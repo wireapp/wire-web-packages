@@ -1,7 +1,7 @@
 interface PayloadBundle {
-  content: string,
-  conversation: string,
-  from: string,
+  content: string;
+  conversation: string;
+  from: string;
 }
 
 export default PayloadBundle;

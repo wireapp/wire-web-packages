@@ -6,9 +6,18 @@
     "prettier": "1.7.4"
   },
   "lint-staged": {
-    "*.js": ["prettier --write", "git add"],
-    "*.json": ["prettier --print-width=200 --write", "git add"],
-    "*.ts": ["prettier --write", "git add"]
+    "*.js": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.json": [
+      "prettier --print-width=200 --write",
+      "git add"
+    ],
+    "*.ts": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "scripts": {
     "dist": "lerna run dist",
