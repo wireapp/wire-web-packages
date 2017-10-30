@@ -24,16 +24,8 @@
     "webpack": "3.6.0"
   },
   "description": "Wire for Web's communication core.",
-  "files":[
-    "dist/commonjs"
-  ],
+  "files": ["dist/commonjs"],
   "license": "GPL-3.0",
-  "lint-staged": {
-    "*.ts": [
-      "npm run prettier",
-      "git add"
-    ]
-  },
   "main": "./dist/commonjs/index.js",
   "name": "@wireapp/core",
   "repository": {
@@ -47,7 +39,6 @@
     "preversion": "npm run && npm run dist && npm run test",
     "version": "npm run dist",
     "postversion": "git push && git push --tags",
-    "precommit": "lint-staged",
     "prettier": "prettier --single-quote --trailing-comma=\"all\" --no-bracket-spacing --write \"src/**/*.ts\"",
     "start": "rimraf .tmp && npm run dist && node index.js",
     "test": "npm run dist && npm run test:node && npm run test:browser",

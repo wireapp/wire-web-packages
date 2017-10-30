@@ -23,7 +23,6 @@
     "browser-sync": "2.18.13",
     "concurrently": "3.5.0",
     "cross-env": "5.1.0",
-    "husky": "0.14.3",
     "istanbul": "0.4.5",
     "jasmine": "2.8.0",
     "karma": "1.7.1",
@@ -31,7 +30,6 @@
     "karma-jasmine": "1.1.0",
     "karma-jasmine-diff-reporter": "1.1.1",
     "karma-sourcemap-loader": "0.3.7",
-    "lint-staged": "4.3.0",
     "nock": "9.0.18",
     "optimist": "0.6.1",
     "prettier": "1.7.4",
@@ -43,17 +41,8 @@
     "webpack-dev-server": "2.9.3"
   },
   "description": "Wire API Client to send and receive data.",
-  "files": [
-    "index.js",
-    "index.html",
-    "dist/commonjs"
-  ],
+  "files": ["index.js", "index.html", "dist/commonjs"],
   "license": "GPL-3.0",
-  "lint-staged": {
-    "*.js": ["prettier --write", "git add"],
-    "*.json": ["prettier --print-width=200 --write", "git add"],
-    "*.ts": ["prettier --write", "git add"]
-  },
   "main": "./dist/commonjs/Client.js",
   "name": "@wireapp/api-client",
   "repository": {
