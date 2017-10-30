@@ -2,7 +2,8 @@
   "lerna": "2.4.0",
   "npmClient": "yarn",
   "npmClientArgs": [
-    "--exact"
+    "--exact",
+    "--frozen-lockfile"
   ],
   "packages": [
     "packages/*"
