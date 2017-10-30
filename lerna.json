@@ -1,0 +1,11 @@
+{
+  "lerna": "2.4.0",
+  "npmClient": "yarn",
+  "npmClientArgs": [
+    "--exact"
+  ],
+  "packages": [
+    "packages/*"
+  ],
+  "version": "independent"
+}
