@@ -11,7 +11,10 @@
     "*.ts": ["prettier --write", "git add"]
   },
   "scripts": {
+    "dist": "lerna run dist",
+    "install": "lerna bootstrap",
     "precommit": "lint-staged",
-    "test": "lerna bootstrap && lerna run test"
+    "prettier": "lerna run prettier",
+    "test": "lerna run test"
   }
 }

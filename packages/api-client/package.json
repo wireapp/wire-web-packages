@@ -61,6 +61,7 @@
     "preversion": "yarn test",
     "version": "yarn build:node && yarn pack:demo && yarn dist:demo",
     "postversion": "git push && git push --tags && yarn pack:browser",
+    "prettier": "yarn fix:config && yarn fix:script",
     "fix:config": "prettier --print-width=200 --write '**/*.json'",
     "fix:script": "prettier --write '**/*.{js,ts}'",
     "start": "yarn build:node && concurrently \"tsc -w\" \"webpack -w\" \"browser-sync start -c bs-config.js\"",
