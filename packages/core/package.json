@@ -28,10 +28,7 @@
   "license": "GPL-3.0",
   "main": "./dist/commonjs/index.js",
   "name": "@wireapp/core",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/wireapp/wire-web-core.git"
-  },
+  "repository": "https://github.com/wireapp/wire-web-lerna/tree/master/packages/core",
   "scripts": {
     "clear": "rimraf dist && rimraf .tmp",
     "coverage": "istanbul cover --report html ./node_modules/jasmine/bin/jasmine.js",

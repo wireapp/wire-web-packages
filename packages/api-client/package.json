@@ -45,10 +45,7 @@
   "license": "GPL-3.0",
   "main": "./dist/commonjs/Client.js",
   "name": "@wireapp/api-client",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/wireapp/wire-web-api-client.git"
-  },
+  "repository": "https://github.com/wireapp/wire-web-lerna/tree/master/packages/api-client",
   "scripts": {
     "build:node": "yarn && yarn clear && tsc",
     "clear": "rimraf dist",
