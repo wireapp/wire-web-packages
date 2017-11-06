@@ -239,8 +239,8 @@ export default class UserAPI {
    */
   public getUsers(parameters: {handles?: string[]; ids?: string[]}): Promise<User[]> {
     const config: AxiosRequestConfig = {
-      params: {},
       method: 'get',
+      params: {},
       url: UserAPI.URL.USERS,
     };
 

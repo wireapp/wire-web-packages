@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "cross-env": "5.1.1",
     "husky": "0.14.3",
     "lerna": "2.5.1",
     "lint-staged": "4.3.0",

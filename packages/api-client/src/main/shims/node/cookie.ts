@@ -56,6 +56,7 @@ export const sendRequestWithCookie = (
   return loadExistingCookie(engine).then(({isExpired, zuid}: {isExpired: string; zuid: string}) => {
     if (!isExpired) {
       // https://github.com/wearezeta/backend-api-docs/wiki/API-User-Authentication#token-refresh
+      config.headers = config.headers || {};
       config.headers['Cookie'] = `zuid=${zuid}`;
       config.withCredentials = true;
     }

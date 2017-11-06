@@ -20,18 +20,33 @@ export default class AuthAPI {
     };
   }
 
-  public postCookiesRemove(login: LoginData, labels?: string[]): AxiosPromise {
+  public getCookies(labels?: string[]) {
+    const config: AxiosRequestConfig = {
+      method: 'get',
+      params: {},
+      url: AuthAPI.URL.COOKIES,
+    };
+
+    if (labels) {
+      config.params.labels = labels.join(',');
+    }
+
+    return this.client.sendRequest(config);
+  }
+
+  public postCookiesRemove(password: string, labels?: string[], ids?: string[]): AxiosPromise {
     const config: AxiosRequestConfig = {
       data: {
-        email: login.email,
-        labels: labels,
-        password: login.password.toString(),
+        ids,
+        labels,
+        password,
       },
       method: 'post',
       url: `${AuthAPI.URL.COOKIES}/remove`,
+      withCredentials: true,
     };
 
-    return this.client.sendRequest(config);
+    return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
   }
 
   public postLogin(login: LoginData): Promise<AccessTokenData> {
@@ -56,7 +71,7 @@ export default class AuthAPI {
       url: `${AuthAPI.URL.ACCESS}/${AuthAPI.URL.LOGOUT}`,
     };
 
-    return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
+    return sendRequestWithCookie(this.client, config, this.engine).then((response: AxiosResponse) => response.data);
   }
 
   public postAccess(expiredAccessToken?: AccessTokenData): Promise<AccessTokenData> {
