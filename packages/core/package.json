@@ -1,16 +1,15 @@
 {
   "author": "Wire",
   "dependencies": {
-    "@wireapp/api-client": "0.2.3",
+    "@wireapp/api-client": "0.2.6",
     "@wireapp/protocol-messaging": "1.19.0",
     "@wireapp/store-engine": "0.1.0",
     "bazinga64": "5.0.3",
     "protobufjs": "6.8.0",
-    "pure-uuid": "1.4.8",
+    "pure-uuid": "1.4.10",
     "wire-webapp-cryptobox": "6.2.0"
   },
   "devDependencies": {
-    "cross-env": "5.0.5",
     "istanbul": "0.4.5",
     "jasmine": "2.8.0",
     "karma": "1.7.1",
@@ -18,10 +17,10 @@
     "karma-jasmine": "1.1.0",
     "karma-jasmine-diff-reporter": "1.1.1",
     "karma-sourcemap-loader": "0.3.7",
-    "webpack": "3.6.0"
+    "webpack": "3.8.1"
   },
   "description": "Wire for Web's communication core.",
-  "files": ["dist/commonjs"],
+  "files": ["dist"],
   "license": "GPL-3.0",
   "main": "./dist/commonjs/index.js",
   "name": "@wireapp/core",
@@ -34,5 +33,5 @@
     "start": "rimraf .tmp && yarn dist && node index.js"
   },
   "types": "./dist/commonjs/index.d.ts",
-  "version": "0.0.3"
+  "version": "0.0.4"
 }

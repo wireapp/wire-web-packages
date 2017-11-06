@@ -1,7 +1,6 @@
 const loadProtocolBuffers = require('@wireapp/protocol-messaging');
 const UUID = require('pure-uuid');
 import * as Proteus from 'wire-webapp-proteus';
-import {PayloadBundle, SessionPayloadBundle} from './payload/';
 import {ClientMismatch, NewOTRMessage, OTRRecipients, UserClients} from '@wireapp/api-client/src/main/conversation/';
 import {Context, LoginData, PreKey} from '@wireapp/api-client/dist/commonjs/auth/';
 import {ConversationEvent, OTRMessageAdd} from '@wireapp/api-client/dist/commonjs/conversation/event/';
@@ -10,6 +9,7 @@ import {Cryptobox, store} from 'wire-webapp-cryptobox';
 import {Decoder, Encoder} from 'bazinga64';
 import {IncomingNotification} from '@wireapp/api-client/dist/commonjs/conversation/';
 import {NewClient, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
+import {PayloadBundle, SessionPayloadBundle} from './payload/';
 import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/error/';
 import {Root} from 'protobufjs';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/';
@@ -105,7 +105,7 @@ export default class Account extends EventEmitter {
   public login(): Promise<Context> {
     return this.apiClient
       .init()
-      .catch(error => this.apiClient.login(this.loginData))
+      .catch((error: Error) => this.apiClient.login(this.loginData))
       .then((context: Context) => this.initClient(context))
       .then((client: RegisteredClient) => {
         this.apiClient.context.clientID = client.id;
@@ -117,6 +117,15 @@ export default class Account extends EventEmitter {
         this.protocolBuffers.Text = root.lookup('Text');
         return this.context;
       });
+  }
+
+  public logout(): Promise<void> {
+    return this.apiClient.logout().then(() => {
+      this.client = undefined;
+      this.context = undefined;
+      this.cryptobox = undefined;
+      this.loginData = undefined;
+    });
   }
 
   private constructSessionId(userId: string, clientId: string): string {
