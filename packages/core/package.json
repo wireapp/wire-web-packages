@@ -18,31 +18,20 @@
     "karma-jasmine": "1.1.0",
     "karma-jasmine-diff-reporter": "1.1.1",
     "karma-sourcemap-loader": "0.3.7",
-    "prettier": "1.7.3",
-    "rimraf": "2.6.2",
-    "typescript": "2.5.3",
     "webpack": "3.6.0"
   },
   "description": "Wire for Web's communication core.",
-  "files": [
-    "dist/commonjs"
-  ],
+  "files": ["dist/commonjs"],
   "license": "GPL-3.0",
   "main": "./dist/commonjs/index.js",
   "name": "@wireapp/core",
   "repository": "https://github.com/wireapp/wire-web-lerna/tree/master/packages/core",
   "scripts": {
-    "clear": "rimraf dist && rimraf .tmp",
     "coverage": "istanbul cover --report html ./node_modules/jasmine/bin/jasmine.js",
-    "dist": "npm run clear && tsc",
-    "preversion": "npm run && npm run dist && npm run test",
-    "version": "npm run dist",
+    "preversion": "yarn && yarn dist && yarn test",
+    "version": "yarn dist",
     "postversion": "git push && git push --tags",
-    "prettier": "prettier --single-quote --trailing-comma=\"all\" --no-bracket-spacing --write \"src/**/*.ts\"",
-    "start": "rimraf .tmp && npm run dist && node index.js",
-    "test": "npm run dist && npm run test:node && npm run test:browser",
-    "test:node": "cross-env JASMINE_CONFIG_PATH=src/test/node/support/jasmine.json jasmine",
-    "test:browser": "echo No operation."
+    "start": "rimraf .tmp && yarn dist && node index.js"
   },
   "types": "./dist/commonjs/index.d.ts",
   "version": "0.0.3"
