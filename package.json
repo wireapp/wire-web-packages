@@ -1,23 +1,14 @@
 {
   "devDependencies": {
     "husky": "0.14.3",
-    "lerna": "2.4.0",
+    "lerna": "2.5.1",
     "lint-staged": "4.3.0",
     "prettier": "1.7.4"
   },
   "lint-staged": {
-    "*.js": [
-      "prettier --write",
-      "git add"
-    ],
-    "*.json": [
-      "prettier --print-width=200 --write",
-      "git add"
-    ],
-    "*.ts": [
-      "prettier --write",
-      "git add"
-    ]
+    "*.js": ["prettier --write", "git add"],
+    "*.json": ["prettier --print-width=200 --write", "git add"],
+    "*.ts": ["prettier --write", "git add"]
   },
   "scripts": {
     "dist": "lerna run dist",
