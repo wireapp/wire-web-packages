@@ -13,6 +13,7 @@
     "*.json": ["prettier --print-width=200 --write", "git add"],
     "*.ts": ["prettier --write", "git add"]
   },
+  "private": true,
   "scripts": {
     "clear": "lerna run clear",
     "dist": "lerna run dist",
@@ -22,5 +23,6 @@
     "fix:config": "prettier --print-width 200 --write 'packages/**/*.json'",
     "fix:script": "prettier --write 'packages/**/src/**/*.{js,ts}'",
     "test": "lerna run test"
-  }
+  },
+  "workspaces": ["packages/*"]
 }
