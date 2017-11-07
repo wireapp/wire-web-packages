@@ -12,7 +12,11 @@ cache:
 
 # http://docs.travis-ci.com/user/build-lifecycle/
 before_install:
-  - curl https://yarnpkg.com/install.sh -sSfL | sh -s --
+  - curl https://yarnpkg.com/install.sh -sSfL | bash -s --
+  - export PATH="$HOME/.yarn/bin:$PATH"
+
+before_script:
+  - yarn bootstrap
 
 notifications:
   email: false

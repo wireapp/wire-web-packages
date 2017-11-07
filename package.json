@@ -17,7 +17,7 @@
   "scripts": {
     "clear": "lerna run clear",
     "dist": "lerna run dist",
-    "install": "lerna bootstrap",
+    "bootstrap": "lerna bootstrap",
     "precommit": "lint-staged",
     "prettier": "yarn fix:config && yarn fix:script",
     "fix:config": "prettier --print-width 200 --write 'packages/**/*.json'",
