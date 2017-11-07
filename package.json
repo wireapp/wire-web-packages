@@ -14,15 +14,13 @@
     "*.ts": ["prettier --write", "git add"]
   },
   "scripts": {
-    "clear": "rimraf packages/**/dist/ && rimraf packages/**/.tmp/",
-    "dist": "yarn clear && lerna exec tsc",
+    "clear": "lerna run clear",
+    "dist": "lerna run dist",
     "install": "lerna bootstrap",
     "precommit": "lint-staged",
     "prettier": "yarn fix:config && yarn fix:script",
     "fix:config": "prettier --print-width 200 --write 'packages/**/*.json'",
     "fix:script": "prettier --write 'packages/**/src/**/*.{js,ts}'",
-    "test": "yarn dist && yarn test:node && yarn test:browser",
-    "test:node": "cross-env JASMINE_CONFIG_PATH=test/node/support/jasmine.json jasmine",
-    "test:browser": "echo No operation."
+    "test": "lerna run test"
   }
 }

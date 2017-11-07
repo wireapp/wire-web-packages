@@ -1,6 +1,6 @@
 interface SessionPayloadBundle {
-  sessionId: string;
-  encryptedPayload: string;
+  sessionId: string,
+  encryptedPayload: string
 }
 
 export default SessionPayloadBundle;
