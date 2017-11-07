@@ -3,25 +3,14 @@
     "cross-env": "5.1.1",
     "husky": "0.14.3",
     "lerna": "2.5.1",
-    "lint-staged": "4.3.0",
-    "prettier": "1.7.4",
     "rimraf": "2.6.2",
     "typescript": "2.6.1"
-  },
-  "lint-staged": {
-    "*.js": ["prettier --write", "git add"],
-    "*.json": ["prettier --print-width=200 --write", "git add"],
-    "*.ts": ["prettier --write", "git add"]
   },
   "private": true,
   "scripts": {
     "clear": "lerna run clear",
     "dist": "lerna run dist",
     "bootstrap": "lerna bootstrap",
-    "precommit": "lint-staged",
-    "prettier": "yarn fix:config && yarn fix:script",
-    "fix:config": "prettier --print-width 200 --write 'packages/**/*.json'",
-    "fix:script": "prettier --write 'packages/**/src/**/*.{js,ts}'",
     "test": "lerna run test"
   },
   "workspaces": ["packages/*"]
