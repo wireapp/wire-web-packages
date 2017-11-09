@@ -1,28 +1,12 @@
 {
   "devDependencies": {
-    "browser-sync": "2.18.13",
-    "concurrently": "3.5.0",
-    "cross-env": "5.1.1",
-    "istanbul": "0.4.5",
-    "jasmine": "2.8.0",
-    "karma": "1.7.1",
-    "karma-chrome-launcher": "2.2.0",
-    "karma-jasmine": "1.1.0",
-    "karma-jasmine-diff-reporter": "1.1.1",
-    "karma-sourcemap-loader": "0.3.7",
-    "lerna": "2.5.1",
-    "rimraf": "2.6.2",
-    "sinon": "4.0.2",
-    "sinon-har-server": "0.3.0",
-    "typescript": "2.6.1",
-    "webpack": "3.8.1",
-    "webpack-dev-server": "2.9.4"
+    "lerna": "2.5.1"
   },
   "private": true,
   "scripts": {
     "clear": "lerna run clear",
     "dist": "lerna run dist",
-    "postinstall": "lerna bootstrap",
+    "bootstrap": "lerna bootstrap",
     "test": "lerna run test"
   },
   "workspaces": [
