@@ -22,7 +22,7 @@
   "scripts": {
     "clear": "lerna run clear",
     "dist": "lerna run dist",
-    "bootstrap": "lerna bootstrap",
+    "postinstall": "lerna bootstrap",
     "test": "lerna run test"
   },
   "workspaces": [
