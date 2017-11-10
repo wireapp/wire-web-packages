@@ -6,7 +6,7 @@
   "scripts": {
     "clear": "lerna run clear",
     "dist": "lerna run dist",
-    "init": "lerna bootstrap",
+    "bootstrap": "lerna bootstrap",
     "test": "lerna run test"
   },
   "workspaces": [
