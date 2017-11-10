@@ -1,4 +1,4 @@
-const {PriorityQueue} = require('../../../../dist/commonjs/index');
+const {PriorityQueue} = require('@wireapp/queue-priority');
 
 beforeAll(() => jasmine.DEFAULT_TIMEOUT_INTERVAL = 5000);
 
