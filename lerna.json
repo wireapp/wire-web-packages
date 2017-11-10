@@ -4,9 +4,6 @@
   "npmClientArgs": [
     "--exact"
   ],
-  "packages": [
-    "packages/*"
-  ],
-  "version": "independent",
-  "useWorkspaces": true
+  "useWorkspaces": true,
+  "version": "independent"
 }
