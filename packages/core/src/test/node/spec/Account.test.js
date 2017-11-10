@@ -1,4 +1,4 @@
-const {Account} = require('../../../../../../../wire-web-core/dist/commonjs/index');
+const {Account} = require('../../../../dist/commonjs/index');
 
 describe('Account', () => {
   describe('"constructor"', () => {
