@@ -1,4 +1,4 @@
-const {unsafeAlphanumeric} = require('../../../../../dist/commonjs/shims/node/random');
+const {unsafeAlphanumeric} = require('@wireapp/api-client/dist/commonjs/shims/node/random');
 
 describe('"unsafeAlphanumeric"', function() {
   it('should generate string of length 32 as default', function() {

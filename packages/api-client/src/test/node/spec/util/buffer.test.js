@@ -1,4 +1,4 @@
-const {base64MD5FromBuffer} = require('../../../../../dist/commonjs/shims/node/buffer');
+const {base64MD5FromBuffer} = require('@wireapp/api-client/dist/commonjs/shims/node/buffer');
 
 describe('"base64MD5FromBuffer"', function() {
   it('can generate base64 encoded md5 hash from buffer', function() {

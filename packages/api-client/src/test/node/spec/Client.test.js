@@ -1,8 +1,8 @@
 const nock = require('nock');
 
-const Client = require('../../../../dist/commonjs/Client');
-const {AuthAPI} = require('../../../../dist/commonjs/auth/index');
-const {UserAPI} = require('../../../../dist/commonjs/user/index');
+const Client = require('@wireapp/api-client/dist/commonjs/Client');
+const {AuthAPI} = require('@wireapp/api-client/dist/commonjs/auth/');
+const {UserAPI} = require('@wireapp/api-client/dist/commonjs/user/');
 
 describe('Client', () => {
   const baseURL = Client.BACKEND.PRODUCTION.rest;

@@ -1,4 +1,4 @@
-const {isValidKey, isValidToken} = require('../../../../../dist/commonjs/asset/AssetUtil');
+const {isValidKey, isValidToken} = require('@wireapp/api-client/dist/commonjs/asset/AssetUtil');
 
 describe('"isValidToken"', function() {
   it('should return true if token is valid', function() {

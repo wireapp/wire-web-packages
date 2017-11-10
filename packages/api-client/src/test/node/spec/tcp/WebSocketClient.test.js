@@ -1,4 +1,4 @@
-const WebSocketClient = require('../../../../../dist/commonjs/tcp/WebSocketClient').default;
+const WebSocketClient = require('@wireapp/api-client/dist/commonjs/tcp/WebSocketClient').default;
 const WebSocketServer = require('ws').Server;
 
 const ACCESS_TOKEN_PAYLOAD = {

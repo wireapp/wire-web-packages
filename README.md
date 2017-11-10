@@ -1,3 +1,3 @@
 ```bash
-yarn boot
+yarn && yarn boot
 ```
