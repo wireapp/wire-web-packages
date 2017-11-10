@@ -18,7 +18,6 @@
     "karma-jasmine": "1.1.0",
     "karma-jasmine-diff-reporter": "1.1.1",
     "karma-sourcemap-loader": "0.3.7",
-    "prettier": "1.8.1",
     "rimraf": "2.6.2",
     "typescript": "2.6.1",
     "webpack": "3.8.1"
@@ -28,12 +27,6 @@
     "dist"
   ],
   "license": "GPL-3.0",
-  "lint-staged": {
-    "*.ts": [
-      "npm run prettier",
-      "git add"
-    ]
-  },
   "main": "./dist/commonjs/index.js",
   "name": "@wireapp/core",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/core",
@@ -44,8 +37,6 @@
     "preversion": "npm run && npm run dist && npm run test",
     "version": "npm run dist",
     "postversion": "git push && git push --tags",
-    "precommit": "lint-staged",
-    "prettier": "prettier --single-quote --trailing-comma=\"all\" --no-bracket-spacing --write \"src/**/*.ts\"",
     "start": "rimraf .tmp && npm run dist && node index.js",
     "test": "npm run dist && npm run test:node && npm run test:browser",
     "test:node": "cross-env JASMINE_CONFIG_PATH=src/test/node/support/jasmine.json jasmine",

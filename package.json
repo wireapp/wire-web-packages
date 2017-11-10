@@ -13,7 +13,6 @@
   },
   "private": true,
   "scripts": {
-    "precommit": "lint-staged",
     "boot": "lerna bootstrap",
     "clear": "lerna run clear",
     "dist": "lerna run dist",

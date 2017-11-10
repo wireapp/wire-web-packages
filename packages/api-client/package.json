@@ -22,7 +22,6 @@
     "browser-sync": "2.18.13",
     "concurrently": "3.5.0",
     "cross-env": "5.1.1",
-    "husky": "0.14.3",
     "istanbul": "0.4.5",
     "jasmine": "2.8.0",
     "karma": "1.7.1",
@@ -30,10 +29,8 @@
     "karma-jasmine": "1.1.0",
     "karma-jasmine-diff-reporter": "1.1.1",
     "karma-sourcemap-loader": "0.3.7",
-    "lint-staged": "4.3.0",
     "nock": "9.0.18",
     "optimist": "0.6.1",
-    "prettier": "1.8.1",
     "rimraf": "2.6.2",
     "sinon": "4.1.2",
     "sinon-har-server": "0.3.0",
@@ -46,12 +43,6 @@
     "dist"
   ],
   "license": "GPL-3.0",
-  "lint-staged": {
-    "*.{js,ts}": [
-      "prettier --write",
-      "git add"
-    ]
-  },
   "main": "./dist/commonjs/Client.js",
   "name": "@wireapp/api-client",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client",
@@ -67,10 +58,6 @@
     "preversion": "yarn test",
     "version": "yarn build:node && yarn pack:demo && yarn dist:demo",
     "postversion": "git push && git push --tags && yarn pack:browser",
-    "precommit": "lint-staged",
-    "fix:config": "prettier --print-width=200 --write '**/*.json'",
-    "fix:script": "prettier --write '**/*.{js,ts}'",
-    "fix": "yarn fix:config && yarn fix:script",
     "start": "yarn build:node && concurrently \"tsc -w\" \"webpack -w\" \"browser-sync start -c bs-config.js\"",
     "test:browser": "karma start karma.conf.js",
     "test:node": "cross-env JASMINE_CONFIG_PATH=src/test/node/support/jasmine.json jasmine",
