@@ -1,7 +1,7 @@
 const loadProtocolBuffers = require('@wireapp/protocol-messaging');
 const UUID = require('pure-uuid');
 import * as Proteus from 'wire-webapp-proteus';
-import {ClientMismatch, NewOTRMessage, OTRRecipients, UserClients} from '@wireapp/api-client/src/main/conversation/';
+import {ClientMismatch, NewOTRMessage, OTRRecipients, UserClients} from '@wireapp/api-client/dist/commonjs/conversation/';
 import {Context, LoginData, PreKey} from '@wireapp/api-client/dist/commonjs/auth/';
 import {ConversationEvent, OTRMessageAdd} from '@wireapp/api-client/dist/commonjs/conversation/event/';
 import {CRUDEngine, MemoryEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
@@ -9,7 +9,7 @@ import {Cryptobox, store} from 'wire-webapp-cryptobox';
 import {Decoder, Encoder} from 'bazinga64';
 import {IncomingNotification} from '@wireapp/api-client/dist/commonjs/conversation/';
 import {NewClient, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
-import {PayloadBundle, SessionPayloadBundle} from './payload/';
+import {PayloadBundle, SessionPayloadBundle} from './payload';
 import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/error/';
 import {Root} from 'protobufjs';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/';
@@ -42,6 +42,7 @@ export default class Account extends EventEmitter {
       persist: !(storeEngine instanceof MemoryEngine),
       ...loginData
     };
+    this.sanitizeLoginData();
     this.storeEngine = storeEngine;
     this.apiClient = new Client({store: storeEngine});
     this.cryptobox = new Cryptobox(new store.CryptoboxCRUDStore(storeEngine));
@@ -52,6 +53,22 @@ export default class Account extends EventEmitter {
       .then((initialPreKeys: Array<Proteus.keys.PreKey>) => {
         return this.storeEngine.read<RegisteredClient>(Account.STORES.CLIENTS, store.CryptoboxCRUDStore.KEYS.LOCAL_IDENTITY);
       });
+  }
+
+  private sanitizeLoginData(): void {
+    const removeNonPrintableCharacters = new RegExp('[^\x20-\x7E]+', 'gm');
+
+    if (this.loginData.email) {
+      this.loginData.email = this.loginData.email.replace(removeNonPrintableCharacters, '');
+    }
+
+    if (this.loginData.password) {
+      this.loginData.password = this.loginData.password.toString().replace(removeNonPrintableCharacters, '');
+    }
+
+    if (this.loginData.handle) {
+      this.loginData.handle = this.loginData.handle.replace(removeNonPrintableCharacters, '');
+    }
   }
 
   private registerNewClient(): Promise<RegisteredClient> {

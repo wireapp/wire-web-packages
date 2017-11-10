@@ -249,8 +249,9 @@ export default class ConversationAPI {
         ...params,
       },
       method: 'post',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.OTR}/${ConversationAPI.URL
-        .MESSAGES}`,
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.OTR}/${
+        ConversationAPI.URL.MESSAGES
+      }`,
     };
 
     if (typeof messageData.recipients === 'object') {

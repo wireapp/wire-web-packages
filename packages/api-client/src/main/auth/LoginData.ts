@@ -1,4 +1,5 @@
 interface LoginData {
+  [key: string]: boolean | number | string;
   code?: string;
   email?: string;
   handle?: string;

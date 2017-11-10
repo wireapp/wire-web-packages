@@ -10,14 +10,14 @@
     "noEmitOnError": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
-    "outDir": "dist/commonjs",
+    "outDir": "../../../wire-web-core/dist/commonjs",
     "removeComments": true,
     "rootDir": "src/main",
     "sourceMap": false,
     "target": "ES5"
   },
   "exclude": [
-    "dist/commonjs",
+    "../../../wire-web-core/dist/commonjs",
     "node_modules"
   ]
 }

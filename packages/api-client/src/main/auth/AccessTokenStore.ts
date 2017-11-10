@@ -37,7 +37,7 @@ export default class AccessTokenStore extends EventEmitter {
     return this.tokenStore
       .read(this.ACCESS_TOKEN_TABLE, this.ACCESS_TOKEN_KEY)
       .catch(error => {
-        if (error instanceof RecordNotFoundError) {
+        if (error.name === RecordNotFoundError.name) {
           return undefined;
         }
 

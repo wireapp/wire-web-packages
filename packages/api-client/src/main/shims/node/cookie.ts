@@ -13,7 +13,7 @@ const loadExistingCookie = (engine: CRUDEngine): Promise<object> => {
   return engine
     .read(TABLE_NAME, COOKIE_PRIMARY_KEY)
     .catch(error => {
-      if (error instanceof RecordNotFoundError) {
+      if (error.name === RecordNotFoundError.name) {
         return {isExpired: true};
       }
 

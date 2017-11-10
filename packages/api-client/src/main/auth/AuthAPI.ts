@@ -52,7 +52,13 @@ export default class AuthAPI {
   public postLogin(login: LoginData): Promise<AccessTokenData> {
     login.password = login.password.toString();
     const config: AxiosRequestConfig = {
-      data: login,
+      data: login.email ? {
+        email: login.email,
+        password: login.password,
+      } : {
+        handle: login.handle,
+        password: login.password,
+      },
       method: 'post',
       params: {
         persist: login.persist.toString(),
