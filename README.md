@@ -1,3 +1,3 @@
-```javascript
-yarn bootstrap
+```bash
+yarn boot
 ```

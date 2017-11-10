@@ -16,7 +16,7 @@ before_install:
   - export PATH="$HOME/.yarn/bin:$PATH"
 
 before_script:
-  - yarn bootstrap
+  - yarn boot
 
 notifications:
   email: false

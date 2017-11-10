@@ -4,9 +4,9 @@
   },
   "private": true,
   "scripts": {
+    "boot": "lerna bootstrap",
     "clear": "lerna run clear",
     "dist": "lerna run dist",
-    "bootstrap": "lerna bootstrap",
     "test": "lerna run test"
   },
   "workspaces": [
