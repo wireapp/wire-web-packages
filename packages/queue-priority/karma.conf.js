@@ -26,13 +26,16 @@ module.exports = function(config) {
   config.set({
     autoWatch: false,
     basePath: '',
+    browserNoActivityTimeout: 10000,
     browsers: ['ChromeHeadless'],
     client: {
       useIframe: false,
     },
     colors: true,
     concurrency: Infinity,
-    files: [`${dist}test.js`],
+    files: [
+      `${dist}test-bundle.js`
+    ],
     frameworks: ['jasmine'],
     logLevel: config.LOG_INFO,
     port: 9876,
