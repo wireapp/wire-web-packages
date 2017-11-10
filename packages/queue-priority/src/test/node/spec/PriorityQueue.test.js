@@ -1,10 +1,10 @@
 const {PriorityQueue} = require('@wireapp/queue-priority');
 
-beforeAll(() => jasmine.DEFAULT_TIMEOUT_INTERVAL = 5000);
+beforeAll(() => (jasmine.DEFAULT_TIMEOUT_INTERVAL = 5000));
 
 describe('PriorityQueue', () => {
   describe('"add"', () => {
-    it('works with thunked Promises', (done) => {
+    it('works with thunked Promises', done => {
       const queue = new PriorityQueue();
 
       Promise.all([
@@ -14,7 +14,7 @@ describe('PriorityQueue', () => {
         queue.add(() => Promise.resolve('dog')),
         queue.add(() => Promise.resolve('eagle')),
         queue.add(() => Promise.resolve('falcon')),
-      ]).then((results) => {
+      ]).then(results => {
         expect(results[0]).toBe('ape');
         expect(results[1]).toBe('bear');
         expect(results[2]).toBe('cat');
@@ -25,7 +25,7 @@ describe('PriorityQueue', () => {
       });
     });
 
-    it('works with thunked functions', (done) => {
+    it('works with thunked functions', done => {
       function happyFn() {
         return 'happy';
       }
@@ -37,15 +37,15 @@ describe('PriorityQueue', () => {
       });
     });
 
-    it('works with thunked primitive values', (done) => {
+    it('works with thunked primitive values', done => {
       const queue = new PriorityQueue();
 
       Promise.all([
         queue.add(() => 'ape'),
         queue.add(() => 'cat'),
         queue.add(() => 'dog'),
-        queue.add(() => 'zebra')
-      ]).then((results) => {
+        queue.add(() => 'zebra'),
+      ]).then(results => {
         expect(results[0]).toBe('ape');
         expect(results[1]).toBe('cat');
         expect(results[2]).toBe('dog');
@@ -54,17 +54,16 @@ describe('PriorityQueue', () => {
       });
     });
 
-    it('catches throwing thunked functions', (done) => {
+    it('catches throwing thunked functions', done => {
       function notHappyFn() {
-        throw Error('not so happy')
+        throw Error('not so happy');
       }
 
       const queue = new PriorityQueue();
-      queue.add(() => notHappyFn())
-        .catch(error => {
-          expect(error.message).toBe('not so happy');
-          done();
-        });
+      queue.add(() => notHappyFn()).catch(error => {
+        expect(error.message).toBe('not so happy');
+        done();
+      });
     });
   });
 });

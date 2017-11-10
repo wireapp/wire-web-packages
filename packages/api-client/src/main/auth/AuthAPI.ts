@@ -52,13 +52,15 @@ export default class AuthAPI {
   public postLogin(login: LoginData): Promise<AccessTokenData> {
     login.password = login.password.toString();
     const config: AxiosRequestConfig = {
-      data: login.email ? {
-        email: login.email,
-        password: login.password,
-      } : {
-        handle: login.handle,
-        password: login.password,
-      },
+      data: login.email
+        ? {
+            email: login.email,
+            password: login.password,
+          }
+        : {
+            handle: login.handle,
+            password: login.password,
+          },
       method: 'post',
       params: {
         persist: login.persist.toString(),
@@ -90,7 +92,7 @@ export default class AuthAPI {
 
     if (expiredAccessToken) {
       config.headers['Authorization'] = `${expiredAccessToken.token_type} ${decodeURIComponent(
-        expiredAccessToken.access_token,
+        expiredAccessToken.access_token
       )}`;
     }
 

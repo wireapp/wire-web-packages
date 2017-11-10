@@ -44,7 +44,7 @@ export default class WebSocketClient extends EventEmitter {
     this.socket = new ReconnectingWebsocket(
       () => this.buildWebSocketURL(),
       undefined,
-      WebSocketClient.RECONNECTING_OPTIONS,
+      WebSocketClient.RECONNECTING_OPTIONS
     );
 
     this.socket.onmessage = (event: MessageEvent) => {

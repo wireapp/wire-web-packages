@@ -3,7 +3,7 @@ module.exports = {
   devServer: {
     stats: {
       chunks: false,
-    }
+    },
   },
   entry: {
     'test-bundle': `${__dirname}/src/test/browser/index.js`,
@@ -12,5 +12,5 @@ module.exports = {
     path: `${__dirname}/dist`,
     filename: `[name].js`,
     publicPath: '/',
-  }
+  },
 };

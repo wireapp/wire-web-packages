@@ -1,7 +1,12 @@
 const loadProtocolBuffers = require('@wireapp/protocol-messaging');
 const UUID = require('pure-uuid');
 import * as Proteus from 'wire-webapp-proteus';
-import {ClientMismatch, NewOTRMessage, OTRRecipients, UserClients} from '@wireapp/api-client/dist/commonjs/conversation/';
+import {
+  ClientMismatch,
+  NewOTRMessage,
+  OTRRecipients,
+  UserClients,
+} from '@wireapp/api-client/dist/commonjs/conversation/';
 import {Context, LoginData, PreKey} from '@wireapp/api-client/dist/commonjs/auth/';
 import {ConversationEvent, OTRMessageAdd} from '@wireapp/api-client/dist/commonjs/conversation/event/';
 import {CRUDEngine, MemoryEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
@@ -28,7 +33,7 @@ export default class Account extends EventEmitter {
 
   static get STORES() {
     return {
-      CLIENTS: 'clients'
+      CLIENTS: 'clients',
     };
   }
 
@@ -40,7 +45,7 @@ export default class Account extends EventEmitter {
     super();
     this.loginData = {
       persist: !(storeEngine instanceof MemoryEngine),
-      ...loginData
+      ...loginData,
     };
     this.sanitizeLoginData();
     this.storeEngine = storeEngine;
@@ -49,10 +54,12 @@ export default class Account extends EventEmitter {
   }
 
   private loadExistingClient(): Promise<RegisteredClient> {
-    return this.cryptobox.load()
-      .then((initialPreKeys: Array<Proteus.keys.PreKey>) => {
-        return this.storeEngine.read<RegisteredClient>(Account.STORES.CLIENTS, store.CryptoboxCRUDStore.KEYS.LOCAL_IDENTITY);
-      });
+    return this.cryptobox.load().then((initialPreKeys: Array<Proteus.keys.PreKey>) => {
+      return this.storeEngine.read<RegisteredClient>(
+        Account.STORES.CLIENTS,
+        store.CryptoboxCRUDStore.KEYS.LOCAL_IDENTITY
+      );
+    });
   }
 
   private sanitizeLoginData(): void {
@@ -72,15 +79,16 @@ export default class Account extends EventEmitter {
   }
 
   private registerNewClient(): Promise<RegisteredClient> {
-    return this.cryptobox.create()
+    return this.cryptobox
+      .create()
       .then((initialPreKeys: Array<Proteus.keys.PreKey>) => {
         const serializedPreKeys: Array<PreKey> = initialPreKeys
-          .map((preKey) => {
+          .map(preKey => {
             const preKeyJson: PreKey = this.cryptobox.serialize_prekey(preKey);
             if (preKeyJson.id !== 65535) return preKeyJson;
             return undefined;
           })
-          .filter((serializedPreKey) => serializedPreKey);
+          .filter(serializedPreKey => serializedPreKey);
 
         // TODO: Make the client values configurable from outside
         const newClient: NewClient = {
@@ -108,17 +116,17 @@ export default class Account extends EventEmitter {
 
   private initClient(context: Context): Promise<RegisteredClient> {
     this.context = context;
-    return this.loadExistingClient()
-      .catch((error) => {
-        if (error instanceof RecordNotFoundError) {
-          return this.registerNewClient();
-        }
-        throw error;
-      });
+    return this.loadExistingClient().catch(error => {
+      if (error instanceof RecordNotFoundError) {
+        return this.registerNewClient();
+      }
+      throw error;
+    });
   }
 
   public login(): Promise<Context> {
-    return this.apiClient.init()
+    return this.apiClient
+      .init()
       .catch((error: Error) => this.apiClient.login(this.loginData))
       .then((context: Context) => this.initClient(context))
       .then((client: RegisteredClient) => {
@@ -150,11 +158,16 @@ export default class Account extends EventEmitter {
     return sessionId.split('@');
   }
 
-  private encryptPayloadForSession(sessionId: string, typedArray: Uint8Array, decodedPreKeyBundle: Uint8Array): Promise<SessionPayloadBundle> {
-    return this.cryptobox.encrypt(sessionId, typedArray, decodedPreKeyBundle.buffer)
-      .then((encryptedPayload) => Encoder.toBase64(encryptedPayload).asString)
-      .catch((error) => '💣')
-      .then((encryptedPayload) => ({sessionId, encryptedPayload}));
+  private encryptPayloadForSession(
+    sessionId: string,
+    typedArray: Uint8Array,
+    decodedPreKeyBundle: Uint8Array
+  ): Promise<SessionPayloadBundle> {
+    return this.cryptobox
+      .encrypt(sessionId, typedArray, decodedPreKeyBundle.buffer)
+      .then(encryptedPayload => Encoder.toBase64(encryptedPayload).asString)
+      .catch(error => '💣')
+      .then(encryptedPayload => ({sessionId, encryptedPayload}));
   }
 
   public encrypt(typedArray: Uint8Array, preKeyBundles: UserPreKeyBundleMap): Promise<OTRRecipients> {
@@ -167,7 +180,6 @@ export default class Account extends EventEmitter {
         const preKeyPayload = preKeyBundles[userId][clientId];
         const preKey = preKeyPayload.key;
 
-
         const sessionId: string = this.constructSessionId(userId, clientId);
         const decodedPreKeyBundle: Uint8Array = Decoder.fromBase64(preKey).asBytes;
 
@@ -175,22 +187,21 @@ export default class Account extends EventEmitter {
       }
     }
 
-    return Promise.all(encryptions)
-      .then((payloads: Array<SessionPayloadBundle>) => {
-        const recipients: OTRRecipients = {};
+    return Promise.all(encryptions).then((payloads: Array<SessionPayloadBundle>) => {
+      const recipients: OTRRecipients = {};
 
-        if (payloads) {
-          payloads.forEach((payload: SessionPayloadBundle) => {
-            const sessionId: string = payload.sessionId;
-            const encrypted: string = payload.encryptedPayload;
-            const [userId, clientId] = this.dismantleSessionId(sessionId);
-            recipients[userId] = recipients[userId] || {};
-            recipients[userId][clientId] = encrypted;
-          });
-        }
+      if (payloads) {
+        payloads.forEach((payload: SessionPayloadBundle) => {
+          const sessionId: string = payload.sessionId;
+          const encrypted: string = payload.encryptedPayload;
+          const [userId, clientId] = this.dismantleSessionId(sessionId);
+          recipients[userId] = recipients[userId] || {};
+          recipients[userId][clientId] = encrypted;
+        });
+      }
 
-        return recipients;
-      });
+      return recipients;
+    });
   }
 
   public listen(callback: Function): Promise<WebSocketClient> {
@@ -200,9 +211,12 @@ export default class Account extends EventEmitter {
           return this.login();
         }
         return undefined;
-      }).then(() => {
+      })
+      .then(() => {
         if (callback) {
-          this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, (notification: IncomingNotification) => callback(notification));
+          this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, (notification: IncomingNotification) =>
+            callback(notification)
+          );
         } else {
           this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, this.handleNotification.bind(this));
         }
@@ -212,43 +226,40 @@ export default class Account extends EventEmitter {
 
   private handleNotification(notification: IncomingNotification): void {
     for (const event of notification.payload) {
-      this.handleEvent(event)
-        .then((payload: PayloadBundle) => {
-          if (payload.content) {
-            this.emit(Account.INCOMING.TEXT_MESSAGE, payload)
-          }
-        });
+      this.handleEvent(event).then((payload: PayloadBundle) => {
+        if (payload.content) {
+          this.emit(Account.INCOMING.TEXT_MESSAGE, payload);
+        }
+      });
     }
   }
 
   private handleEvent(event: ConversationEvent): Promise<PayloadBundle> {
     const {conversation, from} = event;
-    return this.decodeEvent(event)
-      .then((content: string) => {
-        return {
-          content,
-          conversation,
-          from,
-        };
-      });
+    return this.decodeEvent(event).then((content: string) => {
+      return {
+        content,
+        conversation,
+        from,
+      };
+    });
   }
 
   private decodeEvent(event: ConversationEvent): Promise<string> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       switch (event.type) {
         case 'conversation.otr-message-add':
           const otrMessage: OTRMessageAdd = event as OTRMessageAdd;
-          this.decrypt(otrMessage)
-            .then((decryptedMessage: Uint8Array) => {
-              const genericMessage = this.protocolBuffers.GenericMessage.decode(decryptedMessage);
-              switch (genericMessage.content) {
-                case 'text':
-                  resolve(genericMessage.text.content);
-                  break;
-                default:
-                  resolve(undefined);
-              }
-            });
+          this.decrypt(otrMessage).then((decryptedMessage: Uint8Array) => {
+            const genericMessage = this.protocolBuffers.GenericMessage.decode(decryptedMessage);
+            switch (genericMessage.content) {
+              case 'text':
+                resolve(genericMessage.text.content);
+                break;
+              default:
+                resolve(undefined);
+            }
+          });
           break;
       }
     });
@@ -257,7 +268,7 @@ export default class Account extends EventEmitter {
   public sendTextMessage(conversationId: string, message: string): Promise<ClientMismatch> {
     const customTextMessage = this.protocolBuffers.GenericMessage.create({
       messageId: new UUID(4).format(),
-      text: this.protocolBuffers.Text.create({content: message})
+      text: this.protocolBuffers.Text.create({content: message}),
     });
 
     return this.getPreKeyBundles(conversationId)
@@ -265,7 +276,7 @@ export default class Account extends EventEmitter {
         const typedArray = this.protocolBuffers.GenericMessage.encode(customTextMessage).finish();
         return this.encrypt(typedArray, preKeyBundles);
       })
-      .then((payload) => this.sendMessage(conversationId, payload));
+      .then(payload => this.sendMessage(conversationId, payload));
   }
 
   public sendMessage(conversationId: string, recipients: OTRRecipients): Promise<ClientMismatch> {
@@ -278,14 +289,13 @@ export default class Account extends EventEmitter {
 
   // TODO: The correct functionality of this function is heavily based on the case that it always runs into the catch block
   public getPreKeyBundles(conversationId: string): Promise<ClientMismatch | UserPreKeyBundleMap> {
-    return this.apiClient.conversation.api.postOTRMessage(this.context.clientID, conversationId)
-      .catch((error) => {
-        if (error.response && error.response.status === 412) {
-          const recipients: UserClients = error.response.data.missing;
-          return this.apiClient.user.api.postMultiPreKeyBundles(recipients);
-        }
-        throw error;
-      });
+    return this.apiClient.conversation.api.postOTRMessage(this.context.clientID, conversationId).catch(error => {
+      if (error.response && error.response.status === 412) {
+        const recipients: UserClients = error.response.data.missing;
+        return this.apiClient.user.api.postMultiPreKeyBundles(recipients);
+      }
+      throw error;
+    });
   }
 
   public decrypt(event: OTRMessageAdd): Promise<Uint8Array> {

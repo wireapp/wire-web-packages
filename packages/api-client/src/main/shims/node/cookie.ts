@@ -51,7 +51,7 @@ export const retrieveCookie = (response: AxiosResponse, engine: CRUDEngine): Pro
 export const sendRequestWithCookie = (
   client: HttpClient,
   config: AxiosRequestConfig,
-  engine: CRUDEngine,
+  engine: CRUDEngine
 ): AxiosPromise => {
   return loadExistingCookie(engine).then(({isExpired, zuid}: {isExpired: string; zuid: string}) => {
     if (!isExpired) {

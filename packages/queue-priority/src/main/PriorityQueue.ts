@@ -10,7 +10,7 @@ export default class PriorityQueue<P> {
       return b.priority - a.priority;
     },
     maxRetries: Infinity,
-    retryDelay: 1000
+    retryDelay: 1000,
   };
   public isPending: boolean = false;
   private queue: Array<Item<P>> = [];
@@ -89,8 +89,10 @@ export default class PriorityQueue<P> {
   }
 
   public toString(): string {
-    return this.queue.map((item: Item<P>, index: number) => {
-      return `"${index}": ${item.fn.toString().replace(/(\r\n|\n|\r|\s+)/gm, '')}`;
-    }).join('\r\n');
+    return this.queue
+      .map((item: Item<P>, index: number) => {
+        return `"${index}": ${item.fn.toString().replace(/(\r\n|\n|\r|\s+)/gm, '')}`;
+      })
+      .join('\r\n');
   }
 }

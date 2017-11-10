@@ -35,7 +35,7 @@ function startEchoServer() {
         };
 
         client.send(JSON.stringify(payload), options);
-      }),
+      })
     );
   });
 
@@ -90,7 +90,7 @@ describe('WebSocketClient', () => {
           })
           .catch(done.fail);
       },
-      WebSocketClient.RECONNECTING_OPTIONS.maxReconnectionDelay,
+      WebSocketClient.RECONNECTING_OPTIONS.maxReconnectionDelay
     );
   });
 });

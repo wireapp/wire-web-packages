@@ -106,7 +106,7 @@ export default class ConversationAPI {
   public getConversations(
     limit: number = 100,
     conversationId?: string,
-    conversationIds?: string[],
+    conversationIds?: string[]
   ): Promise<Conversations> {
     const config: AxiosRequestConfig = {
       params: {
@@ -233,7 +233,7 @@ export default class ConversationAPI {
     params?: {
       ignore_missing?: boolean;
       report_missing?: string;
-    },
+    }
   ): Promise<ClientMismatch> {
     if (!messageData) {
       messageData = {

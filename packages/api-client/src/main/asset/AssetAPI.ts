@@ -30,7 +30,7 @@ export default class AssetAPI {
             asset_token: token,
           },
         },
-        true,
+        true
       )
       .then((response: AxiosResponse) => response.data);
   }
@@ -44,8 +44,8 @@ export default class AssetAPI {
           public: true,
           retention: AssetRetentionPolicy.PERSISTENT,
         },
-        options,
-      ),
+        options
+      )
     );
 
     let body = '';
