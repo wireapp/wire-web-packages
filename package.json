@@ -1,23 +1,32 @@
 {
   "devDependencies": {
+    "eslint-config-prettier": "2.7.0",
+    "eslint-plugin-prettier": "2.3.1",
+    "eslint-plugin-react": "7.4.0",
+    "eslint": "4.10.0",
     "husky": "0.14.3",
     "lerna": "2.5.1",
     "lint-staged": "4.3.0",
-    "prettier": "1.8.1"
+    "prettier": "1.8.2"
   },
   "lint-staged": {
-    "*.{js,ts}": [
-      "yarn lint:script",
-      "git add"
-    ]
+    "*.{js,jsx}": ["eslint -c .eslintrc.yaml --ignore-path .prettierignore --fix", "git add"],
+    "*.ts": ["prettier --writ`e", "git add"],
+    "*.json": ["prettier --write", "git add"],
+    "*.scss": ["prettier --write", "git add"]
   },
   "private": true,
   "scripts": {
     "boot": "lerna bootstrap",
     "clear": "lerna run clear",
     "dist": "lerna run dist",
-    "lint": "yarn lint:script",
-    "lint:script": "prettier --ignore-path .gitignore --write **/*.{js,ts}",
+    "fix:config": "prettier --write '**/*.json'",
+    "fix:jsscript": "npm run test -- --fix",
+    "fix:style": "prettier --write '**/*.scss'",
+    "fix:tsscript": "prettier --write '**/*.ts'",
+    "fix:script": "yarn fix:tsscript && yarn fix:jsscript",
+    "fix": "yarn fix:config && yarn fix:style && yarn fix:script",
+    "test:script": "eslint -c .eslintrc.yaml --ignore-path .gitignore --ignore-path .prettierignore '**/*.{js,jsx}'",
     "test": "lerna run test"
   },
   "workspaces": [
