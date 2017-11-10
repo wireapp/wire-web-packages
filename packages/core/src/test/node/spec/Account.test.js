@@ -1,4 +1,4 @@
-const {Account} = require('../../../../dist/commonjs/index');
+const {Account} = require('@wireapp/core');
 
 describe('Account', () => {
   describe('"constructor"', () => {
