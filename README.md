@@ -1,3 +1,3 @@
 ```javascript
-yarn && yarn bootstrap
+yarn bootstrap
 ```
