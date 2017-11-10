@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "lib": [
+      "DOM",
+      "ES6"
+    ],
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "outDir": "../../../wire-web-core/dist/commonjs",
+    "removeComments": true,
+    "rootDir": "src/main",
+    "sourceMap": false,
+    "target": "ES5"
+  },
+  "exclude": [
+    "../../../wire-web-core/dist/commonjs",
+    "node_modules"
+  ]
+}
