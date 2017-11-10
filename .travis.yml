@@ -1,0 +1,18 @@
+# http://docs.travis-ci.com/user/workers/container-based-infrastructure/
+dist: trusty
+
+language: node_js
+
+node_js:
+  - "8"
+
+# http://docs.travis-ci.com/user/build-lifecycle/
+before_install:
+  - curl https://yarnpkg.com/install.sh -sSfL | bash -s --
+  - export PATH="$HOME/.yarn/bin:$PATH"
+
+before_script:
+  - yarn boot
+
+notifications:
+  email: false
