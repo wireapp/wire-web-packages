@@ -6,19 +6,15 @@
     "prettier": "1.8.1"
   },
   "lint-staged": {
-    "*.{js,jsx,ts}": ["yarn fix:script", "git add"],
-    "*.json": ["yarn fix:config", "git add"],
-    "*.scss": ["yarn fix:style", "git add"]
+    "*.{js,ts}": ["yarn lint:script", "git add"]
   },
   "private": true,
   "scripts": {
     "boot": "lerna bootstrap",
     "clear": "lerna run clear",
     "dist": "lerna run dist",
-    "fix": "yarn fix:script && yarn fix:style && yarn fix:config",
-    "fix:config": "prettier --ignore-path .gitignore --write **/*.{json}",
-    "fix:script": "prettier --ignore-path .gitignore --write **/*.{js,jsx,ts}",
-    "fix:style": "prettier --ignore-path .gitignore --write **/*.{css,less,scss}",
+    "lint": "yarn lint:script",
+    "lint:script": "prettier --ignore-path .gitignore --write **/*.{js,ts}",
     "test": "lerna run test"
   },
   "workspaces": ["packages/*"]
