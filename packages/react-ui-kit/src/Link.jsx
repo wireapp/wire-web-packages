@@ -34,7 +34,7 @@ const Link = ({component = 'a', ...props}) => {
     &:visited,
     &:link,
     &:active {
-      color: ${props => props.color};
+      color: ${() => props.color};
     }
     &:hover {
       cursor: pointer;
