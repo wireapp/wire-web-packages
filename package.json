@@ -22,15 +22,13 @@
     "clear": "lerna run clear",
     "dist": "lerna run dist",
     "fix:config": "prettier --write '**/*.json'",
-    "fix:jsscript": "npm run test -- --fix",
+    "fix:jsscript": "npm run test:jsscript -- --fix",
     "fix:style": "prettier --write '**/*.scss'",
     "fix:tsscript": "prettier --write '**/*.ts'",
     "fix:script": "yarn fix:tsscript && yarn fix:jsscript",
     "fix": "yarn fix:config && yarn fix:style && yarn fix:script",
-    "test:script": "eslint --ignore-path .gitignore --ignore-path .prettierignore 'packages/core/**/*.{js,jsx}'",
+    "test:jsscript": "eslint --ignore-path .gitignore --ignore-path .prettierignore '**/*.{js,jsx}'",
     "test": "lerna run test"
   },
-  "workspaces": [
-    "packages/*"
-  ]
+  "workspaces": ["packages/*"]
 }

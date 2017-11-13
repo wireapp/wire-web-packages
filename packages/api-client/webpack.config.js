@@ -18,23 +18,23 @@
  */
 
 module.exports = {
-  devtool: 'cheap-module-source-map',
   devServer: {
     stats: {
       chunks: false,
     },
   },
+  devtool: 'cheap-module-source-map',
   entry: {
-    demo: `${__dirname}/src/demo/demo.js`,
     client: `${__dirname}/dist/commonjs/Client.js`,
+    demo: `${__dirname}/src/demo/demo.js`,
     test: `${__dirname}/src/test/browser/index.js`,
   },
   externals: {
     'fs-extra': '{}',
   },
   output: {
-    path: `${__dirname}/dist`,
     filename: `[name].js`,
+    path: `${__dirname}/dist`,
     publicPath: '/',
   },
 };

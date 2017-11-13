@@ -17,10 +17,10 @@
  *
  */
 
-import Client from '../../dist/commonjs/Client';
 import {AccessTokenStore} from '../../dist/commonjs/auth/';
-import {WebSocketClient} from '../../dist/commonjs/tcp/';
+import Client from '../../dist/commonjs/Client';
 import {MemoryEngine} from '@wireapp/store-engine/dist/commonjs/engine';
+import {WebSocketClient} from '../../dist/commonjs/tcp/';
 
 window.onload = function() {
   function initBackendLabel() {
