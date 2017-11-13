@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "babel-eslint": "8.0.2",
     "eslint-config-prettier": "2.7.0",
     "eslint-plugin-prettier": "2.3.1",
     "eslint-plugin-react": "7.4.0",
@@ -26,7 +27,7 @@
     "fix:tsscript": "prettier --write '**/*.ts'",
     "fix:script": "yarn fix:tsscript && yarn fix:jsscript",
     "fix": "yarn fix:config && yarn fix:style && yarn fix:script",
-    "test:script": "eslint -c .eslintrc.yaml --ignore-path .gitignore --ignore-path .prettierignore '**/*.{js,jsx}'",
+    "test:script": "eslint -c .eslintrc.yaml --ignore-path .gitignore --ignore-path .prettierignore 'packages/react-ui-kit/**/*.{js,jsx}'",
     "test": "lerna run test"
   },
   "workspaces": [
