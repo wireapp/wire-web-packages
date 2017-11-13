@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 /*
  * Wire
  * Copyright (C) 2017 Wire Swiss GmbH
@@ -22,6 +21,7 @@ const {base64MD5FromBuffer} = require('../../../../dist/commonjs/shims/node/buff
 
 describe('"base64MD5FromBuffer"', () => {
   it('can generate base64 encoded md5 hash from buffer', () => {
-    expect(base64MD5FromBuffer(new Uint8Array([8, 8]))).toBe('w+7NCDwPSCf1JgWbA7deTA==');
+    const size = 8;
+    expect(base64MD5FromBuffer(new Uint8Array([size, size]))).toBe('w+7NCDwPSCf1JgWbA7deTA==');
   });
 });
