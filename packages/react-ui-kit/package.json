@@ -1,6 +1,16 @@
 {
   "name": "@wireapp/react-ui-kit",
   "version": "0.0.1",
+  "main": "./dist/index.js",
+  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit",
+  "scripts": {
+    "clear": "rimraf dist",
+    "dist": "yarn clear && yarn babel src --out-dir dist --no-comments",
+    "start": "yarn start:demo",
+    "start:static": "gulp",
+    "start:demo": "webpack-dev-server",
+    "version": "yarn dist"
+  },
   "dependencies": {
     "color": "2.0.1",
     "gulp-concat": "2.6.1",
@@ -10,6 +20,7 @@
     "styled-normalize": "2.2.1"
   },
   "devDependencies": {
+    "babel-cli": "6.26.0",
     "babel-core": "6.26.0",
     "babel-loader": "7.1.2",
     "babel-plugin-transform-class-properties": "6.24.1",
@@ -21,15 +32,8 @@
     "gulp-plumber": "1.1.0",
     "gulp-sass": "3.1.0",
     "react-hot-loader": "3.1.2",
+    "rimraf": "2.6.2",
     "webpack": "3.8.1",
     "webpack-dev-server": "2.9.4"
-  },
-  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit",
-  "scripts": {
-    "clear": "echo \"Error: no clear specified\" && exit 1",
-    "dist": "echo \"Error: no dist specified\" && exit 1",
-    "start": "npm run start:demo",
-    "start:static": "gulp",
-    "start:demo": "webpack-dev-server"
   }
 }
