@@ -11,10 +11,11 @@
     "prettier": "1.8.2"
   },
   "lint-staged": {
-    "*.{js,jsx}": ["eslint -c .eslintrc.yaml --ignore-path .prettierignore --fix", "git add"],
-    "*.ts": ["prettier --writ`e", "git add"],
+    "*.{js,jsx}": ["eslint --ignore-path .prettierignore --fix", "git add"],
     "*.json": ["prettier --write", "git add"],
-    "*.scss": ["prettier --write", "git add"]
+    "*.md": ["prettier --write", "git add"],
+    "*.scss": ["prettier --write", "git add"],
+    "*.ts": ["prettier --write", "git add"]
   },
   "private": true,
   "scripts": {
@@ -22,12 +23,14 @@
     "clear": "lerna run clear",
     "dist": "lerna run dist",
     "fix:config": "prettier --write '**/*.json'",
-    "fix:jsscript": "npm run test:jsscript -- --fix",
+    "fix:docs": "prettier --ignore-path .gitignore --write '**/*.md'",
+    "fix:jsScript": "npm run test:jsScript -- --fix",
+    "fix:script": "yarn fix:jsScript && yarn fix:tsScript",
     "fix:style": "prettier --write '**/*.scss'",
-    "fix:tsscript": "prettier --write '**/*.ts'",
-    "fix:script": "yarn fix:tsscript && yarn fix:jsscript",
-    "fix": "yarn fix:config && yarn fix:style && yarn fix:script",
-    "test:jsscript": "eslint --ignore-path .gitignore --ignore-path .prettierignore '**/*.{js,jsx}'",
+    "fix:tsScript": "prettier --write '**/*.ts'",
+    "fix": "yarn fix:docs && yarn fix:config && yarn fix:style && yarn fix:script",
+    "precommit": "lint-staged",
+    "test:jsScript": "eslint --ignore-path .gitignore --ignore-path .prettierignore '**/*.{js,jsx}'",
     "test": "lerna run test"
   },
   "workspaces": ["packages/*"]
