@@ -31,7 +31,7 @@
     "fix": "yarn fix:docs && yarn fix:config && yarn fix:style && yarn fix:script",
     "precommit": "lint-staged",
     "test:jsScript": "eslint --ignore-path .gitignore --ignore-path .prettierignore '**/*.{js,jsx}'",
-    "test": "lerna run test"
+    "test": "yarn test:jsScript && lerna run test"
   },
   "workspaces": ["packages/*"]
 }
