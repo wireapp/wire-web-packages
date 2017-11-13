@@ -1,4 +1,3 @@
-demo/bundle.js
 node_modules/**
 packages/api-client/node_modules/**
 packages/core/node_modules/**
