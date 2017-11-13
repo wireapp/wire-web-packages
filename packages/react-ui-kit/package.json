@@ -6,22 +6,15 @@
   "scripts": {
     "clear": "rimraf dist",
     "dist": "yarn clear && yarn babel src --out-dir dist --no-comments",
-    "fix:config": "prettier --write '**/*.json'",
-    "fix:script": "npm run test -- --fix",
-    "fix:style": "prettier --write '**/*.scss'",
-    "fix": "npm run fix:config && npm run fix:style && npm run fix:script",
+    "fix:script": "yarn test --fix",
+    "fix": "yarn fix:script",
     "precommit": "lint-staged",
-    "start": "npm run start:demo",
+    "start": "yarn start:demo",
     "start:static": "gulp",
     "start:demo": "webpack-dev-server",
     "test": "eslint -c .eslintrc.yaml --ignore-path .gitignore --ignore-path .prettierignore '**/*.{js,jsx}'",
     "preversion": "yarn test",
     "version": "yarn dist"
-  },
-  "lint-staged": {
-    "*.{js,jsx}": ["eslint -c .eslintrc.yaml --ignore-path .prettierignore --fix", "git add"],
-    "*.json": ["prettier --write", "git add"],
-    "*.scss": ["prettier --write", "git add"]
   },
   "dependencies": {
     "color": "2.0.1",
