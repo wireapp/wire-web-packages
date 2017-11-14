@@ -17,8 +17,13 @@
  *
  */
 
+const webpack = require('webpack');
+
 module.exports = {
   devServer: {
+    hot: true,
+    open: true,
+    overlay: true,
     stats: {
       chunks: false,
     },
@@ -32,9 +37,22 @@ module.exports = {
   externals: {
     'fs-extra': '{}',
   },
+  module: {
+    rules: [
+      {
+        exclude: /(node_modules)/,
+        test: /\.jsx?$/,
+        use: [
+          {
+            loader: 'babel-loader',
+          },
+        ],
+      },
+    ],
+  },
   output: {
-    filename: `[name].js`,
-    path: `${__dirname}/dist`,
+    filename: `dist/[name].js`,
     publicPath: '/',
   },
+  plugins: [new webpack.HotModuleReplacementPlugin()],
 };
