@@ -28,6 +28,6 @@ export * from './Form';
 export * from './Grid';
 export * from './Identity';
 export * from './Progress';
-export * from './Text';
+export * from './Text2';
 
 export {COLOR} from './variables';

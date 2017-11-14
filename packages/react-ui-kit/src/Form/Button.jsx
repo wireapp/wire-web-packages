@@ -19,7 +19,7 @@
 
 import {COLOR} from '../variables';
 import PropTypes from 'prop-types';
-import {Text} from '../Text';
+import {Text} from '../Text2';
 import {transition} from '../mixins';
 
 const Button = Text.withComponent('button').extend`
