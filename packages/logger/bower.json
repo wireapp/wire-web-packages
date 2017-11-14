@@ -1,0 +1,18 @@
+{
+  "name": "webapp-module-logger",
+  "main": "dist/js/Logger.js",
+  "keywords": [
+    "logger"
+  ],
+  "devDependencies": {
+    "amplify": "https://github.com/wireapp/amplify.git#1.1.4",
+    "moment": "~2"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

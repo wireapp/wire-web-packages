@@ -12,6 +12,8 @@ before_install:
   - export PATH="$HOME/.yarn/bin:$PATH"
 
 before_script:
+  - npm install -g grunt-cli
+  - npm install -g bower
   - yarn boot
 
 notifications:

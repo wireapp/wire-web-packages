@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<!-- Wire, Copyright (C) 2017 Wire Swiss GmbH -->
+<html>
+  <head lang="en">
+    <meta charset="UTF-8">
+    <script src="/bower_components/moment/moment.js"></script>
+    <script src="/bower_components/amplify/lib/amplify.js"></script>
+    <script src="/dist/js/Logger.js"></script>
+  </head>
+  <body>
+    <p>Demo page!</p>
+    <p>Check the browser's JavaScript console. :)</p>
+    <!-- Livereload -->
+    <script>
+      if (window.location.hostname === 'localhost') {
+        var livereload = document.createElement('script');
+        livereload.id = 'livereload';
+        livereload.src = '//localhost:35729/livereload.js';
+        document.body.appendChild(livereload);
+        console.info('Live Reload enabled.');
+      }
+    </script>
+    <!-- Demo -->
+    <script src="/demo/js/demo.js"></script>
+  </body>
+</html>
