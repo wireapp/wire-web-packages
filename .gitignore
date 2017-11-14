@@ -8,5 +8,7 @@ lerna-debug.log
 node_modules
 npm-debug.log*
 package-lock.json
+packages/logger/demo/js
+packages/logger/test/js
 temp
 yarn-error.log
