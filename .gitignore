@@ -10,3 +10,4 @@ npm-debug.log*
 package-lock.json
 temp
 yarn-error.log
+*hot-update.js*

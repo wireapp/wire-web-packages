@@ -32,8 +32,6 @@ import {
   Link,
   Logo,
   Text,
-  normalizeStyles,
-  baseStyles,
 } from '@wireapp/react-ui-kit';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
@@ -119,7 +117,5 @@ window.onload = function() {
   });
   window.wire = Object.assign({}, {client});
 
-  normalizeStyles();
-  baseStyles();
   ReactDOM.render(<Auth />, document.getElementById('app'));
 };
