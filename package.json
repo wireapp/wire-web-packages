@@ -15,7 +15,7 @@
     "dist": "lerna run dist",
     "lint": "yarn lint:script",
     "lint:script": "prettier --ignore-path .gitignore --write **/*.{js,ts}",
-    "test": "lerna run test"
+    "test": "lerna run dist && lerna run test"
   },
   "workspaces": ["packages/*"]
 }
