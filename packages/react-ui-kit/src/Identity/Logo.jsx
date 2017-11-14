@@ -18,10 +18,10 @@
  */
 
 import styled, {css} from 'styled-components';
-import {COLOR} from './variables';
+import {COLOR} from '../variables';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {transition} from './mixins';
+import {transition} from '../mixins';
 
 const width = 57;
 const height = 18;

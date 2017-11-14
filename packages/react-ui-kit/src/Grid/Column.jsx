@@ -17,21 +17,35 @@
  *
  */
 
-import {COLOR} from './variables';
-import PropTypes from 'prop-types';
+import {SIZE} from '../variables';
+import {media} from '../mixins';
 import styled from 'styled-components';
 
-const Line = styled.hr`
-  border: none;
-  border-bottom: 1px solid ${props => props.color};
+const Columns = styled.div`
+  display: flex;
+  ${media.mobile`
+    flex-direction: column;
+  `};
 `;
 
-Line.propTypes = {
-  color: PropTypes.string,
-};
+const Column = styled.div`
+  display: block;
+  flex-grow: 1;
+  flex-basis: 0;
+  flex-shrink: 1;
+  padding: 0 ${SIZE.GUTTER}px;
+  &:first-child {
+    padding-left: 0;
+  }
+  &:last-child {
+    padding-right: 0;
+  }
 
-Line.defaultProps = {
-  color: COLOR.GRAY_LIGHTEN_88,
-};
+  ${media.mobile`
+    &, &:first-child, &:last-child{
+      padding: 0;
+    }
+  `};
+`;
 
-export {Line};
+export {Column, Columns};

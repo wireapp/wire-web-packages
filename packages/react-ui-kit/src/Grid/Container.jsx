@@ -20,8 +20,8 @@
 /* eslint-disable no-magic-numbers */
 
 import styled, {css} from 'styled-components';
-import {SIZE} from './variables';
-import {media} from './mixins';
+import {SIZE} from '../variables';
+import {media} from '../mixins';
 
 const Container = styled.div`
   position: relative;

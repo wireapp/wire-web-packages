@@ -17,7 +17,7 @@
  *
  */
 
-import {COLOR} from './variables';
+import {COLOR} from '../variables';
 import {Input} from './Input';
 import PropTypes from 'prop-types';
 import React from 'react';

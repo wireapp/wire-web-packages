@@ -66,7 +66,6 @@ export default function Demo() {
           <Loading progress={0.66} />
         </Column>
       </Columns>
-
       <H1>Grid</H1>
       <Line />
       <ContainerXS>

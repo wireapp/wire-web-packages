@@ -17,10 +17,10 @@
  *
  */
 
-import {COLOR} from './variables';
+import {COLOR} from '../variables';
 import React from 'react';
 import {Text} from './Text';
-import {transition} from './mixins';
+import {transition} from '../mixins';
 
 const Link = ({component = 'a', ...props}) => {
   const StyledLink = Text.withComponent(component).extend`

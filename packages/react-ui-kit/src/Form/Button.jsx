@@ -17,10 +17,10 @@
  *
  */
 
-import {COLOR} from './variables';
+import {COLOR} from '../variables';
 import PropTypes from 'prop-types';
-import {Text} from './Text';
-import {transition} from './mixins';
+import {Text} from '../Text';
+import {transition} from '../mixins';
 
 const Button = Text.withComponent('button').extend`
   /* appearance */
