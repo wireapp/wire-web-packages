@@ -1,0 +1,23 @@
+{
+  "devDependencies": {
+    "bower": "1.8.2",
+    "grunt": "1.0.1",
+    "grunt-contrib-clean": "1.1.0",
+    "grunt-contrib-coffee": "1.0.0",
+    "grunt-contrib-connect": "1.0.2",
+    "grunt-contrib-copy": "1.0.0",
+    "grunt-contrib-jasmine": "1.1.0",
+    "grunt-contrib-less": "1.4.1",
+    "grunt-contrib-watch": "1.0.0",
+    "grunt-open": "0.2.3",
+    "load-grunt-tasks": "3.5.2"
+  },
+  "files": ["app/script/", "app/style/", "dist/script/", "dist/style/"],
+  "license": "GPL-3.0",
+  "name": "@wireapp/modal",
+  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/modal",
+  "scripts": {
+    "start": "bower install && grunt"
+  },
+  "version": "1.0.2"
+}

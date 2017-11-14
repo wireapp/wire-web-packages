@@ -1,0 +1,101 @@
+/*
+ * Wire
+ * Copyright (C) 2016 Wire Swiss GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see http://www.gnu.org/licenses/.
+ *
+ */
+
+@bg-color:            #fff;
+@bg-overlay-color:    fade(#000, 64%);
+
+@modal-ease-in-expo:    cubic-bezier(0.600, 0.040, 0.980, 0.335);
+@modal-ease-out-expo:   cubic-bezier(0.190, 1.000, 0.220, 1.000);
+@modal-ease-out-quart:  cubic-bezier(0.165, 0.840, 0.440, 1.000);
+
+.modal {
+  align-items: center;
+  justify-content: center;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  &.modal-show {
+    display: flex;
+  }
+
+  &:before {
+    // close
+    transition-property: opacity;
+    transition-duration: .55s;
+    transition-delay: .35s;
+    transition-timing-function: @modal-ease-out-quart;
+    background-color: @bg-overlay-color;
+    opacity: 0;
+
+    content: " ";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  // open
+  &.modal-fadein {
+
+    &:before {
+      transition-property: opacity;
+      transition-duration: .35s;
+      transition-delay: 0s;
+      transition-timing-function: @modal-ease-out-quart;
+      opacity: 1;
+    }
+
+    .modal-content {
+      .modal-content-anim-open();
+    }
+  }
+
+  .modal-content {
+    // close
+    .modal-content-anim-close();
+    display: block;
+    background-color: @bg-color;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+}
+
+// mixings
+.modal-content-anim-close {
+  transition-property: transform, opacity;
+  transition-duration: .35s, .35s;
+  transition-delay: 0s, 0s;
+  transition-timing-function: @modal-ease-in-expo, @modal-ease-in-expo;
+  transform: scale(.88);
+  opacity: 0;
+}
+
+.modal-content-anim-open {
+  transition-property: transform, opacity;
+  transition-duration: .55s, .55s;
+  transition-delay: .15s, .15s;
+  transition-timing-function: @modal-ease-out-expo, @modal-ease-out-expo;
+  transform: scale(1);
+  opacity: 1;
+}
