@@ -50,7 +50,7 @@ LoadingComponent.propTypes = {
 
 const fillAnimation = keyframes`
   0% {
-    stroke-dashoffset: ${pathLength * 2};
+    stroke-dashoffset: ${pathLength + pathLength};
   }
   100% {
     stroke-dashoffset: 0;
