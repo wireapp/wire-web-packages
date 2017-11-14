@@ -21,6 +21,9 @@ import {COLOR, FONT} from './variables';
 import {css} from 'styled-components';
 
 export default css`
+  * {
+    box-sizing: border-box;
+  }
   body {
     font-family: ${FONT.fontFamily};
     font-weight: 300;
@@ -28,8 +31,5 @@ export default css`
     line-height: 1.5;
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
-  }
-  * {
-    box-sizing: border-box;
   }
 `;
