@@ -14,8 +14,8 @@
   },
   "files": ["app/script/", "app/style/", "dist/script/", "dist/style/"],
   "license": "GPL-3.0",
-  "name": "@wireapp/modal",
-  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/modal",
+  "name": "@wireapp/jquery-modal",
+  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/jquery-modal",
   "scripts": {
     "start": "bower install && grunt"
   },

@@ -1,6 +1,6 @@
 {
-  "name": "webapp-module-modal",
-  "main": "./coffee/webapp-module-modal.coffee",
+  "name": "jquery-modal",
+  "main": "./coffee/jquery-modal.coffee",
   "ignore": [
     "bower.json",
     "bower_components",
@@ -26,6 +26,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wireapp/webapp-module-modal"
+    "url": "https://github.com/wireapp/wire-web-packages/tree/master/packages/jquery-modal"
   }
 }
