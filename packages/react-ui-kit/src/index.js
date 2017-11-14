@@ -21,8 +21,8 @@ import baseStyle from './Base';
 import {injectGlobal} from 'styled-components';
 import styledNormalize from 'styled-normalize';
 
-injectGlobal`${styledNormalize}`;
-injectGlobal`${baseStyle}`;
+injectGlobal([styledNormalize]);
+injectGlobal([baseStyle]);
 
 export * from './Button';
 export * from './Heading';
