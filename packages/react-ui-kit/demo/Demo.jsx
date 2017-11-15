@@ -40,14 +40,10 @@ import {
   Text,
   Uppercase,
 } from '../src/';
-import {Column, Columns} from '@wireapp/react-ui-kit/Grid';
-import {H1, H2, H3, H4, Heading} from '@wireapp/react-ui-kit/dist/Text2';
+import {Column, Columns} from '@wireapp/react-ui-kit/dist/Grid';
+import {H1, H2, H3, H4, Heading} from '@wireapp/react-ui-kit/dist/Text';
 import Color from 'color';
 import React from 'react';
-
-import * as everything from '@wireapp/react-ui-kit';
-
-console.log(everything);
 
 export default function Demo() {
   return (
