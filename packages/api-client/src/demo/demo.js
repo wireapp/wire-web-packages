@@ -33,8 +33,8 @@ class Auth extends Component {
     this.state = {
       authenticated: false,
       login: {
-        email: window.wire.email,
-        password: window.wire.password,
+        email: '',
+        password: '',
         persist: false,
       },
     };
@@ -94,7 +94,6 @@ class Auth extends Component {
     );
   }
 }
-
 window.onload = function() {
   const config = {store: new MemoryEngine('wire-demo'), urls: BACKEND_ENV};
   const client = new Client(config);
@@ -105,5 +104,6 @@ window.onload = function() {
     console.log('Acquired AccessToken', accessToken);
   });
   window.wire = Object.assign({}, {client});
+
   ReactDOM.render(<Auth />, document.getElementById('app'));
 };
