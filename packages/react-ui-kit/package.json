@@ -33,7 +33,7 @@
     "webpack-dev-server": "2.9.4"
   },
   "license": "GPL-3.0",
-  "main": "./src/index.js",
+  "main": "./dist/index.js",
   "name": "@wireapp/react-ui-kit",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit",
   "scripts": {
