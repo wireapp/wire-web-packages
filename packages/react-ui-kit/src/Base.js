@@ -17,7 +17,8 @@
  *
  */
 
-import {COLOR, FONT} from './variables';
+import {COLOR} from './Identity';
+import {FONT} from './variables';
 import {css} from 'styled-components';
 
 export default css`

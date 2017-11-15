@@ -18,7 +18,7 @@
  */
 
 import styled, {css} from 'styled-components';
-import {COLOR} from '../variables';
+import {COLOR} from './colors';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {transition} from '../mixins';

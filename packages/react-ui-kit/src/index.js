@@ -29,5 +29,3 @@ export * from './Grid';
 export * from './Identity';
 export * from './Progress';
 export * from './Text';
-
-export {COLOR} from './variables';

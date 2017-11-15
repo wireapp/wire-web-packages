@@ -17,7 +17,7 @@
  *
  */
 
-import {COLOR} from '../variables';
+import {COLOR} from '../Identity';
 import React from 'react';
 import {Text} from './Text';
 import {transition} from '../mixins';

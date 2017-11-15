@@ -17,7 +17,7 @@
  *
  */
 
-import {COLOR} from '../variables';
+import {COLOR} from '../Identity';
 import PropTypes from 'prop-types';
 import {Text} from '../Text';
 import {transition} from '../mixins';
