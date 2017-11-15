@@ -148,8 +148,11 @@ export default class Account extends EventEmitter {
       .catch((error: Error) => this.apiClient.login(this.loginData))
       .then((context: Context) => {
         if (initClient) {
-          this.initClient(context).then(client => (this.apiClient.context.clientID = client.id));
+          return this.initClient(context).then(client => {
+            this.apiClient.context.clientID = client.id;
+          });
         }
+        return undefined;
       })
       .then(() => {
         this.context = this.apiClient.context;
