@@ -17,7 +17,7 @@
  *
  */
 
-import {SIZE} from './variables';
+import SIZE from './Grid/sizes';
 import {css} from 'styled-components';
 
 export const media = {

@@ -18,7 +18,6 @@
  */
 
 import {COLOR} from './Identity';
-import {FONT} from './variables';
 import {css} from 'styled-components';
 
 export default css`
@@ -26,7 +25,7 @@ export default css`
     box-sizing: border-box;
   }
   body {
-    font-family: ${FONT.fontFamily};
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif;
     font-weight: 300;
     color: ${COLOR.GRAY_DARKEN_72};
     line-height: 1.5;

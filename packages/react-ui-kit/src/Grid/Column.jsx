@@ -17,7 +17,7 @@
  *
  */
 
-import {SIZE} from '../variables';
+import SIZE from './sizes';
 import {media} from '../mixins';
 import styled from 'styled-components';
 

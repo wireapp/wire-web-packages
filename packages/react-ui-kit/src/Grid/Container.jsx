@@ -20,7 +20,7 @@
 /* eslint-disable no-magic-numbers */
 
 import styled, {css} from 'styled-components';
-import {SIZE} from '../variables';
+import SIZE from './sizes';
 import {media} from '../mixins';
 
 const Container = styled.div`

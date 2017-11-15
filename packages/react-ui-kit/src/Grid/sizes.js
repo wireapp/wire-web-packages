@@ -19,11 +19,7 @@
 
 /* eslint-disable sort-keys, sort-vars, no-magic-numbers */
 
-export const FONT = {
-  fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif',
-};
-
-export const SIZE = {
+export default {
   GUTTER: 12,
   MOBILE: 480,
   TABLET_MIN: 640,
