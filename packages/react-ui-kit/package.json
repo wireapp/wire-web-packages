@@ -31,15 +31,9 @@
   "scripts": {
     "clear": "rimraf dist",
     "dist": "yarn clear && yarn babel src --out-dir dist --no-comments",
-    "fix:script": "yarn test --fix",
-    "fix": "yarn fix:script",
-    "precommit": "lint-staged",
-    "prepare": "yarn dist && node scripts/prepare.js",
     "start": "yarn start:demo",
     "start:static": "gulp",
     "start:demo": "webpack-dev-server",
-    "test": "eslint -c .eslintrc.yaml --ignore-path .gitignore --ignore-path .prettierignore '**/*.{js,jsx}'",
-    "preversion": "yarn test",
     "version": "yarn dist"
   },
   "version": "0.0.1"
