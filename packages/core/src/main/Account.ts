@@ -75,7 +75,7 @@ export default class Account extends EventEmitter {
     });
   }
 
-  public sanitizeLoginData(loginData: LoginData): LoginData {
+  private sanitizeLoginData(loginData: LoginData): LoginData {
     const removeNonPrintableCharacters = new RegExp('[^\x20-\x7E]+', 'gm');
 
     if (loginData.email) {
