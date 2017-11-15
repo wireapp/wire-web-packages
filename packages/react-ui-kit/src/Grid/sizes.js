@@ -19,8 +19,7 @@
 
 /* eslint-disable sort-keys, sort-vars, no-magic-numbers */
 
-export default {
-  GUTTER: 12,
+export const WIDTH = {
   MOBILE: 480,
   TABLET_MIN: 640,
   TABLET_MAX: 919,
@@ -29,3 +28,5 @@ export default {
   DESKTOP_XL_MIN: 1201,
   DESKTOP_XL_MAX: 1600,
 };
+
+export const GUTTER = 12;

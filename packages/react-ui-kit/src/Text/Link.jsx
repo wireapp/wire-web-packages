@@ -20,14 +20,14 @@
 import {COLOR} from '../Identity';
 import React from 'react';
 import {Text} from './Text';
-import {transition} from '../mixins';
+import {defaultTransition} from '../Identity/motions';
 
 const Link = ({component = 'a', ...props}) => {
   const StyledLink = Text.withComponent(component).extend`
     /* appearance */
     font-weight: 400;
     text-decoration: none;
-    ${transition}
+    ${defaultTransition}
 
     /* positioning */
 

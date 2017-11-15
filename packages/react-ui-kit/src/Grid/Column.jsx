@@ -17,8 +17,8 @@
  *
  */
 
-import SIZE from './sizes';
-import {media} from '../mixins';
+import {GUTTER} from './sizes';
+import media from '../mediaQueries';
 import styled from 'styled-components';
 
 const Columns = styled.div`
@@ -33,7 +33,7 @@ const Column = styled.div`
   flex-grow: 1;
   flex-basis: 0;
   flex-shrink: 1;
-  padding: 0 ${SIZE.GUTTER}px;
+  padding: 0 ${GUTTER}px;
   &:first-child {
     padding-left: 0;
   }
