@@ -12,3 +12,4 @@ packages/logger/demo/js
 packages/logger/test/js
 temp
 yarn-error.log
+*hot-update.js*
