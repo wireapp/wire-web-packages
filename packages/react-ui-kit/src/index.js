@@ -17,12 +17,9 @@
  *
  */
 
-import baseStyle from './Base';
-import {injectGlobal} from 'styled-components';
-import styledNormalize from 'styled-normalize';
+import setGlobalStyles from './globalStyles';
 
-injectGlobal([styledNormalize]);
-injectGlobal([baseStyle]);
+setGlobalStyles();
 
 export * from './Form';
 export * from './Grid';
