@@ -13,9 +13,7 @@
     "grunt-open": "0.2.3",
     "load-grunt-tasks": "3.5.2"
   },
-  "files": [
-    "dist/"
-  ],
+  "files": ["dist/"],
   "license": "GPL-3.0",
   "name": "logger",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/logger",

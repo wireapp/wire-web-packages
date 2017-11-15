@@ -35,14 +35,13 @@ ERROR: -> 1000  # SEVERE
 
 ## Recommended usage of log levels
 
-- **OFF** — If you don't want to receive any log messages
-- **LEVEL_1** — For function calls (right at the beginning of a function)
-- **LEVEL_2** — For callbacks of a function call (success or error)
-- **LEVEL_3** — For conclusions from values and states (sentences like "Because the number is 5 we have...")
-- **INFO** — Info that could be relevant to end users (like IDs which they need to tell to customer support)
-- **WARN** — Errors in an application which __reduce__ the user experience
-- **ERROR** — Error in an application which __destroy__ the user experience
-
+* **OFF** — If you don't want to receive any log messages
+* **LEVEL_1** — For function calls (right at the beginning of a function)
+* **LEVEL_2** — For callbacks of a function call (success or error)
+* **LEVEL_3** — For conclusions from values and states (sentences like "Because the number is 5 we have...")
+* **INFO** — Info that could be relevant to end users (like IDs which they need to tell to customer support)
+* **WARN** — Errors in an application which **reduce** the user experience
+* **ERROR** — Error in an application which **destroy** the user experience
 
 ## Usage
 
