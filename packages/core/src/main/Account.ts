@@ -41,7 +41,7 @@ import Client = require('@wireapp/api-client');
 import EventEmitter = require('events');
 
 export default class Account extends EventEmitter {
-  private apiClient: Client;
+  public apiClient: Client;
   private client: RegisteredClient;
   public context: Context;
   private cryptobox: Cryptobox;
@@ -132,23 +132,29 @@ export default class Account extends EventEmitter {
       .then(() => this.client);
   }
 
-  private initClient(context: Context): Promise<RegisteredClient> {
+  private initClient(context: Context, shouldRegisterNewClient: boolean): Promise<RegisteredClient> {
     this.context = context;
     return this.loadExistingClient().catch(error => {
       if (error instanceof RecordNotFoundError) {
-        return this.registerNewClient();
+        if (shouldRegisterNewClient) {
+          return this.registerNewClient();
+        } else {
+          return undefined;
+        }
       }
       throw error;
     });
   }
 
-  public login(): Promise<Context> {
+  public login(shouldRegisterNewClient: boolean = true): Promise<Context> {
     return this.apiClient
       .init()
       .catch((error: Error) => this.apiClient.login(this.loginData))
-      .then((context: Context) => this.initClient(context))
+      .then((context: Context) => this.initClient(context, shouldRegisterNewClient))
       .then((client: RegisteredClient) => {
-        this.apiClient.context.clientID = client.id;
+        if (client) {
+          this.apiClient.context.clientID = client.id;
+        }
         this.context = this.apiClient.context;
         return loadProtocolBuffers();
       })

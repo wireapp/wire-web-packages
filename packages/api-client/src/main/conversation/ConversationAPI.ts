@@ -253,6 +253,9 @@ export default class ConversationAPI {
       report_missing?: string;
     }
   ): Promise<ClientMismatch> {
+    if (!clientId) {
+      throw new Error('Unable to send OTR message without clientID');
+    }
     if (!messageData) {
       messageData = {
         recipients: {},
