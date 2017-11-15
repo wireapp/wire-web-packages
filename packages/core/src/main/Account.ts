@@ -132,29 +132,26 @@ export default class Account extends EventEmitter {
       .then(() => this.client);
   }
 
-  private initClient(context: Context, shouldRegisterNewClient: boolean): Promise<RegisteredClient> {
+  private initClient(context: Context): Promise<RegisteredClient> {
     this.context = context;
     return this.loadExistingClient().catch(error => {
       if (error instanceof RecordNotFoundError) {
-        if (shouldRegisterNewClient) {
-          return this.registerNewClient();
-        } else {
-          return undefined;
-        }
+        return this.registerNewClient();
       }
       throw error;
     });
   }
 
-  public login(shouldRegisterNewClient: boolean = true): Promise<Context> {
+  public login(initClient: boolean = true): Promise<Context> {
     return this.apiClient
       .init()
       .catch((error: Error) => this.apiClient.login(this.loginData))
-      .then((context: Context) => this.initClient(context, shouldRegisterNewClient))
-      .then((client: RegisteredClient) => {
-        if (client) {
-          this.apiClient.context.clientID = client.id;
+      .then((context: Context) => {
+        if (initClient) {
+          this.initClient(context).then(client => (this.apiClient.context.clientID = client.id));
         }
+      })
+      .then(() => {
         this.context = this.apiClient.context;
         return loadProtocolBuffers();
       })
