@@ -44,6 +44,7 @@ export default class AuthAPI {
       params: {},
       url: AuthAPI.URL.COOKIES,
     };
+
     if (labels) {
       config.params.labels = labels.join(',');
     }
