@@ -1,0 +1,6 @@
+node_modules/**
+packages/api-client/node_modules/**
+packages/core/node_modules/**
+packages/queue-priority/dist/test-bundle.js
+packages/queue-priority/node_modules/**
+packages/react-ui-kit/node_modules/**
