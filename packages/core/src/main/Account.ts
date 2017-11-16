@@ -82,13 +82,14 @@ export default class Account extends EventEmitter {
       loginData.email = loginData.email.replace(removeNonPrintableCharacters, '');
     }
 
+    if (loginData.handle) {
+      loginData.handle = loginData.handle.replace(removeNonPrintableCharacters, '');
+    }
+
     if (loginData.password) {
       loginData.password = loginData.password.toString().replace(removeNonPrintableCharacters, '');
     }
 
-    if (loginData.handle) {
-      loginData.handle = loginData.handle.replace(removeNonPrintableCharacters, '');
-    }
     return {
       ...loginData,
       persist: !(this.storeEngine instanceof MemoryEngine),
