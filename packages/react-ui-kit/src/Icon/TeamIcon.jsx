@@ -23,7 +23,7 @@ import React from 'react';
 const width = 28;
 const height = 31;
 
-function Team({color, scale}) {
+function TeamIcon({color, scale}) {
   const scaledWidth = scale * width;
   const scaledHeight = scale * height;
   return (
@@ -36,14 +36,14 @@ function Team({color, scale}) {
   );
 }
 
-Team.propTypes = {
+TeamIcon.propTypes = {
   color: PropTypes.string,
   scale: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 };
 
-Team.defaultProps = {
+TeamIcon.defaultProps = {
   color: '#000',
   scale: 1,
 };
 
-export {Team};
+export {TeamIcon};

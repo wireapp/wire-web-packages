@@ -22,7 +22,7 @@ import React from 'react';
 
 const size = 31;
 
-function Profile({color, scale}) {
+function ProfileIcon({color, scale}) {
   const scaledSize = scale * size;
   return (
     <svg width={`${scaledSize}`} height={`${scaledSize}`} viewBox="0 0 31 31">
@@ -34,14 +34,14 @@ function Profile({color, scale}) {
   );
 }
 
-Profile.propTypes = {
+ProfileIcon.propTypes = {
   color: PropTypes.string,
   scale: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 };
 
-Profile.defaultProps = {
+ProfileIcon.defaultProps = {
   color: '#000',
   scale: 1,
 };
 
-export {Profile};
+export {ProfileIcon};
