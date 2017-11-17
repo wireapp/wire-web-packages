@@ -17,6 +17,7 @@
  *
  */
 
+const bazinga64 = require('bazinga64');
 const cryptobox = require('wire-webapp-cryptobox');
 const Proteus = require('wire-webapp-proteus');
 const {crypto} = require('@wireapp/core');
@@ -28,19 +29,16 @@ let bob;
 
 describe('CryptographyService', () => {
   beforeEach((done) => {
-    const config = {
-      store: new MemoryEngine('alice'),
-    };
-    cryptographyService = new crypto.CryptographyService(config);
-    cryptographyService.cryptobox.create().then((preKeys) => {
-      aliceLastResortPreKey = preKeys[Proteus.keys.PreKey.MAX_PREKEY_ID];
-      
-      const storageEngine = new MemoryEngine('bob');
-      const cryptoboxStore = new cryptobox.store.CryptoboxCRUDStore(storageEngine);
-      bob = new cryptobox.Cryptobox(cryptoboxStore);
-      
-      done();
-    });
+    cryptographyService = new crypto.CryptographyService({store: new MemoryEngine('alice')});
+    cryptographyService.cryptobox.create()
+      .then((preKeys) => {
+        aliceLastResortPreKey = preKeys.filter((preKey) => (preKey.key_id === Proteus.keys.PreKey.MAX_PREKEY_ID))[0];
+        const storageEngine = new MemoryEngine('bob');
+        const cryptoboxStore = new cryptobox.store.CryptoboxCRUDStore(storageEngine);
+        bob = new cryptobox.Cryptobox(cryptoboxStore);
+        return bob.create();
+      })
+      .then((done));
   });
   
   describe('"constructor"', () => {
@@ -60,15 +58,20 @@ describe('CryptographyService', () => {
     });
   });
   
-  xdescribe('"decrypt"', () => {
+  describe('"decrypt"', () => {
     it('creates an instance', (done) => {
-      const from = 'afbb5d60-1187-4385-9c29-7361dea79647';
-      const sender = '85f9cdd3192e0159';
-      const text = 'owABAaEAWCCBbsXWbIFm08+6F8NNbcmo3/t0uNDPMPNNii9OFDj/jQJYuwKkAAABoQBYIBv5a2HgvG7AZCWCWklQd3KpIngF47fTc9AhwUOw3NqIAqEAoQBYIPEwuJe1+E6KjebmEAE6H0Bnc22FpZURY0qoKKM1+AqBA6UAUHAVdJh1DZ17vRlXKSsN0t8BAAIAA6EAWCB291yR0iUw+G42r3+OcVvilfcazK6DMlnRr1D6KidzpgRYK/qPH+i4bYP/rthWxO3bIn6q+ZC90OhN+k+NioF6b/TT9h+kp1tfFjRX/Ho=';
-      const sessionId = cryptographyService.constructSessionId(from, sender);
-      cryptographyService.decrypt(sessionId, text)
-        .then((decryptedMessage) => {
-          expect(decryptedMessage).toBeDefined();
+      const alicePublicKey = cryptographyService.cryptobox.identity.public_key;
+      const publicPreKeyBundle = Proteus.keys.PreKeyBundle.new(alicePublicKey, aliceLastResortPreKey);
+      const text = 'Hello Alice!';
+      bob.encrypt('alice-user-id@alice-client-id', text, publicPreKeyBundle.serialise())
+        .then((encryptedPreKeyMessage) => {
+          const encodedPreKeyMessage = bazinga64.Encoder.toBase64(encryptedPreKeyMessage).asString;
+          return cryptographyService.decrypt('bob-user-id@bob-client-id', encodedPreKeyMessage);
+        })
+        .then((decodedMessageBuffer) => {
+          const plaintext = Buffer.from(decodedMessageBuffer).toString('utf8');
+          expect(plaintext).toBe(text);
+          done();
         })
         .catch(done.fail);
     });
