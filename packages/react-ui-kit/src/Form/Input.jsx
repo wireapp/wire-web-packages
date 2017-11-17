@@ -38,15 +38,18 @@ const Input = styled.input`
   &::-webkit-input-placeholder {
     /* WebKit, Blink, Edge */
     color: ${COLOR.GRAY_LIGHTEN_24};
+    text-transform: uppercase;
   }
   &::-ms-input-placeholder {
     /* Microsoft Edge */
     color: ${COLOR.GRAY_LIGHTEN_24};
+    text-transform: uppercase;
   }
   &::-moz-placeholder {
     /* Mozilla Firefox 19+ */
     color: ${COLOR.GRAY_LIGHTEN_24};
     opacity: 1;
+    text-transform: uppercase;
   }
   &:invalid {
     box-shadow: none;
