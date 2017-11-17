@@ -18,9 +18,11 @@
  */
 
 import {COLOR} from '../Identity';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const StyledApp = styled.div`
+  background-color: ${props => props.backgroundColor};
   color: ${COLOR.GRAY_DARKEN_48};
   display: flex;
   flex-direction: column;
@@ -34,5 +36,13 @@ const StyledApp = styled.div`
     box-sizing: border-box;
   }
 `;
+
+StyledApp.propTypes = {
+  backgroundColor: PropTypes.string,
+};
+
+StyledApp.defaultProps = {
+  backgroundColor: '#fafafa',
+};
 
 export {StyledApp};
