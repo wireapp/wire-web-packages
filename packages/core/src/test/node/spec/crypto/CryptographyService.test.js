@@ -59,7 +59,7 @@ describe('CryptographyService', () => {
   });
   
   describe('"decrypt"', () => {
-    it('creates an instance', (done) => {
+    it('decrypts a Base64-encoded cipher message.', (done) => {
       const alicePublicKey = cryptographyService.cryptobox.identity.public_key;
       const publicPreKeyBundle = Proteus.keys.PreKeyBundle.new(alicePublicKey, aliceLastResortPreKey);
       const text = 'Hello Alice!';
@@ -74,6 +74,17 @@ describe('CryptographyService', () => {
           done();
         })
         .catch(done.fail);
+    });
+  });
+  
+  describe('"dismantleSessionId"', () => {
+    it('gets User ID and Client ID from a Session ID.', () => {
+      const clientId = '1ceb9063fced26d3';
+      const userId = 'afbb5d60-1187-4385-9c29-7361dea79647';
+      const sessionId = cryptographyService.constructSessionId(userId, clientId);
+      const [actualUserId, actualClientId] = cryptographyService.dismantleSessionId(sessionId);
+      expect(actualClientId).toBe(clientId);
+      expect(actualUserId).toBe(userId);
     });
   });
 });
