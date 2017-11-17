@@ -3,6 +3,7 @@ import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
 import {Cryptobox, store} from 'wire-webapp-cryptobox';
 import {Decoder, Encoder} from 'bazinga64';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/';
+import {PreKey} from '@wireapp/api-client/dist/commonjs/auth/';
 import {
   ClientMismatch,
   NewOTRMessage,
@@ -11,6 +12,11 @@ import {
 } from '@wireapp/api-client/dist/commonjs/conversation/';
 import SessionPayloadBundle from './SessionPayloadBundle';
 
+/**
+ * CryptographyService operates the Cryptobox and manages encryption and decryption.
+ * It doesn't know about the format of Wire's backend payloads.
+ * @constructor
+ */
 export default class CryptographyService {
   public cryptobox: Cryptobox;
 
@@ -38,13 +44,10 @@ export default class CryptographyService {
     for (const userId in preKeyBundles) {
       recipients[userId] = {};
       for (const clientId in preKeyBundles[userId]) {
-        const preKeyPayload = preKeyBundles[userId][clientId];
-        const preKey = preKeyPayload.key;
-
+        const preKeyPayload: PreKey = preKeyBundles[userId][clientId];
+        const preKey: string = preKeyPayload.key;
         const sessionId: string = this.constructSessionId(userId, clientId);
-        const decodedPreKeyBundle: Uint8Array = Decoder.fromBase64(preKey).asBytes;
-
-        encryptions.push(this.encryptPayloadForSession(sessionId, typedArray, decodedPreKeyBundle));
+        encryptions.push(this.encryptPayloadForSession(sessionId, typedArray, preKey));
       }
     }
 
@@ -67,7 +70,8 @@ export default class CryptographyService {
 
   private encryptPayloadForSession(sessionId: string,
                                    typedArray: Uint8Array,
-                                   decodedPreKeyBundle: Uint8Array): Promise<SessionPayloadBundle> {
+                                   encodedPreKey: string): Promise<SessionPayloadBundle> {
+    const decodedPreKeyBundle: Uint8Array = Decoder.fromBase64(encodedPreKey).asBytes;
     return this.cryptobox
       .encrypt(sessionId, typedArray, decodedPreKeyBundle.buffer)
       .then(encryptedPayload => Encoder.toBase64(encryptedPayload).asString)
