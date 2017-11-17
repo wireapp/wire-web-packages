@@ -17,18 +17,30 @@
  *
  */
 
+const cryptobox = require('wire-webapp-cryptobox');
+const Proteus = require('wire-webapp-proteus');
 const {crypto} = require('@wireapp/core');
 const {MemoryEngine} = require('@wireapp/store-engine').StoreEngine;
 
 let cryptographyService;
+let aliceLastResortPreKey;
+let bob;
 
 describe('CryptographyService', () => {
   beforeEach((done) => {
     const config = {
-      store: new MemoryEngine('temporary'),
+      store: new MemoryEngine('alice'),
     };
     cryptographyService = new crypto.CryptographyService(config);
-    cryptographyService.cryptobox.create().then(done);
+    cryptographyService.cryptobox.create().then((preKeys) => {
+      aliceLastResortPreKey = preKeys[Proteus.keys.PreKey.MAX_PREKEY_ID];
+      
+      const storageEngine = new MemoryEngine('bob');
+      const cryptoboxStore = new cryptobox.store.CryptoboxCRUDStore(storageEngine);
+      bob = new cryptobox.Cryptobox(cryptoboxStore);
+      
+      done();
+    });
   });
   
   describe('"constructor"', () => {
@@ -48,7 +60,7 @@ describe('CryptographyService', () => {
     });
   });
   
-  describe('"decrypt"', () => {
+  xdescribe('"decrypt"', () => {
     it('creates an instance', (done) => {
       const from = 'afbb5d60-1187-4385-9c29-7361dea79647';
       const sender = '85f9cdd3192e0159';
