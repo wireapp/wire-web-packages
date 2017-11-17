@@ -4885,9 +4885,11 @@ log4js@^0.6.31:
     readable-stream "~1.0.2"
     semver "~4.3.3"
 
-logdown@2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/logdown/-/logdown-2.2.0.tgz#23698490bb0f4eab8e93205c6209d31c06de35b2"
+logdown@3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/logdown/-/logdown-3.2.2.tgz#863b7ed97b68898adef754427555c8e1f043befa"
+  dependencies:
+    chalk "^2.0.1"
 
 loglevel@^1.4.1:
   version "1.5.1"
