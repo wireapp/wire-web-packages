@@ -18,14 +18,12 @@ export default class CryptographyService {
     this.cryptobox = new Cryptobox(new store.CryptoboxCRUDStore(config.store));
   }
 
-  private constructSessionId(userId: string, clientId: string): string {
+  public constructSessionId(userId: string, clientId: string): string {
     return `${userId}@${clientId}`;
   }
 
-  public decrypt(event: OTRMessageAdd): Promise<Uint8Array> {
-    const ciphertext: string = event.data.text;
-    const sessionId: string = this.constructSessionId(event.from, event.data.sender);
-    const messageBytes: Uint8Array = Decoder.fromBase64(ciphertext).asBytes;
+  public decrypt(sessionId: string, encodedCiphertext: string): Promise<Uint8Array> {
+    const messageBytes: Uint8Array = Decoder.fromBase64(encodedCiphertext).asBytes;
     return this.cryptobox.decrypt(sessionId, messageBytes.buffer);
   }
 

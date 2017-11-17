@@ -65,7 +65,9 @@ export default class Account extends EventEmitter {
       switch (event.type) {
         case 'conversation.otr-message-add':
           const otrMessage: OTRMessageAdd = event as OTRMessageAdd;
-          this.cryptographyService.decrypt(otrMessage).then((decryptedMessage: Uint8Array) => {
+          const sessionId: string = this.cryptographyService.constructSessionId(otrMessage.from, otrMessage.data.sender);
+          const ciphertext: string =  otrMessage.data.text;
+          this.cryptographyService.decrypt(sessionId, ciphertext).then((decryptedMessage: Uint8Array) => {
             const genericMessage = this.protocolBuffers.GenericMessage.decode(decryptedMessage);
             switch (genericMessage.content) {
               case 'text':
