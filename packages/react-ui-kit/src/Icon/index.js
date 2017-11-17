@@ -17,6 +17,6 @@
  *
  */
 
-export * from './Profile';
-export * from './Team';
+export * from './ProfileIcon';
+export * from './TeamIcon';
 export * from './RoundContainer';

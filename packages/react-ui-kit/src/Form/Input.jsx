@@ -19,10 +19,12 @@
 
 import styled, {css} from 'styled-components';
 import {COLOR} from '../Identity';
+import PropTypes from 'prop-types';
 
 const placeholderStyle = css`
   color: ${COLOR.GRAY_LIGHTEN_24};
   font-size: 11px;
+  text-transform: ${props => props.placeholderTextTransform};
 `;
 
 const Input = styled.input`
@@ -42,16 +44,6 @@ const Input = styled.input`
 
   & + & {
     margin-top: -8px;
-    position: relative;
-    ::before {
-      content: '';
-      display: block;
-      position: absolute;
-      top: 0;
-      left: 20px;
-      right: 20px;
-      border-top: 1px solid ${COLOR.GRAY_LIGHTEN_92};
-    }
   }
 
   &::-webkit-input-placeholder {
@@ -71,5 +63,13 @@ const Input = styled.input`
     box-shadow: none;
   }
 `;
+
+Input.propTypes = {
+  placeholderTextTransform: PropTypes.string,
+};
+
+Input.defaultProps = {
+  placeholderTextTransform: 'uppercase',
+};
 
 export {Input};
