@@ -69,11 +69,11 @@ export default class CryptographyService {
   }
 
   private encryptPayloadForSession(sessionId: string,
-                                   typedArray: Uint8Array,
-                                   encodedPreKey: string): Promise<SessionPayloadBundle> {
-    const decodedPreKeyBundle: Uint8Array = Decoder.fromBase64(encodedPreKey).asBytes;
+                                   plainText: Uint8Array,
+                                   base64EncodedPreKey: string): Promise<SessionPayloadBundle> {
+    const decodedPreKeyBundle: Uint8Array = Decoder.fromBase64(base64EncodedPreKey).asBytes;
     return this.cryptobox
-      .encrypt(sessionId, typedArray, decodedPreKeyBundle.buffer)
+      .encrypt(sessionId, plainText, decodedPreKeyBundle.buffer)
       .then(encryptedPayload => Encoder.toBase64(encryptedPayload).asString)
       .catch(error => '💣')
       .then(encryptedPayload => ({sessionId, encryptedPayload}));

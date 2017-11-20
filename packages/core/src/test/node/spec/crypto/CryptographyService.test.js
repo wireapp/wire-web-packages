@@ -89,8 +89,27 @@ describe('CryptographyService', () => {
   });
   
   describe('"encryptPayloadForSession"', () => {
-    it('turns invalid input into a Bomb Emoji.', () => {
-    
+    it('encodes plaintext.', (done) => {
+      const sessionWithBobId = 'bob-user-id@bob-client-id';
+      const text = new Uint8Array([72, 101, 108, 108, 111, 32, 66, 111, 98, 33]); // "Hello Bob!"
+      const encodedPreKey = 'pQABAQACoQBYIHOFFWPnWlr4sulxUWYoP0A6rsJiBO/Ec3Y914t67CIAA6EAoQBYIPFH5CK/a0YwKEx4n/+U/IPRN+mJXVv++MCs5Z4dLmz4BPY=';
+      cryptographyService.encryptPayloadForSession(sessionWithBobId, text, encodedPreKey)
+        .then(({sessionId, encryptedPayload}) => {
+          expect(encryptedPayload).not.toBe('💣');
+          expect(sessionId).toBe(sessionWithBobId);
+          done();
+        });
+    });
+  
+    it('encodes invalid text as Bomb Emoji.', (done) => {
+      const sessionWithBobId = 'bob-user-id@bob-client-id';
+      const encodedPreKey = 'pQABAQACoQBYIHOFFWPnWlr4sulxUWYoP0A6rsJiBO/Ec3Y914t67CIAA6EAoQBYIPFH5CK/a0YwKEx4n/+U/IPRN+mJXVv++MCs5Z4dLmz4BPY=';
+      cryptographyService.encryptPayloadForSession(sessionWithBobId, undefined, encodedPreKey)
+        .then(({sessionId, encryptedPayload}) => {
+          expect(encryptedPayload).toBe('💣');
+          expect(sessionId).toBe(sessionWithBobId);
+          done();
+        });
     });
   });
 });
