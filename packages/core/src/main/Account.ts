@@ -196,7 +196,7 @@ export default class Account extends EventEmitter {
         const serializedPreKeys: Array<PreKey> = initialPreKeys
           .map(preKey => {
             const preKeyJson: PreKey = this.cryptographyService.cryptobox.serialize_prekey(preKey);
-            if (preKeyJson.id !== 65535) return preKeyJson;
+            if (preKeyJson.id !== Proteus.keys.PreKey.MAX_PREKEY_ID) return preKeyJson;
             return undefined;
           })
           .filter(serializedPreKey => serializedPreKey);
