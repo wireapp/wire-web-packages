@@ -17,12 +17,20 @@
  *
  */
 
-import setGlobalStyles from '../globalStyles';
+import IconBase from './IconBase';
+import React from 'react';
 
-setGlobalStyles();
+class PlaneIcon extends IconBase {
+  /* eslint-disable no-magic-numbers */
+  width = 12;
+  height = 12;
+  renderSVG(width, height, color) {
+    return (
+      <svg width={width} height={height} viewBox="0 0 12 12">
+        <path fill={color} d="M0 10.7c0 1 .8 1.6 1.8 1L11.3 7c1-.6 1-1.4 0-2L1.8.3C.8-.3 0 .3 0 1.3V6h9L0 7.5v3.2z" />
+      </svg>
+    );
+  }
+}
 
-export * from './Button';
-export * from './Checkbox';
-export * from './Form';
-export * from './Input';
-export * from './Select';
+export {PlaneIcon};
