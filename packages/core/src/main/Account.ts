@@ -28,11 +28,11 @@ import {
 } from '@wireapp/api-client/dist/commonjs/conversation/';
 import CryptographyService from './crypto/CryptographyService';
 import {Context, LoginData, PreKey} from '@wireapp/api-client/dist/commonjs/auth/';
-import {ConversationEvent, OTRMessageAdd} from '@wireapp/api-client/dist/commonjs/conversation/event/';
+import {ConversationEvent, ConversationEventType, OTRMessageAdd} from '@wireapp/api-client/dist/commonjs/conversation/event/';
 import {CRUDEngine, MemoryEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
 import {store} from 'wire-webapp-cryptobox';
 import {NewClient, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
-import PayloadBundle from './crypto/PayloadBundle';
+import {GenericMessageType, PayloadBundle} from './crypto/';
 import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/error/';
 import {Root} from 'protobufjs';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/';
@@ -64,7 +64,7 @@ export default class Account extends EventEmitter {
   private decodeEvent(event: ConversationEvent): Promise<string> {
     return new Promise(resolve => {
       switch (event.type) {
-        case 'conversation.otr-message-add':
+        case ConversationEventType.OTR_MESSAGE_ADD:
           const otrMessage: OTRMessageAdd = event as OTRMessageAdd;
           const sessionId: string = this.cryptographyService.constructSessionId(
             otrMessage.from,
@@ -74,7 +74,7 @@ export default class Account extends EventEmitter {
           this.cryptographyService.decrypt(sessionId, ciphertext).then((decryptedMessage: Uint8Array) => {
             const genericMessage = this.protocolBuffers.GenericMessage.decode(decryptedMessage);
             switch (genericMessage.content) {
-              case 'text':
+              case GenericMessageType.TEXT:
                 resolve(genericMessage.text.content);
                 break;
               default:

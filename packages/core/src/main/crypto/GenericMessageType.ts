@@ -2,7 +2,7 @@
 // Wire
 // Copyright (C) 2017 Wire Swiss GmbH
 //
-// This program is free software: you can redistribute it and/or modify
+// This program is free software = you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
@@ -16,12 +16,22 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-import ConversationEvent from './ConversationEvent';
-import ConversationEventType from './ConversationEventType';
-import MemberJoin from './MemberJoin';
-import MemberLeave from './MemberLeave';
-import MemberUpdate from './MemberUpdate';
-import OTRMessageAdd from './OTRMessageAdd';
-import Rename from './Rename';
+enum GenericMessageType {
+  ASSET = 'asset',
+  CALLING = 'calling',
+  CLEARED = 'cleared',
+  CLIENT_ACTION = 'clientAction',
+  CONFIRMATION = 'confirmation',
+  DELETED = 'deleted',
+  EDITED = 'edited',
+  EPHEMERAL = 'ephemeral',
+  HIDDEN = 'hidden',
+  IMAGE = 'image',
+  KNOCK = 'knock',
+  LAST_READ = 'lastRead',
+  LOCATION = 'location',
+  REACTION = 'reaction',
+  TEXT = 'text',
+}
 
-export {ConversationEvent, ConversationEventType, MemberJoin, MemberLeave, MemberUpdate, OTRMessageAdd, Rename};
+export default GenericMessageType;

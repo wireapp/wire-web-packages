@@ -4,13 +4,13 @@ import {Cryptobox, store} from 'wire-webapp-cryptobox';
 import {Decoder, Encoder} from 'bazinga64';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/';
 import {PreKey} from '@wireapp/api-client/dist/commonjs/auth/';
+import {SessionPayloadBundle} from '../crypto/';
 import {
   ClientMismatch,
   NewOTRMessage,
   OTRRecipients,
   UserClients,
 } from '@wireapp/api-client/dist/commonjs/conversation/';
-import SessionPayloadBundle from './SessionPayloadBundle';
 
 export default class CryptographyService {
   public cryptobox: Cryptobox;
