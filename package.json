@@ -22,15 +22,15 @@
     "boot": "lerna bootstrap",
     "clear": "lerna run clear",
     "dist": "lerna run dist",
-    "fix:config": "prettier --write '**/*.json'",
-    "fix:docs": "prettier --ignore-path .gitignore --write '**/*.md'",
-    "fix:jsScript": "npm run test:jsScript -- --fix",
-    "fix:script": "yarn fix:jsScript && yarn fix:tsScript",
-    "fix:style": "prettier --write '**/*.scss'",
-    "fix:tsScript": "prettier --write '**/*.ts'",
     "fix": "yarn fix:docs && yarn fix:config && yarn fix:style && yarn fix:script",
-    "test:jsScript": "eslint --ignore-path .gitignore --ignore-path .prettierignore '**/*.{js,jsx}'",
-    "test": "yarn test:jsScript && lerna run dist && lerna run test"
+    "fix:config": "npx prettier --write **/*.json",
+    "fix:docs": "npx prettier --ignore-path .gitignore --write **/*.md",
+    "fix:jsScript": "yarn test:jsScript --fix",
+    "fix:script": "yarn fix:jsScript && yarn fix:tsScript",
+    "fix:style": "npx prettier --write **/*.scss",
+    "fix:tsScript": "npx prettier --write **/*.ts",
+    "test": "yarn test:jsScript && lerna run dist && lerna run test",
+    "test:jsScript": "eslint --ignore-path .gitignore --ignore-path .prettierignore **/*.{js,jsx}"
   },
   "workspaces": ["packages/*"]
 }

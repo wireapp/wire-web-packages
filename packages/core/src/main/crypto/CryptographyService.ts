@@ -10,17 +10,13 @@ import {
   OTRRecipients,
   UserClients,
 } from '@wireapp/api-client/dist/commonjs/conversation/';
-import SessionPayloadBundle from "./SessionPayloadBundle";
+import SessionPayloadBundle from './SessionPayloadBundle';
 
-/**
- * CryptographyService operates the Cryptobox and manages encryption and decryption.
- * @constructor
- */
 export default class CryptographyService {
   public cryptobox: Cryptobox;
 
-  constructor(config: { store: CRUDEngine }) {
-    this.cryptobox = new Cryptobox(new store.CryptoboxCRUDStore(config.store));
+  constructor(engine: CRUDEngine) {
+    this.cryptobox = new Cryptobox(new store.CryptoboxCRUDStore(engine));
   }
 
   public constructSessionId(userId: string, clientId: string): string {
@@ -50,27 +46,28 @@ export default class CryptographyService {
       }
     }
 
-    return Promise.all(encryptions)
-      .then((payloads: Array<SessionPayloadBundle>) => {
-        const recipients: OTRRecipients = {};
+    return Promise.all(encryptions).then((payloads: Array<SessionPayloadBundle>) => {
+      const recipients: OTRRecipients = {};
 
-        if (payloads) {
-          payloads.forEach((payload: SessionPayloadBundle) => {
-            const sessionId: string = payload.sessionId;
-            const encrypted: string = payload.encryptedPayload;
-            const [userId, clientId] = this.dismantleSessionId(sessionId);
-            recipients[userId] = recipients[userId] || {};
-            recipients[userId][clientId] = encrypted;
-          });
-        }
+      if (payloads) {
+        payloads.forEach((payload: SessionPayloadBundle) => {
+          const sessionId: string = payload.sessionId;
+          const encrypted: string = payload.encryptedPayload;
+          const [userId, clientId] = this.dismantleSessionId(sessionId);
+          recipients[userId] = recipients[userId] || {};
+          recipients[userId][clientId] = encrypted;
+        });
+      }
 
-        return recipients;
-      });
+      return recipients;
+    });
   }
 
-  private encryptPayloadForSession(sessionId: string,
-                                   plainText: Uint8Array,
-                                   base64EncodedPreKey: string): Promise<SessionPayloadBundle> {
+  private encryptPayloadForSession(
+    sessionId: string,
+    plainText: Uint8Array,
+    base64EncodedPreKey: string
+  ): Promise<SessionPayloadBundle> {
     const decodedPreKeyBundle: Uint8Array = Decoder.fromBase64(base64EncodedPreKey).asBytes;
     return this.cryptobox
       .encrypt(sessionId, plainText, decodedPreKeyBundle.buffer)
