@@ -17,12 +17,19 @@
  *
  */
 
+import styled, {css} from 'styled-components';
 import {COLOR} from '../Identity';
-import styled from 'styled-components';
+import PropTypes from 'prop-types';
+
+const placeholderStyle = css`
+  color: ${COLOR.GRAY_LIGHTEN_24};
+  font-size: 11px;
+  text-transform: ${props => props.placeholderTextTransform};
+`;
 
 const Input = styled.input`
   /* appearance */
-  background: ${COLOR.GRAY_LIGHTEN_92};
+  background: ${COLOR.WHITE};
   border-radius: 4px;
   border: 1px solid transparent;
   color: ${COLOR.GRAY_DARKEN_48};
@@ -35,17 +42,21 @@ const Input = styled.input`
   padding: 0 12px;
   width: 100%;
 
+  & + & {
+    margin-top: -8px;
+  }
+
   &::-webkit-input-placeholder {
     /* WebKit, Blink, Edge */
-    color: ${COLOR.GRAY_LIGHTEN_24};
+    ${placeholderStyle};
   }
   &::-ms-input-placeholder {
     /* Microsoft Edge */
-    color: ${COLOR.GRAY_LIGHTEN_24};
+    ${placeholderStyle};
   }
   &::-moz-placeholder {
     /* Mozilla Firefox 19+ */
-    color: ${COLOR.GRAY_LIGHTEN_24};
+    ${placeholderStyle};
     opacity: 1;
   }
   &:invalid {
@@ -53,8 +64,12 @@ const Input = styled.input`
   }
 `;
 
-Input.propTypes = {};
+Input.propTypes = {
+  placeholderTextTransform: PropTypes.string,
+};
 
-Input.defaultProps = {};
+Input.defaultProps = {
+  placeholderTextTransform: 'uppercase',
+};
 
 export {Input};

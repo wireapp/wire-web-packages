@@ -21,8 +21,10 @@ import setGlobalStyles from '../globalStyles';
 
 setGlobalStyles();
 
-export * from './Button';
-export * from './Checkbox';
-export * from './Form';
-export * from './Input';
-export * from './Select';
+export * from './Column';
+export * from './Container';
+export * from './Content';
+export * from './Footer';
+export * from './Header';
+export * from './Spacer';
+export * from './StyledApp';

@@ -17,12 +17,14 @@
  *
  */
 
-import setGlobalStyles from '../globalStyles';
+import {GUTTER} from './sizes';
+import styled from 'styled-components';
 
-setGlobalStyles();
+const Content = styled.div`
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 ${GUTTER + GUTTER}px;
+`;
 
-export * from './Button';
-export * from './Checkbox';
-export * from './Form';
-export * from './Input';
-export * from './Select';
+export {Content};

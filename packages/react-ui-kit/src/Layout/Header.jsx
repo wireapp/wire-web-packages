@@ -17,12 +17,13 @@
  *
  */
 
-import setGlobalStyles from '../globalStyles';
+import styled from 'styled-components';
 
-setGlobalStyles();
+const Header = styled.header`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 64px;
+`;
 
-export * from './Button';
-export * from './Checkbox';
-export * from './Form';
-export * from './Input';
-export * from './Select';
+export {Header};

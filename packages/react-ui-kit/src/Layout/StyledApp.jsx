@@ -18,36 +18,31 @@
  */
 
 import {COLOR} from '../Identity';
-import React from 'react';
-import {Text} from './Text';
-import {defaultTransition} from '../Identity/motions';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
-const Link = ({component = 'a', ...props}) => {
-  const StyledLink = Text.withComponent(component).extend`
-    /* appearance */
-    text-decoration: none;
-    ${defaultTransition}
+const StyledApp = styled.div`
+  background-color: ${props => props.backgroundColor};
+  color: ${COLOR.GRAY_DARKEN_48};
+  display: flex;
+  flex-direction: column;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-weight: 300;
+  line-height: 1.5;
+  min-height: 100vh;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  * {
+    box-sizing: border-box;
+  }
+`;
 
-    /* positioning */
-
-    &:visited,
-    &:link,
-    &:active {
-      color: ${() => props.color};
-    }
-    &:hover {
-      cursor: pointer;
-      color: ${COLOR.GRAY_DARKEN_88};
-    }
-  `;
-  return <StyledLink {...props} />;
-};
-Link.propTypes = {
-  ...Text.propTypes,
+StyledApp.propTypes = {
+  backgroundColor: PropTypes.string,
 };
 
-Link.defaultProps = {
-  ...Text.defaultProps,
+StyledApp.defaultProps = {
+  backgroundColor: '#fafafa',
 };
 
-export {Link};
+export {StyledApp};

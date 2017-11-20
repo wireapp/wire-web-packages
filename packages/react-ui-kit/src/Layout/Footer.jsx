@@ -17,12 +17,8 @@
  *
  */
 
-import setGlobalStyles from '../globalStyles';
+import styled from 'styled-components';
 
-setGlobalStyles();
+const Footer = styled.footer``;
 
-export * from './Button';
-export * from './Checkbox';
-export * from './Form';
-export * from './Input';
-export * from './Select';
+export {Footer};

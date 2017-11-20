@@ -17,19 +17,8 @@
  *
  */
 
-import {COLOR} from './Identity';
-import {css} from 'styled-components';
-
-export default css`
-  * {
-    box-sizing: border-box;
-  }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif;
-    font-weight: 300;
-    color: ${COLOR.GRAY_DARKEN_72};
-    line-height: 1.5;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-font-smoothing: antialiased;
-  }
-`;
+export * from './ArrowIcon';
+export * from './PlaneIcon';
+export * from './ProfileIcon';
+export * from './TeamIcon';
+export * from './RoundContainer';
