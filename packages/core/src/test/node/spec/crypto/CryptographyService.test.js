@@ -87,4 +87,10 @@ describe('CryptographyService', () => {
       expect(actualUserId).toBe(userId);
     });
   });
+  
+  describe('"encryptPayloadForSession"', () => {
+    it('turns invalid input into a Bomb Emoji.', () => {
+    
+    });
+  });
 });

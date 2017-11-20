@@ -10,6 +10,7 @@ import {
   OTRRecipients,
   UserClients,
 } from '@wireapp/api-client/dist/commonjs/conversation/';
+import SessionPayloadBundle from "./SessionPayloadBundle";
 
 /**
  * CryptographyService operates the Cryptobox and manages encryption and decryption.
@@ -37,7 +38,7 @@ export default class CryptographyService {
 
   public encrypt(typedArray: Uint8Array, preKeyBundles: UserPreKeyBundleMap): Promise<OTRRecipients> {
     const recipients: OTRRecipients = {};
-    const encryptions: Array<Promise<{}>> = [];
+    const encryptions: Array<Promise<SessionPayloadBundle>> = [];
 
     for (const userId in preKeyBundles) {
       recipients[userId] = {};
@@ -45,17 +46,12 @@ export default class CryptographyService {
         const preKeyPayload: PreKey = preKeyBundles[userId][clientId];
         const preKey: string = preKeyPayload.key;
         const sessionId: string = this.constructSessionId(userId, clientId);
-        encryptions.push(
-          this.encryptPayloadForSession(sessionId, typedArray, preKey)
-            .then(encryptedPayload => Encoder.toBase64(encryptedPayload).asString)
-            .catch(error => '💣')
-            .then(encryptedPayload => ({sessionId, encryptedPayload}))
-        );
+        encryptions.push(this.encryptPayloadForSession(sessionId, typedArray, preKey));
       }
     }
 
     return Promise.all(encryptions)
-      .then((payloads: Array<{}>) => {
+      .then((payloads: Array<SessionPayloadBundle>) => {
         const recipients: OTRRecipients = {};
 
         if (payloads) {
@@ -74,10 +70,12 @@ export default class CryptographyService {
 
   private encryptPayloadForSession(sessionId: string,
                                    typedArray: Uint8Array,
-                                   encodedPreKey: string): Promise<string> {
+                                   encodedPreKey: string): Promise<SessionPayloadBundle> {
     const decodedPreKeyBundle: Uint8Array = Decoder.fromBase64(encodedPreKey).asBytes;
     return this.cryptobox
       .encrypt(sessionId, typedArray, decodedPreKeyBundle.buffer)
-      .then(encryptedPayload => Encoder.toBase64(encryptedPayload).asString);
+      .then(encryptedPayload => Encoder.toBase64(encryptedPayload).asString)
+      .catch(error => '💣')
+      .then(encryptedPayload => ({sessionId, encryptedPayload}));
   }
 }

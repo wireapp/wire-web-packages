@@ -106,9 +106,9 @@ export default class Account extends EventEmitter {
 
   private handleNotification(notification: IncomingNotification): void {
     for (const event of notification.payload) {
-      this.handleEvent(event).then((payload: PayloadBundle) => {
-        if (payload.content) {
-          this.emit(Account.INCOMING.TEXT_MESSAGE, payload);
+      this.handleEvent(event).then((data: PayloadBundle) => {
+        if (data.content) {
+          this.emit(Account.INCOMING.TEXT_MESSAGE, data);
         }
       });
     }
