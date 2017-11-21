@@ -24,20 +24,20 @@ describe('LoginSanitizer', () => {
     it('sanitizes login data in-place', () => {
       const loginData = {
         email: 'me@wire.com\t',
-        password: '\r\nsecret'
+        password: '\r\nsecret',
       };
-      
+
       auth.LoginSanitizer.removeNonPrintableCharacters(loginData);
       expect(loginData.email).toBe('me@wire.com');
       expect(loginData.password).toBe('secret');
     });
-    
+
     it('turns a given password into a string', () => {
       const loginData = {
         email: 'me@wire.com\t',
-        password: 1234567890
+        password: 1234567890,
       };
-      
+
       auth.LoginSanitizer.removeNonPrintableCharacters(loginData);
       expect(loginData.password).toEqual(jasmine.any(String));
     });
