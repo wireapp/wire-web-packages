@@ -15,9 +15,9 @@ Command-line interface for Wire's secure messaging platform.
 ```bash
 #!/bin/bash
 
-EMAIL = "yourname@email.com";
-PASSWORD = "secret";
-CONVERSATION_ID = "594f0908-b9b7-40f9-a06a-45612145e64e";
+EMAIL="yourname@email.com"
+PASSWORD="secret"
+CONVERSATION_ID="594f0908-b9b7-40f9-a06a-45612145e64e"
 
-node index.js --e="$EMAIL" --p="$PASSWORD" --c="$CONVERSATION_ID"
+dist/commonjs/wire-cli.js -e "$EMAIL" -p "$PASSWORD" -c "$CONVERSATION_ID"
 ```
