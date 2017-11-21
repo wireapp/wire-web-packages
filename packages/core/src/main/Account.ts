@@ -16,7 +16,6 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 const loadProtocolBuffers = require('@wireapp/protocol-messaging');
 const UUID = require('pure-uuid');
 import {
@@ -31,7 +30,7 @@ import {Context, LoginData, PreKey} from '@wireapp/api-client/dist/commonjs/auth
 import {
   ConversationEvent,
   ConversationEventType,
-  OTRMessageAdd
+  OTRMessageAdd,
 } from '@wireapp/api-client/dist/commonjs/conversation/event/';
 import {MemoryEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
 import {NewClient, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
@@ -53,7 +52,7 @@ export default class Account extends EventEmitter {
   private client: RegisteredClient;
   public context: Context;
   private protocolBuffers: any = {};
-  public service: { conversation: ConversationService, crypto: CryptographyService } = {
+  public service: {conversation: ConversationService; crypto: CryptographyService} = {
     conversation: undefined,
     crypto: undefined,
   };
@@ -63,7 +62,7 @@ export default class Account extends EventEmitter {
     this.apiClient = apiClient;
     this.service = {
       conversation: new ConversationService(apiClient),
-      crypto: new CryptographyService(apiClient.config.store)
+      crypto: new CryptographyService(apiClient.config.store),
     };
   }
 
@@ -72,10 +71,7 @@ export default class Account extends EventEmitter {
       switch (event.type) {
         case ConversationEventType.OTR_MESSAGE_ADD:
           const otrMessage: OTRMessageAdd = event as OTRMessageAdd;
-          const sessionId: string = this.service.crypto.constructSessionId(
-            otrMessage.from,
-            otrMessage.data.sender
-          );
+          const sessionId: string = this.service.crypto.constructSessionId(otrMessage.from, otrMessage.data.sender);
           const ciphertext: string = otrMessage.data.text;
           this.service.crypto.decrypt(sessionId, ciphertext).then((decryptedMessage: Uint8Array) => {
             const genericMessage = this.protocolBuffers.GenericMessage.decode(decryptedMessage);
@@ -187,14 +183,13 @@ export default class Account extends EventEmitter {
   }
 
   private registerNewClient(loginData: LoginData): Promise<RegisteredClient> {
-    return this.service.crypto.createCryptobox()
+    return this.service.crypto
+      .createCryptobox()
       .then((serializedPreKeys: Array<PreKey>) => {
         const newClient: NewClient = {
           class: 'desktop',
           cookie: 'webapp@1224301118@temporary@1472638149000',
-          lastkey: this.service.crypto.cryptobox.serialize_prekey(
-            this.service.crypto.cryptobox.lastResortPreKey
-          ),
+          lastkey: this.service.crypto.cryptobox.serialize_prekey(this.service.crypto.cryptobox.lastResortPreKey),
           password: loginData.password.toString(),
           prekeys: serializedPreKeys,
           sigkeys: {
