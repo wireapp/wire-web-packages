@@ -29,6 +29,7 @@
     "fix:script": "yarn fix:jsScript && yarn fix:tsScript",
     "fix:style": "prettier --write **/*.scss",
     "fix:tsScript": "prettier --write **/*.ts",
+    "precommit": "lint-staged",
     "test": "yarn test:jsScript && lerna run dist && lerna run test",
     "test:jsScript": "eslint --ignore-path .gitignore --ignore-path .prettierignore **/*.{js,jsx}"
   },
