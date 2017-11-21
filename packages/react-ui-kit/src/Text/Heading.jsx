@@ -76,8 +76,12 @@ const Heading = ({level, ...props}) => {
 
 Heading.propTypes = {
   ...Text.propTypes,
-  color: PropTypes.string,
   level: PropTypes.oneOf(['1', '2', '3', '4']),
+};
+
+H1.defaultProps = H2.defaultProps = H3.defaultProps = H4.defaultProps = {
+  ...Text.defaultProps,
+  color: '',
 };
 
 Heading.defaultProps = {
