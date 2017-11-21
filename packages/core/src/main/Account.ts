@@ -153,6 +153,7 @@ export default class Account extends EventEmitter {
 
   public login(loginData: LoginData, initClient: boolean = true): Promise<Context> {
     LoginSanitizer.removeNonPrintableCharacters(loginData);
+    loginData.persist = loginData.persist || (this.apiClient.config.store.constructor.name === 'MemoryEngine') ? false : true;
     return this.apiClient
       .init()
       .catch((error: Error) => this.apiClient.login(loginData))
