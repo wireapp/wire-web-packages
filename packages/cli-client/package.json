@@ -14,9 +14,11 @@
     "typescript": "2.6.1"
   },
   "description": "Command-line interface for Wire's secure messaging platform.",
-  "files": ["bin", "dist"],
+  "files": [
+    "bin",
+    "dist"
+  ],
   "license": "GPL-3.0",
-  "main": "./dist/commonjs/wire-cli.js",
   "name": "@wireapp/cli-client",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client",
   "scripts": {
@@ -27,6 +29,6 @@
     "dist": "yarn build",
     "test": "exit 0"
   },
-  "types": "./dist/commonjs/Client.d.ts",
+  "types": "./dist/commonjs/index.d.ts",
   "version": "0.0.0"
 }
