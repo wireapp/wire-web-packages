@@ -52,7 +52,7 @@ export default class Account extends EventEmitter {
   private client: RegisteredClient;
   public context: Context;
   private protocolBuffers: any = {};
-  public service: {conversation: ConversationService; crypto: CryptographyService} = {
+  public service: { conversation: ConversationService; crypto: CryptographyService } = {
     conversation: undefined,
     crypto: undefined,
   };
@@ -130,7 +130,7 @@ export default class Account extends EventEmitter {
     });
   }
 
-  public listen(callback: Function, loginData: LoginData): Promise<WebSocketClient> {
+  public listen(loginData: LoginData, notificationHandler: Function): Promise<WebSocketClient> {
     return Promise.resolve()
       .then(() => {
         if (!this.context) {
@@ -139,9 +139,9 @@ export default class Account extends EventEmitter {
         return undefined;
       })
       .then(() => {
-        if (callback) {
+        if (notificationHandler) {
           this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, (notification: IncomingNotification) =>
-            callback(notification)
+            notificationHandler(notification)
           );
         } else {
           this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, this.handleNotification.bind(this));
