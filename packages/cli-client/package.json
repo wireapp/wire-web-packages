@@ -1,5 +1,7 @@
 {
-  "bin": "dist/commonjs/wire-cli.js",
+  "bin": {
+    "wire-cli": "bin/index.js"
+  },
   "dependencies": {
     "@wireapp/api-client": "0.2.8",
     "@wireapp/core": "0.0.7",
@@ -7,6 +9,7 @@
     "dotenv": "4.0.0"
   },
   "devDependencies": {
+    "cpx": "1.5.0",
     "rimraf": "2.6.2",
     "typescript": "2.6.1"
   },
@@ -19,7 +22,8 @@
   "name": "@wireapp/cli-client",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client",
   "scripts": {
-    "build": "yarn build:node",
+    "copy": "cpx dist/commonjs/index.js bin/",
+    "build": "yarn build:node && yarn copy",
     "build:node": "yarn && yarn clear && tsc",
     "clear": "rimraf dist",
     "dist": "yarn build",

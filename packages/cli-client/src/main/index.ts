@@ -20,11 +20,12 @@ program
   .parse(process.argv);
 
 const loginData = {
-  email: program.email,
-  password: program.password,
+  email: program.email || process.env.WIRE_LOGIN_EMAIL,
+  password: program.password || process.env.WIRE_LOGIN_PASSWORD,
+  persist: true,
 };
 
-const conversationID = program.conversation;
+const conversationID = program.conversation || process.env.WIRE_CONVERSATION_ID;
 
 const path = `${os.homedir()}/.wire-cli/${loginData.email}`;
 const storeEngine = new StoreEngine.FileEngine(path, {fileExtension: '.json'});
