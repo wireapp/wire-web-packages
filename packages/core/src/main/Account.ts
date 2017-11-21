@@ -125,7 +125,7 @@ export default class Account extends EventEmitter {
     this.context = context;
     return this.service.crypto.loadExistingClient().catch(error => {
       if (error instanceof RecordNotFoundError) {
-        return this.registerNewClient(loginData);
+        return this.registerClient(loginData);
       }
       throw error;
     });
@@ -184,7 +184,7 @@ export default class Account extends EventEmitter {
     });
   }
 
-  private registerNewClient(loginData: LoginData, clientClassification: ClientClassification = ClientClassification.DESKTOP, cookieLabel: string = 'default'): Promise<RegisteredClient> {
+  private registerClient(loginData: LoginData, clientClassification: ClientClassification = ClientClassification.DESKTOP, cookieLabel: string = 'default'): Promise<RegisteredClient> {
     return this.service.crypto
       .createCryptobox()
       .then((serializedPreKeys: Array<PreKey>) => {
