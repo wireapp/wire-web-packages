@@ -1,6 +1,7 @@
 {
-  "bin": "bin/wire-cli",
+  "bin": "dist/commonjs/wire-cli.js",
   "dependencies": {
+    "@wireapp/api-client": "0.2.8",
     "@wireapp/core": "0.0.7",
     "commander": "2.11.0"
   },
@@ -9,9 +10,11 @@
     "typescript": "2.6.1"
   },
   "description": "Command-line interface for Wire's secure messaging platform.",
-  "files": ["dist", "bin"],
+  "files": [
+    "dist"
+  ],
   "license": "GPL-3.0",
-  "main": "./dist/commonjs/Client.js",
+  "main": "./dist/commonjs/wire-cli.js",
   "name": "@wireapp/cli-client",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client",
   "scripts": {

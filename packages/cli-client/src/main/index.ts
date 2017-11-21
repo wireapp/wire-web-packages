@@ -1,15 +1,25 @@
 #!/usr/bin/env node
 
-const stdin = process.openStdin();
+const { description, version } = require('../package.json');
 const {Account} = require('@wireapp/core');
 const {StoreEngine} = require('@wireapp/store-engine');
-import * as os from 'os';
-import APIClient = require('@wireapp/api-client');
+const APIClient = require('@wireapp/api-client');
+const program = require('commander');
+const stdin = process.openStdin();
 import {PayloadBundle} from '@wireapp/core/dist/commonjs/crypto/';
+import * as os from 'os';
+
+program
+  .version(version)
+  .description(description)
+  .option('-e, --email <address>', 'Your email address')
+  .option('-p, --password <password>', 'Your password')
+  .option('-c, --conversation <conversationid>', 'The conversation to write in')
+  .parse(process.argv);
 
 const loginData = {
-  email: 'benny+node@wire.com',
-  password: '12345678',
+  email: program.email,
+  password: program.password,
   persist: true
 };
 
@@ -33,7 +43,7 @@ account
   .listen(loginData)
   .then(() => console.log(`Connected to Wire — Client ID "${account.context.clientID}"`))
   .then(() => {
-    stdin.addListener('data', function (data) {
+    stdin.addListener('data', data => {
       const message = data.toString().trim();
       account.sendTextMessage(conversationID, message);
     });
