@@ -49,6 +49,9 @@ export default class Account extends EventEmitter {
   public apiClient: Client;
   private client: RegisteredClient;
   public context: Context;
+  public service: { crypto: CryptographyService } = {
+    crypto: undefined,
+  };
   private cryptographyService: CryptographyService;
   private protocolBuffers: any = {};
   private storeEngine: CRUDEngine;
@@ -57,7 +60,9 @@ export default class Account extends EventEmitter {
     super();
     this.apiClient = apiClient;
     this.storeEngine = apiClient.config.store;
-    this.cryptographyService = new CryptographyService(this.storeEngine);
+    this.service = {
+      crypto: new CryptographyService(this.storeEngine)
+    };
   }
 
   private decodeEvent(event: ConversationEvent): Promise<string> {
@@ -65,12 +70,12 @@ export default class Account extends EventEmitter {
       switch (event.type) {
         case ConversationEventType.OTR_MESSAGE_ADD:
           const otrMessage: OTRMessageAdd = event as OTRMessageAdd;
-          const sessionId: string = this.cryptographyService.constructSessionId(
+          const sessionId: string = this.service.crypto.constructSessionId(
             otrMessage.from,
             otrMessage.data.sender
           );
           const ciphertext: string = otrMessage.data.text;
-          this.cryptographyService.decrypt(sessionId, ciphertext).then((decryptedMessage: Uint8Array) => {
+          this.service.crypto.decrypt(sessionId, ciphertext).then((decryptedMessage: Uint8Array) => {
             const genericMessage = this.protocolBuffers.GenericMessage.decode(decryptedMessage);
             switch (genericMessage.content) {
               case GenericMessageType.TEXT:
@@ -119,7 +124,7 @@ export default class Account extends EventEmitter {
 
   private initClient(context: Context, loginData: LoginData): Promise<RegisteredClient> {
     this.context = context;
-    return this.cryptographyService.loadExistingClient().catch(error => {
+    return this.service.crypto.loadExistingClient().catch(error => {
       if (error instanceof RecordNotFoundError) {
         return this.registerNewClient(loginData);
       }
@@ -175,18 +180,18 @@ export default class Account extends EventEmitter {
     return this.apiClient.logout().then(() => {
       this.client = undefined;
       this.context = undefined;
-      this.cryptographyService = undefined;
+      this.service.crypto = undefined;
     });
   }
 
   private registerNewClient(loginData: LoginData): Promise<RegisteredClient> {
-    return this.cryptographyService.createCryptobox()
+    return this.service.crypto.createCryptobox()
       .then((serializedPreKeys: Array<PreKey>) => {
         const newClient: NewClient = {
           class: 'desktop',
           cookie: 'webapp@1224301118@temporary@1472638149000',
-          lastkey: this.cryptographyService.cryptobox.serialize_prekey(
-            this.cryptographyService.cryptobox.lastResortPreKey
+          lastkey: this.service.crypto.cryptobox.serialize_prekey(
+            this.service.crypto.cryptobox.lastResortPreKey
           ),
           password: loginData.password.toString(),
           prekeys: serializedPreKeys,
@@ -202,7 +207,7 @@ export default class Account extends EventEmitter {
       .then((newClient: NewClient) => this.apiClient.client.api.postClient(newClient))
       .then((client: RegisteredClient) => {
         this.client = client;
-        return this.cryptographyService.saveClient(client);
+        return this.service.crypto.saveClient(client);
       })
       .then(() => this.client);
   }
@@ -245,7 +250,7 @@ export default class Account extends EventEmitter {
     return this.getPreKeyBundles(conversationId)
       .then((preKeyBundles: UserPreKeyBundleMap) => {
         const typedArray = this.protocolBuffers.GenericMessage.encode(customTextMessage).finish();
-        return this.cryptographyService.encrypt(typedArray, preKeyBundles);
+        return this.service.crypto.encrypt(typedArray, preKeyBundles);
       })
       .then(payload => this.sendMessage(conversationId, payload));
   }
