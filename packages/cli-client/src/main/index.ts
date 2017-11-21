@@ -7,6 +7,7 @@ const program = require('commander');
 const stdin = process.openStdin();
 import {PayloadBundle} from '@wireapp/core/dist/commonjs/crypto/';
 import * as os from 'os';
+import * as path from 'path';
 import APIClient = require('@wireapp/api-client');
 
 require('dotenv').config();
@@ -27,8 +28,8 @@ const loginData = {
 
 const conversationID = program.conversation || process.env.WIRE_CONVERSATION_ID;
 
-const path = `${os.homedir()}/.wire-cli/${loginData.email}`;
-const storeEngine = new StoreEngine.FileEngine(path, {fileExtension: '.json'});
+const directory = path.join(os.homedir(), '.wire-cli', loginData.email);
+const storeEngine = new StoreEngine.FileEngine(directory, {fileExtension: '.json'});
 
 const apiClient: APIClient = new APIClient({
   urls: APIClient.BACKEND.PRODUCTION,

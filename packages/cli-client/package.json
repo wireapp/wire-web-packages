@@ -14,7 +14,7 @@
     "typescript": "2.6.1"
   },
   "description": "Command-line interface for Wire's secure messaging platform.",
-  "files": ["dist"],
+  "files": ["bin", "dist"],
   "license": "GPL-3.0",
   "main": "./dist/commonjs/wire-cli.js",
   "name": "@wireapp/cli-client",
