@@ -131,7 +131,7 @@ export default class Account extends EventEmitter {
     });
   }
 
-  public listen(loginData: LoginData, notificationHandler: Function): Promise<WebSocketClient> {
+  public listen(loginData: LoginData, notificationHandler?: Function): Promise<WebSocketClient> {
     return Promise.resolve()
       .then(() => {
         if (!this.context) {
