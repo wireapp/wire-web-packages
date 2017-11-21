@@ -33,7 +33,7 @@ import {
   Text,
   Uppercase,
 } from '@wireapp/react-ui-kit/Text';
-import {Button, ButtonLink, Checkbox, Form, Input, Select} from '@wireapp/react-ui-kit/Form';
+import {Button, ButtonLink, Checkbox, CodeInput, Form, Input, Select} from '@wireapp/react-ui-kit/Form';
 import {COLOR, Logo} from '@wireapp/react-ui-kit/Identity';
 import {
   Column,
@@ -66,6 +66,7 @@ export default function Demo() {
         <PlaneIcon />
       </Header>
       <Content>
+        <CodeInput />
         <Container>
           <H1>Layout</H1>
           <Line />
