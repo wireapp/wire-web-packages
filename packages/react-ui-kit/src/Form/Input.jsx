@@ -31,15 +31,9 @@ const Input = styled.input`
   /* appearance */
   background: ${COLOR.WHITE};
   border-radius: 4px;
-<<<<<<< HEAD
   border: none;
-  color: ${COLOR.GRAY_DARKEN_48};
-  font-weight: 300;
-=======
-  border: 1px solid transparent;
   color: ${COLOR.GRAY_DARKEN_72};
   font-weight: 400;
->>>>>>> be7103feb4dc295ed49bd6a4e30790778f0c919a
   outline: none;
   caret-color: ${COLOR.BLUE};
 
