@@ -1,2 +1,18 @@
 #!/usr/bin/env node
 
+const { default: WireCLI } = require('../dist/commonjs/');
+const program = require('commander');
+const { description, version } = require('../package.json');
+
+program
+  .version(version)
+  .description(description)
+  .option('-e, --email <address>', 'Your email address')
+  .option('-p, --password <password>', 'Your password')
+  .option('-m, --message <message>', 'The message to send')
+  .parse(process.argv);
+
+new WireCLI(email, password, message)
+  .getNetworkTime()
+  .then(status => console.log(status))
+  .catch(err => console.error(err));
