@@ -9,6 +9,8 @@ import {PayloadBundle} from '@wireapp/core/dist/commonjs/crypto/';
 import * as os from 'os';
 import APIClient = require('@wireapp/api-client');
 
+require('dotenv').config();
+
 program
   .version(version)
   .description(description)
