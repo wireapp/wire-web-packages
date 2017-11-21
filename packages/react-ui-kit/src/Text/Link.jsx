@@ -38,11 +38,12 @@ const Link = ({component, ...props}) => {
     }
     &:hover {
       cursor: pointer;
-      color: ${COLOR.GRAY_DARKEN_88};
+      color: ${COLOR.GRAY_DARKEN_72};
     }
   `;
   return <StyledLink {...props} />;
 };
+
 Link.propTypes = {
   ...Text.propTypes,
   component: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
@@ -50,7 +51,11 @@ Link.propTypes = {
 
 Link.defaultProps = {
   ...Text.defaultProps,
+  bold: true,
+  color: COLOR.GRAY_DARKEN_72,
   component: 'a',
+  fontSize: '11px',
+  textTransform: 'uppercase',
 };
 
 export {Link};

@@ -1,10 +1,10 @@
 {
   "devDependencies": {
     "babel-eslint": "8.0.2",
-    "eslint-config-prettier": "2.7.0",
-    "eslint-plugin-prettier": "2.3.1",
-    "eslint-plugin-react": "7.4.0",
     "eslint": "4.11.0",
+    "eslint-config-prettier": "2.8.0",
+    "eslint-plugin-prettier": "2.3.1",
+    "eslint-plugin-react": "7.5.1",
     "husky": "0.14.3",
     "lerna": "2.5.1",
     "lint-staged": "5.0.0",
@@ -22,16 +22,15 @@
     "boot": "lerna bootstrap",
     "clear": "lerna run clear",
     "dist": "lerna run dist",
-    "fix:config": "prettier --write '**/*.json'",
-    "fix:docs": "prettier --ignore-path .gitignore --write '**/*.md'",
-    "fix:jsScript": "npm run test:jsScript -- --fix",
-    "fix:script": "yarn fix:jsScript && yarn fix:tsScript",
-    "fix:style": "prettier --write '**/*.scss'",
-    "fix:tsScript": "prettier --write '**/*.ts'",
     "fix": "yarn fix:docs && yarn fix:config && yarn fix:style && yarn fix:script",
-    "precommit": "lint-staged",
-    "test:jsScript": "eslint --ignore-path .gitignore --ignore-path .prettierignore '**/*.{js,jsx}'",
-    "test": "yarn test:jsScript && lerna run dist && lerna run test"
+    "fix:config": "prettier --write **/*.json",
+    "fix:docs": "prettier --ignore-path .gitignore --write **/*.md",
+    "fix:jsScript": "yarn test:jsScript --fix",
+    "fix:script": "yarn fix:jsScript && yarn fix:tsScript",
+    "fix:style": "prettier --write **/*.scss",
+    "fix:tsScript": "prettier --write **/*.ts",
+    "test": "yarn test:jsScript && lerna run dist && lerna run test",
+    "test:jsScript": "eslint --ignore-path .gitignore --ignore-path .prettierignore **/*.{js,jsx}"
   },
   "workspaces": ["packages/*"]
 }
