@@ -18,7 +18,6 @@
 
 const loadProtocolBuffers = require('@wireapp/protocol-messaging');
 const UUID = require('pure-uuid');
-import * as Proteus from 'wire-webapp-proteus';
 import {
   ClientMismatch,
   IncomingNotification,
@@ -26,11 +25,14 @@ import {
   OTRRecipients,
   UserClients,
 } from '@wireapp/api-client/dist/commonjs/conversation/';
-import CryptographyService from './crypto/CryptographyService';
+import {CryptographyService} from './crypto/';
 import {Context, LoginData, PreKey} from '@wireapp/api-client/dist/commonjs/auth/';
-import {ConversationEvent, ConversationEventType, OTRMessageAdd} from '@wireapp/api-client/dist/commonjs/conversation/event/';
+import {
+  ConversationEvent,
+  ConversationEventType,
+  OTRMessageAdd
+} from '@wireapp/api-client/dist/commonjs/conversation/event/';
 import {CRUDEngine, MemoryEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
-import {store} from 'wire-webapp-cryptobox';
 import {NewClient, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
 import {GenericMessageType, PayloadBundle} from './crypto/';
 import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/error/';
@@ -43,9 +45,6 @@ import EventEmitter = require('events');
 export default class Account extends EventEmitter {
   public static INCOMING = {
     TEXT_MESSAGE: 'Account.INCOMING.TEXT_MESSAGE',
-  };
-  public static STORES = {
-    CLIENTS: 'clients',
   };
   public apiClient: Client;
   private client: RegisteredClient;
@@ -120,7 +119,7 @@ export default class Account extends EventEmitter {
 
   private initClient(context: Context, loginData: LoginData): Promise<RegisteredClient> {
     this.context = context;
-    return this.loadExistingClient().catch(error => {
+    return this.cryptographyService.loadExistingClient().catch(error => {
       if (error instanceof RecordNotFoundError) {
         return this.registerNewClient(loginData);
       }
@@ -146,15 +145,6 @@ export default class Account extends EventEmitter {
         }
         return this.apiClient.connect();
       });
-  }
-
-  private loadExistingClient(): Promise<RegisteredClient> {
-    return this.cryptographyService.cryptobox.load().then((initialPreKeys: Array<Proteus.keys.PreKey>) => {
-      return this.storeEngine.read<RegisteredClient>(
-        Account.STORES.CLIENTS,
-        store.CryptoboxCRUDStore.KEYS.LOCAL_IDENTITY
-      );
-    });
   }
 
   public login(loginData: LoginData, initClient: boolean = true): Promise<Context> {
@@ -190,18 +180,8 @@ export default class Account extends EventEmitter {
   }
 
   private registerNewClient(loginData: LoginData): Promise<RegisteredClient> {
-    return this.cryptographyService.cryptobox
-      .create()
-      .then((initialPreKeys: Array<Proteus.keys.PreKey>) => {
-        const serializedPreKeys: Array<PreKey> = initialPreKeys
-          .map(preKey => {
-            const preKeyJson: PreKey = this.cryptographyService.cryptobox.serialize_prekey(preKey);
-            if (preKeyJson.id !== Proteus.keys.PreKey.MAX_PREKEY_ID) return preKeyJson;
-            return undefined;
-          })
-          .filter(serializedPreKey => serializedPreKey);
-
-        // TODO: Make the client values configurable from outside
+    return this.cryptographyService.createCryptobox()
+      .then((serializedPreKeys: Array<PreKey>) => {
         const newClient: NewClient = {
           class: 'desktop',
           cookie: 'webapp@1224301118@temporary@1472638149000',
@@ -222,7 +202,7 @@ export default class Account extends EventEmitter {
       .then((newClient: NewClient) => this.apiClient.client.api.postClient(newClient))
       .then((client: RegisteredClient) => {
         this.client = client;
-        return this.storeEngine.create(Account.STORES.CLIENTS, store.CryptoboxCRUDStore.KEYS.LOCAL_IDENTITY, client);
+        return this.cryptographyService.saveClient(client);
       })
       .then(() => this.client);
   }
