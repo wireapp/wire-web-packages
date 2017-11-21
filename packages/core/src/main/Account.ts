@@ -16,6 +16,7 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
+
 const loadProtocolBuffers = require('@wireapp/protocol-messaging');
 const UUID = require('pure-uuid');
 import {
@@ -32,8 +33,9 @@ import {
   ConversationEventType,
   OTRMessageAdd
 } from '@wireapp/api-client/dist/commonjs/conversation/event/';
-import {CRUDEngine, MemoryEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
+import {MemoryEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
 import {NewClient, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
+import {LoginSanitizer} from './auth/';
 import {GenericMessageType, PayloadBundle} from './crypto/';
 import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/error/';
 import {Root} from 'protobufjs';
@@ -41,27 +43,27 @@ import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/';
 import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/';
 import Client = require('@wireapp/api-client');
 import EventEmitter = require('events');
+import {ConversationService} from './conversation/';
 
 export default class Account extends EventEmitter {
   public static INCOMING = {
     TEXT_MESSAGE: 'Account.INCOMING.TEXT_MESSAGE',
   };
-  public apiClient: Client;
+  private apiClient: Client;
   private client: RegisteredClient;
   public context: Context;
-  public service: { crypto: CryptographyService } = {
+  private protocolBuffers: any = {};
+  public service: { conversation: ConversationService, crypto: CryptographyService } = {
+    conversation: undefined,
     crypto: undefined,
   };
-  private cryptographyService: CryptographyService;
-  private protocolBuffers: any = {};
-  private storeEngine: CRUDEngine;
 
   constructor(apiClient: Client = new Client({store: new MemoryEngine('temporary')})) {
     super();
     this.apiClient = apiClient;
-    this.storeEngine = apiClient.config.store;
     this.service = {
-      crypto: new CryptographyService(this.storeEngine)
+      conversation: new ConversationService(apiClient),
+      crypto: new CryptographyService(apiClient.config.store)
     };
   }
 
@@ -91,7 +93,7 @@ export default class Account extends EventEmitter {
   }
 
   // TODO: The correct functionality of this function is heavily based on the case that it always runs into the catch block
-  public getPreKeyBundles(conversationId: string): Promise<ClientMismatch | UserPreKeyBundleMap> {
+  private getPreKeyBundles(conversationId: string): Promise<ClientMismatch | UserPreKeyBundleMap> {
     return this.apiClient.conversation.api.postOTRMessage(this.context.clientID, conversationId).catch(error => {
       if (error.response && error.response.status === 412) {
         const recipients: UserClients = error.response.data.missing;
@@ -153,7 +155,7 @@ export default class Account extends EventEmitter {
   }
 
   public login(loginData: LoginData, initClient: boolean = true): Promise<Context> {
-    loginData = this.sanitizeLoginData(loginData);
+    LoginSanitizer.removeNonPrintableCharacters(loginData);
     return this.apiClient
       .init()
       .catch((error: Error) => this.apiClient.login(loginData))
@@ -212,35 +214,6 @@ export default class Account extends EventEmitter {
       .then(() => this.client);
   }
 
-  private sanitizeLoginData(loginData: LoginData): LoginData {
-    const removeNonPrintableCharacters = new RegExp('[^\x20-\x7E]+', 'gm');
-
-    if (loginData.email) {
-      loginData.email = loginData.email.replace(removeNonPrintableCharacters, '');
-    }
-
-    if (loginData.handle) {
-      loginData.handle = loginData.handle.replace(removeNonPrintableCharacters, '');
-    }
-
-    if (loginData.password) {
-      loginData.password = loginData.password.toString().replace(removeNonPrintableCharacters, '');
-    }
-
-    return {
-      ...loginData,
-      persist: !(this.storeEngine instanceof MemoryEngine),
-    };
-  }
-
-  public sendMessage(conversationId: string, recipients: OTRRecipients): Promise<ClientMismatch> {
-    const message: NewOTRMessage = {
-      recipients,
-      sender: this.context.clientID,
-    };
-    return this.apiClient.conversation.api.postOTRMessage(this.context.clientID, conversationId, message);
-  }
-
   public sendTextMessage(conversationId: string, message: string): Promise<ClientMismatch> {
     const customTextMessage = this.protocolBuffers.GenericMessage.create({
       messageId: new UUID(4).format(),
@@ -252,6 +225,6 @@ export default class Account extends EventEmitter {
         const typedArray = this.protocolBuffers.GenericMessage.encode(customTextMessage).finish();
         return this.service.crypto.encrypt(typedArray, preKeyBundles);
       })
-      .then(payload => this.sendMessage(conversationId, payload));
+      .then(payload => this.service.conversation.sendMessage(this.context.clientID, conversationId, payload));
   }
 }

@@ -16,14 +16,6 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-import Account from './Account';
-import * as auth from './auth';
-import * as conversation from './conversation';
-import * as crypto from './crypto';
+import ConversationService from './ConversationService';
 
-export = {
-  Account,
-  auth,
-  conversation,
-  crypto,
-};
+export {ConversationService};
