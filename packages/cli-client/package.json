@@ -1,0 +1,26 @@
+{
+  "dependencies": {
+    "commander": "2.11.0"
+  },
+  "devDependencies": {
+    "rimraf": "2.6.2",
+    "typescript": "2.6.1"
+  },
+  "description": "Command-line interface for Wire's secure messaging platform.",
+  "files": [
+    "dist"
+  ],
+  "license": "GPL-3.0",
+  "main": "./dist/commonjs/Client.js",
+  "name": "@wireapp/cli-client",
+  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client",
+  "scripts": {
+    "build": "yarn build:node",
+    "build:node": "yarn && yarn clear && tsc",
+    "clear": "rimraf dist",
+    "dist": "yarn build",
+    "test": "exit 0"
+  },
+  "types": "./dist/commonjs/Client.d.ts",
+  "version": "0.0.0"
+}
