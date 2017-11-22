@@ -77,7 +77,6 @@ export default function Demo() {
         <PlaneIcon />
       </Header>
       <Content>
-        <CodeInput />
         <Container>
           <H1>Layout</H1>
           <Line />
@@ -96,7 +95,6 @@ export default function Demo() {
               ContainerMD
             </Button>
           </ContainerMD>
-
           <H2>Columns</H2>
           <Line />
           <Columns>
@@ -225,6 +223,7 @@ export default function Demo() {
                 </InputSubmitCombo>
               </InputBlock>
             </Form>
+            <CodeInput onCodeComplete={code => console.log(code)} />
           </ContainerXS>
 
           <H1>Typography</H1>

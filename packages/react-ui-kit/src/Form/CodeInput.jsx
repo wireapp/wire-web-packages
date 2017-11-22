@@ -17,8 +17,14 @@
  *
  */
 
+import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
+
+const CodeInputWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`;
 
 const DigitInput = styled.input`
   line-height: 56px;
@@ -33,13 +39,21 @@ const DigitInput = styled.input`
   }
 `;
 
-const digitCount = 6;
-
 class CodeInput extends React.PureComponent {
+  static propTypes = {
+    digits: PropTypes.number,
+    onCodeComplete: PropTypes.func,
+  };
+
+  static defaultProps = {
+    digits: 6,
+    onCodeComplete: () => {},
+  };
+
   constructor(props) {
     super(props);
     this.state = {
-      values: Array(digitCount).fill(''),
+      values: Array(props.digits).fill(''),
     };
     this.inputs = [];
   }
@@ -61,21 +75,20 @@ class CodeInput extends React.PureComponent {
       const values = [...this.state.values];
       const newValues = cleanedPaste.split('');
       values.splice.apply(values, [num, newValues.length, ...newValues]);
-      this.setState({values: values.slice(0, digitCount)}, this.handleCompleteCode);
+      this.setState({values: values.slice(0, this.props.digits)}, this.handleCompleteCode);
     }
   };
 
   handleCompleteCode = () => {
     const completeCode = this.state.values.join('');
-    if (completeCode.length === digitCount) {
-      console.log('Complete Code:', completeCode);
+    if (completeCode.length === this.props.digits) {
+      this.props.onCodeComplete(completeCode);
     }
   };
 
   nextField = currentFieldNum => {
     const nextFieldNum = currentFieldNum + 1;
-    console.log(this.inputs);
-    if (nextFieldNum < digitCount) {
+    if (nextFieldNum < this.props.digits) {
       this.inputs[nextFieldNum].focus();
     }
   };
@@ -110,7 +123,7 @@ class CodeInput extends React.PureComponent {
   render() {
     const {values} = this.state;
     const inputs = [];
-    for (let i = 0; i < digitCount; i++) {
+    for (let i = 0; i < this.props.digits; i++) {
       inputs.push(
         <DigitInput
           key={i}
@@ -124,7 +137,7 @@ class CodeInput extends React.PureComponent {
         />
       );
     }
-    return <div>{inputs}</div>;
+    return <CodeInputWrapper>{inputs}</CodeInputWrapper>;
   }
 }
 
