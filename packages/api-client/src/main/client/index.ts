@@ -17,8 +17,10 @@
 //
 
 import ClientAPI from './ClientAPI';
+import ClientClassification from './ClientClassification';
+import ClientType from './ClientType';
 import NewClient from './NewClient';
 import PublicClient from './PublicClient';
 import RegisteredClient from './RegisteredClient';
 
-export {ClientAPI, NewClient, PublicClient, RegisteredClient};
+export {ClientAPI, ClientClassification, ClientType, NewClient, PublicClient, RegisteredClient};
