@@ -16,16 +16,6 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-import ClientAPI from './ClientAPI';
-import ClientClassification from './ClientClassification';
-import ClientType from './ClientType';
-import NewClient from './NewClient';
-import PublicClient from './PublicClient';
-import RegisteredClient from './RegisteredClient';
+import LoginSanitizer from './LoginSanitizer';
 
-export {
-  ClientAPI,
-  ClientClassification,
-  ClientType,
-  NewClient, PublicClient, RegisteredClient
-};
+export {LoginSanitizer};
