@@ -48,6 +48,7 @@ export default class Account extends EventEmitter {
   public static INCOMING = {
     TEXT_MESSAGE: 'Account.INCOMING.TEXT_MESSAGE',
   };
+  private apiClient: Client;
   private client: RegisteredClient;
   public context: Context;
   private protocolBuffers: any = {};
@@ -56,8 +57,9 @@ export default class Account extends EventEmitter {
     crypto: undefined,
   };
 
-  constructor(private apiClient: Client = new Client({store: new MemoryEngine('temporary')})) {
+  constructor(apiClient: Client = new Client({store: new MemoryEngine('temporary')})) {
     super();
+    this.apiClient = apiClient;
   }
 
   private decodeEvent(event: ConversationEvent): Promise<string> {
