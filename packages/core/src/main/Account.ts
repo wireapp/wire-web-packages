@@ -17,7 +17,6 @@
 //
 
 const loadProtocolBuffers = require('@wireapp/protocol-messaging');
-const UUID = require('pure-uuid');
 import {
   ClientMismatch,
   IncomingNotification,
@@ -49,7 +48,6 @@ export default class Account extends EventEmitter {
   public static INCOMING = {
     TEXT_MESSAGE: 'Account.INCOMING.TEXT_MESSAGE',
   };
-  private apiClient: Client;
   private client: RegisteredClient;
   public context: Context;
   private protocolBuffers: any = {};
@@ -58,13 +56,9 @@ export default class Account extends EventEmitter {
     crypto: undefined,
   };
 
-  constructor(apiClient: Client = new Client({store: new MemoryEngine('temporary')})) {
+  constructor(private apiClient: Client = new Client({store: new MemoryEngine('temporary')})) {
     super();
-    this.apiClient = apiClient;
-    this.service = {
-      conversation: new ConversationService(apiClient),
-      crypto: new CryptographyService(apiClient.config.store),
-    };
+    this.init();
   }
 
   private decodeEvent(event: ConversationEvent): Promise<string> {
@@ -89,17 +83,6 @@ export default class Account extends EventEmitter {
     });
   }
 
-  // TODO: The correct functionality of this function is heavily based on the case that it always runs into the catch block
-  private getPreKeyBundles(conversationId: string): Promise<ClientMismatch | UserPreKeyBundleMap> {
-    return this.apiClient.conversation.api.postOTRMessage(this.context.clientID, conversationId).catch(error => {
-      if (error.response && error.response.status === 412) {
-        const recipients: UserClients = error.response.data.missing;
-        return this.apiClient.user.api.postMultiPreKeyBundles(recipients);
-      }
-      throw error;
-    });
-  }
-
   private handleEvent(event: ConversationEvent): Promise<PayloadBundle> {
     const {conversation, from} = event;
     return this.decodeEvent(event).then((content: string) => {
@@ -121,8 +104,21 @@ export default class Account extends EventEmitter {
     }
   }
 
+  private init(): Promise<void> {
+    return loadProtocolBuffers()
+      .then((root: Root) => {
+        this.protocolBuffers.GenericMessage = root.lookup('GenericMessage');
+        this.protocolBuffers.Text = root.lookup('Text');
+      })
+      .then(() => {
+        this.service.crypto = new CryptographyService(this.apiClient.config.store);
+        this.service.conversation = new ConversationService(this.apiClient, this.protocolBuffers, this.service.crypto);
+      });
+  }
+
   private initClient(context: Context, loginData: LoginData): Promise<RegisteredClient> {
     this.context = context;
+    this.service.conversation.setContext(this.context);
     return this.service.crypto.loadExistingClient().catch(error => {
       if (error instanceof RecordNotFoundError) {
         return this.registerClient(loginData);
@@ -168,11 +164,7 @@ export default class Account extends EventEmitter {
       })
       .then(() => {
         this.context = this.apiClient.context;
-        return loadProtocolBuffers();
-      })
-      .then((root: Root) => {
-        this.protocolBuffers.GenericMessage = root.lookup('GenericMessage');
-        this.protocolBuffers.Text = root.lookup('Text');
+        this.service.conversation.setContext(this.context);
         return this.context;
       });
   }
@@ -181,6 +173,7 @@ export default class Account extends EventEmitter {
     return this.apiClient.logout().then(() => {
       this.client = undefined;
       this.context = undefined;
+      this.service.conversation.setContext(undefined);
       this.service.crypto = undefined;
     });
   }
@@ -214,19 +207,5 @@ export default class Account extends EventEmitter {
         return this.service.crypto.saveClient(client);
       })
       .then(() => this.client);
-  }
-
-  public sendTextMessage(conversationId: string, message: string): Promise<ClientMismatch> {
-    const customTextMessage = this.protocolBuffers.GenericMessage.create({
-      messageId: new UUID(4).format(),
-      text: this.protocolBuffers.Text.create({content: message}),
-    });
-
-    return this.getPreKeyBundles(conversationId)
-      .then((preKeyBundles: UserPreKeyBundleMap) => {
-        const typedArray = this.protocolBuffers.GenericMessage.encode(customTextMessage).finish();
-        return this.service.crypto.encrypt(typedArray, preKeyBundles);
-      })
-      .then(payload => this.service.conversation.sendMessage(this.context.clientID, conversationId, payload));
   }
 }
