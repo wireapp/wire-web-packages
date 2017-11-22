@@ -58,7 +58,6 @@ export default class Account extends EventEmitter {
 
   constructor(private apiClient: Client = new Client({store: new MemoryEngine('temporary')})) {
     super();
-    this.init();
   }
 
   private decodeEvent(event: ConversationEvent): Promise<string> {
@@ -148,11 +147,13 @@ export default class Account extends EventEmitter {
   }
 
   public login(loginData: LoginData, initClient: boolean = true): Promise<Context> {
-    LoginSanitizer.removeNonPrintableCharacters(loginData);
-    loginData.persist =
-      loginData.persist || this.apiClient.config.store.constructor.name === 'MemoryEngine' ? false : true;
-    return this.apiClient
-      .init()
+    return this.init()
+      .then(() => {
+        LoginSanitizer.removeNonPrintableCharacters(loginData);
+        loginData.persist =
+          loginData.persist || this.apiClient.config.store.constructor.name === 'MemoryEngine' ? false : true;
+        return this.apiClient.init();
+      })
       .catch((error: Error) => this.apiClient.login(loginData))
       .then((context: Context) => {
         if (initClient) {
