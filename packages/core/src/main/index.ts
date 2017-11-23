@@ -17,7 +17,13 @@
 //
 
 import Account from './Account';
+import * as auth from './auth';
+import * as conversation from './conversation';
+import * as crypto from './crypto';
 
 export = {
   Account,
+  auth,
+  conversation,
+  crypto,
 };

@@ -18,16 +18,17 @@
  */
 
 import {COLOR} from '../Identity';
+import PropTypes from 'prop-types';
 import React from 'react';
 import {Text} from './Text';
 import {defaultTransition} from '../Identity/motions';
 
-const Link = ({component = 'a', ...props}) => {
+const Link = ({component, ...props}) => {
   const StyledLink = Text.withComponent(component).extend`
     /* appearance */
-    font-weight: 400;
     text-decoration: none;
     ${defaultTransition}
+    cursor: pointer;
 
     /* positioning */
 
@@ -37,18 +38,24 @@ const Link = ({component = 'a', ...props}) => {
       color: ${() => props.color};
     }
     &:hover {
-      cursor: pointer;
-      color: ${COLOR.GRAY_DARKEN_88};
+      color: ${COLOR.LINK};
     }
   `;
   return <StyledLink {...props} />;
 };
+
 Link.propTypes = {
   ...Text.propTypes,
+  component: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
 };
 
 Link.defaultProps = {
   ...Text.defaultProps,
+  bold: true,
+  color: COLOR.LINK,
+  component: 'a',
+  fontSize: '11px',
+  textTransform: 'uppercase',
 };
 
 export {Link};

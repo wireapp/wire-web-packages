@@ -17,6 +17,7 @@
  *
  */
 
+import {ArrowIcon, PlaneIcon, ProfileIcon, TeamIcon} from '@wireapp/react-ui-kit/Icon';
 import {
   Bold,
   H1,
@@ -32,7 +33,18 @@ import {
   Text,
   Uppercase,
 } from '@wireapp/react-ui-kit/Text';
-import {Button, ButtonLink, Checkbox, Form, Input, Select} from '@wireapp/react-ui-kit/Form';
+import {
+  Button,
+  ButtonLink,
+  Checkbox,
+  CodeInput,
+  Form,
+  Input,
+  InputBlock,
+  InputSubmitCombo,
+  RoundIconButton,
+  Select,
+} from '@wireapp/react-ui-kit/Form';
 import {COLOR, Logo} from '@wireapp/react-ui-kit/Identity';
 import {
   Column,
@@ -46,6 +58,7 @@ import {
   Header,
   StyledApp,
 } from '@wireapp/react-ui-kit/Layout';
+import {CheckboxLabel} from '../src/Form/index';
 import Color from 'color';
 import {Loading} from '@wireapp/react-ui-kit/Progress';
 import React from 'react';
@@ -59,6 +72,10 @@ export default function Demo() {
         <Loading progress={0.33} />
         <Loading progress={0.66} />
         <Logo scale="3" hover />
+        <ProfileIcon />
+        <TeamIcon />
+        <ArrowIcon direction="down" />
+        <PlaneIcon />
       </Header>
       <Content>
         <Container>
@@ -79,7 +96,6 @@ export default function Demo() {
               ContainerMD
             </Button>
           </ContainerMD>
-
           <H2>Columns</H2>
           <Line />
           <Columns>
@@ -129,7 +145,18 @@ export default function Demo() {
             <Column>Checkbox</Column>
             <Column>
               <Checkbox id="ToU">
-                <Text>ToU</Text>
+                <CheckboxLabel>{'ToU'}</CheckboxLabel>
+              </Checkbox>
+            </Column>
+          </Columns>
+          <Columns>
+            <Column>Checkbox</Column>
+            <Column>
+              <Checkbox id="ToU">
+                <Text bold fontSize="11px" textTransform="uppercase">
+                  {'ToU '}
+                </Text>
+                <Link href="#">{'Link'}</Link>
               </Checkbox>
             </Column>
           </Columns>
@@ -137,7 +164,9 @@ export default function Demo() {
             <Column>Disabled Checkbox</Column>
             <Column>
               <Checkbox id="disabled" disabled>
-                <Text>Disabled</Text>
+                <Text bold fontSize="11px" textTransform="uppercase">
+                  {'Disabled'}
+                </Text>
               </Checkbox>
             </Column>
           </Columns>
@@ -185,7 +214,15 @@ export default function Demo() {
             <Form>
               <Input placeholder="Placeholder" type="email" required />
               <Button type="submit">Submit Button</Button>
+              <InputBlock>
+                <Input placeholder="InputBlock" />
+                <InputSubmitCombo>
+                  <Input placeholder="InputSubmitCombo" />
+                  <RoundIconButton type="submit" />
+                </InputSubmitCombo>
+              </InputBlock>
             </Form>
+            <CodeInput onCodeComplete={code => console.log(code)} />
           </ContainerXS>
 
           <H1>Typography</H1>

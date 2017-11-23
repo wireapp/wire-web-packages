@@ -16,7 +16,6 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-import PayloadBundle from './PayloadBundle';
-import SessionPayloadBundle from './SessionPayloadBundle';
+import ConversationService from './ConversationService';
 
-export {PayloadBundle, SessionPayloadBundle};
+export {ConversationService};

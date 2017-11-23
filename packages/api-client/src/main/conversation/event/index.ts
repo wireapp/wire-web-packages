@@ -17,10 +17,11 @@
 //
 
 import ConversationEvent from './ConversationEvent';
+import ConversationEventType from './ConversationEventType';
 import MemberJoin from './MemberJoin';
 import MemberLeave from './MemberLeave';
 import MemberUpdate from './MemberUpdate';
 import OTRMessageAdd from './OTRMessageAdd';
 import Rename from './Rename';
 
-export {ConversationEvent, MemberJoin, MemberLeave, MemberUpdate, OTRMessageAdd, Rename};
+export {ConversationEvent, ConversationEventType, MemberJoin, MemberLeave, MemberUpdate, OTRMessageAdd, Rename};
