@@ -121,6 +121,10 @@
   version "7.0.46"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.46.tgz#c3dedd25558c676b3d6303e51799abb9c3f8f314"
 
+"@types/node@^7.0.48":
+  version "7.0.48"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.48.tgz#24bfdc0aa82e8f6dbd017159c58094a2e06d0abb"
+
 "@types/spark-md5@3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@types/spark-md5/-/spark-md5-3.0.0.tgz#15b80a036f59167a8ec6045f6f1efcd9c8b02a7c"
@@ -132,23 +136,6 @@
 "@types/tough-cookie@2.3.2":
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/@types/tough-cookie/-/tough-cookie-2.3.2.tgz#e0d481d8bb282ad8a8c9e100ceb72c995fb5e709"
-
-"@wireapp/api-client@0.2.8":
-  version "0.2.8"
-  resolved "https://registry.yarnpkg.com/@wireapp/api-client/-/api-client-0.2.8.tgz#d74f529b85134cc38b417b2b94b1328216182afe"
-  dependencies:
-    "@types/node" "8.0.53"
-    "@types/spark-md5" "3.0.0"
-    "@types/text-encoding" "0.0.32"
-    "@types/tough-cookie" "2.3.2"
-    "@wireapp/queue-priority" "0.0.12"
-    "@wireapp/store-engine" "0.1.1"
-    axios "0.17.1"
-    html5-websocket "2.0.1"
-    logdown "2.2.0"
-    reconnecting-websocket "3.2.2"
-    spark-md5 "3.0.0"
-    tough-cookie "2.3.3"
 
 "@wireapp/protocol-messaging@1.19.0":
   version "1.19.0"
@@ -1678,13 +1665,19 @@ command-join@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/command-join/-/command-join-2.0.0.tgz#52e8b984f4872d952ff1bdc8b98397d27c7144cf"
 
-commander@2.11.0, commander@^2.11.0, commander@^2.2.0, commander@^2.9.0:
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-2.11.0.tgz#157152fd1e7a6c8d98a5b715cf376df928004563"
+commander@2.12.0:
+  version "2.12.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.12.0.tgz#2f13615c39c687a77926aa68ef25c099db1e72fb"
+  dependencies:
+    "@types/node" "^7.0.48"
 
 commander@2.6.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.6.0.tgz#9df7e52fb2a0cb0fb89058ee80c3104225f37e1d"
+
+commander@^2.11.0, commander@^2.2.0, commander@^2.9.0:
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.11.0.tgz#157152fd1e7a6c8d98a5b715cf376df928004563"
 
 commondir@^1.0.1:
   version "1.0.1"
