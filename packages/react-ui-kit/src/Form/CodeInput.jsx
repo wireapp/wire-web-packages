@@ -133,10 +133,10 @@ class CodeInput extends React.PureComponent {
         <DigitInput
           autoFocus={index === 0 && this.props.autoFocus}
           key={index}
-          onChange={e => this.setValue(index, e.target.value)}
-          onPaste={e => this.handlePaste(index, e.clipboardData.getData('Text'))}
-          onFocus={e => e.target.select()}
-          onKeyDown={e => this.handleKeyDown(index, e)}
+          onChange={event => this.setValue(index, event.target.value)}
+          onPaste={event => this.handlePaste(index, event.clipboardData.getData('Text'))}
+          onFocus={event => event.target.select()}
+          onKeyDown={event => this.handleKeyDown(index, event)}
           innerRef={node => (this.inputs[index] = node)}
           type="text"
           value={values[index]}
