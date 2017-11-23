@@ -6,19 +6,19 @@ You can find the published source code at [github.com/wireapp](https://github.co
 
 For licensing information, see the attached LICENSE file and the list of third-party licenses at [wire.com/legal/licenses/](https://wire.com/legal/licenses/).
 
-# Wire Storage Engine [![Greenkeeper badge](https://badges.greenkeeper.io/wireapp/wire-web-store-engine.svg)](https://greenkeeper.io/)
+## Store Engine
 
 Provider for the following storage engines: File, IndexedDB, Memory & LocalStorage.
 
-## Motivation
+### Motivation
 
-### One API to rule them all!
+#### One API to rule them all!
 
 ![big deal](https://user-images.githubusercontent.com/469989/28491995-c5f0ea34-6efa-11e7-97d1-2f8b1d159981.jpg)
 
 Nowadays there are more and more storage possibilities and developers must be familiar with the characteristics of each individual solution to reliably store data. Because it can be sometimes hard to keep up with the highly dynamic world of data storages, we have developed a system which unifies the usage of [IndexedDB](https://developer.mozilla.org/docs/IndexedDB), [In-memory storage](https://en.wikipedia.org/wiki/In-memory_database), [File-based storage](https://nodejs.org/api/fs.html) and [LocalStorage](https://developer.mozilla.org/docs/Web/API/Window/localStorage). In addition we built some functionality (like a transient store which deletes data after a [TTL](https://en.wikipedia.org/wiki/Time_to_live)) on top.
 
-## Overview
+### Overview
 
 |       Engine       | Available in Browser | Available in Node.js |                                                        Description                                                         |
 | :----------------: | :------------------: | :------------------: | :------------------------------------------------------------------------------------------------------------------------: |
@@ -27,18 +27,18 @@ Nowadays there are more and more storage possibilities and developers must be fa
 |    MemoryEngine    |          ✔           |          ✔           |                Transient store which loses data on application restart. Suitable for testing environments.                 |
 | LocalStorageEngine |          ✔           |          ❌          | Can save very small amount of data. Stored data is saved across browser sessions. Suitable for simple objects and strings. |
 
-## Quickstart
+### Quickstart
 
-### Engines
+#### Engines
 
-#### Hooking up a FileEngine
+**Hooking up a FileEngine**
 
 ```javascript
 const {StoreEngine} = require('@wireapp/store-engine');
 const engine = new StoreEngine.FileEngine('C:\tempmy-favorite-actors');
 ```
 
-#### Hooking up a IndexedDBEngine
+**Hooking up a IndexedDBEngine**
 
 ```javascript
 import Dexie from 'dexie';
@@ -52,25 +52,25 @@ const {StoreEngine} = require('@wireapp/store-engine');
 const engine = new StoreEngine.IndexedDBEngine(db);
 ```
 
-#### Hooking up a MemoryEngine
+**Hooking up a MemoryEngine**
 
 ```javascript
 const {StoreEngine} = require('@wireapp/store-engine');
 const engine = new StoreEngine.MemoryEngine('my-favorite-actors');
 ```
 
-#### Hooking up a LocalStorageEngine
+**Hooking up a LocalStorageEngine**
 
 ```javascript
 const {StoreEngine} = require('@wireapp/store-engine');
 const engine = new StoreEngine.LocalStorageEngine('my-favorite-actors');
 ```
 
-### Stores
+#### Stores
 
 With an engine you can build a store which has special capabilities like a timeout.
 
-#### Using a TransientStore
+**Using a TransientStore**
 
 ```javascript
 const {Store, StoreEngine} = require('@wireapp/store-engine');
@@ -86,7 +86,7 @@ store
   });
 ```
 
-## API
+### API
 
 No matter what engine you use, all [CRUD operations](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) work the same. 🙂
 
@@ -98,7 +98,7 @@ const PRIMARY_KEY = 'lisa-simpson';
 const ENTITY = {name: 'Lisa Simpson'};
 ```
 
-### create
+#### create
 
 ```javascript
 engine.create(TABLE_NAME, PRIMARY_KEY, ENTITY).then(primaryKey => {
@@ -106,7 +106,7 @@ engine.create(TABLE_NAME, PRIMARY_KEY, ENTITY).then(primaryKey => {
 });
 ```
 
-### delete
+#### delete
 
 ```javascript
 engine.delete(TABLE_NAME, PRIMARY_KEY).then(primaryKey => {
@@ -114,7 +114,7 @@ engine.delete(TABLE_NAME, PRIMARY_KEY).then(primaryKey => {
 });
 ```
 
-### deleteAll
+#### deleteAll
 
 ```javascript
 engine.deleteAll(TABLE_NAME).then(wasDeleted => {
@@ -124,7 +124,7 @@ engine.deleteAll(TABLE_NAME).then(wasDeleted => {
 });
 ```
 
-### read
+#### read
 
 ```javascript
 engine.read(TABLE_NAME, PRIMARY_KEY).then(record => {
@@ -132,7 +132,7 @@ engine.read(TABLE_NAME, PRIMARY_KEY).then(record => {
 });
 ```
 
-### readAll
+#### readAll
 
 ```javascript
 engine.readAll(TABLE_NAME).then(records => {
@@ -140,7 +140,7 @@ engine.readAll(TABLE_NAME).then(records => {
 });
 ```
 
-### readAllPrimaryKeys
+#### readAllPrimaryKeys
 
 ```javascript
 engine.readAllPrimaryKeys(TABLE_NAME).then(primaryKeys => {
@@ -148,7 +148,7 @@ engine.readAllPrimaryKeys(TABLE_NAME).then(primaryKeys => {
 });
 ```
 
-### update
+#### update
 
 ```javascript
 engine.update(TABLE_NAME, PRIMARY_KEY, {brother: 'Bart Simpson'}).then((primaryKey) => {
