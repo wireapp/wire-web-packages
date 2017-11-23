@@ -34,6 +34,7 @@ const DigitInput = styled.input`
   border-radius: 4px;
   text-align: center;
   color: black;
+  outline: none;
   & + & {
     margin-left: 19px;
   }
@@ -41,13 +42,17 @@ const DigitInput = styled.input`
 
 class CodeInput extends React.PureComponent {
   static propTypes = {
+    autoFocus: PropTypes.bool,
     digits: PropTypes.number,
     onCodeComplete: PropTypes.func,
+    style: PropTypes.object,
   };
 
   static defaultProps = {
+    autoFocus: false,
     digits: 6,
     onCodeComplete: () => {},
+    style: null,
   };
 
   constructor(props) {
@@ -126,6 +131,7 @@ class CodeInput extends React.PureComponent {
     for (let index = 0; index < this.props.digits; index++) {
       inputs.push(
         <DigitInput
+          autoFocus={index === 0 && this.props.autoFocus}
           key={index}
           onChange={event => this.setValue(index, event.target.value)}
           onPaste={event => this.handlePaste(index, event.clipboardData.getData('Text'))}
@@ -137,7 +143,7 @@ class CodeInput extends React.PureComponent {
         />
       );
     }
-    return <CodeInputWrapper>{inputs}</CodeInputWrapper>;
+    return <CodeInputWrapper style={this.props.style}>{inputs}</CodeInputWrapper>;
   }
 }
 
