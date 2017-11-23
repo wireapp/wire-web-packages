@@ -23,7 +23,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {Text} from '../Text';
 import styled from 'styled-components';
-import {v4 as uuid} from 'uuid';
 
 const StyledContainerCheckbox = styled.div`
   /* appearance */
@@ -44,8 +43,8 @@ const StyledCheckbox = Input.withComponent('input').extend.attrs({
 `;
 
 const Checkbox = ({id, children, style, ...props}) => {
-  if (id === null) {
-    id = uuid();
+  if (!id) {
+    id = Math.random().toString();
   }
   return (
     <StyledContainerCheckbox style={style}>
