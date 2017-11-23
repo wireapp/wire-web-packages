@@ -17,25 +17,13 @@
  *
  */
 
-import baseStyle from './Base';
-import {injectGlobal} from 'styled-components';
-import styledNormalize from 'styled-normalize';
+import setGlobalStyles from './globalStyles';
 
-injectGlobal([styledNormalize]);
-injectGlobal([baseStyle]);
+setGlobalStyles();
 
-export * from './Button';
-export * from './Heading';
-export * from './Logo';
-export * from './Container';
-export * from './Column';
-export * from './Line';
-export * from './Text';
-export * from './Paragraph';
-export * from './Input';
-export * from './Select';
-export * from './Loading';
-export * from './Checkbox';
 export * from './Form';
-export * from './Link';
-export {COLOR} from './variables';
+export * from './Layout';
+export * from './Identity';
+export * from './Icon';
+export * from './Progress';
+export * from './Text';

@@ -1,7 +1,9 @@
+*hot-update.js*
 .DS_Store
 .idea
 .tmp
 .yarnclean
+bin
 bower_components
 dist
 lerna-debug.log
@@ -12,4 +14,3 @@ packages/logger/demo/js
 packages/logger/test/js
 temp
 yarn-error.log
-*hot-update.js*
