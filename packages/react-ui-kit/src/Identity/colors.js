@@ -102,6 +102,7 @@ const OPAQUE_COLOR = {
 const COMPONENT_COLOR = {
   LINK: DARK_COLOR.GRAY_DARKEN_72,
   TEXT: DARK_COLOR.GRAY_DARKEN_32,
+  DISABLED: opaque(DARK_COLOR.GRAY_DARKEN_32, 0.84),
 };
 
 export const COLOR = {
@@ -110,4 +111,5 @@ export const COLOR = {
   ...LIGHT_COLOR,
   ...OPAQUE_COLOR,
   ...COMPONENT_COLOR,
+  shade,
 };
