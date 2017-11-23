@@ -5,7 +5,8 @@
     "react": "16.1.1",
     "react-dom": "16.0.0",
     "styled-components": "2.2.3",
-    "styled-normalize": "2.2.1"
+    "styled-normalize": "2.2.1",
+    "uuid": "3.1.0"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
@@ -37,5 +38,5 @@
     "version": "yarn dist",
     "publish": "cd ./dist && npm publish"
   },
-  "version": "0.0.6"
+  "version": "0.0.8"
 }
