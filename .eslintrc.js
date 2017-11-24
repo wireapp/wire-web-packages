@@ -9,6 +9,7 @@ module.exports = {
   "rules": {
     "curly": 2,
     "dot-notation": 2,
+    "id-length": 2,
     "no-const-assign": 2,
     "no-dupe-class-members": 2,
     "no-else-return": 2,

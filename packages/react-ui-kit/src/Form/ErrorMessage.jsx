@@ -17,20 +17,21 @@
  *
  */
 
-import {Input, InputSubmitCombo} from './';
 import {COLOR} from '../Identity';
-import styled from 'styled-components';
+import {Text} from '../Text';
 
-const InputBlock = styled.div`
-  background-color: ${COLOR.GRAY_LIGHTEN_88};
-  border-radius: 4px;
-  box-shadow: inset 20px 20px 0 ${COLOR.WHITE}, inset -20px -20px 0 ${COLOR.WHITE};
-  & > ${() => Input} {
-    margin: 0;
-  }
-  & > ${() => Input} + ${() => Input}, & > ${() => Input} + ${() => InputSubmitCombo} {
-    margin: 1px 0 0;
-  }
+const ErrorMessage = Text.extend`
+  display: block;
+  margin-top: 12px;
 `;
 
-export {InputBlock};
+ErrorMessage.defaultProps = {
+  ...Text.defaultProps,
+  bold: true,
+  center: true,
+  color: COLOR.RED,
+  fontSize: '11px',
+  textTransform: 'uppercase',
+};
+
+export {ErrorMessage};
