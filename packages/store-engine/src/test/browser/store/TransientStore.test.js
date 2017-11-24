@@ -17,7 +17,7 @@
  *
  */
 
-import {Store, StoreEngine} from '../../../../dist/commonjs/index';
+import {Store, StoreEngine} from '@wireapp/store-engine';
 
 describe('store.TransientStore', () => {
   const DATABASE_NAME = 'database-name';

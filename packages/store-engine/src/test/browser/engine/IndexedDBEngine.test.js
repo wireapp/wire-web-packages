@@ -18,7 +18,7 @@
  */
 
 import Dexie from 'dexie';
-import {StoreEngine} from '../../../../dist/commonjs/index';
+import {StoreEngine} from '@wireapp/store-engine';
 
 describe('StoreEngine.IndexedDBEngine', () => {
   const DATABASE_NAME = 'database-name';

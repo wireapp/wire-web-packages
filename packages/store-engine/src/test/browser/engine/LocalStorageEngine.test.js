@@ -17,7 +17,7 @@
  *
  */
 
-import {StoreEngine} from '../../../../dist/commonjs/index';
+import {StoreEngine} from '@wireapp/store-engine';
 
 describe('StoreEngine.LocalStorageEngine', () => {
   const DATABASE_NAME = 'database-name';

@@ -17,11 +17,9 @@
  *
  */
 
-/* eslint-disable no-magic-numbers */
-
 const fs = require('fs-extra');
 const path = require('path');
-const {StoreEngine} = require('../../../../../dist/commonjs/index');
+const {StoreEngine} = require('@wireapp/store-engine');
 
 describe('StoreEngine.FileEngine', () => {
   const DATABASE_NAME = 'database-name';
@@ -51,7 +49,6 @@ describe('StoreEngine.FileEngine', () => {
         engine.resolvePath(TABLE_NAME, '..\\etc').catch(error => error),
         engine.resolvePath(TABLE_NAME, '.etc').catch(error => error),
       ]).then(results => {
-        expect(results.length).toBe(6);
         for (error of results) {
           expect(error.name === 'PathValidationError').toBe(true);
           expect(error.message).toBe(StoreEngine.error.PathValidationError.TYPE.PATH_TRAVERSAL);
@@ -127,7 +124,6 @@ describe('StoreEngine.FileEngine', () => {
         engine.create(TABLE_NAME, '..\\etc', entity).catch(error => error),
         engine.create(TABLE_NAME, '.etc', entity).catch(error => error),
       ]).then(results => {
-        expect(results.length).toBe(6);
         for (error of results) {
           expect(error.name === 'PathValidationError').toBe(true);
           expect(error.message).toBe(StoreEngine.error.PathValidationError.TYPE.PATH_TRAVERSAL);
@@ -198,6 +194,8 @@ describe('StoreEngine.FileEngine', () => {
         primaryKey: 'marge-simpson',
       };
 
+      const expectedRemainingEntities = 2;
+
       Promise.all([
         engine.create(TABLE_NAME, homer.primaryKey, homer.entity),
         engine.create(TABLE_NAME, lisa.primaryKey, lisa.entity),
@@ -206,7 +204,7 @@ describe('StoreEngine.FileEngine', () => {
         .then(() => engine.delete(TABLE_NAME, lisa.primaryKey))
         .then(() => engine.readAllPrimaryKeys(TABLE_NAME))
         .then(primaryKeys => {
-          expect(primaryKeys.length).toBe(2);
+          expect(primaryKeys.length).toBe(expectedRemainingEntities);
           expect(primaryKeys[0]).toBe(homer.primaryKey);
           expect(primaryKeys[1]).toBe(marge.primaryKey);
           done();
@@ -224,7 +222,6 @@ describe('StoreEngine.FileEngine', () => {
         engine.delete(TABLE_NAME, '..\\etc').catch(error => error),
         engine.delete(TABLE_NAME, '.etc').catch(error => error),
       ]).then(results => {
-        expect(results.length).toBe(6);
         for (error of results) {
           expect(error.name === 'PathValidationError').toBe(true);
           expect(error.message).toBe(StoreEngine.error.PathValidationError.TYPE.PATH_TRAVERSAL);
@@ -282,7 +279,6 @@ describe('StoreEngine.FileEngine', () => {
         engine.deleteAll('..\\etc').catch(error => error),
         engine.deleteAll('.etc').catch(error => error),
       ]).then(results => {
-        expect(results.length).toBe(3);
         for (error of results) {
           expect(error.name === 'PathValidationError').toBe(true);
           expect(error.message).toBe(StoreEngine.error.PathValidationError.TYPE.PATH_TRAVERSAL);
@@ -334,7 +330,6 @@ describe('StoreEngine.FileEngine', () => {
         engine.read(TABLE_NAME, '..\\etc').catch(error => error),
         engine.read(TABLE_NAME, '.etc').catch(error => error),
       ]).then(results => {
-        expect(results.length).toBe(6);
         for (error of results) {
           expect(error.name === 'PathValidationError').toBe(true);
           expect(error.message).toBe(StoreEngine.error.PathValidationError.TYPE.PATH_TRAVERSAL);
@@ -370,6 +365,8 @@ describe('StoreEngine.FileEngine', () => {
         primaryKey: 'marge-simpson',
       };
 
+      const allEntities = [homer, lisa, marge];
+
       Promise.all([
         engine.create(TABLE_NAME, homer.primaryKey, homer.entity),
         engine.create(TABLE_NAME, lisa.primaryKey, lisa.entity),
@@ -377,10 +374,10 @@ describe('StoreEngine.FileEngine', () => {
       ])
         .then(() => engine.readAll(TABLE_NAME))
         .then(records => {
-          expect(records.length).toBe(3);
-          expect(records[0].firstName).toBe(homer.entity.firstName);
-          expect(records[1].firstName).toBe(lisa.entity.firstName);
-          expect(records[2].firstName).toBe(marge.entity.firstName);
+          expect(records.length).toBe(allEntities.length);
+          for (const i in records) {
+            expect(records[i].firstName).toBe(allEntities[i].entity.firstName);
+          }
           done();
         });
     });
@@ -391,7 +388,6 @@ describe('StoreEngine.FileEngine', () => {
         engine.readAll('..\\etc').catch(error => error),
         engine.readAll('.etc').catch(error => error),
       ]).then(results => {
-        expect(results.length).toBe(3);
         for (error of results) {
           expect(error.name === 'PathValidationError').toBe(true);
           expect(error.message).toBe(StoreEngine.error.PathValidationError.TYPE.PATH_TRAVERSAL);
@@ -427,6 +423,8 @@ describe('StoreEngine.FileEngine', () => {
         primaryKey: 'marge-simpson',
       };
 
+      const allEntities = [homer, lisa, marge];
+
       Promise.all([
         engine.create(TABLE_NAME, homer.primaryKey, homer.entity),
         engine.create(TABLE_NAME, lisa.primaryKey, lisa.entity),
@@ -434,27 +432,12 @@ describe('StoreEngine.FileEngine', () => {
       ])
         .then(() => engine.readAllPrimaryKeys(TABLE_NAME))
         .then(primaryKeys => {
-          expect(primaryKeys.length).toBe(3);
-          expect(primaryKeys[0]).toBe(homer.primaryKey);
-          expect(primaryKeys[1]).toBe(lisa.primaryKey);
-          expect(primaryKeys[2]).toBe(marge.primaryKey);
+          expect(primaryKeys.length).toBe(allEntities.length);
+          for (const i in allEntities) {
+            expect(primaryKeys[i]).toBe(allEntities[i].primaryKey);
+          }
           done();
         });
-    });
-
-    it('does not allow path traversal', done => {
-      Promise.all([
-        engine.readAllPrimaryKeys('../etc').catch(error => error),
-        engine.readAllPrimaryKeys('..\\etc').catch(error => error),
-        engine.readAllPrimaryKeys('.etc').catch(error => error),
-      ]).then(results => {
-        expect(results.length).toBe(3);
-        for (error of results) {
-          expect(error.name === 'PathValidationError').toBe(true);
-          expect(error.message).toBe(StoreEngine.error.PathValidationError.TYPE.PATH_TRAVERSAL);
-        }
-        done();
-      });
     });
   });
 
@@ -474,6 +457,8 @@ describe('StoreEngine.FileEngine', () => {
         },
       };
 
+      const expectedAmountOfProperties = 2;
+
       engine
         .create(TABLE_NAME, PRIMARY_KEY, entity)
         .then(() => engine.update(TABLE_NAME, PRIMARY_KEY, updates))
@@ -481,36 +466,12 @@ describe('StoreEngine.FileEngine', () => {
         .then(updatedRecord => {
           expect(updatedRecord.name).toBe(entity.name);
           expect(updatedRecord.age).toBe(updates.age);
-          expect(Object.keys(updatedRecord.size).length).toBe(2);
+          expect(Object.keys(updatedRecord.size).length).toBe(expectedAmountOfProperties);
           expect(updatedRecord.size.height).toBe(updates.size.height);
           expect(updatedRecord.size.width).toBe(updates.size.width);
           done();
         })
         .catch(done.fail);
-    });
-
-    it('does not allow path traversal', done => {
-      const PRIMARY_KEY = 'primary-key';
-
-      const updates = {
-        some: 'value',
-      };
-
-      Promise.all([
-        engine.update('../etc', PRIMARY_KEY, updates).catch(error => error),
-        engine.update('..\\etc', PRIMARY_KEY, updates).catch(error => error),
-        engine.update('.etc', PRIMARY_KEY, updates).catch(error => error),
-        engine.update(TABLE_NAME, '../etc', updates).catch(error => error),
-        engine.update(TABLE_NAME, '..\\etc', updates).catch(error => error),
-        engine.update(TABLE_NAME, '.etc', updates).catch(error => error),
-      ]).then(results => {
-        expect(results.length).toBe(6);
-        for (error of results) {
-          expect(error.name === 'PathValidationError').toBe(true);
-          expect(error.message).toBe(StoreEngine.error.PathValidationError.TYPE.PATH_TRAVERSAL);
-        }
-        done();
-      });
     });
   });
 });

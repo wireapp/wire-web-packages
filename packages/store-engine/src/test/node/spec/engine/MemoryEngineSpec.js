@@ -17,7 +17,7 @@
  *
  */
 
-const {StoreEngine} = require('../../../../../dist/commonjs/index');
+const {StoreEngine} = require('@wireapp/store-engine');
 
 describe('StoreEngine.MemoryEngine', () => {
   const DATABASE_NAME = 'database-name';
