@@ -250,8 +250,8 @@ describe('StoreEngine.LocalStorageEngine', () => {
         .then(() => engine.readAll(TABLE_NAME))
         .then(records => {
           expect(records.length).toBe(allEntities.length);
-          for (const i in records) {
-            expect(records[i].firstName).toBe(allEntities[i].entity.firstName);
+          for (const counter in records) {
+            expect(records[counter].firstName).toBe(allEntities[counter].entity.firstName);
           }
           done();
         });
@@ -294,8 +294,8 @@ describe('StoreEngine.LocalStorageEngine', () => {
         .then(() => engine.readAllPrimaryKeys(TABLE_NAME))
         .then(primaryKeys => {
           expect(primaryKeys.length).toBe(allEntities.length);
-          for (const i in allEntities) {
-            expect(primaryKeys[i]).toBe(allEntities[i].primaryKey);
+          for (const counter in allEntities) {
+            expect(primaryKeys[counter]).toBe(allEntities[counter].primaryKey);
           }
           done();
         });
