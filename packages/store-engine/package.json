@@ -1,17 +1,11 @@
 {
   "dependencies": {
     "@types/node": "8.0.50",
-    "@wireapp/api-client": "0.2.10",
-    "@wireapp/protocol-messaging": "1.19.0",
-    "@wireapp/store-engine": "0.1.1",
-    "bazinga64": "5.0.3",
-    "protobufjs": "6.8.0",
-    "pure-uuid": "1.4.10",
-    "wire-webapp-cryptobox": "6.2.0"
+    "dexie": "2.0.1",
+    "fs-extra": "4.0.2"
   },
   "devDependencies": {
     "cross-env": "5.1.1",
-    "istanbul": "0.4.5",
     "jasmine": "2.8.0",
     "karma": "1.7.1",
     "karma-chrome-launcher": "2.2.0",
@@ -22,26 +16,24 @@
     "typescript": "2.6.1",
     "webpack": "3.8.1"
   },
-  "description": "Wire for Web's communication core.",
-  "files": ["dist/commonjs"],
+  "description": "Provider for different storage engines.",
+  "files": ["dist"],
   "license": "GPL-3.0",
   "main": "./dist/commonjs/index.js",
-  "name": "@wireapp/core",
-  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/core",
+  "name": "@wireapp/store-engine",
+  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine",
   "scripts": {
     "build": "yarn build:node && yarn build:browser",
     "build:browser": "exit 0",
     "build:node": "tsc",
-    "clear": "rimraf dist && rimraf .tmp",
-    "coverage": "istanbul cover --report html ./node_modules/jasmine/bin/jasmine.js",
+    "clear": "rimraf dist",
     "dist": "yarn clear && yarn build",
     "preversion": "yarn && yarn test",
-    "start": "rimraf .tmp && yarn dist && node index.js",
     "test": "yarn dist && yarn test:node && yarn test:browser",
-    "test:browser": "exit 0",
+    "test:browser": "webpack && karma start karma.conf.js",
     "test:node": "cross-env JASMINE_CONFIG_PATH=src/test/node/support/jasmine.json jasmine",
     "version": "yarn dist"
   },
   "types": "./dist/commonjs/index.d.ts",
-  "version": "0.0.9"
+  "version": "0.1.1"
 }
