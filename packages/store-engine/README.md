@@ -20,25 +20,26 @@ Nowadays there are more and more storage possibilities and developers must be fa
 
 ### Overview
 
-|       Engine       | Available in Browser | Available in Node.js |                                                         Description                                                         |
-| :----------------: | :------------------: | :------------------: | :-------------------------------------------------------------------------------------------------------------------------: |
-|     FileEngine     |          ❌          |          ✔           |                         Rudimentary persistent store based on files. Very generic and easy to read.                         |
-|  IndexedDBEngine   |          ✔           |          ❌          | Persistent storage which handles significant amounts of structured data, including files/blobs. Enables very fast searches. |
-|    MemoryEngine    |          ✔           |          ✔           |                 Transient store which loses data on application restart. Suitable for testing environments.                 |
-| LocalStorageEngine |          ✔           |          ❌          | Can save very small amount of data. Stored data is saved across browser sessions. Suitable for simple objects and strings.  |
+<!-- prettier-ignore -->
+Engine | Available in Browser | Available in Node.js | Description
+:---|:---:|:---:|:---
+FileEngine | ❌ | ✔ | Rudimentary persistent store based on files. Very generic and easy to read.
+IndexedDBEngine | ✔ | ❌ | Persisent storage which handles significant amounts of structured data, including files/blobs. Enables very fast searches.
+MemoryEngine | ✔ | ✔ | Transient store which loses data on application restart. Suitable for testing environments.
+LocalStorageEngine | ✔ | ❌ | Can save very small amount of data. Stored data is saved across browser sessions. Suitable for simple objects and strings.
 
 ### Quickstart
 
 #### Engines
 
-**Hooking up a FileEngine**
+##### Hooking up a FileEngine
 
 ```javascript
 const {StoreEngine} = require('@wireapp/store-engine');
 const engine = new StoreEngine.FileEngine('C:\tempmy-favorite-actors');
 ```
 
-**Hooking up a IndexedDBEngine**
+##### Hooking up a IndexedDBEngine
 
 ```javascript
 import Dexie from 'dexie';
@@ -52,14 +53,14 @@ const {StoreEngine} = require('@wireapp/store-engine');
 const engine = new StoreEngine.IndexedDBEngine(db);
 ```
 
-**Hooking up a MemoryEngine**
+##### Hooking up a MemoryEngine
 
 ```javascript
 const {StoreEngine} = require('@wireapp/store-engine');
 const engine = new StoreEngine.MemoryEngine('my-favorite-actors');
 ```
 
-**Hooking up a LocalStorageEngine**
+##### Hooking up a LocalStorageEngine
 
 ```javascript
 const {StoreEngine} = require('@wireapp/store-engine');
