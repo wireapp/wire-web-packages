@@ -227,7 +227,7 @@ describe('StoreEngine.IndexedDBEngine', () => {
     });
 
     describe('"readAll"', () => {
-      it('returns multiple database records.', done => {
+      xit('returns multiple database records.', done => {
         const homer = {
           entity: {
             firstName: 'Homer',
