@@ -27,11 +27,10 @@ const placeholderStyle = css`
   text-transform: ${props => props.placeholderTextTransform};
 `;
 
-const dotRadius = 4;
-const dotSize = dotRadius + dotRadius;
+const dotSize = 8;
 const invalidDot = `
-  <svg xmlns="http://www.w3.org/2000/svg" width="${dotSize}" height="${dotSize}" viewBox="0 0 ${dotSize} ${dotSize}">
-    <circle cx="${dotRadius}" cy="${dotRadius}" r="${dotRadius}" fill="${COLOR.RED}" />
+  <svg xmlns="http://www.w3.org/2000/svg" width="${dotSize}" height="${dotSize}" viewBox="0 0 8 8">
+    <circle cx="4" cy="4" r="4" fill="${COLOR.RED}" />
   </svg>
 `;
 const base64Dot = btoa(invalidDot);
