@@ -27,6 +27,15 @@ const placeholderStyle = css`
   text-transform: ${props => props.placeholderTextTransform};
 `;
 
+const dotRadius = 4;
+const dotSize = dotRadius + dotRadius;
+const invalidDot = `
+  <svg xmlns="http://www.w3.org/2000/svg" width="${dotSize}" height="${dotSize}" viewBox="0 0 ${dotSize} ${dotSize}">
+    <circle cx="${dotRadius}" cy="${dotRadius}" r="${dotRadius}" fill="${COLOR.RED}" />
+  </svg>
+`;
+const base64Dot = btoa(invalidDot);
+
 const Input = styled.input`
   /* appearance */
   background: ${COLOR.WHITE};
@@ -59,13 +68,18 @@ const Input = styled.input`
   &:invalid {
     box-shadow: none;
   }
+  ${props =>
+    props.markInvalid &&
+    `background: ${COLOR.WHITE} url('data:image/svg+xml;base64,${base64Dot}') no-repeat right 20px center`};
 `;
 
 Input.propTypes = {
+  markInvalid: PropTypes.bool,
   placeholderTextTransform: PropTypes.string,
 };
 
 Input.defaultProps = {
+  markInvalid: false,
   placeholderTextTransform: 'uppercase',
 };
 
