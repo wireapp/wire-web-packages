@@ -97,7 +97,7 @@
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
 
-"@types/long@^3.0.31":
+"@types/long@^3.0.31", "@types/long@^3.0.32":
   version "3.0.32"
   resolved "https://registry.yarnpkg.com/@types/long/-/long-3.0.32.tgz#f4e5af31e9e9b196d8e5fca8a5e2e20aa3d60b69"
 
@@ -109,7 +109,7 @@
   version "8.0.50"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.50.tgz#dc545448e128c88c4eec7cd64025fcc3b7604541"
 
-"@types/node@8.0.53":
+"@types/node@8.0.53", "@types/node@^8.0.53":
   version "8.0.53"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.53.tgz#396b35af826fa66aad472c8cb7b8d5e277f4e6d8"
 
@@ -128,6 +128,23 @@
 "@types/tough-cookie@2.3.2":
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/@types/tough-cookie/-/tough-cookie-2.3.2.tgz#e0d481d8bb282ad8a8c9e100ceb72c995fb5e709"
+
+"@wireapp/api-client@0.2.10":
+  version "0.2.10"
+  resolved "https://registry.yarnpkg.com/@wireapp/api-client/-/api-client-0.2.10.tgz#72d84a2aa9f37fbac9f12e8f4bb7c91585fc32af"
+  dependencies:
+    "@types/node" "8.0.53"
+    "@types/spark-md5" "3.0.0"
+    "@types/text-encoding" "0.0.32"
+    "@types/tough-cookie" "2.3.2"
+    "@wireapp/queue-priority" "0.0.13"
+    "@wireapp/store-engine" "0.1.1"
+    axios "0.17.1"
+    html5-websocket "2.0.1"
+    logdown "2.2.0"
+    reconnecting-websocket "3.2.2"
+    spark-md5 "3.0.0"
+    tough-cookie "2.3.3"
 
 "@wireapp/protocol-messaging@1.19.0":
   version "1.19.0"
@@ -5967,6 +5984,24 @@ protobufjs@6.8.0:
     "@protobufjs/utf8" "^1.1.0"
     "@types/long" "^3.0.31"
     "@types/node" "^7.0.29"
+    long "^3.2.0"
+
+protobufjs@6.8.2:
+  version "6.8.2"
+  resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-6.8.2.tgz#0e650532111f823bb52ac2200c38fbab31ada736"
+  dependencies:
+    "@protobufjs/aspromise" "^1.1.2"
+    "@protobufjs/base64" "^1.1.2"
+    "@protobufjs/codegen" "^2.0.4"
+    "@protobufjs/eventemitter" "^1.1.0"
+    "@protobufjs/fetch" "^1.1.0"
+    "@protobufjs/float" "^1.0.2"
+    "@protobufjs/inquire" "^1.1.0"
+    "@protobufjs/path" "^1.1.2"
+    "@protobufjs/pool" "^1.1.0"
+    "@protobufjs/utf8" "^1.1.0"
+    "@types/long" "^3.0.32"
+    "@types/node" "^8.0.53"
     long "^3.2.0"
 
 proxy-addr@~2.0.2:
