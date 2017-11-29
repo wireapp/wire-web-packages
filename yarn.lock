@@ -129,22 +129,28 @@
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/@types/tough-cookie/-/tough-cookie-2.3.2.tgz#e0d481d8bb282ad8a8c9e100ceb72c995fb5e709"
 
+"@wireapp/api-client@0.2.10":
+  version "0.2.10"
+  resolved "https://registry.yarnpkg.com/@wireapp/api-client/-/api-client-0.2.10.tgz#72d84a2aa9f37fbac9f12e8f4bb7c91585fc32af"
+  dependencies:
+    "@types/node" "8.0.53"
+    "@types/spark-md5" "3.0.0"
+    "@types/text-encoding" "0.0.32"
+    "@types/tough-cookie" "2.3.2"
+    "@wireapp/queue-priority" "0.0.13"
+    "@wireapp/store-engine" "0.1.1"
+    axios "0.17.1"
+    html5-websocket "2.0.1"
+    logdown "2.2.0"
+    reconnecting-websocket "3.2.2"
+    spark-md5 "3.0.0"
+    tough-cookie "2.3.3"
+
 "@wireapp/protocol-messaging@1.19.0":
   version "1.19.0"
   resolved "https://registry.yarnpkg.com/@wireapp/protocol-messaging/-/protocol-messaging-1.19.0.tgz#b20dd2c87587018aefac77e8780f8c28b2caacc3"
   dependencies:
     protobufjs "6.8.0"
-
-"@wireapp/react-ui-kit@0.0.11":
-  version "0.0.11"
-  resolved "https://registry.yarnpkg.com/@wireapp/react-ui-kit/-/react-ui-kit-0.0.11.tgz#01c0c88920f94cfdc48943c604f252fbff42da01"
-  dependencies:
-    color "2.0.1"
-    gulp-concat "2.6.1"
-    react "16.1.1"
-    react-dom "16.0.0"
-    styled-components "2.2.3"
-    styled-normalize "2.2.1"
 
 JSONStream@^1.0.4:
   version "1.3.1"
@@ -1661,9 +1667,9 @@ command-join@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/command-join/-/command-join-2.0.0.tgz#52e8b984f4872d952ff1bdc8b98397d27c7144cf"
 
-commander@2.12.1:
-  version "2.12.1"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-2.12.1.tgz#468635c4168d06145b9323356d1da84d14ac4a7a"
+commander@2.12.2:
+  version "2.12.2"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.12.2.tgz#0f5946c427ed9ec0d91a46bb9def53e54650e555"
 
 commander@2.6.0:
   version "2.6.0"
@@ -6096,15 +6102,6 @@ react-deep-force-update@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/react-deep-force-update/-/react-deep-force-update-2.1.1.tgz#8ea4263cd6455a050b37445b3f08fd839d86e909"
 
-react-dom@16.0.0:
-  version "16.0.0"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.0.0.tgz#9cc3079c3dcd70d4c6e01b84aab2a7e34c303f58"
-  dependencies:
-    fbjs "^0.8.16"
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
-    prop-types "^15.6.0"
-
 react-dom@16.1.1:
   version "16.1.1"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.1.1.tgz#b2e331b6d752faf1a2d31399969399a41d8d45f8"
@@ -7448,6 +7445,10 @@ typescript@2.4.2:
 typescript@2.6.1:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.6.1.tgz#ef39cdea27abac0b500242d6726ab90e0c846631"
+
+typescript@2.6.2:
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.6.2.tgz#3c5b6fd7f6de0914269027f03c0946758f7673a4"
 
 ua-parser-js@0.7.12:
   version "0.7.12"
