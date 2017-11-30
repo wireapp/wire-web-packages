@@ -26,12 +26,18 @@ module.exports = function(config) {
   config.set({
     autoWatch: false,
     basePath: '',
-    browsers: ['ChromeHeadless'],
+    browsers: ['Chrome_Headless'],
     client: {
       useIframe: false,
     },
     colors: true,
     concurrency: Infinity,
+    customLaunchers: {
+      Chrome_Headless: {
+        base: 'Chrome',
+        flags: ['--headless', '--disable-gpu', '--remote-debugging-port=9222'],
+      },
+    },
     files: [`${dist}test.js`],
     frameworks: ['jasmine'],
     logLevel: config.LOG_INFO,
