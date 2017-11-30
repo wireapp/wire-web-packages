@@ -18,6 +18,7 @@
 
 enum BackendErrorLabel {
   INVALID_CREDENTIALS = 'invalid-credentials',
+  TOO_MANY_CLIENTS = 'too-many-clients',
   UNKNOWN_CLIENT = 'unknown-client',
 }
 
