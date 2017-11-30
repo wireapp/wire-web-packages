@@ -27,12 +27,18 @@ module.exports = function(config) {
     autoWatch: false,
     basePath: '',
     browserNoActivityTimeout: 10000,
-    browsers: ['ChromeHeadless'],
+    browsers: ['Chrome_Headless'],
     client: {
       useIframe: false,
     },
     colors: true,
     concurrency: Infinity,
+    customLaunchers: {
+      Chrome_Headless: {
+        base: 'Chrome',
+        flags: ['--headless', '--disable-gpu', '--remote-debugging-port=9222'],
+      },
+    },
     files: [`${dist}test-bundle.js`],
     frameworks: ['jasmine'],
     logLevel: config.LOG_INFO,
