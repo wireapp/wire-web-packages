@@ -17,18 +17,20 @@
  *
  */
 
-// https://stripe.com/docs/api#charge_object
-interface PaymentStripeCharge {
-  id: string;
-  amount: number;
-  created: number;
-  currency: 'eur';
-  failureCode: string;
-  failureMessage: string;
-  invoice: string;
-  livemode: boolean;
-  paid: boolean;
-  status: 'succeeded' | 'pending' | 'failed';
+import IconBase from './IconBase';
+import React from 'react';
+
+class CheckIcon extends IconBase {
+  /* eslint-disable no-magic-numbers */
+  width = 16;
+  height = 12;
+  renderSVG(width, height, color) {
+    return (
+      <svg width={width} height={height} viewBox="0 0 16 12">
+        <path fill={color} d="M5.66 11.86L15.98 1.4 14.58 0 5.65 9.03 1.4 4.8 0 6.2" />
+      </svg>
+    );
+  }
 }
 
-export default PaymentStripeCharge;
+export {CheckIcon};
