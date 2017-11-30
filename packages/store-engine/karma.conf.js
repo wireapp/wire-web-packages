@@ -26,16 +26,16 @@ module.exports = function(config) {
   config.set({
     autoWatch: false,
     basePath: '',
-    browsers: ['Chrome_Headless'],
+    browsers: ['ChromeNoSandbox'],
     client: {
       useIframe: false,
     },
     colors: true,
     concurrency: Infinity,
     customLaunchers: {
-      Chrome_Headless: {
-        base: 'Chrome',
-        flags: ['--no-sandbox', '--headless', '--disable-gpu', '--remote-debugging-port=9222'],
+      ChromeNoSandbox: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox'],
       },
     },
     files: [`${dist}test-bundle.js`],
