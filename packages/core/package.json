@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@types/node": "8.0.50",
-    "@wireapp/api-client": "0.2.10",
+    "@wireapp/api-client": "0.2.12",
     "@wireapp/protocol-messaging": "1.19.0",
     "@wireapp/store-engine": "0.1.1",
     "bazinga64": "5.0.3",
@@ -23,7 +23,9 @@
     "webpack": "3.8.1"
   },
   "description": "Wire for Web's communication core.",
-  "files": ["dist/commonjs"],
+  "files": [
+    "dist/commonjs"
+  ],
   "license": "GPL-3.0",
   "main": "./dist/commonjs/index.js",
   "name": "@wireapp/core",

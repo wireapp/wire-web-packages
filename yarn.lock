@@ -129,23 +129,6 @@
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/@types/tough-cookie/-/tough-cookie-2.3.2.tgz#e0d481d8bb282ad8a8c9e100ceb72c995fb5e709"
 
-"@wireapp/api-client@0.2.10":
-  version "0.2.10"
-  resolved "https://registry.yarnpkg.com/@wireapp/api-client/-/api-client-0.2.10.tgz#72d84a2aa9f37fbac9f12e8f4bb7c91585fc32af"
-  dependencies:
-    "@types/node" "8.0.53"
-    "@types/spark-md5" "3.0.0"
-    "@types/text-encoding" "0.0.32"
-    "@types/tough-cookie" "2.3.2"
-    "@wireapp/queue-priority" "0.0.13"
-    "@wireapp/store-engine" "0.1.1"
-    axios "0.17.1"
-    html5-websocket "2.0.1"
-    logdown "2.2.0"
-    reconnecting-websocket "3.2.2"
-    spark-md5 "3.0.0"
-    tough-cookie "2.3.3"
-
 "@wireapp/protocol-messaging@1.19.0":
   version "1.19.0"
   resolved "https://registry.yarnpkg.com/@wireapp/protocol-messaging/-/protocol-messaging-1.19.0.tgz#b20dd2c87587018aefac77e8780f8c28b2caacc3"
