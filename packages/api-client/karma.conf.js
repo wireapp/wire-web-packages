@@ -35,7 +35,7 @@ module.exports = function(config) {
     customLaunchers: {
       Chrome_Headless: {
         base: 'Chrome',
-        flags: ['--headless', '--disable-gpu', '--remote-debugging-port=9222'],
+        flags: ['--no-sandbox', '--headless', '--disable-gpu', '--remote-debugging-port=9222'],
       },
     },
     files: [`${dist}test.js`],
