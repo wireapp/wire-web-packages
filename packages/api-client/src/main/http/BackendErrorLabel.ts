@@ -16,10 +16,9 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-import BackendError from './BackendError';
-import BackendErrorLabel from './BackendErrorLabel';
-import ContentType from './ContentType';
-import HttpClient from './HttpClient';
-import StatusCode from './StatusCode';
+enum BackendErrorLabel {
+  INVALID_CREDENTIALS = 'invalid-credentials',
+  UNKNOWN_CLIENT = 'unknown-client',
+}
 
-export {BackendError, BackendErrorLabel, ContentType, HttpClient, StatusCode};
+export default BackendErrorLabel;
