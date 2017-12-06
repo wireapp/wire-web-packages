@@ -1,0 +1,31 @@
+{
+  "name": "jquery-modal",
+  "main": "./coffee/jquery-modal.coffee",
+  "ignore": [
+    "bower.json",
+    "bower_components",
+    "Gruntfile.coffee",
+    "index.html",
+    "node_modules",
+    "package.json",
+    "README.md",
+    "app/script/docs.coffee",
+    "app/script/util.coffee",
+    "dist/script/docs.js",
+    "dist/script/util.js",
+    "dist/style",
+    "test"
+  ],
+  "dependencies": {
+    "webapp-module-namespace": "https://github.com/wireapp/webapp-module-namespace.git#1.0.0"
+  },
+  "devDependencies": {
+    "jquery": "~2",
+    "lesshat": "~3",
+    "keyboardjs": "https://github.com/RobertWHurst/KeyboardJS.git#2.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wireapp/wire-web-packages/tree/master/packages/jquery-modal"
+  }
+}
