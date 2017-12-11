@@ -3839,9 +3839,9 @@ html-entities@^1.2.0:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-1.2.1.tgz#0df29351f0721163515dfb9e5543e5f6eed5162f"
 
-html5-websocket@2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/html5-websocket/-/html5-websocket-2.0.1.tgz#953b5e0925c0ed488bf220d9e8a1b3668bd53ec5"
+html5-websocket@2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/html5-websocket/-/html5-websocket-2.0.2.tgz#52bff70507b61c7457ed693fed47ad9244dab438"
   dependencies:
     ws "^3.1.0"
 
