@@ -126,9 +126,9 @@
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/@types/tough-cookie/-/tough-cookie-2.3.2.tgz#e0d481d8bb282ad8a8c9e100ceb72c995fb5e709"
 
-"@wireapp/protocol-messaging@1.19.0":
-  version "1.19.0"
-  resolved "https://registry.yarnpkg.com/@wireapp/protocol-messaging/-/protocol-messaging-1.19.0.tgz#b20dd2c87587018aefac77e8780f8c28b2caacc3"
+"@wireapp/protocol-messaging@1.20.0":
+  version "1.20.0"
+  resolved "https://registry.yarnpkg.com/@wireapp/protocol-messaging/-/protocol-messaging-1.20.0.tgz#bbc2d1fd7e1ab7bdde0a8794cd3db1066be57d07"
   dependencies:
     protobufjs "6.8.0"
 
