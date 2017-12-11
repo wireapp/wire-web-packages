@@ -23,7 +23,6 @@ import {Text} from './Text';
 
 const Label = ({component, ...props}) => {
   const StyledLabel = Text.withComponent(component).extend`
-    /* appearance */
     /* positioning */
     width: 100%;
     padding: 24px 0 8px;
