@@ -17,13 +17,23 @@
  *
  */
 
-import setGlobalStyles from '../globalStyles';
+import {Text} from './Text';
 
-setGlobalStyles();
+const Label = Text.withComponent('span').extend`
+  /* appearance */
+  font-size: 12px;
+  font-weight: 600;
+  /* positioning */
+  width: 100%;
+  padding: 24px 0 8px;
+`;
 
-export * from './Text';
-export {Heading, H1, H2, H3, H4} from './Heading';
-export * from './Line';
-export * from './Link';
-export * from './Label';
-export * from './Paragraph';
+Label.propTypes = {
+  ...Text.propTypes,
+};
+
+Label.defaultProps = {
+  ...Text.defaultProps,
+};
+
+export {Label};
