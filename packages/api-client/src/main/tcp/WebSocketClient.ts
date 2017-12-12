@@ -47,7 +47,12 @@ export default class WebSocketClient extends EventEmitter {
     super();
   }
 
-  private buildWebSocketURL(accessToken: string = this.client.accessTokenStore.accessToken.access_token): string {
+  private buildWebSocketURL(accessToken?: string): string {
+    if (!accessToken) {
+      const accessTokenObject: any = this.client.accessTokenStore.accessToken || {};
+      accessToken = accessTokenObject.access_token || 'unset';
+    }
+
     let url = `${this.baseURL}/await?access_token=${accessToken}`;
     if (this.clientId) {
       // Note: If no client ID is given, then the WebSocket connection will receive all notifications for all clients of the connected user
