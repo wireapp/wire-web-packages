@@ -93,6 +93,14 @@ export default class CryptographyService {
       .then(encryptedPayload => ({sessionId, encryptedPayload}));
   }
 
+  public deleteExistingClient(): Promise<string> {
+    return this.storeEngine
+      .delete(auth.AUTH_TABLE_NAME, auth.AUTH_COOKIE_KEY)
+      .then(() =>
+        this.storeEngine.delete(CryptographyService.STORES.CLIENTS, store.CryptoboxCRUDStore.KEYS.LOCAL_IDENTITY)
+      );
+  }
+
   public loadExistingClient(): Promise<RegisteredClient> {
     return this.cryptobox.load().then((initialPreKeys: Array<Proteus.keys.PreKey>) => {
       return this.storeEngine.read<RegisteredClient>(

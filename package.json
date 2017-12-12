@@ -25,7 +25,6 @@
     "fix": "yarn fix:docs && yarn fix:config && yarn fix:style && yarn fix:script",
     "fix:config": "prettier --write **/*.json",
     "fix:docs": "prettier --ignore-path .gitignore --write **/*.md",
-    "fix:jsScript": "yarn test:jsScript --fix",
     "fix:script": "yarn fix:jsScript && yarn fix:tsScript",
     "fix:style": "prettier --write **/*.scss",
     "fix:tsScript": "prettier --write **/*.ts",

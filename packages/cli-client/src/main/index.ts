@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
+import {AxiosError} from 'axios';
 const {description, version} = require('../../package.json');
 const {Account} = require('@wireapp/core');
+import {BackendError, BackendErrorLabel} from '@wireapp/api-client/dist/commonjs/http/';
 const {StoreEngine} = require('@wireapp/store-engine');
 const program = require('commander');
 const stdin = process.openStdin();
@@ -46,6 +48,19 @@ account.on(Account.INCOMING.TEXT_MESSAGE, (data: PayloadBundle) => {
 
 account
   .listen(loginData)
+  .catch((error: AxiosError) => {
+    if (error.response && error.response.data) {
+      if (error.response.data.label === BackendErrorLabel.TOO_MANY_CLIENTS) {
+        account.context = undefined;
+        loginData.persist = false;
+        return account.listen(loginData);
+      } else {
+        throw error;
+      }
+    } else {
+      throw error;
+    }
+  })
   .then(() => console.log(`Connected to Wire — Client ID "${account.context.clientID}"`))
   .then(() => {
     stdin.addListener('data', data => {

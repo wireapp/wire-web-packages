@@ -26,7 +26,12 @@ import PreKey from './PreKey';
 import PreKeyBundle from './PreKeyBundle';
 import RegisterData from './RegisterData';
 
+const AUTH_COOKIE_KEY: string = 'cookie';
+const AUTH_TABLE_NAME: string = 'authentication';
+
 export {
+  AUTH_COOKIE_KEY,
+  AUTH_TABLE_NAME,
   AccessTokenData,
   AccessTokenStore,
   AuthAPI,
