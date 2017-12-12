@@ -111,7 +111,7 @@ export default class Account extends EventEmitter {
   private initClient(context: Context, loginData: LoginData): Promise<RegisteredClient> {
     this.context = context;
     this.service.conversation.setContext(this.context);
-    return this.service.crypto.loadExistingClient().catch(error => {
+    return this.service.crypto.loadClient().catch(error => {
       if (error instanceof RecordNotFoundError) {
         return this.registerClient(loginData);
       }
@@ -143,8 +143,6 @@ export default class Account extends EventEmitter {
     return this.init()
       .then(() => {
         LoginSanitizer.removeNonPrintableCharacters(loginData);
-        loginData.persist =
-          loginData.persist || (this.apiClient.config.store.constructor.name === 'MemoryEngine' ? false : true);
         return this.apiClient.init();
       })
       .catch((error: Error) => this.apiClient.login(loginData))
@@ -163,7 +161,7 @@ export default class Account extends EventEmitter {
       });
   }
 
-  private resetContext() {
+  private resetContext(): void {
     this.client = undefined;
     this.context = undefined;
     this.service.conversation.setContext(undefined);
