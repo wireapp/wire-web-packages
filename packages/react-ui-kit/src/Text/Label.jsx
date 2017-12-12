@@ -25,7 +25,6 @@ import {Text} from './Text';
 const Label = Text.withComponent('span').extend`
     /* positioning */
     display: ${props => (props.block ? 'block' : 'inline')};
-    margin: 24px 0 8px;
   `;
 
 Label.propTypes = {
