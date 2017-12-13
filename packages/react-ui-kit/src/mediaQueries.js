@@ -18,37 +18,17 @@
  */
 
 import {WIDTH} from './Layout/sizes';
-import {css} from 'styled-components';
 
-export default {
-  desktop: (...content) => css`
-    @media (min-width: ${WIDTH.DESKTOP_MIN}px) {
-      ${css(...content)};
-    }
-  `,
-  desktopXL: (...content) => css`
-    @media (min-width: ${WIDTH.DESKTOP_XL_MIN}px) {
-      ${css(...content)};
-    }
-  `,
-  mobile: (...content) => css`
-    @media (max-width: ${WIDTH.MOBILE}px) {
-      ${css(...content)};
-    }
-  `,
-  mobileUp: (...content) => css`
-    @media (min-width: ${WIDTH.MOBILE}px) {
-      ${css(...content)};
-    }
-  `,
-  tablet: (...content) => css`
-    @media (min-width: ${WIDTH.TABLET_MIN}px) and (max-width: ${WIDTH.TABLET_MAX}px) {
-      ${css(...content)};
-    }
-  `,
-  tabletDown: (...content) => css`
-    @media (min-width: ${WIDTH.TABLET_MAX}px) {
-      ${css(...content)};
-    }
-  `,
+const sizes = {
+  desktop: `min-width: ${WIDTH.DESKTOP_MIN}px`,
+  desktopXL: `min-width: ${WIDTH.DESKTOP_XL_MIN}px`,
+  mobile: `max-width: ${WIDTH.MOBILE}px`,
+  mobileUp: `min-width: ${WIDTH.MOBILE}px`,
+  tablet: `min-width: ${WIDTH.TABLET_MIN}px) and (max-width: ${WIDTH.TABLET_MAX}px`,
+  tabletDown: `min-width: ${WIDTH.TABLET_MAX}px`,
 };
+
+export default Object.entries(sizes).reduce(
+  (output, [key, value]) => ({...output, [key]: (...content) => `@media (${value}){${content}}`}),
+  {}
+);
