@@ -29,6 +29,13 @@ export default class WebSocketClient extends EventEmitter {
 
   private socket: WebSocket;
 
+  public static CLOSE_EVENT_CODE = {
+    NORMAL_CLOSURE: 1000,
+    GOING_AWAY: 1001,
+    PROTOCOL_ERROR: 1002,
+    UNSUPPORTED_DATA: 1003,
+  };
+
   public static RECONNECTING_OPTIONS = {
     connectionTimeout: 4000,
     constructor: typeof window !== 'undefined' ? WebSocket : Html5WebSocket,
@@ -80,7 +87,11 @@ export default class WebSocketClient extends EventEmitter {
     if (this.socket) {
       //TODO 'any' can be removed once this issue is resolved: https://github.com/pladaria/reconnecting-websocket/issues/44
       const socket: any = this.socket;
-      socket.close(1000, reason, {keepClosed: true, fastClose: true, delay: 0});
+      socket.close(WebSocketClient.CLOSE_EVENT_CODE.NORMAL_CLOSURE, reason, {
+        keepClosed: true,
+        fastClose: true,
+        delay: 0,
+      });
     }
   }
 }
