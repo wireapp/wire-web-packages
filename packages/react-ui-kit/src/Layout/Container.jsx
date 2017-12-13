@@ -25,7 +25,7 @@ import {defaultProps} from 'recompose';
 import media from '../mediaQueries';
 import styled from 'styled-components';
 
-const levels = {
+const LEVEL = {
   md: `max-width: ${WIDTH.TABLET_MAX}px;`,
   sm: `max-width: ${WIDTH.TABLET_MIN}px;`,
   xs: `max-width: ${WIDTH.MOBILE}px;`,
@@ -39,7 +39,7 @@ const Container = styled.div`
   width: 100%;
 
   ${({level}) =>
-    levels[level] ||
+    LEVEL[level] ||
     `${media.desktop`
             padding: 0;
             width: ${WIDTH.DESKTOP_MIN - GUTTER * 4}px;
@@ -53,7 +53,7 @@ const Container = styled.div`
 
 Container.propTypes = {
   centerText: PropTypes.bool,
-  level: PropTypes.oneOf(Object.keys(levels)),
+  level: PropTypes.oneOf(Object.keys(LEVEL)),
   verticalCenter: PropTypes.bool,
 };
 

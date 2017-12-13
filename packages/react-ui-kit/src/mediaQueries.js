@@ -18,8 +18,9 @@
  */
 
 import {WIDTH} from './Layout/sizes';
+import {css} from 'styled-components';
 
-const sizes = {
+const QUERY = {
   desktop: `min-width: ${WIDTH.DESKTOP_MIN}px`,
   desktopXL: `min-width: ${WIDTH.DESKTOP_XL_MIN}px`,
   mobile: `max-width: ${WIDTH.MOBILE}px`,
@@ -28,7 +29,10 @@ const sizes = {
   tabletDown: `min-width: ${WIDTH.TABLET_MAX}px`,
 };
 
-export default Object.entries(sizes).reduce(
-  (output, [key, value]) => ({...output, [key]: (...content) => `@media (${value}){${content}}`}),
+export default Object.entries(QUERY).reduce(
+  (accumulator, [key, value]) => ({
+    ...accumulator,
+    [key]: content => `@media (${value}){${css(content)}}`,
+  }),
   {}
 );
