@@ -47,12 +47,7 @@ export default class WebSocketClient extends EventEmitter {
     super();
   }
 
-  private buildWebSocketURL(accessToken?: string): string {
-    if (!accessToken) {
-      const accessTokenObject: any = this.client.accessTokenStore.accessToken || {};
-      accessToken = accessTokenObject.access_token || 'unset';
-    }
-
+  private buildWebSocketURL(accessToken: string = this.client.accessTokenStore.accessToken.access_token): string {
     let url = `${this.baseURL}/await?access_token=${accessToken}`;
     if (this.clientId) {
       // Note: If no client ID is given, then the WebSocket connection will receive all notifications for all clients of the connected user
@@ -81,9 +76,11 @@ export default class WebSocketClient extends EventEmitter {
     return Promise.resolve(this);
   }
 
-  public disconnect(): void {
+  public disconnect(reason: string = 'Unknown reason'): void {
     if (this.socket) {
-      this.socket.close();
+      //TODO 'any' can be removed once this issue is resolved: https://github.com/pladaria/reconnecting-websocket/issues/44
+      const socket: any = this.socket;
+      socket.close(1000, reason, {keepClosed: true, fastClose: true, delay: 0});
     }
   }
 }
