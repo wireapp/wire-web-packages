@@ -39,7 +39,7 @@ const Logo = styled(Wire)`
     props.hover &&
     css`
       &:hover path {
-        fill: ${COLOR.RED};
+        fill: ${COLOR.GRAY_DARKEN_72};
       }
     `};
 `;
