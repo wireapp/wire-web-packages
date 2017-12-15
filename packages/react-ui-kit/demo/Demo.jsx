@@ -26,6 +26,7 @@ import {
   H4,
   Heading,
   Label,
+  LabelLink,
   Line,
   Link,
   Muted,
@@ -79,7 +80,7 @@ export default function Demo() {
         <Logo scale="3" hover />
         <ProfileIcon />
         <TeamIcon />
-        <ArrowIcon direction="down" />
+        <ArrowIcon direction="up" />
         <PlaneIcon />
       </Header>
       <Content>
@@ -326,7 +327,7 @@ export default function Demo() {
             consequuntur fugiat nemo aliquam, architecto animi inventore explicabo sint iure molestias laborum.
           </Paragraph>
           <Line />
-          <Paragraph noWrap>
+          <Paragraph noWrap truncate>
             Truncated text<br />Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut at eveniet numquam non
             aperiam, provident sed atque quibusdam! Vitae velit tempore ea pariatur voluptatum. Iure dolorum laudantium,
             rem iusto eveniet obcaecati perspiciatis. Dolorem quisquam laborum ab ipsam unde eum rerum incidunt quia
@@ -346,10 +347,7 @@ export default function Demo() {
           </Paragraph>
 
           <Label>Label</Label>
-          <br />
-          <Label component={Link} href="#">
-            LabelLink
-          </Label>
+          <LabelLink block>LabelLink</LabelLink>
 
           <H1>Colors</H1>
           <Line />
