@@ -49,7 +49,7 @@ export default class AccessTokenStore extends EventEmitter {
   public init(): Promise<AccessTokenData> {
     return this.tokenStore
       .read(AUTH_TABLE_NAME, AUTH_ACCESS_TOKEN_KEY)
-      .catch(error => {
+      .catch((error: Error) => {
         if (error.name === RecordNotFoundError.name) {
           return undefined;
         }
