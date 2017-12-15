@@ -26,16 +26,6 @@ const Form = styled.form`
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
-  & > * {
-    margin-top: 8px;
-    margin-bottom: 8px;
-    &:first-child {
-      margin-top: 0;
-    }
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
 `;
 
 export {Form};
