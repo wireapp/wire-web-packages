@@ -25,14 +25,14 @@ import {ClientAPI} from './client/';
 import {ConnectionAPI} from './connection/';
 import {ConversationAPI} from './conversation/';
 import {GiphyAPI} from './giphy/';
-import {BackendError, BackendErrorLabel, HttpClient} from './http/';
+import {HttpClient} from './http/';
+import {IncomingMessage} from 'http';
 import {InvitationAPI} from './invitation/';
 import {MemberAPI, PaymentAPI, TeamAPI, TeamInvitationAPI} from './team/';
 import {MemoryEngine} from '@wireapp/store-engine/dist/commonjs/engine';
 import {SelfAPI} from './self/';
 import {UserAPI} from './user/';
 import {WebSocketClient} from './tcp/';
-import {IncomingMessage} from 'http';
 
 class Client {
   // APIs
@@ -42,6 +42,7 @@ class Client {
   public connection: {api: ConnectionAPI} = {api: undefined};
   public conversation: {api: ConversationAPI} = {api: undefined};
   public giphy: {api: GiphyAPI} = {api: undefined};
+  public invitation: {api: InvitationAPI} = {api: undefined};
   public self: {api: SelfAPI} = {api: undefined};
   public teams: {
     team: {api: TeamAPI};
@@ -55,7 +56,6 @@ class Client {
     payment: {api: undefined},
   };
   public user: {api: UserAPI} = {api: undefined};
-  public invitation: {api: InvitationAPI} = {api: undefined};
 
   // Configuration
   private accessTokenStore: AccessTokenStore;
@@ -87,13 +87,13 @@ class Client {
     this.connection.api = new ConnectionAPI(this.transport.http);
     this.conversation.api = new ConversationAPI(this.transport.http);
     this.giphy.api = new GiphyAPI(this.transport.http);
+    this.invitation.api = new InvitationAPI(this.transport.http);
     this.self.api = new SelfAPI(this.transport.http);
     this.teams.invitation.api = new TeamInvitationAPI(this.transport.http);
     this.teams.member.api = new MemberAPI(this.transport.http);
     this.teams.payment.api = new PaymentAPI(this.transport.http);
     this.teams.team.api = new TeamAPI(this.transport.http);
     this.user.api = new UserAPI(this.transport.http);
-    this.invitation.api = new InvitationAPI(this.transport.http);
 
     this.transport.http.authAPI = this.auth.api;
   }
