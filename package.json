@@ -33,7 +33,7 @@
     "test": "yarn test:jsScript && lerna run dist && lerna run test",
     "test:jsScript": "eslint --ignore-path .gitignore --ignore-path .prettierignore **/*.{js,jsx}",
     "release":
-      "lerna publish -m \"chore: Publish\" --loglevel=verbose --exact --cd-version=patch --allow-branch=master --registry=https://registry.npmjs.org/"
+      "lerna publish -m \"chore: Publish\" --conventional-commits --loglevel=verbose --exact --allow-branch=master --registry=https://registry.npmjs.org/"
   },
   "workspaces": ["packages/*"]
 }
