@@ -5,7 +5,7 @@
     "react": "16.2.0",
     "react-dom": "16.2.0",
     "recompose": "0.26.0",
-    "styled-components": "2.3.0",
+    "styled-components": "2.3.2",
     "styled-normalize": "2.2.1"
   },
   "devDependencies": {
@@ -16,7 +16,7 @@
     "babel-plugin-transform-object-rest-spread": "6.26.0",
     "babel-preset-env": "1.6.1",
     "babel-preset-react": "6.24.1",
-    "browser-sync": "2.18.13",
+    "browser-sync": "2.19.0",
     "gulp": "3.9.1",
     "gulp-plumber": "1.1.0",
     "gulp-sass": "3.1.0",
@@ -33,13 +33,13 @@
     "build": "babel src --out-dir dist --no-comments && node scripts/prepare.js",
     "clear": "rimraf dist",
     "dist": "yarn clear && yarn build",
-    "preversion": "yarn && yarn test",
+    "prepublish": "yarn test",
     "release": "cd ./dist && npm publish",
     "start:demo": "webpack-dev-server",
     "start:static": "gulp",
     "start": "yarn start:demo",
     "test": "exit 0",
-    "version": "yarn dist"
+    "prepare": "yarn dist"
   },
-  "version": "0.0.30"
+  "version": "0.0.32"
 }
