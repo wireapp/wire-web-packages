@@ -11,6 +11,7 @@
     "removeComments": true,
     "rootDir": "src/main",
     "sourceMap": false,
+    "strict": true,
     "target": "ES5"
   },
   "exclude": ["dist/commonjs", "node_modules"]

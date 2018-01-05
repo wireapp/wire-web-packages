@@ -34,7 +34,7 @@ export default class PriorityQueue<P> {
   private queue: Array<Item<P>> = [];
 
   constructor(config?: Config<P>) {
-    this.config = Object.assign(this.defaults, config);
+    this.config = <Config<P>>Object.assign(this.defaults, config);
   }
 
   public add(thunkedPromise: Function, priority: P = <any>Priority.MEDIUM): Promise<any> {
@@ -77,8 +77,8 @@ export default class PriorityQueue<P> {
         return [true, () => queueObject.resolve(result)];
       })
       .catch((error: Error) => {
-        if (queueObject.retry > 0) {
-          queueObject.retry -= 1;
+        if (queueObject.retry! > 0) {
+          queueObject.retry! -= 1;
           // TODO: Implement configurable reconnection delay (and reconnection delay growth factor)
           setTimeout(() => this.resolveItems(), this.config.retryDelay);
           return [false];
@@ -91,7 +91,7 @@ export default class PriorityQueue<P> {
         if (shouldContinue) {
           if (wrappedResolve) wrappedResolve();
           this.isPending = false;
-          const nextItem: Item<P> = this.queue.shift();
+          const nextItem: Item<P> | undefined = this.queue.shift();
           if (nextItem) {
             this.resolveItems();
           }
