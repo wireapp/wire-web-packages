@@ -22,7 +22,7 @@ import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/er
 import EventEmitter = require('events');
 
 export default class AccessTokenStore extends EventEmitter {
-  public accessToken: AccessTokenData;
+  public accessToken: AccessTokenData | undefined;
 
   public static TOPIC = {
     ACCESS_TOKEN_REFRESH: 'AccessTokenStore.TOPIC.ACCESS_TOKEN_REFRESH',
