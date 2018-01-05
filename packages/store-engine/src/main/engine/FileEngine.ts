@@ -28,7 +28,7 @@ export default class FileEngine implements CRUDEngine {
     };
 
     return new Promise((resolve, reject) => {
-      if (isPathTraversal(tableName, primaryKey)) {
+      if (isPathTraversal(tableName, primaryKey || '')) {
         return reject(new PathValidationError(PathValidationError.TYPE.PATH_TRAVERSAL));
       }
 
