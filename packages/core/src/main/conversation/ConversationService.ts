@@ -1,5 +1,6 @@
 const UUID = require('pure-uuid');
 import APIClient = require('@wireapp/api-client');
+import {AxiosError} from 'axios';
 import {Context} from '@wireapp/api-client/dist/commonjs/auth/';
 import {
   ClientMismatch,
@@ -34,13 +35,15 @@ export default class ConversationService {
 
   // TODO: The correct functionality of this function is heavily based on the case that it always runs into the catch block
   private getPreKeyBundles(conversationId: string): Promise<ClientMismatch | UserPreKeyBundleMap> {
-    return this.apiClient.conversation.api.postOTRMessage(this.context.clientID, conversationId).catch(error => {
-      if (error.response && error.response.status === 412) {
-        const recipients: UserClients = error.response.data.missing;
-        return this.apiClient.user.api.postMultiPreKeyBundles(recipients);
-      }
-      throw error;
-    });
+    return this.apiClient.conversation.api
+      .postOTRMessage(this.context.clientID, conversationId)
+      .catch((error: AxiosError) => {
+        if (error.response && error.response.status === 412) {
+          const recipients: UserClients = error.response.data.missing;
+          return this.apiClient.user.api.postMultiPreKeyBundles(recipients);
+        }
+        throw error;
+      });
   }
 
   public sendTextMessage(conversationId: string, message: string): Promise<ClientMismatch> {
