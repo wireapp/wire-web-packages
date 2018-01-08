@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "declaration": false,
+    "lib": ["es7", "dom"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "noImplicitAny": false,
+    "noImplicitReturns": true,
+    "removeComments": true,
+    "sourceMap": false,
+    "target": "es5"
+  },
+  "exclude": [
+    "bower_components",
+    "node_modules",
+    "typings/browser",
+    "typings/browser.d.ts"
+  ]
+}
