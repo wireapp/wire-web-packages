@@ -24,7 +24,7 @@
     "lint": "eslint src/",
     "postversion": "git push && git push --tags",
     "preversion": "yarn lint && yarn test && yarn types",
-    "test": "cross-env JASMINE_CONFIG_PATH=spec/support/jasmine.json jasmine",
+    "test": "yarn coverage:html",
     "types": "jsdoc --verbose --pedantic --configure jsdoc.json src/ && node typings/replace.js",
     "version": "yarn dist && git add dist/**/* typings/types.d.ts"
   },
