@@ -46,9 +46,9 @@ export default class AccessTokenStore extends EventEmitter {
     return Promise.resolve(this.accessToken);
   }
 
-  public init(): Promise<AccessTokenData> {
+  public init(): Promise<AccessTokenData | undefined> {
     return this.tokenStore
-      .read(AUTH_TABLE_NAME, AUTH_ACCESS_TOKEN_KEY)
+      .read<AccessTokenData>(AUTH_TABLE_NAME, AUTH_ACCESS_TOKEN_KEY)
       .catch((error: Error) => {
         if (error.name === RecordNotFoundError.name) {
           return undefined;
@@ -56,6 +56,6 @@ export default class AccessTokenStore extends EventEmitter {
 
         throw error;
       })
-      .then((accessToken: AccessTokenData) => (this.accessToken = accessToken));
+      .then((accessToken: AccessTokenData | undefined) => (this.accessToken = accessToken));
   }
 }
