@@ -43,9 +43,8 @@
   "scripts": {
     "clear": "rimraf dist/commonjs && rimraf dist/lib",
     "dist": "gulp dist --env production",
-    "lint": "echo \"No linting specified\" && exit 0",
     "postversion": "git push && git push --tags",
-    "preversion": "yarn lint && yarn dist && yarn test",
+    "preversion": "yarn dist && yarn test",
     "start": "gulp",
     "test:browser": "gulp build && gulp test_browser",
     "test:node": "gulp dist && node dist/index.js && gulp test_node",
