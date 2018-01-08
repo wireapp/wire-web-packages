@@ -1,6 +1,6 @@
-import * as Proteus from "wire-webapp-proteus";
+import * as Proteus from 'wire-webapp-proteus';
 import Logdown = require('logdown');
-import {CryptoboxStore} from "./CryptoboxStore";
+import {CryptoboxStore} from './CryptoboxStore';
 
 export default class Cache implements CryptoboxStore {
   private identity: Proteus.keys.IdentityKeyPair;
@@ -44,11 +44,9 @@ export default class Cache implements CryptoboxStore {
   }
 
   public load_prekeys(): Promise<Array<Proteus.keys.PreKey>> {
-    const prekey_promises: Array<Promise<Proteus.keys.PreKey>> = Object
-      .keys(this.prekeys)
-      .map((key: string) => {
-        const prekey_id = parseInt(key, 10);
-        return this.load_prekey(prekey_id);
+    const prekey_promises: Array<Promise<Proteus.keys.PreKey>> = Object.keys(this.prekeys).map((key: string) => {
+      const prekey_id = parseInt(key, 10);
+      return this.load_prekey(prekey_id);
     });
 
     return Promise.all(prekey_promises);
@@ -74,22 +72,22 @@ export default class Cache implements CryptoboxStore {
       this.logger.log(`Saved PreKey ID "${preKey.key_id}".`);
     } catch (error) {
       // TODO: Keep (and log) error stack trace
-      return Promise.reject(new Error(`PreKey (no. ${preKey.key_id}) serialization problem "${error.message}" at "${error.stack}".`));
+      return Promise.reject(
+        new Error(`PreKey (no. ${preKey.key_id}) serialization problem "${error.message}" at "${error.stack}".`)
+      );
     }
 
     return Promise.resolve(preKey);
   }
 
   save_prekeys(preKeys: Array<Proteus.keys.PreKey>): Promise<Array<Proteus.keys.PreKey>> {
-    const savePromises: Array<Promise<Proteus.keys.PreKey>> = preKeys
-      .map((preKey: Proteus.keys.PreKey) => {
-        return this.save_prekey(preKey);
-      });
+    const savePromises: Array<Promise<Proteus.keys.PreKey>> = preKeys.map((preKey: Proteus.keys.PreKey) => {
+      return this.save_prekey(preKey);
+    });
 
-    return Promise.all(savePromises)
-      .then(() => {
-        return preKeys;
-      });
+    return Promise.all(savePromises).then(() => {
+      return preKeys;
+    });
   }
 
   public create_session(session_id: string, session: Proteus.session.Session): Promise<Proteus.session.Session> {

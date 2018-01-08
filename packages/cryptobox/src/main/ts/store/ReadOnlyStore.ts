@@ -1,5 +1,5 @@
-import * as Proteus from "wire-webapp-proteus";
-import {CryptoboxStore} from "./CryptoboxStore";
+import * as Proteus from 'wire-webapp-proteus';
+import {CryptoboxStore} from './CryptoboxStore';
 
 /**
  * This store holds IDs of PreKeys which should be deleted.
@@ -31,10 +31,9 @@ export class ReadOnlyStore extends Proteus.session.PreKeyStore {
     if (this.prekeys.indexOf(prekey_id) !== -1) {
       return Promise.reject(new Error(`PreKey "${prekey_id}" not found.`));
     }
-    return this.store.load_prekey(prekey_id)
-      .then(function (prekey: Proteus.keys.PreKey) {
-        return prekey;
-      });
+    return this.store.load_prekey(prekey_id).then(function(prekey: Proteus.keys.PreKey) {
+      return prekey;
+    });
   }
 
   /**

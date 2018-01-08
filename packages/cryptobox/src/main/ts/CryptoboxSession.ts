@@ -1,6 +1,6 @@
-import * as Proteus from "wire-webapp-proteus";
-import {DecryptionError} from "./DecryptionError";
-import {ReadOnlyStore} from "./store/ReadOnlyStore";
+import * as Proteus from 'wire-webapp-proteus';
+import {DecryptionError} from './DecryptionError';
+import {ReadOnlyStore} from './store/ReadOnlyStore';
 
 export class CryptoboxSession {
   public id: string;
@@ -24,10 +24,9 @@ export class CryptoboxSession {
   }
 
   public encrypt(plaintext: string | Uint8Array): Promise<ArrayBuffer> {
-    return this.session.encrypt(plaintext)
-      .then(function (ciphertext: Proteus.message.Envelope) {
-         return ciphertext.serialise();
-      });
+    return this.session.encrypt(plaintext).then(function(ciphertext: Proteus.message.Envelope) {
+      return ciphertext.serialise();
+    });
   }
 
   public fingerprint_local(): string {

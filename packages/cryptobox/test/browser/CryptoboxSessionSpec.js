@@ -18,7 +18,6 @@
  */
 
 describe('cryptobox.CryptoboxSession', function() {
-
   let cryptobox = undefined;
   let Proteus = undefined;
   let sodium = undefined;
@@ -38,7 +37,6 @@ describe('cryptobox.CryptoboxSession', function() {
   });
 
   describe('PreKey messages', function() {
-
     let alice = undefined;
     let bob = undefined;
 
@@ -47,7 +45,7 @@ describe('cryptobox.CryptoboxSession', function() {
       const pre_keys = Proteus.keys.PreKey.generate_prekeys(0, 1);
       pre_keys.push(Proteus.keys.PreKey.new(Proteus.keys.PreKey.MAX_PREKEY_ID));
 
-      const promises = pre_keys.map((pre_key) => cryptobox_store.save_prekey(pre_key));
+      const promises = pre_keys.map(pre_key => cryptobox_store.save_prekey(pre_key));
 
       return Promise.all(promises)
         .then(function() {
@@ -83,14 +81,14 @@ describe('cryptobox.CryptoboxSession', function() {
     beforeEach(function() {
       alice = {
         identity: Proteus.keys.IdentityKeyPair.new(),
-        cryptobox_store: new cryptobox.store.Cache()
+        cryptobox_store: new cryptobox.store.Cache(),
       };
 
       alice.pre_key_store = new cryptobox.store.ReadOnlyStore(alice.cryptobox_store);
 
       bob = {
         identity: Proteus.keys.IdentityKeyPair.new(),
-        cryptobox_store: new cryptobox.store.Cache()
+        cryptobox_store: new cryptobox.store.Cache(),
       };
 
       bob.pre_key_store = new cryptobox.store.ReadOnlyStore(bob.cryptobox_store);
@@ -98,11 +96,13 @@ describe('cryptobox.CryptoboxSession', function() {
 
     describe('fingerprints', function() {
       it('returns the local & remote fingerpint', function(done) {
-        setupAliceToBob(0).then(function(sessionWithBob) {
-          expect(sessionWithBob.fingerprint_local()).toBe(alice.identity.public_key.fingerprint());
-          expect(sessionWithBob.fingerprint_remote()).toBe(bob.identity.public_key.fingerprint());
-          done();
-        }).catch(done.fail);
+        setupAliceToBob(0)
+          .then(function(sessionWithBob) {
+            expect(sessionWithBob.fingerprint_local()).toBe(alice.identity.public_key.fingerprint());
+            expect(sessionWithBob.fingerprint_remote()).toBe(bob.identity.public_key.fingerprint());
+            done();
+          })
+          .catch(done.fail);
       });
     });
 
@@ -110,43 +110,51 @@ describe('cryptobox.CryptoboxSession', function() {
       const plaintext = 'Hello Bob, I am Alice.';
 
       it('encrypts a message from Alice which can be decrypted by Bob', function(done) {
-        Promise.resolve().then(function() {
-          return setupAliceToBob(0);
-        }).then(function(sessionWithBob) {
-          return sessionWithBob.encrypt(plaintext);
-        }).then(function(serialisedCipherText) {
-          const envelope = Proteus.message.Envelope.deserialise(serialisedCipherText);
-          expect(bob.pre_key_store.prekeys.length).toBe(0);
-          return Proteus.session.Session.init_from_message(bob.identity, bob.pre_key_store, envelope);
-        }).then(function(proteusSession) {
-          // When Bob decrypts a PreKey message, he knows that one of his PreKeys has been "consumed"
-          expect(bob.pre_key_store.prekeys.length).toBe(1);
-          const decryptedBuffer = proteusSession[1];
-          const decrypted = sodium.to_string(decryptedBuffer);
-          expect(decrypted).toBe(plaintext);
-          done();
-        }).catch(done.fail);
+        Promise.resolve()
+          .then(function() {
+            return setupAliceToBob(0);
+          })
+          .then(function(sessionWithBob) {
+            return sessionWithBob.encrypt(plaintext);
+          })
+          .then(function(serialisedCipherText) {
+            const envelope = Proteus.message.Envelope.deserialise(serialisedCipherText);
+            expect(bob.pre_key_store.prekeys.length).toBe(0);
+            return Proteus.session.Session.init_from_message(bob.identity, bob.pre_key_store, envelope);
+          })
+          .then(function(proteusSession) {
+            // When Bob decrypts a PreKey message, he knows that one of his PreKeys has been "consumed"
+            expect(bob.pre_key_store.prekeys.length).toBe(1);
+            const decryptedBuffer = proteusSession[1];
+            const decrypted = sodium.to_string(decryptedBuffer);
+            expect(decrypted).toBe(plaintext);
+            done();
+          })
+          .catch(done.fail);
       });
 
-      it('doesn\'t remove the last resort PreKey if consumed', function(done) {
-        Promise.resolve().then(function() {
-          return setupAliceToBob(Proteus.keys.PreKey.MAX_PREKEY_ID);
-        }).then(function(sessionWithBob) {
-          return sessionWithBob.encrypt(plaintext);
-        }).then(function(serialisedCipherText) {
-          const envelope = Proteus.message.Envelope.deserialise(serialisedCipherText);
-          expect(bob.pre_key_store.prekeys.length).toBe(0);
-          return Proteus.session.Session.init_from_message(bob.identity, bob.pre_key_store, envelope);
-        }).then(function(proteusSession) {
-          expect(bob.pre_key_store.prekeys.length).toBe(0);
-          const decryptedBuffer = proteusSession[1];
-          const decrypted = sodium.to_string(decryptedBuffer);
-          expect(decrypted).toBe(plaintext);
-          done();
-        }).catch(done.fail);
+      it("doesn't remove the last resort PreKey if consumed", function(done) {
+        Promise.resolve()
+          .then(function() {
+            return setupAliceToBob(Proteus.keys.PreKey.MAX_PREKEY_ID);
+          })
+          .then(function(sessionWithBob) {
+            return sessionWithBob.encrypt(plaintext);
+          })
+          .then(function(serialisedCipherText) {
+            const envelope = Proteus.message.Envelope.deserialise(serialisedCipherText);
+            expect(bob.pre_key_store.prekeys.length).toBe(0);
+            return Proteus.session.Session.init_from_message(bob.identity, bob.pre_key_store, envelope);
+          })
+          .then(function(proteusSession) {
+            expect(bob.pre_key_store.prekeys.length).toBe(0);
+            const decryptedBuffer = proteusSession[1];
+            const decrypted = sodium.to_string(decryptedBuffer);
+            expect(decrypted).toBe(plaintext);
+            done();
+          })
+          .catch(done.fail);
       });
-
     });
-
   });
 });

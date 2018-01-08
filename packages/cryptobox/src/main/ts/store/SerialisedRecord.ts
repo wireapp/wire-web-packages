@@ -1,4 +1,4 @@
-import {Cryptobox} from "../Cryptobox";
+import {Cryptobox} from '../Cryptobox';
 
 export class SerialisedRecord {
   public created: number;

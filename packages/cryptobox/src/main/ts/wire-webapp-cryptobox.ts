@@ -27,5 +27,5 @@ export default {
     CryptoboxCRUDStore,
     IndexedDB,
     ReadOnlyStore,
-  }
-}
+  },
+};

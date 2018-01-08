@@ -3,7 +3,7 @@ describe('cryptobox.store.Cache', () => {
   let Proteus = undefined;
   let store = undefined;
 
-  beforeAll((done) => {
+  beforeAll(done => {
     if (typeof window === 'object') {
       cryptobox = window.cryptobox;
       Proteus = window.Proteus;
@@ -25,13 +25,14 @@ describe('cryptobox.store.Cache', () => {
       expect(store).toBeDefined();
     });
 
-    it('causes new identities on a Cryptobox initialization with a new storage instance (because a cache is temporary)', (done) => {
+    it('causes new identities on a Cryptobox initialization with a new storage instance (because a cache is temporary)', done => {
       let box = new cryptobox.Cryptobox(new cryptobox.store.Cache(), 1);
 
       let firstFingerprint = undefined;
       let secondFingerprint = undefined;
 
-      box.create()
+      box
+        .create()
         .then(() => {
           firstFingerprint = box.identity.public_key.fingerprint();
           box = new cryptobox.Cryptobox(new cryptobox.store.Cache(), 1);
@@ -47,12 +48,15 @@ describe('cryptobox.store.Cache', () => {
   });
 
   describe('save_identity', () => {
-    it('saves the local identity', (done) => {
+    it('saves the local identity', done => {
       const ikp = Proteus.keys.IdentityKeyPair.new();
-      store.save_identity(ikp).then(identity => {
-        expect(identity.public_key.fingerprint()).toEqual(ikp.public_key.fingerprint());
-        done();
-      }).catch(done.fail);
+      store
+        .save_identity(ikp)
+        .then(identity => {
+          expect(identity.public_key.fingerprint()).toEqual(ikp.public_key.fingerprint());
+          done();
+        })
+        .catch(done.fail);
     });
   });
 });
