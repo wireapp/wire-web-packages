@@ -13,6 +13,6 @@
     "encoding": "utf8",
     "lenient": true,
     "recurse": true,
-    "template": "./node_modules/tsd-jsdoc"
+    "template": "../../node_modules/tsd-jsdoc"
   }
 }

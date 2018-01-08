@@ -62,13 +62,13 @@ export declare class Decoder {
   constructor(buffer: ArrayBuffer, config?: Object);
 
   /**
-   * @param {!number} x
+   * @param {!number} int
    * @param {!number} overflow
    * @returns {number}
    * @private
    * @throws DecodeError
    */
-  private static _check_overflow(x: number, overflow: number): number;
+  private static _check_overflow(int: number, overflow: number): number;
 
   /**
    * @param {!number} bytes
@@ -340,139 +340,139 @@ export declare class Encoder {
   private _write_type_and_len(type: Types, len: number): void;
 
   /**
-   * @param {!number} x
+   * @param {!number} value
    * @returns {void}
    * @private
    */
-  private _u8(x: number): void;
+  private _u8(value: number): void;
 
   /**
-   * @param {!number} x
+   * @param {!number} value
    * @returns {void}
    * @private
    */
-  private _u16(x: number): void;
+  private _u16(value: number): void;
 
   /**
-   * @param {!number} x
+   * @param {!number} value
    * @returns {void}
    * @private
    */
-  private _u32(x: number): void;
+  private _u32(value: number): void;
 
   /**
-   * @param {!number} x
+   * @param {!number} value
    * @returns {void}
    * @private
    */
-  private _u64(x: number): void;
+  private _u64(value: number): void;
 
   /**
-   * @param {!number} x
+   * @param {!number} value
    * @returns {void}
    * @private
    */
-  private _f32(x: number): void;
+  private _f32(value: number): void;
 
   /**
-   * @param {!number} x
+   * @param {!number} value
    * @returns {void}
    * @private
    */
-  private _f64(x: number): void;
+  private _f64(value: number): void;
 
   /**
-   * @param {!Uint8Array} x
+   * @param {!Uint8Array} value
    * @returns {void}
    * @private
    */
-  private _bytes(x: Uint8Array): void;
+  private _bytes(value: Uint8Array): void;
 
   /**
-   * @param {!number} x
+   * @param {!number} value
    * @returns {Encoder} `this`
    * @throws RangeError
    */
-  u8(x: number): Encoder;
+  u8(value: number): Encoder;
 
   /**
-   * @param {!number} x
+   * @param {!number} value
    * @returns {Encoder} `this`
    * @throws RangeError
    */
-  u16(x: number): Encoder;
+  u16(value: number): Encoder;
 
   /**
-   * @param {!number} x
+   * @param {!number} value
    * @returns {Encoder} `this`
    * @throws RangeError
    */
-  u32(x: number): Encoder;
+  u32(value: number): Encoder;
 
   /**
-   * @param {!number} x
+   * @param {!number} value
    * @returns {Encoder} `this`
    * @throws RangeError
    */
-  u64(x: number): Encoder;
+  u64(value: number): Encoder;
 
   /**
-   * @param {!number} x
+   * @param {!number} value
    * @returns {Encoder} `this`
    * @throws RangeError
    */
-  i8(x: number): Encoder;
+  i8(value: number): Encoder;
 
   /**
-   * @param {!number} x
+   * @param {!number} value
    * @returns {Encoder} `this`
    * @throws RangeError
    */
-  i16(x: number): Encoder;
+  i16(value: number): Encoder;
 
   /**
-   * @param {!number} x
+   * @param {!number} value
    * @returns {Encoder} `this`
    * @throws RangeError
    */
-  i32(x: number): Encoder;
+  i32(value: number): Encoder;
 
   /**
-   * @param {!number} x
+   * @param {!number} value
    * @returns {Encoder} `this`
    * @throws RangeError
    */
-  i64(x: number): Encoder;
+  i64(value: number): Encoder;
 
   /**
-   * @param {!number} x
+   * @param {!number} value
    * @returns {Encoder} `this`
    */
-  f32(x: number): Encoder;
+  f32(value: number): Encoder;
 
   /**
-   * @param {!number} x
+   * @param {!number} value
    * @returns {Encoder} `this`
    */
-  f64(x: number): Encoder;
+  f64(value: number): Encoder;
 
   /**
-   * @param {!number} x
+   * @param {!number} value
    * @returns {Encoder} `this`
    */
-  bool(x: number): Encoder;
+  bool(value: number): Encoder;
 
   /**
-   * @param {!(ArrayBuffer|Uint8Array)} x
+   * @param {!(ArrayBuffer|Uint8Array)} value
    * @returns {Encoder} `this`
    */
-  bytes(x: ArrayBuffer | Uint8Array): Encoder;
+  bytes(value: ArrayBuffer | Uint8Array): Encoder;
 
   /**
-   * @param {!number} x
+   * @param {!number} value
    * @returns {Encoder} `this`
    */
-  text(x: number): Encoder;
+  text(value: number): Encoder;
 
   /** @returns {Encoder} `this` */
   null(): Encoder;
@@ -577,9 +577,9 @@ export declare class Types {
   static UNDEFINED: number;
 
   /**
-   * @param {!Types} t
+   * @param {!Types} type
    * @returns {number}
    * @throws TypeError
    */
-  static major(t: Types): number;
+  static major(type: Types): number;
 }
