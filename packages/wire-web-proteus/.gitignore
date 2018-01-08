@@ -1,0 +1,8 @@
+.yarnclean
+package-lock.json
+/.idea
+/bower_components
+/dist/commonjs
+/node_modules
+/npm-debug.log*
+/yarn-error.log
