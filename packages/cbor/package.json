@@ -18,8 +18,8 @@
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor",
   "scripts": {
     "clear": "rimraf dist",
-    "coverage:html": "istanbul cover --report html ../../node_modules/jasmine/bin/jasmine.js",
-    "coverage:lcov": "istanbul cover --report lcov ../../node_modules/jasmine/bin/jasmine.js",
+    "coverage:html": "istanbul cover --report html jasmine",
+    "coverage:lcov": "istanbul cover --report lcov jasmine",
     "dist": "webpack",
     "lint": "eslint src/",
     "preversion": "yarn lint && yarn test && yarn types",
