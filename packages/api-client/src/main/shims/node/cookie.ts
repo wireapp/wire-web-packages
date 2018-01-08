@@ -25,12 +25,6 @@ import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/er
 
 const COOKIE_NAME: string = 'zuid';
 
-export interface Cookie {
-  expiration: string;
-  isExpired: boolean;
-  zuid: string;
-}
-
 const loadExistingCookie = (
   engine: CRUDEngine
 ): Promise<{
