@@ -27,21 +27,22 @@ const COOKIE_NAME: string = 'zuid';
 
 const loadExistingCookie = (engine: CRUDEngine): Promise<object> => {
   return engine
-    .read(AUTH_TABLE_NAME, AUTH_COOKIE_KEY)
+    .read<{expiration: string; zuid: string}>(AUTH_TABLE_NAME, AUTH_COOKIE_KEY)
     .catch(error => {
       if (error.name === RecordNotFoundError.name) {
-        return {isExpired: true};
+        return {expiration: '0', isExpired: true};
       }
 
       throw error;
     })
-    .then((fileContent: {expiration: string; zuid: string}) => {
+    .then((fileContent: {expiration: string; zuid: string} | {expiration: string; isExpired: boolean}) => {
       return typeof fileContent === 'object'
         ? {
             isExpired: new Date() > new Date(fileContent.expiration),
             ...fileContent,
           }
         : {
+            expiration: '0',
             isExpired: true,
           };
     });
@@ -69,7 +70,7 @@ export const sendRequestWithCookie = (
   config: AxiosRequestConfig,
   engine: CRUDEngine
 ): AxiosPromise => {
-  return loadExistingCookie(engine).then(({isExpired, zuid}: {isExpired: string; zuid: string}) => {
+  return loadExistingCookie(engine).then(({isExpired, zuid}: {[index: string]: string}) => {
     if (!isExpired) {
       // https://github.com/wearezeta/backend-api-docs/wiki/API-User-Authentication#token-refresh
       config.headers = config.headers || {};
