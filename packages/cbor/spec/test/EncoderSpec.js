@@ -17,7 +17,6 @@
  *
  */
 
-/* eslint no-undef: "off" */
 /* eslint no-magic-numbers: "off" */
 
 const CBOR = require('../../src/cbor');
