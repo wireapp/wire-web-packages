@@ -35,20 +35,13 @@
     "webpack": "2.3.3",
     "yargs": "7.0.2"
   },
-  "files": [
-    "dist/commonjs",
-    "dist/typings",
-    "dist/window"
-  ],
+  "files": ["dist/commonjs", "dist/typings", "dist/window"],
   "license": "GPL-3.0",
   "main": "dist/commonjs/wire-webapp-cryptobox.js",
-  "name": "wire-webapp-cryptobox",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/wireapp/wire-webapp-cryptobox.git"
-  },
+  "name": "@wireapp/cryptobox",
+  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox",
   "scripts": {
-    "clear": "rimraf dist",
+    "clear": "rimraf dist/commonjs && rimraf dist/lib",
     "dist": "gulp dist --env production",
     "lint": "echo \"No linting specified\" && exit 0",
     "postversion": "git push && git push --tags",
