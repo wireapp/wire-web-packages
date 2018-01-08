@@ -6,23 +6,25 @@ You can find the published source code at [github.com/wireapp](https://github.co
 
 For licensing information, see the attached LICENSE file and the list of third-party licenses at [wire.com/legal/licenses/](https://wire.com/legal/licenses/).
 
-## Installation
+## Proteus
+
+### Installation
 
 ```bash
 yarn add @wireapp/proteus
 ```
 
-## Usage
+### Usage
 
-### Browser
+#### Browser
 
 * [index.html](./dist/index.html)
 
-### Node.js
+#### Node.js
 
 * [index.js](./dist/index.js)
 
-### TypeScript
+#### TypeScript
 
 ```typescript
 import * as Proteus from '@wireapp/proteus';
