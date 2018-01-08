@@ -22,9 +22,7 @@
 const CBOR = require('../../src/cbor');
 
 describe('CBOR.Decoder', () => {
-  const is_hex = str => {
-    return typeof str === 'string' && /^[0-9a-f]+$/i.test(str) && str.length % 2 === 0;
-  };
+  const is_hex = str => typeof str === 'string' && /^[0-9a-f]+$/i.test(str) && str.length % 2 === 0;
 
   const from_hex = str => {
     if (!is_hex(str)) {
@@ -42,9 +40,7 @@ describe('CBOR.Decoder', () => {
     return result;
   };
 
-  const decoder = hex_str => {
-    return new CBOR.Decoder(from_hex(hex_str).buffer);
-  };
+  const decoder = hex_str => new CBOR.Decoder(from_hex(hex_str).buffer);
 
   it('decodes unsigned integers', () => {
     expect(0).toBe(decoder('00').u8());
