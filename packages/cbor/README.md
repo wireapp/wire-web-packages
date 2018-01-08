@@ -21,7 +21,7 @@ yarn add @wireapp/cbor
 ### TypeScript
 
 ```typescript
-import * as CBOR from 'wire-webapp-cbor';
+import * as CBOR from '@wireapp/cbor';
 
 const payload: Uint8Array = new Uint8Array([
   255,
