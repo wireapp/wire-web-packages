@@ -17,12 +17,11 @@
  *
  */
 
-describe('Store Compatibility', function() {
-
+describe('Store Compatibility', () => {
   let cryptobox = undefined;
   let Proteus = undefined;
 
-  beforeAll(function(done) {
+  beforeAll(done => {
     if (typeof window === 'object') {
       cryptobox = window.cryptobox;
       Proteus = window.Proteus;
@@ -34,8 +33,8 @@ describe('Store Compatibility', function() {
     }
   });
 
-  describe('local identity', function() {
-    it('saves the same identity', function(done) {
+  describe('local identity', () => {
+    it('saves the same identity', done => {
       const identity = Proteus.keys.IdentityKeyPair.new();
       const fingerprint = identity.public_key.fingerprint();
 
@@ -46,18 +45,19 @@ describe('Store Compatibility', function() {
       let identityFromCache = undefined;
       let identityFromIndexedDB = undefined;
 
-      storeCache.save_identity(identity)
-        .then(function() {
+      storeCache
+        .save_identity(identity)
+        .then(() => {
           return storeIndexedDB.save_identity(identity);
         })
-        .then(function() {
+        .then(() => {
           return storeCache.load_identity();
         })
-        .then(function(identity) {
-          identityFromCache = identity;
+        .then(ident => {
+          identityFromCache = ident;
           return storeIndexedDB.load_identity();
         })
-        .then(function() {
+        .then(() => {
           identityFromIndexedDB = identity;
 
           expect(identityFromCache.public_key.fingerprint()).toBe(fingerprint);

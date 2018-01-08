@@ -29,15 +29,15 @@ module.exports = function(config) {
     port: 9876,
     preprocessors: {},
     proxies: {
-      '/dist': '/base/dist'
+      '/dist': '/base/dist',
     },
     reporters: ['progress'],
-    singleRun: true
+    singleRun: true,
   });
 
   if (process.env.TRAVIS) {
     config.set({
-      port: 9877
+      port: 9877,
     });
   }
 };

@@ -17,6 +17,8 @@
  *
  */
 
+/* eslint no-magic-numbers: "off" */
+
 const cryptobox = require('../../../dist/commonjs/wire-webapp-cryptobox');
 const fs = require('fs-extra');
 const LRUCache = require('wire-webapp-lru-cache');
@@ -160,8 +162,8 @@ describe('cryptobox.store.CryptoboxCRUDStore', () => {
     });
   });
 
-  describe('session_from_prekey', function() {
-    it('saves and caches a valid session from a serialized PreKey bundle', function(done) {
+  describe('session_from_prekey', () => {
+    it('saves and caches a valid session from a serialized PreKey bundle', done => {
       const alice = new cryptobox.Cryptobox(fileStore, 1);
       const sessionId = 'session_with_bob';
 
@@ -190,7 +192,7 @@ describe('cryptobox.store.CryptoboxCRUDStore', () => {
         .catch(done.fail);
     });
 
-    it('reinforces a session from the store without cache', function(done) {
+    it('reinforces a session from the store without cache', done => {
       const alice = new cryptobox.Cryptobox(fileStore, 1);
       const sessionId = 'session_with_bob';
 

@@ -1,18 +1,21 @@
-describe('cryptobox.store.Cache', () => {
+fdescribe('cryptobox.store.Cache', () => {
   let cryptobox = undefined;
   let Proteus = undefined;
   let store = undefined;
 
   beforeAll(done => {
     if (typeof window === 'object') {
+      console.log('window');
       cryptobox = window.cryptobox;
       Proteus = window.Proteus;
       done();
     } else {
+      console.log('no window');
       cryptobox = require('../../dist/commonjs/wire-webapp-cryptobox');
       Proteus = require('wire-webapp-proteus');
       done();
     }
+    console.log('------------', cryptobox);
   });
 
   beforeEach(() => {
@@ -21,8 +24,8 @@ describe('cryptobox.store.Cache', () => {
 
   describe('constructor', () => {
     it('creates an instance', () => {
-      const store = new cryptobox.store.Cache();
-      expect(store).toBeDefined();
+      const storeInstance = new cryptobox.store.Cache();
+      expect(storeInstance).toBeDefined();
     });
 
     it('causes new identities on a Cryptobox initialization with a new storage instance (because a cache is temporary)', done => {

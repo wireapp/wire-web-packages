@@ -17,12 +17,13 @@
  *
  */
 
-describe('cryptobox.store.IndexedDB', function() {
+/* eslint no-magic-numbers: "off" */
 
+describe('cryptobox.store.IndexedDB', () => {
   let cryptobox = undefined;
   let Dexie = undefined;
 
-  beforeAll(function(done) {
+  beforeAll(done => {
     if (typeof window === 'object') {
       cryptobox = window.cryptobox;
       Dexie = window.Dexie;
@@ -31,19 +32,18 @@ describe('cryptobox.store.IndexedDB', function() {
     }
   });
 
-  describe('Basic functionality', function() {
-
-    it('removes PreKeys from the storage (when a session gets established) and creates new PreKeys if needed.', function(done) {
+  describe('Basic functionality', () => {
+    it('removes PreKeys from the storage (when a session gets established) and creates new PreKeys if needed.', done => {
       const alice = {
         // PreKeys: ["65535", "0", "1"]
-        desktop: new cryptobox.Cryptobox(new cryptobox.store.IndexedDB('alice_desktop'), 3)
+        desktop: new cryptobox.Cryptobox(new cryptobox.store.IndexedDB('alice_desktop'), 3),
       };
 
       const bob = {
         // PreKeys: ["65535"]
         desktop: new cryptobox.Cryptobox(new cryptobox.store.IndexedDB('bob_desktop'), 1),
         // PreKeys: ["65535"]
-        mobile: new cryptobox.Cryptobox(new cryptobox.store.IndexedDB('bob_mobile'), 1)
+        mobile: new cryptobox.Cryptobox(new cryptobox.store.IndexedDB('bob_mobile'), 1),
       };
 
       spyOn(alice.desktop, 'publish_prekeys').and.callThrough();
@@ -53,25 +53,25 @@ describe('cryptobox.store.IndexedDB', function() {
 
       // Initialize Cryptoboxes
       Promise.all([alice.desktop.create(), bob.desktop.create(), bob.mobile.create()])
-        .then(function() {
+        .then(() => {
           expect(alice.desktop.cachedPreKeys.length).toBe(3);
           expect(bob.desktop.cachedPreKeys.length).toBe(1);
           expect(bob.mobile.cachedPreKeys.length).toBe(1);
           return alice.desktop.store.load_prekey(0);
         })
-        .then(function(prekey) {
+        .then(prekey => {
           expect(prekey).toBeDefined();
           // Bob sends a message (with PreKey material and ciphertext) to Alice's desktop client
           const publicPreKeyBundle = Proteus.keys.PreKeyBundle.new(alice.desktop.identity.public_key, prekey);
           return bob.desktop.encrypt('to_alice_desktop', messageFromBob, publicPreKeyBundle.serialise());
         })
-        .then(function(ciphertext) {
+        .then(ciphertext => {
           // Alice creates a session with Bob's PreKey message and decrypts the ciphertext
           expect(alice.desktop.pk_store.prekeys.length).toBe(0);
           expect(alice.desktop.publish_prekeys).not.toHaveBeenCalled();
           return alice.desktop.decrypt('to_bob_desktop', ciphertext);
         })
-        .then(function(plaintext) {
+        .then(plaintext => {
           const expectedNewPreKeyId = 2;
           expect(alice.desktop.pk_store.prekeys.length).toBe(0);
           expect(alice.desktop.cachedSessions.size()).toBe(1);
@@ -82,48 +82,50 @@ describe('cryptobox.store.IndexedDB', function() {
           // Bob now establishes a connection with his mobile client to Alice's desktop client...
           return alice.desktop.store.load_prekey(expectedNewPreKeyId);
         })
-        .then(function(prekey) {
+        .then(prekey => {
           const publicPreKeyBundle = Proteus.keys.PreKeyBundle.new(alice.desktop.identity.public_key, prekey);
           return bob.mobile.encrypt('to_alice_desktop', messageFromBob, publicPreKeyBundle.serialise());
         })
-        .then(function(ciphertext) {
+        .then(ciphertext => {
           // Alice creates a session with Bob's PreKey message and decrypts the ciphertext
           expect(alice.desktop.pk_store.prekeys.length).toBe(0);
           return alice.desktop.decrypt('to_bob_mobile', ciphertext);
         })
-        .then(function(plaintext) {
+        .then(plaintext => {
           expect(alice.desktop.pk_store.prekeys.length).toBe(0);
           expect(alice.desktop.cachedSessions.size()).toBe(2);
           expect(alice.desktop.pk_store.release_prekeys.calls.count()).toBe(2);
           expect(alice.desktop.publish_prekeys.calls.count()).toBe(2); // Published PreKey ID "3"
           expect(sodium.to_string(plaintext)).toBe(messageFromBob);
         })
-        .then(function() {
+        .then(() => {
           done();
         })
         .catch(done.fail);
     });
-
   });
 
-  describe('constructor', function() {
+  describe('constructor', () => {
     let store = undefined;
 
-    afterEach(function(done) {
+    afterEach(done => {
       if (store) {
-        store.delete_all().then(done).catch(done.fail);
+        store
+          .delete_all()
+          .then(done)
+          .catch(done.fail);
       }
     });
 
-    it('works with a given Dexie instance', function() {
+    it('works with a given Dexie instance', () => {
       const schema = {
-        "amplify": '',
-        "clients": ', meta.primary_key',
-        "conversation_events": ', conversation, time, type',
-        "conversations": ', id, last_event_timestamp',
-        "keys": '',
-        "prekeys": '',
-        "sessions": ''
+        amplify: '',
+        clients: ', meta.primary_key',
+        conversation_events: ', conversation, time, type',
+        conversations: ', id, last_event_timestamp',
+        keys: '',
+        prekeys: '',
+        sessions: '',
       };
 
       const name = 'wire@production@532af01e-1e24-4366-aacf-33b67d4ee376@temporary';
@@ -138,13 +140,16 @@ describe('cryptobox.store.IndexedDB', function() {
   describe('create', () => {
     let store = undefined;
 
-    afterEach((done) => {
+    afterEach(done => {
       if (store) {
-        store.delete_all().then(done).catch(done.fail);
+        store
+          .delete_all()
+          .then(done)
+          .catch(done.fail);
       }
     });
 
-    it('doesn\'t save null values', (done) => {
+    it("doesn't save null values", done => {
       const schema = {
         amplify: '',
         clients: ', meta.primary_key',
@@ -152,7 +157,7 @@ describe('cryptobox.store.IndexedDB', function() {
         conversations: ', id, last_event_timestamp',
         keys: '',
         prekeys: '',
-        sessions: ''
+        sessions: '',
       };
 
       const name = 'wire@production@532af01e-1e24-4366-aacf-33b67d4ee377@temporary';
@@ -160,29 +165,30 @@ describe('cryptobox.store.IndexedDB', function() {
       db.version(1).stores(schema);
 
       store = new cryptobox.store.IndexedDB(db);
-      store.create(name, 'sessions', null)
-        .catch((error) => {
-          expect(error.name).toBe('RecordTypeError');
-          done();
-        });
+      store.create(name, 'sessions', null).catch(error => {
+        expect(error.name).toBe('RecordTypeError');
+        done();
+      });
     });
   });
 
-  describe('create_session', function() {
-
+  describe('create_session', () => {
     let store = undefined;
 
-    beforeEach(function() {
+    beforeEach(() => {
       store = new cryptobox.store.IndexedDB('bobs_store');
     });
 
-    afterEach(function(done) {
+    afterEach(done => {
       if (store) {
-        store.delete_all().then(done).catch(done.fail);
+        store
+          .delete_all()
+          .then(done)
+          .catch(done.fail);
       }
     });
 
-    it('saves a session with meta data', function(done) {
+    it('saves a session with meta data', done => {
       const alice = Proteus.keys.IdentityKeyPair.new();
 
       const bob = Proteus.keys.IdentityKeyPair.new();
@@ -193,29 +199,28 @@ describe('cryptobox.store.IndexedDB', function() {
       let proteusSession;
 
       Proteus.session.Session.init_from_prekey(alice, bobPreKeyBundle)
-        .then(function(session) {
+        .then(session => {
           proteusSession = session;
-          return store.create_session(sessionId, session)
+          return store.create_session(sessionId, session);
         })
-        .then(function() {
+        .then(() => {
           return store.read(store.TABLE.SESSIONS, sessionId);
         })
-        .then(function(serialisedSession) {
+        .then(serialisedSession => {
           expect(serialisedSession.created).toEqual(jasmine.any(Number));
           expect(serialisedSession.version).toEqual(cryptobox.Cryptobox.prototype.VERSION);
           return store.read_session(alice, sessionId);
         })
-        .then(function(loadedSession) {
+        .then(loadedSession => {
           expect(loadedSession.session_tag).toEqual(proteusSession.session_tag);
           done();
         })
         .catch(done.fail);
     });
-
   });
 
-  describe('session_from_prekey', function() {
-    it('saves and caches a valid session from a serialized PreKey bundle', function(done) {
+  describe('session_from_prekey', () => {
+    it('saves and caches a valid session from a serialized PreKey bundle', done => {
       const alice = new cryptobox.Cryptobox(new cryptobox.store.IndexedDB('alice_db'), 1);
       const sessionId = 'session_with_bob';
 
@@ -223,12 +228,13 @@ describe('cryptobox.store.IndexedDB', function() {
       const preKey = Proteus.keys.PreKey.new(Proteus.keys.PreKey.MAX_PREKEY_ID);
       const bobPreKeyBundle = Proteus.keys.PreKeyBundle.new(bob.public_key, preKey);
 
-      alice.create()
-        .then(function(allPreKeys) {
+      alice
+        .create()
+        .then(allPreKeys => {
           expect(allPreKeys.length).toBe(1);
           return alice.session_from_prekey(sessionId, bobPreKeyBundle.serialise());
         })
-        .then(function(cryptoboxSession) {
+        .then(cryptoboxSession => {
           expect(cryptoboxSession.fingerprint_remote()).toBe(bob.public_key.fingerprint());
           return alice.load_session_from_cache(sessionId);
         })
@@ -236,14 +242,14 @@ describe('cryptobox.store.IndexedDB', function() {
           expect(cryptoboxSession.fingerprint_remote()).toBe(bob.public_key.fingerprint());
           return alice.session_from_prekey(sessionId, bobPreKeyBundle.serialise());
         })
-        .then(function(cryptoboxSession) {
+        .then(cryptoboxSession => {
           expect(cryptoboxSession.fingerprint_remote()).toBe(bob.public_key.fingerprint());
           done();
         })
         .catch(done.fail);
     });
 
-    it('reinforces a session from the indexedDB without cache', function(done) {
+    it('reinforces a session from the indexedDB without cache', done => {
       const alice = new cryptobox.Cryptobox(new cryptobox.store.IndexedDB('alice_db'), 1);
       const sessionId = 'session_with_bob';
 
@@ -251,17 +257,18 @@ describe('cryptobox.store.IndexedDB', function() {
       const preKey = Proteus.keys.PreKey.new(Proteus.keys.PreKey.MAX_PREKEY_ID);
       const bobPreKeyBundle = Proteus.keys.PreKeyBundle.new(bob.public_key, preKey);
 
-      alice.create()
-        .then(function(allPreKeys) {
+      alice
+        .create()
+        .then(allPreKeys => {
           expect(allPreKeys.length).toBe(1);
           return alice.session_from_prekey(sessionId, bobPreKeyBundle.serialise());
         })
-        .then(function(cryptoboxSession) {
+        .then(cryptoboxSession => {
           expect(cryptoboxSession.fingerprint_remote()).toBe(bob.public_key.fingerprint());
           alice.cachedSessions = new window.LRUCache(1);
           return alice.session_from_prekey(sessionId, bobPreKeyBundle.serialise());
         })
-        .then(function(cryptoboxSession) {
+        .then(cryptoboxSession => {
           expect(cryptoboxSession.fingerprint_remote()).toBe(bob.public_key.fingerprint());
           done();
         })
@@ -272,13 +279,18 @@ describe('cryptobox.store.IndexedDB', function() {
   describe('"update_session"', () => {
     let store = undefined;
 
-    beforeEach(() => store = new cryptobox.store.IndexedDB('alices_store'));
+    beforeEach(() => (store = new cryptobox.store.IndexedDB('alices_store')));
 
-    afterEach(function(done) {
-      if (store) store.delete_all().then(done).catch(done.fail);
+    afterEach(done => {
+      if (store) {
+        store
+          .delete_all()
+          .then(done)
+          .catch(done.fail);
+      }
     });
 
-    it('updates an already persisted session', (done) => {
+    it('updates an already persisted session', done => {
       const aliceIdentity = Proteus.keys.IdentityKeyPair.new();
       const bobIdentity = Proteus.keys.IdentityKeyPair.new();
       const bobLastResortPreKey = Proteus.keys.PreKey.new(Proteus.keys.PreKey.MAX_PREKEY_ID);
@@ -286,22 +298,22 @@ describe('cryptobox.store.IndexedDB', function() {
       const sessionId = 'my_session_with_bob';
 
       Proteus.session.Session.init_from_prekey(aliceIdentity, bobPreKeyBundle)
-        .then((proteusSession) => store.create_session(sessionId, proteusSession))
-        .then((proteusSession) => {
+        .then(proteusSession => store.create_session(sessionId, proteusSession))
+        .then(proteusSession => {
           expect(proteusSession.local_identity.public_key.fingerprint()).toBe(aliceIdentity.public_key.fingerprint());
           expect(proteusSession.remote_identity.public_key.fingerprint()).toBe(bobIdentity.public_key.fingerprint());
           expect(proteusSession.version).toBe(1);
           proteusSession.version = 2;
           return store.update_session(sessionId, proteusSession);
         })
-        .then((proteusSession) => store.read_session(aliceIdentity, sessionId))
-        .then((proteusSession) => {
+        .then(proteusSession => store.read_session(aliceIdentity, sessionId))
+        .then(proteusSession => {
           expect(proteusSession.local_identity.public_key.fingerprint()).toBe(aliceIdentity.public_key.fingerprint());
           expect(proteusSession.remote_identity.public_key.fingerprint()).toBe(bobIdentity.public_key.fingerprint());
           expect(proteusSession.version).toBe(2);
           done();
         })
-        .catch((error) => done.fail(error));
+        .catch(error => done.fail(error));
     });
   });
 });

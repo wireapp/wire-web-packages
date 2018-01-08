@@ -17,12 +17,14 @@
  *
  */
 
-describe('cryptobox.Cryptobox', function() {
+/* eslint no-magic-numbers: "off" */
+
+describe('cryptobox.Cryptobox', () => {
   let cryptobox = undefined;
   let Proteus = undefined;
   let store = undefined;
 
-  beforeAll(function(done) {
+  beforeAll(done => {
     if (typeof window === 'object') {
       cryptobox = window.cryptobox;
       Proteus = window.Proteus;
@@ -35,7 +37,7 @@ describe('cryptobox.Cryptobox', function() {
     }
   });
 
-  beforeEach(function() {
+  beforeEach(() => {
     store = new cryptobox.store.Cache();
   });
 
@@ -53,22 +55,22 @@ describe('cryptobox.Cryptobox', function() {
     });
   });
 
-  describe('create', function() {
-    it('initializes a Cryptobox with a new identity and the last resort PreKey and saves these', function(done) {
+  describe('create', () => {
+    it('initializes a Cryptobox with a new identity and the last resort PreKey and saves these', done => {
       const box = new cryptobox.Cryptobox(store);
 
       box
         .create()
-        .then(function() {
+        .then(() => {
           expect(box.identity).toBeDefined();
           return store.load_identity();
         })
-        .then(function(identity) {
+        .then(identity => {
           expect(identity).toBeDefined();
           expect(identity.public_key.fingerprint()).toBeDefined();
           return store.load_prekey(Proteus.keys.PreKey.MAX_PREKEY_ID);
         })
-        .then(function(preKey) {
+        .then(preKey => {
           expect(preKey.key_id).toBe(Proteus.keys.PreKey.MAX_PREKEY_ID);
           done();
         })
@@ -87,19 +89,19 @@ describe('cryptobox.Cryptobox', function() {
       });
     });
 
-    it('returns the current version', function() {
+    it('returns the current version', () => {
       expect(cryptobox.Cryptobox.prototype.VERSION).toBeDefined();
     });
   });
 
-  describe('load', function() {
-    it('initializes a Cryptobox with an existing identity and the last resort PreKey', function(done) {
+  describe('load', () => {
+    it('initializes a Cryptobox with an existing identity and the last resort PreKey', done => {
       let box = new cryptobox.Cryptobox(store, 4);
       let initialFingerPrint = undefined;
 
       box
         .create()
-        .then(function(initialPreKeys) {
+        .then(initialPreKeys => {
           const lastResortPreKey = initialPreKeys[initialPreKeys.length - 1];
           expect(lastResortPreKey.key_id).toBe(Proteus.keys.PreKey.MAX_PREKEY_ID);
 
@@ -113,26 +115,26 @@ describe('cryptobox.Cryptobox', function() {
           expect(box.identity).not.toBeDefined();
           return box.load();
         })
-        .then(function() {
+        .then(() => {
           expect(box.identity.public_key.fingerprint()).toBe(initialFingerPrint);
           done();
         })
         .catch(done.fail);
     });
 
-    it('fails to initialize a Cryptobox of which the identity is missing', function(done) {
+    it('fails to initialize a Cryptobox of which the identity is missing', done => {
       let box = new cryptobox.Cryptobox(store);
 
       box
         .create()
-        .then(function() {
+        .then(() => {
           expect(box.identity).toBeDefined();
           return store.delete_all();
         })
-        .then(function() {
+        .then(() => {
           return store.load_identity();
         })
-        .then(function(identity) {
+        .then(identity => {
           expect(identity).not.toBeDefined();
 
           box = new cryptobox.Cryptobox(store);
@@ -140,25 +142,25 @@ describe('cryptobox.Cryptobox', function() {
           return box.load();
         })
         .then(done.fail)
-        .catch(function(error) {
+        .catch(error => {
           expect(error).toEqual(jasmine.any(cryptobox.error.CryptoboxError));
           done();
         });
     });
 
-    it('fails to initialize a Cryptobox of which the last resort PreKey is missing', function(done) {
+    it('fails to initialize a Cryptobox of which the last resort PreKey is missing', done => {
       let box = new cryptobox.Cryptobox(store);
 
       box
         .create()
-        .then(function() {
+        .then(() => {
           expect(box.identity).toBeDefined();
           return store.delete_prekey(Proteus.keys.PreKey.MAX_PREKEY_ID);
         })
-        .then(function() {
+        .then(() => {
           return store.load_prekey(Proteus.keys.PreKey.MAX_PREKEY_ID);
         })
-        .then(function(prekey) {
+        .then(prekey => {
           expect(prekey).not.toBeDefined();
 
           box = new cryptobox.Cryptobox(store);
@@ -166,22 +168,22 @@ describe('cryptobox.Cryptobox', function() {
           return box.load();
         })
         .then(done.fail)
-        .catch(function(error) {
+        .catch(error => {
           expect(error).toEqual(jasmine.any(cryptobox.error.CryptoboxError));
           done();
         });
     });
   });
 
-  describe('Sessions', function() {
+  describe('Sessions', () => {
     let box = undefined;
-    const sessionId = 'unique_identifier';
+    const sessionIdUnique = 'unique_identifier';
 
-    beforeEach(function(done) {
+    beforeEach(done => {
       box = new cryptobox.Cryptobox(store);
       box
         .create()
-        .then(function() {
+        .then(() => {
           const bob = {
             identity: Proteus.keys.IdentityKeyPair.new(),
             prekey: Proteus.keys.PreKey.new(Proteus.keys.PreKey.MAX_PREKEY_ID),
@@ -190,18 +192,18 @@ describe('cryptobox.Cryptobox', function() {
 
           return Proteus.session.Session.init_from_prekey(box.identity, bob.bundle);
         })
-        .then(function(session) {
-          const cryptoBoxSession = new cryptobox.CryptoboxSession(sessionId, box.pk_store, session);
+        .then(session => {
+          const cryptoBoxSession = new cryptobox.CryptoboxSession(sessionIdUnique, box.pk_store, session);
           return box.session_save(cryptoBoxSession);
         })
-        .then(function() {
+        .then(() => {
           done();
         })
         .catch(done.fail);
     });
 
-    describe('session_from_prekey', function() {
-      it('creates a session from a valid PreKey format', function(done) {
+    describe('session_from_prekey', () => {
+      it('creates a session from a valid PreKey format', done => {
         const remotePreKey = {
           id: 65535,
           key:
@@ -212,14 +214,14 @@ describe('cryptobox.Cryptobox', function() {
 
         box
           .session_from_prekey(sessionId, decodedPreKeyBundleBuffer)
-          .then(function(session) {
+          .then(session => {
             expect(session.id).toBe(sessionId);
             done();
           })
           .catch(done.fail);
       });
 
-      it('fails for outdated PreKey formats', function(done) {
+      it('fails for outdated PreKey formats', done => {
         const remotePreKey = {
           id: 65535,
           key: 'hAEZ//9YIOxZw78oQCH6xKyAI7WqagtbvRZ/LaujG+T790hOTbf7WCDqAE5Dc75VfmYji6wEz976hJ2hYuODYE6pA59DNFn/KQ==',
@@ -230,7 +232,7 @@ describe('cryptobox.Cryptobox', function() {
         box
           .session_from_prekey(sessionId, decodedPreKeyBundleBuffer)
           .then(done.fail)
-          .catch(function(error) {
+          .catch(error => {
             if (error instanceof cryptobox.InvalidPreKeyFormatError) {
               done();
             } else {
@@ -240,14 +242,14 @@ describe('cryptobox.Cryptobox', function() {
       });
     });
 
-    describe('session_load', function() {
-      it('loads a session from the cache', function(done) {
+    describe('session_load', () => {
+      it('loads a session from the cache', done => {
         spyOn(box, 'load_session_from_cache').and.callThrough();
         spyOn(box.store, 'read_session').and.callThrough();
         box
-          .session_load(sessionId)
-          .then(function(session) {
-            expect(session.id).toBe(sessionId);
+          .session_load(sessionIdUnique)
+          .then(session => {
+            expect(session.id).toBe(sessionIdUnique);
             expect(box.load_session_from_cache.calls.count()).toBe(1);
             done();
           })
@@ -255,12 +257,12 @@ describe('cryptobox.Cryptobox', function() {
       });
     });
 
-    describe('encrypt', function() {
-      it('saves the session after successful encryption', function(done) {
+    describe('encrypt', () => {
+      it('saves the session after successful encryption', done => {
         spyOn(box.store, 'create_session').and.callThrough();
         box
-          .encrypt(sessionId, 'Hello World.')
-          .then(function(encryptedBuffer) {
+          .encrypt(sessionIdUnique, 'Hello World.')
+          .then(encryptedBuffer => {
             expect(encryptedBuffer).toBeDefined();
             expect(box.store.create_session.calls.count()).toBe(1);
             done();
