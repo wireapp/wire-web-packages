@@ -6,19 +6,21 @@ You can find the published source code at [github.com/wireapp](https://github.co
 
 For licensing information, see the attached LICENSE file and the list of third-party licenses at [wire.com/legal/licenses/](https://wire.com/legal/licenses/).
 
-## Installation
+## CBOR
+
+### Installation
 
 ```
 yarn add @wireapp/cbor
 ```
 
-## Usage
+### Usage
 
-### Browser
+#### Browser
 
 * [index.html](./dist/index.html)
 
-### TypeScript
+#### TypeScript
 
 ```typescript
 import * as CBOR from '@wireapp/cbor';
