@@ -1,21 +1,18 @@
-fdescribe('cryptobox.store.Cache', () => {
+describe('cryptobox.store.Cache', () => {
   let cryptobox = undefined;
   let Proteus = undefined;
   let store = undefined;
 
   beforeAll(done => {
     if (typeof window === 'object') {
-      console.log('window');
       cryptobox = window.cryptobox;
       Proteus = window.Proteus;
       done();
     } else {
-      console.log('no window');
       cryptobox = require('../../dist/commonjs/wire-webapp-cryptobox');
       Proteus = require('wire-webapp-proteus');
       done();
     }
-    console.log('------------', cryptobox);
   });
 
   beforeEach(() => {

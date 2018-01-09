@@ -1,11 +1,10 @@
 const pkg = require('./package.json');
 const webpack = require('webpack');
-console.log('name', pkg.name);
 
 module.exports = {
   devtool: 'source-map',
   entry: {
-    filename: `${__dirname}/dist/commonjs/${pkg.name}.js`,
+    filename: `${__dirname}/dist/commonjs/wire-webapp-cryptobox.js`,
   },
   externals: {
     bazinga64: true,
@@ -20,7 +19,7 @@ module.exports = {
     path: 'empty',
   },
   output: {
-    filename: `${pkg.name}.js`,
+    filename: 'wire-webapp-cryptobox.js',
     library: 'cryptobox',
     path: `${__dirname}/dist/window`,
   },
