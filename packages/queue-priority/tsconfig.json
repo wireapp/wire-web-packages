@@ -1,8 +1,17 @@
 {
   "compilerOptions": {
+    "declaration": true,
+    "lib": ["DOM", "ES6"],
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "noImplicitAny": false,
+    "noImplicitReturns": true,
     "outDir": "dist/commonjs",
-    "rootDir": "src/main"
+    "removeComments": true,
+    "rootDir": "src/main",
+    "sourceMap": false,
+    "target": "ES5"
   },
-  "exclude": ["dist/commonjs", "node_modules"],
-  "extends": "../../configs/tsconfig.json"
+  "exclude": ["dist/commonjs", "node_modules"]
 }
