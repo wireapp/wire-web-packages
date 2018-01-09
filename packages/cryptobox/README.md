@@ -16,18 +16,18 @@ Cryptobox provides a high-level API with persistent storage for the [Proteus][2]
 ### Installation
 
 ```bash
-yarn add wire-webapp-cryptobox
+yarn add @wireapp/cryptobox
 ```
 
 ### Usage
 
 #### Browser
 
-- [index.html](./dist/index.html)
+* [index.html](./dist/index.html)
 
 #### Node.js
 
-- [index.js](./dist/index.js)
+* [index.js](./dist/index.js)
 
 ### Development
 

@@ -8,21 +8,7 @@
   "devDependencies": {
     "logdown": "2.2.0"
   },
-  "ignore": [
-    "*.*",
-    "**/.*",
-    "bower_components",
-    "dist/**/*",
-    "!dist/window/**/*",
-    "node_modules",
-    "spec",
-    "src",
-    "test",
-    "typings"
-  ],
   "license": "GPL-3.0",
-  "main": [
-    "dist/window/wire-webapp-cryptobox.js"
-  ],
+  "main": ["dist/window/wire-webapp-cryptobox.js"],
   "name": "wire-webapp-cryptobox"
 }
