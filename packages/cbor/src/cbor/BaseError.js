@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2017 Wire Swiss GmbH
+ * Copyright (C) 2016 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,21 @@
  *
  */
 
-// https://stripe.com/docs/api#plans
-interface PaymentStripePlan {
-  id: string;
-  amount: number;
-  currency: 'eur' | 'chf' | 'usd';
-  interval: 'day' | 'week' | 'month' | 'year';
-  name: string;
-  trialPeriodDays: number;
-}
+/**
+ * @class BaseError
+ * @extends Error
+ * @param {string} message
+ * @returns {string}
+ */
+module.exports = (function() {
+  const BaseError = function(message) {
+    this.name = this.constructor.name;
+    this.message = message;
+    this.stack = new Error().stack;
+  };
 
-export default PaymentStripePlan;
+  BaseError.prototype = new Error();
+  BaseError.prototype.constructor = BaseError;
+
+  return BaseError;
+})();

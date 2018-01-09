@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2017 Wire Swiss GmbH
+ * Copyright (C) 2016 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,10 @@
  *
  */
 
-// https://stripe.com/docs/api#plans
-interface PaymentStripePlan {
-  id: string;
-  amount: number;
-  currency: 'eur' | 'chf' | 'usd';
-  interval: 'day' | 'week' | 'month' | 'year';
-  name: string;
-  trialPeriodDays: number;
-}
-
-export default PaymentStripePlan;
+module.exports = {
+  BaseError: require('./cbor/BaseError'),
+  DecodeError: require('./cbor/DecodeError'),
+  Decoder: require('./cbor/Decoder'),
+  Encoder: require('./cbor/Encoder'),
+  Types: require('./cbor/Types'),
+};
