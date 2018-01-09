@@ -46,9 +46,9 @@ class MessageKeys {
    * @returns {MessageKeys} - `this`
    */
   static new(cipher_key, mac_key, counter) {
-    TypeUtil.assert_is_instance(CipherKey, cipher_key);
-    TypeUtil.assert_is_instance(MacKey, mac_key);
-    TypeUtil.assert_is_integer(counter);
+    //TypeUtil.assert_is_instance(CipherKey, cipher_key);
+    //TypeUtil.assert_is_instance(MacKey, mac_key);
+    //TypeUtil.assert_is_integer(counter);
 
     const mk = ClassUtil.new_instance(MessageKeys);
     mk.cipher_key = cipher_key;
@@ -102,7 +102,7 @@ class MessageKeys {
    * @returns {MessageKeys}
    */
   static decode(decoder) {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
+    //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     const self = ClassUtil.new_instance(MessageKeys);
 
@@ -123,9 +123,9 @@ class MessageKeys {
       }
     }
 
-    TypeUtil.assert_is_instance(CipherKey, self.cipher_key);
-    TypeUtil.assert_is_instance(MacKey, self.mac_key);
-    TypeUtil.assert_is_integer(self.counter);
+    //TypeUtil.assert_is_instance(CipherKey, self.cipher_key);
+    //TypeUtil.assert_is_instance(MacKey, self.mac_key);
+    //TypeUtil.assert_is_integer(self.counter);
 
     return self;
   }

@@ -66,7 +66,7 @@ class SessionTag {
    * @returns {SessionTag}
    */
   static decode(decoder) {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
+    //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     const length = 16;
 

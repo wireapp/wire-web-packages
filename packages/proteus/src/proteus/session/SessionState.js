@@ -67,10 +67,10 @@ class SessionState {
    * @param {!keys.PreKeyBundle} bob_pkbundle
    * @returns {SessionState}
    */
-  static init_as_alice(alice_identity_pair, alice_base, bob_pkbundle) {
-    TypeUtil.assert_is_instance(IdentityKeyPair, alice_identity_pair);
-    TypeUtil.assert_is_instance(KeyPair, alice_base);
-    TypeUtil.assert_is_instance(PreKeyBundle, bob_pkbundle);
+  static async init_as_alice(alice_identity_pair, alice_base, bob_pkbundle) {
+    //TypeUtil.assert_is_instance(IdentityKeyPair, alice_identity_pair);
+    //TypeUtil.assert_is_instance(KeyPair, alice_base);
+    //TypeUtil.assert_is_instance(PreKeyBundle, bob_pkbundle);
 
     const master_key = ArrayUtil.concatenate_array_buffers([
       alice_identity_pair.secret_key.shared_secret(bob_pkbundle.public_key),
@@ -86,7 +86,7 @@ class SessionState {
 
     const recv_chains = [RecvChain.new(chainkey, bob_pkbundle.public_key)];
 
-    const send_ratchet = KeyPair.new();
+    const send_ratchet = await KeyPair.new();
     const [rok, chk] = rootkey.dh_ratchet(send_ratchet, bob_pkbundle.public_key);
     const send_chain = SendChain.new(chk, send_ratchet);
 
@@ -106,10 +106,10 @@ class SessionState {
    * @returns {SessionState}
    */
   static init_as_bob(bob_ident, bob_prekey, alice_ident, alice_base) {
-    TypeUtil.assert_is_instance(IdentityKeyPair, bob_ident);
-    TypeUtil.assert_is_instance(KeyPair, bob_prekey);
-    TypeUtil.assert_is_instance(IdentityKey, alice_ident);
-    TypeUtil.assert_is_instance(PublicKey, alice_base);
+    //TypeUtil.assert_is_instance(IdentityKeyPair, bob_ident);
+    //TypeUtil.assert_is_instance(KeyPair, bob_prekey);
+    //TypeUtil.assert_is_instance(IdentityKey, alice_ident);
+    //TypeUtil.assert_is_instance(PublicKey, alice_base);
 
     const master_key = ArrayUtil.concatenate_array_buffers([
       bob_prekey.secret_key.shared_secret(alice_ident.public_key),
@@ -136,8 +136,8 @@ class SessionState {
    * @param {!keys.KeyPair} ratchet_key
    * @returns {void}
    */
-  ratchet(ratchet_key) {
-    const new_ratchet = KeyPair.new();
+  async ratchet(ratchet_key) {
+    const new_ratchet = await KeyPair.new();
 
     const [recv_root_key, recv_chain_key] = this.root_key.dh_ratchet(this.send_chain.ratchet_key, ratchet_key);
 
@@ -170,11 +170,11 @@ class SessionState {
    */
   encrypt(identity_key, pending, tag, plaintext) {
     if (pending) {
-      TypeUtil.assert_is_integer(pending[0]);
-      TypeUtil.assert_is_instance(PublicKey, pending[1]);
+      //TypeUtil.assert_is_integer(pending[0]);
+      //TypeUtil.assert_is_instance(PublicKey, pending[1]);
     }
-    TypeUtil.assert_is_instance(IdentityKey, identity_key);
-    TypeUtil.assert_is_instance(SessionTag, tag);
+    //TypeUtil.assert_is_instance(IdentityKey, identity_key);
+    //TypeUtil.assert_is_instance(SessionTag, tag);
 
     const msgkeys = this.send_chain.chain_key.message_keys();
 
@@ -201,8 +201,8 @@ class SessionState {
    * @returns {Uint8Array}
    */
   decrypt(envelope, msg) {
-    TypeUtil.assert_is_instance(Envelope, envelope);
-    TypeUtil.assert_is_instance(CipherMessage, msg);
+    //TypeUtil.assert_is_instance(Envelope, envelope);
+    //TypeUtil.assert_is_instance(CipherMessage, msg);
 
     let idx = this.recv_chains.findIndex(chain => chain.ratchet_key.fingerprint() === msg.ratchet_key.fingerprint());
 
@@ -256,7 +256,7 @@ class SessionState {
   }
 
   static deserialise(buf) {
-    TypeUtil.assert_is_instance(ArrayBuffer, buf);
+    //TypeUtil.assert_is_instance(ArrayBuffer, buf);
     return SessionState.decode(new CBOR.Decoder(buf));
   }
 
@@ -282,7 +282,7 @@ class SessionState {
    * @returns {SessionState}
    */
   static decode(decoder) {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
+    //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     const self = ClassUtil.new_instance(SessionState);
 
@@ -315,10 +315,10 @@ class SessionState {
       }
     }
 
-    TypeUtil.assert_is_instance(Array, self.recv_chains);
-    TypeUtil.assert_is_instance(SendChain, self.send_chain);
-    TypeUtil.assert_is_instance(RootKey, self.root_key);
-    TypeUtil.assert_is_integer(self.prev_counter);
+    //TypeUtil.assert_is_instance(Array, self.recv_chains);
+    //TypeUtil.assert_is_instance(SendChain, self.send_chain);
+    //TypeUtil.assert_is_instance(RootKey, self.root_key);
+    //TypeUtil.assert_is_integer(self.prev_counter);
 
     return self;
   }

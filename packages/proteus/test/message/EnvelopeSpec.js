@@ -20,55 +20,63 @@
 /* eslint no-magic-numbers: "off" */
 
 describe('Envelope', () => {
-  const mk = Proteus.derived.MacKey.new(new Uint8Array(32).fill(1));
-  const bk = Proteus.keys.KeyPair.new().public_key;
-  const ik = Proteus.keys.IdentityKey.new(Proteus.keys.KeyPair.new().public_key);
-  const rk = Proteus.keys.KeyPair.new().public_key;
+  it('async', async () => {
+    const mac_key = Proteus.derived.MacKey.new(new Uint8Array(32).fill(1));
 
-  const tg = Proteus.message.SessionTag.new();
+    const bob_pk = await Proteus.keys.KeyPair.new();
+    const bob_key = bob_pk.public_key;
 
-  it('should encapsulate a CipherMessage', () => {
-    const msg = Proteus.message.CipherMessage.new(tg, 42, 3, rk, new Uint8Array([1, 2, 3, 4, 5]));
-    const env = Proteus.message.Envelope.new(mk, msg);
+    const identity_keypair = await Proteus.keys.KeyPair.new();
+    const identity_key = Proteus.keys.IdentityKey.new(identity_kepair.public_key);
 
-    assert(env.verify(mk));
-  });
+    const r_keypair = await Proteus.keys.KeyPair.new();
+    const r_key = r_keypair.public_key;
 
-  it('should encapsulate a PreKeyMessage', () => {
-    const msg = Proteus.message.PreKeyMessage.new(
-      42,
-      bk,
-      ik,
-      Proteus.message.CipherMessage.new(tg, 42, 43, rk, new Uint8Array([1, 2, 3, 4]))
-    );
+    const tg = Proteus.message.SessionTag.new();
 
-    const env = Proteus.message.Envelope.new(mk, msg);
-    assert(env.verify(mk));
-  });
+    it('should encapsulate a CipherMessage', () => {
+      const msg = Proteus.message.CipherMessage.new(tg, 42, 3, r_key, new Uint8Array([1, 2, 3, 4, 5]));
+      const env = Proteus.message.Envelope.new(mac_key, msg);
 
-  it('should encode to and decode from CBOR', () => {
-    const msg = Proteus.message.PreKeyMessage.new(
-      42,
-      bk,
-      ik,
-      Proteus.message.CipherMessage.new(tg, 42, 43, rk, new Uint8Array([1, 2, 3, 4]))
-    );
+      assert(env.verify(mac_key));
+    });
 
-    const env = Proteus.message.Envelope.new(mk, msg);
-    assert(env.verify(mk));
+    it('should encapsulate a PreKeyMessage', () => {
+      const msg = Proteus.message.PreKeyMessage.new(
+        42,
+        bob_key,
+        identity_key,
+        Proteus.message.CipherMessage.new(tg, 42, 43, r_key, new Uint8Array([1, 2, 3, 4]))
+      );
 
-    const env_bytes = env.serialise();
-    const env_cpy = Proteus.message.Envelope.deserialise(env_bytes);
+      const env = Proteus.message.Envelope.new(mac_key, msg);
+      assert(env.verify(mac_key));
+    });
 
-    assert(env_cpy.verify(mk));
-  });
+    it('should encode to and decode from CBOR', () => {
+      const msg = Proteus.message.PreKeyMessage.new(
+        42,
+        bob_key,
+        identity_key,
+        Proteus.message.CipherMessage.new(tg, 42, 43, r_key, new Uint8Array([1, 2, 3, 4]))
+      );
 
-  it('fails when passing invalid input', () => {
-    const empty_buffer = new ArrayBuffer(0);
-    try {
-      Proteus.message.Envelope.deserialise(empty_buffer);
-    } catch (error) {
-      assert.instanceOf(error, RangeError);
-    }
+      const env = Proteus.message.Envelope.new(mac_key, msg);
+      assert(env.verify(mac_key));
+
+      const env_bytes = env.serialise();
+      const env_cpy = Proteus.message.Envelope.deserialise(env_bytes);
+
+      assert(env_cpy.verify(mac_key));
+    });
+
+    it('fails when passing invalid input', () => {
+      const empty_buffer = new ArrayBuffer(0);
+      try {
+        Proteus.message.Envelope.deserialise(empty_buffer);
+      } catch (error) {
+        assert.instanceOf(error, RangeError);
+      }
+    });
   });
 });

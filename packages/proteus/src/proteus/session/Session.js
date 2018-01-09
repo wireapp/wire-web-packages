@@ -78,27 +78,25 @@ class Session {
    * @param {!keys.PreKeyBundle} remote_pkbundle - Bob's Pre-Key Bundle
    * @returns {Promise<Session>}
    */
-  static init_from_prekey(local_identity, remote_pkbundle) {
-    return new Promise(resolve => {
-      TypeUtil.assert_is_instance(IdentityKeyPair, local_identity);
-      TypeUtil.assert_is_instance(PreKeyBundle, remote_pkbundle);
+  static async init_from_prekey(local_identity, remote_pkbundle) {
+    //TypeUtil.assert_is_instance(IdentityKeyPair, local_identity);
+    //TypeUtil.assert_is_instance(PreKeyBundle, remote_pkbundle);
 
-      const alice_base = KeyPair.new();
+    const alice_base = await KeyPair.new();
 
-      const state = SessionState.init_as_alice(local_identity, alice_base, remote_pkbundle);
+    const state = SessionState.init_as_alice(local_identity, alice_base, remote_pkbundle);
 
-      const session_tag = SessionTag.new();
+    const session_tag = SessionTag.new();
 
-      const session = ClassUtil.new_instance(this);
-      session.session_tag = session_tag;
-      session.local_identity = local_identity;
-      session.remote_identity = remote_pkbundle.identity_key;
-      session.pending_prekey = [remote_pkbundle.prekey_id, alice_base.public_key];
-      session.session_states = {};
+    const session = ClassUtil.new_instance(this);
+    session.session_tag = session_tag;
+    session.local_identity = local_identity;
+    session.remote_identity = remote_pkbundle.identity_key;
+    session.pending_prekey = [remote_pkbundle.prekey_id, alice_base.public_key];
+    session.session_states = {};
 
-      session._insert_session_state(session_tag, state);
-      return resolve(session);
-    });
+    session._insert_session_state(session_tag, state);
+    return session;
   }
 
   /**
@@ -111,9 +109,9 @@ class Session {
    */
   static init_from_message(our_identity, prekey_store, envelope) {
     return new Promise((resolve, reject) => {
-      TypeUtil.assert_is_instance(IdentityKeyPair, our_identity);
-      TypeUtil.assert_is_instance(PreKeyStore, prekey_store);
-      TypeUtil.assert_is_instance(Envelope, envelope);
+      //TypeUtil.assert_is_instance(IdentityKeyPair, our_identity);
+      //TypeUtil.assert_is_instance(PreKeyStore, prekey_store);
+      //TypeUtil.assert_is_instance(Envelope, envelope);
 
       const pkmsg = (() => {
         if (envelope.message instanceof CipherMessage) {
@@ -274,8 +272,8 @@ class Session {
    */
   decrypt(prekey_store, envelope) {
     return new Promise(resolve => {
-      TypeUtil.assert_is_instance(PreKeyStore, prekey_store);
-      TypeUtil.assert_is_instance(Envelope, envelope);
+      //TypeUtil.assert_is_instance(PreKeyStore, prekey_store);
+      //TypeUtil.assert_is_instance(Envelope, envelope);
 
       const msg = envelope.message;
       if (msg instanceof CipherMessage) {
@@ -367,8 +365,8 @@ class Session {
    * @returns {Session}
    */
   static deserialise(local_identity, buf) {
-    TypeUtil.assert_is_instance(IdentityKeyPair, local_identity);
-    TypeUtil.assert_is_instance(ArrayBuffer, buf);
+    //TypeUtil.assert_is_instance(IdentityKeyPair, local_identity);
+    //TypeUtil.assert_is_instance(ArrayBuffer, buf);
 
     const decoder = new CBOR.Decoder(buf);
     return this.decode(local_identity, decoder);
@@ -416,8 +414,8 @@ class Session {
    * @returns {Session}
    */
   static decode(local_identity, decoder) {
-    TypeUtil.assert_is_instance(IdentityKeyPair, local_identity);
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
+    //TypeUtil.assert_is_instance(IdentityKeyPair, local_identity);
+    //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     const self = ClassUtil.new_instance(this);
 
@@ -489,11 +487,11 @@ class Session {
       }
     }
 
-    TypeUtil.assert_is_integer(self.version);
-    TypeUtil.assert_is_instance(SessionTag, self.session_tag);
-    TypeUtil.assert_is_instance(IdentityKeyPair, self.local_identity);
-    TypeUtil.assert_is_instance(IdentityKey, self.remote_identity);
-    TypeUtil.assert_is_instance(Object, self.session_states);
+    //TypeUtil.assert_is_integer(self.version);
+    //TypeUtil.assert_is_instance(SessionTag, self.session_tag);
+    //TypeUtil.assert_is_instance(IdentityKeyPair, self.local_identity);
+    //TypeUtil.assert_is_instance(IdentityKey, self.remote_identity);
+    //TypeUtil.assert_is_instance(Object, self.session_states);
 
     return self;
   }

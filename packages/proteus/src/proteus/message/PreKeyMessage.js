@@ -51,10 +51,10 @@ class PreKeyMessage extends Message {
    * @returns {PreKeyMessage}
    */
   static new(prekey_id, base_key, identity_key, message) {
-    TypeUtil.assert_is_integer(prekey_id);
-    TypeUtil.assert_is_instance(PublicKey, base_key);
-    TypeUtil.assert_is_instance(IdentityKey, identity_key);
-    TypeUtil.assert_is_instance(CipherMessage, message);
+    //TypeUtil.assert_is_integer(prekey_id);
+    //TypeUtil.assert_is_instance(PublicKey, base_key);
+    //TypeUtil.assert_is_instance(IdentityKey, identity_key);
+    //TypeUtil.assert_is_instance(CipherMessage, message);
 
     const pkm = ClassUtil.new_instance(PreKeyMessage);
 
@@ -88,7 +88,7 @@ class PreKeyMessage extends Message {
    * @returns {PreKeyMessage}
    */
   static decode(decoder) {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
+    //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     let prekey_id = null;
     let base_key = null;

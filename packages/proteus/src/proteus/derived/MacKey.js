@@ -40,7 +40,7 @@ class MacKey {
    * @returns {MacKey} - `this`
    */
   static new(key) {
-    TypeUtil.assert_is_instance(Uint8Array, key);
+    //TypeUtil.assert_is_instance(Uint8Array, key);
 
     const mk = ClassUtil.new_instance(MacKey);
     /** @type {Uint8Array} */
@@ -82,7 +82,7 @@ class MacKey {
    * @returns {MacKey}
    */
   static decode(decoder) {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
+    //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     let key_bytes = null;
 

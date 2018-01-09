@@ -50,7 +50,7 @@ const ArrayUtil = {
    * @returns {Array<ArrayBuffer>}
    */
   concatenate_array_buffers(buffers) {
-    TypeUtil.assert_is_instance(Array, buffers);
+    //TypeUtil.assert_is_instance(Array, buffers);
 
     return buffers.reduce((callback, bytes) => {
       const buf = new callback.constructor(callback.byteLength + bytes.byteLength);

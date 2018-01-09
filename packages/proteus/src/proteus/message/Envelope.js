@@ -45,8 +45,8 @@ class Envelope {
    * @returns {Envelope}
    */
   static new(mac_key, message) {
-    TypeUtil.assert_is_instance(MacKey, mac_key);
-    TypeUtil.assert_is_instance(Message, message);
+    //TypeUtil.assert_is_instance(MacKey, mac_key);
+    //TypeUtil.assert_is_instance(Message, message);
 
     const serialized_message = new Uint8Array(message.serialise());
 
@@ -66,7 +66,7 @@ class Envelope {
    * @returns {boolean}
    */
   verify(mac_key) {
-    TypeUtil.assert_is_instance(MacKey, mac_key);
+    //TypeUtil.assert_is_instance(MacKey, mac_key);
     return mac_key.verify(this.mac, this._message_enc);
   }
 
@@ -82,7 +82,7 @@ class Envelope {
    * @returns {Envelope}
    */
   static deserialise(buf) {
-    TypeUtil.assert_is_instance(ArrayBuffer, buf);
+    //TypeUtil.assert_is_instance(ArrayBuffer, buf);
 
     const decoder = new CBOR.Decoder(buf);
     return Envelope.decode(decoder);
@@ -111,7 +111,7 @@ class Envelope {
    * @returns {Envelope}
    */
   static decode(decoder) {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
+    //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     const env = ClassUtil.new_instance(Envelope);
 
@@ -145,8 +145,8 @@ class Envelope {
       }
     }
 
-    TypeUtil.assert_is_integer(env.version);
-    TypeUtil.assert_is_instance(Uint8Array, env.mac);
+    //TypeUtil.assert_is_integer(env.version);
+    //TypeUtil.assert_is_instance(Uint8Array, env.mac);
 
     env.message = Message.deserialise(env._message_enc.buffer);
 

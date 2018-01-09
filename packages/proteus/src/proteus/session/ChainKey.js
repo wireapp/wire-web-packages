@@ -46,8 +46,8 @@ class ChainKey {
    * @returns {ChainKey}
    */
   static from_mac_key(key, counter) {
-    TypeUtil.assert_is_instance(MacKey, key);
-    TypeUtil.assert_is_integer(counter);
+    //TypeUtil.assert_is_instance(MacKey, key);
+    //TypeUtil.assert_is_integer(counter);
 
     const ck = ClassUtil.new_instance(ChainKey);
     ck.key = key;
@@ -87,7 +87,7 @@ class ChainKey {
    * @returns {ChainKey}
    */
   static decode(decoder) {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
+    //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     const self = ClassUtil.new_instance(ChainKey);
 
@@ -105,8 +105,8 @@ class ChainKey {
       }
     }
 
-    TypeUtil.assert_is_instance(MacKey, self.key);
-    TypeUtil.assert_is_integer(self.idx);
+    //TypeUtil.assert_is_instance(MacKey, self.key);
+    //TypeUtil.assert_is_integer(self.idx);
 
     return self;
   }

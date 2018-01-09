@@ -45,7 +45,7 @@ class RootKey {
    * @returns {RootKey}
    */
   static from_cipher_key(cipher_key) {
-    TypeUtil.assert_is_instance(CipherKey, cipher_key);
+    //TypeUtil.assert_is_instance(CipherKey, cipher_key);
 
     const rk = ClassUtil.new_instance(RootKey);
     rk.key = cipher_key;
@@ -58,8 +58,8 @@ class RootKey {
    * @returns {Array<RootKey|session.ChainKey>}
    */
   dh_ratchet(ours, theirs) {
-    TypeUtil.assert_is_instance(KeyPair, ours);
-    TypeUtil.assert_is_instance(PublicKey, theirs);
+    //TypeUtil.assert_is_instance(KeyPair, ours);
+    //TypeUtil.assert_is_instance(PublicKey, theirs);
 
     const secret = ours.secret_key.shared_secret(theirs);
     const derived_secrets = DerivedSecrets.kdf(secret, this.key.key, 'dh_ratchet');
@@ -82,7 +82,7 @@ class RootKey {
    * @returns {RootKey}
    */
   static decode(decoder) {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
+    //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     let cipher_key = null;
 

@@ -20,22 +20,30 @@
 /* eslint no-magic-numbers: "off" */
 
 describe('Message', () => {
-  const fake_pubkey = byte => {
+  const fake_pubkey = async byte => {
+    await sodium.ready;
+    const _sodium = sodium;
+
     const pub_edward = new Uint8Array(32);
     pub_edward.fill(byte);
-    const pub_curve = sodium.crypto_sign_ed25519_pk_to_curve25519(pub_edward);
+    const pub_curve = _sodium.crypto_sign_ed25519_pk_to_curve25519(pub_edward);
 
     return Proteus.keys.PublicKey.new(pub_edward, pub_curve);
   };
 
-  const bk = fake_pubkey(0xff);
-  const ik = Proteus.keys.IdentityKey.new(fake_pubkey(0xa0));
-  const rk = fake_pubkey(0xf0);
+  /* eslint no-unused-vars: "off" */
 
-  const st = Proteus.message.SessionTag.new();
-  st.tag.fill(42);
+  before(async () => {
+    const bk = await fake_pubkey(0xff);
+    const fk = await fake_pubkey(0xa0);
+    const ik = Proteus.keys.IdentityKey.new(fk);
+    const rk = await fake_pubkey(0xf0);
 
-  it('should serialise and deserialise a CipherMessage correctly', () => {
+    const st = Proteus.message.SessionTag.new();
+    st.tag.fill(42);
+  });
+
+  it('should serialise and deserialise a CipherMessage correctly', async () => {
     const expected =
       '01a500502a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a010c020d03a1005820f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0044a0102030405060708090a';
 
@@ -49,7 +57,7 @@ describe('Message', () => {
     assert(deserialised.ratchet_key.fingerprint() === rk.fingerprint());
   });
 
-  it('should serialise a PreKeyMessage correctly', () => {
+  it('should serialise a PreKeyMessage correctly', async () => {
     const expected =
       '02a400181801a1005820ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff02a100a1005820a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a003a500502a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a010c020d03a1005820f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0044a0102030405060708090a';
 

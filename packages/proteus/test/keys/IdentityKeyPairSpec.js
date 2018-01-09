@@ -18,8 +18,8 @@
  */
 
 describe('IdentityKeyPair', () => {
-  it('serialises and deserialises', () => {
-    const ikp = Proteus.keys.IdentityKeyPair.new();
+  it('serialises and deserialises', async () => {
+    const ikp = await Proteus.keys.IdentityKeyPair.new();
 
     const ikp_bytes = ikp.serialise();
     const ikp_deser = Proteus.keys.IdentityKeyPair.deserialise(ikp_bytes);

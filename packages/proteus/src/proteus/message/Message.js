@@ -57,7 +57,7 @@ class Message {
    * @returns {message.CipherMessage|message.PreKeyMessage}
    */
   static deserialise(buf) {
-    TypeUtil.assert_is_instance(ArrayBuffer, buf);
+    //TypeUtil.assert_is_instance(ArrayBuffer, buf);
 
     const decoder = new CBOR.Decoder(buf);
 

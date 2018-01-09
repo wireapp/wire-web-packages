@@ -1,15 +1,15 @@
 {
   "dependencies": {
-    "wire-webapp-cbor": "2.1.5",
     "ed2curve": "0.2.1",
-    "libsodium-wrappers-sumo": "0.5.4"
+    "libsodium-wrappers-sumo": "0.7.3",
+    "wire-webapp-cbor": "2.1.5"
   },
   "description": "Axolotl protocol implementation for JavaScript.",
   "devDependencies": {
     "bower": "1.8.2",
     "chai": "4.1.2",
     "jsdoc": "3.5.5",
-    "mocha": "2.5.3",
+    "mocha": "4.1.0",
     "tsd-jsdoc": "dcodeio/tsd-jsdoc#fe76c4dc071b00bb549d3af7a3bad8c555999e81",
     "webpack": "3.10.0"
   },
