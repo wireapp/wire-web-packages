@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "babel-eslint": "8.1.2",
+    "babel-eslint": "8.2.1",
     "eslint": "4.15.0",
     "eslint-config-prettier": "2.9.0",
     "eslint-plugin-prettier": "2.4.0",
