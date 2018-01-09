@@ -58,13 +58,13 @@ class Client {
 
   // Configuration
   private accessTokenStore: AccessTokenStore;
-  public context: Context | undefined = undefined;
+  public context: Context;
   public transport: {http: HttpClient; ws: WebSocketClient};
 
   public static BACKEND = Backend;
   public VERSION: string;
 
-  constructor(private config: Config = new Config()) {
+  constructor(public config: Config = new Config()) {
     this.accessTokenStore = new AccessTokenStore(this.config.store);
 
     this.transport.http = new HttpClient(this.config.urls.rest, this.accessTokenStore);
@@ -145,7 +145,9 @@ class Client {
       .postLogout()
       .then(() => this.disconnect('Closed by client logout'))
       .then(() => this.accessTokenStore.delete())
-      .then(() => (this.context = undefined));
+      .then(() => {
+        delete this.context;
+      });
   }
 
   public connect(): Promise<WebSocketClient> {
