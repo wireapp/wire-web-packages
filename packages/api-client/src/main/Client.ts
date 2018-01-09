@@ -67,8 +67,13 @@ class Client {
   constructor(public config: Config = new Config()) {
     this.accessTokenStore = new AccessTokenStore(this.config.store);
 
-    this.transport.http = new HttpClient(this.config.urls.rest, this.accessTokenStore);
-    this.transport.ws = new WebSocketClient(this.config.urls.ws, this.transport.http);
+    config.urls = config.urls || Client.BACKEND.PRODUCTION;
+    const httpClient = new HttpClient(this.config.urls.rest, this.accessTokenStore);
+
+    this.transport = {
+      http: httpClient,
+      ws: new WebSocketClient(this.config.urls.ws, httpClient),
+    };
 
     this.asset = {
       api: new AssetAPI(this.transport.http),
