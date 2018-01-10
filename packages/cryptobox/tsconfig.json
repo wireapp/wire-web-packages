@@ -1,20 +1,11 @@
 {
   "compilerOptions": {
     "declaration": false,
-    "lib": ["es7", "dom"],
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "noEmitOnError": true,
-    "noImplicitAny": false,
-    "noImplicitReturns": true,
-    "removeComments": true,
-    "sourceMap": false,
-    "target": "es5"
+    "lib": ["DOM", "ES7"],
+    "outDir": "dist/commonjs",
+    "rootDir": "src/main/ts",
+    "target": "ES5"
   },
-  "exclude": [
-    "bower_components",
-    "node_modules",
-    "typings/browser",
-    "typings/browser.d.ts"
-  ]
+  "exclude": ["bower_components", "node_modules", "typings/browser", "typings/browser.d.ts"],
+  "extends": "../../configs/tsconfig.json"
 }
