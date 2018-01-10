@@ -19,7 +19,7 @@ describe('cryptobox.store.Cache', () => {
     store = new cryptobox.store.Cache();
   });
 
-  describe('constructor', () => {
+  describe('"constructor"', () => {
     it('creates an instance', () => {
       const storeInstance = new cryptobox.store.Cache();
       expect(storeInstance).toBeDefined();
@@ -47,7 +47,7 @@ describe('cryptobox.store.Cache', () => {
     });
   });
 
-  describe('save_identity', () => {
+  describe('"save_identity"', () => {
     it('saves the local identity', done => {
       const ikp = Proteus.keys.IdentityKeyPair.new();
       store
