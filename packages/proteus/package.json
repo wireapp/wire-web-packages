@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "ed2curve": "0.2.1",
-    "libsodium-wrappers-sumo": "0.7.3",
+    "libsodium-wrappers-sumo": "0.5.4",
     "wire-webapp-cbor": "2.1.5"
   },
   "description": "Axolotl protocol implementation for JavaScript.",
@@ -9,7 +9,7 @@
     "bower": "1.8.2",
     "chai": "4.1.2",
     "jsdoc": "3.5.5",
-    "mocha": "4.1.0",
+    "mocha": "2.5.3",
     "tsd-jsdoc": "dcodeio/tsd-jsdoc#fe76c4dc071b00bb549d3af7a3bad8c555999e81",
     "webpack": "3.10.0"
   },
@@ -22,7 +22,7 @@
     "clear": "exit 0",
     "dist": "bower install && webpack --progress",
     "types": "jsdoc --verbose --pedantic --configure jsdoc.json src/ && node replace.js",
-    "preversion": "yarn lint && yarn test && yarn types",
+    "preversion": "yarn test && yarn types",
     "version": "yarn dist && git add dist/**/*",
     "postversion": "git push && git push --tags",
     "start": "node dist/index.js",
@@ -30,5 +30,5 @@
     "test:node": "mocha -s 30000 -t 30000 --recursive test/harness.js test --trace-warnings"
   },
   "types": "dist/typings/typings.d.ts",
-  "version": "5.2.0"
+  "version": "5.3.0"
 }
