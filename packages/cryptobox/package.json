@@ -42,7 +42,7 @@
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox",
   "scripts": {
     "clear": "rimraf dist/commonjs && rimraf dist/lib",
-    "dist": "gulp dist --env production",
+    "dist": "yarn clear && gulp dist --env production",
     "postversion": "git push && git push --tags",
     "preversion": "yarn dist && yarn test",
     "start": "gulp",
