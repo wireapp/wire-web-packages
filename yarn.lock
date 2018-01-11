@@ -4256,14 +4256,14 @@ gulp-if@2.0.2:
     ternary-stream "^2.0.1"
     through2 "^2.0.1"
 
-gulp-jasmine@2.4.1:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/gulp-jasmine/-/gulp-jasmine-2.4.1.tgz#dbd2c17bcc90a6a640268e3bb828da12aefb76a5"
+gulp-jasmine@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/gulp-jasmine/-/gulp-jasmine-3.0.0.tgz#0131486f0cd59affeda18e00c643992a9196963b"
   dependencies:
     arrify "^1.0.0"
-    gulp-util "^3.0.0"
-    jasmine "^2.3.0"
-    jasmine-terminal-reporter "^1.0.0"
+    jasmine "^2.8.0"
+    jasmine-terminal-reporter "^1.0.3"
+    plugin-error "^0.1.2"
     through2 "^2.0.0"
 
 gulp-match@^1.0.3:
@@ -5265,14 +5265,14 @@ jasmine-core@~2.8.0:
   version "2.8.0"
   resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-2.8.0.tgz#bcc979ae1f9fd05701e45e52e65d3a5d63f1a24e"
 
-jasmine-terminal-reporter@^1.0.0:
+jasmine-terminal-reporter@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/jasmine-terminal-reporter/-/jasmine-terminal-reporter-1.0.3.tgz#896f1ec8fdf4bf6aecdd41c503eda7347f61526b"
   dependencies:
     indent-string "^2.1.0"
     pluralize "^1.2.1"
 
-jasmine@2.8.0, jasmine@^2.3.0:
+jasmine@2.8.0, jasmine@^2.8.0:
   version "2.8.0"
   resolved "https://registry.yarnpkg.com/jasmine/-/jasmine-2.8.0.tgz#6b089c0a11576b1f16df11b80146d91d4e8b8a3e"
   dependencies:
