@@ -6311,9 +6311,9 @@ merge-stream@^1.0.0:
   dependencies:
     readable-stream "^2.0.1"
 
-merge2@1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/merge2/-/merge2-1.0.2.tgz#dd394ea14e0b202c265b567970ba8136e1003bdb"
+merge2@1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/merge2/-/merge2-1.2.1.tgz#271d2516ff52d4af7f7b710b8bf3e16e183fef66"
 
 methods@~1.1.2:
   version "1.1.2"
