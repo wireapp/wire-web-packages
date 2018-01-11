@@ -48,7 +48,7 @@
     "start:demo": "webpack-dev-server",
     "start:static": "gulp",
     "start": "yarn start:demo",
-    "test": "yarn dist && test:browser",
+    "test": "yarn dist && yarn test:browser",
     "test:browser": "exit 0"
   },
   "version": "0.1.3"
