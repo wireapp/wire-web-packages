@@ -23,7 +23,7 @@
     "dist": "yarn clear && bower install && webpack --progress && yarn types",
     "types": "jsdoc --verbose --pedantic --configure jsdoc.json src/ && node replace.js",
     "start": "node dist/index.js",
-    "test": "yarn dist && yarn teat:node",
+    "test": "yarn dist && yarn test:node",
     "test:node": "mocha -s 30000 -t 30000 --recursive test/harness.js test --trace-warnings"
   },
   "types": "dist/typings/typings.d.ts",
