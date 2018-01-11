@@ -3,7 +3,7 @@
     "@types/node": "9.3.0",
     "@wireapp/api-client": "0.2.33",
     "@wireapp/protocol-messaging": "1.20.0",
-    "@wireapp/store-engine": "0.1.7",
+    "@wireapp/store-engine": "0.1.6",
     "bazinga64": "5.0.3",
     "protobufjs": "6.8.4",
     "pure-uuid": "1.4.11",
