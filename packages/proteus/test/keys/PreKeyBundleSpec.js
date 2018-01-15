@@ -21,7 +21,7 @@ describe('PreKeyBundle', () => {
   it('should create a bundle', async () => {
     const id_pair = await Proteus.keys.IdentityKeyPair.new();
     const prekey = await Proteus.keys.PreKey.new(1);
-    const bundle = Proteus.keys.PreKeyBundle.new(id_pair.public_key, prekey);
+    const bundle = await Proteus.keys.PreKeyBundle.new(id_pair.public_key, prekey);
 
     assert(bundle.verify() === Proteus.keys.PreKeyAuth.UNKNOWN);
   });
@@ -37,7 +37,7 @@ describe('PreKeyBundle', () => {
   it('should serialise and deserialise a unsigned bundle', async () => {
     const id_pair = await Proteus.keys.IdentityKeyPair.new();
     const prekey = await Proteus.keys.PreKey.new(1);
-    const bundle = Proteus.keys.PreKeyBundle.new(id_pair.public_key, prekey);
+    const bundle = await Proteus.keys.PreKeyBundle.new(id_pair.public_key, prekey);
 
     assert(bundle.verify() === Proteus.keys.PreKeyAuth.UNKNOWN);
 
@@ -81,7 +81,7 @@ describe('PreKeyBundle', () => {
     const pre_key_id = 72;
     const pre_key = await Proteus.keys.PreKey.new(pre_key_id);
     const public_identity_key = identity_key_pair.public_key;
-    const pre_key_bundle = Proteus.keys.PreKeyBundle.new(public_identity_key, pre_key);
+    const pre_key_bundle = await Proteus.keys.PreKeyBundle.new(public_identity_key, pre_key);
     const serialised_pre_key_bundle_json = pre_key_bundle.serialised_json();
 
     assert.strictEqual(serialised_pre_key_bundle_json.id, pre_key_id);

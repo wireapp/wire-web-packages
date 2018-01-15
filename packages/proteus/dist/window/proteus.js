@@ -1,4 +1,4 @@
-/*! @wireapp/proteus v5.3.0 */
+/*! @wireapp/proteus v5.3.1 */
 var Proteus =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -2363,16 +2363,17 @@ class PreKeyBundle {
    * @param {!keys.PreKey} prekey
    * @returns {PreKeyBundle} - `this`
    */
-  static new(public_identity_key, prekey) {
+  static async new(public_identity_key, prekey) {
     //TypeUtil.assert_is_instance(IdentityKey, public_identity_key);
     //TypeUtil.assert_is_instance(PreKey, prekey);
+    const pk = await prekey;
 
     /** @type {keys.PreyKeyBundle} */
     const bundle = ClassUtil.new_instance(PreKeyBundle);
 
     bundle.version = 1;
-    bundle.prekey_id = prekey.key_id;
-    bundle.public_key = prekey.key_pair.public_key;
+    bundle.prekey_id = pk.key_id;
+    bundle.public_key = pk.key_pair.public_key;
     bundle.identity_key = public_identity_key;
     bundle.signature = null;
 
@@ -6371,11 +6372,14 @@ class SessionState {
     //TypeUtil.assert_is_instance(IdentityKeyPair, alice_identity_pair);
     //TypeUtil.assert_is_instance(KeyPair, alice_base);
     //TypeUtil.assert_is_instance(PreKeyBundle, bob_pkbundle);
+    const alice_ip = await alice_identity_pair;
+    const bob_pkb = await bob_pkbundle;
+    const bob_ik = await bob_pkb.identity_key;
 
     const master_key = ArrayUtil.concatenate_array_buffers([
-      alice_identity_pair.secret_key.shared_secret(bob_pkbundle.public_key),
-      alice_base.secret_key.shared_secret(bob_pkbundle.identity_key.public_key),
-      alice_base.secret_key.shared_secret(bob_pkbundle.public_key),
+      alice_ip.secret_key.shared_secret(bob_pkb.public_key),
+      alice_base.secret_key.shared_secret(bob_ik.public_key),
+      alice_base.secret_key.shared_secret(bob_ik.public_key),
     ]);
 
     const derived_secrets = DerivedSecrets.kdf_without_salt(master_key, 'handshake');

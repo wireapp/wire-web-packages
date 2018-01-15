@@ -71,11 +71,14 @@ class SessionState {
     //TypeUtil.assert_is_instance(IdentityKeyPair, alice_identity_pair);
     //TypeUtil.assert_is_instance(KeyPair, alice_base);
     //TypeUtil.assert_is_instance(PreKeyBundle, bob_pkbundle);
+    const alice_ip = await alice_identity_pair;
+    const bob_pkb = await bob_pkbundle;
+    const bob_ik = await bob_pkb.identity_key;
 
     const master_key = ArrayUtil.concatenate_array_buffers([
-      alice_identity_pair.secret_key.shared_secret(bob_pkbundle.public_key),
-      alice_base.secret_key.shared_secret(bob_pkbundle.identity_key.public_key),
-      alice_base.secret_key.shared_secret(bob_pkbundle.public_key),
+      alice_ip.secret_key.shared_secret(bob_pkb.public_key),
+      alice_base.secret_key.shared_secret(bob_ik.public_key),
+      alice_base.secret_key.shared_secret(bob_ik.public_key),
     ]);
 
     const derived_secrets = DerivedSecrets.kdf_without_salt(master_key, 'handshake');

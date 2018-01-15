@@ -143,6 +143,19 @@
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/@types/tough-cookie/-/tough-cookie-2.3.2.tgz#e0d481d8bb282ad8a8c9e100ceb72c995fb5e709"
 
+"@wireapp/core@0.0.22":
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/@wireapp/core/-/core-0.0.22.tgz#7d4cd5f2c17f674547cf66afc242db9dbe1db9a9"
+  dependencies:
+    "@types/node" "9.3.0"
+    "@wireapp/api-client" "0.2.34"
+    "@wireapp/protocol-messaging" "1.20.0"
+    "@wireapp/store-engine" "0.1.8"
+    bazinga64 "5.0.3"
+    protobufjs "6.8.4"
+    pure-uuid "1.4.11"
+    wire-webapp-cryptobox "6.2.1"
+
 "@wireapp/protocol-messaging@1.20.0":
   version "1.20.0"
   resolved "https://registry.yarnpkg.com/@wireapp/protocol-messaging/-/protocol-messaging-1.20.0.tgz#bbc2d1fd7e1ab7bdde0a8794cd3db1066be57d07"

@@ -48,16 +48,17 @@ class PreKeyBundle {
    * @param {!keys.PreKey} prekey
    * @returns {PreKeyBundle} - `this`
    */
-  static new(public_identity_key, prekey) {
+  static async new(public_identity_key, prekey) {
     //TypeUtil.assert_is_instance(IdentityKey, public_identity_key);
     //TypeUtil.assert_is_instance(PreKey, prekey);
+    const pk = await prekey;
 
     /** @type {keys.PreyKeyBundle} */
     const bundle = ClassUtil.new_instance(PreKeyBundle);
 
     bundle.version = 1;
-    bundle.prekey_id = prekey.key_id;
-    bundle.public_key = prekey.key_pair.public_key;
+    bundle.prekey_id = pk.key_id;
+    bundle.public_key = pk.key_pair.public_key;
     bundle.identity_key = public_identity_key;
     bundle.signature = null;
 
