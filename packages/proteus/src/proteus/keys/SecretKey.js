@@ -72,7 +72,6 @@ class SecretKey {
    */
   shared_secret(public_key) {
     //TypeUtil.assert_is_instance(PublicKey, public_key);
-
     return sodium.crypto_scalarmult(this.sec_curve, public_key.pub_curve);
   }
 

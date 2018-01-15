@@ -2265,7 +2265,6 @@ class SecretKey {
    */
   shared_secret(public_key) {
     //TypeUtil.assert_is_instance(PublicKey, public_key);
-
     return sodium.crypto_scalarmult(this.sec_curve, public_key.pub_curve);
   }
 
@@ -2593,8 +2592,9 @@ class PreKey {
   }
 
   /** @returns {PreKey} */
-  static last_resort() {
-    return PreKey.new(PreKey.MAX_PREKEY_ID);
+  static async last_resort() {
+    const max_prekey = await PreKey.new(PreKey.MAX_PREKEY_ID);
+    return max_prekey;
   }
 
   /**
@@ -2611,7 +2611,7 @@ class PreKey {
       return [];
     }
 
-    return [...Array(size).keys()].map(async x => await PreKey.new((start + x) % PreKey.MAX_PREKEY_ID));
+    return [...Array(size).keys()].map(async key => await PreKey.new((start + key) % PreKey.MAX_PREKEY_ID));
   }
 
   /** @returns {ArrayBuffer} */
@@ -3157,7 +3157,7 @@ class Session {
 
     const alice_base = await KeyPair.new();
 
-    const state = SessionState.init_as_alice(local_identity, alice_base, remote_pkbundle);
+    const state = await SessionState.init_as_alice(local_identity, alice_base, remote_pkbundle);
 
     const session_tag = SessionTag.new();
 
@@ -3211,8 +3211,8 @@ class Session {
 
       return session
         ._new_state(prekey_store, pkmsg)
-        .then(state => {
-          const plain = state.decrypt(envelope, pkmsg.message);
+        .then(async state => {
+          const plain = await state.decrypt(envelope, pkmsg.message);
           session._insert_session_state(pkmsg.message.session_tag, state);
 
           if (pkmsg.prekey_id < PreKey.MAX_PREKEY_ID) {
@@ -3343,25 +3343,25 @@ class Session {
    * @returns {Promise<string>}
    * @throws {errors.DecryptError}
    */
-  decrypt(prekey_store, envelope) {
-    return new Promise(resolve => {
-      //TypeUtil.assert_is_instance(PreKeyStore, prekey_store);
-      //TypeUtil.assert_is_instance(Envelope, envelope);
+  async decrypt(prekey_store, envelope) {
+    //TypeUtil.assert_is_instance(PreKeyStore, prekey_store);
+    //TypeUtil.assert_is_instance(Envelope, envelope);
 
-      const msg = envelope.message;
-      if (msg instanceof CipherMessage) {
-        return resolve(this._decrypt_cipher_message(envelope, envelope.message));
-      } else if (msg instanceof PreKeyMessage) {
-        const actual_fingerprint = msg.identity_key.fingerprint();
-        const expected_fingerprint = this.remote_identity.fingerprint();
-        if (actual_fingerprint !== expected_fingerprint) {
-          const message = `Fingerprints do not match: We expected '${expected_fingerprint}', but received '${actual_fingerprint}'.`;
-          throw new DecryptError.RemoteIdentityChanged(message, DecryptError.CODE.CASE_204);
-        }
-        return resolve(this._decrypt_prekey_message(envelope, msg, prekey_store));
+    const msg = envelope.message;
+    if (msg instanceof CipherMessage) {
+      const decrypted_cipher_message = await this._decrypt_cipher_message(envelope, envelope.message);
+      return decrypted_cipher_message
+    } else if (msg instanceof PreKeyMessage) {
+      const actual_fingerprint = msg.identity_key.fingerprint();
+      const expected_fingerprint = this.remote_identity.fingerprint();
+      if (actual_fingerprint !== expected_fingerprint) {
+        const message = `Fingerprints do not match: We expected '${expected_fingerprint}', but received '${actual_fingerprint}'.`;
+        throw new DecryptError.RemoteIdentityChanged(message, DecryptError.CODE.CASE_204);
       }
-      throw new DecryptError('Unknown message type.', DecryptError.CODE.CASE_200);
-    });
+      const decrypted_prekey_message = await this._decrypt_prekey_message(envelope, msg, prekey_store);
+      return decrypted_prekey_message;
+    }
+    throw new DecryptError('Unknown message type.', DecryptError.CODE.CASE_200);
   }
 
   /**
@@ -3372,27 +3372,28 @@ class Session {
    * @returns {Promise<string>}
    * @throws {errors.DecryptError}
    */
-  _decrypt_prekey_message(envelope, msg, prekey_store) {
-    return Promise.resolve()
-      .then(() => this._decrypt_cipher_message(envelope, msg.message))
-      .catch(error => {
-        if (error instanceof DecryptError.InvalidSignature || error instanceof DecryptError.InvalidMessage) {
-          return this._new_state(prekey_store, msg).then(state => {
-            const plaintext = state.decrypt(envelope, msg.message);
+  async _decrypt_prekey_message(envelope, msg, prekey_store) {
+    try {
+      const decrypted_cipher_message = await this._decrypt_cipher_message(envelope, msg.message);
+      return decrypted_cipher_message;
+    } catch (error) {
+      if (error instanceof DecryptError.InvalidSignature || error instanceof DecryptError.InvalidMessage) {
+        return this._new_state(prekey_store, msg).then(async state => {
+          const plaintext = await state.decrypt(envelope, msg.message);
 
-            if (msg.prekey_id !== PreKey.MAX_PREKEY_ID) {
-              MemoryUtil.zeroize(prekey_store.prekeys[msg.prekey_id]);
-              prekey_store.remove(msg.prekey_id);
-            }
+          if (msg.prekey_id !== PreKey.MAX_PREKEY_ID) {
+            MemoryUtil.zeroize(prekey_store.prekeys[msg.prekey_id]);
+            prekey_store.remove(msg.prekey_id);
+          }
 
-            this._insert_session_state(msg.message.session_tag, state);
-            this.pending_prekey = null;
+          this._insert_session_state(msg.message.session_tag, state);
+          this.pending_prekey = null;
 
-            return plaintext;
-          });
-        }
-        throw error;
-      });
+          return plaintext;
+        });
+      }
+      throw error;
+    }
   }
 
   /**
@@ -3401,7 +3402,7 @@ class Session {
    * @private
    * @returns {string}
    */
-  _decrypt_cipher_message(envelope, msg) {
+  async _decrypt_cipher_message(envelope, msg) {
     let state = this.session_states[msg.session_tag];
     if (!state) {
       throw new DecryptError.InvalidMessage(
@@ -3415,7 +3416,7 @@ class Session {
     // mutating in-place can lead to undefined behavior and undefined state in edge cases
     state = SessionState.deserialise(state.state.serialise());
 
-    const plaintext = state.decrypt(envelope, msg);
+    const plaintext = await state.decrypt(envelope, msg);
 
     this.pending_prekey = null;
 
@@ -6388,10 +6389,11 @@ class SessionState {
     const rootkey = RootKey.from_cipher_key(derived_secrets.cipher_key);
     const chainkey = ChainKey.from_mac_key(derived_secrets.mac_key, 0);
 
-    const recv_chains = [RecvChain.new(chainkey, bob_pkbundle.public_key)];
+    const recv_chains = [RecvChain.new(chainkey, bob_pkb.public_key)];
+    console.log('recv_chains', recv_chains)
 
     const send_ratchet = await KeyPair.new();
-    const [rok, chk] = rootkey.dh_ratchet(send_ratchet, bob_pkbundle.public_key);
+    const [rok, chk] = rootkey.dh_ratchet(send_ratchet, bob_pkb.public_key);
     const send_chain = SendChain.new(chk, send_ratchet);
 
     const state = ClassUtil.new_instance(SessionState);
@@ -6504,14 +6506,15 @@ class SessionState {
    * @param {!message.CipherMessage} msg
    * @returns {Uint8Array}
    */
-  decrypt(envelope, msg) {
+  async decrypt(envelope, msg) {
     //TypeUtil.assert_is_instance(Envelope, envelope);
     //TypeUtil.assert_is_instance(CipherMessage, msg);
+    console.log('this.recv_chains', this.recv_chains)
 
     let idx = this.recv_chains.findIndex(chain => chain.ratchet_key.fingerprint() === msg.ratchet_key.fingerprint());
 
     if (idx === -1) {
-      this.ratchet(msg.ratchet_key);
+      await this.ratchet(msg.ratchet_key);
       idx = 0;
     }
 

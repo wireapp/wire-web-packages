@@ -79,7 +79,7 @@ const assert_serialise_deserialise = (local_identity, session) => {
   assert.deepEqual(sodium.to_hex(new Uint8Array(bytes)), sodium.to_hex(new Uint8Array(deser_bytes)));
 };
 
-describe('Session', async () => {
+describe('Session', () => {
   it('can be serialised and deserialised to/from CBOR', async () => {
     const alice_ident = await Proteus.keys.IdentityKeyPair.new();
     const bob_ident = await Proteus.keys.IdentityKeyPair.new();
@@ -89,8 +89,8 @@ describe('Session', async () => {
     const bob_bundle = await Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
 
     const alice = await Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle);
-    const as = await alice.session_states[alice.session_tag].state;
-    assert(as.recv_chains.length === 1);
+    const alice_state = await alice.session_states[alice.session_tag].state;
+    assert(alice_state.recv_chains.length === 1);
     assert_serialise_deserialise(alice_ident, alice);
   });
 
@@ -114,10 +114,11 @@ describe('Session', async () => {
     let pong_alice = null;
 
     Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle)
-      .then(session => {
+      .then(async session => {
         alice = session;
+        const alice_state = await alice.session_states[alice.session_tag].state;
 
-        assert(alice.session_states[alice.session_tag].state.recv_chains.length === 1);
+        assert(alice_state.recv_chains.length === 1);
 
         return Promise.all(['Hello Bob!', 'Hello delay!'].map(text => alice.encrypt(text)));
       })
@@ -137,9 +138,9 @@ describe('Session', async () => {
 
         return bob.encrypt('Hello Alice!');
       })
-      .then(message => {
+      .then(async message => {
         hello_alice = message;
-        return assert_decrypt('Hello Alice!', alice.decrypt(alice_store, hello_alice));
+        return assert_decrypt('Hello Alice!', await alice.decrypt(alice_store, hello_alice));
       })
       .then(() => {
         assert(alice.pending_prekey === null);
@@ -148,7 +149,7 @@ describe('Session', async () => {
 
         return Promise.all(['Ping1!', 'Ping2!'].map(text => alice.encrypt(text)));
       })
-      .then(msgs => {
+      .then(async msgs => {
         [ping_bob_1, ping_bob_2] = msgs;
 
         assert_prev_count(alice, 2);
@@ -156,25 +157,25 @@ describe('Session', async () => {
         assert(ping_bob_1.message instanceof Proteus.message.CipherMessage);
         assert(ping_bob_2.message instanceof Proteus.message.CipherMessage);
 
-        return assert_decrypt('Ping1!', bob.decrypt(bob_store, ping_bob_1));
+        return assert_decrypt('Ping1!', await bob.decrypt(bob_store, ping_bob_1));
       })
-      .then(() => {
+      .then(async () => {
         assert(bob.session_states[bob.session_tag].state.recv_chains.length === 2);
-        return assert_decrypt('Ping2!', bob.decrypt(bob_store, ping_bob_2));
+        return assert_decrypt('Ping2!', await bob.decrypt(bob_store, ping_bob_2));
       })
       .then(() => {
         assert(bob.session_states[bob.session_tag].state.recv_chains.length === 2);
         return bob.encrypt('Pong!');
       })
-      .then(message => {
+      .then(async message => {
         pong_alice = message;
         assert_prev_count(bob, 1);
-        return assert_decrypt('Pong!', alice.decrypt(alice_store, pong_alice));
+        return assert_decrypt('Pong!', await alice.decrypt(alice_store, pong_alice));
       })
-      .then(() => {
+      .then(async () => {
         assert(alice.session_states[alice.session_tag].state.recv_chains.length === 3);
         assert_prev_count(alice, 2);
-        return assert_decrypt('Hello delay!', bob.decrypt(bob_store, hello_bob_delayed));
+        return assert_decrypt('Hello delay!', await bob.decrypt(bob_store, hello_bob_delayed));
       })
       .then(() => {
         assert(bob.session_states[bob.session_tag].state.recv_chains.length === 2);
@@ -910,7 +911,7 @@ describe('Session', async () => {
     );
 
     const obj_size = obj => Object.keys(obj).length;
-    const bob_bundle = (index, store) => Proteus.keys.PreKeyBundle.new(bob_ident.public_key, store.prekeys[index]);
+    const bob_bundle = async (index, store) => await Proteus.keys.PreKeyBundle.new(bob_ident.public_key, store.prekeys[index]);
 
     let alice = null;
     let bob = null;

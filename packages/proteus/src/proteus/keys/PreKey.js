@@ -72,8 +72,9 @@ class PreKey {
   }
 
   /** @returns {PreKey} */
-  static last_resort() {
-    return PreKey.new(PreKey.MAX_PREKEY_ID);
+  static async last_resort() {
+    const max_prekey = await PreKey.new(PreKey.MAX_PREKEY_ID);
+    return max_prekey;
   }
 
   /**
@@ -90,7 +91,7 @@ class PreKey {
       return [];
     }
 
-    return [...Array(size).keys()].map(async x => await PreKey.new((start + x) % PreKey.MAX_PREKEY_ID));
+    return [...Array(size).keys()].map(async key => await PreKey.new((start + key) % PreKey.MAX_PREKEY_ID));
   }
 
   /** @returns {ArrayBuffer} */

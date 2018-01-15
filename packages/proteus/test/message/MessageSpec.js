@@ -20,6 +20,12 @@
 /* eslint no-magic-numbers: "off" */
 
 describe('Message', () => {
+  let bk;
+  let fk;
+  let ik;
+  let rk;
+  let st;
+
   const fake_pubkey = async byte => {
     await sodium.ready;
     const _sodium = sodium;
@@ -34,12 +40,12 @@ describe('Message', () => {
   /* eslint no-unused-vars: "off" */
 
   before(async () => {
-    const bk = await fake_pubkey(0xff);
-    const fk = await fake_pubkey(0xa0);
-    const ik = Proteus.keys.IdentityKey.new(fk);
-    const rk = await fake_pubkey(0xf0);
+    bk = await fake_pubkey(0xff);
+    fk = await fake_pubkey(0xa0);
+    ik = Proteus.keys.IdentityKey.new(fk);
+    rk = await fake_pubkey(0xf0);
 
-    const st = Proteus.message.SessionTag.new();
+    st = Proteus.message.SessionTag.new();
     st.tag.fill(42);
   });
 

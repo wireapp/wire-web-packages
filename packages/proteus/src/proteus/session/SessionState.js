@@ -87,10 +87,11 @@ class SessionState {
     const rootkey = RootKey.from_cipher_key(derived_secrets.cipher_key);
     const chainkey = ChainKey.from_mac_key(derived_secrets.mac_key, 0);
 
-    const recv_chains = [RecvChain.new(chainkey, bob_pkbundle.public_key)];
+    const recv_chains = [RecvChain.new(chainkey, bob_pkb.public_key)];
+    console.log('recv_chains', recv_chains)
 
     const send_ratchet = await KeyPair.new();
-    const [rok, chk] = rootkey.dh_ratchet(send_ratchet, bob_pkbundle.public_key);
+    const [rok, chk] = rootkey.dh_ratchet(send_ratchet, bob_pkb.public_key);
     const send_chain = SendChain.new(chk, send_ratchet);
 
     const state = ClassUtil.new_instance(SessionState);
@@ -203,14 +204,15 @@ class SessionState {
    * @param {!message.CipherMessage} msg
    * @returns {Uint8Array}
    */
-  decrypt(envelope, msg) {
+  async decrypt(envelope, msg) {
     //TypeUtil.assert_is_instance(Envelope, envelope);
     //TypeUtil.assert_is_instance(CipherMessage, msg);
+    console.log('this.recv_chains', this.recv_chains)
 
     let idx = this.recv_chains.findIndex(chain => chain.ratchet_key.fingerprint() === msg.ratchet_key.fingerprint());
 
     if (idx === -1) {
-      this.ratchet(msg.ratchet_key);
+      await this.ratchet(msg.ratchet_key);
       idx = 0;
     }
 
