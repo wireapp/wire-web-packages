@@ -19,7 +19,7 @@
   },
   "private": true,
   "scripts": {
-    "boot": "lerna bootstrap",
+    "boot": "lerna bootstrap --reject-cycles",
     "clear": "lerna run clear",
     "dist": "yarn clear && lerna run dist",
     "fix": "yarn fix:docs && yarn fix:config && yarn fix:style && yarn fix:script",
@@ -30,7 +30,7 @@
     "fix:style": "prettier --write **/*.scss",
     "fix:tsScript": "prettier --write **/*.ts",
     "precommit": "lint-staged",
-    "test": "yarn dist && yarn test:jsScript && lerna run test",
+    "test": "yarn && yarn dist && yarn test:jsScript && lerna run test",
     "test:jsScript": "eslint --ignore-path .gitignore --ignore-path .prettierignore **/*.{js,jsx}",
     "release":
       "yarn && yarn dist && yarn test && lerna publish -m \"chore: Publish\" --conventional-commits --loglevel=verbose --exact --allow-branch=master --registry=https://registry.npmjs.org/"
