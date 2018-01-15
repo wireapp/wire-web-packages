@@ -2,5 +2,4 @@
 **/dist/**
 **/node_modules/**
 **/bower_components/**
-
 packages/react-ui-kit/*.js
