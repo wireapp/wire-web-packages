@@ -1,2 +1,11 @@
 demo/bundle.js
 dist
+
+index.js
+Form.js
+Icon.js
+Identity.js
+Layout.js
+Modal.js
+Progress.js
+Text.js
