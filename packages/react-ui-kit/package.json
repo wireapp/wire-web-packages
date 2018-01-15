@@ -16,7 +16,7 @@
     "babel-plugin-transform-object-rest-spread": "6.26.0",
     "babel-preset-env": "1.6.1",
     "babel-preset-react": "6.24.1",
-    "browser-sync": "2.23.3",
+    "browser-sync": "2.23.5",
     "gulp": "3.9.1",
     "gulp-plumber": "1.2.0",
     "gulp-sass": "3.1.0",
@@ -26,20 +26,30 @@
     "webpack-dev-server": "2.10.1"
   },
   "license": "GPL-3.0",
-  "main": "./dist/index.js",
+  "main": "./index.js",
+  "files": [
+    "dist",
+    "README.md",
+    "index.js",
+    "Form.js",
+    "Icon.js",
+    "Identity.js",
+    "Layout.js",
+    "Modal.js",
+    "Progress.js",
+    "Text.js"
+  ],
   "name": "@wireapp/react-ui-kit",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit",
   "scripts": {
-    "build": "babel src --out-dir dist --no-comments && node scripts/prepare.js",
+    "build": "babel alias --out-dir ./ --no-comments && babel src --out-dir dist --no-comments",
     "clear": "rimraf dist",
     "dist": "yarn clear && yarn build",
-    "prepublish": "yarn test",
-    "publish": "cd ./dist && npm publish",
     "start:demo": "webpack-dev-server",
     "start:static": "gulp",
     "start": "yarn start:demo",
-    "test": "exit 0",
-    "prepare": "yarn dist"
+    "test": "yarn dist && yarn test:browser",
+    "test:browser": "exit 0"
   },
-  "version": "0.1.3"
+  "version": "0.1.4"
 }
