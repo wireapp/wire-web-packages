@@ -21,7 +21,7 @@
   "scripts": {
     "boot": "lerna bootstrap",
     "clear": "lerna run clear",
-    "dist": "lerna run dist",
+    "dist": "lerna run clear && lerna run dist",
     "fix": "yarn fix:docs && yarn fix:config && yarn fix:style && yarn fix:script",
     "fix:config": "prettier --write **/*.json",
     "fix:docs": "prettier --ignore-path .gitignore --write **/*.md",
@@ -33,7 +33,7 @@
     "test": "yarn test:jsScript && lerna run test",
     "test:jsScript": "eslint --ignore-path .gitignore --ignore-path .prettierignore **/*.{js,jsx}",
     "release":
-      "yarn && yarn test && lerna publish -m \"chore: Publish\" --conventional-commits --loglevel=verbose --exact --allow-branch=master --registry=https://registry.npmjs.org/"
+      "yarn && yarn dist && yarn test && lerna publish -m \"chore: Publish\" --conventional-commits --loglevel=verbose --exact --allow-branch=master --registry=https://registry.npmjs.org/"
   },
   "workspaces": ["packages/*"]
 }
