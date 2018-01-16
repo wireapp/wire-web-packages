@@ -43,7 +43,6 @@ describe('Envelope', () => {
   });
 
   it('should encapsulate a CipherMessage', async () => {
-
     const msg = Proteus.message.CipherMessage.new(tg, 42, 3, r_key, new Uint8Array([1, 2, 3, 4, 5]));
     const env = Proteus.message.Envelope.new(mac_key, msg);
 

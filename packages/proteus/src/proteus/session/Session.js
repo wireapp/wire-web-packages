@@ -82,6 +82,7 @@ class Session {
     //TypeUtil.assert_is_instance(IdentityKeyPair, local_identity);
     //TypeUtil.assert_is_instance(PreKeyBundle, remote_pkbundle);
 
+
     const alice_base = await KeyPair.new();
 
     const state = await SessionState.init_as_alice(local_identity, alice_base, remote_pkbundle);
@@ -94,6 +95,9 @@ class Session {
     session.remote_identity = remote_pkbundle.identity_key;
     session.pending_prekey = [remote_pkbundle.prekey_id, alice_base.public_key];
     session.session_states = {};
+    if (session.pending_prekey == null) {
+      console.log('session', session)
+    }
 
     session._insert_session_state(session_tag, state);
     return session;
@@ -277,7 +281,7 @@ class Session {
     const msg = envelope.message;
     if (msg instanceof CipherMessage) {
       const decrypted_cipher_message = await this._decrypt_cipher_message(envelope, envelope.message);
-      return decrypted_cipher_message
+      return decrypted_cipher_message;
     } else if (msg instanceof PreKeyMessage) {
       const actual_fingerprint = msg.identity_key.fingerprint();
       const expected_fingerprint = this.remote_identity.fingerprint();
