@@ -43,12 +43,14 @@ describe('Client', () => {
       expect(client.transport.ws.baseURL).toBe(Client.BACKEND.PRODUCTION.ws);
       expect(client.transport.http.accessTokenStore.tokenStore).toBeDefined();
     });
+
     it('constructs StoreEngine when only the URLs is provided', () => {
       const client = new Client({urls: Client.BACKEND.PRODUCTION});
       expect(client.transport.http.baseURL).toBe(Client.BACKEND.PRODUCTION.rest);
       expect(client.transport.ws.baseURL).toBe(Client.BACKEND.PRODUCTION.ws);
       expect(client.transport.http.accessTokenStore.tokenStore).toBeDefined();
     });
+
     it('constructs URLs when only the StoreEngine is provided', () => {
       const client = new Client({store: new MemoryEngine('wire-test')});
       expect(client.transport.http.baseURL).toBe(Client.BACKEND.PRODUCTION.rest);
