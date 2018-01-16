@@ -44,7 +44,7 @@ class Envelope {
    * @param {!message.Message} message
    * @returns {Envelope}
    */
-  static new(mac_key, message) {
+  static async new(mac_key, message) {
     //TypeUtil.assert_is_instance(MacKey, mac_key);
     //TypeUtil.assert_is_instance(Message, message);
 
@@ -53,7 +53,7 @@ class Envelope {
     const env = ClassUtil.new_instance(Envelope);
 
     env.version = 1;
-    env.mac = mac_key.sign(serialized_message);
+    env.mac = await mac_key.sign(serialized_message);
     env.message = message;
     env._message_enc = serialized_message;
 
@@ -65,9 +65,9 @@ class Envelope {
    * @param {!derived.MacKey} mac_key The remote party's MacKey
    * @returns {boolean}
    */
-  verify(mac_key) {
+  async verify(mac_key) {
     //TypeUtil.assert_is_instance(MacKey, mac_key);
-    return mac_key.verify(this.mac, this._message_enc);
+    return await mac_key.verify(this.mac, this._message_enc);
   }
 
   /** @returns {ArrayBuffer} - The serialized message envelope */
@@ -113,13 +113,13 @@ class Envelope {
   static decode(decoder) {
     //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
-    const env = ClassUtil.new_instance(Envelope);
+    const envelope = ClassUtil.new_instance(Envelope);
 
     const nprops = decoder.object();
     for (let index = 0; index <= nprops - 1; index++) {
       switch (decoder.u8()) {
         case 0: {
-          env.version = decoder.u8();
+          envelope.version = decoder.u8();
           break;
         }
         case 1: {
@@ -127,7 +127,7 @@ class Envelope {
           for (let subindex = 0; subindex <= nprops_mac - 1; subindex++) {
             switch (decoder.u8()) {
               case 0:
-                env.mac = new Uint8Array(decoder.bytes());
+                envelope.mac = new Uint8Array(decoder.bytes());
                 break;
               default:
                 decoder.skip();
@@ -136,7 +136,7 @@ class Envelope {
           break;
         }
         case 2: {
-          env._message_enc = new Uint8Array(decoder.bytes());
+          envelope._message_enc = new Uint8Array(decoder.bytes());
           break;
         }
         default: {
@@ -148,10 +148,10 @@ class Envelope {
     //TypeUtil.assert_is_integer(env.version);
     //TypeUtil.assert_is_instance(Uint8Array, env.mac);
 
-    env.message = Message.deserialise(env._message_enc.buffer);
+    envelope.message = Message.deserialise(envelope._message_enc.buffer);
 
-    Object.freeze(env);
-    return env;
+    Object.freeze(envelope);
+    return envelope;
   }
 }
 

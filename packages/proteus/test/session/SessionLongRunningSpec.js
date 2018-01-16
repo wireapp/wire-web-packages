@@ -35,16 +35,17 @@ class TestStore extends Proteus.session.PreKeyStore {
   }
 }
 
-const assert_init_from_message = (ident, store, msg, expected) => {
-  return new Promise((resolve, reject) => {
-    Proteus.session.Session.init_from_message(ident, store, msg)
+const assert_init_from_message = async (ident, store, msg, expected) => {
+  try {
+    return await Proteus.session.Session.init_from_message(ident, store, msg)
       .then(messageArray => {
         const [session, message] = messageArray;
         assert.strictEqual(sodium.to_string(message), expected);
         resolve(session);
       })
-      .catch(err => reject(err));
-  });
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 const assert_decrypt = (expected, decryptedPromise) => {
@@ -64,10 +65,11 @@ const assert_prev_count = (session, expected) => {
   assert.strictEqual(expected, session.session_states[session.session_tag].state.prev_counter);
 };
 
-const assert_serialise_deserialise = (local_identity, session) => {
+const assert_serialise_deserialise = async (local_identity, session) => {
   const bytes = session.serialise();
 
-  const deser = Proteus.session.Session.deserialise(local_identity, bytes);
+  const deser = await Proteus.session.Session.deserialise(local_identity, bytes);
+  console.log('deser', deser);
   const deser_bytes = deser.serialise();
 
   assert.deepEqual(sodium.to_hex(new Uint8Array(bytes)), sodium.to_hex(new Uint8Array(deser_bytes)));
@@ -76,57 +78,41 @@ const assert_serialise_deserialise = (local_identity, session) => {
 describe('LongRunning', () => {
   describe('Session', () => {
     it('should handle mass communication', async done => {
-      const alice_ident = await Proteus.keys.IdentityKeyPair.new();
-      const bob_ident = await Proteus.keys.IdentityKeyPair.new();
+      //try {
+        const alice_ident = await Proteus.keys.IdentityKeyPair.new();
+        const bob_ident = await Proteus.keys.IdentityKeyPair.new();
 
-      const alice_prekeys = await Promise.all(Proteus.keys.PreKey.generate_prekeys(0, 10));
-      const bob_prekeys = await Promise.all(Proteus.keys.PreKey.generate_prekeys(0, 10));
+        const alice_prekeys = await Promise.all(Proteus.keys.PreKey.generate_prekeys(0, 10));
+        const bob_prekeys = await Promise.all(Proteus.keys.PreKey.generate_prekeys(0, 10));
 
-      const alice_store = new TestStore(alice_prekeys);
-      const bob_store = new TestStore(bob_prekeys);
+        const alice_store = new TestStore(alice_prekeys);
+        const bob_store = new TestStore(bob_prekeys);
 
-      const bob_prekey = bob_store.prekeys[0];
-      const bob_bundle = await Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
+        const bob_prekey = bob_store.prekeys[0];
+        const bob_bundle = await Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
 
-      let alice = null;
-      let bob = null;
-      let hello_bob = null;
+        const alice_session = await Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle);
 
-      return Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle)
-        .then(session => {
-          alice = session;
-          return alice.encrypt('Hello Bob!');
-        })
-        .then(message => {
-          hello_bob = message;
-          return assert_init_from_message(bob_ident, bob_store, hello_bob, 'Hello Bob!');
-        })
-        .then(session => {
-          bob = session;
+        const hello_bob = await alice_session.encrypt('Hello Bob!');
+        const bob_session = await assert_init_from_message(bob_ident, bob_store, hello_bob, 'Hello Bob!');
 
-          // XXX: need to serialize/deserialize to/from CBOR here
-          return Promise.all(Array.from({length: 999}, () => bob.encrypt('Hello Alice!')));
-        })
-        .then(messages => {
-          return Promise.all(
-            messages.map(message =>
-              assert_decrypt(
-                'Hello Alice!',
-                alice.decrypt(alice_store, Proteus.message.Envelope.deserialise(message.serialise()))
-              )
+        // XXX: need to serialize/deserialize to/from CBOR here
+        const messages = await Promise.all(Array.from({length: 999}, async () => await bob_session.encrypt('Hello Alice!')));
+
+        await Promise.all(
+          messages.map(message =>
+            assert_decrypt(
+              'Hello Alice!',
+              alice_session.decrypt(alice_store, Proteus.message.Envelope.deserialise(message.serialise()))
             )
-          );
-        })
-        .then(() => {
-          assert_serialise_deserialise(alice_ident, alice);
-          return assert_serialise_deserialise(bob_ident, bob);
-        })
-        .then(() => {
-          done();
-        })
-        .catch(err => {
-          done(err);
-        });
+          )
+        );
+        await assert_serialise_deserialise(alice_ident, alice_session);
+        await assert_serialise_deserialise(bob_ident, bob_session);
+        done();
+      /*} catch (error) {
+        done(new Error(error));
+      }*/
     });
 
     it('pathological case', async function(done) {
@@ -145,7 +131,8 @@ describe('LongRunning', () => {
       Promise.all(
         bob_store.prekeys.map(async pk => {
           const bundle = await Proteus.keys.PreKeyBundle.new(bob_ident.public_key, pk);
-          return Proteus.session.Session.init_from_prekey(alice_ident, bundle);
+          const session = await Proteus.session.Session.init_from_prekey(alice_ident, bundle);
+          return session;
         })
       )
         .then(session => {
@@ -153,7 +140,7 @@ describe('LongRunning', () => {
           assert(alices.length === num_alices);
           return alices[0].encrypt('Hello Bob!');
         })
-        .then(message => assert_init_from_message(bob_ident, bob_store, message, 'Hello Bob!'))
+        .then(async message => await assert_init_from_message(bob_ident, bob_store, message, 'Hello Bob!'))
         .then(session => {
           bob = session;
 
@@ -161,7 +148,7 @@ describe('LongRunning', () => {
             alices.map(alice => {
               return new Promise(resolve => {
                 Promise.all(Array.from({length: 900}, () => alice.encrypt('hello')))
-                  .then(() => alice.encrypt('Hello Bob!'))
+                  .then(async () => await alice.encrypt('Hello Bob!'))
                   .then(message => resolve(assert_decrypt('Hello Bob!', bob.decrypt(bob_store, message))));
               });
             })
@@ -171,10 +158,9 @@ describe('LongRunning', () => {
           assert(Object.keys(bob.session_states).length === num_alices);
 
           return Promise.all(
-            alices.map(alice => {
-              return alice
-                .encrypt('Hello Bob!')
-                .then(message => assert_decrypt('Hello Bob!', bob.decrypt(bob_store, message)));
+            alices.map(async alice => {
+              const message = await alice.encrypt('Hello Bob!');
+              return assert_decrypt('Hello Bob!', bob.decrypt(bob_store, message));
             })
           );
         })

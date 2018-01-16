@@ -26,7 +26,7 @@
     "test": "yarn dist && yarn test:node",
     "test:node":
       "mocha -s 30000 -t 30000 --recursive test/harness.js test --trace-warnings --grep LongRunning --invert",
-    "test:longrunning": "mocha -s 30000 -t 30000 --recursive test/harness.js test --trace-warnings --grep LongRunning"
+    "test:longrunning": "mocha -s 30000 -t 30000 --recursive test/harness.js test --trace-warnings --grep communication"
   },
   "types": "dist/typings/typings.d.ts",
   "version": "5.3.1"

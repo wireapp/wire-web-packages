@@ -18,7 +18,7 @@
  */
 
 const CBOR = require('wire-webapp-cbor');
-const sodium = require('libsodium-wrappers-sumo');
+const _sodium = require('libsodium-wrappers-sumo');
 
 const ClassUtil = require('../util/ClassUtil');
 const DontCallConstructor = require('../errors/DontCallConstructor');
@@ -53,18 +53,24 @@ class MacKey {
    * @param {!(string|Uint8Array)} msg
    * @returns {Uint8Array}
    */
-  sign(msg) {
+  async sign(msg) {
+    await _sodium.ready;
+    const sodium = _sodium;
+
     return sodium.crypto_auth_hmacsha256(msg, this.key);
   }
 
   /**
    * Verifies the signature of a given message by resigning it.
    * @param {!Uint8Array} signature Mac signature (HMAC) which needs to get verified
-   * @param {!Uint8Array} msg Unsigned message
+   * @param {!Uint8Array} message Unsigned message
    * @returns {boolean}
    */
-  verify(signature, msg) {
-    return sodium.crypto_auth_hmacsha256_verify(signature, msg, this.key);
+  async verify(signature, message) {
+    await _sodium.ready;
+    const sodium = _sodium;
+
+    return sodium.crypto_auth_hmacsha256_verify(signature, message, this.key);
   }
 
   /**

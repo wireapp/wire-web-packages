@@ -68,7 +68,7 @@ class RecvChain {
    * @param {!message.CipherMessage} msg
    * @returns {Uint8Array}
    */
-  try_message_keys(envelope, msg) {
+  async try_message_keys(envelope, msg) {
     //TypeUtil.assert_is_instance(Envelope, envelope);
     //TypeUtil.assert_is_instance(CipherMessage, msg);
 
@@ -88,7 +88,9 @@ class RecvChain {
     }
 
     const mk = this.message_keys.splice(idx, 1)[0];
-    if (!envelope.verify(mk.mac_key)) {
+    const envelope_verified = await envelope.verify(mk.mac_key);
+
+    if (!envelope_verified) {
       const message = `Envelope verification failed for message with counter behind. Message index is '${
         msg.counter
       }' while receive chain index is '${this.chain_key.idx}'.`;

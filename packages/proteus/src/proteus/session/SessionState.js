@@ -171,7 +171,7 @@ class SessionState {
    * @param {!(string|Uint8Array)} plaintext - The plaintext to encrypt
    * @returns {message.Envelope}
    */
-  encrypt(identity_key, pending, tag, plaintext) {
+  async encrypt(identity_key, pending, tag, plaintext) {
     if (pending) {
       //TypeUtil.assert_is_integer(pending[0]);
       //TypeUtil.assert_is_instance(PublicKey, pending[1]);
@@ -193,59 +193,67 @@ class SessionState {
       message = PreKeyMessage.new(pending[0], pending[1], identity_key, message);
     }
 
-    const env = Envelope.new(msgkeys.mac_key, message);
+    const env = await Envelope.new(msgkeys.mac_key, message);
     this.send_chain.chain_key = this.send_chain.chain_key.next();
     return env;
   }
 
   /**
    * @param {!message.Envelope} envelope
-   * @param {!message.CipherMessage} msg
+   * @param {!message.CipherMessage} message
    * @returns {Uint8Array}
    */
-  async decrypt(envelope, msg) {
+  async decrypt(envelope, message) {
     //TypeUtil.assert_is_instance(Envelope, envelope);
     //TypeUtil.assert_is_instance(CipherMessage, msg);
 
-    let idx = this.recv_chains.findIndex(chain => chain.ratchet_key.fingerprint() === msg.ratchet_key.fingerprint());
+    let idx = this.recv_chains.findIndex(
+      chain => chain.ratchet_key.fingerprint() === message.ratchet_key.fingerprint()
+    );
 
     if (idx === -1) {
-      await this.ratchet(msg.ratchet_key);
+      await this.ratchet(message.ratchet_key);
       idx = 0;
     }
 
-    const rc = this.recv_chains[idx];
-    if (msg.counter < rc.chain_key.idx) {
-      return rc.try_message_keys(envelope, msg);
-    } else if (msg.counter == rc.chain_key.idx) {
-      const mks = rc.chain_key.message_keys();
+    const recv_chain = this.recv_chains[idx];
+    if (message.counter < recv_chain.chain_key.idx) {
+      return await recv_chain.try_message_keys(envelope, message);
+    } else if (message.counter == recv_chain.chain_key.idx) {
+      const mks = recv_chain.chain_key.message_keys();
 
-      if (!envelope.verify(mks.mac_key)) {
+      const envelope_verified = await envelope.verify(mk.mac_key);
+
+      if (!envelope_verified) {
         throw new DecryptError.InvalidSignature(
-          `Envelope verification failed for message with counters in sync at '${msg.counter}'`,
+          `Envelope verification failed for message with counters in sync at '${message.counter}'`,
           DecryptError.CODE.CASE_206
         );
       }
 
-      const plain = mks.decrypt(msg.cipher_text);
-      rc.chain_key = rc.chain_key.next();
-      return plain;
-    } else if (msg.counter > rc.chain_key.idx) {
-      const [chk, mk, mks] = rc.stage_message_keys(msg);
+      const plain = mks.decrypt(message.cipher_text);
 
-      if (!envelope.verify(mk.mac_key)) {
+      recv_chain.chain_key = recv_chain.chain_key.next();
+
+      return plain;
+    } else if (message.counter > recv_chain.chain_key.idx) {
+      const [chk, mk, mks] = recv_chain.stage_message_keys(message);
+
+      const envelope_verified = await envelope.verify(mk.mac_key);
+
+      if (!envelope_verified) {
         throw new DecryptError.InvalidSignature(
           `Envelope verification failed for message with counter ahead. Message index is '${
-            msg.counter
-          }' while receive chain index is '${rc.chain_key.idx}'.`,
+            message.counter
+          }' while receive chain index is '${recv_chain.chain_key.idx}'.`,
           DecryptError.CODE.CASE_207
         );
       }
 
-      const plain = mk.decrypt(msg.cipher_text);
+      const plain = mk.decrypt(message.cipher_text);
 
-      rc.chain_key = chk.next();
-      rc.commit_message_keys(mks);
+      recv_chain.chain_key = chk.next();
+      recv_chain.commit_message_keys(mks);
 
       return plain;
     }
@@ -271,6 +279,7 @@ class SessionState {
     encoder.object(4);
     encoder.u8(0);
     encoder.array(this.recv_chains.length);
+
     this.recv_chains.map(rch => rch.encode(encoder));
     encoder.u8(1);
     this.send_chain.encode(encoder);

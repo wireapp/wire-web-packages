@@ -44,12 +44,13 @@ describe('Envelope', () => {
 
   it('should encapsulate a CipherMessage', async () => {
     const msg = Proteus.message.CipherMessage.new(tg, 42, 3, r_key, new Uint8Array([1, 2, 3, 4, 5]));
-    const env = Proteus.message.Envelope.new(mac_key, msg);
+    const envelope = await Proteus.message.Envelope.new(mac_key, msg);
+    const envelope_verified = await envelope.verify(mac_key);
 
-    assert(env.verify(mac_key));
+    assert(envelope_verified);
   });
 
-  it('should encapsulate a PreKeyMessage', () => {
+  it('should encapsulate a PreKeyMessage', async () => {
     const msg = Proteus.message.PreKeyMessage.new(
       42,
       bob_bk,
@@ -57,11 +58,13 @@ describe('Envelope', () => {
       Proteus.message.CipherMessage.new(tg, 42, 43, r_key, new Uint8Array([1, 2, 3, 4]))
     );
 
-    const env = Proteus.message.Envelope.new(mac_key, msg);
-    assert(env.verify(mac_key));
+    const envelope = await Proteus.message.Envelope.new(mac_key, msg);
+    const envelope_verified = await envelope.verify(mac_key);
+
+    assert(envelope_verified);
   });
 
-  it('should encode to and decode from CBOR', () => {
+  it('should encode to and decode from CBOR', async () => {
     const msg = Proteus.message.PreKeyMessage.new(
       42,
       bob_bk,
@@ -69,13 +72,17 @@ describe('Envelope', () => {
       Proteus.message.CipherMessage.new(tg, 42, 43, r_key, new Uint8Array([1, 2, 3, 4]))
     );
 
-    const env = Proteus.message.Envelope.new(mac_key, msg);
-    assert(env.verify(mac_key));
+    const envelope = await Proteus.message.Envelope.new(mac_key, msg);
+    const envelope_verified = await envelope.verify(mac_key);
 
-    const env_bytes = env.serialise();
-    const env_cpy = Proteus.message.Envelope.deserialise(env_bytes);
+    assert(envelope_verified);
 
-    assert(env_cpy.verify(mac_key));
+    const envelope_bytes = envelope.serialise();
+    const envelope_copy = Proteus.message.Envelope.deserialise(envelope_bytes);
+
+    const envelope_copy_verified = await envelope.verify(mac_key);
+
+    assert(envelope_copy_verified);
   });
 
   it('fails when passing invalid input', () => {

@@ -102,10 +102,10 @@ export module derived {
        /**
         * Verifies the signature of a given message by resigning it.
         * @param {!Uint8Array} signature Mac signature (HMAC) which needs to get verified
-        * @param {!Uint8Array} msg Unsigned message
+        * @param {!Uint8Array} message Unsigned message
         * @returns {boolean}
         */
-       verify(signature: Uint8Array, msg: Uint8Array): boolean;
+       verify(signature: Uint8Array, message: Uint8Array): boolean;
 
        /**
         * @param {!CBOR.Encoder} encoder
@@ -1331,10 +1331,10 @@ export module session {
 
        /**
         * @param {!message.Envelope} envelope
-        * @param {!message.CipherMessage} msg
+        * @param {!message.CipherMessage} message
         * @returns {Uint8Array}
         */
-       decrypt(envelope: message.Envelope, msg: message.CipherMessage): Uint8Array;
+       decrypt(envelope: message.Envelope, message: message.CipherMessage): Uint8Array;
 
        /** @returns {ArrayBuffer} */
        serialise(): ArrayBuffer;

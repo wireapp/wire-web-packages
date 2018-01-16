@@ -82,7 +82,6 @@ class Session {
     //TypeUtil.assert_is_instance(IdentityKeyPair, local_identity);
     //TypeUtil.assert_is_instance(PreKeyBundle, remote_pkbundle);
 
-
     const alice_base = await KeyPair.new();
 
     const state = await SessionState.init_as_alice(local_identity, alice_base, remote_pkbundle);
@@ -95,11 +94,9 @@ class Session {
     session.remote_identity = remote_pkbundle.identity_key;
     session.pending_prekey = [remote_pkbundle.prekey_id, alice_base.public_key];
     session.session_states = {};
-    if (session.pending_prekey == null) {
-      console.log('session', session)
-    }
 
     session._insert_session_state(session_tag, state);
+
     return session;
   }
 
@@ -111,8 +108,8 @@ class Session {
    * @throws {errors.DecryptError.InvalidMessage}
    * @throws {errors.DecryptError.PrekeyNotFound}
    */
-  static init_from_message(our_identity, prekey_store, envelope) {
-    return new Promise((resolve, reject) => {
+  static async init_from_message(our_identity, prekey_store, envelope) {
+    try {
       //TypeUtil.assert_is_instance(IdentityKeyPair, our_identity);
       //TypeUtil.assert_is_instance(PreKeyStore, prekey_store);
       //TypeUtil.assert_is_instance(Envelope, envelope);
@@ -140,30 +137,27 @@ class Session {
       session.pending_prekey = null;
       session.session_states = {};
 
-      return session
-        ._new_state(prekey_store, pkmsg)
-        .then(async state => {
-          const plain = await state.decrypt(envelope, pkmsg.message);
-          session._insert_session_state(pkmsg.message.session_tag, state);
+      const state = await session._new_state(prekey_store, pkmsg);
+      const plain = await state.decrypt(envelope, pkmsg.message);
+      session._insert_session_state(pkmsg.message.session_tag, state);
 
-          if (pkmsg.prekey_id < PreKey.MAX_PREKEY_ID) {
-            MemoryUtil.zeroize(prekey_store.prekeys[pkmsg.prekey_id]);
-            return prekey_store
-              .remove(pkmsg.prekey_id)
-              .then(() => resolve([session, plain]))
-              .catch(error => {
-                reject(
-                  new DecryptError.PrekeyNotFound(
-                    `Could not delete PreKey: ${error.message}`,
-                    DecryptError.CODE.CASE_203
-                  )
-                );
-              });
+      if (pkmsg.prekey_id < PreKey.MAX_PREKEY_ID) {
+        MemoryUtil.zeroize(prekey_store.prekeys[pkmsg.prekey_id]);
+        try {
+          const store = await prekey_store
+          store.remove(pkmsg.prekey_id)
+          return [session, plain];
+        } catch(err) {
+              throw new DecryptError.PrekeyNotFound(
+                `Could not delete PreKey: ${error.message}`,
+                DecryptError.CODE.CASE_203
+              );
           }
-          return resolve([session, plain]);
-        })
-        .catch(reject);
-    });
+      }
+      return [session, plain];
+    } catch(error) {
+      throw new Error(error)
+    }
   }
 
   /**
@@ -249,23 +243,17 @@ class Session {
    * @param {!(String|Uint8Array)} plaintext - The plaintext which needs to be encrypted
    * @return {Promise<message.Envelope>} Encrypted message
    */
-  encrypt(plaintext) {
-    return new Promise((resolve, reject) => {
-      const state = this.session_states[this.session_tag];
+  async encrypt(plaintext) {
+    const state = this.session_states[this.session_tag];
 
-      if (!state) {
-        return reject(
-          new ProteusError(
-            `Could not find session for tag '${(this.session_tag || '').toString()}'.`,
-            ProteusError.prototype.CODE.CASE_102
-          )
-        );
-      }
+    console.log(state.state.encrypt)
 
-      return resolve(
-        state.state.encrypt(this.local_identity.public_key, this.pending_prekey, this.session_tag, plaintext)
-      );
-    });
+    return await state.state.encrypt(
+      this.local_identity.public_key,
+      this.pending_prekey,
+      this.session_tag,
+      plaintext
+    );
   }
 
   /**
@@ -369,12 +357,12 @@ class Session {
    * @param {!ArrayBuffer} buf
    * @returns {Session}
    */
-  static deserialise(local_identity, buf) {
+  static async deserialise(local_identity, buf) {
     //TypeUtil.assert_is_instance(IdentityKeyPair, local_identity);
     //TypeUtil.assert_is_instance(ArrayBuffer, buf);
 
     const decoder = new CBOR.Decoder(buf);
-    return this.decode(local_identity, decoder);
+    return await this.decode(local_identity, decoder);
   }
 
   /**
@@ -418,7 +406,7 @@ class Session {
    * @param {!CBOR.Decoder} decoder
    * @returns {Session}
    */
-  static decode(local_identity, decoder) {
+  static async decode(local_identity, decoder) {
     //TypeUtil.assert_is_instance(IdentityKeyPair, local_identity);
     //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 

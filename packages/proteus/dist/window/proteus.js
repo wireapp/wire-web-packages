@@ -1452,6 +1452,7 @@ class Envelope {
     //TypeUtil.assert_is_instance(Message, message);
 
     const serialized_message = new Uint8Array(message.serialise());
+    console.log(serialized_message)
 
     const env = ClassUtil.new_instance(Envelope);
 
@@ -1516,13 +1517,13 @@ class Envelope {
   static decode(decoder) {
     //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
-    const env = ClassUtil.new_instance(Envelope);
+    const envelope = ClassUtil.new_instance(Envelope);
 
     const nprops = decoder.object();
     for (let index = 0; index <= nprops - 1; index++) {
       switch (decoder.u8()) {
         case 0: {
-          env.version = decoder.u8();
+          envelope.version = decoder.u8();
           break;
         }
         case 1: {
@@ -1530,7 +1531,7 @@ class Envelope {
           for (let subindex = 0; subindex <= nprops_mac - 1; subindex++) {
             switch (decoder.u8()) {
               case 0:
-                env.mac = new Uint8Array(decoder.bytes());
+                envelope.mac = new Uint8Array(decoder.bytes());
                 break;
               default:
                 decoder.skip();
@@ -1539,7 +1540,7 @@ class Envelope {
           break;
         }
         case 2: {
-          env._message_enc = new Uint8Array(decoder.bytes());
+          envelope._message_enc = new Uint8Array(decoder.bytes());
           break;
         }
         default: {
@@ -1551,10 +1552,10 @@ class Envelope {
     //TypeUtil.assert_is_integer(env.version);
     //TypeUtil.assert_is_instance(Uint8Array, env.mac);
 
-    env.message = Message.deserialise(env._message_enc.buffer);
+    envelope.message = Message.deserialise(envelope._message_enc.buffer);
 
-    Object.freeze(env);
-    return env;
+    Object.freeze(envelope);
+    return envelope;
   }
 }
 
@@ -1627,11 +1628,11 @@ class MacKey {
   /**
    * Verifies the signature of a given message by resigning it.
    * @param {!Uint8Array} signature Mac signature (HMAC) which needs to get verified
-   * @param {!Uint8Array} msg Unsigned message
+   * @param {!Uint8Array} message Unsigned message
    * @returns {boolean}
    */
-  verify(signature, msg) {
-    return sodium.crypto_auth_hmacsha256_verify(signature, msg, this.key);
+  verify(signature, message) {
+    return sodium.crypto_auth_hmacsha256_verify(signature, message, this.key);
   }
 
   /**
@@ -3155,7 +3156,6 @@ class Session {
     //TypeUtil.assert_is_instance(IdentityKeyPair, local_identity);
     //TypeUtil.assert_is_instance(PreKeyBundle, remote_pkbundle);
 
-
     const alice_base = await KeyPair.new();
 
     const state = await SessionState.init_as_alice(local_identity, alice_base, remote_pkbundle);
@@ -3168,11 +3168,9 @@ class Session {
     session.remote_identity = remote_pkbundle.identity_key;
     session.pending_prekey = [remote_pkbundle.prekey_id, alice_base.public_key];
     session.session_states = {};
-    if (session.pending_prekey == null) {
-      console.log('session', session)
-    }
 
     session._insert_session_state(session_tag, state);
+
     return session;
   }
 
@@ -3326,18 +3324,14 @@ class Session {
     return new Promise((resolve, reject) => {
       const state = this.session_states[this.session_tag];
 
-      if (!state) {
-        return reject(
-          new ProteusError(
-            `Could not find session for tag '${(this.session_tag || '').toString()}'.`,
-            ProteusError.prototype.CODE.CASE_102
-          )
-        );
-      }
-
-      return resolve(
-        state.state.encrypt(this.local_identity.public_key, this.pending_prekey, this.session_tag, plaintext)
+      const result = state.state.encrypt(
+        this.local_identity.public_key,
+        this.pending_prekey,
+        this.session_tag, plaintext
       );
+
+
+      resolve(result);
     });
   }
 
@@ -6506,52 +6500,56 @@ class SessionState {
 
   /**
    * @param {!message.Envelope} envelope
-   * @param {!message.CipherMessage} msg
+   * @param {!message.CipherMessage} message
    * @returns {Uint8Array}
    */
-  async decrypt(envelope, msg) {
+  async decrypt(envelope, message) {
     //TypeUtil.assert_is_instance(Envelope, envelope);
     //TypeUtil.assert_is_instance(CipherMessage, msg);
 
-    let idx = this.recv_chains.findIndex(chain => chain.ratchet_key.fingerprint() === msg.ratchet_key.fingerprint());
+    let idx = this.recv_chains.findIndex(
+      chain => chain.ratchet_key.fingerprint() === message.ratchet_key.fingerprint()
+    );
 
     if (idx === -1) {
-      await this.ratchet(msg.ratchet_key);
+      await this.ratchet(message.ratchet_key);
       idx = 0;
     }
 
-    const rc = this.recv_chains[idx];
-    if (msg.counter < rc.chain_key.idx) {
-      return rc.try_message_keys(envelope, msg);
-    } else if (msg.counter == rc.chain_key.idx) {
-      const mks = rc.chain_key.message_keys();
+    const recv_chain = this.recv_chains[idx];
+    if (message.counter < recv_chain.chain_key.idx) {
+      return recv_chain.try_message_keys(envelope, message);
+    } else if (message.counter == recv_chain.chain_key.idx) {
+      const mks = recv_chain.chain_key.message_keys();
 
       if (!envelope.verify(mks.mac_key)) {
         throw new DecryptError.InvalidSignature(
-          `Envelope verification failed for message with counters in sync at '${msg.counter}'`,
+          `Envelope verification failed for message with counters in sync at '${message.counter}'`,
           DecryptError.CODE.CASE_206
         );
       }
 
-      const plain = mks.decrypt(msg.cipher_text);
-      rc.chain_key = rc.chain_key.next();
+      const plain = mks.decrypt(message.cipher_text);
+
+      recv_chain.chain_key = recv_chain.chain_key.next();
+
       return plain;
-    } else if (msg.counter > rc.chain_key.idx) {
-      const [chk, mk, mks] = rc.stage_message_keys(msg);
+    } else if (message.counter > recv_chain.chain_key.idx) {
+      const [chk, mk, mks] = recv_chain.stage_message_keys(message);
 
       if (!envelope.verify(mk.mac_key)) {
         throw new DecryptError.InvalidSignature(
           `Envelope verification failed for message with counter ahead. Message index is '${
-            msg.counter
-          }' while receive chain index is '${rc.chain_key.idx}'.`,
+            message.counter
+          }' while receive chain index is '${recv_chain.chain_key.idx}'.`,
           DecryptError.CODE.CASE_207
         );
       }
 
-      const plain = mk.decrypt(msg.cipher_text);
+      const plain = mk.decrypt(message.cipher_text);
 
-      rc.chain_key = chk.next();
-      rc.commit_message_keys(mks);
+      recv_chain.chain_key = chk.next();
+      recv_chain.commit_message_keys(mks);
 
       return plain;
     }
@@ -6577,6 +6575,7 @@ class SessionState {
     encoder.object(4);
     encoder.u8(0);
     encoder.array(this.recv_chains.length);
+
     this.recv_chains.map(rch => rch.encode(encoder));
     encoder.u8(1);
     this.send_chain.encode(encoder);
