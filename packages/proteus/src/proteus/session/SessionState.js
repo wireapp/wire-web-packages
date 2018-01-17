@@ -179,7 +179,7 @@ class SessionState {
     //TypeUtil.assert_is_instance(IdentityKey, identity_key);
     //TypeUtil.assert_is_instance(SessionTag, tag);
 
-    const msgkeys = this.send_chain.chain_key.message_keys();
+    const msgkeys = await this.send_chain.chain_key.message_keys();
 
     let message = CipherMessage.new(
       tag,
