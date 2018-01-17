@@ -45,7 +45,7 @@ export default class Account extends EventEmitter {
   private protocolBuffers: any = {};
   public service: {conversation: ConversationService; crypto: CryptographyService};
 
-  constructor(apiClient: Client = new Client({store: new MemoryEngine('temporary'), urls: Client.BACKEND.PRODUCTION})) {
+  constructor(apiClient: Client = new Client()) {
     super();
     this.apiClient = apiClient;
   }
@@ -100,9 +100,11 @@ export default class Account extends EventEmitter {
         this.protocolBuffers.Text = root.lookup('Text');
       })
       .then(() => {
+        const crypto: CryptographyService = new CryptographyService(this.apiClient.config.store);
+        const conversation: ConversationService = new ConversationService(this.apiClient, this.protocolBuffers, crypto);
         this.service = {
-          conversation: new ConversationService(this.apiClient, this.protocolBuffers, this.service.crypto),
-          crypto: new CryptographyService(this.apiClient.config.store),
+          conversation,
+          crypto,
         };
       });
   }
