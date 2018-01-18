@@ -5,10 +5,14 @@ import {CryptoboxStore} from './CryptoboxStore';
 import {RecordAlreadyExistsError, RecordNotFoundError, RecordTypeError} from './error';
 import {SerialisedRecord} from './SerialisedRecord';
 
+export interface DexieInstance extends Dexie {
+  [index: string]: any;
+}
+
 export default class IndexedDB implements CryptoboxStore {
   public identity: Proteus.keys.IdentityKeyPair;
 
-  private db: Dexie;
+  private db: DexieInstance;
   private prekeys: Object = {};
   private TABLE = {
     LOCAL_IDENTITY: 'keys',
@@ -18,7 +22,7 @@ export default class IndexedDB implements CryptoboxStore {
   private logger: any;
   private localIdentityKey: string = 'local_identity';
 
-  constructor(identifier: string | Dexie) {
+  constructor(identifier: string | DexieInstance) {
     this.logger = logdown('cryptobox.store.IndexedDB', {
       markdown: false,
       logger: console,

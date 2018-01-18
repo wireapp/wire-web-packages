@@ -28,6 +28,7 @@ const jasmine = require('gulp-jasmine');
 const karma = require('karma');
 const merge = require('merge2');
 const ProgressPlugin = require('webpack/lib/ProgressPlugin');
+const replace = require('gulp-replace');
 const runSequence = require('run-sequence');
 const ts = require('gulp-typescript');
 const tsProjectNode = ts.createProject('tsconfig.json');
@@ -75,7 +76,10 @@ gulp.task('build_ts_node', () => {
 
   gutil.log(gutil.colors.yellow(`Disable log statements: ${disableLogging}`));
 
-  return merge([tsResult.dts.pipe(gulp.dest('dist/typings')), tsResult.js.pipe(gulp.dest('dist/commonjs'))]);
+  return merge([
+    tsResult.dts.pipe(gulp.dest('dist/typings')),
+    tsResult.js.pipe(replace('exports.default = {', 'module.exports = {')).pipe(gulp.dest('dist/commonjs')),
+  ]);
 });
 
 gulp.task('default', ['dist'], () => {
