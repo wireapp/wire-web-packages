@@ -1,19 +1,21 @@
+const logdown = require('logdown');
 import * as Proteus from 'wire-webapp-proteus';
-import Logdown = require('logdown');
 import {CryptoboxStore} from './CryptoboxStore';
 
 export default class Cache implements CryptoboxStore {
   private identity: Proteus.keys.IdentityKeyPair;
-  private logger: Logdown;
+  private logger: any;
   private prekeys: Object = {};
   private sessions: Object = {};
 
   constructor() {
-    this.logger = new Logdown({alignOutput: true, markdown: false, prefix: 'cryptobox.store.Cache'});
+    this.logger = logdown('cryptobox.store.Cache', {
+      markdown: false,
+      logger: console,
+    });
   }
 
   public delete_all(): Promise<boolean> {
-    this.identity = undefined;
     this.prekeys = {};
     this.sessions = {};
     return Promise.resolve(true);

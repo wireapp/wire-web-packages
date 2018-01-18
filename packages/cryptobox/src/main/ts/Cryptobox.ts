@@ -1,14 +1,13 @@
+const logdown = require('logdown');
 import * as Proteus from 'wire-webapp-proteus';
 import CryptoboxCRUDStore from './store/CryptoboxCRUDStore';
 import EventEmitter = require('events');
-import Logdown = require('logdown');
 import LRUCache = require('wire-webapp-lru-cache');
 import {CryptoboxError} from './error';
 import {CryptoboxSession} from './CryptoboxSession';
 import {DecryptionError} from './DecryptionError';
 import {InvalidPreKeyFormatError} from './InvalidPreKeyFormatError';
 import {ReadOnlyStore} from './store/ReadOnlyStore';
-import {RecordAlreadyExistsError} from './store/error';
 
 export class Cryptobox extends EventEmitter {
   public static TOPIC = {
@@ -21,7 +20,7 @@ export class Cryptobox extends EventEmitter {
   private cachedSessions: LRUCache;
   public lastResortPreKey: Proteus.keys.PreKey;
 
-  private logger: Logdown;
+  private logger: any;
   private minimumAmountOfPreKeys: number;
   private pk_store: ReadOnlyStore;
   private store: CryptoboxCRUDStore;
@@ -44,7 +43,10 @@ export class Cryptobox extends EventEmitter {
       minimumAmountOfPreKeys = Proteus.keys.PreKey.MAX_PREKEY_ID;
     }
 
-    this.logger = new Logdown({alignOutput: true, markdown: false, prefix: 'cryptobox.Cryptobox'});
+    this.logger = logdown('cryptobox.Cryptobox', {
+      markdown: false,
+      logger: console,
+    });
 
     this.cachedPreKeys = [];
     this.cachedSessions = new LRUCache(1000);
