@@ -39,8 +39,8 @@ const assert_init_from_message = (ident, store, message, expected) => {
   return new Promise(async (resolve, reject) => {
     await Proteus.session.Session.init_from_message(ident, store, message)
       .then(messageArray => {
-        const [session, message] = messageArray;
-        assert.strictEqual(sodium.to_string(message), expected);
+        const [session, msg] = messageArray;
+        assert.strictEqual(sodium.to_string(msg), expected);
         resolve(session);
       })
       .catch(err => reject(err));
@@ -119,91 +119,91 @@ describe('Session', () => {
     const bob_prekey = bob_store.prekeys[0];
     const bob_bundle = await Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
 
-      let bob = null;
+    let bob = null;
 
-      let hello_bob = null;
-      let hello_bob_delayed = null;
-      let hello_alice = null;
-      let ping_bob_1 = null;
-      let ping_bob_2 = null;
-      let pong_alice = null;
+    let hello_bob = null;
+    let hello_bob_delayed = null;
+    let hello_alice = null;
+    let ping_bob_1 = null;
+    let ping_bob_2 = null;
+    let pong_alice = null;
 
-      const alice = await Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle);
-      const alice_state = await alice.session_states[alice.session_tag].state;
-      assert(alice_state.recv_chains.length === 1);
+    const alice = await Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle);
+    let alice_state = await alice.session_states[alice.session_tag].state;
+    assert(alice_state.recv_chains.length === 1);
 
-      return Promise.all(['Hello Bob!', 'Hello delay!'].map(async text => await alice.encrypt(text)))
-        .then(async msgs => {
-          [hello_bob, hello_bob_delayed] = msgs;
+    return Promise.all(['Hello Bob!', 'Hello delay!'].map(async text => await alice.encrypt(text)))
+      .then(async msgs => {
+        [hello_bob, hello_bob_delayed] = msgs;
 
-          assert(Object.keys(alice.session_states).length === 1);
+        assert(Object.keys(alice.session_states).length === 1);
 
-          const alice_state = await alice.session_states[alice.session_tag].state;
+        alice_state = await alice.session_states[alice.session_tag].state;
 
-          assert(alice_state.recv_chains.length === 1);
+        assert(alice_state.recv_chains.length === 1);
 
-          return assert_init_from_message(bob_ident, bob_store, hello_bob, 'Hello Bob!');
-        })
-        .then(async session => {
-          bob = session;
+        return assert_init_from_message(bob_ident, bob_store, hello_bob, 'Hello Bob!');
+      })
+      .then(async session => {
+        bob = session;
 
-          assert(Object.keys(bob.session_states).length === 1);
-          assert(bob.session_states[bob.session_tag].state.recv_chains.length === 1);
+        assert(Object.keys(bob.session_states).length === 1);
+        assert(bob.session_states[bob.session_tag].state.recv_chains.length === 1);
 
-          return await bob.encrypt('Hello Alice!');
-        })
-        .then(async message => {
-          hello_alice = message;
-          return assert_decrypt('Hello Alice!', await alice.decrypt(alice_store, hello_alice));
-        })
-        .then(() => {
-          assert(alice.pending_prekey === null);
-          assert(alice.session_states[alice.session_tag].state.recv_chains.length === 2);
-          assert(alice.remote_identity.fingerprint() === bob.local_identity.public_key.fingerprint());
+        return await bob.encrypt('Hello Alice!');
+      })
+      .then(async message => {
+        hello_alice = message;
+        return assert_decrypt('Hello Alice!', await alice.decrypt(alice_store, hello_alice));
+      })
+      .then(() => {
+        assert(alice.pending_prekey === null);
+        assert(alice.session_states[alice.session_tag].state.recv_chains.length === 2);
+        assert(alice.remote_identity.fingerprint() === bob.local_identity.public_key.fingerprint());
 
-          return Promise.all(['Ping1!', 'Ping2!'].map(async text => await alice.encrypt(text)));
-        })
-        .then(async msgs => {
-          [ping_bob_1, ping_bob_2] = msgs;
+        return Promise.all(['Ping1!', 'Ping2!'].map(async text => await alice.encrypt(text)));
+      })
+      .then(async msgs => {
+        [ping_bob_1, ping_bob_2] = msgs;
 
-          assert_prev_count(alice, 2);
+        assert_prev_count(alice, 2);
 
-          assert(ping_bob_1.message instanceof Proteus.message.CipherMessage);
-          assert(ping_bob_2.message instanceof Proteus.message.CipherMessage);
+        assert(ping_bob_1.message instanceof Proteus.message.CipherMessage);
+        assert(ping_bob_2.message instanceof Proteus.message.CipherMessage);
 
-          return assert_decrypt('Ping1!', await bob.decrypt(bob_store, ping_bob_1));
-        })
-        .then(async () => {
-          assert(bob.session_states[bob.session_tag].state.recv_chains.length === 2);
-          return assert_decrypt('Ping2!', await bob.decrypt(bob_store, ping_bob_2));
-        })
-        .then(() => {
-          assert(bob.session_states[bob.session_tag].state.recv_chains.length === 2);
-          return bob.encrypt('Pong!');
-        })
-        .then(async message => {
-          pong_alice = message;
-          assert_prev_count(bob, 1);
-          return assert_decrypt('Pong!', await alice.decrypt(alice_store, pong_alice));
-        })
-        .then(async () => {
-          assert(alice.session_states[alice.session_tag].state.recv_chains.length === 3);
-          assert_prev_count(alice, 2);
-          return assert_decrypt('Hello delay!', await bob.decrypt(bob_store, hello_bob_delayed));
-        })
-        .then(async () => {
-          assert(bob.session_states[bob.session_tag].state.recv_chains.length === 2);
-          assert_prev_count(bob, 1);
+        return assert_decrypt('Ping1!', await bob.decrypt(bob_store, ping_bob_1));
+      })
+      .then(async () => {
+        assert(bob.session_states[bob.session_tag].state.recv_chains.length === 2);
+        return assert_decrypt('Ping2!', await bob.decrypt(bob_store, ping_bob_2));
+      })
+      .then(() => {
+        assert(bob.session_states[bob.session_tag].state.recv_chains.length === 2);
+        return bob.encrypt('Pong!');
+      })
+      .then(async message => {
+        pong_alice = message;
+        assert_prev_count(bob, 1);
+        return assert_decrypt('Pong!', await alice.decrypt(alice_store, pong_alice));
+      })
+      .then(async () => {
+        assert(alice.session_states[alice.session_tag].state.recv_chains.length === 3);
+        assert_prev_count(alice, 2);
+        return assert_decrypt('Hello delay!', await bob.decrypt(bob_store, hello_bob_delayed));
+      })
+      .then(async () => {
+        assert(bob.session_states[bob.session_tag].state.recv_chains.length === 2);
+        assert_prev_count(bob, 1);
 
-          await assert_serialise_deserialise(alice_ident, alice);
-          return await assert_serialise_deserialise(bob_ident, bob);
-        })
-        .then(() => {
-          done();
-        })
-        .catch(err => {
-          done(err);
-        });
+        await assert_serialise_deserialise(alice_ident, alice);
+        return await assert_serialise_deserialise(bob_ident, bob);
+      })
+      .then(() => {
+        done();
+      })
+      .catch(err => {
+        done(err);
+      });
   });
 
   it('should limit the number of receive chains', async done => {

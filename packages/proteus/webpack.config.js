@@ -30,8 +30,8 @@ module.exports = {
     'wire-webapp-cbor': 'CBOR',
   },
   node: {
-    fs: 'empty',
     crypto: 'empty',
+    fs: 'empty',
   },
   output: {
     filename: 'proteus.js',

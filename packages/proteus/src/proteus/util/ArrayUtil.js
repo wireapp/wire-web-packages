@@ -17,6 +17,8 @@
  *
  */
 
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
+
 const ProteusError = require('../errors/ProteusError');
 const TypeUtil = require('../util/TypeUtil');
 

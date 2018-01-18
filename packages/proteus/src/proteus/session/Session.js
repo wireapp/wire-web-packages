@@ -18,6 +18,7 @@
  */
 
 /* eslint no-magic-numbers: "off" */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = require('wire-webapp-cbor');
 
@@ -144,19 +145,19 @@ class Session {
       if (pkmsg.prekey_id < PreKey.MAX_PREKEY_ID) {
         MemoryUtil.zeroize(prekey_store.prekeys[pkmsg.prekey_id]);
         try {
-          const store = await prekey_store
-          store.remove(pkmsg.prekey_id)
+          const store = await prekey_store;
+          store.remove(pkmsg.prekey_id);
           return [session, plain];
-        } catch(err) {
-              throw new DecryptError.PrekeyNotFound(
-                `Could not delete PreKey: ${error.message}`,
-                DecryptError.CODE.CASE_203
-              );
-          }
+        } catch (err) {
+          throw new DecryptError.PrekeyNotFound(
+            `Could not delete PreKey: ${error.message}`,
+            DecryptError.CODE.CASE_203
+          );
+        }
       }
       return [session, plain];
-    } catch(error) {
-      throw new Error(error)
+    } catch (error) {
+      throw new Error(error);
     }
   }
 
@@ -246,14 +247,7 @@ class Session {
   async encrypt(plaintext) {
     const state = this.session_states[this.session_tag];
 
-    console.log(state.state.encrypt)
-
-    return await state.state.encrypt(
-      this.local_identity.public_key,
-      this.pending_prekey,
-      this.session_tag,
-      plaintext
-    );
+    return await state.state.encrypt(this.local_identity.public_key, this.pending_prekey, this.session_tag, plaintext);
   }
 
   /**

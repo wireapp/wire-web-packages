@@ -80,7 +80,7 @@ describe('Envelope', () => {
     const envelope_bytes = envelope.serialise();
     const envelope_copy = Proteus.message.Envelope.deserialise(envelope_bytes);
 
-    const envelope_copy_verified = await envelope.verify(mac_key);
+    const envelope_copy_verified = await envelope_copy.verify(mac_key);
 
     assert(envelope_copy_verified);
   });

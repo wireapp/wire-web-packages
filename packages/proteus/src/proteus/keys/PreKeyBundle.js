@@ -18,6 +18,7 @@
  */
 
 /* eslint no-magic-numbers: "off" */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = require('wire-webapp-cbor');
 const sodium = require('libsodium-wrappers-sumo');

@@ -17,6 +17,8 @@
  *
  */
 
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
+
 const sodium = require('libsodium-wrappers-sumo');
 
 const ArrayUtil = require('../util/ArrayUtil');

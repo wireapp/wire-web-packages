@@ -37,12 +37,11 @@ class TestStore extends Proteus.session.PreKeyStore {
 
 const assert_init_from_message = async (ident, store, msg, expected) => {
   try {
-    return await Proteus.session.Session.init_from_message(ident, store, msg)
-      .then(messageArray => {
-        const [session, message] = messageArray;
-        assert.strictEqual(sodium.to_string(message), expected);
-        resolve(session);
-      })
+    return await Proteus.session.Session.init_from_message(ident, store, msg).then(messageArray => {
+      const [session, message] = messageArray;
+      assert.strictEqual(sodium.to_string(message), expected);
+      resolve(session);
+    });
   } catch (error) {
     throw new Error(error);
   }
@@ -61,10 +60,6 @@ const assert_decrypt = (expected, decryptedPromise) => {
   });
 };
 
-const assert_prev_count = (session, expected) => {
-  assert.strictEqual(expected, session.session_states[session.session_tag].state.prev_counter);
-};
-
 const assert_serialise_deserialise = async (local_identity, session) => {
   const bytes = session.serialise();
 
@@ -78,7 +73,7 @@ const assert_serialise_deserialise = async (local_identity, session) => {
 describe('LongRunning', () => {
   describe('Session', () => {
     it('should handle mass communication', async done => {
-      //try {
+      try {
         const alice_ident = await Proteus.keys.IdentityKeyPair.new();
         const bob_ident = await Proteus.keys.IdentityKeyPair.new();
 
@@ -97,7 +92,9 @@ describe('LongRunning', () => {
         const bob_session = await assert_init_from_message(bob_ident, bob_store, hello_bob, 'Hello Bob!');
 
         // XXX: need to serialize/deserialize to/from CBOR here
-        const messages = await Promise.all(Array.from({length: 999}, async () => await bob_session.encrypt('Hello Alice!')));
+        const messages = await Promise.all(
+          Array.from({length: 999}, async () => await bob_session.encrypt('Hello Alice!'))
+        );
 
         await Promise.all(
           messages.map(message =>
@@ -110,9 +107,9 @@ describe('LongRunning', () => {
         await assert_serialise_deserialise(alice_ident, alice_session);
         await assert_serialise_deserialise(bob_ident, bob_session);
         done();
-      /*} catch (error) {
+      } catch (error) {
         done(new Error(error));
-      }*/
+      }
     });
 
     it('pathological case', async function(done) {

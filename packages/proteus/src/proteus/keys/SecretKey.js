@@ -17,6 +17,8 @@
  *
  */
 
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
+
 const CBOR = require('wire-webapp-cbor');
 const ed2curve = require('ed2curve');
 const sodium = require('libsodium-wrappers-sumo');
