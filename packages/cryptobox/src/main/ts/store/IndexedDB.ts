@@ -21,7 +21,6 @@ export default class IndexedDB implements CryptoboxStore {
   constructor(identifier: string | Dexie) {
     this.logger = logdown('cryptobox.store.IndexedDB', {
       markdown: false,
-      logger: console,
     });
 
     if (typeof indexedDB === 'undefined') {

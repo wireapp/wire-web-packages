@@ -11,7 +11,6 @@ export default class Cache implements CryptoboxStore {
   constructor() {
     this.logger = logdown('cryptobox.store.Cache', {
       markdown: false,
-      logger: console,
     });
   }
 

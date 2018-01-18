@@ -45,7 +45,6 @@ export class Cryptobox extends EventEmitter {
 
     this.logger = logdown('cryptobox.Cryptobox', {
       markdown: false,
-      logger: console,
     });
 
     this.cachedPreKeys = [];
