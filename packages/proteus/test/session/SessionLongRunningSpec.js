@@ -64,7 +64,6 @@ const assert_serialise_deserialise = async (local_identity, session) => {
   const bytes = session.serialise();
 
   const deser = await Proteus.session.Session.deserialise(local_identity, bytes);
-  console.log('deser', deser);
   const deser_bytes = deser.serialise();
 
   assert.deepEqual(sodium.to_hex(new Uint8Array(bytes)), sodium.to_hex(new Uint8Array(deser_bytes)));

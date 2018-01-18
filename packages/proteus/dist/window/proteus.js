@@ -274,6 +274,8 @@ module.exports = ClassUtil;
  *
  */
 
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
+
 const CBOR = __webpack_require__(2);
 const ed2curve = __webpack_require__(20);
 const sodium = __webpack_require__(5);
@@ -455,6 +457,7 @@ module.exports = ProteusError;
  */
 
 /* eslint no-magic-numbers: "off" */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = __webpack_require__(2);
 const ed2curve = __webpack_require__(20);
@@ -594,6 +597,8 @@ module.exports = KeyPair;
  *
  */
 
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
+
 const CBOR = __webpack_require__(2);
 const sodium = __webpack_require__(5);
 
@@ -699,6 +704,7 @@ module.exports = IdentityKey;
  */
 
 /* eslint no-magic-numbers: "off" */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = __webpack_require__(2);
 
@@ -1078,6 +1084,7 @@ module.exports = ProteusError.DecryptError = DecryptError;
  */
 
 /* eslint no-magic-numbers: "off" */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = __webpack_require__(2);
 
@@ -1206,6 +1213,7 @@ module.exports = IdentityKeyPair;
  */
 
 /* eslint no-magic-numbers: "off" */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = __webpack_require__(2);
 
@@ -1292,6 +1300,7 @@ const PreKeyMessage = __webpack_require__(14);
  */
 
 /* eslint no-magic-numbers: "off" */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = __webpack_require__(2);
 
@@ -1421,6 +1430,7 @@ module.exports = PreKeyMessage;
  */
 
 /* eslint no-magic-numbers: "off" */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = __webpack_require__(2);
 
@@ -1447,17 +1457,16 @@ class Envelope {
    * @param {!message.Message} message
    * @returns {Envelope}
    */
-  static new(mac_key, message) {
+  static async new(mac_key, message) {
     //TypeUtil.assert_is_instance(MacKey, mac_key);
     //TypeUtil.assert_is_instance(Message, message);
 
     const serialized_message = new Uint8Array(message.serialise());
-    console.log(serialized_message)
 
     const env = ClassUtil.new_instance(Envelope);
 
     env.version = 1;
-    env.mac = mac_key.sign(serialized_message);
+    env.mac = await mac_key.sign(serialized_message);
     env.message = message;
     env._message_enc = serialized_message;
 
@@ -1469,9 +1478,9 @@ class Envelope {
    * @param {!derived.MacKey} mac_key The remote party's MacKey
    * @returns {boolean}
    */
-  verify(mac_key) {
+  async verify(mac_key) {
     //TypeUtil.assert_is_instance(MacKey, mac_key);
-    return mac_key.verify(this.mac, this._message_enc);
+    return await mac_key.verify(this.mac, this._message_enc);
   }
 
   /** @returns {ArrayBuffer} - The serialized message envelope */
@@ -1585,8 +1594,10 @@ module.exports = Envelope;
  *
  */
 
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
+
 const CBOR = __webpack_require__(2);
-const sodium = __webpack_require__(5);
+const _sodium = __webpack_require__(5);
 
 const ClassUtil = __webpack_require__(3);
 const DontCallConstructor = __webpack_require__(0);
@@ -1621,7 +1632,10 @@ class MacKey {
    * @param {!(string|Uint8Array)} msg
    * @returns {Uint8Array}
    */
-  sign(msg) {
+  async sign(msg) {
+    await _sodium.ready;
+    const sodium = _sodium;
+
     return sodium.crypto_auth_hmacsha256(msg, this.key);
   }
 
@@ -1631,7 +1645,10 @@ class MacKey {
    * @param {!Uint8Array} message Unsigned message
    * @returns {boolean}
    */
-  verify(signature, message) {
+  async verify(signature, message) {
+    await _sodium.ready;
+    const sodium = _sodium;
+
     return sodium.crypto_auth_hmacsha256_verify(signature, message, this.key);
   }
 
@@ -1744,6 +1761,7 @@ module.exports = MemoryUtil;
  */
 
 /* eslint no-magic-numbers: "off" */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = __webpack_require__(2);
 
@@ -1790,8 +1808,8 @@ class ChainKey {
   }
 
   /** @returns {session.MessageKeys} */
-  message_keys() {
-    const base = this.key.sign('0');
+  async message_keys() {
+    const base = await this.key.sign('0');
     const derived_secrets = DerivedSecrets.kdf_without_salt(base, 'hash_ratchet');
     return MessageKeys.new(derived_secrets.cipher_key, derived_secrets.mac_key, this.idx);
   }
@@ -2211,6 +2229,8 @@ module.exports = ProteusError.InputError = InputError;
  *
  */
 
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
+
 const CBOR = __webpack_require__(2);
 const ed2curve = __webpack_require__(20);
 const sodium = __webpack_require__(5);
@@ -2333,6 +2353,7 @@ module.exports = SecretKey;
  */
 
 /* eslint no-magic-numbers: "off" */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = __webpack_require__(2);
 const sodium = __webpack_require__(5);
@@ -2539,6 +2560,7 @@ module.exports = PreKeyBundle;
  */
 
 /* eslint no-magic-numbers: "off" */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = __webpack_require__(2);
 
@@ -2705,6 +2727,7 @@ module.exports = PreKey;
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = __webpack_require__(2);
 const sodium = __webpack_require__(5);
@@ -2879,6 +2902,8 @@ module.exports = DerivedSecrets;
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
+
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = __webpack_require__(2);
 const sodium = __webpack_require__(5);
@@ -3092,6 +3117,7 @@ module.exports = PreKeyStore;
  */
 
 /* eslint no-magic-numbers: "off" */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = __webpack_require__(2);
 
@@ -3182,8 +3208,8 @@ class Session {
    * @throws {errors.DecryptError.InvalidMessage}
    * @throws {errors.DecryptError.PrekeyNotFound}
    */
-  static init_from_message(our_identity, prekey_store, envelope) {
-    return new Promise((resolve, reject) => {
+  static async init_from_message(our_identity, prekey_store, envelope) {
+    try {
       //TypeUtil.assert_is_instance(IdentityKeyPair, our_identity);
       //TypeUtil.assert_is_instance(PreKeyStore, prekey_store);
       //TypeUtil.assert_is_instance(Envelope, envelope);
@@ -3211,30 +3237,27 @@ class Session {
       session.pending_prekey = null;
       session.session_states = {};
 
-      return session
-        ._new_state(prekey_store, pkmsg)
-        .then(async state => {
-          const plain = await state.decrypt(envelope, pkmsg.message);
-          session._insert_session_state(pkmsg.message.session_tag, state);
+      const state = await session._new_state(prekey_store, pkmsg);
+      const plain = await state.decrypt(envelope, pkmsg.message);
+      session._insert_session_state(pkmsg.message.session_tag, state);
 
-          if (pkmsg.prekey_id < PreKey.MAX_PREKEY_ID) {
-            MemoryUtil.zeroize(prekey_store.prekeys[pkmsg.prekey_id]);
-            return prekey_store
-              .remove(pkmsg.prekey_id)
-              .then(() => resolve([session, plain]))
-              .catch(error => {
-                reject(
-                  new DecryptError.PrekeyNotFound(
-                    `Could not delete PreKey: ${error.message}`,
-                    DecryptError.CODE.CASE_203
-                  )
-                );
-              });
-          }
-          return resolve([session, plain]);
-        })
-        .catch(reject);
-    });
+      if (pkmsg.prekey_id < PreKey.MAX_PREKEY_ID) {
+        MemoryUtil.zeroize(prekey_store.prekeys[pkmsg.prekey_id]);
+        try {
+          const store = await prekey_store;
+          store.remove(pkmsg.prekey_id);
+          return [session, plain];
+        } catch (err) {
+          throw new DecryptError.PrekeyNotFound(
+            `Could not delete PreKey: ${error.message}`,
+            DecryptError.CODE.CASE_203
+          );
+        }
+      }
+      return [session, plain];
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   /**
@@ -3320,19 +3343,10 @@ class Session {
    * @param {!(String|Uint8Array)} plaintext - The plaintext which needs to be encrypted
    * @return {Promise<message.Envelope>} Encrypted message
    */
-  encrypt(plaintext) {
-    return new Promise((resolve, reject) => {
-      const state = this.session_states[this.session_tag];
+  async encrypt(plaintext) {
+    const state = this.session_states[this.session_tag];
 
-      const result = state.state.encrypt(
-        this.local_identity.public_key,
-        this.pending_prekey,
-        this.session_tag, plaintext
-      );
-
-
-      resolve(result);
-    });
+    return await state.state.encrypt(this.local_identity.public_key, this.pending_prekey, this.session_tag, plaintext);
   }
 
   /**
@@ -3436,12 +3450,12 @@ class Session {
    * @param {!ArrayBuffer} buf
    * @returns {Session}
    */
-  static deserialise(local_identity, buf) {
+  static async deserialise(local_identity, buf) {
     //TypeUtil.assert_is_instance(IdentityKeyPair, local_identity);
     //TypeUtil.assert_is_instance(ArrayBuffer, buf);
 
     const decoder = new CBOR.Decoder(buf);
-    return this.decode(local_identity, decoder);
+    return await this.decode(local_identity, decoder);
   }
 
   /**
@@ -3485,7 +3499,7 @@ class Session {
    * @param {!CBOR.Decoder} decoder
    * @returns {Session}
    */
-  static decode(local_identity, decoder) {
+  static async decode(local_identity, decoder) {
     //TypeUtil.assert_is_instance(IdentityKeyPair, local_identity);
     //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
@@ -3597,6 +3611,8 @@ const SessionState = __webpack_require__(37);
  *
  */
 
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
+
 const ProteusError = __webpack_require__(6);
 const TypeUtil = __webpack_require__(1);
 
@@ -3668,6 +3684,7 @@ module.exports = ArrayUtil;
  */
 
 /* eslint no-magic-numbers: "off" */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = __webpack_require__(2);
 
@@ -6318,6 +6335,7 @@ module.exports = {random_bytes};
  */
 
 /* eslint no-magic-numbers: "off" */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = __webpack_require__(2);
 
@@ -6471,7 +6489,7 @@ class SessionState {
    * @param {!(string|Uint8Array)} plaintext - The plaintext to encrypt
    * @returns {message.Envelope}
    */
-  encrypt(identity_key, pending, tag, plaintext) {
+  async encrypt(identity_key, pending, tag, plaintext) {
     if (pending) {
       //TypeUtil.assert_is_integer(pending[0]);
       //TypeUtil.assert_is_instance(PublicKey, pending[1]);
@@ -6479,7 +6497,7 @@ class SessionState {
     //TypeUtil.assert_is_instance(IdentityKey, identity_key);
     //TypeUtil.assert_is_instance(SessionTag, tag);
 
-    const msgkeys = this.send_chain.chain_key.message_keys();
+    const msgkeys = await this.send_chain.chain_key.message_keys();
 
     let message = CipherMessage.new(
       tag,
@@ -6493,7 +6511,7 @@ class SessionState {
       message = PreKeyMessage.new(pending[0], pending[1], identity_key, message);
     }
 
-    const env = Envelope.new(msgkeys.mac_key, message);
+    const env = await Envelope.new(msgkeys.mac_key, message);
     this.send_chain.chain_key = this.send_chain.chain_key.next();
     return env;
   }
@@ -6518,11 +6536,13 @@ class SessionState {
 
     const recv_chain = this.recv_chains[idx];
     if (message.counter < recv_chain.chain_key.idx) {
-      return recv_chain.try_message_keys(envelope, message);
+      return await recv_chain.try_message_keys(envelope, message);
     } else if (message.counter == recv_chain.chain_key.idx) {
       const mks = recv_chain.chain_key.message_keys();
 
-      if (!envelope.verify(mks.mac_key)) {
+      const envelope_verified = await envelope.verify(mk.mac_key);
+
+      if (!envelope_verified) {
         throw new DecryptError.InvalidSignature(
           `Envelope verification failed for message with counters in sync at '${message.counter}'`,
           DecryptError.CODE.CASE_206
@@ -6537,7 +6557,9 @@ class SessionState {
     } else if (message.counter > recv_chain.chain_key.idx) {
       const [chk, mk, mks] = recv_chain.stage_message_keys(message);
 
-      if (!envelope.verify(mk.mac_key)) {
+      const envelope_verified = await envelope.verify(mk.mac_key);
+
+      if (!envelope_verified) {
         throw new DecryptError.InvalidSignature(
           `Envelope verification failed for message with counter ahead. Message index is '${
             message.counter
@@ -6658,6 +6680,8 @@ module.exports = SessionState;
  *
  */
 
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
+
 const sodium = __webpack_require__(5);
 
 const ArrayUtil = __webpack_require__(30);
@@ -6773,6 +6797,7 @@ module.exports = KeyDerivationUtil;
  */
 
 /* eslint no-magic-numbers: "off" */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = __webpack_require__(2);
 
@@ -6823,7 +6848,7 @@ class RecvChain {
    * @param {!message.CipherMessage} msg
    * @returns {Uint8Array}
    */
-  try_message_keys(envelope, msg) {
+  async try_message_keys(envelope, msg) {
     //TypeUtil.assert_is_instance(Envelope, envelope);
     //TypeUtil.assert_is_instance(CipherMessage, msg);
 
@@ -6835,6 +6860,7 @@ class RecvChain {
     }
 
     const idx = this.message_keys.findIndex(mk => {
+      console.log('mk', mk)
       return mk.counter === msg.counter;
     });
 
@@ -6843,7 +6869,9 @@ class RecvChain {
     }
 
     const mk = this.message_keys.splice(idx, 1)[0];
-    if (!envelope.verify(mk.mac_key)) {
+    const envelope_verified = await envelope.verify(mk.mac_key);
+
+    if (!envelope_verified) {
       const message = `Envelope verification failed for message with counter behind. Message index is '${
         msg.counter
       }' while receive chain index is '${this.chain_key.idx}'.`;
@@ -7005,6 +7033,8 @@ module.exports = RecvChain;
  *
  */
 
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
+
 const CBOR = __webpack_require__(2);
 
 const ClassUtil = __webpack_require__(3);
@@ -7115,6 +7145,7 @@ module.exports = RootKey;
  */
 
 /* eslint no-magic-numbers: "off" */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = __webpack_require__(2);
 

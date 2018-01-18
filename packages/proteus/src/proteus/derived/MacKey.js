@@ -58,8 +58,7 @@ class MacKey {
   async sign(msg) {
     await _sodium.ready;
     const sodium = _sodium;
-
-    return sodium.crypto_auth_hmacsha256(msg, this.key);
+    return sodium.crypto_auth_hmacsha256(msg, await this.key);
   }
 
   /**

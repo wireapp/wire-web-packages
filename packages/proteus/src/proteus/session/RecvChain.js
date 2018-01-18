@@ -80,9 +80,7 @@ class RecvChain {
       throw new DecryptError.OutdatedMessage(message, DecryptError.CODE.CASE_208);
     }
 
-    const idx = this.message_keys.findIndex(mk => {
-      return mk.counter === msg.counter;
-    });
+    const idx = this.message_keys.findIndex(mk => mk.counter === msg.counter);
 
     if (idx === -1) {
       throw new DecryptError.DuplicateMessage(null, DecryptError.CODE.CASE_209);
