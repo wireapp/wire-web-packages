@@ -54,7 +54,7 @@ export default class CryptoboxCRUDStore implements CryptoboxStore {
     return this.engine.delete(CryptoboxCRUDStore.STORES.PRE_KEYS, prekey_id.toString()).then(() => prekey_id);
   }
 
-  public load_identity(): Promise<Proteus.keys.IdentityKeyPair> {
+  public load_identity(): Promise<Error | Proteus.keys.IdentityKeyPair> {
     return this.engine
       .read(CryptoboxCRUDStore.STORES.LOCAL_IDENTITY, CryptoboxCRUDStore.KEYS.LOCAL_IDENTITY)
       .then((payload: PersistedRecord) => {
