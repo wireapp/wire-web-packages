@@ -19,3 +19,6 @@ before_script:
 
 notifications:
   email: false
+
+after_success:
+  - if [ "$TRAVIS_BRANCH" == "master" ]; yarn release
