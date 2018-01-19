@@ -5,15 +5,14 @@ import {CryptoboxStore} from './CryptoboxStore';
 export default class Cache implements CryptoboxStore {
   private identity: Proteus.keys.IdentityKeyPair;
   private logger: Logdown;
-  private prekeys: Object = {};
-  private sessions: Object = {};
+  private prekeys: {[index: string]: Proteus.keys.PreKey | ArrayBuffer};
+  private sessions: {[index: string]: Proteus.session.Session | ArrayBuffer};
 
   constructor() {
     this.logger = new Logdown({alignOutput: true, markdown: false, prefix: 'cryptobox.store.Cache'});
   }
 
   public delete_all(): Promise<boolean> {
-    this.identity = undefined;
     this.prekeys = {};
     this.sessions = {};
     return Promise.resolve(true);
@@ -35,12 +34,13 @@ export default class Cache implements CryptoboxStore {
   }
 
   public load_prekey(prekey_id: number): Promise<Proteus.keys.PreKey> {
-    const serialised: ArrayBuffer = this.prekeys[prekey_id];
+    const serialised: ArrayBuffer = <ArrayBuffer>this.prekeys[prekey_id];
+
     if (serialised) {
       return Promise.resolve(Proteus.keys.PreKey.deserialise(serialised));
     }
 
-    return Promise.resolve(undefined);
+    return Promise.reject(new Error(`No PreKey found with ID "${prekey_id}".`));
   }
 
   public load_prekeys(): Promise<Array<Proteus.keys.PreKey>> {
@@ -53,7 +53,7 @@ export default class Cache implements CryptoboxStore {
   }
 
   public read_session(identity: Proteus.keys.IdentityKeyPair, session_id: string): Promise<Proteus.session.Session> {
-    const serialised: ArrayBuffer = this.sessions[session_id];
+    const serialised: ArrayBuffer = <ArrayBuffer>this.sessions[session_id];
     if (serialised) {
       return Promise.resolve(Proteus.session.Session.deserialise(identity, serialised));
     }
