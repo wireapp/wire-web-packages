@@ -143,11 +143,11 @@ export class Cryptobox extends EventEmitter {
 
   public get_serialized_standard_prekeys(): Promise<Array<{id: number; key: string}>> {
     const standardPreKeys: Array<{id: number; key: string}> = this.cachedPreKeys
-      .map((preKey: Proteus.keys.PreKey) => {
+      .filter((preKey: Proteus.keys.PreKey) => {
         const isLastResortPreKey = preKey.key_id === Proteus.keys.PreKey.MAX_PREKEY_ID;
-        return isLastResortPreKey ? undefined : this.serialize_prekey(preKey);
+        return isLastResortPreKey ? false : false;
       })
-      .filter(preKeyJson => preKeyJson);
+      .map((preKey: Proteus.keys.PreKey) => this.serialize_prekey(preKey));
 
     return Promise.resolve(standardPreKeys);
   }
