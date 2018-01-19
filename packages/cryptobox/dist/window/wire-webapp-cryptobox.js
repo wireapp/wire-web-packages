@@ -1,4 +1,4 @@
-/*! @wireapp/cryptobox v6.3.0 */
+/*! @wireapp/cryptobox v6.3.1 */
 var cryptobox =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -65,7 +65,7 @@ var cryptobox =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 21);
+/******/ 	return __webpack_require__(__webpack_require__.s = 22);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -114,16 +114,22 @@ exports.DecryptionError = DecryptionError;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var RecordAlreadyExistsError_1 = __webpack_require__(18);
+var RecordAlreadyExistsError_1 = __webpack_require__(19);
 exports.RecordAlreadyExistsError = RecordAlreadyExistsError_1.default;
-var RecordNotFoundError_1 = __webpack_require__(19);
+var RecordNotFoundError_1 = __webpack_require__(20);
 exports.RecordNotFoundError = RecordNotFoundError_1.default;
-var RecordTypeError_1 = __webpack_require__(20);
+var RecordTypeError_1 = __webpack_require__(21);
 exports.RecordTypeError = RecordTypeError_1.default;
 
 
 /***/ }),
 /* 3 */
+/***/ (function(module, exports) {
+
+module.exports = Logdown;
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -139,15 +145,15 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+var logdown = __webpack_require__(3);
 var Proteus = __webpack_require__(0);
-var EventEmitter = __webpack_require__(13);
-
-var LRUCache = __webpack_require__(25);
-var error_1 = __webpack_require__(6);
-var CryptoboxSession_1 = __webpack_require__(4);
+var EventEmitter = __webpack_require__(14);
+var LRUCache = __webpack_require__(26);
+var error_1 = __webpack_require__(7);
+var CryptoboxSession_1 = __webpack_require__(5);
 var DecryptionError_1 = __webpack_require__(1);
-var InvalidPreKeyFormatError_1 = __webpack_require__(5);
-var ReadOnlyStore_1 = __webpack_require__(7);
+var InvalidPreKeyFormatError_1 = __webpack_require__(6);
+var ReadOnlyStore_1 = __webpack_require__(8);
 var Cryptobox = /** @class */ (function (_super) {
     __extends(Cryptobox, _super);
     /**
@@ -164,54 +170,57 @@ var Cryptobox = /** @class */ (function (_super) {
         if (minimumAmountOfPreKeys > Proteus.keys.PreKey.MAX_PREKEY_ID) {
             minimumAmountOfPreKeys = Proteus.keys.PreKey.MAX_PREKEY_ID;
         }
-        
+        _this.logger = logdown('cryptobox.Cryptobox', {
+            markdown: false,
+            logger: console,
+        });
         _this.cachedPreKeys = [];
         _this.cachedSessions = new LRUCache(1000);
         _this.minimumAmountOfPreKeys = minimumAmountOfPreKeys;
         _this.store = cryptoBoxStore;
         _this.pk_store = new ReadOnlyStore_1.ReadOnlyStore(_this.store);
         var storageEngine = cryptoBoxStore.constructor.name;
-        
+        _this.logger.log("Constructed Cryptobox. Minimum amount of PreKeys is \"" + minimumAmountOfPreKeys + "\". Storage engine is \"" + storageEngine + "\".");
         return _this;
     }
     Cryptobox.prototype.save_session_in_cache = function (session) {
-        
+        this.logger.log("Saving Session with ID \"" + session.id + "\" in cache...");
         this.cachedSessions.set(session.id, session);
         return session;
     };
     Cryptobox.prototype.load_session_from_cache = function (session_id) {
-        
+        this.logger.log("Trying to load Session with ID \"" + session_id + "\" from cache...");
         return this.cachedSessions.get(session_id);
     };
     Cryptobox.prototype.remove_session_from_cache = function (session_id) {
-        
+        this.logger.log("Removing Session with ID \"" + session_id + "\" from cache...");
         this.cachedSessions.delete(session_id);
     };
     Cryptobox.prototype.create = function () {
         var _this = this;
-        
+        this.logger.log("Initializing Cryptobox. Creating local identity...");
         return this.create_new_identity()
             .then(function (identity) {
             _this.identity = identity;
-            
+            _this.logger.log("Initialized Cryptobox with new local identity. Fingerprint is \"" + identity.public_key.fingerprint() + "\".", _this.identity);
             return _this.create_last_resort_prekey();
         })
             .then(function (lastResortPreKey) {
             _this.cachedPreKeys = [lastResortPreKey];
-            
+            _this.logger.log("Created Last Resort PreKey with ID \"" + lastResortPreKey.key_id + "\".", lastResortPreKey);
             return _this.init();
         });
     };
     Cryptobox.prototype.load = function () {
         var _this = this;
-        
+        this.logger.log("Initializing Cryptobox. Loading local identity...");
         return this.store
             .load_identity()
             .then(function (identity) {
             if (identity) {
-                
+                _this.logger.log("Initialized Cryptobox with existing local identity. Fingerprint is \"" + identity.public_key.fingerprint() + "\".", _this.identity);
                 _this.identity = identity;
-                
+                _this.logger.log("Loading PreKeys...");
                 return _this.store.load_prekeys();
             }
             throw new error_1.CryptoboxError('Failed to load local identity');
@@ -219,9 +228,9 @@ var Cryptobox = /** @class */ (function (_super) {
             .then(function (preKeysFromStorage) {
             var lastResortPreKey = preKeysFromStorage.find(function (preKey) { return preKey.key_id === Proteus.keys.PreKey.MAX_PREKEY_ID; });
             if (lastResortPreKey) {
-                
+                _this.logger.log("Loaded Last Resort PreKey with ID \"" + lastResortPreKey.key_id + "\".", lastResortPreKey);
                 _this.lastResortPreKey = lastResortPreKey;
-                
+                _this.logger.log("Loaded \"" + (_this.minimumAmountOfPreKeys - 1) + "\" standard PreKeys...");
                 _this.cachedPreKeys = preKeysFromStorage;
                 return _this.init();
             }
@@ -232,7 +241,7 @@ var Cryptobox = /** @class */ (function (_super) {
         var _this = this;
         return this.refill_prekeys().then(function () {
             var ids = _this.cachedPreKeys.map(function (preKey) { return preKey.key_id.toString(); });
-            
+            _this.logger.log("Initialized Cryptobox with a total amount of \"" + _this.cachedPreKeys.length + "\" PreKeys (" + ids.join(', ') + ").", _this.cachedPreKeys);
             return _this.cachedPreKeys.sort(function (a, b) { return a.key_id - b.key_id; });
         });
     };
@@ -251,7 +260,7 @@ var Cryptobox = /** @class */ (function (_super) {
     };
     Cryptobox.prototype.publish_event = function (topic, event) {
         this.emit(topic, event);
-        
+        this.logger.log("Published event \"" + topic + "\".", event);
     };
     Cryptobox.prototype.publish_prekeys = function (newPreKeys) {
         if (newPreKeys.length > 0) {
@@ -275,14 +284,14 @@ var Cryptobox = /** @class */ (function (_super) {
                     var isLastResortPreKey = currentPreKey.key_id === Proteus.keys.PreKey.MAX_PREKEY_ID;
                     return isLastResortPreKey ? currentHighestValue : Math.max(currentPreKey.key_id + 1, currentHighestValue);
                 }, 0);
-                
+                _this.logger.warn("There are not enough PreKeys in the storage. Generating \"" + missingAmount + "\" new PreKey(s), starting from ID \"" + startId + "\"...");
                 return _this.new_prekeys(startId, missingAmount);
             }
             return [];
         })
             .then(function (newPreKeys) {
             if (newPreKeys.length > 0) {
-                
+                _this.logger.log("Generated PreKeys from ID \"" + newPreKeys[0].key_id + "\" to ID \"" + newPreKeys[newPreKeys.length - 1].key_id + "\".");
                 _this.cachedPreKeys = _this.cachedPreKeys.concat(newPreKeys);
             }
             return newPreKeys;
@@ -294,7 +303,7 @@ var Cryptobox = /** @class */ (function (_super) {
             .then(function () { return _this.store.delete_all(); })
             .then(function () {
             var identity = Proteus.keys.IdentityKeyPair.new();
-            
+            _this.logger.warn("Cleaned cryptographic items prior to saving a new local identity.", identity);
             return _this.store.save_identity(identity);
         });
     };
@@ -305,7 +314,7 @@ var Cryptobox = /** @class */ (function (_super) {
     Cryptobox.prototype.session_from_prekey = function (session_id, pre_key_bundle) {
         var _this = this;
         return this.session_load(session_id).catch(function (sessionLoadError) {
-            
+            _this.logger.warn("Creating new session because session with ID \"" + session_id + "\" could not be loaded: " + sessionLoadError.message);
             var bundle;
             try {
                 bundle = Proteus.keys.PreKeyBundle.deserialise(pre_key_bundle);
@@ -334,7 +343,7 @@ var Cryptobox = /** @class */ (function (_super) {
     };
     Cryptobox.prototype.session_load = function (session_id) {
         var _this = this;
-        
+        this.logger.log("Trying to load Session with ID \"" + session_id + "\"...");
         var cachedSession = this.load_session_from_cache(session_id);
         if (cachedSession) {
             return Promise.resolve(cachedSession);
@@ -377,7 +386,7 @@ var Cryptobox = /** @class */ (function (_super) {
         var _this = this;
         return Promise.resolve()
             .then(function () {
-            
+            _this.logger.log("Creating Last Resort PreKey with ID \"" + Proteus.keys.PreKey.MAX_PREKEY_ID + "\"...");
             _this.lastResortPreKey = Proteus.keys.PreKey.last_resort();
             return _this.store.save_prekeys([_this.lastResortPreKey]);
         })
@@ -459,11 +468,11 @@ var Cryptobox = /** @class */ (function (_super) {
 }(EventEmitter));
 exports.Cryptobox = Cryptobox;
 // Note: Path to "package.json" must be relative to the "commonjs" dist files
-Cryptobox.prototype.VERSION = __webpack_require__(23).version;
+Cryptobox.prototype.VERSION = __webpack_require__(24).version;
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -502,7 +511,7 @@ exports.CryptoboxSession = CryptoboxSession;
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -535,18 +544,18 @@ exports.InvalidPreKeyFormatError = InvalidPreKeyFormatError;
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var CryptoboxError_1 = __webpack_require__(17);
+var CryptoboxError_1 = __webpack_require__(18);
 exports.CryptoboxError = CryptoboxError_1.default;
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -612,13 +621,13 @@ exports.ReadOnlyStore = ReadOnlyStore;
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Cryptobox_1 = __webpack_require__(3);
+var Cryptobox_1 = __webpack_require__(4);
 var SerialisedRecord = /** @class */ (function () {
     function SerialisedRecord(serialised, id) {
         this.created = Date.now();
@@ -632,29 +641,31 @@ exports.SerialisedRecord = SerialisedRecord;
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var logdown = __webpack_require__(3);
 var Proteus = __webpack_require__(0);
-
 var Cache = /** @class */ (function () {
     function Cache() {
         this.prekeys = {};
         this.sessions = {};
-        
+        this.logger = logdown('cryptobox.store.Cache', {
+            markdown: false,
+            logger: console,
+        });
     }
     Cache.prototype.delete_all = function () {
-        this.identity = undefined;
         this.prekeys = {};
         this.sessions = {};
         return Promise.resolve(true);
     };
     Cache.prototype.delete_prekey = function (prekey_id) {
         delete this.prekeys[prekey_id];
-        
+        this.logger.log("Deleted PreKey ID \"" + prekey_id + "\".");
         return Promise.resolve(prekey_id);
     };
     Cache.prototype.delete_session = function (session_id) {
@@ -693,7 +704,7 @@ var Cache = /** @class */ (function () {
     Cache.prototype.save_prekey = function (preKey) {
         try {
             this.prekeys[preKey.key_id] = preKey.serialise();
-            
+            this.logger.log("Saved PreKey ID \"" + preKey.key_id + "\".");
         }
         catch (error) {
             // TODO: Keep (and log) error stack trace
@@ -728,7 +739,7 @@ exports.default = Cache;
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -736,7 +747,7 @@ exports.default = Cache;
 Object.defineProperty(exports, "__esModule", { value: true });
 var Proteus = __webpack_require__(0);
 var error_1 = __webpack_require__(2);
-var SerialisedRecord_1 = __webpack_require__(8);
+var SerialisedRecord_1 = __webpack_require__(9);
 var CryptoboxCRUDStore = /** @class */ (function () {
     function CryptoboxCRUDStore(engine) {
         this.engine = engine;
@@ -875,20 +886,20 @@ var CryptoboxCRUDStore = /** @class */ (function () {
 }());
 exports.default = CryptoboxCRUDStore;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(15).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16).Buffer))
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var logdown = __webpack_require__(3);
 var Proteus = __webpack_require__(0);
-var dexie_1 = __webpack_require__(24);
-
+var dexie_1 = __webpack_require__(25);
 var error_1 = __webpack_require__(2);
-var SerialisedRecord_1 = __webpack_require__(8);
+var SerialisedRecord_1 = __webpack_require__(9);
 var IndexedDB = /** @class */ (function () {
     function IndexedDB(identifier) {
         var _this = this;
@@ -899,7 +910,10 @@ var IndexedDB = /** @class */ (function () {
             SESSIONS: 'sessions',
         };
         this.localIdentityKey = 'local_identity';
-        
+        this.logger = logdown('cryptobox.store.IndexedDB', {
+            markdown: false,
+            logger: console,
+        });
         if (typeof indexedDB === 'undefined') {
             var warning = "IndexedDB isn't supported by your platform.";
             throw new Error(warning);
@@ -914,10 +928,10 @@ var IndexedDB = /** @class */ (function () {
         }
         else {
             this.db = identifier;
-            
+            this.logger.log("Using cryptobox with existing database \"" + this.db.name + "\".");
         }
         this.db.on('blocked', function (event) {
-            
+            _this.logger.warn("Database access to \"" + _this.db.name + "\" got blocked.", event);
             _this.db.close();
         });
     }
@@ -925,7 +939,7 @@ var IndexedDB = /** @class */ (function () {
         var _this = this;
         return Promise.resolve().then(function () {
             if (entity) {
-                
+                _this.logger.log("Add record \"" + primary_key + "\" in object store \"" + store_name + "\"...", entity);
                 return _this.db[store_name].add(entity, primary_key);
             }
             throw new error_1.RecordTypeError("Entity is \"undefined\" or \"null\". Store name \"" + store_name + "\", Primary Key \"" + primary_key + "\".");
@@ -935,21 +949,21 @@ var IndexedDB = /** @class */ (function () {
         var _this = this;
         return Promise.resolve()
             .then(function () {
-            
+            _this.logger.log("Trying to load record \"" + primary_key + "\" from object store \"" + store_name + "\".");
             return _this.db[store_name].get(primary_key);
         })
             .then(function (record) {
             if (record) {
-                
+                _this.logger.log("Loaded record \"" + primary_key + "\" from object store \"" + store_name + "\".", record);
                 return record;
             }
             var message = "Record \"" + primary_key + "\" from object store \"" + store_name + "\" could not be found.";
-            
+            _this.logger.warn(message);
             throw new error_1.RecordNotFoundError(message);
         });
     };
     IndexedDB.prototype.update = function (store_name, primary_key, changes) {
-        
+        this.logger.log("Changing record \"" + primary_key + "\" in object store \"" + store_name + "\"...", changes);
         return this.db[store_name].update(primary_key, changes);
     };
     IndexedDB.prototype.delete = function (store_name, primary_key) {
@@ -959,7 +973,7 @@ var IndexedDB = /** @class */ (function () {
             return _this.db[store_name].delete(primary_key);
         })
             .then(function () {
-            
+            _this.logger.log("Deleted record with primary key \"" + primary_key + "\" from object store \"" + store_name + "\".");
             return primary_key;
         });
     };
@@ -970,15 +984,15 @@ var IndexedDB = /** @class */ (function () {
             return _this.db[_this.TABLE.LOCAL_IDENTITY].clear();
         })
             .then(function () {
-            
+            _this.logger.log("Deleted all records in object store \"" + _this.TABLE.LOCAL_IDENTITY + "\".");
             return _this.db[_this.TABLE.PRE_KEYS].clear();
         })
             .then(function () {
-            
+            _this.logger.log("Deleted all records in object store \"" + _this.TABLE.PRE_KEYS + "\".");
             return _this.db[_this.TABLE.SESSIONS].clear();
         })
             .then(function () {
-            
+            _this.logger.log("Deleted all records in object store \"" + _this.TABLE.SESSIONS + "\".");
             return true;
         });
     };
@@ -1041,7 +1055,7 @@ var IndexedDB = /** @class */ (function () {
             var fingerprint = identity.public_key.fingerprint();
             var message = "Saved local identity \"" + fingerprint + "\"" +
                 (" with key \"" + primaryKey + "\" in object store \"" + _this.TABLE.LOCAL_IDENTITY + "\".");
-            
+            _this.logger.log(message);
             return identity;
         });
     };
@@ -1051,7 +1065,7 @@ var IndexedDB = /** @class */ (function () {
         this.prekeys[prekey.key_id] = prekey;
         return this.create(this.TABLE.PRE_KEYS, payload.id, payload).then(function (primaryKey) {
             var message = "Saved PreKey (ID \"" + prekey.key_id + "\") with key \"" + primaryKey + "\" in object store \"" + _this.TABLE.PRE_KEYS + "\".";
-            
+            _this.logger.log(message);
             return prekey;
         });
     };
@@ -1067,13 +1081,13 @@ var IndexedDB = /** @class */ (function () {
             items.push(payload);
             return key;
         });
-        
+        this.logger.log("Saving a batch of \"" + items.length + "\" PreKeys (" + keys.join(', ') + ") in object store \"" + this.TABLE.PRE_KEYS + "\"...", prekeys);
         return Promise.resolve()
             .then(function () {
             return _this.db[_this.TABLE.PRE_KEYS].bulkPut(items, keys);
         })
             .then(function () {
-            
+            _this.logger.log("Saved a batch of \"" + items.length + "\" PreKeys (" + keys.join(', ') + ").", items);
             return prekeys;
         });
     };
@@ -1083,7 +1097,7 @@ var IndexedDB = /** @class */ (function () {
         return this.create(this.TABLE.SESSIONS, payload.id, payload)
             .then(function (primaryKey) {
             var message = "Added session ID \"" + session_id + "\" in object store \"" + _this.TABLE.SESSIONS + "\" with key \"" + primaryKey + "\".";
-            
+            _this.logger.log(message);
             return session;
         })
             .catch(function (error) {
@@ -1099,7 +1113,7 @@ var IndexedDB = /** @class */ (function () {
         var payload = new SerialisedRecord_1.SerialisedRecord(session.serialise(), session_id);
         return this.update(this.TABLE.SESSIONS, payload.id, { serialised: payload.serialised }).then(function (primaryKey) {
             var message = "Updated session ID \"" + session_id + "\" in object store \"" + _this.TABLE.SESSIONS + "\" with key \"" + primaryKey + "\".";
-            
+            _this.logger.log(message);
             return session;
         });
     };
@@ -1109,7 +1123,7 @@ exports.default = IndexedDB;
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1230,7 +1244,7 @@ function fromByteArray (uint8) {
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports) {
 
 // Copyright Joyent, Inc. and other Node contributors.
@@ -1538,7 +1552,7 @@ function isUndefined(arg) {
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -1628,7 +1642,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1642,9 +1656,9 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 
 
-var base64 = __webpack_require__(12)
-var ieee754 = __webpack_require__(14)
-var isArray = __webpack_require__(16)
+var base64 = __webpack_require__(13)
+var ieee754 = __webpack_require__(15)
+var isArray = __webpack_require__(17)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -3422,10 +3436,10 @@ function isnan (val) {
   return val !== val // eslint-disable-line no-self-compare
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(22)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)))
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -3436,7 +3450,7 @@ module.exports = Array.isArray || function (arr) {
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3469,7 +3483,7 @@ exports.default = CryptoboxError;
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3502,7 +3516,7 @@ exports.default = RecordAlreadyExistsError;
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3535,7 +3549,7 @@ exports.default = RecordNotFoundError;
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3568,21 +3582,21 @@ exports.default = RecordTypeError;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Cache_1 = __webpack_require__(9);
-var IndexedDB_1 = __webpack_require__(11);
-var CryptoboxCRUDStore_1 = __webpack_require__(10);
-var Cryptobox_1 = __webpack_require__(3);
-var error_1 = __webpack_require__(6);
-var CryptoboxSession_1 = __webpack_require__(4);
+var Cache_1 = __webpack_require__(10);
+var IndexedDB_1 = __webpack_require__(12);
+var CryptoboxCRUDStore_1 = __webpack_require__(11);
+var Cryptobox_1 = __webpack_require__(4);
+var error_1 = __webpack_require__(7);
+var CryptoboxSession_1 = __webpack_require__(5);
 var DecryptionError_1 = __webpack_require__(1);
-var InvalidPreKeyFormatError_1 = __webpack_require__(5);
-var ReadOnlyStore_1 = __webpack_require__(7);
+var InvalidPreKeyFormatError_1 = __webpack_require__(6);
+var ReadOnlyStore_1 = __webpack_require__(8);
 var error_2 = __webpack_require__(2);
 module.exports = {
     Cryptobox: Cryptobox_1.Cryptobox,
@@ -3607,7 +3621,7 @@ module.exports = {
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports) {
 
 var g;
@@ -3634,19 +3648,19 @@ module.exports = g;
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports) {
 
-module.exports = {"dependencies":{"@wireapp/store-engine":"0.1.4","dexie":"1.5.1","fs-extra":"5.0.0","wire-webapp-lru-cache":"2.0.0","wire-webapp-proteus":"5.2.0"},"description":"High-level API with persistent storage for Proteus.","devDependencies":{"@types/fs-extra":"5.0.0","@types/node":"8.5.7","browser-sync":"2.23.3","gulp":"3.9.1","gulp-babel":"6.1.2","gulp-bower":"0.0.13","gulp-bower-assets":"0.0.3","gulp-clean":"0.3.2","gulp-concat":"2.6.0","gulp-eslint":"3.0.1","gulp-if":"2.0.2","gulp-jasmine":"2.4.1","gulp-replace":"0.5.4","gulp-typescript":"3.1.6","gulp-util":"3.0.7","gutil":"1.6.4","karma":"1.7.0","karma-chrome-launcher":"2.1.1","karma-jasmine":"1.1.0","logdown":"2.2.0","merge2":"1.0.2","rimraf":"2.6.2","run-sequence":"1.2.2","typescript":"2.6.2","webpack":"2.3.3","yargs":"7.0.2"},"files":["dist/commonjs","dist/typings","dist/window"],"license":"GPL-3.0","main":"dist/commonjs/wire-webapp-cryptobox.js","name":"@wireapp/cryptobox","repository":"https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox","scripts":{"clear":"rimraf dist/commonjs && rimraf dist/lib","dist":"yarn clear && gulp dist --env production","postversion":"git push && git push --tags","preversion":"yarn dist && yarn test","start":"gulp","test:browser":"gulp build && gulp test_browser","test:node":"gulp dist && node dist/index.js && gulp test_node","test:rerun":"gulp test","test":"gulp test","version":"gulp build_ts_browser && git add dist/"},"types":"dist/typings/wire-webapp-cryptobox.d.ts","version":"6.3.0"}
+module.exports = {"dependencies":{"@wireapp/store-engine":"0.1.8","dexie":"2.0.1","fs-extra":"5.0.0","wire-webapp-lru-cache":"2.0.0","wire-webapp-proteus":"5.2.0"},"description":"High-level API with persistent storage for Proteus.","devDependencies":{"@types/fs-extra":"5.0.0","@types/node":"8.5.7","browser-sync":"2.23.5","cross-env":"5.1.3","gulp":"3.9.1","gulp-babel":"7.0.0","gulp-bower":"0.0.14","gulp-bower-assets":"0.0.3","gulp-clean":"0.4.0","gulp-concat":"2.6.1","gulp-eslint":"4.0.1","gulp-jasmine":"3.0.0","gulp-replace":"0.6.1","gulp-typescript":"3.1.6","gulp-util":"3.0.8","gutil":"1.6.4","karma":"1.7.0","karma-chrome-launcher":"2.1.1","karma-jasmine":"1.1.0","logdown":"3.2.3","merge2":"1.2.1","rimraf":"2.6.2","run-sequence":"2.2.1","typescript":"2.6.2","webpack":"2.3.3","yargs":"10.1.1"},"files":["dist/commonjs","dist/typings","dist/window"],"license":"GPL-3.0","main":"dist/commonjs/wire-webapp-cryptobox.js","name":"@wireapp/cryptobox","repository":"https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox","scripts":{"clear":"rimraf dist/commonjs && rimraf dist/lib","dist":"yarn clear && gulp dist --env production","start":"gulp","test:browser":"gulp build && gulp test_browser","test:node":"gulp dist && node dist/index.js && gulp test_node","test:rerun":"gulp test","test":"cross-env-shell DEBUG=* yarn dist && gulp test"},"types":"dist/typings/wire-webapp-cryptobox.d.ts","version":"6.3.1"}
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports) {
 
 module.exports = Dexie;
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports) {
 
 module.exports = LRUCache;

@@ -11,6 +11,7 @@
     "@types/fs-extra": "5.0.0",
     "@types/node": "8.5.7",
     "browser-sync": "2.23.5",
+    "cross-env": "5.1.3",
     "gulp": "3.9.1",
     "gulp-babel": "7.0.0",
     "gulp-bower": "0.0.14",
@@ -18,7 +19,6 @@
     "gulp-clean": "0.4.0",
     "gulp-concat": "2.6.1",
     "gulp-eslint": "4.0.1",
-    "gulp-if": "2.0.2",
     "gulp-jasmine": "3.0.0",
     "gulp-replace": "0.6.1",
     "gulp-typescript": "3.1.6",
@@ -27,7 +27,7 @@
     "karma": "1.7.0",
     "karma-chrome-launcher": "2.1.1",
     "karma-jasmine": "1.1.0",
-    "logdown": "2.2.0",
+    "logdown": "3.2.3",
     "merge2": "1.2.1",
     "rimraf": "2.6.2",
     "run-sequence": "2.2.1",
@@ -47,7 +47,7 @@
     "test:browser": "gulp build && gulp test_browser",
     "test:node": "gulp dist && node dist/index.js && gulp test_node",
     "test:rerun": "gulp test",
-    "test": "yarn dist && gulp test"
+    "test": "cross-env-shell DEBUG=* yarn dist && gulp test"
   },
   "types": "dist/typings/wire-webapp-cryptobox.d.ts",
   "version": "6.3.1"

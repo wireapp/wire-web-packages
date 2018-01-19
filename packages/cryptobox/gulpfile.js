@@ -23,7 +23,6 @@ const bower = require('gulp-bower');
 const browserSync = require('browser-sync').create();
 const clean = require('gulp-clean');
 const gulp = require('gulp');
-const gulpif = require('gulp-if');
 const gutil = require('gulp-util');
 const jasmine = require('gulp-jasmine');
 const karma = require('karma');
@@ -79,11 +78,7 @@ gulp.task('build_ts_node', () => {
 
   return merge([
     tsResult.dts.pipe(gulp.dest('dist/typings')),
-    tsResult.js
-      .pipe(replace('exports.default = {', 'module.exports = {'))
-      .pipe(gulpif(disableLogging, replace(/(const|var) Logdown[^\n]*/gi, '')))
-      .pipe(gulpif(disableLogging, replace(/[_]?this.logger[^\n]*/gim, '')))
-      .pipe(gulp.dest('dist/commonjs')),
+    tsResult.js.pipe(replace('exports.default = {', 'module.exports = {')).pipe(gulp.dest('dist/commonjs')),
   ]);
 });
 

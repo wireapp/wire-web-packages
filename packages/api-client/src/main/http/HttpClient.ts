@@ -16,20 +16,23 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
+const logdown = require('logdown');
 import AccessTokenData from '../auth/AccessTokenData';
 import axios, {AxiosError, AxiosPromise, AxiosRequestConfig} from 'axios';
 import {AccessTokenStore, AuthAPI} from '../auth';
 import {ContentType} from '../http';
 import PriorityQueue from '@wireapp/queue-priority/dist/commonjs/PriorityQueue';
-import Logdown = require('logdown');
 
 export default class HttpClient {
   private _authAPI: AuthAPI;
-  private logger: Logdown;
+  private logger: any;
   private requestQueue: PriorityQueue<number>;
 
   constructor(private baseURL: string, public accessTokenStore: AccessTokenStore) {
-    this.logger = new Logdown(this.constructor.name);
+    this.logger = logdown(this.constructor.name, {
+      logger: console,
+      prefixColor: '#F4DD6D',
+    });
 
     this.requestQueue = new PriorityQueue({
       maxRetries: 0,

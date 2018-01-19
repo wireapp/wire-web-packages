@@ -1,25 +1,32 @@
+const logdown = require('logdown');
 import * as Proteus from 'wire-webapp-proteus';
 import Dexie from 'dexie';
-import Logdown = require('logdown');
 import {CryptoboxStore} from './CryptoboxStore';
 import {RecordAlreadyExistsError, RecordNotFoundError, RecordTypeError} from './error';
 import {SerialisedRecord} from './SerialisedRecord';
 
+export interface DexieInstance extends Dexie {
+  [index: string]: any;
+}
+
 export default class IndexedDB implements CryptoboxStore {
   public identity: Proteus.keys.IdentityKeyPair;
 
-  private db: Dexie;
+  private db: DexieInstance;
   private prekeys: Object = {};
   private TABLE = {
     LOCAL_IDENTITY: 'keys',
     PRE_KEYS: 'prekeys',
     SESSIONS: 'sessions',
   };
-  private logger: Logdown;
+  private logger: any;
   private localIdentityKey: string = 'local_identity';
 
-  constructor(identifier: string | Dexie) {
-    this.logger = new Logdown({alignOutput: true, markdown: false, prefix: 'cryptobox.store.IndexedDB'});
+  constructor(identifier: string | DexieInstance) {
+    this.logger = logdown('cryptobox.store.IndexedDB', {
+      markdown: false,
+      logger: console,
+    });
 
     if (typeof indexedDB === 'undefined') {
       const warning = `IndexedDB isn't supported by your platform.`;
