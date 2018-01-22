@@ -103,7 +103,7 @@ class RecvChain {
    * @param {!message.CipherMessage} msg
    * @returns {Array<session.ChainKey>|session.MessageKeys}
    */
-  stage_message_keys(msg) {
+  async stage_message_keys(msg) {
     //TypeUtil.assert_is_instance(CipherMessage, msg);
 
     const num = msg.counter - this.chain_key.idx;
@@ -124,11 +124,12 @@ class RecvChain {
     let chk = this.chain_key;
 
     for (let index = 0; index <= num - 1; index++) {
-      keys.push(chk.message_keys());
+      const mk = await chk.message_keys();
+      keys.push(mk);
       chk = chk.next();
     }
 
-    const mk = chk.message_keys();
+    const mk = await chk.message_keys();
     return [chk, mk, keys];
   }
 

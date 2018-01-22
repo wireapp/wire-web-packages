@@ -221,9 +221,8 @@ class SessionState {
     if (message.counter < recv_chain.chain_key.idx) {
       return await recv_chain.try_message_keys(envelope, message);
     } else if (message.counter == recv_chain.chain_key.idx) {
-      const mks = recv_chain.chain_key.message_keys();
-
-      const envelope_verified = await envelope.verify(mk.mac_key);
+      const msgkeys = await recv_chain.chain_key.message_keys();
+      const envelope_verified = await envelope.verify(msgkeys.mac_key);
 
       if (!envelope_verified) {
         throw new DecryptError.InvalidSignature(
@@ -232,13 +231,13 @@ class SessionState {
         );
       }
 
-      const plain = mks.decrypt(message.cipher_text);
+      const plain = msgkeys.decrypt(message.cipher_text);
 
       recv_chain.chain_key = recv_chain.chain_key.next();
 
       return plain;
     } else if (message.counter > recv_chain.chain_key.idx) {
-      const [chk, mk, mks] = recv_chain.stage_message_keys(message);
+      const [chk, mk, mks] = await recv_chain.stage_message_keys(message);
 
       const envelope_verified = await envelope.verify(mk.mac_key);
 

@@ -1635,8 +1635,7 @@ class MacKey {
   async sign(msg) {
     await _sodium.ready;
     const sodium = _sodium;
-
-    return sodium.crypto_auth_hmacsha256(msg, this.key);
+    return sodium.crypto_auth_hmacsha256(msg, await this.key);
   }
 
   /**
@@ -6538,9 +6537,8 @@ class SessionState {
     if (message.counter < recv_chain.chain_key.idx) {
       return await recv_chain.try_message_keys(envelope, message);
     } else if (message.counter == recv_chain.chain_key.idx) {
-      const mks = recv_chain.chain_key.message_keys();
-
-      const envelope_verified = await envelope.verify(mk.mac_key);
+      const msgkeys = await recv_chain.chain_key.message_keys();
+      const envelope_verified = await envelope.verify(msgkeys.mac_key);
 
       if (!envelope_verified) {
         throw new DecryptError.InvalidSignature(
@@ -6549,13 +6547,13 @@ class SessionState {
         );
       }
 
-      const plain = mks.decrypt(message.cipher_text);
+      const plain = msgkeys.decrypt(message.cipher_text);
 
       recv_chain.chain_key = recv_chain.chain_key.next();
 
       return plain;
     } else if (message.counter > recv_chain.chain_key.idx) {
-      const [chk, mk, mks] = recv_chain.stage_message_keys(message);
+      const [chk, mk, mks] = await recv_chain.stage_message_keys(message);
 
       const envelope_verified = await envelope.verify(mk.mac_key);
 
@@ -6859,10 +6857,7 @@ class RecvChain {
       throw new DecryptError.OutdatedMessage(message, DecryptError.CODE.CASE_208);
     }
 
-    const idx = this.message_keys.findIndex(mk => {
-      console.log('mk', mk)
-      return mk.counter === msg.counter;
-    });
+    const idx = this.message_keys.findIndex(mk => mk.counter === msg.counter);
 
     if (idx === -1) {
       throw new DecryptError.DuplicateMessage(null, DecryptError.CODE.CASE_209);
@@ -6885,7 +6880,7 @@ class RecvChain {
    * @param {!message.CipherMessage} msg
    * @returns {Array<session.ChainKey>|session.MessageKeys}
    */
-  stage_message_keys(msg) {
+  async stage_message_keys(msg) {
     //TypeUtil.assert_is_instance(CipherMessage, msg);
 
     const num = msg.counter - this.chain_key.idx;
@@ -6906,11 +6901,12 @@ class RecvChain {
     let chk = this.chain_key;
 
     for (let index = 0; index <= num - 1; index++) {
-      keys.push(chk.message_keys());
+      const mk = await chk.message_keys();
+      keys.push(mk);
       chk = chk.next();
     }
 
-    const mk = chk.message_keys();
+    const mk = await chk.message_keys();
     return [chk, mk, keys];
   }
 
