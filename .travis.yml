@@ -27,7 +27,8 @@ notifications:
   email: false
 
 after_success:
-  - if [ "${TRAVIS_BRANCH}" == "master" ]; then
+  - |
+    if [ "${TRAVIS_BRANCH}" == "master" ]; then
       npx lerna updated && \
         echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> "${HOME}/.npmrc" && \
         yarn release
