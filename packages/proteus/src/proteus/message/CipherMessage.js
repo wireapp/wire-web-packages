@@ -40,15 +40,16 @@ class CipherMessage extends Message {
   constructor() {
     super();
     /** @type {SessionTag} */
-    this.session_tag;
+    this.session_tag = undefined;
     /** @type {number} */
-    this.counter;
+    this.counter = undefined;
     /** @type {number} */
-    this.prev_counter;
+    this.prev_counter = undefined;
     /** @type {keys.PublicKey} */
-    this.ratchet_key;
+    this.ratchet_key = undefined;
     /** @type {Uint8Array} */
-    this.cipher_text;
+    this.cipher_text = undefined;
+
     throw new DontCallConstructor(this);
   }
 

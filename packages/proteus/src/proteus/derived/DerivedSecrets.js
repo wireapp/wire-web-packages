@@ -36,9 +36,10 @@ const MacKey = require('./MacKey');
 class DerivedSecrets {
   constructor() {
     /** @type {derived.CipherKey} */
-    this.cipher_key;
+    this.cipher_key = undefined;
     /** @type {derived.MacKey} */
-    this.mac_key;
+    this.mac_key = undefined;
+
     throw new DontCallConstructor(this);
   }
 

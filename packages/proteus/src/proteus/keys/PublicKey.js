@@ -34,9 +34,10 @@ const TypeUtil = require('../util/TypeUtil');
 class PublicKey {
   constructor() {
     /** @type {Uint8Array} */
-    this.pub_edward;
+    this.pub_edward = undefined;
     /** @type {Uint8Array} */
-    this.pub_curve;
+    this.pub_curve = undefined;
+
     throw new DontCallConstructor(this);
   }
 

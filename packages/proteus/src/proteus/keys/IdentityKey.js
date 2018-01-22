@@ -36,6 +36,9 @@ const PublicKey = require('./PublicKey');
  */
 class IdentityKey {
   constructor() {
+    /** @type {PublicKey} */
+    this.public_key = undefined;
+
     throw new DontCallConstructor(this);
   }
 

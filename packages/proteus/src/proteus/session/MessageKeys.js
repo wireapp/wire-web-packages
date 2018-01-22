@@ -37,11 +37,11 @@ const MacKey = require('../derived/MacKey');
 class MessageKeys {
   constructor() {
     /** @type {derived.CipherKey} */
-    this.cipher_key;
+    this.cipher_key = undefined;
     /** @type {derived.MacKey} */
-    this.mac_key;
+    this.mac_key = undefined;
     /** @type {number} */
-    this.counter;
+    this.counter = undefined;
 
     throw new DontCallConstructor(this);
   }

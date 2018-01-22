@@ -39,11 +39,12 @@ const KeyPair = require('./KeyPair');
 class PreKey {
   constructor() {
     /** @type {number} */
-    this.key_id;
+    this.key_id = undefined;
     /** @type {keys.KeyPair} */
-    this.key_pair;
+    this.key_pair = undefined;
     /** @type {number} */
-    this.version;
+    this.version = undefined;
+
     throw new DontCallConstructor(this);
   }
 

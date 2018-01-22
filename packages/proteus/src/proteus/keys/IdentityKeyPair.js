@@ -38,11 +38,12 @@ const SecretKey = require('./SecretKey');
 class IdentityKeyPair {
   constructor() {
     /** @type {keys.IdentityKey} */
-    this.public_key;
+    this.public_key = undefined;
     /** @type {SecretKey} */
-    this.secret_key;
+    this.secret_key = undefined;
     /** @type {number} */
-    this.version;
+    this.version = undefined;
+
     throw new DontCallConstructor(this);
   }
 

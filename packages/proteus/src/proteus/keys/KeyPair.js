@@ -40,9 +40,10 @@ const SecretKey = require('./SecretKey');
 class KeyPair {
   constructor() {
     /** @type {keys.PublicKey} */
-    this.public_key;
+    this.public_key = undefined;
     /** @type {SecretKey} */
-    this.secret_key;
+    this.secret_key = undefined;
+
     throw new DontCallConstructor(this);
   }
 

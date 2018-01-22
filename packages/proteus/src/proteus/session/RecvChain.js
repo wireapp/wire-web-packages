@@ -45,11 +45,11 @@ const MessageKeys = require('./MessageKeys');
 class RecvChain {
   constructor() {
     /** @type {ChainKey} */
-    this.chain_key;
+    this.chain_key = undefined;
     /** @type {Array<MessageKeys>} */
-    this.message_keys;
+    this.message_keys = undefined;
     /** @type {keys.PublicKey} */
-    this.ratchet_key;
+    this.ratchet_key = undefined;
 
     throw new DontCallConstructor(this);
   }

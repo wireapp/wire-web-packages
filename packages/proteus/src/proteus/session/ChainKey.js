@@ -38,9 +38,10 @@ const MessageKeys = require('./MessageKeys');
 class ChainKey {
   constructor() {
     /** @type {derived.MacKey} */
-    this.key;
+    this.key = undefined;
     /** @type {number} */
-    this.idx;
+    this.idx = undefined;
+
     throw new DontCallConstructor(this);
   }
 

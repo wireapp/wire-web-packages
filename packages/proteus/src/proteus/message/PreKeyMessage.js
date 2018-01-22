@@ -42,13 +42,13 @@ class PreKeyMessage extends Message {
     super();
 
     /** @type {number} */
-    this.prekey_id;
+    this.prekey_id = undefined;
     /** @type {keys.PublicKey} */
-    this.base_key;
+    this.base_key = undefined;
     /** @type {keys.IdentityKey} */
-    this.identity_key;
+    this.identity_key = undefined;
     /** @type {CipherMessage} */
-    this.message;
+    this.message = undefined;
 
     throw new DontCallConstructor(this);
   }

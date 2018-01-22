@@ -37,9 +37,9 @@ const KeyPair = require('../keys/KeyPair');
 class SendChain {
   constructor() {
     /** @type {ChainKey} */
-    this.chain_key;
+    this.chain_key = undefined;
     /** @type {keys.KeyPair} */
-    this.ratchet_key;
+    this.ratchet_key = undefined;
 
     throw new DontCallConstructor(this);
   }

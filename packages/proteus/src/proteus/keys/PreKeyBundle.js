@@ -41,15 +41,16 @@ const PublicKey = require('./PublicKey');
 class PreKeyBundle {
   constructor() {
     /** @type {number} */
-    this.version;
+    this.version = undefined;
     /** @type {number} */
-    this.prekey_id;
+    this.prekey_id = undefined;
     /** @type {keys.PublicKey} */
-    this.public_key;
+    this.public_key = undefined;
     /** @type {keys.IdentityKey} */
-    this.identity_key;
+    this.identity_key = undefined;
     /** @type {Uint8Array} */
-    this.signature;
+    this.signature = undefined;
+
     throw new DontCallConstructor(this);
   }
 

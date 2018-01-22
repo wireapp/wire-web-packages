@@ -38,7 +38,7 @@ const PublicKey = require('../keys/PublicKey');
 class RootKey {
   constructor() {
     /** @type {derived.CipherKey} */
-    this.key;
+    this.key = undefined;
 
     throw new DontCallConstructor(this);
   }

@@ -37,7 +37,8 @@ const RandomUtil = require('../util/RandomUtil');
 class SessionTag {
   constructor() {
     /** @type {Uint8Array} */
-    this.tag;
+    this.tag = undefined;
+
     throw new DontCallConstructor(this);
   }
 

@@ -37,13 +37,13 @@ const Message = require('./Message');
 class Envelope {
   constructor() {
     /** @type {number} */
-    this.version;
+    this.version = undefined;
     /** @type {Uint8Array} */
-    this.mac;
+    this.mac = undefined;
     /** @type {Message} */
-    this.message;
+    this.message = undefined;
     /** @type {Uint8Array} */
-    this._message_enc;
+    this._message_enc = undefined;
 
     throw new DontCallConstructor(this);
   }

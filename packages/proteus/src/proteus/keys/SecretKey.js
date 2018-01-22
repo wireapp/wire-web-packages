@@ -35,9 +35,9 @@ const TypeUtil = require('../util/TypeUtil');
 class SecretKey {
   constructor() {
     /** @type {Uint8Array} */
-    this.sec_edward;
+    this.sec_edward = undefined;
     /** @type {Uint8Array} */
-    this.sec_curve;
+    this.sec_curve = undefined;
 
     throw new DontCallConstructor(this);
   }

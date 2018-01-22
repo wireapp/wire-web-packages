@@ -33,7 +33,8 @@ const TypeUtil = require('../util/TypeUtil');
 class CipherKey {
   constructor() {
     /** @type {Uint8Array} */
-    this.key;
+    this.key = undefined;
+
     throw new DontCallConstructor(this);
   }
 
