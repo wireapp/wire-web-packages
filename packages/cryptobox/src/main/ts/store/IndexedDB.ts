@@ -5,11 +5,15 @@ import {CryptoboxStore} from './CryptoboxStore';
 import {RecordAlreadyExistsError, RecordNotFoundError, RecordTypeError} from './error';
 import {SerialisedRecord} from './SerialisedRecord';
 
+export interface DexieInstance extends Dexie {
+  [index: string]: any;
+}
+
 export default class IndexedDB implements CryptoboxStore {
   public identity: Proteus.keys.IdentityKeyPair;
 
-  private db: Dexie;
-  private prekeys: Object = {};
+  private db: DexieInstance;
+  private prekeys: {[index: string]: Proteus.keys.PreKey} = {};
   private TABLE = {
     LOCAL_IDENTITY: 'keys',
     PRE_KEYS: 'prekeys',
@@ -18,7 +22,7 @@ export default class IndexedDB implements CryptoboxStore {
   private logger: Logdown;
   private localIdentityKey: string = 'local_identity';
 
-  constructor(identifier: string | Dexie) {
+  constructor(identifier: string | DexieInstance) {
     this.logger = new Logdown({alignOutput: true, markdown: false, prefix: 'cryptobox.store.IndexedDB'});
 
     if (typeof indexedDB === 'undefined') {
@@ -38,11 +42,6 @@ export default class IndexedDB implements CryptoboxStore {
       this.db = identifier;
       this.logger.log(`Using cryptobox with existing database "${this.db.name}".`);
     }
-
-    this.db.on('blocked', event => {
-      this.logger.warn(`Database access to "${this.db.name}" got blocked.`, event);
-      this.db.close();
-    });
   }
 
   private create(store_name: string, primary_key: string, entity: SerialisedRecord): Promise<string> {
@@ -58,7 +57,7 @@ export default class IndexedDB implements CryptoboxStore {
     });
   }
 
-  private read(store_name: string, primary_key: string): Promise<Object> {
+  private read<T>(store_name: string, primary_key: string): Promise<T> {
     return Promise.resolve()
       .then(() => {
         this.logger.log(`Trying to load record "${primary_key}" from object store "${store_name}".`);
@@ -123,8 +122,8 @@ export default class IndexedDB implements CryptoboxStore {
     });
   }
 
-  public load_identity(): Promise<Proteus.keys.IdentityKeyPair> {
-    return this.read(this.TABLE.LOCAL_IDENTITY, this.localIdentityKey)
+  public load_identity(): Promise<Proteus.keys.IdentityKeyPair | undefined> {
+    return this.read<SerialisedRecord>(this.TABLE.LOCAL_IDENTITY, this.localIdentityKey)
       .then((record: SerialisedRecord) => {
         return Proteus.keys.IdentityKeyPair.deserialise(record.serialised);
       })
@@ -136,8 +135,8 @@ export default class IndexedDB implements CryptoboxStore {
       });
   }
 
-  public load_prekey(prekey_id: number): Promise<Proteus.keys.PreKey> {
-    return this.read(this.TABLE.PRE_KEYS, prekey_id.toString())
+  public load_prekey(prekey_id: number): Promise<Proteus.keys.PreKey | undefined> {
+    return this.read<SerialisedRecord>(this.TABLE.PRE_KEYS, prekey_id.toString())
       .then((record: SerialisedRecord) => {
         return Proteus.keys.PreKey.deserialise(record.serialised);
       })
@@ -162,7 +161,7 @@ export default class IndexedDB implements CryptoboxStore {
   }
 
   public read_session(identity: Proteus.keys.IdentityKeyPair, session_id: string): Promise<Proteus.session.Session> {
-    return this.read(this.TABLE.SESSIONS, session_id).then((payload: SerialisedRecord) => {
+    return this.read<SerialisedRecord>(this.TABLE.SESSIONS, session_id).then((payload: SerialisedRecord) => {
       return Proteus.session.Session.deserialise(identity, payload.serialised);
     });
   }

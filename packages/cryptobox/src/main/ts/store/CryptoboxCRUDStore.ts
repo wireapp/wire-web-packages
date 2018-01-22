@@ -54,9 +54,9 @@ export default class CryptoboxCRUDStore implements CryptoboxStore {
     return this.engine.delete(CryptoboxCRUDStore.STORES.PRE_KEYS, prekey_id.toString()).then(() => prekey_id);
   }
 
-  public load_identity(): Promise<Proteus.keys.IdentityKeyPair> {
+  public load_identity(): Promise<Proteus.keys.IdentityKeyPair | undefined> {
     return this.engine
-      .read(CryptoboxCRUDStore.STORES.LOCAL_IDENTITY, CryptoboxCRUDStore.KEYS.LOCAL_IDENTITY)
+      .read<PersistedRecord>(CryptoboxCRUDStore.STORES.LOCAL_IDENTITY, CryptoboxCRUDStore.KEYS.LOCAL_IDENTITY)
       .then((payload: PersistedRecord) => {
         const record: SerialisedRecord = this.from_store(payload);
         const identity: Proteus.keys.IdentityKeyPair = Proteus.keys.IdentityKeyPair.deserialise(record.serialised);
@@ -70,9 +70,9 @@ export default class CryptoboxCRUDStore implements CryptoboxStore {
       });
   }
 
-  public load_prekey(prekey_id: number): Promise<Error | Proteus.keys.PreKey> {
+  public load_prekey(prekey_id: number): Promise<Proteus.keys.PreKey | undefined> {
     return this.engine
-      .read(CryptoboxCRUDStore.STORES.PRE_KEYS, prekey_id.toString())
+      .read<PersistedRecord>(CryptoboxCRUDStore.STORES.PRE_KEYS, prekey_id.toString())
       .then((payload: PersistedRecord) => {
         const record: SerialisedRecord = this.from_store(payload);
         return Proteus.keys.PreKey.deserialise(record.serialised);
@@ -123,10 +123,12 @@ export default class CryptoboxCRUDStore implements CryptoboxStore {
   }
 
   public read_session(identity: Proteus.keys.IdentityKeyPair, session_id: string): Promise<Proteus.session.Session> {
-    return this.engine.read(CryptoboxCRUDStore.STORES.SESSIONS, session_id).then((payload: PersistedRecord) => {
-      const record: SerialisedRecord = this.from_store(payload);
-      return Proteus.session.Session.deserialise(identity, record.serialised);
-    });
+    return this.engine
+      .read<PersistedRecord>(CryptoboxCRUDStore.STORES.SESSIONS, session_id)
+      .then((payload: PersistedRecord) => {
+        const record: SerialisedRecord = this.from_store(payload);
+        return Proteus.session.Session.deserialise(identity, record.serialised);
+      });
   }
 
   public update_session(session_id: string, session: Proteus.session.Session): Promise<Proteus.session.Session> {

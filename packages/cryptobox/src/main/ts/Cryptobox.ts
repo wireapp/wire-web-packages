@@ -98,7 +98,7 @@ export class Cryptobox extends EventEmitter {
     this.logger.log(`Initializing Cryptobox. Loading local identity...`);
     return this.store
       .load_identity()
-      .then((identity: Proteus.keys.IdentityKeyPair) => {
+      .then((identity: Proteus.keys.IdentityKeyPair | undefined) => {
         if (identity) {
           this.logger.log(
             `Initialized Cryptobox with existing local identity. Fingerprint is "${identity.public_key.fingerprint()}".`,
