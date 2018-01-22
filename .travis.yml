@@ -22,14 +22,20 @@ before_install:
 
 before_script:
   - yarn boot
+  - export IS_MASTER_BRANCH=$(if [ "${TRAVIS_BRANCH}" == "master" ]; then echo 0; else echo 1; fi)
+  - export HAS_UPDATES=$(npx lerna updated; echo $?)
+  - export WILL_RELEASE=$(if [ "${IS_MASTER_BRANCH}" == 0 ] && [ "${HAS_UPDATES}" == 0 ]; then echo 0; else echo 1; fi)
+
+script:
+  # Tests will be executed in the release phase if condition evaluates to false
+  - if [ "${WILL_RELEASE}" == 1 ]; then yarn test; fi
 
 notifications:
   email: false
 
 after_success:
   - |
-    if [ "${TRAVIS_BRANCH}" == "master" ]; then
-      npx lerna updated && \
+    if [ "${WILL_RELEASE}" == 0 ]; then
         echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> "${HOME}/.npmrc" && \
         yarn release
     fi
