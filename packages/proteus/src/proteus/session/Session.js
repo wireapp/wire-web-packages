@@ -294,7 +294,7 @@ class Session {
           const message = `Fingerprints do not match: We expected '${expected_fingerprint}', but received '${actual_fingerprint}'.`;
           throw new DecryptError.RemoteIdentityChanged(message, DecryptError.CODE.CASE_204);
         }
-        return this._decrypt_prekey_message(envelope, msg, prekey_store);
+        return resolve(this._decrypt_prekey_message(envelope, msg, prekey_store));
       }
       throw new DecryptError('Unknown message type.', DecryptError.CODE.CASE_200);
     });
