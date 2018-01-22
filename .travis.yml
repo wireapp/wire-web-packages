@@ -18,7 +18,7 @@ addons:
 # http://docs.travis-ci.com/user/build-lifecycle/
 before_install:
   - curl https://yarnpkg.com/install.sh -sSfL | bash -s --
-  - export PATH="$HOME/.yarn/bin:$PATH"
+  - export PATH="${HOME}/.yarn/bin:${PATH}"
 
 before_script:
   - yarn boot
@@ -27,4 +27,9 @@ notifications:
   email: false
 
 after_success:
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc; yarn release; fi
+  - |
+    if [ "${TRAVIS_BRANCH}" == "master" ]; then
+      npx lerna updated && \
+        echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> "${HOME}/.npmrc" && \
+        yarn release
+    fi
