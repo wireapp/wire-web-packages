@@ -1,4 +1,4 @@
-import * as Proteus from 'wire-webapp-proteus';
+import * as Proteus from '@wireapp/proteus';
 import {CryptoboxStore} from './CryptoboxStore';
 
 /**

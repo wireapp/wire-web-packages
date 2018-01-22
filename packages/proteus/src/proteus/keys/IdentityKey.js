@@ -17,7 +17,7 @@
  *
  */
 
-const CBOR = require('wire-webapp-cbor');
+const CBOR = require('@wireapp/cbor');
 const sodium = require('libsodium-wrappers-sumo');
 
 const ClassUtil = require('../util/ClassUtil');

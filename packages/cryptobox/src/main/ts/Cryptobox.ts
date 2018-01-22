@@ -1,4 +1,4 @@
-import * as Proteus from 'wire-webapp-proteus';
+import * as Proteus from '@wireapp/proteus';
 import CryptoboxCRUDStore from './store/CryptoboxCRUDStore';
 import EventEmitter = require('events');
 import Logdown = require('logdown');

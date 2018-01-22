@@ -1,4 +1,4 @@
-import * as Proteus from 'wire-webapp-proteus';
+import * as Proteus from '@wireapp/proteus';
 import Logdown = require('logdown');
 import {CryptoboxStore} from './CryptoboxStore';
 

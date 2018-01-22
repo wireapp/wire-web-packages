@@ -19,7 +19,7 @@
 
 /* eslint no-magic-numbers: "off" */
 
-const CBOR = require('wire-webapp-cbor');
+const CBOR = require('@wireapp/cbor');
 
 const ClassUtil = require('../util/ClassUtil');
 const DontCallConstructor = require('../errors/DontCallConstructor');
@@ -36,6 +36,15 @@ const Message = require('./Message');
  */
 class Envelope {
   constructor() {
+    /** @type {number} */
+    this.version;
+    /** @type {Uint8Array} */
+    this.mac;
+    /** @type {Message} */
+    this.message;
+    /** @type {Uint8Array} */
+    this._message_enc;
+
     throw new DontCallConstructor(this);
   }
 

@@ -19,7 +19,7 @@
 
 /* eslint no-magic-numbers: "off" */
 
-const CBOR = require('wire-webapp-cbor');
+const CBOR = require('@wireapp/cbor');
 const sodium = require('libsodium-wrappers-sumo');
 
 const ClassUtil = require('../util/ClassUtil');
@@ -40,6 +40,16 @@ const PublicKey = require('./PublicKey');
  */
 class PreKeyBundle {
   constructor() {
+    /** @type {number} */
+    this.version;
+    /** @type {number} */
+    this.prekey_id;
+    /** @type {keys.PublicKey} */
+    this.public_key;
+    /** @type {keys.IdentityKey} */
+    this.identity_key;
+    /** @type {Uint8Array} */
+    this.signature;
     throw new DontCallConstructor(this);
   }
 

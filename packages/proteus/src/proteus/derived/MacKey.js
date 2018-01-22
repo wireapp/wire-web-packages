@@ -17,7 +17,7 @@
  *
  */
 
-const CBOR = require('wire-webapp-cbor');
+const CBOR = require('@wireapp/cbor');
 const sodium = require('libsodium-wrappers-sumo');
 
 const ClassUtil = require('../util/ClassUtil');
@@ -32,6 +32,8 @@ const TypeUtil = require('../util/TypeUtil');
  */
 class MacKey {
   constructor() {
+    /** @type {Uint8Array} */
+    this.key;
     throw new DontCallConstructor(this);
   }
 
@@ -43,7 +45,6 @@ class MacKey {
     TypeUtil.assert_is_instance(Uint8Array, key);
 
     const mk = ClassUtil.new_instance(MacKey);
-    /** @type {Uint8Array} */
     mk.key = key;
     return mk;
   }

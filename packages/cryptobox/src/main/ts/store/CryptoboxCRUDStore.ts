@@ -1,4 +1,4 @@
-import * as Proteus from 'wire-webapp-proteus';
+import * as Proteus from '@wireapp/proteus';
 import PersistedRecord from './PersistedRecord';
 import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine';
 import {CryptoboxStore} from './CryptoboxStore';
