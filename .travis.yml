@@ -24,7 +24,7 @@ before_script:
   - yarn boot
   - export IS_MASTER_BRANCH=$(if [ "${TRAVIS_BRANCH}" == "master" ]; then echo 0; else echo 1; fi)
   - export HAS_UPDATES=$(npx lerna updated; echo $?)
-  - export WILL_RELEASE=$(if [ "${IS_MASTER_BRANCH}" == 0 ] && [ "${HAS_UPDATES}" == 0 ]; then echo 0; fi)
+  - export WILL_RELEASE=$(if [ "${IS_MASTER_BRANCH}" == 0 ] && [ "${HAS_UPDATES}" == 0 ]; then echo 0; else echo 1; fi)
   - echo "IS_MASTER_BRANCH = ${IS_MASTER_BRANCH}"
   - echo "HAS_UPDATES = ${HAS_UPDATES}"
   - echo "WILL_RELEASE = ${WILL_RELEASE}"
