@@ -150,7 +150,7 @@ export class Cryptobox extends EventEmitter {
     const standardPreKeys: Array<{id: number; key: string}> = this.cachedPreKeys
       .filter((preKey: Proteus.keys.PreKey) => {
         const isLastResortPreKey = preKey.key_id === Proteus.keys.PreKey.MAX_PREKEY_ID;
-        return isLastResortPreKey ? false : false;
+        return !isLastResortPreKey;
       })
       .map((preKey: Proteus.keys.PreKey) => this.serialize_prekey(preKey));
 

@@ -30,7 +30,7 @@ describe('cryptobox.CryptoboxSession', () => {
       done();
     } else {
       cryptobox = require('../../dist/commonjs/wire-webapp-cryptobox');
-      Proteus = require('wire-webapp-proteus');
+      Proteus = require('@wireapp/proteus');
       sodium = require('libsodium');
       done();
     }
@@ -74,7 +74,7 @@ describe('cryptobox.CryptoboxSession', () => {
         })
         .catch(error => {
           console.log('Error in Test Alice setup!');
-          reject(error);
+          throw error;
         });
     }
 

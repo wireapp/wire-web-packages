@@ -1,6 +1,7 @@
 import * as Proteus from '@wireapp/proteus';
 import Logdown = require('logdown');
 import {CryptoboxStore} from './CryptoboxStore';
+import {CryptoboxError} from '../error/';
 
 export default class Cache implements CryptoboxStore {
   private identity: Proteus.keys.IdentityKeyPair;
@@ -13,6 +14,7 @@ export default class Cache implements CryptoboxStore {
   }
 
   public delete_all(): Promise<boolean> {
+    delete this.identity;
     this.prekeys = {};
     this.sessions = {};
     return Promise.resolve(true);
@@ -40,7 +42,7 @@ export default class Cache implements CryptoboxStore {
       return Promise.resolve(Proteus.keys.PreKey.deserialise(serialised));
     }
 
-    return Promise.reject(new Error(`No PreKey found with ID "${prekey_id}".`));
+    return Promise.reject(new CryptoboxError(`No PreKey found with ID "${prekey_id}".`));
   }
 
   public load_prekeys(): Promise<Array<Proteus.keys.PreKey>> {

@@ -7,12 +7,12 @@ module.exports = {
     filename: `${__dirname}/dist/commonjs/wire-webapp-cryptobox.js`,
   },
   externals: {
+    '@wireapp/proteus': 'Proteus',
     bazinga64: true,
     dexie: 'Dexie',
     'fs-extra': false,
     logdown: 'Logdown',
     'wire-webapp-lru-cache': 'LRUCache',
-    'wire-webapp-proteus': 'Proteus',
   },
   node: {
     fs: 'empty',

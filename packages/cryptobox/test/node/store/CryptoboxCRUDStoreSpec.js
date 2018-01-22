@@ -23,7 +23,7 @@ const cryptobox = require('../../../dist/commonjs/wire-webapp-cryptobox');
 const fs = require('fs-extra');
 const LRUCache = require('wire-webapp-lru-cache');
 const path = require('path');
-const Proteus = require('wire-webapp-proteus');
+const Proteus = require('@wireapp/proteus');
 const {FileEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
 
 // gulp test_node --file "node/store/CryptoboxCRUDStoreSpec.js"
