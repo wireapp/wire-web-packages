@@ -27,7 +27,7 @@ before_script:
   - export WILL_RELEASE=$(if [ "${IS_MASTER_BRANCH}" == 0 ] && [ "${HAS_UPDATES}" == 0 ]; then echo 0; else echo 1; fi)
 
 script:
-  # Tests will be executed in the release phase if condition evaluates to true
+  # Tests will be executed in the release phase if condition evaluates to false
   - if [ "${WILL_RELEASE}" == 1 ]; then yarn test; fi
 
 notifications:
