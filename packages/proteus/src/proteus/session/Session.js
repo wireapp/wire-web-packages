@@ -112,7 +112,7 @@ class Session {
    * @param {!keys.IdentityKeyPair} our_identity
    * @param {!session.PreKeyStore} prekey_store
    * @param {!message.Envelope} envelope
-   * @returns {Promise<Array<Session|string>>}
+   * @returns {Promise<Array<Session|Uint8Array>>}
    * @throws {errors.DecryptError.InvalidMessage}
    * @throws {errors.DecryptError.PrekeyNotFound}
    */
@@ -276,7 +276,7 @@ class Session {
   /**
    * @param {!session.PreKeyStore} prekey_store
    * @param {!message.Envelope} envelope
-   * @returns {Promise<string>}
+   * @returns {Promise<Uint8Array>}
    * @throws {errors.DecryptError}
    */
   decrypt(prekey_store, envelope) {
@@ -294,7 +294,7 @@ class Session {
           const message = `Fingerprints do not match: We expected '${expected_fingerprint}', but received '${actual_fingerprint}'.`;
           throw new DecryptError.RemoteIdentityChanged(message, DecryptError.CODE.CASE_204);
         }
-        return resolve(this._decrypt_prekey_message(envelope, msg, prekey_store));
+        return this._decrypt_prekey_message(envelope, msg, prekey_store);
       }
       throw new DecryptError('Unknown message type.', DecryptError.CODE.CASE_200);
     });

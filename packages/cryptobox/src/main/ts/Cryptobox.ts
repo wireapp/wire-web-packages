@@ -10,6 +10,11 @@ import {InvalidPreKeyFormatError} from './InvalidPreKeyFormatError';
 import {ReadOnlyStore} from './store/ReadOnlyStore';
 import {RecordAlreadyExistsError} from './store/error';
 
+export interface SessionFromMessageTuple extends Array<CryptoboxSession | Uint8Array> {
+  0: CryptoboxSession;
+  1: Uint8Array;
+}
+
 export class Cryptobox extends EventEmitter {
   public static TOPIC = {
     NEW_PREKEYS: 'new-prekeys',
@@ -246,14 +251,15 @@ export class Cryptobox extends EventEmitter {
    * Uses a cipher message to create a new session and to decrypt to message which the given cipher message contains.
    * Saving the newly created session is not needed as it's done during the inbuilt decryption phase.
    */
-  private session_from_message(session_id: string, envelope: ArrayBuffer): Promise<any> {
+  private session_from_message(session_id: string, envelope: ArrayBuffer): Promise<SessionFromMessageTuple> {
     const env: Proteus.message.Envelope = Proteus.message.Envelope.deserialise(envelope);
 
     return Proteus.session.Session.init_from_message(this.identity, this.pk_store, env).then(
-      (tuple: Proteus.session.SessionFromMessageTuple) => {
-        const [session, decrypted]: [Proteus.session.Session, Uint8Array] = tuple;
+      (tuple: Array<Proteus.session.Session | Uint8Array>) => {
+        const session: Proteus.session.Session | Uint8Array = <Proteus.session.Session>tuple[0];
+        const decrypted: Proteus.session.Session | Uint8Array = <Uint8Array>tuple[1];
         const cryptoBoxSession: CryptoboxSession = new CryptoboxSession(session_id, this.pk_store, session);
-        return [cryptoBoxSession, decrypted];
+        return <SessionFromMessageTuple>[cryptoBoxSession, decrypted];
       }
     );
   }
