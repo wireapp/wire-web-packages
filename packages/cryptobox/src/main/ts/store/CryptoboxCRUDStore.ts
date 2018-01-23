@@ -62,7 +62,7 @@ export default class CryptoboxCRUDStore implements CryptoboxStore {
         const identity: Proteus.keys.IdentityKeyPair = Proteus.keys.IdentityKeyPair.deserialise(record.serialised);
         return identity;
       })
-      .catch(function(error: Error) {
+      .catch((error: Error) => {
         if (error instanceof RecordNotFoundError) {
           return undefined;
         }
@@ -77,7 +77,7 @@ export default class CryptoboxCRUDStore implements CryptoboxStore {
         const record: SerialisedRecord = this.from_store(payload);
         return Proteus.keys.PreKey.deserialise(record.serialised);
       })
-      .catch(function(error: Error) {
+      .catch((error: Error) => {
         if (error instanceof RecordNotFoundError) {
           return undefined;
         }

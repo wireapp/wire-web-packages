@@ -10,6 +10,8 @@ export default class Cache implements CryptoboxStore {
   private sessions: {[index: string]: Proteus.session.Session | ArrayBuffer};
 
   constructor() {
+    this.prekeys = {};
+    this.sessions = {};
     this.logger = new Logdown({alignOutput: true, markdown: false, prefix: 'cryptobox.store.Cache'});
   }
 
