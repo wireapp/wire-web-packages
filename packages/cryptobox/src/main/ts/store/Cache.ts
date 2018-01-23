@@ -1,6 +1,6 @@
 import * as Proteus from '@wireapp/proteus';
 import Logdown = require('logdown');
-import {CryptoboxStore} from './CryptoboxStore';
+import {CryptoboxStore} from '../store/';
 import {CryptoboxError} from '../error/';
 
 export default class Cache implements CryptoboxStore {

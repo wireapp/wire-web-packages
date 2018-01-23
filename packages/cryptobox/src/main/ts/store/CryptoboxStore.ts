@@ -1,6 +1,6 @@
 import * as Proteus from '@wireapp/proteus';
 
-export interface CryptoboxStore {
+interface CryptoboxStore {
   delete_all(): Promise<boolean>;
 
   /**
@@ -64,3 +64,5 @@ export interface CryptoboxStore {
    */
   delete_session(session_id: string): Promise<string>;
 }
+
+export default CryptoboxStore;

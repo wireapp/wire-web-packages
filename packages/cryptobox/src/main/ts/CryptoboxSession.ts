@@ -1,8 +1,8 @@
 import * as Proteus from '@wireapp/proteus';
-import {DecryptionError} from './DecryptionError';
-import {ReadOnlyStore} from './store/ReadOnlyStore';
+import DecryptionError from './DecryptionError';
+import {ReadOnlyStore} from './store/';
 
-export class CryptoboxSession {
+class CryptoboxSession {
   public id: string;
   public pk_store: ReadOnlyStore;
   public session: Proteus.session.Session;
@@ -37,3 +37,5 @@ export class CryptoboxSession {
     return this.session.remote_identity!.fingerprint();
   }
 }
+
+export default CryptoboxSession;

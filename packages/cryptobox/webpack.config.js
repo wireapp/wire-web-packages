@@ -4,7 +4,7 @@ const webpack = require('webpack');
 module.exports = {
   devtool: 'source-map',
   entry: {
-    filename: `${__dirname}/dist/commonjs/wire-webapp-cryptobox.js`,
+    filename: `${__dirname}/dist/commonjs/index.js`,
   },
   externals: {
     '@wireapp/proteus': 'Proteus',

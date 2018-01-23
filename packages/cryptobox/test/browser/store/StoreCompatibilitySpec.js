@@ -27,7 +27,7 @@ describe('Store Compatibility', () => {
       Proteus = window.Proteus;
       done();
     } else {
-      cryptobox = require('../../../dist/commonjs/wire-webapp-cryptobox');
+      cryptobox = require('../../../dist/commonjs/index');
       Proteus = require('@wireapp/proteus');
       done();
     }

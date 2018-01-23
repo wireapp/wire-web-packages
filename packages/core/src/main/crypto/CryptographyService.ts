@@ -1,5 +1,5 @@
 import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
-import {Cryptobox, store} from 'wire-webapp-cryptobox';
+import {Cryptobox, store} from '@wireapp/cryptobox';
 import {Decoder, Encoder} from 'bazinga64';
 import {RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/';

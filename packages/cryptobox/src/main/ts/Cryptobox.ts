@@ -1,21 +1,20 @@
 import * as Proteus from '@wireapp/proteus';
 import CryptoboxCRUDStore from './store/CryptoboxCRUDStore';
+import {CryptoboxError} from './error/';
+import CryptoboxSession from './CryptoboxSession';
+import DecryptionError from './DecryptionError';
+import InvalidPreKeyFormatError from './InvalidPreKeyFormatError';
+import {ReadOnlyStore} from './store/';
 import EventEmitter = require('events');
 import Logdown = require('logdown');
 import LRUCache = require('wire-webapp-lru-cache');
-import {CryptoboxError} from './error';
-import {CryptoboxSession} from './CryptoboxSession';
-import {DecryptionError} from './DecryptionError';
-import {InvalidPreKeyFormatError} from './InvalidPreKeyFormatError';
-import {ReadOnlyStore} from './store/ReadOnlyStore';
-import {RecordAlreadyExistsError} from './store/error';
 
 export interface SessionFromMessageTuple extends Array<CryptoboxSession | Uint8Array> {
   0: CryptoboxSession;
   1: Uint8Array;
 }
 
-export class Cryptobox extends EventEmitter {
+class Cryptobox extends EventEmitter {
   public static TOPIC = {
     NEW_PREKEYS: 'new-prekeys',
     NEW_SESSION: 'new-session',
@@ -404,3 +403,5 @@ export class Cryptobox extends EventEmitter {
 
 // Note: Path to "package.json" must be relative to the "commonjs" dist files
 Cryptobox.prototype.VERSION = require('../../package.json').version;
+
+export default Cryptobox;

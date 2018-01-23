@@ -37,7 +37,7 @@
   },
   "files": ["dist/commonjs", "dist/wire-webapp-cryptobox.d.ts", "dist/window"],
   "license": "GPL-3.0",
-  "main": "dist/commonjs/wire-webapp-cryptobox.js",
+  "main": "dist/commonjs/index.js",
   "name": "@wireapp/cryptobox",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox",
   "scripts": {
@@ -49,6 +49,6 @@
     "test:rerun": "gulp test",
     "test": "yarn dist && gulp test"
   },
-  "types": "dist/wire-webapp-cryptobox.d.ts",
+  "types": "dist/index.d.ts",
   "version": "6.3.2"
 }

@@ -1,10 +1,10 @@
 import * as Proteus from '@wireapp/proteus';
-import {CryptoboxStore} from './CryptoboxStore';
+import {CryptoboxStore} from '../store';
 
 /**
  * This store holds IDs of PreKeys which should be deleted.
  */
-export class ReadOnlyStore extends Proteus.session.PreKeyStore {
+class ReadOnlyStore extends Proteus.session.PreKeyStore {
   public prekeys: Array<number> = [];
 
   constructor(private store: CryptoboxStore) {
@@ -43,3 +43,5 @@ export class ReadOnlyStore extends Proteus.session.PreKeyStore {
     return Promise.resolve(prekey_id);
   }
 }
+
+export default ReadOnlyStore;

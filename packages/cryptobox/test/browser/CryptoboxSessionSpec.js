@@ -29,7 +29,7 @@ describe('cryptobox.CryptoboxSession', () => {
       sodium = window.sodium;
       done();
     } else {
-      cryptobox = require('../../dist/commonjs/wire-webapp-cryptobox');
+      cryptobox = require('../../dist/commonjs/index');
       Proteus = require('@wireapp/proteus');
       sodium = require('libsodium');
       done();

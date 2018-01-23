@@ -1,15 +1,15 @@
 import * as Proteus from '@wireapp/proteus';
 import Dexie from 'dexie';
 import Logdown = require('logdown');
-import {CryptoboxStore} from './CryptoboxStore';
-import {RecordAlreadyExistsError, RecordNotFoundError, RecordTypeError} from './error';
-import {SerialisedRecord} from './SerialisedRecord';
+import CryptoboxStore from './CryptoboxStore';
+import {error as storeError} from '../store/';
+import {SerialisedRecord} from '../store';
 
 export interface DexieInstance extends Dexie {
   [index: string]: any;
 }
 
-export default class IndexedDB implements CryptoboxStore {
+class IndexedDB implements CryptoboxStore {
   public identity: Proteus.keys.IdentityKeyPair;
 
   private db: DexieInstance;
@@ -51,7 +51,7 @@ export default class IndexedDB implements CryptoboxStore {
         return this.db[store_name].add(entity, primary_key);
       }
 
-      throw new RecordTypeError(
+      throw new storeError.RecordTypeError(
         `Entity is "undefined" or "null". Store name "${store_name}", Primary Key "${primary_key}".`
       );
     });
@@ -71,7 +71,7 @@ export default class IndexedDB implements CryptoboxStore {
 
         const message: string = `Record "${primary_key}" from object store "${store_name}" could not be found.`;
         this.logger.warn(message);
-        throw new RecordNotFoundError(message);
+        throw new storeError.RecordNotFoundError(message);
       });
   }
 
@@ -128,7 +128,7 @@ export default class IndexedDB implements CryptoboxStore {
         return Proteus.keys.IdentityKeyPair.deserialise(record.serialised);
       })
       .catch(function(error: Error) {
-        if (error instanceof RecordNotFoundError) {
+        if (error instanceof storeError.RecordNotFoundError) {
           return undefined;
         }
         throw error;
@@ -141,7 +141,7 @@ export default class IndexedDB implements CryptoboxStore {
         return Proteus.keys.PreKey.deserialise(record.serialised);
       })
       .catch(function(error: Error) {
-        if (error instanceof RecordNotFoundError) {
+        if (error instanceof storeError.RecordNotFoundError) {
           return undefined;
         }
         throw error;
@@ -235,7 +235,7 @@ export default class IndexedDB implements CryptoboxStore {
       .catch((error: Error) => {
         if (error instanceof Dexie.ConstraintError) {
           const message: string = `Session with ID '${session_id}' already exists and cannot get overwritten. You need to delete the session first if you want to do it.`;
-          throw new RecordAlreadyExistsError(message);
+          throw new storeError.RecordAlreadyExistsError(message);
         }
 
         throw error;
@@ -254,3 +254,5 @@ export default class IndexedDB implements CryptoboxStore {
     });
   }
 }
+
+export default IndexedDB;
