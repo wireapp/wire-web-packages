@@ -11,6 +11,4 @@ Promise.resolve()
     console.log(cache.size()); // 2
     process.exit(0);
   })
-  .catch(() => {
-    process.exit(1);
-  });
+  .catch(() => process.exit(1));
