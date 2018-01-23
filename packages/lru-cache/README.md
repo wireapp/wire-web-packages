@@ -6,16 +6,12 @@ You can find the published source code at [github.com/wireapp](https://github.co
 
 For licensing information, see the attached LICENSE file and the list of third-party licenses at [wire.com/legal/licenses/](https://wire.com/legal/licenses/).
 
-## Build Status
-
-[![Build Status](https://travis-ci.org/wireapp/wire-webapp-lru-cache.svg?branch=master)](https://travis-ci.org/wireapp/wire-webapp-lru-cache)
-
-## Instructions
+## LRUCache
 
 ### Installation
 
 ```bash
-npm install --save wire-webapp-lru-cache
+yarn add @wireapp/lru-cache
 ```
 
 ### Import
@@ -23,14 +19,14 @@ npm install --save wire-webapp-lru-cache
 **TypeScript**
 
 ```typescript
-import LRUCache = require('wire-webapp-lru-cache');
+import LRUCache = require('@wireapp/lru-cache');
 let cache = new LRUCache();
 ```
 
 **CommonJS**
 
 ```javascript
-const LRUCache = require('wire-webapp-lru-cache');
+const LRUCache = require('@wireapp/lru-cache');
 let cache = new LRUCache();
 ```
 
@@ -38,12 +34,8 @@ let cache = new LRUCache();
 
 **Browser**
 
-* [index.html](./dist/index.html)
+* [index.html](./demo.html)
 
 **Node.js**
 
-* [index.js](./dist/index.js)
-
-**Functions**
-
-* [TypeScript Declaration File](./dist/commonjs/LRUCache.d.ts)
+* [index.js](./demo.js)

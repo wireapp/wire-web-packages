@@ -22,7 +22,7 @@
 describe('LRUCache', () => {
   const LRUCache = require('../../../dist/commonjs/LRUCache.js');
 
-  describe('delete', () => {
+  describe('"delete"', () => {
     it('keeps the list order intact when deleting', () => {
       const cache = new LRUCache(3);
       cache.set('1', 'Apple');
@@ -48,7 +48,7 @@ describe('LRUCache', () => {
     });
   });
 
-  describe('oldest', () => {
+  describe('"oldest"', () => {
     it("returns the Node's value which was added first", () => {
       const cache = new LRUCache(3);
       cache.set('1', 'Apple');
@@ -58,7 +58,7 @@ describe('LRUCache', () => {
     });
   });
 
-  describe('keys', () => {
+  describe('"keys"', () => {
     it('lists all keys of the cache starting with the latest item in the cache', () => {
       const cache = new LRUCache(3);
       cache.set('1', 'Apple');
@@ -68,7 +68,7 @@ describe('LRUCache', () => {
     });
   });
 
-  describe('latest', () => {
+  describe('"latest"', () => {
     it("returns the Node's value which was added last", () => {
       const cache = new LRUCache(3);
       cache.set('1', 'Apple');
@@ -78,7 +78,7 @@ describe('LRUCache', () => {
     });
   });
 
-  describe('set', () => {
+  describe('"set"', () => {
     it('removes the oldest Node if no space available', () => {
       const cache = new LRUCache(3);
       cache.set('1', 'Apple');
