@@ -7,7 +7,6 @@ module.exports = {
     filename: `${__dirname}/dist/commonjs/index.js`,
   },
   externals: {
-    '@wireapp/lru-cache': 'LRUCache',
     '@wireapp/proteus': 'Proteus',
     bazinga64: true,
     dexie: 'Dexie',
