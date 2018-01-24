@@ -47,5 +47,10 @@ after_success:
       rm -rf temp
       echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> "${HOME}/.npmrc" && \
       git checkout master;
+      git pull;
+      REPO=`git config remote.origin.url`
+      SSH_REPO=${REPO/https:\/\/github.com\//git@github.com:}
+      echo "${SSH_REPO}"
+      git remote set-url origin ${SSH_REPO}
       yarn release;
     fi
