@@ -37,7 +37,7 @@ notifications:
 after_success:
   - |
     if [ "${WILL_RELEASE}" == 0 ]; then
-      git config --global user.email travis@wire.com
+      git config --global user.email webapp+travis@wire.com
       git config --global user.name "Wire Travis CI"
       mkdir -p temp
       openssl aes-256-cbc -K $encrypted_d95474b06f11_key -iv $encrypted_d95474b06f11_iv -in deploy.enc -out temp/deploy -d
