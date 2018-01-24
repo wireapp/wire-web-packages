@@ -37,6 +37,7 @@ notifications:
 after_success:
   - |
     if [ "${WILL_RELEASE}" == 0 ]; then
-        echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> "${HOME}/.npmrc" && \
-        yarn release
+      git checkout master;
+      echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> "${HOME}/.npmrc" && \
+      yarn release;
     fi
