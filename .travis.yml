@@ -43,7 +43,7 @@ after_success:
       openssl aes-256-cbc -K $encrypted_d95474b06f11_key -iv $encrypted_d95474b06f11_iv -in deploy.enc -out temp/deploy -d
       chmod 600 temp/deploy
       eval `ssh-agent -s`
-      ssh-add deploy
+      ssh-add temp/deploy
       rm -rf temp
       echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> "${HOME}/.npmrc" && \
       git checkout master;
