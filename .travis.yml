@@ -23,7 +23,7 @@ before_install:
 before_script:
   - yarn boot
   - export IS_MASTER_BRANCH=$(if [ "${TRAVIS_BRANCH}" == "master" ]; then echo 0; else echo 1; fi)
-  - export HAS_UPDATES=$(npx lerna updated; echo $?)
+  - export HAS_UPDATES=$(npx lerna updated > /dev/null 2>&1; echo $?)
   - export WILL_RELEASE=$(if [ "${IS_MASTER_BRANCH}" == 0 ] && [ "${HAS_UPDATES}" == 0 ]; then echo 0; else echo 1; fi)
   - echo -e "IS_MASTER_BRANCH = ${IS_MASTER_BRANCH}\nHAS_UPDATES = ${HAS_UPDATES}\nWILL_RELEASE = ${WILL_RELEASE}"
 
