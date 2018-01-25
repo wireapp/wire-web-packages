@@ -20,7 +20,7 @@
 /* eslint no-magic-numbers: "off" */
 /* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
-const CBOR = require('wire-webapp-cbor');
+const CBOR = require('@wireapp/cbor');
 
 const ClassUtil = require('../util/ClassUtil');
 const DontCallConstructor = require('../errors/DontCallConstructor');
@@ -38,14 +38,21 @@ const SecretKey = require('./SecretKey');
  */
 class IdentityKeyPair {
   constructor() {
+    /** @type {keys.IdentityKey} */
+    this.public_key = undefined;
+    /** @type {SecretKey} */
+    this.secret_key = undefined;
+    /** @type {number} */
+    this.version = undefined;
+
     throw new DontCallConstructor(this);
   }
 
-  /** @returns {IdentityKeyPair} - `this` */
+  /** @returns {keys.IdentityKeyPair} - `this` */
   static async new() {
     const key_pair = await KeyPair.new();
 
-    /** @type {IdentityKeyPair} */
+    /** @type {keys.IdentityKeyPair} */
     const ikp = ClassUtil.new_instance(IdentityKeyPair);
     ikp.version = 1;
     ikp.secret_key = key_pair.secret_key;
@@ -63,7 +70,7 @@ class IdentityKeyPair {
 
   /**
    * @param {!ArrayBuffer} buf
-   * @returns {IdentityKeyPair}
+   * @returns {keys.IdentityKeyPair}
    */
   static deserialise(buf) {
     //TypeUtil.assert_is_instance(ArrayBuffer, buf);
@@ -88,7 +95,7 @@ class IdentityKeyPair {
 
   /**
    * @param {!CBOR.Decoder} decoder
-   * @returns {IdentityKeyPair}
+   * @returns {keys.IdentityKeyPair}
    */
   static decode(decoder) {
     //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);

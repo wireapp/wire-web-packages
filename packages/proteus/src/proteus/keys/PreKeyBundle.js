@@ -20,7 +20,7 @@
 /* eslint no-magic-numbers: "off" */
 /* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
-const CBOR = require('wire-webapp-cbor');
+const CBOR = require('@wireapp/cbor');
 const sodium = require('libsodium-wrappers-sumo');
 
 const ClassUtil = require('../util/ClassUtil');
@@ -41,6 +41,17 @@ const PublicKey = require('./PublicKey');
  */
 class PreKeyBundle {
   constructor() {
+    /** @type {number} */
+    this.version = undefined;
+    /** @type {number} */
+    this.prekey_id = undefined;
+    /** @type {keys.PublicKey} */
+    this.public_key = undefined;
+    /** @type {keys.IdentityKey} */
+    this.identity_key = undefined;
+    /** @type {Uint8Array} */
+    this.signature = undefined;
+
     throw new DontCallConstructor(this);
   }
 

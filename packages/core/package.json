@@ -1,13 +1,13 @@
 {
   "dependencies": {
     "@types/node": "9.3.0",
-    "@wireapp/api-client": "0.2.34",
+    "@wireapp/api-client": "0.3.0",
+    "@wireapp/cryptobox": "6.3.4",
     "@wireapp/protocol-messaging": "1.20.0",
-    "@wireapp/store-engine": "0.1.8",
+    "@wireapp/store-engine": "0.1.9",
     "bazinga64": "5.0.3",
     "protobufjs": "6.8.4",
-    "pure-uuid": "1.4.11",
-    "wire-webapp-cryptobox": "6.2.1"
+    "pure-uuid": "1.4.11"
   },
   "devDependencies": {
     "cross-env": "5.1.3",
@@ -42,5 +42,5 @@
     "prepare": "yarn dist"
   },
   "types": "./dist/commonjs/index.d.ts",
-  "version": "0.0.23"
+  "version": "0.0.27"
 }

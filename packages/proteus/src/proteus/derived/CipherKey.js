@@ -19,7 +19,7 @@
 
 /* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
-const CBOR = require('wire-webapp-cbor');
+const CBOR = require('@wireapp/cbor');
 const sodium = require('libsodium-wrappers-sumo');
 
 const ClassUtil = require('../util/ClassUtil');
@@ -34,6 +34,9 @@ const TypeUtil = require('../util/TypeUtil');
  */
 class CipherKey {
   constructor() {
+    /** @type {Uint8Array} */
+    this.key = undefined;
+
     throw new DontCallConstructor(this);
   }
 
@@ -45,7 +48,6 @@ class CipherKey {
     //TypeUtil.assert_is_instance(Uint8Array, key);
 
     const ck = ClassUtil.new_instance(CipherKey);
-    /** @type {Uint8Array} */
     ck.key = key;
     return ck;
   }

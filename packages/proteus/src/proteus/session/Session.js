@@ -20,7 +20,7 @@
 /* eslint no-magic-numbers: "off" */
 /* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
-const CBOR = require('wire-webapp-cbor');
+const CBOR = require('@wireapp/cbor');
 
 const ClassUtil = require('../util/ClassUtil');
 const DontCallConstructor = require('../errors/DontCallConstructor');
@@ -53,12 +53,19 @@ const PreKeyStore = require('./PreKeyStore');
  */
 class Session {
   constructor() {
+    /** @type {number} */
     this.counter = 0;
+    /** @type {keys.IdentityKeyPair | null} */
     this.local_identity = null;
+    /** @type {Array<number|keys.PublicKey> | null} */
     this.pending_prekey = null;
+    /** @type {keys.IdentityKey | null} */
     this.remote_identity = null;
+    /** @type {Object} */
     this.session_states = null;
+    /** @type {message.SessionTag | null} */
     this.session_tag = null;
+    /** @type {number} */
     this.version = 1;
 
     throw new DontCallConstructor(this);
@@ -105,7 +112,7 @@ class Session {
    * @param {!keys.IdentityKeyPair} our_identity
    * @param {!session.PreKeyStore} prekey_store
    * @param {!message.Envelope} envelope
-   * @returns {Promise<Array<Session|string>>}
+   * @returns {Promise<Array<Session|Uint8Array>>}
    * @throws {errors.DecryptError.InvalidMessage}
    * @throws {errors.DecryptError.PrekeyNotFound}
    */
@@ -253,7 +260,7 @@ class Session {
   /**
    * @param {!session.PreKeyStore} prekey_store
    * @param {!message.Envelope} envelope
-   * @returns {Promise<string>}
+   * @returns {Promise<Uint8Array>}
    * @throws {errors.DecryptError}
    */
   async decrypt(prekey_store, envelope) {

@@ -20,7 +20,7 @@
 /* eslint no-magic-numbers: "off" */
 /* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
-const CBOR = require('wire-webapp-cbor');
+const CBOR = require('@wireapp/cbor');
 
 const ClassUtil = require('../util/ClassUtil');
 const DontCallConstructor = require('../errors/DontCallConstructor');
@@ -37,6 +37,11 @@ const KeyPair = require('../keys/KeyPair');
  */
 class SendChain {
   constructor() {
+    /** @type {ChainKey} */
+    this.chain_key = undefined;
+    /** @type {keys.KeyPair} */
+    this.ratchet_key = undefined;
+
     throw new DontCallConstructor(this);
   }
 

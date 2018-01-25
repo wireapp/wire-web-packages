@@ -20,7 +20,7 @@
 /* eslint no-magic-numbers: "off" */
 /* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
-const CBOR = require('wire-webapp-cbor');
+const CBOR = require('@wireapp/cbor');
 
 const ClassUtil = require('../util/ClassUtil');
 const DontCallConstructor = require('../errors/DontCallConstructor');
@@ -37,6 +37,15 @@ const Message = require('./Message');
  */
 class Envelope {
   constructor() {
+    /** @type {number} */
+    this.version = undefined;
+    /** @type {Uint8Array} */
+    this.mac = undefined;
+    /** @type {Message} */
+    this.message = undefined;
+    /** @type {Uint8Array} */
+    this._message_enc = undefined;
+
     throw new DontCallConstructor(this);
   }
 

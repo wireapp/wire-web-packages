@@ -1,13 +1,13 @@
 {
   "devDependencies": {
     "babel-eslint": "8.2.1",
-    "eslint": "4.15.0",
+    "eslint": "4.16.0",
     "eslint-config-prettier": "2.9.0",
     "eslint-plugin-prettier": "2.5.0",
     "eslint-plugin-react": "7.5.1",
     "husky": "0.14.3",
-    "lerna": "2.7.1",
-    "lint-staged": "6.0.0",
+    "lerna": "2.8.0",
+    "lint-staged": "6.0.1",
     "prettier": "1.10.2"
   },
   "lint-staged": {
@@ -33,7 +33,7 @@
     "test": "yarn && yarn test:jsScript && lerna run test",
     "test:jsScript": "eslint --ignore-path .gitignore --ignore-path .prettierignore **/*.{js,jsx}",
     "release":
-      "yarn test && lerna run test:longrunning --scope @wireapp/proteus && lerna publish -m \"chore: Publish\" --conventional-commits --loglevel=verbose --exact --allow-branch=master --registry=https://registry.npmjs.org/"
+      "yarn test && lerna run test:longrunning --scope @wireapp/proteus && lerna publish -m \"chore: Publish\" --conventional-commits --loglevel=verbose --exact --allow-branch=master --registry=https://registry.npmjs.org/ --yes"
   },
   "workspaces": ["packages/*"]
 }

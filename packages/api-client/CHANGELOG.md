@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.3.0"></a>
+
+# [0.3.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.2.37...@wireapp/api-client@0.3.0) (2018-01-24)
+
+### Features
+
+* **cli-client:** Automatically remove a registered client if there are too many ([03fc0ff](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/03fc0ff))
+
+<a name="0.2.37"></a>
+
+## [0.2.37](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.2.36...@wireapp/api-client@0.2.37) (2018-01-24)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.2.36"></a>
+
+## [0.2.36](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.2.35...@wireapp/api-client@0.2.36) (2018-01-23)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.2.35"></a>
+
+## [0.2.35](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.2.34...@wireapp/api-client@0.2.35) (2018-01-22)
+
+### Bug Fixes
+
+* **api-client:** Mutual config ([#206](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/206)) ([9eb6fa0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/9eb6fa0))
+
 <a name="0.2.34"></a>
 
 ## [0.2.34](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.2.33...@wireapp/api-client@0.2.34) (2018-01-11)

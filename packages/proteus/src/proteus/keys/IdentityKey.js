@@ -19,7 +19,7 @@
 
 /* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
-const CBOR = require('wire-webapp-cbor');
+const CBOR = require('@wireapp/cbor');
 const sodium = require('libsodium-wrappers-sumo');
 
 const ClassUtil = require('../util/ClassUtil');
@@ -38,6 +38,9 @@ const PublicKey = require('./PublicKey');
  */
 class IdentityKey {
   constructor() {
+    /** @type {PublicKey} */
+    this.public_key = undefined;
+
     throw new DontCallConstructor(this);
   }
 

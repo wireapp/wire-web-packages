@@ -1,6 +1,12 @@
 # http://docs.travis-ci.com/user/workers/container-based-infrastructure/
 dist: trusty
 
+# https://docs.travis-ci.com/user/encryption-keys/
+env:
+  global:
+    # NPM_TOKEN
+    - secure: "oKoD5vM9EANq0vkFKmJciMUOuEOyHx3YvEPbwgBH3FFRkVAiUnjGEoeTgOdmc7yz+StdGnIK9tVpE1LGhH+h/OMTk3eKT91XAgOv6KyobBqHz+D4EZYhQL8hFm9d9S9HcKUFsrp9xeY2KlEG54Wy0LP0l+hrZxdqlF+Mox3ReP5ZnyEu9OY0J2YlbEH+Kpxu5jcQuapIefE6lSbgC7EWpa3qBcOW7NCTw1q3nc5nfIOYGSKZ/To71+/Fn4AQmZbeMo+r6bUsCS4w9nJ4gKpkRAgO91vNX6V3PPYqxakqgPyQO/5qCejgjDUt+w3H4j6Rg/LewfM59d8xuwg14d7m8RNRTNIHLDIpmujcuj+ZzARW9SeDrXgAnXaKzjp9WOL7vNAy3vdPc6SCqM0zW3tx2AZBSgYV6vmN8hLZmxMKukCUqlbWBd2PZYNPO3GnB50rAHeg3+RUjc8mSLyiB07DQU1lqsKfOjjVcUmeVWOTx2+FbGqOgdQVi00GY7alHx3b+4IuIVIcrHQjjuvOXA1J45rp9d/gyGJWSH00Z/KneuLSKyUSC29THy6Wk6Y6B01EUvv5riMyEDOhDMnGyehf5Xgz51yTpfKdoY0t+7zCVTd8xZNb/Ko/PlHfpkpY1OFDKi5Yc1vcTCNGqMCHC3eu9659+pg8B7ENCgsCJ7dBw5M="
+
 language: node_js
 
 node_js:
@@ -12,10 +18,39 @@ addons:
 # http://docs.travis-ci.com/user/build-lifecycle/
 before_install:
   - curl https://yarnpkg.com/install.sh -sSfL | bash -s --
-  - export PATH="$HOME/.yarn/bin:$PATH"
+  - export PATH="${HOME}/.yarn/bin:${PATH}"
 
 before_script:
   - yarn boot
+  - export IS_MASTER_BRANCH=$(if [ "${TRAVIS_BRANCH}" == "master" ]; then echo 0; else echo 1; fi)
+  - export HAS_UPDATES=$(npx lerna updated > /dev/null 2>&1; echo $?)
+  - export WILL_RELEASE=$(if [ "${IS_MASTER_BRANCH}" == 0 ] && [ "${HAS_UPDATES}" == 0 ]; then echo 0; else echo 1; fi)
+  - echo -e "IS_MASTER_BRANCH = ${IS_MASTER_BRANCH}\nHAS_UPDATES = ${HAS_UPDATES}\nWILL_RELEASE = ${WILL_RELEASE}"
+
+script:
+  # Tests will be executed in the release phase if condition evaluates to false
+  - if [ "${WILL_RELEASE}" == 1 ]; then yarn test; fi
 
 notifications:
   email: false
+
+after_success:
+  - |
+    if [ "${WILL_RELEASE}" == 0 ]; then
+      git config --global user.email webapp+travis@wire.com
+      git config --global user.name "Wire Travis CI"
+      mkdir -p temp
+      openssl aes-256-cbc -K $encrypted_d95474b06f11_key -iv $encrypted_d95474b06f11_iv -in deploy.enc -out temp/deploy -d
+      chmod 600 temp/deploy
+      eval `ssh-agent -s`
+      ssh-add temp/deploy
+      rm -rf temp
+      echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> "${HOME}/.npmrc" && \
+      git checkout master;
+      git pull;
+      REPO=`git config remote.origin.url`
+      SSH_REPO=${REPO/https:\/\/github.com\//git@github.com:}
+      echo "${SSH_REPO}"
+      git remote set-url origin ${SSH_REPO}
+      yarn release;
+    fi

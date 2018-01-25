@@ -20,7 +20,7 @@
 /* eslint no-magic-numbers: "off" */
 /* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
-const CBOR = require('wire-webapp-cbor');
+const CBOR = require('@wireapp/cbor');
 const ed2curve = require('ed2curve');
 const _sodium = require('libsodium-wrappers-sumo');
 
@@ -40,6 +40,11 @@ const SecretKey = require('./SecretKey');
  */
 class KeyPair {
   constructor() {
+    /** @type {keys.PublicKey} */
+    this.public_key = undefined;
+    /** @type {SecretKey} */
+    this.secret_key = undefined;
+
     throw new DontCallConstructor(this);
   }
 

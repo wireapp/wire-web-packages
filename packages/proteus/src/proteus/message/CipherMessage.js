@@ -20,7 +20,7 @@
 /* eslint no-magic-numbers: "off" */
 /* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
-const CBOR = require('wire-webapp-cbor');
+const CBOR = require('@wireapp/cbor');
 
 const ClassUtil = require('../util/ClassUtil');
 const DontCallConstructor = require('../errors/DontCallConstructor');
@@ -40,6 +40,17 @@ const SessionTag = require('./SessionTag');
 class CipherMessage extends Message {
   constructor() {
     super();
+    /** @type {SessionTag} */
+    this.session_tag = undefined;
+    /** @type {number} */
+    this.counter = undefined;
+    /** @type {number} */
+    this.prev_counter = undefined;
+    /** @type {keys.PublicKey} */
+    this.ratchet_key = undefined;
+    /** @type {Uint8Array} */
+    this.cipher_text = undefined;
+
     throw new DontCallConstructor(this);
   }
 
