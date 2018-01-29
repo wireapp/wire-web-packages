@@ -34,11 +34,7 @@ export default class IdentityKey {
 
   constructor() {}
 
-  /**
-   * @param {!IdentityKey} public_key
-   * @returns {IdentityKey}
-   */
-  static new(public_key) {
+  static new(public_key: IdentityKey): IdentityKey {
     TypeUtil.assert_is_instance(PublicKey, public_key);
 
     const key = ClassUtil.new_instance(IdentityKey);
@@ -46,31 +42,21 @@ export default class IdentityKey {
     return key;
   }
 
-  /** @returns {string} */
-  fingerprint() {
+  fingerprint(): string {
     return this.public_key.fingerprint();
   }
 
-  /** @returns {string} */
-  toString() {
+  toString(): string {
     return sodium.to_hex(this.public_key);
   }
 
-  /**
-   * @param {!CBOR.Encoder} encoder
-   * @returns {CBOR.Encoder}
-   */
-  encode(encoder) {
+  encode(encoder: CBOR.Encoder): CBOR.Encoder {
     encoder.object(1);
     encoder.u8(0);
     return this.public_key.encode(encoder);
   }
 
-  /**
-   * @param {!CBOR.Decoder} decoder
-   * @returns {IdentityKey}
-   */
-  static decode(decoder) {
+  static decode(decoder: CBOR.Decoder): IdentityKey {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     let public_key = null;

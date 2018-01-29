@@ -66,7 +66,7 @@ export default class Envelope {
     return mac_key.verify(this.mac, this._message_enc);
   }
 
-  /** @returns {ArrayBuffer} - The serialized message envelope */
+  /** @returns {ArrayBuffer} The serialized message envelope */
   serialise() {
     const encoder = new CBOR.Encoder();
     this.encode(encoder);
@@ -88,7 +88,7 @@ export default class Envelope {
    * @param {!CBOR.Encoder} encoder
    * @returns {CBOR.Encoder}
    */
-  encode(encoder) {
+  encode(encoder: CBOR.Encoder): CBOR.Encoder {
     encoder.object(3);
     encoder.u8(0);
     encoder.u8(this.version);
@@ -106,7 +106,7 @@ export default class Envelope {
    * @param {!CBOR.Decoder} decoder
    * @returns {Envelope}
    */
-  static decode(decoder) {
+  static decode(decoder: CBOR.Decoder) {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     const env = ClassUtil.new_instance(Envelope);

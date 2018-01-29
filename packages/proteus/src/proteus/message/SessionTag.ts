@@ -31,8 +31,7 @@ export default class SessionTag {
 
   constructor() {}
 
-  /** @returns {SessionTag} */
-  static new() {
+  static new(): SessionTag {
     const length = 16;
 
     const st = ClassUtil.new_instance(SessionTag);
@@ -40,24 +39,15 @@ export default class SessionTag {
     return st;
   }
 
-  /** @returns {string} */
-  toString() {
+  toString(): string {
     return sodium.to_hex(this.tag);
   }
 
-  /**
-   * @param {!CBOR.Encoder} encoder
-   * @returns {CBOR.Encoder}
-   */
-  encode(encoder) {
+  encode(encoder: CBOR.Encoder): CBOR.Encoder {
     return encoder.bytes(this.tag);
   }
 
-  /**
-   * @param {!CBOR.Decoder} decoder
-   * @returns {SessionTag}
-   */
-  static decode(decoder) {
+  static decode(decoder: CBOR.Decoder): SessionTag {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     const length = 16;

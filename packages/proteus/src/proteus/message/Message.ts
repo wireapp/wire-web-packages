@@ -27,8 +27,7 @@ import DecodeError from '../errors/DecodeError';
 export default class Message {
   constructor() {}
 
-  /** @returns {ArrayBuffer} */
-  serialise() {
+  serialise(): ArrayBuffer {
     const encoder = new CBOR.Encoder();
     if (this instanceof CipherMessage) {
       encoder.u8(1);
@@ -42,11 +41,7 @@ export default class Message {
     return encoder.get_buffer();
   }
 
-  /**
-   * @param {!ArrayBuffer} buf
-   * @returns {message.CipherMessage|message.PreKeyMessage}
-   */
-  static deserialise(buf) {
+  static deserialise(buf: ArrayBuffer): CipherMessage | PreKeyMessage {
     TypeUtil.assert_is_instance(ArrayBuffer, buf);
 
     const decoder = new CBOR.Decoder(buf);

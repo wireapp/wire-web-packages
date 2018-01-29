@@ -36,7 +36,7 @@ const ArrayUtil = {
     }
   },
 
-  concatenate_array_buffers(buffers: Array<ArrayBuffer>): Array<ArrayBuffer> {
+  concatenate_array_buffers(buffers: Array<ArrayBuffer | Uint8Array>): Array<ArrayBuffer> {
     TypeUtil.assert_is_instance(Array, buffers);
 
     return <any>buffers.reduce((callback: any, bytes) => {

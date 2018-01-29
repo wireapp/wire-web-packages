@@ -61,9 +61,8 @@ export default class RecvChain {
   /**
    * @param {!message.Envelope} envelope
    * @param {!message.CipherMessage} msg
-   * @returns {Uint8Array}
    */
-  try_message_keys(envelope, msg) {
+  try_message_keys(envelope, msg): Uint8Array {
     TypeUtil.assert_is_instance(Envelope, envelope);
     TypeUtil.assert_is_instance(CipherMessage, msg);
 
@@ -128,9 +127,8 @@ export default class RecvChain {
 
   /**
    * @param {!Array<session.MessageKeys>} keys
-   * @returns {void}
    */
-  commit_message_keys(keys) {
+  commit_message_keys(keys: Array<MessageKeys>): void {
     TypeUtil.assert_is_instance(Array, keys);
     keys.map(key => TypeUtil.assert_is_instance(MessageKeys, key));
 
@@ -161,7 +159,7 @@ export default class RecvChain {
    * @param {!CBOR.Encoder} encoder
    * @returns {Array<CBOR.Encoder>}
    */
-  encode(encoder) {
+  encode(encoder: CBOR.Encoder): Array<CBOR.Encoder> {
     encoder.object(3);
     encoder.u8(0);
     this.chain_key.encode(encoder);
@@ -177,7 +175,7 @@ export default class RecvChain {
    * @param {!CBOR.Decoder} decoder
    * @returns {RecvChain}
    */
-  static decode(decoder) {
+  static decode(decoder: CBOR.Decoder) {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     const self = ClassUtil.new_instance(RecvChain);

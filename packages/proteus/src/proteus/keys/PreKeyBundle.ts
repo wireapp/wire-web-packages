@@ -132,7 +132,7 @@ export default class PreKeyBundle {
    * @param {!CBOR.Encoder} encoder
    * @returns {CBOR.Encoder}
    */
-  encode(encoder) {
+  encode(encoder: CBOR.Encoder): CBOR.Encoder {
     TypeUtil.assert_is_instance(CBOR.Encoder, encoder);
 
     encoder.object(5);
@@ -156,7 +156,7 @@ export default class PreKeyBundle {
    * @param {!CBOR.Decoder} decoder
    * @returns {PreKeyBundle}
    */
-  static decode(decoder) {
+  static decode(decoder: CBOR.Decoder) {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     const self = ClassUtil.new_instance(PreKeyBundle);

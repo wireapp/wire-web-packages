@@ -32,13 +32,7 @@ export default class DerivedSecrets {
 
   constructor() {}
 
-  /**
-   * @param {!Array<number>} input
-   * @param {!Uint8Array} salt
-   * @param {!string} info
-   * @returns {DerivedSecrets}
-   */
-  static kdf(input, salt, info) {
+  static kdf(input: Uint8Array | Array<ArrayBuffer>, salt: Uint8Array, info: string): DerivedSecrets {
     const byte_length = 64;
 
     const output_key_material = KeyDerivationUtil.hkdf(salt, input, info, byte_length);
@@ -55,11 +49,10 @@ export default class DerivedSecrets {
   }
 
   /**
-   * @param {!Array<number>} input - Initial key material (usually the Master Key) in byte array format
-   * @param {!string} info - Key Derivation Data
-   * @returns {DerivedSecrets}
+   * @param input Initial key material (usually the Master Key) in byte array format
+   * @param info Key Derivation Data
    */
-  static kdf_without_salt(input, info) {
+  static kdf_without_salt(input: Uint8Array | Array<ArrayBuffer>, info: string): DerivedSecrets {
     return this.kdf(input, new Uint8Array(0), info);
   }
 }

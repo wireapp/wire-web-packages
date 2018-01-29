@@ -27,13 +27,16 @@ const KeyDerivationUtil = {
   /**
    * HMAC-based Key Derivation Function
    *
-   * @param {!(Uint8Array|string)} salt
-   * @param {!(Uint8Array|string)} input - Initial Keying Material (IKM)
-   * @param {!(Uint8Array|string)} info - Key Derivation Data (Info)
-   * @param {!number} length - Length of the derived key in bytes (L)
-   * @returns {Uint8Array} - Output Keying Material (OKM)
+   * @param input Initial Keying Material (IKM)
+   * @param info Key Derivation Data (Info)
+   * @param length Length of the derived key in bytes (L)
    */
-  hkdf(salt, input, info, length) {
+  hkdf(
+    salt: Uint8Array | string,
+    input: Uint8Array | string | Array<number> | Array<ArrayBuffer>,
+    info: Uint8Array | string,
+    length: number
+  ): Uint8Array {
     const convert_type = value => {
       if (typeof value === 'string') {
         return sodium.from_string(value);
@@ -50,11 +53,7 @@ const KeyDerivationUtil = {
 
     const HASH_LEN = 32;
 
-    /**
-     * @param {*} received_salt
-     * @returns {Uint8Array}
-     */
-    const salt_to_key = received_salt => {
+    const salt_to_key = (received_salt): Uint8Array => {
       const keybytes = sodium.crypto_auth_hmacsha256_KEYBYTES;
       if (received_salt.length > keybytes) {
         return sodium.crypto_hash_sha256(received_salt);
@@ -65,22 +64,11 @@ const KeyDerivationUtil = {
       return key;
     };
 
-    /**
-     * @param {*} received_salt
-     * @param {*} received_input
-     * @returns {*}
-     */
     const extract = (received_salt, received_input) => {
       return sodium.crypto_auth_hmacsha256(received_input, salt_to_key(received_salt));
     };
 
-    /**
-     * @param {*} tag
-     * @param {*} received_info
-     * @param {!number} received_length
-     * @returns {Uint8Array}
-     */
-    const expand = (tag, received_info, received_length) => {
+    const expand = (tag, received_info, received_length: number): Uint8Array => {
       const num_blocks = Math.ceil(received_length / HASH_LEN);
       let hmac = new Uint8Array(0);
       let result: any = new Uint8Array(0);

@@ -21,11 +21,6 @@
 
 import ProteusError from './ProteusError';
 
-/**
- * @extends ProteusError
- * @param {string} [message]
- * @param {string} [code]
- */
 class DecryptError extends ProteusError {
   static CODE = {
     CASE_200: 200,
@@ -49,11 +44,6 @@ class DecryptError extends ProteusError {
   }
 }
 
-/**
- * @extends DecryptError
- * @param {string} [message]
- * @param {string} [code]
- */
 class RemoteIdentityChanged extends DecryptError {
   constructor(message = 'Remote identity changed', code) {
     super(message, code);
@@ -61,11 +51,6 @@ class RemoteIdentityChanged extends DecryptError {
   }
 }
 
-/**
- * @extends DecryptError
- * @param {string} [message]
- * @param {string} [code]
- */
 class InvalidSignature extends DecryptError {
   constructor(message = 'Invalid signature', code) {
     super(message, code);
@@ -73,11 +58,6 @@ class InvalidSignature extends DecryptError {
   }
 }
 
-/**
- * @extends DecryptError
- * @param {string} [message]
- * @param {string} [code]
- */
 class InvalidMessage extends DecryptError {
   constructor(message = 'Invalid message', code) {
     super(message, code);
@@ -85,11 +65,6 @@ class InvalidMessage extends DecryptError {
   }
 }
 
-/**
- * @extends DecryptError
- * @param {string} [message]
- * @param {string} [code]
- */
 class DuplicateMessage extends DecryptError {
   constructor(message = 'Duplicate message', code) {
     super(message, code);
@@ -97,11 +72,6 @@ class DuplicateMessage extends DecryptError {
   }
 }
 
-/**
- * @extends DecryptError
- * @param {string} [message]
- * @param {string} [code]
- */
 class TooDistantFuture extends DecryptError {
   constructor(message = 'Message is from too distant in the future', code) {
     super(message, code);
@@ -109,11 +79,6 @@ class TooDistantFuture extends DecryptError {
   }
 }
 
-/**
- * @extends DecryptError
- * @param {string} [message]
- * @param {string} [code]
- */
 class OutdatedMessage extends DecryptError {
   constructor(message = 'Outdated message', code) {
     super(message, code);
@@ -121,11 +86,6 @@ class OutdatedMessage extends DecryptError {
   }
 }
 
-/**
- * @extends DecryptError
- * @param {string} [message]
- * @param {string} [code]
- */
 class PrekeyNotFound extends DecryptError {
   constructor(message = 'Pre-key not found', code) {
     super(message, code);

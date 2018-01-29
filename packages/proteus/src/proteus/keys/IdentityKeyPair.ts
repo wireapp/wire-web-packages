@@ -70,7 +70,7 @@ export default class IdentityKeyPair {
    * @param {!CBOR.Encoder} encoder
    * @returns {CBOR.Encoder}
    */
-  encode(encoder) {
+  encode(encoder: CBOR.Encoder): CBOR.Encoder {
     encoder.object(3);
     encoder.u8(0);
     encoder.u8(this.version);
@@ -84,7 +84,7 @@ export default class IdentityKeyPair {
    * @param {!CBOR.Decoder} decoder
    * @returns {keys.IdentityKeyPair}
    */
-  static decode(decoder) {
+  static decode(decoder: CBOR.Decoder) {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     const self = ClassUtil.new_instance(IdentityKeyPair);

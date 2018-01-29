@@ -58,8 +58,8 @@ export default class Session {
   constructor() {}
 
   /**
-   * @param {!keys.IdentityKeyPair} local_identity - Alice's Identity Key Pair
-   * @param {!keys.PreKeyBundle} remote_pkbundle - Bob's Pre-Key Bundle
+   * @param {!keys.IdentityKeyPair} local_identity Alice's Identity Key Pair
+   * @param {!keys.PreKeyBundle} remote_pkbundle Bob's Pre-Key Bundle
    * @returns {Promise<Session>}
    */
   static init_from_prekey(local_identity, remote_pkbundle) {
@@ -150,9 +150,8 @@ export default class Session {
    * @param {!session.PreKeyStore} pre_key_store
    * @param {!message.PreKeyMessage} pre_key_message
    * @returns {Promise<session.SessionState>}
-   * @private
    */
-  _new_state(pre_key_store, pre_key_message) {
+  private _new_state(pre_key_store, pre_key_message) {
     return pre_key_store.get_prekey(pre_key_message.prekey_id).then(pre_key => {
       if (pre_key) {
         return SessionState.init_as_bob(
@@ -170,9 +169,8 @@ export default class Session {
    * @param {!message.SessionTag} tag
    * @param {!session.SessionState} state
    * @returns {boolean}
-   * @private
    */
-  _insert_session_state(tag, state) {
+  private _insert_session_state(tag, state) {
     if (this.session_states.hasOwnProperty(tag)) {
       this.session_states[tag].state = state;
     } else {
@@ -204,11 +202,7 @@ export default class Session {
     return this._evict_oldest_session_state();
   }
 
-  /**
-   * @returns {void}
-   * @private
-   */
-  _evict_oldest_session_state() {
+  private _evict_oldest_session_state(): void {
     const oldest = Object.keys(this.session_states)
       .filter(obj => obj.toString() !== <any>this.session_tag)
       .reduce((lowest, obj, index) => {
@@ -225,7 +219,7 @@ export default class Session {
   }
 
   /**
-   * @param {!(String|Uint8Array)} plaintext - The plaintext which needs to be encrypted
+   * @param {!(String|Uint8Array)} plaintext The plaintext which needs to be encrypted
    * @return {Promise<message.Envelope>} Encrypted message
    */
   encrypt(plaintext) {
@@ -252,14 +246,14 @@ export default class Session {
    * @param {!message.Envelope} envelope
    * @returns {Promise<Uint8Array>}
    */
-  decrypt(prekey_store, envelope) {
+  decrypt(prekey_store: PreKeyStore, envelope: Envelope): Promise<Uint8Array> {
     return new Promise(resolve => {
       TypeUtil.assert_is_instance(PreKeyStore, prekey_store);
       TypeUtil.assert_is_instance(Envelope, envelope);
 
       const msg = envelope.message;
       if (msg instanceof CipherMessage) {
-        return resolve(this._decrypt_cipher_message(envelope, envelope.message));
+        return resolve(this._decrypt_cipher_message(envelope, <CipherMessage>msg));
       } else if (msg instanceof PreKeyMessage) {
         const actual_fingerprint = msg.identity_key.fingerprint();
         const expected_fingerprint = this.remote_identity.fingerprint();
@@ -267,20 +261,17 @@ export default class Session {
           const message = `Fingerprints do not match: We expected '${expected_fingerprint}', but received '${actual_fingerprint}'.`;
           throw new (<any>DecryptError).RemoteIdentityChanged(message, DecryptError.CODE.CASE_204);
         }
-        return resolve(this._decrypt_prekey_message(envelope, msg, prekey_store));
+        return resolve(this._decrypt_prekey_message(envelope, <PreKeyMessage>msg, prekey_store));
       }
       throw new DecryptError('Unknown message type.', DecryptError.CODE.CASE_200);
     });
   }
 
-  /**
-   * @param {!message.Envelope} envelope
-   * @param {!message.Message} msg
-   * @param {!session.PreKeyStore} prekey_store
-   * @private
-   * @returns {Promise<string>}
-   */
-  _decrypt_prekey_message(envelope, msg, prekey_store) {
+  private _decrypt_prekey_message(
+    envelope: Envelope,
+    msg: PreKeyMessage,
+    prekey_store: PreKeyStore
+  ): Promise<Uint8Array> {
     return Promise.resolve()
       .then(() => this._decrypt_cipher_message(envelope, msg.message))
       .catch(error => {
@@ -306,14 +297,8 @@ export default class Session {
       });
   }
 
-  /**
-   * @param {!message.Envelope} envelope
-   * @param {!message.Message} msg
-   * @private
-   * @returns {string}
-   */
-  _decrypt_cipher_message(envelope, msg) {
-    let state = this.session_states[msg.session_tag];
+  private _decrypt_cipher_message(envelope: Envelope, msg: CipherMessage): Uint8Array {
+    let state = this.session_states[<any>msg.session_tag];
     if (!state) {
       throw new (<any>DecryptError).InvalidMessage(
         `Local session not found for message session tag '${msg.session_tag}'.`,
@@ -334,21 +319,13 @@ export default class Session {
     return plaintext;
   }
 
-  /**
-   * @returns {ArrayBuffer}
-   */
-  serialise() {
+  serialise(): ArrayBuffer {
     const encoder = new CBOR.Encoder();
     this.encode(encoder);
     return encoder.get_buffer();
   }
 
-  /**
-   * @param {!keys.IdentityKeyPair} local_identity
-   * @param {!ArrayBuffer} buf
-   * @returns {Session}
-   */
-  static deserialise(local_identity, buf) {
+  static deserialise(local_identity: IdentityKeyPair, buf: ArrayBuffer): Session {
     TypeUtil.assert_is_instance(IdentityKeyPair, local_identity);
     TypeUtil.assert_is_instance(ArrayBuffer, buf);
 
@@ -356,11 +333,7 @@ export default class Session {
     return this.decode(local_identity, decoder);
   }
 
-  /**
-   * @param {!CBOR.Encoder} encoder
-   * @returns {void}
-   */
-  encode(encoder) {
+  encode(encoder: CBOR.Encoder): void {
     encoder.object(6);
     encoder.u8(0);
     encoder.u8(this.version);
@@ -375,7 +348,7 @@ export default class Session {
     if (this.pending_prekey) {
       encoder.object(2);
       encoder.u8(0);
-      encoder.u16(this.pending_prekey[0]);
+      encoder.u16(<number>this.pending_prekey[0]);
       encoder.u8(1);
       (<PublicKey>this.pending_prekey[1]).encode(encoder);
     } else {
@@ -392,12 +365,7 @@ export default class Session {
     }
   }
 
-  /**
-   * @param {!keys.IdentityKeyPair} local_identity
-   * @param {!CBOR.Decoder} decoder
-   * @returns {Session}
-   */
-  static decode(local_identity, decoder) {
+  static decode(local_identity: IdentityKeyPair, decoder: CBOR.Decoder): Session {
     TypeUtil.assert_is_instance(IdentityKeyPair, local_identity);
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
@@ -427,7 +395,7 @@ export default class Session {
           break;
         }
         case 4: {
-          switch (decoder.optional(() => decoder.object())) {
+          switch (decoder.optional<number>(() => decoder.object())) {
             case null:
               self.pending_prekey = null;
               break;
@@ -457,7 +425,7 @@ export default class Session {
             idx = 0 <= ref ? ++subindex : --subindex
           ) {
             const tag = SessionTag.decode(decoder);
-            self.session_states[tag] = {
+            self.session_states[<any>tag] = {
               idx,
               state: SessionState.decode(decoder),
               tag: tag,

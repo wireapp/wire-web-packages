@@ -52,11 +52,7 @@ export default class MessageKeys {
     return mk;
   }
 
-  /**
-   * @returns {Uint8Array}
-   * @private
-   */
-  _counter_as_nonce() {
+  private _counter_as_nonce(): Uint8Array {
     const nonce = new ArrayBuffer(8);
     new DataView(nonce).setUint32(0, this.counter);
     return new Uint8Array(nonce);
@@ -64,17 +60,15 @@ export default class MessageKeys {
 
   /**
    * @param {!(string|Uint8Array)} plaintext
-   * @returns {Uint8Array}
    */
-  encrypt(plaintext) {
+  encrypt(plaintext): Uint8Array {
     return this.cipher_key.encrypt(plaintext, this._counter_as_nonce());
   }
 
   /**
    * @param {!Uint8Array} ciphertext
-   * @returns {Uint8Array}
    */
-  decrypt(ciphertext) {
+  decrypt(ciphertext): Uint8Array {
     return this.cipher_key.decrypt(ciphertext, this._counter_as_nonce());
   }
 
@@ -82,7 +76,7 @@ export default class MessageKeys {
    * @param {!CBOR.Encoder} encoder
    * @returns {CBOR.Encoder}
    */
-  encode(encoder) {
+  encode(encoder: CBOR.Encoder): CBOR.Encoder {
     encoder.object(3);
     encoder.u8(0);
     this.cipher_key.encode(encoder);
@@ -96,7 +90,7 @@ export default class MessageKeys {
    * @param {!CBOR.Decoder} decoder
    * @returns {MessageKeys}
    */
-  static decode(decoder) {
+  static decode(decoder: CBOR.Decoder) {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     const self = ClassUtil.new_instance(MessageKeys);

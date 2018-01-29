@@ -48,7 +48,6 @@ import RootKey from './RootKey';
 import SendChain from './SendChain';
 import Session from './Session';
 
-/** @class SessionState */
 export default class SessionState {
   recv_chains: Array<RecvChain> = null;
   send_chain: SendChain = null;
@@ -57,13 +56,11 @@ export default class SessionState {
 
   constructor() {}
 
-  /**
-   * @param {!keys.IdentityKeyPair} alice_identity_pair
-   * @param {!keys.PublicKey} alice_base
-   * @param {!keys.PreKeyBundle} bob_pkbundle
-   * @returns {SessionState}
-   */
-  static init_as_alice(alice_identity_pair, alice_base, bob_pkbundle) {
+  static init_as_alice(
+    alice_identity_pair: IdentityKeyPair,
+    alice_base: IdentityKeyPair,
+    bob_pkbundle: PreKeyBundle
+  ): SessionState {
     TypeUtil.assert_is_instance(IdentityKeyPair, alice_identity_pair);
     TypeUtil.assert_is_instance(KeyPair, alice_base);
     TypeUtil.assert_is_instance(PreKeyBundle, bob_pkbundle);
@@ -94,14 +91,12 @@ export default class SessionState {
     return state;
   }
 
-  /**
-   * @param {!keys.IdentityKeyPair} bob_ident
-   * @param {!keys.KeyPair} bob_prekey
-   * @param {!keys.IdentityKey} alice_ident
-   * @param {!keys.PublicKey} alice_base
-   * @returns {SessionState}
-   */
-  static init_as_bob(bob_ident, bob_prekey, alice_ident, alice_base) {
+  static init_as_bob(
+    bob_ident: IdentityKeyPair,
+    bob_prekey: KeyPair,
+    alice_ident: IdentityKey,
+    alice_base: PublicKey
+  ): SessionState {
     TypeUtil.assert_is_instance(IdentityKeyPair, bob_ident);
     TypeUtil.assert_is_instance(KeyPair, bob_prekey);
     TypeUtil.assert_is_instance(IdentityKey, alice_ident);
@@ -128,11 +123,7 @@ export default class SessionState {
     return state;
   }
 
-  /**
-   * @param {!keys.KeyPair} ratchet_key
-   * @returns {void}
-   */
-  ratchet(ratchet_key) {
+  ratchet(ratchet_key: KeyPair): void {
     const new_ratchet = KeyPair.new();
 
     const [recv_root_key, recv_chain_key] = this.root_key.dh_ratchet(this.send_chain.ratchet_key, ratchet_key);
@@ -158,10 +149,10 @@ export default class SessionState {
   }
 
   /**
-   * @param {!keys.IdentityKey} identity_key - Public identity key of the local identity key pair
-   * @param {!Array<number>} pending - Pending pre-key
-   * @param {!message.SessionTag} tag - Session tag
-   * @param {!(string|Uint8Array)} plaintext - The plaintext to encrypt
+   * @param {!keys.IdentityKey} identity_key Public identity key of the local identity key pair
+   * @param {!Array<number>} pending Pending pre-key
+   * @param {!message.SessionTag} tag Session tag
+   * @param {!(string|Uint8Array)} plaintext The plaintext to encrypt
    * @returns {message.Envelope}
    */
   encrypt(identity_key, pending, tag, plaintext) {
@@ -194,9 +185,8 @@ export default class SessionState {
   /**
    * @param {!message.Envelope} envelope
    * @param {!message.CipherMessage} msg
-   * @returns {Uint8Array}
    */
-  decrypt(envelope, msg) {
+  decrypt(envelope, msg): Uint8Array {
     TypeUtil.assert_is_instance(Envelope, envelope);
     TypeUtil.assert_is_instance(CipherMessage, msg);
 
@@ -260,7 +250,7 @@ export default class SessionState {
    * @param {!CBOR.Encoder} encoder
    * @returns {CBOR.Encoder}
    */
-  encode(encoder) {
+  encode(encoder: CBOR.Encoder): CBOR.Encoder {
     encoder.object(4);
     encoder.u8(0);
     encoder.array(this.recv_chains.length);
@@ -277,7 +267,7 @@ export default class SessionState {
    * @param {!CBOR.Decoder} decoder
    * @returns {SessionState}
    */
-  static decode(decoder) {
+  static decode(decoder: CBOR.Decoder) {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     const self = ClassUtil.new_instance(SessionState);

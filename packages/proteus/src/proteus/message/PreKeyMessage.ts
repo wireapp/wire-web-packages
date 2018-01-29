@@ -71,7 +71,7 @@ export default class PreKeyMessage extends Message {
    * @param {!CBOR.Encoder} encoder
    * @returns {CBOR.Encoder}
    */
-  encode(encoder) {
+  encode(encoder: CBOR.Encoder): CBOR.Encoder {
     encoder.object(4);
     encoder.u8(0);
     encoder.u16(this.prekey_id);
@@ -87,7 +87,7 @@ export default class PreKeyMessage extends Message {
    * @param {!CBOR.Decoder} decoder
    * @returns {PreKeyMessage}
    */
-  static decode(decoder) {
+  static decode(decoder: CBOR.Decoder) {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     let prekey_id = null;

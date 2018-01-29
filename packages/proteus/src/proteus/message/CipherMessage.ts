@@ -72,7 +72,7 @@ export default class CipherMessage extends Message {
    * @param {!CBOR.Encoder} encoder
    * @returns {CBOR.Encoder}
    */
-  encode(encoder) {
+  encode(encoder: CBOR.Encoder): CBOR.Encoder {
     encoder.object(5);
     encoder.u8(0);
     this.session_tag.encode(encoder);
@@ -90,7 +90,7 @@ export default class CipherMessage extends Message {
    * @param {!CBOR.Decoder} decoder
    * @returns {CipherMessage}
    */
-  static decode(decoder) {
+  static decode(decoder: CBOR.Decoder) {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     let session_tag = null;

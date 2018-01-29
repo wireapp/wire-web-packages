@@ -28,11 +28,7 @@ export default class CipherKey {
 
   constructor() {}
 
-  /**
-   * @param {!Uint8Array} key
-   * @returns {CipherKey}
-   */
-  static new(key) {
+  static new(key: Uint8Array): CipherKey {
     TypeUtil.assert_is_instance(Uint8Array, key);
 
     const ck = ClassUtil.new_instance(CipherKey);
@@ -41,11 +37,11 @@ export default class CipherKey {
   }
 
   /**
-   * @param {!(ArrayBuffer|String|Uint8Array)} plaintext - The text to encrypt
-   * @param {!Uint8Array} nonce - Counter as nonce
-   * @returns {Uint8Array} - Encrypted payload
+   * @param plaintext The text to encrypt
+   * @param nonce Counter as nonce
+   * @returns Encrypted payload
    */
-  encrypt(plaintext, nonce) {
+  encrypt(plaintext: ArrayBuffer | string | Uint8Array, nonce: Uint8Array): Uint8Array {
     // @todo Re-validate if the ArrayBuffer check is needed (Prerequisite: Integration tests)
     if (plaintext instanceof ArrayBuffer && plaintext.byteLength !== undefined) {
       plaintext = new Uint8Array(plaintext);
@@ -54,12 +50,7 @@ export default class CipherKey {
     return sodium.crypto_stream_chacha20_xor(plaintext, nonce, this.key, 'uint8array');
   }
 
-  /**
-   * @param {!Uint8Array} ciphertext
-   * @param {!Uint8Array} nonce
-   * @returns {Uint8Array}
-   */
-  decrypt(ciphertext, nonce) {
+  decrypt(ciphertext: Uint8Array, nonce: Uint8Array): Uint8Array {
     return this.encrypt(ciphertext, nonce);
   }
 
@@ -67,17 +58,13 @@ export default class CipherKey {
    * @param {!CBOR.Encoder} encoder
    * @returns {CBOR.Encoder}
    */
-  encode(encoder) {
+  encode(encoder: CBOR.Encoder): CBOR.Encoder {
     encoder.object(1);
     encoder.u8(0);
     return encoder.bytes(this.key);
   }
 
-  /**
-   * @param {!CBOR.Encoder} decoder
-   * @returns {CipherKey}
-   */
-  static decode(decoder) {
+  static decode(decoder: CBOR.Decoder): CipherKey {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     let key_bytes = null;

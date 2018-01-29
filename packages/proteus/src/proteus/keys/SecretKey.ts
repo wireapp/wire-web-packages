@@ -52,9 +52,9 @@ export default class SecretKey {
   /**
    * This function can be used to compute a message signature.
    * @param {!string} message - Message to be signed
-   * @returns {Uint8Array} - A message signature
+   * @returns A message signature
    */
-  sign(message) {
+  sign(message): Uint8Array {
     return sodium.crypto_sign_detached(message, this.sec_edward);
   }
 
@@ -62,9 +62,9 @@ export default class SecretKey {
    * This function can be used to compute a shared secret given a user's secret key and another
    * user's public key.
    * @param {!keys.PublicKey} public_key - Another user's public key
-   * @returns {Uint8Array} - Array buffer view of the computed shared secret
+   * @returns Array buffer view of the computed shared secret
    */
-  shared_secret(public_key) {
+  shared_secret(public_key): Uint8Array {
     TypeUtil.assert_is_instance(PublicKey, public_key);
 
     const shared_secret = sodium.crypto_scalarmult(this.sec_curve, public_key.pub_curve);
@@ -74,21 +74,16 @@ export default class SecretKey {
     return shared_secret;
   }
 
-  /**
-   * @param {!CBOR.Encoder} encoder
-   * @returns {CBOR.Encoder}
-   */
-  encode(encoder) {
+  encode(encoder: CBOR.Encoder): CBOR.Encoder {
     encoder.object(1);
     encoder.u8(0);
     return encoder.bytes(this.sec_edward);
   }
 
   /**
-   * @param {!CBOR.Decoder} decoder
    * @returns {SecretKey}
    */
-  static decode(decoder) {
+  static decode(decoder: CBOR.Decoder) {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     const self = ClassUtil.new_instance(SecretKey);

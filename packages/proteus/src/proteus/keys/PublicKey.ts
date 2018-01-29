@@ -30,17 +30,11 @@ export default class PublicKey {
 
   constructor() {}
 
-  /**
-   * @param {!Uint8Array} pub_edward
-   * @param {!Uint8Array} pub_curve
-   * @returns {keys.PublicKey}
-   */
-  static new(pub_edward, pub_curve) {
+  static new(pub_edward: Uint8Array, pub_curve: Uint8Array): PublicKey {
     TypeUtil.assert_is_instance(Uint8Array, pub_edward);
     TypeUtil.assert_is_instance(Uint8Array, pub_curve);
 
-    /** @type {keys.PublicKey} */
-    const pk = ClassUtil.new_instance(PublicKey);
+    const pk: PublicKey = ClassUtil.new_instance(PublicKey);
 
     pk.pub_edward = pub_edward;
     pk.pub_curve = pub_curve;
@@ -50,35 +44,26 @@ export default class PublicKey {
   /**
    * This function can be used to verify a message signature.
    *
-   * @param {!Uint8Array} signature - The signature to verify
-   * @param {!string} message - The message from which the signature was computed.
-   * @returns {boolean} - `true` if the signature is valid, `false` otherwise.
+   * @param signature The signature to verify
+   * @param message The message from which the signature was computed.
+   * @returns `true` if the signature is valid, `false` otherwise.
    */
-  verify(signature, message) {
+  verify(signature: Uint8Array, message: Uint8Array): boolean {
     TypeUtil.assert_is_instance(Uint8Array, signature);
     return sodium.crypto_sign_verify_detached(signature, message, this.pub_edward);
   }
 
-  /** @returns {string} */
-  fingerprint() {
+  fingerprint(): string {
     return sodium.to_hex(this.pub_edward);
   }
 
-  /**
-   * @param {!CBOR.Encoder} encoder
-   * @returns {CBOR.Encoder}
-   */
-  encode(encoder) {
+  encode(encoder: CBOR.Encoder): CBOR.Encoder {
     encoder.object(1);
     encoder.u8(0);
     return encoder.bytes(this.pub_edward);
   }
 
-  /**
-   * @param {!CBOR.Decoder} decoder
-   * @returns {keys.PublicKey}
-   */
-  static decode(decoder) {
+  static decode(decoder: CBOR.Decoder): PublicKey {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     const self = ClassUtil.new_instance(PublicKey);

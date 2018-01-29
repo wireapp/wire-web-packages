@@ -47,7 +47,7 @@ export default class SendChain {
    * @param {!CBOR.Encoder} encoder
    * @returns {CBOR.Encoder}
    */
-  encode(encoder) {
+  encode(encoder: CBOR.Encoder): CBOR.Encoder {
     encoder.object(2);
     encoder.u8(0);
     this.chain_key.encode(encoder);
@@ -59,7 +59,7 @@ export default class SendChain {
    * @param {!CBOR.Decoder} decoder
    * @returns {SendChain}
    */
-  static decode(decoder) {
+  static decode(decoder: CBOR.Decoder) {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
     const self = ClassUtil.new_instance(SendChain);
     const nprops = decoder.object();

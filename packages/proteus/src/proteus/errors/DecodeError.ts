@@ -21,12 +21,6 @@
 
 import ProteusError from './ProteusError';
 
-/**
- * @extends ProteusError
- * @param {string} [message]
- * @param {string} [code]
- * @returns {string}
- */
 class DecodeError extends ProteusError {
   static CODE = {
     CASE_300: 300,
@@ -41,12 +35,6 @@ class DecodeError extends ProteusError {
   }
 }
 
-/**
- * @extends DecodeError
- * @param {string} [message]
- * @param {string} [code]
- * @returns {string}
- */
 class InvalidType extends DecodeError {
   constructor(message = 'Invalid type', code) {
     super(message, code);
@@ -54,12 +42,6 @@ class InvalidType extends DecodeError {
   }
 }
 
-/**
- * @extends DecodeError
- * @param {string} [message]
- * @param {string} [code]
- * @returns {string}
- */
 class InvalidArrayLen extends DecodeError {
   constructor(message = 'Invalid array length', code) {
     super(message, code);
@@ -67,12 +49,6 @@ class InvalidArrayLen extends DecodeError {
   }
 }
 
-/**
- * @extends DecodeError
- * @param {string} [message]
- * @param {string} [code]
- * @returns {string}
- */
 class LocalIdentityChanged extends DecodeError {
   constructor(message = 'Local identity changed', code) {
     super(message, code);

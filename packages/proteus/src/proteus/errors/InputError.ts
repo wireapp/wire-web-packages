@@ -21,12 +21,6 @@
 
 import ProteusError from './ProteusError';
 
-/**
- * @extends ProteusError
- * @param {string} [message]
- * @param {string} [code]
- * @returns {string}
- */
 class InputError extends ProteusError {
   static CODE = {
     CASE_400: 400,
@@ -42,12 +36,6 @@ class InputError extends ProteusError {
   }
 }
 
-/**
- * @extends InputError
- * @param {string} [message]
- * @param {string} [code]
- * @returns {string}
- */
 class RangeError extends InputError {
   constructor(message = 'Invalid type', code) {
     super(message, code);
@@ -55,12 +43,6 @@ class RangeError extends InputError {
   }
 }
 
-/**
- * @extends InputError
- * @param {string} [message]
- * @param {string} [code]
- * @returns {string}
- */
 class TypeError extends InputError {
   constructor(message = 'Invalid array length', code) {
     super(message, code);
