@@ -9,10 +9,8 @@
   "devDependencies": {
     "bower": "1.8.2",
     "chai": "4.1.2",
-    "jsdoc": "3.5.5",
     "mocha": "2.5.3",
     "rimraf": "2.6.2",
-    "tsd-jsdoc": "dcodeio/tsd-jsdoc#fe76c4dc071b00bb549d3af7a3bad8c555999e81",
     "typescript": "2.6.2",
     "webpack": "3.10.0"
   },
@@ -31,6 +29,6 @@
       "mocha -s 30000 -t 30000 --recursive test/harness.js test --trace-warnings --grep LongRunning --invert",
     "test:longrunning": "mocha -s 30000 -t 30000 --recursive test/harness.js test --trace-warnings --grep LongRunning"
   },
-  "types": "dist/types.d.ts",
+  "types": "dist/commonjs/proteus.d.ts",
   "version": "5.3.3"
 }
