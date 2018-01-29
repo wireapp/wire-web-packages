@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2016 Wire Swiss GmbH
+ * Copyright (C) 2018 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,28 +17,14 @@
  *
  */
 
-/** @class PreKeyStore */
-function PreKeyStore() {}
+export default class PreKeyStore {
+  prekeys: Array<number> = [];
 
-/** @type {Array<number>} */
-(<any>PreKeyStore).prekeys = [];
+  get_prekey(prekey_id: number): void {
+    throw Error('Virtual function unimplemented');
+  }
 
-/**
- * @param {!number} prekey_id
- * @returns {void}
- * @throws {Error}
- */
-PreKeyStore.prototype.get_prekey = function(prekey_id) {
-  throw Error('Virtual function unimplemented');
-};
-
-/**
- * @param {!number} prekey_id
- * @returns {void}
- * @throws {Error}
- */
-PreKeyStore.prototype.remove = function(prekey_id) {
-  throw Error('Virtual function unimplemented');
-};
-
-export default PreKeyStore;
+  remove(prekey_id: number): void {
+    throw Error('Virtual function unimplemented');
+  }
+}

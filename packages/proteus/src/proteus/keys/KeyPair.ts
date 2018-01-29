@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2016 Wire Swiss GmbH
+ * Copyright (C) 2018 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,12 +19,11 @@
 
 /* eslint no-magic-numbers: "off" */
 
-const CBOR = require('@wireapp/cbor');
-const ed2curve = require('ed2curve');
-const sodium = require('libsodium-wrappers-sumo');
+import * as CBOR from '@wireapp/cbor';
+import * as ed2curve from 'ed2curve';
+import * as sodium from 'libsodium-wrappers-sumo';
 
 import ClassUtil from '../util/ClassUtil';
-
 import TypeUtil from '../util/TypeUtil';
 
 import PublicKey from './PublicKey';

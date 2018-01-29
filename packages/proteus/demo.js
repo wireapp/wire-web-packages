@@ -1,5 +1,5 @@
 const Proteus = require('../dist/window/proteus');
-const sodium = require('libsodium-wrappers-sumo');
+import * as sodium from 'libsodium-wrappers-sumo';
 
 const identity = Proteus.keys.IdentityKeyPair.new();
 const fingerprint = identity.public_key.fingerprint();
