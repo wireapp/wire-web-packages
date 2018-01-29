@@ -36,21 +36,21 @@ class DecodeError extends ProteusError {
 }
 
 class InvalidType extends DecodeError {
-  constructor(message = 'Invalid type', code) {
+  constructor(message = 'Invalid type', code: number) {
     super(message, code);
     Object.setPrototypeOf(this, InvalidType.prototype);
   }
 }
 
 class InvalidArrayLen extends DecodeError {
-  constructor(message = 'Invalid array length', code) {
+  constructor(message = 'Invalid array length', code: number) {
     super(message, code);
     Object.setPrototypeOf(this, InvalidArrayLen.prototype);
   }
 }
 
 class LocalIdentityChanged extends DecodeError {
-  constructor(message = 'Local identity changed', code) {
+  constructor(message = 'Local identity changed', code: number) {
     super(message, code);
     Object.setPrototypeOf(this, LocalIdentityChanged.prototype);
   }

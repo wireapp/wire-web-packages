@@ -20,7 +20,7 @@
 import PreKey from '../keys/PreKey';
 
 export default class PreKeyStore {
-  prekeys: Array<number> = [];
+  prekeys: Array<PreKey> = [];
 
   get_prekey(prekey_id: number): Promise<PreKey> {
     throw Error('Virtual function unimplemented');

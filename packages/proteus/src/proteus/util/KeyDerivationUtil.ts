@@ -37,7 +37,7 @@ const KeyDerivationUtil = {
     info: Uint8Array | string,
     length: number
   ): Uint8Array {
-    const convert_type = value => {
+    const convert_type = (value: string | Uint8Array) => {
       if (typeof value === 'string') {
         return sodium.from_string(value);
       }
@@ -46,14 +46,14 @@ const KeyDerivationUtil = {
     };
 
     salt = convert_type(salt);
-    input = convert_type(input);
+    input = convert_type(<Uint8Array | string>input);
     info = convert_type(info);
 
     TypeUtil.assert_is_integer(length);
 
     const HASH_LEN = 32;
 
-    const salt_to_key = (received_salt): Uint8Array => {
+    const salt_to_key = (received_salt: Uint8Array): Uint8Array => {
       const keybytes = sodium.crypto_auth_hmacsha256_KEYBYTES;
       if (received_salt.length > keybytes) {
         return <Uint8Array>sodium.crypto_hash_sha256(received_salt);
@@ -64,11 +64,11 @@ const KeyDerivationUtil = {
       return key;
     };
 
-    const extract = (received_salt, received_input): Uint8Array => {
+    const extract = (received_salt: Uint8Array, received_input: Uint8Array): Uint8Array => {
       return <Uint8Array>sodium.crypto_auth_hmacsha256(received_input, salt_to_key(received_salt));
     };
 
-    const expand = (tag, received_info, received_length: number): Uint8Array => {
+    const expand = (tag: Uint8Array, received_info: Uint8Array, received_length: number): Uint8Array => {
       const num_blocks = Math.ceil(received_length / HASH_LEN);
       let hmac = new Uint8Array(0);
       let result: any = new Uint8Array(0);

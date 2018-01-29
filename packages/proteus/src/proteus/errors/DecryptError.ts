@@ -45,49 +45,49 @@ class DecryptError extends ProteusError {
 }
 
 class RemoteIdentityChanged extends DecryptError {
-  constructor(message = 'Remote identity changed', code) {
+  constructor(message = 'Remote identity changed', code: number) {
     super(message, code);
     Object.setPrototypeOf(this, RemoteIdentityChanged.prototype);
   }
 }
 
 class InvalidSignature extends DecryptError {
-  constructor(message = 'Invalid signature', code) {
+  constructor(message = 'Invalid signature', code: number) {
     super(message, code);
     Object.setPrototypeOf(this, InvalidSignature.prototype);
   }
 }
 
 class InvalidMessage extends DecryptError {
-  constructor(message = 'Invalid message', code) {
+  constructor(message = 'Invalid message', code: number) {
     super(message, code);
     Object.setPrototypeOf(this, InvalidMessage.prototype);
   }
 }
 
 class DuplicateMessage extends DecryptError {
-  constructor(message = 'Duplicate message', code) {
+  constructor(message = 'Duplicate message', code: number) {
     super(message, code);
     Object.setPrototypeOf(this, DuplicateMessage.prototype);
   }
 }
 
 class TooDistantFuture extends DecryptError {
-  constructor(message = 'Message is from too distant in the future', code) {
+  constructor(message = 'Message is from too distant in the future', code: number) {
     super(message, code);
     Object.setPrototypeOf(this, TooDistantFuture.prototype);
   }
 }
 
 class OutdatedMessage extends DecryptError {
-  constructor(message = 'Outdated message', code) {
+  constructor(message = 'Outdated message', code: number) {
     super(message, code);
     Object.setPrototypeOf(this, OutdatedMessage.prototype);
   }
 }
 
 class PrekeyNotFound extends DecryptError {
-  constructor(message = 'Pre-key not found', code) {
+  constructor(message = 'Pre-key not found', code: number) {
     super(message, code);
     Object.setPrototypeOf(this, PrekeyNotFound.prototype);
   }

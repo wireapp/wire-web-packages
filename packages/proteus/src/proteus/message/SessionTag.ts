@@ -26,7 +26,11 @@ import TypeUtil from '../util/TypeUtil';
 import DecodeError from '../errors/DecodeError';
 import RandomUtil from '../util/RandomUtil';
 
+import SessionState from '../session/SessionState';
+
 export default class SessionTag {
+  idx: number;
+  state: SessionState;
   tag: Uint8Array;
 
   constructor() {}

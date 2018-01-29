@@ -44,6 +44,14 @@ import SessionTag from '../message/SessionTag';
 
 import PreKeyStore from './PreKeyStore';
 
+export interface IntermediateSessionState {
+  [index: string]: {
+    idx: number;
+    state: SessionState;
+    tag: SessionTag;
+  };
+}
+
 export default class Session {
   static MAX_RECV_CHAINS = 5;
   static MAX_SESSION_STATES = 100;
@@ -52,7 +60,7 @@ export default class Session {
   local_identity: IdentityKeyPair = null;
   pending_prekey: Array<number | PublicKey> = null;
   remote_identity: IdentityKey = null;
-  session_states: Object = null;
+  session_states: IntermediateSessionState = null;
   session_tag: SessionTag = null;
   version = 1;
 
@@ -125,7 +133,7 @@ export default class Session {
           session._insert_session_state(pkmsg.message.session_tag, state);
 
           if (pkmsg.prekey_id < PreKey.MAX_PREKEY_ID) {
-            MemoryUtil.zeroize(prekey_store.prekeys[pkmsg.prekey_id]);
+            MemoryUtil.zeroize<PreKey>(prekey_store.prekeys[pkmsg.prekey_id]);
             return prekey_store
               .remove(pkmsg.prekey_id)
               .then(() => resolve([session, plain]))
@@ -160,14 +168,14 @@ export default class Session {
 
   private _insert_session_state(tag: SessionTag, state: SessionState): void {
     if (this.session_states.hasOwnProperty(<any>tag)) {
-      this.session_states[<any>tag].state = state;
+      this.session_states[tag.toString()].state = state;
     } else {
       if (this.counter >= Number.MAX_SAFE_INTEGER) {
         this.session_states = {};
         this.counter = 0;
       }
 
-      this.session_states[<any>tag] = {
+      this.session_states[tag.toString()] = {
         idx: this.counter,
         state: state,
         tag: tag,
@@ -179,7 +187,7 @@ export default class Session {
       this.session_tag = tag;
     }
 
-    const obj_size = obj => Object.keys(obj).length;
+    const obj_size = (obj: IntermediateSessionState) => Object.keys(obj).length;
 
     if (obj_size(this.session_states) < Session.MAX_SESSION_STATES) {
       return;
@@ -279,7 +287,7 @@ export default class Session {
   }
 
   private _decrypt_cipher_message(envelope: Envelope, msg: CipherMessage): Uint8Array {
-    let state = this.session_states[<any>msg.session_tag];
+    const state = this.session_states[<any>msg.session_tag];
     if (!state) {
       throw new (<any>DecryptError).InvalidMessage(
         `Local session not found for message session tag '${msg.session_tag}'.`,
@@ -290,13 +298,13 @@ export default class Session {
     // serialise and de-serialise for a deep clone
     // THIS IS IMPORTANT, DO NOT MUTATE THE SESSION STATE IN-PLACE
     // mutating in-place can lead to undefined behavior and undefined state in edge cases
-    state = SessionState.deserialise(state.state.serialise());
+    const session_state = SessionState.deserialise(state.state.serialise());
 
-    const plaintext = state.decrypt(envelope, msg);
+    const plaintext = session_state.decrypt(envelope, msg);
 
     this.pending_prekey = null;
 
-    this._insert_session_state(msg.session_tag, state);
+    this._insert_session_state(msg.session_tag, session_state);
     return plaintext;
   }
 

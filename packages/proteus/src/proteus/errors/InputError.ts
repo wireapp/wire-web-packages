@@ -37,14 +37,14 @@ class InputError extends ProteusError {
 }
 
 class RangeError extends InputError {
-  constructor(message = 'Invalid type', code) {
+  constructor(message = 'Invalid type', code: number) {
     super(message, code);
     Object.setPrototypeOf(this, RangeError.prototype);
   }
 }
 
 class TypeError extends InputError {
-  constructor(message = 'Invalid array length', code) {
+  constructor(message = 'Invalid array length', code: number) {
     super(message, code);
     Object.setPrototypeOf(this, TypeError.prototype);
   }

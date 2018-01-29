@@ -17,8 +17,12 @@
  *
  */
 
+export interface ParameterlessConstructor<T> {
+  new (): T;
+}
+
 const ClassUtil = {
-  new_instance<T>(_class): T {
+  new_instance<T>(_class: ParameterlessConstructor<T>): T {
     try {
       return new _class();
     } catch (error) {

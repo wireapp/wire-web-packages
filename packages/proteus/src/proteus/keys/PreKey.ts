@@ -51,7 +51,7 @@ export default class PreKey {
     return pk;
   }
 
-  static validate_pre_key_id(pre_key_id): void {
+  static validate_pre_key_id(pre_key_id: number): void {
     TypeUtil.assert_is_integer(pre_key_id);
 
     if (pre_key_id < 0 || pre_key_id > PreKey.MAX_PREKEY_ID) {
