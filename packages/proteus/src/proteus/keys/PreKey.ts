@@ -22,7 +22,7 @@
 const CBOR = require('@wireapp/cbor');
 
 import ClassUtil from '../util/ClassUtil';
-import DontCallConstructor from '../errors/DontCallConstructor';
+
 import InputError from '../errors/InputError';
 import TypeUtil from '../util/TypeUtil';
 
@@ -32,7 +32,6 @@ import KeyPair from './KeyPair';
  * @class PreKey
  * @classdesc Pre-generated (and regularly refreshed) pre-keys.
  * A Pre-Shared Key contains the public long-term identity and ephemeral handshake keys for the initial triple DH.
- * @throws {DontCallConstructor}
  */
 export default class PreKey {
   key_id: number;
@@ -40,9 +39,7 @@ export default class PreKey {
   version: number;
   static MAX_PREKEY_ID = 0xffff;
 
-  constructor() {
-    throw new DontCallConstructor(this);
-  }
+  constructor() {}
 
   /**
    * @param {!number} pre_key_id

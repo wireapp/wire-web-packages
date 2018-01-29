@@ -23,7 +23,7 @@ const CBOR = require('@wireapp/cbor');
 
 import ArrayUtil from '../util/ArrayUtil';
 import ClassUtil from '../util/ClassUtil';
-import DontCallConstructor from '../errors/DontCallConstructor';
+
 import MemoryUtil from '../util/MemoryUtil';
 import TypeUtil from '../util/TypeUtil';
 
@@ -55,9 +55,7 @@ export default class SessionState {
   root_key: RootKey = null;
   prev_counter: number = null;
 
-  constructor() {
-    throw new DontCallConstructor(this);
-  }
+  constructor() {}
 
   /**
    * @param {!keys.IdentityKeyPair} alice_identity_pair

@@ -11,7 +11,7 @@
     "removeComments": true,
     "sourceMap": false,
     "strict": false,
-    "target": "ES5"
+    "target": "ES6"
   },
   "exclude": ["bower_components", "node_modules", "dist"]
 }

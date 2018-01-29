@@ -20,7 +20,6 @@
 /* eslint no-magic-numbers: "off" */
 
 import ClassUtil from '../util/ClassUtil';
-import DontCallConstructor from '../errors/DontCallConstructor';
 
 import KeyDerivationUtil from '../util/KeyDerivationUtil';
 import MemoryUtil from '../util/MemoryUtil';
@@ -29,15 +28,12 @@ import MacKey from './MacKey';
 
 /**
  * @class DerivedSecrets
- * @throws {DontCallConstructor}
  */
 export default class DerivedSecrets {
   cipher_key: CipherKey;
   mac_key: MacKey;
 
-  constructor() {
-    throw new DontCallConstructor(this);
-  }
+  constructor() {}
 
   /**
    * @param {!Array<number>} input

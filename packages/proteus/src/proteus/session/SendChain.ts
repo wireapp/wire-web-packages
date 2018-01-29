@@ -22,7 +22,7 @@
 const CBOR = require('@wireapp/cbor');
 
 import ClassUtil from '../util/ClassUtil';
-import DontCallConstructor from '../errors/DontCallConstructor';
+
 import TypeUtil from '../util/TypeUtil';
 
 import ChainKey from './ChainKey';
@@ -30,15 +30,12 @@ import KeyPair from '../keys/KeyPair';
 
 /**
  * @class SendChain
- * @throws {DontCallConstructor}
  */
 export default class SendChain {
   chain_key: ChainKey;
   ratchet_key: KeyPair;
 
-  constructor() {
-    throw new DontCallConstructor(this);
-  }
+  constructor() {}
 
   static new(chain_key, keypair) {
     TypeUtil.assert_is_instance(ChainKey, chain_key);

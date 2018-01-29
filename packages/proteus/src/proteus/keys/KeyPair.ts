@@ -24,7 +24,7 @@ const ed2curve = require('ed2curve');
 const sodium = require('libsodium-wrappers-sumo');
 
 import ClassUtil from '../util/ClassUtil';
-import DontCallConstructor from '../errors/DontCallConstructor';
+
 import TypeUtil from '../util/TypeUtil';
 
 import PublicKey from './PublicKey';
@@ -33,15 +33,12 @@ import SecretKey from './SecretKey';
 /**
  * Construct an ephemeral key pair.
  * @class KeyPair
- * @throws {DontCallConstructor}
  */
 export default class KeyPair {
   public_key: PublicKey;
   secret_key: SecretKey;
 
-  constructor() {
-    throw new DontCallConstructor(this);
-  }
+  constructor() {}
 
   /** @returns {KeyPair} - `this` */
   static new() {

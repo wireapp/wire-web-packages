@@ -22,7 +22,6 @@
 const CBOR = require('@wireapp/cbor');
 
 import ClassUtil from '../util/ClassUtil';
-import DontCallConstructor from '../errors/DontCallConstructor';
 import TypeUtil from '../util/TypeUtil';
 
 import IdentityKey from '../keys/IdentityKey';
@@ -33,7 +32,6 @@ import Message from './Message';
 
 /**
  * @extends Message
- * @throws {DontCallConstructor}
  */
 export default class PreKeyMessage extends Message {
   prekey_id: number;
@@ -43,8 +41,6 @@ export default class PreKeyMessage extends Message {
 
   constructor() {
     super();
-
-    throw new DontCallConstructor(this);
   }
 
   /**

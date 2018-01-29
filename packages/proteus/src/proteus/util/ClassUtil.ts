@@ -17,8 +17,6 @@
  *
  */
 
-import DontCallConstructor from '../errors/DontCallConstructor';
-
 const ClassUtil = {
   /**
    * @param {*} _class
@@ -28,9 +26,6 @@ const ClassUtil = {
     try {
       return new _class();
     } catch (error) {
-      if (!(error instanceof DontCallConstructor)) {
-        throw error;
-      }
       return error._instance;
     }
   },

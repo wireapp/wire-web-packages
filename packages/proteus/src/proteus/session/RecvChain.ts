@@ -22,9 +22,7 @@
 const CBOR = require('@wireapp/cbor');
 
 import ClassUtil from '../util/ClassUtil';
-import DontCallConstructor from '../errors/DontCallConstructor';
 import TypeUtil from '../util/TypeUtil';
-
 import PublicKey from '../keys/PublicKey';
 
 import DecryptError from '../errors/DecryptError';
@@ -38,7 +36,6 @@ import MessageKeys from './MessageKeys';
 
 /**
  * @class RecvChain
- * @throws {DontCallConstructor}
  */
 export default class RecvChain {
   chain_key: ChainKey;
@@ -46,9 +43,7 @@ export default class RecvChain {
   ratchet_key: PublicKey;
   static MAX_COUNTER_GAP = 1000;
 
-  constructor() {
-    throw new DontCallConstructor(this);
-  }
+  constructor() {}
 
   /**
    * @param {!session.ChainKey} chain_key

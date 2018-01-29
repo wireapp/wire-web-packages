@@ -22,22 +22,19 @@ const ed2curve = require('ed2curve');
 const sodium = require('libsodium-wrappers-sumo');
 
 import ClassUtil from '../util/ClassUtil';
-import DontCallConstructor from '../errors/DontCallConstructor';
+
 import PublicKey from './PublicKey';
 import ArrayUtil from '../util/ArrayUtil';
 import TypeUtil from '../util/TypeUtil';
 
 /**
  * @class SecretKey
- * @throws {DontCallConstructor}
  */
 export default class SecretKey {
   sec_edward: Uint8Array;
   sec_curve: Uint8Array;
 
-  constructor() {
-    throw new DontCallConstructor(this);
-  }
+  constructor() {}
 
   /**
    * @param {!Uint8Array} sec_edward

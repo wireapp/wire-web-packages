@@ -20,8 +20,6 @@
 const CBOR = require('@wireapp/cbor');
 const sodium = require('libsodium-wrappers-sumo');
 
-import DontCallConstructor from '../errors/DontCallConstructor';
-
 import ClassUtil from '../util/ClassUtil';
 import TypeUtil from '../util/TypeUtil';
 
@@ -30,14 +28,11 @@ import RandomUtil from '../util/RandomUtil';
 
 /**
  * @class SessionTag
- * @throws {DontCallConstructor}
  */
 export default class SessionTag {
   tag: Uint8Array;
 
-  constructor() {
-    throw new DontCallConstructor(this);
-  }
+  constructor() {}
 
   /** @returns {SessionTag} - `this` */
   static new() {

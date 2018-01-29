@@ -21,19 +21,15 @@ const CBOR = require('@wireapp/cbor');
 const sodium = require('libsodium-wrappers-sumo');
 
 import ClassUtil from '../util/ClassUtil';
-import DontCallConstructor from '../errors/DontCallConstructor';
 import TypeUtil from '../util/TypeUtil';
 
 /**
  * @class CipherKey
- * @throws {DontCallConstructor}
  */
 export default class CipherKey {
   key: Uint8Array;
 
-  constructor() {
-    throw new DontCallConstructor(this);
-  }
+  constructor() {}
 
   /**
    * @param {!Uint8Array} key

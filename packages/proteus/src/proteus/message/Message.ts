@@ -21,19 +21,14 @@
 
 const CBOR = require('@wireapp/cbor');
 
-import DontCallConstructor from '../errors/DontCallConstructor';
 import TypeUtil from '../util/TypeUtil';
-
 import DecodeError from '../errors/DecodeError';
 
 /**
  * @class Message
- * @throws {DontCallConstructor}
  */
 export default class Message {
-  constructor() {
-    throw new DontCallConstructor(this);
-  }
+  constructor() {}
 
   /** @returns {ArrayBuffer} */
   serialise() {

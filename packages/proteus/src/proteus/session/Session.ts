@@ -22,7 +22,7 @@
 const CBOR = require('@wireapp/cbor');
 
 import ClassUtil from '../util/ClassUtil';
-import DontCallConstructor from '../errors/DontCallConstructor';
+
 import MemoryUtil from '../util/MemoryUtil';
 import TypeUtil from '../util/TypeUtil';
 
@@ -46,7 +46,6 @@ import PreKeyStore from './PreKeyStore';
 
 /**
  * @class Session
- * @throws {DontCallConstructor}
  */
 export default class Session {
   counter = 0;
@@ -59,9 +58,7 @@ export default class Session {
   static MAX_RECV_CHAINS = 5;
   static MAX_SESSION_STATES = 100;
 
-  constructor() {
-    throw new DontCallConstructor(this);
-  }
+  constructor() {}
 
   /**
    * @param {!keys.IdentityKeyPair} local_identity - Alice's Identity Key Pair

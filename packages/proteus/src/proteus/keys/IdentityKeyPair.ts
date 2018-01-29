@@ -22,7 +22,7 @@
 const CBOR = require('@wireapp/cbor');
 
 import ClassUtil from '../util/ClassUtil';
-import DontCallConstructor from '../errors/DontCallConstructor';
+
 import TypeUtil from '../util/TypeUtil';
 
 import IdentityKey from './IdentityKey';
@@ -31,16 +31,13 @@ import SecretKey from './SecretKey';
 
 /**
  * @class IdentityKeyPair
- * @throws {DontCallConstructor}
  */
 export default class IdentityKeyPair {
   public_key: IdentityKey;
   secret_key: SecretKey;
   version: number;
 
-  constructor() {
-    throw new DontCallConstructor(this);
-  }
+  constructor() {}
 
   /** @returns {keys.IdentityKeyPair} - `this` */
   static new() {

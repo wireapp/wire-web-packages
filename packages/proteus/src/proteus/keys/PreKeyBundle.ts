@@ -23,7 +23,7 @@ const CBOR = require('@wireapp/cbor');
 const sodium = require('libsodium-wrappers-sumo');
 
 import ClassUtil from '../util/ClassUtil';
-import DontCallConstructor from '../errors/DontCallConstructor';
+
 import TypeUtil from '../util/TypeUtil';
 
 import IdentityKey from './IdentityKey';
@@ -34,7 +34,6 @@ import PublicKey from './PublicKey';
 
 /**
  * @class PreKeyBundle
- * @throws {DontCallConstructor}
  */
 export default class PreKeyBundle {
   version: number;
@@ -43,9 +42,7 @@ export default class PreKeyBundle {
   identity_key: IdentityKey;
   signature: Uint8Array;
 
-  constructor() {
-    throw new DontCallConstructor(this);
-  }
+  constructor() {}
 
   /**
    * @param {!keys.IdentityKey} public_identity_key

@@ -22,17 +22,13 @@
 const CBOR = require('@wireapp/cbor');
 
 import ClassUtil from '../util/ClassUtil';
-import DontCallConstructor from '../errors/DontCallConstructor';
 import TypeUtil from '../util/TypeUtil';
-
 import PublicKey from '../keys/PublicKey';
-
 import Message from './Message';
 import SessionTag from './SessionTag';
 
 /**
  * @extends Message
- * @throws {DontCallConstructor}
  */
 export default class CipherMessage extends Message {
   session_tag: SessionTag;
@@ -43,7 +39,6 @@ export default class CipherMessage extends Message {
 
   constructor() {
     super();
-    throw new DontCallConstructor(this);
   }
 
   /**

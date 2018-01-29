@@ -22,7 +22,7 @@
 const CBOR = require('@wireapp/cbor');
 
 import ClassUtil from '../util/ClassUtil';
-import DontCallConstructor from '../errors/DontCallConstructor';
+
 import TypeUtil from '../util/TypeUtil';
 
 import CipherKey from '../derived/CipherKey';
@@ -30,16 +30,13 @@ import MacKey from '../derived/MacKey';
 
 /**
  * @class MessageKeys
- * @throws {DontCallConstructor}
  */
 export default class MessageKeys {
   cipher_key: CipherKey;
   mac_key: MacKey;
   counter: number;
 
-  constructor() {
-    throw new DontCallConstructor(this);
-  }
+  constructor() {}
 
   /**
    * @param {!derived.CipherKey} cipher_key
