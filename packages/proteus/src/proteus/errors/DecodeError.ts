@@ -28,17 +28,16 @@ import ProteusError from './ProteusError';
  * @returns {string}
  */
 class DecodeError extends ProteusError {
+  static CODE = {
+    CASE_300: 300,
+    CASE_301: 301,
+    CASE_302: 302,
+    CASE_303: 303,
+  };
+
   constructor(message = 'Unknown decoding error', code = 3) {
     super(message, code);
-  }
-
-  static get CODE() {
-    return {
-      CASE_300: 300,
-      CASE_301: 301,
-      CASE_302: 302,
-      CASE_303: 303,
-    };
+    Object.setPrototypeOf(this, DecodeError.prototype);
   }
 }
 
@@ -51,6 +50,7 @@ class DecodeError extends ProteusError {
 class InvalidType extends DecodeError {
   constructor(message = 'Invalid type', code) {
     super(message, code);
+    Object.setPrototypeOf(this, InvalidType.prototype);
   }
 }
 
@@ -63,6 +63,7 @@ class InvalidType extends DecodeError {
 class InvalidArrayLen extends DecodeError {
   constructor(message = 'Invalid array length', code) {
     super(message, code);
+    Object.setPrototypeOf(this, InvalidArrayLen.prototype);
   }
 }
 
@@ -75,6 +76,7 @@ class InvalidArrayLen extends DecodeError {
 class LocalIdentityChanged extends DecodeError {
   constructor(message = 'Local identity changed', code) {
     super(message, code);
+    Object.setPrototypeOf(this, LocalIdentityChanged.prototype);
   }
 }
 
@@ -83,7 +85,5 @@ Object.assign(DecodeError, {
   InvalidType,
   LocalIdentityChanged,
 });
-
-Object.assign(ProteusError, {DecodeError});
 
 export default DecodeError;

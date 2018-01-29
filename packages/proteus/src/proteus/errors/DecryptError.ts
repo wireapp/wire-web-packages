@@ -27,26 +27,25 @@ import ProteusError from './ProteusError';
  * @param {string} [code]
  */
 class DecryptError extends ProteusError {
+  static CODE = {
+    CASE_200: 200,
+    CASE_201: 201,
+    CASE_202: 202,
+    CASE_203: 203,
+    CASE_204: 204,
+    CASE_205: 205,
+    CASE_206: 206,
+    CASE_207: 207,
+    CASE_208: 208,
+    CASE_209: 209,
+    CASE_210: 210,
+    CASE_211: 211,
+    CASE_212: 212,
+  };
+
   constructor(message = 'Unknown decryption error', code = 2) {
     super(message, code);
-  }
-
-  static get CODE() {
-    return {
-      CASE_200: 200,
-      CASE_201: 201,
-      CASE_202: 202,
-      CASE_203: 203,
-      CASE_204: 204,
-      CASE_205: 205,
-      CASE_206: 206,
-      CASE_207: 207,
-      CASE_208: 208,
-      CASE_209: 209,
-      CASE_210: 210,
-      CASE_211: 211,
-      CASE_212: 212,
-    };
+    Object.setPrototypeOf(this, DecryptError.prototype);
   }
 }
 
@@ -58,6 +57,7 @@ class DecryptError extends ProteusError {
 class RemoteIdentityChanged extends DecryptError {
   constructor(message = 'Remote identity changed', code) {
     super(message, code);
+    Object.setPrototypeOf(this, RemoteIdentityChanged.prototype);
   }
 }
 
@@ -69,6 +69,7 @@ class RemoteIdentityChanged extends DecryptError {
 class InvalidSignature extends DecryptError {
   constructor(message = 'Invalid signature', code) {
     super(message, code);
+    Object.setPrototypeOf(this, InvalidSignature.prototype);
   }
 }
 
@@ -80,6 +81,7 @@ class InvalidSignature extends DecryptError {
 class InvalidMessage extends DecryptError {
   constructor(message = 'Invalid message', code) {
     super(message, code);
+    Object.setPrototypeOf(this, InvalidMessage.prototype);
   }
 }
 
@@ -91,6 +93,7 @@ class InvalidMessage extends DecryptError {
 class DuplicateMessage extends DecryptError {
   constructor(message = 'Duplicate message', code) {
     super(message, code);
+    Object.setPrototypeOf(this, DuplicateMessage.prototype);
   }
 }
 
@@ -102,6 +105,7 @@ class DuplicateMessage extends DecryptError {
 class TooDistantFuture extends DecryptError {
   constructor(message = 'Message is from too distant in the future', code) {
     super(message, code);
+    Object.setPrototypeOf(this, TooDistantFuture.prototype);
   }
 }
 
@@ -113,6 +117,7 @@ class TooDistantFuture extends DecryptError {
 class OutdatedMessage extends DecryptError {
   constructor(message = 'Outdated message', code) {
     super(message, code);
+    Object.setPrototypeOf(this, OutdatedMessage.prototype);
   }
 }
 
@@ -124,6 +129,7 @@ class OutdatedMessage extends DecryptError {
 class PrekeyNotFound extends DecryptError {
   constructor(message = 'Pre-key not found', code) {
     super(message, code);
+    Object.setPrototypeOf(this, PrekeyNotFound.prototype);
   }
 }
 
@@ -136,7 +142,5 @@ Object.assign(DecryptError, {
   RemoteIdentityChanged,
   TooDistantFuture,
 });
-
-Object.assign(ProteusError, {DecryptError});
 
 export default DecryptError;

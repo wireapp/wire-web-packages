@@ -38,14 +38,10 @@ export default class PreKey {
   key_id: number;
   key_pair: KeyPair;
   version: number;
+  static MAX_PREKEY_ID = 0xffff;
 
   constructor() {
     throw new DontCallConstructor(this);
-  }
-
-  /** @type {number} */
-  static get MAX_PREKEY_ID() {
-    return 0xffff;
   }
 
   /**

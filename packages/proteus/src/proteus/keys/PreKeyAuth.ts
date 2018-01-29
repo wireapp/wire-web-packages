@@ -17,20 +17,8 @@
  *
  */
 
-/** @class PreKeyAuth */
 export default class PreKeyAuth {
-  /** @type {string} */
-  static get INVALID() {
-    return 'Invalid';
-  }
-
-  /** @type {string} */
-  static get UNKNOWN() {
-    return 'Unknown';
-  }
-
-  /** @type {string} */
-  static get VALID() {
-    return 'Valid';
-  }
+  static INVALID = 'Invalid';
+  static UNKNOWN = 'Unknown';
+  static VALID = 'Valid';
 }

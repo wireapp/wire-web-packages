@@ -87,7 +87,7 @@ export default class RecvChain {
     });
 
     if (idx === -1) {
-      throw new (<any>DecryptError).DuplicateMessage(null, DecryptError.CODE.CASE_209);
+      throw new (<any>DecryptError).DuplicateMessage(undefined, DecryptError.CODE.CASE_209);
     }
 
     const mk = this.message_keys.splice(idx, 1)[0];

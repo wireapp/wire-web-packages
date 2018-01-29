@@ -17,6 +17,14 @@
  *
  */
 export default class ProteusError extends Error {
+  CODE: {[index: string]: number} = {
+    CASE_100: 100,
+    CASE_101: 101,
+    CASE_102: 102,
+    CASE_103: 103,
+    CASE_104: 104,
+  };
+
   constructor(public message: string, public code = 1) {
     super(message);
     Object.setPrototypeOf(this, ProteusError.prototype);
@@ -24,16 +32,6 @@ export default class ProteusError extends Error {
     this.code = code;
     this.message = message;
     this.name = (<any>this).constructor.name;
-    this.stack = new Error().stack;
-  }
-
-  get CODE() {
-    return {
-      CASE_100: 100,
-      CASE_101: 101,
-      CASE_102: 102,
-      CASE_103: 103,
-      CASE_104: 104,
-    };
+    //this.stack = new Error().stack;
   }
 }

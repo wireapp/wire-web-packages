@@ -56,19 +56,11 @@ export default class Session {
   session_states: Object = null;
   session_tag: SessionTag = null;
   version = 1;
+  static MAX_RECV_CHAINS = 5;
+  static MAX_SESSION_STATES = 100;
 
   constructor() {
     throw new DontCallConstructor(this);
-  }
-
-  /** @type {number} */
-  static get MAX_RECV_CHAINS() {
-    return 5;
-  }
-
-  /** @type {number} */
-  static get MAX_SESSION_STATES() {
-    return 100;
   }
 
   /**
