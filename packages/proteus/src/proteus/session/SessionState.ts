@@ -40,7 +40,10 @@ import PublicKey from '../keys/PublicKey';
 import CipherMessage from '../message/CipherMessage';
 import Envelope from '../message/Envelope';
 import PreKeyMessage from '../message/PreKeyMessage';
+import Message from '../message/Message';
 import SessionTag from '../message/SessionTag';
+
+import MessageKeys from '../session/MessageKeys';
 
 import ChainKey from './ChainKey';
 import RecvChain from './RecvChain';
@@ -49,16 +52,16 @@ import SendChain from './SendChain';
 import Session from './Session';
 
 export default class SessionState {
-  recv_chains: Array<RecvChain> = null;
-  send_chain: SendChain = null;
-  root_key: RootKey = null;
   prev_counter: number = null;
+  recv_chains: Array<RecvChain> = null;
+  root_key: RootKey = null;
+  send_chain: SendChain = null;
 
   constructor() {}
 
   static init_as_alice(
     alice_identity_pair: IdentityKeyPair,
-    alice_base: IdentityKeyPair,
+    alice_base: IdentityKeyPair | KeyPair,
     bob_pkbundle: PreKeyBundle
   ): SessionState {
     TypeUtil.assert_is_instance(IdentityKeyPair, alice_identity_pair);
@@ -81,12 +84,12 @@ export default class SessionState {
 
     const send_ratchet = KeyPair.new();
     const [rok, chk] = rootkey.dh_ratchet(send_ratchet, bob_pkbundle.public_key);
-    const send_chain = SendChain.new(chk, send_ratchet);
+    const send_chain = SendChain.new(<ChainKey>chk, send_ratchet);
 
-    const state = ClassUtil.new_instance(SessionState);
+    const state = ClassUtil.new_instance<SessionState>(SessionState);
     state.recv_chains = recv_chains;
     state.send_chain = send_chain;
-    state.root_key = rok;
+    state.root_key = <RootKey>rok;
     state.prev_counter = 0;
     return state;
   }
@@ -115,7 +118,7 @@ export default class SessionState {
     const chainkey = ChainKey.from_mac_key(derived_secrets.mac_key, 0);
     const send_chain = SendChain.new(chainkey, bob_prekey);
 
-    const state = ClassUtil.new_instance(SessionState);
+    const state = ClassUtil.new_instance<SessionState>(SessionState);
     state.recv_chains = [];
     state.send_chain = send_chain;
     state.root_key = rootkey;
@@ -123,17 +126,17 @@ export default class SessionState {
     return state;
   }
 
-  ratchet(ratchet_key: KeyPair): void {
+  ratchet(ratchet_key: PublicKey): void {
     const new_ratchet = KeyPair.new();
 
     const [recv_root_key, recv_chain_key] = this.root_key.dh_ratchet(this.send_chain.ratchet_key, ratchet_key);
 
-    const [send_root_key, send_chain_key] = recv_root_key.dh_ratchet(new_ratchet, ratchet_key);
+    const [send_root_key, send_chain_key] = (<RootKey>recv_root_key).dh_ratchet(new_ratchet, ratchet_key);
 
-    const recv_chain = RecvChain.new(recv_chain_key, ratchet_key);
-    const send_chain = SendChain.new(send_chain_key, new_ratchet);
+    const recv_chain = RecvChain.new(<ChainKey>recv_chain_key, ratchet_key);
+    const send_chain = SendChain.new(<ChainKey>send_chain_key, new_ratchet);
 
-    this.root_key = send_root_key;
+    this.root_key = <RootKey>send_root_key;
     this.prev_counter = this.send_chain.chain_key.idx;
     this.send_chain = send_chain;
 
@@ -149,13 +152,17 @@ export default class SessionState {
   }
 
   /**
-   * @param {!keys.IdentityKey} identity_key Public identity key of the local identity key pair
-   * @param {!Array<number>} pending Pending pre-key
-   * @param {!message.SessionTag} tag Session tag
-   * @param {!(string|Uint8Array)} plaintext The plaintext to encrypt
-   * @returns {message.Envelope}
+   * @param identity_key Public identity key of the local identity key pair
+   * @param pending Pending pre-key
+   * @param tag Session tag
+   * @param plaintext The plaintext to encrypt
    */
-  encrypt(identity_key, pending, tag, plaintext) {
+  encrypt(
+    identity_key: IdentityKey,
+    pending: Array<number | PublicKey>,
+    tag: SessionTag,
+    plaintext: string | Uint8Array
+  ): Envelope {
     if (pending) {
       TypeUtil.assert_is_integer(pending[0]);
       TypeUtil.assert_is_instance(PublicKey, pending[1]);
@@ -165,7 +172,7 @@ export default class SessionState {
 
     const msgkeys = this.send_chain.chain_key.message_keys();
 
-    let message = CipherMessage.new(
+    let message: Message = CipherMessage.new(
       tag,
       this.send_chain.chain_key.idx,
       this.prev_counter,
@@ -174,7 +181,7 @@ export default class SessionState {
     );
 
     if (pending) {
-      message = PreKeyMessage.new(pending[0], pending[1], identity_key, message);
+      message = PreKeyMessage.new(<number>pending[0], <PublicKey>pending[1], identity_key, <CipherMessage>message);
     }
 
     const env = Envelope.new(msgkeys.mac_key, message);
@@ -182,11 +189,7 @@ export default class SessionState {
     return env;
   }
 
-  /**
-   * @param {!message.Envelope} envelope
-   * @param {!message.CipherMessage} msg
-   */
-  decrypt(envelope, msg): Uint8Array {
+  decrypt(envelope: Envelope, msg: CipherMessage): Uint8Array {
     TypeUtil.assert_is_instance(Envelope, envelope);
     TypeUtil.assert_is_instance(CipherMessage, msg);
 
@@ -216,7 +219,7 @@ export default class SessionState {
     } else if (msg.counter > rc.chain_key.idx) {
       const [chk, mk, mks] = rc.stage_message_keys(msg);
 
-      if (!envelope.verify(mk.mac_key)) {
+      if (!envelope.verify((<MessageKeys>mk).mac_key)) {
         throw new (<any>DecryptError).InvalidSignature(
           `Envelope verification failed for message with counter ahead. Message index is '${
             msg.counter
@@ -225,31 +228,26 @@ export default class SessionState {
         );
       }
 
-      const plain = mk.decrypt(msg.cipher_text);
+      const plain = (<MessageKeys>mk).decrypt(msg.cipher_text);
 
-      rc.chain_key = chk.next();
-      rc.commit_message_keys(mks);
+      rc.chain_key = (<ChainKey>chk).next();
+      rc.commit_message_keys(<Array<MessageKeys>>mks);
 
       return plain;
     }
   }
 
-  /** @returns {ArrayBuffer} */
-  serialise() {
+  serialise(): ArrayBuffer {
     const encoder = new CBOR.Encoder();
     this.encode(encoder);
     return encoder.get_buffer();
   }
 
-  static deserialise(buf) {
+  static deserialise(buf: ArrayBuffer): SessionState {
     TypeUtil.assert_is_instance(ArrayBuffer, buf);
     return SessionState.decode(new CBOR.Decoder(buf));
   }
 
-  /**
-   * @param {!CBOR.Encoder} encoder
-   * @returns {CBOR.Encoder}
-   */
   encode(encoder: CBOR.Encoder): CBOR.Encoder {
     encoder.object(4);
     encoder.u8(0);
@@ -263,14 +261,10 @@ export default class SessionState {
     return encoder.u32(this.prev_counter);
   }
 
-  /**
-   * @param {!CBOR.Decoder} decoder
-   * @returns {SessionState}
-   */
-  static decode(decoder: CBOR.Decoder) {
+  static decode(decoder: CBOR.Decoder): SessionState {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
-    const self = ClassUtil.new_instance(SessionState);
+    const self = ClassUtil.new_instance<SessionState>(SessionState);
 
     const nprops = decoder.object();
     for (let index = 0; index <= nprops - 1; index++) {

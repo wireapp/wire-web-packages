@@ -29,23 +29,17 @@ import MacKey from '../derived/MacKey';
 
 export default class MessageKeys {
   cipher_key: CipherKey;
-  mac_key: MacKey;
   counter: number;
+  mac_key: MacKey;
 
   constructor() {}
 
-  /**
-   * @param {!derived.CipherKey} cipher_key
-   * @param {!derived.MacKey} mac_key
-   * @param {!number} counter
-   * @returns {MessageKeys}
-   */
-  static new(cipher_key, mac_key, counter) {
+  static new(cipher_key: CipherKey, mac_key: MacKey, counter: number): MessageKeys {
     TypeUtil.assert_is_instance(CipherKey, cipher_key);
     TypeUtil.assert_is_instance(MacKey, mac_key);
     TypeUtil.assert_is_integer(counter);
 
-    const mk = ClassUtil.new_instance(MessageKeys);
+    const mk = ClassUtil.new_instance<MessageKeys>(MessageKeys);
     mk.cipher_key = cipher_key;
     mk.mac_key = mac_key;
     mk.counter = counter;
@@ -58,24 +52,14 @@ export default class MessageKeys {
     return new Uint8Array(nonce);
   }
 
-  /**
-   * @param {!(string|Uint8Array)} plaintext
-   */
-  encrypt(plaintext): Uint8Array {
+  encrypt(plaintext: string | Uint8Array): Uint8Array {
     return this.cipher_key.encrypt(plaintext, this._counter_as_nonce());
   }
 
-  /**
-   * @param {!Uint8Array} ciphertext
-   */
-  decrypt(ciphertext): Uint8Array {
+  decrypt(ciphertext: Uint8Array): Uint8Array {
     return this.cipher_key.decrypt(ciphertext, this._counter_as_nonce());
   }
 
-  /**
-   * @param {!CBOR.Encoder} encoder
-   * @returns {CBOR.Encoder}
-   */
   encode(encoder: CBOR.Encoder): CBOR.Encoder {
     encoder.object(3);
     encoder.u8(0);
@@ -86,14 +70,10 @@ export default class MessageKeys {
     return encoder.u32(this.counter);
   }
 
-  /**
-   * @param {!CBOR.Decoder} decoder
-   * @returns {MessageKeys}
-   */
-  static decode(decoder: CBOR.Decoder) {
+  static decode(decoder: CBOR.Decoder): MessageKeys {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
-    const self = ClassUtil.new_instance(MessageKeys);
+    const self = ClassUtil.new_instance<MessageKeys>(MessageKeys);
 
     const nprops = decoder.object();
     for (let index = 0; index <= nprops - 1; index++) {

@@ -30,33 +30,23 @@ import PublicKey from '../keys/PublicKey';
 import CipherMessage from './CipherMessage';
 import Message from './Message';
 
-/**
- * @extends Message
- */
 export default class PreKeyMessage extends Message {
-  prekey_id: number;
   base_key: PublicKey;
   identity_key: IdentityKey;
   message: CipherMessage;
+  prekey_id: number;
 
   constructor() {
     super();
   }
 
-  /**
-   * @param {!number} prekey_id
-   * @param {!keys.PublicKey} base_key
-   * @param {!keys.IdentityKey} identity_key
-   * @param {!message.CipherMessage} message
-   * @returns {PreKeyMessage}
-   */
-  static new(prekey_id, base_key, identity_key, message) {
+  static new(prekey_id: number, base_key: PublicKey, identity_key: IdentityKey, message: CipherMessage): PreKeyMessage {
     TypeUtil.assert_is_integer(prekey_id);
     TypeUtil.assert_is_instance(PublicKey, base_key);
     TypeUtil.assert_is_instance(IdentityKey, identity_key);
     TypeUtil.assert_is_instance(CipherMessage, message);
 
-    const pkm = ClassUtil.new_instance(PreKeyMessage);
+    const pkm = ClassUtil.new_instance<PreKeyMessage>(PreKeyMessage);
 
     pkm.prekey_id = prekey_id;
     pkm.base_key = base_key;
@@ -67,10 +57,6 @@ export default class PreKeyMessage extends Message {
     return pkm;
   }
 
-  /**
-   * @param {!CBOR.Encoder} encoder
-   * @returns {CBOR.Encoder}
-   */
   encode(encoder: CBOR.Encoder): CBOR.Encoder {
     encoder.object(4);
     encoder.u8(0);
@@ -83,11 +69,7 @@ export default class PreKeyMessage extends Message {
     return this.message.encode(encoder);
   }
 
-  /**
-   * @param {!CBOR.Decoder} decoder
-   * @returns {PreKeyMessage}
-   */
-  static decode(decoder: CBOR.Decoder) {
+  static decode(decoder: CBOR.Decoder): PreKeyMessage {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     let prekey_id = null;

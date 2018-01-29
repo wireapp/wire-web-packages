@@ -42,7 +42,7 @@ export default class DerivedSecrets {
 
     MemoryUtil.zeroize(output_key_material.buffer);
 
-    const ds = ClassUtil.new_instance(DerivedSecrets);
+    const ds = ClassUtil.new_instance<DerivedSecrets>(DerivedSecrets);
     ds.cipher_key = CipherKey.new(cipher_key);
     ds.mac_key = MacKey.new(mac_key);
     return ds;

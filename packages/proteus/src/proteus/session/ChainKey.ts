@@ -38,31 +38,25 @@ export default class ChainKey {
     TypeUtil.assert_is_instance(MacKey, key);
     TypeUtil.assert_is_integer(counter);
 
-    const ck = ClassUtil.new_instance(ChainKey);
+    const ck = ClassUtil.new_instance<ChainKey>(ChainKey);
     ck.key = key;
     ck.idx = counter;
     return ck;
   }
 
-  /** @returns {ChainKey} */
-  next() {
-    const ck = ClassUtil.new_instance(ChainKey);
+  next(): ChainKey {
+    const ck = ClassUtil.new_instance<ChainKey>(ChainKey);
     ck.key = MacKey.new(this.key.sign('1'));
     ck.idx = this.idx + 1;
     return ck;
   }
 
-  /** @returns {session.MessageKeys} */
-  message_keys() {
+  message_keys(): MessageKeys {
     const base = this.key.sign('0');
     const derived_secrets = DerivedSecrets.kdf_without_salt(base, 'hash_ratchet');
     return MessageKeys.new(derived_secrets.cipher_key, derived_secrets.mac_key, this.idx);
   }
 
-  /**
-   * @param {!CBOR.Encoder} encoder
-   * @returns {CBOR.Encoder}
-   */
   encode(encoder: CBOR.Encoder): CBOR.Encoder {
     encoder.object(2);
     encoder.u8(0);
@@ -71,14 +65,10 @@ export default class ChainKey {
     return encoder.u32(this.idx);
   }
 
-  /**
-   * @param {!CBOR.Decoder} decoder
-   * @returns {ChainKey}
-   */
-  static decode(decoder: CBOR.Decoder) {
+  static decode(decoder: CBOR.Decoder): ChainKey {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
-    const self = ClassUtil.new_instance(ChainKey);
+    const self = ClassUtil.new_instance<ChainKey>(ChainKey);
 
     const nprops = decoder.object();
     for (let index = 0; index <= nprops - 1; index++) {

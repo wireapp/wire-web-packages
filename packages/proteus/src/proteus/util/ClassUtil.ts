@@ -18,11 +18,7 @@
  */
 
 const ClassUtil = {
-  /**
-   * @param {*} _class
-   * @returns {Function}
-   */
-  new_instance(_class) {
+  new_instance<T>(_class): T {
     try {
       return new _class();
     } catch (error) {

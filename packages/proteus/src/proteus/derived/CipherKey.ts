@@ -31,7 +31,7 @@ export default class CipherKey {
   static new(key: Uint8Array): CipherKey {
     TypeUtil.assert_is_instance(Uint8Array, key);
 
-    const ck = ClassUtil.new_instance(CipherKey);
+    const ck = ClassUtil.new_instance<CipherKey>(CipherKey);
     ck.key = key;
     return ck;
   }
@@ -54,10 +54,6 @@ export default class CipherKey {
     return this.encrypt(ciphertext, nonce);
   }
 
-  /**
-   * @param {!CBOR.Encoder} encoder
-   * @returns {CBOR.Encoder}
-   */
   encode(encoder: CBOR.Encoder): CBOR.Encoder {
     encoder.object(1);
     encoder.u8(0);

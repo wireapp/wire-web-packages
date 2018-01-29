@@ -42,27 +42,18 @@ export default class RecvChain {
 
   constructor() {}
 
-  /**
-   * @param {!session.ChainKey} chain_key
-   * @param {!keys.PublicKey} public_key
-   * @returns {message.PreKeyMessage}
-   */
-  static new(chain_key, public_key) {
+  static new(chain_key: ChainKey, public_key: PublicKey): RecvChain {
     TypeUtil.assert_is_instance(ChainKey, chain_key);
     TypeUtil.assert_is_instance(PublicKey, public_key);
 
-    const rc = ClassUtil.new_instance(RecvChain);
+    const rc = ClassUtil.new_instance<RecvChain>(RecvChain);
     rc.chain_key = chain_key;
     rc.ratchet_key = public_key;
     rc.message_keys = [];
     return rc;
   }
 
-  /**
-   * @param {!message.Envelope} envelope
-   * @param {!message.CipherMessage} msg
-   */
-  try_message_keys(envelope, msg): Uint8Array {
+  try_message_keys(envelope: Envelope, msg: CipherMessage): Uint8Array {
     TypeUtil.assert_is_instance(Envelope, envelope);
     TypeUtil.assert_is_instance(CipherMessage, msg);
 
@@ -92,11 +83,7 @@ export default class RecvChain {
     return mk.decrypt(msg.cipher_text);
   }
 
-  /**
-   * @param {!message.CipherMessage} msg
-   * @returns {Array<session.ChainKey>|session.MessageKeys}
-   */
-  stage_message_keys(msg) {
+  stage_message_keys(msg: CipherMessage): Array<ChainKey | MessageKeys | Array<MessageKeys>> {
     TypeUtil.assert_is_instance(CipherMessage, msg);
 
     const num = msg.counter - this.chain_key.idx;
@@ -113,7 +100,7 @@ export default class RecvChain {
       );
     }
 
-    const keys = [];
+    const keys: Array<MessageKeys> = [];
     let chk = this.chain_key;
 
     for (let index = 0; index <= num - 1; index++) {
@@ -125,9 +112,6 @@ export default class RecvChain {
     return [chk, mk, keys];
   }
 
-  /**
-   * @param {!Array<session.MessageKeys>} keys
-   */
   commit_message_keys(keys: Array<MessageKeys>): void {
     TypeUtil.assert_is_instance(Array, keys);
     keys.map(key => TypeUtil.assert_is_instance(MessageKeys, key));
@@ -155,10 +139,6 @@ export default class RecvChain {
     }
   }
 
-  /**
-   * @param {!CBOR.Encoder} encoder
-   * @returns {Array<CBOR.Encoder>}
-   */
   encode(encoder: CBOR.Encoder): Array<CBOR.Encoder> {
     encoder.object(3);
     encoder.u8(0);
@@ -171,14 +151,10 @@ export default class RecvChain {
     return this.message_keys.map(key => key.encode(encoder));
   }
 
-  /**
-   * @param {!CBOR.Decoder} decoder
-   * @returns {RecvChain}
-   */
-  static decode(decoder: CBOR.Decoder) {
+  static decode(decoder: CBOR.Decoder): RecvChain {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
-    const self = ClassUtil.new_instance(RecvChain);
+    const self = ClassUtil.new_instance<RecvChain>(RecvChain);
 
     const nprops = decoder.object();
     for (let index = 0; index <= nprops - 1; index++) {

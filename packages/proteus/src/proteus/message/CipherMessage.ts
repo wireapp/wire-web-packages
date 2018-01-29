@@ -27,36 +27,31 @@ import PublicKey from '../keys/PublicKey';
 import Message from './Message';
 import SessionTag from './SessionTag';
 
-/**
- * @extends Message
- */
 export default class CipherMessage extends Message {
-  session_tag: SessionTag;
+  cipher_text: Uint8Array;
   counter: number;
   prev_counter: number;
   ratchet_key: PublicKey;
-  cipher_text: Uint8Array;
+  session_tag: SessionTag;
 
   constructor() {
     super();
   }
 
-  /**
-   * @param {!message.SessionTag} session_tag
-   * @param {!number} counter
-   * @param {!number} prev_counter
-   * @param {!keys.PublicKey} ratchet_key
-   * @param {!Uint8Array} cipher_text
-   * @returns {CipherMessage}
-   */
-  static new(session_tag, counter, prev_counter, ratchet_key, cipher_text) {
+  static new(
+    session_tag: SessionTag,
+    counter: number,
+    prev_counter: number,
+    ratchet_key: PublicKey,
+    cipher_text: Uint8Array
+  ): CipherMessage {
     TypeUtil.assert_is_instance(SessionTag, session_tag);
     TypeUtil.assert_is_integer(counter);
     TypeUtil.assert_is_integer(prev_counter);
     TypeUtil.assert_is_instance(PublicKey, ratchet_key);
     TypeUtil.assert_is_instance(Uint8Array, cipher_text);
 
-    const cm = ClassUtil.new_instance(CipherMessage);
+    const cm = ClassUtil.new_instance<CipherMessage>(CipherMessage);
 
     cm.session_tag = session_tag;
     cm.counter = counter;
@@ -68,10 +63,6 @@ export default class CipherMessage extends Message {
     return cm;
   }
 
-  /**
-   * @param {!CBOR.Encoder} encoder
-   * @returns {CBOR.Encoder}
-   */
   encode(encoder: CBOR.Encoder): CBOR.Encoder {
     encoder.object(5);
     encoder.u8(0);
@@ -86,11 +77,7 @@ export default class CipherMessage extends Message {
     return encoder.bytes(this.cipher_text);
   }
 
-  /**
-   * @param {!CBOR.Decoder} decoder
-   * @returns {CipherMessage}
-   */
-  static decode(decoder: CBOR.Decoder) {
+  static decode(decoder: CBOR.Decoder): CipherMessage {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     let session_tag = null;

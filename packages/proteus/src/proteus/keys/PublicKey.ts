@@ -34,7 +34,7 @@ export default class PublicKey {
     TypeUtil.assert_is_instance(Uint8Array, pub_edward);
     TypeUtil.assert_is_instance(Uint8Array, pub_curve);
 
-    const pk: PublicKey = ClassUtil.new_instance(PublicKey);
+    const pk = ClassUtil.new_instance<PublicKey>(PublicKey);
 
     pk.pub_edward = pub_edward;
     pk.pub_curve = pub_curve;
@@ -66,7 +66,7 @@ export default class PublicKey {
   static decode(decoder: CBOR.Decoder): PublicKey {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
-    const self = ClassUtil.new_instance(PublicKey);
+    const self = ClassUtil.new_instance<PublicKey>(PublicKey);
 
     const nprops = decoder.object();
     for (let index = 0; index <= nprops - 1; index++) {

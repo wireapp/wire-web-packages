@@ -34,7 +34,7 @@ export default class MacKey {
   static new(key: Uint8Array): MacKey {
     TypeUtil.assert_is_instance(Uint8Array, key);
 
-    const mk = ClassUtil.new_instance(MacKey);
+    const mk = ClassUtil.new_instance<MacKey>(MacKey);
     mk.key = key;
     return mk;
   }

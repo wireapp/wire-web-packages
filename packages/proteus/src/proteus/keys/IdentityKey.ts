@@ -34,10 +34,10 @@ export default class IdentityKey {
 
   constructor() {}
 
-  static new(public_key: IdentityKey): IdentityKey {
+  static new(public_key: PublicKey): IdentityKey {
     TypeUtil.assert_is_instance(PublicKey, public_key);
 
-    const key = ClassUtil.new_instance(IdentityKey);
+    const key = ClassUtil.new_instance<IdentityKey>(IdentityKey);
     key.public_key = public_key;
     return key;
   }

@@ -17,14 +17,16 @@
  *
  */
 
+import PreKey from '../keys/PreKey';
+
 export default class PreKeyStore {
   prekeys: Array<number> = [];
 
-  get_prekey(prekey_id: number): void {
+  get_prekey(prekey_id: number): Promise<PreKey> {
     throw Error('Virtual function unimplemented');
   }
 
-  remove(prekey_id: number): void {
+  remove(prekey_id: number): Promise<void> {
     throw Error('Virtual function unimplemented');
   }
 }

@@ -33,20 +33,16 @@ export default class SendChain {
 
   constructor() {}
 
-  static new(chain_key, keypair) {
+  static new(chain_key: ChainKey, keypair: KeyPair): SendChain {
     TypeUtil.assert_is_instance(ChainKey, chain_key);
     TypeUtil.assert_is_instance(KeyPair, keypair);
 
-    const sc = ClassUtil.new_instance(SendChain);
+    const sc = ClassUtil.new_instance<SendChain>(SendChain);
     sc.chain_key = chain_key;
     sc.ratchet_key = keypair;
     return sc;
   }
 
-  /**
-   * @param {!CBOR.Encoder} encoder
-   * @returns {CBOR.Encoder}
-   */
   encode(encoder: CBOR.Encoder): CBOR.Encoder {
     encoder.object(2);
     encoder.u8(0);
@@ -55,13 +51,9 @@ export default class SendChain {
     return this.ratchet_key.encode(encoder);
   }
 
-  /**
-   * @param {!CBOR.Decoder} decoder
-   * @returns {SendChain}
-   */
-  static decode(decoder: CBOR.Decoder) {
+  static decode(decoder: CBOR.Decoder): SendChain {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
-    const self = ClassUtil.new_instance(SendChain);
+    const self = ClassUtil.new_instance<SendChain>(SendChain);
     const nprops = decoder.object();
     for (let index = 0; index <= nprops - 1; index++) {
       switch (decoder.u8()) {

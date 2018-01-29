@@ -35,12 +35,10 @@ export default class IdentityKeyPair {
 
   constructor() {}
 
-  /** @returns {keys.IdentityKeyPair} */
-  static new() {
+  static new(): IdentityKeyPair {
     const key_pair = KeyPair.new();
 
-    /** @type {keys.IdentityKeyPair} */
-    const ikp = ClassUtil.new_instance(IdentityKeyPair);
+    const ikp = ClassUtil.new_instance<IdentityKeyPair>(IdentityKeyPair);
     ikp.version = 1;
     ikp.secret_key = key_pair.secret_key;
     ikp.public_key = IdentityKey.new(key_pair.public_key);
@@ -48,28 +46,19 @@ export default class IdentityKeyPair {
     return ikp;
   }
 
-  /** @returns {ArrayBuffer} */
-  serialise() {
+  serialise(): ArrayBuffer {
     const encoder = new CBOR.Encoder();
     this.encode(encoder);
     return encoder.get_buffer();
   }
 
-  /**
-   * @param {!ArrayBuffer} buf
-   * @returns {keys.IdentityKeyPair}
-   */
-  static deserialise(buf) {
+  static deserialise(buf: ArrayBuffer): IdentityKeyPair {
     TypeUtil.assert_is_instance(ArrayBuffer, buf);
 
     const decoder = new CBOR.Decoder(buf);
     return IdentityKeyPair.decode(decoder);
   }
 
-  /**
-   * @param {!CBOR.Encoder} encoder
-   * @returns {CBOR.Encoder}
-   */
   encode(encoder: CBOR.Encoder): CBOR.Encoder {
     encoder.object(3);
     encoder.u8(0);
@@ -80,14 +69,10 @@ export default class IdentityKeyPair {
     return this.public_key.encode(encoder);
   }
 
-  /**
-   * @param {!CBOR.Decoder} decoder
-   * @returns {keys.IdentityKeyPair}
-   */
-  static decode(decoder: CBOR.Decoder) {
+  static decode(decoder: CBOR.Decoder): IdentityKeyPair {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
-    const self = ClassUtil.new_instance(IdentityKeyPair);
+    const self = ClassUtil.new_instance<IdentityKeyPair>(IdentityKeyPair);
 
     const nprops = decoder.object();
     for (let index = 0; index <= nprops - 1; index++) {

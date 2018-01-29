@@ -34,7 +34,7 @@ export default class SessionTag {
   static new(): SessionTag {
     const length = 16;
 
-    const st = ClassUtil.new_instance(SessionTag);
+    const st = ClassUtil.new_instance<SessionTag>(SessionTag);
     st.tag = RandomUtil.random_bytes(length);
     return st;
   }
@@ -60,7 +60,7 @@ export default class SessionTag {
       );
     }
 
-    const st = ClassUtil.new_instance(SessionTag);
+    const st = ClassUtil.new_instance<SessionTag>(SessionTag);
     st.tag = new Uint8Array(bytes);
     return st;
   }

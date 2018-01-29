@@ -28,21 +28,16 @@ import ArrayUtil from '../util/ArrayUtil';
 import TypeUtil from '../util/TypeUtil';
 
 export default class SecretKey {
-  sec_edward: Uint8Array;
   sec_curve: Uint8Array;
+  sec_edward: Uint8Array;
 
   constructor() {}
 
-  /**
-   * @param {!Uint8Array} sec_edward
-   * @param {!Uint8Array} sec_curve
-   * @returns {SecretKey}
-   */
-  static new(sec_edward, sec_curve) {
+  static new(sec_edward: Uint8Array, sec_curve: Uint8Array): SecretKey {
     TypeUtil.assert_is_instance(Uint8Array, sec_edward);
     TypeUtil.assert_is_instance(Uint8Array, sec_curve);
 
-    const sk = ClassUtil.new_instance(SecretKey);
+    const sk = ClassUtil.new_instance<SecretKey>(SecretKey);
 
     sk.sec_edward = sec_edward;
     sk.sec_curve = sec_curve;
@@ -51,20 +46,20 @@ export default class SecretKey {
 
   /**
    * This function can be used to compute a message signature.
-   * @param {!string} message - Message to be signed
+   * @param message Message to be signed
    * @returns A message signature
    */
-  sign(message): Uint8Array {
+  sign(message: Uint8Array): Uint8Array {
     return sodium.crypto_sign_detached(message, this.sec_edward);
   }
 
   /**
    * This function can be used to compute a shared secret given a user's secret key and another
    * user's public key.
-   * @param {!keys.PublicKey} public_key - Another user's public key
+   * @param public_key Another user's public key
    * @returns Array buffer view of the computed shared secret
    */
-  shared_secret(public_key): Uint8Array {
+  shared_secret(public_key: PublicKey): Uint8Array {
     TypeUtil.assert_is_instance(PublicKey, public_key);
 
     const shared_secret = sodium.crypto_scalarmult(this.sec_curve, public_key.pub_curve);
@@ -80,13 +75,10 @@ export default class SecretKey {
     return encoder.bytes(this.sec_edward);
   }
 
-  /**
-   * @returns {SecretKey}
-   */
-  static decode(decoder: CBOR.Decoder) {
+  static decode(decoder: CBOR.Decoder): SecretKey {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
-    const self = ClassUtil.new_instance(SecretKey);
+    const self = ClassUtil.new_instance<SecretKey>(SecretKey);
 
     const nprops = decoder.object();
     for (let index = 0; index <= nprops - 1; index++) {

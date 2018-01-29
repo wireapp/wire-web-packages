@@ -45,6 +45,9 @@ import SessionTag from '../message/SessionTag';
 import PreKeyStore from './PreKeyStore';
 
 export default class Session {
+  static MAX_RECV_CHAINS = 5;
+  static MAX_SESSION_STATES = 100;
+
   counter = 0;
   local_identity: IdentityKeyPair = null;
   pending_prekey: Array<number | PublicKey> = null;
@@ -52,17 +55,14 @@ export default class Session {
   session_states: Object = null;
   session_tag: SessionTag = null;
   version = 1;
-  static MAX_RECV_CHAINS = 5;
-  static MAX_SESSION_STATES = 100;
 
   constructor() {}
 
   /**
-   * @param {!keys.IdentityKeyPair} local_identity Alice's Identity Key Pair
-   * @param {!keys.PreKeyBundle} remote_pkbundle Bob's Pre-Key Bundle
-   * @returns {Promise<Session>}
+   * @param local_identity Alice's Identity Key Pair
+   * @param remote_pkbundle Bob's Pre-Key Bundle
    */
-  static init_from_prekey(local_identity, remote_pkbundle) {
+  static init_from_prekey(local_identity: IdentityKeyPair, remote_pkbundle: PreKeyBundle): Promise<Session> {
     return new Promise(resolve => {
       TypeUtil.assert_is_instance(IdentityKeyPair, local_identity);
       TypeUtil.assert_is_instance(PreKeyBundle, remote_pkbundle);
@@ -73,7 +73,7 @@ export default class Session {
 
       const session_tag = SessionTag.new();
 
-      const session = ClassUtil.new_instance(this);
+      const session = ClassUtil.new_instance<Session>(this);
       session.session_tag = session_tag;
       session.local_identity = local_identity;
       session.remote_identity = remote_pkbundle.identity_key;
@@ -85,13 +85,11 @@ export default class Session {
     });
   }
 
-  /**
-   * @param {!keys.IdentityKeyPair} our_identity
-   * @param {!session.PreKeyStore} prekey_store
-   * @param {!message.Envelope} envelope
-   * @returns {Promise<Array<Session|Uint8Array>>}
-   */
-  static init_from_message(our_identity, prekey_store, envelope) {
+  static init_from_message(
+    our_identity: IdentityKeyPair,
+    prekey_store: PreKeyStore,
+    envelope: Envelope
+  ): Promise<Array<Session | Uint8Array>> {
     return new Promise((resolve, reject) => {
       TypeUtil.assert_is_instance(IdentityKeyPair, our_identity);
       TypeUtil.assert_is_instance(PreKeyStore, prekey_store);
@@ -113,7 +111,7 @@ export default class Session {
         }
       })();
 
-      const session = ClassUtil.new_instance(Session);
+      const session = ClassUtil.new_instance<Session>(Session);
       session.session_tag = pkmsg.message.session_tag;
       session.local_identity = our_identity;
       session.remote_identity = pkmsg.identity_key;
@@ -146,12 +144,7 @@ export default class Session {
     });
   }
 
-  /**
-   * @param {!session.PreKeyStore} pre_key_store
-   * @param {!message.PreKeyMessage} pre_key_message
-   * @returns {Promise<session.SessionState>}
-   */
-  private _new_state(pre_key_store, pre_key_message) {
+  private _new_state(pre_key_store: PreKeyStore, pre_key_message: PreKeyMessage): Promise<SessionState> {
     return pre_key_store.get_prekey(pre_key_message.prekey_id).then(pre_key => {
       if (pre_key) {
         return SessionState.init_as_bob(
@@ -165,21 +158,16 @@ export default class Session {
     });
   }
 
-  /**
-   * @param {!message.SessionTag} tag
-   * @param {!session.SessionState} state
-   * @returns {boolean}
-   */
-  private _insert_session_state(tag, state) {
-    if (this.session_states.hasOwnProperty(tag)) {
-      this.session_states[tag].state = state;
+  private _insert_session_state(tag: SessionTag, state: SessionState): void {
+    if (this.session_states.hasOwnProperty(<any>tag)) {
+      this.session_states[<any>tag].state = state;
     } else {
       if (this.counter >= Number.MAX_SAFE_INTEGER) {
         this.session_states = {};
         this.counter = 0;
       }
 
-      this.session_states[tag] = {
+      this.session_states[<any>tag] = {
         idx: this.counter,
         state: state,
         tag: tag,
@@ -213,16 +201,14 @@ export default class Session {
     delete this.session_states[oldest];
   }
 
-  /** @returns {keys.PublicKey} */
-  get_local_identity() {
+  get_local_identity(): IdentityKey {
     return this.local_identity.public_key;
   }
 
   /**
-   * @param {!(String|Uint8Array)} plaintext The plaintext which needs to be encrypted
-   * @return {Promise<message.Envelope>} Encrypted message
+   * @param plaintext The plaintext which needs to be encrypted
    */
-  encrypt(plaintext) {
+  encrypt(plaintext: string | Uint8Array): Promise<Envelope> {
     return new Promise((resolve, reject) => {
       const state = this.session_states[<any>this.session_tag];
 
@@ -241,11 +227,6 @@ export default class Session {
     });
   }
 
-  /**
-   * @param {!session.PreKeyStore} prekey_store
-   * @param {!message.Envelope} envelope
-   * @returns {Promise<Uint8Array>}
-   */
   decrypt(prekey_store: PreKeyStore, envelope: Envelope): Promise<Uint8Array> {
     return new Promise(resolve => {
       TypeUtil.assert_is_instance(PreKeyStore, prekey_store);
@@ -369,7 +350,7 @@ export default class Session {
     TypeUtil.assert_is_instance(IdentityKeyPair, local_identity);
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
-    const self = ClassUtil.new_instance(this);
+    const self = ClassUtil.new_instance<Session>(this);
 
     const nprops = decoder.object();
     for (let index = 0; index <= nprops - 1; index++) {

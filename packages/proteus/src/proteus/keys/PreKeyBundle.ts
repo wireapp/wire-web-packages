@@ -31,6 +31,11 @@ import PreKey from './PreKey';
 import PreKeyAuth from './PreKeyAuth';
 import PublicKey from './PublicKey';
 
+export interface SerialisedJSON {
+  id: number;
+  key: string;
+}
+
 export default class PreKeyBundle {
   version: number;
   prekey_id: number;
@@ -40,17 +45,11 @@ export default class PreKeyBundle {
 
   constructor() {}
 
-  /**
-   * @param {!keys.IdentityKey} public_identity_key
-   * @param {!keys.PreKey} prekey
-   * @returns {PreKeyBundle}
-   */
-  static new(public_identity_key, prekey) {
+  static new(public_identity_key: IdentityKey, prekey: PreKey): PreKeyBundle {
     TypeUtil.assert_is_instance(IdentityKey, public_identity_key);
     TypeUtil.assert_is_instance(PreKey, prekey);
 
-    /** @type {keys.PreyKeyBundle} */
-    const bundle = ClassUtil.new_instance(PreKeyBundle);
+    const bundle = ClassUtil.new_instance<PreKeyBundle>(PreKeyBundle);
 
     bundle.version = 1;
     bundle.prekey_id = prekey.key_id;
@@ -61,22 +60,14 @@ export default class PreKeyBundle {
     return bundle;
   }
 
-  /**
-   * @param {!keys.IdentityKeyPair} identity_pair
-   * @param {!keys.PreKey} prekey
-   * @returns {PreKeyBundle}
-   */
-  static signed(identity_pair, prekey) {
+  static signed(identity_pair: IdentityKeyPair, prekey: PreKey): PreKeyBundle {
     TypeUtil.assert_is_instance(IdentityKeyPair, identity_pair);
     TypeUtil.assert_is_instance(PreKey, prekey);
 
-    /** @type {keys.PublicKey} */
     const ratchet_key = prekey.key_pair.public_key;
-    /** @type {Uint8Array} */
     const signature = identity_pair.secret_key.sign(ratchet_key.pub_edward);
 
-    /** @type {keys.PreyKeyBundle} */
-    const bundle = ClassUtil.new_instance(PreKeyBundle);
+    const bundle = ClassUtil.new_instance<PreKeyBundle>(PreKeyBundle);
 
     bundle.version = 1;
     bundle.prekey_id = prekey.key_id;
@@ -87,8 +78,7 @@ export default class PreKeyBundle {
     return bundle;
   }
 
-  /** @returns {keys.PreKeyAuth} */
-  verify() {
+  verify(): PreKeyAuth {
     if (!this.signature) {
       return PreKeyAuth.UNKNOWN;
     }
@@ -99,39 +89,24 @@ export default class PreKeyBundle {
     return PreKeyAuth.INVALID;
   }
 
-  /** @returns {ArrayBuffer} */
-  serialise() {
+  serialise(): ArrayBuffer {
     const encoder = new CBOR.Encoder();
     this.encode(encoder);
     return encoder.get_buffer();
   }
 
-  /**
-   * @typedef {Object} type_serialised_json
-   * @property {number} id
-   * @property {string} key
-   */
-  /** @returns {type_serialised_json} */
-  serialised_json() {
+  serialised_json(): SerialisedJSON {
     return {
       id: this.prekey_id,
       key: sodium.to_base64(new Uint8Array(this.serialise()), true),
     };
   }
 
-  /**
-   * @param {!ArrayBuffer} buf
-   * @returns {PreKeyBundle}
-   */
-  static deserialise(buf) {
+  static deserialise(buf: ArrayBuffer): PreKeyBundle {
     TypeUtil.assert_is_instance(ArrayBuffer, buf);
     return PreKeyBundle.decode(new CBOR.Decoder(buf));
   }
 
-  /**
-   * @param {!CBOR.Encoder} encoder
-   * @returns {CBOR.Encoder}
-   */
   encode(encoder: CBOR.Encoder): CBOR.Encoder {
     TypeUtil.assert_is_instance(CBOR.Encoder, encoder);
 
@@ -152,14 +127,10 @@ export default class PreKeyBundle {
     return encoder.bytes(this.signature);
   }
 
-  /**
-   * @param {!CBOR.Decoder} decoder
-   * @returns {PreKeyBundle}
-   */
-  static decode(decoder: CBOR.Decoder) {
+  static decode(decoder: CBOR.Decoder): PreKeyBundle {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
-    const self = ClassUtil.new_instance(PreKeyBundle);
+    const self = ClassUtil.new_instance<PreKeyBundle>(PreKeyBundle);
 
     const nprops = decoder.object();
     for (let index = 0; index <= nprops - 1; index++) {

@@ -33,21 +33,17 @@ import KeyPair from './KeyPair';
  * A Pre-Shared Key contains the public long-term identity and ephemeral handshake keys for the initial triple DH.
  */
 export default class PreKey {
+  static MAX_PREKEY_ID = 0xffff;
   key_id: number;
   key_pair: KeyPair;
   version: number;
-  static MAX_PREKEY_ID = 0xffff;
 
   constructor() {}
 
-  /**
-   * @param {!number} pre_key_id
-   * @returns {PreKey}
-   */
-  static new(pre_key_id) {
+  static new(pre_key_id: number): PreKey {
     this.validate_pre_key_id(pre_key_id);
 
-    const pk = ClassUtil.new_instance(PreKey);
+    const pk = ClassUtil.new_instance<PreKey>(PreKey);
 
     pk.version = 1;
     pk.key_id = pre_key_id;
@@ -55,7 +51,7 @@ export default class PreKey {
     return pk;
   }
 
-  static validate_pre_key_id(pre_key_id) {
+  static validate_pre_key_id(pre_key_id): void {
     TypeUtil.assert_is_integer(pre_key_id);
 
     if (pre_key_id < 0 || pre_key_id > PreKey.MAX_PREKEY_ID) {
@@ -64,17 +60,11 @@ export default class PreKey {
     }
   }
 
-  /** @returns {PreKey} */
-  static last_resort() {
+  static last_resort(): PreKey {
     return PreKey.new(PreKey.MAX_PREKEY_ID);
   }
 
-  /**
-   * @param {!number} start
-   * @param {!number} size
-   * @returns {Array<PreKey>}
-   */
-  static generate_prekeys(start, size) {
+  static generate_prekeys(start: number, size: number): Array<PreKey> {
     this.validate_pre_key_id(start);
     this.validate_pre_key_id(size);
 
@@ -85,26 +75,17 @@ export default class PreKey {
     return new Array(size).fill(null).map((_, index) => PreKey.new((start + index) % PreKey.MAX_PREKEY_ID));
   }
 
-  /** @returns {ArrayBuffer} */
-  serialise() {
+  serialise(): ArrayBuffer {
     const encoder = new CBOR.Encoder();
     this.encode(encoder);
     return encoder.get_buffer();
   }
 
-  /**
-   * @param {!ArrayBuffer} buf
-   * @returns {PreKey}
-   */
-  static deserialise(buf) {
+  static deserialise(buf: ArrayBuffer): PreKey {
     TypeUtil.assert_is_instance(ArrayBuffer, buf);
     return PreKey.decode(new CBOR.Decoder(buf));
   }
 
-  /**
-   * @param {!CBOR.Encoder} encoder
-   * @returns {CBOR.Encoder}
-   */
   encode(encoder: CBOR.Encoder): CBOR.Encoder {
     TypeUtil.assert_is_instance(CBOR.Encoder, encoder);
     encoder.object(3);
@@ -116,14 +97,10 @@ export default class PreKey {
     return this.key_pair.encode(encoder);
   }
 
-  /**
-   * @param {!CBOR.Decoder} decoder
-   * @returns {PreKey}
-   */
-  static decode(decoder: CBOR.Decoder) {
+  static decode(decoder: CBOR.Decoder): PreKey {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
-    const self = ClassUtil.new_instance(PreKey);
+    const self = ClassUtil.new_instance<PreKey>(PreKey);
 
     const nprops = decoder.object();
     for (let index = 0; index <= nprops - 1; index++) {
