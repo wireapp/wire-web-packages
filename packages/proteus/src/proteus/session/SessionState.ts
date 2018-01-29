@@ -235,6 +235,12 @@ export default class SessionState {
 
       return plain;
     }
+
+    // TODO: what happens if msg.counter == rc.chain_key.idx?
+    throw new (<any>DecryptError).InvalidSignature(
+      `Envelope verification failed for message with counters in sync at '${msg.counter}'`,
+      DecryptError.CODE.CASE_206
+    );
   }
 
   serialise(): ArrayBuffer {
