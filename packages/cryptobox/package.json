@@ -10,14 +10,14 @@
   "devDependencies": {
     "@types/fs-extra": "5.0.0",
     "@types/node": "8.5.7",
-    "browser-sync": "2.23.5",
+    "browser-sync": "2.23.6",
     "gulp": "3.9.1",
     "gulp-babel": "7.0.0",
     "gulp-bower": "0.0.14",
     "gulp-bower-assets": "0.0.3",
     "gulp-clean": "0.4.0",
     "gulp-concat": "2.6.1",
-    "gulp-eslint": "4.0.1",
+    "gulp-eslint": "4.0.2",
     "gulp-if": "2.0.2",
     "gulp-jasmine": "3.0.0",
     "gulp-replace": "0.6.1",
@@ -35,7 +35,7 @@
     "webpack": "2.3.3",
     "yargs": "11.0.0"
   },
-  "files": ["dist/commonjs", "dist/wire-webapp-cryptobox.d.ts", "dist/window"],
+  "files": ["dist", "!dist/lib"],
   "license": "GPL-3.0",
   "main": "dist/commonjs/index.js",
   "name": "@wireapp/cryptobox",
@@ -50,5 +50,5 @@
     "test": "yarn dist && gulp test"
   },
   "types": "dist/index.d.ts",
-  "version": "6.3.4"
+  "version": "6.3.6"
 }
