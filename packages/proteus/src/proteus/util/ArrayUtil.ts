@@ -32,7 +32,7 @@ const ArrayUtil = {
     }
 
     if (only_zeroes === true) {
-      throw new ProteusError('Array consists only of zeroes.', ProteusError.prototype.CODE.CASE_100);
+      throw new ProteusError('Array consists only of zeroes.', ProteusError.CODE.CASE_100);
     }
   },
 

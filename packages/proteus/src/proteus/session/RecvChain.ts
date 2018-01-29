@@ -145,7 +145,7 @@ export default class RecvChain {
     if (keys.length > RecvChain.MAX_COUNTER_GAP) {
       throw new ProteusError(
         `Number of message keys (${keys.length}) exceed message chain counter gap (${RecvChain.MAX_COUNTER_GAP}).`,
-        ProteusError.prototype.CODE.CASE_103
+        ProteusError.CODE.CASE_103
       );
     }
 
@@ -160,7 +160,7 @@ export default class RecvChain {
     if (keys.length > RecvChain.MAX_COUNTER_GAP) {
       throw new ProteusError(
         `Skipped message keys which exceed the message chain counter gap (${RecvChain.MAX_COUNTER_GAP}).`,
-        ProteusError.prototype.CODE.CASE_104
+        ProteusError.CODE.CASE_104
       );
     }
   }

@@ -17,7 +17,7 @@
  *
  */
 export default class ProteusError extends Error {
-  CODE: {[index: string]: number} = {
+  static CODE: {[index: string]: number} = {
     CASE_100: 100,
     CASE_101: 101,
     CASE_102: 102,

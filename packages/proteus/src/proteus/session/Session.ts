@@ -171,7 +171,7 @@ export default class Session {
           pre_key_message.base_key
         );
       }
-      throw new ProteusError('Unable to get PreKey from PreKey store.', ProteusError.prototype.CODE.CASE_101);
+      throw new ProteusError('Unable to get PreKey from PreKey store.', ProteusError.CODE.CASE_101);
     });
   }
 
@@ -245,7 +245,7 @@ export default class Session {
         return reject(
           new ProteusError(
             `Could not find session for tag '${(this.session_tag || '').toString()}'.`,
-            ProteusError.prototype.CODE.CASE_102
+            ProteusError.CODE.CASE_102
           )
         );
       }

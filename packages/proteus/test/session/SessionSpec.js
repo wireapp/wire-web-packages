@@ -542,7 +542,7 @@ describe('Session', () => {
       .then(() => assert.fail('should have thrown Proteus.errors.ProteusError'))
       .catch(err => {
         assert.instanceOf(err, Proteus.errors.ProteusError);
-        assert.strictEqual(err.code, Proteus.errors.ProteusError.prototype.CODE.CASE_101);
+        assert.strictEqual(err.code, Proteus.errors.ProteusError.CODE.CASE_101);
       })
       .then(() => {
         done();
