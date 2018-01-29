@@ -47,7 +47,7 @@ export default class CipherMessage extends Message {
    * @param {!number} prev_counter
    * @param {!keys.PublicKey} ratchet_key
    * @param {!Uint8Array} cipher_text
-   * @returns {CipherMessage} - `this`
+   * @returns {CipherMessage}
    */
   static new(session_tag, counter, prev_counter, ratchet_key, cipher_text) {
     TypeUtil.assert_is_instance(SessionTag, session_tag);

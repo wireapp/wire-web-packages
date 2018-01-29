@@ -28,9 +28,6 @@ import IdentityKey from './IdentityKey';
 import KeyPair from './KeyPair';
 import SecretKey from './SecretKey';
 
-/**
- * @class IdentityKeyPair
- */
 export default class IdentityKeyPair {
   public_key: IdentityKey;
   secret_key: SecretKey;
@@ -38,7 +35,7 @@ export default class IdentityKeyPair {
 
   constructor() {}
 
-  /** @returns {keys.IdentityKeyPair} - `this` */
+  /** @returns {keys.IdentityKeyPair} */
   static new() {
     const key_pair = KeyPair.new();
 

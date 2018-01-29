@@ -26,9 +26,6 @@ import MemoryUtil from '../util/MemoryUtil';
 import CipherKey from './CipherKey';
 import MacKey from './MacKey';
 
-/**
- * @class DerivedSecrets
- */
 export default class DerivedSecrets {
   cipher_key: CipherKey;
   mac_key: MacKey;
@@ -39,7 +36,7 @@ export default class DerivedSecrets {
    * @param {!Array<number>} input
    * @param {!Uint8Array} salt
    * @param {!string} info
-   * @returns {DerivedSecrets} - `this`
+   * @returns {DerivedSecrets}
    */
   static kdf(input, salt, info) {
     const byte_length = 64;

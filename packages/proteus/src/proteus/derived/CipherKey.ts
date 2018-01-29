@@ -23,9 +23,6 @@ import * as sodium from 'libsodium-wrappers-sumo';
 import ClassUtil from '../util/ClassUtil';
 import TypeUtil from '../util/TypeUtil';
 
-/**
- * @class CipherKey
- */
 export default class CipherKey {
   key: Uint8Array;
 
@@ -33,7 +30,7 @@ export default class CipherKey {
 
   /**
    * @param {!Uint8Array} key
-   * @returns {CipherKey} - `this`
+   * @returns {CipherKey}
    */
   static new(key) {
     TypeUtil.assert_is_instance(Uint8Array, key);

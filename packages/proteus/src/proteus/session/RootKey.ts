@@ -28,9 +28,6 @@ import DerivedSecrets from '../derived/DerivedSecrets';
 import KeyPair from '../keys/KeyPair';
 import PublicKey from '../keys/PublicKey';
 
-/**
- * @class RootKey
- */
 export default class RootKey {
   key: CipherKey;
 

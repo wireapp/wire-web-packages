@@ -27,9 +27,6 @@ import TypeUtil from '../util/TypeUtil';
 import CipherKey from '../derived/CipherKey';
 import MacKey from '../derived/MacKey';
 
-/**
- * @class MessageKeys
- */
 export default class MessageKeys {
   cipher_key: CipherKey;
   mac_key: MacKey;
@@ -41,7 +38,7 @@ export default class MessageKeys {
    * @param {!derived.CipherKey} cipher_key
    * @param {!derived.MacKey} mac_key
    * @param {!number} counter
-   * @returns {MessageKeys} - `this`
+   * @returns {MessageKeys}
    */
   static new(cipher_key, mac_key, counter) {
     TypeUtil.assert_is_instance(CipherKey, cipher_key);

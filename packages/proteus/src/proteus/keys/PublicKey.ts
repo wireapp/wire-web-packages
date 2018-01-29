@@ -24,9 +24,6 @@ import * as sodium from 'libsodium-wrappers-sumo';
 import ClassUtil from '../util/ClassUtil';
 import TypeUtil from '../util/TypeUtil';
 
-/**
- * @class PublicKey
- */
 export default class PublicKey {
   pub_edward: Uint8Array;
   pub_curve: Uint8Array;
@@ -36,7 +33,7 @@ export default class PublicKey {
   /**
    * @param {!Uint8Array} pub_edward
    * @param {!Uint8Array} pub_curve
-   * @returns {keys.PublicKey} - `this`
+   * @returns {keys.PublicKey}
    */
   static new(pub_edward, pub_curve) {
     TypeUtil.assert_is_instance(Uint8Array, pub_edward);

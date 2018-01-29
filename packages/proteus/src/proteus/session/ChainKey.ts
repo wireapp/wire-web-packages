@@ -28,9 +28,6 @@ import DerivedSecrets from '../derived/DerivedSecrets';
 import MacKey from '../derived/MacKey';
 import MessageKeys from './MessageKeys';
 
-/**
- * @class ChainKey
- */
 export default class ChainKey {
   key: MacKey;
   idx: number;

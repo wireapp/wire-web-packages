@@ -44,9 +44,6 @@ import SessionTag from '../message/SessionTag';
 
 import PreKeyStore from './PreKeyStore';
 
-/**
- * @class Session
- */
 export default class Session {
   counter = 0;
   local_identity: IdentityKeyPair = null;
@@ -93,8 +90,6 @@ export default class Session {
    * @param {!session.PreKeyStore} prekey_store
    * @param {!message.Envelope} envelope
    * @returns {Promise<Array<Session|Uint8Array>>}
-   * @throws {errors.DecryptError.InvalidMessage}
-   * @throws {errors.DecryptError.PrekeyNotFound}
    */
   static init_from_message(our_identity, prekey_store, envelope) {
     return new Promise((resolve, reject) => {
@@ -156,7 +151,6 @@ export default class Session {
    * @param {!message.PreKeyMessage} pre_key_message
    * @returns {Promise<session.SessionState>}
    * @private
-   * @throws {errors.ProteusError}
    */
   _new_state(pre_key_store, pre_key_message) {
     return pre_key_store.get_prekey(pre_key_message.prekey_id).then(pre_key => {
@@ -257,7 +251,6 @@ export default class Session {
    * @param {!session.PreKeyStore} prekey_store
    * @param {!message.Envelope} envelope
    * @returns {Promise<Uint8Array>}
-   * @throws {errors.DecryptError}
    */
   decrypt(prekey_store, envelope) {
     return new Promise(resolve => {
@@ -286,7 +279,6 @@ export default class Session {
    * @param {!session.PreKeyStore} prekey_store
    * @private
    * @returns {Promise<string>}
-   * @throws {errors.DecryptError}
    */
   _decrypt_prekey_message(envelope, msg, prekey_store) {
     return Promise.resolve()

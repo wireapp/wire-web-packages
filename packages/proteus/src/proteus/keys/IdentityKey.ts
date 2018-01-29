@@ -36,7 +36,7 @@ export default class IdentityKey {
 
   /**
    * @param {!IdentityKey} public_key
-   * @returns {IdentityKey} - `this`
+   * @returns {IdentityKey}
    */
   static new(public_key) {
     TypeUtil.assert_is_instance(PublicKey, public_key);

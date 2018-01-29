@@ -34,9 +34,6 @@ import Envelope from '../message/Envelope';
 import ChainKey from './ChainKey';
 import MessageKeys from './MessageKeys';
 
-/**
- * @class RecvChain
- */
 export default class RecvChain {
   chain_key: ChainKey;
   message_keys: Array<MessageKeys>;

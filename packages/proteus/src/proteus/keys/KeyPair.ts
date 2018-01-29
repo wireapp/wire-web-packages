@@ -31,7 +31,6 @@ import SecretKey from './SecretKey';
 
 /**
  * Construct an ephemeral key pair.
- * @class KeyPair
  */
 export default class KeyPair {
   public_key: PublicKey;
@@ -39,7 +38,7 @@ export default class KeyPair {
 
   constructor() {}
 
-  /** @returns {KeyPair} - `this` */
+  /** @returns {KeyPair} */
   static new() {
     const ed25519_key_pair = sodium.crypto_sign_keypair();
 

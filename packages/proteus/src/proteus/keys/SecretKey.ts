@@ -27,9 +27,6 @@ import PublicKey from './PublicKey';
 import ArrayUtil from '../util/ArrayUtil';
 import TypeUtil from '../util/TypeUtil';
 
-/**
- * @class SecretKey
- */
 export default class SecretKey {
   sec_edward: Uint8Array;
   sec_curve: Uint8Array;
@@ -39,7 +36,7 @@ export default class SecretKey {
   /**
    * @param {!Uint8Array} sec_edward
    * @param {!Uint8Array} sec_curve
-   * @returns {SecretKey} - `this`
+   * @returns {SecretKey}
    */
   static new(sec_edward, sec_curve) {
     TypeUtil.assert_is_instance(Uint8Array, sec_edward);

@@ -24,9 +24,6 @@ import * as CBOR from '@wireapp/cbor';
 import TypeUtil from '../util/TypeUtil';
 import DecodeError from '../errors/DecodeError';
 
-/**
- * @class Message
- */
 export default class Message {
   constructor() {}
 

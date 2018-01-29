@@ -26,15 +26,12 @@ import TypeUtil from '../util/TypeUtil';
 import DecodeError from '../errors/DecodeError';
 import RandomUtil from '../util/RandomUtil';
 
-/**
- * @class SessionTag
- */
 export default class SessionTag {
   tag: Uint8Array;
 
   constructor() {}
 
-  /** @returns {SessionTag} - `this` */
+  /** @returns {SessionTag} */
   static new() {
     const length = 16;
 

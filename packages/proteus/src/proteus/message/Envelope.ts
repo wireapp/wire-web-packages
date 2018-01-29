@@ -27,9 +27,6 @@ import TypeUtil from '../util/TypeUtil';
 import MacKey from '../derived/MacKey';
 import Message from './Message';
 
-/**
- * @class Envelope
- */
 export default class Envelope {
   version: number;
   mac: Uint8Array;

@@ -31,9 +31,6 @@ import PreKey from './PreKey';
 import PreKeyAuth from './PreKeyAuth';
 import PublicKey from './PublicKey';
 
-/**
- * @class PreKeyBundle
- */
 export default class PreKeyBundle {
   version: number;
   prekey_id: number;
@@ -46,7 +43,7 @@ export default class PreKeyBundle {
   /**
    * @param {!keys.IdentityKey} public_identity_key
    * @param {!keys.PreKey} prekey
-   * @returns {PreKeyBundle} - `this`
+   * @returns {PreKeyBundle}
    */
   static new(public_identity_key, prekey) {
     TypeUtil.assert_is_instance(IdentityKey, public_identity_key);

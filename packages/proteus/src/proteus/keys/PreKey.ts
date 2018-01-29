@@ -29,7 +29,6 @@ import TypeUtil from '../util/TypeUtil';
 import KeyPair from './KeyPair';
 
 /**
- * @class PreKey
  * @classdesc Pre-generated (and regularly refreshed) pre-keys.
  * A Pre-Shared Key contains the public long-term identity and ephemeral handshake keys for the initial triple DH.
  */
@@ -43,8 +42,7 @@ export default class PreKey {
 
   /**
    * @param {!number} pre_key_id
-   * @returns {PreKey} - `this`
-   * @throws {errors.InputError.RangeError}
+   * @returns {PreKey}
    */
   static new(pre_key_id) {
     this.validate_pre_key_id(pre_key_id);
@@ -75,7 +73,6 @@ export default class PreKey {
    * @param {!number} start
    * @param {!number} size
    * @returns {Array<PreKey>}
-   * @throws {errors.InputError.RangeError}
    */
   static generate_prekeys(start, size) {
     this.validate_pre_key_id(start);
