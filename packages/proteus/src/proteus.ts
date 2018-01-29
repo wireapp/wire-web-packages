@@ -37,7 +37,7 @@ import Envelope from './proteus/message/Envelope';
 import PreKeyStore from './proteus/session/PreKeyStore';
 import Session from './proteus/session/Session';
 
-module.exports = {
+export default {
   errors: {
     ProteusError,
     DecodeError,

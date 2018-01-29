@@ -133,7 +133,7 @@ export default class Session {
           session._insert_session_state(pkmsg.message.session_tag, state);
 
           if (pkmsg.prekey_id < PreKey.MAX_PREKEY_ID) {
-            MemoryUtil.zeroize<PreKey>(prekey_store.prekeys[pkmsg.prekey_id]);
+            MemoryUtil.zeroize(prekey_store.prekeys[pkmsg.prekey_id]);
             return prekey_store
               .remove(pkmsg.prekey_id)
               .then(() => resolve([session, plain]))

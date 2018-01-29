@@ -27,6 +27,6 @@ yarn add @wireapp/proteus
 #### TypeScript
 
 ```typescript
-import * as Proteus from '@wireapp/proteus';
+import Proteus from '@wireapp/proteus';
 const identity: Proteus.keys.IdentityKeyPair = Proteus.keys.IdentityKeyPair.new();
 ```
