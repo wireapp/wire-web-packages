@@ -47,7 +47,8 @@ export default class IdentityKey {
   }
 
   toString(): string {
-    return sodium.to_hex(this.public_key);
+    // TODO: `to_hex` doesn't accept public keys.
+    return sodium.to_hex(<any>this.public_key);
   }
 
   encode(encoder: CBOR.Encoder): CBOR.Encoder {

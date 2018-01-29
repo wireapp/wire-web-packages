@@ -50,7 +50,7 @@ export default class SecretKey {
    * @returns A message signature
    */
   sign(message: Uint8Array): Uint8Array {
-    return sodium.crypto_sign_detached(message, this.sec_edward);
+    return <Uint8Array>sodium.crypto_sign_detached(message, this.sec_edward);
   }
 
   /**
@@ -62,7 +62,7 @@ export default class SecretKey {
   shared_secret(public_key: PublicKey): Uint8Array {
     TypeUtil.assert_is_instance(PublicKey, public_key);
 
-    const shared_secret = sodium.crypto_scalarmult(this.sec_curve, public_key.pub_curve);
+    const shared_secret = <Uint8Array>sodium.crypto_scalarmult(this.sec_curve, public_key.pub_curve);
 
     ArrayUtil.assert_is_not_zeros(shared_secret);
 

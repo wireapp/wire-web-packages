@@ -31,7 +31,7 @@ export default class ProteusError extends Error {
 
     this.code = code;
     this.message = message;
-    this.name = (<any>this).constructor.name;
+    this.name = this.constructor.name;
     //this.stack = new Error().stack;
   }
 }

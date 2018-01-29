@@ -22,7 +22,7 @@ import TypeUtil from '../util/TypeUtil';
 
 /** Concatenates array buffers (usually 8-bit unsigned). */
 const ArrayUtil = {
-  assert_is_not_zeros(array: Array<number | Uint8Array>): void {
+  assert_is_not_zeros(array: Array<number> | Uint8Array): void {
     let only_zeroes = true;
     for (const val in array) {
       if (parseInt(val) > 0) {
@@ -36,7 +36,7 @@ const ArrayUtil = {
     }
   },
 
-  concatenate_array_buffers(buffers: Array<ArrayBuffer | Uint8Array>): Array<ArrayBuffer> {
+  concatenate_array_buffers(buffers: Array<ArrayBuffer | Uint8Array>): Uint8Array {
     TypeUtil.assert_is_instance(Array, buffers);
 
     return <any>buffers.reduce((callback: any, bytes) => {

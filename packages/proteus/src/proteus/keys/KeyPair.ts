@@ -29,7 +29,7 @@ import TypeUtil from '../util/TypeUtil';
 import PublicKey from './PublicKey';
 import SecretKey from './SecretKey';
 
-export interface LibsodiumKeypair {
+export interface LibsodiumKeyPair {
   publicKey: Uint8Array;
   privateKey: Uint8Array;
   keyType: string;
@@ -45,11 +45,11 @@ export default class KeyPair {
   constructor() {}
 
   static new(): KeyPair {
-    const ed25519_key_pair = sodium.crypto_sign_keypair();
+    const ed25519_key_pair = sodium.crypto_sign_keypair(null, null);
 
     const kp = ClassUtil.new_instance<KeyPair>(KeyPair);
-    kp.secret_key = KeyPair.prototype._construct_private_key(ed25519_key_pair);
-    kp.public_key = KeyPair.prototype._construct_public_key(ed25519_key_pair);
+    kp.secret_key = KeyPair.prototype._construct_private_key(<LibsodiumKeyPair>ed25519_key_pair);
+    kp.public_key = KeyPair.prototype._construct_public_key(<LibsodiumKeyPair>ed25519_key_pair);
 
     return kp;
   }
@@ -61,7 +61,7 @@ export default class KeyPair {
    * @returns Constructed private key
    * @see https://download.libsodium.org/doc/advanced/ed25519-curve25519.html
    */
-  private _construct_private_key(ed25519_key_pair: LibsodiumKeypair): SecretKey {
+  private _construct_private_key(ed25519_key_pair: LibsodiumKeyPair): SecretKey {
     const sk_ed25519 = ed25519_key_pair.privateKey;
     const sk_curve25519 = ed2curve.convertSecretKey(sk_ed25519);
     return SecretKey.new(sk_ed25519, sk_curve25519);
@@ -71,7 +71,7 @@ export default class KeyPair {
    * @param ed25519_key_pair Key pair based on Edwards-curve (Ed25519)
    * @returns Constructed public key
    */
-  private _construct_public_key(ed25519_key_pair: LibsodiumKeypair): PublicKey {
+  private _construct_public_key(ed25519_key_pair: LibsodiumKeyPair): PublicKey {
     const pk_ed25519 = ed25519_key_pair.publicKey;
     const pk_curve25519 = ed2curve.convertPublicKey(pk_ed25519);
     return PublicKey.new(pk_ed25519, pk_curve25519);

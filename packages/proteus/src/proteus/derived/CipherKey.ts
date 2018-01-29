@@ -41,13 +41,13 @@ export default class CipherKey {
    * @param nonce Counter as nonce
    * @returns Encrypted payload
    */
-  encrypt(plaintext: ArrayBuffer | string | Uint8Array, nonce: Uint8Array): Uint8Array {
+  encrypt(plaintext: string | Uint8Array, nonce: Uint8Array): Uint8Array {
     // @todo Re-validate if the ArrayBuffer check is needed (Prerequisite: Integration tests)
     if (plaintext instanceof ArrayBuffer && plaintext.byteLength !== undefined) {
       plaintext = new Uint8Array(plaintext);
     }
 
-    return sodium.crypto_stream_chacha20_xor(plaintext, nonce, this.key, 'uint8array');
+    return <Uint8Array>sodium.crypto_stream_chacha20_xor(plaintext, nonce, this.key, 'uint8array');
   }
 
   decrypt(ciphertext: Uint8Array, nonce: Uint8Array): Uint8Array {
