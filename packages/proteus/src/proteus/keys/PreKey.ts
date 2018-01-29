@@ -92,7 +92,7 @@ export default class PreKey {
       return [];
     }
 
-    return new Array(size).fill(null).map(key => PreKey.new((start + key) % PreKey.MAX_PREKEY_ID));
+    return new Array(size).fill(null).map((_, index) => PreKey.new((start + index) % PreKey.MAX_PREKEY_ID));
   }
 
   /** @returns {ArrayBuffer} */
