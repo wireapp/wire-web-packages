@@ -6,7 +6,6 @@ assert = require('chai').assert;
 global.sodium = require('libsodium-wrappers-sumo');
 
 Proteus = require('proteus');
-
 Proteus.derived = {
   CipherKey: require('proteus/derived/CipherKey').default,
   DerivedSecrets: require('proteus/derived/DerivedSecrets').default,

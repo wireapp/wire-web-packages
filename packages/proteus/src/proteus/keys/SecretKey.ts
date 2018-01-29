@@ -24,6 +24,7 @@ const sodium = require('libsodium-wrappers-sumo');
 import ClassUtil from '../util/ClassUtil';
 import DontCallConstructor from '../errors/DontCallConstructor';
 import PublicKey from './PublicKey';
+import ArrayUtil from '../util/ArrayUtil';
 import TypeUtil from '../util/TypeUtil';
 
 /**
@@ -72,7 +73,11 @@ export default class SecretKey {
   shared_secret(public_key) {
     TypeUtil.assert_is_instance(PublicKey, public_key);
 
-    return sodium.crypto_scalarmult(this.sec_curve, public_key.pub_curve);
+    const shared_secret = sodium.crypto_scalarmult(this.sec_curve, public_key.pub_curve);
+
+    ArrayUtil.assert_is_not_zeros(shared_secret);
+
+    return shared_secret;
   }
 
   /**

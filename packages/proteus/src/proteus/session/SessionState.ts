@@ -50,10 +50,10 @@ import Session from './Session';
 
 /** @class SessionState */
 export default class SessionState {
-  recv_chains: Array<RecvChain>;
-  send_chain: SendChain;
-  root_key: RootKey;
-  prev_counter: number;
+  recv_chains: Array<RecvChain> = null;
+  send_chain: SendChain = null;
+  root_key: RootKey = null;
+  prev_counter: number = null;
 
   constructor() {
     throw new DontCallConstructor(this);

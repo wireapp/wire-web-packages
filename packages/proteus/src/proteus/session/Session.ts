@@ -49,13 +49,13 @@ import PreKeyStore from './PreKeyStore';
  * @throws {DontCallConstructor}
  */
 export default class Session {
-  counter: number;
-  local_identity: IdentityKeyPair;
-  pending_prekey: Array<number | PublicKey>;
-  remote_identity: IdentityKey;
-  session_states: Object;
-  session_tag: SessionTag;
-  version: number;
+  counter = 0;
+  local_identity: IdentityKeyPair = null;
+  pending_prekey: Array<number | PublicKey> = null;
+  remote_identity: IdentityKey = null;
+  session_states: Object = null;
+  session_tag: SessionTag = null;
+  version = 1;
 
   constructor() {
     throw new DontCallConstructor(this);
