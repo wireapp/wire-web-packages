@@ -21,27 +21,23 @@
 
 const CBOR = require('@wireapp/cbor');
 
-const ClassUtil = require('../util/ClassUtil');
-const DontCallConstructor = require('../errors/DontCallConstructor');
-const TypeUtil = require('../util/TypeUtil');
+import ClassUtil from '../util/ClassUtil';
+import DontCallConstructor from '../errors/DontCallConstructor';
+import TypeUtil from '../util/TypeUtil';
 
-const DerivedSecrets = require('../derived/DerivedSecrets');
-const MacKey = require('../derived/MacKey');
-const MessageKeys = require('./MessageKeys');
-
-/** @module session */
+import DerivedSecrets from '../derived/DerivedSecrets';
+import MacKey from '../derived/MacKey';
+import MessageKeys from './MessageKeys';
 
 /**
  * @class ChainKey
  * @throws {DontCallConstructor}
  */
-class ChainKey {
-  constructor() {
-    /** @type {derived.MacKey} */
-    this.key = undefined;
-    /** @type {number} */
-    this.idx = undefined;
+export default class ChainKey {
+  key: MacKey;
+  idx: number;
 
+  constructor() {
     throw new DontCallConstructor(this);
   }
 
@@ -116,5 +112,3 @@ class ChainKey {
     return self;
   }
 }
-
-module.exports = ChainKey;

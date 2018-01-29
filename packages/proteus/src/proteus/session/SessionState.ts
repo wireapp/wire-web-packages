@@ -21,47 +21,41 @@
 
 const CBOR = require('@wireapp/cbor');
 
-const ArrayUtil = require('../util/ArrayUtil');
-const ClassUtil = require('../util/ClassUtil');
-const DontCallConstructor = require('../errors/DontCallConstructor');
-const MemoryUtil = require('../util/MemoryUtil');
-const TypeUtil = require('../util/TypeUtil');
+import ArrayUtil from '../util/ArrayUtil';
+import ClassUtil from '../util/ClassUtil';
+import DontCallConstructor from '../errors/DontCallConstructor';
+import MemoryUtil from '../util/MemoryUtil';
+import TypeUtil from '../util/TypeUtil';
 
-const DecryptError = require('../errors/DecryptError');
+import DecryptError from '../errors/DecryptError';
 
-const DerivedSecrets = require('../derived/DerivedSecrets');
+import DerivedSecrets from '../derived/DerivedSecrets';
 
-const IdentityKey = require('../keys/IdentityKey');
-const IdentityKeyPair = require('../keys/IdentityKeyPair');
-const KeyPair = require('../keys/KeyPair');
-const PreKeyBundle = require('../keys/PreKeyBundle');
-const PublicKey = require('../keys/PublicKey');
+import IdentityKey from '../keys/IdentityKey';
+import IdentityKeyPair from '../keys/IdentityKeyPair';
+import KeyPair from '../keys/KeyPair';
+import PreKeyBundle from '../keys/PreKeyBundle';
+import PublicKey from '../keys/PublicKey';
 
-const CipherMessage = require('../message/CipherMessage');
-const Envelope = require('../message/Envelope');
-const PreKeyMessage = require('../message/PreKeyMessage');
-const SessionTag = require('../message/SessionTag');
+import CipherMessage from '../message/CipherMessage';
+import Envelope from '../message/Envelope';
+import PreKeyMessage from '../message/PreKeyMessage';
+import SessionTag from '../message/SessionTag';
 
-const ChainKey = require('./ChainKey');
-const RecvChain = require('./RecvChain');
-const RootKey = require('./RootKey');
-const SendChain = require('./SendChain');
-const Session = require('./Session');
-
-/** @module session */
+import ChainKey from './ChainKey';
+import RecvChain from './RecvChain';
+import RootKey from './RootKey';
+import SendChain from './SendChain';
+import Session from './Session';
 
 /** @class SessionState */
-class SessionState {
-  constructor() {
-    /** @type {Array<RecvChain> | null} */
-    this.recv_chains = null;
-    /** @type {SendChain | null} */
-    this.send_chain = null;
-    /** @type {RootKey | null} */
-    this.root_key = null;
-    /** @type {number | null} */
-    this.prev_counter = null;
+export default class SessionState {
+  recv_chains: Array<RecvChain>;
+  send_chain: SendChain;
+  root_key: RootKey;
+  prev_counter: number;
 
+  constructor() {
     throw new DontCallConstructor(this);
   }
 
@@ -222,7 +216,7 @@ class SessionState {
       const mks = rc.chain_key.message_keys();
 
       if (!envelope.verify(mks.mac_key)) {
-        throw new DecryptError.InvalidSignature(
+        throw new (<any>DecryptError).InvalidSignature(
           `Envelope verification failed for message with counters in sync at '${msg.counter}'`,
           DecryptError.CODE.CASE_206
         );
@@ -235,7 +229,7 @@ class SessionState {
       const [chk, mk, mks] = rc.stage_message_keys(msg);
 
       if (!envelope.verify(mk.mac_key)) {
-        throw new DecryptError.InvalidSignature(
+        throw new (<any>DecryptError).InvalidSignature(
           `Envelope verification failed for message with counter ahead. Message index is '${
             msg.counter
           }' while receive chain index is '${rc.chain_key.idx}'.`,
@@ -327,5 +321,3 @@ class SessionState {
     return self;
   }
 }
-
-module.exports = SessionState;

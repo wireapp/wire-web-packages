@@ -21,14 +21,12 @@
 
 const CBOR = require('@wireapp/cbor');
 
-const ClassUtil = require('../util/ClassUtil');
-const DontCallConstructor = require('../errors/DontCallConstructor');
-const InputError = require('../errors/InputError');
-const TypeUtil = require('../util/TypeUtil');
+import ClassUtil from '../util/ClassUtil';
+import DontCallConstructor from '../errors/DontCallConstructor';
+import InputError from '../errors/InputError';
+import TypeUtil from '../util/TypeUtil';
 
-const KeyPair = require('./KeyPair');
-
-/** @module keys **/
+import KeyPair from './KeyPair';
 
 /**
  * @class PreKey
@@ -36,15 +34,12 @@ const KeyPair = require('./KeyPair');
  * A Pre-Shared Key contains the public long-term identity and ephemeral handshake keys for the initial triple DH.
  * @throws {DontCallConstructor}
  */
-class PreKey {
-  constructor() {
-    /** @type {number} */
-    this.key_id = undefined;
-    /** @type {keys.KeyPair} */
-    this.key_pair = undefined;
-    /** @type {number} */
-    this.version = undefined;
+export default class PreKey {
+  key_id: number;
+  key_pair: KeyPair;
+  version: number;
 
+  constructor() {
     throw new DontCallConstructor(this);
   }
 
@@ -74,7 +69,7 @@ class PreKey {
 
     if (pre_key_id < 0 || pre_key_id > PreKey.MAX_PREKEY_ID) {
       const message = `PreKey ID (${pre_key_id}) must be between or equal to 0 and ${PreKey.MAX_PREKEY_ID}.`;
-      throw new InputError.RangeError(message, InputError.CODE.CASE_400);
+      throw new (<any>InputError).RangeError(message, InputError.CODE.CASE_400);
     }
   }
 
@@ -97,7 +92,7 @@ class PreKey {
       return [];
     }
 
-    return [...Array(size).keys()].map(key => PreKey.new((start + key) % PreKey.MAX_PREKEY_ID));
+    return new Array(size).fill(0).map(key => PreKey.new((start + key) % PreKey.MAX_PREKEY_ID));
   }
 
   /** @returns {ArrayBuffer} */
@@ -164,5 +159,3 @@ class PreKey {
     return self;
   }
 }
-
-module.exports = PreKey;

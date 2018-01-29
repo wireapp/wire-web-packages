@@ -19,9 +19,7 @@
 
 /* eslint no-magic-numbers: "off" */
 
-const ProteusError = require('./ProteusError');
-
-/** @module errors */
+import ProteusError from './ProteusError';
 
 /**
  * @extends ProteusError
@@ -74,4 +72,6 @@ Object.assign(InputError, {
   TypeError,
 });
 
-module.exports = ProteusError.InputError = InputError;
+Object.assign(ProteusError, {InputError});
+
+export default InputError;

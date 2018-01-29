@@ -21,18 +21,16 @@
 
 const CBOR = require('@wireapp/cbor');
 
-const DontCallConstructor = require('../errors/DontCallConstructor');
-const TypeUtil = require('../util/TypeUtil');
+import DontCallConstructor from '../errors/DontCallConstructor';
+import TypeUtil from '../util/TypeUtil';
 
-const DecodeError = require('../errors/DecodeError');
-
-/** @module message */
+import DecodeError from '../errors/DecodeError';
 
 /**
  * @class Message
  * @throws {DontCallConstructor}
  */
-class Message {
+export default class Message {
   constructor() {
     throw new DontCallConstructor(this);
   }
@@ -45,7 +43,7 @@ class Message {
     } else if (this instanceof PreKeyMessage) {
       encoder.u8(2);
     } else {
-      throw new TypeError('Unexpected message type', 9);
+      throw new TypeError('Unexpected message type');
     }
 
     this.encode(encoder);
@@ -67,14 +65,12 @@ class Message {
       case 2:
         return PreKeyMessage.decode(decoder);
       default:
-        throw new DecodeError.InvalidType('Unrecognised message type', DecodeError.CODE.CASE_302);
+        throw new (<any>DecodeError).InvalidType('Unrecognised message type', DecodeError.CODE.CASE_302);
     }
   }
 }
 
-module.exports = Message;
-
 // these require lines have to come after the Message definition because otherwise
 // it creates a circular dependency with the message subtypes
-const CipherMessage = require('./CipherMessage');
-const PreKeyMessage = require('./PreKeyMessage');
+import CipherMessage from './CipherMessage';
+import PreKeyMessage from './PreKeyMessage';

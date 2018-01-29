@@ -17,10 +17,8 @@
  *
  */
 
-/** @module keys */
-
 /** @class PreKeyAuth */
-class PreKeyAuth {
+export default class PreKeyAuth {
   /** @type {string} */
   static get INVALID() {
     return 'Invalid';
@@ -36,5 +34,3 @@ class PreKeyAuth {
     return 'Valid';
   }
 }
-
-module.exports = PreKeyAuth;

@@ -19,9 +19,7 @@
 
 /* eslint no-magic-numbers: "off" */
 
-const ProteusError = require('./ProteusError');
-
-/** @module errors */
+import ProteusError from './ProteusError';
 
 /**
  * @extends ProteusError
@@ -86,4 +84,6 @@ Object.assign(DecodeError, {
   LocalIdentityChanged,
 });
 
-module.exports = ProteusError.DecodeError = DecodeError;
+Object.assign(ProteusError, {DecodeError});
+
+export default DecodeError;

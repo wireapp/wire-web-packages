@@ -17,24 +17,15 @@
  *
  */
 
-const ProteusError = require('../errors/ProteusError');
-const TypeUtil = require('../util/TypeUtil');
+import ProteusError from '../errors/ProteusError';
+import TypeUtil from '../util/TypeUtil';
 
-/** @module util */
-
-/**
- * Concatenates array buffers (usually 8-bit unsigned).
- */
+/** Concatenates array buffers (usually 8-bit unsigned). */
 const ArrayUtil = {
-  /**
-   * @param {!(Array<number>|Uint8Array)} array
-   * @returns {void}
-   * @throws {errors.ProteusError}
-   */
-  assert_is_not_zeros(array) {
+  assert_is_not_zeros(array: Array<number | Uint8Array>): void {
     let only_zeroes = true;
     for (const val in array) {
-      if (val > 0) {
+      if (parseInt(val) > 0) {
         only_zeroes = false;
         break;
       }
@@ -45,14 +36,10 @@ const ArrayUtil = {
     }
   },
 
-  /**
-   * @param {!Array<ArrayBuffer>} buffers
-   * @returns {Array<ArrayBuffer>}
-   */
-  concatenate_array_buffers(buffers) {
+  concatenate_array_buffers(buffers: Array<ArrayBuffer>): Array<ArrayBuffer> {
     TypeUtil.assert_is_instance(Array, buffers);
 
-    return buffers.reduce((callback, bytes) => {
+    return <any>buffers.reduce((callback: any, bytes) => {
       const buf = new callback.constructor(callback.byteLength + bytes.byteLength);
       buf.set(callback, 0);
       buf.set(bytes, callback.byteLength);
@@ -61,4 +48,4 @@ const ArrayUtil = {
   },
 };
 
-module.exports = ArrayUtil;
+export default ArrayUtil;

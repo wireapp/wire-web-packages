@@ -17,9 +17,7 @@
  *
  */
 
-const ProteusError = require('./ProteusError');
-
-/** @module errors */
+import ProteusError from './ProteusError';
 
 const _extend = function(child, parent) {
   for (const key in parent) {
@@ -46,7 +44,7 @@ const DontCallConstructor = (function(superClass) {
 
   function func(_instance) {
     this._instance = _instance;
-    func.__super__.constructor.call(
+    (<any>func).__super__.constructor.call(
       this,
       `Instead of 'new {this._instance.constructor.name}', use '${this._instance.constructor.name}.new'.`
     );
@@ -55,4 +53,4 @@ const DontCallConstructor = (function(superClass) {
   return func;
 })(ProteusError);
 
-module.exports = DontCallConstructor;
+export default DontCallConstructor;

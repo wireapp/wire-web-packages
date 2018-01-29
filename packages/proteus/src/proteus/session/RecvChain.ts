@@ -21,36 +21,32 @@
 
 const CBOR = require('@wireapp/cbor');
 
-const ClassUtil = require('../util/ClassUtil');
-const DontCallConstructor = require('../errors/DontCallConstructor');
-const TypeUtil = require('../util/TypeUtil');
+import ClassUtil from '../util/ClassUtil';
+import DontCallConstructor from '../errors/DontCallConstructor';
+import TypeUtil from '../util/TypeUtil';
 
-const PublicKey = require('../keys/PublicKey');
+import PublicKey from '../keys/PublicKey';
 
-const DecryptError = require('../errors/DecryptError');
-const ProteusError = require('../errors/ProteusError');
+import DecryptError from '../errors/DecryptError';
+import ProteusError from '../errors/ProteusError';
 
-const CipherMessage = require('../message/CipherMessage');
-const Envelope = require('../message/Envelope');
+import CipherMessage from '../message/CipherMessage';
+import Envelope from '../message/Envelope';
 
-const ChainKey = require('./ChainKey');
-const MessageKeys = require('./MessageKeys');
-
-/** @module session */
+import ChainKey from './ChainKey';
+import MessageKeys from './MessageKeys';
 
 /**
  * @class RecvChain
  * @throws {DontCallConstructor}
  */
-class RecvChain {
-  constructor() {
-    /** @type {ChainKey} */
-    this.chain_key = undefined;
-    /** @type {Array<MessageKeys>} */
-    this.message_keys = undefined;
-    /** @type {keys.PublicKey} */
-    this.ratchet_key = undefined;
+export default class RecvChain {
+  chain_key: ChainKey;
+  message_keys: Array<MessageKeys>;
+  ratchet_key: PublicKey;
+  static MAX_COUNTER_GAP = 1000;
 
+  constructor() {
     throw new DontCallConstructor(this);
   }
 
@@ -83,7 +79,7 @@ class RecvChain {
       const message = `Message too old. Counter for oldest staged chain key is '${
         this.message_keys[0].counter
       }' while message counter is '${msg.counter}'.`;
-      throw new DecryptError.OutdatedMessage(message, DecryptError.CODE.CASE_208);
+      throw new (<any>DecryptError).OutdatedMessage(message, DecryptError.CODE.CASE_208);
     }
 
     const idx = this.message_keys.findIndex(mk => {
@@ -91,7 +87,7 @@ class RecvChain {
     });
 
     if (idx === -1) {
-      throw new DecryptError.DuplicateMessage(null, DecryptError.CODE.CASE_209);
+      throw new (<any>DecryptError).DuplicateMessage(null, DecryptError.CODE.CASE_209);
     }
 
     const mk = this.message_keys.splice(idx, 1)[0];
@@ -99,7 +95,7 @@ class RecvChain {
       const message = `Envelope verification failed for message with counter behind. Message index is '${
         msg.counter
       }' while receive chain index is '${this.chain_key.idx}'.`;
-      throw new DecryptError.InvalidSignature(message, DecryptError.CODE.CASE_210);
+      throw new (<any>DecryptError).InvalidSignature(message, DecryptError.CODE.CASE_210);
     }
 
     return mk.decrypt(msg.cipher_text);
@@ -115,12 +111,12 @@ class RecvChain {
     const num = msg.counter - this.chain_key.idx;
     if (num > RecvChain.MAX_COUNTER_GAP) {
       if (this.chain_key.idx === 0) {
-        throw new DecryptError.TooDistantFuture(
+        throw new (<any>DecryptError).TooDistantFuture(
           'Skipped too many message at the beginning of a receive chain.',
           DecryptError.CODE.CASE_211
         );
       }
-      throw new DecryptError.TooDistantFuture(
+      throw new (<any>DecryptError).TooDistantFuture(
         `Skipped too many message within a used receive chain. Receive chain counter is '${this.chain_key.idx}'`,
         DecryptError.CODE.CASE_212
       );
@@ -227,8 +223,3 @@ class RecvChain {
     return self;
   }
 }
-
-/** @type {number} */
-RecvChain.MAX_COUNTER_GAP = 1000;
-
-module.exports = RecvChain;

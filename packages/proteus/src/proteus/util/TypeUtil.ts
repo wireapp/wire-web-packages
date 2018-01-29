@@ -16,19 +16,10 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-
 const InputError = require('../errors/InputError');
 
-/** @module util */
-
 const TypeUtil = {
-  /**
-   * @param {*} classes
-   * @param {*} inst
-   * @returns {void}
-   * @throws {errors.InputError.TypeError}
-   */
-  assert_is_instance(classes, inst) {
+  assert_is_instance(classes: any, inst: any): void {
     if (!Array.isArray(classes)) {
       classes = [classes];
     }
@@ -44,12 +35,8 @@ const TypeUtil = {
     }
     throw new InputError.TypeError(`Expected one of ${valid_types}, got '${String(inst)}'.`, InputError.CODE.CASE_402);
   },
-  /**
-   * @param {*} inst
-   * @returns {boolean}
-   * @throws {errors.InputError.TypeError}
-   */
-  assert_is_integer(inst) {
+
+  assert_is_integer(inst: any): boolean {
     if (Number.isInteger(inst)) {
       return true;
     }
@@ -60,4 +47,4 @@ const TypeUtil = {
   },
 };
 
-module.exports = TypeUtil;
+export default TypeUtil;

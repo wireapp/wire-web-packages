@@ -19,27 +19,24 @@
 
 const CBOR = require('@wireapp/cbor');
 
-const ClassUtil = require('../util/ClassUtil');
-const DontCallConstructor = require('../errors/DontCallConstructor');
-const TypeUtil = require('../util/TypeUtil');
+import ClassUtil from '../util/ClassUtil';
+import DontCallConstructor from '../errors/DontCallConstructor';
+import TypeUtil from '../util/TypeUtil';
 
-const ChainKey = require('./ChainKey');
-const CipherKey = require('../derived/CipherKey');
-const DerivedSecrets = require('../derived/DerivedSecrets');
-const KeyPair = require('../keys/KeyPair');
-const PublicKey = require('../keys/PublicKey');
-
-/** @module session */
+import ChainKey from './ChainKey';
+import CipherKey from '../derived/CipherKey';
+import DerivedSecrets from '../derived/DerivedSecrets';
+import KeyPair from '../keys/KeyPair';
+import PublicKey from '../keys/PublicKey';
 
 /**
  * @class RootKey
  * @throws {DontCallConstructor}
  */
-class RootKey {
-  constructor() {
-    /** @type {derived.CipherKey} */
-    this.key = undefined;
+export default class RootKey {
+  key: CipherKey;
 
+  constructor() {
     throw new DontCallConstructor(this);
   }
 
@@ -102,5 +99,3 @@ class RootKey {
     return RootKey.from_cipher_key(cipher_key);
   }
 }
-
-module.exports = RootKey;

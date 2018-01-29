@@ -21,35 +21,28 @@
 
 const CBOR = require('@wireapp/cbor');
 
-const ClassUtil = require('../util/ClassUtil');
-const DontCallConstructor = require('../errors/DontCallConstructor');
-const TypeUtil = require('../util/TypeUtil');
+import ClassUtil from '../util/ClassUtil';
+import DontCallConstructor from '../errors/DontCallConstructor';
+import TypeUtil from '../util/TypeUtil';
 
-const PublicKey = require('../keys/PublicKey');
+import PublicKey from '../keys/PublicKey';
 
-const Message = require('./Message');
-const SessionTag = require('./SessionTag');
-
-/** @module message */
+import Message from './Message';
+import SessionTag from './SessionTag';
 
 /**
  * @extends Message
  * @throws {DontCallConstructor}
  */
-class CipherMessage extends Message {
+export default class CipherMessage extends Message {
+  session_tag: SessionTag;
+  counter: number;
+  prev_counter: number;
+  ratchet_key: PublicKey;
+  cipher_text: Uint8Array;
+
   constructor() {
     super();
-    /** @type {SessionTag} */
-    this.session_tag = undefined;
-    /** @type {number} */
-    this.counter = undefined;
-    /** @type {number} */
-    this.prev_counter = undefined;
-    /** @type {keys.PublicKey} */
-    this.ratchet_key = undefined;
-    /** @type {Uint8Array} */
-    this.cipher_text = undefined;
-
     throw new DontCallConstructor(this);
   }
 
@@ -137,5 +130,3 @@ class CipherMessage extends Message {
     return CipherMessage.new(session_tag, counter, prev_counter, ratchet_key, cipher_text);
   }
 }
-
-module.exports = CipherMessage;

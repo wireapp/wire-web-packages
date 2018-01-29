@@ -21,26 +21,22 @@
 
 const CBOR = require('@wireapp/cbor');
 
-const ClassUtil = require('../util/ClassUtil');
-const DontCallConstructor = require('../errors/DontCallConstructor');
-const TypeUtil = require('../util/TypeUtil');
+import ClassUtil from '../util/ClassUtil';
+import DontCallConstructor from '../errors/DontCallConstructor';
+import TypeUtil from '../util/TypeUtil';
 
-const ChainKey = require('./ChainKey');
-const KeyPair = require('../keys/KeyPair');
-
-/** @module session */
+import ChainKey from './ChainKey';
+import KeyPair from '../keys/KeyPair';
 
 /**
  * @class SendChain
  * @throws {DontCallConstructor}
  */
-class SendChain {
-  constructor() {
-    /** @type {ChainKey} */
-    this.chain_key = undefined;
-    /** @type {keys.KeyPair} */
-    this.ratchet_key = undefined;
+export default class SendChain {
+  chain_key: ChainKey;
+  ratchet_key: KeyPair;
 
+  constructor() {
     throw new DontCallConstructor(this);
   }
 
@@ -91,5 +87,3 @@ class SendChain {
     return self;
   }
 }
-
-module.exports = SendChain;

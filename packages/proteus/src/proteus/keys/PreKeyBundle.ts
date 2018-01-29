@@ -22,35 +22,28 @@
 const CBOR = require('@wireapp/cbor');
 const sodium = require('libsodium-wrappers-sumo');
 
-const ClassUtil = require('../util/ClassUtil');
-const DontCallConstructor = require('../errors/DontCallConstructor');
-const TypeUtil = require('../util/TypeUtil');
+import ClassUtil from '../util/ClassUtil';
+import DontCallConstructor from '../errors/DontCallConstructor';
+import TypeUtil from '../util/TypeUtil';
 
-const IdentityKey = require('./IdentityKey');
-const IdentityKeyPair = require('./IdentityKeyPair');
-const PreKey = require('./PreKey');
-const PreKeyAuth = require('./PreKeyAuth');
-const PublicKey = require('./PublicKey');
-
-/** @module keys */
+import IdentityKey from './IdentityKey';
+import IdentityKeyPair from './IdentityKeyPair';
+import PreKey from './PreKey';
+import PreKeyAuth from './PreKeyAuth';
+import PublicKey from './PublicKey';
 
 /**
  * @class PreKeyBundle
  * @throws {DontCallConstructor}
  */
-class PreKeyBundle {
-  constructor() {
-    /** @type {number} */
-    this.version = undefined;
-    /** @type {number} */
-    this.prekey_id = undefined;
-    /** @type {keys.PublicKey} */
-    this.public_key = undefined;
-    /** @type {keys.IdentityKey} */
-    this.identity_key = undefined;
-    /** @type {Uint8Array} */
-    this.signature = undefined;
+export default class PreKeyBundle {
+  version: number;
+  prekey_id: number;
+  public_key: PublicKey;
+  identity_key: IdentityKey;
+  signature: Uint8Array;
 
+  constructor() {
     throw new DontCallConstructor(this);
   }
 
@@ -206,5 +199,3 @@ class PreKeyBundle {
     return self;
   }
 }
-
-module.exports = PreKeyBundle;

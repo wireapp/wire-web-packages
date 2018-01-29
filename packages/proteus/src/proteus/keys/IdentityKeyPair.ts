@@ -21,29 +21,24 @@
 
 const CBOR = require('@wireapp/cbor');
 
-const ClassUtil = require('../util/ClassUtil');
-const DontCallConstructor = require('../errors/DontCallConstructor');
-const TypeUtil = require('../util/TypeUtil');
+import ClassUtil from '../util/ClassUtil';
+import DontCallConstructor from '../errors/DontCallConstructor';
+import TypeUtil from '../util/TypeUtil';
 
-const IdentityKey = require('./IdentityKey');
-const KeyPair = require('./KeyPair');
-const SecretKey = require('./SecretKey');
-
-/** @module keys */
+import IdentityKey from './IdentityKey';
+import KeyPair from './KeyPair';
+import SecretKey from './SecretKey';
 
 /**
  * @class IdentityKeyPair
  * @throws {DontCallConstructor}
  */
-class IdentityKeyPair {
-  constructor() {
-    /** @type {keys.IdentityKey} */
-    this.public_key = undefined;
-    /** @type {SecretKey} */
-    this.secret_key = undefined;
-    /** @type {number} */
-    this.version = undefined;
+export default class IdentityKeyPair {
+  public_key: IdentityKey;
+  secret_key: SecretKey;
+  version: number;
 
+  constructor() {
     throw new DontCallConstructor(this);
   }
 
@@ -125,5 +120,3 @@ class IdentityKeyPair {
     return self;
   }
 }
-
-module.exports = IdentityKeyPair;

@@ -17,13 +17,11 @@
  *
  */
 
-/** @module session */
-
 /** @class PreKeyStore */
 function PreKeyStore() {}
 
 /** @type {Array<number>} */
-PreKeyStore.prekeys = [];
+(<any>PreKeyStore).prekeys = [];
 
 /**
  * @param {!number} prekey_id
@@ -43,4 +41,4 @@ PreKeyStore.prototype.remove = function(prekey_id) {
   throw Error('Virtual function unimplemented');
 };
 
-module.exports = PreKeyStore;
+export default PreKeyStore;

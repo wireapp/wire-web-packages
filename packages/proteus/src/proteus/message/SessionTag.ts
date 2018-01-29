@@ -20,25 +20,22 @@
 const CBOR = require('@wireapp/cbor');
 const sodium = require('libsodium-wrappers-sumo');
 
-const DontCallConstructor = require('../errors/DontCallConstructor');
+import DontCallConstructor from '../errors/DontCallConstructor';
 
-const ClassUtil = require('../util/ClassUtil');
-const TypeUtil = require('../util/TypeUtil');
+import ClassUtil from '../util/ClassUtil';
+import TypeUtil from '../util/TypeUtil';
 
-const DecodeError = require('../errors/DecodeError');
-const RandomUtil = require('../util/RandomUtil');
-
-/** @module message */
+import DecodeError from '../errors/DecodeError';
+import RandomUtil from '../util/RandomUtil';
 
 /**
  * @class SessionTag
  * @throws {DontCallConstructor}
  */
-class SessionTag {
-  constructor() {
-    /** @type {Uint8Array} */
-    this.tag = undefined;
+export default class SessionTag {
+  tag: Uint8Array;
 
+  constructor() {
     throw new DontCallConstructor(this);
   }
 
@@ -75,7 +72,7 @@ class SessionTag {
 
     const bytes = new Uint8Array(decoder.bytes());
     if (bytes.byteLength !== length) {
-      throw DecodeError.InvalidArrayLen(
+      throw (<any>DecodeError).InvalidArrayLen(
         `Session tag should be 16 bytes, not ${bytes.byteLength} bytes.`,
         DecodeError.CODE.CASE_303
       );
@@ -86,5 +83,3 @@ class SessionTag {
     return st;
   }
 }
-
-module.exports = SessionTag;

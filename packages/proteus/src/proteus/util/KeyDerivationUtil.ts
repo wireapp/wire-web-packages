@@ -19,11 +19,9 @@
 
 const sodium = require('libsodium-wrappers-sumo');
 
-const ArrayUtil = require('../util/ArrayUtil');
-const MemoryUtil = require('../util/MemoryUtil');
-const TypeUtil = require('../util/TypeUtil');
-
-/** @module util */
+import ArrayUtil from '../util/ArrayUtil';
+import MemoryUtil from '../util/MemoryUtil';
+import TypeUtil from '../util/TypeUtil';
 
 const KeyDerivationUtil = {
   /**
@@ -85,12 +83,12 @@ const KeyDerivationUtil = {
     const expand = (tag, received_info, received_length) => {
       const num_blocks = Math.ceil(received_length / HASH_LEN);
       let hmac = new Uint8Array(0);
-      let result = new Uint8Array(0);
+      let result: any = new Uint8Array(0);
 
       for (let index = 0; index <= num_blocks - 1; index++) {
         const buf = ArrayUtil.concatenate_array_buffers([hmac, received_info, new Uint8Array([index + 1])]);
         hmac = sodium.crypto_auth_hmacsha256(buf, tag);
-        result = ArrayUtil.concatenate_array_buffers([result, hmac]);
+        result = ArrayUtil.concatenate_array_buffers(<any>[result, hmac]);
       }
 
       return new Uint8Array(result.buffer.slice(0, received_length));
@@ -105,4 +103,4 @@ const KeyDerivationUtil = {
   },
 };
 
-module.exports = KeyDerivationUtil;
+export default KeyDerivationUtil;

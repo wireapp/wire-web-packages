@@ -21,34 +21,28 @@
 
 const CBOR = require('@wireapp/cbor');
 
-const ClassUtil = require('../util/ClassUtil');
-const DontCallConstructor = require('../errors/DontCallConstructor');
-const TypeUtil = require('../util/TypeUtil');
+import ClassUtil from '../util/ClassUtil';
+import DontCallConstructor from '../errors/DontCallConstructor';
+import TypeUtil from '../util/TypeUtil';
 
-const IdentityKey = require('../keys/IdentityKey');
-const PublicKey = require('../keys/PublicKey');
+import IdentityKey from '../keys/IdentityKey';
+import PublicKey from '../keys/PublicKey';
 
-const CipherMessage = require('./CipherMessage');
-const Message = require('./Message');
-
-/** @module message */
+import CipherMessage from './CipherMessage';
+import Message from './Message';
 
 /**
  * @extends Message
  * @throws {DontCallConstructor}
  */
-class PreKeyMessage extends Message {
+export default class PreKeyMessage extends Message {
+  prekey_id: number;
+  base_key: PublicKey;
+  identity_key: IdentityKey;
+  message: CipherMessage;
+
   constructor() {
     super();
-
-    /** @type {number} */
-    this.prekey_id = undefined;
-    /** @type {keys.PublicKey} */
-    this.base_key = undefined;
-    /** @type {keys.IdentityKey} */
-    this.identity_key = undefined;
-    /** @type {CipherMessage} */
-    this.message = undefined;
 
     throw new DontCallConstructor(this);
   }
@@ -129,5 +123,3 @@ class PreKeyMessage extends Message {
     return PreKeyMessage.new(prekey_id, base_key, identity_key, message);
   }
 }
-
-module.exports = PreKeyMessage;

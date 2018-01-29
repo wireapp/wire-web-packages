@@ -20,13 +20,11 @@
 const CBOR = require('@wireapp/cbor');
 const sodium = require('libsodium-wrappers-sumo');
 
-const ClassUtil = require('../util/ClassUtil');
-const DontCallConstructor = require('../errors/DontCallConstructor');
-const TypeUtil = require('../util/TypeUtil');
+import ClassUtil from '../util/ClassUtil';
+import DontCallConstructor from '../errors/DontCallConstructor';
+import TypeUtil from '../util/TypeUtil';
 
-const PublicKey = require('./PublicKey');
-
-/** @module keys */
+import PublicKey from './PublicKey';
 
 /**
  * Construct a long-term identity key pair.
@@ -34,11 +32,10 @@ const PublicKey = require('./PublicKey');
  * Long-term identity keys are used to initialise "sessions" with other clients (triple DH).
  * @throws {DontCallConstructor}
  */
-class IdentityKey {
-  constructor() {
-    /** @type {PublicKey} */
-    this.public_key = undefined;
+export default class IdentityKey {
+  public_key: PublicKey;
 
+  constructor() {
     throw new DontCallConstructor(this);
   }
 
@@ -97,5 +94,3 @@ class IdentityKey {
     return IdentityKey.new(public_key);
   }
 }
-
-module.exports = IdentityKey;

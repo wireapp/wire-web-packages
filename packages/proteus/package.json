@@ -11,6 +11,7 @@
     "chai": "4.1.2",
     "jsdoc": "3.5.5",
     "mocha": "2.5.3",
+    "rimraf": "2.6.2",
     "tsd-jsdoc": "dcodeio/tsd-jsdoc#fe76c4dc071b00bb549d3af7a3bad8c555999e81",
     "typescript": "2.6.2",
     "webpack": "3.10.0"
@@ -21,8 +22,9 @@
   "name": "@wireapp/proteus",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus",
   "scripts": {
-    "clear": "exit 0",
-    "dist": "yarn clear && bower install && webpack --progress && yarn types",
+    "build": "tsc",
+    "clear": "rimraf dist",
+    "dist": "yarn clear && yarn build && bower install && webpack --progress && yarn types",
     "types": "jsdoc --verbose --pedantic --configure jsdoc.json src/ && node replace.js",
     "start": "node dist/index.js",
     "test": "yarn dist && yarn test:node",

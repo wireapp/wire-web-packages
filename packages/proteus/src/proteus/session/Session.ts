@@ -21,52 +21,43 @@
 
 const CBOR = require('@wireapp/cbor');
 
-const ClassUtil = require('../util/ClassUtil');
-const DontCallConstructor = require('../errors/DontCallConstructor');
-const MemoryUtil = require('../util/MemoryUtil');
-const TypeUtil = require('../util/TypeUtil');
+import ClassUtil from '../util/ClassUtil';
+import DontCallConstructor from '../errors/DontCallConstructor';
+import MemoryUtil from '../util/MemoryUtil';
+import TypeUtil from '../util/TypeUtil';
 
-const DecodeError = require('../errors/DecodeError');
-const DecryptError = require('../errors/DecryptError');
-const ProteusError = require('../errors/ProteusError');
+import DecodeError from '../errors/DecodeError';
+import DecryptError from '../errors/DecryptError';
+import ProteusError from '../errors/ProteusError';
 
-const IdentityKey = require('../keys/IdentityKey');
-const IdentityKeyPair = require('../keys/IdentityKeyPair');
-const KeyPair = require('../keys/KeyPair');
-const PreKey = require('../keys/PreKey');
-const PreKeyBundle = require('../keys/PreKeyBundle');
-const PublicKey = require('../keys/PublicKey');
+import IdentityKey from '../keys/IdentityKey';
+import IdentityKeyPair from '../keys/IdentityKeyPair';
+import KeyPair from '../keys/KeyPair';
+import PreKey from '../keys/PreKey';
+import PreKeyBundle from '../keys/PreKeyBundle';
+import PublicKey from '../keys/PublicKey';
 
-const CipherMessage = require('../message/CipherMessage');
-const Envelope = require('../message/Envelope');
-const PreKeyMessage = require('../message/PreKeyMessage');
-const SessionTag = require('../message/SessionTag');
+import CipherMessage from '../message/CipherMessage';
+import Envelope from '../message/Envelope';
+import PreKeyMessage from '../message/PreKeyMessage';
+import SessionTag from '../message/SessionTag';
 
-const PreKeyStore = require('./PreKeyStore');
-
-/** @module session */
+import PreKeyStore from './PreKeyStore';
 
 /**
  * @class Session
  * @throws {DontCallConstructor}
  */
-class Session {
-  constructor() {
-    /** @type {number} */
-    this.counter = 0;
-    /** @type {keys.IdentityKeyPair | null} */
-    this.local_identity = null;
-    /** @type {Array<number|keys.PublicKey> | null} */
-    this.pending_prekey = null;
-    /** @type {keys.IdentityKey | null} */
-    this.remote_identity = null;
-    /** @type {Object} */
-    this.session_states = null;
-    /** @type {message.SessionTag | null} */
-    this.session_tag = null;
-    /** @type {number} */
-    this.version = 1;
+export default class Session {
+  counter: number;
+  local_identity: IdentityKeyPair;
+  pending_prekey: Array<number | PublicKey>;
+  remote_identity: IdentityKey;
+  session_states: Object;
+  session_tag: SessionTag;
+  version: number;
 
+  constructor() {
     throw new DontCallConstructor(this);
   }
 
@@ -124,14 +115,14 @@ class Session {
 
       const pkmsg = (() => {
         if (envelope.message instanceof CipherMessage) {
-          throw new DecryptError.InvalidMessage(
+          throw new (<any>DecryptError).InvalidMessage(
             "Can't initialise a session from a CipherMessage.",
             DecryptError.CODE.CASE_201
           );
         } else if (envelope.message instanceof PreKeyMessage) {
           return envelope.message;
         } else {
-          throw new DecryptError.InvalidMessage(
+          throw new (<any>DecryptError).InvalidMessage(
             'Unknown message format: The message is neither a "CipherMessage" nor a "PreKeyMessage".',
             DecryptError.CODE.CASE_202
           );
@@ -158,7 +149,7 @@ class Session {
               .then(() => resolve([session, plain]))
               .catch(error => {
                 reject(
-                  new DecryptError.PrekeyNotFound(
+                  new (<any>DecryptError).PrekeyNotFound(
                     `Could not delete PreKey: ${error.message}`,
                     DecryptError.CODE.CASE_203
                   )
@@ -236,7 +227,7 @@ class Session {
    */
   _evict_oldest_session_state() {
     const oldest = Object.keys(this.session_states)
-      .filter(obj => obj.toString() !== this.session_tag)
+      .filter(obj => obj.toString() !== <any>this.session_tag)
       .reduce((lowest, obj, index) => {
         return this.session_states[obj].idx < this.session_states[lowest].idx ? obj.toString() : lowest;
       });
@@ -256,7 +247,7 @@ class Session {
    */
   encrypt(plaintext) {
     return new Promise((resolve, reject) => {
-      const state = this.session_states[this.session_tag];
+      const state = this.session_states[<any>this.session_tag];
 
       if (!state) {
         return reject(
@@ -292,7 +283,7 @@ class Session {
         const expected_fingerprint = this.remote_identity.fingerprint();
         if (actual_fingerprint !== expected_fingerprint) {
           const message = `Fingerprints do not match: We expected '${expected_fingerprint}', but received '${actual_fingerprint}'.`;
-          throw new DecryptError.RemoteIdentityChanged(message, DecryptError.CODE.CASE_204);
+          throw new (<any>DecryptError).RemoteIdentityChanged(message, DecryptError.CODE.CASE_204);
         }
         return resolve(this._decrypt_prekey_message(envelope, msg, prekey_store));
       }
@@ -312,7 +303,10 @@ class Session {
     return Promise.resolve()
       .then(() => this._decrypt_cipher_message(envelope, msg.message))
       .catch(error => {
-        if (error instanceof DecryptError.InvalidSignature || error instanceof DecryptError.InvalidMessage) {
+        if (
+          error instanceof (<any>DecryptError).InvalidSignature ||
+          error instanceof (<any>DecryptError).InvalidMessage
+        ) {
           return this._new_state(prekey_store, msg).then(state => {
             const plaintext = state.decrypt(envelope, msg.message);
 
@@ -340,7 +334,7 @@ class Session {
   _decrypt_cipher_message(envelope, msg) {
     let state = this.session_states[msg.session_tag];
     if (!state) {
-      throw new DecryptError.InvalidMessage(
+      throw new (<any>DecryptError).InvalidMessage(
         `Local session not found for message session tag '${msg.session_tag}'.`,
         DecryptError.CODE.CASE_205
       );
@@ -402,7 +396,7 @@ class Session {
       encoder.u8(0);
       encoder.u16(this.pending_prekey[0]);
       encoder.u8(1);
-      this.pending_prekey[1].encode(encoder);
+      (<PublicKey>this.pending_prekey[1]).encode(encoder);
     } else {
       encoder.null();
     }
@@ -442,7 +436,7 @@ class Session {
         case 2: {
           const identity_key = IdentityKey.decode(decoder);
           if (local_identity.public_key.fingerprint() !== identity_key.fingerprint()) {
-            throw new DecodeError.LocalIdentityChanged(null, DecodeError.CODE.CASE_300);
+            throw new (<any>DecodeError).LocalIdentityChanged(null, DecodeError.CODE.CASE_300);
           }
           self.local_identity = local_identity;
           break;
@@ -469,7 +463,7 @@ class Session {
               }
               break;
             default:
-              throw new DecodeError.InvalidType(null, DecodeError.CODE.CASE_301);
+              throw new (<any>DecodeError).InvalidType(null, DecodeError.CODE.CASE_301);
           }
           break;
         }
@@ -506,6 +500,4 @@ class Session {
   }
 }
 
-module.exports = Session;
-
-const SessionState = require('./SessionState');
+import SessionState from './SessionState';

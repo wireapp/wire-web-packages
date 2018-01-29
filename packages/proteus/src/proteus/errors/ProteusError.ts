@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2016 Wire Swiss GmbH
+ * Copyright (C) 2018 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,27 +16,8 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-
-/** @module errors */
-
-/**
- * @class ProteusError
- * @param {!string} message
- * @param {string} [code]
- * @extends Error
- * @returns {ProteusError} - `this`
- */
-const ProteusError = (function() {
-  const func = function(message, code = 1) {
-    this.code = code;
-    this.message = message;
-    this.name = this.constructor.name;
-    this.stack = new Error().stack;
-  };
-
-  func.prototype = new Error();
-  func.prototype.constructor = func;
-  func.prototype.CODE = {
+export default class ProteusError extends Error {
+  CODE = {
     CASE_100: 100,
     CASE_101: 101,
     CASE_102: 102,
@@ -44,7 +25,13 @@ const ProteusError = (function() {
     CASE_104: 104,
   };
 
-  return func;
-})();
+  constructor(public message: string, public code = 1) {
+    super(message);
+    Object.setPrototypeOf(this, ProteusError.prototype);
 
-module.exports = ProteusError;
+    this.code = code;
+    this.message = message;
+    this.name = (<any>this).constructor.name;
+    this.stack = new Error().stack;
+  }
+}

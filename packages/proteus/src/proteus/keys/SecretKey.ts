@@ -21,24 +21,20 @@ const CBOR = require('@wireapp/cbor');
 const ed2curve = require('ed2curve');
 const sodium = require('libsodium-wrappers-sumo');
 
-const ClassUtil = require('../util/ClassUtil');
-const DontCallConstructor = require('../errors/DontCallConstructor');
-const PublicKey = require('./PublicKey');
-const TypeUtil = require('../util/TypeUtil');
-
-/** @module keys */
+import ClassUtil from '../util/ClassUtil';
+import DontCallConstructor from '../errors/DontCallConstructor';
+import PublicKey from './PublicKey';
+import TypeUtil from '../util/TypeUtil';
 
 /**
  * @class SecretKey
  * @throws {DontCallConstructor}
  */
-class SecretKey {
-  constructor() {
-    /** @type {Uint8Array} */
-    this.sec_edward = undefined;
-    /** @type {Uint8Array} */
-    this.sec_curve = undefined;
+export default class SecretKey {
+  sec_edward: Uint8Array;
+  sec_curve: Uint8Array;
 
+  constructor() {
     throw new DontCallConstructor(this);
   }
 
@@ -115,5 +111,3 @@ class SecretKey {
     return self;
   }
 }
-
-module.exports = SecretKey;

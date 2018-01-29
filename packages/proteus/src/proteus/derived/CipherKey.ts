@@ -20,21 +20,18 @@
 const CBOR = require('@wireapp/cbor');
 const sodium = require('libsodium-wrappers-sumo');
 
-const ClassUtil = require('../util/ClassUtil');
-const DontCallConstructor = require('../errors/DontCallConstructor');
-const TypeUtil = require('../util/TypeUtil');
-
-/** @module derived */
+import ClassUtil from '../util/ClassUtil';
+import DontCallConstructor from '../errors/DontCallConstructor';
+import TypeUtil from '../util/TypeUtil';
 
 /**
  * @class CipherKey
  * @throws {DontCallConstructor}
  */
-class CipherKey {
-  constructor() {
-    /** @type {Uint8Array} */
-    this.key = undefined;
+export default class CipherKey {
+  key: Uint8Array;
 
+  constructor() {
     throw new DontCallConstructor(this);
   }
 
@@ -105,5 +102,3 @@ class CipherKey {
     return CipherKey.new(key_bytes);
   }
 }
-
-module.exports = CipherKey;

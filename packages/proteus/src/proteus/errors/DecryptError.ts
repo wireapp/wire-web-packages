@@ -19,9 +19,7 @@
 
 /* eslint no-magic-numbers: "off" */
 
-const ProteusError = require('./ProteusError');
-
-/** @module errors */
+import ProteusError from './ProteusError';
 
 /**
  * @extends ProteusError
@@ -139,4 +137,6 @@ Object.assign(DecryptError, {
   TooDistantFuture,
 });
 
-module.exports = ProteusError.DecryptError = DecryptError;
+Object.assign(ProteusError, {DecryptError});
+
+export default DecryptError;

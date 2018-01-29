@@ -19,27 +19,23 @@
 
 /* eslint no-magic-numbers: "off" */
 
-const ClassUtil = require('../util/ClassUtil');
-const DontCallConstructor = require('../errors/DontCallConstructor');
-const KeyDerivationUtil = require('../util/KeyDerivationUtil');
-const MemoryUtil = require('../util/MemoryUtil');
+import ClassUtil from '../util/ClassUtil';
+import DontCallConstructor from '../errors/DontCallConstructor';
 
-const CipherKey = require('./CipherKey');
-const MacKey = require('./MacKey');
-
-/** @module derived */
+import KeyDerivationUtil from '../util/KeyDerivationUtil';
+import MemoryUtil from '../util/MemoryUtil';
+import CipherKey from './CipherKey';
+import MacKey from './MacKey';
 
 /**
  * @class DerivedSecrets
  * @throws {DontCallConstructor}
  */
-class DerivedSecrets {
-  constructor() {
-    /** @type {derived.CipherKey} */
-    this.cipher_key = undefined;
-    /** @type {derived.MacKey} */
-    this.mac_key = undefined;
+export default class DerivedSecrets {
+  cipher_key: CipherKey;
+  mac_key: MacKey;
 
+  constructor() {
     throw new DontCallConstructor(this);
   }
 
@@ -74,5 +70,3 @@ class DerivedSecrets {
     return this.kdf(input, new Uint8Array(0), info);
   }
 }
-
-module.exports = DerivedSecrets;

@@ -19,8 +19,6 @@
 
 const sodium = require('libsodium-wrappers-sumo');
 
-/** @module util */
-
 const MemoryUtil = {
   /**
    * @param {!(Uint8Array|ArrayBuffer|Object)} object
@@ -39,4 +37,4 @@ const MemoryUtil = {
   },
 };
 
-module.exports = MemoryUtil;
+export default MemoryUtil;

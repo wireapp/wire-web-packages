@@ -23,27 +23,23 @@ const CBOR = require('@wireapp/cbor');
 const ed2curve = require('ed2curve');
 const sodium = require('libsodium-wrappers-sumo');
 
-const ClassUtil = require('../util/ClassUtil');
-const DontCallConstructor = require('../errors/DontCallConstructor');
-const TypeUtil = require('../util/TypeUtil');
+import ClassUtil from '../util/ClassUtil';
+import DontCallConstructor from '../errors/DontCallConstructor';
+import TypeUtil from '../util/TypeUtil';
 
-const PublicKey = require('./PublicKey');
-const SecretKey = require('./SecretKey');
-
-/** @module keys */
+import PublicKey from './PublicKey';
+import SecretKey from './SecretKey';
 
 /**
  * Construct an ephemeral key pair.
  * @class KeyPair
  * @throws {DontCallConstructor}
  */
-class KeyPair {
-  constructor() {
-    /** @type {keys.PublicKey} */
-    this.public_key = undefined;
-    /** @type {SecretKey} */
-    this.secret_key = undefined;
+export default class KeyPair {
+  public_key: PublicKey;
+  secret_key: SecretKey;
 
+  constructor() {
     throw new DontCallConstructor(this);
   }
 
@@ -132,5 +128,3 @@ class KeyPair {
     return self;
   }
 }
-
-module.exports = KeyPair;

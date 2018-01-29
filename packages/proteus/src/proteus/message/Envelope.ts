@@ -21,30 +21,24 @@
 
 const CBOR = require('@wireapp/cbor');
 
-const ClassUtil = require('../util/ClassUtil');
-const DontCallConstructor = require('../errors/DontCallConstructor');
-const TypeUtil = require('../util/TypeUtil');
+import ClassUtil from '../util/ClassUtil';
+import DontCallConstructor from '../errors/DontCallConstructor';
+import TypeUtil from '../util/TypeUtil';
 
-const MacKey = require('../derived/MacKey');
-const Message = require('./Message');
-
-/** @module message */
+import MacKey from '../derived/MacKey';
+import Message from './Message';
 
 /**
  * @class Envelope
  * @throws {DontCallConstructor}
  */
-class Envelope {
-  constructor() {
-    /** @type {number} */
-    this.version = undefined;
-    /** @type {Uint8Array} */
-    this.mac = undefined;
-    /** @type {Message} */
-    this.message = undefined;
-    /** @type {Uint8Array} */
-    this._message_enc = undefined;
+export default class Envelope {
+  version: number;
+  mac: Uint8Array;
+  message: Message;
+  _message_enc: Uint8Array;
 
+  constructor() {
     throw new DontCallConstructor(this);
   }
 
@@ -163,5 +157,3 @@ class Envelope {
     return env;
   }
 }
-
-module.exports = Envelope;

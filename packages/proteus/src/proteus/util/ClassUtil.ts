@@ -17,9 +17,7 @@
  *
  */
 
-const DontCallConstructor = require('../errors/DontCallConstructor');
-
-/** @module util */
+import DontCallConstructor from '../errors/DontCallConstructor';
 
 const ClassUtil = {
   /**
@@ -38,4 +36,4 @@ const ClassUtil = {
   },
 };
 
-module.exports = ClassUtil;
+export default ClassUtil;
