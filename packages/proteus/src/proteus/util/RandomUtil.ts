@@ -19,7 +19,7 @@
 
 /** @module util */
 
-let crypto = typeof window !== 'undefined' && (window.crypto || window.msCrypto);
+let crypto = typeof window !== 'undefined' && (window.crypto || (<any>window).msCrypto);
 let random_bytes;
 
 if (crypto) {

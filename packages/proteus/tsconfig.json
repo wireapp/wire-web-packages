@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "lib": ["DOM", "ES7"],
+    "outDir": "dist/commonjs",
+    "rootDir": "src/",
+    "target": "ES5"
+  },
+  "exclude": ["bower_components", "node_modules", "dist", "../../node_modules"]
+}
