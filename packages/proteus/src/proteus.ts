@@ -18,35 +18,53 @@
  */
 
 /* eslint sort-keys: "off" */
+import ProteusError from './proteus/errors/ProteusError';
+import DecodeError from './proteus/errors/DecodeError';
+import DecryptError from './proteus/errors/DecryptError';
+import InputError from './proteus/errors/InputError';
+import IdentityKey from './proteus/keys/IdentityKey';
+import IdentityKeyPair from './proteus/keys/IdentityKeyPair';
+import KeyPair from './proteus/keys/KeyPair';
+import PreKeyAuth from './proteus/keys/PreKeyAuth';
+import PreKeyBundle from './proteus/keys/PreKeyBundle';
+import PreKey from './proteus/keys/PreKey';
+import PublicKey from './proteus/keys/PublicKey';
+import SecretKey from './proteus/keys/SecretKey';
+import Message from './proteus/message/Message';
+import CipherMessage from './proteus/message/CipherMessage';
+import PreKeyMessage from './proteus/message/PreKeyMessage';
+import Envelope from './proteus/message/Envelope';
+import PreKeyStore from './proteus/session/PreKeyStore';
+import Session from './proteus/session/Session';
 
 module.exports = {
   errors: {
-    ProteusError: require('./proteus/errors/ProteusError'),
-    DecodeError: require('./proteus/errors/DecodeError'),
-    DecryptError: require('./proteus/errors/DecryptError'),
-    InputError: require('./proteus/errors/InputError'),
+    ProteusError,
+    DecodeError,
+    DecryptError,
+    InputError,
   },
 
   keys: {
-    IdentityKey: require('./proteus/keys/IdentityKey'),
-    IdentityKeyPair: require('./proteus/keys/IdentityKeyPair'),
-    KeyPair: require('./proteus/keys/KeyPair'),
-    PreKeyAuth: require('./proteus/keys/PreKeyAuth'),
-    PreKeyBundle: require('./proteus/keys/PreKeyBundle'),
-    PreKey: require('./proteus/keys/PreKey'),
-    PublicKey: require('./proteus/keys/PublicKey'),
-    SecretKey: require('./proteus/keys/SecretKey'),
+    IdentityKey,
+    IdentityKeyPair,
+    KeyPair,
+    PreKeyAuth,
+    PreKeyBundle,
+    PreKey,
+    PublicKey,
+    SecretKey,
   },
 
   message: {
-    Message: require('./proteus/message/Message'),
-    CipherMessage: require('./proteus/message/CipherMessage'),
-    PreKeyMessage: require('./proteus/message/PreKeyMessage'),
-    Envelope: require('./proteus/message/Envelope'),
+    Message,
+    CipherMessage,
+    PreKeyMessage,
+    Envelope,
   },
 
   session: {
-    PreKeyStore: require('./proteus/session/PreKeyStore'),
-    Session: require('./proteus/session/Session'),
+    PreKeyStore,
+    Session,
   },
 };

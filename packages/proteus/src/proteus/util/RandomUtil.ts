@@ -19,21 +19,16 @@
 
 const random_bytes = (len: number) => {
   let crypto = typeof window !== 'undefined' && (window.crypto || (<any>window).msCrypto);
-  let random_bytes;
 
   if (crypto) {
     // browser
-    return len => {
-      const buffer = new ArrayBuffer(len);
-      const buffer_view = new Uint8Array(buffer);
-      return crypto.getRandomValues(buffer_view);
-    };
+    const buffer = new ArrayBuffer(len);
+    const buffer_view = new Uint8Array(buffer);
+    return crypto.getRandomValues(buffer_view);
   } else {
     // node
     crypto = require('crypto');
-    return len => {
-      return new Uint8Array(crypto.randomBytes(len));
-    };
+    return new Uint8Array(crypto.randomBytes(len));
   }
 };
 

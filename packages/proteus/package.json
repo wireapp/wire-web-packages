@@ -18,14 +18,13 @@
   },
   "files": ["dist/types.d.ts", "dist/window", "src"],
   "license": "GPL-3.0",
-  "main": "src/proteus.js",
+  "main": "dist/commonjs/proteus.js",
   "name": "@wireapp/proteus",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus",
   "scripts": {
     "build": "tsc",
     "clear": "rimraf dist",
-    "dist": "yarn clear && yarn build && bower install && webpack --progress && yarn types",
-    "types": "jsdoc --verbose --pedantic --configure jsdoc.json src/ && node replace.js",
+    "dist": "yarn clear && yarn build && bower install && webpack --progress",
     "start": "node dist/index.js",
     "test": "yarn dist && yarn test:node",
     "test:node":

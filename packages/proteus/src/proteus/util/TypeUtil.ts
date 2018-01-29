@@ -16,7 +16,8 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-const InputError = require('../errors/InputError');
+
+import InputError from '../errors/InputError';
 
 const TypeUtil = {
   assert_is_instance(classes: any, inst: any): void {
@@ -28,12 +29,15 @@ const TypeUtil = {
     }
     const valid_types = classes.map(_class => `'${_class.name}'`).join(' or ');
     if (inst) {
-      throw new InputError.TypeError(
+      throw new (<any>InputError).TypeError(
         `Expected one of ${valid_types}, got '${inst.constructor.name}'.`,
         InputError.CODE.CASE_401
       );
     }
-    throw new InputError.TypeError(`Expected one of ${valid_types}, got '${String(inst)}'.`, InputError.CODE.CASE_402);
+    throw new (<any>InputError).TypeError(
+      `Expected one of ${valid_types}, got '${String(inst)}'.`,
+      InputError.CODE.CASE_402
+    );
   },
 
   assert_is_integer(inst: any): boolean {
@@ -41,9 +45,12 @@ const TypeUtil = {
       return true;
     }
     if (inst) {
-      throw new InputError.TypeError(`Expected integer, got '${inst.constructor.name}'.`, InputError.CODE.CASE_403);
+      throw new (<any>InputError).TypeError(
+        `Expected integer, got '${inst.constructor.name}'.`,
+        InputError.CODE.CASE_403
+      );
     }
-    throw new InputError.TypeError(`Expected integer, got '${String(inst)}'.`, InputError.CODE.CASE_404);
+    throw new (<any>InputError).TypeError(`Expected integer, got '${String(inst)}'.`, InputError.CODE.CASE_404);
   },
 };
 
