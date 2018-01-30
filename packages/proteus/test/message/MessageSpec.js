@@ -24,33 +24,225 @@ describe('Message', () => {
   let ik;
   let rk;
 
-  const fake_pubkey = async byte => {
-    // TODO: libsodium doesn't accept fake pubkeys anymore.
-
-    // const _alice = sodium.crypto_hash_sha256(new Buffer('alice'));
-    // const alice = sodium.crypto_sign_seed_keypair(_alice);
-    // sodium.crypto_sign_ed25519_pk_to_curve25519(alice.publicKey);
-
-    await sodium.ready;
-
-    const pub_edward = new Uint8Array(32).fill(byte);
-    const pub_curve = sodium.crypto_sign_ed25519_pk_to_curve25519(pub_edward);
-
-    return Proteus.keys.PublicKey.new(pub_edward, pub_curve);
-  };
-
   const st = Proteus.message.SessionTag.new().tag.fill(42);
 
   before(async done => {
     try {
-      let ik_pk = await fake_pubkey(0xa0);
-      bk = await fake_pubkey(0xff);
-      rk = await fake_pubkey(0xf0);
+      bk = Proteus.keys.PublicKey.new(
+        new Uint8Array([
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+        ]),
+        new Uint8Array([
+          63,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+        ])
+      );
+      rk = Proteus.keys.PublicKey.new(
+        new Uint8Array([
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+          240,
+        ]),
+        new Uint8Array([
+          185,
+          178,
+          44,
+          203,
+          178,
+          44,
+          203,
+          178,
+          44,
+          203,
+          178,
+          44,
+          203,
+          178,
+          44,
+          203,
+          178,
+          44,
+          203,
+          178,
+          44,
+          203,
+          178,
+          44,
+          203,
+          178,
+          44,
+          203,
+          178,
+          44,
+          203,
+          114,
+        ])
+      );
+      const ik_pk = Proteus.keys.PublicKey.new(
+        new Uint8Array([
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+          160,
+        ]),
+        new Uint8Array([
+          92,
+          62,
+          6,
+          231,
+          99,
+          112,
+          62,
+          6,
+          231,
+          99,
+          112,
+          62,
+          6,
+          231,
+          99,
+          112,
+          62,
+          6,
+          231,
+          99,
+          112,
+          62,
+          6,
+          231,
+          99,
+          112,
+          62,
+          6,
+          231,
+          99,
+          112,
+          126,
+        ])
+      );
       ik = Proteus.keys.IdentityKey.new(ik_pk);
 
       done();
-    } catch(err) {
-      console.log(err)
+    } catch (err) {
+      console.log(err);
       done(err);
     }
   });
