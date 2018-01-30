@@ -21,11 +21,20 @@
 
 describe('Envelope', () => {
   const mk = Proteus.derived.MacKey.new(new Uint8Array(32).fill(1));
-  const bk = Proteus.keys.KeyPair.new().public_key;
-  const ik = Proteus.keys.IdentityKey.new(Proteus.keys.KeyPair.new().public_key);
-  const rk = Proteus.keys.KeyPair.new().public_key;
 
   const tg = Proteus.message.SessionTag.new();
+
+  let ik;
+  let bk;
+  let rk;
+
+  before(async done => {
+    ik = Proteus.keys.IdentityKey.new((await Proteus.keys.KeyPair.new()).public_key);
+    bk = (await Proteus.keys.KeyPair.new()).public_key;
+    rk = (await Proteus.keys.KeyPair.new()).public_key;
+
+    done();
+  });
 
   it('should encapsulate a CipherMessage', () => {
     const msg = Proteus.message.CipherMessage.new(tg, 42, 3, rk, new Uint8Array([1, 2, 3, 4, 5]));

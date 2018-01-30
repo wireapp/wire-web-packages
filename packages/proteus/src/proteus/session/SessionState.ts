@@ -59,11 +59,11 @@ export default class SessionState {
 
   constructor() {}
 
-  static init_as_alice(
+  static async init_as_alice(
     alice_identity_pair: IdentityKeyPair,
     alice_base: IdentityKeyPair | KeyPair,
     bob_pkbundle: PreKeyBundle
-  ): SessionState {
+  ): Promise<SessionState> {
     TypeUtil.assert_is_instance(IdentityKeyPair, alice_identity_pair);
     TypeUtil.assert_is_instance(KeyPair, alice_base);
     TypeUtil.assert_is_instance(PreKeyBundle, bob_pkbundle);
@@ -82,7 +82,7 @@ export default class SessionState {
 
     const recv_chains = [RecvChain.new(chainkey, bob_pkbundle.public_key)];
 
-    const send_ratchet = KeyPair.new();
+    const send_ratchet = await KeyPair.new();
     const [rok, chk] = rootkey.dh_ratchet(send_ratchet, bob_pkbundle.public_key);
     const send_chain = SendChain.new(<ChainKey>chk, send_ratchet);
 
@@ -126,8 +126,8 @@ export default class SessionState {
     return state;
   }
 
-  ratchet(ratchet_key: PublicKey): void {
-    const new_ratchet = KeyPair.new();
+  async ratchet(ratchet_key: PublicKey): Promise<void> {
+    const new_ratchet = await KeyPair.new();
 
     const [recv_root_key, recv_chain_key] = this.root_key.dh_ratchet(this.send_chain.ratchet_key, ratchet_key);
 

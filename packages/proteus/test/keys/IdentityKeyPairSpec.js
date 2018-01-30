@@ -18,13 +18,15 @@
  */
 
 describe('IdentityKeyPair', () => {
-  it('serialises and deserialises', () => {
-    const ikp = Proteus.keys.IdentityKeyPair.new();
+  it('serialises and deserialises', async done => {
+    const ikp = await Proteus.keys.IdentityKeyPair.new();
 
     const ikp_bytes = ikp.serialise();
     const ikp_deser = Proteus.keys.IdentityKeyPair.deserialise(ikp_bytes);
 
     assert(ikp.public_key.fingerprint() === ikp_deser.public_key.fingerprint());
     assert(sodium.to_hex(new Uint8Array(ikp_bytes)) === sodium.to_hex(new Uint8Array(ikp_deser.serialise())));
+
+    done();
   });
 });

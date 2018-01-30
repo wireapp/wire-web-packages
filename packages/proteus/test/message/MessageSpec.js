@@ -20,20 +20,40 @@
 /* eslint no-magic-numbers: "off" */
 
 describe('Message', () => {
-  const fake_pubkey = byte => {
-    const pub_edward = new Uint8Array(32);
-    pub_edward.fill(byte);
+  let bk;
+  let ik;
+  let rk;
+
+  const fake_pubkey = async byte => {
+    // TODO: libsodium doesn't accept fake pubkeys anymore.
+
+    // const _alice = sodium.crypto_hash_sha256(new Buffer('alice'));
+    // const alice = sodium.crypto_sign_seed_keypair(_alice);
+    // sodium.crypto_sign_ed25519_pk_to_curve25519(alice.publicKey);
+
+    await sodium.ready;
+
+    const pub_edward = new Uint8Array(32).fill(byte);
     const pub_curve = sodium.crypto_sign_ed25519_pk_to_curve25519(pub_edward);
 
     return Proteus.keys.PublicKey.new(pub_edward, pub_curve);
   };
 
-  const bk = fake_pubkey(0xff);
-  const ik = Proteus.keys.IdentityKey.new(fake_pubkey(0xa0));
-  const rk = fake_pubkey(0xf0);
+  const st = Proteus.message.SessionTag.new().tag.fill(42);
 
-  const st = Proteus.message.SessionTag.new();
-  st.tag.fill(42);
+  before(async done => {
+    try {
+      let ik_pk = await fake_pubkey(0xa0);
+      bk = await fake_pubkey(0xff);
+      rk = await fake_pubkey(0xf0);
+      ik = Proteus.keys.IdentityKey.new(ik_pk);
+
+      done();
+    } catch(err) {
+      console.log(err)
+      done(err);
+    }
+  });
 
   it('should serialise and deserialise a CipherMessage correctly', () => {
     const expected =

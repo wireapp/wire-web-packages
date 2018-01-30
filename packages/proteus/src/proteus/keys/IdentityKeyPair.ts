@@ -35,8 +35,8 @@ export default class IdentityKeyPair {
 
   constructor() {}
 
-  static new(): IdentityKeyPair {
-    const key_pair = KeyPair.new();
+  static async new(): Promise<IdentityKeyPair> {
+    const key_pair = await KeyPair.new();
 
     const ikp = ClassUtil.new_instance<IdentityKeyPair>(IdentityKeyPair);
     ikp.version = 1;

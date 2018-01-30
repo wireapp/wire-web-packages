@@ -21,7 +21,7 @@
 
 import * as CBOR from '@wireapp/cbor';
 import * as ed2curve from 'ed2curve';
-import * as sodium from 'libsodium-wrappers-sumo';
+import * as _sodium from 'libsodium-wrappers-sumo';
 
 import ClassUtil from '../util/ClassUtil';
 import TypeUtil from '../util/TypeUtil';
@@ -44,7 +44,10 @@ export default class KeyPair {
 
   constructor() {}
 
-  static new(): KeyPair {
+  static async new(): Promise<KeyPair> {
+    await _sodium.ready;
+    const sodium = _sodium;
+
     const ed25519_key_pair = sodium.crypto_sign_keypair();
 
     const kp = ClassUtil.new_instance<KeyPair>(KeyPair);

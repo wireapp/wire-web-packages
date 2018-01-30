@@ -28,6 +28,11 @@ import DerivedSecrets from '../derived/DerivedSecrets';
 import KeyPair from '../keys/KeyPair';
 import PublicKey from '../keys/PublicKey';
 
+export interface RatchetTuple extends Array<RootKey | ChainKey> {
+  0: RootKey;
+  1: ChainKey;
+}
+
 export default class RootKey {
   key: CipherKey;
 
@@ -48,7 +53,7 @@ export default class RootKey {
    * @param ours Our key pair
    * @param theirs Their public key
    */
-  dh_ratchet(ours: KeyPair, theirs: PublicKey): Array<RootKey | ChainKey> {
+  dh_ratchet(ours: KeyPair, theirs: PublicKey): RatchetTuple {
     TypeUtil.assert_is_instance(KeyPair, ours);
     TypeUtil.assert_is_instance(PublicKey, theirs);
 

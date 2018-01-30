@@ -9,6 +9,8 @@ declare module 'libsodium-wrappers-sumo' {
     keyType: 'ed25519';
   }
 
+  function ready(): Promise<void>;
+
   function memzero(bytes: Uint8Array): void;
   function from_string(str: string): Uint8Array;
   function to_hex(bytes: Uint8Array): string;
@@ -46,4 +48,9 @@ declare module 'libsodium-wrappers-sumo' {
     key: Uint8Array,
     outputFormat?: OutputFormat
   ): string | Uint8Array;
+  function crypto_sign_ed25519_pk_to_curve25519(
+    publicKey: Uint8Array,
+    outputFormat?: OutputFormat
+  ): string | Uint8Array;
+  function to_string(bytes: any): string;
 }

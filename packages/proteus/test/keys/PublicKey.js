@@ -18,10 +18,10 @@
  */
 
 describe('Public Key', () => {
-  it('should reject shared secrets at the point of infinity', () => {
+  it('should reject shared secrets at the point of infinity', async done => {
     const emptyCurve = new Uint8Array([1].concat(Array.from({length: 30})));
-    const alice_keypair = Proteus.keys.KeyPair.new();
-    const bob_keypair = Proteus.keys.KeyPair.new();
+    const alice_keypair = await Proteus.keys.KeyPair.new();
+    const bob_keypair = await Proteus.keys.KeyPair.new();
 
     assert.deepEqual(
       alice_keypair.secret_key.shared_secret(bob_keypair.public_key),
@@ -31,5 +31,7 @@ describe('Public Key', () => {
     bob_keypair.public_key.pub_curve = emptyCurve;
 
     assert.throws(() => alice_keypair.secret_key.shared_secret(bob_keypair.public_key));
+
+    done();
   });
 });

@@ -77,15 +77,15 @@ const assert_serialise_deserialise = (local_identity, session) => {
 
 describe('LongRunning', () => {
   describe('Session', () => {
-    it('pathological case', function(done) {
+    it('pathological case', async function(done) {
       this.timeout(0);
 
       const num_alices = 32;
       let alices = null;
       let bob = null;
 
-      const [alice_ident, bob_ident] = [0, 1].map(() => Proteus.keys.IdentityKeyPair.new());
-      const bob_store = new TestStore(Proteus.keys.PreKey.generate_prekeys(0, num_alices));
+      const [alice_ident, bob_ident] = await Promise.all([0, 1].map(() => Proteus.keys.IdentityKeyPair.new()));
+      const bob_store = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, num_alices));
 
       Promise.all(
         bob_store.prekeys.map(pk => {
@@ -123,17 +123,13 @@ describe('LongRunning', () => {
             })
           );
         })
-        .then(() => {
-          done();
-        })
-        .catch(err => {
-          done(err);
-        });
+        .then(() => done())
+        .catch(err => done(err));
     });
 
-    it('should handle mass communication', done => {
-      const [alice_ident, bob_ident] = [0, 1].map(() => Proteus.keys.IdentityKeyPair.new());
-      const [alice_store, bob_store] = [0, 1].map(() => new TestStore(Proteus.keys.PreKey.generate_prekeys(0, 10)));
+    it('should handle mass communication', async done => {
+      const [alice_ident, bob_ident] = await Promise.all([0, 1].map(() => Proteus.keys.IdentityKeyPair.new()));
+      const [alice_store, bob_store] = await Promise.all([0, 1].map(async () => new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10))));
 
       const bob_prekey = bob_store.prekeys[0];
       const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
@@ -171,12 +167,8 @@ describe('LongRunning', () => {
           assert_serialise_deserialise(alice_ident, alice);
           return assert_serialise_deserialise(bob_ident, bob);
         })
-        .then(() => {
-          done();
-        })
-        .catch(err => {
-          done(err);
-        });
+        .then(() => done())
+        .catch(err => done(err));
     });
   });
 });

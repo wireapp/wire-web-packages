@@ -44,12 +44,14 @@ describe('MemoryUtil', () => {
       array_random.every(value => assert.strictEqual(value, 0));
     });
 
-    it('deeply zeroizes a KeyPair', () => {
-      const key_pair = Proteus.keys.KeyPair.new();
+    it('deeply zeroizes a KeyPair', async done => {
+      const key_pair = await Proteus.keys.KeyPair.new();
 
       Proteus.util.MemoryUtil.zeroize(key_pair);
       key_pair.secret_key.sec_edward.every(value => assert.strictEqual(value, 0));
       key_pair.secret_key.sec_curve.every(value => assert.strictEqual(value, 0));
+
+      done();
     });
   });
 });

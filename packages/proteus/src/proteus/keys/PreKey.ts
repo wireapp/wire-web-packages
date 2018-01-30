@@ -40,14 +40,14 @@ export default class PreKey {
 
   constructor() {}
 
-  static new(pre_key_id: number): PreKey {
+  static async new(pre_key_id: number): Promise<PreKey> {
     this.validate_pre_key_id(pre_key_id);
 
     const pk = ClassUtil.new_instance<PreKey>(PreKey);
 
     pk.version = 1;
     pk.key_id = pre_key_id;
-    pk.key_pair = KeyPair.new();
+    pk.key_pair = await KeyPair.new();
     return pk;
   }
 
@@ -60,11 +60,11 @@ export default class PreKey {
     }
   }
 
-  static last_resort(): PreKey {
-    return PreKey.new(PreKey.MAX_PREKEY_ID);
+  static async last_resort(): Promise<PreKey> {
+    return await PreKey.new(PreKey.MAX_PREKEY_ID);
   }
 
-  static generate_prekeys(start: number, size: number): Array<PreKey> {
+  static async generate_prekeys(start: number, size: number): Promise<Array<PreKey>> {
     this.validate_pre_key_id(start);
     this.validate_pre_key_id(size);
 
@@ -72,7 +72,12 @@ export default class PreKey {
       return [];
     }
 
-    return new Array(size).fill(null).map((_, index) => PreKey.new((start + index) % PreKey.MAX_PREKEY_ID));
+    return await Promise.all(
+      new Array(size).fill(null).map(async (_, index) => {
+        const pk = await PreKey.new((start + index) % PreKey.MAX_PREKEY_ID);
+        return pk;
+      })
+    );
   }
 
   serialise(): ArrayBuffer {

@@ -98,7 +98,7 @@ export default class PreKeyBundle {
   serialised_json(): SerialisedJSON {
     return {
       id: this.prekey_id,
-      key: sodium.to_base64(new Uint8Array(this.serialise()), true),
+      key: sodium.to_base64(new Uint8Array(this.serialise())),
     };
   }
 

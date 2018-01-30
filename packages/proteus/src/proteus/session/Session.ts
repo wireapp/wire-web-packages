@@ -52,6 +52,11 @@ export interface IntermediateSessionState {
   };
 }
 
+export interface SessionFromMessageTuple extends Array<Session | Uint8Array> {
+  0: Session;
+  1: Uint8Array;
+}
+
 export default class Session {
   static MAX_RECV_CHAINS = 5;
   static MAX_SESSION_STATES = 100;
@@ -70,34 +75,32 @@ export default class Session {
    * @param local_identity Alice's Identity Key Pair
    * @param remote_pkbundle Bob's Pre-Key Bundle
    */
-  static init_from_prekey(local_identity: IdentityKeyPair, remote_pkbundle: PreKeyBundle): Promise<Session> {
-    return new Promise(resolve => {
-      TypeUtil.assert_is_instance(IdentityKeyPair, local_identity);
-      TypeUtil.assert_is_instance(PreKeyBundle, remote_pkbundle);
+  static async init_from_prekey(local_identity: IdentityKeyPair, remote_pkbundle: PreKeyBundle): Promise<Session> {
+    TypeUtil.assert_is_instance(IdentityKeyPair, local_identity);
+    TypeUtil.assert_is_instance(PreKeyBundle, remote_pkbundle);
 
-      const alice_base = KeyPair.new();
+    const alice_base = await KeyPair.new();
 
-      const state = SessionState.init_as_alice(local_identity, alice_base, remote_pkbundle);
+    const state = await SessionState.init_as_alice(local_identity, alice_base, remote_pkbundle);
 
-      const session_tag = SessionTag.new();
+    const session_tag = SessionTag.new();
 
-      const session = ClassUtil.new_instance<Session>(this);
-      session.session_tag = session_tag;
-      session.local_identity = local_identity;
-      session.remote_identity = remote_pkbundle.identity_key;
-      session.pending_prekey = [remote_pkbundle.prekey_id, alice_base.public_key];
-      session.session_states = {};
+    const session = ClassUtil.new_instance<Session>(this);
+    session.session_tag = session_tag;
+    session.local_identity = local_identity;
+    session.remote_identity = remote_pkbundle.identity_key;
+    session.pending_prekey = [remote_pkbundle.prekey_id, alice_base.public_key];
+    session.session_states = {};
 
-      session._insert_session_state(session_tag, state);
-      return resolve(session);
-    });
+    session._insert_session_state(session_tag, state);
+    return session;
   }
 
   static init_from_message(
     our_identity: IdentityKeyPair,
     prekey_store: PreKeyStore,
     envelope: Envelope
-  ): Promise<Array<Session | Uint8Array>> {
+  ): Promise<SessionFromMessageTuple> {
     return new Promise((resolve, reject) => {
       TypeUtil.assert_is_instance(IdentityKeyPair, our_identity);
       TypeUtil.assert_is_instance(PreKeyStore, prekey_store);
