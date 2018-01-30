@@ -36,14 +36,14 @@ const ArrayUtil = {
     }
   },
 
-  concatenate_array_buffers(buffers: Array<ArrayBuffer | Uint8Array>): Uint8Array {
+  concatenate_array_buffers(buffers: Array<Uint8Array>): Uint8Array {
     TypeUtil.assert_is_instance(Array, buffers);
 
-    return <any>buffers.reduce((callback: any, bytes) => {
-      const buf = new callback.constructor(callback.byteLength + bytes.byteLength);
-      buf.set(callback, 0);
-      buf.set(bytes, callback.byteLength);
-      return buf;
+    return buffers.reduce((accumulator: Uint8Array, bytes: Uint8Array): Uint8Array => {
+      const buffer = new Uint8Array(accumulator.byteLength + bytes.byteLength);
+      buffer.set(accumulator, 0);
+      buffer.set(bytes, accumulator.byteLength);
+      return buffer;
     });
   },
 };

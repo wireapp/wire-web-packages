@@ -62,7 +62,7 @@ export default class MacKey {
   static decode(decoder: CBOR.Decoder): MacKey {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
-    let key_bytes = null;
+    let key_bytes = new Uint8Array([]);
 
     const nprops = decoder.object();
     for (let index = 0; index <= nprops - 1; index++) {

@@ -46,11 +46,6 @@ export default class IdentityKey {
     return this.public_key.fingerprint();
   }
 
-  toString(): string {
-    // TODO: `to_hex` doesn't accept public keys.
-    return sodium.to_hex(<any>this.public_key);
-  }
-
   encode(encoder: CBOR.Encoder): CBOR.Encoder {
     encoder.object(1);
     encoder.u8(0);
@@ -60,7 +55,7 @@ export default class IdentityKey {
   static decode(decoder: CBOR.Decoder): IdentityKey {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
-    let public_key = null;
+    let public_key = ClassUtil.new_instance<PublicKey>(PublicKey);
 
     const nprops = decoder.object();
     for (let index = 0; index <= nprops - 1; index++) {

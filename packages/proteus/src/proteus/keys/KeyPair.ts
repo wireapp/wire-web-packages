@@ -45,7 +45,7 @@ export default class KeyPair {
   constructor() {}
 
   static new(): KeyPair {
-    const ed25519_key_pair = sodium.crypto_sign_keypair(null, null);
+    const ed25519_key_pair = sodium.crypto_sign_keypair();
 
     const kp = ClassUtil.new_instance<KeyPair>(KeyPair);
     kp.secret_key = KeyPair.prototype._construct_private_key(<LibsodiumKeyPair>ed25519_key_pair);

@@ -13,7 +13,11 @@ declare module 'libsodium-wrappers-sumo' {
   function from_string(str: string): Uint8Array;
   function to_hex(bytes: Uint8Array): string;
   function to_base64(aBytes: Uint8Array, noNewLine?: boolean): string;
-  function crypto_auth_hmacsha256(message: string | Uint8Array, key: Uint8Array): string | Uint8Array;
+  function crypto_auth_hmacsha256(
+    message: string | Uint8Array,
+    key: Uint8Array,
+    outputFormat?: OutputFormat
+  ): string | Uint8Array;
   function crypto_auth_hmacsha256_verify(
     tag: string | Uint8Array,
     message: string | Uint8Array,
@@ -30,7 +34,7 @@ declare module 'libsodium-wrappers-sumo' {
     privateKey: Uint8Array,
     outputFormat?: OutputFormat
   ): string | Uint8Array;
-  function crypto_sign_keypair(publicKey: Uint8Array, outputFormat?: OutputFormat): KeyPair;
+  function crypto_sign_keypair(outputFormat?: OutputFormat): KeyPair;
   function crypto_sign_verify_detached(
     signature: Uint8Array,
     message: string | Uint8Array,

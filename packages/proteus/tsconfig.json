@@ -5,6 +5,7 @@
     "module": "CommonJS",
     "moduleResolution": "node",
     "noEmitOnError": true,
+    "noImplicitAny": true,
     "noImplicitReturns": true,
     "outDir": "dist/commonjs",
     "rootDir": "src",

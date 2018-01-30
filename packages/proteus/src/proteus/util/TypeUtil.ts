@@ -24,10 +24,10 @@ const TypeUtil = {
     if (!Array.isArray(classes)) {
       classes = [classes];
     }
-    if (classes.some(_class => inst instanceof _class || (inst && inst.prototype instanceof _class))) {
+    if (classes.some((_class: any) => inst instanceof _class || (inst && inst.prototype instanceof _class))) {
       return;
     }
-    const valid_types = classes.map(_class => `'${_class.name}'`).join(' or ');
+    const valid_types = classes.map((_class: any) => `'${_class.name}'`).join(' or ');
     if (inst) {
       throw new (<any>InputError).TypeError(
         `Expected one of ${valid_types}, got '${inst.constructor.name}'.`,
