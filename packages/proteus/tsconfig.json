@@ -1,18 +1,11 @@
 {
   "compilerOptions": {
-    "declaration": true,
-    "lib": ["DOM", "ES6"],
-    "module": "CommonJS",
-    "moduleResolution": "node",
-    "noEmitOnError": true,
     "noImplicitAny": true,
-    "noImplicitReturns": true,
     "outDir": "dist/commonjs",
     "rootDir": "src",
-    "removeComments": true,
-    "sourceMap": false,
     "strict": false,
     "target": "ES6"
   },
-  "exclude": ["bower_components", "node_modules", "dist"]
+  "exclude": ["bower_components", "node_modules", "dist"],
+  "extends": "../../configs/tsconfig.json"
 }
