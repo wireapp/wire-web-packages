@@ -12,45 +12,58 @@ declare module 'libsodium-wrappers-sumo' {
   function ready(): Promise<void>;
 
   function memzero(bytes: Uint8Array): void;
+
   function from_string(str: string): Uint8Array;
+
   function to_hex(bytes: Uint8Array): string;
+
   function to_base64(aBytes: Uint8Array, noNewLine?: boolean): string;
+
   function crypto_auth_hmacsha256(
     message: string | Uint8Array,
     key: Uint8Array,
     outputFormat?: OutputFormat
   ): string | Uint8Array;
+
   function crypto_auth_hmacsha256_verify(
-    tag: string | Uint8Array,
+    tag: Uint8Array,
     message: string | Uint8Array,
-    key: string | Uint8Array
+    key: Uint8Array
   ): boolean;
+
   function crypto_hash_sha256(message: string | Uint8Array, outputFormat?: OutputFormat): string | Uint8Array;
+
   function crypto_scalarmult(
     privateKey: Uint8Array,
     publicKey: Uint8Array,
     outputFormat?: OutputFormat
   ): string | Uint8Array;
+
   function crypto_sign_detached(
     message: string | Uint8Array,
     privateKey: Uint8Array,
     outputFormat?: OutputFormat
   ): string | Uint8Array;
+
   function crypto_sign_keypair(outputFormat?: OutputFormat): KeyPair;
+
   function crypto_sign_verify_detached(
     signature: Uint8Array,
     message: string | Uint8Array,
     publicKey: Uint8Array
   ): boolean;
+
   function crypto_stream_chacha20_xor(
     input_message: string | Uint8Array,
     nonce: Uint8Array,
     key: Uint8Array,
     outputFormat?: OutputFormat
   ): string | Uint8Array;
+
   function crypto_sign_ed25519_pk_to_curve25519(
     publicKey: Uint8Array,
     outputFormat?: OutputFormat
   ): string | Uint8Array;
+
   function to_string(bytes: any): string;
 }

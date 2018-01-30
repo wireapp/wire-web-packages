@@ -3,7 +3,6 @@
     "noImplicitAny": true,
     "outDir": "dist/commonjs",
     "rootDir": "src",
-    "strict": false,
     "target": "ES6"
   },
   "exclude": ["bower_components", "node_modules", "dist"],

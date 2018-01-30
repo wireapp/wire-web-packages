@@ -201,6 +201,7 @@ export default class SessionState {
     }
 
     const rc = this.recv_chains[idx];
+
     if (msg.counter < rc.chain_key.idx) {
       return rc.try_message_keys(envelope, msg);
     } else if (msg.counter == rc.chain_key.idx) {
@@ -216,7 +217,7 @@ export default class SessionState {
       const plain = mks.decrypt(msg.cipher_text);
       rc.chain_key = rc.chain_key.next();
       return plain;
-    } else if (msg.counter > rc.chain_key.idx) {
+    } else {
       const [chk, mk, mks] = rc.stage_message_keys(msg);
 
       if (!envelope.verify((<MessageKeys>mk).mac_key)) {
@@ -235,12 +236,6 @@ export default class SessionState {
 
       return plain;
     }
-
-    // TODO: what happens if msg.counter == rc.chain_key.idx?
-    throw new (<any>DecryptError).InvalidSignature(
-      `Envelope verification failed for message with counters equaling index '${msg.counter}'`,
-      DecryptError.CODE.CASE_206
-    );
   }
 
   serialise(): ArrayBuffer {
