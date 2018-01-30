@@ -384,7 +384,7 @@ export default class Session {
           break;
         }
         case 4: {
-          switch (decoder.optional(() => decoder.object())) {
+          switch (<any>decoder.optional(() => decoder.object())) {
             case null:
               self.pending_prekey = null;
               break;
