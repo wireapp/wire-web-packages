@@ -18,6 +18,7 @@
  */
 
 /* eslint sort-keys: "off" */
+
 import ProteusError from './proteus/errors/ProteusError';
 import DecodeError from './proteus/errors/DecodeError';
 import DecryptError from './proteus/errors/DecryptError';

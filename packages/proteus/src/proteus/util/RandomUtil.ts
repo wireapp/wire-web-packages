@@ -17,18 +17,16 @@
  *
  */
 
-const random_bytes = (len: number) => {
-  let crypto = typeof window !== 'undefined' && (window.crypto || (<any>window).msCrypto);
-
-  if (crypto) {
+const random_bytes = (length: number) => {
+  if (typeof window !== 'undefined' && window.crypto) {
     // browser
-    const buffer = new ArrayBuffer(len);
+    const buffer = new ArrayBuffer(length);
     const buffer_view = new Uint8Array(buffer);
-    return crypto.getRandomValues(buffer_view);
+    return window.crypto.getRandomValues(buffer_view);
   } else {
     // node
-    crypto = require('crypto');
-    return new Uint8Array(crypto.randomBytes(len));
+    const crypto = require('crypto');
+    return new Uint8Array(crypto.randomBytes(length));
   }
 };
 

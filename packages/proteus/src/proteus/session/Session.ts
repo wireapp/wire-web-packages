@@ -167,7 +167,7 @@ export default class Session {
   }
 
   private _insert_session_state(tag: SessionTag, state: SessionState): void {
-    if (this.session_states.hasOwnProperty(<any>tag)) {
+    if (this.session_states.hasOwnProperty(tag.toString())) {
       this.session_states[tag.toString()].state = state;
     } else {
       if (this.counter >= Number.MAX_SAFE_INTEGER) {
@@ -200,7 +200,7 @@ export default class Session {
 
   private _evict_oldest_session_state(): void {
     const oldest = Object.keys(this.session_states)
-      .filter(obj => obj.toString() !== <any>this.session_tag)
+      .filter(obj => obj.toString() !== this.session_tag.toString())
       .reduce((lowest, obj, index) => {
         return this.session_states[obj].idx < this.session_states[lowest].idx ? obj.toString() : lowest;
       });
@@ -218,7 +218,7 @@ export default class Session {
    */
   encrypt(plaintext: string | Uint8Array): Promise<Envelope> {
     return new Promise((resolve, reject) => {
-      const state = this.session_states[<any>this.session_tag];
+      const state = this.session_states[this.session_tag.toString()];
 
       if (!state) {
         return reject(
@@ -287,7 +287,7 @@ export default class Session {
   }
 
   private _decrypt_cipher_message(envelope: Envelope, msg: CipherMessage): Uint8Array {
-    const state = this.session_states[<any>msg.session_tag];
+    const state = this.session_states[msg.session_tag.toString()];
     if (!state) {
       throw new (<any>DecryptError).InvalidMessage(
         `Local session not found for message session tag '${msg.session_tag}'.`,
@@ -414,7 +414,7 @@ export default class Session {
             idx = 0 <= ref ? ++subindex : --subindex
           ) {
             const tag = SessionTag.decode(decoder);
-            self.session_states[<any>tag] = {
+            self.session_states[tag.toString()] = {
               idx,
               state: SessionState.decode(decoder),
               tag: tag,
