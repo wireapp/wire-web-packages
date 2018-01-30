@@ -189,14 +189,14 @@ export default class SessionState {
     return env;
   }
 
-  decrypt(envelope: Envelope, msg: CipherMessage): Uint8Array {
+  async decrypt(envelope: Envelope, msg: CipherMessage): Promise<Uint8Array> {
     TypeUtil.assert_is_instance(Envelope, envelope);
     TypeUtil.assert_is_instance(CipherMessage, msg);
 
     let idx = this.recv_chains.findIndex(chain => chain.ratchet_key.fingerprint() === msg.ratchet_key.fingerprint());
 
     if (idx === -1) {
-      this.ratchet(msg.ratchet_key);
+      await this.ratchet(msg.ratchet_key);
       idx = 0;
     }
 
@@ -238,7 +238,7 @@ export default class SessionState {
 
     // TODO: what happens if msg.counter == rc.chain_key.idx?
     throw new (<any>DecryptError).InvalidSignature(
-      `Envelope verification failed for message with counters in sync at '${msg.counter}'`,
+      `Envelope verification failed for message with counters equaling index '${msg.counter}'`,
       DecryptError.CODE.CASE_206
     );
   }

@@ -131,8 +131,8 @@ export default class Session {
 
       return session
         ._new_state(prekey_store, pkmsg)
-        .then(state => {
-          const plain = state.decrypt(envelope, pkmsg.message);
+        .then(async state => {
+          const plain = await state.decrypt(envelope, pkmsg.message);
           session._insert_session_state(pkmsg.message.session_tag, state);
 
           if (pkmsg.prekey_id < PreKey.MAX_PREKEY_ID) {
@@ -289,7 +289,7 @@ export default class Session {
       });
   }
 
-  private _decrypt_cipher_message(envelope: Envelope, msg: CipherMessage): Uint8Array {
+  private async _decrypt_cipher_message(envelope: Envelope, msg: CipherMessage): Promise<Uint8Array> {
     const state = this.session_states[msg.session_tag.toString()];
     if (!state) {
       throw new (<any>DecryptError).InvalidMessage(
@@ -303,7 +303,7 @@ export default class Session {
     // mutating in-place can lead to undefined behavior and undefined state in edge cases
     const session_state = SessionState.deserialise(state.state.serialise());
 
-    const plaintext = session_state.decrypt(envelope, msg);
+    const plaintext = await session_state.decrypt(envelope, msg);
 
     this.pending_prekey = null;
 

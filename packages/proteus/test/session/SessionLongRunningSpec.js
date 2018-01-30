@@ -129,7 +129,9 @@ describe('LongRunning', () => {
 
     it('should handle mass communication', async done => {
       const [alice_ident, bob_ident] = await Promise.all([0, 1].map(() => Proteus.keys.IdentityKeyPair.new()));
-      const [alice_store, bob_store] = await Promise.all([0, 1].map(async () => new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10))));
+      const [alice_store, bob_store] = await Promise.all(
+        [0, 1].map(async () => new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10)))
+      );
 
       const bob_prekey = bob_store.prekeys[0];
       const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);

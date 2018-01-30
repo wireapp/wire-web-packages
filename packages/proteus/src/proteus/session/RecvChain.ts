@@ -77,7 +77,6 @@ export default class RecvChain {
     if (idx === -1) {
       throw new (<any>DecryptError).DuplicateMessage(undefined, DecryptError.CODE.CASE_209);
     }
-
     const mk = this.message_keys.splice(idx, 1)[0];
     if (!envelope.verify(mk.mac_key)) {
       const message = `Envelope verification failed for message with counter behind. Message index is '${

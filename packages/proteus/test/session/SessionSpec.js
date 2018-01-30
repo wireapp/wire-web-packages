@@ -24,12 +24,11 @@
 const Proteus = require('../../dist/commonjs/proteus').default;
 const sodium = require('libsodium-wrappers-sumo');
 const assert = require('chai').assert;
-
-const Envelope = Proteus.message.Envelope;
-const IdentityKeyPair = Proteus.keys.IdentityKeyPair;
 const PreKey = Proteus.keys.PreKey;
-const PreKeyStore = require('../../dist/commonjs/proteus/session/PreKeyStore').default;
 const Session = Proteus.session.Session;
+const PreKeyStore = Proteus.session.PreKeyStore;
+const IdentityKeyPair = Proteus.keys.IdentityKeyPair;
+const Envelope = Proteus.message.Envelope;
 
 class TestStore extends Proteus.session.PreKeyStore {
   constructor(prekeys) {
@@ -56,20 +55,20 @@ class TestStore extends Proteus.session.PreKeyStore {
 }
 
 /** @returns {Promise<Session>} */
-const assert_init_from_message = (/** @type {IdentityKeyPair} */ ident, /** @type {PreKeyStore} */ store, /** @type {Envelope} */ msg, /** @type {string} */ expected) => {
+const assert_init_from_message = (
+  /** @type {IdentityKeyPair} */ ident,
+  /** @type {PreKeyStore} */ store,
+  /** @type {Envelope} */ msg,
+  /** @type {string} */ expected
+) => {
   return new Promise((resolve, reject) => {
     Proteus.session.Session.init_from_message(ident, store, msg)
       .then(messageArray => {
-        console.log('init ok')
         const [session, message] = messageArray;
-        console.log(session)
         assert.strictEqual(sodium.to_string(message), expected);
         resolve(session);
       })
-      .catch(err => {
-        console.log(err);
-        return reject(err)
-      });
+      .catch(err => reject(err));
   });
 };
 
@@ -81,9 +80,7 @@ const assert_decrypt = (/** @type {string} */ expected, /** @type {Promise<Uint8
         assert.strictEqual(expected, sodium.to_string(actual));
         resolve();
       })
-      .catch(err => {
-        reject(err);
-      });
+      .catch(err => reject(err));
   });
 };
 
@@ -93,7 +90,10 @@ const assert_prev_count = (/** @type {Session} */ session, /** @type {number} */
 };
 
 /** @returns {void} */
-const assert_serialise_deserialise = (/** @type {IdentityKeyPair} */ local_identity, /** @type {Session} */ session) => {
+const assert_serialise_deserialise = (
+  /** @type {IdentityKeyPair} */ local_identity,
+  /** @type {Session} */ session
+) => {
   const bytes = session.serialise();
 
   const deser = Proteus.session.Session.deserialise(local_identity, bytes);
@@ -119,7 +119,9 @@ describe('Session', async done => {
 
   it('encrypts and decrypts messages', async done => {
     const [alice_ident, bob_ident] = await Promise.all([0, 1].map(() => Proteus.keys.IdentityKeyPair.new()));
-    const [alice_store, bob_store] = await Promise.all([0, 1].map(async () => new TestStore((await Proteus.keys.PreKey.generate_prekeys(0, 10)))));
+    const [alice_store, bob_store] = await Promise.all(
+      [0, 1].map(async () => new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10)))
+    );
 
     const bob_prekey = bob_store.prekeys[0];
     const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
@@ -218,7 +220,9 @@ describe('Session', async done => {
 
   it('should limit the number of receive chains', async done => {
     const [alice_ident, bob_ident] = await Promise.all([0, 1].map(() => Proteus.keys.IdentityKeyPair.new()));
-    const [alice_store, bob_store] = await Promise.all([0, 1].map(async () => new TestStore((await Proteus.keys.PreKey.generate_prekeys(0, 10)))));
+    const [alice_store, bob_store] = await Promise.all(
+      [0, 1].map(async () => new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10)))
+    );
 
     const bob_prekey = bob_store.prekeys[0];
     const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
@@ -269,7 +273,9 @@ describe('Session', async done => {
 
   it('should handle a counter mismatch', async done => {
     const [alice_ident, bob_ident] = await Promise.all([0, 1].map(() => Proteus.keys.IdentityKeyPair.new()));
-    const [alice_store, bob_store] = await Promise.all([0, 1].map(async () => new TestStore((await Proteus.keys.PreKey.generate_prekeys(0, 10)))));
+    const [alice_store, bob_store] = await Promise.all(
+      [0, 1].map(async () => new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10)))
+    );
 
     const bob_prekey = bob_store.prekeys[0];
     const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
@@ -382,7 +388,9 @@ describe('Session', async done => {
 
   it('should handle simultaneous prekey messages', async done => {
     const [alice_ident, bob_ident] = await Promise.all([0, 1].map(() => Proteus.keys.IdentityKeyPair.new()));
-    const [alice_store, bob_store] = await Promise.all([0, 1].map(async () => new TestStore((await Proteus.keys.PreKey.generate_prekeys(0, 10)))));
+    const [alice_store, bob_store] = await Promise.all(
+      [0, 1].map(async () => new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10)))
+    );
 
     const bob_prekey = bob_store.prekeys[0];
     const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
@@ -390,10 +398,14 @@ describe('Session', async done => {
     const alice_prekey = alice_store.prekeys[0];
     const alice_bundle = Proteus.keys.PreKeyBundle.new(alice_ident.public_key, alice_prekey);
 
+    /** @type {Session} */
     let alice = null;
+    /** @type {Session} */
     let bob = null;
 
+    /** @type {Envelope} */
     let hello_bob = null;
+    /** @type {Envelope} */
     let hello_alice = null;
 
     return Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle)
@@ -403,8 +415,7 @@ describe('Session', async done => {
       })
       .then(message => {
         hello_bob = message;
-        bob = Proteus.session.Session.init_from_prekey(bob_ident, alice_bundle);
-        return bob;
+        return Proteus.session.Session.init_from_prekey(bob_ident, alice_bundle);
       })
       .then(session => {
         bob = session;
@@ -445,7 +456,9 @@ describe('Session', async done => {
 
   it('should handle simultaneous repeated messages', async done => {
     const [alice_ident, bob_ident] = await Promise.all([0, 1].map(() => Proteus.keys.IdentityKeyPair.new()));
-    const [alice_store, bob_store] = await Promise.all([0, 1].map(async () => new TestStore((await Proteus.keys.PreKey.generate_prekeys(0, 10)))));
+    const [alice_store, bob_store] = await Promise.all(
+      [0, 1].map(async () => new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10)))
+    );
 
     const bob_prekey = bob_store.prekeys[0];
     const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
@@ -577,7 +590,9 @@ describe('Session', async done => {
 
   it('skipped message keys', async done => {
     const [alice_ident, bob_ident] = await Promise.all([0, 1].map(() => Proteus.keys.IdentityKeyPair.new()));
-    const [alice_store, bob_store] = await Promise.all([0, 1].map(async () => new TestStore((await Proteus.keys.PreKey.generate_prekeys(0, 10)))));
+    const [alice_store, bob_store] = await Promise.all(
+      [0, 1].map(async () => new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10)))
+    );
 
     const bob_prekey = bob_store.prekeys[0];
     const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
@@ -712,7 +727,9 @@ describe('Session', async done => {
 
   it('replaced prekeys', async done => {
     const [alice_ident, bob_ident] = await Promise.all([0, 1].map(() => Proteus.keys.IdentityKeyPair.new()));
-    const [bob_store1, bob_store2] = await Promise.all([0, 1, 2].map(async () => new TestStore((await Proteus.keys.PreKey.generate_prekeys(0, 10)))));
+    const [bob_store1, bob_store2] = await Promise.all(
+      [0, 1, 2].map(async () => new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10)))
+    );
 
     const bob_prekey = bob_store1.prekeys[0];
     const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);

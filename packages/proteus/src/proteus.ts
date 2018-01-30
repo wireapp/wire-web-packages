@@ -32,6 +32,7 @@ import PreKey from './proteus/keys/PreKey';
 import PublicKey from './proteus/keys/PublicKey';
 import SecretKey from './proteus/keys/SecretKey';
 import Message from './proteus/message/Message';
+import SessionTag from './proteus/message/SessionTag';
 import CipherMessage from './proteus/message/CipherMessage';
 import PreKeyMessage from './proteus/message/PreKeyMessage';
 import Envelope from './proteus/message/Envelope';
@@ -62,6 +63,7 @@ export default {
     CipherMessage,
     PreKeyMessage,
     Envelope,
+    SessionTag,
   },
 
   session: {
