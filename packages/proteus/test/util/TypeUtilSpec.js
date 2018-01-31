@@ -18,14 +18,33 @@
  */
 
 describe('TypeUtil', () => {
-  it('should check one type', () => {
-    Proteus.util.TypeUtil.assert_is_instance(Array, []);
-    return assert.throws(() => Proteus.util.TypeUtil.assert_is_instance(Array, {}));
+  it('checks if an instance matches a specific type', () => {
+    assert.throws(() => Proteus.util.TypeUtil.assert_is_instance(Array, {}));
   });
 
-  it('should check multiple types', () => {
-    Proteus.util.TypeUtil.assert_is_instance([Array, String], []);
-    return assert.throws(() => Proteus.util.TypeUtil.assert_is_instance([Array, String], {}));
+  it('checks if an instance matches against an array of types', () => {
+    assert.throws(() => Proteus.util.TypeUtil.assert_is_instance([Array, String], {}));
+  });
+
+  it('recognizes string objects', () => {
+    const text = new String('Hello World');
+    Proteus.util.TypeUtil.assert_is_instance(String, text);
+  });
+
+  it('knows that string literals are not string objects', () => {
+    const text = 'Hello World';
+    assert.throws(() => Proteus.util.TypeUtil.assert_is_instance(String, text));
+  });
+
+  it("doesn't accept null values", () => {
+    assert.throws(() => Proteus.util.TypeUtil.assert_is_instance(String, {}));
+  });
+
+  it('throws typed errors', () => {
+    assert.throws(() => {
+      const instance = 1337;
+      Proteus.util.TypeUtil.assert_is_instance(Uint8Array, instance);
+    }, Proteus.errors.InputError.TypeError);
   });
 
   it('throws errors with error codes', () => {
