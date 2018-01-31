@@ -25,11 +25,7 @@ declare module 'libsodium-wrappers-sumo' {
     outputFormat?: OutputFormat
   ): string | Uint8Array;
 
-  function crypto_auth_hmacsha256_verify(
-    tag: Uint8Array,
-    message: string | Uint8Array,
-    key: Uint8Array
-  ): boolean;
+  function crypto_auth_hmacsha256_verify(tag: Uint8Array, message: string | Uint8Array, key: Uint8Array): boolean;
 
   function crypto_hash_sha256(message: string | Uint8Array, outputFormat?: OutputFormat): string | Uint8Array;
 

@@ -55,7 +55,6 @@ export default class PreKeyBundle {
     bundle.prekey_id = prekey.key_id;
     bundle.public_key = prekey.key_pair.public_key;
     bundle.identity_key = public_identity_key;
-    bundle.signature = null;
 
     return bundle;
   }

@@ -24,11 +24,6 @@
 const Proteus = require('../../dist/commonjs/proteus').default;
 const sodium = require('libsodium-wrappers-sumo');
 const assert = require('chai').assert;
-const PreKey = Proteus.keys.PreKey;
-const Session = Proteus.session.Session;
-const PreKeyStore = Proteus.session.PreKeyStore;
-const IdentityKeyPair = Proteus.keys.IdentityKeyPair;
-const Envelope = Proteus.message.Envelope;
 
 class TestStore extends Proteus.session.PreKeyStore {
   constructor(prekeys) {
@@ -102,7 +97,7 @@ const assert_serialise_deserialise = (
   assert.deepEqual(sodium.to_hex(new Uint8Array(bytes)), sodium.to_hex(new Uint8Array(deser_bytes)));
 };
 
-describe('Session', async done => {
+describe('Session', () => {
   it('can be serialised and deserialised to/from CBOR', async done => {
     const [alice_ident, bob_ident] = await Promise.all([0, 1].map(() => Proteus.keys.IdentityKeyPair.new()));
     const bob_store = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10));
@@ -560,7 +555,6 @@ describe('Session', async done => {
 
     let alice = null;
     let hello_bob = null;
-    let bob = null;
 
     return Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle)
       .then(session => {
@@ -572,7 +566,6 @@ describe('Session', async done => {
         return assert_init_from_message(bob_ident, bob_store, hello_bob, 'Hello Bob!');
       })
       .then(session => {
-        bob = session;
         return Proteus.session.Session.init_from_message(bob_ident, bob_store, hello_bob);
       })
       .then(() => assert.fail('should have thrown Proteus.errors.ProteusError'))

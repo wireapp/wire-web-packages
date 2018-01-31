@@ -20,15 +20,15 @@
 /* eslint no-magic-numbers: "off" */
 
 const assertThrowsAsync = async (fn, regExp) => {
-  let f = () => {};
+  let thunk = () => {};
   try {
     await fn();
-  } catch (e) {
-    f = () => {
-      throw e;
+  } catch (error) {
+    thunk = () => {
+      throw error;
     };
   } finally {
-    assert.throws(f, regExp);
+    assert.throws(thunk, regExp);
   }
 };
 
