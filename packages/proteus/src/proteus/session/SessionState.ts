@@ -52,10 +52,10 @@ import SendChain from './SendChain';
 import Session from './Session';
 
 export default class SessionState {
-  prev_counter: number = null;
-  recv_chains: Array<RecvChain> = null;
-  root_key: RootKey = null;
-  send_chain: SendChain = null;
+  prev_counter: number;
+  recv_chains: Array<RecvChain>;
+  root_key: RootKey;
+  send_chain: SendChain;
 
   constructor() {}
 

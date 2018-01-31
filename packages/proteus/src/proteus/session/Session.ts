@@ -62,11 +62,11 @@ export default class Session {
   static MAX_SESSION_STATES = 100;
 
   counter = 0;
-  local_identity: IdentityKeyPair = null;
-  pending_prekey: Array<number | PublicKey> = null;
-  remote_identity: IdentityKey = null;
-  session_states: IntermediateSessionState = null;
-  session_tag: SessionTag = null;
+  local_identity: IdentityKeyPair;
+  pending_prekey: Array<number | PublicKey>;
+  remote_identity: IdentityKey;
+  session_states: IntermediateSessionState;
+  session_tag: SessionTag;
   version = 1;
 
   constructor() {}
@@ -126,7 +126,6 @@ export default class Session {
       session.session_tag = pkmsg.message.session_tag;
       session.local_identity = our_identity;
       session.remote_identity = pkmsg.identity_key;
-      session.pending_prekey = null;
       session.session_states = {};
 
       return session
@@ -280,7 +279,6 @@ export default class Session {
             }
 
             this._insert_session_state(msg.message.session_tag, state);
-            this.pending_prekey = null;
 
             return plaintext;
           });
@@ -304,8 +302,6 @@ export default class Session {
     const session_state = SessionState.deserialise(state.state.serialise());
 
     const plaintext = await session_state.decrypt(envelope, msg);
-
-    this.pending_prekey = null;
 
     this._insert_session_state(msg.session_tag, session_state);
     return plaintext;
@@ -389,10 +385,8 @@ export default class Session {
         case 4: {
           switch (<any>decoder.optional(() => decoder.object())) {
             case null:
-              self.pending_prekey = null;
               break;
             case 2:
-              self.pending_prekey = [null, null];
               for (let key = 0; key <= 1; ++key) {
                 switch (decoder.u8()) {
                   case 0:

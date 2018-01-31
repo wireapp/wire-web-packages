@@ -27,6 +27,7 @@ import CipherKey from '../derived/CipherKey';
 import DerivedSecrets from '../derived/DerivedSecrets';
 import KeyPair from '../keys/KeyPair';
 import PublicKey from '../keys/PublicKey';
+import InputError from '../errors/InputError';
 
 export interface RatchetTuple extends Array<RootKey | ChainKey> {
   0: RootKey;
@@ -72,7 +73,7 @@ export default class RootKey {
   static decode(decoder: CBOR.Decoder): RootKey {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
-    let cipher_key = null;
+    let cipher_key;
 
     const nprops = decoder.object();
     for (let index = 0; index <= nprops - 1; index++) {
@@ -84,6 +85,14 @@ export default class RootKey {
           decoder.skip();
       }
     }
-    return RootKey.from_cipher_key(cipher_key);
+
+    if (cipher_key) {
+      return RootKey.from_cipher_key(cipher_key);
+    } else {
+      throw new (<any>InputError).TypeError(
+        `Given RootKey doesn't match expected signature.`,
+        InputError.CODE.CASE_407
+      );
+    }
   }
 }

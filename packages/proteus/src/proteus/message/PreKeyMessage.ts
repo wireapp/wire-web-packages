@@ -29,6 +29,7 @@ import PublicKey from '../keys/PublicKey';
 
 import CipherMessage from './CipherMessage';
 import Message from './Message';
+import InputError from '../errors/InputError';
 
 export default class PreKeyMessage extends Message {
   base_key: PublicKey;
@@ -97,7 +98,13 @@ export default class PreKeyMessage extends Message {
       }
     }
 
-    // checks for missing variables happens in constructor
-    return PreKeyMessage.new(prekey_id, base_key, identity_key, message);
+    if (prekey_id && base_key && identity_key && message) {
+      return PreKeyMessage.new(prekey_id, base_key, identity_key, message);
+    } else {
+      throw new (<any>InputError).TypeError(
+        `Given PreKeyMessage doesn't match expected signature.`,
+        InputError.CODE.CASE_406
+      );
+    }
   }
 }

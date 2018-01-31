@@ -26,6 +26,7 @@ import TypeUtil from '../util/TypeUtil';
 import PublicKey from '../keys/PublicKey';
 import Message from './Message';
 import SessionTag from './SessionTag';
+import InputError from '../errors/InputError';
 
 export default class CipherMessage extends Message {
   cipher_text: Uint8Array;
@@ -109,6 +110,13 @@ export default class CipherMessage extends Message {
       }
     }
 
-    return CipherMessage.new(session_tag, counter, prev_counter, ratchet_key, cipher_text);
+    if (session_tag && counter && prev_counter && ratchet_key && cipher_text) {
+      return CipherMessage.new(session_tag, counter, prev_counter, ratchet_key, cipher_text);
+    } else {
+      throw new (<any>InputError).TypeError(
+        `Given CipherMessage doesn't match expected signature.`,
+        InputError.CODE.CASE_405
+      );
+    }
   }
 }

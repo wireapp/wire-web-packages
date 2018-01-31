@@ -28,6 +28,9 @@ class InputError extends ProteusError {
     CASE_402: 402,
     CASE_403: 403,
     CASE_404: 404,
+    CASE_405: 405,
+    CASE_406: 406,
+    CASE_407: 407,
   };
 
   constructor(message = 'Invalid input', code = 4) {
@@ -37,14 +40,14 @@ class InputError extends ProteusError {
 }
 
 class RangeError extends InputError {
-  constructor(message = 'Invalid type', code: number) {
+  constructor(message = 'Invalid array length', code: number) {
     super(message, code);
     Object.setPrototypeOf(this, RangeError.prototype);
   }
 }
 
 class TypeError extends InputError {
-  constructor(message = 'Invalid array length', code: number) {
+  constructor(message = 'Invalid type', code: number) {
     super(message, code);
     Object.setPrototypeOf(this, TypeError.prototype);
   }
