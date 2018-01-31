@@ -19,27 +19,31 @@
 
 /* eslint sort-keys: "off" */
 
-import ProteusError from './proteus/errors/ProteusError';
+import ArrayUtil from "./proteus/util/ArrayUtil"
+import CipherMessage from './proteus/message/CipherMessage';
 import DecodeError from './proteus/errors/DecodeError';
 import DecryptError from './proteus/errors/DecryptError';
-import InputError from './proteus/errors/InputError';
+import Envelope from './proteus/message/Envelope';
 import IdentityKey from './proteus/keys/IdentityKey';
 import IdentityKeyPair from './proteus/keys/IdentityKeyPair';
+import InputError from './proteus/errors/InputError';
+import KeyDerivationUtil from "./proteus/util/KeyDerivationUtil"
 import KeyPair from './proteus/keys/KeyPair';
+import MemoryUtil from "./proteus/util/MemoryUtil"
+import Message from './proteus/message/Message';
+import PreKey from './proteus/keys/PreKey';
 import PreKeyAuth from './proteus/keys/PreKeyAuth';
 import PreKeyBundle from './proteus/keys/PreKeyBundle';
-import PreKey from './proteus/keys/PreKey';
+import PreKeyMessage from './proteus/message/PreKeyMessage';
+import PreKeyStore from './proteus/session/PreKeyStore';
+import ProteusError from './proteus/errors/ProteusError';
 import PublicKey from './proteus/keys/PublicKey';
 import SecretKey from './proteus/keys/SecretKey';
-import Message from './proteus/message/Message';
-import SessionTag from './proteus/message/SessionTag';
-import CipherMessage from './proteus/message/CipherMessage';
-import PreKeyMessage from './proteus/message/PreKeyMessage';
-import Envelope from './proteus/message/Envelope';
-import PreKeyStore from './proteus/session/PreKeyStore';
 import Session from './proteus/session/Session';
+import SessionTag from './proteus/message/SessionTag';
+import TypeUtil from "./proteus/util/TypeUtil"
 
-export default {
+export = {
   errors: {
     ProteusError,
     DecodeError,
@@ -70,4 +74,11 @@ export default {
     PreKeyStore,
     Session,
   },
+
+  util: {
+    ArrayUtil,
+    KeyDerivationUtil,
+    MemoryUtil,
+    TypeUtil,
+  }
 };
