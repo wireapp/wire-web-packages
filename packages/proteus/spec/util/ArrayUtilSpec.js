@@ -29,7 +29,10 @@ describe('HMAC-based Key Derivation Function', () => {
   });
 
   it('concatenates two buffers', () => {
-    const actual = Proteus.util.ArrayUtil.concatenate_array_buffers([new Uint8Array([1, 2, 3]), new Uint8Array([4, 5, 6])]);
+    const actual = Proteus.util.ArrayUtil.concatenate_array_buffers([
+      new Uint8Array([1, 2, 3]),
+      new Uint8Array([4, 5, 6]),
+    ]);
     const expected = new Uint8Array([1, 2, 3, 4, 5, 6]);
     expect(actual).toEqual(expected);
   });

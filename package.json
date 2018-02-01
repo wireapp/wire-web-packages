@@ -30,6 +30,7 @@
     "fix:style": "prettier --write **/*.scss",
     "fix:tsScript": "prettier --write **/*.ts",
     "precommit": "lint-staged",
+    "postinstall": "yarn boot",
     "test": "yarn && yarn test:jsScript && lerna run test",
     "test:jsScript": "eslint --ignore-path .gitignore --ignore-path .prettierignore **/*.{js,jsx}",
     "release":

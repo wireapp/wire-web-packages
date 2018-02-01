@@ -19,7 +19,7 @@
 
 /* eslint sort-keys: "off" */
 
-import ArrayUtil from "./proteus/util/ArrayUtil"
+import ArrayUtil from './proteus/util/ArrayUtil';
 import CipherMessage from './proteus/message/CipherMessage';
 import DecodeError from './proteus/errors/DecodeError';
 import DecryptError from './proteus/errors/DecryptError';
@@ -27,9 +27,9 @@ import Envelope from './proteus/message/Envelope';
 import IdentityKey from './proteus/keys/IdentityKey';
 import IdentityKeyPair from './proteus/keys/IdentityKeyPair';
 import InputError from './proteus/errors/InputError';
-import KeyDerivationUtil from "./proteus/util/KeyDerivationUtil"
+import KeyDerivationUtil from './proteus/util/KeyDerivationUtil';
 import KeyPair from './proteus/keys/KeyPair';
-import MemoryUtil from "./proteus/util/MemoryUtil"
+import MemoryUtil from './proteus/util/MemoryUtil';
 import Message from './proteus/message/Message';
 import PreKey from './proteus/keys/PreKey';
 import PreKeyAuth from './proteus/keys/PreKeyAuth';
@@ -41,7 +41,7 @@ import PublicKey from './proteus/keys/PublicKey';
 import SecretKey from './proteus/keys/SecretKey';
 import Session from './proteus/session/Session';
 import SessionTag from './proteus/message/SessionTag';
-import TypeUtil from "./proteus/util/TypeUtil"
+import TypeUtil from './proteus/util/TypeUtil';
 
 export = {
   errors: {
@@ -80,5 +80,5 @@ export = {
     KeyDerivationUtil,
     MemoryUtil,
     TypeUtil,
-  }
+  },
 };

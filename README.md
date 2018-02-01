@@ -13,5 +13,5 @@ Collection of npm modules created by Wire's web team.
 ### Getting Started
 
 ```bash
-yarn && yarn boot
+yarn
 ```
