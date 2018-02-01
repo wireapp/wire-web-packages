@@ -39,6 +39,10 @@ export default class PreKeyMessage extends Message {
 
   constructor() {
     super();
+    this.base_key = new PublicKey();
+    this.identity_key = new IdentityKey();
+    this.message = new CipherMessage();
+    this.prekey_id = -1;
   }
 
   static new(prekey_id: number, base_key: PublicKey, identity_key: IdentityKey, message: CipherMessage): PreKeyMessage {

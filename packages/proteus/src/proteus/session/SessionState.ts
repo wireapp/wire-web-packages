@@ -57,7 +57,12 @@ export default class SessionState {
   root_key: RootKey;
   send_chain: SendChain;
 
-  constructor() {}
+  constructor() {
+    this.prev_counter = -1;
+    this.recv_chains = [];
+    this.root_key = new RootKey();
+    this.send_chain = new SendChain();
+  }
 
   static async init_as_alice(
     alice_identity_pair: IdentityKeyPair,

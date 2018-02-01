@@ -42,8 +42,17 @@ import SecretKey from './proteus/keys/SecretKey';
 import Session from './proteus/session/Session';
 import SessionTag from './proteus/message/SessionTag';
 import TypeUtil from './proteus/util/TypeUtil';
+import DerivedSecrets from './proteus/derived/DerivedSecrets';
+import CipherKey from './proteus/derived/CipherKey';
+import MacKey from './proteus/derived/MacKey';
 
 export = {
+  derived: {
+    CipherKey,
+    DerivedSecrets,
+    MacKey,
+  },
+
   errors: {
     ProteusError,
     DecodeError,

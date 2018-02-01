@@ -37,6 +37,11 @@ export default class CipherMessage extends Message {
 
   constructor() {
     super();
+    this.cipher_text = new Uint8Array([]);
+    this.counter = -1;
+    this.prev_counter = -1;
+    this.ratchet_key = new PublicKey();
+    this.session_tag = new SessionTag();
   }
 
   static new(

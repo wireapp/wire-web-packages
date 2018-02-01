@@ -29,6 +29,7 @@ import TypeUtil from '../util/TypeUtil';
 import DecodeError from '../errors/DecodeError';
 import DecryptError from '../errors/DecryptError';
 import ProteusError from '../errors/ProteusError';
+import SessionState from './SessionState';
 
 import IdentityKey from '../keys/IdentityKey';
 import IdentityKeyPair from '../keys/IdentityKeyPair';
@@ -69,7 +70,13 @@ export default class Session {
   session_tag: SessionTag;
   version = 1;
 
-  constructor() {}
+  constructor() {
+    this.local_identity = new IdentityKeyPair();
+    this.pending_prekey = [];
+    this.remote_identity = new IdentityKey();
+    this.session_states = {};
+    this.session_tag = new SessionTag();
+  }
 
   /**
    * @param local_identity Alice's Identity Key Pair
@@ -434,5 +441,3 @@ export default class Session {
     return self;
   }
 }
-
-import SessionState from './SessionState';

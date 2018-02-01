@@ -18,7 +18,6 @@
  */
 
 const Proteus = require('@wireapp/proteus');
-
 const _sodium = require('libsodium-wrappers-sumo');
 let sodium;
 

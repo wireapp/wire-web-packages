@@ -33,7 +33,11 @@ export default class IdentityKeyPair {
   secret_key: SecretKey;
   version: number;
 
-  constructor() {}
+  constructor() {
+    this.public_key = new IdentityKey();
+    this.secret_key = new SecretKey();
+    this.version = -1;
+  }
 
   static async new(): Promise<IdentityKeyPair> {
     const key_pair = await KeyPair.new();

@@ -42,7 +42,10 @@ export default class KeyPair {
   public_key: PublicKey;
   secret_key: SecretKey;
 
-  constructor() {}
+  constructor() {
+    this.public_key = new PublicKey();
+    this.secret_key = new SecretKey();
+  }
 
   static async new(): Promise<KeyPair> {
     await _sodium.ready;

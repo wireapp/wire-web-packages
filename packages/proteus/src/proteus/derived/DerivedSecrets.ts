@@ -30,7 +30,10 @@ export default class DerivedSecrets {
   cipher_key: CipherKey;
   mac_key: MacKey;
 
-  constructor() {}
+  constructor() {
+    this.cipher_key = new CipherKey();
+    this.mac_key = new MacKey();
+  }
 
   static kdf(input: Uint8Array | Array<ArrayBuffer>, salt: Uint8Array, info: string): DerivedSecrets {
     const byte_length = 64;

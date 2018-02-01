@@ -28,7 +28,10 @@ export default class PublicKey {
   pub_edward: Uint8Array;
   pub_curve: Uint8Array;
 
-  constructor() {}
+  constructor() {
+    this.pub_edward = new Uint8Array([]);
+    this.pub_curve = new Uint8Array([]);
+  }
 
   static new(pub_edward: Uint8Array, pub_curve: Uint8Array): PublicKey {
     TypeUtil.assert_is_instance(Uint8Array, pub_edward);

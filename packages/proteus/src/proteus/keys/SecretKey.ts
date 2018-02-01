@@ -31,7 +31,10 @@ export default class SecretKey {
   sec_curve: Uint8Array;
   sec_edward: Uint8Array;
 
-  constructor() {}
+  constructor() {
+    this.sec_curve = new Uint8Array([]);
+    this.sec_edward = new Uint8Array([]);
+  }
 
   static new(sec_edward: Uint8Array, sec_curve: Uint8Array): SecretKey {
     TypeUtil.assert_is_instance(Uint8Array, sec_edward);

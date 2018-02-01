@@ -32,7 +32,9 @@ import PublicKey from './PublicKey';
 export default class IdentityKey {
   public_key: PublicKey;
 
-  constructor() {}
+  constructor() {
+    this.public_key = new PublicKey();
+  }
 
   static new(public_key: PublicKey): IdentityKey {
     TypeUtil.assert_is_instance(PublicKey, public_key);

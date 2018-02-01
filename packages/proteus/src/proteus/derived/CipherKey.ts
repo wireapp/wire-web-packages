@@ -26,7 +26,9 @@ import TypeUtil from '../util/TypeUtil';
 export default class CipherKey {
   key: Uint8Array;
 
-  constructor() {}
+  constructor() {
+    this.key = new Uint8Array([]);
+  }
 
   static new(key: Uint8Array): CipherKey {
     TypeUtil.assert_is_instance(Uint8Array, key);

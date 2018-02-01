@@ -32,7 +32,10 @@ export default class ChainKey {
   idx: number;
   key: MacKey;
 
-  constructor() {}
+  constructor() {
+    this.idx = -1;
+    this.key = new MacKey();
+  }
 
   static from_mac_key(key: MacKey, counter: number): ChainKey {
     TypeUtil.assert_is_instance(MacKey, key);

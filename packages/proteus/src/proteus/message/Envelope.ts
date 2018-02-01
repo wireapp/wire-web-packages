@@ -33,7 +33,12 @@ export default class Envelope {
   message: Message;
   version: number;
 
-  constructor() {}
+  constructor() {
+    this._message_enc = new Uint8Array([]);
+    this.mac = new Uint8Array([]);
+    this.message = new Message();
+    this.version = -1;
+  }
 
   static new(mac_key: MacKey, message: Message): Envelope {
     TypeUtil.assert_is_instance(MacKey, mac_key);

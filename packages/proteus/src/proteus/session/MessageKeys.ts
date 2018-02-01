@@ -32,7 +32,11 @@ export default class MessageKeys {
   counter: number;
   mac_key: MacKey;
 
-  constructor() {}
+  constructor() {
+    this.cipher_key = new CipherKey();
+    this.counter = -1;
+    this.mac_key = new MacKey();
+  }
 
   static new(cipher_key: CipherKey, mac_key: MacKey, counter: number): MessageKeys {
     TypeUtil.assert_is_instance(CipherKey, cipher_key);

@@ -46,7 +46,11 @@ export default class RecvChain {
   ratchet_key: PublicKey;
   static MAX_COUNTER_GAP = 1000;
 
-  constructor() {}
+  constructor() {
+    this.chain_key = new ChainKey();
+    this.message_keys = [];
+    this.ratchet_key = new PublicKey();
+  }
 
   static new(chain_key: ChainKey, public_key: PublicKey): RecvChain {
     TypeUtil.assert_is_instance(ChainKey, chain_key);

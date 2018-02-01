@@ -38,7 +38,11 @@ export default class PreKey {
   key_pair: KeyPair;
   version: number;
 
-  constructor() {}
+  constructor() {
+    this.key_id = -1;
+    this.key_pair = new KeyPair();
+    this.version = -1;
+  }
 
   static async new(pre_key_id: number): Promise<PreKey> {
     this.validate_pre_key_id(pre_key_id);

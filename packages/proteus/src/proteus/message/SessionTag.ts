@@ -33,7 +33,11 @@ export default class SessionTag {
   state: SessionState;
   tag: Uint8Array;
 
-  constructor() {}
+  constructor() {
+    this.idx = -1;
+    this.state = new SessionState();
+    this.tag = new Uint8Array([]);
+  }
 
   static new(): SessionTag {
     const length = 16;

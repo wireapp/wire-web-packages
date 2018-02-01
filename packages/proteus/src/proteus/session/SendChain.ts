@@ -31,7 +31,10 @@ export default class SendChain {
   chain_key: ChainKey;
   ratchet_key: KeyPair;
 
-  constructor() {}
+  constructor() {
+    this.chain_key = new ChainKey();
+    this.ratchet_key = new KeyPair();
+  }
 
   static new(chain_key: ChainKey, keypair: KeyPair): SendChain {
     TypeUtil.assert_is_instance(ChainKey, chain_key);
