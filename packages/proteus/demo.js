@@ -1,5 +1,5 @@
 (async () => {
-  const Proteus = require('./dist/commonjs/index');
+  const Proteus = require('@wireapp/proteus');
   const _sodium = require('libsodium-wrappers-sumo');
 
   await _sodium.ready;

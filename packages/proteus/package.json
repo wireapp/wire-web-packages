@@ -19,7 +19,7 @@
   },
   "files": ["dist"],
   "license": "GPL-3.0",
-  "main": "dist/commonjs/index.js",
+  "main": "dist/index.js",
   "name": "@wireapp/proteus",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus",
   "scripts": {

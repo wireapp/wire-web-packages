@@ -1,6 +1,6 @@
-import * as ProteusKeys from '@wireapp/proteus/dist/commonjs/keys/';
-import * as ProteusMessage from '@wireapp/proteus/dist/commonjs/message';
-import * as ProteusSession from '@wireapp/proteus/dist/commonjs/session/';
+import * as ProteusKeys from '@wireapp/proteus/dist/keys/';
+import * as ProteusMessage from '@wireapp/proteus/dist/message';
+import * as ProteusSession from '@wireapp/proteus/dist/session/';
 import CryptoboxCRUDStore from './store/CryptoboxCRUDStore';
 import {CryptoboxError} from './error/';
 import CryptoboxSession from './CryptoboxSession';

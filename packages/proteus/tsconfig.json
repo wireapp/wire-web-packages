@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "noImplicitAny": true,
-    "outDir": "dist/commonjs",
+    "outDir": "dist",
     "rootDir": "src/proteus",
     "target": "ES6"
   },
