@@ -25,7 +25,6 @@ import {
   ConversationEventType,
   OTRMessageAdd,
 } from '@wireapp/api-client/dist/commonjs/conversation/event/';
-import {MemoryEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
 import {ClientClassification, ClientType, NewClient, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
 import {LoginSanitizer} from './auth/';
 import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/error/';

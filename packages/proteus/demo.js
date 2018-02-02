@@ -1,6 +1,9 @@
 (async () => {
-  const Proteus = require('../dist/window/proteus').default;
-  const sodium = require('libsodium-wrappers-sumo');
+  const Proteus = require('./dist/commonjs/index');
+  const _sodium = require('libsodium-wrappers-sumo');
+
+  await _sodium.ready;
+  sodium = _sodium;
 
   const identity = Proteus.keys.IdentityKeyPair.new();
   const fingerprint = identity.public_key.fingerprint();

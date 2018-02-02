@@ -19,7 +19,7 @@
 
 /* eslint no-magic-numbers: "off" */
 
-const cryptobox = require('@wireapp/cryptobox');
+const cryptobox = require('../../../dist/');
 const fs = require('fs-extra');
 const LRUCache = require('@wireapp/lru-cache').default;
 const path = require('path');

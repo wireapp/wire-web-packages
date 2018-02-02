@@ -17,11 +17,9 @@
     "typescript": "2.6.2",
     "webpack": "3.10.0"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "license": "GPL-3.0",
-  "main": "dist/commonjs/proteus.js",
+  "main": "dist/commonjs/index.js",
   "name": "@wireapp/proteus",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus",
   "scripts": {
@@ -34,6 +32,6 @@
     "test:mocha": "mocha -s 30000 -t 30000 --recursive test/harness.js test --trace-warnings --grep simultaneous",
     "test:longrunning": "mocha -s 30000 -t 30000 --recursive test/harness.js test --trace-warnings --grep LongRunning"
   },
-  "types": "dist/commonjs/proteus.d.ts",
+  "types": "dist/commonjs/index.d.ts",
   "version": "5.3.3"
 }
