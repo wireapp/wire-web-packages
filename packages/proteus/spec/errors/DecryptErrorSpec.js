@@ -17,16 +17,18 @@
  *
  */
 
+const Proteus = require('@wireapp/proteus');
+
 describe('DecryptError', () => {
   describe('constructor', () => {
     it('constructs a default error code', () => {
       const correct_error_code = 2;
 
       let error = new Proteus.errors.DecryptError.InvalidMessage();
-      assert(error.code === correct_error_code);
+      expect(error.code).toBe(correct_error_code);
 
       error = new Proteus.errors.DecryptError.InvalidMessage('Custom Text');
-      assert(error.code === correct_error_code);
+      expect(error.code).toBe(correct_error_code);
     });
   });
 
@@ -36,20 +38,19 @@ describe('DecryptError', () => {
 
     it('uses the generic error class as namespace', () => {
       const error = new Proteus.errors.DecryptError.InvalidMessage(error_message, error_code);
-      assert(error.code === error_code);
-      assert(error.message === error_message);
+      expect(error.code).toBe(error_code);
+      expect(error.message).toBe(error_message);
     });
 
     it('assures that specializations are the same type as generics', () => {
       const error = new Proteus.errors.DecryptError.InvalidMessage(error_message, error_code);
-      assert.instanceOf(error, Proteus.errors.DecryptError.InvalidMessage);
-      assert.instanceOf(error, Proteus.errors.DecryptError);
+      expect(error instanceof Proteus.errors.DecryptError).toBe(true);
+      expect(error instanceof Proteus.errors.DecryptError.InvalidMessage).toBe(true);
     });
 
     it('is possible to create an error from a generic class', () => {
       const error = new Proteus.errors.DecryptError();
-      assert.isDefined(error);
-      assert.isDefined(error.message);
+      expect(error.message).toBeDefined();
     });
   });
 });
