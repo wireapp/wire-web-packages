@@ -41,14 +41,14 @@ class PreKeyBundle {
   prekey_id: number;
   public_key: PublicKey;
   identity_key: IdentityKey;
-  signature: Uint8Array;
+  signature: Uint8Array | null;
 
   constructor() {
     this.version = -1;
     this.prekey_id = -1;
     this.public_key = new PublicKey();
     this.identity_key = new IdentityKey();
-    this.signature = new Uint8Array([]);
+    this.signature = null;
   }
 
   static new(public_identity_key: IdentityKey, prekey: PreKey): PreKeyBundle {
