@@ -30,7 +30,7 @@ describe('cryptobox.Cryptobox', () => {
       Proteus = window.Proteus;
       done();
     } else {
-      cryptobox = require('../../dist/commonjs/index');
+      cryptobox = require('@wireapp/cryptobox');
       Proteus = require('@wireapp/proteus');
       sodium = require('libsodium-wrappers-sumo');
       done();

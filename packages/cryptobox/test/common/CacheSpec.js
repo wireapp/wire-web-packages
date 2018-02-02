@@ -9,7 +9,7 @@ describe('cryptobox.store.Cache', () => {
       Proteus = window.Proteus;
       done();
     } else {
-      cryptobox = require('../../dist/commonjs/index');
+      cryptobox = require('@wireapp/cryptobox');
       Proteus = require('@wireapp/proteus');
       done();
     }
