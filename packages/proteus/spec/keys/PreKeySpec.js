@@ -34,7 +34,6 @@ describe('PreKey', () => {
       const key_id = 0;
       const pk = await Proteus.keys.PreKey.new(key_id);
       expect(pk.key_id).toBe(key_id);
-
       done();
     });
 
@@ -48,7 +47,8 @@ describe('PreKey', () => {
       try {
         await Proteus.keys.PreKey.new(undefined);
       } catch (error) {
-        expect(error.constructor.name).toBe('TypeError');
+        expect(error instanceof Proteus.errors.InputError.TypeError).toBe(true);
+        expect(error.code).toBe(Proteus.errors.InputError.CODE.CASE_404);
         done();
       }
     });
@@ -57,7 +57,8 @@ describe('PreKey', () => {
       try {
         await Proteus.keys.PreKey.new('foo');
       } catch (error) {
-        expect(error.constructor.name).toBe('TypeError');
+        expect(error instanceof Proteus.errors.InputError.TypeError).toBe(true);
+        expect(error.code).toBe(Proteus.errors.InputError.CODE.CASE_403);
         done();
       }
     });
@@ -86,7 +87,8 @@ describe('PreKey', () => {
       try {
         await Proteus.keys.PreKey.new(4242.42);
       } catch (error) {
-        expect(error.constructor.name).toBe('TypeError');
+        expect(error instanceof Proteus.errors.InputError.TypeError).toBe(true);
+        expect(error.code).toBe(Proteus.errors.InputError.CODE.CASE_403);
         done();
       }
     });

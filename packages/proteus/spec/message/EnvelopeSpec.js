@@ -79,7 +79,6 @@ describe('Envelope', () => {
     try {
       Proteus.message.Envelope.deserialise(empty_buffer);
     } catch (error) {
-      console.log(`error`, error.constructor.name);
       expect(error instanceof RangeError).toBe(true);
     }
   });
