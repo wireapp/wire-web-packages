@@ -19,6 +19,8 @@
 
 /* eslint no-magic-numbers: "off" */
 
+const Proteus = require('@wireapp/proteus');
+
 describe('Envelope', () => {
   const mk = Proteus.derived.MacKey.new(new Uint8Array(32).fill(1));
 
@@ -28,7 +30,7 @@ describe('Envelope', () => {
   let bk;
   let rk;
 
-  before(async done => {
+  beforeAll(async done => {
     ik = Proteus.keys.IdentityKey.new((await Proteus.keys.KeyPair.new()).public_key);
     bk = (await Proteus.keys.KeyPair.new()).public_key;
     rk = (await Proteus.keys.KeyPair.new()).public_key;
@@ -36,14 +38,14 @@ describe('Envelope', () => {
     done();
   });
 
-  it('should encapsulate a CipherMessage', () => {
+  it('encapsulates a CipherMessage', () => {
     const msg = Proteus.message.CipherMessage.new(tg, 42, 3, rk, new Uint8Array([1, 2, 3, 4, 5]));
     const env = Proteus.message.Envelope.new(mk, msg);
 
-    assert(env.verify(mk));
+    expect(env.verify(mk)).toBe(true);
   });
 
-  it('should encapsulate a PreKeyMessage', () => {
+  it('encapsulates a PreKeyMessage', () => {
     const msg = Proteus.message.PreKeyMessage.new(
       42,
       bk,
@@ -52,10 +54,10 @@ describe('Envelope', () => {
     );
 
     const env = Proteus.message.Envelope.new(mk, msg);
-    assert(env.verify(mk));
+    expect(env.verify(mk)).toBe(true);
   });
 
-  it('should encode to and decode from CBOR', () => {
+  it('encodes to and decode from CBOR', () => {
     const msg = Proteus.message.PreKeyMessage.new(
       42,
       bk,
@@ -64,12 +66,12 @@ describe('Envelope', () => {
     );
 
     const env = Proteus.message.Envelope.new(mk, msg);
-    assert(env.verify(mk));
+    expect(env.verify(mk)).toBe(true);
 
     const env_bytes = env.serialise();
     const env_cpy = Proteus.message.Envelope.deserialise(env_bytes);
 
-    assert(env_cpy.verify(mk));
+    expect(env_cpy.verify(mk)).toBe(true);
   });
 
   it('fails when passing invalid input', () => {
@@ -77,7 +79,8 @@ describe('Envelope', () => {
     try {
       Proteus.message.Envelope.deserialise(empty_buffer);
     } catch (error) {
-      assert.instanceOf(error, RangeError);
+      console.log(`error`, error.constructor.name);
+      expect(error instanceof RangeError).toBe(true);
     }
   });
 });
