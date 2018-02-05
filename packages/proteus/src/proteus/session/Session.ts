@@ -64,7 +64,7 @@ export default class Session {
 
   counter = 0;
   local_identity: IdentityKeyPair;
-  pending_prekey: Array<number | PublicKey>;
+  pending_prekey: Array<number | PublicKey | null> | null;
   remote_identity: IdentityKey;
   session_states: IntermediateSessionState;
   session_tag: SessionTag;
@@ -72,7 +72,7 @@ export default class Session {
 
   constructor() {
     this.local_identity = new IdentityKeyPair();
-    this.pending_prekey = [];
+    this.pending_prekey = null;
     this.remote_identity = new IdentityKey();
     this.session_states = {};
     this.session_tag = new SessionTag();
@@ -133,6 +133,7 @@ export default class Session {
       session.session_tag = pkmsg.message.session_tag;
       session.local_identity = our_identity;
       session.remote_identity = pkmsg.identity_key;
+      session.pending_prekey = null;
       session.session_states = {};
 
       return session
@@ -230,9 +231,9 @@ export default class Session {
    */
   encrypt(plaintext: string | Uint8Array): Promise<Envelope> {
     return new Promise((resolve, reject) => {
-      const state = this.session_states[this.session_tag.toString()];
+      const session_state = this.session_states[this.session_tag.toString()];
 
-      if (!state) {
+      if (!session_state) {
         return reject(
           new ProteusError(
             `Could not find session for tag '${(this.session_tag || '').toString()}'.`,
@@ -242,7 +243,7 @@ export default class Session {
       }
 
       return resolve(
-        state.state.encrypt(this.local_identity.public_key, this.pending_prekey, this.session_tag, plaintext)
+        session_state.state.encrypt(this.local_identity.public_key, this.pending_prekey, this.session_tag, plaintext)
       );
     });
   }
@@ -289,6 +290,7 @@ export default class Session {
             }
 
             this._insert_session_state(msg.message.session_tag, state);
+            this.pending_prekey = null;
 
             return plaintext;
           });
@@ -312,6 +314,8 @@ export default class Session {
     const session_state = SessionState.deserialise(state.state.serialise());
 
     const plaintext = await session_state.decrypt(envelope, msg);
+
+    this.pending_prekey = null;
 
     this._insert_session_state(msg.session_tag, session_state);
     return plaintext;
@@ -395,8 +399,10 @@ export default class Session {
         case 4: {
           switch (<any>decoder.optional(() => decoder.object())) {
             case null:
+              self.pending_prekey = null;
               break;
             case 2:
+              self.pending_prekey = [null, null];
               for (let key = 0; key <= 1; ++key) {
                 switch (decoder.u8()) {
                   case 0:
@@ -404,6 +410,7 @@ export default class Session {
                     break;
                   case 1:
                     self.pending_prekey[1] = PublicKey.decode(decoder);
+                    break;
                 }
               }
               break;

@@ -164,7 +164,7 @@ export default class SessionState {
    */
   encrypt(
     identity_key: IdentityKey,
-    pending: Array<number | PublicKey>,
+    pending: Array<number | PublicKey | null> | null,
     tag: SessionTag,
     plaintext: string | Uint8Array
   ): Envelope {
