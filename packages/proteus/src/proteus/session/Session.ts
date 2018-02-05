@@ -64,7 +64,7 @@ export default class Session {
 
   counter = 0;
   local_identity: IdentityKeyPair;
-  pending_prekey: Array<number | PublicKey | null> | null;
+  pending_prekey: Array<number | PublicKey> | null;
   remote_identity: IdentityKey;
   session_states: IntermediateSessionState;
   session_tag: SessionTag;
@@ -402,7 +402,7 @@ export default class Session {
               self.pending_prekey = null;
               break;
             case 2:
-              self.pending_prekey = [null, null];
+              self.pending_prekey = [];
               for (let key = 0; key <= 1; ++key) {
                 switch (decoder.u8()) {
                   case 0:
