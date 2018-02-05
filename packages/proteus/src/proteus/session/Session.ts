@@ -171,7 +171,10 @@ export default class Session {
           pre_key_message.base_key
         );
       }
-      throw new ProteusError('Unable to get PreKey from PreKey store.', ProteusError.CODE.CASE_101);
+      throw new ProteusError(
+        `Unable to find PreKey ID "${pre_key_message.prekey_id}" in PreKey store "${pre_key_store.constructor.name}".`,
+        ProteusError.CODE.CASE_101
+      );
     });
   }
 
