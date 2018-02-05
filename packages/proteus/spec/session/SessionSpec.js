@@ -146,7 +146,7 @@ describe('Session', () => {
         expect(ping_bob_1.message).toEqual(jasmine.any(Proteus.message.CipherMessage));
         expect(ping_bob_2.message).toEqual(jasmine.any(Proteus.message.CipherMessage));
 
-        expect('Ping1!').toBe(sodium.to_string(await bob.decrypt(bob_store, ping_bob_1)));
+        expect(sodium.to_string(await bob.decrypt(bob_store, ping_bob_1))).toBe('Ping1!');
 
         expect(bob.session_states[bob.session_tag.toString()].state.recv_chains.length).toBe(2);
 
@@ -183,6 +183,51 @@ describe('Session', () => {
         const deserialised_bytes_bob = deserialised_session_bob.serialise();
 
         expect(sodium.to_hex(new Uint8Array(bytes_bob))).toEqual(sodium.to_hex(new Uint8Array(deserialised_bytes_bob)));
+      } catch (err) {
+        console.log(err);
+      } finally {
+        done();
+      }
+    });
+
+    it('limits the number of receive chains', async done => {
+      try {
+        const alice_ident = await Proteus.keys.IdentityKeyPair.new();
+        const alice_store = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10));
+
+        const bob_ident = await Proteus.keys.IdentityKeyPair.new();
+        const bob_store = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10));
+
+        const bob_prekey = await bob_store.get_prekey(0);
+        const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
+
+        const alice = await Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle);
+        const hello_bob = await alice.encrypt('Hello Bob!');
+
+        const [bob, decrypted] = await Proteus.session.Session.init_from_message(bob_ident, bob_store, hello_bob);
+
+        expect(decrypted).toBeDefined();
+
+        expect(alice.session_states[alice.session_tag.toString()].state.recv_chains.length).toBe(1);
+        expect(bob.session_states[bob.session_tag.toString()].state.recv_chains.length).toBe(1);
+
+        await Promise.all(
+          Array.from({length: Proteus.session.Session.MAX_RECV_CHAINS * 2}, async () => {
+            const bob_to_alice = await bob.encrypt('ping');
+            expect(sodium.to_string(await alice.decrypt(alice_store, bob_to_alice))).toBe('ping');
+
+            const alice_to_bob = await alice.encrypt('pong');
+            expect(sodium.to_string(await bob.decrypt(bob_store, alice_to_bob))).toBe('pong');
+
+            expect(alice.session_states[alice.session_tag.toString()].state.recv_chains.length).not.toBeGreaterThan(
+              Proteus.session.Session.MAX_RECV_CHAINS
+            );
+
+            expect(bob.session_states[bob.session_tag.toString()].state.recv_chains.length).not.toBeGreaterThan(
+              Proteus.session.Session.MAX_RECV_CHAINS
+            );
+          })
+        );
       } catch (err) {
         console.log(err);
       } finally {
