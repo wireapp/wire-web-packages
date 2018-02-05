@@ -102,7 +102,9 @@ export default class PreKeyMessage extends Message {
       }
     }
 
-    if (prekey_id && base_key && identity_key && message) {
+    prekey_id = Number(prekey_id);
+
+    if (!isNaN(prekey_id) && base_key && identity_key && message) {
       return PreKeyMessage.new(prekey_id, base_key, identity_key, message);
     } else {
       throw new (<any>InputError).TypeError(
