@@ -48,6 +48,7 @@ describe('PreKey', () => {
       try {
         await Proteus.keys.PreKey.new(undefined);
       } catch (error) {
+        expect(error.constructor.name).toBe('TypeError');
         done();
       }
     });
@@ -56,6 +57,7 @@ describe('PreKey', () => {
       try {
         await Proteus.keys.PreKey.new('foo');
       } catch (error) {
+        expect(error.constructor.name).toBe('TypeError');
         done();
       }
     });
@@ -64,6 +66,8 @@ describe('PreKey', () => {
       try {
         await Proteus.keys.PreKey.new(-1);
       } catch (error) {
+        expect(error instanceof Proteus.errors.InputError.RangeError).toBe(true);
+        expect(error.code).toBe(Proteus.errors.InputError.CODE.CASE_400);
         done();
       }
     });
@@ -72,6 +76,8 @@ describe('PreKey', () => {
       try {
         await Proteus.keys.PreKey.new(65537);
       } catch (error) {
+        expect(error instanceof Proteus.errors.InputError.RangeError).toBe(true);
+        expect(error.code).toBe(Proteus.errors.InputError.CODE.CASE_400);
         done();
       }
     });
@@ -80,6 +86,7 @@ describe('PreKey', () => {
       try {
         await Proteus.keys.PreKey.new(4242.42);
       } catch (error) {
+        expect(error.constructor.name).toBe('TypeError');
         done();
       }
     });
