@@ -27,6 +27,8 @@ import PublicKey from './PublicKey';
 import ArrayUtil from '../util/ArrayUtil';
 import TypeUtil from '../util/TypeUtil';
 
+import InputError from '../errors/InputError';
+
 export default class SecretKey {
   sec_curve: Uint8Array;
   sec_edward: Uint8Array;
@@ -96,7 +98,11 @@ export default class SecretKey {
 
     TypeUtil.assert_is_instance(Uint8Array, self.sec_edward);
 
-    self.sec_curve = ed2curve.convertSecretKey(self.sec_edward);
-    return self;
+    const sec_curve = ed2curve.convertSecretKey(self.sec_edward);
+    if (sec_curve) {
+      self.sec_curve = sec_curve;
+      return self;
+    }
+    throw new (<any>InputError).ConversionError('Could not convert public key with ed2curve.', 408);
   }
 }

@@ -24,6 +24,8 @@ import * as sodium from 'libsodium-wrappers-sumo';
 import ClassUtil from '../util/ClassUtil';
 import TypeUtil from '../util/TypeUtil';
 
+import InputError from '../errors/InputError';
+
 export default class PublicKey {
   pub_edward: Uint8Array;
   pub_curve: Uint8Array;
@@ -84,7 +86,11 @@ export default class PublicKey {
 
     TypeUtil.assert_is_instance(Uint8Array, self.pub_edward);
 
-    self.pub_curve = ed2curve.convertPublicKey(self.pub_edward);
-    return self;
+    const pub_curve = ed2curve.convertPublicKey(self.pub_edward);
+    if (pub_curve) {
+      self.pub_curve = pub_curve;
+      return self;
+    }
+    throw new (<any>InputError).ConversionError('Could not convert private key with ed2curve.', 409);
   }
 }

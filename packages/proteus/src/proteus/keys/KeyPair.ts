@@ -29,6 +29,8 @@ import TypeUtil from '../util/TypeUtil';
 import PublicKey from './PublicKey';
 import SecretKey from './SecretKey';
 
+import InputError from '../errors/InputError';
+
 export interface LibsodiumKeyPair {
   publicKey: Uint8Array;
   privateKey: Uint8Array;
@@ -70,7 +72,10 @@ export default class KeyPair {
   private _construct_private_key(ed25519_key_pair: LibsodiumKeyPair): SecretKey {
     const sk_ed25519 = ed25519_key_pair.privateKey;
     const sk_curve25519 = ed2curve.convertSecretKey(sk_ed25519);
-    return SecretKey.new(sk_ed25519, sk_curve25519);
+    if (sk_curve25519) {
+      return SecretKey.new(sk_ed25519, sk_curve25519);
+    }
+    throw new (<any>InputError).ConversionError('Could not convert private key with ed2curve.', 409);
   }
 
   /**
@@ -80,7 +85,10 @@ export default class KeyPair {
   private _construct_public_key(ed25519_key_pair: LibsodiumKeyPair): PublicKey {
     const pk_ed25519 = ed25519_key_pair.publicKey;
     const pk_curve25519 = ed2curve.convertPublicKey(pk_ed25519);
-    return PublicKey.new(pk_ed25519, pk_curve25519);
+    if (pk_curve25519) {
+      return PublicKey.new(pk_ed25519, pk_curve25519);
+    }
+    throw new (<any>InputError).ConversionError('Could not convert public key with ed2curve.', 408);
   }
 
   encode(encoder: CBOR.Encoder): CBOR.Encoder {

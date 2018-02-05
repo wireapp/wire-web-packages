@@ -31,6 +31,8 @@ class InputError extends ProteusError {
     CASE_405: 405,
     CASE_406: 406,
     CASE_407: 407,
+    CASE_408: 408,
+    CASE_409: 409,
   };
 
   constructor(message = 'Invalid input', code = 4) {
@@ -53,9 +55,17 @@ class TypeError extends InputError {
   }
 }
 
+class ConversionError extends InputError {
+  constructor(message = 'Conversion error', code: number) {
+    super(message, code);
+    Object.setPrototypeOf(this, TypeError.prototype);
+  }
+}
+
 Object.assign(InputError, {
   RangeError,
   TypeError,
+  ConversionError,
 });
 
 export default InputError;
