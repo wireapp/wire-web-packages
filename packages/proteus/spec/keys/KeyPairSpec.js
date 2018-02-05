@@ -20,29 +20,27 @@
 const Proteus = require('@wireapp/proteus');
 
 describe('KeyPair', () => {
-  it('signs a message and verifies the signature', done => {
-    Proteus.keys.KeyPair.new().then(kp => {
-      const msg = 'what do ya want for nothing?';
-      const sig = kp.secret_key.sign(msg);
-      const bad_sig = new Uint8Array(sig);
+  it('signs a message and verifies the signature', async done => {
+    const kp = await Proteus.keys.KeyPair.new();
+    const msg = 'what do ya want for nothing?';
+    const sig = kp.secret_key.sign(msg);
+    const bad_sig = new Uint8Array(sig);
 
-      bad_sig.forEach((obj, index) => {
-        bad_sig[index] = ~bad_sig[index];
-      });
-
-      expect(kp.public_key.verify(sig, msg)).toBe(true);
-      expect(kp.public_key.verify(bad_sig, msg)).toBe(false);
-
-      done();
+    bad_sig.forEach((obj, index) => {
+      bad_sig[index] = ~bad_sig[index];
     });
+
+    expect(kp.public_key.verify(sig, msg)).toBe(true);
+    expect(kp.public_key.verify(bad_sig, msg)).toBe(false);
+
+    done();
   });
 
-  it('computes a Diffie-Hellman shared secret', done => {
-    Promise.all([Proteus.keys.KeyPair.new(), Proteus.keys.KeyPair.new()]).then(([keypair_a, keypair_b]) => {
-      const shared_a = keypair_a.secret_key.shared_secret(keypair_b.public_key);
-      const shared_b = keypair_b.secret_key.shared_secret(keypair_a.public_key);
-      expect(shared_a).toEqual(shared_b);
-      done();
-    });
+  it('computes a Diffie-Hellman shared secret', async done => {
+    const [keypair_a, keypair_b] = await Promise.all([Proteus.keys.KeyPair.new(), Proteus.keys.KeyPair.new()]);
+    const shared_a = keypair_a.secret_key.shared_secret(keypair_b.public_key);
+    const shared_b = keypair_b.secret_key.shared_secret(keypair_a.public_key);
+    expect(shared_a).toEqual(shared_b);
+    done();
   });
 });
