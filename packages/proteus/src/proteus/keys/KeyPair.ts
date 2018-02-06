@@ -37,10 +37,8 @@ export interface LibsodiumKeyPair {
   keyType: string;
 }
 
-/**
- * Construct an ephemeral key pair.
- */
-export default class KeyPair {
+/** Construct an ephemeral key pair. */
+class KeyPair {
   public_key: PublicKey;
   secret_key: SecretKey;
 
@@ -126,3 +124,5 @@ export default class KeyPair {
     return self;
   }
 }
+
+export default KeyPair;

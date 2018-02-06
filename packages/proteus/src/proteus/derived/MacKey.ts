@@ -19,11 +19,11 @@
 
 import * as CBOR from '@wireapp/cbor';
 import * as sodium from 'libsodium-wrappers-sumo';
-
+import * as fs from 'fs';
 import ClassUtil from '../util/ClassUtil';
 import TypeUtil from '../util/TypeUtil';
 
-export default class MacKey {
+class MacKey {
   key: Uint8Array;
 
   /**
@@ -73,3 +73,5 @@ export default class MacKey {
     return new MacKey(key_bytes);
   }
 }
+
+export default MacKey;

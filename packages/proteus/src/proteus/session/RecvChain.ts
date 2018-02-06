@@ -40,7 +40,7 @@ export interface RecvChainTriple extends Array<ChainKey | MessageKeys | Array<Me
   2: Array<MessageKeys>;
 }
 
-export default class RecvChain {
+class RecvChain {
   chain_key: ChainKey;
   message_keys: Array<MessageKeys>;
   ratchet_key: PublicKey;
@@ -198,3 +198,5 @@ export default class RecvChain {
     return self;
   }
 }
+
+export default RecvChain;

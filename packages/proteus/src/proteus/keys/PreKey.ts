@@ -32,7 +32,7 @@ import KeyPair from './KeyPair';
  * @classdesc Pre-generated (and regularly refreshed) pre-keys.
  * A Pre-Shared Key contains the public long-term identity and ephemeral handshake keys for the initial triple DH.
  */
-export default class PreKey {
+class PreKey {
   static MAX_PREKEY_ID = 0xffff;
   key_id: number;
   key_pair: KeyPair;
@@ -135,3 +135,5 @@ export default class PreKey {
     return self;
   }
 }
+
+export default PreKey;

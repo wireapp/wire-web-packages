@@ -28,14 +28,10 @@ import RandomUtil from '../util/RandomUtil';
 
 import SessionState from '../session/SessionState';
 
-export default class SessionTag {
-  idx: number;
-  state: SessionState;
+class SessionTag {
   tag: Uint8Array;
 
   constructor() {
-    this.idx = -1;
-    this.state = new SessionState();
     this.tag = new Uint8Array([]);
   }
 
@@ -73,3 +69,5 @@ export default class SessionTag {
     return st;
   }
 }
+
+export default SessionTag;

@@ -27,7 +27,7 @@ import TypeUtil from '../util/TypeUtil';
 import CipherKey from '../derived/CipherKey';
 import MacKey from '../derived/MacKey';
 
-export default class MessageKeys {
+class MessageKeys {
   cipher_key: CipherKey;
   counter: number;
   mac_key: MacKey;
@@ -103,3 +103,5 @@ export default class MessageKeys {
     return self;
   }
 }
+
+export default MessageKeys;

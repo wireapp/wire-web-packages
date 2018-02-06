@@ -29,7 +29,7 @@ import TypeUtil from '../util/TypeUtil';
 
 import InputError from '../errors/InputError';
 
-export default class SecretKey {
+class SecretKey {
   sec_curve: Uint8Array;
   sec_edward: Uint8Array;
 
@@ -106,3 +106,5 @@ export default class SecretKey {
     throw new (<any>InputError).ConversionError('Could not convert public key with ed2curve.', 408);
   }
 }
+
+export default SecretKey;

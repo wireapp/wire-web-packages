@@ -27,7 +27,7 @@ import TypeUtil from '../util/TypeUtil';
 import MacKey from '../derived/MacKey';
 import Message from './Message';
 
-export default class Envelope {
+class Envelope {
   _message_enc: Uint8Array;
   mac: Uint8Array;
   message: Message;
@@ -135,3 +135,5 @@ export default class Envelope {
     return env;
   }
 }
+
+export default Envelope;

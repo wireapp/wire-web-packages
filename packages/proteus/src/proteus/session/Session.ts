@@ -58,7 +58,7 @@ export interface SessionFromMessageTuple extends Array<Session | Uint8Array> {
   1: Uint8Array;
 }
 
-export default class Session {
+export class Session {
   static MAX_RECV_CHAINS = 5;
   static MAX_SESSION_STATES = 100;
 
@@ -259,6 +259,7 @@ export default class Session {
       } else if (msg instanceof PreKeyMessage) {
         const actual_fingerprint = msg.identity_key.fingerprint();
         const expected_fingerprint = this.remote_identity.fingerprint();
+
         if (actual_fingerprint !== expected_fingerprint) {
           const message = `Fingerprints do not match: We expected '${expected_fingerprint}', but received '${actual_fingerprint}'.`;
           throw new (<any>DecryptError).RemoteIdentityChanged(message, DecryptError.CODE.CASE_204);
@@ -281,8 +282,8 @@ export default class Session {
           error instanceof (<any>DecryptError).InvalidSignature ||
           error instanceof (<any>DecryptError).InvalidMessage
         ) {
-          return this._new_state(prekey_store, msg).then(state => {
-            const plaintext = state.decrypt(envelope, msg.message);
+          return this._new_state(prekey_store, msg).then(async state => {
+            const plaintext = await state.decrypt(envelope, msg.message);
 
             if (msg.prekey_id !== PreKey.MAX_PREKEY_ID) {
               MemoryUtil.zeroize(prekey_store.prekeys[msg.prekey_id]);
@@ -451,3 +452,5 @@ export default class Session {
     return self;
   }
 }
+
+export default Session;

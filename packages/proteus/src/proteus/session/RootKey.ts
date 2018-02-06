@@ -34,7 +34,7 @@ export interface RatchetTuple extends Array<RootKey | ChainKey> {
   1: ChainKey;
 }
 
-export default class RootKey {
+class RootKey {
   key: CipherKey;
 
   constructor() {
@@ -98,3 +98,5 @@ export default class RootKey {
     }
   }
 }
+
+export default RootKey;

@@ -28,7 +28,7 @@ import Message from './Message';
 import SessionTag from './SessionTag';
 import InputError from '../errors/InputError';
 
-export default class CipherMessage extends Message {
+class CipherMessage extends Message {
   cipher_text: Uint8Array;
   counter: number;
   prev_counter: number;
@@ -128,3 +128,5 @@ export default class CipherMessage extends Message {
     }
   }
 }
+
+export default CipherMessage;

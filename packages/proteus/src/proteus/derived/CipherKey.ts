@@ -23,7 +23,7 @@ import * as sodium from 'libsodium-wrappers-sumo';
 import ClassUtil from '../util/ClassUtil';
 import TypeUtil from '../util/TypeUtil';
 
-export default class CipherKey {
+class CipherKey {
   key: Uint8Array;
 
   constructor() {
@@ -80,3 +80,5 @@ export default class CipherKey {
     return CipherKey.new(key_bytes);
   }
 }
+
+export default CipherKey;

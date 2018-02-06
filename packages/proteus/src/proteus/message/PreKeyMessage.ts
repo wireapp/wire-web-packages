@@ -31,7 +31,7 @@ import CipherMessage from './CipherMessage';
 import Message from './Message';
 import InputError from '../errors/InputError';
 
-export default class PreKeyMessage extends Message {
+class PreKeyMessage extends Message {
   base_key: PublicKey;
   identity_key: IdentityKey;
   message: CipherMessage;
@@ -114,3 +114,5 @@ export default class PreKeyMessage extends Message {
     }
   }
 }
+
+export default PreKeyMessage;

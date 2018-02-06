@@ -28,7 +28,7 @@ import IdentityKey from './IdentityKey';
 import KeyPair from './KeyPair';
 import SecretKey from './SecretKey';
 
-export default class IdentityKeyPair {
+class IdentityKeyPair {
   public_key: IdentityKey;
   secret_key: SecretKey;
   version: number;
@@ -102,3 +102,5 @@ export default class IdentityKeyPair {
     return self;
   }
 }
+
+export default IdentityKeyPair;

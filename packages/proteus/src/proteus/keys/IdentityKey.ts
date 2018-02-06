@@ -28,7 +28,7 @@ import PublicKey from './PublicKey';
  * @classdesc Every client has a long-term identity key pair.
  * Long-term identity keys are used to initialise "sessions" with other clients (triple DH).
  */
-export default class IdentityKey {
+class IdentityKey {
   public_key: PublicKey;
 
   constructor() {
@@ -72,3 +72,5 @@ export default class IdentityKey {
     return IdentityKey.new(public_key);
   }
 }
+
+export default IdentityKey;

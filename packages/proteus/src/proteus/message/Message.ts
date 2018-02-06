@@ -24,7 +24,7 @@ import * as CBOR from '@wireapp/cbor';
 import TypeUtil from '../util/TypeUtil';
 import DecodeError from '../errors/DecodeError';
 
-export default class Message {
+class Message {
   constructor() {}
 
   serialise(): ArrayBuffer {
@@ -56,6 +56,8 @@ export default class Message {
     }
   }
 }
+
+export default Message;
 
 // these require lines have to come after the Message definition because otherwise
 // it creates a circular dependency with the message subtypes

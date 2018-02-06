@@ -26,7 +26,7 @@ import TypeUtil from '../util/TypeUtil';
 
 import InputError from '../errors/InputError';
 
-export default class PublicKey {
+class PublicKey {
   pub_edward: Uint8Array;
   pub_curve: Uint8Array;
 
@@ -94,3 +94,5 @@ export default class PublicKey {
     throw new (<any>InputError).ConversionError('Could not convert private key with ed2curve.', 409);
   }
 }
+
+export default PublicKey;

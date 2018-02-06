@@ -51,7 +51,7 @@ import RootKey from './RootKey';
 import SendChain from './SendChain';
 import Session from './Session';
 
-export default class SessionState {
+class SessionState {
   prev_counter: number;
   recv_chains: Array<RecvChain>;
   root_key: RootKey;
@@ -309,3 +309,5 @@ export default class SessionState {
     return self;
   }
 }
+
+export default SessionState;

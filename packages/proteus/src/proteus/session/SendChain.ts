@@ -27,7 +27,7 @@ import TypeUtil from '../util/TypeUtil';
 import ChainKey from './ChainKey';
 import KeyPair from '../keys/KeyPair';
 
-export default class SendChain {
+class SendChain {
   chain_key: ChainKey;
   ratchet_key: KeyPair;
 
@@ -75,3 +75,5 @@ export default class SendChain {
     return self;
   }
 }
+
+export default SendChain;

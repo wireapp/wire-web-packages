@@ -16,7 +16,8 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-export default class ProteusError extends Error {
+
+class ProteusError extends Error {
   static CODE: {[index: string]: number} = {
     CASE_100: 100,
     CASE_101: 101,
@@ -35,3 +36,5 @@ export default class ProteusError extends Error {
     //this.stack = new Error().stack;
   }
 }
+
+export default ProteusError;

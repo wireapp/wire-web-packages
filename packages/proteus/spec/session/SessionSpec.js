@@ -339,26 +339,27 @@ describe('Session', () => {
 
         const bob = await Proteus.session.Session.init_from_prekey(bob_ident, alice_bundle);
         const hello_alice = await bob.encrypt('Hello Alice!');
+
         expect(alice.session_tag.toString()).not.toEqual(bob.session_tag.toString());
         expect(hello_alice).toBeDefined();
 
         const hello_bob_decrypted = await bob.decrypt(bob_store, hello_bob_encrypted);
         expect(sodium.to_string(hello_bob_decrypted)).toBe('Hello Bob!');
-        // expect(Object.keys(bob.session_states).length).toBe(2);
+        expect(Object.keys(bob.session_states).length).toBe(2);
 
-        // expect(sodium.to_string(await alice.decrypt(alice_store, hello_alice))).toBe('Hello Alice!');
-        // expect(Object.keys(alice.session_states).length).toBe(2);
+        expect(sodium.to_string(await alice.decrypt(alice_store, hello_alice))).toBe('Hello Alice!');
+        expect(Object.keys(alice.session_states).length).toBe(2);
 
-        // const message_alice = alice.encrypt('That was fast!');
-        // expect(sodium.to_string(await bob.decrypt(bob_store, message_alice))).toBe('That was fast!');
+        const message_alice = await alice.encrypt('That was fast!');
+        expect(sodium.to_string(await bob.decrypt(bob_store, message_alice))).toBe('That was fast!');
 
-        // const message_bob = bob.encrypt(':-)');
+        const message_bob = await bob.encrypt(':-)');
 
-        // expect(sodium.to_string(await alice.decrypt(alice_store, message_bob))).toBe(':-)');
-        // expect(alice.session_tag.toString()).not.toEqual(bob.session_tag.toString());
+        expect(sodium.to_string(await alice.decrypt(alice_store, message_bob))).toBe(':-)');
+        expect(alice.session_tag.toString()).toEqual(bob.session_tag.toString());
 
-        // assert_serialise_deserialise(alice_ident, alice);
-        // assert_serialise_deserialise(bob_ident, bob);
+        assert_serialise_deserialise(alice_ident, alice);
+        assert_serialise_deserialise(bob_ident, bob);
       } catch (err) {
         console.log(err);
       } finally {

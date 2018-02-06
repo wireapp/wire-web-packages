@@ -26,7 +26,7 @@ import MemoryUtil from '../util/MemoryUtil';
 import CipherKey from './CipherKey';
 import MacKey from './MacKey';
 
-export default class DerivedSecrets {
+class DerivedSecrets {
   cipher_key: CipherKey;
   mac_key: MacKey;
 
@@ -59,3 +59,5 @@ export default class DerivedSecrets {
     return this.kdf(input, new Uint8Array(0), info);
   }
 }
+
+export default DerivedSecrets;
