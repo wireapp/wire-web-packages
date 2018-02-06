@@ -17,14 +17,20 @@
  *
  */
 
-describe('IdentityKeyPair', () => {
-  it('serialises and deserialises', () => {
-    const ikp = Proteus.keys.IdentityKeyPair.new();
+import * as sodium from 'libsodium-wrappers-sumo';
 
-    const ikp_bytes = ikp.serialise();
-    const ikp_deser = Proteus.keys.IdentityKeyPair.deserialise(ikp_bytes);
+const MemoryUtil = {
+  zeroize(object: Uint8Array | ArrayBuffer | {[index: string]: any}): void {
+    if (object instanceof Uint8Array) {
+      sodium.memzero(<Uint8Array>object);
+    } else if (object instanceof ArrayBuffer) {
+      sodium.memzero(new Uint8Array(<ArrayBuffer>object));
+    } else if (typeof object === 'object') {
+      Object.keys(object)
+        .map(key => object[key])
+        .forEach(val => this.zeroize(val));
+    }
+  },
+};
 
-    assert(ikp.public_key.fingerprint() === ikp_deser.public_key.fingerprint());
-    assert(sodium.to_hex(new Uint8Array(ikp_bytes)) === sodium.to_hex(new Uint8Array(ikp_deser.serialise())));
-  });
-});
+export default MemoryUtil;

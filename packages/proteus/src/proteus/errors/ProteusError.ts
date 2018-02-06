@@ -16,15 +16,22 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
+export default class ProteusError extends Error {
+  static CODE: {[index: string]: number} = {
+    CASE_100: 100,
+    CASE_101: 101,
+    CASE_102: 102,
+    CASE_103: 103,
+    CASE_104: 104,
+  };
 
-describe('IdentityKeyPair', () => {
-  it('serialises and deserialises', () => {
-    const ikp = Proteus.keys.IdentityKeyPair.new();
+  constructor(public message: string, public code = 1) {
+    super(message);
+    Object.setPrototypeOf(this, ProteusError.prototype);
 
-    const ikp_bytes = ikp.serialise();
-    const ikp_deser = Proteus.keys.IdentityKeyPair.deserialise(ikp_bytes);
-
-    assert(ikp.public_key.fingerprint() === ikp_deser.public_key.fingerprint());
-    assert(sodium.to_hex(new Uint8Array(ikp_bytes)) === sodium.to_hex(new Uint8Array(ikp_deser.serialise())));
-  });
-});
+    this.code = code;
+    this.message = message;
+    this.name = this.constructor.name;
+    //this.stack = new Error().stack;
+  }
+}

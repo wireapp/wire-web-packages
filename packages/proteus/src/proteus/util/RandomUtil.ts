@@ -17,14 +17,17 @@
  *
  */
 
-describe('IdentityKeyPair', () => {
-  it('serialises and deserialises', () => {
-    const ikp = Proteus.keys.IdentityKeyPair.new();
+const random_bytes = (length: number) => {
+  if (typeof window !== 'undefined' && window.crypto) {
+    // browser
+    const buffer = new ArrayBuffer(length);
+    const buffer_view = new Uint8Array(buffer);
+    return window.crypto.getRandomValues(buffer_view);
+  } else {
+    // node
+    const crypto = require('crypto');
+    return new Uint8Array(crypto.randomBytes(length));
+  }
+};
 
-    const ikp_bytes = ikp.serialise();
-    const ikp_deser = Proteus.keys.IdentityKeyPair.deserialise(ikp_bytes);
-
-    assert(ikp.public_key.fingerprint() === ikp_deser.public_key.fingerprint());
-    assert(sodium.to_hex(new Uint8Array(ikp_bytes)) === sodium.to_hex(new Uint8Array(ikp_deser.serialise())));
-  });
-});
+export default {random_bytes};

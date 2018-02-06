@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2016 Wire Swiss GmbH
+ * Copyright (C) 2018 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -542,7 +542,7 @@ describe('Session', () => {
       .then(() => assert.fail('should have thrown Proteus.errors.ProteusError'))
       .catch(err => {
         assert.instanceOf(err, Proteus.errors.ProteusError);
-        assert.strictEqual(err.code, Proteus.errors.ProteusError.prototype.CODE.CASE_101);
+        assert.strictEqual(err.code, Proteus.errors.ProteusError.CODE.CASE_101);
       })
       .then(() => {
         done();

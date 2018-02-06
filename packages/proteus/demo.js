@@ -1,4 +1,4 @@
-const Proteus = require('../src/proteus');
+const Proteus = require('../dist/window/proteus').default;
 const sodium = require('libsodium-wrappers-sumo');
 
 const identity = Proteus.keys.IdentityKeyPair.new();

@@ -17,14 +17,16 @@
  *
  */
 
-describe('IdentityKeyPair', () => {
-  it('serialises and deserialises', () => {
-    const ikp = Proteus.keys.IdentityKeyPair.new();
+import PreKey from '../keys/PreKey';
 
-    const ikp_bytes = ikp.serialise();
-    const ikp_deser = Proteus.keys.IdentityKeyPair.deserialise(ikp_bytes);
+export default class PreKeyStore {
+  prekeys: Array<PreKey> = [];
 
-    assert(ikp.public_key.fingerprint() === ikp_deser.public_key.fingerprint());
-    assert(sodium.to_hex(new Uint8Array(ikp_bytes)) === sodium.to_hex(new Uint8Array(ikp_deser.serialise())));
-  });
-});
+  get_prekey(prekey_id: number): Promise<PreKey> {
+    throw Error('Virtual function unimplemented');
+  }
+
+  remove(prekey_id: number): Promise<void> {
+    throw Error('Virtual function unimplemented');
+  }
+}

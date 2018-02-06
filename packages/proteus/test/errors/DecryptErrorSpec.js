@@ -29,4 +29,27 @@ describe('DecryptError', () => {
       assert(error.code === correct_error_code);
     });
   });
+
+  describe('Wire for web compatibility', () => {
+    const error_code = 300;
+    const error_message = 'The received message was too big.';
+
+    it('uses the generic error class as namespace', () => {
+      const error = new Proteus.errors.DecryptError.InvalidMessage(error_message, error_code);
+      assert(error.code === error_code);
+      assert(error.message === error_message);
+    });
+
+    it('assures that specializations are the same type as generics', () => {
+      const error = new Proteus.errors.DecryptError.InvalidMessage(error_message, error_code);
+      assert.instanceOf(error, Proteus.errors.DecryptError.InvalidMessage);
+      assert.instanceOf(error, Proteus.errors.DecryptError);
+    });
+
+    it('is possible to create an error from a generic class', () => {
+      const error = new Proteus.errors.DecryptError();
+      assert.isDefined(error);
+      assert.isDefined(error.message);
+    });
+  });
 });

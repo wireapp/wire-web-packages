@@ -36,6 +36,7 @@ module.exports = {
   output: {
     filename: 'proteus.js',
     library: 'Proteus',
+    libraryExport: 'default',
     libraryTarget: 'var',
     path: `${__dirname}/dist/window`,
   },
