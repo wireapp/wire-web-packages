@@ -18,8 +18,8 @@
  */
 
 describe('KeyPair', () => {
-  it('signs a message and verifies the signature', () => {
-    const kp = Proteus.keys.KeyPair.new();
+  it('signs a message and verifies the signature', async () => {
+    const kp = await Proteus.keys.KeyPair.new();
     const msg = 'what do ya want for nothing?';
     const sig = kp.secret_key.sign(msg);
     const bad_sig = new Uint8Array(sig);
@@ -32,9 +32,9 @@ describe('KeyPair', () => {
     assert(!kp.public_key.verify(bad_sig, msg));
   });
 
-  it('computes a Diffie-Hellman shared secret', () => {
-    const keypair_a = Proteus.keys.KeyPair.new();
-    const keypair_b = Proteus.keys.KeyPair.new();
+  it('computes a Diffie-Hellman shared secret', async () => {
+    const keypair_a = await Proteus.keys.KeyPair.new();
+    const keypair_b = await Proteus.keys.KeyPair.new();
     assert.deepEqual(
       keypair_a.secret_key.shared_secret(keypair_b.public_key),
       keypair_b.secret_key.shared_secret(keypair_a.public_key)

@@ -18,6 +18,7 @@
  */
 
 /* eslint no-magic-numbers: "off" */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = require('@wireapp/cbor');
 const sodium = require('libsodium-wrappers-sumo');
@@ -59,16 +60,17 @@ class PreKeyBundle {
    * @param {!keys.PreKey} prekey
    * @returns {PreKeyBundle} - `this`
    */
-  static new(public_identity_key, prekey) {
-    TypeUtil.assert_is_instance(IdentityKey, public_identity_key);
-    TypeUtil.assert_is_instance(PreKey, prekey);
+  static async new(public_identity_key, prekey) {
+    //TypeUtil.assert_is_instance(IdentityKey, public_identity_key);
+    //TypeUtil.assert_is_instance(PreKey, prekey);
+    const pk = await prekey;
 
     /** @type {keys.PreyKeyBundle} */
     const bundle = ClassUtil.new_instance(PreKeyBundle);
 
     bundle.version = 1;
-    bundle.prekey_id = prekey.key_id;
-    bundle.public_key = prekey.key_pair.public_key;
+    bundle.prekey_id = pk.key_id;
+    bundle.public_key = pk.key_pair.public_key;
     bundle.identity_key = public_identity_key;
     bundle.signature = null;
 
@@ -81,8 +83,8 @@ class PreKeyBundle {
    * @returns {PreKeyBundle}
    */
   static signed(identity_pair, prekey) {
-    TypeUtil.assert_is_instance(IdentityKeyPair, identity_pair);
-    TypeUtil.assert_is_instance(PreKey, prekey);
+    //TypeUtil.assert_is_instance(IdentityKeyPair, identity_pair);
+    //TypeUtil.assert_is_instance(PreKey, prekey);
 
     /** @type {keys.PublicKey} */
     const ratchet_key = prekey.key_pair.public_key;
@@ -129,7 +131,7 @@ class PreKeyBundle {
   serialised_json() {
     return {
       id: this.prekey_id,
-      key: sodium.to_base64(new Uint8Array(this.serialise()), true),
+      key: sodium.to_base64(new Uint8Array(this.serialise())),
     };
   }
 
@@ -138,7 +140,7 @@ class PreKeyBundle {
    * @returns {PreKeyBundle}
    */
   static deserialise(buf) {
-    TypeUtil.assert_is_instance(ArrayBuffer, buf);
+    //TypeUtil.assert_is_instance(ArrayBuffer, buf);
     return PreKeyBundle.decode(new CBOR.Decoder(buf));
   }
 
@@ -147,7 +149,7 @@ class PreKeyBundle {
    * @returns {CBOR.Encoder}
    */
   encode(encoder) {
-    TypeUtil.assert_is_instance(CBOR.Encoder, encoder);
+    //TypeUtil.assert_is_instance(CBOR.Encoder, encoder);
 
     encoder.object(5);
     encoder.u8(0);
@@ -171,7 +173,7 @@ class PreKeyBundle {
    * @returns {PreKeyBundle}
    */
   static decode(decoder) {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
+    //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     const self = ClassUtil.new_instance(PreKeyBundle);
 
@@ -198,10 +200,10 @@ class PreKeyBundle {
       }
     }
 
-    TypeUtil.assert_is_integer(self.version);
-    TypeUtil.assert_is_integer(self.prekey_id);
-    TypeUtil.assert_is_instance(PublicKey, self.public_key);
-    TypeUtil.assert_is_instance(IdentityKey, self.identity_key);
+    //TypeUtil.assert_is_integer(self.version);
+    //TypeUtil.assert_is_integer(self.prekey_id);
+    //TypeUtil.assert_is_instance(PublicKey, self.public_key);
+    //TypeUtil.assert_is_instance(IdentityKey, self.identity_key);
 
     return self;
   }

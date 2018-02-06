@@ -17,8 +17,10 @@
  *
  */
 
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
+
 const CBOR = require('@wireapp/cbor');
-const sodium = require('libsodium-wrappers-sumo');
+const _sodium = require('libsodium-wrappers-sumo');
 
 const ClassUtil = require('../util/ClassUtil');
 const DontCallConstructor = require('../errors/DontCallConstructor');
@@ -43,7 +45,7 @@ class MacKey {
    * @returns {MacKey} - `this`
    */
   static new(key) {
-    TypeUtil.assert_is_instance(Uint8Array, key);
+    //TypeUtil.assert_is_instance(Uint8Array, key);
 
     const mk = ClassUtil.new_instance(MacKey);
     mk.key = key;
@@ -55,18 +57,23 @@ class MacKey {
    * @param {!(string|Uint8Array)} msg
    * @returns {Uint8Array}
    */
-  sign(msg) {
-    return sodium.crypto_auth_hmacsha256(msg, this.key);
+  async sign(msg) {
+    await _sodium.ready;
+    const sodium = _sodium;
+    return sodium.crypto_auth_hmacsha256(msg, await this.key);
   }
 
   /**
    * Verifies the signature of a given message by resigning it.
    * @param {!Uint8Array} signature Mac signature (HMAC) which needs to get verified
-   * @param {!Uint8Array} msg Unsigned message
+   * @param {!Uint8Array} message Unsigned message
    * @returns {boolean}
    */
-  verify(signature, msg) {
-    return sodium.crypto_auth_hmacsha256_verify(signature, msg, this.key);
+  async verify(signature, message) {
+    await _sodium.ready;
+    const sodium = _sodium;
+
+    return sodium.crypto_auth_hmacsha256_verify(signature, message, this.key);
   }
 
   /**
@@ -84,7 +91,7 @@ class MacKey {
    * @returns {MacKey}
    */
   static decode(decoder) {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
+    //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     let key_bytes = null;
 

@@ -18,6 +18,7 @@
  */
 
 /* eslint no-magic-numbers: "off" */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = require('@wireapp/cbor');
 
@@ -60,8 +61,8 @@ class RecvChain {
    * @returns {message.PreKeyMessage}
    */
   static new(chain_key, public_key) {
-    TypeUtil.assert_is_instance(ChainKey, chain_key);
-    TypeUtil.assert_is_instance(PublicKey, public_key);
+    //TypeUtil.assert_is_instance(ChainKey, chain_key);
+    //TypeUtil.assert_is_instance(PublicKey, public_key);
 
     const rc = ClassUtil.new_instance(RecvChain);
     rc.chain_key = chain_key;
@@ -75,9 +76,9 @@ class RecvChain {
    * @param {!message.CipherMessage} msg
    * @returns {Uint8Array}
    */
-  try_message_keys(envelope, msg) {
-    TypeUtil.assert_is_instance(Envelope, envelope);
-    TypeUtil.assert_is_instance(CipherMessage, msg);
+  async try_message_keys(envelope, msg) {
+    //TypeUtil.assert_is_instance(Envelope, envelope);
+    //TypeUtil.assert_is_instance(CipherMessage, msg);
 
     if (this.message_keys[0] && this.message_keys[0].counter > msg.counter) {
       const message = `Message too old. Counter for oldest staged chain key is '${
@@ -86,16 +87,16 @@ class RecvChain {
       throw new DecryptError.OutdatedMessage(message, DecryptError.CODE.CASE_208);
     }
 
-    const idx = this.message_keys.findIndex(mk => {
-      return mk.counter === msg.counter;
-    });
+    const idx = this.message_keys.findIndex(mk => mk.counter === msg.counter);
 
     if (idx === -1) {
       throw new DecryptError.DuplicateMessage(null, DecryptError.CODE.CASE_209);
     }
 
     const mk = this.message_keys.splice(idx, 1)[0];
-    if (!envelope.verify(mk.mac_key)) {
+    const envelope_verified = await envelope.verify(mk.mac_key);
+
+    if (!envelope_verified) {
       const message = `Envelope verification failed for message with counter behind. Message index is '${
         msg.counter
       }' while receive chain index is '${this.chain_key.idx}'.`;
@@ -109,8 +110,8 @@ class RecvChain {
    * @param {!message.CipherMessage} msg
    * @returns {Array<session.ChainKey>|session.MessageKeys}
    */
-  stage_message_keys(msg) {
-    TypeUtil.assert_is_instance(CipherMessage, msg);
+  async stage_message_keys(msg) {
+    //TypeUtil.assert_is_instance(CipherMessage, msg);
 
     const num = msg.counter - this.chain_key.idx;
     if (num > RecvChain.MAX_COUNTER_GAP) {
@@ -130,11 +131,12 @@ class RecvChain {
     let chk = this.chain_key;
 
     for (let index = 0; index <= num - 1; index++) {
-      keys.push(chk.message_keys());
+      const mk = await chk.message_keys();
+      keys.push(mk);
       chk = chk.next();
     }
 
-    const mk = chk.message_keys();
+    const mk = await chk.message_keys();
     return [chk, mk, keys];
   }
 
@@ -143,8 +145,8 @@ class RecvChain {
    * @returns {void}
    */
   commit_message_keys(keys) {
-    TypeUtil.assert_is_instance(Array, keys);
-    keys.map(key => TypeUtil.assert_is_instance(MessageKeys, key));
+    //TypeUtil.assert_is_instance(Array, keys);
+    //keys.map(key => TypeUtil.assert_is_instance(MessageKeys, key));
 
     if (keys.length > RecvChain.MAX_COUNTER_GAP) {
       throw new ProteusError(
@@ -190,7 +192,7 @@ class RecvChain {
    * @returns {RecvChain}
    */
   static decode(decoder) {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
+    //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     const self = ClassUtil.new_instance(RecvChain);
 
@@ -220,9 +222,9 @@ class RecvChain {
       }
     }
 
-    TypeUtil.assert_is_instance(ChainKey, self.chain_key);
-    TypeUtil.assert_is_instance(PublicKey, self.ratchet_key);
-    TypeUtil.assert_is_instance(Array, self.message_keys);
+    //TypeUtil.assert_is_instance(ChainKey, self.chain_key);
+    //TypeUtil.assert_is_instance(PublicKey, self.ratchet_key);
+    //TypeUtil.assert_is_instance(Array, self.message_keys);
 
     return self;
   }

@@ -17,6 +17,8 @@
  *
  */
 
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
+
 const CBOR = require('@wireapp/cbor');
 const ed2curve = require('ed2curve');
 const sodium = require('libsodium-wrappers-sumo');
@@ -48,8 +50,8 @@ class SecretKey {
    * @returns {SecretKey} - `this`
    */
   static new(sec_edward, sec_curve) {
-    TypeUtil.assert_is_instance(Uint8Array, sec_edward);
-    TypeUtil.assert_is_instance(Uint8Array, sec_curve);
+    //TypeUtil.assert_is_instance(Uint8Array, sec_edward);
+    //TypeUtil.assert_is_instance(Uint8Array, sec_curve);
 
     const sk = ClassUtil.new_instance(SecretKey);
 
@@ -74,8 +76,7 @@ class SecretKey {
    * @returns {Uint8Array} - Array buffer view of the computed shared secret
    */
   shared_secret(public_key) {
-    TypeUtil.assert_is_instance(PublicKey, public_key);
-
+    //TypeUtil.assert_is_instance(PublicKey, public_key);
     return sodium.crypto_scalarmult(this.sec_curve, public_key.pub_curve);
   }
 
@@ -94,7 +95,7 @@ class SecretKey {
    * @returns {SecretKey}
    */
   static decode(decoder) {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
+    //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     const self = ClassUtil.new_instance(SecretKey);
 
@@ -109,7 +110,7 @@ class SecretKey {
       }
     }
 
-    TypeUtil.assert_is_instance(Uint8Array, self.sec_edward);
+    //TypeUtil.assert_is_instance(Uint8Array, self.sec_edward);
 
     self.sec_curve = ed2curve.convertSecretKey(self.sec_edward);
     return self;

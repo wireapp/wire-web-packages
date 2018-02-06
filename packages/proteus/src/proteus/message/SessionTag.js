@@ -16,6 +16,7 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = require('@wireapp/cbor');
 const sodium = require('libsodium-wrappers-sumo');
@@ -69,7 +70,7 @@ class SessionTag {
    * @returns {SessionTag}
    */
   static decode(decoder) {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
+    //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     const length = 16;
 

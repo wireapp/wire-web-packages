@@ -18,6 +18,7 @@
  */
 
 /* eslint no-magic-numbers: "off" */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = require('@wireapp/cbor');
 
@@ -57,7 +58,7 @@ class Message {
    * @returns {message.CipherMessage|message.PreKeyMessage}
    */
   static deserialise(buf) {
-    TypeUtil.assert_is_instance(ArrayBuffer, buf);
+    //TypeUtil.assert_is_instance(ArrayBuffer, buf);
 
     const decoder = new CBOR.Decoder(buf);
 

@@ -17,6 +17,8 @@
  *
  */
 
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
+
 const CBOR = require('@wireapp/cbor');
 const sodium = require('libsodium-wrappers-sumo');
 
@@ -47,7 +49,7 @@ class IdentityKey {
    * @returns {IdentityKey} - `this`
    */
   static new(public_key) {
-    TypeUtil.assert_is_instance(PublicKey, public_key);
+    //TypeUtil.assert_is_instance(PublicKey, public_key);
 
     const key = ClassUtil.new_instance(IdentityKey);
     key.public_key = public_key;
@@ -79,7 +81,7 @@ class IdentityKey {
    * @returns {IdentityKey}
    */
   static decode(decoder) {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
+    //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     let public_key = null;
 

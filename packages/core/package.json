@@ -23,9 +23,7 @@
     "webpack": "3.10.0"
   },
   "description": "Wire for Web's communication core.",
-  "files": [
-    "dist/commonjs"
-  ],
+  "files": ["dist/commonjs"],
   "license": "GPL-3.0",
   "main": "./dist/commonjs/index.js",
   "name": "@wireapp/core",

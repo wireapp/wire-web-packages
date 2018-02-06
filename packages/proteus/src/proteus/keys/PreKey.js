@@ -18,6 +18,7 @@
  */
 
 /* eslint no-magic-numbers: "off" */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = require('@wireapp/cbor');
 
@@ -58,19 +59,19 @@ class PreKey {
    * @returns {PreKey} - `this`
    * @throws {errors.InputError.RangeError}
    */
-  static new(pre_key_id) {
+  static async new(pre_key_id) {
     this.validate_pre_key_id(pre_key_id);
 
     const pk = ClassUtil.new_instance(PreKey);
 
     pk.version = 1;
     pk.key_id = pre_key_id;
-    pk.key_pair = KeyPair.new();
+    pk.key_pair = await KeyPair.new();
     return pk;
   }
 
   static validate_pre_key_id(pre_key_id) {
-    TypeUtil.assert_is_integer(pre_key_id);
+    //TypeUtil.assert_is_integer(pre_key_id);
 
     if (pre_key_id < 0 || pre_key_id > PreKey.MAX_PREKEY_ID) {
       const message = `PreKey ID (${pre_key_id}) must be between or equal to 0 and ${PreKey.MAX_PREKEY_ID}.`;
@@ -79,8 +80,9 @@ class PreKey {
   }
 
   /** @returns {PreKey} */
-  static last_resort() {
-    return PreKey.new(PreKey.MAX_PREKEY_ID);
+  static async last_resort() {
+    const max_prekey = await PreKey.new(PreKey.MAX_PREKEY_ID);
+    return max_prekey;
   }
 
   /**
@@ -97,7 +99,7 @@ class PreKey {
       return [];
     }
 
-    return [...Array(size).keys()].map(key => PreKey.new((start + key) % PreKey.MAX_PREKEY_ID));
+    return [...Array(size).keys()].map(async key => await PreKey.new((start + key) % PreKey.MAX_PREKEY_ID));
   }
 
   /** @returns {ArrayBuffer} */
@@ -112,7 +114,7 @@ class PreKey {
    * @returns {PreKey}
    */
   static deserialise(buf) {
-    TypeUtil.assert_is_instance(ArrayBuffer, buf);
+    //TypeUtil.assert_is_instance(ArrayBuffer, buf);
     return PreKey.decode(new CBOR.Decoder(buf));
   }
 
@@ -121,7 +123,7 @@ class PreKey {
    * @returns {CBOR.Encoder}
    */
   encode(encoder) {
-    TypeUtil.assert_is_instance(CBOR.Encoder, encoder);
+    //TypeUtil.assert_is_instance(CBOR.Encoder, encoder);
     encoder.object(3);
     encoder.u8(0);
     encoder.u8(this.version);
@@ -136,7 +138,7 @@ class PreKey {
    * @returns {PreKey}
    */
   static decode(decoder) {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
+    //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     const self = ClassUtil.new_instance(PreKey);
 
@@ -157,9 +159,9 @@ class PreKey {
       }
     }
 
-    TypeUtil.assert_is_integer(self.version);
-    TypeUtil.assert_is_integer(self.key_id);
-    TypeUtil.assert_is_instance(KeyPair, self.key_pair);
+    //TypeUtil.assert_is_integer(self.version);
+    //TypeUtil.assert_is_integer(self.key_id);
+    //TypeUtil.assert_is_instance(KeyPair, self.key_pair);
 
     return self;
   }

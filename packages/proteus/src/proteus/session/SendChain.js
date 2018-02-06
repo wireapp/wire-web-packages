@@ -18,6 +18,7 @@
  */
 
 /* eslint no-magic-numbers: "off" */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = require('@wireapp/cbor');
 
@@ -45,8 +46,8 @@ class SendChain {
   }
 
   static new(chain_key, keypair) {
-    TypeUtil.assert_is_instance(ChainKey, chain_key);
-    TypeUtil.assert_is_instance(KeyPair, keypair);
+    //TypeUtil.assert_is_instance(ChainKey, chain_key);
+    //TypeUtil.assert_is_instance(KeyPair, keypair);
 
     const sc = ClassUtil.new_instance(SendChain);
     sc.chain_key = chain_key;
@@ -71,7 +72,7 @@ class SendChain {
    * @returns {SendChain}
    */
   static decode(decoder) {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
+    //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
     const self = ClassUtil.new_instance(SendChain);
     const nprops = decoder.object();
     for (let index = 0; index <= nprops - 1; index++) {
@@ -86,8 +87,8 @@ class SendChain {
           decoder.skip();
       }
     }
-    TypeUtil.assert_is_instance(ChainKey, self.chain_key);
-    TypeUtil.assert_is_instance(KeyPair, self.ratchet_key);
+    //TypeUtil.assert_is_instance(ChainKey, self.chain_key);
+    //TypeUtil.assert_is_instance(KeyPair, self.ratchet_key);
     return self;
   }
 }

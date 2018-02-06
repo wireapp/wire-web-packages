@@ -17,6 +17,8 @@
  *
  */
 
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
+
 const CBOR = require('@wireapp/cbor');
 const sodium = require('libsodium-wrappers-sumo');
 
@@ -43,7 +45,7 @@ class CipherKey {
    * @returns {CipherKey} - `this`
    */
   static new(key) {
-    TypeUtil.assert_is_instance(Uint8Array, key);
+    //TypeUtil.assert_is_instance(Uint8Array, key);
 
     const ck = ClassUtil.new_instance(CipherKey);
     ck.key = key;
@@ -88,7 +90,7 @@ class CipherKey {
    * @returns {CipherKey}
    */
   static decode(decoder) {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
+    //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     let key_bytes = null;
 

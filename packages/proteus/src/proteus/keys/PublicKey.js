@@ -17,6 +17,8 @@
  *
  */
 
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
+
 const CBOR = require('@wireapp/cbor');
 const ed2curve = require('ed2curve');
 const sodium = require('libsodium-wrappers-sumo');
@@ -47,8 +49,8 @@ class PublicKey {
    * @returns {keys.PublicKey} - `this`
    */
   static new(pub_edward, pub_curve) {
-    TypeUtil.assert_is_instance(Uint8Array, pub_edward);
-    TypeUtil.assert_is_instance(Uint8Array, pub_curve);
+    //TypeUtil.assert_is_instance(Uint8Array, pub_edward);
+    //TypeUtil.assert_is_instance(Uint8Array, pub_curve);
 
     /** @type {keys.PublicKey} */
     const pk = ClassUtil.new_instance(PublicKey);
@@ -66,7 +68,7 @@ class PublicKey {
    * @returns {boolean} - `true` if the signature is valid, `false` otherwise.
    */
   verify(signature, message) {
-    TypeUtil.assert_is_instance(Uint8Array, signature);
+    //TypeUtil.assert_is_instance(Uint8Array, signature);
     return sodium.crypto_sign_verify_detached(signature, message, this.pub_edward);
   }
 
@@ -90,7 +92,7 @@ class PublicKey {
    * @returns {keys.PublicKey}
    */
   static decode(decoder) {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
+    //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     const self = ClassUtil.new_instance(PublicKey);
 
@@ -105,7 +107,7 @@ class PublicKey {
       }
     }
 
-    TypeUtil.assert_is_instance(Uint8Array, self.pub_edward);
+    //TypeUtil.assert_is_instance(Uint8Array, self.pub_edward);
 
     self.pub_curve = ed2curve.convertPublicKey(self.pub_edward);
     return self;

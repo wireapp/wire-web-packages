@@ -17,6 +17,8 @@
  *
  */
 
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
+
 const sodium = require('libsodium-wrappers-sumo');
 
 const ArrayUtil = require('../util/ArrayUtil');
@@ -40,7 +42,7 @@ const KeyDerivationUtil = {
       if (typeof value === 'string') {
         return sodium.from_string(value);
       }
-      TypeUtil.assert_is_instance(Uint8Array, value);
+      //TypeUtil.assert_is_instance(Uint8Array, value);
       return value;
     };
 
@@ -48,7 +50,7 @@ const KeyDerivationUtil = {
     input = convert_type(input);
     info = convert_type(info);
 
-    TypeUtil.assert_is_integer(length);
+    //TypeUtil.assert_is_integer(length);
 
     const HASH_LEN = 32;
 

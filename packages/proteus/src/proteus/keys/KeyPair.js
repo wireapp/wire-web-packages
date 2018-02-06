@@ -18,10 +18,11 @@
  */
 
 /* eslint no-magic-numbers: "off" */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = require('@wireapp/cbor');
 const ed2curve = require('ed2curve');
-const sodium = require('libsodium-wrappers-sumo');
+const _sodium = require('libsodium-wrappers-sumo');
 
 const ClassUtil = require('../util/ClassUtil');
 const DontCallConstructor = require('../errors/DontCallConstructor');
@@ -48,7 +49,10 @@ class KeyPair {
   }
 
   /** @returns {KeyPair} - `this` */
-  static new() {
+  static async new() {
+    await _sodium.ready;
+    const sodium = _sodium;
+
     const ed25519_key_pair = sodium.crypto_sign_keypair();
 
     const kp = ClassUtil.new_instance(KeyPair);
@@ -108,7 +112,7 @@ class KeyPair {
    * @returns {KeyPair}
    */
   static decode(decoder) {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
+    //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     const self = ClassUtil.new_instance(KeyPair);
 
@@ -126,8 +130,8 @@ class KeyPair {
       }
     }
 
-    TypeUtil.assert_is_instance(SecretKey, self.secret_key);
-    TypeUtil.assert_is_instance(PublicKey, self.public_key);
+    //TypeUtil.assert_is_instance(SecretKey, self.secret_key);
+    //TypeUtil.assert_is_instance(PublicKey, self.public_key);
 
     return self;
   }

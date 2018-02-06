@@ -18,6 +18,7 @@
  */
 
 /* eslint no-magic-numbers: "off" */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = require('@wireapp/cbor');
 
@@ -51,8 +52,8 @@ class ChainKey {
    * @returns {ChainKey}
    */
   static from_mac_key(key, counter) {
-    TypeUtil.assert_is_instance(MacKey, key);
-    TypeUtil.assert_is_integer(counter);
+    //TypeUtil.assert_is_instance(MacKey, key);
+    //TypeUtil.assert_is_integer(counter);
 
     const ck = ClassUtil.new_instance(ChainKey);
     ck.key = key;
@@ -69,8 +70,8 @@ class ChainKey {
   }
 
   /** @returns {session.MessageKeys} */
-  message_keys() {
-    const base = this.key.sign('0');
+  async message_keys() {
+    const base = await this.key.sign('0');
     const derived_secrets = DerivedSecrets.kdf_without_salt(base, 'hash_ratchet');
     return MessageKeys.new(derived_secrets.cipher_key, derived_secrets.mac_key, this.idx);
   }
@@ -92,7 +93,7 @@ class ChainKey {
    * @returns {ChainKey}
    */
   static decode(decoder) {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
+    //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     const self = ClassUtil.new_instance(ChainKey);
 
@@ -110,8 +111,8 @@ class ChainKey {
       }
     }
 
-    TypeUtil.assert_is_instance(MacKey, self.key);
-    TypeUtil.assert_is_integer(self.idx);
+    //TypeUtil.assert_is_instance(MacKey, self.key);
+    //TypeUtil.assert_is_integer(self.idx);
 
     return self;
   }

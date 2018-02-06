@@ -18,6 +18,7 @@
  */
 
 /* eslint no-magic-numbers: "off" */
+/* eslint no-unused-vars: "off" */ // only until TypeUtil can be used again
 
 const CBOR = require('@wireapp/cbor');
 
@@ -62,11 +63,11 @@ class CipherMessage extends Message {
    * @returns {CipherMessage} - `this`
    */
   static new(session_tag, counter, prev_counter, ratchet_key, cipher_text) {
-    TypeUtil.assert_is_instance(SessionTag, session_tag);
-    TypeUtil.assert_is_integer(counter);
-    TypeUtil.assert_is_integer(prev_counter);
-    TypeUtil.assert_is_instance(PublicKey, ratchet_key);
-    TypeUtil.assert_is_instance(Uint8Array, cipher_text);
+    //TypeUtil.assert_is_instance(SessionTag, session_tag);
+    //TypeUtil.assert_is_integer(counter);
+    //TypeUtil.assert_is_integer(prev_counter);
+    //TypeUtil.assert_is_instance(PublicKey, ratchet_key);
+    //TypeUtil.assert_is_instance(Uint8Array, cipher_text);
 
     const cm = ClassUtil.new_instance(CipherMessage);
 
@@ -103,7 +104,7 @@ class CipherMessage extends Message {
    * @returns {CipherMessage}
    */
   static decode(decoder) {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
+    //TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
     let session_tag = null;
     let counter = null;
