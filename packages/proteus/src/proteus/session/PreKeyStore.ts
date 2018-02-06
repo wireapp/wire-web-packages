@@ -22,7 +22,7 @@ import PreKey from '../keys/PreKey';
 export default class PreKeyStore {
   public prekeys: Array<PreKey> = [];
 
-  get_prekey(prekey_id: number): Promise<PreKey> {
+  get_prekey(prekey_id: number): Promise<PreKey | undefined> {
     throw Error('Virtual function unimplemented');
   }
 

@@ -19,7 +19,7 @@
 
 /* eslint no-magic-numbers: "off" */
 
-const cryptobox = require('../../../dist/');
+const cryptobox = require('@wireapp/cryptobox');
 const fs = require('fs-extra');
 const LRUCache = require('@wireapp/lru-cache').default;
 const path = require('path');
@@ -45,7 +45,7 @@ describe('cryptobox.store.CryptoboxCRUDStore', () => {
   );
 
   describe('"delete_all"', () => {
-    fit('deletes everything from the storage', done => {
+    it('deletes everything from the storage', done => {
       let sessionWithBob;
       const alicePreKeys = Proteus.keys.PreKey.generate_prekeys(0, 10);
 

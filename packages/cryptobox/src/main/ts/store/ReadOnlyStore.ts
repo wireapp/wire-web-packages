@@ -7,9 +7,12 @@ import {CryptoboxStore} from '../store';
  */
 class ReadOnlyStore extends ProteusSession.PreKeyStore {
   private removePrekeys: Array<number> = [];
+  // TODO: Use "prekeys" from "PreKeyStore"
+  public prekeys: Array<ProteusKeys.PreKey> = [];
 
   constructor(private store: CryptoboxStore) {
     super();
+    this.prekeys = [];
   }
 
   /**
@@ -28,7 +31,7 @@ class ReadOnlyStore extends ProteusSession.PreKeyStore {
    * Returns a PreKey (if it's not marked for deletion) via the Cryptobox store.
    * @override
    */
-  get_prekey(prekey_id: number): Promise<ProteusKeys.PreKey> {
+  get_prekey(prekey_id: number): Promise<ProteusKeys.PreKey | undefined> {
     if (this.removePrekeys.indexOf(prekey_id) !== -1) {
       return Promise.reject(new Error(`PreKey "${prekey_id}" not found.`));
     }

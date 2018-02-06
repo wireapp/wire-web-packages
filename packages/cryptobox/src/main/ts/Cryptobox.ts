@@ -217,9 +217,10 @@ class Cryptobox extends EventEmitter {
     return Promise.resolve()
       .then(() => this.store.delete_all())
       .then(() => {
-        const identity = ProteusKeys.IdentityKeyPair.new();
+        return ProteusKeys.IdentityKeyPair.new();
+      })
+      .then((identity: ProteusKeys.IdentityKeyPair) => {
         this.logger.warn(`Cleaned cryptographic items prior to saving a new local identity.`, identity);
-
         return this.store.save_identity(identity);
       });
   }
@@ -284,14 +285,19 @@ class Cryptobox extends EventEmitter {
       return Promise.resolve(cachedSession);
     }
 
-    return this.store.read_session(this.identity, session_id).then((session: ProteusSession.Session) => {
-      const cryptobox_session = new CryptoboxSession(session_id, this.pk_store, session);
-      return this.save_session_in_cache(cryptobox_session);
-    });
+    if (this.identity) {
+      return this.store.read_session(this.identity, session_id).then((session: ProteusSession.Session) => {
+        const cryptobox_session = new CryptoboxSession(session_id, this.pk_store, session);
+        return this.save_session_in_cache(cryptobox_session);
+      });
+    }
+    throw new CryptoboxError('No local identity available.');
   }
 
   private session_cleanup(session: CryptoboxSession): Promise<CryptoboxSession> {
-    const preKeyDeletionPromises = this.pk_store.prekeys.map((preKeyId: number) => this.store.delete_prekey(preKeyId));
+    const preKeyDeletionPromises = this.pk_store.prekeys.map((pk: ProteusKeys.PreKey) =>
+      this.store.delete_prekey(pk.key_id)
+    );
 
     return Promise.all(preKeyDeletionPromises)
       .then((deletedPreKeyIds: Array<number>) => {
