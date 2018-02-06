@@ -35,7 +35,7 @@ export default class MessageKeys {
   constructor() {
     this.cipher_key = new CipherKey();
     this.counter = -1;
-    this.mac_key = new MacKey();
+    this.mac_key = new MacKey(new Uint8Array([]));
   }
 
   static new(cipher_key: CipherKey, mac_key: MacKey, counter: number): MessageKeys {

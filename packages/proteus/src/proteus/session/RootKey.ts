@@ -75,7 +75,7 @@ export default class RootKey {
   static decode(decoder: CBOR.Decoder): RootKey {
     TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
 
-    let cipher_key;
+    let cipher_key = null;
 
     const nprops = decoder.object();
     for (let index = 0; index <= nprops - 1; index++) {

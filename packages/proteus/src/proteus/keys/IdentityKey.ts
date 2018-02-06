@@ -18,7 +18,6 @@
  */
 
 import * as CBOR from '@wireapp/cbor';
-import * as sodium from 'libsodium-wrappers-sumo';
 
 import ClassUtil from '../util/ClassUtil';
 import TypeUtil from '../util/TypeUtil';

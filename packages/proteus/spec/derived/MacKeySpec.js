@@ -19,9 +19,11 @@
 
 /* eslint no-magic-numbers: "off" */
 
+/// <reference path="../../libsodium.d.ts" />
+
 const Proteus = require('@wireapp/proteus');
 const _sodium = require('libsodium-wrappers-sumo');
-let sodium;
+let sodium = _sodium;
 
 beforeAll(async () => {
   await _sodium.ready;
@@ -32,7 +34,7 @@ describe('Mac Key', () => {
   it('encodes a message', () => {
     const key_material_buffer = new ArrayBuffer(32);
     const typed_key_material = new Uint8Array(key_material_buffer);
-    const mac_key = Proteus.derived.MacKey.new(typed_key_material);
+    const mac_key = new Proteus.derived.MacKey(typed_key_material);
     const message = sodium.from_string('hello');
 
     const authentication_code = mac_key.sign(message);
@@ -73,5 +75,274 @@ describe('Mac Key', () => {
     ]);
 
     expect(authentication_code).toEqual(expected);
+  });
+
+  it('verifies correct data', () => {
+    const signature = new Uint8Array([
+      200,
+      47,
+      165,
+      205,
+      79,
+      32,
+      199,
+      25,
+      126,
+      101,
+      210,
+      67,
+      90,
+      11,
+      202,
+      247,
+      9,
+      67,
+      144,
+      173,
+      147,
+      174,
+      155,
+      244,
+      121,
+      55,
+      21,
+      198,
+      18,
+      27,
+      0,
+      99,
+    ]);
+
+    const msg = new Uint8Array([
+      1,
+      165,
+      0,
+      80,
+      82,
+      255,
+      214,
+      194,
+      215,
+      199,
+      190,
+      124,
+      44,
+      155,
+      253,
+      88,
+      108,
+      182,
+      97,
+      218,
+      1,
+      0,
+      2,
+      1,
+      3,
+      161,
+      0,
+      88,
+      32,
+      81,
+      164,
+      93,
+      189,
+      218,
+      73,
+      99,
+      191,
+      236,
+      250,
+      188,
+      97,
+      212,
+      13,
+      88,
+      41,
+      115,
+      127,
+      228,
+      229,
+      168,
+      46,
+      142,
+      241,
+      211,
+      60,
+      155,
+      78,
+      219,
+      59,
+      171,
+      17,
+      4,
+      66,
+      130,
+      57,
+    ]);
+
+    const key = new Uint8Array([
+      15,
+      61,
+      178,
+      141,
+      34,
+      114,
+      210,
+      82,
+      206,
+      161,
+      179,
+      78,
+      187,
+      60,
+      132,
+      17,
+      255,
+      23,
+      66,
+      215,
+      138,
+      84,
+      215,
+      117,
+      169,
+      50,
+      70,
+      165,
+      78,
+      243,
+      39,
+      242,
+    ]);
+
+    const mac_key = new Proteus.derived.MacKey(key);
+
+    expect(mac_key.verify(signature, msg)).toBe(true);
+  });
+
+  it('verifies a calculated signature', () => {
+    const msg = new Uint8Array([
+      1,
+      165,
+      0,
+      80,
+      82,
+      255,
+      214,
+      194,
+      215,
+      199,
+      190,
+      124,
+      44,
+      155,
+      253,
+      88,
+      108,
+      182,
+      97,
+      218,
+      1,
+      0,
+      2,
+      1,
+      3,
+      161,
+      0,
+      88,
+      32,
+      81,
+      164,
+      93,
+      189,
+      218,
+      73,
+      99,
+      191,
+      236,
+      250,
+      188,
+      97,
+      212,
+      13,
+      88,
+      41,
+      115,
+      127,
+      228,
+      229,
+      168,
+      46,
+      142,
+      241,
+      211,
+      60,
+      155,
+      78,
+      219,
+      59,
+      171,
+      17,
+      4,
+      66,
+      130,
+      57,
+    ]);
+
+    const key = new Uint8Array([
+      15,
+      61,
+      178,
+      141,
+      34,
+      114,
+      210,
+      82,
+      206,
+      161,
+      179,
+      78,
+      187,
+      60,
+      132,
+      17,
+      255,
+      23,
+      66,
+      215,
+      138,
+      84,
+      215,
+      117,
+      169,
+      50,
+      70,
+      165,
+      78,
+      243,
+      39,
+      242,
+    ]);
+
+    const mac_key = new Proteus.derived.MacKey(key);
+
+    const signature = mac_key.sign(msg);
+
+    expect(mac_key.verify(signature, msg)).toBe(true);
+  });
+
+  it('verifies calculated data', async done => {
+    try {
+      const mac_key = new Proteus.derived.MacKey(new Uint8Array(32).fill(1));
+      const msg = sodium.from_string('This is my great message in Proteus!');
+      const signature = mac_key.sign(msg);
+
+      expect(mac_key.verify(signature, msg)).toBe(true);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      done();
+    }
   });
 });

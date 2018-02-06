@@ -34,7 +34,7 @@ export default class ChainKey {
 
   constructor() {
     this.idx = -1;
-    this.key = new MacKey();
+    this.key = new MacKey(new Uint8Array([]));
   }
 
   static from_mac_key(key: MacKey, counter: number): ChainKey {
@@ -49,7 +49,7 @@ export default class ChainKey {
 
   next(): ChainKey {
     const ck = ClassUtil.new_instance<ChainKey>(ChainKey);
-    ck.key = MacKey.new(this.key.sign('1'));
+    ck.key = new MacKey(this.key.sign('1'));
     ck.idx = this.idx + 1;
     return ck;
   }

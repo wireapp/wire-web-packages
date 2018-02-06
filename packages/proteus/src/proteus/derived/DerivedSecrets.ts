@@ -32,7 +32,7 @@ export default class DerivedSecrets {
 
   constructor() {
     this.cipher_key = new CipherKey();
-    this.mac_key = new MacKey();
+    this.mac_key = new MacKey(new Uint8Array([]));
   }
 
   static kdf(input: Uint8Array | Array<ArrayBuffer>, salt: Uint8Array, info: string): DerivedSecrets {
@@ -47,7 +47,7 @@ export default class DerivedSecrets {
 
     const ds = ClassUtil.new_instance<DerivedSecrets>(DerivedSecrets);
     ds.cipher_key = CipherKey.new(cipher_key);
-    ds.mac_key = MacKey.new(mac_key);
+    ds.mac_key = new MacKey(mac_key);
     return ds;
   }
 
