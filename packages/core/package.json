@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@types/node": "9.3.0",
+    "@types/node": "9.4.1",
     "@wireapp/api-client": "0.3.3",
     "@wireapp/cryptobox": "6.3.7",
     "@wireapp/protocol-messaging": "1.20.0",
