@@ -470,5 +470,105 @@ describe('Session', () => {
         done();
       }
     });
+
+    it('skips message keys', async done => {
+      const alice_ident = await Proteus.keys.IdentityKeyPair.new();
+      const alice_store = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10));
+
+      const bob_ident = await Proteus.keys.IdentityKeyPair.new();
+      const bob_store = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10));
+
+      const bob_prekey = await bob_store.get_prekey(0);
+      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
+
+      const alice = await Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle);
+
+      const hello_bob_plaintext = 'Hello Bob!';
+      const hello_bob_encrypted = await alice.encrypt(hello_bob_plaintext);
+
+      let state = alice.session_states[alice.session_tag.toString()].state;
+      expect(state.recv_chains.length).toBe(1);
+      expect(state.recv_chains[0].chain_key.idx).toBe(0);
+      expect(state.send_chain.chain_key.idx).toBe(1);
+      expect(state.recv_chains[0].message_keys.length).toBe(0);
+
+      const bob = await assert_init_from_message(bob_ident, bob_store, hello_bob_encrypted, hello_bob_plaintext);
+
+      state = bob.session_states[bob.session_tag.toString()].state;
+      expect(state.recv_chains.length).toBe(1);
+      expect(state.recv_chains[0].chain_key.idx).toBe(1);
+      expect(state.send_chain.chain_key.idx).toBe(0);
+      expect(state.recv_chains[0].message_keys.length).toBe(0);
+
+      const hello_alice0_plaintext = 'Hello0';
+      const hello_alice0_encrypted = await bob.encrypt(hello_alice0_plaintext);
+
+      bob.encrypt('Hello1'); // unused result
+
+      const hello_alice2_plaintext = 'Hello2';
+      const hello_alice2_encrypted = await bob.encrypt(hello_alice2_plaintext);
+
+      const hello_alice2_decrypted = await alice.decrypt(alice_store, hello_alice2_encrypted);
+      expect(sodium.to_string(hello_alice2_decrypted)).toBe(hello_alice2_plaintext);
+
+      // Alice has two skipped message keys in her new receive chain:
+      state = alice.session_states[alice.session_tag.toString()].state;
+      expect(state.recv_chains.length).toBe(2);
+      expect(state.recv_chains[0].chain_key.idx).toBe(3);
+      expect(state.send_chain.chain_key.idx).toBe(0);
+      expect(state.recv_chains[0].message_keys.length).toBe(2);
+      expect(state.recv_chains[0].message_keys[0].counter).toBe(0);
+      expect(state.recv_chains[0].message_keys[1].counter).toBe(1);
+
+      const hello_bob0_plaintext = 'Hello0';
+      const hello_bob0_encrypted = await alice.encrypt(hello_bob0_plaintext);
+
+      const hello_bob0_decrypted = await bob.decrypt(bob_store, hello_bob0_encrypted);
+      expect(sodium.to_string(hello_bob0_decrypted)).toBe(hello_bob0_plaintext);
+
+      // For Bob everything is normal still. A new message from Alice means a
+      // new receive chain has been created and again no skipped message keys.
+
+      state = bob.session_states[bob.session_tag.toString()].state;
+      expect(state.recv_chains.length).toBe(2);
+      expect(state.recv_chains[0].chain_key.idx).toBe(1);
+      expect(state.send_chain.chain_key.idx).toBe(0);
+      expect(state.recv_chains[0].message_keys.length).toBe(0);
+
+      const hello_alice0_decrypted = await alice.decrypt(alice_store, hello_alice0_encrypted);
+      expect(sodium.to_string(hello_alice0_decrypted)).toBe(hello_alice0_plaintext);
+
+      // Alice received the first of the two missing messages. Therefore
+      // only one message key is still skipped (counter value = 1).
+
+      state = alice.session_states[alice.session_tag.toString()].state;
+      expect(state.recv_chains.length).toBe(2);
+      expect(state.recv_chains[0].message_keys.length).toBe(1);
+      expect(state.recv_chains[0].message_keys[0].counter).toBe(1);
+
+      const hello_again0_plaintext = 'Again0';
+      const hello_again0_encrypted = await bob.encrypt(hello_again0_plaintext);
+
+      const hello_again1_plaintext = 'Again1';
+      const hello_again1_encrypted = await bob.encrypt(hello_again1_plaintext);
+
+      const hello_again1_decrypted = await alice.decrypt(alice_store, hello_again1_encrypted);
+      expect(sodium.to_string(hello_again1_decrypted)).toBe(hello_again1_plaintext);
+
+      // Alice received the first of the two missing messages. Therefore
+      // only one message key is still skipped (counter value = 1).
+
+      state = alice.session_states[alice.session_tag.toString()].state;
+      expect(state.recv_chains.length).toBe(3);
+      expect(state.recv_chains[0].message_keys.length).toBe(1);
+      expect(state.recv_chains[1].message_keys.length).toBe(1);
+      expect(state.recv_chains[0].message_keys[0].counter).toBe(0);
+      expect(state.recv_chains[1].message_keys[0].counter).toBe(1);
+
+      const hello_again0_decrypted = await alice.decrypt(alice_store, hello_again0_encrypted);
+      expect(sodium.to_string(hello_again0_decrypted)).toBe(hello_again0_plaintext);
+
+      done();
+    });
   });
 });
