@@ -143,6 +143,7 @@ export class Session {
           session._insert_session_state(pkmsg.message.session_tag, state);
 
           if (pkmsg.prekey_id < PreKey.MAX_PREKEY_ID) {
+            // TODO: Zeroize should be tested (and awaited) here!
             MemoryUtil.zeroize(prekey_store.get_prekey(pkmsg.prekey_id));
             return prekey_store
               .remove(pkmsg.prekey_id)
@@ -286,6 +287,7 @@ export class Session {
             const plaintext = await state.decrypt(envelope, msg.message);
 
             if (msg.prekey_id !== PreKey.MAX_PREKEY_ID) {
+              // TODO: Zeroize should be tested (and awaited) here!
               MemoryUtil.zeroize(prekey_store.get_prekey(msg.prekey_id));
               prekey_store.remove(msg.prekey_id);
             }
