@@ -80,41 +80,6 @@ const assert_decrypt = (/** @type {string} */ expected, /** @type {Promise<Uint8
 };
 
 describe('Session', () => {
-  it('should fail retry init from message', async done => {
-    const [alice_ident, bob_ident] = await Promise.all([0, 1].map(() => Proteus.keys.IdentityKeyPair.new()));
-    const bob_store = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10));
-
-    const bob_prekey = bob_store.prekeys[0];
-    const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
-
-    let alice = null;
-    let hello_bob = null;
-
-    return Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle)
-      .then(session => {
-        alice = session;
-        return alice.encrypt('Hello Bob!');
-      })
-      .then(message => {
-        hello_bob = message;
-        return assert_init_from_message(bob_ident, bob_store, hello_bob, 'Hello Bob!');
-      })
-      .then(session => {
-        return Proteus.session.Session.init_from_message(bob_ident, bob_store, hello_bob);
-      })
-      .then(() => assert.fail('should have thrown Proteus.errors.ProteusError'))
-      .catch(err => {
-        assert.instanceOf(err, Proteus.errors.ProteusError);
-        assert.strictEqual(err.code, Proteus.errors.ProteusError.CODE.CASE_101);
-      })
-      .then(() => {
-        done();
-      })
-      .catch(err => {
-        done(err);
-      });
-  });
-
   it('skipped message keys', async done => {
     const [alice_ident, bob_ident] = await Promise.all([0, 1].map(() => Proteus.keys.IdentityKeyPair.new()));
     const [alice_store, bob_store] = await Promise.all(
