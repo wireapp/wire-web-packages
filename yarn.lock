@@ -1277,10 +1277,6 @@ binary-extensions@^1.0.0:
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-1.11.0.tgz#46aa1751fb6a2f93ee5e689bb1087d4b14c6c205"
 
-binaryextensions@~1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/binaryextensions/-/binaryextensions-1.0.1.tgz#1e637488b35b58bda5f4774bf96a5212a8c90755"
-
 bl@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/bl/-/bl-1.1.2.tgz#fdca871a99713aa00d19e3bbba41c44787a65398"
@@ -2809,7 +2805,7 @@ duplexer@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/duplexer/-/duplexer-0.1.1.tgz#ace6ff808c1ce66b57d1ebf97977acb02334cfc1"
 
-duplexify@^3.2.0, duplexify@^3.5.0:
+duplexify@^3.2.0:
   version "3.5.1"
   resolved "https://registry.yarnpkg.com/duplexify/-/duplexify-3.5.1.tgz#4e1516be68838bc90a49994f0b39a6e5960befcd"
   dependencies:
@@ -3089,7 +3085,7 @@ escape-string-regexp@1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.2.tgz#4dbc2fe674e71949caf3fb2695ce7f2dc1d9a8d1"
 
-escape-string-regexp@^1.0.0, escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.3, escape-string-regexp@^1.0.5, escape-string-regexp@~1.0.5:
+escape-string-regexp@^1.0.0, escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.5, escape-string-regexp@~1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
 
@@ -3721,10 +3717,6 @@ forever-agent@~0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/forever-agent/-/forever-agent-0.6.1.tgz#fbc71f0c41adeb37f96c577ad1ed42d8fdacca91"
 
-fork-stream@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/fork-stream/-/fork-stream-0.0.4.tgz#db849fce77f6708a5f8f386ae533a0907b54ae70"
-
 form-data@~2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/form-data/-/form-data-2.0.0.tgz#6f0aebadcc5da16c13e1ecc11137d85f9b883b25"
@@ -4272,14 +4264,6 @@ gulp-eslint@4.0.2:
     fancy-log "^1.3.2"
     plugin-error "^1.0.0"
 
-gulp-if@2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/gulp-if/-/gulp-if-2.0.2.tgz#a497b7e7573005041caa2bc8b7dda3c80444d629"
-  dependencies:
-    gulp-match "^1.0.3"
-    ternary-stream "^2.0.1"
-    through2 "^2.0.1"
-
 gulp-jasmine@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/gulp-jasmine/-/gulp-jasmine-3.0.0.tgz#0131486f0cd59affeda18e00c643992a9196963b"
@@ -4290,12 +4274,6 @@ gulp-jasmine@3.0.0:
     plugin-error "^0.1.2"
     through2 "^2.0.0"
 
-gulp-match@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/gulp-match/-/gulp-match-1.0.3.tgz#91c7c0d7f29becd6606d57d80a7f8776a87aba8e"
-  dependencies:
-    minimatch "^3.0.3"
-
 gulp-plumber@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/gulp-plumber/-/gulp-plumber-1.2.0.tgz#18ea03912c9ee483f8a5499973b5954cd90f6ad8"
@@ -4304,14 +4282,6 @@ gulp-plumber@1.2.0:
     fancy-log "^1.3.2"
     plugin-error "^0.1.2"
     through2 "^2.0.3"
-
-gulp-replace@0.6.1:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/gulp-replace/-/gulp-replace-0.6.1.tgz#11bf8c8fce533e33e2f6a8f2f430b955ba0be066"
-  dependencies:
-    istextorbinary "1.0.2"
-    readable-stream "^2.0.1"
-    replacestream "^4.0.0"
 
 gulp-sass@3.1.0:
   version "3.1.0"
@@ -5270,13 +5240,6 @@ istanbul@0.4.5:
     supports-color "^3.1.0"
     which "^1.1.1"
     wordwrap "^1.0.0"
-
-istextorbinary@1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/istextorbinary/-/istextorbinary-1.0.2.tgz#ace19354d1a9a0173efeb1084ce0f87b0ad7decf"
-  dependencies:
-    binaryextensions "~1.0.0"
-    textextensions "~1.0.0"
 
 jade@0.26.3:
   version "0.26.3"
@@ -6341,7 +6304,7 @@ minimatch@0.3:
     lru-cache "2"
     sigmund "~1.0.0"
 
-"minimatch@2 || 3", minimatch@^3.0.0, minimatch@^3.0.2, minimatch@^3.0.3, minimatch@^3.0.4, minimatch@~3.0.2:
+"minimatch@2 || 3", minimatch@^3.0.0, minimatch@^3.0.2, minimatch@^3.0.4, minimatch@~3.0.2:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.0.4.tgz#5166e286457f03306064be5497e8dbb0c3d32083"
   dependencies:
@@ -7847,14 +7810,6 @@ replace-ext@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/replace-ext/-/replace-ext-1.0.0.tgz#de63128373fcbf7c3ccfa4de5a480c45a67958eb"
 
-replacestream@^4.0.0:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/replacestream/-/replacestream-4.0.3.tgz#3ee5798092be364b1cdb1484308492cb3dff2f36"
-  dependencies:
-    escape-string-regexp "^1.0.3"
-    object-assign "^4.0.1"
-    readable-stream "^2.0.2"
-
 request@2, request@^2.0.0, request@^2.74.0, request@^2.79.0:
   version "2.83.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.83.0.tgz#ca0b65da02ed62935887808e6f510381034e3356"
@@ -9056,15 +9011,6 @@ tempfile@^1.1.1:
     os-tmpdir "^1.0.0"
     uuid "^2.0.1"
 
-ternary-stream@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/ternary-stream/-/ternary-stream-2.0.1.tgz#064e489b4b5bf60ba6a6b7bc7f2f5c274ecf8269"
-  dependencies:
-    duplexify "^3.5.0"
-    fork-stream "^0.0.4"
-    merge-stream "^1.0.0"
-    through2 "^2.0.1"
-
 text-encoding@^0.6.4:
   version "0.6.4"
   resolved "https://registry.yarnpkg.com/text-encoding/-/text-encoding-0.6.4.tgz#e399a982257a276dae428bb92845cb71bdc26d19"
@@ -9076,10 +9022,6 @@ text-extensions@^1.0.0:
 text-table@~0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
-
-textextensions@~1.0.0:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/textextensions/-/textextensions-1.0.2.tgz#65486393ee1f2bb039a60cbba05b0b68bd9501d2"
 
 tfunk@^3.0.1:
   version "3.1.0"

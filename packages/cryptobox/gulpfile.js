@@ -23,13 +23,11 @@ const bower = require('gulp-bower');
 const browserSync = require('browser-sync').create();
 const clean = require('gulp-clean');
 const gulp = require('gulp');
-const gulpif = require('gulp-if');
 const gutil = require('gulp-util');
 const jasmine = require('gulp-jasmine');
 const karma = require('karma');
 const merge = require('merge2');
 const ProgressPlugin = require('webpack/lib/ProgressPlugin');
-const replace = require('gulp-replace');
 const runSequence = require('run-sequence');
 const ts = require('gulp-typescript');
 const tsProjectNode = ts.createProject('tsconfig.json');
@@ -77,14 +75,7 @@ gulp.task('build_ts_node', () => {
 
   gutil.log(gutil.colors.yellow(`Disable log statements: ${disableLogging}`));
 
-  return merge([
-    tsResult.dts.pipe(gulp.dest('dist/')),
-    tsResult.js
-      .pipe(replace('exports.default = {', 'module.exports = {'))
-      .pipe(gulpif(disableLogging, replace(/(const|var) Logdown[^\n]*/gi, '')))
-      .pipe(gulpif(disableLogging, replace(/[_]?this.logger[^\n]*/gim, '')))
-      .pipe(gulp.dest('dist/commonjs')),
-  ]);
+  return merge([tsResult.dts.pipe(gulp.dest('dist/')), tsResult.js.pipe(gulp.dest('dist/commonjs'))]);
 });
 
 gulp.task('default', ['dist'], () => {
