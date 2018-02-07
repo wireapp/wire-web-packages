@@ -5256,6 +5256,10 @@ jasmine-core@~2.9.0:
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-2.9.0.tgz#bfbb56defcd30789adec5a3fbba8504233289c72"
 
+jasmine-core@~3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-3.0.0.tgz#8cdb20cf336b1b86830edc58b1a8aac47455e94c"
+
 jasmine-terminal-reporter@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/jasmine-terminal-reporter/-/jasmine-terminal-reporter-1.0.3.tgz#896f1ec8fdf4bf6aecdd41c503eda7347f61526b"
@@ -5270,6 +5274,13 @@ jasmine@2.9.0:
     exit "^0.1.2"
     glob "^7.0.6"
     jasmine-core "~2.9.0"
+
+jasmine@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/jasmine/-/jasmine-3.0.0.tgz#e3d9476c0faf937d0f6982f73c847e5176eab1b5"
+  dependencies:
+    glob "^7.0.6"
+    jasmine-core "~3.0.0"
 
 jasmine@^2.8.0:
   version "2.8.0"

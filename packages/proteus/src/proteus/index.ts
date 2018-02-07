@@ -20,15 +20,18 @@
 /* eslint sort-keys: "off" */
 
 import ArrayUtil from './util/ArrayUtil';
+import CipherKey from './derived/CipherKey';
 import CipherMessage from './message/CipherMessage';
 import DecodeError from './errors/DecodeError';
 import DecryptError from './errors/DecryptError';
+import DerivedSecrets from './derived/DerivedSecrets';
 import Envelope from './message/Envelope';
 import IdentityKey from './keys/IdentityKey';
 import IdentityKeyPair from './keys/IdentityKeyPair';
 import InputError from './errors/InputError';
 import KeyDerivationUtil from './util/KeyDerivationUtil';
 import KeyPair from './keys/KeyPair';
+import MacKey from './derived/MacKey';
 import MemoryUtil from './util/MemoryUtil';
 import Message from './message/Message';
 import PreKey from './keys/PreKey';
@@ -42,9 +45,6 @@ import SecretKey from './keys/SecretKey';
 import Session from './session/Session';
 import SessionTag from './message/SessionTag';
 import TypeUtil from './util/TypeUtil';
-import DerivedSecrets from './derived/DerivedSecrets';
-import CipherKey from './derived/CipherKey';
-import MacKey from './derived/MacKey';
 
 export = {
   derived: {

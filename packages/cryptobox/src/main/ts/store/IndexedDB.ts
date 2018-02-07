@@ -11,7 +11,7 @@ export interface DexieInstance extends Dexie {
 }
 
 class IndexedDB implements CryptoboxStore {
-  public identity: ProteusKeys.IdentityKeyPair;
+  public identity: ProteusKeys.IdentityKeyPair | undefined;
 
   private db: DexieInstance;
   private prekeys: {[index: string]: ProteusKeys.PreKey} = {};

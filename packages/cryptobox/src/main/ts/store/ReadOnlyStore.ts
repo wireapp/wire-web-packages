@@ -1,15 +1,18 @@
 import * as ProteusKeys from '@wireapp/proteus/dist/keys/';
 import * as ProteusSession from '@wireapp/proteus/dist/session/';
 import {CryptoboxStore} from '../store';
+import PreKey from '../../../../../proteus/dist/keys/PreKey';
 
 /**
  * This store holds IDs of PreKeys which should be deleted.
  */
-class ReadOnlyStore extends ProteusSession.PreKeyStore {
-  public prekeysThatShouldBeRemoved: Array<number> = [];
+class ReadOnlyStore implements ProteusSession.PreKeyStore {
+  public prekeys: Array<number> = [];
 
-  constructor(private store: CryptoboxStore) {
-    super();
+  constructor(private store: CryptoboxStore) {}
+
+  public get_prekeys(): Promise<ProteusKeys.PreKey[]> {
+    return this.store.load_prekeys();
   }
 
   /**
@@ -17,9 +20,9 @@ class ReadOnlyStore extends ProteusSession.PreKeyStore {
    */
   public release_prekeys(deletedPreKeyIds: Array<number>): void {
     deletedPreKeyIds.forEach((id: number) => {
-      const index: number = this.prekeysThatShouldBeRemoved.indexOf(id);
+      const index: number = this.prekeys.indexOf(id);
       if (index > -1) {
-        this.prekeysThatShouldBeRemoved.splice(index, 1);
+        this.prekeys.splice(index, 1);
       }
     });
   }
@@ -29,7 +32,7 @@ class ReadOnlyStore extends ProteusSession.PreKeyStore {
    * @override
    */
   get_prekey(prekey_id: number): Promise<ProteusKeys.PreKey | undefined> {
-    if (this.prekeysThatShouldBeRemoved.indexOf(prekey_id) !== -1) {
+    if (this.prekeys.indexOf(prekey_id) !== -1) {
       return Promise.reject(new Error(`PreKey "${prekey_id}" not found.`));
     }
     return this.store.load_prekey(prekey_id);
@@ -40,7 +43,7 @@ class ReadOnlyStore extends ProteusSession.PreKeyStore {
    * @override
    */
   remove(prekey_id: number): Promise<void> {
-    this.prekeysThatShouldBeRemoved.push(prekey_id);
+    this.prekeys.push(prekey_id);
     return Promise.resolve();
   }
 }

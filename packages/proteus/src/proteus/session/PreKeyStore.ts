@@ -19,16 +19,10 @@
 
 import PreKey from '../keys/PreKey';
 
-class PreKeyStore {
-  public prekeys: Array<PreKey> = [];
-
-  get_prekey(prekey_id: number): Promise<PreKey | undefined> {
-    throw Error('Virtual function unimplemented');
-  }
-
-  remove(prekey_id: number): Promise<void> {
-    throw Error('Virtual function unimplemented');
-  }
+abstract class PreKeyStore {
+  abstract get_prekeys(): Promise<PreKey[]>;
+  abstract get_prekey(prekey_id: number): Promise<PreKey | undefined>;
+  abstract remove(prekey_id: number): Promise<void>;
 }
 
 export default PreKeyStore;

@@ -26,7 +26,7 @@ const path = require('path');
 const Proteus = require('@wireapp/proteus');
 const {FileEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
 
-// gulp test_node --file "node/store/CryptoboxCRUDStoreSpec.js"
+// gulp test_node --file "node/store/CryptoboxCRUDStoreSpec.node.js"
 describe('cryptobox.store.CryptoboxCRUDStore', () => {
   let storagePath = undefined;
   let fileStore = undefined;
@@ -121,8 +121,11 @@ describe('cryptobox.store.CryptoboxCRUDStore', () => {
   });
 
   describe('"save_prekeys"', () => {
-    it('saves multiple PreKeys', done => {
-      const preKeys = [Proteus.keys.PreKey.new(0), Proteus.keys.PreKey.new(Proteus.keys.PreKey.MAX_PREKEY_ID)];
+    it('saves multiple PreKeys', async done => {
+      const preKeys = await Promise.all([
+        Proteus.keys.PreKey.new(0),
+        Proteus.keys.PreKey.new(Proteus.keys.PreKey.MAX_PREKEY_ID),
+      ]);
 
       fileStore
         .save_prekeys(preKeys)

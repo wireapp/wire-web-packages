@@ -295,11 +295,14 @@ class Cryptobox extends EventEmitter {
   }
 
   private session_cleanup(session: CryptoboxSession): Promise<CryptoboxSession> {
-    const preKeyDeletionPromises = this.pk_store.prekeys.map((pk: ProteusKeys.PreKey) =>
-      this.store.delete_prekey(pk.key_id)
-    );
-
-    return Promise.all(preKeyDeletionPromises)
+    // TODO: Check if the code should be reverted to:
+    // const preKeyDeletionPromises = this.pk_store.prekeys.map((pk: ProteusKeys.PreKey) =>
+    return this.pk_store
+      .get_prekeys()
+      .then((pks: ProteusKeys.PreKey[]) => {
+        const preKeyDeletionPromises = pks.map((pk: ProteusKeys.PreKey) => this.store.delete_prekey(pk.key_id));
+        return Promise.all(preKeyDeletionPromises);
+      })
       .then((deletedPreKeyIds: Array<number>) => {
         // Remove PreKey from cache
         this.cachedPreKeys = this.cachedPreKeys.filter(

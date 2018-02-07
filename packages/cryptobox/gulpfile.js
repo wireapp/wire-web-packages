@@ -129,7 +129,7 @@ gulp.task('test_browser', done => {
         // Application
         'dist/window/**/*.js',
         // Tests
-        file ? `test/${file}` : 'test/{browser,common}/**/*Spec.js',
+        file ? `test/${file}` : 'test/**/*Spec.{browser,common}.js',
       ],
       logLevel: file ? 'debug' : 'info',
     },
