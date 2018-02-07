@@ -366,5 +366,86 @@ describe('Session', () => {
         done();
       }
     });
+
+    it('handles simultaneous repeated messages', async done => {
+      const alice_ident = await Proteus.keys.IdentityKeyPair.new();
+      const alice_store = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10));
+
+      const bob_ident = await Proteus.keys.IdentityKeyPair.new();
+      const bob_store = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10));
+
+      const bob_prekey = await bob_store.get_prekey(0);
+      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
+
+      const alice_prekey = await alice_store.get_prekey(0);
+      const alice_bundle = Proteus.keys.PreKeyBundle.new(alice_ident.public_key, alice_prekey);
+
+      const alice = await Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle);
+      const hello_bob_plaintext = 'Hello Bob!';
+      const hello_bob_encrypted = await alice.encrypt(hello_bob_plaintext);
+
+      const bob = await Proteus.session.Session.init_from_prekey(bob_ident, alice_bundle);
+      const hello_alice_plaintext = 'Hello Alice!';
+      const hello_alice_encrypted = await bob.encrypt(hello_alice_plaintext);
+
+      expect(alice.session_tag.toString()).not.toEqual(bob.session_tag.toString());
+
+      const hello_bob_decrypted = await bob.decrypt(bob_store, hello_bob_encrypted);
+      expect(sodium.to_string(hello_bob_decrypted)).toBe(hello_bob_plaintext);
+
+      const hello_alice_decrypted = await alice.decrypt(alice_store, hello_alice_encrypted);
+      expect(sodium.to_string(hello_alice_decrypted)).toBe(hello_alice_plaintext);
+
+      const echo_bob1_plaintext = 'Echo Bob1!';
+      const echo_bob1_encrypted = await alice.encrypt(echo_bob1_plaintext);
+
+      const echo_alice1_plaintext = 'Echo Alice1!';
+      const echo_alice1_encrypted = await bob.encrypt(echo_alice1_plaintext);
+
+      const echo_bob1_decrypted = await bob.decrypt(bob_store, echo_bob1_encrypted);
+      expect(sodium.to_string(echo_bob1_decrypted)).toBe(echo_bob1_plaintext);
+      expect(Object.keys(bob.session_states).length).toBe(2);
+
+      const echo_alice1_decrypted = await alice.decrypt(alice_store, echo_alice1_encrypted);
+      expect(sodium.to_string(echo_alice1_decrypted)).toBe(echo_alice1_plaintext);
+      expect(Object.keys(alice.session_states).length).toBe(2);
+
+      const echo_bob2_plaintext = 'Echo Bob2!';
+      const echo_bob2_encrypted = await alice.encrypt(echo_bob2_plaintext);
+
+      const echo_alice2_plaintext = 'Echo Alice2!';
+      const echo_alice2_encrypted = await bob.encrypt(echo_alice2_plaintext);
+
+      const echo_bob2_decrypted = await bob.decrypt(bob_store, echo_bob2_encrypted);
+      expect(sodium.to_string(echo_bob2_decrypted)).toBe(echo_bob2_plaintext);
+      expect(Object.keys(bob.session_states).length).toBe(2);
+
+      const echo_alice2_decrypted = await alice.decrypt(alice_store, echo_alice2_encrypted);
+      expect(sodium.to_string(echo_alice2_decrypted)).toBe(echo_alice2_plaintext);
+      expect(Object.keys(alice.session_states).length).toBe(2);
+
+      expect(alice.session_tag.toString()).not.toEqual(bob.session_tag.toString());
+
+      const stop_it_plaintext = 'Stop it!';
+      const stop_it_encrypted = await alice.encrypt(stop_it_plaintext);
+
+      const stop_it_decrypted = await bob.decrypt(bob_store, stop_it_encrypted);
+      expect(sodium.to_string(stop_it_decrypted)).toBe(stop_it_plaintext);
+      expect(Object.keys(bob.session_states).length).toBe(2);
+
+      const ok_plaintext = 'OK';
+      const ok_encrypted = await bob.encrypt(ok_plaintext);
+
+      const ok_decrypted = await alice.decrypt(alice_store, ok_encrypted);
+      expect(sodium.to_string(ok_decrypted)).toBe(ok_plaintext);
+      expect(Object.keys(alice.session_states).length).toBe(2);
+
+      expect(alice.session_tag.toString()).toEqual(bob.session_tag.toString());
+
+      assert_serialise_deserialise(alice_ident, alice);
+      assert_serialise_deserialise(bob_ident, bob);
+
+      done();
+    });
   });
 });
