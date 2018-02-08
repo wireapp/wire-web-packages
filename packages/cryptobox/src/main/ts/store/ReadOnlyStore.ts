@@ -1,7 +1,6 @@
 import * as ProteusKeys from '@wireapp/proteus/dist/keys/';
 import * as ProteusSession from '@wireapp/proteus/dist/session/';
 import {CryptoboxStore} from '../store';
-import PreKey from '../../../../../proteus/dist/keys/PreKey';
 
 /**
  * This store holds IDs of PreKeys which should be deleted.
