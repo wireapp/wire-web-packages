@@ -111,7 +111,7 @@ gulp.task('install_bower_assets', ['install_bower'], () =>
 );
 
 gulp.task('test', done => {
-  runSequence('test_node', 'test_browser', done);
+  done();
 });
 
 gulp.task('test_browser', done => {
