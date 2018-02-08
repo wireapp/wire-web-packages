@@ -570,5 +570,43 @@ describe('Session', () => {
 
       done();
     });
+
+    it('replaces prekeys', async done => {
+      const alice_ident = await Proteus.keys.IdentityKeyPair.new();
+
+      const bob_ident = await Proteus.keys.IdentityKeyPair.new();
+      const bob_store1 = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10));
+      const bob_store2 = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10));
+
+      const bob_prekey = await bob_store1.get_prekey(0);
+      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
+
+      const alice = await Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle);
+
+      const hello_bob1_plaintext = 'Hello Bob!';
+      const hello_bob1_encrypted = await alice.encrypt(hello_bob1_plaintext);
+
+      const bob = await assert_init_from_message(bob_ident, bob_store1, hello_bob1_encrypted, hello_bob1_plaintext);
+
+      expect(Object.keys(bob.session_states).length).toBe(1);
+
+      const hello_bob2_plaintext = 'Hello Bob2!';
+      const hello_bob2_encrypted = await alice.encrypt(hello_bob2_plaintext);
+
+      const hello_bob2_decrypted = await bob.decrypt(bob_store1, hello_bob2_encrypted);
+      expect(sodium.to_string(hello_bob2_decrypted)).toBe(hello_bob2_plaintext);
+
+      expect(Object.keys(bob.session_states).length).toBe(1);
+
+      const hello_bob3_plaintext = 'Hello Bob3!';
+      const hello_bob3_encrypted = await alice.encrypt(hello_bob3_plaintext);
+
+      const hello_bob3_decrypted = await bob.decrypt(bob_store2, hello_bob3_encrypted);
+      expect(sodium.to_string(hello_bob3_decrypted)).toBe(hello_bob3_plaintext);
+
+      expect(Object.keys(bob.session_states).length).toBe(1);
+
+      done();
+    });
   });
 });
