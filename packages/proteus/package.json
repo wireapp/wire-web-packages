@@ -30,6 +30,6 @@
     "test:node": "jasmine",
     "test:longrunning": "jasmine --config=spec/support/jasmine.longrunning.json"
   },
-  "types": "dist/commonjs/index.d.ts",
+  "types": "dist/index.d.ts",
   "version": "5.3.3"
 }
