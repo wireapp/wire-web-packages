@@ -24,7 +24,6 @@ const browserSync = require('browser-sync').create();
 const clean = require('gulp-clean');
 const gulp = require('gulp');
 const gutil = require('gulp-util');
-const jasmine = require('gulp-jasmine');
 const karma = require('karma');
 const merge = require('merge2');
 const ProgressPlugin = require('webpack/lib/ProgressPlugin');
@@ -137,25 +136,4 @@ gulp.task('test_browser', done => {
   );
 
   server.start();
-});
-
-gulp.task('test_node', () => {
-  const filePosition = 4;
-
-  gutil.log(gutil.colors.yellow('Running tests on Node.js:'));
-
-  const file = process.argv[filePosition];
-
-  let tests = ['test/common/**/*Spec.js', 'test/node/**/*Spec.js'];
-
-  if (file) {
-    tests = [`test/${file}`];
-  }
-
-  return gulp.src(tests).pipe(
-    jasmine({
-      random: true,
-      stopSpecOnExpectationFailure: true,
-    })
-  );
 });

@@ -19,7 +19,6 @@
     "gulp-clean": "0.4.0",
     "gulp-concat": "2.6.1",
     "gulp-eslint": "4.0.2",
-    "gulp-jasmine": "3.0.0",
     "gulp-typescript": "3.2.4",
     "gulp-util": "3.0.8",
     "gutil": "1.6.4",
@@ -46,10 +45,9 @@
   "scripts": {
     "clear": "rimraf dist/commonjs && rimraf dist/lib",
     "dist": "yarn clear && gulp dist --env production",
-    "start": "gulp",
+    "test": "yarn dist && yarn test:node && yarn test:browser",
     "test:browser": "echo done",
-    "test:node": "jasmine --config=test/jasmine.node.json",
-    "test": "yarn dist && gulp test"
+    "test:node": "jasmine --config=test/jasmine.node.json"
   },
   "types": "dist/index.d.ts",
   "version": "6.3.7"
