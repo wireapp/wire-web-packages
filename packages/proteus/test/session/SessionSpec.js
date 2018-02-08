@@ -80,52 +80,6 @@ const assert_decrypt = (/** @type {string} */ expected, /** @type {Promise<Uint8
 };
 
 describe('Session', () => {
-  it('max counter gap', async function(done) {
-    this.timeout(0);
-
-    const [alice_ident, bob_ident] = await Promise.all([0, 1].map(() => Proteus.keys.IdentityKeyPair.new()));
-
-    const keys = [];
-    keys[Proteus.keys.PreKey.MAX_PREKEY_ID] = await Proteus.keys.PreKey.last_resort();
-
-    const bob_store = new TestStore(keys);
-
-    const bob_prekey = bob_store.prekeys[Proteus.keys.PreKey.MAX_PREKEY_ID];
-    const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
-
-    let alice = null;
-    let bob = null;
-
-    return Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle)
-      .then(session => {
-        alice = session;
-        return alice.encrypt('Hello Bob1!');
-      })
-      .then(hello_bob1 => assert_init_from_message(bob_ident, bob_store, hello_bob1, 'Hello Bob1!'))
-      .then(session => {
-        bob = session;
-        assert(Object.keys(bob.session_states).length === 1);
-
-        return Promise.all(
-          Array.from({length: 1001}, () => {
-            return new Promise((resolve, reject) => {
-              return alice.encrypt('Hello Bob2!').then(hello_bob2 => {
-                assert_decrypt('Hello Bob2!', bob.decrypt(bob_store, hello_bob2));
-                assert.strictEqual(Object.keys(bob.session_states).length, 1);
-                resolve();
-              });
-            });
-          })
-        );
-      })
-      .then(() => {
-        done();
-      })
-      .catch(err => {
-        done(err);
-      });
-  });
-
   it('should limit the number of sessions', async done => {
     const [alice_ident, bob_ident] = await Promise.all([0, 1].map(() => Proteus.keys.IdentityKeyPair.new()));
     const bob_store = new TestStore(
