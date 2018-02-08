@@ -80,54 +80,6 @@ const assert_decrypt = (/** @type {string} */ expected, /** @type {Promise<Uint8
 };
 
 describe('Session', () => {
-  it('replaced prekeys', async done => {
-    const [alice_ident, bob_ident] = await Promise.all([0, 1].map(() => Proteus.keys.IdentityKeyPair.new()));
-    const [bob_store1, bob_store2] = await Promise.all(
-      [0, 1, 2].map(async () => new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10)))
-    );
-
-    const bob_prekey = bob_store1.prekeys[0];
-    const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
-
-    let alice = null;
-    let bob = null;
-    let hello_bob1 = null;
-    let hello_bob2 = null;
-    let hello_bob3 = null;
-
-    return Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle)
-      .then(session => {
-        alice = session;
-        return alice.encrypt('Hello Bob1!');
-      })
-      .then(message => {
-        hello_bob1 = message;
-        return assert_init_from_message(bob_ident, bob_store1, hello_bob1, 'Hello Bob1!');
-      })
-      .then(session => {
-        bob = session;
-        assert(Object.keys(bob.session_states).length === 1);
-        return alice.encrypt('Hello Bob2!');
-      })
-      .then(message => {
-        hello_bob2 = message;
-        assert_decrypt('Hello Bob2!', bob.decrypt(bob_store1, hello_bob2));
-        assert(Object.keys(bob.session_states).length === 1);
-        return alice.encrypt('Hello Bob3!');
-      })
-      .then(message => {
-        hello_bob3 = message;
-        assert_decrypt('Hello Bob3!', bob.decrypt(bob_store2, hello_bob3));
-        assert(Object.keys(bob.session_states).length === 1);
-      })
-      .then(() => {
-        done();
-      })
-      .catch(err => {
-        done(err);
-      });
-  });
-
   it('max counter gap', async function(done) {
     this.timeout(0);
 
