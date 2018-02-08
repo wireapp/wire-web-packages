@@ -47,13 +47,31 @@ describe('MemoryUtil', () => {
     });
 
     it('deeply zeroizes a KeyPair', async done => {
-      const key_pair = await Proteus.keys.KeyPair.new();
+      try {
+        const key_pair = await Proteus.keys.KeyPair.new();
 
-      Proteus.util.MemoryUtil.zeroize(key_pair);
-      key_pair.secret_key.sec_edward.every(value => expect(value).toBe(0));
-      key_pair.secret_key.sec_curve.every(value => expect(value).toBe(0));
+        Proteus.util.MemoryUtil.zeroize(key_pair);
+        key_pair.secret_key.sec_edward.every(value => expect(value).toBe(0));
+        key_pair.secret_key.sec_curve.every(value => expect(value).toBe(0));
 
-      done();
+        done();
+      } catch (err) {
+        done.fail(err);
+      }
+    });
+
+    it('deeply zeroizes a PreKey', async done => {
+      try {
+        const prekey = await Proteus.keys.PreKey.new(0);
+
+        Proteus.util.MemoryUtil.zeroize(prekey);
+        prekey.key_pair.secret_key.sec_edward.every(value => expect(value).toBe(0));
+        prekey.key_pair.secret_key.sec_curve.every(value => expect(value).toBe(0));
+
+        done();
+      } catch (err) {
+        done.fail(err);
+      }
     });
   });
 });

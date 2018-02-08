@@ -48,13 +48,9 @@ const assert_serialise_deserialise = (local_identity, session) => {
 };
 
 const assert_init_from_message = async (ident, store, msg, expected) => {
-  try {
-    const [session, message] = await Proteus.session.Session.init_from_message(ident, store, msg);
-    expect(sodium.to_string(message)).toBe(expected);
-    return session;
-  } catch (error) {
-    console.log(error);
-  }
+  const [session, message] = await Proteus.session.Session.init_from_message(ident, store, msg);
+  expect(sodium.to_string(message)).toBe(expected);
+  return session;
 };
 
 beforeAll(async () => {
@@ -103,10 +99,10 @@ describe('LongRunning', () => {
               expect(sodium.to_string(await bob.decrypt(bob_store, encrypted_message))).toBe('Hello Bob!');
             })
           );
-        } catch (error) {
-          console.log(error);
-        } finally {
+
           done();
+        } catch (err) {
+          done.fail(err);
         }
       },
       10000
@@ -144,10 +140,10 @@ describe('LongRunning', () => {
 
           assert_serialise_deserialise(alice_ident, alice);
           assert_serialise_deserialise(bob_ident, bob);
-        } catch (error) {
-          console.log(error);
-        } finally {
+
           done();
+        } catch (err) {
+          done.fail(err);
         }
       },
       10000

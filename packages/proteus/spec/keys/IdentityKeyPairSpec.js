@@ -19,7 +19,7 @@
 
 const Proteus = require('@wireapp/proteus');
 const _sodium = require('libsodium-wrappers-sumo');
-let sodium;
+let sodium = _sodium;
 
 beforeAll(async () => {
   await _sodium.ready;
@@ -28,13 +28,17 @@ beforeAll(async () => {
 
 describe('IdentityKeyPair', () => {
   it('serialises and deserialises', async done => {
-    const ikp = await Proteus.keys.IdentityKeyPair.new();
-    const ikp_bytes = ikp.serialise();
-    const ikp_deser = Proteus.keys.IdentityKeyPair.deserialise(ikp_bytes);
+    try {
+      const ikp = await Proteus.keys.IdentityKeyPair.new();
+      const ikp_bytes = ikp.serialise();
+      const ikp_deser = Proteus.keys.IdentityKeyPair.deserialise(ikp_bytes);
 
-    expect(ikp.public_key.fingerprint()).toBe(ikp_deser.public_key.fingerprint());
-    expect(sodium.to_hex(new Uint8Array(ikp_bytes))).toBe(sodium.to_hex(new Uint8Array(ikp_deser.serialise())));
+      expect(ikp.public_key.fingerprint()).toBe(ikp_deser.public_key.fingerprint());
+      expect(sodium.to_hex(new Uint8Array(ikp_bytes))).toBe(sodium.to_hex(new Uint8Array(ikp_deser.serialise())));
 
-    done();
+      done();
+    } catch (err) {
+      done.fail(err);
+    }
   });
 });

@@ -339,10 +339,10 @@ describe('Mac Key', () => {
       const signature = mac_key.sign(msg);
 
       expect(mac_key.verify(signature, msg)).toBe(true);
-    } catch (err) {
-      console.log(err);
-    } finally {
+
       done();
+    } catch (err) {
+      done.fail(err);
     }
   });
 });

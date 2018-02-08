@@ -31,11 +31,15 @@ describe('Envelope', () => {
   let ratchet_key;
 
   beforeAll(async done => {
-    identity_key = Proteus.keys.IdentityKey.new((await Proteus.keys.KeyPair.new()).public_key);
-    base_key = (await Proteus.keys.KeyPair.new()).public_key;
-    ratchet_key = (await Proteus.keys.KeyPair.new()).public_key;
+    try {
+      identity_key = Proteus.keys.IdentityKey.new((await Proteus.keys.KeyPair.new()).public_key);
+      base_key = (await Proteus.keys.KeyPair.new()).public_key;
+      ratchet_key = (await Proteus.keys.KeyPair.new()).public_key;
 
-    done();
+      done();
+    } catch (err) {
+      done.fail(err);
+    }
   });
 
   it('encapsulates a CipherMessage', () => {

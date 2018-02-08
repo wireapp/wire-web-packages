@@ -64,8 +64,8 @@ class PreKey {
     }
   }
 
-  static async last_resort(): Promise<PreKey> {
-    return await PreKey.new(PreKey.MAX_PREKEY_ID);
+  static last_resort(): Promise<PreKey> {
+    return PreKey.new(PreKey.MAX_PREKEY_ID);
   }
 
   static async generate_prekeys(start: number, size: number): Promise<Array<PreKey>> {

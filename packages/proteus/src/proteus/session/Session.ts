@@ -144,7 +144,7 @@ export class Session {
 
           if (pkmsg.prekey_id < PreKey.MAX_PREKEY_ID) {
             // TODO: Zeroize should be tested (and awaited) here!
-            MemoryUtil.zeroize(prekey_store.get_prekey(pkmsg.prekey_id));
+            MemoryUtil.zeroize(await prekey_store.get_prekey(pkmsg.prekey_id));
             return prekey_store
               .remove(pkmsg.prekey_id)
               .then(() => resolve([session, plain]))
@@ -278,7 +278,7 @@ export class Session {
   ): Promise<Uint8Array> {
     return Promise.resolve()
       .then(() => this._decrypt_cipher_message(envelope, msg.message))
-      .catch(error => {
+      .catch(async error => {
         if (
           error instanceof (<any>DecryptError).InvalidSignature ||
           error instanceof (<any>DecryptError).InvalidMessage
@@ -288,7 +288,7 @@ export class Session {
 
             if (msg.prekey_id !== PreKey.MAX_PREKEY_ID) {
               // TODO: Zeroize should be tested (and awaited) here!
-              MemoryUtil.zeroize(prekey_store.get_prekey(msg.prekey_id));
+              MemoryUtil.zeroize(await prekey_store.get_prekey(msg.prekey_id));
               prekey_store.remove(msg.prekey_id);
             }
 
