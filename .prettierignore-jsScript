@@ -1,5 +1,0 @@
-**/bin/**
-**/bower_components/**
-**/dist/**
-**/node_modules/**
-packages/react-ui-kit/*.js

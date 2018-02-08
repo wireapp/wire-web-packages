@@ -2,3 +2,6 @@
 **/bower_components/**
 **/dist/**
 **/node_modules/**
+CHANGELOG.md
+package.json
+packages/react-ui-kit/*.js
