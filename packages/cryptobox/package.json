@@ -9,7 +9,7 @@
   "description": "High-level API with persistent storage for Proteus.",
   "devDependencies": {
     "@types/fs-extra": "5.0.0",
-    "@types/node": "8.5.7",
+    "@types/node": "9.4.2",
     "browser-sync": "2.23.6",
     "gulp": "3.9.1",
     "gulp-babel": "7.0.1",
