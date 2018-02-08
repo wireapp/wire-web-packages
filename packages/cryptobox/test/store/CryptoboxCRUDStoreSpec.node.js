@@ -121,7 +121,7 @@ describe('cryptobox.store.CryptoboxCRUDStore', () => {
   });
 
   describe('"save_prekeys"', () => {
-    it('saves multiple PreKeys', async done => {
+    fit('saves multiple PreKeys', async done => {
       const preKeys = await Promise.all([
         Proteus.keys.PreKey.new(0),
         Proteus.keys.PreKey.new(Proteus.keys.PreKey.MAX_PREKEY_ID),

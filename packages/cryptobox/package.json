@@ -23,7 +23,7 @@
     "gulp-typescript": "3.2.4",
     "gulp-util": "3.0.8",
     "gutil": "1.6.4",
-    "jasmine": "3.0.0",
+    "jasmine": "2.99.0",
     "karma": "1.7.0",
     "karma-chrome-launcher": "2.1.1",
     "karma-jasmine": "1.1.0",
@@ -48,7 +48,7 @@
     "dist": "yarn clear && gulp dist --env production",
     "start": "gulp",
     "test:browser": "echo done",
-    "test:node": "echo done",
+    "test:node": "jasmine --config=test/jasmine.node.json",
     "test": "yarn dist && gulp test"
   },
   "types": "dist/index.d.ts",
