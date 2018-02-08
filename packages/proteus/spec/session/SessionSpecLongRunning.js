@@ -30,11 +30,13 @@ class TestStore extends Proteus.session.PreKeyStore {
   }
 
   get_prekey(prekey_id) {
-    return Promise.resolve(this.prekeys[prekey_id]);
+    const matches = this.prekeys.filter(prekey => prekey.key_id === prekey_id);
+    return Promise.resolve(matches[0]);
   }
 
   remove(prekey_id) {
-    return Promise.resolve().then(() => delete this.prekeys[prekey_id]);
+    const matches = this.prekeys.filter(prekey => prekey.key_id === prekey_id);
+    return Promise.resolve().then(() => delete matches[0]);
   }
 }
 
@@ -60,6 +62,46 @@ beforeAll(async () => {
 
 describe('LongRunning', () => {
   describe('Session', () => {
+    it('works until the max counter gap', async done => {
+      try {
+        const alice_ident = await Proteus.keys.IdentityKeyPair.new();
+
+        const bob_ident = await Proteus.keys.IdentityKeyPair.new();
+
+        const pre_keys = [await Proteus.keys.PreKey.last_resort()];
+        const bob_store = new TestStore(pre_keys);
+
+        const bob_prekey = await bob_store.get_prekey(Proteus.keys.PreKey.MAX_PREKEY_ID);
+        expect(bob_prekey.key_id).toBe(Proteus.keys.PreKey.MAX_PREKEY_ID);
+
+        const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
+
+        const alice = await Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle);
+
+        const hello_bob1_plaintext = 'Hello Bob1!';
+        const hello_bob1_encrypted = await alice.encrypt(hello_bob1_plaintext);
+
+        const bob = await assert_init_from_message(bob_ident, bob_store, hello_bob1_encrypted, hello_bob1_plaintext);
+        expect(Object.keys(bob.session_states).length).toBe(1);
+
+        await Promise.all(
+          Array.from({length: 1001}, () => {
+            return Promise.resolve().then(async () => {
+              const hello_bob2_plaintext = 'Hello Bob2!';
+              const hello_bob2_encrypted = await alice.encrypt(hello_bob2_plaintext);
+              const hello_bob2_decrypted = await bob.decrypt(bob_store, hello_bob2_encrypted);
+              expect(sodium.to_string(hello_bob2_decrypted)).toBe(hello_bob2_plaintext);
+              expect(Object.keys(bob.session_states).length).toBe(1);
+            });
+          })
+        );
+
+        done();
+      } catch (err) {
+        done.fail(err);
+      }
+    });
+
     it(
       'pathological case',
       async done => {
