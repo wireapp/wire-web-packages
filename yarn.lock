@@ -1986,9 +1986,9 @@ commander@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/commander/-/commander-0.6.1.tgz#fa68a14f6a945d54dbbe50d8cdb3320e9e3b1a06"
 
-commander@2.14.0:
-  version "2.14.0"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-2.14.0.tgz#7b25325963e6aace20d3a9285b09379b0c2208b5"
+commander@2.14.1:
+  version "2.14.1"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.14.1.tgz#2235123e37af8ca3c65df45b026dbd357b01b9aa"
 
 commander@2.3.0:
   version "2.3.0"
@@ -3112,9 +3112,9 @@ eslint-config-prettier@2.9.0:
   dependencies:
     get-stdin "^5.0.1"
 
-eslint-plugin-prettier@2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-prettier/-/eslint-plugin-prettier-2.5.0.tgz#39a91dd7528eaf19cd42c0ee3f2c1f684606a05f"
+eslint-plugin-prettier@2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-prettier/-/eslint-plugin-prettier-2.6.0.tgz#33e4e228bdb06142d03c560ce04ec23f6c767dd7"
   dependencies:
     fast-diff "^1.1.1"
     jest-docblock "^21.0.0"
@@ -8344,9 +8344,9 @@ sinon-har-server@0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/sinon-har-server/-/sinon-har-server-0.3.0.tgz#d767b51a2f6f34856ecd9867ff98f97bacfbde6b"
 
-sinon@4.2.1:
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/sinon/-/sinon-4.2.1.tgz#3664e90ea4bccec6ebde3c06e3da8179983371d9"
+sinon@4.2.2:
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/sinon/-/sinon-4.2.2.tgz#e039ab27bdb426fc61363c380726e996a2e2c620"
   dependencies:
     diff "^3.1.0"
     formatio "1.2.0"
