@@ -15,9 +15,9 @@ module.exports = {
     path: 'empty',
   },
   output: {
-    filename: 'wire-webapp-cryptobox.js',
+    filename: `${pkg.name.substr(pkg.name.indexOf('/') + 1)}.js`,
     library: 'cryptobox',
-    path: `${__dirname}/dist/window`,
+    path: `${__dirname}/dist`,
   },
   performance: {
     hints: 'warning',
