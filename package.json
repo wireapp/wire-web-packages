@@ -11,7 +11,7 @@
     "prettier": "1.10.2"
   },
   "lint-staged": {
-    "*.{js,jsx}": ["eslint --ignore-path .prettierignore --fix", "git add"],
+    "*.{js,jsx}": ["eslint --fix", "git add"],
     "*.{json,md,scss,ts}": ["prettier --write", "git add"],
     "*.scss": ["prettier --write", "git add"],
     "*.ts": ["prettier --write", "git add"]
@@ -21,16 +21,14 @@
     "boot": "lerna bootstrap --reject-cycles",
     "clear": "lerna run clear",
     "dist": "yarn clear && lerna run dist",
-    "fix": "yarn fix:docs && yarn fix:config && yarn fix:style && yarn fix:script",
-    "fix:config": "prettier --ignore-path .prettierignore --write **/*.json",
-    "fix:docs": "prettier --ignore-path .prettierignore --write **/*.md",
+    "fix": "yarn fix:assets && yarn fix:script",
+    "fix:assets": "prettier --write **/*.{json,md,scss}",
     "fix:jsScript": "yarn test:jsScript --fix",
     "fix:script": "yarn fix:jsScript && yarn fix:tsScript",
-    "fix:style": "prettier --write **/*.scss",
     "fix:tsScript": "prettier --write **/*.ts",
     "precommit": "lint-staged",
     "test": "yarn && yarn test:jsScript && lerna run test",
-    "test:jsScript": "eslint --ignore-path .gitignore --ignore-path .prettierignore **/*.{js,jsx}",
+    "test:jsScript": "eslint --ignore-path .gitignore **/*.{js,jsx}",
     "release":
       "yarn test && lerna run test:longrunning --scope @wireapp/proteus && lerna publish -m \"chore: Publish\" --conventional-commits --loglevel=verbose --exact --allow-branch=master --registry=https://registry.npmjs.org/ --yes"
   },
