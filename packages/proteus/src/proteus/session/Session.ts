@@ -110,7 +110,6 @@ export class Session {
   ): Promise<SessionFromMessageTuple> {
     return new Promise((resolve, reject) => {
       TypeUtil.assert_is_instance(IdentityKeyPair, our_identity);
-      TypeUtil.assert_is_instance(PreKeyStore, prekey_store);
       TypeUtil.assert_is_instance(Envelope, envelope);
 
       const pkmsg = (() => {
@@ -251,7 +250,6 @@ export class Session {
 
   decrypt(prekey_store: PreKeyStore, envelope: Envelope): Promise<Uint8Array> {
     return new Promise(resolve => {
-      TypeUtil.assert_is_instance(PreKeyStore, prekey_store);
       TypeUtil.assert_is_instance(Envelope, envelope);
 
       const msg = envelope.message;
