@@ -12,9 +12,7 @@
   },
   "lint-staged": {
     "*.{js,jsx}": ["eslint --fix", "git add"],
-    "*.{json,md,scss,ts}": ["prettier --write", "git add"],
-    "*.scss": ["prettier --write", "git add"],
-    "*.ts": ["prettier --write", "git add"]
+    "*.{json,md,scss,ts}": ["prettier --write", "git add"]
   },
   "private": true,
   "scripts": {
