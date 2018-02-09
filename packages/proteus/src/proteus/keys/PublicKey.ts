@@ -22,8 +22,6 @@ import * as ed2curve from 'ed2curve';
 import * as sodium from 'libsodium-wrappers-sumo';
 
 import ClassUtil from '../util/ClassUtil';
-import TypeUtil from '../util/TypeUtil';
-
 import InputError from '../errors/InputError';
 
 class PublicKey {
@@ -36,9 +34,6 @@ class PublicKey {
   }
 
   static new(pub_edward: Uint8Array, pub_curve: Uint8Array): PublicKey {
-    TypeUtil.assert_is_instance(Uint8Array, pub_edward);
-    TypeUtil.assert_is_instance(Uint8Array, pub_curve);
-
     const pk = ClassUtil.new_instance<PublicKey>(PublicKey);
 
     pk.pub_edward = pub_edward;
@@ -54,7 +49,6 @@ class PublicKey {
    * @returns `true` if the signature is valid, `false` otherwise.
    */
   verify(signature: Uint8Array, message: Uint8Array): boolean {
-    TypeUtil.assert_is_instance(Uint8Array, signature);
     return sodium.crypto_sign_verify_detached(signature, message, this.pub_edward);
   }
 
@@ -69,8 +63,6 @@ class PublicKey {
   }
 
   static decode(decoder: CBOR.Decoder): PublicKey {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
-
     const self = ClassUtil.new_instance<PublicKey>(PublicKey);
 
     const nprops = decoder.object();
@@ -83,8 +75,6 @@ class PublicKey {
           decoder.skip();
       }
     }
-
-    TypeUtil.assert_is_instance(Uint8Array, self.pub_edward);
 
     const pub_curve = ed2curve.convertPublicKey(self.pub_edward);
     if (pub_curve) {

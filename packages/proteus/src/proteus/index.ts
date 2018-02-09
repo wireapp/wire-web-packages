@@ -44,7 +44,6 @@ import PublicKey from './keys/PublicKey';
 import SecretKey from './keys/SecretKey';
 import Session from './session/Session';
 import SessionTag from './message/SessionTag';
-import TypeUtil from './util/TypeUtil';
 
 export = {
   derived: {
@@ -88,6 +87,5 @@ export = {
     ArrayUtil,
     KeyDerivationUtil,
     MemoryUtil,
-    TypeUtil,
   },
 };

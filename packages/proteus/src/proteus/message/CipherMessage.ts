@@ -22,7 +22,6 @@
 import * as CBOR from '@wireapp/cbor';
 
 import ClassUtil from '../util/ClassUtil';
-import TypeUtil from '../util/TypeUtil';
 import PublicKey from '../keys/PublicKey';
 import Message from './Message';
 import SessionTag from './SessionTag';
@@ -51,12 +50,6 @@ class CipherMessage extends Message {
     ratchet_key: PublicKey,
     cipher_text: Uint8Array
   ): CipherMessage {
-    TypeUtil.assert_is_instance(SessionTag, session_tag);
-    TypeUtil.assert_is_integer(counter);
-    TypeUtil.assert_is_integer(prev_counter);
-    TypeUtil.assert_is_instance(PublicKey, ratchet_key);
-    TypeUtil.assert_is_instance(Uint8Array, cipher_text);
-
     const cm = ClassUtil.new_instance<CipherMessage>(CipherMessage);
 
     cm.session_tag = session_tag;
@@ -84,8 +77,6 @@ class CipherMessage extends Message {
   }
 
   static decode(decoder: CBOR.Decoder): CipherMessage {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
-
     let session_tag = null;
     let counter = null;
     let prev_counter = null;

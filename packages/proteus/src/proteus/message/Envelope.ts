@@ -22,8 +22,6 @@
 import * as CBOR from '@wireapp/cbor';
 
 import ClassUtil from '../util/ClassUtil';
-import TypeUtil from '../util/TypeUtil';
-
 import MacKey from '../derived/MacKey';
 import Message from './Message';
 
@@ -41,9 +39,6 @@ class Envelope {
   }
 
   static new(mac_key: MacKey, message: Message): Envelope {
-    TypeUtil.assert_is_instance(MacKey, mac_key);
-    TypeUtil.assert_is_instance(Message, message);
-
     const serialized_message = new Uint8Array(message.serialise());
 
     const env = ClassUtil.new_instance<Envelope>(Envelope);
@@ -59,7 +54,6 @@ class Envelope {
 
   /** @param mac_key The remote party's MacKey */
   verify(mac_key: MacKey): boolean {
-    TypeUtil.assert_is_instance(MacKey, mac_key);
     return mac_key.verify(this.mac, this._message_enc);
   }
 
@@ -71,8 +65,6 @@ class Envelope {
   }
 
   static deserialise(buf: ArrayBuffer): Envelope {
-    TypeUtil.assert_is_instance(ArrayBuffer, buf);
-
     const decoder = new CBOR.Decoder(buf);
     return Envelope.decode(decoder);
   }
@@ -92,8 +84,6 @@ class Envelope {
   }
 
   static decode(decoder: CBOR.Decoder): Envelope {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
-
     const env = ClassUtil.new_instance<Envelope>(Envelope);
 
     const nprops = decoder.object();
@@ -125,9 +115,6 @@ class Envelope {
         }
       }
     }
-
-    TypeUtil.assert_is_integer(env.version);
-    TypeUtil.assert_is_instance(Uint8Array, env.mac);
 
     env.message = Message.deserialise(env._message_enc.buffer);
 

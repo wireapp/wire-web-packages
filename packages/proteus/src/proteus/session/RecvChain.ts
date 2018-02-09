@@ -22,7 +22,6 @@
 import * as CBOR from '@wireapp/cbor';
 
 import ClassUtil from '../util/ClassUtil';
-import TypeUtil from '../util/TypeUtil';
 import PublicKey from '../keys/PublicKey';
 
 import DecryptError from '../errors/DecryptError';
@@ -53,9 +52,6 @@ class RecvChain {
   }
 
   static new(chain_key: ChainKey, public_key: PublicKey): RecvChain {
-    TypeUtil.assert_is_instance(ChainKey, chain_key);
-    TypeUtil.assert_is_instance(PublicKey, public_key);
-
     const rc = ClassUtil.new_instance<RecvChain>(RecvChain);
     rc.chain_key = chain_key;
     rc.ratchet_key = public_key;
@@ -64,9 +60,6 @@ class RecvChain {
   }
 
   try_message_keys(envelope: Envelope, msg: CipherMessage): Uint8Array {
-    TypeUtil.assert_is_instance(Envelope, envelope);
-    TypeUtil.assert_is_instance(CipherMessage, msg);
-
     if (this.message_keys[0] && this.message_keys[0].counter > msg.counter) {
       const message = `Message too old. Counter for oldest staged chain key is '${
         this.message_keys[0].counter
@@ -93,8 +86,6 @@ class RecvChain {
   }
 
   stage_message_keys(msg: CipherMessage): RecvChainTriple {
-    TypeUtil.assert_is_instance(CipherMessage, msg);
-
     const num = msg.counter - this.chain_key.idx;
     if (num > RecvChain.MAX_COUNTER_GAP) {
       if (this.chain_key.idx === 0) {
@@ -122,9 +113,6 @@ class RecvChain {
   }
 
   commit_message_keys(keys: Array<MessageKeys>): void {
-    TypeUtil.assert_is_instance(Array, keys);
-    keys.map(key => TypeUtil.assert_is_instance(MessageKeys, key));
-
     if (keys.length > RecvChain.MAX_COUNTER_GAP) {
       throw new ProteusError(
         `Number of message keys (${keys.length}) exceed message chain counter gap (${RecvChain.MAX_COUNTER_GAP}).`,
@@ -161,8 +149,6 @@ class RecvChain {
   }
 
   static decode(decoder: CBOR.Decoder): RecvChain {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
-
     const self = ClassUtil.new_instance<RecvChain>(RecvChain);
 
     const nprops = decoder.object();
@@ -190,10 +176,6 @@ class RecvChain {
         }
       }
     }
-
-    TypeUtil.assert_is_instance(ChainKey, self.chain_key);
-    TypeUtil.assert_is_instance(PublicKey, self.ratchet_key);
-    TypeUtil.assert_is_instance(Array, self.message_keys);
 
     return self;
   }

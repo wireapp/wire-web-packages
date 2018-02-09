@@ -24,8 +24,6 @@ import * as CBOR from '@wireapp/cbor';
 import ClassUtil from '../util/ClassUtil';
 
 import MemoryUtil from '../util/MemoryUtil';
-import TypeUtil from '../util/TypeUtil';
-
 import DecodeError from '../errors/DecodeError';
 import DecryptError from '../errors/DecryptError';
 import ProteusError from '../errors/ProteusError';
@@ -83,9 +81,6 @@ export class Session {
    * @param remote_pkbundle Bob's Pre-Key Bundle
    */
   static async init_from_prekey(local_identity: IdentityKeyPair, remote_pkbundle: PreKeyBundle): Promise<Session> {
-    TypeUtil.assert_is_instance(IdentityKeyPair, local_identity);
-    TypeUtil.assert_is_instance(PreKeyBundle, remote_pkbundle);
-
     const alice_base = await KeyPair.new();
 
     const state = await SessionState.init_as_alice(local_identity, alice_base, remote_pkbundle);
@@ -109,9 +104,6 @@ export class Session {
     envelope: Envelope
   ): Promise<SessionFromMessageTuple> {
     return new Promise((resolve, reject) => {
-      TypeUtil.assert_is_instance(IdentityKeyPair, our_identity);
-      TypeUtil.assert_is_instance(Envelope, envelope);
-
       const pkmsg = (() => {
         if (envelope.message instanceof CipherMessage) {
           throw new (<any>DecryptError).InvalidMessage(
@@ -250,8 +242,6 @@ export class Session {
 
   decrypt(prekey_store: PreKeyStore, envelope: Envelope): Promise<Uint8Array> {
     return new Promise(resolve => {
-      TypeUtil.assert_is_instance(Envelope, envelope);
-
       const msg = envelope.message;
       if (msg instanceof CipherMessage) {
         return resolve(this._decrypt_cipher_message(envelope, <CipherMessage>msg));
@@ -329,9 +319,6 @@ export class Session {
   }
 
   static deserialise(local_identity: IdentityKeyPair, buf: ArrayBuffer): Session {
-    TypeUtil.assert_is_instance(IdentityKeyPair, local_identity);
-    TypeUtil.assert_is_instance(ArrayBuffer, buf);
-
     const decoder = new CBOR.Decoder(buf);
     return this.decode(local_identity, decoder);
   }
@@ -369,9 +356,6 @@ export class Session {
   }
 
   static decode(local_identity: IdentityKeyPair, decoder: CBOR.Decoder): Session {
-    TypeUtil.assert_is_instance(IdentityKeyPair, local_identity);
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
-
     const self = ClassUtil.new_instance<Session>(this);
 
     const nprops = decoder.object();
@@ -442,12 +426,6 @@ export class Session {
         }
       }
     }
-
-    TypeUtil.assert_is_integer(self.version);
-    TypeUtil.assert_is_instance(SessionTag, self.session_tag);
-    TypeUtil.assert_is_instance(IdentityKeyPair, self.local_identity);
-    TypeUtil.assert_is_instance(IdentityKey, self.remote_identity);
-    TypeUtil.assert_is_instance(Object, self.session_states);
 
     return self;
   }

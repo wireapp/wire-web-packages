@@ -20,8 +20,6 @@
 /* eslint no-magic-numbers: "off" */
 
 import * as CBOR from '@wireapp/cbor';
-
-import TypeUtil from '../util/TypeUtil';
 import DecodeError from '../errors/DecodeError';
 
 class Message {
@@ -42,8 +40,6 @@ class Message {
   }
 
   static deserialise(buf: ArrayBuffer): CipherMessage | PreKeyMessage {
-    TypeUtil.assert_is_instance(ArrayBuffer, buf);
-
     const decoder = new CBOR.Decoder(buf);
 
     switch (decoder.u8()) {

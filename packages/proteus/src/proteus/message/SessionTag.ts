@@ -21,12 +21,8 @@ import * as CBOR from '@wireapp/cbor';
 import * as sodium from 'libsodium-wrappers-sumo';
 
 import ClassUtil from '../util/ClassUtil';
-import TypeUtil from '../util/TypeUtil';
-
 import DecodeError from '../errors/DecodeError';
 import RandomUtil from '../util/RandomUtil';
-
-import SessionState from '../session/SessionState';
 
 class SessionTag {
   tag: Uint8Array;
@@ -52,8 +48,6 @@ class SessionTag {
   }
 
   static decode(decoder: CBOR.Decoder): SessionTag {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
-
     const length = 16;
 
     const bytes = new Uint8Array(decoder.bytes());

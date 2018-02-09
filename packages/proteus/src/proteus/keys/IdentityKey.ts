@@ -20,7 +20,6 @@
 import * as CBOR from '@wireapp/cbor';
 
 import ClassUtil from '../util/ClassUtil';
-import TypeUtil from '../util/TypeUtil';
 import PublicKey from './PublicKey';
 
 /**
@@ -36,8 +35,6 @@ class IdentityKey {
   }
 
   static new(public_key: PublicKey): IdentityKey {
-    TypeUtil.assert_is_instance(PublicKey, public_key);
-
     const key = ClassUtil.new_instance<IdentityKey>(IdentityKey);
     key.public_key = public_key;
     return key;
@@ -54,8 +51,6 @@ class IdentityKey {
   }
 
   static decode(decoder: CBOR.Decoder): IdentityKey {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
-
     let public_key = ClassUtil.new_instance<PublicKey>(PublicKey);
 
     const nprops = decoder.object();

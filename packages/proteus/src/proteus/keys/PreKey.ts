@@ -24,7 +24,6 @@ import * as CBOR from '@wireapp/cbor';
 import ClassUtil from '../util/ClassUtil';
 
 import InputError from '../errors/InputError';
-import TypeUtil from '../util/TypeUtil';
 
 import KeyPair from './KeyPair';
 
@@ -56,9 +55,16 @@ class PreKey {
   }
 
   static validate_pre_key_id(pre_key_id: number): void {
-    TypeUtil.assert_is_integer(pre_key_id);
-
-    if (pre_key_id < 0 || pre_key_id > PreKey.MAX_PREKEY_ID) {
+    if (pre_key_id === undefined) {
+      throw new (<any>InputError).TypeError('PreKey ID is undefined.', InputError.CODE.CASE_404);
+    } else if (typeof pre_key_id === 'string') {
+      throw new (<any>InputError).TypeError(`PreKey ID "${pre_key_id}" is a string.`, InputError.CODE.CASE_403);
+    } else if (pre_key_id % 1 !== 0) {
+      throw new (<any>InputError).TypeError(
+        `PreKey ID "${pre_key_id}" is a floating-point number.`,
+        InputError.CODE.CASE_403
+      );
+    } else if (pre_key_id < 0 || pre_key_id > PreKey.MAX_PREKEY_ID) {
       const message = `PreKey ID (${pre_key_id}) must be between or equal to 0 and ${PreKey.MAX_PREKEY_ID}.`;
       throw new (<any>InputError).RangeError(message, InputError.CODE.CASE_400);
     }
@@ -91,12 +97,10 @@ class PreKey {
   }
 
   static deserialise(buf: ArrayBuffer): PreKey {
-    TypeUtil.assert_is_instance(ArrayBuffer, buf);
     return PreKey.decode(new CBOR.Decoder(buf));
   }
 
   encode(encoder: CBOR.Encoder): CBOR.Encoder {
-    TypeUtil.assert_is_instance(CBOR.Encoder, encoder);
     encoder.object(3);
     encoder.u8(0);
     encoder.u8(this.version);
@@ -107,8 +111,6 @@ class PreKey {
   }
 
   static decode(decoder: CBOR.Decoder): PreKey {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
-
     const self = ClassUtil.new_instance<PreKey>(PreKey);
 
     const nprops = decoder.object();
@@ -127,10 +129,6 @@ class PreKey {
           decoder.skip();
       }
     }
-
-    TypeUtil.assert_is_integer(self.version);
-    TypeUtil.assert_is_integer(self.key_id);
-    TypeUtil.assert_is_instance(KeyPair, self.key_pair);
 
     return self;
   }

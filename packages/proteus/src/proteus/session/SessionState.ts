@@ -25,8 +25,6 @@ import ArrayUtil from '../util/ArrayUtil';
 import ClassUtil from '../util/ClassUtil';
 
 import MemoryUtil from '../util/MemoryUtil';
-import TypeUtil from '../util/TypeUtil';
-
 import DecryptError from '../errors/DecryptError';
 
 import DerivedSecrets from '../derived/DerivedSecrets';
@@ -69,10 +67,6 @@ class SessionState {
     alice_base: IdentityKeyPair | KeyPair,
     bob_pkbundle: PreKeyBundle
   ): Promise<SessionState> {
-    TypeUtil.assert_is_instance(IdentityKeyPair, alice_identity_pair);
-    TypeUtil.assert_is_instance(KeyPair, alice_base);
-    TypeUtil.assert_is_instance(PreKeyBundle, bob_pkbundle);
-
     const master_key = ArrayUtil.concatenate_array_buffers([
       alice_identity_pair.secret_key.shared_secret(bob_pkbundle.public_key),
       alice_base.secret_key.shared_secret(bob_pkbundle.identity_key.public_key),
@@ -105,11 +99,6 @@ class SessionState {
     alice_ident: IdentityKey,
     alice_base: PublicKey
   ): SessionState {
-    TypeUtil.assert_is_instance(IdentityKeyPair, bob_ident);
-    TypeUtil.assert_is_instance(KeyPair, bob_prekey);
-    TypeUtil.assert_is_instance(IdentityKey, alice_ident);
-    TypeUtil.assert_is_instance(PublicKey, alice_base);
-
     const master_key = ArrayUtil.concatenate_array_buffers([
       bob_prekey.secret_key.shared_secret(alice_ident.public_key),
       bob_ident.secret_key.shared_secret(alice_base),
@@ -168,13 +157,6 @@ class SessionState {
     tag: SessionTag,
     plaintext: string | Uint8Array
   ): Envelope {
-    if (pending) {
-      TypeUtil.assert_is_integer(pending[0]);
-      TypeUtil.assert_is_instance(PublicKey, pending[1]);
-    }
-    TypeUtil.assert_is_instance(IdentityKey, identity_key);
-    TypeUtil.assert_is_instance(SessionTag, tag);
-
     const msgkeys = this.send_chain.chain_key.message_keys();
 
     let message: Message = CipherMessage.new(
@@ -195,9 +177,6 @@ class SessionState {
   }
 
   async decrypt(envelope: Envelope, msg: CipherMessage): Promise<Uint8Array> {
-    TypeUtil.assert_is_instance(Envelope, envelope);
-    TypeUtil.assert_is_instance(CipherMessage, msg);
-
     let idx = this.recv_chains.findIndex(chain => chain.ratchet_key.fingerprint() === msg.ratchet_key.fingerprint());
 
     if (idx === -1) {
@@ -250,7 +229,6 @@ class SessionState {
   }
 
   static deserialise(buf: ArrayBuffer): SessionState {
-    TypeUtil.assert_is_instance(ArrayBuffer, buf);
     return SessionState.decode(new CBOR.Decoder(buf));
   }
 
@@ -268,8 +246,6 @@ class SessionState {
   }
 
   static decode(decoder: CBOR.Decoder): SessionState {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
-
     const self = ClassUtil.new_instance<SessionState>(SessionState);
 
     const nprops = decoder.object();
@@ -300,11 +276,6 @@ class SessionState {
         }
       }
     }
-
-    TypeUtil.assert_is_instance(Array, self.recv_chains);
-    TypeUtil.assert_is_instance(SendChain, self.send_chain);
-    TypeUtil.assert_is_instance(RootKey, self.root_key);
-    TypeUtil.assert_is_integer(self.prev_counter);
 
     return self;
   }

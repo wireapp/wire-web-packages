@@ -21,7 +21,6 @@ import * as sodium from 'libsodium-wrappers-sumo';
 
 import ArrayUtil from '../util/ArrayUtil';
 import MemoryUtil from '../util/MemoryUtil';
-import TypeUtil from '../util/TypeUtil';
 
 const KeyDerivationUtil = {
   /**
@@ -41,15 +40,12 @@ const KeyDerivationUtil = {
       if (typeof value === 'string') {
         return sodium.from_string(value);
       }
-      TypeUtil.assert_is_instance(Uint8Array, value);
       return value;
     };
 
     salt = convert_type(salt);
     input = convert_type(<Uint8Array | string>input);
     info = convert_type(info);
-
-    TypeUtil.assert_is_integer(length);
 
     const HASH_LEN = 32;
 

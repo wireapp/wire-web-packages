@@ -21,7 +21,6 @@ import * as CBOR from '@wireapp/cbor';
 import * as sodium from 'libsodium-wrappers-sumo';
 
 import ClassUtil from '../util/ClassUtil';
-import TypeUtil from '../util/TypeUtil';
 
 class CipherKey {
   key: Uint8Array;
@@ -31,8 +30,6 @@ class CipherKey {
   }
 
   static new(key: Uint8Array): CipherKey {
-    TypeUtil.assert_is_instance(Uint8Array, key);
-
     const ck = ClassUtil.new_instance<CipherKey>(CipherKey);
     ck.key = key;
     return ck;
@@ -63,8 +60,6 @@ class CipherKey {
   }
 
   static decode(decoder: CBOR.Decoder): CipherKey {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
-
     let key_bytes = new Uint8Array([]);
 
     const nprops = decoder.object();

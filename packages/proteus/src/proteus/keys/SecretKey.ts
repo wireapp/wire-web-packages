@@ -25,8 +25,6 @@ import ClassUtil from '../util/ClassUtil';
 
 import PublicKey from './PublicKey';
 import ArrayUtil from '../util/ArrayUtil';
-import TypeUtil from '../util/TypeUtil';
-
 import InputError from '../errors/InputError';
 
 class SecretKey {
@@ -39,9 +37,6 @@ class SecretKey {
   }
 
   static new(sec_edward: Uint8Array, sec_curve: Uint8Array): SecretKey {
-    TypeUtil.assert_is_instance(Uint8Array, sec_edward);
-    TypeUtil.assert_is_instance(Uint8Array, sec_curve);
-
     const sk = ClassUtil.new_instance<SecretKey>(SecretKey);
 
     sk.sec_edward = sec_edward;
@@ -65,8 +60,6 @@ class SecretKey {
    * @returns Array buffer view of the computed shared secret
    */
   shared_secret(public_key: PublicKey): Uint8Array {
-    TypeUtil.assert_is_instance(PublicKey, public_key);
-
     const shared_secret = <Uint8Array>sodium.crypto_scalarmult(this.sec_curve, public_key.pub_curve);
 
     ArrayUtil.assert_is_not_zeros(shared_secret);
@@ -81,8 +74,6 @@ class SecretKey {
   }
 
   static decode(decoder: CBOR.Decoder): SecretKey {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
-
     const self = ClassUtil.new_instance<SecretKey>(SecretKey);
 
     const nprops = decoder.object();
@@ -95,8 +86,6 @@ class SecretKey {
           decoder.skip();
       }
     }
-
-    TypeUtil.assert_is_instance(Uint8Array, self.sec_edward);
 
     const sec_curve = ed2curve.convertSecretKey(self.sec_edward);
     if (sec_curve) {

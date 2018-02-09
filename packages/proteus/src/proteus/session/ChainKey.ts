@@ -22,8 +22,6 @@
 import * as CBOR from '@wireapp/cbor';
 
 import ClassUtil from '../util/ClassUtil';
-import TypeUtil from '../util/TypeUtil';
-
 import DerivedSecrets from '../derived/DerivedSecrets';
 import MacKey from '../derived/MacKey';
 import MessageKeys from './MessageKeys';
@@ -38,9 +36,6 @@ class ChainKey {
   }
 
   static from_mac_key(key: MacKey, counter: number): ChainKey {
-    TypeUtil.assert_is_instance(MacKey, key);
-    TypeUtil.assert_is_integer(counter);
-
     const ck = ClassUtil.new_instance<ChainKey>(ChainKey);
     ck.key = key;
     ck.idx = counter;
@@ -69,8 +64,6 @@ class ChainKey {
   }
 
   static decode(decoder: CBOR.Decoder): ChainKey {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
-
     const self = ClassUtil.new_instance<ChainKey>(ChainKey);
 
     const nprops = decoder.object();
@@ -86,9 +79,6 @@ class ChainKey {
           decoder.skip();
       }
     }
-
-    TypeUtil.assert_is_instance(MacKey, self.key);
-    TypeUtil.assert_is_integer(self.idx);
 
     return self;
   }

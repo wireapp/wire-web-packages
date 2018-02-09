@@ -19,9 +19,6 @@
 
 import * as CBOR from '@wireapp/cbor';
 import * as sodium from 'libsodium-wrappers-sumo';
-import * as fs from 'fs';
-import ClassUtil from '../util/ClassUtil';
-import TypeUtil from '../util/TypeUtil';
 
 class MacKey {
   key: Uint8Array;
@@ -55,8 +52,6 @@ class MacKey {
   }
 
   static decode(decoder: CBOR.Decoder): MacKey {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
-
     let key_bytes = new Uint8Array([]);
 
     const nprops = decoder.object();

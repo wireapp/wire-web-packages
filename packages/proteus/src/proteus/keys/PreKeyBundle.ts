@@ -23,8 +23,6 @@ import * as CBOR from '@wireapp/cbor';
 import * as sodium from 'libsodium-wrappers-sumo';
 
 import ClassUtil from '../util/ClassUtil';
-import TypeUtil from '../util/TypeUtil';
-
 import IdentityKey from './IdentityKey';
 import IdentityKeyPair from './IdentityKeyPair';
 import PreKey from './PreKey';
@@ -52,9 +50,6 @@ class PreKeyBundle {
   }
 
   static new(public_identity_key: IdentityKey, prekey: PreKey): PreKeyBundle {
-    TypeUtil.assert_is_instance(IdentityKey, public_identity_key);
-    TypeUtil.assert_is_instance(PreKey, prekey);
-
     const bundle = ClassUtil.new_instance<PreKeyBundle>(PreKeyBundle);
 
     bundle.version = 1;
@@ -67,9 +62,6 @@ class PreKeyBundle {
   }
 
   static signed(identity_pair: IdentityKeyPair, prekey: PreKey): PreKeyBundle {
-    TypeUtil.assert_is_instance(IdentityKeyPair, identity_pair);
-    TypeUtil.assert_is_instance(PreKey, prekey);
-
     const ratchet_key = prekey.key_pair.public_key;
     const signature = identity_pair.secret_key.sign(ratchet_key.pub_edward);
 
@@ -109,13 +101,10 @@ class PreKeyBundle {
   }
 
   static deserialise(buf: ArrayBuffer): PreKeyBundle {
-    TypeUtil.assert_is_instance(ArrayBuffer, buf);
     return PreKeyBundle.decode(new CBOR.Decoder(buf));
   }
 
   encode(encoder: CBOR.Encoder): CBOR.Encoder {
-    TypeUtil.assert_is_instance(CBOR.Encoder, encoder);
-
     encoder.object(5);
     encoder.u8(0);
     encoder.u8(this.version);
@@ -134,8 +123,6 @@ class PreKeyBundle {
   }
 
   static decode(decoder: CBOR.Decoder): PreKeyBundle {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
-
     const self = ClassUtil.new_instance<PreKeyBundle>(PreKeyBundle);
 
     const nprops = decoder.object();
@@ -160,11 +147,6 @@ class PreKeyBundle {
           decoder.skip();
       }
     }
-
-    TypeUtil.assert_is_integer(self.version);
-    TypeUtil.assert_is_integer(self.prekey_id);
-    TypeUtil.assert_is_instance(PublicKey, self.public_key);
-    TypeUtil.assert_is_instance(IdentityKey, self.identity_key);
 
     return self;
   }

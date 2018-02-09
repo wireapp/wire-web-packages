@@ -22,8 +22,6 @@
 import * as CBOR from '@wireapp/cbor';
 
 import ClassUtil from '../util/ClassUtil';
-import TypeUtil from '../util/TypeUtil';
-
 import IdentityKey from '../keys/IdentityKey';
 import PublicKey from '../keys/PublicKey';
 
@@ -46,11 +44,6 @@ class PreKeyMessage extends Message {
   }
 
   static new(prekey_id: number, base_key: PublicKey, identity_key: IdentityKey, message: CipherMessage): PreKeyMessage {
-    TypeUtil.assert_is_integer(prekey_id);
-    TypeUtil.assert_is_instance(PublicKey, base_key);
-    TypeUtil.assert_is_instance(IdentityKey, identity_key);
-    TypeUtil.assert_is_instance(CipherMessage, message);
-
     const pkm = ClassUtil.new_instance<PreKeyMessage>(PreKeyMessage);
 
     pkm.prekey_id = prekey_id;
@@ -75,8 +68,6 @@ class PreKeyMessage extends Message {
   }
 
   static decode(decoder: CBOR.Decoder): PreKeyMessage {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
-
     let prekey_id = null;
     let base_key = null;
     let identity_key = null;

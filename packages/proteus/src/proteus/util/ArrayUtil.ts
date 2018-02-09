@@ -18,7 +18,6 @@
  */
 
 import ProteusError from '../errors/ProteusError';
-import TypeUtil from '../util/TypeUtil';
 
 /** Concatenates array buffers (usually 8-bit unsigned). */
 const ArrayUtil = {
@@ -37,8 +36,6 @@ const ArrayUtil = {
   },
 
   concatenate_array_buffers(buffers: Array<Uint8Array>): Uint8Array {
-    TypeUtil.assert_is_instance(Array, buffers);
-
     return buffers.reduce((accumulator: Uint8Array, bytes: Uint8Array): Uint8Array => {
       const buffer = new Uint8Array(accumulator.byteLength + bytes.byteLength);
       buffer.set(accumulator, 0);

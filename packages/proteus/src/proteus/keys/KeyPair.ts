@@ -24,8 +24,6 @@ import * as ed2curve from 'ed2curve';
 import * as _sodium from 'libsodium-wrappers-sumo';
 
 import ClassUtil from '../util/ClassUtil';
-import TypeUtil from '../util/TypeUtil';
-
 import PublicKey from './PublicKey';
 import SecretKey from './SecretKey';
 
@@ -100,8 +98,6 @@ class KeyPair {
   }
 
   static decode(decoder: CBOR.Decoder): KeyPair {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
-
     const self = ClassUtil.new_instance<KeyPair>(KeyPair);
 
     const nprops = decoder.object();
@@ -117,9 +113,6 @@ class KeyPair {
           decoder.skip();
       }
     }
-
-    TypeUtil.assert_is_instance(SecretKey, self.secret_key);
-    TypeUtil.assert_is_instance(PublicKey, self.public_key);
 
     return self;
   }

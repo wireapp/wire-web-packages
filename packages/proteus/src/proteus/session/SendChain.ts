@@ -22,8 +22,6 @@
 import * as CBOR from '@wireapp/cbor';
 
 import ClassUtil from '../util/ClassUtil';
-import TypeUtil from '../util/TypeUtil';
-
 import ChainKey from './ChainKey';
 import KeyPair from '../keys/KeyPair';
 
@@ -37,9 +35,6 @@ class SendChain {
   }
 
   static new(chain_key: ChainKey, keypair: KeyPair): SendChain {
-    TypeUtil.assert_is_instance(ChainKey, chain_key);
-    TypeUtil.assert_is_instance(KeyPair, keypair);
-
     const sc = ClassUtil.new_instance<SendChain>(SendChain);
     sc.chain_key = chain_key;
     sc.ratchet_key = keypair;
@@ -55,7 +50,6 @@ class SendChain {
   }
 
   static decode(decoder: CBOR.Decoder): SendChain {
-    TypeUtil.assert_is_instance(CBOR.Decoder, decoder);
     const self = ClassUtil.new_instance<SendChain>(SendChain);
     const nprops = decoder.object();
     for (let index = 0; index <= nprops - 1; index++) {
@@ -70,8 +64,7 @@ class SendChain {
           decoder.skip();
       }
     }
-    TypeUtil.assert_is_instance(ChainKey, self.chain_key);
-    TypeUtil.assert_is_instance(KeyPair, self.ratchet_key);
+
     return self;
   }
 }
