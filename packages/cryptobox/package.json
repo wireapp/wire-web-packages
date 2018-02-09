@@ -26,7 +26,7 @@
     "karma": "1.7.0",
     "karma-chrome-launcher": "2.1.1",
     "karma-jasmine": "1.1.0",
-    "logdown": "2.2.0",
+    "logdown": "3.2.3",
     "merge2": "1.2.1",
     "rimraf": "2.6.2",
     "run-sequence": "2.2.1",
@@ -47,7 +47,7 @@
     "dist": "yarn clear && gulp dist --env production",
     "test": "yarn dist && yarn test:node && yarn test:browser",
     "test:browser": "echo done",
-    "test:node": "jasmine --config=test/jasmine.node.json"
+    "test:node": "cross-env DEBUG=cryptobox.* jasmine --config=test/jasmine.node.json"
   },
   "types": "dist/index.d.ts",
   "version": "6.3.7"

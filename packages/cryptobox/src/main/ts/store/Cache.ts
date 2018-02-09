@@ -1,12 +1,15 @@
 import * as ProteusKeys from '@wireapp/proteus/dist/keys/';
 import * as ProteusSession from '@wireapp/proteus/dist/session/';
-import Logdown = require('logdown');
+const logdown = require('logdown');
 import {CryptoboxStore} from '../store/';
 import {CryptoboxError} from '../error/';
 
 export default class Cache implements CryptoboxStore {
   private identity: ProteusKeys.IdentityKeyPair | undefined;
-  private logger: Logdown;
+  private logger: any = logdown('cryptobox.store.Cache', {
+    logger: console,
+    markdown: false,
+  });
   private prekeys: {[index: string]: ProteusKeys.PreKey | ArrayBuffer};
   private sessions: {[index: string]: ProteusSession.Session | ArrayBuffer};
 
@@ -14,7 +17,6 @@ export default class Cache implements CryptoboxStore {
     this.identity = undefined;
     this.prekeys = {};
     this.sessions = {};
-    this.logger = new Logdown({alignOutput: true, markdown: false, prefix: 'cryptobox.store.Cache'});
   }
 
   public delete_all(): Promise<boolean> {

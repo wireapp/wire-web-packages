@@ -9,7 +9,7 @@ import InvalidPreKeyFormatError from './InvalidPreKeyFormatError';
 import {ReadOnlyStore} from './store/';
 import LRUCache from '@wireapp/lru-cache';
 import EventEmitter = require('events');
-import Logdown = require('logdown');
+const logdown = require('logdown');
 
 export interface SessionFromMessageTuple extends Array<CryptoboxSession | Uint8Array> {
   0: CryptoboxSession;
@@ -25,7 +25,10 @@ class Cryptobox extends EventEmitter {
   private cachedPreKeys: Array<ProteusKeys.PreKey>;
   private cachedSessions: LRUCache;
 
-  private logger: Logdown;
+  private logger: any = logdown('cryptobox.Cryptobox', {
+    logger: console,
+    markdown: false,
+  });
   private minimumAmountOfPreKeys: number;
   private pk_store: ReadOnlyStore;
   private store: CryptoboxCRUDStore;
@@ -49,8 +52,6 @@ class Cryptobox extends EventEmitter {
     if (minimumAmountOfPreKeys > ProteusKeys.PreKey.MAX_PREKEY_ID) {
       minimumAmountOfPreKeys = ProteusKeys.PreKey.MAX_PREKEY_ID;
     }
-
-    this.logger = new Logdown({alignOutput: true, markdown: false, prefix: 'cryptobox.Cryptobox'});
 
     this.cachedPreKeys = [];
     this.cachedSessions = new LRUCache(1000);

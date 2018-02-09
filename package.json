@@ -12,8 +12,7 @@
   },
   "lint-staged": {
     "*.{js,jsx}": ["eslint --ignore-path .prettierignore --fix", "git add"],
-    "*.json": ["prettier --ignore-path .prettierignore --write", "git add"],
-    "*.md": ["prettier --ignore-path .prettierignore --write", "git add"],
+    "*.{json,md,scss,ts}": ["prettier --write", "git add"],
     "*.scss": ["prettier --write", "git add"],
     "*.ts": ["prettier --write", "git add"]
   },
