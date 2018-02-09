@@ -7,11 +7,8 @@ module.exports = {
     filename: `${__dirname}/dist/commonjs/index.js`,
   },
   externals: {
-    '@wireapp/proteus': 'Proteus',
-    bazinga64: true,
     dexie: 'Dexie',
     'fs-extra': false,
-    logdown: 'Logdown',
   },
   node: {
     fs: 'empty',
