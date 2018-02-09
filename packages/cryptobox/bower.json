@@ -1,8 +1,10 @@
 {
   "dependencies": {
-    "dexie": "1.5.1",
-    "libsodium.js": "0.7.3",
-    "wire-webapp-lru-cache": "2.0.0",
+    "dexie": "1.5.1"
+  },
+  "devDependencies": {
+    "logdown": "3.2.3",
+    "libsodium.js": "0.5.4",
     "wire-webapp-proteus": "5.2.0"
   },
   "license": "GPL-3.0",
