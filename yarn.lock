@@ -4237,16 +4237,6 @@ gulp-eslint@4.0.2:
     fancy-log "^1.3.2"
     plugin-error "^1.0.0"
 
-gulp-jasmine@3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/gulp-jasmine/-/gulp-jasmine-3.0.0.tgz#0131486f0cd59affeda18e00c643992a9196963b"
-  dependencies:
-    arrify "^1.0.0"
-    jasmine "^2.8.0"
-    jasmine-terminal-reporter "^1.0.3"
-    plugin-error "^0.1.2"
-    through2 "^2.0.0"
-
 gulp-plumber@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/gulp-plumber/-/gulp-plumber-1.2.0.tgz#18ea03912c9ee483f8a5499973b5954cd90f6ad8"
@@ -5214,10 +5204,6 @@ istanbul@0.4.5:
     which "^1.1.1"
     wordwrap "^1.0.0"
 
-jasmine-core@~2.8.0:
-  version "2.8.0"
-  resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-2.8.0.tgz#bcc979ae1f9fd05701e45e52e65d3a5d63f1a24e"
-
 jasmine-core@~2.9.0:
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-2.9.0.tgz#bfbb56defcd30789adec5a3fbba8504233289c72"
@@ -5225,13 +5211,6 @@ jasmine-core@~2.9.0:
 jasmine-core@~2.99.0:
   version "2.99.1"
   resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-2.99.1.tgz#e6400df1e6b56e130b61c4bcd093daa7f6e8ca15"
-
-jasmine-terminal-reporter@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/jasmine-terminal-reporter/-/jasmine-terminal-reporter-1.0.3.tgz#896f1ec8fdf4bf6aecdd41c503eda7347f61526b"
-  dependencies:
-    indent-string "^2.1.0"
-    pluralize "^1.2.1"
 
 jasmine@2.9.0:
   version "2.9.0"
@@ -5248,14 +5227,6 @@ jasmine@2.99.0:
     exit "^0.1.2"
     glob "^7.0.6"
     jasmine-core "~2.99.0"
-
-jasmine@^2.8.0:
-  version "2.8.0"
-  resolved "https://registry.yarnpkg.com/jasmine/-/jasmine-2.8.0.tgz#6b089c0a11576b1f16df11b80146d91d4e8b8a3e"
-  dependencies:
-    exit "^0.1.2"
-    glob "^7.0.6"
-    jasmine-core "~2.8.0"
 
 jest-docblock@^21.0.0:
   version "21.2.0"
@@ -7189,10 +7160,6 @@ plugin-error@^1.0.0, plugin-error@^1.0.1:
     arr-diff "^4.0.0"
     arr-union "^3.1.0"
     extend-shallow "^3.0.2"
-
-pluralize@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-1.2.1.tgz#d1a21483fd22bb41e58a12fa3421823140897c45"
 
 pluralize@^7.0.0:
   version "7.0.0"
