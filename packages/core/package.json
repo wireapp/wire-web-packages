@@ -1,13 +1,13 @@
 {
   "dependencies": {
     "@types/node": "9.3.0",
-    "@wireapp/api-client": "0.3.3",
-    "@wireapp/cryptobox": "6.3.7",
+    "@wireapp/api-client": "0.3.5",
+    "@wireapp/cryptobox": "7.0.1",
     "@wireapp/protocol-messaging": "1.20.0",
-    "@wireapp/store-engine": "0.1.9",
+    "@wireapp/store-engine": "0.1.10",
     "bazinga64": "5.0.3",
     "protobufjs": "6.8.4",
-    "pure-uuid": "1.4.11"
+    "pure-uuid": "1.5.0"
   },
   "devDependencies": {
     "cross-env": "5.1.3",
@@ -19,8 +19,8 @@
     "karma-jasmine-diff-reporter": "1.1.1",
     "karma-sourcemap-loader": "0.3.7",
     "rimraf": "2.6.2",
-    "typescript": "2.6.1",
-    "webpack": "3.10.0"
+    "typescript": "2.7.1",
+    "webpack": "3.11.0"
   },
   "description": "Wire for Web's communication core.",
   "files": [
@@ -40,9 +40,9 @@
     "start": "rimraf .tmp && yarn dist && node index.js",
     "test": "yarn dist && yarn test:node && yarn test:browser",
     "test:browser": "exit 0",
-    "test:node": "cross-env JASMINE_CONFIG_PATH=src/test/node/support/jasmine.json jasmine",
+    "test:node": "jasmine --config=src/test/node/support/jasmine.json",
     "prepare": "yarn dist"
   },
   "types": "./dist/commonjs/index.d.ts",
-  "version": "0.0.32"
+  "version": "1.0.2"
 }
