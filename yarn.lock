@@ -5982,10 +5982,6 @@ log4js@^2.3.9:
     redis "^2.7.1"
     slack-node "~0.2.0"
 
-logdown@2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/logdown/-/logdown-2.2.0.tgz#23698490bb0f4eab8e93205c6209d31c06de35b2"
-
 logdown@3.2.3:
   version "3.2.3"
   resolved "https://registry.yarnpkg.com/logdown/-/logdown-3.2.3.tgz#b033901259057a419cb09a41baa3e98b5be57b3c"
