@@ -1,9 +1,9 @@
 {
   "dependencies": {
     "@types/chai": "4.1.2",
-    "@types/ed2curve": "0.2.1",
+    "@types/ed2curve": "0.2.2",
     "@types/node": "9.4.0",
-    "@wireapp/cbor": "3.0.0",
+    "@wireapp/cbor": "3.0.1",
     "ed2curve": "0.2.1",
     "libsodium-wrappers-sumo": "0.7.3"
   },
@@ -14,7 +14,7 @@
     "jasmine": "2.9.0",
     "rimraf": "2.6.2",
     "typescript": "2.7.1",
-    "webpack": "3.10.0"
+    "webpack": "3.11.0"
   },
   "files": [
     "dist"
@@ -34,5 +34,5 @@
     "test:longrunning": "jasmine --config=spec/support/jasmine.longrunning.json"
   },
   "types": "dist/index.d.ts",
-  "version": "6.0.0"
+  "version": "6.0.2"
 }
