@@ -107,9 +107,9 @@
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.1.2.tgz#f1af664769cfb50af805431c407425ed619daa21"
 
-"@types/ed2curve@0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@types/ed2curve/-/ed2curve-0.2.1.tgz#e1ba68eb377eeaa1c565e22bb61ba406d5195966"
+"@types/ed2curve@0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@types/ed2curve/-/ed2curve-0.2.2.tgz#8f8bc7e2c9a5895a941c63a4f7acd7a6a62a5b15"
   dependencies:
     tweetnacl "^1.0.0"
 
