@@ -16,7 +16,6 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-const loadProtocolBuffers = require('@wireapp/protocol-messaging');
 import {IncomingNotification} from '@wireapp/api-client/dist/commonjs/conversation/';
 import {CryptographyService, GenericMessageType, PayloadBundle} from './crypto/';
 import {Context, LoginData, PreKey} from '@wireapp/api-client/dist/commonjs/auth/';
