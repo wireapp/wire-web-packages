@@ -1,9 +1,9 @@
 {
   "dependencies": {
-    "@types/node": "9.3.0",
-    "@wireapp/api-client": "0.3.10",
-    "@wireapp/cryptobox": "7.0.5",
-    "@wireapp/store-engine": "0.1.12",
+    "@types/node": "9.4.6",
+    "@wireapp/api-client": "0.3.11",
+    "@wireapp/cryptobox": "8.0.0",
+    "@wireapp/store-engine": "0.1.13",
     "bazinga64": "5.0.3",
     "protobufjs": "6.8.4",
     "pure-uuid": "1.5.0"
@@ -31,7 +31,7 @@
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/core",
   "scripts": {
     "build": "yarn build:node && yarn build:browser",
-    "build:browser": "exit 0",
+    "build:browser": "webpack --progress",
     "build:node": "tsc",
     "clear": "rimraf dist && rimraf .tmp",
     "coverage": "istanbul cover --report html ./node_modules/jasmine/bin/jasmine.js",
@@ -43,5 +43,5 @@
     "prepare": "yarn dist"
   },
   "types": "./dist/commonjs/index.d.ts",
-  "version": "1.0.8"
+  "version": "2.0.0"
 }
