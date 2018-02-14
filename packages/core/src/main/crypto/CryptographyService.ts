@@ -84,9 +84,9 @@ export default class CryptographyService {
     const decodedPreKeyBundle: Uint8Array = Decoder.fromBase64(base64EncodedPreKey).asBytes;
     return this.cryptobox
       .encrypt(sessionId, plainText, decodedPreKeyBundle.buffer)
-      .then(encryptedPayload => Encoder.toBase64(encryptedPayload).asString)
-      .catch(error => '💣')
-      .then(encryptedPayload => ({sessionId, encryptedPayload}));
+      .then((encryptedPayload: ArrayBuffer) => Encoder.toBase64(encryptedPayload).asString)
+      .catch((error: Error) => '💣')
+      .then((encryptedPayload: string) => ({sessionId, encryptedPayload}));
   }
 
   public deleteClient(): Promise<string> {
