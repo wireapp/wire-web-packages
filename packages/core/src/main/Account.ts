@@ -337,7 +337,7 @@ export default class Account extends EventEmitter {
     this.context = context;
     this.service.conversation.setClientID(<string>this.context.clientID);
     return this.service.crypto.loadClient().catch(error => {
-      if (error.constructor.name === 'RecordNotFoundError') {
+      if (error instanceof RecordNotFoundError) {
         return this.registerClient(loginData);
       }
       throw error;
