@@ -40,9 +40,8 @@ export default class PriorityQueue<P> {
     if (typeof thunkedPromise !== 'function') thunkedPromise = () => thunkedPromise;
 
     return new Promise((resolve, reject) => {
-      const queueObject = new Item<P>();
+      const queueObject = new Item<P>(priority);
       queueObject.fn = thunkedPromise;
-      queueObject.priority = priority;
       queueObject.reject = reject;
       queueObject.resolve = resolve;
       queueObject.retry = this.config!.maxRetries;
