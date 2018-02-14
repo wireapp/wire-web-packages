@@ -24,6 +24,7 @@ import {H1, Link, Text} from '@wireapp/react-ui-kit/Text';
 import React, {Component} from 'react';
 import {AccessTokenStore} from '../../dist/commonjs/auth/';
 import Client from '../../dist/commonjs/Client';
+import {ClientClassification} from '../../dist/commonjs/client/';
 import {MemoryEngine} from '@wireapp/store-engine/dist/commonjs/engine';
 import ReactDOM from 'react-dom';
 import {WebSocketClient} from '../../dist/commonjs/tcp/';
@@ -44,6 +45,9 @@ class Auth extends Component {
     this.doAuth = this.doAuth.bind(this);
     this.onEmailChange = this.onEmailChange.bind(this);
     this.onPasswordChange = this.onPasswordChange.bind(this);
+
+    const clientClassification = ClientClassification.DESKTOP;
+    console.log('hello', clientClassification);
   }
 
   doAuth(event) {
