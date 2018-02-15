@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2017 Wire Swiss GmbH
+ * Copyright (C) 2018 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,15 +34,15 @@ module.exports = {
     fs: 'empty',
   },
   output: {
-    filename: `${pkg.name.substr(pkg.name.indexOf('/') + 1)}.js`,
+    filename: `${pkg.name.substr(pkg.name.indexOf('/') + 1)}.bundle.js`,
     library: 'Proteus',
     libraryTarget: 'var',
     path: `${__dirname}/dist`,
   },
   performance: {
     hints: 'warning',
-    maxAssetSize: 100,
-    maxEntrypointSize: 300,
+    maxAssetSize: 36000,
+    maxEntrypointSize: 36000,
   },
   plugins: [new webpack.BannerPlugin(`${pkg.name} v${pkg.version}`)],
 };

@@ -3,6 +3,70 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="2.0.1"></a>
+## [2.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.0...@wireapp/core@2.0.1) (2018-02-15)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.0.0"></a>
+# [2.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@1.0.9...@wireapp/core@2.0.0) (2018-02-14)
+
+
+### Bug Fixes
+
+* **core,cli-client,cryptobox,proteus:** Explicitly declare root path to not confuse webpack ([#267](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/267)) ([546e913](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/546e913))
+
+
+### BREAKING CHANGES
+
+* **core,cli-client,cryptobox,proteus:** * Classes are now exported in a file called `root.ts` instead of `index.ts`
+
+
+
+
+<a name="1.0.9"></a>
+## [1.0.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@1.0.8...@wireapp/core@1.0.9) (2018-02-14)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="1.0.8"></a>
+## [1.0.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@1.0.7...@wireapp/core@1.0.8) (2018-02-13)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="1.0.7"></a>
+## [1.0.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@1.0.6...@wireapp/core@1.0.7) (2018-02-13)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="1.0.6"></a>
+## [1.0.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@1.0.5...@wireapp/core@1.0.6) (2018-02-13)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="1.0.5"></a>
+## [1.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@1.0.4...@wireapp/core@1.0.5) (2018-02-13)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
 <a name="1.0.4"></a>
 ## [1.0.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@1.0.3...@wireapp/core@1.0.4) (2018-02-13)
 

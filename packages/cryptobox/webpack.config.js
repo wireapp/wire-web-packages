@@ -8,21 +8,21 @@ module.exports = {
   },
   externals: {
     dexie: 'Dexie',
-    'fs-extra': false,
+    'fs-extra': '{}',
   },
   node: {
     fs: 'empty',
     path: 'empty',
   },
   output: {
-    filename: `${pkg.name.substr(pkg.name.indexOf('/') + 1)}.js`,
+    filename: `${pkg.name.substr(pkg.name.indexOf('/') + 1)}.bundle.js`,
     library: 'cryptobox',
     path: `${__dirname}/dist`,
   },
   performance: {
     hints: 'warning',
-    maxAssetSize: 100,
-    maxEntrypointSize: 300,
+    maxAssetSize: 36000,
+    maxEntrypointSize: 36000,
   },
   plugins: [new webpack.BannerPlugin(`${pkg.name} v${pkg.version}`)],
   target: 'web',
