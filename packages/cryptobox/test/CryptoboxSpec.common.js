@@ -179,8 +179,16 @@ describe('cryptobox.Cryptobox', () => {
 
   describe('PreKeys', () => {
     describe('"serialize_prekey"', () => {
-      it('generates a JSON format', () => {
-        expect('a').toBe('a');
+      it('generates a JSON format', async done => {
+        const box = new cryptobox.Cryptobox(store, 10);
+        box.identity = await Proteus.keys.IdentityKeyPair.new();
+        const preKeyId = 72;
+        const preKey = await Proteus.keys.PreKey.new(preKeyId);
+        const json = box.serialize_prekey(preKey);
+        expect(json.id).toBe(preKeyId);
+        const decodedPreKeyBundleBuffer = sodium.from_base64(json.key, 1).buffer;
+        expect(decodedPreKeyBundleBuffer).toBeDefined();
+        done();
       });
     });
   });
