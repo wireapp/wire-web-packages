@@ -196,7 +196,7 @@ describe('cryptobox.Cryptobox', () => {
     let box = undefined;
     const sessionIdUnique = 'unique_identifier';
 
-    beforeEach(async done => {
+    beforeEach(done => {
       box = new cryptobox.Cryptobox(store);
       box
         .create()
