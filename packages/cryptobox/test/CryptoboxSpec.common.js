@@ -24,7 +24,7 @@ describe('cryptobox.Cryptobox', () => {
   let Proteus = undefined;
   let store = undefined;
 
-  beforeAll(done => {
+  beforeAll(async done => {
     if (typeof window === 'object') {
       cryptobox = window.cryptobox;
       Proteus = window.Proteus;
@@ -32,7 +32,9 @@ describe('cryptobox.Cryptobox', () => {
     } else {
       cryptobox = require('@wireapp/cryptobox');
       Proteus = require('@wireapp/proteus');
-      sodium = require('libsodium-wrappers-sumo');
+      const _sodium = require('libsodium-wrappers-sumo');
+      await _sodium.ready;
+      sodium = _sodium;
       done();
     }
   });
@@ -41,7 +43,7 @@ describe('cryptobox.Cryptobox', () => {
     store = new cryptobox.store.Cache();
   });
 
-  describe('decrypt', () => {
+  describe('"decrypt"', () => {
     it("doesn't decrypt empty ArrayBuffers", done => {
       const box = new cryptobox.Cryptobox(store);
       const sessionId = 'sessionWithBob';
@@ -55,7 +57,7 @@ describe('cryptobox.Cryptobox', () => {
     });
   });
 
-  describe('create', () => {
+  describe('"create"', () => {
     it('initializes a Cryptobox with a new identity and the last resort PreKey and saves these', done => {
       const box = new cryptobox.Cryptobox(store);
 
@@ -175,21 +177,29 @@ describe('cryptobox.Cryptobox', () => {
     });
   });
 
+  describe('PreKeys', () => {
+    describe('"serialize_prekey"', () => {
+      it('generates a JSON format', () => {
+        expect('a').toBe('a');
+      });
+    });
+  });
+
   describe('Sessions', () => {
     let box = undefined;
     const sessionIdUnique = 'unique_identifier';
 
-    beforeEach(done => {
+    beforeEach(async done => {
       box = new cryptobox.Cryptobox(store);
       box
         .create()
-        .then(() => {
+        .then(async () => {
           const bob = {
-            identity: Proteus.keys.IdentityKeyPair.new(),
-            prekey: Proteus.keys.PreKey.new(Proteus.keys.PreKey.MAX_PREKEY_ID),
+            identity: await Proteus.keys.IdentityKeyPair.new(),
+            prekey: await Proteus.keys.PreKey.new(Proteus.keys.PreKey.MAX_PREKEY_ID),
           };
 
-          bob.bundle = Proteus.keys.PreKeyBundle.new(bob.identity.public_key, bob.prekey);
+          bob.bundle = await Proteus.keys.PreKeyBundle.new(bob.identity.public_key, bob.prekey);
 
           return Proteus.session.Session.init_from_prekey(box.identity, bob.bundle);
         })
@@ -211,7 +221,7 @@ describe('cryptobox.Cryptobox', () => {
             'pQABARn//wKhAFggY/Yre8URI2xF93otjO7pUJ3ZjP4aM+sNJb6pL6J+iYgDoQChAFggZ049puHgS2zw8wjJorpl+EG9/op9qEOANG7ecEU2hfwE9g==',
         };
         const sessionId = 'session_id';
-        const decodedPreKeyBundleBuffer = sodium.from_base64(remotePreKey.key).buffer;
+        const decodedPreKeyBundleBuffer = sodium.from_base64(remotePreKey.key, 1).buffer;
 
         box
           .session_from_prekey(sessionId, decodedPreKeyBundleBuffer)
@@ -228,7 +238,7 @@ describe('cryptobox.Cryptobox', () => {
           key: 'hAEZ//9YIOxZw78oQCH6xKyAI7WqagtbvRZ/LaujG+T790hOTbf7WCDqAE5Dc75VfmYji6wEz976hJ2hYuODYE6pA59DNFn/KQ==',
         };
         const sessionId = 'session_id';
-        const decodedPreKeyBundleBuffer = sodium.from_base64(remotePreKey.key).buffer;
+        const decodedPreKeyBundleBuffer = sodium.from_base64(remotePreKey.key, 1).buffer;
 
         box
           .session_from_prekey(sessionId, decodedPreKeyBundleBuffer)

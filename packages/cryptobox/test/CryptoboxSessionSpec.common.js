@@ -22,7 +22,7 @@ describe('cryptobox.CryptoboxSession', () => {
   let Proteus = undefined;
   let sodium = undefined;
 
-  beforeAll(done => {
+  beforeAll(async done => {
     if (typeof window === 'object') {
       cryptobox = window.cryptobox;
       Proteus = window.Proteus;
@@ -31,7 +31,9 @@ describe('cryptobox.CryptoboxSession', () => {
     } else {
       cryptobox = require('@wireapp/cryptobox');
       Proteus = require('@wireapp/proteus');
-      sodium = require('libsodium');
+      const _sodium = require('libsodium-wrappers-sumo');
+      await _sodium.ready;
+      sodium = _sodium;
       done();
     }
   });
@@ -40,10 +42,10 @@ describe('cryptobox.CryptoboxSession', () => {
     let alice = undefined;
     let bob = undefined;
 
-    function generatePreKeys(cryptobox_store) {
+    async function generatePreKeys(cryptobox_store) {
       // Generate one PreKey and the Last Resort PreKey
-      const pre_keys = Proteus.keys.PreKey.generate_prekeys(0, 1);
-      pre_keys.push(Proteus.keys.PreKey.new(Proteus.keys.PreKey.MAX_PREKEY_ID));
+      const pre_keys = await Proteus.keys.PreKey.generate_prekeys(0, 1);
+      pre_keys.push(await Proteus.keys.PreKey.new(Proteus.keys.PreKey.MAX_PREKEY_ID));
 
       const promises = pre_keys.map(pre_key => cryptobox_store.save_prekey(pre_key));
 
@@ -63,9 +65,9 @@ describe('cryptobox.CryptoboxSession', () => {
         .then(() => {
           return bob.cryptobox_store.load_prekey(preKeyId);
         })
-        .then(prekey => {
+        .then(async prekey => {
           // 2. Alice takes Bob's PreKey bundle to initiate a session
-          bob.bundle = Proteus.keys.PreKeyBundle.new(bob.identity.public_key, prekey);
+          bob.bundle = await Proteus.keys.PreKeyBundle.new(bob.identity.public_key, prekey);
           return Proteus.session.Session.init_from_prekey(alice.identity, bob.bundle);
         })
         .then(session => {
@@ -73,25 +75,26 @@ describe('cryptobox.CryptoboxSession', () => {
           return new cryptobox.CryptoboxSession('bobs_client_id', alice.pre_key_store, session);
         })
         .catch(error => {
-          console.log('Error in Test Alice setup!');
+          console.log('Error in Test Alice setup!', error);
           throw error;
         });
     }
 
-    beforeEach(() => {
+    beforeEach(async done => {
       alice = {
         cryptobox_store: new cryptobox.store.Cache(),
-        identity: Proteus.keys.IdentityKeyPair.new(),
+        identity: await Proteus.keys.IdentityKeyPair.new(),
       };
 
       alice.pre_key_store = new cryptobox.store.ReadOnlyStore(alice.cryptobox_store);
 
       bob = {
         cryptobox_store: new cryptobox.store.Cache(),
-        identity: Proteus.keys.IdentityKeyPair.new(),
+        identity: await Proteus.keys.IdentityKeyPair.new(),
       };
 
       bob.pre_key_store = new cryptobox.store.ReadOnlyStore(bob.cryptobox_store);
+      done();
     });
 
     describe('fingerprints', () => {
