@@ -618,7 +618,7 @@ declare module 'libsodium-wrappers-sumo' {
     key: Uint8Array,
     outputFormat?: OutputFormat
   ): string | Uint8Array;
-  function from_base64(input: string, variant: base64_variants): Uint8Array;
+  function from_base64(input: string, variant: number): Uint8Array;
   function from_hex(input: string): string;
   function from_string(str: string): Uint8Array;
   function increment(bytes: Uint8Array): void;
