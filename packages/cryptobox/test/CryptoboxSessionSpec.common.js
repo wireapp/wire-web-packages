@@ -18,19 +18,15 @@
  */
 
 describe('cryptobox.CryptoboxSession', () => {
-  let cryptobox = undefined;
-  let Proteus = undefined;
+  const cryptobox = typeof window === 'object' ? window.cryptobox : require('@wireapp/cryptobox');
+  const Proteus = typeof window === 'object' ? window.Proteus : require('@wireapp/proteus');
   let sodium = undefined;
 
   beforeAll(async done => {
     if (typeof window === 'object') {
-      cryptobox = window.cryptobox;
-      Proteus = window.Proteus;
       sodium = window.sodium;
       done();
     } else {
-      cryptobox = require('@wireapp/cryptobox');
-      Proteus = require('@wireapp/proteus');
       const _sodium = require('libsodium-wrappers-sumo');
       await _sodium.ready;
       sodium = _sodium;
