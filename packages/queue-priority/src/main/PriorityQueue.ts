@@ -73,29 +73,20 @@ export default class PriorityQueue<P> {
 
     Promise.resolve(queueObject.fn())
       .then((result: any) => {
-        return {
-          shouldContinue: true,
-          wrappedResolve: queueObject.resolve(result),
-        };
+        return [true, () => queueObject.resolve(result)];
       })
       .catch((error: Error) => {
         if (queueObject.retry! > 0) {
           queueObject.retry! -= 1;
           // TODO: Implement configurable reconnection delay (and reconnection delay growth factor)
           setTimeout(() => this.resolveItems(), this.config!.retryDelay || 1000);
-          return {
-            shouldContinue: false,
-            wrappedResolve: undefined,
-          };
+          return [false];
         } else {
           queueObject.reject(error);
-          return {
-            shouldContinue: true,
-            wrappedResolve: undefined,
-          };
+          return [true];
         }
       })
-      .then(({shouldContinue, wrappedResolve}) => {
+      .then(([shouldContinue, wrappedResolve]: [boolean, () => any]) => {
         if (shouldContinue) {
           if (wrappedResolve) wrappedResolve();
           this.isPending = false;
