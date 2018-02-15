@@ -17,8 +17,6 @@
  *
  */
 
-const dist = 'dist/';
-
 const preprocessors = {};
 preprocessors['**/*.js'] = ['sourcemap'];
 
@@ -39,7 +37,7 @@ module.exports = function(config) {
         flags: ['--no-sandbox'],
       },
     },
-    files: [`${dist}test-bundle.js`],
+    files: ['dist/test-bundle.js'],
     frameworks: ['jasmine'],
     logLevel: config.LOG_INFO,
     port: 9876,

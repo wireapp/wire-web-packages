@@ -17,11 +17,10 @@
 //
 
 export default class Item<P> {
-  fn: Function = () => undefined;
-  reject: Function = () => undefined;
-  resolve: Function = () => undefined;
-  retry: number | undefined = undefined;
-  timestamp: number = 0;
-
-  constructor(public priority: P) {}
+  fn: Function;
+  priority: P;
+  reject: Function;
+  resolve: Function;
+  retry: number | undefined;
+  timestamp: number;
 }
