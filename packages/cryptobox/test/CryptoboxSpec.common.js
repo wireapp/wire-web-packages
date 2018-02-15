@@ -186,7 +186,7 @@ describe('cryptobox.Cryptobox', () => {
         const preKey = await Proteus.keys.PreKey.new(preKeyId);
         const json = box.serialize_prekey(preKey);
         expect(json.id).toBe(preKeyId);
-        const decodedPreKeyBundleBuffer = sodium.from_base64(json.key, 1).buffer;
+        const decodedPreKeyBundleBuffer = sodium.from_base64(json.key, sodium.base64_variants.ORIGINAL).buffer;
         expect(decodedPreKeyBundleBuffer).toBeDefined();
         done();
       });
@@ -229,7 +229,7 @@ describe('cryptobox.Cryptobox', () => {
             'pQABARn//wKhAFggY/Yre8URI2xF93otjO7pUJ3ZjP4aM+sNJb6pL6J+iYgDoQChAFggZ049puHgS2zw8wjJorpl+EG9/op9qEOANG7ecEU2hfwE9g==',
         };
         const sessionId = 'session_id';
-        const decodedPreKeyBundleBuffer = sodium.from_base64(remotePreKey.key, 1).buffer;
+        const decodedPreKeyBundleBuffer = sodium.from_base64(remotePreKey.key, sodium.base64_variants.ORIGINAL).buffer;
 
         box
           .session_from_prekey(sessionId, decodedPreKeyBundleBuffer)
@@ -246,7 +246,7 @@ describe('cryptobox.Cryptobox', () => {
           key: 'hAEZ//9YIOxZw78oQCH6xKyAI7WqagtbvRZ/LaujG+T790hOTbf7WCDqAE5Dc75VfmYji6wEz976hJ2hYuODYE6pA59DNFn/KQ==',
         };
         const sessionId = 'session_id';
-        const decodedPreKeyBundleBuffer = sodium.from_base64(remotePreKey.key, 1).buffer;
+        const decodedPreKeyBundleBuffer = sodium.from_base64(remotePreKey.key, sodium.base64_variants.ORIGINAL).buffer;
 
         box
           .session_from_prekey(sessionId, decodedPreKeyBundleBuffer)
