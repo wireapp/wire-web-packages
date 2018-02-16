@@ -401,7 +401,7 @@ export default class Account extends EventEmitter {
   public registerClient(
     loginData: LoginData,
     clientInfo: ClientInfo = {
-      clientClassification: ClientClassification.DESKTOP,
+      classification: ClientClassification.DESKTOP,
       cookieLabel: 'default',
       model: `${pkg.name} v${pkg.version}`,
       location: {lat: 52.53269, lon: 13.402315},
@@ -412,7 +412,7 @@ export default class Account extends EventEmitter {
       .then((serializedPreKeys: Array<PreKey>) => {
         if (this.service.crypto.cryptobox.lastResortPreKey) {
           const newClient: NewClient = {
-            class: clientInfo.clientClassification,
+            class: clientInfo.classification,
             cookie: clientInfo.cookieLabel,
             lastkey: this.service.crypto.cryptobox.serialize_prekey(this.service.crypto.cryptobox.lastResortPreKey),
             location: clientInfo.location,

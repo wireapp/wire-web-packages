@@ -7,7 +7,7 @@ import {
 } from '@wireapp/api-client/dist/commonjs/client/index';
 
 interface ClientInfo {
-  clientClassification: ClientClassification;
+  classification: ClientClassification;
   cookieLabel: string;
   model: string;
   location: Location;
