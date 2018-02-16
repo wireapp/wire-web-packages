@@ -16,6 +16,7 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
+const pkg = require('../../package.json');
 import {IncomingNotification} from '@wireapp/api-client/dist/commonjs/conversation/index';
 import {CryptographyService, GenericMessageType, PayloadBundle} from './crypto/root';
 import {Context, LoginData, PreKey} from '@wireapp/api-client/dist/commonjs/auth/index';
@@ -27,6 +28,7 @@ import {
 import {
   ClientClassification,
   ClientType,
+  Location,
   NewClient,
   RegisteredClient,
 } from '@wireapp/api-client/dist/commonjs/client/index';
@@ -399,7 +401,9 @@ export default class Account extends EventEmitter {
   public registerClient(
     loginData: LoginData,
     clientClassification: ClientClassification = ClientClassification.DESKTOP,
-    cookieLabel: string = 'default'
+    cookieLabel: string = 'default',
+    model: string = `${pkg.name} v${pkg.version}`,
+    location: Location = {lat: 52.53269, lon: 13.402315}
   ): Promise<RegisteredClient> {
     return this.service.crypto
       .createCryptobox()
@@ -409,8 +413,10 @@ export default class Account extends EventEmitter {
             class: clientClassification,
             cookie: cookieLabel,
             lastkey: this.service.crypto.cryptobox.serialize_prekey(this.service.crypto.cryptobox.lastResortPreKey),
+            location,
             password: String(loginData.password),
             prekeys: serializedPreKeys,
+            model,
             sigkeys: {
               enckey: 'Wuec0oJi9/q9VsgOil9Ds4uhhYwBT+CAUrvi/S9vcz0=',
               mackey: 'Wuec0oJi9/q9VsgOil9Ds4uhhYwBT+CAUrvi/S9vcz0=',
