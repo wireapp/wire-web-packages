@@ -1,10 +1,10 @@
 const _sodium = require('libsodium-wrappers-sumo');
 
 (async () => {
-  const Proteus = require('@wireapp/proteus');
-
   await _sodium.ready;
-  sodium = _sodium;
+  const sodium = _sodium;
+
+  const Proteus = require('@wireapp/proteus');
 
   const identity = await Proteus.keys.IdentityKeyPair.new();
   const fingerprint = identity.public_key.fingerprint();
