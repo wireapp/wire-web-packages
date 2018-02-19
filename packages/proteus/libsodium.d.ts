@@ -108,9 +108,6 @@ declare module 'libsodium-wrappers-sumo' {
   const crypto_box_SEALBYTES: number;
   const crypto_box_SECRETKEYBYTES: number;
   const crypto_box_SEEDBYTES: number;
-  const crypto_box_curve25519xchacha20poly1305_NONCEBYTES: number;
-  const crypto_box_curve25519xchacha20poly1305_PUBLICKEYBYTES: number;
-  const crypto_box_curve25519xchacha20poly1305_SECRETKEYBYTES: number;
   const crypto_core_hchacha20_CONSTBYTES: number;
   const crypto_core_hchacha20_INPUTBYTES: number;
   const crypto_core_hchacha20_KEYBYTES: number;
@@ -469,30 +466,6 @@ declare module 'libsodium-wrappers-sumo' {
   function crypto_box_beforenm(
     publicKey: Uint8Array,
     privateKey: Uint8Array,
-    outputFormat?: StringOutputFormat | null
-  ): string;
-  function crypto_box_curve25519xchacha20poly1305_keypair(outputFormat?: Uint8ArrayOutputFormat | null): Uint8Array;
-  function crypto_box_curve25519xchacha20poly1305_keypair(outputFormat?: StringOutputFormat | null): string;
-  function crypto_box_curve25519xchacha20poly1305_seal(
-    message: string | Uint8Array | undefined,
-    publicKey: Uint8Array,
-    outputFormat?: Uint8ArrayOutputFormat | null
-  ): Uint8Array;
-  function crypto_box_curve25519xchacha20poly1305_seal(
-    message: string | Uint8Array | undefined,
-    publicKey: Uint8Array,
-    outputFormat?: StringOutputFormat | null
-  ): string;
-  function crypto_box_curve25519xchacha20poly1305_seal_open(
-    ciphertext: string | Uint8Array | undefined,
-    publicKey: Uint8Array,
-    secretKey: Uint8Array,
-    outputFormat?: Uint8ArrayOutputFormat | null
-  ): Uint8Array;
-  function crypto_box_curve25519xchacha20poly1305_seal_open(
-    ciphertext: string | Uint8Array | undefined,
-    publicKey: Uint8Array,
-    secretKey: Uint8Array,
     outputFormat?: StringOutputFormat | null
   ): string;
   function crypto_box_detached(
@@ -992,18 +965,6 @@ declare module 'libsodium-wrappers-sumo' {
     message: string | Uint8Array | undefined,
     publicKey: Uint8Array
   ): boolean;
-  function crypto_stream_chacha20(
-    outLength: number,
-    key: Uint8Array,
-    nonce: Uint8Array,
-    outputFormat?: Uint8ArrayOutputFormat | null
-  ): Uint8Array;
-  function crypto_stream_chacha20(
-    outLength: number,
-    key: Uint8Array,
-    nonce: Uint8Array,
-    outputFormat?: StringOutputFormat | null
-  ): string;
   function crypto_stream_chacha20_ietf_xor(
     input_message: string | Uint8Array | undefined,
     nonce: Uint8Array,
