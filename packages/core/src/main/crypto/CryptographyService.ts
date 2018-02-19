@@ -85,7 +85,10 @@ export default class CryptographyService {
     return this.cryptobox
       .encrypt(sessionId, plainText, decodedPreKeyBundle.buffer)
       .then((encryptedPayload: ArrayBuffer) => Encoder.toBase64(encryptedPayload).asString)
-      .catch((error: Error) => '💣')
+      .catch((error: Error) => {
+        console.log('EEEEEEEEER', error);
+        return '💣';
+      })
       .then((encryptedPayload: string) => ({sessionId, encryptedPayload}));
   }
 

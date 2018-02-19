@@ -9,6 +9,7 @@ import InvalidPreKeyFormatError from './InvalidPreKeyFormatError';
 import {ReadOnlyStore} from './store/root';
 import LRUCache from '@wireapp/lru-cache';
 import EventEmitter = require('events');
+import PQueue = require('p-queue');
 const logdown = require('logdown');
 
 export interface SessionFromMessageTuple extends Array<CryptoboxSession | Uint8Array> {
@@ -31,6 +32,7 @@ class Cryptobox extends EventEmitter {
   });
   private minimumAmountOfPreKeys: number;
   private pk_store: ReadOnlyStore;
+  private queue: PQueue = new PQueue({concurrency: 1});
   private store: CryptoboxCRUDStore;
 
   public lastResortPreKey: ProteusKeys.PreKey | undefined;
@@ -137,7 +139,7 @@ class Cryptobox extends EventEmitter {
     return this.refill_prekeys().then(() => {
       const ids: Array<string> = this.cachedPreKeys.map(preKey => preKey.key_id.toString());
       this.logger.log(
-        `Initialized Cryptobox with a total amount of "${this.cachedPreKeys.length}" PreKeys (${ids.join(', ')}).`,
+        `Initialized Cryptobox with a total amount of "${this.cachedPreKeys.length}" PreKey(s) (${ids.join(', ')}).`,
         this.cachedPreKeys
       );
       return this.cachedPreKeys.sort((a, b) => a.key_id - b.key_id);
@@ -367,24 +369,26 @@ class Cryptobox extends EventEmitter {
     let encryptedBuffer: ArrayBuffer;
     let loadedSession: CryptoboxSession;
 
-    return Promise.resolve()
-      .then(() => {
-        if (pre_key_bundle) {
-          return this.session_from_prekey(session_id, pre_key_bundle);
-        }
+    return this.queue.add(() => {
+      return Promise.resolve()
+        .then(() => {
+          if (pre_key_bundle) {
+            return this.session_from_prekey(session_id, pre_key_bundle);
+          }
 
-        return this.session_load(session_id);
-      })
-      .then((session: CryptoboxSession) => {
-        loadedSession = session;
-        return loadedSession.encrypt(payload);
-      })
-      .then((encrypted: ArrayBuffer) => {
-        encryptedBuffer = encrypted;
-        // TODO: This should be "update_session"
-        return this.session_update(loadedSession);
-      })
-      .then(() => encryptedBuffer);
+          return this.session_load(session_id);
+        })
+        .then((session: CryptoboxSession) => {
+          loadedSession = session;
+          return loadedSession.encrypt(payload);
+        })
+        .then((encrypted: ArrayBuffer) => {
+          encryptedBuffer = encrypted;
+          // TODO: This should be "update_session"
+          return this.session_update(loadedSession);
+        })
+        .then(() => encryptedBuffer);
+    });
   }
 
   public decrypt(session_id: string, ciphertext: ArrayBuffer): Promise<Uint8Array> {
