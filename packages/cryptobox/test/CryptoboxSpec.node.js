@@ -20,22 +20,12 @@
 /* eslint no-magic-numbers: "off" */
 
 describe('cryptobox.Cryptobox', () => {
-  const cryptobox = typeof window === 'object' ? window.cryptobox : require('@wireapp/cryptobox');
-  const Proteus = typeof window === 'object' ? window.Proteus : require('@wireapp/proteus');
+  const cryptobox = require('@wireapp/cryptobox');
+  const Proteus = require('@wireapp/proteus');
   const {MemoryEngine} = require('@wireapp/store-engine').StoreEngine;
 
-  beforeEach(() => {
-    store = new cryptobox.store.Cache();
-  });
-
-  async function generatePreKeyBundle() {
-    const identity = await Proteus.keys.IdentityKeyPair.new();
-    const preKey = await Proteus.keys.PreKey.new(0);
-    return Proteus.keys.PreKeyBundle.new(identity.public_key, preKey);
-  }
-
-  describe('"encrypt"', () => {
-    it('encrypts messages for multiple recipients / clients', async done => {
+  describe('"encrypt / decrypt"', () => {
+    it('encrypts messages for multiple clients and decrypts', async done => {
       const alice = new cryptobox.Cryptobox(new cryptobox.store.CryptoboxCRUDStore(new MemoryEngine('alice')));
       const text = 'Hello, World!';
 
@@ -43,17 +33,34 @@ describe('cryptobox.Cryptobox', () => {
       await alice.create();
       expect(alice.cachedPreKeys.length).toBe(1);
 
-      const bobBundle = await generatePreKeyBundle();
-      const eveBundle = await generatePreKeyBundle();
-      const malloryBundle = await generatePreKeyBundle();
+      const bob = new cryptobox.Cryptobox(new cryptobox.store.CryptoboxCRUDStore(new MemoryEngine('bob')));
+      await bob.create();
+
+      const eve = new cryptobox.Cryptobox(new cryptobox.store.CryptoboxCRUDStore(new MemoryEngine('eve')));
+      await eve.create();
+
+      const mallory = new cryptobox.Cryptobox(new cryptobox.store.CryptoboxCRUDStore(new MemoryEngine('mallory')));
+      await mallory.create();
+
+      const bobBundle = Proteus.keys.PreKeyBundle.new(bob.identity.public_key, bob.cachedPreKeys[0]);
+      const eveBundle = Proteus.keys.PreKeyBundle.new(eve.identity.public_key, eve.cachedPreKeys[0]);
+      const malloryBundle = Proteus.keys.PreKeyBundle.new(mallory.identity.public_key, mallory.cachedPreKeys[0]);
 
       Promise.all([
         alice.encrypt('session-with-bob', text, bobBundle.serialise()),
         alice.encrypt('session-with-eve', text, eveBundle.serialise()),
         alice.encrypt('session-with-mallory', text, malloryBundle.serialise()),
       ])
-        .then(encryptedPayloads => {
-          expect(encryptedPayloads.length).toBe(3);
+        .then(async ([bobPayload, evePayload, malloryPayload]) => {
+          let decrypted = await bob.decrypt('session-with-alice', bobPayload);
+          expect(Buffer.from(decrypted).toString('utf8')).toBe(text);
+
+          decrypted = await eve.decrypt('session-with-alice', evePayload);
+          expect(Buffer.from(decrypted).toString('utf8')).toBe(text);
+
+          decrypted = await mallory.decrypt('session-with-alice', malloryPayload);
+          expect(Buffer.from(decrypted).toString('utf8')).toBe(text);
+
           done();
         })
         .catch(done.fail);
