@@ -151,9 +151,7 @@ class Client {
         );
         accessToken = createdAccessToken;
       })
-      .then(() => {
-        this.initEngine(context);
-      })
+      .then(() => this.initEngine(context))
       .then(() => this.accessTokenStore.updateToken(accessToken))
       .then(() => context);
   }
