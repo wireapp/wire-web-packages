@@ -16,8 +16,10 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
+import {ClientType} from '../client/';
+
 class Context {
-  constructor(public userID: string, public clientID?: string) {}
+  constructor(public userID: string, public clientID?: string, public clientType?: ClientType) {}
 }
 
 export {Context};
