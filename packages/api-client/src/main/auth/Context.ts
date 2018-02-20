@@ -19,7 +19,7 @@
 import {ClientType} from '../client/';
 
 class Context {
-  constructor(public userID: string, public clientID?: string, public clientType?: ClientType) {}
+  constructor(public userId: string, public clientId?: string, public clientType?: ClientType) {}
 }
 
 export {Context};

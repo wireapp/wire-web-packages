@@ -174,15 +174,15 @@ class Client {
   }
 
   public connect(): Promise<WebSocketClient> {
-    return this.transport.ws.connect(this.context!.clientID);
+    return this.transport.ws.connect(this.context!.clientId);
   }
 
-  private createContext(userID: string, clientId?: string, clientType?: ClientType): Context {
+  private createContext(userId: string, clientId?: string, clientType?: ClientType): Context {
     if (this.context) {
-      throw new Error(`There is already a context with user ID '${userID}'.`);
+      throw new Error(`There is already a context with user ID '${userId}'.`);
     }
 
-    this.context = new Context(userID, clientId, clientType);
+    this.context = new Context(userId, clientId, clientType);
     return this.context;
   }
 
@@ -192,7 +192,7 @@ class Client {
 
   private async initEngine(context: Context) {
     await this.config.store.init(
-      `${this.STORE_NAME_PREFIX}@${this.config.urls.name}@${context.userID}${
+      `${this.STORE_NAME_PREFIX}@${this.config.urls.name}@${context.userId}${
         context.clientType ? `@${context.clientType}` : ''
       }`
     );
