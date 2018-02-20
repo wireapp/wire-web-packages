@@ -11,7 +11,7 @@
     "@types/tough-cookie": "2.3.2",
     "@wireapp/queue-priority": "0.0.26",
     "@wireapp/store-engine": "0.1.13",
-    "axios": "0.17.1",
+    "axios": "0.18.0",
     "html5-websocket": "2.0.2",
     "logdown": "3.2.3",
     "reconnecting-websocket": "3.2.2",
@@ -19,7 +19,7 @@
     "tough-cookie": "2.3.3"
   },
   "devDependencies": {
-    "@wireapp/react-ui-kit": "1.0.1",
+    "@wireapp/react-ui-kit": "1.0.2",
     "babel-core": "6.26.0",
     "babel-loader": "7.1.2",
     "babel-preset-react": "6.24.1",
@@ -62,9 +62,8 @@
     "test": "yarn dist && yarn test:node && yarn test:browser",
     "test:browser": "webpack && karma start karma.conf.js",
     "test:node": "cross-env DEBUG=@wireapp/api-client* JASMINE_CONFIG_PATH=src/test/node/support/jasmine.json jasmine",
-    "prepare": "yarn dist",
     "watch": "webpack-dev-server --config webpack.config.js"
   },
   "types": "./dist/commonjs/Client.d.ts",
-  "version": "0.3.14"
+  "version": "0.3.16"
 }

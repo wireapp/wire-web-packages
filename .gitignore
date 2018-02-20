@@ -1,5 +1,6 @@
 *hot-update.js*
 .DS_Store
+*.env
 .idea
 .tmp
 .yarnclean

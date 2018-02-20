@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="7.0.4"></a>
+## [7.0.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.0.3...@wireapp/proteus@7.0.4) (2018-02-19)
+
+
+### Bug Fixes
+
+* **cryptobox:** Queuing encryptions for multipe clients ([#280](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/issues/280)) ([d7dbd87](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/commit/d7dbd87))
+
+
+
+
+<a name="7.0.3"></a>
+## [7.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.0.2...@wireapp/proteus@7.0.3) (2018-02-19)
+
+
+
+
+**Note:** Version bump only for package @wireapp/proteus
+
+<a name="7.0.2"></a>
+## [7.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.0.1...@wireapp/proteus@7.0.2) (2018-02-18)
+
+
+
+
+**Note:** Version bump only for package @wireapp/proteus
+
+<a name="7.0.1"></a>
+## [7.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.0.0...@wireapp/proteus@7.0.1) (2018-02-15)
+
+
+### Bug Fixes
+
+* **proteus:** Specifying "sodium.base64_variants.ORIGINAL" ([#272](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/issues/272)) ([1f1792e](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/commit/1f1792e))
+
+
+
+
 <a name="7.0.0"></a>
 # [7.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@6.0.5...@wireapp/proteus@7.0.0) (2018-02-14)
 

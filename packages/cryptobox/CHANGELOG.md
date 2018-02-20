@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="8.0.5"></a>
+## [8.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.0.4...@wireapp/cryptobox@8.0.5) (2018-02-19)
+
+
+### Bug Fixes
+
+* **cryptobox:** Cannot find module 'p-queue' ([7c2ebb2](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/commit/7c2ebb2))
+
+
+
+
+<a name="8.0.4"></a>
+## [8.0.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.0.3...@wireapp/cryptobox@8.0.4) (2018-02-19)
+
+
+### Bug Fixes
+
+* **cryptobox:** Queuing encryptions for multipe clients ([#280](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/issues/280)) ([d7dbd87](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/commit/d7dbd87))
+
+
+
+
+<a name="8.0.3"></a>
+## [8.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.0.2...@wireapp/cryptobox@8.0.3) (2018-02-19)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+<a name="8.0.2"></a>
+## [8.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.0.1...@wireapp/cryptobox@8.0.2) (2018-02-18)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+<a name="8.0.1"></a>
+## [8.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.0.0...@wireapp/cryptobox@8.0.1) (2018-02-15)
+
+
+### Bug Fixes
+
+* **proteus:** Specifying "sodium.base64_variants.ORIGINAL" ([#272](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/issues/272)) ([1f1792e](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/commit/1f1792e))
+
+
+
+
 <a name="8.0.0"></a>
 # [8.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@7.0.6...@wireapp/cryptobox@8.0.0) (2018-02-14)
 

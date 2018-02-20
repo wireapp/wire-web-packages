@@ -3,6 +3,70 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="1.0.11"></a>
+## [1.0.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@1.0.10...@wireapp/cli-client@1.0.11) (2018-02-19)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+<a name="1.0.10"></a>
+## [1.0.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@1.0.9...@wireapp/cli-client@1.0.10) (2018-02-19)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+<a name="1.0.9"></a>
+## [1.0.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@1.0.8...@wireapp/cli-client@1.0.9) (2018-02-19)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+<a name="1.0.8"></a>
+## [1.0.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@1.0.7...@wireapp/cli-client@1.0.8) (2018-02-19)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+<a name="1.0.7"></a>
+## [1.0.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@1.0.6...@wireapp/cli-client@1.0.7) (2018-02-18)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+<a name="1.0.6"></a>
+## [1.0.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@1.0.5...@wireapp/cli-client@1.0.6) (2018-02-16)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+<a name="1.0.5"></a>
+## [1.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@1.0.4...@wireapp/cli-client@1.0.5) (2018-02-16)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+<a name="1.0.4"></a>
+## [1.0.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@1.0.3...@wireapp/cli-client@1.0.4) (2018-02-15)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cli-client
+
 <a name="1.0.3"></a>
 ## [1.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@1.0.2...@wireapp/cli-client@1.0.3) (2018-02-15)
 
