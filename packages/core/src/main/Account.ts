@@ -371,9 +371,8 @@ class Account extends EventEmitter {
     return this.init()
       .then(() => {
         LoginSanitizer.removeNonPrintableCharacters(loginData);
-        return this.apiClient.init();
       })
-      .catch((error: Error) => this.apiClient.login(loginData))
+      .then(() => this.apiClient.login(loginData))
       .then((context: Context) => {
         if (initClient) {
           return this.initClient(context, loginData).then(client => {
