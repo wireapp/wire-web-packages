@@ -17,6 +17,7 @@
  *
  */
 
+import Dexie from 'dexie';
 import {StoreEngine} from '@wireapp/store-engine';
 
 describe('StoreEngine.IndexedDBEngine', () => {
@@ -44,6 +45,32 @@ describe('StoreEngine.IndexedDBEngine', () => {
   describe('"create"', () => {
     Object.entries(require('../../test/shared/create')).map(([description, testFunction]) => {
       it(description, done => testFunction(done, engine));
+    });
+
+    it('writes into an existing database.', async done => {
+      const TABLE_NAME = 'friends';
+      const PRIMARY_KEY = 'camilla';
+      const entity = {
+        age: 25,
+        anotherProperty: 'not all properties needs to be indexed',
+        name: 'Camilla',
+      };
+
+      const db = new Dexie('MyDatabase');
+      db.version(1).stores({
+        [TABLE_NAME]: ', name, age',
+      });
+
+      engine = new StoreEngine.IndexedDBEngine(db);
+      await engine.init(STORE_NAME);
+
+      engine
+        .create(TABLE_NAME, PRIMARY_KEY, entity)
+        .then(primaryKey => {
+          expect(primaryKey).toEqual(PRIMARY_KEY);
+          done();
+        })
+        .catch(done.fail);
     });
   });
 
