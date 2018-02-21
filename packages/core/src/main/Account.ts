@@ -33,7 +33,7 @@ import {
   RegisteredClient,
 } from '@wireapp/api-client/dist/commonjs/client/index';
 import {LoginSanitizer, ClientInfo} from './auth/root';
-import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/error/index';
+import {StoreEngine} from '@wireapp/store-engine';
 import {Root} from 'protobufjs';
 import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/index';
 import {ConversationService} from './conversation/root';
@@ -345,7 +345,8 @@ class Account extends EventEmitter {
     this.context = context;
     this.service.conversation.setClientID(<string>this.context.clientId);
     return this.service.crypto.loadClient().catch(error => {
-      if (error instanceof RecordNotFoundError) {
+      console.log('Here I am', error.constructor.name);
+      if (error instanceof StoreEngine.error.RecordNotFoundError) {
         return this.registerClient(loginData);
       }
       throw error;
