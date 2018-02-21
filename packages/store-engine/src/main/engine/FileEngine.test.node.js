@@ -63,7 +63,7 @@ describe('StoreEngine.FileEngine', () => {
   });
 
   describe('"create"', () => {
-    Object.entries(require('../../../shared/create')).map(([description, testFunction]) => {
+    Object.entries(require('../../test/shared/create')).map(([description, testFunction]) => {
       it(description, done => testFunction(done, engine));
     });
 
@@ -111,7 +111,7 @@ describe('StoreEngine.FileEngine', () => {
   });
 
   describe('"delete"', () => {
-    Object.entries(require('../../../shared/delete')).map(([description, testFunction]) => {
+    Object.entries(require('../../test/shared/delete')).map(([description, testFunction]) => {
       it(description, done => testFunction(done, engine));
     });
 
@@ -136,7 +136,7 @@ describe('StoreEngine.FileEngine', () => {
   });
 
   describe('"deleteAll"', () => {
-    Object.entries(require('../../../shared/deleteAll')).map(([description, testFunction]) => {
+    Object.entries(require('../../test/shared/deleteAll')).map(([description, testFunction]) => {
       it(description, done => testFunction(done, engine));
     });
 
@@ -156,7 +156,7 @@ describe('StoreEngine.FileEngine', () => {
   });
 
   describe('"read"', () => {
-    Object.entries(require('../../../shared/read')).map(([description, testFunction]) => {
+    Object.entries(require('../../test/shared/read')).map(([description, testFunction]) => {
       it(description, done => testFunction(done, engine));
     });
 
@@ -181,7 +181,7 @@ describe('StoreEngine.FileEngine', () => {
   });
 
   describe('"readAll"', () => {
-    Object.entries(require('../../../shared/readAll')).map(([description, testFunction]) => {
+    Object.entries(require('../../test/shared/readAll')).map(([description, testFunction]) => {
       it(description, done => testFunction(done, engine));
     });
 
@@ -201,13 +201,13 @@ describe('StoreEngine.FileEngine', () => {
   });
 
   describe('"readAllPrimaryKeys"', () => {
-    Object.entries(require('../../../shared/readAllPrimaryKeys')).map(([description, testFunction]) => {
+    Object.entries(require('../../test/shared/readAllPrimaryKeys')).map(([description, testFunction]) => {
       it(description, done => testFunction(done, engine));
     });
   });
 
   describe('"update"', () => {
-    Object.entries(require('../../../shared/update')).map(([description, testFunction]) => {
+    Object.entries(require('../../test/shared/update')).map(([description, testFunction]) => {
       it(description, done => testFunction(done, engine));
     });
   });
