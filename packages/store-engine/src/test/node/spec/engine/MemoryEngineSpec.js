@@ -20,11 +20,12 @@
 const {StoreEngine} = require('@wireapp/store-engine');
 
 describe('StoreEngine.MemoryEngine', () => {
+  const STORE_NAME = 'store-name';
   let engine = undefined;
 
   beforeEach(async done => {
     engine = new StoreEngine.MemoryEngine();
-    await engine.init('store-name');
+    await engine.init(STORE_NAME);
     done();
   });
 
