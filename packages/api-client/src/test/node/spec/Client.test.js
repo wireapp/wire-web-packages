@@ -273,7 +273,9 @@ describe('Client', () => {
           expect(client.accessTokenStore.accessToken.access_token).toBe(accessTokenData.access_token);
           done();
         })
-        .catch(done.fail);
+        .catch(error => {
+          console.log('HELLO', error);
+        });
     });
   });
 });
