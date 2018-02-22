@@ -2,8 +2,7 @@
   "compilerOptions": {
     "noImplicitAny": true,
     "outDir": "dist",
-    "rootDir": "src/main",
-    "target": "ES6"
+    "rootDir": "src/main"
   },
   "exclude": ["bower_components", "node_modules", "dist"],
   "extends": "../../tsconfig.json"
