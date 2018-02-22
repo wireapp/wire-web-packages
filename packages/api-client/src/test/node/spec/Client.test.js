@@ -272,9 +272,6 @@ describe('Client', () => {
           expect(context.userId).toBe(registerData.id);
           expect(client.accessTokenStore.accessToken.access_token).toBe(accessTokenData.access_token);
           done();
-        })
-        .catch(error => {
-          console.log('HELLO', error);
         });
     });
   });
