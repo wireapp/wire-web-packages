@@ -168,18 +168,6 @@
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/@types/tough-cookie/-/tough-cookie-2.3.2.tgz#e0d481d8bb282ad8a8c9e100ceb72c995fb5e709"
 
-"@wireapp/core@2.0.25":
-  version "2.0.25"
-  resolved "https://registry.yarnpkg.com/@wireapp/core/-/core-2.0.25.tgz#d4f802f52f90cbb63d9da8d3ef78fc32b501328f"
-  dependencies:
-    "@types/node" "9.4.6"
-    "@wireapp/api-client" "0.4.6"
-    "@wireapp/cryptobox" "8.0.13"
-    "@wireapp/store-engine" "0.2.3"
-    bazinga64 "5.0.3"
-    protobufjs "6.8.5"
-    pure-uuid "1.5.0"
-
 JSONStream@^1.0.3, JSONStream@^1.0.4:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/JSONStream/-/JSONStream-1.3.2.tgz#c102371b6ec3a7cf3b847ca00c20bb0fce4c6dea"
@@ -9499,10 +9487,6 @@ type-is@~1.6.15:
 typedarray@^0.0.6, typedarray@~0.0.5:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
-
-typescript@2.4.2:
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.4.2.tgz#f8395f85d459276067c988aa41837a8f82870844"
 
 typescript@2.6.1:
   version "2.6.1"
