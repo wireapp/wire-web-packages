@@ -88,10 +88,7 @@ class RemoteIdentityChanged extends DecryptError {
 }
 
 class RemoteEncryptionError extends DecryptError {
-  constructor(
-    message = "The sending client couldn't encrypt a message for our client.",
-    code: number = DecryptError.CODE.CASE_213
-  ) {
+  constructor(message = 'Sending client failed to encrypt the message', code: number = DecryptError.CODE.CASE_213) {
     super(message, code);
     Object.setPrototypeOf(this, RemoteEncryptionError.prototype);
   }
