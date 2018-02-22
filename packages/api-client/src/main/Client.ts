@@ -138,6 +138,7 @@ class Client {
   }
 
   public login(loginData: LoginData): Promise<Context> {
+    console.log('APIClient - login');
     let context: Context;
     let accessToken: AccessTokenData;
     return Promise.resolve()
@@ -164,6 +165,7 @@ class Client {
   }
 
   public logout(): Promise<void> {
+    console.log('APIClient - logout');
     return this.auth.api
       .postLogout()
       .then(() => this.disconnect('Closed by client logout'))
@@ -178,6 +180,7 @@ class Client {
   }
 
   private createContext(userId: string, clientId?: string, clientType?: ClientType): Context {
+    console.log('APIClient - createContext');
     if (this.context) {
       throw new Error(`There is already a context with user ID '${userId}'.`);
     }
@@ -191,11 +194,13 @@ class Client {
   }
 
   private async initEngine(context: Context) {
+    console.log('APIClient - initEngine');
     const db = await this.config.store.init(
       `${this.STORE_NAME_PREFIX}@${this.config.urls.name}@${context.userId}${
         context.clientType ? `@${context.clientType}` : ''
       }`
     );
+    console.log('APIClient - Database initialized... loading schema');
     const isDexieStore = db && db.constructor.name === 'Dexie';
     const isSchemalessStore = db && Object.keys(db._dbSchema).length === 0;
     if (isDexieStore && isSchemalessStore) {

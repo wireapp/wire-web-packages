@@ -3,11 +3,13 @@ import {RecordAlreadyExistsError, RecordNotFoundError, RecordTypeError} from './
 
 export default class MemoryEngine implements CRUDEngine {
   public storeName: string = '';
+  public isInitialized: boolean = false;
   private stores: {[index: string]: {[index: string]: any}} = {};
 
   init(storeName: string): Promise<any> {
     this.storeName = storeName;
     this.stores[this.storeName] = this.stores[this.storeName] || {};
+    this.isInitialized = true;
     return Promise.resolve();
   }
 
