@@ -3,9 +3,11 @@ import {RecordAlreadyExistsError, RecordNotFoundError, RecordTypeError} from './
 
 export default class LocalStorageEngine implements CRUDEngine {
   public storeName: string = '';
+  public isInitialized: boolean = false;
 
   init(storeName: string): Promise<any> {
     this.storeName = storeName;
+    this.isInitialized = true;
     return Promise.resolve();
   }
 

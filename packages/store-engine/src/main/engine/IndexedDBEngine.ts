@@ -8,16 +8,19 @@ export interface DexieInstance extends Dexie {
 
 export default class IndexedDBEngine implements CRUDEngine {
   public storeName: string = '';
+  public isInitialized: boolean = false;
 
   constructor(private db?: DexieInstance) {}
 
   init(storeName: string = 'wire'): Promise<any> {
+    console.log('init');
     if (this.db) {
       this.storeName = this.db.name;
     } else {
       this.storeName = storeName;
       this.db = new Dexie(this.storeName);
     }
+    this.isInitialized = true;
     return Promise.resolve(this.db);
   }
 
@@ -37,6 +40,7 @@ export default class IndexedDBEngine implements CRUDEngine {
   }
 
   public delete(tableName: string, primaryKey: string): Promise<string> {
+    console.log(`StorageEngine - delete(${tableName}, ${primaryKey})`, this.db, this.db![tableName]);
     return Promise.resolve()
       .then(() => this.db![tableName].delete(primaryKey))
       .then(() => primaryKey);

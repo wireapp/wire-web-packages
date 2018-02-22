@@ -38,6 +38,7 @@ class AccessTokenStore extends EventEmitter {
 
   public async updateToken(accessToken: AccessTokenData): Promise<AccessTokenData> {
     if (this.accessToken !== accessToken) {
+      console.log('APIClient - updateToken');
       return this.engine
         .delete(AUTH_TABLE_NAME, AUTH_ACCESS_TOKEN_KEY)
         .then(() => this.engine.create(AUTH_TABLE_NAME, AUTH_ACCESS_TOKEN_KEY, accessToken))
@@ -46,8 +47,15 @@ class AccessTokenStore extends EventEmitter {
     return Promise.resolve(this.accessToken);
   }
 
-  public async init(): Promise<AccessTokenData | undefined> {
-    await this.engine.init('wire');
+  public init(): Promise<AccessTokenData | undefined> {
+    // TODO: Handle non-initialized stores
+    // for register there is no store yet
+    // for refresh there might be a store
+    if (!this.engine.isInitialized) {
+      console.log('APIClient - init on uninitialized database');
+      return Promise.resolve(undefined);
+    }
+    console.log('init on initialized database');
     return this.engine
       .read<AccessTokenData>(AUTH_TABLE_NAME, AUTH_ACCESS_TOKEN_KEY)
       .catch((error: Error) => {

@@ -5,6 +5,7 @@ import {PathValidationError, RecordAlreadyExistsError, RecordNotFoundError, Reco
 
 export default class FileEngine implements CRUDEngine {
   public storeName: string = '';
+  public isInitialized: boolean = false;
   private options: {fileExtension: string} = {
     fileExtension: '.dat',
   };
@@ -12,6 +13,7 @@ export default class FileEngine implements CRUDEngine {
   init(storeName: string, options: {fileExtension: string}): Promise<any> {
     this.storeName = path.normalize(storeName);
     this.options = {...this.options, ...options};
+    this.isInitialized = true;
     return Promise.resolve(storeName);
   }
 

@@ -329,7 +329,6 @@ class Account extends EventEmitter {
       .then((root: Root) => {
         this.protocolBuffers.GenericMessage = root.lookup('GenericMessage');
         this.protocolBuffers.Text = root.lookup('Text');
-        return this.apiClient.config.store.init('wire');
       })
       .then(() => {
         const crypto: CryptographyService = new CryptographyService(this.apiClient.config.store);
@@ -370,10 +369,14 @@ class Account extends EventEmitter {
   public login(loginData: LoginData, initClient: boolean = true): Promise<Context> {
     return this.init()
       .then(() => LoginSanitizer.removeNonPrintableCharacters(loginData))
+      .then(() => console.log('before login'))
       .then(() => this.apiClient.login(loginData))
       .then((context: Context) => {
+        console.log('after login');
         if (initClient) {
+          console.log('before init client');
           return this.initClient(context, loginData).then(client => {
+            console.log('after init client');
             this.apiClient.context.clientId = client.id;
           });
         }
@@ -405,6 +408,7 @@ class Account extends EventEmitter {
       location: {lat: 52.53269, lon: 13.402315},
     }
   ): Promise<RegisteredClient> {
+    console.log('Core - registerClient');
     return this.service.crypto
       .createCryptobox()
       .then((serializedPreKeys: Array<PreKey>) => {

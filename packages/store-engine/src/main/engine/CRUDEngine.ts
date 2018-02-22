@@ -1,5 +1,6 @@
 interface CRUDEngine {
   storeName: string;
+  isInitialized: boolean;
   init(storeName: string, ...args: any[]): Promise<any>;
   create<T>(tableName: string, primaryKey: string, entity: T): Promise<string>;
   // TODO: Implement "createAll"
