@@ -23,18 +23,25 @@ const Proteus = require('@wireapp/proteus');
 const cryptobox = require('@wireapp/cryptobox');
 
 describe('cryptobox.store.IndexedDB', () => {
+  const DATABASE_NAME = 'wire@production@532af01e-1e24-4366-aacf-33b67d4ee376@temporary';
+  let store = undefined;
+
+  beforeEach(() => {
+    store = new cryptobox.store.IndexedDB(DATABASE_NAME);
+  });
+
+  afterEach(done => {
+    if (store) {
+      store
+        .delete_all()
+        .then(done)
+        .catch(done.fail);
+    }
+
+    window.indexedDB.deleteDatabase(DATABASE_NAME);
+  });
+
   describe('"constructor"', () => {
-    let store = undefined;
-
-    afterEach(done => {
-      if (store) {
-        store
-          .delete_all()
-          .then(done)
-          .catch(done.fail);
-      }
-    });
-
     it('works with a given Dexie instance', () => {
       const schema = {
         amplify: '',
@@ -46,31 +53,17 @@ describe('cryptobox.store.IndexedDB', () => {
         sessions: '',
       };
 
-      const name = 'wire@production@532af01e-1e24-4366-aacf-33b67d4ee376@temporary';
-      const db = new Dexie(name);
+      const db = new Dexie(DATABASE_NAME);
       db.version(7).stores(schema);
 
       store = new cryptobox.store.IndexedDB(db);
-      expect(store.db.name).toBe(name);
+
+      expect(store.db.name).toBe(DATABASE_NAME);
+      expect(Object.keys(db._dbSchema).length).toBe(7);
     });
   });
 
   describe('"create_session"', () => {
-    let store = undefined;
-
-    beforeEach(() => {
-      store = new cryptobox.store.IndexedDB('bobs_store');
-    });
-
-    afterEach(done => {
-      if (store) {
-        store
-          .delete_all()
-          .then(done)
-          .catch(done.fail);
-      }
-    });
-
     it('saves a session with meta data', async done => {
       const alice = await Proteus.keys.IdentityKeyPair.new();
 
