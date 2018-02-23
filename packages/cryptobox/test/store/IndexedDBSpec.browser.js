@@ -86,4 +86,30 @@ describe('cryptobox.store.IndexedDB', () => {
       done();
     });
   });
+
+  describe('"update_session"', () => {
+    it('updates an already persisted session', async done => {
+      const aliceIdentity = await Proteus.keys.IdentityKeyPair.new();
+      const bobIdentity = await Proteus.keys.IdentityKeyPair.new();
+      const bobLastResortPreKey = await Proteus.keys.PreKey.new(Proteus.keys.PreKey.MAX_PREKEY_ID);
+      const bobPreKeyBundle = await Proteus.keys.PreKeyBundle.new(bobIdentity.public_key, bobLastResortPreKey);
+      const sessionId = 'my_session_with_bob';
+
+      let proteusSession = await Proteus.session.Session.init_from_prekey(aliceIdentity, bobPreKeyBundle);
+      await store.create_session(sessionId, proteusSession);
+
+      expect(proteusSession.local_identity.public_key.fingerprint()).toBe(aliceIdentity.public_key.fingerprint());
+      expect(proteusSession.remote_identity.public_key.fingerprint()).toBe(bobIdentity.public_key.fingerprint());
+      expect(proteusSession.version).toBe(1);
+      proteusSession.version = 2;
+
+      proteusSession = await store.update_session(sessionId, proteusSession);
+
+      expect(proteusSession.local_identity.public_key.fingerprint()).toBe(aliceIdentity.public_key.fingerprint());
+      expect(proteusSession.remote_identity.public_key.fingerprint()).toBe(bobIdentity.public_key.fingerprint());
+      expect(proteusSession.version).toBe(2);
+
+      done();
+    });
+  });
 });
