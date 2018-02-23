@@ -4,7 +4,8 @@ const webpack = require('webpack');
 module.exports = {
   devtool: 'source-map',
   entry: {
-    filename: `${__dirname}/dist/commonjs/index.js`,
+    'cryptobox.bundle': `${__dirname}/dist/commonjs/index.js`,
+    'cryptobox.test.bundle': `${__dirname}/test/index.test.browser.js`,
   },
   externals: {
     dexie: 'Dexie',
@@ -15,7 +16,7 @@ module.exports = {
     path: 'empty',
   },
   output: {
-    filename: `${pkg.name.substr(pkg.name.indexOf('/') + 1)}.bundle.js`,
+    filename: `[name].js`,
     library: 'cryptobox',
     path: `${__dirname}/dist`,
   },

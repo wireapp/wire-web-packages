@@ -19,19 +19,10 @@
 
 /* eslint no-magic-numbers: "off" */
 
+const Proteus = require('@wireapp/proteus');
+const cryptobox = require('@wireapp/cryptobox');
+
 describe('cryptobox.store.IndexedDB', () => {
-  let cryptobox = undefined;
-  let Dexie = undefined;
-
-  beforeAll(done => {
-    if (typeof window === 'object') {
-      cryptobox = window.cryptobox;
-      Dexie = window.Dexie;
-      sodium = window.sodium;
-      done();
-    }
-  });
-
   describe('Basic functionality', () => {
     it('removes PreKeys from the storage (when a session gets established) and creates new PreKeys if needed.', done => {
       const alice = {
@@ -105,7 +96,7 @@ describe('cryptobox.store.IndexedDB', () => {
     });
   });
 
-  describe('constructor', () => {
+  describe('"constructor"', () => {
     let store = undefined;
 
     afterEach(done => {
@@ -117,7 +108,7 @@ describe('cryptobox.store.IndexedDB', () => {
       }
     });
 
-    it('works with a given Dexie instance', () => {
+    fit('works with a given Dexie instance', () => {
       const schema = {
         amplify: '',
         clients: ', meta.primary_key',
@@ -137,7 +128,7 @@ describe('cryptobox.store.IndexedDB', () => {
     });
   });
 
-  describe('create', () => {
+  describe('"create"', () => {
     let store = undefined;
 
     afterEach(done => {
@@ -172,7 +163,7 @@ describe('cryptobox.store.IndexedDB', () => {
     });
   });
 
-  describe('create_session', () => {
+  describe('"create_session"', () => {
     let store = undefined;
 
     beforeEach(() => {
@@ -219,7 +210,7 @@ describe('cryptobox.store.IndexedDB', () => {
     });
   });
 
-  describe('session_from_prekey', () => {
+  describe('"session_from_prekey"', () => {
     it('saves and caches a valid session from a serialized PreKey bundle', done => {
       const alice = new cryptobox.Cryptobox(new cryptobox.store.IndexedDB('alice_db'), 1);
       const sessionId = 'session_with_bob';

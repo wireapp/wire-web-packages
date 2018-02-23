@@ -22,6 +22,9 @@ module.exports = function(config) {
     autoWatch: false,
     basePath: '',
     browsers: ['ChromeNoSandbox'],
+    client: {
+      useIframe: false,
+    },
     colors: true,
     concurrency: Infinity,
     customLaunchers: {
@@ -30,20 +33,25 @@ module.exports = function(config) {
         flags: ['--no-sandbox'],
       },
     },
-    exclude: [],
+    files: [
+      {included: true, nocache: true, pattern: 'dist/lib/dynamic/**/*.js', served: true},
+      'dist/cryptobox.test.bundle.js',
+      // 'test/**/*Spec.+(browser|common).js',
+    ],
+    // files: [
+    //   // Libraries
+    //   // // Application
+    //   // 'dist/cryptobox.bundle.js',
+    //   // // Tests
+    //   // 'test/**/*Spec.{browser,common}.js',
+    // ],
     frameworks: ['jasmine'],
     port: 9876,
     preprocessors: {},
-    proxies: {
-      '/dist': '/base/dist',
-    },
-    reporters: ['progress'],
+    // proxies: {
+    //   '/dist': '/base/dist',
+    // },
+    reporters: ['jasmine-diff', 'progress'],
     singleRun: true,
   });
-
-  if (process.env.TRAVIS) {
-    config.set({
-      port: 9877,
-    });
-  }
 };
