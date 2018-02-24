@@ -5,6 +5,7 @@
     "@wireapp/lru-cache": "2.0.6",
     "@wireapp/proteus": "7.1.1",
     "@wireapp/store-engine": "0.2.4",
+    "bazinga64": "5.0.3",
     "dexie": "2.0.1",
     "fs-extra": "5.0.0",
     "p-queue": "2.3.0"
