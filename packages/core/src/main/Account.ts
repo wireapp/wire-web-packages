@@ -32,8 +32,7 @@ import {
   NewClient,
   RegisteredClient,
 } from '@wireapp/api-client/dist/commonjs/client/index';
-import {LoginSanitizer, ClientInfo} from './auth/root';
-import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/error/index';
+import {ClientInfo, LoginSanitizer} from './auth/root';
 import {Root} from 'protobufjs';
 import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/index';
 import {ConversationService} from './conversation/root';
