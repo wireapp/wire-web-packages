@@ -36,21 +36,10 @@ module.exports = function(config) {
     files: [
       {included: true, nocache: true, pattern: 'dist/lib/dynamic/**/*.js', served: true},
       'dist/cryptobox.test.bundle.js',
-      // 'test/**/*Spec.+(browser|common).js',
     ],
-    // files: [
-    //   // Libraries
-    //   // // Application
-    //   // 'dist/cryptobox.bundle.js',
-    //   // // Tests
-    //   // 'test/**/*Spec.{browser,common}.js',
-    // ],
     frameworks: ['jasmine'],
     port: 9876,
     preprocessors: {},
-    // proxies: {
-    //   '/dist': '/base/dist',
-    // },
     reporters: ['jasmine-diff', 'progress'],
     singleRun: true,
   });
