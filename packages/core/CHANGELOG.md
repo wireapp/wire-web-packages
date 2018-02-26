@@ -3,6 +3,87 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="2.0.28"></a>
+## [2.0.28](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.27...@wireapp/core@2.0.28) (2018-02-23)
+
+
+### Bug Fixes
+
+* **core:** Save client meta data after creation ([#297](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/297)) ([c029d2b](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/c029d2b))
+
+
+
+
+<a name="2.0.27"></a>
+## [2.0.27](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.25...@wireapp/core@2.0.27) (2018-02-22)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.0.25"></a>
+## [2.0.25](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.24...@wireapp/core@2.0.25) (2018-02-22)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.0.24"></a>
+## [2.0.24](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.23...@wireapp/core@2.0.24) (2018-02-22)
+
+
+### Bug Fixes
+
+* **core:** Remove init call from login function ([#291](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/291)) ([7c8c16d](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/7c8c16d))
+
+
+
+
+<a name="2.0.23"></a>
+## [2.0.23](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.22...@wireapp/core@2.0.23) (2018-02-22)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.0.22"></a>
+## [2.0.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.21...@wireapp/core@2.0.22) (2018-02-22)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.0.21"></a>
+## [2.0.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.20...@wireapp/core@2.0.21) (2018-02-22)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.0.20"></a>
+## [2.0.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.19...@wireapp/core@2.0.20) (2018-02-21)
+
+
+### Bug Fixes
+
+* **core:** Identify 'RecordNotFoundError' by constructor name for webpack bundling ([3c0c811](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/3c0c811))
+
+
+
+
+<a name="2.0.19"></a>
+## [2.0.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.18...@wireapp/core@2.0.19) (2018-02-21)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
 <a name="2.0.18"></a>
 ## [2.0.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.17...@wireapp/core@2.0.18) (2018-02-21)
 

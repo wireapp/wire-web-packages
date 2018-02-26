@@ -329,7 +329,6 @@ class Account extends EventEmitter {
       .then((root: Root) => {
         this.protocolBuffers.GenericMessage = root.lookup('GenericMessage');
         this.protocolBuffers.Text = root.lookup('Text');
-        return this.apiClient.config.store.init('wire');
       })
       .then(() => {
         const crypto: CryptographyService = new CryptographyService(this.apiClient.config.store);
@@ -345,8 +344,7 @@ class Account extends EventEmitter {
     this.context = context;
     this.service.conversation.setClientID(<string>this.context.clientId);
     return this.service.crypto.loadClient().catch(error => {
-      console.log('Here I am', error.constructor.name);
-      if (error instanceof StoreEngine.error.RecordNotFoundError) {
+      if (error.constructor.name === 'RecordNotFoundError') {
         return this.registerClient(loginData);
       }
       throw error;
@@ -370,11 +368,8 @@ class Account extends EventEmitter {
 
   public login(loginData: LoginData, initClient: boolean = true): Promise<Context> {
     return this.init()
-      .then(() => {
-        LoginSanitizer.removeNonPrintableCharacters(loginData);
-        return this.apiClient.init();
-      })
-      .catch((error: Error) => this.apiClient.login(loginData))
+      .then(() => LoginSanitizer.removeNonPrintableCharacters(loginData))
+      .then(() => this.apiClient.login(loginData))
       .then((context: Context) => {
         if (initClient) {
           return this.initClient(context, loginData).then(client => {
@@ -436,7 +431,7 @@ class Account extends EventEmitter {
       .then((newClient: NewClient) => this.apiClient.client.api.postClient(newClient))
       .then((client: RegisteredClient) => {
         this.client = client;
-        return this.service.crypto.saveClient(client);
+        return this.service.crypto.saveClient(this.client);
       })
       .then(() => this.client);
   }

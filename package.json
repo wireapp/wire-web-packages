@@ -7,12 +7,18 @@
     "eslint-plugin-react": "7.7.0",
     "husky": "0.14.3",
     "lerna": "2.9.0",
-    "lint-staged": "6.1.1",
+    "lint-staged": "7.0.0",
     "prettier": "1.10.2"
   },
   "lint-staged": {
-    "*.{js,jsx}": ["eslint --fix", "git add"],
-    "*.{json,md,scss,ts}": ["prettier --write", "git add"]
+    "*.{js,jsx}": [
+      "eslint --fix",
+      "git add"
+    ],
+    "*.{json,md,scss,ts}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "private": true,
   "scripts": {
@@ -29,5 +35,7 @@
     "test:jsScript": "eslint --ignore-path .gitignore **/*.{js,jsx}",
     "release": "yarn test && lerna run test:longrunning --scope @wireapp/proteus && lerna publish -m \"chore: Publish\" --conventional-commits --loglevel=verbose --exact --allow-branch=master --registry=https://registry.npmjs.org/ --yes"
   },
-  "workspaces": ["packages/*"]
+  "workspaces": [
+    "packages/*"
+  ]
 }
