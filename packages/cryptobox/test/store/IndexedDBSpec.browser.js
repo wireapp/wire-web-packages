@@ -26,9 +26,7 @@ describe('cryptobox.store.IndexedDB', () => {
   const DATABASE_NAME = 'wire@production@532af01e-1e24-4366-aacf-33b67d4ee376@temporary';
   let store = undefined;
 
-  beforeEach(() => {
-    store = new cryptobox.store.IndexedDB(DATABASE_NAME);
-  });
+  beforeEach(() => (store = new cryptobox.store.IndexedDB(DATABASE_NAME)));
 
   afterEach(done => {
     if (store) {
@@ -62,6 +60,8 @@ describe('cryptobox.store.IndexedDB', () => {
       expect(Object.keys(db._dbSchema).length).toBe(7);
     });
   });
+
+  describe('"create"', () => {});
 
   describe('"create_session"', () => {
     it('saves a session with meta data', async done => {
