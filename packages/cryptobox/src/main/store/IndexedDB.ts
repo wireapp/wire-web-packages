@@ -10,6 +10,7 @@ export interface DexieInstance extends Dexie {
   [index: string]: any;
 }
 
+// TODO: Remove this class in the long run and use "IndexedDBEngine" from "store-engine" instead!
 class IndexedDB implements CryptoboxStore {
   public identity: ProteusKeys.IdentityKeyPair | undefined;
 
