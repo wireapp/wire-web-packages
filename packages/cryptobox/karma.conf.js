@@ -39,7 +39,9 @@ module.exports = function(config) {
     ],
     frameworks: ['jasmine'],
     port: 9876,
-    preprocessors: {},
+    preprocessors: {
+      '**/*.js': ['sourcemap'],
+    },
     reporters: ['jasmine-diff', 'progress'],
     singleRun: true,
   });
