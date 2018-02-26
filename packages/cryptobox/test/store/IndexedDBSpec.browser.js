@@ -23,7 +23,7 @@ const Proteus = require('@wireapp/proteus');
 const cryptobox = require('@wireapp/cryptobox');
 
 describe('cryptobox.store.IndexedDB', () => {
-  const DATABASE_NAME = 'wire@production@532af01e-1e24-4366-aacf-33b67d4ee376@temporary';
+  let DATABASE_NAME = 'wire@production@532af01e-1e24-4366-aacf-33b67d4ee376@temporary';
   let store = undefined;
 
   beforeEach(() => (store = new cryptobox.store.IndexedDB(DATABASE_NAME)));
@@ -87,7 +87,9 @@ describe('cryptobox.store.IndexedDB', () => {
 
   describe('"session_from_prekey"', () => {
     it('saves and caches a valid session from a serialized PreKey bundle', async done => {
-      const alice = new cryptobox.Cryptobox(new cryptobox.store.IndexedDB('alice_db'), 1);
+      DATABASE_NAME = 'alice_db';
+
+      const alice = new cryptobox.Cryptobox(new cryptobox.store.IndexedDB(DATABASE_NAME), 1);
       const sessionId = 'session_with_bob';
 
       const bob = await Proteus.keys.IdentityKeyPair.new();
