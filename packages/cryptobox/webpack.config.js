@@ -1,11 +1,13 @@
 const pkg = require('./package.json');
 const webpack = require('webpack');
 
+const projectName = pkg.name.replace('@wireapp/', '');
+
 module.exports = {
   devtool: 'source-map',
   entry: {
-    'cryptobox.bundle': `${__dirname}/dist/commonjs/index.js`,
-    'cryptobox.test.bundle': `${__dirname}/test/index.test.browser.js`,
+    [projectName]: `${__dirname}/${pkg.main}`,
+    [`${projectName}.test`]: `${__dirname}/test/index.test.browser.js`,
   },
   externals: {
     dexie: 'Dexie',
@@ -16,14 +18,9 @@ module.exports = {
     path: 'empty',
   },
   output: {
-    filename: `[name].js`,
-    library: 'cryptobox',
+    filename: '[name].bundle.js',
+    library: projectName,
     path: `${__dirname}/dist`,
-  },
-  performance: {
-    hints: 'warning',
-    maxAssetSize: 36000,
-    maxEntrypointSize: 36000,
   },
   plugins: [new webpack.BannerPlugin(`${pkg.name} v${pkg.version}`)],
   target: 'web',
