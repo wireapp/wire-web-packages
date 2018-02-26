@@ -3,15 +3,15 @@ import * as ProteusSession from '@wireapp/proteus/dist/session/root';
 import Dexie from 'dexie';
 const logdown = require('logdown');
 import CryptoboxStore from './CryptoboxStore';
-import {error as storeError} from '../store/root';
 import {SerialisedRecord} from '../store/root';
 import {Decoder} from 'bazinga64';
+import {StoreEngine} from '@wireapp/store-engine';
 
 export interface DexieInstance extends Dexie {
   [index: string]: any;
 }
 
-// TODO: This class should extend "CRUDEngine" from "store-engine"
+// TODO: Remove this class in the long run and use "IndexedDBEngine" from "store-engine" instead!
 class IndexedDB implements CryptoboxStore {
   public identity: ProteusKeys.IdentityKeyPair | undefined;
 
@@ -56,7 +56,7 @@ class IndexedDB implements CryptoboxStore {
         return this.db[store_name].add(entity, primary_key);
       }
 
-      throw new storeError.RecordTypeError(
+      throw new StoreEngine.error.RecordTypeError(
         `Entity is "undefined" or "null". Store name "${store_name}", Primary Key "${primary_key}".`
       );
     });
@@ -76,7 +76,7 @@ class IndexedDB implements CryptoboxStore {
 
         const message: string = `Record "${primary_key}" from object store "${store_name}" could not be found.`;
         this.logger.warn(message);
-        throw new storeError.RecordNotFoundError(message);
+        throw new StoreEngine.error.RecordNotFoundError(message);
       });
   }
 
@@ -137,7 +137,7 @@ class IndexedDB implements CryptoboxStore {
         return ProteusKeys.IdentityKeyPair.deserialise(payload);
       })
       .catch(function(error: Error) {
-        if (error instanceof storeError.RecordNotFoundError) {
+        if (error instanceof StoreEngine.error.RecordNotFoundError) {
           return undefined;
         }
         throw error;
@@ -154,7 +154,7 @@ class IndexedDB implements CryptoboxStore {
         return ProteusKeys.PreKey.deserialise(payload);
       })
       .catch(function(error: Error) {
-        if (error instanceof storeError.RecordNotFoundError) {
+        if (error instanceof StoreEngine.error.RecordNotFoundError) {
           return undefined;
         }
         throw error;
@@ -256,7 +256,7 @@ class IndexedDB implements CryptoboxStore {
       .catch((error: Error) => {
         if (error instanceof Dexie.ConstraintError) {
           const message: string = `Session with ID '${session_id}' already exists and cannot get overwritten. You need to delete the session first if you want to do it.`;
-          throw new storeError.RecordAlreadyExistsError(message);
+          throw new StoreEngine.error.RecordAlreadyExistsError(message);
         }
 
         throw error;
