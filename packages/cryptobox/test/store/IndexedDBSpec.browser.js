@@ -61,8 +61,6 @@ describe('cryptobox.store.IndexedDB', () => {
     });
   });
 
-  describe('"create"', () => {});
-
   describe('"create_session"', () => {
     it('saves a session with meta data', async done => {
       const alice = await Proteus.keys.IdentityKeyPair.new();
@@ -82,6 +80,31 @@ describe('cryptobox.store.IndexedDB', () => {
 
       const loadedSession = await store.read_session(alice, sessionId);
       expect(loadedSession.session_tag).toEqual(proteusSession.session_tag);
+
+      done();
+    });
+  });
+
+  describe('"session_from_prekey"', () => {
+    it('saves and caches a valid session from a serialized PreKey bundle', async done => {
+      const alice = new cryptobox.Cryptobox(new cryptobox.store.IndexedDB('alice_db'), 1);
+      const sessionId = 'session_with_bob';
+
+      const bob = await Proteus.keys.IdentityKeyPair.new();
+      const preKey = await Proteus.keys.PreKey.new(Proteus.keys.PreKey.MAX_PREKEY_ID);
+      const bobPreKeyBundle = await Proteus.keys.PreKeyBundle.new(bob.public_key, preKey);
+
+      const allPreKeys = await alice.create();
+      expect(allPreKeys.length).toBe(1);
+
+      let cryptoboxSession = await alice.session_from_prekey(sessionId, bobPreKeyBundle.serialise());
+      expect(cryptoboxSession.fingerprint_remote()).toBe(bob.public_key.fingerprint());
+
+      cryptoboxSession = alice.load_session_from_cache(sessionId);
+      expect(cryptoboxSession.fingerprint_remote()).toBe(bob.public_key.fingerprint());
+
+      cryptoboxSession = await alice.session_from_prekey(sessionId, bobPreKeyBundle.serialise());
+      expect(cryptoboxSession.fingerprint_remote()).toBe(bob.public_key.fingerprint());
 
       done();
     });
