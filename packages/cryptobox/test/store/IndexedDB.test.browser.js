@@ -40,6 +40,86 @@ describe('cryptobox.store.IndexedDB', () => {
     window.indexedDB.deleteDatabase(storeName);
   });
 
+  describe('Basic functionality', () => {
+    it('removes PreKeys from the storage (when a session gets established) and creates new PreKeys if needed.', async done => {
+      const alice = {
+        // PreKeys: ["65535", "0", "1"]
+        desktop: new cryptobox.Cryptobox(new cryptobox.store.IndexedDB('alice_desktop'), 3),
+      };
+
+      const bob = {
+        // PreKeys: ["65535"]
+        desktop: new cryptobox.Cryptobox(new cryptobox.store.IndexedDB('bob_desktop'), 1),
+        // PreKeys: ["65535"]
+        mobile: new cryptobox.Cryptobox(new cryptobox.store.IndexedDB('bob_mobile'), 1),
+      };
+
+      spyOn(alice.desktop, 'publish_prekeys').and.callThrough();
+      spyOn(alice.desktop.pk_store, 'release_prekeys').and.callThrough();
+
+      const messageFromBob = 'Hello Alice!';
+
+      await Promise.all([alice.desktop.create(), bob.desktop.create(), bob.mobile.create()]);
+      expect(alice.desktop.cachedPreKeys.length).toBe(3);
+      expect(bob.desktop.cachedPreKeys.length).toBe(1);
+      expect(bob.mobile.cachedPreKeys.length).toBe(1);
+
+      let prekey = await alice.desktop.store.load_prekey(0);
+      expect(prekey).toBeDefined();
+
+      // Bob sends a message (with PreKey material and ciphertext) to Alice's desktop client
+      let publicPreKeyBundle = await Proteus.keys.PreKeyBundle.new(alice.desktop.identity.public_key, prekey);
+      let ciphertext = await bob.desktop.encrypt('to_alice_desktop', messageFromBob, publicPreKeyBundle.serialise());
+      expect(alice.desktop.pk_store.prekeys.length).toBe(0);
+      expect(alice.desktop.publish_prekeys).not.toHaveBeenCalled();
+
+      let plaintext = await alice.desktop.decrypt('to_bob_desktop', ciphertext);
+      const expectedNewPreKeyId = 2;
+      expect(alice.desktop.pk_store.prekeys.length).toBe(0);
+      expect(alice.desktop.cachedSessions.size()).toBe(1);
+      expect(alice.desktop.pk_store.release_prekeys.calls.count()).toBe(1);
+      expect(alice.desktop.publish_prekeys.calls.count()).toBe(1);
+      expect(alice.desktop.cachedPreKeys[alice.desktop.cachedPreKeys.length - 1].key_id).toBe(expectedNewPreKeyId);
+      expect(sodium.to_string(plaintext)).toBe(messageFromBob);
+
+      prekey = await alice.desktop.store.load_prekey(expectedNewPreKeyId);
+      publicPreKeyBundle = await Proteus.keys.PreKeyBundle.new(alice.desktop.identity.public_key, prekey);
+      ciphertext = await bob.mobile.encrypt('to_alice_desktop', messageFromBob, publicPreKeyBundle.serialise());
+      expect(alice.desktop.pk_store.prekeys.length).toBe(0);
+
+      plaintext = await alice.desktop.decrypt('to_bob_mobile', ciphertext);
+      expect(alice.desktop.pk_store.prekeys.length).toBe(0);
+      expect(alice.desktop.cachedSessions.size()).toBe(2);
+      expect(alice.desktop.pk_store.release_prekeys.calls.count()).toBe(2);
+      expect(alice.desktop.publish_prekeys.calls.count()).toBe(2); // Published PreKey ID "3"
+      expect(await sodium.to_string(plaintext)).toBe(messageFromBob);
+
+      done();
+    });
+  });
+
+  describe('"constructor"', () => {
+    it('works with a given Dexie instance', () => {
+      const schema = {
+        amplify: '',
+        clients: ', meta.primary_key',
+        conversation_events: ', conversation, time, type',
+        conversations: ', id, last_event_timestamp',
+        keys: '',
+        prekeys: '',
+        sessions: '',
+      };
+
+      const db = new Dexie(storeName);
+      db.version(7).stores(schema);
+
+      store = new cryptobox.store.IndexedDB(db);
+
+      expect(store.db.name).toBe(storeName);
+      expect(Object.keys(db._dbSchema).length).toBe(7);
+    });
+  });
+
   describe('"create"', () => {
     it("doesn't save null values", async done => {
       const schema = {
@@ -66,28 +146,6 @@ describe('cryptobox.store.IndexedDB', () => {
         expect(error.name).toBe('RecordTypeError');
         done();
       }
-    });
-  });
-
-  describe('"constructor"', () => {
-    it('works with a given Dexie instance', () => {
-      const schema = {
-        amplify: '',
-        clients: ', meta.primary_key',
-        conversation_events: ', conversation, time, type',
-        conversations: ', id, last_event_timestamp',
-        keys: '',
-        prekeys: '',
-        sessions: '',
-      };
-
-      const db = new Dexie(storeName);
-      db.version(7).stores(schema);
-
-      store = new cryptobox.store.IndexedDB(db);
-
-      expect(store.db.name).toBe(storeName);
-      expect(Object.keys(db._dbSchema).length).toBe(7);
     });
   });
 
