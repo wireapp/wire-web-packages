@@ -1,6 +1,6 @@
 import CRUDEngine from './CRUDEngine';
 import Dexie from 'dexie';
-import {RecordAlreadyExistsError, RecordNotFoundError, RecordTypeError} from './error';
+import {StoreEngine} from '@wireapp/store-engine';
 
 export interface DexieInstance extends Dexie {
   [index: string]: any;
@@ -26,14 +26,14 @@ export default class IndexedDBEngine implements CRUDEngine {
       return this.db![tableName].add(entity, primaryKey).catch((error: Dexie.DexieError) => {
         if (error instanceof Dexie.ConstraintError) {
           const message: string = `Record "${primaryKey}" already exists in "${tableName}". You need to delete the record first if you want to overwrite it.`;
-          throw new RecordAlreadyExistsError(message);
+          throw new StoreEngine.error.RecordAlreadyExistsError(message);
         } else {
           throw error;
         }
       });
     }
     const message: string = `Record "${primaryKey}" cannot be saved in "${tableName}" because it's "undefined" or "null".`;
-    return Promise.reject(new RecordTypeError(message));
+    return Promise.reject(new StoreEngine.error.RecordTypeError(message));
   }
 
   public delete(tableName: string, primaryKey: string): Promise<string> {
@@ -56,7 +56,7 @@ export default class IndexedDBEngine implements CRUDEngine {
           return record;
         }
         const message: string = `Record "${primaryKey}" in "${tableName}" could not be found.`;
-        throw new RecordNotFoundError(message);
+        throw new StoreEngine.error.RecordNotFoundError(message);
       });
   }
 
