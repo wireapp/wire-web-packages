@@ -21,6 +21,7 @@
 
 const Proteus = require('@wireapp/proteus');
 const cryptobox = require('@wireapp/cryptobox');
+const LRUCache = require('@wireapp/lru-cache').default;
 
 describe('cryptobox.store.IndexedDB', () => {
   let storeName = 'wire@production@532af01e-1e24-4366-aacf-33b67d4ee376@temporary';
@@ -109,6 +110,32 @@ describe('cryptobox.store.IndexedDB', () => {
       expect(cryptoboxSession.fingerprint_remote()).toBe(bob.public_key.fingerprint());
 
       done();
+    });
+
+    it('reinforces a session from the indexedDB without cache', async done => {
+      const alice = new cryptobox.Cryptobox(new cryptobox.store.IndexedDB(storeName), 1);
+      const sessionId = 'session_with_bob';
+
+      try {
+        const bob = await Proteus.keys.IdentityKeyPair.new();
+        const preKey = await Proteus.keys.PreKey.new(Proteus.keys.PreKey.MAX_PREKEY_ID);
+        const bobPreKeyBundle = await Proteus.keys.PreKeyBundle.new(bob.public_key, preKey);
+
+        const allPreKeys = await alice.create();
+        expect(allPreKeys.length).toBe(1);
+
+        let cryptoboxSession = await alice.session_from_prekey(sessionId, bobPreKeyBundle.serialise());
+        expect(cryptoboxSession.fingerprint_remote()).toBe(bob.public_key.fingerprint());
+
+        alice.cachedSessions = new LRUCache(1);
+
+        cryptoboxSession = await alice.session_from_prekey(sessionId, bobPreKeyBundle.serialise());
+        expect(cryptoboxSession.fingerprint_remote()).toBe(bob.public_key.fingerprint());
+
+        done();
+      } catch (error) {
+        done.fail(error);
+      }
     });
   });
 
