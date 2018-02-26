@@ -40,6 +40,35 @@ describe('cryptobox.store.IndexedDB', () => {
     window.indexedDB.deleteDatabase(storeName);
   });
 
+  describe('"create"', () => {
+    it("doesn't save null values", async done => {
+      const schema = {
+        amplify: '',
+        clients: ', meta.primary_key',
+        conversation_events: ', conversation, time, type',
+        conversations: ', id, last_event_timestamp',
+        keys: '',
+        prekeys: '',
+        sessions: '',
+      };
+
+      storeName = 'wire@production@532af01e-1e24-4366-aacf-33b67d4ee377@temporary';
+      const db = new Dexie(storeName);
+      db.version(1).stores(schema);
+
+      store = new cryptobox.store.IndexedDB(db);
+      expect(store.db.name).toBe(storeName);
+
+      try {
+        await store.create(name, 'sessions', null);
+        done.fail(new Error('Expected error'));
+      } catch (error) {
+        expect(error.name).toBe('RecordTypeError');
+        done();
+      }
+    });
+  });
+
   describe('"constructor"', () => {
     it('works with a given Dexie instance', () => {
       const schema = {
