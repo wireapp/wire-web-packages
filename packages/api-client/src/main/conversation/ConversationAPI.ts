@@ -46,6 +46,7 @@ class ConversationAPI {
       CONVERSATIONS: '/conversations',
       MEMBERS: 'members',
       MESSAGES: 'messages',
+      JOIN: '/join',
       OTR: 'otr',
       SELF: 'self',
     };
@@ -227,7 +228,7 @@ class ConversationAPI {
 
   /**
    * Validates conversation code
-   * @param conversationData The new conversation
+   * @param conversationCode The conversation code
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/checkConversationCode
    */
   public postConversationCodeCheck(conversationCode: ConversationCode): Promise<{}> {
@@ -238,6 +239,21 @@ class ConversationAPI {
     };
 
     return this.client.sendJSON(config).then(() => ({}));
+  }
+
+  /**
+   * Join a conversation by conversationCode.
+   * @param conversationCode The conversation code
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/joinConversationByCode
+   */
+  public postJoinByCode(conversationCode: ConversationCode): Promise<ConversationEvent> {
+    const config: AxiosRequestConfig = {
+      data: conversationCode,
+      method: 'post',
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${ConversationAPI.URL.JOIN}`,
+    };
+
+    return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
   }
 
   /**
