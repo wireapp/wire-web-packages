@@ -22,6 +22,7 @@ import {
   Conversation,
   ConversationIds,
   Conversations,
+  ConversationCode,
   ConversationUpdate,
   Invite,
   Member,
@@ -41,6 +42,7 @@ class ConversationAPI {
     return {
       BOTS: 'bots',
       CLIENTS: '/clients',
+      CODE_CHECK: '/code-check',
       CONVERSATIONS: '/conversations',
       MEMBERS: 'members',
       MESSAGES: 'messages',
@@ -221,6 +223,21 @@ class ConversationAPI {
     };
 
     return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
+  }
+
+  /**
+   * Validates conversation code
+   * @param conversationData The new conversation
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/createGroupConversation
+   */
+  public postConversationCodeCheck(conversationCode: ConversationCode): Promise<{}> {
+    const config: AxiosRequestConfig = {
+      data: conversationCode,
+      method: 'post',
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${ConversationAPI.URL.CODE_CHECK}`,
+    };
+
+    return this.client.sendJSON(config).then(() => ({}));
   }
 
   /**
