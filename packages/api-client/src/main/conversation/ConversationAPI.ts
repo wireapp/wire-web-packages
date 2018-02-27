@@ -235,7 +235,7 @@ class ConversationAPI {
     const config: AxiosRequestConfig = {
       data: conversationCode,
       method: 'post',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${ConversationAPI.URL.CODE_CHECK}`,
+      url: `${ConversationAPI.URL.CONVERSATIONS}${ConversationAPI.URL.CODE_CHECK}`,
     };
 
     return this.client.sendJSON(config).then(() => ({}));
@@ -250,7 +250,7 @@ class ConversationAPI {
     const config: AxiosRequestConfig = {
       data: conversationCode,
       method: 'post',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${ConversationAPI.URL.JOIN}`,
+      url: `${ConversationAPI.URL.CONVERSATIONS}${ConversationAPI.URL.JOIN}`,
     };
 
     return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
