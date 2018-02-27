@@ -10,8 +10,10 @@ module.exports = {
     [`${projectName}.test`]: `${__dirname}/test/index.test.browser.js`,
   },
   externals: {
+    '@wireapp/cbor': 'CBOR',
     dexie: 'Dexie',
     'fs-extra': '{}',
+    'libsodium-wrappers-sumo': 'sodium',
   },
   node: {
     fs: 'empty',
