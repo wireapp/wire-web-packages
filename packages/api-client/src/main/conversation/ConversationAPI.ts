@@ -228,7 +228,7 @@ class ConversationAPI {
   /**
    * Validates conversation code
    * @param conversationData The new conversation
-   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/createGroupConversation
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/checkConversationCode
    */
   public postConversationCodeCheck(conversationCode: ConversationCode): Promise<{}> {
     const config: AxiosRequestConfig = {
