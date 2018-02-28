@@ -17,9 +17,9 @@
 //
 
 interface ConversationCode {
-  uri?: string;
-  key: string;
   code: string;
+  key: string;
+  uri?: string;
 }
 
 export {ConversationCode};

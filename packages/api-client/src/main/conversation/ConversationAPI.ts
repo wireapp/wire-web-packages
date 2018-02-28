@@ -242,7 +242,7 @@ class ConversationAPI {
   }
 
   /**
-   * Join a conversation by conversationCode.
+   * Join a conversation by conversation code.
    * @param conversationCode The conversation code
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/joinConversationByCode
    */
