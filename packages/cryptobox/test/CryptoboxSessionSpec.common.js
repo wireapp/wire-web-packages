@@ -23,7 +23,7 @@ const {StoreEngine} = require('@wireapp/store-engine');
 const cryptobox = typeof window === 'object' ? window.cryptobox : require('@wireapp/cryptobox');
 const Proteus = typeof window === 'object' ? window.Proteus : require('@wireapp/proteus');
 
-fdescribe('cryptobox.CryptoboxSession', () => {
+describe('cryptobox.CryptoboxSession', () => {
   let sodium = undefined;
 
   beforeAll(async done => {
