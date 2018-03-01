@@ -104,9 +104,33 @@ describe('cryptobox.store.IndexedDB', () => {
       expect(alice.desktop.cachedSessions.size()).toBe(2);
       expect(alice.desktop.pk_store.release_prekeys.calls.count()).toBe(2);
       expect(alice.desktop.publish_prekeys.calls.count()).toBe(2);
-      expect(await sodium.to_string(plaintext)).toBe(messageFromBob);
+      expect(sodium.to_string(plaintext)).toBe(messageFromBob);
 
       done();
+    });
+
+    fit('Renews PreKeys after consumption', async done => {
+      try {
+        const alice = new cryptobox.Cryptobox(await createStore('alice_db'), 3);
+        const cachedPreKeys = await alice.create();
+
+        expect(cachedPreKeys.length).toBe(3);
+
+        const sessionId = 'session_with_alice';
+
+        const bob = new cryptobox.Cryptobox(await createStore('bob_db'));
+        await bob.create();
+
+        const preKey = await alice.store.load_prekey(0);
+        const alicePreKeyBundle = await Proteus.keys.PreKeyBundle.new(alice.identity.public_key, preKey);
+        const ciphertext = await bob.encrypt(sessionId, 'Hello Alice!', alicePreKeyBundle);
+        const plaintext = await alice.decrypt(sessionId, ciphertext);
+        expect(plaintext).toBe('Hello Alice!');
+
+        done();
+      } catch (err) {
+        console.log(err.message);
+      }
     });
   });
 
@@ -136,9 +160,7 @@ describe('cryptobox.store.IndexedDB', () => {
   });
 
   describe('"session_from_prekey"', () => {
-    afterEach(() => {
-      window.indexedDB.deleteDatabase('alice_db');
-    });
+    afterEach(() => window.indexedDB.deleteDatabase('alice_db'));
 
     it('saves and caches a valid session from a serialized PreKey bundle', async done => {
       const alice = new cryptobox.Cryptobox(await createStore('alice_db'), 1);
