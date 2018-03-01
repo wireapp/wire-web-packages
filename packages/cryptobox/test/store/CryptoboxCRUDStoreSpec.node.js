@@ -159,7 +159,7 @@ describe('cryptobox.store.CryptoboxCRUDStore', () => {
   });
 
   describe('"update_session"', () => {
-    it('updates an already persisted session', async done => {
+    fit('updates an already persisted session', async done => {
       try {
         const aliceIdentity = await Proteus.keys.IdentityKeyPair.new();
         const bobIdentity = await Proteus.keys.IdentityKeyPair.new();
