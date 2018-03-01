@@ -23,7 +23,7 @@ const {StoreEngine} = require('@wireapp/store-engine');
 const cryptobox = typeof window === 'object' ? window.cryptobox : require('@wireapp/cryptobox');
 const Proteus = typeof window === 'object' ? window.Proteus : require('@wireapp/proteus');
 
-describe('cryptobox.CryptoboxSession', () => {
+fdescribe('cryptobox.CryptoboxSession', () => {
   let sodium = undefined;
 
   beforeAll(async done => {
@@ -81,15 +81,21 @@ describe('cryptobox.CryptoboxSession', () => {
     }
 
     beforeEach(async done => {
+      const aliceEngine = new StoreEngine.MemoryEngine();
+      await aliceEngine.init('cache');
+
       alice = {
-        cryptobox_store: new cryptobox.store.Cache(),
+        cryptobox_store: new cryptobox.store.CryptoboxCRUDStore(aliceEngine),
         identity: await Proteus.keys.IdentityKeyPair.new(),
       };
 
       alice.pre_key_store = new cryptobox.store.ReadOnlyStore(alice.cryptobox_store);
 
+      const bobEngine = new StoreEngine.MemoryEngine();
+      await bobEngine.init('cache');
+
       bob = {
-        cryptobox_store: new cryptobox.store.Cache(),
+        cryptobox_store: new cryptobox.store.CryptoboxCRUDStore(bobEngine),
         identity: await Proteus.keys.IdentityKeyPair.new(),
       };
 
