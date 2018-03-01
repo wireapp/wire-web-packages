@@ -117,7 +117,6 @@ class CryptoboxCRUDStore implements CryptoboxStore {
       .read<PersistedRecord>(CryptoboxCRUDStore.STORES.SESSIONS, session_id)
       .then((record: PersistedRecord) => {
         const payload = this.from_store(record);
-        console.log('buffer', payload);
         return ProteusSession.Session.deserialise(identity, payload);
       });
   }

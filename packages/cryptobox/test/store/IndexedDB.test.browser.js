@@ -44,9 +44,7 @@ describe('cryptobox.store.IndexedDB', () => {
     done();
   });
 
-  afterEach(() => {
-    window.indexedDB.deleteDatabase(STORE_NAME);
-  });
+  afterEach(() => window.indexedDB.deleteDatabase('alice_db'));
 
   describe('Basic functionality', () => {
     afterEach(() => {
