@@ -39,73 +39,30 @@ describe('cryptobox.CryptoboxSession', () => {
   });
 
   describe('PreKey messages', () => {
-    let alice = undefined;
-    let bob = undefined;
-
-    async function generatePreKeys(cryptobox_store) {
-      // Generate one PreKey and the Last Resort PreKey
-      const pre_keys = await Proteus.keys.PreKey.generate_prekeys(0, 1);
-      pre_keys.push(await Proteus.keys.PreKey.new(Proteus.keys.PreKey.MAX_PREKEY_ID));
-
-      const promises = pre_keys.map(pre_key => cryptobox_store.save_prekey(pre_key));
-
-      return Promise.all(promises)
-        .then(() => {
-          return pre_keys;
-        })
-        .catch(error => {
-          console.log('Error in Test PreKey generation.');
-          throw error;
-        });
-    }
-
-    function setupAliceToBob(preKeyId) {
-      // 1. Bob creates and "uploads" a PreKey, which can be "consumed" by Alice
-      return generatePreKeys(bob.cryptobox_store)
-        .then(() => {
-          return bob.cryptobox_store.load_prekey(preKeyId);
-        })
-        .then(async prekey => {
-          // 2. Alice takes Bob's PreKey bundle to initiate a session
-          bob.bundle = await Proteus.keys.PreKeyBundle.new(bob.identity.public_key, prekey);
-          return Proteus.session.Session.init_from_prekey(alice.identity, bob.bundle);
-        })
-        .then(session => {
-          // 3. Alice upgrades the basic Proteus session into a high-level Cryptobox session
-          return new cryptobox.CryptoboxSession('bobs_client_id', alice.pre_key_store, session);
-        })
-        .catch(error => {
-          console.log('Error in Test Alice setup!', error);
-          throw error;
-        });
-    }
-
-    beforeEach(async done => {
+    async function setupAliceToBob() {
       const aliceEngine = new StoreEngine.MemoryEngine();
-      await aliceEngine.init('cache');
-
-      alice = {
-        cryptobox_store: aliceEngine,
-        identity: await Proteus.keys.IdentityKeyPair.new(),
-      };
-
-      alice.pre_key_store = new cryptobox.store.ReadOnlyStore(alice.cryptobox_store);
+      await aliceEngine.init('alice');
 
       const bobEngine = new StoreEngine.MemoryEngine();
-      await bobEngine.init('cache');
+      await bobEngine.init('bob');
 
-      bob = {
-        cryptobox_store: bobEngine,
-        identity: await Proteus.keys.IdentityKeyPair.new(),
-      };
+      alice = new cryptobox.Cryptobox(aliceEngine, 1);
+      await alice.create();
 
-      bob.pre_key_store = new cryptobox.store.ReadOnlyStore(bob.cryptobox_store);
-      done();
-    });
+      bob = new cryptobox.Cryptobox(bobEngine, 1);
+      await bob.create();
 
-    describe('fingerprints', () => {
-      it('returns the local & remote fingerpint', done => {
-        setupAliceToBob(0)
+      // 1. Bob creates and "uploads" a PreKey, which can be "consumed" by Alice
+      const preKey = await bob.get_prekey();
+      const bobBundle = await Proteus.keys.PreKeyBundle.new(bob.identity.public_key, preKey);
+      // 2. Alice takes Bob's PreKey bundle to initiate a session
+      const sessionWithBob = await alice.session_from_prekey('session-with-bob', bobBundle.serialise());
+      return sessionWithBob;
+    }
+
+    describe('"fingerprints"', () => {
+      it('returns the local & remote fingerprint', done => {
+        setupAliceToBob()
           .then(sessionWithBob => {
             expect(sessionWithBob.fingerprint_local()).toBe(alice.identity.public_key.fingerprint());
             expect(sessionWithBob.fingerprint_remote()).toBe(bob.identity.public_key.fingerprint());
@@ -115,25 +72,23 @@ describe('cryptobox.CryptoboxSession', () => {
       });
     });
 
-    describe('encryption & decryption', () => {
+    describe('"encryption & decryption"', () => {
       const plaintext = 'Hello Bob, I am Alice.';
 
       it('encrypts a message from Alice which can be decrypted by Bob', done => {
         Promise.resolve()
           .then(() => {
-            return setupAliceToBob(0);
+            return setupAliceToBob();
           })
           .then(sessionWithBob => {
             return sessionWithBob.encrypt(plaintext);
           })
           .then(serialisedCipherText => {
             const envelope = Proteus.message.Envelope.deserialise(serialisedCipherText);
-            expect(bob.pre_key_store.prekeys.length).toBe(0);
-            return Proteus.session.Session.init_from_message(bob.identity, bob.pre_key_store, envelope);
+            expect(bob.pk_store.prekeys.length).toBe(0);
+            return Proteus.session.Session.init_from_message(bob.identity, bob.pk_store, envelope);
           })
           .then(proteusSession => {
-            // When Bob decrypts a PreKey message, he knows that one of his PreKeys has been "consumed"
-            expect(bob.pre_key_store.prekeys.length).toBe(1);
             const decryptedBuffer = proteusSession[1];
             const decrypted = sodium.to_string(decryptedBuffer);
             expect(decrypted).toBe(plaintext);
@@ -152,11 +107,11 @@ describe('cryptobox.CryptoboxSession', () => {
           })
           .then(serialisedCipherText => {
             const envelope = Proteus.message.Envelope.deserialise(serialisedCipherText);
-            expect(bob.pre_key_store.prekeys.length).toBe(0);
-            return Proteus.session.Session.init_from_message(bob.identity, bob.pre_key_store, envelope);
+            expect(bob.pk_store.prekeys.length).toBe(0);
+            return Proteus.session.Session.init_from_message(bob.identity, bob.pk_store, envelope);
           })
           .then(proteusSession => {
-            expect(bob.pre_key_store.prekeys.length).toBe(0);
+            expect(bob.pk_store.prekeys.length).toBe(0);
             const decryptedBuffer = proteusSession[1];
             const decrypted = sodium.to_string(decryptedBuffer);
             expect(decrypted).toBe(plaintext);

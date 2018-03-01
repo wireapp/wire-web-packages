@@ -109,7 +109,7 @@ describe('cryptobox.store.IndexedDB', () => {
       done();
     });
 
-    fit('Renews PreKeys after consumption', async done => {
+    it('renews PreKeys after consumption', async done => {
       try {
         const alice = new cryptobox.Cryptobox(await createStore('alice_db'), 3);
         const cachedPreKeys = await alice.create();
