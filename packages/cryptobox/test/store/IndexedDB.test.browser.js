@@ -36,7 +36,7 @@ describe('cryptobox.store.IndexedDB', () => {
       prekeys: '',
       sessions: '',
     });
-    return new cryptobox.store.CryptoboxCRUDStore(engine);
+    return engine;
   }
 
   beforeEach(async done => {

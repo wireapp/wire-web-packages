@@ -85,7 +85,7 @@ describe('cryptobox.CryptoboxSession', () => {
       await aliceEngine.init('cache');
 
       alice = {
-        cryptobox_store: new cryptobox.store.CryptoboxCRUDStore(aliceEngine),
+        cryptobox_store: aliceEngine,
         identity: await Proteus.keys.IdentityKeyPair.new(),
       };
 
@@ -95,7 +95,7 @@ describe('cryptobox.CryptoboxSession', () => {
       await bobEngine.init('cache');
 
       bob = {
-        cryptobox_store: new cryptobox.store.CryptoboxCRUDStore(bobEngine),
+        cryptobox_store: bobEngine,
         identity: await Proteus.keys.IdentityKeyPair.new(),
       };
 
@@ -175,10 +175,10 @@ describe('cryptobox.CryptoboxSession', () => {
       const bobEngine = new StoreEngine.MemoryEngine();
       await bobEngine.init('store-bob');
 
-      const alice = new cryptobox.Cryptobox(new cryptobox.store.CryptoboxCRUDStore(aliceEngine), 5);
+      const alice = new cryptobox.Cryptobox(aliceEngine, 5);
       await alice.create();
 
-      const bob = new cryptobox.Cryptobox(new cryptobox.store.CryptoboxCRUDStore(bobEngine), 5);
+      const bob = new cryptobox.Cryptobox(bobEngine, 5);
       await bob.create();
 
       const preKeyBundle = await bob.get_serialized_standard_prekeys();

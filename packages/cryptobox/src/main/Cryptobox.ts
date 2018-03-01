@@ -10,6 +10,7 @@ import {ReadOnlyStore} from './store/root';
 import LRUCache from '@wireapp/lru-cache';
 import EventEmitter = require('events');
 import PQueue = require('p-queue');
+import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
 const logdown = require('logdown');
 
 export interface SessionFromMessageTuple extends Array<CryptoboxSession | Uint8Array> {
@@ -44,7 +45,7 @@ class Cryptobox extends EventEmitter {
    * @param {CryptoboxCRUDStore} cryptoBoxStore
    * @param {number} minimumAmountOfPreKeys - Minimum amount of PreKeys (including the last resort PreKey)
    */
-  constructor(cryptoBoxStore: CryptoboxCRUDStore, minimumAmountOfPreKeys: number = 1) {
+  constructor(cryptoBoxStore: CRUDEngine, minimumAmountOfPreKeys: number = 1) {
     super();
 
     if (!cryptoBoxStore) {
@@ -59,7 +60,7 @@ class Cryptobox extends EventEmitter {
     this.cachedSessions = new LRUCache(1000);
     this.minimumAmountOfPreKeys = minimumAmountOfPreKeys;
 
-    this.store = cryptoBoxStore;
+    this.store = new CryptoboxCRUDStore(cryptoBoxStore);
     this.pk_store = new ReadOnlyStore(this.store);
 
     const storageEngine: string = cryptoBoxStore.constructor.name;
