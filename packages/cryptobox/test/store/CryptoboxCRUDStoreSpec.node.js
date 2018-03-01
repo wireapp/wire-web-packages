@@ -26,7 +26,6 @@ const path = require('path');
 const Proteus = require('@wireapp/proteus');
 const {FileEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
 
-// gulp test_node --file "node/store/CryptoboxCRUDStoreSpec.node.js"
 describe('cryptobox.store.CryptoboxCRUDStore', () => {
   let storagePath = '';
   let engine = undefined;
@@ -35,7 +34,7 @@ describe('cryptobox.store.CryptoboxCRUDStore', () => {
   beforeEach(async done => {
     storagePath = fs.mkdtempSync(path.normalize(`${__dirname}/test`));
     engine = new FileEngine();
-    await engine.init(storagePath);
+    await engine.init(storagePath, {fileExtension: '.json'});
     fileStore = new cryptobox.store.CryptoboxCRUDStore(engine);
     done();
   });
@@ -159,7 +158,7 @@ describe('cryptobox.store.CryptoboxCRUDStore', () => {
   });
 
   describe('"update_session"', () => {
-    fit('updates an already persisted session', async done => {
+    it('updates an already persisted session', async done => {
       try {
         const aliceIdentity = await Proteus.keys.IdentityKeyPair.new();
         const bobIdentity = await Proteus.keys.IdentityKeyPair.new();
