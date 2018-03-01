@@ -23,7 +23,7 @@ class CryptoboxCRUDStore implements CryptoboxStore {
   }
 
   private from_store(record: PersistedRecord): ArrayBuffer {
-    console.log('serialised', record.serialised);
+    console.log('serialised', typeof record.serialised);
     return typeof record.serialised === 'string'
       ? Decoder.fromBase64(record.serialised).asBytes.buffer
       : record.serialised;
