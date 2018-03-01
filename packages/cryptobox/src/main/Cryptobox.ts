@@ -8,8 +8,10 @@ import DecryptionError from './DecryptionError';
 import InvalidPreKeyFormatError from './InvalidPreKeyFormatError';
 import {ReadOnlyStore} from './store/root';
 import LRUCache from '@wireapp/lru-cache';
+import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
 import EventEmitter = require('events');
 import PQueue = require('p-queue');
+
 const logdown = require('logdown');
 
 export interface SessionFromMessageTuple extends Array<CryptoboxSession | Uint8Array> {
@@ -44,7 +46,7 @@ class Cryptobox extends EventEmitter {
    * @param {CryptoboxCRUDStore} cryptoBoxStore
    * @param {number} minimumAmountOfPreKeys - Minimum amount of PreKeys (including the last resort PreKey)
    */
-  constructor(cryptoBoxStore: CryptoboxCRUDStore, minimumAmountOfPreKeys: number = 1) {
+  constructor(cryptoBoxStore: CRUDEngine, minimumAmountOfPreKeys: number = 1) {
     super();
 
     if (!cryptoBoxStore) {
@@ -59,7 +61,7 @@ class Cryptobox extends EventEmitter {
     this.cachedSessions = new LRUCache(1000);
     this.minimumAmountOfPreKeys = minimumAmountOfPreKeys;
 
-    this.store = cryptoBoxStore;
+    this.store = new CryptoboxCRUDStore(cryptoBoxStore);
     this.pk_store = new ReadOnlyStore(this.store);
 
     const storageEngine: string = cryptoBoxStore.constructor.name;
@@ -151,6 +153,10 @@ class Cryptobox extends EventEmitter {
       return Promise.resolve(this.serialize_prekey(this.lastResortPreKey));
     }
     return Promise.reject(new CryptoboxError('No last resort PreKey available.'));
+  }
+
+  private get_prekey(prekey_id: number = ProteusKeys.PreKey.MAX_PREKEY_ID): Promise<ProteusKeys.PreKey | undefined> {
+    return this.store.load_prekey(prekey_id);
   }
 
   public get_serialized_standard_prekeys(): Promise<Array<{id: number; key: string}>> {

@@ -27,7 +27,7 @@ describe('cryptobox.Cryptobox', () => {
   async function createCryptobox(storeName) {
     const engine = new StoreEngine.MemoryEngine();
     await engine.init(storeName);
-    return new cryptobox.Cryptobox(new cryptobox.store.CryptoboxCRUDStore(engine));
+    return new cryptobox.Cryptobox(engine);
   }
 
   describe('"encrypt / decrypt"', () => {

@@ -11,9 +11,7 @@ logger.log(`Testing Cryptobox v${cryptobox.Cryptobox.prototype.VERSION}`);
     const engine = new StoreEngine.MemoryEngine();
     await engine.init('cache');
 
-    const store = new cryptobox.store.CryptoboxCRUDStore(engine);
-    const box = new cryptobox.Cryptobox(store, MIN_AMOUNT_PREKEYS);
-
+    const box = new cryptobox.Cryptobox(engine, MIN_AMOUNT_PREKEYS);
     await box.create();
 
     const fingerprint = box.identity.public_key.fingerprint();

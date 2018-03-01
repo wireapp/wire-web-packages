@@ -42,7 +42,7 @@ describe('cryptobox.Cryptobox', () => {
   beforeEach(async () => {
     const engine = new StoreEngine.MemoryEngine();
     await engine.init('cache');
-    store = new cryptobox.store.CryptoboxCRUDStore(engine);
+    store = engine;
   });
 
   describe('"decrypt"', () => {
@@ -67,12 +67,12 @@ describe('cryptobox.Cryptobox', () => {
         .create()
         .then(() => {
           expect(box.identity).toBeDefined();
-          return store.load_identity();
+          return box.store.load_identity();
         })
         .then(identity => {
           expect(identity).toBeDefined();
           expect(identity.public_key.fingerprint()).toBeDefined();
-          return store.load_prekey(Proteus.keys.PreKey.MAX_PREKEY_ID);
+          return box.store.load_prekey(Proteus.keys.PreKey.MAX_PREKEY_ID);
         })
         .then(preKey => {
           expect(preKey.key_id).toBe(Proteus.keys.PreKey.MAX_PREKEY_ID);
@@ -133,10 +133,10 @@ describe('cryptobox.Cryptobox', () => {
         .create()
         .then(() => {
           expect(box.identity).toBeDefined();
-          return store.delete_all();
+          return box.store.delete_all();
         })
         .then(() => {
-          return store.load_identity();
+          return box.store.load_identity();
         })
         .then(identity => {
           expect(identity).not.toBeDefined();
@@ -159,10 +159,10 @@ describe('cryptobox.Cryptobox', () => {
         .create()
         .then(() => {
           expect(box.identity).toBeDefined();
-          return store.delete_prekey(Proteus.keys.PreKey.MAX_PREKEY_ID);
+          return box.store.delete_prekey(Proteus.keys.PreKey.MAX_PREKEY_ID);
         })
         .then(() => {
-          return store.load_prekey(Proteus.keys.PreKey.MAX_PREKEY_ID);
+          return box.store.load_prekey(Proteus.keys.PreKey.MAX_PREKEY_ID);
         })
         .then(prekey => {
           expect(prekey).not.toBeDefined();
