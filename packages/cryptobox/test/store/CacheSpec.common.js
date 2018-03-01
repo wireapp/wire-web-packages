@@ -1,22 +1,14 @@
+const cryptobox = typeof window === 'object' ? window.cryptobox : require('@wireapp/cryptobox');
+const Proteus = typeof window === 'object' ? window.Proteus : require('@wireapp/proteus');
+const {StoreEngine} = require('@wireapp/store-engine');
+
 describe('cryptobox.store.Cache', () => {
-  let cryptobox = undefined;
-  let Proteus = undefined;
   let store = undefined;
 
-  beforeAll(done => {
-    if (typeof window === 'object') {
-      cryptobox = window.cryptobox;
-      Proteus = window.Proteus;
-      done();
-    } else {
-      cryptobox = require('@wireapp/cryptobox');
-      Proteus = require('@wireapp/proteus');
-      done();
-    }
-  });
-
-  beforeEach(() => {
-    store = new cryptobox.store.Cache();
+  beforeEach(async () => {
+    const engine = new StoreEngine.MemoryEngine();
+    await engine.init('cache');
+    store = new cryptobox.store.CryptoboxCRUDStore(engine);
   });
 
   describe('"constructor"', () => {
