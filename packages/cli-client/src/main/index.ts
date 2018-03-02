@@ -4,7 +4,7 @@ const fs = require('fs-extra');
 const program = require('commander');
 const {Account} = require('@wireapp/core');
 const {description, version} = require('../../package.json');
-const {StoreEngine} = require('@wireapp/store-engine');
+const {FileEngine} = require('@wireapp/store-engine');
 import * as os from 'os';
 import * as path from 'path';
 import APIClient = require('@wireapp/api-client');
@@ -33,7 +33,7 @@ const loginData = {
 const conversationID = program.conversation || process.env.WIRE_CONVERSATION_ID;
 
 const directory = path.join(os.homedir(), '.wire-cli', loginData.email);
-const storeEngine = new StoreEngine.FileEngine(directory, {fileExtension: '.json'});
+const storeEngine = new FileEngine(directory, {fileExtension: '.json'});
 
 const apiClient: APIClient = new APIClient(new Config(storeEngine, APIClient.BACKEND.PRODUCTION));
 
