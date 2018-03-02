@@ -10,6 +10,7 @@ import {ReadOnlyStore} from './store/root';
 import LRUCache from '@wireapp/lru-cache';
 import EventEmitter = require('events');
 import PQueue = require('p-queue');
+import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
 const logdown = require('logdown');
 
 export interface SessionFromMessageTuple extends Array<CryptoboxSession | Uint8Array> {
@@ -41,13 +42,13 @@ class Cryptobox extends EventEmitter {
 
   /**
    * Constructs a Cryptobox.
-   * @param {CryptoboxCRUDStore} cryptoBoxStore
+   * @param {CryptoboxCRUDStore} engine
    * @param {number} minimumAmountOfPreKeys - Minimum amount of PreKeys (including the last resort PreKey)
    */
-  constructor(cryptoBoxStore: CryptoboxCRUDStore, minimumAmountOfPreKeys: number = 1) {
+  constructor(engine: CRUDEngine, minimumAmountOfPreKeys: number = 1) {
     super();
 
-    if (!cryptoBoxStore) {
+    if (!engine) {
       throw new Error(`You cannot initialize Cryptobox without a storage component.`);
     }
 
@@ -58,11 +59,10 @@ class Cryptobox extends EventEmitter {
     this.cachedPreKeys = [];
     this.cachedSessions = new LRUCache(1000);
     this.minimumAmountOfPreKeys = minimumAmountOfPreKeys;
-
-    this.store = cryptoBoxStore;
+    this.store = new CryptoboxCRUDStore(engine);
     this.pk_store = new ReadOnlyStore(this.store);
 
-    const storageEngine: string = cryptoBoxStore.constructor.name;
+    const storageEngine: string = engine.constructor.name;
     this.logger.log(
       `Constructed Cryptobox. Minimum amount of PreKeys is "${minimumAmountOfPreKeys}". Storage engine is "${storageEngine}".`
     );
