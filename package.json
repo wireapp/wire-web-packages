@@ -33,7 +33,7 @@
     "precommit": "lint-staged",
     "test": "yarn && yarn test:jsScript && lerna run test",
     "test:jsScript": "eslint --ignore-path .gitignore **/*.{js,jsx}",
-    "release": "yarn test && lerna run test:longrunning --scope @wireapp/proteus && lerna publish -m \"chore: Publish\" --conventional-commits --loglevel=verbose --exact --allow-branch=master --registry=https://registry.npmjs.org/ --yes"
+    "release": "yarn test && lerna run test:longrunning --scope @wireapp/proteus && lerna publish -m \"[skip ci] chore: Publish\" --conventional-commits --loglevel=verbose --exact --allow-branch=master --registry=https://registry.npmjs.org/ --yes"
   },
   "workspaces": [
     "packages/*"
