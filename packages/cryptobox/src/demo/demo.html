@@ -9,7 +9,7 @@
   <body>
     <script>
       async function createEngine(storeName) {
-        const engine = new StoreEngine.StoreEngine.IndexedDBEngine();
+        const engine = new StoreEngine.IndexedDBEngine();
         await engine.init(storeName);
         engine.db.version(1).stores({
           keys: '',

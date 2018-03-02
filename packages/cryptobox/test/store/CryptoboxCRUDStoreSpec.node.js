@@ -24,7 +24,7 @@ const fs = require('fs-extra');
 const LRUCache = require('@wireapp/lru-cache').default;
 const path = require('path');
 const Proteus = require('@wireapp/proteus');
-const {StoreEngine} = require('@wireapp/store-engine');
+const {FileEngine} = require('@wireapp/store-engine');
 
 describe('cryptobox.store.CryptoboxCRUDStore', () => {
   const TEMP_DIRECTORY = path.normalize(`${__dirname}/.tmp`);
@@ -35,7 +35,7 @@ describe('cryptobox.store.CryptoboxCRUDStore', () => {
   beforeEach(async done => {
     await fs.ensureDir(TEMP_DIRECTORY);
     storagePath = fs.mkdtempSync(path.join(TEMP_DIRECTORY, 'test'));
-    engine = new StoreEngine.FileEngine();
+    engine = new FileEngine();
     await engine.init(storagePath, {fileExtension: '.json'});
     const tempCryptobox = new cryptobox.Cryptobox(engine, 1);
     fileStore = tempCryptobox.store;

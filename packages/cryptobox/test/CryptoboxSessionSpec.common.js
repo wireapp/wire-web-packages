@@ -19,7 +19,7 @@
 
 /* eslint-disable no-magic-numbers */
 
-const {StoreEngine} = require('@wireapp/store-engine');
+const {error: StoreEngineError, MemoryEngine} = require('@wireapp/store-engine');
 const cryptobox = typeof window === 'object' ? window.cryptobox : require('@wireapp/cryptobox');
 const Proteus = typeof window === 'object' ? window.Proteus : require('@wireapp/proteus');
 let sodium = undefined;
@@ -41,10 +41,10 @@ describe('cryptobox.CryptoboxSession', () => {
   });
 
   async function setupAliceToBob(amountOfBobsPreKeys, bobPreKeyId) {
-    const aliceEngine = new StoreEngine.MemoryEngine();
+    const aliceEngine = new MemoryEngine();
     await aliceEngine.init('alice');
 
-    const bobEngine = new StoreEngine.MemoryEngine();
+    const bobEngine = new MemoryEngine();
     await bobEngine.init('bob');
 
     alice = new cryptobox.Cryptobox(aliceEngine, 1);
@@ -113,10 +113,10 @@ describe('cryptobox.CryptoboxSession', () => {
 
   describe('"Session reset"', () => {
     it('throws an error when a session is broken', async done => {
-      const aliceEngine = new StoreEngine.MemoryEngine();
+      const aliceEngine = new MemoryEngine();
       await aliceEngine.init('store-alice');
 
-      const bobEngine = new StoreEngine.MemoryEngine();
+      const bobEngine = new MemoryEngine();
       await bobEngine.init('store-bob');
 
       alice = new cryptobox.Cryptobox(aliceEngine, 5);
@@ -140,7 +140,7 @@ describe('cryptobox.CryptoboxSession', () => {
       try {
         await alice.encrypt('alice-to-bob', `I'm back!`);
       } catch (error) {
-        expect(error).toEqual(jasmine.any(StoreEngine.error.RecordNotFoundError));
+        expect(error).toEqual(jasmine.any(StoreEngineError.RecordNotFoundError));
         expect(error.code).toBe(2);
       }
 

@@ -19,7 +19,7 @@
 
 const fs = require('fs-extra');
 const path = require('path');
-const {StoreEngine} = require('@wireapp/store-engine');
+const StoreEngine = require('@wireapp/store-engine');
 
 describe('StoreEngine.FileEngine', () => {
   const STORE_NAME = 'store-name';

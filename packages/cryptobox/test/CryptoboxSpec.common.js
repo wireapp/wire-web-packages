@@ -21,7 +21,7 @@
 
 const cryptobox = typeof window === 'object' ? window.cryptobox : require('@wireapp/cryptobox');
 const Proteus = typeof window === 'object' ? window.Proteus : require('@wireapp/proteus');
-const {StoreEngine} = require('@wireapp/store-engine');
+const {MemoryEngine} = require('@wireapp/store-engine');
 
 describe('cryptobox.Cryptobox', () => {
   let sodium = undefined;
@@ -40,7 +40,7 @@ describe('cryptobox.Cryptobox', () => {
   });
 
   beforeEach(async done => {
-    engine = new StoreEngine.MemoryEngine();
+    engine = new MemoryEngine();
     await engine.init('cache');
     done();
   });

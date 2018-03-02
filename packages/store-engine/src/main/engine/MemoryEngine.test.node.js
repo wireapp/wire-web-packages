@@ -17,7 +17,7 @@
  *
  */
 
-const {StoreEngine} = require('@wireapp/store-engine');
+const StoreEngine = require('@wireapp/store-engine');
 
 describe('StoreEngine.MemoryEngine', () => {
   const STORE_NAME = 'store-name';

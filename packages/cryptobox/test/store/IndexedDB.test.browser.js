@@ -23,7 +23,7 @@ const cryptobox = require('@wireapp/cryptobox');
 const LRUCache = require('@wireapp/lru-cache').default;
 const Proteus = require('@wireapp/proteus');
 const UUID = require('pure-uuid');
-const {StoreEngine} = require('@wireapp/store-engine');
+const {IndexedDBEngine} = require('@wireapp/store-engine');
 
 describe('cryptobox.store.IndexedDB', () => {
   let dexieInstances = [];
@@ -45,7 +45,7 @@ describe('cryptobox.store.IndexedDB', () => {
   }
 
   async function createEngine(storeName) {
-    const engine = new StoreEngine.IndexedDBEngine();
+    const engine = new IndexedDBEngine();
     await engine.init(storeName);
     engine.db.version(1).stores({
       keys: '',
