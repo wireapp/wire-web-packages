@@ -7,7 +7,7 @@
     "noEmitOnError": true,
     "noImplicitReturns": true,
     "removeComments": true,
-    "sourceMap": false,
+    "sourceMap": true,
     "strict": true,
     "target": "ES5"
   }
