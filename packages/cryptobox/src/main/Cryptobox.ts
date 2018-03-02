@@ -39,11 +39,6 @@ class Cryptobox extends EventEmitter {
   public identity: ProteusKeys.IdentityKeyPair | undefined;
   public VERSION: string = '';
 
-  /**
-   * Constructs a Cryptobox.
-   * @param {CryptoboxCRUDStore} engine
-   * @param {number} minimumAmountOfPreKeys - Minimum amount of PreKeys (including the last resort PreKey)
-   */
   constructor(engine: CRUDEngine, minimumAmountOfPreKeys: number = 1) {
     super();
 

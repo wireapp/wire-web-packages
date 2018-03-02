@@ -19,7 +19,7 @@
 
 /* eslint no-magic-numbers: "off" */
 
-const cryptobox = require('@wireapp/cryptobox');
+const {Cryptobox} = require('@wireapp/cryptobox');
 const fs = require('fs-extra');
 const LRUCache = require('@wireapp/lru-cache').default;
 const path = require('path');
@@ -37,7 +37,7 @@ describe('cryptobox.store.CryptoboxCRUDStore', () => {
     storagePath = fs.mkdtempSync(path.join(TEMP_DIRECTORY, 'test'));
     engine = new FileEngine();
     await engine.init(storagePath, {fileExtension: '.json'});
-    const tempCryptobox = new cryptobox.Cryptobox(engine, 1);
+    const tempCryptobox = new Cryptobox(engine, 1);
     fileStore = tempCryptobox.store;
     done();
   });
@@ -174,7 +174,7 @@ describe('cryptobox.store.CryptoboxCRUDStore', () => {
 
   describe('"session_from_prekey"', () => {
     it('saves and caches a valid session from a serialized PreKey bundle', async done => {
-      const alice = new cryptobox.Cryptobox(engine, 1);
+      const alice = new Cryptobox(engine, 1);
       const sessionId = 'session_with_bob';
 
       const bob = await Proteus.keys.IdentityKeyPair.new();
@@ -195,7 +195,7 @@ describe('cryptobox.store.CryptoboxCRUDStore', () => {
     });
 
     it('reinforces a session from the store without cache', async done => {
-      const alice = new cryptobox.Cryptobox(engine, 1);
+      const alice = new Cryptobox(engine, 1);
       const sessionId = 'session_with_bob';
 
       const bob = await Proteus.keys.IdentityKeyPair.new();

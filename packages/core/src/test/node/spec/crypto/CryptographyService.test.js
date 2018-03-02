@@ -19,9 +19,9 @@
 
 /* eslint-disable no-magic-numbers */
 const bazinga64 = require('bazinga64');
-const cryptobox = require('@wireapp/cryptobox');
-const Proteus = require('@wireapp/proteus');
 const crypto = require('@wireapp/core/dist/crypto/root');
+const Proteus = require('@wireapp/proteus');
+const {Cryptobox} = require('@wireapp/cryptobox');
 const {MemoryEngine} = require('@wireapp/store-engine');
 
 async function createEngine(storeName) {
@@ -41,7 +41,7 @@ describe('CryptographyService', () => {
       .create()
       .then(async preKeys => {
         aliceLastResortPreKey = preKeys.filter(preKey => preKey.key_id === Proteus.keys.PreKey.MAX_PREKEY_ID)[0];
-        bob = new cryptobox.Cryptobox(await createEngine('wire'));
+        bob = new Cryptobox(await createEngine('wire'));
         return bob.create();
       })
       .then(done);
