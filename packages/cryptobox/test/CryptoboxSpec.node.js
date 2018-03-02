@@ -19,7 +19,7 @@
 
 /* eslint no-magic-numbers: "off" */
 
-fdescribe('cryptobox.Cryptobox', () => {
+describe('cryptobox.Cryptobox', () => {
   const cryptobox = require('@wireapp/cryptobox');
   const Proteus = require('@wireapp/proteus');
   const {StoreEngine} = require('@wireapp/store-engine');

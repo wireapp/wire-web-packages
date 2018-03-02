@@ -60,6 +60,7 @@ class Cryptobox extends EventEmitter {
     this.cachedSessions = new LRUCache(1000);
     this.minimumAmountOfPreKeys = minimumAmountOfPreKeys;
     this.store = new CryptoboxCRUDStore(engine);
+    // "pk_store" takes temporary record of consumed PreKeys
     this.pk_store = new ReadOnlyStore(this.store);
 
     const storageEngine: string = engine.constructor.name;
@@ -151,6 +152,10 @@ class Cryptobox extends EventEmitter {
       return Promise.resolve(this.serialize_prekey(this.lastResortPreKey));
     }
     return Promise.reject(new CryptoboxError('No last resort PreKey available.'));
+  }
+
+  private get_prekey(prekey_id: number = ProteusKeys.PreKey.MAX_PREKEY_ID): Promise<ProteusKeys.PreKey | undefined> {
+    return this.store.load_prekey(prekey_id);
   }
 
   public get_serialized_standard_prekeys(): Promise<Array<{id: number; key: string}>> {

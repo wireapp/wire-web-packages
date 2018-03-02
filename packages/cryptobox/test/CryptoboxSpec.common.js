@@ -23,7 +23,7 @@ const cryptobox = typeof window === 'object' ? window.cryptobox : require('@wire
 const Proteus = typeof window === 'object' ? window.Proteus : require('@wireapp/proteus');
 const {StoreEngine} = require('@wireapp/store-engine');
 
-fdescribe('cryptobox.Cryptobox', () => {
+describe('cryptobox.Cryptobox', () => {
   let sodium = undefined;
   let engine = undefined;
 
