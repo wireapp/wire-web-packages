@@ -1,12 +1,11 @@
 import * as ProteusKeys from '@wireapp/proteus/dist/keys/root';
 import * as ProteusMessage from '@wireapp/proteus/dist/message/root';
 import * as ProteusSession from '@wireapp/proteus/dist/session/root';
-import CryptoboxCRUDStore from './store/CryptoboxCRUDStore';
 import {CryptoboxError} from './error/root';
 import CryptoboxSession from './CryptoboxSession';
 import DecryptionError from './DecryptionError';
 import InvalidPreKeyFormatError from './InvalidPreKeyFormatError';
-import {ReadOnlyStore} from './store/root';
+import {CryptoboxCRUDStore, ReadOnlyStore} from './store/root';
 import LRUCache from '@wireapp/lru-cache';
 import EventEmitter = require('events');
 import PQueue = require('p-queue');

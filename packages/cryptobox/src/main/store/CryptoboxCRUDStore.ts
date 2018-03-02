@@ -136,4 +136,4 @@ class CryptoboxCRUDStore implements CryptoboxStore {
   }
 }
 
-export default CryptoboxCRUDStore;
+export {CryptoboxCRUDStore};

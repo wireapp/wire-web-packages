@@ -66,14 +66,14 @@ describe('cryptobox.store.IndexedDB', () => {
     it('removes PreKeys from the storage (when a session gets established) and creates new PreKeys if needed.', async done => {
       const alice = {
         // PreKeys: ["65535", "0", "1"]
-        desktop: new cryptobox.Cryptobox(await createStore(), 3),
+        desktop: new cryptobox.Cryptobox((await createStore()).engine, 3),
       };
 
       const bob = {
         // PreKeys: ["65535"]
-        desktop: new cryptobox.Cryptobox(await createStore(), 1),
+        desktop: new cryptobox.Cryptobox((await createStore()).engine, 1),
         // PreKeys: ["65535"]
-        mobile: new cryptobox.Cryptobox(await createStore(), 1),
+        mobile: new cryptobox.Cryptobox((await createStore()).engine, 1),
       };
 
       spyOn(alice.desktop, 'publish_prekeys').and.callThrough();
@@ -177,7 +177,7 @@ describe('cryptobox.store.IndexedDB', () => {
     it('saves and caches a valid session from a serialized PreKey bundle', async done => {
       const store = await createStore();
 
-      const alice = new cryptobox.Cryptobox(store, 1);
+      const alice = new cryptobox.Cryptobox(store.engine, 1);
       const sessionId = 'session_with_bob';
 
       const bob = await Proteus.keys.IdentityKeyPair.new();
@@ -202,7 +202,7 @@ describe('cryptobox.store.IndexedDB', () => {
     it('reinforces a session from the indexedDB without cache', async done => {
       const store = await createStore();
 
-      const alice = new cryptobox.Cryptobox(store, 1);
+      const alice = new cryptobox.Cryptobox(store.engine, 1);
       const sessionId = 'session_with_bob';
 
       const bob = await Proteus.keys.IdentityKeyPair.new();
