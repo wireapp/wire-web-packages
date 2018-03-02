@@ -41,7 +41,7 @@ describe('CryptographyService', () => {
       .create()
       .then(async preKeys => {
         aliceLastResortPreKey = preKeys.filter(preKey => preKey.key_id === Proteus.keys.PreKey.MAX_PREKEY_ID)[0];
-        bob = new cryptobox.Cryptobox(new cryptobox.store.CryptoboxCRUDStore(await createEngine('wire')));
+        bob = new cryptobox.Cryptobox(await createEngine('wire'));
         return bob.create();
       })
       .then(done);
