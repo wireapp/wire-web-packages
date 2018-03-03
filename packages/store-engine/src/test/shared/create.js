@@ -1,6 +1,6 @@
 const TABLE_NAME = 'the-simpsons';
 
-const {StoreEngine} = require('@wireapp/store-engine');
+const StoreEngine = require('@wireapp/store-engine');
 
 module.exports = {
   'creates a serialized database record.': (done, engine) => {
@@ -19,6 +19,19 @@ module.exports = {
       .catch(done.fail);
   },
   "doesn't save empty values.": (done, engine) => {
+    const PRIMARY_KEY = 'primary-key';
+
+    const entity = undefined;
+
+    engine
+      .create(TABLE_NAME, PRIMARY_KEY, entity)
+      .then(() => done.fail(new Error('Method is supposed to throw an error.')))
+      .catch(error => {
+        expect(error).toEqual(jasmine.any(StoreEngine.error.RecordTypeError));
+        done();
+      });
+  },
+  "doesn't save null values.": (done, engine) => {
     const PRIMARY_KEY = 'primary-key';
 
     const entity = undefined;

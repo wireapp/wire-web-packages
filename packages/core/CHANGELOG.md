@@ -3,6 +3,70 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="2.0.47"></a>
+## [2.0.47](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.46...@wireapp/core@2.0.47) (2018-03-02)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.0.46"></a>
+## [2.0.46](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.45...@wireapp/core@2.0.46) (2018-03-02)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.0.45"></a>
+## [2.0.45](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.44...@wireapp/core@2.0.45) (2018-03-02)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.0.44"></a>
+## [2.0.44](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.43...@wireapp/core@2.0.44) (2018-03-01)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.0.43"></a>
+## [2.0.43](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.42...@wireapp/core@2.0.43) (2018-03-01)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.0.42"></a>
+## [2.0.42](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.41...@wireapp/core@2.0.42) (2018-03-01)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.0.41"></a>
+## [2.0.41](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.40...@wireapp/core@2.0.41) (2018-03-01)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.0.40"></a>
+## [2.0.40](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.39...@wireapp/core@2.0.40) (2018-03-01)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
 <a name="2.0.39"></a>
 ## [2.0.39](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.38...@wireapp/core@2.0.39) (2018-02-28)
 
