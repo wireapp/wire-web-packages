@@ -12,7 +12,7 @@ describe('Account', () => {
       }
     });
 
-    it('creates a client of there is none', async done => {
+    it('creates a client if there is none', async done => {
       const engine = new IndexedDBEngine();
       const apiClient = new Client({
         schemaCallback: db => {
@@ -35,14 +35,10 @@ describe('Account', () => {
       const account = new Account(apiClient);
       spyOn(account, 'registerClient');
 
-      try {
-        await account.init();
-        await apiClient.initEngine(context);
-        storeName = engine.storeName;
-        await account.initClient(context);
-      } catch (error) {
-        return done.fail(error);
-      }
+      await account.init();
+      await apiClient.initEngine(context);
+      storeName = engine.storeName;
+      await account.initClient(context);
 
       expect(account.registerClient).toHaveBeenCalledTimes(1);
       done();
