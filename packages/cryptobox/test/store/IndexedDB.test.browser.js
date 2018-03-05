@@ -167,7 +167,7 @@ describe('cryptobox.store.IndexedDB', () => {
   });
 
   describe('"refill_prekeys"', () => {
-    it('removes PreKeys from the storage (when a session gets established) and creates new PreKeys if needed', async done => {
+    it('refills PreKeys after a successful decryption', async done => {
       const aliceStore = await createStore();
       const alice = new Cryptobox(aliceStore.engine, 10);
 
@@ -175,18 +175,40 @@ describe('cryptobox.store.IndexedDB', () => {
       expect(alice.refill_prekeys).toHaveBeenCalledTimes(0);
 
       const alicePreKeys = await alice.create();
+      expect(alicePreKeys.length).toBe(10);
 
       expect(alicePreKeys[9].key_id).toBe(Proteus.keys.PreKey.MAX_PREKEY_ID);
       expect(alice.refill_prekeys).toHaveBeenCalledTimes(1);
 
       const bobStore = await createStore();
-      const bob = new Cryptobox(bobStore.engine, 10);
+      const bob = new Cryptobox(bobStore.engine, 7);
+
       spyOn(bob, 'refill_prekeys').and.callThrough();
       expect(bob.refill_prekeys).toHaveBeenCalledTimes(0);
 
-      await bob.create();
+      const bobPreKeys = await bob.create();
+
+      expect(bobPreKeys.length).toBe(7);
       expect(bob.refill_prekeys).toHaveBeenCalledTimes(1);
+
+      const sessionId = 'session_with_bob';
+      const preKey = await bob.store.load_prekey(3);
+
+      const bobBundle = await Proteus.keys.PreKeyBundle.new(bob.identity.public_key, preKey);
+
+      const cipherMessage = await alice.encrypt(sessionId, 'Hello Bob!', bobBundle.serialise());
+      expect((await bob.store.load_prekeys()).length).toBe(7);
+
       expect(alice.refill_prekeys).toHaveBeenCalledTimes(1);
+      expect(bob.refill_prekeys).toHaveBeenCalledTimes(1);
+
+      expect((await bob.store.load_prekeys()).map(pk => pk.key_id)).toEqual([0, 1, 2, 3, 4, 5, 65535]);
+
+      await bob.decrypt(sessionId, cipherMessage);
+      expect(bob.refill_prekeys).toHaveBeenCalledTimes(2);
+
+      expect((await bob.store.load_prekeys()).length).toBe(7);
+      expect((await bob.store.load_prekeys()).map(pk => pk.key_id)).toEqual([0, 1, 2, 4, 5, 6, 65535]);
 
       done();
     });
