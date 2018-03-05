@@ -134,7 +134,6 @@ export class Session {
           session._insert_session_state(pkmsg.message.session_tag, state);
 
           if (pkmsg.prekey_id < PreKey.MAX_PREKEY_ID) {
-            // TODO: Zeroize should be tested (and awaited) here!
             MemoryUtil.zeroize(await prekey_store.load_prekey(pkmsg.prekey_id));
             return prekey_store
               .delete_prekey(pkmsg.prekey_id)
