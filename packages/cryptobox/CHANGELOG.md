@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="8.1.12"></a>
+## [8.1.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.1.11...@wireapp/cryptobox@8.1.12) (2018-03-06)
+
+
+### Bug Fixes
+
+* **cryptobox:** Don't publish Prekeys on init ([#337](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/issues/337)) ([c4b0df3](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/commit/c4b0df3))
+
+
+
+
+<a name="8.1.11"></a>
+## [8.1.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.1.10...@wireapp/cryptobox@8.1.11) (2018-03-05)
+
+
+### Bug Fixes
+
+* **cryptobox,proteus:** Removed ReadOnlyStore ([#334](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/issues/334)) ([6e1b97d](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/commit/6e1b97d))
+
+
+
+
+<a name="8.1.10"></a>
+## [8.1.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.1.9...@wireapp/cryptobox@8.1.10) (2018-03-05)
+
+
+### Bug Fixes
+
+* **cryptobox:** Properly assign identity property ([db51329](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/commit/db51329))
+
+
+
+
 <a name="8.1.9"></a>
 ## [8.1.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.1.8...@wireapp/cryptobox@8.1.9) (2018-03-02)
 
