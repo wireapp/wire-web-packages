@@ -18,9 +18,9 @@
 
 import Priority from './Priority';
 
-export default class Item<P> {
+export default class Item {
   fn: Function = () => {};
-  priority: Priority = Priority.MEDIUM;
+  priority: number = Priority.MEDIUM;
   reject: Function = () => {};
   resolve: Function = () => {};
   retry: number | undefined = 0;

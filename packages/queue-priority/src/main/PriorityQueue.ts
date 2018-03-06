@@ -20,9 +20,9 @@ import Config from './Config';
 import Item from './Item';
 import Priority from './Priority';
 
-export default class PriorityQueue<P> {
+export default class PriorityQueue {
   private defaults = {
-    comparator: (a: Item<P>, b: Item<P>): Priority => {
+    comparator: (a: Item, b: Item): Priority => {
       if (a.priority === b.priority) {
         return a.timestamp - b.timestamp;
       }
@@ -32,19 +32,19 @@ export default class PriorityQueue<P> {
     retryDelay: 1000,
   };
   public isPending: boolean = false;
-  private queue: Array<Item<P>> = [];
+  private queue: Array<Item> = [];
 
-  constructor(private config?: Config<P>) {
+  constructor(private config?: Config) {
     this.config = Object.assign(this.defaults, config);
   }
 
-  public add(thunkedPromise: any, priority: Priority = Priority.MEDIUM): Promise<P> {
+  public add(thunkedPromise: any, priority: Priority = Priority.MEDIUM): Promise<any> {
     if (typeof thunkedPromise !== 'function') {
       thunkedPromise = () => thunkedPromise;
     }
 
     return new Promise((resolve, reject) => {
-      const queueObject = new Item<P>();
+      const queueObject = new Item();
       queueObject.fn = thunkedPromise;
       queueObject.priority = priority;
       queueObject.reject = reject;
@@ -57,15 +57,19 @@ export default class PriorityQueue<P> {
     });
   }
 
+  public get all(): Array<Item> {
+    return this.queue;
+  }
+
   public get size(): number {
     return this.queue.length;
   }
 
-  public get first(): Item<P> {
+  public get first(): Item {
     return this.queue[0];
   }
 
-  public get last(): Item<P> {
+  public get last(): Item {
     return this.queue[this.queue.length - 1];
   }
 
@@ -76,7 +80,7 @@ export default class PriorityQueue<P> {
     }
 
     Promise.resolve(queueObject.fn())
-      .then((result: P) => {
+      .then((result: any) => {
         return {shouldContinue: true, wrappedResolve: () => queueObject.resolve(result)};
       })
       .catch((error: Error) => {
@@ -96,7 +100,7 @@ export default class PriorityQueue<P> {
             wrappedResolve();
           }
           this.isPending = false;
-          const nextItem: Item<P> | undefined = this.queue.shift();
+          const nextItem: Item | undefined = this.queue.shift();
           if (nextItem) {
             this.resolveItems();
           }
@@ -113,7 +117,7 @@ export default class PriorityQueue<P> {
 
   public toString(): string {
     return this.queue
-      .map((item: Item<P>, index: number) => {
+      .map((item: Item, index: number) => {
         return `"${index}": ${item.fn.toString().replace(/(\r\n|\n|\r|\s+)/gm, '')}`;
       })
       .join('\r\n');

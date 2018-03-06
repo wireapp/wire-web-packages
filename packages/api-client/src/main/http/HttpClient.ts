@@ -17,7 +17,7 @@
 //
 
 import {AccessTokenData} from '../auth/AccessTokenData';
-import axios, {AxiosError, AxiosPromise, AxiosResponse, AxiosRequestConfig} from 'axios';
+import axios, {AxiosError, AxiosPromise, AxiosRequestConfig} from 'axios';
 import {AccessTokenStore, AuthAPI} from '../auth';
 import {ContentType} from '../http';
 import PriorityQueue from '@wireapp/queue-priority/dist/commonjs/PriorityQueue';
@@ -29,10 +29,10 @@ class HttpClient {
     logger: console,
     markdown: false,
   });
-  private requestQueue: PriorityQueue<AxiosResponse>;
+  private requestQueue: PriorityQueue<Promise<any>>;
 
   constructor(private baseURL: string, public accessTokenStore: AccessTokenStore) {
-    this.requestQueue = new PriorityQueue<AxiosResponse>({
+    this.requestQueue = new PriorityQueue({
       maxRetries: 0,
       retryDelay: 1000,
     });
