@@ -16,9 +16,11 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
+import Priority from './Priority';
+
 export default class Item<P> {
   fn: Function = () => {};
-  priority: P | undefined;
+  priority: Priority = Priority.MEDIUM;
   reject: Function = () => {};
   resolve: Function = () => {};
   retry: number | undefined = 0;

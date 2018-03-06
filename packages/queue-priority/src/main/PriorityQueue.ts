@@ -27,9 +27,11 @@ export interface ResolvedItems extends Array<boolean | Function | undefined> {
 
 export default class PriorityQueue<P> {
   private defaults = {
-    comparator: (a: Item<P>, b: Item<P>): number => {
-      if (a.priority === b.priority) return a.timestamp - b.timestamp;
-      return <any>b.priority - <any>a.priority;
+    comparator: (a: Item<P>, b: Item<P>): Priority => {
+      if (a.priority === b.priority) {
+        return a.timestamp - b.timestamp;
+      }
+      return b.priority - a.priority;
     },
     maxRetries: Infinity,
     retryDelay: 1000,
@@ -41,8 +43,10 @@ export default class PriorityQueue<P> {
     this.config = Object.assign(this.defaults, config);
   }
 
-  public add(thunkedPromise: Function, priority: P = <any>Priority.MEDIUM): Promise<any> {
-    if (typeof thunkedPromise !== 'function') thunkedPromise = () => thunkedPromise;
+  public add(thunkedPromise: any, priority: Priority = Priority.MEDIUM): Promise<P> {
+    if (typeof thunkedPromise !== 'function') {
+      thunkedPromise = () => thunkedPromise;
+    }
 
     return new Promise((resolve, reject) => {
       const queueObject = new Item<P>();
@@ -77,7 +81,7 @@ export default class PriorityQueue<P> {
     }
 
     Promise.resolve(queueObject.fn())
-      .then((result: any) => {
+      .then((result: P) => {
         return <ResolvedItems>[true, () => queueObject.resolve(result)];
       })
       .catch((error: Error) => {
@@ -93,7 +97,9 @@ export default class PriorityQueue<P> {
       })
       .then(([shouldContinue, wrappedResolve]: ResolvedItems) => {
         if (shouldContinue) {
-          if (wrappedResolve) wrappedResolve();
+          if (wrappedResolve) {
+            wrappedResolve();
+          }
           this.isPending = false;
           const nextItem: Item<P> | undefined = this.queue.shift();
           if (nextItem) {
