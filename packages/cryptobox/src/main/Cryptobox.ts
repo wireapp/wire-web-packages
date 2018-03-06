@@ -30,7 +30,7 @@ class Cryptobox extends EventEmitter {
     markdown: false,
   });
   private minimumAmountOfPreKeys: number;
-  private queue: PriorityQueue = new PriorityQueue({maxRetries: 1});
+  private queue: PriorityQueue = new PriorityQueue({maxRetries: 0});
   private store: CryptoboxCRUDStore;
 
   public lastResortPreKey: ProteusKeys.PreKey | undefined;
