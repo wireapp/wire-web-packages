@@ -20,6 +20,11 @@ import Config from './Config';
 import Item from './Item';
 import Priority from './Priority';
 
+export interface ResolvedItems extends Array<boolean | Function | undefined> {
+  0: boolean;
+  1?: Function;
+}
+
 export default class PriorityQueue<P> {
   private defaults = {
     comparator: (a: Item<P>, b: Item<P>): number => {
@@ -73,20 +78,20 @@ export default class PriorityQueue<P> {
 
     Promise.resolve(queueObject.fn())
       .then((result: any) => {
-        return [true, () => queueObject.resolve(result)];
+        return <ResolvedItems>[true, () => queueObject.resolve(result)];
       })
       .catch((error: Error) => {
         if (queueObject.retry! > 0) {
           queueObject.retry! -= 1;
           // TODO: Implement configurable reconnection delay (and reconnection delay growth factor)
           setTimeout(() => this.resolveItems(), this.config!.retryDelay || 1000);
-          return [false];
+          return <ResolvedItems>[false];
         } else {
           queueObject.reject(error);
-          return [true];
+          return <ResolvedItems>[true];
         }
       })
-      .then(([shouldContinue, wrappedResolve]: [boolean, () => any]) => {
+      .then(([shouldContinue, wrappedResolve]: ResolvedItems) => {
         if (shouldContinue) {
           if (wrappedResolve) wrappedResolve();
           this.isPending = false;
