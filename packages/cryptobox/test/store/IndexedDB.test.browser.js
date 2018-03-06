@@ -184,7 +184,7 @@ describe('cryptobox.store.IndexedDB', () => {
 
     it(`doesn't publish refilled PreKeys when a Cryptobox is created`, async done => {
       const store = await createStore();
-      const box = new Cryptobox(store.engine, 1);
+      const box = new Cryptobox(store.engine, 2);
 
       spyOn(box, 'publish_prekeys').and.callThrough();
       await box.create();
