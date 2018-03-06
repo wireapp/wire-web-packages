@@ -1,18 +1,24 @@
 {
   "devDependencies": {
     "babel-eslint": "8.2.2",
-    "eslint": "4.18.1",
+    "eslint": "4.18.2",
     "eslint-config-prettier": "2.9.0",
     "eslint-plugin-prettier": "2.6.0",
     "eslint-plugin-react": "7.7.0",
     "husky": "0.14.3",
     "lerna": "2.9.0",
     "lint-staged": "7.0.0",
-    "prettier": "1.10.2"
+    "prettier": "1.11.1"
   },
   "lint-staged": {
-    "*.{js,jsx}": ["eslint --fix", "git add"],
-    "*.{json,md,scss,ts}": ["prettier --write", "git add"]
+    "*.{js,jsx}": [
+      "eslint --fix",
+      "git add"
+    ],
+    "*.{json,md,scss,ts}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "private": true,
   "scripts": {
@@ -27,7 +33,9 @@
     "precommit": "lint-staged",
     "test": "yarn && yarn test:jsScript && lerna run test",
     "test:jsScript": "eslint --ignore-path .gitignore **/*.{js,jsx}",
-    "release": "yarn test && lerna run test:longrunning --scope @wireapp/proteus && lerna publish -m \"chore: Publish\" --conventional-commits --loglevel=verbose --exact --allow-branch=master --registry=https://registry.npmjs.org/ --yes"
+    "release": "yarn test && lerna run test:longrunning --scope @wireapp/proteus && lerna publish -m \"[skip ci] chore: Publish\" --conventional-commits --loglevel=verbose --exact --allow-branch=master --registry=https://registry.npmjs.org/ --yes"
   },
-  "workspaces": ["packages/*"]
+  "workspaces": [
+    "packages/*"
+  ]
 }

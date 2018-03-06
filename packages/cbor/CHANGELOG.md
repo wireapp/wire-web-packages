@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.0.6"></a>
+## [3.0.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@3.0.5...@wireapp/cbor@3.0.6) (2018-02-28)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cbor
+
+<a name="3.0.5"></a>
+## [3.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@3.0.4...@wireapp/cbor@3.0.5) (2018-02-27)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cbor
+
+<a name="3.0.4"></a>
+## 3.0.4 (2018-02-26)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cbor
+
 <a name="3.0.3"></a>
 ## [3.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@3.0.2...@wireapp/cbor@3.0.3) (2018-02-13)
 

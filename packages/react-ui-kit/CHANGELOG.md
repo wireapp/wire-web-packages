@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="1.0.7"></a>
+## [1.0.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.0.6...@wireapp/react-ui-kit@1.0.7) (2018-03-01)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Reduce modal padding ([#326](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/326)) ([a52ffe3](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/a52ffe3))
+
+
+
+
+<a name="1.0.6"></a>
+## [1.0.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.0.5...@wireapp/react-ui-kit@1.0.6) (2018-03-01)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.0.5"></a>
+## [1.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.0.4...@wireapp/react-ui-kit@1.0.5) (2018-02-28)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.0.4"></a>
+## [1.0.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.0.3...@wireapp/react-ui-kit@1.0.4) (2018-02-28)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.0.3"></a>
+## 1.0.3 (2018-02-26)
+
+
+### Bug Fixes
+
+* **cryptobox:** Queuing encryptions for multipe clients ([#280](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/280)) ([d7dbd87](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/d7dbd87))
+
+
+
+
 <a name="1.0.2"></a>
 ## [1.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.0.1...@wireapp/react-ui-kit@1.0.2) (2018-02-19)
 

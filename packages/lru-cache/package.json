@@ -4,12 +4,12 @@
   },
   "description": "Least Recently Used (LRU) Cache for JavaScript and TypeScript.",
   "devDependencies": {
-    "jasmine": "3.0.0",
+    "jasmine": "3.1.0",
     "rimraf": "2.6.1",
     "typescript": "2.6.2"
   },
   "files": [
-    "dist/commonjs/"
+    "dist"
   ],
   "license": "GPL-3.0",
   "main": "dist/commonjs/LRUCache.js",
@@ -26,5 +26,5 @@
     "test:node": "jasmine JASMINE_CONFIG_PATH=jasmine.json"
   },
   "types": "dist/commonjs/LRUCache.d.ts",
-  "version": "2.0.6"
+  "version": "2.0.9"
 }

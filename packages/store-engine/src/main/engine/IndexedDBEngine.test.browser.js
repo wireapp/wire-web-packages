@@ -18,7 +18,7 @@
  */
 
 import Dexie from 'dexie';
-import {StoreEngine} from '@wireapp/store-engine';
+import {IndexedDBEngine} from '@wireapp/store-engine';
 
 describe('StoreEngine.IndexedDBEngine', () => {
   const STORE_NAME = 'store-name';
@@ -26,7 +26,7 @@ describe('StoreEngine.IndexedDBEngine', () => {
   let engine = undefined;
 
   beforeEach(async done => {
-    engine = new StoreEngine.IndexedDBEngine();
+    engine = new IndexedDBEngine();
     const db = await engine.init(STORE_NAME);
     db.version(1).stores({
       'the-simpsons': ',firstName,lastName',
@@ -62,7 +62,7 @@ describe('StoreEngine.IndexedDBEngine', () => {
         [TABLE_NAME]: ', name, age',
       });
 
-      engine = new StoreEngine.IndexedDBEngine(db);
+      engine = new IndexedDBEngine(db);
       await engine.init(STORE_NAME);
 
       engine
@@ -70,6 +70,8 @@ describe('StoreEngine.IndexedDBEngine', () => {
         .then(primaryKey => {
           expect(primaryKey).toEqual(PRIMARY_KEY);
           expect(engine.storeName).toBe(name);
+          expect(engine.db.name).toBe(name);
+          expect(Object.keys(engine.db._dbSchema).length).toBe(1);
           done();
         })
         .catch(done.fail);

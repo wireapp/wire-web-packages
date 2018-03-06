@@ -16,7 +16,7 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-import {Config, SchemaCallbackFunction} from './Config';
+import {Config} from './Config';
 import {AccessTokenData, AuthAPI, Context, LoginData, RegisterData, AUTH_TABLE_NAME} from './auth';
 import {AccessTokenStore} from './auth/';
 import {AssetAPI} from './asset/';
@@ -201,8 +201,8 @@ class Client {
       }`
     );
     const isDexieStore = db && db.constructor.name === 'Dexie';
-    const isSchemalessStore = db && Object.keys(db._dbSchema).length === 0;
-    if (isDexieStore && isSchemalessStore) {
+    const isSchemalessStore = isDexieStore && Object.keys(db._dbSchema).length === 0;
+    if (isSchemalessStore) {
       if (this.config.schemaCallback) {
         this.config.schemaCallback(db);
       } else {

@@ -1,18 +1,18 @@
 {
   "dependencies": {
     "@types/node": "9.4.6",
-    "@wireapp/api-client": "0.4.7",
-    "@wireapp/cryptobox": "8.0.14",
-    "@wireapp/store-engine": "0.2.4",
+    "@wireapp/api-client": "0.5.3",
+    "@wireapp/cryptobox": "8.1.11",
+    "@wireapp/store-engine": "0.3.4",
     "bazinga64": "5.0.3",
-    "protobufjs": "6.8.5",
+    "protobufjs": "6.8.6",
     "pure-uuid": "1.5.0"
   },
   "devDependencies": {
     "cross-env": "5.1.3",
-    "dotenv": "5.0.0",
+    "dotenv": "5.0.1",
     "istanbul": "0.4.5",
-    "jasmine": "3.0.0",
+    "jasmine": "3.1.0",
     "karma": "2.0.0",
     "karma-chrome-launcher": "2.2.0",
     "karma-jasmine": "1.1.1",
@@ -39,9 +39,9 @@
     "dist": "yarn clear && yarn build",
     "start": "rimraf .tmp && yarn dist && node index.js",
     "test": "yarn dist && yarn test:node && yarn test:browser",
-    "test:browser": "exit 0",
+    "test:browser": "webpack && karma start",
     "test:node": "jasmine --config=src/test/node/support/jasmine.json"
   },
   "types": "./dist/Account.d.ts",
-  "version": "2.0.27"
+  "version": "2.0.49"
 }
