@@ -87,7 +87,6 @@ class AuthAPI {
       withCredentials: true,
     };
 
-    // TODO: "retrieveCookie" will also save the cookie. At this point in time, a FileStoreEngine would be not initialized, which is a problem.
     return this.client.sendJSON(config).then((response: AxiosResponse) => response);
   }
 
