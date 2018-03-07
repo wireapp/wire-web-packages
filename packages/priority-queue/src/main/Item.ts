@@ -24,7 +24,7 @@ export default class Item {
   priority: number = Priority.MEDIUM;
   reject: Function = () => {}; // wrapped "reject" of "fn"
   resolve: Function = () => {}; // wrapped "resolve" of "fn"
-  retry: number | undefined = 0; // number of retries for rejecting Promises
+  retry: number = Infinity; // number of retries for rejecting Promises
   timestamp: number = 0; // time when the item has been added to the queue
   uuid: string;
 

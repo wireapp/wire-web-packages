@@ -50,7 +50,7 @@ export default class PriorityQueue {
       queueObject.priority = priority;
       queueObject.reject = reject;
       queueObject.resolve = resolve;
-      queueObject.retry = this.config.maxRetries;
+      queueObject.retry = this.config.maxRetries || queueObject.retry;
       queueObject.timestamp = Date.now() + this.size;
       this.queue.push(queueObject);
       this.queue.sort(this.config.comparator);
