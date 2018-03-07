@@ -106,18 +106,6 @@ describe('PriorityQueue', () => {
       const promisesByPriority = queue.all;
       expect(promisesByPriority[0].label).toBe('access token refresh');
     });
-
-    it('adds UUIDs to queued Promises', () => {
-      const promise = new Promise(resolve => setTimeout(() => resolve(), Number.MAX_SAFE_INTEGER));
-
-      queue = new PriorityQueue();
-      queue.add(promise, 1);
-      queue.add(promise, 1);
-
-      const promisesByPriority = queue.all;
-
-      expect(promisesByPriority[0].uuid).not.toBe(promisesByPriority[1].uuid);
-    });
   });
 
   describe('"delete"', () => {
@@ -125,15 +113,15 @@ describe('PriorityQueue', () => {
       const promise = new Promise(resolve => setTimeout(() => resolve(), Number.MAX_SAFE_INTEGER));
 
       queue = new PriorityQueue();
-      queue.add(promise);
-      queue.add(promise);
-      queue.add(promise);
-      queue.add(promise);
+      queue.add(promise, 1);
+      queue.add(promise, 1);
+      queue.add(promise, 1, 'delete-me');
+      queue.add(promise, 1);
 
       expect(queue.all.length).toBe(4);
 
-      const uuid = queue.all[2].uuid;
-      queue.delete(uuid);
+      queue.delete('delete-me');
+
       expect(queue.all.length).toBe(3);
     });
   });

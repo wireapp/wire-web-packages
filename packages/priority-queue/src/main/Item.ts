@@ -15,13 +15,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
-const UUID = require('pure-uuid');
 import Priority from './Priority';
 
 export default class Item {
   /** original business logic */
   fn: Function = () => {};
-  label: string = '';
+  label: string | undefined;
   priority: number = Priority.MEDIUM;
   /** wrapped `reject` of `fn` */
   reject: Function = () => {};
@@ -31,9 +30,4 @@ export default class Item {
   retry: number = Infinity;
   /** time when the item has been added to the queue */
   timestamp: number = 0;
-  uuid: string;
-
-  constructor() {
-    this.uuid = new UUID(4).format();
-  }
 }

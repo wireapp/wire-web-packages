@@ -46,7 +46,7 @@ export default class PriorityQueue {
     return new Promise((resolve, reject) => {
       const queueObject = new Item();
       queueObject.fn = thunkedPromise;
-      queueObject.label = label || queueObject.label;
+      queueObject.label = label;
       queueObject.priority = priority;
       queueObject.reject = reject;
       queueObject.resolve = resolve;
@@ -58,8 +58,8 @@ export default class PriorityQueue {
     });
   }
 
-  public delete(uuid: string): void {
-    this.queue = this.queue.filter(item => item.uuid !== uuid);
+  public delete(label: string): void {
+    this.queue = this.queue.filter(item => item.label !== label);
   }
 
   public deleteAll(): void {
