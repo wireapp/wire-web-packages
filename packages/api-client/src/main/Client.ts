@@ -49,10 +49,10 @@ class Client {
   public invitation: {api: InvitationAPI};
   public self: {api: SelfAPI};
   public teams: {
-    team: {api: TeamAPI | undefined};
-    member: {api: MemberAPI | undefined};
-    invitation: {api: TeamInvitationAPI | undefined};
-    payment: {api: PaymentAPI | undefined};
+    team: {api?: TeamAPI};
+    member: {api?: MemberAPI};
+    invitation: {api?: TeamInvitationAPI};
+    payment: {api?: PaymentAPI};
   } = {
     team: {api: undefined},
     member: {api: undefined},
@@ -63,7 +63,7 @@ class Client {
 
   // Configuration
   private accessTokenStore: AccessTokenStore;
-  public context: Context;
+  public context?: Context;
   public transport: {http: HttpClient; ws: WebSocketClient};
 
   public static BACKEND = Backend;
@@ -185,7 +185,11 @@ class Client {
   }
 
   public connect(): Promise<WebSocketClient> {
-    return this.transport.ws.connect(this.context!.clientId);
+    if (this.context && this.context.clientId) {
+      return this.transport.ws.connect(this.context.clientId);
+    } else {
+      return this.transport.ws.connect();
+    }
   }
 
   private createContext(userId: string, clientId?: string, clientType?: ClientType): Context {

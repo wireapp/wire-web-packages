@@ -214,7 +214,7 @@ class Cryptobox extends EventEmitter {
         return ProteusKeys.IdentityKeyPair.new();
       })
       .then((identity: ProteusKeys.IdentityKeyPair) => {
-        this.logger.warn(`Cleaned cryptographic items prior to saving a new local identity.`, identity);
+        this.logger.warn(`Cleaned cryptographic items prior to saving a new local identity.`);
         return this.store.save_identity(identity);
       });
   }
