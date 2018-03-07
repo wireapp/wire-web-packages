@@ -50,7 +50,7 @@ export default class PriorityQueue {
       queueObject.priority = priority;
       queueObject.reject = reject;
       queueObject.resolve = resolve;
-      queueObject.retry = this.config.maxRetries || queueObject.retry;
+      queueObject.retry = Number(this.config.maxRetries) >= 0 ? Number(this.config.maxRetries) : queueObject.retry;
       queueObject.timestamp = Date.now() + this.size;
       this.queue.push(queueObject);
       this.queue.sort(this.config.comparator);
@@ -93,10 +93,10 @@ export default class PriorityQueue {
         return {shouldContinue: true, wrappedResolve: () => queueObject.resolve(result)};
       })
       .catch((error: Error) => {
-        if (queueObject.retry! > 0) {
-          queueObject.retry! -= 1;
+        if (queueObject.retry > 0) {
+          queueObject.retry -= 1;
           // TODO: Implement configurable reconnection delay (and reconnection delay growth factor)
-          setTimeout(() => this.resolveItems(), this.config!.retryDelay || 1000);
+          setTimeout(() => this.resolveItems(), this.config.retryDelay || 1000);
           return {shouldContinue: false};
         } else {
           queueObject.reject(error);

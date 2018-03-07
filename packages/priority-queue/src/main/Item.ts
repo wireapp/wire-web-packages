@@ -26,7 +26,7 @@ export default class Item {
   reject: Function = () => {};
   /** wrapped `resolve` of `fn` */
   resolve: Function = () => {};
-  /** number of retries for rejecting Promises */
+  /** number of remaining retries for rejecting Promises */
   retry: number = Infinity;
   /** time when the item has been added to the queue */
   timestamp: number = 0;

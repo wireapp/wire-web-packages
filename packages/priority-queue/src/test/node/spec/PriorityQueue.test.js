@@ -31,6 +31,23 @@ describe('PriorityQueue', () => {
     }
   });
 
+  describe('"constructor"', () => {
+    it('allows a configuration with zero retries', () => {
+      const promise = new Promise(resolve => setTimeout(() => resolve(), Number.MAX_SAFE_INTEGER));
+      queue = new PriorityQueue({maxRetries: 0});
+      expect(queue.config.maxRetries).toBe(0);
+      queue.add(promise);
+      expect(queue.first.retry).toBe(0);
+    });
+
+    it('does not apply negative retries', () => {
+      const promise = new Promise(resolve => setTimeout(() => resolve(), Number.MAX_SAFE_INTEGER));
+      queue = new PriorityQueue({maxRetries: -12});
+      queue.add(promise);
+      expect(queue.first.retry).toBe(Infinity);
+    });
+  });
+
   describe('"add"', () => {
     it('works with thunked Promises', done => {
       queue = new PriorityQueue();
