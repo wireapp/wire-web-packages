@@ -31,7 +31,7 @@ yarn add @wireapp/api-client
 
 **Node.js**
 
-* [index.js](./demo.js)
+* [index.js](index.js)
 
 ### Execution
 

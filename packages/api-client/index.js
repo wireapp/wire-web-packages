@@ -39,7 +39,7 @@ const login = {
 const storagePath = path.join(process.cwd(), '.tmp', login.email);
 
 const config = {
-  store: new FileEngine(storagePath, {fileExtension: '.json'}),
+  store: new FileEngine(storagePath),
 };
 
 const apiClient = new Client(config);
