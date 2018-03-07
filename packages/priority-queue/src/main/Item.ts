@@ -19,13 +19,18 @@ const UUID = require('pure-uuid');
 import Priority from './Priority';
 
 export default class Item {
-  fn: Function = () => {}; // original business logic
+  /** original business logic */
+  fn: Function = () => {};
   label: string = '';
   priority: number = Priority.MEDIUM;
-  reject: Function = () => {}; // wrapped "reject" of "fn"
-  resolve: Function = () => {}; // wrapped "resolve" of "fn"
-  retry: number = Infinity; // number of retries for rejecting Promises
-  timestamp: number = 0; // time when the item has been added to the queue
+  /** wrapped `reject` of `fn` */
+  reject: Function = () => {};
+  /** wrapped `resolve` of `fn` */
+  resolve: Function = () => {};
+  /** number of retries for rejecting Promises */
+  retry: number = Infinity;
+  /** time when the item has been added to the queue */
+  timestamp: number = 0;
   uuid: string;
 
   constructor() {
