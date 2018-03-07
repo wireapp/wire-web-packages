@@ -59,22 +59,25 @@ class Account extends EventEmitter {
       if (!this.service) {
         throw new Error('Services are not set.');
       }
+
       switch (event.type) {
-        case ConversationEventType.OTR_MESSAGE_ADD:
+        case ConversationEventType.OTR_MESSAGE_ADD: {
           const otrMessage: OTRMessageAdd = event as OTRMessageAdd;
           const sessionId: string = this.service.crypto.constructSessionId(otrMessage.from, otrMessage.data.sender);
           const ciphertext: string = otrMessage.data.text;
           this.service.crypto.decrypt(sessionId, ciphertext).then((decryptedMessage: Uint8Array) => {
             const genericMessage = this.protocolBuffers.GenericMessage.decode(decryptedMessage);
             switch (genericMessage.content) {
-              case GenericMessageType.TEXT:
+              case GenericMessageType.TEXT: {
                 resolve(genericMessage.text.content);
                 break;
+              }
               default:
                 resolve(undefined);
             }
           });
           break;
+        }
       }
     });
   }
