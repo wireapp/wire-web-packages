@@ -37,7 +37,7 @@ class Cryptobox extends EventEmitter {
 
   public lastResortPreKey: ProteusKeys.PreKey | undefined;
   public identity: ProteusKeys.IdentityKeyPair | undefined;
-  public VERSION: string = VERSION;
+  public static VERSION: string = VERSION;
 
   constructor(engine: CRUDEngine, minimumAmountOfPreKeys: number = 1) {
     super();

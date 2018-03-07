@@ -67,7 +67,7 @@ class Client {
   public transport: {http: HttpClient; ws: WebSocketClient};
 
   public static BACKEND = Backend;
-  public VERSION: string = VERSION;
+  public static VERSION: string = VERSION;
 
   constructor(public config: Config = new Config()) {
     this.config = new Config(config.store, config.urls, config.schemaCallback);
