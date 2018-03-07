@@ -40,7 +40,8 @@
     "sinon": "4.4.2",
     "sinon-har-server": "0.3.0",
     "typescript": "2.6.2",
-    "webpack": "3.11.0",
+    "webpack": "4.1.0",
+    "webpack-cli": "2.0.10",
     "webpack-dev-server": "3.1.0"
   },
   "description": "Wire API Client to send and receive data.",
@@ -53,7 +54,7 @@
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client",
   "scripts": {
     "build": "yarn build:node && yarn build:browser",
-    "build:browser": "webpack --config ./webpack.browser.js",
+    "build:browser": "webpack --config ./webpack.browser.js --mode production --progress",
     "build:node": "tsc",
     "clear": "rimraf dist",
     "coverage": "istanbul cover --report html ./node_modules/jasmine/bin/jasmine.js",

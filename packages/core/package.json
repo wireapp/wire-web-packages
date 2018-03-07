@@ -20,7 +20,8 @@
     "karma-sourcemap-loader": "0.3.7",
     "rimraf": "2.6.2",
     "typescript": "2.7.1",
-    "webpack": "3.11.0"
+    "webpack": "4.1.0",
+    "webpack-cli": "2.0.10"
   },
   "description": "Wire for Web's communication core.",
   "files": [
