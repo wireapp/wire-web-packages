@@ -38,7 +38,7 @@ export default class PriorityQueue {
     this.config = Object.assign(this.config, config);
   }
 
-  public add(thunkedPromise: any, priority: Priority = Priority.MEDIUM, label: string): Promise<any> {
+  public add(thunkedPromise: any, priority: Priority = Priority.MEDIUM, label?: string): Promise<any> {
     if (typeof thunkedPromise !== 'function') {
       thunkedPromise = () => thunkedPromise;
     }
@@ -46,7 +46,7 @@ export default class PriorityQueue {
     return new Promise((resolve, reject) => {
       const queueObject = new Item();
       queueObject.fn = thunkedPromise;
-      queueObject.label = label;
+      queueObject.label = label || '';
       queueObject.priority = priority;
       queueObject.reject = reject;
       queueObject.resolve = resolve;
