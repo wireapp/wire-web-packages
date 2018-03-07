@@ -17,6 +17,8 @@ export interface SessionFromMessageTuple extends Array<CryptoboxSession | Uint8A
   1: Uint8Array;
 }
 
+const VERSION = require('../../package.json').version;
+
 class Cryptobox extends EventEmitter {
   public static TOPIC = {
     NEW_PREKEYS: 'new-prekeys',
@@ -35,7 +37,7 @@ class Cryptobox extends EventEmitter {
 
   public lastResortPreKey: ProteusKeys.PreKey | undefined;
   public identity: ProteusKeys.IdentityKeyPair | undefined;
-  public VERSION: string = '';
+  public VERSION: string = VERSION;
 
   constructor(engine: CRUDEngine, minimumAmountOfPreKeys: number = 1) {
     super();
@@ -397,8 +399,5 @@ class Cryptobox extends EventEmitter {
     });
   }
 }
-
-// Note: Path to "package.json" must be relative to the "commonjs" dist files
-Cryptobox.prototype.VERSION = require('../../package.json').version;
 
 export default Cryptobox;

@@ -35,6 +35,8 @@ import {WebSocketClient} from './tcp/';
 import {User} from './user';
 import {retrieveCookie} from './shims/node/cookie';
 
+const VERSION = require('../../package.json').version;
+
 class Client {
   private STORE_NAME_PREFIX: string = 'wire';
   // APIs
@@ -65,13 +67,13 @@ class Client {
   public transport: {http: HttpClient; ws: WebSocketClient};
 
   public static BACKEND = Backend;
-  public VERSION: string;
+  public VERSION: string = VERSION;
 
   constructor(public config: Config = new Config()) {
     this.config = new Config(config.store, config.urls, config.schemaCallback);
     this.accessTokenStore = new AccessTokenStore(this.config.store);
 
-    const httpClient = new HttpClient(this.config.urls.rest, this.accessTokenStore);
+    const httpClient = new HttpClient(this.config.urls.rest, this.accessTokenStore, this.config.store);
 
     this.transport = {
       http: httpClient,
@@ -121,8 +123,6 @@ class Client {
     this.user = {
       api: new UserAPI(this.transport.http),
     };
-
-    this.transport.http.authAPI = this.auth.api;
   }
 
   public init(): Promise<Context> {
@@ -130,7 +130,9 @@ class Client {
     let accessToken: AccessTokenData;
     return this.accessTokenStore
       .init()
-      .then((accessToken: AccessTokenData | undefined) => (accessToken ? accessToken : this.auth.api.postAccess()))
+      .then(
+        (accessToken: AccessTokenData | undefined) => (accessToken ? accessToken : this.transport.http.postAccess())
+      )
       .then((createdAccessToken: AccessTokenData) => {
         context = this.createContext(createdAccessToken.user);
         accessToken = createdAccessToken;
@@ -220,7 +222,5 @@ class Client {
     return this.config.store;
   }
 }
-
-Client.prototype.VERSION = require('../../package.json').version;
 
 export = Client;
