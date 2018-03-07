@@ -21,7 +21,7 @@ import Item from './Item';
 import Priority from './Priority';
 
 export default class PriorityQueue {
-  private defaults = {
+  private config: Config = {
     comparator: (a: Item, b: Item): Priority => {
       if (a.priority === b.priority) {
         return a.timestamp - b.timestamp;
@@ -34,11 +34,11 @@ export default class PriorityQueue {
   public isPending: boolean = false;
   private queue: Array<Item> = [];
 
-  constructor(private config?: Config) {
-    this.config = Object.assign(this.defaults, config);
+  constructor(config?: Config) {
+    this.config = Object.assign(this.config, config);
   }
 
-  public add(thunkedPromise: any, priority: Priority = Priority.MEDIUM): Promise<any> {
+  public add(thunkedPromise: any, priority: Priority = Priority.MEDIUM, label: string): Promise<any> {
     if (typeof thunkedPromise !== 'function') {
       thunkedPromise = () => thunkedPromise;
     }
@@ -46,13 +46,14 @@ export default class PriorityQueue {
     return new Promise((resolve, reject) => {
       const queueObject = new Item();
       queueObject.fn = thunkedPromise;
+      queueObject.label = label;
       queueObject.priority = priority;
       queueObject.reject = reject;
       queueObject.resolve = resolve;
-      queueObject.retry = this.config!.maxRetries;
+      queueObject.retry = this.config.maxRetries;
       queueObject.timestamp = Date.now() + this.size;
       this.queue.push(queueObject);
-      this.queue.sort(this.config!.comparator);
+      this.queue.sort(this.config.comparator);
       this.run();
     });
   }

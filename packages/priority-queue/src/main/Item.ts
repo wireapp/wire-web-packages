@@ -19,10 +19,11 @@
 import Priority from './Priority';
 
 export default class Item {
-  fn: Function = () => {};
+  fn: Function = () => {}; // original business logic
+  label: string = '';
   priority: number = Priority.MEDIUM;
-  reject: Function = () => {};
-  resolve: Function = () => {};
-  retry: number | undefined = 0;
-  timestamp: number = 0;
+  reject: Function = () => {}; // wrapped "reject" of "fn"
+  resolve: Function = () => {}; // wrapped "resolve" of "fn"
+  retry: number | undefined = 0; // number of retries for rejecting Promises
+  timestamp: number = 0; // time when the item has been added to the queue
 }
