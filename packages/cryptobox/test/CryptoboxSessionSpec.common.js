@@ -55,7 +55,7 @@ describe('cryptobox.CryptoboxSession', () => {
 
     // 1. Bob creates and "uploads" a PreKey, which can be "consumed" by Alice
     const preKey = await bob.get_prekey(bobPreKeyId);
-    const bobBundle = await Proteus.keys.PreKeyBundle.new(bob.identity.public_key, preKey);
+    const bobBundle = Proteus.keys.PreKeyBundle.new(bob.identity.public_key, preKey);
     // 2. Alice takes Bob's PreKey bundle to initiate a session
     const sessionWithBob = await alice.session_from_prekey('session-with-bob', bobBundle.serialise());
     return sessionWithBob;
@@ -80,11 +80,9 @@ describe('cryptobox.CryptoboxSession', () => {
       setupAliceToBob(2, 0)
         .then(sessionWithBob => sessionWithBob.encrypt(plaintext))
         .then(serialisedCipherText => {
-          expect(bob.pk_store.prekeys.length).toBe(0);
           return bob.session_from_message('session-with-alice', serialisedCipherText);
         })
         .then(proteusSession => {
-          expect(bob.pk_store.prekeys.length).toBe(1);
           const decryptedBuffer = proteusSession[1];
           const decrypted = sodium.to_string(decryptedBuffer);
           expect(decrypted).toBe(plaintext);
@@ -97,11 +95,9 @@ describe('cryptobox.CryptoboxSession', () => {
       setupAliceToBob(1, Proteus.keys.PreKey.MAX_PREKEY_ID)
         .then(sessionWithBob => sessionWithBob.encrypt(plaintext))
         .then(serialisedCipherText => {
-          expect(bob.pk_store.prekeys.length).toBe(0);
           return bob.session_from_message('session-with-alice', serialisedCipherText);
         })
         .then(proteusSession => {
-          expect(bob.pk_store.prekeys.length).toBe(0);
           const decryptedBuffer = proteusSession[1];
           const decrypted = sodium.to_string(decryptedBuffer);
           expect(decrypted).toBe(plaintext);

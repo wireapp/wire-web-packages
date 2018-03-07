@@ -20,7 +20,7 @@ import {AccessTokenData} from '../auth/AccessTokenData';
 import axios, {AxiosError, AxiosPromise, AxiosRequestConfig} from 'axios';
 import {AccessTokenStore, AuthAPI} from '../auth';
 import {ContentType} from '../http';
-import PriorityQueue from '@wireapp/queue-priority/dist/commonjs/PriorityQueue';
+import {PriorityQueue} from '@wireapp/priority-queue';
 const logdown = require('logdown');
 
 class HttpClient {
@@ -29,7 +29,7 @@ class HttpClient {
     logger: console,
     markdown: false,
   });
-  private requestQueue: PriorityQueue<number>;
+  private requestQueue: PriorityQueue;
 
   constructor(private baseURL: string, public accessTokenStore: AccessTokenStore) {
     this.requestQueue = new PriorityQueue({

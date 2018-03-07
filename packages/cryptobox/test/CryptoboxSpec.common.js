@@ -81,16 +81,15 @@ describe('cryptobox.Cryptobox', () => {
         .catch(done.fail);
     });
 
-    it('initializes a Cryptobox with a defined amount of PreKeys (including the last resort PreKey)', done => {
+    it('initializes a Cryptobox with a defined amount of PreKeys (including the last resort PreKey)', async done => {
       const box = new cryptobox.Cryptobox(engine, 10);
-      box.create().then(() => {
-        const preKeys = box.cachedPreKeys;
-        const lastResortPreKey = preKeys.filter(preKey => preKey.key_id === Proteus.keys.PreKey.MAX_PREKEY_ID);
-        expect(preKeys.length).toBe(10);
-        expect(box.lastResortPreKey).toBeDefined();
-        expect(box.lastResortPreKey).toBe(lastResortPreKey[0]);
-        done();
-      });
+      await box.create();
+      const preKeys = await box.store.load_prekeys();
+      const lastResortPreKey = preKeys.filter(preKey => preKey.key_id === Proteus.keys.PreKey.MAX_PREKEY_ID);
+      expect(preKeys.length).toBe(10);
+      expect(box.lastResortPreKey).toBeDefined();
+      expect(box.lastResortPreKey).toEqual(lastResortPreKey[0]);
+      done();
     });
 
     it('returns the current version', () => {
@@ -209,7 +208,7 @@ describe('cryptobox.Cryptobox', () => {
             prekey: await Proteus.keys.PreKey.new(Proteus.keys.PreKey.MAX_PREKEY_ID),
           };
 
-          bob.bundle = await Proteus.keys.PreKeyBundle.new(bob.identity.public_key, bob.prekey);
+          bob.bundle = Proteus.keys.PreKeyBundle.new(bob.identity.public_key, bob.prekey);
 
           return Proteus.session.Session.init_from_prekey(box.identity, bob.bundle);
         })

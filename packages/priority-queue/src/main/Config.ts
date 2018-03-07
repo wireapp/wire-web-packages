@@ -16,11 +16,12 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-export default class Item<P> {
-  fn: Function;
-  priority: P;
-  reject: Function;
-  resolve: Function;
-  retry: number | undefined;
-  timestamp: number;
+import Item from './Item';
+
+interface Config {
+  comparator?: (a: Item, b: Item) => number;
+  maxRetries?: number;
+  retryDelay?: number;
 }
+
+export default Config;

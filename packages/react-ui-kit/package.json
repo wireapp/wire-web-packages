@@ -5,13 +5,13 @@
     "react": "16.2.0",
     "react-dom": "16.2.0",
     "recompose": "0.26.0",
-    "styled-components": "3.1.6",
+    "styled-components": "3.2.0",
     "styled-normalize": "4.0.0"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
     "babel-core": "6.26.0",
-    "babel-loader": "7.1.3",
+    "babel-loader": "7.1.4",
     "babel-plugin-transform-class-properties": "6.24.1",
     "babel-plugin-transform-object-rest-spread": "6.26.0",
     "babel-preset-env": "1.6.1",
@@ -44,5 +44,5 @@
     "test": "yarn dist && yarn test:browser",
     "test:browser": "exit 0"
   },
-  "version": "1.0.7"
+  "version": "1.0.8"
 }

@@ -11,18 +11,18 @@
     "karma-jasmine-diff-reporter": "1.1.1",
     "karma-sourcemap-loader": "0.3.7",
     "rimraf": "2.6.1",
-    "typescript": "2.4.2",
+    "typescript": "2.7.2",
     "webpack": "4.0.1",
     "webpack-cli": "2.0.10"
   },
   "description": "A Promise-based dynamic priority queue runner.",
   "files": [
-    "dist/commonjs"
+    "dist"
   ],
   "license": "GPL-3.0",
-  "main": "./dist/commonjs/index.js",
-  "name": "@wireapp/queue-priority",
-  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/queue-priority",
+  "main": "./dist/index.js",
+  "name": "@wireapp/priority-queue",
+  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/priority-queue",
   "scripts": {
     "build": "yarn build:node && yarn build:browser",
     "build:browser": "exit 0",
@@ -33,6 +33,6 @@
     "test:browser": "webpack && karma start",
     "test:node": "cross-env JASMINE_CONFIG_PATH=src/test/node/support/jasmine.json jasmine"
   },
-  "types": "./dist/commonjs/index.d.ts",
-  "version": "0.0.31"
+  "types": "./dist/index.d.ts",
+  "version": "0.0.33"
 }

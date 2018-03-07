@@ -16,12 +16,13 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-import Item from './Item';
+import Priority from './Priority';
 
-interface Config<P> {
-  comparator?: (a: Item<P>, b: Item<P>) => number;
-  maxRetries?: number;
-  retryDelay?: number;
+export default class Item {
+  fn: Function = () => {};
+  priority: number = Priority.MEDIUM;
+  reject: Function = () => {};
+  resolve: Function = () => {};
+  retry: number | undefined = 0;
+  timestamp: number = 0;
 }
-
-export default Config;
