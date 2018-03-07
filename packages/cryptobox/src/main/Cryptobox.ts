@@ -82,14 +82,13 @@ class Cryptobox extends EventEmitter {
       .then((identity: ProteusKeys.IdentityKeyPair) => {
         this.identity = identity;
         this.logger.log(
-          `Initialized Cryptobox with new local identity. Fingerprint is "${identity.public_key.fingerprint()}".`,
-          this.identity
+          `Initialized Cryptobox with new local identity. Fingerprint is "${identity.public_key.fingerprint()}".`
         );
 
         return this.create_last_resort_prekey();
       })
       .then((lastResortPreKey: ProteusKeys.PreKey) => {
-        this.logger.log(`Created Last Resort PreKey with ID "${lastResortPreKey.key_id}".`, lastResortPreKey);
+        this.logger.log(`Created Last Resort PreKey with ID "${lastResortPreKey.key_id}".`);
         return this.init(false);
       });
   }
@@ -103,8 +102,7 @@ class Cryptobox extends EventEmitter {
           this.identity = identity;
 
           this.logger.log(
-            `Initialized Cryptobox with existing local identity. Fingerprint is "${identity.public_key.fingerprint()}".`,
-            this.identity
+            `Initialized Cryptobox with existing local identity. Fingerprint is "${identity.public_key.fingerprint()}".`
           );
 
           this.logger.log(`Loading PreKeys...`);
