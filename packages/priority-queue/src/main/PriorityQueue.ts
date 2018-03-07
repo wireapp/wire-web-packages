@@ -58,12 +58,16 @@ export default class PriorityQueue {
     });
   }
 
-  public get all(): Array<Item> {
-    return this.queue;
+  public delete(uuid: string): void {
+    this.queue = this.queue.filter(item => item.uuid !== uuid);
   }
 
-  public get size(): number {
-    return this.queue.length;
+  public deleteAll(): void {
+    this.queue = [];
+  }
+
+  public get all(): Array<Item> {
+    return this.queue;
   }
 
   public get first(): Item {
@@ -72,6 +76,10 @@ export default class PriorityQueue {
 
   public get last(): Item {
     return this.queue[this.queue.length - 1];
+  }
+
+  public get size(): number {
+    return this.queue.length;
   }
 
   private resolveItems(): void {

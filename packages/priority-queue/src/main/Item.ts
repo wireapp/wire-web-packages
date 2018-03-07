@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
-
+const UUID = require('pure-uuid');
 import Priority from './Priority';
 
 export default class Item {
@@ -26,4 +26,9 @@ export default class Item {
   resolve: Function = () => {}; // wrapped "resolve" of "fn"
   retry: number | undefined = 0; // number of retries for rejecting Promises
   timestamp: number = 0; // time when the item has been added to the queue
+  uuid: string;
+
+  constructor() {
+    this.uuid = new UUID(4).format();
+  }
 }

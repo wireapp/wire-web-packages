@@ -23,9 +23,17 @@ const {PriorityQueue} = require('@wireapp/priority-queue');
 beforeAll(() => (jasmine.DEFAULT_TIMEOUT_INTERVAL = 5000));
 
 describe('PriorityQueue', () => {
+  let queue = undefined;
+
+  afterEach(() => {
+    if (queue) {
+      queue.deleteAll();
+    }
+  });
+
   describe('"add"', () => {
     it('works with thunked Promises', done => {
-      const queue = new PriorityQueue();
+      queue = new PriorityQueue();
 
       Promise.all([
         queue.add(() => Promise.resolve('ape')),
@@ -50,7 +58,7 @@ describe('PriorityQueue', () => {
         return 'happy';
       }
 
-      const queue = new PriorityQueue();
+      queue = new PriorityQueue();
       queue.add(() => happyFn()).then(value => {
         expect(value).toBe('happy');
         done();
@@ -58,7 +66,7 @@ describe('PriorityQueue', () => {
     });
 
     it('works with thunked primitive values', done => {
-      const queue = new PriorityQueue();
+      queue = new PriorityQueue();
 
       Promise.all([
         queue.add(() => 'ape'),
@@ -79,11 +87,71 @@ describe('PriorityQueue', () => {
         throw Error('not so happy');
       }
 
-      const queue = new PriorityQueue();
+      queue = new PriorityQueue();
       queue.add(() => notHappyFn()).catch(error => {
         expect(error.message).toBe('not so happy');
         done();
       });
+    });
+
+    it('supports adding a label', () => {
+      const promise = new Promise(resolve => setTimeout(() => resolve(), Number.MAX_SAFE_INTEGER));
+
+      queue = new PriorityQueue();
+      queue.add(promise, 1, 'get request');
+      queue.add(promise, 1, 'put request');
+      queue.add(promise, 5, 'access token refresh');
+      queue.add(promise, 1, 'another get request');
+
+      const promisesByPriority = queue.all;
+      expect(promisesByPriority[0].label).toBe('access token refresh');
+    });
+
+    it('adds UUIDs to queued Promises', () => {
+      const promise = new Promise(resolve => setTimeout(() => resolve(), Number.MAX_SAFE_INTEGER));
+
+      queue = new PriorityQueue();
+      queue.add(promise, 1);
+      queue.add(promise, 1);
+
+      const promisesByPriority = queue.all;
+
+      expect(promisesByPriority[0].uuid).not.toBe(promisesByPriority[1].uuid);
+    });
+  });
+
+  describe('"delete"', () => {
+    it("deletes a Promise from the queue by it's UUID", () => {
+      const promise = new Promise(resolve => setTimeout(() => resolve(), Number.MAX_SAFE_INTEGER));
+
+      queue = new PriorityQueue();
+      queue.add(promise);
+      queue.add(promise);
+      queue.add(promise);
+      queue.add(promise);
+
+      expect(queue.all.length).toBe(4);
+
+      const uuid = queue.all[2].uuid;
+      queue.delete(uuid);
+      expect(queue.all.length).toBe(3);
+    });
+  });
+
+  describe('"deleteAll"', () => {
+    it('deletes all queued Promises', () => {
+      const promise = new Promise(resolve => setTimeout(() => resolve(), Number.MAX_SAFE_INTEGER));
+
+      queue = new PriorityQueue();
+      queue.add(promise);
+      queue.add(promise);
+      queue.add(promise);
+
+      expect(queue.all.length).toBe(3);
+
+      queue.deleteAll();
+
+      expect(queue.all.length).toBe(0);
     });
   });
 });
