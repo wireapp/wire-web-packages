@@ -46,7 +46,7 @@ export default class PriorityQueue {
     return new Promise((resolve, reject) => {
       const queueObject = new Item();
       queueObject.fn = thunkedPromise;
-      queueObject.label = label || '';
+      queueObject.label = label || queueObject.label;
       queueObject.priority = priority;
       queueObject.reject = reject;
       queueObject.resolve = resolve;
