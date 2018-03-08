@@ -16,7 +16,7 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-import {AUTH_TABLE_NAME, AUTH_COOKIE_KEY, AccessTokenData, Cookie} from '../../auth';
+import {AccessTokenData, AUTH_COOKIE_KEY, AUTH_TABLE_NAME, Cookie} from '../../auth';
 import {AxiosPromise, AxiosRequestConfig, AxiosResponse} from 'axios';
 import {Cookie as ToughCookie} from 'tough-cookie';
 import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine';
@@ -25,13 +25,14 @@ import {HttpClient} from '../../http';
 
 const COOKIE_NAME: string = 'zuid';
 
+type PersistedCookie = {
+  expiration: string;
+  zuid: string;
+};
+
 const loadExistingCookie = async (engine: CRUDEngine): Promise<Cookie> => {
-  await engine.init('wire');
   return engine
-    .read<{
-      expiration: string;
-      zuid: string;
-    }>(AUTH_TABLE_NAME, AUTH_COOKIE_KEY)
+    .read<PersistedCookie>(AUTH_TABLE_NAME, AUTH_COOKIE_KEY)
     .catch(error => {
       if (error instanceof StoreEngineError.RecordNotFoundError) {
         return new Cookie('', '0');
@@ -39,7 +40,7 @@ const loadExistingCookie = async (engine: CRUDEngine): Promise<Cookie> => {
 
       throw error;
     })
-    .then((fileContent: {expiration: string; zuid: string}) => {
+    .then((fileContent: PersistedCookie) => {
       return typeof fileContent === 'object'
         ? new Cookie(fileContent.zuid, fileContent.expiration)
         : new Cookie('', '0');
@@ -47,7 +48,7 @@ const loadExistingCookie = async (engine: CRUDEngine): Promise<Cookie> => {
 };
 
 const setInternalCookie = (cookie: Cookie, engine: CRUDEngine): Promise<string> => {
-  const entity = {expiration: cookie.expiration, zuid: cookie.zuid};
+  const entity: PersistedCookie = {expiration: cookie.expiration, zuid: cookie.zuid};
   return engine.create(AUTH_TABLE_NAME, AUTH_COOKIE_KEY, entity).catch(error => {
     if (error instanceof StoreEngineError.RecordAlreadyExistsError) {
       return engine.update(AUTH_TABLE_NAME, AUTH_COOKIE_KEY, entity);
