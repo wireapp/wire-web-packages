@@ -10,9 +10,9 @@ const messageCount = 3000;
 
 const measure = timer => {
   const [seconds, nanoseconds] = process.hrtime(timer);
-  const NANOSECOND = 1e9;
+  const NANOSECONDS_IN_SECOND = 1e9;
   const digits = 3;
-  return (seconds + nanoseconds / NANOSECOND).toFixed(digits);
+  return (seconds + nanoseconds / NANOSECONDS_IN_SECOND).toFixed(digits);
 };
 
 async function createCryptobox(storeName, amountOfPreKeys = 1) {
@@ -53,9 +53,9 @@ async function benchmark() {
     )
   );
 
-  const elapsedEncryption = measure(encryptionTimer);
+  const elapsedTimeEncryption = measure(encryptionTimer);
   process.stdout.write('Done.\n');
-  console.log(`Execution time: ${elapsedEncryption} seconds.\n`);
+  console.log(`Execution time: ${elapsedTimeEncryption} seconds.\n`);
 
   process.stdout.write(`Measuring decryption time for ${numbers.length} messages ... `);
   const decryptionTimer = process.hrtime();
@@ -63,9 +63,9 @@ async function benchmark() {
     encryptedMessages.map(async encryptedMessage => await bob.decrypt(sessionWithAlice, encryptedMessage))
   );
 
-  const elapsedDecryption = measure(decryptionTimer);
+  const elapsedTimeDecryption = measure(decryptionTimer);
   process.stdout.write('Done.\n');
-  console.log(`Execution time: ${elapsedDecryption} seconds.`);
+  console.log(`Execution time: ${elapsedTimeDecryption} seconds.`);
 }
 
 (async () => {
