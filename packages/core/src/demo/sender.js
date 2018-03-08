@@ -21,7 +21,7 @@ const {FileEngine} = require('@wireapp/store-engine');
     persist: true,
   };
 
-  const engine = new FileEngine(path.normalize('./.tmp/sender'));
+  const engine = new FileEngine(path.join(__dirname, '.tmp', 'sender'));
   await engine.init(undefined, {fileExtension: '.json'});
   const apiClient = new APIClient({
     store: engine,
