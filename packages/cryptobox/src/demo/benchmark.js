@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-/* eslint: */
-
 const Proteus = require('@wireapp/proteus');
 const {Cryptobox} = require('@wireapp/cryptobox');
 const {MemoryEngine} = require('@wireapp/store-engine');
