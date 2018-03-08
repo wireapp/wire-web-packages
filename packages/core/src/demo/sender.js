@@ -32,8 +32,9 @@ const {FileEngine} = require('@wireapp/store-engine');
 
   function sendMessage() {
     const timeoutInMillis = 2000;
-    setTimeout(() => {
-      account.service.conversation.sendTextMessage(CONVERSATION_ID, 'Hello World!').then(() => sendMessage());
+    setTimeout(async () => {
+      await account.service.conversation.sendTextMessage(CONVERSATION_ID, 'Hello World!');
+      sendMessage();
     }, timeoutInMillis);
   }
 
