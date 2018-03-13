@@ -148,11 +148,7 @@ async function pingPongWithMultipleSessions(messageCount) {
   process.stdout.write(`Measuring time for decrypting "${messageCount}" messages in "${messageCount}" sessions ... `);
   startTime = process.hrtime();
 
-  await Promise.all(
-    encryptions.map((encrypted, index) => {
-      return alice.decrypt(`session-${index}`, encrypted);
-    })
-  );
+  await Promise.all(encryptions.map((encrypted, index) => alice.decrypt(`session-${index}`, encrypted)));
 
   stopTime = getTimeInSeconds(startTime);
   process.stdout.write('Done.\n');
