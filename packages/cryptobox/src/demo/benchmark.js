@@ -18,7 +18,7 @@ function createSessionId(receiver) {
 function numbersInArray(count) {
   return Array(count)
     .fill(null)
-    .map((value, key) => key + 1);
+    .map((value, key) => ++key);
 }
 
 /** Creates a Cryptobox with an initialized store. */
