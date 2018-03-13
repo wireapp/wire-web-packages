@@ -33,7 +33,6 @@ class Cryptobox extends EventEmitter {
     markdown: false,
   });
   private minimumAmountOfPreKeys: number;
-  private queue: PriorityQueue = new PriorityQueue({maxRetries: 0});
   private queues = new LRUCache(1000);
   private store: CryptoboxCRUDStore;
 
@@ -62,8 +61,15 @@ class Cryptobox extends EventEmitter {
     );
   }
 
-  private get_session_queue(session_id: string): void {
-    const queue = <PriorityQueue | undefined>this.queues.get(session_id);
+  private get_session_queue(session_id: string): PriorityQueue {
+    let queue = <PriorityQueue | undefined>this.queues.get(session_id);
+
+    if (!queue) {
+      queue = new PriorityQueue({maxRetries: 0});
+      this.queues.set(session_id, queue);
+    }
+
+    return queue;
   }
 
   private save_session_in_cache(session: CryptoboxSession): CryptoboxSession {
@@ -341,7 +347,7 @@ class Cryptobox extends EventEmitter {
     let encryptedBuffer: ArrayBuffer;
     let loadedSession: CryptoboxSession;
 
-    return this.queue.add(() => {
+    return this.get_session_queue(session_id).add(() => {
       return Promise.resolve()
         .then(() => {
           if (pre_key_bundle) {
@@ -371,7 +377,7 @@ class Cryptobox extends EventEmitter {
       return Promise.reject(new DecryptionError('Cannot decrypt an empty ArrayBuffer.'));
     }
 
-    return this.queue.add(() => {
+    return this.get_session_queue(session_id).add(() => {
       return (
         this.session_load(session_id)
           .catch(() => this.session_from_message(session_id, ciphertext))
