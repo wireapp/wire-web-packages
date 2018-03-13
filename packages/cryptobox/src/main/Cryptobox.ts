@@ -7,9 +7,10 @@ import DecryptionError from './DecryptionError';
 import InvalidPreKeyFormatError from './InvalidPreKeyFormatError';
 import {CryptoboxCRUDStore} from './store/root';
 import LRUCache from '@wireapp/lru-cache';
-import EventEmitter = require('events');
 import {PriorityQueue} from '@wireapp/priority-queue';
 import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
+import EventEmitter = require('events');
+
 const logdown = require('logdown');
 
 export interface SessionFromMessageTuple extends Array<CryptoboxSession | Uint8Array> {
@@ -33,6 +34,7 @@ class Cryptobox extends EventEmitter {
   });
   private minimumAmountOfPreKeys: number;
   private queue: PriorityQueue = new PriorityQueue({maxRetries: 0});
+  private queues = new LRUCache(1000);
   private store: CryptoboxCRUDStore;
 
   public lastResortPreKey: ProteusKeys.PreKey | undefined;
@@ -58,6 +60,10 @@ class Cryptobox extends EventEmitter {
     this.logger.log(
       `Constructed Cryptobox. Minimum amount of PreKeys is "${minimumAmountOfPreKeys}". Storage engine is "${storageEngine}".`
     );
+  }
+
+  private get_session_queue(session_id: string): void {
+    const queue = <PriorityQueue | undefined>this.queues.get(session_id);
   }
 
   private save_session_in_cache(session: CryptoboxSession): CryptoboxSession {
