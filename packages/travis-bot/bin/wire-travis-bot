@@ -1,5 +1,9 @@
 #!/usr/bin/env node
+
 /* eslint-disable no-magic-numbers */
+
+const Changelog = require('generate-changelog');
+const {exec} = require('child_process');
 
 const {TravisBot} = require('../dist/');
 const scriptName = require('path').basename(process.argv[1]);
@@ -9,6 +13,12 @@ const travisEnvVars = ['TRAVIS_BRANCH', 'TRAVIS_BUILD_NUMBER', 'TRAVIS_COMMIT', 
 
 const envVarUsage = `Required environment variables: ${requiredEnvVars.join(', ')}`;
 const usage = `Usage: ${scriptName} <author> <summary>`;
+
+const generateChangelog = config => Changelog.generate(config).then(changelog => {
+  const headlines = new RegExp('^#+ (.*)$', 'gm');
+  const listItems = new RegExp('^\\* (.*) \\(\\[.*$', 'gm');
+  return changelog.replace(headlines, '**$1**').replace(listItems, '– $1');
+})
 
 if (process.argv[2].replace(/-/g, '') === 'help') {
   console.info(usage);
@@ -23,11 +33,24 @@ if (!commitAuthor) {
   process.exit(1);
 }
 
-const commitSummary = process.argv[3];
+let commitSummary = process.argv[3];
 if (!commitSummary) {
   console.error('Error: No summary for last commit specified.\n');
   console.info(usage);
   process.exit(1);
+}
+
+if (process.env.TRAVIS_TAG) {
+  exec(`git describe --abbrev=0 --tags ${process.env.TRAVIS_TAG}^`, async (err, previousGitTag) => {
+    if (!err) {
+      commitSummary += '\n\n' + await generateChangelog({
+        repoUrl: `https://github.com/${process.env.TRAVIS_REPO_SLUG}`,
+        tag: `${previousGitTag}..${process.env.TRAVIS_TAG}`,
+      });
+    } else {
+      console.info('Previous git tag could not be read.');
+    }
+  });
 }
 
 travisEnvVars.forEach(envVar => {
@@ -64,7 +87,10 @@ const build = {
   url: '',
 };
 
-conversationIds = process.env.WIRE_WEBAPP_BOT_CONVERSATION_IDS ? process.env.WIRE_WEBAPP_BOT_CONVERSATION_IDS.split(',') : undefined;
+conversationIds =
+  process.env.WIRE_WEBAPP_BOT_CONVERSATION_IDS
+  ? process.env.WIRE_WEBAPP_BOT_CONVERSATION_IDS.split(',')
+  : undefined;
 
 const messageData = {
   build,
@@ -73,7 +99,6 @@ const messageData = {
 };
 
 const bot = new TravisBot(login, messageData);
-
 bot
   .start()
   .then(() => process.exit(0))
