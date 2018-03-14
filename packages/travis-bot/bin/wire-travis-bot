@@ -2,32 +2,32 @@
 /* eslint-disable no-magic-numbers */
 
 const {TravisBot} = require('../dist/');
-const path = require('path');
+const scriptName = require('path').basename(process.argv[1]);
 
-const requiredEnvVars = ['WIRE_WEBAPP_BOT_EMAIL', 'WIRE_WEBAPP_BOT_PASSWORD', 'WIRE_WEBAPP_BOT_CONVERSATION_ID'];
+const requiredEnvVars = ['WIRE_WEBAPP_BOT_CONVERSATION_ID', 'WIRE_WEBAPP_BOT_EMAIL', 'WIRE_WEBAPP_BOT_PASSWORD'];
 const travisEnvVars = ['TRAVIS_BRANCH', 'TRAVIS_BUILD_NUMBER'];
 
-const usage = exitCode => {
-  console.info(`Usage: ${path.basename(process.argv[1])} <author> <summary>`);
-  if (typeof exitCode !== 'undefined') {
-    process.exit(exitCode);
-  }
-};
+const usage = `Usage: ${scriptName} <author> <summary>`;
+const envVarUsage = `Required environment variables: ${requiredEnvVars.join(', ')}`;
 
 if (process.argv[2].replace(/-/g, '') === 'help') {
-  usage(0);
+  console.info(usage);
+  console.info(envVarUsage);
+  process.exit(0);
 }
 
 const commitAuthor = process.argv[2];
 if (!commitAuthor) {
-  console.error('Error: No author for last commit specified.');
-  usage(1);
+  console.error('Error: No author for last commit specified.\n');
+  console.info(usage);
+  process.exit(1);
 }
 
 const commitSummary = process.argv[3];
 if (!commitSummary) {
-  console.error('Error: No summary for last commit specified.');
-  usage(1);
+  console.error('Error: No summary for last commit specified.\n');
+  console.info(usage);
+  process.exit(1);
 }
 
 travisEnvVars.forEach(envVar => {
@@ -39,7 +39,8 @@ travisEnvVars.forEach(envVar => {
 
 requiredEnvVars.forEach(envVar => {
   if (!process.env[envVar]) {
-    console.error(`Error: Environment variable "${envVar}" is not set. Read more: `);
+    console.error(`Error: Environment variable "${envVar}" is not set.`);
+    console.info(envVarUsage);
     process.exit(1);
   }
 });
