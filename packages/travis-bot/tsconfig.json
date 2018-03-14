@@ -3,7 +3,8 @@
     "declaration": true,
     "lib": ["DOM", "ES7"],
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "src",
+    "sourceMap": false
   },
   "exclude": ["dist", "node_modules"],
   "extends": "../../tsconfig.json"
