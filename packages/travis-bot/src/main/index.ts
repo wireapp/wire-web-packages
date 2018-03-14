@@ -44,7 +44,7 @@ export interface Content {
 export interface MessageData {
   commit: Commit;
   build: Build;
-  conversationIds: Array<string>;
+  conversationIds?: Array<string>;
 }
 
 class TravisBot {
@@ -57,13 +57,13 @@ class TravisBot {
     return (
       `**${repositoryName}: Travis build '${buildNumber}' deployed on '${branch}' environment.** ᕦ(￣ ³￣)ᕤ\n` +
       `- Last commit from: ${author}\n` +
-      `- Last commit message: ${message}` +
+      `- Last commit message: ${message}\n` +
       `- https://github.com/${repositoryName}/commit/${hash}`
     );
   }
 
   async start(): Promise<void> {
-    const {conversationIds} = this.messageData;
+    let {conversationIds} = this.messageData;
 
     const engine = new MemoryEngine();
     await engine.init('');
@@ -72,6 +72,12 @@ class TravisBot {
 
     const account = new Account(client);
     await account.listen(this.loginData);
+
+    if (!conversationIds) {
+      const conversations = await client.conversation.api.getConversations(500);
+      const groupConversations = conversations.conversations.filter(c => c.type === 0);
+      conversationIds = groupConversations.map(c => c.id);
+    }
 
     if (account.service) {
       for (const id of conversationIds) {

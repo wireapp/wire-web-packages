@@ -4,7 +4,7 @@
 const {TravisBot} = require('../dist/');
 const scriptName = require('path').basename(process.argv[1]);
 
-const requiredEnvVars = ['WIRE_WEBAPP_BOT_CONVERSATION_ID', 'WIRE_WEBAPP_BOT_EMAIL', 'WIRE_WEBAPP_BOT_PASSWORD'];
+const requiredEnvVars = ['WIRE_WEBAPP_BOT_EMAIL', 'WIRE_WEBAPP_BOT_PASSWORD'];
 const travisEnvVars = ['TRAVIS_BRANCH', 'TRAVIS_BUILD_NUMBER', 'TRAVIS_COMMIT', 'TRAVIS_REPO_SLUG'];
 
 const envVarUsage = `Required environment variables: ${requiredEnvVars.join(', ')}`;
@@ -64,15 +64,20 @@ const build = {
   url: '',
 };
 
+conversationIds = process.env.WIRE_WEBAPP_BOT_CONVERSATION_IDS ? process.env.WIRE_WEBAPP_BOT_CONVERSATION_IDS.split(',') : undefined;
+
 const messageData = {
   build,
   commit,
-  conversationIds: process.env.WIRE_WEBAPP_BOT_CONVERSATION_ID.split(','),
+  conversationIds
 };
 
 const bot = new TravisBot(login, messageData);
 
-bot.start().catch(error => {
-  console.error(error.message, error.stack);
-  process.exit(1);
-});
+bot
+  .start()
+  .then(() => process.exit(0))
+  .catch(error => {
+    console.error(error.message, error.stack);
+    process.exit(1);
+  });
