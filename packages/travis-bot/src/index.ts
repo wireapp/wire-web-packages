@@ -42,7 +42,7 @@ export interface Content {
 export interface MessageData {
   commit: Commit;
   build: Build;
-  conversationId: string;
+  conversationIds: Array<string>;
 }
 
 class TravisBot {
@@ -60,7 +60,7 @@ class TravisBot {
   }
 
   async start(): Promise<void> {
-    const {conversationId} = this.messageData;
+    const {conversationIds} = this.messageData;
 
     const engine = new MemoryEngine();
     await engine.init('');
@@ -71,7 +71,11 @@ class TravisBot {
     await account.listen(this.loginData);
 
     if (account.service) {
-      await account.service.conversation.sendTextMessage(conversationId, this.message);
+      for (const id of conversationIds) {
+        await account.service.conversation.sendTextMessage(id, this.message);
+      }
+    } else {
+      throw new Error('Account service is not set!');
     }
   }
 }

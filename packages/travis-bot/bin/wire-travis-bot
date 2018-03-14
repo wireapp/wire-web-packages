@@ -7,8 +7,8 @@ const scriptName = require('path').basename(process.argv[1]);
 const requiredEnvVars = ['WIRE_WEBAPP_BOT_CONVERSATION_ID', 'WIRE_WEBAPP_BOT_EMAIL', 'WIRE_WEBAPP_BOT_PASSWORD'];
 const travisEnvVars = ['TRAVIS_BRANCH', 'TRAVIS_BUILD_NUMBER'];
 
-const usage = `Usage: ${scriptName} <author> <summary>`;
 const envVarUsage = `Required environment variables: ${requiredEnvVars.join(', ')}`;
+const usage = `Usage: ${scriptName} <author> <summary>`;
 
 if (process.argv[2].replace(/-/g, '') === 'help') {
   console.info(usage);
@@ -65,7 +65,7 @@ const build = {
 const messageData = {
   build,
   commit,
-  conversationId: process.env.WIRE_WEBAPP_BOT_CONVERSATION_ID,
+  conversationIds: process.env.WIRE_WEBAPP_BOT_CONVERSATION_ID.split(','),
 };
 
 const bot = new TravisBot(login, messageData);
