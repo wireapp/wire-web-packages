@@ -136,9 +136,7 @@ async function pingPongWithMultipleSessions(messageCount) {
   startTime = process.hrtime();
 
   const encryptions = await Promise.all(
-    cryptoboxes.map(cryptobox => {
-      return cryptobox.encrypt(createSessionId(alice), 'Hello', aliceBundle.serialise());
-    })
+    cryptoboxes.map(cryptobox => cryptobox.encrypt(createSessionId(alice), 'Hello', aliceBundle.serialise());
   );
 
   stopTime = getTimeInSeconds(startTime);
