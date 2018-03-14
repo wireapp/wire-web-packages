@@ -1,10 +1,8 @@
 {
   "compilerOptions": {
     "declaration": true,
-    "lib": ["DOM", "ES7"],
     "outDir": "dist",
-    "rootDir": "src",
-    "sourceMap": false
+    "rootDir": "src/main"
   },
   "exclude": ["dist", "node_modules"],
   "extends": "../../tsconfig.json"

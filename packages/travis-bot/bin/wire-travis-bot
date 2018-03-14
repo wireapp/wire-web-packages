@@ -5,7 +5,7 @@ const {TravisBot} = require('../dist/');
 const scriptName = require('path').basename(process.argv[1]);
 
 const requiredEnvVars = ['WIRE_WEBAPP_BOT_CONVERSATION_ID', 'WIRE_WEBAPP_BOT_EMAIL', 'WIRE_WEBAPP_BOT_PASSWORD'];
-const travisEnvVars = ['TRAVIS_BRANCH', 'TRAVIS_BUILD_NUMBER'];
+const travisEnvVars = ['TRAVIS_BRANCH', 'TRAVIS_BUILD_NUMBER', 'TRAVIS_COMMIT', 'TRAVIS_REPO_SLUG'];
 
 const envVarUsage = `Required environment variables: ${requiredEnvVars.join(', ')}`;
 const usage = `Usage: ${scriptName} <author> <summary>`;
@@ -54,10 +54,12 @@ const login = {
 const commit = {
   author: commitAuthor,
   branch: process.env.TRAVIS_BRANCH,
+  hash: process.env.TRAVIS_COMMIT,
   message: commitSummary,
 };
 
 const build = {
+  repositoryName: process.env.TRAVIS_REPO_SLUG,
   number: process.env.TRAVIS_BUILD_NUMBER,
   url: '',
 };

@@ -26,11 +26,13 @@ import {LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
 export interface Commit {
   author: string;
   branch: string;
+  hash: string;
   message: string;
 }
 
 export interface Build {
   number: string | number;
+  repositoryName: string;
   url: string;
 }
 
@@ -49,13 +51,14 @@ class TravisBot {
   constructor(private loginData: LoginData, private messageData: MessageData) {}
 
   get message(): string {
-    const {build: {number: buildNumber}} = this.messageData;
-    const {commit: {branch, author, message}} = this.messageData;
+    const {build: {number: buildNumber, repositoryName}} = this.messageData;
+    const {commit: {branch, author, hash, message}} = this.messageData;
 
     return (
-      `**Travis build '${buildNumber}' deployed on '${branch}' environment.** ᕦ(￣ ³￣)ᕤ\n` +
+      `**${repositoryName}: Travis build '${buildNumber}' deployed on '${branch}' environment.** ᕦ(￣ ³￣)ᕤ\n` +
       `- Last commit from: ${author}\n` +
-      `- Last commit message: ${message}`
+      `- Last commit message: ${message}` +
+      `- https://github.com/${repositoryName}/commit/${hash}`
     );
   }
 

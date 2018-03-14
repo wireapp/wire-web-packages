@@ -2,17 +2,15 @@
   "bin": "bin/wire-travis-bot",
   "dependencies": {
     "@types/node": "9.4.7",
-    "@wireapp/api-client": "0.5.20",
-    "@wireapp/core": "2.0.75",
-    "@wireapp/store-engine": "0.3.6"
+    "@wireapp/core": "2.0.75"
   },
-  "description": "High-level API with persistent storage for Proteus.",
+  "description": "A Travis deployment notification bot.",
   "devDependencies": {
-    "cpx": "1.5.0",
     "rimraf": "2.6.2",
     "typescript": "2.7.2"
   },
   "files": [
+    "bin",
     "dist"
   ],
   "license": "GPL-3.0",
