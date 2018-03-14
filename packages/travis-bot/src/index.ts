@@ -17,16 +17,11 @@
  *
  */
 
-import Client = require('@wireapp/api-client');
+import APIClient = require('@wireapp/api-client');
 import {Config} from '@wireapp/api-client/dist/commonjs/Config';
 import {Account} from '@wireapp/core';
-import {MemoryEngine} from '@wireapp/store-engine/dist/commonjs/engine';
-
-export interface Login {
-  email: string;
-  password: string;
-  persist: boolean;
-}
+import {MemoryEngine} from '@wireapp/store-engine';
+import {LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
 
 export interface Commit {
   author: string;
@@ -44,26 +39,39 @@ export interface Content {
   message: string;
 }
 
-export interface Data {
+export interface MessageData {
   commit: Commit;
   build: Build;
-  content: Content;
+  conversationId: string;
 }
 
 class TravisBot {
-  constructor(private loginData: Login, private data: Data) {}
+  constructor(private loginData: LoginData, private messageData: MessageData) {}
+
+  get message(): string {
+    const {build: {number: buildNumber}} = this.messageData;
+    const {commit: {branch, author, message}} = this.messageData;
+
+    return (
+      `**Travis build '${buildNumber}' deployed on '${branch}' environment.** ᕦ(￣ ³￣)ᕤ\n` +
+      `- Last commit from: ${author}\n` +
+      `- Last commit message: ${message}`
+    );
+  }
 
   async start(): Promise<void> {
+    const {conversationId} = this.messageData;
+
     const engine = new MemoryEngine();
     await engine.init('');
 
-    const client = new Client(new Config(engine, Client.BACKEND.PRODUCTION));
+    const client = new APIClient(new Config(engine, APIClient.BACKEND.PRODUCTION));
 
     const account = new Account(client);
     await account.listen(this.loginData);
 
     if (account.service) {
-      await account.service.conversation.sendTextMessage(this.data.content.conversationId, this.data.content.message);
+      await account.service.conversation.sendTextMessage(conversationId, this.message);
     }
   }
 }

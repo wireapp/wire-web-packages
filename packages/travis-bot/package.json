@@ -1,7 +1,5 @@
 {
-  "bin": {
-    "wire-travis-bot": "bin/index.js"
-  },
+  "bin": "bin/wire-travis-bot",
   "dependencies": {
     "@types/node": "9.4.7",
     "@wireapp/api-client": "0.5.20",

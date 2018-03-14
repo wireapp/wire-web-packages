@@ -1,0 +1,75 @@
+#!/usr/bin/env node
+/* eslint-disable no-magic-numbers */
+
+const {TravisBot} = require('../dist/');
+const path = require('path');
+
+const requiredEnvVars = ['WIRE_WEBAPP_BOT_EMAIL', 'WIRE_WEBAPP_BOT_PASSWORD', 'WIRE_WEBAPP_BOT_CONVERSATION_ID'];
+const travisEnvVars = ['TRAVIS_BRANCH', 'TRAVIS_BUILD_NUMBER'];
+
+const usage = exitCode => {
+  console.info(`Usage: ${path.basename(process.argv[1])} <author> <summary>`);
+  if (typeof exitCode !== 'undefined') {
+    process.exit(exitCode);
+  }
+};
+
+if (process.argv[2].replace(/-/g, '') === 'help') {
+  usage(0);
+}
+
+const commitAuthor = process.argv[2];
+if (!commitAuthor) {
+  console.error('Error: No author for last commit specified.');
+  usage(1);
+}
+
+const commitSummary = process.argv[3];
+if (!commitSummary) {
+  console.error('Error: No summary for last commit specified.');
+  usage(1);
+}
+
+travisEnvVars.forEach(envVar => {
+  if (!process.env[envVar]) {
+    console.error(`Error: Travis environment variable "${envVar}" is not set.\nRead more: https://docs.travis-ci.com/user/environment-variables/#Default-Environment-Variables`);
+    process.exit(1);
+  }
+});
+
+requiredEnvVars.forEach(envVar => {
+  if (!process.env[envVar]) {
+    console.error(`Error: Environment variable "${envVar}" is not set. Read more: `);
+    process.exit(1);
+  }
+});
+
+const login = {
+  email: process.env.WIRE_WEBAPP_BOT_EMAIL,
+  password: process.env.WIRE_WEBAPP_BOT_PASSWORD,
+  persist: false,
+};
+
+const commit = {
+  author: commitAuthor,
+  branch: process.env.TRAVIS_BRANCH,
+  message: commitSummary,
+};
+
+const build = {
+  number: process.env.TRAVIS_BUILD_NUMBER,
+  url: '',
+};
+
+const messageData = {
+  build,
+  commit,
+  conversationId: process.env.WIRE_WEBAPP_BOT_CONVERSATION_ID,
+};
+
+const bot = new TravisBot(login, messageData);
+
+bot.start().catch(error => {
+  console.error(error.message, error.stack);
+  process.exit(1);
+});
