@@ -1,3 +1,22 @@
+/*
+ * Wire
+ * Copyright (C) 2018 Wire Swiss GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see http://www.gnu.org/licenses/.
+ *
+ */
+
 import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/index';
 import {Cryptobox, store} from '@wireapp/cryptobox';
 import {Decoder, Encoder} from 'bazinga64';
@@ -7,6 +26,8 @@ import * as ProteusKeys from '@wireapp/proteus/dist/keys/root';
 import * as auth from '@wireapp/api-client/dist/commonjs/auth/index';
 import {SessionPayloadBundle} from '../crypto/root';
 import {OTRRecipients} from '@wireapp/api-client/dist/commonjs/conversation/index';
+import {EncryptedAsset} from '../crypto/root';
+import * as crypto from 'crypto';
 
 export default class CryptographyService {
   public static STORES = {
@@ -44,6 +65,41 @@ export default class CryptographyService {
   private dismantleSessionId(sessionId: string): Array<string> {
     return sessionId.split('@');
   }
+
+  private static generateRandomBytes(length: number): Uint8Array {
+    const getRandomValue = () => {
+      const buffer = new Uint32Array(1);
+      window.crypto.getRandomValues(buffer);
+      return buffer[0] >>> 0;
+    };
+
+    const randomValues = new Uint32Array(length / 4).map(getRandomValue);
+    const randomBytes = new Uint8Array(randomValues.buffer);
+    if (randomBytes.length && !randomBytes.every(byte => byte === 0)) {
+      return randomBytes;
+    }
+    throw Error('Failed to initialize iv with random values');
+  }
+
+  /*public async encryptAsset(plaintext: ArrayBuffer): Promise<EncryptedAsset> {
+    const iv = CryptographyService.generateRandomBytes(16);
+    const rawKeyBytes = CryptographyService.generateRandomBytes(32);
+
+    const key = await crypto.subtle.importKey('raw', rawKeyBytes.buffer, 'AES-CBC', true, ['encrypt']);
+    const cipherText = await crypto.subtle.encrypt({iv: iv.buffer, name: 'AES-CBC'}, key, plaintext);
+    const ivCipherText = new Uint8Array(cipherText.byteLength + iv.byteLength);
+    ivCipherText.set(iv, 0);
+    ivCipherText.set(new Uint8Array(cipherText), iv.byteLength);
+
+    const computedSha256 = await crypto.subtle.digest('SHA-256', ivCipherText);
+    const keyBytes = await crypto.subtle.exportKey('raw', key);
+
+    return {
+      cipherText: ivCipherText.buffer,
+      keyBytes: keyBytes,
+      sha256: computedSha256
+    };
+  }*/
 
   public encrypt(plainText: Uint8Array, preKeyBundles: UserPreKeyBundleMap): Promise<OTRRecipients> {
     const recipients: OTRRecipients = {};

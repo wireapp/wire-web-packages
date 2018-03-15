@@ -336,8 +336,8 @@ class Account extends EventEmitter {
         this.protocolBuffers.Text = root.lookup('Text');
       })
       .then(() => {
-        const crypto: CryptographyService = new CryptographyService(this.apiClient.config.store);
-        const conversation: ConversationService = new ConversationService(this.apiClient, this.protocolBuffers, crypto);
+        const crypto = new CryptographyService(this.apiClient.config.store);
+        const conversation = new ConversationService(this.apiClient, this.protocolBuffers, crypto);
         this.service = {
           conversation,
           crypto,
@@ -374,7 +374,7 @@ class Account extends EventEmitter {
         }
         return this.apiClient.connect();
       })
-      .then(() => this)
+      .then(() => this);
   }
 
   public login(loginData: LoginData, initClient: boolean = true): Promise<Context> {

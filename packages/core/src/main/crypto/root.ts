@@ -20,5 +20,6 @@ import CryptographyService from './CryptographyService';
 import GenericMessageType from './GenericMessageType';
 import PayloadBundle from './PayloadBundle';
 import SessionPayloadBundle from './SessionPayloadBundle';
+import EncryptedAsset from './EncryptedAsset';
 
-export {CryptographyService, GenericMessageType, PayloadBundle, SessionPayloadBundle};
+export {CryptographyService, EncryptedAsset, GenericMessageType, PayloadBundle, SessionPayloadBundle};

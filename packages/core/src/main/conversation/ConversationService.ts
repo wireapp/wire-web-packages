@@ -1,3 +1,22 @@
+/*
+ * Wire
+ * Copyright (C) 2018 Wire Swiss GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see http://www.gnu.org/licenses/.
+ *
+ */
+
 const UUID = require('pure-uuid');
 import APIClient = require('@wireapp/api-client');
 import {AxiosError} from 'axios';
@@ -55,19 +74,21 @@ export default class ConversationService {
       .then(clients => [].concat.apply([], clients));
   }
 
-  private shouldSendAsExternal(conversationId: string, customTextMessage: any): Promise<boolean> {
+  private shouldSendAsExternal(conversationId: string, customTextMessage: any): Promise<any> {
     const EXTERNAL_MESSAGE_THRESHOLD = 200 * 1024;
 
     return this.getAllClientsInConversation(conversationId).then(clients => {
       const messageBuffer = this.protocolBuffers.GenericMessage.encode(customTextMessage).finish();
       const messageInBytes = new Uint8Array(messageBuffer).length;
       const clientCount = clients.length;
-
       const estimatedPayloadInBytes = clientCount * messageInBytes;
 
       return estimatedPayloadInBytes > EXTERNAL_MESSAGE_THRESHOLD;
     });
   }
+
+  /*private sendExternalGenericMessage(conversationId: string, message: string): Promise<ClientMismatch> {
+  }*/
 
   public sendTextMessage(conversationId: string, message: string): Promise<ClientMismatch> {
     const customTextMessage = this.protocolBuffers.GenericMessage.create({
@@ -78,7 +99,7 @@ export default class ConversationService {
     return this.shouldSendAsExternal(conversationId, customTextMessage).then(result => {
       if (result === true) {
         throw new Error('should send as external!');
-        //  return this._sendExternalGenericMessage(conversationId)
+        // return this.sendExternalGenericMessage(conversationId)
       }
       return this.getPreKeyBundles(conversationId)
         .then((preKeyBundles: ClientMismatch | UserPreKeyBundleMap) => {
