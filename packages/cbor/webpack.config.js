@@ -10,8 +10,7 @@ module.exports = {
   },
   output: {
     filename: '[name].bundle.js',
-    library: projectName.toUpperCase(),
-    libraryTarget: 'var',
+    library: 'CBOR',
     path: `${__dirname}/dist`,
   },
   plugins: [new webpack.BannerPlugin(`${pkg.name} v${pkg.version}`)],

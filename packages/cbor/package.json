@@ -8,7 +8,8 @@
     "jsdoc": "3.5.5",
     "rimraf": "2.6.2",
     "tsd-jsdoc": "dcodeio/tsd-jsdoc#fe76c4dc071b00bb549d3af7a3bad8c555999e81",
-    "webpack": "4.1.1"
+    "webpack": "4.1.1",
+    "webpack-cli": "2.0.12"
   },
   "files": [
     "dist/",
