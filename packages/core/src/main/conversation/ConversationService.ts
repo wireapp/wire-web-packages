@@ -55,14 +55,15 @@ export default class ConversationService {
       .then(clients => [].concat.apply([], clients));
   }
 
-  private shouldSendAsExternal(conversationId: string, genericMessage: any): Promise<boolean> {
+  private shouldSendAsExternal(conversationId: string, customTextMessage: any): Promise<boolean> {
     const EXTERNAL_MESSAGE_THRESHOLD = 200 * 1024;
-    console.log('hello?');
 
     return this.getAllClientsInConversation(conversationId).then(clients => {
-      const messageInBytes = new Uint8Array(genericMessage.toArrayBuffer()).length;
-      console.log('clients: ', clients.length);
-      const estimatedPayloadInBytes = clients.length * messageInBytes;
+      const messageBuffer = this.protocolBuffers.GenericMessage.encode(customTextMessage).finish();
+      const messageInBytes = new Uint8Array(messageBuffer).length;
+      const clientCount = clients.length;
+
+      const estimatedPayloadInBytes = clientCount * messageInBytes;
 
       return estimatedPayloadInBytes > EXTERNAL_MESSAGE_THRESHOLD;
     });
@@ -76,18 +77,17 @@ export default class ConversationService {
 
     return this.shouldSendAsExternal(conversationId, customTextMessage).then(result => {
       if (result === true) {
-        console.log('should send as external!');
+        throw new Error('should send as external!');
         //  return this._sendExternalGenericMessage(conversationId)
-      } else {
-        return this.getPreKeyBundles(conversationId)
-          .then((preKeyBundles: ClientMismatch | UserPreKeyBundleMap) => {
-            const typedArray = this.protocolBuffers.GenericMessage.encode(customTextMessage).finish();
-            return this.cryptographyService.encrypt(typedArray, <UserPreKeyBundleMap>preKeyBundles);
-          })
-          .then((payload: OTRRecipients) => {
-            return this.sendMessage(this.clientID, conversationId, payload);
-          });
       }
+      return this.getPreKeyBundles(conversationId)
+        .then((preKeyBundles: ClientMismatch | UserPreKeyBundleMap) => {
+          const plainText = this.protocolBuffers.GenericMessage.encode(customTextMessage).finish();
+          return this.cryptographyService.encrypt(plainText, <UserPreKeyBundleMap>preKeyBundles);
+        })
+        .then((payload: OTRRecipients) => {
+          return this.sendMessage(this.clientID, conversationId, payload);
+        });
     });
   }
 

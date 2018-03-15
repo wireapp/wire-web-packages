@@ -45,7 +45,7 @@ export default class CryptographyService {
     return sessionId.split('@');
   }
 
-  public encrypt(typedArray: Uint8Array, preKeyBundles: UserPreKeyBundleMap): Promise<OTRRecipients> {
+  public encrypt(plainText: Uint8Array, preKeyBundles: UserPreKeyBundleMap): Promise<OTRRecipients> {
     const recipients: OTRRecipients = {};
     const encryptions: Array<Promise<SessionPayloadBundle>> = [];
 
@@ -55,7 +55,7 @@ export default class CryptographyService {
         const preKeyPayload: auth.PreKey = preKeyBundles[userId][clientId];
         const preKey: string = preKeyPayload.key;
         const sessionId: string = this.constructSessionId(userId, clientId);
-        encryptions.push(this.encryptPayloadForSession(sessionId, typedArray, preKey));
+        encryptions.push(this.encryptPayloadForSession(sessionId, plainText, preKey));
       }
     }
 
