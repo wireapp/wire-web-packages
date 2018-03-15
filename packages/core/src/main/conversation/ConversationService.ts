@@ -8,6 +8,7 @@ import {
   UserClients,
 } from '@wireapp/api-client/dist/commonjs/conversation/index';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
+import {PublicClient} from '@wireapp/api-client/dist/commonjs/client/index';
 import {CryptographyService} from '../crypto/root';
 
 export default class ConversationService {
@@ -42,18 +43,52 @@ export default class ConversationService {
     });
   }
 
+  public getAllClientsInConversation(conversationId: string): Promise<PublicClient[]> {
+    return this.apiClient.conversation.api
+      .getConversation(conversationId)
+      .then(conversation => {
+        const {others, self} = conversation.members;
+        const allUsers = others.concat(self);
+
+        return Promise.all(allUsers.map(user => this.apiClient.user.api.getClients(user.id)));
+      })
+      .then(clients => [].concat.apply([], clients));
+  }
+
+  private shouldSendAsExternal(conversationId: string, genericMessage: any): Promise<boolean> {
+    const EXTERNAL_MESSAGE_THRESHOLD = 200 * 1024;
+    console.log('hello?');
+
+    return this.getAllClientsInConversation(conversationId).then(clients => {
+      const messageInBytes = new Uint8Array(genericMessage.toArrayBuffer()).length;
+      console.log('clients: ', clients.length);
+      const estimatedPayloadInBytes = clients.length * messageInBytes;
+
+      return estimatedPayloadInBytes > EXTERNAL_MESSAGE_THRESHOLD;
+    });
+  }
+
   public sendTextMessage(conversationId: string, message: string): Promise<ClientMismatch> {
     const customTextMessage = this.protocolBuffers.GenericMessage.create({
       messageId: new UUID(4).format(),
       text: this.protocolBuffers.Text.create({content: message}),
     });
 
-    return this.getPreKeyBundles(conversationId)
-      .then((preKeyBundles: ClientMismatch | UserPreKeyBundleMap) => {
-        const typedArray = this.protocolBuffers.GenericMessage.encode(customTextMessage).finish();
-        return this.cryptographyService.encrypt(typedArray, <UserPreKeyBundleMap>preKeyBundles);
-      })
-      .then((payload: OTRRecipients) => this.sendMessage(this.clientID, conversationId, payload));
+    return this.shouldSendAsExternal(conversationId, customTextMessage).then(result => {
+      if (result === true) {
+        console.log('should send as external!');
+        //  return this._sendExternalGenericMessage(conversationId)
+      } else {
+        return this.getPreKeyBundles(conversationId)
+          .then((preKeyBundles: ClientMismatch | UserPreKeyBundleMap) => {
+            const typedArray = this.protocolBuffers.GenericMessage.encode(customTextMessage).finish();
+            return this.cryptographyService.encrypt(typedArray, <UserPreKeyBundleMap>preKeyBundles);
+          })
+          .then((payload: OTRRecipients) => {
+            return this.sendMessage(this.clientID, conversationId, payload);
+          });
+      }
+    });
   }
 
   public setClientID(clientID: string) {
