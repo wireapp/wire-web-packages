@@ -16,12 +16,13 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-
 import APIClient = require('@wireapp/api-client');
 import {Config} from '@wireapp/api-client/dist/commonjs/Config';
 import {Account} from '@wireapp/core';
 import {MemoryEngine} from '@wireapp/store-engine';
 import {LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
+
+const Changelog = require('generate-changelog');
 
 export interface Commit {
   author: string;
@@ -81,6 +82,7 @@ class TravisBot {
 
     if (account.service) {
       for (const id of conversationIds) {
+        console.info(`Sending message to conversation ${id} ...`);
         await account.service.conversation.sendTextMessage(id, this.message);
       }
     } else {
@@ -88,5 +90,12 @@ class TravisBot {
     }
   }
 }
+
+const generateChangelog = (config: Object) =>
+  Changelog.generate(config).then((changelog: string) => {
+    const headlines = new RegExp('^#+ (.*)$', 'gm');
+    const listItems = new RegExp('^\\* (.*) \\(\\[.*$', 'gm');
+    return changelog.replace(headlines, '**$1**').replace(listItems, '– $1');
+  });
 
 export {TravisBot};
