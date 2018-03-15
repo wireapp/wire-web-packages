@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.5.23"></a>
+## [0.5.23](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.5.22...@wireapp/api-client@0.5.23) (2018-03-15)
+
+
+### Bug Fixes
+
+* Option to pass ClientInfo and ClientType ([#373](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/373)) ([d5e86af](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/d5e86af))
+
+
+
+
+<a name="0.5.22"></a>
+## [0.5.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.5.21...@wireapp/api-client@0.5.22) (2018-03-15)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
 <a name="0.5.21"></a>
 ## [0.5.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.5.20...@wireapp/api-client@0.5.21) (2018-03-14)
 
