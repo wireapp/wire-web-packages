@@ -30,6 +30,9 @@ module.exports = {
   },
   externals: {
     '@wireapp/cbor': 'CBOR',
+    '@wireapp/lru-cache': 'LRUCache',
+    '@wireapp/priority-queue': 'Proteus',
+    '@wireapp/proteus': 'PriorityQueue',
     '@wireapp/store-engine': 'StoreEngine',
     dexie: 'Dexie',
     'fs-extra': '{}',

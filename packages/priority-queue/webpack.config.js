@@ -28,6 +28,7 @@ module.exports = {
   },
   output: {
     filename: '[name].bundle.js',
+    library: 'PriorityQueue',
     path: `${__dirname}/dist`,
     publicPath: '/',
   },
