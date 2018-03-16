@@ -62,29 +62,20 @@ export default class ConversationService {
     });
   }
 
-  public getAllClientsInConversation(conversationId: string): Promise<PublicClient[]> {
-    return this.apiClient.conversation.api
-      .getConversation(conversationId)
-      .then(conversation => {
-        const {others, self} = conversation.members;
-        const allUsers = others.concat(self);
-
-        return Promise.all(allUsers.map(user => this.apiClient.user.api.getClients(user.id)));
-      })
-      .then(clients => [].concat.apply([], clients));
-  }
-
-  private shouldSendAsExternal(conversationId: string, customTextMessage: any): Promise<any> {
+  private shouldSendAsExternal(plainText: ArrayBuffer, preKeyBundles: UserPreKeyBundleMap): boolean {
     const EXTERNAL_MESSAGE_THRESHOLD = 200 * 1024;
 
-    return this.getAllClientsInConversation(conversationId).then(clients => {
-      const messageBuffer = this.protocolBuffers.GenericMessage.encode(customTextMessage).finish();
-      const messageInBytes = new Uint8Array(messageBuffer).length;
-      const clientCount = clients.length;
-      const estimatedPayloadInBytes = clientCount * messageInBytes;
+    let clientCount = 0;
+    for (const user in preKeyBundles) {
+      for (const device in preKeyBundles[user]) {
+        clientCount++;
+      }
+    }
 
-      return estimatedPayloadInBytes > EXTERNAL_MESSAGE_THRESHOLD;
-    });
+    const messageInBytes = new Uint8Array(plainText).length;
+    const estimatedPayloadInBytes = clientCount * messageInBytes;
+
+    return estimatedPayloadInBytes > EXTERNAL_MESSAGE_THRESHOLD;
   }
 
   /*private sendExternalGenericMessage(conversationId: string, message: string): Promise<ClientMismatch> {
@@ -96,20 +87,18 @@ export default class ConversationService {
       text: this.protocolBuffers.Text.create({content: message}),
     });
 
-    return this.shouldSendAsExternal(conversationId, customTextMessage).then(result => {
-      if (result === true) {
-        throw new Error('should send as external!');
-        // return this.sendExternalGenericMessage(conversationId)
-      }
-      return this.getPreKeyBundles(conversationId)
-        .then((preKeyBundles: ClientMismatch | UserPreKeyBundleMap) => {
-          const plainText = this.protocolBuffers.GenericMessage.encode(customTextMessage).finish();
-          return this.cryptographyService.encrypt(plainText, <UserPreKeyBundleMap>preKeyBundles);
-        })
-        .then((payload: OTRRecipients) => {
-          return this.sendMessage(this.clientID, conversationId, payload);
-        });
-    });
+    return this.getPreKeyBundles(conversationId)
+      .then((preKeyBundles: ClientMismatch | UserPreKeyBundleMap) => {
+        const plainText = this.protocolBuffers.GenericMessage.encode(customTextMessage).finish();
+        if (this.shouldSendAsExternal(plainText, <UserPreKeyBundleMap>preKeyBundles)) {
+          throw new Error('should send as external!');
+          // return this.sendExternalGenericMessage(conversationId)
+        }
+        return this.cryptographyService.encrypt(plainText, <UserPreKeyBundleMap>preKeyBundles);
+      })
+      .then((payload: OTRRecipients) => {
+        return this.sendMessage(this.clientID, conversationId, payload);
+      });
   }
 
   public setClientID(clientID: string) {

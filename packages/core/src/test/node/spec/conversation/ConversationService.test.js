@@ -24,6 +24,34 @@ const {Account} = require('@wireapp/core');
 const {Config} = require('@wireapp/api-client/dist/commonjs/Config');
 const {MemoryEngine} = require('@wireapp/store-engine');
 
+const createMessage = (conversationRepository, content) => {
+  const customTextMessage = conversationRepository.protocolBuffers.GenericMessage.create({
+    messageId: new UUID(4).format(),
+    text: conversationRepository.protocolBuffers.Text.create({content}),
+  });
+
+  return conversationRepository.protocolBuffers.GenericMessage.encode(customTextMessage).finish();
+};
+
+const generatePreKeyBundles = (users, devicesPerUser) => {
+  const preKeyBundles = {};
+
+  new Array(users)
+    .fill()
+    .map(() => new UUID(4).format())
+    .forEach(userId => {
+      preKeyBundles[userId] = {};
+      new Array(devicesPerUser)
+        .fill()
+        .map(() => new UUID(4).format())
+        .forEach(deviceId => {
+          preKeyBundles[userId][deviceId] = {};
+        });
+    });
+
+  return preKeyBundles;
+};
+
 describe('ConversationService', () => {
   let account;
 
@@ -41,17 +69,14 @@ describe('ConversationService', () => {
   describe('shouldSendAsExternal', () => {
     it('returns true for a big payload', async done => {
       const {conversation} = account.service;
-      spyOn(conversation, 'getAllClientsInConversation').and.returnValue(Promise.resolve(new Array(128 * 4)));
+      const preKeyBundles = generatePreKeyBundles(128, 4);
 
       const longMessage =
         'massive external message massive external message massive external message massive external message massive external message massive external message massive external message massive external message massive external messagemassive external message massive external message massive external message massive external message massive external message massive external message massive external message massive external message massive external messagemassive external message massive external message massive external message massive external message massive external message massive external message massive external message massive external message massive external messagemassive external message massive external message massive external message massive external message massive external message massive external message massive external message massive external message massive external message';
+      const plainText = createMessage(conversation, longMessage);
 
-      const customTextMessage = conversation.protocolBuffers.GenericMessage.create({
-        messageId: new UUID(4).format(),
-        text: conversation.protocolBuffers.Text.create({content: longMessage}),
-      });
+      const shouldSendAsExternal = conversation.shouldSendAsExternal(plainText, preKeyBundles);
 
-      const shouldSendAsExternal = await conversation.shouldSendAsExternal('', customTextMessage);
       expect(shouldSendAsExternal).toBe(true);
 
       done();
@@ -59,14 +84,12 @@ describe('ConversationService', () => {
 
     it('returns false for a small payload', async done => {
       const {conversation} = account.service;
-      spyOn(conversation, 'getAllClientsInConversation').and.returnValue(Promise.resolve([0, 1]));
+      const preKeyBundles = generatePreKeyBundles(2, 1);
 
-      const customTextMessage = conversation.protocolBuffers.GenericMessage.create({
-        messageId: new UUID(4).format(),
-        text: conversation.protocolBuffers.Text.create({content: new UUID(4).format()}),
-      });
+      const shortMessage = new UUID(4).format();
+      const plainText = createMessage(conversation, shortMessage);
 
-      const shouldSendAsExternal = await conversation.shouldSendAsExternal('', customTextMessage);
+      const shouldSendAsExternal = conversation.shouldSendAsExternal(plainText, preKeyBundles);
       expect(shouldSendAsExternal).toBe(false);
 
       done();
