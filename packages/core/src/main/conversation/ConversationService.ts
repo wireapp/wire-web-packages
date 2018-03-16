@@ -28,7 +28,6 @@ import {
   UserClients,
 } from '@wireapp/api-client/dist/commonjs/conversation/index';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
-import {PublicClient} from '@wireapp/api-client/dist/commonjs/client/index';
 import {CryptographyService, EncryptedAsset} from '../crypto/root';
 
 export default class ConversationService {
