@@ -333,6 +333,7 @@ class Account extends EventEmitter {
     };
     return Promise.resolve(Root.fromJSON(proto))
       .then((root: Root) => {
+        this.protocolBuffers.External = root.lookup('External');
         this.protocolBuffers.GenericMessage = root.lookup('GenericMessage');
         this.protocolBuffers.Text = root.lookup('Text');
       })

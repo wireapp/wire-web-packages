@@ -18,9 +18,9 @@
  */
 
 interface EncryptedAsset {
-  cipherText: ArrayBuffer;
-  keyBytes: ArrayBuffer;
-  sha256: ArrayBuffer;
+  cipherText: Buffer;
+  keyBytes: Buffer;
+  computedSha256: Buffer;
 }
 
 export default EncryptedAsset;

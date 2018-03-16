@@ -19,10 +19,12 @@
 
 /* eslint-disable no-magic-numbers */
 const bazinga64 = require('bazinga64');
-const crypto = require('@wireapp/core/dist/crypto/root');
+const crypto = require('crypto');
 const Proteus = require('@wireapp/proteus');
 const {Cryptobox} = require('@wireapp/cryptobox');
+const {CryptographyService} = require('@wireapp/core/dist/crypto/root');
 const {MemoryEngine} = require('@wireapp/store-engine');
+const {promisify} = require('util');
 
 async function createEngine(storeName) {
   const engine = new MemoryEngine();
@@ -36,7 +38,7 @@ describe('CryptographyService', () => {
   let bob;
 
   beforeEach(async done => {
-    cryptographyService = new crypto.CryptographyService(await createEngine('wire'));
+    cryptographyService = new CryptographyService(await createEngine('wire'));
     cryptographyService.cryptobox
       .create()
       .then(async preKeys => {
@@ -140,6 +142,50 @@ describe('CryptographyService', () => {
         expect(otrBundle[firstUserID][firstClientId]).toEqual(jasmine.any(String));
         done();
       });
+    });
+  });
+
+  describe('"encryptAsset"', () => {
+    it('encrypts and decrypts ArrayBuffer', async done => {
+      const bytes = new Uint8Array(16);
+      await promisify(crypto.randomFill)(bytes);
+      const byteBuffer = new Buffer(bytes);
+
+      const encryptedAsset = await cryptographyService.encryptAsset(byteBuffer);
+      const decryptedBuffer = await cryptographyService.decryptAsset(encryptedAsset);
+
+      expect(decryptedBuffer).toEqual(byteBuffer);
+      done();
+    });
+
+    it('does not decrypt when the hash is missing', async done => {
+      const bytes = new Uint8Array(16);
+      await promisify(crypto.randomFill)(bytes);
+      const byteBuffer = new Buffer(bytes);
+
+      const {cipherText, keyBytes} = await cryptographyService.encryptAsset(byteBuffer);
+
+      try {
+        await cryptographyService.decryptAsset(cipherText, keyBytes, null);
+        done.fail();
+      } catch (error) {
+        done();
+      }
+    });
+
+    it('does not decrypt when hash is an empty array', async done => {
+      const bytes = new Uint8Array(16);
+      await promisify(crypto.randomFill)(bytes);
+      const byteBuffer = new Buffer(bytes);
+
+      const {cipherText, keyBytes} = await cryptographyService.encryptAsset(byteBuffer);
+
+      try {
+        await cryptographyService.decryptAsset(cipherText, keyBytes, new Uint8Array([]));
+        done.fail();
+      } catch (error) {
+        done();
+      }
     });
   });
 

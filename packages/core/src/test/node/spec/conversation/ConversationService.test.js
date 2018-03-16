@@ -44,9 +44,7 @@ const generatePreKeyBundles = (users, devicesPerUser) => {
       new Array(devicesPerUser)
         .fill()
         .map(() => new UUID(4).format())
-        .forEach(deviceId => {
-          preKeyBundles[userId][deviceId] = {};
-        });
+        .forEach(deviceId => (preKeyBundles[userId][deviceId] = {}));
     });
 
   return preKeyBundles;
@@ -66,7 +64,7 @@ describe('ConversationService', () => {
     done();
   });
 
-  describe('shouldSendAsExternal', () => {
+  describe("'shouldSendAsExternal'", () => {
     it('returns true for a big payload', async done => {
       const {conversation} = account.service;
       const preKeyBundles = generatePreKeyBundles(128, 4);

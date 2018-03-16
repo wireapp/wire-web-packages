@@ -62,44 +62,29 @@ export default class CryptographyService {
     return this.cryptobox.decrypt(sessionId, messageBytes.buffer);
   }
 
+  public decryptAsset({cipherText, keyBytes, computedSha256}: EncryptedAsset): Buffer {
+    const referenceSha256 = crypto
+      .createHash('SHA256')
+      .update(cipherText)
+      .digest();
+
+    if (!CryptographyService.equalHashes(referenceSha256, computedSha256)) {
+      throw new Error('Computed SHA256 hash is not equal to the provided hash.');
+    }
+
+    const initializationVector = cipherText.slice(0, 16);
+    const assetCipherText = cipherText.slice(16);
+
+    const decipher = crypto.createDecipheriv('aes-256-cbc', keyBytes, initializationVector);
+    const decipherUpdated = decipher.update(assetCipherText);
+    const decipherFinal = decipher.final();
+
+    return Buffer.concat([decipherUpdated, decipherFinal]);
+  }
+
   private dismantleSessionId(sessionId: string): Array<string> {
     return sessionId.split('@');
   }
-
-  private static generateRandomBytes(length: number): Uint8Array {
-    const getRandomValue = () => {
-      const buffer = new Uint32Array(1);
-      window.crypto.getRandomValues(buffer);
-      return buffer[0] >>> 0;
-    };
-
-    const randomValues = new Uint32Array(length / 4).map(getRandomValue);
-    const randomBytes = new Uint8Array(randomValues.buffer);
-    if (randomBytes.length && !randomBytes.every(byte => byte === 0)) {
-      return randomBytes;
-    }
-    throw Error('Failed to initialize iv with random values');
-  }
-
-  /*public async encryptAsset(plaintext: ArrayBuffer): Promise<EncryptedAsset> {
-    const iv = CryptographyService.generateRandomBytes(16);
-    const rawKeyBytes = CryptographyService.generateRandomBytes(32);
-
-    const key = await crypto.subtle.importKey('raw', rawKeyBytes.buffer, 'AES-CBC', true, ['encrypt']);
-    const cipherText = await crypto.subtle.encrypt({iv: iv.buffer, name: 'AES-CBC'}, key, plaintext);
-    const ivCipherText = new Uint8Array(cipherText.byteLength + iv.byteLength);
-    ivCipherText.set(iv, 0);
-    ivCipherText.set(new Uint8Array(cipherText), iv.byteLength);
-
-    const computedSha256 = await crypto.subtle.digest('SHA-256', ivCipherText);
-    const keyBytes = await crypto.subtle.exportKey('raw', key);
-
-    return {
-      cipherText: ivCipherText.buffer,
-      keyBytes: keyBytes,
-      sha256: computedSha256
-    };
-  }*/
 
   public encrypt(plainText: Uint8Array, preKeyBundles: UserPreKeyBundleMap): Promise<OTRRecipients> {
     const recipients: OTRRecipients = {};
@@ -132,6 +117,32 @@ export default class CryptographyService {
     });
   }
 
+  public encryptAsset(plainText: Buffer): EncryptedAsset {
+    const initializationVector = crypto.randomBytes(16);
+    const keyBytes = crypto.randomBytes(32);
+
+    const cipher = crypto.createCipheriv('aes-256-cbc', keyBytes, initializationVector);
+    const cipherUpdated = cipher.update(plainText);
+    const cipherFinal = cipher.final();
+
+    const cipherText = Buffer.concat([cipherUpdated, cipherFinal]);
+
+    const ivCipherText = new Uint8Array(initializationVector.byteLength + cipherText.byteLength);
+    ivCipherText.set(initializationVector, 0);
+    ivCipherText.set(cipherText, initializationVector.byteLength);
+
+    const computedSha256 = crypto
+      .createHash('SHA256')
+      .update(new Buffer(ivCipherText.buffer))
+      .digest();
+
+    return {
+      cipherText: new Buffer(ivCipherText.buffer),
+      keyBytes,
+      computedSha256,
+    };
+  }
+
   private encryptPayloadForSession(
     sessionId: string,
     plainText: Uint8Array,
@@ -143,6 +154,12 @@ export default class CryptographyService {
       .then((encryptedPayload: ArrayBuffer) => Encoder.toBase64(encryptedPayload).asString)
       .catch((error: Error) => '💣')
       .then((encryptedPayload: string) => ({sessionId, encryptedPayload}));
+  }
+
+  private static equalHashes(bufferA: Buffer, bufferB: Buffer): boolean {
+    const arrayA = new Uint32Array(bufferA);
+    const arrayB = new Uint32Array(bufferB);
+    return arrayA.length === arrayB.length && arrayA.every((value, index) => value === arrayB[index]);
   }
 
   public deleteClient(): Promise<string> {
