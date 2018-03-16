@@ -39,6 +39,7 @@ import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/index';
 import {ConversationService} from './conversation/root';
 import Client = require('@wireapp/api-client');
 import EventEmitter = require('events');
+import {StatusCode} from '@wireapp/api-client/dist/commonjs/http';
 
 class Account extends EventEmitter {
   public static INCOMING = {
@@ -351,14 +352,23 @@ class Account extends EventEmitter {
     }
 
     this.context = context;
-    this.service.conversation.setClientID(<string>this.context.clientId);
-    return this.service.crypto.loadClient().catch(error => {
-      // There was no client so we need to "create" and "register" a client
-      if (error instanceof cryptobox.error.CryptoboxError) {
-        return this.registerClient(loginData, clientInfo);
-      }
-      throw error;
-    });
+    let loadedClient: RegisteredClient;
+
+    return this.service.crypto
+      .loadClient()
+      .then(client => (loadedClient = client))
+      .then(() => this.apiClient.client.api.getClient(loadedClient.id))
+      .then(() => {
+        this.service!.conversation.setClientID(<string>this.context!.clientId);
+        return loadedClient;
+      })
+      .catch(error => {
+        // There was no client so we need to "create" and "register" a client
+        if (error instanceof cryptobox.error.CryptoboxError || error.code === StatusCode.NOT_FOUND) {
+          return this.registerClient(loginData, clientInfo);
+        }
+        throw error;
+      });
   }
 
   public listen(loginData: LoginData, notificationHandler?: Function): Promise<Account> {
