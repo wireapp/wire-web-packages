@@ -1,4 +1,7 @@
 {
+  "browser": {
+    "./dist/commonjs/shims/node/encryptAsset": "./dist/commonjs/shims/browser/encryptAsset.js"
+  },
   "dependencies": {
     "@types/node": "9.4.7",
     "@wireapp/api-client": "0.5.23",

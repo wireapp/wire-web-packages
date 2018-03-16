@@ -29,6 +29,7 @@ import {
 } from '@wireapp/api-client/dist/commonjs/conversation/index';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
 import {CryptographyService, EncryptedAsset} from '../crypto/root';
+import {encryptAsset} from '../shims/node/encryptAsset';
 
 export default class ConversationService {
   private clientID: string = '';
@@ -121,7 +122,7 @@ export default class ConversationService {
 
     if (this.shouldSendAsExternal(plainTextBuffer, <UserPreKeyBundleMap>preKeyBundles)) {
       console.log('Sending message as external...');
-      const payload: EncryptedAsset = this.cryptographyService.encryptAsset(plainTextBuffer);
+      const payload: EncryptedAsset = encryptAsset(plainTextBuffer);
       return this.sendExternalGenericMessage(
         this.clientID,
         conversationId,

@@ -26,8 +26,6 @@ import * as ProteusKeys from '@wireapp/proteus/dist/keys/root';
 import * as auth from '@wireapp/api-client/dist/commonjs/auth/index';
 import {SessionPayloadBundle} from '../crypto/root';
 import {OTRRecipients} from '@wireapp/api-client/dist/commonjs/conversation/index';
-import {EncryptedAsset} from '../crypto/root';
-import * as crypto from 'crypto';
 
 export default class CryptographyService {
   public static STORES = {
@@ -60,26 +58,6 @@ export default class CryptographyService {
   public decrypt(sessionId: string, encodedCiphertext: string): Promise<Uint8Array> {
     const messageBytes: Uint8Array = Decoder.fromBase64(encodedCiphertext).asBytes;
     return this.cryptobox.decrypt(sessionId, messageBytes.buffer);
-  }
-
-  public decryptAsset({cipherText, keyBytes, computedSha256}: EncryptedAsset): Buffer {
-    const referenceSha256 = crypto
-      .createHash('SHA256')
-      .update(cipherText)
-      .digest();
-
-    if (!CryptographyService.equalHashes(referenceSha256, computedSha256)) {
-      throw new Error('Computed SHA256 hash is not equal to the provided hash.');
-    }
-
-    const initializationVector = cipherText.slice(0, 16);
-    const assetCipherText = cipherText.slice(16);
-
-    const decipher = crypto.createDecipheriv('aes-256-cbc', keyBytes, initializationVector);
-    const decipherUpdated = decipher.update(assetCipherText);
-    const decipherFinal = decipher.final();
-
-    return Buffer.concat([decipherUpdated, decipherFinal]);
   }
 
   private dismantleSessionId(sessionId: string): Array<string> {
@@ -117,32 +95,6 @@ export default class CryptographyService {
     });
   }
 
-  public encryptAsset(plainText: Buffer): EncryptedAsset {
-    const initializationVector = crypto.randomBytes(16);
-    const keyBytes = crypto.randomBytes(32);
-
-    const cipher = crypto.createCipheriv('aes-256-cbc', keyBytes, initializationVector);
-    const cipherUpdated = cipher.update(plainText);
-    const cipherFinal = cipher.final();
-
-    const cipherText = Buffer.concat([cipherUpdated, cipherFinal]);
-
-    const ivCipherText = new Uint8Array(initializationVector.byteLength + cipherText.byteLength);
-    ivCipherText.set(initializationVector, 0);
-    ivCipherText.set(cipherText, initializationVector.byteLength);
-
-    const computedSha256 = crypto
-      .createHash('SHA256')
-      .update(new Buffer(ivCipherText.buffer))
-      .digest();
-
-    return {
-      cipherText: new Buffer(ivCipherText.buffer),
-      keyBytes,
-      computedSha256,
-    };
-  }
-
   private encryptPayloadForSession(
     sessionId: string,
     plainText: Uint8Array,
@@ -154,12 +106,6 @@ export default class CryptographyService {
       .then((encryptedPayload: ArrayBuffer) => Encoder.toBase64(encryptedPayload).asString)
       .catch((error: Error) => '💣')
       .then((encryptedPayload: string) => ({sessionId, encryptedPayload}));
-  }
-
-  private static equalHashes(bufferA: Buffer, bufferB: Buffer): boolean {
-    const arrayA = new Uint32Array(bufferA);
-    const arrayB = new Uint32Array(bufferB);
-    return arrayA.length === arrayB.length && arrayA.every((value, index) => value === arrayB[index]);
   }
 
   public deleteClient(): Promise<string> {

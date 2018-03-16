@@ -25,6 +25,7 @@ const {Cryptobox} = require('@wireapp/cryptobox');
 const {CryptographyService} = require('@wireapp/core/dist/crypto/root');
 const {MemoryEngine} = require('@wireapp/store-engine');
 const {promisify} = require('util');
+const {decryptAsset, encryptAsset} = require('@wireapp/core/dist/shims/node/encryptAsset');
 
 async function createEngine(storeName) {
   const engine = new MemoryEngine();
@@ -151,8 +152,8 @@ describe('CryptographyService', () => {
       await promisify(crypto.randomFill)(bytes);
       const byteBuffer = new Buffer(bytes);
 
-      const encryptedAsset = await cryptographyService.encryptAsset(byteBuffer);
-      const decryptedBuffer = await cryptographyService.decryptAsset(encryptedAsset);
+      const encryptedAsset = await encryptAsset(byteBuffer);
+      const decryptedBuffer = await decryptAsset(encryptedAsset);
 
       expect(decryptedBuffer).toEqual(byteBuffer);
       done();
@@ -163,10 +164,10 @@ describe('CryptographyService', () => {
       await promisify(crypto.randomFill)(bytes);
       const byteBuffer = new Buffer(bytes);
 
-      const {cipherText, keyBytes} = await cryptographyService.encryptAsset(byteBuffer);
+      const {cipherText, keyBytes} = await encryptAsset(byteBuffer);
 
       try {
-        await cryptographyService.decryptAsset(cipherText, keyBytes, null);
+        await decryptAsset(cipherText, keyBytes, null);
         done.fail();
       } catch (error) {
         done();
@@ -178,10 +179,10 @@ describe('CryptographyService', () => {
       await promisify(crypto.randomFill)(bytes);
       const byteBuffer = new Buffer(bytes);
 
-      const {cipherText, keyBytes} = await cryptographyService.encryptAsset(byteBuffer);
+      const {cipherText, keyBytes} = await encryptAsset(byteBuffer);
 
       try {
-        await cryptographyService.decryptAsset(cipherText, keyBytes, new Uint8Array([]));
+        await decryptAsset(cipherText, keyBytes, new Uint8Array([]));
         done.fail();
       } catch (error) {
         done();
