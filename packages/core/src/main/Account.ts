@@ -468,7 +468,7 @@ class Account extends EventEmitter {
 
     const client = await this.apiClient.client.api.postClient(newClient);
     await this.service.crypto.saveClient(client);
-    this.service.notification.initializeNotificationStream(client.id);
+    await this.service.notification.initializeNotificationStream(client.id);
 
     return client;
   }
