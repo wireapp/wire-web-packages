@@ -136,6 +136,10 @@
   dependencies:
     "@types/node" "*"
 
+"@types/generate-changelog@1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@types/generate-changelog/-/generate-changelog-1.7.0.tgz#3857dd209247d6bed1c8b0832d1f04ea8081c6ba"
+
 "@types/long@^3.0.32":
   version "3.0.32"
   resolved "https://registry.yarnpkg.com/@types/long/-/long-3.0.32.tgz#f4e5af31e9e9b196d8e5fca8a5e2e20aa3d60b69"
@@ -201,6 +205,24 @@
     "@wireapp/store-engine" "0.3.6"
     dexie "2.0.2"
     fs-extra "5.0.0"
+
+"@wireapp/priority-queue@0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@wireapp/priority-queue/-/priority-queue-0.1.2.tgz#04e4b96dcda47a32843995bae4eaa030088fd4d4"
+  dependencies:
+    "@types/node" "9.4.7"
+    pure-uuid "1.5.0"
+
+"@wireapp/proteus@7.1.8":
+  version "7.1.8"
+  resolved "https://registry.yarnpkg.com/@wireapp/proteus/-/proteus-7.1.8.tgz#d7d86f60261986c64a9e3bbf5a22b87ddcaae1b5"
+  dependencies:
+    "@types/chai" "4.1.2"
+    "@types/ed2curve" "0.2.2"
+    "@types/node" "9.4.7"
+    "@wireapp/cbor" "3.0.7"
+    ed2curve "0.2.1"
+    libsodium-wrappers-sumo "0.7.3"
 
 "@wireapp/store-engine@0.3.6":
   version "0.3.6"

@@ -21,8 +21,7 @@ import {Config} from '@wireapp/api-client/dist/commonjs/Config';
 import {Account} from '@wireapp/core';
 import {MemoryEngine} from '@wireapp/store-engine';
 import {LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
-
-const Changelog = require('generate-changelog');
+import * as Changelog from 'generate-changelog';
 
 export interface Commit {
   author: string;
@@ -91,7 +90,7 @@ class TravisBot {
   }
 }
 
-const generateChangelog = (config: Object) =>
+const generateChangelog = (config: Changelog.Options) =>
   Changelog.generate(config).then((changelog: string) => {
     const headlines = new RegExp('^#+ (.*)$', 'gm');
     const listItems = new RegExp('^\\* (.*) \\(\\[.*$', 'gm');

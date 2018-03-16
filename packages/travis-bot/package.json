@@ -2,6 +2,7 @@
   "bin": "bin/wire-travis-bot",
   "dependencies": {
     "@types/node": "9.4.7",
+    "@types/generate-changelog": "1.7.0",
     "@wireapp/core": "2.0.75",
     "generate-changelog": "1.7.0"
   },
