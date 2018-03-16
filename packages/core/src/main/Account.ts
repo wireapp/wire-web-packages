@@ -39,7 +39,7 @@ import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/index';
 import {ConversationService} from './conversation/root';
 import Client = require('@wireapp/api-client');
 import EventEmitter = require('events');
-import {StatusCode} from '@wireapp/api-client/dist/commonjs/http';
+import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/index';
 
 class Account extends EventEmitter {
   public static INCOMING = {
