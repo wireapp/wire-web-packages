@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // @ts-check
 
-const {default: TravisBot} = require('../');
+const {TravisBot} = require('../');
 const {exec} = require('child_process');
 const {promisify} = require('util');
 const {version} = require('../package.json');
@@ -84,7 +84,7 @@ const start = async environment => {
   return bot;
 };
 
-console.info(setBold(`wire-travis-bot v${version}`) + '\n');
+logger.info(setBold(`wire-travis-bot v${version}`) + '\n');
 
 switch (process.argv[2]) {
   case '-help':

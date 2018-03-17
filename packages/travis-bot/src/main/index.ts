@@ -102,4 +102,4 @@ class TravisBot {
   }
 }
 
-export default TravisBot;
+export {TravisBot};
