@@ -25,7 +25,7 @@ const {Cryptobox} = require('@wireapp/cryptobox');
 const {CryptographyService} = require('@wireapp/core/dist/crypto/root');
 const {MemoryEngine} = require('@wireapp/store-engine');
 const {promisify} = require('util');
-const {decryptAsset, encryptAsset} = require('@wireapp/core/dist/shims/node/encryptAsset');
+const {decryptAsset, encryptAsset} = require('@wireapp/core/dist/shims/node/assetCryptography');
 
 async function createEngine(storeName) {
   const engine = new MemoryEngine();

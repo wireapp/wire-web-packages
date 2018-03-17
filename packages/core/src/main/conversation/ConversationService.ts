@@ -29,7 +29,7 @@ import {
 } from '@wireapp/api-client/dist/commonjs/conversation/index';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
 import {CryptographyService, EncryptedAsset} from '../crypto/root';
-import {encryptAsset} from '../shims/node/encryptAsset';
+import {encryptAsset} from '../shims/node/assetCryptography';
 
 export default class ConversationService {
   private clientID: string = '';
