@@ -1,6 +1,6 @@
 {
   "browser": {
-    "./dist/commonjs/shims/node/encryptAsset": "./dist/commonjs/shims/browser/encryptAsset.js"
+    "./dist/commonjs/shims/node/assetCryptography": "./dist/commonjs/shims/browser/assetCryptography.js"
   },
   "dependencies": {
     "@types/node": "9.4.7",
