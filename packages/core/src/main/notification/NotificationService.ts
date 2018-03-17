@@ -16,27 +16,28 @@ export default class NotificationService {
   constructor(private apiClient: APIClient, private storeEngine: CRUDEngine) {}
 
   public initializeNotificationStream(clientId: string): Promise<any> {
-    return this.getLastEventDate()
-      .catch(error => {
-        if (error instanceof RecordNotFoundError) {
-          return this.setLastEventDate(new Date(0));
-        }
-        throw error;
-      })
+    return this.setLastEventDate(new Date(0))
       .then(() => this.getLastNotification(clientId))
       .then(notification => this.setLastNotificationId(notification));
   }
 
   private setLastEventDate(eventDate: Date): Promise<Date> {
-    return this.getLastEventDate().then(databaseLastEventDate => {
-      if (eventDate > databaseLastEventDate) {
-        this.storeEngine.create(NotificationService.STORES.AMPLIFY, NotificationService.KEYS.PRIMARY_KEY_LAST_EVENT, {
-          value: eventDate.toISOString(),
-        });
-        return eventDate;
-      }
-      return databaseLastEventDate;
-    });
+    return this.getLastEventDate()
+      .catch(error => {
+        if (error instanceof RecordNotFoundError) {
+          return new Date(-1);
+        }
+        throw error;
+      })
+      .then(databaseLastEventDate => {
+        if (eventDate > databaseLastEventDate) {
+          this.storeEngine.create(NotificationService.STORES.AMPLIFY, NotificationService.KEYS.PRIMARY_KEY_LAST_EVENT, {
+            value: eventDate.toISOString(),
+          });
+          return eventDate;
+        }
+        return databaseLastEventDate;
+      });
   }
 
   private getLastEventDate(): Promise<Date> {
