@@ -340,14 +340,14 @@ class Account extends EventEmitter {
         this.protocolBuffers.Text = root.lookup('Text');
       })
       .then(() => {
-        const crypto = new CryptographyService(this.apiClient.config.store);
-        const conversation = new ConversationService(this.apiClient, this.protocolBuffers, crypto);
-        const notification = new NotificationService(this.apiClient, this.apiClient.config.store);
+        const cryptographyService = new CryptographyService(this.apiClient.config.store);
+        const conversationService = new ConversationService(this.apiClient, this.protocolBuffers, cryptographyService);
+        const notificationService = new NotificationService(this.apiClient, this.apiClient.config.store);
 
         this.service = {
-          conversation,
-          crypto,
-          notification,
+          conversation: conversationService,
+          crypto: cryptographyService,
+          notification: notificationService,
         };
       });
   }
