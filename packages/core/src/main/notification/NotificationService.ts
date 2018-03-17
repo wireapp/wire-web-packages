@@ -15,7 +15,7 @@ export default class NotificationService {
 
   constructor(private apiClient: APIClient, private storeEngine: CRUDEngine) {}
 
-  public initializeNotificationStream(clientId: string): Promise<any> {
+  public initializeNotificationStream(clientId: string): Promise<string> {
     return this.setLastEventDate(new Date(0))
       .then(() => this.getLastNotification(clientId))
       .then(notification => this.setLastNotificationId(notification));
