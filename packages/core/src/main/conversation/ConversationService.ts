@@ -46,11 +46,11 @@ export default class ConversationService {
     asset: EncryptedAsset,
     preKeyBundles: UserPreKeyBundleMap
   ): Promise<ClientMismatch> {
-    const {cipherText, keyBytes, computedSha256} = asset;
+    const {cipherText, keyBytes, sha256} = asset;
 
     const externalMessage = this.protocolBuffers.External.create({
       otrKey: new Uint8Array(keyBytes),
-      sha256: new Uint8Array(computedSha256),
+      sha256: new Uint8Array(sha256),
     });
 
     const base64CipherText = Encoder.toBase64(cipherText).asString;
@@ -123,6 +123,7 @@ export default class ConversationService {
     if (this.shouldSendAsExternal(plainTextBuffer, <UserPreKeyBundleMap>preKeyBundles)) {
       console.log('Sending message as external...');
       const payload: EncryptedAsset = encryptAsset(plainTextBuffer);
+
       return this.sendExternalGenericMessage(
         this.clientID,
         conversationId,

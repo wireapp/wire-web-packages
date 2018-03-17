@@ -20,7 +20,8 @@
 interface EncryptedAsset {
   cipherText: Buffer;
   keyBytes: Buffer;
-  computedSha256: Buffer;
+  /** The SHA-256 sum of `cipherText` */
+  sha256: Buffer;
 }
 
 export default EncryptedAsset;

@@ -26,11 +26,31 @@ const equalHashes = (bufferA: Buffer, bufferB: Buffer): boolean => {
   return arrayA.length === arrayB.length && arrayA.every((value, index) => value === arrayB[index]);
 };
 
+export const decryptAsset = ({cipherText, keyBytes, sha256: referenceSHA256}: EncryptedAsset): Buffer => {
+  const computedSHA256 = crypto
+    .createHash('SHA256')
+    .update(cipherText)
+    .digest();
+
+  if (!equalHashes(computedSHA256, referenceSHA256)) {
+    throw new Error('Encrypted asset does not match its SHA-256 hash');
+  }
+
+  const initializationVector = cipherText.slice(0, 16);
+  const assetCipherText = cipherText.slice(16);
+
+  const decipher = crypto.createDecipheriv('AES-256-CBC', keyBytes, initializationVector);
+  const decipherUpdated = decipher.update(assetCipherText);
+  const decipherFinal = decipher.final();
+
+  return Buffer.concat([decipherUpdated, decipherFinal]);
+};
+
 export const encryptAsset = (plainText: Buffer): EncryptedAsset => {
   const initializationVector = crypto.randomBytes(16);
   const keyBytes = crypto.randomBytes(32);
 
-  const cipher = crypto.createCipheriv('aes-256-cbc', keyBytes, initializationVector);
+  const cipher = crypto.createCipheriv('AES-256-CBC', keyBytes, initializationVector);
   const cipherUpdated = cipher.update(plainText);
   const cipherFinal = cipher.final();
 
@@ -40,7 +60,7 @@ export const encryptAsset = (plainText: Buffer): EncryptedAsset => {
   ivCipherText.set(initializationVector, 0);
   ivCipherText.set(cipherText, initializationVector.byteLength);
 
-  const computedSha256 = crypto
+  const computedSHA256 = crypto
     .createHash('SHA256')
     .update(new Buffer(ivCipherText.buffer))
     .digest();
@@ -48,26 +68,6 @@ export const encryptAsset = (plainText: Buffer): EncryptedAsset => {
   return {
     cipherText: new Buffer(ivCipherText.buffer),
     keyBytes,
-    computedSha256,
+    sha256: computedSHA256,
   };
-};
-
-export const decryptAsset = ({cipherText, keyBytes, computedSha256}: EncryptedAsset): Buffer => {
-  const referenceSha256 = crypto
-    .createHash('SHA256')
-    .update(cipherText)
-    .digest();
-
-  if (!equalHashes(referenceSha256, computedSha256)) {
-    throw new Error('Encrypted asset does not match its SHA-256 hash');
-  }
-
-  const initializationVector = cipherText.slice(0, 16);
-  const assetCipherText = cipherText.slice(16);
-
-  const decipher = crypto.createDecipheriv('aes-256-cbc', keyBytes, initializationVector);
-  const decipherUpdated = decipher.update(assetCipherText);
-  const decipherFinal = decipher.final();
-
-  return Buffer.concat([decipherUpdated, decipherFinal]);
 };
