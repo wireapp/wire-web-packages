@@ -26,7 +26,11 @@ const equalHashes = (bufferA: Buffer, bufferB: Buffer): boolean => {
   return arrayA.length === arrayB.length && arrayA.every((value, index) => value === arrayB[index]);
 };
 
-export const decryptAsset = ({cipherText, keyBytes, sha256: referenceSHA256}: EncryptedAsset): Buffer => {
+export const decryptAsset = async ({
+  cipherText,
+  keyBytes,
+  sha256: referenceSHA256,
+}: EncryptedAsset): Promise<Buffer> => {
   const computedSHA256 = crypto
     .createHash('SHA256')
     .update(cipherText)
@@ -46,7 +50,7 @@ export const decryptAsset = ({cipherText, keyBytes, sha256: referenceSHA256}: En
   return Buffer.concat([decipherUpdated, decipherFinal]);
 };
 
-export const encryptAsset = (plainText: Buffer): EncryptedAsset => {
+export const encryptAsset = async (plainText: Buffer): Promise<EncryptedAsset> => {
   const initializationVector = crypto.randomBytes(16);
   const keyBytes = crypto.randomBytes(32);
 

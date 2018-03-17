@@ -122,7 +122,7 @@ export default class ConversationService {
 
     if (this.shouldSendAsExternal(plainTextBuffer, <UserPreKeyBundleMap>preKeyBundles)) {
       console.log('Sending message as external...');
-      const payload: EncryptedAsset = encryptAsset(plainTextBuffer);
+      const payload: EncryptedAsset = await encryptAsset(plainTextBuffer);
 
       return this.sendExternalGenericMessage(
         this.clientID,
