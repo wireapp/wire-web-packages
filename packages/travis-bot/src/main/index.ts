@@ -23,27 +23,18 @@ import {MemoryEngine} from '@wireapp/store-engine';
 import {LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
 import * as Changelog from 'generate-changelog';
 
-export interface Commit {
-  author: string;
-  branch: string;
-  hash: string;
-  message: string;
-}
-
-export interface Build {
-  number: string | number;
-  repositoryName: string;
-  url: string;
-}
-
-export interface Content {
-  conversationId: string;
-  message: string;
-}
-
 export interface MessageData {
-  commit: Commit;
-  build: Build;
+  commit: {
+    author: string;
+    branch: string;
+    hash: string;
+    message: string;
+  };
+  build: {
+    number: string | number;
+    repositoryName: string;
+    url: string;
+  };
   conversationIds?: Array<string>;
 }
 
@@ -79,14 +70,15 @@ class TravisBot {
       conversationIds = groupConversations.map(c => c.id);
     }
 
-    if (account.service) {
-      for (const id of conversationIds) {
+    await Promise.all(
+      conversationIds.map(async id => {
+        if (!account.service) {
+          throw new Error(`Account service is not set: ${account}`);
+        }
         console.info(`Sending message to conversation ${id} ...`);
         await account.service.conversation.sendTextMessage(id, this.message);
-      }
-    } else {
-      throw new Error('Account service is not set!');
-    }
+      })
+    );
   }
 
   static async generateChangelog(repoSlug: string, gitTag: string, maximumChars?: number): Promise<string> {
@@ -104,4 +96,4 @@ class TravisBot {
   }
 }
 
-export {TravisBot};
+export default TravisBot;

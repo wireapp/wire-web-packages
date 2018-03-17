@@ -3,32 +3,40 @@
 
 /* eslint-disable no-magic-numbers */
 
-const { exec } = require('child_process');
-const { promisify } = require('util');
-const { version } = require('../package.json');
+const {default: TravisBot} = require('../');
+const {exec} = require('child_process');
+const {promisify} = require('util');
+const {version} = require('../package.json');
 
-const { TravisBot } = require('../dist/');
 const scriptName = require('path').basename(process.argv[1]);
 
 const requiredEnvVars = ['WIRE_WEBAPP_BOT_EMAIL', 'WIRE_WEBAPP_BOT_PASSWORD'];
 const travisEnvVars = ['TRAVIS_BRANCH', 'TRAVIS_BUILD_NUMBER', 'TRAVIS_COMMIT', 'TRAVIS_REPO_SLUG'];
 
-const envVarUsage = `Required environment variables: ${requiredEnvVars.join(', ')}`;
-const usage = `Usage: ${scriptName} <author> <summary>`;
+/** @param text {string} */
+const setBold = text => `\x1b[1m${text}\x1b[0m`;
+
+const usage = () => {
+  console.info(`${setBold('Usage:')} ${scriptName} <conversation id(s)>\n`);
+  console.info(
+    `${setBold('Example:')} ${scriptName} "e4302e84-75fd-4dc7-8a16-67018bd94ce7,44be7db8-7b7c-4acf-887d-86fbb9a5508f"`
+  );
+};
+const envVarUsage = () => console.info(setBold('Required environment variables:'), requiredEnvVars.join(', '));
 
 /** @param command {string} */
 const trimmedCommandOutput = async command => {
-  const { stderr, stdout } = await promisify(exec)(command);
+  const {stderr, stdout} = await promisify(exec)(command);
   if (stderr) {
     throw new Error(`Command error: ${stderr}`);
   }
   return stdout.trim();
-}
+};
 
 /** @param environment {NodeJS.ProcessEnv} */
 const start = async environment => {
-  const { WIRE_WEBAPP_BOT_EMAIL, WIRE_WEBAPP_BOT_PASSWORD, WIRE_WEBAPP_BOT_CONVERSATION_IDS } = environment;
-  const { TRAVIS_BRANCH, TRAVIS_BUILD_NUMBER, TRAVIS_COMMIT, TRAVIS_REPO_SLUG, TRAVIS_TAG } = environment;
+  const {WIRE_WEBAPP_BOT_EMAIL, WIRE_WEBAPP_BOT_PASSWORD, WIRE_WEBAPP_BOT_CONVERSATION_IDS} = environment;
+  const {TRAVIS_BRANCH, TRAVIS_BUILD_NUMBER, TRAVIS_COMMIT, TRAVIS_REPO_SLUG, TRAVIS_TAG} = environment;
 
   const commitAuthor = await trimmedCommandOutput(`git log | grep Author: | cut -d' ' -f2- | uniq | head -n1`);
   let commitSummary = await trimmedCommandOutput('git log -1 --pretty=%s');
@@ -48,8 +56,8 @@ const start = async environment => {
 
   const messageData = {
     build: {
-      repositoryName: TRAVIS_REPO_SLUG,
       number: TRAVIS_BUILD_NUMBER,
+      repositoryName: TRAVIS_REPO_SLUG,
       url: '',
     },
     commit: {
@@ -61,10 +69,10 @@ const start = async environment => {
   };
 
   if (WIRE_WEBAPP_BOT_CONVERSATION_IDS) {
-    messageData.commit.conversationIds = WIRE_WEBAPP_BOT_CONVERSATION_IDS.split(',');
+    messageData.commit.conversationIds = WIRE_WEBAPP_BOT_CONVERSATION_IDS.replace(' ', '').split(',');
   }
 
-  console.info('Booting up ...')
+  console.info('Booting up ...');
 
   const bot = new TravisBot(loginData, messageData);
   await bot.start();
@@ -72,17 +80,28 @@ const start = async environment => {
   return bot;
 };
 
-console.log('\x1b[1m%s\x1b[0m', `wire-travis-bot v${version}\n`);
+console.info(setBold(`wire-travis-bot v${version}`) + '\n');
 
-if (process.argv[2] && process.argv[2].replace(/-/g, '') === 'help') {
-  console.info(usage);
-  console.info(envVarUsage);
-  process.exit(0);
+switch (process.argv[2]) {
+  case '-help':
+  case '--help':
+  case '-h':
+  case '--h': {
+    usage();
+    envVarUsage();
+    process.exit(0);
+  }
+  default: {
+    process.env.WIRE_WEBAPP_BOT_CONVERSATION_IDS = process.argv[2];
+  }
 }
 
 travisEnvVars.forEach(envVar => {
   if (!process.env[envVar]) {
-    console.error(`Error: Travis environment variable "${envVar}" is not set.\nRead more: https://docs.travis-ci.com/user/environment-variables/#Default-Environment-Variables`);
+    console.error(
+      `${setBold('Error:')} Travis environment variable "${envVar}" is not set.\n` +
+        'Read more: https://docs.travis-ci.com/user/environment-variables/#Default-Environment-Variables'
+    );
     process.exit(1);
   }
 });
@@ -90,7 +109,7 @@ travisEnvVars.forEach(envVar => {
 requiredEnvVars.forEach(envVar => {
   if (!process.env[envVar]) {
     console.error(`Error: Environment variable "${envVar}" is not set.`);
-    console.info(envVarUsage);
+    envVarUsage();
     process.exit(1);
   }
 });
