@@ -22,6 +22,12 @@ import {Account} from '@wireapp/core';
 import {MemoryEngine} from '@wireapp/store-engine';
 import {LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
 import * as Changelog from 'generate-changelog';
+const logdown = require('logdown');
+
+const logger = logdown('@wireapp/travis-bot/main', {
+  logger: console,
+  markdown: false,
+});
 
 export interface MessageData {
   commit: {
@@ -75,7 +81,7 @@ class TravisBot {
         if (!account.service) {
           throw new Error(`Account service is not set: ${account}`);
         }
-        console.info(`Sending message to conversation ${id} ...`);
+        logger.info(`Sending message to conversation ${id} ...`);
         await account.service.conversation.sendTextMessage(id, this.message);
       })
     );

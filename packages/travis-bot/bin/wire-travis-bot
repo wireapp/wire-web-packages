@@ -1,12 +1,16 @@
 #!/usr/bin/env node
 // @ts-check
 
-/* eslint-disable no-magic-numbers */
-
 const {default: TravisBot} = require('../');
 const {exec} = require('child_process');
 const {promisify} = require('util');
 const {version} = require('../package.json');
+const logdown = require('logdown');
+
+const logger = logdown('@wireapp/travis-bot/cli', {
+  logger: console,
+  markdown: false,
+});
 
 const scriptName = require('path').basename(process.argv[1]);
 
@@ -72,7 +76,7 @@ const start = async environment => {
     messageData.commit.conversationIds = WIRE_WEBAPP_BOT_CONVERSATION_IDS.replace(' ', '').split(',');
   }
 
-  console.info('Booting up ...');
+  logger.info('Booting up ...');
 
   const bot = new TravisBot(loginData, messageData);
   await bot.start();

@@ -1,13 +1,14 @@
 {
   "bin": "bin/wire-travis-bot",
   "dependencies": {
-    "@types/node": "9.4.7",
     "@types/generate-changelog": "1.7.0",
+    "@types/node": "9.4.7",
     "@wireapp/core": "2.0.75",
     "generate-changelog": "1.7.0"
   },
   "description": "A Travis deployment notification bot.",
   "devDependencies": {
+    "logdown": "3.2.3",
     "rimraf": "2.6.2",
     "typescript": "2.7.2"
   },
