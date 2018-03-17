@@ -1,9 +1,11 @@
 #!/usr/bin/env node
+// @ts-check
 
 /* eslint-disable no-magic-numbers */
 
 const { exec } = require('child_process');
 const { promisify } = require('util');
+const { version } = require('../package.json');
 
 const { TravisBot } = require('../dist/');
 const scriptName = require('path').basename(process.argv[1]);
@@ -14,7 +16,63 @@ const travisEnvVars = ['TRAVIS_BRANCH', 'TRAVIS_BUILD_NUMBER', 'TRAVIS_COMMIT', 
 const envVarUsage = `Required environment variables: ${requiredEnvVars.join(', ')}`;
 const usage = `Usage: ${scriptName} <author> <summary>`;
 
+/** @param command {string} */
+const trimmedCommandOutput = async command => {
+  const { stderr, stdout } = await promisify(exec)(command);
+  if (stderr) {
+    throw new Error(`Command error: ${stderr}`);
+  }
+  return stdout.trim();
+}
 
+/** @param environment {NodeJS.ProcessEnv} */
+const start = async environment => {
+  const { WIRE_WEBAPP_BOT_EMAIL, WIRE_WEBAPP_BOT_PASSWORD, WIRE_WEBAPP_BOT_CONVERSATION_IDS } = environment;
+  const { TRAVIS_BRANCH, TRAVIS_BUILD_NUMBER, TRAVIS_COMMIT, TRAVIS_REPO_SLUG, TRAVIS_TAG } = environment;
+
+  const commitAuthor = await trimmedCommandOutput(`git log | grep Author: | cut -d' ' -f2- | uniq | head -n1`);
+  let commitSummary = await trimmedCommandOutput('git log -1 --pretty=%s');
+
+  if (TRAVIS_TAG) {
+    const previousGitTag = await trimmedCommandOutput(`git describe --abbrev=0 --tags ${TRAVIS_TAG}^`);
+    const changelog = await TravisBot.generateChangelog(TRAVIS_REPO_SLUG, `${previousGitTag}..${TRAVIS_TAG}`, 800);
+
+    commitSummary += '\n\n' + changelog;
+  }
+
+  const loginData = {
+    email: WIRE_WEBAPP_BOT_EMAIL,
+    password: WIRE_WEBAPP_BOT_PASSWORD,
+    persist: false,
+  };
+
+  const messageData = {
+    build: {
+      repositoryName: TRAVIS_REPO_SLUG,
+      number: TRAVIS_BUILD_NUMBER,
+      url: '',
+    },
+    commit: {
+      author: commitAuthor,
+      branch: TRAVIS_BRANCH,
+      hash: TRAVIS_COMMIT,
+      message: commitSummary,
+    },
+  };
+
+  if (WIRE_WEBAPP_BOT_CONVERSATION_IDS) {
+    messageData.commit.conversationIds = WIRE_WEBAPP_BOT_CONVERSATION_IDS.split(',');
+  }
+
+  console.info('Booting up ...')
+
+  const bot = new TravisBot(loginData, messageData);
+  await bot.start();
+
+  return bot;
+};
+
+console.log('\x1b[1m%s\x1b[0m', `wire-travis-bot v${version}\n`);
 
 if (process.argv[2] && process.argv[2].replace(/-/g, '') === 'help') {
   console.info(usage);
@@ -37,57 +95,9 @@ requiredEnvVars.forEach(envVar => {
   }
 });
 
-(async () => {
-  try {
-    const commitAuthor = await promisify(exec)(`git log | grep Author: | cut -d' ' -f2- | uniq | head -n1`).then(({ stdout }) => stdout.trim());
-    let commitSummary = await promisify(exec)('git log -1 --pretty=%s').then(({ stdout }) => stdout.trim());
-
-    if (process.env.TRAVIS_TAG) {
-      const previousGitTag = await promisify(exec)(`git describe --abbrev=0 --tags ${process.env.TRAVIS_TAG}^`).then(({ stdout }) => stdout.trim());
-
-      const changelog = await generateChangelog({
-        repoUrl: `https://github.com/${process.env.TRAVIS_REPO_SLUG}`,
-        tag: `${previousGitTag}..${process.env.TRAVIS_TAG}`,
-      }).then(changelog => changelog.substring(0, 800));
-
-      commitSummary += '\n\n' + changelog;
-    }
-
-    const login = {
-      email: process.env.WIRE_WEBAPP_BOT_EMAIL,
-      password: process.env.WIRE_WEBAPP_BOT_PASSWORD,
-      persist: false,
-    };
-
-    const commit = {
-      author: commitAuthor,
-      branch: process.env.TRAVIS_BRANCH,
-      hash: process.env.TRAVIS_COMMIT,
-      message: commitSummary,
-    };
-
-    const build = {
-      repositoryName: process.env.TRAVIS_REPO_SLUG,
-      number: process.env.TRAVIS_BUILD_NUMBER,
-      url: '',
-    };
-
-    conversationIds =
-      process.env.WIRE_WEBAPP_BOT_CONVERSATION_IDS
-        ? process.env.WIRE_WEBAPP_BOT_CONVERSATION_IDS.split(',')
-        : undefined;
-
-    const messageData = {
-      build,
-      commit,
-      conversationIds,
-    };
-
-    const bot = new TravisBot(login, messageData);
-    await bot.start();
-
-  } catch (error) {
-    console.error('Error:', error);
+start(process.env)
+  .then(() => process.exit())
+  .catch(error => {
+    console.error(error);
     process.exit(1);
-  }
-})();
+  });

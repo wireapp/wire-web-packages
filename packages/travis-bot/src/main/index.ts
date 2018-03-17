@@ -88,13 +88,20 @@ class TravisBot {
       throw new Error('Account service is not set!');
     }
   }
-}
 
-const generateChangelog = (config: Changelog.Options) =>
-  Changelog.generate(config).then((changelog: string) => {
+  static async generateChangelog(repoSlug: string, gitTag: string, maximumChars?: number): Promise<string> {
     const headlines = new RegExp('^#+ (.*)$', 'gm');
     const listItems = new RegExp('^\\* (.*) \\(\\[.*$', 'gm');
-    return changelog.replace(headlines, '**$1**').replace(listItems, '– $1');
-  });
+
+    const changelog = await Changelog.generate({
+      repoUrl: `https://github.com/${repoSlug}`,
+      tag: gitTag,
+    });
+
+    const styledChangelog = changelog.replace(headlines, '**$1**').replace(listItems, '– $1');
+
+    return changelog.substring(0, maximumChars);
+  }
+}
 
 export {TravisBot};
