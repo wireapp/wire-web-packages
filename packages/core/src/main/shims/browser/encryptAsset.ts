@@ -19,25 +19,10 @@
 
 import {EncryptedAsset} from '../../crypto/root';
 
-const equalHashes = (bufferA: Buffer, bufferB: Buffer) => {
+const equalHashes = (bufferA: Buffer, bufferB: Buffer): boolean => {
   const arrayA = new Uint32Array(bufferA);
   const arrayB = new Uint32Array(bufferB);
   return arrayA.length === arrayB.length && arrayA.every((value, index) => value === arrayB[index]);
-};
-
-const generateRandomBytes = (length: number): Uint8Array => {
-  const getRandomValue = () => {
-    const buffer = new Uint32Array(1);
-    window.crypto.getRandomValues(buffer);
-    return buffer[0] >>> 0;
-  };
-
-  const randomValues = new Uint32Array(length / 4).map(getRandomValue);
-  const randomBytes = new Uint8Array(randomValues.buffer);
-  if (randomBytes.length && !randomBytes.every(byte => byte === 0)) {
-    return randomBytes;
-  }
-  throw Error('Failed to initialize iv with random values');
 };
 
 export const decryptAsset = async ({
@@ -47,29 +32,37 @@ export const decryptAsset = async ({
 }: EncryptedAsset): Promise<Buffer> => {
   const computedSHA256 = await window.crypto.subtle.digest('SHA-256', cipherText);
 
-  if (!equalHashes(referenceSHA256, new Buffer(computedSHA256))) {
+  if (!equalHashes(new Buffer(computedSHA256), referenceSHA256)) {
     throw new Error('Encrypted asset does not match its SHA-256 hash');
   }
 
   const key = await window.crypto.subtle.importKey('raw', keyBytes, 'AES-CBC', false, ['decrypt']);
 
-  const iv = cipherText.slice(0, 16);
+  const initializationVector = cipherText.slice(0, 16);
   const assetCipherText = cipherText.slice(16);
-  const decrypted = await window.crypto.subtle.decrypt({iv: iv, name: 'AES-CBC'}, key, assetCipherText);
+  const decipher = await window.crypto.subtle.decrypt(
+    {iv: initializationVector, name: 'AES-CBC'},
+    key,
+    assetCipherText
+  );
 
-  return new Buffer(decrypted);
+  return new Buffer(decipher);
 };
 
 export const encryptAsset = async (plaintext: ArrayBuffer): Promise<EncryptedAsset> => {
-  const iv = generateRandomBytes(16);
-  const rawKeyBytes = generateRandomBytes(32);
+  const initializationVector = window.crypto.getRandomValues(new Uint8Array(16));
+  const rawKeyBytes = window.crypto.getRandomValues(new Uint8Array(32));
 
   const key = await window.crypto.subtle.importKey('raw', rawKeyBytes.buffer, 'AES-CBC', true, ['encrypt']);
-  const cipherText = await window.crypto.subtle.encrypt({iv: iv.buffer, name: 'AES-CBC'}, key, plaintext);
+  const cipherText = await window.crypto.subtle.encrypt(
+    {iv: initializationVector.buffer, name: 'AES-CBC'},
+    key,
+    plaintext
+  );
 
-  const ivCipherText = new Uint8Array(cipherText.byteLength + iv.byteLength);
-  ivCipherText.set(iv, 0);
-  ivCipherText.set(new Uint8Array(cipherText), iv.byteLength);
+  const ivCipherText = new Uint8Array(cipherText.byteLength + initializationVector.byteLength);
+  ivCipherText.set(initializationVector, 0);
+  ivCipherText.set(new Uint8Array(cipherText), initializationVector.byteLength);
 
   const computedSHA256 = await window.crypto.subtle.digest('SHA-256', ivCipherText);
   const keyBytes = await window.crypto.subtle.exportKey('raw', key);
