@@ -40,6 +40,17 @@ export default class ConversationService {
     private cryptographyService: CryptographyService
   ) {}
 
+  // TODO: The correct functionality of this function is heavily based on the case that it always runs into the catch block
+  private getPreKeyBundles(conversationId: string): Promise<ClientMismatch | UserPreKeyBundleMap> {
+    return this.apiClient.conversation.api.postOTRMessage(this.clientID, conversationId).catch((error: AxiosError) => {
+      if (error.response && error.response.status === 412) {
+        const recipients: UserClients = error.response.data.missing;
+        return this.apiClient.user.api.postMultiPreKeyBundles(recipients);
+      }
+      throw error;
+    });
+  }
+
   public async sendExternalGenericMessage(
     sendingClientId: string,
     conversationId: string,
@@ -84,33 +95,6 @@ export default class ConversationService {
     return this.apiClient.conversation.api.postOTRMessage(sendingClientId, conversationId, message);
   }
 
-  // TODO: The correct functionality of this function is heavily based on the case that it always runs into the catch block
-  private getPreKeyBundles(conversationId: string): Promise<ClientMismatch | UserPreKeyBundleMap> {
-    return this.apiClient.conversation.api.postOTRMessage(this.clientID, conversationId).catch((error: AxiosError) => {
-      if (error.response && error.response.status === 412) {
-        const recipients: UserClients = error.response.data.missing;
-        return this.apiClient.user.api.postMultiPreKeyBundles(recipients);
-      }
-      throw error;
-    });
-  }
-
-  private shouldSendAsExternal(plainText: Buffer, preKeyBundles: UserPreKeyBundleMap): boolean {
-    const EXTERNAL_MESSAGE_THRESHOLD = 200 * 1024;
-
-    let clientCount = 0;
-    for (const user in preKeyBundles) {
-      for (const device in preKeyBundles[user]) {
-        clientCount++;
-      }
-    }
-
-    const messageInBytes = new Uint8Array(plainText).length;
-    const estimatedPayloadInBytes = clientCount * messageInBytes;
-
-    return estimatedPayloadInBytes > EXTERNAL_MESSAGE_THRESHOLD;
-  }
-
   public async sendTextMessage(conversationId: string, message: string): Promise<ClientMismatch> {
     const customTextMessage = this.protocolBuffers.GenericMessage.create({
       messageId: new UUID(4).format(),
@@ -141,5 +125,21 @@ export default class ConversationService {
 
   public setClientID(clientID: string) {
     this.clientID = clientID;
+  }
+
+  private shouldSendAsExternal(plainText: Buffer, preKeyBundles: UserPreKeyBundleMap): boolean {
+    const EXTERNAL_MESSAGE_THRESHOLD = 200 * 1024;
+
+    let clientCount = 0;
+    for (const user in preKeyBundles) {
+      for (const device in preKeyBundles[user]) {
+        clientCount++;
+      }
+    }
+
+    const messageInBytes = new Uint8Array(plainText).length;
+    const estimatedPayloadInBytes = clientCount * messageInBytes;
+
+    return estimatedPayloadInBytes > EXTERNAL_MESSAGE_THRESHOLD;
   }
 }
