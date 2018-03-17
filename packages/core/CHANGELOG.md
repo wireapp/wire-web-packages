@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="2.0.82"></a>
+## [2.0.82](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.81...@wireapp/core@2.0.82) (2018-03-17)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.0.81"></a>
+## [2.0.81](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.80...@wireapp/core@2.0.81) (2018-03-16)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.0.80"></a>
+## [2.0.80](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.79...@wireapp/core@2.0.80) (2018-03-16)
+
+
+### Bug Fixes
+
+* **core:** Validate local client with backend ([#376](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/376)) ([fbed7c0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/fbed7c0))
+
+
+
+
+<a name="2.0.79"></a>
+## [2.0.79](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.78...@wireapp/core@2.0.79) (2018-03-16)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
 <a name="2.0.78"></a>
 ## [2.0.78](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.77...@wireapp/core@2.0.78) (2018-03-15)
 
