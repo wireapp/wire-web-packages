@@ -21,7 +21,6 @@
 const APIClient = require('@wireapp/api-client');
 const UUID = require('pure-uuid');
 const {Account} = require('@wireapp/core');
-const {Config} = require('@wireapp/api-client/dist/commonjs/Config');
 const {MemoryEngine} = require('@wireapp/store-engine');
 
 const createMessage = (conversationRepository, content) => {
@@ -57,7 +56,7 @@ describe('ConversationService', () => {
     const engine = new MemoryEngine();
     await engine.init('');
 
-    const client = new APIClient(new Config(engine, APIClient.BACKEND.STAGING));
+    const client = new APIClient({store: engine, urls: APIClient.BACKEND.STAGING});
     account = new Account(client);
     await account.init();
 
@@ -70,7 +69,7 @@ describe('ConversationService', () => {
       const preKeyBundles = generatePreKeyBundles(128, 4);
 
       const longMessage =
-        'massive external message massive external message massive external message massive external message massive external message massive external message massive external message massive external message massive external messagemassive external message massive external message massive external message massive external message massive external message massive external message massive external message massive external message massive external messagemassive external message massive external message massive external message massive external message massive external message massive external message massive external message massive external message massive external messagemassive external message massive external message massive external message massive external message massive external message massive external message massive external message massive external message massive external message';
+        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem';
       const plainText = createMessage(conversation, longMessage);
 
       const shouldSendAsExternal = conversation.shouldSendAsExternal(plainText, preKeyBundles);

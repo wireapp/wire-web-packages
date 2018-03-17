@@ -17,13 +17,17 @@
  *
  */
 
-import {EncryptedAsset} from '../../crypto/root';
+import {EncryptedAsset} from '../crypto/root';
 import * as crypto from 'crypto';
 
-const equalHashes = (bufferA: Buffer, bufferB: Buffer): boolean => {
-  const arrayA = new Uint32Array(bufferA);
-  const arrayB = new Uint32Array(bufferB);
-  return arrayA.length === arrayB.length && arrayA.every((value, index) => value === arrayB[index]);
+const isEqual = (a: Buffer, b: Buffer): boolean => {
+  const arrayA = new Uint32Array(a);
+  const arrayB = new Uint32Array(b);
+
+  const hasSameLength = arrayA.length === arrayB.length;
+  const hasSameValues = arrayA.every((value, index) => value === arrayB[index]);
+
+  return hasSameLength && hasSameValues;
 };
 
 export const decryptAsset = async ({
@@ -36,7 +40,7 @@ export const decryptAsset = async ({
     .update(cipherText)
     .digest();
 
-  if (!equalHashes(computedSHA256, referenceSHA256)) {
+  if (!isEqual(computedSHA256, referenceSHA256)) {
     throw new Error('Encrypted asset does not match its SHA-256 hash');
   }
 

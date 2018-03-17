@@ -29,7 +29,7 @@ import {
 } from '@wireapp/api-client/dist/commonjs/conversation/index';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
 import {CryptographyService, EncryptedAsset} from '../crypto/root';
-import {encryptAsset} from '../shims/node/assetCryptography';
+import {encryptAsset} from '../crypto/assetCryptography.node';
 
 export default class ConversationService {
   private clientID: string = '';
@@ -128,7 +128,7 @@ export default class ConversationService {
   }
 
   private shouldSendAsExternal(plainText: Buffer, preKeyBundles: UserPreKeyBundleMap): boolean {
-    const EXTERNAL_MESSAGE_THRESHOLD = 200 * 1024;
+    const EXTERNAL_MESSAGE_THRESHOLD_BYTES = 200 * 1024;
 
     let clientCount = 0;
     for (const user in preKeyBundles) {
@@ -140,6 +140,6 @@ export default class ConversationService {
     const messageInBytes = new Uint8Array(plainText).length;
     const estimatedPayloadInBytes = clientCount * messageInBytes;
 
-    return estimatedPayloadInBytes > EXTERNAL_MESSAGE_THRESHOLD;
+    return estimatedPayloadInBytes > EXTERNAL_MESSAGE_THRESHOLD_BYTES;
   }
 }
