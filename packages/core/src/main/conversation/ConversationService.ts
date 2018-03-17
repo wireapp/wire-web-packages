@@ -101,11 +101,10 @@ export default class ConversationService {
       text: this.protocolBuffers.Text.create({content: message}),
     });
 
-    const preKeyBundles: ClientMismatch | UserPreKeyBundleMap = await this.getPreKeyBundles(conversationId);
+    const preKeyBundles = await this.getPreKeyBundles(conversationId);
     const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(customTextMessage).finish();
 
     if (this.shouldSendAsExternal(plainTextBuffer, <UserPreKeyBundleMap>preKeyBundles)) {
-      console.log('Sending message as external...');
       const payload: EncryptedAsset = await encryptAsset(plainTextBuffer);
 
       return this.sendExternalGenericMessage(
@@ -120,6 +119,7 @@ export default class ConversationService {
       plainTextBuffer,
       <UserPreKeyBundleMap>preKeyBundles
     );
+
     return this.sendMessage(this.clientID, conversationId, payload);
   }
 
