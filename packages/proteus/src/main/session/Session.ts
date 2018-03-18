@@ -182,7 +182,7 @@ export class Session {
       this.session_states[tag.toString()] = {
         idx: this.counter,
         state: state,
-        tag: tag,
+        tag,
       };
       this.counter++;
     }
@@ -405,17 +405,15 @@ export class Session {
         }
         case 5: {
           self.session_states = {};
-          // needs simplification
-          for (
-            let idx = 0, ref = decoder.object() - 1, subindex = 0;
-            0 <= ref ? subindex <= ref : subindex >= ref;
-            idx = 0 <= ref ? ++subindex : --subindex
-          ) {
+
+          const nprops = decoder.object();
+
+          for (let index = 0; index <= nprops - 1; index++) {
             const tag = SessionTag.decode(decoder);
             self.session_states[tag.toString()] = {
-              idx,
+              idx: index,
               state: SessionState.decode(decoder),
-              tag: tag,
+              tag,
             };
           }
           break;
