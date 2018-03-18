@@ -17,20 +17,15 @@
  *
  */
 
-const fs = require('fs');
-const path = require('path');
-const file = path.resolve(__dirname, 'dist/types.d.ts');
-const regex = /^(declare class )/gm;
+class BaseError extends Error {
+  constructor(public message: string) {
+    super(message);
+    Object.setPrototypeOf(this, BaseError.prototype);
 
-fs.readFile(file, 'utf8', (err, content) => {
-  if (err !== null) {
-    throw err;
+    this.message = message;
+    this.name = this.constructor.name;
+    //this.stack = new Error().stack;
   }
-  if (content.match(regex)) {
-    fs.writeFile(file, content.replace(regex, 'export $1'), error => {
-      if (error !== null) {
-        throw error;
-      }
-    });
-  }
-});
+}
+
+export default BaseError;

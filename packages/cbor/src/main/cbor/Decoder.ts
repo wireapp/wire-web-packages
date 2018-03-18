@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2016 Wire Swiss GmbH
+ * Copyright (C) 2018 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,10 +19,23 @@
 
 /* eslint no-magic-numbers: "off" */
 
-const DecodeError = require('./DecodeError');
-const Types = require('./Types');
+import DecodeError from './DecodeError';
+import Types from './Types';
 
-const DEFAULT_CONFIG = {
+interface TypeMinorTuple extends Array<Types | number> {
+  0: Types;
+  1: number;
+}
+
+export interface DecoderConfig {
+  max_array_length: number;
+  max_bytes_length: number;
+  max_nesting: number;
+  max_object_size: number;
+  max_text_length: number;
+}
+
+const DEFAULT_CONFIG: DecoderConfig = {
   max_array_length: 1000,
   max_bytes_length: 5242880,
   max_nesting: 16,
@@ -30,71 +43,38 @@ const DEFAULT_CONFIG = {
   max_text_length: 5242880,
 };
 
-/**
- * @class Decoder
- * @param {!ArrayBuffer} buffer
- * @param {Object} [config=DEFAULT_CONFIG] config
- * @returns {Decoder} `this`
- */
+export type closureCallback<T> = () => T;
+
 class Decoder {
-  /**
-   * @callback closureCallback
-   */
+  private view: DataView;
 
-  constructor(buffer, config = DEFAULT_CONFIG) {
-    // buffer *must* be an ArrayBuffer
-
-    this.buffer = buffer;
-    this.config = config;
+  constructor(private buffer: ArrayBuffer, private config = DEFAULT_CONFIG) {
     this.view = new DataView(this.buffer);
-    return this;
   }
 
-  /**
-   * @param {!number} int
-   * @param {!number} overflow
-   * @returns {number}
-   * @private
-   * @throws DecodeError
-   */
-  static _check_overflow(int, overflow) {
+  private static _check_overflow(int: number, overflow: number): number {
     if (int > overflow) {
       throw new DecodeError(DecodeError.INT_OVERFLOW);
     }
     return int;
   }
 
-  /**
-   * @param {!number} bytes
-   * @returns {void}
-   * @private
-   */
-  _advance(bytes) {
+  private _advance(bytes: number): void {
     this.view = new DataView(this.buffer, this.view.byteOffset + bytes);
   }
 
-  /**
-   * @returns {!number}
-   * @private
-   */
-  _available() {
+  private get _available(): number {
     return this.view.byteLength;
   }
 
-  /**
-   * @param {!number} bytes
-   * @param {!closureCallback} closure
-   * @returns {number}
-   * @private
-   * @throws DecodeError
-   */
-  _read(bytes, closure) {
+  private _read<T>(bytes: number, closure: closureCallback<T>): T {
     if (this._available < bytes) {
       throw new DecodeError(DecodeError.UNEXPECTED_EOF);
     }
 
     const value = closure();
     this._advance(bytes);
+
     return value;
   }
 
@@ -102,62 +82,32 @@ class Decoder {
    * reader-like interface for @buffer
    */
 
-  /**
-   * @returns {number}
-   * @private
-   */
-  _u8() {
+  private _u8(): number {
     return this._read(1, () => this.view.getUint8(0));
   }
 
-  /**
-   * @returns {number}
-   * @private
-   */
-  _u16() {
+  private _u16(): number {
     return this._read(2, () => this.view.getUint16(0));
   }
 
-  /**
-   * @returns {number}
-   * @private
-   */
-  _u32() {
+  private _u32(): number {
     return this._read(4, () => this.view.getUint32(0));
   }
 
-  /**
-   * @returns {number}
-   * @private
-   */
-  _u64() {
+  private _u64(): number {
     const r64 = () => this.view.getUint32(0) * Math.pow(2, 32) + this.view.getUint32(4);
     return this._read(8, r64);
   }
 
-  /**
-   * @returns {number}
-   * @private
-   */
-  _f32() {
+  private _f32(): number {
     return this._read(4, () => this.view.getFloat32(0));
   }
 
-  /**
-   * @returns {number}
-   * @private
-   */
-  _f64() {
+  private _f64(): number {
     return this._read(8, () => this.view.getFloat64(0));
   }
 
-  /**
-   * @param {!number} minor
-   * @returns {number}
-   * @private
-   * @throws DecodeError
-   */
-  _read_length(minor) {
+  private _read_length(minor: number): number {
     if (0 <= minor && minor <= 23) {
       return minor;
     }
@@ -176,28 +126,19 @@ class Decoder {
     throw new DecodeError(DecodeError.UNEXPECTED_TYPE);
   }
 
-  /**
-   * @param {!number} minor
-   * @param {!number} max_len
-   * @returns {number}
-   * @private
-   * @throws DecodeError
-   */
-  _bytes(minor, max_len) {
+  private _bytes(minor: number, max_len: number): ArrayBuffer {
     const len = this._read_length(minor);
     if (len > max_len) {
       throw new DecodeError(DecodeError.TOO_LONG);
     }
 
-    return this._read(len, () => this.buffer.slice(this.view.byteOffset, this.view.byteOffset + len));
+    const callback: closureCallback<ArrayBuffer> = () =>
+      this.buffer.slice(this.view.byteOffset, this.view.byteOffset + len);
+
+    return this._read<ArrayBuffer>(len, callback);
   }
 
-  /**
-   * @returns {Array<Types|number>}
-   * @private
-   * @throws DecodeError
-   */
-  _read_type_info() {
+  private _read_type_info(): TypeMinorTuple {
     let type = this._u8();
 
     const major = (type & 0xe0) >> 5;
@@ -271,13 +212,7 @@ class Decoder {
     throw new DecodeError(DecodeError.INVALID_TYPE);
   }
 
-  /**
-   * @param {!(number|Array<number>)} expected
-   * @returns {Array<Types|number>}
-   * @private
-   * @throws DecodeError
-   */
-  _type_info_with_assert(expected) {
+  private _type_info_with_assert(expected: number | Array<number>): TypeMinorTuple {
     const [type, minor] = this._read_type_info();
 
     if (!Array.isArray(expected)) {
@@ -291,14 +226,7 @@ class Decoder {
     return [type, minor];
   }
 
-  /**
-   * @param {Types} type
-   * @param {!number} minor
-   * @returns {number}
-   * @private
-   * @throws DecodeError
-   */
-  _read_unsigned(type, minor) {
+  private _read_unsigned(type: Types, minor: number): number {
     switch (type) {
       case Types.UINT8:
         return minor <= 23 ? minor : this._u8();
@@ -316,15 +244,7 @@ class Decoder {
     throw new DecodeError(DecodeError.UNEXPECTED_TYPE, [type, minor]);
   }
 
-  /**
-   * @param {!number} overflow
-   * @param {*} type
-   * @param {!number} minor
-   * @returns {number}
-   * @private
-   * @throws DecodeError
-   */
-  _read_signed(overflow, type, minor) {
+  private _read_signed(overflow: number, type: Types, minor: number): number {
     switch (type) {
       case Types.INT8:
         if (minor <= 23) {
@@ -351,231 +271,7 @@ class Decoder {
     throw new DecodeError(DecodeError.UNEXPECTED_TYPE, [type, minor]);
   }
 
-  /*
-   * public API
-   */
-
-  /** @returns {number} */
-  u8() {
-    return this._read_unsigned(...this._type_info_with_assert([Types.UINT8]));
-  }
-
-  /** @returns {number} */
-  u16() {
-    return this._read_unsigned(...this._type_info_with_assert([Types.UINT8, Types.UINT16]));
-  }
-
-  /** @returns {number} */
-  u32() {
-    return this._read_unsigned(...this._type_info_with_assert([Types.UINT8, Types.UINT16, Types.UINT32]));
-  }
-
-  /** @returns {number} */
-  u64() {
-    return this._read_unsigned(...this._type_info_with_assert([Types.UINT8, Types.UINT16, Types.UINT32, Types.UINT64]));
-  }
-
-  /** @returns {number} */
-  i8() {
-    return this._read_signed(127, ...this._type_info_with_assert([Types.INT8, Types.UINT8]));
-  }
-
-  /** @returns {number} */
-  i16() {
-    return this._read_signed(
-      32767,
-      ...this._type_info_with_assert([Types.INT8, Types.INT16, Types.UINT8, Types.UINT16])
-    );
-  }
-
-  /** @returns {number} */
-  i32() {
-    return this._read_signed(
-      2147483647,
-      ...this._type_info_with_assert([Types.INT8, Types.INT16, Types.INT32, Types.UINT8, Types.UINT16, Types.UINT32])
-    );
-  }
-
-  /** @returns {number} */
-  i64() {
-    return this._read_signed(
-      Number.MAX_SAFE_INTEGER,
-      ...this._type_info_with_assert([
-        Types.INT8,
-        Types.INT16,
-        Types.INT32,
-        Types.INT64,
-
-        Types.UINT8,
-        Types.UINT16,
-        Types.UINT32,
-        Types.UINT64,
-      ])
-    );
-  }
-
-  /** @returns {number} */
-  unsigned() {
-    return this.u64();
-  }
-
-  /** @returns {number} */
-  int() {
-    return this.i64();
-  }
-
-  /** @returns {number} */
-  f16() {
-    this._type_info_with_assert(Types.FLOAT16);
-
-    const half = this._u16();
-    const exp = (half >> 10) & 0x1f;
-    const mant = half & 0x3ff;
-
-    const ldexp = (significand, exponent) => significand * Math.pow(2, exponent);
-
-    let val;
-    switch (exp) {
-      case 0:
-        val = ldexp(mant, -24);
-        break;
-      case 31:
-        val = mant === 0 ? Number.POSITIVE_INFINITY : Number.NaN;
-        break;
-      default:
-        val = ldexp(mant + 1024, exp - 25);
-        break;
-    }
-
-    return half & 0x8000 ? -val : val;
-  }
-
-  /** @returns {number} */
-  f32() {
-    this._type_info_with_assert(Types.FLOAT32);
-    return this._f32();
-  }
-
-  /** @returns {number} */
-  f64() {
-    this._type_info_with_assert(Types.FLOAT64);
-    return this._f64();
-  }
-
-  /**
-   * @returns {boolean}
-   * @throws DecodeError
-   */
-  bool() {
-    const minor = this._type_info_with_assert(Types.BOOL)[1];
-
-    switch (minor) {
-      case 20:
-        return false;
-      case 21:
-        return true;
-      default:
-        throw new DecodeError(DecodeError.UNEXPECTED_TYPE);
-    }
-  }
-
-  /**
-   * @returns {number}
-   * @throws DecodeError
-   */
-  bytes() {
-    const minor = this._type_info_with_assert(Types.BYTES)[1];
-
-    if (minor === 31) {
-      // XXX: handle indefinite encoding
-      throw new DecodeError(DecodeError.UNEXPECTED_TYPE);
-    }
-
-    return this._bytes(minor, this.config.max_bytes_length);
-  }
-
-  /**
-   * @returns {string}
-   * @throws DecodeError
-   */
-  text() {
-    const minor = this._type_info_with_assert(Types.TEXT)[1];
-
-    if (minor === 31) {
-      // XXX: handle indefinite encoding
-      throw new DecodeError(DecodeError.UNEXPECTED_TYPE);
-    }
-
-    const buf = this._bytes(minor, this.config.max_text_length);
-    const utf8 = String.fromCharCode(...new Uint8Array(buf));
-
-    // http://ecmanaut.blogspot.de/2006/07/encoding-decoding-utf8-in-javascript.html
-    return decodeURIComponent(escape(utf8));
-  }
-
-  /**
-   * @param {!closureCallback} closure
-   * @returns {(closureCallback|null)}
-   * @throws DecodeError
-   */
-  optional(closure) {
-    try {
-      return closure();
-    } catch (error) {
-      if (error instanceof DecodeError && error.extra[0] === Types.NULL) {
-        return null;
-      }
-      throw error;
-    }
-  }
-
-  /**
-   * @returns {number}
-   * @throws DecodeError
-   */
-  array() {
-    const minor = this._type_info_with_assert(Types.ARRAY)[1];
-
-    if (minor === 31) {
-      // XXX: handle indefinite encoding
-      throw new DecodeError(DecodeError.UNEXPECTED_TYPE);
-    }
-
-    const len = this._read_length(minor);
-    if (len > this.config.max_array_length) {
-      throw new DecodeError(DecodeError.TOO_LONG);
-    }
-
-    return len;
-  }
-
-  /**
-   * @returns {number}
-   * @throws DecodeError
-   */
-  object() {
-    const minor = this._type_info_with_assert(Types.OBJECT)[1];
-
-    if (minor === 31) {
-      // XXX: handle indefinite encoding
-      throw new DecodeError(DecodeError.UNEXPECTED_TYPE);
-    }
-
-    const len = this._read_length(minor);
-    if (len > this.config.max_object_size) {
-      throw new DecodeError(DecodeError.TOO_LONG);
-    }
-
-    return len;
-  }
-
-  /**
-   * @param {*} type
-   * @returns {void}
-   * @private
-   * @throws DecodeError
-   */
-  _skip_until_break(type) {
+  private _skip_until_break(type: Types): void {
     for (;;) {
       const [t, minor] = this._read_type_info();
       if (t === Types.BREAK) {
@@ -591,18 +287,13 @@ class Decoder {
     }
   }
 
-  /**
-   * @param {!number} level
-   * @returns {boolean}
-   * @private
-   * @throws DecodeError
-   */
-  _skip_value(level) {
+  private _skip_value(level: number): boolean {
     if (level === 0) {
       throw new DecodeError(DecodeError.TOO_NESTED);
     }
 
     const [type, minor] = this._read_type_info();
+
     let len;
     switch (type) {
       case Types.UINT8:
@@ -658,13 +349,200 @@ class Decoder {
           this._skip_value(level - 1);
         }
         return true;
+      default:
+        return false;
     }
   }
 
-  /** @returns {boolean} */
-  skip() {
+  /*
+   * public API
+   */
+
+  public u8(): number {
+    const [type, minor] = this._type_info_with_assert([Types.UINT8]);
+    return this._read_unsigned(type, minor);
+  }
+
+  public u16(): number {
+    const [type, minor] = this._type_info_with_assert([Types.UINT8, Types.UINT16]);
+    return this._read_unsigned(type, minor);
+  }
+
+  public u32(): number {
+    const [type, minor] = this._type_info_with_assert([Types.UINT8, Types.UINT16, Types.UINT32]);
+    return this._read_unsigned(type, minor);
+  }
+
+  public u64(): number {
+    const [type, minor] = this._type_info_with_assert([Types.UINT8, Types.UINT16, Types.UINT32, Types.UINT64]);
+    return this._read_unsigned(type, minor);
+  }
+
+  public i8(): number {
+    const [type, minor] = this._type_info_with_assert([Types.INT8, Types.UINT8]);
+    return this._read_signed(127, type, minor);
+  }
+
+  public i16(): number {
+    const [type, minor] = this._type_info_with_assert([Types.INT8, Types.INT16, Types.UINT8, Types.UINT16]);
+    return this._read_signed(32767, type, minor);
+  }
+
+  public i32(): number {
+    const [type, minor] = this._type_info_with_assert([
+      Types.INT8,
+      Types.INT16,
+      Types.INT32,
+      Types.UINT8,
+      Types.UINT16,
+      Types.UINT32,
+    ]);
+    return this._read_signed(2147483647, type, minor);
+  }
+
+  public i64(): number {
+    const [type, minor] = this._type_info_with_assert([
+      Types.INT8,
+      Types.INT16,
+      Types.INT32,
+      Types.INT64,
+      Types.UINT8,
+      Types.UINT16,
+      Types.UINT32,
+      Types.UINT64,
+    ]);
+
+    return this._read_signed(Number.MAX_SAFE_INTEGER, type, minor);
+  }
+
+  public unsigned(): number {
+    return this.u64();
+  }
+
+  public int(): number {
+    return this.i64();
+  }
+
+  public f16(): number {
+    this._type_info_with_assert(Types.FLOAT16);
+
+    const half = this._u16();
+    const exp = (half >> 10) & 0x1f;
+    const mant = half & 0x3ff;
+
+    const ldexp = (significand: number, exponent: number) => significand * Math.pow(2, exponent);
+
+    let val;
+    switch (exp) {
+      case 0:
+        val = ldexp(mant, -24);
+        break;
+      case 31:
+        val = mant === 0 ? Number.POSITIVE_INFINITY : Number.NaN;
+        break;
+      default:
+        val = ldexp(mant + 1024, exp - 25);
+        break;
+    }
+
+    return half & 0x8000 ? -val : val;
+  }
+
+  public f32(): number {
+    this._type_info_with_assert(Types.FLOAT32);
+    return this._f32();
+  }
+
+  public f64(): number {
+    this._type_info_with_assert(Types.FLOAT64);
+    return this._f64();
+  }
+
+  public bool(): boolean {
+    const minor = this._type_info_with_assert(Types.BOOL)[1];
+
+    switch (minor) {
+      case 20:
+        return false;
+      case 21:
+        return true;
+      default:
+        throw new DecodeError(DecodeError.UNEXPECTED_TYPE);
+    }
+  }
+
+  public bytes(): ArrayBuffer {
+    const minor = this._type_info_with_assert(Types.BYTES)[1];
+
+    if (minor === 31) {
+      // XXX: handle indefinite encoding
+      throw new DecodeError(DecodeError.UNEXPECTED_TYPE);
+    }
+
+    return this._bytes(minor, this.config.max_bytes_length);
+  }
+
+  public text(): string {
+    const [_, minor] = this._type_info_with_assert(Types.TEXT);
+
+    if (minor === 31) {
+      // XXX: handle indefinite encoding
+      throw new DecodeError(DecodeError.UNEXPECTED_TYPE);
+    }
+
+    const array = new Uint8Array(this._bytes(minor, this.config.max_text_length));
+    const utf8 = array.reduce((previousValue, char) => previousValue + String.fromCharCode(char), '');
+
+    // http://ecmanaut.blogspot.de/2006/07/encoding-decoding-utf8-in-javascript.html
+    return decodeURIComponent(escape(utf8));
+  }
+
+  public optional<T>(closure: closureCallback<T>): T | null {
+    try {
+      return closure();
+    } catch (error) {
+      if (error instanceof DecodeError && error.extra[0] === Types.NULL) {
+        return null;
+      }
+      throw error;
+    }
+  }
+
+  public array(): number {
+    const minor = this._type_info_with_assert(Types.ARRAY)[1];
+
+    if (minor === 31) {
+      // XXX: handle indefinite encoding
+      throw new DecodeError(DecodeError.UNEXPECTED_TYPE);
+    }
+
+    const len = this._read_length(minor);
+    if (len > this.config.max_array_length) {
+      throw new DecodeError(DecodeError.TOO_LONG);
+    }
+
+    return len;
+  }
+
+  public object(): number {
+    const minor = this._type_info_with_assert(Types.OBJECT)[1];
+
+    if (minor === 31) {
+      // XXX: handle indefinite encoding
+      throw new DecodeError(DecodeError.UNEXPECTED_TYPE);
+    }
+
+    const len = this._read_length(minor);
+    if (len > this.config.max_object_size) {
+      throw new DecodeError(DecodeError.TOO_LONG);
+    }
+
+    return len;
+  }
+
+  public skip(): boolean {
     return this._skip_value(this.config.max_nesting);
   }
 }
 
-module.exports = Decoder;
+export default Decoder;

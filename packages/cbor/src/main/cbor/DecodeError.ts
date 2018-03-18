@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2016 Wire Swiss GmbH
+ * Copyright (C) 2018 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,10 +17,22 @@
  *
  */
 
-module.exports = {
-  BaseError: require('./cbor/BaseError'),
-  DecodeError: require('./cbor/DecodeError'),
-  Decoder: require('./cbor/Decoder'),
-  Encoder: require('./cbor/Encoder'),
-  Types: require('./cbor/Types'),
-};
+import BaseError from './BaseError';
+
+class DecodeError extends BaseError {
+  static readonly INVALID_TYPE = 'Invalid type';
+  static readonly UNEXPECTED_EOF = 'Unexpected end-of-buffer';
+  static readonly UNEXPECTED_TYPE = 'Unexpected type';
+  static readonly INT_OVERFLOW = 'Integer overflow';
+  static readonly TOO_LONG = 'Field too long';
+  static readonly TOO_NESTED = 'Object nested too deep';
+
+  constructor(public message: string, public extra?: any) {
+    super(message);
+
+    Object.setPrototypeOf(this, DecodeError.prototype);
+    this.extra = extra;
+  }
+}
+
+export default DecodeError;
