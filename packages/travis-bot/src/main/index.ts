@@ -76,9 +76,11 @@ class TravisBot {
     await account.listen(this.loginData);
 
     if (!conversationIds) {
-      const conversations = await client.conversation.api.getConversations(500);
-      const groupConversations = conversations.conversations.filter(c => c.type === 0);
-      conversationIds = groupConversations.map(c => c.id);
+      const MAXIMUM_CONVERSATIONS = 500;
+
+      const allConversations = await client.conversation.api.getConversations(MAXIMUM_CONVERSATIONS);
+      const groupConversations = allConversations.conversations.filter(conversation => conversation.type === 0);
+      conversationIds = groupConversations.map(conversation => conversation.id);
     }
 
     await Promise.all(
@@ -86,8 +88,10 @@ class TravisBot {
         if (!account.service) {
           throw new Error(`Account service is not set: ${account}`);
         }
-        logger.info(`Sending message to conversation ${id} ...`);
-        await account.service.conversation.sendTextMessage(id, this.message);
+        if (id) {
+          logger.info(`Sending message to conversation ${id} ...`);
+          await account.service.conversation.sendTextMessage(id, this.message);
+        }
       })
     );
   }
