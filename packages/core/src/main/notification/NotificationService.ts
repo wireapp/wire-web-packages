@@ -13,48 +13,88 @@ export default class NotificationService {
     PRIMARY_KEY_LAST_NOTIFICATION: 'z.storage.StorageKey.NOTIFICATION.LAST_ID',
   };
 
-  constructor(private apiClient: APIClient, private storeEngine: CRUDEngine) {}
+  private database: Database;
+  private backend: Backend;
+
+  constructor(private apiClient: APIClient, private storeEngine: CRUDEngine) {
+    this.database = new Database(this.storeEngine);
+    this.backend = new Backend(this.apiClient);
+  }
 
   public initializeNotificationStream(clientId: string): Promise<string> {
-    return this.setLastEventDate(new Date(0))
-      .then(() => this.getLastNotification(clientId))
-      .then(notification => this.setLastNotificationId(notification));
+    return this.database
+      .setLastEventDate(new Date(0))
+      .then(() => this.backend.getLastNotification(clientId))
+      .then(notification => this.database.setLastNotificationId(notification));
   }
+}
 
-  private setLastEventDate(eventDate: Date): Promise<Date> {
-    return this.getLastEventDate()
-      .catch(error => {
-        if (error instanceof RecordNotFoundError) {
-          return new Date(-1);
-        }
-        throw error;
-      })
-      .then(databaseLastEventDate => {
-        if (eventDate > databaseLastEventDate) {
-          this.storeEngine.create(NotificationService.STORES.AMPLIFY, NotificationService.KEYS.PRIMARY_KEY_LAST_EVENT, {
-            value: eventDate.toISOString(),
-          });
-          return eventDate;
-        }
-        return databaseLastEventDate;
-      });
-  }
-
+class Database {
+  constructor(private storeEngine: CRUDEngine) {}
   private getLastEventDate(): Promise<Date> {
     return this.storeEngine
       .read<{value: string}>(NotificationService.STORES.AMPLIFY, NotificationService.KEYS.PRIMARY_KEY_LAST_EVENT)
       .then(({value}) => new Date(value));
   }
 
-  private getLastNotification(clientId: string): Promise<Notification> {
-    return this.apiClient.notification.api.getLastNotification(clientId);
+  public setLastEventDate(eventDate: Date): Promise<Date> {
+    return this.getLastEventDate()
+      .then(databaseLastEventDate => {
+        if (eventDate > databaseLastEventDate) {
+          return this.storeEngine
+            .update(NotificationService.STORES.AMPLIFY, NotificationService.KEYS.PRIMARY_KEY_LAST_EVENT, {
+              value: eventDate.toISOString(),
+            })
+            .then(() => eventDate);
+        }
+        return databaseLastEventDate;
+      })
+      .catch(error => {
+        if (error instanceof RecordNotFoundError) {
+          return this.storeEngine
+            .create<{value: string}>(
+              NotificationService.STORES.AMPLIFY,
+              NotificationService.KEYS.PRIMARY_KEY_LAST_EVENT,
+              {
+                value: eventDate.toISOString(),
+              }
+            )
+            .then(() => eventDate);
+        }
+        throw error;
+      });
   }
 
-  private setLastNotificationId(lastNotification: Notification): Promise<string> {
-    return this.storeEngine.create(
-      NotificationService.STORES.AMPLIFY,
-      NotificationService.KEYS.PRIMARY_KEY_LAST_NOTIFICATION,
-      {value: lastNotification.id}
-    );
+  private getLastNotificationId(): Promise<string> {
+    return this.storeEngine
+      .read<{value: string}>(NotificationService.STORES.AMPLIFY, NotificationService.KEYS.PRIMARY_KEY_LAST_NOTIFICATION)
+      .then(({value}) => value);
+  }
+
+  public setLastNotificationId(lastNotification: Notification): Promise<string> {
+    return this.getLastNotificationId()
+      .then(() =>
+        this.storeEngine.update(
+          NotificationService.STORES.AMPLIFY,
+          NotificationService.KEYS.PRIMARY_KEY_LAST_NOTIFICATION,
+          {value: lastNotification.id}
+        )
+      )
+      .catch(() =>
+        this.storeEngine.create(
+          NotificationService.STORES.AMPLIFY,
+          NotificationService.KEYS.PRIMARY_KEY_LAST_NOTIFICATION,
+          {value: lastNotification.id}
+        )
+      )
+      .then(() => lastNotification.id);
+  }
+}
+
+class Backend {
+  constructor(private apiClient: APIClient) {}
+
+  public getLastNotification(clientId: string): Promise<Notification> {
+    return this.apiClient.notification.api.getLastNotification(clientId);
   }
 }

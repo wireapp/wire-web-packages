@@ -1,0 +1,200 @@
+const {NotificationService} = require('@wireapp/core/dist/notification/root');
+const {IndexedDBEngine} = require('@wireapp/store-engine');
+const Client = require('@wireapp/api-client');
+
+describe('NotificationService', () => {
+  describe('Database "setLastEventDate"', () => {
+    let storeName = undefined;
+
+    afterEach(() => {
+      if (storeName) {
+        window.indexedDB.deleteDatabase(storeName);
+      }
+    });
+
+    it('initializes last event date if database entry is not present', async done => {
+      const engine = new IndexedDBEngine();
+      const apiClient = new Client({
+        schemaCallback: db => {
+          db.version(1).stores({
+            amplify: '',
+          });
+        },
+        store: engine,
+        urls: Client.BACKEND.STAGING,
+      });
+
+      const notificationService = new NotificationService(apiClient, engine);
+      spyOn(notificationService.database, 'getLastEventDate').and.callThrough();
+      spyOn(engine, 'read').and.callThrough();
+      spyOn(engine, 'update').and.callThrough();
+      spyOn(engine, 'create').and.callThrough();
+
+      try {
+        await apiClient.initEngine({});
+        storeName = engine.storeName;
+
+        const returnValue = await notificationService.database.setLastEventDate(new Date(0));
+        expect(returnValue).toEqual(new Date(0));
+      } catch (error) {
+        return done.fail(error);
+      }
+
+      expect(notificationService.database.getLastEventDate).toHaveBeenCalledTimes(1);
+      expect(engine.read).toHaveBeenCalledTimes(1);
+      expect(engine.update).toHaveBeenCalledTimes(0);
+      expect(engine.create).toHaveBeenCalledTimes(1);
+      done();
+    });
+
+    it('updates last event date if lesser database entry exists', async done => {
+      const engine = new IndexedDBEngine();
+      const apiClient = new Client({
+        schemaCallback: db => {
+          db.version(1).stores({
+            amplify: '',
+          });
+        },
+        store: engine,
+        urls: Client.BACKEND.STAGING,
+      });
+
+      const notificationService = new NotificationService(apiClient, engine);
+
+      try {
+        await apiClient.initEngine({});
+        storeName = engine.storeName;
+        await notificationService.database.setLastEventDate(new Date(0));
+
+        spyOn(notificationService.database, 'getLastEventDate').and.callThrough();
+        spyOn(engine, 'read').and.callThrough();
+        spyOn(engine, 'update').and.callThrough();
+        spyOn(engine, 'create').and.callThrough();
+
+        const newDate = await notificationService.database.setLastEventDate(new Date(1));
+        expect(newDate).toEqual(new Date(1));
+      } catch (error) {
+        return done.fail(error);
+      }
+
+      expect(notificationService.database.getLastEventDate).toHaveBeenCalledTimes(1);
+      expect(engine.read).toHaveBeenCalledTimes(1);
+      expect(engine.update).toHaveBeenCalledTimes(1);
+      expect(engine.create).toHaveBeenCalledTimes(0);
+      done();
+    });
+  });
+
+  it('ignores last event date update if greater database entry exists', async done => {
+    const engine = new IndexedDBEngine();
+    const apiClient = new Client({
+      schemaCallback: db => {
+        db.version(1).stores({
+          amplify: '',
+        });
+      },
+      store: engine,
+      urls: Client.BACKEND.STAGING,
+    });
+
+    const notificationService = new NotificationService(apiClient, engine);
+    const greaterDate = new Date(1);
+    const lesserDate = new Date(0);
+
+    try {
+      await apiClient.initEngine({});
+      storeName = engine.storeName;
+      await notificationService.database.setLastEventDate(greaterDate);
+
+      spyOn(notificationService.database, 'getLastEventDate').and.callThrough();
+      spyOn(engine, 'read').and.callThrough();
+      spyOn(engine, 'update').and.callThrough();
+      spyOn(engine, 'create').and.callThrough();
+
+      const returnValue = await notificationService.database.setLastEventDate(lesserDate);
+      expect(returnValue).toEqual(greaterDate);
+    } catch (error) {
+      return done.fail(error);
+    }
+
+    expect(notificationService.database.getLastEventDate).toHaveBeenCalledTimes(1);
+    expect(engine.read).toHaveBeenCalledTimes(1);
+    expect(engine.update).toHaveBeenCalledTimes(0);
+    expect(engine.create).toHaveBeenCalledTimes(0);
+    expect(await notificationService.database.getLastEventDate()).toEqual(greaterDate);
+    done();
+  });
+
+  it('initializes last notification ID if database entry is not present', async done => {
+    const engine = new IndexedDBEngine();
+    const apiClient = new Client({
+      schemaCallback: db => {
+        db.version(1).stores({
+          amplify: '',
+        });
+      },
+      store: engine,
+      urls: Client.BACKEND.STAGING,
+    });
+
+    const notificationService = new NotificationService(apiClient, engine);
+    spyOn(notificationService.database, 'getLastNotificationId').and.callThrough();
+    spyOn(engine, 'read').and.callThrough();
+    spyOn(engine, 'update').and.callThrough();
+    spyOn(engine, 'create').and.callThrough();
+
+    try {
+      await apiClient.initEngine({});
+      storeName = engine.storeName;
+
+      const returnValue = await notificationService.database.setLastNotificationId({id: '12'});
+      expect(returnValue).toEqual('12');
+    } catch (error) {
+      return done.fail(error);
+    }
+
+    expect(notificationService.database.getLastNotificationId).toHaveBeenCalledTimes(1);
+    expect(engine.read).toHaveBeenCalledTimes(1);
+    expect(engine.update).toHaveBeenCalledTimes(0);
+    expect(engine.create).toHaveBeenCalledTimes(1);
+    done();
+  });
+
+  it('updates last notification ID  if database entry exists', async done => {
+    const engine = new IndexedDBEngine();
+    const apiClient = new Client({
+      schemaCallback: db => {
+        db.version(1).stores({
+          amplify: '',
+        });
+      },
+      store: engine,
+      urls: Client.BACKEND.STAGING,
+    });
+
+    const notificationService = new NotificationService(apiClient, engine);
+
+    try {
+      await apiClient.initEngine({});
+      storeName = engine.storeName;
+
+      await notificationService.database.setLastNotificationId({id: '12'});
+
+      spyOn(notificationService.database, 'getLastNotificationId').and.callThrough();
+      spyOn(engine, 'read').and.callThrough();
+      spyOn(engine, 'update').and.callThrough();
+      spyOn(engine, 'create').and.callThrough();
+
+      const returnValue = await notificationService.database.setLastNotificationId({id: '13'});
+      expect(returnValue).toEqual('13');
+    } catch (error) {
+      return done.fail(error);
+    }
+
+    expect(notificationService.database.getLastNotificationId).toHaveBeenCalledTimes(1);
+    expect(engine.read).toHaveBeenCalledTimes(1);
+    expect(engine.update).toHaveBeenCalledTimes(1);
+    expect(engine.create).toHaveBeenCalledTimes(0);
+    done();
+  });
+});
