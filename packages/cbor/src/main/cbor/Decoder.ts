@@ -497,7 +497,7 @@ class Decoder {
     try {
       return closure();
     } catch (error) {
-      if (error instanceof DecodeError && error.extra[0] === Types.NULL) {
+      if (error instanceof DecodeError && error.extra && error.extra[0] === Types.NULL) {
         return null;
       }
       throw error;
