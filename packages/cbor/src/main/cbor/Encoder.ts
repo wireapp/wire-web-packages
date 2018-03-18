@@ -21,7 +21,7 @@
 
 import Types from './Types';
 
-type closureCallback = Function;
+export type closureCallback<T> = () => T;
 
 class Encoder {
   private buffer: ArrayBuffer;
@@ -59,7 +59,7 @@ class Encoder {
     this.view = new DataView(this.buffer, this.view.byteOffset + bytes);
   }
 
-  private _write(bytes: number, closure: closureCallback): void {
+  private _write<T>(bytes: number, closure: closureCallback<T>): void {
     this._ensure(bytes);
     closure();
     return this._advance(bytes);

@@ -139,48 +139,44 @@ class Decoder {
   }
 
   private _read_type_info(): TypeMinorTuple {
-    let type = this._u8();
+    const type = this._u8();
 
     const major = (type & 0xe0) >> 5;
     const minor = type & 0x1f;
 
     switch (major) {
-      case 0:
-        type =
-          0 <= minor && minor <= 24
-            ? Types.UINT8
-            : (() => {
-                switch (minor) {
-                  case 25:
-                    return Types.UINT16;
-                  case 26:
-                    return Types.UINT32;
-                  case 27:
-                    return Types.UINT64;
-                  default:
-                    throw new DecodeError(DecodeError.INVALID_TYPE);
-                }
-              })();
-        return [type, minor];
-
-      case 1:
-        type =
-          0 <= minor && minor <= 24
-            ? Types.INT8
-            : (() => {
-                switch (minor) {
-                  case 25:
-                    return Types.INT16;
-                  case 26:
-                    return Types.INT32;
-                  case 27:
-                    return Types.INT64;
-                  default:
-                    throw new DecodeError(DecodeError.INVALID_TYPE);
-                }
-              })();
-        return [type, minor];
-
+      case 0: {
+        if (0 <= minor && minor <= 24) {
+          return [Types.UINT8, minor];
+        } else {
+          switch (minor) {
+            case 25:
+              return [Types.UINT16, minor];
+            case 26:
+              return [Types.UINT32, minor];
+            case 27:
+              return [Types.UINT64, minor];
+            default:
+              throw new DecodeError(DecodeError.INVALID_TYPE);
+          }
+        }
+      }
+      case 1: {
+        if (0 <= minor && minor <= 24) {
+          return [Types.INT8, minor];
+        } else {
+          switch (minor) {
+            case 25:
+              return [Types.INT16, minor];
+            case 26:
+              return [Types.INT32, minor];
+            case 27:
+              return [Types.INT64, minor];
+            default:
+              throw new DecodeError(DecodeError.INVALID_TYPE);
+          }
+        }
+      }
       case 2:
         return [Types.BYTES, minor];
       case 3:
