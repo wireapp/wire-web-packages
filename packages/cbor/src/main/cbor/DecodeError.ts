@@ -18,16 +18,17 @@
  */
 
 import BaseError from './BaseError';
+import Types from './Types';
 
 class DecodeError extends BaseError {
-  static readonly INVALID_TYPE = 'Invalid type';
-  static readonly UNEXPECTED_EOF = 'Unexpected end-of-buffer';
-  static readonly UNEXPECTED_TYPE = 'Unexpected type';
   static readonly INT_OVERFLOW = 'Integer overflow';
+  static readonly INVALID_TYPE = 'Invalid type';
   static readonly TOO_LONG = 'Field too long';
   static readonly TOO_NESTED = 'Object nested too deep';
+  static readonly UNEXPECTED_EOF = 'Unexpected end-of-buffer';
+  static readonly UNEXPECTED_TYPE = 'Unexpected type';
 
-  constructor(public message: string, public extra?: any) {
+  constructor(public message: string, public extra?: Array<Types>) {
     super(message);
 
     Object.setPrototypeOf(this, DecodeError.prototype);
