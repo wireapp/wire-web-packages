@@ -29,7 +29,7 @@ describe('Account', () => {
 
       const context = {
         clientId: 'aa9ecc1b-ed3a-49fc-987d-68d69ce59c0d',
-        userId: 'c213e4ac-ab40-406f-b67e-d5b2687c3345',
+        userId: Math.random().toString(),
       };
 
       const account = new Account(apiClient);

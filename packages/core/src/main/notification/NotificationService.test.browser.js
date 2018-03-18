@@ -31,10 +31,10 @@ describe('NotificationService', () => {
       spyOn(engine, 'create').and.callThrough();
 
       try {
-        await apiClient.initEngine({});
+        await apiClient.initEngine({userId: Math.random().toString()});
         storeName = engine.storeName;
 
-        const returnValue = await notificationService.database.setLastEventDate(new Date(0));
+        const returnValue = await notificationService.setLastEventDate(new Date(0));
         expect(returnValue).toEqual(new Date(0));
       } catch (error) {
         return done.fail(error);
@@ -62,16 +62,16 @@ describe('NotificationService', () => {
       const notificationService = new NotificationService(apiClient, engine);
 
       try {
-        await apiClient.initEngine({});
+        await apiClient.initEngine({userId: Math.random().toString()});
         storeName = engine.storeName;
-        await notificationService.database.setLastEventDate(new Date(0));
+        await notificationService.setLastEventDate(new Date(0));
 
         spyOn(notificationService.database, 'getLastEventDate').and.callThrough();
         spyOn(engine, 'read').and.callThrough();
         spyOn(engine, 'update').and.callThrough();
         spyOn(engine, 'create').and.callThrough();
 
-        const newDate = await notificationService.database.setLastEventDate(new Date(1));
+        const newDate = await notificationService.setLastEventDate(new Date(1));
         expect(newDate).toEqual(new Date(1));
       } catch (error) {
         return done.fail(error);
@@ -102,16 +102,16 @@ describe('NotificationService', () => {
     const lesserDate = new Date(0);
 
     try {
-      await apiClient.initEngine({});
+      await apiClient.initEngine({userId: Math.random().toString()});
       storeName = engine.storeName;
-      await notificationService.database.setLastEventDate(greaterDate);
+      await notificationService.setLastEventDate(greaterDate);
 
       spyOn(notificationService.database, 'getLastEventDate').and.callThrough();
       spyOn(engine, 'read').and.callThrough();
       spyOn(engine, 'update').and.callThrough();
       spyOn(engine, 'create').and.callThrough();
 
-      const returnValue = await notificationService.database.setLastEventDate(lesserDate);
+      const returnValue = await notificationService.setLastEventDate(lesserDate);
       expect(returnValue).toEqual(greaterDate);
     } catch (error) {
       return done.fail(error);
@@ -144,10 +144,10 @@ describe('NotificationService', () => {
     spyOn(engine, 'create').and.callThrough();
 
     try {
-      await apiClient.initEngine({});
+      await apiClient.initEngine({userId: Math.random().toString()});
       storeName = engine.storeName;
 
-      const returnValue = await notificationService.database.setLastNotificationId({id: '12'});
+      const returnValue = await notificationService.setLastNotificationId({id: '12'});
       expect(returnValue).toEqual('12');
     } catch (error) {
       return done.fail(error);
@@ -175,17 +175,17 @@ describe('NotificationService', () => {
     const notificationService = new NotificationService(apiClient, engine);
 
     try {
-      await apiClient.initEngine({});
+      await apiClient.initEngine({userId: Math.random().toString()});
       storeName = engine.storeName;
 
-      await notificationService.database.setLastNotificationId({id: '12'});
+      await notificationService.setLastNotificationId({id: '12'});
 
       spyOn(notificationService.database, 'getLastNotificationId').and.callThrough();
       spyOn(engine, 'read').and.callThrough();
       spyOn(engine, 'update').and.callThrough();
       spyOn(engine, 'create').and.callThrough();
 
-      const returnValue = await notificationService.database.setLastNotificationId({id: '13'});
+      const returnValue = await notificationService.setLastNotificationId({id: '13'});
       expect(returnValue).toEqual('13');
     } catch (error) {
       return done.fail(error);

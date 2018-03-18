@@ -22,71 +22,80 @@ export default class NotificationService {
   }
 
   public initializeNotificationStream(clientId: string): Promise<string> {
-    return this.database
-      .setLastEventDate(new Date(0))
+    return this.setLastEventDate(new Date(0))
       .then(() => this.backend.getLastNotification(clientId))
-      .then(notification => this.database.setLastNotificationId(notification));
-  }
-}
-
-class Database {
-  constructor(private storeEngine: CRUDEngine) {}
-  private getLastEventDate(): Promise<Date> {
-    return this.storeEngine
-      .read<{value: string}>(NotificationService.STORES.AMPLIFY, NotificationService.KEYS.PRIMARY_KEY_LAST_EVENT)
-      .then(({value}) => new Date(value));
+      .then(notification => this.setLastNotificationId(notification));
   }
 
-  public setLastEventDate(eventDate: Date): Promise<Date> {
-    return this.getLastEventDate()
+  private setLastEventDate(eventDate: Date): Promise<Date> {
+    return this.database
+      .getLastEventDate()
       .then(databaseLastEventDate => {
         if (eventDate > databaseLastEventDate) {
-          return this.storeEngine
-            .update(NotificationService.STORES.AMPLIFY, NotificationService.KEYS.PRIMARY_KEY_LAST_EVENT, {
-              value: eventDate.toISOString(),
-            })
-            .then(() => eventDate);
+          return this.database.updateLastEventDate(eventDate);
         }
         return databaseLastEventDate;
       })
       .catch(error => {
         if (error instanceof RecordNotFoundError) {
-          return this.storeEngine
-            .create<{value: string}>(
-              NotificationService.STORES.AMPLIFY,
-              NotificationService.KEYS.PRIMARY_KEY_LAST_EVENT,
-              {
-                value: eventDate.toISOString(),
-              }
-            )
-            .then(() => eventDate);
+          return this.database.createLastEventDate(eventDate);
         }
         throw error;
       });
   }
 
-  private getLastNotificationId(): Promise<string> {
+  private setLastNotificationId(lastNotification: Notification): Promise<string> {
+    return this.database
+      .getLastNotificationId()
+      .then(() => this.database.updateLastNotificationId(lastNotification))
+      .catch(error => this.database.createLastNotificationId(lastNotification));
+  }
+}
+
+class Database {
+  constructor(private storeEngine: CRUDEngine) {}
+
+  public getLastEventDate(): Promise<Date> {
+    return this.storeEngine
+      .read<{value: string}>(NotificationService.STORES.AMPLIFY, NotificationService.KEYS.PRIMARY_KEY_LAST_EVENT)
+      .then(({value}) => new Date(value));
+  }
+
+  public updateLastEventDate(eventDate: Date): Promise<Date> {
+    return this.storeEngine
+      .update(NotificationService.STORES.AMPLIFY, NotificationService.KEYS.PRIMARY_KEY_LAST_EVENT, {
+        value: eventDate.toISOString(),
+      })
+      .then(() => eventDate);
+  }
+
+  public createLastEventDate(eventDate: Date): Promise<Date> {
+    return this.storeEngine
+      .create(NotificationService.STORES.AMPLIFY, NotificationService.KEYS.PRIMARY_KEY_LAST_EVENT, {
+        value: eventDate.toISOString(),
+      })
+      .then(() => eventDate);
+  }
+
+  public getLastNotificationId(): Promise<string> {
     return this.storeEngine
       .read<{value: string}>(NotificationService.STORES.AMPLIFY, NotificationService.KEYS.PRIMARY_KEY_LAST_NOTIFICATION)
       .then(({value}) => value);
   }
 
-  public setLastNotificationId(lastNotification: Notification): Promise<string> {
-    return this.getLastNotificationId()
-      .then(() =>
-        this.storeEngine.update(
-          NotificationService.STORES.AMPLIFY,
-          NotificationService.KEYS.PRIMARY_KEY_LAST_NOTIFICATION,
-          {value: lastNotification.id}
-        )
-      )
-      .catch(() =>
-        this.storeEngine.create(
-          NotificationService.STORES.AMPLIFY,
-          NotificationService.KEYS.PRIMARY_KEY_LAST_NOTIFICATION,
-          {value: lastNotification.id}
-        )
-      )
+  public updateLastNotificationId(lastNotification: Notification): Promise<string> {
+    return this.storeEngine
+      .update(NotificationService.STORES.AMPLIFY, NotificationService.KEYS.PRIMARY_KEY_LAST_NOTIFICATION, {
+        value: lastNotification.id,
+      })
+      .then(() => lastNotification.id);
+  }
+
+  public createLastNotificationId(lastNotification: Notification): Promise<string> {
+    return this.storeEngine
+      .create(NotificationService.STORES.AMPLIFY, NotificationService.KEYS.PRIMARY_KEY_LAST_NOTIFICATION, {
+        value: lastNotification.id,
+      })
       .then(() => lastNotification.id);
   }
 }
