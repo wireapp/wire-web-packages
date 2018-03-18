@@ -37,10 +37,9 @@ const trimmedCommandOutput = async command => {
   return stdout.trim();
 };
 
-/** @param environment {NodeJS.ProcessEnv} */
-const start = async environment => {
-  const {WIRE_WEBAPP_BOT_EMAIL, WIRE_WEBAPP_BOT_PASSWORD, WIRE_WEBAPP_BOT_CONVERSATION_IDS} = environment;
-  const {TRAVIS_BRANCH, TRAVIS_BUILD_NUMBER, TRAVIS_COMMIT, TRAVIS_REPO_SLUG, TRAVIS_TAG} = environment;
+const start = async () => {
+  const {WIRE_WEBAPP_BOT_EMAIL, WIRE_WEBAPP_BOT_PASSWORD, WIRE_WEBAPP_BOT_CONVERSATION_IDS} = process.env;
+  const {TRAVIS_BRANCH, TRAVIS_BUILD_NUMBER, TRAVIS_COMMIT, TRAVIS_REPO_SLUG, TRAVIS_TAG} = process.env;
 
   const commitAuthor = await trimmedCommandOutput(`git log | grep Author: | cut -d' ' -f2- | uniq | head -n1`);
   let commitSummary = await trimmedCommandOutput('git log -1 --pretty=%s');
@@ -118,9 +117,12 @@ requiredEnvVars.forEach(envVar => {
   }
 });
 
-start(process.env)
-  .then(() => process.exit())
-  .catch(error => {
+(async () => {
+  try {
+    await start();
+    process.exit();
+  } catch(error) {
     console.error(error);
     process.exit(1);
-  });
+  }
+});

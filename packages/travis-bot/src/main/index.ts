@@ -16,6 +16,7 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
+
 import APIClient = require('@wireapp/api-client');
 import {Config} from '@wireapp/api-client/dist/commonjs/Config';
 import {Account} from '@wireapp/core';
@@ -24,7 +25,7 @@ import {LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
 import * as Changelog from 'generate-changelog';
 const logdown = require('logdown');
 
-const logger = logdown('@wireapp/travis-bot/main', {
+const logger = logdown('@wireapp/travis-bot/TravisBot', {
   logger: console,
   markdown: false,
 });
