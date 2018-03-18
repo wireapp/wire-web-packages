@@ -17,12 +17,16 @@
  *
  */
 
-import APIClient = require('@wireapp/api-client');
-import {Config} from '@wireapp/api-client/dist/commonjs/Config';
 import {Account} from '@wireapp/core';
-import {MemoryEngine} from '@wireapp/store-engine';
+import {Config} from '@wireapp/api-client/dist/commonjs/Config';
+import {exec} from 'child_process';
 import {LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
+import {MemoryEngine} from '@wireapp/store-engine';
+import {promisify} from 'util';
+
+import APIClient = require('@wireapp/api-client');
 import * as Changelog from 'generate-changelog';
+
 const logdown = require('logdown');
 
 const logger = logdown('@wireapp/travis-bot/TravisBot', {
@@ -100,6 +104,16 @@ class TravisBot {
     const styledChangelog = changelog.replace(headlines, '**$1**').replace(listItems, '– $1');
 
     return changelog.substring(0, maximumChars);
+  }
+
+  static async runCommand(command: string): Promise<string> {
+    const {stderr, stdout} = await promisify(exec)(command);
+
+    if (stderr) {
+      throw new Error(`Command execution error: ${stderr}`);
+    }
+
+    return stdout.trim();
   }
 }
 

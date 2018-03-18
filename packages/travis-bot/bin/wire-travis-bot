@@ -2,8 +2,6 @@
 // @ts-check
 
 const {TravisBot} = require('../');
-const {exec} = require('child_process');
-const {promisify} = require('util');
 const {version} = require('../package.json');
 const logdown = require('logdown');
 
@@ -17,7 +15,6 @@ const scriptName = require('path').basename(process.argv[1]);
 const requiredEnvVars = ['WIRE_WEBAPP_BOT_EMAIL', 'WIRE_WEBAPP_BOT_PASSWORD'];
 const travisEnvVars = ['TRAVIS_BRANCH', 'TRAVIS_BUILD_NUMBER', 'TRAVIS_COMMIT', 'TRAVIS_REPO_SLUG'];
 
-/** @param text {string} */
 const setBold = text => `\x1b[1m${text}\x1b[0m`;
 
 const usage = () => {
@@ -28,24 +25,15 @@ const usage = () => {
 };
 const envVarUsage = () => console.info(setBold('Required environment variables:'), requiredEnvVars.join(', '));
 
-/** @param command {string} */
-const trimmedCommandOutput = async command => {
-  const {stderr, stdout} = await promisify(exec)(command);
-  if (stderr) {
-    throw new Error(`Command error: ${stderr}`);
-  }
-  return stdout.trim();
-};
-
 const start = async () => {
   const {WIRE_WEBAPP_BOT_EMAIL, WIRE_WEBAPP_BOT_PASSWORD, WIRE_WEBAPP_BOT_CONVERSATION_IDS} = process.env;
   const {TRAVIS_BRANCH, TRAVIS_BUILD_NUMBER, TRAVIS_COMMIT, TRAVIS_REPO_SLUG, TRAVIS_TAG} = process.env;
 
-  const commitAuthor = await trimmedCommandOutput(`git log | grep Author: | cut -d' ' -f2- | uniq | head -n1`);
-  let commitSummary = await trimmedCommandOutput('git log -1 --pretty=%s');
+  const commitAuthor = await TravisBot.runCommand(`git log | grep Author: | cut -d' ' -f2- | uniq | head -n1`);
+  let commitSummary = await TravisBot.runCommand('git log -1 --pretty=%s');
 
   if (TRAVIS_TAG) {
-    const previousGitTag = await trimmedCommandOutput(`git describe --abbrev=0 --tags ${TRAVIS_TAG}^`);
+    const previousGitTag = await TravisBot.runCommand(`git describe --abbrev=0 --tags ${TRAVIS_TAG}^`);
     const changelog = await TravisBot.generateChangelog(TRAVIS_REPO_SLUG, `${previousGitTag}..${TRAVIS_TAG}`, 800);
 
     commitSummary += '\n\n' + changelog;
