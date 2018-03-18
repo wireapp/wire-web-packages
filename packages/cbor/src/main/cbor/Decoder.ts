@@ -43,8 +43,6 @@ const DEFAULT_CONFIG: DecoderConfig = {
   max_text_length: 5242880,
 };
 
-export type closureCallback<T> = () => T;
-
 class Decoder {
   private view: DataView;
 
@@ -67,7 +65,7 @@ class Decoder {
     return this.view.byteLength;
   }
 
-  private _read<T>(bytes: number, closure: closureCallback<T>): T {
+  private _read<T>(bytes: number, closure: () => T): T {
     if (this._available < bytes) {
       throw new DecodeError(DecodeError.UNEXPECTED_EOF);
     }
@@ -132,10 +130,9 @@ class Decoder {
       throw new DecodeError(DecodeError.TOO_LONG);
     }
 
-    const callback: closureCallback<ArrayBuffer> = () =>
-      this.buffer.slice(this.view.byteOffset, this.view.byteOffset + len);
+    const callback = () => this.buffer.slice(this.view.byteOffset, this.view.byteOffset + len);
 
-    return this._read<ArrayBuffer>(len, callback);
+    return this._read(len, callback);
   }
 
   private _read_type_info(): TypeMinorTuple {
@@ -493,7 +490,7 @@ class Decoder {
     return decodeURIComponent(escape(utf8));
   }
 
-  public optional<T>(closure: closureCallback<T>): T | null {
+  public optional<T>(closure: () => T): T | null {
     try {
       return closure();
     } catch (error) {
