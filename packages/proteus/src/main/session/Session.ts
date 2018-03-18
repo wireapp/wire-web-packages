@@ -87,7 +87,7 @@ export class Session {
 
     const session_tag = SessionTag.new();
 
-    const session = ClassUtil.new_instance<Session>(this);
+    const session = ClassUtil.new_instance(this);
     session.session_tag = session_tag;
     session.local_identity = local_identity;
     session.remote_identity = remote_pkbundle.identity_key;
@@ -120,7 +120,7 @@ export class Session {
         }
       })();
 
-      const session = ClassUtil.new_instance<Session>(Session);
+      const session = ClassUtil.new_instance(Session);
       session.session_tag = pkmsg.message.session_tag;
       session.local_identity = our_identity;
       session.remote_identity = pkmsg.identity_key;
@@ -355,7 +355,7 @@ export class Session {
   }
 
   static decode(local_identity: IdentityKeyPair, decoder: CBOR.Decoder): Session {
-    const self = ClassUtil.new_instance<Session>(this);
+    const self = ClassUtil.new_instance(this);
 
     const nprops = decoder.object();
     for (let index = 0; index <= nprops - 1; index++) {

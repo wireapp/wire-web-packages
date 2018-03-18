@@ -41,7 +41,7 @@ class Envelope {
   static new(mac_key: MacKey, message: Message): Envelope {
     const serialized_message = new Uint8Array(message.serialise());
 
-    const env = ClassUtil.new_instance<Envelope>(Envelope);
+    const env = ClassUtil.new_instance(Envelope);
 
     env.version = 1;
     env.mac = mac_key.sign(serialized_message);
@@ -84,7 +84,7 @@ class Envelope {
   }
 
   static decode(decoder: CBOR.Decoder): Envelope {
-    const env = ClassUtil.new_instance<Envelope>(Envelope);
+    const env = ClassUtil.new_instance(Envelope);
 
     const nprops = decoder.object();
     for (let index = 0; index <= nprops - 1; index++) {
