@@ -17,6 +17,8 @@
  *
  */
 
+window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+
 describe('FileSystemEngine', () => {
   describe('"constructor"', () => {
     it('has access to "window.requestFileSystem"', done => {
