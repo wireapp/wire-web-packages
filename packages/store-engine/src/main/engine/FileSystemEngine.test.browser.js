@@ -19,6 +19,8 @@
 
 window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
 
+import {FileSystemEngine} from '@wireapp/store-engine';
+
 describe('FileSystemEngine', () => {
   describe('"constructor"', () => {
     it('has access to "window.requestFileSystem"', done => {
@@ -35,11 +37,10 @@ describe('FileSystemEngine', () => {
   });
 
   describe('"init"', () => {
-    it('resolves with a browser-specific URL to the storage place.', async done => {
+    it('resolves with a browser-specific URL to the filesystem.', async done => {
       const engine = new FileSystemEngine();
       const url = await engine.init();
-      console.log('url', url);
-      expect(typeof url).toBe('string');
+      expect(url.startsWith('filesystem:')).toBe(true);
       done();
     });
   });

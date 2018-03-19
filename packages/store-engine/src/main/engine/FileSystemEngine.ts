@@ -24,6 +24,8 @@ export default class FileSystemEngine implements CRUDEngine {
 
   private filesystem: FileSystem | undefined;
 
+  constructor() {}
+
   init(storeName: string = '', options: {type: number; size: number}): Promise<string> {
     const config = Object.assign(
       {},
@@ -33,13 +35,14 @@ export default class FileSystemEngine implements CRUDEngine {
       },
       options
     );
+
     return new Promise((resolve, reject) => {
       window.requestFileSystem(
         config.type,
         config.size,
         filesystem => {
           this.filesystem = filesystem;
-          Promise.resolve(this.filesystem.root.toURL());
+          resolve(this.filesystem.root.toURL());
         },
         reject
       );
