@@ -53,8 +53,14 @@ const start = async () => {
   let commitSummary = await TravisBot.runCommand('git log -1 --pretty=%s');
 
   if (TRAVIS_TAG) {
+    const MAXIMUM_CHANGELOG_CHARS = 800;
+
     const previousGitTag = await TravisBot.runCommand(`git describe --abbrev=0 --tags ${TRAVIS_TAG}^`);
-    const changelog = await TravisBot.generateChangelog(TRAVIS_REPO_SLUG, `${previousGitTag}..${TRAVIS_TAG}`, 800);
+    const changelog = await TravisBot.generateChangelog(
+      TRAVIS_REPO_SLUG,
+      `${previousGitTag}..${TRAVIS_TAG}`,
+      MAXIMUM_CHANGELOG_CHARS
+    );
 
     commitSummary += '\n\n' + changelog;
   }
@@ -93,7 +99,9 @@ const start = async () => {
 
 logger.info(setBold(`wire-travis-bot v${version}`) + '\n');
 
-switch (process.argv[2]) {
+const SECOND_ARGUMENT = 2;
+
+switch (process.argv[SECOND_ARGUMENT]) {
   case '-help':
   case '--help':
   case '-h':
@@ -103,7 +111,7 @@ switch (process.argv[2]) {
     process.exit(0);
   }
   default: {
-    process.env.WIRE_WEBAPP_BOT_CONVERSATION_IDS = process.argv[2];
+    process.env.WIRE_WEBAPP_BOT_CONVERSATION_IDS = process.argv[SECOND_ARGUMENT];
   }
 }
 
@@ -129,7 +137,7 @@ requiredEnvVars.forEach(envVar => {
   try {
     await start();
     process.exit(0);
-  } catch(error) {
+  } catch (error) {
     console.error(error);
     process.exit(1);
   }

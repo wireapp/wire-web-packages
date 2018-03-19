@@ -1,5 +1,7 @@
 {
-  "bin": "bin/wire-travis-bot",
+  "bin": {
+    "wire-travis-bot": "./bin/wire-travis-bot.js"
+  },
   "dependencies": {
     "@types/generate-changelog": "1.7.0",
     "@types/node": "9.4.7",

@@ -8,7 +8,7 @@ For licensing information, see the attached LICENSE file and the list of third-p
 
 ## Travis Bot
 
-A bot used by Travis build scripts which posts useful messages to Wire. Based on [`@wireapp/core`](https://www.npmjs.com/package/@wireapp/core).
+A bot used by Travis build scripts which posts useful messages to Wire.
 
 ### Getting Started
 
@@ -25,37 +25,7 @@ yarn global add @wireapp/travis-bot
 
 ### Usage
 
-```javascript
-const loginData = {
-  email: <email>,
-  password: <password>,
-  persist: false
-};
-
-const messageData = {
-  build: {
-    number: <build number>,
-    repositoryName: <repository name>,
-    url: ''
-  },
-  commit: {
-    author: <commit author>,
-    conversationIds: [<wire conversation id>],
-    branch: <branch>,
-    hash: <commit hash>,
-    message: <commit summary>
-  }
-};
-
-new TravisBot(loginData, messageData)
-  .start()
-  .then(() => {
-    // yay
-  })
-  .catch(error => {
-    // nay
-  });
-```
+* [wire-travis-bot.js](./bin/wire-travis-bot.js)
 
 ### Execution
 
@@ -68,14 +38,6 @@ export WIRE_WEBAPP_BOT_EMAIL="<email>"
 export WIRE_WEBAPP_BOT_PASSWORD="<password>"
 export WIRE_WEBAPP_BOT_CONVERSATION_IDS="<conversation id>,<conversation id>"
 
-# these should be set by Travis
-# export TRAVIS_BRANCH= ...
-# export TRAVIS_BUILD_NUMBER= ...
-# export TRAVIS_COMMIT= ...
-# export TRAVIS_REPO_SLUG= ...
-# export TRAVIS_TAG= ...
-# export TRAVIS_TAG= ...
-
 wire-travis-bot
 ```
 
@@ -83,5 +45,5 @@ wire-travis-bot
 
 ```bash
 yarn dist
-bin/wire-travis-bot "<conversation id>,<conversation id>"
+bin/wire-travis-bot.js "<conversation id>,<conversation id>"
 ```
