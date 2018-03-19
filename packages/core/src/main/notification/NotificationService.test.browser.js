@@ -30,10 +30,10 @@ describe('NotificationService', () => {
 
     afterEach(done => {
       if (storeName) {
-        const callback = window.indexedDB.deleteDatabase(storeName);
+        const deleteRequest = window.indexedDB.deleteDatabase(storeName);
 
-        callback.onerror = error => done.fail(error);
-        callback.onsuccess = () => done();
+        deleteRequest.onerror = done.fail;
+        deleteRequest.onsuccess = done;
       }
     });
 
