@@ -28,7 +28,7 @@ describe('Account', () => {
   describe('"initClient"', () => {
     let storeName = undefined;
 
-    afterEach(() => {
+    afterEach(done => {
       if (storeName) {
         const deleteRequest = window.indexedDB.deleteDatabase(storeName);
 
