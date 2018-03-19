@@ -30,7 +30,10 @@ describe('Account', () => {
 
     afterEach(() => {
       if (storeName) {
-        window.indexedDB.deleteDatabase(storeName);
+        const callback = window.indexedDB.deleteDatabase(storeName);
+
+        callback.onerror = error => done.fail(error);
+        callback.onsuccess = () => done();
       }
     });
 
