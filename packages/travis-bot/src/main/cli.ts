@@ -33,17 +33,17 @@ const scriptName = require('path').basename(process.argv[1]);
 const requiredEnvVars = ['WIRE_WEBAPP_BOT_EMAIL', 'WIRE_WEBAPP_BOT_PASSWORD'];
 const travisEnvVars = ['TRAVIS_BRANCH', 'TRAVIS_BUILD_NUMBER', 'TRAVIS_COMMIT', 'TRAVIS_REPO_SLUG'];
 
-const setBold = (text: string) => `\x1b[1m${text}\x1b[0m`;
+const setBold = (text: string): string => `\x1b[1m${text}\x1b[0m`;
 
-const usage = () => {
+const usage = (): void => {
   console.info(`${setBold('Usage:')} ${scriptName} <conversation id(s)>\n`);
   console.info(
     `${setBold('Example:')} ${scriptName} "e4302e84-75fd-4dc7-8a16-67018bd94ce7,44be7db8-7b7c-4acf-887d-86fbb9a5508f"`
   );
 };
-const envVarUsage = () => console.info(setBold('Required environment variables:'), requiredEnvVars.join(', '));
+const envVarUsage = (): void => console.info(setBold('Required environment variables:'), requiredEnvVars.join(', '));
 
-const start = async () => {
+const start = async (): Promise<TravisBot> => {
   const {WIRE_WEBAPP_BOT_EMAIL, WIRE_WEBAPP_BOT_PASSWORD, WIRE_WEBAPP_BOT_CONVERSATION_IDS} = process.env;
   const {TRAVIS_BRANCH, TRAVIS_BUILD_NUMBER, TRAVIS_COMMIT, TRAVIS_REPO_SLUG, TRAVIS_TAG} = process.env;
 
@@ -55,7 +55,7 @@ const start = async () => {
 
     const previousGitTag = await TravisBot.runCommand(`git describe --abbrev=0 --tags ${TRAVIS_TAG}^`);
     const changelog = await TravisBot.generateChangelog(
-      TRAVIS_REPO_SLUG!,
+      String(TRAVIS_REPO_SLUG),
       `${previousGitTag}..${TRAVIS_TAG}`,
       MAXIMUM_CHANGELOG_CHARS
     );
@@ -71,14 +71,14 @@ const start = async () => {
 
   const messageData: MessageData = {
     build: {
-      number: TRAVIS_BUILD_NUMBER!,
-      repositoryName: TRAVIS_REPO_SLUG!,
+      number: String(TRAVIS_BUILD_NUMBER),
+      repositoryName: String(TRAVIS_REPO_SLUG),
       url: '',
     },
     commit: {
       author: commitAuthor,
-      branch: TRAVIS_BRANCH!,
-      hash: TRAVIS_COMMIT!,
+      branch: String(TRAVIS_BRANCH),
+      hash: String(TRAVIS_COMMIT),
       message: commitSummary,
     },
   };
