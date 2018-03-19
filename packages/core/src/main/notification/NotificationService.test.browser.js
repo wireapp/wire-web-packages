@@ -17,17 +17,23 @@
  *
  */
 
+const UUID = require('pure-uuid');
 const {NotificationService} = require('@wireapp/core/dist/notification/root');
 const {IndexedDBEngine} = require('@wireapp/store-engine');
 const Client = require('@wireapp/api-client');
+
+const UUIDVersion = 4;
 
 describe('NotificationService', () => {
   describe('Database "setLastEventDate"', () => {
     let storeName = undefined;
 
-    afterEach(() => {
+    afterEach(done => {
       if (storeName) {
-        window.indexedDB.deleteDatabase(storeName);
+        const callback = window.indexedDB.deleteDatabase(storeName);
+
+        callback.onerror = error => done.fail(error);
+        callback.onsuccess = () => done();
       }
     });
 
@@ -50,7 +56,7 @@ describe('NotificationService', () => {
       spyOn(engine, 'create').and.callThrough();
 
       try {
-        await apiClient.initEngine({userId: Math.random().toString()});
+        await apiClient.initEngine({userId: new UUID(UUIDVersion)});
         storeName = engine.storeName;
 
         const returnValue = await notificationService.setLastEventDate(new Date(0));
@@ -81,7 +87,7 @@ describe('NotificationService', () => {
       const notificationService = new NotificationService(apiClient, engine);
 
       try {
-        await apiClient.initEngine({userId: Math.random().toString()});
+        await apiClient.initEngine({userId: new UUID(UUIDVersion)});
         storeName = engine.storeName;
         await notificationService.setLastEventDate(new Date(0));
 
@@ -121,7 +127,7 @@ describe('NotificationService', () => {
     const lesserDate = new Date(0);
 
     try {
-      await apiClient.initEngine({userId: Math.random().toString()});
+      await apiClient.initEngine({userId: new UUID(UUIDVersion)});
       storeName = engine.storeName;
       await notificationService.setLastEventDate(greaterDate);
 
@@ -163,7 +169,7 @@ describe('NotificationService', () => {
     spyOn(engine, 'create').and.callThrough();
 
     try {
-      await apiClient.initEngine({userId: Math.random().toString()});
+      await apiClient.initEngine({userId: new UUID(UUIDVersion)});
       storeName = engine.storeName;
 
       const returnValue = await notificationService.setLastNotificationId({id: '12'});
@@ -194,7 +200,7 @@ describe('NotificationService', () => {
     const notificationService = new NotificationService(apiClient, engine);
 
     try {
-      await apiClient.initEngine({userId: Math.random().toString()});
+      await apiClient.initEngine({userId: new UUID(UUIDVersion)});
       storeName = engine.storeName;
 
       await notificationService.setLastNotificationId({id: '12'});
