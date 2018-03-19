@@ -41,7 +41,7 @@ import {ConversationService} from './conversation/root';
 import Client = require('@wireapp/api-client');
 import EventEmitter = require('events');
 import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/index';
-import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/error';
+import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/error/index';
 
 class Account extends EventEmitter {
   public static INCOMING = {
