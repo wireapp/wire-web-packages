@@ -13,12 +13,12 @@ export default class NotificationService {
     PRIMARY_KEY_LAST_NOTIFICATION: 'z.storage.StorageKey.NOTIFICATION.LAST_ID',
   };
 
-  private database: Database;
   private backend: Backend;
+  private database: Database;
 
   constructor(private apiClient: APIClient, private storeEngine: CRUDEngine) {
-    this.database = new Database(this.storeEngine);
     this.backend = new Backend(this.apiClient);
+    this.database = new Database(this.storeEngine);
   }
 
   public initializeNotificationStream(clientId: string): Promise<string> {
@@ -49,6 +49,14 @@ export default class NotificationService {
       .getLastNotificationId()
       .then(() => this.database.updateLastNotificationId(lastNotification))
       .catch(error => this.database.createLastNotificationId(lastNotification));
+  }
+}
+
+class Backend {
+  constructor(private apiClient: APIClient) {}
+
+  public getLastNotification(clientId: string): Promise<Notification> {
+    return this.apiClient.notification.api.getLastNotification(clientId);
   }
 }
 
@@ -97,13 +105,5 @@ class Database {
         value: lastNotification.id,
       })
       .then(() => lastNotification.id);
-  }
-}
-
-class Backend {
-  constructor(private apiClient: APIClient) {}
-
-  public getLastNotification(clientId: string): Promise<Notification> {
-    return this.apiClient.notification.api.getLastNotification(clientId);
   }
 }
