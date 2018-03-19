@@ -33,4 +33,14 @@ describe('FileSystemEngine', () => {
       }
     });
   });
+
+  describe('"init"', () => {
+    it('resolves with a browser-specific URL to the storage place.', async done => {
+      const engine = new FileSystemEngine();
+      const url = await engine.init();
+      console.log('url', url);
+      expect(typeof url).toBe('string');
+      done();
+    });
+  });
 });

@@ -22,8 +22,28 @@ import CRUDEngine from './CRUDEngine';
 export default class FileSystemEngine implements CRUDEngine {
   public storeName: string = '';
 
-  init(storeName: string, ...args: any[]): Promise<any> {
-    throw new Error('Method not implemented.');
+  private filesystem: FileSystem | undefined;
+
+  init(storeName: string = '', options: {type: number; size: number}): Promise<string> {
+    const config = Object.assign(
+      {},
+      {
+        type: window.TEMPORARY,
+        size: 1024 * 1024 * 10,
+      },
+      options
+    );
+    return new Promise((resolve, reject) => {
+      window.requestFileSystem(
+        config.type,
+        config.size,
+        filesystem => {
+          this.filesystem = filesystem;
+          Promise.resolve(this.filesystem.root.toURL());
+        },
+        reject
+      );
+    });
   }
 
   create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
