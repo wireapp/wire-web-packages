@@ -47,18 +47,18 @@ export default class CryptographyService {
     return `${userId}@${clientId}`;
   }
 
-  public createCryptobox(): Promise<Array<SerializedPreKey>> {
-    return this.cryptobox.create().then((initialPreKeys: Array<ProteusKeys.PreKey>) => {
-      return initialPreKeys
-        .map(preKey => {
-          const preKeyJson: SerializedPreKey = this.cryptobox.serialize_prekey(preKey);
-          if (preKeyJson.id !== ProteusKeys.PreKey.MAX_PREKEY_ID) {
-            return preKeyJson;
-          }
-          return {id: -1, key: ''};
-        })
-        .filter(serializedPreKey => serializedPreKey.key);
-    });
+  public async createCryptobox(): Promise<Array<SerializedPreKey>> {
+    const initialPreKeys: Array<ProteusKeys.PreKey> = await this.cryptobox.create();
+
+    return initialPreKeys
+      .map(preKey => {
+        const preKeyJson: SerializedPreKey = this.cryptobox.serialize_prekey(preKey);
+        if (preKeyJson.id !== ProteusKeys.PreKey.MAX_PREKEY_ID) {
+          return preKeyJson;
+        }
+        return {id: -1, key: ''};
+      })
+      .filter(serializedPreKey => serializedPreKey.key);
   }
 
   public decrypt(sessionId: string, encodedCiphertext: string): Promise<Uint8Array> {
@@ -70,12 +70,13 @@ export default class CryptographyService {
     return sessionId.split('@');
   }
 
-  public encrypt(plainText: Uint8Array, preKeyBundles: UserPreKeyBundleMap): Promise<OTRRecipients> {
+  public async encrypt(plainText: Uint8Array, preKeyBundles: UserPreKeyBundleMap): Promise<OTRRecipients> {
     const recipients: OTRRecipients = {};
     const encryptions: Array<Promise<SessionPayloadBundle>> = [];
 
     for (const userId in preKeyBundles) {
       recipients[userId] = {};
+
       for (const clientId in preKeyBundles[userId]) {
         const preKeyPayload: SerializedPreKey = preKeyBundles[userId][clientId];
         const preKey: string = preKeyPayload.key;
@@ -84,38 +85,44 @@ export default class CryptographyService {
       }
     }
 
-    return Promise.all(encryptions).then((payloads: Array<SessionPayloadBundle>) => {
-      const recipients: OTRRecipients = {};
+    const payloads: Array<SessionPayloadBundle> = await Promise.all(encryptions);
 
-      if (payloads) {
-        payloads.forEach((payload: SessionPayloadBundle) => {
-          const sessionId: string = payload.sessionId;
-          const encrypted: string = payload.encryptedPayload;
-          const [userId, clientId] = CryptographyService.dismantleSessionId(sessionId);
-          recipients[userId] = recipients[userId] || {};
-          recipients[userId][clientId] = encrypted;
-        });
-      }
+    if (payloads) {
+      payloads.forEach((payload: SessionPayloadBundle) => {
+        const sessionId: string = payload.sessionId;
+        const encrypted: string = payload.encryptedPayload;
+        const [userId, clientId] = CryptographyService.dismantleSessionId(sessionId);
+        recipients[userId][clientId] = encrypted;
+      });
+    }
 
-      return recipients;
-    });
-  }
-
-  private encryptPayloadForSession(
-    sessionId: string,
-    plainText: Uint8Array,
-    base64EncodedPreKey: string
-  ): Promise<SessionPayloadBundle> {
-    const decodedPreKeyBundle: Uint8Array = Decoder.fromBase64(base64EncodedPreKey).asBytes;
-    return this.cryptobox
-      .encrypt(sessionId, plainText, decodedPreKeyBundle.buffer)
-      .then((encryptedPayload: ArrayBuffer) => Encoder.toBase64(encryptedPayload).asString)
-      .catch((error: Error) => '💣')
-      .then((encryptedPayload: string) => ({sessionId, encryptedPayload}));
+    return recipients;
   }
 
   public deleteClient(): Promise<string> {
     return this.database.deleteClient(CryptoboxStore.CryptoboxCRUDStore.KEYS.LOCAL_IDENTITY);
+  }
+
+  private async encryptPayloadForSession(
+    sessionId: string,
+    plainText: Uint8Array,
+    base64EncodedPreKey: string
+  ): Promise<SessionPayloadBundle> {
+    let encryptedPayload;
+
+    try {
+      const decodedPreKeyBundle: Uint8Array = Decoder.fromBase64(base64EncodedPreKey).asBytes;
+      const payloadAsBuffer: ArrayBuffer = await this.cryptobox.encrypt(
+        sessionId,
+        plainText,
+        decodedPreKeyBundle.buffer
+      );
+      encryptedPayload = Encoder.toBase64(payloadAsBuffer).asString;
+    } catch (error) {
+      encryptedPayload = '💣';
+    }
+
+    return {sessionId, encryptedPayload};
   }
 
   public async loadClient(): Promise<RegisteredClient> {
