@@ -19,7 +19,7 @@
 
 /* eslint no-magic-numbers: "off" */
 
-import Types from './Types';
+import Type from './Type';
 
 class Encoder {
   private buffer: ArrayBuffer;
@@ -63,8 +63,8 @@ class Encoder {
     return this._advance(bytes);
   }
 
-  private _write_type_and_len(type: Types, len: number): void {
-    const major = Types.major(type) << 5;
+  private _write_type_and_len(type: Type, len: number): void {
+    const major = Type.major(type) << 5;
 
     if (0 <= len && len <= 23) {
       return this._u8(major | len);
@@ -314,7 +314,7 @@ class Encoder {
   }
 
   public bytes(value: ArrayBuffer | Uint8Array): Encoder {
-    this._write_type_and_len(Types.BYTES, value.byteLength);
+    this._write_type_and_len(Type.BYTES, value.byteLength);
     this._bytes(value);
 
     return this;
@@ -324,7 +324,7 @@ class Encoder {
     // http://ecmanaut.blogspot.de/2006/07/encoding-decoding-utf8-in-javascript.html
     const utf8 = unescape(encodeURIComponent(value));
 
-    this._write_type_and_len(Types.TEXT, utf8.length);
+    this._write_type_and_len(Type.TEXT, utf8.length);
     this._bytes(new Uint8Array(utf8.split('').map(char => char.charCodeAt(0))));
 
     return this;
@@ -341,7 +341,7 @@ class Encoder {
   }
 
   public array(len: number): Encoder {
-    this._write_type_and_len(Types.ARRAY, len);
+    this._write_type_and_len(Type.ARRAY, len);
     return this;
   }
 
@@ -356,7 +356,7 @@ class Encoder {
   }
 
   public object(len: number): Encoder {
-    this._write_type_and_len(Types.OBJECT, len);
+    this._write_type_and_len(Type.OBJECT, len);
     return this;
   }
 

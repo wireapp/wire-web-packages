@@ -19,7 +19,7 @@
 
 /* eslint no-magic-numbers: "off" */
 
-class Types {
+class Type {
   static readonly ARRAY = 1;
   static readonly BOOL = 2;
   static readonly BREAK = 3;
@@ -45,47 +45,47 @@ class Types {
     throw new Error(`Can't create instance of singleton`);
   }
 
-  static major(type: Types): number {
+  static major(type: Type): number {
     switch (type) {
-      case Types.ARRAY:
+      case Type.ARRAY:
         return 4;
-      case Types.BOOL:
+      case Type.BOOL:
         return 7;
-      case Types.BREAK:
+      case Type.BREAK:
         return 7;
-      case Types.BYTES:
+      case Type.BYTES:
         return 2;
-      case Types.FLOAT16:
+      case Type.FLOAT16:
         return 7;
-      case Types.FLOAT32:
+      case Type.FLOAT32:
         return 7;
-      case Types.FLOAT64:
+      case Type.FLOAT64:
         return 7;
-      case Types.UINT8:
+      case Type.UINT8:
         return 0;
-      case Types.UINT16:
+      case Type.UINT16:
         return 0;
-      case Types.UINT32:
+      case Type.UINT32:
         return 0;
-      case Types.UINT64:
+      case Type.UINT64:
         return 0;
-      case Types.INT8:
+      case Type.INT8:
         return 1;
-      case Types.INT16:
+      case Type.INT16:
         return 1;
-      case Types.INT32:
+      case Type.INT32:
         return 1;
-      case Types.INT64:
+      case Type.INT64:
         return 1;
-      case Types.NULL:
+      case Type.NULL:
         return 7;
-      case Types.OBJECT:
+      case Type.OBJECT:
         return 5;
-      case Types.TAGGED:
+      case Type.TAGGED:
         return 6;
-      case Types.TEXT:
+      case Type.TEXT:
         return 3;
-      case Types.UNDEFINED:
+      case Type.UNDEFINED:
         return 7;
       default:
         throw new TypeError('Invalid CBOR type');
@@ -93,4 +93,4 @@ class Types {
   }
 }
 
-export default Types;
+export default Type;

@@ -21,6 +21,6 @@ import BaseError from './cbor/BaseError';
 import DecodeError from './cbor/DecodeError';
 import Decoder from './cbor/Decoder';
 import Encoder from './cbor/Encoder';
-import Types from './cbor/Types';
+import Type from './cbor/Type';
 
-export {DecodeError, BaseError, Decoder, Encoder, Types};
+export {DecodeError, BaseError, Decoder, Encoder, Type};

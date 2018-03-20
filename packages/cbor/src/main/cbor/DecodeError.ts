@@ -18,7 +18,7 @@
  */
 
 import BaseError from './BaseError';
-import Types from './Types';
+import Type from './Type';
 
 class DecodeError extends BaseError {
   static readonly INT_OVERFLOW = 'Integer overflow';
@@ -28,7 +28,7 @@ class DecodeError extends BaseError {
   static readonly UNEXPECTED_EOF = 'Unexpected end-of-buffer';
   static readonly UNEXPECTED_TYPE = 'Unexpected type';
 
-  constructor(public message: string, public extra?: Array<Types>) {
+  constructor(public message: string, public extra?: Array<Type>) {
     super(message);
 
     Object.setPrototypeOf(this, DecodeError.prototype);

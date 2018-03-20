@@ -20,10 +20,10 @@
 /* eslint no-magic-numbers: "off" */
 
 import DecodeError from './DecodeError';
-import Types from './Types';
+import Type from './Type';
 
-interface TypeMinorTuple extends Array<Types | number> {
-  0: Types;
+interface TypeMinorTuple extends Array<Type | number> {
+  0: Type;
   1: number;
 }
 
@@ -144,15 +144,15 @@ class Decoder {
     switch (major) {
       case 0: {
         if (0 <= minor && minor <= 24) {
-          return [Types.UINT8, minor];
+          return [Type.UINT8, minor];
         } else {
           switch (minor) {
             case 25:
-              return [Types.UINT16, minor];
+              return [Type.UINT16, minor];
             case 26:
-              return [Types.UINT32, minor];
+              return [Type.UINT32, minor];
             case 27:
-              return [Types.UINT64, minor];
+              return [Type.UINT64, minor];
             default:
               throw new DecodeError(DecodeError.INVALID_TYPE);
           }
@@ -160,44 +160,44 @@ class Decoder {
       }
       case 1: {
         if (0 <= minor && minor <= 24) {
-          return [Types.INT8, minor];
+          return [Type.INT8, minor];
         } else {
           switch (minor) {
             case 25:
-              return [Types.INT16, minor];
+              return [Type.INT16, minor];
             case 26:
-              return [Types.INT32, minor];
+              return [Type.INT32, minor];
             case 27:
-              return [Types.INT64, minor];
+              return [Type.INT64, minor];
             default:
               throw new DecodeError(DecodeError.INVALID_TYPE);
           }
         }
       }
       case 2:
-        return [Types.BYTES, minor];
+        return [Type.BYTES, minor];
       case 3:
-        return [Types.TEXT, minor];
+        return [Type.TEXT, minor];
       case 4:
-        return [Types.ARRAY, minor];
+        return [Type.ARRAY, minor];
       case 5:
-        return [Types.OBJECT, minor];
+        return [Type.OBJECT, minor];
 
       case 7:
         switch (minor) {
           case 20:
           case 21:
-            return [Types.BOOL, minor];
+            return [Type.BOOL, minor];
           case 22:
-            return [Types.NULL, minor];
+            return [Type.NULL, minor];
           case 25:
-            return [Types.FLOAT16, minor];
+            return [Type.FLOAT16, minor];
           case 26:
-            return [Types.FLOAT32, minor];
+            return [Type.FLOAT32, minor];
           case 27:
-            return [Types.FLOAT64, minor];
+            return [Type.FLOAT64, minor];
           case 31:
-            return [Types.BREAK, minor];
+            return [Type.BREAK, minor];
         }
         break;
     }
@@ -219,55 +219,55 @@ class Decoder {
     return [type, minor];
   }
 
-  private _read_unsigned(type: Types, minor: number): number {
+  private _read_unsigned(type: Type, minor: number): number {
     switch (type) {
-      case Types.UINT8:
+      case Type.UINT8:
         return minor <= 23 ? minor : this._u8();
 
-      case Types.UINT16:
+      case Type.UINT16:
         return this._u16();
 
-      case Types.UINT32:
+      case Type.UINT32:
         return this._u32();
 
-      case Types.UINT64:
+      case Type.UINT64:
         return this._u64();
     }
 
     throw new DecodeError(DecodeError.UNEXPECTED_TYPE, [type, minor]);
   }
 
-  private _read_signed(overflow: number, type: Types, minor: number): number {
+  private _read_signed(overflow: number, type: Type, minor: number): number {
     switch (type) {
-      case Types.INT8:
+      case Type.INT8:
         if (minor <= 23) {
           return -1 - minor;
         }
         return -1 - Decoder._check_overflow(this._u8(), overflow);
 
-      case Types.INT16:
+      case Type.INT16:
         return -1 - Decoder._check_overflow(this._u16(), overflow);
 
-      case Types.INT32:
+      case Type.INT32:
         return -1 - Decoder._check_overflow(this._u32(), overflow);
 
-      case Types.INT64:
+      case Type.INT64:
         return -1 - Decoder._check_overflow(this._u64(), overflow);
 
-      case Types.UINT8:
-      case Types.UINT16:
-      case Types.UINT32:
-      case Types.UINT64:
+      case Type.UINT8:
+      case Type.UINT16:
+      case Type.UINT32:
+      case Type.UINT64:
         return Decoder._check_overflow(this._read_unsigned(type, minor), overflow);
     }
 
     throw new DecodeError(DecodeError.UNEXPECTED_TYPE, [type, minor]);
   }
 
-  private _skip_until_break(type: Types): void {
+  private _skip_until_break(type: Type): void {
     for (;;) {
       const [t, minor] = this._read_type_info();
-      if (t === Types.BREAK) {
+      if (t === Type.BREAK) {
         return;
       }
 
@@ -289,38 +289,38 @@ class Decoder {
 
     let len;
     switch (type) {
-      case Types.UINT8:
-      case Types.UINT16:
-      case Types.UINT32:
-      case Types.UINT64:
-      case Types.INT8:
-      case Types.INT16:
-      case Types.INT32:
-      case Types.INT64:
+      case Type.UINT8:
+      case Type.UINT16:
+      case Type.UINT32:
+      case Type.UINT64:
+      case Type.INT8:
+      case Type.INT16:
+      case Type.INT32:
+      case Type.INT64:
         this._read_length(minor);
         return true;
 
-      case Types.BOOL:
-      case Types.NULL:
+      case Type.BOOL:
+      case Type.NULL:
         return true;
 
-      case Types.BREAK:
+      case Type.BREAK:
         return false;
 
-      case Types.FLOAT16:
+      case Type.FLOAT16:
         this._advance(2);
         return true;
 
-      case Types.FLOAT32:
+      case Type.FLOAT32:
         this._advance(4);
         return true;
 
-      case Types.FLOAT64:
+      case Type.FLOAT64:
         this._advance(8);
         return true;
 
-      case Types.BYTES:
-      case Types.TEXT:
+      case Type.BYTES:
+      case Type.TEXT:
         if (minor === 31) {
           this._skip_until_break(type);
           return true;
@@ -329,8 +329,8 @@ class Decoder {
         this._advance(len);
         return true;
 
-      case Types.ARRAY:
-      case Types.OBJECT:
+      case Type.ARRAY:
+      case Type.OBJECT:
         if (minor === 31) {
           while (this._skip_value(level - 1)) {
             // do nothing
@@ -352,57 +352,57 @@ class Decoder {
    */
 
   public u8(): number {
-    const [type, minor] = this._type_info_with_assert([Types.UINT8]);
+    const [type, minor] = this._type_info_with_assert([Type.UINT8]);
     return this._read_unsigned(type, minor);
   }
 
   public u16(): number {
-    const [type, minor] = this._type_info_with_assert([Types.UINT8, Types.UINT16]);
+    const [type, minor] = this._type_info_with_assert([Type.UINT8, Type.UINT16]);
     return this._read_unsigned(type, minor);
   }
 
   public u32(): number {
-    const [type, minor] = this._type_info_with_assert([Types.UINT8, Types.UINT16, Types.UINT32]);
+    const [type, minor] = this._type_info_with_assert([Type.UINT8, Type.UINT16, Type.UINT32]);
     return this._read_unsigned(type, minor);
   }
 
   public u64(): number {
-    const [type, minor] = this._type_info_with_assert([Types.UINT8, Types.UINT16, Types.UINT32, Types.UINT64]);
+    const [type, minor] = this._type_info_with_assert([Type.UINT8, Type.UINT16, Type.UINT32, Type.UINT64]);
     return this._read_unsigned(type, minor);
   }
 
   public i8(): number {
-    const [type, minor] = this._type_info_with_assert([Types.INT8, Types.UINT8]);
+    const [type, minor] = this._type_info_with_assert([Type.INT8, Type.UINT8]);
     return this._read_signed(127, type, minor);
   }
 
   public i16(): number {
-    const [type, minor] = this._type_info_with_assert([Types.INT8, Types.INT16, Types.UINT8, Types.UINT16]);
+    const [type, minor] = this._type_info_with_assert([Type.INT8, Type.INT16, Type.UINT8, Type.UINT16]);
     return this._read_signed(32767, type, minor);
   }
 
   public i32(): number {
     const [type, minor] = this._type_info_with_assert([
-      Types.INT8,
-      Types.INT16,
-      Types.INT32,
-      Types.UINT8,
-      Types.UINT16,
-      Types.UINT32,
+      Type.INT8,
+      Type.INT16,
+      Type.INT32,
+      Type.UINT8,
+      Type.UINT16,
+      Type.UINT32,
     ]);
     return this._read_signed(2147483647, type, minor);
   }
 
   public i64(): number {
     const [type, minor] = this._type_info_with_assert([
-      Types.INT8,
-      Types.INT16,
-      Types.INT32,
-      Types.INT64,
-      Types.UINT8,
-      Types.UINT16,
-      Types.UINT32,
-      Types.UINT64,
+      Type.INT8,
+      Type.INT16,
+      Type.INT32,
+      Type.INT64,
+      Type.UINT8,
+      Type.UINT16,
+      Type.UINT32,
+      Type.UINT64,
     ]);
 
     return this._read_signed(Number.MAX_SAFE_INTEGER, type, minor);
@@ -417,7 +417,7 @@ class Decoder {
   }
 
   public f16(): number {
-    this._type_info_with_assert(Types.FLOAT16);
+    this._type_info_with_assert(Type.FLOAT16);
 
     const half = this._u16();
     const exp = (half >> 10) & 0x1f;
@@ -442,17 +442,17 @@ class Decoder {
   }
 
   public f32(): number {
-    this._type_info_with_assert(Types.FLOAT32);
+    this._type_info_with_assert(Type.FLOAT32);
     return this._f32();
   }
 
   public f64(): number {
-    this._type_info_with_assert(Types.FLOAT64);
+    this._type_info_with_assert(Type.FLOAT64);
     return this._f64();
   }
 
   public bool(): boolean {
-    const [_, minor] = this._type_info_with_assert(Types.BOOL);
+    const [_, minor] = this._type_info_with_assert(Type.BOOL);
 
     switch (minor) {
       case 20:
@@ -465,7 +465,7 @@ class Decoder {
   }
 
   public bytes(): ArrayBuffer {
-    const [_, minor] = this._type_info_with_assert(Types.BYTES);
+    const [_, minor] = this._type_info_with_assert(Type.BYTES);
 
     if (minor === 31) {
       // XXX: handle indefinite encoding
@@ -476,7 +476,7 @@ class Decoder {
   }
 
   public text(): string {
-    const [_, minor] = this._type_info_with_assert(Types.TEXT);
+    const [_, minor] = this._type_info_with_assert(Type.TEXT);
 
     if (minor === 31) {
       // XXX: handle indefinite encoding
@@ -494,7 +494,7 @@ class Decoder {
     try {
       return closure();
     } catch (error) {
-      if (error instanceof DecodeError && error.extra && error.extra[0] === Types.NULL) {
+      if (error instanceof DecodeError && error.extra && error.extra[0] === Type.NULL) {
         return null;
       }
       throw error;
@@ -502,7 +502,7 @@ class Decoder {
   }
 
   public array(): number {
-    const [_, minor] = this._type_info_with_assert(Types.ARRAY);
+    const [_, minor] = this._type_info_with_assert(Type.ARRAY);
 
     if (minor === 31) {
       // XXX: handle indefinite encoding
@@ -518,7 +518,7 @@ class Decoder {
   }
 
   public object(): number {
-    const [_, minor] = this._type_info_with_assert(Types.OBJECT);
+    const [_, minor] = this._type_info_with_assert(Type.OBJECT);
 
     if (minor === 31) {
       // XXX: handle indefinite encoding
