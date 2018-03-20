@@ -23,7 +23,7 @@ import {Decoder, Encoder} from 'bazinga64';
 import {RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/index';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
 import * as ProteusKeys from '@wireapp/proteus/dist/keys/root';
-import * as auth from '@wireapp/api-client/dist/commonjs/auth/index';
+import {PreKey as SerializedPreKey} from '@wireapp/api-client/dist/commonjs/auth/index';
 import {SessionPayloadBundle} from '../crypto/root';
 import {OTRRecipients} from '@wireapp/api-client/dist/commonjs/conversation/index';
 
@@ -37,11 +37,11 @@ export default class CryptographyService {
     this.cryptobox = new Cryptobox(storeEngine);
   }
 
-  public createCryptobox(): Promise<Array<auth.PreKey>> {
+  public createCryptobox(): Promise<Array<SerializedPreKey>> {
     return this.cryptobox.create().then((initialPreKeys: Array<ProteusKeys.PreKey>) => {
       return initialPreKeys
         .map(preKey => {
-          const preKeyJson: auth.PreKey = this.cryptobox.serialize_prekey(preKey);
+          const preKeyJson: SerializedPreKey = this.cryptobox.serialize_prekey(preKey);
           if (preKeyJson.id !== ProteusKeys.PreKey.MAX_PREKEY_ID) {
             return preKeyJson;
           }
@@ -71,7 +71,7 @@ export default class CryptographyService {
     for (const userId in preKeyBundles) {
       recipients[userId] = {};
       for (const clientId in preKeyBundles[userId]) {
-        const preKeyPayload: auth.PreKey = preKeyBundles[userId][clientId];
+        const preKeyPayload: SerializedPreKey = preKeyBundles[userId][clientId];
         const preKey: string = preKeyPayload.key;
         const sessionId: string = this.constructSessionId(userId, clientId);
         encryptions.push(this.encryptPayloadForSession(sessionId, plainText, preKey));
