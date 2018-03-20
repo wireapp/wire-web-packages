@@ -18,23 +18,33 @@
  */
 
 import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/index';
-import {Cryptobox, store} from '@wireapp/cryptobox';
+import {Cryptobox, store as CryptoboxStore} from '@wireapp/cryptobox';
 import {Decoder, Encoder} from 'bazinga64';
 import {RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/index';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
 import * as ProteusKeys from '@wireapp/proteus/dist/keys/root';
 import {PreKey as SerializedPreKey} from '@wireapp/api-client/dist/commonjs/auth/index';
-import {SessionPayloadBundle} from '../crypto/root';
+import {CryptographyDatabaseRepository, SessionPayloadBundle} from '../crypto/root';
 import {OTRRecipients} from '@wireapp/api-client/dist/commonjs/conversation/index';
 
-export default class CryptographyService {
-  public static STORES = {
-    CLIENTS: 'clients',
+export interface MetaClient extends RegisteredClient {
+  meta: {
+    primary_key: string;
+    is_verified?: boolean;
   };
+}
+
+export default class CryptographyService {
   public cryptobox: Cryptobox;
+  private database: CryptographyDatabaseRepository;
 
   constructor(private storeEngine: CRUDEngine) {
     this.cryptobox = new Cryptobox(storeEngine);
+    this.database = new CryptographyDatabaseRepository(this.storeEngine);
+  }
+
+  public static constructSessionId(userId: string, clientId: string): string {
+    return `${userId}@${clientId}`;
   }
 
   public createCryptobox(): Promise<Array<SerializedPreKey>> {
@@ -51,16 +61,12 @@ export default class CryptographyService {
     });
   }
 
-  public constructSessionId(userId: string, clientId: string): string {
-    return `${userId}@${clientId}`;
-  }
-
   public decrypt(sessionId: string, encodedCiphertext: string): Promise<Uint8Array> {
     const messageBytes: Uint8Array = Decoder.fromBase64(encodedCiphertext).asBytes;
     return this.cryptobox.decrypt(sessionId, messageBytes.buffer);
   }
 
-  private dismantleSessionId(sessionId: string): Array<string> {
+  private static dismantleSessionId(sessionId: string): Array<string> {
     return sessionId.split('@');
   }
 
@@ -73,7 +79,7 @@ export default class CryptographyService {
       for (const clientId in preKeyBundles[userId]) {
         const preKeyPayload: SerializedPreKey = preKeyBundles[userId][clientId];
         const preKey: string = preKeyPayload.key;
-        const sessionId: string = this.constructSessionId(userId, clientId);
+        const sessionId: string = CryptographyService.constructSessionId(userId, clientId);
         encryptions.push(this.encryptPayloadForSession(sessionId, plainText, preKey));
       }
     }
@@ -85,7 +91,7 @@ export default class CryptographyService {
         payloads.forEach((payload: SessionPayloadBundle) => {
           const sessionId: string = payload.sessionId;
           const encrypted: string = payload.encryptedPayload;
-          const [userId, clientId] = this.dismantleSessionId(sessionId);
+          const [userId, clientId] = CryptographyService.dismantleSessionId(sessionId);
           recipients[userId] = recipients[userId] || {};
           recipients[userId][clientId] = encrypted;
         });
@@ -109,27 +115,21 @@ export default class CryptographyService {
   }
 
   public deleteClient(): Promise<string> {
-    return this.storeEngine.delete(CryptographyService.STORES.CLIENTS, store.CryptoboxCRUDStore.KEYS.LOCAL_IDENTITY);
+    return this.database.deleteClient(CryptoboxStore.CryptoboxCRUDStore.KEYS.LOCAL_IDENTITY);
   }
 
-  public loadClient(): Promise<RegisteredClient> {
-    return this.cryptobox.load().then((initialPreKeys: Array<ProteusKeys.PreKey>) => {
-      return this.storeEngine.read<RegisteredClient>(
-        CryptographyService.STORES.CLIENTS,
-        store.CryptoboxCRUDStore.KEYS.LOCAL_IDENTITY
-      );
-    });
+  public async loadClient(): Promise<RegisteredClient> {
+    const initialPreKeys: Array<ProteusKeys.PreKey> = await this.cryptobox.load();
+
+    return this.database.loadClient(CryptoboxStore.CryptoboxCRUDStore.KEYS.LOCAL_IDENTITY);
   }
 
   public saveClient(client: RegisteredClient): Promise<string> {
-    const clientWithMeta = {
+    const clientWithMeta: MetaClient = {
       ...client,
-      meta: {primary_key: store.CryptoboxCRUDStore.KEYS.LOCAL_IDENTITY, is_verified: true},
+      meta: {primary_key: CryptoboxStore.CryptoboxCRUDStore.KEYS.LOCAL_IDENTITY, is_verified: true},
     };
-    return this.storeEngine.create(
-      CryptographyService.STORES.CLIENTS,
-      store.CryptoboxCRUDStore.KEYS.LOCAL_IDENTITY,
-      clientWithMeta
-    );
+
+    return this.database.saveClient(CryptoboxStore.CryptoboxCRUDStore.KEYS.LOCAL_IDENTITY, clientWithMeta);
   }
 }

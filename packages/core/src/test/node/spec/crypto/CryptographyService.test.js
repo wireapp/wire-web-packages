@@ -61,7 +61,7 @@ describe('CryptographyService', () => {
     it('constructs a Session ID by a given User ID and Client ID.', () => {
       const clientId = '1ceb9063fced26d3';
       const userId = 'afbb5d60-1187-4385-9c29-7361dea79647';
-      const actual = cryptographyService.constructSessionId(userId, clientId);
+      const actual = CryptographyService.constructSessionId(userId, clientId);
       expect(actual).toContain(clientId);
       expect(actual).toContain(userId);
     });
@@ -89,7 +89,7 @@ describe('CryptographyService', () => {
     it('gets User ID and Client ID from a Session ID.', () => {
       const clientId = '1ceb9063fced26d3';
       const userId = 'afbb5d60-1187-4385-9c29-7361dea79647';
-      const sessionId = cryptographyService.constructSessionId(userId, clientId);
+      const sessionId = CryptographyService.constructSessionId(userId, clientId);
       const [actualUserId, actualClientId] = cryptographyService.dismantleSessionId(sessionId);
       expect(actualClientId).toBe(clientId);
       expect(actualUserId).toBe(userId);
