@@ -35,14 +35,14 @@ export interface DecoderConfig {
   max_text_length: number;
 }
 
-const MEGABYTE_IN_BYTES = 0x100000;
+const BYTES_IN_MEGABYTE = 0x100000;
 
 const DEFAULT_CONFIG: DecoderConfig = {
   max_array_length: 1000,
-  max_bytes_length: 5 * MEGABYTE_IN_BYTES,
+  max_bytes_length: 5 * BYTES_IN_MEGABYTE,
   max_nesting: 16,
   max_object_size: 1000,
-  max_text_length: 5 * MEGABYTE_IN_BYTES,
+  max_text_length: 5 * BYTES_IN_MEGABYTE,
 };
 
 class Decoder {
