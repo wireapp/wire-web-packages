@@ -17,7 +17,7 @@
  *
  */
 
-import {EncryptedAsset} from '../crypto/root';
+import {EncryptedAsset} from '../cryptography/root';
 const {crypto} = window;
 
 const isEqual = (a: Buffer, b: Buffer): boolean => {

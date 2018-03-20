@@ -1,6 +1,6 @@
 {
   "browser": {
-    "./dist/commonjs/crypto/assetCryptography.node": "./dist/commonjs/crypto/assetCryptography.browser.js"
+    "./dist/commonjs/cryptography/AssetCryptography.node": "./dist/commonjs/cryptography/AssetCryptography.browser.js"
   },
   "dependencies": {
     "@types/node": "9.4.7",

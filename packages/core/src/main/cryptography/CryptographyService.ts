@@ -24,7 +24,7 @@ import {RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/index';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
 import * as ProteusKeys from '@wireapp/proteus/dist/keys/root';
 import {PreKey as SerializedPreKey} from '@wireapp/api-client/dist/commonjs/auth/index';
-import {CryptographyDatabaseRepository, SessionPayloadBundle} from '../crypto/root';
+import {CryptographyDatabaseRepository, SessionPayloadBundle} from '../cryptography/root';
 import {OTRRecipients} from '@wireapp/api-client/dist/commonjs/conversation/index';
 
 export interface MetaClient extends RegisteredClient {

@@ -17,7 +17,7 @@
  *
  */
 
-import {EncryptedAsset} from '../crypto/root';
+import {EncryptedAsset} from '../cryptography/root';
 import * as crypto from 'crypto';
 
 const isEqual = (a: Buffer, b: Buffer): boolean => {

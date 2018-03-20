@@ -20,11 +20,11 @@
 import {Account} from './Account';
 import * as auth from './auth/root';
 import * as conversation from './conversation/root';
-import * as crypto from './crypto/root';
+import * as cryptography from './cryptography/root';
 
 export = {
   Account,
   auth,
   conversation,
-  crypto,
+  cryptography,
 };

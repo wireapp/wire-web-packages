@@ -20,7 +20,7 @@
 const pkg = require('../package.json');
 import {IncomingNotification} from '@wireapp/api-client/dist/commonjs/conversation/index';
 import * as cryptobox from '@wireapp/cryptobox';
-import {CryptographyService, GenericMessageType, PayloadBundle} from './crypto/root';
+import {CryptographyService, GenericMessageType, PayloadBundle} from './cryptography/root';
 import {NotificationService} from './notification/root';
 import {Context, LoginData, PreKey} from '@wireapp/api-client/dist/commonjs/auth/index';
 import {
