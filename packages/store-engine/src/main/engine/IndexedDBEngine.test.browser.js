@@ -25,12 +25,17 @@ describe('StoreEngine.IndexedDBEngine', () => {
 
   let engine = undefined;
 
-  beforeEach(async done => {
-    engine = new IndexedDBEngine();
-    const db = await engine.init(STORE_NAME);
+  async function initEngine() {
+    const storeEngine = new IndexedDBEngine();
+    const db = await storeEngine.init(STORE_NAME);
     db.version(1).stores({
       'the-simpsons': ',firstName,lastName',
     });
+    return storeEngine;
+  }
+
+  beforeEach(async done => {
+    engine = await initEngine();
     done();
   });
 
@@ -87,6 +92,21 @@ describe('StoreEngine.IndexedDBEngine', () => {
   describe('"deleteAll"', () => {
     Object.entries(require('../../test/shared/deleteAll')).map(([description, testFunction]) => {
       it(description, done => testFunction(done, engine));
+    });
+  });
+
+  fdescribe('"purge"', () => {
+    it('deletes the database and all of its entries', async done => {
+      const TABLE_NAME = 'the-simpsons';
+      await engine.create(TABLE_NAME, 'one', {name: 'Alpha'});
+      await engine.create(TABLE_NAME, 'two', {name: 'Bravo'});
+      await engine.create(TABLE_NAME, 'three', {name: 'Charlie'});
+      await engine.create(TABLE_NAME, 'four', {name: 'Delta'});
+      const SAVED_RECORDS = 4;
+      const keys = await engine.readAllPrimaryKeys(TABLE_NAME);
+      expect(keys.length).toBe(SAVED_RECORDS);
+      // await engine.purge();
+      done();
     });
   });
 
