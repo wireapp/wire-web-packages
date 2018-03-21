@@ -9,6 +9,8 @@ interface CRUDEngine {
    */
   init(storeName: string, ...settings: any[]): Promise<any>;
 
+  purge(): Promise<void>;
+
   /**
    * Creates a record by its primary key within a table.
    * @param {string} tableName - Table name
