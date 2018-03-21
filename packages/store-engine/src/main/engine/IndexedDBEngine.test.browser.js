@@ -103,9 +103,15 @@ describe('StoreEngine.IndexedDBEngine', () => {
       await engine.create(TABLE_NAME, 'three', {name: 'Charlie'});
       await engine.create(TABLE_NAME, 'four', {name: 'Delta'});
       const SAVED_RECORDS = 4;
-      const keys = await engine.readAllPrimaryKeys(TABLE_NAME);
+      let keys = await engine.readAllPrimaryKeys(TABLE_NAME);
       expect(keys.length).toBe(SAVED_RECORDS);
-      // await engine.purge();
+
+      await engine.purge();
+
+      engine = await initEngine();
+      keys = await engine.readAllPrimaryKeys(TABLE_NAME);
+      expect(keys.length).toBe(0);
+
       done();
     });
   });
