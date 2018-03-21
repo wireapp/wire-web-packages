@@ -385,11 +385,10 @@ class Account extends EventEmitter {
           const shouldDeleteWholeDatabase = loadedClient.type === ClientType.TEMPORARY;
           if (shouldDeleteWholeDatabase) {
             return this.service!.cryptography.purgeDb().then(() => this.registerClient(loginData, clientInfo));
-          } else {
-            return this.service!.cryptography.deleteCryptographyStores().then(() =>
-              this.registerClient(loginData, clientInfo)
-            );
           }
+          return this.service!.cryptography.deleteCryptographyStores().then(() =>
+            this.registerClient(loginData, clientInfo)
+          );
         }
         throw error;
       });
