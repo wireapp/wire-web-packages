@@ -95,24 +95,9 @@ describe('StoreEngine.IndexedDBEngine', () => {
     });
   });
 
-  fdescribe('"purge"', () => {
-    it('deletes the database and all of its entries', async done => {
-      const TABLE_NAME = 'the-simpsons';
-      await engine.create(TABLE_NAME, 'one', {name: 'Alpha'});
-      await engine.create(TABLE_NAME, 'two', {name: 'Bravo'});
-      await engine.create(TABLE_NAME, 'three', {name: 'Charlie'});
-      await engine.create(TABLE_NAME, 'four', {name: 'Delta'});
-      const SAVED_RECORDS = 4;
-      let keys = await engine.readAllPrimaryKeys(TABLE_NAME);
-      expect(keys.length).toBe(SAVED_RECORDS);
-
-      await engine.purge();
-
-      engine = await initEngine();
-      keys = await engine.readAllPrimaryKeys(TABLE_NAME);
-      expect(keys.length).toBe(0);
-
-      done();
+  describe('"purge"', () => {
+    Object.entries(require('../../test/shared/purge')).map(([description, testFunction]) => {
+      it(description, done => testFunction(done, engine, initEngine));
     });
   });
 
