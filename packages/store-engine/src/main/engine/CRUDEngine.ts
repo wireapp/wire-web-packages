@@ -9,6 +9,10 @@ interface CRUDEngine {
    */
   init(storeName: string, ...settings: any[]): Promise<any>;
 
+  /**
+   * Deletes the store.
+   * @returns {Promise<void>} Resolves if store got deleted.
+   */
   purge(): Promise<void>;
 
   /**
