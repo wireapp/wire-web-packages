@@ -35,7 +35,7 @@ class ClientDatabaseRepository {
 
   constructor(private storeEngine: CRUDEngine) {}
 
-  public getLocalIdentityClient(): Promise<MetaClient> {
+  public getLocalClient(): Promise<MetaClient> {
     return this.getClient(ClientDatabaseRepository.KEYS.LOCAL_IDENTITY);
   }
 
@@ -43,7 +43,7 @@ class ClientDatabaseRepository {
     return this.storeEngine.read<MetaClient>(ClientDatabaseRepository.STORES.CLIENTS, sessionId);
   }
 
-  public deleteLocalIdentityClient(): Promise<string> {
+  public deleteLocalClient(): Promise<string> {
     return this.storeEngine.delete(
       ClientDatabaseRepository.STORES.CLIENTS,
       ClientDatabaseRepository.KEYS.LOCAL_IDENTITY
@@ -62,15 +62,15 @@ class ClientDatabaseRepository {
     return Promise.all(createClientTasks);
   }
 
-  public createLocalIdentityClient(client: RegisteredClient): Promise<MetaClient> {
-    const transformedClient = this.transformLocalIdentityClient(client);
+  public createLocalClient(client: RegisteredClient): Promise<MetaClient> {
+    const transformedClient = this.transformLocalClient(client);
     return this.storeEngine
       .create(ClientDatabaseRepository.STORES.CLIENTS, ClientDatabaseRepository.KEYS.LOCAL_IDENTITY, transformedClient)
       .then(() => transformedClient);
   }
 
-  public updateLocalIdentityClient(client: RegisteredClient): Promise<MetaClient> {
-    const transformedClient = this.transformLocalIdentityClient(client);
+  public updateLocalClient(client: RegisteredClient): Promise<MetaClient> {
+    const transformedClient = this.transformLocalClient(client);
     return this.storeEngine
       .update(ClientDatabaseRepository.STORES.CLIENTS, ClientDatabaseRepository.KEYS.LOCAL_IDENTITY, transformedClient)
       .then(() => transformedClient);
@@ -105,7 +105,7 @@ class ClientDatabaseRepository {
     };
   }
 
-  private transformLocalIdentityClient(client: RegisteredClient, verified: boolean = true): MetaClient {
+  private transformLocalClient(client: RegisteredClient, verified: boolean = true): MetaClient {
     return {
       ...client,
       meta: {primary_key: ClientDatabaseRepository.KEYS.LOCAL_IDENTITY, is_verified: verified},

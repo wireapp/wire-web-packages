@@ -39,26 +39,26 @@ export default class ClientService {
     this.backend = new ClientBackendRepository(this.apiClient);
   }
 
-  public deleteLocalIdentityClient(): Promise<string> {
-    return this.database.deleteLocalIdentityClient();
+  public deleteLocalClient(): Promise<string> {
+    return this.database.deleteLocalClient();
   }
 
-  public getLocalIdentityClient(): Promise<MetaClient> {
-    return this.database.getLocalIdentityClient();
+  public getLocalClient(): Promise<MetaClient> {
+    return this.database.getLocalClient();
   }
 
-  public createLocalIdentityClient(client: RegisteredClient): Promise<MetaClient> {
-    return this.database.createLocalIdentityClient(client);
+  public createLocalClient(client: RegisteredClient): Promise<MetaClient> {
+    return this.database.createLocalClient(client);
   }
 
   public synchronizeClients() {
     return this.backend
       .getClients()
-      .then((registeredClients: RegisteredClient[]) =>
-        registeredClients.filter(client => client.id !== this.apiClient.context!.clientId)
-      )
-      .then((registeredClients: RegisteredClient[]) =>
-        this.database.createClientList(this.apiClient.context!.userId, registeredClients)
-      );
+      .then((registeredClients: RegisteredClient[]) => {
+        return registeredClients.filter(client => client.id !== this.apiClient.context!.clientId);
+      })
+      .then((registeredClients: RegisteredClient[]) => {
+        return this.database.createClientList(this.apiClient.context!.userId, registeredClients);
+      });
   }
 }

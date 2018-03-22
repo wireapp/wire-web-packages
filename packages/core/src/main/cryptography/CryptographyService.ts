@@ -124,9 +124,9 @@ export default class CryptographyService {
     return {sessionId, encryptedPayload};
   }
 
-  public async loadLocalIdentityClient(): Promise<RegisteredClient> {
+  public async loadLocalClient(): Promise<RegisteredClient> {
     const initialPreKeys: Array<ProteusKeys.PreKey> = await this.cryptobox.load();
-    return this.clientService.getLocalIdentityClient();
+    return this.clientService.getLocalClient();
   }
 
   public deleteCryptographyStores(): Promise<boolean[]> {

@@ -370,7 +370,7 @@ class Account extends EventEmitter {
     let loadedClient: RegisteredClient;
 
     return this.service.cryptography
-      .loadLocalIdentityClient()
+      .loadLocalClient()
       .then(client => (loadedClient = client))
       .then(() => this.apiClient.client.api.getClient(loadedClient.id))
       .then(() => {
@@ -503,8 +503,8 @@ class Account extends EventEmitter {
     }
 
     const client = await this.apiClient.client.api.postClient(newClient);
-    await this.service.client.createLocalIdentityClient(client);
-    await this.service.cryptography.loadLocalIdentityClient();
+    await this.service.client.createLocalClient(client);
+    await this.service.cryptography.loadLocalClient();
     await this.service.notification.initializeNotificationStream(client.id);
 
     return client;
