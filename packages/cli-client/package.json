@@ -1,6 +1,6 @@
 {
   "bin": {
-    "wire-cli": "bin/node/index.js"
+    "wire-cli": "dist/commonjs/index.js"
   },
   "dependencies": {
     "@wireapp/core": "2.1.6",
@@ -15,17 +15,16 @@
   },
   "description": "Command-line interface for Wire's secure messaging platform.",
   "files": [
-    "bin",
     "dist"
   ],
   "license": "GPL-3.0",
+  "main": "dist/commonjs/index.js",
   "name": "@wireapp/cli-client",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client",
   "scripts": {
     "build": "yarn build:node && yarn build:cli",
-    "build:cli": "cpx dist/commonjs/index.js bin/node/",
     "build:node": "tsc",
-    "clear": "rimraf dist bin",
+    "clear": "rimraf dist",
     "dist": "yarn clear && yarn build",
     "test": "yarn dist && yarn test:node && yarn test:browser",
     "test:browser": "exit 0",
