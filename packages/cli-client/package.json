@@ -21,7 +21,7 @@
   "name": "@wireapp/cli-client",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client",
   "scripts": {
-    "build": "yarn build:node && yarn build:cli",
+    "build": "yarn build:node",
     "build:node": "tsc",
     "clear": "rimraf dist",
     "dist": "yarn clear && yarn build",
