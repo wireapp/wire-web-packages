@@ -384,7 +384,7 @@ class Account extends EventEmitter {
           error instanceof cryptobox.error.CryptoboxError ||
           error.constructor.name === 'CryptoboxError' ||
           error instanceof RecordNotFoundError ||
-          error.constructor.name === 'CryptoboxError';
+          error.constructor.name === 'RecordNotFoundError';
         const notFoundOnBackend = error.response && error.response.status === StatusCode.NOT_FOUND;
 
         if (notFoundInDatabase) {
