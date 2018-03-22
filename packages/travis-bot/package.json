@@ -15,7 +15,6 @@
     "typescript": "2.7.2"
   },
   "files": [
-    "bin",
     "dist"
   ],
   "license": "GPL-3.0",
