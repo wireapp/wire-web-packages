@@ -42,7 +42,7 @@ export default class CryptographyService {
   private database: CryptographyDatabaseRepository;
 
   constructor(private apiClient: APIClient, private storeEngine: CRUDEngine, private clientService: ClientService) {
-    this.cryptobox = new Cryptobox(storeEngine);
+    this.cryptobox = new Cryptobox(this.storeEngine);
     this.database = new CryptographyDatabaseRepository(this.storeEngine);
   }
 
