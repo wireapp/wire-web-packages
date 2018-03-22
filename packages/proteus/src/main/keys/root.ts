@@ -21,7 +21,8 @@ import IdentityKey from './IdentityKey';
 import IdentityKeyPair from './IdentityKeyPair';
 import KeyPair from './KeyPair';
 import PreKeyBundle from './PreKeyBundle';
+import PreKeyAuth from './PreKeyAuth';
 import PublicKey from './PublicKey';
 import SecretKey from './SecretKey';
 
-export {IdentityKey, IdentityKeyPair, KeyPair, PreKey, PreKeyBundle, PublicKey, SecretKey};
+export {IdentityKey, IdentityKeyPair, KeyPair, PreKey, PreKeyAuth, PreKeyBundle, PublicKey, SecretKey};
