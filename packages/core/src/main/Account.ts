@@ -21,6 +21,7 @@ const pkg = require('../package.json');
 import {IncomingNotification} from '@wireapp/api-client/dist/commonjs/conversation/index';
 import * as cryptobox from '@wireapp/cryptobox';
 import {CryptographyService, GenericMessageType, PayloadBundle} from './cryptography/root';
+import {ClientService} from './client/root';
 import {NotificationService} from './notification/root';
 import {Context, LoginData, PreKey} from '@wireapp/api-client/dist/commonjs/auth/index';
 import {
@@ -52,6 +53,7 @@ class Account extends EventEmitter {
   public context?: Context;
   private protocolBuffers: any = {};
   public service?: {
+    client: ClientService;
     conversation: ConversationService;
     cryptography: CryptographyService;
     notification: NotificationService;
@@ -345,11 +347,13 @@ class Account extends EventEmitter {
         this.protocolBuffers.Text = root.lookup('Text');
       })
       .then(() => {
-        const cryptographyService = new CryptographyService(this.apiClient.config.store);
+        const clientService = new ClientService(this.apiClient, this.apiClient.config.store);
+        const cryptographyService = new CryptographyService(this.apiClient, this.apiClient.config.store, clientService);
         const conversationService = new ConversationService(this.apiClient, this.protocolBuffers, cryptographyService);
         const notificationService = new NotificationService(this.apiClient, this.apiClient.config.store);
 
         this.service = {
+          client: clientService,
           conversation: conversationService,
           cryptography: cryptographyService,
           notification: notificationService,
@@ -366,7 +370,7 @@ class Account extends EventEmitter {
     let loadedClient: RegisteredClient;
 
     return this.service.cryptography
-      .loadClient()
+      .loadLocalIdentityClient()
       .then(client => (loadedClient = client))
       .then(() => this.apiClient.client.api.getClient(loadedClient.id))
       .then(() => {
@@ -385,7 +389,8 @@ class Account extends EventEmitter {
         if (notFoundOnBackend) {
           const shouldDeleteWholeDatabase = loadedClient.type === ClientType.TEMPORARY;
           if (shouldDeleteWholeDatabase) {
-            return this.service!.cryptography.purgeDb()
+            return this.apiClient.config.store
+              .purge()
               .then(() => this.apiClient.init())
               .then(() => this.registerClient(loginData, clientInfo));
           }
@@ -393,6 +398,10 @@ class Account extends EventEmitter {
             this.registerClient(loginData, clientInfo)
           );
         }
+        throw error;
+      })
+      .then((client: RegisteredClient) => this.service!.client.synchronizeClients().then(() => client))
+      .catch((error: Error) => {
         throw error;
       });
   }
@@ -494,7 +503,8 @@ class Account extends EventEmitter {
     }
 
     const client = await this.apiClient.client.api.postClient(newClient);
-    await this.service.cryptography.saveClient(client);
+    await this.service.client.createLocalIdentityClient(client);
+    await this.service.cryptography.loadLocalIdentityClient();
     await this.service.notification.initializeNotificationStream(client.id);
 
     return client;
