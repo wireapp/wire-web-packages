@@ -376,6 +376,10 @@ class Account extends EventEmitter {
             .then((client: RegisteredClient) => this.service!.client.synchronizeClients().then(() => client));
         }
         throw error;
+      })
+      .then((client: RegisteredClient) => this.service!.client.synchronizeClients().then(() => client))
+      .catch((error: Error) => {
+        throw error;
       });
   }
 
