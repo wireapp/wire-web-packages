@@ -19,8 +19,23 @@
 
 import {BackendEvent} from './BackendEvent';
 
+enum CONVERSATION_EVENT {
+  ACCESS_UPDATE = 'conversation.access-update',
+  CODE_DELETE = 'conversation.code-delete',
+  CODE_UPDATE = 'conversation.code-update',
+  CONNECT_REQUEST = 'conversation.connect-request',
+  CREATE = 'conversation.create',
+  DELETE = 'conversation.delete',
+  MEMBER_JOIN = 'conversation.member-join',
+  MEMBER_LEAVE = 'conversation.member-leave',
+  MEMBER_UPDATE = 'conversation.member-update',
+  OTR_MESSAGE_ADD = 'conversation.otr-message-add',
+  RENAME = 'conversation.rename',
+  TYPING = 'conversation.typing',
+}
+
 interface ConversationEvent extends BackendEvent {
-  type: string;
+  type: CONVERSATION_EVENT;
   conversation: string;
   from: string;
   time: string;
@@ -28,7 +43,7 @@ interface ConversationEvent extends BackendEvent {
 }
 
 interface ConversationAccessUpdateEvent extends ConversationEvent {
-  type: 'conversation.access-update';
+  type: CONVERSATION_EVENT.ACCESS_UPDATE;
   data: {
     access: 'private' | 'invite' | 'link' | 'code';
     access_role: 'private' | 'team' | 'activated' | 'non_activated';
@@ -36,12 +51,12 @@ interface ConversationAccessUpdateEvent extends ConversationEvent {
 }
 
 interface ConversationCodeDeleteEvent extends ConversationEvent {
-  type: 'conversation.code-delete';
+  type: CONVERSATION_EVENT.CODE_DELETE;
   // no further data
 }
 
 interface ConversationCodeUpdateEvent extends ConversationEvent {
-  type: 'conversation.code-update';
+  type: CONVERSATION_EVENT.CODE_UPDATE;
   data: {
     key: string;
     code: string;
@@ -50,14 +65,14 @@ interface ConversationCodeUpdateEvent extends ConversationEvent {
 }
 
 interface ConversationConnectRequestEvent extends ConversationEvent {
-  type: 'conversation.connect-request';
+  type: CONVERSATION_EVENT.CONNECT_REQUEST;
   data: {
     recipient: string;
   };
 }
 
 interface ConversationCreateEvent extends ConversationEvent {
-  type: 'conversation.create';
+  type: CONVERSATION_EVENT.CREATE;
   data: {
     id: string;
     type: 0 | 1 | 2 | 3; //TODO: 0: regular, 1: self, 2: one2one, 3: connect
@@ -71,26 +86,26 @@ interface ConversationCreateEvent extends ConversationEvent {
 }
 
 interface ConversationDeleteEvent extends ConversationEvent {
-  type: 'conversation.delete';
+  type: CONVERSATION_EVENT.DELETE;
   // no further data
 }
 
 interface ConversationMemberJoinEvent extends ConversationEvent {
-  type: 'conversation.member-join';
+  type: CONVERSATION_EVENT.MEMBER_JOIN;
   data: {
     user_ids: string[];
   };
 }
 
 interface ConversationMemberLeaveEvent extends ConversationEvent {
-  type: 'conversation.member-leave';
+  type: CONVERSATION_EVENT.MEMBER_LEAVE;
   data: {
     user_ids: string[];
   };
 }
 
 interface ConversationMemberUpdateEvent extends ConversationEvent {
-  type: 'conversation.member-update';
+  type: CONVERSATION_EVENT.MEMBER_UPDATE;
   data: {
     otr_muted?: boolean;
     otr_muted_ref?: string;
@@ -102,7 +117,7 @@ interface ConversationMemberUpdateEvent extends ConversationEvent {
 }
 
 interface ConversationOtrMessageAddEvent extends ConversationEvent {
-  type: 'conversation.member-update';
+  type: CONVERSATION_EVENT.OTR_MESSAGE_ADD;
   data: {
     sender: string;
     recipient: string;
@@ -112,20 +127,21 @@ interface ConversationOtrMessageAddEvent extends ConversationEvent {
 }
 
 interface ConversationRenameEvent extends ConversationEvent {
-  type: 'conversation.rename';
+  type: CONVERSATION_EVENT.RENAME;
   data: {
     name: string;
   };
 }
 
 interface ConversationTypingEvent extends ConversationEvent {
-  type: 'conversation.typing';
+  type: CONVERSATION_EVENT.TYPING;
   data: {
     status: 'started' | 'stopped';
   };
 }
 
 export {
+  CONVERSATION_EVENT,
   ConversationEvent,
   ConversationAccessUpdateEvent,
   ConversationCodeDeleteEvent,

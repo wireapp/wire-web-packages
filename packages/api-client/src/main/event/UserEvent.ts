@@ -19,35 +19,45 @@
 
 import {BackendEvent} from './BackendEvent';
 
+enum USER_EVENT {
+  ACTIVATE = 'user.activate',
+  CLIENT_ADD = 'user.client-add',
+  CLIENT_REMOVE = 'user.client-remove',
+  CONNECTION = 'user.connection',
+  DELETE = 'user.delete',
+  UPDATE = 'user.update',
+}
+
 interface UserEvent extends BackendEvent {
-  type: string;
+  type: USER_EVENT;
 }
 
 interface UserActivateEvent extends UserEvent {
-  type: 'user.activate';
+  type: USER_EVENT.ACTIVATE;
 }
 
 interface UserClientAddEvent extends UserEvent {
-  type: 'user.client-add';
+  type: USER_EVENT.CLIENT_ADD;
 }
 
 interface UserClientRemoveEvent extends UserEvent {
-  type: 'user.client-remove';
+  type: USER_EVENT.CLIENT_REMOVE;
 }
 
 interface UserConnectionEvent extends UserEvent {
-  type: 'user.connection';
+  type: USER_EVENT.CONNECTION;
 }
 
 interface UserDeleteEvent extends UserEvent {
-  type: 'user.delete';
+  type: USER_EVENT.DELETE;
 }
 
 interface UserUpdateEvent extends UserEvent {
-  type: 'user.update';
+  type: USER_EVENT.UPDATE;
 }
 
 export {
+  USER_EVENT,
   UserEvent,
   UserActivateEvent,
   UserClientAddEvent,
