@@ -41,6 +41,9 @@ const StyledCheckbox = Input.withComponent('input').extend.attrs({
   margin-bottom: 0;
 `;
 
+const checkSvg =
+  '<svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 8 6"><path fill="white" d="M2.83 6L8 .72 7.29 0 2.83 4.57.71 2.42 0 3.14z"/></svg>';
+
 const StyledLabel = styled.label`
   display: flex;
   &::before {
@@ -55,9 +58,7 @@ const StyledLabel = styled.label`
   }
 
   ${StyledCheckbox}:checked + &::before {
-    background: #000
-      url('data:image/svg+xml; utf8, <svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 8 6"><path fill="white" d="M2.83 6L8 .72 7.29 0 2.83 4.57.71 2.42 0 3.14z"/></svg>')
-      no-repeat center;
+    background: #000 url('data:image/svg+xml; utf8, ${checkSvg}') no-repeat center;
   }
 `;
 
