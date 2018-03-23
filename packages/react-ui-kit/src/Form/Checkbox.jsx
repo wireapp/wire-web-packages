@@ -35,11 +35,30 @@ const StyledContainerCheckbox = styled.div`
 const StyledCheckbox = Input.withComponent('input').extend.attrs({
   type: 'checkbox',
 })`
-  /* appearance */
-  /* positioning */
-  height: 14px;
-  width: 30px;
+  opacity: 0;
+  height: 16px;
+  width: 16px;
   margin-bottom: 0;
+`;
+
+const StyledLabel = styled.label`
+  display: flex;
+  &::before {
+    content: '';
+    display: inline-block;
+    box-sizing: border-box;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(0, 0, 0, 0.4);
+    border-radius: 4px;
+    margin: 0 8px 0 -16px;
+  }
+
+  ${StyledCheckbox}:checked + &::before {
+    background: #000
+      url('data:image/svg+xml; utf8, <svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 8 6"><path fill="white" d="M2.83 6L8 .72 7.29 0 2.83 4.57.71 2.42 0 3.14z"/></svg>')
+      no-repeat center;
+  }
 `;
 
 const Checkbox = ({id, children, style, ...props}) => {
@@ -49,7 +68,7 @@ const Checkbox = ({id, children, style, ...props}) => {
   return (
     <StyledContainerCheckbox style={style}>
       <StyledCheckbox id={id} {...props} />
-      <label htmlFor={id}>{children}</label>
+      <StyledLabel htmlFor={id}>{children}</StyledLabel>
     </StyledContainerCheckbox>
   );
 };
