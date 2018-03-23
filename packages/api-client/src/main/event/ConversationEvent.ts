@@ -21,54 +21,108 @@ import {BackendEvent} from './BackendEvent';
 
 interface ConversationEvent extends BackendEvent {
   type: string;
+  conversation: string;
+  from: string;
+  time: string;
+  data: {};
 }
 
 interface ConversationAccessUpdateEvent extends ConversationEvent {
   type: 'conversation.access-update';
+  data: {
+    access: 'private' | 'invite' | 'link' | 'code';
+    access_role: 'private' | 'team' | 'activated' | 'non_activated';
+  };
 }
 
 interface ConversationCodeDeleteEvent extends ConversationEvent {
   type: 'conversation.code-delete';
+  // no further data
 }
 
 interface ConversationCodeUpdateEvent extends ConversationEvent {
   type: 'conversation.code-update';
+  data: {
+    key: string;
+    code: string;
+    uri: string;
+  };
 }
 
 interface ConversationConnectRequestEvent extends ConversationEvent {
   type: 'conversation.connect-request';
+  data: {
+    recipient: string;
+  };
 }
 
 interface ConversationCreateEvent extends ConversationEvent {
   type: 'conversation.create';
+  data: {
+    id: string;
+    type: 0 | 1 | 2 | 3; //TODO: 0: regular, 1: self, 2: one2one, 3: connect
+    creator: string;
+    access: 'private' | 'invite' | 'link' | 'code';
+    access_role: 'private' | 'team' | 'activated' | 'non_activated';
+    name: string;
+    members: string[];
+    team?: string;
+  };
 }
 
 interface ConversationDeleteEvent extends ConversationEvent {
   type: 'conversation.delete';
+  // no further data
 }
 
 interface ConversationMemberJoinEvent extends ConversationEvent {
   type: 'conversation.member-join';
+  data: {
+    user_ids: string[];
+  };
 }
 
 interface ConversationMemberLeaveEvent extends ConversationEvent {
   type: 'conversation.member-leave';
+  data: {
+    user_ids: string[];
+  };
 }
 
 interface ConversationMemberUpdateEvent extends ConversationEvent {
   type: 'conversation.member-update';
+  data: {
+    otr_muted?: boolean;
+    otr_muted_ref?: string;
+    otr_archived?: boolean;
+    otr_archived_ref?: string;
+    hidden?: boolean;
+    hidden_ref?: string;
+  };
 }
 
 interface ConversationOtrMessageAddEvent extends ConversationEvent {
   type: 'conversation.member-update';
+  data: {
+    sender: string;
+    recipient: string;
+    text: string;
+    data?: string;
+  };
 }
 
 interface ConversationRenameEvent extends ConversationEvent {
   type: 'conversation.rename';
+  data: {
+    name: string;
+  };
 }
 
 interface ConversationTypingEvent extends ConversationEvent {
   type: 'conversation.typing';
+  data: {
+    status: 'started' | 'stopped';
+  };
 }
 
 export {
