@@ -26,12 +26,7 @@ describe('StoreEngine.IndexedDBEngine', () => {
   let engine = undefined;
 
   async function initEngine(shouldCreateNewEngine = true) {
-    let storeEngine;
-    if (shouldCreateNewEngine) {
-      storeEngine = new IndexedDBEngine();
-    } else {
-      storeEngine = engine;
-    }
+    const storeEngine = shouldCreateNewEngine ? new IndexedDBEngine() : engine;
     const db = await storeEngine.init(STORE_NAME);
     db.version(1).stores({
       'the-simpsons': ',firstName,lastName',
