@@ -63,23 +63,23 @@ interface CRUDEngine {
   readAllPrimaryKeys(tableName: string): Promise<string[]>;
 
   /**
-   * Updates a record with a set of properties.
+   * Updates a record with an object.
    * @param {string} tableName - Table name
    * @param {string} primaryKey - Primary key of record which should get updated.
-   * @param {Object} changes - Updated properties that should be saved for the record
+   * @param {Object} entity - Updated object that should be saved for the record
    * @returns {Promise<string>} Resolves with the primary key of the updated record.
    */
-  update(tableName: string, primaryKey: string, changes: Object): Promise<string>;
+  update<T>(tableName: string, primaryKey: string, entity: T): Promise<string>;
 
   /**
-   * Updates a record with a set of properties.
+   * Updates a record with an object.
    * If the record doesn't exist, The record will be created automatically.
    * @param {string} tableName - Table name
-   * @param {string} primaryKey - Primary key of record which should get updated.
-   * @param {Object} changes - Updated properties that should be saved for the record
-   * @returns {Promise<string>} Resolves with the primary key of the updated record.
+   * @param {string} primaryKey - Primary key of record which should get updated or created.
+   * @param {Object} entity - Updated object that should be saved for the record
+   * @returns {Promise<string>} Resolves with the primary key of the updated or created record.
    */
-  updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string>;
+  updateOrCreate<T>(tableName: string, primaryKey: string, entity: T): Promise<string>;
 }
 
 export default CRUDEngine;

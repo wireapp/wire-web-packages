@@ -74,17 +74,13 @@ export default class IndexedDBEngine implements CRUDEngine {
     return this.db![tableName].toCollection().keys();
   }
 
-  public update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
-    return this.db![tableName].update(primaryKey, changes).then((updatedRecords: number) => {
-      if (updatedRecords === 0) {
-        const message: string = `Record "${primaryKey}" in "${tableName}" could not be found.`;
-        throw new RecordNotFoundError(message);
-      }
-      return primaryKey;
-    });
+  public update<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
+    return this.read<T>(tableName, primaryKey)
+      .then(() => this.delete(tableName, primaryKey))
+      .then(() => this.create<T>(tableName, primaryKey, entity));
   }
 
-  public updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
-    return this.db![tableName].put(changes, primaryKey);
+  public updateOrCreate<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
+    return this.db![tableName].put(entity, primaryKey);
   }
 }

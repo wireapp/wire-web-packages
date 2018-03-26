@@ -98,27 +98,23 @@ export default class LocalStorageEngine implements CRUDEngine {
     return Promise.resolve(primaryKeys);
   }
 
-  public update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
-    return this.read(tableName, primaryKey)
-      .then((entity: Object) => {
-        return Object.assign(entity, changes);
-      })
-      .then((updatedEntity: Object) => {
-        return this.create(tableName, primaryKey, updatedEntity).catch(error => {
-          if (error instanceof RecordAlreadyExistsError) {
-            return this.delete(tableName, primaryKey).then(() => this.create(tableName, primaryKey, updatedEntity));
-          } else {
-            throw error;
-          }
-        });
+  public update<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
+    return this.read<T>(tableName, primaryKey).then(() => {
+      return this.create(tableName, primaryKey, entity).catch(error => {
+        if (error instanceof RecordAlreadyExistsError) {
+          return this.delete(tableName, primaryKey).then(() => this.create<T>(tableName, primaryKey, entity));
+        } else {
+          throw error;
+        }
       });
+    });
   }
 
-  public updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
-    return this.update(tableName, primaryKey, changes)
+  public updateOrCreate<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
+    return this.update<T>(tableName, primaryKey, entity)
       .catch(error => {
         if (error instanceof RecordNotFoundError) {
-          return this.create(tableName, primaryKey, changes);
+          return this.create<T>(tableName, primaryKey, entity);
         }
         throw error;
       })

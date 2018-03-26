@@ -6,16 +6,12 @@ module.exports = {
   'fails if the record does not exist.': (done, engine) => {
     const PRIMARY_KEY = 'primary-key';
 
-    const updates = {
-      age: 177,
-      size: {
-        height: 1080,
-        width: 1920,
-      },
+    const entity = {
+      name: 'Old monitor',
     };
 
     engine
-      .update(TABLE_NAME, PRIMARY_KEY, updates)
+      .update(TABLE_NAME, PRIMARY_KEY, entity)
       .then(() => done.fail('Update on non-existing record should have failed'))
       .catch(error => {
         expect(error).toEqual(jasmine.any(StoreEngine.error.RecordNotFoundError));
@@ -29,7 +25,7 @@ module.exports = {
       name: 'Old monitor',
     };
 
-    const updates = {
+    const newEntity = {
       age: 177,
       size: {
         height: 1080,
@@ -41,14 +37,14 @@ module.exports = {
 
     engine
       .create(TABLE_NAME, PRIMARY_KEY, entity)
-      .then(() => engine.update(TABLE_NAME, PRIMARY_KEY, updates))
+      .then(() => engine.update(TABLE_NAME, PRIMARY_KEY, newEntity))
       .then(primaryKey => engine.read(TABLE_NAME, primaryKey))
       .then(updatedRecord => {
-        expect(updatedRecord.name).toBe(entity.name);
-        expect(updatedRecord.age).toBe(updates.age);
+        expect(updatedRecord.name).toBe(undefined);
+        expect(updatedRecord.age).toBe(newEntity.age);
         expect(Object.keys(updatedRecord.size).length).toBe(expectedAmountOfProperties);
-        expect(updatedRecord.size.height).toBe(updates.size.height);
-        expect(updatedRecord.size.width).toBe(updates.size.width);
+        expect(updatedRecord.size.height).toBe(newEntity.size.height);
+        expect(updatedRecord.size.width).toBe(newEntity.size.width);
         done();
       })
       .catch(done.fail);
