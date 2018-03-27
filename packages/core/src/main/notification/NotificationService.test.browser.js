@@ -24,7 +24,7 @@ const Client = require('@wireapp/api-client');
 
 const UUIDVersion = 4;
 
-fdescribe('NotificationService', () => {
+describe('NotificationService', () => {
   describe('Database "setLastEventDate"', () => {
     let storeName = undefined;
 
