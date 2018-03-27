@@ -389,7 +389,7 @@ class Account extends EventEmitter {
             this.logger.info('Last client was temporary - Deleting database');
             return this.apiClient.config.store
               .purge()
-              .then(() => this.apiClient.init())
+              .then(() => this.apiClient.init(loginData.persist ? ClientType.PERMANENT : ClientType.TEMPORARY))
               .then(() => this.service!.client.register(loginData, clientInfo))
               .then((client: RegisteredClient) => (registeredClient = client))
               .then(() => {
