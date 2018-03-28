@@ -41,9 +41,9 @@ class AccessTokenStore extends EventEmitter {
 
   public async delete(): Promise<void> {
     this.logger.info(
-      `Deleting access token in store ${
+      `Deleting access token in store "${
         this.engine.storeName
-      } on table ${AUTH_TABLE_NAME} with key ${AUTH_ACCESS_TOKEN_KEY}`
+      }" on table "${AUTH_TABLE_NAME}" with key "${AUTH_ACCESS_TOKEN_KEY}"`
     );
     return this.engine.delete(AUTH_TABLE_NAME, AUTH_ACCESS_TOKEN_KEY).then(() => (this.accessToken = undefined));
   }
@@ -51,9 +51,9 @@ class AccessTokenStore extends EventEmitter {
   public async updateToken(accessToken: AccessTokenData): Promise<AccessTokenData> {
     if (this.accessToken !== accessToken) {
       this.logger.info(
-        `Updating access token in store ${
+        `Updating access token in store "${
           this.engine.storeName
-        } on table ${AUTH_TABLE_NAME} with key ${AUTH_ACCESS_TOKEN_KEY}`
+        }" on table "${AUTH_TABLE_NAME}" with key "${AUTH_ACCESS_TOKEN_KEY}"`
       );
       return this.engine
         .delete(AUTH_TABLE_NAME, AUTH_ACCESS_TOKEN_KEY)
@@ -65,9 +65,9 @@ class AccessTokenStore extends EventEmitter {
 
   public async init(): Promise<AccessTokenData | undefined> {
     this.logger.info(
-      `Initialising access token from store ${
+      `Initialising access token from store "${
         this.engine.storeName
-      } on table ${AUTH_TABLE_NAME} with key ${AUTH_ACCESS_TOKEN_KEY}`
+      }" on table "${AUTH_TABLE_NAME}" with key "${AUTH_ACCESS_TOKEN_KEY}"`
     );
     return this.engine
       .read<AccessTokenData>(AUTH_TABLE_NAME, AUTH_ACCESS_TOKEN_KEY)

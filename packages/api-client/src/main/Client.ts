@@ -221,7 +221,7 @@ class Client {
     const dbName = `${this.STORE_NAME_PREFIX}@${this.config.urls.name}@${context.userId}${
       context.clientType ? `@${context.clientType}` : ''
     }`;
-    this.logger.info(`Initialising store with name ${dbName}`);
+    this.logger.info(`Initialising store with name "${dbName}"`);
     const db = await this.config.store.init(dbName);
     const isDexieStore = db && db.constructor.name === 'Dexie';
     const isSchemalessStore = isDexieStore && Object.keys(db._dbSchema).length === 0;
