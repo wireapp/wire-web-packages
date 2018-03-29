@@ -3824,9 +3824,9 @@ gaze@^1.0.0:
   dependencies:
     globule "^1.0.0"
 
-generate-changelog@1.7.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/generate-changelog/-/generate-changelog-1.7.0.tgz#e6321226207d5cbcfe24de39d7ffd65d51698596"
+generate-changelog@1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/generate-changelog/-/generate-changelog-1.7.1.tgz#c0b549de34177e6a5d6414af3d74daea9a3cdc0f"
   dependencies:
     bluebird "^3.0.6"
     commander "^2.9.0"
