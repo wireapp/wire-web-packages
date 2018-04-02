@@ -7384,9 +7384,9 @@ punycode@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.0.tgz#5f863edc89b96db09074bad7947bf09056ca4e7d"
 
-pure-uuid@1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/pure-uuid/-/pure-uuid-1.5.0.tgz#624e806881698dee1bb58a578ec7544b5d6d0d69"
+pure-uuid@1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/pure-uuid/-/pure-uuid-1.5.1.tgz#584ed52894df0967660a39b14679d89497f87dc3"
 
 q@^1.4.1, q@^1.5.1:
   version "1.5.1"
@@ -7510,9 +7510,9 @@ react-hot-loader@4.0.0:
     prop-types "^15.6.0"
     shallowequal "^1.0.2"
 
-react@16.3.0:
-  version "16.3.0"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.3.0.tgz#fc5a01c68f91e9b38e92cf83f7b795ebdca8ddff"
+react@16.2.0:
+  version "16.2.0"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.2.0.tgz#a31bd2dab89bff65d42134fa187f24d054c273ba"
   dependencies:
     fbjs "^0.8.16"
     loose-envify "^1.1.0"
