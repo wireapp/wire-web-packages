@@ -16,7 +16,7 @@
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache",
   "scripts": {
     "build": "yarn build:node && yarn build:browser",
-    "build:browser": "webpack --progress",
+    "build:browser": "webpack --mode=production --progress",
     "build:node": "tsc",
     "clear": "rimraf dist",
     "dist": "yarn clear && yarn build",
