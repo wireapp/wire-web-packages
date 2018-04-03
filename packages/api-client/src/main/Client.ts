@@ -229,9 +229,7 @@ class Client {
       if (this.config.schemaCallback) {
         this.config.schemaCallback(db);
       } else {
-        db.version(1).stores({
-          [AUTH_TABLE_NAME]: '',
-        });
+        db.version(1).stores({});
       }
       // In case the database got purged, db.close() is called automatically and we have to reopen it.
       await db.open();

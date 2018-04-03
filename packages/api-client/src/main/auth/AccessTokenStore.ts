@@ -27,6 +27,10 @@ class AccessTokenStore extends EventEmitter {
     markdown: false,
   });
 
+  public static TOPIC = {
+    ACCESS_TOKEN_REFRESH: 'AccessTokenStore.TOPIC.ACCESS_TOKEN_REFRESH',
+  };
+
   public accessToken: AccessTokenData | undefined;
 
   public async delete(): Promise<void> {
@@ -39,6 +43,7 @@ class AccessTokenStore extends EventEmitter {
     if (this.accessToken !== accessToken) {
       this.logger.info('Updating access token');
       this.accessToken = accessToken;
+      this.emit(AccessTokenStore.TOPIC.ACCESS_TOKEN_REFRESH, this.accessToken);
     }
     return Promise.resolve(this.accessToken);
   }
