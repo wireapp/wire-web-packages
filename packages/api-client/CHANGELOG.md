@@ -3,6 +3,79 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.6.22"></a>
+## [0.6.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.6.21...@wireapp/api-client@0.6.22) (2018-04-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.6.21"></a>
+## [0.6.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.6.20...@wireapp/api-client@0.6.21) (2018-04-03)
+
+
+### Bug Fixes
+
+* **api-client,cryptobox:** Show log messages during tests ([#435](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/435)) ([559759d](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/559759d))
+
+
+
+
+<a name="0.6.20"></a>
+## [0.6.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.6.19...@wireapp/api-client@0.6.20) (2018-04-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.6.19"></a>
+## [0.6.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.6.18...@wireapp/api-client@0.6.19) (2018-03-30)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.6.18"></a>
+## [0.6.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.6.17...@wireapp/api-client@0.6.18) (2018-03-29)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.6.17"></a>
+## [0.6.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.6.16...@wireapp/api-client@0.6.17) (2018-03-29)
+
+
+### Bug Fixes
+
+* **api-client,core:** Login by phone number removed from request ([#434](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/434)) ([c5123fd](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/c5123fd))
+
+
+
+
+<a name="0.6.16"></a>
+## [0.6.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.6.15...@wireapp/api-client@0.6.16) (2018-03-29)
+
+
+### Bug Fixes
+
+* **api-client:** Use updateOrCreate when updating access token ([#433](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/433)) ([10dbae5](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/10dbae5))
+
+
+
+
+<a name="0.6.15"></a>
+## [0.6.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.6.14...@wireapp/api-client@0.6.15) (2018-03-29)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
 <a name="0.6.14"></a>
 ## [0.6.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.6.13...@wireapp/api-client@0.6.14) (2018-03-28)
 
