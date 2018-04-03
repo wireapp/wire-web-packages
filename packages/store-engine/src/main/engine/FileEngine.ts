@@ -17,6 +17,10 @@ export default class FileEngine implements CRUDEngine {
     return Promise.resolve(storeName);
   }
 
+  purge(): Promise<void> {
+    return fs.remove(this.storeName);
+  }
+
   private resolvePath(tableName: string, primaryKey?: string): Promise<string> {
     const isPathTraversal = (...testPaths: string[]): boolean => {
       for (let testPath of testPaths) {
@@ -181,5 +185,16 @@ export default class FileEngine implements CRUDEngine {
         .then((updatedRecord: any) => fs.outputFile(file, updatedRecord))
         .then(() => primaryKey);
     });
+  }
+
+  public updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+    return this.update(tableName, primaryKey, changes)
+      .catch(error => {
+        if (error instanceof RecordNotFoundError) {
+          return this.create(tableName, primaryKey, changes);
+        }
+        throw error;
+      })
+      .then(() => primaryKey);
   }
 }

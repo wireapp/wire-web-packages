@@ -24,9 +24,14 @@ describe('StoreEngine.LocalStorageEngine', () => {
 
   let engine = undefined;
 
+  async function initEngine() {
+    const storeEngine = new LocalStorageEngine();
+    await storeEngine.init(STORE_NAME);
+    return storeEngine;
+  }
+
   beforeEach(async done => {
-    engine = new LocalStorageEngine();
-    await engine.init(STORE_NAME);
+    engine = await initEngine();
     done();
   });
 
@@ -50,6 +55,12 @@ describe('StoreEngine.LocalStorageEngine', () => {
     });
   });
 
+  describe('"purge"', () => {
+    Object.entries(require('../../test/shared/purge')).map(([description, testFunction]) => {
+      it(description, done => testFunction(done, engine, initEngine));
+    });
+  });
+
   describe('"read"', () => {
     Object.entries(require('../../test/shared/read')).map(([description, testFunction]) => {
       it(description, done => testFunction(done, engine));
@@ -70,6 +81,12 @@ describe('StoreEngine.LocalStorageEngine', () => {
 
   describe('"update"', () => {
     Object.entries(require('../../test/shared/update')).map(([description, testFunction]) => {
+      it(description, done => testFunction(done, engine));
+    });
+  });
+
+  describe('"updateOrCreate"', () => {
+    Object.entries(require('../../test/shared/updateOrCreate')).map(([description, testFunction]) => {
       it(description, done => testFunction(done, engine));
     });
   });

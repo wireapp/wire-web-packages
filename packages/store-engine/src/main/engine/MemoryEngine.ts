@@ -11,6 +11,11 @@ export default class MemoryEngine implements CRUDEngine {
     return Promise.resolve();
   }
 
+  purge(): Promise<void> {
+    delete this.stores[this.storeName];
+    return Promise.resolve();
+  }
+
   private prepareTable(tableName: string) {
     if (!this.stores[this.storeName][tableName]) {
       this.stores[this.storeName][tableName] = {};
@@ -90,5 +95,16 @@ export default class MemoryEngine implements CRUDEngine {
         this.stores[this.storeName][tableName][primaryKey] = updatedEntity;
         return primaryKey;
       });
+  }
+
+  public updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+    return this.update(tableName, primaryKey, changes)
+      .catch(error => {
+        if (error instanceof RecordNotFoundError) {
+          return this.create(tableName, primaryKey, changes);
+        }
+        throw error;
+      })
+      .then(() => primaryKey);
   }
 }

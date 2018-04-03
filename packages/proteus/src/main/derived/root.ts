@@ -16,9 +16,8 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-interface SessionPayloadBundle {
-  sessionId: string;
-  encryptedPayload: string;
-}
+import CipherKey from './CipherKey';
+import DerivedSecrets from './DerivedSecrets';
+import MacKey from './MacKey';
 
-export default SessionPayloadBundle;
+export {CipherKey, DerivedSecrets, MacKey};

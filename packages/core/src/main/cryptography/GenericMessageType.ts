@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2016 Wire Swiss GmbH
+ * Copyright (C) 2018 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,10 +17,22 @@
  *
  */
 
-module.exports = {
-  BaseError: require('./cbor/BaseError'),
-  DecodeError: require('./cbor/DecodeError'),
-  Decoder: require('./cbor/Decoder'),
-  Encoder: require('./cbor/Encoder'),
-  Types: require('./cbor/Types'),
-};
+enum GenericMessageType {
+  ASSET = 'asset',
+  CALLING = 'calling',
+  CLEARED = 'cleared',
+  CLIENT_ACTION = 'clientAction',
+  CONFIRMATION = 'confirmation',
+  DELETED = 'deleted',
+  EDITED = 'edited',
+  EPHEMERAL = 'ephemeral',
+  HIDDEN = 'hidden',
+  IMAGE = 'image',
+  KNOCK = 'knock',
+  LAST_READ = 'lastRead',
+  LOCATION = 'location',
+  REACTION = 'reaction',
+  TEXT = 'text',
+}
+
+export default GenericMessageType;

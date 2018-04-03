@@ -16,10 +16,9 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-interface PayloadBundle {
-  content: string;
-  conversation: string;
-  from: string;
-}
+import DecodeError from './DecodeError';
+import DecryptError from './DecryptError';
+import InputError from './InputError';
+import ProteusError from './ProteusError';
 
-export default PayloadBundle;
+export {DecodeError, DecryptError, InputError, ProteusError};

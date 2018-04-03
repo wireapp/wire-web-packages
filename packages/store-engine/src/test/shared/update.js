@@ -1,6 +1,27 @@
+const StoreEngine = require('@wireapp/store-engine');
+
 const TABLE_NAME = 'the-simpsons';
 
 module.exports = {
+  'fails if the record does not exist.': (done, engine) => {
+    const PRIMARY_KEY = 'primary-key';
+
+    const updates = {
+      age: 177,
+      size: {
+        height: 1080,
+        width: 1920,
+      },
+    };
+
+    engine
+      .update(TABLE_NAME, PRIMARY_KEY, updates)
+      .then(() => done.fail('Update on non-existing record should have failed'))
+      .catch(error => {
+        expect(error).toEqual(jasmine.any(StoreEngine.error.RecordNotFoundError));
+        done();
+      });
+  },
   'updates an existing database record.': (done, engine) => {
     const PRIMARY_KEY = 'primary-key';
 

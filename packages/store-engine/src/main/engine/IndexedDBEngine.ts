@@ -23,6 +23,10 @@ export default class IndexedDBEngine implements CRUDEngine {
     return Promise.resolve(this.db);
   }
 
+  purge(): Promise<void> {
+    return this.db ? this.db.delete() : Dexie.delete(this.storeName);
+  }
+
   public create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
     if (entity) {
       return this.db![tableName].add(entity, primaryKey).catch((error: Dexie.DexieError) => {
@@ -71,6 +75,16 @@ export default class IndexedDBEngine implements CRUDEngine {
   }
 
   public update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
-    return this.db![tableName].update(primaryKey, changes).then((updatedRecords: number) => primaryKey);
+    return this.db![tableName].update(primaryKey, changes).then((updatedRecords: number) => {
+      if (updatedRecords === 0) {
+        const message: string = `Record "${primaryKey}" in "${tableName}" could not be found.`;
+        throw new RecordNotFoundError(message);
+      }
+      return primaryKey;
+    });
+  }
+
+  public updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+    return this.db![tableName].put(changes, primaryKey);
   }
 }

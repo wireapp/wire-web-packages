@@ -3,9 +3,9 @@
     "color": "3.0.0",
     "gulp-concat": "2.6.1",
     "react": "16.2.0",
-    "react-dom": "16.2.0",
+    "react-dom": "16.3.0",
     "recompose": "0.26.0",
-    "styled-components": "3.2.3",
+    "styled-components": "3.2.5",
     "styled-normalize": "4.0.0"
   },
   "devDependencies": {
@@ -19,8 +19,8 @@
     "browser-sync": "2.23.6",
     "gulp": "3.9.1",
     "gulp-plumber": "1.2.0",
-    "gulp-sass": "3.2.0",
-    "react-hot-loader": "4.0.0",
+    "gulp-sass": "3.2.1",
+    "react-hot-loader": "4.0.1",
     "rimraf": "2.6.2",
     "webpack": "4.1.1",
     "webpack-cli": "2.0.12",
@@ -44,5 +44,5 @@
     "test": "yarn dist && yarn test:browser",
     "test:browser": "exit 0"
   },
-  "version": "1.0.15"
+  "version": "1.0.22"
 }

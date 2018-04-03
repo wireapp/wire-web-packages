@@ -3,6 +3,98 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.5.4"></a>
+## [0.5.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@0.5.3...@wireapp/store-engine@0.5.4) (2018-03-29)
+
+
+
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+<a name="0.5.3"></a>
+## [0.5.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@0.5.2...@wireapp/store-engine@0.5.3) (2018-03-26)
+
+
+
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+<a name="0.5.2"></a>
+## [0.5.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@0.5.1...@wireapp/store-engine@0.5.2) (2018-03-26)
+
+
+### Bug Fixes
+
+* **api-client,store-engine:** Open IndexedDB after purge ([#415](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/415)) ([ebb802a](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/ebb802a))
+
+
+
+
+<a name="0.5.1"></a>
+## [0.5.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@0.5.0...@wireapp/store-engine@0.5.1) (2018-03-26)
+
+
+
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+<a name="0.5.0"></a>
+# [0.5.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@0.4.2...@wireapp/store-engine@0.5.0) (2018-03-22)
+
+
+### Features
+
+* **store-engine:** updateOrCreate ([#404](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/404)) ([fcddf64](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/fcddf64))
+
+
+
+
+<a name="0.4.2"></a>
+## [0.4.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@0.4.1...@wireapp/store-engine@0.4.2) (2018-03-22)
+
+
+
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+<a name="0.4.1"></a>
+## [0.4.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@0.4.0...@wireapp/store-engine@0.4.1) (2018-03-21)
+
+
+
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+<a name="0.4.0"></a>
+# [0.4.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@0.3.9...@wireapp/store-engine@0.4.0) (2018-03-21)
+
+
+### Features
+
+* **store-engine:** Add "purge" to delete the database ([#393](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/393)) ([37a0b10](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/37a0b10))
+
+
+
+
+<a name="0.3.9"></a>
+## [0.3.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@0.3.8...@wireapp/store-engine@0.3.9) (2018-03-20)
+
+
+### Bug Fixes
+
+* **api-client,cryptobox,store-engine:** Simplify error constructors ([#384](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/384)) ([fdbae30](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/fdbae30))
+
+
+
+
+<a name="0.3.8"></a>
+## [0.3.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@0.3.7...@wireapp/store-engine@0.3.8) (2018-03-17)
+
+
+
+
+**Note:** Version bump only for package @wireapp/store-engine
+
 <a name="0.3.7"></a>
 ## [0.3.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@0.3.6...@wireapp/store-engine@0.3.7) (2018-03-14)
 

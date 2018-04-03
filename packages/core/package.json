@@ -1,12 +1,16 @@
 {
+  "browser": {
+    "./dist/commonjs/cryptography/AssetCryptography.node": "./dist/commonjs/cryptography/AssetCryptography.browser.js"
+  },
   "dependencies": {
-    "@types/node": "9.4.7",
-    "@wireapp/api-client": "0.5.22",
-    "@wireapp/cryptobox": "8.2.4",
-    "@wireapp/store-engine": "0.3.7",
+    "@types/node": "9.6.1",
+    "@wireapp/api-client": "0.6.22",
+    "@wireapp/cryptobox": "8.3.13",
+    "@wireapp/store-engine": "0.5.4",
     "bazinga64": "5.0.3",
+    "logdown": "3.2.3",
     "protobufjs": "6.8.6",
-    "pure-uuid": "1.5.0"
+    "pure-uuid": "1.5.1"
   },
   "devDependencies": {
     "cross-env": "5.1.4",
@@ -44,5 +48,5 @@
     "test:node": "jasmine --config=src/test/node/support/jasmine.json"
   },
   "types": "./dist/Account.d.ts",
-  "version": "2.0.77"
+  "version": "2.1.35"
 }

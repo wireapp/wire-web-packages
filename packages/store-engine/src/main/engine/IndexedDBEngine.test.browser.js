@@ -25,12 +25,18 @@ describe('StoreEngine.IndexedDBEngine', () => {
 
   let engine = undefined;
 
-  beforeEach(async done => {
-    engine = new IndexedDBEngine();
-    const db = await engine.init(STORE_NAME);
+  async function initEngine(shouldCreateNewEngine = true) {
+    const storeEngine = shouldCreateNewEngine ? new IndexedDBEngine() : engine;
+    const db = await storeEngine.init(STORE_NAME);
     db.version(1).stores({
       'the-simpsons': ',firstName,lastName',
     });
+    await db.open();
+    return storeEngine;
+  }
+
+  beforeEach(async done => {
+    engine = await initEngine();
     done();
   });
 
@@ -90,6 +96,12 @@ describe('StoreEngine.IndexedDBEngine', () => {
     });
   });
 
+  describe('"purge"', () => {
+    Object.entries(require('../../test/shared/purge')).map(([description, testFunction]) => {
+      it(description, done => testFunction(done, engine, initEngine));
+    });
+  });
+
   describe('"read"', () => {
     Object.entries(require('../../test/shared/read')).map(([description, testFunction]) => {
       it(description, done => testFunction(done, engine));
@@ -110,6 +122,12 @@ describe('StoreEngine.IndexedDBEngine', () => {
 
   describe('"update"', () => {
     Object.entries(require('../../test/shared/update')).map(([description, testFunction]) => {
+      it(description, done => testFunction(done, engine));
+    });
+  });
+
+  describe('"updateOrCreate"', () => {
+    Object.entries(require('../../test/shared/updateOrCreate')).map(([description, testFunction]) => {
       it(description, done => testFunction(done, engine));
     });
   });

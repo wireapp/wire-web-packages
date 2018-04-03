@@ -33,12 +33,6 @@ import Envelope from '../message/Envelope';
 import ChainKey from './ChainKey';
 import MessageKeys from './MessageKeys';
 
-export interface RecvChainTriple extends Array<ChainKey | MessageKeys | Array<MessageKeys>> {
-  0: ChainKey;
-  1: MessageKeys;
-  2: Array<MessageKeys>;
-}
-
 class RecvChain {
   chain_key: ChainKey;
   message_keys: Array<MessageKeys>;
@@ -52,7 +46,7 @@ class RecvChain {
   }
 
   static new(chain_key: ChainKey, public_key: PublicKey): RecvChain {
-    const rc = ClassUtil.new_instance<RecvChain>(RecvChain);
+    const rc = ClassUtil.new_instance(RecvChain);
     rc.chain_key = chain_key;
     rc.ratchet_key = public_key;
     rc.message_keys = [];
@@ -85,7 +79,7 @@ class RecvChain {
     return mk.decrypt(msg.cipher_text);
   }
 
-  stage_message_keys(msg: CipherMessage): RecvChainTriple {
+  stage_message_keys(msg: CipherMessage): [ChainKey, MessageKeys, Array<MessageKeys>] {
     const num = msg.counter - this.chain_key.idx;
     if (num > RecvChain.MAX_COUNTER_GAP) {
       if (this.chain_key.idx === 0) {
@@ -149,7 +143,7 @@ class RecvChain {
   }
 
   static decode(decoder: CBOR.Decoder): RecvChain {
-    const self = ClassUtil.new_instance<RecvChain>(RecvChain);
+    const self = ClassUtil.new_instance(RecvChain);
 
     const nprops = decoder.object();
     for (let index = 0; index <= nprops - 1; index++) {

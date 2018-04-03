@@ -51,11 +51,6 @@ export interface IntermediateSessionState {
   };
 }
 
-export interface SessionFromMessageTuple extends Array<Session | Uint8Array> {
-  0: Session;
-  1: Uint8Array;
-}
-
 export class Session {
   static MAX_RECV_CHAINS = 5;
   static MAX_SESSION_STATES = 100;
@@ -87,7 +82,7 @@ export class Session {
 
     const session_tag = SessionTag.new();
 
-    const session = ClassUtil.new_instance<Session>(this);
+    const session = ClassUtil.new_instance(this);
     session.session_tag = session_tag;
     session.local_identity = local_identity;
     session.remote_identity = remote_pkbundle.identity_key;
@@ -102,7 +97,7 @@ export class Session {
     our_identity: IdentityKeyPair,
     prekey_store: PreKeyStore,
     envelope: Envelope
-  ): Promise<SessionFromMessageTuple> {
+  ): Promise<[Session, Uint8Array]> {
     return new Promise((resolve, reject) => {
       const pkmsg = (() => {
         if (envelope.message instanceof CipherMessage) {
@@ -120,7 +115,7 @@ export class Session {
         }
       })();
 
-      const session = ClassUtil.new_instance<Session>(Session);
+      const session = ClassUtil.new_instance(Session);
       session.session_tag = pkmsg.message.session_tag;
       session.local_identity = our_identity;
       session.remote_identity = pkmsg.identity_key;
@@ -182,7 +177,7 @@ export class Session {
       this.session_states[tag.toString()] = {
         idx: this.counter,
         state: state,
-        tag: tag,
+        tag,
       };
       this.counter++;
     }
@@ -355,7 +350,7 @@ export class Session {
   }
 
   static decode(local_identity: IdentityKeyPair, decoder: CBOR.Decoder): Session {
-    const self = ClassUtil.new_instance<Session>(this);
+    const self = ClassUtil.new_instance(this);
 
     const nprops = decoder.object();
     for (let index = 0; index <= nprops - 1; index++) {
@@ -381,7 +376,7 @@ export class Session {
           break;
         }
         case 4: {
-          switch (<any>decoder.optional(() => decoder.object())) {
+          switch (decoder.optional(() => decoder.object())) {
             case null:
               self.pending_prekey = null;
               break;
@@ -405,17 +400,15 @@ export class Session {
         }
         case 5: {
           self.session_states = {};
-          // needs simplification
-          for (
-            let idx = 0, ref = decoder.object() - 1, subindex = 0;
-            0 <= ref ? subindex <= ref : subindex >= ref;
-            idx = 0 <= ref ? ++subindex : --subindex
-          ) {
+
+          const nprops = decoder.object();
+
+          for (let index = 0; index <= nprops - 1; index++) {
             const tag = SessionTag.decode(decoder);
             self.session_states[tag.toString()] = {
-              idx,
+              idx: index,
               state: SessionState.decode(decoder),
-              tag: tag,
+              tag,
             };
           }
           break;

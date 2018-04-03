@@ -1,21 +1,23 @@
-//
-// Wire
-// Copyright (C) 2018 Wire Swiss GmbH
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program. If not, see http://www.gnu.org/licenses/.
-//
+/*
+ * Wire
+ * Copyright (C) 2018 Wire Swiss GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see http://www.gnu.org/licenses/.
+ *
+ */
 
+const logdown = require('logdown');
 import {Config} from './Config';
 import {AccessTokenData, AuthAPI, Context, LoginData, RegisterData, AUTH_TABLE_NAME} from './auth';
 import {AccessTokenStore} from './auth/';
@@ -28,6 +30,7 @@ import {ConversationAPI} from './conversation/';
 import {GiphyAPI} from './giphy/';
 import {HttpClient} from './http/';
 import {InvitationAPI} from './invitation/';
+import {NotificationAPI} from './notification/';
 import {MemberAPI, PaymentAPI, TeamAPI, TeamInvitationAPI} from './team/';
 import {SelfAPI} from './self/';
 import {UserAPI} from './user/';
@@ -38,6 +41,11 @@ import {retrieveCookie} from './shims/node/cookie';
 const VERSION = require('../../package.json').version;
 
 class Client {
+  private logger: any = logdown('@wireapp/api-client/Client', {
+    logger: console,
+    markdown: false,
+  });
+
   private STORE_NAME_PREFIX: string = 'wire';
   // APIs
   public asset: {api: AssetAPI};
@@ -47,6 +55,7 @@ class Client {
   public conversation: {api: ConversationAPI};
   public giphy: {api: GiphyAPI};
   public invitation: {api: InvitationAPI};
+  public notification: {api: NotificationAPI};
   public self: {api: SelfAPI};
   public teams: {
     team: {api?: TeamAPI};
@@ -71,7 +80,7 @@ class Client {
 
   constructor(public config: Config = new Config()) {
     this.config = new Config(config.store, config.urls, config.schemaCallback);
-    this.accessTokenStore = new AccessTokenStore(this.config.store);
+    this.accessTokenStore = new AccessTokenStore();
 
     const httpClient = new HttpClient(this.config.urls.rest, this.accessTokenStore, this.config.store);
 
@@ -101,6 +110,9 @@ class Client {
     this.invitation = {
       api: new InvitationAPI(this.transport.http),
     };
+    this.notification = {
+      api: new NotificationAPI(this.transport.http),
+    };
     this.self = {
       api: new SelfAPI(this.transport.http),
     };
@@ -125,16 +137,13 @@ class Client {
     };
   }
 
-  public init(): Promise<Context> {
+  public init(clientType?: ClientType): Promise<Context> {
     let context: Context;
     let accessToken: AccessTokenData;
-    return this.accessTokenStore
-      .init()
-      .then(
-        (accessToken: AccessTokenData | undefined) => (accessToken ? accessToken : this.transport.http.postAccess())
-      )
+    return this.transport.http
+      .postAccess()
       .then((createdAccessToken: AccessTokenData) => {
-        context = this.createContext(createdAccessToken.user);
+        context = this.createContext(createdAccessToken.user, undefined, clientType);
         accessToken = createdAccessToken;
       })
       .then(() => this.initEngine(context))
@@ -165,11 +174,13 @@ class Client {
       .then(() => context);
   }
 
-  public register(userAccount: RegisterData): Promise<Context> {
+  public register(userAccount: RegisterData, persist: boolean = true): Promise<Context> {
     return Promise.resolve()
       .then(() => this.context && this.logout())
       .then(() => this.auth.api.postRegister(userAccount))
-      .then((user: User) => this.createContext(user.id))
+      .then((user: User) =>
+        this.createContext(user.id, undefined, persist ? ClientType.PERMANENT : ClientType.TEMPORARY)
+      )
       .then((context: Context) => this.initEngine(context))
       .then(() => this.init());
   }
@@ -207,21 +218,21 @@ class Client {
   }
 
   private async initEngine(context: Context) {
-    const db = await this.config.store.init(
-      `${this.STORE_NAME_PREFIX}@${this.config.urls.name}@${context.userId}${
-        context.clientType ? `@${context.clientType}` : ''
-      }`
-    );
+    const dbName = `${this.STORE_NAME_PREFIX}@${this.config.urls.name}@${context.userId}${
+      context.clientType ? `@${context.clientType}` : ''
+    }`;
+    this.logger.info(`Initialising store with name "${dbName}"`);
+    const db = await this.config.store.init(dbName);
     const isDexieStore = db && db.constructor.name === 'Dexie';
     const isSchemalessStore = isDexieStore && Object.keys(db._dbSchema).length === 0;
     if (isSchemalessStore) {
       if (this.config.schemaCallback) {
         this.config.schemaCallback(db);
       } else {
-        db.version(1).stores({
-          [AUTH_TABLE_NAME]: '',
-        });
+        db.version(1).stores({});
       }
+      // In case the database got purged, db.close() is called automatically and we have to reopen it.
+      await db.open();
     }
     return this.config.store;
   }
