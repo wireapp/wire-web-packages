@@ -54,7 +54,7 @@
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client",
   "scripts": {
     "build": "yarn build:node && yarn build:browser",
-    "build:browser": "webpack --config ./webpack.browser.js --mode production",
+    "build:browser": "webpack --config ./webpack.browser.js --mode=production",
     "build:node": "tsc",
     "clear": "rimraf dist",
     "coverage": "istanbul cover --report html ./node_modules/jasmine/bin/jasmine.js",

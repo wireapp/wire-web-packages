@@ -44,7 +44,7 @@
     "dist": "yarn clear && yarn build",
     "start": "rimraf .tmp && yarn dist && node index.js",
     "test": "yarn dist && yarn test:node && yarn test:browser",
-    "test:browser": "webpack && karma start",
+    "test:browser": "webpack --mode=development && karma start",
     "test:node": "jasmine --config=src/test/node/support/jasmine.json"
   },
   "types": "./dist/Account.d.ts",

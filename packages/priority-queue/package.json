@@ -31,7 +31,7 @@
     "clear": "rimraf dist",
     "dist": "yarn clear && yarn build",
     "test": "yarn dist && yarn test:node && yarn test:browser",
-    "test:browser": "webpack && karma start",
+    "test:browser": "webpack --mode=development && karma start",
     "test:node": "cross-env JASMINE_CONFIG_PATH=src/test/node/support/jasmine.json jasmine"
   },
   "types": "./dist/index.d.ts",
