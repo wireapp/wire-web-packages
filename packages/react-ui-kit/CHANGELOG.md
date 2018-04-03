@@ -3,6 +3,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="1.0.23"></a>
+## [1.0.23](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.0.22...@wireapp/react-ui-kit@1.0.23) (2018-04-03)
+
+
+### Bug Fixes
+
+* input block margins ([#447](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/447)) ([8a5461f](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/8a5461f))
+
+
+
+
+<a name="1.0.22"></a>
+## [1.0.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.0.21...@wireapp/react-ui-kit@1.0.22) (2018-04-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.0.21"></a>
+## [1.0.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.0.20...@wireapp/react-ui-kit@1.0.21) (2018-04-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.0.20"></a>
+## [1.0.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.0.19...@wireapp/react-ui-kit@1.0.20) (2018-03-30)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.0.19"></a>
+## [1.0.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.0.18...@wireapp/react-ui-kit@1.0.19) (2018-03-28)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Override InputSubmitCombo paddings ([#426](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/426)) ([a376eb7](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/a376eb7))
+
+
+
+
+<a name="1.0.18"></a>
+## [1.0.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.0.17...@wireapp/react-ui-kit@1.0.18) (2018-03-27)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Checkmark inside the checkbox ([#421](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/421)) ([429975a](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/429975a))
+
+
+
+
+<a name="1.0.17"></a>
+## [1.0.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.0.16...@wireapp/react-ui-kit@1.0.17) (2018-03-26)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
 <a name="1.0.16"></a>
 ## 1.0.16 (2018-03-23)
 
