@@ -351,10 +351,8 @@ class Account extends EventEmitter {
       .then(() => this.service!.client.getLocalClient())
       .then(client => (loadedClient = client))
       .then(() => this.apiClient.client.api.getClient(loadedClient.id))
-      .then(() => {
-        this.service!.conversation.setClientID(<string>this.apiClient.context!.clientId);
-        return {isNewClient: false, localClient: loadedClient};
-      })
+      .then(() => this.service!.conversation.setClientID(<string>this.apiClient.context!.clientId))
+      .then(() => ({isNewClient: false, localClient: loadedClient}))
       .catch(error => {
         let registeredClient: RegisteredClient;
 
@@ -408,9 +406,7 @@ class Account extends EventEmitter {
         return this.service!.notification.initializeNotificationStream(registeredClient.id);
       })
       .then(() => this.service!.client.synchronizeClients())
-      .then(() => {
-        return {isNewClient: true, localClient: registeredClient};
-      });
+      .then(() => ({isNewClient: true, localClient: registeredClient}));
   }
 
   private resetContext(): Promise<void> {
