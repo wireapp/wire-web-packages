@@ -80,7 +80,7 @@ class Client {
 
   constructor(public config: Config = new Config()) {
     this.config = new Config(config.store, config.urls, config.schemaCallback);
-    this.accessTokenStore = new AccessTokenStore(this.config.store);
+    this.accessTokenStore = new AccessTokenStore();
 
     const httpClient = new HttpClient(this.config.urls.rest, this.accessTokenStore, this.config.store);
 
