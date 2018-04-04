@@ -9,10 +9,10 @@
     "@babel/highlight" "7.0.0-beta.40"
 
 "@babel/code-frame@^7.0.0-beta.35":
-  version "7.0.0-beta.42"
-  resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.0.0-beta.42.tgz#a9c83233fa7cd06b39dc77adbb908616ff4f1962"
+  version "7.0.0-beta.44"
+  resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.0.0-beta.44.tgz#2a02643368de80916162be70865c97774f3adbd9"
   dependencies:
-    "@babel/highlight" "7.0.0-beta.42"
+    "@babel/highlight" "7.0.0-beta.44"
 
 "@babel/generator@7.0.0-beta.40":
   version "7.0.0-beta.40"
@@ -46,9 +46,9 @@
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
-"@babel/highlight@7.0.0-beta.42":
-  version "7.0.0-beta.42"
-  resolved "https://registry.yarnpkg.com/@babel/highlight/-/highlight-7.0.0-beta.42.tgz#a502a1c0d6f99b2b0e81d468a1b0c0e81e3f3623"
+"@babel/highlight@7.0.0-beta.44":
+  version "7.0.0-beta.44"
+  resolved "https://registry.yarnpkg.com/@babel/highlight/-/highlight-7.0.0-beta.44.tgz#18c94ce543916a80553edcdcf681890b200747d5"
   dependencies:
     chalk "^2.0.0"
     esutils "^2.0.2"
@@ -1858,6 +1858,10 @@ class-utils@^0.3.5:
     define-property "^0.2.5"
     isobject "^3.0.0"
     static-extend "^0.1.1"
+
+cli-command-parser@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/cli-command-parser/-/cli-command-parser-1.0.3.tgz#377af3ce60ad2d8a34a7e5eae4b395d491b0d652"
 
 cli-cursor@^1.0.1, cli-cursor@^1.0.2:
   version "1.0.2"
@@ -5700,12 +5704,13 @@ limiter@^1.0.5:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/limiter/-/limiter-1.1.2.tgz#229d8055891c8b11af9e0ee5200e8e09bb3dcbeb"
 
-lint-staged@7.0.2:
-  version "7.0.2"
-  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-7.0.2.tgz#c99f6800e0525fa9c16f04c13ebe137edfd4fcd7"
+lint-staged@7.0.3:
+  version "7.0.3"
+  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-7.0.3.tgz#c2c30bd2821ae9c6043141179b9a03793ad3da08"
   dependencies:
     app-root-path "^2.0.1"
     chalk "^2.3.1"
+    cli-command-parser "^1.0.3"
     commander "^2.14.1"
     cosmiconfig "^4.0.0"
     debug "^3.1.0"
