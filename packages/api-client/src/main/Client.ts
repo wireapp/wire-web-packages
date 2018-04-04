@@ -178,11 +178,7 @@ class Client {
     return Promise.resolve()
       .then(() => this.context && this.logout())
       .then(() => this.auth.api.postRegister(userAccount))
-      .then((user: User) =>
-        this.createContext(user.id, undefined, persist ? ClientType.PERMANENT : ClientType.TEMPORARY)
-      )
-      .then((context: Context) => this.initEngine(context))
-      .then(() => this.init());
+      .then(() => this.init(persist ? ClientType.PERMANENT : ClientType.TEMPORARY));
   }
 
   public logout(): Promise<void> {
