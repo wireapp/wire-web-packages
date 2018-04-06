@@ -18,6 +18,13 @@
  */
 
 import {BackendEvent} from './BackendEvent';
+import {
+  CONVERSATION_TYPE,
+  CONVERSATION_ACCESS,
+  CONVERSATION_ACCESS_ROLE,
+  ConversationMembers,
+  Conversation,
+} from '../conversation';
 
 enum CONVERSATION_EVENT {
   ACCESS_UPDATE = 'conversation.access-update',
@@ -34,30 +41,9 @@ enum CONVERSATION_EVENT {
   TYPING = 'conversation.typing',
 }
 
-enum CONVERSATION_ACCESS_ROLE {
-  ACTIVATED = 'activated',
-  PRIVATE = 'private',
-  TEAM = 'team',
-  NON_ACTIVATED = 'non_activated',
-}
-
-enum CONVERSATION_ACCESS {
-  PRIVATE = 'private',
-  INVITE = 'invite',
-  LINK = 'link',
-  CODE = 'code',
-}
-
 enum CONVERSATION_TYPING {
   STARTED = 'started',
   STOPPED = 'stopped',
-}
-
-enum CONVERSATION_TYPE {
-  REGULAR = 0,
-  SELF = 1,
-  ONE_TO_ONE = 2,
-  CONNECT = 3,
 }
 
 interface ConversationEvent extends BackendEvent {
@@ -107,24 +93,7 @@ interface ConversationConnectRequestEvent extends ConversationEvent {
 
 interface ConversationCreateEvent extends ConversationEvent {
   type: CONVERSATION_EVENT.CREATE;
-  data: {
-    id: string;
-    type: CONVERSATION_TYPE.REGULAR | CONVERSATION_TYPE.SELF | CONVERSATION_TYPE.ONE_TO_ONE | CONVERSATION_TYPE.CONNECT;
-    creator: string;
-    access:
-      | CONVERSATION_ACCESS.PRIVATE
-      | CONVERSATION_ACCESS.INVITE
-      | CONVERSATION_ACCESS.LINK
-      | CONVERSATION_ACCESS.CODE;
-    access_role:
-      | CONVERSATION_ACCESS_ROLE.ACTIVATED
-      | CONVERSATION_ACCESS_ROLE.PRIVATE
-      | CONVERSATION_ACCESS_ROLE.TEAM
-      | CONVERSATION_ACCESS_ROLE.NON_ACTIVATED;
-    name: string;
-    members: string[];
-    team?: string;
-  };
+  data: Conversation;
 }
 
 interface ConversationDeleteEvent extends ConversationEvent {
@@ -184,9 +153,6 @@ interface ConversationTypingEvent extends ConversationEvent {
 
 export {
   CONVERSATION_EVENT,
-  CONVERSATION_ACCESS,
-  CONVERSATION_ACCESS_ROLE,
-  CONVERSATION_TYPE,
   CONVERSATION_TYPING,
   ConversationEvent,
   ConversationAccessUpdateEvent,
