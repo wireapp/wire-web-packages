@@ -5,7 +5,7 @@
   "dependencies": {
     "@types/generate-changelog": "1.7.0",
     "@types/node": "9.6.2",
-    "@wireapp/core": "2.1.42",
+    "@wireapp/core": "2.1.44",
     "generate-changelog": "1.7.1"
   },
   "description": "A Travis deployment notification bot.",
@@ -26,8 +26,9 @@
     "build:node": "tsc",
     "clear": "rimraf dist",
     "dist": "yarn clear && yarn build",
-    "test": "yarn dist"
+    "test": "exit 0",
+    "test:project": "yarn dist && yarn test"
   },
   "types": "dist/index.d.ts",
-  "version": "0.1.52"
+  "version": "0.1.54"
 }
