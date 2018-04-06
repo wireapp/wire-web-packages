@@ -4,8 +4,8 @@
     "jasmine": "3.1.0",
     "rimraf": "2.6.1",
     "typescript": "2.7.2",
-    "webpack": "4.4.1",
-    "webpack-cli": "2.0.12"
+    "webpack": "4.5.0",
+    "webpack-cli": "2.0.14"
   },
   "files": [
     "dist"
