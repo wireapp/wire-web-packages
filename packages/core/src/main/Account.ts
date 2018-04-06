@@ -373,7 +373,7 @@ class Account extends EventEmitter {
                 .then(() => this.apiClient.init(loginData.persist ? ClientType.PERMANENT : ClientType.TEMPORARY))
                 .then(() => this.registerClient(loginData, clientInfo));
             }
-            this.logger.info('Last client was permanent - Deleting cryptograpy stores');
+            this.logger.info('Last client was permanent - Deleting cryptography stores');
             return this.service!.cryptography.deleteCryptographyStores().then(() =>
               this.registerClient(loginData, clientInfo)
             );
