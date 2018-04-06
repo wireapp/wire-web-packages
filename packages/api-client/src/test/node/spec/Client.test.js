@@ -41,21 +41,18 @@ describe('Client', () => {
       const client = new Client();
       expect(client.transport.http.baseURL).toBe(Client.BACKEND.PRODUCTION.rest);
       expect(client.transport.ws.baseURL).toBe(Client.BACKEND.PRODUCTION.ws);
-      expect(client.transport.http.accessTokenStore.engine).toBeDefined();
     });
 
     it('constructs StoreEngine when only the URLs is provided', () => {
       const client = new Client({urls: Client.BACKEND.PRODUCTION});
       expect(client.transport.http.baseURL).toBe(Client.BACKEND.PRODUCTION.rest);
       expect(client.transport.ws.baseURL).toBe(Client.BACKEND.PRODUCTION.ws);
-      expect(client.transport.http.accessTokenStore.engine).toBeDefined();
     });
 
     it('constructs URLs when only the StoreEngine is provided', () => {
       const client = new Client({store: new MemoryEngine()});
       expect(client.transport.http.baseURL).toBe(Client.BACKEND.PRODUCTION.rest);
       expect(client.transport.ws.baseURL).toBe(Client.BACKEND.PRODUCTION.ws);
-      expect(client.transport.http.accessTokenStore.engine).toBeDefined();
     });
 
     it('constructs schema callback when provided', () => {
@@ -247,7 +244,13 @@ describe('Client', () => {
     });
 
     it('automatically gets an access token after registration', done => {
-      const client = new Client();
+      const client = new Client({
+        schemaCallback: db => {
+          db.version(1).stores({
+            [AUTH_TABLE_NAME]: '',
+          });
+        },
+      });
       client
         .register(registerData)
         .then(context => {

@@ -17,21 +17,26 @@
  *
  */
 
-import {Input, InputSubmitCombo} from './';
-import {COLOR} from '../Identity';
-import styled from 'styled-components';
+const {execSync} = require('child_process');
 
-const InputBlock = styled.div`
-  background-color: ${COLOR.GRAY_LIGHTEN_88};
-  border-radius: 4px;
-  box-shadow: inset 16px 16px 0 ${COLOR.WHITE}, inset -16px -16px 0 ${COLOR.WHITE};
-  margin-bottom: 16px;
-  & > ${() => Input} {
-    margin: 0;
-  }
-  & > ${() => Input} + ${() => Input}, & > ${() => Input} + ${() => InputSubmitCombo} {
-    margin: 1px 0 0;
-  }
-`;
+let output;
+console.info('Checking for updated packages');
+try {
+  output = execSync(`npx lerna updated`);
+} catch (error) {
+  console.info(`No project updates - skipping tests`);
+  process.exit(0);
+}
 
-export {InputBlock};
+const updatedProjects = output
+  .toString()
+  .replace(/- /g, '')
+  .match(/[^\r\n]+/g);
+
+console.info('Building all packages');
+execSync(`yarn dist`, {stdio: [0, 1]});
+
+updatedProjects.forEach(project => {
+  console.info(`Running tests for project "${project}"`);
+  execSync(`npx lerna run --scope ${project} test`, {stdio: [0, 1]});
+});
