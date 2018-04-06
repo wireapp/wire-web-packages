@@ -71,7 +71,9 @@ storeEngine.init('', {fileExtension: '.json'}).then(() => {
       }
     })
     .then(() =>
-      console.log(`Connected to Wire — User ID "${account.context.userId}" — Client ID "${account.context.clientId}"`)
+      console.log(
+        `Connected to Wire — User ID "${apiClient!.context!.userId}" — Client ID "${apiClient!.context!.clientId}"`
+      )
     )
     .then(() => {
       const stdin = process.openStdin();
