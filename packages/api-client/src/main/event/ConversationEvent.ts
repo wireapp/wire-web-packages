@@ -34,6 +34,32 @@ enum CONVERSATION_EVENT {
   TYPING = 'conversation.typing',
 }
 
+enum CONVERSATION_ACCESS_ROLE {
+  ACTIVATED = 'activated',
+  PRIVATE = 'private',
+  TEAM = 'team',
+  NON_ACTIVATED = 'non_activated',
+}
+
+enum CONVERSATION_ACCESS {
+  PRIVATE = 'private',
+  INVITE = 'invite',
+  LINK = 'link',
+  CODE = 'code',
+}
+
+enum CONVERSATION_TYPING {
+  STARTED = 'started',
+  STOPPED = 'stopped',
+}
+
+enum CONVERSATION_TYPE {
+  REGULAR = 0,
+  SELF = 1,
+  ONE_TO_ONE = 2,
+  CONNECT = 3,
+}
+
 interface ConversationEvent extends BackendEvent {
   type: CONVERSATION_EVENT;
   conversation: string;
@@ -45,8 +71,16 @@ interface ConversationEvent extends BackendEvent {
 interface ConversationAccessUpdateEvent extends ConversationEvent {
   type: CONVERSATION_EVENT.ACCESS_UPDATE;
   data: {
-    access: 'private' | 'invite' | 'link' | 'code';
-    access_role: 'private' | 'team' | 'activated' | 'non_activated';
+    access:
+      | CONVERSATION_ACCESS.PRIVATE
+      | CONVERSATION_ACCESS.INVITE
+      | CONVERSATION_ACCESS.INVITE
+      | CONVERSATION_ACCESS.CODE;
+    access_role:
+      | CONVERSATION_ACCESS_ROLE.ACTIVATED
+      | CONVERSATION_ACCESS_ROLE.PRIVATE
+      | CONVERSATION_ACCESS_ROLE.TEAM
+      | CONVERSATION_ACCESS_ROLE.NON_ACTIVATED;
   };
 }
 
@@ -75,10 +109,18 @@ interface ConversationCreateEvent extends ConversationEvent {
   type: CONVERSATION_EVENT.CREATE;
   data: {
     id: string;
-    type: 0 | 1 | 2 | 3; //TODO: 0: regular, 1: self, 2: one2one, 3: connect
+    type: CONVERSATION_TYPE.REGULAR | CONVERSATION_TYPE.SELF | CONVERSATION_TYPE.ONE_TO_ONE | CONVERSATION_TYPE.CONNECT;
     creator: string;
-    access: 'private' | 'invite' | 'link' | 'code';
-    access_role: 'private' | 'team' | 'activated' | 'non_activated';
+    access:
+      | CONVERSATION_ACCESS.PRIVATE
+      | CONVERSATION_ACCESS.INVITE
+      | CONVERSATION_ACCESS.INVITE
+      | CONVERSATION_ACCESS.CODE;
+    access_role:
+      | CONVERSATION_ACCESS_ROLE.ACTIVATED
+      | CONVERSATION_ACCESS_ROLE.PRIVATE
+      | CONVERSATION_ACCESS_ROLE.TEAM
+      | CONVERSATION_ACCESS_ROLE.NON_ACTIVATED;
     name: string;
     members: string[];
     team?: string;
@@ -136,12 +178,16 @@ interface ConversationRenameEvent extends ConversationEvent {
 interface ConversationTypingEvent extends ConversationEvent {
   type: CONVERSATION_EVENT.TYPING;
   data: {
-    status: 'started' | 'stopped';
+    status: CONVERSATION_TYPING.STARTED | CONVERSATION_TYPING.STOPPED;
   };
 }
 
 export {
   CONVERSATION_EVENT,
+  CONVERSATION_ACCESS,
+  CONVERSATION_ACCESS_ROLE,
+  CONVERSATION_TYPE,
+  CONVERSATION_TYPING,
   ConversationEvent,
   ConversationAccessUpdateEvent,
   ConversationCodeDeleteEvent,
