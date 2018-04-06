@@ -72,7 +72,6 @@ interface ConversationAccessUpdateEvent extends ConversationEvent {
 
 interface ConversationCodeDeleteEvent extends ConversationEvent {
   type: CONVERSATION_EVENT.CODE_DELETE;
-  // no further data
 }
 
 interface ConversationCodeUpdateEvent extends ConversationEvent {
@@ -98,7 +97,6 @@ interface ConversationCreateEvent extends ConversationEvent {
 
 interface ConversationDeleteEvent extends ConversationEvent {
   type: CONVERSATION_EVENT.DELETE;
-  // no further data
 }
 
 interface ConversationMemberJoinEvent extends ConversationEvent {
