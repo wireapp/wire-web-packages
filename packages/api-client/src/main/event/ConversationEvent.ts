@@ -74,7 +74,7 @@ interface ConversationAccessUpdateEvent extends ConversationEvent {
     access:
       | CONVERSATION_ACCESS.PRIVATE
       | CONVERSATION_ACCESS.INVITE
-      | CONVERSATION_ACCESS.INVITE
+      | CONVERSATION_ACCESS.LINK
       | CONVERSATION_ACCESS.CODE;
     access_role:
       | CONVERSATION_ACCESS_ROLE.ACTIVATED
@@ -114,7 +114,7 @@ interface ConversationCreateEvent extends ConversationEvent {
     access:
       | CONVERSATION_ACCESS.PRIVATE
       | CONVERSATION_ACCESS.INVITE
-      | CONVERSATION_ACCESS.INVITE
+      | CONVERSATION_ACCESS.LINK
       | CONVERSATION_ACCESS.CODE;
     access_role:
       | CONVERSATION_ACCESS_ROLE.ACTIVATED
