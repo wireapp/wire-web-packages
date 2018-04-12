@@ -3,6 +3,108 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.6.34"></a>
+## [0.6.34](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.6.33...@wireapp/api-client@0.6.34) (2018-04-12)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.6.33"></a>
+## [0.6.33](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.6.32...@wireapp/api-client@0.6.33) (2018-04-10)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.6.32"></a>
+## [0.6.32](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.6.31...@wireapp/api-client@0.6.32) (2018-04-09)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.6.31"></a>
+## [0.6.31](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.6.30...@wireapp/api-client@0.6.31) (2018-04-06)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.6.30"></a>
+## [0.6.30](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.6.29...@wireapp/api-client@0.6.30) (2018-04-06)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.6.29"></a>
+## [0.6.29](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.6.28...@wireapp/api-client@0.6.29) (2018-04-06)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.6.28"></a>
+## [0.6.28](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.6.27...@wireapp/api-client@0.6.28) (2018-04-06)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.6.27"></a>
+## [0.6.27](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.6.26...@wireapp/api-client@0.6.27) (2018-04-04)
+
+
+### Bug Fixes
+
+* **api-client:** Pass ClientType to Client.init after registration ([#455](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/455)) ([1ef62ff](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/1ef62ff))
+
+
+
+
+<a name="0.6.26"></a>
+## [0.6.26](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.6.25...@wireapp/api-client@0.6.26) (2018-04-04)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.6.25"></a>
+## [0.6.25](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.6.24...@wireapp/api-client@0.6.25) (2018-04-04)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.6.24"></a>
+## [0.6.24](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.6.23...@wireapp/api-client@0.6.24) (2018-04-03)
+
+
+### Bug Fixes
+
+* **api-client,store-engine:** Always create new Dexie instance on Engine.init() ([#448](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/448)) ([27623ee](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/27623ee))
+
+
+
+
+<a name="0.6.23"></a>
+## [0.6.23](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.6.22...@wireapp/api-client@0.6.23) (2018-04-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
 <a name="0.6.22"></a>
 ## [0.6.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.6.21...@wireapp/api-client@0.6.22) (2018-04-03)
 

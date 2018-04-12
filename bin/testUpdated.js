@@ -17,39 +17,26 @@
  *
  */
 
-.btn {
-  display: inline-block;
-  padding: 0 32px;
-  color: $white;
-  background-color: $gray;
-  max-width: 100%;
-  height: 48px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-align: center;
-  text-overflow: ellipsis;
-  text-transform: uppercase;
-  text-decoration: none;
-  font-weight: 600;
-  line-height: 48px;
-  border: 0;
-  border-radius: 8px;
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.12);
-  cursor: pointer;
-  transition: all 0.24s;
+const {execSync} = require('child_process');
 
-  &.btn-block {
-    width: 100%;
-  }
-
-  &:hover,
-  &:focus,
-  &.focus {
-    text-decoration: none;
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-  }
-
-  &.no-capital {
-    text-transform: initial;
-  }
+let output;
+console.info('Checking for updated packages');
+try {
+  output = execSync(`npx lerna updated`);
+} catch (error) {
+  console.info(`No project updates - skipping tests`);
+  process.exit(0);
 }
+
+const updatedProjects = output
+  .toString()
+  .replace(/- /g, '')
+  .match(/[^\r\n]+/g);
+
+console.info('Building all packages');
+execSync(`yarn dist`, {stdio: [0, 1]});
+
+updatedProjects.forEach(project => {
+  console.info(`Running tests for project "${project}"`);
+  execSync(`npx lerna run --scope ${project} test`, {stdio: [0, 1]});
+});

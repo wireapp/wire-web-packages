@@ -1,7 +1,7 @@
 {
   "description": "Implementation of Concise Binary Object Representation (CBOR) data format (RFC7049).",
   "devDependencies": {
-    "@types/node": "9.6.1",
+    "@types/node": "9.6.4",
     "coveralls": "3.0.0",
     "cross-env": "5.1.4",
     "istanbul": "0.4.5",
@@ -24,10 +24,11 @@
     "coverage:html": "istanbul cover --report html jasmine",
     "coverage:lcov": "istanbul cover --report lcov jasmine",
     "dist": "yarn clear && yarn build",
+    "test": "yarn test:node && yarn test:browser",
+    "test:project": "yarn dist && yarn test",
     "test:browser": "exit 0",
-    "test:node": "jasmine",
-    "test": "yarn dist && yarn test:node && yarn test:browser"
+    "test:node": "jasmine"
   },
   "types": "dist/index.d.ts",
-  "version": "3.0.12"
+  "version": "3.0.15"
 }

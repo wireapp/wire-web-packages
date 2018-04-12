@@ -3,10 +3,10 @@
     "./dist/commonjs/cryptography/AssetCryptography.node": "./dist/commonjs/cryptography/AssetCryptography.browser.js"
   },
   "dependencies": {
-    "@types/node": "9.6.1",
-    "@wireapp/api-client": "0.6.22",
-    "@wireapp/cryptobox": "8.3.13",
-    "@wireapp/store-engine": "0.5.4",
+    "@types/node": "9.6.4",
+    "@wireapp/api-client": "0.6.34",
+    "@wireapp/cryptobox": "8.3.19",
+    "@wireapp/store-engine": "0.5.9",
     "bazinga64": "5.0.3",
     "logdown": "3.2.3",
     "protobufjs": "6.8.6",
@@ -42,10 +42,11 @@
     "coverage": "istanbul cover --report html ./node_modules/jasmine/bin/jasmine.js",
     "dist": "yarn clear && yarn build",
     "start": "rimraf .tmp && yarn dist && node index.js",
-    "test": "yarn dist && yarn test:node && yarn test:browser",
+    "test": "yarn test:node && yarn test:browser",
+    "test:project": "yarn dist && yarn test",
     "test:browser": "webpack && karma start",
     "test:node": "jasmine --config=src/test/node/support/jasmine.json"
   },
   "types": "./dist/Account.d.ts",
-  "version": "2.1.35"
+  "version": "2.1.53"
 }

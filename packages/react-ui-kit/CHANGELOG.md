@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="1.1.2"></a>
+## [1.1.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.1.1...@wireapp/react-ui-kit@1.1.2) (2018-04-09)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.1.1"></a>
+## [1.1.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.1.0...@wireapp/react-ui-kit@1.1.1) (2018-04-06)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.1.0"></a>
+# [1.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.0.25...@wireapp/react-ui-kit@1.1.0) (2018-04-06)
+
+
+### Features
+
+* **react-ui-kit:** Loading spinner color and linecaps ([#453](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/453)) ([b3f4b7c](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/b3f4b7c))
+
+
+
+
+<a name="1.0.25"></a>
+## [1.0.25](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.0.24...@wireapp/react-ui-kit@1.0.25) (2018-04-06)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.0.24"></a>
+## [1.0.24](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.0.23...@wireapp/react-ui-kit@1.0.24) (2018-04-04)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.0.23"></a>
+## [1.0.23](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.0.22...@wireapp/react-ui-kit@1.0.23) (2018-04-03)
+
+
+### Bug Fixes
+
+* input block margins ([#447](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/447)) ([8a5461f](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/8a5461f))
+
+
+
+
 <a name="1.0.22"></a>
 ## [1.0.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.0.21...@wireapp/react-ui-kit@1.0.22) (2018-04-03)
 
