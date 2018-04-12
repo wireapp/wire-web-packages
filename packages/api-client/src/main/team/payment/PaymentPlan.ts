@@ -19,10 +19,10 @@
 
 interface PaymentPlan {
   amount: number;
+  custom: boolean;
   id: 'wire_annual_plan' | 'wire_monthly_plan';
   interval: 'day' | 'week' | 'month' | 'year';
   name: string;
-  custom: boolean;
 }
 
 export {PaymentPlan};
