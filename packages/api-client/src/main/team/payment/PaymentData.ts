@@ -35,6 +35,7 @@ interface PaymentData {
   seats: number;
   status: 'trialing' | 'active' | 'past_due' | 'canceled' | 'unpaid';
   trialEndsAt: number;
+  bankTransfer: boolean;
 }
 
 export {PaymentData};
