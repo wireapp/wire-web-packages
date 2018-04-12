@@ -20,6 +20,7 @@
 import {InvoiceData, PaymentPlan} from '.';
 
 interface PaymentData {
+  bankTransfer: boolean;
   card: {
     brand: string;
     country: string;
@@ -35,7 +36,6 @@ interface PaymentData {
   seats: number;
   status: 'trialing' | 'active' | 'past_due' | 'canceled' | 'unpaid';
   trialEndsAt: number;
-  bankTransfer: boolean;
 }
 
 export {PaymentData};
