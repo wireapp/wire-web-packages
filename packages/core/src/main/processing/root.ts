@@ -17,7 +17,6 @@
  *
  */
 
-import ConversationService from './ConversationService';
-import AssetService from './AssetService';
+import ImageProcessingService from './ImageProcessingService';
 
-export {AssetService, ConversationService};
+export {ImageProcessingService};
