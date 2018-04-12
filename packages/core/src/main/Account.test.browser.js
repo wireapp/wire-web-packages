@@ -78,4 +78,58 @@ describe('Account', () => {
       done();
     });
   });
+  describe('"loadAndValidateLocalClient"', () => {
+    it('Updates clientId in api-clients context & ConversationService', async done => {
+      const engine = new IndexedDBEngine();
+      const apiClient = new Client({
+        schemaCallback: db => {},
+        store: engine,
+        urls: Client.BACKEND.STAGING,
+      });
+      const clientId = new UUID(UUIDVersion).toString();
+      const account = new Account(apiClient);
+
+      try {
+        await account.init();
+        account.service.cryptography.initCryptobox = () => Promise.resolve();
+        account.service.client.getLocalClient = () => Promise.resolve({id: clientId});
+        account.apiClient.client.api.getClient = () => Promise.resolve({id: clientId});
+        account.apiClient.createContext('userId', 'clientId', 'clientType');
+
+        await account.loadAndValidateLocalClient();
+      } catch (error) {
+        return done.fail(error);
+      }
+      expect(account.apiClient.context.clientId).toBe(clientId);
+      expect(account.service.conversation.clientID).toBe(clientId);
+      done();
+    });
+  });
+  describe('"registerClient"', () => {
+    it('Updates clientId in api-clients context & ConversationService', async done => {
+      const engine = new IndexedDBEngine();
+      const apiClient = new Client({
+        schemaCallback: db => {},
+        store: engine,
+        urls: Client.BACKEND.STAGING,
+      });
+      const clientId = new UUID(UUIDVersion).toString();
+      const account = new Account(apiClient);
+
+      try {
+        await account.init();
+        account.service.client.register = () => Promise.resolve({id: clientId});
+        account.service.client.synchronizeClients = () => Promise.resolve();
+        account.service.notification.initializeNotificationStream = () => Promise.resolve();
+        account.apiClient.createContext('userId', 'clientId', 'clientType');
+
+        await account.registerClient();
+      } catch (error) {
+        return done.fail(error);
+      }
+      expect(account.apiClient.context.clientId).toBe(clientId);
+      expect(account.service.conversation.clientID).toBe(clientId);
+      done();
+    });
+  });
 });
