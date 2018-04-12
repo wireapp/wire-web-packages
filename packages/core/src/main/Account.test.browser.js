@@ -78,8 +78,9 @@ describe('Account', () => {
       done();
     });
   });
+
   describe('"loadAndValidateLocalClient"', () => {
-    it('Updates clientId in api-clients context & ConversationService', async done => {
+    it('synchronizes the client ID', async done => {
       const engine = new IndexedDBEngine();
       const apiClient = new Client({
         schemaCallback: db => {},
@@ -105,8 +106,9 @@ describe('Account', () => {
       done();
     });
   });
+
   describe('"registerClient"', () => {
-    it('Updates clientId in api-clients context & ConversationService', async done => {
+    it('synchronizes the client ID', async done => {
       const engine = new IndexedDBEngine();
       const apiClient = new Client({
         schemaCallback: db => {},
