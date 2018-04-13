@@ -29,8 +29,7 @@ before_script:
   - echo -e "IS_MASTER_BRANCH = ${IS_MASTER_BRANCH}\nHAS_UPDATES = ${HAS_UPDATES}\nWILL_RELEASE = ${WILL_RELEASE}\nIS_DEPENDENCY_BUMP = ${IS_DEPENDENCY_BUMP}"
 
 script:
-  # Tests will be executed in the release phase if condition evaluates to false
-  - if [ "${WILL_RELEASE}" == 1 ]; then yarn test; fi
+  - yarn test
 
 notifications:
   email: false

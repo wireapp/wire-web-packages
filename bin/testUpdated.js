@@ -34,7 +34,7 @@ const updatedProjects = output
   .match(/[^\r\n]+/g);
 
 console.info('Building all packages');
-execSync(`yarn clear && yarn dist`, {stdio: [0, 1]});
+execSync(`yarn dist`, {stdio: [0, 1]});
 
 updatedProjects.forEach(project => {
   console.info(`Running tests for project "${project}"`);

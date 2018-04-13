@@ -27,9 +27,9 @@ import {NotificationService} from './notification/root';
 import {Context, LoginData, PreKey} from '@wireapp/api-client/dist/commonjs/auth/index';
 import {
   ConversationEvent,
-  ConversationEventType,
-  OTRMessageAdd,
-} from '@wireapp/api-client/dist/commonjs/conversation/event/index';
+  CONVERSATION_EVENT,
+  ConversationOtrMessageAddEvent,
+} from '@wireapp/api-client/dist/commonjs/event/index';
 import {
   ClientClassification,
   ClientType,
@@ -56,7 +56,6 @@ class Account extends EventEmitter {
     TEXT_MESSAGE: 'Account.INCOMING.TEXT_MESSAGE',
   };
   private apiClient: Client;
-  public context?: Context;
   private protocolBuffers: any = {};
   public service?: {
     client: ClientService;
@@ -329,7 +328,7 @@ class Account extends EventEmitter {
       .then(() => this.init())
       .then(() => LoginSanitizer.removeNonPrintableCharacters(loginData))
       .then(() => this.apiClient.login(loginData))
-      .then((context: Context) => {
+      .then(() => {
         return initClient
           ? this.initClient(loginData, clientInfo).then(() => this.apiClient.context)
           : this.apiClient.context;
@@ -344,11 +343,9 @@ class Account extends EventEmitter {
     if (!this.service) {
       throw new Error('Services are not set.');
     }
-    let loadedClient: RegisteredClient;
 
     return this.loadAndValidateLocalClient()
-      .then(client => (loadedClient = client))
-      .then(() => ({isNewClient: false, localClient: loadedClient}))
+      .then(localClient => ({isNewClient: false, localClient}))
       .catch(error => {
         let registeredClient: RegisteredClient;
 
@@ -366,18 +363,20 @@ class Account extends EventEmitter {
         }
         if (notFoundOnBackend) {
           this.logger.info('Could not find valid client on backend');
-          const shouldDeleteWholeDatabase = loadedClient.type === ClientType.TEMPORARY;
-          if (shouldDeleteWholeDatabase) {
-            this.logger.info('Last client was temporary - Deleting database');
-            return this.apiClient.config.store
-              .purge()
-              .then(() => this.apiClient.init(loginData.persist ? ClientType.PERMANENT : ClientType.TEMPORARY))
-              .then(() => this.registerClient(loginData, clientInfo));
-          }
-          this.logger.info('Last client was permanent - Deleting cryptograpy stores');
-          return this.service!.cryptography.deleteCryptographyStores().then(() =>
-            this.registerClient(loginData, clientInfo)
-          );
+          return this.service!.client.getLocalClient().then(client => {
+            const shouldDeleteWholeDatabase = client.type === ClientType.TEMPORARY;
+            if (shouldDeleteWholeDatabase) {
+              this.logger.info('Last client was temporary - Deleting database');
+              return this.apiClient.config.store
+                .purge()
+                .then(() => this.apiClient.init(loginData.persist ? ClientType.PERMANENT : ClientType.TEMPORARY))
+                .then(() => this.registerClient(loginData, clientInfo));
+            }
+            this.logger.info('Last client was permanent - Deleting cryptography stores');
+            return this.service!.cryptography.deleteCryptographyStores().then(() =>
+              this.registerClient(loginData, clientInfo)
+            );
+          });
         }
         throw error;
       });
@@ -390,7 +389,8 @@ class Account extends EventEmitter {
       .then(() => this.service!.client.getLocalClient())
       .then(client => (loadedClient = client))
       .then(() => this.apiClient.client.api.getClient(loadedClient.id))
-      .then(() => this.service!.conversation.setClientID(<string>this.apiClient.context!.clientId))
+      .then(() => (this.apiClient.context!.clientId = loadedClient.id))
+      .then(() => this.service!.conversation.setClientID(loadedClient.id))
       .then(() => loadedClient);
   }
 
@@ -429,10 +429,12 @@ class Account extends EventEmitter {
     return this.apiClient.logout().then(() => this.resetContext());
   }
 
-  public listen(loginData: LoginData, notificationHandler?: Function): Promise<Account> {
+  public listen(notificationHandler?: Function): Promise<Account> {
     this.logger.info('listen');
+    if (!this.apiClient.context) {
+      throw new Error('Context is not set - Please login first');
+    }
     return Promise.resolve()
-      .then(() => (this.apiClient.context ? this.apiClient.context : this.login(loginData, true)))
       .then(() => {
         if (notificationHandler) {
           this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, (notification: IncomingNotification) =>
@@ -454,8 +456,8 @@ class Account extends EventEmitter {
       }
 
       switch (event.type) {
-        case ConversationEventType.OTR_MESSAGE_ADD: {
-          const otrMessage: OTRMessageAdd = event as OTRMessageAdd;
+        case CONVERSATION_EVENT.OTR_MESSAGE_ADD: {
+          const otrMessage: ConversationOtrMessageAddEvent = event as ConversationOtrMessageAddEvent;
           const sessionId: string = CryptographyService.constructSessionId(otrMessage.from, otrMessage.data.sender);
           const ciphertext: string = otrMessage.data.text;
           this.service.cryptography.decrypt(sessionId, ciphertext).then((decryptedMessage: Uint8Array) => {

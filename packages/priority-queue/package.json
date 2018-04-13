@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@types/node": "9.6.2",
+    "@types/node": "9.6.4",
     "pure-uuid": "1.5.1"
   },
   "devDependencies": {
@@ -12,7 +12,7 @@
     "karma-jasmine-diff-reporter": "1.1.1",
     "karma-sourcemap-loader": "0.3.7",
     "rimraf": "2.6.1",
-    "typescript": "2.7.2",
+    "typescript": "2.8.1",
     "webpack": "4.5.0",
     "webpack-cli": "2.0.14"
   },
@@ -26,14 +26,15 @@
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/priority-queue",
   "scripts": {
     "build": "yarn build:node && yarn build:browser",
-    "build:browser": "exit 0",
+    "build:browser": "webpack --progress",
     "build:node": "tsc",
     "clear": "rimraf dist",
     "dist": "yarn clear && yarn build",
-    "test": "yarn dist && yarn test:node && yarn test:browser",
-    "test:browser": "webpack --mode=development && karma start",
+    "test": "yarn test:node && yarn test:browser",
+    "test:browser": "webpack --mode=production && karma start",
+    "test:project": "yarn dist && yarn test",
     "test:node": "cross-env JASMINE_CONFIG_PATH=src/test/node/support/jasmine.json jasmine"
   },
   "types": "./dist/index.d.ts",
-  "version": "0.1.7"
+  "version": "0.1.9"
 }

@@ -46,7 +46,8 @@ storeEngine.init('', {fileExtension: '.json'}).then(() => {
   });
 
   account
-    .listen(loginData)
+    .login(loginData)
+    .then(() => account.listen())
     .catch((error: AxiosError) => {
       const data = error.response && error.response.data;
       const errorLabel = data && data.label;
@@ -64,15 +65,17 @@ storeEngine.init('', {fileExtension: '.json'}).then(() => {
             // TODO: Completely removing the Wire Cryptobox directoy isn't a good idea! The "logout" method should
             // handle already the cleanup of artifacts. Unfortunately "logout" sometimes has issues (we need to solve these!)
             .then(() => fs.remove(directory))
-            .then(() => account.listen(loginData))
+            .then(() => account.login(loginData))
+            .then(() => account.listen())
         );
       } else {
         throw error;
       }
     })
-    .then(() =>
-      console.log(`Connected to Wire — User ID "${account.context.userId}" — Client ID "${account.context.clientId}"`)
-    )
+    .then(() => {
+      const {clientId, userId} = apiClient!.context!;
+      console.log(`Connected to Wire — User ID "${userId}" — Client ID "${clientId}"`);
+    })
     .then(() => {
       const stdin = process.openStdin();
       stdin.addListener('data', data => {
