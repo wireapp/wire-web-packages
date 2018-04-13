@@ -389,7 +389,8 @@ class Account extends EventEmitter {
       .then(() => this.service!.client.getLocalClient())
       .then(client => (loadedClient = client))
       .then(() => this.apiClient.client.api.getClient(loadedClient.id))
-      .then(() => this.service!.conversation.setClientID(<string>this.apiClient.context!.clientId))
+      .then(() => (this.apiClient.context!.clientId = loadedClient.id))
+      .then(() => this.service!.conversation.setClientID(loadedClient.id))
       .then(() => loadedClient);
   }
 
@@ -428,10 +429,12 @@ class Account extends EventEmitter {
     return this.apiClient.logout().then(() => this.resetContext());
   }
 
-  public listen(loginData: LoginData, notificationHandler?: Function): Promise<Account> {
+  public listen(notificationHandler?: Function): Promise<Account> {
     this.logger.info('listen');
+    if (!this.apiClient.context) {
+      throw new Error('Context is not set - Please login first');
+    }
     return Promise.resolve()
-      .then(() => (this.apiClient.context ? this.apiClient.context : this.login(loginData, true)))
       .then(() => {
         if (notificationHandler) {
           this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, (notification: IncomingNotification) =>
