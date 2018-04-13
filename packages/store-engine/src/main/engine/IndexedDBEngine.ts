@@ -9,18 +9,23 @@ export interface DexieInstance extends Dexie {
 }
 
 export default class IndexedDBEngine implements CRUDEngine {
+  private db?: DexieInstance;
   public storeName: string = '';
 
-  constructor(private db?: DexieInstance) {}
-
   init(storeName: string): Promise<any> {
-    if (this.db) {
-      this.storeName = this.db.name;
-    } else {
-      this.storeName = storeName;
-      this.db = new Dexie(this.storeName);
-    }
+    this.db = new Dexie(storeName);
+    this.storeName = this.db.name;
     return Promise.resolve(this.db);
+  }
+
+  initWithDb(db: DexieInstance): Promise<DexieInstance> {
+    this.db = db;
+    this.storeName = this.db.name;
+    return Promise.resolve(this.db);
+  }
+
+  purge(): Promise<void> {
+    return this.db ? this.db.delete() : Dexie.delete(this.storeName);
   }
 
   public create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
@@ -71,6 +76,16 @@ export default class IndexedDBEngine implements CRUDEngine {
   }
 
   public update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
-    return this.db![tableName].update(primaryKey, changes).then((updatedRecords: number) => primaryKey);
+    return this.db![tableName].update(primaryKey, changes).then((updatedRecords: number) => {
+      if (updatedRecords === 0) {
+        const message: string = `Record "${primaryKey}" in "${tableName}" could not be found.`;
+        throw new RecordNotFoundError(message);
+      }
+      return primaryKey;
+    });
+  }
+
+  public updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+    return this.db![tableName].put(changes, primaryKey);
   }
 }

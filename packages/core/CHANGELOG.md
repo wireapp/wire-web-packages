@@ -3,6 +3,517 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="2.1.55"></a>
+## [2.1.55](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.54...@wireapp/core@2.1.55) (2018-04-13)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.54"></a>
+## [2.1.54](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.53...@wireapp/core@2.1.54) (2018-04-13)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.53"></a>
+## [2.1.53](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.52...@wireapp/core@2.1.53) (2018-04-12)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.52"></a>
+## [2.1.52](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.51...@wireapp/core@2.1.52) (2018-04-12)
+
+
+### Bug Fixes
+
+* **core:** Synchronize clientId ([#479](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/479)) ([81e3b5f](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/81e3b5f))
+
+
+
+
+<a name="2.1.51"></a>
+## [2.1.51](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.50...@wireapp/core@2.1.51) (2018-04-12)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.50"></a>
+## [2.1.50](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.49...@wireapp/core@2.1.50) (2018-04-12)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.49"></a>
+## [2.1.49](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.48...@wireapp/core@2.1.49) (2018-04-10)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.48"></a>
+## [2.1.48](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.47...@wireapp/core@2.1.48) (2018-04-09)
+
+
+### Bug Fixes
+
+* **cli-client:** Access user context from API client ([#466](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/466)) ([470e875](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/470e875))
+
+
+
+
+<a name="2.1.47"></a>
+## [2.1.47](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.46...@wireapp/core@2.1.47) (2018-04-09)
+
+
+### Bug Fixes
+
+* **core:** Load local client if not found on backend ([#462](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/462)) ([e2306df](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/e2306df))
+
+
+
+
+<a name="2.1.46"></a>
+## [2.1.46](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.45...@wireapp/core@2.1.46) (2018-04-06)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.45"></a>
+## [2.1.45](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.44...@wireapp/core@2.1.45) (2018-04-06)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.44"></a>
+## [2.1.44](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.43...@wireapp/core@2.1.44) (2018-04-06)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.43"></a>
+## [2.1.43](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.42...@wireapp/core@2.1.43) (2018-04-06)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.42"></a>
+## [2.1.42](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.41...@wireapp/core@2.1.42) (2018-04-04)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.41"></a>
+## [2.1.41](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.40...@wireapp/core@2.1.41) (2018-04-04)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.40"></a>
+## [2.1.40](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.39...@wireapp/core@2.1.40) (2018-04-04)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.39"></a>
+## [2.1.39](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.38...@wireapp/core@2.1.39) (2018-04-04)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.38"></a>
+## [2.1.38](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.37...@wireapp/core@2.1.38) (2018-04-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.37"></a>
+## [2.1.37](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.36...@wireapp/core@2.1.37) (2018-04-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.36"></a>
+## [2.1.36](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.35...@wireapp/core@2.1.36) (2018-04-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.35"></a>
+## [2.1.35](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.34...@wireapp/core@2.1.35) (2018-04-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.34"></a>
+## [2.1.34](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.33...@wireapp/core@2.1.34) (2018-04-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.33"></a>
+## [2.1.33](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.32...@wireapp/core@2.1.33) (2018-04-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.32"></a>
+## [2.1.32](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.31...@wireapp/core@2.1.32) (2018-03-30)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.31"></a>
+## [2.1.31](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.30...@wireapp/core@2.1.31) (2018-03-29)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.30"></a>
+## [2.1.30](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.29...@wireapp/core@2.1.30) (2018-03-29)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.29"></a>
+## [2.1.29](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.28...@wireapp/core@2.1.29) (2018-03-29)
+
+
+### Bug Fixes
+
+* **api-client,core:** Login by phone number removed from request ([#434](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/434)) ([c5123fd](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/c5123fd))
+
+
+
+
+<a name="2.1.28"></a>
+## [2.1.28](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.27...@wireapp/core@2.1.28) (2018-03-29)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.27"></a>
+## [2.1.27](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.26...@wireapp/core@2.1.27) (2018-03-29)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.26"></a>
+## [2.1.26](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.25...@wireapp/core@2.1.26) (2018-03-28)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.25"></a>
+## [2.1.25](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.24...@wireapp/core@2.1.25) (2018-03-27)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.24"></a>
+## [2.1.24](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.23...@wireapp/core@2.1.24) (2018-03-27)
+
+
+### Bug Fixes
+
+* **api-client,core:** Optional client type parameter for init ([#422](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/422)) ([29750e1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/29750e1))
+
+
+
+
+<a name="2.1.23"></a>
+## [2.1.23](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.22...@wireapp/core@2.1.23) (2018-03-27)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.22"></a>
+## [2.1.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.21...@wireapp/core@2.1.22) (2018-03-27)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.21"></a>
+## [2.1.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.20...@wireapp/core@2.1.21) (2018-03-27)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.20"></a>
+## [2.1.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.19...@wireapp/core@2.1.20) (2018-03-26)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.19"></a>
+## [2.1.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.18...@wireapp/core@2.1.19) (2018-03-26)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.18"></a>
+## [2.1.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.17...@wireapp/core@2.1.18) (2018-03-26)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.17"></a>
+## [2.1.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.16...@wireapp/core@2.1.17) (2018-03-26)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.16"></a>
+## [2.1.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.15...@wireapp/core@2.1.16) (2018-03-25)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.15"></a>
+## [2.1.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.14...@wireapp/core@2.1.15) (2018-03-23)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.14"></a>
+## [2.1.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.13...@wireapp/core@2.1.14) (2018-03-23)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.13"></a>
+## [2.1.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.12...@wireapp/core@2.1.13) (2018-03-23)
+
+
+### Bug Fixes
+
+* **core:** Only sync clients on not found error ([#409](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/409)) ([1524fe4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/1524fe4))
+
+
+
+
+<a name="2.1.12"></a>
+## [2.1.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.11...@wireapp/core@2.1.12) (2018-03-23)
+
+
+### Bug Fixes
+
+* **core:** Filter local client ([#408](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/408)) ([88a413a](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/88a413a))
+
+
+
+
+<a name="2.1.11"></a>
+## [2.1.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.10...@wireapp/core@2.1.11) (2018-03-22)
+
+
+### Bug Fixes
+
+* **core:** Synchronize clients after client registration ([#405](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/405)) ([e85e0ea](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/e85e0ea))
+
+
+
+
+<a name="2.1.10"></a>
+## [2.1.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.9...@wireapp/core@2.1.10) (2018-03-22)
+
+
+### Bug Fixes
+
+* **core:** Check for Error constructor ([#406](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/406)) ([1e0ca42](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/1e0ca42))
+
+
+
+
+<a name="2.1.9"></a>
+## [2.1.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.8...@wireapp/core@2.1.9) (2018-03-22)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.8"></a>
+## [2.1.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.7...@wireapp/core@2.1.8) (2018-03-22)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.7"></a>
+## [2.1.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.6...@wireapp/core@2.1.7) (2018-03-22)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.6"></a>
+## [2.1.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.5...@wireapp/core@2.1.6) (2018-03-21)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.5"></a>
+## [2.1.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.4...@wireapp/core@2.1.5) (2018-03-21)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.4"></a>
+## [2.1.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.3...@wireapp/core@2.1.4) (2018-03-21)
+
+
+### Bug Fixes
+
+* **core:** Init engine after purge ([#397](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/397)) ([d0ea5a2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/d0ea5a2))
+
+
+
+
+<a name="2.1.3"></a>
+## [2.1.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.2...@wireapp/core@2.1.3) (2018-03-21)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.2"></a>
+## [2.1.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.1...@wireapp/core@2.1.2) (2018-03-21)
+
+
+### Bug Fixes
+
+* **core:** Verification cleanup ([#394](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/394)) ([1d5f4a8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/1d5f4a8))
+
+
+
+
+<a name="2.1.1"></a>
+## [2.1.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.0...@wireapp/core@2.1.1) (2018-03-21)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.0"></a>
+# [2.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.89...@wireapp/core@2.1.0) (2018-03-20)
+
+
+### Features
+
+* **core:** Add support for generic messages ([#374](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/374)) ([29aee69](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/29aee69))
+
+
+
+
+<a name="2.0.89"></a>
+## [2.0.89](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.88...@wireapp/core@2.0.89) (2018-03-20)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.0.88"></a>
+## [2.0.88](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.87...@wireapp/core@2.0.88) (2018-03-20)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.0.87"></a>
+## [2.0.87](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.86...@wireapp/core@2.0.87) (2018-03-19)
+
+
+### Bug Fixes
+
+* **core:** Get response status ([#386](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/386)) ([c432114](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/c432114))
+
+
+
+
 <a name="2.0.86"></a>
 ## [2.0.86](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.0.85...@wireapp/core@2.0.86) (2018-03-19)
 

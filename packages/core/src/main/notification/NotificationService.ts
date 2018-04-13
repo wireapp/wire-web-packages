@@ -17,6 +17,8 @@
  *
  */
 
+const logdown = require('logdown');
+import {NotificationEvent} from '@wireapp/api-client/dist/commonjs/notification/index';
 import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/index';
 import APIClient = require('@wireapp/api-client');
 import {Notification} from '@wireapp/api-client/dist/commonjs/notification/index';
@@ -25,6 +27,11 @@ import NotificationDatabaseRepository from './NotificationDatabaseRepository';
 import NotificationBackendRepository from './NotificationBackendRepository';
 
 export default class NotificationService {
+  private logger: any = logdown('@wireapp/core/Account', {
+    logger: console,
+    markdown: false,
+  });
+
   private backend: NotificationBackendRepository;
   private database: NotificationDatabaseRepository;
 
@@ -34,12 +41,24 @@ export default class NotificationService {
   }
 
   public initializeNotificationStream(clientId: string): Promise<string> {
+    this.logger.info('initializeNotificationStream');
     return this.setLastEventDate(new Date(0))
       .then(() => this.backend.getLastNotification(clientId))
       .then(notification => this.setLastNotificationId(notification));
   }
 
+  public hasHistory(): Promise<boolean> {
+    this.logger.info('hasHistory');
+    return this.getNotificationEventList().then(notificationEvents => !!notificationEvents.length);
+  }
+
+  private getNotificationEventList(): Promise<NotificationEvent[]> {
+    this.logger.info('getNotificationEventList');
+    return this.database.getNotificationEventList();
+  }
+
   private setLastEventDate(eventDate: Date): Promise<Date> {
+    this.logger.info('setLastEventDate');
     return this.database
       .getLastEventDate()
       .then(databaseLastEventDate => {
@@ -49,7 +68,7 @@ export default class NotificationService {
         return databaseLastEventDate;
       })
       .catch(error => {
-        if (error instanceof RecordNotFoundError) {
+        if (error instanceof RecordNotFoundError || error.constructor.name === 'RecordNotFoundError') {
           return this.database.createLastEventDate(eventDate);
         }
         throw error;
@@ -57,6 +76,7 @@ export default class NotificationService {
   }
 
   private setLastNotificationId(lastNotification: Notification): Promise<string> {
+    this.logger.info('setLastNotificationId');
     return this.database
       .getLastNotificationId()
       .then(() => this.database.updateLastNotificationId(lastNotification))

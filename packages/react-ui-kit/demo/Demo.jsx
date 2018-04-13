@@ -178,7 +178,7 @@ class Demo extends React.PureComponent {
             <Columns>
               <Column>Checkbox</Column>
               <Column>
-                <Checkbox id="ToU">
+                <Checkbox id="ToULink" defaultChecked={true}>
                   <Text bold fontSize="11px" textTransform="uppercase">
                     {'ToU '}
                   </Text>
@@ -251,7 +251,7 @@ class Demo extends React.PureComponent {
                   <InputBlock>
                     <Input placeholder="InputBlock" markInvalid />
                     <InputSubmitCombo>
-                      <Input placeholder="InputSubmitCombo" />
+                      <Input placeholder="InputSubmitCombo" name="password" />
                       <RoundIconButton type="submit" icon={ICON_NAME.ARROW} formNoValidate />
                       <RoundIconButton type="submit" icon={ICON_NAME.CHECK} formNoValidate />
                       <RoundIconButton type="submit" icon={ICON_NAME.CLOSE} formNoValidate />

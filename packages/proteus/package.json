@@ -2,18 +2,18 @@
   "dependencies": {
     "@types/chai": "4.1.2",
     "@types/ed2curve": "0.2.2",
-    "@types/node": "9.4.7",
-    "@wireapp/cbor": "3.0.7",
+    "@types/node": "9.6.4",
+    "@wireapp/cbor": "3.0.15",
     "ed2curve": "0.2.1",
     "libsodium-wrappers-sumo": "0.7.3"
   },
   "description": "Axolotl protocol implementation for JavaScript.",
   "devDependencies": {
-    "bower": "1.8.2",
+    "bower": "1.8.4",
     "chai": "4.1.2",
     "jasmine": "3.1.0",
     "rimraf": "2.6.2",
-    "typescript": "2.7.2",
+    "typescript": "2.8.1",
     "webpack": "3.11.0"
   },
   "files": [
@@ -29,11 +29,10 @@
     "clear": "rimraf dist",
     "dist": "yarn clear && yarn build:node && yarn build:browser",
     "start": "node dist/index.js",
-    "test": "yarn dist && yarn test:node",
-    "test:all": "yarn test && yarn test:longrunning",
-    "test:node": "jasmine",
-    "test:longrunning": "jasmine --config=spec/support/jasmine.longrunning.json"
+    "test": "yarn test:node",
+    "test:project": "yarn dist && yarn test",
+    "test:node": "jasmine"
   },
   "types": "dist/index.d.ts",
-  "version": "7.1.10"
+  "version": "7.1.20"
 }

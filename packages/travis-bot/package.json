@@ -1,21 +1,20 @@
 {
   "bin": {
-    "wire-travis-bot": "./bin/wire-travis-bot.js"
+    "wire-travis-bot": "dist/cli.js"
   },
   "dependencies": {
     "@types/generate-changelog": "1.7.0",
-    "@types/node": "9.4.7",
-    "@wireapp/core": "2.0.75",
-    "generate-changelog": "1.7.0"
+    "@types/node": "9.6.4",
+    "@wireapp/core": "2.1.55",
+    "generate-changelog": "1.7.1"
   },
   "description": "A Travis deployment notification bot.",
   "devDependencies": {
     "logdown": "3.2.3",
     "rimraf": "2.6.2",
-    "typescript": "2.7.2"
+    "typescript": "2.8.1"
   },
   "files": [
-    "bin",
     "dist"
   ],
   "license": "GPL-3.0",
@@ -27,8 +26,9 @@
     "build:node": "tsc",
     "clear": "rimraf dist",
     "dist": "yarn clear && yarn build",
-    "test": "yarn dist"
+    "test": "exit 0",
+    "test:project": "yarn dist && yarn test"
   },
   "types": "dist/index.d.ts",
-  "version": "0.1.3"
+  "version": "0.1.66"
 }

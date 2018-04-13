@@ -28,9 +28,14 @@ describe('FileEngine', () => {
   const TEST_DIRECTORY = path.join(process.cwd(), '.tmp', STORE_NAME);
   let engine = undefined;
 
+  async function initEngine() {
+    const storeEngine = new FileEngine();
+    await storeEngine.init(TEST_DIRECTORY);
+    return storeEngine;
+  }
+
   beforeEach(async done => {
-    engine = new FileEngine();
-    await engine.init(TEST_DIRECTORY);
+    engine = await initEngine();
     done();
   });
 
@@ -166,6 +171,12 @@ describe('FileEngine', () => {
     });
   });
 
+  describe('"purge"', () => {
+    Object.entries(require('../../test/shared/purge')).map(([description, testFunction]) => {
+      it(description, done => testFunction(done, engine, initEngine));
+    });
+  });
+
   describe('"read"', () => {
     Object.entries(require('../../test/shared/read')).map(([description, testFunction]) => {
       it(description, done => testFunction(done, engine));
@@ -219,6 +230,12 @@ describe('FileEngine', () => {
 
   describe('"update"', () => {
     Object.entries(require('../../test/shared/update')).map(([description, testFunction]) => {
+      it(description, done => testFunction(done, engine));
+    });
+  });
+
+  describe('"updateOrCreate"', () => {
+    Object.entries(require('../../test/shared/updateOrCreate')).map(([description, testFunction]) => {
       it(description, done => testFunction(done, engine));
     });
   });

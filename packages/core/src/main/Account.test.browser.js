@@ -42,10 +42,11 @@ describe('Account', () => {
       const apiClient = new Client({
         schemaCallback: db => {
           db.version(1).stores({
-            authentication: '',
+            amplify: '',
             clients: ', meta.primary_key',
             keys: '',
             prekeys: '',
+            sessions: '',
           });
         },
         store: engine,
@@ -58,10 +59,14 @@ describe('Account', () => {
       };
 
       const account = new Account(apiClient);
-      spyOn(account, 'registerClient');
 
       try {
         await account.init();
+        spyOn(account.service.client, 'register').and.callThrough();
+        account.service.client.synchronizeClients = () => Promise.resolve();
+        account.service.notification.backend.getLastNotification = () => Promise.resolve({id: 'notification-id'});
+        account.apiClient.context = {};
+        account.apiClient.client.api.postClient = () => Promise.resolve({id: context.clientId});
         await apiClient.initEngine(context);
         storeName = engine.storeName;
         await account.initClient(context);
@@ -69,7 +74,63 @@ describe('Account', () => {
         return done.fail(error);
       }
 
-      expect(account.registerClient).toHaveBeenCalledTimes(1);
+      expect(account.service.client.register).toHaveBeenCalledTimes(1);
+      done();
+    });
+  });
+
+  describe('"loadAndValidateLocalClient"', () => {
+    it('synchronizes the client ID', async done => {
+      const engine = new IndexedDBEngine();
+      const apiClient = new Client({
+        schemaCallback: db => {},
+        store: engine,
+        urls: Client.BACKEND.STAGING,
+      });
+      const clientId = new UUID(UUIDVersion).toString();
+      const account = new Account(apiClient);
+
+      try {
+        await account.init();
+        account.service.cryptography.initCryptobox = () => Promise.resolve();
+        account.service.client.getLocalClient = () => Promise.resolve({id: clientId});
+        account.apiClient.client.api.getClient = () => Promise.resolve({id: clientId});
+        account.apiClient.createContext('userId', 'clientId', 'clientType');
+
+        await account.loadAndValidateLocalClient();
+      } catch (error) {
+        return done.fail(error);
+      }
+      expect(account.apiClient.context.clientId).toBe(clientId);
+      expect(account.service.conversation.clientID).toBe(clientId);
+      done();
+    });
+  });
+
+  describe('"registerClient"', () => {
+    it('synchronizes the client ID', async done => {
+      const engine = new IndexedDBEngine();
+      const apiClient = new Client({
+        schemaCallback: db => {},
+        store: engine,
+        urls: Client.BACKEND.STAGING,
+      });
+      const clientId = new UUID(UUIDVersion).toString();
+      const account = new Account(apiClient);
+
+      try {
+        await account.init();
+        account.service.client.register = () => Promise.resolve({id: clientId});
+        account.service.client.synchronizeClients = () => Promise.resolve();
+        account.service.notification.initializeNotificationStream = () => Promise.resolve();
+        account.apiClient.createContext('userId', 'clientId', 'clientType');
+
+        await account.registerClient();
+      } catch (error) {
+        return done.fail(error);
+      }
+      expect(account.apiClient.context.clientId).toBe(clientId);
+      expect(account.service.conversation.clientID).toBe(clientId);
       done();
     });
   });

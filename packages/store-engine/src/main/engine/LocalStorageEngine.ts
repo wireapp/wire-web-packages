@@ -9,6 +9,11 @@ export default class LocalStorageEngine implements CRUDEngine {
     return Promise.resolve();
   }
 
+  purge(): Promise<void> {
+    window.localStorage.clear();
+    return Promise.resolve();
+  }
+
   public create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
     if (entity) {
       const key: string = `${this.storeName}@${tableName}@${primaryKey}`;
@@ -107,5 +112,16 @@ export default class LocalStorageEngine implements CRUDEngine {
           }
         });
       });
+  }
+
+  public updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+    return this.update(tableName, primaryKey, changes)
+      .catch(error => {
+        if (error instanceof RecordNotFoundError) {
+          return this.create(tableName, primaryKey, changes);
+        }
+        throw error;
+      })
+      .then(() => primaryKey);
   }
 }

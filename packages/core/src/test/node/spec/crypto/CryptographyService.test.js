@@ -19,10 +19,13 @@
 
 /* eslint-disable no-magic-numbers */
 const bazinga64 = require('bazinga64');
-const crypto = require('@wireapp/core/dist/crypto/root');
+const crypto = require('crypto');
 const Proteus = require('@wireapp/proteus');
 const {Cryptobox} = require('@wireapp/cryptobox');
+const {CryptographyService} = require('@wireapp/core/dist/cryptography/root');
 const {MemoryEngine} = require('@wireapp/store-engine');
+const {promisify} = require('util');
+const {decryptAsset, encryptAsset} = require('@wireapp/core/dist/cryptography/AssetCryptography.node');
 
 async function createEngine(storeName) {
   const engine = new MemoryEngine();
@@ -31,13 +34,13 @@ async function createEngine(storeName) {
 }
 
 describe('CryptographyService', () => {
-  let cryptographyService;
+  let cryptography;
   let aliceLastResortPreKey;
   let bob;
 
   beforeEach(async done => {
-    cryptographyService = new crypto.CryptographyService(await createEngine('wire'));
-    cryptographyService.cryptobox
+    cryptography = new CryptographyService(undefined, await createEngine('wire'), undefined);
+    cryptography.cryptobox
       .create()
       .then(async preKeys => {
         aliceLastResortPreKey = preKeys.filter(preKey => preKey.key_id === Proteus.keys.PreKey.MAX_PREKEY_ID)[0];
@@ -49,8 +52,8 @@ describe('CryptographyService', () => {
 
   describe('"constructor"', () => {
     it('creates an instance.', () => {
-      expect(cryptographyService.cryptobox.identity.public_key.fingerprint()).toBeDefined();
-      expect(cryptographyService).toBeDefined();
+      expect(cryptography.cryptobox.identity.public_key.fingerprint()).toBeDefined();
+      expect(cryptography).toBeDefined();
     });
   });
 
@@ -58,7 +61,7 @@ describe('CryptographyService', () => {
     it('constructs a Session ID by a given User ID and Client ID.', () => {
       const clientId = '1ceb9063fced26d3';
       const userId = 'afbb5d60-1187-4385-9c29-7361dea79647';
-      const actual = cryptographyService.constructSessionId(userId, clientId);
+      const actual = CryptographyService.constructSessionId(userId, clientId);
       expect(actual).toContain(clientId);
       expect(actual).toContain(userId);
     });
@@ -66,7 +69,7 @@ describe('CryptographyService', () => {
 
   describe('"decrypt"', () => {
     it('decrypts a Base64-encoded cipher message.', async done => {
-      const alicePublicKey = cryptographyService.cryptobox.identity.public_key;
+      const alicePublicKey = cryptography.cryptobox.identity.public_key;
       const publicPreKeyBundle = Proteus.keys.PreKeyBundle.new(alicePublicKey, aliceLastResortPreKey);
       const text = 'Hello Alice!';
       const encryptedPreKeyMessage = await bob.encrypt(
@@ -75,7 +78,7 @@ describe('CryptographyService', () => {
         publicPreKeyBundle.serialise()
       );
       const encodedPreKeyMessage = bazinga64.Encoder.toBase64(encryptedPreKeyMessage).asString;
-      const decodedMessageBuffer = await cryptographyService.decrypt('bob-user-id@bob-client-id', encodedPreKeyMessage);
+      const decodedMessageBuffer = await cryptography.decrypt('bob-user-id@bob-client-id', encodedPreKeyMessage);
       const plaintext = Buffer.from(decodedMessageBuffer).toString('utf8');
       expect(plaintext).toBe(text);
       done();
@@ -86,8 +89,8 @@ describe('CryptographyService', () => {
     it('gets User ID and Client ID from a Session ID.', () => {
       const clientId = '1ceb9063fced26d3';
       const userId = 'afbb5d60-1187-4385-9c29-7361dea79647';
-      const sessionId = cryptographyService.constructSessionId(userId, clientId);
-      const [actualUserId, actualClientId] = cryptographyService.dismantleSessionId(sessionId);
+      const sessionId = CryptographyService.constructSessionId(userId, clientId);
+      const [actualUserId, actualClientId] = CryptographyService.dismantleSessionId(sessionId);
       expect(actualClientId).toBe(clientId);
       expect(actualUserId).toBe(userId);
     });
@@ -133,7 +136,7 @@ describe('CryptographyService', () => {
       };
 
       const text = new Uint8Array([72, 101, 108, 108, 111, 33]); // "Hello!"
-      cryptographyService.encrypt(text, preKeyBundleMap).then(otrBundle => {
+      cryptography.encrypt(text, preKeyBundleMap).then(otrBundle => {
         expect(Object.keys(otrBundle).length).toBe(2);
         expect(Object.keys(otrBundle[firstUserID]).length).toBe(3);
         expect(Object.keys(otrBundle[secondUserID]).length).toBe(2);
@@ -143,13 +146,57 @@ describe('CryptographyService', () => {
     });
   });
 
+  describe('"encryptAsset"', () => {
+    it('encrypts and decrypts ArrayBuffer', async done => {
+      const bytes = new Uint8Array(16);
+      await promisify(crypto.randomFill)(bytes);
+      const byteBuffer = new Buffer(bytes);
+
+      const encryptedAsset = await encryptAsset(byteBuffer);
+      const decryptedBuffer = await decryptAsset(encryptedAsset);
+
+      expect(decryptedBuffer).toEqual(byteBuffer);
+      done();
+    });
+
+    it('does not decrypt when the hash is missing', async done => {
+      const bytes = new Uint8Array(16);
+      await promisify(crypto.randomFill)(bytes);
+      const byteBuffer = new Buffer(bytes);
+
+      const {cipherText, keyBytes} = await encryptAsset(byteBuffer);
+
+      try {
+        await decryptAsset(cipherText, keyBytes, null);
+        done.fail();
+      } catch (error) {
+        done();
+      }
+    });
+
+    it('does not decrypt when hash is an empty array', async done => {
+      const bytes = new Uint8Array(16);
+      await promisify(crypto.randomFill)(bytes);
+      const byteBuffer = new Buffer(bytes);
+
+      const {cipherText, keyBytes} = await encryptAsset(byteBuffer);
+
+      try {
+        await decryptAsset(cipherText, keyBytes, new Uint8Array([]));
+        done.fail();
+      } catch (error) {
+        done();
+      }
+    });
+  });
+
   describe('"encryptPayloadForSession"', () => {
     it('encodes plaintext.', done => {
       const sessionWithBobId = 'bob-user-id@bob-client-id';
       const text = new Uint8Array([72, 101, 108, 108, 111, 32, 66, 111, 98, 33]); // "Hello Bob!"
       const encodedPreKey =
         'pQABAQACoQBYIHOFFWPnWlr4sulxUWYoP0A6rsJiBO/Ec3Y914t67CIAA6EAoQBYIPFH5CK/a0YwKEx4n/+U/IPRN+mJXVv++MCs5Z4dLmz4BPY=';
-      cryptographyService
+      cryptography
         .encryptPayloadForSession(sessionWithBobId, text, encodedPreKey)
         .then(({sessionId, encryptedPayload}) => {
           expect(encryptedPayload).not.toBe('💣');
@@ -162,7 +209,7 @@ describe('CryptographyService', () => {
       const sessionWithBobId = 'bob-user-id@bob-client-id';
       const encodedPreKey =
         'pQABAQACoQBYIHOFFWPnWlr4sulxUWYoP0A6rsJiBO/Ec3Y914t67CIAA6EAoQBYIPFH5CK/a0YwKEx4n/+U/IPRN+mJXVv++MCs5Z4dLmz4BPY=';
-      cryptographyService
+      cryptography
         .encryptPayloadForSession(sessionWithBobId, undefined, encodedPreKey)
         .then(({sessionId, encryptedPayload}) => {
           expect(encryptedPayload).toBe('💣');

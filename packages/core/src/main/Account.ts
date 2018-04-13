@@ -1,32 +1,35 @@
-//
-// Wire
-// Copyright (C) 2018 Wire Swiss GmbH
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program. If not, see http://www.gnu.org/licenses/.
-//
+/*
+ * Wire
+ * Copyright (C) 2018 Wire Swiss GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see http://www.gnu.org/licenses/.
+ *
+ */
 
 const pkg = require('../package.json');
+const logdown = require('logdown');
 import {IncomingNotification} from '@wireapp/api-client/dist/commonjs/conversation/index';
 import * as cryptobox from '@wireapp/cryptobox';
-import {CryptographyService, GenericMessageType, PayloadBundle} from './crypto/root';
+import {CryptographyService, GenericMessageType, PayloadBundle} from './cryptography/root';
+import {ClientService, ClientInfo} from './client/root';
 import {NotificationService} from './notification/root';
 import {Context, LoginData, PreKey} from '@wireapp/api-client/dist/commonjs/auth/index';
 import {
   ConversationEvent,
-  ConversationEventType,
-  OTRMessageAdd,
-} from '@wireapp/api-client/dist/commonjs/conversation/event/index';
+  CONVERSATION_EVENT,
+  ConversationOtrMessageAddEvent,
+} from '@wireapp/api-client/dist/commonjs/event/index';
 import {
   ClientClassification,
   ClientType,
@@ -34,7 +37,7 @@ import {
   NewClient,
   RegisteredClient,
 } from '@wireapp/api-client/dist/commonjs/client/index';
-import {LoginSanitizer, ClientInfo} from './auth/root';
+import {LoginSanitizer} from './auth/root';
 import {Root} from 'protobufjs';
 import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/index';
 import {ConversationService} from './conversation/root';
@@ -44,69 +47,30 @@ import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/index';
 import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/error/index';
 
 class Account extends EventEmitter {
+  private logger: any = logdown('@wireapp/core/Account', {
+    logger: console,
+    markdown: false,
+  });
+
   public static INCOMING = {
     TEXT_MESSAGE: 'Account.INCOMING.TEXT_MESSAGE',
   };
   private apiClient: Client;
-  public context?: Context;
   private protocolBuffers: any = {};
-  public service?: {conversation: ConversationService; crypto: CryptographyService; notification: NotificationService};
+  public service?: {
+    client: ClientService;
+    conversation: ConversationService;
+    cryptography: CryptographyService;
+    notification: NotificationService;
+  };
 
   constructor(apiClient: Client = new Client()) {
     super();
     this.apiClient = apiClient;
   }
 
-  private decodeEvent(event: ConversationEvent): Promise<string> {
-    return new Promise(resolve => {
-      if (!this.service) {
-        throw new Error('Services are not set.');
-      }
-
-      switch (event.type) {
-        case ConversationEventType.OTR_MESSAGE_ADD: {
-          const otrMessage: OTRMessageAdd = event as OTRMessageAdd;
-          const sessionId: string = this.service.crypto.constructSessionId(otrMessage.from, otrMessage.data.sender);
-          const ciphertext: string = otrMessage.data.text;
-          this.service.crypto.decrypt(sessionId, ciphertext).then((decryptedMessage: Uint8Array) => {
-            const genericMessage = this.protocolBuffers.GenericMessage.decode(decryptedMessage);
-            switch (genericMessage.content) {
-              case GenericMessageType.TEXT: {
-                resolve(genericMessage.text.content);
-                break;
-              }
-              default:
-                resolve(undefined);
-            }
-          });
-          break;
-        }
-      }
-    });
-  }
-
-  private handleEvent(event: ConversationEvent): Promise<PayloadBundle> {
-    const {conversation, from} = event;
-    return this.decodeEvent(event).then((content: string) => {
-      return {
-        content,
-        conversation,
-        from,
-      };
-    });
-  }
-
-  private handleNotification(notification: IncomingNotification): void {
-    for (const event of notification.payload) {
-      this.handleEvent(event).then((data: PayloadBundle) => {
-        if (data.content) {
-          this.emit(Account.INCOMING.TEXT_MESSAGE, data);
-        }
-      });
-    }
-  }
-
   private init(): Promise<void> {
+    this.logger.info('init');
     const proto = {
       options: {java_package: 'com.waz.model'},
       nested: {
@@ -335,52 +299,142 @@ class Account extends EventEmitter {
     };
     return Promise.resolve(Root.fromJSON(proto))
       .then((root: Root) => {
+        this.protocolBuffers.External = root.lookup('External');
         this.protocolBuffers.GenericMessage = root.lookup('GenericMessage');
         this.protocolBuffers.Text = root.lookup('Text');
       })
       .then(() => {
-        const crypto: CryptographyService = new CryptographyService(this.apiClient.config.store);
-        const conversation: ConversationService = new ConversationService(this.apiClient, this.protocolBuffers, crypto);
-        const notification: NotificationService = new NotificationService(this.apiClient, this.apiClient.config.store);
+        const cryptographyService = new CryptographyService(this.apiClient, this.apiClient.config.store);
+        const clientService = new ClientService(this.apiClient, this.apiClient.config.store, cryptographyService);
+        const conversationService = new ConversationService(this.apiClient, this.protocolBuffers, cryptographyService);
+        const notificationService = new NotificationService(this.apiClient, this.apiClient.config.store);
+
         this.service = {
-          conversation,
-          crypto,
-          notification,
+          client: clientService,
+          conversation: conversationService,
+          cryptography: cryptographyService,
+          notification: notificationService,
         };
       });
   }
 
-  private initClient(context: Context, loginData: LoginData, clientInfo?: ClientInfo): Promise<RegisteredClient> {
+  public login(
+    loginData: LoginData,
+    initClient: boolean = true,
+    clientInfo?: ClientInfo
+  ): Promise<Context | undefined> {
+    this.logger.info('login');
+    return this.resetContext()
+      .then(() => this.init())
+      .then(() => LoginSanitizer.removeNonPrintableCharacters(loginData))
+      .then(() => this.apiClient.login(loginData))
+      .then(() => {
+        return initClient
+          ? this.initClient(loginData, clientInfo).then(() => this.apiClient.context)
+          : this.apiClient.context;
+      });
+  }
+
+  private initClient(
+    loginData: LoginData,
+    clientInfo?: ClientInfo
+  ): Promise<{isNewClient: boolean; localClient: RegisteredClient}> {
+    this.logger.info('initClient');
     if (!this.service) {
       throw new Error('Services are not set.');
     }
 
-    this.context = context;
-    let loadedClient: RegisteredClient;
-
-    return this.service.crypto
-      .loadClient()
-      .then(client => (loadedClient = client))
-      .then(() => this.apiClient.client.api.getClient(loadedClient.id))
-      .then(() => {
-        this.service!.conversation.setClientID(<string>this.context!.clientId);
-        return loadedClient;
-      })
+    return this.loadAndValidateLocalClient()
+      .then(localClient => ({isNewClient: false, localClient}))
       .catch(error => {
+        let registeredClient: RegisteredClient;
+
         // There was no client so we need to "create" and "register" a client
         const notFoundInDatabase =
-          error instanceof cryptobox.error.CryptoboxError || error instanceof RecordNotFoundError;
-        const notFoundOnBackend = error.code === StatusCode.NOT_FOUND;
-        if (notFoundInDatabase || notFoundOnBackend) {
+          error instanceof cryptobox.error.CryptoboxError ||
+          error.constructor.name === 'CryptoboxError' ||
+          error instanceof RecordNotFoundError ||
+          error.constructor.name === 'RecordNotFoundError';
+        const notFoundOnBackend = error.response && error.response.status === StatusCode.NOT_FOUND;
+
+        if (notFoundInDatabase) {
+          this.logger.info('Could not find valid client in database');
           return this.registerClient(loginData, clientInfo);
+        }
+        if (notFoundOnBackend) {
+          this.logger.info('Could not find valid client on backend');
+          return this.service!.client.getLocalClient().then(client => {
+            const shouldDeleteWholeDatabase = client.type === ClientType.TEMPORARY;
+            if (shouldDeleteWholeDatabase) {
+              this.logger.info('Last client was temporary - Deleting database');
+              return this.apiClient.config.store
+                .purge()
+                .then(() => this.apiClient.init(loginData.persist ? ClientType.PERMANENT : ClientType.TEMPORARY))
+                .then(() => this.registerClient(loginData, clientInfo));
+            }
+            this.logger.info('Last client was permanent - Deleting cryptography stores');
+            return this.service!.cryptography.deleteCryptographyStores().then(() =>
+              this.registerClient(loginData, clientInfo)
+            );
+          });
         }
         throw error;
       });
   }
 
-  public listen(loginData: LoginData, notificationHandler?: Function): Promise<Account> {
+  public loadAndValidateLocalClient(): Promise<RegisteredClient> {
+    this.logger.info('loadAndValidateLocalClient');
+    let loadedClient: RegisteredClient;
+    return this.service!.cryptography.initCryptobox()
+      .then(() => this.service!.client.getLocalClient())
+      .then(client => (loadedClient = client))
+      .then(() => this.apiClient.client.api.getClient(loadedClient.id))
+      .then(() => (this.apiClient.context!.clientId = loadedClient.id))
+      .then(() => this.service!.conversation.setClientID(loadedClient.id))
+      .then(() => loadedClient);
+  }
+
+  private registerClient(
+    loginData: LoginData,
+    clientInfo?: ClientInfo
+  ): Promise<{isNewClient: boolean; localClient: RegisteredClient}> {
+    this.logger.info('registerClient');
+    if (!this.service) {
+      throw new Error('Services are not set.');
+    }
+    let registeredClient: RegisteredClient;
+
+    return this.service!.client.register(loginData, clientInfo)
+      .then((client: RegisteredClient) => (registeredClient = client))
+      .then(() => {
+        this.logger.info('Client is created');
+        this.apiClient.context!.clientId = registeredClient.id;
+        this.service!.conversation.setClientID(registeredClient.id);
+        return this.service!.notification.initializeNotificationStream(registeredClient.id);
+      })
+      .then(() => this.service!.client.synchronizeClients())
+      .then(() => ({isNewClient: true, localClient: registeredClient}));
+  }
+
+  private resetContext(): Promise<void> {
+    this.logger.info('resetContext');
+    return Promise.resolve().then(() => {
+      delete this.apiClient.context;
+      delete this.service;
+    });
+  }
+
+  public logout(): Promise<void> {
+    this.logger.info('logout');
+    return this.apiClient.logout().then(() => this.resetContext());
+  }
+
+  public listen(notificationHandler?: Function): Promise<Account> {
+    this.logger.info('listen');
+    if (!this.apiClient.context) {
+      throw new Error('Context is not set - Please login first');
+    }
     return Promise.resolve()
-      .then(() => (this.context ? this.context : this.login(loginData, true)))
       .then(() => {
         if (notificationHandler) {
           this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, (notification: IncomingNotification) =>
@@ -394,85 +448,56 @@ class Account extends EventEmitter {
       .then(() => this);
   }
 
-  public login(loginData: LoginData, initClient: boolean = true, clientInfo?: ClientInfo): Promise<Context> {
-    return this.init()
-      .then(() => LoginSanitizer.removeNonPrintableCharacters(loginData))
-      .then(() => this.apiClient.login(loginData))
-      .then((context: Context) => {
-        if (initClient) {
-          return this.initClient(context, loginData, clientInfo).then(client => {
-            if (!this.apiClient.context) {
-              throw new Error('API client does not have a context.');
+  private decodeEvent(event: ConversationEvent): Promise<string> {
+    this.logger.info('decodeEvent');
+    return new Promise(resolve => {
+      if (!this.service) {
+        throw new Error('Services are not set.');
+      }
+
+      switch (event.type) {
+        case CONVERSATION_EVENT.OTR_MESSAGE_ADD: {
+          const otrMessage: ConversationOtrMessageAddEvent = event as ConversationOtrMessageAddEvent;
+          const sessionId: string = CryptographyService.constructSessionId(otrMessage.from, otrMessage.data.sender);
+          const ciphertext: string = otrMessage.data.text;
+          this.service.cryptography.decrypt(sessionId, ciphertext).then((decryptedMessage: Uint8Array) => {
+            const genericMessage = this.protocolBuffers.GenericMessage.decode(decryptedMessage);
+            switch (genericMessage.content) {
+              case GenericMessageType.TEXT: {
+                resolve(genericMessage.text.content);
+                break;
+              }
+              default:
+                resolve(undefined);
             }
-            this.apiClient.context.clientId = client.id;
           });
+          break;
         }
-        return undefined;
-      })
-      .then(() => {
-        if (!this.service) {
-          throw new Error('Services are not set.');
-        }
-
-        if (!this.apiClient.context) {
-          throw new Error('API client does not have a context.');
-        }
-
-        this.context = this.apiClient.context;
-        this.service.conversation.setClientID(<string>this.context.clientId);
-        return this.context;
-      });
+      }
+    });
   }
 
-  private resetContext(): void {
-    delete this.context;
-    delete this.service;
-  }
-
-  public logout(): Promise<void> {
-    return this.apiClient.logout().then(() => this.resetContext());
-  }
-
-  // TODO: Split functionality into "create" and "register" client
-  public async registerClient(
-    loginData: LoginData,
-    clientInfo: ClientInfo = {
-      classification: ClientClassification.DESKTOP,
-      cookieLabel: 'default',
-      model: `${pkg.name} v${pkg.version}`,
-    }
-  ): Promise<RegisteredClient> {
-    if (!this.service) {
-      throw new Error('Services are not set.');
-    }
-
-    const serializedPreKeys: Array<PreKey> = await this.service.crypto.createCryptobox();
-
-    let newClient: NewClient;
-    if (this.service.crypto.cryptobox.lastResortPreKey) {
-      newClient = {
-        class: clientInfo.classification,
-        cookie: clientInfo.cookieLabel,
-        lastkey: this.service.crypto.cryptobox.serialize_prekey(this.service.crypto.cryptobox.lastResortPreKey),
-        location: clientInfo.location,
-        password: String(loginData.password),
-        prekeys: serializedPreKeys,
-        model: clientInfo.model,
-        sigkeys: {
-          enckey: 'Wuec0oJi9/q9VsgOil9Ds4uhhYwBT+CAUrvi/S9vcz0=',
-          mackey: 'Wuec0oJi9/q9VsgOil9Ds4uhhYwBT+CAUrvi/S9vcz0=',
-        },
-        type: loginData.persist ? ClientType.PERMANENT : ClientType.TEMPORARY,
+  private handleEvent(event: ConversationEvent): Promise<PayloadBundle> {
+    this.logger.info('handleEvent');
+    const {conversation, from} = event;
+    return this.decodeEvent(event).then((content: string) => {
+      return {
+        content,
+        conversation,
+        from,
       };
-    } else {
-      throw new Error('Cryptobox got initialized without a last resort PreKey.');
+    });
+  }
+
+  private handleNotification(notification: IncomingNotification): void {
+    this.logger.info('handleNotification');
+    for (const event of notification.payload) {
+      this.handleEvent(event).then((data: PayloadBundle) => {
+        if (data.content) {
+          this.emit(Account.INCOMING.TEXT_MESSAGE, data);
+        }
+      });
     }
-
-    const client = await this.apiClient.client.api.postClient(newClient);
-    await this.service.crypto.saveClient(client);
-    await this.service.notification.initializeNotificationStream(client.id);
-
-    return client;
   }
 }
 

@@ -3,6 +3,199 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="8.3.20"></a>
+## [8.3.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.3.19...@wireapp/cryptobox@8.3.20) (2018-04-13)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+<a name="8.3.19"></a>
+## [8.3.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.3.18...@wireapp/cryptobox@8.3.19) (2018-04-12)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+<a name="8.3.18"></a>
+## [8.3.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.3.17...@wireapp/cryptobox@8.3.18) (2018-04-12)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+<a name="8.3.17"></a>
+## [8.3.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.3.16...@wireapp/cryptobox@8.3.17) (2018-04-06)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+<a name="8.3.16"></a>
+## [8.3.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.3.15...@wireapp/cryptobox@8.3.16) (2018-04-04)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+<a name="8.3.15"></a>
+## [8.3.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.3.14...@wireapp/cryptobox@8.3.15) (2018-04-04)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+<a name="8.3.14"></a>
+## [8.3.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.3.13...@wireapp/cryptobox@8.3.14) (2018-04-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+<a name="8.3.13"></a>
+## [8.3.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.3.12...@wireapp/cryptobox@8.3.13) (2018-04-03)
+
+
+### Bug Fixes
+
+* **api-client,cryptobox:** Show log messages during tests ([#435](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/issues/435)) ([559759d](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/commit/559759d))
+
+
+
+
+<a name="8.3.12"></a>
+## [8.3.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.3.11...@wireapp/cryptobox@8.3.12) (2018-04-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+<a name="8.3.11"></a>
+## [8.3.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.3.10...@wireapp/cryptobox@8.3.11) (2018-03-29)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+<a name="8.3.10"></a>
+## [8.3.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.3.9...@wireapp/cryptobox@8.3.10) (2018-03-29)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+<a name="8.3.9"></a>
+## [8.3.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.3.8...@wireapp/cryptobox@8.3.9) (2018-03-26)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+<a name="8.3.8"></a>
+## [8.3.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.3.7...@wireapp/cryptobox@8.3.8) (2018-03-26)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+<a name="8.3.7"></a>
+## [8.3.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.3.6...@wireapp/cryptobox@8.3.7) (2018-03-26)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+<a name="8.3.6"></a>
+## [8.3.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.3.5...@wireapp/cryptobox@8.3.6) (2018-03-25)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+<a name="8.3.5"></a>
+## [8.3.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.3.4...@wireapp/cryptobox@8.3.5) (2018-03-22)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+<a name="8.3.4"></a>
+## [8.3.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.3.3...@wireapp/cryptobox@8.3.4) (2018-03-22)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+<a name="8.3.3"></a>
+## [8.3.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.3.2...@wireapp/cryptobox@8.3.3) (2018-03-22)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+<a name="8.3.2"></a>
+## [8.3.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.3.1...@wireapp/cryptobox@8.3.2) (2018-03-21)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+<a name="8.3.1"></a>
+## [8.3.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.3.0...@wireapp/cryptobox@8.3.1) (2018-03-21)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+<a name="8.3.0"></a>
+# [8.3.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.2.9...@wireapp/cryptobox@8.3.0) (2018-03-20)
+
+
+### Features
+
+* **core:** Add support for generic messages ([#374](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/issues/374)) ([29aee69](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/commit/29aee69))
+
+
+
+
+<a name="8.2.9"></a>
+## [8.2.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.2.8...@wireapp/cryptobox@8.2.9) (2018-03-20)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+<a name="8.2.8"></a>
+## [8.2.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.2.7...@wireapp/cryptobox@8.2.8) (2018-03-20)
+
+
+### Bug Fixes
+
+* **api-client,cryptobox,store-engine:** Simplify error constructors ([#384](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/issues/384)) ([fdbae30](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/commit/fdbae30))
+
+
+
+
 <a name="8.2.7"></a>
 ## [8.2.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.2.6...@wireapp/cryptobox@8.2.7) (2018-03-19)
 

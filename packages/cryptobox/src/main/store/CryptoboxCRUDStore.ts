@@ -1,27 +1,25 @@
-import * as ProteusKeys from '@wireapp/proteus/dist/keys/root';
-import * as ProteusSession from '@wireapp/proteus/dist/session/root';
+import {keys as ProteusKeys} from '@wireapp/proteus';
+import {session as ProteusSession} from '@wireapp/proteus';
 import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/index';
 import {PersistedRecord, SerialisedRecord} from '../store/root';
-import PreKeyStore from '@wireapp/proteus/dist/session/PreKeyStore';
 import {error as StoreEngineError} from '@wireapp/store-engine';
 import {Decoder, Encoder} from 'bazinga64';
 
-class CryptoboxCRUDStore implements PreKeyStore {
+export enum CRUDStoreKeys {
+  LOCAL_IDENTITY = 'local_identity',
+}
+
+export enum CrudStoreStores {
+  LOCAL_IDENTITY = 'keys',
+  PRE_KEYS = 'prekeys',
+  SESSIONS = 'sessions',
+}
+
+class CryptoboxCRUDStore implements ProteusSession.PreKeyStore {
+  public static readonly KEYS = CRUDStoreKeys;
+  public static readonly STORES = CrudStoreStores;
+
   constructor(private engine: CRUDEngine) {}
-
-  static get KEYS() {
-    return {
-      LOCAL_IDENTITY: 'local_identity',
-    };
-  }
-
-  static get STORES() {
-    return {
-      LOCAL_IDENTITY: 'keys',
-      PRE_KEYS: 'prekeys',
-      SESSIONS: 'sessions',
-    };
-  }
 
   private from_store(record: PersistedRecord): ArrayBuffer {
     return typeof record.serialised === 'string'
