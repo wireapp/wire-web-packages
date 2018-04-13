@@ -76,4 +76,12 @@ export default class FileSystemEngine implements CRUDEngine {
   update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
     throw new Error('Method not implemented.');
   }
+
+  purge(): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+
+  updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+    throw new Error('Method not implemented.');
+  }
 }
