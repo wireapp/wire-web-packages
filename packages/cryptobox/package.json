@@ -48,12 +48,12 @@
   "scripts": {
     "build": "gulp install && yarn build:node && yarn build:browser",
     "copy:browser": "cpx ../cbor/dist/cbor.bundle.js dist/lib/dynamic && cpx ../lru-cache/dist/lru-cache.bundle.js dist/lib/dynamic && cpx ../priority-queue/dist/priority-queue.bundle.js dist/lib/dynamic && cpx ../proteus/dist/proteus.bundle.js dist/lib/dynamic && cpx ../store-engine/dist/store-engine.bundle.js dist/lib/dynamic",
-    "build:browser": "yarn copy:browser && webpack --mode=production --progress",
+    "build:browser": "yarn copy:browser && webpack --progress",
     "build:node": "tsc",
     "clear": "rimraf dist/commonjs dist/lib",
     "dist": "yarn clear && yarn build",
     "test": "yarn test:node && yarn test:browser",
-    "test:browser": "webpack --mode=production && karma start",
+    "test:browser": "webpack && karma start",
     "test:project": "yarn dist && yarn test",
     "test:node": "cross-env NODE_DEBUG=@wireapp/cryptobox* jasmine --config=test/jasmine.node.json"
   },

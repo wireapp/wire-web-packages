@@ -26,12 +26,12 @@
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine",
   "scripts": {
     "build": "yarn build:node && yarn build:browser",
-    "build:browser": "webpack --mode=production --progress",
+    "build:browser": "webpack --progress",
     "build:node": "tsc",
     "clear": "rimraf dist",
     "dist": "yarn clear && yarn build",
     "test": "yarn test:node && yarn test:browser",
-    "test:browser": "webpack --mode=production --progress && karma start",
+    "test:browser": "webpack --progress && karma start",
     "test:project": "yarn dist && yarn test",
     "test:node": "jasmine --config=jasmine.json"
   },

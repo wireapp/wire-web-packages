@@ -34,7 +34,7 @@ module.exports = {
   entry: {
     bundle: ['react-hot-loader/patch', DEMO_DIR + '/index.jsx'],
   },
-  mode: 'production',
+  mode: 'development',
   module: {
     rules: [
       {

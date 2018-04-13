@@ -12,6 +12,7 @@ module.exports = {
   externals: {
     'fs-extra': '{}',
   },
+  mode: 'production',
   node: {
     fs: 'empty',
     path: 'empty',

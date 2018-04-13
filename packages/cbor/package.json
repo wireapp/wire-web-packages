@@ -19,7 +19,7 @@
   "name": "@wireapp/cbor",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor",
   "scripts": {
-    "build:browser": "webpack --mode=production --progress",
+    "build:browser": "webpack --progress",
     "build:node": "tsc",
     "build": "yarn build:node && yarn build:browser",
     "clear": "rimraf dist",
