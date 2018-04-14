@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@types/filesystem": "0.0.28",
-    "@types/node": "9.6.4",
+    "@types/node": "9.6.5",
     "dexie": "2.0.2",
     "fs-extra": "5.0.0"
   },
@@ -36,5 +36,5 @@
     "test:node": "jasmine --config=jasmine.json"
   },
   "types": "./dist/commonjs/index.d.ts",
-  "version": "0.5.10"
+  "version": "0.5.11"
 }
