@@ -71,10 +71,10 @@ export default class LocalStorageEngine implements CRUDEngine {
       const key: string = `${this.storeName}@${tableName}@${primaryKey}`;
       const record = window.localStorage.getItem(key);
       if (record) {
-        if (typeof record === 'string') {
-          return record;
-        } else {
+        try {
           return JSON.parse(record);
+        } catch (error) {
+          return record;
         }
       }
       const message: string = `Record "${primaryKey}" in "${tableName}" could not be found.`;
