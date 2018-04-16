@@ -17,8 +17,7 @@ export default class LocalStorageEngine implements CRUDEngine {
   public create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
     if (entity) {
       const key: string = `${this.storeName}@${tableName}@${primaryKey}`;
-      return Promise.resolve()
-        .then(() => this.read(tableName, primaryKey))
+      return this.read(tableName, primaryKey)
         .catch(error => {
           if (error instanceof RecordNotFoundError) {
             return undefined;
@@ -123,5 +122,17 @@ export default class LocalStorageEngine implements CRUDEngine {
         throw error;
       })
       .then(() => primaryKey);
+  }
+
+  append(tableName: string, primaryKey: string, additions: string): Promise<string> {
+    return this.read(tableName, primaryKey).then((record: any) => {
+      if (typeof record === 'string') {
+        record += additions;
+      } else {
+        const message: string = `Cannot append text to record "${primaryKey}" because it's not a string.`;
+        throw new RecordTypeError(message);
+      }
+      return this.updateOrCreate(tableName, primaryKey, record);
+    });
   }
 }
