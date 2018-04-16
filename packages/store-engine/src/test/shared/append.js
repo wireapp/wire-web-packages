@@ -11,6 +11,7 @@ module.exports = {
     await engine.append(TABLE_NAME, primaryKey, textExtension);
     const record = await engine.read(TABLE_NAME, primaryKey);
     expect(record).toBe(`${text}${textExtension}`);
+
     done();
   },
 };
