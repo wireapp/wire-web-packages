@@ -24,9 +24,11 @@ export type FileSystemEngineOptions = {
   type: number;
 };
 
+const TEN_MEGABYTES = 1024 * 1024 * 10;
+
 const DEFAULT_OPTIONS: FileSystemEngineOptions = {
+  size: TEN_MEGABYTES,
   type: window.TEMPORARY,
-  size: 1024 * 1024 * 10,
 };
 
 export default class FileSystemEngine implements CRUDEngine {
