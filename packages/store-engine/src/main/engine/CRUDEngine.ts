@@ -5,7 +5,7 @@ interface CRUDEngine {
    * Appends a string to an existing record.
    * @param {string} tableName - Table name
    * @param {string} primaryKey - Primary key of record which should get extended
-   * @param {Object} changes - Text to append
+   * @param {Object} additions - Text to append
    * @returns {Promise<string>} Resolves with the primary key of the extended record.
    */
   append(tableName: string, primaryKey: string, additions: string): Promise<string>;
