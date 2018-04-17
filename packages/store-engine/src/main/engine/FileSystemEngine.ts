@@ -19,6 +19,16 @@
 
 import CRUDEngine from './CRUDEngine';
 
+export type FileSystemEngineOptions = {
+  size: number;
+  type: number;
+};
+
+const DEFAULT_OPTIONS: FileSystemEngineOptions = {
+  type: window.TEMPORARY,
+  size: 1024 * 1024 * 10,
+};
+
 export default class FileSystemEngine implements CRUDEngine {
   public storeName: string = '';
 
@@ -26,15 +36,8 @@ export default class FileSystemEngine implements CRUDEngine {
 
   constructor() {}
 
-  init(storeName: string = '', options: {type: number; size: number}): Promise<string> {
-    const config = Object.assign(
-      {},
-      {
-        type: window.TEMPORARY,
-        size: 1024 * 1024 * 10,
-      },
-      options
-    );
+  init(storeName: string = '', options: FileSystemEngineOptions): Promise<string> {
+    const config = {...DEFAULT_OPTIONS, ...options};
 
     return new Promise((resolve, reject) => {
       window.requestFileSystem(
@@ -47,6 +50,10 @@ export default class FileSystemEngine implements CRUDEngine {
         reject
       );
     });
+  }
+
+  append(tableName: string, primaryKey: string, additions: string): Promise<string> {
+    throw new Error('Method not implemented.');
   }
 
   create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
