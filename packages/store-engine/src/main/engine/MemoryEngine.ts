@@ -85,23 +85,19 @@ export default class MemoryEngine implements CRUDEngine {
     return Promise.resolve(Object.keys(this.stores[this.storeName][tableName]));
   }
 
-  public update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  public update<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
     this.prepareTable(tableName);
-    return this.read(tableName, primaryKey)
-      .then((entity: Object) => {
-        return Object.assign(entity, changes);
-      })
-      .then((updatedEntity: Object) => {
-        this.stores[this.storeName][tableName][primaryKey] = updatedEntity;
-        return primaryKey;
-      });
+    return this.read(tableName, primaryKey).then(() => {
+      this.stores[this.storeName][tableName][primaryKey] = entity;
+      return primaryKey;
+    });
   }
 
-  public updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
-    return this.update(tableName, primaryKey, changes)
+  public updateOrCreate<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
+    return this.update(tableName, primaryKey, entity)
       .catch(error => {
         if (error instanceof RecordNotFoundError) {
-          return this.create(tableName, primaryKey, changes);
+          return this.create(tableName, primaryKey, entity);
         }
         throw error;
       })

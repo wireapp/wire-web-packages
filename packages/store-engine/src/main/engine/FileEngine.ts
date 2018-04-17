@@ -172,26 +172,22 @@ export default class FileEngine implements CRUDEngine {
   }
 
   // TODO: Make this function also work for binary data.
-  update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  update<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
     return this.resolvePath(tableName, primaryKey).then(file => {
       return this.read(tableName, primaryKey)
         .then((record: any) => {
-          if (typeof record === 'string') {
-            record = JSON.parse(record);
-          }
-          const updatedRecord: Object = {...record, ...changes};
-          return JSON.stringify(updatedRecord);
+          return JSON.stringify(entity);
         })
-        .then((updatedRecord: any) => fs.outputFile(file, updatedRecord))
+        .then((updatedRecord: string) => fs.outputFile(file, updatedRecord))
         .then(() => primaryKey);
     });
   }
 
-  public updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
-    return this.update(tableName, primaryKey, changes)
+  public updateOrCreate<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
+    return this.update<T>(tableName, primaryKey, entity)
       .catch(error => {
         if (error instanceof RecordNotFoundError) {
-          return this.create(tableName, primaryKey, changes);
+          return this.create<T>(tableName, primaryKey, entity);
         }
         throw error;
       })
