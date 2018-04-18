@@ -20,11 +20,11 @@
 import CRUDEngine from './CRUDEngine';
 import {RecordTypeError} from './error/';
 
-const Filer = require('filer.js');
+const fs = require('bro-fs');
 
 export type FileSystemEngineOptions = {
   fileExtension: string;
-  isPersistent: boolean;
+  type: number;
   size: number;
 };
 
@@ -35,53 +35,40 @@ export default class FileSystemEngine implements CRUDEngine {
 
   private config: FileSystemEngineOptions = {
     fileExtension: '.dat',
-    isPersistent: false,
+    type: window.TEMPORARY,
     size: TEN_MEGABYTES,
   };
-  private filer: any;
 
-  constructor() {
-    this.filer = new Filer();
-  }
+  constructor() {}
 
-  init(storeName: string = '', options?: FileSystemEngineOptions): Promise<string> {
+  async init(storeName: string = '', options?: FileSystemEngineOptions): Promise<void> {
     Object.assign(this.config, options);
     this.storeName = storeName;
 
-    return new Promise((resolve, reject) => {
-      this.filer.init(
-        {persistent: this.config.isPersistent, size: this.config.size},
-        (filesystem: FileSystem) => {
-          resolve(this.filer.fs.root.toURL());
-        },
-        reject
-      );
-    });
+    await fs.init({type: this.config.type, bytes: this.config.size});
   }
 
   append(tableName: string, primaryKey: string, additions: string): Promise<string> {
     throw new Error('Method not implemented.');
   }
 
-  private createDirectory(tableName: string): Promise<string> {
+  private async createDirectory(tableName: string): Promise<string> {
     const path = `${this.storeName}/${tableName}`;
-    return new Promise((resolve, reject) => {
-      this.filer.mkdir(path, false, () => resolve(path), reject);
-    });
+    await fs.mkdir(path);
+    return path;
   }
 
-  create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
-    return new Promise(async (resolve, reject) => {
-      const onError = () => {
-        const message: string = `Record "${primaryKey}" cannot be saved in "${tableName}" because it's "undefined" or "null".`;
-        reject(new RecordTypeError(message));
-      };
+  async create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
+    const directory = await this.createDirectory(tableName);
+    const path = `${directory}/${primaryKey}.${this.config.fileExtension}`;
 
-      const directory = await this.createDirectory(tableName);
-      const path = `${directory}/${primaryKey}.${this.config.fileExtension}`;
-
-      this.filer.create(path, false, () => resolve(primaryKey), onError);
-    });
+    try {
+      await fs.writeFile(path, entity);
+    } catch (error) {
+      const message: string = `Record "${primaryKey}" cannot be saved in "${tableName}": ${error.message}`;
+      throw new RecordTypeError(message);
+    }
+    return primaryKey;
   }
 
   delete(tableName: string, primaryKey: string): Promise<string> {
