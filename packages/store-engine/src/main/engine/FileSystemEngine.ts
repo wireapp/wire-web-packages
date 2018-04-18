@@ -42,6 +42,7 @@ export default class FileSystemEngine implements CRUDEngine {
     const config = {...DEFAULT_OPTIONS, ...options};
 
     return new Promise((resolve, reject) => {
+      window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
       window.requestFileSystem(
         config.type,
         config.size,

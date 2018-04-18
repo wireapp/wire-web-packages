@@ -17,25 +17,9 @@
  *
  */
 
-window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
-
 import {FileSystemEngine} from '@wireapp/store-engine';
 
 describe('FileSystemEngine', () => {
-  describe('"constructor"', () => {
-    it('has access to "window.requestFileSystem"', done => {
-      if (window.requestFileSystem) {
-        done();
-      } else {
-        done.fail(
-          new Error(
-            '"FileSystem API" in Chrome is not enabled. Read more: http://blog.teamtreehouse.com/building-an-html5-text-editor-with-the-filesystem-apis'
-          )
-        );
-      }
-    });
-  });
-
   describe('"init"', () => {
     it('resolves with a browser-specific URL to the filesystem.', async done => {
       const engine = new FileSystemEngine();
