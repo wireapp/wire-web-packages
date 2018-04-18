@@ -34,7 +34,12 @@ export default class FileSystemEngine implements CRUDEngine {
   constructor() {}
 
   init(storeName: string = '', options: FileSystemEngineOptions): Promise<string> {
-    const config = {size: TEN_MEGABYTES, type: window.TEMPORARY, ...options};
+    const DEFAULT_OPTIONS: FileSystemEngineOptions = {
+      size: TEN_MEGABYTES,
+      type: window.TEMPORARY,
+    };
+
+    const config = {...DEFAULT_OPTIONS, ...options};
 
     return new Promise((resolve, reject) => {
       window.requestFileSystem(
