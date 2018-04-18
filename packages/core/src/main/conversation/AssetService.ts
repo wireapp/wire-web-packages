@@ -76,7 +76,7 @@ export default class AssetService {
     return asset;
   }
 
-  public async getAssetUrl(assetKey: string, assetToken?: string): Promise<ArrayBuffer> {
+  public getAssetUrl(assetKey: string, assetToken?: string): Promise<ArrayBuffer> {
     return this.apiClient.asset.api.getAsset(assetKey, assetToken);
   }
 }
