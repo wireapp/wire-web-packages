@@ -17,11 +17,10 @@
  *
  */
 
-const UUID = require('pure-uuid');
 import APIClient = require('@wireapp/api-client');
 import {CryptographyService, EncryptedAsset} from '../cryptography/root';
 import {Image} from '../conversation/root';
-import {encryptAsset} from '../cryptography/AssetCryptography.node';
+import * as AssetCryptography from '../cryptography/AssetCryptography.node';
 import {AssetRetentionPolicy} from '@wireapp/api-client/dist/commonjs/asset/AssetRetentionPolicy';
 
 export interface AssetOptions {
@@ -40,7 +39,7 @@ export default class AssetService {
     buffer: Buffer,
     options?: AssetOptions
   ): Promise<EncryptedAsset & {key: string; token: string}> {
-    const {cipherText, keyBytes, sha256} = await encryptAsset(buffer);
+    const {cipherText, keyBytes, sha256} = await AssetCryptography.encryptAsset(buffer);
     const {key, token} = await this.apiClient.asset.api.postAsset(new Uint8Array(cipherText), options);
     return {
       cipherText,

@@ -30,7 +30,7 @@ import {
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
 import {CryptographyService, EncryptedAsset} from '../cryptography/root';
 import {AssetService, Image} from '../conversation/root';
-import {encryptAsset} from '../cryptography/AssetCryptography.node';
+import * as AssetCryptography from '../cryptography/AssetCryptography.node';
 
 export default class ConversationService {
   private clientID: string = '';
@@ -107,7 +107,7 @@ export default class ConversationService {
     const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(customTextMessage).finish();
 
     if (this.shouldSendAsExternal(plainTextBuffer, <UserPreKeyBundleMap>preKeyBundles)) {
-      const payload: EncryptedAsset = await encryptAsset(plainTextBuffer);
+      const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
 
       return this.sendExternalGenericMessage(
         this.clientID,
@@ -135,7 +135,7 @@ export default class ConversationService {
 
     const preKeyBundles = await this.getPreKeyBundles(conversationId);
     const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(genericMessage).finish();
-    const payload: EncryptedAsset = await encryptAsset(plainTextBuffer);
+    const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
 
     return this.sendExternalGenericMessage(this.clientID, conversationId, payload, <UserPreKeyBundleMap>preKeyBundles);
   }
