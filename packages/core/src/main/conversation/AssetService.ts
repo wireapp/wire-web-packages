@@ -24,6 +24,16 @@ import {ImageProcessingService} from '../processing/root';
 import {encryptAsset} from '../cryptography/AssetCryptography.node';
 import {AssetRetentionPolicy} from '@wireapp/api-client/dist/commonjs/asset/AssetRetentionPolicy';
 
+export interface AssetOptions {
+  public: boolean;
+  retention: AssetRetentionPolicy;
+}
+
+export interface Image {
+  data: Buffer | string;
+  type: string;
+}
+
 export default class AssetService {
   private imageProcessingService: ImageProcessingService;
   constructor(
@@ -34,18 +44,15 @@ export default class AssetService {
     this.imageProcessingService = new ImageProcessingService();
   }
 
-  public async uploadAsset(buffer: Buffer, options: {public: boolean; retention: AssetRetentionPolicy}): Promise<any> {
-    const {key, keyBytes, sha256, token} = await this._uploadAsset(buffer, options);
+  public async uploadAsset(buffer: Buffer, options: AssetOptions): Promise<any> {
+    const {key, keyBytes, sha256, token} = await this.postAsset(buffer, options);
     const asset = this.protocolBuffers.Asset.create();
     const remoteData = this.protocolBuffers.Asset.RemoteData.create({keyBytes, sha256, key, token});
     asset.set('uploaded', remoteData);
     return asset;
   }
 
-  private async _uploadAsset(
-    buffer: Buffer,
-    options: {public: boolean; retention: AssetRetentionPolicy}
-  ): Promise<any> {
+  private async postAsset(buffer: Buffer, options: AssetOptions): Promise<any> {
     const {cipherText, keyBytes, sha256} = await encryptAsset(buffer);
     const {key, token} = await this.apiClient.asset.api.postAsset(new Uint8Array(cipherText), options);
     return {
@@ -56,12 +63,9 @@ export default class AssetService {
     };
   }
 
-  public async uploadImageAsset(
-    image: Buffer | string,
-    options: {public: boolean; retention: AssetRetentionPolicy}
-  ): Promise<any> {
-    const {compressedBytes, compressedImage} = await this.imageProcessingService.compress(image);
-    const {key, keyBytes, sha256, token} = await this._uploadAsset(compressedBytes, options);
+  public async uploadImageAsset(image: Image, options: AssetOptions): Promise<any> {
+    const {compressedBytes, compressedImage} = await this.imageProcessingService.compress(image.data);
+    const {key, keyBytes, sha256, token} = await this.postAsset(compressedBytes, options);
     const imageMetadata = this.protocolBuffers.Asset.ImageMetaData.create(
       compressedImage.width,
       compressedImage.height
@@ -76,7 +80,7 @@ export default class AssetService {
     return asset;
   }
 
-  public async getAssetUrl(assetKey: string, assetToken?: string): Promise<any> {
+  public async getAssetUrl(assetKey: string, assetToken?: string): Promise<ArrayBuffer> {
     return this.apiClient.asset.api.getAsset(assetKey, assetToken);
   }
 }

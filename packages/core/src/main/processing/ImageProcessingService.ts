@@ -27,7 +27,7 @@ export default class ImageProcessingService {
 
   constructor() {}
 
-  public async compress(data: string | Buffer): Promise<any> {
+  public async compress(data: Buffer | string): Promise<any> {
     const image = await jimp.read(data);
 
     if (image.bitmap.width > ImageProcessingService.MAX_SIZE || image.bitmap.height > ImageProcessingService.MAX_SIZE) {
