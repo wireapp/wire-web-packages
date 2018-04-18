@@ -19,9 +19,11 @@
 
 import CRUDEngine from './CRUDEngine';
 
+const Filer = require('filer.js');
+
 export type FileSystemEngineOptions = {
   size: number;
-  type: number;
+  isPersistent: boolean;
 };
 
 const TEN_MEGABYTES = 1024 * 1024 * 10;
@@ -29,26 +31,25 @@ const TEN_MEGABYTES = 1024 * 1024 * 10;
 export default class FileSystemEngine implements CRUDEngine {
   public storeName: string = '';
 
-  private filesystem: FileSystem | undefined;
+  private filer: any;
 
-  constructor() {}
+  constructor() {
+    this.filer = new Filer();
+  }
 
   init(storeName: string = '', options: FileSystemEngineOptions): Promise<string> {
     const DEFAULT_OPTIONS: FileSystemEngineOptions = {
       size: TEN_MEGABYTES,
-      type: window.TEMPORARY,
+      isPersistent: false,
     };
 
     const config = {...DEFAULT_OPTIONS, ...options};
 
     return new Promise((resolve, reject) => {
-      window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
-      window.requestFileSystem(
-        config.type,
-        config.size,
-        filesystem => {
-          this.filesystem = filesystem;
-          resolve(this.filesystem.root.toURL());
+      this.filer.init(
+        {persistent: config.isPersistent, size: config.size},
+        (filesystem: FileSystem) => {
+          resolve(this.filer.fs.root.toURL());
         },
         reject
       );
