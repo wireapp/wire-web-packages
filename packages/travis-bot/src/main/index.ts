@@ -54,8 +54,13 @@ class TravisBot {
   constructor(private loginData: LoginData, private messageData: MessageData) {}
 
   get message(): string {
-    const {build: {number: buildNumber, repositoryName}} = this.messageData;
-    const {changelog, commit: {branch, author, hash, message}} = this.messageData;
+    const {
+      build: {number: buildNumber, repositoryName},
+    } = this.messageData;
+    const {
+      changelog,
+      commit: {branch, author, hash, message},
+    } = this.messageData;
 
     let msg = `**${repositoryName}: Build '${buildNumber}' finished on '${branch}' branch.**\n`;
 
@@ -80,7 +85,8 @@ class TravisBot {
     const client = new APIClient(new Config(engine, APIClient.BACKEND.PRODUCTION));
 
     const account = new Account(client);
-    await account.listen(this.loginData);
+    await account.login(this.loginData);
+    await account.listen();
 
     if (!conversationIds) {
       const MAXIMUM_CONVERSATIONS = 500;

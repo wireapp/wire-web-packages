@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@types/node": "9.6.4",
+    "@types/node": "9.6.5",
     "dexie": "2.0.2",
     "fs-extra": "5.0.0"
   },
@@ -9,10 +9,10 @@
     "karma": "2.0.0",
     "karma-chrome-launcher": "2.2.0",
     "karma-jasmine": "1.1.1",
-    "karma-jasmine-diff-reporter": "1.1.1",
+    "karma-jasmine-diff-reporter": "1.2.0",
     "karma-sourcemap-loader": "0.3.7",
     "rimraf": "2.6.2",
-    "typescript": "2.7.2",
+    "typescript": "2.8.1",
     "webpack": "3.11.0"
   },
   "description": "Provider for different storage engines.",
@@ -35,5 +35,5 @@
     "test:node": "jasmine --config=jasmine.json"
   },
   "types": "./dist/commonjs/index.d.ts",
-  "version": "0.5.9"
+  "version": "0.6.0"
 }

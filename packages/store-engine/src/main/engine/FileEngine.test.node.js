@@ -43,8 +43,7 @@ describe('FileEngine', () => {
     fs
       .remove(TEST_DIRECTORY)
       .then(done)
-      .catch(done.fail)
-  );
+      .catch(done.fail));
 
   describe('"resolvePath"', () => {
     it('properly validate paths', done => {
@@ -64,6 +63,12 @@ describe('FileEngine', () => {
         }
         done();
       });
+    });
+  });
+
+  describe('"append"', () => {
+    Object.entries(require('../../test/shared/append')).map(([description, testFunction]) => {
+      it(description, done => testFunction(done, engine));
     });
   });
 
