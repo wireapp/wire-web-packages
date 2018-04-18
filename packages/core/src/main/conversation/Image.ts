@@ -17,6 +17,11 @@
  *
  */
 
-import ImageProcessingService from './ImageProcessingService';
+interface Image {
+  data: Buffer;
+  height: number;
+  type: string;
+  width: number;
+}
 
-export {ImageProcessingService};
+export default Image;

@@ -40,7 +40,7 @@ import {
 import {LoginSanitizer} from './auth/root';
 import {Root} from 'protobufjs';
 import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/index';
-import {ConversationService} from './conversation/root';
+import {AssetService, ConversationService} from './conversation/root';
 import Client = require('@wireapp/api-client');
 import EventEmitter = require('events');
 import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/index';
@@ -299,15 +299,21 @@ class Account extends EventEmitter {
     };
     return Promise.resolve(Root.fromJSON(proto))
       .then((root: Root) => {
+        this.protocolBuffers.Asset = root.lookup('Asset');
         this.protocolBuffers.External = root.lookup('External');
         this.protocolBuffers.GenericMessage = root.lookup('GenericMessage');
         this.protocolBuffers.Text = root.lookup('Text');
-        this.protocolBuffers.Asset = root.lookup('Asset');
       })
       .then(() => {
         const cryptographyService = new CryptographyService(this.apiClient, this.apiClient.config.store);
         const clientService = new ClientService(this.apiClient, this.apiClient.config.store, cryptographyService);
-        const conversationService = new ConversationService(this.apiClient, this.protocolBuffers, cryptographyService);
+        const assetService = new AssetService(this.apiClient, this.protocolBuffers, cryptographyService);
+        const conversationService = new ConversationService(
+          this.apiClient,
+          this.protocolBuffers,
+          cryptographyService,
+          assetService
+        );
         const notificationService = new NotificationService(this.apiClient, this.apiClient.config.store);
 
         this.service = {

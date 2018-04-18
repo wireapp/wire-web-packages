@@ -19,5 +19,6 @@
 
 import ConversationService from './ConversationService';
 import AssetService from './AssetService';
+import Image from './Image';
 
-export {AssetService, ConversationService};
+export {AssetService, ConversationService, Image};
