@@ -37,7 +37,7 @@ describe('AssetService', () => {
     done();
   });
 
-  describe("'uploadImageAsset'", () => {
+  describe('"uploadImageAsset"', () => {
     it('builds protocol buffers', async done => {
       const assetServerData = {
         key: `3-2-${new UUID(4).format()}`,
