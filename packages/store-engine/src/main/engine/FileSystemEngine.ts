@@ -26,11 +26,6 @@ export type FileSystemEngineOptions = {
 
 const TEN_MEGABYTES = 1024 * 1024 * 10;
 
-const DEFAULT_OPTIONS: FileSystemEngineOptions = {
-  size: TEN_MEGABYTES,
-  type: window.TEMPORARY,
-};
-
 export default class FileSystemEngine implements CRUDEngine {
   public storeName: string = '';
 
@@ -39,7 +34,7 @@ export default class FileSystemEngine implements CRUDEngine {
   constructor() {}
 
   init(storeName: string = '', options: FileSystemEngineOptions): Promise<string> {
-    const config = {...DEFAULT_OPTIONS, ...options};
+    const config = {size: TEN_MEGABYTES, type: window.TEMPORARY, ...options};
 
     return new Promise((resolve, reject) => {
       window.requestFileSystem(
