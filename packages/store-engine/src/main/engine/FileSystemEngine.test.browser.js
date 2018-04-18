@@ -20,11 +20,34 @@
 import {FileSystemEngine} from '@wireapp/store-engine';
 
 describe('FileSystemEngine', () => {
+  const STORE_NAME = 'store-name';
+
+  let engine = undefined;
+
+  async function initEngine() {
+    const storeEngine = new FileSystemEngine();
+    await storeEngine.init(STORE_NAME);
+    return storeEngine;
+  }
+
+  beforeEach(async done => {
+    engine = await initEngine();
+    done();
+  });
+
   describe('"init"', () => {
     it('resolves with a browser-specific URL to the filesystem.', async done => {
-      const engine = new FileSystemEngine();
       const url = await engine.init();
       expect(url.startsWith('filesystem:')).toBe(true);
+      done();
+    });
+  });
+
+  describe('"create"', () => {
+    it('saves files.', async done => {
+      const entity = 'this-is-a-test';
+      const primaryKey = await engine.create('my-table', 'my-key', entity);
+      expect(primaryKey).toBe('my-key');
       done();
     });
   });
