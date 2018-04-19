@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="2.2.1"></a>
+## [2.2.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.2.0...@wireapp/core@2.2.1) (2018-04-18)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.2.0"></a>
+# [2.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.62...@wireapp/core@2.2.0) (2018-04-18)
+
+
+### Features
+
+* **core:** Send images ([#492](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/492)) ([86eed46](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/86eed46))
+
+
+
+
+<a name="2.1.62"></a>
+## [2.1.62](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.61...@wireapp/core@2.1.62) (2018-04-18)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="2.1.61"></a>
+## [2.1.61](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.60...@wireapp/core@2.1.61) (2018-04-17)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
 <a name="2.1.60"></a>
 ## [2.1.60](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.1.59...@wireapp/core@2.1.60) (2018-04-17)
 
