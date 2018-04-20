@@ -23,12 +23,16 @@ const webpack = require('webpack');
 module.exports = {
   devtool: 'source-map',
   entry: {
-    filename: `${__dirname}/${pkg.main}`,
+    [pkg.name]: `${__dirname}/${pkg.main}`,
+    [`${pkg.name}.test`]: [
+      `${__dirname}/test/shared/helpers/globalTestValues.js`,
+      `${__dirname}/test/browser/index.js`,
+    ],
   },
   output: {
-    filename: `${pkg.name}.js`,
+    filename: '[name].bundle.js',
     library: pkg.name,
-    path: `${__dirname}/dist/window`,
+    path: `${__dirname}/dist`,
   },
   plugins: [new webpack.BannerPlugin(`${pkg.name} v${pkg.version}`)],
 };

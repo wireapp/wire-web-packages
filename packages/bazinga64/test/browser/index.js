@@ -17,34 +17,6 @@
  *
  */
 
-const dist = 'dist/';
-
-module.exports = function(config) {
-  config.set({
-    autoWatch: false,
-    basePath: '',
-    browserNoActivityTimeout: 90000,
-    browsers: ['ChromeNoSandbox'],
-    client: {
-      useIframe: false,
-    },
-    colors: true,
-    concurrency: Infinity,
-    customLaunchers: {
-      ChromeNoSandbox: {
-        base: 'ChromeHeadless',
-        flags: ['--no-sandbox'],
-      },
-    },
-    exclude: [],
-    files: [`${dist}bazinga64.test.bundle.js`],
-    frameworks: ['jasmine'],
-    logLevel: config.LOG_INFO,
-    port: 9876,
-    preprocessors: {
-      '**/*.js': ['sourcemap'],
-    },
-    reporters: ['jasmine-diff', 'progress'],
-    singleRun: true,
-  });
-};
+// traverse all test files for webpack dependency resolution
+const testsContext = require.context('../shared/spec/', true, /.*Spec\.js$/);
+testsContext.keys().forEach(testsContext);

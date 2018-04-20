@@ -42,7 +42,7 @@
     "dist": "yarn clear && yarn build",
     "test": "yarn test:node && yarn test:browser",
     "test:browser": "webpack && karma start",
-    "test:node": "cross-env JASMINE_CONFIG_PATH=test/js/support/jasmine.json jasmine"
+    "test:node": "cross-env JASMINE_CONFIG_PATH=test/shared/support/jasmine.json jasmine"
   },
   "typings": "dist/bazinga64.d.ts",
   "version": "5.0.3"

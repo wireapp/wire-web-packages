@@ -61,23 +61,23 @@ describe('Decoder', () => {
       const secondLine = '4zfU8cH1ccO02+4kfgoaAqEAoQBYIFBeAyydEVNDHd+pPoqvt1Es4zfU8cH1ccO02+4kfgoa';
 
       // RFC 2045: The encoded output stream must be represented in lines of no more than 76 characters each.
-      const encoded = firstLine + '\r\n' + secondLine;
+      let encoded = firstLine + '\r\n' + secondLine;
       let bytes = bazinga64.Decoder.fromBase64(encoded).asBytes;
       expect(bytes.byteLength).toBeDefined();
 
-      const encoded = firstLine + secondLine + ':';
+      encoded = firstLine + secondLine + ':';
       bytes = bazinga64.Decoder.fromBase64(encoded).asBytes;
       expect(bytes.byteLength).toBeDefined();
 
-      const encoded = firstLine + secondLine + '.';
+      encoded = firstLine + secondLine + '.';
       bytes = bazinga64.Decoder.fromBase64(encoded).asBytes;
       expect(bytes.byteLength).toBeDefined();
 
-      const encoded = firstLine + secondLine + '!';
+      encoded = firstLine + secondLine + '!';
       bytes = bazinga64.Decoder.fromBase64(encoded).asBytes;
       expect(bytes.byteLength).toBeDefined();
 
-      const encoded = firstLine + '\\' + secondLine + '!';
+      encoded = firstLine + '\\' + secondLine + '!';
       bytes = bazinga64.Decoder.fromBase64(encoded).asBytes;
       expect(bytes.byteLength).toBeDefined();
     });
