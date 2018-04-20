@@ -190,7 +190,7 @@ export class EncodedData implements IData {
 }
 
 export class Encoder {
-  public static toBase64(data: string | number | ArrayBuffer | number[]): EncodedData {
+  public static toBase64(data: string | number | number[] | ArrayBuffer | Buffer): EncodedData {
     const decoded = Converter.toArrayBufferView(data);
     const asString = Encoder.fromByteArray(decoded);
     const asBytes = Converter.stringToArrayBufferViewUTF8(asString);
