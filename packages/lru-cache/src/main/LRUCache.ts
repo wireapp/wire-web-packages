@@ -51,13 +51,14 @@ class LRUCache<T> {
     }
   }
 
-  public get(key: string): T | void {
+  public get(key: string): T | undefined {
     let node = this.map[key];
     if (node) {
       this.remove(node);
       this.setHead(node);
       return node.value;
     }
+    return undefined;
   }
 
   public getAll(key: string): {[id: string]: T}[] {
@@ -111,7 +112,7 @@ class LRUCache<T> {
     return node;
   }
 
-  public set(key: string, value: T): T | void {
+  public set(key: string, value: T): T | undefined {
     let old = this.map[key];
     let removedNode;
 
@@ -142,6 +143,7 @@ class LRUCache<T> {
         return removedNode.value;
       }
     }
+    return undefined;
   }
 
   private setHead(node: Node<T>): void {
