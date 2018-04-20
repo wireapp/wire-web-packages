@@ -20,7 +20,7 @@ class Cryptobox extends EventEmitter {
     NEW_SESSION: 'new-session',
   };
 
-  private cachedSessions: LRUCache;
+  private cachedSessions: LRUCache<CryptoboxSession>;
 
   private logger: any = logdown('@wireapp/cryptobox/Cryptobox', {
     logger: console,
@@ -72,7 +72,7 @@ class Cryptobox extends EventEmitter {
     return session;
   }
 
-  private load_session_from_cache(session_id: string): CryptoboxSession {
+  private load_session_from_cache(session_id: string): CryptoboxSession | void {
     this.logger.log(`Trying to load Session with ID "${session_id}" from cache...`);
     return this.cachedSessions.get(session_id);
   }
@@ -276,7 +276,7 @@ class Cryptobox extends EventEmitter {
   public session_load(session_id: string): Promise<CryptoboxSession> {
     this.logger.log(`Trying to load Session with ID "${session_id}"...`);
 
-    const cachedSession: CryptoboxSession = this.load_session_from_cache(session_id);
+    const cachedSession: CryptoboxSession | void = this.load_session_from_cache(session_id);
     if (cachedSession) {
       return Promise.resolve(cachedSession);
     }
