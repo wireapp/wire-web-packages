@@ -121,7 +121,7 @@ export class Converter {
     return arrayBufferView;
   }
 
-  private static arrayBufferViewToString(arrayBufferView: Uint8Array) {
+  private static arrayBufferViewToString(arrayBufferView: Uint8Array): string {
     const binaryString = Array.prototype.map
       .call(arrayBufferView, (index: number) => String.fromCharCode(index))
       .join('');
