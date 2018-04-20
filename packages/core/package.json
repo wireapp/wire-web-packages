@@ -3,10 +3,10 @@
     "./dist/commonjs/cryptography/AssetCryptography.node": "./dist/commonjs/cryptography/AssetCryptography.browser.js"
   },
   "dependencies": {
-    "@types/node": "9.6.5",
-    "@wireapp/api-client": "0.7.2",
-    "@wireapp/cryptobox": "8.3.26",
-    "@wireapp/store-engine": "0.6.1",
+    "@types/node": "9.6.6",
+    "@wireapp/api-client": "0.7.3",
+    "@wireapp/cryptobox": "8.3.27",
+    "@wireapp/store-engine": "0.6.2",
     "bazinga64": "5.0.3",
     "logdown": "3.2.3",
     "protobufjs": "6.8.6",
@@ -17,13 +17,13 @@
     "dotenv": "5.0.1",
     "istanbul": "1.1.0-alpha.1",
     "jasmine": "3.1.0",
-    "karma": "2.0.0",
+    "karma": "2.0.2",
     "karma-chrome-launcher": "2.2.0",
     "karma-jasmine": "1.1.1",
     "karma-jasmine-diff-reporter": "1.2.0",
     "karma-sourcemap-loader": "0.3.7",
     "rimraf": "2.6.2",
-    "typescript": "2.8.1",
+    "typescript": "2.8.3",
     "webpack": "3.11.0"
   },
   "description": "Wire for Web's communication core.",
@@ -48,5 +48,5 @@
     "test:node": "jasmine --config=src/test/node/support/jasmine.json"
   },
   "types": "./dist/Account.d.ts",
-  "version": "2.2.2"
+  "version": "2.2.3"
 }
