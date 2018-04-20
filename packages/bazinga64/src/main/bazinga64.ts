@@ -64,7 +64,7 @@ export class Converter {
     return arrayBufferView;
   }
 
-  public static toArrayBufferView(data: ArrayBuffer | number[] | Buffer | number | string): Uint8Array {
+  public static toArrayBufferView(data: number | string | number[] | Buffer | ArrayBuffer): Uint8Array {
     switch (data.constructor.name) {
       case 'ArrayBuffer':
         return new Uint8Array(<ArrayBuffer>data);
