@@ -48,4 +48,13 @@ describe('FileSystemEngine', () => {
       it(description, done => testFunction(done, engine));
     });
   });
+
+  describe('"read"', () => {
+    fit('benny-test', async done => {
+      const entity = 'this-is-a-test';
+      const primaryKey = await engine.create('my-table', 'my-key', entity);
+      expect(primaryKey).toBe('my-key');
+      done();
+    });
+  });
 });

@@ -62,14 +62,25 @@ export default class FileSystemEngine implements CRUDEngine {
     });
   }
 
-  append(tableName: string, primaryKey: string, additions: string): Promise<string> {
-    throw new Error('Method not implemented.');
+  private createDirectoryPath(tableName: string): string {
+    return `${this.storeName}/${tableName}`;
+  }
+
+  private createFilePath(tableName: string, primaryKey: string): string {
+    const directory = this.createDirectoryPath(tableName);
+    return `${directory}/${primaryKey}${this.config.fileExtension}`;
+  }
+
+  async append(tableName: string, primaryKey: string, additions: string): Promise<string> {
+    const filePath = this.createFilePath(tableName, primaryKey);
+    await fs.appendFile(filePath, additions);
+    return primaryKey;
   }
 
   private async createDirectory(tableName: string): Promise<string> {
-    const path = `${this.storeName}/${tableName}`;
-    await fs.mkdir(path);
-    return path;
+    const directoryPath = this.createDirectoryPath(tableName);
+    await fs.mkdir(directoryPath);
+    return directoryPath;
   }
 
   create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
@@ -79,15 +90,14 @@ export default class FileSystemEngine implements CRUDEngine {
     }
 
     return new Promise(async (resolve, reject) => {
+      const filePath = this.createFilePath(tableName, primaryKey);
+      const onSuccess = () => resolve(primaryKey);
       const onError = () => {
         const message: string = `Record "${primaryKey}" already exists in "${tableName}". You need to delete the record first if you want to overwrite it.`;
         reject(new RecordAlreadyExistsError(message));
       };
 
-      const directory = await this.createDirectory(tableName);
-      const path = `${directory}/${primaryKey}.${this.config.fileExtension}`;
-
-      this.filer.create(path, true, () => resolve(primaryKey), onError);
+      this.filer.create(filePath, true, onSuccess, onError);
     });
   }
 
@@ -100,7 +110,8 @@ export default class FileSystemEngine implements CRUDEngine {
   }
 
   read<T>(tableName: string, primaryKey: string): Promise<T> {
-    throw new Error('Method not implemented.');
+    const filePath = this.createFilePath(tableName, primaryKey);
+    return fs.readFile(filePath);
   }
 
   readAll<T>(tableName: string): Promise<T[]> {
