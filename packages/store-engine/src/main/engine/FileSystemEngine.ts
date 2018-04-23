@@ -19,6 +19,7 @@
 
 import CRUDEngine from './CRUDEngine';
 import {RecordTypeError} from './error/';
+import {RecordAlreadyExistsError} from './error';
 
 const Filer = require('filer.js');
 const fs = require('bro-fs');
@@ -71,22 +72,23 @@ export default class FileSystemEngine implements CRUDEngine {
     return path;
   }
 
-  async create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
-    const directory = await this.createDirectory(tableName);
-    const path = `${directory}/${primaryKey}.${this.config.fileExtension}`;
-
+  create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
     if (!entity) {
       const message: string = `Record "${primaryKey}" cannot be saved in "${tableName}" because it's "undefined" or "null".`;
-      throw new RecordTypeError(message);
+      return Promise.reject(new RecordTypeError(message));
     }
 
-    try {
-      await fs.writeFile(path, entity);
-    } catch (error) {
-      const message: string = `Record "${primaryKey}" cannot be saved in "${tableName}": ${error.message}`;
-      throw new RecordTypeError(message);
-    }
-    return primaryKey;
+    return new Promise(async (resolve, reject) => {
+      const onError = () => {
+        const message: string = `Record "${primaryKey}" already exists in "${tableName}". You need to delete the record first if you want to overwrite it.`;
+        reject(new RecordAlreadyExistsError(message));
+      };
+
+      const directory = await this.createDirectory(tableName);
+      const path = `${directory}/${primaryKey}.${this.config.fileExtension}`;
+
+      this.filer.create(path, true, () => resolve(primaryKey), onError);
+    });
   }
 
   delete(tableName: string, primaryKey: string): Promise<string> {
