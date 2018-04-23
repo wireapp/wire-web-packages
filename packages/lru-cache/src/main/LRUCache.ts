@@ -40,24 +40,26 @@ class LRUCache<T> {
   }
 
   public delete(key: string): boolean {
-    let node = this.map[key];
+    const node = this.map[key];
 
     if (node) {
       this.remove(node);
       delete this.map[node.key];
       return true;
-    } else {
-      return false;
     }
+
+    return false;
   }
 
   public get(key: string): T | undefined {
-    let node = this.map[key];
+    const node = this.map[key];
+
     if (node) {
       this.remove(node);
       this.setHead(node);
       return node.value;
     }
+
     return undefined;
   }
 
@@ -71,7 +73,7 @@ class LRUCache<T> {
   }
 
   public keys(): Array<string> {
-    let keys: Array<string> = [];
+    const keys: Array<string> = [];
     let entry = this.head;
 
     while (entry) {
@@ -113,7 +115,7 @@ class LRUCache<T> {
   }
 
   public set(key: string, value: T): T | undefined {
-    let old = this.map[key];
+    const old = this.map[key];
     let removedNode;
 
     if (old) {
@@ -122,7 +124,7 @@ class LRUCache<T> {
       this.setHead(old);
       return removedNode.value;
     } else {
-      let created: Node<T> = {
+      const created: Node<T> = {
         key,
         value,
         next: null,
@@ -143,6 +145,7 @@ class LRUCache<T> {
         return removedNode.value;
       }
     }
+
     return undefined;
   }
 
@@ -166,7 +169,7 @@ class LRUCache<T> {
   }
 
   public toString(): string {
-    let string: string = '(newest) ';
+    let string = '(newest) ';
     let entry = this.head;
 
     while (entry) {
