@@ -67,4 +67,10 @@ describe('FileSystemEngine', () => {
       it(description, done => testFunction(done, engine));
     });
   });
+
+  describe('"readAll"', () => {
+    Object.entries(require('../../test/shared/readAll')).map(([description, testFunction]) => {
+      it(description, done => testFunction(done, engine));
+    });
+  });
 });

@@ -126,8 +126,20 @@ export default class FileSystemEngine implements CRUDEngine {
     }
   }
 
-  readAll<T>(tableName: string): Promise<T[]> {
-    throw new Error('Method not implemented.');
+  async readAll<T>(tableName: string): Promise<T[]> {
+    const directoryPath = this.createDirectoryPath(tableName);
+
+    const entries: FileEntry[] = await fs.readdir(directoryPath, {deep: true});
+    const names = entries.map((entry: FileEntry) => entry.name);
+
+    const promises: Array<Promise<T>> = [];
+
+    for (const name of names.sort()) {
+      const nameWithoutExtension = name.substr(0, name.indexOf('.'));
+      promises.push(this.read(tableName, nameWithoutExtension));
+    }
+
+    return Promise.all(promises);
   }
 
   readAllPrimaryKeys(tableName: string): Promise<string[]> {
