@@ -114,7 +114,7 @@ export default class FileSystemEngine implements CRUDEngine {
   async read<T>(tableName: string, primaryKey: string): Promise<T> {
     const filePath = this.createFilePath(tableName, primaryKey);
     try {
-      const data = await fs.readFile(filePath);
+      const data = await fs.readFile(filePath, {type: 'Text'});
       try {
         return JSON.parse(data);
       } catch (error) {
