@@ -37,17 +37,15 @@ describe('FileSystemEngine', () => {
 
   describe('"init"', () => {
     it('resolves with a browser-specific URL to the filesystem.', async done => {
-      await engine.init();
+      const fileSystem = await engine.init();
+      expect(fileSystem.root.toURL().startsWith('filesystem:')).toBe(true);
       done();
     });
   });
 
   describe('"create"', () => {
-    it('saves files.', async done => {
-      const entity = 'this-is-a-test';
-      const primaryKey = await engine.create('my-table', 'my-key', entity);
-      expect(primaryKey).toBe('my-key');
-      done();
+    Object.entries(require('../../test/shared/create')).map(([description, testFunction]) => {
+      it(description, done => testFunction(done, engine));
     });
   });
 });

@@ -3469,6 +3469,10 @@ filename-regex@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/filename-regex/-/filename-regex-2.0.1.tgz#c1c4b9bee3e09725ddb106b75c1e301fe2f18b26"
 
+filer.js@0.4.5:
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/filer.js/-/filer.js-0.4.5.tgz#e5ef85ac9309f8040d94af535ce8b4f1d75e3885"
+
 fileset@^2.0.2:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/fileset/-/fileset-2.0.3.tgz#8e7548a96d3cc2327ee5e674168723a333bba2a0"

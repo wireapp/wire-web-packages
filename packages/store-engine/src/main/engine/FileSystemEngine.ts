@@ -20,6 +20,7 @@
 import CRUDEngine from './CRUDEngine';
 import {RecordTypeError} from './error/';
 
+const Filer = require('filer.js');
 const fs = require('bro-fs');
 
 export type FileSystemEngineOptions = {
@@ -39,13 +40,25 @@ export default class FileSystemEngine implements CRUDEngine {
     size: TEN_MEGABYTES,
   };
 
-  constructor() {}
+  private filer: any;
 
-  async init(storeName: string = '', options?: FileSystemEngineOptions): Promise<void> {
+  constructor() {
+    this.filer = new Filer();
+  }
+
+  async init(storeName: string = '', options?: FileSystemEngineOptions): Promise<any> {
     Object.assign(this.config, options);
     this.storeName = storeName;
 
     await fs.init({type: this.config.type, bytes: this.config.size});
+
+    return new Promise((resolve, reject) => {
+      this.filer.init(
+        {persistent: Boolean(this.config.type), size: this.config.size},
+        (filesystem: FileSystem) => resolve(filesystem),
+        reject
+      );
+    });
   }
 
   append(tableName: string, primaryKey: string, additions: string): Promise<string> {
@@ -61,6 +74,11 @@ export default class FileSystemEngine implements CRUDEngine {
   async create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
     const directory = await this.createDirectory(tableName);
     const path = `${directory}/${primaryKey}.${this.config.fileExtension}`;
+
+    if (!entity) {
+      const message: string = `Record "${primaryKey}" cannot be saved in "${tableName}" because it's "undefined" or "null".`;
+      throw new RecordTypeError(message);
+    }
 
     try {
       await fs.writeFile(path, entity);
