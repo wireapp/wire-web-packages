@@ -19,6 +19,8 @@
 
 import {FileSystemEngine} from '@wireapp/store-engine';
 
+const fs = require('bro-fs');
+
 describe('FileSystemEngine', () => {
   const STORE_NAME = 'store-name';
 
@@ -35,6 +37,11 @@ describe('FileSystemEngine', () => {
     done();
   });
 
+  afterEach(async done => {
+    await fs.rmdir(STORE_NAME);
+    done();
+  });
+
   describe('"init"', () => {
     it('resolves with a browser-specific URL to the filesystem.', async done => {
       const fileSystem = await engine.init();
@@ -43,18 +50,15 @@ describe('FileSystemEngine', () => {
     });
   });
 
-  describe('"create"', () => {
-    Object.entries(require('../../test/shared/create')).map(([description, testFunction]) => {
+  describe('"append"', () => {
+    Object.entries(require('../../test/shared/append')).map(([description, testFunction]) => {
       it(description, done => testFunction(done, engine));
     });
   });
 
-  describe('"read"', () => {
-    fit('benny-test', async done => {
-      const entity = 'this-is-a-test';
-      const primaryKey = await engine.create('my-table', 'my-key', entity);
-      expect(primaryKey).toBe('my-key');
-      done();
+  describe('"create"', () => {
+    Object.entries(require('../../test/shared/create')).map(([description, testFunction]) => {
+      it(description, done => testFunction(done, engine));
     });
   });
 });

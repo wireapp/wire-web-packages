@@ -4,7 +4,6 @@
     "@types/node": "9.6.6",
     "bro-fs": "0.3.0",
     "dexie": "2.0.2",
-    "filer.js": "0.4.5",
     "fs-extra": "5.0.0"
   },
   "devDependencies": {

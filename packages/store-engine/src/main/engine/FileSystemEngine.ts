@@ -21,7 +21,6 @@ import CRUDEngine from './CRUDEngine';
 import {RecordTypeError} from './error/';
 import {RecordAlreadyExistsError} from './error';
 
-const Filer = require('filer.js');
 const fs = require('bro-fs');
 
 export type FileSystemEngineOptions = {
@@ -41,25 +40,12 @@ export default class FileSystemEngine implements CRUDEngine {
     size: TEN_MEGABYTES,
   };
 
-  private filer: any;
-
-  constructor() {
-    this.filer = new Filer();
-  }
+  constructor() {}
 
   async init(storeName: string = '', options?: FileSystemEngineOptions): Promise<any> {
     Object.assign(this.config, options);
     this.storeName = storeName;
-
-    await fs.init({type: this.config.type, bytes: this.config.size});
-
-    return new Promise((resolve, reject) => {
-      this.filer.init(
-        {persistent: Boolean(this.config.type), size: this.config.size},
-        (filesystem: FileSystem) => resolve(filesystem),
-        reject
-      );
-    });
+    return await fs.init({type: this.config.type, bytes: this.config.size});
   }
 
   private createDirectoryPath(tableName: string): string {
@@ -83,22 +69,22 @@ export default class FileSystemEngine implements CRUDEngine {
     return directoryPath;
   }
 
-  create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
+  async create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
     if (!entity) {
       const message: string = `Record "${primaryKey}" cannot be saved in "${tableName}" because it's "undefined" or "null".`;
-      return Promise.reject(new RecordTypeError(message));
+      throw new RecordTypeError(message);
     }
 
-    return new Promise(async (resolve, reject) => {
-      const filePath = this.createFilePath(tableName, primaryKey);
-      const onSuccess = () => resolve(primaryKey);
-      const onError = () => {
-        const message: string = `Record "${primaryKey}" already exists in "${tableName}". You need to delete the record first if you want to overwrite it.`;
-        reject(new RecordAlreadyExistsError(message));
-      };
+    const filePath = this.createFilePath(tableName, primaryKey);
+    const isExistent = await fs.exists(filePath);
 
-      this.filer.create(filePath, true, onSuccess, onError);
-    });
+    if (isExistent) {
+      const message: string = `Record "${primaryKey}" already exists in "${tableName}". You need to delete the record first if you want to overwrite it.`;
+      throw new RecordAlreadyExistsError(message);
+    } else {
+      await fs.writeFile(filePath, entity);
+      return primaryKey;
+    }
   }
 
   delete(tableName: string, primaryKey: string): Promise<string> {
