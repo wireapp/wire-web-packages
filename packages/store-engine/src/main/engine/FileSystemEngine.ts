@@ -59,8 +59,18 @@ export default class FileSystemEngine implements CRUDEngine {
 
   async append(tableName: string, primaryKey: string, additions: string): Promise<string> {
     const filePath = this.createFilePath(tableName, primaryKey);
-    await fs.appendFile(filePath, additions);
-    return primaryKey;
+    return this.read(tableName, primaryKey)
+      .then((record: any) => {
+        if (typeof record === 'string') {
+          record += additions;
+        } else {
+          const message: string = `Cannot append text to record "${primaryKey}" because it's not a string.`;
+          throw new RecordTypeError(message);
+        }
+        return record;
+      })
+      .then((updatedRecord: any) => fs.writeFile(filePath, updatedRecord))
+      .then(() => primaryKey);
   }
 
   private async createDirectory(tableName: string): Promise<string> {
