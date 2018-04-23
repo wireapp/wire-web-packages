@@ -73,4 +73,10 @@ describe('FileSystemEngine', () => {
       it(description, done => testFunction(done, engine));
     });
   });
+
+  describe('"readAllPrimaryKeys"', () => {
+    Object.entries(require('../../test/shared/readAllPrimaryKeys')).map(([description, testFunction]) => {
+      it(description, done => testFunction(done, engine));
+    });
+  });
 });

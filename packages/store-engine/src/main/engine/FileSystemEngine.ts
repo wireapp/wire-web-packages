@@ -127,23 +127,30 @@ export default class FileSystemEngine implements CRUDEngine {
   }
 
   async readAll<T>(tableName: string): Promise<T[]> {
-    const directoryPath = this.createDirectoryPath(tableName);
-
-    const entries: FileEntry[] = await fs.readdir(directoryPath, {deep: true});
-    const names = entries.map((entry: FileEntry) => entry.name);
-
+    const primaryKeys = await this.readAllPrimaryKeys(tableName);
     const promises: Array<Promise<T>> = [];
 
-    for (const name of names.sort()) {
-      const nameWithoutExtension = name.substr(0, name.indexOf('.'));
-      promises.push(this.read(tableName, nameWithoutExtension));
+    for (const primaryKey of primaryKeys) {
+      promises.push(this.read(tableName, primaryKey));
     }
 
     return Promise.all(promises);
   }
 
-  readAllPrimaryKeys(tableName: string): Promise<string[]> {
-    throw new Error('Method not implemented.');
+  async readAllPrimaryKeys(tableName: string): Promise<string[]> {
+    const directoryPath = this.createDirectoryPath(tableName);
+
+    const entries: FileEntry[] = await fs.readdir(directoryPath, {deep: true});
+    const names = entries.map((entry: FileEntry) => entry.name);
+
+    const primaryKeys: string[] = [];
+
+    for (const name of names.sort()) {
+      const nameWithoutExtension = name.substr(0, name.indexOf('.'));
+      primaryKeys.push(nameWithoutExtension);
+    }
+
+    return primaryKeys;
   }
 
   update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
