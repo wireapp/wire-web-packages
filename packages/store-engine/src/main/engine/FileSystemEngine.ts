@@ -19,7 +19,7 @@
 
 import CRUDEngine from './CRUDEngine';
 import {RecordTypeError} from './error/';
-import {RecordAlreadyExistsError} from './error';
+import {RecordAlreadyExistsError, RecordNotFoundError} from './error';
 
 const fs = require('bro-fs');
 
@@ -82,7 +82,13 @@ export default class FileSystemEngine implements CRUDEngine {
       const message: string = `Record "${primaryKey}" already exists in "${tableName}". You need to delete the record first if you want to overwrite it.`;
       throw new RecordAlreadyExistsError(message);
     } else {
-      await fs.writeFile(filePath, entity);
+      let data;
+      try {
+        data = JSON.stringify(entity);
+      } catch (error) {
+        data = entity;
+      }
+      await fs.writeFile(filePath, data);
       return primaryKey;
     }
   }
@@ -95,9 +101,19 @@ export default class FileSystemEngine implements CRUDEngine {
     throw new Error('Method not implemented.');
   }
 
-  read<T>(tableName: string, primaryKey: string): Promise<T> {
+  async read<T>(tableName: string, primaryKey: string): Promise<T> {
     const filePath = this.createFilePath(tableName, primaryKey);
-    return fs.readFile(filePath);
+    try {
+      const data = await fs.readFile(filePath);
+      try {
+        return JSON.parse(data);
+      } catch (error) {
+        return data;
+      }
+    } catch (error) {
+      const message: string = `Record "${primaryKey}" in "${tableName}" could not be found.`;
+      throw new RecordNotFoundError(message);
+    }
   }
 
   readAll<T>(tableName: string): Promise<T[]> {
