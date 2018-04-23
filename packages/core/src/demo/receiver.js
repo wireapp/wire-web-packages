@@ -42,13 +42,8 @@ const engine = new MemoryEngine();
     } = data;
     console.log(`Asset in "${conversation}" from "${from}":`, original);
     const fileType = original.mimeType.replace(/[^\/]+\//g, '');
-    const file = await account.service.conversation.getAsset(
-      uploaded.assetId,
-      uploaded.otrKey,
-      uploaded.sha256,
-      uploaded.assetToken
-    );
-    await promisify(fs.writeFile)(path.join('.', `received_file.${fileType}`), new Buffer(file));
+    const image = await account.service.conversation.getImage(uploaded);
+    await promisify(fs.writeFile)(path.join('.', `received_image.${fileType}`), image);
   });
 
   try {
