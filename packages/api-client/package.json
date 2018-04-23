@@ -18,11 +18,11 @@
     "tough-cookie": "2.3.4"
   },
   "devDependencies": {
-    "@wireapp/react-ui-kit": "1.1.6",
+    "@wireapp/react-ui-kit": "1.1.7",
     "babel-core": "6.26.0",
     "babel-loader": "7.1.4",
     "babel-preset-react": "6.24.1",
-    "browser-sync": "2.23.6",
+    "browser-sync": "2.23.7",
     "concurrently": "3.5.1",
     "cross-env": "5.1.4",
     "istanbul": "1.1.0-alpha.1",
@@ -34,7 +34,7 @@
     "karma-sourcemap-loader": "0.3.7",
     "nock": "9.2.5",
     "optimist": "0.6.1",
-    "react-hot-loader": "4.1.0",
+    "react-hot-loader": "4.1.1",
     "rimraf": "2.6.2",
     "sinon": "4.5.0",
     "sinon-har-server": "0.3.0",
@@ -65,5 +65,5 @@
     "watch": "webpack-dev-server --config webpack.config.js"
   },
   "types": "./dist/commonjs/Client.d.ts",
-  "version": "0.7.3"
+  "version": "0.7.6"
 }

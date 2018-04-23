@@ -2,16 +2,16 @@
   "dependencies": {
     "@types/fs-extra": "5.0.2",
     "@types/node": "9.6.6",
-    "@wireapp/lru-cache": "2.1.4",
+    "@wireapp/lru-cache": "2.1.5",
     "@wireapp/priority-queue": "0.1.15",
-    "@wireapp/proteus": "7.1.23",
+    "@wireapp/proteus": "7.1.25",
     "@wireapp/store-engine": "0.6.2",
     "dexie": "2.0.2",
     "fs-extra": "5.0.0"
   },
   "description": "High-level API with persistent storage for Proteus.",
   "devDependencies": {
-    "browser-sync": "2.23.6",
+    "browser-sync": "2.23.7",
     "cpx": "1.5.0",
     "cross-env": "5.1.4",
     "gulp": "3.9.1",
@@ -57,5 +57,5 @@
     "test:node": "cross-env NODE_DEBUG=@wireapp/cryptobox* jasmine --config=test/jasmine.node.json"
   },
   "types": "dist/commonjs/index.d.ts",
-  "version": "8.3.27"
+  "version": "8.3.31"
 }
