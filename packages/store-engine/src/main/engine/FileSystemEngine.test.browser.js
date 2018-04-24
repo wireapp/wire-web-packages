@@ -62,6 +62,18 @@ describe('FileSystemEngine', () => {
     });
   });
 
+  describe('"delete"', () => {
+    Object.entries(require('../../test/shared/delete')).map(([description, testFunction]) => {
+      it(description, done => testFunction(done, engine));
+    });
+  });
+
+  describe('"deleteAll"', () => {
+    Object.entries(require('../../test/shared/deleteAll')).map(([description, testFunction]) => {
+      it(description, done => testFunction(done, engine));
+    });
+  });
+
   describe('"read"', () => {
     Object.entries(require('../../test/shared/read')).map(([description, testFunction]) => {
       it(description, done => testFunction(done, engine));

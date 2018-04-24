@@ -103,12 +103,23 @@ export default class FileSystemEngine implements CRUDEngine {
     }
   }
 
-  delete(tableName: string, primaryKey: string): Promise<string> {
-    throw new Error('Method not implemented.');
+  async delete(tableName: string, primaryKey: string): Promise<string> {
+    const filePath = this.createFilePath(tableName, primaryKey);
+    await fs.unlink(filePath);
+    return primaryKey;
   }
 
-  deleteAll(tableName: string): Promise<boolean> {
-    throw new Error('Method not implemented.');
+  async deleteAll(tableName: string): Promise<boolean> {
+    const primaryKeys = await this.readAllPrimaryKeys(tableName);
+    const promises: Array<Promise<string>> = [];
+
+    for (const primaryKey of primaryKeys) {
+      promises.push(this.delete(tableName, primaryKey));
+    }
+
+    return Promise.all(promises)
+      .then(() => true)
+      .catch(() => false);
   }
 
   async read<T>(tableName: string, primaryKey: string): Promise<T> {
