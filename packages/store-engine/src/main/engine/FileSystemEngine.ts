@@ -183,6 +183,13 @@ export default class FileSystemEngine implements CRUDEngine {
   }
 
   updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
-    throw new Error('Method not implemented.');
+    return this.update(tableName, primaryKey, changes)
+      .catch(error => {
+        if (error instanceof RecordNotFoundError) {
+          return this.create(tableName, primaryKey, changes);
+        }
+        throw error;
+      })
+      .then(() => primaryKey);
   }
 }
