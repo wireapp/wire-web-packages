@@ -91,4 +91,10 @@ describe('FileSystemEngine', () => {
       it(description, done => testFunction(done, engine));
     });
   });
+
+  describe('"update"', () => {
+    Object.entries(require('../../test/shared/update')).map(([description, testFunction]) => {
+      it(description, done => testFunction(done, engine));
+    });
+  });
 });

@@ -165,7 +165,17 @@ export default class FileSystemEngine implements CRUDEngine {
   }
 
   update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
-    throw new Error('Method not implemented.');
+    const filePath = this.createFilePath(tableName, primaryKey);
+    return this.read(tableName, primaryKey)
+      .then((record: any) => {
+        if (typeof record === 'string') {
+          record = JSON.parse(record);
+        }
+        const updatedRecord: Object = {...record, ...changes};
+        return JSON.stringify(updatedRecord);
+      })
+      .then((updatedRecord: any) => fs.writeFile(filePath, updatedRecord))
+      .then(() => primaryKey);
   }
 
   purge(): Promise<void> {
