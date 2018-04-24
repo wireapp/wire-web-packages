@@ -26,8 +26,8 @@ describe('FileSystemEngine', () => {
 
   let engine = undefined;
 
-  async function initEngine() {
-    const storeEngine = new FileSystemEngine();
+  async function initEngine(shouldCreateNewEngine = true) {
+    const storeEngine = shouldCreateNewEngine ? new FileSystemEngine() : engine;
     await storeEngine.init(STORE_NAME);
     return storeEngine;
   }
@@ -71,6 +71,12 @@ describe('FileSystemEngine', () => {
   describe('"deleteAll"', () => {
     Object.entries(require('../../test/shared/deleteAll')).map(([description, testFunction]) => {
       it(description, done => testFunction(done, engine));
+    });
+  });
+
+  fdescribe('"purge"', () => {
+    Object.entries(require('../../test/shared/purge')).map(([description, testFunction]) => {
+      it(description, done => testFunction(done, engine, initEngine));
     });
   });
 

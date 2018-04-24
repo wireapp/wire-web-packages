@@ -42,10 +42,12 @@ export default class FileSystemEngine implements CRUDEngine {
 
   constructor() {}
 
-  async init(storeName: string = '', options?: FileSystemEngineOptions): Promise<any> {
-    Object.assign(this.config, options);
+  async init(storeName: string = '', options?: FileSystemEngineOptions): Promise<FileSystem> {
+    this.config = Object.assign({}, this.config, options);
     this.storeName = storeName;
-    return await fs.init({type: this.config.type, bytes: this.config.size});
+    const fileSystem: FileSystem = await fs.init({type: this.config.type, bytes: this.config.size});
+    await fs.mkdir(this.storeName);
+    return fileSystem;
   }
 
   private createDirectoryPath(tableName: string): string {
@@ -151,7 +153,13 @@ export default class FileSystemEngine implements CRUDEngine {
   async readAllPrimaryKeys(tableName: string): Promise<string[]> {
     const directoryPath = this.createDirectoryPath(tableName);
 
-    const entries: FileEntry[] = await fs.readdir(directoryPath, {deep: true});
+    let entries: FileEntry[];
+    try {
+      entries = await fs.readdir(directoryPath, {deep: true});
+    } catch (error) {
+      entries = [];
+    }
+
     const names = entries.map((entry: FileEntry) => entry.name);
 
     const primaryKeys: string[] = [];
@@ -178,8 +186,8 @@ export default class FileSystemEngine implements CRUDEngine {
       .then(() => primaryKey);
   }
 
-  purge(): Promise<void> {
-    throw new Error('Method not implemented.');
+  async purge(): Promise<void> {
+    await fs.rmdir(this.storeName);
   }
 
   updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {

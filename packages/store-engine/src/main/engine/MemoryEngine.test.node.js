@@ -24,8 +24,8 @@ describe('StoreEngine.MemoryEngine', () => {
 
   let engine = undefined;
 
-  async function initEngine() {
-    const storeEngine = new MemoryEngine();
+  async function initEngine(shouldCreateNewEngine = true) {
+    const storeEngine = shouldCreateNewEngine ? new MemoryEngine() : engine;
     await storeEngine.init(STORE_NAME);
     return storeEngine;
   }
