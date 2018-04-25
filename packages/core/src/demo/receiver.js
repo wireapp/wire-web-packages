@@ -36,7 +36,7 @@ const {FileEngine} = require('@wireapp/store-engine');
     await account.service.conversation.sendConfirmation(conversationId, messageId);
   });
 
-  account.on(Account.INCOMING.CONFIRMATION, async data => {
+  account.on(Account.INCOMING.CONFIRMATION, data => {
     const {conversationId, from, id: messageId} = data;
     console.log(`Confirmation "${messageId}" in "${conversationId}" from "${from}".`);
   });
