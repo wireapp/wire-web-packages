@@ -17,13 +17,9 @@
  *
  */
 
-enum MessageStatusType {
-  DELIVERED = 3,
-  FAILED = 0,
-  SEEN = 4,
-  SENDING = 1,
-  SENT = 2,
-  UNSPECIFIED = -1,
+enum ConfirmationType {
+  DELIVERED = 0,
+  READ = 1,
 }
 
-export default MessageStatusType;
+export default ConfirmationType;

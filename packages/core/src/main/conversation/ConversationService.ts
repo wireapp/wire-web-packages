@@ -29,7 +29,7 @@ import {
 } from '@wireapp/api-client/dist/commonjs/conversation/index';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
 import {CryptographyService, EncryptedAsset} from '../cryptography/root';
-import {AssetService, Image, MessageStatusType} from '../conversation/root';
+import {AssetService, Image, ConfirmationType} from '../conversation/root';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
 
 export default class ConversationService {
@@ -55,7 +55,7 @@ export default class ConversationService {
 
   public async sendConfirmation(conversationId: string, messageId: string): Promise<ClientMismatch> {
     const confirmation = this.protocolBuffers.Confirmation.create({
-      type: MessageStatusType.DELIVERED,
+      type: ConfirmationType.DELIVERED,
       firstMessageId: messageId,
     });
 

@@ -22,6 +22,6 @@ import ConversationService from './ConversationService';
 import DecodedEvent from './DecodedEvent';
 import GenericMessageType from './GenericMessageType';
 import Image from './Image';
-import MessageStatusType from './MessageStatusType';
+import ConfirmationType from './ConfirmationType';
 
-export {AssetService, ConversationService, DecodedEvent, GenericMessageType, Image, MessageStatusType};
+export {AssetService, ConfirmationType, ConversationService, DecodedEvent, GenericMessageType, Image};
