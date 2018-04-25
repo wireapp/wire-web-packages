@@ -3,6 +3,7 @@ import Dexie from 'dexie';
 import RecordAlreadyExistsError from './error/RecordAlreadyExistsError';
 import RecordTypeError from './error/RecordTypeError';
 import RecordNotFoundError from './error/RecordNotFoundError';
+import {UnsupportedError} from './error';
 
 export interface DexieInstance extends Dexie {
   [index: string]: any;
@@ -13,6 +14,10 @@ export default class IndexedDBEngine implements CRUDEngine {
   public storeName: string = '';
 
   init(storeName: string): Promise<any> {
+    if (typeof window === 'undefined' || !window.indexedDB) {
+      const message = `IndexedDB is not available on your platform.`;
+      throw new UnsupportedError(message);
+    }
     this.db = new Dexie(storeName);
     this.storeName = this.db.name;
     return Promise.resolve(this.db);
