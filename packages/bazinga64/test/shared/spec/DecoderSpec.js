@@ -83,7 +83,7 @@ describe('Decoder', () => {
       expect(bytes.byteLength).toBeDefined();
     });
 
-    it('decodes very long strings', async () => {
+    it('decodes very long strings.', async () => {
       const encoded = fixtures.files['yaoqi-lai-21901-unsplash_800.jpg'];
       const bytes = bazinga64.Decoder.fromBase64(encoded).asBytes;
       expect(bytes instanceof Uint8Array).toBe(true);
