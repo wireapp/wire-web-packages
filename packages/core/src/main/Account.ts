@@ -248,30 +248,11 @@ class Account extends EventEmitter {
           const ciphertext: string = otrMessage.data.text;
           this.service.cryptography.decrypt(sessionId, ciphertext).then((decryptedMessage: Uint8Array) => {
             const genericMessage = this.protocolBuffers.GenericMessage.decode(decryptedMessage);
-            switch (genericMessage.content) {
-              case GenericMessageType.TEXT: {
-                resolve({
-                  content: genericMessage.text.content,
-                  id: genericMessage.messageId,
-                });
-                break;
-              }
-              case GenericMessageType.ASSET: {
-                resolve({
-                  content: genericMessage.asset,
-                  id: genericMessage.messageId,
-                  type: GenericMessageType.ASSET,
-                });
-                break;
-              }
-              case GenericMessageType.CONFIRMATION:
-                resolve({
-                  id: genericMessage.messageId,
-                  type: GenericMessageType.CONFIRMATION,
-                });
-              default:
-                resolve(undefined);
-            }
+            resolve({
+              content: genericMessage.text.content,
+              id: genericMessage.messageId,
+              type: genericMessage.content,
+            });
           });
           break;
         }
@@ -289,15 +270,13 @@ class Account extends EventEmitter {
     this.logger.info('handleNotification');
     for (const event of notification.payload) {
       this.handleEvent(event).then((data: PayloadBundle) => {
-        if (typeof data.content === 'string') {
-          this.emit(Account.INCOMING.TEXT_MESSAGE, data);
-        } else if (data.type) {
-          switch (data.type) {
-            case GenericMessageType.ASSET:
-              this.emit(Account.INCOMING.ASSET, data);
-            case GenericMessageType.CONFIRMATION:
-              this.emit(Account.INCOMING.CONFIRMATION, data);
-          }
+        switch (data.type) {
+          case GenericMessageType.TEXT:
+            this.emit(Account.INCOMING.TEXT_MESSAGE, data);
+          case GenericMessageType.ASSET:
+            this.emit(Account.INCOMING.ASSET, data);
+          case GenericMessageType.CONFIRMATION:
+            this.emit(Account.INCOMING.CONFIRMATION, data);
         }
       });
     }

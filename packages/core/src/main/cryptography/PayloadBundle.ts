@@ -24,7 +24,7 @@ interface PayloadBundle {
   conversation: string;
   from: string;
   id: string;
-  type?: GenericMessageType;
+  type: GenericMessageType;
 }
 
 export default PayloadBundle;

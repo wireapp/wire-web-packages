@@ -22,7 +22,7 @@ import {GenericMessageType} from '../conversation/root';
 interface DecodedEvent {
   content?: string;
   id: string;
-  type?: GenericMessageType;
+  type: GenericMessageType;
 }
 
 export default DecodedEvent;
