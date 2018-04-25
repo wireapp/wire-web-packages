@@ -17,10 +17,10 @@
  *
  */
 
-import {GenericMessageType} from '../conversation/root';
+import {Asset, GenericMessageType} from '../conversation/root';
 
 interface PayloadBundle {
-  content?: string;
+  content?: string | Asset;
   conversation: string;
   from: string;
   id: string;

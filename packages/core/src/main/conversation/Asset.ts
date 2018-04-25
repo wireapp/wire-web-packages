@@ -17,22 +17,25 @@
  *
  */
 
-import {Asset, Original, RemoteData} from './Asset';
-import AssetService from './AssetService';
-import ConfirmationType from './ConfirmationType';
-import ConversationService from './ConversationService';
-import DecodedEvent from './DecodedEvent';
-import GenericMessageType from './GenericMessageType';
-import Image from './Image';
+interface RemoteData {
+  assetId: string;
+  otrKey: Uint8Array | Buffer;
+  sha256: Uint8Array | Buffer;
+  assetToken?: string;
+}
 
-export {
-  Asset,
-  AssetService,
-  ConfirmationType,
-  ConversationService,
-  DecodedEvent,
-  Original,
-  GenericMessageType,
-  Image,
-  RemoteData,
-};
+interface Original {
+  mimeType: string;
+  size: number;
+  image?: {
+    height: number;
+    width: number;
+  };
+}
+
+interface Asset {
+  uploaded: RemoteData;
+  original: Original;
+}
+
+export {Asset, Original, RemoteData};
