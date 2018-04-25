@@ -21,7 +21,7 @@ import {GenericMessageType} from '../conversation/root';
 
 interface PayloadBundle {
   content?: string;
-  conversationId: string;
+  conversation: string;
   from: string;
   id: string;
   type?: GenericMessageType;
