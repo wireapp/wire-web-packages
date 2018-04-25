@@ -263,14 +263,20 @@ class Account extends EventEmitter {
                 break;
               }
               case GenericMessageType.ASSET: {
-                resolve(genericMessage.asset);
+                resolve({
+                  content: genericMessage.asset,
+                  id: genericMessage.messageId,
+                  type: GenericMessageType.ASSET,
+                });
                 break;
               }
-              default:
+              case GenericMessageType.CONFIRMATION:
                 resolve({
-                  type: GenericMessageType.CONFIRMATION,
                   id: genericMessage.messageId,
+                  type: GenericMessageType.CONFIRMATION,
                 });
+              default:
+                resolve(undefined);
             }
           });
           break;
@@ -293,10 +299,10 @@ class Account extends EventEmitter {
           this.emit(Account.INCOMING.TEXT_MESSAGE, data);
         } else if (data.type) {
           switch (data.type) {
-            case GenericMessageType.CONFIRMATION:
-              this.emit(Account.INCOMING.CONFIRMATION, data);
             case GenericMessageType.ASSET:
               this.emit(Account.INCOMING.ASSET, data);
+            case GenericMessageType.CONFIRMATION:
+              this.emit(Account.INCOMING.CONFIRMATION, data);
           }
         }
       });
