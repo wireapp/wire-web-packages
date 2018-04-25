@@ -1,7 +1,14 @@
 const fs = require('fs-extra');
 import CRUDEngine from './CRUDEngine';
+import {
+  PathValidationError,
+  RecordAlreadyExistsError,
+  RecordNotFoundError,
+  RecordTypeError,
+  UnsupportedError,
+} from './error';
+import {isBrowser} from './EnvironmentUtil';
 import path = require('path');
-import {PathValidationError, RecordAlreadyExistsError, RecordNotFoundError, RecordTypeError} from './error';
 
 export default class FileEngine implements CRUDEngine {
   public storeName: string = '';
@@ -12,6 +19,10 @@ export default class FileEngine implements CRUDEngine {
   constructor(private baseDirectory: string = '') {}
 
   init(storeName: string = '', options: {fileExtension: string}): Promise<any> {
+    if (isBrowser()) {
+      const message = `Node.js' File System Module is not available on your platform.`;
+      throw new UnsupportedError(message);
+    }
     this.storeName = path.normalize(path.join(this.baseDirectory, storeName));
     this.options = {...this.options, ...options};
     return Promise.resolve(storeName);
@@ -36,7 +47,8 @@ export default class FileEngine implements CRUDEngine {
 
     return new Promise((resolve, reject) => {
       if (isPathTraversal(tableName, primaryKey || '')) {
-        return reject(new PathValidationError(PathValidationError.TYPE.PATH_TRAVERSAL));
+        const message = `Path traversal has been detected on "${path.join(tableName, String(primaryKey))}".`;
+        return reject(new PathValidationError(message));
       }
 
       const filePath = path.join(
@@ -47,7 +59,8 @@ export default class FileEngine implements CRUDEngine {
       const nonPrintableCharacters = new RegExp('[^\x20-\x7E]+', 'gm');
 
       if (filePath.match(nonPrintableCharacters)) {
-        return reject(new PathValidationError(PathValidationError.TYPE.INVALID_NAME));
+        const message = `Cannot create file with path "${filePath}".`;
+        return reject(new PathValidationError(message));
       }
 
       return resolve(filePath);
@@ -59,7 +72,6 @@ export default class FileEngine implements CRUDEngine {
       if (entity) {
         this.resolvePath(tableName, primaryKey)
           .then((filePath: string) => {
-            // TODO: Implement "base64" serialization to save any kind of data.
             if (typeof entity === 'object') {
               try {
                 entity = JSON.stringify(entity);
@@ -171,7 +183,23 @@ export default class FileEngine implements CRUDEngine {
     });
   }
 
-  // TODO: Make this function also work for binary data.
+  append(tableName: string, primaryKey: string, additions: string): Promise<string> {
+    return this.resolvePath(tableName, primaryKey).then(file => {
+      return this.read(tableName, primaryKey)
+        .then((record: any) => {
+          if (typeof record === 'string') {
+            record += additions;
+          } else {
+            const message: string = `Cannot append text to record "${primaryKey}" because it's not a string.`;
+            throw new RecordTypeError(message);
+          }
+          return record;
+        })
+        .then((updatedRecord: any) => fs.outputFile(file, updatedRecord))
+        .then(() => primaryKey);
+    });
+  }
+
   update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
     return this.resolvePath(tableName, primaryKey).then(file => {
       return this.read(tableName, primaryKey)

@@ -19,13 +19,13 @@
 
 import {LocalStorageEngine} from '@wireapp/store-engine';
 
-describe('StoreEngine.LocalStorageEngine', () => {
+describe('LocalStorageEngine', () => {
   const STORE_NAME = 'store-name';
 
   let engine = undefined;
 
-  async function initEngine() {
-    const storeEngine = new LocalStorageEngine();
+  async function initEngine(shouldCreateNewEngine = true) {
+    const storeEngine = shouldCreateNewEngine ? new LocalStorageEngine() : engine;
     await storeEngine.init(STORE_NAME);
     return storeEngine;
   }
@@ -36,6 +36,12 @@ describe('StoreEngine.LocalStorageEngine', () => {
   });
 
   afterEach(() => window.localStorage.clear());
+
+  describe('"append"', () => {
+    Object.entries(require('../../test/shared/append')).map(([description, testFunction]) => {
+      it(description, done => testFunction(done, engine));
+    });
+  });
 
   describe('"create"', () => {
     Object.entries(require('../../test/shared/create')).map(([description, testFunction]) => {

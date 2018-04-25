@@ -20,7 +20,7 @@
 import Dexie from 'dexie';
 import {IndexedDBEngine} from '@wireapp/store-engine';
 
-describe('StoreEngine.IndexedDBEngine', () => {
+describe('IndexedDBEngine', () => {
   const STORE_NAME = 'store-name';
 
   let engine = undefined;
@@ -46,6 +46,12 @@ describe('StoreEngine.IndexedDBEngine', () => {
     }
 
     window.indexedDB.deleteDatabase(STORE_NAME);
+  });
+
+  describe('"append"', () => {
+    Object.entries(require('../../test/shared/append')).map(([description, testFunction]) => {
+      it(description, done => testFunction(done, engine));
+    });
   });
 
   describe('"create"', () => {

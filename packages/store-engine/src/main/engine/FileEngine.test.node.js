@@ -28,8 +28,8 @@ describe('FileEngine', () => {
   const TEST_DIRECTORY = path.join(process.cwd(), '.tmp', STORE_NAME);
   let engine = undefined;
 
-  async function initEngine() {
-    const storeEngine = new FileEngine();
+  async function initEngine(shouldCreateNewEngine = true) {
+    const storeEngine = shouldCreateNewEngine ? new FileEngine() : engine;
     await storeEngine.init(TEST_DIRECTORY);
     return storeEngine;
   }
@@ -46,7 +46,7 @@ describe('FileEngine', () => {
       .catch(done.fail));
 
   describe('"resolvePath"', () => {
-    it('properly validate paths', done => {
+    it('properly validates paths.', done => {
       const PRIMARY_KEY = 'primary-key';
 
       Promise.all([
@@ -58,11 +58,16 @@ describe('FileEngine', () => {
         engine.resolvePath(TABLE_NAME, '.etc').catch(error => error),
       ]).then(results => {
         for (error of results) {
-          expect(error.name === 'PathValidationError').toBe(true);
-          expect(error.message).toBe(StoreEngineError.PathValidationError.TYPE.PATH_TRAVERSAL);
+          expect(error instanceof StoreEngineError.PathValidationError).toBe(true);
         }
         done();
       });
+    });
+  });
+
+  describe('"append"', () => {
+    Object.entries(require('../../test/shared/append')).map(([description, testFunction]) => {
+      it(description, done => testFunction(done, engine));
     });
   });
 
@@ -71,7 +76,7 @@ describe('FileEngine', () => {
       it(description, done => testFunction(done, engine));
     });
 
-    it('accepts custom file extensions', async done => {
+    it('accepts custom file extensions.', async done => {
       const options = {
         fileExtension: '.json',
       };
@@ -98,14 +103,13 @@ describe('FileEngine', () => {
         engine.create(TABLE_NAME, '.etc', entity).catch(error => error),
       ]).then(results => {
         for (error of results) {
-          expect(error.name === 'PathValidationError').toBe(true);
-          expect(error.message).toBe(StoreEngineError.PathValidationError.TYPE.PATH_TRAVERSAL);
+          expect(error instanceof StoreEngineError.PathValidationError).toBe(true);
         }
         done();
       });
     });
 
-    it('does not work when non-printable characters are being used in the store name', async done => {
+    it('does not work when non-printable characters are being used in the store name.', async done => {
       await engine.init(path.join(process.cwd(), '.tmp', 'wrong\t'));
 
       const PRIMARY_KEY = 'primary-key';
@@ -118,8 +122,7 @@ describe('FileEngine', () => {
         .create(TABLE_NAME, PRIMARY_KEY, entity)
         .then(() => done.fail(new Error('Method is supposed to throw an error.')))
         .catch(error => {
-          expect(error.name).toBe(StoreEngineError.PathValidationError.name);
-          expect(error.message).toBe(StoreEngineError.PathValidationError.TYPE.INVALID_NAME);
+          expect(error instanceof StoreEngineError.PathValidationError).toBe(true);
           done();
         });
     });
@@ -142,8 +145,7 @@ describe('FileEngine', () => {
         engine.delete(TABLE_NAME, '.etc').catch(error => error),
       ]).then(results => {
         for (error of results) {
-          expect(error.name === 'PathValidationError').toBe(true);
-          expect(error.message).toBe(StoreEngineError.PathValidationError.TYPE.PATH_TRAVERSAL);
+          expect(error instanceof StoreEngineError.PathValidationError).toBe(true);
         }
         done();
       });
@@ -162,8 +164,7 @@ describe('FileEngine', () => {
         engine.deleteAll('.etc').catch(error => error),
       ]).then(results => {
         for (error of results) {
-          expect(error.name === 'PathValidationError').toBe(true);
-          expect(error.message).toBe(StoreEngineError.PathValidationError.TYPE.PATH_TRAVERSAL);
+          expect(error instanceof StoreEngineError.PathValidationError).toBe(true);
         }
         done();
       });
@@ -193,8 +194,7 @@ describe('FileEngine', () => {
         engine.read(TABLE_NAME, '.etc').catch(error => error),
       ]).then(results => {
         for (error of results) {
-          expect(error.name === 'PathValidationError').toBe(true);
-          expect(error.message).toBe(StoreEngineError.PathValidationError.TYPE.PATH_TRAVERSAL);
+          expect(error instanceof StoreEngineError.PathValidationError).toBe(true);
         }
         done();
       });
@@ -213,8 +213,7 @@ describe('FileEngine', () => {
         engine.readAll('.etc').catch(error => error),
       ]).then(results => {
         for (error of results) {
-          expect(error.name === 'PathValidationError').toBe(true);
-          expect(error.message).toBe(StoreEngineError.PathValidationError.TYPE.PATH_TRAVERSAL);
+          expect(error instanceof StoreEngineError.PathValidationError).toBe(true);
         }
         done();
       });

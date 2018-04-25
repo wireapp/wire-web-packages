@@ -1,10 +1,15 @@
 import CRUDEngine from './CRUDEngine';
-import {RecordAlreadyExistsError, RecordNotFoundError, RecordTypeError} from './error';
+import {RecordAlreadyExistsError, RecordNotFoundError, RecordTypeError, UnsupportedError} from './error';
+import {isBrowser} from './EnvironmentUtil';
 
 export default class LocalStorageEngine implements CRUDEngine {
   public storeName: string = '';
 
   init(storeName: string): Promise<any> {
+    if (!isBrowser() || !window.localStorage) {
+      const message = `LocalStorage is not available on your platform.`;
+      throw new UnsupportedError(message);
+    }
     this.storeName = storeName;
     return Promise.resolve();
   }
@@ -14,11 +19,14 @@ export default class LocalStorageEngine implements CRUDEngine {
     return Promise.resolve();
   }
 
+  private createKey(tableName: string, primaryKey: string): string {
+    return `${this.storeName}@${tableName}@${primaryKey}`;
+  }
+
   public create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
     if (entity) {
-      const key: string = `${this.storeName}@${tableName}@${primaryKey}`;
-      return Promise.resolve()
-        .then(() => this.read(tableName, primaryKey))
+      const key: string = this.createKey(tableName, primaryKey);
+      return this.read(tableName, primaryKey)
         .catch(error => {
           if (error instanceof RecordNotFoundError) {
             return undefined;
@@ -30,7 +38,11 @@ export default class LocalStorageEngine implements CRUDEngine {
             const message: string = `Record "${primaryKey}" already exists in "${tableName}". You need to delete the record first if you want to overwrite it.`;
             throw new RecordAlreadyExistsError(message);
           } else {
-            window.localStorage.setItem(key, JSON.stringify(entity));
+            if (typeof record === 'string') {
+              window.localStorage.setItem(key, String(entity));
+            } else {
+              window.localStorage.setItem(key, JSON.stringify(entity));
+            }
             return primaryKey;
           }
         });
@@ -41,7 +53,7 @@ export default class LocalStorageEngine implements CRUDEngine {
 
   public delete(tableName: string, primaryKey: string): Promise<string> {
     return Promise.resolve().then(() => {
-      const key: string = `${this.storeName}@${tableName}@${primaryKey}`;
+      const key: string = this.createKey(tableName, primaryKey);
       window.localStorage.removeItem(key);
       return primaryKey;
     });
@@ -64,7 +76,11 @@ export default class LocalStorageEngine implements CRUDEngine {
       const key: string = `${this.storeName}@${tableName}@${primaryKey}`;
       const record = window.localStorage.getItem(key);
       if (record) {
-        return JSON.parse(record);
+        try {
+          return JSON.parse(record);
+        } catch (error) {
+          return record;
+        }
       }
       const message: string = `Record "${primaryKey}" in "${tableName}" could not be found.`;
       throw new RecordNotFoundError(message);
@@ -123,5 +139,21 @@ export default class LocalStorageEngine implements CRUDEngine {
         throw error;
       })
       .then(() => primaryKey);
+  }
+
+  append(tableName: string, primaryKey: string, additions: string): Promise<string> {
+    return this.read(tableName, primaryKey).then((record: any) => {
+      if (typeof record === 'string') {
+        record += additions;
+      } else {
+        const message: string = `Cannot append text to record "${primaryKey}" because it's not a string.`;
+        throw new RecordTypeError(message);
+      }
+
+      const key: string = this.createKey(tableName, primaryKey);
+      window.localStorage.setItem(key, record);
+
+      return primaryKey;
+    });
   }
 }

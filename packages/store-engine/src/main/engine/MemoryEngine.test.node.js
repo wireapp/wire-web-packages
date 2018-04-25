@@ -19,13 +19,13 @@
 
 const {MemoryEngine} = require('@wireapp/store-engine');
 
-describe('StoreEngine.MemoryEngine', () => {
+describe('MemoryEngine', () => {
   const STORE_NAME = 'store-name';
 
   let engine = undefined;
 
-  async function initEngine() {
-    const storeEngine = new MemoryEngine();
+  async function initEngine(shouldCreateNewEngine = true) {
+    const storeEngine = shouldCreateNewEngine ? new MemoryEngine() : engine;
     await storeEngine.init(STORE_NAME);
     return storeEngine;
   }
@@ -33,6 +33,12 @@ describe('StoreEngine.MemoryEngine', () => {
   beforeEach(async done => {
     engine = await initEngine();
     done();
+  });
+
+  describe('"append"', () => {
+    Object.entries(require('../../test/shared/append')).map(([description, testFunction]) => {
+      it(description, done => testFunction(done, engine));
+    });
   });
 
   describe('"create"', () => {
