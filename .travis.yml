@@ -22,7 +22,7 @@ before_install:
 
 before_script:
   - yarn boot
-  - export IS_MASTER_BRANCH=$(if [ "${TRAVIS_BRANCH}" == "master" ]; then echo 0; else echo 1; fi)
+  - export IS_MASTER_BRANCH=$(if [ "${TRAVIS_BRANCH}" == "master" ] && [ "${TRAVIS_PULL_REQUEST}" == "false" ]; then echo 0; else echo 1; fi)
   - export HAS_UPDATES=$(npx lerna updated > /dev/null 2>&1; echo $?)
   - export IS_DEPENDENCY_BUMP=$(if [[ "${TRAVIS_COMMIT_MESSAGE}" = "build"* ]]; then echo 0; else echo 1; fi)
   - export WILL_RELEASE=$(if [ "${IS_MASTER_BRANCH}" == 0 ] && [ "${HAS_UPDATES}" == 0 ] && [ "${IS_DEPENDENCY_BUMP}" == 1 ]; then echo 0; else echo 1; fi)
