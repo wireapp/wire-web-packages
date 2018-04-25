@@ -24,8 +24,8 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
     persist: false,
   };
 
-  const engine = new MemoryEngine('receiver');
-  await engine.init(undefined, {fileExtension: '.json'});
+  const engine = new MemoryEngine();
+  await engine.init('receiver');
 
   const apiClient = new APIClient(new Config(engine, APIClient.BACKEND.STAGING));
   const account = new Account(apiClient);
