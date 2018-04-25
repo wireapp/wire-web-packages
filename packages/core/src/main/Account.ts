@@ -54,6 +54,7 @@ class Account extends EventEmitter {
   });
 
   public static INCOMING = {
+    CONFIRMATION: 'Account.INCOMING.CONFIRMATION',
     TEXT_MESSAGE: 'Account.INCOMING.TEXT_MESSAGE',
   };
   private apiClient: Client;
@@ -235,8 +236,9 @@ class Account extends EventEmitter {
   private decodeEvent(
     event: ConversationEvent
   ): Promise<{
-    content: string;
+    content?: string;
     id: string;
+    type?: GenericMessageType;
   }> {
     this.logger.info('decodeEvent');
     return new Promise(resolve => {
@@ -260,7 +262,10 @@ class Account extends EventEmitter {
                 break;
               }
               default:
-                resolve(undefined);
+                resolve({
+                  type: GenericMessageType.CONFIRMATION,
+                  id: genericMessage.messageId,
+                });
             }
           });
           break;
@@ -272,12 +277,7 @@ class Account extends EventEmitter {
   private handleEvent(event: ConversationEvent): Promise<PayloadBundle> {
     this.logger.info('handleEvent');
     const {conversation: conversationId, from} = event;
-    return this.decodeEvent(event).then(({content, id: messageId}) => ({
-      content,
-      conversationId,
-      from,
-      messageId,
-    }));
+    return this.decodeEvent(event).then(data => Object.assign(data, {from, conversationId}));
   }
 
   private handleNotification(notification: IncomingNotification): void {
@@ -286,6 +286,11 @@ class Account extends EventEmitter {
       this.handleEvent(event).then((data: PayloadBundle) => {
         if (data.content) {
           this.emit(Account.INCOMING.TEXT_MESSAGE, data);
+        } else if (data.type) {
+          switch (data.type) {
+            case GenericMessageType.CONFIRMATION:
+              this.emit(Account.INCOMING.CONFIRMATION, data);
+          }
         }
       });
     }

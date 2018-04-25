@@ -17,11 +17,14 @@
  *
  */
 
+import {GenericMessageType} from '../conversation/root';
+
 interface PayloadBundle {
-  content: string;
+  content?: string;
   conversationId: string;
   from: string;
-  messageId: string;
+  id: string;
+  type?: GenericMessageType;
 }
 
 export default PayloadBundle;

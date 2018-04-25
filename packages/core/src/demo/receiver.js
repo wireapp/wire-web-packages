@@ -29,9 +29,14 @@ const engine = new MemoryEngine();
   const account = new Account(apiClient);
 
   account.on(Account.INCOMING.TEXT_MESSAGE, async data => {
-    const {conversationId, from, content, messageId} = data;
+    const {conversationId, from, content, id: messageId} = data;
     console.log(`Message "${messageId}" in "${conversationId}" from "${from}":`, content);
     await account.service.conversation.sendConfirmation(conversationId, messageId);
+  });
+
+  account.on(Account.INCOMING.CONFIRMATION, async data => {
+    const {conversationId, from, id: messageId} = data;
+    console.log(`Confirmation "${messageId}" in "${conversationId}" from "${from}".`);
   });
 
   try {
