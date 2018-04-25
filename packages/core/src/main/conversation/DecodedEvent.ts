@@ -17,11 +17,12 @@
  *
  */
 
-import AssetService from './AssetService';
-import ConversationService from './ConversationService';
-import DecodedEvent from './DecodedEvent';
-import GenericMessageType from './GenericMessageType';
-import Image from './Image';
-import MessageStatusType from './MessageStatusType';
+import {GenericMessageType} from '../conversation/root';
 
-export {AssetService, ConversationService, DecodedEvent, GenericMessageType, Image, MessageStatusType};
+interface DecodedEvent {
+  content?: string;
+  id: string;
+  type?: GenericMessageType;
+}
+
+export default DecodedEvent;

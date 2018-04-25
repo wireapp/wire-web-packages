@@ -40,7 +40,7 @@ import {
 import {LoginSanitizer} from './auth/root';
 import {Root} from 'protobufjs';
 import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/index';
-import {AssetService, ConversationService, GenericMessageType} from './conversation/root';
+import {AssetService, ConversationService, DecodedEvent, GenericMessageType} from './conversation/root';
 import Client = require('@wireapp/api-client');
 import EventEmitter = require('events');
 import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/index';
@@ -234,13 +234,7 @@ class Account extends EventEmitter {
       .then(() => this);
   }
 
-  private decodeEvent(
-    event: ConversationEvent
-  ): Promise<{
-    content?: string;
-    id: string;
-    type?: GenericMessageType;
-  }> {
+  private decodeEvent(event: ConversationEvent): Promise<DecodedEvent> {
     this.logger.info('decodeEvent');
     return new Promise(resolve => {
       if (!this.service) {
