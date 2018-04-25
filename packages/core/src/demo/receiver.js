@@ -13,8 +13,7 @@ require('dotenv').config({path: path.join(__dirname, 'echo1.env')});
 const {Account} = require('@wireapp/core');
 const APIClient = require('@wireapp/api-client');
 const {Config} = require('@wireapp/api-client/dist/commonjs/Config');
-const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
-const engine = new MemoryEngine();
+const {FileEngine} = require('@wireapp/store-engine');
 
 (async () => {
   const login = {
@@ -23,7 +22,8 @@ const engine = new MemoryEngine();
     persist: false,
   };
 
-  await engine.init('receiver');
+  const engine = new FileEngine(path.join(__dirname, '.tmp', 'receiver'));
+  await engine.init(undefined, {fileExtension: '.json'});
 
   const apiClient = new APIClient(new Config(engine, APIClient.BACKEND.STAGING));
   const account = new Account(apiClient);
