@@ -53,7 +53,8 @@ class Account extends EventEmitter {
     markdown: false,
   });
 
-  public static INCOMING = {
+  public static readonly INCOMING = {
+    ASSET: 'Account.INCOMING.ASSET',
     CONFIRMATION: 'Account.INCOMING.CONFIRMATION',
     TEXT_MESSAGE: 'Account.INCOMING.TEXT_MESSAGE',
   };
@@ -261,6 +262,10 @@ class Account extends EventEmitter {
                 });
                 break;
               }
+              case GenericMessageType.ASSET: {
+                resolve(genericMessage.asset);
+                break;
+              }
               default:
                 resolve({
                   type: GenericMessageType.CONFIRMATION,
@@ -284,12 +289,14 @@ class Account extends EventEmitter {
     this.logger.info('handleNotification');
     for (const event of notification.payload) {
       this.handleEvent(event).then((data: PayloadBundle) => {
-        if (data.content) {
+        if (typeof data.content === 'string') {
           this.emit(Account.INCOMING.TEXT_MESSAGE, data);
         } else if (data.type) {
           switch (data.type) {
             case GenericMessageType.CONFIRMATION:
               this.emit(Account.INCOMING.CONFIRMATION, data);
+            case GenericMessageType.ASSET:
+              this.emit(Account.INCOMING.ASSET, data);
           }
         }
       });

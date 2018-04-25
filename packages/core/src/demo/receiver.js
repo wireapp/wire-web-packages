@@ -12,6 +12,8 @@ require('dotenv').config({path: path.join(__dirname, 'echo1.env')});
 
 const {Account} = require('@wireapp/core');
 const APIClient = require('@wireapp/api-client');
+const fs = require('fs');
+const {promisify} = require('util');
 const {Config} = require('@wireapp/api-client/dist/commonjs/Config');
 const {FileEngine} = require('@wireapp/store-engine');
 
@@ -37,6 +39,22 @@ const {FileEngine} = require('@wireapp/store-engine');
   account.on(Account.INCOMING.CONFIRMATION, async data => {
     const {conversationId, from, id: messageId} = data;
     console.log(`Confirmation "${messageId}" in "${conversationId}" from "${from}".`);
+  });
+
+  account.on(Account.INCOMING.TEXT_MESSAGE, data => {
+    console.log(`Message in "${data.conversation}" from "${data.from}":`, data.content);
+  });
+
+  account.on(Account.INCOMING.ASSET, async data => {
+    const {
+      conversation,
+      from,
+      content: {uploaded, original},
+    } = data;
+    console.log(`Asset in "${conversation}" from "${from}":`, original);
+    const fileType = original.mimeType.replace(/[^\/]+\//g, '');
+    const image = await account.service.conversation.getImage(uploaded);
+    await promisify(fs.writeFile)(path.join('.', `received_image.${fileType}`), image);
   });
 
   try {
