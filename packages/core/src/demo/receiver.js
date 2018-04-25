@@ -15,7 +15,7 @@ const APIClient = require('@wireapp/api-client');
 const fs = require('fs');
 const {promisify} = require('util');
 const {Config} = require('@wireapp/api-client/dist/commonjs/Config');
-const {FileEngine} = require('@wireapp/store-engine');
+const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
 
 (async () => {
   const login = {
@@ -24,7 +24,7 @@ const {FileEngine} = require('@wireapp/store-engine');
     persist: false,
   };
 
-  const engine = new FileEngine(path.join(__dirname, '.tmp', 'receiver'));
+  const engine = new MemoryEngine('receiver');
   await engine.init(undefined, {fileExtension: '.json'});
 
   const apiClient = new APIClient(new Config(engine, APIClient.BACKEND.STAGING));
