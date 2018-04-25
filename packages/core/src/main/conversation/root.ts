@@ -17,8 +17,10 @@
  *
  */
 
-import ConversationService from './ConversationService';
 import AssetService from './AssetService';
+import ConversationService from './ConversationService';
+import GenericMessageType from './GenericMessageType';
+import MessageStatusType from './MessageStatusType';
 import Image from './Image';
 
-export {AssetService, ConversationService, Image};
+export {AssetService, ConversationService, GenericMessageType, Image, MessageStatusType};

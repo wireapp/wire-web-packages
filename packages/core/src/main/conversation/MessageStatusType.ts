@@ -17,9 +17,13 @@
  *
  */
 
-import CryptographyService from './CryptographyService';
-import PayloadBundle from './PayloadBundle';
-import SessionPayloadBundle from './SessionPayloadBundle';
-import EncryptedAsset from './EncryptedAsset';
+enum MessageStatusType {
+  DELIVERED = 3,
+  FAILED = 0,
+  SEEN = 4,
+  SENDING = 1,
+  SENT = 2,
+  UNSPECIFIED = -1,
+}
 
-export {CryptographyService, EncryptedAsset, PayloadBundle, SessionPayloadBundle};
+export default MessageStatusType;

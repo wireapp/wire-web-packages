@@ -19,8 +19,9 @@
 
 interface PayloadBundle {
   content: string;
-  conversation: string;
+  conversationId: string;
   from: string;
+  messageId: string;
 }
 
 export default PayloadBundle;

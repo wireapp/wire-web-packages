@@ -21,7 +21,7 @@ const pkg = require('../package.json');
 const logdown = require('logdown');
 import {IncomingNotification} from '@wireapp/api-client/dist/commonjs/conversation/index';
 import * as cryptobox from '@wireapp/cryptobox';
-import {CryptographyService, GenericMessageType, PayloadBundle} from './cryptography/root';
+import {CryptographyService, PayloadBundle} from './cryptography/root';
 import {ClientService, ClientInfo} from './client/root';
 import {NotificationService} from './notification/root';
 import {Context, LoginData, PreKey} from '@wireapp/api-client/dist/commonjs/auth/index';
@@ -40,7 +40,7 @@ import {
 import {LoginSanitizer} from './auth/root';
 import {Root} from 'protobufjs';
 import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/index';
-import {AssetService, ConversationService} from './conversation/root';
+import {AssetService, ConversationService, GenericMessageType} from './conversation/root';
 import Client = require('@wireapp/api-client');
 import EventEmitter = require('events');
 import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/index';
@@ -77,6 +77,7 @@ class Account extends EventEmitter {
 
     this.protocolBuffers = {
       Asset: root.lookup('Asset'),
+      Confirmation: root.lookup('Confirmation'),
       External: root.lookup('External'),
       GenericMessage: root.lookup('GenericMessage'),
       Text: root.lookup('Text'),
@@ -231,7 +232,12 @@ class Account extends EventEmitter {
       .then(() => this);
   }
 
-  private decodeEvent(event: ConversationEvent): Promise<string> {
+  private decodeEvent(
+    event: ConversationEvent
+  ): Promise<{
+    content: string;
+    id: string;
+  }> {
     this.logger.info('decodeEvent');
     return new Promise(resolve => {
       if (!this.service) {
@@ -247,7 +253,10 @@ class Account extends EventEmitter {
             const genericMessage = this.protocolBuffers.GenericMessage.decode(decryptedMessage);
             switch (genericMessage.content) {
               case GenericMessageType.TEXT: {
-                resolve(genericMessage.text.content);
+                resolve({
+                  content: genericMessage.text.content,
+                  id: genericMessage.messageId,
+                });
                 break;
               }
               default:
@@ -262,14 +271,13 @@ class Account extends EventEmitter {
 
   private handleEvent(event: ConversationEvent): Promise<PayloadBundle> {
     this.logger.info('handleEvent');
-    const {conversation, from} = event;
-    return this.decodeEvent(event).then((content: string) => {
-      return {
-        content,
-        conversation,
-        from,
-      };
-    });
+    const {conversation: conversationId, from} = event;
+    return this.decodeEvent(event).then(({content, id: messageId}) => ({
+      content,
+      conversationId,
+      from,
+      messageId,
+    }));
   }
 
   private handleNotification(notification: IncomingNotification): void {
