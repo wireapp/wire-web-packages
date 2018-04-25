@@ -4,6 +4,7 @@ import RecordAlreadyExistsError from './error/RecordAlreadyExistsError';
 import RecordTypeError from './error/RecordTypeError';
 import RecordNotFoundError from './error/RecordNotFoundError';
 import {UnsupportedError} from './error';
+import {isBrowser} from './EnvironmentUtil';
 
 export interface DexieInstance extends Dexie {
   [index: string]: any;
@@ -14,7 +15,7 @@ export default class IndexedDBEngine implements CRUDEngine {
   public storeName: string = '';
 
   init(storeName: string): Promise<any> {
-    if (typeof window === 'undefined' || !window.indexedDB) {
+    if (!isBrowser() || !window.indexedDB) {
       const message = `IndexedDB is not available on your platform.`;
       throw new UnsupportedError(message);
     }

@@ -20,6 +20,7 @@
 import CRUDEngine from './CRUDEngine';
 import {RecordTypeError} from './error/';
 import {RecordAlreadyExistsError, RecordNotFoundError, UnsupportedError} from './error';
+import {isBrowser} from './EnvironmentUtil';
 
 const fs = require('bro-fs');
 
@@ -43,7 +44,7 @@ export default class FileSystemEngine implements CRUDEngine {
   constructor() {}
 
   async init(storeName: string = '', options?: FileSystemEngineOptions): Promise<FileSystem> {
-    if (typeof window === 'undefined' || !fs.isSupported()) {
+    if (!isBrowser() || !fs.isSupported()) {
       const message = `File and Directory Entries API is not available on your platform.`;
       throw new UnsupportedError(message);
     }

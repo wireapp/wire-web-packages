@@ -1,11 +1,12 @@
 import CRUDEngine from './CRUDEngine';
 import {RecordAlreadyExistsError, RecordNotFoundError, RecordTypeError, UnsupportedError} from './error';
+import {isBrowser} from './EnvironmentUtil';
 
 export default class LocalStorageEngine implements CRUDEngine {
   public storeName: string = '';
 
   init(storeName: string): Promise<any> {
-    if (typeof window === 'undefined' || !window.localStorage) {
+    if (!isBrowser() || !window.localStorage) {
       const message = `LocalStorage is not available on your platform.`;
       throw new UnsupportedError(message);
     }

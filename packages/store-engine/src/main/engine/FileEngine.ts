@@ -7,6 +7,7 @@ import {
   RecordTypeError,
   UnsupportedError,
 } from './error';
+import {isBrowser} from './EnvironmentUtil';
 import path = require('path');
 
 export default class FileEngine implements CRUDEngine {
@@ -18,7 +19,7 @@ export default class FileEngine implements CRUDEngine {
   constructor(private baseDirectory: string = '') {}
 
   init(storeName: string = '', options: {fileExtension: string}): Promise<any> {
-    if (typeof window !== 'undefined') {
+    if (isBrowser()) {
       const message = `Node.js' File System Module is not available on your platform.`;
       throw new UnsupportedError(message);
     }
