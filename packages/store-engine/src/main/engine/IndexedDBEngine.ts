@@ -14,11 +14,47 @@ export default class IndexedDBEngine implements CRUDEngine {
   private db?: DexieInstance;
   public storeName: string = '';
 
-  init(storeName: string): Promise<any> {
-    if (!isBrowser() || !window.indexedDB) {
-      const message = `IndexedDB is not available on your platform.`;
-      throw new UnsupportedError(message);
+  private canUseIndexedDB(): Promise<boolean> {
+    if (!window.indexedDB) {
+      return Promise.resolve(false);
+    } else {
+      return new Promise(resolve => {
+        const name = 'test';
+        const DBOpenRequest = window.indexedDB.open(name);
+        DBOpenRequest.onerror = () => resolve(false);
+        DBOpenRequest.onsuccess = () => {
+          const db = DBOpenRequest.result;
+          db.close();
+          const deleteRequest = window.indexedDB.deleteDatabase(name);
+          deleteRequest.onerror = () => resolve(false);
+          deleteRequest.onsuccess = () => resolve(true);
+        };
+      });
     }
+  }
+
+  private async validateIndexedDBSupport(): Promise<void> {
+    const message = `IndexedDB is not available on your platform.`;
+    const unsupportedError = new UnsupportedError(message);
+
+    if (isBrowser()) {
+      try {
+        // Check if IndexedDB is accessible (which won't be the case when browsing with Firefox in private mode)
+        const canUseIndexedDB = await this.canUseIndexedDB();
+        if (!canUseIndexedDB) {
+          throw unsupportedError;
+        }
+      } catch (error) {
+        // This will be triggered on pages like "about:blank"
+        throw unsupportedError;
+      }
+    } else {
+      throw unsupportedError;
+    }
+  }
+
+  async init(storeName: string): Promise<any> {
+    await this.validateIndexedDBSupport();
     this.db = new Dexie(storeName);
     this.storeName = this.db.name;
     return Promise.resolve(this.db);
