@@ -4,7 +4,6 @@ import RecordAlreadyExistsError from './error/RecordAlreadyExistsError';
 import RecordTypeError from './error/RecordTypeError';
 import RecordNotFoundError from './error/RecordNotFoundError';
 import {UnsupportedError} from './error';
-import {isBrowser} from './EnvironmentUtil';
 
 export interface DexieInstance extends Dexie {
   [index: string]: any;
@@ -15,21 +14,22 @@ export default class IndexedDBEngine implements CRUDEngine {
   public storeName: string = '';
 
   private canUseIndexedDB(): Promise<boolean> {
-    if (!window.indexedDB) {
-      return Promise.resolve(false);
-    } else {
+    const platform = typeof global === 'undefined' ? window : global;
+    if ('indexedDB' in platform) {
       return new Promise(resolve => {
         const name = 'test';
-        const DBOpenRequest = window.indexedDB.open(name);
+        const DBOpenRequest = platform.indexedDB.open(name);
         DBOpenRequest.onerror = () => resolve(false);
         DBOpenRequest.onsuccess = () => {
           const db = DBOpenRequest.result;
           db.close();
-          const deleteRequest = window.indexedDB.deleteDatabase(name);
+          const deleteRequest = platform.indexedDB.deleteDatabase(name);
           deleteRequest.onerror = () => resolve(false);
           deleteRequest.onsuccess = () => resolve(true);
         };
       });
+    } else {
+      return Promise.resolve(false);
     }
   }
 
@@ -37,18 +37,14 @@ export default class IndexedDBEngine implements CRUDEngine {
     const message = `IndexedDB is not available on your platform.`;
     const unsupportedError = new UnsupportedError(message);
 
-    if (isBrowser()) {
-      try {
-        // Check if IndexedDB is accessible (which won't be the case when browsing with Firefox in private mode)
-        const canUseIndexedDB = await this.canUseIndexedDB();
-        if (!canUseIndexedDB) {
-          throw unsupportedError;
-        }
-      } catch (error) {
-        // This will be triggered on pages like "about:blank"
+    try {
+      // Check if IndexedDB is accessible (which won't be the case when browsing with Firefox in private mode)
+      const canUseIndexedDB = await this.canUseIndexedDB();
+      if (!canUseIndexedDB) {
         throw unsupportedError;
       }
-    } else {
+    } catch (error) {
+      // This will be triggered on pages like "about:blank"
       throw unsupportedError;
     }
   }
