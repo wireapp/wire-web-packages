@@ -24,13 +24,13 @@ interface Self {
   assets: UserAsset[];
   deleted?: boolean;
   email?: string;
+  expires_at?: string;
   handle?: string;
   id: string;
   locale: string;
   name: string;
   phone?: string;
   team?: string;
-  expires_at?: string;
 }
 
 export {Self};
