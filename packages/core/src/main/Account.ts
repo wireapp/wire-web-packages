@@ -37,7 +37,6 @@ import {
   NewClient,
   RegisteredClient,
 } from '@wireapp/api-client/dist/commonjs/client/index';
-import {LoginSanitizer} from './auth/root';
 import {Root} from 'protobufjs';
 import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/index';
 import {AssetService, ConversationService, DecodedEvent, GenericMessageType} from './conversation/root';
@@ -112,7 +111,6 @@ class Account extends EventEmitter {
     this.logger.info('login');
     return this.resetContext()
       .then(() => this.init())
-      .then(() => LoginSanitizer.removeNonPrintableCharacters(loginData))
       .then(() => this.apiClient.login(loginData))
       .then(() => {
         return initClient
