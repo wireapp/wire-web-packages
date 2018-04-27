@@ -6,7 +6,8 @@
     "@types/generate-changelog": "1.7.0",
     "@types/node": "9.6.6",
     "@wireapp/core": "2.4.4",
-    "generate-changelog": "1.7.1"
+    "generate-changelog": "1.7.1",
+    "pure-uuid": "1.5.2"
   },
   "description": "A Travis deployment notification bot.",
   "devDependencies": {

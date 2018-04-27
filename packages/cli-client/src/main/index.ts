@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const fs = require('fs-extra');
+const UUID = require('pure-uuid');
 const program = require('commander');
 const {Account} = require('@wireapp/core');
 const {description, version} = require('../../package.json');
@@ -80,7 +81,7 @@ storeEngine.init('', {fileExtension: '.json'}).then(() => {
       const stdin = process.openStdin();
       stdin.addListener('data', data => {
         const message = data.toString().trim();
-        account.service.conversation.sendTextMessage(conversationID, message);
+        account.service.conversation.sendTextMessage(new UUID(4).format(), conversationID, message);
       });
     })
     .catch((error: Error) => {
