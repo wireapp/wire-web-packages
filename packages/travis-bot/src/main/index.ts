@@ -17,6 +17,7 @@
  *
  */
 
+const UUID = require('pure-uuid');
 import {Account} from '@wireapp/core';
 import {Config} from '@wireapp/api-client/dist/commonjs/Config';
 import {exec} from 'child_process';
@@ -103,7 +104,7 @@ class TravisBot {
         }
         if (id) {
           logger.info(`Sending message to conversation ${id} ...`);
-          await account.service.conversation.sendTextMessage(id, this.message);
+          await account.service.conversation.sendTextMessage(new UUID(4).format(), id, this.message);
         }
       })
     );
