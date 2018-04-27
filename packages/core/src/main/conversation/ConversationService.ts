@@ -17,7 +17,6 @@
  *
  */
 
-const UUID = require('pure-uuid');
 import APIClient = require('@wireapp/api-client');
 import {Encoder} from 'bazinga64';
 import {AxiosError} from 'axios';
@@ -53,15 +52,19 @@ export default class ConversationService {
     });
   }
 
-  public async sendConfirmation(conversationId: string, messageId: string): Promise<ClientMismatch> {
+  public async sendConfirmation(
+    messageId: string,
+    conversationId: string,
+    confirmMessageId: string
+  ): Promise<ClientMismatch> {
     const confirmation = this.protocolBuffers.Confirmation.create({
       type: ConfirmationType.DELIVERED,
-      firstMessageId: messageId,
+      firstMessageId: confirmMessageId,
     });
 
     const genericMessage = this.protocolBuffers.GenericMessage.create({
       confirmation,
-      messageId: new UUID(4).format(),
+      messageId,
     });
 
     return this.sendGenericMessage(this.clientID, conversationId, genericMessage);
@@ -80,6 +83,7 @@ export default class ConversationService {
   }
 
   private async sendExternalGenericMessage(
+    messageId: string,
     sendingClientId: string,
     conversationId: string,
     asset: EncryptedAsset,
@@ -96,7 +100,7 @@ export default class ConversationService {
 
     const customTextMessage = this.protocolBuffers.GenericMessage.create({
       external: externalMessage,
-      messageId: new UUID(4).format(),
+      messageId,
     });
 
     const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(customTextMessage).finish();
@@ -132,9 +136,9 @@ export default class ConversationService {
     return this.apiClient.conversation.api.postOTRMessage(sendingClientId, conversationId, message);
   }
 
-  public async sendTextMessage(conversationId: string, message: string): Promise<ClientMismatch> {
+  public async sendTextMessage(messageId: string, conversationId: string, message: string): Promise<ClientMismatch> {
     const customTextMessage = this.protocolBuffers.GenericMessage.create({
-      messageId: new UUID(4).format(),
+      messageId,
       text: this.protocolBuffers.Text.create({content: message}),
     });
 
@@ -145,6 +149,7 @@ export default class ConversationService {
       const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
 
       return this.sendExternalGenericMessage(
+        messageId,
         this.clientID,
         conversationId,
         payload,
@@ -160,11 +165,11 @@ export default class ConversationService {
     return this.sendMessage(this.clientID, conversationId, payload);
   }
 
-  public async sendImage(conversationId: string, image: Image): Promise<ClientMismatch> {
+  public async sendImage(messageId: string, conversationId: string, image: Image): Promise<ClientMismatch> {
     const imageAsset = await this.assetService.uploadImageAsset(image);
 
     const genericMessage = this.protocolBuffers.GenericMessage.create({
-      messageId: new UUID(4).format(),
+      messageId,
       asset: imageAsset,
     });
 
@@ -172,7 +177,13 @@ export default class ConversationService {
     const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(genericMessage).finish();
     const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
 
-    return this.sendExternalGenericMessage(this.clientID, conversationId, payload, <UserPreKeyBundleMap>preKeyBundles);
+    return this.sendExternalGenericMessage(
+      messageId,
+      this.clientID,
+      conversationId,
+      payload,
+      <UserPreKeyBundleMap>preKeyBundles
+    );
   }
 
   public setClientID(clientID: string) {
