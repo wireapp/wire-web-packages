@@ -33,7 +33,7 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
   account.on(Account.INCOMING.TEXT_MESSAGE, async data => {
     const {conversation: conversationId, from, content, id: messageId} = data;
     console.log(`Message "${messageId}" in "${conversationId}" from "${from}":`, content);
-    await account.service.conversation.sendConfirmation(conversationId, messageId);
+    await account.service.conversation.sendConfirmation([conversationId], messageId);
   });
 
   account.on(Account.INCOMING.CONFIRMATION, data => {

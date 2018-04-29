@@ -42,20 +42,24 @@ export default class ConversationService {
     private assetService: AssetService
   ) {}
 
-  public async sendConfirmation(conversationId: string, confirmMessageId: string): Promise<string> {
-    const messageId = new UUID(4).format();
-    const confirmation = this.protocolBuffers.Confirmation.create({
-      type: ConfirmationType.DELIVERED,
-      firstMessageId: confirmMessageId,
-    });
+  public async sendConfirmation(conversationIds: string[], confirmMessageId: string): Promise<string[]> {
+    return Promise.all(
+      conversationIds.map(async conversationId => {
+        const messageId = new UUID(4).format();
+        const confirmation = this.protocolBuffers.Confirmation.create({
+          type: ConfirmationType.DELIVERED,
+          firstMessageId: confirmMessageId,
+        });
 
-    const genericMessage = this.protocolBuffers.GenericMessage.create({
-      confirmation,
-      messageId,
-    });
+        const genericMessage = this.protocolBuffers.GenericMessage.create({
+          confirmation,
+          messageId,
+        });
 
-    await this.sendGenericMessage(this.clientID, conversationId, genericMessage);
-    return messageId;
+        await this.sendGenericMessage(this.clientID, conversationId, genericMessage);
+        return messageId;
+      })
+    );
   }
 
   public async getImage({assetId, otrKey, sha256, assetToken}: RemoteData): Promise<Buffer> {
