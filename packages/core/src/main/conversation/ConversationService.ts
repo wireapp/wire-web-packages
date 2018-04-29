@@ -106,21 +106,30 @@ export default class ConversationService {
     );
   }
 
-  public async sendImage(conversationId: string, image: Image): Promise<string> {
-    const imageAsset = await this.assetService.uploadImageAsset(image);
-    const messageId = new UUID(4).format();
+  public async sendImage(conversationIds: string[], image: Image): Promise<string[]> {
+    return Promise.all(
+      conversationIds.map(async conversationId => {
+        const imageAsset = await this.assetService.uploadImageAsset(image);
+        const messageId = new UUID(4).format();
 
-    const genericMessage = this.protocolBuffers.GenericMessage.create({
-      messageId,
-      asset: imageAsset,
-    });
+        const genericMessage = this.protocolBuffers.GenericMessage.create({
+          messageId,
+          asset: imageAsset,
+        });
 
-    const preKeyBundles = await this.getPreKeyBundles(conversationId);
-    const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(genericMessage).finish();
-    const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
+        const preKeyBundles = await this.getPreKeyBundles(conversationId);
+        const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(genericMessage).finish();
+        const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
 
-    await this.sendExternalGenericMessage(this.clientID, conversationId, payload, <UserPreKeyBundleMap>preKeyBundles);
-    return messageId;
+        await this.sendExternalGenericMessage(
+          this.clientID,
+          conversationId,
+          payload,
+          <UserPreKeyBundleMap>preKeyBundles
+        );
+        return messageId;
+      })
+    );
   }
 
   public setClientID(clientID: string) {
