@@ -1449,11 +1449,11 @@ braces@^2.3.1:
     split-string "^3.0.2"
     to-regex "^3.0.1"
 
-bro-fs@0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/bro-fs/-/bro-fs-0.3.0.tgz#ef5636ed9f8e11b7d1c6802746f5fa17b2a17f7f"
+bro-fs@0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/bro-fs/-/bro-fs-0.4.0.tgz#3df38350c463342186b075a43a9ba68e156b921a"
   dependencies:
-    marked "^0.3.17"
+    marked "^0.3.19"
 
 brorand@^1.0.1:
   version "1.1.0"
@@ -6109,7 +6109,7 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-marked@^0.3.17:
+marked@^0.3.19:
   version "0.3.19"
   resolved "https://registry.yarnpkg.com/marked/-/marked-0.3.19.tgz#5d47f709c4c9fc3c216b6d46127280f40b39d790"
 
