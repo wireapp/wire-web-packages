@@ -67,30 +67,39 @@ export default class ConversationService {
     });
   }
 
-  public async sendTextMessage(conversationId: string, message: string): Promise<string> {
-    const messageId = new UUID(4).format();
-    const customTextMessage = this.protocolBuffers.GenericMessage.create({
-      messageId,
-      text: this.protocolBuffers.Text.create({content: message}),
-    });
+  public async sendTextMessage(conversationIds: string[], message: string): Promise<string[]> {
+    return Promise.all(
+      conversationIds.map(async conversationId => {
+        const messageId = new UUID(4).format();
+        const customTextMessage = this.protocolBuffers.GenericMessage.create({
+          messageId,
+          text: this.protocolBuffers.Text.create({content: message}),
+        });
 
-    const preKeyBundles = await this.getPreKeyBundles(conversationId);
-    const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(customTextMessage).finish();
+        const preKeyBundles = await this.getPreKeyBundles(conversationId);
+        const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(customTextMessage).finish();
 
-    if (this.shouldSendAsExternal(plainTextBuffer, <UserPreKeyBundleMap>preKeyBundles)) {
-      const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
+        if (this.shouldSendAsExternal(plainTextBuffer, <UserPreKeyBundleMap>preKeyBundles)) {
+          const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
 
-      await this.sendExternalGenericMessage(this.clientID, conversationId, payload, <UserPreKeyBundleMap>preKeyBundles);
-      return messageId;
-    }
+          await this.sendExternalGenericMessage(
+            this.clientID,
+            conversationId,
+            payload,
+            <UserPreKeyBundleMap>preKeyBundles
+          );
+          return messageId;
+        }
 
-    const payload: OTRRecipients = await this.cryptographyService.encrypt(
-      plainTextBuffer,
-      <UserPreKeyBundleMap>preKeyBundles
+        const payload: OTRRecipients = await this.cryptographyService.encrypt(
+          plainTextBuffer,
+          <UserPreKeyBundleMap>preKeyBundles
+        );
+
+        await this.sendMessage(this.clientID, conversationId, payload);
+        return messageId;
+      })
     );
-
-    await this.sendMessage(this.clientID, conversationId, payload);
-    return messageId;
   }
 
   public async sendImage(conversationId: string, image: Image): Promise<string> {
