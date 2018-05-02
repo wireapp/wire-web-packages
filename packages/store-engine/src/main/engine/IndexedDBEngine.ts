@@ -33,7 +33,7 @@ export default class IndexedDBEngine implements CRUDEngine {
     }
   }
 
-  private async validateIndexedDBSupport(): Promise<void> {
+  public async validateIndexedDBSupport(): Promise<void> {
     const message = `IndexedDB is not available on your platform.`;
     const unsupportedError = new UnsupportedError(message);
 
@@ -49,20 +49,20 @@ export default class IndexedDBEngine implements CRUDEngine {
     }
   }
 
-  async init(storeName: string): Promise<any> {
+  public async init(storeName: string): Promise<any> {
     await this.validateIndexedDBSupport();
     this.db = new Dexie(storeName);
     this.storeName = this.db.name;
     return Promise.resolve(this.db);
   }
 
-  initWithDb(db: DexieInstance): Promise<DexieInstance> {
+  public initWithDb(db: DexieInstance): Promise<DexieInstance> {
     this.db = db;
     this.storeName = this.db.name;
     return Promise.resolve(this.db);
   }
 
-  purge(): Promise<void> {
+  public purge(): Promise<void> {
     return this.db ? this.db.delete() : Dexie.delete(this.storeName);
   }
 
@@ -123,7 +123,7 @@ export default class IndexedDBEngine implements CRUDEngine {
     return this.db![tableName].put(changes, primaryKey);
   }
 
-  append(tableName: string, primaryKey: string, additions: string): Promise<string> {
+  public append(tableName: string, primaryKey: string, additions: string): Promise<string> {
     return this.db![tableName].get(primaryKey).then((record: any) => {
       if (typeof record === 'string') {
         record += additions;
