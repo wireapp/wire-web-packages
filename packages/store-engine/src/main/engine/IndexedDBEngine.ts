@@ -13,36 +13,33 @@ export default class IndexedDBEngine implements CRUDEngine {
   private db?: DexieInstance;
   public storeName: string = '';
 
-  private canUseIndexedDB(): Promise<boolean> {
+  private canUseIndexedDB(): Promise<void> {
     const platform = typeof global === 'undefined' ? window : global;
     if ('indexedDB' in platform) {
-      return new Promise(resolve => {
+      return new Promise((resolve, reject) => {
         const name = 'test';
         const DBOpenRequest = platform.indexedDB.open(name);
-        DBOpenRequest.onerror = () => resolve(false);
+        DBOpenRequest.onerror = error => reject(error);
         DBOpenRequest.onsuccess = () => {
           const db = DBOpenRequest.result;
           db.close();
           const deleteRequest = platform.indexedDB.deleteDatabase(name);
-          deleteRequest.onerror = () => resolve(false);
-          deleteRequest.onsuccess = () => resolve(true);
+          deleteRequest.onerror = error => reject(error);
+          deleteRequest.onsuccess = () => resolve();
         };
       });
     } else {
-      return Promise.resolve(false);
+      return Promise.reject(new Error('Could not find indexedDB in global scope'));
     }
   }
 
-  public async validateIndexedDBSupport(): Promise<void> {
+  public async isSupported(): Promise<void> {
     const message = `IndexedDB is not available on your platform.`;
     const unsupportedError = new UnsupportedError(message);
 
     try {
       // Check if IndexedDB is accessible (which won't be the case when browsing with Firefox in private mode)
-      const canUseIndexedDB = await this.canUseIndexedDB();
-      if (!canUseIndexedDB) {
-        throw unsupportedError;
-      }
+      await this.canUseIndexedDB();
     } catch (error) {
       // This will be triggered on pages like "about:blank"
       throw unsupportedError;
@@ -50,7 +47,7 @@ export default class IndexedDBEngine implements CRUDEngine {
   }
 
   public async init(storeName: string): Promise<any> {
-    await this.validateIndexedDBSupport();
+    await this.isSupported();
     this.db = new Dexie(storeName);
     this.storeName = this.db.name;
     return Promise.resolve(this.db);
