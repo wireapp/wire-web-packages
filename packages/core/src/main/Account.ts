@@ -273,10 +273,15 @@ class Account extends EventEmitter {
         switch (data.type) {
           case GenericMessageType.TEXT:
             this.emit(Account.INCOMING.TEXT_MESSAGE, data);
+            return;
           case GenericMessageType.ASSET:
             this.emit(Account.INCOMING.ASSET, data);
+            return;
           case GenericMessageType.CONFIRMATION:
             this.emit(Account.INCOMING.CONFIRMATION, data);
+            return;
+          default:
+            return;
         }
       });
     }
