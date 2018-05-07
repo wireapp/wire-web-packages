@@ -26,5 +26,8 @@
     "prefer-const": true,
     "prettier": true,
     "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore", "allow-pascal-case"]
+  },
+  "linterOptions": {
+    "exclude": ["**/node_modules/**"]
   }
 }
