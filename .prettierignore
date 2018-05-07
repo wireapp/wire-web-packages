@@ -1,7 +1,7 @@
 **/bin/**
-**/bower_components/**
 **/dist/**
-**/node_modules/**
+bower_components
 CHANGELOG.md
+node_modules
 package.json
 packages/react-ui-kit/*.js

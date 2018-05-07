@@ -1,0 +1,29 @@
+{
+  "extends": ["tslint-config-prettier", "tslint-plugin-prettier"],
+  "rules": {
+    "ban-types": false,
+    "interface-name": false,
+    "no-bitwise": false,
+    "no-duplicate-imports": true,
+    "no-invalid-template-strings": true,
+    "no-object-literal-type-assertion": true,
+    "no-sparse-arrays": true,
+    "no-var-requires": false,
+    "prefer-conditional-expression": true,
+    "prefer-object-spread": true,
+    "ban-comma-operator": true,
+    "no-duplicate-switch-case": true,
+    "no-implicit-dependencies": false,
+    "no-return-await": true,
+    "jsdoc-format": [true, "check-multiline-start"],
+    "no-duplicate-variable": [true, "check-parameters"],
+    "no-this-assignment": true,
+    "space-within-parens": [true, 0],
+    "no-submodule-imports": false,
+    "prefer-const": true,
+    "prettier": true
+  },
+  "linterOptions": {
+    "exclude": ["**/node_modules/**"]
+  }
+}
