@@ -29,8 +29,17 @@ export default class SelfService {
     return name;
   }
 
+  public async getUserName(): Promise<string | undefined> {
+    const {handle} = await this.apiClient.self.api.getSelf();
+    return handle;
+  }
+
   public getSelf(): Promise<Self> {
     return this.apiClient.self.api.getSelf();
+  }
+
+  public setName(name: string): Promise<{}> {
+    return this.apiClient.self.api.putSelf({name});
   }
 
   public async setUserName(userName: string): Promise<{}> {
