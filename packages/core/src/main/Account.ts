@@ -263,7 +263,7 @@ class Account extends EventEmitter {
   private handleEvent(event: ConversationEvent): Promise<PayloadBundle> {
     this.logger.info('handleEvent');
     const {conversation, from} = event;
-    return this.decodeEvent(event).then(data => Object.assign(data, {from, conversation}));
+    return this.decodeEvent(event).then(data => ({...data, from, conversation}));
   }
 
   private handleNotification(notification: IncomingNotification): void {
