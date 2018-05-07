@@ -37,7 +37,7 @@
     "fix:ts": "yarn test:ts --fix",
     "fix": "yarn fix:other && yarn fix:js && yarn fix:ts",
     "precommit": "lint-staged",
-    "prettier": "prettier --ignore-path .gitignore \"**/*.{json,md,scss}\"",
+    "prettier": "prettier \"**/*.{json,md,scss}\"",
     "release": "lerna publish -m \"[skip ci] chore: Publish\" --conventional-commits --loglevel=verbose --exact --allow-branch=master --registry=https://registry.npmjs.org/ --yes",
     "test:js": "eslint --ignore-path .gitignore **/*.{js,jsx}",
     "test:other": "yarn prettier --list-different",
