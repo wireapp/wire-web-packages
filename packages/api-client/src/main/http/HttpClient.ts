@@ -18,8 +18,7 @@
  */
 
 import axios, {AxiosError, AxiosPromise, AxiosRequestConfig, AxiosResponse} from 'axios';
-import {AccessTokenData} from '../auth';
-import {AccessTokenStore, AuthAPI} from '../auth';
+import {AccessTokenData, AccessTokenStore, AuthAPI} from '../auth';
 import {ContentType} from '../http';
 import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine';
 import {PriorityQueue} from '@wireapp/priority-queue';

@@ -95,7 +95,7 @@ class CryptoboxCRUDStore implements ProteusSession.PreKeyStore {
 
       records.forEach((record: PersistedRecord) => {
         const payload = this.from_store(record);
-        let preKey: ProteusKeys.PreKey = ProteusKeys.PreKey.deserialise(payload);
+        const preKey: ProteusKeys.PreKey = ProteusKeys.PreKey.deserialise(payload);
         preKeys.push(preKey);
       });
 

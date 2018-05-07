@@ -133,8 +133,6 @@ class Account extends EventEmitter {
     return this.loadAndValidateLocalClient()
       .then(localClient => ({isNewClient: false, localClient}))
       .catch(error => {
-        let registeredClient: RegisteredClient;
-
         // There was no client so we need to "create" and "register" a client
         const notFoundInDatabase =
           error instanceof cryptobox.error.CryptoboxError ||
