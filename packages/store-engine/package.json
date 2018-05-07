@@ -1,16 +1,16 @@
 {
   "dependencies": {
     "@types/filesystem": "0.0.28",
-    "@types/node": "9.6.6",
+    "@types/node": "10.0.4",
     "bro-fs": "0.4.0",
     "dexie": "2.0.3",
-    "fs-extra": "5.0.0"
+    "fs-extra": "6.0.0"
   },
   "devDependencies": {
     "jasmine": "3.1.0",
     "karma": "2.0.2",
     "karma-chrome-launcher": "2.2.0",
-    "karma-jasmine": "1.1.1",
+    "karma-jasmine": "1.1.2",
     "karma-jasmine-diff-reporter": "1.2.0",
     "karma-sourcemap-loader": "0.3.7",
     "rimraf": "2.6.2",
@@ -50,5 +50,5 @@
     "test:node": "jasmine --config=jasmine.json"
   },
   "types": "./dist/commonjs/index.d.ts",
-  "version": "0.9.1"
+  "version": "0.11.2"
 }
