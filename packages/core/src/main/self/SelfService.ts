@@ -51,6 +51,6 @@ export default class SelfService {
       return this.apiClient.self.api.putHandle({handle: userName});
     }
 
-    throw new Error('Username is not available.');
+    throw new Error(`Username "${userName}" is not available.`);
   }
 }
