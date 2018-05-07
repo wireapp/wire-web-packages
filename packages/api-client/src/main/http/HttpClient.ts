@@ -17,11 +17,11 @@
  *
  */
 
+import {PriorityQueue} from '@wireapp/priority-queue';
+import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine';
 import axios, {AxiosError, AxiosPromise, AxiosRequestConfig, AxiosResponse} from 'axios';
 import {AccessTokenData, AccessTokenStore, AuthAPI} from '../auth';
 import {ContentType} from '../http';
-import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine';
-import {PriorityQueue} from '@wireapp/priority-queue';
 import {sendRequestWithCookie} from '../shims/node/cookie';
 
 const logdown = require('logdown');

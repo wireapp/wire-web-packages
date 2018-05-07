@@ -1,7 +1,6 @@
+import {message as ProteusMessage, session as ProteusSession} from '@wireapp/proteus';
 import DecryptionError from './DecryptionError';
 import {CryptoboxCRUDStore} from './store/root';
-import {message as ProteusMessage} from '@wireapp/proteus';
-import {session as ProteusSession} from '@wireapp/proteus';
 
 class CryptoboxSession {
   public id: string;
