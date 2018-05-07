@@ -57,6 +57,7 @@ class Account extends EventEmitter {
   public static readonly INCOMING = {
     ASSET: 'Account.INCOMING.ASSET',
     CONFIRMATION: 'Account.INCOMING.CONFIRMATION',
+    PING: 'Account.INCOMFING.PING',
     TEXT_MESSAGE: 'Account.INCOMING.TEXT_MESSAGE',
   };
   private apiClient: Client;
@@ -84,6 +85,7 @@ class Account extends EventEmitter {
       Confirmation: root.lookup('Confirmation'),
       External: root.lookup('External'),
       GenericMessage: root.lookup('GenericMessage'),
+      Knock: root.lookup('Knock'),
       Text: root.lookup('Text'),
     };
 
@@ -283,6 +285,9 @@ class Account extends EventEmitter {
             break;
           case GenericMessageType.CONFIRMATION:
             this.emit(Account.INCOMING.CONFIRMATION, data);
+            break;
+          case GenericMessageType.KNOCK:
+            this.emit(Account.INCOMING.PING, data);
             break;
         }
       });
