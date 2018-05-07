@@ -47,7 +47,6 @@
     "clear": "rimraf coverage dist",
     "coverage": "cross-env JASMINE_CONFIG_PATH=jasmine.json istanbul cover --report html ../../node_modules/jasmine/bin/jasmine.js",
     "dist": "yarn clear && yarn build",
-    "istanbul": "1.1.0-alpha.1",
     "test": "yarn test:node && yarn test:browser && yarn test coverage",
     "test:coverage": "yarn coverage && istanbul check-coverage --branches 65 --functions 65 --lines 65 --statements 65",
     "test:project": "yarn dist && yarn test",
