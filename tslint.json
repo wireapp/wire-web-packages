@@ -24,6 +24,6 @@
     "prettier": true
   },
   "linterOptions": {
-    "exclude": ["**/node_modules/**"]
+    "exclude": ["**/bower_components/**", "**/dist/**", "**/node_modules/**"]
   }
 }
