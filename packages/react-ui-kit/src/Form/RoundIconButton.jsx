@@ -17,7 +17,21 @@
  *
  */
 
-import {ArrowIcon, CheckIcon, CloseIcon, PlaneIcon, ProfileIcon, RoundContainer, TeamIcon, TrashIcon} from '../Icon';
+import {
+  ArrowIcon,
+  AttachmentIcon,
+  CheckIcon,
+  CloseIcon,
+  GifIcon,
+  ImageIcon,
+  PingIcon,
+  PlaneIcon,
+  ProfileIcon,
+  RoundContainer,
+  TeamIcon,
+  TimedIcon,
+  TrashIcon,
+} from '../Icon';
 import {COLOR} from '../Identity';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -40,11 +54,16 @@ const Button = RoundContainer.withComponent('button').extend`
 
 const ICON_NAME = {
   ARROW: 'arrow',
+  ATTACHMENT: 'attachment',
   CHECK: 'check',
   CLOSE: 'close',
+  GIF: 'gif',
+  IMAGE: 'image',
+  PING: 'ping',
   PLANE: 'plane',
   PROFILE: 'profile',
   TEAM: 'team',
+  TIMED: 'timed',
   TRASH: 'trash',
 };
 
@@ -52,6 +71,21 @@ const RoundIconButton = ({icon, iconColor, iconHeight, iconWidth, ...props}) => 
   <Button {...props}>
     {(() => {
       switch (icon) {
+        case ICON_NAME.ATTACHMENT: {
+          return <AttachmentIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+        }
+        case ICON_NAME.GIF: {
+          return <GifIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+        }
+        case ICON_NAME.IMAGE: {
+          return <ImageIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+        }
+        case ICON_NAME.PING: {
+          return <PingIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+        }
+        case ICON_NAME.TIMED: {
+          return <TimedIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+        }
         case ICON_NAME.CHECK: {
           return <CheckIcon color={iconColor} height={iconHeight} width={iconWidth} />;
         }
