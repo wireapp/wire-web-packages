@@ -103,7 +103,7 @@ class TravisBot {
         }
         if (id) {
           logger.info(`Sending message to conversation ${id} ...`);
-          await account.service.conversation.sendTextMessage(id, this.message);
+          await account.service.conversation.sendTextMessage([id], this.message);
         }
       })
     );

@@ -80,7 +80,7 @@ storeEngine.init('', {fileExtension: '.json'}).then(() => {
       const stdin = process.openStdin();
       stdin.addListener('data', data => {
         const message = data.toString().trim();
-        account.service.conversation.sendTextMessage(conversationID, message);
+        account.service.conversation.sendTextMessage([conversationID], message);
       });
     })
     .catch((error: Error) => {
