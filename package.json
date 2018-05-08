@@ -7,15 +7,22 @@
     "eslint-plugin-react": "7.7.0",
     "husky": "0.14.3",
     "lerna": "2.11.0",
-    "lint-staged": "7.0.5",
-    "prettier": "1.12.1"
+    "lint-staged": "7.1.0",
+    "prettier": "1.12.1",
+    "tslint": "5.10.0",
+    "tslint-config-prettier": "1.12.0",
+    "tslint-plugin-prettier": "1.3.0"
   },
   "lint-staged": {
     "*.{js,jsx}": [
       "eslint --fix",
       "git add"
     ],
-    "*.{json,md,scss,ts}": [
+    "*.ts": [
+      "tslint -c tslint.json --fix",
+      "git add"
+    ],
+    "*.{json,md,scss}": [
       "prettier --write",
       "git add"
     ]
@@ -25,16 +32,17 @@
     "boot": "lerna bootstrap --reject-cycles",
     "clear": "lerna run clear",
     "dist": "yarn clear && lerna run dist",
-    "fix": "yarn fix:assets && yarn fix:script",
-    "fix:assets": "prettier --write **/*.{json,md,scss}",
-    "fix:jsScript": "yarn test:jsScript --fix",
-    "fix:script": "yarn fix:jsScript && yarn fix:tsScript",
-    "fix:tsScript": "prettier --write **/*.ts",
+    "fix:js": "yarn test:js --fix",
+    "fix:other": "yarn prettier --write",
+    "fix:ts": "yarn test:ts --fix",
+    "fix": "yarn fix:other && yarn fix:js && yarn fix:ts",
     "precommit": "lint-staged",
-    "test": "yarn && yarn test:jsScript && node bin/testUpdated.js",
-    "test:all": "yarn && yarn test:jsScript && lerna run test",
-    "test:jsScript": "eslint --ignore-path .gitignore **/*.{js,jsx}",
-    "release": "lerna publish -m \"[skip ci] chore: Publish\" --conventional-commits --loglevel=verbose --exact --allow-branch=master --registry=https://registry.npmjs.org/ --yes"
+    "prettier": "prettier \"**/*.{json,md,scss}\"",
+    "release": "lerna publish -m \"[skip ci] chore: Publish\" --conventional-commits --loglevel=verbose --exact --allow-branch=master --registry=https://registry.npmjs.org/ --yes",
+    "test:js": "eslint --ignore-path .gitignore **/*.{js,jsx}",
+    "test:other": "yarn prettier --list-different",
+    "test:ts": "tslint -c tslint.json \"**/*.ts\"",
+    "test": "yarn && yarn test:js && yarn test:ts && yarn test:other && node bin/testUpdated.js"
   },
   "workspaces": [
     "packages/*"

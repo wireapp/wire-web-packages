@@ -179,7 +179,8 @@ class Client {
       Promise.resolve()
         .then(() => this.context && this.logout())
         .then(() => this.auth.api.postRegister(userAccount))
-        /** Note:
+        /**
+         * Note:
          * It's necessary to initialize the context (Client.createContext()) and the store (Client.initEngine())
          * for saving the retrieved cookie from POST /access (Client.init()) in a Node environment.
          */
@@ -210,12 +211,7 @@ class Client {
   }
 
   private createContext(userId: string, clientId?: string, clientType?: ClientType): Context {
-    if (this.context) {
-      this.context = {...this.context, clientId, clientType};
-    } else {
-      this.context = new Context(userId, clientId, clientType);
-    }
-
+    this.context = this.context ? {...this.context, clientId, clientType} : new Context(userId, clientId, clientType);
     return this.context;
   }
 
@@ -228,16 +224,20 @@ class Client {
       context.clientType ? `@${context.clientType}` : ''
     }`;
     this.logger.info(`Initialising store with name "${dbName}"`);
-    const db = await this.config.store.init(dbName);
-    const isDexieStore = db && db.constructor.name === 'Dexie';
-    if (isDexieStore) {
-      if (this.config.schemaCallback) {
-        this.config.schemaCallback(db);
-      } else {
-        throw new Error('Could not initialize database - missing schema definition');
+    try {
+      const db = await this.config.store.init(dbName);
+      const isDexieStore = db && db.constructor.name === 'Dexie';
+      if (isDexieStore) {
+        if (this.config.schemaCallback) {
+          this.config.schemaCallback(db);
+        } else {
+          throw new Error('Could not initialize database - missing schema definition');
+        }
+        // In case the database got purged, db.close() is called automatically and we have to reopen it.
+        await db.open();
       }
-      // In case the database got purged, db.close() is called automatically and we have to reopen it.
-      await db.open();
+    } catch (error) {
+      throw new Error(`Could not initialize database: "${error.message}`);
     }
     return this.config.store;
   }

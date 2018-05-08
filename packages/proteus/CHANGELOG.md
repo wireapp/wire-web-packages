@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="7.1.31"></a>
+## [7.1.31](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.1.30...@wireapp/proteus@7.1.31) (2018-05-07)
+
+
+
+
+**Note:** Version bump only for package @wireapp/proteus
+
+<a name="7.1.30"></a>
+## [7.1.30](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.1.29...@wireapp/proteus@7.1.30) (2018-05-07)
+
+
+
+
+**Note:** Version bump only for package @wireapp/proteus
+
+<a name="7.1.29"></a>
+## [7.1.29](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.1.28...@wireapp/proteus@7.1.29) (2018-05-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/proteus
+
+<a name="7.1.28"></a>
+## [7.1.28](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.1.26...@wireapp/proteus@7.1.28) (2018-05-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/proteus
+
+<a name="7.1.27"></a>
+## [7.1.27](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.1.26...@wireapp/proteus@7.1.27) (2018-05-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/proteus
+
 <a name="7.1.26"></a>
 ## [7.1.26](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.1.25...@wireapp/proteus@7.1.26) (2018-04-26)
 

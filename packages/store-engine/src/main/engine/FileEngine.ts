@@ -18,23 +18,27 @@ export default class FileEngine implements CRUDEngine {
 
   constructor(private baseDirectory: string = '') {}
 
-  init(storeName: string = '', options: {fileExtension: string}): Promise<any> {
+  public async isSupported(): Promise<void> {
     if (isBrowser()) {
       const message = `Node.js' File System Module is not available on your platform.`;
       throw new UnsupportedError(message);
     }
+  }
+
+  public async init(storeName: string = '', options: {fileExtension: string}): Promise<any> {
+    await this.isSupported();
     this.storeName = path.normalize(path.join(this.baseDirectory, storeName));
     this.options = {...this.options, ...options};
     return Promise.resolve(storeName);
   }
 
-  purge(): Promise<void> {
+  public purge(): Promise<void> {
     return fs.remove(this.storeName);
   }
 
   private resolvePath(tableName: string, primaryKey?: string): Promise<string> {
     const isPathTraversal = (...testPaths: string[]): boolean => {
-      for (let testPath of testPaths) {
+      for (const testPath of testPaths) {
         if (
           typeof testPath !== 'undefined' &&
           (testPath.includes('.') || testPath.includes('/') || testPath.includes('\\'))

@@ -43,12 +43,16 @@ export default class FileSystemEngine implements CRUDEngine {
 
   constructor() {}
 
-  async init(storeName: string = '', options?: FileSystemEngineOptions): Promise<FileSystem> {
+  public async isSupported(): Promise<void> {
     if (!isBrowser() || !fs.isSupported()) {
       const message = `File and Directory Entries API is not available on your platform.`;
       throw new UnsupportedError(message);
     }
-    this.config = Object.assign({}, this.config, options);
+  }
+
+  public async init(storeName: string = '', options?: FileSystemEngineOptions): Promise<FileSystem> {
+    await this.isSupported();
+    this.config = {...this.config, ...options};
     this.storeName = storeName;
     const fileSystem: FileSystem = await fs.init({type: this.config.type, bytes: this.config.size});
     await fs.mkdir(this.storeName);

@@ -3,6 +3,63 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.11.4"></a>
+## [0.11.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@0.11.3...@wireapp/store-engine@0.11.4) (2018-05-07)
+
+
+
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+<a name="0.11.3"></a>
+## [0.11.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@0.11.2...@wireapp/store-engine@0.11.3) (2018-05-07)
+
+
+
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+<a name="0.11.2"></a>
+## [0.11.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@0.11.1...@wireapp/store-engine@0.11.2) (2018-05-03)
+
+
+### Bug Fixes
+
+* **api-client:** Guard initEngine ([#554](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/554)) ([c0c5f04](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/c0c5f04))
+
+
+
+
+<a name="0.11.1"></a>
+## [0.11.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@0.11.0...@wireapp/store-engine@0.11.1) (2018-05-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+<a name="0.11.0"></a>
+# [0.11.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@0.9.1...@wireapp/store-engine@0.11.0) (2018-05-03)
+
+
+### Features
+
+* Implement isSupported ([#546](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/546)) ([85c4b24](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/85c4b24))
+
+
+
+
+<a name="0.10.0"></a>
+# [0.10.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@0.9.1...@wireapp/store-engine@0.10.0) (2018-05-03)
+
+
+### Features
+
+* Implement isSupported ([#546](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/546)) ([85c4b24](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/85c4b24))
+
+
+
+
 <a name="0.9.1"></a>
 ## [0.9.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@0.9.0...@wireapp/store-engine@0.9.1) (2018-04-27)
 

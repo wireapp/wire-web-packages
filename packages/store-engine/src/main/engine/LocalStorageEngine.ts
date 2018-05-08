@@ -5,18 +5,20 @@ import {isBrowser} from './EnvironmentUtil';
 export default class LocalStorageEngine implements CRUDEngine {
   public storeName: string = '';
 
-  init(storeName: string): Promise<any> {
+  public async isSupported(): Promise<void> {
     if (!isBrowser() || !window.localStorage) {
       const message = `LocalStorage is not available on your platform.`;
       throw new UnsupportedError(message);
     }
-    this.storeName = storeName;
-    return Promise.resolve();
   }
 
-  purge(): Promise<void> {
+  public async init(storeName: string): Promise<any> {
+    await this.isSupported();
+    this.storeName = storeName;
+  }
+
+  public async purge(): Promise<void> {
     window.localStorage.clear();
-    return Promise.resolve();
   }
 
   private createKey(tableName: string, primaryKey: string): string {
@@ -117,7 +119,7 @@ export default class LocalStorageEngine implements CRUDEngine {
   public update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
     return this.read(tableName, primaryKey)
       .then((entity: Object) => {
-        return Object.assign(entity, changes);
+        return {...entity, ...changes};
       })
       .then((updatedEntity: Object) => {
         return this.create(tableName, primaryKey, updatedEntity).catch(error => {
