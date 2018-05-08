@@ -1,15 +1,13 @@
-import {keys as ProteusKeys} from '@wireapp/proteus';
-import {message as ProteusMessage} from '@wireapp/proteus';
-import {session as ProteusSession} from '@wireapp/proteus';
-import {CryptoboxError} from './error/root';
-import CryptoboxSession from './CryptoboxSession';
-import DecryptionError from './DecryptionError';
-import InvalidPreKeyFormatError from './InvalidPreKeyFormatError';
-import {CryptoboxCRUDStore} from './store/root';
 import LRUCache from '@wireapp/lru-cache';
 import {PriorityQueue} from '@wireapp/priority-queue';
+import {keys as ProteusKeys, message as ProteusMessage, session as ProteusSession} from '@wireapp/proteus';
 import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
 import EventEmitter = require('events');
+import CryptoboxSession from './CryptoboxSession';
+import DecryptionError from './DecryptionError';
+import {CryptoboxError} from './error/root';
+import InvalidPreKeyFormatError from './InvalidPreKeyFormatError';
+import {CryptoboxCRUDStore} from './store/root';
 
 const logdown = require('logdown');
 const VERSION = require('../../package.json').version;

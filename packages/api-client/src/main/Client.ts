@@ -18,25 +18,25 @@
  */
 
 const logdown = require('logdown');
-import {Config} from './Config';
-import {AccessTokenData, AuthAPI, Context, LoginData, RegisterData, AUTH_TABLE_NAME} from './auth';
-import {AccessTokenStore} from './auth/';
-import {AssetAPI} from './asset/';
 import {AxiosResponse} from 'axios';
-import {Backend} from './env';
+import {AssetAPI} from './asset/';
+import {AccessTokenData, AUTH_TABLE_NAME, AuthAPI, Context, LoginData, RegisterData} from './auth';
+import {AccessTokenStore} from './auth/';
 import {ClientAPI, ClientType} from './client/';
+import {Config} from './Config';
 import {ConnectionAPI} from './connection/';
 import {ConversationAPI} from './conversation/';
+import {Backend} from './env';
 import {GiphyAPI} from './giphy/';
 import {HttpClient} from './http/';
 import {InvitationAPI} from './invitation/';
 import {NotificationAPI} from './notification/';
-import {MemberAPI, PaymentAPI, TeamAPI, TeamInvitationAPI} from './team/';
 import {SelfAPI} from './self/';
-import {UserAPI} from './user/';
-import {WebSocketClient} from './tcp/';
-import {User} from './user';
 import {retrieveCookie} from './shims/node/cookie';
+import {WebSocketClient} from './tcp/';
+import {MemberAPI, PaymentAPI, TeamAPI, TeamInvitationAPI} from './team/';
+import {User} from './user';
+import {UserAPI} from './user/';
 
 const VERSION = require('../../package.json').version;
 
@@ -179,7 +179,8 @@ class Client {
       Promise.resolve()
         .then(() => this.context && this.logout())
         .then(() => this.auth.api.postRegister(userAccount))
-        /** Note:
+        /**
+         * Note:
          * It's necessary to initialize the context (Client.createContext()) and the store (Client.initEngine())
          * for saving the retrieved cookie from POST /access (Client.init()) in a Node environment.
          */
@@ -210,12 +211,7 @@ class Client {
   }
 
   private createContext(userId: string, clientId?: string, clientType?: ClientType): Context {
-    if (this.context) {
-      this.context = {...this.context, clientId, clientType};
-    } else {
-      this.context = new Context(userId, clientId, clientType);
-    }
-
+    this.context = this.context ? {...this.context, clientId, clientType} : new Context(userId, clientId, clientType);
     return this.context;
   }
 

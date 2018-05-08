@@ -1,5 +1,7 @@
 const fs = require('fs-extra');
+import path = require('path');
 import CRUDEngine from './CRUDEngine';
+import {isBrowser} from './EnvironmentUtil';
 import {
   PathValidationError,
   RecordAlreadyExistsError,
@@ -7,8 +9,6 @@ import {
   RecordTypeError,
   UnsupportedError,
 } from './error';
-import {isBrowser} from './EnvironmentUtil';
-import path = require('path');
 
 export default class FileEngine implements CRUDEngine {
   public storeName: string = '';
@@ -38,7 +38,7 @@ export default class FileEngine implements CRUDEngine {
 
   private resolvePath(tableName: string, primaryKey?: string): Promise<string> {
     const isPathTraversal = (...testPaths: string[]): boolean => {
-      for (let testPath of testPaths) {
+      for (const testPath of testPaths) {
         if (
           typeof testPath !== 'undefined' &&
           (testPath.includes('.') || testPath.includes('/') || testPath.includes('\\'))

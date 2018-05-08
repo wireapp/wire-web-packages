@@ -19,11 +19,11 @@
 
 import {AxiosResponse} from 'axios';
 import {HttpClient} from '../http';
-import {isValidKey, isValidToken} from './AssetUtil';
+import {base64MD5FromBuffer, concatToBuffer} from '../shims/node/buffer';
 import {unsafeAlphanumeric} from '../shims/node/random';
 import {AssetRetentionPolicy} from './AssetRetentionPolicy';
 import {AssetUploadData} from './AssetUploadData';
-import {base64MD5FromBuffer, concatToBuffer} from '../shims/node/buffer';
+import {isValidKey, isValidToken} from './AssetUtil';
 
 class AssetAPI {
   private static readonly ASSET_URL = '/assets/v3';
@@ -57,15 +57,11 @@ class AssetAPI {
   postAsset(asset: Uint8Array, options?: {public: boolean; retention: AssetRetentionPolicy}): Promise<AssetUploadData> {
     const BOUNDARY = `Frontier${unsafeAlphanumeric()}`;
 
-    const metadata = JSON.stringify(
-      Object.assign(
-        {
-          public: true,
-          retention: AssetRetentionPolicy.PERSISTENT,
-        },
-        options
-      )
-    );
+    const metadata = JSON.stringify({
+      public: true,
+      retention: AssetRetentionPolicy.PERSISTENT,
+      ...options,
+    });
 
     let body = '';
 

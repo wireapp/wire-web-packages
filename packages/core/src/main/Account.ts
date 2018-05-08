@@ -19,17 +19,8 @@
 
 const pkg = require('../package.json');
 const logdown = require('logdown');
-import {IncomingNotification} from '@wireapp/api-client/dist/commonjs/conversation/index';
-import * as cryptobox from '@wireapp/cryptobox';
-import {CryptographyService, PayloadBundle} from './cryptography/root';
-import {ClientService, ClientInfo} from './client/root';
-import {NotificationService} from './notification/root';
+import Client = require('@wireapp/api-client');
 import {Context, LoginData, PreKey} from '@wireapp/api-client/dist/commonjs/auth/index';
-import {
-  ConversationEvent,
-  CONVERSATION_EVENT,
-  ConversationOtrMessageAddEvent,
-} from '@wireapp/api-client/dist/commonjs/event/index';
 import {
   ClientClassification,
   ClientType,
@@ -37,15 +28,25 @@ import {
   NewClient,
   RegisteredClient,
 } from '@wireapp/api-client/dist/commonjs/client/index';
-import {LoginSanitizer} from './auth/root';
-import {Root} from 'protobufjs';
-import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/index';
-import {AssetService, ConversationService, DecodedEvent, GenericMessageType} from './conversation/root';
-import Client = require('@wireapp/api-client');
-import EventEmitter = require('events');
+import {IncomingNotification} from '@wireapp/api-client/dist/commonjs/conversation/index';
+import {
+  CONVERSATION_EVENT,
+  ConversationEvent,
+  ConversationOtrMessageAddEvent,
+} from '@wireapp/api-client/dist/commonjs/event/index';
 import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/index';
+import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/index';
+import * as cryptobox from '@wireapp/cryptobox';
 import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/error/index';
+import EventEmitter = require('events');
+import {Root} from 'protobufjs';
+import {LoginSanitizer} from './auth/root';
+import {ClientInfo, ClientService} from './client/root';
+import {AssetService, ConversationService, DecodedEvent, GenericMessageType} from './conversation/root';
+import {CryptographyService, PayloadBundle} from './cryptography/root';
+import {NotificationService} from './notification/root';
 import proto from './Protobuf';
+import {SelfService} from './self/root';
 
 class Account extends EventEmitter {
   private logger: any = logdown('@wireapp/core/Account', {
@@ -56,6 +57,7 @@ class Account extends EventEmitter {
   public static readonly INCOMING = {
     ASSET: 'Account.INCOMING.ASSET',
     CONFIRMATION: 'Account.INCOMING.CONFIRMATION',
+    PING: 'Account.INCOMFING.PING',
     TEXT_MESSAGE: 'Account.INCOMING.TEXT_MESSAGE',
   };
   private apiClient: Client;
@@ -65,6 +67,7 @@ class Account extends EventEmitter {
     conversation: ConversationService;
     cryptography: CryptographyService;
     notification: NotificationService;
+    self: SelfService;
   };
 
   constructor(apiClient: Client = new Client()) {
@@ -82,6 +85,7 @@ class Account extends EventEmitter {
       Confirmation: root.lookup('Confirmation'),
       External: root.lookup('External'),
       GenericMessage: root.lookup('GenericMessage'),
+      Knock: root.lookup('Knock'),
       Text: root.lookup('Text'),
     };
 
@@ -95,12 +99,14 @@ class Account extends EventEmitter {
       assetService
     );
     const notificationService = new NotificationService(this.apiClient, this.apiClient.config.store);
+    const selfService = new SelfService(this.apiClient);
 
     this.service = {
       client: clientService,
       conversation: conversationService,
       cryptography: cryptographyService,
       notification: notificationService,
+      self: selfService,
     };
   }
 
@@ -133,8 +139,6 @@ class Account extends EventEmitter {
     return this.loadAndValidateLocalClient()
       .then(localClient => ({isNewClient: false, localClient}))
       .catch(error => {
-        let registeredClient: RegisteredClient;
-
         // There was no client so we need to "create" and "register" a client
         const notFoundInDatabase =
           error instanceof cryptobox.error.CryptoboxError ||
@@ -263,7 +267,7 @@ class Account extends EventEmitter {
   private handleEvent(event: ConversationEvent): Promise<PayloadBundle> {
     this.logger.info('handleEvent');
     const {conversation, from} = event;
-    return this.decodeEvent(event).then(data => Object.assign(data, {from, conversation}));
+    return this.decodeEvent(event).then(data => ({...data, from, conversation}));
   }
 
   private handleNotification(notification: IncomingNotification): void {
@@ -279,6 +283,9 @@ class Account extends EventEmitter {
             break;
           case GenericMessageType.CONFIRMATION:
             this.emit(Account.INCOMING.CONFIRMATION, data);
+            break;
+          case GenericMessageType.KNOCK:
+            this.emit(Account.INCOMING.PING, data);
             break;
         }
       });

@@ -19,8 +19,6 @@
 
 const UUID = require('pure-uuid');
 import APIClient = require('@wireapp/api-client');
-import {Encoder} from 'bazinga64';
-import {AxiosError} from 'axios';
 import {
   ClientMismatch,
   NewOTRMessage,
@@ -28,9 +26,11 @@ import {
   UserClients,
 } from '@wireapp/api-client/dist/commonjs/conversation/index';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
-import {CryptographyService, EncryptedAsset} from '../cryptography/root';
+import {AxiosError} from 'axios';
+import {Encoder} from 'bazinga64';
 import {AssetService, ConfirmationType, Image, RemoteData} from '../conversation/root';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
+import {CryptographyService, EncryptedAsset} from '../cryptography/root';
 
 export default class ConversationService {
   private clientID: string = '';
@@ -104,6 +104,22 @@ export default class ConversationService {
 
     const preKeyBundles = await this.getPreKeyBundles(conversationId);
     const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(genericMessage).finish();
+    const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
+
+    await this.sendExternalGenericMessage(this.clientID, conversationId, payload, <UserPreKeyBundleMap>preKeyBundles);
+    return messageId;
+  }
+
+  public async sendPing(conversationId: string): Promise<string> {
+    const messageId = new UUID(4).format();
+    const knock = this.protocolBuffers.Knock.create();
+    const ping = this.protocolBuffers.GenericMessage.create({
+      messageId,
+      knock,
+    });
+
+    const preKeyBundles = await this.getPreKeyBundles(conversationId);
+    const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(ping).finish();
     const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
 
     await this.sendExternalGenericMessage(this.clientID, conversationId, payload, <UserPreKeyBundleMap>preKeyBundles);
