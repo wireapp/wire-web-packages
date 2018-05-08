@@ -43,14 +43,6 @@ export default class SelfService {
   }
 
   public async setUserName(userName: string): Promise<{}> {
-    const [availableHandle] = await this.apiClient.user.api.postHandles({
-      handles: [userName],
-    });
-
-    if (availableHandle) {
-      return this.apiClient.self.api.putHandle({handle: userName});
-    }
-
-    throw new Error(`Username "${userName}" is not available.`);
+    return this.apiClient.self.api.putHandle({handle: userName});
   }
 }
