@@ -127,11 +127,11 @@ export default class ConversationService {
     return messageId;
   }
 
-  public async sendTypingStart(conversationId: string): Promise<{}> {
+  public sendTypingStart(conversationId: string): Promise<void> {
     return this.apiClient.conversation.api.postTyping(conversationId, {status: CONVERSATION_TYPING.STARTED});
   }
 
-  public async sendTypingStop(conversationId: string): Promise<{}> {
+  public sendTypingStop(conversationId: string): Promise<void> {
     return this.apiClient.conversation.api.postTyping(conversationId, {status: CONVERSATION_TYPING.STOPPED});
   }
 
