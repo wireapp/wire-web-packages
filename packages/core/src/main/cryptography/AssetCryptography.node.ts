@@ -17,8 +17,8 @@
  *
  */
 
-import {EncryptedAsset} from '../cryptography/root';
 import * as crypto from 'crypto';
+import {EncryptedAsset} from '../cryptography/root';
 
 const isEqual = (a: Buffer, b: Buffer): boolean => {
   const arrayA = new Uint32Array(a);
@@ -70,11 +70,11 @@ export const encryptAsset = async (plainText: Buffer): Promise<EncryptedAsset> =
 
   const computedSha256 = crypto
     .createHash('SHA256')
-    .update(new Buffer(ivCipherText.buffer))
+    .update(Buffer.from(ivCipherText.buffer))
     .digest();
 
   return {
-    cipherText: new Buffer(ivCipherText.buffer),
+    cipherText: Buffer.from(ivCipherText.buffer),
     keyBytes,
     sha256: computedSha256,
   };

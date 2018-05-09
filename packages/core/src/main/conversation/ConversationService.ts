@@ -19,8 +19,6 @@
 
 const UUID = require('pure-uuid');
 import APIClient = require('@wireapp/api-client');
-import {Encoder} from 'bazinga64';
-import {AxiosError} from 'axios';
 import {
   ClientMismatch,
   NewOTRMessage,
@@ -28,9 +26,11 @@ import {
   UserClients,
 } from '@wireapp/api-client/dist/commonjs/conversation/index';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
-import {CryptographyService, EncryptedAsset} from '../cryptography/root';
+import {AxiosError} from 'axios';
+import {Encoder} from 'bazinga64';
 import {AssetService, ConfirmationType, Image, RemoteData} from '../conversation/root';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
+import {CryptographyService, EncryptedAsset} from '../cryptography/root';
 
 export default class ConversationService {
   private clientID: string = '';
@@ -61,9 +61,9 @@ export default class ConversationService {
   public async getImage({assetId, otrKey, sha256, assetToken}: RemoteData): Promise<Buffer> {
     const encryptedBuffer = await this.apiClient.asset.api.getAsset(assetId, assetToken);
     return AssetCryptography.decryptAsset({
-      cipherText: new Buffer(encryptedBuffer),
-      keyBytes: new Buffer(otrKey),
-      sha256: new Buffer(sha256),
+      cipherText: Buffer.from(encryptedBuffer),
+      keyBytes: Buffer.from(otrKey.buffer),
+      sha256: Buffer.from(sha256.buffer),
     });
   }
 
