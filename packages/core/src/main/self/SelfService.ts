@@ -24,14 +24,14 @@ import {Self} from '@wireapp/api-client/dist/commonjs/self/index';
 export default class SelfService {
   constructor(private apiClient: APIClient) {}
 
-  public async checkUserName(userName: string): Promise<string | undefined> {
-    const [availableHandle] = await this.checkUserNames([userName]);
-    return availableHandle;
+  public async checkUsername(username: string): Promise<string | undefined> {
+    const [availableUsername] = await this.checkUsernames([username]);
+    return availableUsername;
   }
 
-  public checkUserNames(userNames: string[]): Promise<string[]> {
+  public checkUsernames(usernames: string[]): Promise<string[]> {
     return this.apiClient.user.api.postHandles({
-      handles: userNames,
+      handles: usernames,
     });
   }
 
@@ -44,7 +44,7 @@ export default class SelfService {
     return this.apiClient.self.api.getSelf();
   }
 
-  public async getUserName(): Promise<string | undefined> {
+  public async getUsername(): Promise<string | undefined> {
     const {handle} = await this.apiClient.self.api.getSelf();
     return handle;
   }
@@ -53,7 +53,7 @@ export default class SelfService {
     return this.apiClient.self.api.putSelf({name});
   }
 
-  public setUserName(userName: string): Promise<void> {
-    return this.apiClient.self.api.putHandle({handle: userName});
+  public setUsername(username: string): Promise<void> {
+    return this.apiClient.self.api.putHandle({handle: username});
   }
 }
