@@ -24,9 +24,9 @@ import {Self} from '@wireapp/api-client/dist/commonjs/self/index';
 export default class SelfService {
   constructor(private apiClient: APIClient) {}
 
-  public async checkUsername(username: string): Promise<string | undefined> {
+  public async checkUsername(username: string): Promise<boolean> {
     const [availableUsername] = await this.checkUsernames([username]);
-    return availableUsername;
+    return !!availableUsername;
   }
 
   public checkUsernames(usernames: string[]): Promise<string[]> {
