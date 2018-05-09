@@ -244,9 +244,13 @@ class Account extends EventEmitter {
       throw new Error('Services are not set.');
     }
 
-    const sessionId = CryptographyService.constructSessionId(otrMessage.from, otrMessage.data.sender);
-    const ciphertext = otrMessage.data.text;
-    const decryptedMessage = await this.service.cryptography.decrypt(sessionId, ciphertext);
+    const {
+      from,
+      data: {sender, text: cipherText},
+    } = otrMessage;
+
+    const sessionId = CryptographyService.constructSessionId(from, sender);
+    const decryptedMessage = await this.service.cryptography.decrypt(sessionId, cipherText);
     const genericMessage = this.protocolBuffers.GenericMessage.decode(decryptedMessage);
 
     return {
