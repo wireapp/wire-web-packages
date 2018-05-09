@@ -248,7 +248,6 @@ class Account extends EventEmitter {
     const ciphertext = otrMessage.data.text;
     const decryptedMessage = await this.service.cryptography.decrypt(sessionId, ciphertext);
     const genericMessage = this.protocolBuffers.GenericMessage.decode(decryptedMessage);
-    console.log('genericMessage', genericMessage);
 
     return {
       content: genericMessage.text && genericMessage.text.content,
