@@ -126,6 +126,14 @@ export default class ConversationService {
     return messageId;
   }
 
+  public async sendTypingStart(conversationId: string): Promise<{}> {
+    return this.apiClient.conversation.api.postTyping(conversationId, {status: 'started'});
+  }
+
+  public async sendTypingStop(conversationId: string): Promise<{}> {
+    return this.apiClient.conversation.api.postTyping(conversationId, {status: 'stopped'});
+  }
+
   public setClientID(clientID: string) {
     this.clientID = clientID;
   }

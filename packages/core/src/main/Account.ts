@@ -275,9 +275,6 @@ class Account extends EventEmitter {
     for (const event of notification.payload) {
       this.handleEvent(event).then((data: PayloadBundle) => {
         switch (data.type) {
-          case GenericMessageType.TEXT:
-            this.emit(Account.INCOMING.TEXT_MESSAGE, data);
-            break;
           case GenericMessageType.ASSET:
             this.emit(Account.INCOMING.ASSET, data);
             break;
@@ -286,6 +283,12 @@ class Account extends EventEmitter {
             break;
           case GenericMessageType.KNOCK:
             this.emit(Account.INCOMING.PING, data);
+            break;
+          case GenericMessageType.TEXT:
+            this.emit(Account.INCOMING.TEXT_MESSAGE, data);
+            break;
+          case GenericMessageType.TYPING:
+            this.emit(Account.INCOMING.TEXT_MESSAGE, data);
             break;
         }
       });
