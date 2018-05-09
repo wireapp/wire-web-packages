@@ -74,6 +74,12 @@ const RoundIconButton = ({icon, iconColor, iconHeight, iconWidth, ...props}) => 
         case ICON_NAME.ATTACHMENT: {
           return <AttachmentIcon color={iconColor} height={iconHeight} width={iconWidth} />;
         }
+        case ICON_NAME.CHECK: {
+          return <CheckIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+        }
+        case ICON_NAME.CLOSE: {
+          return <CloseIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+        }
         case ICON_NAME.GIF: {
           return <GifIcon color={iconColor} height={iconHeight} width={iconWidth} />;
         }
@@ -82,15 +88,6 @@ const RoundIconButton = ({icon, iconColor, iconHeight, iconWidth, ...props}) => 
         }
         case ICON_NAME.PING: {
           return <PingIcon color={iconColor} height={iconHeight} width={iconWidth} />;
-        }
-        case ICON_NAME.TIMED: {
-          return <TimedIcon color={iconColor} height={iconHeight} width={iconWidth} />;
-        }
-        case ICON_NAME.CHECK: {
-          return <CheckIcon color={iconColor} height={iconHeight} width={iconWidth} />;
-        }
-        case ICON_NAME.CLOSE: {
-          return <CloseIcon color={iconColor} height={iconHeight} width={iconWidth} />;
         }
         case ICON_NAME.PLANE: {
           return <PlaneIcon color={iconColor} height={iconHeight} width={iconWidth} style={{marginLeft: 2}} />;
@@ -102,6 +99,9 @@ const RoundIconButton = ({icon, iconColor, iconHeight, iconWidth, ...props}) => 
         case ICON_NAME.TEAM: {
           const defaultSize = 24;
           return <TeamIcon color={iconColor} height={iconHeight || defaultSize} width={iconWidth || defaultSize} />;
+        }
+        case ICON_NAME.TIMED: {
+          return <TimedIcon color={iconColor} height={iconHeight} width={iconWidth} />;
         }
         case ICON_NAME.TRASH: {
           return <TrashIcon color={iconColor} height={iconHeight} width={iconWidth} />;
