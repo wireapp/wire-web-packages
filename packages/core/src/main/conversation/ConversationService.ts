@@ -25,6 +25,7 @@ import {
   OTRRecipients,
   UserClients,
 } from '@wireapp/api-client/dist/commonjs/conversation/index';
+import {CONVERSATION_TYPING} from '@wireapp/api-client/dist/commonjs/event/index';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
 import {AxiosError} from 'axios';
 import {Encoder} from 'bazinga64';
@@ -127,11 +128,11 @@ export default class ConversationService {
   }
 
   public async sendTypingStart(conversationId: string): Promise<{}> {
-    return this.apiClient.conversation.api.postTyping(conversationId, {status: 'started'});
+    return this.apiClient.conversation.api.postTyping(conversationId, {status: CONVERSATION_TYPING.STARTED});
   }
 
   public async sendTypingStop(conversationId: string): Promise<{}> {
-    return this.apiClient.conversation.api.postTyping(conversationId, {status: 'stopped'});
+    return this.apiClient.conversation.api.postTyping(conversationId, {status: CONVERSATION_TYPING.STOPPED});
   }
 
   public setClientID(clientID: string) {
