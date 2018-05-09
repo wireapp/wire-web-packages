@@ -49,11 +49,11 @@ export default class SelfService {
     return handle;
   }
 
-  public setName(name: string): Promise<{}> {
+  public setName(name: string): Promise<void> {
     return this.apiClient.self.api.putSelf({name});
   }
 
-  public setUserName(userName: string): Promise<{}> {
+  public setUserName(userName: string): Promise<void> {
     return this.apiClient.self.api.putHandle({handle: userName});
   }
 }
