@@ -41,7 +41,7 @@
     "release": "lerna publish -m \"[skip ci] chore: Publish\" --conventional-commits --loglevel=verbose --exact --allow-branch=master --registry=https://registry.npmjs.org/ --yes",
     "test:js": "eslint --ignore-path .gitignore **/*.{js,jsx}",
     "test:other": "yarn prettier --list-different",
-    "test:ts": "tslint -c tslint.json \"**/*.ts\"",
+    "test:ts": "tslint --config tslint.json --project tsconfig.json \"**/*.ts\"",
     "test": "yarn && yarn test:js && yarn test:ts && yarn test:other && node bin/testUpdated.js"
   },
   "workspaces": [
