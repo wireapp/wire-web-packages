@@ -54,6 +54,8 @@ class ConversationAPI {
     };
   }
 
+  public static readonly MAX_CHUNK_SIZE = 500;
+
   /**
    * Remove bot from conversation.
    * @param conversationId The conversation ID to remove the bot from
@@ -81,6 +83,29 @@ class ConversationAPI {
     };
 
     return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
+  }
+
+  /**
+   * Get all conversations.
+   */
+  public getAllConversations(): Promise<Conversation[]> {
+    let allConversations: Conversation[] = [];
+
+    const getConversationChunks = async (conversationId?: string): Promise<Conversation[]> => {
+      const {conversations, has_more} = await this.getConversations(conversationId, ConversationAPI.MAX_CHUNK_SIZE);
+      allConversations = allConversations.concat(conversations);
+
+      if (has_more) {
+        const lastConversation = conversations.pop();
+        if (lastConversation) {
+          return getConversationChunks(lastConversation.id);
+        }
+      }
+
+      return allConversations;
+    };
+
+    return getConversationChunks();
   }
 
   /**
@@ -126,7 +151,7 @@ class ConversationAPI {
    * @param limit Max. number of conversations to return
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversations
    */
-  public getConversations(conversationId?: string, limit: number = 500): Promise<Conversations> {
+  public getConversations(conversationId?: string, limit = ConversationAPI.MAX_CHUNK_SIZE): Promise<Conversations> {
     return this._getConversations(conversationId, undefined, limit);
   }
 
@@ -134,11 +159,27 @@ class ConversationAPI {
    * Get conversations.
    * Note: At most 500 conversations are returned per request.
    * @param conversationId Conversation ID to start from (exclusive). Mutually exclusive with `conversationIds`.
-   * @param limit Max. number of conversations to return
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversations
    */
-  public getConversationsByIds(conversationIds: string[], limit: number = 500): Promise<Conversations> {
-    return this._getConversations(undefined, conversationIds, limit);
+  public async getConversationsByIds(conversationIds: string[]): Promise<Conversation[]> {
+    const allConversations: Conversation[] = [];
+
+    const getConversationChunk = async (chunkedConversationIds: string[]): Promise<Conversation[]> => {
+      const {conversations} = await this._getConversations(
+        undefined,
+        chunkedConversationIds,
+        ConversationAPI.MAX_CHUNK_SIZE
+      );
+      return conversations;
+    };
+
+    for (let index = 0; index <= conversationIds.length; index += ConversationAPI.MAX_CHUNK_SIZE) {
+      const requestChunk = conversationIds.slice(index, index + ConversationAPI.MAX_CHUNK_SIZE);
+      const conversationChunk = await getConversationChunk(requestChunk);
+      allConversations.concat(conversationChunk);
+    }
+
+    return allConversations;
   }
 
   /**
@@ -152,7 +193,7 @@ class ConversationAPI {
   private _getConversations(
     conversationId?: string,
     conversationIds?: string[],
-    limit: number = 500
+    limit = ConversationAPI.MAX_CHUNK_SIZE
   ): Promise<Conversations> {
     const config: AxiosRequestConfig = {
       method: 'get',
@@ -169,30 +210,6 @@ class ConversationAPI {
     }
 
     return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
-  }
-
-  /**
-   * Get all conversations.
-   */
-  public getAllConversations(): Promise<Conversation[]> {
-    let allConversations: Conversation[] = [];
-
-    const getConversationChunks = async (conversationId?: string): Promise<Conversation[]> => {
-      const conversationsPerRequest = 500;
-      const {conversations, has_more} = await this.getConversations(conversationId, conversationsPerRequest);
-      allConversations = allConversations.concat(conversations);
-
-      if (has_more) {
-        const lastConversation = conversations.pop();
-        if (lastConversation) {
-          return getConversationChunks(lastConversation.id);
-        }
-      }
-
-      return allConversations;
-    };
-
-    return getConversationChunks();
   }
 
   /**
