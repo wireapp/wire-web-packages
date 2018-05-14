@@ -1,15 +1,13 @@
-import {keys as ProteusKeys} from '@wireapp/proteus';
-import {message as ProteusMessage} from '@wireapp/proteus';
-import {session as ProteusSession} from '@wireapp/proteus';
-import {CryptoboxError} from './error/root';
-import CryptoboxSession from './CryptoboxSession';
-import DecryptionError from './DecryptionError';
-import InvalidPreKeyFormatError from './InvalidPreKeyFormatError';
-import {CryptoboxCRUDStore} from './store/root';
 import LRUCache from '@wireapp/lru-cache';
 import {PriorityQueue} from '@wireapp/priority-queue';
+import {keys as ProteusKeys, message as ProteusMessage, session as ProteusSession} from '@wireapp/proteus';
 import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
 import EventEmitter = require('events');
+import CryptoboxSession from './CryptoboxSession';
+import DecryptionError from './DecryptionError';
+import {CryptoboxError} from './error/root';
+import InvalidPreKeyFormatError from './InvalidPreKeyFormatError';
+import {CryptoboxCRUDStore} from './store/root';
 
 const logdown = require('logdown');
 const VERSION = require('../../package.json').version;
@@ -20,15 +18,15 @@ class Cryptobox extends EventEmitter {
     NEW_SESSION: 'new-session',
   };
 
-  private cachedSessions: LRUCache<CryptoboxSession>;
+  private readonly cachedSessions: LRUCache<CryptoboxSession>;
 
-  private logger: any = logdown('@wireapp/cryptobox/Cryptobox', {
+  private readonly logger: any = logdown('@wireapp/cryptobox/Cryptobox', {
     logger: console,
     markdown: false,
   });
-  private minimumAmountOfPreKeys: number;
-  private queues = new LRUCache<PriorityQueue>(1000);
-  private store: CryptoboxCRUDStore;
+  private readonly minimumAmountOfPreKeys: number;
+  private readonly queues = new LRUCache<PriorityQueue>(1000);
+  private readonly store: CryptoboxCRUDStore;
 
   public lastResortPreKey: ProteusKeys.PreKey | undefined;
   public identity: ProteusKeys.IdentityKeyPair | undefined;
@@ -142,7 +140,7 @@ class Cryptobox extends EventEmitter {
     return Promise.reject(new CryptoboxError('No last resort PreKey available.'));
   }
 
-  private get_prekey(prekey_id: number = ProteusKeys.PreKey.MAX_PREKEY_ID): Promise<ProteusKeys.PreKey | undefined> {
+  public get_prekey(prekey_id: number = ProteusKeys.PreKey.MAX_PREKEY_ID): Promise<ProteusKeys.PreKey | undefined> {
     return this.store.load_prekey(prekey_id);
   }
 

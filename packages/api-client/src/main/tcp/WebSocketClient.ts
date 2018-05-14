@@ -1,24 +1,25 @@
-//
-// Wire
-// Copyright (C) 2018 Wire Swiss GmbH
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program. If not, see http://www.gnu.org/licenses/.
-//
+/*
+ * Wire
+ * Copyright (C) 2018 Wire Swiss GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see http://www.gnu.org/licenses/.
+ *
+ */
 
 import EventEmitter = require('events');
-import {HttpClient} from '../http/';
 import {IncomingNotification} from '../conversation/';
+import {HttpClient} from '../http/';
 
 const buffer = require('../shims/node/buffer');
 const Html5WebSocket = require('html5-websocket');
@@ -30,8 +31,8 @@ class WebSocketClient extends EventEmitter {
   private socket: WebSocket | undefined;
 
   public static CLOSE_EVENT_CODE = {
-    NORMAL_CLOSURE: 1000,
     GOING_AWAY: 1001,
+    NORMAL_CLOSURE: 1000,
     PROTOCOL_ERROR: 1002,
     UNSUPPORTED_DATA: 1003,
   };
@@ -50,7 +51,7 @@ class WebSocketClient extends EventEmitter {
     ON_MESSAGE: 'message',
   };
 
-  constructor(private baseURL: string, public client: HttpClient) {
+  constructor(private readonly baseURL: string, public client: HttpClient) {
     super();
   }
 
@@ -90,9 +91,9 @@ class WebSocketClient extends EventEmitter {
       //TODO 'any' can be removed once this issue is resolved: https://github.com/pladaria/reconnecting-websocket/issues/44
       const socket: any = this.socket;
       socket.close(WebSocketClient.CLOSE_EVENT_CODE.NORMAL_CLOSURE, reason, {
-        keepClosed: true,
-        fastClose: true,
         delay: 0,
+        fastClose: true,
+        keepClosed: true,
       });
     }
   }

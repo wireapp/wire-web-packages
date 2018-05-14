@@ -41,10 +41,6 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
     console.log(`Confirmation "${messageId}" in "${conversationId}" from "${from}".`);
   });
 
-  account.on(Account.INCOMING.TEXT_MESSAGE, data => {
-    console.log(`Message in "${data.conversation}" from "${data.from}":`, data.content);
-  });
-
   account.on(Account.INCOMING.ASSET, async data => {
     const {
       conversation,
@@ -57,10 +53,34 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
     await promisify(fs.writeFile)(path.join('.', `received_image.${fileType}`), image);
   });
 
+  account.on(Account.INCOMING.PING, async data => {
+    const {conversation: conversationId, from} = data;
+    console.log(`Ping in "${conversationId}" from "${from}".`);
+    await account.service.conversation.sendPing(conversationId);
+  });
+
+  account.on(Account.INCOMING.TYPING, async data => {
+    const {
+      conversation: conversationId,
+      from,
+      data: {status},
+    } = data;
+    console.log(`Typing in "${conversationId}" from "${from}".`, data);
+    if (status === 'started') {
+      await account.service.conversation.sendTypingStart(conversationId);
+    } else {
+      await account.service.conversation.sendTypingStop(conversationId);
+    }
+  });
+
   try {
     console.log('Logging in ...');
     await account.login(login);
     await account.listen();
+
+    const name = await account.service.self.getName();
+
+    console.log('My name:', name);
     console.log('Listening for messages ...');
   } catch (error) {
     console.error(error);

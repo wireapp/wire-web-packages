@@ -1,19 +1,19 @@
 {
   "dependencies": {
     "@types/fs-extra": "5.0.2",
-    "@types/node": "9.6.6",
-    "@wireapp/lru-cache": "2.1.6",
-    "@wireapp/priority-queue": "0.1.15",
-    "@wireapp/proteus": "7.1.25",
-    "@wireapp/store-engine": "0.8.0",
-    "dexie": "2.0.2",
-    "fs-extra": "5.0.0"
+    "@types/node": "10.0.8",
+    "@wireapp/lru-cache": "2.1.8",
+    "@wireapp/priority-queue": "0.1.24",
+    "@wireapp/proteus": "7.1.36",
+    "@wireapp/store-engine": "0.11.9",
+    "dexie": "2.0.3",
+    "fs-extra": "6.0.1"
   },
   "description": "High-level API with persistent storage for Proteus.",
   "devDependencies": {
-    "browser-sync": "2.23.7",
+    "browser-sync": "2.24.4",
     "cpx": "1.5.0",
-    "cross-env": "5.1.4",
+    "cross-env": "5.1.5",
     "gulp": "3.9.1",
     "gulp-babel": "7.0.1",
     "gulp-bower": "0.0.14",
@@ -26,7 +26,7 @@
     "jasmine": "3.1.0",
     "karma": "2.0.2",
     "karma-chrome-launcher": "2.2.0",
-    "karma-jasmine": "1.1.1",
+    "karma-jasmine": "1.1.2",
     "karma-jasmine-diff-reporter": "1.2.0",
     "karma-sourcemap-loader": "0.3.7",
     "logdown": "3.2.3",
@@ -58,5 +58,5 @@
     "test:node": "cross-env NODE_DEBUG=@wireapp/cryptobox* jasmine --config=test/jasmine.node.json"
   },
   "types": "dist/commonjs/index.d.ts",
-  "version": "8.3.36"
+  "version": "8.3.50"
 }

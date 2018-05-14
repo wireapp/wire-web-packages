@@ -3,6 +3,70 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.0.26"></a>
+## [3.0.26](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@3.0.25...@wireapp/cbor@3.0.26) (2018-05-14)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cbor
+
+<a name="3.0.25"></a>
+## [3.0.25](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@3.0.24...@wireapp/cbor@3.0.25) (2018-05-14)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cbor
+
+<a name="3.0.24"></a>
+## [3.0.24](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@3.0.23...@wireapp/cbor@3.0.24) (2018-05-14)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cbor
+
+<a name="3.0.23"></a>
+## [3.0.23](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@3.0.22...@wireapp/cbor@3.0.23) (2018-05-09)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cbor
+
+<a name="3.0.22"></a>
+## [3.0.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@3.0.21...@wireapp/cbor@3.0.22) (2018-05-07)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cbor
+
+<a name="3.0.21"></a>
+## [3.0.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@3.0.20...@wireapp/cbor@3.0.21) (2018-05-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cbor
+
+<a name="3.0.20"></a>
+## [3.0.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@3.0.18...@wireapp/cbor@3.0.20) (2018-05-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cbor
+
+<a name="3.0.19"></a>
+## [3.0.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@3.0.18...@wireapp/cbor@3.0.19) (2018-05-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cbor
+
 <a name="3.0.18"></a>
 ## [3.0.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@3.0.17...@wireapp/cbor@3.0.18) (2018-04-20)
 

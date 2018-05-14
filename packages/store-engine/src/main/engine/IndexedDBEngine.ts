@@ -1,10 +1,9 @@
-import CRUDEngine from './CRUDEngine';
 import Dexie from 'dexie';
-import RecordAlreadyExistsError from './error/RecordAlreadyExistsError';
-import RecordTypeError from './error/RecordTypeError';
-import RecordNotFoundError from './error/RecordNotFoundError';
+import CRUDEngine from './CRUDEngine';
 import {UnsupportedError} from './error';
-import {isBrowser} from './EnvironmentUtil';
+import RecordAlreadyExistsError from './error/RecordAlreadyExistsError';
+import RecordNotFoundError from './error/RecordNotFoundError';
+import RecordTypeError from './error/RecordTypeError';
 
 export interface DexieInstance extends Dexie {
   [index: string]: any;
@@ -14,23 +13,53 @@ export default class IndexedDBEngine implements CRUDEngine {
   private db?: DexieInstance;
   public storeName: string = '';
 
-  init(storeName: string): Promise<any> {
-    if (!isBrowser() || !window.indexedDB) {
-      const message = `IndexedDB is not available on your platform.`;
-      throw new UnsupportedError(message);
+  private canUseIndexedDB(): Promise<void> {
+    const platform = typeof global === 'undefined' ? window : global;
+    if ('indexedDB' in platform) {
+      return new Promise((resolve, reject) => {
+        const name = 'test';
+        const DBOpenRequest = platform.indexedDB.open(name);
+        DBOpenRequest.onerror = error => reject(error);
+        DBOpenRequest.onsuccess = () => {
+          const db = DBOpenRequest.result;
+          db.close();
+          const deleteRequest = platform.indexedDB.deleteDatabase(name);
+          deleteRequest.onerror = error => reject(error);
+          deleteRequest.onsuccess = () => resolve();
+        };
+      });
+    } else {
+      return Promise.reject(new Error('Could not find indexedDB in global scope'));
     }
-    this.db = new Dexie(storeName);
-    this.storeName = this.db.name;
-    return Promise.resolve(this.db);
   }
 
-  initWithDb(db: DexieInstance): Promise<DexieInstance> {
+  public async isSupported(): Promise<void> {
+    const message = `IndexedDB is not available on your platform.`;
+    const unsupportedError = new UnsupportedError(message);
+
+    try {
+      // Check if IndexedDB is accessible (which won't be the case when browsing with Firefox in private mode)
+      await this.canUseIndexedDB();
+    } catch (error) {
+      // This will be triggered on pages like "about:blank"
+      throw unsupportedError;
+    }
+  }
+
+  public async init(storeName: string): Promise<any> {
+    await this.isSupported();
+    this.db = new Dexie(storeName);
+    this.storeName = this.db.name;
+    return this.db;
+  }
+
+  public initWithDb(db: DexieInstance): Promise<DexieInstance> {
     this.db = db;
     this.storeName = this.db.name;
     return Promise.resolve(this.db);
   }
 
-  purge(): Promise<void> {
+  public purge(): Promise<void> {
     return this.db ? this.db.delete() : Dexie.delete(this.storeName);
   }
 
@@ -91,7 +120,7 @@ export default class IndexedDBEngine implements CRUDEngine {
     return this.db![tableName].put(changes, primaryKey);
   }
 
-  append(tableName: string, primaryKey: string, additions: string): Promise<string> {
+  public append(tableName: string, primaryKey: string, additions: string): Promise<string> {
     return this.db![tableName].get(primaryKey).then((record: any) => {
       if (typeof record === 'string') {
         record += additions;

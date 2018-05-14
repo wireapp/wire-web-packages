@@ -1,5 +1,7 @@
 const fs = require('fs-extra');
+import path = require('path');
 import CRUDEngine from './CRUDEngine';
+import {isBrowser} from './EnvironmentUtil';
 import {
   PathValidationError,
   RecordAlreadyExistsError,
@@ -7,8 +9,6 @@ import {
   RecordTypeError,
   UnsupportedError,
 } from './error';
-import {isBrowser} from './EnvironmentUtil';
-import path = require('path');
 
 export default class FileEngine implements CRUDEngine {
   public storeName: string = '';
@@ -16,25 +16,29 @@ export default class FileEngine implements CRUDEngine {
     fileExtension: '.dat',
   };
 
-  constructor(private baseDirectory: string = '') {}
+  constructor(private readonly baseDirectory: string = '') {}
 
-  init(storeName: string = '', options: {fileExtension: string}): Promise<any> {
+  public async isSupported(): Promise<void> {
     if (isBrowser()) {
       const message = `Node.js' File System Module is not available on your platform.`;
       throw new UnsupportedError(message);
     }
+  }
+
+  public async init(storeName: string = '', options: {fileExtension: string}): Promise<any> {
+    await this.isSupported();
     this.storeName = path.normalize(path.join(this.baseDirectory, storeName));
     this.options = {...this.options, ...options};
     return Promise.resolve(storeName);
   }
 
-  purge(): Promise<void> {
+  public purge(): Promise<void> {
     return fs.remove(this.storeName);
   }
 
   private resolvePath(tableName: string, primaryKey?: string): Promise<string> {
     const isPathTraversal = (...testPaths: string[]): boolean => {
-      for (let testPath of testPaths) {
+      for (const testPath of testPaths) {
         if (
           typeof testPath !== 'undefined' &&
           (testPath.includes('.') || testPath.includes('/') || testPath.includes('\\'))

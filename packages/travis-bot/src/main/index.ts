@@ -17,11 +17,11 @@
  *
  */
 
-import {Account} from '@wireapp/core';
-import {Config} from '@wireapp/api-client/dist/commonjs/Config';
-import {exec} from 'child_process';
 import {LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
+import {Config} from '@wireapp/api-client/dist/commonjs/Config';
+import {Account} from '@wireapp/core';
 import {MemoryEngine} from '@wireapp/store-engine';
+import {exec} from 'child_process';
 import {promisify} from 'util';
 
 import APIClient = require('@wireapp/api-client');
@@ -51,7 +51,7 @@ export interface MessageData {
 }
 
 class TravisBot {
-  constructor(private loginData: LoginData, private messageData: MessageData) {}
+  constructor(private readonly loginData: LoginData, private readonly messageData: MessageData) {}
 
   get message(): string {
     const {

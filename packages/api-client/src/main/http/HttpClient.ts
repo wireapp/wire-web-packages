@@ -1,40 +1,44 @@
-//
-// Wire
-// Copyright (C) 2018 Wire Swiss GmbH
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program. If not, see http://www.gnu.org/licenses/.
-//
+/*
+ * Wire
+ * Copyright (C) 2018 Wire Swiss GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see http://www.gnu.org/licenses/.
+ *
+ */
 
-import axios, {AxiosError, AxiosPromise, AxiosRequestConfig, AxiosResponse} from 'axios';
-import {AccessTokenData} from '../auth';
-import {AccessTokenStore, AuthAPI} from '../auth';
-import {ContentType} from '../http';
-import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine';
 import {PriorityQueue} from '@wireapp/priority-queue';
+import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine';
+import axios, {AxiosError, AxiosPromise, AxiosRequestConfig, AxiosResponse} from 'axios';
+import {AccessTokenData, AccessTokenStore, AuthAPI} from '../auth';
+import {ContentType} from '../http';
 import {sendRequestWithCookie} from '../shims/node/cookie';
 
 const logdown = require('logdown');
 
 class HttpClient {
   // private _authAPI: AuthAPI;
-  private logger: any = logdown('@wireapp/api-client/http.HttpClient', {
+  private readonly logger: any = logdown('@wireapp/api-client/http.HttpClient', {
     logger: console,
     markdown: false,
   });
-  private requestQueue: PriorityQueue;
+  private readonly requestQueue: PriorityQueue;
 
-  constructor(private baseURL: string, public accessTokenStore: AccessTokenStore, private engine: CRUDEngine) {
+  constructor(
+    private readonly baseURL: string,
+    public accessTokenStore: AccessTokenStore,
+    private readonly engine: CRUDEngine
+  ) {
     this.requestQueue = new PriorityQueue({
       maxRetries: 0,
       retryDelay: 1000,
@@ -110,9 +114,9 @@ class HttpClient {
   public postAccess(expiredAccessToken?: AccessTokenData): Promise<AccessTokenData> {
     const config: AxiosRequestConfig = {
       headers: {},
-      withCredentials: true,
       method: 'post',
       url: `${AuthAPI.URL.ACCESS}`,
+      withCredentials: true,
     };
 
     if (expiredAccessToken) {

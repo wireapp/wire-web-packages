@@ -3,6 +3,165 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.9.2"></a>
+## [0.9.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.9.1...@wireapp/api-client@0.9.2) (2018-05-14)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.9.1"></a>
+## [0.9.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.9.0...@wireapp/api-client@0.9.1) (2018-05-14)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.9.0"></a>
+# [0.9.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.8.17...@wireapp/api-client@0.9.0) (2018-05-14)
+
+
+### Features
+
+* **api-client,core:** Send and receive typing notifications ([#579](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/579)) ([beb5526](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/beb5526))
+
+
+
+
+<a name="0.8.17"></a>
+## [0.8.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.8.16...@wireapp/api-client@0.8.17) (2018-05-14)
+
+
+### Bug Fixes
+
+* **api-client:** Return complete error ([#590](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/590)) ([23588bc](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/23588bc))
+
+
+
+
+<a name="0.8.16"></a>
+## [0.8.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.8.15...@wireapp/api-client@0.8.16) (2018-05-09)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.8.15"></a>
+## [0.8.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.8.14...@wireapp/api-client@0.8.15) (2018-05-09)
+
+
+### Bug Fixes
+
+* **api-client:** Return types ([#565](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/565)) ([3fffb4e](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/3fffb4e))
+
+
+
+
+<a name="0.8.14"></a>
+## [0.8.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.8.13...@wireapp/api-client@0.8.14) (2018-05-09)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.8.13"></a>
+## [0.8.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.8.12...@wireapp/api-client@0.8.13) (2018-05-08)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.8.12"></a>
+## [0.8.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.8.11...@wireapp/api-client@0.8.12) (2018-05-07)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.8.11"></a>
+## [0.8.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.8.10...@wireapp/api-client@0.8.11) (2018-05-07)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.8.10"></a>
+## [0.8.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.8.9...@wireapp/api-client@0.8.10) (2018-05-03)
+
+
+### Bug Fixes
+
+* **api-client:** Guard initEngine ([#554](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/554)) ([c0c5f04](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/c0c5f04))
+
+
+
+
+<a name="0.8.9"></a>
+## [0.8.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.8.8...@wireapp/api-client@0.8.9) (2018-05-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.8.8"></a>
+## [0.8.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.8.6...@wireapp/api-client@0.8.8) (2018-05-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.8.7"></a>
+## [0.8.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.8.6...@wireapp/api-client@0.8.7) (2018-05-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.8.6"></a>
+## [0.8.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.8.5...@wireapp/api-client@0.8.6) (2018-04-27)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.8.5"></a>
+## [0.8.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.8.4...@wireapp/api-client@0.8.5) (2018-04-26)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.8.4"></a>
+## [0.8.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.8.3...@wireapp/api-client@0.8.4) (2018-04-26)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.8.3"></a>
+## [0.8.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.8.2...@wireapp/api-client@0.8.3) (2018-04-26)
+
+
+### Bug Fixes
+
+* **api-client:** Add expires_at to Self type ([#522](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/522)) ([aa710ad](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/aa710ad))
+
+
+
+
 <a name="0.8.2"></a>
 ## [0.8.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.8.1...@wireapp/api-client@0.8.2) (2018-04-25)
 

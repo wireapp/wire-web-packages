@@ -17,38 +17,32 @@
  *
  */
 
-const pkg = require('../package.json');
 const logdown = require('logdown');
+import Client = require('@wireapp/api-client');
+import {Context, LoginData} from '@wireapp/api-client/dist/commonjs/auth/index';
+import {ClientType, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/index';
 import {IncomingNotification} from '@wireapp/api-client/dist/commonjs/conversation/index';
-import * as cryptobox from '@wireapp/cryptobox';
-import {CryptographyService, PayloadBundle} from './cryptography/root';
-import {ClientService, ClientInfo} from './client/root';
-import {NotificationService} from './notification/root';
-import {Context, LoginData, PreKey} from '@wireapp/api-client/dist/commonjs/auth/index';
 import {
-  ConversationEvent,
   CONVERSATION_EVENT,
+  ConversationEvent,
   ConversationOtrMessageAddEvent,
 } from '@wireapp/api-client/dist/commonjs/event/index';
-import {
-  ClientClassification,
-  ClientType,
-  Location,
-  NewClient,
-  RegisteredClient,
-} from '@wireapp/api-client/dist/commonjs/client/index';
-import {LoginSanitizer} from './auth/root';
-import {Root} from 'protobufjs';
-import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/index';
-import {AssetService, ConversationService, DecodedEvent, GenericMessageType} from './conversation/root';
-import Client = require('@wireapp/api-client');
-import EventEmitter = require('events');
 import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/index';
+import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/index';
+import * as cryptobox from '@wireapp/cryptobox';
 import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/error/index';
+import EventEmitter = require('events');
+import {Root} from 'protobufjs';
+import {LoginSanitizer} from './auth/root';
+import {ClientInfo, ClientService} from './client/root';
+import {AssetService, ConversationService, DecodedMessage, GenericMessageType} from './conversation/root';
+import {CryptographyService, PayloadBundle} from './cryptography/root';
+import {NotificationService} from './notification/root';
 import proto from './Protobuf';
+import {SelfService} from './self/root';
 
 class Account extends EventEmitter {
-  private logger: any = logdown('@wireapp/core/Account', {
+  private readonly logger: any = logdown('@wireapp/core/Account', {
     logger: console,
     markdown: false,
   });
@@ -56,15 +50,18 @@ class Account extends EventEmitter {
   public static readonly INCOMING = {
     ASSET: 'Account.INCOMING.ASSET',
     CONFIRMATION: 'Account.INCOMING.CONFIRMATION',
+    PING: 'Account.INCOMING.PING',
     TEXT_MESSAGE: 'Account.INCOMING.TEXT_MESSAGE',
+    TYPING: 'Account.INCOMING.TYPING',
   };
-  private apiClient: Client;
+  private readonly apiClient: Client;
   private protocolBuffers: any = {};
   public service?: {
     client: ClientService;
     conversation: ConversationService;
     cryptography: CryptographyService;
     notification: NotificationService;
+    self: SelfService;
   };
 
   constructor(apiClient: Client = new Client()) {
@@ -82,12 +79,13 @@ class Account extends EventEmitter {
       Confirmation: root.lookup('Confirmation'),
       External: root.lookup('External'),
       GenericMessage: root.lookup('GenericMessage'),
+      Knock: root.lookup('Knock'),
       Text: root.lookup('Text'),
     };
 
     const cryptographyService = new CryptographyService(this.apiClient, this.apiClient.config.store);
     const clientService = new ClientService(this.apiClient, this.apiClient.config.store, cryptographyService);
-    const assetService = new AssetService(this.apiClient, this.protocolBuffers, cryptographyService);
+    const assetService = new AssetService(this.apiClient, this.protocolBuffers);
     const conversationService = new ConversationService(
       this.apiClient,
       this.protocolBuffers,
@@ -95,12 +93,14 @@ class Account extends EventEmitter {
       assetService
     );
     const notificationService = new NotificationService(this.apiClient, this.apiClient.config.store);
+    const selfService = new SelfService(this.apiClient);
 
     this.service = {
       client: clientService,
       conversation: conversationService,
       cryptography: cryptographyService,
       notification: notificationService,
+      self: selfService,
     };
   }
 
@@ -133,8 +133,6 @@ class Account extends EventEmitter {
     return this.loadAndValidateLocalClient()
       .then(localClient => ({isNewClient: false, localClient}))
       .catch(error => {
-        let registeredClient: RegisteredClient;
-
         // There was no client so we need to "create" and "register" a client
         const notFoundInDatabase =
           error instanceof cryptobox.error.CryptoboxError ||
@@ -234,51 +232,66 @@ class Account extends EventEmitter {
       .then(() => this);
   }
 
-  private decodeEvent(event: ConversationEvent): Promise<DecodedEvent> {
-    this.logger.info('decodeEvent');
-    return new Promise(resolve => {
-      if (!this.service) {
-        throw new Error('Services are not set.');
-      }
+  private async decodeGenericMessage(otrMessage: ConversationOtrMessageAddEvent): Promise<DecodedMessage> {
+    if (!this.service) {
+      throw new Error('Services are not set.');
+    }
 
-      switch (event.type) {
-        case CONVERSATION_EVENT.OTR_MESSAGE_ADD: {
-          const otrMessage: ConversationOtrMessageAddEvent = event as ConversationOtrMessageAddEvent;
-          const sessionId: string = CryptographyService.constructSessionId(otrMessage.from, otrMessage.data.sender);
-          const ciphertext: string = otrMessage.data.text;
-          this.service.cryptography.decrypt(sessionId, ciphertext).then((decryptedMessage: Uint8Array) => {
-            const genericMessage = this.protocolBuffers.GenericMessage.decode(decryptedMessage);
-            resolve({
-              content: genericMessage.text.content,
-              id: genericMessage.messageId,
-              type: genericMessage.content,
-            });
-          });
-          break;
-        }
-      }
-    });
+    const {
+      from,
+      data: {sender, text: cipherText},
+    } = otrMessage;
+
+    const sessionId = CryptographyService.constructSessionId(from, sender);
+    const decryptedMessage = await this.service.cryptography.decrypt(sessionId, cipherText);
+    const genericMessage = this.protocolBuffers.GenericMessage.decode(decryptedMessage);
+
+    return {
+      content: genericMessage.text && genericMessage.text.content,
+      id: genericMessage.messageId,
+      type: genericMessage.content,
+    };
   }
 
-  private handleEvent(event: ConversationEvent): Promise<PayloadBundle> {
+  private async handleEvent(event: ConversationEvent): Promise<PayloadBundle | ConversationEvent | void> {
     this.logger.info('handleEvent');
     const {conversation, from} = event;
-    return this.decodeEvent(event).then(data => Object.assign(data, {from, conversation}));
+
+    switch (event.type) {
+      case CONVERSATION_EVENT.OTR_MESSAGE_ADD: {
+        const decodedMessage = await this.decodeGenericMessage(event as ConversationOtrMessageAddEvent);
+        return {...decodedMessage, from, conversation};
+      }
+      case CONVERSATION_EVENT.TYPING: {
+        return {...event, from, conversation};
+      }
+    }
   }
 
-  private handleNotification(notification: IncomingNotification): void {
+  private async handleNotification(notification: IncomingNotification): Promise<void> {
     this.logger.info('handleNotification');
     for (const event of notification.payload) {
-      this.handleEvent(event).then((data: PayloadBundle) => {
+      const data = await this.handleEvent(event);
+      if (data) {
         switch (data.type) {
-          case GenericMessageType.TEXT:
-            this.emit(Account.INCOMING.TEXT_MESSAGE, data);
           case GenericMessageType.ASSET:
             this.emit(Account.INCOMING.ASSET, data);
+            break;
           case GenericMessageType.CONFIRMATION:
             this.emit(Account.INCOMING.CONFIRMATION, data);
+            break;
+          case GenericMessageType.KNOCK:
+            this.emit(Account.INCOMING.PING, data);
+            break;
+          case GenericMessageType.TEXT:
+            this.emit(Account.INCOMING.TEXT_MESSAGE, data);
+            break;
+          case CONVERSATION_EVENT.TYPING: {
+            this.emit(Account.INCOMING.TYPING, event);
+            break;
+          }
         }
-      });
+      }
     }
   }
 }

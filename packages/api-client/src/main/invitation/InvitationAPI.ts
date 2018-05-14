@@ -1,20 +1,21 @@
-//
-// Wire
-// Copyright (C) 2018 Wire Swiss GmbH
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program. If not, see http://www.gnu.org/licenses/.
-//
+/*
+ * Wire
+ * Copyright (C) 2018 Wire Swiss GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see http://www.gnu.org/licenses/.
+ *
+ */
 
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
 
@@ -22,7 +23,7 @@ import {HttpClient} from '../http';
 import {Invitation, InvitationList, InvitationRequest} from '../invitation';
 
 class InvitationAPI {
-  constructor(private client: HttpClient) {}
+  constructor(private readonly client: HttpClient) {}
 
   static get URL() {
     return {
@@ -36,13 +37,13 @@ class InvitationAPI {
    * @param invitationId The invitation ID to delete
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/invitation_0
    */
-  public deleteInvitation(invitationId: string): Promise<{}> {
+  public async deleteInvitation(invitationId: string): Promise<void> {
     const config: AxiosRequestConfig = {
       method: 'delete',
       url: `${InvitationAPI.URL.INVITATIONS}/${invitationId}`,
     };
 
-    return this.client.sendJSON(config).then(() => ({}));
+    await this.client.sendJSON(config);
   }
 
   /**
@@ -67,10 +68,10 @@ class InvitationAPI {
   public getInvitationInfo(invitationCode: string): Promise<Invitation> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${InvitationAPI.URL.INVITATIONS}/${InvitationAPI.URL.INFO}`,
       params: {
         code: invitationCode,
       },
+      url: `${InvitationAPI.URL.INVITATIONS}/${InvitationAPI.URL.INFO}`,
     };
 
     return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);

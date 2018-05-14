@@ -1,0 +1,28 @@
+{
+  "extends": ["tslint-config-prettier", "tslint-plugin-prettier"],
+  "rules": {
+    "ban-comma-operator": true,
+    "curly": true,
+    "jsdoc-format": [true, "check-multiline-start"],
+    "no-duplicate-imports": true,
+    "no-duplicate-switch-case": true,
+    "no-duplicate-variable": [true, "check-parameters"],
+    "no-invalid-template-strings": true,
+    "no-object-literal-type-assertion": true,
+    "no-return-await": true,
+    "no-sparse-arrays": true,
+    "no-this-assignment": true,
+    "object-literal-sort-keys": true,
+    "no-unused-variable": true,
+    "ordered-imports": true,
+    "prefer-conditional-expression": true,
+    "prefer-const": true,
+    "prefer-object-spread": true,
+    "prefer-readonly": true,
+    "prettier": true,
+    "space-within-parens": [true, 0]
+  },
+  "linterOptions": {
+    "exclude": ["**/bower_components/**", "**/dist/**", "**/node_modules/**"]
+  }
+}

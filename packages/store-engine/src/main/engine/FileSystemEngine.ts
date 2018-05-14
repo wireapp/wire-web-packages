@@ -18,9 +18,9 @@
  */
 
 import CRUDEngine from './CRUDEngine';
-import {RecordTypeError} from './error/';
-import {RecordAlreadyExistsError, RecordNotFoundError, UnsupportedError} from './error';
 import {isBrowser} from './EnvironmentUtil';
+import {RecordAlreadyExistsError, RecordNotFoundError, UnsupportedError} from './error';
+import {RecordTypeError} from './error/';
 
 const fs = require('bro-fs');
 
@@ -37,18 +37,22 @@ export default class FileSystemEngine implements CRUDEngine {
 
   private config: FileSystemEngineOptions = {
     fileExtension: '.dat',
-    type: typeof window === 'undefined' ? 0 : window.TEMPORARY,
     size: TEN_MEGABYTES,
+    type: typeof window === 'undefined' ? 0 : window.TEMPORARY,
   };
 
   constructor() {}
 
-  async init(storeName: string = '', options?: FileSystemEngineOptions): Promise<FileSystem> {
+  public async isSupported(): Promise<void> {
     if (!isBrowser() || !fs.isSupported()) {
       const message = `File and Directory Entries API is not available on your platform.`;
       throw new UnsupportedError(message);
     }
-    this.config = Object.assign({}, this.config, options);
+  }
+
+  public async init(storeName: string = '', options?: FileSystemEngineOptions): Promise<FileSystem> {
+    await this.isSupported();
+    this.config = {...this.config, ...options};
     this.storeName = storeName;
     const fileSystem: FileSystem = await fs.init({type: this.config.type, bytes: this.config.size});
     await fs.mkdir(this.storeName);
@@ -78,12 +82,6 @@ export default class FileSystemEngine implements CRUDEngine {
       })
       .then((updatedRecord: any) => fs.writeFile(filePath, updatedRecord))
       .then(() => primaryKey);
-  }
-
-  private async createDirectory(tableName: string): Promise<string> {
-    const directoryPath = this.createDirectoryPath(tableName);
-    await fs.mkdir(directoryPath);
-    return directoryPath;
   }
 
   async create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {

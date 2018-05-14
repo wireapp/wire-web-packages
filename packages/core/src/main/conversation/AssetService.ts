@@ -18,10 +18,10 @@
  */
 
 import APIClient = require('@wireapp/api-client');
-import {CryptographyService, EncryptedAsset} from '../cryptography/root';
+import {AssetRetentionPolicy} from '@wireapp/api-client/dist/commonjs/asset/AssetRetentionPolicy';
 import {Image} from '../conversation/root';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
-import {AssetRetentionPolicy} from '@wireapp/api-client/dist/commonjs/asset/AssetRetentionPolicy';
+import {EncryptedAsset} from '../cryptography/root';
 
 export interface AssetOptions {
   public: boolean;
@@ -29,11 +29,7 @@ export interface AssetOptions {
 }
 
 export default class AssetService {
-  constructor(
-    private apiClient: APIClient,
-    private protocolBuffers: any = {},
-    private cryptographyService: CryptographyService
-  ) {}
+  constructor(private readonly apiClient: APIClient, private readonly protocolBuffers: any = {}) {}
 
   private async postAsset(
     buffer: Buffer,
@@ -53,22 +49,22 @@ export default class AssetService {
   public async uploadImageAsset(image: Image, options?: AssetOptions): Promise<any> {
     const {key, keyBytes, sha256, token} = await this.postAsset(image.data, options);
     const imageMetadata = this.protocolBuffers.Asset.ImageMetaData.create({
-      width: image.width,
       height: image.height,
+      width: image.width,
     });
 
     const original = this.protocolBuffers.Asset.Original.create({
-      mimeType: image.type,
-      size: image.data.length,
-      name: null,
       image: imageMetadata,
+      mimeType: image.type,
+      name: null,
+      size: image.data.length,
     });
 
     const remoteData = this.protocolBuffers.Asset.RemoteData.create({
-      otrKey: keyBytes,
-      sha256,
       assetId: key,
       assetToken: token,
+      otrKey: keyBytes,
+      sha256,
     });
 
     const asset = this.protocolBuffers.Asset.create({

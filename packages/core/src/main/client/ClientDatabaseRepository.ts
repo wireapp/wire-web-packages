@@ -17,8 +17,8 @@
  *
  */
 
-import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/index';
 import {RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/index';
+import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/index';
 import {CryptographyService} from '../cryptography/root';
 import {MetaClient} from './ClientService';
 
@@ -33,7 +33,7 @@ class ClientDatabaseRepository {
     LOCAL_IDENTITY: 'local_identity',
   };
 
-  constructor(private storeEngine: CRUDEngine) {}
+  constructor(private readonly storeEngine: CRUDEngine) {}
 
   public getLocalClient(): Promise<MetaClient> {
     return this.getClient(ClientDatabaseRepository.KEYS.LOCAL_IDENTITY);

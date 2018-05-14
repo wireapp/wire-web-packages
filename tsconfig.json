@@ -6,6 +6,7 @@
     "moduleResolution": "node",
     "noEmitOnError": true,
     "noImplicitReturns": true,
+    "noUnusedLocals": true,
     "removeComments": true,
     "sourceMap": true,
     "strict": true,

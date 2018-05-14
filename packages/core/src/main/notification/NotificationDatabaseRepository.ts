@@ -17,10 +17,9 @@
  *
  */
 
-import {NotificationEvent} from '@wireapp/api-client/dist/commonjs/notification/index';
+import {Notification, NotificationEvent} from '@wireapp/api-client/dist/commonjs/notification/index';
 import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/index';
 import CryptographyDatabaseRepository from '../cryptography/CryptographyDatabaseRepository';
-import {Notification} from '@wireapp/api-client/dist/commonjs/notification/index';
 
 export enum DatabaseStores {
   EVENTS = 'events',
@@ -35,7 +34,7 @@ export default class NotificationDatabaseRepository {
   public static readonly STORES = DatabaseStores;
   public static readonly KEYS = DatabaseKeys;
 
-  constructor(private storeEngine: CRUDEngine) {}
+  constructor(private readonly storeEngine: CRUDEngine) {}
 
   public getNotificationEventList(): Promise<NotificationEvent[]> {
     return this.storeEngine.readAll<NotificationEvent>(NotificationDatabaseRepository.STORES.EVENTS);
