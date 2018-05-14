@@ -140,10 +140,6 @@ class Cryptobox extends EventEmitter {
     return Promise.reject(new CryptoboxError('No last resort PreKey available.'));
   }
 
-  private get_prekey(prekey_id: number = ProteusKeys.PreKey.MAX_PREKEY_ID): Promise<ProteusKeys.PreKey | undefined> {
-    return this.store.load_prekey(prekey_id);
-  }
-
   public get_serialized_standard_prekeys(): Promise<Array<{id: number; key: string}>> {
     return this.store.load_prekeys().then(prekeys =>
       prekeys
