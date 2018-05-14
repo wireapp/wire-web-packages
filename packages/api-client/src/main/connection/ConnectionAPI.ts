@@ -70,22 +70,22 @@ class ConnectionAPI {
   public getAllConnections(): Promise<Connection[]> {
     let allConnections: Connection[] = [];
 
-    const _getConnections = async (connectionId?: string): Promise<Connection[]> => {
+    const getConnectionChunks = async (connectionId?: string): Promise<Connection[]> => {
       const connectionsPerRequest = 500;
-      const {connections, has_more} = await this.getConnections(connectionsPerRequest, connectionId);
+      const {connections, has_more} = await this.getConnections(connectionId, connectionsPerRequest);
       allConnections = allConnections.concat(connections);
 
       if (has_more) {
         const lastConnection = connections.pop();
         if (lastConnection) {
-          return _getConnections(lastConnection.to);
+          return getConnectionChunks(lastConnection.to);
         }
       }
 
       return allConnections;
     };
 
-    return _getConnections();
+    return getConnectionChunks();
   }
 
   /**

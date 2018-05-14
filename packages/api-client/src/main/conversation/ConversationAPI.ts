@@ -120,17 +120,39 @@ class ConversationAPI {
   }
 
   /**
-   * Get conversations.
+   * Get conversations as chunks.
    * Note: At most 500 conversations are returned per request.
-   * @param limit Max. number of conversations to return
    * @param conversationId Conversation ID to start from (exclusive). Mutually exclusive with `conversationIds`.
-   * @param conversationIds Mutually exclusive with `conversationId`. At most 32 IDs per request.
+   * @param limit Max. number of conversations to return
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversations
    */
-  public getConversations(
-    limit: number = 100,
+  public getConversations(conversationId?: string, limit: number = 500): Promise<Conversations> {
+    return this._getConversations(conversationId, undefined, limit);
+  }
+
+  /**
+   * Get conversations.
+   * Note: At most 500 conversations are returned per request.
+   * @param conversationId Conversation ID to start from (exclusive). Mutually exclusive with `conversationIds`.
+   * @param limit Max. number of conversations to return
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversations
+   */
+  public getConversationsByIds(conversationIds: string[], limit: number = 500): Promise<Conversations> {
+    return this._getConversations(undefined, conversationIds, limit);
+  }
+
+  /**
+   * Get conversations.
+   * Note: At most 500 conversations are returned per request.
+   * @param conversationId Conversation ID to start from (exclusive). Mutually exclusive with `conversationIds`.
+   * @param conversationIds Mutually exclusive with `conversationId`. At most 32 IDs per request.
+   * @param limit Max. number of conversations to return
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversations
+   */
+  private _getConversations(
     conversationId?: string,
-    conversationIds?: string[]
+    conversationIds?: string[],
+    limit: number = 500
   ): Promise<Conversations> {
     const config: AxiosRequestConfig = {
       method: 'get',
@@ -155,22 +177,22 @@ class ConversationAPI {
   public getAllConversations(): Promise<Conversation[]> {
     let allConversations: Conversation[] = [];
 
-    const _getConversations = async (conversationId?: string): Promise<Conversation[]> => {
+    const getConversationChunks = async (conversationId?: string): Promise<Conversation[]> => {
       const conversationsPerRequest = 500;
-      const {conversations, has_more} = await this.getConversations(conversationsPerRequest, conversationId);
+      const {conversations, has_more} = await this.getConversations(conversationId, conversationsPerRequest);
       allConversations = allConversations.concat(conversations);
 
       if (has_more) {
         const lastConversation = conversations.pop();
         if (lastConversation) {
-          return _getConversations(lastConversation.id);
+          return getConversationChunks(lastConversation.id);
         }
       }
 
       return allConversations;
     };
 
-    return _getConversations();
+    return getConversationChunks();
   }
 
   /**
