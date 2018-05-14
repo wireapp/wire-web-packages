@@ -25,6 +25,7 @@ import {
   OTRRecipients,
   UserClients,
 } from '@wireapp/api-client/dist/commonjs/conversation/index';
+import {CONVERSATION_TYPING} from '@wireapp/api-client/dist/commonjs/event/index';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
 import {AxiosError} from 'axios';
 import {Encoder} from 'bazinga64';
@@ -36,17 +37,17 @@ export default class ConversationService {
   private clientID: string = '';
 
   constructor(
-    private apiClient: APIClient,
-    private protocolBuffers: any = {},
-    private cryptographyService: CryptographyService,
-    private assetService: AssetService
+    private readonly apiClient: APIClient,
+    private readonly protocolBuffers: any = {},
+    private readonly cryptographyService: CryptographyService,
+    private readonly assetService: AssetService
   ) {}
 
   public async sendConfirmation(conversationId: string, confirmMessageId: string): Promise<string> {
     const messageId = new UUID(4).format();
     const confirmation = this.protocolBuffers.Confirmation.create({
-      type: ConfirmationType.DELIVERED,
       firstMessageId: confirmMessageId,
+      type: ConfirmationType.DELIVERED,
     });
 
     const genericMessage = this.protocolBuffers.GenericMessage.create({
@@ -98,8 +99,8 @@ export default class ConversationService {
     const messageId = new UUID(4).format();
 
     const genericMessage = this.protocolBuffers.GenericMessage.create({
-      messageId,
       asset: imageAsset,
+      messageId,
     });
 
     const preKeyBundles = await this.getPreKeyBundles(conversationId);
@@ -114,8 +115,8 @@ export default class ConversationService {
     const messageId = new UUID(4).format();
     const knock = this.protocolBuffers.Knock.create();
     const ping = this.protocolBuffers.GenericMessage.create({
-      messageId,
       knock,
+      messageId,
     });
 
     const preKeyBundles = await this.getPreKeyBundles(conversationId);
@@ -124,6 +125,14 @@ export default class ConversationService {
 
     await this.sendExternalGenericMessage(this.clientID, conversationId, payload, <UserPreKeyBundleMap>preKeyBundles);
     return messageId;
+  }
+
+  public sendTypingStart(conversationId: string): Promise<void> {
+    return this.apiClient.conversation.api.postTyping(conversationId, {status: CONVERSATION_TYPING.STARTED});
+  }
+
+  public sendTypingStop(conversationId: string): Promise<void> {
+    return this.apiClient.conversation.api.postTyping(conversationId, {status: CONVERSATION_TYPING.STOPPED});
   }
 
   public setClientID(clientID: string) {

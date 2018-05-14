@@ -37,7 +37,7 @@ import {HttpClient} from '../http/';
 import {ValidationError} from '../validation/';
 
 class ConversationAPI {
-  constructor(private client: HttpClient) {}
+  constructor(private readonly client: HttpClient) {}
 
   static get URL() {
     return {
@@ -45,11 +45,12 @@ class ConversationAPI {
       CLIENTS: '/clients',
       CODE_CHECK: '/code-check',
       CONVERSATIONS: '/conversations',
+      JOIN: '/join',
       MEMBERS: 'members',
       MESSAGES: 'messages',
-      JOIN: '/join',
       OTR: 'otr',
       SELF: 'self',
+      TYPING: 'typing',
     };
   }
 
@@ -104,10 +105,10 @@ class ConversationAPI {
    */
   public getConversationIds(limit: number, conversationId?: string): Promise<ConversationIds> {
     const config: AxiosRequestConfig = {
+      method: 'get',
       params: {
         size: limit,
       },
-      method: 'get',
       url: `${ConversationAPI.URL.CONVERSATIONS}/ids`,
     };
 
@@ -132,10 +133,10 @@ class ConversationAPI {
     conversationIds?: string[]
   ): Promise<Conversations> {
     const config: AxiosRequestConfig = {
+      method: 'get',
       params: {
         size: limit,
       },
-      method: 'get',
       url: `${ConversationAPI.URL.CONVERSATIONS}`,
     };
 
@@ -324,11 +325,11 @@ class ConversationAPI {
 
     const config: AxiosRequestConfig = {
       data: messageData,
+      method: 'post',
       params: {
         ignore_missing: !!messageData.data,
         ...params,
       },
-      method: 'post',
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.OTR}/${
         ConversationAPI.URL.MESSAGES
       }`,
@@ -365,7 +366,7 @@ class ConversationAPI {
     const config: AxiosRequestConfig = {
       data: typingData,
       method: 'post',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.SELF}`,
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.TYPING}`,
     };
 
     await this.client.sendJSON(config);
