@@ -13,6 +13,7 @@
     "no-sparse-arrays": true,
     "no-this-assignment": true,
     "object-literal-sort-keys": true,
+    "no-unused-variable": true,
     "ordered-imports": true,
     "prefer-conditional-expression": true,
     "prefer-const": true,
