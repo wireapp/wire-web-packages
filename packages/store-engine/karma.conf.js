@@ -32,20 +32,37 @@ module.exports = function(config) {
     },
     colors: true,
     concurrency: Infinity,
+    coverageReporter: {
+      reporters: [
+        {
+          dir: 'coverage/browser',
+          type: 'json',
+        },
+        {
+          dir: 'coverage/browser',
+          type: 'html',
+        },
+      ],
+    },
     customLaunchers: {
       ChromeNoSandbox: {
         base: 'ChromeHeadless',
         flags: ['--allow-file-access-from-files', '--no-sandbox', '--unlimited-quota-for-files'],
       },
     },
-    files: ['https://unpkg.com/dexie@2.0.2/dist/dexie.js', `${dist}${projectName}.test.bundle.js`],
+    files: [
+      'https://unpkg.com/dexie@2.0.2/dist/dexie.js',
+      `${dist}${projectName}.bundle.js`,
+      `${dist}${projectName}.test.bundle.js`,
+    ],
     frameworks: ['jasmine'],
     logLevel: config.LOG_INFO,
     port: 9876,
     preprocessors: {
+      [`${dist}${projectName}.bundle.js`]: ['coverage'],
       '**/*.js': ['sourcemap'],
     },
-    reporters: ['jasmine-diff', 'progress'],
+    reporters: ['jasmine-diff', 'progress', 'coverage'],
     singleRun: true,
   });
 };
