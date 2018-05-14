@@ -170,7 +170,7 @@ class ConversationAPI {
       return conversations;
     };
 
-    for (let index = 0; index <= conversationIds.length; index += ConversationAPI.MAX_CHUNK_SIZE) {
+    for (let index = 0; index < conversationIds.length; index += ConversationAPI.MAX_CHUNK_SIZE) {
       const requestChunk = conversationIds.slice(index, index + ConversationAPI.MAX_CHUNK_SIZE);
       if (requestChunk.length) {
         const conversationChunk = await getConversationChunk(requestChunk);
