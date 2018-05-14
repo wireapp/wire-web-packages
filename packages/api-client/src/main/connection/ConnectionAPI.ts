@@ -69,8 +69,7 @@ class ConnectionAPI {
 
   /**
    * Get all connections to other users.
-   * @param limit Number of results to return (default 100)
-   * @param connectionId The connection ID to start from
+   * @param limit Max. number of connections to return (default 100)
    */
   public getAllConnections(limit = 100): Promise<Connection[]> {
     let allConnections: Connection[] = [];
