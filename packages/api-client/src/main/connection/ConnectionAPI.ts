@@ -53,7 +53,7 @@ class ConnectionAPI {
     const config: AxiosRequestConfig = {
       method: 'get',
       params: {
-        limit,
+        size: limit,
         start: connectionId,
       },
       url: ConnectionAPI.URL.CONNECTIONS,
@@ -71,7 +71,10 @@ class ConnectionAPI {
     const getConnectionChunks = async (connectionId?: string): Promise<Connection[]> => {
       const connectionsPerRequest = 500;
       const {connections, has_more} = await this.getConnections(connectionId, connectionsPerRequest);
-      allConnections = allConnections.concat(connections);
+
+      if (connections.length) {
+        allConnections = allConnections.concat(connections);
+      }
 
       if (has_more) {
         const lastConnection = connections.pop();

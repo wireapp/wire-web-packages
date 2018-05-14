@@ -91,7 +91,10 @@ class ConversationAPI {
 
     const getConversationChunks = async (conversationId?: string): Promise<Conversation[]> => {
       const {conversations, has_more} = await this.getConversations(conversationId, ConversationAPI.MAX_CHUNK_SIZE);
-      allConversations = allConversations.concat(conversations);
+
+      if (conversations.length) {
+        allConversations = allConversations.concat(conversations);
+      }
 
       if (has_more) {
         const lastConversation = conversations.pop();
@@ -131,13 +134,10 @@ class ConversationAPI {
       method: 'get',
       params: {
         size: limit,
+        start: conversationId,
       },
       url: `${ConversationAPI.URL.CONVERSATIONS}/ids`,
     };
-
-    if (conversationId) {
-      config.data.start = conversationId;
-    }
 
     return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
   }
@@ -160,7 +160,7 @@ class ConversationAPI {
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversations
    */
   public async getConversationsByIds(conversationIds: string[]): Promise<Conversation[]> {
-    const allConversations: Conversation[] = [];
+    let allConversations: Conversation[] = [];
 
     const getConversationChunk = async (chunkedConversationIds: string[]): Promise<Conversation[]> => {
       const {conversations} = await this._getConversations(
@@ -173,8 +173,13 @@ class ConversationAPI {
 
     for (let index = 0; index <= conversationIds.length; index += ConversationAPI.MAX_CHUNK_SIZE) {
       const requestChunk = conversationIds.slice(index, index + ConversationAPI.MAX_CHUNK_SIZE);
-      const conversationChunk = await getConversationChunk(requestChunk);
-      allConversations.concat(conversationChunk);
+      if (requestChunk.length) {
+        const conversationChunk = await getConversationChunk(requestChunk);
+
+        if (conversationChunk.length) {
+          allConversations = allConversations.concat(conversationChunk);
+        }
+      }
     }
 
     return allConversations;
@@ -197,14 +202,13 @@ class ConversationAPI {
       method: 'get',
       params: {
         size: limit,
+        start: conversationId,
       },
       url: `${ConversationAPI.URL.CONVERSATIONS}`,
     };
 
-    if (conversationId) {
-      config.data.start = conversationId;
-    } else if (conversationIds) {
-      config.data.ids = conversationIds.join(',');
+    if (conversationIds) {
+      config.params.ids = conversationIds.join(',');
     }
 
     return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
