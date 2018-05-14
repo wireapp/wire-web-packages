@@ -20,7 +20,7 @@
 import styled from 'styled-components';
 
 const Form = styled.form`
-  /* n */
+  /* appearance */
   /* positioning */
   display: flex;
   flex-direction: column;
