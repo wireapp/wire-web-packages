@@ -149,6 +149,30 @@ class ConversationAPI {
   }
 
   /**
+   * Get all conversations.
+   * @param limit Max. number of conversations to return (default 500)
+   */
+  public getAllConversations(limit = 500): Promise<Conversation[]> {
+    let allConversations: Conversation[] = [];
+
+    const _getConversations = async (conversationId?: string): Promise<Conversation[]> => {
+      const {conversations, has_more} = await this.getConversations(limit, conversationId);
+      allConversations = allConversations.concat(conversations);
+
+      if (has_more) {
+        const lastConversation = conversations.pop();
+        if (lastConversation) {
+          return _getConversations(lastConversation.id);
+        }
+      }
+
+      return allConversations;
+    };
+
+    return _getConversations();
+  }
+
+  /**
    * Get self membership properties.
    * @param conversationId The Conversation ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/getSelf

@@ -68,6 +68,31 @@ class ConnectionAPI {
   }
 
   /**
+   * Get all connections to other users.
+   * @param limit Number of results to return (default 100)
+   * @param connectionId The connection ID to start from
+   */
+  public getAllConnections(limit = 100): Promise<Connection[]> {
+    let allConnections: Connection[] = [];
+
+    const _getConnections = async (userId?: string): Promise<Connection[]> => {
+      const {connections, has_more} = await this.getConnections(limit, userId);
+      allConnections = allConnections.concat(connections);
+
+      if (has_more) {
+        const lastConnection = connections.pop();
+        if (lastConnection) {
+          return _getConnections(lastConnection.to);
+        }
+      }
+
+      return allConnections;
+    };
+
+    return _getConnections();
+  }
+
+  /**
    * Create a connection to another user.
    * Note: You can have no more than 1000 connections in accepted or sent state.
    * @param connectionRequestData: The connection request
