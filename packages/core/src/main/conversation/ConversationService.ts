@@ -29,7 +29,7 @@ import {CONVERSATION_TYPING} from '@wireapp/api-client/dist/commonjs/event/index
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
 import {AxiosError} from 'axios';
 import {Encoder} from 'bazinga64';
-import {AssetService, ConfirmationType, Image, RemoteData} from '../conversation/root';
+import {AssetService, ConfirmationType, GenericMessageType, Image, RemoteData} from '../conversation/root';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
 import {CryptographyService, EncryptedAsset} from '../cryptography/root';
 
@@ -42,6 +42,48 @@ export default class ConversationService {
     private readonly cryptographyService: CryptographyService,
     private readonly assetService: AssetService
   ) {}
+
+  public async deleteMessage(conversationId: string, messageIdToHide: string): Promise<string> {
+    const MessageHide = this.protocolBuffers.MessageHide.create({
+      conversationId,
+      messageId: messageIdToHide,
+    });
+
+    const messageId = new UUID(4).format();
+    const confirmation = this.protocolBuffers.Confirmation.create({
+      MessageHide,
+      type: GenericMessageType.HIDDEN,
+    });
+
+    const genericMessage = this.protocolBuffers.GenericMessage.create({
+      confirmation,
+      messageId,
+    });
+
+    await this.sendGenericMessage(this.clientID, conversationId, genericMessage);
+    return messageId;
+  }
+
+  public async deleteMessageEveryone(conversationId: string, messageIdToDelete: string): Promise<string> {
+    const MessageDelete = this.protocolBuffers.MessageDelete.create({
+      conversationId,
+      messageId: messageIdToDelete,
+    });
+
+    const messageId = new UUID(4).format();
+    const confirmation = this.protocolBuffers.Confirmation.create({
+      MessageDelete,
+      type: GenericMessageType.DELETED,
+    });
+
+    const genericMessage = this.protocolBuffers.GenericMessage.create({
+      confirmation,
+      messageId,
+    });
+
+    await this.sendGenericMessage(this.clientID, conversationId, genericMessage);
+    return messageId;
+  }
 
   public async sendConfirmation(conversationId: string, confirmMessageId: string): Promise<string> {
     const messageId = new UUID(4).format();
