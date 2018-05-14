@@ -151,13 +151,13 @@ class ConversationAPI {
 
   /**
    * Get all conversations.
-   * @param limit Max. number of conversations to return (default 500)
    */
-  public getAllConversations(limit = 500): Promise<Conversation[]> {
+  public getAllConversations(): Promise<Conversation[]> {
     let allConversations: Conversation[] = [];
 
     const _getConversations = async (conversationId?: string): Promise<Conversation[]> => {
-      const {conversations, has_more} = await this.getConversations(limit, conversationId);
+      const conversationsPerRequest = 500;
+      const {conversations, has_more} = await this.getConversations(conversationsPerRequest, conversationId);
       allConversations = allConversations.concat(conversations);
 
       if (has_more) {

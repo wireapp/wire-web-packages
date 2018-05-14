@@ -51,31 +51,28 @@ class ConnectionAPI {
    * @param connectionId The connection ID to start from
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/connections
    */
-  public getConnections(limit: number = 100, connectionId?: string): Promise<UserConnectionList> {
+  public getConnections(connectionId?: string, limit = 100): Promise<UserConnectionList> {
     const config: AxiosRequestConfig = {
       method: 'get',
       params: {
-        size: limit,
+        limit,
+        start: connectionId,
       },
       url: ConnectionAPI.URL.CONNECTIONS,
     };
-
-    if (connectionId) {
-      config.params.start = connectionId;
-    }
 
     return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
   }
 
   /**
    * Get all connections to other users.
-   * @param limit Max. number of connections to return (default 100)
    */
-  public getAllConnections(limit = 100): Promise<Connection[]> {
+  public getAllConnections(): Promise<Connection[]> {
     let allConnections: Connection[] = [];
 
-    const _getConnections = async (userId?: string): Promise<Connection[]> => {
-      const {connections, has_more} = await this.getConnections(limit, userId);
+    const _getConnections = async (connectionId?: string): Promise<Connection[]> => {
+      const connectionsPerRequest = 500;
+      const {connections, has_more} = await this.getConnections(connectionsPerRequest, connectionId);
       allConnections = allConnections.concat(connections);
 
       if (has_more) {
