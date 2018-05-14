@@ -39,22 +39,20 @@ import {ValidationError} from '../validation/';
 class ConversationAPI {
   constructor(private readonly client: HttpClient) {}
 
-  static get URL() {
-    return {
-      BOTS: 'bots',
-      CLIENTS: '/clients',
-      CODE_CHECK: '/code-check',
-      CONVERSATIONS: '/conversations',
-      JOIN: '/join',
-      MEMBERS: 'members',
-      MESSAGES: 'messages',
-      OTR: 'otr',
-      SELF: 'self',
-      TYPING: 'typing',
-    };
-  }
+  static readonly URL = {
+    BOTS: 'bots',
+    CLIENTS: '/clients',
+    CODE_CHECK: '/code-check',
+    CONVERSATIONS: '/conversations',
+    JOIN: '/join',
+    MEMBERS: 'members',
+    MESSAGES: 'messages',
+    OTR: 'otr',
+    SELF: 'self',
+    TYPING: 'typing',
+  };
 
-  public static readonly MAX_CHUNK_SIZE = 500;
+  static readonly MAX_CHUNK_SIZE = 500;
 
   /**
    * Remove bot from conversation.

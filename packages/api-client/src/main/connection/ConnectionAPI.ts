@@ -25,11 +25,9 @@ import {HttpClient} from '../http';
 class ConnectionAPI {
   constructor(private readonly client: HttpClient) {}
 
-  static get URL() {
-    return {
-      CONNECTIONS: '/connections',
-    };
-  }
+  static readonly URL = {
+    CONNECTIONS: '/connections',
+  };
 
   /**
    * Get an existing connection to another user.
