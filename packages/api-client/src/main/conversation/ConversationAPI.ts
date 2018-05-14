@@ -187,27 +187,27 @@ class ConversationAPI {
   /**
    * Get conversations.
    * Note: At most 500 conversations are returned per request.
-   * @param conversationId Conversation ID to start from (exclusive). Mutually exclusive with `conversationIds`.
-   * @param conversationIds Mutually exclusive with `conversationId`. At most 32 IDs per request.
+   * @param startConversationId Conversation ID to start from (exclusive). Mutually exclusive with `conversationIds`.
+   * @param filteredConversationIds Mutually exclusive with `startConversationId`. At most 32 IDs per request.
    * @param limit Max. number of conversations to return
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversations
    */
   private _getConversations(
-    conversationId?: string,
-    conversationIds?: string[],
+    startConversationId?: string,
+    filteredConversationIds?: string[],
     limit = ConversationAPI.MAX_CHUNK_SIZE
   ): Promise<Conversations> {
     const config: AxiosRequestConfig = {
       method: 'get',
       params: {
         size: limit,
-        start: conversationId,
+        start: startConversationId,
       },
       url: `${ConversationAPI.URL.CONVERSATIONS}`,
     };
 
-    if (conversationIds) {
-      config.params.ids = conversationIds.join(',');
+    if (filteredConversationIds) {
+      config.params.ids = filteredConversationIds.join(',');
     }
 
     return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
