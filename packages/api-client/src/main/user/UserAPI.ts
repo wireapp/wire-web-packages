@@ -279,7 +279,7 @@ class UserAPI {
     const maxChunkSize = 100;
     let allUsers: User[] = [];
 
-    for (let index = 0; index <= userIds.length; index += maxChunkSize) {
+    for (let index = 0; index < userIds.length; index += maxChunkSize) {
       const requestChunk = userIds.slice(index, index + maxChunkSize);
       if (requestChunk.length) {
         const conversationChunk = await this.getUsers({ids: requestChunk});

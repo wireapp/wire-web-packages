@@ -144,12 +144,15 @@ class ConversationAPI {
   /**
    * Get conversations as chunks.
    * Note: At most 500 conversations are returned per request.
-   * @param conversationId Conversation ID to start from (exclusive). Mutually exclusive with `conversationIds`.
+   * @param startConversationId Conversation ID to start from (exclusive). Mutually exclusive with `conversationIds`.
    * @param limit Max. number of conversations to return
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversations
    */
-  public getConversations(conversationId?: string, limit = ConversationAPI.MAX_CHUNK_SIZE): Promise<Conversations> {
-    return this._getConversations(conversationId, undefined, limit);
+  public getConversations(
+    startConversationId?: string,
+    limit = ConversationAPI.MAX_CHUNK_SIZE
+  ): Promise<Conversations> {
+    return this._getConversations(startConversationId, undefined, limit);
   }
 
   /**
@@ -158,7 +161,7 @@ class ConversationAPI {
    * @param conversationId Conversation ID to start from (exclusive). Mutually exclusive with `conversationIds`.
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversations
    */
-  public async getConversationsByIds(conversationIds: string[]): Promise<Conversation[]> {
+  public async getConversationsByIds(filteredConversationIds: string[]): Promise<Conversation[]> {
     let allConversations: Conversation[] = [];
 
     const getConversationChunk = async (chunkedConversationIds: string[]): Promise<Conversation[]> => {
@@ -170,8 +173,8 @@ class ConversationAPI {
       return conversations;
     };
 
-    for (let index = 0; index < conversationIds.length; index += ConversationAPI.MAX_CHUNK_SIZE) {
-      const requestChunk = conversationIds.slice(index, index + ConversationAPI.MAX_CHUNK_SIZE);
+    for (let index = 0; index < filteredConversationIds.length; index += ConversationAPI.MAX_CHUNK_SIZE) {
+      const requestChunk = filteredConversationIds.slice(index, index + ConversationAPI.MAX_CHUNK_SIZE);
       if (requestChunk.length) {
         const conversationChunk = await getConversationChunk(requestChunk);
 
