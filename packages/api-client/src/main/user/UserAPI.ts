@@ -38,24 +38,22 @@ import {
 } from '../user';
 
 class UserAPI {
-  constructor(private readonly client: HttpClient) {}
+  static readonly URL = {
+    ACTIVATE: '/activate',
+    CALLS: '/calls',
+    CLIENTS: 'clients',
+    CONTACTS: 'contacts',
+    DELETE: '/delete',
+    HANDLES: 'handles',
+    PASSWORDRESET: '/password-reset',
+    PRE_KEYS: 'prekeys',
+    PROPERTIES: '/properties',
+    SEARCH: '/search',
+    SEND: 'send',
+    USERS: '/users',
+  };
 
-  static get URL() {
-    return {
-      ACTIVATE: '/activate',
-      CALLS: '/calls',
-      CLIENTS: 'clients',
-      CONTACTS: 'contacts',
-      DELETE: '/delete',
-      HANDLES: 'handles',
-      PASSWORDRESET: '/password-reset',
-      PRE_KEYS: 'prekeys',
-      PROPERTIES: '/properties',
-      SEARCH: '/search',
-      SEND: 'send',
-      USERS: '/users',
-    };
-  }
+  constructor(private readonly client: HttpClient) {}
 
   /**
    * Clear all properties.

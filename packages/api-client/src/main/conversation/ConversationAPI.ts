@@ -37,8 +37,7 @@ import {HttpClient} from '../http/';
 import {ValidationError} from '../validation/';
 
 class ConversationAPI {
-  constructor(private readonly client: HttpClient) {}
-
+  static readonly MAX_CHUNK_SIZE = 500;
   static readonly URL = {
     BOTS: 'bots',
     CLIENTS: '/clients',
@@ -52,7 +51,7 @@ class ConversationAPI {
     TYPING: 'typing',
   };
 
-  static readonly MAX_CHUNK_SIZE = 500;
+  constructor(private readonly client: HttpClient) {}
 
   /**
    * Remove bot from conversation.
