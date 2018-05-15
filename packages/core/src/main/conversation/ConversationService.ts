@@ -19,34 +19,35 @@
 
 const UUID = require('pure-uuid');
 import APIClient = require('@wireapp/api-client');
-import {Encoder} from 'bazinga64';
-import {AxiosError} from 'axios';
 import {
   ClientMismatch,
   NewOTRMessage,
   OTRRecipients,
   UserClients,
 } from '@wireapp/api-client/dist/commonjs/conversation/index';
+import {CONVERSATION_TYPING} from '@wireapp/api-client/dist/commonjs/event/index';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
-import {CryptographyService, EncryptedAsset} from '../cryptography/root';
+import {AxiosError} from 'axios';
+import {Encoder} from 'bazinga64';
 import {AssetService, ConfirmationType, Image, RemoteData} from '../conversation/root';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
+import {CryptographyService, EncryptedAsset} from '../cryptography/root';
 
 export default class ConversationService {
   private clientID: string = '';
 
   constructor(
-    private apiClient: APIClient,
-    private protocolBuffers: any = {},
-    private cryptographyService: CryptographyService,
-    private assetService: AssetService
+    private readonly apiClient: APIClient,
+    private readonly protocolBuffers: any = {},
+    private readonly cryptographyService: CryptographyService,
+    private readonly assetService: AssetService
   ) {}
 
   public async sendConfirmation(conversationId: string, confirmMessageId: string): Promise<string> {
     const messageId = new UUID(4).format();
     const confirmation = this.protocolBuffers.Confirmation.create({
-      type: ConfirmationType.DELIVERED,
       firstMessageId: confirmMessageId,
+      type: ConfirmationType.DELIVERED,
     });
 
     const genericMessage = this.protocolBuffers.GenericMessage.create({
@@ -61,9 +62,9 @@ export default class ConversationService {
   public async getImage({assetId, otrKey, sha256, assetToken}: RemoteData): Promise<Buffer> {
     const encryptedBuffer = await this.apiClient.asset.api.getAsset(assetId, assetToken);
     return AssetCryptography.decryptAsset({
-      cipherText: new Buffer(encryptedBuffer),
-      keyBytes: new Buffer(otrKey),
-      sha256: new Buffer(sha256),
+      cipherText: Buffer.from(encryptedBuffer),
+      keyBytes: Buffer.from(otrKey.buffer),
+      sha256: Buffer.from(sha256.buffer),
     });
   }
 
@@ -98,8 +99,8 @@ export default class ConversationService {
     const messageId = new UUID(4).format();
 
     const genericMessage = this.protocolBuffers.GenericMessage.create({
-      messageId,
       asset: imageAsset,
+      messageId,
     });
 
     const preKeyBundles = await this.getPreKeyBundles(conversationId);
@@ -114,8 +115,8 @@ export default class ConversationService {
     const messageId = new UUID(4).format();
     const knock = this.protocolBuffers.Knock.create();
     const ping = this.protocolBuffers.GenericMessage.create({
-      messageId,
       knock,
+      messageId,
     });
 
     const preKeyBundles = await this.getPreKeyBundles(conversationId);
@@ -124,6 +125,14 @@ export default class ConversationService {
 
     await this.sendExternalGenericMessage(this.clientID, conversationId, payload, <UserPreKeyBundleMap>preKeyBundles);
     return messageId;
+  }
+
+  public sendTypingStart(conversationId: string): Promise<void> {
+    return this.apiClient.conversation.api.postTyping(conversationId, {status: CONVERSATION_TYPING.STARTED});
+  }
+
+  public sendTypingStop(conversationId: string): Promise<void> {
+    return this.apiClient.conversation.api.postTyping(conversationId, {status: CONVERSATION_TYPING.STOPPED});
   }
 
   public setClientID(clientID: string) {
@@ -135,9 +144,7 @@ export default class ConversationService {
 
     let clientCount = 0;
     for (const user in preKeyBundles) {
-      for (const device in preKeyBundles[user]) {
-        clientCount++;
-      }
+      clientCount += Object.keys(preKeyBundles[user]).length;
     }
 
     const messageInBytes = new Uint8Array(plainText).length;

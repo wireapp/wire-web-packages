@@ -18,9 +18,9 @@
  */
 
 import CRUDEngine from './CRUDEngine';
-import {RecordTypeError} from './error/';
-import {RecordAlreadyExistsError, RecordNotFoundError, UnsupportedError} from './error';
 import {isBrowser} from './EnvironmentUtil';
+import {RecordAlreadyExistsError, RecordNotFoundError, UnsupportedError} from './error';
+import {RecordTypeError} from './error/';
 
 const fs = require('bro-fs');
 
@@ -37,8 +37,8 @@ export default class FileSystemEngine implements CRUDEngine {
 
   private config: FileSystemEngineOptions = {
     fileExtension: '.dat',
-    type: typeof window === 'undefined' ? 0 : window.TEMPORARY,
     size: TEN_MEGABYTES,
+    type: typeof window === 'undefined' ? 0 : window.TEMPORARY,
   };
 
   constructor() {}
@@ -82,12 +82,6 @@ export default class FileSystemEngine implements CRUDEngine {
       })
       .then((updatedRecord: any) => fs.writeFile(filePath, updatedRecord))
       .then(() => primaryKey);
-  }
-
-  private async createDirectory(tableName: string): Promise<string> {
-    const directoryPath = this.createDirectoryPath(tableName);
-    await fs.mkdir(directoryPath);
-    return directoryPath;
   }
 
   async create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {

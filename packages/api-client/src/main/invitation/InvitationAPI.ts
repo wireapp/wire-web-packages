@@ -23,7 +23,7 @@ import {HttpClient} from '../http';
 import {Invitation, InvitationList, InvitationRequest} from '../invitation';
 
 class InvitationAPI {
-  constructor(private client: HttpClient) {}
+  constructor(private readonly client: HttpClient) {}
 
   static get URL() {
     return {
@@ -37,13 +37,13 @@ class InvitationAPI {
    * @param invitationId The invitation ID to delete
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/invitation_0
    */
-  public deleteInvitation(invitationId: string): Promise<{}> {
+  public async deleteInvitation(invitationId: string): Promise<void> {
     const config: AxiosRequestConfig = {
       method: 'delete',
       url: `${InvitationAPI.URL.INVITATIONS}/${invitationId}`,
     };
 
-    return this.client.sendJSON(config).then(() => ({}));
+    await this.client.sendJSON(config);
   }
 
   /**
@@ -68,10 +68,10 @@ class InvitationAPI {
   public getInvitationInfo(invitationCode: string): Promise<Invitation> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${InvitationAPI.URL.INVITATIONS}/${InvitationAPI.URL.INFO}`,
       params: {
         code: invitationCode,
       },
+      url: `${InvitationAPI.URL.INVITATIONS}/${InvitationAPI.URL.INFO}`,
     };
 
     return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);

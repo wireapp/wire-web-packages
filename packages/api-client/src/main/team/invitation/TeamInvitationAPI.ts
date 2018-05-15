@@ -19,12 +19,12 @@
 
 import {AxiosPromise, AxiosRequestConfig, AxiosResponse} from 'axios';
 
-import {NewTeamInvitation, TeamInvitation, TeamInvitationChunk} from '../invitation';
 import {HttpClient} from '../../http';
+import {NewTeamInvitation, TeamInvitation, TeamInvitationChunk} from '../invitation';
 import {TeamAPI} from '../team';
 
 class TeamInvitationAPI {
-  constructor(private client: HttpClient) {}
+  constructor(private readonly client: HttpClient) {}
 
   static get URL() {
     return {
@@ -72,10 +72,10 @@ class TeamInvitationAPI {
 
   public getInvitationFromCode(invitationCode: string): Promise<TeamInvitation> {
     const config: AxiosRequestConfig = {
+      method: 'get',
       params: {
         code: invitationCode,
       },
-      method: 'get',
       url: `${TeamAPI.URL.TEAMS}/${TeamInvitationAPI.URL.INVITATIONS}/${TeamInvitationAPI.URL.INFO}`,
     };
 

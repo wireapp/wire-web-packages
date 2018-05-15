@@ -1,5 +1,7 @@
 const fs = require('fs-extra');
+import path = require('path');
 import CRUDEngine from './CRUDEngine';
+import {isBrowser} from './EnvironmentUtil';
 import {
   PathValidationError,
   RecordAlreadyExistsError,
@@ -7,8 +9,6 @@ import {
   RecordTypeError,
   UnsupportedError,
 } from './error';
-import {isBrowser} from './EnvironmentUtil';
-import path = require('path');
 
 export default class FileEngine implements CRUDEngine {
   public storeName: string = '';
@@ -16,7 +16,7 @@ export default class FileEngine implements CRUDEngine {
     fileExtension: '.dat',
   };
 
-  constructor(private baseDirectory: string = '') {}
+  constructor(private readonly baseDirectory: string = '') {}
 
   public async isSupported(): Promise<void> {
     if (isBrowser()) {

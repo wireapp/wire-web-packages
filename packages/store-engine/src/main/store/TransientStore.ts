@@ -17,21 +17,21 @@
  *
  */
 
+import {EventEmitter} from 'events';
+import {CRUDEngine} from '../engine';
+import {RecordAlreadyExistsError, RecordNotFoundError} from '../engine/error';
 import ExpiredBundle from './ExpiredBundle';
 import TransientBundle from './TransientBundle';
-import {CRUDEngine} from '../engine';
-import {EventEmitter} from 'events';
-import {RecordAlreadyExistsError, RecordNotFoundError} from '../engine/error';
 
 export default class TransientStore extends EventEmitter {
-  private bundles: {[index: string]: TransientBundle} = {};
+  private readonly bundles: {[index: string]: TransientBundle} = {};
   private tableName: string = '';
 
   public static TOPIC = {
     EXPIRED: 'expired',
   };
 
-  constructor(private engine: CRUDEngine) {
+  constructor(private readonly engine: CRUDEngine) {
     super();
   }
 

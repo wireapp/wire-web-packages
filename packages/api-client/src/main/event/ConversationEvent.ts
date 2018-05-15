@@ -17,14 +17,8 @@
  *
  */
 
+import {Conversation, CONVERSATION_ACCESS, CONVERSATION_ACCESS_ROLE} from '../conversation';
 import {BackendEvent} from './BackendEvent';
-import {
-  CONVERSATION_TYPE,
-  CONVERSATION_ACCESS,
-  CONVERSATION_ACCESS_ROLE,
-  ConversationMembers,
-  Conversation,
-} from '../conversation';
 
 enum CONVERSATION_EVENT {
   ACCESS_UPDATE = 'conversation.access-update',

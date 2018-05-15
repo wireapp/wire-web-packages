@@ -18,35 +18,35 @@
  */
 
 const logdown = require('logdown');
-import {Config} from './Config';
-import {AccessTokenData, AuthAPI, Context, LoginData, RegisterData, AUTH_TABLE_NAME} from './auth';
-import {AccessTokenStore} from './auth/';
-import {AssetAPI} from './asset/';
 import {AxiosResponse} from 'axios';
-import {Backend} from './env';
+import {AssetAPI} from './asset/';
+import {AccessTokenData, AuthAPI, Context, LoginData, RegisterData} from './auth';
+import {AccessTokenStore} from './auth/';
 import {ClientAPI, ClientType} from './client/';
+import {Config} from './Config';
 import {ConnectionAPI} from './connection/';
 import {ConversationAPI} from './conversation/';
+import {Backend} from './env';
 import {GiphyAPI} from './giphy/';
 import {HttpClient} from './http/';
 import {InvitationAPI} from './invitation/';
 import {NotificationAPI} from './notification/';
-import {MemberAPI, PaymentAPI, TeamAPI, TeamInvitationAPI} from './team/';
 import {SelfAPI} from './self/';
-import {UserAPI} from './user/';
-import {WebSocketClient} from './tcp/';
-import {User} from './user';
 import {retrieveCookie} from './shims/node/cookie';
+import {WebSocketClient} from './tcp/';
+import {MemberAPI, PaymentAPI, TeamAPI, TeamInvitationAPI} from './team/';
+import {User} from './user';
+import {UserAPI} from './user/';
 
 const VERSION = require('../../package.json').version;
 
 class Client {
-  private logger: any = logdown('@wireapp/api-client/Client', {
+  private readonly logger: any = logdown('@wireapp/api-client/Client', {
     logger: console,
     markdown: false,
   });
 
-  private STORE_NAME_PREFIX: string = 'wire';
+  private readonly STORE_NAME_PREFIX: string = 'wire';
   // APIs
   public asset: {api: AssetAPI};
   public auth: {api: AuthAPI};
@@ -58,20 +58,20 @@ class Client {
   public notification: {api: NotificationAPI};
   public self: {api: SelfAPI};
   public teams: {
-    team: {api?: TeamAPI};
-    member: {api?: MemberAPI};
     invitation: {api?: TeamInvitationAPI};
+    member: {api?: MemberAPI};
     payment: {api?: PaymentAPI};
+    team: {api?: TeamAPI};
   } = {
-    team: {api: undefined},
-    member: {api: undefined},
     invitation: {api: undefined},
+    member: {api: undefined},
     payment: {api: undefined},
+    team: {api: undefined},
   };
   public user: {api: UserAPI};
 
   // Configuration
-  private accessTokenStore: AccessTokenStore;
+  private readonly accessTokenStore: AccessTokenStore;
   public context?: Context;
   public transport: {http: HttpClient; ws: WebSocketClient};
 

@@ -4,7 +4,7 @@
     "eslint": "4.19.1",
     "eslint-config-prettier": "2.9.0",
     "eslint-plugin-prettier": "2.6.0",
-    "eslint-plugin-react": "7.7.0",
+    "eslint-plugin-react": "7.8.2",
     "husky": "0.14.3",
     "lerna": "2.11.0",
     "lint-staged": "7.1.0",
@@ -41,7 +41,7 @@
     "release": "lerna publish -m \"[skip ci] chore: Publish\" --conventional-commits --loglevel=verbose --exact --allow-branch=master --registry=https://registry.npmjs.org/ --yes",
     "test:js": "eslint --ignore-path .gitignore **/*.{js,jsx}",
     "test:other": "yarn prettier --list-different",
-    "test:ts": "tslint -c tslint.json \"**/*.ts\"",
+    "test:ts": "tslint --config tslint.json --project tsconfig.json \"**/*.ts\"",
     "test": "yarn && yarn test:js && yarn test:ts && yarn test:other && node bin/testUpdated.js"
   },
   "workspaces": [

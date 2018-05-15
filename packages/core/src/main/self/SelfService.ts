@@ -17,40 +17,42 @@
  *
  */
 
-const logdown = require('logdown');
 import APIClient = require('@wireapp/api-client');
 import {Self} from '@wireapp/api-client/dist/commonjs/self/index';
 
 export default class SelfService {
-  constructor(private apiClient: APIClient) {}
+  constructor(private readonly apiClient: APIClient) {}
+
+  public async checkUsername(username: string): Promise<boolean> {
+    const [availableUsername] = await this.checkUsernames([username]);
+    return !!availableUsername;
+  }
+
+  public checkUsernames(usernames: string[]): Promise<string[]> {
+    return this.apiClient.user.api.postHandles({
+      handles: usernames,
+    });
+  }
 
   public async getName(): Promise<string> {
     const {name} = await this.apiClient.self.api.getName();
     return name;
   }
 
-  public async getUserName(): Promise<string | undefined> {
-    const {handle} = await this.apiClient.self.api.getSelf();
-    return handle;
-  }
-
   public getSelf(): Promise<Self> {
     return this.apiClient.self.api.getSelf();
   }
 
-  public setName(name: string): Promise<{}> {
+  public async getUsername(): Promise<string | undefined> {
+    const {handle} = await this.apiClient.self.api.getSelf();
+    return handle;
+  }
+
+  public setName(name: string): Promise<void> {
     return this.apiClient.self.api.putSelf({name});
   }
 
-  public async setUserName(userName: string): Promise<{}> {
-    const [availableHandle] = await this.apiClient.user.api.postHandles({
-      handles: [userName],
-    });
-
-    if (availableHandle) {
-      return this.apiClient.self.api.putHandle({handle: userName});
-    }
-
-    throw new Error(`Username "${userName}" is not available.`);
+  public setUsername(username: string): Promise<void> {
+    return this.apiClient.self.api.putHandle({handle: username});
   }
 }
