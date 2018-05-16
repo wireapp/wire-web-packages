@@ -55,6 +55,6 @@ const {MemoryEngine} = require('@wireapp/store-engine');
       `@wireapp/core v${version} deployed.`
     );
   } catch (error) {
-    console.error('error:', error);
+    console.error('Error:', error);
   }
 })();
