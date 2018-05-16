@@ -46,13 +46,13 @@ const {MemoryEngine} = require('@wireapp/store-engine');
     const engine = new MemoryEngine();
     await engine.init('');
 
-    const apiClient = new APIClient(new Config(engine, APIClient.BACKEND.STAGING));
+    const apiClient = new APIClient(new Config(engine, APIClient.BACKEND.PRODUCTION));
     const account = new Account(apiClient);
     await account.login(login);
 
     await account.service.conversation.sendTextMessage(
       WIRE_STATUS_BOT_CONVERSATION_ID,
-      `@wireapp/core v${version} deployed.`
+      `I am posting from @wireapp/core v${version}. 🌞`
     );
   } catch (error) {
     console.error('Error:', error);

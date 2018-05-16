@@ -40,8 +40,6 @@ notifications:
   email: false
 
 after_success:
-  - export WIRE_STATUS_BOT_CONVERSATION_ID="1f87209d-7554-4778-b269-9df736589085"
-  - node packages/core/src/demo/status-bot.js
   - |
     if [ "${WILL_RELEASE}" == 0 ]; then
       git config --global user.email webapp+travis@wire.com
@@ -63,5 +61,5 @@ after_success:
     fi
 
 after_deploy:
-  - export WIRE_STATUS_BOT_CONVERSATION_ID="1f87209d-7554-4778-b269-9df736589085"
+  - export WIRE_STATUS_BOT_CONVERSATION_ID="4ae15efc-d061-4013-98f2-bcd81ab39b60"
   - node packages/core/src/demo/status-bot.js
