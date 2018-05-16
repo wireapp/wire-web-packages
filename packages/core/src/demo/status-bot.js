@@ -26,7 +26,8 @@ const {MemoryEngine} = require('@wireapp/store-engine');
 
 const {version} = require('../../package.json');
 
-const conversationId = process.argv[2];
+const CONVERSATION_ARGUMENT_INDEX = 2;
+const conversationId = process.argv[CONVERSATION_ARGUMENT_INDEX];
 if (!conversationId) {
   console.error(`Error: Conversation id is not set. Example: status-bot.js "c94a6e69-7718-406b-b834-df4144e5a65b".`);
   process.exit(1);
