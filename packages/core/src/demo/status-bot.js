@@ -25,12 +25,11 @@ const {Config} = require('@wireapp/api-client/dist/commonjs/Config');
 const {MemoryEngine} = require('@wireapp/store-engine');
 
 const {version} = require('../../package.json');
-const filename = require('path').basename(process.argv[1]);
 
 const firstArgumentIndex = 2;
 const conversationId = process.argv[firstArgumentIndex];
 if (!conversationId) {
-  console.error(`Error: Conversation id is not set. Example: ${filename} "c94a6e69-7718-406b-b834-df4144e5a65b".`);
+  console.error(`Error: Conversation id is not set. Example: status-bot.js "c94a6e69-7718-406b-b834-df4144e5a65b".`);
   process.exit(1);
 }
 
