@@ -18,7 +18,7 @@ module.exports = {
     "no-magic-numbers": [
       2,
       {
-        "ignore": [-1, 0, 1]
+        "ignore": [-1, 0, 1, 2]
       }
     ],
     "no-shadow": 2,
