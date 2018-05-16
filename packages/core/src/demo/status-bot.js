@@ -17,28 +17,35 @@
  *
  */
 
+/* eslint-disable no-magic-numbers */
+
 //@ts-check
 
 const APIClient = require('@wireapp/api-client');
-const {version} = require('../../package.json');
 const {Account} = require('@wireapp/core');
 const {Config} = require('@wireapp/api-client/dist/commonjs/Config');
 const {MemoryEngine} = require('@wireapp/store-engine');
 
-['WIRE_STATUS_BOT_EMAIL', 'WIRE_STATUS_BOT_PASSWORD', 'WIRE_STATUS_BOT_CONVERSATION_ID'].forEach(
-  (envVar, index, array) => {
-    if (!process.env[envVar]) {
-      throw new Error(`Environment variable "${envVar}" is not set. Required variables: ${array.join(', ')}.`);
-    }
+const {version} = require('../../package.json');
+const filename = require('path').basename(process.argv[1]);
+
+const conversationId = process.argv[2];
+if (!conversationId) {
+  console.error(`Error: Conversation id is not set. Example: ${filename} "c94a6e69-7718-406b-b834-df4144e5a65b".`);
+  process.exit(1);
+}
+
+['WIRE_STATUS_BOT_EMAIL', 'WIRE_STATUS_BOT_PASSWORD'].forEach((envVar, index, array) => {
+  if (!process.env[envVar]) {
+    console.error(`Error: Environment variable "${envVar}" is not set. Required variables: ${array.join(', ')}.`);
+    process.exit(1);
   }
-);
+});
 
 (async () => {
-  const {WIRE_STATUS_BOT_EMAIL, WIRE_STATUS_BOT_PASSWORD, WIRE_STATUS_BOT_CONVERSATION_ID} = process.env;
-
   const login = {
-    email: WIRE_STATUS_BOT_EMAIL,
-    password: WIRE_STATUS_BOT_PASSWORD,
+    email: process.env.WIRE_STATUS_BOT_EMAIL,
+    password: process.env.WIRE_STATUS_BOT_PASSWORD,
     persist: false,
   };
 
@@ -51,7 +58,7 @@ const {MemoryEngine} = require('@wireapp/store-engine');
     await account.login(login);
 
     await account.service.conversation.sendTextMessage(
-      WIRE_STATUS_BOT_CONVERSATION_ID,
+      conversationId,
       `I am posting from @wireapp/core v${version}. 🌞`
     );
   } catch (error) {

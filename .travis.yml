@@ -61,5 +61,4 @@ after_success:
     fi
 
 after_deploy:
-  - export WIRE_STATUS_BOT_CONVERSATION_ID="4ae15efc-d061-4013-98f2-bcd81ab39b60"
-  - node packages/core/src/demo/status-bot.js
+  - node packages/core/src/demo/status-bot.js "4ae15efc-d061-4013-98f2-bcd81ab39b60"
