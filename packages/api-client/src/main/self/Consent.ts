@@ -1,5 +1,3 @@
-import {ConsentType} from './ConsentType';
-
 /*
  * Wire
  * Copyright (C) 2018 Wire Swiss GmbH
@@ -18,6 +16,7 @@ import {ConsentType} from './ConsentType';
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
+import {ConsentType} from './ConsentType';
 
 interface Consent {
   type: ConsentType;
