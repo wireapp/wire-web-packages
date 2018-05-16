@@ -17,8 +17,6 @@
  *
  */
 
-/* eslint-disable no-magic-numbers */
-
 //@ts-check
 
 const APIClient = require('@wireapp/api-client');
@@ -29,7 +27,8 @@ const {MemoryEngine} = require('@wireapp/store-engine');
 const {version} = require('../../package.json');
 const filename = require('path').basename(process.argv[1]);
 
-const conversationId = process.argv[2];
+const firstArgumentIndex = 2;
+const conversationId = process.argv[firstArgumentIndex];
 if (!conversationId) {
   console.error(`Error: Conversation id is not set. Example: ${filename} "c94a6e69-7718-406b-b834-df4144e5a65b".`);
   process.exit(1);
