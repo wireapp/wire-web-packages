@@ -21,6 +21,7 @@ import {ConsentType} from './ConsentType';
 interface Consent {
   type: ConsentType;
   value: number;
+  source: string;
 }
 
 export {Consent};

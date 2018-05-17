@@ -98,7 +98,7 @@ class SelfAPI {
    * Get your consents.
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/consent
    */
-  public getConsents(): Promise<Consent[]> {
+  public getConsents(): Promise<{results: Consent[]}> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${SelfAPI.URL.SELF}/${SelfAPI.URL.CONSENT}`,
