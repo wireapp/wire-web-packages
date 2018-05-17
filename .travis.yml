@@ -36,6 +36,9 @@ before_script:
 script:
   - yarn test
 
+after_script:
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then node packages/core/src/demo/status-bot.js "4ae15efc-d061-4013-98f2-bcd81ab39b60"; fi
+
 notifications:
   email: false
 
@@ -59,4 +62,3 @@ after_success:
       git remote set-url origin ${SSH_REPO}
       yarn release;
     fi
-  - 'if [ "$TRAVIS_BRANCH" == "master" ]; then node packages/core/src/demo/status-bot.js "4ae15efc-d061-4013-98f2-bcd81ab39b60"; fi'
