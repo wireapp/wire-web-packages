@@ -11,7 +11,6 @@ env:
     # WIRE_STATUS_BOT_PASSWORD
     - secure: "5zzJ1eRrrWdl6LFFPgCYdYtejZ3+qb/e9MCQev6mo4U0mMQBGZaFAkMcYQ4yRja71vQ3sQrWRegIkjFyX02TcKQzGEjCav/2QDlWxE5Vjzez9pP/0K+MpS78eaqEOUOZ5rOML4xeS0HShUqzYWF/umFPeQuu8NJrAmU3K2cTejgKagecN7Mzv6k5sAFLvV6iuSmXSlQnVQJtH3I+KDiOr6qWF8dP9ZohKONXb3VL8mvJfDmOiWSNQQVSKynkM+tBnqEXHsYRSxp/A8yRDdv+IcT3eT+im8ZqLa9q/xlF61O7OkG00Gx3Ev7A01wLKyk++qOI9FwI60MM7YCoumCzjuQbUAd86eT5vCS/PdLbRoGou8eTz5lknxOxYCP57sxZ+uIlqStmNuNghuGm5SJOUGSvok7Gs8LprZSO76wsLC+1CH1QptuePN5qqrUS5pRWccLo1L0KJFndOsw3PnWaGydFdB0drJotHynfzLynrZ89HQMH2U1yPz6dhrJRWmrW+YyBELG1EFXL3hOz1FisbAmmSNvRofr7AtBpMiFEgyTLQs/lCAWoM2/9SGPK5YMvJ8/CTRwlwnE6AmGB3ExZoBkX3rrfKmFJdCyP2/sN0485M6EBSuHg/0lAnmzAlUL749Eylx9JeJ2lNlCe1APXBiXCkeWkQSpNW4Ky/sa9xjE="
 
-
 language: node_js
 
 node_js:
@@ -35,7 +34,6 @@ before_script:
 
 script:
   - yarn test
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then node packages/core/src/demo/status-bot.js "4ae15efc-d061-4013-98f2-bcd81ab39b60"; fi
 
 notifications:
   email: false
@@ -59,4 +57,5 @@ after_success:
       echo "${SSH_REPO}"
       git remote set-url origin ${SSH_REPO}
       yarn release;
+      node packages/core/src/demo/status-bot.js "4ae15efc-d061-4013-98f2-bcd81ab39b60";
     fi
