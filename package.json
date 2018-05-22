@@ -30,8 +30,8 @@
   "private": true,
   "scripts": {
     "boot": "lerna bootstrap --reject-cycles",
-    "clear": "lerna run clear",
-    "dist": "yarn clear && lerna run dist",
+    "clean": "lerna run clean",
+    "dist": "yarn clean && lerna run dist",
     "fix": "yarn fix:other && yarn fix:js && yarn fix:ts",
     "fix:js": "yarn lint:js --fix",
     "fix:other": "yarn prettier --write",
