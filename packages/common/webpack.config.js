@@ -28,14 +28,7 @@ module.exports = {
     [`${projectName}.test`]: `${__dirname}/src/main/index.test.browser.js`,
     [projectName]: `${__dirname}/${pkg.main}`,
   },
-  externals: {
-    dexie: 'Dexie',
-    'fs-extra': '{}',
-  },
   mode: 'production',
-  node: {
-    path: 'empty',
-  },
   output: {
     filename: '[name].bundle.js',
     library: 'common',
