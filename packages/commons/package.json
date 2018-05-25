@@ -25,7 +25,7 @@
   "license": "GPL-3.0",
   "main": "./dist/commonjs/index.js",
   "name": "@wireapp/commons",
-  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/common",
+  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/commons",
   "scripts": {
     "build": "yarn build:node && yarn build:browser",
     "build:browser": "webpack --progress",
