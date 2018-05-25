@@ -6,6 +6,6 @@ You can find the published source code at [github.com/wireapp](https://github.co
 
 For licensing information, see the attached LICENSE file and the list of third-party licenses at [wire.com/legal/licenses/](https://wire.com/legal/licenses/).
 
-## Common
+## Commons
 
 Collection of common components that are used across Wire web applications.

@@ -17,7 +17,7 @@
  *
  */
 
-import {UrlUtil} from '@wireapp/common';
+import {UrlUtil} from '@wireapp/commons';
 
 describe('UrlUtil', () => {
   describe('"pathWithParams"', () => {
@@ -28,6 +28,7 @@ describe('UrlUtil', () => {
       expect(actual).toEqual(expected);
       done();
     });
+
     it('constructs path with queries from plain path', done => {
       const urlBase = 'https://wire.com/';
       const expected = `${urlBase}?q=1`;
@@ -35,6 +36,7 @@ describe('UrlUtil', () => {
       expect(actual).toEqual(expected);
       done();
     });
+
     it('constructs path with queries from a path with queries', done => {
       const urlBase = 'https://wire.com/?q=1';
       const expected = `${urlBase}?b=2`;
@@ -43,6 +45,7 @@ describe('UrlUtil', () => {
       done();
     });
   });
+
   describe('"getURLParameter"', () => {
     it('returns empty string if parameter does not exist', done => {
       const expected = '';
@@ -51,6 +54,7 @@ describe('UrlUtil', () => {
       done();
     });
   });
+
   describe('"hasURLParameter"', () => {
     it('returns false if parameter does not exist', done => {
       const expected = false;

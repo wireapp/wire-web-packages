@@ -17,7 +17,7 @@
  *
  */
 
-const {RandomUtil} = require('@wireapp/common');
+const {RandomUtil} = require('@wireapp/commons');
 
 describe('RandomUtil', () => {
   describe('"randomInt"', () => {
@@ -32,6 +32,7 @@ describe('RandomUtil', () => {
       done();
     });
   });
+
   describe('"randomArrayElement"', () => {
     it('returns undefined on empty array', done => {
       const actual = RandomUtil.randomArrayElement([]);

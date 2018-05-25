@@ -17,7 +17,7 @@
  *
  */
 
-const {StringUtil} = require('@wireapp/common');
+const {StringUtil} = require('@wireapp/commons');
 
 describe('StringUtil', () => {
   describe('"capitalize"', () => {
@@ -28,6 +28,7 @@ describe('StringUtil', () => {
       expect(actual).toEqual(expected);
       done();
     });
+
     it('capitalizes first letter', done => {
       const test = 'abcd';
       const expected = 'Abcd';

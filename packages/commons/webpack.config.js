@@ -17,11 +17,23 @@
  *
  */
 
-export function randomArrayElement(array: any[]) {
-  return array[randomInt(array.length - 1)];
-}
+const pkg = require('./package.json');
+const webpack = require('webpack');
 
-// returns number: 0 <= number <= max
-export function randomInt(max: number) {
-  return Math.floor(Math.random() * (max + 1));
-}
+const projectName = pkg.name.replace('@wireapp/', '');
+
+module.exports = {
+  devtool: 'source-map',
+  entry: {
+    [`${projectName}.test`]: `${__dirname}/src/main/index.test.browser.js`,
+    [projectName]: `${__dirname}/${pkg.main}`,
+  },
+  mode: 'production',
+  output: {
+    filename: '[name].bundle.js',
+    library: 'commons',
+    path: `${__dirname}/dist`,
+    publicPath: '/',
+  },
+  plugins: [new webpack.BannerPlugin(`${pkg.name} v${pkg.version}`)],
+};
