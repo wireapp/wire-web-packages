@@ -22,4 +22,4 @@ import * as RandomUtil from './util/RandomUtil';
 import * as StringUtil from './util/StringUtil';
 import * as UrlUtil from './util/UrlUtil';
 
-export = {RandomUtil, StringUtil, UrlUtil, CommonConfig};
+export {RandomUtil, StringUtil, UrlUtil, CommonConfig};
