@@ -219,4 +219,25 @@ export default class ConversationService {
       throw error;
     });
   }
+
+  async updateTextMessage(conversationId: string, originalMessageId: string, newMessage: string) {
+    const messageId = new UUID(4).format();
+
+    const editedMessage = this.protocolBuffers.MessageEdit.create({
+      replacingMessageId: originalMessageId,
+      text: this.protocolBuffers.Text.create({content: newMessage}),
+    });
+
+    const genericMessage = this.protocolBuffers.GenericMessage.create({
+      edited: editedMessage,
+      messageId,
+    });
+
+    const preKeyBundles = await this.getPreKeyBundles(conversationId);
+    const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(genericMessage).finish();
+    const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
+
+    await this.sendExternalGenericMessage(this.clientID, conversationId, payload, <UserPreKeyBundleMap>preKeyBundles);
+    return messageId;
+  }
 }
