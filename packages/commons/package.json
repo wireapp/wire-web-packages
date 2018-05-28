@@ -1,10 +1,8 @@
 {
   "dependencies": {
-    "@types/node": "10.1.2",
-    "pure-uuid": "1.5.2"
+    "@types/node": "10.1.2"
   },
   "devDependencies": {
-    "cross-env": "5.1.6",
     "jasmine": "3.1.0",
     "karma": "2.0.2",
     "karma-chrome-launcher": "2.2.0",
@@ -16,14 +14,18 @@
     "webpack": "4.9.1",
     "webpack-cli": "2.1.3"
   },
-  "description": "A Promise-based dynamic priority queue runner.",
+  "description": "Collection of common components that are used across Wire web applications.",
   "files": [
     "dist"
   ],
+  "keywords": [
+    "commons",
+    "utils"
+  ],
   "license": "GPL-3.0",
-  "main": "./dist/index.js",
-  "name": "@wireapp/priority-queue",
-  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/priority-queue",
+  "main": "./dist/commonjs/index.js",
+  "name": "@wireapp/commons",
+  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/commons",
   "scripts": {
     "build": "yarn build:node && yarn build:browser",
     "build:browser": "webpack --progress",
@@ -31,10 +33,10 @@
     "clean": "rimraf dist",
     "dist": "yarn clean && yarn build",
     "test": "yarn test:node && yarn test:browser",
-    "test:browser": "webpack && karma start",
+    "test:browser": "webpack --progress && karma start",
     "test:project": "yarn dist && yarn test",
-    "test:node": "cross-env JASMINE_CONFIG_PATH=src/test/node/support/jasmine.json jasmine"
+    "test:node": "jasmine --config=jasmine.json"
   },
-  "types": "./dist/index.d.ts",
-  "version": "0.1.31"
+  "types": "./dist/commonjs/index.d.ts",
+  "version": "0.0.1"
 }
