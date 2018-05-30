@@ -39,10 +39,6 @@ class Type {
   static readonly TEXT = 19;
   static readonly UNDEFINED = 20;
 
-  private constructor() {
-    throw new Error(`Can't create instance of singleton`);
-  }
-
   static major(type: Type): number {
     switch (type) {
       case Type.ARRAY:
