@@ -28,7 +28,7 @@
     "coverage:browser": "exit 0",
     "coverage:node": "cross-env JASMINE_CONFIG_PATH=jasmine.json istanbul cover --report html --dir ./coverage/node ../../node_modules/jasmine/bin/jasmine.js",
     "dist": "yarn clean && yarn build",
-    "test": "yarn test:coverage yarn test:browser",
+    "test": "yarn test:node && yarn test:browser && yarn test:coverage",
     "test:coverage": "yarn coverage && istanbul check-coverage --branches 100 --functions 100 --lines 100 --statements 100",
     "test:project": "yarn dist && yarn test",
     "test:browser": "exit 0",
