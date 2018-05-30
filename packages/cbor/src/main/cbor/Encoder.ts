@@ -17,8 +17,6 @@
  *
  */
 
-/* eslint no-magic-numbers: "off" */
-
 import Type from './Type';
 
 class Encoder {

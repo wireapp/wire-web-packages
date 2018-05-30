@@ -17,8 +17,6 @@
  *
  */
 
-/* eslint no-magic-numbers: "off" */
-
 import DecodeError from './DecodeError';
 import Type from './Type';
 

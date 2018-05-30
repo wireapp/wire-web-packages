@@ -26,13 +26,13 @@
     "clean:coverage": "rimraf coverage",
     "coverage": "yarn clean:coverage && yarn coverage:node && yarn coverage:browser",
     "coverage:browser": "exit 0",
-    "coverage:node": "cross-env JASMINE_CONFIG_PATH=spec/support/jasmine.json istanbul cover --report html --dir ./coverage/node ../../node_modules/jasmine/bin/jasmine.js",
+    "coverage:node": "cross-env JASMINE_CONFIG_PATH=jasmine.json istanbul cover --report html --dir ./coverage/node ../../node_modules/jasmine/bin/jasmine.js",
     "dist": "yarn clean && yarn build",
     "test": "yarn test:node && yarn test:browser && yarn test:coverage",
     "test:coverage": "yarn coverage && istanbul check-coverage --branches 100 --functions 100 --lines 100 --statements 100",
     "test:project": "yarn dist && yarn test",
     "test:browser": "exit 0",
-    "test:node": "jasmine"
+    "test:node": "jasmine JASMINE_CONFIG_PATH=jasmine.json"
   },
   "types": "dist/index.d.ts",
   "version": "3.0.36"

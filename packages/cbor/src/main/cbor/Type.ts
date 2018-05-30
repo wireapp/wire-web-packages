@@ -17,8 +17,6 @@
  *
  */
 
-/* eslint no-magic-numbers: "off" */
-
 class Type {
   static readonly ARRAY = 1;
   static readonly BOOL = 2;
