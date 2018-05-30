@@ -1,6 +1,8 @@
 {
   "description": "Least Recently Used (LRU) Cache for JavaScript and TypeScript.",
   "devDependencies": {
+    "cross-env": "5.1.4",
+    "istanbul": "1.1.0-alpha.1",
     "jasmine": "3.1.0",
     "rimraf": "2.6.2",
     "typescript": "2.8.3",
@@ -19,8 +21,13 @@
     "build:browser": "webpack --progress",
     "build:node": "tsc",
     "clean": "rimraf dist",
+    "clear:coverage": "rimraf coverage",
+    "coverage": "yarn clear:coverage && yarn coverage:node && yarn coverage:browser",
+    "coverage:browser": "exit 0",
+    "coverage:node": "cross-env JASMINE_CONFIG_PATH=jasmine.json istanbul cover --report html --dir ./coverage/node ../../node_modules/jasmine/bin/jasmine.js",
     "dist": "yarn clean && yarn build",
-    "test": "yarn test:node && yarn test:browser",
+    "test": "yarn test:node && yarn test:browser && yarn test:coverage",
+    "test:coverage": "yarn coverage && istanbul check-coverage --branches 65 --functions 90 --lines 80 --statements 80",
     "test:project": "yarn dist && yarn test",
     "test:browser": "exit 0",
     "test:node": "jasmine JASMINE_CONFIG_PATH=jasmine.json"
