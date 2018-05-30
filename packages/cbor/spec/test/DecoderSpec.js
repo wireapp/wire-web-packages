@@ -98,6 +98,11 @@ describe('CBOR.Decoder', () => {
     expect(-23764523654).toBe(decoder('3b000000058879da85').int());
   });
 
+  it('decodes unsigned integers', () => {
+    expect(1000000000000).toBe(decoder('1b000000e8d4a51000').unsigned());
+    expect(18446744073709551615).toBe(decoder('1bffffffffffffffff').unsigned());
+  });
+
   it('decodes floats', () => {
     expect(0.0).toBe(decoder('f90000').f16());
     expect(-0.0).toBe(decoder('f98000').f16());
