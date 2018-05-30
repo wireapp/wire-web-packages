@@ -105,6 +105,10 @@ describe('CBOR.Encoder', () => {
     expect(encoded('f6', encoder => encoder.null())).toBe(true);
   });
 
+  it('handles undefined values', () => {
+    expect(encoded('f7', encoder => encoder.undefined())).toBe(true);
+  });
+
   it('encodes arrays', () => {
     expect(
       encoded('83010203', encoder => {

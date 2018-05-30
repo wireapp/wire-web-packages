@@ -217,4 +217,9 @@ describe('CBOR.Decoder', () => {
       expect(3).toBe(decoded.u32());
     });
   });
+
+  it('decodes undefined values', () => {
+    const decoded = decoder('f7');
+    expect(undefined).toBe(decoded.optional(() => decoded.u8()));
+  });
 });
