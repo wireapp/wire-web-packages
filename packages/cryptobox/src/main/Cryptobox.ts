@@ -222,7 +222,7 @@ class Cryptobox extends EventEmitter {
 
   /**
    * Creates (and persists) a new session which can be used for cryptographic operations (encryption & decryption) from a remote PreKey bundle.
-   * This function is automatically called on every execution of "encrypt" and "decrypt" so you might not need to call it yourself. However, is has been marked as "public" because there are some cases where you just need the session without executing an encryption or decryption. This is the case when you for example just want to show the fingerprint of the remote party.
+   * This function is automatically called on every execution of "encrypt" and "decrypt" so you might not need to call it yourself. However, it has been marked as "public" because there are some cases where you just need the session without executing an encryption or decryption. This is the case when you for example just want to show the fingerprint of the remote party.
    */
   public session_from_prekey(session_id: string, pre_key_bundle: ArrayBuffer): Promise<CryptoboxSession> {
     return this.session_load(session_id).catch(sessionLoadError => {
