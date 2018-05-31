@@ -89,7 +89,7 @@ class WebSocketClient extends EventEmitter {
 
   public disconnect(reason: string = 'Unknown reason'): void {
     if (this.socket) {
-      //TODO 'any' can be removed once this issue is resolved:
+      // TODO: 'any' can be removed once this issue is resolved:
       // https://github.com/pladaria/reconnecting-websocket/issues/44
       const socket: any = this.socket;
       socket.close(WebSocketClient.CLOSE_EVENT_CODE.NORMAL_CLOSURE, reason, {
