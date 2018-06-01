@@ -39,24 +39,80 @@ describe('CBOR.Encoder', () => {
   const encoded = (expected, closure) => {
     const encoder = new CBOR.Encoder();
     closure(encoder);
+    console.log('hah', to_hex(new Uint8Array(encoder.get_buffer())));
     return to_hex(new Uint8Array(encoder.get_buffer())) === expected;
   };
 
-  it('encodes unsigned integers', () => {
-    expect(encoded('00', encoder => encoder.u8(0))).toBe(true);
-    expect(encoded('00', encoder => encoder.u8(0))).toBe(true);
-    expect(encoded('01', encoder => encoder.u8(1))).toBe(true);
-    expect(encoded('0a', encoder => encoder.u8(10))).toBe(true);
-    expect(encoded('17', encoder => encoder.u8(23))).toBe(true);
-    expect(encoded('1818', encoder => encoder.u8(24))).toBe(true);
-    expect(encoded('1819', encoder => encoder.u8(25))).toBe(true);
-    expect(encoded('1864', encoder => encoder.u8(100))).toBe(true);
-    expect(encoded('1903e8', encoder => encoder.u16(1000))).toBe(true);
-    expect(encoded('1a000f4240', encoder => encoder.u32(1000000))).toBe(true);
-    expect(encoded('1b000000e8d4a51000', encoder => encoder.u64(1000000000000))).toBe(true);
-    expect(encoded('1b001fffffffffffff', encoder => encoder.u64(Number.MAX_SAFE_INTEGER))).toBe(true);
-    expect(() => encoded('1bffffffffffffffff')).toThrow();
-    expect(encoder => encoder.u64(18446744073709551615)).toThrow();
+  describe('"u8"', () => {
+    it('throws an error when out of ASCII range', () => {
+      const encoder = new CBOR.Encoder();
+      expect(() => encoder.u8(256)).toThrowError(RangeError);
+    });
+
+    it('encodes unsigned integers', () => {
+      expect(encoded('00', encoder => encoder.u8(0))).toBe(true);
+      expect(encoded('00', encoder => encoder.u8(0))).toBe(true);
+      expect(encoded('01', encoder => encoder.u8(1))).toBe(true);
+      expect(encoded('0a', encoder => encoder.u8(10))).toBe(true);
+      expect(encoded('17', encoder => encoder.u8(23))).toBe(true);
+      expect(encoded('1818', encoder => encoder.u8(24))).toBe(true);
+      expect(encoded('1819', encoder => encoder.u8(25))).toBe(true);
+      expect(encoded('1864', encoder => encoder.u8(100))).toBe(true);
+    });
+
+    it('throws an error when out of range', () => {
+      const encoder = new CBOR.Encoder();
+      expect(() => encoder.u8(0xff + 1)).toThrowError(RangeError);
+    });
+  });
+
+  describe('"u16"', () => {
+    it('encodes unsigned integers', () => {
+      expect(encoded('17', encoder => encoder.u16(23))).toBe(true);
+      expect(encoded('1818', encoder => encoder.u16(24))).toBe(true);
+      expect(encoded('1861', encoder => encoder.u16(97))).toBe(true);
+      expect(encoded('191337', encoder => encoder.u16(4919))).toBe(true);
+      expect(encoded('192614', encoder => encoder.u16(9748))).toBe(true);
+      expect(encoded('1903e8', encoder => encoder.u16(1000))).toBe(true);
+    });
+
+    it('throws an error when out of range', () => {
+      const encoder = new CBOR.Encoder();
+      expect(() => encoder.u16(0xffff + 1)).toThrowError(RangeError);
+    });
+  });
+
+  describe('"u32"', () => {
+    it('encodes unsigned integers', () => {
+      expect(encoded('17', encoder => encoder.u32(23))).toBe(true);
+      expect(encoded('18ff', encoder => encoder.u32(255))).toBe(true);
+      expect(encoded('191337', encoder => encoder.u32(4919))).toBe(true);
+      expect(encoded('1a000f4240', encoder => encoder.u32(1000000))).toBe(true);
+    });
+
+    it('throws an error when out of range', () => {
+      const encoder = new CBOR.Encoder();
+      expect(() => encoder.u32(0xffffffff + 1)).toThrowError(RangeError);
+    });
+  });
+
+  describe('"u64"', () => {
+    it('encodes unsigned integers', () => {
+      expect(encoded('1b000000e8d4a51000', encoder => encoder.u64(1000000000000))).toBe(true);
+    });
+
+    it('inside the allowed ranges', () => {
+      expect(encoded('17', encoder => encoder.u64(23))).toBe(true);
+      expect(encoded('18ff', encoder => encoder.u64(0xff))).toBe(true);
+      expect(encoded('19ffff', encoder => encoder.u64(0xffff))).toBe(true);
+      expect(encoded('1affffffff', encoder => encoder.u64(0xffffffff))).toBe(true);
+      expect(encoded('1b001fffffffffffff', encoder => encoder.u64(Number.MAX_SAFE_INTEGER))).toBe(true);
+    });
+
+    it('throws an error when out of range', () => {
+      const encoder = new CBOR.Encoder();
+      expect(() => encoder.u64(Number.MAX_SAFE_INTEGER + 1)).toThrowError(RangeError);
+    });
   });
 
   it('encodes signed integers', () => {
