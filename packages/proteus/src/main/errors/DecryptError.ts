@@ -37,6 +37,8 @@ class DecryptError extends ProteusError {
     CASE_211: 211,
     CASE_212: 212,
     CASE_213: 213, // REMOTE_ENCRYPTION_FAILURE: Created by the receiver when getting a decryption failure symbol (💣)
+    CASE_214: 214, // LOCAL_DECRYPTION_FAILURE: This error occurs when destroying the session with our QA team's
+    // debug/test code
   };
 
   constructor(message = 'Unknown decryption error', code = 2) {
