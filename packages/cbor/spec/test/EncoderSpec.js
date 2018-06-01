@@ -90,7 +90,7 @@ describe('CBOR.Encoder', () => {
       expect(encoded('1a000f4240', encoder => encoder.u32(1000000))).toBe(true);
     });
 
-    it('throws an error when out of range', () => {
+    it('throws an error when number is out of range', () => {
       const encoder = new CBOR.Encoder();
       expect(() => encoder.u32(0xffffffff + 1)).toThrowError(RangeError);
     });
@@ -101,7 +101,7 @@ describe('CBOR.Encoder', () => {
       expect(encoded('1b000000e8d4a51000', encoder => encoder.u64(1000000000000))).toBe(true);
     });
 
-    it('inside the allowed ranges', () => {
+    it('encodes inside the allowed ranges', () => {
       expect(encoded('17', encoder => encoder.u64(23))).toBe(true);
       expect(encoded('18ff', encoder => encoder.u64(0xff))).toBe(true);
       expect(encoded('19ffff', encoder => encoder.u64(0xffff))).toBe(true);
@@ -109,7 +109,7 @@ describe('CBOR.Encoder', () => {
       expect(encoded('1b001fffffffffffff', encoder => encoder.u64(Number.MAX_SAFE_INTEGER))).toBe(true);
     });
 
-    it('throws an error when out of range', () => {
+    it('throws an error when number is out of range', () => {
       const encoder = new CBOR.Encoder();
       expect(() => encoder.u64(Number.MAX_SAFE_INTEGER + 1)).toThrowError(RangeError);
     });
