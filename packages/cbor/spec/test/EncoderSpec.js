@@ -58,7 +58,7 @@ describe('CBOR.Encoder', () => {
       expect(encoded('1864', encoder => encoder.u8(100))).toBe(true);
     });
 
-    it('encodes inside the allowed ranges', () => {
+    it('encodes inside the boundaries', () => {
       expect(encoded('17', encoder => encoder.u64(23))).toBe(true);
       expect(encoded('18ff', encoder => encoder.u64(0xff))).toBe(true);
     });
@@ -78,10 +78,10 @@ describe('CBOR.Encoder', () => {
       expect(encoded('1903e8', encoder => encoder.u16(1000))).toBe(true);
     });
 
-    it('encodes inside the allowed ranges', () => {
-      expect(encoded('17', encoder => encoder.u64(23))).toBe(true);
-      expect(encoded('18ff', encoder => encoder.u64(0xff))).toBe(true);
-      expect(encoded('19ffff', encoder => encoder.u64(0xffff))).toBe(true);
+    it('encodes inside the boundaries', () => {
+      expect(encoded('17', encoder => encoder.u16(23))).toBe(true);
+      expect(encoded('18ff', encoder => encoder.u16(0xff))).toBe(true);
+      expect(encoded('19ffff', encoder => encoder.u16(0xffff))).toBe(true);
     });
 
     it('throws an error when number is out of range', () => {
@@ -96,11 +96,11 @@ describe('CBOR.Encoder', () => {
       expect(encoded('1a000f4240', encoder => encoder.u32(1000000))).toBe(true);
     });
 
-    it('encodes inside the allowed ranges', () => {
-      expect(encoded('17', encoder => encoder.u64(23))).toBe(true);
-      expect(encoded('18ff', encoder => encoder.u64(0xff))).toBe(true);
-      expect(encoded('19ffff', encoder => encoder.u64(0xffff))).toBe(true);
-      expect(encoded('1affffffff', encoder => encoder.u64(0xffffffff))).toBe(true);
+    it('encodes inside the boundaries', () => {
+      expect(encoded('17', encoder => encoder.u32(23))).toBe(true);
+      expect(encoded('18ff', encoder => encoder.u32(0xff))).toBe(true);
+      expect(encoded('19ffff', encoder => encoder.u32(0xffff))).toBe(true);
+      expect(encoded('1affffffff', encoder => encoder.u32(0xffffffff))).toBe(true);
     });
 
     it('throws an error when number is out of range', () => {
@@ -114,7 +114,7 @@ describe('CBOR.Encoder', () => {
       expect(encoded('1b000000e8d4a51000', encoder => encoder.u64(1000000000000))).toBe(true);
     });
 
-    it('encodes inside the allowed ranges', () => {
+    it('encodes inside the boundaries', () => {
       expect(encoded('17', encoder => encoder.u64(23))).toBe(true);
       expect(encoded('18ff', encoder => encoder.u64(0xff))).toBe(true);
       expect(encoded('19ffff', encoder => encoder.u64(0xffff))).toBe(true);
@@ -129,14 +129,21 @@ describe('CBOR.Encoder', () => {
   });
 
   describe('"i8"', () => {
-    it('encodes signed integers', () => {});
-  });
-
-  describe('"i8"', () => {
     it('encodes signed integers', () => {
       expect(encoded('20', encoder => encoder.i8(-1))).toBe(true);
       expect(encoded('29', encoder => encoder.i8(-10))).toBe(true);
       expect(encoded('3863', encoder => encoder.i8(-100))).toBe(true);
+    });
+
+    it('encodes inside the boundaries', () => {
+      expect(encoded('00', encoder => encoder.i8(0))).toBe(true);
+      expect(encoded('17', encoder => encoder.i8(23))).toBe(true);
+      expect(encoded('ff', encoder => encoder.i8(0xff))).toBe(true);
+    });
+
+    it('throws an error when number is out of range', () => {
+      const encoder = new CBOR.Encoder();
+      expect(() => encoder.i8(0xff + 1)).toThrowError(RangeError);
     });
   });
 
