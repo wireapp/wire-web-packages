@@ -347,10 +347,6 @@ class Decoder {
     }
   }
 
-  /*
-   * public API
-   */
-
   public u8(): number {
     const [type, minor] = this._type_info_with_assert([Type.UINT8]);
     return this._read_unsigned(type, minor);

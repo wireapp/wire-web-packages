@@ -126,10 +126,6 @@ class Encoder {
     return this._advance(nbytes);
   }
 
-  /*
-   * public API
-   */
-
   public u8(value: number): Encoder {
     if (0 <= value && value <= 23) {
       this._u8(value);
