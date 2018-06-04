@@ -93,7 +93,7 @@ class ChangelogBot {
     let styledChangelog = changelog
       .replace(headlines, '**$1**')
       .replace(listItems, '– $1')
-      .replace(githubIssueLinks, '$1');
+      .replace(githubIssueLinks, '$1/files?diff=unified');
 
     if (maximumChars && styledChangelog.length > maximumChars) {
       styledChangelog = styledChangelog.substr(0, maximumChars - omittedMessage.length);
