@@ -58,7 +58,6 @@ class ChangelogBot {
 
     const account = new Account(client);
     await account.login(this.loginData);
-    await account.listen();
 
     if (!conversationIds) {
       const allConversations = await client.conversation.api.getAllConversations();
@@ -69,7 +68,7 @@ class ChangelogBot {
     await Promise.all(
       conversationIds.map(async id => {
         if (!account.service) {
-          throw new Error(`Account service is not set. Account not listening?`);
+          throw new Error(`Account service is not set. Not logged in?`);
         }
         if (id) {
           logger.info(`Sending message to conversation ${id} ...`);
@@ -79,15 +78,16 @@ class ChangelogBot {
     );
   }
 
-  static async generateChangelog(repoSlug: string, gitTag: string, maximumChars?: number): Promise<string> {
+  static async generateChangelog(repoSlug: string, previousGitTag: string, maximumChars?: number): Promise<string> {
     const headlines = new RegExp('^#+ (.*)$', 'gm');
     const listItems = new RegExp('^\\* (.*) \\(\\[.*$', 'gm');
     const githubIssueLinks = new RegExp('\\[[^\\]]+\\]\\((https:[^)]+)\\)', 'gm');
     const omittedMessage = '... (content omitted)';
 
     const changelog = await Changelog.generate({
+      exclude: ['chore', 'refactor', 'build'],
       repoUrl: `https://github.com/${repoSlug}`,
-      tag: gitTag,
+      tag: previousGitTag,
     });
 
     let styledChangelog = changelog

@@ -32,27 +32,22 @@ const logger = logdown('@wireapp/changelog-bot/cli', {
 
 const scriptName = require('path').basename(process.argv[1]);
 
-const requiredEnvVars = ['WIRE_CHANGELOG_BOT_EMAIL', 'WIRE_CHANGELOG_BOT_PASSWORD', 'WIRE_CHANGELOG_BOT_PROJECT_DIR'];
+const requiredEnvVars = ['WIRE_CHANGELOG_BOT_EMAIL', 'WIRE_CHANGELOG_BOT_PASSWORD'];
+const travisEnvVars = ['TRAVIS_TAG'];
 
 const setBold = (text: string): string => `\x1b[1m${text}\x1b[0m`;
 
 const usage = (): void => {
   console.info(`${setBold('Usage:')} ${scriptName} <conversation id(s)>\n`);
   console.info(
-    `${setBold(
-      'Example:'
-    )} ${scriptName} "e4302e84-75fd-4dc7-8a16-67018bd94ce7,44be7db8-7b7c-4acf-887d-86fbb9a5508f" "/path/to/git/project"`
+    `${setBold('Example:')} ${scriptName} "e4302e84-75fd-4dc7-8a16-67018bd94ce7,44be7db8-7b7c-4acf-887d-86fbb9a5508f"`
   );
 };
 const envVarUsage = (): void => console.info(setBold('Required environment variables:'), requiredEnvVars.join(', '));
 
 const start = async (): Promise<ChangelogBot> => {
-  const {
-    WIRE_CHANGELOG_BOT_EMAIL,
-    WIRE_CHANGELOG_BOT_PASSWORD,
-    WIRE_CHANGELOG_BOT_CONVERSATION_IDS,
-    WIRE_CHANGELOG_BOT_PROJECT_DIR,
-  } = process.env;
+  const {WIRE_CHANGELOG_BOT_EMAIL, WIRE_CHANGELOG_BOT_PASSWORD, WIRE_CHANGELOG_BOT_CONVERSATION_IDS} = process.env;
+  const {TRAVIS_TAG} = process.env;
 
   const loginData: LoginData = {
     email: WIRE_CHANGELOG_BOT_EMAIL,
@@ -60,19 +55,12 @@ const start = async (): Promise<ChangelogBot> => {
     persist: false,
   };
 
-  const previousCommit = await ChangelogBot.runCommand(
-    `cd "${WIRE_CHANGELOG_BOT_PROJECT_DIR}" && git rev-parse HEAD~1`
-  );
-  console.log('previousCommit', previousCommit);
-
-  const changelog = await ChangelogBot.generateChangelog('wireapp/wire-webapp', previousCommit);
+  const previousGitTag = await ChangelogBot.runCommand(`git describe --abbrev=0 --tags ${TRAVIS_TAG}^`);
+  const changelog = await ChangelogBot.generateChangelog('wireapp/wire-webapp', `${previousGitTag}...${TRAVIS_TAG}`);
 
   const messageData: MessageData = {
     content: changelog,
   };
-
-  console.log('messageData', messageData);
-  process.exit();
 
   if (WIRE_CHANGELOG_BOT_CONVERSATION_IDS) {
     messageData.conversationIds = WIRE_CHANGELOG_BOT_CONVERSATION_IDS.replace(' ', '').split(',');
@@ -89,7 +77,6 @@ const start = async (): Promise<ChangelogBot> => {
 logger.info(setBold(`wire-changelog-bot v${version}`) + '\n');
 
 const SECOND_ARGUMENT = 2;
-const THIRD_ARGUMENT = 3;
 
 switch (process.argv[SECOND_ARGUMENT]) {
   case '-help':
@@ -100,17 +87,22 @@ switch (process.argv[SECOND_ARGUMENT]) {
     envVarUsage();
     process.exit(0);
   }
-  default:
-    {
-      if (process.argv[SECOND_ARGUMENT]) {
-        process.env.WIRE_CHANGELOG_BOT_CONVERSATION_IDS = process.argv[SECOND_ARGUMENT];
-      }
+  default: {
+    if (process.argv[SECOND_ARGUMENT]) {
+      process.env.WIRE_CHANGELOG_BOT_CONVERSATION_IDS = process.argv[SECOND_ARGUMENT];
     }
-
-    if (process.argv[THIRD_ARGUMENT]) {
-      process.env.WIRE_CHANGELOG_BOT_PROJECT_DIR = process.argv[THIRD_ARGUMENT];
-    }
+  }
 }
+
+travisEnvVars.forEach(envVar => {
+  if (!process.env[envVar]) {
+    console.error(
+      `${setBold('Error:')} Travis environment variable "${envVar}" is not set.\n` +
+        'Read more: https://docs.travis-ci.com/user/environment-variables/#Default-Environment-Variables'
+    );
+    process.exit(1);
+  }
+});
 
 requiredEnvVars.forEach(envVar => {
   if (!process.env[envVar]) {
@@ -120,12 +112,9 @@ requiredEnvVars.forEach(envVar => {
   }
 });
 
-(async () => {
-  try {
-    await start();
-    process.exit(0);
-  } catch (error) {
+start()
+  .then(() => process.exit(0))
+  .catch(error => {
     console.error(error);
     process.exit(1);
-  }
-})();
+  });
