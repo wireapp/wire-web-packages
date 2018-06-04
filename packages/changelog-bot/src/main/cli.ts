@@ -33,7 +33,7 @@ const logger = logdown('@wireapp/changelog-bot/cli', {
 const scriptName = require('path').basename(process.argv[1]);
 
 const requiredEnvVars = ['WIRE_CHANGELOG_BOT_BRANCH', 'WIRE_CHANGELOG_BOT_EMAIL', 'WIRE_CHANGELOG_BOT_PASSWORD'];
-const travisEnvVars = ['TRAVIS_BRANCH', 'TRAVIS_COMMIT_RANGE', 'TRAVIS_EVENT_TYPE', 'TRAVIS_TAG'];
+const travisEnvVars = ['TRAVIS_BRANCH', 'TRAVIS_COMMIT_RANGE', 'TRAVIS_EVENT_TYPE', 'TRAVIS_REPO_SLUG', 'TRAVIS_TAG'];
 
 const setBold = (text: string): string => `\x1b[1m${text}\x1b[0m`;
 
@@ -54,7 +54,7 @@ const start = async (): Promise<ChangelogBot> => {
     WIRE_CHANGELOG_BOT_PASSWORD,
     WIRE_CHANGELOG_BOT_CONVERSATION_IDS,
   } = process.env;
-  const {TRAVIS_BRANCH, TRAVIS_COMMIT_RANGE, TRAVIS_EVENT_TYPE, TRAVIS_PULL_REQUEST} = process.env;
+  const {TRAVIS_BRANCH, TRAVIS_COMMIT_RANGE, TRAVIS_EVENT_TYPE, TRAVIS_PULL_REQUEST, TRAVIS_REPO_SLUG} = process.env;
 
   if (TRAVIS_BRANCH !== WIRE_CHANGELOG_BOT_BRANCH || TRAVIS_PULL_REQUEST !== 'false' || TRAVIS_EVENT_TYPE !== 'push') {
     process.exit(0);
@@ -66,7 +66,7 @@ const start = async (): Promise<ChangelogBot> => {
     persist: false,
   };
 
-  const changelog = await ChangelogBot.generateChangelog('wireapp/wire-webapp', String(TRAVIS_COMMIT_RANGE));
+  const changelog = await ChangelogBot.generateChangelog(String(TRAVIS_REPO_SLUG), String(TRAVIS_COMMIT_RANGE));
 
   const messageData: MessageData = {
     content: changelog,

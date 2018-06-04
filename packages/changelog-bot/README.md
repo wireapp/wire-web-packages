@@ -8,7 +8,7 @@ For licensing information, see the attached LICENSE file and the list of third-p
 
 ## Changelog Bot
 
-A bot used by Travis build scripts to post a changelog of the wire-webapp to Wire. If there is a version tag, then the bot also posts a changelog.
+A bot used by Travis build scripts to post a changelog of the current project to Wire.
 
 ### Getting Started
 
@@ -36,14 +36,13 @@ yarn global add @wireapp/changelog-bot
 
 export WIRE_WEBAPP_BOT_EMAIL="<email>"
 export WIRE_WEBAPP_BOT_PASSWORD="<password>"
-export WIRE_WEBAPP_BOT_CONVERSATION_IDS="<conversation id>,<conversation id>"
 
-changelog-bot
+changelog-bot "<conversation id>,<conversation id>" "staging"
 ```
 
 **Node**
 
 ```bash
 yarn dist
-node changelog-bot.js "<conversation id>,<conversation id>"
+node changelog-bot.js "<conversation id>,<conversation id>" "staging"
 ```
