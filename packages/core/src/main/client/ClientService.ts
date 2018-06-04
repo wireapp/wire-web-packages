@@ -21,7 +21,12 @@ const logdown = require('logdown');
 const pkg = require('../../package.json');
 import APIClient = require('@wireapp/api-client');
 import {LoginData, PreKey} from '@wireapp/api-client/dist/commonjs/auth/index';
-import {ClientClassification, NewClient, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/index';
+import {
+  ClientClassification,
+  ClientType,
+  NewClient,
+  RegisteredClient,
+} from '@wireapp/api-client/dist/commonjs/client/index';
 import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/index';
 import {CryptographyService} from '../cryptography/root';
 import ClientBackendRepository from './ClientBackendRepository';
@@ -92,6 +97,9 @@ export default class ClientService {
     this.logger.info('register');
     if (!this.apiClient.context) {
       throw new Error('Context is not set.');
+    }
+    if (loginData.clientType === ClientType.NONE) {
+      throw new Error(`Can't register client of type "${ClientType.NONE}"`);
     }
 
     const serializedPreKeys: Array<PreKey> = await this.cryptographyService.createCryptobox();
