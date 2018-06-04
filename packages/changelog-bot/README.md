@@ -6,9 +6,9 @@ You can find the published source code at [github.com/wireapp](https://github.co
 
 For licensing information, see the attached LICENSE file and the list of third-party licenses at [wire.com/legal/licenses/](https://wire.com/legal/licenses/).
 
-## Travis Bot
+## Changelog Bot
 
-A bot used by Travis build scripts to post Git commit messages to Wire when pull requests get merged. If there is a version tag, then the bot also posts a changelog.
+A bot used by Travis build scripts to post a changelog of the wire-webapp to Wire. If there is a version tag, then the bot also posts a changelog.
 
 ### Getting Started
 
@@ -20,12 +20,12 @@ yarn start
 ### Installation
 
 ```
-yarn global add @wireapp/travis-bot
+yarn global add @wireapp/changelog-bot
 ```
 
 ### Usage
 
-- [wire-travis-bot.js](./bin/wire-travis-bot.js)
+- [cli.js](./src/cli.js)
 
 ### Execution
 
@@ -38,12 +38,12 @@ export WIRE_WEBAPP_BOT_EMAIL="<email>"
 export WIRE_WEBAPP_BOT_PASSWORD="<password>"
 export WIRE_WEBAPP_BOT_CONVERSATION_IDS="<conversation id>,<conversation id>"
 
-wire-travis-bot
+changelog-bot
 ```
 
 **Node**
 
 ```bash
 yarn dist
-bin/wire-travis-bot.js "<conversation id>,<conversation id>"
+node changelog-bot.js "<conversation id>,<conversation id>"
 ```
