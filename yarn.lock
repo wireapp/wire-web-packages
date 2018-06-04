@@ -9216,9 +9216,9 @@ wcwidth@^1.0.0:
   dependencies:
     defaults "^1.0.3"
 
-webpack-cli@3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-3.0.0.tgz#7bf9372f1f096d92132a076623ce41af8943c222"
+webpack-cli@3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-3.0.1.tgz#1d894ed039268aa1a17a9b80f8810c637fd0df63"
   dependencies:
     chalk "^2.4.1"
     cross-spawn "^6.0.5"
