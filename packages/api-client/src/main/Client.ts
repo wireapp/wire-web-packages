@@ -155,12 +155,6 @@ class Client {
     let context: Context;
     let accessToken: AccessTokenData;
     let cookieResponse: AxiosResponse;
-    const clientType =
-      loginData.persist === undefined
-        ? ClientType.NONE
-        : loginData.persist
-          ? ClientType.PERMANENT
-          : ClientType.TEMPORARY;
 
     return Promise.resolve()
       .then(() => this.context && this.logout())
@@ -168,7 +162,7 @@ class Client {
       .then((response: AxiosResponse<any>) => {
         cookieResponse = response;
         accessToken = response.data;
-        context = this.createContext(accessToken.user, clientType, undefined);
+        context = this.createContext(accessToken.user, loginData.clientType, undefined);
       })
       .then(() => this.initEngine(context))
       .then(() => retrieveCookie(cookieResponse, this.config.store))

@@ -79,9 +79,9 @@ describe('Client', () => {
     };
 
     const loginData = {
+      clientType: 'temporary',
       email: 'me@mail.com',
       password: 'top-secret',
-      persist: false,
     };
 
     const userData = [
@@ -134,7 +134,7 @@ describe('Client', () => {
           email: loginData.email,
           password: loginData.password,
         })
-        .query({persist: loginData.persist})
+        .query({persist: loginData.clientType === 'permanent'})
         .reply(200, accessTokenData);
 
       nock(baseURL)
