@@ -32,22 +32,33 @@ const logger = logdown('@wireapp/changelog-bot/cli', {
 
 const scriptName = require('path').basename(process.argv[1]);
 
-const requiredEnvVars = ['WIRE_CHANGELOG_BOT_EMAIL', 'WIRE_CHANGELOG_BOT_PASSWORD'];
-const travisEnvVars = ['TRAVIS_TAG'];
+const requiredEnvVars = ['WIRE_CHANGELOG_BOT_BRANCH', 'WIRE_CHANGELOG_BOT_EMAIL', 'WIRE_CHANGELOG_BOT_PASSWORD'];
+const travisEnvVars = ['TRAVIS_BRANCH', 'TRAVIS_COMMIT_RANGE', 'TRAVIS_EVENT_TYPE', 'TRAVIS_TAG'];
 
 const setBold = (text: string): string => `\x1b[1m${text}\x1b[0m`;
 
 const usage = (): void => {
   console.info(`${setBold('Usage:')} ${scriptName} <conversation id(s)>\n`);
   console.info(
-    `${setBold('Example:')} ${scriptName} "e4302e84-75fd-4dc7-8a16-67018bd94ce7,44be7db8-7b7c-4acf-887d-86fbb9a5508f"`
+    `${setBold(
+      'Example:'
+    )} ${scriptName} "e4302e84-75fd-4dc7-8a16-67018bd94ce7,44be7db8-7b7c-4acf-887d-86fbb9a5508f" "staging"`
   );
 };
 const envVarUsage = (): void => console.info(setBold('Required environment variables:'), requiredEnvVars.join(', '));
 
 const start = async (): Promise<ChangelogBot> => {
-  const {WIRE_CHANGELOG_BOT_EMAIL, WIRE_CHANGELOG_BOT_PASSWORD, WIRE_CHANGELOG_BOT_CONVERSATION_IDS} = process.env;
-  const {TRAVIS_TAG} = process.env;
+  const {
+    WIRE_CHANGELOG_BOT_BRANCH,
+    WIRE_CHANGELOG_BOT_EMAIL,
+    WIRE_CHANGELOG_BOT_PASSWORD,
+    WIRE_CHANGELOG_BOT_CONVERSATION_IDS,
+  } = process.env;
+  const {TRAVIS_BRANCH, TRAVIS_COMMIT_RANGE, TRAVIS_EVENT_TYPE, TRAVIS_PULL_REQUEST} = process.env;
+
+  if (TRAVIS_BRANCH !== WIRE_CHANGELOG_BOT_BRANCH || TRAVIS_PULL_REQUEST !== 'false' || TRAVIS_EVENT_TYPE !== 'push') {
+    process.exit(0);
+  }
 
   const loginData: LoginData = {
     email: WIRE_CHANGELOG_BOT_EMAIL,
@@ -55,8 +66,7 @@ const start = async (): Promise<ChangelogBot> => {
     persist: false,
   };
 
-  const previousGitTag = await ChangelogBot.runCommand(`git describe --abbrev=0 --tags ${TRAVIS_TAG}^`);
-  const changelog = await ChangelogBot.generateChangelog('wireapp/wire-webapp', `${previousGitTag}...${TRAVIS_TAG}`);
+  const changelog = await ChangelogBot.generateChangelog('wireapp/wire-webapp', String(TRAVIS_COMMIT_RANGE));
 
   const messageData: MessageData = {
     content: changelog,
@@ -77,6 +87,7 @@ const start = async (): Promise<ChangelogBot> => {
 logger.info(setBold(`wire-changelog-bot v${version}`) + '\n');
 
 const SECOND_ARGUMENT = 2;
+const THIRD_ARGUMENT = 3;
 
 switch (process.argv[SECOND_ARGUMENT]) {
   case '-help':
@@ -90,6 +101,9 @@ switch (process.argv[SECOND_ARGUMENT]) {
   default: {
     if (process.argv[SECOND_ARGUMENT]) {
       process.env.WIRE_CHANGELOG_BOT_CONVERSATION_IDS = process.argv[SECOND_ARGUMENT];
+    }
+    if (process.argv[THIRD_ARGUMENT]) {
+      process.env.WIRE_CHANGELOG_BOT_BRANCH = process.argv[THIRD_ARGUMENT];
     }
   }
 }
