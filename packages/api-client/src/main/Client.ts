@@ -143,7 +143,7 @@ class Client {
     return this.transport.http
       .postAccess()
       .then((createdAccessToken: AccessTokenData) => {
-        context = this.createContext(createdAccessToken.user, clientType, undefined);
+        context = this.createContext(createdAccessToken.user, clientType);
         accessToken = createdAccessToken;
       })
       .then(() => this.initEngine(context))
@@ -162,7 +162,7 @@ class Client {
       .then((response: AxiosResponse<any>) => {
         cookieResponse = response;
         accessToken = response.data;
-        context = this.createContext(accessToken.user, loginData.clientType, undefined);
+        context = this.createContext(accessToken.user, loginData.clientType);
       })
       .then(() => this.initEngine(context))
       .then(() => retrieveCookie(cookieResponse, this.config.store))
@@ -180,7 +180,7 @@ class Client {
          * It's necessary to initialize the context (Client.createContext()) and the store (Client.initEngine())
          * for saving the retrieved cookie from POST /access (Client.init()) in a Node environment.
          */
-        .then((user: User) => this.createContext(user.id, clientType, undefined))
+        .then((user: User) => this.createContext(user.id, clientType))
         .then((context: Context) => this.initEngine(context))
         .then(() => this.init(clientType))
     );
