@@ -44,20 +44,17 @@ export default class ConversationService {
   ) {}
 
   public async deleteMessage(conversationId: string, messageIdToHide: string): Promise<string> {
-    const MessageHide = this.protocolBuffers.MessageHide.create({
+    const messageId = new UUID(4).format();
+
+    const messageHide = this.protocolBuffers.MessageHide.create({
       conversationId,
       messageId: messageIdToHide,
     });
 
-    const messageId = new UUID(4).format();
-    const confirmation = this.protocolBuffers.Confirmation.create({
-      MessageHide,
-      type: GenericMessageType.HIDDEN,
-    });
-
     const genericMessage = this.protocolBuffers.GenericMessage.create({
-      confirmation,
+      messageHide,
       messageId,
+      type: GenericMessageType.HIDDEN,
     });
 
     await this.sendGenericMessage(this.clientID, conversationId, genericMessage);
@@ -65,20 +62,18 @@ export default class ConversationService {
   }
 
   public async deleteMessageEveryone(conversationId: string, messageIdToDelete: string): Promise<string> {
-    const MessageDelete = this.protocolBuffers.MessageDelete.create({
+    const messageId = new UUID(4).format();
+
+    const messageDelete = this.protocolBuffers.MessageDelete.create({
       conversationId,
       messageId: messageIdToDelete,
-    });
-
-    const messageId = new UUID(4).format();
-    const confirmation = this.protocolBuffers.Confirmation.create({
-      MessageDelete,
       type: GenericMessageType.DELETED,
     });
 
     const genericMessage = this.protocolBuffers.GenericMessage.create({
-      confirmation,
+      messageDelete,
       messageId,
+      type: GenericMessageType.DELETED,
     });
 
     await this.sendGenericMessage(this.clientID, conversationId, genericMessage);
