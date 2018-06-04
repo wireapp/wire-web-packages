@@ -37,12 +37,12 @@ yarn global add @wireapp/changelog-bot
 export WIRE_WEBAPP_BOT_EMAIL="<email>"
 export WIRE_WEBAPP_BOT_PASSWORD="<password>"
 
-wire-changelog-bot "<conversation id>,<conversation id>" "staging"
+wire-changelog-bot "<conversation id>,<conversation id>"
 ```
 
 **Node**
 
 ```bash
 yarn dist
-node dist/cli.js "<conversation id>,<conversation id>" "staging"
+node dist/cli.js "<conversation id>,<conversation id>"
 ```
