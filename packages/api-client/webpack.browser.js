@@ -32,11 +32,11 @@ module.exports = {
     dexie: 'Dexie',
     'fs-extra': '{}',
   },
+  mode: 'production',
   output: {
     filename: `[name].bundle.js`,
     library: `${camelCasedRepositoryName}`,
     path: `${__dirname}/dist`,
   },
   plugins: [new webpack.BannerPlugin(`${pkg.name} v${pkg.version}`)],
-  target: 'web',
 };

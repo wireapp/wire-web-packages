@@ -22,3 +22,5 @@ export * from './Delete';
 export * from './SearchableStatus';
 export * from './Self';
 export * from './SelfAPI';
+export * from './Consent';
+export * from './ConsentType';

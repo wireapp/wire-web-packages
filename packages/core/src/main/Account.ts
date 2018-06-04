@@ -69,7 +69,7 @@ class Account extends EventEmitter {
     this.apiClient = apiClient;
   }
 
-  private async init(): Promise<void> {
+  public async init(): Promise<void> {
     this.logger.info('init');
 
     const root: Root = Root.fromJSON(proto);
@@ -81,6 +81,7 @@ class Account extends EventEmitter {
       GenericMessage: root.lookup('GenericMessage'),
       Knock: root.lookup('Knock'),
       MessageDelete: root.lookup('MessageDelete'),
+      MessageEdit: root.lookup('MessageEdit'),
       MessageHide: root.lookup('MessageHide'),
       Text: root.lookup('Text'),
     };
@@ -123,7 +124,7 @@ class Account extends EventEmitter {
       });
   }
 
-  private initClient(
+  public initClient(
     loginData: LoginData,
     clientInfo?: ClientInfo
   ): Promise<{isNewClient: boolean; localClient: RegisteredClient}> {

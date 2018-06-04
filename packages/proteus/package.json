@@ -2,8 +2,8 @@
   "dependencies": {
     "@types/chai": "4.1.3",
     "@types/ed2curve": "0.2.2",
-    "@types/node": "10.0.8",
-    "@wireapp/cbor": "3.0.26",
+    "@types/node": "10.3.0",
+    "@wireapp/cbor": "3.0.38",
     "ed2curve": "0.2.1",
     "libsodium-wrappers-sumo": "0.7.3"
   },
@@ -13,8 +13,9 @@
     "chai": "4.1.2",
     "jasmine": "3.1.0",
     "rimraf": "2.6.2",
-    "typescript": "2.8.3",
-    "webpack": "3.11.0"
+    "typescript": "2.9.1",
+    "webpack": "4.10.2",
+    "webpack-cli": "3.0.1"
   },
   "files": [
     "dist"
@@ -26,13 +27,13 @@
   "scripts": {
     "build:browser": "bower install && webpack --progress",
     "build:node": "tsc",
-    "clear": "rimraf dist",
-    "dist": "yarn clear && yarn build:node && yarn build:browser",
+    "clean": "rimraf dist",
+    "dist": "yarn clean && yarn build:node && yarn build:browser",
     "start": "node dist/index.js",
     "test": "yarn test:node",
     "test:project": "yarn dist && yarn test",
     "test:node": "jasmine"
   },
   "types": "dist/index.d.ts",
-  "version": "7.1.36"
+  "version": "7.1.50"
 }

@@ -1,9 +1,9 @@
 {
   "dependencies": {
     "@types/filesystem": "0.0.28",
-    "@types/node": "10.0.8",
+    "@types/node": "10.3.0",
     "bro-fs": "0.4.0",
-    "dexie": "2.0.3",
+    "dexie": "2.0.4",
     "fs-extra": "6.0.1"
   },
   "devDependencies": {
@@ -14,8 +14,9 @@
     "karma-jasmine-diff-reporter": "1.2.0",
     "karma-sourcemap-loader": "0.3.7",
     "rimraf": "2.6.2",
-    "typescript": "2.8.3",
-    "webpack": "3.11.0"
+    "typescript": "2.9.1",
+    "webpack": "4.10.2",
+    "webpack-cli": "3.0.1"
   },
   "description": "Provides a generic storage layer for File, FileSystem, IndexedDB, Memory & LocalStorage.",
   "files": [
@@ -42,13 +43,13 @@
     "build": "yarn build:node && yarn build:browser",
     "build:browser": "webpack --progress",
     "build:node": "tsc",
-    "clear": "rimraf dist",
-    "dist": "yarn clear && yarn build",
+    "clean": "rimraf dist",
+    "dist": "yarn clean && yarn build",
     "test": "yarn test:node && yarn test:browser",
-    "test:project": "yarn dist && yarn test",
     "test:browser": "webpack --progress && karma start",
+    "test:project": "yarn dist && yarn test",
     "test:node": "jasmine --config=jasmine.json"
   },
   "types": "./dist/commonjs/index.d.ts",
-  "version": "0.11.9"
+  "version": "0.11.21"
 }

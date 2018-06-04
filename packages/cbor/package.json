@@ -1,13 +1,15 @@
 {
   "description": "Implementation of Concise Binary Object Representation (CBOR) data format (RFC7049).",
   "devDependencies": {
-    "@types/node": "10.0.8",
+    "@types/node": "10.3.0",
     "coveralls": "3.0.1",
-    "cross-env": "5.1.5",
+    "cross-env": "5.1.6",
     "istanbul": "1.1.0-alpha.1",
     "jasmine": "3.1.0",
     "rimraf": "2.6.2",
-    "webpack": "3.11.0"
+    "tsd-jsdoc": "dcodeio/tsd-jsdoc#fe76c4dc071b00bb549d3af7a3bad8c555999e81",
+    "webpack": "4.10.2",
+    "webpack-cli": "3.0.1"
   },
   "files": [
     "dist"
@@ -20,15 +22,15 @@
     "build:browser": "webpack --progress",
     "build:node": "tsc",
     "build": "yarn build:node && yarn build:browser",
-    "clear": "rimraf dist",
+    "clean": "rimraf dist",
     "coverage:html": "istanbul cover --report html jasmine",
     "coverage:lcov": "istanbul cover --report lcov jasmine",
-    "dist": "yarn clear && yarn build",
+    "dist": "yarn clean && yarn build",
     "test": "yarn test:node && yarn test:browser",
     "test:project": "yarn dist && yarn test",
     "test:browser": "exit 0",
     "test:node": "jasmine"
   },
   "types": "dist/index.d.ts",
-  "version": "3.0.26"
+  "version": "3.0.38"
 }

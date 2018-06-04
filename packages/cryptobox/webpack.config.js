@@ -38,6 +38,7 @@ module.exports = {
     'fs-extra': '{}',
     'libsodium-wrappers-sumo': 'sodium',
   },
+  mode: 'production',
   node: {
     fs: 'empty',
     path: 'empty',
@@ -48,5 +49,4 @@ module.exports = {
     path: `${__dirname}/dist`,
   },
   plugins: [new webpack.BannerPlugin(`${pkg.name} v${pkg.version}`)],
-  target: 'web',
 };

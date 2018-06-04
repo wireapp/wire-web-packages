@@ -127,10 +127,9 @@ export default class ConversationService {
       return messageId;
     }
 
-    const payload: OTRRecipients = await this.cryptographyService.encrypt(
-      plainTextBuffer,
-      <UserPreKeyBundleMap>preKeyBundles
-    );
+    const payload: OTRRecipients = await this.cryptographyService.encrypt(plainTextBuffer, <UserPreKeyBundleMap>(
+      preKeyBundles
+    ));
 
     await this.sendMessage(this.clientID, conversationId, payload);
     return messageId;
@@ -161,11 +160,7 @@ export default class ConversationService {
       messageId,
     });
 
-    const preKeyBundles = await this.getPreKeyBundles(conversationId);
-    const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(ping).finish();
-    const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
-
-    await this.sendExternalGenericMessage(this.clientID, conversationId, payload, <UserPreKeyBundleMap>preKeyBundles);
+    await this.sendGenericMessage(this.clientID, conversationId, ping);
     return messageId;
   }
 
@@ -179,6 +174,31 @@ export default class ConversationService {
 
   public setClientID(clientID: string) {
     this.clientID = clientID;
+  }
+
+  public async updateTextMessage(
+    conversationId: string,
+    originalMessageId: string,
+    newMessage: string
+  ): Promise<string> {
+    const messageId = new UUID(4).format();
+
+    const editedMessage = this.protocolBuffers.MessageEdit.create({
+      replacingMessageId: originalMessageId,
+      text: this.protocolBuffers.Text.create({content: newMessage}),
+    });
+
+    const genericMessage = this.protocolBuffers.GenericMessage.create({
+      edited: editedMessage,
+      messageId,
+    });
+
+    const preKeyBundles = await this.getPreKeyBundles(conversationId);
+    const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(genericMessage).finish();
+    const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
+
+    await this.sendExternalGenericMessage(this.clientID, conversationId, payload, <UserPreKeyBundleMap>preKeyBundles);
+    return messageId;
   }
 
   private shouldSendAsExternal(plainText: Buffer, preKeyBundles: UserPreKeyBundleMap): boolean {
@@ -252,7 +272,8 @@ export default class ConversationService {
     return this.sendMessage(sendingClientId, conversationId, recipients);
   }
 
-  // TODO: The correct functionality of this function is heavily based on the case that it always runs into the catch block
+  // TODO: The correct functionality of this function is heavily based on the case that it always runs into the catch
+  // block
   private getPreKeyBundles(conversationId: string): Promise<ClientMismatch | UserPreKeyBundleMap> {
     return this.apiClient.conversation.api.postOTRMessage(this.clientID, conversationId).catch((error: AxiosError) => {
       if (error.response && error.response.status === 412) {
