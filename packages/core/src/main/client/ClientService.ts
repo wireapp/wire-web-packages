@@ -21,12 +21,7 @@ const logdown = require('logdown');
 const pkg = require('../../package.json');
 import APIClient = require('@wireapp/api-client');
 import {LoginData, PreKey} from '@wireapp/api-client/dist/commonjs/auth/index';
-import {
-  ClientClassification,
-  ClientType,
-  NewClient,
-  RegisteredClient,
-} from '@wireapp/api-client/dist/commonjs/client/index';
+import {ClientClassification, NewClient, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/index';
 import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/index';
 import {CryptographyService} from '../cryptography/root';
 import ClientBackendRepository from './ClientBackendRepository';
@@ -118,7 +113,7 @@ export default class ClientService {
           enckey: 'Wuec0oJi9/q9VsgOil9Ds4uhhYwBT+CAUrvi/S9vcz0=',
           mackey: 'Wuec0oJi9/q9VsgOil9Ds4uhhYwBT+CAUrvi/S9vcz0=',
         },
-        type: loginData.persist ? ClientType.PERMANENT : ClientType.TEMPORARY,
+        type: loginData.clientType,
       };
     } else {
       throw new Error('Cryptobox got initialized without a last resort PreKey.');
