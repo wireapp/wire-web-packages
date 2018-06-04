@@ -13,7 +13,7 @@ A bot used by Travis build scripts to post a changelog of the current project to
 ### Getting Started
 
 ```
-yarn install
+yarn
 yarn start
 ```
 
@@ -25,7 +25,7 @@ yarn global add @wireapp/changelog-bot
 
 ### Usage
 
-- [cli.js](./src/cli.js)
+- [cli.ts](./src/main/cli.ts)
 
 ### Execution
 
@@ -37,12 +37,12 @@ yarn global add @wireapp/changelog-bot
 export WIRE_WEBAPP_BOT_EMAIL="<email>"
 export WIRE_WEBAPP_BOT_PASSWORD="<password>"
 
-changelog-bot "<conversation id>,<conversation id>" "staging"
+wire-changelog-bot "<conversation id>,<conversation id>" "staging"
 ```
 
 **Node**
 
 ```bash
 yarn dist
-node changelog-bot.js "<conversation id>,<conversation id>" "staging"
+node dist/cli.js "<conversation id>,<conversation id>" "staging"
 ```
