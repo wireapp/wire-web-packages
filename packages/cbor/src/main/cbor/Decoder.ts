@@ -209,7 +209,6 @@ class Decoder {
       expected = [expected];
     }
 
-    console.log('expected', expected);
     const hasExpectedType = expected.some(expectedType => type === expectedType);
     if (!hasExpectedType) {
       throw new DecodeError(DecodeError.UNEXPECTED_TYPE, [type, minor]);
