@@ -31,12 +31,14 @@ const logger = logdown('@wireapp/changelog-bot/cli', {
   markdown: false,
 });
 
+logger.state.isEnabled = true;
+
 program
   .version(version)
   .description(description)
+  .option('-c, --conversations <conversationId,...>', 'The conversation IDs to write in')
   .option('-e, --email <address>', 'Your email address')
   .option('-p, --password <password>', 'Your password')
-  .option('-c, --conversations <conversationId,...>', 'The conversation IDs to write in')
   .parse(process.argv);
 
 const TRAVIS_ENV_VARS = ['TRAVIS_COMMIT_RANGE', 'TRAVIS_EVENT_TYPE', 'TRAVIS_REPO_SLUG'];
@@ -47,13 +49,13 @@ const parameters = {
   WIRE_CHANGELOG_BOT_PASSWORD: program.password || process.env.WIRE_CHANGELOG_BOT_PASSWORD,
 };
 
-logger.info(chalk`{bold wire-changelog-bot v${version}}\n`);
+logger.info(chalk`{bold wire-changelog-bot v${version}}`);
 
 TRAVIS_ENV_VARS.forEach(envVar => {
   if (!process.env[envVar]) {
     logger.error(
-      chalk`{bold ('Error:')} Travis environment variable "${envVar}" is not set.\n` +
-        'Read more: https://docs.travis-ci.com/user/environment-variables/#Default-Environment-Variables'
+      chalk`{bold Error:} Travis environment variable "${envVar}" is not set.` +
+        '\nRead more: https://docs.travis-ci.com/user/environment-variables/#Default-Environment-Variables'
     );
     process.exit(1);
   }
