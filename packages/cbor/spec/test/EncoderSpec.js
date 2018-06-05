@@ -43,11 +43,6 @@ describe('CBOR.Encoder', () => {
   };
 
   describe('"u8"', () => {
-    it('throws an error when out of ASCII range', () => {
-      const encoder = new CBOR.Encoder();
-      expect(() => encoder.u8(256)).toThrowError(RangeError);
-    });
-
     it('encodes unsigned integers', () => {
       expect(encoded('00', encoder => encoder.u8(0))).toBe(true);
       expect(encoded('00', encoder => encoder.u8(0))).toBe(true);
@@ -59,8 +54,8 @@ describe('CBOR.Encoder', () => {
     });
 
     it('encodes inside the boundaries', () => {
-      expect(encoded('17', encoder => encoder.u64(23))).toBe(true);
-      expect(encoded('18ff', encoder => encoder.u64(0xff))).toBe(true);
+      expect(encoded('17', encoder => encoder.u8(23))).toBe(true);
+      expect(encoded('18ff', encoder => encoder.u8(0xff))).toBe(true);
     });
 
     it('throws an error when number is out of range', () => {
@@ -137,13 +132,13 @@ describe('CBOR.Encoder', () => {
 
     it('encodes inside the boundaries', () => {
       expect(encoded('00', encoder => encoder.i8(0))).toBe(true);
-      expect(encoded('17', encoder => encoder.i8(23))).toBe(true);
-      expect(encoded('ff', encoder => encoder.i8(0xff))).toBe(true);
+      expect(encoded('37', encoder => encoder.i8(-(23 + 1)))).toBe(true);
+      expect(encoded('38ff', encoder => encoder.i8(-(0xff + 1)))).toBe(true);
     });
 
     it('throws an error when number is out of range', () => {
       const encoder = new CBOR.Encoder();
-      expect(() => encoder.i8(0xff + 1)).toThrowError(RangeError);
+      expect(() => encoder.i8(-(0xff + 2))).toThrowError(RangeError);
     });
   });
 
