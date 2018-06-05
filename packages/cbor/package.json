@@ -35,5 +35,5 @@
     "test:node": "jasmine JASMINE_CONFIG_PATH=jasmine.json"
   },
   "types": "dist/index.d.ts",
-  "version": "3.0.40"
+  "version": "3.0.41"
 }
