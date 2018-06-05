@@ -19,7 +19,7 @@
       "git add"
     ],
     "*.ts": [
-      "tslint -c tslint.json --fix",
+      "tslint --config tslint.json --project tsconfig.json --fix",
       "git add"
     ],
     "*.{json,md,scss}": [
