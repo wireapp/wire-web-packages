@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.0.4"></a>
+## [3.0.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.0.3...@wireapp/core@3.0.4) (2018-06-05)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.0.3"></a>
+## [3.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.0.2...@wireapp/core@3.0.3) (2018-06-05)
+
+
+### Bug Fixes
+
+* **core:** ClientType import ([#667](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/667)) ([cfdaf51](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/cfdaf51))
+
+
+
+
+<a name="3.0.2"></a>
+## [3.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.0.1...@wireapp/core@3.0.2) (2018-06-04)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.0.1"></a>
+## [3.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.0.0...@wireapp/core@3.0.1) (2018-06-04)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.0.0"></a>
+# [3.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.9.6...@wireapp/core@3.0.0) (2018-06-04)
+
+
+### Code Refactoring
+
+* **api-client,core:** Add ClientType.NONE ([#660](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/660)) ([97e7b12](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/97e7b12))
+
+
+### BREAKING CHANGES
+
+* **api-client,core:** Expecting ClientType in init calls, register calls and LoginData type.
+
+
+
+
+<a name="2.9.6"></a>
+## [2.9.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.9.5...@wireapp/core@2.9.6) (2018-06-04)
+
+
+### Bug Fixes
+
+* **core:** Don't send external message for ping ([#658](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/658)) ([092facb](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/092facb))
+
+
+
+
+<a name="2.9.5"></a>
+## [2.9.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.9.4...@wireapp/core@2.9.5) (2018-06-01)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
 <a name="2.9.4"></a>
 ## [2.9.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@2.9.3...@wireapp/core@2.9.4) (2018-05-30)
 

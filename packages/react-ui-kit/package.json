@@ -1,11 +1,11 @@
 {
   "dependencies": {
-    "bazinga64": "5.1.15",
+    "bazinga64": "5.1.16",
     "color": "3.0.0",
     "react": "16.4.0",
     "react-dom": "16.4.0",
     "recompose": "0.27.1",
-    "styled-components": "3.3.0",
+    "styled-components": "3.3.2",
     "styled-normalize": "4.0.0"
   },
   "devDependencies": {
@@ -18,8 +18,8 @@
     "babel-preset-react": "6.24.1",
     "react-hot-loader": "4.2.0",
     "rimraf": "2.6.2",
-    "webpack": "4.10.2",
-    "webpack-cli": "2.1.4",
+    "webpack": "4.11.0",
+    "webpack-cli": "3.0.2",
     "webpack-dev-server": "3.1.4"
   },
   "license": "GPL-3.0",
@@ -39,5 +39,5 @@
     "test:project": "yarn dist && yarn test",
     "test:browser": "exit 0"
   },
-  "version": "1.1.29"
+  "version": "1.1.33"
 }

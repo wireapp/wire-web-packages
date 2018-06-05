@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.1.6"></a>
+## [0.1.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.1.5...@wireapp/commons@0.1.6) (2018-06-05)
+
+
+
+
+**Note:** Version bump only for package @wireapp/commons
+
+<a name="0.1.5"></a>
+## [0.1.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.1.4...@wireapp/commons@0.1.5) (2018-06-04)
+
+
+
+
+**Note:** Version bump only for package @wireapp/commons
+
+<a name="0.1.4"></a>
+## [0.1.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.1.3...@wireapp/commons@0.1.4) (2018-06-04)
+
+
+
+
+**Note:** Version bump only for package @wireapp/commons
+
+<a name="0.1.3"></a>
+## [0.1.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.1.2...@wireapp/commons@0.1.3) (2018-06-01)
+
+
+
+
+**Note:** Version bump only for package @wireapp/commons
+
 <a name="0.1.2"></a>
 ## [0.1.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.1.1...@wireapp/commons@0.1.2) (2018-05-30)
 

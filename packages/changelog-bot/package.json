@@ -1,26 +1,28 @@
 {
   "bin": {
-    "wire-travis-bot": "dist/cli.js"
+    "wire-changelog-bot": "dist/cli.js"
   },
   "dependencies": {
     "@types/generate-changelog": "1.7.0",
     "@types/node": "10.3.1",
-    "@wireapp/core": "3.0.4",
+    "@wireapp/core": "2.9.2",
+    "chalk": "2.4.1",
+    "commander": "2.15.1",
     "generate-changelog": "1.7.1"
   },
-  "description": "A Travis deployment notification bot.",
+  "description": "A changelog notification bot.",
   "devDependencies": {
     "logdown": "3.2.3",
     "rimraf": "2.6.2",
-    "typescript": "2.9.1"
+    "typescript": "2.8.3"
   },
   "files": [
     "dist"
   ],
   "license": "GPL-3.0",
   "main": "dist/index.js",
-  "name": "@wireapp/travis-bot",
-  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot",
+  "name": "@wireapp/changelog-bot",
+  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot",
   "scripts": {
     "build": "yarn build:node",
     "build:node": "tsc",
@@ -30,5 +32,5 @@
     "test:project": "yarn dist && yarn test"
   },
   "types": "dist/index.d.ts",
-  "version": "1.0.5"
+  "version": "0.1.1"
 }

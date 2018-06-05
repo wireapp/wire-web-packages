@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="1.1.1"></a>
+## [1.1.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.1.0...@wireapp/api-client@1.1.1) (2018-06-05)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.1.0"></a>
+# [1.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.0.1...@wireapp/api-client@1.1.0) (2018-06-04)
+
+
+### Features
+
+* **api-client:** Logout function ignoreError option ([#663](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/663)) ([72dc8e6](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/72dc8e6))
+
+
+
+
+<a name="1.0.1"></a>
+## [1.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.0.0...@wireapp/api-client@1.0.1) (2018-06-04)
+
+
+### Bug Fixes
+
+* **api-client:** Continue registration & login on precautionary logout error ([#661](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/661)) ([2f04c72](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/2f04c72))
+
+
+
+
+<a name="1.0.0"></a>
+# [1.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.10.11...@wireapp/api-client@1.0.0) (2018-06-04)
+
+
+### Code Refactoring
+
+* **api-client,core:** Add ClientType.NONE ([#660](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/660)) ([97e7b12](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/97e7b12))
+
+
+### BREAKING CHANGES
+
+* **api-client,core:** Expecting ClientType in init calls, register calls and LoginData type.
+
+
+
+
+<a name="0.10.11"></a>
+## [0.10.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.10.10...@wireapp/api-client@0.10.11) (2018-06-04)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="0.10.10"></a>
+## [0.10.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.10.9...@wireapp/api-client@0.10.10) (2018-06-01)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
 <a name="0.10.9"></a>
 ## [0.10.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.10.8...@wireapp/api-client@0.10.9) (2018-05-30)
 
