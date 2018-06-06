@@ -37,7 +37,7 @@ class PreKeyBundle {
   prekey_id: number;
   public_key: PublicKey;
   identity_key: IdentityKey;
-  signature: Uint8Array | null;
+  signature: Uint8Array | null | undefined;
 
   constructor() {
     this.version = -1;
