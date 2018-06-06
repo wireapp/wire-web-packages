@@ -32,7 +32,7 @@
     "test:coverage": "yarn coverage && istanbul check-coverage --branches 80 --functions 90 --lines 90 --statements 90",
     "test:project": "yarn dist && yarn test",
     "test:browser": "exit 0",
-    "test:node": "jasmine JASMINE_CONFIG_PATH=jasmine.json"
+    "test:node": "jasmine --config=jasmine.json"
   },
   "types": "dist/index.d.ts",
   "version": "3.0.41"
