@@ -8823,10 +8823,6 @@ trim-right@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/trim-right/-/trim-right-1.0.1.tgz#cb2e1203067e0c8de1f614094b9fe45704ea6003"
 
-tsd-jsdoc@dcodeio/tsd-jsdoc#fe76c4dc071b00bb549d3af7a3bad8c555999e81:
-  version "1.0.1"
-  resolved "https://codeload.github.com/dcodeio/tsd-jsdoc/tar.gz/fe76c4dc071b00bb549d3af7a3bad8c555999e81"
-
 tslib@^1.7.1, tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.9.1.tgz#a5d1f0532a49221c87755cfcc89ca37197242ba7"
