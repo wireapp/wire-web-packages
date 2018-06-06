@@ -21,6 +21,7 @@ import LRUCache from '@wireapp/lru-cache';
 import {PriorityQueue} from '@wireapp/priority-queue';
 import {keys as ProteusKeys, message as ProteusMessage, session as ProteusSession} from '@wireapp/proteus';
 import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
+import {Encoder} from 'bazinga64';
 import EventEmitter = require('events');
 import CryptoboxSession from './CryptoboxSession';
 import DecryptionError from './DecryptionError';
@@ -38,7 +39,6 @@ class Cryptobox extends EventEmitter {
   };
 
   private readonly cachedSessions: LRUCache<CryptoboxSession>;
-
   private readonly logger: any = logdown('@wireapp/cryptobox/Cryptobox', {
     logger: console,
     markdown: false,
@@ -417,6 +417,30 @@ class Cryptobox extends EventEmitter {
           .then(() => message)
       );
     });
+  }
+
+  public async export() {
+    const toBase64 = (array: ArrayBuffer) => Encoder.toBase64(new Uint8Array(array)).asString;
+
+    const data: {
+      identity: string;
+      sessions: string[];
+    } = {
+      identity: '',
+      sessions: [],
+    };
+
+    const identity: ProteusKeys.IdentityKeyPair | undefined = await this.store.load_identity();
+    if (identity) {
+      data.identity = toBase64(identity.serialise());
+    }
+
+    const sessions = await this.store.read_sessions(this.identity);
+    if (sessions.length) {
+      data.sessions = sessions.map(session => toBase64(session.serialise()));
+    }
+
+    return data;
   }
 }
 
