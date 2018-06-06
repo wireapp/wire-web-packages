@@ -114,7 +114,6 @@ class CryptoboxCRUDStore implements ProteusSession.PreKeyStore {
 
   /**
    * Saves the serialised format of a specified PreKey.
-   * @deprecated Please use "save_prekeys" instead.
    * @return Promise<string> Resolves with the "ID" from the saved PreKey record.
    */
   public save_prekey(pre_key: ProteusKeys.PreKey): Promise<ProteusKeys.PreKey> {
