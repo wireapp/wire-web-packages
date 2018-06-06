@@ -433,11 +433,8 @@ class Cryptobox extends EventEmitter {
     const identity: ProteusKeys.IdentityKeyPair | undefined = await this.store.load_identity();
     if (identity) {
       data.identity = toBase64(identity.serialise());
-    }
-
-    const sessions = await this.store.read_sessions(this.identity);
-    if (sessions.length) {
-      data.sessions = sessions.map(session => toBase64(session.serialise()));
+      const sessions = await this.store.read_sessions(identity);
+      data.sessions = sessions.map((session: ProteusSession.Session) => toBase64(session.serialise()));
     }
 
     return data;
