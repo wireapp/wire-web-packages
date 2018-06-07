@@ -27,6 +27,7 @@ import CryptoboxSession from './CryptoboxSession';
 import DecryptionError from './DecryptionError';
 import {CryptoboxError} from './error/root';
 import InvalidPreKeyFormatError from './InvalidPreKeyFormatError';
+import {SerializedCryptobox} from './SerializedCryptobox';
 import {CryptoboxCRUDStore} from './store/root';
 
 const logdown = require('logdown');
@@ -419,14 +420,12 @@ class Cryptobox extends EventEmitter {
     });
   }
 
-  public async serialize() {
+  public async deserialize() {}
+
+  public async serialize(): Promise<SerializedCryptobox> {
     const toBase64 = (array: ArrayBuffer) => Encoder.toBase64(new Uint8Array(array)).asString;
 
-    const data: {
-      identity: string;
-      prekeys: string[];
-      sessions: string[];
-    } = {
+    const data: SerializedCryptobox = {
       identity: '',
       prekeys: [],
       sessions: [],

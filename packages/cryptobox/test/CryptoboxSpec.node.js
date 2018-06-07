@@ -75,7 +75,7 @@ describe('Cryptobox', () => {
   });
 
   describe('"serialize', () => {
-    it('serializes the local identity, primary keys & sessions', async done => {
+    fit('serializes the local identity, primary keys & sessions', async done => {
       const amountOfPreKeys = 15;
       const alice = await createCryptobox('alice', amountOfPreKeys);
       await alice.create();
@@ -95,7 +95,7 @@ describe('Cryptobox', () => {
       expect(Object.keys(serializedCryptobox.prekeys).length).toBe(amountOfPreKeys);
       expect(Object.keys(serializedCryptobox.sessions).length).toBe(1);
 
-      const eve = await createCryptobox('eve', 2);
+      const eve = await createCryptobox('eve', 5);
       await eve.create();
 
       const aliceBundle = Proteus.keys.PreKeyBundle.new(alice.identity.public_key, await alice.store.load_prekey(0));
@@ -106,6 +106,11 @@ describe('Cryptobox', () => {
 
       expect(Object.keys(serializedCryptobox.prekeys).length).toBe(amountOfPreKeys);
       expect(Object.keys(serializedCryptobox.sessions).length).toBe(2);
+
+      const aliceId = alice.identity.public_key.fingerprint();
+      const eveId = eve.identity.public_key.fingerprint();
+
+      expect(aliceId).not.toBe(eveId);
 
       done();
     });
