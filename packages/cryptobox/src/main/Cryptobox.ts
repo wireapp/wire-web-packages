@@ -419,7 +419,7 @@ class Cryptobox extends EventEmitter {
     });
   }
 
-  public async export() {
+  public async serialize() {
     const toBase64 = (array: ArrayBuffer) => Encoder.toBase64(new Uint8Array(array)).asString;
 
     const data: {

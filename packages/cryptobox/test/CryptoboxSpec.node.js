@@ -73,4 +73,41 @@ describe('Cryptobox', () => {
         .catch(done.fail);
     });
   });
+
+  describe('"serialize', () => {
+    it('serializes the local identity, primary keys & sessions', async done => {
+      const amountOfPreKeys = 15;
+      const alice = await createCryptobox('alice', amountOfPreKeys);
+      await alice.create();
+      let serializedCryptobox = await alice.serialize();
+
+      expect(Object.keys(serializedCryptobox.prekeys).length).toBe(amountOfPreKeys);
+      expect(Object.keys(serializedCryptobox.sessions).length).toBe(0);
+
+      const bob = await createCryptobox('bob', 2);
+      await bob.create();
+
+      const bobBundle = Proteus.keys.PreKeyBundle.new(bob.identity.public_key, await bob.store.load_prekey(0));
+      await alice.encrypt('alice-to-bob', 'Hello Bob. This is Alice.', bobBundle.serialise());
+
+      serializedCryptobox = await alice.serialize();
+
+      expect(Object.keys(serializedCryptobox.prekeys).length).toBe(amountOfPreKeys);
+      expect(Object.keys(serializedCryptobox.sessions).length).toBe(1);
+
+      const eve = await createCryptobox('eve', 2);
+      await eve.create();
+
+      const aliceBundle = Proteus.keys.PreKeyBundle.new(alice.identity.public_key, await alice.store.load_prekey(0));
+      const ciphertext = await eve.encrypt('eve-to-alice', 'Hello Alice. This is Eve.', aliceBundle.serialise());
+      await alice.decrypt('alice-to-eve', ciphertext);
+
+      serializedCryptobox = await alice.serialize();
+
+      expect(Object.keys(serializedCryptobox.prekeys).length).toBe(amountOfPreKeys);
+      expect(Object.keys(serializedCryptobox.sessions).length).toBe(2);
+
+      done();
+    });
+  });
 });
