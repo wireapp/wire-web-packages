@@ -76,14 +76,16 @@ describe('Cryptobox', () => {
 
   describe('"serialize / deserialize"', () => {
     it('serializes the local identity, primary keys & sessions', async done => {
-      const amountOfPreKeys = 15;
-      const alice = await createCryptobox('alice', amountOfPreKeys);
+      // Test serialization
+      const amountOfAlicePreKeys = 15;
+      const alice = await createCryptobox('alice', amountOfAlicePreKeys);
       await alice.create();
       let serializedAlice = await alice.serialize();
 
-      expect(Object.keys(serializedAlice.prekeys).length).toBe(amountOfPreKeys);
+      expect(Object.keys(serializedAlice.prekeys).length).toBe(amountOfAlicePreKeys);
       expect(Object.keys(serializedAlice.sessions).length).toBe(0);
 
+      // Test serialization with sessions
       const bob = await createCryptobox('bob', 2);
       await bob.create();
 
@@ -92,7 +94,7 @@ describe('Cryptobox', () => {
 
       serializedAlice = await alice.serialize();
 
-      expect(Object.keys(serializedAlice.prekeys).length).toBe(amountOfPreKeys);
+      expect(Object.keys(serializedAlice.prekeys).length).toBe(amountOfAlicePreKeys);
       expect(Object.keys(serializedAlice.sessions).length).toBe(1);
 
       const eve = await createCryptobox('eve', 5);
@@ -104,17 +106,27 @@ describe('Cryptobox', () => {
 
       serializedAlice = await alice.serialize();
 
-      expect(Object.keys(serializedAlice.prekeys).length).toBe(amountOfPreKeys);
+      expect(Object.keys(serializedAlice.prekeys).length).toBe(amountOfAlicePreKeys);
       expect(Object.keys(serializedAlice.sessions).length).toBe(2);
 
+      // Test different identities
       const aliceId = alice.identity.public_key.fingerprint();
       let eveId = eve.identity.public_key.fingerprint();
       expect(aliceId).not.toBe(eveId);
 
-      // Testing identity change
+      // Test identity import
       await eve.deserialize(serializedAlice);
       eveId = eve.identity.public_key.fingerprint();
       expect(aliceId).toBe(eveId);
+
+      // Test PreKey import
+      const evePreKeys = await eve.store.load_prekeys();
+      expect(eve.lastResortPreKey).toBeDefined();
+      expect(evePreKeys.length).toBe(amountOfAlicePreKeys);
+
+      // Test serialization
+      const serializedEve = await eve.serialize();
+      expect(Object.keys(serializedEve.prekeys).length).toBe(amountOfAlicePreKeys);
 
       done();
     });
