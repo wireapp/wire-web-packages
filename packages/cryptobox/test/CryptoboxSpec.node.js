@@ -74,15 +74,15 @@ describe('Cryptobox', () => {
     });
   });
 
-  describe('"serialize', () => {
-    fit('serializes the local identity, primary keys & sessions', async done => {
+  describe('"serialize / deserialize"', () => {
+    it('serializes the local identity, primary keys & sessions', async done => {
       const amountOfPreKeys = 15;
       const alice = await createCryptobox('alice', amountOfPreKeys);
       await alice.create();
-      let serializedCryptobox = await alice.serialize();
+      let serializedAlice = await alice.serialize();
 
-      expect(Object.keys(serializedCryptobox.prekeys).length).toBe(amountOfPreKeys);
-      expect(Object.keys(serializedCryptobox.sessions).length).toBe(0);
+      expect(Object.keys(serializedAlice.prekeys).length).toBe(amountOfPreKeys);
+      expect(Object.keys(serializedAlice.sessions).length).toBe(0);
 
       const bob = await createCryptobox('bob', 2);
       await bob.create();
@@ -90,10 +90,10 @@ describe('Cryptobox', () => {
       const bobBundle = Proteus.keys.PreKeyBundle.new(bob.identity.public_key, await bob.store.load_prekey(0));
       await alice.encrypt('alice-to-bob', 'Hello Bob. This is Alice.', bobBundle.serialise());
 
-      serializedCryptobox = await alice.serialize();
+      serializedAlice = await alice.serialize();
 
-      expect(Object.keys(serializedCryptobox.prekeys).length).toBe(amountOfPreKeys);
-      expect(Object.keys(serializedCryptobox.sessions).length).toBe(1);
+      expect(Object.keys(serializedAlice.prekeys).length).toBe(amountOfPreKeys);
+      expect(Object.keys(serializedAlice.sessions).length).toBe(1);
 
       const eve = await createCryptobox('eve', 5);
       await eve.create();
@@ -102,15 +102,19 @@ describe('Cryptobox', () => {
       const ciphertext = await eve.encrypt('eve-to-alice', 'Hello Alice. This is Eve.', aliceBundle.serialise());
       await alice.decrypt('alice-to-eve', ciphertext);
 
-      serializedCryptobox = await alice.serialize();
+      serializedAlice = await alice.serialize();
 
-      expect(Object.keys(serializedCryptobox.prekeys).length).toBe(amountOfPreKeys);
-      expect(Object.keys(serializedCryptobox.sessions).length).toBe(2);
+      expect(Object.keys(serializedAlice.prekeys).length).toBe(amountOfPreKeys);
+      expect(Object.keys(serializedAlice.sessions).length).toBe(2);
 
       const aliceId = alice.identity.public_key.fingerprint();
-      const eveId = eve.identity.public_key.fingerprint();
-
+      let eveId = eve.identity.public_key.fingerprint();
       expect(aliceId).not.toBe(eveId);
+
+      // Testing identity change
+      await eve.deserialize(serializedAlice);
+      eveId = eve.identity.public_key.fingerprint();
+      expect(aliceId).toBe(eveId);
 
       done();
     });
