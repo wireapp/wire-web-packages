@@ -437,10 +437,10 @@ class Cryptobox extends EventEmitter {
     await this.save_identity(identity);
   }
 
-  private async importPreKeys(payload: string[]): Promise<void> {
-    this.logger.log(`Importing "${payload.length}" PreKeys...`);
+  private async importPreKeys(serializedPreKeys: {[sessionId: string]: string}): Promise<void> {
+    this.logger.log(`Importing "${serializedPreKeys.length}" PreKeys...`);
 
-    const proteusPreKeys = payload.map(preKey => {
+    const proteusPreKeys = Object.values(serializedPreKeys).map(preKey => {
       const preKeyBuffer = Decoder.fromBase64(preKey).asBytes.buffer;
       const proteusPreKey = ProteusKeys.PreKey.deserialise(preKeyBuffer);
       if (proteusPreKey.key_id === ProteusKeys.PreKey.MAX_PREKEY_ID) {
@@ -452,11 +452,11 @@ class Cryptobox extends EventEmitter {
     await this.store.save_prekeys(proteusPreKeys);
   }
 
-  private async importSessions(payload: {[sessionId: string]: string}): Promise<void> {
-    this.logger.log(`Importing "${payload.length}" sessions...`);
+  private async importSessions(serializedSessions: {[sessionId: string]: string}): Promise<void> {
+    this.logger.log(`Importing "${serializedSessions.length}" sessions...`);
 
-    for (const sessionId in payload) {
-      const serializedSession = payload[sessionId];
+    for (const sessionId in serializedSessions) {
+      const serializedSession = serializedSessions[sessionId];
       const sessionBuffer = Decoder.fromBase64(serializedSession).asBytes.buffer;
       const proteusSession = ProteusSession.Session.deserialise(this.identity!, sessionBuffer);
       const cryptoBoxSession = new CryptoboxSession(sessionId, proteusSession);
@@ -477,7 +477,7 @@ class Cryptobox extends EventEmitter {
 
     const data: SerializedCryptobox = {
       identity: '',
-      prekeys: [],
+      prekeys: {},
       sessions: {},
     };
 
@@ -493,7 +493,9 @@ class Cryptobox extends EventEmitter {
     }
 
     const storedPreKeys = await this.store.load_prekeys();
-    data.prekeys = storedPreKeys.map(storedPreKey => toBase64(storedPreKey.serialise()));
+    for (const storedPreKey of storedPreKeys) {
+      data.prekeys[storedPreKey.key_id] = toBase64(storedPreKey.serialise());
+    }
 
     return data;
   }
