@@ -421,13 +421,12 @@ class Cryptobox extends EventEmitter {
     });
   }
 
-  private async delete(): Promise<void> {
-    await this.store.delete_all();
-
+  private async deleteData(): Promise<void> {
     this.cachedSessions = new LRUCache(DEFAULT_CAPACITY);
     this.identity = undefined;
     this.lastResortPreKey = undefined;
     this.queues = new LRUCache<PriorityQueue>(DEFAULT_CAPACITY);
+    await this.store.delete_all();
   }
 
   private async importIdentity(payload: string): Promise<void> {
@@ -445,12 +444,11 @@ class Cryptobox extends EventEmitter {
       }
       return proteusPreKey;
     });
-
     await this.store.save_prekeys(preKeys);
   }
 
   public async deserialize(payload: SerializedCryptobox) {
-    this.delete();
+    this.deleteData();
     this.importIdentity(payload.identity);
     this.importPreKeys(payload.prekeys);
   }
