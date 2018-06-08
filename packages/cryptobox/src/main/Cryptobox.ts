@@ -421,23 +421,23 @@ class Cryptobox extends EventEmitter {
     });
   }
 
-  public async deserialize(payload: SerializedCryptobox) {
-    // Delete data & states
+  private async delete(): Promise<void> {
     await this.store.delete_all();
 
     this.cachedSessions = new LRUCache(DEFAULT_CAPACITY);
     this.identity = undefined;
     this.lastResortPreKey = undefined;
     this.queues = new LRUCache<PriorityQueue>(DEFAULT_CAPACITY);
+  }
 
-    // Import identity
-    const identityBuffer = Decoder.fromBase64(payload.identity).asBytes.buffer;
+  private async importIdentity(payload: string): Promise<void> {
+    const identityBuffer = Decoder.fromBase64(payload).asBytes.buffer;
     const identity = ProteusKeys.IdentityKeyPair.deserialise(identityBuffer);
-
     await this.save_identity(identity);
+  }
 
-    // Import PreKeys
-    const preKeys = payload.prekeys.map(preKey => {
+  private async importPreKeys(payload: string[]): Promise<void> {
+    const preKeys = payload.map(preKey => {
       const preKeyBuffer = Decoder.fromBase64(preKey).asBytes.buffer;
       const proteusPreKey = ProteusKeys.PreKey.deserialise(preKeyBuffer);
       if (proteusPreKey.key_id === ProteusKeys.PreKey.MAX_PREKEY_ID) {
@@ -447,10 +447,12 @@ class Cryptobox extends EventEmitter {
     });
 
     await this.store.save_prekeys(preKeys);
+  }
 
-    // Import Sessions
-
-    return identity;
+  public async deserialize(payload: SerializedCryptobox) {
+    this.delete();
+    this.importIdentity(payload.identity);
+    this.importPreKeys(payload.prekeys);
   }
 
   public async serialize(): Promise<SerializedCryptobox> {
