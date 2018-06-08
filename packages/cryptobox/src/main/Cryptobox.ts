@@ -460,8 +460,8 @@ class Cryptobox extends EventEmitter {
       return ProteusSession.Session.deserialise(this.identity!, sessionBuffer);
     });
 
-    const saveSessions = proteusSessions.map(session => {
-      const cryptoBoxSession = new CryptoboxSession(undefined, this.store, session);
+    const saveSessions = proteusSessions.map(proteusSession => {
+      const cryptoBoxSession = new CryptoboxSession(undefined, this.store, proteusSession);
       return this.session_save(cryptoBoxSession);
     });
 
@@ -477,7 +477,7 @@ class Cryptobox extends EventEmitter {
   }
 
   public async serialize(): Promise<SerializedCryptobox> {
-    const toBase64 = (array: ArrayBuffer) => Encoder.toBase64(new Uint8Array(array)).asString;
+    const toBase64 = (buffer: ArrayBuffer) => Encoder.toBase64(buffer).asString;
 
     const data: SerializedCryptobox = {
       identity: '',
@@ -489,12 +489,12 @@ class Cryptobox extends EventEmitter {
 
     if (identity) {
       data.identity = toBase64(identity.serialise());
-      const sessions = await this.store.read_sessions(identity);
-      data.sessions = sessions.map(session => toBase64(session.serialise()));
+      const storedSessions = await this.store.read_sessions(identity);
+      data.sessions = storedSessions.map(storedSession => toBase64(storedSession.serialise()));
     }
 
-    const prekeys = await this.store.load_prekeys();
-    data.prekeys = prekeys.map(prekey => toBase64(prekey.serialise()));
+    const storedPreKeys = await this.store.load_prekeys();
+    data.prekeys = storedPreKeys.map(storedPreKey => toBase64(storedPreKey.serialise()));
 
     return data;
   }
