@@ -3,7 +3,7 @@
     "./dist/cryptography/AssetCryptography.node": "./dist/cryptography/AssetCryptography.browser.js"
   },
   "dependencies": {
-    "@types/node": "10.3.1",
+    "@types/node": "10.3.2",
     "@wireapp/api-client": "1.1.4",
     "@wireapp/cryptobox": "8.3.70",
     "@wireapp/store-engine": "0.11.25",
@@ -25,7 +25,7 @@
     "rimraf": "2.6.2",
     "typescript": "2.9.1",
     "uglifyjs-webpack-plugin": "1.2.5",
-    "webpack": "4.11.1",
+    "webpack": "4.12.0",
     "webpack-cli": "3.0.3"
   },
   "description": "Wire for Web's communication core.",
