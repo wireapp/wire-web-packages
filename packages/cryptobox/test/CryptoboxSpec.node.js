@@ -90,7 +90,8 @@ describe('Cryptobox', () => {
       await bob.create();
 
       const bobBundle = Proteus.keys.PreKeyBundle.new(bob.identity.public_key, await bob.store.load_prekey(0));
-      await alice.encrypt('alice-to-bob', 'Hello Bob. This is Alice.', bobBundle.serialise());
+      const sessionName = 'alice-to-bob';
+      await alice.encrypt(sessionName, 'Hello Bob. This is Alice.', bobBundle.serialise());
 
       serializedAlice = await alice.serialize();
 
@@ -135,7 +136,7 @@ describe('Cryptobox', () => {
 
       // Test that Eve can write to Bob because Alice had a session with Bob
       const messageEveToBob = 'Hello Bob, I am your new Alice. ;)';
-      const encrypted = await eve.encrypt('alice-to-bob', messageEveToBob);
+      const encrypted = await eve.encrypt(sessionName, messageEveToBob);
       const decrypted = await bob.decrypt('bob-to-alice', encrypted);
       expect(Buffer.from(decrypted).toString('utf8')).toBe(messageEveToBob);
 
