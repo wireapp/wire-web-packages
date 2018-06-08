@@ -101,8 +101,8 @@ describe('Cryptobox', () => {
       await eve.create();
 
       const aliceBundle = Proteus.keys.PreKeyBundle.new(alice.identity.public_key, await alice.store.load_prekey(0));
-      const ciphertext = await eve.encrypt('eve-to-alice', 'Hello Alice. This is Eve.', aliceBundle.serialise());
-      await alice.decrypt('alice-to-eve', ciphertext);
+      const cipherText = await eve.encrypt('eve-to-alice', 'Hello Alice. This is Eve.', aliceBundle.serialise());
+      await alice.decrypt('alice-to-eve', cipherText);
 
       serializedAlice = await alice.serialize();
 
@@ -127,17 +127,15 @@ describe('Cryptobox', () => {
 
       // Test that Eve can import Alice's Sessions
       const eveSessions = await eve.store.read_sessions(eve.identity);
-      expect(eveSessions.length).toBe(expectedSessionsOfAlice);
+      expect(Object.keys(eveSessions).length).toBe(expectedSessionsOfAlice);
 
       // Test that Eve's Cryptobox can be serialized
       const serializedEve = await eve.serialize();
       expect(Object.keys(serializedEve.prekeys).length).toBe(amountOfAlicePreKeys);
 
       // Test that Eve can write to Bob because Alice had a session with Bob
-      const bobId = bob.identity.public_key.fingerprint();
-      const sessionId = `${aliceId}@${bobId}`;
       const messageEveToBob = 'Hello Bob, I am your new Alice. ;)';
-      const encrypted = await eve.encrypt(sessionId, messageEveToBob);
+      const encrypted = await eve.encrypt('alice-to-bob', messageEveToBob);
       const decrypted = await bob.decrypt('bob-to-alice', encrypted);
       expect(Buffer.from(decrypted).toString('utf8')).toBe(messageEveToBob);
 

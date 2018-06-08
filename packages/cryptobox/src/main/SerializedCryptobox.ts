@@ -1,5 +1,5 @@
 export type SerializedCryptobox = {
   identity: string;
   prekeys: string[];
-  sessions: string[];
+  sessions: {[sessionId: string]: string};
 };

@@ -153,18 +153,17 @@ class CryptoboxCRUDStore implements ProteusSession.PreKeyStore {
       });
   }
 
-  public read_sessions(identity: ProteusKeys.IdentityKeyPair): Promise<ProteusSession.Session[]> {
-    return this.engine.readAll(CryptoboxCRUDStore.STORES.SESSIONS).then((records: any[]) => {
-      const sessions: ProteusSession.Session[] = [];
+  public async read_sessions(
+    identity: ProteusKeys.IdentityKeyPair
+  ): Promise<{[sessionId: string]: ProteusSession.Session}> {
+    const sessionIds = await this.engine.readAllPrimaryKeys(CryptoboxCRUDStore.STORES.SESSIONS);
+    const sessions: {[sessionId: string]: ProteusSession.Session} = {};
 
-      records.forEach((record: PersistedRecord) => {
-        const payload = this.from_store(record);
-        const session: ProteusSession.Session = ProteusSession.Session.deserialise(identity, payload);
-        sessions.push(session);
-      });
+    for (const sessionId of sessionIds) {
+      sessions[sessionId] = await this.read_session(identity, sessionId);
+    }
 
-      return sessions;
-    });
+    return sessions;
   }
 
   public update_session(session_id: string, session: ProteusSession.Session): Promise<ProteusSession.Session> {

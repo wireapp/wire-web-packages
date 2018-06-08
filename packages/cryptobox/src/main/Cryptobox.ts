@@ -452,21 +452,16 @@ class Cryptobox extends EventEmitter {
     await this.store.save_prekeys(proteusPreKeys);
   }
 
-  private async importSessions(payload: string[]): Promise<void> {
+  private async importSessions(payload: {[sessionId: string]: string}): Promise<void> {
     this.logger.log(`Importing "${payload.length}" sessions...`);
 
-    const proteusSessions = payload.map(session => {
-      const sessionBuffer = Decoder.fromBase64(session).asBytes.buffer;
-      return ProteusSession.Session.deserialise(this.identity!, sessionBuffer);
-    });
-
-    const saveSessions = proteusSessions.map(proteusSession => {
-      const sessionId = CryptoboxSession.generateSessionId(proteusSession);
+    for (const sessionId in payload) {
+      const serializedSession = payload[sessionId];
+      const sessionBuffer = Decoder.fromBase64(serializedSession).asBytes.buffer;
+      const proteusSession = ProteusSession.Session.deserialise(this.identity!, sessionBuffer);
       const cryptoBoxSession = new CryptoboxSession(sessionId, proteusSession);
-      return this.session_save(cryptoBoxSession);
-    });
-
-    await Promise.all(saveSessions);
+      await this.session_save(cryptoBoxSession);
+    }
   }
 
   public async deserialize(payload: SerializedCryptobox) {
@@ -483,15 +478,18 @@ class Cryptobox extends EventEmitter {
     const data: SerializedCryptobox = {
       identity: '',
       prekeys: [],
-      sessions: [],
+      sessions: {},
     };
 
     const identity = await this.store.load_identity();
 
     if (identity) {
       data.identity = toBase64(identity.serialise());
-      const storedSessions = await this.store.read_sessions(identity);
-      data.sessions = storedSessions.map(storedSession => toBase64(storedSession.serialise()));
+      const sessions = await this.store.read_sessions(identity);
+      for (const sessionId in sessions) {
+        const storedSession = sessions[sessionId];
+        data.sessions[sessionId] = toBase64(storedSession.serialise());
+      }
     }
 
     const storedPreKeys = await this.store.load_prekeys();
