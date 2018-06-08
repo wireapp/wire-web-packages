@@ -26,10 +26,10 @@ class CryptoboxSession {
   public pk_store: CryptoboxCRUDStore;
   public session: ProteusSession.Session;
 
-  constructor(id: string, pk_store: CryptoboxCRUDStore, session: ProteusSession.Session) {
-    this.id = id;
+  constructor(id: string | undefined, pk_store: CryptoboxCRUDStore, session: ProteusSession.Session) {
     this.pk_store = pk_store;
     this.session = session;
+    this.id = id || this.generateSessionId();
     Object.freeze(this);
   }
 
@@ -46,6 +46,12 @@ class CryptoboxSession {
     return this.session.encrypt(plaintext).then(function(ciphertext: ProteusMessage.Envelope) {
       return ciphertext.serialise();
     });
+  }
+
+  public generateSessionId(): string {
+    const from = this.fingerprint_local();
+    const to = this.fingerprint_remote();
+    return `${from}@${to}`;
   }
 
   public fingerprint_local(): string {

@@ -106,27 +106,40 @@ describe('Cryptobox', () => {
 
       serializedAlice = await alice.serialize();
 
+      const expectedSessionsOfAlice = 2;
       expect(Object.keys(serializedAlice.prekeys).length).toBe(amountOfAlicePreKeys);
-      expect(Object.keys(serializedAlice.sessions).length).toBe(2);
+      expect(Object.keys(serializedAlice.sessions).length).toBe(expectedSessionsOfAlice);
 
-      // Test different identities
+      // Test that Alice and Eve are NOT the same
       const aliceId = alice.identity.public_key.fingerprint();
       let eveId = eve.identity.public_key.fingerprint();
       expect(aliceId).not.toBe(eveId);
 
-      // Test identity import
+      // Test that Eve can import Alice's Identity
       await eve.deserialize(serializedAlice);
       eveId = eve.identity.public_key.fingerprint();
       expect(aliceId).toBe(eveId);
 
-      // Test PreKey import
+      // Test that Eve can import Alice's PreKeys
       const evePreKeys = await eve.store.load_prekeys();
       expect(eve.lastResortPreKey).toBeDefined();
       expect(evePreKeys.length).toBe(amountOfAlicePreKeys);
 
-      // Test serialization
+      // Test that Eve can import Alice's Sessions
+      const eveSessions = await eve.store.read_sessions(eve.identity);
+      expect(eveSessions.length).toBe(expectedSessionsOfAlice);
+
+      // Test that Eve's Cryptobox can be serialized
       const serializedEve = await eve.serialize();
       expect(Object.keys(serializedEve.prekeys).length).toBe(amountOfAlicePreKeys);
+
+      // Test that Eve can write to Bob because Alice had a session with Bob
+      const bobId = bob.identity.public_key.fingerprint();
+      const sessionId = `${aliceId}@${bobId}`;
+      const messageEveToBob = 'Hello Bob, I am your new Alice. ;)';
+      const encrypted = await eve.encrypt(sessionId, messageEveToBob);
+      const decrypted = await bob.decrypt('bob-to-alice', encrypted);
+      expect(Buffer.from(decrypted).toString('utf8')).toBe(messageEveToBob);
 
       done();
     });
