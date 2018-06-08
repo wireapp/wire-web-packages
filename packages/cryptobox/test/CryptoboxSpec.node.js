@@ -75,7 +75,7 @@ describe('Cryptobox', () => {
   });
 
   describe('"serialize / deserialize"', () => {
-    it('serializes the local identity, primary keys & sessions', async done => {
+    it('can be used to export and import Cryptobox instances', async done => {
       // Test serialization
       const amountOfAlicePreKeys = 15;
       const alice = await createCryptobox('alice', amountOfAlicePreKeys);
