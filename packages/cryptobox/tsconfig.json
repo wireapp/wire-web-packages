@@ -1,7 +1,5 @@
 {
   "compilerOptions": {
-    "declaration": true,
-    "lib": ["DOM", "ES7", "ES2017.object"],
     "outDir": "dist/commonjs",
     "rootDir": "src/main"
   },
