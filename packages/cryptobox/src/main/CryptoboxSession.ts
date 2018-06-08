@@ -25,9 +25,9 @@ class CryptoboxSession {
   public id: string;
   public session: ProteusSession.Session;
 
-  constructor(id: string | undefined, session: ProteusSession.Session) {
+  constructor(id: string, session: ProteusSession.Session) {
+    this.id = id || CryptoboxSession.generateSessionId(session);
     this.session = session;
-    this.id = id || this.generateSessionId();
     Object.freeze(this);
   }
 
@@ -46,18 +46,18 @@ class CryptoboxSession {
     });
   }
 
-  public generateSessionId(): string {
-    const from = this.fingerprint_local();
-    const to = this.fingerprint_remote();
-    return `${from}@${to}`;
-  }
-
   public fingerprint_local(): string {
     return this.session.local_identity!.public_key.fingerprint();
   }
 
   public fingerprint_remote(): string {
     return this.session.remote_identity!.fingerprint();
+  }
+
+  public static generateSessionId(session: ProteusSession.Session): string {
+    const from = session.local_identity.public_key.fingerprint();
+    const to = session.remote_identity.fingerprint();
+    return `${from}@${to}`;
   }
 }
 

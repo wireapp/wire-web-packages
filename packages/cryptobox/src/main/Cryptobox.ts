@@ -461,7 +461,8 @@ class Cryptobox extends EventEmitter {
     });
 
     const saveSessions = proteusSessions.map(proteusSession => {
-      const cryptoBoxSession = new CryptoboxSession(undefined, proteusSession);
+      const sessionId = CryptoboxSession.generateSessionId(proteusSession);
+      const cryptoBoxSession = new CryptoboxSession(sessionId, proteusSession);
       return this.session_save(cryptoBoxSession);
     });
 
