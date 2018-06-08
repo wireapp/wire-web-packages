@@ -266,7 +266,7 @@ class Cryptobox extends EventEmitter {
       if (this.identity) {
         return ProteusSession.Session.init_from_prekey(this.identity, bundle).then(
           (session: ProteusSession.Session) => {
-            const cryptobox_session = new CryptoboxSession(session_id, this.store, session);
+            const cryptobox_session = new CryptoboxSession(session_id, session);
             return this.session_save(cryptobox_session);
           }
         );
@@ -286,7 +286,7 @@ class Cryptobox extends EventEmitter {
     if (this.identity) {
       return ProteusSession.Session.init_from_message(this.identity, this.store, env).then(tuple => {
         const [session, decrypted] = tuple;
-        const cryptoBoxSession = new CryptoboxSession(session_id, this.store, session);
+        const cryptoBoxSession = new CryptoboxSession(session_id, session);
         return <[CryptoboxSession, Uint8Array]>[cryptoBoxSession, decrypted];
       });
     }
@@ -304,7 +304,7 @@ class Cryptobox extends EventEmitter {
 
     if (this.identity) {
       return this.store.read_session(this.identity, session_id).then((session: ProteusSession.Session) => {
-        const cryptobox_session = new CryptoboxSession(session_id, this.store, session);
+        const cryptobox_session = new CryptoboxSession(session_id, session);
         return this.save_session_in_cache(cryptobox_session);
       });
     }
@@ -404,7 +404,7 @@ class Cryptobox extends EventEmitter {
             }
 
             session = value;
-            return session.decrypt(ciphertext);
+            return session.decrypt(ciphertext, this.store);
           })
           .then(decrypted_message => {
             message = decrypted_message;
@@ -461,7 +461,7 @@ class Cryptobox extends EventEmitter {
     });
 
     const saveSessions = proteusSessions.map(proteusSession => {
-      const cryptoBoxSession = new CryptoboxSession(undefined, this.store, proteusSession);
+      const cryptoBoxSession = new CryptoboxSession(undefined, proteusSession);
       return this.session_save(cryptoBoxSession);
     });
 
