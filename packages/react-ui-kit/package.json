@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "bazinga64": "5.2.0",
+    "bazinga64": "5.2.1",
     "color": "3.0.0",
     "react": "16.4.0",
     "react-dom": "16.4.0",
@@ -16,7 +16,7 @@
     "babel-plugin-transform-object-rest-spread": "6.26.0",
     "babel-preset-env": "1.7.0",
     "babel-preset-react": "6.24.1",
-    "react-hot-loader": "4.3.0",
+    "react-hot-loader": "4.3.1",
     "rimraf": "2.6.2",
     "webpack": "4.12.0",
     "webpack-cli": "3.0.3",
@@ -39,5 +39,5 @@
     "test:project": "yarn dist && yarn test",
     "test:browser": "exit 0"
   },
-  "version": "1.1.36"
+  "version": "1.1.37"
 }
