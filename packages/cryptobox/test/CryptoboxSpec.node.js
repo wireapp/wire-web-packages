@@ -75,8 +75,8 @@ describe('Cryptobox', () => {
     });
 
     fit('recovers from a broken session', async () => {
-      const event = require('./fixtures/qa-break-session/event');
       const cryptobox = require('./fixtures/qa-break-session/cryptobox');
+      const event = require('./fixtures/qa-break-session/event');
       const sessionId = `${event.from}@${event.data.sender}`;
 
       const amountOfAlicePreKeys = Object.keys(cryptobox.prekeys).length;
