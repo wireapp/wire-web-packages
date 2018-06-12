@@ -438,7 +438,7 @@ class Cryptobox extends EventEmitter {
   }
 
   private async importPreKeys(serializedPreKeys: {[sessionId: string]: string}): Promise<void> {
-    this.logger.log(`Importing "${serializedPreKeys.length}" PreKeys...`);
+    this.logger.log(`Importing "${Object.keys(serializedPreKeys).length}" PreKeys...`);
 
     const proteusPreKeys = Object.values(serializedPreKeys).map(preKey => {
       const preKeyBuffer = Decoder.fromBase64(preKey).asBytes.buffer;
@@ -453,7 +453,7 @@ class Cryptobox extends EventEmitter {
   }
 
   private async importSessions(serializedSessions: {[sessionId: string]: string}): Promise<void> {
-    this.logger.log(`Importing "${serializedSessions.length}" sessions...`);
+    this.logger.log(`Importing "${Object.keys(serializedSessions).length}" sessions...`);
 
     for (const sessionId in serializedSessions) {
       const serializedSession = serializedSessions[sessionId];
