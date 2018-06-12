@@ -19,6 +19,7 @@
 
 /* eslint no-magic-numbers: "off" */
 
+const bazinga64 = require('bazinga64');
 const Proteus = require('@wireapp/proteus');
 const {Cryptobox} = require('@wireapp/cryptobox');
 const {MemoryEngine} = require('@wireapp/store-engine');
@@ -71,6 +72,23 @@ describe('Cryptobox', () => {
           done();
         })
         .catch(done.fail);
+    });
+
+    fit('recovers from a broken session', async () => {
+      const event = require('./fixtures/qa-break-session/event');
+      const cryptobox = require('./fixtures/qa-break-session/cryptobox');
+      const sessionId = `${event.from}@${event.data.sender}`;
+
+      const amountOfAlicePreKeys = Object.keys(cryptobox.prekeys).length;
+      const alice = await createCryptobox('alice', amountOfAlicePreKeys);
+      await alice.create();
+      await alice.deserialize(cryptobox);
+
+      const ciphertext = bazinga64.Decoder.fromBase64(event.data.text).asBytes;
+      await alice.decrypt(sessionId, ciphertext.buffer);
+
+      expect(alice).toBeDefined();
+      expect(ciphertext).toBeDefined();
     });
   });
 
