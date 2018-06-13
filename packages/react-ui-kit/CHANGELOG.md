@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="1.1.39"></a>
+## [1.1.39](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.1.38...@wireapp/react-ui-kit@1.1.39) (2018-06-13)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.1.38"></a>
+## [1.1.38](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.1.37...@wireapp/react-ui-kit@1.1.38) (2018-06-13)
+
+
+### Bug Fixes
+
+* Input line height ([#694](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/694)) ([ac9ad33](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/ac9ad33))
+
+
+
+
 <a name="1.1.37"></a>
 ## [1.1.37](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.1.36...@wireapp/react-ui-kit@1.1.37) (2018-06-08)
 
