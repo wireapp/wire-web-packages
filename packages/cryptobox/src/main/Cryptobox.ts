@@ -158,6 +158,16 @@ class Cryptobox extends EventEmitter {
     return this.store.load_prekey(prekey_id);
   }
 
+  public async get_prekey_bundle(
+    prekey_id: number = ProteusKeys.PreKey.MAX_PREKEY_ID
+  ): Promise<ProteusKeys.PreKeyBundle | undefined> {
+    const preKey = await this.get_prekey(prekey_id);
+    if (this.identity && preKey) {
+      return ProteusKeys.PreKeyBundle.new(this.identity.public_key, preKey);
+    }
+    return undefined;
+  }
+
   public get_serialized_standard_prekeys(): Promise<Array<{id: number; key: string}>> {
     return this.store.load_prekeys().then(prekeys =>
       prekeys
