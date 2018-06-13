@@ -71,9 +71,12 @@ start(parameters)
         data: {message: errorMessage},
       },
     } = error;
+
     logger.error(error.stack);
+
     if (errorMessage) {
       logger.info('Message from backend:', errorMessage);
     }
+
     process.exit(1);
   });
