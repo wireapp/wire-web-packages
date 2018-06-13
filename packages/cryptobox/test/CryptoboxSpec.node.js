@@ -89,7 +89,7 @@ describe('Cryptobox', () => {
       try {
         await alice.decrypt(sessionId, ciphertext.buffer);
       } catch (error) {
-        expect(error.code).toBe(101);
+        expect(error.code).toBe(Proteus.errors.ProteusError.CODE.CASE_101);
       }
     });
   });
