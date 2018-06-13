@@ -72,6 +72,7 @@ export default class ConversationService {
     const messageId = new UUID(4).format();
     const sessionReset = this.protocolBuffers.GenericMessage.create({
       clientAction: ClientAction.RESET_SESSION,
+      messageId,
     });
 
     await this.sendGenericMessage(this.clientID, conversationId, sessionReset);
