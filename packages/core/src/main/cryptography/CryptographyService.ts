@@ -143,7 +143,8 @@ export default class CryptographyService {
     return this.database.deleteStores();
   }
 
-  public resetSession(sessionId: string): Promise<string> {
-    return this.cryptobox.session_delete(sessionId);
+  public async resetSession(sessionId: string): Promise<void> {
+    await this.cryptobox.session_delete(sessionId);
+    this.logger.info(`Deleted session ID: "${sessionId}".`);
   }
 }

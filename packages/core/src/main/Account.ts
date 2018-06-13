@@ -252,7 +252,6 @@ class Account extends EventEmitter {
     return {
       content: genericMessage.text && genericMessage.text.content,
       id: genericMessage.messageId,
-      sessionId,
       type: genericMessage.content,
     };
   }
@@ -263,8 +262,10 @@ class Account extends EventEmitter {
 
     switch (event.type) {
       case CONVERSATION_EVENT.OTR_MESSAGE_ADD: {
-        const decodedMessage = await this.decodeGenericMessage(event as ConversationOtrMessageAddEvent);
-        return {...decodedMessage, from, conversation};
+        const otrMessage = event as ConversationOtrMessageAddEvent;
+        const sessionId = CryptographyService.constructSessionId(from, otrMessage.data.sender);
+        const decodedMessage = await this.decodeGenericMessage(otrMessage);
+        return {...decodedMessage, from, conversation, sessionId};
       }
       case CONVERSATION_EVENT.TYPING: {
         return {...event, from, conversation};
@@ -291,8 +292,8 @@ class Account extends EventEmitter {
             this.emit(Account.INCOMING.TEXT_MESSAGE, data);
             break;
           case GenericMessageType.CLIENT_ACTION:
-            if (this.service && data.type === this.protocolBuffers.ClientAction.RESET_SESSION && data.sessionId) {
-              this.service.cryptography.resetSession(data.sessionId);
+            if (this.service && data.type === this.protocolBuffers.ClientAction.RESET_SESSION) {
+              await this.service.cryptography.resetSession(data.sessionId);
             }
             this.emit(Account.INCOMING.CLIENT_ACTION, data);
             break;
