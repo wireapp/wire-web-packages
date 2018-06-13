@@ -17,9 +17,8 @@
  *
  */
 
-enum ConfirmationType {
-  DELIVERED = 0,
-  READ = 1,
+enum ClientAction {
+  RESET_SESSION = 0,
 }
 
-export {ConfirmationType};
+export {ClientAction};
