@@ -29,7 +29,15 @@ import {CONVERSATION_TYPING} from '@wireapp/api-client/dist/commonjs/event/index
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
 import {AxiosError} from 'axios';
 import {Encoder} from 'bazinga64';
-import {AssetService, ConfirmationType, GenericMessageType, Image, ImageAsset, RemoteData} from '../conversation/root';
+import {
+  AssetService,
+  ClientAction,
+  ConfirmationType,
+  GenericMessageType,
+  Image,
+  ImageAsset,
+  RemoteData,
+} from '../conversation/root';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
 import {CryptographyService, EncryptedAsset, PayloadBundle} from '../cryptography/root';
 
@@ -246,6 +254,17 @@ export default class ConversationService {
       id: messageId,
       type: GenericMessageType.KNOCK,
     };
+  }
+
+  public async sendSessionReset(conversationId: string) {
+    const messageId = new UUID(4).format();
+    const sessionReset = this.protocolBuffers.GenericMessage.create({
+      clientAction: ClientAction.RESET_SESSION,
+      messageId,
+    });
+
+    await this.sendGenericMessage(this.clientID, conversationId, sessionReset);
+    return messageId;
   }
 
   public async sendText(conversationId: string, payloadBundle: PayloadBundle): Promise<PayloadBundle> {
