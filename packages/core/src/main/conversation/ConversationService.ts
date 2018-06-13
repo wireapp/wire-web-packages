@@ -138,20 +138,15 @@ export default class ConversationService {
         asset: imageAsset,
         image,
       },
-      conversation: '',
       from: this.clientID,
       id: messageId,
       type: GenericMessageType.ASSET,
     };
   }
 
-  public async createTextMessage(
-    message: string,
-    messageId: string = ConversationService.createId()
-  ): Promise<PayloadBundle> {
+  public async createText(message: string, messageId: string = ConversationService.createId()): Promise<PayloadBundle> {
     return {
       content: message,
-      conversation: '',
       from: this.clientID,
       id: messageId,
       type: GenericMessageType.TEXT,
@@ -253,7 +248,7 @@ export default class ConversationService {
     };
   }
 
-  public async sendTextMessage(conversationId: string, payloadBundle: PayloadBundle): Promise<PayloadBundle> {
+  public async sendText(conversationId: string, payloadBundle: PayloadBundle): Promise<PayloadBundle> {
     const genericMessage = this.protocolBuffers.GenericMessage.create({
       messageId: payloadBundle.id,
       text: this.protocolBuffers.Text.create({content: payloadBundle.content}),

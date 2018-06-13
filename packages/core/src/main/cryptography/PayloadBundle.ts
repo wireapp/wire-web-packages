@@ -21,7 +21,7 @@ import {Asset, GenericMessageType, Image, ImageAsset} from '../conversation/root
 
 interface PayloadBundle {
   content?: string | Asset | Image | ImageAsset;
-  conversation: string;
+  conversation?: string;
   from: string;
   id: string;
   type: GenericMessageType;
