@@ -96,6 +96,15 @@ class Demo extends React.PureComponent {
   };
 
   render() {
+    const ColumnsStyle = {
+      marginBottom: '16px',
+    };
+
+    const ColumnStyle = {
+      backgroundColor: COLOR.YELLOW_DARKEN_8,
+      border: `1px solid ${COLOR.RED_DARKEN_48}`,
+    };
+
     return (
       <StyledApp>
         {this.state.isModalOpen && (
@@ -162,10 +171,59 @@ class Demo extends React.PureComponent {
             </ContainerMD>
             <H2>Columns</H2>
             <Line />
-            <Columns>
-              <Column>Column</Column>
-              <Column>Column</Column>
-              <Column>Column</Column>
+
+            <Columns style={ColumnsStyle}>
+              <Column style={ColumnStyle}>Column</Column>
+            </Columns>
+
+            <Columns style={ColumnsStyle}>
+              <Column style={ColumnStyle}>Column</Column>
+              <Column style={ColumnStyle}>Column</Column>
+            </Columns>
+
+            <Columns style={ColumnsStyle}>
+              <Column style={ColumnStyle}>Column</Column>
+              <Column style={ColumnStyle}>Column</Column>
+              <Column style={ColumnStyle}>Column</Column>
+            </Columns>
+
+            <Columns style={ColumnsStyle}>
+              <Column style={ColumnStyle}>Column</Column>
+              <Column style={ColumnStyle}>Column</Column>
+              <Column style={ColumnStyle}>Column</Column>
+              <Column style={ColumnStyle}>Column</Column>
+            </Columns>
+
+            <Columns style={ColumnsStyle}>
+              <Column style={ColumnStyle}>Column</Column>
+              <Column style={ColumnStyle}>Column</Column>
+              <Column style={ColumnStyle}>Column</Column>
+              <Column style={ColumnStyle}>Column</Column>
+              <Column style={ColumnStyle}>Column</Column>
+            </Columns>
+
+            <Columns style={ColumnsStyle}>
+              <Column style={ColumnStyle}>
+                <Columns>
+                  <Column style={ColumnStyle}>Column</Column>
+                  <Column style={ColumnStyle}>Column</Column>
+                  <Column style={ColumnStyle}>Column</Column>
+                </Columns>
+              </Column>
+              <Column style={ColumnStyle}>
+                <Columns>
+                  <Column style={ColumnStyle}>Column</Column>
+                  <Column style={ColumnStyle}>Column</Column>
+                  <Column style={ColumnStyle}>Column</Column>
+                </Columns>
+              </Column>
+              <Column style={ColumnStyle}>
+                <Columns>
+                  <Column style={ColumnStyle}>Column</Column>
+                  <Column style={ColumnStyle}>Column</Column>
+                  <Column style={ColumnStyle}>Column</Column>
+                </Columns>
+              </Column>
             </Columns>
 
             <H1>Input</H1>

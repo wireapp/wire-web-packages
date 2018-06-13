@@ -13,6 +13,7 @@ npm-debug.log*
 package-lock.json
 temp
 yarn-error.log
+bundle*
 
 packages/react-ui-kit/index.js
 packages/react-ui-kit/Form.js
