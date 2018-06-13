@@ -29,9 +29,9 @@ import {CONVERSATION_TYPING} from '@wireapp/api-client/dist/commonjs/event/index
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
 import {AxiosError} from 'axios';
 import {Encoder} from 'bazinga64';
-import {AssetService, ConfirmationType, Image, MessagePayloadBundle, RemoteData} from '../conversation/root';
+import {AssetService, ConfirmationType, GenericMessageType, Image, ImageAsset, RemoteData} from '../conversation/root';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
-import {CryptographyService, EncryptedAsset} from '../cryptography/root';
+import {CryptographyService, EncryptedAsset, PayloadBundle} from '../cryptography/root';
 
 export default class ConversationService {
   private clientID: string = '';
@@ -126,72 +126,35 @@ export default class ConversationService {
     return estimatedPayloadInBytes > EXTERNAL_MESSAGE_THRESHOLD_BYTES;
   }
 
-  public async createConfirmation(
-    confirmMessageId: string,
-    messageId: string = ConversationService.createId()
-  ): Promise<MessagePayloadBundle> {
-    const confirmation = this.protocolBuffers.Confirmation.create({
-      firstMessageId: confirmMessageId,
-      type: ConfirmationType.DELIVERED,
-    });
-
-    const genericMessage = this.protocolBuffers.GenericMessage.create({
-      confirmation,
-      messageId,
-    });
-
-    return {
-      content: genericMessage,
-      messageId,
-    };
-  }
-
   public static createId(): string {
     return new UUID(4).format();
   }
 
-  public async createImage(
-    image: Image,
-    messageId: string = ConversationService.createId()
-  ): Promise<MessagePayloadBundle> {
+  public async createImage(image: Image, messageId: string = ConversationService.createId()): Promise<PayloadBundle> {
     const imageAsset = await this.assetService.uploadImageAsset(image);
 
-    const genericMessage = this.protocolBuffers.GenericMessage.create({
-      asset: imageAsset,
-      messageId,
-    });
-
     return {
-      content: genericMessage,
-      messageId,
-    };
-  }
-
-  public async createPing(messageId: string = ConversationService.createId()): Promise<MessagePayloadBundle> {
-    const knock = this.protocolBuffers.Knock.create();
-    const genericMessage = this.protocolBuffers.GenericMessage.create({
-      knock,
-      messageId,
-    });
-
-    return {
-      content: genericMessage,
-      messageId,
+      content: {
+        asset: imageAsset,
+        image,
+      },
+      conversation: '',
+      from: this.clientID,
+      id: messageId,
+      type: GenericMessageType.ASSET,
     };
   }
 
   public async createTextMessage(
     message: string,
     messageId: string = ConversationService.createId()
-  ): Promise<MessagePayloadBundle> {
-    const genericMessage = this.protocolBuffers.GenericMessage.create({
-      messageId,
-      text: this.protocolBuffers.Text.create({content: message}),
-    });
-
+  ): Promise<PayloadBundle> {
     return {
-      content: genericMessage,
-      messageId,
+      content: message,
+      conversation: '',
+      from: this.clientID,
+      id: messageId,
+      type: GenericMessageType.TEXT,
     };
   }
 
@@ -204,28 +167,100 @@ export default class ConversationService {
     });
   }
 
-  public async sendConfirmation(conversationId: string, payloadBundle: MessagePayloadBundle): Promise<string> {
-    await this.sendGenericMessage(this.clientID, conversationId, payloadBundle.content);
-    return payloadBundle.messageId;
+  public async sendConfirmation(conversationId: string, confirmMessageId: string): Promise<PayloadBundle> {
+    const messageId = ConversationService.createId();
+
+    const confirmation = this.protocolBuffers.Confirmation.create({
+      firstMessageId: confirmMessageId,
+      type: ConfirmationType.DELIVERED,
+    });
+
+    const genericMessage = this.protocolBuffers.GenericMessage.create({
+      confirmation,
+      messageId,
+    });
+
+    await this.sendGenericMessage(this.clientID, conversationId, genericMessage);
+
+    return {
+      conversation: conversationId,
+      from: this.clientID,
+      id: messageId,
+      type: GenericMessageType.CONFIRMATION,
+    };
   }
 
-  public async sendImage(conversationId: string, payloadBundle: MessagePayloadBundle): Promise<string> {
+  public async sendImage(conversationId: string, payloadBundle: PayloadBundle): Promise<PayloadBundle> {
+    if (!payloadBundle.content) {
+      throw new Error('No content for sendImage provided!');
+    }
+
+    const encryptedAsset = payloadBundle.content as ImageAsset;
+
+    const imageMetadata = this.protocolBuffers.Asset.ImageMetaData.create({
+      height: encryptedAsset.image.height,
+      width: encryptedAsset.image.width,
+    });
+
+    const original = this.protocolBuffers.Asset.Original.create({
+      image: imageMetadata,
+      mimeType: encryptedAsset.image.type,
+      name: null,
+      size: encryptedAsset.image.data.length,
+    });
+
+    const remoteData = this.protocolBuffers.Asset.RemoteData.create({
+      assetId: encryptedAsset.asset.key,
+      assetToken: encryptedAsset.asset.token,
+      otrKey: encryptedAsset.asset.keyBytes,
+      sha256: encryptedAsset.asset.sha256,
+    });
+
+    const asset = this.protocolBuffers.Asset.create({
+      original,
+      uploaded: remoteData,
+    });
+
+    const genericMessage = this.protocolBuffers.GenericMessage.create({
+      asset,
+      messageId: payloadBundle.id,
+    });
+
     const preKeyBundles = await this.getPreKeyBundles(conversationId);
-    const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(payloadBundle.content).finish();
+    const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(genericMessage).finish();
     const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
 
     await this.sendExternalGenericMessage(this.clientID, conversationId, payload, preKeyBundles as UserPreKeyBundleMap);
-    return payloadBundle.messageId;
+    return payloadBundle;
   }
 
-  public async sendPing(conversationId: string, payloadBundle: MessagePayloadBundle): Promise<string> {
-    await this.sendGenericMessage(this.clientID, conversationId, payloadBundle.content);
-    return payloadBundle.messageId;
+  public async sendPing(conversationId: string): Promise<PayloadBundle> {
+    const messageId = ConversationService.createId();
+
+    const knock = this.protocolBuffers.Knock.create();
+    const genericMessage = this.protocolBuffers.GenericMessage.create({
+      knock,
+      messageId,
+    });
+
+    await this.sendGenericMessage(this.clientID, conversationId, genericMessage);
+
+    return {
+      conversation: conversationId,
+      from: this.clientID,
+      id: messageId,
+      type: GenericMessageType.KNOCK,
+    };
   }
 
-  public async sendTextMessage(conversationId: string, payloadBundle: MessagePayloadBundle): Promise<string> {
+  public async sendTextMessage(conversationId: string, payloadBundle: PayloadBundle): Promise<PayloadBundle> {
+    const genericMessage = this.protocolBuffers.GenericMessage.create({
+      messageId: payloadBundle.id,
+      text: this.protocolBuffers.Text.create({content: payloadBundle.content}),
+    });
+
     const preKeyBundles = await this.getPreKeyBundles(conversationId);
-    const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(payloadBundle.content).finish();
+    const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(genericMessage).finish();
 
     if (this.shouldSendAsExternal(plainTextBuffer, preKeyBundles as UserPreKeyBundleMap)) {
       const encryptedAsset: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
@@ -236,7 +271,7 @@ export default class ConversationService {
         encryptedAsset,
         preKeyBundles as UserPreKeyBundleMap
       );
-      return payloadBundle.messageId;
+      return payloadBundle;
     }
 
     const payload: OTRRecipients = await this.cryptographyService.encrypt(
@@ -245,7 +280,7 @@ export default class ConversationService {
     );
 
     await this.sendMessage(this.clientID, conversationId, payload);
-    return payloadBundle.messageId;
+    return payloadBundle;
   }
 
   public sendTypingStart(conversationId: string): Promise<void> {

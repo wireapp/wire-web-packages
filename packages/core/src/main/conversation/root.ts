@@ -17,14 +17,13 @@
  *
  */
 
-import {Asset, Original, RemoteData} from './Asset';
+import {Asset, ImageAsset, Original, RemoteData} from './Asset';
 import AssetService from './AssetService';
 import ConfirmationType from './ConfirmationType';
 import ConversationService from './ConversationService';
 import DecodedMessage from './DecodedMessage';
 import GenericMessageType from './GenericMessageType';
 import Image from './Image';
-import MessagePayloadBundle from './MessagePayloadBundle';
 
 export {
   Asset,
@@ -35,6 +34,6 @@ export {
   Original,
   GenericMessageType,
   Image,
-  MessagePayloadBundle,
+  ImageAsset,
   RemoteData,
 };

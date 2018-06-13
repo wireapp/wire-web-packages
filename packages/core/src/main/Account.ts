@@ -86,7 +86,7 @@ class Account extends EventEmitter {
 
     const cryptographyService = new CryptographyService(this.apiClient, this.apiClient.config.store);
     const clientService = new ClientService(this.apiClient, this.apiClient.config.store, cryptographyService);
-    const assetService = new AssetService(this.apiClient, this.protocolBuffers);
+    const assetService = new AssetService(this.apiClient);
     const conversationService = new ConversationService(
       this.apiClient,
       this.protocolBuffers,
