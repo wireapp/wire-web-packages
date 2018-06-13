@@ -65,7 +65,9 @@ start(parameters)
   .then(() => process.exit(0))
   .catch(error => {
     // Info:
-    // Don't log error payloads here (on a global level) as they can leak sensitive information. Stack traces are ok!
+    // Don't log error payloads here (on a global level) as they can leak sensitive information.
+    // Stack traces and backend error messages are ok!
+
     const {
       response: {
         data: {message: errorMessage},
