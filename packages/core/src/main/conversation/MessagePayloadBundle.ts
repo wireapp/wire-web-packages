@@ -17,24 +17,9 @@
  *
  */
 
-import {Asset, Original, RemoteData} from './Asset';
-import AssetService from './AssetService';
-import ConfirmationType from './ConfirmationType';
-import ConversationService from './ConversationService';
-import DecodedMessage from './DecodedMessage';
-import GenericMessageType from './GenericMessageType';
-import Image from './Image';
-import MessagePayloadBundle from './MessagePayloadBundle';
+interface MessagePayloadBundle {
+  content: any;
+  messageId: string;
+}
 
-export {
-  Asset,
-  AssetService,
-  ConfirmationType,
-  ConversationService,
-  DecodedMessage,
-  Original,
-  GenericMessageType,
-  Image,
-  MessagePayloadBundle,
-  RemoteData,
-};
+export default MessagePayloadBundle;
