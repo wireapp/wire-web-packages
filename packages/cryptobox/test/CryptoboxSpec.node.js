@@ -74,7 +74,7 @@ describe('Cryptobox', () => {
         .catch(done.fail);
     });
 
-    fit('recovers from a broken session', async () => {
+    it("throws an error when receiving a PreKey message that was encoded with a PreKey which does not exist anymore on the receiver's side", async () => {
       const cryptobox = require('./fixtures/qa-break-session/cryptobox');
       const event = require('./fixtures/qa-break-session/event');
       const sessionId = `${event.from}@${event.data.sender}`;
@@ -85,10 +85,12 @@ describe('Cryptobox', () => {
       await alice.deserialize(cryptobox);
 
       const ciphertext = bazinga64.Decoder.fromBase64(event.data.text).asBytes;
-      await alice.decrypt(sessionId, ciphertext.buffer);
 
-      expect(alice).toBeDefined();
-      expect(ciphertext).toBeDefined();
+      try {
+        await alice.decrypt(sessionId, ciphertext.buffer);
+      } catch (error) {
+        expect(error.code).toBe(101);
+      }
     });
   });
 
