@@ -77,7 +77,7 @@ start(parameters)
     logger.error(error.stack);
 
     if (errorMessage) {
-      logger.info('Message from backend:', errorMessage);
+      logger.info(`Message from backend: "${errorMessage}"`);
     }
 
     process.exit(1);
