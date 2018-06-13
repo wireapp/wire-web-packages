@@ -65,7 +65,20 @@ start(parameters)
   .then(() => process.exit(0))
   .catch(error => {
     // Info:
-    // Don't log error payloads here (on a global level) as they can leak sensitive information. Stack traces are ok!
-    logger.error('Error at:', error.stack);
+    // Don't log error payloads here (on a global level) as they can leak sensitive information.
+    // Stack traces and backend error messages are ok!
+
+    const {
+      response: {
+        data: {message: errorMessage},
+      },
+    } = error;
+
+    logger.error(error.stack);
+
+    if (errorMessage) {
+      logger.info(`Message from backend: "${errorMessage}"`);
+    }
+
     process.exit(1);
   });
