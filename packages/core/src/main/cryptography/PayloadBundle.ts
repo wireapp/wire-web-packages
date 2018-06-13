@@ -24,6 +24,7 @@ interface PayloadBundle {
   conversation: string;
   from: string;
   id: string;
+  sessionId?: string;
   type: GenericMessageType;
 }
 

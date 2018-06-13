@@ -49,6 +49,7 @@ class Account extends EventEmitter {
 
   public static readonly INCOMING = {
     ASSET: 'Account.INCOMING.ASSET',
+    CLIENT_ACTION: 'Account.CLIENT_ACTION',
     CONFIRMATION: 'Account.INCOMING.CONFIRMATION',
     PING: 'Account.INCOMING.PING',
     TEXT_MESSAGE: 'Account.INCOMING.TEXT_MESSAGE',
@@ -76,6 +77,7 @@ class Account extends EventEmitter {
 
     this.protocolBuffers = {
       Asset: root.lookup('Asset'),
+      ClientAction: root.lookup('ClientAction'),
       Confirmation: root.lookup('Confirmation'),
       External: root.lookup('External'),
       GenericMessage: root.lookup('GenericMessage'),
@@ -250,6 +252,7 @@ class Account extends EventEmitter {
     return {
       content: genericMessage.text && genericMessage.text.content,
       id: genericMessage.messageId,
+      sessionId,
       type: genericMessage.content,
     };
   }
@@ -286,6 +289,12 @@ class Account extends EventEmitter {
             break;
           case GenericMessageType.TEXT:
             this.emit(Account.INCOMING.TEXT_MESSAGE, data);
+            break;
+          case GenericMessageType.CLIENT_ACTION:
+            if (this.service && data.type === this.protocolBuffers.ClientAction.RESET_SESSION && data.sessionId) {
+              this.service.cryptography.resetSession(data.sessionId);
+            }
+            this.emit(Account.INCOMING.CLIENT_ACTION, data);
             break;
           case CONVERSATION_EVENT.TYPING: {
             this.emit(Account.INCOMING.TYPING, event);

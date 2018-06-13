@@ -22,6 +22,7 @@ import {GenericMessageType} from '../conversation/root';
 interface DecodedEvent {
   content?: string;
   id: string;
+  sessionId?: string;
   type: GenericMessageType;
 }
 
