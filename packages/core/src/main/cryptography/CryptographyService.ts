@@ -32,8 +32,8 @@ import CryptographyDatabaseRepository from './CryptographyDatabaseRepository';
 
 export interface MetaClient extends RegisteredClient {
   meta: {
-    primary_key: string;
     is_verified?: boolean;
+    primary_key: string;
   };
 }
 
@@ -145,6 +145,6 @@ export default class CryptographyService {
 
   public async resetSession(sessionId: string): Promise<void> {
     await this.cryptobox.session_delete(sessionId);
-    this.logger.info(`Deleted session ID: "${sessionId}".`);
+    this.logger.info(`Deleted session ID "${sessionId}".`);
   }
 }

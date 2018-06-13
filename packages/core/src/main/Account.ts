@@ -282,6 +282,9 @@ class Account extends EventEmitter {
           case GenericMessageType.ASSET:
             this.emit(Account.INCOMING.ASSET, data);
             break;
+          case GenericMessageType.CLIENT_ACTION:
+            this.emit(Account.INCOMING.CLIENT_ACTION, data);
+            break;
           case GenericMessageType.CONFIRMATION:
             this.emit(Account.INCOMING.CONFIRMATION, data);
             break;
@@ -290,12 +293,6 @@ class Account extends EventEmitter {
             break;
           case GenericMessageType.TEXT:
             this.emit(Account.INCOMING.TEXT_MESSAGE, data);
-            break;
-          case GenericMessageType.CLIENT_ACTION:
-            if (this.service && data.type === this.protocolBuffers.ClientAction.RESET_SESSION) {
-              await this.service.cryptography.resetSession(data.sessionId);
-            }
-            this.emit(Account.INCOMING.CLIENT_ACTION, data);
             break;
           case CONVERSATION_EVENT.TYPING: {
             this.emit(Account.INCOMING.TYPING, event);
