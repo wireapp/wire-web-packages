@@ -77,7 +77,7 @@ export default class ConversationService {
     });
 
     const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(customTextMessage).finish();
-    const recipients = await this.cryptographyService.encrypt(plainTextBuffer, <UserPreKeyBundleMap>preKeyBundles);
+    const recipients = await this.cryptographyService.encrypt(plainTextBuffer, preKeyBundles as UserPreKeyBundleMap);
 
     const message: NewOTRMessage = {
       data: base64CipherText,
@@ -95,7 +95,7 @@ export default class ConversationService {
   ): Promise<ClientMismatch> {
     const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(genericMessage).finish();
     const preKeyBundles = await this.getPreKeyBundles(conversationId);
-    const recipients = await this.cryptographyService.encrypt(plainTextBuffer, <UserPreKeyBundleMap>preKeyBundles);
+    const recipients = await this.cryptographyService.encrypt(plainTextBuffer, preKeyBundles as UserPreKeyBundleMap);
 
     return this.sendMessage(sendingClientId, conversationId, recipients);
   }
@@ -210,11 +210,11 @@ export default class ConversationService {
   }
 
   public async sendImage(conversationId: string, payloadBundle: MessagePayloadBundle): Promise<string> {
-    const preKeyBundles: UserPreKeyBundleMap = await this.getPreKeyBundles(conversationId);
+    const preKeyBundles = await this.getPreKeyBundles(conversationId);
     const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(payloadBundle.content).finish();
     const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
 
-    await this.sendExternalGenericMessage(this.clientID, conversationId, payload, preKeyBundles);
+    await this.sendExternalGenericMessage(this.clientID, conversationId, payload, preKeyBundles as UserPreKeyBundleMap);
     return payloadBundle.messageId;
   }
 
@@ -224,17 +224,25 @@ export default class ConversationService {
   }
 
   public async sendTextMessage(conversationId: string, payloadBundle: MessagePayloadBundle): Promise<string> {
-    const preKeyBundles: UserPreKeyBundleMap = await this.getPreKeyBundles(conversationId);
+    const preKeyBundles = await this.getPreKeyBundles(conversationId);
     const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(payloadBundle.content).finish();
 
-    if (this.shouldSendAsExternal(plainTextBuffer, preKeyBundles)) {
+    if (this.shouldSendAsExternal(plainTextBuffer, preKeyBundles as UserPreKeyBundleMap)) {
       const encryptedAsset: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
 
-      await this.sendExternalGenericMessage(this.clientID, conversationId, encryptedAsset, preKeyBundles);
+      await this.sendExternalGenericMessage(
+        this.clientID,
+        conversationId,
+        encryptedAsset,
+        preKeyBundles as UserPreKeyBundleMap
+      );
       return payloadBundle.messageId;
     }
 
-    const payload: OTRRecipients = await this.cryptographyService.encrypt(plainTextBuffer, preKeyBundles);
+    const payload: OTRRecipients = await this.cryptographyService.encrypt(
+      plainTextBuffer,
+      preKeyBundles as UserPreKeyBundleMap
+    );
 
     await this.sendMessage(this.clientID, conversationId, payload);
     return payloadBundle.messageId;
@@ -273,7 +281,7 @@ export default class ConversationService {
     const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(genericMessage).finish();
     const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
 
-    await this.sendExternalGenericMessage(this.clientID, conversationId, payload, <UserPreKeyBundleMap>preKeyBundles);
+    await this.sendExternalGenericMessage(this.clientID, conversationId, payload, preKeyBundles as UserPreKeyBundleMap);
     return messageId;
   }
 }
