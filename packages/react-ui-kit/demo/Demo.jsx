@@ -101,8 +101,17 @@ class Demo extends React.PureComponent {
     };
 
     const ColumnStyle = {
-      backgroundColor: COLOR.YELLOW_DARKEN_8,
-      border: `1px solid ${COLOR.RED_DARKEN_48}`,
+      backgroundColor: COLOR.GRAY_LIGHTEN_72,
+      border: `1px solid ${COLOR.GRAY_LIGHTEN_24}`,
+    };
+
+    const ContainerStyle = {
+      ...ColumnsStyle,
+      ...ColumnStyle,
+      alignItems: 'center',
+      display: 'flex',
+      height: '48px',
+      justifyContent: 'center',
     };
 
     return (
@@ -154,21 +163,9 @@ class Demo extends React.PureComponent {
             <Line />
             <H1>Layout</H1>
             <Line />
-            <ContainerXS>
-              <Button block disabled>
-                ContainerXS
-              </Button>
-            </ContainerXS>
-            <ContainerSM>
-              <Button block disabled>
-                ContainerSM
-              </Button>
-            </ContainerSM>
-            <ContainerMD>
-              <Button block disabled>
-                ContainerMD
-              </Button>
-            </ContainerMD>
+            <ContainerXS style={ContainerStyle}>ContainerXS</ContainerXS>
+            <ContainerSM style={ContainerStyle}>ContainerSM</ContainerSM>
+            <ContainerMD style={ContainerStyle}>ContainerMD</ContainerMD>
             <H2>Columns</H2>
             <Line />
 
