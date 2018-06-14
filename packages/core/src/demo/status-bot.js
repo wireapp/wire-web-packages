@@ -61,10 +61,7 @@ if (!conversationId) {
     const account = new Account(apiClient);
     await account.login(login);
 
-    await account.service.conversation.sendTextMessage(
-      conversationId,
-      `I am posting from @wireapp/core v${version}. 🌞`
-    );
+    await account.service.conversation.sendText(conversationId, `I am posting from @wireapp/core v${version}. 🌞`);
   } catch (error) {
     logger.error('Error:', error.stack);
   }
