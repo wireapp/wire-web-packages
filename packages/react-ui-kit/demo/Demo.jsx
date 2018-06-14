@@ -97,7 +97,7 @@ class Demo extends React.PureComponent {
 
   render() {
     const ColumnsStyle = {
-      marginBottom: '16px',
+      marginBottom: '12px',
     };
 
     const ColumnStyle = {
