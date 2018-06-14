@@ -4,7 +4,7 @@
   },
   "dependencies": {
     "@types/generate-changelog": "1.7.0",
-    "@types/node": "10.3.2",
+    "@types/node": "10.3.3",
     "@wireapp/core": "3.1.0",
     "chalk": "2.4.1",
     "commander": "2.15.1",
@@ -14,7 +14,7 @@
   "devDependencies": {
     "logdown": "3.2.3",
     "rimraf": "2.6.2",
-    "typescript": "2.8.3"
+    "typescript": "2.9.2"
   },
   "files": [
     "dist"
