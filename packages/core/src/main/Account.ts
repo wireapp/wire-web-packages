@@ -223,6 +223,8 @@ class Account extends EventEmitter {
     }
     return Promise.resolve()
       .then(() => {
+        this.apiClient.transport.ws.removeAllListeners(WebSocketClient.TOPIC.ON_MESSAGE);
+
         if (notificationHandler) {
           this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, (notification: IncomingNotification) =>
             notificationHandler(notification)
