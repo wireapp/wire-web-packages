@@ -11,15 +11,6 @@ lerna-debug.log
 node_modules
 npm-debug.log*
 package-lock.json
+packages/react-ui-kit/demo/bundle*
 temp
 yarn-error.log
-bundle*
-
-packages/react-ui-kit/index.js
-packages/react-ui-kit/Form.js
-packages/react-ui-kit/Icon.js
-packages/react-ui-kit/Identity.js
-packages/react-ui-kit/Layout.js
-packages/react-ui-kit/Modal.js
-packages/react-ui-kit/Progress.js
-packages/react-ui-kit/Text.js

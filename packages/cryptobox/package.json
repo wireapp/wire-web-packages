@@ -2,10 +2,10 @@
   "dependencies": {
     "@types/fs-extra": "5.0.3",
     "@types/node": "10.3.2",
-    "@wireapp/lru-cache": "2.1.23",
-    "@wireapp/priority-queue": "0.1.41",
-    "@wireapp/proteus": "7.1.56",
-    "@wireapp/store-engine": "0.11.26",
+    "@wireapp/lru-cache": "2.1.25",
+    "@wireapp/priority-queue": "0.1.43",
+    "@wireapp/proteus": "7.1.59",
+    "@wireapp/store-engine": "0.11.27",
     "dexie": "2.0.4",
     "fs-extra": "6.0.1"
   },
@@ -13,7 +13,7 @@
   "devDependencies": {
     "browser-sync": "2.24.4",
     "cpx": "1.5.0",
-    "cross-env": "5.1.6",
+    "cross-env": "5.2.0",
     "gulp": "3.9.1",
     "gulp-babel": "7.0.1",
     "gulp-bower": "0.0.14",
@@ -35,7 +35,7 @@
     "run-sequence": "2.2.1",
     "typescript": "2.9.1",
     "webpack": "4.12.0",
-    "webpack-cli": "3.0.3"
+    "webpack-cli": "3.0.4"
   },
   "files": [
     "dist",
@@ -58,5 +58,5 @@
     "test:node": "cross-env NODE_DEBUG=@wireapp/cryptobox* jasmine --config=test/jasmine.node.json"
   },
   "types": "dist/commonjs/index.d.ts",
-  "version": "8.4.0"
+  "version": "8.4.3"
 }
