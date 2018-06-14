@@ -36,7 +36,7 @@ import {Root} from 'protobufjs';
 import {LoginSanitizer} from './auth/root';
 import {ClientInfo, ClientService} from './client/root';
 import {AssetService, ConversationService, DecodedMessage, GenericMessageType} from './conversation/root';
-import {CryptographyService, PayloadBundle} from './cryptography/root';
+import {CryptographyService, PayloadBundle, PayloadBundleState} from './cryptography/root';
 import {NotificationService} from './notification/root';
 import proto from './Protobuf';
 import {SelfService} from './self/root';
@@ -264,7 +264,7 @@ class Account extends EventEmitter {
       case CONVERSATION_EVENT.OTR_MESSAGE_ADD: {
         const otrMessage = event as ConversationOtrMessageAddEvent;
         const decodedMessage = await this.decodeGenericMessage(otrMessage);
-        return {...decodedMessage, from, conversation};
+        return {...decodedMessage, from, conversation, state: PayloadBundleState.INCOMING};
       }
       case CONVERSATION_EVENT.TYPING: {
         return {...event, from, conversation};

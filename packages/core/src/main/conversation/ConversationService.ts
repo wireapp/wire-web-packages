@@ -17,8 +17,6 @@
  *
  */
 
-const UUID = require('pure-uuid');
-import APIClient = require('@wireapp/api-client');
 import {
   ClientMismatch,
   NewOTRMessage,
@@ -39,7 +37,11 @@ import {
   RemoteData,
 } from '../conversation/root';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
+import {PayloadBundleState} from '../cryptography/PayloadBundle';
 import {CryptographyService, EncryptedAsset, PayloadBundle} from '../cryptography/root';
+
+const UUID = require('pure-uuid');
+import APIClient = require('@wireapp/api-client');
 
 export default class ConversationService {
   private clientID: string = '';
@@ -148,6 +150,7 @@ export default class ConversationService {
       },
       from: this.clientID,
       id: messageId,
+      state: PayloadBundleState.OUTGOING_UNSENT,
       type: GenericMessageType.ASSET,
     };
   }
@@ -157,6 +160,7 @@ export default class ConversationService {
       content: message,
       from: this.clientID,
       id: messageId,
+      state: PayloadBundleState.OUTGOING_UNSENT,
       type: GenericMessageType.TEXT,
     };
   }
@@ -189,6 +193,7 @@ export default class ConversationService {
       conversation: conversationId,
       from: this.clientID,
       id: messageId,
+      state: PayloadBundleState.OUTGOING_SENT,
       type: GenericMessageType.CONFIRMATION,
     };
   }
@@ -234,7 +239,7 @@ export default class ConversationService {
     const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
 
     await this.sendExternalGenericMessage(this.clientID, conversationId, payload, preKeyBundles as UserPreKeyBundleMap);
-    return payloadBundle;
+    return {...payloadBundle, state: PayloadBundleState.OUTGOING_SENT};
   }
 
   public async sendPing(conversationId: string): Promise<PayloadBundle> {
@@ -252,22 +257,31 @@ export default class ConversationService {
       conversation: conversationId,
       from: this.clientID,
       id: messageId,
+      state: PayloadBundleState.OUTGOING_SENT,
       type: GenericMessageType.KNOCK,
     };
   }
 
-  public async sendSessionReset(conversationId: string) {
-    const messageId = new UUID(4).format();
+  public async sendSessionReset(conversationId: string): Promise<PayloadBundle> {
+    const messageId = ConversationService.createId();
+
     const sessionReset = this.protocolBuffers.GenericMessage.create({
       clientAction: ClientAction.RESET_SESSION,
       messageId,
     });
 
     await this.sendGenericMessage(this.clientID, conversationId, sessionReset);
-    return messageId;
+    return {
+      conversation: conversationId,
+      from: this.clientID,
+      id: messageId,
+      state: PayloadBundleState.OUTGOING_SENT,
+      type: GenericMessageType.CLIENT_ACTION,
+    };
   }
 
-  public async sendText(conversationId: string, payloadBundle: PayloadBundle): Promise<PayloadBundle> {
+  public async sendText(conversationId: string, originalPayloadBundle: PayloadBundle): Promise<PayloadBundle> {
+    const payloadBundle = {...originalPayloadBundle, state: PayloadBundleState.OUTGOING_SENT};
     const genericMessage = this.protocolBuffers.GenericMessage.create({
       messageId: payloadBundle.id,
       text: this.protocolBuffers.Text.create({content: payloadBundle.content}),
@@ -309,11 +323,7 @@ export default class ConversationService {
     this.clientID = clientID;
   }
 
-  public async updateTextMessage(
-    conversationId: string,
-    originalMessageId: string,
-    newMessage: string
-  ): Promise<string> {
+  public async updateText(conversationId: string, originalMessageId: string, newMessage: string): Promise<string> {
     const messageId = ConversationService.createId();
 
     const editedMessage = this.protocolBuffers.MessageEdit.create({
