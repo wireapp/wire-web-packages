@@ -36,24 +36,19 @@ export default class FileEngine implements CRUDEngine {
     return fs.remove(this.storeName);
   }
 
-  private resolvePath(tableName: string, primaryKey?: string): Promise<string> {
-    const isPathTraversal = (...testPaths: string[]): boolean => {
-      for (const testPath of testPaths) {
-        if (
-          typeof testPath !== 'undefined' &&
-          (testPath.includes('.') || testPath.includes('/') || testPath.includes('\\'))
-        ) {
-          return true;
-        }
+  static checkPathTraversal(...testPaths: string[]): void {
+    for (const testPath of testPaths) {
+      const normalized = path.normalize(testPath).replace(/^(\.\.[\/\\])+/, '');
+      if (String(testPath) !== normalized) {
+        const message = `Path traversal has been detected on value "${testPath}" of array "${testPaths.join(',')}".`;
+        throw new PathValidationError(message);
       }
-      return false;
-    };
+    }
+  }
 
+  private resolvePath(tableName: string, primaryKey: string = ''): Promise<string> {
     return new Promise((resolve, reject) => {
-      if (isPathTraversal(tableName, primaryKey || '')) {
-        const message = `Path traversal has been detected on "${path.join(tableName, String(primaryKey))}".`;
-        return reject(new PathValidationError(message));
-      }
+      FileEngine.checkPathTraversal(tableName, primaryKey);
 
       const filePath = path.join(
         this.storeName,

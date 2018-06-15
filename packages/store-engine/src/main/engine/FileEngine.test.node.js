@@ -45,23 +45,24 @@ describe('FileEngine', () => {
       .then(done)
       .catch(done.fail));
 
-  describe('"resolvePath"', () => {
-    it('properly validates paths.', done => {
-      const PRIMARY_KEY = 'primary-key';
+  describe('"checkPathTraversal"', () => {
+    it('allows dots inside of primary keys.', () => {
+      const tableName = 'amplify';
+      const primaryKey = 'z.storage.StorageKey.EVENT.LAST_DATE';
+      const actual = FileEngine.checkPathTraversal(tableName, primaryKey);
+      expect(actual).toBeUndefined();
+    });
 
-      Promise.all([
-        engine.resolvePath('../etc', PRIMARY_KEY).catch(error => error),
-        engine.resolvePath('..\\etc', PRIMARY_KEY).catch(error => error),
-        engine.resolvePath('.etc', PRIMARY_KEY).catch(error => error),
-        engine.resolvePath(TABLE_NAME, '../etc').catch(error => error),
-        engine.resolvePath(TABLE_NAME, '..\\etc').catch(error => error),
-        engine.resolvePath(TABLE_NAME, '.etc').catch(error => error),
-      ]).then(results => {
-        for (error of results) {
-          expect(error instanceof StoreEngineError.PathValidationError).toBe(true);
-        }
-        done();
-      });
+    it('throws errors on path traversals.', () => {
+      const checkPathTraversal = (...testPaths) => () => FileEngine.checkPathTraversal(...testPaths);
+      const error = StoreEngineError.PathValidationError;
+      expect(checkPathTraversal('../etc', 'a')).toThrowError(error);
+      expect(checkPathTraversal('..\\etc', 'a')).toThrowError(error);
+      expect(checkPathTraversal('a', '../etc')).toThrowError(error);
+      expect(checkPathTraversal('a', '..\\etc')).toThrowError(error);
+      expect(checkPathTraversal('../etc', 'a')).toThrowError(error);
+      expect(checkPathTraversal('users/../', 'tigris')).toThrowError(error);
+      expect(checkPathTraversal('users/..', 'tigris')).toThrowError(error);
     });
   });
 
