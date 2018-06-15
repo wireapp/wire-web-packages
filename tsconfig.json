@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "declaration": true,
+    "forceConsistentCasingInFileNames": true,
     "lib": ["DOM", "ES6", "ES2017.object"],
     "module": "CommonJS",
     "moduleResolution": "node",
