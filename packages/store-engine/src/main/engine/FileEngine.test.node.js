@@ -60,23 +60,30 @@ describe('FileEngine', () => {
       expect(actual).toBeUndefined();
     });
 
-    it('throws errors on path traversals.', () => {
+    fit('throws errors on path traversals.', () => {
       const checkPathTraversal = (...testPaths) => () => FileEngine.checkPathTraversal(...testPaths);
       const error = StoreEngineError.PathValidationError;
-      expect(checkPathTraversal('../etc', 'a')).toThrowError(error);
-      expect(checkPathTraversal('C:\\Users\\wire\\Documents\\Database\\malicious\\..\\entry\\..\\test', 'a')).toThrowError(error);
-      expect(checkPathTraversal('C:\\Users\\wire\\Documents\\Database\\malicious\\..\\entry\\..', 'a')).toThrowError(error);
-      expect(checkPathTraversal('C:\\Users\\wire\\Documents\\Database\\malicious\\..\\entry\\..\\', 'a')).toThrowError(error);
-      expect(checkPathTraversal('/home/root/malicious/../../../entry/../test', 'a')).toThrowError(error);
-      expect(checkPathTraversal('/home/root/malicious/../../../entry/..', 'a')).toThrowError(error);
-      expect(checkPathTraversal('/home/root/malicious/../../../entry/../', 'a')).toThrowError(error);
-      expect(checkPathTraversal('..\\etc', 'a')).toThrowError(error);
-      expect(checkPathTraversal('a', '../etc')).toThrowError(error);
-      expect(checkPathTraversal('a', '..\\etc')).toThrowError(error);
-      expect(checkPathTraversal('../etc', 'a')).toThrowError(error);
-      expect(checkPathTraversal('\\\\server', 'a')).toThrowError(error);
-      expect(checkPathTraversal('users/../', 'tigris')).toThrowError(error);
-      expect(checkPathTraversal('users/..', 'tigris')).toThrowError(error);
+
+      const windowsFolder = 'C:\\Users\\wire\\Documents\\Database\\';
+      const unixFolder = '/home/root/test/';
+
+      expect(checkPathTraversal(windowsFolder, ['malicious\\..\\entry\\..\\test', 'b'], true)).toThrowError(error);
+      expect(checkPathTraversal(windowsFolder, ['\\malicious\\..\\entry\\..', 'o'], true)).toThrowError(error);
+      expect(checkPathTraversal(windowsFolder, ['malicious\\..\\entry\\..', 'x'], true)).toThrowError(error);
+      expect(checkPathTraversal(windowsFolder, ['a', '\\\\server\\..\\..\\..'], true)).toThrowError(error);
+      expect(checkPathTraversal(windowsFolder, ['malicious\\..\\entry\\..\\', 'z'], true)).toThrowError(error);
+      expect(checkPathTraversal(windowsFolder, ['..\\etc', 'a'], true)).toThrowError(error);
+
+      expect(checkPathTraversal(unixFolder, ['../etc', 'a'])).toThrowError(error);
+      expect(checkPathTraversal(unixFolder, ['/malicious/../../../entry/../test'])).toThrowError(error);
+      expect(checkPathTraversal(unixFolder, ['malicious/../../../entry/..', 'a'])).toThrowError(error);
+      expect(checkPathTraversal(unixFolder, ['documents/../../../../../etc/hosts', 'a'])).toThrowError(error);
+
+      expect(checkPathTraversal(unixFolder, ['a', 'malicious/../../../entry/../'])).toThrowError(error);
+      expect(checkPathTraversal(unixFolder, ['a', '../etc'])).toThrowError(error);
+      expect(checkPathTraversal(unixFolder, ['users/../../', 'tigris'])).toThrowError(error);
+      expect(checkPathTraversal(unixFolder, ['users/../..', 'tigris'])).toThrowError(error);
+      expect(checkPathTraversal(unixFolder, ['../etc', 'a'])).toThrowError(error);
     });
   });
 

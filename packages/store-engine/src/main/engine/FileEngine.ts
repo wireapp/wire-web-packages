@@ -36,13 +36,25 @@ export default class FileEngine implements CRUDEngine {
     return fs.remove(this.storeName);
   }
 
-  static checkPathTraversal(...testPaths: string[]): void {
+  static checkPathTraversal(trustedRoot: string, testPaths: string[], forceWindows: boolean = false): void {
+    const isPathSuspicious = (givenPath: string): boolean => {
+      if (process.platform === 'win32' || forceWindows === true) {
+        trustedRoot = path.win32.resolve(trustedRoot);
+        const unsafePath = path.win32.resolve(path.win32.join(trustedRoot, givenPath));
+        if (unsafePath.startsWith(trustedRoot) === false) {
+          return true;
+        }
+      } else {
+        trustedRoot = path.resolve(trustedRoot);
+        const unsafePath = path.resolve(path.join(trustedRoot, givenPath));
+        if (unsafePath.startsWith(trustedRoot) === false) {
+          return true;
+        }
+      }
+      return false;
+    };
     for (const testPath of testPaths) {
-      const normalized = path.normalize(testPath).replace(/^(\.\.[\/\\])+/, '');
-      const testCandidate = String(testPath);
-      const noEmptyString = testCandidate.length > 0;
-      const hasPathTraversal = String(testPath) !== normalized;
-      if (noEmptyString && hasPathTraversal) {
+      if (isPathSuspicious(testPath)) {
         const message = `Path traversal has been detected on value "${testPath}" of array "${testPaths.join(',')}".`;
         throw new PathValidationError(message);
       }
@@ -51,7 +63,7 @@ export default class FileEngine implements CRUDEngine {
 
   private resolvePath(tableName: string, primaryKey: string = ''): Promise<string> {
     return new Promise((resolve, reject) => {
-      FileEngine.checkPathTraversal(tableName, primaryKey);
+      FileEngine.checkPathTraversal(this.baseDirectory, [tableName, primaryKey]);
 
       const filePath = path.join(
         this.storeName,
