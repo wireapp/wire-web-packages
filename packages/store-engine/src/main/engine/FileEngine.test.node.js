@@ -66,8 +66,10 @@ describe('FileEngine', () => {
       expect(checkPathTraversal('../etc', 'a')).toThrowError(error);
       expect(checkPathTraversal('C:\\Users\\wire\\Documents\\Database\\malicious\\..\\entry\\..\\test', 'a')).toThrowError(error);
       expect(checkPathTraversal('C:\\Users\\wire\\Documents\\Database\\malicious\\..\\entry\\..', 'a')).toThrowError(error);
+      expect(checkPathTraversal('C:\\Users\\wire\\Documents\\Database\\malicious\\..\\entry\\..\\', 'a')).toThrowError(error);
       expect(checkPathTraversal('/home/root/malicious/../../../entry/../test', 'a')).toThrowError(error);
-      expect(checkPathTraversal('/home/root/malicious/../../../entry/../test', 'a')).toThrowError(error);
+      expect(checkPathTraversal('/home/root/malicious/../../../entry/..', 'a')).toThrowError(error);
+      expect(checkPathTraversal('/home/root/malicious/../../../entry/../', 'a')).toThrowError(error);
       expect(checkPathTraversal('..\\etc', 'a')).toThrowError(error);
       expect(checkPathTraversal('a', '../etc')).toThrowError(error);
       expect(checkPathTraversal('a', '..\\etc')).toThrowError(error);
