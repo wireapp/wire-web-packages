@@ -45,7 +45,7 @@ describe('FileEngine', () => {
       .then(done)
       .catch(done.fail));
 
-  describe('"checkPathTraversal"', () => {
+  fdescribe('"checkPathTraversal"', () => {
     it('allows dots inside of primary keys.', () => {
       const tableName = 'amplify';
       const primaryKey = 'z.storage.StorageKey.EVENT.LAST_DATE';
@@ -73,7 +73,7 @@ describe('FileEngine', () => {
     });
   });
 
-  describe('"append"', () => {
+  fdescribe('"append"', () => {
     Object.entries(require('../../test/shared/append')).map(([description, testFunction]) => {
       it(description, done => testFunction(done, engine));
     });
@@ -93,28 +93,6 @@ describe('FileEngine', () => {
 
       expect(engine.options.fileExtension).toBe(options.fileExtension);
       done();
-    });
-
-    it('does not allow path traversal', done => {
-      const PRIMARY_KEY = 'primary-key';
-
-      const entity = {
-        some: 'value',
-      };
-
-      Promise.all([
-        engine.create('../etc', PRIMARY_KEY, entity).catch(error => error),
-        engine.create('..\\etc', PRIMARY_KEY, entity).catch(error => error),
-        engine.create('.etc', PRIMARY_KEY, entity).catch(error => error),
-        engine.create(TABLE_NAME, '../etc', entity).catch(error => error),
-        engine.create(TABLE_NAME, '..\\etc', entity).catch(error => error),
-        engine.create(TABLE_NAME, '.etc', entity).catch(error => error),
-      ]).then(results => {
-        for (error of results) {
-          expect(error instanceof StoreEngineError.PathValidationError).toBe(true);
-        }
-        done();
-      });
     });
 
     it('does not work when non-printable characters are being used in the store name.', async done => {
