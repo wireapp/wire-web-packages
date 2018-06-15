@@ -53,6 +53,13 @@ describe('FileEngine', () => {
       expect(actual).toBeUndefined();
     });
 
+    it('allows empty strings.', () => {
+      const tableName = 'amplify';
+      const primaryKey = '';
+      const actual = FileEngine.checkPathTraversal(tableName, primaryKey);
+      expect(actual).toBeUndefined();
+    });
+
     it('throws errors on path traversals.', () => {
       const checkPathTraversal = (...testPaths) => () => FileEngine.checkPathTraversal(...testPaths);
       const error = StoreEngineError.PathValidationError;
