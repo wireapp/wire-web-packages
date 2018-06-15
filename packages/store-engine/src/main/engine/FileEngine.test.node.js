@@ -67,7 +67,9 @@ describe('FileEngine', () => {
       const windowsFolder = 'C:\\Users\\wire\\Documents\\Database\\';
       const unixFolder = '/home/root/test/';
 
-      expect(checkPathTraversal(windowsFolder, ['malicious\\..\\entry\\..\\test\\..', 'b'], true)).toThrowError(error);
+      expect(checkPathTraversal(windowsFolder, ['malicious\\..\\entry\\..\\test\\..\\..', 'b'], true)).toThrowError(
+        error
+      );
       expect(checkPathTraversal(windowsFolder, ['\\malicious\\..\\\\..entry\\..\\..', 'o'], true)).toThrowError(error);
       expect(checkPathTraversal(windowsFolder, ['malicious\\..\\entry\\..\\..', 'x'], true)).toThrowError(error);
       expect(checkPathTraversal(windowsFolder, ['a', '\\\\server\\..\\..\\..'], true)).toThrowError(error);
