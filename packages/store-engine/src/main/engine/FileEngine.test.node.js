@@ -60,7 +60,7 @@ describe('FileEngine', () => {
       expect(actual).toBeUndefined();
     });
 
-    fit('throws errors on path traversals.', () => {
+    it('throws errors on path traversals.', () => {
       const checkPathTraversal = (...testPaths) => () => FileEngine.checkPathTraversal(...testPaths);
       const error = StoreEngineError.PathValidationError;
 
