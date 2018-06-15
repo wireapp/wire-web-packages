@@ -45,7 +45,7 @@ describe('FileEngine', () => {
       .then(done)
       .catch(done.fail));
 
-  fdescribe('"checkPathTraversal"', () => {
+  describe('"checkPathTraversal"', () => {
     it('allows dots inside of primary keys.', () => {
       const tableName = 'amplify';
       const primaryKey = 'z.storage.StorageKey.EVENT.LAST_DATE';
@@ -73,7 +73,7 @@ describe('FileEngine', () => {
     });
   });
 
-  fdescribe('"append"', () => {
+  describe('"append"', () => {
     Object.entries(require('../../test/shared/append')).map(([description, testFunction]) => {
       it(description, done => testFunction(done, engine));
     });
@@ -118,42 +118,11 @@ describe('FileEngine', () => {
     Object.entries(require('../../test/shared/delete')).map(([description, testFunction]) => {
       it(description, done => testFunction(done, engine));
     });
-
-    it('does not allow path traversal', done => {
-      const PRIMARY_KEY = 'primary-key';
-
-      Promise.all([
-        engine.delete('../etc', PRIMARY_KEY).catch(error => error),
-        engine.delete('..\\etc', PRIMARY_KEY).catch(error => error),
-        engine.delete('.etc', PRIMARY_KEY).catch(error => error),
-        engine.delete(TABLE_NAME, '../etc').catch(error => error),
-        engine.delete(TABLE_NAME, '..\\etc').catch(error => error),
-        engine.delete(TABLE_NAME, '.etc').catch(error => error),
-      ]).then(results => {
-        for (error of results) {
-          expect(error instanceof StoreEngineError.PathValidationError).toBe(true);
-        }
-        done();
-      });
-    });
   });
 
   describe('"deleteAll"', () => {
     Object.entries(require('../../test/shared/deleteAll')).map(([description, testFunction]) => {
       it(description, done => testFunction(done, engine));
-    });
-
-    it('does not allow path traversal', done => {
-      Promise.all([
-        engine.deleteAll('../etc').catch(error => error),
-        engine.deleteAll('..\\etc').catch(error => error),
-        engine.deleteAll('.etc').catch(error => error),
-      ]).then(results => {
-        for (error of results) {
-          expect(error instanceof StoreEngineError.PathValidationError).toBe(true);
-        }
-        done();
-      });
     });
   });
 
@@ -167,42 +136,11 @@ describe('FileEngine', () => {
     Object.entries(require('../../test/shared/read')).map(([description, testFunction]) => {
       it(description, done => testFunction(done, engine));
     });
-
-    it('does not allow path traversal', done => {
-      const PRIMARY_KEY = 'primary-key';
-
-      Promise.all([
-        engine.read('../etc', PRIMARY_KEY).catch(error => error),
-        engine.read('..\\etc', PRIMARY_KEY).catch(error => error),
-        engine.read('.etc', PRIMARY_KEY).catch(error => error),
-        engine.read(TABLE_NAME, '../etc').catch(error => error),
-        engine.read(TABLE_NAME, '..\\etc').catch(error => error),
-        engine.read(TABLE_NAME, '.etc').catch(error => error),
-      ]).then(results => {
-        for (error of results) {
-          expect(error instanceof StoreEngineError.PathValidationError).toBe(true);
-        }
-        done();
-      });
-    });
   });
 
   describe('"readAll"', () => {
     Object.entries(require('../../test/shared/readAll')).map(([description, testFunction]) => {
       it(description, done => testFunction(done, engine));
-    });
-
-    it('does not allow path traversal', done => {
-      Promise.all([
-        engine.readAll('../etc').catch(error => error),
-        engine.readAll('..\\etc').catch(error => error),
-        engine.readAll('.etc').catch(error => error),
-      ]).then(results => {
-        for (error of results) {
-          expect(error instanceof StoreEngineError.PathValidationError).toBe(true);
-        }
-        done();
-      });
     });
   });
 
