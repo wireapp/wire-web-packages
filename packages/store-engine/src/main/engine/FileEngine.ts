@@ -39,7 +39,10 @@ export default class FileEngine implements CRUDEngine {
   static checkPathTraversal(...testPaths: string[]): void {
     for (const testPath of testPaths) {
       const normalized = path.normalize(testPath).replace(/^(\.\.[\/\\])+/, '');
-      if (String(testPath) !== normalized) {
+      const testCandidate = String(testPath);
+      const noEmptyString = testCandidate.length > 0;
+      const hasPathTraversal = String(testPath) !== normalized;
+      if (noEmptyString && hasPathTraversal) {
         const message = `Path traversal has been detected on value "${testPath}" of array "${testPaths.join(',')}".`;
         throw new PathValidationError(message);
       }
