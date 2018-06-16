@@ -45,51 +45,56 @@ describe('FileEngine', () => {
       .then(done)
       .catch(done.fail));
 
-  describe('"checkPathTraversal"', () => {
+  describe('"enforcePathRestrictions"', () => {
+    const windowsFolder = 'C:\\Users\\bart\\Documents\\Database\\';
+    const unixFolder = '/home/marge/test/';
+
     it('allows dots inside of primary keys.', () => {
-      const tableName = '/home/root/test/amplify';
+      const tableName = 'amplify';
       const primaryKey = 'z.storage.StorageKey.EVENT.LAST_DATE';
-      const actual = FileEngine.checkPathTraversal(tableName, primaryKey);
+      const actual = FileEngine.enforcePathRestrictions(`${unixFolder}${tableName}`, primaryKey);
       expect(actual).toBeUndefined();
     });
 
     it('allows empty strings.', () => {
-      const tableName = '/home/root/test/amplify';
+      const tableName = 'amplify';
       const primaryKey = '';
-      const actual = FileEngine.checkPathTraversal(tableName, primaryKey);
+      const actual = FileEngine.enforcePathRestrictions(`${unixFolder}${tableName}`, primaryKey);
       expect(actual).toBeUndefined();
     });
 
-    const windowsFolder = 'C:\\Users\\wire\\Documents\\Database\\';
-    const unixFolder = '/home/root/test/';
-
     it('allows navigation within the restricted folder.', () => {
-      expect(FileEngine.checkPathTraversal(unixFolder, 'users/..')).toBeUndefined();
-      expect(FileEngine.checkPathTraversal(unixFolder, 'users/../')).toBeUndefined();
-      expect(FileEngine.checkPathTraversal(unixFolder, 'users/../sandbox')).toBeUndefined();
-      expect(FileEngine.checkPathTraversal(unixFolder, 'users/me')).toBeUndefined();
-      expect(FileEngine.checkPathTraversal(unixFolder, 'a/b/c/d/e/f/g/../../../../ok')).toBeUndefined();
+      expect(FileEngine.enforcePathRestrictions(unixFolder, 'users/..')).toBeUndefined();
+      expect(FileEngine.enforcePathRestrictions(unixFolder, 'users/../')).toBeUndefined();
+      expect(FileEngine.enforcePathRestrictions(unixFolder, 'users/../sandbox')).toBeUndefined();
+      expect(FileEngine.enforcePathRestrictions(unixFolder, 'users/me')).toBeUndefined();
+      expect(FileEngine.enforcePathRestrictions(unixFolder, 'a/b/c/d/e/f/g/../../../../ok')).toBeUndefined();
     });
 
+    const enforcePathRestrictions = (...opts) => () => FileEngine.enforcePathRestrictions(...opts);
+    const error = StoreEngineError.PathValidationError;
+
     it('throws errors on path traversals.', () => {
-      const checkPathTraversal = (...testPaths) => () => FileEngine.checkPathTraversal(...testPaths);
-      const error = StoreEngineError.PathValidationError;
+      expect(enforcePathRestrictions(windowsFolder, 'malicious\\..\\..\\test\\..\\..', true)).toThrowError(error);
+      expect(enforcePathRestrictions(windowsFolder, '\\malicious\\..\\\\..entry\\..\\..', true)).toThrowError(error);
+      expect(enforcePathRestrictions(windowsFolder, 'malicious\\..\\entry\\..\\..', true)).toThrowError(error);
+      expect(enforcePathRestrictions(windowsFolder, '\\\\server\\..\\..\\..', true)).toThrowError(error);
+      expect(enforcePathRestrictions(windowsFolder, 'malicious\\..\\..\\entry\\..\\', true)).toThrowError(error);
+      expect(enforcePathRestrictions(windowsFolder, '..\\etc', true)).toThrowError(error);
 
-      expect(checkPathTraversal(windowsFolder, 'malicious\\..\\..\\test\\..\\..', true)).toThrowError(error);
-      expect(checkPathTraversal(windowsFolder, '\\malicious\\..\\\\..entry\\..\\..', true)).toThrowError(error);
-      expect(checkPathTraversal(windowsFolder, 'malicious\\..\\entry\\..\\..', true)).toThrowError(error);
-      expect(checkPathTraversal(windowsFolder, '\\\\server\\..\\..\\..', true)).toThrowError(error);
-      expect(checkPathTraversal(windowsFolder, 'malicious\\..\\..\\entry\\..\\', true)).toThrowError(error);
-      expect(checkPathTraversal(windowsFolder, '..\\etc', true)).toThrowError(error);
+      expect(enforcePathRestrictions(unixFolder, '../etc')).toThrowError(error);
+      expect(enforcePathRestrictions(unixFolder, '/malicious/../../../entry/../test')).toThrowError(error);
+      expect(enforcePathRestrictions(unixFolder, 'malicious/../../../entry/..')).toThrowError(error);
+      expect(enforcePathRestrictions(unixFolder, 'documents/../../../../../etc/hosts')).toThrowError(error);
+      expect(enforcePathRestrictions(unixFolder, 'malicious/../../../entry/../')).toThrowError(error);
+      expect(enforcePathRestrictions(unixFolder, '../etc')).toThrowError(error);
+      expect(enforcePathRestrictions(unixFolder, 'users/../../tigris')).toThrowError(error);
+      expect(enforcePathRestrictions(unixFolder, 'users/../tigris/../../')).toThrowError(error);
+    });
 
-      expect(checkPathTraversal(unixFolder, '../etc')).toThrowError(error);
-      expect(checkPathTraversal(unixFolder, '/malicious/../../../entry/../test')).toThrowError(error);
-      expect(checkPathTraversal(unixFolder, 'malicious/../../../entry/..')).toThrowError(error);
-      expect(checkPathTraversal(unixFolder, 'documents/../../../../../etc/hosts')).toThrowError(error);
-      expect(checkPathTraversal(unixFolder, 'malicious/../../../entry/../')).toThrowError(error);
-      expect(checkPathTraversal(unixFolder, '../etc')).toThrowError(error);
-      expect(checkPathTraversal(unixFolder, 'users/../../tigris')).toThrowError(error);
-      expect(checkPathTraversal(unixFolder, 'users/../tigris/../../')).toThrowError(error);
+    it('throws errors when attempting to use the root folder as a trusted root.', () => {
+      expect(enforcePathRestrictions('/', 'etc/hosts')).toThrowError(error);
+      expect(enforcePathRestrictions('C:/', '\\Windows\\System32\\drivers\\etc\\hosts', true)).toThrowError(error);
     });
   });
 

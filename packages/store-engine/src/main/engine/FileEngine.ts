@@ -38,35 +38,28 @@ export default class FileEngine implements CRUDEngine {
     return fs.remove(this.storeName);
   }
 
-  static checkPathTraversal(trustedRoot: string, testPath: string, forceWindows: boolean = false): void {
-    const isPathSuspicious = (givenPath: string): boolean => {
-      if (process.platform === 'win32' || forceWindows === true) {
-        trustedRoot = path.win32.resolve(trustedRoot);
-        const unsafePath = path.win32.resolve(path.win32.join(trustedRoot, givenPath));
-        if (unsafePath.startsWith(trustedRoot) === false) {
-          return true;
-        }
-      } else {
-        trustedRoot = path.resolve(trustedRoot);
-        const unsafePath = path.resolve(path.join(trustedRoot, givenPath));
-        if (unsafePath.startsWith(trustedRoot) === false) {
-          return true;
-        }
-      }
-      return false;
-    };
+  static enforcePathRestrictions(givenTrustedRoot: string, givenPath: string, forceWindows: boolean = false): void {
+    const pathApi: any = process.platform === 'win32' || forceWindows === true ? path.win32 : path;
+    const trustedRoot = pathApi.resolve(givenTrustedRoot);
 
-    if (isPathSuspicious(testPath)) {
-      const message = `Path traversal has been detected on value "${testPath}".`;
+    const trustedRootDetails = pathApi.parse(trustedRoot);
+    if (trustedRootDetails.root === trustedRootDetails.dir && trustedRootDetails.base === '') {
+      const message = `"${trustedRoot}" cannot be the root of the filesystem.`;
+      throw new PathValidationError(message);
+    }
+
+    const unsafePath = pathApi.resolve(pathApi.join(trustedRoot, givenPath));
+    if (unsafePath.startsWith(trustedRoot) === false) {
+      const message = `Path traversal has been detected. Allowed path was "${trustedRoot}" but tested path "${givenPath}" attempted to reach "${unsafePath}"`;
       throw new PathValidationError(message);
     }
   }
 
   private resolvePath(tableName: string, primaryKey: string = ''): Promise<string> {
     return new Promise((resolve, reject) => {
-      FileEngine.checkPathTraversal(this.baseDirectory, this.storeNameOriginal);
-      FileEngine.checkPathTraversal(this.storeName, tableName);
-      FileEngine.checkPathTraversal(path.join(this.storeName, tableName), primaryKey);
+      FileEngine.enforcePathRestrictions(this.baseDirectory, this.storeNameOriginal);
+      FileEngine.enforcePathRestrictions(this.storeName, tableName);
+      FileEngine.enforcePathRestrictions(path.join(this.storeName, tableName), primaryKey);
 
       const filePath = path.join(
         this.storeName,
