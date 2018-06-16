@@ -12,6 +12,7 @@ import {
 
 export default class FileEngine implements CRUDEngine {
   public storeName: string = '';
+  public storeNameOriginal: string = '';
   private options: {fileExtension: string} = {
     fileExtension: '.dat',
   };
@@ -27,7 +28,8 @@ export default class FileEngine implements CRUDEngine {
 
   public async init(storeName: string = '', options: {fileExtension: string}): Promise<any> {
     await this.isSupported();
-    this.storeName = path.normalize(path.join(this.baseDirectory, storeName));
+    this.storeNameOriginal = storeName;
+    this.storeName = path.resolve(path.join(this.baseDirectory, storeName));
     this.options = {...this.options, ...options};
     return Promise.resolve(storeName);
   }
@@ -36,7 +38,7 @@ export default class FileEngine implements CRUDEngine {
     return fs.remove(this.storeName);
   }
 
-  static checkPathTraversal(trustedRoot: string, testPaths: string[], forceWindows: boolean = false): void {
+  static checkPathTraversal(trustedRoot: string, testPath: string, forceWindows: boolean = false): void {
     const isPathSuspicious = (givenPath: string): boolean => {
       if (process.platform === 'win32' || forceWindows === true) {
         trustedRoot = path.win32.resolve(trustedRoot);
@@ -53,25 +55,26 @@ export default class FileEngine implements CRUDEngine {
       }
       return false;
     };
-    for (const testPath of testPaths) {
-      if (isPathSuspicious(testPath)) {
-        const message = `Path traversal has been detected on value "${testPath}" of array "${testPaths.join(',')}".`;
-        throw new PathValidationError(message);
-      }
+
+    if (isPathSuspicious(testPath)) {
+      const message = `Path traversal has been detected on value "${testPath}".`;
+      throw new PathValidationError(message);
     }
   }
 
   private resolvePath(tableName: string, primaryKey: string = ''): Promise<string> {
     return new Promise((resolve, reject) => {
-      FileEngine.checkPathTraversal(this.baseDirectory, [tableName, primaryKey]);
+      FileEngine.checkPathTraversal(this.baseDirectory, this.storeNameOriginal);
+      FileEngine.checkPathTraversal(this.storeName, tableName);
+      FileEngine.checkPathTraversal(path.join(this.storeName, tableName), primaryKey);
 
       const filePath = path.join(
         this.storeName,
         tableName,
         primaryKey ? `${primaryKey}${this.options.fileExtension}` : ''
       );
-      const nonPrintableCharacters = new RegExp('[^\x20-\x7E]+', 'gm');
 
+      const nonPrintableCharacters = new RegExp('[^\x20-\x7E]+', 'gm');
       if (filePath.match(nonPrintableCharacters)) {
         const message = `Cannot create file with path "${filePath}".`;
         return reject(new PathValidationError(message));

@@ -47,43 +47,49 @@ describe('FileEngine', () => {
 
   describe('"checkPathTraversal"', () => {
     it('allows dots inside of primary keys.', () => {
-      const tableName = 'amplify';
+      const tableName = '/home/root/test/amplify';
       const primaryKey = 'z.storage.StorageKey.EVENT.LAST_DATE';
       const actual = FileEngine.checkPathTraversal(tableName, primaryKey);
       expect(actual).toBeUndefined();
     });
 
     it('allows empty strings.', () => {
-      const tableName = 'amplify';
+      const tableName = '/home/root/test/amplify';
       const primaryKey = '';
       const actual = FileEngine.checkPathTraversal(tableName, primaryKey);
       expect(actual).toBeUndefined();
+    });
+
+    const windowsFolder = 'C:\\Users\\wire\\Documents\\Database\\';
+    const unixFolder = '/home/root/test/';
+
+    it('allows navigation within the restricted folder.', () => {
+      expect(FileEngine.checkPathTraversal(unixFolder, 'users/..')).toBeUndefined();
+      expect(FileEngine.checkPathTraversal(unixFolder, 'users/../')).toBeUndefined();
+      expect(FileEngine.checkPathTraversal(unixFolder, 'users/../sandbox')).toBeUndefined();
+      expect(FileEngine.checkPathTraversal(unixFolder, 'users/me')).toBeUndefined();
+      expect(FileEngine.checkPathTraversal(unixFolder, 'a/b/c/d/e/f/g/../../../../ok')).toBeUndefined();
     });
 
     it('throws errors on path traversals.', () => {
       const checkPathTraversal = (...testPaths) => () => FileEngine.checkPathTraversal(...testPaths);
       const error = StoreEngineError.PathValidationError;
 
-      const windowsFolder = 'C:\\Users\\wire\\Documents\\Database\\';
-      const unixFolder = '/home/root/test/';
+      expect(checkPathTraversal(windowsFolder, 'malicious\\..\\..\\test\\..\\..', true)).toThrowError(error);
+      expect(checkPathTraversal(windowsFolder, '\\malicious\\..\\\\..entry\\..\\..', true)).toThrowError(error);
+      expect(checkPathTraversal(windowsFolder, 'malicious\\..\\entry\\..\\..', true)).toThrowError(error);
+      expect(checkPathTraversal(windowsFolder, '\\\\server\\..\\..\\..', true)).toThrowError(error);
+      expect(checkPathTraversal(windowsFolder, 'malicious\\..\\..\\entry\\..\\', true)).toThrowError(error);
+      expect(checkPathTraversal(windowsFolder, '..\\etc', true)).toThrowError(error);
 
-      expect(checkPathTraversal(windowsFolder, ['malicious\\..\\entry\\..\\test\\..\\..', 'b'], true)).toThrowError(
-        error
-      );
-      expect(checkPathTraversal(windowsFolder, ['\\malicious\\..\\\\..entry\\..\\..', 'o'], true)).toThrowError(error);
-      expect(checkPathTraversal(windowsFolder, ['malicious\\..\\entry\\..\\..', 'x'], true)).toThrowError(error);
-      expect(checkPathTraversal(windowsFolder, ['a', '\\\\server\\..\\..\\..'], true)).toThrowError(error);
-      expect(checkPathTraversal(windowsFolder, ['malicious\\..\\..\\entry\\..\\', 'z'], true)).toThrowError(error);
-      expect(checkPathTraversal(windowsFolder, ['..\\etc', 'a'], true)).toThrowError(error);
-
-      expect(checkPathTraversal(unixFolder, ['../etc', 'a'])).toThrowError(error);
-      expect(checkPathTraversal(unixFolder, ['/malicious/../../../entry/../test'])).toThrowError(error);
-      expect(checkPathTraversal(unixFolder, ['malicious/../../../entry/..', 'a'])).toThrowError(error);
-      expect(checkPathTraversal(unixFolder, ['documents/../../../../../etc/hosts', 'a'])).toThrowError(error);
-      expect(checkPathTraversal(unixFolder, ['a', 'malicious/../../../entry/../'])).toThrowError(error);
-      expect(checkPathTraversal(unixFolder, ['a', '../etc'])).toThrowError(error);
-      expect(checkPathTraversal(unixFolder, ['users/../../', 'tigris'])).toThrowError(error);
-      expect(checkPathTraversal(unixFolder, ['users/../..', 'tigris'])).toThrowError(error);
+      expect(checkPathTraversal(unixFolder, '../etc')).toThrowError(error);
+      expect(checkPathTraversal(unixFolder, '/malicious/../../../entry/../test')).toThrowError(error);
+      expect(checkPathTraversal(unixFolder, 'malicious/../../../entry/..')).toThrowError(error);
+      expect(checkPathTraversal(unixFolder, 'documents/../../../../../etc/hosts')).toThrowError(error);
+      expect(checkPathTraversal(unixFolder, 'malicious/../../../entry/../')).toThrowError(error);
+      expect(checkPathTraversal(unixFolder, '../etc')).toThrowError(error);
+      expect(checkPathTraversal(unixFolder, 'users/../../tigris')).toThrowError(error);
+      expect(checkPathTraversal(unixFolder, 'users/../tigris/../../')).toThrowError(error);
     });
   });
 
