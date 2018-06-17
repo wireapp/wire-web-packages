@@ -52,14 +52,14 @@ describe('FileEngine', () => {
     it('allows dots inside of primary keys.', () => {
       const tableName = 'amplify';
       const primaryKey = 'z.storage.StorageKey.EVENT.LAST_DATE';
-      const actual = FileEngine.enforcePathRestrictions(`${unixFolder}${tableName}`, primaryKey);
+      const actual = FileEngine.enforcePathRestrictions(path.join(unixFolder, tableName), primaryKey);
       expect(actual).toBeUndefined();
     });
 
     it('allows empty strings.', () => {
       const tableName = 'amplify';
       const primaryKey = '';
-      const actual = FileEngine.enforcePathRestrictions(`${unixFolder}${tableName}`, primaryKey);
+      const actual = FileEngine.enforcePathRestrictions(path.join(unixFolder, tableName), primaryKey);
       expect(actual).toBeUndefined();
     });
 
