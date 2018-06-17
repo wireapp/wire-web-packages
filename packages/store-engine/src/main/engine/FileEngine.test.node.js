@@ -22,15 +22,14 @@ const path = require('path');
 const {error: StoreEngineError, FileEngine} = require('@wireapp/store-engine');
 
 describe('FileEngine', () => {
-  const STORE_NAME = 'store-name';
-  const TABLE_NAME = 'the-simpsons';
-
-  const TEST_DIRECTORY = path.join(process.cwd(), '.tmp', STORE_NAME);
+  const BASE_DIRECTORY = path.join(process.cwd(), '.tmp');
+  const STORE_NAME = 'the-simpsons';
+  const TEST_DIRECTORY = path.join(BASE_DIRECTORY, STORE_NAME);
   let engine = undefined;
 
   async function initEngine(shouldCreateNewEngine = true) {
-    const storeEngine = shouldCreateNewEngine ? new FileEngine() : engine;
-    await storeEngine.init(TEST_DIRECTORY);
+    const storeEngine = shouldCreateNewEngine ? new FileEngine(BASE_DIRECTORY) : engine;
+    await storeEngine.init(STORE_NAME);
     return storeEngine;
   }
 
@@ -113,29 +112,11 @@ describe('FileEngine', () => {
       const options = {
         fileExtension: '.json',
       };
-      engine = new FileEngine();
+      engine = new FileEngine(BASE_DIRECTORY);
       await engine.init(STORE_NAME, options);
 
       expect(engine.options.fileExtension).toBe(options.fileExtension);
       done();
-    });
-
-    it('does not work when non-printable characters are being used in the store name.', async done => {
-      await engine.init(path.join(process.cwd(), '.tmp', 'wrong\t'));
-
-      const PRIMARY_KEY = 'primary-key';
-
-      const entity = {
-        some: 'value',
-      };
-
-      engine
-        .create(TABLE_NAME, PRIMARY_KEY, entity)
-        .then(() => done.fail(new Error('Method is supposed to throw an error.')))
-        .catch(error => {
-          expect(error instanceof StoreEngineError.PathValidationError).toBe(true);
-          done();
-        });
     });
   });
 

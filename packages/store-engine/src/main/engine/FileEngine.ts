@@ -12,12 +12,11 @@ import {
 
 export default class FileEngine implements CRUDEngine {
   public storeName: string = '';
-  public storeNameOriginal: string = '';
   private options: {fileExtension: string} = {
     fileExtension: '.dat',
   };
 
-  constructor(private readonly baseDirectory: string = '') {}
+  constructor(private readonly baseDirectory: string = './') {}
 
   public async isSupported(): Promise<void> {
     if (isBrowser()) {
@@ -28,8 +27,10 @@ export default class FileEngine implements CRUDEngine {
 
   public async init(storeName: string = '', options: {fileExtension: string}): Promise<any> {
     await this.isSupported();
-    this.storeNameOriginal = storeName;
-    this.storeName = path.resolve(path.join(this.baseDirectory, storeName));
+
+    FileEngine.enforcePathRestrictions(this.baseDirectory, storeName);
+    this.storeName = path.resolve(this.baseDirectory, storeName);
+
     this.options = {...this.options, ...options};
     return Promise.resolve(storeName);
   }
@@ -38,8 +39,8 @@ export default class FileEngine implements CRUDEngine {
     return fs.remove(this.storeName);
   }
 
-  static enforcePathRestrictions(givenTrustedRoot: string, givenPath: string, forceWindows: boolean = false): void {
-    const pathApi: any = process.platform === 'win32' || forceWindows === true ? path.win32 : path;
+  static enforcePathRestrictions(givenTrustedRoot: string, givenPath: string, forceWindows: boolean = false): string {
+    const pathApi = process.platform === 'win32' || forceWindows === true ? path.win32 : path.posix;
     const trustedRoot = pathApi.resolve(givenTrustedRoot);
 
     const trustedRootDetails = pathApi.parse(trustedRoot);
@@ -48,32 +49,24 @@ export default class FileEngine implements CRUDEngine {
       throw new PathValidationError(message);
     }
 
-    const unsafePath = pathApi.resolve(pathApi.join(trustedRoot, givenPath));
+    const unsafePath = pathApi.resolve(trustedRoot, givenPath);
     if (unsafePath.startsWith(trustedRoot) === false) {
       const message = `Path traversal has been detected. Allowed path was "${trustedRoot}" but tested path "${givenPath}" attempted to reach "${unsafePath}"`;
       throw new PathValidationError(message);
     }
+
+    return unsafePath;
   }
 
   private resolvePath(tableName: string, primaryKey: string = ''): Promise<string> {
     return new Promise((resolve, reject) => {
-      FileEngine.enforcePathRestrictions(this.baseDirectory, this.storeNameOriginal);
-      FileEngine.enforcePathRestrictions(this.storeName, tableName);
-      FileEngine.enforcePathRestrictions(path.join(this.storeName, tableName), primaryKey);
-
-      const filePath = path.join(
-        this.storeName,
-        tableName,
+      const tableNamePath = FileEngine.enforcePathRestrictions(this.storeName, tableName);
+      const primaryKeyPath = FileEngine.enforcePathRestrictions(
+        tableNamePath,
         primaryKey ? `${primaryKey}${this.options.fileExtension}` : ''
       );
 
-      const nonPrintableCharacters = new RegExp('[^\x20-\x7E]+', 'gm');
-      if (filePath.match(nonPrintableCharacters)) {
-        const message = `Cannot create file with path "${filePath}".`;
-        return reject(new PathValidationError(message));
-      }
-
-      return resolve(filePath);
+      return resolve(primaryKeyPath);
     });
   }
 
