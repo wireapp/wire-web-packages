@@ -52,15 +52,15 @@ describe('FileEngine', () => {
       const tableName = 'amplify';
       const primaryKey = 'z.storage.StorageKey.EVENT.LAST_DATE';
       const actual = FileEngine.enforcePathRestrictions(path.join(unixFolder, tableName), primaryKey);
-      expect(actual).toBeString();
+      expect(actual).toBeDefined();
     });
 
     it('allows slashes inside of primary keys.', () => {
-      expect(FileEngine.enforcePathRestrictions(unixFolder, 'users/..')).toBeString();
-      expect(FileEngine.enforcePathRestrictions(unixFolder, 'users/../')).toBeString();
-      expect(FileEngine.enforcePathRestrictions(unixFolder, 'users/../sandbox')).toBeString();
-      expect(FileEngine.enforcePathRestrictions(unixFolder, 'users/me')).toBeString();
-      expect(FileEngine.enforcePathRestrictions(unixFolder, 'a/b/c/d/e/f/g/../../../../ok')).toBeString();
+      expect(FileEngine.enforcePathRestrictions(unixFolder, 'users/..')).toBeDefined();
+      expect(FileEngine.enforcePathRestrictions(unixFolder, 'users/../')).toBeDefined();
+      expect(FileEngine.enforcePathRestrictions(unixFolder, 'users/../sandbox')).toBeDefined();
+      expect(FileEngine.enforcePathRestrictions(unixFolder, 'users/me')).toBeDefined();
+      expect(FileEngine.enforcePathRestrictions(unixFolder, 'a/b/c/d/e/f/g/../../../../ok')).toBeDefined();
     });
 
     it('allows empty strings.', () => {
