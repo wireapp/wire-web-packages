@@ -124,7 +124,7 @@ describe('FileEngine', () => {
       for (operation of functionNames) {
         try {
           await engine[operation]('../etc', 'primary-key', {});
-          done.fail('Expected error');
+          done.fail();
         } catch (error) {
           expect(error instanceof expectedError).toBe(true);
         }
