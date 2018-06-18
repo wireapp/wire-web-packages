@@ -45,8 +45,10 @@ describe('FileEngine', () => {
       .catch(done.fail));
 
   describe('"enforcePathRestrictions"', () => {
-    const windowsFolder = 'C:\\Users\\bart\\Documents\\Database\\';
+    const enforcePathRestrictions = (...opts) => () => FileEngine.enforcePathRestrictions(...opts);
+    const error = StoreEngineError.PathValidationError;
     const unixFolder = '/home/marge/test/';
+    const windowsFolder = 'C:\\Users\\bart\\Documents\\Database\\';
 
     it('allows dots inside of primary keys.', () => {
       const tableName = 'amplify';
@@ -57,13 +59,15 @@ describe('FileEngine', () => {
       expect(actual).toBeDefined();
     });
 
-    it('allows slashes inside of primary keys.', () => {
+    it('allows slashes inside of primary keys as long as they do not navigate outside of the base folder.', () => {
       FileEngine.path = path.posix;
       expect(FileEngine.enforcePathRestrictions(unixFolder, 'users/..')).toBeDefined();
       expect(FileEngine.enforcePathRestrictions(unixFolder, 'users/../')).toBeDefined();
       expect(FileEngine.enforcePathRestrictions(unixFolder, 'users/../sandbox')).toBeDefined();
       expect(FileEngine.enforcePathRestrictions(unixFolder, 'users/me')).toBeDefined();
       expect(FileEngine.enforcePathRestrictions(unixFolder, 'a/b/c/d/e/f/g/../../../../ok')).toBeDefined();
+      expect(FileEngine.enforcePathRestrictions(unixFolder, 'a/b/c/../../../')).toBeDefined();
+      expect(enforcePathRestrictions(unixFolder, 'a/b/c/../../../../')).toThrowError(error);
     });
 
     it('allows empty strings.', () => {
@@ -74,9 +78,6 @@ describe('FileEngine', () => {
       const actual = FileEngine.enforcePathRestrictions(path.join(unixFolder, tableName), primaryKey);
       expect(actual).toBeDefined();
     });
-
-    const enforcePathRestrictions = (...opts) => () => FileEngine.enforcePathRestrictions(...opts);
-    const error = StoreEngineError.PathValidationError;
 
     it('throws errors on path traversals.', () => {
       FileEngine.path = path.win32;
