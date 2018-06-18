@@ -282,8 +282,12 @@ export default class ConversationService {
     };
   }
 
-  public async sendText(conversationId: string, originalPayloadBundle: PayloadBundle): Promise<PayloadBundle> {
-    const payloadBundle = {...originalPayloadBundle, state: PayloadBundleState.OUTGOING_SENT};
+  public async sendText(conversationId: string, originalPayloadBundle: PayloadBundle): Promise<PayloadBundleOutgoing> {
+    const payloadBundle = {
+      ...originalPayloadBundle,
+      conversation: conversationId,
+      state: PayloadBundleState.OUTGOING_SENT,
+    };
     const genericMessage = this.protocolBuffers.GenericMessage.create({
       messageId: payloadBundle.id,
       text: this.protocolBuffers.Text.create({content: payloadBundle.content}),
