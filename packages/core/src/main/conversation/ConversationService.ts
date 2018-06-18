@@ -232,7 +232,7 @@ export default class ConversationService {
     };
   }
 
-  public async sendConfirmation(conversationId: string, confirmMessageId: string): Promise<PayloadBundle> {
+  public async sendConfirmation(conversationId: string, confirmMessageId: string): Promise<PayloadBundleOutgoing> {
     const messageId = ConversationService.createId();
 
     const confirmation = this.protocolBuffers.Confirmation.create({
