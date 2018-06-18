@@ -167,7 +167,7 @@ export default class ConversationService {
         asset: imageAsset,
         image,
       },
-      from: this.clientID,
+      from: this.apiClient.context!.userId,
       id: messageId,
       state: PayloadBundleState.OUTGOING_UNSENT,
       type: GenericMessageType.ASSET,
@@ -180,7 +180,7 @@ export default class ConversationService {
   ): Promise<PayloadBundleOutgoingUnsent> {
     return {
       content: message,
-      from: this.clientID,
+      from: this.apiClient.context!.userId,
       id: messageId,
       state: PayloadBundleState.OUTGOING_UNSENT,
       type: GenericMessageType.TEXT,
@@ -213,7 +213,7 @@ export default class ConversationService {
 
     return {
       conversation: conversationId,
-      from: this.clientID,
+      from: this.apiClient.context!.userId,
       id: messageId,
       state: PayloadBundleState.OUTGOING_SENT,
       type: GenericMessageType.CONFIRMATION,
@@ -285,7 +285,7 @@ export default class ConversationService {
 
     return {
       conversation: conversationId,
-      from: this.clientID,
+      from: this.apiClient.context!.userId,
       id: messageId,
       state: PayloadBundleState.OUTGOING_SENT,
       type: GenericMessageType.KNOCK,
@@ -304,7 +304,7 @@ export default class ConversationService {
 
     return {
       conversation: conversationId,
-      from: this.clientID,
+      from: this.apiClient.context!.userId,
       id: messageId,
       state: PayloadBundleState.OUTGOING_SENT,
       type: GenericMessageType.CLIENT_ACTION,
