@@ -12,7 +12,7 @@ require('dotenv').config({path: path.join(__dirname, 'echo1.env')});
 
 const {Account} = require('@wireapp/core');
 const APIClient = require('@wireapp/api-client');
-const ClientType = require('@wireapp/api-client/dist/commonjs/client/ClientType');
+const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/ClientType');
 const fs = require('fs');
 const {promisify} = require('util');
 const {Config} = require('@wireapp/api-client/dist/commonjs/Config');
@@ -72,6 +72,12 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
     } else {
       await account.service.conversation.sendTypingStop(conversationId);
     }
+  });
+
+  account.on(Account.INCOMING.DELETED, async data => {
+    console.log({data});
+    const {conversation: conversationId, id: messageId, from} = data;
+    console.log(`Deleted message ${messageId} in "${conversationId}" by "${from}".`, data);
   });
 
   try {

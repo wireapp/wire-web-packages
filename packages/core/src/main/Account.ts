@@ -51,6 +51,7 @@ class Account extends EventEmitter {
     ASSET: 'Account.INCOMING.ASSET',
     CLIENT_ACTION: 'Account.CLIENT_ACTION',
     CONFIRMATION: 'Account.INCOMING.CONFIRMATION',
+    DELETED: 'Account.INCOMING.DELETED',
     PING: 'Account.INCOMING.PING',
     TEXT_MESSAGE: 'Account.INCOMING.TEXT_MESSAGE',
     TYPING: 'Account.INCOMING.TYPING',
@@ -290,6 +291,9 @@ class Account extends EventEmitter {
             break;
           case GenericMessageType.CONFIRMATION:
             this.emit(Account.INCOMING.CONFIRMATION, data);
+            break;
+          case GenericMessageType.DELETED:
+            this.emit(Account.INCOMING.DELETED, data);
             break;
           case GenericMessageType.KNOCK:
             this.emit(Account.INCOMING.PING, data);

@@ -27,20 +27,19 @@ const {FileEngine} = require('@wireapp/store-engine');
 
   const engine = new FileEngine(path.join(__dirname, '.tmp', 'sender'));
   await engine.init(undefined, {fileExtension: '.json'});
-  const apiClient = new APIClient(new Config(engine, APIClient.BACKEND.PRODUCTION));
+  const apiClient = new APIClient(new Config(engine, APIClient.BACKEND.STAGING));
   const account = new Account(apiClient);
   await account.login(login);
   await account.listen();
-  const textMessage = await account.service.conversation.createText('Hello World');
 
-  function sendMessage() {
-    const timeoutInMillis = 2000;
-    setTimeout(async () => {
-      const textPayload = await account.service.conversation.createText(textMessage);
-      await account.service.conversation.sendText(CONVERSATION_ID, textPayload);
-      sendMessage();
-    }, timeoutInMillis);
-  }
+  const textPayload = await account.service.conversation.createText('Delete me! ' + new Date());
+  const {id: messageId} = await account.service.conversation.sendText(CONVERSATION_ID, textPayload);
+  await account.service.conversation.sendPing(CONVERSATION_ID);
 
-  sendMessage();
+  const timeoutInMillis = 5000;
+  setTimeout(async () => {
+    await account.service.conversation.deleteMessageEveryone(CONVERSATION_ID, messageId);
+    console.log('deleted', messageId);
+    process.exit();
+  }, timeoutInMillis);
 })();

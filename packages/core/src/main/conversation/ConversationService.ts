@@ -185,7 +185,6 @@ export default class ConversationService {
     const genericMessage = this.protocolBuffers.GenericMessage.create({
       messageHide,
       messageId,
-      type: GenericMessageType.HIDDEN,
     });
 
     await this.sendGenericMessage(this.clientID, conversationId, genericMessage);
@@ -202,10 +201,13 @@ export default class ConversationService {
   public async deleteMessageEveryone(conversationId: string, messageIdToDelete: string): Promise<PayloadBundle> {
     const messageId = new UUID(4).format();
 
+    const messageDelete = this.protocolBuffers.MessageDelete.create({
+      messageId: messageIdToDelete,
+    });
+
     const genericMessage = this.protocolBuffers.GenericMessage.create({
-      messageDelete: this.protocolBuffers.MessageDelete.create({messageId: messageIdToDelete}),
+      messageDelete,
       messageId,
-      type: GenericMessageType.DELETED,
     });
 
     await this.sendGenericMessage(this.clientID, conversationId, genericMessage);
@@ -290,9 +292,8 @@ export default class ConversationService {
   public async sendPing(conversationId: string): Promise<PayloadBundle> {
     const messageId = ConversationService.createId();
 
-    const knock = this.protocolBuffers.Knock.create();
     const genericMessage = this.protocolBuffers.GenericMessage.create({
-      knock,
+      knock: this.protocolBuffers.Knock.create(),
       messageId,
     });
 
