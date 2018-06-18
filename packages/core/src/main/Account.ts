@@ -124,8 +124,11 @@ class Account extends EventEmitter {
       })
       .catch(error => {
         const {response: {data: {message: backendMessage = '', code: httpCode = ''} = {}} = {}} = error;
-        if (backendMessage && httpCode) {
-          throw new Error(`Message from backend: "${backendMessage}", HTTP error code "${httpCode}".`);
+        if (httpCode) {
+          throw new Error(
+            `HTTP request failed with code "${httpCode}".` +
+              (backendMessage ? ` Message from backend: "${backendMessage}".` : '')
+          );
         }
         throw error;
       });
@@ -244,8 +247,11 @@ class Account extends EventEmitter {
       .then(() => this)
       .catch(error => {
         const {response: {data: {message: backendMessage = '', code: httpCode = ''} = {}} = {}} = error;
-        if (backendMessage && httpCode) {
-          throw new Error(`Message from backend: "${backendMessage}", HTTP error code "${httpCode}".`);
+        if (httpCode) {
+          throw new Error(
+            `HTTP request failed with code "${httpCode}".` +
+              (backendMessage ? ` Message from backend: "${backendMessage}".` : '')
+          );
         }
         throw error;
       });
