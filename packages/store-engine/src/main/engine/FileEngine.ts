@@ -15,13 +15,13 @@ export default class FileEngine implements CRUDEngine {
   private options: {fileExtension: string} = {
     fileExtension: '.dat',
   };
-  public static path = path;
+  private static readonly path = path;
 
   constructor(private readonly baseDirectory: string = './') {}
 
   public async isSupported(): Promise<void> {
     if (isBrowser()) {
-      const message = `Node.js' File System Module is not available on your platform.`;
+      const message = `Node.js File System Module is not available on your platform.`;
       throw new UnsupportedError(message);
     }
   }
@@ -30,7 +30,7 @@ export default class FileEngine implements CRUDEngine {
     await this.isSupported();
 
     FileEngine.enforcePathRestrictions(this.baseDirectory, storeName);
-    this.storeName = this.path.resolve(this.baseDirectory, storeName);
+    this.storeName = FileEngine.path.resolve(this.baseDirectory, storeName);
 
     this.options = {...this.options, ...options};
     return Promise.resolve(storeName);
@@ -41,15 +41,15 @@ export default class FileEngine implements CRUDEngine {
   }
 
   static enforcePathRestrictions(givenTrustedRoot: string, givenPath: string): string {
-    const trustedRoot = this.path.resolve(givenTrustedRoot);
+    const trustedRoot = FileEngine.path.resolve(givenTrustedRoot);
 
-    const trustedRootDetails = this.path.parse(trustedRoot);
+    const trustedRootDetails = FileEngine.path.parse(trustedRoot);
     if (trustedRootDetails.root === trustedRootDetails.dir && trustedRootDetails.base === '') {
       const message = `"${trustedRoot}" cannot be the root of the filesystem.`;
       throw new PathValidationError(message);
     }
 
-    const unsafePath = this.path.resolve(trustedRoot, givenPath);
+    const unsafePath = FileEngine.path.resolve(trustedRoot, givenPath);
     if (unsafePath.startsWith(trustedRoot) === false) {
       const message = `Path traversal has been detected. Allowed path was "${trustedRoot}" but tested path "${givenPath}" attempted to reach "${unsafePath}"`;
       throw new PathValidationError(message);
@@ -157,7 +157,7 @@ export default class FileEngine implements CRUDEngine {
           if (error) {
             reject(error);
           } else {
-            const recordNames = files.map(file => path.basename(file, path.extname(file)));
+            const recordNames = files.map(file => FileEngine.path.basename(file, FileEngine.path.extname(file)));
             const promises: Array<Promise<T>> = recordNames.map(primaryKey => this.read(tableName, primaryKey));
             Promise.all(promises).then((records: T[]) => resolve(records));
           }
@@ -177,7 +177,7 @@ export default class FileEngine implements CRUDEngine {
               throw error;
             }
           } else {
-            const fileNames: string[] = files.map((file: string) => path.parse(file).name);
+            const fileNames: string[] = files.map((file: string) => FileEngine.path.parse(file).name);
             resolve(fileNames);
           }
         });
