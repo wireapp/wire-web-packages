@@ -174,7 +174,7 @@ export default class ConversationService {
     });
   }
 
-  public async deleteMessage(conversationId: string, messageIdToHide: string): Promise<string> {
+  public async deleteMessage(conversationId: string, messageIdToHide: string): Promise<PayloadBundle> {
     const messageId = new UUID(4).format();
 
     const messageHide = this.protocolBuffers.MessageHide.create({
@@ -189,10 +189,17 @@ export default class ConversationService {
     });
 
     await this.sendGenericMessage(this.clientID, conversationId, genericMessage);
-    return messageId;
+
+    return {
+      conversation: conversationId,
+      from: this.clientID,
+      id: messageId,
+      state: PayloadBundleState.OUTGOING_SENT,
+      type: GenericMessageType.HIDDEN,
+    };
   }
 
-  public async deleteMessageEveryone(conversationId: string, messageIdToDelete: string): Promise<string> {
+  public async deleteMessageEveryone(conversationId: string, messageIdToDelete: string): Promise<PayloadBundle> {
     const messageId = new UUID(4).format();
 
     const genericMessage = this.protocolBuffers.GenericMessage.create({
@@ -202,7 +209,14 @@ export default class ConversationService {
     });
 
     await this.sendGenericMessage(this.clientID, conversationId, genericMessage);
-    return messageId;
+
+    return {
+      conversation: conversationId,
+      from: this.clientID,
+      id: messageId,
+      state: PayloadBundleState.OUTGOING_SENT,
+      type: GenericMessageType.DELETED,
+    };
   }
 
   public async sendConfirmation(conversationId: string, confirmMessageId: string): Promise<PayloadBundle> {
