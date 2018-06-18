@@ -1,12 +1,31 @@
 #!/usr/bin/env node
 
+/*
+ * Wire
+ * Copyright (C) 2018 Wire Swiss GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see http://www.gnu.org/licenses/.
+ *
+ */
+
 const fs = require('fs-extra');
 const program = require('commander');
 const {Account} = require('@wireapp/core');
 const {description, version} = require('../../package.json');
 const {FileEngine} = require('@wireapp/store-engine');
 import APIClient = require('@wireapp/api-client');
-import {RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
+import {ClientType, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
 import {Config} from '@wireapp/api-client/dist/commonjs/Config';
 import {BackendErrorLabel} from '@wireapp/api-client/dist/commonjs/http/';
 import {PayloadBundle} from '@wireapp/core/dist/cryptography/root';
@@ -25,9 +44,9 @@ program
   .parse(process.argv);
 
 const loginData = {
+  clientType: ClientType.PERMANENT,
   email: program.email || process.env.WIRE_LOGIN_EMAIL,
   password: program.password || process.env.WIRE_LOGIN_PASSWORD,
-  persist: true,
 };
 
 const conversationID = program.conversation || process.env.WIRE_CONVERSATION_ID;
@@ -81,7 +100,7 @@ storeEngine.init('', {fileExtension: '.json'}).then(() => {
       const stdin = process.openStdin();
       stdin.addListener('data', data => {
         const message = data.toString().trim();
-        account.service.conversation.sendTextMessage(conversationID, message);
+        account.service.conversation.sendText(conversationID, message);
       });
     })
     .catch((error: Error) => {

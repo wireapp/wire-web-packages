@@ -36,7 +36,7 @@ import {Root} from 'protobufjs';
 import {LoginSanitizer} from './auth/root';
 import {ClientInfo, ClientService} from './client/root';
 import {AssetService, ConversationService, DecodedMessage, GenericMessageType} from './conversation/root';
-import {CryptographyService, PayloadBundle} from './cryptography/root';
+import {CryptographyService, PayloadBundle, PayloadBundleState} from './cryptography/root';
 import {NotificationService} from './notification/root';
 import proto from './Protobuf';
 import {SelfService} from './self/root';
@@ -49,6 +49,7 @@ class Account extends EventEmitter {
 
   public static readonly INCOMING = {
     ASSET: 'Account.INCOMING.ASSET',
+    CLIENT_ACTION: 'Account.CLIENT_ACTION',
     CONFIRMATION: 'Account.INCOMING.CONFIRMATION',
     PING: 'Account.INCOMING.PING',
     TEXT_MESSAGE: 'Account.INCOMING.TEXT_MESSAGE',
@@ -76,6 +77,7 @@ class Account extends EventEmitter {
 
     this.protocolBuffers = {
       Asset: root.lookup('Asset'),
+      ClientAction: root.lookup('ClientAction'),
       Confirmation: root.lookup('Confirmation'),
       External: root.lookup('External'),
       GenericMessage: root.lookup('GenericMessage'),
@@ -88,7 +90,7 @@ class Account extends EventEmitter {
 
     const cryptographyService = new CryptographyService(this.apiClient, this.apiClient.config.store);
     const clientService = new ClientService(this.apiClient, this.apiClient.config.store, cryptographyService);
-    const assetService = new AssetService(this.apiClient, this.protocolBuffers);
+    const assetService = new AssetService(this.apiClient);
     const conversationService = new ConversationService(
       this.apiClient,
       this.protocolBuffers,
@@ -156,7 +158,7 @@ class Account extends EventEmitter {
               this.logger.info('Last client was temporary - Deleting database');
               return this.apiClient.config.store
                 .purge()
-                .then(() => this.apiClient.init(loginData.persist ? ClientType.PERMANENT : ClientType.TEMPORARY))
+                .then(() => this.apiClient.init(loginData.clientType))
                 .then(() => this.registerClient(loginData, clientInfo));
             }
             this.logger.info('Last client was permanent - Deleting cryptography stores');
@@ -223,6 +225,8 @@ class Account extends EventEmitter {
     }
     return Promise.resolve()
       .then(() => {
+        this.apiClient.transport.ws.removeAllListeners(WebSocketClient.TOPIC.ON_MESSAGE);
+
         if (notificationHandler) {
           this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, (notification: IncomingNotification) =>
             notificationHandler(notification)
@@ -262,8 +266,9 @@ class Account extends EventEmitter {
 
     switch (event.type) {
       case CONVERSATION_EVENT.OTR_MESSAGE_ADD: {
-        const decodedMessage = await this.decodeGenericMessage(event as ConversationOtrMessageAddEvent);
-        return {...decodedMessage, from, conversation};
+        const otrMessage = event as ConversationOtrMessageAddEvent;
+        const decodedMessage = await this.decodeGenericMessage(otrMessage);
+        return {...decodedMessage, from, conversation, state: PayloadBundleState.INCOMING};
       }
       case CONVERSATION_EVENT.TYPING: {
         return {...event, from, conversation};
@@ -279,6 +284,9 @@ class Account extends EventEmitter {
         switch (data.type) {
           case GenericMessageType.ASSET:
             this.emit(Account.INCOMING.ASSET, data);
+            break;
+          case GenericMessageType.CLIENT_ACTION:
+            this.emit(Account.INCOMING.CLIENT_ACTION, data);
             break;
           case GenericMessageType.CONFIRMATION:
             this.emit(Account.INCOMING.CONFIRMATION, data);

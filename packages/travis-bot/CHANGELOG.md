@@ -3,6 +3,153 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="1.0.16"></a>
+## [1.0.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@1.0.15...@wireapp/travis-bot@1.0.16) (2018-06-15)
+
+
+
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+<a name="1.0.15"></a>
+## [1.0.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@1.0.14...@wireapp/travis-bot@1.0.15) (2018-06-14)
+
+
+
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+<a name="1.0.14"></a>
+## [1.0.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@1.0.13...@wireapp/travis-bot@1.0.14) (2018-06-14)
+
+
+
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+<a name="1.0.13"></a>
+## [1.0.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@1.0.12...@wireapp/travis-bot@1.0.13) (2018-06-13)
+
+
+
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+<a name="1.0.12"></a>
+## [1.0.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@1.0.11...@wireapp/travis-bot@1.0.12) (2018-06-13)
+
+
+
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+<a name="1.0.11"></a>
+## [1.0.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@1.0.10...@wireapp/travis-bot@1.0.11) (2018-06-13)
+
+
+
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+<a name="1.0.10"></a>
+## [1.0.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@1.0.9...@wireapp/travis-bot@1.0.10) (2018-06-08)
+
+
+
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+<a name="1.0.9"></a>
+## [1.0.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@1.0.8...@wireapp/travis-bot@1.0.9) (2018-06-06)
+
+
+
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+<a name="1.0.8"></a>
+## [1.0.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@1.0.7...@wireapp/travis-bot@1.0.8) (2018-06-06)
+
+
+
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+<a name="1.0.7"></a>
+## [1.0.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@1.0.6...@wireapp/travis-bot@1.0.7) (2018-06-06)
+
+
+
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+<a name="1.0.6"></a>
+## [1.0.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@1.0.5...@wireapp/travis-bot@1.0.6) (2018-06-05)
+
+
+
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+<a name="1.0.5"></a>
+## [1.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@1.0.4...@wireapp/travis-bot@1.0.5) (2018-06-05)
+
+
+
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+<a name="1.0.4"></a>
+## [1.0.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@1.0.3...@wireapp/travis-bot@1.0.4) (2018-06-05)
+
+
+
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+<a name="1.0.3"></a>
+## [1.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@1.0.2...@wireapp/travis-bot@1.0.3) (2018-06-04)
+
+
+
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+<a name="1.0.2"></a>
+## [1.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@1.0.1...@wireapp/travis-bot@1.0.2) (2018-06-04)
+
+
+### Bug Fixes
+
+* **travis-bot:** ClientType import ([#662](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/issues/662)) ([1ec51bf](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/commit/1ec51bf))
+
+
+
+
+<a name="1.0.1"></a>
+## [1.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@1.0.0...@wireapp/travis-bot@1.0.1) (2018-06-04)
+
+
+
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+<a name="1.0.0"></a>
+# [1.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@0.1.136...@wireapp/travis-bot@1.0.0) (2018-06-04)
+
+
+### Code Refactoring
+
+* **api-client,core:** Add ClientType.NONE ([#660](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/issues/660)) ([97e7b12](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/commit/97e7b12))
+
+
+### BREAKING CHANGES
+
+* **api-client,core:** Expecting ClientType in init calls, register calls and LoginData type.
+
+
+
+
 <a name="0.1.136"></a>
 ## [0.1.136](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@0.1.135...@wireapp/travis-bot@0.1.136) (2018-06-04)
 

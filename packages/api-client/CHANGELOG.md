@@ -3,6 +3,127 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="1.1.10"></a>
+## [1.1.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.1.9...@wireapp/api-client@1.1.10) (2018-06-15)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.1.9"></a>
+## [1.1.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.1.8...@wireapp/api-client@1.1.9) (2018-06-14)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.1.8"></a>
+## [1.1.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.1.7...@wireapp/api-client@1.1.8) (2018-06-14)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.1.7"></a>
+## [1.1.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.1.6...@wireapp/api-client@1.1.7) (2018-06-13)
+
+
+### Bug Fixes
+
+* **api-client:** Add optional expires_at to User entity ([9cc6d06](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/9cc6d06))
+
+
+
+
+<a name="1.1.6"></a>
+## [1.1.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.1.5...@wireapp/api-client@1.1.6) (2018-06-13)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.1.5"></a>
+## [1.1.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.1.4...@wireapp/api-client@1.1.5) (2018-06-08)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.1.4"></a>
+## [1.1.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.1.3...@wireapp/api-client@1.1.4) (2018-06-06)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.1.3"></a>
+## [1.1.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.1.2...@wireapp/api-client@1.1.3) (2018-06-06)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.1.2"></a>
+## [1.1.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.1.1...@wireapp/api-client@1.1.2) (2018-06-05)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.1.1"></a>
+## [1.1.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.1.0...@wireapp/api-client@1.1.1) (2018-06-05)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.1.0"></a>
+# [1.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.0.1...@wireapp/api-client@1.1.0) (2018-06-04)
+
+
+### Features
+
+* **api-client:** Logout function ignoreError option ([#663](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/663)) ([72dc8e6](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/72dc8e6))
+
+
+
+
+<a name="1.0.1"></a>
+## [1.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.0.0...@wireapp/api-client@1.0.1) (2018-06-04)
+
+
+### Bug Fixes
+
+* **api-client:** Continue registration & login on precautionary logout error ([#661](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/661)) ([2f04c72](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/2f04c72))
+
+
+
+
+<a name="1.0.0"></a>
+# [1.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.10.11...@wireapp/api-client@1.0.0) (2018-06-04)
+
+
+### Code Refactoring
+
+* **api-client,core:** Add ClientType.NONE ([#660](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/660)) ([97e7b12](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/97e7b12))
+
+
+### BREAKING CHANGES
+
+* **api-client,core:** Expecting ClientType in init calls, register calls and LoginData type.
+
+
+
+
 <a name="0.10.11"></a>
 ## [0.10.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@0.10.10...@wireapp/api-client@0.10.11) (2018-06-04)
 

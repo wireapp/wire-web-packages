@@ -17,9 +17,10 @@
  *
  */
 
-import {Asset, Original, RemoteData} from './Asset';
+import {Asset, ImageAsset, Original, RemoteData} from './Asset';
 import AssetService from './AssetService';
-import ConfirmationType from './ConfirmationType';
+import {ClientAction} from './ClientAction';
+import {ConfirmationType} from './ConfirmationType';
 import ConversationService from './ConversationService';
 import DecodedMessage from './DecodedMessage';
 import GenericMessageType from './GenericMessageType';
@@ -28,11 +29,13 @@ import Image from './Image';
 export {
   Asset,
   AssetService,
+  ClientAction,
   ConfirmationType,
   ConversationService,
   DecodedMessage,
   Original,
   GenericMessageType,
   Image,
+  ImageAsset,
   RemoteData,
 };

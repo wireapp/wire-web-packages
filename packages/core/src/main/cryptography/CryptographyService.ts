@@ -32,12 +32,12 @@ import CryptographyDatabaseRepository from './CryptographyDatabaseRepository';
 
 export interface MetaClient extends RegisteredClient {
   meta: {
-    primary_key: string;
     is_verified?: boolean;
+    primary_key: string;
   };
 }
 
-export default class CryptographyService {
+class CryptographyService {
   private readonly logger: any = logdown('@wireapp/core/Account', {
     logger: console,
     markdown: false,
@@ -142,4 +142,11 @@ export default class CryptographyService {
     this.logger.info('deleteCryptographyStores');
     return this.database.deleteStores();
   }
+
+  public async resetSession(sessionId: string): Promise<void> {
+    await this.cryptobox.session_delete(sessionId);
+    this.logger.info(`Deleted session ID "${sessionId}".`);
+  }
 }
+
+export {CryptographyService};

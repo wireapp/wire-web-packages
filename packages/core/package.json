@@ -3,17 +3,17 @@
     "./dist/cryptography/AssetCryptography.node": "./dist/cryptography/AssetCryptography.browser.js"
   },
   "dependencies": {
-    "@types/node": "10.3.0",
-    "@wireapp/api-client": "0.10.11",
-    "@wireapp/cryptobox": "8.3.65",
-    "@wireapp/store-engine": "0.11.21",
-    "bazinga64": "5.1.16",
+    "@types/node": "10.3.3",
+    "@wireapp/api-client": "1.1.10",
+    "@wireapp/cryptobox": "8.4.5",
+    "@wireapp/store-engine": "0.11.29",
+    "bazinga64": "5.2.3",
     "logdown": "3.2.3",
     "protobufjs": "6.8.6",
     "pure-uuid": "1.5.2"
   },
   "devDependencies": {
-    "cross-env": "5.1.6",
+    "cross-env": "5.2.0",
     "dotenv": "6.0.0",
     "istanbul": "1.1.0-alpha.1",
     "jasmine": "3.1.0",
@@ -23,10 +23,10 @@
     "karma-jasmine-diff-reporter": "1.2.0",
     "karma-sourcemap-loader": "0.3.7",
     "rimraf": "2.6.2",
-    "typescript": "2.9.1",
+    "typescript": "2.9.2",
     "uglifyjs-webpack-plugin": "1.2.5",
-    "webpack": "4.10.2",
-    "webpack-cli": "3.0.1"
+    "webpack": "4.12.0",
+    "webpack-cli": "3.0.7"
   },
   "description": "Wire for Web's communication core.",
   "files": [
@@ -50,5 +50,5 @@
     "test:node": "jasmine --config=src/test/node/support/jasmine.json"
   },
   "types": "./dist/Account.d.ts",
-  "version": "2.9.6"
+  "version": "3.1.3"
 }
