@@ -47,7 +47,7 @@ describe('FileEngine', () => {
 
   describe('"enforcePathRestrictions"', () => {
     const enforcePathRestrictions = (...opts) => () => FileEngine.enforcePathRestrictions(...opts);
-    const error = StoreEngineError.PathValidationError;
+    const expectedError = StoreEngineError.PathValidationError;
     const unixFolder = '/home/marge/test/';
     const windowsFolder = 'C:\\Users\\bart\\Documents\\Database\\';
 
@@ -68,7 +68,7 @@ describe('FileEngine', () => {
       expect(FileEngine.enforcePathRestrictions(unixFolder, 'users/me')).toBeDefined();
       expect(FileEngine.enforcePathRestrictions(unixFolder, 'a/b/c/d/e/f/g/../../../../ok')).toBeDefined();
       expect(FileEngine.enforcePathRestrictions(unixFolder, 'a/b/c/../../../')).toBeDefined();
-      expect(enforcePathRestrictions(unixFolder, 'a/b/c/../../../../')).toThrowError(error);
+      expect(enforcePathRestrictions(unixFolder, 'a/b/c/../../../../')).toThrowError(expectedError);
     });
 
     it('allows empty strings.', () => {
@@ -82,30 +82,90 @@ describe('FileEngine', () => {
 
     it('throws errors on path traversals.', () => {
       FileEngine.path = path.win32;
-      expect(enforcePathRestrictions(windowsFolder, 'malicious\\..\\..\\test\\..\\..')).toThrowError(error);
-      expect(enforcePathRestrictions(windowsFolder, '\\malicious\\..\\\\..entry\\..\\..')).toThrowError(error);
-      expect(enforcePathRestrictions(windowsFolder, 'malicious\\..\\entry\\..\\..')).toThrowError(error);
-      expect(enforcePathRestrictions(windowsFolder, '\\\\server\\..\\..\\..')).toThrowError(error);
-      expect(enforcePathRestrictions(windowsFolder, 'malicious\\..\\..\\entry\\..\\')).toThrowError(error);
-      expect(enforcePathRestrictions(windowsFolder, '..\\etc')).toThrowError(error);
+      expect(enforcePathRestrictions(windowsFolder, 'malicious\\..\\..\\test\\..\\..')).toThrowError(expectedError);
+      expect(enforcePathRestrictions(windowsFolder, '\\malicious\\..\\\\..entry\\..\\..')).toThrowError(expectedError);
+      expect(enforcePathRestrictions(windowsFolder, 'malicious\\..\\entry\\..\\..')).toThrowError(expectedError);
+      expect(enforcePathRestrictions(windowsFolder, '\\\\server\\..\\..\\..')).toThrowError(expectedError);
+      expect(enforcePathRestrictions(windowsFolder, 'malicious\\..\\..\\entry\\..\\')).toThrowError(expectedError);
+      expect(enforcePathRestrictions(windowsFolder, '..\\etc')).toThrowError(expectedError);
 
       FileEngine.path = path.posix;
-      expect(enforcePathRestrictions(unixFolder, '../etc')).toThrowError(error);
-      expect(enforcePathRestrictions(unixFolder, '/malicious/../../../entry/../test')).toThrowError(error);
-      expect(enforcePathRestrictions(unixFolder, 'malicious/../../../entry/..')).toThrowError(error);
-      expect(enforcePathRestrictions(unixFolder, 'documents/../../../../../etc/hosts')).toThrowError(error);
-      expect(enforcePathRestrictions(unixFolder, 'malicious/../../../entry/../')).toThrowError(error);
-      expect(enforcePathRestrictions(unixFolder, '../etc')).toThrowError(error);
-      expect(enforcePathRestrictions(unixFolder, 'users/../../tigris')).toThrowError(error);
-      expect(enforcePathRestrictions(unixFolder, 'users/../tigris/../../')).toThrowError(error);
+      expect(enforcePathRestrictions(unixFolder, '../etc')).toThrowError(expectedError);
+      expect(enforcePathRestrictions(unixFolder, '/malicious/../../../entry/../test')).toThrowError(expectedError);
+      expect(enforcePathRestrictions(unixFolder, 'malicious/../../../entry/..')).toThrowError(expectedError);
+      expect(enforcePathRestrictions(unixFolder, 'documents/../../../../../etc/hosts')).toThrowError(expectedError);
+      expect(enforcePathRestrictions(unixFolder, 'malicious/../../../entry/../')).toThrowError(expectedError);
+      expect(enforcePathRestrictions(unixFolder, '../etc')).toThrowError(expectedError);
+      expect(enforcePathRestrictions(unixFolder, 'users/../../tigris')).toThrowError(expectedError);
+      expect(enforcePathRestrictions(unixFolder, 'users/../tigris/../../')).toThrowError(expectedError);
     });
 
     it('throws errors when attempting to use the root folder as a trusted root.', () => {
       FileEngine.path = path.posix;
-      expect(enforcePathRestrictions('/', 'etc/hosts')).toThrowError(error);
+      expect(enforcePathRestrictions('/', 'etc/hosts')).toThrowError(expectedError);
 
       FileEngine.path = path.win32;
-      expect(enforcePathRestrictions('C:/', '\\Windows\\System32\\drivers\\etc\\hosts')).toThrowError(error);
+      expect(enforcePathRestrictions('C:/', '\\Windows\\System32\\drivers\\etc\\hosts')).toThrowError(expectedError);
+    });
+
+    it('is applied to create operations.', async done => {
+      try {
+        await engine.create('../etc', 'primary-key', {});
+        done.fail('Expected error');
+      } catch (error) {
+        expect(error instanceof expectedError).toBe(true);
+        done();
+      }
+    });
+
+    it('is applied to delete operations.', async done => {
+      try {
+        await engine.delete('../etc', 'primary-key', {});
+        done.fail('Expected error');
+      } catch (error) {
+        expect(error instanceof expectedError).toBe(true);
+        done();
+      }
+    });
+
+    it('is applied to delete all operations.', async done => {
+      try {
+        await engine.deleteAll('../etc');
+        done.fail('Expected error');
+      } catch (error) {
+        expect(error instanceof expectedError).toBe(true);
+        done();
+      }
+    });
+
+    it('is applied to read operations.', async done => {
+      try {
+        await engine.read('../etc', 'primary-key');
+        done.fail('Expected error');
+      } catch (error) {
+        expect(error instanceof expectedError).toBe(true);
+        done();
+      }
+    });
+
+    it('is applied to read all operations.', async done => {
+      try {
+        await engine.readAll('../etc');
+        done.fail('Expected error');
+      } catch (error) {
+        expect(error instanceof expectedError).toBe(true);
+        done();
+      }
+    });
+
+    it('is applied to update operations.', async done => {
+      try {
+        await engine.update('../etc', 'primary-key', {age: 47});
+        done.fail('Expected error');
+      } catch (error) {
+        expect(error instanceof expectedError).toBe(true);
+        done();
+      }
     });
   });
 
