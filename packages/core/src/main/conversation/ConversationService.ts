@@ -53,9 +53,9 @@ export default class ConversationService {
     private readonly assetService: AssetService
   ) {}
 
-  private createEphemeral(originalGenericMessage: any, timeoutSeconds: number): any {
+  private createEphemeral(originalGenericMessage: any, expireAfterMillis: number): any {
     const ephemeral = this.protocolBuffers.Ephemeral.create({
-      expireAfterMillis: timeoutSeconds,
+      expireAfterMillis,
       [originalGenericMessage.content]: originalGenericMessage[originalGenericMessage.content],
     });
 
@@ -85,8 +85,7 @@ export default class ConversationService {
     sendingClientId: string,
     conversationId: string,
     asset: EncryptedAsset,
-    preKeyBundles: UserPreKeyBundleMap,
-    ephemeralTimeoutSeconds?: number
+    preKeyBundles: UserPreKeyBundleMap
   ): Promise<ClientMismatch> {
     const {cipherText, keyBytes, sha256} = asset;
     const messageId = ConversationService.createId();
@@ -98,14 +97,10 @@ export default class ConversationService {
 
     const base64CipherText = Encoder.toBase64(cipherText).asString;
 
-    let customTextMessage = this.protocolBuffers.GenericMessage.create({
+    const customTextMessage = this.protocolBuffers.GenericMessage.create({
       external: externalMessage,
       messageId,
     });
-
-    if (ephemeralTimeoutSeconds) {
-      customTextMessage = this.createEphemeral(customTextMessage, ephemeralTimeoutSeconds);
-    }
 
     const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(customTextMessage).finish();
     const recipients = await this.cryptographyService.encrypt(plainTextBuffer, preKeyBundles as UserPreKeyBundleMap);
@@ -222,7 +217,7 @@ export default class ConversationService {
   public async sendImage(
     conversationId: string,
     payloadBundle: PayloadBundle,
-    ephemeralTimeoutSeconds?: number
+    expireAfterMillis?: number
   ): Promise<PayloadBundle> {
     if (!payloadBundle.content) {
       throw new Error('No content for sendImage provided!');
@@ -254,23 +249,21 @@ export default class ConversationService {
       uploaded: remoteData,
     });
 
-    const genericMessage = this.protocolBuffers.GenericMessage.create({
+    let genericMessage = this.protocolBuffers.GenericMessage.create({
       asset,
       messageId: payloadBundle.id,
     });
+
+    if (expireAfterMillis) {
+      genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
+    }
 
     const preKeyBundles = await this.getPreKeyBundles(conversationId);
     const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(genericMessage).finish();
     const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
 
-    await this.sendExternalGenericMessage(
-      this.clientID,
-      conversationId,
-      payload,
-      preKeyBundles as UserPreKeyBundleMap,
-      ephemeralTimeoutSeconds
-    );
-    return {...payloadBundle, ephemeralTimeout: ephemeralTimeoutSeconds, state: PayloadBundleState.OUTGOING_SENT};
+    await this.sendExternalGenericMessage(this.clientID, conversationId, payload, preKeyBundles as UserPreKeyBundleMap);
+    return {...payloadBundle, ephemeralTimeout: expireAfterMillis, state: PayloadBundleState.OUTGOING_SENT};
   }
 
   public async sendPing(conversationId: string): Promise<PayloadBundle> {
@@ -314,11 +307,11 @@ export default class ConversationService {
   public async sendText(
     conversationId: string,
     originalPayloadBundle: PayloadBundle,
-    ephemeralTimeoutSeconds?: number
+    expireAfterMillis?: number
   ): Promise<PayloadBundle> {
     const payloadBundle = {
       ...originalPayloadBundle,
-      ephemeralTimeout: ephemeralTimeoutSeconds,
+      ephemeralTimeout: expireAfterMillis,
       state: PayloadBundleState.OUTGOING_SENT,
     };
     let genericMessage = this.protocolBuffers.GenericMessage.create({
@@ -326,8 +319,8 @@ export default class ConversationService {
       text: this.protocolBuffers.Text.create({content: payloadBundle.content}),
     });
 
-    if (ephemeralTimeoutSeconds) {
-      genericMessage = this.createEphemeral(genericMessage, ephemeralTimeoutSeconds);
+    if (expireAfterMillis) {
+      genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
     const preKeyBundles = await this.getPreKeyBundles(conversationId);
@@ -340,8 +333,7 @@ export default class ConversationService {
         this.clientID,
         conversationId,
         encryptedAsset,
-        preKeyBundles as UserPreKeyBundleMap,
-        ephemeralTimeoutSeconds
+        preKeyBundles as UserPreKeyBundleMap
       );
       return payloadBundle;
     }
