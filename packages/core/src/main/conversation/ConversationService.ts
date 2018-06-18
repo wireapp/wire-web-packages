@@ -200,7 +200,7 @@ export default class ConversationService {
     };
   }
 
-  public async sendImage(conversationId: string, payloadBundle: PayloadBundle): Promise<PayloadBundle> {
+  public async sendImage(conversationId: string, payloadBundle: PayloadBundle): Promise<PayloadBundleOutgoing> {
     if (!payloadBundle.content) {
       throw new Error('No content for sendImage provided!');
     }
@@ -241,7 +241,7 @@ export default class ConversationService {
     const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
 
     await this.sendExternalGenericMessage(this.clientID, conversationId, payload, preKeyBundles as UserPreKeyBundleMap);
-    return {...payloadBundle, state: PayloadBundleState.OUTGOING_SENT};
+    return {...payloadBundle, conversation: conversationId, state: PayloadBundleState.OUTGOING_SENT};
   }
 
   public async sendPing(conversationId: string): Promise<PayloadBundleOutgoing> {
@@ -273,6 +273,7 @@ export default class ConversationService {
     });
 
     await this.sendGenericMessage(this.clientID, conversationId, sessionReset);
+
     return {
       conversation: conversationId,
       from: this.clientID,
@@ -283,7 +284,7 @@ export default class ConversationService {
   }
 
   public async sendText(conversationId: string, originalPayloadBundle: PayloadBundle): Promise<PayloadBundleOutgoing> {
-    const payloadBundle = {
+    const payloadBundle: PayloadBundleOutgoing = {
       ...originalPayloadBundle,
       conversation: conversationId,
       state: PayloadBundleState.OUTGOING_SENT,
