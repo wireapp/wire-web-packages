@@ -31,8 +31,6 @@ export async function start(parameters: {[index: string]: string}): Promise<Chan
     password,
   };
 
-  console.log({loginData});
-
   const changelog = await ChangelogBot.generateChangelog(String(TRAVIS_REPO_SLUG), String(TRAVIS_COMMIT_RANGE));
 
   const messageData: MessageData = {
