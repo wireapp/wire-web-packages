@@ -27,7 +27,7 @@ const {FileEngine} = require('@wireapp/store-engine');
 
   const engine = new FileEngine(path.join(__dirname, '.tmp', 'sender'));
   await engine.init(undefined, {fileExtension: '.json'});
-  const apiClient = new APIClient(new Config(engine, APIClient.BACKEND.STAGING));
+  const apiClient = new APIClient(new Config(engine, APIClient.BACKEND.PRODUCTION));
   const account = new Account(apiClient);
   await account.login(login);
   await account.listen();
