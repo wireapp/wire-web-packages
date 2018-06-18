@@ -53,43 +53,6 @@ export default class ConversationService {
     private readonly assetService: AssetService
   ) {}
 
-  public async deleteMessage(conversationId: string, messageIdToHide: string): Promise<string> {
-    const messageId = new UUID(4).format();
-
-    const messageHide = this.protocolBuffers.MessageHide.create({
-      conversationId,
-      messageId: messageIdToHide,
-    });
-
-    const genericMessage = this.protocolBuffers.GenericMessage.create({
-      messageHide,
-      messageId,
-      type: GenericMessageType.HIDDEN,
-    });
-
-    await this.sendGenericMessage(this.clientID, conversationId, genericMessage);
-    return messageId;
-  }
-
-  public async deleteMessageEveryone(conversationId: string, messageIdToDelete: string): Promise<string> {
-    const messageId = new UUID(4).format();
-
-    const messageDelete = this.protocolBuffers.MessageDelete.create({
-      conversationId,
-      messageId: messageIdToDelete,
-      type: GenericMessageType.DELETED,
-    });
-
-    const genericMessage = this.protocolBuffers.GenericMessage.create({
-      messageDelete,
-      messageId,
-      type: GenericMessageType.DELETED,
-    });
-
-    await this.sendGenericMessage(this.clientID, conversationId, genericMessage);
-    return messageId;
-  }
-
   // TODO: The correct functionality of this function is heavily based on the case that it always runs into the catch
   // block
   private getPreKeyBundles(conversationId: string): Promise<ClientMismatch | UserPreKeyBundleMap> {
@@ -209,6 +172,43 @@ export default class ConversationService {
       keyBytes: Buffer.from(otrKey.buffer),
       sha256: Buffer.from(sha256.buffer),
     });
+  }
+
+  public async deleteMessage(conversationId: string, messageIdToHide: string): Promise<string> {
+    const messageId = new UUID(4).format();
+
+    const messageHide = this.protocolBuffers.MessageHide.create({
+      conversationId,
+      messageId: messageIdToHide,
+    });
+
+    const genericMessage = this.protocolBuffers.GenericMessage.create({
+      messageHide,
+      messageId,
+      type: GenericMessageType.HIDDEN,
+    });
+
+    await this.sendGenericMessage(this.clientID, conversationId, genericMessage);
+    return messageId;
+  }
+
+  public async deleteMessageEveryone(conversationId: string, messageIdToDelete: string): Promise<string> {
+    const messageId = new UUID(4).format();
+
+    const messageDelete = this.protocolBuffers.MessageDelete.create({
+      conversationId,
+      messageId: messageIdToDelete,
+      type: GenericMessageType.DELETED,
+    });
+
+    const genericMessage = this.protocolBuffers.GenericMessage.create({
+      messageDelete,
+      messageId,
+      type: GenericMessageType.DELETED,
+    });
+
+    await this.sendGenericMessage(this.clientID, conversationId, genericMessage);
+    return messageId;
   }
 
   public async sendConfirmation(conversationId: string, confirmMessageId: string): Promise<PayloadBundle> {
