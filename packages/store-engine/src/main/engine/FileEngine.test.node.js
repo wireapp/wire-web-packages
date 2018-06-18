@@ -108,64 +108,17 @@ describe('FileEngine', () => {
       expect(enforcePathRestrictions('C:/', '\\Windows\\System32\\drivers\\etc\\hosts')).toThrowError(expectedError);
     });
 
-    it('is applied to create operations.', async done => {
-      try {
-        await engine.create('../etc', 'primary-key', {});
-        done.fail('Expected error');
-      } catch (error) {
-        expect(error instanceof expectedError).toBe(true);
-        done();
+    it('is applied to all store operations.', async done => {
+      const functionNames = ['create', 'delete', 'read', 'update'];
+      for (operation of functionNames) {
+        try {
+          await engine[operation]('../etc', 'primary-key', {});
+          done.fail('Expected error');
+        } catch (error) {
+          expect(error instanceof expectedError).toBe(true);
+        }
       }
-    });
-
-    it('is applied to delete operations.', async done => {
-      try {
-        await engine.delete('../etc', 'primary-key', {});
-        done.fail('Expected error');
-      } catch (error) {
-        expect(error instanceof expectedError).toBe(true);
-        done();
-      }
-    });
-
-    it('is applied to delete all operations.', async done => {
-      try {
-        await engine.deleteAll('../etc');
-        done.fail('Expected error');
-      } catch (error) {
-        expect(error instanceof expectedError).toBe(true);
-        done();
-      }
-    });
-
-    it('is applied to read operations.', async done => {
-      try {
-        await engine.read('../etc', 'primary-key');
-        done.fail('Expected error');
-      } catch (error) {
-        expect(error instanceof expectedError).toBe(true);
-        done();
-      }
-    });
-
-    it('is applied to read all operations.', async done => {
-      try {
-        await engine.readAll('../etc');
-        done.fail('Expected error');
-      } catch (error) {
-        expect(error instanceof expectedError).toBe(true);
-        done();
-      }
-    });
-
-    it('is applied to update operations.', async done => {
-      try {
-        await engine.update('../etc', 'primary-key', {age: 47});
-        done.fail('Expected error');
-      } catch (error) {
-        expect(error instanceof expectedError).toBe(true);
-        done();
-      }
+      done();
     });
   });
 
