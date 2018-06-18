@@ -31,7 +31,7 @@ const {FileEngine} = require('@wireapp/store-engine');
   const account = new Account(apiClient);
   await account.login(login);
   await account.listen();
-  const textMessage = await account.service.conversation.createText('Hello World');
+  const textMessage = 'Hello World';
 
   function sendMessage() {
     const timeoutInMillis = 2000;

@@ -55,7 +55,7 @@ export default class ConversationService {
 
   private createEphemeral(originalGenericMessage: any, timeoutSeconds: number): any {
     const ephemeral = this.protocolBuffers.Ephemeral.create({
-      expire_after_millis: timeoutSeconds,
+      expireAfterMillis: timeoutSeconds,
       [originalGenericMessage.content]: originalGenericMessage[originalGenericMessage.content],
     });
 
@@ -321,10 +321,14 @@ export default class ConversationService {
       ephemeralTimeout: ephemeralTimeoutSeconds,
       state: PayloadBundleState.OUTGOING_SENT,
     };
-    const genericMessage = this.protocolBuffers.GenericMessage.create({
+    let genericMessage = this.protocolBuffers.GenericMessage.create({
       messageId: payloadBundle.id,
       text: this.protocolBuffers.Text.create({content: payloadBundle.content}),
     });
+
+    if (ephemeralTimeoutSeconds) {
+      genericMessage = this.createEphemeral(genericMessage, ephemeralTimeoutSeconds);
+    }
 
     const preKeyBundles = await this.getPreKeyBundles(conversationId);
     const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(genericMessage).finish();
