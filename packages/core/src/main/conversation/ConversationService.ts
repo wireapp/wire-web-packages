@@ -195,14 +195,8 @@ export default class ConversationService {
   public async deleteMessageEveryone(conversationId: string, messageIdToDelete: string): Promise<string> {
     const messageId = new UUID(4).format();
 
-    const messageDelete = this.protocolBuffers.MessageDelete.create({
-      conversationId,
-      messageId: messageIdToDelete,
-      type: GenericMessageType.DELETED,
-    });
-
     const genericMessage = this.protocolBuffers.GenericMessage.create({
-      messageDelete,
+      messageDelete: this.protocolBuffers.MessageDelete.create({messageId: messageIdToDelete}),
       messageId,
       type: GenericMessageType.DELETED,
     });
