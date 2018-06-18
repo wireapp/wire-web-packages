@@ -28,6 +28,7 @@ enum PayloadBundleState {
 interface PayloadBundle {
   content?: string | Asset | Image | ImageAsset;
   conversation?: string;
+  ephemeralTimeout?: number;
   from: string;
   id: string;
   state: PayloadBundleState;
