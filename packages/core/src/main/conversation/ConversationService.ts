@@ -375,8 +375,7 @@ export default class ConversationService {
     switch (payloadBundle.type) {
       case GenericMessageType.ASSET: {
         if (payloadBundle.content) {
-          const ctn = payloadBundle.content as ImageAsset;
-          if (ctn.image) {
+          if ((payloadBundle.content as ImageAsset).image) {
             return this.sendImage(conversationId, payloadBundle);
           }
           throw new Error(`No send method implemented for sending other assets than images.`);
