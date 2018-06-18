@@ -109,7 +109,18 @@ describe('FileEngine', () => {
     });
 
     it('is applied to all store operations.', async done => {
-      const functionNames = ['create', 'delete', 'read', 'update'];
+      const functionNames = [
+        'append',
+        'create',
+        'delete',
+        'deleteAll',
+        'read',
+        'readAll',
+        'readAllPrimaryKeys',
+        'update',
+        'updateOrCreate',
+      ];
+
       for (operation of functionNames) {
         try {
           await engine[operation]('../etc', 'primary-key', {});
