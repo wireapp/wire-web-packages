@@ -28,7 +28,7 @@ import APIClient = require('@wireapp/api-client');
 import {ClientType, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
 import {Config} from '@wireapp/api-client/dist/commonjs/Config';
 import {BackendErrorLabel} from '@wireapp/api-client/dist/commonjs/http/';
-import {PayloadBundle} from '@wireapp/core/dist/cryptography/root';
+import {PayloadBundle} from '@wireapp/core/dist/conversation/root';
 import {AxiosError} from 'axios';
 import * as os from 'os';
 import * as path from 'path';
