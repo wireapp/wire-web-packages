@@ -121,6 +121,13 @@ class Account extends EventEmitter {
         return initClient
           ? this.initClient(loginData, clientInfo).then(() => this.apiClient.context)
           : this.apiClient.context;
+      })
+      .catch(error => {
+        const {response: {data: {message: backendMessage = '', code: httpCode = ''} = {}} = {}} = error;
+        if (backendMessage && httpCode) {
+          throw new Error(`Message from backend: "${backendMessage}", HTTP error code "${httpCode}".`);
+        }
+        throw error;
       });
   }
 
@@ -234,7 +241,14 @@ class Account extends EventEmitter {
         }
         return this.apiClient.connect();
       })
-      .then(() => this);
+      .then(() => this)
+      .catch(error => {
+        const {response: {data: {message: backendMessage = '', code: httpCode = ''} = {}} = {}} = error;
+        if (backendMessage && httpCode) {
+          throw new Error(`Message from backend: "${backendMessage}", HTTP error code "${httpCode}".`);
+        }
+        throw error;
+      });
   }
 
   private async decodeGenericMessage(otrMessage: ConversationOtrMessageAddEvent): Promise<DecodedMessage> {
