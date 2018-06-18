@@ -25,6 +25,7 @@ import ConversationService from './ConversationService';
 import DecodedMessage from './DecodedMessage';
 import GenericMessageType from './GenericMessageType';
 import Image from './Image';
+import {PayloadBundle, PayloadBundleIncoming, PayloadBundleOutgoing, PayloadBundleState} from './PayloadBundle';
 
 export {
   Asset,
@@ -37,5 +38,9 @@ export {
   GenericMessageType,
   Image,
   ImageAsset,
+  PayloadBundle,
+  PayloadBundleIncoming,
+  PayloadBundleOutgoing,
+  PayloadBundleState,
   RemoteData,
 };

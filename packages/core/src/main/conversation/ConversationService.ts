@@ -34,11 +34,13 @@ import {
   GenericMessageType,
   Image,
   ImageAsset,
+  PayloadBundle,
+  PayloadBundleOutgoing,
+  PayloadBundleState,
   RemoteData,
 } from '../conversation/root';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
-import {PayloadBundleState} from '../cryptography/PayloadBundle';
-import {CryptographyService, EncryptedAsset, PayloadBundle} from '../cryptography/root';
+import {CryptographyService, EncryptedAsset} from '../cryptography/root';
 
 const UUID = require('pure-uuid');
 import APIClient = require('@wireapp/api-client');
@@ -174,7 +176,7 @@ export default class ConversationService {
     });
   }
 
-  public async sendConfirmation(conversationId: string, confirmMessageId: string): Promise<PayloadBundle> {
+  public async sendConfirmation(conversationId: string, confirmMessageId: string): Promise<PayloadBundleOutgoing> {
     const messageId = ConversationService.createId();
 
     const confirmation = this.protocolBuffers.Confirmation.create({
@@ -242,7 +244,7 @@ export default class ConversationService {
     return {...payloadBundle, state: PayloadBundleState.OUTGOING_SENT};
   }
 
-  public async sendPing(conversationId: string): Promise<PayloadBundle> {
+  public async sendPing(conversationId: string): Promise<PayloadBundleOutgoing> {
     const messageId = ConversationService.createId();
 
     const knock = this.protocolBuffers.Knock.create();
@@ -262,7 +264,7 @@ export default class ConversationService {
     };
   }
 
-  public async sendSessionReset(conversationId: string): Promise<PayloadBundle> {
+  public async sendSessionReset(conversationId: string): Promise<PayloadBundleOutgoing> {
     const messageId = ConversationService.createId();
 
     const sessionReset = this.protocolBuffers.GenericMessage.create({
