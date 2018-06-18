@@ -34,6 +34,7 @@ describe('FileEngine', () => {
   }
 
   beforeEach(async done => {
+    FileEngine.path = path;
     engine = await initEngine();
     done();
   });
