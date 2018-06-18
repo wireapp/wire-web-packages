@@ -55,6 +55,20 @@ export default class ConversationService {
     private readonly assetService: AssetService
   ) {}
 
+  private createEphemeral(originalGenericMessage: any, expireAfterMillis: number): any {
+    const ephemeral = this.protocolBuffers.Ephemeral.create({
+      expireAfterMillis,
+      [originalGenericMessage.content]: originalGenericMessage[originalGenericMessage.content],
+    });
+
+    const genericMessage = this.protocolBuffers.GenericMessage.create({
+      ephemeral,
+      messageId: originalGenericMessage.messageId,
+    });
+
+    return genericMessage;
+  }
+
   // TODO: The correct functionality of this function is heavily based on the case that it always runs into the catch
   // block
   private getPreKeyBundles(conversationId: string): Promise<ClientMismatch | UserPreKeyBundleMap> {
@@ -133,7 +147,8 @@ export default class ConversationService {
 
   private async sendImage(
     conversationId: string,
-    payloadBundle: PayloadBundleOutgoingUnsent
+    payloadBundle: PayloadBundleOutgoingUnsent,
+    expireAfterMillis?: number
   ): Promise<PayloadBundleOutgoing> {
     if (!payloadBundle.content) {
       throw new Error('No content for sendImage provided!');
@@ -165,10 +180,14 @@ export default class ConversationService {
       uploaded: remoteData,
     });
 
-    const genericMessage = this.protocolBuffers.GenericMessage.create({
+    let genericMessage = this.protocolBuffers.GenericMessage.create({
       asset,
       messageId: payloadBundle.id,
     });
+
+    if (expireAfterMillis) {
+      genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
+    }
 
     const preKeyBundles = await this.getPreKeyBundles(conversationId);
     const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(genericMessage).finish();
@@ -221,17 +240,22 @@ export default class ConversationService {
 
   private async sendText(
     conversationId: string,
-    originalPayloadBundle: PayloadBundleOutgoingUnsent
+    originalPayloadBundle: PayloadBundleOutgoingUnsent,
+    expireAfterMillis?: number
   ): Promise<PayloadBundleOutgoing> {
     const payloadBundle: PayloadBundleOutgoing = {
       ...originalPayloadBundle,
       conversation: conversationId,
       state: PayloadBundleState.OUTGOING_SENT,
     };
-    const genericMessage = this.protocolBuffers.GenericMessage.create({
+    let genericMessage = this.protocolBuffers.GenericMessage.create({
       messageId: payloadBundle.id,
       text: this.protocolBuffers.Text.create({content: payloadBundle.content}),
     });
+
+    if (expireAfterMillis) {
+      genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
+    }
 
     const preKeyBundles = await this.getPreKeyBundles(conversationId);
     const plainTextBuffer: Buffer = this.protocolBuffers.GenericMessage.encode(genericMessage).finish();
