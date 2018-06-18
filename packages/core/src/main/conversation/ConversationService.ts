@@ -34,8 +34,8 @@ import {
   GenericMessageType,
   Image,
   ImageAsset,
-  PayloadBundle,
   PayloadBundleOutgoing,
+  PayloadBundleOutgoingUnsent,
   PayloadBundleState,
   RemoteData,
 } from '../conversation/root';
@@ -142,7 +142,10 @@ export default class ConversationService {
     return new UUID(4).format();
   }
 
-  public async createImage(image: Image, messageId: string = ConversationService.createId()): Promise<PayloadBundle> {
+  public async createImage(
+    image: Image,
+    messageId: string = ConversationService.createId()
+  ): Promise<PayloadBundleOutgoingUnsent> {
     const imageAsset = await this.assetService.uploadImageAsset(image);
 
     return {
@@ -157,7 +160,10 @@ export default class ConversationService {
     };
   }
 
-  public async createText(message: string, messageId: string = ConversationService.createId()): Promise<PayloadBundle> {
+  public async createText(
+    message: string,
+    messageId: string = ConversationService.createId()
+  ): Promise<PayloadBundleOutgoingUnsent> {
     return {
       content: message,
       from: this.clientID,
@@ -200,7 +206,10 @@ export default class ConversationService {
     };
   }
 
-  public async sendImage(conversationId: string, payloadBundle: PayloadBundle): Promise<PayloadBundleOutgoing> {
+  public async sendImage(
+    conversationId: string,
+    payloadBundle: PayloadBundleOutgoingUnsent
+  ): Promise<PayloadBundleOutgoing> {
     if (!payloadBundle.content) {
       throw new Error('No content for sendImage provided!');
     }
@@ -283,7 +292,10 @@ export default class ConversationService {
     };
   }
 
-  public async sendText(conversationId: string, originalPayloadBundle: PayloadBundle): Promise<PayloadBundleOutgoing> {
+  public async sendText(
+    conversationId: string,
+    originalPayloadBundle: PayloadBundleOutgoingUnsent
+  ): Promise<PayloadBundleOutgoing> {
     const payloadBundle: PayloadBundleOutgoing = {
       ...originalPayloadBundle,
       conversation: conversationId,

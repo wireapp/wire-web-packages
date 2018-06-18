@@ -28,8 +28,9 @@ enum PayloadBundleState {
 type PayloadBundleIncoming = PayloadBundle & {conversation?: string; state: PayloadBundleState.INCOMING};
 type PayloadBundleOutgoing = PayloadBundle & {
   conversation: string;
-  state: PayloadBundleState.OUTGOING_SENT | PayloadBundleState.OUTGOING_UNSENT;
+  state: PayloadBundleState.OUTGOING_SENT;
 };
+type PayloadBundleOutgoingUnsent = PayloadBundle & {state: PayloadBundleState.OUTGOING_UNSENT};
 
 interface PayloadBundle {
   content?: string | Asset | Image | ImageAsset;
@@ -39,4 +40,4 @@ interface PayloadBundle {
   type: GenericMessageType;
 }
 
-export {PayloadBundle, PayloadBundleIncoming, PayloadBundleOutgoing, PayloadBundleState};
+export {PayloadBundle, PayloadBundleIncoming, PayloadBundleOutgoing, PayloadBundleOutgoingUnsent, PayloadBundleState};
