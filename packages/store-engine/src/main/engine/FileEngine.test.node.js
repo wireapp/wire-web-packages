@@ -51,11 +51,14 @@ describe('FileEngine', () => {
     it('allows dots inside of primary keys.', () => {
       const tableName = 'amplify';
       const primaryKey = 'z.storage.StorageKey.EVENT.LAST_DATE';
+
+      FileEngine.path = path.posix;
       const actual = FileEngine.enforcePathRestrictions(path.join(unixFolder, tableName), primaryKey);
       expect(actual).toBeDefined();
     });
 
     it('allows slashes inside of primary keys.', () => {
+      FileEngine.path = path.posix;
       expect(FileEngine.enforcePathRestrictions(unixFolder, 'users/..')).toBeDefined();
       expect(FileEngine.enforcePathRestrictions(unixFolder, 'users/../')).toBeDefined();
       expect(FileEngine.enforcePathRestrictions(unixFolder, 'users/../sandbox')).toBeDefined();
@@ -66,6 +69,8 @@ describe('FileEngine', () => {
     it('allows empty strings.', () => {
       const tableName = 'amplify';
       const primaryKey = '';
+
+      FileEngine.path = path.posix;
       const actual = FileEngine.enforcePathRestrictions(path.join(unixFolder, tableName), primaryKey);
       expect(actual).toBeDefined();
     });
@@ -74,13 +79,15 @@ describe('FileEngine', () => {
     const error = StoreEngineError.PathValidationError;
 
     it('throws errors on path traversals.', () => {
-      expect(enforcePathRestrictions(windowsFolder, 'malicious\\..\\..\\test\\..\\..', true)).toThrowError(error);
-      expect(enforcePathRestrictions(windowsFolder, '\\malicious\\..\\\\..entry\\..\\..', true)).toThrowError(error);
-      expect(enforcePathRestrictions(windowsFolder, 'malicious\\..\\entry\\..\\..', true)).toThrowError(error);
-      expect(enforcePathRestrictions(windowsFolder, '\\\\server\\..\\..\\..', true)).toThrowError(error);
-      expect(enforcePathRestrictions(windowsFolder, 'malicious\\..\\..\\entry\\..\\', true)).toThrowError(error);
-      expect(enforcePathRestrictions(windowsFolder, '..\\etc', true)).toThrowError(error);
+      FileEngine.path = path.win32;
+      expect(enforcePathRestrictions(windowsFolder, 'malicious\\..\\..\\test\\..\\..')).toThrowError(error);
+      expect(enforcePathRestrictions(windowsFolder, '\\malicious\\..\\\\..entry\\..\\..')).toThrowError(error);
+      expect(enforcePathRestrictions(windowsFolder, 'malicious\\..\\entry\\..\\..')).toThrowError(error);
+      expect(enforcePathRestrictions(windowsFolder, '\\\\server\\..\\..\\..')).toThrowError(error);
+      expect(enforcePathRestrictions(windowsFolder, 'malicious\\..\\..\\entry\\..\\')).toThrowError(error);
+      expect(enforcePathRestrictions(windowsFolder, '..\\etc')).toThrowError(error);
 
+      FileEngine.path = path.posix;
       expect(enforcePathRestrictions(unixFolder, '../etc')).toThrowError(error);
       expect(enforcePathRestrictions(unixFolder, '/malicious/../../../entry/../test')).toThrowError(error);
       expect(enforcePathRestrictions(unixFolder, 'malicious/../../../entry/..')).toThrowError(error);
@@ -92,8 +99,11 @@ describe('FileEngine', () => {
     });
 
     it('throws errors when attempting to use the root folder as a trusted root.', () => {
+      FileEngine.path = path.posix;
       expect(enforcePathRestrictions('/', 'etc/hosts')).toThrowError(error);
-      expect(enforcePathRestrictions('C:/', '\\Windows\\System32\\drivers\\etc\\hosts', true)).toThrowError(error);
+
+      FileEngine.path = path.win32;
+      expect(enforcePathRestrictions('C:/', '\\Windows\\System32\\drivers\\etc\\hosts')).toThrowError(error);
     });
   });
 
