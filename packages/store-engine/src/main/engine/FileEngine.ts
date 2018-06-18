@@ -15,6 +15,7 @@ export default class FileEngine implements CRUDEngine {
   private options: {fileExtension: string} = {
     fileExtension: '.dat',
   };
+  public static path = path;
 
   constructor(private readonly baseDirectory: string = './') {}
 
@@ -29,7 +30,7 @@ export default class FileEngine implements CRUDEngine {
     await this.isSupported();
 
     FileEngine.enforcePathRestrictions(this.baseDirectory, storeName);
-    this.storeName = path.resolve(this.baseDirectory, storeName);
+    this.storeName = this.path.resolve(this.baseDirectory, storeName);
 
     this.options = {...this.options, ...options};
     return Promise.resolve(storeName);
@@ -39,17 +40,16 @@ export default class FileEngine implements CRUDEngine {
     return fs.remove(this.storeName);
   }
 
-  static enforcePathRestrictions(givenTrustedRoot: string, givenPath: string, forceWindows: boolean = false): string {
-    const pathApi = process.platform === 'win32' || forceWindows === true ? path.win32 : path.posix;
-    const trustedRoot = pathApi.resolve(givenTrustedRoot);
+  static enforcePathRestrictions(givenTrustedRoot: string, givenPath: string): string {
+    const trustedRoot = this.path.resolve(givenTrustedRoot);
 
-    const trustedRootDetails = pathApi.parse(trustedRoot);
+    const trustedRootDetails = this.path.parse(trustedRoot);
     if (trustedRootDetails.root === trustedRootDetails.dir && trustedRootDetails.base === '') {
       const message = `"${trustedRoot}" cannot be the root of the filesystem.`;
       throw new PathValidationError(message);
     }
 
-    const unsafePath = pathApi.resolve(trustedRoot, givenPath);
+    const unsafePath = this.path.resolve(trustedRoot, givenPath);
     if (unsafePath.startsWith(trustedRoot) === false) {
       const message = `Path traversal has been detected. Allowed path was "${trustedRoot}" but tested path "${givenPath}" attempted to reach "${unsafePath}"`;
       throw new PathValidationError(message);
