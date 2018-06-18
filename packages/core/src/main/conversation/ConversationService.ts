@@ -109,10 +109,10 @@ export default class ConversationService {
     const preKeyBundles = await this.getPreKeyBundles(conversationId);
     const recipients = await this.cryptographyService.encrypt(plainTextBuffer, preKeyBundles as UserPreKeyBundleMap);
 
-    return this.sendMessage(sendingClientId, conversationId, recipients);
+    return this.sendOTRMessage(sendingClientId, conversationId, recipients);
   }
 
-  private sendMessage(
+  private sendOTRMessage(
     sendingClientId: string,
     conversationId: string,
     recipients: OTRRecipients
@@ -160,10 +160,7 @@ export default class ConversationService {
     };
   }
 
-  public async createText(
-    message: string,
-    messageId: string = ConversationService.createId()
-  ): Promise<PayloadBundleOutgoingUnsent> {
+  public createText(message: string, messageId: string = ConversationService.createId()): PayloadBundleOutgoingUnsent {
     return {
       content: message,
       from: this.apiClient.context!.userId,
@@ -182,31 +179,39 @@ export default class ConversationService {
     });
   }
 
-  public async sendConfirmation(conversationId: string, confirmMessageId: string): Promise<PayloadBundleOutgoing> {
-    const messageId = ConversationService.createId();
+  public createConfirmation(
+    confirmMessageId: string,
+    messageId: string = ConversationService.createId()
+  ): PayloadBundleOutgoingUnsent {
+    return {
+      content: confirmMessageId,
+      from: this.apiClient.context!.userId,
+      id: messageId,
+      state: PayloadBundleState.OUTGOING_UNSENT,
+      type: GenericMessageType.CONFIRMATION,
+    };
+  }
 
+  private async sendConfirmation(
+    conversationId: string,
+    payloadBundle: PayloadBundleOutgoingUnsent
+  ): Promise<PayloadBundleOutgoing> {
     const confirmation = this.protocolBuffers.Confirmation.create({
-      firstMessageId: confirmMessageId,
+      firstMessageId: payloadBundle.content,
       type: ConfirmationType.DELIVERED,
     });
 
     const genericMessage = this.protocolBuffers.GenericMessage.create({
       confirmation,
-      messageId,
+      messageId: payloadBundle.id,
     });
 
     await this.sendGenericMessage(this.clientID, conversationId, genericMessage);
 
-    return {
-      conversation: conversationId,
-      from: this.apiClient.context!.userId,
-      id: messageId,
-      state: PayloadBundleState.OUTGOING_SENT,
-      type: GenericMessageType.CONFIRMATION,
-    };
+    return {...payloadBundle, conversation: conversationId, state: PayloadBundleState.OUTGOING_SENT};
   }
 
-  public async sendImage(
+  private async sendImage(
     conversationId: string,
     payloadBundle: PayloadBundleOutgoingUnsent
   ): Promise<PayloadBundleOutgoing> {
@@ -253,46 +258,55 @@ export default class ConversationService {
     return {...payloadBundle, conversation: conversationId, state: PayloadBundleState.OUTGOING_SENT};
   }
 
-  public async sendPing(conversationId: string): Promise<PayloadBundleOutgoing> {
-    const messageId = ConversationService.createId();
-
-    const knock = this.protocolBuffers.Knock.create();
-    const genericMessage = this.protocolBuffers.GenericMessage.create({
-      knock,
-      messageId,
-    });
-
-    await this.sendGenericMessage(this.clientID, conversationId, genericMessage);
-
+  public createPing(messageId: string = ConversationService.createId()): PayloadBundleOutgoingUnsent {
     return {
-      conversation: conversationId,
       from: this.apiClient.context!.userId,
       id: messageId,
-      state: PayloadBundleState.OUTGOING_SENT,
+      state: PayloadBundleState.OUTGOING_UNSENT,
       type: GenericMessageType.KNOCK,
     };
   }
 
-  public async sendSessionReset(conversationId: string): Promise<PayloadBundleOutgoing> {
-    const messageId = ConversationService.createId();
-
-    const sessionReset = this.protocolBuffers.GenericMessage.create({
-      clientAction: ClientAction.RESET_SESSION,
-      messageId,
-    });
-
-    await this.sendGenericMessage(this.clientID, conversationId, sessionReset);
-
+  public createSessionReset(messageId: string = ConversationService.createId()): PayloadBundleOutgoingUnsent {
     return {
-      conversation: conversationId,
+      content: String(ClientAction.RESET_SESSION),
       from: this.apiClient.context!.userId,
       id: messageId,
-      state: PayloadBundleState.OUTGOING_SENT,
+      state: PayloadBundleState.OUTGOING_UNSENT,
       type: GenericMessageType.CLIENT_ACTION,
     };
   }
 
-  public async sendText(
+  private async sendPing(
+    conversationId: string,
+    payloadBundle: PayloadBundleOutgoingUnsent
+  ): Promise<PayloadBundleOutgoing> {
+    const knock = this.protocolBuffers.Knock.create();
+    const genericMessage = this.protocolBuffers.GenericMessage.create({
+      knock,
+      messageId: payloadBundle.id,
+    });
+
+    await this.sendGenericMessage(this.clientID, conversationId, genericMessage);
+
+    return {...payloadBundle, conversation: conversationId, state: PayloadBundleState.OUTGOING_SENT};
+  }
+
+  private async sendSessionReset(
+    conversationId: string,
+    payloadBundle: PayloadBundleOutgoingUnsent
+  ): Promise<PayloadBundleOutgoing> {
+    const sessionReset = this.protocolBuffers.GenericMessage.create({
+      clientAction: ClientAction.RESET_SESSION,
+      messageId: payloadBundle.id,
+    });
+
+    await this.sendGenericMessage(this.clientID, conversationId, sessionReset);
+
+    return {...payloadBundle, conversation: conversationId, state: PayloadBundleState.OUTGOING_SENT};
+  }
+
+  private async sendText(
     conversationId: string,
     originalPayloadBundle: PayloadBundleOutgoingUnsent
   ): Promise<PayloadBundleOutgoing> {
@@ -326,8 +340,42 @@ export default class ConversationService {
       preKeyBundles as UserPreKeyBundleMap
     );
 
-    await this.sendMessage(this.clientID, conversationId, payload);
+    await this.sendOTRMessage(this.clientID, conversationId, payload);
     return payloadBundle;
+  }
+
+  public async send(
+    conversationId: string,
+    payloadBundle: PayloadBundleOutgoingUnsent
+  ): Promise<PayloadBundleOutgoing> {
+    switch (payloadBundle.type) {
+      case GenericMessageType.ASSET: {
+        if (payloadBundle.content) {
+          const ctn = payloadBundle.content as ImageAsset;
+          if (ctn.image) {
+            return this.sendImage(conversationId, payloadBundle);
+          }
+          throw new Error(`No send method implemented for sending other assets than images.`);
+        }
+        throw new Error(`No send method implemented for "${payloadBundle.type}" without content".`);
+      }
+      case GenericMessageType.CLIENT_ACTION: {
+        if (payloadBundle.content === ClientAction.RESET_SESSION) {
+          return this.sendSessionReset(conversationId, payloadBundle);
+        }
+        throw new Error(
+          `No send method implemented for "${payloadBundle.type}" and ClientAction "${payloadBundle.content}".`
+        );
+      }
+      case GenericMessageType.CONFIRMATION:
+        return this.sendConfirmation(conversationId, payloadBundle);
+      case GenericMessageType.KNOCK:
+        return this.sendPing(conversationId, payloadBundle);
+      case GenericMessageType.TEXT:
+        return this.sendText(conversationId, payloadBundle);
+      default:
+        throw new Error(`No send method implemented for "${payloadBundle.type}."`);
+    }
   }
 
   public sendTypingStart(conversationId: string): Promise<void> {
