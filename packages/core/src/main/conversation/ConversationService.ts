@@ -66,8 +66,6 @@ export default class ConversationService {
       messageId: originalGenericMessage.messageId,
     });
 
-    // TODO: start timer
-
     return genericMessage;
   }
 
