@@ -123,7 +123,7 @@ class Account extends EventEmitter {
           : this.apiClient.context;
       })
       .catch(error => {
-        const {response: {data: {message: backendMessage = '', code: httpCode = ''} = {}} = {}} = error;
+        const {response: {data: {message: backendMessage = ''} = {}, status: httpCode = ''} = {}} = error;
         if (httpCode) {
           throw new Error(
             `HTTP request failed with code "${httpCode}".` +
@@ -246,7 +246,7 @@ class Account extends EventEmitter {
       })
       .then(() => this)
       .catch(error => {
-        const {response: {data: {message: backendMessage = '', code: httpCode = ''} = {}} = {}} = error;
+        const {response: {data: {message: backendMessage = ''} = {}, status: httpCode = ''} = {}} = error;
         if (httpCode) {
           throw new Error(
             `HTTP request failed with code "${httpCode}".` +
