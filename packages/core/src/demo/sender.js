@@ -35,15 +35,4 @@ const {FileEngine} = require('@wireapp/store-engine');
   const ephemeralTimeout = 5000;
   const ephemeralPayload = await account.service.conversation.createText('Expire after 5 seconds');
   await account.service.conversation.sendText(CONVERSATION_ID, ephemeralPayload, ephemeralTimeout);
-
-  function sendMessage() {
-    const timeoutInMillis = 2000;
-    setTimeout(async () => {
-      const textPayload = await account.service.conversation.createText('Hello World');
-      await account.service.conversation.sendText(CONVERSATION_ID, textPayload);
-      sendMessage();
-    }, timeoutInMillis);
-  }
-
-  sendMessage();
 })();

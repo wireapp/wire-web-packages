@@ -268,11 +268,7 @@ export default class ConversationService {
     const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
 
     await this.sendExternalGenericMessage(this.clientID, conversationId, payload, preKeyBundles as UserPreKeyBundleMap);
-<<<<<<< HEAD
-    return {...payloadBundle, ephemeralTimeout: expireAfterMillis, state: PayloadBundleState.OUTGOING_SENT};
-=======
     return {...payloadBundle, conversation: conversationId, state: PayloadBundleState.OUTGOING_SENT};
->>>>>>> master
   }
 
   public async sendPing(conversationId: string): Promise<PayloadBundleOutgoing> {
@@ -316,17 +312,6 @@ export default class ConversationService {
 
   public async sendText(
     conversationId: string,
-<<<<<<< HEAD
-    originalPayloadBundle: PayloadBundle,
-    expireAfterMillis?: number
-  ): Promise<PayloadBundle> {
-    const payloadBundle = {
-      ...originalPayloadBundle,
-      ephemeralTimeout: expireAfterMillis,
-      state: PayloadBundleState.OUTGOING_SENT,
-    };
-    let genericMessage = this.protocolBuffers.GenericMessage.create({
-=======
     originalPayloadBundle: PayloadBundleOutgoingUnsent
   ): Promise<PayloadBundleOutgoing> {
     const payloadBundle: PayloadBundleOutgoing = {
@@ -335,7 +320,6 @@ export default class ConversationService {
       state: PayloadBundleState.OUTGOING_SENT,
     };
     const genericMessage = this.protocolBuffers.GenericMessage.create({
->>>>>>> master
       messageId: payloadBundle.id,
       text: this.protocolBuffers.Text.create({content: payloadBundle.content}),
     });
