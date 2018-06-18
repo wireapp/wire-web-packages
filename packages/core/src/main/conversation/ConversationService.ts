@@ -222,7 +222,8 @@ export default class ConversationService {
 
   public async sendImage(
     conversationId: string,
-    payloadBundle: PayloadBundleOutgoingUnsent
+    payloadBundle: PayloadBundleOutgoingUnsent,
+    expireAfterMillis?: number
   ): Promise<PayloadBundleOutgoing> {
     if (!payloadBundle.content) {
       throw new Error('No content for sendImage provided!');
@@ -312,14 +313,15 @@ export default class ConversationService {
 
   public async sendText(
     conversationId: string,
-    originalPayloadBundle: PayloadBundleOutgoingUnsent
+    originalPayloadBundle: PayloadBundleOutgoingUnsent,
+    expireAfterMillis?: number
   ): Promise<PayloadBundleOutgoing> {
     const payloadBundle: PayloadBundleOutgoing = {
       ...originalPayloadBundle,
       conversation: conversationId,
       state: PayloadBundleState.OUTGOING_SENT,
     };
-    const genericMessage = this.protocolBuffers.GenericMessage.create({
+    let genericMessage = this.protocolBuffers.GenericMessage.create({
       messageId: payloadBundle.id,
       text: this.protocolBuffers.Text.create({content: payloadBundle.content}),
     });
