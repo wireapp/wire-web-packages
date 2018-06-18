@@ -1,10 +1,10 @@
 //@ts-check
 
 process.on('uncaughtException', error =>
-  console.error(`Uncaught exception "${error.constructor.name}" (${error.code}): ${error.message}`, error)
+  console.error(`Uncaught exception "${error.constructor.name}" (code: ${error.code}): ${error.message}`, error)
 );
 process.on('unhandledRejection', error =>
-  console.error(`Uncaught rejection "${error.constructor.name}" (${error.code}): ${error.message}`, error)
+  console.error(`Uncaught rejection "${error.constructor.name}" (code: ${error.code}): ${error.message}`, error)
 );
 
 const path = require('path');
@@ -32,14 +32,28 @@ const {FileEngine} = require('@wireapp/store-engine');
   await account.login(login);
   await account.listen();
 
-  const textPayload = await account.service.conversation.createText('Delete me! ' + new Date());
-  const {id: messageId} = await account.service.conversation.sendText(CONVERSATION_ID, textPayload);
+  const deleteTextPayload = await account.service.conversation.createText('Delete me! ' + new Date());
+  const {id: messageId} = await account.service.conversation.sendText(CONVERSATION_ID, deleteTextPayload);
   await account.service.conversation.sendPing(CONVERSATION_ID);
 
-  const timeoutInMillis = 5000;
+  const fiveSecondsInMillis = 5000;
   setTimeout(async () => {
     await account.service.conversation.deleteMessageEveryone(CONVERSATION_ID, messageId);
     console.log('deleted', messageId);
     process.exit();
-  }, timeoutInMillis);
+  }, fiveSecondsInMillis);
+
+  const ephemeralPayload = await account.service.conversation.createText('Expire after 5 seconds');
+  await account.service.conversation.sendText(CONVERSATION_ID, ephemeralPayload, fiveSecondsInMillis);
+
+  function sendMessage() {
+    const twoSecondsInMillis = 2000;
+    setTimeout(async () => {
+      const textPayload = await account.service.conversation.createText('Hello World');
+      await account.service.conversation.sendText(CONVERSATION_ID, textPayload);
+      sendMessage();
+    }, twoSecondsInMillis);
+  }
+
+  sendMessage();
 })();
