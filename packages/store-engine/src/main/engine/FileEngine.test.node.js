@@ -56,7 +56,7 @@ describe('FileEngine', () => {
       const primaryKey = 'z.storage.StorageKey.EVENT.LAST_DATE';
 
       FileEngine.path = path.posix;
-      const actual = FileEngine.enforcePathRestrictions(path.join(unixFolder, tableName), primaryKey);
+      const actual = FileEngine.enforcePathRestrictions(FileEngine.path.join(unixFolder, tableName), primaryKey);
       expect(actual).toBeDefined();
     });
 
@@ -76,7 +76,7 @@ describe('FileEngine', () => {
       const primaryKey = '';
 
       FileEngine.path = path.posix;
-      const actual = FileEngine.enforcePathRestrictions(path.join(unixFolder, tableName), primaryKey);
+      const actual = FileEngine.enforcePathRestrictions(FileEngine.path.join(unixFolder, tableName), primaryKey);
       expect(actual).toBeDefined();
     });
 
