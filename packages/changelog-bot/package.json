@@ -5,7 +5,7 @@
   "dependencies": {
     "@types/generate-changelog": "1.7.0",
     "@types/node": "10.3.3",
-    "@wireapp/core": "3.2.0",
+    "@wireapp/core": "3.2.2",
     "chalk": "2.4.1",
     "commander": "2.15.1",
     "generate-changelog": "1.7.1"
@@ -20,7 +20,7 @@
     "dist"
   ],
   "license": "GPL-3.0",
-  "main": "dist/index.js",
+  "main": "dist/ChangelogBot.js",
   "name": "@wireapp/changelog-bot",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot",
   "scripts": {
@@ -31,6 +31,6 @@
     "test": "exit 0",
     "test:project": "yarn dist && yarn test"
   },
-  "types": "dist/index.d.ts",
-  "version": "0.1.16"
+  "types": "dist/ChangelogBot.d.ts",
+  "version": "0.1.19"
 }
