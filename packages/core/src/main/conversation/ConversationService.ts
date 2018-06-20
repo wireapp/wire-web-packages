@@ -365,10 +365,9 @@ export default class ConversationService {
     };
   }
 
-  public async getConversation(): Promise<Conversation[]>;
-  public async getConversation(conversationId: string): Promise<Conversation>;
-  public async getConversation(conversationId: string[]): Promise<Conversation[]>;
-  public async getConversation(conversationId?: string | string[]): Promise<Conversation[] | Conversation> {
+  public async getConversations(conversationId: string): Promise<Conversation>;
+  public async getConversations(conversationId?: string[]): Promise<Conversation[]>;
+  public async getConversations(conversationId?: string | string[]): Promise<Conversation[] | Conversation> {
     if (!conversationId || !conversationId.length) {
       return this.apiClient.conversation.api.getAllConversations();
     }
