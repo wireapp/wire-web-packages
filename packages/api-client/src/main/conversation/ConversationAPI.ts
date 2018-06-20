@@ -23,6 +23,7 @@ import {
   Conversation,
   ConversationCode,
   ConversationIds,
+  ConversationMessageTimer,
   Conversations,
   ConversationUpdate,
   Invite,
@@ -426,6 +427,25 @@ class ConversationAPI {
       data: conversationData,
       method: 'put',
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}`,
+    };
+
+    return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
+  }
+
+  /**
+   * Update conversation properties.
+   * @param conversationId The conversation ID
+   * @param conversationData The new message timer
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/updateConversationMessageTimer
+   */
+  public putConversationMessageTimer(
+    conversationId: string,
+    messageTimer: ConversationMessageTimer
+  ): Promise<ConversationEvent> {
+    const config: AxiosRequestConfig = {
+      data: messageTimer,
+      method: 'put',
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/message-timer`,
     };
 
     return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);

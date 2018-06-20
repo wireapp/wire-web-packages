@@ -17,13 +17,8 @@
  *
  */
 
-import {TeamInfo} from '../team';
-
-interface NewConversation {
-  message_timer?: string;
-  name?: string;
-  team?: TeamInfo;
-  users: string[];
+interface ConversationMessageTimer {
+  message_timer: string | null;
 }
 
-export {NewConversation};
+export {ConversationMessageTimer};
