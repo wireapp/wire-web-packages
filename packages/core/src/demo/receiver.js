@@ -31,17 +31,19 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
   const apiClient = new APIClient(new Config(engine, APIClient.BACKEND.STAGING));
   const account = new Account(apiClient);
 
-  async function sendPing(data) {
-    const {conversation: conversationId, from} = data;
-    console.log(`Ping in "${conversationId}" from "${from}".`);
-    const payload = account.service.conversation.createPing();
-    await account.service.conversation.send(conversationId, payload, data.messageTimer);
-  }
-
   account.on(Account.INCOMING.TEXT_MESSAGE, async data => {
-    const {conversation: conversationId, from, content, id: messageId} = data;
-    console.log(`Message "${messageId}" in "${conversationId}" from "${from}":`, content);
-    await account.service.conversation.sendConfirmation(conversationId, messageId);
+    const {conversation: conversationId, from, content, id: messageId, messageTimer} = data;
+    console.log(
+      `Message "${messageId}" in "${conversationId}" from "${from}":`,
+      content,
+      messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
+    );
+
+    const confirmationPayload = account.service.conversation.createConfirmation(messageId);
+    await account.service.conversation.send(conversationId, confirmationPayload);
+
+    const textPayload = account.service.conversation.createText(content);
+    await account.service.conversation.send(conversationId, textPayload, messageTimer);
   });
 
   account.on(Account.INCOMING.CONFIRMATION, data => {
@@ -54,16 +56,27 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
       conversation,
       from,
       content: {uploaded, original},
+      messageTimer,
     } = data;
-    console.log(`Asset in "${conversation}" from "${from}":`, original);
+    console.log(
+      `Asset in "${conversation}" from "${from}":`,
+      original,
+      messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
+    );
     const fileType = original.mimeType.replace(/[^\/]+\//g, '');
     const image = await account.service.conversation.getImage(uploaded);
     await promisify(fs.writeFile)(path.join('.', `received_image.${fileType}`), image);
   });
 
-  account.on(Account.INCOMING.EPHEMERAL, async data => {});
-
-  account.on(Account.INCOMING.PING, sendPing);
+  account.on(Account.INCOMING.PING, async data => {
+    const {conversation: conversationId, from, messageTimer} = data;
+    console.log(
+      `Ping in "${conversationId}" from "${from}".`,
+      messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
+    );
+    const payload = account.service.conversation.createPing();
+    await account.service.conversation.send(conversationId, payload, messageTimer);
+  });
 
   account.on(Account.INCOMING.TYPING, async data => {
     const {

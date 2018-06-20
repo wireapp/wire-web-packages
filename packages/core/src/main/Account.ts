@@ -280,7 +280,6 @@ class Account extends EventEmitter {
     const {conversation, from} = event;
 
     const ENCRYPTED_EVENTS = [CONVERSATION_EVENT.OTR_MESSAGE_ADD];
-
     const META_EVENTS = [CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE, CONVERSATION_EVENT.TYPING];
 
     if (ENCRYPTED_EVENTS.includes(event.type)) {
