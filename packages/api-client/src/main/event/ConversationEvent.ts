@@ -75,24 +75,24 @@ interface ConversationCodeDeleteEvent extends ConversationEvent {
 }
 
 interface ConversationCodeUpdateEvent extends ConversationEvent {
-  type: CONVERSATION_EVENT.CODE_UPDATE;
   data: {
     code: string;
     key: string;
     uri: string;
   };
+  type: CONVERSATION_EVENT.CODE_UPDATE;
 }
 
 interface ConversationConnectRequestEvent extends ConversationEvent {
-  type: CONVERSATION_EVENT.CONNECT_REQUEST;
   data: {
     recipient: string;
   };
+  type: CONVERSATION_EVENT.CONNECT_REQUEST;
 }
 
 interface ConversationCreateEvent extends ConversationEvent {
-  type: CONVERSATION_EVENT.CREATE;
   data: Conversation;
+  type: CONVERSATION_EVENT.CREATE;
 }
 
 interface ConversationDeleteEvent extends ConversationEvent {
