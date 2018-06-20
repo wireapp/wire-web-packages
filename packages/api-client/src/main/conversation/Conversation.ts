@@ -54,7 +54,7 @@ interface Conversation {
   creator: string;
   id: string;
   members: ConversationMembers;
-  message_timer?: string;
+  message_timer?: number;
   name: string;
   team?: string;
   type: CONVERSATION_TYPE.REGULAR | CONVERSATION_TYPE.SELF | CONVERSATION_TYPE.ONE_TO_ONE | CONVERSATION_TYPE.CONNECT;

@@ -23,7 +23,7 @@ import {
   Conversation,
   ConversationCode,
   ConversationIds,
-  ConversationMessageTimer,
+  ConversationMessageTimerUpdate,
   Conversations,
   ConversationUpdate,
   Invite,
@@ -440,7 +440,7 @@ class ConversationAPI {
    */
   public putConversationMessageTimer(
     conversationId: string,
-    messageTimer: ConversationMessageTimer
+    messageTimer: ConversationMessageTimerUpdate
   ): Promise<ConversationEvent> {
     const config: AxiosRequestConfig = {
       data: messageTimer,

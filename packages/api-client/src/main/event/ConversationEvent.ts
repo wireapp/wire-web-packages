@@ -17,7 +17,12 @@
  *
  */
 
-import {Conversation, CONVERSATION_ACCESS, CONVERSATION_ACCESS_ROLE, ConversationMessageTimer} from '../conversation';
+import {
+  Conversation,
+  CONVERSATION_ACCESS,
+  CONVERSATION_ACCESS_ROLE,
+  ConversationMessageTimerUpdate,
+} from '../conversation';
 import {BackendEvent} from './BackendEvent';
 
 enum CONVERSATION_EVENT {
@@ -121,7 +126,7 @@ interface ConversationMemberUpdateEvent extends ConversationEvent {
 }
 
 interface ConversationMessageTimerUpdateEvent extends ConversationEvent {
-  data: ConversationMessageTimer;
+  data: ConversationMessageTimerUpdate;
   type: CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE;
 }
 
