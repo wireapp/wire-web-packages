@@ -433,7 +433,7 @@ class ConversationAPI {
   }
 
   /**
-   * Update conversation properties.
+   * Update the message timer for a conversation.
    * @param conversationId The conversation ID
    * @param conversationData The new message timer
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/updateConversationMessageTimer
