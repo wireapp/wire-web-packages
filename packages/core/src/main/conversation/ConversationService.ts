@@ -153,7 +153,7 @@ export default class ConversationService {
   private async sendImage(
     conversationId: string,
     payloadBundle: PayloadBundleOutgoingUnsent,
-    expireAfterMillis?: number
+    expireAfterMillis: number
   ): Promise<PayloadBundleOutgoing> {
     if (!payloadBundle.content) {
       throw new Error('No content for sendImage provided!');
@@ -190,7 +190,7 @@ export default class ConversationService {
       messageId: payloadBundle.id,
     });
 
-    if (expireAfterMillis) {
+    if (expireAfterMillis > 0) {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
@@ -217,7 +217,7 @@ export default class ConversationService {
   private async sendPing(
     conversationId: string,
     payloadBundle: PayloadBundleOutgoingUnsent,
-    expireAfterMillis?: number
+    expireAfterMillis: number
   ): Promise<PayloadBundleOutgoing> {
     const knock = this.protocolBuffers.Knock.create();
     let genericMessage = this.protocolBuffers.GenericMessage.create({
@@ -225,7 +225,7 @@ export default class ConversationService {
       messageId: payloadBundle.id,
     });
 
-    if (expireAfterMillis) {
+    if (expireAfterMillis > 0) {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
@@ -251,7 +251,7 @@ export default class ConversationService {
   private async sendText(
     conversationId: string,
     originalPayloadBundle: PayloadBundleOutgoingUnsent,
-    expireAfterMillis?: number
+    expireAfterMillis: number
   ): Promise<PayloadBundleOutgoing> {
     const payloadBundle: PayloadBundleOutgoing = {
       ...originalPayloadBundle,
@@ -263,7 +263,7 @@ export default class ConversationService {
       text: this.protocolBuffers.Text.create({content: payloadBundle.content}),
     });
 
-    if (expireAfterMillis) {
+    if (expireAfterMillis > 0) {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
@@ -392,9 +392,10 @@ export default class ConversationService {
 
   public async send(
     conversationId: string,
-    payloadBundle: PayloadBundleOutgoingUnsent,
-    expireAfterMillis: number = this.timerService.getMessageTimer(conversationId)
+    payloadBundle: PayloadBundleOutgoingUnsent
   ): Promise<PayloadBundleOutgoing> {
+    const expireAfterMillis = this.timerService.getMessageTimer(conversationId);
+
     switch (payloadBundle.type) {
       case GenericMessageType.ASSET: {
         if (payloadBundle.content) {

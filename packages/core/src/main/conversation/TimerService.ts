@@ -25,10 +25,6 @@ export default class TimerService {
     this.messageLevelTimers = new Map();
   }
 
-  public deleteConversationLevelTimer(conversationId: string): void {
-    this.conversationLevelTimers.delete(conversationId);
-  }
-
   public getConversationLevelTimer(conversationId: string): number {
     return this.conversationLevelTimers.get(conversationId) || 0;
   }
@@ -43,9 +39,17 @@ export default class TimerService {
 
   public setConversationLevelTimer(conversationId: string, messageTimer: number): void {
     if (messageTimer === 0) {
-      this.deleteConversationLevelTimer(conversationId);
+      this.conversationLevelTimers.delete(conversationId);
     } else {
       this.conversationLevelTimers.set(conversationId, messageTimer);
+    }
+  }
+
+  public setMessageLevelTimer(conversationId: string, messageTimer: number): void {
+    if (messageTimer === 0) {
+      this.conversationLevelTimers.delete(conversationId);
+    } else {
+      this.messageLevelTimers.set(conversationId, messageTimer);
     }
   }
 }

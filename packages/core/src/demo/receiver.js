@@ -43,7 +43,9 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
     await account.service.conversation.send(conversationId, confirmationPayload);
 
     const textPayload = account.service.conversation.createText(content);
-    await account.service.conversation.send(conversationId, textPayload, messageTimer);
+    account.service.conversation.timerService.setConversationLevelTimer(conversationId, messageTimer);
+    await account.service.conversation.send(conversationId, textPayload);
+    account.service.conversation.timerService.setMessageLevelTimer(conversationId, 0);
   });
 
   account.on(Account.INCOMING.CONFIRMATION, data => {
@@ -75,7 +77,9 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
     );
     const payload = account.service.conversation.createPing();
-    await account.service.conversation.send(conversationId, payload, messageTimer);
+    account.service.conversation.timerService.setMessageLevelTimer(conversationId, messageTimer);
+    await account.service.conversation.send(conversationId, payload);
+    account.service.conversation.timerService.setMessageLevelTimer(conversationId, 0);
   });
 
   account.on(Account.INCOMING.TYPING, async data => {
@@ -84,7 +88,9 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
       from,
       data: {status},
     } = data;
+
     console.log(`Typing in "${conversationId}" from "${from}".`, data);
+
     if (status === 'started') {
       await account.service.conversation.sendTypingStart(conversationId);
     } else {
