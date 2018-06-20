@@ -30,7 +30,7 @@ import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/index';
 import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/index';
 import * as cryptobox from '@wireapp/cryptobox';
 import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/error/index';
-import Long = require('long');
+import * as Long from 'long';
 import {Root} from 'protobufjs';
 import {LoginSanitizer} from './auth/root';
 import {ClientInfo, ClientService} from './client/root';
