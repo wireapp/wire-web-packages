@@ -440,10 +440,10 @@ class ConversationAPI {
    */
   public putConversationMessageTimer(
     conversationId: string,
-    messageTimer: ConversationMessageTimerUpdate
+    messageTimerData: ConversationMessageTimerUpdate
   ): Promise<ConversationEvent> {
     const config: AxiosRequestConfig = {
-      data: messageTimer,
+      data: messageTimerData,
       method: 'put',
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/message-timer`,
     };
