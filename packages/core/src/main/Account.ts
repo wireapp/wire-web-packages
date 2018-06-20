@@ -317,9 +317,9 @@ class Account extends EventEmitter {
               conversation,
             } = data as ConversationMessageTimerUpdateEvent;
             this.logger.info(
-              `Received "${expireAfterMillis}"ms timer on conversation level for conversation "${conversation}".`
+              `Received "${expireAfterMillis}" ms timer on conversation level for conversation "${conversation}".`
             );
-            this.service!.conversation.setConversationLevelTimer(conversation, Number(expireAfterMillis));
+            this.service!.conversation.timerService.setConversationLevelTimer(conversation, Number(expireAfterMillis));
             this.emit(Account.INCOMING.MESSAGE_TIMER_UPDATE, event);
             break;
           }
