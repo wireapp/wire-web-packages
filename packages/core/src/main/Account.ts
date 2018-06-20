@@ -276,7 +276,7 @@ class Account extends EventEmitter {
   }
 
   private async handleEvent(event: ConversationEvent): Promise<PayloadBundleIncoming | ConversationEvent | void> {
-    this.logger.info('handleEvent', event);
+    this.logger.info('handleEvent', event.type);
     const {conversation, from} = event;
 
     const ENCRYPTED_EVENTS = [CONVERSATION_EVENT.OTR_MESSAGE_ADD];
@@ -313,13 +313,14 @@ class Account extends EventEmitter {
             break;
           case CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE: {
             const {
-              data: {message_timer: expireAfterMillis},
+              data: {message_timer},
               conversation,
             } = data as ConversationMessageTimerUpdateEvent;
+            const expireAfterMillis = Number(message_timer);
             this.logger.info(
               `Received "${expireAfterMillis}" ms timer on conversation level for conversation "${conversation}".`
             );
-            this.service!.conversation.timerService.setConversationLevelTimer(conversation, Number(expireAfterMillis));
+            this.service!.conversation.timerService.setConversationLevelTimer(conversation, expireAfterMillis);
             this.emit(Account.INCOMING.MESSAGE_TIMER_UPDATE, event);
             break;
           }

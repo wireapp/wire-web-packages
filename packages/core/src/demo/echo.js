@@ -25,10 +25,11 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
     password: process.env.WIRE_PASSWORD,
   };
 
+  const backend = process.env.WIRE_BACKEND === 'staging' ? APIClient.BACKEND.STAGING : APIClient.BACKEND.PRODUCTION;
   const engine = new MemoryEngine();
   await engine.init('receiver');
 
-  const apiClient = new APIClient(new Config(engine, APIClient.BACKEND.PRODUCTION));
+  const apiClient = new APIClient(new Config(engine, backend));
   const account = new Account(apiClient);
 
   account.on(Account.INCOMING.TEXT_MESSAGE, async data => {
