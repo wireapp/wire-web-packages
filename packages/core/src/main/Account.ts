@@ -30,6 +30,7 @@ import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/index';
 import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/index';
 import * as cryptobox from '@wireapp/cryptobox';
 import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/error/index';
+import Long = require('long');
 import {Root} from 'protobufjs';
 import {LoginSanitizer} from './auth/root';
 import {ClientInfo, ClientService} from './client/root';
@@ -262,10 +263,15 @@ class Account extends EventEmitter {
     const decryptedMessage = await this.service.cryptography.decrypt(sessionId, cipherText);
     const genericMessage = this.protocolBuffers.GenericMessage.decode(decryptedMessage);
 
+    const contentBody = genericMessage.ephemeral ? genericMessage.ephemeral.text : genericMessage.text;
+    const messageTimer = genericMessage.ephemeral ? (genericMessage.ephemeral.expireAfterMillis as Long).toNumber() : 0;
+    const type = genericMessage.ephemeral ? genericMessage.ephemeral.content : genericMessage.content;
+
     return {
-      content: genericMessage.text && genericMessage.text.content,
+      content: contentBody && contentBody.content,
       id: genericMessage.messageId,
-      type: genericMessage.content,
+      messageTimer,
+      type,
     };
   }
 

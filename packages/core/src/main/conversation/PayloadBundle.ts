@@ -36,6 +36,7 @@ interface PayloadBundle {
   content?: string | Asset | Image | ImageAsset | ClientAction;
   from: string;
   id: string;
+  messageTimer?: number;
   state: PayloadBundleState;
   type: GenericMessageType;
 }

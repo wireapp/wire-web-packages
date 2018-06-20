@@ -35,7 +35,7 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
     const {conversation: conversationId, from} = data;
     console.log(`Ping in "${conversationId}" from "${from}".`);
     const payload = account.service.conversation.createPing();
-    await account.service.conversation.send(conversationId, payload);
+    await account.service.conversation.send(conversationId, payload, data.messageTimer);
   }
 
   account.on(Account.INCOMING.TEXT_MESSAGE, async data => {
