@@ -25,7 +25,11 @@ enum PayloadBundleState {
   OUTGOING_UNSENT = 'PayloadBundleState.OUTGOING_UNSENT',
 }
 
-type PayloadBundleIncoming = PayloadBundle & {conversation?: string; state: PayloadBundleState.INCOMING};
+type PayloadBundleIncoming = PayloadBundle & {
+  conversation?: string;
+  messageTimer: number;
+  state: PayloadBundleState.INCOMING;
+};
 type PayloadBundleOutgoing = PayloadBundle & {
   conversation: string;
   state: PayloadBundleState.OUTGOING_SENT;
@@ -36,7 +40,6 @@ interface PayloadBundle {
   content?: string | Asset | Image | ImageAsset | ClientAction;
   from: string;
   id: string;
-  messageTimer?: number;
   state: PayloadBundleState;
   type: GenericMessageType;
 }
