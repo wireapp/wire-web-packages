@@ -23,6 +23,7 @@ import {IncomingNotification} from '@wireapp/api-client/dist/commonjs/conversati
 import {
   CONVERSATION_EVENT,
   ConversationEvent,
+  ConversationMessageTimerUpdateEvent,
   ConversationOtrMessageAddEvent,
 } from '@wireapp/api-client/dist/commonjs/event/index';
 import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/index';
@@ -57,8 +58,9 @@ class Account extends EventEmitter {
 
   public static readonly INCOMING = {
     ASSET: 'Account.INCOMING.ASSET',
-    CLIENT_ACTION: 'Account.CLIENT_ACTION',
+    CLIENT_ACTION: 'Account.INCOMING.CLIENT_ACTION',
     CONFIRMATION: 'Account.INCOMING.CONFIRMATION',
+    MESSAGE_TIMER_UPDATE: 'Account.INCOMING.MESSAGE_TIMER_UPDATE',
     PING: 'Account.INCOMING.PING',
     TEXT_MESSAGE: 'Account.INCOMING.TEXT_MESSAGE',
     TYPING: 'Account.INCOMING.TYPING',
@@ -268,12 +270,12 @@ class Account extends EventEmitter {
   }
 
   private async handleEvent(event: ConversationEvent): Promise<PayloadBundleIncoming | ConversationEvent | void> {
-    this.logger.info('handleEvent');
+    this.logger.info('handleEvent', event);
     const {conversation, from} = event;
 
-    const ENCRYPTED_EVENTS = [CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE, CONVERSATION_EVENT.OTR_MESSAGE_ADD];
+    const ENCRYPTED_EVENTS = [CONVERSATION_EVENT.OTR_MESSAGE_ADD];
 
-    const META_EVENTS = [CONVERSATION_EVENT.TYPING];
+    const META_EVENTS = [CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE, CONVERSATION_EVENT.TYPING];
 
     if (ENCRYPTED_EVENTS.includes(event.type)) {
       const decodedMessage = await this.decodeGenericMessage(event as ConversationOtrMessageAddEvent);
@@ -304,6 +306,18 @@ class Account extends EventEmitter {
           case GenericMessageType.TEXT:
             this.emit(Account.INCOMING.TEXT_MESSAGE, data);
             break;
+          case CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE: {
+            const {
+              data: {message_timer: expireAfterMillis},
+              conversation,
+            } = data as ConversationMessageTimerUpdateEvent;
+            this.logger.info(
+              `Received "${expireAfterMillis}"ms timer on conversation level for conversation "${conversation}".`
+            );
+            this.service!.conversation.setConversationLevelTimer(conversation, Number(expireAfterMillis));
+            this.emit(Account.INCOMING.MESSAGE_TIMER_UPDATE, event);
+            break;
+          }
           case CONVERSATION_EVENT.TYPING: {
             this.emit(Account.INCOMING.TYPING, event);
             break;

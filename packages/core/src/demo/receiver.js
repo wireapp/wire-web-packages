@@ -28,8 +28,15 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
   const engine = new MemoryEngine();
   await engine.init('receiver');
 
-  const apiClient = new APIClient(new Config(engine, APIClient.BACKEND.PRODUCTION));
+  const apiClient = new APIClient(new Config(engine, APIClient.BACKEND.STAGING));
   const account = new Account(apiClient);
+
+  async function sendPing(data) {
+    const {conversation: conversationId, from} = data;
+    console.log(`Ping in "${conversationId}" from "${from}".`);
+    const payload = account.service.conversation.createPing();
+    await account.service.conversation.send(conversationId, payload);
+  }
 
   account.on(Account.INCOMING.TEXT_MESSAGE, async data => {
     const {conversation: conversationId, from, content, id: messageId} = data;
@@ -54,12 +61,9 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
     await promisify(fs.writeFile)(path.join('.', `received_image.${fileType}`), image);
   });
 
-  account.on(Account.INCOMING.PING, async data => {
-    const {conversation: conversationId, from} = data;
-    console.log(`Ping in "${conversationId}" from "${from}".`);
-    const payload = account.service.conversation.createPing();
-    await account.service.conversation.send(conversationId, payload);
-  });
+  account.on(Account.INCOMING.EPHEMERAL, async data => {});
+
+  account.on(Account.INCOMING.PING, sendPing);
 
   account.on(Account.INCOMING.TYPING, async data => {
     const {

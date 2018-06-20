@@ -48,13 +48,42 @@ import APIClient = require('@wireapp/api-client');
 
 export default class ConversationService {
   private clientID: string = '';
+  private readonly conversationLevelTimers: Map<string, number>;
+  private readonly messageLevelTimers: Map<string, number>;
 
   constructor(
     private readonly apiClient: APIClient,
     private readonly protocolBuffers: any = {},
     private readonly cryptographyService: CryptographyService,
     private readonly assetService: AssetService
-  ) {}
+  ) {
+    this.conversationLevelTimers = new Map();
+    this.messageLevelTimers = new Map();
+  }
+
+  public setConversationLevelTimer(conversationId: string, messageTimer: number): void {
+    if (messageTimer === 0) {
+      this.deleteConversationLevelTimer(conversationId);
+    } else {
+      this.conversationLevelTimers.set(conversationId, messageTimer);
+    }
+  }
+
+  public getConversationLevelTimer(conversationId: string): number {
+    return this.conversationLevelTimers.get(conversationId) || 0;
+  }
+
+  public deleteConversationLevelTimer(conversationId: string): void {
+    this.conversationLevelTimers.delete(conversationId);
+  }
+
+  public getMessageLevelTimer(conversationId: string): number {
+    return this.messageLevelTimers.get(conversationId) || 0;
+  }
+
+  public getMessageTimer(conversationId: string): number {
+    return this.getConversationLevelTimer(conversationId) || this.getMessageLevelTimer(conversationId);
+  }
 
   private createEphemeral(originalGenericMessage: any, expireAfterMillis: number): any {
     const ephemeral = this.protocolBuffers.Ephemeral.create({
@@ -389,7 +418,7 @@ export default class ConversationService {
   public async send(
     conversationId: string,
     payloadBundle: PayloadBundleOutgoingUnsent,
-    expireAfterMillis?: number
+    expireAfterMillis: number = this.getMessageTimer(conversationId)
   ): Promise<PayloadBundleOutgoing> {
     switch (payloadBundle.type) {
       case GenericMessageType.ASSET: {
