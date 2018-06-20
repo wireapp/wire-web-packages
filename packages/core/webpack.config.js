@@ -13,7 +13,7 @@ module.exports = {
   externals: {
     'fs-extra': '{}',
   },
-  mode: 'production',
+  mode: 'development',
   node: {
     fs: 'empty',
     path: 'empty',

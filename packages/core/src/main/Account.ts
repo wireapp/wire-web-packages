@@ -17,8 +17,6 @@
  *
  */
 
-const logdown = require('logdown');
-import Client = require('@wireapp/api-client');
 import {Context, LoginData} from '@wireapp/api-client/dist/commonjs/auth/index';
 import {ClientType, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/index';
 import {IncomingNotification} from '@wireapp/api-client/dist/commonjs/conversation/index';
@@ -31,7 +29,6 @@ import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/index';
 import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/index';
 import * as cryptobox from '@wireapp/cryptobox';
 import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/error/index';
-import EventEmitter = require('events');
 import {Root} from 'protobufjs';
 import {LoginSanitizer} from './auth/root';
 import {ClientInfo, ClientService} from './client/root';
@@ -47,6 +44,10 @@ import {CryptographyService} from './cryptography/root';
 import {NotificationService} from './notification/root';
 import proto from './Protobuf';
 import {SelfService} from './self/root';
+
+const logdown = require('logdown');
+import Client = require('@wireapp/api-client');
+import EventEmitter = require('events');
 
 class Account extends EventEmitter {
   private readonly logger: any = logdown('@wireapp/core/Account', {
@@ -270,15 +271,15 @@ class Account extends EventEmitter {
     this.logger.info('handleEvent');
     const {conversation, from} = event;
 
-    switch (event.type) {
-      case CONVERSATION_EVENT.OTR_MESSAGE_ADD: {
-        const otrMessage = event as ConversationOtrMessageAddEvent;
-        const decodedMessage = await this.decodeGenericMessage(otrMessage);
-        return {...decodedMessage, from, conversation, state: PayloadBundleState.INCOMING};
-      }
-      case CONVERSATION_EVENT.TYPING: {
-        return {...event, from, conversation};
-      }
+    const ENCRYPTED_EVENTS = [CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE, CONVERSATION_EVENT.OTR_MESSAGE_ADD];
+
+    const META_EVENTS = [CONVERSATION_EVENT.TYPING];
+
+    if (ENCRYPTED_EVENTS.includes(event.type)) {
+      const decodedMessage = await this.decodeGenericMessage(event as ConversationOtrMessageAddEvent);
+      return {...decodedMessage, from, conversation, state: PayloadBundleState.INCOMING};
+    } else if (META_EVENTS.includes(event.type)) {
+      return {...event, from, conversation};
     }
   }
 
@@ -308,6 +309,13 @@ class Account extends EventEmitter {
             break;
           }
         }
+      } else {
+        this.logger.info(
+          `Received unsupported event "${event.type}" in conversation "${event.conversation}" from user "${
+            event.from
+          }".`,
+          event
+        );
       }
     }
   }

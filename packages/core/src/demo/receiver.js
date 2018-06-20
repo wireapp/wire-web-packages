@@ -57,7 +57,8 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
   account.on(Account.INCOMING.PING, async data => {
     const {conversation: conversationId, from} = data;
     console.log(`Ping in "${conversationId}" from "${from}".`);
-    await account.service.conversation.sendPing(conversationId);
+    const payload = account.service.conversation.createPing();
+    await account.service.conversation.send(conversationId, payload);
   });
 
   account.on(Account.INCOMING.TYPING, async data => {
@@ -81,7 +82,9 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
 
     const name = await account.service.self.getName();
 
-    console.log('My name:', name);
+    console.log('Name:', name);
+    console.log('User ID:', account.service.self.apiClient.context.userId);
+    console.log('Client ID:', account.service.self.apiClient.context.clientId);
     console.log('Listening for messages ...');
   } catch (error) {
     console.error(error);
