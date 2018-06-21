@@ -64,10 +64,12 @@ describe('TimerService', () => {
       timerService.setMessageLevelTimer(conversationId, oneMinute);
       let expiry = timerService.getMessageLevelTimer(conversationId);
       expect(expiry).toBe(oneMinute);
+      expect(timerService.messageLevelTimers.size).toBe(1);
 
       timerService.setMessageLevelTimer(conversationId, 0);
       expiry = timerService.getMessageLevelTimer();
       expect(expiry).toBe(0);
+      expect(timerService.messageLevelTimers.size).toBe(0);
     });
 
     it('can remove the message level timer.', () => {
@@ -78,10 +80,12 @@ describe('TimerService', () => {
       timerService.setConversationLevelTimer(conversationId, oneMinute);
       let expiry = timerService.getConversationLevelTimer(conversationId);
       expect(expiry).toBe(oneMinute);
+      expect(timerService.conversationLevelTimers.size).toBe(1);
 
       timerService.setConversationLevelTimer(conversationId, 0);
       expiry = timerService.getConversationLevelTimer();
       expect(expiry).toBe(0);
+      expect(timerService.conversationLevelTimers.size).toBe(0);
     });
   });
 });

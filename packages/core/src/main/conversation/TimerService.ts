@@ -47,7 +47,7 @@ class TimerService {
 
   public setMessageLevelTimer(conversationId: string, messageTimer: number): void {
     if (messageTimer === 0) {
-      this.conversationLevelTimers.delete(conversationId);
+      this.messageLevelTimers.delete(conversationId);
     } else {
       this.messageLevelTimers.set(conversationId, messageTimer);
     }
