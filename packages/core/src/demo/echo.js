@@ -1,14 +1,17 @@
 //@ts-check
 
 process.on('uncaughtException', error =>
-  console.error(`Uncaught exception "${error.constructor.name}" (${error.code}): ${error.message}`, error)
+  logger.error(`Uncaught exception "${error.constructor.name}" (${error.code}): ${error.message}`, error)
 );
 process.on('unhandledRejection', error =>
-  console.error(`Uncaught rejection "${error.constructor.name}" (${error.code}): ${error.message}`, error)
+  logger.error(`Uncaught rejection "${error.constructor.name}" (${error.code}): ${error.message}`, error)
 );
 
 const path = require('path');
 require('dotenv').config({path: path.join(__dirname, 'echo1.env')});
+
+const logger = require('logdown')('@wireapp/core/demo/echo.js');
+logger.state.isEnabled = true;
 
 const {Account} = require('@wireapp/core');
 const APIClient = require('@wireapp/api-client');
@@ -34,7 +37,7 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
 
   account.on(Account.INCOMING.TEXT_MESSAGE, async data => {
     const {conversation: conversationId, from, content, id: messageId, messageTimer} = data;
-    console.log(
+    logger.log(
       `Message "${messageId}" in "${conversationId}" from "${from}":`,
       content,
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
@@ -51,7 +54,7 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
 
   account.on(Account.INCOMING.CONFIRMATION, data => {
     const {conversation: conversationId, from, id: messageId} = data;
-    console.log(`Confirmation "${messageId}" in "${conversationId}" from "${from}".`);
+    logger.log(`Confirmation "${messageId}" in "${conversationId}" from "${from}".`);
   });
 
   account.on(Account.INCOMING.ASSET, async data => {
@@ -61,7 +64,7 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
       content: {uploaded, original},
       messageTimer,
     } = data;
-    console.log(
+    logger.log(
       `Asset in "${conversation}" from "${from}":`,
       original,
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
@@ -73,7 +76,7 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
 
   account.on(Account.INCOMING.PING, async data => {
     const {conversation: conversationId, from, messageTimer} = data;
-    console.log(
+    logger.log(
       `Ping in "${conversationId}" from "${from}".`,
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
     );
@@ -90,7 +93,7 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
       data: {status},
     } = data;
 
-    console.log(`Typing in "${conversationId}" from "${from}".`, data);
+    logger.log(`Typing in "${conversationId}" from "${from}".`, data);
 
     if (status === 'started') {
       await account.service.conversation.sendTypingStart(conversationId);
@@ -100,18 +103,18 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
   });
 
   try {
-    console.log('Logging in ...');
+    logger.log('Logging in ...');
     await account.login(login);
     await account.listen();
 
     const name = await account.service.self.getName();
 
-    console.log('Name:', name);
-    console.log('User ID:', account.service.self.apiClient.context.userId);
-    console.log('Client ID:', account.service.self.apiClient.context.clientId);
-    console.log('Listening for messages ...');
+    logger.log('Name:', name);
+    logger.log('User ID:', account.service.self.apiClient.context.userId);
+    logger.log('Client ID:', account.service.self.apiClient.context.clientId);
+    logger.log('Listening for messages ...');
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     process.exit(1);
   }
 })();
