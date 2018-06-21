@@ -16,7 +16,7 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-export default class TimerService {
+class TimerService {
   private readonly conversationLevelTimers: Map<string, number>;
   private readonly messageLevelTimers: Map<string, number>;
 
@@ -53,3 +53,5 @@ export default class TimerService {
     }
   }
 }
+
+export {TimerService};
