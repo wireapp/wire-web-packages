@@ -20,9 +20,11 @@ describe('TimerService', () => {
       const conversationId = 'a0e0f130-8c21-11df-92d9-95795a3bcd40';
       const timerService = new TimerService();
       const oneMinute = 60000;
+
       timerService.setMessageLevelTimer(conversationId, oneMinute);
       let expiry = timerService.getMessageTimer(conversationId);
       expect(expiry).toBe(oneMinute);
+
       expiry = timerService.getMessageLevelTimer(conversationId);
       expect(expiry).toBe(oneMinute);
     });
@@ -31,9 +33,11 @@ describe('TimerService', () => {
       const conversationId = 'a0e0f130-8c21-11df-92d9-95795a3bcd40';
       const timerService = new TimerService();
       const oneMinute = 60000;
+
       timerService.setConversationLevelTimer(conversationId, oneMinute);
       let expiry = timerService.getMessageTimer(conversationId);
       expect(expiry).toBe(oneMinute);
+
       expiry = timerService.getConversationLevelTimer(conversationId);
       expect(expiry).toBe(oneMinute);
     });
@@ -56,9 +60,11 @@ describe('TimerService', () => {
       const conversationId = 'a0e0f130-8c21-11df-92d9-95795a3bcd40';
       const timerService = new TimerService();
       const oneMinute = 60000;
+
       timerService.setMessageLevelTimer(conversationId, oneMinute);
       let expiry = timerService.getMessageLevelTimer(conversationId);
       expect(expiry).toBe(oneMinute);
+
       timerService.setMessageLevelTimer(conversationId, 0);
       expiry = timerService.getMessageLevelTimer();
       expect(expiry).toBe(0);
@@ -68,9 +74,11 @@ describe('TimerService', () => {
       const conversationId = 'a0e0f130-8c21-11df-92d9-95795a3bcd40';
       const timerService = new TimerService();
       const oneMinute = 60000;
+
       timerService.setConversationLevelTimer(conversationId, oneMinute);
       let expiry = timerService.getConversationLevelTimer(conversationId);
       expect(expiry).toBe(oneMinute);
+
       timerService.setConversationLevelTimer(conversationId, 0);
       expiry = timerService.getConversationLevelTimer();
       expect(expiry).toBe(0);
