@@ -44,9 +44,9 @@ export * from './TrashIcon';
 export * from './WireIcon';
 
 // Brand Icons
-export * from './FacebookIcon';
-export * from './GitHubIcon';
-export * from './LinkedInIcon';
-export * from './TwitterIcon';
+export * from './Brand/FacebookIcon';
+export * from './Brand/GitHubIcon';
+export * from './Brand/LinkedInIcon';
+export * from './Brand/TwitterIcon';
 
 export * from './RoundContainer';
