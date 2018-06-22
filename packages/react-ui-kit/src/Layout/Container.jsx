@@ -40,11 +40,11 @@ const Container = styled.div`
     LEVEL[level] ||
     `${media.desktop`
             padding: 0;
-            width: ${WIDTH.DESKTOP_MIN - (GUTTER + GUTTER)}px;
+            width: ${WIDTH.DESKTOP_MIN - GUTTER - GUTTER}px;
           `};
           ${media.desktopXL`
             padding: 0;
-            width: ${WIDTH.DESKTOP_MIN - (GUTTER + GUTTER)}px;
+            width: ${WIDTH.DESKTOP_MIN - GUTTER - GUTTER}px;
           `};`}
   }};
 `;
