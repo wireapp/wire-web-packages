@@ -17,8 +17,6 @@
  *
  */
 
-/* eslint-disable no-magic-numbers */
-
 import {GUTTER, WIDTH} from './sizes';
 import PropTypes from 'prop-types';
 import {defaultProps} from 'recompose';
@@ -42,11 +40,11 @@ const Container = styled.div`
     LEVEL[level] ||
     `${media.desktop`
             padding: 0;
-            width: ${WIDTH.DESKTOP_MIN - GUTTER * 2}px;
+            width: ${WIDTH.DESKTOP_MIN - (GUTTER + GUTTER)}px;
           `};
           ${media.desktopXL`
             padding: 0;
-            width: ${WIDTH.DESKTOP_MIN - GUTTER * 2}px;
+            width: ${WIDTH.DESKTOP_MIN - (GUTTER + GUTTER)}px;
           `};`}
   }};
 `;
