@@ -24,7 +24,6 @@ const Content = styled.div`
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  /* default content padding should be 0 16px */
   padding: 0 ${GUTTER}px;
 `;
 
