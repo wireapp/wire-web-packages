@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="1.2.1"></a>
+## [1.2.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.2.0...@wireapp/react-ui-kit@1.2.1) (2018-06-21)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.2.0"></a>
+# [1.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.1.45...@wireapp/react-ui-kit@1.2.0) (2018-06-21)
+
+
+### Features
+
+* **core:** Receive Message Timer Events ([#737](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/737)) ([da1bb34](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/da1bb34))
+
+
+
+
+<a name="1.1.45"></a>
+## [1.1.45](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.1.44...@wireapp/react-ui-kit@1.1.45) (2018-06-21)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
 <a name="1.1.44"></a>
 ## [1.1.44](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.1.43...@wireapp/react-ui-kit@1.1.44) (2018-06-19)
 
