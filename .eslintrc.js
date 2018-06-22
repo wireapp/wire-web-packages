@@ -4,8 +4,12 @@ module.exports = {
     "es6": true,
     "node": true
   },
-  "plugins": ["prettier", "react"],
-  "extends": ["prettier", "plugin:react/recommended"],
+  "plugins": [
+    "no-unsanitized",
+    "prettier",
+    "react"
+  ],
+  "extends": ["prettier", "plugin:no-unsanitized/DOM", "plugin:react/recommended"],
   "rules": {
     "curly": 2,
     "dot-notation": 2,
