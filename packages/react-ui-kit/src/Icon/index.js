@@ -43,4 +43,10 @@ export * from './TimedIcon';
 export * from './TrashIcon';
 export * from './WireIcon';
 
+// Brand Icons
+export * from './FacebookIcon';
+export * from './GitHubIcon';
+export * from './LinkedInIcon';
+export * from './TwitterIcon';
+
 export * from './RoundContainer';
