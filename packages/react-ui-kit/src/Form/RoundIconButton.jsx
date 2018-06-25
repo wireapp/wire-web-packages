@@ -67,7 +67,7 @@ const ICON_NAME = {
   TRASH: 'trash',
 };
 
-const RoundIconButton = ({icon, iconColor, iconHeight, iconWidth, ...props}) => (
+const RoundIconButton = ({icon, iconColor, iconHeight, iconWidth, children, ...props}) => (
   <Button {...props}>
     {(() => {
       switch (icon) {
@@ -106,16 +106,20 @@ const RoundIconButton = ({icon, iconColor, iconHeight, iconWidth, ...props}) => 
         case ICON_NAME.TRASH: {
           return <TrashIcon color={iconColor} height={iconHeight} width={iconWidth} />;
         }
-        case ICON_NAME.ARROW:
-        default: {
+        case ICON_NAME.ARROW: {
           return <ArrowIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+        }
+        default: {
+          return null;
         }
       }
     })()}
+    {children}
   </Button>
 );
 
 RoundIconButton.propTypes = {
+  children: PropTypes.node,
   color: PropTypes.string,
   disabled: PropTypes.bool,
   icon: PropTypes.oneOf(Object.values(ICON_NAME)),
@@ -126,9 +130,10 @@ RoundIconButton.propTypes = {
 };
 
 RoundIconButton.defaultProps = {
+  children: null,
   color: COLOR.BLUE,
   disabled: false,
-  icon: ICON_NAME.ARROW,
+  icon: null,
   iconColor: COLOR.WHITE,
   iconHeight: null,
   iconWidth: null,

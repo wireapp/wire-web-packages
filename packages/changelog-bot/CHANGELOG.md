@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.1.35"></a>
+## [0.1.35](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@0.1.34...@wireapp/changelog-bot@0.1.35) (2018-06-25)
+
+
+
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+<a name="0.1.34"></a>
+## [0.1.34](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@0.1.33...@wireapp/changelog-bot@0.1.34) (2018-06-25)
+
+
+
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+<a name="0.1.33"></a>
+## [0.1.33](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@0.1.32...@wireapp/changelog-bot@0.1.33) (2018-06-25)
+
+
+
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+<a name="0.1.32"></a>
+## [0.1.32](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@0.1.31...@wireapp/changelog-bot@0.1.32) (2018-06-25)
+
+
+
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+<a name="0.1.31"></a>
+## [0.1.31](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@0.1.30...@wireapp/changelog-bot@0.1.31) (2018-06-22)
+
+
+
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+<a name="0.1.30"></a>
+## [0.1.30](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@0.1.29...@wireapp/changelog-bot@0.1.30) (2018-06-22)
+
+
+
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
 <a name="0.1.29"></a>
 ## [0.1.29](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@0.1.28...@wireapp/changelog-bot@0.1.29) (2018-06-22)
 
