@@ -118,9 +118,9 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
 
     const name = await account.service.self.getName();
 
-    logger.log('Name:', name);
-    logger.log('User ID:', account.service.self.apiClient.context.userId);
-    logger.log('Client ID:', account.service.self.apiClient.context.clientId);
+    logger.log('Name', name);
+    logger.log('User ID', account.service.self.apiClient.context.userId);
+    logger.log('Client ID', account.service.self.apiClient.context.clientId);
     logger.log('Listening for messages ...');
   } catch (error) {
     logger.error(error);
