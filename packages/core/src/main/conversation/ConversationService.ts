@@ -393,7 +393,7 @@ export default class ConversationService {
 
     return {
       conversation: conversationId,
-      from: this.clientID,
+      from: this.apiClient.context!.userId,
       id: messageId,
       state: PayloadBundleState.OUTGOING_SENT,
       type: GenericMessageType.HIDDEN,
@@ -419,7 +419,7 @@ export default class ConversationService {
 
     return {
       conversation: conversationId,
-      from: this.clientID,
+      from: this.apiClient.context!.userId,
       id: messageId,
       state: PayloadBundleState.OUTGOING_SENT,
       type: GenericMessageType.DELETED,
