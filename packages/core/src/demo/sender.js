@@ -48,7 +48,7 @@ const {FileEngine} = require('@wireapp/store-engine');
   logger.log('Client ID:', account.service.self.apiClient.context.clientId);
 
   async function sendAndDeleteMessage() {
-    const deleteTextPayload = await account.service.conversation.createText('Delete me! ' + new Date());
+    const deleteTextPayload = await account.service.conversation.createText('Delete me!');
     const {id: messageId} = await account.service.conversation.send(CONVERSATION_ID, deleteTextPayload);
 
     const fiveSecondsInMillis = 5000;
