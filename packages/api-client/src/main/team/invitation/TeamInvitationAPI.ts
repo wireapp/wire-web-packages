@@ -46,13 +46,13 @@ class TeamInvitationAPI {
   public async getAllInvitations(teamId: string): Promise<TeamInvitation[]> {
     let allInvitations: TeamInvitation[] = [];
 
-    let invitationChunk = await this._getInvitations(teamId, undefined);
+    let invitationChunk = await this.getInvitations(teamId, undefined);
     allInvitations = allInvitations.concat(invitationChunk.invitations);
     while (invitationChunk.has_more) {
       const invitations = invitationChunk.invitations;
       const lastInvitation = invitations[invitations.length - 1] || {};
       const lastChunkEmail = lastInvitation.email;
-      invitationChunk = await this._getInvitations(teamId, lastChunkEmail);
+      invitationChunk = await this.getInvitations(teamId, lastChunkEmail);
       allInvitations = allInvitations.concat(invitations);
     }
 
@@ -60,14 +60,6 @@ class TeamInvitationAPI {
   }
 
   public getInvitations(
-    teamId: string,
-    startEmail?: string,
-    limit = TeamInvitationAPI.MAX_CHUNK_SIZE
-  ): Promise<TeamInvitationChunk> {
-    return this._getInvitations(teamId, startEmail, limit);
-  }
-
-  private _getInvitations(
     teamId: string,
     startEmail?: string,
     limit = TeamInvitationAPI.MAX_CHUNK_SIZE
