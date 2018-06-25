@@ -39,9 +39,11 @@ import {
   Content,
   DeviceIcon,
   ErrorMessage,
+  FacebookIcon,
   Footer,
   Form,
   GifIcon,
+  GitHubIcon,
   H1,
   H2,
   H3,
@@ -59,6 +61,7 @@ import {
   LeaveIcon,
   Line,
   Link,
+  LinkedInIcon,
   Loading,
   Logo,
   MessageIcon,
@@ -80,6 +83,7 @@ import {
   TeamIcon,
   Text,
   TimedIcon,
+  TwitterIcon,
   Uppercase,
   WireIcon,
 } from '@wireapp/react-ui-kit';
@@ -159,6 +163,14 @@ class Demo extends React.PureComponent {
               <LeaveIcon height={32} />
               <AddPeopleIcon height={32} />
               <GifIcon width={32} />
+            </Container>
+            <Line />
+            <H1>Brand Icons</H1>
+            <Container style={{alignItems: 'center', display: 'flex', justifyContent: 'space-around'}}>
+              <FacebookIcon width={32} />
+              <GitHubIcon width={32} />
+              <LinkedInIcon width={32} />
+              <TwitterIcon width={32} />
             </Container>
             <Line />
             <H1>Layout</H1>
@@ -357,12 +369,15 @@ class Demo extends React.PureComponent {
                       <RoundIconButton type="submit" icon={ICON_NAME.TEAM} formNoValidate />
                       <RoundIconButton type="submit" icon={ICON_NAME.TIMED} formNoValidate />
                       <RoundIconButton type="submit" icon={ICON_NAME.TRASH} formNoValidate />
+                      <RoundIconButton type="submit" formNoValidate>
+                        M
+                      </RoundIconButton>
                     </InputSubmitCombo>
                   </InputBlock>
                 </Form>
               </ShakeBox>
               <ErrorMessage>Submit form for shake effect</ErrorMessage>
-              <CodeInput onCodeComplete={code => console.log(code)} />
+              <CodeInput onCodeComplete={code => console.info(code)} />
             </ContainerXS>
 
             <H1>Modals</H1>
@@ -487,16 +502,46 @@ class Demo extends React.PureComponent {
 
             <Label>Label</Label>
             <LabelLink block>LabelLink</LabelLink>
-
-            <H1>Colors</H1>
             <Line />
-            {Object.keys(COLOR).map(colorKey => (
-              <div key={colorKey} style={{backgroundColor: COLOR[colorKey], color: Color(COLOR[colorKey]).negate()}}>
-                {colorKey} ({Color(COLOR[colorKey])
-                  .hex()
-                  .toString()})
-              </div>
-            ))}
+            <H1>Colors</H1>
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                justifyContent: 'space-around',
+              }}
+            >
+              {Object.keys(COLOR).map((colorKey, index) => (
+                <div
+                  key={colorKey}
+                  style={{
+                    backgroundColor: COLOR[colorKey],
+                    borderRadius: '12px',
+                    height: '96px',
+                    margin: '8px',
+                    width: '192px',
+                  }}
+                >
+                  <div
+                    style={{
+                      backgroundColor: COLOR.WHITE,
+                      border: `1px solid ${Color(COLOR[colorKey])
+                        .hex()
+                        .toString()}`,
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      padding: '4px',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {colorKey}
+                    ({Color(COLOR[colorKey])
+                      .hex()
+                      .toString()})
+                  </div>
+                </div>
+              ))}
+            </div>
           </Container>
         </Content>
         <Footer>Footer</Footer>

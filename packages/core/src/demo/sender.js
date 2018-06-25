@@ -18,6 +18,7 @@ const {FileEngine} = require('@wireapp/store-engine');
 
 (async () => {
   const CONVERSATION_ID = process.env.WIRE_CONVERSATION_ID;
+  const MESSAGE_TIMER = 5000;
 
   const login = {
     clientType: ClientType.TEMPORARY,
@@ -25,9 +26,10 @@ const {FileEngine} = require('@wireapp/store-engine');
     password: process.env.WIRE_PASSWORD,
   };
 
+  const backend = process.env.WIRE_BACKEND === 'staging' ? APIClient.BACKEND.STAGING : APIClient.BACKEND.PRODUCTION;
   const engine = new FileEngine(path.join(__dirname, '.tmp', 'sender'));
   await engine.init(undefined, {fileExtension: '.json'});
-  const apiClient = new APIClient(new Config(engine, APIClient.BACKEND.STAGING));
+  const apiClient = new APIClient(new Config(engine, backend));
   const account = new Account(apiClient);
   await account.login(login);
   await account.listen();
@@ -39,21 +41,28 @@ const {FileEngine} = require('@wireapp/store-engine');
   const fiveSecondsInMillis = 5000;
   setTimeout(async () => {
     await account.service.conversation.deleteMessageEveryone(CONVERSATION_ID, messageId);
-    console.log('deleted', messageId);
-    process.exit();
   }, fiveSecondsInMillis);
 
-  const ephemeralPayload = await account.service.conversation.createText('Expire after 5 seconds');
-  await account.service.conversation.sendText(CONVERSATION_ID, ephemeralPayload, fiveSecondsInMillis);
-
-  function sendMessage() {
-    const twoSecondsInMillis = 2000;
-    setTimeout(async () => {
-      const textPayload = await account.service.conversation.createText('Hello World');
-      await account.service.conversation.sendText(CONVERSATION_ID, textPayload);
-      sendMessage();
-    }, twoSecondsInMillis);
+  async function sendEphemeralText(expiry = MESSAGE_TIMER) {
+    const payload = await account.service.conversation.createText(`Expires after ${expiry}ms ...`);
+    await account.service.conversation.send(CONVERSATION_ID, payload, expiry);
   }
 
-  sendMessage();
+  async function sendPing(expiry = MESSAGE_TIMER) {
+    const payload = await account.service.conversation.createPing();
+    await account.service.conversation.send(CONVERSATION_ID, payload, expiry);
+  }
+
+  async function sendText() {
+    const payload = await account.service.conversation.createText('Hello, World!');
+    await account.service.conversation.send(CONVERSATION_ID, payload);
+  }
+
+  const methods = [sendEphemeralText, sendPing, sendText];
+
+  const timeoutInMillis = 2000;
+  setInterval(() => {
+    const randomMethod = methods[Math.floor(Math.random() * methods.length)];
+    randomMethod();
+  }, timeoutInMillis);
 })();

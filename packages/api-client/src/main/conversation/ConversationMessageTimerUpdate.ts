@@ -17,12 +17,8 @@
  *
  */
 
-import {ServiceRef} from '../conversation';
-
-interface OtherMember {
-  id: string;
-  service?: ServiceRef;
-  status: number;
+interface ConversationMessageTimerUpdate {
+  message_timer: number | null;
 }
 
-export {OtherMember};
+export {ConversationMessageTimerUpdate};

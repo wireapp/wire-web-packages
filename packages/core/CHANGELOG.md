@@ -3,6 +3,170 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.5.10"></a>
+## [3.5.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.5.9...@wireapp/core@3.5.10) (2018-06-25)
+
+
+### Bug Fixes
+
+* **core:** Use MessageTimer in demo ([1ca988f](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/1ca988f))
+
+
+
+
+<a name="3.5.9"></a>
+## [3.5.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.5.8...@wireapp/core@3.5.9) (2018-06-25)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.5.8"></a>
+## [3.5.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.5.7...@wireapp/core@3.5.8) (2018-06-25)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.5.7"></a>
+## [3.5.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.5.6...@wireapp/core@3.5.7) (2018-06-25)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.5.6"></a>
+## [3.5.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.5.5...@wireapp/core@3.5.6) (2018-06-25)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.5.5"></a>
+## [3.5.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.5.4...@wireapp/core@3.5.5) (2018-06-22)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.5.4"></a>
+## [3.5.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.5.3...@wireapp/core@3.5.4) (2018-06-22)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.5.3"></a>
+## [3.5.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.5.2...@wireapp/core@3.5.3) (2018-06-22)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.5.2"></a>
+## [3.5.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.5.1...@wireapp/core@3.5.2) (2018-06-22)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.5.1"></a>
+## [3.5.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.5.0...@wireapp/core@3.5.1) (2018-06-21)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.5.0"></a>
+# [3.5.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.4.2...@wireapp/core@3.5.0) (2018-06-21)
+
+
+### Features
+
+* **core:** Receive Message Timer Events ([#737](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/737)) ([da1bb34](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/da1bb34))
+
+
+
+
+<a name="3.4.2"></a>
+## [3.4.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.4.1...@wireapp/core@3.4.2) (2018-06-21)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.4.1"></a>
+## [3.4.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.4.0...@wireapp/core@3.4.1) (2018-06-20)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.4.0"></a>
+# [3.4.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.3.1...@wireapp/core@3.4.0) (2018-06-20)
+
+
+### Features
+
+* **core:** Get (all) conversations ([#734](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/734)) ([4b8b24c](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/4b8b24c))
+
+
+
+
+<a name="3.3.1"></a>
+## [3.3.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.3.0...@wireapp/core@3.3.1) (2018-06-19)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.3.0"></a>
+# [3.3.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.2.3...@wireapp/core@3.3.0) (2018-06-19)
+
+
+### Features
+
+* **core:** Support timed messages in send method ([#731](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/731)) ([f4ec8c1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/f4ec8c1))
+
+
+
+
+<a name="3.2.3"></a>
+## [3.2.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.2.2...@wireapp/core@3.2.3) (2018-06-19)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.2.2"></a>
+## [3.2.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.2.1...@wireapp/core@3.2.2) (2018-06-18)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.2.1"></a>
+## [3.2.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.2.0...@wireapp/core@3.2.1) (2018-06-18)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
 <a name="3.2.0"></a>
 # [3.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.1.6...@wireapp/core@3.2.0) (2018-06-18)
 

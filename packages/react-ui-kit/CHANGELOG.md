@@ -3,6 +3,111 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="1.4.0"></a>
+# [1.4.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.3.0...@wireapp/react-ui-kit@1.4.0) (2018-06-25)
+
+
+### Features
+
+* **react-ui-kit:** Allow children in RoundIconButton ([#760](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/760)) ([93ddab1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/93ddab1))
+
+
+
+
+<a name="1.3.0"></a>
+# [1.3.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.2.6...@wireapp/react-ui-kit@1.3.0) (2018-06-25)
+
+
+### Features
+
+* **react-ui-kit:** Default to no icon if unset ([#759](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/759)) ([d1b8190](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/d1b8190))
+
+
+
+
+<a name="1.2.6"></a>
+## [1.2.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.2.5...@wireapp/react-ui-kit@1.2.6) (2018-06-25)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.2.5"></a>
+## [1.2.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.2.4...@wireapp/react-ui-kit@1.2.5) (2018-06-22)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.2.4"></a>
+## [1.2.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.2.3...@wireapp/react-ui-kit@1.2.4) (2018-06-22)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.2.3"></a>
+## [1.2.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.2.2...@wireapp/react-ui-kit@1.2.3) (2018-06-22)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.2.2"></a>
+## [1.2.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.2.1...@wireapp/react-ui-kit@1.2.2) (2018-06-22)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.2.1"></a>
+## [1.2.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.2.0...@wireapp/react-ui-kit@1.2.1) (2018-06-21)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.2.0"></a>
+# [1.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.1.45...@wireapp/react-ui-kit@1.2.0) (2018-06-21)
+
+
+### Features
+
+* **core:** Receive Message Timer Events ([#737](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/737)) ([da1bb34](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/da1bb34))
+
+
+
+
+<a name="1.1.45"></a>
+## [1.1.45](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.1.44...@wireapp/react-ui-kit@1.1.45) (2018-06-21)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.1.44"></a>
+## [1.1.44](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.1.43...@wireapp/react-ui-kit@1.1.44) (2018-06-19)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.1.43"></a>
+## [1.1.43](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.1.42...@wireapp/react-ui-kit@1.1.43) (2018-06-19)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
 <a name="1.1.42"></a>
 ## [1.1.42](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.1.41...@wireapp/react-ui-kit@1.1.42) (2018-06-18)
 

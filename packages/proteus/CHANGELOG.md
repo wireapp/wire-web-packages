@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="7.2.1"></a>
+## [7.2.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.2.0...@wireapp/proteus@7.2.1) (2018-06-25)
+
+
+
+
+**Note:** Version bump only for package @wireapp/proteus
+
+<a name="7.2.0"></a>
+# [7.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.1.63...@wireapp/proteus@7.2.0) (2018-06-21)
+
+
+### Features
+
+* **core:** Receive Message Timer Events ([#737](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/issues/737)) ([da1bb34](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/commit/da1bb34))
+
+
+
+
+<a name="7.1.63"></a>
+## [7.1.63](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.1.62...@wireapp/proteus@7.1.63) (2018-06-19)
+
+
+
+
+**Note:** Version bump only for package @wireapp/proteus
+
 <a name="7.1.62"></a>
 ## [7.1.62](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.1.61...@wireapp/proteus@7.1.62) (2018-06-18)
 

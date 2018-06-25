@@ -1,17 +1,17 @@
 {
   "dependencies": {
-    "@types/node": "10.3.3"
+    "@types/node": "10.3.5"
   },
   "devDependencies": {
     "jasmine": "3.1.0",
-    "karma": "2.0.3",
+    "karma": "2.0.4",
     "karma-chrome-launcher": "2.2.0",
     "karma-jasmine": "1.1.2",
     "karma-jasmine-diff-reporter": "1.2.0",
     "karma-sourcemap-loader": "0.3.7",
     "rimraf": "2.6.2",
     "typescript": "2.9.2",
-    "webpack": "4.12.0",
+    "webpack": "4.12.1",
     "webpack-cli": "3.0.8"
   },
   "description": "Collection of common components that are used across Wire web applications.",
@@ -38,5 +38,5 @@
     "test:node": "jasmine --config=jasmine.json"
   },
   "types": "./dist/commonjs/index.d.ts",
-  "version": "0.1.13"
+  "version": "0.1.16"
 }

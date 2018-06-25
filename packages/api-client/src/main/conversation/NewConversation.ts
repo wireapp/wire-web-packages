@@ -20,6 +20,7 @@
 import {TeamInfo} from '../team';
 
 interface NewConversation {
+  message_timer?: number;
   name?: string;
   team?: TeamInfo;
   users: string[];
