@@ -86,6 +86,11 @@ export default class ConversationService {
     });
   }
 
+  private async getSelfConversation(): Promise<Conversation> {
+    const {userId} = this.apiClient.context!;
+    return this.apiClient.conversation.api.getConversation(userId);
+  }
+
   private async sendConfirmation(
     conversationId: string,
     payloadBundle: PayloadBundleOutgoingUnsent
@@ -369,7 +374,7 @@ export default class ConversationService {
     };
   }
 
-  public async deleteMessage(conversationId: string, messageIdToHide: string): Promise<PayloadBundleOutgoing> {
+  public async deleteMessageLocal(conversationId: string, messageIdToHide: string): Promise<PayloadBundleOutgoing> {
     const messageId = new UUID(4).format();
 
     const messageHide = this.protocolBuffers.MessageHide.create({
@@ -378,11 +383,13 @@ export default class ConversationService {
     });
 
     const genericMessage = this.protocolBuffers.GenericMessage.create({
-      messageHide,
+      [GenericMessageType.HIDDEN]: messageHide,
       messageId,
     });
 
-    await this.sendGenericMessage(this.clientID, conversationId, genericMessage);
+    const {id: selfConversationId} = await this.getSelfConversation();
+
+    await this.sendGenericMessage(this.clientID, selfConversationId, genericMessage);
 
     return {
       conversation: conversationId,
@@ -404,7 +411,7 @@ export default class ConversationService {
     });
 
     const genericMessage = this.protocolBuffers.GenericMessage.create({
-      messageDelete,
+      [GenericMessageType.DELETED]: messageDelete,
       messageId,
     });
 
