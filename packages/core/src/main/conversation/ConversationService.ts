@@ -86,7 +86,7 @@ export default class ConversationService {
     });
   }
 
-  private async getSelfConversation(): Promise<Conversation> {
+  private getSelfConversation(): Promise<Conversation> {
     const {userId} = this.apiClient.context!;
     return this.apiClient.conversation.api.getConversation(userId);
   }
