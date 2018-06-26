@@ -8,8 +8,9 @@ process.on('unhandledRejection', error =>
   console.error(`Uncaught rejection "${error.constructor.name}" (code: ${error.code}): ${error.message}`, error)
 );
 
-const path = require('path');
 const logdown = require('logdown');
+const path = require('path');
+const TimeUnits = require('./TimeUnits');
 require('dotenv').config({path: path.join(__dirname, 'echo2.env')});
 
 const logger = logdown('@wireapp/core/demo/sender.js', {
@@ -27,7 +28,6 @@ const {FileEngine} = require('@wireapp/store-engine');
 (async () => {
   const CONVERSATION_ID = process.env.WIRE_CONVERSATION_ID;
   const MESSAGE_TIMER = 5000;
-  const ONE_YEAR_IN_MILLIS = 1000 * 60 * 60 * 24 * 365;
 
   const login = {
     clientType: ClientType.TEMPORARY,
@@ -59,7 +59,7 @@ const {FileEngine} = require('@wireapp/store-engine');
     }, fiveSecondsInMillis);
   }
 
-  async function sendConversationLevelTimer(timeInMillis = ONE_YEAR_IN_MILLIS) {
+  async function sendConversationLevelTimer(timeInMillis = TimeUnits.ONE_YEAR_IN_MILLIS) {
     await account.service.conversation.apiClient.conversation.api.putConversationMessageTimer(CONVERSATION_ID, {
       message_timer: timeInMillis,
     });
