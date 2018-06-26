@@ -1,4 +1,4 @@
-/* eslint-disable no-magic-numbers, no-unused-vars*/
+/* eslint-disable no-magic-numbers, no-unused-vars */
 //@ts-check
 
 process.on('uncaughtException', error =>
