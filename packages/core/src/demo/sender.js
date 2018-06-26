@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers, no-unused-vars*/
 //@ts-check
 
 process.on('uncaughtException', error =>
@@ -26,6 +27,7 @@ const {FileEngine} = require('@wireapp/store-engine');
 (async () => {
   const CONVERSATION_ID = process.env.WIRE_CONVERSATION_ID;
   const MESSAGE_TIMER = 5000;
+  const ONE_YEAR_IN_MILLIS = 1000 * 60 * 60 * 24 * 365;
 
   const login = {
     clientType: ClientType.TEMPORARY,
@@ -55,6 +57,12 @@ const {FileEngine} = require('@wireapp/store-engine');
     setTimeout(async () => {
       await account.service.conversation.deleteMessageEveryone(CONVERSATION_ID, messageId);
     }, fiveSecondsInMillis);
+  }
+
+  async function sendConversationLevelTimer(timeInMillis = ONE_YEAR_IN_MILLIS) {
+    await account.service.conversation.apiClient.conversation.api.putConversationMessageTimer(CONVERSATION_ID, {
+      message_timer: timeInMillis,
+    });
   }
 
   async function sendEphemeralText(expiry = MESSAGE_TIMER) {
