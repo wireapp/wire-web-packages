@@ -3,6 +3,7 @@
     "babel-eslint": "8.2.5",
     "eslint": "5.0.1",
     "eslint-config-prettier": "2.9.0",
+    "eslint-plugin-no-unsanitized": "3.0.2",
     "eslint-plugin-prettier": "2.6.1",
     "eslint-plugin-react": "7.10.0",
     "husky": "0.14.3",
