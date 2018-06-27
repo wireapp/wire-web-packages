@@ -74,8 +74,10 @@ class HttpClient extends EventEmitter {
   }
 
   private updateConnectionState(state: ConnectionState): void {
-    this.connectionState = state;
-    this.emit(HttpClient.TOPIC.ON_CONNECTION_STATE_CHANGE, this.connectionState);
+    if (this.connectionState !== state) {
+      this.connectionState = state;
+      this.emit(HttpClient.TOPIC.ON_CONNECTION_STATE_CHANGE, this.connectionState);
+    }
   }
 
   public createUrl(url: string) {
@@ -104,9 +106,7 @@ class HttpClient extends EventEmitter {
     return axios
       .request(config)
       .then((response: AxiosResponse) => {
-        if (this.connectionState !== ConnectionState.CONNECTED) {
-          this.updateConnectionState(ConnectionState.CONNECTED);
-        }
+        this.updateConnectionState(ConnectionState.CONNECTED);
         return response;
       })
       .catch((error: AxiosError) => {
