@@ -20,19 +20,23 @@
 import {PriorityQueue} from '@wireapp/priority-queue';
 import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine';
 import axios, {AxiosError, AxiosPromise, AxiosRequestConfig, AxiosResponse} from 'axios';
+import EventEmitter = require('events');
 import {AccessTokenData, AccessTokenStore, AuthAPI} from '../auth';
-import {ContentType} from '../http';
+import {ContentType, NetworkError} from '../http';
 import {sendRequestWithCookie} from '../shims/node/cookie';
 
 const logdown = require('logdown');
 
-class HttpClient {
-  // private _authAPI: AuthAPI;
-  private readonly logger: any = logdown('@wireapp/api-client/http.HttpClient', {
+class HttpClient extends EventEmitter {
+  private readonly logger: any = logdown('@wireapp/api-client/http/HttpClient', {
     logger: console,
     markdown: false,
   });
   private readonly requestQueue: PriorityQueue;
+
+  public static TOPIC = {
+    ON_NETWORK_ERROR: 'HttpClient.TOPIC.ON_NETWORK_ERROR',
+  };
 
   constructor(
     private readonly baseURL: string,
@@ -92,7 +96,17 @@ class HttpClient {
     }
 
     return axios.request(config).catch((error: AxiosError) => {
-      if (error.response && error.response.status === 401) {
+      const isNetworkError = !error.response && error.request && Object.keys(error.request).length === 0;
+      const isUnauthorized = error.response && error.response.status === 401;
+
+      if (isNetworkError) {
+        const message = `Cannot do "${error.config.method}" request to "${error.config.url}".`;
+        const networkError = new NetworkError(message);
+        this.emit(HttpClient.TOPIC.ON_NETWORK_ERROR, networkError);
+        return Promise.reject(networkError);
+      }
+
+      if (isUnauthorized) {
         return this.refreshAccessToken().then(() => this._sendRequest(config, tokenAsParam));
       }
 
