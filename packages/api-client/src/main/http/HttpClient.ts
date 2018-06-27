@@ -22,7 +22,7 @@ import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine';
 import axios, {AxiosError, AxiosPromise, AxiosRequestConfig, AxiosResponse} from 'axios';
 import EventEmitter = require('events');
 import {AccessTokenData, AccessTokenStore, AuthAPI} from '../auth';
-import {ContentType, NetworkError} from '../http';
+import {ConnectionState, ContentType, NetworkError} from '../http';
 import {sendRequestWithCookie} from '../shims/node/cookie';
 
 const logdown = require('logdown');
@@ -32,10 +32,11 @@ class HttpClient extends EventEmitter {
     logger: console,
     markdown: false,
   });
+  private connectionState: ConnectionState;
   private readonly requestQueue: PriorityQueue;
 
   public static TOPIC = {
-    ON_NETWORK_ERROR: 'HttpClient.TOPIC.ON_NETWORK_ERROR',
+    ON_CONNECTION_STATE_CHANGE: 'HttpClient.TOPIC.ON_CONNECTION_STATE_CHANGE',
   };
 
   constructor(
@@ -44,6 +45,9 @@ class HttpClient extends EventEmitter {
     private readonly engine: CRUDEngine
   ) {
     super();
+
+    this.connectionState = ConnectionState.UNDEFINED;
+
     this.requestQueue = new PriorityQueue({
       maxRetries: 0,
       retryDelay: 1000,
@@ -69,6 +73,11 @@ class HttpClient extends EventEmitter {
     });
   }
 
+  private updateConnectionState(state: ConnectionState): void {
+    this.connectionState = state;
+    this.emit(HttpClient.TOPIC.ON_CONNECTION_STATE_CHANGE, this.connectionState);
+  }
+
   public createUrl(url: string) {
     return `${this.baseURL}${url}`;
   }
@@ -92,23 +101,31 @@ class HttpClient extends EventEmitter {
       }
     }
 
-    return axios.request(config).catch((error: AxiosError) => {
-      const isNetworkError = !error.response && error.request && Object.keys(error.request).length === 0;
-      const isUnauthorized = error.response && error.response.status === 401;
+    return axios
+      .request(config)
+      .then((response: AxiosResponse) => {
+        if (this.connectionState !== ConnectionState.CONNECTED) {
+          this.updateConnectionState(ConnectionState.CONNECTED);
+        }
+        return response;
+      })
+      .catch((error: AxiosError) => {
+        const isNetworkError = !error.response && error.request && Object.keys(error.request).length === 0;
+        const isUnauthorized = error.response && error.response.status === 401;
 
-      if (isNetworkError) {
-        const message = `Cannot do "${error.config.method}" request to "${error.config.url}".`;
-        const networkError = new NetworkError(message);
-        this.emit(HttpClient.TOPIC.ON_NETWORK_ERROR, networkError);
-        return Promise.reject(networkError);
-      }
+        if (isNetworkError) {
+          const message = `Cannot do "${error.config.method}" request to "${error.config.url}".`;
+          const networkError = new NetworkError(message);
+          this.updateConnectionState(ConnectionState.DISCONNECTED);
+          return Promise.reject(networkError);
+        }
 
-      if (isUnauthorized) {
-        return this.refreshAccessToken().then(() => this._sendRequest(config, tokenAsParam));
-      }
+        if (isUnauthorized) {
+          return this.refreshAccessToken().then(() => this._sendRequest(config, tokenAsParam));
+        }
 
-      return Promise.reject(error);
-    });
+        return Promise.reject(error);
+      });
   }
 
   public refreshAccessToken(): Promise<AccessTokenData> {
