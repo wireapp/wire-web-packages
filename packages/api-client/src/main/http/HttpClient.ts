@@ -43,6 +43,7 @@ class HttpClient extends EventEmitter {
     public accessTokenStore: AccessTokenStore,
     private readonly engine: CRUDEngine
   ) {
+    super();
     this.requestQueue = new PriorityQueue({
       maxRetries: 0,
       retryDelay: 1000,
