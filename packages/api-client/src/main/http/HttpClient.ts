@@ -69,10 +69,6 @@ class HttpClient extends EventEmitter {
     });
   }
 
-  // set authAPI(authAPI: AuthAPI) {
-  //   this._authAPI = authAPI;
-  // }
-
   public createUrl(url: string) {
     return `${this.baseURL}${url}`;
   }
