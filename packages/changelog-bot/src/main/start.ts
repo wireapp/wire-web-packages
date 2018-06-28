@@ -19,7 +19,8 @@
 
 import {LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
 import {ClientType} from '@wireapp/api-client/dist/commonjs/client/';
-import {ChangelogBot, ChangelogData} from './ChangelogBot';
+import {ChangelogBot} from './ChangelogBot';
+import {ChangelogData} from './ChangelogData';
 
 export async function start(parameters: {[index: string]: string}): Promise<ChangelogBot> {
   const {conversationIds, email, password} = parameters;
@@ -31,10 +32,12 @@ export async function start(parameters: {[index: string]: string}): Promise<Chan
     password,
   };
 
-  const changelog = await ChangelogBot.generateChangelog(String(TRAVIS_REPO_SLUG), String(TRAVIS_COMMIT_RANGE));
+  const repoSlug = String(TRAVIS_REPO_SLUG);
+  const changelog = await ChangelogBot.generateChangelog(repoSlug, String(TRAVIS_COMMIT_RANGE));
 
   const messageData: ChangelogData = {
     content: changelog,
+    repoSlug,
   };
 
   if (conversationIds) {
