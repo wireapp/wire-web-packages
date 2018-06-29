@@ -35,30 +35,9 @@ const MenuModalWrapper = styled.div`
 `;
 
 const MenuModalBody = styled.div`
-  ${props =>
-    props.fullscreen
-      ? `
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      border-radius: 0;
-      justify-content: center;
-      box-shadow: none;
-      @media (max-width: 767px) {
-        width: initial;
-      }
-      `
-      : `
-      position: relative;
-      box-shadow: 0 16px 64px 0 rgba(0, 0, 0, 0.16);
-      justify-content: space-between;
-      width: 767px;
-      @media (max-width: 767px) {
-        width: 100%;
-      }
-      `};
+  position: relative;
+  box-shadow: 0 16px 64px 0 rgba(0, 0, 0, 0.16);
+  justify-content: space-between;
   align-items: flex-end;
   align-self: flex-end;
   background-color: #fff;
@@ -69,6 +48,10 @@ const MenuModalBody = styled.div`
   margin-left: auto;
   margin-right: auto;
   -webkit-transform: translate3d(0, 0, 0);
+  width: 767px;
+  @media (max-width: 767px) {
+    width: 100%;
+  }
 `;
 
 const MenuModalContent = styled.ul`
@@ -114,12 +97,12 @@ const MenuModalBackground = styled.div`
 
 const noop = () => {};
 
-const MenuModal = ({children, fullscreen, onBackgroundClick}) => (
+const MenuModal = ({children, onBackgroundClick}) => (
   <MenuModalWrapper>
-    <MenuModalBody fullscreen={fullscreen}>
+    <MenuModalBody>
       <MenuModalContent>{children}</MenuModalContent>
     </MenuModalBody>
-    {!fullscreen && <MenuModalBackground onClick={onBackgroundClick} data-uie-name="menu-background" />}
+    <MenuModalBackground onClick={onBackgroundClick} data-uie-name="menu-background" />
   </MenuModalWrapper>
 );
 
@@ -137,13 +120,11 @@ MenuItem.defaultProps = {
 
 MenuModal.propTypes = {
   children: PropTypes.node,
-  fullscreen: PropTypes.bool,
   onBackgroundClick: PropTypes.func,
 };
 
 MenuModal.defaultProps = {
   children: null,
-  fullscreen: false,
   onBackgroundClick: noop,
 };
 
