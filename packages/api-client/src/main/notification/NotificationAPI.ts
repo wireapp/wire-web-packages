@@ -53,7 +53,7 @@ class NotificationAPI {
    */
   public getNotifications(
     clientId?: string,
-    size: number = 1000,
+    size: number = 10000,
     since?: Date,
     cancelFallbackNotifications?: boolean
   ): Promise<NotificationList> {
