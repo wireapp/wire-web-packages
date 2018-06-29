@@ -32,12 +32,19 @@ export async function start(parameters: {[index: string]: string}): Promise<Chan
     password,
   };
 
-  const repoSlug = String(TRAVIS_REPO_SLUG);
-  const changelog = await ChangelogBot.generateChangelog(repoSlug, String(TRAVIS_COMMIT_RANGE));
+  if (!TRAVIS_REPO_SLUG) {
+    throw Error('You need to specify a repository slug. Otherwise this script will not work.');
+  }
+
+  if (!TRAVIS_COMMIT_RANGE) {
+    throw Error('You need to specify a commit range. Otherwise this script will not work.');
+  }
+
+  const changelog = await ChangelogBot.generateChangelog(TRAVIS_REPO_SLUG, TRAVIS_COMMIT_RANGE);
 
   const messageData: ChangelogData = {
     content: changelog,
-    repoSlug,
+    repoSlug: TRAVIS_REPO_SLUG,
   };
 
   if (conversationIds) {
