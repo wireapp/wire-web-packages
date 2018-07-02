@@ -30,6 +30,7 @@ const nock = require('nock');
 
 const BASE_URL = 'mock-backend.wire.com';
 const BASE_URL_HTTPS = `https://${BASE_URL}`;
+const UUID4_REGEX = /(\w{8}(-\w{4}){3}-\w{12}?)/;
 
 describe('Account', () => {
   describe('"init"', () => {
@@ -121,40 +122,38 @@ describe('Account', () => {
     });
 
     it('logs in with correct credentials', async done => {
-      try {
-        const storeEngine = new MemoryEngine();
-        await storeEngine.init('account.test');
+      const storeEngine = new MemoryEngine();
+      await storeEngine.init('account.test');
 
-        const config = new Config(storeEngine, MOCK_BACKEND);
-        const apiClient = new APIClient(config);
-        const account = new Account(apiClient);
+      const config = new Config(storeEngine, MOCK_BACKEND);
+      const apiClient = new APIClient(config);
+      const account = new Account(apiClient);
 
-        await account.init();
-        const {clientId, clientType} = await account.login({
-          clientType: ClientType.TEMPORARY,
-          email: 'hello@example.com',
-          password: 'my-secret',
-        });
+      await account.init();
+      const {clientId, clientType, userId} = await account.login({
+        clientType: ClientType.TEMPORARY,
+        email: 'hello@example.com',
+        password: 'my-secret',
+      });
 
-        expect(clientId).toBe(CLIENT_ID);
-        expect(clientType).toBe(ClientType.TEMPORARY);
+      expect(clientId).toBe(CLIENT_ID);
+      expect(userId).toMatch(UUID4_REGEX);
+      expect(clientType).toBe(ClientType.TEMPORARY);
 
-        done();
-      } catch (error) {
-        done.fail(error);
-      }
+      done();
     });
 
     it('does not log in with incorrect credentials', async done => {
+      const storeEngine = new MemoryEngine();
+      await storeEngine.init('account.test');
+
+      const config = new Config(storeEngine, MOCK_BACKEND);
+      const apiClient = new APIClient(config);
+      const account = new Account(apiClient);
+
+      await account.init();
+
       try {
-        const storeEngine = new MemoryEngine();
-        await storeEngine.init('account.test');
-
-        const config = new Config(storeEngine, MOCK_BACKEND);
-        const apiClient = new APIClient(config);
-        const account = new Account(apiClient);
-
-        await account.init();
         await account.login({
           clientType: ClientType.TEMPORARY,
           email: 'hello@example.com',
