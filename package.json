@@ -38,7 +38,7 @@
     "fix:other": "yarn prettier --write",
     "fix:ts": "yarn lint:ts --fix",
     "lint": "yarn lint:js && yarn lint:other && yarn lint:ts",
-    "lint:js": "eslint --ignore-path .gitignore **/*.{js,jsx}",
+    "lint:js": "eslint --ignore-path .gitignore --ext .js,.jsx .",
     "lint:other": "yarn prettier --list-different",
     "lint:ts": "tslint --config tslint.json --project tsconfig.json \"**/*.ts\"",
     "precommit": "lint-staged",
