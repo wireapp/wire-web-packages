@@ -31,6 +31,15 @@ const bottomUpMovement = keyframes`
   }
 `;
 
+const backgroundFade = keyframes`
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+`;
+
 const MenuModalWrapper = styled.div`
   position: fixed;
   display: flex;
@@ -84,15 +93,6 @@ const MenuItemContent = styled.li`
   cursor: pointer;
   height: 56px;
   list-style-type: none;
-`;
-
-const backgroundFade = keyframes`
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
 `;
 
 const MenuModalBackground = styled.div`
