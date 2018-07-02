@@ -61,7 +61,7 @@ describe('Account', () => {
       ws: `wss://${BASE_URL}`,
     };
 
-    const clientId = '4e37b32f57f6da55';
+    const CLIENT_ID = '4e37b32f57f6da55';
 
     const accessTokenData = {
       access_token:
@@ -83,7 +83,7 @@ describe('Account', () => {
             return [
               StatusCode.FORBIDDEN,
               JSON.stringify({
-                code: 403,
+                code: StatusCode.FORBIDDEN,
                 label: 'invalid-credentials',
                 message: 'Authentication failed.',
               }),
@@ -98,7 +98,7 @@ describe('Account', () => {
 
       nock(BASE_URL_HTTPS)
         .post(ClientAPI.URL.CLIENTS)
-        .reply(StatusCode.OK, {id: clientId});
+        .reply(StatusCode.OK, {id: CLIENT_ID});
 
       nock(BASE_URL_HTTPS)
         .post(
@@ -111,16 +111,16 @@ describe('Account', () => {
         .persist();
 
       nock(BASE_URL_HTTPS)
-        .get(NotificationAPI.URL.NOTIFICATION + '/' + NotificationAPI.URL.LAST)
-        .query({client: clientId})
+        .get(`${NotificationAPI.URL.NOTIFICATION}/${NotificationAPI.URL.LAST}`)
+        .query({client: CLIENT_ID})
         .reply(StatusCode.OK, {});
 
       nock(BASE_URL_HTTPS)
         .get(ClientAPI.URL.CLIENTS)
-        .reply(StatusCode.OK, [{id: clientId}]);
+        .reply(StatusCode.OK, [{id: CLIENT_ID}]);
     });
 
-    fit('logs in with correct credentials', async done => {
+    it('logs in with correct credentials', async done => {
       try {
         const storeEngine = new MemoryEngine();
         await storeEngine.init('account.test');
@@ -130,11 +130,14 @@ describe('Account', () => {
         const account = new Account(apiClient);
 
         await account.init();
-        await account.login({
+        const {clientId, clientType} = await account.login({
           clientType: ClientType.TEMPORARY,
           email: 'hello@example.com',
           password: 'my-secret',
         });
+
+        expect(clientId).toBe(CLIENT_ID);
+        expect(clientType).toBe(ClientType.TEMPORARY);
 
         done();
       } catch (error) {
@@ -142,7 +145,7 @@ describe('Account', () => {
       }
     });
 
-    fit('fails with incorrect credentials', async done => {
+    it('does not log in with incorrect credentials', async done => {
       try {
         const storeEngine = new MemoryEngine();
         await storeEngine.init('account.test');
@@ -160,6 +163,14 @@ describe('Account', () => {
 
         done.fail('Should not be logged in');
       } catch (error) {
+        const {
+          status: errorCode,
+          data: {message: errorMessage},
+        } = error.response;
+
+        expect(errorCode).toBe(StatusCode.FORBIDDEN);
+        expect(errorMessage).toBe('Authentication failed.');
+
         done();
       }
     });
