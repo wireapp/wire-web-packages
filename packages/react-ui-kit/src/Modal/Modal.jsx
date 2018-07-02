@@ -17,7 +17,7 @@
  *
  */
 
-import {DURATION, QUART_EASE, fadeIn} from '../Identity/motions';
+import {ANIMATION, DURATION, EASE} from '../Identity/motions';
 import {CloseIcon} from '../Icon';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -96,7 +96,7 @@ const ModalBackground = styled.div`
   width: 100vw;
   background: rgba(50, 54, 57, 0.4);
   z-index: 9998;
-  animation: ${fadeIn} ${DURATION.PROACTIVE_SLOW} ${QUART_EASE};
+  animation: ${ANIMATION.fadeIn} ${DURATION.PROACTIVE_SLOW} ${EASE.QUART};
 `;
 
 const noop = () => {};

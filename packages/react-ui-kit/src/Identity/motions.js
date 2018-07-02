@@ -26,6 +26,7 @@ import {keyframes} from 'styled-components';
  */
 export const DURATION = {
   DEFAULT: '0.55s',
+  EXTRA_LONG: '2.4s',
   PROACTIVE_FAST: '0.15s',
   PROACTIVE_SLOW: '0.35s',
   SYSTEM: '0.7s',
@@ -35,34 +36,36 @@ export const DURATION = {
  * The rule of thumb is using Quart Out when animating only the object's opacity,
  * otherwise use Expo Out ease.
  */
-export const EXPONENTIAL_EASE = 'cubic-bezier(0.19, 1, 0.22, 1)';
-export const QUART_EASE = 'cubic-bezier(0.165, 0.84, 0.44, 1)';
+export const EASE = {
+  EXPONENTIAL: 'cubic-bezier(0.19, 1, 0.22, 1)',
+  QUART: 'cubic-bezier(0.165, 0.84, 0.44, 1)',
+};
 
-export const bottomUpMovement = keyframes`
+export const ANIMATION = {
+  bottomUpMovement: keyframes`
   0% {
     transform: translateY(100%);
   }
   100% {
     transform: translateY(0);
   }
-`;
-
-export const fadeIn = keyframes`
+`,
+  fadeIn: keyframes`
   0% {
     opacity: 0;
   }
   100% {
     opacity: 1;
   }
-`;
-
-export const rotate = keyframes`
+`,
+  rotate: keyframes`
   0% {
     transform: rotate(0);
   }
   100% {
     transform: rotate(360deg);
   }
-`;
+`,
+};
 
 export const defaultTransition = 'transition: all 0.24s;';

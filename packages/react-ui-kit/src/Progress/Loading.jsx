@@ -17,10 +17,10 @@
  *
  */
 
+import {ANIMATION, DURATION} from '../Identity/motions';
 import styled, {css, keyframes} from 'styled-components';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {rotate} from '../Identity/motions';
 
 const pathLength = 125.68;
 
@@ -69,7 +69,8 @@ const Loading = styled(LoadingComponent)`
       circle:nth-of-type(2) {
         stroke-dasharray: ${pathLength};
       }
-      animation: ${fillAnimation} 2.4s infinite ease-in-out, ${rotate} 2.4s infinite linear;
+      animation: ${fillAnimation} ${DURATION.EXTRA_LONG} infinite ease-in-out,
+        ${ANIMATION.rotate} ${DURATION.EXTRA_LONG} infinite linear;
     `};
 `;
 

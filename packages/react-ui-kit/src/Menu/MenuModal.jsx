@@ -17,7 +17,7 @@
  *
  */
 
-import {DURATION, EXPONENTIAL_EASE, bottomUpMovement, fadeIn} from '../Identity/motions';
+import {ANIMATION, DURATION, EASE} from '../Identity/motions';
 import {COLOR} from '../Identity/';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -49,7 +49,7 @@ const MenuModalBody = styled.div`
   margin-left: auto;
   margin-right: auto;
   width: 767px;
-  animation: ${bottomUpMovement} 0.55s cubic-bezier(0.19, 1, 0.22, 1);
+  animation: ${ANIMATION.bottomUpMovement} ${DURATION.DEFAULT} ${EASE.EXPONENTIAL};
   @media (max-width: 767px) {
     width: 100%;
   }
@@ -86,7 +86,7 @@ const MenuModalBackground = styled.div`
   width: 100vw;
   background: rgba(50, 54, 57, 0.4);
   z-index: 9998;
-  animation: ${fadeIn} ${DURATION.PROACTIVE_SLOW} ${EXPONENTIAL_EASE};
+  animation: ${ANIMATION.fadeIn} ${DURATION.PROACTIVE_SLOW} ${EASE.EXPONENTIAL};
 `;
 
 const noop = () => {};
