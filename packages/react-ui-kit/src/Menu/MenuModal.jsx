@@ -17,28 +17,11 @@
  *
  */
 
-import styled, {keyframes} from 'styled-components';
+import {DURATION, EXPONENTIAL_EASE, bottomUpMovement, fadeIn} from '../Identity/motions';
 import {COLOR} from '../Identity/';
 import PropTypes from 'prop-types';
 import React from 'react';
-
-const bottomUpMovement = keyframes`
-  0% {
-    transform: translateY(100%);
-  }
-  100% {
-    transform: translateY(0);
-  }
-`;
-
-const backgroundFade = keyframes`
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-`;
+import styled from 'styled-components';
 
 const MenuModalWrapper = styled.div`
   position: fixed;
@@ -103,7 +86,7 @@ const MenuModalBackground = styled.div`
   width: 100vw;
   background: rgba(50, 54, 57, 0.4);
   z-index: 9998;
-  animation: ${backgroundFade} 0.3s ease;
+  animation: ${fadeIn} ${DURATION.PROACTIVE_SLOW} ${EXPONENTIAL_EASE};
 `;
 
 const noop = () => {};
