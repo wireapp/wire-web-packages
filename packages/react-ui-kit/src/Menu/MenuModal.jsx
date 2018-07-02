@@ -22,6 +22,15 @@ import {COLOR} from '../Identity/';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+const bottomUpMovement = keyframes`
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+`;
+
 const MenuModalWrapper = styled.div`
   position: fixed;
   display: flex;
@@ -47,8 +56,8 @@ const MenuModalBody = styled.div`
   z-index: 9999;
   margin-left: auto;
   margin-right: auto;
-  -webkit-transform: translate3d(0, 0, 0);
   width: 767px;
+  animation: ${bottomUpMovement} 0.55s cubic-bezier(0.19, 1, 0.22, 1);
   @media (max-width: 767px) {
     width: 100%;
   }
