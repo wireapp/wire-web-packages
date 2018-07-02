@@ -43,7 +43,7 @@ const MenuModalBody = styled.div`
   background-color: #fff;
   display: flex;
   flex-direction: column;
-  padding: 8px 24px;
+  padding: 8px 16px;
   z-index: 9999;
   margin-left: auto;
   margin-right: auto;
@@ -60,7 +60,7 @@ const MenuModalContent = styled.ul`
   padding: 0;
   margin: 0;
   li {
-    border-bottom: 1px solid ${COLOR.GRAY};
+    border-bottom: 1px solid ${COLOR.GRAY_LIGHTEN_72};
   }
   li:last-child {
     border-bottom: 0;
@@ -69,9 +69,11 @@ const MenuModalContent = styled.ul`
 
 const MenuItemContent = styled.li`
   color: ${COLOR.GRAY_DARKEN_72};
+  display: flex;
+  align-items: center;
   max-width: 100%;
   cursor: pointer;
-  padding: 10px 0;
+  height: 56px;
   list-style-type: none;
 `;
 
