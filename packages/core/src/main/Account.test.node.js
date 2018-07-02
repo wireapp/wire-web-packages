@@ -19,8 +19,7 @@
 
 const {Account} = require('@wireapp/core');
 const {AuthAPI} = require('@wireapp/api-client/dist/commonjs/auth/');
-const {ClientAPI} = require('@wireapp/api-client/dist/commonjs/client/');
-const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/');
+const {ClientAPI, ClientType} = require('@wireapp/api-client/dist/commonjs/client/');
 const {Config} = require('@wireapp/api-client/dist/commonjs/Config');
 const {ConversationAPI} = require('@wireapp/api-client/dist/commonjs/conversation/');
 const {MemoryEngine} = require('@wireapp/store-engine');
