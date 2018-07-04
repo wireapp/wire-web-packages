@@ -113,10 +113,11 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
 
   account.on(Account.INCOMING.CONNECTION, async data => {
     const {
-      connection: {conversation: conversationId},
+      connection: {conversation: conversationId, to: connectingUserId},
       user: {name: connectingUser},
     } = data;
     logger.log(`Connection request from "${connectingUser}" in "${conversationId}".`);
+    await account.service.connection.acceptConnection(connectingUserId);
   });
 
   try {

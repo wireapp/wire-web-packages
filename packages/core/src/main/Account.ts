@@ -37,6 +37,7 @@ import * as Long from 'long';
 import {Root} from 'protobufjs';
 import {LoginSanitizer} from './auth/root';
 import {ClientInfo, ClientService} from './client/root';
+import {ConnectionService} from './connection/root';
 import {
   AssetService,
   ConversationService,
@@ -76,6 +77,7 @@ class Account extends EventEmitter {
   public service?: {
     client: ClientService;
     conversation: ConversationService;
+    connection: ConnectionService;
     cryptography: CryptographyService;
     notification: NotificationService;
     self: SelfService;
@@ -107,6 +109,7 @@ class Account extends EventEmitter {
 
     const cryptographyService = new CryptographyService(this.apiClient, this.apiClient.config.store);
     const clientService = new ClientService(this.apiClient, this.apiClient.config.store, cryptographyService);
+    const connectionService = new ConnectionService(this.apiClient);
     const assetService = new AssetService(this.apiClient);
     const conversationService = new ConversationService(
       this.apiClient,
@@ -119,6 +122,7 @@ class Account extends EventEmitter {
 
     this.service = {
       client: clientService,
+      connection: connectionService,
       conversation: conversationService,
       cryptography: cryptographyService,
       notification: notificationService,
