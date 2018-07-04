@@ -25,6 +25,9 @@ import {
   ConversationEvent,
   ConversationMessageTimerUpdateEvent,
   ConversationOtrMessageAddEvent,
+  IncomingEvent,
+  USER_EVENT,
+  UserEvent,
 } from '@wireapp/api-client/dist/commonjs/event/index';
 import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/index';
 import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/index';
@@ -60,6 +63,7 @@ class Account extends EventEmitter {
     ASSET: 'Account.INCOMING.ASSET',
     CLIENT_ACTION: 'Account.INCOMING.CLIENT_ACTION',
     CONFIRMATION: 'Account.INCOMING.CONFIRMATION',
+    CONNECTION: 'Account.INCOMING.CONNECTION',
     DELETED: 'Account.INCOMING.DELETED',
     HIDDEN: 'Account.INCOMING.HIDDEN',
     MESSAGE_TIMER_UPDATE: 'Account.INCOMING.MESSAGE_TIMER_UPDATE',
@@ -332,17 +336,23 @@ class Account extends EventEmitter {
     }
   }
 
-  private async handleEvent(event: ConversationEvent): Promise<PayloadBundleIncoming | ConversationEvent | void> {
+  private async handleEvent(
+    event: IncomingEvent
+  ): Promise<PayloadBundleIncoming | ConversationEvent | UserEvent | void> {
     this.logger.info('handleEvent', event.type);
 
     const ENCRYPTED_EVENTS = [CONVERSATION_EVENT.OTR_MESSAGE_ADD];
     const META_EVENTS = [CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE, CONVERSATION_EVENT.TYPING];
+    const USER_EVENTS = [USER_EVENT.CONNECTION];
 
-    if (ENCRYPTED_EVENTS.includes(event.type)) {
+    if (ENCRYPTED_EVENTS.includes(event.type as CONVERSATION_EVENT)) {
       return this.decodeGenericMessage(event as ConversationOtrMessageAddEvent);
-    } else if (META_EVENTS.includes(event.type)) {
-      const {conversation, from} = event;
-      return {...event, from, conversation};
+    } else if (META_EVENTS.includes(event.type as CONVERSATION_EVENT)) {
+      const {conversation, from} = event as ConversationEvent;
+      const metaEvent = {...event, from, conversation};
+      return metaEvent as ConversationEvent;
+    } else if (USER_EVENTS.includes(event.type as USER_EVENT)) {
+      return event as UserEvent;
     }
   }
 
@@ -390,12 +400,18 @@ class Account extends EventEmitter {
             this.emit(Account.INCOMING.TYPING, event);
             break;
           }
+          case USER_EVENT.CONNECTION: {
+            this.emit(Account.INCOMING.CONNECTION);
+            break;
+          }
         }
       } else {
         this.logger.info(
-          `Received unsupported event "${event.type}" in conversation "${event.conversation}" from user "${
-            event.from
-          }".`,
+          `Received unsupported event "${event.type}"` + (event as ConversationEvent).conversation
+            ? `in conversation "${(event as ConversationEvent).conversation}"`
+            : '' + (event as ConversationEvent).from
+              ? `from user "${(event as ConversationEvent).from}"`
+              : '' + '.',
           event
         );
       }
