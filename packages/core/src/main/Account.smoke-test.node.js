@@ -66,8 +66,10 @@ fdescribe('Account', () => {
 
   describe('Message Sending', () => {
     beforeAll(async done => {
-      expect(ValidationUtil.isUUIDv4(alice.apiClient.context.userId)).toBe(true);
-      expect(ValidationUtil.isUUIDv4(bob.apiClient.context.userId)).toBe(true);
+      if (CAN_RUN) {
+        expect(ValidationUtil.isUUIDv4(alice.apiClient.context.userId)).toBe(true);
+        expect(ValidationUtil.isUUIDv4(bob.apiClient.context.userId)).toBe(true);
+      }
       done();
     });
 
@@ -77,7 +79,7 @@ fdescribe('Account', () => {
         return done();
       }
 
-      alice.done();
+      done();
     });
   });
 });
