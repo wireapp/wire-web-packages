@@ -19,6 +19,7 @@
 
 import {RegisteredClient} from '../client/';
 import {Connection} from '../connection/';
+import {Self} from '../self/';
 import {BackendEvent} from './BackendEvent';
 
 enum USER_EVENT {
@@ -37,6 +38,7 @@ interface UserEvent extends BackendEvent {
 
 interface UserActivateEvent extends UserEvent {
   type: USER_EVENT.ACTIVATE;
+  user: Self;
 }
 
 interface UserClientAddEvent extends UserEvent {
@@ -66,23 +68,23 @@ interface UserDeleteEvent extends UserEvent {
 interface UserPropertiesSetEvent extends UserEvent {
   value: {
     contact_import: Object;
+    enable_debugging: boolean;
     settings: {
       emoji: {
         replace_inline: boolean;
       };
-      sound: {
-        alerts: 'all';
+      notifications: 'on';
+      previews: {
+        send: boolean;
       };
       privacy: {
         improve_wire: boolean;
       };
-      previews: {
-        send: boolean;
+      sound: {
+        alerts: 'all';
       };
-      notifications: 'on';
     };
     version: number;
-    enable_debugging: false;
   };
   key: 'webapp';
   type: USER_EVENT.PROPERTIES_SET;
