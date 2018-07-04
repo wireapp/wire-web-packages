@@ -17,13 +17,10 @@
  *
  */
 
-enum ConnectionStatus {
-  ACCEPTED = 'accepted',
-  BLOCKED = 'blocked',
-  CANCELLED = 'cancelled',
-  IGNORED = 'ignored',
-  PENDING = 'pending',
-  SENT = 'sent',
+enum AudioPreference {
+  ALL = 'all',
+  NONE = 'none',
+  SOME = 'some',
 }
 
-export {ConnectionStatus};
+export {AudioPreference};

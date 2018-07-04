@@ -17,13 +17,11 @@
  *
  */
 
-enum ConnectionStatus {
-  ACCEPTED = 'accepted',
-  BLOCKED = 'blocked',
-  CANCELLED = 'cancelled',
-  IGNORED = 'ignored',
-  PENDING = 'pending',
-  SENT = 'sent',
+enum NotificationPreference {
+  NONE = 'none',
+  OBFUSCATE = 'obfuscate',
+  OBFUSCATE_MESSAGE = 'obfuscate-message',
+  ON = 'on',
 }
 
-export {ConnectionStatus};
+export {NotificationPreference};

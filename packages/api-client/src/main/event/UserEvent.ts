@@ -17,8 +17,10 @@
  *
  */
 
+import {AudioPreference} from '../audio/';
 import {RegisteredClient} from '../client/';
 import {Connection} from '../connection/';
+import {NotificationPreference} from '../notification/';
 import {Self} from '../self/';
 import {BackendEvent} from './BackendEvent';
 
@@ -73,7 +75,7 @@ interface UserPropertiesSetEvent extends UserEvent {
       emoji: {
         replace_inline: boolean;
       };
-      notifications: 'on';
+      notifications: NotificationPreference;
       previews: {
         send: boolean;
       };
@@ -81,7 +83,7 @@ interface UserPropertiesSetEvent extends UserEvent {
         improve_wire: boolean;
       };
       sound: {
-        alerts: 'all';
+        alerts: AudioPreference;
       };
     };
     version: number;
