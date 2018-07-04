@@ -52,7 +52,7 @@ async function getAccount(email, password) {
   return account;
 }
 
-fdescribe('Account', () => {
+describe('Account', () => {
   let alice;
   let bob;
 
