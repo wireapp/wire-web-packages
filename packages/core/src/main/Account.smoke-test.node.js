@@ -67,7 +67,7 @@ function sendText(sender, conversationId, message = 'Hello, World!') {
   return sender.service.conversation.send(conversationId, payload);
 }
 
-fdescribe('Account', () => {
+describe('Account', () => {
   let alice;
   let bob;
 
@@ -97,13 +97,12 @@ fdescribe('Account', () => {
       const message = 'Hello, Bob!';
 
       bob.on(Account.INCOMING.TEXT_MESSAGE, async data => {
-        expect(data.content).toBe(message);
+        expect(data.content.text).toBe(message);
         done();
       });
 
       await bob.listen();
-
-      const {conversation: conversationId, to: connectingUserId} = await createConnection(alice, bob);
+      const {conversation: conversationId, from: connectingUserId} = await createConnection(alice, bob);
       await acceptConnection(bob, connectingUserId);
       await sendText(alice, conversationId, message);
     });
