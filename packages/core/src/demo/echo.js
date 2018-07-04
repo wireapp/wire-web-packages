@@ -108,7 +108,15 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
 
   account.on(Account.INCOMING.DELETED, async data => {
     const {conversation: conversationId, id: messageId, from} = data;
-    logger.log(`Deleted message ${messageId} in "${conversationId}" by "${from}".`, data);
+    logger.log(`Deleted message "${messageId}" in "${conversationId}" by "${from}".`);
+  });
+
+  account.on(Account.INCOMING.CONNECTION, async data => {
+    const {
+      connection: {conversation: conversationId},
+      user: {name: connectingUser},
+    } = data;
+    logger.log(`Connection request from "${connectingUser}" in "${conversationId}".`);
   });
 
   try {

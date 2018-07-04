@@ -401,7 +401,7 @@ class Account extends EventEmitter {
             break;
           }
           case USER_EVENT.CONNECTION: {
-            this.emit(Account.INCOMING.CONNECTION);
+            this.emit(Account.INCOMING.CONNECTION, event);
             break;
           }
         }
