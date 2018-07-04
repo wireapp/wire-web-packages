@@ -17,4 +17,9 @@
  *
  */
 
-export type PaymentInterval = 'day' | 'week' | 'month' | 'year';
+export enum PaymentInterval {
+  DAY = 'day',
+  WEEK = 'week',
+  MONTH = 'month',
+  YEAR = 'year',
+}

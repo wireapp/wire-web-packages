@@ -17,4 +17,11 @@
  *
  */
 
-export type ConnectionStatus = 'accepted' | 'blocked' | 'cancelled' | 'ignored' | 'pending' | 'sent';
+export enum ConnectionStatus {
+  ACCEPTED = 'accepted',
+  BLOCKED = 'blocked',
+  CANCELLED = 'cancelled',
+  IGNORED = 'ignored',
+  PENDING = 'pending',
+  SENT = 'sent',
+}

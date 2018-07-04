@@ -18,20 +18,20 @@
  */
 
 import APIClient = require('@wireapp/api-client');
-import {Connection} from '@wireapp/api-client/dist/commonjs/connection/';
+import {Connection, ConnectionStatus} from '@wireapp/api-client/dist/commonjs/connection/';
 
 export default class ConnectionService {
   constructor(private readonly apiClient: APIClient) {}
 
   public acceptConnection(userId: string): Promise<Connection> {
     return this.apiClient.connection.api.putConnection(userId, {
-      status: 'accepted',
+      status: ConnectionStatus.ACCEPTED,
     });
   }
 
   public ignoreConnection(userId: string): Promise<Connection> {
     return this.apiClient.connection.api.putConnection(userId, {
-      status: 'ignored',
+      status: ConnectionStatus.IGNORED,
     });
   }
 }
