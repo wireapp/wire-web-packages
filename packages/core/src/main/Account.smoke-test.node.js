@@ -77,6 +77,7 @@ describe('Account', () => {
 
   beforeAll(async done => {
     if (CAN_RUN) {
+      logger.info('Running smoke tests for @wireapp/core ...');
       alice = await getAccount(process.env.ALICE_EMAIL, process.env.ALICE_PASSWORD);
       bob = await getAccount(process.env.BOB_EMAIL, process.env.BOB_PASSWORD);
     }
