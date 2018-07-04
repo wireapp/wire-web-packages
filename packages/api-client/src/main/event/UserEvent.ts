@@ -17,6 +17,8 @@
  *
  */
 
+import {RegisteredClient} from '../client/';
+import {Connection} from '../connection/';
 import {BackendEvent} from './BackendEvent';
 
 enum USER_EVENT {
@@ -25,6 +27,7 @@ enum USER_EVENT {
   CLIENT_REMOVE = 'user.client-remove',
   CONNECTION = 'user.connection',
   DELETE = 'user.delete',
+  PROPERTIES_SET = 'user.properties-set',
   UPDATE = 'user.update',
 }
 
@@ -37,19 +40,52 @@ interface UserActivateEvent extends UserEvent {
 }
 
 interface UserClientAddEvent extends UserEvent {
+  client: RegisteredClient;
   type: USER_EVENT.CLIENT_ADD;
 }
 
 interface UserClientRemoveEvent extends UserEvent {
+  client: {
+    id: string;
+  };
   type: USER_EVENT.CLIENT_REMOVE;
 }
 
 interface UserConnectionEvent extends UserEvent {
+  connection: Connection;
+  user: {
+    name: string;
+  };
   type: USER_EVENT.CONNECTION;
 }
 
 interface UserDeleteEvent extends UserEvent {
   type: USER_EVENT.DELETE;
+}
+
+interface UserPropertiesSetEvent extends UserEvent {
+  value: {
+    contact_import: Object;
+    settings: {
+      emoji: {
+        replace_inline: boolean;
+      };
+      sound: {
+        alerts: 'all';
+      };
+      privacy: {
+        improve_wire: boolean;
+      };
+      previews: {
+        send: boolean;
+      };
+      notifications: 'on';
+    };
+    version: number;
+    enable_debugging: false;
+  };
+  key: 'webapp';
+  type: USER_EVENT.PROPERTIES_SET;
 }
 
 interface UserUpdateEvent extends UserEvent {
@@ -58,11 +94,12 @@ interface UserUpdateEvent extends UserEvent {
 
 export {
   USER_EVENT,
-  UserEvent,
   UserActivateEvent,
   UserClientAddEvent,
   UserClientRemoveEvent,
   UserConnectionEvent,
   UserDeleteEvent,
+  UserEvent,
+  UserPropertiesSetEvent,
   UserUpdateEvent,
 };
