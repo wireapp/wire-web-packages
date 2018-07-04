@@ -35,6 +35,7 @@ const logger = logdown('@wireapp/core/main/Account(SmokeTest)', {
 });
 logger.state.isEnabled = true;
 
+// Note: We need to listen to the "WILL_RELEASE" environment variable, otherwise our tests get executed on every commit in a Pull Request (PR) which will cause the "login too frequently" backend error for the smoke tests accounts.
 const CAN_RUN =
   process.env.ALICE_EMAIL &&
   process.env.ALICE_PASSWORD &&
