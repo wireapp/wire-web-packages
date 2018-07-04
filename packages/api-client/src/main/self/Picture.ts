@@ -29,7 +29,7 @@ interface Picture {
     nonce: string;
     original_height: number;
     original_width: number;
-    public: true;
+    public: boolean;
     tag: string;
     width: number;
   };
