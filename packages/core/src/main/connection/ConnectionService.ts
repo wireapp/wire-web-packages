@@ -34,6 +34,14 @@ export default class ConnectionService {
       status: ConnectionStatus.IGNORED,
     });
   }
+
+  public createConnection(userId: string): Promise<Connection> {
+    return this.apiClient.connection.api.postConnection({
+      message: ' ',
+      name: ' ',
+      user: userId,
+    });
+  }
 }
 
 export {ConnectionService};

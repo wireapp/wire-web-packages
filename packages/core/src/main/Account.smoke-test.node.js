@@ -17,6 +17,8 @@
  *
  */
 
+//@ts-check
+
 require('dotenv').config();
 
 const {Account} = require('@wireapp/core');
@@ -52,7 +54,20 @@ async function getAccount(email, password) {
   return account;
 }
 
-describe('Account', () => {
+function createConnection(sender, receiver) {
+  return sender.service.connection.createConnection(receiver.apiClient.context.userId);
+}
+
+function acceptConnection(receiver, senderId) {
+  return receiver.service.connection.acceptConnection(senderId);
+}
+
+function sendText(sender, conversationId, message = 'Hello, World!') {
+  const payload = sender.service.conversation.createText('message');
+  return sender.service.conversation.send(conversationId, payload);
+}
+
+fdescribe('Account', () => {
   let alice;
   let bob;
 
@@ -79,7 +94,18 @@ describe('Account', () => {
         return done();
       }
 
-      done();
+      const message = 'Hello, Bob!';
+
+      bob.on(Account.INCOMING.TEXT_MESSAGE, async data => {
+        expect(data.content).toBe(message);
+        done();
+      });
+
+      await bob.listen();
+
+      const {conversation: conversationId, to: connectingUserId} = await createConnection(alice, bob);
+      await acceptConnection(bob, connectingUserId);
+      await sendText(alice, conversationId, message);
     });
   });
 });
