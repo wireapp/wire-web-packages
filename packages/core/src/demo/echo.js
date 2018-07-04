@@ -108,12 +108,12 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
 
   account.on(Account.INCOMING.DELETED, async data => {
     const {conversation: conversationId, id: messageId, from} = data;
-    logger.log(`Deleted message ${messageId} in "${conversationId}" by "${from}".`, data);
+    logger.log(`Deleted message "${messageId}" in "${conversationId}" by "${from}".`, data);
   });
 
   account.on(Account.INCOMING.HIDDEN, async data => {
     const {conversation: conversationId, id: messageId, from} = data;
-    logger.log(`Hidden message ${messageId} in "${conversationId}" by "${from}".`, data);
+    logger.log(`Hidden message "${messageId}" in "${conversationId}" by "${from}".`, data);
   });
 
   try {
