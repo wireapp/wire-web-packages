@@ -36,7 +36,11 @@ const logger = logdown('@wireapp/core/main/Account(SmokeTest)', {
 logger.state.isEnabled = true;
 
 const CAN_RUN =
-  process.env.ALICE_EMAIL && process.env.ALICE_PASSWORD && process.env.BOB_EMAIL && process.env.BOB_PASSWORD;
+  process.env.ALICE_EMAIL &&
+  process.env.ALICE_PASSWORD &&
+  process.env.BOB_EMAIL &&
+  process.env.BOB_PASSWORD &&
+  process.env.WILL_RELEASE === '0';
 
 async function getAccount(email, password) {
   const login = {
