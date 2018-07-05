@@ -32,10 +32,10 @@ class BackendErrorMapper {
     } = {
       [Number(StatusCode.BAD_REQUEST)]: {
         [String(BackendErrorLabel.CLIENT_ERROR)]: {
-          ["[path] 'usr' invalid: Failed reading: Invalid UUID"]: new UnknownUserError('User ID is unknown.'),
           ["[path] 'cnv' invalid: Failed reading: Invalid UUID"]: new UnknownConversationError(
             'Conversation ID is unknown.'
           ),
+          ["[path] 'usr' invalid: Failed reading: Invalid UUID"]: new UnknownUserError('User ID is unknown.'),
         },
       },
     };
