@@ -17,21 +17,21 @@
  *
  */
 
-export class ConversationError extends Error {
-  public name: string = 'ConversationError';
+export class UserError extends Error {
+  public name: string = 'UserError';
 
   constructor(message: string) {
     super(message);
-    Object.setPrototypeOf(this, ConversationError.prototype);
+    Object.setPrototypeOf(this, UserError.prototype);
     this.stack = new Error().stack;
   }
 }
 
-export class UnknownConversationError extends ConversationError {
-  public name: string = 'UnknownConversationError';
+export class UnknownUserError extends UserError {
+  public name: string = 'UnknownUserError';
 
   constructor(message: string) {
     super(message);
-    Object.setPrototypeOf(this, UnknownConversationError.prototype);
+    Object.setPrototypeOf(this, UnknownUserError.prototype);
   }
 }

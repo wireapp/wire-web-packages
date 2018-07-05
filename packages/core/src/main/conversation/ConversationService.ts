@@ -475,6 +475,21 @@ export default class ConversationService {
     });
   }
 
+  public async addUser(conversationId: string, userId: string): Promise<string[]>;
+  public async addUser(conversationId: string, userIds: string[]): Promise<string[]>;
+  public async addUser(conversationId: string, userIds: string | string[]): Promise<string[]> {
+    const ids = typeof userIds === 'string' ? [userIds] : userIds;
+    return this.apiClient.conversation.api
+      .postMembers(conversationId, ids)
+      .then(() => ids)
+      .catch((error: AxiosError) => {
+        if (error && error.response) {
+          throw BackendErrorMapper.mapBackendError(error.response.data as BackendError);
+        }
+        throw error;
+      });
+  }
+
   public async removeUser(conversationId: string, userId: string): Promise<string> {
     return this.apiClient.conversation.api
       .deleteMember(conversationId, userId)

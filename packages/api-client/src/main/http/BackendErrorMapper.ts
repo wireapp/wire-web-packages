@@ -19,6 +19,7 @@
 
 import {UnknownConversationError} from '../conversation/';
 import {BackendError, BackendErrorLabel, StatusCode} from '../http/';
+import {UnknownUserError} from '../user/';
 
 class BackendErrorMapper {
   public static mapBackendError(error: BackendError): Error {
@@ -31,7 +32,8 @@ class BackendErrorMapper {
     } = {
       [Number(StatusCode.BAD_REQUEST)]: {
         [String(BackendErrorLabel.CLIENT_ERROR)]: {
-          ["[path] 'usr' invalid: Failed reading: Invalid UUID"]: new UnknownConversationError(
+          ["[path] 'usr' invalid: Failed reading: Invalid UUID"]: new UnknownUserError('User ID is unknown.'),
+          ["[path] 'cnv' invalid: Failed reading: Invalid UUID"]: new UnknownConversationError(
             'Conversation ID is unknown.'
           ),
         },
@@ -39,8 +41,12 @@ class BackendErrorMapper {
     };
 
     try {
-      return errors[Number(error.code)][error.label][error.message];
-    } catch (error) {
+      const mappedError: Error | undefined = errors[Number(error.code)][error.label][error.message];
+      if (mappedError) {
+        return mappedError;
+      }
+      return new Error(error.message);
+    } catch (mappingError) {
       return new Error(error.message);
     }
   }
