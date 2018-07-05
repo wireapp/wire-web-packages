@@ -484,7 +484,7 @@ export default class ConversationService {
       .then(() => ids)
       .catch((error: AxiosError) => {
         if (error && error.response) {
-          throw BackendErrorMapper.mapBackendError(error.response.data as BackendError);
+          throw BackendErrorMapper.map(error.response.data as BackendError);
         }
         throw error;
       });
@@ -496,7 +496,7 @@ export default class ConversationService {
       .then(() => userId)
       .catch((error: AxiosError) => {
         if (error && error.response) {
-          throw BackendErrorMapper.mapBackendError(error.response.data as BackendError);
+          throw BackendErrorMapper.map(error.response.data as BackendError);
         }
         throw error;
       });
