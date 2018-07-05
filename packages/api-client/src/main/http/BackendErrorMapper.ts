@@ -21,25 +21,25 @@ import {UnknownConversationError} from '../conversation/';
 import {BackendError, BackendErrorLabel, StatusCode} from '../http/';
 import {UnknownUserError} from '../user/';
 
-const BACKEND_ERRORS: {
-  [code: number]: {
-    [label: string]: {
-      [message: string]: Error;
-    };
-  };
-} = {
-  [Number(StatusCode.BAD_REQUEST)]: {
-    [String(BackendErrorLabel.CLIENT_ERROR)]: {
-      ["[path] 'cnv' invalid: Failed reading: Invalid UUID"]: new UnknownConversationError(
-        'Conversation ID is unknown.'
-      ),
-      ["[path] 'usr' invalid: Failed reading: Invalid UUID"]: new UnknownUserError('User ID is unknown.'),
-    },
-  },
-};
-
 class BackendErrorMapper {
   public static map(error: BackendError): Error {
+    const BACKEND_ERRORS: {
+      [code: number]: {
+        [label: string]: {
+          [message: string]: Error;
+        };
+      };
+    } = {
+      [Number(StatusCode.BAD_REQUEST)]: {
+        [String(BackendErrorLabel.CLIENT_ERROR)]: {
+          ["[path] 'cnv' invalid: Failed reading: Invalid UUID"]: new UnknownConversationError(
+            'Conversation ID is unknown.'
+          ),
+          ["[path] 'usr' invalid: Failed reading: Invalid UUID"]: new UnknownUserError('User ID is unknown.'),
+        },
+      },
+    };
+
     try {
       const mappedError: Error | undefined = BACKEND_ERRORS[Number(error.code)][error.label][error.message];
       if (mappedError) {
