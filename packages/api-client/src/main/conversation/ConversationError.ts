@@ -17,12 +17,21 @@
  *
  */
 
-import {BackendErrorLabel, StatusCode} from '../http/';
+export class ConversationError extends Error {
+  public name: string = 'ConversationError';
 
-interface BackendError {
-  code: StatusCode;
-  label: BackendErrorLabel;
-  message: string;
+  constructor(message: string) {
+    super(message);
+    Object.setPrototypeOf(this, ConversationError.prototype);
+    this.stack = new Error().stack;
+  }
 }
 
-export {BackendError};
+export class UnknownConversationError extends ConversationError {
+  public name: string = 'GuestError';
+
+  constructor(message: string) {
+    super(message);
+    Object.setPrototypeOf(this, UnknownConversationError.prototype);
+  }
+}

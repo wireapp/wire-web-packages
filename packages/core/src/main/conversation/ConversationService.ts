@@ -28,6 +28,7 @@ import {CONVERSATION_TYPING} from '@wireapp/api-client/dist/commonjs/event/index
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
 import {AxiosError} from 'axios';
 import {Encoder} from 'bazinga64';
+import {BackendError, BackendErrorMapper} from '../../../../api-client/src/main/http';
 import {
   AssetService,
   ClientActionType,
@@ -472,6 +473,18 @@ export default class ConversationService {
       keyBytes: Buffer.from(otrKey.buffer),
       sha256: Buffer.from(sha256.buffer),
     });
+  }
+
+  public async removeUser(conversationId: string, userId: string): Promise<string> {
+    return this.apiClient.conversation.api
+      .deleteMember(conversationId, userId)
+      .then(() => userId)
+      .catch((error: AxiosError) => {
+        if (error && error.response) {
+          throw BackendErrorMapper.mapBackendError(error.response.data as BackendError);
+        }
+        throw error;
+      });
   }
 
   public async send(
