@@ -25,10 +25,10 @@ import {
   UserClients,
 } from '@wireapp/api-client/dist/commonjs/conversation/index';
 import {CONVERSATION_TYPING} from '@wireapp/api-client/dist/commonjs/event/index';
+import {BackendError, BackendErrorMapper} from '@wireapp/api-client/dist/commonjs/http';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
 import {AxiosError} from 'axios';
 import {Encoder} from 'bazinga64';
-import {BackendError, BackendErrorMapper} from '../../../../api-client/src/main/http';
 import {
   AssetService,
   ClientActionType,
