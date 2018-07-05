@@ -452,7 +452,7 @@ class ConversationAPI {
   }
 
   /**
-   * Add users to an existing conversation
+   * Add users to an existing conversation.
    * @param conversationId The conversation ID to add the users to
    * @param userIds List of user IDs to add to a conversation
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/addMembers
