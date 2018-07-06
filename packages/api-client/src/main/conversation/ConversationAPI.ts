@@ -33,7 +33,7 @@ import {
   NewOTRMessage,
   Typing,
 } from '../conversation/';
-import {ConversationEvent, ConversationMemberJoinEvent} from '../event/ConversationEvent';
+import {ConversationEvent, ConversationMemberJoinEvent, ConversationMemberLeaveEvent} from '../event/';
 import {HttpClient} from '../http/';
 import {ValidationError} from '../validation/';
 
@@ -74,7 +74,7 @@ class ConversationAPI {
    * @param userId The user to remove
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/removeMember
    */
-  public deleteMember(conversationId: string, userId: string): Promise<ConversationEvent> {
+  public deleteMember(conversationId: string, userId: string): Promise<ConversationMemberLeaveEvent> {
     const config: AxiosRequestConfig = {
       method: 'delete',
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.MEMBERS}/${userId}`,
