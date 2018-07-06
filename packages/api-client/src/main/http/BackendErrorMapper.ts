@@ -36,6 +36,7 @@ class BackendErrorMapper {
             'Conversation ID is unknown.'
           ),
           ["[path] 'usr' invalid: Failed reading: Invalid UUID"]: new UnknownUserError('User ID is unknown.'),
+          ['Error in $: Failed reading: satisfy']: new Error(),
         },
       },
     };

@@ -20,6 +20,7 @@
 enum BackendErrorLabel {
   CLIENT_ERROR = 'client-error',
   INVALID_CREDENTIALS = 'invalid-credentials',
+  INVALID_PAYLOAD = 'invalid-payload',
   TOO_MANY_CLIENTS = 'too-many-clients',
   UNKNOWN_CLIENT = 'unknown-client',
 }
