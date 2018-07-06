@@ -174,6 +174,10 @@ describe('Account', () => {
     });
 
     it('creates conversations and add participants.', async done => {
+      if (!CAN_RUN) {
+        return done();
+      }
+
       // Alice connects to Bob
       await connect(
         alice,
