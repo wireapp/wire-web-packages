@@ -17,25 +17,31 @@
  *
  */
 
+import {InvalidCredentialsError, LoginTooFrequentError} from '../auth/';
 import {UnknownConversationError} from '../conversation/';
 import {BackendError, BackendErrorLabel, StatusCode} from '../http/';
 import {UnconnectedUserError, UnknownUserError} from '../user/';
 
 class BackendErrorMapper {
-  public static map(error: BackendError): BackendError {
-    const BACKEND_ERRORS: {
-      [code: number]: {
-        [label: string]: {
-          [message: string]: BackendError;
-        };
+  public static get ERRORS(): {
+    [code: number]: {
+      [label: string]: {
+        [message: string]: BackendError;
       };
-    } = {
+    };
+  } {
+    return {
       [Number(StatusCode.TOO_MANY_REQUESTS)]: {
         [String(BackendErrorLabel.CLIENT_ERROR)]: {
-          ['Logins too frequent']: new BackendError('Logins too frequent. User login temporarily disabled.'),
+          ['Logins too frequent']: new LoginTooFrequentError('Logins too frequent. User login temporarily disabled.'),
         },
       },
       [Number(StatusCode.FORBIDDEN)]: {
+        [String(BackendErrorLabel.INVALID_CREDENTIALS)]: {
+          ['Authentication failed.']: new InvalidCredentialsError(
+            'Authentication failed because of invalid credentials.'
+          ),
+        },
         [String(BackendErrorLabel.NOT_CONNECTED)]: {
           ['Users are not connected']: new UnconnectedUserError('Users are not connected.'),
         },
@@ -50,9 +56,11 @@ class BackendErrorMapper {
         },
       },
     };
+  }
 
+  public static map(error: BackendError): BackendError {
     try {
-      const mappedError: BackendError | undefined = BACKEND_ERRORS[Number(error.code)][error.label][
+      const mappedError: BackendError | undefined = BackendErrorMapper.ERRORS[Number(error.code)][error.label][
         error.message
       ] as BackendError;
       if (mappedError) {
