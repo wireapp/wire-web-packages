@@ -26,7 +26,6 @@ import {
   UserClients,
 } from '@wireapp/api-client/dist/commonjs/conversation/';
 import {CONVERSATION_TYPING, ConversationMemberLeaveEvent} from '@wireapp/api-client/dist/commonjs/event/';
-import {BackendError, BackendErrorMapper} from '@wireapp/api-client/dist/commonjs/http';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
 import {AxiosError} from 'axios';
 import {Encoder} from 'bazinga64';
@@ -460,12 +459,7 @@ export default class ConversationService {
       userId = this.apiClient.context.userId;
     }
 
-    return this.apiClient.conversation.api.deleteMember(conversationId, userId).catch(error => {
-      if (error && error.response) {
-        throw BackendErrorMapper.map(error.response.data as BackendError);
-      }
-      throw error;
-    });
+    return this.apiClient.conversation.api.deleteMember(conversationId, userId);
   }
 
   public createConversation(name: string, otherUserIds: string | string[] = []): Promise<Conversation> {
@@ -476,12 +470,7 @@ export default class ConversationService {
       users: ids,
     };
 
-    return this.apiClient.conversation.api.postConversation(newConversation).catch(error => {
-      if (error && error.response) {
-        throw BackendErrorMapper.map(error.response.data as BackendError);
-      }
-      throw error;
-    });
+    return this.apiClient.conversation.api.postConversation(newConversation);
   }
 
   public async getConversations(conversationId: string): Promise<Conversation>;
@@ -509,29 +498,12 @@ export default class ConversationService {
   public async addUser(conversationId: string, userIds: string[]): Promise<string[]>;
   public async addUser(conversationId: string, userIds: string | string[]): Promise<string | string[]> {
     const ids = typeof userIds === 'string' ? [userIds] : userIds;
-
-    try {
-      await this.apiClient.conversation.api.postMembers(conversationId, ids);
-    } catch (error) {
-      if (error && error.response) {
-        throw BackendErrorMapper.map(error.response.data as BackendError);
-      }
-      throw error;
-    }
-
+    await this.apiClient.conversation.api.postMembers(conversationId, ids);
     return userIds;
   }
 
   public async removeUser(conversationId: string, userId: string): Promise<string> {
-    try {
-      await this.apiClient.conversation.api.deleteMember(conversationId, userId);
-    } catch (error) {
-      if (error && error.response) {
-        throw BackendErrorMapper.map(error.response.data as BackendError);
-      }
-      throw error;
-    }
-
+    await this.apiClient.conversation.api.deleteMember(conversationId, userId);
     return userId;
   }
 
