@@ -19,24 +19,34 @@
 
 import {UnknownConversationError} from '../conversation/';
 import {BackendError, BackendErrorLabel, StatusCode} from '../http/';
-import {UnknownUserError} from '../user/';
+import {UnconnectedUserError, UnknownUserError} from '../user/';
 
 class BackendErrorMapper {
   public static map(error: BackendError): BackendError {
     const BACKEND_ERRORS: {
       [code: number]: {
         [label: string]: {
-          [message: string]: Error;
+          [message: string]: BackendError;
         };
       };
     } = {
+      [Number(StatusCode.TOO_MANY_REQUESTS)]: {
+        [String(BackendErrorLabel.CLIENT_ERROR)]: {
+          ['Logins too frequent']: new BackendError('Logins too frequent. User login temporarily disabled.'),
+        },
+      },
+      [Number(StatusCode.FORBIDDEN)]: {
+        [String(BackendErrorLabel.NOT_CONNECTED)]: {
+          ['Users are not connected']: new UnconnectedUserError('Users are not connected.'),
+        },
+      },
       [Number(StatusCode.BAD_REQUEST)]: {
         [String(BackendErrorLabel.CLIENT_ERROR)]: {
           ["[path] 'cnv' invalid: Failed reading: Invalid UUID"]: new UnknownConversationError(
             'Conversation ID is unknown.'
           ),
           ["[path] 'usr' invalid: Failed reading: Invalid UUID"]: new UnknownUserError('User ID is unknown.'),
-          ['Error in $: Failed reading: satisfy']: new Error(),
+          ['Error in $: Failed reading: satisfy']: new BackendError('Wrong set of parameters.'),
         },
       },
     };

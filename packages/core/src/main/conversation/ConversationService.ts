@@ -20,11 +20,12 @@
 import {
   ClientMismatch,
   Conversation,
+  NewConversation,
   NewOTRMessage,
   OTRRecipients,
   UserClients,
-} from '@wireapp/api-client/dist/commonjs/conversation/index';
-import {CONVERSATION_TYPING} from '@wireapp/api-client/dist/commonjs/event/index';
+} from '@wireapp/api-client/dist/commonjs/conversation/';
+import {CONVERSATION_TYPING, ConversationMemberLeaveEvent} from '@wireapp/api-client/dist/commonjs/event/';
 import {BackendError, BackendErrorMapper} from '@wireapp/api-client/dist/commonjs/http';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
 import {AxiosError} from 'axios';
@@ -452,6 +453,35 @@ export default class ConversationService {
       state: PayloadBundleState.OUTGOING_SENT,
       type: GenericMessageType.DELETED,
     };
+  }
+
+  public leaveConversation(conversationId: string, userId: string = ''): Promise<ConversationMemberLeaveEvent> {
+    if (userId.length === 0 && this.apiClient.context) {
+      userId = this.apiClient.context.userId;
+    }
+
+    return this.apiClient.conversation.api.deleteMember(conversationId, userId).catch(error => {
+      if (error && error.response) {
+        throw BackendErrorMapper.map(error.response.data as BackendError);
+      }
+      throw error;
+    });
+  }
+
+  public createConversation(name: string, otherUserIds: string | string[] = []): Promise<Conversation> {
+    const ids = typeof otherUserIds === 'string' ? [otherUserIds] : otherUserIds;
+
+    const newConversation: NewConversation = {
+      name,
+      users: ids,
+    };
+
+    return this.apiClient.conversation.api.postConversation(newConversation).catch(error => {
+      if (error && error.response) {
+        throw BackendErrorMapper.map(error.response.data as BackendError);
+      }
+      throw error;
+    });
   }
 
   public async getConversations(conversationId: string): Promise<Conversation>;

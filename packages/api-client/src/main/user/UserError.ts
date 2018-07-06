@@ -38,3 +38,15 @@ export class UnknownUserError extends UserError {
     this.name = 'UnknownUserError';
   }
 }
+
+export class UnconnectedUserError extends UserError {
+  constructor(
+    message: string,
+    label: BackendErrorLabel = BackendErrorLabel.NOT_CONNECTED,
+    code: StatusCode = StatusCode.FORBIDDEN
+  ) {
+    super(message, label, code);
+    Object.setPrototypeOf(this, UnknownUserError.prototype);
+    this.name = 'UnconnectedUserError';
+  }
+}

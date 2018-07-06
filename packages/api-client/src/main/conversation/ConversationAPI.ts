@@ -462,7 +462,7 @@ class ConversationAPI {
       data: {
         users: userIds,
       },
-      method: 'put',
+      method: 'post',
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.MEMBERS}`,
     };
 
