@@ -18,7 +18,7 @@
  */
 
 export class UserError extends Error {
-  public name: string = 'UserError';
+  public name = 'UserError';
 
   constructor(message: string) {
     super(message);
@@ -28,7 +28,7 @@ export class UserError extends Error {
 }
 
 export class UnknownUserError extends UserError {
-  public name: string = 'UnknownUserError';
+  public name = 'UnknownUserError';
 
   constructor(message: string) {
     super(message);

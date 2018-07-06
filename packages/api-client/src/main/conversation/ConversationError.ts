@@ -18,7 +18,7 @@
  */
 
 export class ConversationError extends Error {
-  public name: string = 'ConversationError';
+  public name = 'ConversationError';
 
   constructor(message: string) {
     super(message);
@@ -28,7 +28,7 @@ export class ConversationError extends Error {
 }
 
 export class UnknownConversationError extends ConversationError {
-  public name: string = 'UnknownConversationError';
+  public name = 'UnknownConversationError';
 
   constructor(message: string) {
     super(message);
