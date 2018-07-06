@@ -475,13 +475,13 @@ export default class ConversationService {
     });
   }
 
-  public async addUser(conversationId: string, userId: string): Promise<string[]>;
+  public async addUser(conversationId: string, userId: string): Promise<string>;
   public async addUser(conversationId: string, userIds: string[]): Promise<string[]>;
-  public async addUser(conversationId: string, userIds: string | string[]): Promise<string[]> {
+  public async addUser(conversationId: string, userIds: string | string[]): Promise<string | string[]> {
     const ids = typeof userIds === 'string' ? [userIds] : userIds;
     return this.apiClient.conversation.api
       .postMembers(conversationId, ids)
-      .then(() => ids)
+      .then(() => userIds)
       .catch((error: AxiosError) => {
         if (error && error.response) {
           throw BackendErrorMapper.map(error.response.data as BackendError);
