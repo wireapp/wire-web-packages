@@ -17,21 +17,24 @@
  *
  */
 
-export class ConversationError extends Error {
-  public name = 'ConversationError';
+import {BackendError, BackendErrorLabel, StatusCode} from '../http/';
 
-  constructor(message: string) {
-    super(message);
+export class ConversationError extends BackendError {
+  constructor(message: string, label: BackendErrorLabel, code: StatusCode) {
+    super(message, label, code);
     Object.setPrototypeOf(this, ConversationError.prototype);
-    this.stack = new Error().stack;
+    this.name = 'ConversationError';
   }
 }
 
 export class UnknownConversationError extends ConversationError {
-  public name = 'UnknownConversationError';
-
-  constructor(message: string) {
-    super(message);
+  constructor(
+    message: string,
+    label: BackendErrorLabel = BackendErrorLabel.CLIENT_ERROR,
+    code: StatusCode = StatusCode.BAD_REQUEST
+  ) {
+    super(message, label, code);
     Object.setPrototypeOf(this, UnknownConversationError.prototype);
+    this.name = 'UnknownConversationError';
   }
 }

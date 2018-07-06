@@ -17,21 +17,24 @@
  *
  */
 
-export class UserError extends Error {
-  public name = 'UserError';
+import {BackendError, BackendErrorLabel, StatusCode} from '../http/';
 
-  constructor(message: string) {
-    super(message);
+export class UserError extends BackendError {
+  constructor(message: string, label: BackendErrorLabel, code: StatusCode) {
+    super(message, label, code);
     Object.setPrototypeOf(this, UserError.prototype);
-    this.stack = new Error().stack;
+    this.name = 'UserError';
   }
 }
 
 export class UnknownUserError extends UserError {
-  public name = 'UnknownUserError';
-
-  constructor(message: string) {
-    super(message);
+  constructor(
+    message: string,
+    label: BackendErrorLabel = BackendErrorLabel.CLIENT_ERROR,
+    code: StatusCode = StatusCode.BAD_REQUEST
+  ) {
+    super(message, label, code);
     Object.setPrototypeOf(this, UnknownUserError.prototype);
+    this.name = 'UnknownUserError';
   }
 }

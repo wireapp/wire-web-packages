@@ -22,7 +22,7 @@ import {BackendError, BackendErrorLabel, StatusCode} from '../http/';
 import {UnknownUserError} from '../user/';
 
 class BackendErrorMapper {
-  public static map(error: BackendError): Error {
+  public static map(error: BackendError): BackendError {
     const BACKEND_ERRORS: {
       [code: number]: {
         [label: string]: {
@@ -42,13 +42,15 @@ class BackendErrorMapper {
     };
 
     try {
-      const mappedError: Error | undefined = BACKEND_ERRORS[Number(error.code)][error.label][error.message];
+      const mappedError: BackendError | undefined = BACKEND_ERRORS[Number(error.code)][error.label][
+        error.message
+      ] as BackendError;
       if (mappedError) {
         return mappedError;
       }
-      return new Error(error.message);
+      return new BackendError(error.message);
     } catch (mappingError) {
-      return new Error(error.message);
+      return new BackendError(error.message);
     }
   }
 }
