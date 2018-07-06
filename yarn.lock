@@ -8017,9 +8017,9 @@ sinon-har-server@0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/sinon-har-server/-/sinon-har-server-0.3.0.tgz#d767b51a2f6f34856ecd9867ff98f97bacfbde6b"
 
-sinon@6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/sinon/-/sinon-6.1.0.tgz#9ee3d3900616333078464aa3969ba5688456fea3"
+sinon@6.1.2:
+  version "6.1.2"
+  resolved "https://registry.yarnpkg.com/sinon/-/sinon-6.1.2.tgz#bb21d99e3ca7c9cf2913dd4f09f546e6876d343b"
   dependencies:
     "@sinonjs/formatio" "^2.0.0"
     diff "^3.5.0"
