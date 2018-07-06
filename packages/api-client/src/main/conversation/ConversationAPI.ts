@@ -457,7 +457,7 @@ class ConversationAPI {
    * @param userIds List of user IDs to add to a conversation
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/addMembers
    */
-  public async postMembers(conversationId: string, userIds: string[]): Promise<ConversationMemberJoinEvent> {
+  public postMembers(conversationId: string, userIds: string[]): Promise<ConversationMemberJoinEvent> {
     const config: AxiosRequestConfig = {
       data: {
         users: userIds,

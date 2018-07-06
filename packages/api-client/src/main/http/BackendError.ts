@@ -24,7 +24,11 @@ class BackendError extends Error {
   label: BackendErrorLabel;
   message: string;
 
-  constructor(message: string, label: BackendErrorLabel = BackendErrorLabel.UNKNOWN_ERROR, code: number = -1) {
+  constructor(
+    message: string,
+    label: BackendErrorLabel = BackendErrorLabel.UNKNOWN,
+    code: StatusCode = StatusCode.UNKNOWN
+  ) {
     super(message);
     this.code = code;
     this.label = label;

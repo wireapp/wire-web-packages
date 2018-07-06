@@ -45,7 +45,7 @@ enum BackendErrorLabel {
   TOO_MANY_MEMBERS = 'too-many-members',
   TOO_MANY_TEAM_MEMBERS = 'too-many-team-members',
   UNKNOWN_CLIENT = 'unknown-client',
-  UNKNOWN_ERROR = 'unknown-error', // defined by web team
+  UNKNOWN = 'unknown-error', // defined by web team
 }
 
 export {BackendErrorLabel};
