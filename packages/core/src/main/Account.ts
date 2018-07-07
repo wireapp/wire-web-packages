@@ -303,7 +303,7 @@ class Account extends EventEmitter {
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
-          time: event.time,
+          timestamp: new Date(event.time).getTime(),
           type: genericMessage.content,
         };
       }
@@ -317,7 +317,7 @@ class Account extends EventEmitter {
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
-          time: event.time,
+          timestamp: new Date(event.time).getTime(),
           type: genericMessage.content,
         };
       }
@@ -332,7 +332,7 @@ class Account extends EventEmitter {
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
-          time: event.time,
+          timestamp: new Date(event.time).getTime(),
           type: genericMessage.content,
         };
       }
@@ -344,7 +344,7 @@ class Account extends EventEmitter {
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
-          time: event.time,
+          timestamp: new Date(event.time).getTime(),
           type: genericMessage.content,
         };
       }
