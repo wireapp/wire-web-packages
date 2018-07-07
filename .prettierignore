@@ -1,5 +1,6 @@
 **/.tmp/**
 **/bin/**
+**/coverage/**
 **/dist/**
 **/temp/**
 bower_components
