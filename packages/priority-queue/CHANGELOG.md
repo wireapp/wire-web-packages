@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.1.56"></a>
+## [0.1.56](https://github.com/wireapp/wire-web-packages/tree/master/packages/priority-queue/compare/@wireapp/priority-queue@0.1.55...@wireapp/priority-queue@0.1.56) (2018-07-06)
+
+
+
+
+**Note:** Version bump only for package @wireapp/priority-queue
+
+<a name="0.1.55"></a>
+## [0.1.55](https://github.com/wireapp/wire-web-packages/tree/master/packages/priority-queue/compare/@wireapp/priority-queue@0.1.54...@wireapp/priority-queue@0.1.55) (2018-07-05)
+
+
+
+
+**Note:** Version bump only for package @wireapp/priority-queue
+
+<a name="0.1.54"></a>
+## [0.1.54](https://github.com/wireapp/wire-web-packages/tree/master/packages/priority-queue/compare/@wireapp/priority-queue@0.1.53...@wireapp/priority-queue@0.1.54) (2018-07-02)
+
+
+
+
+**Note:** Version bump only for package @wireapp/priority-queue
+
+<a name="0.1.53"></a>
+## [0.1.53](https://github.com/wireapp/wire-web-packages/tree/master/packages/priority-queue/compare/@wireapp/priority-queue@0.1.52...@wireapp/priority-queue@0.1.53) (2018-06-29)
+
+
+
+
+**Note:** Version bump only for package @wireapp/priority-queue
+
+<a name="0.1.52"></a>
+## [0.1.52](https://github.com/wireapp/wire-web-packages/tree/master/packages/priority-queue/compare/@wireapp/priority-queue@0.1.51...@wireapp/priority-queue@0.1.52) (2018-06-29)
+
+
+
+
+**Note:** Version bump only for package @wireapp/priority-queue
+
 <a name="0.1.51"></a>
 ## [0.1.51](https://github.com/wireapp/wire-web-packages/tree/master/packages/priority-queue/compare/@wireapp/priority-queue@0.1.50...@wireapp/priority-queue@0.1.51) (2018-06-27)
 

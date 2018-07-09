@@ -2,16 +2,16 @@
 //@ts-check
 
 process.on('uncaughtException', error =>
-  console.error(`Uncaught exception "${error.constructor.name}" (code: ${error.code}): ${error.message}`, error)
+  console.error(`Uncaught exception "${error.constructor.name}": ${error.message}`, error)
 );
 process.on('unhandledRejection', error =>
-  console.error(`Uncaught rejection "${error.constructor.name}" (code: ${error.code}): ${error.message}`, error)
+  console.error(`Uncaught rejection "${error.constructor.name}": ${error.message}`, error)
 );
 
 const logdown = require('logdown');
 const path = require('path');
 const TimeUnits = require('./TimeUnits');
-require('dotenv').config({path: path.join(__dirname, 'echo2.env')});
+require('dotenv').config({path: path.join(__dirname, 'sender.env')});
 
 const logger = logdown('@wireapp/core/demo/sender.js', {
   logger: console,
@@ -21,7 +21,7 @@ logger.state.isEnabled = true;
 
 const {Account} = require('@wireapp/core');
 const APIClient = require('@wireapp/api-client');
-const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/ClientType');
+const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/');
 const {Config} = require('@wireapp/api-client/dist/commonjs/Config');
 const {FileEngine} = require('@wireapp/store-engine');
 
@@ -50,7 +50,7 @@ const {FileEngine} = require('@wireapp/store-engine');
   logger.log('Client ID', account.service.self.apiClient.context.clientId);
 
   async function sendAndDeleteMessage() {
-    const deleteTextPayload = await account.service.conversation.createText('Delete me!');
+    const deleteTextPayload = account.service.conversation.createText('Delete me!');
     const {id: messageId} = await account.service.conversation.send(CONVERSATION_ID, deleteTextPayload);
 
     const fiveSecondsInMillis = 5000;
@@ -67,20 +67,20 @@ const {FileEngine} = require('@wireapp/store-engine');
 
   async function sendEphemeralText(expiry = MESSAGE_TIMER) {
     account.service.conversation.messageTimer.setMessageLevelTimer(CONVERSATION_ID, expiry);
-    const payload = await account.service.conversation.createText(`Expires after ${expiry}ms ...`);
+    const payload = account.service.conversation.createText(`Expires after ${expiry}ms ...`);
     await account.service.conversation.send(CONVERSATION_ID, payload);
     account.service.conversation.messageTimer.setMessageLevelTimer(CONVERSATION_ID, 0);
   }
 
   async function sendPing(expiry = MESSAGE_TIMER) {
     account.service.conversation.messageTimer.setMessageLevelTimer(CONVERSATION_ID, expiry);
-    const payload = await account.service.conversation.createPing();
+    const payload = account.service.conversation.createPing();
     await account.service.conversation.send(CONVERSATION_ID, payload);
     account.service.conversation.messageTimer.setMessageLevelTimer(CONVERSATION_ID, 0);
   }
 
   async function sendText() {
-    const payload = await account.service.conversation.createText('Hello, World!');
+    const payload = account.service.conversation.createText('Hello, World!');
     await account.service.conversation.send(CONVERSATION_ID, payload);
   }
 

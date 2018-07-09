@@ -17,11 +17,4 @@
  *
  */
 
-interface Image {
-  data: Buffer;
-  height: number;
-  type: string;
-  width: number;
-}
-
-export default Image;
+export * from './AudioPreference';

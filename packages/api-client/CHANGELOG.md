@@ -3,6 +3,105 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="1.7.0"></a>
+# [1.7.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.6.2...@wireapp/api-client@1.7.0) (2018-07-07)
+
+
+### Bug Fixes
+
+* **api-client:** Stricter backend error check ([9e78b2b](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/9e78b2b))
+
+
+### Features
+
+* **core:** Add and remove conversation participants ([#803](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/803)) ([3ffec6d](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/3ffec6d))
+
+
+
+
+<a name="1.6.2"></a>
+## [1.6.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.6.1...@wireapp/api-client@1.6.2) (2018-07-06)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.6.1"></a>
+## [1.6.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.6.0...@wireapp/api-client@1.6.1) (2018-07-05)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.6.0"></a>
+# [1.6.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.5.7...@wireapp/api-client@1.6.0) (2018-07-04)
+
+
+### Features
+
+* **core:** Send and receive connection requests ([#798](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/798)) ([cd118e8](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/cd118e8))
+
+
+
+
+<a name="1.5.7"></a>
+## [1.5.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.5.6...@wireapp/api-client@1.5.7) (2018-07-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.5.6"></a>
+## [1.5.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.5.5...@wireapp/api-client@1.5.6) (2018-07-02)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.5.5"></a>
+## [1.5.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.5.4...@wireapp/api-client@1.5.5) (2018-07-02)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.5.4"></a>
+## [1.5.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.5.3...@wireapp/api-client@1.5.4) (2018-06-29)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.5.3"></a>
+## [1.5.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.5.2...@wireapp/api-client@1.5.3) (2018-06-29)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.5.2"></a>
+## [1.5.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.5.1...@wireapp/api-client@1.5.2) (2018-06-29)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.5.1"></a>
+## [1.5.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.5.0...@wireapp/api-client@1.5.1) (2018-06-29)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
 <a name="1.5.0"></a>
 # [1.5.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.4.3...@wireapp/api-client@1.5.0) (2018-06-27)
 

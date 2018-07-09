@@ -17,10 +17,26 @@
  *
  */
 
-interface BackendError {
-  code: number;
-  label: string;
+import {BackendErrorLabel, StatusCode} from '../http/';
+
+class BackendError extends Error {
+  code: StatusCode;
+  label: BackendErrorLabel;
   message: string;
+
+  constructor(
+    message: string,
+    label: BackendErrorLabel = BackendErrorLabel.UNKNOWN,
+    code: StatusCode = StatusCode.UNKNOWN
+  ) {
+    super(message);
+    this.code = code;
+    this.label = label;
+    this.message = message;
+    // @see
+    // https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
+    Object.setPrototypeOf(this, BackendError.prototype);
+  }
 }
 
 export {BackendError};

@@ -64,8 +64,11 @@ import {
   LinkedInIcon,
   Loading,
   Logo,
+  MenuItem,
+  MenuModal,
   MessageIcon,
   Modal,
+  MoreIcon,
   MuteIcon,
   Muted,
   OptionsIcon,
@@ -96,6 +99,7 @@ let shakebox = null;
 class Demo extends React.PureComponent {
   state = {
     isFullscreenModalOpen: false,
+    isMenuModalOpen: false,
     isModalOpen: false,
   };
 
@@ -122,13 +126,22 @@ class Demo extends React.PureComponent {
       <StyledApp>
         {this.state.isModalOpen && (
           <Modal onClose={() => this.setState({isModalOpen: false})}>
-            <H1>Normal Modal</H1>
+            <Text>Normal Modal</Text>
           </Modal>
         )}
         {this.state.isFullscreenModalOpen && (
           <Modal fullscreen onClose={() => this.setState({isFullscreenModalOpen: false})}>
             <H1>Fullscreen Modal</H1>
           </Modal>
+        )}
+        {this.state.isMenuModalOpen && (
+          <MenuModal onBackgroundClick={() => this.setState({isMenuModalOpen: false})}>
+            <MenuItem onClick={() => this.setState({isMenuModalOpen: false})}>Like</MenuItem>
+            <MenuItem onClick={() => this.setState({isMenuModalOpen: false})}>Edit</MenuItem>
+            <MenuItem onClick={() => this.setState({isMenuModalOpen: false})}>Delete for me...</MenuItem>
+            <MenuItem onClick={() => this.setState({isMenuModalOpen: false})}>Delete for everyone...</MenuItem>
+            <MenuItem onClick={() => this.setState({isMenuModalOpen: false})}>Cancel</MenuItem>
+          </MenuModal>
         )}
         <Header>
           <Logo width={72} />
@@ -154,6 +167,7 @@ class Demo extends React.PureComponent {
               <AttachmentIcon height={32} />
               <PingIcon height={32} />
               <MuteIcon height={32} />
+              <MoreIcon height={32} />
               <CamIcon width={32} />
               <SpeakerIcon height={32} />
               <HangupIcon width={32} />
@@ -391,6 +405,12 @@ class Demo extends React.PureComponent {
               <Column>Full screen</Column>
               <Column>
                 <Button onClick={() => this.setState({isFullscreenModalOpen: true})}>Open</Button>
+              </Column>
+            </Columns>
+            <Columns>
+              <Column>MenuModal</Column>
+              <Column>
+                <Button onClick={() => this.setState({isMenuModalOpen: true})}>Open</Button>
               </Column>
             </Columns>
 

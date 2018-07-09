@@ -20,26 +20,29 @@
 import {
   ClientMismatch,
   Conversation,
+  NewConversation,
   NewOTRMessage,
   OTRRecipients,
   UserClients,
-} from '@wireapp/api-client/dist/commonjs/conversation/index';
-import {CONVERSATION_TYPING} from '@wireapp/api-client/dist/commonjs/event/index';
+} from '@wireapp/api-client/dist/commonjs/conversation/';
+import {CONVERSATION_TYPING, ConversationMemberLeaveEvent} from '@wireapp/api-client/dist/commonjs/event/';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
 import {AxiosError} from 'axios';
 import {Encoder} from 'bazinga64';
 import {
   AssetService,
-  ClientAction,
+  ClientActionType,
+  ConfirmationContent,
   ConfirmationType,
   GenericMessageType,
-  Image,
-  ImageAsset,
+  ImageAssetContent,
+  ImageContent,
   MessageTimer,
   PayloadBundleOutgoing,
   PayloadBundleOutgoingUnsent,
   PayloadBundleState,
   RemoteData,
+  TextContent,
 } from '../conversation/root';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
 import {CryptographyService, EncryptedAsset} from '../cryptography/root';
@@ -96,7 +99,7 @@ export default class ConversationService {
     payloadBundle: PayloadBundleOutgoingUnsent
   ): Promise<PayloadBundleOutgoing> {
     const confirmationMessage = this.protocolBuffers.Confirmation.create({
-      firstMessageId: payloadBundle.content,
+      firstMessageId: (payloadBundle.content as ConfirmationContent).confirmMessageId,
       type: ConfirmationType.DELIVERED,
     });
 
@@ -107,7 +110,12 @@ export default class ConversationService {
 
     await this.sendGenericMessage(this.clientID, conversationId, genericMessage);
 
-    return {...payloadBundle, conversation: conversationId, state: PayloadBundleState.OUTGOING_SENT};
+    return {
+      ...payloadBundle,
+      conversation: conversationId,
+      messageTimer: 0,
+      state: PayloadBundleState.OUTGOING_SENT,
+    };
   }
 
   private async sendExternalGenericMessage(
@@ -163,7 +171,7 @@ export default class ConversationService {
       throw new Error('No content for sendImage provided!');
     }
 
-    const encryptedAsset = payloadBundle.content as ImageAsset;
+    const encryptedAsset = payloadBundle.content as ImageAssetContent;
 
     const imageMetadata = this.protocolBuffers.Asset.ImageMetaData.create({
       height: encryptedAsset.image.height,
@@ -204,7 +212,12 @@ export default class ConversationService {
     const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
 
     await this.sendExternalGenericMessage(this.clientID, conversationId, payload, preKeyBundles as UserPreKeyBundleMap);
-    return {...payloadBundle, conversation: conversationId, state: PayloadBundleState.OUTGOING_SENT};
+    return {
+      ...payloadBundle,
+      conversation: conversationId,
+      messageTimer: this.messageTimer.getMessageTimer(conversationId),
+      state: PayloadBundleState.OUTGOING_SENT,
+    };
   }
 
   private sendOTRMessage(
@@ -235,7 +248,12 @@ export default class ConversationService {
 
     await this.sendGenericMessage(this.clientID, conversationId, genericMessage);
 
-    return {...payloadBundle, conversation: conversationId, state: PayloadBundleState.OUTGOING_SENT};
+    return {
+      ...payloadBundle,
+      conversation: conversationId,
+      messageTimer: this.messageTimer.getMessageTimer(conversationId),
+      state: PayloadBundleState.OUTGOING_SENT,
+    };
   }
 
   private async sendSessionReset(
@@ -243,13 +261,18 @@ export default class ConversationService {
     payloadBundle: PayloadBundleOutgoingUnsent
   ): Promise<PayloadBundleOutgoing> {
     const sessionReset = this.protocolBuffers.GenericMessage.create({
-      [GenericMessageType.CLIENT_ACTION]: ClientAction.RESET_SESSION,
+      [GenericMessageType.CLIENT_ACTION]: ClientActionType.RESET_SESSION,
       messageId: payloadBundle.id,
     });
 
     await this.sendGenericMessage(this.clientID, conversationId, sessionReset);
 
-    return {...payloadBundle, conversation: conversationId, state: PayloadBundleState.OUTGOING_SENT};
+    return {
+      ...payloadBundle,
+      conversation: conversationId,
+      messageTimer: this.messageTimer.getMessageTimer(conversationId),
+      state: PayloadBundleState.OUTGOING_SENT,
+    };
   }
 
   private async sendText(
@@ -259,11 +282,15 @@ export default class ConversationService {
     const payloadBundle: PayloadBundleOutgoing = {
       ...originalPayloadBundle,
       conversation: conversationId,
+      messageTimer: this.messageTimer.getMessageTimer(conversationId),
       state: PayloadBundleState.OUTGOING_SENT,
     };
+
     let genericMessage = this.protocolBuffers.GenericMessage.create({
       messageId: payloadBundle.id,
-      [GenericMessageType.TEXT]: this.protocolBuffers.Text.create({content: payloadBundle.content}),
+      [GenericMessageType.TEXT]: this.protocolBuffers.Text.create({
+        content: (payloadBundle.content as TextContent).text,
+      }),
     });
 
     const expireAfterMillis = this.messageTimer.getMessageTimer(conversationId);
@@ -314,7 +341,7 @@ export default class ConversationService {
   }
 
   public async createImage(
-    image: Image,
+    image: ImageContent,
     messageId: string = ConversationService.createId()
   ): Promise<PayloadBundleOutgoingUnsent> {
     const imageAsset = await this.assetService.uploadImageAsset(image);
@@ -331,9 +358,9 @@ export default class ConversationService {
     };
   }
 
-  public createText(message: string, messageId: string = ConversationService.createId()): PayloadBundleOutgoingUnsent {
+  public createText(text: string, messageId: string = ConversationService.createId()): PayloadBundleOutgoingUnsent {
     return {
-      content: message,
+      content: {text},
       from: this.apiClient.context!.userId,
       id: messageId,
       state: PayloadBundleState.OUTGOING_UNSENT,
@@ -346,7 +373,7 @@ export default class ConversationService {
     messageId: string = ConversationService.createId()
   ): PayloadBundleOutgoingUnsent {
     return {
-      content: confirmMessageId,
+      content: {confirmMessageId},
       from: this.apiClient.context!.userId,
       id: messageId,
       state: PayloadBundleState.OUTGOING_UNSENT,
@@ -365,7 +392,7 @@ export default class ConversationService {
 
   public createSessionReset(messageId: string = ConversationService.createId()): PayloadBundleOutgoingUnsent {
     return {
-      content: String(ClientAction.RESET_SESSION),
+      content: ClientActionType.RESET_SESSION,
       from: this.apiClient.context!.userId,
       id: messageId,
       state: PayloadBundleState.OUTGOING_UNSENT,
@@ -394,6 +421,7 @@ export default class ConversationService {
       conversation: conversationId,
       from: this.apiClient.context!.userId,
       id: messageId,
+      messageTimer: this.messageTimer.getMessageTimer(conversationId),
       state: PayloadBundleState.OUTGOING_SENT,
       type: GenericMessageType.HIDDEN,
     };
@@ -420,9 +448,29 @@ export default class ConversationService {
       conversation: conversationId,
       from: this.apiClient.context!.userId,
       id: messageId,
+      messageTimer: this.messageTimer.getMessageTimer(conversationId),
       state: PayloadBundleState.OUTGOING_SENT,
       type: GenericMessageType.DELETED,
     };
+  }
+
+  public leaveConversation(conversationId: string, userId: string = ''): Promise<ConversationMemberLeaveEvent> {
+    if (userId.length === 0 && this.apiClient.context) {
+      userId = this.apiClient.context.userId;
+    }
+
+    return this.apiClient.conversation.api.deleteMember(conversationId, userId);
+  }
+
+  public createConversation(name: string, otherUserIds: string | string[] = []): Promise<Conversation> {
+    const ids = typeof otherUserIds === 'string' ? [otherUserIds] : otherUserIds;
+
+    const newConversation: NewConversation = {
+      name,
+      users: ids,
+    };
+
+    return this.apiClient.conversation.api.postConversation(newConversation);
   }
 
   public async getConversations(conversationId: string): Promise<Conversation>;
@@ -446,6 +494,19 @@ export default class ConversationService {
     });
   }
 
+  public async addUser(conversationId: string, userId: string): Promise<string>;
+  public async addUser(conversationId: string, userIds: string[]): Promise<string[]>;
+  public async addUser(conversationId: string, userIds: string | string[]): Promise<string | string[]> {
+    const ids = typeof userIds === 'string' ? [userIds] : userIds;
+    await this.apiClient.conversation.api.postMembers(conversationId, ids);
+    return userIds;
+  }
+
+  public async removeUser(conversationId: string, userId: string): Promise<string> {
+    await this.apiClient.conversation.api.deleteMember(conversationId, userId);
+    return userId;
+  }
+
   public async send(
     conversationId: string,
     payloadBundle: PayloadBundleOutgoingUnsent
@@ -453,7 +514,7 @@ export default class ConversationService {
     switch (payloadBundle.type) {
       case GenericMessageType.ASSET: {
         if (payloadBundle.content) {
-          if ((payloadBundle.content as ImageAsset).image) {
+          if ((payloadBundle.content as ImageAssetContent).image) {
             return this.sendImage(conversationId, payloadBundle);
           }
           throw new Error(`No send method implemented for sending other assets than images.`);
@@ -461,7 +522,7 @@ export default class ConversationService {
         throw new Error(`No send method implemented for "${payloadBundle.type}" without content".`);
       }
       case GenericMessageType.CLIENT_ACTION: {
-        if (payloadBundle.content === ClientAction.RESET_SESSION) {
+        if (payloadBundle.content === ClientActionType.RESET_SESSION) {
           return this.sendSessionReset(conversationId, payloadBundle);
         }
         throw new Error(

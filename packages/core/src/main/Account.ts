@@ -25,6 +25,9 @@ import {
   ConversationEvent,
   ConversationMessageTimerUpdateEvent,
   ConversationOtrMessageAddEvent,
+  IncomingEvent,
+  USER_EVENT,
+  UserEvent,
 } from '@wireapp/api-client/dist/commonjs/event/index';
 import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/index';
 import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/index';
@@ -34,10 +37,10 @@ import * as Long from 'long';
 import {Root} from 'protobufjs';
 import {LoginSanitizer} from './auth/root';
 import {ClientInfo, ClientService} from './client/root';
+import {ConnectionService} from './connection/root';
 import {
   AssetService,
   ConversationService,
-  DecodedMessage,
   GenericMessageType,
   PayloadBundleIncoming,
   PayloadBundleState,
@@ -61,7 +64,9 @@ class Account extends EventEmitter {
     ASSET: 'Account.INCOMING.ASSET',
     CLIENT_ACTION: 'Account.INCOMING.CLIENT_ACTION',
     CONFIRMATION: 'Account.INCOMING.CONFIRMATION',
+    CONNECTION: 'Account.INCOMING.CONNECTION',
     DELETED: 'Account.INCOMING.DELETED',
+    HIDDEN: 'Account.INCOMING.HIDDEN',
     MESSAGE_TIMER_UPDATE: 'Account.INCOMING.MESSAGE_TIMER_UPDATE',
     PING: 'Account.INCOMING.PING',
     TEXT_MESSAGE: 'Account.INCOMING.TEXT_MESSAGE',
@@ -72,6 +77,7 @@ class Account extends EventEmitter {
   public service?: {
     client: ClientService;
     conversation: ConversationService;
+    connection: ConnectionService;
     cryptography: CryptographyService;
     notification: NotificationService;
     self: SelfService;
@@ -103,6 +109,7 @@ class Account extends EventEmitter {
 
     const cryptographyService = new CryptographyService(this.apiClient, this.apiClient.config.store);
     const clientService = new ClientService(this.apiClient, this.apiClient.config.store, cryptographyService);
+    const connectionService = new ConnectionService(this.apiClient);
     const assetService = new AssetService(this.apiClient);
     const conversationService = new ConversationService(
       this.apiClient,
@@ -115,6 +122,7 @@ class Account extends EventEmitter {
 
     this.service = {
       client: clientService,
+      connection: connectionService,
       conversation: conversationService,
       cryptography: cryptographyService,
       notification: notificationService,
@@ -252,13 +260,14 @@ class Account extends EventEmitter {
       .then(() => this);
   }
 
-  private async decodeGenericMessage(otrMessage: ConversationOtrMessageAddEvent): Promise<DecodedMessage> {
+  private async decodeGenericMessage(otrMessage: ConversationOtrMessageAddEvent): Promise<PayloadBundleIncoming> {
     if (!this.service) {
       throw new Error('Services are not set.');
     }
 
     const {
       from,
+      conversation,
       data: {sender, text: cipherText},
     } = otrMessage;
 
@@ -266,30 +275,91 @@ class Account extends EventEmitter {
     const decryptedMessage = await this.service.cryptography.decrypt(sessionId, cipherText);
     const genericMessage = this.protocolBuffers.GenericMessage.decode(decryptedMessage);
 
-    const contentBody = genericMessage.ephemeral ? genericMessage.ephemeral.text : genericMessage.text;
-    const messageTimer = genericMessage.ephemeral ? (genericMessage.ephemeral.expireAfterMillis as Long).toNumber() : 0;
-    const type = genericMessage.ephemeral ? genericMessage.ephemeral.content : genericMessage.content;
-
-    return {
-      content: contentBody && contentBody.content,
-      id: genericMessage.messageId,
-      messageTimer,
-      type,
-    };
+    if (genericMessage.content === GenericMessageType.EPHEMERAL) {
+      const unwrappedMessage = this.mapGenericMessage(genericMessage.ephemeral, conversation, from);
+      const expireAfterMillis = genericMessage.ephemeral.expireAfterMillis;
+      unwrappedMessage.messageTimer = expireAfterMillis.toNumber
+        ? (expireAfterMillis as Long).toNumber()
+        : expireAfterMillis;
+      return unwrappedMessage;
+    } else {
+      return this.mapGenericMessage(genericMessage, conversation, from);
+    }
   }
 
-  private async handleEvent(event: ConversationEvent): Promise<PayloadBundleIncoming | ConversationEvent | void> {
+  private mapGenericMessage(genericMessage: any, conversation: string, from: string): PayloadBundleIncoming {
+    switch (genericMessage.content) {
+      case GenericMessageType.TEXT: {
+        return {
+          content: {
+            text: genericMessage.text.content,
+          },
+          conversation,
+          from,
+          id: genericMessage.messageId,
+          messageTimer: 0,
+          state: PayloadBundleState.INCOMING,
+          type: genericMessage.content,
+        };
+      }
+      case GenericMessageType.DELETED: {
+        return {
+          content: {
+            originalMessageId: genericMessage.deleted.messageId,
+          },
+          conversation,
+          from,
+          id: genericMessage.messageId,
+          messageTimer: 0,
+          state: PayloadBundleState.INCOMING,
+          type: genericMessage.content,
+        };
+      }
+      case GenericMessageType.HIDDEN: {
+        return {
+          content: {
+            conversationId: genericMessage.hidden.conversationId,
+            originalMessageId: genericMessage.hidden.messageId,
+          },
+          conversation,
+          from,
+          id: genericMessage.messageId,
+          messageTimer: 0,
+          state: PayloadBundleState.INCOMING,
+          type: genericMessage.content,
+        };
+      }
+      default: {
+        this.logger.warn(`Unhandled event type "${genericMessage.content}": ${genericMessage}`);
+        return {
+          conversation,
+          from,
+          id: genericMessage.messageId,
+          messageTimer: 0,
+          state: PayloadBundleState.INCOMING,
+          type: genericMessage.content,
+        };
+      }
+    }
+  }
+
+  private async handleEvent(
+    event: IncomingEvent
+  ): Promise<PayloadBundleIncoming | ConversationEvent | UserEvent | void> {
     this.logger.info('handleEvent', event.type);
-    const {conversation, from} = event;
 
     const ENCRYPTED_EVENTS = [CONVERSATION_EVENT.OTR_MESSAGE_ADD];
     const META_EVENTS = [CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE, CONVERSATION_EVENT.TYPING];
+    const USER_EVENTS = [USER_EVENT.CONNECTION];
 
-    if (ENCRYPTED_EVENTS.includes(event.type)) {
-      const decodedMessage = await this.decodeGenericMessage(event as ConversationOtrMessageAddEvent);
-      return {...decodedMessage, from, conversation, state: PayloadBundleState.INCOMING};
-    } else if (META_EVENTS.includes(event.type)) {
-      return {...event, from, conversation};
+    if (ENCRYPTED_EVENTS.includes(event.type as CONVERSATION_EVENT)) {
+      return this.decodeGenericMessage(event as ConversationOtrMessageAddEvent);
+    } else if (META_EVENTS.includes(event.type as CONVERSATION_EVENT)) {
+      const {conversation, from} = event as ConversationEvent;
+      const metaEvent = {...event, from, conversation};
+      return metaEvent as ConversationEvent;
+    } else if (USER_EVENTS.includes(event.type as USER_EVENT)) {
+      return event as UserEvent;
     }
   }
 
@@ -310,6 +380,9 @@ class Account extends EventEmitter {
             break;
           case GenericMessageType.DELETED:
             this.emit(Account.INCOMING.DELETED, data);
+            break;
+          case GenericMessageType.HIDDEN:
+            this.emit(Account.INCOMING.HIDDEN, data);
             break;
           case GenericMessageType.KNOCK:
             this.emit(Account.INCOMING.PING, data);
@@ -334,12 +407,18 @@ class Account extends EventEmitter {
             this.emit(Account.INCOMING.TYPING, event);
             break;
           }
+          case USER_EVENT.CONNECTION: {
+            this.emit(Account.INCOMING.CONNECTION, event);
+            break;
+          }
         }
       } else {
         this.logger.info(
-          `Received unsupported event "${event.type}" in conversation "${event.conversation}" from user "${
-            event.from
-          }".`,
+          `Received unsupported event "${event.type}"` + (event as ConversationEvent).conversation
+            ? `in conversation "${(event as ConversationEvent).conversation}"`
+            : '' + (event as ConversationEvent).from
+              ? `from user "${(event as ConversationEvent).from}"`
+              : '' + '.',
           event
         );
       }

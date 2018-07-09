@@ -17,8 +17,10 @@
  *
  */
 
-enum ClientAction {
-  RESET_SESSION = 0,
+enum AudioPreference {
+  ALL = 'all',
+  NONE = 'none',
+  SOME = 'some',
 }
 
-export {ClientAction};
+export {AudioPreference};

@@ -9,7 +9,7 @@ process.on('unhandledRejection', error =>
 
 const path = require('path');
 const logdown = require('logdown');
-require('dotenv').config({path: path.join(__dirname, 'echo1.env')});
+require('dotenv').config({path: path.join(__dirname, 'echo.env')});
 
 const logger = logdown('@wireapp/core/demo/echo.js', {
   logger: console,
@@ -43,14 +43,14 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
     const {conversation: conversationId, from, content, id: messageId, messageTimer} = data;
     logger.log(
       `Message "${messageId}" in "${conversationId}" from "${from}":`,
-      content,
+      content.text,
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
     );
 
     const confirmationPayload = account.service.conversation.createConfirmation(messageId);
     await account.service.conversation.send(conversationId, confirmationPayload);
 
-    const textPayload = account.service.conversation.createText(content);
+    const textPayload = account.service.conversation.createText(content.text);
     account.service.conversation.messageTimer.setConversationLevelTimer(conversationId, messageTimer);
     await account.service.conversation.send(conversationId, textPayload);
     account.service.conversation.messageTimer.setMessageLevelTimer(conversationId, 0);
@@ -108,7 +108,21 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
 
   account.on(Account.INCOMING.DELETED, async data => {
     const {conversation: conversationId, id: messageId, from} = data;
-    logger.log(`Deleted message ${messageId} in "${conversationId}" by "${from}".`, data);
+    logger.log(`Deleted message "${messageId}" in "${conversationId}" by "${from}".`, data);
+  });
+
+  account.on(Account.INCOMING.HIDDEN, async data => {
+    const {conversation: conversationId, id: messageId, from} = data;
+    logger.log(`Hidden message "${messageId}" in "${conversationId}" by "${from}".`, data);
+  });
+
+  account.on(Account.INCOMING.CONNECTION, async data => {
+    const {
+      connection: {conversation: conversationId, to: connectingUserId},
+      user: {name: connectingUser},
+    } = data;
+    logger.log(`Connection request from "${connectingUser}" in "${conversationId}".`);
+    await account.service.connection.acceptConnection(connectingUserId);
   });
 
   try {

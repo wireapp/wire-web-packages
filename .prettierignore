@@ -1,5 +1,8 @@
+**/.tmp/**
 **/bin/**
+**/coverage/**
 **/dist/**
+**/temp/**
 bower_components
 CHANGELOG.md
 node_modules

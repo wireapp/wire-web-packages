@@ -3,6 +3,173 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.8.0"></a>
+# [3.8.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.7.3...@wireapp/core@3.8.0) (2018-07-07)
+
+
+### Bug Fixes
+
+* **api-client:** Stricter backend error check ([9e78b2b](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/9e78b2b))
+
+
+### Features
+
+* **core:** Add and remove conversation participants ([#803](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/803)) ([3ffec6d](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/3ffec6d))
+
+
+
+
+<a name="3.7.3"></a>
+## [3.7.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.7.2...@wireapp/core@3.7.3) (2018-07-06)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.7.2"></a>
+## [3.7.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.7.1...@wireapp/core@3.7.2) (2018-07-05)
+
+
+### Bug Fixes
+
+* **core:** Ephemeral timer type casting ([#801](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/801)) ([5441a88](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/5441a88))
+
+
+
+
+<a name="3.7.1"></a>
+## [3.7.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.7.0...@wireapp/core@3.7.1) (2018-07-05)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.7.0"></a>
+# [3.7.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.6.18...@wireapp/core@3.7.0) (2018-07-04)
+
+
+### Features
+
+* **core:** Send and receive connection requests ([#798](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/798)) ([cd118e8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/cd118e8))
+
+
+
+
+<a name="3.6.18"></a>
+## [3.6.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.6.17...@wireapp/core@3.6.18) (2018-07-04)
+
+
+### Bug Fixes
+
+* **core:** Add conversationId field to HiddenContent ([#797](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/797)) ([21d5508](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/21d5508))
+
+
+
+
+<a name="3.6.17"></a>
+## [3.6.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.6.16...@wireapp/core@3.6.17) (2018-07-04)
+
+
+### Bug Fixes
+
+* **core:** Encode correct content with protobuf ([#796](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/796)) ([f5ef1ff](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/f5ef1ff))
+
+
+
+
+<a name="3.6.16"></a>
+## [3.6.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.6.15...@wireapp/core@3.6.16) (2018-07-04)
+
+
+### Bug Fixes
+
+* **core:** Emit hide messages ([#795](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/795)) ([96df1c8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/96df1c8))
+
+
+
+
+<a name="3.6.15"></a>
+## [3.6.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.6.14...@wireapp/core@3.6.15) (2018-07-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.6.14"></a>
+## [3.6.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.6.13...@wireapp/core@3.6.14) (2018-07-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.6.13"></a>
+## [3.6.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.6.12...@wireapp/core@3.6.13) (2018-07-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.6.12"></a>
+## [3.6.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.6.11...@wireapp/core@3.6.12) (2018-07-02)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.6.11"></a>
+## [3.6.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.6.10...@wireapp/core@3.6.11) (2018-07-02)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.6.10"></a>
+## [3.6.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.6.9...@wireapp/core@3.6.10) (2018-06-29)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.6.9"></a>
+## [3.6.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.6.8...@wireapp/core@3.6.9) (2018-06-29)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.6.8"></a>
+## [3.6.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.6.7...@wireapp/core@3.6.8) (2018-06-29)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.6.7"></a>
+## [3.6.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.6.6...@wireapp/core@3.6.7) (2018-06-29)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.6.6"></a>
+## [3.6.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.6.5...@wireapp/core@3.6.6) (2018-06-29)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
 <a name="3.6.5"></a>
 ## [3.6.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.6.4...@wireapp/core@3.6.5) (2018-06-27)
 
