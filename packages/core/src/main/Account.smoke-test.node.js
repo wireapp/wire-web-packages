@@ -154,9 +154,11 @@ describe('Account', () => {
     });
 
     beforeEach(async done => {
-      await alice.service.conversation.leaveConversations();
-      await bob.service.conversation.leaveConversations();
-      await eve.service.conversation.leaveConversations();
+      if (CAN_RUN) {
+        await alice.service.conversation.leaveConversations();
+        await bob.service.conversation.leaveConversations();
+        await eve.service.conversation.leaveConversations();
+      }
       done();
     });
 
