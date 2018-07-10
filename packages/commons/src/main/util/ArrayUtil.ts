@@ -25,14 +25,14 @@ export function getDeduplicatedUnion(
 }
 
 export function getDifference(array1: Array<number | string>, array2: Array<number | string>): Array<number | string> {
-  return array1.filter(value => array2.includes(value));
+  return array1.filter(value => array2.indexOf(value) === -1);
 }
 
 export function getIntersection(
   array1: Array<number | string>,
   array2: Array<number | string>
 ): Array<number | string> {
-  return array1.filter(value => !array2.includes(value));
+  return array1.filter(value => array2.indexOf(value) !== -1);
 }
 
 export function removeDuplicates(array: any[]): any[] {
