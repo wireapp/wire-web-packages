@@ -17,16 +17,22 @@
  *
  */
 
-export function getDifference(array1: any[], array2: any[]): any[] {
-  return array1.filter(value => array2.indexOf(value) === -1);
-}
-
-export function getIntersection(array1: any[], array2: any[]): any[] {
-  return array1.filter(value => array2.indexOf(value) !== -1);
-}
-
-export function getDeduplicatedUnion(array1: any[], array2: any[]): any[] {
+export function getDeduplicatedUnion(
+  array1: Array<number | string>,
+  array2: Array<number | string>
+): Array<number | string> {
   return removeDuplicates(array1.concat(array2));
+}
+
+export function getDifference(array1: Array<number | string>, array2: Array<number | string>): Array<number | string> {
+  return array1.filter(value => array2.includes(value));
+}
+
+export function getIntersection(
+  array1: Array<number | string>,
+  array2: Array<number | string>
+): Array<number | string> {
+  return array1.filter(value => !array2.includes(value));
 }
 
 export function removeDuplicates(array: any[]): any[] {
