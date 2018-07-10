@@ -22,6 +22,14 @@
 const {ArrayUtil} = require('@wireapp/commons');
 
 describe('ArrayUtil', () => {
+  describe('"getDifference"', () => {
+    it('returns items which are different in the source array.', () => {
+      const source = ['Tick', 'Trick', 'Track'];
+      const comparative = ['Flic', 'Flac', 'Track'];
+      expect(ArrayUtil.getDifference(source, comparative)).toEqual(['Tick', 'Trick']);
+    });
+  });
+
   describe('"getIntersection"', () => {
     it('returns items which two arrays have in common.', () => {
       const array1 = ['Ape', 'Bear', 'Dodo'];
@@ -45,6 +53,14 @@ describe('ArrayUtil', () => {
       const array = [1, 3, 3, 7];
       const notAnArray = 1447;
       expect(() => ArrayUtil.getIntersection(array, notAnArray)).toThrowError(Error);
+    });
+  });
+
+  describe('"getDeduplicatedUnion"', () => {
+    it('returns deduplicated items from the union of two arrays.', () => {
+      const array1 = ['Tick', 'Trick', 'Track'];
+      const array2 = ['Flic', 'Flac', 'Track'];
+      expect(ArrayUtil.getDeduplicatedUnion(array1, array2)).toEqual(['Tick', 'Trick', 'Track', 'Flic', 'Flac']);
     });
   });
 

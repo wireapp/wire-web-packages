@@ -17,8 +17,16 @@
  *
  */
 
+export function getDifference(array1: any[], array2: any[]): any[] {
+  return array1.filter(value => array2.indexOf(value) === -1);
+}
+
 export function getIntersection(array1: any[], array2: any[]): any[] {
   return array1.filter(value => array2.indexOf(value) !== -1);
+}
+
+export function getDeduplicatedUnion(array1: any[], array2: any[]): any[] {
+  return removeDuplicates(array1.concat(array2));
 }
 
 export function removeDuplicates(array: any[]): any[] {
