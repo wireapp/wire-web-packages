@@ -17,11 +17,10 @@
  *
  */
 
-import * as CommonConfig from './config/CommonConfig';
-import * as ArrayUtil from './util/ArrayUtil';
-import * as RandomUtil from './util/RandomUtil';
-import * as StringUtil from './util/StringUtil';
-import * as UrlUtil from './util/UrlUtil';
-import * as ValidationUtil from './util/ValidationUtil';
+export function getIntersection(array1: any[], array2: any[]): any[] {
+  return array1.filter(value => array2.indexOf(value) !== -1);
+}
 
-export {ArrayUtil, CommonConfig, RandomUtil, StringUtil, UrlUtil, ValidationUtil};
+export function removeDuplicates(array: any[]): any[] {
+  return Array.from(new Set(array));
+}
