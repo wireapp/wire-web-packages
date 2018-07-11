@@ -100,11 +100,7 @@ const MenuModal = ({children, onBackgroundClick, ...props}) => (
   </MenuModalWrapper>
 );
 
-const MenuItem = ({children, onClick, ...props}) => (
-  <MenuItemContent onClick={onClick} {...props}>
-    {children}
-  </MenuItemContent>
-);
+const MenuItem = ({children, ...props}) => <MenuItemContent {...props}>{children}</MenuItemContent>;
 
 MenuItem.propTypes = {
   children: PropTypes.node,
