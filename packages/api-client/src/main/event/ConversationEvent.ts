@@ -19,7 +19,7 @@
 
 import {ConversationMessageTimerUpdate} from '../conversation/ConversationMessageTimerUpdate';
 import {Conversation, CONVERSATION_ACCESS, CONVERSATION_ACCESS_ROLE} from '../conversation/index';
-import {BackendEvent} from './BackendEvent';
+import {BackendEvent} from '../event/index';
 
 enum CONVERSATION_EVENT {
   ACCESS_UPDATE = 'conversation.access-update',
