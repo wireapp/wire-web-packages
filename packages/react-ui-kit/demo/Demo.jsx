@@ -103,6 +103,8 @@ class Demo extends React.PureComponent {
     isModalOpen: false,
   };
 
+  closeMenuModal = () => this.setState({isMenuModalOpen: false});
+
   render() {
     const ColumnsStyle = {
       marginBottom: '12px',
@@ -135,20 +137,20 @@ class Demo extends React.PureComponent {
           </Modal>
         )}
         {this.state.isMenuModalOpen && (
-          <MenuModal data-uie-name="should-be-there" onBackgroundClick={() => this.setState({isMenuModalOpen: false})}>
-            <MenuItem data-uie-name="should-be-there" onClick={() => this.setState({isMenuModalOpen: false})}>
+          <MenuModal data-uie-name="should-be-there" onBackgroundClick={this.closeMenuModal}>
+            <MenuItem data-uie-name="should-be-there" onClick={this.closeMenuModal}>
               Like
             </MenuItem>
-            <MenuItem data-uie-name="should-be-there" onClick={() => this.setState({isMenuModalOpen: false})}>
+            <MenuItem data-uie-name="should-be-there" onClick={this.closeMenuModal}>
               Edit
             </MenuItem>
-            <MenuItem data-uie-name="should-be-there" onClick={() => this.setState({isMenuModalOpen: false})}>
+            <MenuItem data-uie-name="should-be-there" onClick={this.closeMenuModal}>
               Delete for me...
             </MenuItem>
-            <MenuItem data-uie-name="should-be-there" onClick={() => this.setState({isMenuModalOpen: false})}>
+            <MenuItem data-uie-name="should-be-there" onClick={this.closeMenuModal}>
               Delete for everyone...
             </MenuItem>
-            <MenuItem data-uie-name="should-be-there" onClick={() => this.setState({isMenuModalOpen: false})}>
+            <MenuItem data-uie-name="should-be-there" onClick={this.closeMenuModal}>
               Cancel
             </MenuItem>
           </MenuModal>
