@@ -17,12 +17,12 @@
  *
  */
 
-import {AudioPreference} from '../audio/';
-import {RegisteredClient} from '../client/';
-import {Connection} from '../connection/';
-import {NotificationPreference} from '../notification/';
-import {Self} from '../self/';
-import {BackendEvent} from './BackendEvent';
+import {AudioPreference} from '../audio/index';
+import {RegisteredClient} from '../client/index';
+import {Connection} from '../connection/index';
+import {BackendEvent} from '../event/index';
+import {NotificationPreference} from '../notification/index';
+import {Self} from '../self/index';
 
 enum USER_EVENT {
   ACTIVATE = 'user.activate',

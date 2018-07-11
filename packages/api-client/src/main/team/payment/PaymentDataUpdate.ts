@@ -17,7 +17,7 @@
  *
  */
 
-import {PaymentInterval} from '../payment/';
+import {PaymentInterval} from '../payment/index';
 
 interface PaymentDataUpdate {
   interval?: PaymentInterval;

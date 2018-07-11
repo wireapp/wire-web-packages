@@ -17,7 +17,7 @@
  *
  */
 
-import {Invitation} from '../invitation';
+import {Invitation} from '../invitation/index';
 
 interface InvitationList {
   has_more: boolean;

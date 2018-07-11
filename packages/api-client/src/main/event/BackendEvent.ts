@@ -17,9 +17,7 @@
  *
  */
 
-import {CONVERSATION_EVENT} from './ConversationEvent';
-import {TEAM_EVENT} from './TeamEvent';
-import {USER_EVENT} from './UserEvent';
+import {CONVERSATION_EVENT, TEAM_EVENT, USER_EVENT} from '../event/index';
 
 interface BackendEvent {
   type: CONVERSATION_EVENT | TEAM_EVENT | USER_EVENT;

@@ -17,7 +17,7 @@
  *
  */
 
-import {BackendEvent} from './BackendEvent';
+import {BackendEvent} from '../event/index';
 
 enum TEAM_EVENT {
   CONVERSATION_CREATE = 'team.conversation-create',

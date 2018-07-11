@@ -17,7 +17,7 @@
  *
  */
 
-import {MemberData} from '../member/MemberData';
+import {MemberData} from '../member/index';
 
 interface NewTeamData {
   members?: MemberData[];

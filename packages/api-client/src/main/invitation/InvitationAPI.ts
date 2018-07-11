@@ -18,9 +18,8 @@
  */
 
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
-
-import {HttpClient} from '../http';
-import {Invitation, InvitationList, InvitationRequest} from '../invitation';
+import {HttpClient} from '../http/index';
+import {Invitation, InvitationList, InvitationRequest} from '../invitation/index';
 
 class InvitationAPI {
   constructor(private readonly client: HttpClient) {}

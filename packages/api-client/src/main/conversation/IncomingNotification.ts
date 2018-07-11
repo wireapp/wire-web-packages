@@ -17,7 +17,7 @@
  *
  */
 
-import {IncomingEvent} from '../event/';
+import {IncomingEvent} from '../event/index';
 
 interface IncomingNotification {
   id: string;

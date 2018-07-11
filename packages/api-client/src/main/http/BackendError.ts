@@ -17,7 +17,7 @@
  *
  */
 
-import {BackendErrorLabel, StatusCode} from '../http/';
+import {BackendErrorLabel, StatusCode} from '../http/index';
 
 class BackendError extends Error {
   code: StatusCode;

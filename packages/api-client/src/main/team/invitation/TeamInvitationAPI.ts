@@ -18,10 +18,9 @@
  */
 
 import {AxiosPromise, AxiosRequestConfig, AxiosResponse} from 'axios';
-
-import {HttpClient} from '../../http';
-import {NewTeamInvitation, TeamInvitation, TeamInvitationChunk} from '../invitation';
-import {TeamAPI} from '../team';
+import {HttpClient} from '../../http/index';
+import {NewTeamInvitation, TeamInvitation, TeamInvitationChunk} from '../invitation/index';
+import {TeamAPI} from '../team/index';
 
 class TeamInvitationAPI {
   static readonly MAX_CHUNK_SIZE = 100;

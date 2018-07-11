@@ -18,8 +18,8 @@
  */
 
 import EventEmitter = require('events');
-import {IncomingNotification} from '../conversation/';
-import {HttpClient, NetworkError} from '../http/';
+import {IncomingNotification} from '../conversation/index';
+import {HttpClient, NetworkError} from '../http/index';
 
 const buffer = require('../shims/node/buffer');
 const Html5WebSocket = require('html5-websocket');

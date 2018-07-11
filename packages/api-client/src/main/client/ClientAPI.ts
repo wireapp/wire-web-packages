@@ -18,10 +18,9 @@
  */
 
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
-
-import {PreKeyBundle} from '../auth';
+import {PreKeyBundle} from '../auth/index';
 import {NewClient, RegisteredClient} from '../client/index';
-import {HttpClient} from '../http';
+import {HttpClient} from '../http/index';
 
 class ClientAPI {
   constructor(private readonly client: HttpClient) {}

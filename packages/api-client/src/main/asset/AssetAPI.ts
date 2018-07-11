@@ -18,10 +18,10 @@
  */
 
 import {AxiosResponse} from 'axios';
-import {HttpClient} from '../http';
+import {AssetRetentionPolicy} from '../asset/index';
+import {HttpClient} from '../http/index';
 import {base64MD5FromBuffer, concatToBuffer} from '../shims/node/buffer';
 import {unsafeAlphanumeric} from '../shims/node/random';
-import {AssetRetentionPolicy} from './AssetRetentionPolicy';
 import {AssetUploadData} from './AssetUploadData';
 import {isValidKey, isValidToken} from './AssetUtil';
 

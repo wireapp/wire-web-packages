@@ -17,8 +17,8 @@
  *
  */
 
-import {Picture} from '../self/';
-import {UserAsset} from '../user/';
+import {Picture} from '../self/index';
+import {UserAsset} from '../user/index';
 
 interface Self {
   accent_id?: number;

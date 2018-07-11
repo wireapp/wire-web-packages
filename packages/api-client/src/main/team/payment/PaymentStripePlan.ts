@@ -18,7 +18,7 @@
  */
 
 // https://stripe.com/docs/api#plans
-import {PaymentInterval} from '../payment/';
+import {PaymentInterval} from '../payment/index';
 
 interface PaymentStripePlan {
   id: string;

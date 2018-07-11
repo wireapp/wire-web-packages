@@ -17,10 +17,10 @@
  *
  */
 
-import {InvalidCredentialsError, LoginTooFrequentError} from '../auth/';
-import {ConversationIsUnknownError, ConversationOperationError} from '../conversation/';
-import {BackendError, BackendErrorLabel, StatusCode} from '../http/';
-import {UnconnectedUserError, UserIsUnknownError} from '../user/';
+import {InvalidCredentialsError, LoginTooFrequentError} from '../auth/index';
+import {ConversationIsUnknownError, ConversationOperationError} from '../conversation/index';
+import {BackendError, BackendErrorLabel, StatusCode} from '../http/index';
+import {UnconnectedUserError, UserIsUnknownError} from '../user/index';
 
 class BackendErrorMapper {
   public static get ERRORS(): {

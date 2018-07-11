@@ -17,7 +17,7 @@
  *
  */
 
-import {InvoiceData, PaymentPlan} from '.';
+import {InvoiceData, PaymentPlan} from '../payment/index';
 
 interface PaymentData {
   bankTransfer: boolean;

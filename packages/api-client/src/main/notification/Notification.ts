@@ -17,7 +17,7 @@
  *
  */
 
-import {NotificationEvent} from './NotificationEvent';
+import {NotificationEvent} from '../notification/index';
 
 interface Notification {
   id: string;

@@ -17,10 +17,10 @@
  *
  */
 
-import {error as StoreEngineError} from '@wireapp/store-engine';
-import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine';
 import {AxiosPromise, AxiosRequestConfig, AxiosResponse} from 'axios';
 import {Cookie as ToughCookie} from 'tough-cookie';
+import {error as StoreEngineError} from '../../../../../store-engine/dist/commonjs';
+import {CRUDEngine} from '../../../../../store-engine/dist/commonjs/engine';
 import {AccessTokenData, AUTH_COOKIE_KEY, AUTH_TABLE_NAME, Cookie} from '../../auth';
 import {HttpClient} from '../../http';
 

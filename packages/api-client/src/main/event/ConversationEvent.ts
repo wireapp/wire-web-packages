@@ -17,12 +17,8 @@
  *
  */
 
-import {
-  Conversation,
-  CONVERSATION_ACCESS,
-  CONVERSATION_ACCESS_ROLE,
-  ConversationMessageTimerUpdate,
-} from '../conversation';
+import {ConversationMessageTimerUpdate} from '../conversation/ConversationMessageTimerUpdate';
+import {Conversation, CONVERSATION_ACCESS, CONVERSATION_ACCESS_ROLE} from '../conversation/index';
 import {BackendEvent} from './BackendEvent';
 
 enum CONVERSATION_EVENT {

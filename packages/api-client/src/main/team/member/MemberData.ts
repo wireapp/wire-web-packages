@@ -17,7 +17,7 @@
  *
  */
 
-import {PermissionsData} from './PermissionsData';
+import {PermissionsData} from '../member/index';
 
 interface MemberData {
   user: string;

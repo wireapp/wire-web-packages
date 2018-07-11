@@ -17,7 +17,7 @@
  *
  */
 
-import {UserAsset} from '../user';
+import {UserAsset} from '../user/index';
 
 interface UserUpdate {
   accent_id?: number;

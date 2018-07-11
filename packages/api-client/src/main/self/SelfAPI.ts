@@ -18,11 +18,9 @@
  */
 
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
-
-import {HttpClient} from '../http';
-import {ChangePassword, Delete, SearchableStatus, Self} from '../self';
-import {UserUpdate} from '../user';
-import {Consent} from './Consent';
+import {HttpClient} from '../http/index';
+import {ChangePassword, Consent, Delete, SearchableStatus, Self} from '../self/index';
+import {UserUpdate} from '../user/index';
 
 class SelfAPI {
   constructor(private readonly client: HttpClient) {}

@@ -17,7 +17,7 @@
  *
  */
 
-import {Notification} from './Notification';
+import {Notification} from '../notification/index';
 
 interface NotificationList {
   has_more: boolean;

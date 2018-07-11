@@ -17,8 +17,8 @@
  *
  */
 
-import {PreKey} from '../auth/';
-import {ClientClassification, ClientType, Location} from '../client/';
+import {PreKey} from '../auth/index';
+import {ClientClassification, ClientType, Location} from '../client/index';
 
 interface NewClient {
   class: ClientClassification.DESKTOP | ClientClassification.PHONE | ClientClassification.TABLET;

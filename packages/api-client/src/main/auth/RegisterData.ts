@@ -17,8 +17,8 @@
  *
  */
 
-import {TeamData} from '../team/team/TeamData';
-import {UserAsset} from '../user';
+import {TeamData} from '../team/team/index';
+import {UserAsset} from '../user/index';
 
 interface RegisterData {
   accent_id?: number;

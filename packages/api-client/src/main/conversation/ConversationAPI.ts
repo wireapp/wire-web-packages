@@ -32,10 +32,10 @@ import {
   NewConversation,
   NewOTRMessage,
   Typing,
-} from '../conversation/';
-import {ConversationEvent, ConversationMemberJoinEvent, ConversationMemberLeaveEvent} from '../event/';
-import {HttpClient} from '../http/';
-import {ValidationError} from '../validation/';
+} from '../conversation/index';
+import {ConversationEvent, ConversationMemberJoinEvent, ConversationMemberLeaveEvent} from '../event/index';
+import {HttpClient} from '../http/index';
+import {ValidationError} from '../validation/index';
 
 class ConversationAPI {
   static readonly MAX_CHUNK_SIZE = 500;

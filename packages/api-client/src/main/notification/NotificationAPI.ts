@@ -18,8 +18,8 @@
  */
 
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
-import {HttpClient} from '../http';
-import {Notification, NotificationList} from './index';
+import {HttpClient} from '../http/index';
+import {Notification, NotificationList} from '../notification/index';
 
 const NOTIFICATION_SIZE_MAXIMUM = 10000;
 

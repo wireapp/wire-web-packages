@@ -20,11 +20,11 @@
 import {PriorityQueue} from '@wireapp/priority-queue';
 import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine';
 import axios, {AxiosError, AxiosPromise, AxiosRequestConfig, AxiosResponse} from 'axios';
-import EventEmitter = require('events');
-import {AccessTokenData, AccessTokenStore, AuthAPI} from '../auth/';
-import {BackendErrorMapper, ConnectionState, ContentType, NetworkError} from '../http/';
+import {AccessTokenData, AccessTokenStore, AuthAPI} from '../auth/index';
+import {BackendErrorMapper, ConnectionState, ContentType, NetworkError} from '../http/index';
 import {sendRequestWithCookie} from '../shims/node/cookie';
 
+import EventEmitter = require('events');
 const logdown = require('logdown');
 
 class HttpClient extends EventEmitter {

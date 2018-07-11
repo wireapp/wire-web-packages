@@ -18,7 +18,6 @@
  */
 
 import {AxiosPromise, AxiosRequestConfig, AxiosResponse} from 'axios';
-
 import {
   PaymentBillingData,
   PaymentData,
@@ -28,7 +27,7 @@ import {
   PaymentStripeInvoice,
   PaymentStripePlan,
 } from '.';
-import {HttpClient} from '../../http';
+import {HttpClient} from '../../http/index';
 
 class PaymentAPI {
   constructor(private readonly client: HttpClient) {}

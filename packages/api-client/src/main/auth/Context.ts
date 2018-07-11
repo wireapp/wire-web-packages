@@ -17,7 +17,7 @@
  *
  */
 
-import {ClientType} from '../client/';
+import {ClientType} from '../client/index';
 
 class Context {
   constructor(public userId: string, public clientType: ClientType, public clientId?: string) {}

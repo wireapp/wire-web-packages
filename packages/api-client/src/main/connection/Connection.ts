@@ -17,7 +17,7 @@
  *
  */
 
-import {ConnectionStatus} from '../connection/';
+import {ConnectionStatus} from '../connection/index';
 
 interface Connection {
   conversation?: string;

@@ -19,24 +19,22 @@
 
 const logdown = require('logdown');
 import {AxiosResponse} from 'axios';
-import {AssetAPI} from './asset/';
-import {AccessTokenData, AuthAPI, Context, LoginData, RegisterData} from './auth';
-import {AccessTokenStore} from './auth/';
-import {ClientAPI, ClientType} from './client/';
+import {AssetAPI} from './asset/index';
+import {AccessTokenData, AccessTokenStore, AuthAPI, Context, LoginData, RegisterData} from './auth/index';
+import {ClientAPI, ClientType} from './client/index';
 import {Config} from './Config';
-import {ConnectionAPI} from './connection/';
-import {ConversationAPI} from './conversation/';
-import {Backend} from './env';
-import {GiphyAPI} from './giphy/';
-import {HttpClient} from './http/';
-import {InvitationAPI} from './invitation/';
-import {NotificationAPI} from './notification/';
-import {SelfAPI} from './self/';
+import {ConnectionAPI} from './connection/index';
+import {ConversationAPI} from './conversation/index';
+import {Backend} from './env/index';
+import {GiphyAPI} from './giphy/index';
+import {HttpClient} from './http/index';
+import {InvitationAPI} from './invitation/index';
+import {NotificationAPI} from './notification/index';
+import {SelfAPI} from './self/index';
 import {retrieveCookie} from './shims/node/cookie';
-import {WebSocketClient} from './tcp/';
-import {MemberAPI, PaymentAPI, TeamAPI, TeamInvitationAPI} from './team/';
-import {User} from './user';
-import {UserAPI} from './user/';
+import {WebSocketClient} from './tcp/index';
+import {MemberAPI, PaymentAPI, TeamAPI, TeamInvitationAPI} from './team/index';
+import {User, UserAPI} from './user/index';
 
 const VERSION = require('../../package.json').version;
 

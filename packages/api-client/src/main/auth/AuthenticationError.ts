@@ -17,7 +17,7 @@
  *
  */
 
-import {BackendError, BackendErrorLabel, StatusCode} from '../http/';
+import {BackendError, BackendErrorLabel, StatusCode} from '../http/index';
 
 export class AuthenticationError extends BackendError {
   constructor(message: string, label: BackendErrorLabel, code: StatusCode) {

@@ -16,7 +16,7 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-import {ConsentType} from './ConsentType';
+import {ConsentType} from '../self/index';
 
 interface Consent {
   type: ConsentType;
