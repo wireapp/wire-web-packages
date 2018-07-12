@@ -2,9 +2,11 @@ module.exports = {
   "env": {
     "browser": true,
     "es6": true,
+    "jasmine": true,
     "node": true
   },
   "plugins": [
+    "jasmine",
     "no-unsanitized",
     "prettier",
     "react"
@@ -20,6 +22,7 @@ module.exports = {
         "allow": ["error", "info"]
       }
     ],
+    "no-undef": 2,
     "no-const-assign": 2,
     "no-dupe-class-members": 2,
     "no-else-return": 2,
