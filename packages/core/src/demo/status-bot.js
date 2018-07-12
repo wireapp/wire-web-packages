@@ -68,7 +68,7 @@ if (!message) {
     await account.login(login);
 
     const text = message ? message : `I am posting from ${name} v${version}. 🌞`;
-    const payload = await account.service.conversation.createText(text);
+    const payload = account.service.conversation.createText(text);
     await account.service.conversation.send(message, payload);
   } catch (error) {
     logger.error('Error:', error.stack);
