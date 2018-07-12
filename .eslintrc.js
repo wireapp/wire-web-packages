@@ -2,14 +2,14 @@ module.exports = {
   "env": {
     "browser": true,
     "es6": true,
-    "node": true,
-    "jasmine": true
+    "jasmine": true,
+    "node": true
   },
   "plugins": [
+    "jasmine",
     "no-unsanitized",
     "prettier",
-    "react",
-    "jasmine"
+    "react"
   ],
   "extends": ["prettier", "plugin:no-unsanitized/DOM", "plugin:react/recommended"],
   "rules": {
