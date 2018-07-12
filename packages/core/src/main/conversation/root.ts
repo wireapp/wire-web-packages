@@ -20,7 +20,6 @@
 import AssetService from './AssetService';
 import {ClientActionType} from './ClientActionType';
 import {ConfirmationType} from './ConfirmationType';
-import {ImageAssetContent, Original, RemoteData} from './content/AssetContent';
 import ConversationService from './ConversationService';
 import GenericMessageType from './GenericMessageType';
 import {MessageTimer} from './MessageTimer';
@@ -37,14 +36,11 @@ export {
   ClientActionType,
   ConfirmationType,
   ConversationService,
-  Original,
   GenericMessageType,
-  ImageAssetContent,
   PayloadBundle,
   PayloadBundleIncoming,
   PayloadBundleOutgoing,
   PayloadBundleOutgoingUnsent,
   PayloadBundleState,
-  RemoteData,
   MessageTimer,
 };

@@ -17,10 +17,10 @@
  *
  */
 
-export * from './AssetContent';
-export * from './ClientActionContent';
-export * from './ConfirmationContent';
-export * from './DeletedContent';
-export * from './HiddenContent';
-export * from './ImageContent';
-export * from './TextContent';
+import {ClientActionType} from '../../conversation/root';
+
+interface ClientActionContent {
+  clientAction: ClientActionType;
+}
+
+export {ClientActionContent};

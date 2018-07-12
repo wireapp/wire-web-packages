@@ -20,6 +20,7 @@
 import {ImageContent} from '../../conversation/content/';
 import {EncryptedAsset} from '../../cryptography/root';
 
+// https://github.com/wireapp/generic-message-proto/blob/v1.20.0/proto/messages.proto#L201
 interface RemoteData {
   assetId: string;
   otrKey: Uint8Array | Buffer;
