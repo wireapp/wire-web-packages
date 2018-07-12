@@ -1,3 +1,5 @@
+import {StandupBot} from './index';
+
 const logdown = require('logdown');
 const program = require('commander');
 
@@ -15,4 +17,12 @@ program
   .option('-p, --password <password>', 'Your password')
   .parse(process.argv);
 
-logger.info('email', program.email);
+(async () => {
+  const bot = new StandupBot(4);
+  try {
+    await bot.login(program.email, program.password);
+    logger.info(`Running stand-up bot with "${program.email}" ...`);
+  } catch (error) {
+    logger.error(`Failed to run stand-up bot with "${program.email}": ${error.message}`, error);
+  }
+})();

@@ -19,7 +19,7 @@ class StandupBot {
       email,
       password,
     };
-    const backend = APIClient.BACKEND.STAGING;
+    const backend = APIClient.BACKEND.PRODUCTION;
     const engine = new MemoryEngine();
     await engine.init(email);
     const apiClient = new APIClient(new Config(engine, backend));

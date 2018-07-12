@@ -17,8 +17,4 @@
  *
  */
 
-import {StandupBot} from './StandupBot';
-
-export = {
-  StandupBot,
-};
+export * from './StandupBot';

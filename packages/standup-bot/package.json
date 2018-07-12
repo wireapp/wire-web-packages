@@ -21,7 +21,7 @@
     "build:node": "tsc",
     "clean": "rimraf dist",
     "dist": "yarn clean && yarn build",
-    "start": "cross-env NODE_DEBUG=@wireapp:* node dist/start.js",
+    "start": "cross-env NODE_DEBUG=@wireapp/standup-bot* node dist/start.js",
     "test": "yarn test:node && yarn test:browser",
     "test:browser": "exit 0",
     "test:node": "jasmine --config=jasmine.json",
