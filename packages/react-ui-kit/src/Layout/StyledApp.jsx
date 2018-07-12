@@ -23,7 +23,7 @@ import styled from 'styled-components';
 
 const StyledApp = styled.div`
   background-color: ${props => props.backgroundColor};
-  color: ${COLOR.GRAY_DARKEN_48};
+  color: ${COLOR.TEXT};
   display: flex;
   flex-direction: column;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif;
