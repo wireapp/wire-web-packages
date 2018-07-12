@@ -17,5 +17,5 @@
  *
  */
 
+export * from './Bot';
 export * from './BotConfiguration';
-export * from './StandupBot';

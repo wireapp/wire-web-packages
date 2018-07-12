@@ -10,7 +10,7 @@ import {BotConfiguration} from './BotConfiguration';
 
 const logdown = require('logdown');
 
-class StandupBot {
+class Bot {
   private readonly config: BotConfiguration;
   private readonly logger: any = logdown('@wireapp/standup-bot/StandupBot', {
     logger: console,
@@ -81,4 +81,4 @@ class StandupBot {
   }
 }
 
-export {StandupBot};
+export {Bot};

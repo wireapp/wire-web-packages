@@ -1,4 +1,4 @@
-import {StandupBot} from './index';
+import {Bot} from './index';
 
 const logdown = require('logdown');
 const program = require('commander');
@@ -22,7 +22,7 @@ program
   const conversationIds: string[] = program.conversations ? program.conversations.trim().split(',') : [];
   const ownerIds: string[] = program.owners ? program.owners.trim().split(',') : [];
 
-  const bot = new StandupBot(
+  const bot = new Bot(
     {
       conversations: conversationIds,
       owners: ownerIds,
