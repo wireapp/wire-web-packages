@@ -1,13 +1,18 @@
 {
+  "bin": {
+    "wire-standup-bot": "dist/start.js"
+  },
   "dependencies": {
-    "@wireapp/lru-cache": "2.1.30"
+    "@wireapp/core": "3.10.5"
   },
   "devDependencies": {
+    "cross-env": "5.2.0",
     "jasmine": "3.1.0",
     "rimraf": "2.6.2",
     "typescript": "2.9.2"
   },
   "license": "GPL-3.0",
+  "main": "dist/index.js",
   "name": "@wireapp/standup-bot",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/standup-bot",
   "scripts": {
@@ -16,10 +21,11 @@
     "build:node": "tsc",
     "clean": "rimraf dist",
     "dist": "yarn clean && yarn build",
+    "start": "cross-env NODE_DEBUG=@wireapp:* node dist/start.js",
     "test": "yarn test:node && yarn test:browser",
     "test:browser": "exit 0",
-    "test:project": "yarn dist && yarn test",
-    "test:node": "jasmine --config=jasmine.json"
+    "test:node": "jasmine --config=jasmine.json",
+    "test:project": "yarn dist && yarn test"
   },
   "version": "0.0.0"
 }
