@@ -17,11 +17,24 @@
  *
  */
 
-import * as CommonConfig from './config/CommonConfig';
-import * as ArrayUtil from './util/ArrayUtil';
-import * as RandomUtil from './util/RandomUtil';
-import * as StringUtil from './util/StringUtil';
-import * as UrlUtil from './util/UrlUtil';
-import * as ValidationUtil from './util/ValidationUtil';
+import {BackendError, BackendErrorLabel, StatusCode} from '../http';
 
-export {ArrayUtil, CommonConfig, RandomUtil, StringUtil, UrlUtil, ValidationUtil};
+export class TeamError extends BackendError {
+  constructor(message: string, label: BackendErrorLabel, code: StatusCode) {
+    super(message, label, code);
+    Object.setPrototypeOf(this, TeamError.prototype);
+    this.name = 'ConversationError';
+  }
+}
+
+export class InviteEmailInUseError extends TeamError {
+  constructor(
+    message: string,
+    label: BackendErrorLabel = BackendErrorLabel.INVITE_EMAIL_EXISTS,
+    code: StatusCode = StatusCode.CONFLICT
+  ) {
+    super(message, label, code);
+    Object.setPrototypeOf(this, InviteEmailInUseError.prototype);
+    this.name = 'EmailInUseError';
+  }
+}

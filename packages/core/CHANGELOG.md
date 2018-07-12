@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.10.4"></a>
+## [3.10.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.10.3...@wireapp/core@3.10.4) (2018-07-11)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.10.3"></a>
+## [3.10.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.10.2...@wireapp/core@3.10.3) (2018-07-11)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.10.2"></a>
+## [3.10.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.10.1...@wireapp/core@3.10.2) (2018-07-11)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.10.1"></a>
+## [3.10.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.10.0...@wireapp/core@3.10.1) (2018-07-10)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.10.0"></a>
+# [3.10.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.9.0...@wireapp/core@3.10.0) (2018-07-10)
+
+
+### Features
+
+* **core:** Leave conversations ([#816](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/816)) ([b421fa7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/b421fa7))
+
+
+
+
+<a name="3.9.0"></a>
+# [3.9.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.8.0...@wireapp/core@3.9.0) (2018-07-09)
+
+
+### Features
+
+* **core:** Add "timestamp" to payload bundle ([#810](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/810)) ([e811575](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/e811575))
+
+
+
+
 <a name="3.8.0"></a>
 # [3.8.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.7.3...@wireapp/core@3.8.0) (2018-07-07)
 

@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="1.8.4"></a>
+## [1.8.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.8.3...@wireapp/api-client@1.8.4) (2018-07-11)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.8.3"></a>
+## [1.8.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.8.2...@wireapp/api-client@1.8.3) (2018-07-11)
+
+
+### Bug Fixes
+
+* **api-client:** Map suspended account & invite email exists errors ([#821](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/821)) ([3d4f983](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/3d4f983))
+
+
+
+
+<a name="1.8.2"></a>
+## [1.8.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.8.1...@wireapp/api-client@1.8.2) (2018-07-11)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.8.1"></a>
+## [1.8.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.8.0...@wireapp/api-client@1.8.1) (2018-07-10)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.8.0"></a>
+# [1.8.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.7.1...@wireapp/api-client@1.8.0) (2018-07-10)
+
+
+### Features
+
+* **core:** Leave conversations ([#816](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/816)) ([b421fa7](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/b421fa7))
+
+
+
+
+<a name="1.7.1"></a>
+## [1.7.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.7.0...@wireapp/api-client@1.7.1) (2018-07-09)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
 <a name="1.7.0"></a>
 # [1.7.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.6.2...@wireapp/api-client@1.7.0) (2018-07-07)
 
