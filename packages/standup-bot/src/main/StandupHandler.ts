@@ -1,5 +1,5 @@
 import {Account} from '@wireapp/core';
-import {TextContent} from '@wireapp/core/dist/conversation/content/root';
+import {TextContent} from '@wireapp/core/dist/conversation/content/';
 import {PayloadBundleIncoming} from '@wireapp/core/dist/conversation/root';
 import {MessageHandler} from './MessageHandler';
 

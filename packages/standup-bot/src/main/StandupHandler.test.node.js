@@ -1,6 +1,6 @@
-const {StandupBot} = require('../../dist/StandupBot');
+const {StandupHandler} = require('../../dist/StandupHandler');
 
-describe('StandupBot', () => {
+describe('StandupHandler', () => {
   describe('"addParticipant"', () => {
     it('removes people when more people join and', () => {
       const benny = '1ee85494-726c-4c7c-90cd-75f19079f7e8';
@@ -10,8 +10,9 @@ describe('StandupBot', () => {
       const michael = '2c623f67-bf4a-432b-a660-1b5986724899';
       const thomas = '9805787c-b048-4865-85f0-7470e7704237';
 
+      const conversationId = '569cda73-9a18-489d-8e60-6d4461e83194';
       const limit = 4;
-      const bot = new StandupBot(limit);
+      const bot = new StandupHandler(conversationId, limit);
 
       bot.addParticipant(benny);
       bot.addParticipant(florian);
