@@ -50,6 +50,13 @@ script:
 notifications:
   email: false
 
+after_failure:
+  - |
+    if [ "${IS_MASTER_BRANCH}" == 0 ]; then
+      LAST_COMMITTER_NAME="$(git log -1 --format='%cn')"
+      NODE_DEBUG=@wireapp:* node packages/core/src/demo/status-bot.js "4ae15efc-d061-4013-98f2-bcd81ab39b60" "${LAST_COMMITTER_NAME} broke the "${TRAVIS_BRANCH}" branch on "${TRAVIS_REPO_SLUG}". 🌵";
+    fi
+
 after_success:
   - |
     if [ "${WILL_RELEASE}" == 0 ]; then
