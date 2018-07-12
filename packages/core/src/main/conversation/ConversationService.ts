@@ -33,18 +33,18 @@ import {Encoder} from 'bazinga64';
 import {
   AssetService,
   ClientActionType,
-  ConfirmationContent,
   ConfirmationType,
   GenericMessageType,
   ImageAssetContent,
-  ImageContent,
   MessageTimer,
   PayloadBundleOutgoing,
   PayloadBundleOutgoingUnsent,
   PayloadBundleState,
   RemoteData,
-  TextContent,
 } from '../conversation/root';
+
+import {ConfirmationContent, ImageContent, TextContent} from '../conversation/content/';
+
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
 import {CryptographyService, EncryptedAsset} from '../cryptography/root';
 

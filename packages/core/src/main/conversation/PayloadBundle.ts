@@ -17,17 +17,16 @@
  *
  */
 
+import {ClientActionType, GenericMessageType, ImageAssetContent} from '../conversation/root';
+
 import {
   AssetContent,
-  ClientActionType,
   ConfirmationContent,
   DeletedContent,
-  GenericMessageType,
   HiddenContent,
-  ImageAssetContent,
   ImageContent,
   TextContent,
-} from '../conversation/root';
+} from '../conversation/content/';
 
 enum PayloadBundleState {
   INCOMING = 'PayloadBundleState.INCOMING',

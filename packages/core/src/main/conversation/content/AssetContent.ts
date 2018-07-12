@@ -17,7 +17,7 @@
  *
  */
 
-import {ImageContent} from '../../conversation/root';
+import {ImageContent} from '../../conversation/content/';
 import {EncryptedAsset} from '../../cryptography/root';
 
 interface RemoteData {
