@@ -24,15 +24,31 @@ class StandupHandler implements MessageHandler {
     return removedUserId;
   }
 
-  async handleText(account: Account, payload: PayloadBundleIncoming) {
-    if ((payload.content as TextContent).text === '/remote') {
-      this.logger.log('WAGOO', payload);
-      const sender = payload.from;
-      const removedUserID = this.addParticipant(sender);
-      if (removedUserID) {
-        await account.service!.conversation.removeUser(this.targetConversationId, removedUserID);
-      }
-      await account.service!.conversation.addUser(this.targetConversationId, sender);
+  async handleText(account: Account, incomingPayload: PayloadBundleIncoming) {
+    const conversationId = incomingPayload.conversation;
+    const text = (incomingPayload.content as TextContent).text;
+
+    this.logger.debug(`Received text message in conversation "${conversationId}".`);
+
+    switch (text) {
+      case '/conversation':
+        const conversationText = account.service!.conversation.createText(
+          `The ID of this conversation is "${conversationId}".`
+        );
+        await account.service!.conversation.send(conversationId, conversationText);
+        break;
+      case '/user':
+        const userText = account.service!.conversation.createText(`Your user ID is "${incomingPayload.from}".`);
+        await account.service!.conversation.send(conversationId, userText);
+        break;
+      case '/wfh':
+        const sender = incomingPayload.from;
+        const removedUserID = this.addParticipant(sender);
+        if (removedUserID) {
+          await account.service!.conversation.removeUser(this.targetConversationId, removedUserID);
+        }
+        await account.service!.conversation.addUser(this.targetConversationId, sender);
+        break;
     }
   }
 }
