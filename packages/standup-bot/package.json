@@ -3,7 +3,7 @@
     "wire-standup-bot": "dist/start.js"
   },
   "dependencies": {
-    "@wireapp/core": "3.10.5"
+    "@wireapp/core": "3.11.0"
   },
   "devDependencies": {
     "cross-env": "5.2.0",
