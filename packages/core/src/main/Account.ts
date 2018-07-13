@@ -368,9 +368,7 @@ class Account extends EventEmitter {
     }
   }
 
-  private async handleEvent(
-    event: IncomingEvent
-  ): Promise<PayloadBundleIncoming | ConversationEvent | UserEvent | void> {
+  private async handleEvent(event: IncomingEvent): Promise<PayloadBundleIncoming | IncomingEvent | void> {
     this.logger.info('handleEvent', event.type);
 
     const ENCRYPTED_EVENTS = [CONVERSATION_EVENT.OTR_MESSAGE_ADD];

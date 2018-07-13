@@ -83,6 +83,8 @@ describe('CryptographyService', () => {
       expect(plaintext).toBe(text);
       done();
     });
+
+    it('is resistant to duplicated message errors', () => {});
   });
 
   describe('"dismantleSessionId"', () => {
