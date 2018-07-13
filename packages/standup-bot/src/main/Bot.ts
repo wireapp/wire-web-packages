@@ -1,31 +1,25 @@
 import APIClient = require('@wireapp/api-client');
-import LRUCache from '@wireapp/lru-cache';
 
 import {ClientType} from '@wireapp/api-client/dist/commonjs/client/';
 import {Config} from '@wireapp/api-client/dist/commonjs/Config';
 import {Account} from '@wireapp/core';
 import {PayloadBundleIncoming} from '@wireapp/core/dist/conversation/root';
 import {MemoryEngine} from '@wireapp/store-engine';
-import {BotConfiguration} from './BotConfiguration';
+import {BotConfig, MessageHandler} from './index';
 
 const logdown = require('logdown');
 
 class Bot {
-  private readonly config: BotConfiguration;
+  private readonly config: BotConfig;
+  private readonly handler: MessageHandler;
   private readonly logger: any = logdown('@wireapp/standup-bot/StandupBot', {
     logger: console,
     markdown: false,
   });
-  private readonly participants: LRUCache<string>;
 
-  constructor(config: BotConfiguration, limit: number) {
+  constructor(config: BotConfig, handler: MessageHandler) {
     this.config = config;
-    this.participants = new LRUCache<string>(limit);
-  }
-
-  addParticipant(userId: string): string | undefined {
-    const removedUserId = this.participants.set(userId, userId);
-    return removedUserId;
+    this.handler = handler;
   }
 
   isAllowedConversation(conversationId: string): boolean {
@@ -58,7 +52,7 @@ class Bot {
     account.on(Account.INCOMING.TEXT_MESSAGE, async (payload: PayloadBundleIncoming) => {
       if (this.validateMessage(String(payload.conversation), payload.from)) {
         this.logger.info('Processing message ...');
-        // TODO: Assign a message handler (which is supplied from the outside, Interface)
+        this.handler.handleText(account, payload);
       }
     });
     await account.login(login);

@@ -18,4 +18,5 @@
  */
 
 export * from './Bot';
-export * from './BotConfiguration';
+export * from './BotConfig';
+export * from './MessageHandler';

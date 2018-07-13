@@ -7,9 +7,11 @@ import LRUCache from '@wireapp/lru-cache';
 
 class StandupHandler implements MessageHandler {
   private readonly participants: LRUCache<string>;
+  private readonly targetConversationId: string;
 
-  constructor(private readonly targetConversationId: string, limit: number) {
+  constructor(targetConversationId: string, limit: number) {
     this.participants = new LRUCache<string>(limit);
+    this.targetConversationId = targetConversationId;
   }
 
   addParticipant(userId: string): string | undefined {

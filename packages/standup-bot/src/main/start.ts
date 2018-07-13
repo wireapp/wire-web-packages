@@ -1,4 +1,5 @@
 import {Bot} from './index';
+import {StandupHandler} from './StandupHandler';
 
 const logdown = require('logdown');
 const program = require('commander');
@@ -22,12 +23,14 @@ program
   const conversationIds: string[] = program.conversations ? program.conversations.trim().split(',') : [];
   const ownerIds: string[] = program.owners ? program.owners.trim().split(',') : [];
 
+  const messageHandler = new StandupHandler('', 4);
+
   const bot = new Bot(
     {
       conversations: conversationIds,
       owners: ownerIds,
     },
-    4
+    messageHandler
   );
 
   try {
