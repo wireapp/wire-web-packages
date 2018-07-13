@@ -20,9 +20,9 @@ program
   .parse(process.argv);
 
 (async () => {
+  const PARTICIPANT_LIMIT = 3;
+  const messageHandler = new StandupHandler(program.conversation, PARTICIPANT_LIMIT);
   const ownerIds: string[] = program.owners ? program.owners.trim().split(',') : [];
-
-  const messageHandler = new StandupHandler(program.conversation, 4);
 
   const bot = new Bot(
     {
