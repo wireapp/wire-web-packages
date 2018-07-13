@@ -82,9 +82,9 @@ class BackendErrorMapper {
       if (mappedError) {
         return mappedError;
       }
-      return new BackendError(error.message);
+      return new BackendError(error.message, error.label, error.code);
     } catch (mappingError) {
-      return new BackendError(error.message);
+      return new BackendError(error.message, error.label, error.code);
     }
   }
 }
