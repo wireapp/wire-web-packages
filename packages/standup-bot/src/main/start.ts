@@ -13,21 +13,20 @@ const logger = logdown('@wireapp/standup-bot/start', {
 program
   .description(description)
   .version(version)
-  .option('-c, --conversations <conversationId,...>', 'The conversation ID(s) for the bot to act in')
+  .option('-c, --conversation <conversationId>', 'The conversation ID of the stand-up chat')
   .option('-e, --email <address>', 'Bot email address')
   .option('-o, --owners <userId,...>', 'The user ID(s) of the bot owner')
   .option('-p, --password <password>', 'Bot password')
   .parse(process.argv);
 
 (async () => {
-  const conversationIds: string[] = program.conversations ? program.conversations.trim().split(',') : [];
   const ownerIds: string[] = program.owners ? program.owners.trim().split(',') : [];
 
-  const messageHandler = new StandupHandler('', 4);
+  const messageHandler = new StandupHandler(program.conversation, 4);
 
   const bot = new Bot(
     {
-      conversations: conversationIds,
+      conversations: [],
       owners: ownerIds,
     },
     messageHandler

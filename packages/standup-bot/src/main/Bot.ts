@@ -1,5 +1,4 @@
 import APIClient = require('@wireapp/api-client');
-
 import {ClientType} from '@wireapp/api-client/dist/commonjs/client/';
 import {Config} from '@wireapp/api-client/dist/commonjs/Config';
 import {Account} from '@wireapp/core';
@@ -52,7 +51,11 @@ class Bot {
     account.on(Account.INCOMING.TEXT_MESSAGE, async (payload: PayloadBundleIncoming) => {
       if (this.validateMessage(String(payload.conversation), payload.from)) {
         this.logger.info('Processing message ...');
-        this.handler.handleText(account, payload);
+        try {
+          await this.handler.handleText(account, payload);
+        } catch (error) {
+          this.logger.error(`An error occured during text handling: ${error.message}`, error);
+        }
       }
     });
     await account.login(login);

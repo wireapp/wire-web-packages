@@ -14,7 +14,7 @@ A bot that can add people to a certain chat.
 
 ```
 yarn
-yarn start -e bot@wire.com -p password
+yarn start -e bot@wire.com -p password -c e792358c-faa1-4b60-b5e0-96bcafe9e13b
 ```
 
 ### Usage
