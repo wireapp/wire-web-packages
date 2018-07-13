@@ -17,4 +17,8 @@ module.exports = {
     const cipherText = await sender.encrypt(sessionId, encryptedPreKeyMessage, preKeyBundle.serialise());
     return bazinga64.Encoder.toBase64(cipherText).asString;
   },
+  getPlainText: async (cryptographyService, encodedPreKeyMessage, sessionId = `temp-${Date.now()}`) => {
+    const decodedMessageBuffer = await cryptographyService.decrypt(sessionId, encodedPreKeyMessage);
+    return Buffer.from(decodedMessageBuffer).toString('utf8');
+  },
 };
