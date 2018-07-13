@@ -337,7 +337,7 @@ class Account extends EventEmitter {
       }
       case GenericMessageType.ASSET: {
         const content: AssetContent = {
-          notUploaded: genericMessage.asset.not_uploaded,
+          abortReason: genericMessage.asset.not_uploaded,
           original: genericMessage.asset.original,
           preview: genericMessage.asset.preview,
           uploaded: genericMessage.asset.uploaded,
