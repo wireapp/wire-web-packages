@@ -17,10 +17,10 @@
  *
  */
 
-import {ClientActionType} from '../../conversation/root';
+import {ClientAction} from '../../Protobuf';
 
 interface ClientActionContent {
-  clientAction: ClientActionType;
+  clientAction: ClientAction;
 }
 
 export {ClientActionContent};
