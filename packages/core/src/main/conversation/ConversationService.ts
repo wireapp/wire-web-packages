@@ -142,10 +142,10 @@ export default class ConversationService {
     const {cipherText, keyBytes, sha256} = asset;
     const messageId = ConversationService.createId();
 
-    const externalMessage = External.create({
+    const externalMessage = {
       otrKey: new Uint8Array(keyBytes),
       sha256: new Uint8Array(sha256),
-    });
+    };
 
     const base64CipherText = Encoder.toBase64(cipherText).asString;
 
