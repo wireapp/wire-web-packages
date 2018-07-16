@@ -58,7 +58,7 @@ import {
   MessageEdit,
   MessageHide,
   Text,
-} from '../Protobuf';
+} from '../Protobuf.js';
 
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
 import {CryptographyService, EncryptedAsset} from '../cryptography/root';
