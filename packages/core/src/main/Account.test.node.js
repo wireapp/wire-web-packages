@@ -26,7 +26,7 @@ const {MemoryEngine} = require('@wireapp/store-engine');
 const {NotificationAPI} = require('@wireapp/api-client/dist/commonjs/notification/');
 const {BackendErrorLabel, StatusCode} = require('@wireapp/api-client/dist/commonjs/http/');
 const {ValidationUtil} = require('@wireapp/commons');
-const {GenericMessage, Text} = require('./Protobuf');
+const {GenericMessage, Text} = require('@wireapp/protocol-messaging');
 const APIClient = require('@wireapp/api-client');
 const nock = require('nock');
 

@@ -21,7 +21,7 @@
 const APIClient = require('@wireapp/api-client');
 const UUID = require('pure-uuid');
 const {Account} = require('@wireapp/core');
-const {GenericMessage, Text} = require('../Protobuf');
+const {GenericMessage, Text} = require('@wireapp/protocol-messaging');
 const {MemoryEngine} = require('@wireapp/store-engine');
 
 const createMessage = (conversationRepository, content) => {

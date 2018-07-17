@@ -32,6 +32,7 @@ import {
 import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/index';
 import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/index';
 import * as cryptobox from '@wireapp/cryptobox';
+import {GenericMessage} from '@wireapp/protocol-messaging';
 import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/error/index';
 import * as Long from 'long';
 import {LoginSanitizer} from './auth/root';
@@ -47,7 +48,6 @@ import {
 } from './conversation/root';
 import {CryptographyService} from './cryptography/root';
 import {NotificationService} from './notification/root';
-import {GenericMessage} from './Protobuf';
 import {SelfService} from './self/root';
 
 const logdown = require('logdown');

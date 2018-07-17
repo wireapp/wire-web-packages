@@ -17,7 +17,7 @@
  *
  */
 
-import {ClientAction} from '../../Protobuf';
+import {ClientAction} from '@wireapp/protocol-messaging';
 
 interface ClientActionContent {
   clientAction: ClientAction;

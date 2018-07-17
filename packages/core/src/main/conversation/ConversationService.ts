@@ -40,14 +40,6 @@ import {
 } from '../conversation/root';
 
 import {
-  ClientActionContent,
-  ConfirmationContent,
-  ImageAssetContent,
-  ImageContent,
-  RemoteData,
-  TextContent,
-} from '../conversation/content/';
-import {
   Asset,
   ClientAction,
   Confirmation,
@@ -58,7 +50,15 @@ import {
   MessageEdit,
   MessageHide,
   Text,
-} from '../Protobuf.js';
+} from '@wireapp/protocol-messaging';
+import {
+  ClientActionContent,
+  ConfirmationContent,
+  ImageAssetContent,
+  ImageContent,
+  RemoteData,
+  TextContent,
+} from '../conversation/content/';
 
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
 import {CryptographyService, EncryptedAsset} from '../cryptography/root';
