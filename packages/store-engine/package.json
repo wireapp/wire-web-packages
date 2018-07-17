@@ -4,7 +4,7 @@
     "@types/node": "10.5.2",
     "bro-fs": "0.4.0",
     "dexie": "2.0.4",
-    "fs-extra": "6.0.1"
+    "fs-extra": "7.0.0"
   },
   "devDependencies": {
     "jasmine": "3.1.0",
@@ -15,7 +15,7 @@
     "karma-sourcemap-loader": "0.3.7",
     "rimraf": "2.6.2",
     "typescript": "2.9.2",
-    "webpack": "4.16.0",
+    "webpack": "4.16.1",
     "webpack-cli": "3.0.8"
   },
   "description": "Provides a generic storage layer for File, FileSystem, IndexedDB, Memory & LocalStorage.",
@@ -51,5 +51,5 @@
     "test:node": "jasmine --config=jasmine.json"
   },
   "types": "./dist/commonjs/index.d.ts",
-  "version": "0.11.43"
+  "version": "0.11.45"
 }

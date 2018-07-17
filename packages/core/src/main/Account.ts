@@ -32,12 +32,13 @@ import {
 import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/index';
 import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/index';
 import * as cryptobox from '@wireapp/cryptobox';
+import {GenericMessage} from '@wireapp/protocol-messaging';
 import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/error/index';
 import * as Long from 'long';
-import {Root} from 'protobufjs';
 import {LoginSanitizer} from './auth/root';
 import {ClientInfo, ClientService} from './client/root';
 import {ConnectionService} from './connection/root';
+import {AssetContent, DeletedContent, HiddenContent, TextContent} from './conversation/content/';
 import {
   AssetService,
   ConversationService,
@@ -47,13 +48,11 @@ import {
 } from './conversation/root';
 import {CryptographyService} from './cryptography/root';
 import {NotificationService} from './notification/root';
-import proto from './Protobuf';
 import {SelfService} from './self/root';
 
 const logdown = require('logdown');
 import Client = require('@wireapp/api-client');
 import EventEmitter = require('events');
-import {AssetContent, DeletedContent, HiddenContent, TextContent} from './conversation/content/';
 
 class Account extends EventEmitter {
   private readonly logger: any = logdown('@wireapp/core/Account', {
@@ -74,7 +73,6 @@ class Account extends EventEmitter {
     TYPING: 'Account.INCOMING.TYPING',
   };
   private readonly apiClient: Client;
-  private protocolBuffers: any = {};
   public service?: {
     client: ClientService;
     conversation: ConversationService;
@@ -90,34 +88,13 @@ class Account extends EventEmitter {
   }
 
   public async init(): Promise<void> {
-    this.logger.info('init');
-
-    const root: Root = Root.fromJSON(proto);
-
-    this.protocolBuffers = {
-      Asset: root.lookup('Asset'),
-      ClientAction: root.lookup('ClientAction'),
-      Confirmation: root.lookup('Confirmation'),
-      Ephemeral: root.lookup('Ephemeral'),
-      External: root.lookup('External'),
-      GenericMessage: root.lookup('GenericMessage'),
-      Knock: root.lookup('Knock'),
-      MessageDelete: root.lookup('MessageDelete'),
-      MessageEdit: root.lookup('MessageEdit'),
-      MessageHide: root.lookup('MessageHide'),
-      Text: root.lookup('Text'),
-    };
+    this.logger.log('init');
 
     const cryptographyService = new CryptographyService(this.apiClient, this.apiClient.config.store);
     const clientService = new ClientService(this.apiClient, this.apiClient.config.store, cryptographyService);
     const connectionService = new ConnectionService(this.apiClient);
     const assetService = new AssetService(this.apiClient);
-    const conversationService = new ConversationService(
-      this.apiClient,
-      this.protocolBuffers,
-      cryptographyService,
-      assetService
-    );
+    const conversationService = new ConversationService(this.apiClient, cryptographyService, assetService);
     const notificationService = new NotificationService(this.apiClient, this.apiClient.config.store);
     const selfService = new SelfService(this.apiClient);
 
@@ -136,7 +113,7 @@ class Account extends EventEmitter {
     initClient: boolean = true,
     clientInfo?: ClientInfo
   ): Promise<Context | undefined> {
-    this.logger.info('login');
+    this.logger.log('login');
     return this.resetContext()
       .then(() => this.init())
       .then(() => LoginSanitizer.removeNonPrintableCharacters(loginData))
@@ -152,7 +129,7 @@ class Account extends EventEmitter {
     loginData: LoginData,
     clientInfo?: ClientInfo
   ): Promise<{isNewClient: boolean; localClient: RegisteredClient}> {
-    this.logger.info('initClient');
+    this.logger.log('initClient');
     if (!this.service) {
       throw new Error('Services are not set.');
     }
@@ -169,21 +146,21 @@ class Account extends EventEmitter {
         const notFoundOnBackend = error.response && error.response.status === StatusCode.NOT_FOUND;
 
         if (notFoundInDatabase) {
-          this.logger.info('Could not find valid client in database');
+          this.logger.log('Could not find valid client in database');
           return this.registerClient(loginData, clientInfo);
         }
         if (notFoundOnBackend) {
-          this.logger.info('Could not find valid client on backend');
+          this.logger.log('Could not find valid client on backend');
           return this.service!.client.getLocalClient().then(client => {
             const shouldDeleteWholeDatabase = client.type === ClientType.TEMPORARY;
             if (shouldDeleteWholeDatabase) {
-              this.logger.info('Last client was temporary - Deleting database');
+              this.logger.log('Last client was temporary - Deleting database');
               return this.apiClient.config.store
                 .purge()
                 .then(() => this.apiClient.init(loginData.clientType))
                 .then(() => this.registerClient(loginData, clientInfo));
             }
-            this.logger.info('Last client was permanent - Deleting cryptography stores');
+            this.logger.log('Last client was permanent - Deleting cryptography stores');
             return this.service!.cryptography.deleteCryptographyStores().then(() =>
               this.registerClient(loginData, clientInfo)
             );
@@ -194,7 +171,7 @@ class Account extends EventEmitter {
   }
 
   public loadAndValidateLocalClient(): Promise<RegisteredClient> {
-    this.logger.info('loadAndValidateLocalClient');
+    this.logger.log('loadAndValidateLocalClient');
     let loadedClient: RegisteredClient;
     return this.service!.cryptography.initCryptobox()
       .then(() => this.service!.client.getLocalClient())
@@ -209,7 +186,7 @@ class Account extends EventEmitter {
     loginData: LoginData,
     clientInfo?: ClientInfo
   ): Promise<{isNewClient: boolean; localClient: RegisteredClient}> {
-    this.logger.info('registerClient');
+    this.logger.log('registerClient');
     if (!this.service) {
       throw new Error('Services are not set.');
     }
@@ -218,7 +195,7 @@ class Account extends EventEmitter {
     return this.service!.client.register(loginData, clientInfo)
       .then((client: RegisteredClient) => (registeredClient = client))
       .then(() => {
-        this.logger.info('Client is created');
+        this.logger.log('Client is created');
         this.apiClient.context!.clientId = registeredClient.id;
         this.service!.conversation.setClientID(registeredClient.id);
         return this.service!.notification.initializeNotificationStream(registeredClient.id);
@@ -228,7 +205,7 @@ class Account extends EventEmitter {
   }
 
   private resetContext(): Promise<void> {
-    this.logger.info('resetContext');
+    this.logger.log('resetContext');
     return Promise.resolve().then(() => {
       delete this.apiClient.context;
       delete this.service;
@@ -236,12 +213,12 @@ class Account extends EventEmitter {
   }
 
   public logout(): Promise<void> {
-    this.logger.info('logout');
+    this.logger.log('logout');
     return this.apiClient.logout().then(() => this.resetContext());
   }
 
   public listen(notificationHandler?: Function): Promise<Account> {
-    this.logger.info('listen');
+    this.logger.log('listen');
     if (!this.apiClient.context) {
       throw new Error('Context is not set - Please login first');
     }
@@ -273,14 +250,15 @@ class Account extends EventEmitter {
 
     const sessionId = CryptographyService.constructSessionId(from, sender);
     const decryptedMessage = await this.service.cryptography.decrypt(sessionId, cipherText);
-    const genericMessage = this.protocolBuffers.GenericMessage.decode(decryptedMessage);
+    const genericMessage = GenericMessage.decode(decryptedMessage);
 
     if (genericMessage.content === GenericMessageType.EPHEMERAL) {
       const unwrappedMessage = this.mapGenericMessage(genericMessage.ephemeral, otrMessage);
-      const expireAfterMillis = genericMessage.ephemeral.expireAfterMillis;
-      unwrappedMessage.messageTimer = expireAfterMillis.toNumber
-        ? (expireAfterMillis as Long).toNumber()
-        : expireAfterMillis;
+      if (genericMessage.ephemeral) {
+        const expireAfterMillis = genericMessage.ephemeral.expireAfterMillis;
+        unwrappedMessage.messageTimer =
+          typeof expireAfterMillis === 'number' ? expireAfterMillis : (expireAfterMillis as Long).toNumber();
+      }
       return unwrappedMessage;
     } else {
       return this.mapGenericMessage(genericMessage, otrMessage);
@@ -370,7 +348,6 @@ class Account extends EventEmitter {
 
   private async handleEvent(event: IncomingEvent): Promise<PayloadBundleIncoming | IncomingEvent | void> {
     this.logger.info('handleEvent', event.type);
-
     const ENCRYPTED_EVENTS = [CONVERSATION_EVENT.OTR_MESSAGE_ADD];
     const META_EVENTS = [CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE, CONVERSATION_EVENT.TYPING];
     const USER_EVENTS = [USER_EVENT.CONNECTION];
@@ -387,7 +364,7 @@ class Account extends EventEmitter {
   }
 
   private async handleNotification(notification: IncomingNotification): Promise<void> {
-    this.logger.info('handleNotification');
+    this.logger.log('handleNotification');
     for (const event of notification.payload) {
       const data = await this.handleEvent(event);
       if (data) {
@@ -419,7 +396,7 @@ class Account extends EventEmitter {
               conversation,
             } = data as ConversationMessageTimerUpdateEvent;
             const expireAfterMillis = Number(message_timer);
-            this.logger.info(
+            this.logger.log(
               `Received "${expireAfterMillis}" ms timer on conversation level for conversation "${conversation}".`
             );
             this.service!.conversation.messageTimer.setConversationLevelTimer(conversation, expireAfterMillis);
@@ -436,7 +413,7 @@ class Account extends EventEmitter {
           }
         }
       } else {
-        this.logger.info(
+        this.logger.log(
           `Received unsupported event "${event.type}"` + (event as ConversationEvent).conversation
             ? `in conversation "${(event as ConversationEvent).conversation}"`
             : '' + (event as ConversationEvent).from
