@@ -78,10 +78,10 @@ export default class ConversationService {
     this.messageTimer = new MessageTimer();
   }
 
-  private createEphemeral(originalGenericMessage: any, expireAfterMillis: number): GenericMessage {
+  private createEphemeral(originalGenericMessage: GenericMessage, expireAfterMillis: number): GenericMessage {
     const ephemeralMessage = Ephemeral.create({
       expireAfterMillis,
-      [originalGenericMessage.content]: originalGenericMessage[originalGenericMessage.content],
+      [originalGenericMessage.content!]: originalGenericMessage[originalGenericMessage.content!],
     });
 
     const genericMessage = GenericMessage.create({
