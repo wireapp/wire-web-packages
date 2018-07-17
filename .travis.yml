@@ -38,11 +38,11 @@ before_install:
 
 before_script:
   - yarn boot
-  - export IS_MASTER_BRANCH="$([[ "${TRAVIS_BRANCH}" == "master" && "${TRAVIS_PULL_REQUEST}" == "false" ]] && echo 0 || echo 1)"
-  - export HAS_UPDATES="$(npx lerna updated > /dev/null 2>&1; echo $?)"
-  - export IS_DEPENDENCY_BUMP="$([[ "${TRAVIS_COMMIT_MESSAGE}" == "build"* ]] && echo 0 || echo 1)"
-  - export WILL_RELEASE="$([[ "${IS_MASTER_BRANCH}" == "0" && "${HAS_UPDATES}" == "0" && "${IS_DEPENDENCY_BUMP}" == "1" ]] && echo 0 || echo 1)"
-  - echo -e "IS_MASTER_BRANCH = ${IS_MASTER_BRANCH}\nHAS_UPDATES = ${HAS_UPDATES}\nWILL_RELEASE = ${WILL_RELEASE}\nIS_DEPENDENCY_BUMP = ${IS_DEPENDENCY_BUMP}"
+  - export IS_MASTER_BRANCH="$([[ "${TRAVIS_BRANCH}" == "master" && "${TRAVIS_PULL_REQUEST}" == "false" ]] && echo "0" || echo "1")"
+  - export HAS_UPDATES="$(npx lerna updated > /dev/null 2>&1; echo "${?}")"
+  - export IS_DEPENDENCY_BUMP="$([[ "${TRAVIS_COMMIT_MESSAGE}" == "build"* ]] && echo "0" || echo "1")"
+  - export WILL_RELEASE="$([[ "${IS_MASTER_BRANCH}" == "0" && "${HAS_UPDATES}" == "0" && "${IS_DEPENDENCY_BUMP}" == "1" ]] && echo "0" || echo "1")"
+  - echo -e "IS_MASTER_BRANCH = ${IS_MASTER_BRANCH}\\nHAS_UPDATES = ${HAS_UPDATES}\\nWILL_RELEASE = ${WILL_RELEASE}\\nIS_DEPENDENCY_BUMP = ${IS_DEPENDENCY_BUMP}"
 
 script:
   - yarn test
@@ -52,16 +52,16 @@ notifications:
 
 after_failure:
   - |
-    if [ "${IS_MASTER_BRANCH}" == 0 ]; then
+    if [[ "${IS_MASTER_BRANCH}" == "0" ]]; then
       LAST_COMMITTER_NAME="$(git log -1 --format='%cn')"
       NODE_DEBUG="@wireapp:*" node "packages/core/src/demo/status-bot.js" "4ae15efc-d061-4013-98f2-bcd81ab39b60" "${LAST_COMMITTER_NAME} broke the \"${TRAVIS_BRANCH}\" branch on \"${TRAVIS_REPO_SLUG}\". 🌵"
     fi
 
 after_success:
   - |
-    if [ "${WILL_RELEASE}" == 0 ]; then
-      git config --global user.email "webapp+travis@wire.com"
-      git config --global user.name "Wire Travis CI"
+    if [[ "${WILL_RELEASE}" == "0" ]]; then
+      git config --global "user.email" "webapp+travis@wire.com"
+      git config --global "user.name" "Wire Travis CI"
       mkdir -p "temp"
       openssl aes-256-cbc -K "${encrypted_d95474b06f11_key}" -iv "${encrypted_d95474b06f11_iv}" -in "deploy.enc" -out "temp/deploy" -d
       chmod 600 "temp/deploy"
