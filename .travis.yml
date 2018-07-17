@@ -54,7 +54,7 @@ after_failure:
   - |
     if [ "${IS_MASTER_BRANCH}" == 0 ]; then
       LAST_COMMITTER_NAME="$(git log -1 --format='%cn')"
-      NODE_DEBUG=@wireapp:* node packages/core/src/demo/status-bot.js "4ae15efc-d061-4013-98f2-bcd81ab39b60" "${LAST_COMMITTER_NAME} broke the \"${TRAVIS_BRANCH}\" branch on \"${TRAVIS_REPO_SLUG}\". 🌵";
+      NODE_DEBUG=@wireapp:* node packages/core/src/demo/status-bot.js "4ae15efc-d061-4013-98f2-bcd81ab39b60" "${LAST_COMMITTER_NAME} broke the \"${TRAVIS_BRANCH}\" branch on \"${TRAVIS_REPO_SLUG}\". 🌵"
     fi
 
 after_success:
@@ -68,13 +68,13 @@ after_success:
       eval `ssh-agent -s`
       ssh-add temp/deploy
       rm -rf temp
-      echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> "${HOME}/.npmrc" && \
-      git checkout master;
-      git pull;
+      echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> "${HOME}/.npmrc"
+      git checkout master
+      git pull
       REPO=`git config remote.origin.url`
       SSH_REPO=${REPO/https:\/\/github.com\//git@github.com:}
       echo "${SSH_REPO}"
       git remote set-url origin ${SSH_REPO}
-      yarn release;
-      NODE_DEBUG=@wireapp:* node packages/core/src/demo/status-bot.js "4ae15efc-d061-4013-98f2-bcd81ab39b60";
+      yarn release
+      NODE_DEBUG=@wireapp:* node packages/core/src/demo/status-bot.js "4ae15efc-d061-4013-98f2-bcd81ab39b60"
     fi
