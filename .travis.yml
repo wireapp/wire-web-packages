@@ -62,19 +62,19 @@ after_success:
     if [ "${WILL_RELEASE}" == 0 ]; then
       git config --global user.email webapp+travis@wire.com
       git config --global user.name "Wire Travis CI"
-      mkdir -p temp
-      openssl aes-256-cbc -K $encrypted_d95474b06f11_key -iv $encrypted_d95474b06f11_iv -in deploy.enc -out temp/deploy -d
-      chmod 600 temp/deploy
-      eval `ssh-agent -s`
-      ssh-add temp/deploy
-      rm -rf temp
+      mkdir -p "temp"
+      openssl aes-256-cbc -K "${encrypted_d95474b06f11_key}" -iv "${encrypted_d95474b06f11_iv}" -in "deploy.enc" -out "temp/deploy" -d
+      chmod 600 "temp/deploy"
+      eval $(ssh-agent -s)
+      ssh-add "temp/deploy"
+      rm -rf "temp"
       echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> "${HOME}/.npmrc"
       git checkout master
       git pull
-      REPO=`git config remote.origin.url`
-      SSH_REPO=${REPO/https:\/\/github.com\//git@github.com:}
+      REPO="$(git config remote.origin.url)"
+      SSH_REPO="${REPO/https:\/\/github.com\//git@github.com:}"
       echo "${SSH_REPO}"
-      git remote set-url origin ${SSH_REPO}
+      git remote set-url origin "${SSH_REPO}"
       yarn release
       NODE_DEBUG=@wireapp:* node packages/core/src/demo/status-bot.js "4ae15efc-d061-4013-98f2-bcd81ab39b60"
     fi
