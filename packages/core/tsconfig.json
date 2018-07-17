@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
+    "allowJs": true,
+    "declaration": false,
     "outDir": "dist",
     "rootDir": "src/main"
   },
-  "exclude": ["dist", "node_modules"],
+  "exclude": ["dist", "node_modules", "src/main/**/*test.node.js", "src/demo", "karma.conf.js", "webpack.config.js"],
   "extends": "../../tsconfig.json"
 }

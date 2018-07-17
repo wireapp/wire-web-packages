@@ -78,7 +78,7 @@ export default class ConversationService {
     this.messageTimer = new MessageTimer();
   }
 
-  private createEphemeral(originalGenericMessage: any, expireAfterMillis: number): any {
+  private createEphemeral(originalGenericMessage: any, expireAfterMillis: number): GenericMessage {
     const ephemeralMessage = Ephemeral.create({
       expireAfterMillis,
       [originalGenericMessage.content]: originalGenericMessage[originalGenericMessage.content],
@@ -169,7 +169,7 @@ export default class ConversationService {
   private async sendGenericMessage(
     sendingClientId: string,
     conversationId: string,
-    genericMessage: any
+    genericMessage: GenericMessage
   ): Promise<ClientMismatch> {
     const plainTextBuffer: Uint8Array = GenericMessage.encode(genericMessage).finish();
     const preKeyBundles = await this.getPreKeyBundles(conversationId);
