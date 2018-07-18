@@ -25,7 +25,7 @@ class StandupHandler implements MessageHandler {
   }
 
   async handleText(account: Account, incomingPayload: PayloadBundleIncoming) {
-    const conversationId = incomingPayload.conversation;
+    const conversationId = String(incomingPayload.conversation);
     const text = (incomingPayload.content as TextContent).text;
 
     this.logger.debug(`Received text message in conversation "${conversationId}".`);
