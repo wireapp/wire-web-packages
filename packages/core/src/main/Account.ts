@@ -238,7 +238,9 @@ class Account extends EventEmitter {
       .then(() => this);
   }
 
-  private async decodeGenericMessage(otrMessage: ConversationOtrMessageAddEvent): Promise<PayloadBundleIncoming> {
+  private async decodeGenericMessage(
+    otrMessage: ConversationOtrMessageAddEvent
+  ): Promise<PayloadBundleIncoming | undefined> {
     if (!this.service) {
       throw new Error('Services are not set.');
     }
@@ -250,18 +252,22 @@ class Account extends EventEmitter {
 
     const sessionId = CryptographyService.constructSessionId(from, sender);
     const decryptedMessage = await this.service.cryptography.decrypt(sessionId, cipherText);
-    const genericMessage = GenericMessage.decode(decryptedMessage);
+    if (decryptedMessage) {
+      const genericMessage = GenericMessage.decode(decryptedMessage);
 
-    if (genericMessage.content === GenericMessageType.EPHEMERAL) {
-      const unwrappedMessage = this.mapGenericMessage(genericMessage.ephemeral, otrMessage);
-      if (genericMessage.ephemeral) {
-        const expireAfterMillis = genericMessage.ephemeral.expireAfterMillis;
-        unwrappedMessage.messageTimer =
-          typeof expireAfterMillis === 'number' ? expireAfterMillis : (expireAfterMillis as Long).toNumber();
+      if (genericMessage.content === GenericMessageType.EPHEMERAL) {
+        const unwrappedMessage = this.mapGenericMessage(genericMessage.ephemeral, otrMessage);
+        if (genericMessage.ephemeral) {
+          const expireAfterMillis = genericMessage.ephemeral.expireAfterMillis;
+          unwrappedMessage.messageTimer =
+            typeof expireAfterMillis === 'number' ? expireAfterMillis : (expireAfterMillis as Long).toNumber();
+        }
+        return unwrappedMessage;
+      } else {
+        return this.mapGenericMessage(genericMessage, otrMessage);
       }
-      return unwrappedMessage;
     } else {
-      return this.mapGenericMessage(genericMessage, otrMessage);
+      return undefined;
     }
   }
 

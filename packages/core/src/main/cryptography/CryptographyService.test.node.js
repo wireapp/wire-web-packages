@@ -91,7 +91,12 @@ describe('CryptographyService', () => {
       const preKey = await cryptographyService.cryptobox.get_prekey();
       const text = 'Hi!';
       const encodedPreKeyMessage = await CryptographyHelper.createEncodedCipherText(receiver, preKey, text);
-      const plaintext = await CryptographyHelper.getPlainText(cryptographyService, encodedPreKeyMessage);
+      const sessionId = 'alice-to-bob';
+      const plaintext = await CryptographyHelper.getPlainText(cryptographyService, encodedPreKeyMessage, sessionId);
+      // Testing to decrypt the same message multiple times (to provoke duplicate message errors)
+      await CryptographyHelper.getPlainText(cryptographyService, encodedPreKeyMessage, sessionId);
+      await CryptographyHelper.getPlainText(cryptographyService, encodedPreKeyMessage, sessionId);
+      await CryptographyHelper.getPlainText(cryptographyService, encodedPreKeyMessage, sessionId);
       expect(plaintext).toBe(text);
       done();
     });

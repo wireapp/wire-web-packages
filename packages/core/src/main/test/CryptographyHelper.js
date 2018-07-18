@@ -18,6 +18,8 @@ module.exports = {
   },
   getPlainText: async (cryptographyService, encodedPreKeyMessage, sessionId = `temp-${Date.now()}`) => {
     const decodedMessageBuffer = await cryptographyService.decrypt(sessionId, encodedPreKeyMessage);
-    return Buffer.from(decodedMessageBuffer).toString('utf8');
+    if (decodedMessageBuffer) {
+      return Buffer.from(decodedMessageBuffer).toString('utf8');
+    }
   },
 };
