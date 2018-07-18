@@ -17,8 +17,8 @@
  *
  */
 
+import {ActionLink} from './ActionLink';
 import {COLOR} from '../Identity';
-import {Link} from './Link';
 import {Text} from './Text';
 
 const Label = Text.withComponent('span');
@@ -26,10 +26,10 @@ const Label = Text.withComponent('span');
 Label.defaultProps = {
   ...Text.defaultProps,
   bold: true,
-  color: COLOR.LINK,
+  color: COLOR.ACTION_LINK,
   fontSize: '12px',
 };
 
-const LabelLink = Label.withComponent(Link);
+const LabelLink = Label.withComponent(ActionLink);
 
 export {Label, LabelLink};

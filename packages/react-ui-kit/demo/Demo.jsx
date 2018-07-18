@@ -18,6 +18,7 @@
  */
 
 import {
+  ActionLink,
   AddPeopleIcon,
   ArrowIcon,
   AttachmentIcon,
@@ -62,7 +63,6 @@ import {
   LabelLink,
   LeaveIcon,
   Line,
-  Link,
   LinkedInIcon,
   Loading,
   Logo,
@@ -281,20 +281,20 @@ class Demo extends React.PureComponent {
               </Column>
             </Columns>
 
-            <H2>Link</H2>
+            <H2>Links</H2>
             <Line />
             <Columns>
-              <Column>Link</Column>
+              <Column>Action Link</Column>
               <Column>
-                <Link href="#">Link</Link>
+                <ActionLink href="#">Action Link</ActionLink>
               </Column>
             </Columns>
             <Columns>
-              <Column>Link with custom component</Column>
+              <Column>Action Link with custom component</Column>
               <Column>
-                <Link component={Button} color={COLOR.GREEN}>
-                  CustomLink
-                </Link>
+                <ActionLink component={Button} color={COLOR.YELLOW}>
+                  Custom Link
+                </ActionLink>
               </Column>
             </Columns>
 
@@ -313,9 +313,9 @@ class Demo extends React.PureComponent {
               <Column>
                 <Checkbox id="ToULink" defaultChecked={true}>
                   <Text bold fontSize="11px" textTransform="uppercase">
-                    {'ToU '}
+                    {'ToU'}
                   </Text>
-                  <Link href="#">{'Link'}</Link>
+                  <ActionLink href="#">{'Link'}</ActionLink>
                 </Checkbox>
               </Column>
             </Columns>

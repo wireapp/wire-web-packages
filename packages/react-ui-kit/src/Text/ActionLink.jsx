@@ -23,8 +23,8 @@ import React from 'react';
 import {Text} from './Text';
 import {defaultTransition} from '../Identity/motions';
 
-const Link = ({component, ...props}) => {
-  const StyledLink = Text.withComponent(component).extend`
+const ActionLink = ({component, ...props}) => {
+  const StyledActionLink = Text.withComponent(component).extend`
     /* appearance */
     text-decoration: none;
     ${defaultTransition}
@@ -38,24 +38,24 @@ const Link = ({component, ...props}) => {
       color: ${() => props.color};
     }
     &:hover {
-      color: ${COLOR.LINK};
+      color: ${COLOR.ACTION_LINK};
     }
   `;
-  return <StyledLink {...props} />;
+  return <StyledActionLink {...props} />;
 };
 
-Link.propTypes = {
+ActionLink.propTypes = {
   ...Text.propTypes,
   component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 };
 
-Link.defaultProps = {
+ActionLink.defaultProps = {
   ...Text.defaultProps,
   bold: true,
-  color: COLOR.LINK,
+  color: COLOR.ACTION_LINK,
   component: 'a',
   fontSize: '11px',
   textTransform: 'uppercase',
 };
 
-export {Link};
+export {ActionLink};
