@@ -89,7 +89,7 @@ describe('CryptographyService', () => {
     it('is resistant to duplicated message errors', async done => {
       const receiver = cryptographyService.cryptobox.identity;
       const preKey = await cryptographyService.cryptobox.get_prekey();
-      const text = 'Hi';
+      const text = 'Hi!';
       const encodedPreKeyMessage = await CryptographyHelper.createEncodedCipherText(receiver, preKey, text);
       const plaintext = await CryptographyHelper.getPlainText(cryptographyService, encodedPreKeyMessage);
       expect(plaintext).toBe(text);
