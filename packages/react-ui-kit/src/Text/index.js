@@ -24,6 +24,6 @@ setGlobalStyles();
 export {Heading, H1, H2, H3, H4} from './Heading';
 export {Label, LabelLink} from './Label';
 export * from './Line';
-export * from './StrongLink';
 export * from './Paragraph';
+export * from './StrongLink';
 export * from './Text';
