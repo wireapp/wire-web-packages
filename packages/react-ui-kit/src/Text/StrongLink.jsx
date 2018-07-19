@@ -24,7 +24,7 @@ import {Text} from './Text';
 import {defaultTransition} from '../Identity/motions';
 
 const StrongLink = ({component, ...props}) => {
-  const StyledActionLink = Text.withComponent(component).extend`
+  const StyledStrongLink = Text.withComponent(component).extend`
     /* appearance */
     text-decoration: none;
     ${defaultTransition}
@@ -41,7 +41,7 @@ const StrongLink = ({component, ...props}) => {
       color: ${COLOR.STRONG_LINK};
     }
   `;
-  return <StyledActionLink {...props} />;
+  return <StyledStrongLink {...props} />;
 };
 
 StrongLink.propTypes = {
