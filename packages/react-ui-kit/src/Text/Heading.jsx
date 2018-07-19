@@ -39,20 +39,20 @@ const H2 = Text.withComponent('h2').extend`
   font-size: 24px;
   font-weight: 700;
   line-height: 32px;
-  margin-top: 48px;
   margin-bottom: 24px;
+  margin-top: 48px;
 
   ${media.mobile`
     font-size: 20px;
     line-height: 28px;
-    margin-top: 44px;
     margin-bottom: 20px;
+    margin-top: 44px;
   `}
 `;
 
 const H3 = Text.withComponent('h3').extend`
-  font-weight: 600;
   font-size: 16px;
+  font-weight: 600;
   margin-bottom: 16px;
 `;
 
