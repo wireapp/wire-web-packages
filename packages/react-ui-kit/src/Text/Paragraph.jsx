@@ -18,6 +18,7 @@
  */
 
 import {Text} from './Text';
+import media from '../mediaQueries';
 
 const Paragraph = Text.withComponent('p').extend`
   margin-top: 0;
@@ -33,4 +34,24 @@ Paragraph.defaultProps = {
   block: true,
 };
 
-export {Paragraph};
+const Lead = Text.withComponent('p').extend`
+  margin-bottom: 56px;
+  margin-top: 0;
+  ${media.mobile`
+    font-size: 20px;
+  `};
+`;
+
+Lead.propTypes = {
+  ...Text.propTypes,
+};
+
+Lead.defaultProps = {
+  ...Text.defaultProps,
+  block: true,
+  center: true,
+  fontSize: '24px',
+  light: true,
+};
+
+export {Paragraph, Lead};
