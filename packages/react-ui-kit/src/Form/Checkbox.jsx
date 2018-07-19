@@ -77,7 +77,7 @@ const Checkbox = ({id, children, style, ...props}) => {
 const CheckboxLabel = Text.extend`
   a {
     text-decoration: none;
-    color: ${COLOR.ACTION_LINK};
+    color: ${COLOR.STRONG_LINK};
   }
 `;
 

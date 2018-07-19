@@ -18,7 +18,6 @@
  */
 
 import {
-  ActionLink,
   AddPeopleIcon,
   ArrowIcon,
   AttachmentIcon,
@@ -84,6 +83,7 @@ import {
   ShakeBox,
   Small,
   SpeakerIcon,
+  StrongLink,
   StyledApp,
   TeamIcon,
   Text,
@@ -284,17 +284,17 @@ class Demo extends React.PureComponent {
             <H2>Links</H2>
             <Line />
             <Columns>
-              <Column>Action Link</Column>
+              <Column>Strong Link</Column>
               <Column>
-                <ActionLink href="#">Action Link</ActionLink>
+                <StrongLink href="#">Strong Link</StrongLink>
               </Column>
             </Columns>
             <Columns>
-              <Column>Action Link with custom component</Column>
+              <Column>Strong Link with custom component</Column>
               <Column>
-                <ActionLink component={Button} color={COLOR.YELLOW}>
+                <StrongLink component={Button} color={COLOR.YELLOW}>
                   Custom Link
-                </ActionLink>
+                </StrongLink>
               </Column>
             </Columns>
 
@@ -315,7 +315,7 @@ class Demo extends React.PureComponent {
                   <Text bold fontSize="11px" textTransform="uppercase">
                     {'ToU'}
                   </Text>
-                  <ActionLink href="#">{'Link'}</ActionLink>
+                  <StrongLink href="#">{'Link'}</StrongLink>
                 </Checkbox>
               </Column>
             </Columns>

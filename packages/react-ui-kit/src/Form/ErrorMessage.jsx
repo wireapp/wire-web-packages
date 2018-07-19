@@ -24,7 +24,7 @@ const ErrorMessage = Text.extend`
   display: block;
   margin-bottom: 12px;
   a {
-    color: ${COLOR.ACTION_LINK};
+    color: ${COLOR.STRONG_LINK};
     text-decoration: none;
   }
 `;
