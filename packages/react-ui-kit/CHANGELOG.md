@@ -3,6 +3,87 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+      <a name="1.8.0"></a>
+# [1.8.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.7.5...@wireapp/react-ui-kit@1.8.0) (2018-07-19)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Update Heading styles ([#856](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/856)) ([ebbe7f2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/ebbe7f2))
+
+
+### Features
+
+* **react-ui-kit:** Add Title element ([#860](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/860)) ([8f15295](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/8f15295))
+
+
+### BREAKING CHANGES
+
+* **react-ui-kit:** H1: 
+- font size 40px -> 48px
+- line-height: 56px
+- margin-bottom: 64px
+- mobile
+- font-size 24px -> 40px
+- line-height: 32px -> 48px
+
+H2: 
+- font-weight: 300 -> 700
+- line-height: 32px;
+- margin-bottom: 24px;
+- margin-top: 48px;
+- mobile
+- font-size: 20px;
+- line-height: 28px;
+- margin-bottom: 20px;
+- margin-top: 44px;
+
+H3:
+- font-size: 18px -> 16px
+- font-weight: 300 -> 600
+- margin-bottom: 16px
+
+
+
+
+      <a name="1.7.5"></a>
+## [1.7.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.7.4...@wireapp/react-ui-kit@1.7.5) (2018-07-19)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.7.4"></a>
+## [1.7.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.7.3...@wireapp/react-ui-kit@1.7.4) (2018-07-19)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Revert remove flex-basis of columns ([#851](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/851)) ([0a5cc52](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/0a5cc52))
+
+
+
+
+<a name="1.7.3"></a>
+## [1.7.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.7.2...@wireapp/react-ui-kit@1.7.3) (2018-07-18)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Icon color GRAY_DARKEN_72 ([#850](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/850)) ([e74b8d8](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/e74b8d8))
+
+
+
+
+<a name="1.7.2"></a>
+## [1.7.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.7.1...@wireapp/react-ui-kit@1.7.2) (2018-07-18)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
 <a name="1.7.1"></a>
 ## [1.7.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.7.0...@wireapp/react-ui-kit@1.7.1) (2018-07-16)
 

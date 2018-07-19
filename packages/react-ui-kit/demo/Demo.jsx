@@ -23,6 +23,7 @@ import {
   AttachmentIcon,
   AudioVideoIcon,
   Bold,
+  Box,
   Button,
   ButtonLink,
   COLOR,
@@ -60,6 +61,7 @@ import {
   InputSubmitCombo,
   Label,
   LabelLink,
+  Lead,
   LeaveIcon,
   Line,
   Link,
@@ -88,6 +90,7 @@ import {
   TeamIcon,
   Text,
   TimedIcon,
+  Title,
   TwitterIcon,
   Uppercase,
   WireIcon,
@@ -262,6 +265,13 @@ class Demo extends React.PureComponent {
                 </Columns>
               </Column>
             </Columns>
+            <H2>Box</H2>
+
+            <Box>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce a mattis nibh, sed maximus leo. Fusce a
+              lacinia sem, vitae ornare dolor. Quisque rhoncus, magna non lacinia sagittis, erat augue fringilla metus,
+              eu consectetur leo velit non lacus. Phasellus ipsum turpis, dapibus ut purus in, lobortis consectetur mi.
+            </Box>
 
             <H1>Input</H1>
             <Line />
@@ -431,6 +441,12 @@ class Demo extends React.PureComponent {
             <H1>Typography</H1>
             <Line />
             <Columns>
+              <Column>Title</Column>
+              <Column>
+                <Title>Title</Title>
+              </Column>
+            </Columns>
+            <Columns>
               <Column>Default heading</Column>
               <Column>
                 <Heading>Heading default</Heading>
@@ -533,7 +549,11 @@ class Demo extends React.PureComponent {
               perferendis alias porro, placeat totam molestiae similique reiciendis harum consequuntur, earum autem
               excepturi expedita molestias laborum quae non cupiditate!
             </Paragraph>
-
+            <Lead>
+              Lead<br />Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut at eveniet numquam non aperiam,
+              provident sed atque quibusdam! Vitae velit tempore ea pariatur voluptatum. Iure dolorum laudantium, rem
+              iusto eveniet obcaecati perspiciatis.
+            </Lead>
             <Label>Label</Label>
             <LabelLink block>LabelLink</LabelLink>
             <Line />

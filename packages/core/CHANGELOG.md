@@ -3,6 +3,84 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.13.8"></a>
+## [3.13.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.13.7...@wireapp/core@3.13.8) (2018-07-19)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.13.7"></a>
+## [3.13.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.13.6...@wireapp/core@3.13.7) (2018-07-19)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.13.6"></a>
+## [3.13.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.13.5...@wireapp/core@3.13.6) (2018-07-19)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.13.5"></a>
+## [3.13.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.13.4...@wireapp/core@3.13.5) (2018-07-19)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.13.4"></a>
+## [3.13.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.13.3...@wireapp/core@3.13.4) (2018-07-18)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.13.3"></a>
+## [3.13.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.13.2...@wireapp/core@3.13.3) (2018-07-18)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.13.2"></a>
+## [3.13.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.13.1...@wireapp/core@3.13.2) (2018-07-18)
+
+
+### Bug Fixes
+
+* **core:** Fix message sending in status bot ([d9f3618](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/d9f3618))
+
+
+
+
+<a name="3.13.1"></a>
+## [3.13.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.13.0...@wireapp/core@3.13.1) (2018-07-18)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.13.0"></a>
+# [3.13.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.12.3...@wireapp/core@3.13.0) (2018-07-18)
+
+
+### Features
+
+* **core:** Handle duplicate message errors ([#845](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/845)) ([0394c8a](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/0394c8a))
+
+
+
+
 <a name="3.12.3"></a>
 ## [3.12.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.12.2...@wireapp/core@3.12.3) (2018-07-17)
 

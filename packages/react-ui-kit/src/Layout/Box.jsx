@@ -17,41 +17,13 @@
  *
  */
 
-import {Text} from './Text';
-import media from '../mediaQueries';
+import {COLOR} from '../Identity';
+import styled from 'styled-components';
 
-const Paragraph = Text.withComponent('p').extend`
-  margin-top: 0;
-  margin-bottom: 16px;
+const Box = styled.div`
+  border: 2px solid ${COLOR.GRAY_LIGHTEN_72};
+  border-radius: 4px;
+  padding: 16px 32px;
 `;
 
-Paragraph.propTypes = {
-  ...Text.propTypes,
-};
-
-Paragraph.defaultProps = {
-  ...Text.defaultProps,
-  block: true,
-};
-
-const Lead = Text.withComponent('p').extend`
-  margin-bottom: 56px;
-  margin-top: 0;
-  ${media.mobile`
-    font-size: 20px;
-  `};
-`;
-
-Lead.propTypes = {
-  ...Text.propTypes,
-};
-
-Lead.defaultProps = {
-  ...Text.defaultProps,
-  block: true,
-  center: true,
-  fontSize: '24px',
-  light: true,
-};
-
-export {Paragraph, Lead};
+export {Box};

@@ -21,6 +21,7 @@ import setGlobalStyles from '../globalStyles';
 
 setGlobalStyles();
 
+export * from './Box';
 export * from './Column';
 export * from './Container';
 export * from './Content';
