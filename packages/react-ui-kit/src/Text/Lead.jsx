@@ -18,19 +18,25 @@
  */
 
 import {Text} from './Text';
+import media from '../mediaQueries';
 
-const Paragraph = Text.withComponent('p').extend`
+const Lead = Text.withComponent('p').extend`
+  font-size: 24px;
+  font-weight: 300;
+  margin-bottom: 56px;
   margin-top: 0;
-  margin-bottom: 16px;
+  ${media.mobile`
+    font-size: 20px;
+  `};
 `;
 
-Paragraph.propTypes = {
+Lead.propTypes = {
   ...Text.propTypes,
 };
 
-Paragraph.defaultProps = {
+Lead.defaultProps = {
   ...Text.defaultProps,
   block: true,
 };
 
-export {Paragraph};
+export {Lead};
