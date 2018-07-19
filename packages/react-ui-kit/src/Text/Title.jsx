@@ -33,6 +33,7 @@ Title.propTypes = {
 Title.defaultProps = {
   ...Text.defaultProps,
   block: true,
+  center: true,
   fontSize: '32px',
 };
 
