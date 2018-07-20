@@ -100,8 +100,10 @@ storeEngine.init('', {fileExtension: '.json'}).then(() => {
       const stdin = process.openStdin();
       stdin.addListener('data', data => {
         const message = data.toString().trim();
-        const payload = account.service.conversation.createText(message);
-        account.service.conversation.send(conversationID, payload);
+        if (account.service) {
+          const payload = account.service.conversation.createText(message);
+          account.service.conversation.send(conversationID, payload);
+        }
       });
     })
     .catch((error: Error) => {
