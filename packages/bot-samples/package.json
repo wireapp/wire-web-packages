@@ -3,7 +3,7 @@
     "wire-standup-bot": "dist/standup-bot/index.js"
   },
   "dependencies": {
-    "@wireapp/bot": "0.0.1",
+    "@wireapp/bot": "0.1.0-beta.1",
     "commander": "2.16.0",
     "logdown": "3.2.3"
   },
@@ -14,8 +14,8 @@
     "typescript": "2.9.2"
   },
   "license": "GPL-3.0",
-  "main": "dist/index.js",
   "name": "@wireapp/bot-samples",
+  "private": true,
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-samples",
   "scripts": {
     "build": "yarn build:node && yarn build:browser",
