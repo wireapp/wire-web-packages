@@ -6,24 +6,13 @@ You can find the published source code at [github.com/wireapp](https://github.co
 
 For licensing information, see the attached LICENSE file and the list of third-party licenses at [wire.com/legal/licenses/](https://wire.com/legal/licenses/).
 
-## Standup Bot
+## Bot Samples
 
-A bot that can add people to a certain chat.
+Collection of exemplary Wire bot projects.
 
-### Getting Started
+### Standup Bot
 
 ```
 yarn
-yarn start -e bot@wire.com -p password -c d620c216-646a-4063-bbb3-b29b7e84b306
-```
-
-### Usage
-
-Just ask for `--help` to get informed on how to use this bot:
-
-**Node**
-
-```bash
-yarn dist
-node dist/start.js --help
+yarn start:standup-bot -e bot@wire.com -p password -c d620c216-646a-4063-bbb3-b29b7e84b306
 ```

@@ -1,6 +1,6 @@
 /* eslint no-magic-numbers: "off" */
 
-const {StandupHandler} = require('../../dist/StandupHandler');
+const {StandupHandler} = require('../../../dist/StandupHandler');
 
 describe('StandupHandler', () => {
   describe('"addParticipant"', () => {
