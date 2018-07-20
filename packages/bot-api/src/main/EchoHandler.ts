@@ -20,7 +20,7 @@
 import {MessageHandler} from './MessageHandler';
 
 class EchoHandler extends MessageHandler {
-  async handleText(conversationId: string, fromId: string, text: string): Promise<void> {
+  async handleText(conversationId: string, _: string, text: string): Promise<void> {
     await this.sendText(conversationId, text);
   }
 }
