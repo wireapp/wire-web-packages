@@ -17,41 +17,24 @@
  *
  */
 
+import {COLOR} from '../Identity';
 import {Text} from './Text';
-import media from '../mediaQueries';
 
-const Paragraph = Text.withComponent('p').extend`
-  margin-top: 0;
-  margin-bottom: 16px;
+const Title = Text.withComponent('div').extend`
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: ${COLOR.GRAY};
 `;
 
-Paragraph.propTypes = {
+Title.propTypes = {
   ...Text.propTypes,
 };
 
-Paragraph.defaultProps = {
-  ...Text.defaultProps,
-  block: true,
-};
-
-const Lead = Text.withComponent('p').extend`
-  margin-bottom: 56px;
-  margin-top: 0;
-  ${media.mobile`
-    font-size: 20px;
-  `};
-`;
-
-Lead.propTypes = {
-  ...Text.propTypes,
-};
-
-Lead.defaultProps = {
+Title.defaultProps = {
   ...Text.defaultProps,
   block: true,
   center: true,
-  fontSize: '24px',
-  light: true,
+  fontSize: '32px',
 };
 
-export {Paragraph, Lead};
+export {Title};

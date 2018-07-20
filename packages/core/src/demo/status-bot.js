@@ -19,6 +19,8 @@
 
 //@ts-check
 
+require('dotenv').config();
+
 const APIClient = require('@wireapp/api-client');
 const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/');
 const logdown = require('logdown');
@@ -67,9 +69,9 @@ if (!message) {
     const account = new Account(apiClient);
     await account.login(login);
 
-    const text = message || `I am posting from ${name} v${version}. 🌞`;
+    const text = message || `I am posting from ${name} v${version} (Build #${process.env.TRAVIS_BUILD_NUMBER}). 🌞`;
     const payload = account.service.conversation.createText(text);
-    await account.service.conversation.send(message, payload);
+    await account.service.conversation.send(conversationId, payload);
   } catch (error) {
     logger.error('Error:', error.stack);
   }
