@@ -17,7 +17,7 @@
  *
  */
 
-import APIClient = require('@wireapp/api-client');
+import {Client as APIClient} from '@wireapp/api-client';
 import {Connection, ConnectionStatus} from '@wireapp/api-client/dist/commonjs/connection/';
 
 export default class ConnectionService {

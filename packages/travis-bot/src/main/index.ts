@@ -24,7 +24,7 @@ import {MemoryEngine} from '@wireapp/store-engine';
 import {exec} from 'child_process';
 import {promisify} from 'util';
 
-import APIClient = require('@wireapp/api-client');
+import {Client as APIClient} from '@wireapp/api-client';
 import * as Changelog from 'generate-changelog';
 
 const logdown = require('logdown');

@@ -38,7 +38,7 @@ import {MemberAPI, PaymentAPI, TeamAPI, TeamInvitationAPI} from './team/';
 import {User} from './user';
 import {UserAPI} from './user/';
 
-const VERSION = require('../../package.json').version;
+const {version}: {version: string} = require('../../package.json');
 
 class Client {
   private readonly logger: any = logdown('@wireapp/api-client/Client', {
@@ -76,7 +76,7 @@ class Client {
   public transport: {http: HttpClient; ws: WebSocketClient};
 
   public static BACKEND = Backend;
-  public static VERSION: string = VERSION;
+  public static VERSION = version;
 
   constructor(public config: Config = new Config()) {
     this.config = new Config(config.store, config.urls, config.schemaCallback);
@@ -243,4 +243,4 @@ class Client {
   }
 }
 
-export = Client;
+export {Client};

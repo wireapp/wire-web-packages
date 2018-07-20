@@ -17,7 +17,7 @@
  *
  */
 
-import APIClient = require('@wireapp/api-client');
+import {Client as APIClient} from '@wireapp/api-client';
 import {NewClient, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/index';
 
 export default class ClientBackendRepository {

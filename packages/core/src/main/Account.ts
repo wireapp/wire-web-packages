@@ -51,8 +51,8 @@ import {NotificationService} from './notification/root';
 import {SelfService} from './self/root';
 
 const logdown = require('logdown');
-import Client = require('@wireapp/api-client');
-import EventEmitter = require('events');
+import {Client} from '@wireapp/api-client';
+import * as EventEmitter from 'events';
 
 class Account extends EventEmitter {
   private readonly logger: any = logdown('@wireapp/core/Account', {
