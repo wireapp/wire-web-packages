@@ -12,7 +12,6 @@
     "no-return-await": true,
     "no-sparse-arrays": true,
     "no-this-assignment": true,
-    "no-unused-variable": true,
     "object-literal-sort-keys": true,
     "ordered-imports": true,
     "prefer-conditional-expression": true,
