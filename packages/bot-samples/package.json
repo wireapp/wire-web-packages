@@ -3,7 +3,7 @@
     "wire-standup-bot": "dist/standup-bot/index.js"
   },
   "dependencies": {
-    "@wireapp/bot": "0.1.0-beta.1",
+    "@wireapp/bot-api": "0.1.0-beta.1",
     "commander": "2.16.0",
     "logdown": "3.2.3"
   },
