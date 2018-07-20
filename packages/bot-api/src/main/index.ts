@@ -17,6 +17,10 @@
  *
  */
 
-export * from './Bot';
-export * from './BotConfig';
-export * from './MessageHandler';
+import {Bot} from './Bot';
+import {MessageHandler} from './MessageHandler';
+
+export = {
+  Bot,
+  MessageHandler,
+};

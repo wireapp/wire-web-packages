@@ -24,7 +24,8 @@ import {Account} from '@wireapp/core';
 import {TextContent} from '@wireapp/core/dist/conversation/content';
 import {PayloadBundleIncoming} from '@wireapp/core/dist/conversation/root';
 import {MemoryEngine} from '@wireapp/store-engine';
-import {BotConfig, MessageHandler} from './index';
+import {BotConfig} from './BotConfig';
+import {MessageHandler} from './MessageHandler';
 
 const logdown = require('logdown');
 
@@ -37,7 +38,7 @@ class Bot {
     markdown: false,
   });
 
-  constructor(config: BotConfig) {
+  constructor(config: BotConfig = {conversations: [], owners: []}) {
     this.config = config;
     this.account = new Account(new APIClient());
     this.handlers = [];
