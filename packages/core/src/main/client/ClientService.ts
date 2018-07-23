@@ -19,7 +19,7 @@
 
 const logdown = require('logdown');
 const pkg = require('../../package.json');
-import APIClient = require('@wireapp/api-client');
+import {APIClient} from '@wireapp/api-client';
 import {LoginData, PreKey} from '@wireapp/api-client/dist/commonjs/auth/index';
 import {
   ClientClassification,
@@ -115,7 +115,7 @@ export default class ClientService {
         ),
         location: clientInfo.location,
         model: clientInfo.model,
-        password: String(loginData.password),
+        password: loginData.password ? String(loginData.password) : undefined,
         prekeys: serializedPreKeys,
         sigkeys: {
           enckey: 'Wuec0oJi9/q9VsgOil9Ds4uhhYwBT+CAUrvi/S9vcz0=',
