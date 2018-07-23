@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@wireapp/core": "3.13.11"
+    "@wireapp/core": "3.13.13"
   },
   "devDependencies": {
     "cross-env": "5.2.0",
