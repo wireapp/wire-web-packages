@@ -18,7 +18,7 @@
  */
 
 import {MessageHandler} from '@wireapp/bot-api';
-import LRUCache from '@wireapp/lru-cache';
+import {LRUCache} from '@wireapp/lru-cache';
 
 const logdown = require('logdown');
 
