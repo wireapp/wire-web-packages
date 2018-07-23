@@ -24,22 +24,22 @@ abstract class MessageHandler {
 
   abstract handleText(conversationId: string, fromId: string, text: string): void;
 
-  public async sendText(conversationId: string, text: string): Promise<void> {
-    if (this.account) {
-      const textPayload = this.account.service!.conversation.createText(text);
-      await this.account.service!.conversation.send(conversationId, textPayload);
-    }
-  }
-
   public async addUser(conversationId: string, userId: string): Promise<void> {
-    if (this.account) {
-      await this.account.service!.conversation.addUser(conversationId, userId);
+    if (this.account && this.account.service) {
+      await this.account.service.conversation.addUser(conversationId, userId);
     }
   }
 
   public async removeUser(conversationId: string, userId: string): Promise<void> {
-    if (this.account) {
-      await this.account.service!.conversation.removeUser(conversationId, userId);
+    if (this.account && this.account.service) {
+      await this.account.service.conversation.removeUser(conversationId, userId);
+    }
+  }
+
+  public async sendText(conversationId: string, text: string): Promise<void> {
+    if (this.account && this.account.service) {
+      const textPayload = this.account.service.conversation.createText(text);
+      await this.account.service.conversation.send(conversationId, textPayload);
     }
   }
 }

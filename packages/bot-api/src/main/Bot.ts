@@ -30,7 +30,7 @@ import {MessageHandler} from './MessageHandler';
 const logdown = require('logdown');
 
 class Bot {
-  private account: Account;
+  private account: Account | undefined;
   private readonly config: BotConfig;
   private readonly handlers: MessageHandler[];
   private readonly logger: any = logdown('@wireapp/standup-bot/StandupBot', {
@@ -40,12 +40,10 @@ class Bot {
 
   constructor(config: BotConfig = {conversations: [], owners: []}) {
     this.config = config;
-    this.account = new Account(new APIClient());
     this.handlers = [];
   }
 
   public addHandler(handler: MessageHandler) {
-    handler.account = this.account;
     this.handlers.push(handler);
   }
 
@@ -91,6 +89,7 @@ class Bot {
     });
     await this.account.login(login);
     await this.account.listen();
+    this.handlers.forEach(handler => (handler.account = this.account));
     return true;
   }
 
