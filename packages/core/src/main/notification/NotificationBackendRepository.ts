@@ -17,7 +17,7 @@
  *
  */
 
-import {Client as APIClient} from '@wireapp/api-client';
+import {APIClient} from '@wireapp/api-client';
 import {Notification} from '@wireapp/api-client/dist/commonjs/notification/index';
 
 export default class NotificationBackendRepository {

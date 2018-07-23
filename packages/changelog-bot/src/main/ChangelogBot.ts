@@ -17,7 +17,7 @@
  *
  */
 
-import {Client as APIClient} from '@wireapp/api-client';
+import {APIClient} from '@wireapp/api-client';
 import {LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
 import {Config} from '@wireapp/api-client/dist/commonjs/Config';
 import {Account} from '@wireapp/core';

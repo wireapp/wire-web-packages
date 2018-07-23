@@ -17,7 +17,7 @@
  *
  */
 
-import LRUCache from '@wireapp/lru-cache';
+import {LRUCache} from '@wireapp/lru-cache';
 import {PriorityQueue} from '@wireapp/priority-queue';
 import {
   errors as ProteusErrors,

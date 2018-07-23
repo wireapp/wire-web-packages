@@ -19,7 +19,7 @@
 
 const logdown = require('logdown');
 const pkg = require('../../package.json');
-import {Client as APIClient} from '@wireapp/api-client';
+import {APIClient} from '@wireapp/api-client';
 import {LoginData, PreKey} from '@wireapp/api-client/dist/commonjs/auth/index';
 import {
   ClientClassification,

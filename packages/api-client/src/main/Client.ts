@@ -40,7 +40,7 @@ import {UserAPI} from './user/';
 
 const {version}: {version: string} = require('../../package.json');
 
-class Client {
+class APIClient {
   private readonly logger: any = logdown('@wireapp/api-client/Client', {
     logger: console,
     markdown: false,
@@ -243,4 +243,4 @@ class Client {
   }
 }
 
-export {Client};
+export {APIClient};

@@ -51,7 +51,7 @@ import {NotificationService} from './notification/root';
 import {SelfService} from './self/root';
 
 const logdown = require('logdown');
-import {Client} from '@wireapp/api-client';
+import {APIClient} from '@wireapp/api-client';
 import * as EventEmitter from 'events';
 
 class Account extends EventEmitter {
@@ -72,7 +72,7 @@ class Account extends EventEmitter {
     TEXT_MESSAGE: 'Account.INCOMING.TEXT_MESSAGE',
     TYPING: 'Account.INCOMING.TYPING',
   };
-  private readonly apiClient: Client;
+  private readonly apiClient: APIClient;
   public service?: {
     client: ClientService;
     conversation: ConversationService;
@@ -82,7 +82,7 @@ class Account extends EventEmitter {
     self: SelfService;
   };
 
-  constructor(apiClient: Client = new Client()) {
+  constructor(apiClient: APIClient = new APIClient()) {
     super();
     this.apiClient = apiClient;
   }

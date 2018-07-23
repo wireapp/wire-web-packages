@@ -19,7 +19,7 @@
  *
  */
 
-import {Client as APIClient} from '@wireapp/api-client';
+import {APIClient} from '@wireapp/api-client';
 import {ClientType, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
 import {Config} from '@wireapp/api-client/dist/commonjs/Config';
 import {BackendErrorLabel} from '@wireapp/api-client/dist/commonjs/http/';
