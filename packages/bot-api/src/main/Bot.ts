@@ -86,7 +86,7 @@ class Bot {
       if (this.validateMessage(conversationId, payload.from)) {
         this.logger.info('Processing message ...');
         try {
-          await Promise.all(this.handlers.map(handler => handler.handleText(conversationId, fromId, text)));
+          this.handlers.forEach(handler => handler.handleText(conversationId, fromId, text));
         } catch (error) {
           this.logger.error(`An error occured during text handling: ${error.message}`, error);
         }
