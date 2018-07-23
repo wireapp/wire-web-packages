@@ -24,15 +24,16 @@ import {Account} from '@wireapp/core';
 import {TextContent} from '@wireapp/core/dist/conversation/content';
 import {PayloadBundleIncoming} from '@wireapp/core/dist/conversation/root';
 import {MemoryEngine} from '@wireapp/store-engine';
+import UUID from 'pure-uuid';
 import {BotConfig} from './BotConfig';
 import {MessageHandler} from './MessageHandler';
 
 const logdown = require('logdown');
 
 class Bot {
-  private account: Account | undefined;
+  public account: Account | undefined;
   private readonly config: BotConfig;
-  private readonly handlers: MessageHandler[];
+  private readonly handlers: Map<string, MessageHandler>;
   private readonly logger: any = logdown('@wireapp/standup-bot/StandupBot', {
     logger: console,
     markdown: false,
@@ -40,11 +41,15 @@ class Bot {
 
   constructor(config: BotConfig = {conversations: [], owners: []}) {
     this.config = config;
-    this.handlers = [];
+    this.handlers = new Map();
   }
 
   public addHandler(handler: MessageHandler) {
-    this.handlers.push(handler);
+    this.handlers.set(new UUID(4).format(), handler);
+  }
+
+  public removeHandler(key: string) {
+    this.handlers.delete(key);
   }
 
   private isAllowedConversation(conversationId: string): boolean {

@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "@wireapp/core": "3.13.13"
+    "@wireapp/core": "3.13.13",
+    "pure-uuid": "1.5.3"
   },
   "devDependencies": {
     "cross-env": "5.2.0",
