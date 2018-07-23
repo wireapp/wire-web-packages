@@ -20,7 +20,7 @@
 
 const nock = require('nock');
 
-const {APIClient} = require('@wireapp/api-client/dist/commonjs/Client');
+const {APIClient} = require('@wireapp/api-client');
 const {AUTH_TABLE_NAME, AuthAPI} = require('@wireapp/api-client/dist/commonjs/auth/');
 const {UserAPI} = require('@wireapp/api-client/dist/commonjs/user/');
 const {MemoryEngine} = require('@wireapp/store-engine');

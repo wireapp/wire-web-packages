@@ -29,12 +29,13 @@ import {FileEngine} from '@wireapp/store-engine';
 import {AxiosError} from 'axios';
 import * as program from 'commander';
 import * as fs from 'fs-extra';
-const {description, version}: {description: string; version: string} = require('../../package.json');
 import * as os from 'os';
 import * as path from 'path';
 
 import * as dotenv from 'dotenv';
 dotenv.config();
+
+const {description, version}: {description: string; version: string} = require('../../package.json');
 
 program
   .version(version)
