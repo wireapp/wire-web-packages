@@ -19,7 +19,7 @@
 
 interface EditedTextContent {
   originalMessageId: string;
-  newMessageText: string;
+  text: string;
 }
 
 export {EditedTextContent};

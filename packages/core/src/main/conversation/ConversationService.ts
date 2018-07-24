@@ -183,11 +183,11 @@ export default class ConversationService {
     conversationId: string,
     payloadBundle: PayloadBundleOutgoingUnsent
   ): Promise<PayloadBundleOutgoing> {
-    const {newMessageText, originalMessageId} = payloadBundle.content as EditedTextContent;
+    const {originalMessageId, text} = payloadBundle.content as EditedTextContent;
 
     const editedMessage = MessageEdit.create({
       replacingMessageId: originalMessageId,
-      text: Text.create({content: newMessageText}),
+      text: Text.create({content: text}),
     });
 
     const genericMessage = GenericMessage.create({
@@ -385,8 +385,8 @@ export default class ConversationService {
   ): PayloadBundleOutgoingUnsent {
     return {
       content: {
-        newMessageText,
         originalMessageId,
+        text: newMessageText,
       },
       from: this.apiClient.context!.userId,
       id: messageId,
