@@ -72,8 +72,8 @@ class LRUCache<T> {
     });
   }
 
-  public keys(): Array<string> {
-    const keys: Array<string> = [];
+  public keys(): string[] {
+    const keys: string[] = [];
     let entry = this.head;
 
     while (entry) {

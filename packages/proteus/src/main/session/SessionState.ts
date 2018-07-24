@@ -49,7 +49,7 @@ import Session from './Session';
 
 class SessionState {
   prev_counter: number;
-  recv_chains: Array<RecvChain>;
+  recv_chains: RecvChain[];
   root_key: RootKey;
   send_chain: SendChain;
 
@@ -216,7 +216,7 @@ class SessionState {
       const plain = (<MessageKeys>mk).decrypt(msg.cipher_text);
 
       rc.chain_key = (<ChainKey>chk).next();
-      rc.commit_message_keys(<Array<MessageKeys>>mks);
+      rc.commit_message_keys(<MessageKeys[]>mks);
 
       return plain;
     }

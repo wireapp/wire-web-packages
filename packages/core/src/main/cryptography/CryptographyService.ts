@@ -55,9 +55,9 @@ class CryptographyService {
     return `${userId}@${clientId}`;
   }
 
-  public async createCryptobox(): Promise<Array<SerializedPreKey>> {
+  public async createCryptobox(): Promise<SerializedPreKey[]> {
     this.logger.log('createCryptobox');
-    const initialPreKeys: Array<ProteusKeys.PreKey> = await this.cryptobox.create();
+    const initialPreKeys: ProteusKeys.PreKey[] = await this.cryptobox.create();
 
     return initialPreKeys
       .map(preKey => {
@@ -76,7 +76,7 @@ class CryptographyService {
     return this.cryptobox.decrypt(sessionId, messageBytes.buffer);
   }
 
-  private static dismantleSessionId(sessionId: string): Array<string> {
+  private static dismantleSessionId(sessionId: string): string[] {
     return sessionId.split('@');
   }
 
@@ -96,7 +96,7 @@ class CryptographyService {
       }
     }
 
-    const payloads: Array<SessionPayloadBundle> = await Promise.all(encryptions);
+    const payloads: SessionPayloadBundle[] = await Promise.all(encryptions);
 
     if (payloads) {
       payloads.forEach((payload: SessionPayloadBundle) => {
