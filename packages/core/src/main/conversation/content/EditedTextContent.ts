@@ -17,11 +17,9 @@
  *
  */
 
-export * from './AssetContent';
-export * from './ClientActionContent';
-export * from './ConfirmationContent';
-export * from './DeletedContent';
-export * from './EditedTextContent';
-export * from './HiddenContent';
-export * from './ImageContent';
-export * from './TextContent';
+interface EditedTextContent {
+  originalMessageId: string;
+  newMessageText: string;
+}
+
+export {EditedTextContent};
