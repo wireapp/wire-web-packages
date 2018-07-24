@@ -24,8 +24,7 @@ import {RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/index';
 import {OTRRecipients} from '@wireapp/api-client/dist/commonjs/conversation/index';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
 import {Cryptobox} from '@wireapp/cryptobox';
-import * as ProteusErrors from '@wireapp/proteus/dist/errors/root';
-import * as ProteusKeys from '@wireapp/proteus/dist/keys/root';
+import {errors as ProteusErrors, keys as ProteusKeys} from '@wireapp/proteus';
 import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/index';
 import {Decoder, Encoder} from 'bazinga64';
 import {SessionPayloadBundle} from '../cryptography/root';
@@ -92,8 +91,8 @@ class CryptographyService {
         value: result,
       };
     } catch (error) {
-      const isOutdatedMessage = error.code === ProteusErrors.DecryptError.CODE.CASE_208;
-      const isDuplicateMessage = error.code === ProteusErrors.DecryptError.CODE.CASE_209;
+      const isOutdatedMessage = error instanceof ProteusErrors.DecryptError.OutdatedMessage;
+      const isDuplicateMessage = error instanceof ProteusErrors.DecryptError.DuplicateMessage;
 
       if (isOutdatedMessage || isDuplicateMessage) {
         return {
