@@ -3,7 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-  <a name="1.8.3"></a>
+      <a name="1.9.1"></a>
+## [1.9.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.9.0...@wireapp/react-ui-kit@1.9.1) (2018-07-24)
+
+
+### Bug Fixes
+
+* close menu on logo click ([#880](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/880)) ([25eb99d](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/25eb99d))
+
+
+
+
+      <a name="1.9.0"></a>
+# [1.9.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.8.4...@wireapp/react-ui-kit@1.9.0) (2018-07-24)
+
+
+### Features
+
+* **react-ui-kit:** EditIcon, HeaderMenu, MenuLink ([#878](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/878)) ([fb0b39d](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/fb0b39d))
+
+
+
+
+<a name="1.8.4"></a>
+## [1.8.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.8.3...@wireapp/react-ui-kit@1.8.4) (2018-07-24)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.8.3"></a>
 ## [1.8.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.8.2...@wireapp/react-ui-kit@1.8.3) (2018-07-20)
 
 
@@ -14,7 +44,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-  <a name="1.8.2"></a>
+<a name="1.8.2"></a>
 ## [1.8.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.8.1...@wireapp/react-ui-kit@1.8.2) (2018-07-20)
 
 

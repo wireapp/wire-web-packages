@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.14.5"></a>
+## [3.14.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.14.4...@wireapp/core@3.14.5) (2018-07-24)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.14.4"></a>
+## [3.14.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.14.3...@wireapp/core@3.14.4) (2018-07-24)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.14.3"></a>
+## [3.14.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.14.2...@wireapp/core@3.14.3) (2018-07-24)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.14.2"></a>
+## [3.14.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.14.1...@wireapp/core@3.14.2) (2018-07-24)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.14.1"></a>
+## [3.14.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.14.0...@wireapp/core@3.14.1) (2018-07-24)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.14.0"></a>
+# [3.14.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.13.13...@wireapp/core@3.14.0) (2018-07-24)
+
+
+### Features
+
+* **core:** Implement editing messages ([#877](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/877)) ([c1c23f8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/c1c23f8))
+
+
+
+
 <a name="3.13.13"></a>
 ## [3.13.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.13.11...@wireapp/core@3.13.13) (2018-07-23)
 

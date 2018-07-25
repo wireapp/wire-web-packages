@@ -27,5 +27,6 @@ export * from './Container';
 export * from './Content';
 export * from './Footer';
 export * from './Header';
+export * from './HeaderMenu';
 export * from './Spacer';
 export * from './StyledApp';
