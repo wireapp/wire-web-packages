@@ -55,7 +55,7 @@ class ClientDatabaseRepository {
   }
 
   public createClientList(userId: string, clientList: RegisteredClient[]): Promise<MetaClient[]> {
-    const createClientTasks: Array<Promise<MetaClient>> = [];
+    const createClientTasks: Promise<MetaClient>[] = [];
     for (const client of clientList) {
       createClientTasks.push(this.createClient(userId, client));
     }
