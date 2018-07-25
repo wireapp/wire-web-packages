@@ -1,7 +1,7 @@
 {
   "extends": ["tslint-config-prettier", "tslint-plugin-prettier"],
   "rules": {
-    "array-type": [true, "array-simple"],
+    "array-type": [true, "array"],
     "ban-comma-operator": true,
     "curly": true,
     "jsdoc-format": [true, "check-multiline-start"],
