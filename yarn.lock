@@ -181,9 +181,9 @@
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@types/long/-/long-4.0.0.tgz#719551d2352d301ac8b81db732acb6bdc28dbdef"
 
-"@types/node@*", "@types/node@10.5.2", "@types/node@^10.1.0":
-  version "10.5.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.5.2.tgz#f19f05314d5421fe37e74153254201a7bf00a707"
+"@types/node@*", "@types/node@10.5.3", "@types/node@^10.1.0":
+  version "10.5.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.5.3.tgz#5bcfaf088ad17894232012877669634c06b20cc5"
 
 "@types/node@^8.9.4":
   version "8.10.20"
@@ -5394,9 +5394,9 @@ karma-sourcemap-loader@0.3.7:
   dependencies:
     graceful-fs "^4.1.2"
 
-karma@2.0.4, karma@>=0.9:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/karma/-/karma-2.0.4.tgz#b399785f57e9bab1d3c4384db33fef4dec8ae349"
+karma@2.0.5, karma@>=0.9:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/karma/-/karma-2.0.5.tgz#3710c7a2e71b1c439313f283846d88e04e4f918c"
   dependencies:
     bluebird "^3.3.0"
     body-parser "^1.16.1"
@@ -7401,9 +7401,9 @@ react-dom@16.4.1:
     object-assign "^4.1.1"
     prop-types "^15.6.0"
 
-react-hot-loader@4.3.3:
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.3.3.tgz#37409a3341c7787563d0972007ba02521f82f5d5"
+react-hot-loader@4.3.4:
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.3.4.tgz#4f9bdd55bb20d77a6ae8931fa1c187e5f0ce6279"
   dependencies:
     fast-levenshtein "^2.0.6"
     global "^4.3.0"

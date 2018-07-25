@@ -3,9 +3,9 @@
     "./dist/cryptography/AssetCryptography.node": "./dist/cryptography/AssetCryptography.browser.js"
   },
   "dependencies": {
-    "@types/node": "10.5.2",
+    "@types/node": "10.5.3",
     "@wireapp/api-client": "1.9.14",
-    "@wireapp/cryptobox": "8.6.4",
+    "@wireapp/cryptobox": "8.6.6",
     "@wireapp/protocol-messaging": "1.20.1",
     "@wireapp/store-engine": "0.11.48",
     "bazinga64": "5.2.14",
@@ -19,7 +19,7 @@
     "dotenv": "6.0.0",
     "istanbul": "1.1.0-alpha.1",
     "jasmine": "3.1.0",
-    "karma": "2.0.4",
+    "karma": "2.0.5",
     "karma-chrome-launcher": "2.2.0",
     "karma-jasmine": "1.1.2",
     "karma-jasmine-diff-reporter": "1.2.0",
@@ -55,5 +55,5 @@
     "test:node": "jasmine --config=jasmine.json"
   },
   "types": "./dist/Account.d.ts",
-  "version": "3.14.3"
+  "version": "3.14.5"
 }
