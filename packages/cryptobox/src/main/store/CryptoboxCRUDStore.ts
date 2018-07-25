@@ -126,7 +126,7 @@ class CryptoboxCRUDStore implements ProteusSession.PreKeyStore {
    * Saves the serialised formats from a batch of PreKeys.
    */
   public save_prekeys(pre_keys: ProteusKeys.PreKey[]): Promise<ProteusKeys.PreKey[]> {
-    const promises: Array<Promise<ProteusKeys.PreKey>> = pre_keys.map(pre_key => this.save_prekey(pre_key));
+    const promises: Promise<ProteusKeys.PreKey>[] = pre_keys.map(pre_key => this.save_prekey(pre_key));
     return Promise.all(promises).then(() => pre_keys);
   }
 
