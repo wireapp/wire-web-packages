@@ -20,6 +20,8 @@
 import {APIClient} from '@wireapp/api-client';
 import {ClientType} from '@wireapp/api-client/dist/commonjs/client/';
 import {Config} from '@wireapp/api-client/dist/commonjs/Config';
+import {ConnectionStatus} from '@wireapp/api-client/dist/commonjs/connection/';
+import {UserConnectionEvent} from '@wireapp/api-client/dist/commonjs/event/';
 import {Account} from '@wireapp/core';
 import {TextContent} from '@wireapp/core/dist/conversation/content';
 import {PayloadBundleIncoming} from '@wireapp/core/dist/conversation/root';
@@ -89,6 +91,22 @@ class Bot {
           this.handlers.forEach(handler => handler.handleText(conversationId, fromId, text));
         } catch (error) {
           this.logger.error(`An error occured during text handling: ${error.message}`, error);
+        }
+      }
+    });
+    this.account.on(Account.INCOMING.CONNECTION, async (payload: UserConnectionEvent) => {
+      if (payload.connection.status === ConnectionStatus.PENDING) {
+        const {
+          connection: {conversation, to: userId},
+          user: {name: userName},
+        } = payload;
+        if (this.validateMessage(String(conversation), userId)) {
+          this.logger.info('Processing connection request ...');
+          try {
+            this.handlers.forEach(handler => handler.handleConnectionRequest(userId, userName));
+          } catch (error) {
+            this.logger.error(`An error occured during connection request handling: ${error.message}`, error);
+          }
         }
       }
     });

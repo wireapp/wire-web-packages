@@ -23,6 +23,7 @@ abstract class MessageHandler {
   public account: Account | undefined = undefined;
 
   abstract handleText(conversationId: string, fromId: string, text: string): void;
+  abstract handleConnectionRequest(userId: string, userName: string): void;
 
   public async addUser(conversationId: string, userId: string): Promise<void> {
     if (this.account && this.account.service) {
@@ -40,6 +41,22 @@ abstract class MessageHandler {
     if (this.account && this.account.service) {
       const textPayload = this.account.service.conversation.createText(text);
       await this.account.service.conversation.send(conversationId, textPayload);
+    }
+  }
+
+  public async sendConnectionRequest(userId: string): Promise<void> {
+    if (this.account && this.account.service) {
+      await this.account.service.connection.createConnection(userId);
+    }
+  }
+
+  public async sendConnectionRequestAnswer(userId: string, accept: boolean): Promise<void> {
+    if (this.account && this.account.service) {
+      if (accept) {
+        await this.account.service.connection.acceptConnection(userId);
+      } else {
+        await this.account.service.connection.ignoreConnection(userId);
+      }
     }
   }
 }
