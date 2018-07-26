@@ -30,7 +30,7 @@ const StyledContainerSelect = styled.div`
   position: relative;
  // background: ${COLOR.GRAY_LIGHTEN_92};
   border-radius: 4px;
-  background: ${COLOR.GRAY_LIGHTEN_92};
+  background: ${props => (props.disabled ? COLOR.GRAY_LIGHTEN_92 : COLOR.WHITE)};
   height: 56px;
   align-items: center;
   margin: 0 0 16px;
@@ -82,7 +82,7 @@ const ArrowDown = () => (
 
 const Select = ({children, disabled, ...props}) => {
   return (
-    <StyledContainerSelect {...props}>
+    <StyledContainerSelect disabled={disabled} {...props}>
       <StyledSelect disabled={disabled}>{children}</StyledSelect>
       <ArrowDown />
     </StyledContainerSelect>
