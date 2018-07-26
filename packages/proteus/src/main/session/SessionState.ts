@@ -151,7 +151,7 @@ class SessionState {
    */
   encrypt(
     identity_key: IdentityKey,
-    pending: Array<number | PublicKey> | null,
+    pending: (number | PublicKey)[] | null,
     tag: SessionTag,
     plaintext: string | Uint8Array
   ): Envelope {

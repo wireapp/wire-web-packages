@@ -173,7 +173,7 @@ class Cryptobox extends EventEmitter {
     return ProteusKeys.PreKeyBundle.new(this.identity.public_key, preKey);
   }
 
-  public get_serialized_standard_prekeys(): Promise<Array<{id: number; key: string}>> {
+  public get_serialized_standard_prekeys(): Promise<{id: number; key: string}[]> {
     return this.store.load_prekeys().then(prekeys =>
       prekeys
         .filter((preKey: ProteusKeys.PreKey) => {
