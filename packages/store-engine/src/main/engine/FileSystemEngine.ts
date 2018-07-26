@@ -17,11 +17,11 @@
  *
  */
 
+import * as fs from 'bro-fs';
 import CRUDEngine from './CRUDEngine';
 import {isBrowser} from './EnvironmentUtil';
 import {RecordAlreadyExistsError, RecordNotFoundError, UnsupportedError} from './error';
 import {RecordTypeError} from './error/';
-const fs = require('bro-fs');
 
 export type FileSystemEngineOptions = {
   fileExtension: string;
@@ -96,11 +96,11 @@ export default class FileSystemEngine implements CRUDEngine {
       const message: string = `Record "${primaryKey}" already exists in "${tableName}". You need to delete the record first if you want to overwrite it.`;
       throw new RecordAlreadyExistsError(message);
     } else {
-      let data;
+      let data: string;
       try {
         data = JSON.stringify(entity);
       } catch (error) {
-        data = entity;
+        data = entity.toString();
       }
       await fs.writeFile(filePath, data);
       return primaryKey;
