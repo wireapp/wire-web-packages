@@ -23,12 +23,9 @@ import React from 'react';
 import styled from 'styled-components';
 
 const StyledContainerSelect = styled.div`
-  /* appearance */
-  /* positioning */
   display: flex;
   overflow: hidden;
   position: relative;
- // background: ${COLOR.GRAY_LIGHTEN_92};
   border-radius: 4px;
   background: ${props => (props.disabled ? COLOR.GRAY_LIGHTEN_92 : COLOR.WHITE)};
   height: 56px;
@@ -43,7 +40,6 @@ const StyledContainerSelect = styled.div`
 `;
 
 const StyledSelect = styled.select`
-  /* appearance */
   height: 100%;
   background-image: none;
   background: transparent;
@@ -52,13 +48,11 @@ const StyledSelect = styled.select`
   box-shadow: none;
   color: ${COLOR.GRAY_DARKEN_48};
   font-weight: 300;
+  width: 100%;
   overflow: hidden;
   outline: none;
   -moz-appearance: none;
   -webkit-appearance: none;
-
-  /* positioning */
-  width: 100%;
 
   &:focus {
     /* appearance */
