@@ -112,7 +112,7 @@ class CryptographyService {
   public async encrypt(plainText: Uint8Array, preKeyBundles: UserPreKeyBundleMap): Promise<OTRRecipients> {
     this.logger.log('encrypt');
     const recipients: OTRRecipients = {};
-    const encryptions: Array<Promise<SessionPayloadBundle>> = [];
+    const encryptions: Promise<SessionPayloadBundle>[] = [];
 
     for (const userId in preKeyBundles) {
       recipients[userId] = {};
