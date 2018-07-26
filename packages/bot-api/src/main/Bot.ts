@@ -95,15 +95,14 @@ class Bot {
       }
     });
     this.account.on(Account.INCOMING.CONNECTION, async (payload: UserConnectionEvent) => {
-      if (payload.connection.status === ConnectionStatus.PENDING) {
+      if (payload.connection.status === ConnectionStatus.PENDING && payload.connection.conversation) {
         const {
           connection: {conversation, to: userId},
-          user: {name: userName},
         } = payload;
         if (this.validateMessage(String(conversation), userId)) {
           this.logger.info('Processing connection request ...');
           try {
-            this.handlers.forEach(handler => handler.handleConnectionRequest(userId, userName));
+            this.handlers.forEach(handler => handler.handleConnectionRequest(userId, conversation));
           } catch (error) {
             this.logger.error(`An error occured during connection request handling: ${error.message}`, error);
           }

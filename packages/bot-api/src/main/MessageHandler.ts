@@ -23,7 +23,7 @@ abstract class MessageHandler {
   public account: Account | undefined = undefined;
 
   abstract handleText(conversationId: string, fromId: string, text: string): void;
-  abstract handleConnectionRequest(userId: string, userName: string): void;
+  abstract handleConnectionRequest(userId: string, conversation: string): void;
 
   public async addUser(conversationId: string, userId: string): Promise<void> {
     if (this.account && this.account.service) {
