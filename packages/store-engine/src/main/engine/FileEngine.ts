@@ -126,7 +126,7 @@ export default class FileEngine implements CRUDEngine {
   read<T>(tableName: string, primaryKey: string): Promise<T> {
     return this.resolvePath(tableName, primaryKey).then(file => {
       return new Promise<T>((resolve, reject) => {
-        fs.readFile(file, {encoding: 'utf8', flag: 'r'}, (error: any, data: any) => {
+        fs.readFile(file, {encoding: 'utf8', flag: 'r'}, (error, data: any) => {
           if (error) {
             if (error.code === 'ENOENT') {
               const message: string = `Record "${primaryKey}" in "${tableName}" could not be found.`;
