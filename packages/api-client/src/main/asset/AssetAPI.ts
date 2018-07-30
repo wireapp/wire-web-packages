@@ -23,20 +23,20 @@ import {base64MD5FromBuffer, concatToBuffer} from '../shims/node/buffer';
 import {unsafeAlphanumeric} from '../shims/node/random';
 import {AssetRetentionPolicy} from './AssetRetentionPolicy';
 import {AssetUploadData} from './AssetUploadData';
-import {isValidKey, isValidToken} from './AssetUtil';
+import {isValidAssetId, isValidToken} from './AssetUtil';
 
 class AssetAPI {
   private static readonly ASSET_URL = '/assets/v3';
 
   constructor(private readonly client: HttpClient) {}
 
-  getAsset(key: string, token?: string): Promise<ArrayBuffer> {
-    if (!isValidKey(key)) {
-      throw TypeError('Expected key to only contain alphanumeric values and dashes.');
+  getAsset(assetId: string, token?: string): Promise<ArrayBuffer> {
+    if (!isValidAssetId(assetId)) {
+      throw new TypeError('Expected asset ID to only contain alphanumeric values and dashes.');
     }
 
     if (token && !isValidToken(token)) {
-      throw TypeError('Expected token to be base64 encoded string.');
+      throw new TypeError('Expected token to be base64 encoded string.');
     }
 
     return this.client
@@ -44,10 +44,10 @@ class AssetAPI {
         {
           method: 'get',
           params: {
-            asset_token: token,
+            asset_token: token ? encodeURI(token) : undefined,
           },
           responseType: 'arraybuffer',
-          url: `${AssetAPI.ASSET_URL}/${key}`,
+          url: `${AssetAPI.ASSET_URL}/${assetId}`,
         },
         true
       )
