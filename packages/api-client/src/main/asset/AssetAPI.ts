@@ -32,11 +32,11 @@ class AssetAPI {
 
   getAsset(assetId: string, token?: string): Promise<ArrayBuffer> {
     if (!isValidAssetId(assetId)) {
-      throw new TypeError('Expected asset ID to only contain alphanumeric values and dashes.');
+      throw new TypeError(`Expected asset ID "${assetId}" to only contain alphanumeric values and dashes.`);
     }
 
     if (token && !isValidToken(token)) {
-      throw new TypeError('Expected token to be base64 encoded string.');
+      throw new TypeError(`Expected token "${token.substr(0, 5)}..." (redacted) to be base64 encoded string.`);
     }
 
     return this.client
