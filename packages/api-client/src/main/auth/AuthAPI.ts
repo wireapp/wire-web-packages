@@ -112,7 +112,7 @@ class AuthAPI {
     return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
   }
 
-  public headInitiateLogin(ssoCode: string): Promise<User> {
+  public headInitiateLogin(ssoCode: string): Promise<void> {
     const config: AxiosRequestConfig = {
       method: 'head',
       url: `${AuthAPI.URL.INITIATE_LOGIN}/${AuthAPI.URL.INITIATE_LOGIN}/${ssoCode}`,
