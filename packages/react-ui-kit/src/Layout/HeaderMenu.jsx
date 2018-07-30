@@ -18,7 +18,6 @@
  */
 
 import {COLOR} from '../Identity';
-import {Content} from '../Layout';
 import {GUTTER} from './sizes';
 import {Link} from '../Text';
 import PropTypes from 'prop-types';
@@ -29,20 +28,22 @@ const MenuWrapper = styled.div`
   height: 64px;
 `;
 
-const MenuContent = styled(Content)`
-  height: 64px;
+const MenuContent = styled.div`
   align-items: center;
-  justify-content: space-between;
+  display: flex;
   flex-direction: row;
+  flex-grow: 1;
+  height: 64px;
+  justify-content: space-between;
   padding: 0;
   ${props =>
     props.open &&
     `
+  left: 0;
+  padding: 0 ${GUTTER};
   position: fixed;
   width: 100%;
-  z-index: 10000;
-  left: 0;
-  padding: 0 ${GUTTER};`};
+  z-index: 10000;`};
 `;
 
 const MenuItems = styled.div`
