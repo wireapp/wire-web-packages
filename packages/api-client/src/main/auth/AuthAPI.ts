@@ -33,10 +33,12 @@ class AuthAPI {
     return {
       ACCESS: '/access',
       COOKIES: '/cookies',
+      INITIATE_LOGIN: 'initiate-login',
       INVITATIONS: '/invitations',
       LOGIN: '/login',
       LOGOUT: 'logout',
       REGISTER: '/register',
+      SSO: '/sso',
     };
   }
 
@@ -105,6 +107,15 @@ class AuthAPI {
       method: 'post',
       url: AuthAPI.URL.REGISTER,
       withCredentials: true,
+    };
+
+    return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
+  }
+
+  public headInitiateLogin(ssoCode: string): Promise<User> {
+    const config: AxiosRequestConfig = {
+      method: 'head',
+      url: `${AuthAPI.URL.INITIATE_LOGIN}/${AuthAPI.URL.INITIATE_LOGIN}/${ssoCode}`,
     };
 
     return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
