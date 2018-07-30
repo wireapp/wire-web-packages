@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="1.10.2"></a>
+## [1.10.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.10.1...@wireapp/api-client@1.10.2) (2018-07-30)
+
+
+### Bug Fixes
+
+* **core:** Receive images ([#897](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/897)) ([0d5dc6b](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/0d5dc6b))
+
+
+
+
+<a name="1.10.1"></a>
+## [1.10.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.10.0...@wireapp/api-client@1.10.1) (2018-07-30)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.10.0"></a>
+# [1.10.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.9.18...@wireapp/api-client@1.10.0) (2018-07-30)
+
+
+### Features
+
+* **api-client:** Check SSO code endpoint ([#896](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/896)) ([f58fa07](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/f58fa07))
+
+
+
+
+<a name="1.9.18"></a>
+## [1.9.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.9.17...@wireapp/api-client@1.9.18) (2018-07-27)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.9.17"></a>
+## [1.9.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.9.16...@wireapp/api-client@1.9.17) (2018-07-26)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.9.16"></a>
+## [1.9.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.9.15...@wireapp/api-client@1.9.16) (2018-07-26)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.9.15"></a>
+## [1.9.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.9.14...@wireapp/api-client@1.9.15) (2018-07-26)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
 <a name="1.9.14"></a>
 ## [1.9.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.9.13...@wireapp/api-client@1.9.14) (2018-07-24)
 

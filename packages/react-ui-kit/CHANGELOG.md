@@ -3,7 +3,78 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-      <a name="1.9.1"></a>
+  <a name="1.10.6"></a>
+## [1.10.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.10.5...@wireapp/react-ui-kit@1.10.6) (2018-07-30)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+  <a name="1.10.5"></a>
+## [1.10.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.10.4...@wireapp/react-ui-kit@1.10.5) (2018-07-30)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Remove padding from header menu ([#898](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/898)) ([9147d1a](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/9147d1a))
+
+
+
+
+<a name="1.10.4"></a>
+## [1.10.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.10.3...@wireapp/react-ui-kit@1.10.4) (2018-07-30)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.10.3"></a>
+## [1.10.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.10.2...@wireapp/react-ui-kit@1.10.3) (2018-07-27)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** style of select element ([#893](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/893)) ([4a7a358](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/4a7a358))
+
+
+
+
+<a name="1.10.2"></a>
+## [1.10.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.10.1...@wireapp/react-ui-kit@1.10.2) (2018-07-26)
+
+
+### Bug Fixes
+
+* button behaviour, select element style ([#891](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/891)) ([b422515](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/b422515))
+
+
+
+
+<a name="1.10.1"></a>
+## [1.10.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.10.0...@wireapp/react-ui-kit@1.10.1) (2018-07-26)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Adjust Overlay background ([#890](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/890)) ([2efe398](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/2efe398))
+
+
+
+
+<a name="1.10.0"></a>
+# [1.10.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.9.1...@wireapp/react-ui-kit@1.10.0) (2018-07-26)
+
+
+### Features
+
+* **react-ui-kit:** Overlay component ([#887](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/887)) ([08ac67c](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/08ac67c))
+
+
+
+
+<a name="1.9.1"></a>
 ## [1.9.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.9.0...@wireapp/react-ui-kit@1.9.1) (2018-07-24)
 
 
@@ -14,7 +85,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-      <a name="1.9.0"></a>
+<a name="1.9.0"></a>
 # [1.9.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.8.4...@wireapp/react-ui-kit@1.9.0) (2018-07-24)
 
 

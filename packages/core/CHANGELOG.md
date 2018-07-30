@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.15.6"></a>
+## [3.15.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.15.5...@wireapp/core@3.15.6) (2018-07-30)
+
+
+### Bug Fixes
+
+* **core:** Receive images ([#897](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/897)) ([0d5dc6b](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/0d5dc6b))
+
+
+
+
+<a name="3.15.5"></a>
+## [3.15.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.15.4...@wireapp/core@3.15.5) (2018-07-30)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.15.4"></a>
+## [3.15.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.15.3...@wireapp/core@3.15.4) (2018-07-30)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.15.3"></a>
+## [3.15.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.15.2...@wireapp/core@3.15.3) (2018-07-27)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.15.2"></a>
+## [3.15.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.15.1...@wireapp/core@3.15.2) (2018-07-26)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.15.1"></a>
+## [3.15.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.15.0...@wireapp/core@3.15.1) (2018-07-26)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.15.0"></a>
+# [3.15.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.14.5...@wireapp/core@3.15.0) (2018-07-26)
+
+
+### Features
+
+* **core:** Status bot can report to multiple chats [skip ci] ([4b99184](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/4b99184))
+
+
+
+
 <a name="3.14.5"></a>
 ## [3.14.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.14.4...@wireapp/core@3.14.5) (2018-07-24)
 

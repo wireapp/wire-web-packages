@@ -3,6 +3,62 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.2.60"></a>
+## [0.2.60](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@0.2.59...@wireapp/changelog-bot@0.2.60) (2018-07-30)
+
+
+
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+<a name="0.2.59"></a>
+## [0.2.59](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@0.2.58...@wireapp/changelog-bot@0.2.59) (2018-07-30)
+
+
+
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+<a name="0.2.58"></a>
+## [0.2.58](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@0.2.57...@wireapp/changelog-bot@0.2.58) (2018-07-30)
+
+
+
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+<a name="0.2.57"></a>
+## [0.2.57](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@0.2.56...@wireapp/changelog-bot@0.2.57) (2018-07-27)
+
+
+
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+<a name="0.2.56"></a>
+## [0.2.56](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@0.2.55...@wireapp/changelog-bot@0.2.56) (2018-07-26)
+
+
+
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+<a name="0.2.55"></a>
+## [0.2.55](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@0.2.54...@wireapp/changelog-bot@0.2.55) (2018-07-26)
+
+
+
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+<a name="0.2.54"></a>
+## [0.2.54](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@0.2.53...@wireapp/changelog-bot@0.2.54) (2018-07-26)
+
+
+
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
 <a name="0.2.53"></a>
 ## [0.2.53](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@0.2.52...@wireapp/changelog-bot@0.2.53) (2018-07-24)
 
