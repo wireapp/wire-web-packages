@@ -3,6 +3,202 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+  <a name="1.10.6"></a>
+## [1.10.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.10.5...@wireapp/react-ui-kit@1.10.6) (2018-07-30)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+  <a name="1.10.5"></a>
+## [1.10.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.10.4...@wireapp/react-ui-kit@1.10.5) (2018-07-30)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Remove padding from header menu ([#898](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/898)) ([9147d1a](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/9147d1a))
+
+
+
+
+<a name="1.10.4"></a>
+## [1.10.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.10.3...@wireapp/react-ui-kit@1.10.4) (2018-07-30)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.10.3"></a>
+## [1.10.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.10.2...@wireapp/react-ui-kit@1.10.3) (2018-07-27)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** style of select element ([#893](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/893)) ([4a7a358](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/4a7a358))
+
+
+
+
+<a name="1.10.2"></a>
+## [1.10.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.10.1...@wireapp/react-ui-kit@1.10.2) (2018-07-26)
+
+
+### Bug Fixes
+
+* button behaviour, select element style ([#891](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/891)) ([b422515](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/b422515))
+
+
+
+
+<a name="1.10.1"></a>
+## [1.10.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.10.0...@wireapp/react-ui-kit@1.10.1) (2018-07-26)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Adjust Overlay background ([#890](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/890)) ([2efe398](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/2efe398))
+
+
+
+
+<a name="1.10.0"></a>
+# [1.10.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.9.1...@wireapp/react-ui-kit@1.10.0) (2018-07-26)
+
+
+### Features
+
+* **react-ui-kit:** Overlay component ([#887](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/887)) ([08ac67c](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/08ac67c))
+
+
+
+
+<a name="1.9.1"></a>
+## [1.9.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.9.0...@wireapp/react-ui-kit@1.9.1) (2018-07-24)
+
+
+### Bug Fixes
+
+* close menu on logo click ([#880](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/880)) ([25eb99d](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/25eb99d))
+
+
+
+
+<a name="1.9.0"></a>
+# [1.9.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.8.4...@wireapp/react-ui-kit@1.9.0) (2018-07-24)
+
+
+### Features
+
+* **react-ui-kit:** EditIcon, HeaderMenu, MenuLink ([#878](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/878)) ([fb0b39d](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/fb0b39d))
+
+
+
+
+<a name="1.8.4"></a>
+## [1.8.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.8.3...@wireapp/react-ui-kit@1.8.4) (2018-07-24)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.8.3"></a>
+## [1.8.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.8.2...@wireapp/react-ui-kit@1.8.3) (2018-07-20)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** CheckboxLabel & MutedText adjustments ([#866](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/866)) ([50df180](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/50df180))
+
+
+
+
+<a name="1.8.2"></a>
+## [1.8.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.8.1...@wireapp/react-ui-kit@1.8.2) (2018-07-20)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Set input height to 56px ([#863](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/863)) ([c0e9ee3](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/c0e9ee3))
+
+
+
+
+<a name="1.8.1"></a>
+## [1.8.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.8.0...@wireapp/react-ui-kit@1.8.1) (2018-07-19)
+
+
+### Bug Fixes
+
+* avoid jittery loading animation ([#861](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/861)) ([b8c5f32](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/b8c5f32))
+
+
+
+
+<a name="1.8.0"></a>
+# [1.8.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.7.5...@wireapp/react-ui-kit@1.8.0) (2018-07-19)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Update Heading styles ([#856](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/856)) ([ebbe7f2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/ebbe7f2))
+
+
+### Features
+
+* **react-ui-kit:** Add Title element ([#860](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/860)) ([8f15295](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/8f15295))
+
+
+### BREAKING CHANGES
+
+* **react-ui-kit:** H1: 
+- font size 40px -> 48px
+- line-height: 56px
+- margin-bottom: 64px
+- mobile
+- font-size 24px -> 40px
+- line-height: 32px -> 48px
+
+H2: 
+- font-weight: 300 -> 700
+- line-height: 32px;
+- margin-bottom: 24px;
+- margin-top: 48px;
+- mobile
+- font-size: 20px;
+- line-height: 28px;
+- margin-bottom: 20px;
+- margin-top: 44px;
+
+H3:
+- font-size: 18px -> 16px
+- font-weight: 300 -> 600
+- margin-bottom: 16px
+
+
+
+
+<a name="1.7.5"></a>
+## [1.7.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.7.4...@wireapp/react-ui-kit@1.7.5) (2018-07-19)
+
+
+
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+<a name="1.7.4"></a>
+## [1.7.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.7.3...@wireapp/react-ui-kit@1.7.4) (2018-07-19)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Revert remove flex-basis of columns ([#851](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/851)) ([0a5cc52](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/0a5cc52))
+
+
+
+
 <a name="1.7.3"></a>
 ## [1.7.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@1.7.2...@wireapp/react-ui-kit@1.7.3) (2018-07-18)
 

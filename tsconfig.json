@@ -8,6 +8,7 @@
     "noEmitOnError": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
+    "noUnusedParameters": false,
     "removeComments": true,
     "sourceMap": true,
     "strict": true,

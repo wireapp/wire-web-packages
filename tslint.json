@@ -1,6 +1,7 @@
 {
   "extends": ["tslint-config-prettier", "tslint-plugin-prettier"],
   "rules": {
+    "array-type": [true, "array"],
     "ban-comma-operator": true,
     "curly": true,
     "jsdoc-format": [true, "check-multiline-start"],
@@ -12,7 +13,6 @@
     "no-return-await": true,
     "no-sparse-arrays": true,
     "no-this-assignment": true,
-    "no-unused-variable": true,
     "object-literal-sort-keys": true,
     "ordered-imports": true,
     "prefer-conditional-expression": true,

@@ -33,7 +33,7 @@ import MessageKeys from './MessageKeys';
 
 class RecvChain {
   chain_key: ChainKey;
-  message_keys: Array<MessageKeys>;
+  message_keys: MessageKeys[];
   ratchet_key: PublicKey;
   static MAX_COUNTER_GAP = 1000;
 
@@ -56,7 +56,7 @@ class RecvChain {
       const message = `Message too old. Counter for oldest staged chain key is '${
         this.message_keys[0].counter
       }' while message counter is '${msg.counter}'.`;
-      throw new (<any>DecryptError).OutdatedMessage(message, DecryptError.CODE.CASE_208);
+      throw new DecryptError.OutdatedMessage(message, DecryptError.CODE.CASE_208);
     }
 
     const idx = this.message_keys.findIndex(mk => {
@@ -64,35 +64,35 @@ class RecvChain {
     });
 
     if (idx === -1) {
-      throw new (<any>DecryptError).DuplicateMessage(undefined, DecryptError.CODE.CASE_209);
+      throw new DecryptError.DuplicateMessage(undefined, DecryptError.CODE.CASE_209);
     }
     const mk = this.message_keys.splice(idx, 1)[0];
     if (!envelope.verify(mk.mac_key)) {
       const message = `Envelope verification failed for message with counter behind. Message index is '${
         msg.counter
       }' while receive chain index is '${this.chain_key.idx}'.`;
-      throw new (<any>DecryptError).InvalidSignature(message, DecryptError.CODE.CASE_210);
+      throw new DecryptError.InvalidSignature(message, DecryptError.CODE.CASE_210);
     }
 
     return mk.decrypt(msg.cipher_text);
   }
 
-  stage_message_keys(msg: CipherMessage): [ChainKey, MessageKeys, Array<MessageKeys>] {
+  stage_message_keys(msg: CipherMessage): [ChainKey, MessageKeys, MessageKeys[]] {
     const num = msg.counter - this.chain_key.idx;
     if (num > RecvChain.MAX_COUNTER_GAP) {
       if (this.chain_key.idx === 0) {
-        throw new (<any>DecryptError).TooDistantFuture(
+        throw new DecryptError.TooDistantFuture(
           'Skipped too many message at the beginning of a receive chain.',
           DecryptError.CODE.CASE_211
         );
       }
-      throw new (<any>DecryptError).TooDistantFuture(
+      throw new DecryptError.TooDistantFuture(
         `Skipped too many message within a used receive chain. Receive chain counter is '${this.chain_key.idx}'`,
         DecryptError.CODE.CASE_212
       );
     }
 
-    const keys: Array<MessageKeys> = [];
+    const keys: MessageKeys[] = [];
     let chk = this.chain_key;
 
     for (let index = 0; index <= num - 1; index++) {
@@ -104,7 +104,7 @@ class RecvChain {
     return [chk, mk, keys];
   }
 
-  commit_message_keys(keys: Array<MessageKeys>): void {
+  commit_message_keys(keys: MessageKeys[]): void {
     if (keys.length > RecvChain.MAX_COUNTER_GAP) {
       throw new ProteusError(
         `Number of message keys (${keys.length}) exceed message chain counter gap (${RecvChain.MAX_COUNTER_GAP}).`,
@@ -128,7 +128,7 @@ class RecvChain {
     }
   }
 
-  encode(encoder: CBOR.Encoder): Array<CBOR.Encoder> {
+  encode(encoder: CBOR.Encoder): CBOR.Encoder[] {
     encoder.object(3);
     encoder.u8(0);
     this.chain_key.encode(encoder);

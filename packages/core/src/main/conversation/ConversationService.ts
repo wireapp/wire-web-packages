@@ -54,6 +54,7 @@ import {
 import {
   ClientActionContent,
   ConfirmationContent,
+  EditedTextContent,
   ImageAssetContent,
   ImageContent,
   RemoteData,
@@ -63,8 +64,8 @@ import {
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
 import {CryptographyService, EncryptedAsset} from '../cryptography/root';
 
-const UUID = require('pure-uuid');
-import APIClient = require('@wireapp/api-client');
+import {APIClient} from '@wireapp/api-client';
+import UUID from 'pure-uuid';
 
 export default class ConversationService {
   private clientID: string = '';
@@ -176,6 +177,32 @@ export default class ConversationService {
     const recipients = await this.cryptographyService.encrypt(plainTextBuffer, preKeyBundles as UserPreKeyBundleMap);
 
     return this.sendOTRMessage(sendingClientId, conversationId, recipients);
+  }
+
+  private async sendEditedText(
+    conversationId: string,
+    payloadBundle: PayloadBundleOutgoingUnsent
+  ): Promise<PayloadBundleOutgoing> {
+    const {originalMessageId, text} = payloadBundle.content as EditedTextContent;
+
+    const editedMessage = MessageEdit.create({
+      replacingMessageId: originalMessageId,
+      text: Text.create({content: text}),
+    });
+
+    const genericMessage = GenericMessage.create({
+      [GenericMessageType.EDITED]: editedMessage,
+      messageId: payloadBundle.id,
+    });
+
+    await this.sendGenericMessage(this.clientID, conversationId, genericMessage);
+
+    return {
+      ...payloadBundle,
+      conversation: conversationId,
+      messageTimer: 0,
+      state: PayloadBundleState.OUTGOING_SENT,
+    };
   }
 
   private async sendImage(
@@ -351,6 +378,24 @@ export default class ConversationService {
     return estimatedPayloadInBytes > EXTERNAL_MESSAGE_THRESHOLD_BYTES;
   }
 
+  public createEditedText(
+    newMessageText: string,
+    originalMessageId: string,
+    messageId: string = ConversationService.createId()
+  ): PayloadBundleOutgoingUnsent {
+    return {
+      content: {
+        originalMessageId,
+        text: newMessageText,
+      },
+      from: this.apiClient.context!.userId,
+      id: messageId,
+      state: PayloadBundleState.OUTGOING_UNSENT,
+      timestamp: Date.now(),
+      type: GenericMessageType.EDITED,
+    };
+  }
+
   public static createId(): string {
     return new UUID(4).format();
   }
@@ -522,12 +567,13 @@ export default class ConversationService {
     return this.apiClient.conversation.api.getConversationsByIds(conversationId);
   }
 
-  public async getImage({assetId, otrKey, sha256, assetToken}: RemoteData): Promise<Buffer> {
+  public async getImage({assetId, assetToken, otrKey, sha256}: RemoteData): Promise<Buffer> {
     const encryptedBuffer = await this.apiClient.asset.api.getAsset(assetId, assetToken);
+
     return AssetCryptography.decryptAsset({
       cipherText: Buffer.from(encryptedBuffer),
-      keyBytes: Buffer.from(otrKey.buffer),
-      sha256: Buffer.from(sha256.buffer),
+      keyBytes: Buffer.from(otrKey),
+      sha256: Buffer.from(sha256),
     });
   }
 
@@ -568,6 +614,8 @@ export default class ConversationService {
       }
       case GenericMessageType.CONFIRMATION:
         return this.sendConfirmation(conversationId, payloadBundle);
+      case GenericMessageType.EDITED:
+        return this.sendEditedText(conversationId, payloadBundle);
       case GenericMessageType.KNOCK:
         return this.sendPing(conversationId, payloadBundle);
       case GenericMessageType.TEXT:
@@ -587,26 +635,5 @@ export default class ConversationService {
 
   public setClientID(clientID: string) {
     this.clientID = clientID;
-  }
-
-  public async updateText(conversationId: string, originalMessageId: string, newMessage: string): Promise<string> {
-    const messageId = ConversationService.createId();
-
-    const editedMessage = MessageEdit.create({
-      replacingMessageId: originalMessageId,
-      text: Text.create({content: newMessage}),
-    });
-
-    const genericMessage = GenericMessage.create({
-      edited: editedMessage,
-      messageId,
-    });
-
-    const preKeyBundles = await this.getPreKeyBundles(conversationId);
-    const plainTextBuffer = GenericMessage.encode(genericMessage).finish();
-    const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
-
-    await this.sendExternalGenericMessage(this.clientID, conversationId, payload, preKeyBundles as UserPreKeyBundleMap);
-    return messageId;
   }
 }

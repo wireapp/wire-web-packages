@@ -21,10 +21,12 @@ import setGlobalStyles from '../globalStyles';
 
 setGlobalStyles();
 
+export * from './Box';
 export * from './Column';
 export * from './Container';
 export * from './Content';
 export * from './Footer';
 export * from './Header';
+export * from './HeaderMenu';
 export * from './Spacer';
 export * from './StyledApp';

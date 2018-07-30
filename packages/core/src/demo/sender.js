@@ -20,7 +20,7 @@ const logger = logdown('@wireapp/core/demo/sender.js', {
 logger.state.isEnabled = true;
 
 const {Account} = require('@wireapp/core');
-const APIClient = require('@wireapp/api-client');
+const {APIClient} = require('@wireapp/api-client');
 const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/');
 const {Config} = require('@wireapp/api-client/dist/commonjs/Config');
 const {FileEngine} = require('@wireapp/store-engine');
@@ -84,7 +84,16 @@ const {FileEngine} = require('@wireapp/store-engine');
     await account.service.conversation.send(CONVERSATION_ID, payload);
   }
 
-  const methods = [sendAndDeleteMessage, sendEphemeralText, sendPing, sendText];
+  async function sendAndEdit() {
+    const payload = account.service.conversation.createText('Hello, Wolrd!');
+    const {id: originalMessageId} = await account.service.conversation.send(CONVERSATION_ID, payload);
+    setInterval(async () => {
+      const editedPayload = account.service.conversation.createEditedText('Hello, World!', originalMessageId);
+      await account.service.conversation.send(CONVERSATION_ID, editedPayload);
+    }, 2000);
+  }
+
+  const methods = [sendAndDeleteMessage, sendEphemeralText, sendPing, sendText, sendAndEdit];
 
   const timeoutInMillis = 2000;
   setInterval(() => {

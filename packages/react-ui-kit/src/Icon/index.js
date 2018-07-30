@@ -26,6 +26,7 @@ export * from './CamIcon';
 export * from './CheckIcon';
 export * from './CloseIcon';
 export * from './DeviceIcon';
+export * from './EditIcon';
 export * from './FileIcon';
 export * from './GifIcon';
 export * from './HangupIcon';
@@ -46,9 +47,14 @@ export * from './TrashIcon';
 export * from './WireIcon';
 
 // Brand Icons
+export * from './Brand/AndroidIcon';
+export * from './Brand/AppleIcon';
+export * from './Brand/ChromeIcon';
 export * from './Brand/FacebookIcon';
 export * from './Brand/GitHubIcon';
 export * from './Brand/LinkedInIcon';
+export * from './Brand/LinuxIcon';
+export * from './Brand/MicrosoftIcon';
 export * from './Brand/TwitterIcon';
 
 export * from './RoundContainer';

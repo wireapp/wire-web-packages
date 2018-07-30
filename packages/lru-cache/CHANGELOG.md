@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="2.1.41"></a>
+## [2.1.41](https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache/compare/@wireapp/lru-cache@2.1.40...@wireapp/lru-cache@2.1.41) (2018-07-30)
+
+
+
+
+**Note:** Version bump only for package @wireapp/lru-cache
+
+<a name="2.1.40"></a>
+## [2.1.40](https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache/compare/@wireapp/lru-cache@2.1.39...@wireapp/lru-cache@2.1.40) (2018-07-26)
+
+
+
+
+**Note:** Version bump only for package @wireapp/lru-cache
+
+<a name="2.1.39"></a>
+## [2.1.39](https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache/compare/@wireapp/lru-cache@2.1.38...@wireapp/lru-cache@2.1.39) (2018-07-24)
+
+
+### Bug Fixes
+
+* **lru-cache:** Update Browser demo ([596ab1e](https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache/commit/596ab1e))
+
+
+
+
+<a name="2.1.38"></a>
+## [2.1.38](https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache/compare/@wireapp/lru-cache@2.1.37...@wireapp/lru-cache@2.1.38) (2018-07-24)
+
+
+
+
+**Note:** Version bump only for package @wireapp/lru-cache
+
+<a name="2.1.37"></a>
+## [2.1.37](https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache/compare/@wireapp/lru-cache@2.1.36...@wireapp/lru-cache@2.1.37) (2018-07-23)
+
+
+
+
+**Note:** Version bump only for package @wireapp/lru-cache
+
 <a name="2.1.36"></a>
 ## [2.1.36](https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache/compare/@wireapp/lru-cache@2.1.35...@wireapp/lru-cache@2.1.36) (2018-07-18)
 

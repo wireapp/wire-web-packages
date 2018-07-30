@@ -27,3 +27,4 @@ export * from './Line';
 export * from './Paragraph';
 export * from './StrongLink';
 export * from './Text';
+export * from './Title';

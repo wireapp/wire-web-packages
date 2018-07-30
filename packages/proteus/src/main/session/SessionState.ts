@@ -49,7 +49,7 @@ import Session from './Session';
 
 class SessionState {
   prev_counter: number;
-  recv_chains: Array<RecvChain>;
+  recv_chains: RecvChain[];
   root_key: RootKey;
   send_chain: SendChain;
 
@@ -151,7 +151,7 @@ class SessionState {
    */
   encrypt(
     identity_key: IdentityKey,
-    pending: Array<number | PublicKey> | null,
+    pending: (number | PublicKey)[] | null,
     tag: SessionTag,
     plaintext: string | Uint8Array
   ): Envelope {
@@ -190,7 +190,7 @@ class SessionState {
       const mks = rc.chain_key.message_keys();
 
       if (!envelope.verify(mks.mac_key)) {
-        throw new (<any>DecryptError).InvalidSignature(
+        throw new DecryptError.InvalidSignature(
           `Envelope verification failed for message with counters in sync at '${
             msg.counter
           }'. The received message was possibly encrypted for another client.`,
@@ -205,7 +205,7 @@ class SessionState {
       const [chk, mk, mks] = rc.stage_message_keys(msg);
 
       if (!envelope.verify((<MessageKeys>mk).mac_key)) {
-        throw new (<any>DecryptError).InvalidSignature(
+        throw new DecryptError.InvalidSignature(
           `Envelope verification failed for message with counter ahead. Message index is '${
             msg.counter
           }' while receive chain index is '${rc.chain_key.idx}'.`,
@@ -216,7 +216,7 @@ class SessionState {
       const plain = (<MessageKeys>mk).decrypt(msg.cipher_text);
 
       rc.chain_key = (<ChainKey>chk).next();
-      rc.commit_message_keys(<Array<MessageKeys>>mks);
+      rc.commit_message_keys(<MessageKeys[]>mks);
 
       return plain;
     }

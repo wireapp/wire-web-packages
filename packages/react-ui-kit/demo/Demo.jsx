@@ -19,10 +19,13 @@
 
 import {
   AddPeopleIcon,
+  AndroidIcon,
+  AppleIcon,
   ArrowIcon,
   AttachmentIcon,
   AudioVideoIcon,
   Bold,
+  Box,
   Button,
   ButtonLink,
   COLOR,
@@ -30,6 +33,7 @@ import {
   CamIcon,
   Checkbox,
   CheckboxLabel,
+  ChromeIcon,
   CodeInput,
   Column,
   Columns,
@@ -39,6 +43,7 @@ import {
   ContainerXS,
   Content,
   DeviceIcon,
+  EditIcon,
   ErrorMessage,
   FacebookIcon,
   FileIcon,
@@ -51,7 +56,7 @@ import {
   H3,
   H4,
   HangupIcon,
-  Header,
+  HeaderMenu,
   Heading,
   ICON_NAME,
   ImageIcon,
@@ -60,19 +65,24 @@ import {
   InputSubmitCombo,
   Label,
   LabelLink,
+  Lead,
   LeaveIcon,
   Line,
   LinkedInIcon,
+  LinuxIcon,
   Loading,
   Logo,
   MenuItem,
+  MenuLink,
   MenuModal,
   MessageIcon,
+  MicrosoftIcon,
   Modal,
   MoreIcon,
   MuteIcon,
   Muted,
   OptionsIcon,
+  Overlay,
   Paragraph,
   PingIcon,
   PlaneIcon,
@@ -88,6 +98,7 @@ import {
   TeamIcon,
   Text,
   TimedIcon,
+  Title,
   TwitterIcon,
   Uppercase,
   WireIcon,
@@ -102,6 +113,7 @@ class Demo extends React.PureComponent {
     isFullscreenModalOpen: false,
     isMenuModalOpen: false,
     isModalOpen: false,
+    isOverlayOpen: false,
   };
 
   closeMenuModal = () => this.setState({isMenuModalOpen: false});
@@ -137,6 +149,12 @@ class Demo extends React.PureComponent {
             <H1>Fullscreen Modal</H1>
           </Modal>
         )}
+        {this.state.isOverlayOpen && (
+          <Overlay>
+            <H1>Overlay</H1>
+            <Button onClick={() => this.setState({isOverlayOpen: false})}>Close</Button>
+          </Overlay>
+        )}
         {this.state.isMenuModalOpen && (
           <MenuModal data-uie-name="should-be-there" onBackgroundClick={this.closeMenuModal}>
             <MenuItem data-uie-name="should-be-there" onClick={this.closeMenuModal}>
@@ -156,17 +174,26 @@ class Demo extends React.PureComponent {
             </MenuItem>
           </MenuModal>
         )}
-        <Header>
-          <Logo width={72} />
-          <Loading />
-          <Loading progress={0.33} />
-          <Loading progress={0.66} />
-          <Logo scale="3" hover />
-        </Header>
+        <HeaderMenu logoElement={<Logo width={72} />}>
+          <MenuLink href="#" color={COLOR.GREEN} button>
+            test1
+          </MenuLink>
+          <MenuLink href="#">test2</MenuLink>
+          <MenuLink href="#">test3</MenuLink>
+        </HeaderMenu>
+
         <Content>
+          <Container style={{alignItems: 'center', display: 'flex', justifyContent: 'space-around'}}>
+            <Logo scale={3} />
+            <Loading />
+            <Loading progress={0.33} />
+            <Loading progress={0.66} />
+          </Container>
           <Container>
             <H1>Icons</H1>
-            <Container style={{alignItems: 'center', display: 'flex', justifyContent: 'space-around'}}>
+            <Container
+              style={{alignItems: 'center', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around'}}
+            >
               <AddPeopleIcon height={32} />
               <ArrowIcon direction="up" height={32} />
               <AttachmentIcon height={32} />
@@ -174,6 +201,7 @@ class Demo extends React.PureComponent {
               <CallIcon height={32} />
               <CamIcon width={32} />
               <DeviceIcon height={32} />
+              <EditIcon />
               <FileIcon height={32} />
               <GifIcon width={32} />
               <HangupIcon width={32} />
@@ -195,10 +223,15 @@ class Demo extends React.PureComponent {
             <Line />
             <H1>Brand Icons</H1>
             <Container style={{alignItems: 'center', display: 'flex', justifyContent: 'space-around'}}>
-              <FacebookIcon width={32} />
-              <GitHubIcon width={32} />
-              <LinkedInIcon width={32} />
-              <TwitterIcon width={32} />
+              <AndroidIcon width={48} />
+              <AppleIcon width={48} />
+              <ChromeIcon width={48} />
+              <FacebookIcon width={48} />
+              <GitHubIcon width={48} />
+              <LinkedInIcon width={48} />
+              <LinuxIcon width={48} />
+              <MicrosoftIcon width={48} />
+              <TwitterIcon width={48} />
             </Container>
             <Line />
             <H1>Layout</H1>
@@ -262,6 +295,13 @@ class Demo extends React.PureComponent {
                 </Columns>
               </Column>
             </Columns>
+            <H2>Box</H2>
+
+            <Box>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce a mattis nibh, sed maximus leo. Fusce a
+              lacinia sem, vitae ornare dolor. Quisque rhoncus, magna non lacinia sagittis, erat augue fringilla metus,
+              eu consectetur leo velit non lacus. Phasellus ipsum turpis, dapibus ut purus in, lobortis consectetur mi.
+            </Box>
 
             <H1>Input</H1>
             <Line />
@@ -427,9 +467,21 @@ class Demo extends React.PureComponent {
                 <Button onClick={() => this.setState({isMenuModalOpen: true})}>Open</Button>
               </Column>
             </Columns>
+            <Columns>
+              <Column>Overlay</Column>
+              <Column>
+                <Button onClick={() => this.setState({isOverlayOpen: true})}>Open</Button>
+              </Column>
+            </Columns>
 
             <H1>Typography</H1>
             <Line />
+            <Columns>
+              <Column>Title</Column>
+              <Column>
+                <Title>Title</Title>
+              </Column>
+            </Columns>
             <Columns>
               <Column>Default heading</Column>
               <Column>
@@ -496,44 +548,52 @@ class Demo extends React.PureComponent {
               </Column>
             </Columns>
             <Line />
+            <H2>Paragraph</H2>
             <Paragraph>
-              Paragraph<br />Lorem ipsum dolor, sit amet consectetur adipisicing elit. Odit, nemo. Voluptates rerum
-              harum accusamus dignissimos modi rem, quod quia. Delectus nesciunt, provident rerum maiores vero
-              consequatur, nostrum quod ad, ipsam reprehenderit iure laborum error amet voluptate aliquam cum! Error
-              nulla nobis, quia beatae nesciunt ex doloribus eius temporibus nihil explicabo eveniet architecto, ipsam
-              doloremque. Pariatur, reiciendis voluptatem? Modi voluptatibus fugiat aliquid, ipsum quisquam corrupti
-              labore molestiae optio, voluptate iste incidunt laborum ullam obcaecati veniam harum deleniti nobis beatae
-              aspernatur inventore in, quibusdam sunt itaque ipsam veritatis! Inventore corporis eaque voluptatum
-              quaerat facilis illo architecto unde consequatur veniam modi nam, eveniet perferendis aliquid in deleniti!
-              Officiis obcaecati repudiandae harum sequi. Eum ab qui, eaque sapiente, quod perspiciatis totam voluptate
-              neque enim facere repudiandae nemo! Soluta sunt aliquid voluptatem molestiae fugiat, iure iste assumenda,
-              non quia nisi voluptatibus odio perferendis qui debitis facere dignissimos perspiciatis sapiente laborum
-              voluptatum. Quia provident aperiam id veniam natus inventore distinctio, error, quibusdam nulla iusto
-              maxime! Necessitatibus quo vitae veritatis repellat unde placeat tempora est nobis aut cumque quis, autem,
-              quae maiores nihil consectetur quasi? Error repudiandae similique adipisci quasi autem necessitatibus
-              labore cumque, exercitationem consequuntur fugiat nemo aliquam, architecto animi inventore explicabo sint
-              iure molestias laborum.
+              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Odit, nemo. Voluptates rerum harum accusamus
+              dignissimos modi rem, quod quia. Delectus nesciunt, provident rerum maiores vero consequatur, nostrum quod
+              ad, ipsam reprehenderit iure laborum error amet voluptate aliquam cum! Error nulla nobis, quia beatae
+              nesciunt ex doloribus eius temporibus nihil explicabo eveniet architecto, ipsam doloremque. Pariatur,
+              reiciendis voluptatem? Modi voluptatibus fugiat aliquid, ipsum quisquam corrupti labore molestiae optio,
+              voluptate iste incidunt laborum ullam obcaecati veniam harum deleniti nobis beatae aspernatur inventore
+              in, quibusdam sunt itaque ipsam veritatis! Inventore corporis eaque voluptatum quaerat facilis illo
+              architecto unde consequatur veniam modi nam, eveniet perferendis aliquid in deleniti! Officiis obcaecati
+              repudiandae harum sequi. Eum ab qui, eaque sapiente, quod perspiciatis totam voluptate neque enim facere
+              repudiandae nemo! Soluta sunt aliquid voluptatem molestiae fugiat, iure iste assumenda, non quia nisi
+              voluptatibus odio perferendis qui debitis facere dignissimos perspiciatis sapiente laborum voluptatum.
+              Quia provident aperiam id veniam natus inventore distinctio, error, quibusdam nulla iusto maxime!
+              Necessitatibus quo vitae veritatis repellat unde placeat tempora est nobis aut cumque quis, autem, quae
+              maiores nihil consectetur quasi? Error repudiandae similique adipisci quasi autem necessitatibus labore
+              cumque, exercitationem consequuntur fugiat nemo aliquam, architecto animi inventore explicabo sint iure
+              molestias laborum.
             </Paragraph>
             <Line />
+            <H2>Truncated text</H2>
             <Paragraph noWrap truncate>
-              Truncated text<br />Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut at eveniet numquam non
-              aperiam, provident sed atque quibusdam! Vitae velit tempore ea pariatur voluptatum. Iure dolorum
-              laudantium, rem iusto eveniet obcaecati perspiciatis. Dolorem quisquam laborum ab ipsam unde eum rerum
-              incidunt quia magnam harum itaque, obcaecati fugiat debitis aliquid nihil, voluptatum commodi, sit quidem!
-              Delectus itaque consectetur consequatur quis dignissimos pariatur, incidunt ipsam in velit deleniti
-              voluptatum numquam minima. Optio repudiandae deleniti nemo modi, eligendi sit rem? Sapiente facere quam
-              laboriosam ratione tenetur inventore repellendus adipisci dolorem sit vero cum explicabo consequatur
-              voluptatibus quis modi fuga mollitia, maiores expedita dolor nostrum magni nesciunt cupiditate. Itaque
-              voluptatibus totam asperiores quisquam nisi nihil, eos accusantium similique, praesentium illo neque
-              repellendus nam placeat. Quibusdam minima repudiandae blanditiis iste esse voluptas in! Cumque distinctio
-              consequatur animi sit incidunt nostrum aut mollitia, voluptatum dolores reprehenderit eius qui praesentium
-              officiis delectus, non neque, cupiditate quis obcaecati recusandae odit? Minus officiis sed, nemo quos in
-              laudantium consequatur soluta accusamus ea adipisci magni consequuntur optio incidunt eligendi, rerum
-              cupiditate repudiandae tempore dolores neque laborum commodi, libero voluptatibus dolorum! Magnam
-              perferendis alias porro, placeat totam molestiae similique reiciendis harum consequuntur, earum autem
-              excepturi expedita molestias laborum quae non cupiditate!
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut at eveniet numquam non aperiam, provident sed
+              atque quibusdam! Vitae velit tempore ea pariatur voluptatum. Iure dolorum laudantium, rem iusto eveniet
+              obcaecati perspiciatis. Dolorem quisquam laborum ab ipsam unde eum rerum incidunt quia magnam harum
+              itaque, obcaecati fugiat debitis aliquid nihil, voluptatum commodi, sit quidem! Delectus itaque
+              consectetur consequatur quis dignissimos pariatur, incidunt ipsam in velit deleniti voluptatum numquam
+              minima. Optio repudiandae deleniti nemo modi, eligendi sit rem? Sapiente facere quam laboriosam ratione
+              tenetur inventore repellendus adipisci dolorem sit vero cum explicabo consequatur voluptatibus quis modi
+              fuga mollitia, maiores expedita dolor nostrum magni nesciunt cupiditate. Itaque voluptatibus totam
+              asperiores quisquam nisi nihil, eos accusantium similique, praesentium illo neque repellendus nam placeat.
+              Quibusdam minima repudiandae blanditiis iste esse voluptas in! Cumque distinctio consequatur animi sit
+              incidunt nostrum aut mollitia, voluptatum dolores reprehenderit eius qui praesentium officiis delectus,
+              non neque, cupiditate quis obcaecati recusandae odit? Minus officiis sed, nemo quos in laudantium
+              consequatur soluta accusamus ea adipisci magni consequuntur optio incidunt eligendi, rerum cupiditate
+              repudiandae tempore dolores neque laborum commodi, libero voluptatibus dolorum! Magnam perferendis alias
+              porro, placeat totam molestiae similique reiciendis harum consequuntur, earum autem excepturi expedita
+              molestias laborum quae non cupiditate!
             </Paragraph>
-
+            <H2>Lead</H2>
+            <Lead>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut at eveniet numquam non aperiam, provident sed
+              atque quibusdam! Vitae velit tempore ea pariatur voluptatum. Iure dolorum laudantium, rem iusto eveniet
+              obcaecati perspiciatis. Dolorem quisquam laborum ab ipsam unde eum rerum incidunt quia magnam harum
+              itaque, obcaecati fugiat debitis aliquid nihil, voluptatum commodi, sit quidem!
+            </Lead>
             <Label>Label</Label>
             <LabelLink block>LabelLink</LabelLink>
             <Line />
@@ -568,10 +628,11 @@ class Demo extends React.PureComponent {
                       textAlign: 'center',
                     }}
                   >
-                    {colorKey}
-                    ({Color(COLOR[colorKey])
+                    {colorKey}(
+                    {Color(COLOR[colorKey])
                       .hex()
-                      .toString()})
+                      .toString()}
+                    )
                   </div>
                 </div>
               ))}

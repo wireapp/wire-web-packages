@@ -18,13 +18,13 @@
  */
 
 const logdown = require('logdown');
-import APIClient = require('@wireapp/api-client');
+import {APIClient} from '@wireapp/api-client';
 import {PreKey as SerializedPreKey} from '@wireapp/api-client/dist/commonjs/auth/index';
 import {RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/index';
 import {OTRRecipients} from '@wireapp/api-client/dist/commonjs/conversation/index';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
 import {Cryptobox} from '@wireapp/cryptobox';
-import * as ProteusKeys from '@wireapp/proteus/dist/keys/root';
+import {errors as ProteusErrors, keys as ProteusKeys} from '@wireapp/proteus';
 import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/index';
 import {Decoder, Encoder} from 'bazinga64';
 import {SessionPayloadBundle} from '../cryptography/root';
@@ -36,6 +36,16 @@ export interface MetaClient extends RegisteredClient {
     primary_key: string;
   };
 }
+
+export type DecryptionResult =
+  | {
+      isSuccess: true;
+      value: Uint8Array;
+    }
+  | {
+      isSuccess: false;
+      error: Error;
+    };
 
 class CryptographyService {
   private readonly logger: any = logdown('@wireapp/core/cryptography/CryptographyService', {
@@ -55,9 +65,9 @@ class CryptographyService {
     return `${userId}@${clientId}`;
   }
 
-  public async createCryptobox(): Promise<Array<SerializedPreKey>> {
+  public async createCryptobox(): Promise<SerializedPreKey[]> {
     this.logger.log('createCryptobox');
-    const initialPreKeys: Array<ProteusKeys.PreKey> = await this.cryptobox.create();
+    const initialPreKeys: ProteusKeys.PreKey[] = await this.cryptobox.create();
 
     return initialPreKeys
       .map(preKey => {
@@ -70,20 +80,39 @@ class CryptographyService {
       .filter(serializedPreKey => serializedPreKey.key);
   }
 
-  public decrypt(sessionId: string, encodedCiphertext: string): Promise<Uint8Array | undefined> {
+  public async decrypt(sessionId: string, encodedCiphertext: string): Promise<DecryptionResult> {
     this.logger.log('decrypt');
     const messageBytes: Uint8Array = Decoder.fromBase64(encodedCiphertext).asBytes;
-    return this.cryptobox.decrypt(sessionId, messageBytes.buffer);
+
+    try {
+      const result = await this.cryptobox.decrypt(sessionId, messageBytes.buffer);
+      return {
+        isSuccess: true,
+        value: result,
+      };
+    } catch (error) {
+      const isOutdatedMessage = error instanceof ProteusErrors.DecryptError.OutdatedMessage;
+      const isDuplicateMessage = error instanceof ProteusErrors.DecryptError.DuplicateMessage;
+
+      if (isOutdatedMessage || isDuplicateMessage) {
+        return {
+          error,
+          isSuccess: false,
+        };
+      }
+
+      throw error;
+    }
   }
 
-  private static dismantleSessionId(sessionId: string): Array<string> {
+  private static dismantleSessionId(sessionId: string): string[] {
     return sessionId.split('@');
   }
 
   public async encrypt(plainText: Uint8Array, preKeyBundles: UserPreKeyBundleMap): Promise<OTRRecipients> {
     this.logger.log('encrypt');
     const recipients: OTRRecipients = {};
-    const encryptions: Array<Promise<SessionPayloadBundle>> = [];
+    const encryptions: Promise<SessionPayloadBundle>[] = [];
 
     for (const userId in preKeyBundles) {
       recipients[userId] = {};
@@ -96,7 +125,7 @@ class CryptographyService {
       }
     }
 
-    const payloads: Array<SessionPayloadBundle> = await Promise.all(encryptions);
+    const payloads: SessionPayloadBundle[] = await Promise.all(encryptions);
 
     if (payloads) {
       payloads.forEach((payload: SessionPayloadBundle) => {

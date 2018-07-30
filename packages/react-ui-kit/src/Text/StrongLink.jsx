@@ -18,27 +18,29 @@
  */
 
 import {COLOR} from '../Identity';
+import Color from 'color';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {Text} from './Text';
 import {defaultTransition} from '../Identity/motions';
 
-const StrongLink = ({component, ...props}) => {
+const StrongLink = ({color, component, ...props}) => {
+  const darker = 0.16;
+  const hoverColor = Color(color)
+    .mix(Color(COLOR.BLACK), darker)
+    .toString();
   const StyledStrongLink = Text.withComponent(component).extend`
-    /* appearance */
     text-decoration: none;
     ${defaultTransition}
     cursor: pointer;
 
-    /* positioning */
-
     &:visited,
     &:link,
     &:active {
-      color: ${() => props.color};
+      color: ${color};
     }
     &:hover {
-      color: ${COLOR.STRONG_LINK};
+      color: ${hoverColor};
     }
   `;
   return <StyledStrongLink {...props} />;
