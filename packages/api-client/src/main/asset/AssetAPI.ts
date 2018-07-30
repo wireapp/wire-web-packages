@@ -44,7 +44,7 @@ class AssetAPI {
         {
           method: 'get',
           params: {
-            asset_token: token ? encodeURI(token) : undefined,
+            asset_token: token,
           },
           responseType: 'arraybuffer',
           url: `${AssetAPI.ASSET_URL}/${assetId}`,
