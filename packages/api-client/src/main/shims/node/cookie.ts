@@ -24,18 +24,16 @@ import {Cookie as ToughCookie} from 'tough-cookie';
 import {AccessTokenData, AUTH_COOKIE_KEY, AUTH_TABLE_NAME, Cookie} from '../../auth';
 import {HttpClient} from '../../http';
 
-const COOKIE_NAME: string = 'zuid';
-
-type PersistedCookie = {
+interface PersistedCookie {
   expiration: string;
   zuid: string;
-};
+}
 
-const loadExistingCookie = async (engine: CRUDEngine): Promise<Cookie> => {
+const loadExistingCookie = (engine: CRUDEngine): Promise<Cookie> => {
   return engine
     .read<PersistedCookie>(AUTH_TABLE_NAME, AUTH_COOKIE_KEY)
-    .catch(error => {
-      if (error instanceof StoreEngineError.RecordNotFoundError) {
+    .catch((error: Error) => {
+      if (error instanceof StoreEngineError.RecordNotFoundError || error.constructor.name === 'RecordNotFoundError') {
         return new Cookie('', '0');
       }
 
@@ -63,11 +61,7 @@ export const retrieveCookie = async (response: AxiosResponse, engine: CRUDEngine
   if (response.headers && response.headers['set-cookie']) {
     const cookies = response.headers['set-cookie'].map(ToughCookie.parse);
     for (const cookie of cookies) {
-      // Don't store the cookie if persist=false (doesn't have an expiration time set by the server)
-      if (cookie.key === COOKIE_NAME && String(cookie.expires) !== 'Infinity') {
-        await setInternalCookie(new Cookie(cookie.value, cookie.expires), engine);
-        break;
-      }
+      await setInternalCookie(new Cookie(cookie.value, cookie.expires), engine);
     }
   }
 
