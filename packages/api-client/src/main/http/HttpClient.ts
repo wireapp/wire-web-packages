@@ -54,7 +54,7 @@ class HttpClient extends EventEmitter {
 
     // Log all failing HTTP requests
     axios.interceptors.response.use(undefined, (error: AxiosError) => {
-      let backendResponse: string = '';
+      let backendResponse = '';
 
       if (error.response) {
         try {
