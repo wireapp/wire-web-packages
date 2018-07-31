@@ -17,12 +17,13 @@
  *
  */
 
-export * from './AssetContent';
-export * from './ClientActionContent';
-export * from './ConfirmationContent';
-export * from './DeletedContent';
-export * from './EditedTextContent';
-export * from './HiddenContent';
-export * from './ImageContent';
-export * from './ReactionContent';
-export * from './TextContent';
+const {ConversationService} = require('@wireapp/core/dist/conversation/root');
+
+describe('ConversationService', () => {
+  describe('"createId"', () => {
+    it('creates a random ID.', () => {
+      const id = ConversationService.createId();
+      expect(typeof id).toBe('string');
+    });
+  });
+});
