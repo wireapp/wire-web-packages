@@ -51,9 +51,6 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine/');
     const confirmationPayload = account.service.conversation.createConfirmation(messageId);
     await account.service.conversation.send(conversationId, confirmationPayload);
 
-    const reactionPayload = account.service.conversation.createReaction(messageId, true);
-    await account.service.conversation.send(conversationId, reactionPayload);
-
     const textPayload = account.service.conversation.createText(content.text);
     account.service.conversation.messageTimer.setConversationLevelTimer(conversationId, messageTimer);
     await account.service.conversation.send(conversationId, textPayload);
@@ -92,6 +89,14 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine/');
     account.service.conversation.messageTimer.setMessageLevelTimer(conversationId, messageTimer);
     await account.service.conversation.send(conversationId, payload);
     account.service.conversation.messageTimer.setMessageLevelTimer(conversationId, 0);
+  });
+
+  account.on(Account.INCOMING.REACTION, async data => {
+    const {conversation: conversationId, from, content} = data;
+    logger.log(`Reaction in "${conversationId}" from "${from}": "${content.emoji}".`);
+
+    const reactionPayload = account.service.conversation.createReaction(content.originalMessageId, content.emoji);
+    await account.service.conversation.send(conversationId, reactionPayload);
   });
 
   account.on(Account.INCOMING.TYPING, async data => {

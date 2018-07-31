@@ -308,7 +308,7 @@ export default class ConversationService {
     const reactionContent = payloadBundle.content as ReactionContent;
 
     const reaction = Reaction.create({
-      emoji: reactionContent.reaction,
+      emoji: reactionContent.emoji,
       messageId: reactionContent.originalMessageId,
     });
 
@@ -452,10 +452,10 @@ export default class ConversationService {
 
   public createReaction(
     originalMessageId: string,
-    like: boolean,
+    emoji: ReactionType,
     messageId: string = ConversationService.createId()
   ): PayloadBundleOutgoingUnsent {
-    const content: ReactionContent = {originalMessageId, reaction: like ? ReactionType.LIKE : ReactionType.NONE};
+    const content: ReactionContent = {originalMessageId, emoji};
 
     return {
       content,

@@ -21,7 +21,7 @@ import {ReactionType} from '../root';
 
 interface ReactionContent {
   originalMessageId: string;
-  reaction: ReactionType;
+  emoji: ReactionType;
 }
 
 export {ReactionContent};
