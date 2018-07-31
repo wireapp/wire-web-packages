@@ -20,8 +20,8 @@
 import {ReactionType} from '../root';
 
 interface ReactionContent {
-  originalMessageId: string;
   emoji: ReactionType;
+  originalMessageId: string;
 }
 
 export {ReactionContent};
