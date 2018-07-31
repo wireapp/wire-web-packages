@@ -17,11 +17,11 @@
  *
  */
 
-import {Reaction} from '../root';
+import {ReactionType} from '../root';
 
 interface ReactionContent {
   originalMessageId: string;
-  reaction: Reaction;
+  reaction: ReactionType;
 }
 
 export {ReactionContent};

@@ -19,11 +19,12 @@ logger.state.isEnabled = true;
 
 const {Account} = require('@wireapp/core');
 const {APIClient} = require('@wireapp/api-client');
-const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/ClientType');
 const fs = require('fs');
 const {promisify} = require('util');
 const {Config} = require('@wireapp/api-client/dist/commonjs/Config');
-const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
+const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/ClientType');
+const {CONVERSATION_TYPING} = require('@wireapp/api-client/dist/commonjs/event/');
+const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine/');
 
 (async () => {
   const login = {
@@ -49,6 +50,9 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
 
     const confirmationPayload = account.service.conversation.createConfirmation(messageId);
     await account.service.conversation.send(conversationId, confirmationPayload);
+
+    const reactionPayload = account.service.conversation.createReaction(messageId, true);
+    await account.service.conversation.send(conversationId, reactionPayload);
 
     const textPayload = account.service.conversation.createText(content.text);
     account.service.conversation.messageTimer.setConversationLevelTimer(conversationId, messageTimer);
@@ -99,7 +103,7 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine');
 
     logger.log(`Typing in "${conversationId}" from "${from}".`, data);
 
-    if (status === 'started') {
+    if (status === CONVERSATION_TYPING.STARTED) {
       await account.service.conversation.sendTypingStart(conversationId);
     } else {
       await account.service.conversation.sendTypingStop(conversationId);
