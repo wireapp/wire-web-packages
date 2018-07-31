@@ -437,10 +437,10 @@ class Account extends EventEmitter {
             break;
           }
           case CONVERSATION_EVENT.MEMBER_JOIN:
-            this.emit(Account.INCOMING.MEMBER_JOIN, data);
+            this.emit(Account.INCOMING.MEMBER_JOIN, event);
             break;
           case CONVERSATION_EVENT.RENAME:
-            this.emit(Account.INCOMING.CONVERSATION_RENAME, data);
+            this.emit(Account.INCOMING.CONVERSATION_RENAME, event);
             break;
           case CONVERSATION_EVENT.TYPING: {
             this.emit(Account.INCOMING.TYPING, event);
