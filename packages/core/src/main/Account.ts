@@ -139,10 +139,7 @@ class Account extends EventEmitter {
       .catch(error => {
         // There was no client so we need to "create" and "register" a client
         const notFoundInDatabase =
-          error instanceof cryptobox.error.CryptoboxError ||
-          error.constructor.name === 'CryptoboxError' ||
-          error instanceof RecordNotFoundError ||
-          error.constructor.name === 'RecordNotFoundError';
+          error.constructor.name === 'CryptoboxError' || error.constructor.name === 'RecordNotFoundError';
         const notFoundOnBackend = error.response && error.response.status === StatusCode.NOT_FOUND;
 
         if (notFoundInDatabase) {

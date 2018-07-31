@@ -66,8 +66,8 @@ export default class NotificationService {
         }
         return databaseLastEventDate;
       })
-      .catch(error => {
-        if (error instanceof RecordNotFoundError || error.constructor.name === 'RecordNotFoundError') {
+      .catch((error: Error) => {
+        if (error.constructor.name === 'RecordNotFoundError') {
           return this.database.createLastEventDate(eventDate);
         }
         throw error;
