@@ -340,8 +340,8 @@ class Account extends EventEmitter {
       }
       case GenericMessageType.REACTION: {
         const content: ReactionContent = {
-          emoji: genericMessage.reaction.emoji,
           originalMessageId: genericMessage.reaction.messageId,
+          type: genericMessage.reaction.emoji,
         };
         return {
           content,
