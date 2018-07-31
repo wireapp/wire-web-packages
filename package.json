@@ -24,7 +24,7 @@
       "tslint --config tslint.json --project tsconfig.json --fix",
       "git add"
     ],
-    "*.{json,md,scss}": [
+    "*.{json,md,scss,yml}": [
       "prettier --write",
       "git add"
     ]
@@ -43,7 +43,7 @@
     "lint:other": "yarn prettier --list-different",
     "lint:ts": "tslint --config tslint.json --project tsconfig.json \"**/*.ts\"",
     "precommit": "lint-staged",
-    "prettier": "prettier \"**/*.{json,md,scss}\"",
+    "prettier": "prettier \"**/*.{json,md,scss,yml}\"",
     "release": "lerna publish -m \"[skip ci] chore: Publish\" --conventional-commits --loglevel=verbose --exact --allow-branch=master --registry=https://registry.npmjs.org/ --yes",
     "test": "yarn && yarn lint:js && yarn lint:ts && yarn lint:other && node bin/testUpdated.js",
     "test:all": "yarn && yarn dist && yarn lint && lerna run test"
