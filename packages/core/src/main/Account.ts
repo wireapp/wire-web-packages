@@ -65,8 +65,10 @@ class Account extends EventEmitter {
     CLIENT_ACTION: 'Account.INCOMING.CLIENT_ACTION',
     CONFIRMATION: 'Account.INCOMING.CONFIRMATION',
     CONNECTION: 'Account.INCOMING.CONNECTION',
+    CONVERSATION_RENAME: 'Account.INCOMING.CONVERSATION_RENAME',
     DELETED: 'Account.INCOMING.DELETED',
     HIDDEN: 'Account.INCOMING.HIDDEN',
+    MEMBER_JOIN: 'Account.INCOMING.MEMBER_JOIN',
     MESSAGE_TIMER_UPDATE: 'Account.INCOMING.MESSAGE_TIMER_UPDATE',
     PING: 'Account.INCOMING.PING',
     REACTION: 'Account.INCOMING.REACTION',
@@ -434,6 +436,12 @@ class Account extends EventEmitter {
             this.emit(Account.INCOMING.MESSAGE_TIMER_UPDATE, event);
             break;
           }
+          case CONVERSATION_EVENT.MEMBER_JOIN:
+            this.emit(Account.INCOMING.MEMBER_JOIN, data);
+            break;
+          case CONVERSATION_EVENT.RENAME:
+            this.emit(Account.INCOMING.CONVERSATION_RENAME, data);
+            break;
           case CONVERSATION_EVENT.TYPING: {
             this.emit(Account.INCOMING.TYPING, event);
             break;
