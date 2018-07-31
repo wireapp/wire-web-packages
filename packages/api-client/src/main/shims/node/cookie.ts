@@ -33,7 +33,10 @@ const loadExistingCookie = (engine: CRUDEngine): Promise<Cookie> => {
   return engine
     .read<PersistedCookie>(AUTH_TABLE_NAME, AUTH_COOKIE_KEY)
     .catch((error: Error) => {
-      if (error instanceof StoreEngineError.RecordNotFoundError || error.constructor.name === 'RecordNotFoundError') {
+      if (
+        error instanceof StoreEngineError.RecordNotFoundError ||
+        error.constructor.name === StoreEngineError.RecordNotFoundError.name
+      ) {
         return new Cookie('', '0');
       }
 
@@ -49,7 +52,10 @@ const loadExistingCookie = (engine: CRUDEngine): Promise<Cookie> => {
 const setInternalCookie = (cookie: Cookie, engine: CRUDEngine): Promise<string> => {
   const entity: PersistedCookie = {expiration: cookie.expiration, zuid: cookie.zuid};
   return engine.create(AUTH_TABLE_NAME, AUTH_COOKIE_KEY, entity).catch(error => {
-    if (error instanceof StoreEngineError.RecordAlreadyExistsError) {
+    if (
+      error instanceof StoreEngineError.RecordAlreadyExistsError ||
+      error.constructor.name === StoreEngineError.RecordAlreadyExistsError.name
+    ) {
       return engine.update(AUTH_TABLE_NAME, AUTH_COOKIE_KEY, entity);
     } else {
       throw error;
