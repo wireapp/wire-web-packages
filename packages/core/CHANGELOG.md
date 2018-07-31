@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.16.3"></a>
+## [3.16.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.16.2...@wireapp/core@3.16.3) (2018-07-31)
+
+
+### Bug Fixes
+
+* **core:** Propagate ConversationEvent MEMBER_JOIN & RENAME ([#912](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/912)) ([a0080ec](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/a0080ec))
+
+
+
+
+<a name="3.16.2"></a>
+## [3.16.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.16.1...@wireapp/core@3.16.2) (2018-07-31)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.16.1"></a>
+## [3.16.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.16.0...@wireapp/core@3.16.1) (2018-07-31)
+
+
+### Bug Fixes
+
+* **core:** Logger statement for older browsers ([#910](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/910)) ([d373156](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/d373156))
+
+
+
+
 <a name="3.16.0"></a>
 # [3.16.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.15.8...@wireapp/core@3.16.0) (2018-07-31)
 
