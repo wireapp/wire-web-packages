@@ -57,6 +57,7 @@ import {
   ClientActionContent,
   ConfirmationContent,
   EditedTextContent,
+  FileAssetContent,
   ImageAssetContent,
   ImageContent,
   ReactionContent,
@@ -204,6 +205,57 @@ export default class ConversationService {
       ...payloadBundle,
       conversation: conversationId,
       messageTimer: 0,
+      state: PayloadBundleState.OUTGOING_SENT,
+    };
+  }
+
+  private async sendFile(
+    conversationId: string,
+    payloadBundle: PayloadBundleOutgoingUnsent
+  ): Promise<PayloadBundleOutgoing> {
+    if (!payloadBundle.content) {
+      throw new Error('No content for sendFile provided!');
+    }
+
+    const encryptedAsset = payloadBundle.content as FileAssetContent;
+
+    const original = Asset.Original.create({
+      mimeType: encryptedAsset.file.type,
+      name: encryptedAsset.file.name,
+      size: encryptedAsset.file.data.length,
+    });
+
+    const remoteData = Asset.RemoteData.create({
+      assetId: encryptedAsset.asset.key,
+      assetToken: encryptedAsset.asset.token,
+      otrKey: encryptedAsset.asset.keyBytes,
+      sha256: encryptedAsset.asset.sha256,
+    });
+
+    const assetMessage = Asset.create({
+      original,
+      uploaded: remoteData,
+    });
+
+    let genericMessage = GenericMessage.create({
+      [GenericMessageType.ASSET]: assetMessage,
+      messageId: payloadBundle.id,
+    });
+
+    const expireAfterMillis = this.messageTimer.getMessageTimer(conversationId);
+    if (expireAfterMillis > 0) {
+      genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
+    }
+
+    const preKeyBundles = await this.getPreKeyBundles(conversationId);
+    const plainTextBuffer: Uint8Array = GenericMessage.encode(genericMessage).finish();
+    const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
+
+    await this.sendExternalGenericMessage(this.clientID, conversationId, payload, preKeyBundles as UserPreKeyBundleMap);
+    return {
+      ...payloadBundle,
+      conversation: conversationId,
+      messageTimer: this.messageTimer.getMessageTimer(conversationId),
       state: PayloadBundleState.OUTGOING_SENT,
     };
   }

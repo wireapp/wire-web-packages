@@ -17,13 +17,10 @@
  *
  */
 
-export * from './AssetContent';
-export * from './ClientActionContent';
-export * from './ConfirmationContent';
-export * from './DeletedContent';
-export * from './EditedTextContent';
-export * from './FileContent';
-export * from './HiddenContent';
-export * from './ImageContent';
-export * from './ReactionContent';
-export * from './TextContent';
+interface FileContent {
+  data: Buffer;
+  name: string;
+  type: string;
+}
+
+export {FileContent};

@@ -17,7 +17,7 @@
  *
  */
 
-import {ImageContent} from '../../conversation/content/';
+import {FileContent, ImageContent} from '../../conversation/content/';
 import {EncryptedAsset} from '../../cryptography/root';
 
 // https://github.com/wireapp/generic-message-proto/blob/v1.20.0/proto/messages.proto#L201
@@ -75,4 +75,19 @@ interface ImageAssetContent {
   image: ImageContent;
 }
 
-export {AssetContent, ImageAssetContent, Original, RemoteData, ImageMetaData, VideoMetaData, AudioMetaData, Preview};
+interface FileAssetContent {
+  asset: EncryptedAsset & {key: string; token: string};
+  file: FileContent;
+}
+
+export {
+  AssetContent,
+  FileAssetContent,
+  ImageAssetContent,
+  Original,
+  RemoteData,
+  ImageMetaData,
+  VideoMetaData,
+  AudioMetaData,
+  Preview,
+};
