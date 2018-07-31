@@ -17,20 +17,8 @@
  *
  */
 
-import {ClientActionType, GenericMessageType} from '../conversation/root';
-
-import {
-  AssetContent,
-  ClientActionContent,
-  ConfirmationContent,
-  DeletedContent,
-  EditedTextContent,
-  HiddenContent,
-  ImageAssetContent,
-  ImageContent,
-  ReactionContent,
-  TextContent,
-} from '../conversation/content/';
+import {GenericMessageType} from '../conversation/root';
+import {ConversationContent} from './content/ConversationContent';
 
 enum PayloadBundleState {
   INCOMING = 'PayloadBundleState.INCOMING',
@@ -51,18 +39,7 @@ type PayloadBundleOutgoing = PayloadBundle & {
 type PayloadBundleOutgoingUnsent = PayloadBundle & {state: PayloadBundleState.OUTGOING_UNSENT};
 
 interface PayloadBundle {
-  content?:
-    | AssetContent
-    | ClientActionContent
-    | ClientActionType
-    | ConfirmationContent
-    | DeletedContent
-    | EditedTextContent
-    | HiddenContent
-    | ImageAssetContent
-    | ImageContent
-    | ReactionContent
-    | TextContent;
+  content?: ConversationContent;
   from: string;
   id: string;
   state: PayloadBundleState;

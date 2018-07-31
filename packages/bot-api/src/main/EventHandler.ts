@@ -18,12 +18,12 @@
  */
 
 import {Account} from '@wireapp/core';
+import {Event} from './Event';
 
-abstract class MessageHandler {
+abstract class EventHandler {
   public account: Account | undefined = undefined;
 
-  abstract handleText(conversationId: string, fromId: string, text: string): void;
-  abstract handleConnectionRequest(userId: string, conversation: string): void;
+  abstract handleEvent(event: Event): void;
 
   public async addUser(conversationId: string, userId: string): Promise<void> {
     if (this.account && this.account.service) {
@@ -50,7 +50,7 @@ abstract class MessageHandler {
     }
   }
 
-  public async sendConnectionRequestAnswer(userId: string, accept: boolean): Promise<void> {
+  public async sendConnectionResponse(userId: string, accept: boolean): Promise<void> {
     if (this.account && this.account.service) {
       if (accept) {
         await this.account.service.connection.acceptConnection(userId);
@@ -61,4 +61,4 @@ abstract class MessageHandler {
   }
 }
 
-export {MessageHandler};
+export {EventHandler};

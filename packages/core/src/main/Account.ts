@@ -371,6 +371,7 @@ class Account extends EventEmitter {
     }
   }
 
+  // TODO: Remove "IncomingEvent" from the method signature and build a "mapEvent" method
   private async handleEvent(event: IncomingEvent): Promise<PayloadBundleIncoming | IncomingEvent | void> {
     this.logger.log('handleEvent', event.type);
     const ENCRYPTED_EVENTS = [CONVERSATION_EVENT.OTR_MESSAGE_ADD];

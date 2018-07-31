@@ -23,30 +23,33 @@ import {Config} from '@wireapp/api-client/dist/commonjs/Config';
 import {ConnectionStatus} from '@wireapp/api-client/dist/commonjs/connection/';
 import {UserConnectionEvent} from '@wireapp/api-client/dist/commonjs/event/';
 import {Account} from '@wireapp/core';
-import {TextContent} from '@wireapp/core/dist/conversation/content';
 import {PayloadBundleIncoming} from '@wireapp/core/dist/conversation/root';
 import {MemoryEngine} from '@wireapp/store-engine';
 import UUID from 'pure-uuid';
 import {BotConfig} from './BotConfig';
-import {MessageHandler} from './MessageHandler';
+import {Event} from './Event';
+import {EventHandler} from './EventHandler';
 
 const logdown = require('logdown');
 
 class Bot {
   public account: Account | undefined;
+
+  private readonly credentials: {email: string; password: string};
   private readonly config: BotConfig;
-  private readonly handlers: Map<string, MessageHandler>;
+  private readonly handlers: Map<string, EventHandler>;
   private readonly logger: any = logdown('@wireapp/standup-bot/StandupBot', {
     logger: console,
     markdown: false,
   });
 
-  constructor(config: BotConfig = {conversations: [], owners: []}) {
+  constructor(credentials: {email: string; password: string}, config: BotConfig = {conversations: [], owners: []}) {
     this.config = config;
+    this.credentials = credentials;
     this.handlers = new Map();
   }
 
-  public addHandler(handler: MessageHandler) {
+  public addHandler(handler: EventHandler) {
     this.handlers.set(new UUID(4).format(), handler);
   }
 
@@ -55,42 +58,38 @@ class Bot {
   }
 
   private isAllowedConversation(conversationId: string): boolean {
-    if (this.config.conversations.length === 0) {
-      return true;
-    } else {
-      return this.config.conversations.includes(conversationId);
-    }
+    return this.config.conversations.length === 0 ? true : this.config.conversations.includes(conversationId);
   }
 
   private isOwner(userId: string): boolean {
-    if (this.config.owners.length === 0) {
-      return true;
-    } else {
-      return this.config.owners.includes(userId);
-    }
+    return this.config.owners.length === 0 ? true : this.config.owners.includes(userId);
   }
 
-  public async start(email: string, password: string): Promise<boolean> {
+  public async start(): Promise<boolean> {
     const login = {
       clientType: ClientType.TEMPORARY,
-      email,
-      password,
+      email: this.credentials.email,
+      password: this.credentials.password,
     };
     const backend = APIClient.BACKEND.PRODUCTION;
     const engine = new MemoryEngine();
-    await engine.init(email);
+    await engine.init(this.credentials.email);
     const apiClient = new APIClient(new Config(engine, backend));
     this.account = new Account(apiClient);
     this.account.on(Account.INCOMING.TEXT_MESSAGE, async (payload: PayloadBundleIncoming) => {
       const conversationId = String(payload.conversation);
-      const fromId = payload.from;
-      const text = (payload.content as TextContent).text;
       if (this.validateMessage(conversationId, payload.from)) {
         this.logger.info('Processing message ...');
         try {
-          this.handlers.forEach(handler => handler.handleText(conversationId, fromId, text));
+          const event: Event = {
+            conversationId,
+            data: payload,
+            fromId: payload.from,
+            type: Account.INCOMING.TEXT_MESSAGE,
+          };
+          this.handlers.forEach(handler => handler.handleEvent(event));
         } catch (error) {
-          this.logger.error(`An error occured during text handling: ${error.message}`, error);
+          this.logger.error(`An error occurred during text handling: ${error.message}`, error);
         }
       }
     });
@@ -102,7 +101,13 @@ class Bot {
         if (this.validateMessage(String(conversation), userId)) {
           this.logger.info('Processing connection request ...');
           try {
-            this.handlers.forEach(handler => handler.handleConnectionRequest(userId, conversation));
+            const event: Event = {
+              conversationId: conversation,
+              data: payload,
+              fromId: userId,
+              type: Account.INCOMING.CONNECTION,
+            };
+            this.handlers.forEach(handler => handler.handleEvent(event));
           } catch (error) {
             this.logger.error(`An error occured during connection request handling: ${error.message}`, error);
           }
