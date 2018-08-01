@@ -165,6 +165,7 @@ describe('Account', () => {
       const account = new Account();
       const incomingEvent = account.mapConversationEvent(event);
 
+      expect(incomingEvent.content).toBe(event.data);
       expect(incomingEvent.conversation).toBe(event.conversation);
       expect(incomingEvent.from).toBe(event.from);
       expect(typeof incomingEvent.id).toBe('string');
@@ -192,6 +193,7 @@ describe('Account', () => {
       const account = new Account();
       const incomingEvent = account.mapConversationEvent(event);
 
+      expect(incomingEvent.content).toBe(event.data);
       expect(incomingEvent.conversation).toBe(event.conversation);
       expect(incomingEvent.from).toBe(event.from);
       expect(typeof incomingEvent.id).toBe('string');
@@ -215,6 +217,7 @@ describe('Account', () => {
       const account = new Account();
       const incomingEvent = account.mapConversationEvent(event);
 
+      expect(incomingEvent.content).toBe(event.data);
       expect(incomingEvent.conversation).toBe(event.conversation);
       expect(incomingEvent.from).toBe(event.from);
       expect(typeof incomingEvent.id).toBe('string');
@@ -236,6 +239,7 @@ describe('Account', () => {
       const account = new Account();
       const incomingEvent = account.mapConversationEvent(event);
 
+      expect(incomingEvent.content).toBe(event.data);
       expect(incomingEvent.conversation).toBe(event.conversation);
       expect(incomingEvent.from).toBe(event.from);
       expect(typeof incomingEvent.id).toBe('string');

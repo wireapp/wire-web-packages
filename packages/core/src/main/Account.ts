@@ -374,6 +374,7 @@ class Account extends EventEmitter {
 
   private mapConversationEvent(event: ConversationEvent): PayloadBundleIncoming {
     return {
+      content: event.data,
       conversation: event.conversation,
       from: event.from,
       id: ConversationService.createId(),
