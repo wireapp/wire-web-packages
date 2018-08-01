@@ -3,6 +3,125 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="4.0.1"></a>
+## [4.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@4.0.0...@wireapp/core@4.0.1) (2018-08-01)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="4.0.0"></a>
+# [4.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.16.7...@wireapp/core@4.0.0) (2018-08-01)
+
+
+### Code Refactoring
+
+* **core:** Reduce amount of return types for "handleEvent" ([#919](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/919)) ([9729f53](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/9729f53))
+
+
+### BREAKING CHANGES
+
+* **core:** The "handleEvent" method of the "Account" class now always returns a "PayloadBundleIncoming" class (or void).
+
+
+
+
+<a name="3.16.7"></a>
+## [3.16.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.16.6...@wireapp/core@3.16.7) (2018-08-01)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.16.6"></a>
+## [3.16.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.16.5...@wireapp/core@3.16.6) (2018-08-01)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.16.5"></a>
+## [3.16.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.16.4...@wireapp/core@3.16.5) (2018-08-01)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.16.4"></a>
+## [3.16.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.16.3...@wireapp/core@3.16.4) (2018-07-31)
+
+
+### Bug Fixes
+
+* **core:** Set correct conversation id on incoming messages ([#915](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/915)) ([d4662b7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/d4662b7))
+
+
+
+
+<a name="3.16.3"></a>
+## [3.16.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.16.2...@wireapp/core@3.16.3) (2018-07-31)
+
+
+### Bug Fixes
+
+* **core:** Propagate ConversationEvent MEMBER_JOIN & RENAME ([#912](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/912)) ([a0080ec](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/a0080ec))
+
+
+
+
+<a name="3.16.2"></a>
+## [3.16.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.16.1...@wireapp/core@3.16.2) (2018-07-31)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.16.1"></a>
+## [3.16.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.16.0...@wireapp/core@3.16.1) (2018-07-31)
+
+
+### Bug Fixes
+
+* **core:** Logger statement for older browsers ([#910](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/910)) ([d373156](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/d373156))
+
+
+
+
+<a name="3.16.0"></a>
+# [3.16.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.15.8...@wireapp/core@3.16.0) (2018-07-31)
+
+
+### Features
+
+* **core:** Send and receive reactions ([#909](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/909)) ([a1e51f6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/a1e51f6))
+
+
+
+
+<a name="3.15.8"></a>
+## [3.15.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.15.7...@wireapp/core@3.15.8) (2018-07-31)
+
+
+### Bug Fixes
+
+* **core:** Fix UUID import for browser builds ([#908](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/908)) ([b494ea4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/b494ea4))
+
+
+
+
+<a name="3.15.7"></a>
+## [3.15.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.15.6...@wireapp/core@3.15.7) (2018-07-31)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
 <a name="3.15.6"></a>
 ## [3.15.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.15.5...@wireapp/core@3.15.6) (2018-07-30)
 

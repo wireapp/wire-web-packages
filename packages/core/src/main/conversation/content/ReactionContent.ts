@@ -17,18 +17,11 @@
  *
  */
 
-class Cookie {
-  public expiration = '0';
-  public zuid = '';
+import {ReactionType} from '../root';
 
-  constructor(zuid: string, expiration: string) {
-    this.expiration = expiration;
-    this.zuid = zuid;
-  }
-
-  public get isExpired(): boolean {
-    return new Date() > new Date(this.expiration);
-  }
+interface ReactionContent {
+  originalMessageId: string;
+  type: ReactionType;
 }
 
-export {Cookie};
+export {ReactionContent};

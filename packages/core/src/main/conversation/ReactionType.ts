@@ -17,18 +17,9 @@
  *
  */
 
-class Cookie {
-  public expiration = '0';
-  public zuid = '';
-
-  constructor(zuid: string, expiration: string) {
-    this.expiration = expiration;
-    this.zuid = zuid;
-  }
-
-  public get isExpired(): boolean {
-    return new Date() > new Date(this.expiration);
-  }
+enum ReactionType {
+  LIKE = '❤️',
+  NONE = '',
 }
 
-export {Cookie};
+export {ReactionType};
