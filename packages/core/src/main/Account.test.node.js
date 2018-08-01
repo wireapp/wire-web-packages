@@ -17,18 +17,20 @@
  *
  */
 
+const nock = require('nock');
 const {Account} = require('@wireapp/core');
+const {PayloadBundleState} = require('@wireapp/core/dist/conversation/root');
+const {APIClient} = require('@wireapp/api-client');
 const {AuthAPI} = require('@wireapp/api-client/dist/commonjs/auth/');
+const {BackendErrorLabel, StatusCode} = require('@wireapp/api-client/dist/commonjs/http/');
 const {ClientAPI, ClientType} = require('@wireapp/api-client/dist/commonjs/client/');
 const {Config} = require('@wireapp/api-client/dist/commonjs/Config');
+const {CONVERSATION_EVENT} = require('@wireapp/api-client/dist/commonjs/event');
 const {ConversationAPI} = require('@wireapp/api-client/dist/commonjs/conversation/');
+const {GenericMessage, Text} = require('@wireapp/protocol-messaging');
 const {MemoryEngine} = require('@wireapp/store-engine');
 const {NotificationAPI} = require('@wireapp/api-client/dist/commonjs/notification/');
-const {BackendErrorLabel, StatusCode} = require('@wireapp/api-client/dist/commonjs/http/');
 const {ValidationUtil} = require('@wireapp/commons');
-const {GenericMessage, Text} = require('@wireapp/protocol-messaging');
-const {APIClient} = require('@wireapp/api-client');
-const nock = require('nock');
 
 const BASE_URL = 'mock-backend.wire.com';
 const BASE_URL_HTTPS = `https://${BASE_URL}`;
@@ -105,6 +107,30 @@ describe('Account', () => {
       .reply(StatusCode.OK, [{id: CLIENT_ID}]);
   });
 
+  describe('"createText"', () => {
+    it('creates a text payload', async done => {
+      const account = await createAccount();
+      expect(account.apiClient.context).toBeUndefined();
+
+      await account.init();
+
+      await account.login({
+        clientType: ClientType.TEMPORARY,
+        email: 'hello@example.com',
+        password: 'my-secret',
+      });
+
+      expect(account.apiClient.context.userId).toBeDefined();
+
+      const text = 'FIFA World Cup';
+      const payload = account.service.conversation.createText(text);
+
+      expect(payload.timestamp).toBeGreaterThan(0);
+
+      done();
+    });
+  });
+
   describe('"init"', () => {
     it('initializes the Protocol buffers', async done => {
       const account = new Account();
@@ -120,6 +146,33 @@ describe('Account', () => {
       });
 
       expect(message.content).toBe('text');
+      done();
+    });
+  });
+
+  describe('"handleEvent"', () => {
+    it('maps unencrypted events', async done => {
+      const messageTimerUpdate = {
+        conversation: 'ed5e4cd5-85ab-4d9e-be59-4e1c0324a9d4',
+        data: {
+          message_timer: 2419200000,
+        },
+        from: '39b7f597-dfd1-4dff-86f5-fe1b79cb70a0',
+        time: '2018-08-01T09:40:25.481Z',
+        type: 'conversation.message-timer-update',
+      };
+
+      const account = new Account();
+      const incomingEvent = await account.handleEvent(messageTimerUpdate);
+
+      expect(incomingEvent.conversation).toBe(messageTimerUpdate.conversation);
+      expect(incomingEvent.from).toBe(messageTimerUpdate.from);
+      expect(typeof incomingEvent.id).toBe('string');
+      expect(incomingEvent.messageTimer).toBe(0);
+      expect(incomingEvent.state).toBe(PayloadBundleState.INCOMING);
+      expect(incomingEvent.timestamp).toBe(new Date(messageTimerUpdate.time).getTime());
+      expect(incomingEvent.type).toBe(CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE);
+
       done();
     });
   });
@@ -171,30 +224,6 @@ describe('Account', () => {
 
         done();
       }
-    });
-  });
-
-  describe('"createText"', () => {
-    it('creates a text payload.', async done => {
-      const account = await createAccount();
-      expect(account.apiClient.context).toBeUndefined();
-
-      await account.init();
-
-      await account.login({
-        clientType: ClientType.TEMPORARY,
-        email: 'hello@example.com',
-        password: 'my-secret',
-      });
-
-      expect(account.apiClient.context.userId).toBeDefined();
-
-      const text = 'FIFA World Cup';
-      const payload = account.service.conversation.createText(text);
-
-      expect(payload.timestamp).toBeGreaterThan(0);
-
-      done();
     });
   });
 });

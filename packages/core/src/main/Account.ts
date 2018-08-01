@@ -371,6 +371,18 @@ class Account extends EventEmitter {
     }
   }
 
+  private mapConversationEvent(event: ConversationEvent): PayloadBundleIncoming {
+    return {
+      conversation: event.conversation,
+      from: event.from,
+      id: ConversationService.createId(),
+      messageTimer: 0,
+      state: PayloadBundleState.INCOMING,
+      timestamp: new Date(event.time).getTime(),
+      type: event.type,
+    };
+  }
+
   private async handleEvent(event: IncomingEvent): Promise<PayloadBundleIncoming | IncomingEvent | void> {
     this.logger.log('handleEvent', event.type);
     const ENCRYPTED_EVENTS = [CONVERSATION_EVENT.OTR_MESSAGE_ADD];
@@ -387,7 +399,7 @@ class Account extends EventEmitter {
     } else if (META_EVENTS.includes(event.type as CONVERSATION_EVENT)) {
       const {conversation, from} = event as ConversationEvent;
       const metaEvent = {...event, from, conversation};
-      return metaEvent as ConversationEvent;
+      return this.mapConversationEvent(metaEvent as ConversationEvent);
     } else if (USER_EVENTS.includes(event.type as USER_EVENT)) {
       return event as UserEvent;
     }
