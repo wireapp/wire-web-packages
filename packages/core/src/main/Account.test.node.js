@@ -150,7 +150,7 @@ describe('Account', () => {
     });
   });
 
-  fdescribe('"handleEvent"', () => {
+  describe('"handleEvent"', () => {
     it('maps unencrypted events', async done => {
       const account = new Account();
 
@@ -197,6 +197,26 @@ describe('Account', () => {
       expect(incomingEvent.state).toBe(PayloadBundleState.INCOMING);
       expect(incomingEvent.timestamp).toBe(new Date(memberJoin.time).getTime());
       expect(incomingEvent.type).toBe(CONVERSATION_EVENT.MEMBER_JOIN);
+
+      const conversationRename = {
+        conversation: 'ed5e4cd5-85ab-4d9e-be59-4e1c0324a9d4',
+        data: {
+          name: 'Tiny Timed Messages',
+        },
+        from: '39b7f597-dfd1-4dff-86f5-fe1b79cb70a0',
+        time: '2018-08-01T12:01:21.629Z',
+        type: 'conversation.rename',
+      };
+
+      incomingEvent = await account.handleEvent(conversationRename);
+
+      expect(incomingEvent.conversation).toBe(conversationRename.conversation);
+      expect(incomingEvent.from).toBe(conversationRename.from);
+      expect(typeof incomingEvent.id).toBe('string');
+      expect(incomingEvent.messageTimer).toBe(0);
+      expect(incomingEvent.state).toBe(PayloadBundleState.INCOMING);
+      expect(incomingEvent.timestamp).toBe(new Date(conversationRename.time).getTime());
+      expect(incomingEvent.type).toBe(CONVERSATION_EVENT.RENAME);
 
       done();
     });
