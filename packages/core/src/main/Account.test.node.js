@@ -150,10 +150,8 @@ describe('Account', () => {
     });
   });
 
-  describe('"handleEvent"', () => {
-    it('maps unencrypted events', async done => {
-      const account = new Account();
-
+  describe('"mapConversationEvent"', () => {
+    it('maps "conversation.message-timer-update" events', async done => {
       const messageTimerUpdate = {
         conversation: 'ed5e4cd5-85ab-4d9e-be59-4e1c0324a9d4',
         data: {
@@ -164,7 +162,8 @@ describe('Account', () => {
         type: 'conversation.message-timer-update',
       };
 
-      let incomingEvent = await account.handleEvent(messageTimerUpdate);
+      const account = new Account();
+      const incomingEvent = await account.mapConversationEvent(messageTimerUpdate);
 
       expect(incomingEvent.conversation).toBe(messageTimerUpdate.conversation);
       expect(incomingEvent.from).toBe(messageTimerUpdate.from);
@@ -174,6 +173,10 @@ describe('Account', () => {
       expect(incomingEvent.timestamp).toBe(new Date(messageTimerUpdate.time).getTime());
       expect(incomingEvent.type).toBe(CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE);
 
+      done();
+    });
+
+    it('maps "conversation.member-join" events', async done => {
       const memberJoin = {
         conversation: '87591650-8676-430f-985f-dec8583f58cb',
         data: {
@@ -188,7 +191,8 @@ describe('Account', () => {
         type: 'conversation.member-join',
       };
 
-      incomingEvent = await account.handleEvent(memberJoin);
+      const account = new Account();
+      const incomingEvent = await account.mapConversationEvent(memberJoin);
 
       expect(incomingEvent.conversation).toBe(memberJoin.conversation);
       expect(incomingEvent.from).toBe(memberJoin.from);
@@ -198,6 +202,10 @@ describe('Account', () => {
       expect(incomingEvent.timestamp).toBe(new Date(memberJoin.time).getTime());
       expect(incomingEvent.type).toBe(CONVERSATION_EVENT.MEMBER_JOIN);
 
+      done();
+    });
+
+    it('maps "conversation.rename" events', async done => {
       const conversationRename = {
         conversation: 'ed5e4cd5-85ab-4d9e-be59-4e1c0324a9d4',
         data: {
@@ -208,7 +216,8 @@ describe('Account', () => {
         type: 'conversation.rename',
       };
 
-      incomingEvent = await account.handleEvent(conversationRename);
+      const account = new Account();
+      const incomingEvent = await account.mapConversationEvent(conversationRename);
 
       expect(incomingEvent.conversation).toBe(conversationRename.conversation);
       expect(incomingEvent.from).toBe(conversationRename.from);
@@ -218,6 +227,10 @@ describe('Account', () => {
       expect(incomingEvent.timestamp).toBe(new Date(conversationRename.time).getTime());
       expect(incomingEvent.type).toBe(CONVERSATION_EVENT.RENAME);
 
+      done();
+    });
+
+    it('maps "conversation.typing" events', async done => {
       const isTyping = {
         conversation: '508f14b9-ef4c-405d-bba9-5c4300cc1cbf',
         data: {status: 'started'},
@@ -226,7 +239,8 @@ describe('Account', () => {
         type: 'conversation.typing',
       };
 
-      incomingEvent = await account.handleEvent(isTyping);
+      const account = new Account();
+      const incomingEvent = await account.mapConversationEvent(isTyping);
 
       expect(incomingEvent.conversation).toBe(isTyping.conversation);
       expect(incomingEvent.from).toBe(isTyping.from);
