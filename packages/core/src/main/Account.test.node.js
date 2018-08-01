@@ -25,7 +25,7 @@ const {AuthAPI} = require('@wireapp/api-client/dist/commonjs/auth/');
 const {BackendErrorLabel, StatusCode} = require('@wireapp/api-client/dist/commonjs/http/');
 const {ClientAPI, ClientType} = require('@wireapp/api-client/dist/commonjs/client/');
 const {Config} = require('@wireapp/api-client/dist/commonjs/Config');
-const {CONVERSATION_EVENT} = require('@wireapp/api-client/dist/commonjs/event');
+const {CONVERSATION_EVENT, USER_EVENT} = require('@wireapp/api-client/dist/commonjs/event');
 const {ConversationAPI} = require('@wireapp/api-client/dist/commonjs/conversation/');
 const {GenericMessage, Text} = require('@wireapp/protocol-messaging');
 const {MemoryEngine} = require('@wireapp/store-engine');
@@ -151,8 +151,8 @@ describe('Account', () => {
   });
 
   describe('"mapConversationEvent"', () => {
-    it('maps "conversation.message-timer-update" events', async done => {
-      const messageTimerUpdate = {
+    it('maps "conversation.message-timer-update" events', () => {
+      const event = {
         conversation: 'ed5e4cd5-85ab-4d9e-be59-4e1c0324a9d4',
         data: {
           message_timer: 2419200000,
@@ -163,21 +163,19 @@ describe('Account', () => {
       };
 
       const account = new Account();
-      const incomingEvent = await account.mapConversationEvent(messageTimerUpdate);
+      const incomingEvent = account.mapConversationEvent(event);
 
-      expect(incomingEvent.conversation).toBe(messageTimerUpdate.conversation);
-      expect(incomingEvent.from).toBe(messageTimerUpdate.from);
+      expect(incomingEvent.conversation).toBe(event.conversation);
+      expect(incomingEvent.from).toBe(event.from);
       expect(typeof incomingEvent.id).toBe('string');
       expect(incomingEvent.messageTimer).toBe(0);
       expect(incomingEvent.state).toBe(PayloadBundleState.INCOMING);
-      expect(incomingEvent.timestamp).toBe(new Date(messageTimerUpdate.time).getTime());
+      expect(incomingEvent.timestamp).toBe(new Date(event.time).getTime());
       expect(incomingEvent.type).toBe(CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE);
-
-      done();
     });
 
-    it('maps "conversation.member-join" events', async done => {
-      const memberJoin = {
+    it('maps "conversation.member-join" events', () => {
+      const event = {
         conversation: '87591650-8676-430f-985f-dec8583f58cb',
         data: {
           user_ids: [
@@ -192,21 +190,19 @@ describe('Account', () => {
       };
 
       const account = new Account();
-      const incomingEvent = await account.mapConversationEvent(memberJoin);
+      const incomingEvent = account.mapConversationEvent(event);
 
-      expect(incomingEvent.conversation).toBe(memberJoin.conversation);
-      expect(incomingEvent.from).toBe(memberJoin.from);
+      expect(incomingEvent.conversation).toBe(event.conversation);
+      expect(incomingEvent.from).toBe(event.from);
       expect(typeof incomingEvent.id).toBe('string');
       expect(incomingEvent.messageTimer).toBe(0);
       expect(incomingEvent.state).toBe(PayloadBundleState.INCOMING);
-      expect(incomingEvent.timestamp).toBe(new Date(memberJoin.time).getTime());
+      expect(incomingEvent.timestamp).toBe(new Date(event.time).getTime());
       expect(incomingEvent.type).toBe(CONVERSATION_EVENT.MEMBER_JOIN);
-
-      done();
     });
 
-    it('maps "conversation.rename" events', async done => {
-      const conversationRename = {
+    it('maps "conversation.rename" events', () => {
+      const event = {
         conversation: 'ed5e4cd5-85ab-4d9e-be59-4e1c0324a9d4',
         data: {
           name: 'Tiny Timed Messages',
@@ -217,21 +213,19 @@ describe('Account', () => {
       };
 
       const account = new Account();
-      const incomingEvent = await account.mapConversationEvent(conversationRename);
+      const incomingEvent = account.mapConversationEvent(event);
 
-      expect(incomingEvent.conversation).toBe(conversationRename.conversation);
-      expect(incomingEvent.from).toBe(conversationRename.from);
+      expect(incomingEvent.conversation).toBe(event.conversation);
+      expect(incomingEvent.from).toBe(event.from);
       expect(typeof incomingEvent.id).toBe('string');
       expect(incomingEvent.messageTimer).toBe(0);
       expect(incomingEvent.state).toBe(PayloadBundleState.INCOMING);
-      expect(incomingEvent.timestamp).toBe(new Date(conversationRename.time).getTime());
+      expect(incomingEvent.timestamp).toBe(new Date(event.time).getTime());
       expect(incomingEvent.type).toBe(CONVERSATION_EVENT.RENAME);
-
-      done();
     });
 
-    it('maps "conversation.typing" events', async done => {
-      const isTyping = {
+    it('maps "conversation.typing" events', () => {
+      const event = {
         conversation: '508f14b9-ef4c-405d-bba9-5c4300cc1cbf',
         data: {status: 'started'},
         from: '16d71f22-0f7b-425e-b4b3-5e288700ac1f',
@@ -240,17 +234,43 @@ describe('Account', () => {
       };
 
       const account = new Account();
-      const incomingEvent = await account.mapConversationEvent(isTyping);
+      const incomingEvent = account.mapConversationEvent(event);
 
-      expect(incomingEvent.conversation).toBe(isTyping.conversation);
-      expect(incomingEvent.from).toBe(isTyping.from);
+      expect(incomingEvent.conversation).toBe(event.conversation);
+      expect(incomingEvent.from).toBe(event.from);
       expect(typeof incomingEvent.id).toBe('string');
       expect(incomingEvent.messageTimer).toBe(0);
       expect(incomingEvent.state).toBe(PayloadBundleState.INCOMING);
-      expect(incomingEvent.timestamp).toBe(new Date(isTyping.time).getTime());
+      expect(incomingEvent.timestamp).toBe(new Date(event.time).getTime());
       expect(incomingEvent.type).toBe(CONVERSATION_EVENT.TYPING);
+    });
+  });
 
-      done();
+  describe('"mapUserEvent"', () => {
+    it('maps "user.connection" events', () => {
+      const event = {
+        connection: {
+          conversation: '19dbbc18-5e22-41dc-acce-0d9d983c1a60',
+          from: '39b7f597-dfd1-4dff-86f5-fe1b79cb70a0',
+          last_update: '2018-07-06T09:38:52.286Z',
+          message: ' ',
+          status: 'sent',
+          to: 'e023c681-7e51-43dd-a5d8-0f821e70a9c0',
+        },
+        type: 'user.connection',
+      };
+
+      const account = new Account();
+      const incomingEvent = account.mapUserEvent(event);
+
+      expect(incomingEvent.content).toBe(event.connection);
+      expect(incomingEvent.conversation).toBe(event.connection.conversation);
+      expect(incomingEvent.from).toBe(event.connection.from);
+      expect(typeof incomingEvent.id).toBe('string');
+      expect(incomingEvent.messageTimer).toBe(0);
+      expect(incomingEvent.state).toBe(PayloadBundleState.INCOMING);
+      expect(incomingEvent.timestamp).toBe(new Date(event.connection.last_update).getTime());
+      expect(incomingEvent.type).toBe(USER_EVENT.CONNECTION);
     });
   });
 
