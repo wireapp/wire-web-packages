@@ -218,6 +218,24 @@ describe('Account', () => {
       expect(incomingEvent.timestamp).toBe(new Date(conversationRename.time).getTime());
       expect(incomingEvent.type).toBe(CONVERSATION_EVENT.RENAME);
 
+      const isTyping = {
+        conversation: '508f14b9-ef4c-405d-bba9-5c4300cc1cbf',
+        data: {status: 'started'},
+        from: '16d71f22-0f7b-425e-b4b3-5e288700ac1f',
+        time: '2018-08-01T12:10:42.422Z',
+        type: 'conversation.typing',
+      };
+
+      incomingEvent = await account.handleEvent(isTyping);
+
+      expect(incomingEvent.conversation).toBe(isTyping.conversation);
+      expect(incomingEvent.from).toBe(isTyping.from);
+      expect(typeof incomingEvent.id).toBe('string');
+      expect(incomingEvent.messageTimer).toBe(0);
+      expect(incomingEvent.state).toBe(PayloadBundleState.INCOMING);
+      expect(incomingEvent.timestamp).toBe(new Date(isTyping.time).getTime());
+      expect(incomingEvent.type).toBe(CONVERSATION_EVENT.TYPING);
+
       done();
     });
   });
