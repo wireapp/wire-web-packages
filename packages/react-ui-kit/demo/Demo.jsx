@@ -175,15 +175,15 @@ class Demo extends React.PureComponent {
             </MenuItem>
           </MenuModal>
         )}
-        <HeaderMenu logoElement={<Logo width={72} />}>
-          <MenuLink href="#" color={COLOR.GREEN} button>
-            test1
-          </MenuLink>
-          <MenuLink href="#">test2</MenuLink>
-          <MenuLink href="#">test3</MenuLink>
-        </HeaderMenu>
-
         <Content>
+          <HeaderMenu logoElement={<Logo width={72} />}>
+            <MenuLink href="#" color={COLOR.GREEN} button>
+              test1
+            </MenuLink>
+            <MenuLink href="#">test2</MenuLink>
+            <MenuLink href="#">test3</MenuLink>
+          </HeaderMenu>
+
           <Container style={{alignItems: 'center', display: 'flex', justifyContent: 'space-around'}}>
             <Logo scale={3} />
             <Loading />
