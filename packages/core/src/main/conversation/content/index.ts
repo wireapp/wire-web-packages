@@ -24,4 +24,5 @@ export * from './DeletedContent';
 export * from './EditedTextContent';
 export * from './HiddenContent';
 export * from './ImageContent';
+export * from './ReactionContent';
 export * from './TextContent';

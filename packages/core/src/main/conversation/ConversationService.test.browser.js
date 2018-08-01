@@ -17,18 +17,13 @@
  *
  */
 
-class Cookie {
-  public expiration = '0';
-  public zuid = '';
+const {ConversationService} = require('@wireapp/core/dist/conversation/root');
 
-  constructor(zuid: string, expiration: string) {
-    this.expiration = expiration;
-    this.zuid = zuid;
-  }
-
-  public get isExpired(): boolean {
-    return new Date() > new Date(this.expiration);
-  }
-}
-
-export {Cookie};
+describe('ConversationService', () => {
+  describe('"createId"', () => {
+    it('creates a random ID.', () => {
+      const id = ConversationService.createId();
+      expect(typeof id).toBe('string');
+    });
+  });
+});

@@ -11,7 +11,7 @@
     "karma-sourcemap-loader": "0.3.7",
     "libsodium-wrappers": "0.7.3",
     "rimraf": "2.6.2",
-    "typescript": "2.9.2",
+    "typescript": "3.0.1",
     "webpack": "4.16.3"
   },
   "files": [
@@ -46,5 +46,5 @@
     "test:node": "cross-env JASMINE_CONFIG_PATH=test/shared/support/jasmine.json jasmine"
   },
   "types": "dist/bazinga64.d.ts",
-  "version": "5.2.17"
+  "version": "5.2.18"
 }
