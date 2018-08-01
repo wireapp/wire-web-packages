@@ -192,10 +192,6 @@
   version "10.5.5"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.5.5.tgz#8e84d24e896cd77b0d4f73df274027e3149ec2ba"
 
-"@types/node@10.5.2":
-  version "10.5.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.5.2.tgz#f19f05314d5421fe37e74153254201a7bf00a707"
-
 "@types/node@^8.9.4":
   version "8.10.20"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.10.20.tgz#fe674ea52e13950ab10954433a7824438aabbcac"
@@ -344,92 +340,11 @@
     "@webassemblyjs/wast-parser" "1.5.13"
     long "^3.2.0"
 
-"@wireapp/api-client@1.9.10":
-  version "1.9.10"
-  resolved "https://registry.yarnpkg.com/@wireapp/api-client/-/api-client-1.9.10.tgz#c847ea66b9f85950ed66d4aac559d5234fed4c85"
-  dependencies:
-    "@types/node" "10.5.2"
-    "@types/spark-md5" "3.0.0"
-    "@types/tough-cookie" "2.3.3"
-    "@wireapp/priority-queue" "0.1.59"
-    "@wireapp/store-engine" "0.11.47"
-    axios "0.18.0"
-    html5-websocket "2.0.3"
-    logdown "3.2.3"
-    reconnecting-websocket "3.2.2"
-    spark-md5 "3.0.0"
-    tough-cookie "2.4.3"
-
-"@wireapp/cbor@3.0.61":
-  version "3.0.61"
-  resolved "https://registry.yarnpkg.com/@wireapp/cbor/-/cbor-3.0.61.tgz#5f9628cb4da75df7415fa4629c9b1dd37aa2c954"
-
-"@wireapp/core@3.13.13":
-  version "3.13.13"
-  resolved "https://registry.yarnpkg.com/@wireapp/core/-/core-3.13.13.tgz#def651280d412c8f2333c38001d2946730171072"
-  dependencies:
-    "@types/node" "10.5.2"
-    "@wireapp/api-client" "1.9.10"
-    "@wireapp/cryptobox" "8.6.2"
-    "@wireapp/protocol-messaging" "1.20.1"
-    "@wireapp/store-engine" "0.11.47"
-    bazinga64 "5.2.13"
-    logdown "3.2.3"
-    protobufjs "6.8.8"
-    pure-uuid "1.5.3"
-
-"@wireapp/cryptobox@8.6.2":
-  version "8.6.2"
-  resolved "https://registry.yarnpkg.com/@wireapp/cryptobox/-/cryptobox-8.6.2.tgz#0bc0e6adcb1a9ecd57a017f5d13ca05be709670d"
-  dependencies:
-    "@types/fs-extra" "5.0.4"
-    "@types/node" "10.5.2"
-    "@wireapp/lru-cache" "2.1.37"
-    "@wireapp/priority-queue" "0.1.59"
-    "@wireapp/proteus" "7.3.1"
-    "@wireapp/store-engine" "0.11.47"
-    bazinga64 "5.2.13"
-    dexie "2.0.4"
-    fs-extra "7.0.0"
-    logdown "3.2.3"
-
-"@wireapp/lru-cache@2.1.37":
-  version "2.1.37"
-  resolved "https://registry.yarnpkg.com/@wireapp/lru-cache/-/lru-cache-2.1.37.tgz#583e9390429a1868fa663aef62327c54ef95fd8e"
-
-"@wireapp/priority-queue@0.1.59":
-  version "0.1.59"
-  resolved "https://registry.yarnpkg.com/@wireapp/priority-queue/-/priority-queue-0.1.59.tgz#d699dbdd40e32d230add252c3cfd750e431f90c9"
-  dependencies:
-    "@types/node" "10.5.2"
-    pure-uuid "1.5.3"
-
-"@wireapp/proteus@7.3.1":
-  version "7.3.1"
-  resolved "https://registry.yarnpkg.com/@wireapp/proteus/-/proteus-7.3.1.tgz#f39583deba99677c98f32032c06ffa938eae0bc8"
-  dependencies:
-    "@types/chai" "4.1.4"
-    "@types/ed2curve" "0.2.2"
-    "@types/node" "10.5.2"
-    "@wireapp/cbor" "3.0.61"
-    ed2curve "0.2.1"
-    libsodium-wrappers-sumo "0.7.3"
-
 "@wireapp/protocol-messaging@1.20.1":
   version "1.20.1"
   resolved "https://registry.yarnpkg.com/@wireapp/protocol-messaging/-/protocol-messaging-1.20.1.tgz#3ff6b21914b628ef62f0092dc1827a99bd9e5b24"
   dependencies:
     protobufjs "6.8.6"
-
-"@wireapp/store-engine@0.11.47":
-  version "0.11.47"
-  resolved "https://registry.yarnpkg.com/@wireapp/store-engine/-/store-engine-0.11.47.tgz#4d1fa01ad8d1638788f4f8fb2a1c13396c62e128"
-  dependencies:
-    "@types/filesystem" "0.0.28"
-    "@types/node" "10.5.2"
-    bro-fs "0.4.0"
-    dexie "2.0.4"
-    fs-extra "7.0.0"
 
 JSONStream@^1.0.4:
   version "1.3.3"
@@ -1489,10 +1404,6 @@ base@^0.11.1:
 batch@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/batch/-/batch-0.6.1.tgz#dc34314f4e679318093fc760272525f94bf25c16"
-
-bazinga64@5.2.13:
-  version "5.2.13"
-  resolved "https://registry.yarnpkg.com/bazinga64/-/bazinga64-5.2.13.tgz#98abf2dfa656ea7fd795f57e4abd2fd3651ed0f5"
 
 bcrypt-pbkdf@^1.0.0:
   version "1.0.2"
@@ -5971,12 +5882,6 @@ log4js@^2.5.3:
     nodemailer "^2.5.0"
     redis "^2.7.1"
     slack-node "~0.2.0"
-
-logdown@3.2.3:
-  version "3.2.3"
-  resolved "https://registry.yarnpkg.com/logdown/-/logdown-3.2.3.tgz#b033901259057a419cb09a41baa3e98b5be57b3c"
-  dependencies:
-    chalk "^2.3.0"
 
 logdown@3.2.7:
   version "3.2.7"
