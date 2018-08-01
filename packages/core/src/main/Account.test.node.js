@@ -150,8 +150,10 @@ describe('Account', () => {
     });
   });
 
-  describe('"handleEvent"', () => {
+  fdescribe('"handleEvent"', () => {
     it('maps unencrypted events', async done => {
+      const account = new Account();
+
       const messageTimerUpdate = {
         conversation: 'ed5e4cd5-85ab-4d9e-be59-4e1c0324a9d4',
         data: {
@@ -162,8 +164,7 @@ describe('Account', () => {
         type: 'conversation.message-timer-update',
       };
 
-      const account = new Account();
-      const incomingEvent = await account.handleEvent(messageTimerUpdate);
+      let incomingEvent = await account.handleEvent(messageTimerUpdate);
 
       expect(incomingEvent.conversation).toBe(messageTimerUpdate.conversation);
       expect(incomingEvent.from).toBe(messageTimerUpdate.from);
@@ -172,6 +173,30 @@ describe('Account', () => {
       expect(incomingEvent.state).toBe(PayloadBundleState.INCOMING);
       expect(incomingEvent.timestamp).toBe(new Date(messageTimerUpdate.time).getTime());
       expect(incomingEvent.type).toBe(CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE);
+
+      const memberJoin = {
+        conversation: '87591650-8676-430f-985f-dec8583f58cb',
+        data: {
+          user_ids: [
+            'e023c681-7e51-43dd-a5d8-0f821e70a9c0',
+            'b8a09877-7b73-4636-a664-95b2bda193b0',
+            '5b068afd-1ef2-4860-9fbb-9c3c70a22f97',
+          ],
+        },
+        from: '39b7f597-dfd1-4dff-86f5-fe1b79cb70a0',
+        time: '2018-07-12T09:43:34.442Z',
+        type: 'conversation.member-join',
+      };
+
+      incomingEvent = await account.handleEvent(memberJoin);
+
+      expect(incomingEvent.conversation).toBe(memberJoin.conversation);
+      expect(incomingEvent.from).toBe(memberJoin.from);
+      expect(typeof incomingEvent.id).toBe('string');
+      expect(incomingEvent.messageTimer).toBe(0);
+      expect(incomingEvent.state).toBe(PayloadBundleState.INCOMING);
+      expect(incomingEvent.timestamp).toBe(new Date(memberJoin.time).getTime());
+      expect(incomingEvent.type).toBe(CONVERSATION_EVENT.MEMBER_JOIN);
 
       done();
     });
