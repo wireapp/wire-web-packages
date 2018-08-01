@@ -20,15 +20,14 @@
 import {APIClient} from '@wireapp/api-client';
 import {ClientType} from '@wireapp/api-client/dist/commonjs/client/';
 import {Config} from '@wireapp/api-client/dist/commonjs/Config';
+import {Connection} from '@wireapp/api-client/dist/commonjs/connection';
 import {ConnectionStatus} from '@wireapp/api-client/dist/commonjs/connection/';
-import {UserConnectionEvent} from '@wireapp/api-client/dist/commonjs/event/';
 import {Account} from '@wireapp/core';
 import {PayloadBundleIncoming} from '@wireapp/core/dist/conversation/root';
 import {MemoryEngine} from '@wireapp/store-engine';
 import UUID from 'pure-uuid';
 import {BotConfig} from './BotConfig';
-import {Event} from './Event';
-import {EventHandler} from './EventHandler';
+import {MessageHandler} from './MessageHandler';
 
 const logdown = require('logdown');
 
@@ -37,7 +36,7 @@ class Bot {
 
   private readonly credentials: {email: string; password: string};
   private readonly config: BotConfig;
-  private readonly handlers: Map<string, EventHandler>;
+  private readonly handlers: Map<string, MessageHandler>;
   private readonly logger: any = logdown('@wireapp/standup-bot/StandupBot', {
     logger: console,
     markdown: false,
@@ -49,7 +48,7 @@ class Bot {
     this.handlers = new Map();
   }
 
-  public addHandler(handler: EventHandler) {
+  public addHandler(handler: MessageHandler) {
     this.handlers.set(new UUID(4).format(), handler);
   }
 
@@ -81,35 +80,22 @@ class Bot {
       if (this.validateMessage(conversationId, payload.from)) {
         this.logger.info('Processing message ...');
         try {
-          const event: Event = {
-            conversationId,
-            data: payload,
-            fromId: payload.from,
-            type: Account.INCOMING.TEXT_MESSAGE,
-          };
-          this.handlers.forEach(handler => handler.handleEvent(event));
+          this.handlers.forEach(handler => handler.handleEvent(payload));
         } catch (error) {
           this.logger.error(`An error occurred during text handling: ${error.message}`, error);
         }
       }
     });
-    this.account.on(Account.INCOMING.CONNECTION, async (payload: UserConnectionEvent) => {
-      if (payload.connection.status === ConnectionStatus.PENDING && payload.connection.conversation) {
-        const {
-          connection: {conversation, to: userId},
-        } = payload;
+    this.account.on(Account.INCOMING.CONNECTION, async (payload: PayloadBundleIncoming) => {
+      const connection: Connection = payload.content as Connection;
+      if (connection.status === ConnectionStatus.PENDING && connection.conversation) {
+        const {conversation, to: userId} = connection;
         if (this.validateMessage(String(conversation), userId)) {
           this.logger.info('Processing connection request ...');
           try {
-            const event: Event = {
-              conversationId: conversation,
-              data: payload,
-              fromId: userId,
-              type: Account.INCOMING.CONNECTION,
-            };
-            this.handlers.forEach(handler => handler.handleEvent(event));
+            this.handlers.forEach(handler => handler.handleEvent(payload));
           } catch (error) {
-            this.logger.error(`An error occured during connection request handling: ${error.message}`, error);
+            this.logger.error(`An error occurred during connection request handling: ${error.message}`, error);
           }
         }
       }

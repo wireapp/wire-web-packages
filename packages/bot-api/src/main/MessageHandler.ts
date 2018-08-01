@@ -18,12 +18,12 @@
  */
 
 import {Account} from '@wireapp/core';
-import {Event} from './Event';
+import {PayloadBundleIncoming} from '@wireapp/core/dist/conversation/root';
 
-abstract class EventHandler {
+abstract class MessageHandler {
   public account: Account | undefined = undefined;
 
-  abstract handleEvent(event: Event): void;
+  abstract handleEvent(payload: PayloadBundleIncoming): void;
 
   public async addUser(conversationId: string, userId: string): Promise<void> {
     if (this.account && this.account.service) {
@@ -61,4 +61,4 @@ abstract class EventHandler {
   }
 }
 
-export {EventHandler};
+export {MessageHandler};
