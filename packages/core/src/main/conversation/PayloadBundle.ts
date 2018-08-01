@@ -17,8 +17,22 @@
  *
  */
 
-import {GenericMessageType} from '../conversation/root';
-import {ConversationContent} from './content/ConversationContent';
+import {ClientActionType, GenericMessageType} from '../conversation/root';
+
+import {Connection} from '@wireapp/api-client/dist/commonjs/connection';
+import {CONVERSATION_EVENT, USER_EVENT} from '@wireapp/api-client/dist/commonjs/event';
+import {
+  AssetContent,
+  ClientActionContent,
+  ConfirmationContent,
+  DeletedContent,
+  EditedTextContent,
+  HiddenContent,
+  ImageAssetContent,
+  ImageContent,
+  ReactionContent,
+  TextContent,
+} from '../conversation/content/';
 
 enum PayloadBundleState {
   INCOMING = 'PayloadBundleState.INCOMING',
@@ -39,12 +53,24 @@ type PayloadBundleOutgoing = PayloadBundle & {
 type PayloadBundleOutgoingUnsent = PayloadBundle & {state: PayloadBundleState.OUTGOING_UNSENT};
 
 interface PayloadBundle {
-  content?: ConversationContent;
+  content?:
+    | AssetContent
+    | ClientActionContent
+    | ClientActionType
+    | ConfirmationContent
+    | Connection
+    | DeletedContent
+    | EditedTextContent
+    | HiddenContent
+    | ImageAssetContent
+    | ImageContent
+    | ReactionContent
+    | TextContent;
   from: string;
   id: string;
   state: PayloadBundleState;
   timestamp: number;
-  type: GenericMessageType;
+  type: GenericMessageType | CONVERSATION_EVENT | USER_EVENT;
 }
 
 export {PayloadBundle, PayloadBundleIncoming, PayloadBundleOutgoing, PayloadBundleOutgoingUnsent, PayloadBundleState};

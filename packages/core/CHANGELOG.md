@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="4.0.1"></a>
+## [4.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@4.0.0...@wireapp/core@4.0.1) (2018-08-01)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="4.0.0"></a>
+# [4.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.16.7...@wireapp/core@4.0.0) (2018-08-01)
+
+
+### Code Refactoring
+
+* **core:** Reduce amount of return types for "handleEvent" ([#919](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/919)) ([9729f53](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/9729f53))
+
+
+### BREAKING CHANGES
+
+* **core:** The "handleEvent" method of the "Account" class now always returns a "PayloadBundleIncoming" class (or void).
+
+
+
+
+<a name="3.16.7"></a>
+## [3.16.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.16.6...@wireapp/core@3.16.7) (2018-08-01)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.16.6"></a>
+## [3.16.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.16.5...@wireapp/core@3.16.6) (2018-08-01)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="3.16.5"></a>
+## [3.16.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.16.4...@wireapp/core@3.16.5) (2018-08-01)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
 <a name="3.16.4"></a>
 ## [3.16.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@3.16.3...@wireapp/core@3.16.4) (2018-07-31)
 
