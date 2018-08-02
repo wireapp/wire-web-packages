@@ -62,7 +62,7 @@ notifications:
 after_failure:
   - |
     if [[ "${IS_MASTER_BRANCH}" == "0" ]]; then
-      LAST_COMMITTER_NAME="$(git log -1 --format='%cn')"
+      LAST_COMMITTER_NAME="$(git --no-pager show -s --format='%an' HEAD)"
       TRAVIS_BUILD_URL="https://travis-ci.org/${TRAVIS_REPO_SLUG}/builds/${TRAVIS_BUILD_ID}"
       NODE_DEBUG="@wireapp:*" node "packages/core/src/demo/status-bot.js" "4ae15efc-d061-4013-98f2-bcd81ab39b60,b2cc7120-4154-4be4-b0c0-45a8c361c4d1" "${LAST_COMMITTER_NAME} broke the \"${TRAVIS_BRANCH}\" branch on \"${TRAVIS_REPO_SLUG}\" (Build #${TRAVIS_BUILD_NUMBER}). 🌵\n→ ${TRAVIS_BUILD_URL}"
     fi
