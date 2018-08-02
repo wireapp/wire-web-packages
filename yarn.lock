@@ -188,9 +188,9 @@
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@types/long/-/long-4.0.0.tgz#719551d2352d301ac8b81db732acb6bdc28dbdef"
 
-"@types/node@*", "@types/node@10.5.4", "@types/node@^10.1.0":
-  version "10.5.4"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.5.4.tgz#6eccc158504357d1da91434d75e86acde94bb10b"
+"@types/node@*", "@types/node@10.5.5", "@types/node@^10.1.0":
+  version "10.5.5"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.5.5.tgz#8e84d24e896cd77b0d4f73df274027e3149ec2ba"
 
 "@types/node@^8.9.4":
   version "8.10.20"
@@ -5883,9 +5883,9 @@ log4js@^2.5.3:
     redis "^2.7.1"
     slack-node "~0.2.0"
 
-logdown@3.2.3:
-  version "3.2.3"
-  resolved "https://registry.yarnpkg.com/logdown/-/logdown-3.2.3.tgz#b033901259057a419cb09a41baa3e98b5be57b3c"
+logdown@3.2.7:
+  version "3.2.7"
+  resolved "https://registry.yarnpkg.com/logdown/-/logdown-3.2.7.tgz#4dd24375bf5b757064f65aeb8c3459ae66cde1b9"
   dependencies:
     chalk "^2.3.0"
 
@@ -6374,9 +6374,9 @@ nise@^1.4.2:
     path-to-regexp "^1.7.0"
     text-encoding "^0.6.4"
 
-nock@9.4.3:
-  version "9.4.3"
-  resolved "https://registry.yarnpkg.com/nock/-/nock-9.4.3.tgz#26bbc1280898f442c9814085f05199cab857a04c"
+nock@9.4.4:
+  version "9.4.4"
+  resolved "https://registry.yarnpkg.com/nock/-/nock-9.4.4.tgz#d58a6d54ca26735d792aa776801cd0623789bdb6"
   dependencies:
     chai "^4.1.2"
     debug "^3.1.0"
@@ -7399,9 +7399,9 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-dom@16.4.1:
-  version "16.4.1"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.4.1.tgz#7f8b0223b3a5fbe205116c56deb85de32685dad6"
+react-dom@16.4.2:
+  version "16.4.2"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.4.2.tgz#4afed569689f2c561d2b8da0b819669c38a0bda4"
   dependencies:
     fbjs "^0.8.16"
     loose-envify "^1.1.0"
@@ -7427,9 +7427,9 @@ react-lifecycles-compat@^3.0.2, react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
 
-react@16.4.1:
-  version "16.4.1"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.4.1.tgz#de51ba5764b5dbcd1f9079037b862bd26b82fe32"
+react@16.4.2:
+  version "16.4.2"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.4.2.tgz#2cd90154e3a9d9dd8da2991149fdca3c260e129f"
   dependencies:
     fbjs "^0.8.16"
     loose-envify "^1.1.0"

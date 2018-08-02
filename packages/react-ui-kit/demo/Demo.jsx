@@ -65,6 +65,7 @@ import {
   InputSubmitCombo,
   Label,
   LabelLink,
+  Large,
   Lead,
   LeaveIcon,
   Line,
@@ -84,7 +85,9 @@ import {
   Muted,
   OptionsIcon,
   Overlay,
+  PILL_TYPE,
   Paragraph,
+  Pill,
   PingIcon,
   PlaneIcon,
   ProfileIcon,
@@ -188,6 +191,14 @@ class Demo extends React.PureComponent {
             <Loading />
             <Loading progress={0.33} />
             <Loading progress={0.66} />
+          </Container>
+          <Container>
+            <H1>Pills</H1>
+            <Pill>Default Pill</Pill>
+            <Pill active>Active default Pill</Pill>
+            <Pill type={PILL_TYPE.error}>Error Pill</Pill>
+            <Pill type={PILL_TYPE.success}>Success Pill</Pill>
+            <Pill type={PILL_TYPE.warning}>Warning Pill</Pill>
           </Container>
           <Container>
             <H1>Icons</H1>
@@ -545,6 +556,12 @@ class Demo extends React.PureComponent {
               <Column>Uppercase text</Column>
               <Column>
                 <Uppercase>upper case</Uppercase>
+              </Column>
+            </Columns>
+            <Columns>
+              <Column>Large text</Column>
+              <Column>
+                <Large>Large text</Large>
               </Column>
             </Columns>
             <Line />
