@@ -361,7 +361,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: genericMessage.type,
+          type: genericMessage.content,
         };
       }
       case GenericMessageType.REACTION: {

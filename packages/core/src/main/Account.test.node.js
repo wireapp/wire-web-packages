@@ -278,6 +278,57 @@ describe('Account', () => {
     });
   });
 
+  describe('"mapGenericMessage"', () => {
+    it('merges file asset messages correctly', () => {
+      const eventData = {
+        conversation: '134d2334-6366-4bec-a27f-99c8ea38d664',
+        data: {
+          recipient: '8afda7b1f7aa00db',
+          sender: '1bdf4f70290e9d9a',
+          text: 'encrypted-text',
+        },
+        from: '3bfce2ae-628c-449d-9bc6-ecd5174317c9',
+        time: new Date(),
+        type: 'conversation.otr-message-add',
+      };
+
+      const genericMessageOriginal = {
+        asset: {
+          original: {
+            mimeType: 'application/zip',
+            name: 'filename.zip',
+            size: 1234,
+          },
+          preview: null,
+          uploaded: null,
+        },
+        content: 'asset',
+        messageId: '1db06886-7e58-493a-8b5b-ca4ce6b35c80',
+      };
+
+      const genericMessageUploaded = {
+        asset: {
+          original: null,
+          preview: null,
+          uploaded: {
+            assetId: '3-2-01881fdb-f81c-4260-83e0-f4b8f277ecb2',
+            assetToken: 'base64 encoded token',
+            otrKey: new Uint8Array([]),
+            sha256: new Uint8Array([]),
+          },
+        },
+        content: 'asset',
+        messageId: '1db06886-7e58-493a-8b5b-ca4ce6b35c80',
+      };
+
+      const account = new Account();
+      account.mapGenericMessage(genericMessageOriginal, eventData);
+
+      const mappedMessage = account.mapGenericMessage(genericMessageUploaded, eventData);
+      expect(mappedMessage.content.original).toEqual(genericMessageOriginal.asset.original);
+    });
+  });
+
   describe('"login"', () => {
     it('logs in with correct credentials', async done => {
       const storeEngine = new MemoryEngine();
