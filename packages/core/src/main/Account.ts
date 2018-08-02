@@ -54,6 +54,7 @@ import {APIClient} from '@wireapp/api-client';
 import {UserConnectionEvent} from '@wireapp/api-client/dist/commonjs/event';
 import * as EventEmitter from 'events';
 import * as logdown from 'logdown';
+import GenericMessageType from './conversation/GenericMessageType';
 
 class Account extends EventEmitter {
   private readonly logger = logdown('@wireapp/core/Account', {
@@ -63,18 +64,26 @@ class Account extends EventEmitter {
 
   public static readonly INCOMING = {
     ASSET: 'Account.INCOMING.ASSET',
+    AVAILABILITY: 'Account.INCOMING.AVAILABILITY',
+    CALL: 'Account.INCOMING.CALL',
     CLIENT_ACTION: 'Account.INCOMING.CLIENT_ACTION',
     CONFIRMATION: 'Account.INCOMING.CONFIRMATION',
     CONNECTION: 'Account.INCOMING.CONNECTION',
+    CONVERSATION_CLEAR: 'Account.INCOMING.CONVERSATION_CLEAR',
     CONVERSATION_RENAME: 'Account.INCOMING.CONVERSATION_RENAME',
     DELETED: 'Account.INCOMING.DELETED',
     HIDDEN: 'Account.INCOMING.HIDDEN',
+    IMAGE: 'Account.INCOMING.IMAGE',
+    LAST_READ_UPDATE: 'Account.INCOMING.LAST_READ_UPDATE',
+    LOCATION: 'Account.INCOMING.LOCATION',
     MEMBER_JOIN: 'Account.INCOMING.MEMBER_JOIN',
+    MESSAGE_EDIT: 'Account.INCOMING.MESSAGE_EDIT',
     MESSAGE_TIMER_UPDATE: 'Account.INCOMING.MESSAGE_TIMER_UPDATE',
     PING: 'Account.INCOMING.PING',
     REACTION: 'Account.INCOMING.REACTION',
     TEXT_MESSAGE: 'Account.INCOMING.TEXT_MESSAGE',
     TYPING: 'Account.INCOMING.TYPING',
+    UNKNOWN: 'Account.INCOMING.UNKNOWN',
   };
   private readonly apiClient: APIClient;
   public service?: {
@@ -289,7 +298,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: genericMessage.content,
+          type: Account.INCOMING.TEXT_MESSAGE,
         };
       }
       case GenericMessageType.DELETED: {
@@ -304,7 +313,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: genericMessage.content,
+          type: Account.INCOMING.DELETED,
         };
       }
       case GenericMessageType.HIDDEN: {
@@ -320,7 +329,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: genericMessage.content,
+          type: Account.INCOMING.HIDDEN,
         };
       }
       case GenericMessageType.ASSET: {
@@ -338,7 +347,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: genericMessage.content,
+          type: Account.INCOMING.ASSET,
         };
       }
       case GenericMessageType.REACTION: {
@@ -354,7 +363,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: genericMessage.content,
+          type: Account.INCOMING.REACTION,
         };
       }
       default: {
@@ -366,7 +375,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: genericMessage.content,
+          type: Account.INCOMING.UNKNOWN,
         };
       }
     }
@@ -401,6 +410,43 @@ class Account extends EventEmitter {
     }
   }
 
+  private mapGenericMessageType(type: GenericMessageType): string {
+    switch (type) {
+      case GenericMessageType.ASSET:
+        return Account.INCOMING.ASSET;
+      case GenericMessageType.AVAILABILITY:
+        return Account.INCOMING.AVAILABILITY;
+      case GenericMessageType.CALLING:
+        return Account.INCOMING.CALL;
+      case GenericMessageType.CLEARED:
+        return Account.INCOMING.CONVERSATION_CLEAR;
+      case GenericMessageType.CLIENT_ACTION:
+        return Account.INCOMING.CLIENT_ACTION;
+      case GenericMessageType.CONFIRMATION:
+        return Account.INCOMING.CONFIRMATION;
+      case GenericMessageType.DELETED:
+        return Account.INCOMING.DELETED;
+      case GenericMessageType.EDITED:
+        return Account.INCOMING.MESSAGE_EDIT;
+      case GenericMessageType.HIDDEN:
+        return Account.INCOMING.HIDDEN;
+      case GenericMessageType.IMAGE:
+        return Account.INCOMING.IMAGE;
+      case GenericMessageType.KNOCK:
+        return Account.INCOMING.PING;
+      case GenericMessageType.LAST_READ:
+        return Account.INCOMING.LAST_READ_UPDATE;
+      case GenericMessageType.LOCATION:
+        return Account.INCOMING.LOCATION;
+      case GenericMessageType.REACTION:
+        return Account.INCOMING.REACTION;
+      case GenericMessageType.TEXT:
+        return Account.INCOMING.TEXT_MESSAGE;
+      default:
+        return Account.INCOMING.UNKNOWN;
+    }
+  }
+
   private async handleEvent(event: IncomingEvent): Promise<PayloadBundleIncoming | void> {
     this.logger.log('handleEvent', event.type);
     const ENCRYPTED_EVENTS = [CONVERSATION_EVENT.OTR_MESSAGE_ADD];
@@ -429,31 +475,31 @@ class Account extends EventEmitter {
       const data = await this.handleEvent(event);
       if (data) {
         switch (data.type) {
-          case GenericMessageType.ASSET:
-            this.emit(Account.INCOMING.ASSET, data);
+          case Account.INCOMING.ASSET:
+            this.emit(data.type, event);
             break;
-          case GenericMessageType.CLIENT_ACTION:
-            this.emit(Account.INCOMING.CLIENT_ACTION, data);
+          case Account.INCOMING.CLIENT_ACTION:
+            this.emit(data.type, event);
             break;
-          case GenericMessageType.CONFIRMATION:
-            this.emit(Account.INCOMING.CONFIRMATION, data);
+          case Account.INCOMING.CONFIRMATION:
+            this.emit(data.type, event);
             break;
-          case GenericMessageType.DELETED:
-            this.emit(Account.INCOMING.DELETED, data);
+          case Account.INCOMING.DELETED:
+            this.emit(data.type, event);
             break;
-          case GenericMessageType.HIDDEN:
-            this.emit(Account.INCOMING.HIDDEN, data);
+          case Account.INCOMING.HIDDEN:
+            this.emit(data.type, event);
             break;
-          case GenericMessageType.KNOCK:
-            this.emit(Account.INCOMING.PING, data);
+          case Account.INCOMING.PING:
+            this.emit(data.type, event);
             break;
-          case GenericMessageType.REACTION:
-            this.emit(Account.INCOMING.REACTION, data);
+          case Account.INCOMING.REACTION:
+            this.emit(data.type, event);
             break;
-          case GenericMessageType.TEXT:
-            this.emit(Account.INCOMING.TEXT_MESSAGE, data);
+          case Account.INCOMING.TEXT_MESSAGE:
+            this.emit(data.type, event);
             break;
-          case CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE: {
+          case Account.INCOMING.MESSAGE_TIMER_UPDATE: {
             const {
               data: {message_timer},
               conversation,
@@ -463,21 +509,21 @@ class Account extends EventEmitter {
               `Received "${expireAfterMillis}" ms timer on conversation level for conversation "${conversation}".`
             );
             this.service!.conversation.messageTimer.setConversationLevelTimer(conversation, expireAfterMillis);
-            this.emit(Account.INCOMING.MESSAGE_TIMER_UPDATE, event);
+            this.emit(data.type, event);
             break;
           }
-          case CONVERSATION_EVENT.MEMBER_JOIN:
-            this.emit(Account.INCOMING.MEMBER_JOIN, event);
+          case Account.INCOMING.MEMBER_JOIN:
+            this.emit(data.type, event);
             break;
-          case CONVERSATION_EVENT.RENAME:
-            this.emit(Account.INCOMING.CONVERSATION_RENAME, event);
+          case Account.INCOMING.CONVERSATION_RENAME:
+            this.emit(data.type, event);
             break;
-          case CONVERSATION_EVENT.TYPING: {
-            this.emit(Account.INCOMING.TYPING, event);
+          case Account.INCOMING.TYPING: {
+            this.emit(data.type, event);
             break;
           }
-          case USER_EVENT.CONNECTION: {
-            this.emit(Account.INCOMING.CONNECTION, event);
+          case Account.INCOMING.CONNECTION: {
+            this.emit(data.type, event);
             break;
           }
         }
