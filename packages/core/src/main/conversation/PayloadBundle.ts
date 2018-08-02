@@ -27,6 +27,7 @@ import {
   ConfirmationContent,
   DeletedContent,
   EditedTextContent,
+  FileAssetContent,
   HiddenContent,
   ImageAssetContent,
   ImageContent,
@@ -61,6 +62,7 @@ interface PayloadBundle {
     | Connection
     | DeletedContent
     | EditedTextContent
+    | FileAssetContent
     | HiddenContent
     | ImageAssetContent
     | ImageContent

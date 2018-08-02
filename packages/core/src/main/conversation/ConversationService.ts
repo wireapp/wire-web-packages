@@ -58,6 +58,7 @@ import {
   ConfirmationContent,
   EditedTextContent,
   FileAssetContent,
+  FileContent,
   ImageAssetContent,
   ImageContent,
   ReactionContent,
@@ -477,6 +478,27 @@ export default class ConversationService {
     };
   }
 
+  public async createFile(
+    file: FileContent,
+    messageId: string = ConversationService.createId()
+  ): Promise<PayloadBundleOutgoingUnsent> {
+    const imageAsset = await this.assetService.uploadFileAsset(file);
+
+    const content: FileAssetContent = {
+      asset: imageAsset,
+      file,
+    };
+
+    return {
+      content,
+      from: this.apiClient.context!.userId,
+      id: messageId,
+      state: PayloadBundleState.OUTGOING_UNSENT,
+      timestamp: Date.now(),
+      type: GenericMessageType.ASSET,
+    };
+  }
+
   public static createId(): string {
     return new UUID(4).format();
   }
@@ -697,6 +719,9 @@ export default class ConversationService {
         if (payloadBundle.content) {
           if ((payloadBundle.content as ImageAssetContent).image) {
             return this.sendImage(conversationId, payloadBundle);
+          }
+          if ((payloadBundle.content as FileAssetContent).asset) {
+            return this.sendFile(conversationId, payloadBundle);
           }
           throw new Error(`No send method implemented for sending other assets than images.`);
         }
