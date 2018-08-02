@@ -19,6 +19,7 @@
 
 import {COLOR} from '../Identity';
 import {Content} from '../Layout';
+import {GUTTER} from './sizes';
 import {Link} from '../Text';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -40,7 +41,7 @@ const MenuContent = styled(Content)`
   width: 100%;
   z-index: 10000;
   left: 0;
-  padding: 0;`};
+  padding: 0 ${GUTTER}px;`};
 `;
 
 const MenuItems = styled.div`
