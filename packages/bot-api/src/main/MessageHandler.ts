@@ -18,7 +18,7 @@
  */
 
 import {Account} from '@wireapp/core';
-import {PayloadBundleIncoming} from '@wireapp/core/dist/conversation/root';
+import {PayloadBundleIncoming, ReactionType} from '@wireapp/core/dist/conversation/root';
 
 abstract class MessageHandler {
   public account: Account | undefined = undefined;
@@ -57,6 +57,13 @@ abstract class MessageHandler {
       } else {
         await this.account.service.connection.ignoreConnection(userId);
       }
+    }
+  }
+
+  public async sendReaction(conversationId: string, originalMessageId: string, type: ReactionType): Promise<void> {
+    if (this.account && this.account.service) {
+      const reactionPayload = this.account.service.conversation.createReaction(originalMessageId, type);
+      await this.account.service.conversation.send(conversationId, reactionPayload);
     }
   }
 }
