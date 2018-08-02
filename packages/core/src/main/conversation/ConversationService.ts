@@ -697,6 +697,10 @@ export default class ConversationService {
     });
   }
 
+  public getImage(data: RemoteData): Promise<Buffer> {
+    return this.getAsset(data);
+  }
+
   public async addUser(conversationId: string, userId: string): Promise<string>;
   public async addUser(conversationId: string, userIds: string[]): Promise<string[]>;
   public async addUser(conversationId: string, userIds: string | string[]): Promise<string | string[]> {
