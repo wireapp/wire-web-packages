@@ -24,6 +24,8 @@ const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/ClientTyp
 const {CONVERSATION_TYPING} = require('@wireapp/api-client/dist/commonjs/event/');
 const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine/');
 
+const assetOriginalCache = {};
+
 (async () => {
   const login = {
     clientType: ClientType.TEMPORARY,
@@ -74,13 +76,24 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine/');
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
     );
 
+    if (original && !uploaded) {
+      assetOriginalCache[messageId] = original;
+      return;
+    }
+
+    const cacheOriginal = assetOriginalCache[messageId];
+    if (!cacheOriginal) {
+      throw new Error(`Uploaded data for message ID "${messageId} was received before the original data."`);
+    }
+
     const fileBuffer = await account.service.conversation.getAsset(uploaded);
-    const imagePayload = await account.service.conversation.createFile({
+    const filePayload = await account.service.conversation.createFile({
       data: fileBuffer,
-      name: original.name,
-      type: original.mimeType,
+      name: cacheOriginal.name,
+      type: cacheOriginal.mimeType,
     });
-    await account.service.conversation.send(conversationId, imagePayload);
+    await account.service.conversation.send(conversationId, filePayload);
+    delete assetOriginalCache[data.messageId];
   });
 
   account.on(Account.INCOMING.IMAGE, async data => {
@@ -170,8 +183,8 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine/');
     const name = await account.service.self.getName();
 
     logger.log('Name', name);
-    logger.log('User ID', account.service.self.apiClient.context.userId);
-    logger.log('Client ID', account.service.self.apiClient.context.clientId);
+    logger.log('User ID', account.apiClient.context.userId);
+    logger.log('Client ID', account.apiClient.context.clientId);
     logger.log('Listening for messages ...');
   } catch (error) {
     logger.error(error);

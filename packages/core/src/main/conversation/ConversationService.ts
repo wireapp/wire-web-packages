@@ -730,7 +730,7 @@ export default class ConversationService {
           }
           throw new Error(`No send method implemented for this kind of asset.`);
         }
-        throw new Error(`No send method implemented for "${payloadBundle.type}" without content.`);
+        throw new Error(`Payload of type "${payloadBundle.type}" does not have a "content" property.`);
       }
       case GenericMessageType.CLIENT_ACTION: {
         if (payloadBundle.content === ClientAction.RESET_SESSION) {
