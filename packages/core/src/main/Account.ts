@@ -54,7 +54,6 @@ import {APIClient} from '@wireapp/api-client';
 import {UserConnectionEvent} from '@wireapp/api-client/dist/commonjs/event';
 import * as EventEmitter from 'events';
 import * as logdown from 'logdown';
-import GenericMessageType from './conversation/GenericMessageType';
 
 class Account extends EventEmitter {
   private readonly logger = logdown('@wireapp/core/Account', {
@@ -407,43 +406,6 @@ class Account extends EventEmitter {
         timestamp: new Date(connectionEvent.connection.last_update).getTime(),
         type: USER_EVENT.CONNECTION,
       };
-    }
-  }
-
-  private mapGenericMessageType(type: GenericMessageType): string {
-    switch (type) {
-      case GenericMessageType.ASSET:
-        return Account.INCOMING.ASSET;
-      case GenericMessageType.AVAILABILITY:
-        return Account.INCOMING.AVAILABILITY;
-      case GenericMessageType.CALLING:
-        return Account.INCOMING.CALL;
-      case GenericMessageType.CLEARED:
-        return Account.INCOMING.CONVERSATION_CLEAR;
-      case GenericMessageType.CLIENT_ACTION:
-        return Account.INCOMING.CLIENT_ACTION;
-      case GenericMessageType.CONFIRMATION:
-        return Account.INCOMING.CONFIRMATION;
-      case GenericMessageType.DELETED:
-        return Account.INCOMING.DELETED;
-      case GenericMessageType.EDITED:
-        return Account.INCOMING.MESSAGE_EDIT;
-      case GenericMessageType.HIDDEN:
-        return Account.INCOMING.HIDDEN;
-      case GenericMessageType.IMAGE:
-        return Account.INCOMING.IMAGE;
-      case GenericMessageType.KNOCK:
-        return Account.INCOMING.PING;
-      case GenericMessageType.LAST_READ:
-        return Account.INCOMING.LAST_READ_UPDATE;
-      case GenericMessageType.LOCATION:
-        return Account.INCOMING.LOCATION;
-      case GenericMessageType.REACTION:
-        return Account.INCOMING.REACTION;
-      case GenericMessageType.TEXT:
-        return Account.INCOMING.TEXT_MESSAGE;
-      default:
-        return Account.INCOMING.UNKNOWN;
     }
   }
 
