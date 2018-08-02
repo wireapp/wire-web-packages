@@ -22,7 +22,7 @@
 require('dotenv').config();
 
 const AccountHelper = require('./test/AccountHelper');
-const {Account} = require('@wireapp/core');
+const {PayloadBundleType} = require('@wireapp/core/dist/conversation/root');
 const {ValidationUtil} = require('@wireapp/commons');
 const {UnconnectedUserError} = require('@wireapp/api-client/dist/commonjs/user/');
 const logdown = require('logdown');
@@ -152,7 +152,7 @@ describe('Account', () => {
 
       const message = 'Hello, Bob!';
 
-      bob.on(Account.INCOMING.TEXT_MESSAGE, async data => {
+      bob.on(PayloadBundleType.TEXT_MESSAGE, async data => {
         expect(data.content.text).toBe(message);
         done();
       });
