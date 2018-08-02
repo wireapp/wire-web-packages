@@ -434,59 +434,19 @@ class Account extends EventEmitter {
     for (const event of notification.payload) {
       const data = await this.handleEvent(event);
       if (data) {
-        switch (data.type) {
-          case Account.INCOMING.ASSET:
-            this.emit(data.type, event);
-            break;
-          case Account.INCOMING.CLIENT_ACTION:
-            this.emit(data.type, event);
-            break;
-          case Account.INCOMING.CONFIRMATION:
-            this.emit(data.type, event);
-            break;
-          case Account.INCOMING.DELETED:
-            this.emit(data.type, event);
-            break;
-          case Account.INCOMING.HIDDEN:
-            this.emit(data.type, event);
-            break;
-          case Account.INCOMING.PING:
-            this.emit(data.type, event);
-            break;
-          case Account.INCOMING.REACTION:
-            this.emit(data.type, event);
-            break;
-          case Account.INCOMING.TEXT_MESSAGE:
-            this.emit(data.type, event);
-            break;
-          case Account.INCOMING.MESSAGE_TIMER_UPDATE: {
-            const {
-              data: {message_timer},
-              conversation,
-            } = event as ConversationMessageTimerUpdateEvent;
-            const expireAfterMillis = Number(message_timer);
-            this.logger.log(
-              `Received "${expireAfterMillis}" ms timer on conversation level for conversation "${conversation}".`
-            );
-            this.service!.conversation.messageTimer.setConversationLevelTimer(conversation, expireAfterMillis);
-            this.emit(data.type, event);
-            break;
-          }
-          case Account.INCOMING.MEMBER_JOIN:
-            this.emit(data.type, event);
-            break;
-          case Account.INCOMING.CONVERSATION_RENAME:
-            this.emit(data.type, event);
-            break;
-          case Account.INCOMING.TYPING: {
-            this.emit(data.type, event);
-            break;
-          }
-          case Account.INCOMING.CONNECTION: {
-            this.emit(data.type, event);
-            break;
-          }
+        if (data.type === Account.INCOMING.MESSAGE_TIMER_UPDATE) {
+          const {
+            data: {message_timer},
+            conversation,
+          } = event as ConversationMessageTimerUpdateEvent;
+          const expireAfterMillis = Number(message_timer);
+          this.logger.log(
+            `Received "${expireAfterMillis}" ms timer on conversation level for conversation "${conversation}".`
+          );
+          this.service!.conversation.messageTimer.setConversationLevelTimer(conversation, expireAfterMillis);
         }
+
+        this.emit(data.type, event);
       } else {
         this.logger.log(
           `Received unsupported event "${event.type}"` + (event as ConversationEvent).conversation
