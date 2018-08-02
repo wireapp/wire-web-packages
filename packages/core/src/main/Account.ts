@@ -45,6 +45,7 @@ import {
   GenericMessageType,
   PayloadBundleIncoming,
   PayloadBundleState,
+  PayloadBundleType,
 } from './conversation/root';
 import {CryptographyService} from './cryptography/root';
 import {NotificationService} from './notification/root';
@@ -61,29 +62,6 @@ class Account extends EventEmitter {
     markdown: false,
   });
 
-  public static readonly INCOMING = {
-    ASSET: 'Account.INCOMING.ASSET',
-    AVAILABILITY: 'Account.INCOMING.AVAILABILITY',
-    CALL: 'Account.INCOMING.CALL',
-    CLIENT_ACTION: 'Account.INCOMING.CLIENT_ACTION',
-    CONFIRMATION: 'Account.INCOMING.CONFIRMATION',
-    CONNECTION: 'Account.INCOMING.CONNECTION',
-    CONVERSATION_CLEAR: 'Account.INCOMING.CONVERSATION_CLEAR',
-    CONVERSATION_RENAME: 'Account.INCOMING.CONVERSATION_RENAME',
-    DELETED: 'Account.INCOMING.DELETED',
-    HIDDEN: 'Account.INCOMING.HIDDEN',
-    IMAGE: 'Account.INCOMING.IMAGE',
-    LAST_READ_UPDATE: 'Account.INCOMING.LAST_READ_UPDATE',
-    LOCATION: 'Account.INCOMING.LOCATION',
-    MEMBER_JOIN: 'Account.INCOMING.MEMBER_JOIN',
-    MESSAGE_EDIT: 'Account.INCOMING.MESSAGE_EDIT',
-    MESSAGE_TIMER_UPDATE: 'Account.INCOMING.MESSAGE_TIMER_UPDATE',
-    PING: 'Account.INCOMING.PING',
-    REACTION: 'Account.INCOMING.REACTION',
-    TEXT_MESSAGE: 'Account.INCOMING.TEXT_MESSAGE',
-    TYPING: 'Account.INCOMING.TYPING',
-    UNKNOWN: 'Account.INCOMING.UNKNOWN',
-  };
   private readonly apiClient: APIClient;
   public service?: {
     client: ClientService;
@@ -295,7 +273,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: Account.INCOMING.TEXT_MESSAGE,
+          type: PayloadBundleType.TEXT_MESSAGE,
         };
       }
       case GenericMessageType.DELETED: {
@@ -310,7 +288,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: Account.INCOMING.DELETED,
+          type: PayloadBundleType.DELETED,
         };
       }
       case GenericMessageType.HIDDEN: {
@@ -326,7 +304,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: Account.INCOMING.HIDDEN,
+          type: PayloadBundleType.HIDDEN,
         };
       }
       case GenericMessageType.ASSET: {
@@ -344,7 +322,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: Account.INCOMING.ASSET,
+          type: PayloadBundleType.ASSET,
         };
       }
       case GenericMessageType.REACTION: {
@@ -360,7 +338,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: Account.INCOMING.REACTION,
+          type: PayloadBundleType.REACTION,
         };
       }
       default: {
@@ -372,7 +350,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: Account.INCOMING.UNKNOWN,
+          type: PayloadBundleType.UNKNOWN,
         };
       }
     }
@@ -387,8 +365,23 @@ class Account extends EventEmitter {
       messageTimer: 0,
       state: PayloadBundleState.INCOMING,
       timestamp: new Date(event.time).getTime(),
-      type: event.type,
+      type: this.mapConversationEventType(event.type),
     };
+  }
+
+  private mapConversationEventType(type: CONVERSATION_EVENT): PayloadBundleType {
+    switch (type) {
+      case CONVERSATION_EVENT.MEMBER_JOIN:
+        return PayloadBundleType.MEMBER_JOIN;
+      case CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE:
+        return PayloadBundleType.MESSAGE_TIMER_UPDATE;
+      case CONVERSATION_EVENT.RENAME:
+        return PayloadBundleType.CONVERSATION_RENAME;
+      case CONVERSATION_EVENT.TYPING:
+        return PayloadBundleType.TYPING;
+      default:
+        return PayloadBundleType.UNKNOWN;
+    }
   }
 
   private mapUserEvent(event: UserEvent): PayloadBundleIncoming | void {
@@ -402,7 +395,7 @@ class Account extends EventEmitter {
         messageTimer: 0,
         state: PayloadBundleState.INCOMING,
         timestamp: new Date(connectionEvent.connection.last_update).getTime(),
-        type: USER_EVENT.CONNECTION,
+        type: PayloadBundleType.CONNECTION,
       };
     }
   }
@@ -434,7 +427,7 @@ class Account extends EventEmitter {
     for (const event of notification.payload) {
       const data = await this.handleEvent(event);
       if (data) {
-        if (data.type === Account.INCOMING.MESSAGE_TIMER_UPDATE) {
+        if (data.type === PayloadBundleType.MESSAGE_TIMER_UPDATE) {
           const {
             data: {message_timer},
             conversation,

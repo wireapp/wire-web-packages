@@ -69,7 +69,38 @@ interface PayloadBundle {
   id: string;
   state: PayloadBundleState;
   timestamp: number;
-  type: string;
+  type: PayloadBundleType;
 }
 
-export {PayloadBundle, PayloadBundleIncoming, PayloadBundleOutgoing, PayloadBundleOutgoingUnsent, PayloadBundleState};
+enum PayloadBundleType {
+  ASSET = 'Account.INCOMING.ASSET',
+  AVAILABILITY = 'Account.INCOMING.AVAILABILITY',
+  CALL = 'Account.INCOMING.CALL',
+  CLIENT_ACTION = 'Account.INCOMING.CLIENT_ACTION',
+  CONFIRMATION = 'Account.INCOMING.CONFIRMATION',
+  CONNECTION = 'Account.INCOMING.CONNECTION',
+  CONVERSATION_CLEAR = 'Account.INCOMING.CONVERSATION_CLEAR',
+  CONVERSATION_RENAME = 'Account.INCOMING.CONVERSATION_RENAME',
+  DELETED = 'Account.INCOMING.DELETED',
+  HIDDEN = 'Account.INCOMING.HIDDEN',
+  IMAGE = 'Account.INCOMING.IMAGE',
+  LAST_READ_UPDATE = 'Account.INCOMING.LAST_READ_UPDATE',
+  LOCATION = 'Account.INCOMING.LOCATION',
+  MEMBER_JOIN = 'Account.INCOMING.MEMBER_JOIN',
+  MESSAGE_EDIT = 'Account.INCOMING.MESSAGE_EDIT',
+  MESSAGE_TIMER_UPDATE = 'Account.INCOMING.MESSAGE_TIMER_UPDATE',
+  PING = 'Account.INCOMING.PING',
+  REACTION = 'Account.INCOMING.REACTION',
+  TEXT_MESSAGE = 'Account.INCOMING.TEXT_MESSAGE',
+  TYPING = 'Account.INCOMING.TYPING',
+  UNKNOWN = 'Account.INCOMING.UNKNOWN',
+}
+
+export {
+  PayloadBundle,
+  PayloadBundleType,
+  PayloadBundleIncoming,
+  PayloadBundleOutgoing,
+  PayloadBundleOutgoingUnsent,
+  PayloadBundleState,
+};

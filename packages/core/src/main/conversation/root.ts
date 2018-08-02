@@ -29,6 +29,7 @@ import {
   PayloadBundleOutgoing,
   PayloadBundleOutgoingUnsent,
   PayloadBundleState,
+  PayloadBundleType,
 } from './PayloadBundle';
 import {ReactionType} from './ReactionType';
 
@@ -43,6 +44,7 @@ export {
   PayloadBundleOutgoing,
   PayloadBundleOutgoingUnsent,
   PayloadBundleState,
+  PayloadBundleType,
   MessageTimer,
   ReactionType,
 };
