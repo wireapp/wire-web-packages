@@ -38,7 +38,14 @@ import * as Long from 'long';
 import {LoginSanitizer} from './auth/root';
 import {ClientInfo, ClientService} from './client/root';
 import {ConnectionService} from './connection/root';
-import {AssetContent, DeletedContent, HiddenContent, ReactionContent, TextContent} from './conversation/content/';
+import {
+  AssetContent,
+  DeletedContent,
+  HiddenContent,
+  Original,
+  ReactionContent,
+  TextContent,
+} from './conversation/content/';
 import {
   AssetService,
   ConversationService,
@@ -69,6 +76,7 @@ class Account extends EventEmitter {
     CONVERSATION_RENAME: 'Account.INCOMING.CONVERSATION_RENAME',
     DELETED: 'Account.INCOMING.DELETED',
     HIDDEN: 'Account.INCOMING.HIDDEN',
+    IMAGE: 'Account.INCOMING.IMAGE',
     MEMBER_JOIN: 'Account.INCOMING.MEMBER_JOIN',
     MESSAGE_TIMER_UPDATE: 'Account.INCOMING.MESSAGE_TIMER_UPDATE',
     PING: 'Account.INCOMING.PING',
@@ -85,6 +93,7 @@ class Account extends EventEmitter {
     notification: NotificationService;
     self: SelfService;
   };
+  private readonly assetOriginalCache: {[messageId: string]: Original} = {};
 
   constructor(apiClient: APIClient = new APIClient()) {
     super();
@@ -324,6 +333,20 @@ class Account extends EventEmitter {
         };
       }
       case GenericMessageType.ASSET: {
+        const {uploaded, original} = genericMessage.asset;
+        const isImage = !!uploaded && !!uploaded.assetId && !!original && !!original.image;
+
+        if (!isImage) {
+          if (original && !uploaded) {
+            this.assetOriginalCache[genericMessage.messageId] = original;
+          } else {
+            genericMessage.asset.original = this.assetOriginalCache[genericMessage.messageId];
+            delete this.assetOriginalCache[genericMessage.messageId];
+          }
+        } else {
+          genericMessage.type = GenericMessageType.IMAGE;
+        }
+
         const content: AssetContent = {
           abortReason: genericMessage.asset.not_uploaded,
           original: genericMessage.asset.original,
@@ -338,7 +361,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: genericMessage.content,
+          type: genericMessage.type,
         };
       }
       case GenericMessageType.REACTION: {
@@ -429,8 +452,15 @@ class Account extends EventEmitter {
       const data = await this.handleEvent(event);
       if (data) {
         switch (data.type) {
-          case GenericMessageType.ASSET:
-            this.emit(Account.INCOMING.ASSET, data);
+          case GenericMessageType.ASSET: {
+            const assetContent = data.content as AssetContent;
+            if (assetContent && assetContent.uploaded) {
+              this.emit(Account.INCOMING.ASSET, data);
+            }
+            break;
+          }
+          case GenericMessageType.IMAGE:
+            this.emit(Account.INCOMING.IMAGE, data);
             break;
           case GenericMessageType.CLIENT_ACTION:
             this.emit(Account.INCOMING.CLIENT_ACTION, data);

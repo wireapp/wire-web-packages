@@ -19,8 +19,6 @@ logger.state.isEnabled = true;
 
 const {Account} = require('@wireapp/core');
 const {APIClient} = require('@wireapp/api-client');
-const fs = require('fs');
-const {promisify} = require('util');
 const {Config} = require('@wireapp/api-client/dist/commonjs/Config');
 const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/ClientType');
 const {CONVERSATION_TYPING} = require('@wireapp/api-client/dist/commonjs/event/');
@@ -64,19 +62,49 @@ const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine/');
 
   account.on(Account.INCOMING.ASSET, async data => {
     const {
-      conversation,
+      conversation: conversationId,
       from,
-      content: {uploaded, original},
+      content: {original, uploaded},
+      id: messageId,
       messageTimer,
     } = data;
     logger.log(
-      `Asset in "${conversation}" from "${from}":`,
-      original,
+      `Asset "${messageId}" in "${conversationId}" from "${from}":`,
+      data,
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
     );
-    const fileType = original.mimeType.replace(/[^\/]+\//g, '');
-    const image = await account.service.conversation.getImage(uploaded);
-    await promisify(fs.writeFile)(path.join('.', `received_image.${fileType}`), image);
+
+    const fileBuffer = await account.service.conversation.getAsset(uploaded);
+    const imagePayload = await account.service.conversation.createFile({
+      data: fileBuffer,
+      name: original.name,
+      type: original.mimeType,
+    });
+    await account.service.conversation.send(conversationId, imagePayload);
+  });
+
+  account.on(Account.INCOMING.IMAGE, async data => {
+    const {
+      conversation: conversationId,
+      from,
+      content: {uploaded, original},
+      id: messageId,
+      messageTimer,
+    } = data;
+    logger.log(
+      `image "${messageId}" in "${conversationId}" from "${from}":`,
+      data,
+      messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
+    );
+
+    const imageBuffer = await account.service.conversation.getAsset(uploaded);
+    const imagePayload = await account.service.conversation.createImage({
+      data: imageBuffer,
+      height: original.image.height,
+      type: original.mimeType,
+      width: original.image.width,
+    });
+    await account.service.conversation.send(conversationId, imagePayload);
   });
 
   account.on(Account.INCOMING.PING, async data => {

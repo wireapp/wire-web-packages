@@ -520,7 +520,7 @@ export default class ConversationService {
       id: messageId,
       state: PayloadBundleState.OUTGOING_UNSENT,
       timestamp: Date.now(),
-      type: GenericMessageType.ASSET,
+      type: GenericMessageType.IMAGE,
     };
   }
 
@@ -687,7 +687,7 @@ export default class ConversationService {
     return this.apiClient.conversation.api.getConversationsByIds(conversationId);
   }
 
-  public async getImage({assetId, assetToken, otrKey, sha256}: RemoteData): Promise<Buffer> {
+  public async getAsset({assetId, assetToken, otrKey, sha256}: RemoteData): Promise<Buffer> {
     const encryptedBuffer = await this.apiClient.asset.api.getAsset(assetId, assetToken);
 
     return AssetCryptography.decryptAsset({
@@ -715,7 +715,8 @@ export default class ConversationService {
     payloadBundle: PayloadBundleOutgoingUnsent
   ): Promise<PayloadBundleOutgoing> {
     switch (payloadBundle.type) {
-      case GenericMessageType.ASSET: {
+      case GenericMessageType.ASSET:
+      case GenericMessageType.IMAGE: {
         if (payloadBundle.content) {
           if ((payloadBundle.content as ImageAssetContent).image) {
             return this.sendImage(conversationId, payloadBundle);
@@ -723,9 +724,9 @@ export default class ConversationService {
           if ((payloadBundle.content as FileAssetContent).asset) {
             return this.sendFile(conversationId, payloadBundle);
           }
-          throw new Error(`No send method implemented for sending other assets than images.`);
+          throw new Error(`No send method implemented for this kind of asset.`);
         }
-        throw new Error(`No send method implemented for "${payloadBundle.type}" without content".`);
+        throw new Error(`No send method implemented for "${payloadBundle.type}" without content.`);
       }
       case GenericMessageType.CLIENT_ACTION: {
         if (payloadBundle.content === ClientAction.RESET_SESSION) {
@@ -746,7 +747,7 @@ export default class ConversationService {
       case GenericMessageType.TEXT:
         return this.sendText(conversationId, payloadBundle);
       default:
-        throw new Error(`No send method implemented for "${payloadBundle.type}."`);
+        throw new Error(`No send method implemented for "${payloadBundle.type}".`);
     }
   }
 
