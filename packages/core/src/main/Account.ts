@@ -427,19 +427,40 @@ class Account extends EventEmitter {
     for (const event of notification.payload) {
       const data = await this.handleEvent(event);
       if (data) {
-        if (data.type === PayloadBundleType.MESSAGE_TIMER_UPDATE) {
-          const {
-            data: {message_timer},
-            conversation,
-          } = event as ConversationMessageTimerUpdateEvent;
-          const expireAfterMillis = Number(message_timer);
-          this.logger.log(
-            `Received "${expireAfterMillis}" ms timer on conversation level for conversation "${conversation}".`
-          );
-          this.service!.conversation.messageTimer.setConversationLevelTimer(conversation, expireAfterMillis);
-        }
+        switch (data.type) {
+          case PayloadBundleType.ASSET:
+          case PayloadBundleType.CLIENT_ACTION:
+          case PayloadBundleType.CONFIRMATION:
+          case PayloadBundleType.DELETED:
+          case PayloadBundleType.HIDDEN:
+          case PayloadBundleType.PING:
+          case PayloadBundleType.REACTION:
+          case PayloadBundleType.TEXT_MESSAGE:
+            this.emit(data.type, data);
+            break;
+          case PayloadBundleType.MESSAGE_TIMER_UPDATE: {
+            if (data.type === PayloadBundleType.MESSAGE_TIMER_UPDATE) {
+              const {
+                data: {message_timer},
+                conversation,
+              } = event as ConversationMessageTimerUpdateEvent;
+              const expireAfterMillis = Number(message_timer);
+              this.logger.log(
+                `Received "${expireAfterMillis}" ms timer on conversation level for conversation "${conversation}".`
+              );
+              this.service!.conversation.messageTimer.setConversationLevelTimer(conversation, expireAfterMillis);
+            }
 
-        this.emit(data.type, event);
+            this.emit(data.type, event);
+            break;
+          }
+          case PayloadBundleType.CONNECTION:
+          case PayloadBundleType.CONVERSATION_RENAME:
+          case PayloadBundleType.MEMBER_JOIN:
+          case PayloadBundleType.TYPING:
+            this.emit(data.type, event);
+            break;
+        }
       } else {
         this.logger.log(
           `Received unsupported event "${event.type}"` + (event as ConversationEvent).conversation

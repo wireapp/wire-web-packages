@@ -152,8 +152,8 @@ describe('Account', () => {
 
       const message = 'Hello, Bob!';
 
-      bob.on(PayloadBundleType.TEXT_MESSAGE, async data => {
-        expect(data.content.text).toBe(message);
+      bob.on(PayloadBundleType.TEXT_MESSAGE, async payload => {
+        expect(payload.content.text).toBe(message);
         done();
       });
 
