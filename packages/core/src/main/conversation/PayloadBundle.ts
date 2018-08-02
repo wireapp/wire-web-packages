@@ -40,7 +40,7 @@ enum PayloadBundleState {
 }
 
 type PayloadBundleIncoming = PayloadBundle & {
-  conversation?: string;
+  conversation: string;
   messageTimer: number;
   state: PayloadBundleState.INCOMING;
 };
