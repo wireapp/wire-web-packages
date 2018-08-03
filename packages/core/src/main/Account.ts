@@ -395,7 +395,7 @@ class Account extends EventEmitter {
       const connectionEvent = event as UserConnectionEvent;
       return {
         content: connectionEvent.connection,
-        conversation: connectionEvent.connection.conversation!,
+        conversation: connectionEvent.connection.conversation,
         from: connectionEvent.connection.from,
         id: ConversationService.createId(),
         messageTimer: 0,
