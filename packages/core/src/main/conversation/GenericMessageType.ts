@@ -24,6 +24,7 @@ enum GenericMessageType {
   CLEARED = 'cleared',
   CLIENT_ACTION = 'clientAction',
   CONFIRMATION = 'confirmation',
+  CONFIRMATION_EPHEMERAL = 'confirmationEphemeral',
   DELETED = 'deleted',
   EDITED = 'edited',
   EPHEMERAL = 'ephemeral',

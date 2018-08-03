@@ -117,8 +117,10 @@ export default class ConversationService {
     conversationId: string,
     payloadBundle: PayloadBundleOutgoingUnsent
   ): Promise<PayloadBundleOutgoing> {
+    const confirmationContent = payloadBundle.content as ConfirmationContent;
+
     const confirmationMessage = Confirmation.create({
-      firstMessageId: (payloadBundle.content as ConfirmationContent).confirmMessageId,
+      firstMessageId: confirmationContent.confirmMessageId,
       type: Confirmation.Type.DELIVERED,
     });
 
@@ -128,6 +130,42 @@ export default class ConversationService {
     });
 
     await this.sendGenericMessage(this.clientID, conversationId, genericMessage);
+
+    return {
+      ...payloadBundle,
+      conversation: conversationId,
+      messageTimer: 0,
+      state: PayloadBundleState.OUTGOING_SENT,
+    };
+  }
+
+  private async sendConfirmationEphemeral(
+    conversationId: string,
+    payloadBundle: PayloadBundleOutgoingUnsent
+  ): Promise<PayloadBundleOutgoing> {
+    const confirmationContent = payloadBundle.content as ConfirmationContent;
+
+    const confirmationMessage = Confirmation.create({
+      firstMessageId: confirmationContent.confirmMessageId,
+      type: Confirmation.Type.DELIVERED,
+    });
+
+    const genericConfirmationMessage = GenericMessage.create({
+      [GenericMessageType.CONFIRMATION]: confirmationMessage,
+      messageId: payloadBundle.id,
+    });
+
+    const deletionMessage = MessageDelete.create({
+      messageId: confirmationContent.confirmMessageId,
+    });
+
+    const genericDeletionMessage = GenericMessage.create({
+      [GenericMessageType.DELETED]: deletionMessage,
+      messageId: payloadBundle.id,
+    });
+
+    await this.sendGenericMessage(this.clientID, conversationId, genericConfirmationMessage);
+    await this.sendGenericMessage(this.clientID, conversationId, genericDeletionMessage);
 
     return {
       ...payloadBundle,
@@ -495,6 +533,21 @@ export default class ConversationService {
     };
   }
 
+  public createConfirmationEphemeral(
+    confirmMessageId: string,
+    messageId: string = ConversationService.createId()
+  ): PayloadBundleOutgoingUnsent {
+    const content: ConfirmationContent = {confirmMessageId};
+    return {
+      content,
+      from: this.apiClient.context!.userId,
+      id: messageId,
+      state: PayloadBundleState.OUTGOING_UNSENT,
+      timestamp: Date.now(),
+      type: GenericMessageType.CONFIRMATION_EPHEMERAL,
+    };
+  }
+
   public createPing(messageId: string = ConversationService.createId()): PayloadBundleOutgoingUnsent {
     return {
       from: this.apiClient.context!.userId,
@@ -660,6 +713,8 @@ export default class ConversationService {
       }
       case GenericMessageType.CONFIRMATION:
         return this.sendConfirmation(conversationId, payloadBundle);
+      case GenericMessageType.CONFIRMATION_EPHEMERAL:
+        return this.sendConfirmationEphemeral(conversationId, payloadBundle);
       case GenericMessageType.EDITED:
         return this.sendEditedText(conversationId, payloadBundle);
       case GenericMessageType.KNOCK:
