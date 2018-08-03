@@ -523,7 +523,7 @@ export default class ConversationService {
     confirmMessageId: string,
     messageId: string = ConversationService.createId()
   ): PayloadBundleOutgoingUnsent {
-    const confirmationPayload: PayloadBundleOutgoingUnsent = this.createConfirmation(confirmMessageId, messageId);
+    const confirmationPayload = this.createConfirmation(confirmMessageId, messageId);
 
     return {
       ...confirmationPayload,
