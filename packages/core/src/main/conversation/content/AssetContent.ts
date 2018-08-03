@@ -86,7 +86,7 @@ interface FileAssetMetaDataContent {
   metaData: FileMetaDataContent;
 }
 
-interface FileAssetAbortedContent {
+interface FileAssetAbortContent {
   reason: AbortReason;
 }
 
@@ -95,7 +95,7 @@ export {
   AudioMetaData,
   FileAssetContent,
   FileAssetMetaDataContent,
-  FileAssetAbortedContent,
+  FileAssetAbortContent,
   ImageAssetContent,
   ImageMetaData,
   Original,

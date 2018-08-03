@@ -91,7 +91,7 @@ const assetOriginalCache = {};
       delete assetOriginalCache[data.messageId];
     } catch (error) {
       console.error(`Error while sending asset: "${error.stack}"`);
-      const fileAbortPayload = await account.service.conversation.createFileAborted(0, fileMetaDataPayload.id);
+      const fileAbortPayload = await account.service.conversation.createFileAbort(0, fileMetaDataPayload.id);
       await account.service.conversation.send(conversationId, fileAbortPayload);
     }
   });
@@ -107,7 +107,7 @@ const assetOriginalCache = {};
     assetOriginalCache[messageId] = content.original;
   });
 
-  account.on(Account.INCOMING.ASSET_ABORTED, async data => {
+  account.on(Account.INCOMING.ASSET_ABORT, async data => {
     const {conversation: conversationId, from, content, id: messageId, messageTimer} = data;
     logger.log(
       `Asset "${messageId}" not uploaded (reason: "${content.abortReason}") in "${conversationId}" from "${from}":`,
@@ -127,7 +127,7 @@ const assetOriginalCache = {};
     });
     await account.service.conversation.send(conversationId, fileMetaDataPayload);
 
-    const fileAbortPayload = await account.service.conversation.createFileAborted(0, fileMetaDataPayload.id);
+    const fileAbortPayload = await account.service.conversation.createFileAbort(0, fileMetaDataPayload.id);
     await account.service.conversation.send(conversationId, fileAbortPayload);
 
     delete assetOriginalCache[data.messageId];

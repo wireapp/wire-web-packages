@@ -59,7 +59,7 @@ import {
   ClientActionContent,
   ConfirmationContent,
   EditedTextContent,
-  FileAssetAbortedContent,
+  FileAssetAbortContent,
   FileAssetContent,
   FileAssetMetaDataContent,
   FileContent,
@@ -220,7 +220,7 @@ class ConversationService {
     payloadBundle: PayloadBundleOutgoingUnsent
   ): Promise<PayloadBundleOutgoing> {
     if (!payloadBundle.content) {
-      throw new Error('No content for sendFileData provided!');
+      throw new Error('No content for sendFileData provided.');
     }
 
     const encryptedAsset = payloadBundle.content as FileAssetContent;
@@ -266,7 +266,7 @@ class ConversationService {
     payloadBundle: PayloadBundleOutgoingUnsent
   ): Promise<PayloadBundleOutgoing> {
     if (!payloadBundle.content) {
-      throw new Error('No content for sendFileMetaData provided!');
+      throw new Error('No content for sendFileMetaData provided.');
     }
 
     const encryptedAsset = payloadBundle.content as FileAssetMetaDataContent;
@@ -301,15 +301,15 @@ class ConversationService {
     };
   }
 
-  private async sendFileAborted(
+  private async sendFileAbort(
     conversationId: string,
     payloadBundle: PayloadBundleOutgoingUnsent
   ): Promise<PayloadBundleOutgoing> {
     if (!payloadBundle.content) {
-      throw new Error('No content for sendFileAborted provided!');
+      throw new Error('No content for sendFileAbort provided.');
     }
 
-    const abortContent = payloadBundle.content as FileAssetAbortedContent;
+    const abortContent = payloadBundle.content as FileAssetAbortContent;
 
     const assetMessage = Asset.create({
       notUploaded: abortContent.reason,
@@ -346,7 +346,7 @@ class ConversationService {
     payloadBundle: PayloadBundleOutgoingUnsent
   ): Promise<PayloadBundleOutgoing> {
     if (!payloadBundle.content) {
-      throw new Error('No content for sendImage provided!');
+      throw new Error('No content for sendImage provided.');
     }
 
     const encryptedAsset = payloadBundle.content as ImageAssetContent;
@@ -596,8 +596,8 @@ class ConversationService {
     };
   }
 
-  public async createFileAborted(reason: AbortReason, messageId: string): Promise<PayloadBundleOutgoingUnsent> {
-    const content: FileAssetAbortedContent = {
+  public async createFileAbort(reason: AbortReason, messageId: string): Promise<PayloadBundleOutgoingUnsent> {
+    const content: FileAssetAbortContent = {
       reason,
     };
 
@@ -607,7 +607,7 @@ class ConversationService {
       id: messageId,
       state: PayloadBundleState.OUTGOING_UNSENT,
       timestamp: Date.now(),
-      type: GenericMessageType.ASSET_ABORTED,
+      type: GenericMessageType.ASSET_ABORT,
     };
   }
 
@@ -829,8 +829,8 @@ class ConversationService {
     switch (payloadBundle.type) {
       case GenericMessageType.ASSET:
         return this.sendFileData(conversationId, payloadBundle);
-      case GenericMessageType.ASSET_ABORTED:
-        return this.sendFileAborted(conversationId, payloadBundle);
+      case GenericMessageType.ASSET_ABORT:
+        return this.sendFileAbort(conversationId, payloadBundle);
       case GenericMessageType.ASSET_META:
         return this.sendFileMetaData(conversationId, payloadBundle);
       case GenericMessageType.IMAGE:
