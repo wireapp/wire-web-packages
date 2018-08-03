@@ -145,27 +145,13 @@ export default class ConversationService {
   ): Promise<PayloadBundleOutgoing> {
     const confirmationContent = payloadBundle.content as ConfirmationContent;
 
-    const confirmationMessage = Confirmation.create({
-      firstMessageId: confirmationContent.confirmMessageId,
-      type: Confirmation.Type.DELIVERED,
-    });
+    const confirmationObject: PayloadBundleOutgoingUnsent = {
+      ...payloadBundle,
+      type: GenericMessageType.CONFIRMATION,
+    };
 
-    const genericConfirmationMessage = GenericMessage.create({
-      [GenericMessageType.CONFIRMATION]: confirmationMessage,
-      messageId: payloadBundle.id,
-    });
-
-    const deletionMessage = MessageDelete.create({
-      messageId: confirmationContent.confirmMessageId,
-    });
-
-    const genericDeletionMessage = GenericMessage.create({
-      [GenericMessageType.DELETED]: deletionMessage,
-      messageId: payloadBundle.id,
-    });
-
-    await this.sendGenericMessage(this.clientID, conversationId, genericConfirmationMessage);
-    await this.sendGenericMessage(this.clientID, conversationId, genericDeletionMessage);
+    await this.send(conversationId, confirmationObject);
+    await this.deleteMessageEveryone(conversationId, confirmationContent.confirmMessageId);
 
     return {
       ...payloadBundle,
