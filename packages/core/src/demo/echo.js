@@ -1,9 +1,9 @@
 //@ts-check
 
-process.on('uncaughtException', error =>
+process.on('uncaughtException', (/** @type {any} */ error) =>
   logger.error(`Uncaught exception "${error.constructor.name}" (${error.code}): ${error.message}`, error)
 );
-process.on('unhandledRejection', error =>
+process.on('unhandledRejection', (/** @type {any} */ error) =>
   logger.error(`Uncaught rejection "${error.constructor.name}" (${error.code}): ${error.message}`, error)
 );
 
@@ -85,7 +85,7 @@ const assetOriginalCache = {};
     await account.service.conversation.send(conversationId, fileMetaDataPayload);
 
     try {
-      const filePayload = await account.service.conversation.createFile({data: fileBuffer}, fileMetaDataPayload.id);
+      const filePayload = await account.service.conversation.createFileData({data: fileBuffer}, fileMetaDataPayload.id);
       await account.service.conversation.send(conversationId, filePayload);
 
       delete assetOriginalCache[data.messageId];
@@ -142,7 +142,7 @@ const assetOriginalCache = {};
       messageTimer,
     } = data;
     logger.log(
-      `image "${messageId}" in "${conversationId}" from "${from}":`,
+      `Image "${messageId}" in "${conversationId}" from "${from}":`,
       data,
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
     );

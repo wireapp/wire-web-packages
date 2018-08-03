@@ -560,7 +560,7 @@ class ConversationService {
     };
   }
 
-  public async createFile(file: FileContent, messageId: string): Promise<PayloadBundleOutgoingUnsent> {
+  public async createFileData(file: FileContent, messageId: string): Promise<PayloadBundleOutgoingUnsent> {
     const imageAsset = await this.assetService.uploadFileAsset(file);
 
     const content: FileAssetContent = {

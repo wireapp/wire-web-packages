@@ -110,12 +110,14 @@ const {FileEngine} = require('@wireapp/store-engine');
   async function sendFile() {
     const filename = 'wire_logo.png';
     const data = await promisify(fs.readFile)(path.join(__dirname, filename));
-    const file = {
-      data,
+    const metadataPayload = await account.service.conversation.createFileMetadata({
+      length: data.length,
       name: filename,
       type: 'image/png',
-    };
-    const filePayload = await account.service.conversation.createFile(file);
+    });
+    await account.service.conversation.send(CONVERSATION_ID, metadataPayload);
+
+    const filePayload = await account.service.conversation.createFileData({data}, metadataPayload.id);
     await account.service.conversation.send(CONVERSATION_ID, filePayload);
   }
 
