@@ -329,9 +329,10 @@ class Account extends EventEmitter {
         const isImage = !!uploaded && !!uploaded.assetId && !!original && !!original.image;
 
         const content: AssetContent = {
-          abortReason: genericMessage.asset.not_uploaded,
+          abortReason: genericMessage.asset.notUploaded,
           original: genericMessage.asset.original,
           preview: genericMessage.asset.preview,
+          status: genericMessage.asset.status,
           uploaded: genericMessage.asset.uploaded,
         };
         return {

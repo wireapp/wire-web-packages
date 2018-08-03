@@ -59,9 +59,9 @@ import {
   ClientActionContent,
   ConfirmationContent,
   EditedTextContent,
+  FileAssetAbortedContent,
   FileAssetContent,
   FileAssetMetaDataContent,
-  FileAssetUploadAbortContent,
   FileContent,
   FileMetaDataContent,
   ImageAssetContent,
@@ -215,12 +215,12 @@ class ConversationService {
     };
   }
 
-  private async sendFile(
+  private async sendFileData(
     conversationId: string,
     payloadBundle: PayloadBundleOutgoingUnsent
   ): Promise<PayloadBundleOutgoing> {
     if (!payloadBundle.content) {
-      throw new Error('No content for sendFile provided!');
+      throw new Error('No content for sendFileData provided!');
     }
 
     const encryptedAsset = payloadBundle.content as FileAssetContent;
@@ -301,20 +301,24 @@ class ConversationService {
     };
   }
 
-  private async sendFileNotUploaded(
+  private async sendFileAborted(
     conversationId: string,
     payloadBundle: PayloadBundleOutgoingUnsent
   ): Promise<PayloadBundleOutgoing> {
     if (!payloadBundle.content) {
-      throw new Error('No content for sendFileMetaData provided!');
+      throw new Error('No content for sendFileAborted provided!');
     }
 
-    const notUploadedContent = payloadBundle.content as FileAssetUploadAbortContent;
+    const abortContent = payloadBundle.content as FileAssetAbortedContent;
+
+    const assetMessage = Asset.create({
+      notUploaded: abortContent.reason,
+    });
+
+    assetMessage.status = AssetTransferState.NOT_UPLOADED;
 
     let genericMessage = GenericMessage.create({
-      [GenericMessageType.ASSET]: Asset.create({
-        notUploaded: notUploadedContent.reason,
-      }),
+      [GenericMessageType.ASSET]: assetMessage,
       messageId: payloadBundle.id,
     });
 
@@ -592,8 +596,8 @@ class ConversationService {
     };
   }
 
-  public async createFileNotUploaded(reason: AbortReason, messageId: string): Promise<PayloadBundleOutgoingUnsent> {
-    const content: FileAssetUploadAbortContent = {
+  public async createFileAborted(reason: AbortReason, messageId: string): Promise<PayloadBundleOutgoingUnsent> {
+    const content: FileAssetAbortedContent = {
       reason,
     };
 
@@ -824,11 +828,11 @@ class ConversationService {
   ): Promise<PayloadBundleOutgoing> {
     switch (payloadBundle.type) {
       case GenericMessageType.ASSET:
-        return this.sendFile(conversationId, payloadBundle);
+        return this.sendFileData(conversationId, payloadBundle);
+      case GenericMessageType.ASSET_ABORTED:
+        return this.sendFileAborted(conversationId, payloadBundle);
       case GenericMessageType.ASSET_META:
         return this.sendFileMetaData(conversationId, payloadBundle);
-      case GenericMessageType.ASSET_ABORTED:
-        return this.sendFileNotUploaded(conversationId, payloadBundle);
       case GenericMessageType.IMAGE:
         return this.sendImage(conversationId, payloadBundle);
       case GenericMessageType.CLIENT_ACTION: {

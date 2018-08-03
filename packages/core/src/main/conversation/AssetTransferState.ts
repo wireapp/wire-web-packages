@@ -18,11 +18,8 @@
  */
 
 enum AssetTransferState {
-  DOWNLOADING = 'downloading',
-  UPLOAD_CANCELED = 'upload-canceled',
-  UPLOAD_FAILED = 'upload-failed',
   UPLOADED = 'uploaded',
-  UPLOADING = 'uploading',
+  NOT_UPLOADED = 'notUploaded',
 }
 
 export {AssetTransferState};

@@ -27,9 +27,9 @@ import {
   ConfirmationContent,
   DeletedContent,
   EditedTextContent,
+  FileAssetAbortedContent,
   FileAssetContent,
   FileAssetMetaDataContent,
-  FileAssetUploadAbortContent,
   HiddenContent,
   ImageAssetContent,
   ImageContent,
@@ -66,7 +66,7 @@ interface PayloadBundle {
     | EditedTextContent
     | FileAssetContent
     | FileAssetMetaDataContent
-    | FileAssetUploadAbortContent
+    | FileAssetAbortedContent
     | HiddenContent
     | ImageAssetContent
     | ImageContent

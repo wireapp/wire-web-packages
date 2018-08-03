@@ -26,6 +26,7 @@ interface AssetContent {
   abortReason?: AbortReason;
   original?: Original;
   preview?: Preview;
+  status?: string;
   uploaded?: RemoteData;
 }
 
@@ -85,7 +86,7 @@ interface FileAssetMetaDataContent {
   metaData: FileMetaDataContent;
 }
 
-interface FileAssetUploadAbortContent {
+interface FileAssetAbortedContent {
   reason: AbortReason;
 }
 
@@ -94,7 +95,7 @@ export {
   AudioMetaData,
   FileAssetContent,
   FileAssetMetaDataContent,
-  FileAssetUploadAbortContent,
+  FileAssetAbortedContent,
   ImageAssetContent,
   ImageMetaData,
   Original,

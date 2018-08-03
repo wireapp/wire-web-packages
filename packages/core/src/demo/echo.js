@@ -84,10 +84,16 @@ const assetOriginalCache = {};
     });
     await account.service.conversation.send(conversationId, fileMetaDataPayload);
 
-    const filePayload = await account.service.conversation.createFile({data: fileBuffer}, fileMetaDataPayload.id);
-    await account.service.conversation.send(conversationId, filePayload);
+    try {
+      const filePayload = await account.service.conversation.createFile({data: fileBuffer}, fileMetaDataPayload.id);
+      await account.service.conversation.send(conversationId, filePayload);
 
-    delete assetOriginalCache[data.messageId];
+      delete assetOriginalCache[data.messageId];
+    } catch (error) {
+      console.error(`Error while sending asset: "${error.stack}"`);
+      const fileAbortPayload = await account.service.conversation.createFileAborted(0, fileMetaDataPayload.id);
+      await account.service.conversation.send(conversationId, fileAbortPayload);
+    }
   });
 
   account.on(Account.INCOMING.ASSET_META, data => {
@@ -104,7 +110,7 @@ const assetOriginalCache = {};
   account.on(Account.INCOMING.ASSET_ABORTED, async data => {
     const {conversation: conversationId, from, content, id: messageId, messageTimer} = data;
     logger.log(
-      `Asset "${messageId}" not uploaded (reason: "${content.reason}") in "${conversationId}" from "${from}":`,
+      `Asset "${messageId}" not uploaded (reason: "${content.abortReason}") in "${conversationId}" from "${from}":`,
       data,
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
     );
@@ -113,6 +119,16 @@ const assetOriginalCache = {};
     if (!cacheOriginal) {
       throw new Error(`Abort message for message ID "${messageId} was received before the metadata."`);
     }
+
+    const fileMetaDataPayload = await account.service.conversation.createFileMetadata({
+      length: 0,
+      name: cacheOriginal.name,
+      type: cacheOriginal.mimeType,
+    });
+    await account.service.conversation.send(conversationId, fileMetaDataPayload);
+
+    const fileAbortPayload = await account.service.conversation.createFileAborted(0, fileMetaDataPayload.id);
+    await account.service.conversation.send(conversationId, fileAbortPayload);
 
     delete assetOriginalCache[data.messageId];
   });
