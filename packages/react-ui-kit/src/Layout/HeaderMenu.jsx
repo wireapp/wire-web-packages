@@ -32,7 +32,7 @@ const MenuContent = styled(Content)`
   height: 64px;
   align-items: center;
   justify-content: space-between;
-  flex-direction: row;
+  flex-direction: row !important;
   ${props =>
     props.open &&
     `
