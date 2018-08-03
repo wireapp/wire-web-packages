@@ -63,6 +63,7 @@ class Account extends EventEmitter {
 
   public static readonly INCOMING = {
     ASSET: 'Account.INCOMING.ASSET',
+    ASSET_META: 'Account.INCOMING.ASSET_META',
     CLIENT_ACTION: 'Account.INCOMING.CLIENT_ACTION',
     CONFIRMATION: 'Account.INCOMING.CONFIRMATION',
     CONNECTION: 'Account.INCOMING.CONNECTION',
@@ -431,9 +432,13 @@ class Account extends EventEmitter {
       const data = await this.handleEvent(event);
       if (data) {
         switch (data.type) {
-          case GenericMessageType.ASSET:
-            this.emit(Account.INCOMING.ASSET, data);
+          case GenericMessageType.ASSET: {
+            const assetContent = data.content as AssetContent;
+            const isMetaData = !!assetContent && !!assetContent.original && !assetContent.uploaded;
+
+            this.emit(isMetaData ? Account.INCOMING.ASSET_META : Account.INCOMING.ASSET, data);
             break;
+          }
           case GenericMessageType.IMAGE:
             this.emit(Account.INCOMING.IMAGE, data);
             break;

@@ -62,31 +62,31 @@ const assetOriginalCache = {};
     logger.log(`Confirmation "${messageId}" in "${conversationId}" from "${from}".`);
   });
 
+  account.on(Account.INCOMING.ASSET_META, data => {
+    const {conversation: conversationId, from, content, id: messageId, messageTimer} = data;
+    logger.log(
+      `Asset metadata "${messageId}" in "${conversationId}" from "${from}":`,
+      data,
+      messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
+    );
+
+    assetOriginalCache[messageId] = content.original;
+  });
+
   account.on(Account.INCOMING.ASSET, async data => {
-    const {
-      conversation: conversationId,
-      from,
-      content: {original, uploaded},
-      id: messageId,
-      messageTimer,
-    } = data;
+    const {conversation: conversationId, from, content, id: messageId, messageTimer} = data;
     logger.log(
       `Asset "${messageId}" in "${conversationId}" from "${from}":`,
       data,
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
     );
 
-    if (original && !uploaded) {
-      assetOriginalCache[messageId] = original;
-      return;
-    }
-
     const cacheOriginal = assetOriginalCache[messageId];
     if (!cacheOriginal) {
       throw new Error(`Uploaded data for message ID "${messageId} was received before the original data."`);
     }
 
-    const fileBuffer = await account.service.conversation.getAsset(uploaded);
+    const fileBuffer = await account.service.conversation.getAsset(content.uploaded);
     const filePayload = await account.service.conversation.createFile({
       data: fileBuffer,
       name: cacheOriginal.name,
