@@ -19,8 +19,8 @@
 
 enum GenericMessageType {
   ASSET = 'asset',
-  ASSET_ABORT = 'asset_abort',
-  ASSET_META = 'asset_meta',
+  ASSET_ABORT = 'assetAbort',
+  ASSET_META = 'assetMeta',
   AVAILABILITY = 'availability',
   CALLING = 'calling',
   CLEARED = 'cleared',
