@@ -523,13 +523,10 @@ export default class ConversationService {
     confirmMessageId: string,
     messageId: string = ConversationService.createId()
   ): PayloadBundleOutgoingUnsent {
-    const content: ConfirmationContent = {confirmMessageId};
+    const confirmationPayload: PayloadBundleOutgoingUnsent = this.createConfirmation(confirmMessageId, messageId);
+
     return {
-      content,
-      from: this.apiClient.context!.userId,
-      id: messageId,
-      state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
+      ...confirmationPayload,
       type: GenericMessageType.CONFIRMATION_EPHEMERAL,
     };
   }
