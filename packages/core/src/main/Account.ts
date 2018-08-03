@@ -63,6 +63,7 @@ class Account extends EventEmitter {
 
   public static readonly INCOMING = {
     ASSET: 'Account.INCOMING.ASSET',
+    ASSET_ABORTED: 'Account.INCOMING.ASSET_ABORTED',
     ASSET_META: 'Account.INCOMING.ASSET_META',
     CLIENT_ACTION: 'Account.INCOMING.CLIENT_ACTION',
     CONFIRMATION: 'Account.INCOMING.CONFIRMATION',
@@ -435,8 +436,15 @@ class Account extends EventEmitter {
           case GenericMessageType.ASSET: {
             const assetContent = data.content as AssetContent;
             const isMetaData = !!assetContent && !!assetContent.original && !assetContent.uploaded;
+            const isAborted = !!assetContent.abortReason || (!assetContent.original && !assetContent.uploaded);
 
-            this.emit(isMetaData ? Account.INCOMING.ASSET_META : Account.INCOMING.ASSET, data);
+            if (isMetaData) {
+              this.emit(Account.INCOMING.ASSET_META, data);
+            } else if (isAborted) {
+              this.emit(Account.INCOMING.ASSET_ABORTED, data);
+            } else {
+              this.emit(Account.INCOMING.ASSET, data);
+            }
             break;
           }
           case GenericMessageType.IMAGE:

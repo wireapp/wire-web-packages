@@ -31,11 +31,11 @@ import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index'
 import {AxiosError} from 'axios';
 import {Encoder} from 'bazinga64';
 import {
+  AbortReason,
   AssetService,
   AssetTransferState,
   GenericMessageType,
   MessageTimer,
-  NotUploadedReason,
   PayloadBundleOutgoing,
   PayloadBundleOutgoingUnsent,
   PayloadBundleState,
@@ -61,7 +61,7 @@ import {
   EditedTextContent,
   FileAssetContent,
   FileAssetMetaDataContent,
-  FileAssetNotUploadedContent,
+  FileAssetUploadAbortContent,
   FileContent,
   FileMetaDataContent,
   ImageAssetContent,
@@ -309,7 +309,7 @@ class ConversationService {
       throw new Error('No content for sendFileMetaData provided!');
     }
 
-    const notUploadedContent = payloadBundle.content as FileAssetNotUploadedContent;
+    const notUploadedContent = payloadBundle.content as FileAssetUploadAbortContent;
 
     let genericMessage = GenericMessage.create({
       [GenericMessageType.ASSET]: Asset.create({
@@ -592,11 +592,8 @@ class ConversationService {
     };
   }
 
-  public async createFileNotUploaded(
-    reason: NotUploadedReason,
-    messageId: string
-  ): Promise<PayloadBundleOutgoingUnsent> {
-    const content: FileAssetNotUploadedContent = {
+  public async createFileNotUploaded(reason: AbortReason, messageId: string): Promise<PayloadBundleOutgoingUnsent> {
+    const content: FileAssetUploadAbortContent = {
       reason,
     };
 
@@ -606,7 +603,7 @@ class ConversationService {
       id: messageId,
       state: PayloadBundleState.OUTGOING_UNSENT,
       timestamp: Date.now(),
-      type: GenericMessageType.ASSET_NOT_UPLOADED,
+      type: GenericMessageType.ASSET_ABORTED,
     };
   }
 
@@ -830,7 +827,7 @@ class ConversationService {
         return this.sendFile(conversationId, payloadBundle);
       case GenericMessageType.ASSET_META:
         return this.sendFileMetaData(conversationId, payloadBundle);
-      case GenericMessageType.ASSET_NOT_UPLOADED:
+      case GenericMessageType.ASSET_ABORTED:
         return this.sendFileNotUploaded(conversationId, payloadBundle);
       case GenericMessageType.IMAGE:
         return this.sendImage(conversationId, payloadBundle);

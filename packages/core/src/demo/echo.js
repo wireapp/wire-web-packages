@@ -62,28 +62,17 @@ const assetOriginalCache = {};
     logger.log(`Confirmation "${messageId}" in "${conversationId}" from "${from}".`);
   });
 
-  account.on(Account.INCOMING.ASSET_META, data => {
-    const {conversation: conversationId, from, content, id: messageId, messageTimer} = data;
-    logger.log(
-      `Asset metadata "${messageId}" in "${conversationId}" from "${from}":`,
-      data.content.uploaded,
-      messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
-    );
-
-    assetOriginalCache[messageId] = content.original;
-  });
-
   account.on(Account.INCOMING.ASSET, async data => {
     const {conversation: conversationId, from, content, id: messageId, messageTimer} = data;
     logger.log(
       `Asset "${messageId}" in "${conversationId}" from "${from}":`,
-      data,
+      data.content,
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
     );
 
     const cacheOriginal = assetOriginalCache[messageId];
     if (!cacheOriginal) {
-      throw new Error(`Uploaded data for message ID "${messageId} was received before the original data."`);
+      throw new Error(`Uploaded data for message ID "${messageId} was received before the metadata."`);
     }
 
     const fileBuffer = await account.service.conversation.getAsset(content.uploaded);
@@ -97,6 +86,33 @@ const assetOriginalCache = {};
 
     const filePayload = await account.service.conversation.createFile({data: fileBuffer}, fileMetaDataPayload.id);
     await account.service.conversation.send(conversationId, filePayload);
+
+    delete assetOriginalCache[data.messageId];
+  });
+
+  account.on(Account.INCOMING.ASSET_META, data => {
+    const {conversation: conversationId, from, content, id: messageId, messageTimer} = data;
+    logger.log(
+      `Asset metadata "${messageId}" in "${conversationId}" from "${from}":`,
+      data.content,
+      messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
+    );
+
+    assetOriginalCache[messageId] = content.original;
+  });
+
+  account.on(Account.INCOMING.ASSET_ABORTED, async data => {
+    const {conversation: conversationId, from, content, id: messageId, messageTimer} = data;
+    logger.log(
+      `Asset "${messageId}" not uploaded (reason: "${content.reason}") in "${conversationId}" from "${from}":`,
+      data,
+      messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
+    );
+
+    const cacheOriginal = assetOriginalCache[messageId];
+    if (!cacheOriginal) {
+      throw new Error(`Abort message for message ID "${messageId} was received before the metadata."`);
+    }
 
     delete assetOriginalCache[data.messageId];
   });

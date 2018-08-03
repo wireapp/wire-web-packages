@@ -18,12 +18,12 @@
  */
 
 import {FileContent, FileMetaDataContent, ImageContent} from '../../conversation/content/';
-import {NotUploadedReason} from '../../conversation/root';
+import {AbortReason} from '../../conversation/root';
 import {EncryptedAssetUploaded} from '../../cryptography/root';
 
 // https://github.com/wireapp/generic-message-proto/blob/v1.20.0/proto/messages.proto#L201
 interface AssetContent {
-  abortReason?: number;
+  abortReason?: AbortReason;
   original?: Original;
   preview?: Preview;
   uploaded?: RemoteData;
@@ -85,8 +85,8 @@ interface FileAssetMetaDataContent {
   metaData: FileMetaDataContent;
 }
 
-interface FileAssetNotUploadedContent {
-  reason: NotUploadedReason;
+interface FileAssetUploadAbortContent {
+  reason: AbortReason;
 }
 
 export {
@@ -94,7 +94,7 @@ export {
   AudioMetaData,
   FileAssetContent,
   FileAssetMetaDataContent,
-  FileAssetNotUploadedContent,
+  FileAssetUploadAbortContent,
   ImageAssetContent,
   ImageMetaData,
   Original,

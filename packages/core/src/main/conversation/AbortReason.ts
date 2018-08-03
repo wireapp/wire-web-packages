@@ -19,6 +19,6 @@
 
 import {Asset} from '@wireapp/protocol-messaging';
 
-type NotUploadedReason = Asset.NotUploaded;
+type AbortReason = Asset.NotUploaded;
 
-export {NotUploadedReason};
+export {AbortReason};
