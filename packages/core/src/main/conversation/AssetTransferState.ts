@@ -17,14 +17,12 @@
  *
  */
 
-interface FileContent {
-  data: Buffer;
+enum AssetTransferState {
+  DOWNLOADING = 'downloading',
+  UPLOAD_CANCELED = 'upload-canceled',
+  UPLOAD_FAILED = 'upload-failed',
+  UPLOADED = 'uploaded',
+  UPLOADING = 'uploading',
 }
 
-interface FileMetaDataContent {
-  name: string;
-  length: number;
-  type: string;
-}
-
-export {FileContent, FileMetaDataContent};
+export {AssetTransferState};

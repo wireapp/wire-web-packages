@@ -66,7 +66,7 @@ const assetOriginalCache = {};
     const {conversation: conversationId, from, content, id: messageId, messageTimer} = data;
     logger.log(
       `Asset metadata "${messageId}" in "${conversationId}" from "${from}":`,
-      data,
+      data.content.uploaded,
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
     );
 
@@ -87,12 +87,17 @@ const assetOriginalCache = {};
     }
 
     const fileBuffer = await account.service.conversation.getAsset(content.uploaded);
-    const filePayload = await account.service.conversation.createFile({
-      data: fileBuffer,
+
+    const fileMetaDataPayload = await account.service.conversation.createFileMetadata({
+      length: fileBuffer.length,
       name: cacheOriginal.name,
       type: cacheOriginal.mimeType,
     });
+    await account.service.conversation.send(conversationId, fileMetaDataPayload);
+
+    const filePayload = await account.service.conversation.createFile({data: fileBuffer}, fileMetaDataPayload.id);
     await account.service.conversation.send(conversationId, filePayload);
+
     delete assetOriginalCache[data.messageId];
   });
 

@@ -20,7 +20,7 @@
 import {ClientActionType, GenericMessageType} from '../conversation/root';
 
 import {Connection} from '@wireapp/api-client/dist/commonjs/connection';
-import {CONVERSATION_EVENT, USER_EVENT} from '@wireapp/api-client/dist/commonjs/event';
+import {CONVERSATION_EVENT, USER_EVENT} from '@wireapp/api-client/dist/commonjs/event/';
 import {
   AssetContent,
   ClientActionContent,
@@ -28,6 +28,8 @@ import {
   DeletedContent,
   EditedTextContent,
   FileAssetContent,
+  FileAssetMetaDataContent,
+  FileAssetNotUploadedContent,
   HiddenContent,
   ImageAssetContent,
   ImageContent,
@@ -63,6 +65,8 @@ interface PayloadBundle {
     | DeletedContent
     | EditedTextContent
     | FileAssetContent
+    | FileAssetMetaDataContent
+    | FileAssetNotUploadedContent
     | HiddenContent
     | ImageAssetContent
     | ImageContent

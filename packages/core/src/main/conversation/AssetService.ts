@@ -21,19 +21,14 @@ import {APIClient} from '@wireapp/api-client';
 import {AssetRetentionPolicy} from '@wireapp/api-client/dist/commonjs/asset/AssetRetentionPolicy';
 import {FileContent, ImageContent} from '../conversation/content/';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
-import {EncryptedAsset} from '../cryptography/root';
-
-interface EncryptedAssetUploaded extends EncryptedAsset {
-  key: string;
-  token: string;
-}
+import {EncryptedAssetUploaded} from '../cryptography/root';
 
 export interface AssetOptions {
   public: boolean;
   retention: AssetRetentionPolicy;
 }
 
-export default class AssetService {
+class AssetService {
   constructor(private readonly apiClient: APIClient) {}
 
   private async postAsset(buffer: Buffer, options?: AssetOptions): Promise<EncryptedAssetUploaded> {
@@ -57,3 +52,5 @@ export default class AssetService {
     return this.postAsset(file.data, options);
   }
 }
+
+export {AssetService};

@@ -17,8 +17,9 @@
  *
  */
 
-import {FileContent, ImageContent} from '../../conversation/content/';
-import {EncryptedAsset} from '../../cryptography/root';
+import {FileContent, FileMetaDataContent, ImageContent} from '../../conversation/content/';
+import {NotUploadedReason} from '../../conversation/root';
+import {EncryptedAssetUploaded} from '../../cryptography/root';
 
 // https://github.com/wireapp/generic-message-proto/blob/v1.20.0/proto/messages.proto#L201
 interface AssetContent {
@@ -71,23 +72,33 @@ interface Preview {
 }
 
 interface ImageAssetContent {
-  asset: EncryptedAsset & {key: string; token: string};
+  asset: EncryptedAssetUploaded;
   image: ImageContent;
 }
 
 interface FileAssetContent {
-  asset: EncryptedAsset & {key: string; token: string};
+  asset: EncryptedAssetUploaded;
   file: FileContent;
+}
+
+interface FileAssetMetaDataContent {
+  metaData: FileMetaDataContent;
+}
+
+interface FileAssetNotUploadedContent {
+  reason: NotUploadedReason;
 }
 
 export {
   AssetContent,
-  FileAssetContent,
-  ImageAssetContent,
-  Original,
-  RemoteData,
-  ImageMetaData,
-  VideoMetaData,
   AudioMetaData,
+  FileAssetContent,
+  FileAssetMetaDataContent,
+  FileAssetNotUploadedContent,
+  ImageAssetContent,
+  ImageMetaData,
+  Original,
   Preview,
+  RemoteData,
+  VideoMetaData,
 };

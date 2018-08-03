@@ -32,8 +32,10 @@ import {AxiosError} from 'axios';
 import {Encoder} from 'bazinga64';
 import {
   AssetService,
+  AssetTransferState,
   GenericMessageType,
   MessageTimer,
+  NotUploadedReason,
   PayloadBundleOutgoing,
   PayloadBundleOutgoingUnsent,
   PayloadBundleState,
@@ -58,7 +60,10 @@ import {
   ConfirmationContent,
   EditedTextContent,
   FileAssetContent,
+  FileAssetMetaDataContent,
+  FileAssetNotUploadedContent,
   FileContent,
+  FileMetaDataContent,
   ImageAssetContent,
   ImageContent,
   ReactionContent,
@@ -72,7 +77,7 @@ import {CryptographyService, EncryptedAsset} from '../cryptography/root';
 import {APIClient} from '@wireapp/api-client';
 const UUID = require('pure-uuid');
 
-export default class ConversationService {
+class ConversationService {
   private clientID: string = '';
   public readonly messageTimer: MessageTimer;
 
@@ -220,12 +225,6 @@ export default class ConversationService {
 
     const encryptedAsset = payloadBundle.content as FileAssetContent;
 
-    const original = Asset.Original.create({
-      mimeType: encryptedAsset.file.type,
-      name: encryptedAsset.file.name,
-      size: encryptedAsset.file.data.length,
-    });
-
     const remoteData = Asset.RemoteData.create({
       assetId: encryptedAsset.asset.key,
       assetToken: encryptedAsset.asset.token,
@@ -234,9 +233,10 @@ export default class ConversationService {
     });
 
     const assetMessage = Asset.create({
-      original,
       uploaded: remoteData,
     });
+
+    assetMessage.status = AssetTransferState.UPLOADED;
 
     let genericMessage = GenericMessage.create({
       [GenericMessageType.ASSET]: assetMessage,
@@ -253,6 +253,82 @@ export default class ConversationService {
     const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
 
     await this.sendExternalGenericMessage(this.clientID, conversationId, payload, preKeyBundles as UserPreKeyBundleMap);
+    return {
+      ...payloadBundle,
+      conversation: conversationId,
+      messageTimer: this.messageTimer.getMessageTimer(conversationId),
+      state: PayloadBundleState.OUTGOING_SENT,
+    };
+  }
+
+  private async sendFileMetaData(
+    conversationId: string,
+    payloadBundle: PayloadBundleOutgoingUnsent
+  ): Promise<PayloadBundleOutgoing> {
+    if (!payloadBundle.content) {
+      throw new Error('No content for sendFileMetaData provided!');
+    }
+
+    const encryptedAsset = payloadBundle.content as FileAssetMetaDataContent;
+
+    const original = Asset.Original.create({
+      mimeType: encryptedAsset.metaData.type,
+      name: encryptedAsset.metaData.name,
+      size: encryptedAsset.metaData.length,
+    });
+
+    let genericMessage = GenericMessage.create({
+      [GenericMessageType.ASSET]: Asset.create({original}),
+      messageId: payloadBundle.id,
+    });
+
+    const expireAfterMillis = this.messageTimer.getMessageTimer(conversationId);
+    if (expireAfterMillis > 0) {
+      genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
+    }
+
+    const preKeyBundles = await this.getPreKeyBundles(conversationId);
+    const plainTextBuffer: Uint8Array = GenericMessage.encode(genericMessage).finish();
+    const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
+
+    await this.sendExternalGenericMessage(this.clientID, conversationId, payload, preKeyBundles as UserPreKeyBundleMap);
+
+    return {
+      ...payloadBundle,
+      conversation: conversationId,
+      messageTimer: this.messageTimer.getMessageTimer(conversationId),
+      state: PayloadBundleState.OUTGOING_SENT,
+    };
+  }
+
+  private async sendFileNotUploaded(
+    conversationId: string,
+    payloadBundle: PayloadBundleOutgoingUnsent
+  ): Promise<PayloadBundleOutgoing> {
+    if (!payloadBundle.content) {
+      throw new Error('No content for sendFileMetaData provided!');
+    }
+
+    const notUploadedContent = payloadBundle.content as FileAssetNotUploadedContent;
+
+    let genericMessage = GenericMessage.create({
+      [GenericMessageType.ASSET]: Asset.create({
+        notUploaded: notUploadedContent.reason,
+      }),
+      messageId: payloadBundle.id,
+    });
+
+    const expireAfterMillis = this.messageTimer.getMessageTimer(conversationId);
+    if (expireAfterMillis > 0) {
+      genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
+    }
+
+    const preKeyBundles = await this.getPreKeyBundles(conversationId);
+    const plainTextBuffer: Uint8Array = GenericMessage.encode(genericMessage).finish();
+    const payload: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
+
+    await this.sendExternalGenericMessage(this.clientID, conversationId, payload, preKeyBundles as UserPreKeyBundleMap);
+
     return {
       ...payloadBundle,
       conversation: conversationId,
@@ -294,6 +370,8 @@ export default class ConversationService {
       original,
       uploaded: remoteData,
     });
+
+    assetMessage.status = AssetTransferState.UPLOADED;
 
     let genericMessage = GenericMessage.create({
       [GenericMessageType.ASSET]: assetMessage,
@@ -478,10 +556,7 @@ export default class ConversationService {
     };
   }
 
-  public async createFile(
-    file: FileContent,
-    messageId: string = ConversationService.createId()
-  ): Promise<PayloadBundleOutgoingUnsent> {
+  public async createFile(file: FileContent, messageId: string): Promise<PayloadBundleOutgoingUnsent> {
     const imageAsset = await this.assetService.uploadFileAsset(file);
 
     const content: FileAssetContent = {
@@ -496,6 +571,42 @@ export default class ConversationService {
       state: PayloadBundleState.OUTGOING_UNSENT,
       timestamp: Date.now(),
       type: GenericMessageType.ASSET,
+    };
+  }
+
+  public createFileMetadata(
+    metaData: FileMetaDataContent,
+    messageId: string = ConversationService.createId()
+  ): PayloadBundleOutgoingUnsent {
+    const content: FileAssetMetaDataContent = {
+      metaData,
+    };
+
+    return {
+      content,
+      from: this.apiClient.context!.userId,
+      id: messageId,
+      state: PayloadBundleState.OUTGOING_UNSENT,
+      timestamp: Date.now(),
+      type: GenericMessageType.ASSET_META,
+    };
+  }
+
+  public async createFileNotUploaded(
+    reason: NotUploadedReason,
+    messageId: string
+  ): Promise<PayloadBundleOutgoingUnsent> {
+    const content: FileAssetNotUploadedContent = {
+      reason,
+    };
+
+    return {
+      content,
+      from: this.apiClient.context!.userId,
+      id: messageId,
+      state: PayloadBundleState.OUTGOING_UNSENT,
+      timestamp: Date.now(),
+      type: GenericMessageType.ASSET_NOT_UPLOADED,
     };
   }
 
@@ -716,18 +827,13 @@ export default class ConversationService {
   ): Promise<PayloadBundleOutgoing> {
     switch (payloadBundle.type) {
       case GenericMessageType.ASSET:
-      case GenericMessageType.IMAGE: {
-        if (payloadBundle.content) {
-          if ((payloadBundle.content as ImageAssetContent).image) {
-            return this.sendImage(conversationId, payloadBundle);
-          }
-          if ((payloadBundle.content as FileAssetContent).asset) {
-            return this.sendFile(conversationId, payloadBundle);
-          }
-          throw new Error(`No send method implemented for this kind of asset.`);
-        }
-        throw new Error(`Payload of type "${payloadBundle.type}" does not have a "content" property.`);
-      }
+        return this.sendFile(conversationId, payloadBundle);
+      case GenericMessageType.ASSET_META:
+        return this.sendFileMetaData(conversationId, payloadBundle);
+      case GenericMessageType.ASSET_NOT_UPLOADED:
+        return this.sendFileNotUploaded(conversationId, payloadBundle);
+      case GenericMessageType.IMAGE:
+        return this.sendImage(conversationId, payloadBundle);
       case GenericMessageType.CLIENT_ACTION: {
         if (payloadBundle.content === ClientAction.RESET_SESSION) {
           return this.sendSessionReset(conversationId, payloadBundle);
@@ -763,3 +869,5 @@ export default class ConversationService {
     this.clientID = clientID;
   }
 }
+
+export {ConversationService};

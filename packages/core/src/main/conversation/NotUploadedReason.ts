@@ -17,14 +17,8 @@
  *
  */
 
-interface FileContent {
-  data: Buffer;
-}
+import {Asset} from '@wireapp/protocol-messaging';
 
-interface FileMetaDataContent {
-  name: string;
-  length: number;
-  type: string;
-}
+type NotUploadedReason = Asset.NotUploaded;
 
-export {FileContent, FileMetaDataContent};
+export {NotUploadedReason};
