@@ -576,7 +576,7 @@ class ConversationService {
       id: messageId,
       state: PayloadBundleState.OUTGOING_UNSENT,
       timestamp: Date.now(),
-      type: GenericMessageType.ASSET,
+      type: PayloadBundleType.ASSET,
     };
   }
 
@@ -594,7 +594,7 @@ class ConversationService {
       id: messageId,
       state: PayloadBundleState.OUTGOING_UNSENT,
       timestamp: Date.now(),
-      type: GenericMessageType.ASSET_META,
+      type: PayloadBundleType.ASSET_META,
     };
   }
 
@@ -609,7 +609,7 @@ class ConversationService {
       id: messageId,
       state: PayloadBundleState.OUTGOING_UNSENT,
       timestamp: Date.now(),
-      type: GenericMessageType.ASSET_ABORT,
+      type: PayloadBundleType.ASSET_ABORT,
     };
   }
 

@@ -20,7 +20,6 @@
 import {ClientActionType} from '../conversation/root';
 
 import {Connection} from '@wireapp/api-client/dist/commonjs/connection';
-import {CONVERSATION_EVENT, USER_EVENT} from '@wireapp/api-client/dist/commonjs/event/';
 import {
   AssetContent,
   ClientActionContent,
@@ -81,6 +80,8 @@ interface PayloadBundle {
 
 enum PayloadBundleType {
   ASSET = 'PayloadBundleType.ASSET',
+  ASSET_ABORT = 'PayloadBundleType.ASSET_ABORT',
+  ASSET_META = 'PayloadBundleType.ASSET_META',
   AVAILABILITY = 'PayloadBundleType.AVAILABILITY',
   CALL = 'PayloadBundleType.CALL',
   CLIENT_ACTION = 'PayloadBundleType.CLIENT_ACTION',
@@ -89,6 +90,7 @@ enum PayloadBundleType {
   CONVERSATION_CLEAR = 'PayloadBundleType.CONVERSATION_CLEAR',
   CONVERSATION_RENAME = 'PayloadBundleType.CONVERSATION_RENAME',
   DELETED = 'PayloadBundleType.DELETED',
+  EDITED = 'PayloadBundleType.EDITED',
   HIDDEN = 'PayloadBundleType.HIDDEN',
   IMAGE = 'PayloadBundleType.IMAGE',
   LAST_READ_UPDATE = 'PayloadBundleType.LAST_READ_UPDATE',
