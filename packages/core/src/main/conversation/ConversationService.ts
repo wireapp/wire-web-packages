@@ -24,9 +24,12 @@ import {
   NewConversation,
   NewOTRMessage,
   OTRRecipients,
+  UserClients,
 } from '@wireapp/api-client/dist/commonjs/conversation/';
 import {CONVERSATION_TYPING, ConversationMemberLeaveEvent} from '@wireapp/api-client/dist/commonjs/event/';
-import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
+import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/';
+import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/';
+import {AxiosError} from 'axios';
 import {Encoder} from 'bazinga64';
 import {
   AbortReason,
@@ -152,7 +155,7 @@ class ConversationService {
     conversationId: string,
     asset: EncryptedAsset,
     preKeyBundles: UserPreKeyBundleMap
-  ): Promise<ClientMismatch> {
+  ): Promise<void> {
     const {cipherText, keyBytes, sha256} = asset;
     const messageId = ConversationService.createId();
 
@@ -177,14 +180,14 @@ class ConversationService {
       sender: sendingClientId,
     };
 
-    return this.apiClient.conversation.api.postOTRMessage(sendingClientId, conversationId, message);
+    return this.sendOTRMessage(sendingClientId, conversationId, recipients, message);
   }
 
   private async sendGenericMessage(
     sendingClientId: string,
     conversationId: string,
     genericMessage: GenericMessage
-  ): Promise<ClientMismatch> {
+  ): Promise<void> {
     const plainTextBuffer: Uint8Array = GenericMessage.encode(genericMessage).finish();
     const preKeyBundles = await this.getPreKeyBundles(conversationId);
     const recipients = await this.cryptographyService.encrypt(plainTextBuffer, preKeyBundles);
@@ -403,16 +406,28 @@ class ConversationService {
     };
   }
 
-  private sendOTRMessage(
+  private async sendOTRMessage(
     sendingClientId: string,
     conversationId: string,
-    recipients: OTRRecipients
-  ): Promise<ClientMismatch> {
-    const message: NewOTRMessage = {
+    recipients: OTRRecipients,
+    message: NewOTRMessage = {
       recipients,
       sender: sendingClientId,
-    };
-    return this.apiClient.conversation.api.postOTRMessage(sendingClientId, conversationId, message);
+    }
+  ): Promise<void> {
+    try {
+      await this.apiClient.conversation.api.postOTRMessage(sendingClientId, conversationId, message);
+    } catch (error) {
+      await this.onClientMismatch(error);
+    }
+  }
+
+  private onClientMismatch(error: AxiosError): Promise<any> {
+    if (error.response && error.response.status === StatusCode.PRECONDITION_FAILED) {
+      const recipients: UserClients = error.response.data.missing;
+      return this.apiClient.user.api.postMultiPreKeyBundles(recipients);
+    }
+    throw error;
   }
 
   private async sendPing(
