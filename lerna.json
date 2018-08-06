@@ -6,9 +6,12 @@
       "message": "[skip ci] chore: Publish %s"
     }
   },
+  "exact": true,
   "ignoreChanges": ["**/demo/**"],
+  "loglevel": "verbose",
   "npmClient": "yarn",
   "npmClientArgs": ["--exact"],
   "useWorkspaces": true,
-  "version": "independent"
+  "version": "independent",
+  "yes": true
 }
