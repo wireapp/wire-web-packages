@@ -48,7 +48,7 @@ const assetOriginalCache = {};
       }, messageTimer);
     } else {
       const confirmationPayload = account.service.conversation.createConfirmation(messageId);
-      return account.service.conversation.send(conversationId, confirmationPayload);
+      await account.service.conversation.send(conversationId, confirmationPayload);
     }
   };
 
@@ -99,7 +99,9 @@ const assetOriginalCache = {};
 
     try {
       const filePayload = await account.service.conversation.createFileData({data: fileBuffer}, fileMetaDataPayload.id);
+      account.service.conversation.messageTimer.setConversationLevelTimer(conversationId, messageTimer);
       await account.service.conversation.send(conversationId, filePayload);
+      account.service.conversation.messageTimer.setConversationLevelTimer(conversationId, 0);
 
       delete assetOriginalCache[data.messageId];
     } catch (error) {
@@ -169,7 +171,10 @@ const assetOriginalCache = {};
       type: original.mimeType,
       width: original.image.width,
     });
+
+    account.service.conversation.messageTimer.setConversationLevelTimer(conversationId, messageTimer);
     await account.service.conversation.send(conversationId, imagePayload);
+    account.service.conversation.messageTimer.setConversationLevelTimer(conversationId, 0);
   });
 
   account.on(Account.INCOMING.PING, async data => {
