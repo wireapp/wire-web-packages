@@ -40,6 +40,18 @@ const assetOriginalCache = {};
   const apiClient = new APIClient(new Config(engine, backend));
   const account = new Account(apiClient);
 
+  const sendConfirmation = async (messageId, conversationId, messageTimer) => {
+    if (messageTimer) {
+      setTimeout(async () => {
+        const confirmationPayload = account.service.conversation.createConfirmationEphemeral(messageId);
+        await account.service.conversation.send(conversationId, confirmationPayload);
+      }, messageTimer);
+    } else {
+      const confirmationPayload = account.service.conversation.createConfirmation(messageId);
+      return account.service.conversation.send(conversationId, confirmationPayload);
+    }
+  };
+
   account.on(Account.INCOMING.TEXT_MESSAGE, async data => {
     const {conversation: conversationId, from, content, id: messageId, messageTimer} = data;
     logger.log(
@@ -48,13 +60,7 @@ const assetOriginalCache = {};
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
     );
 
-    if (messageTimer) {
-      const confirmationPayload = account.service.conversation.createConfirmationEphemeral(messageId);
-      await account.service.conversation.send(conversationId, confirmationPayload);
-    } else {
-      const confirmationPayload = account.service.conversation.createConfirmation(messageId);
-      await account.service.conversation.send(conversationId, confirmationPayload);
-    }
+    await sendConfirmation(messageId, conversationId, messageTimer);
 
     const textPayload = account.service.conversation.createText(content.text);
     account.service.conversation.messageTimer.setConversationLevelTimer(conversationId, messageTimer);
@@ -82,13 +88,7 @@ const assetOriginalCache = {};
 
     const fileBuffer = await account.service.conversation.getAsset(content.uploaded);
 
-    if (messageTimer) {
-      const confirmationPayload = account.service.conversation.createConfirmationEphemeral(messageId);
-      await account.service.conversation.send(conversationId, confirmationPayload);
-    } else {
-      const confirmationPayload = account.service.conversation.createConfirmation(messageId);
-      await account.service.conversation.send(conversationId, confirmationPayload);
-    }
+    await sendConfirmation(messageId, conversationId, messageTimer);
 
     const fileMetaDataPayload = await account.service.conversation.createFileMetadata({
       length: fileBuffer.length,
@@ -160,13 +160,7 @@ const assetOriginalCache = {};
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
     );
 
-    if (messageTimer) {
-      const confirmationPayload = account.service.conversation.createConfirmationEphemeral(messageId);
-      await account.service.conversation.send(conversationId, confirmationPayload);
-    } else {
-      const confirmationPayload = account.service.conversation.createConfirmation(messageId);
-      await account.service.conversation.send(conversationId, confirmationPayload);
-    }
+    await sendConfirmation(messageId, conversationId, messageTimer);
 
     const imageBuffer = await account.service.conversation.getAsset(uploaded);
     const imagePayload = await account.service.conversation.createImage({
@@ -185,13 +179,7 @@ const assetOriginalCache = {};
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
     );
 
-    if (messageTimer) {
-      const confirmationPayload = account.service.conversation.createConfirmationEphemeral(messageId);
-      await account.service.conversation.send(conversationId, confirmationPayload);
-    } else {
-      const confirmationPayload = account.service.conversation.createConfirmation(messageId);
-      await account.service.conversation.send(conversationId, confirmationPayload);
-    }
+    await sendConfirmation(messageId, conversationId, messageTimer);
 
     const payload = account.service.conversation.createPing();
     account.service.conversation.messageTimer.setMessageLevelTimer(conversationId, messageTimer);
