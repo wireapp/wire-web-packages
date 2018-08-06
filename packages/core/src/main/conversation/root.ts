@@ -17,30 +17,13 @@
  *
  */
 
-import AssetService from './AssetService';
-import {ClientActionType} from './ClientActionType';
-import {ConfirmationType} from './ConfirmationType';
-import ConversationService from './ConversationService';
-import GenericMessageType from './GenericMessageType';
-import {MessageTimer} from './MessageTimer';
-import {
-  PayloadBundle,
-  PayloadBundleIncoming,
-  PayloadBundleOutgoing,
-  PayloadBundleOutgoingUnsent,
-  PayloadBundleState,
-} from './PayloadBundle';
-
-export {
-  AssetService,
-  ClientActionType,
-  ConfirmationType,
-  ConversationService,
-  GenericMessageType,
-  PayloadBundle,
-  PayloadBundleIncoming,
-  PayloadBundleOutgoing,
-  PayloadBundleOutgoingUnsent,
-  PayloadBundleState,
-  MessageTimer,
-};
+export * from './AbortReason';
+export * from './AssetService';
+export * from './AssetTransferState';
+export * from './ClientActionType';
+export * from './ConfirmationType';
+export * from './ConversationService';
+export * from './GenericMessageType';
+export * from './MessageTimer';
+export * from './PayloadBundle';
+export * from './ReactionType';

@@ -38,7 +38,7 @@ import * as Long from 'long';
 import {LoginSanitizer} from './auth/root';
 import {ClientInfo, ClientService} from './client/root';
 import {ConnectionService} from './connection/root';
-import {AssetContent, DeletedContent, HiddenContent, TextContent} from './conversation/content/';
+import {AssetContent, DeletedContent, HiddenContent, ReactionContent, TextContent} from './conversation/content/';
 import {
   AssetService,
   ConversationService,
@@ -50,25 +50,32 @@ import {CryptographyService} from './cryptography/root';
 import {NotificationService} from './notification/root';
 import {SelfService} from './self/root';
 
-const logdown = require('logdown');
 import {APIClient} from '@wireapp/api-client';
+import {UserConnectionEvent} from '@wireapp/api-client/dist/commonjs/event';
 import * as EventEmitter from 'events';
+import * as logdown from 'logdown';
 
 class Account extends EventEmitter {
-  private readonly logger: any = logdown('@wireapp/core/Account', {
+  private readonly logger = logdown('@wireapp/core/Account', {
     logger: console,
     markdown: false,
   });
 
   public static readonly INCOMING = {
     ASSET: 'Account.INCOMING.ASSET',
+    ASSET_ABORT: 'Account.INCOMING.ASSET_ABORT',
+    ASSET_META: 'Account.INCOMING.ASSET_META',
     CLIENT_ACTION: 'Account.INCOMING.CLIENT_ACTION',
     CONFIRMATION: 'Account.INCOMING.CONFIRMATION',
     CONNECTION: 'Account.INCOMING.CONNECTION',
+    CONVERSATION_RENAME: 'Account.INCOMING.CONVERSATION_RENAME',
     DELETED: 'Account.INCOMING.DELETED',
     HIDDEN: 'Account.INCOMING.HIDDEN',
+    IMAGE: 'Account.INCOMING.IMAGE',
+    MEMBER_JOIN: 'Account.INCOMING.MEMBER_JOIN',
     MESSAGE_TIMER_UPDATE: 'Account.INCOMING.MESSAGE_TIMER_UPDATE',
     PING: 'Account.INCOMING.PING',
+    REACTION: 'Account.INCOMING.REACTION',
     TEXT_MESSAGE: 'Account.INCOMING.TEXT_MESSAGE',
     TYPING: 'Account.INCOMING.TYPING',
   };
@@ -238,9 +245,7 @@ class Account extends EventEmitter {
       .then(() => this);
   }
 
-  private async decodeGenericMessage(
-    otrMessage: ConversationOtrMessageAddEvent
-  ): Promise<PayloadBundleIncoming | undefined> {
+  private async decodeGenericMessage(otrMessage: ConversationOtrMessageAddEvent): Promise<PayloadBundleIncoming> {
     if (!this.service) {
       throw new Error('Services are not set.');
     }
@@ -267,7 +272,7 @@ class Account extends EventEmitter {
         return this.mapGenericMessage(genericMessage, otrMessage);
       }
     } else {
-      return undefined;
+      throw decryptedMessage.error;
     }
   }
 
@@ -310,7 +315,7 @@ class Account extends EventEmitter {
         };
         return {
           content,
-          conversation: event.from,
+          conversation: event.conversation,
           from: event.from,
           id: genericMessage.messageId,
           messageTimer: 0,
@@ -320,15 +325,35 @@ class Account extends EventEmitter {
         };
       }
       case GenericMessageType.ASSET: {
+        const {uploaded, original} = genericMessage.asset;
+        const isImage = !!uploaded && !!uploaded.assetId && !!original && !!original.image;
+
         const content: AssetContent = {
-          abortReason: genericMessage.asset.not_uploaded,
+          abortReason: genericMessage.asset.notUploaded,
           original: genericMessage.asset.original,
           preview: genericMessage.asset.preview,
+          status: genericMessage.asset.status,
           uploaded: genericMessage.asset.uploaded,
         };
         return {
           content,
-          conversation: event.from,
+          conversation: event.conversation,
+          from: event.from,
+          id: genericMessage.messageId,
+          messageTimer: 0,
+          state: PayloadBundleState.INCOMING,
+          timestamp: new Date(event.time).getTime(),
+          type: isImage ? GenericMessageType.IMAGE : genericMessage.content,
+        };
+      }
+      case GenericMessageType.REACTION: {
+        const content: ReactionContent = {
+          originalMessageId: genericMessage.reaction.messageId,
+          type: genericMessage.reaction.emoji,
+        };
+        return {
+          content,
+          conversation: event.conversation,
           from: event.from,
           id: genericMessage.messageId,
           messageTimer: 0,
@@ -352,10 +377,44 @@ class Account extends EventEmitter {
     }
   }
 
-  private async handleEvent(event: IncomingEvent): Promise<PayloadBundleIncoming | IncomingEvent | void> {
-    this.logger.info('handleEvent', event.type);
+  private mapConversationEvent(event: ConversationEvent): PayloadBundleIncoming {
+    return {
+      content: event.data,
+      conversation: event.conversation,
+      from: event.from,
+      id: ConversationService.createId(),
+      messageTimer: 0,
+      state: PayloadBundleState.INCOMING,
+      timestamp: new Date(event.time).getTime(),
+      type: event.type,
+    };
+  }
+
+  private mapUserEvent(event: UserEvent): PayloadBundleIncoming | void {
+    if (event.type === USER_EVENT.CONNECTION) {
+      const connectionEvent = event as UserConnectionEvent;
+      return {
+        content: connectionEvent.connection,
+        conversation: connectionEvent.connection.conversation,
+        from: connectionEvent.connection.from,
+        id: ConversationService.createId(),
+        messageTimer: 0,
+        state: PayloadBundleState.INCOMING,
+        timestamp: new Date(connectionEvent.connection.last_update).getTime(),
+        type: USER_EVENT.CONNECTION,
+      };
+    }
+  }
+
+  private async handleEvent(event: IncomingEvent): Promise<PayloadBundleIncoming | void> {
+    this.logger.log('handleEvent', event.type);
     const ENCRYPTED_EVENTS = [CONVERSATION_EVENT.OTR_MESSAGE_ADD];
-    const META_EVENTS = [CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE, CONVERSATION_EVENT.TYPING];
+    const META_EVENTS = [
+      CONVERSATION_EVENT.MEMBER_JOIN,
+      CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE,
+      CONVERSATION_EVENT.RENAME,
+      CONVERSATION_EVENT.TYPING,
+    ];
     const USER_EVENTS = [USER_EVENT.CONNECTION];
 
     if (ENCRYPTED_EVENTS.includes(event.type as CONVERSATION_EVENT)) {
@@ -363,9 +422,9 @@ class Account extends EventEmitter {
     } else if (META_EVENTS.includes(event.type as CONVERSATION_EVENT)) {
       const {conversation, from} = event as ConversationEvent;
       const metaEvent = {...event, from, conversation};
-      return metaEvent as ConversationEvent;
+      return this.mapConversationEvent(metaEvent as ConversationEvent);
     } else if (USER_EVENTS.includes(event.type as USER_EVENT)) {
-      return event as UserEvent;
+      return this.mapUserEvent(event as UserEvent);
     }
   }
 
@@ -375,8 +434,22 @@ class Account extends EventEmitter {
       const data = await this.handleEvent(event);
       if (data) {
         switch (data.type) {
-          case GenericMessageType.ASSET:
-            this.emit(Account.INCOMING.ASSET, data);
+          case GenericMessageType.ASSET: {
+            const assetContent = data.content as AssetContent;
+            const isMetaData = !!assetContent && !!assetContent.original && !assetContent.uploaded;
+            const isAbort = !!assetContent.abortReason || (!assetContent.original && !assetContent.uploaded);
+
+            if (isMetaData) {
+              this.emit(Account.INCOMING.ASSET_META, data);
+            } else if (isAbort) {
+              this.emit(Account.INCOMING.ASSET_ABORT, data);
+            } else {
+              this.emit(Account.INCOMING.ASSET, data);
+            }
+            break;
+          }
+          case GenericMessageType.IMAGE:
+            this.emit(Account.INCOMING.IMAGE, data);
             break;
           case GenericMessageType.CLIENT_ACTION:
             this.emit(Account.INCOMING.CLIENT_ACTION, data);
@@ -393,6 +466,9 @@ class Account extends EventEmitter {
           case GenericMessageType.KNOCK:
             this.emit(Account.INCOMING.PING, data);
             break;
+          case GenericMessageType.REACTION:
+            this.emit(Account.INCOMING.REACTION, data);
+            break;
           case GenericMessageType.TEXT:
             this.emit(Account.INCOMING.TEXT_MESSAGE, data);
             break;
@@ -400,7 +476,7 @@ class Account extends EventEmitter {
             const {
               data: {message_timer},
               conversation,
-            } = data as ConversationMessageTimerUpdateEvent;
+            } = event as ConversationMessageTimerUpdateEvent;
             const expireAfterMillis = Number(message_timer);
             this.logger.log(
               `Received "${expireAfterMillis}" ms timer on conversation level for conversation "${conversation}".`
@@ -409,6 +485,12 @@ class Account extends EventEmitter {
             this.emit(Account.INCOMING.MESSAGE_TIMER_UPDATE, event);
             break;
           }
+          case CONVERSATION_EVENT.MEMBER_JOIN:
+            this.emit(Account.INCOMING.MEMBER_JOIN, event);
+            break;
+          case CONVERSATION_EVENT.RENAME:
+            this.emit(Account.INCOMING.CONVERSATION_RENAME, event);
+            break;
           case CONVERSATION_EVENT.TYPING: {
             this.emit(Account.INCOMING.TYPING, event);
             break;

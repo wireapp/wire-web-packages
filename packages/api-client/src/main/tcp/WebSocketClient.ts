@@ -18,18 +18,18 @@
  */
 
 import * as EventEmitter from 'events';
+import * as logdown from 'logdown';
 import {IncomingNotification} from '../conversation/';
 import {HttpClient, NetworkError} from '../http/';
 
 import * as Html5WebSocket from 'html5-websocket';
 import * as buffer from '../shims/node/buffer';
 const ReconnectingWebsocket = require('reconnecting-websocket');
-const logdown = require('logdown');
 
 class WebSocketClient extends EventEmitter {
   private clientId: string | undefined;
 
-  private readonly logger: any = logdown('@wireapp/api-client/tcp/WebSocketClient', {
+  private readonly logger = logdown('@wireapp/api-client/tcp/WebSocketClient', {
     logger: console,
     markdown: false,
   });
@@ -100,7 +100,7 @@ class WebSocketClient extends EventEmitter {
     return Promise.resolve(this);
   }
 
-  public disconnect(reason: string = 'Unknown reason'): void {
+  public disconnect(reason = 'Unknown reason'): void {
     if (this.socket) {
       // TODO: 'any' can be removed once this issue is resolved:
       // https://github.com/pladaria/reconnecting-websocket/issues/44

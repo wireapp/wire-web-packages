@@ -19,6 +19,8 @@
 
 import {
   AddPeopleIcon,
+  AndroidIcon,
+  AppleIcon,
   ArrowIcon,
   AttachmentIcon,
   AudioVideoIcon,
@@ -31,6 +33,7 @@ import {
   CamIcon,
   Checkbox,
   CheckboxLabel,
+  ChromeIcon,
   CodeInput,
   Column,
   Columns,
@@ -62,23 +65,29 @@ import {
   InputSubmitCombo,
   Label,
   LabelLink,
+  Large,
   Lead,
   LeaveIcon,
   Line,
   Link,
   LinkedInIcon,
+  LinuxIcon,
   Loading,
   Logo,
   MenuItem,
   MenuLink,
   MenuModal,
   MessageIcon,
+  MicrosoftIcon,
   Modal,
   MoreIcon,
   MuteIcon,
   Muted,
   OptionsIcon,
+  Overlay,
+  PILL_TYPE,
   Paragraph,
+  Pill,
   PingIcon,
   PlaneIcon,
   ProfileIcon,
@@ -98,18 +107,110 @@ import {
   WireIcon,
 } from '@wireapp/react-ui-kit';
 import Color from 'color';
+import Helmet from 'react-helmet';
 import React from 'react';
+import styled from 'styled-components';
 
 let shakebox = null;
+
+const ColorElement = styled.div.attrs({
+  'data-text': props => `${props.name}
+${props.value}${
+    props.alpha
+      ? `
+α: ${props.alpha}`
+      : ''
+  }`,
+  style: ({color}) => ({backgroundColor: color}),
+})`
+  width: 80px;
+  height: 80px;
+  border-radius: 40px;
+  border: 1px solid black;
+  position: relative;
+  display: inline-block;
+  &::after {
+    width: 100%;
+    position: absolute;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    content: attr(data-text);
+    color: #fff
+    font-size: 10px;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+    opacity: 0;
+    transform: scale(1.2);
+    text-shadow: #000 0 0 2px;
+    text-align: center;
+    white-space: pre-wrap;
+    z-index:1;
+  }
+  &:hover::after {
+    opacity: 1;
+    transform: scale(1);
+  }
+`;
 
 class Demo extends React.PureComponent {
   state = {
     isFullscreenModalOpen: false,
     isMenuModalOpen: false,
     isModalOpen: false,
+    isOverlayOpen: false,
   };
 
   closeMenuModal = () => this.setState({isMenuModalOpen: false});
+
+  renderColorSection() {
+    const baseColors = ['BLUE', 'GRAY', 'GREEN', 'ORANGE', 'RED', 'YELLOW'];
+    const additionalColors = ['WHITE', 'BLACK', 'LINK', 'TEXT', 'ICON', 'DISABLED'];
+    const allColors = [...baseColors, ...additionalColors];
+    const steps = [];
+    const percent = 100;
+    const stepSize = 8;
+    for (let index = stepSize; index < percent; index += stepSize) {
+      steps.push(index);
+    }
+
+    return (
+      <Container>
+        <H2>Base Colors </H2>
+        {allColors.map(this.renderColor)}
+        <H2>Darken</H2>
+        {baseColors.map(color => (
+          <Container key={color}>{steps.map(step => this.renderColor(`${color}_DARKEN_${step}`))}</Container>
+        ))}
+        <H2>Lighten</H2>
+        {baseColors.map(color => (
+          <Container key={color}>{steps.map(step => this.renderColor(`${color}_LIGHTEN_${step}`))}</Container>
+        ))}
+        <H2>Opaque</H2>
+        {baseColors.map(color => (
+          <Container
+            key={color}
+            style={{
+              backgroundImage:
+                "url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAL0lEQVQ4T2N88ODBfwY8QEFBgRGfPOOoAQzDIQzwxTFIjlA0400kowZAgnfwByIAPbI9Ca+UKQsAAAAASUVORK5CYII=')",
+            }}
+          >
+            {steps.map(step => this.renderColor(`${color}_OPAQUE_${step}`))}
+          </Container>
+        ))}
+      </Container>
+    );
+  }
+
+  renderColor(name) {
+    const color = Color(COLOR[name]);
+    const value = color.hex().toString();
+    const digits = 2;
+    const alpha = color.alpha() < 1 ? color.alpha().toFixed(digits) : 0;
+
+    return <ColorElement key={name} name={name} color={COLOR[name]} value={value} alpha={alpha} />;
+  }
 
   render() {
     const ColumnsStyle = {
@@ -132,6 +233,15 @@ class Demo extends React.PureComponent {
 
     return (
       <StyledApp>
+        <Helmet
+          meta={[
+            {
+              content: 'width=device-width, initial-scale=1, user-scalable=no',
+              name: 'viewport',
+            },
+          ]}
+        />
+
         {this.state.isModalOpen && (
           <Modal onClose={() => this.setState({isModalOpen: false})}>
             <Text>Normal Modal</Text>
@@ -141,6 +251,12 @@ class Demo extends React.PureComponent {
           <Modal fullscreen onClose={() => this.setState({isFullscreenModalOpen: false})}>
             <H1>Fullscreen Modal</H1>
           </Modal>
+        )}
+        {this.state.isOverlayOpen && (
+          <Overlay>
+            <H1>Overlay</H1>
+            <Button onClick={() => this.setState({isOverlayOpen: false})}>Close</Button>
+          </Overlay>
         )}
         {this.state.isMenuModalOpen && (
           <MenuModal data-uie-name="should-be-there" onBackgroundClick={this.closeMenuModal}>
@@ -177,8 +293,18 @@ class Demo extends React.PureComponent {
             <Loading progress={0.66} />
           </Container>
           <Container>
+            <H1>Pills</H1>
+            <Pill>Default Pill</Pill>
+            <Pill active>Active default Pill</Pill>
+            <Pill type={PILL_TYPE.error}>Error Pill</Pill>
+            <Pill type={PILL_TYPE.success}>Success Pill</Pill>
+            <Pill type={PILL_TYPE.warning}>Warning Pill</Pill>
+          </Container>
+          <Container>
             <H1>Icons</H1>
-            <Container style={{alignItems: 'center', display: 'flex', justifyContent: 'space-around'}}>
+            <Container
+              style={{alignItems: 'center', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around'}}
+            >
               <AddPeopleIcon height={32} />
               <ArrowIcon direction="up" height={32} />
               <AttachmentIcon height={32} />
@@ -186,6 +312,7 @@ class Demo extends React.PureComponent {
               <CallIcon height={32} />
               <CamIcon width={32} />
               <DeviceIcon height={32} />
+              <EditIcon />
               <FileIcon height={32} />
               <GifIcon width={32} />
               <HangupIcon width={32} />
@@ -203,15 +330,19 @@ class Demo extends React.PureComponent {
               <TeamIcon />
               <TimedIcon height={32} />
               <WireIcon width={32} />
-              <EditIcon />
             </Container>
             <Line />
             <H1>Brand Icons</H1>
             <Container style={{alignItems: 'center', display: 'flex', justifyContent: 'space-around'}}>
-              <FacebookIcon width={32} />
-              <GitHubIcon width={32} />
-              <LinkedInIcon width={32} />
-              <TwitterIcon width={32} />
+              <AndroidIcon width={48} />
+              <AppleIcon width={48} />
+              <ChromeIcon width={48} />
+              <FacebookIcon width={48} />
+              <GitHubIcon width={48} />
+              <LinkedInIcon width={48} />
+              <LinuxIcon width={48} />
+              <MicrosoftIcon width={48} />
+              <TwitterIcon width={48} />
             </Container>
             <Line />
             <H1>Layout</H1>
@@ -447,6 +578,12 @@ class Demo extends React.PureComponent {
                 <Button onClick={() => this.setState({isMenuModalOpen: true})}>Open</Button>
               </Column>
             </Columns>
+            <Columns>
+              <Column>Overlay</Column>
+              <Column>
+                <Button onClick={() => this.setState({isOverlayOpen: true})}>Open</Button>
+              </Column>
+            </Columns>
 
             <H1>Typography</H1>
             <Line />
@@ -521,6 +658,12 @@ class Demo extends React.PureComponent {
                 <Uppercase>upper case</Uppercase>
               </Column>
             </Columns>
+            <Columns>
+              <Column>Large text</Column>
+              <Column>
+                <Large>Large text</Large>
+              </Column>
+            </Columns>
             <Line />
             <H2>Paragraph</H2>
             <Paragraph>
@@ -572,44 +715,7 @@ class Demo extends React.PureComponent {
             <LabelLink block>LabelLink</LabelLink>
             <Line />
             <H1>Colors</H1>
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                justifyContent: 'space-around',
-              }}
-            >
-              {Object.keys(COLOR).map((colorKey, index) => (
-                <div
-                  key={colorKey}
-                  style={{
-                    backgroundColor: COLOR[colorKey],
-                    borderRadius: '12px',
-                    height: '96px',
-                    margin: '8px',
-                    width: '192px',
-                  }}
-                >
-                  <div
-                    style={{
-                      backgroundColor: COLOR.WHITE,
-                      border: `1px solid ${Color(COLOR[colorKey])
-                        .hex()
-                        .toString()}`,
-                      fontSize: '12px',
-                      fontWeight: 600,
-                      padding: '4px',
-                      textAlign: 'center',
-                    }}
-                  >
-                    {colorKey}
-                    ({Color(COLOR[colorKey])
-                      .hex()
-                      .toString()})
-                  </div>
-                </div>
-              ))}
-            </div>
+            {this.renderColorSection()}
           </Container>
         </Content>
         <Footer>Footer</Footer>

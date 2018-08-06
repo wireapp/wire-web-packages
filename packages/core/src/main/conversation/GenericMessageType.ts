@@ -19,6 +19,8 @@
 
 enum GenericMessageType {
   ASSET = 'asset',
+  ASSET_ABORT = 'assetAbort',
+  ASSET_META = 'assetMeta',
   AVAILABILITY = 'availability',
   CALLING = 'calling',
   CLEARED = 'cleared',
@@ -36,4 +38,4 @@ enum GenericMessageType {
   TEXT = 'text',
 }
 
-export default GenericMessageType;
+export {GenericMessageType};

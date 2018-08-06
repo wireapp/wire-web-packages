@@ -17,8 +17,14 @@
  *
  */
 
-import setGlobalStyles from '../globalStyles';
+interface FileContent {
+  data: Buffer;
+}
 
-setGlobalStyles();
+interface FileMetaDataContent {
+  name: string;
+  length: number;
+  type: string;
+}
 
-export * from './Loading';
+export {FileContent, FileMetaDataContent};
