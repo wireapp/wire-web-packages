@@ -311,7 +311,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: genericMessage.content,
+          type: PayloadBundleType.MESSAGE_EDIT,
         };
       }
       case GenericMessageType.HIDDEN: {

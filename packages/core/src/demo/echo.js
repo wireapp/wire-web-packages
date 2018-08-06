@@ -180,7 +180,7 @@ const messageEchoCache = {};
     await account.service.conversation.send(conversationId, reactionPayload);
   });
 
-  account.on(Account.INCOMING.TYPING, async data => {
+  account.on(PayloadBundleType.TYPING, async data => {
     const {
       conversation: conversationId,
       from,
@@ -196,7 +196,7 @@ const messageEchoCache = {};
     }
   });
 
-  account.on(PayloadBundleType.DELETED, async data => {
+  account.on(PayloadBundleType.MESSAGE_DELETE, async data => {
     const {conversation: conversationId, id: messageId, content, from} = data;
     logger.log(`Deleted message "${messageId}" in "${conversationId}" by "${from}".`, content);
 
