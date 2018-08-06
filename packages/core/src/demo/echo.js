@@ -25,6 +25,7 @@ const {CONVERSATION_TYPING} = require('@wireapp/api-client/dist/commonjs/event/'
 const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine/');
 
 const assetOriginalCache = {};
+let lastSentMessage;
 
 (async () => {
   const login = {
@@ -52,6 +53,7 @@ const assetOriginalCache = {};
     await account.service.conversation.send(conversationId, confirmationPayload);
 
     const textPayload = account.service.conversation.createText(content.text);
+    lastSentMessage = textPayload;
     account.service.conversation.messageTimer.setConversationLevelTimer(conversationId, messageTimer);
     await account.service.conversation.send(conversationId, textPayload);
     account.service.conversation.messageTimer.setMessageLevelTimer(conversationId, 0);
@@ -196,6 +198,16 @@ const assetOriginalCache = {};
   account.on(Account.INCOMING.DELETED, async data => {
     const {conversation: conversationId, id: messageId, from} = data;
     logger.log(`Deleted message "${messageId}" in "${conversationId}" by "${from}".`, data);
+
+    await account.service.conversation.deleteMessageEveryone(conversationId, lastSentMessage.id);
+  });
+
+  account.on(Account.INCOMING.EDITED, async data => {
+    const {conversation: conversationId, id: messageId, content, from} = data;
+    logger.log(`Edited message "${messageId}" in "${conversationId}" by "${from}".`, content);
+
+    const editedPayload = account.service.conversation.createEditedText(content.text, lastSentMessage.id);
+    await account.service.conversation.send(conversationId, editedPayload);
   });
 
   account.on(Account.INCOMING.HIDDEN, async data => {

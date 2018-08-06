@@ -38,7 +38,14 @@ import * as Long from 'long';
 import {LoginSanitizer} from './auth/root';
 import {ClientInfo, ClientService} from './client/root';
 import {ConnectionService} from './connection/root';
-import {AssetContent, DeletedContent, HiddenContent, ReactionContent, TextContent} from './conversation/content/';
+import {
+  AssetContent,
+  DeletedContent,
+  EditedTextContent,
+  HiddenContent,
+  ReactionContent,
+  TextContent,
+} from './conversation/content/';
 import {
   AssetService,
   ConversationService,
@@ -70,6 +77,7 @@ class Account extends EventEmitter {
     CONNECTION: 'Account.INCOMING.CONNECTION',
     CONVERSATION_RENAME: 'Account.INCOMING.CONVERSATION_RENAME',
     DELETED: 'Account.INCOMING.DELETED',
+    EDITED: 'Account.INCOMING.EDITED',
     HIDDEN: 'Account.INCOMING.HIDDEN',
     IMAGE: 'Account.INCOMING.IMAGE',
     MEMBER_JOIN: 'Account.INCOMING.MEMBER_JOIN',
@@ -308,6 +316,22 @@ class Account extends EventEmitter {
           type: genericMessage.content,
         };
       }
+      case GenericMessageType.EDITED: {
+        const content: EditedTextContent = {
+          originalMessageId: genericMessage.edited.replacingMessageId,
+          text: genericMessage.edited.text.content,
+        };
+        return {
+          content,
+          conversation: event.conversation,
+          from: event.from,
+          id: genericMessage.messageId,
+          messageTimer: 0,
+          state: PayloadBundleState.INCOMING,
+          timestamp: new Date(event.time).getTime(),
+          type: genericMessage.content,
+        };
+      }
       case GenericMessageType.HIDDEN: {
         const content: HiddenContent = {
           conversationId: genericMessage.hidden.conversationId,
@@ -459,6 +483,9 @@ class Account extends EventEmitter {
             break;
           case GenericMessageType.DELETED:
             this.emit(Account.INCOMING.DELETED, data);
+            break;
+          case GenericMessageType.EDITED:
+            this.emit(Account.INCOMING.EDITED, data);
             break;
           case GenericMessageType.HIDDEN:
             this.emit(Account.INCOMING.HIDDEN, data);
