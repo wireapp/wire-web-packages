@@ -18,7 +18,6 @@
  */
 
 import {
-  ClientMismatch,
   Conversation,
   CONVERSATION_TYPE,
   NewConversation,
@@ -180,7 +179,7 @@ class ConversationService {
       sender: sendingClientId,
     };
 
-    return this.sendOTRMessage(sendingClientId, conversationId, recipients, message);
+    return this.sendOTRMessage(sendingClientId, conversationId, recipients, plainTextBuffer, message);
   }
 
   private async sendGenericMessage(
@@ -192,7 +191,7 @@ class ConversationService {
     const preKeyBundles = await this.getPreKeyBundles(conversationId);
     const recipients = await this.cryptographyService.encrypt(plainTextBuffer, preKeyBundles);
 
-    return this.sendOTRMessage(sendingClientId, conversationId, recipients);
+    return this.sendOTRMessage(sendingClientId, conversationId, recipients, plainTextBuffer);
   }
 
   private async sendEditedText(
@@ -410,6 +409,7 @@ class ConversationService {
     sendingClientId: string,
     conversationId: string,
     recipients: OTRRecipients,
+    plainTextBuffer: Uint8Array,
     message: NewOTRMessage = {
       recipients,
       sender: sendingClientId,
@@ -418,11 +418,13 @@ class ConversationService {
     try {
       await this.apiClient.conversation.api.postOTRMessage(sendingClientId, conversationId, message);
     } catch (error) {
-      await this.onClientMismatch(error);
+      const preKeyBundles = await this.onClientMismatch(error);
+      message.recipients = await this.cryptographyService.encrypt(plainTextBuffer, preKeyBundles);
+      await this.apiClient.conversation.api.postOTRMessage(sendingClientId, conversationId, message);
     }
   }
 
-  private onClientMismatch(error: AxiosError): Promise<any> {
+  private onClientMismatch(error: AxiosError): Promise<UserPreKeyBundleMap> {
     if (error.response && error.response.status === StatusCode.PRECONDITION_FAILED) {
       const recipients: UserClients = error.response.data.missing;
       return this.apiClient.user.api.postMultiPreKeyBundles(recipients);
@@ -526,15 +528,15 @@ class ConversationService {
     const plainTextBuffer = GenericMessage.encode(genericMessage).finish();
 
     if (this.shouldSendAsExternal(plainTextBuffer, preKeyBundles)) {
-      const encryptedAsset: EncryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
+      const encryptedAsset = await AssetCryptography.encryptAsset(plainTextBuffer);
 
       await this.sendExternalGenericMessage(this.clientID, conversationId, encryptedAsset, preKeyBundles);
       return payloadBundle;
     }
 
-    const payload: OTRRecipients = await this.cryptographyService.encrypt(plainTextBuffer, preKeyBundles);
+    const encryptedPayload = await this.cryptographyService.encrypt(plainTextBuffer, preKeyBundles);
 
-    await this.sendOTRMessage(this.clientID, conversationId, payload);
+    await this.sendOTRMessage(this.clientID, conversationId, encryptedPayload, plainTextBuffer);
     return payloadBundle;
   }
 
