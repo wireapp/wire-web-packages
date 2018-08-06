@@ -158,7 +158,7 @@ class ConversationService {
     };
 
     await this.send(conversationId, confirmationObject);
-    await this.deleteMessageEveryone(conversationId, confirmationContent.confirmMessageId);
+    await this.deleteMessageEveryone(payloadBundle.from, confirmationContent.confirmMessageId);
 
     return {
       ...payloadBundle,
