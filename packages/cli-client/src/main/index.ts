@@ -60,7 +60,7 @@ storeEngine.init('', {fileExtension: '.json'}).then(() => {
 
   const account = new Account(apiClient);
 
-  account.on(PayloadBundleType.TEXT_MESSAGE, (data: PayloadBundleIncoming) => {
+  account.on(PayloadBundleType.TEXT, (data: PayloadBundleIncoming) => {
     console.log(
       `Received message from user ID "${data.from}" in conversation ID "${data.conversation}": ${data.content}`
     );
