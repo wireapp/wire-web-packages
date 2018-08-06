@@ -44,7 +44,7 @@
     "lint:ts": "tslint --config tslint.json --project tsconfig.json \"**/*.ts\"",
     "precommit": "lint-staged",
     "prettier": "prettier \"**/*.{json,md,scss,yml}\"",
-    "release": "lerna publish -m \"[skip ci] chore: Publish\" --conventional-commits --loglevel=verbose --exact --allow-branch=master --registry=https://registry.npmjs.org/ --yes",
+    "release": "lerna publish --loglevel=verbose --exact --registry=https://registry.npmjs.org/ --yes",
     "test": "yarn && yarn lint:js && yarn lint:ts && yarn lint:other && node bin/testUpdated.js",
     "test:all": "yarn && yarn dist && yarn lint && lerna run test"
   },

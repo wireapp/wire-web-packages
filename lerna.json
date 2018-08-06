@@ -1,5 +1,12 @@
 {
-  "lerna": "2.5.1",
+  "command": {
+    "publish": {
+      "allowBranch": "master",
+      "conventionalCommits": true,
+      "message": "[skip ci] chore: Publish %s"
+    }
+  },
+  "ignoreChanges": ["**/demo/**"],
   "npmClient": "yarn",
   "npmClientArgs": ["--exact"],
   "useWorkspaces": true,
