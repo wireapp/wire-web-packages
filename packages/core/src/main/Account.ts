@@ -52,6 +52,7 @@ import {
   GenericMessageType,
   PayloadBundleIncoming,
   PayloadBundleState,
+  PayloadBundleType,
 } from './conversation/root';
 import {CryptographyService} from './cryptography/root';
 import {NotificationService} from './notification/root';
@@ -68,25 +69,6 @@ class Account extends EventEmitter {
     markdown: false,
   });
 
-  public static readonly INCOMING = {
-    ASSET: 'Account.INCOMING.ASSET',
-    ASSET_ABORT: 'Account.INCOMING.ASSET_ABORT',
-    ASSET_META: 'Account.INCOMING.ASSET_META',
-    CLIENT_ACTION: 'Account.INCOMING.CLIENT_ACTION',
-    CONFIRMATION: 'Account.INCOMING.CONFIRMATION',
-    CONNECTION: 'Account.INCOMING.CONNECTION',
-    CONVERSATION_RENAME: 'Account.INCOMING.CONVERSATION_RENAME',
-    DELETED: 'Account.INCOMING.DELETED',
-    EDITED: 'Account.INCOMING.EDITED',
-    HIDDEN: 'Account.INCOMING.HIDDEN',
-    IMAGE: 'Account.INCOMING.IMAGE',
-    MEMBER_JOIN: 'Account.INCOMING.MEMBER_JOIN',
-    MESSAGE_TIMER_UPDATE: 'Account.INCOMING.MESSAGE_TIMER_UPDATE',
-    PING: 'Account.INCOMING.PING',
-    REACTION: 'Account.INCOMING.REACTION',
-    TEXT_MESSAGE: 'Account.INCOMING.TEXT_MESSAGE',
-    TYPING: 'Account.INCOMING.TYPING',
-  };
   private readonly apiClient: APIClient;
   public service?: {
     client: ClientService;
@@ -298,7 +280,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: genericMessage.content,
+          type: PayloadBundleType.TEXT,
         };
       }
       case GenericMessageType.DELETED: {
@@ -313,7 +295,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: genericMessage.content,
+          type: PayloadBundleType.MESSAGE_DELETE,
         };
       }
       case GenericMessageType.EDITED: {
@@ -345,7 +327,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: genericMessage.content,
+          type: PayloadBundleType.MESSAGE_HIDE,
         };
       }
       case GenericMessageType.ASSET: {
@@ -367,7 +349,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: isImage ? GenericMessageType.IMAGE : genericMessage.content,
+          type: isImage ? PayloadBundleType.ASSET_IMAGE : genericMessage.content,
         };
       }
       case GenericMessageType.REACTION: {
@@ -383,7 +365,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: genericMessage.content,
+          type: PayloadBundleType.REACTION,
         };
       }
       default: {
@@ -395,7 +377,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: genericMessage.content,
+          type: PayloadBundleType.UNKNOWN,
         };
       }
     }
@@ -410,8 +392,23 @@ class Account extends EventEmitter {
       messageTimer: 0,
       state: PayloadBundleState.INCOMING,
       timestamp: new Date(event.time).getTime(),
-      type: event.type,
+      type: this.mapConversationEventType(event.type),
     };
+  }
+
+  private mapConversationEventType(type: CONVERSATION_EVENT): PayloadBundleType {
+    switch (type) {
+      case CONVERSATION_EVENT.MEMBER_JOIN:
+        return PayloadBundleType.MEMBER_JOIN;
+      case CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE:
+        return PayloadBundleType.TIMER_UPDATE;
+      case CONVERSATION_EVENT.RENAME:
+        return PayloadBundleType.CONVERSATION_RENAME;
+      case CONVERSATION_EVENT.TYPING:
+        return PayloadBundleType.TYPING;
+      default:
+        return PayloadBundleType.UNKNOWN;
+    }
   }
 
   private mapUserEvent(event: UserEvent): PayloadBundleIncoming | void {
@@ -425,7 +422,7 @@ class Account extends EventEmitter {
         messageTimer: 0,
         state: PayloadBundleState.INCOMING,
         timestamp: new Date(connectionEvent.connection.last_update).getTime(),
-        type: USER_EVENT.CONNECTION,
+        type: PayloadBundleType.CONNECTION_REQUEST,
       };
     }
   }
@@ -458,74 +455,52 @@ class Account extends EventEmitter {
       const data = await this.handleEvent(event);
       if (data) {
         switch (data.type) {
-          case GenericMessageType.ASSET: {
+          case PayloadBundleType.CLIENT_ACTION:
+          case PayloadBundleType.CONFIRMATION:
+          case PayloadBundleType.MESSAGE_DELETE:
+          case PayloadBundleType.MESSAGE_HIDE:
+          case PayloadBundleType.ASSET_IMAGE:
+          case PayloadBundleType.PING:
+          case PayloadBundleType.REACTION:
+          case PayloadBundleType.TEXT:
+            this.emit(data.type, data);
+            break;
+          case PayloadBundleType.ASSET: {
             const assetContent = data.content as AssetContent;
             const isMetaData = !!assetContent && !!assetContent.original && !assetContent.uploaded;
             const isAbort = !!assetContent.abortReason || (!assetContent.original && !assetContent.uploaded);
 
             if (isMetaData) {
-              this.emit(Account.INCOMING.ASSET_META, data);
+              this.emit(PayloadBundleType.ASSET_META, data);
             } else if (isAbort) {
-              this.emit(Account.INCOMING.ASSET_ABORT, data);
+              this.emit(PayloadBundleType.ASSET_ABORT, data);
             } else {
-              this.emit(Account.INCOMING.ASSET, data);
+              this.emit(PayloadBundleType.ASSET, data);
             }
             break;
           }
-          case GenericMessageType.IMAGE:
-            this.emit(Account.INCOMING.IMAGE, data);
-            break;
-          case GenericMessageType.CLIENT_ACTION:
-            this.emit(Account.INCOMING.CLIENT_ACTION, data);
-            break;
-          case GenericMessageType.CONFIRMATION:
-            this.emit(Account.INCOMING.CONFIRMATION, data);
-            break;
-          case GenericMessageType.DELETED:
-            this.emit(Account.INCOMING.DELETED, data);
-            break;
-          case GenericMessageType.EDITED:
-            this.emit(Account.INCOMING.EDITED, data);
-            break;
-          case GenericMessageType.HIDDEN:
-            this.emit(Account.INCOMING.HIDDEN, data);
-            break;
-          case GenericMessageType.KNOCK:
-            this.emit(Account.INCOMING.PING, data);
-            break;
-          case GenericMessageType.REACTION:
-            this.emit(Account.INCOMING.REACTION, data);
-            break;
-          case GenericMessageType.TEXT:
-            this.emit(Account.INCOMING.TEXT_MESSAGE, data);
-            break;
-          case CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE: {
-            const {
-              data: {message_timer},
-              conversation,
-            } = event as ConversationMessageTimerUpdateEvent;
-            const expireAfterMillis = Number(message_timer);
-            this.logger.log(
-              `Received "${expireAfterMillis}" ms timer on conversation level for conversation "${conversation}".`
-            );
-            this.service!.conversation.messageTimer.setConversationLevelTimer(conversation, expireAfterMillis);
-            this.emit(Account.INCOMING.MESSAGE_TIMER_UPDATE, event);
+          case PayloadBundleType.TIMER_UPDATE: {
+            if (data.type === PayloadBundleType.TIMER_UPDATE) {
+              const {
+                data: {message_timer},
+                conversation,
+              } = event as ConversationMessageTimerUpdateEvent;
+              const expireAfterMillis = Number(message_timer);
+              this.logger.log(
+                `Received "${expireAfterMillis}" ms timer on conversation level for conversation "${conversation}".`
+              );
+              this.service!.conversation.messageTimer.setConversationLevelTimer(conversation, expireAfterMillis);
+            }
+
+            this.emit(data.type, event);
             break;
           }
-          case CONVERSATION_EVENT.MEMBER_JOIN:
-            this.emit(Account.INCOMING.MEMBER_JOIN, event);
+          case PayloadBundleType.CONNECTION_REQUEST:
+          case PayloadBundleType.CONVERSATION_RENAME:
+          case PayloadBundleType.MEMBER_JOIN:
+          case PayloadBundleType.TYPING:
+            this.emit(data.type, event);
             break;
-          case CONVERSATION_EVENT.RENAME:
-            this.emit(Account.INCOMING.CONVERSATION_RENAME, event);
-            break;
-          case CONVERSATION_EVENT.TYPING: {
-            this.emit(Account.INCOMING.TYPING, event);
-            break;
-          }
-          case USER_EVENT.CONNECTION: {
-            this.emit(Account.INCOMING.CONNECTION, event);
-            break;
-          }
         }
       } else {
         this.logger.log(

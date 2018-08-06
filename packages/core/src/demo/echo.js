@@ -18,6 +18,7 @@ const logger = logdown('@wireapp/core/demo/echo.js', {
 logger.state.isEnabled = true;
 
 const {Account} = require('@wireapp/core');
+const {PayloadBundleType} = require('@wireapp/core/dist/conversation/root');
 const {APIClient} = require('@wireapp/api-client');
 const {Config} = require('@wireapp/api-client/dist/commonjs/Config');
 const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/ClientType');
@@ -41,7 +42,7 @@ const messageEchoCache = {};
   const apiClient = new APIClient(new Config(engine, backend));
   const account = new Account(apiClient);
 
-  account.on(Account.INCOMING.TEXT_MESSAGE, async data => {
+  account.on(PayloadBundleType.TEXT, async data => {
     const {conversation: conversationId, from, content, id: messageId, messageTimer} = data;
     logger.log(
       `Message "${messageId}" in "${conversationId}" from "${from}":`,
@@ -59,12 +60,12 @@ const messageEchoCache = {};
     account.service.conversation.messageTimer.setMessageLevelTimer(conversationId, 0);
   });
 
-  account.on(Account.INCOMING.CONFIRMATION, data => {
+  account.on(PayloadBundleType.CONFIRMATION, data => {
     const {conversation: conversationId, from, id: messageId} = data;
     logger.log(`Confirmation "${messageId}" in "${conversationId}" from "${from}".`);
   });
 
-  account.on(Account.INCOMING.ASSET, async data => {
+  account.on(PayloadBundleType.ASSET, async data => {
     const {conversation: conversationId, from, content, id: messageId, messageTimer} = data;
     logger.log(
       `Asset "${messageId}" in "${conversationId}" from "${from}":`,
@@ -98,7 +99,7 @@ const messageEchoCache = {};
     }
   });
 
-  account.on(Account.INCOMING.ASSET_META, data => {
+  account.on(PayloadBundleType.ASSET_META, data => {
     const {conversation: conversationId, from, content, id: messageId, messageTimer} = data;
     logger.log(
       `Asset metadata "${messageId}" in "${conversationId}" from "${from}":`,
@@ -109,7 +110,7 @@ const messageEchoCache = {};
     assetOriginalCache[messageId] = content.original;
   });
 
-  account.on(Account.INCOMING.ASSET_ABORT, async data => {
+  account.on(PayloadBundleType.ASSET_ABORT, async data => {
     const {conversation: conversationId, from, content, id: messageId, messageTimer} = data;
     logger.log(
       `Asset "${messageId}" not uploaded (reason: "${content.abortReason}") in "${conversationId}" from "${from}":`,
@@ -135,7 +136,7 @@ const messageEchoCache = {};
     delete assetOriginalCache[data.messageId];
   });
 
-  account.on(Account.INCOMING.IMAGE, async data => {
+  account.on(PayloadBundleType.ASSET_IMAGE, async data => {
     const {
       conversation: conversationId,
       from,
@@ -159,7 +160,7 @@ const messageEchoCache = {};
     await account.service.conversation.send(conversationId, imagePayload);
   });
 
-  account.on(Account.INCOMING.PING, async data => {
+  account.on(PayloadBundleType.PING, async data => {
     const {conversation: conversationId, from, messageTimer} = data;
     logger.log(
       `Ping in "${conversationId}" from "${from}".`,
@@ -171,7 +172,7 @@ const messageEchoCache = {};
     account.service.conversation.messageTimer.setMessageLevelTimer(conversationId, 0);
   });
 
-  account.on(Account.INCOMING.REACTION, async data => {
+  account.on(PayloadBundleType.REACTION, async data => {
     const {conversation: conversationId, from, content} = data;
     logger.log(`Reaction in "${conversationId}" from "${from}": "${content.emoji}".`);
 
@@ -195,7 +196,7 @@ const messageEchoCache = {};
     }
   });
 
-  account.on(Account.INCOMING.DELETED, async data => {
+  account.on(PayloadBundleType.DELETED, async data => {
     const {conversation: conversationId, id: messageId, content, from} = data;
     logger.log(`Deleted message "${messageId}" in "${conversationId}" by "${from}".`, content);
 
@@ -206,7 +207,7 @@ const messageEchoCache = {};
     delete messageEchoCache[messageId];
   });
 
-  account.on(Account.INCOMING.EDITED, async data => {
+  account.on(PayloadBundleType.MESSAGE_EDIT, async data => {
     const {conversation: conversationId, id: messageId, content, from} = data;
     logger.log(`Edited message "${messageId}" in "${conversationId}" by "${from}".`, content);
 
@@ -217,12 +218,12 @@ const messageEchoCache = {};
     await account.service.conversation.send(conversationId, editedPayload);
   });
 
-  account.on(Account.INCOMING.HIDDEN, async data => {
+  account.on(PayloadBundleType.MESSAGE_HIDE, async data => {
     const {conversation: conversationId, id: messageId, from} = data;
     logger.log(`Hidden message "${messageId}" in "${conversationId}" by "${from}".`, data);
   });
 
-  account.on(Account.INCOMING.CONNECTION, async data => {
+  account.on(PayloadBundleType.CONNECTION_REQUEST, async data => {
     const {
       connection: {conversation: conversationId, to: connectingUserId},
       user: {name: connectingUser},
