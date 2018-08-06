@@ -127,7 +127,7 @@ describe('Account', () => {
     done();
   });
 
-  describe('Message Sending', () => {
+  describe('"Message Sending"', () => {
     beforeAll(async done => {
       if (CAN_RUN) {
         expect(ValidationUtil.isUUIDv4(alice.apiClient.context.userId)).toBe(true);
@@ -152,7 +152,7 @@ describe('Account', () => {
 
       const message = 'Hello, Bob!';
 
-      bob.on(PayloadBundleType.TEXT_MESSAGE, async payload => {
+      bob.on(PayloadBundleType.TEXT, async payload => {
         expect(payload.content.text).toBe(message);
         done();
       });

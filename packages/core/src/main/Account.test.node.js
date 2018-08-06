@@ -171,7 +171,7 @@ describe('Account', () => {
       expect(incomingEvent.messageTimer).toBe(0);
       expect(incomingEvent.state).toBe(PayloadBundleState.INCOMING);
       expect(incomingEvent.timestamp).toBe(new Date(event.time).getTime());
-      expect(incomingEvent.type).toBe(PayloadBundleType.MESSAGE_TIMER_UPDATE);
+      expect(incomingEvent.type).toBe(PayloadBundleType.TIMER_UPDATE);
     });
 
     it('maps "conversation.member-join" events', () => {
@@ -273,7 +273,7 @@ describe('Account', () => {
       expect(incomingEvent.messageTimer).toBe(0);
       expect(incomingEvent.state).toBe(PayloadBundleState.INCOMING);
       expect(incomingEvent.timestamp).toBe(new Date(event.connection.last_update).getTime());
-      expect(incomingEvent.type).toBe(PayloadBundleType.CONNECTION);
+      expect(incomingEvent.type).toBe(PayloadBundleType.CONNECTION_REQUEST);
     });
   });
 

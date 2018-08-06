@@ -634,7 +634,7 @@ class ConversationService {
       id: messageId,
       state: PayloadBundleState.OUTGOING_UNSENT,
       timestamp: Date.now(),
-      type: PayloadBundleType.IMAGE,
+      type: PayloadBundleType.ASSET_IMAGE,
     };
   }
 
@@ -664,7 +664,7 @@ class ConversationService {
       id: messageId,
       state: PayloadBundleState.OUTGOING_UNSENT,
       timestamp: Date.now(),
-      type: PayloadBundleType.TEXT_MESSAGE,
+      type: PayloadBundleType.TEXT,
     };
   }
 
@@ -731,7 +731,7 @@ class ConversationService {
       messageTimer: this.messageTimer.getMessageTimer(conversationId),
       state: PayloadBundleState.OUTGOING_SENT,
       timestamp: Date.now(),
-      type: PayloadBundleType.HIDDEN,
+      type: PayloadBundleType.MESSAGE_HIDE,
     };
   }
 
@@ -759,7 +759,7 @@ class ConversationService {
       messageTimer: this.messageTimer.getMessageTimer(conversationId),
       state: PayloadBundleState.OUTGOING_SENT,
       timestamp: Date.now(),
-      type: PayloadBundleType.DELETED,
+      type: PayloadBundleType.MESSAGE_DELETE,
     };
   }
 
@@ -835,7 +835,7 @@ class ConversationService {
         return this.sendFileAbort(conversationId, payloadBundle);
       case PayloadBundleType.ASSET_META:
         return this.sendFileMetaData(conversationId, payloadBundle);
-      case PayloadBundleType.IMAGE:
+      case PayloadBundleType.ASSET_IMAGE:
         return this.sendImage(conversationId, payloadBundle);
       case PayloadBundleType.CLIENT_ACTION: {
         if (payloadBundle.content === ClientAction.RESET_SESSION) {
@@ -853,7 +853,7 @@ class ConversationService {
         return this.sendPing(conversationId, payloadBundle);
       case PayloadBundleType.REACTION:
         return this.sendReaction(conversationId, payloadBundle);
-      case PayloadBundleType.TEXT_MESSAGE:
+      case PayloadBundleType.TEXT:
         return this.sendText(conversationId, payloadBundle);
       default:
         throw new Error(`No send method implemented for "${payloadBundle.type}".`);

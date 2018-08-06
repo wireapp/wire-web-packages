@@ -273,7 +273,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: PayloadBundleType.TEXT_MESSAGE,
+          type: PayloadBundleType.TEXT,
         };
       }
       case GenericMessageType.DELETED: {
@@ -288,7 +288,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: PayloadBundleType.DELETED,
+          type: PayloadBundleType.MESSAGE_DELETE,
         };
       }
       case GenericMessageType.HIDDEN: {
@@ -304,7 +304,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: PayloadBundleType.HIDDEN,
+          type: PayloadBundleType.MESSAGE_HIDE,
         };
       }
       case GenericMessageType.ASSET: {
@@ -326,7 +326,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: isImage ? PayloadBundleType.IMAGE : genericMessage.content,
+          type: isImage ? PayloadBundleType.ASSET_IMAGE : genericMessage.content,
         };
       }
       case GenericMessageType.REACTION: {
@@ -378,7 +378,7 @@ class Account extends EventEmitter {
       case CONVERSATION_EVENT.MEMBER_JOIN:
         return PayloadBundleType.MEMBER_JOIN;
       case CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE:
-        return PayloadBundleType.MESSAGE_TIMER_UPDATE;
+        return PayloadBundleType.TIMER_UPDATE;
       case CONVERSATION_EVENT.RENAME:
         return PayloadBundleType.CONVERSATION_RENAME;
       case CONVERSATION_EVENT.TYPING:
@@ -399,7 +399,7 @@ class Account extends EventEmitter {
         messageTimer: 0,
         state: PayloadBundleState.INCOMING,
         timestamp: new Date(connectionEvent.connection.last_update).getTime(),
-        type: PayloadBundleType.CONNECTION,
+        type: PayloadBundleType.CONNECTION_REQUEST,
       };
     }
   }
@@ -434,12 +434,12 @@ class Account extends EventEmitter {
         switch (data.type) {
           case PayloadBundleType.CLIENT_ACTION:
           case PayloadBundleType.CONFIRMATION:
-          case PayloadBundleType.DELETED:
-          case PayloadBundleType.HIDDEN:
-          case PayloadBundleType.IMAGE:
+          case PayloadBundleType.MESSAGE_DELETE:
+          case PayloadBundleType.MESSAGE_HIDE:
+          case PayloadBundleType.ASSET_IMAGE:
           case PayloadBundleType.PING:
           case PayloadBundleType.REACTION:
-          case PayloadBundleType.TEXT_MESSAGE:
+          case PayloadBundleType.TEXT:
             this.emit(data.type, data);
           case PayloadBundleType.ASSET: {
             const assetContent = data.content as AssetContent;
@@ -455,8 +455,8 @@ class Account extends EventEmitter {
             }
             break;
           }
-          case PayloadBundleType.MESSAGE_TIMER_UPDATE: {
-            if (data.type === PayloadBundleType.MESSAGE_TIMER_UPDATE) {
+          case PayloadBundleType.TIMER_UPDATE: {
+            if (data.type === PayloadBundleType.TIMER_UPDATE) {
               const {
                 data: {message_timer},
                 conversation,
@@ -471,7 +471,7 @@ class Account extends EventEmitter {
             this.emit(data.type, event);
             break;
           }
-          case PayloadBundleType.CONNECTION:
+          case PayloadBundleType.CONNECTION_REQUEST:
           case PayloadBundleType.CONVERSATION_RENAME:
           case PayloadBundleType.MEMBER_JOIN:
           case PayloadBundleType.TYPING:
