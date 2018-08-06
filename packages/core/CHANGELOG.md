@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="5.0.0"></a>
+# [5.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@4.0.8...@wireapp/core@5.0.0) (2018-08-03)
+
+
+### Features
+
+* **core:** Send and receive files (WEBFOUND-4) ([#932](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/932)) ([2a629b0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/2a629b0))
+
+
+### BREAKING CHANGES
+
+* **core:** getImage() was renamed to getAsset()
+
+
+
+
+<a name="4.0.8"></a>
+## [4.0.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@4.0.7...@wireapp/core@4.0.8) (2018-08-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="4.0.7"></a>
+## [4.0.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@4.0.6...@wireapp/core@4.0.7) (2018-08-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="4.0.6"></a>
+## [4.0.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@4.0.5...@wireapp/core@4.0.6) (2018-08-03)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
 <a name="4.0.5"></a>
 ## [4.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@4.0.4...@wireapp/core@4.0.5) (2018-08-02)
 

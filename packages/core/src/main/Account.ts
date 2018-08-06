@@ -308,10 +308,14 @@ class Account extends EventEmitter {
         };
       }
       case GenericMessageType.ASSET: {
+        const {uploaded, original} = genericMessage.asset;
+        const isImage = !!uploaded && !!uploaded.assetId && !!original && !!original.image;
+
         const content: AssetContent = {
-          abortReason: genericMessage.asset.not_uploaded,
+          abortReason: genericMessage.asset.notUploaded,
           original: genericMessage.asset.original,
           preview: genericMessage.asset.preview,
+          status: genericMessage.asset.status,
           uploaded: genericMessage.asset.uploaded,
         };
         return {
@@ -322,7 +326,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: PayloadBundleType.ASSET,
+          type: isImage ? PayloadBundleType.IMAGE : genericMessage.content,
         };
       }
       case GenericMessageType.REACTION: {
@@ -437,6 +441,40 @@ class Account extends EventEmitter {
           case PayloadBundleType.REACTION:
           case PayloadBundleType.TEXT_MESSAGE:
             this.emit(data.type, data);
+          case GenericMessageType.ASSET: {
+            const assetContent = data.content as AssetContent;
+            const isMetaData = !!assetContent && !!assetContent.original && !assetContent.uploaded;
+            const isAbort = !!assetContent.abortReason || (!assetContent.original && !assetContent.uploaded);
+
+            if (isMetaData) {
+              this.emit(Account.INCOMING.ASSET_META, data);
+            } else if (isAbort) {
+              this.emit(Account.INCOMING.ASSET_ABORT, data);
+            } else {
+              this.emit(Account.INCOMING.ASSET, data);
+            }
+            break;
+          }
+          case GenericMessageType.IMAGE:
+            this.emit(Account.INCOMING.IMAGE, data);
+            break;
+          case GenericMessageType.CLIENT_ACTION:
+            this.emit(Account.INCOMING.CLIENT_ACTION, data);
+            break;
+          case GenericMessageType.CONFIRMATION:
+            this.emit(Account.INCOMING.CONFIRMATION, data);
+            break;
+          case GenericMessageType.DELETED:
+            this.emit(Account.INCOMING.DELETED, data);
+            break;
+          case GenericMessageType.HIDDEN:
+            this.emit(Account.INCOMING.HIDDEN, data);
+            break;
+          case GenericMessageType.KNOCK:
+            this.emit(Account.INCOMING.PING, data);
+            break;
+          case GenericMessageType.REACTION:
+            this.emit(Account.INCOMING.REACTION, data);
             break;
           case PayloadBundleType.MESSAGE_TIMER_UPDATE: {
             if (data.type === PayloadBundleType.MESSAGE_TIMER_UPDATE) {
