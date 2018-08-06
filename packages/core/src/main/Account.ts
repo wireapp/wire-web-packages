@@ -441,6 +441,7 @@ class Account extends EventEmitter {
           case PayloadBundleType.REACTION:
           case PayloadBundleType.TEXT:
             this.emit(data.type, data);
+            break;
           case PayloadBundleType.ASSET: {
             const assetContent = data.content as AssetContent;
             const isMetaData = !!assetContent && !!assetContent.original && !assetContent.uploaded;
