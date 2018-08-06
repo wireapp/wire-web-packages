@@ -23,11 +23,11 @@ import {isBrowser} from './EnvironmentUtil';
 import {RecordAlreadyExistsError, RecordNotFoundError, UnsupportedError} from './error';
 import {RecordTypeError} from './error/';
 
-export type FileSystemEngineOptions = {
+export interface FileSystemEngineOptions {
   fileExtension: string;
-  type: number;
   size: number;
-};
+  type: number;
+}
 
 const TEN_MEGABYTES = 1024 * 1024 * 10;
 
@@ -133,7 +133,7 @@ export default class FileSystemEngine implements CRUDEngine {
       try {
         return JSON.parse(data);
       } catch (error) {
-        return data;
+        throw new Error(`Record "${primaryKey}" in "${tableName}" could not be parsed as JSON.`);
       }
     } catch (error) {
       const message: string = `Record "${primaryKey}" in "${tableName}" could not be found.`;
