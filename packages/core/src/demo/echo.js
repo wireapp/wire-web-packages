@@ -25,7 +25,7 @@ const {CONVERSATION_TYPING} = require('@wireapp/api-client/dist/commonjs/event/'
 const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine/');
 
 const assetOriginalCache = {};
-let lastSentMessage;
+const messageEchoCache = {};
 
 (async () => {
   const login = {
@@ -53,7 +53,7 @@ let lastSentMessage;
     await account.service.conversation.send(conversationId, confirmationPayload);
 
     const textPayload = account.service.conversation.createText(content.text);
-    lastSentMessage = textPayload;
+    messageEchoCache[messageId] = textPayload.id;
     account.service.conversation.messageTimer.setConversationLevelTimer(conversationId, messageTimer);
     await account.service.conversation.send(conversationId, textPayload);
     account.service.conversation.messageTimer.setMessageLevelTimer(conversationId, 0);
@@ -196,17 +196,24 @@ let lastSentMessage;
   });
 
   account.on(Account.INCOMING.DELETED, async data => {
-    const {conversation: conversationId, id: messageId, from} = data;
-    logger.log(`Deleted message "${messageId}" in "${conversationId}" by "${from}".`, data);
+    const {conversation: conversationId, id: messageId, content, from} = data;
+    logger.log(`Deleted message "${messageId}" in "${conversationId}" by "${from}".`, content);
 
-    await account.service.conversation.deleteMessageEveryone(conversationId, lastSentMessage.id);
+    await account.service.conversation.deleteMessageEveryone(
+      conversationId,
+      messageEchoCache[content.originalMessageId]
+    );
+    delete messageEchoCache[messageId];
   });
 
   account.on(Account.INCOMING.EDITED, async data => {
     const {conversation: conversationId, id: messageId, content, from} = data;
     logger.log(`Edited message "${messageId}" in "${conversationId}" by "${from}".`, content);
 
-    const editedPayload = account.service.conversation.createEditedText(content.text, lastSentMessage.id);
+    const editedPayload = account.service.conversation.createEditedText(
+      content.text,
+      messageEchoCache[content.originalMessageId]
+    );
     await account.service.conversation.send(conversationId, editedPayload);
   });
 
