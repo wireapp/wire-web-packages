@@ -595,8 +595,6 @@ class ConversationService {
       messageId,
     });
 
-    console.log({genericMessage});
-
     const {id: selfConversationId} = await this.getSelfConversation();
 
     await this.sendGenericMessage(this.clientID, selfConversationId, genericMessage);
