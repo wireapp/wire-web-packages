@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@types/filesystem": "0.0.28",
-    "@types/node": "10.5.6",
+    "@types/node": "10.5.7",
     "bro-fs": "0.4.0",
     "dexie": "2.0.4",
     "fs-extra": "7.0.0"
@@ -15,7 +15,7 @@
     "karma-sourcemap-loader": "0.3.7",
     "rimraf": "2.6.2",
     "typescript": "3.0.1",
-    "webpack": "4.16.4",
+    "webpack": "4.16.5",
     "webpack-cli": "3.1.0"
   },
   "description": "Provides a generic storage layer for File, FileSystem, IndexedDB, Memory & LocalStorage.",
