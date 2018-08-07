@@ -81,11 +81,13 @@ class APIClient {
   private readonly accessTokenStore: AccessTokenStore;
   public context?: Context;
   public transport: {http: HttpClient; ws: WebSocketClient};
+  public config: Config;
 
   public static BACKEND = Backend;
   public static VERSION = version;
 
-  constructor(public config: Config = defaultConfig) {
+  constructor(config?: Config) {
+    this.config = {...defaultConfig, ...config};
     this.accessTokenStore = new AccessTokenStore();
 
     const httpClient = new HttpClient(this.config.urls.rest, this.accessTokenStore, this.config.store);
