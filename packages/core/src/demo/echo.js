@@ -58,10 +58,6 @@ const messageEchoCache = {};
     account.service.conversation.messageTimer.setConversationLevelTimer(conversationId, messageTimer);
     await account.service.conversation.send(conversationId, textPayload);
     account.service.conversation.messageTimer.setMessageLevelTimer(conversationId, 0);
-
-    if (content.text === 'clear') {
-      await account.service.conversation.clearConversation(conversationId);
-    }
   });
 
   account.on(PayloadBundleType.CONFIRMATION, data => {
