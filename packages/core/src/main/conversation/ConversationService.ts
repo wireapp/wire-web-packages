@@ -105,13 +105,19 @@ class ConversationService {
     return genericMessage;
   }
 
-  private async getPreKeyBundles(conversationId: string): Promise<UserPreKeyBundleMap> {
+  private async getPreKeyBundles(
+    conversationId: string,
+    skipOwnClients = false,
+    userIds?: string[]
+  ): Promise<UserPreKeyBundleMap> {
     const conversation = await this.apiClient.conversation.api.getConversation(conversationId);
-    const preKeys = await Promise.all(
-      conversation.members.others.map(async member => this.apiClient.user.api.getUserPreKeys(member.id))
-    );
-    const selfPreKey = await this.apiClient.user.api.getUserPreKeys(conversation.members.self.id);
-    preKeys.push(selfPreKey);
+    const members = userIds && userIds.length ? userIds.map(id => ({id})) : conversation.members.others;
+    const preKeys = await Promise.all(members.map(async member => this.apiClient.user.api.getUserPreKeys(member.id)));
+
+    if (!skipOwnClients) {
+      const selfPreKey = await this.apiClient.user.api.getUserPreKeys(conversation.members.self.id);
+      preKeys.push(selfPreKey);
+    }
 
     return preKeys.reduce((bundleMap: UserPreKeyBundleMap, bundle) => {
       bundleMap[bundle.user] = {};
