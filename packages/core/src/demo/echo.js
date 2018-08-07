@@ -161,7 +161,8 @@ const assetOriginalCache = {};
   account.on(PayloadBundleType.LOCATION, async data => {
     const {conversation: conversationId, from, messageTimer} = data;
     logger.log(
-      `Location in "${conversationId}" from "${from}".`,
+      `Location in "${conversationId}" from "${from}":`,
+      data.content,
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
     );
 
