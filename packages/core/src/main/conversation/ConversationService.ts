@@ -669,7 +669,7 @@ class ConversationService {
   }
 
   public createLocation(
-    location: Location,
+    location: LocationContent,
     messageId: string = ConversationService.createId()
   ): PayloadBundleOutgoingUnsent {
     return {
