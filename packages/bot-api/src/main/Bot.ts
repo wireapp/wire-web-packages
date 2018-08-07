@@ -22,7 +22,7 @@ import {ClientType} from '@wireapp/api-client/dist/commonjs/client/';
 import {Config} from '@wireapp/api-client/dist/commonjs/Config';
 import {Connection, ConnectionStatus} from '@wireapp/api-client/dist/commonjs/connection';
 import {Account} from '@wireapp/core';
-import {PayloadBundleIncoming} from '@wireapp/core/dist/conversation/root';
+import {PayloadBundleIncoming, PayloadBundleType} from '@wireapp/core/dist/conversation/root';
 import {MemoryEngine} from '@wireapp/store-engine';
 import UUID from 'pure-uuid';
 import {BotConfig} from './BotConfig';
@@ -74,7 +74,7 @@ class Bot {
     await engine.init(this.credentials.email);
     const apiClient = new APIClient(new Config(engine, backend));
     this.account = new Account(apiClient);
-    this.account.on(Account.INCOMING.TEXT_MESSAGE, async (payload: PayloadBundleIncoming) => {
+    this.account.on(PayloadBundleType.TEXT, async (payload: PayloadBundleIncoming) => {
       const conversationId = String(payload.conversation);
       if (this.validateMessage(conversationId, payload.from)) {
         this.logger.info('Processing message ...');
@@ -85,7 +85,7 @@ class Bot {
         }
       }
     });
-    this.account.on(Account.INCOMING.CONNECTION, async (payload: PayloadBundleIncoming) => {
+    this.account.on(PayloadBundleType.CONNECTION_REQUEST, async (payload: PayloadBundleIncoming) => {
       const connection: Connection = payload.content as Connection;
       if (connection.status === ConnectionStatus.PENDING && connection.conversation) {
         const {conversation, to: userId} = connection;
