@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="2.1.106"></a>
+## [2.1.106](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@2.1.105...@wireapp/cli-client@2.1.106) (2018-08-07)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+<a name="2.1.105"></a>
+## [2.1.105](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@2.1.104...@wireapp/cli-client@2.1.105) (2018-08-07)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+<a name="2.1.104"></a>
+## [2.1.104](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@2.1.103...@wireapp/cli-client@2.1.104) (2018-08-06)
+
+
+
+
+**Note:** Version bump only for package @wireapp/cli-client
+
 <a name="2.1.103"></a>
 ## [2.1.103](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@2.1.102...@wireapp/cli-client@2.1.103) (2018-08-03)
 

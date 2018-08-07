@@ -38,7 +38,14 @@ import * as Long from 'long';
 import {LoginSanitizer} from './auth/root';
 import {ClientInfo, ClientService} from './client/root';
 import {ConnectionService} from './connection/root';
-import {AssetContent, DeletedContent, HiddenContent, ReactionContent, TextContent} from './conversation/content/';
+import {
+  AssetContent,
+  DeletedContent,
+  EditedTextContent,
+  HiddenContent,
+  ReactionContent,
+  TextContent,
+} from './conversation/content/';
 import {
   AssetService,
   ConversationService,
@@ -291,6 +298,22 @@ class Account extends EventEmitter {
           type: PayloadBundleType.MESSAGE_DELETE,
         };
       }
+      case GenericMessageType.EDITED: {
+        const content: EditedTextContent = {
+          originalMessageId: genericMessage.edited.replacingMessageId,
+          text: genericMessage.edited.text.content,
+        };
+        return {
+          content,
+          conversation: event.conversation,
+          from: event.from,
+          id: genericMessage.messageId,
+          messageTimer: 0,
+          state: PayloadBundleState.INCOMING,
+          timestamp: new Date(event.time).getTime(),
+          type: PayloadBundleType.MESSAGE_EDIT,
+        };
+      }
       case GenericMessageType.HIDDEN: {
         const content: HiddenContent = {
           conversationId: genericMessage.hidden.conversationId,
@@ -480,13 +503,11 @@ class Account extends EventEmitter {
             break;
         }
       } else {
+        const conversationEvent = event as ConversationEvent;
         this.logger.log(
-          `Received unsupported event "${event.type}"` + (event as ConversationEvent).conversation
-            ? `in conversation "${(event as ConversationEvent).conversation}"`
-            : '' + (event as ConversationEvent).from
-              ? `from user "${(event as ConversationEvent).from}"`
-              : '' + '.',
-          event
+          `Received unsupported event "${event.type}" in conversation "${conversationEvent.conversation}" from user "${
+            conversationEvent.from
+          }".`
         );
       }
     }
