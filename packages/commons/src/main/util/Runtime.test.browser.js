@@ -20,8 +20,14 @@
 import {Runtime} from '@wireapp/commons';
 
 describe('Runtime', () => {
+  describe('"isAndroid"', () => {
+    it('knows if running in Android', () => {
+      expect(Runtime.isAndroid()).toEqual(false);
+    });
+  });
+
   describe('"isChrome"', () => {
-    fit('knows if running in Chrome', () => {
+    it('knows if running in Chrome', () => {
       spyOn(Runtime, 'getPlatform').and.returnValue({name: 'chrome'});
       expect(Runtime.isChrome()).toEqual(true);
     });
@@ -36,12 +42,6 @@ describe('Runtime', () => {
   describe('"isOpera"', () => {
     it('knows if running in Opera', () => {
       expect(Runtime.isOpera()).toEqual(false);
-    });
-  });
-
-  describe('"isAndroid"', () => {
-    it('knows if running in Android', () => {
-      expect(Runtime.isAndroid()).toEqual(false);
     });
   });
 });

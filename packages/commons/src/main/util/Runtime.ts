@@ -18,117 +18,134 @@
  */
 
 import * as platform from 'platform';
-import {BROWSER} from '../config/CommonConfig';
+import {BROWSER, WEBAPP_SUPPORTED_BROWSERS} from '../config/CommonConfig';
 
 class Runtime {
+  public static ELECTRON_APP = {
+    FRANZ: 'franz',
+    WIRE: 'wire',
+  };
+
+  public static OS = {
+    DESKTOP: {
+      LINUX: ['linux', 'ubuntu', 'fedora', 'gentoo', 'debian', 'suse', 'centos', 'red hat', 'freebsd', 'openbsd'],
+      MAC: ['os x', 'mac os'],
+      WINDOWS: ['windows', 'windows server 2008 r2 / 7', 'windows server 2008 / vista', 'windows xp'],
+    },
+    MOBILE: {
+      ANDROID: ['android'],
+      IOS: ['ios'],
+    },
+  };
+
   public static getPlatform() {
     return platform;
+  }
+
+  public static getOsFamily() {
+    return Runtime.getOs().family.toLowerCase();
   }
 
   public static getBrowserName() {
     return (Runtime.getPlatform().name || 'unknown').toLowerCase();
   }
 
+  public static getBrowserVersion() {
+    const [majorVersion, minorVersion] = (Runtime.getPlatform().version || 'unknown').split('.');
+    return {major: parseInt(majorVersion, 10), minor: parseInt(minorVersion, 10)};
+  }
+
+  public static getUserAgent() {
+    return (Runtime.getPlatform().ua || 'unknown').toLowerCase();
+  }
+
+  public static isWebappSupportedBrowser() {
+    if (Runtime.isFranz()) {
+      return false;
+    }
+
+    return Object.entries(WEBAPP_SUPPORTED_BROWSERS).some(([browser, supportedVersion]) => {
+      const isBrowserSupported = Runtime.getBrowserName() === browser;
+      const currentVersion = Runtime.getBrowserVersion();
+      const isSupportedMajorVersion = currentVersion.major >= supportedVersion.major;
+      const isHigherMajorVersion = currentVersion.major > supportedVersion.major;
+      const isSupportedMinorVersion = isHigherMajorVersion || currentVersion.minor >= supportedVersion.minor;
+      return isBrowserSupported && isSupportedMajorVersion && isSupportedMinorVersion;
+    });
+  }
+
+  public static getOs() {
+    return {
+      architecture: 'unknown',
+      family: 'unknown',
+      version: 'unknown',
+      ...platform.os,
+    };
+  }
+
   public static isChrome() {
     return Runtime.getBrowserName() === BROWSER.CHROME;
+  }
+
+  public static isEdge() {
+    return Runtime.getBrowserName() === BROWSER.EDGE;
+  }
+
+  public static isFirefox() {
+    return Runtime.getBrowserName() === BROWSER.FIREFOX;
+  }
+
+  public static isInternetExplorer() {
+    return Runtime.getBrowserName() === BROWSER.IE;
+  }
+
+  public static isOpera() {
+    return Runtime.getBrowserName() === BROWSER.OPERA;
+  }
+
+  public static isSafari() {
+    return Runtime.getBrowserName() === BROWSER.SAFARI;
+  }
+
+  public static isDesktopOs() {
+    return Runtime.isMacOS() || Runtime.isWindows() || Runtime.isLinux();
+  }
+
+  public static isElectron() {
+    return Runtime.getBrowserName() === BROWSER.ELECTRON;
+  }
+
+  public static isDesktopApp() {
+    return Runtime.isElectron() && Runtime.getUserAgent().includes(Runtime.ELECTRON_APP.WIRE);
+  }
+
+  public static isFranz() {
+    return Runtime.isElectron() && Runtime.getUserAgent().includes(Runtime.ELECTRON_APP.FRANZ);
+  }
+
+  public static isMacOS() {
+    return Runtime.OS.DESKTOP.MAC.includes(Runtime.getOsFamily());
+  }
+
+  public static isWindows() {
+    return Runtime.OS.DESKTOP.WINDOWS.includes(Runtime.getOsFamily());
+  }
+
+  public static isLinux() {
+    return Runtime.OS.DESKTOP.LINUX.includes(Runtime.getOsFamily());
+  }
+
+  public static isMobileOs() {
+    return Runtime.isAndroid() || Runtime.isIOS();
+  }
+
+  public static isAndroid() {
+    return Runtime.OS.MOBILE.ANDROID.includes(Runtime.getOsFamily());
+  }
+
+  public static isIOS() {
+    return Runtime.OS.MOBILE.IOS.includes(Runtime.getOsFamily());
   }
 }
 
 export {Runtime};
-
-// import {BROWSER, WEBAPP_SUPPORTED_BROWSERS} from '../config/CommonConfig';
-
-// const ELECTRON_APP = {
-//   FRANZ: 'franz',
-//   WIRE: 'wire',
-// };
-
-// export const OS = {
-//   DESKTOP: {
-//     LINUX: ['linux', 'ubuntu', 'fedora', 'gentoo', 'debian', 'suse', 'centos', 'red hat', 'freebsd', 'openbsd'],
-//     MAC: ['os x', 'mac os'],
-//     WINDOWS: ['windows', 'windows server 2008 r2 / 7', 'windows server 2008 / vista', 'windows xp'],
-//   },
-//   MOBILE: {
-//     ANDROID: ['android'],
-//     IOS: ['ios'],
-//   },
-// };
-
-// const getOs = () => {
-//   return {
-//     architecture: 'unknown',
-//     family: 'unknown',
-//     version: 'unknown',
-//     ...platform.os,
-//   };
-// };
-
-// const getPlatform = (): Platform => platform;
-// const getUserAgent = () => (getPlatform().ua || 'unknown').toLowerCase();
-
-// const getOsFamily = () => getOs().family.toLowerCase();
-// const getBrowserName = () => (getPlatform().name || 'unknown').toLowerCase();
-// const getBrowserVersion = () => {
-//   const [majorVersion, minorVersion] = (getPlatform().version || 'unknown').split('.');
-//   return {major: parseInt(majorVersion, 10), minor: parseInt(minorVersion, 10)};
-// };
-
-// const isWebappSupportedBrowser = () => {
-//   if (isFranz()) {
-//     return false;
-//   }
-
-//   return Object.entries(WEBAPP_SUPPORTED_BROWSERS).some(([browser, supportedVersion]) => {
-//     const isBrowserSupported = getBrowserName() === browser;
-//     const currentVersion = getBrowserVersion();
-//     const isSupportedMajorVersion = currentVersion.major >= supportedVersion.major;
-//     const isHigherMajorVersion = currentVersion.major > supportedVersion.major;
-//     const isSupportedMinorVersion = isHigherMajorVersion || currentVersion.minor >= supportedVersion.minor;
-//     return isBrowserSupported && isSupportedMajorVersion && isSupportedMinorVersion;
-//   });
-// };
-
-// const isChrome = () => getBrowserName() === BROWSER.CHROME;
-// const isEdge = () => getBrowserName() === BROWSER.EDGE;
-// const isFirefox = () => getBrowserName() === BROWSER.FIREFOX;
-// const isInternetExplorer = () => getBrowserName() === BROWSER.IE;
-// const isOpera = () => getBrowserName() === BROWSER.OPERA;
-// const isSafari = () => getBrowserName() === BROWSER.SAFARI;
-
-// const isDesktopOs = () => isMacOS() || isWindows() || isLinux();
-// const isElectron = () => getBrowserName() === BROWSER.ELECTRON;
-// const isDesktopApp = () => isElectron() && getUserAgent().includes(ELECTRON_APP.WIRE);
-// const isFranz = () => isElectron() && getUserAgent().includes(ELECTRON_APP.FRANZ);
-
-// const isMacOS = () => OS.DESKTOP.MAC.includes(getOsFamily());
-// const isWindows = () => OS.DESKTOP.WINDOWS.includes(getOsFamily());
-// const isLinux = () => OS.DESKTOP.LINUX.includes(getOsFamily());
-
-// const isMobileOs = () => isAndroid() || isIOS();
-// const isAndroid = () => OS.MOBILE.ANDROID.includes(getOsFamily());
-// const isIOS = () => OS.MOBILE.IOS.includes(getOsFamily());
-
-// export {
-//   getBrowserName,
-//   getOs,
-//   getOsFamily,
-//   getPlatform,
-//   isAndroid,
-//   isChrome,
-//   isDesktopApp,
-//   isDesktopOs,
-//   isEdge,
-//   isElectron,
-//   isFirefox,
-//   isFranz,
-//   isInternetExplorer,
-//   isIOS,
-//   isLinux,
-//   isMacOS,
-//   isMobileOs,
-//   isOpera,
-//   isSafari,
-//   isWebappSupportedBrowser,
-//   isWindows,
-// };
