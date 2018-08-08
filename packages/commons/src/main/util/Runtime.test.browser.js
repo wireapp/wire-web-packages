@@ -17,12 +17,14 @@
  *
  */
 
-import * as CommonConfig from './config/CommonConfig';
-import * as ArrayUtil from './util/ArrayUtil';
-import * as RandomUtil from './util/RandomUtil';
-import * as Runtime from './util/Runtime';
-import * as StringUtil from './util/StringUtil';
-import * as UrlUtil from './util/UrlUtil';
-import * as ValidationUtil from './util/ValidationUtil';
+import {Runtime} from '@wireapp/commons';
 
-export {ArrayUtil, CommonConfig, RandomUtil, Runtime, StringUtil, UrlUtil, ValidationUtil};
+describe('Runtime', () => {
+  describe('"isElectron"', () => {
+    it('knows if running in Electron wrapper', () => {
+      const expected = false;
+      const actual = Runtime.isElectron();
+      expect(actual).toEqual(expected);
+    });
+  });
+});
