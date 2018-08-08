@@ -18,16 +18,7 @@
  */
 
 import * as platform from 'platform';
-
-const BROWSER = {
-  CHROME: 'chrome',
-  EDGE: 'microsoft edge',
-  ELECTRON: 'electron',
-  FIREFOX: 'firefox',
-  IE: 'ie',
-  OPERA: 'opera',
-  SAFARI: 'safari',
-};
+import {BROWSER, WEBAPP_SUPPORTED_BROWSERS} from '../config/CommonConfig';
 
 const ELECTRON_APP = {
   FRANZ: 'franz',
@@ -46,14 +37,6 @@ export const OS = {
   },
 };
 
-export const WEBAPP_SUPPORTED_BROWSERS = {
-  [BROWSER.CHROME]: {major: 56, minor: 0},
-  [BROWSER.FIREFOX]: {major: 60, minor: 0},
-  [BROWSER.EDGE]: {major: 15, minor: 0},
-  [BROWSER.ELECTRON]: {major: 1, minor: 6},
-  [BROWSER.OPERA]: {major: 43, minor: 0},
-};
-
 const getOs = () => {
   return {
     architecture: 'unknown',
@@ -63,12 +46,13 @@ const getOs = () => {
   };
 };
 
-const getUserAgent = () => (platform.ua || 'unknown').toLowerCase();
+const getPlatform = (): Platform => platform;
+const getUserAgent = () => (getPlatform().ua || 'unknown').toLowerCase();
 
 const getOsFamily = () => getOs().family.toLowerCase();
-const getBrowserName = () => (platform.name || 'unknown').toLowerCase();
+const getBrowserName = () => (getPlatform().name || 'unknown').toLowerCase();
 const getBrowserVersion = () => {
-  const [majorVersion, minorVersion] = (platform.version || 'unknown').split('.');
+  const [majorVersion, minorVersion] = (getPlatform().version || 'unknown').split('.');
   return {major: parseInt(majorVersion, 10), minor: parseInt(minorVersion, 10)};
 };
 
@@ -111,6 +95,7 @@ export {
   getBrowserName,
   getOs,
   getOsFamily,
+  getPlatform,
   isAndroid,
   isChrome,
   isDesktopApp,
