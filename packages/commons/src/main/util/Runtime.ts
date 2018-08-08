@@ -22,7 +22,7 @@ import {BROWSER, WEBAPP_SUPPORTED_BROWSERS} from '../config/CommonConfig';
 
 class Runtime {
   private static getPlatform(): Platform {
-    return platform;
+    return platform || {};
   }
 
   public static getOSFamily(): string {
