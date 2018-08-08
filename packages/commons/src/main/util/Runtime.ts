@@ -21,45 +21,28 @@ import * as platform from 'platform';
 import {BROWSER, WEBAPP_SUPPORTED_BROWSERS} from '../config/CommonConfig';
 
 class Runtime {
-  public static ELECTRON_APP = {
-    FRANZ: 'franz',
-    WIRE: 'wire',
-  };
-
-  public static OS = {
-    DESKTOP: {
-      LINUX: ['linux', 'ubuntu', 'fedora', 'gentoo', 'debian', 'suse', 'centos', 'red hat', 'freebsd', 'openbsd'],
-      MAC: ['os x', 'mac os'],
-      WINDOWS: ['windows', 'windows server 2008 r2 / 7', 'windows server 2008 / vista', 'windows xp'],
-    },
-    MOBILE: {
-      ANDROID: ['android'],
-      IOS: ['ios'],
-    },
-  };
-
-  public static getPlatform() {
+  public static getPlatform(): Platform {
     return platform;
   }
 
-  public static getOsFamily() {
-    return Runtime.getOs().family.toLowerCase();
+  public static getOSFamily(): string {
+    return Runtime.getOS().family.toLowerCase();
   }
 
-  public static getBrowserName() {
+  public static getBrowserName(): string {
     return (Runtime.getPlatform().name || 'unknown').toLowerCase();
   }
 
-  public static getBrowserVersion() {
+  public static getBrowserVersion(): {major: number; minor: number} {
     const [majorVersion, minorVersion] = (Runtime.getPlatform().version || 'unknown').split('.');
     return {major: parseInt(majorVersion, 10), minor: parseInt(minorVersion, 10)};
   }
 
-  public static getUserAgent() {
+  public static getUserAgent(): string {
     return (Runtime.getPlatform().ua || 'unknown').toLowerCase();
   }
 
-  public static isWebappSupportedBrowser() {
+  public static isWebappSupportedBrowser(): boolean {
     if (Runtime.isFranz()) {
       return false;
     }
@@ -74,7 +57,7 @@ class Runtime {
     });
   }
 
-  public static getOs() {
+  public static getOS() {
     return {
       architecture: 'unknown',
       family: 'unknown',
@@ -83,68 +66,68 @@ class Runtime {
     };
   }
 
-  public static isChrome() {
+  public static isChrome(): boolean {
     return Runtime.getBrowserName() === BROWSER.CHROME;
   }
 
-  public static isEdge() {
+  public static isEdge(): boolean {
     return Runtime.getBrowserName() === BROWSER.EDGE;
   }
 
-  public static isFirefox() {
+  public static isFirefox(): boolean {
     return Runtime.getBrowserName() === BROWSER.FIREFOX;
   }
 
-  public static isInternetExplorer() {
+  public static isInternetExplorer(): boolean {
     return Runtime.getBrowserName() === BROWSER.IE;
   }
 
-  public static isOpera() {
+  public static isOpera(): boolean {
     return Runtime.getBrowserName() === BROWSER.OPERA;
   }
 
-  public static isSafari() {
+  public static isSafari(): boolean {
     return Runtime.getBrowserName() === BROWSER.SAFARI;
   }
 
-  public static isDesktopOs() {
+  public static isDesktopOS(): boolean {
     return Runtime.isMacOS() || Runtime.isWindows() || Runtime.isLinux();
   }
 
-  public static isElectron() {
+  public static isElectron(): boolean {
     return Runtime.getBrowserName() === BROWSER.ELECTRON;
   }
 
-  public static isDesktopApp() {
-    return Runtime.isElectron() && Runtime.getUserAgent().includes(Runtime.ELECTRON_APP.WIRE);
+  public static isDesktopApp(): boolean {
+    return Runtime.isElectron() && Runtime.getUserAgent().includes('wire');
   }
 
-  public static isFranz() {
-    return Runtime.isElectron() && Runtime.getUserAgent().includes(Runtime.ELECTRON_APP.FRANZ);
+  public static isFranz(): boolean {
+    return Runtime.isElectron() && Runtime.getUserAgent().includes('franz');
   }
 
-  public static isMacOS() {
-    return Runtime.OS.DESKTOP.MAC.includes(Runtime.getOsFamily());
+  public static isMacOS(): boolean {
+    return ['os x', 'mac os'].includes(Runtime.getOSFamily());
   }
 
-  public static isWindows() {
-    return Runtime.OS.DESKTOP.WINDOWS.includes(Runtime.getOsFamily());
+  public static isWindows(): boolean {
+    return Runtime.getOSFamily().indexOf('windows') > -1;
   }
 
-  public static isLinux() {
-    return Runtime.OS.DESKTOP.LINUX.includes(Runtime.getOsFamily());
+  public static isLinux(): boolean {
+    return !Runtime.isWindows() && !Runtime.isMacOS();
   }
 
-  public static isMobileOs() {
+  public static isMobileOS(): boolean {
     return Runtime.isAndroid() || Runtime.isIOS();
   }
 
-  public static isAndroid() {
-    return Runtime.OS.MOBILE.ANDROID.includes(Runtime.getOsFamily());
+  public static isAndroid(): boolean {
+    return Runtime.getOSFamily().indexOf('android') > -1;
   }
 
-  public static isIOS() {
-    return Runtime.OS.MOBILE.IOS.includes(Runtime.getOsFamily());
+  public static isIOS(): boolean {
+    return Runtime.getOSFamily().indexOf('ios') > -1;
   }
 }
 
