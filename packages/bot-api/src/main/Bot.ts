@@ -24,11 +24,10 @@ import {Connection, ConnectionStatus} from '@wireapp/api-client/dist/commonjs/co
 import {Account} from '@wireapp/core';
 import {PayloadBundleIncoming, PayloadBundleType} from '@wireapp/core/dist/conversation/root';
 import {MemoryEngine} from '@wireapp/store-engine';
+import * as logdown from 'logdown';
 import UUID from 'pure-uuid';
 import {BotConfig} from './BotConfig';
 import {MessageHandler} from './MessageHandler';
-
-const logdown = require('logdown');
 
 class Bot {
   public account: Account | undefined;
@@ -74,17 +73,15 @@ class Bot {
     await engine.init(this.credentials.email);
     const apiClient = new APIClient(new Config(engine, backend));
     this.account = new Account(apiClient);
-    this.account.on(PayloadBundleType.TEXT, async (payload: PayloadBundleIncoming) => {
-      const conversationId = String(payload.conversation);
-      if (this.validateMessage(conversationId, payload.from)) {
-        this.logger.info('Processing message ...');
-        try {
-          this.handlers.forEach(handler => handler.handleEvent(payload));
-        } catch (error) {
-          this.logger.error(`An error occurred during text handling: ${error.message}`, error);
-        }
-      }
-    });
+
+    this.account.on(PayloadBundleType.ASSET, this.handlePayload);
+    this.account.on(PayloadBundleType.ASSET_ABORT, this.handlePayload);
+    this.account.on(PayloadBundleType.ASSET_IMAGE, this.handlePayload);
+    this.account.on(PayloadBundleType.ASSET_META, this.handlePayload);
+    this.account.on(PayloadBundleType.AVAILABILITY, this.handlePayload);
+    this.account.on(PayloadBundleType.CALL, this.handlePayload);
+    this.account.on(PayloadBundleType.CLIENT_ACTION, this.handlePayload);
+    this.account.on(PayloadBundleType.CONFIRMATION, this.handlePayload);
     this.account.on(PayloadBundleType.CONNECTION_REQUEST, async (payload: PayloadBundleIncoming) => {
       const connection: Connection = payload.content as Connection;
       if (connection.status === ConnectionStatus.PENDING && connection.conversation) {
@@ -99,10 +96,30 @@ class Bot {
         }
       }
     });
+    this.account.on(PayloadBundleType.CONVERSATION_CLEAR, this.handlePayload);
+    this.account.on(PayloadBundleType.CONVERSATION_RENAME, this.handlePayload);
+    this.account.on(PayloadBundleType.LAST_READ_UPDATE, this.handlePayload);
+    this.account.on(PayloadBundleType.LOCATION, this.handlePayload);
+    this.account.on(PayloadBundleType.MEMBER_JOIN, this.handlePayload);
+    this.account.on(PayloadBundleType.MESSAGE_DELETE, this.handlePayload);
+    this.account.on(PayloadBundleType.MESSAGE_EDIT, this.handlePayload);
+    this.account.on(PayloadBundleType.MESSAGE_HIDE, this.handlePayload);
+    this.account.on(PayloadBundleType.PING, this.handlePayload);
+    this.account.on(PayloadBundleType.REACTION, this.handlePayload);
+    this.account.on(PayloadBundleType.TEXT, this.handlePayload);
+
     await this.account.login(login);
     await this.account.listen();
+
     this.handlers.forEach(handler => (handler.account = this.account));
+
     return true;
+  }
+
+  private handlePayload(payload: PayloadBundleIncoming): void {
+    if (this.validateMessage(payload.conversation, payload.from)) {
+      this.handlers.forEach(handler => handler.handleEvent(payload));
+    }
   }
 
   private validateMessage(conversationID: string, userID: string): boolean {
