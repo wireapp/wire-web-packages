@@ -33,6 +33,18 @@ describe('Runtime', () => {
     });
   });
 
+  describe('"isMacOS"', () => {
+    it('detects OS X', () => {
+      spyOn(Runtime, 'getOS').and.returnValue({family: 'OS X'});
+      expect(Runtime.isMacOS()).toEqual(true);
+    });
+
+    it('detects Mac OS', () => {
+      spyOn(Runtime, 'getOS').and.returnValue({family: 'Mac OS'});
+      expect(Runtime.isMacOS()).toEqual(true);
+    });
+  });
+
   describe('"isElectron"', () => {
     it('knows if running in Electron', () => {
       expect(Runtime.isElectron()).toEqual(false);
