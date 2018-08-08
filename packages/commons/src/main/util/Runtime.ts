@@ -20,6 +20,8 @@
 import * as platform from 'platform';
 import {BROWSER, WEBAPP_SUPPORTED_BROWSERS} from '../config/CommonConfig';
 
+const UNKNOWN_PROPERTY = 'unknown';
+
 class Runtime {
   private static getPlatform(): Platform {
     return platform || {};
@@ -30,16 +32,16 @@ class Runtime {
   }
 
   public static getBrowserName(): string {
-    return (Runtime.getPlatform().name || 'unknown').toLowerCase();
+    return (Runtime.getPlatform().name || UNKNOWN_PROPERTY).toLowerCase();
   }
 
   public static getBrowserVersion(): {major: number; minor: number} {
-    const [majorVersion, minorVersion] = (Runtime.getPlatform().version || 'unknown').split('.');
+    const [majorVersion, minorVersion] = (Runtime.getPlatform().version || UNKNOWN_PROPERTY).split('.');
     return {major: parseInt(majorVersion, 10), minor: parseInt(minorVersion, 10)};
   }
 
   public static getUserAgent(): string {
-    return (Runtime.getPlatform().ua || 'unknown').toLowerCase();
+    return (Runtime.getPlatform().ua || UNKNOWN_PROPERTY).toLowerCase();
   }
 
   public static isWebappSupportedBrowser(): boolean {
@@ -59,9 +61,9 @@ class Runtime {
 
   public static getOS() {
     return {
-      architecture: 'unknown',
-      family: 'unknown',
-      version: 'unknown',
+      architecture: UNKNOWN_PROPERTY,
+      family: UNKNOWN_PROPERTY,
+      version: UNKNOWN_PROPERTY,
       ...platform.os,
     };
   }
