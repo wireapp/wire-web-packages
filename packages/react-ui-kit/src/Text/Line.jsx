@@ -31,7 +31,7 @@ Line.propTypes = {
 };
 
 Line.defaultProps = {
-  color: COLOR.GRAY_LIGHTEN_88,
+  color: COLOR.GRAY_LIGHTEN_72,
 };
 
 export {Line};
