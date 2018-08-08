@@ -45,6 +45,18 @@ describe('Runtime', () => {
     });
   });
 
+  describe('"isWindows"', () => {
+    it('detects Windows', () => {
+      spyOn(Runtime, 'getOS').and.returnValue({family: 'Windows'});
+      expect(Runtime.isWindows()).toEqual(true);
+    });
+
+    it('detects Windows 7', () => {
+      spyOn(Runtime, 'getOS').and.returnValue({family: 'windows server 2008 r2 / 7'});
+      expect(Runtime.isWindows()).toEqual(true);
+    });
+  });
+
   describe('"isElectron"', () => {
     it('knows if running in Electron', () => {
       expect(Runtime.isElectron()).toEqual(false);
