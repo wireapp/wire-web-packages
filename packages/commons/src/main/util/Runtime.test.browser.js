@@ -25,12 +25,16 @@ describe('Runtime', () => {
     it('knows if running on Android', () => {
       spyOn(Runtime, 'getOS').and.returnValue({family: 'Android'});
       expect(Runtime.isAndroid()).toEqual(true);
+      expect(Runtime.isIOS()).toEqual(false);
+      expect(Runtime.isMobileOS()).toEqual(true);
     });
   });
 
   describe('"isChrome"', () => {
     it('knows if running in Chrome', () => {
-      spyOn(Runtime, 'getPlatform').and.returnValue({name: 'chrome'});
+      const userAgent =
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36';
+      spyOn(Runtime, 'getPlatform').and.returnValue(platform.parse(userAgent));
       expect(Runtime.isChrome()).toEqual(true);
       expect(Runtime.isEdge()).toEqual(false);
       expect(Runtime.isFirefox()).toEqual(false);
@@ -44,15 +48,17 @@ describe('Runtime', () => {
     it('knows if running in Electron', () => {
       const userAgent =
         'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.75 Electron/0.37.5 Safari/537.36';
-      spyOn(Runtime, 'getOS').and.returnValue(platform.parse(userAgent));
-      expect(Runtime.isElectron()).toEqual(false);
+      spyOn(Runtime, 'getPlatform').and.returnValue(platform.parse(userAgent));
+      expect(Runtime.isElectron()).toEqual(true);
     });
   });
 
   describe('"isIOS"', () => {
     it('knows if running on iOS', () => {
       spyOn(Runtime, 'getOS').and.returnValue({family: 'iOS'});
+      expect(Runtime.isAndroid()).toEqual(false);
       expect(Runtime.isIOS()).toEqual(true);
+      expect(Runtime.isMobileOS()).toEqual(true);
     });
   });
 
@@ -60,6 +66,8 @@ describe('Runtime', () => {
     it('detects pure Linux', () => {
       spyOn(Runtime, 'getOS').and.returnValue({family: 'Linux'});
       expect(Runtime.isLinux()).toEqual(true);
+      expect(Runtime.isMacOS()).toEqual(false);
+      expect(Runtime.isWindows()).toEqual(false);
     });
 
     it('detects Debian', () => {
@@ -81,7 +89,9 @@ describe('Runtime', () => {
   describe('"isMacOS"', () => {
     it('detects OS X', () => {
       spyOn(Runtime, 'getOS').and.returnValue({family: 'OS X'});
+      expect(Runtime.isLinux()).toEqual(false);
       expect(Runtime.isMacOS()).toEqual(true);
+      expect(Runtime.isWindows()).toEqual(false);
     });
 
     it('detects Mac OS', () => {
@@ -93,6 +103,8 @@ describe('Runtime', () => {
   describe('"isWindows"', () => {
     it('detects Windows', () => {
       spyOn(Runtime, 'getOS').and.returnValue({family: 'Windows'});
+      expect(Runtime.isLinux()).toEqual(false);
+      expect(Runtime.isMacOS()).toEqual(false);
       expect(Runtime.isWindows()).toEqual(true);
     });
 
