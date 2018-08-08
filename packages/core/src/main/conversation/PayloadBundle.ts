@@ -19,7 +19,7 @@
 
 import {ClientActionType} from '../conversation/root';
 
-import {Connection} from '@wireapp/api-client/dist/commonjs/connection';
+import {Connection} from '@wireapp/api-client/dist/commonjs/connection/';
 import {
   AssetContent,
   ClientActionContent,
