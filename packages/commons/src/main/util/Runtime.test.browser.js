@@ -31,7 +31,7 @@ describe('Runtime', () => {
   });
 
   describe('"getBrowserName"', () => {
-    it('still works even if platform fails to load', () => {
+    it('works if platform fails to load properly', () => {
       spyOn(Runtime, 'getPlatform').and.returnValue({});
       expect(Runtime.getBrowserName()).toBe('unknown');
     });
