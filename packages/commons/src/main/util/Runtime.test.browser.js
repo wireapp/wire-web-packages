@@ -27,6 +27,7 @@ describe('Runtime', () => {
       expect(actual).toEqual(expected);
     });
   });
+
   describe('"isOpera"', () => {
     it('knows if running in Opera', () => {
       const expected = false;
@@ -34,6 +35,7 @@ describe('Runtime', () => {
       expect(actual).toEqual(expected);
     });
   });
+
   describe('"isAndroid"', () => {
     it('knows if running in Android', () => {
       const expected = false;

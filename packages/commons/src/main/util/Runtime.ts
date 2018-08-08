@@ -107,28 +107,25 @@ const isMobileOs = () => isAndroid() || isIOS();
 const isAndroid = () => OS.MOBILE.ANDROID.includes(getOsFamily());
 const isIOS = () => OS.MOBILE.IOS.includes(getOsFamily());
 
-//const isSupportingClipboard = () => !!navigator.clipboard;
-
 export {
   getBrowserName,
   getOs,
   getOsFamily,
+  isAndroid,
   isChrome,
+  isDesktopApp,
+  isDesktopOs,
   isEdge,
+  isElectron,
+  isFirefox,
+  isFranz,
   isInternetExplorer,
+  isIOS,
+  isLinux,
+  isMacOS,
+  isMobileOs,
   isOpera,
   isSafari,
-  isFirefox,
-  isDesktopOs,
-  isElectron,
-  isDesktopApp,
-  isFranz,
-  isMacOS,
-  isWindows,
-  isLinux,
-  isMobileOs,
-  isAndroid,
-  isIOS,
   isWebappSupportedBrowser,
-  //isSupportingClipboard,
+  isWindows,
 };
