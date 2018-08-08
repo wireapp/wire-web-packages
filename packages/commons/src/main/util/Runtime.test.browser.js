@@ -21,26 +21,20 @@ import {Runtime} from '@wireapp/commons';
 
 describe('Runtime', () => {
   describe('"isElectron"', () => {
-    it('knows if running in Electron wrapper', () => {
-      const expected = false;
-      const actual = Runtime.isElectron();
-      expect(actual).toEqual(expected);
+    it('knows if running in Electron', () => {
+      expect(Runtime.isElectron()).toEqual(false);
     });
   });
 
   describe('"isOpera"', () => {
     it('knows if running in Opera', () => {
-      const expected = false;
-      const actual = Runtime.isOpera();
-      expect(actual).toEqual(expected);
+      expect(Runtime.isOpera()).toEqual(false);
     });
   });
 
   describe('"isAndroid"', () => {
     it('knows if running in Android', () => {
-      const expected = false;
-      const actual = Runtime.isAndroid();
-      expect(actual).toEqual(expected);
+      expect(Runtime.isAndroid()).toEqual(false);
     });
   });
 });
