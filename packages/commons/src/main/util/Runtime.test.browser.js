@@ -20,6 +20,13 @@
 import {Runtime} from '@wireapp/commons';
 
 describe('Runtime', () => {
+  describe('"isChrome"', () => {
+    fit('knows if running in Chrome', () => {
+      spyOn(Runtime, 'getPlatform').and.returnValue({name: 'chrome'});
+      expect(Runtime.isChrome()).toEqual(true);
+    });
+  });
+
   describe('"isElectron"', () => {
     it('knows if running in Electron', () => {
       expect(Runtime.isElectron()).toEqual(false);

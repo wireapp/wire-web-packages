@@ -20,7 +20,7 @@
 import * as CommonConfig from './config/CommonConfig';
 import * as ArrayUtil from './util/ArrayUtil';
 import * as RandomUtil from './util/RandomUtil';
-import * as Runtime from './util/Runtime';
+import {Runtime} from './util/Runtime';
 import * as StringUtil from './util/StringUtil';
 import * as UrlUtil from './util/UrlUtil';
 import * as ValidationUtil from './util/ValidationUtil';
