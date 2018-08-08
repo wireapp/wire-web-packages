@@ -17,12 +17,14 @@
  *
  */
 
+import * as platform from 'platform';
 import {Runtime} from '@wireapp/commons';
 
 describe('Runtime', () => {
   describe('"isAndroid"', () => {
-    it('knows if running in Android', () => {
-      expect(Runtime.isAndroid()).toEqual(false);
+    it('knows if running on Android', () => {
+      spyOn(Runtime, 'getOS').and.returnValue({family: 'Android'});
+      expect(Runtime.isAndroid()).toEqual(true);
     });
   });
 
@@ -30,6 +32,49 @@ describe('Runtime', () => {
     it('knows if running in Chrome', () => {
       spyOn(Runtime, 'getPlatform').and.returnValue({name: 'chrome'});
       expect(Runtime.isChrome()).toEqual(true);
+      expect(Runtime.isEdge()).toEqual(false);
+      expect(Runtime.isFirefox()).toEqual(false);
+      expect(Runtime.isInternetExplorer()).toEqual(false);
+      expect(Runtime.isOpera()).toEqual(false);
+      expect(Runtime.isSafari()).toEqual(false);
+    });
+  });
+
+  describe('"isElectron"', () => {
+    it('knows if running in Electron', () => {
+      const userAgent =
+        'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.75 Electron/0.37.5 Safari/537.36';
+      spyOn(Runtime, 'getOS').and.returnValue(platform.parse(userAgent));
+      expect(Runtime.isElectron()).toEqual(false);
+    });
+  });
+
+  describe('"isIOS"', () => {
+    it('knows if running on iOS', () => {
+      spyOn(Runtime, 'getOS').and.returnValue({family: 'iOS'});
+      expect(Runtime.isIOS()).toEqual(true);
+    });
+  });
+
+  describe('"isLinux"', () => {
+    it('detects pure Linux', () => {
+      spyOn(Runtime, 'getOS').and.returnValue({family: 'Linux'});
+      expect(Runtime.isLinux()).toEqual(true);
+    });
+
+    it('detects Debian', () => {
+      spyOn(Runtime, 'getOS').and.returnValue({family: 'Debian'});
+      expect(Runtime.isLinux()).toEqual(true);
+    });
+
+    it('detects Fedora', () => {
+      spyOn(Runtime, 'getOS').and.returnValue({family: 'Fedora'});
+      expect(Runtime.isLinux()).toEqual(true);
+    });
+
+    it('detects Ubuntu', () => {
+      spyOn(Runtime, 'getOS').and.returnValue({family: 'Ubuntu'});
+      expect(Runtime.isLinux()).toEqual(true);
     });
   });
 
@@ -54,18 +99,6 @@ describe('Runtime', () => {
     it('detects Windows 7', () => {
       spyOn(Runtime, 'getOS').and.returnValue({family: 'windows server 2008 r2 / 7'});
       expect(Runtime.isWindows()).toEqual(true);
-    });
-  });
-
-  describe('"isElectron"', () => {
-    it('knows if running in Electron', () => {
-      expect(Runtime.isElectron()).toEqual(false);
-    });
-  });
-
-  describe('"isOpera"', () => {
-    it('knows if running in Opera', () => {
-      expect(Runtime.isOpera()).toEqual(false);
     });
   });
 });

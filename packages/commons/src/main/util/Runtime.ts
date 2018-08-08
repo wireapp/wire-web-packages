@@ -21,7 +21,7 @@ import * as platform from 'platform';
 import {BROWSER, WEBAPP_SUPPORTED_BROWSERS} from '../config/CommonConfig';
 
 class Runtime {
-  public static getPlatform(): Platform {
+  private static getPlatform(): Platform {
     return platform;
   }
 
