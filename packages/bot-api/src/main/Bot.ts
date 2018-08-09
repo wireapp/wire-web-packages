@@ -19,7 +19,6 @@
 
 import {APIClient} from '@wireapp/api-client';
 import {ClientType} from '@wireapp/api-client/dist/commonjs/client/';
-import {Config} from '@wireapp/api-client/dist/commonjs/Config';
 import {Connection, ConnectionStatus} from '@wireapp/api-client/dist/commonjs/connection/';
 import {Account} from '@wireapp/core';
 import {PayloadBundleIncoming, PayloadBundleType} from '@wireapp/core/dist/conversation/root';
@@ -68,10 +67,9 @@ class Bot {
       email: this.credentials.email,
       password: this.credentials.password,
     };
-    const backend = APIClient.BACKEND.PRODUCTION;
     const engine = new MemoryEngine();
     await engine.init(this.credentials.email);
-    const apiClient = new APIClient(new Config(engine, backend));
+    const apiClient = new APIClient({store: engine, urls: APIClient.BACKEND.PRODUCTION});
     this.account = new Account(apiClient);
 
     this.account.on(PayloadBundleType.ASSET, this.handlePayload);
