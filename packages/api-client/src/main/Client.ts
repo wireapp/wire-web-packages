@@ -137,6 +137,9 @@ class APIClient {
       payment: {
         api: new PaymentAPI(this.transport.http),
       },
+      service: {
+        api: new ServiceAPI(this.transport.http),
+      },
       team: {
         api: new TeamAPI(this.transport.http),
       },
