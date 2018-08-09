@@ -160,7 +160,7 @@ describe('Client', () => {
         .catch(done.fail);
     });
 
-    it('refreshes an access token when it gets invalid', done => {
+    it('refreshes an access token when it becomes invalid', done => {
       nock(baseURL)
         .get(UserAPI.URL.USERS)
         .query({handles: 'webappbot'})

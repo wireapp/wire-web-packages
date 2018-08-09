@@ -114,7 +114,6 @@ class HttpClient extends EventEmitter {
       .catch(error => {
         // Map Axios errors
         const isNetworkError = !error.response && error.request && Object.keys(error.request).length === 0;
-        const isUnauthorized = error.response && error.response.status === StatusCode.UNAUTHORIZED;
         const isForbidden = error.response && error.response.status === StatusCode.FORBIDDEN;
         const isBackendError =
           error.response &&
@@ -130,7 +129,7 @@ class HttpClient extends EventEmitter {
           return Promise.reject(networkError);
         }
 
-        if ((isUnauthorized || isForbidden) && isBackendError && error.response.data.message === 'Token expired') {
+        if (isForbidden && this.accessTokenStore && this.accessTokenStore.accessToken) {
           return this.refreshAccessToken().then(() => this._sendRequest(config, tokenAsParam, true));
         }
 
