@@ -80,20 +80,7 @@ class Bot {
     this.account.on(PayloadBundleType.CALL, this.handlePayload);
     this.account.on(PayloadBundleType.CLIENT_ACTION, this.handlePayload);
     this.account.on(PayloadBundleType.CONFIRMATION, this.handlePayload);
-    this.account.on(PayloadBundleType.CONNECTION_REQUEST, async (payload: PayloadBundleIncoming) => {
-      const connection: Connection = payload.content as Connection;
-      if (connection.status === ConnectionStatus.PENDING && connection.conversation) {
-        const {conversation, to: userId} = connection;
-        if (this.validateMessage(String(conversation), userId)) {
-          this.logger.info('Processing connection request ...');
-          try {
-            this.handlers.forEach(handler => handler.handleEvent(payload));
-          } catch (error) {
-            this.logger.error(`An error occurred during connection request handling: ${error.message}`, error);
-          }
-        }
-      }
-    });
+    this.account.on(PayloadBundleType.CONNECTION_REQUEST, this.handlePayload);
     this.account.on(PayloadBundleType.CONVERSATION_CLEAR, this.handlePayload);
     this.account.on(PayloadBundleType.CONVERSATION_RENAME, this.handlePayload);
     this.account.on(PayloadBundleType.LAST_READ_UPDATE, this.handlePayload);
