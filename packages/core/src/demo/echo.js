@@ -20,12 +20,12 @@ logger.state.isEnabled = true;
 const {Account} = require('@wireapp/core');
 const {PayloadBundleType} = require('@wireapp/core/dist/conversation/root');
 const {APIClient} = require('@wireapp/api-client');
-const {Config} = require('@wireapp/api-client/dist/commonjs/Config');
 const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/ClientType');
 const {CONVERSATION_TYPING} = require('@wireapp/api-client/dist/commonjs/event/');
 const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine/');
 
 const assetOriginalCache = {};
+const messageEchoCache = {};
 
 (async () => {
   const login = {
@@ -38,7 +38,7 @@ const assetOriginalCache = {};
   const engine = new MemoryEngine();
   await engine.init('receiver');
 
-  const apiClient = new APIClient(new Config(engine, backend));
+  const apiClient = new APIClient({store: engine, urls: backend});
   const account = new Account(apiClient);
 
   account.on(PayloadBundleType.TEXT, async data => {
@@ -53,6 +53,7 @@ const assetOriginalCache = {};
     await account.service.conversation.send(conversationId, confirmationPayload);
 
     const textPayload = account.service.conversation.createText(content.text);
+    messageEchoCache[messageId] = textPayload.id;
     account.service.conversation.messageTimer.setConversationLevelTimer(conversationId, messageTimer);
     await account.service.conversation.send(conversationId, textPayload);
     account.service.conversation.messageTimer.setMessageLevelTimer(conversationId, 0);
@@ -158,15 +159,35 @@ const assetOriginalCache = {};
     await account.service.conversation.send(conversationId, imagePayload);
   });
 
+  account.on(PayloadBundleType.LOCATION, async data => {
+    const {conversation: conversationId, from, messageTimer} = data;
+    logger.log(
+      `Location in "${conversationId}" from "${from}":`,
+      data.content,
+      messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
+    );
+
+    const locationPayload = account.service.conversation.createLocation({
+      latitude: 52.5069313,
+      longitude: 13.1445635,
+      name: 'Berlin',
+      zoom: 10,
+    });
+    account.service.conversation.messageTimer.setMessageLevelTimer(conversationId, messageTimer);
+    await account.service.conversation.send(conversationId, locationPayload);
+    account.service.conversation.messageTimer.setMessageLevelTimer(conversationId, 0);
+  });
+
   account.on(PayloadBundleType.PING, async data => {
     const {conversation: conversationId, from, messageTimer} = data;
     logger.log(
       `Ping in "${conversationId}" from "${from}".`,
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
     );
-    const payload = account.service.conversation.createPing();
+
+    const pingPayload = account.service.conversation.createPing();
     account.service.conversation.messageTimer.setMessageLevelTimer(conversationId, messageTimer);
-    await account.service.conversation.send(conversationId, payload);
+    await account.service.conversation.send(conversationId, pingPayload);
     account.service.conversation.messageTimer.setMessageLevelTimer(conversationId, 0);
   });
 
@@ -178,7 +199,7 @@ const assetOriginalCache = {};
     await account.service.conversation.send(conversationId, reactionPayload);
   });
 
-  account.on(Account.INCOMING.TYPING, async data => {
+  account.on(PayloadBundleType.TYPING, async data => {
     const {
       conversation: conversationId,
       from,
@@ -195,8 +216,25 @@ const assetOriginalCache = {};
   });
 
   account.on(PayloadBundleType.MESSAGE_DELETE, async data => {
-    const {conversation: conversationId, id: messageId, from} = data;
-    logger.log(`Deleted message "${messageId}" in "${conversationId}" by "${from}".`, data);
+    const {conversation: conversationId, id: messageId, content, from} = data;
+    logger.log(`Deleted message "${messageId}" in "${conversationId}" by "${from}".`, content);
+
+    await account.service.conversation.deleteMessageEveryone(
+      conversationId,
+      messageEchoCache[content.originalMessageId]
+    );
+    delete messageEchoCache[messageId];
+  });
+
+  account.on(PayloadBundleType.MESSAGE_EDIT, async data => {
+    const {conversation: conversationId, id: messageId, content, from} = data;
+    logger.log(`Edited message "${messageId}" in "${conversationId}" by "${from}".`, content);
+
+    const editedPayload = account.service.conversation.createEditedText(
+      content.text,
+      messageEchoCache[content.originalMessageId]
+    );
+    await account.service.conversation.send(conversationId, editedPayload);
   });
 
   account.on(PayloadBundleType.MESSAGE_HIDE, async data => {

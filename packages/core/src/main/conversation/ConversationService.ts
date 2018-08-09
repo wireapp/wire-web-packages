@@ -45,11 +45,13 @@ import {
 
 import {
   Asset,
+  Cleared,
   ClientAction,
   Confirmation,
   Ephemeral,
   GenericMessage,
   Knock,
+  Location,
   MessageDelete,
   MessageEdit,
   MessageHide,
@@ -67,6 +69,7 @@ import {
   FileMetaDataContent,
   ImageAssetContent,
   ImageContent,
+  LocationContent,
   ReactionContent,
   RemoteData,
   TextContent,
@@ -413,6 +416,34 @@ class ConversationService {
     };
   }
 
+  private async sendLocation(
+    conversationId: string,
+    payloadBundle: PayloadBundleOutgoingUnsent
+  ): Promise<PayloadBundleOutgoing> {
+    const {latitude, longitude, name, zoom} = payloadBundle.content as LocationContent;
+
+    const locationMessage = Location.create({
+      latitude,
+      longitude,
+      name,
+      zoom,
+    });
+
+    const genericMessage = GenericMessage.create({
+      [GenericMessageType.LOCATION]: locationMessage,
+      messageId: payloadBundle.id,
+    });
+
+    await this.sendGenericMessage(this.clientID, conversationId, genericMessage);
+
+    return {
+      ...payloadBundle,
+      conversation: conversationId,
+      messageTimer: 0,
+      state: PayloadBundleState.OUTGOING_SENT,
+    };
+  }
+
   private async sendOTRMessage(
     sendingClientId: string,
     conversationId: string,
@@ -562,6 +593,41 @@ class ConversationService {
     return estimatedPayloadInBytes > EXTERNAL_MESSAGE_THRESHOLD_BYTES;
   }
 
+  public async clearConversation(
+    conversationId: string,
+    timestamp: number | Date = new Date()
+  ): Promise<PayloadBundleOutgoing> {
+    const messageId = new UUID(4).format();
+
+    if (timestamp instanceof Date) {
+      timestamp = timestamp.getTime();
+    }
+
+    const clearedMessage = Cleared.create({
+      clearedTimestamp: timestamp,
+      conversationId,
+    });
+
+    const genericMessage = GenericMessage.create({
+      [GenericMessageType.CLEARED]: clearedMessage,
+      messageId,
+    });
+
+    const {id: selfConversationId} = await this.getSelfConversation();
+
+    await this.sendGenericMessage(this.clientID, selfConversationId, genericMessage);
+
+    return {
+      conversation: conversationId,
+      from: this.apiClient.context!.userId,
+      id: messageId,
+      messageTimer: 0,
+      state: PayloadBundleState.OUTGOING_SENT,
+      timestamp: Date.now(),
+      type: PayloadBundleType.CLEARED,
+    };
+  }
+
   public createEditedText(
     newMessageText: string,
     originalMessageId: string,
@@ -653,6 +719,20 @@ class ConversationService {
       state: PayloadBundleState.OUTGOING_UNSENT,
       timestamp: Date.now(),
       type: PayloadBundleType.ASSET_IMAGE,
+    };
+  }
+
+  public createLocation(
+    location: LocationContent,
+    messageId: string = ConversationService.createId()
+  ): PayloadBundleOutgoingUnsent {
+    return {
+      content: location,
+      from: this.apiClient.context!.userId,
+      id: messageId,
+      state: PayloadBundleState.OUTGOING_UNSENT,
+      timestamp: Date.now(),
+      type: PayloadBundleType.LOCATION,
     };
   }
 
@@ -865,6 +945,8 @@ class ConversationService {
       }
       case PayloadBundleType.CONFIRMATION:
         return this.sendConfirmation(conversationId, payloadBundle);
+      case PayloadBundleType.LOCATION:
+        return this.sendLocation(conversationId, payloadBundle);
       case PayloadBundleType.MESSAGE_EDIT:
         return this.sendEditedText(conversationId, payloadBundle);
       case PayloadBundleType.PING:
