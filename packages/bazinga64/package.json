@@ -2,7 +2,7 @@
   "description": "Base64 encoding and decoding with ASCII string representation.",
   "devDependencies": {
     "cross-env": "5.2.0",
-    "jasmine": "3.1.0",
+    "jasmine": "3.2.0",
     "karma": "2.0.5",
     "karma-chrome-launcher": "2.2.0",
     "karma-coverage": "1.1.2",
@@ -46,5 +46,5 @@
     "test:node": "cross-env JASMINE_CONFIG_PATH=test/shared/support/jasmine.json jasmine"
   },
   "types": "dist/bazinga64.d.ts",
-  "version": "5.2.20"
+  "version": "5.2.21"
 }
