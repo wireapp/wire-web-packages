@@ -368,7 +368,7 @@ class Account extends EventEmitter {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: isImage ? PayloadBundleType.ASSET_IMAGE : genericMessage.content,
+          type: isImage ? PayloadBundleType.ASSET_IMAGE : PayloadBundleType.ASSET,
         };
       }
       case GenericMessageType.REACTION: {
