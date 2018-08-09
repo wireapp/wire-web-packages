@@ -34,7 +34,7 @@ class Bot {
   private readonly credentials: {email: string; password: string};
   private readonly config: BotConfig;
   private readonly handlers: Map<string, MessageHandler>;
-  private readonly logger: any = logdown('@wireapp/standup-bot/StandupBot', {
+  private readonly logger: logdown.Logger = logdown('@wireapp/standup-bot/StandupBot', {
     logger: console,
     markdown: false,
   });
@@ -61,7 +61,7 @@ class Bot {
     return this.config.owners.length === 0 ? true : this.config.owners.includes(userId);
   }
 
-  public async start(): Promise<boolean> {
+  public async start(): Promise<void> {
     const login = {
       clientType: ClientType.TEMPORARY,
       email: this.credentials.email,
@@ -110,8 +110,6 @@ class Bot {
     await this.account.listen();
 
     this.handlers.forEach(handler => (handler.account = this.account));
-
-    return true;
   }
 
   private handlePayload(payload: PayloadBundleIncoming): void {
