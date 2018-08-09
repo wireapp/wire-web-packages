@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@wireapp/core": "5.1.1",
+    "@wireapp/core": "5.2.5",
     "pure-uuid": "1.5.3"
   },
   "devDependencies": {
