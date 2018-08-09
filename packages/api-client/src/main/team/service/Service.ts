@@ -16,6 +16,7 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
+import {UserAsset} from '../../user/';
 
 interface Service {
   id: string;
@@ -23,7 +24,7 @@ interface Service {
   provider: string;
   summary: string;
   description: string;
-  assets: string[]; // TODO Define asset
+  assets: UserAsset[];
   tags: string[];
   enabled: boolean;
 }
