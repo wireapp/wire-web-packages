@@ -56,7 +56,7 @@ class BackendErrorMapper {
           ['Authentication failed.']: new InvalidCredentialsError(
             'Authentication failed because of invalid credentials.'
           ),
-          ['Token expired']: new TokenExpiredError('Authentication failed because of an expired token.'),
+          ['Token expired']: new TokenExpiredError('Authentication failed because the token is expired.'),
         },
         [BackendErrorLabel.NOT_CONNECTED]: {
           ['Users are not connected']: new UnconnectedUserError('Users are not connected.'),
