@@ -19,7 +19,6 @@
 
 import {APIClient} from '@wireapp/api-client';
 import {ClientType} from '@wireapp/api-client/dist/commonjs/client/';
-import {Connection, ConnectionStatus} from '@wireapp/api-client/dist/commonjs/connection/';
 import {Account} from '@wireapp/core';
 import {PayloadBundleIncoming, PayloadBundleType} from '@wireapp/core/dist/conversation/root';
 import {MemoryEngine} from '@wireapp/store-engine';
