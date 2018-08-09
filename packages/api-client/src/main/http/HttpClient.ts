@@ -130,7 +130,7 @@ class HttpClient extends EventEmitter {
           return Promise.reject(networkError);
         }
 
-        if (isUnauthorized || (isForbidden && !secondTry)) {
+        if ((isUnauthorized || isForbidden) && isBackendError && error.response.data.message === 'Token expired') {
           return this.refreshAccessToken().then(() => this._sendRequest(config, tokenAsParam, true));
         }
 
