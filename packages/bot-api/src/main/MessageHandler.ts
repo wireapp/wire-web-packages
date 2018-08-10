@@ -45,13 +45,13 @@ abstract class MessageHandler {
     }
   }
 
-  public async sendTextToAllGroupConversations(text: string): Promise<void> {
+  public async sendTextToAllConversations(text: string, type?: CONVERSATION_TYPE): Promise<void> {
     if (this.account && this.account.service) {
-      const allConversations = await this.account.service.conversation.getConversations();
-      const groupConversations = allConversations.filter(
-        conversation => conversation.type === CONVERSATION_TYPE.REGULAR
-      );
-      const conversationIds: string[] = groupConversations.map(conversation => conversation.id);
+      let allConversations = await this.account.service.conversation.getConversations();
+      if (type) {
+        allConversations = allConversations.filter(conversation => conversation.type === type);
+      }
+      const conversationIds: string[] = allConversations.map(conversation => conversation.id);
       await Promise.all(conversationIds.map(id => this.sendText(id, text)));
     }
   }
