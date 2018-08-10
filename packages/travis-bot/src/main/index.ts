@@ -19,7 +19,6 @@
 
 import {APIClient} from '@wireapp/api-client';
 import {LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
-import {Config} from '@wireapp/api-client/dist/commonjs/Config';
 import {Account} from '@wireapp/core';
 import {MemoryEngine} from '@wireapp/store-engine';
 import {exec} from 'child_process';
@@ -65,12 +64,9 @@ class TravisBot {
     let msg = `**${repositoryName}: Build '${buildNumber}' finished on '${branch}' branch.**\n`;
 
     if (changelog) {
-      msg += `\n**Changelog:** \n\n` + changelog;
+      msg += `\n**Changelog:** \n\n${changelog}`;
     } else {
-      msg +=
-        `- Last commit from: ${author}\n` +
-        `- Last commit message: ${message}\n` +
-        `- https://github.com/${repositoryName}/commit/${hash}`;
+      msg += `- Last commit from: ${author}\n- Last commit message: ${message}\n- https://github.com/${repositoryName}/commit/${hash}`;
     }
 
     return msg;
@@ -82,7 +78,7 @@ class TravisBot {
     const engine = new MemoryEngine();
     await engine.init('');
 
-    const client = new APIClient(new Config(engine, APIClient.BACKEND.PRODUCTION));
+    const client = new APIClient({store: engine, urls: APIClient.BACKEND.PRODUCTION});
 
     const account = new Account(client);
     await account.login(this.loginData);
@@ -133,7 +129,7 @@ class TravisBot {
         styledChangelog = styledChangelog.substr(0, indexOfLastDash);
       }
 
-      styledChangelog += '\n' + omittedMessage;
+      styledChangelog += `\n${omittedMessage}`;
     }
 
     return styledChangelog;

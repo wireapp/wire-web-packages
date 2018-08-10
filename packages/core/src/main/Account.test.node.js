@@ -19,13 +19,11 @@
 
 const nock = require('nock');
 const {Account} = require('@wireapp/core');
-const {PayloadBundleState} = require('@wireapp/core/dist/conversation/root');
+const {PayloadBundleState, PayloadBundleType} = require('@wireapp/core/dist/conversation/root');
 const {APIClient} = require('@wireapp/api-client');
 const {AuthAPI} = require('@wireapp/api-client/dist/commonjs/auth/');
 const {BackendErrorLabel, StatusCode} = require('@wireapp/api-client/dist/commonjs/http/');
 const {ClientAPI, ClientType} = require('@wireapp/api-client/dist/commonjs/client/');
-const {Config} = require('@wireapp/api-client/dist/commonjs/Config');
-const {CONVERSATION_EVENT, USER_EVENT} = require('@wireapp/api-client/dist/commonjs/event');
 const {ConversationAPI} = require('@wireapp/api-client/dist/commonjs/conversation/');
 const {GenericMessage, Text} = require('@wireapp/protocol-messaging');
 const {MemoryEngine} = require('@wireapp/store-engine');
@@ -44,8 +42,7 @@ async function createAccount(storageName = `test-${Date.now()}`) {
   const storeEngine = new MemoryEngine();
   await storeEngine.init(storageName);
 
-  const config = new Config(storeEngine, MOCK_BACKEND);
-  const apiClient = new APIClient(config);
+  const apiClient = new APIClient({store: storeEngine, urls: MOCK_BACKEND});
   return new Account(apiClient);
 }
 
@@ -172,7 +169,7 @@ describe('Account', () => {
       expect(incomingEvent.messageTimer).toBe(0);
       expect(incomingEvent.state).toBe(PayloadBundleState.INCOMING);
       expect(incomingEvent.timestamp).toBe(new Date(event.time).getTime());
-      expect(incomingEvent.type).toBe(CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE);
+      expect(incomingEvent.type).toBe(PayloadBundleType.TIMER_UPDATE);
     });
 
     it('maps "conversation.member-join" events', () => {
@@ -200,7 +197,7 @@ describe('Account', () => {
       expect(incomingEvent.messageTimer).toBe(0);
       expect(incomingEvent.state).toBe(PayloadBundleState.INCOMING);
       expect(incomingEvent.timestamp).toBe(new Date(event.time).getTime());
-      expect(incomingEvent.type).toBe(CONVERSATION_EVENT.MEMBER_JOIN);
+      expect(incomingEvent.type).toBe(PayloadBundleType.MEMBER_JOIN);
     });
 
     it('maps "conversation.rename" events', () => {
@@ -224,7 +221,7 @@ describe('Account', () => {
       expect(incomingEvent.messageTimer).toBe(0);
       expect(incomingEvent.state).toBe(PayloadBundleState.INCOMING);
       expect(incomingEvent.timestamp).toBe(new Date(event.time).getTime());
-      expect(incomingEvent.type).toBe(CONVERSATION_EVENT.RENAME);
+      expect(incomingEvent.type).toBe(PayloadBundleType.CONVERSATION_RENAME);
     });
 
     it('maps "conversation.typing" events', () => {
@@ -246,7 +243,7 @@ describe('Account', () => {
       expect(incomingEvent.messageTimer).toBe(0);
       expect(incomingEvent.state).toBe(PayloadBundleState.INCOMING);
       expect(incomingEvent.timestamp).toBe(new Date(event.time).getTime());
-      expect(incomingEvent.type).toBe(CONVERSATION_EVENT.TYPING);
+      expect(incomingEvent.type).toBe(PayloadBundleType.TYPING);
     });
   });
 
@@ -274,7 +271,7 @@ describe('Account', () => {
       expect(incomingEvent.messageTimer).toBe(0);
       expect(incomingEvent.state).toBe(PayloadBundleState.INCOMING);
       expect(incomingEvent.timestamp).toBe(new Date(event.connection.last_update).getTime());
-      expect(incomingEvent.type).toBe(USER_EVENT.CONNECTION);
+      expect(incomingEvent.type).toBe(PayloadBundleType.CONNECTION_REQUEST);
     });
   });
 
@@ -283,8 +280,7 @@ describe('Account', () => {
       const storeEngine = new MemoryEngine();
       await storeEngine.init('account.test');
 
-      const config = new Config(storeEngine, MOCK_BACKEND);
-      const apiClient = new APIClient(config);
+      const apiClient = new APIClient({store: storeEngine, urls: MOCK_BACKEND});
       const account = new Account(apiClient);
 
       await account.init();
@@ -305,8 +301,7 @@ describe('Account', () => {
       const storeEngine = new MemoryEngine();
       await storeEngine.init('account.test');
 
-      const config = new Config(storeEngine, MOCK_BACKEND);
-      const apiClient = new APIClient(config);
+      const apiClient = new APIClient({store: storeEngine, urls: MOCK_BACKEND});
       const account = new Account(apiClient);
 
       await account.init();

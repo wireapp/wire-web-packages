@@ -3,6 +3,139 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="1.13.1"></a>
+## [1.13.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.13.0...@wireapp/api-client@1.13.1) (2018-08-10)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+<a name="1.13.0"></a>
+# [1.13.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.12.1...@wireapp/api-client@1.13.0) (2018-08-10)
+
+
+### Features
+
+* **api-client:** Provider endpoints ([#980](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/980)) ([e5af8ce](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/e5af8ce))
+
+
+
+
+
+<a name="1.12.1"></a>
+## [1.12.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.12.0...@wireapp/api-client@1.12.1) (2018-08-10)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+<a name="1.12.0"></a>
+# [1.12.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.11.2...@wireapp/api-client@1.12.0) (2018-08-10)
+
+
+### Features
+
+* Print time elapsed for each test ([#978](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/978)) ([a6de5f2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/a6de5f2))
+
+
+
+
+<a name="1.11.2"></a>
+## [1.11.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.11.1...@wireapp/api-client@1.11.2) (2018-08-09)
+
+
+### Bug Fixes
+
+* **api-client:** Expose ServiceAPI ([#972](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/972)) ([d71bb90](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/d71bb90))
+
+
+
+
+<a name="1.11.1"></a>
+## [1.11.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.11.0...@wireapp/api-client@1.11.1) (2018-08-09)
+
+
+### Bug Fixes
+
+* **api-client:** Refresh access token (WEBFOUND-25) ([#967](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/967)) ([3d85b9d](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/3d85b9d))
+
+
+
+
+<a name="1.11.0"></a>
+# [1.11.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.10.24...@wireapp/api-client@1.11.0) (2018-08-09)
+
+
+### Features
+
+* **api-client:** Service endpoints ([#969](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/969)) ([7cb5e3a](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/7cb5e3a))
+
+
+
+
+<a name="1.10.24"></a>
+## [1.10.24](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.10.23...@wireapp/api-client@1.10.24) (2018-08-09)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.10.23"></a>
+## [1.10.23](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.10.22...@wireapp/api-client@1.10.23) (2018-08-08)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.10.22"></a>
+## [1.10.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.10.21...@wireapp/api-client@1.10.22) (2018-08-08)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.10.21"></a>
+## [1.10.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.10.20...@wireapp/api-client@1.10.21) (2018-08-07)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.10.20"></a>
+## [1.10.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.10.19...@wireapp/api-client@1.10.20) (2018-08-07)
+
+
+### Bug Fixes
+
+* **api-client:** Increase maximum content length ([#954](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/954)) ([a7ba805](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/a7ba805))
+
+
+
+
+<a name="1.10.19"></a>
+## [1.10.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.10.18...@wireapp/api-client@1.10.19) (2018-08-07)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
+<a name="1.10.18"></a>
+## [1.10.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.10.17...@wireapp/api-client@1.10.18) (2018-08-06)
+
+
+
+
+**Note:** Version bump only for package @wireapp/api-client
+
 <a name="1.10.17"></a>
 ## [1.10.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.10.16...@wireapp/api-client@1.10.17) (2018-08-03)
 

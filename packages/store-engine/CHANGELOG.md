@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.12.0"></a>
+# [0.12.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@0.11.56...@wireapp/store-engine@0.12.0) (2018-08-10)
+
+
+### Features
+
+* Print time elapsed for each test ([#978](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/978)) ([a6de5f2](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/a6de5f2))
+
+
+
+
+<a name="0.11.56"></a>
+## [0.11.56](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@0.11.55...@wireapp/store-engine@0.11.56) (2018-08-09)
+
+
+
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+<a name="0.11.55"></a>
+## [0.11.55](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@0.11.54...@wireapp/store-engine@0.11.55) (2018-08-07)
+
+
+
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+<a name="0.11.54"></a>
+## [0.11.54](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@0.11.53...@wireapp/store-engine@0.11.54) (2018-08-06)
+
+
+
+
+**Note:** Version bump only for package @wireapp/store-engine
+
 <a name="0.11.53"></a>
 ## [0.11.53](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@0.11.52...@wireapp/store-engine@0.11.53) (2018-08-03)
 

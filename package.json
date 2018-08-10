@@ -8,9 +8,9 @@
     "eslint-plugin-prettier": "2.6.2",
     "eslint-plugin-react": "7.10.0",
     "husky": "0.14.3",
-    "lerna": "2.11.0",
+    "lerna": "3.0.1",
     "lint-staged": "7.2.0",
-    "prettier": "1.14.0",
+    "prettier": "1.14.2",
     "tslint": "5.11.0",
     "tslint-config-prettier": "1.14.0",
     "tslint-plugin-prettier": "1.3.0"
@@ -44,7 +44,7 @@
     "lint:ts": "tslint --config tslint.json --project tsconfig.json \"**/*.ts\"",
     "precommit": "lint-staged",
     "prettier": "prettier \"**/*.{json,md,scss,yml}\"",
-    "release": "lerna publish -m \"[skip ci] chore: Publish\" --conventional-commits --loglevel=verbose --exact --allow-branch=master --registry=https://registry.npmjs.org/ --yes",
+    "release": "lerna publish",
     "test": "yarn && yarn lint:js && yarn lint:ts && yarn lint:other && node bin/testUpdated.js",
     "test:all": "yarn && yarn dist && yarn lint && lerna run test"
   },

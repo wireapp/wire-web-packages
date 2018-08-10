@@ -3,6 +3,213 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="5.7.1"></a>
+## [5.7.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.7.0...@wireapp/core@5.7.1) (2018-08-10)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.7.0"></a>
+# [5.7.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.6.2...@wireapp/core@5.7.0) (2018-08-10)
+
+
+### Features
+
+* **api-client:** Provider endpoints ([#980](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/980)) ([e5af8ce](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/e5af8ce))
+
+
+
+
+
+<a name="5.6.2"></a>
+## [5.6.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.6.1...@wireapp/core@5.6.2) (2018-08-10)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.6.1"></a>
+## [5.6.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.6.0...@wireapp/core@5.6.1) (2018-08-10)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="5.6.0"></a>
+# [5.6.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.5.0...@wireapp/core@5.6.0) (2018-08-10)
+
+
+### Features
+
+* Print time elapsed for each test ([#978](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/978)) ([a6de5f2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/a6de5f2))
+
+
+
+
+<a name="5.5.0"></a>
+# [5.5.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.4.2...@wireapp/core@5.5.0) (2018-08-09)
+
+
+### Features
+
+* **core:** Get clients ([#968](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/968)) ([ef014ae](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/ef014ae))
+
+
+
+
+<a name="5.4.2"></a>
+## [5.4.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.4.1...@wireapp/core@5.4.2) (2018-08-09)
+
+
+### Bug Fixes
+
+* **core:** Emit assets correctly (WEBFOUND-20) ([#973](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/973)) ([e4e4b8a](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/e4e4b8a))
+
+
+
+
+<a name="5.4.1"></a>
+## [5.4.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.4.0...@wireapp/core@5.4.1) (2018-08-09)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="5.4.0"></a>
+# [5.4.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.3.1...@wireapp/core@5.4.0) (2018-08-09)
+
+
+### Features
+
+* **core:** Archive conversations ([#966](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/966)) ([7dc7fea](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/7dc7fea))
+
+
+
+
+<a name="5.3.1"></a>
+## [5.3.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.3.0...@wireapp/core@5.3.1) (2018-08-09)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="5.3.0"></a>
+# [5.3.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.2.5...@wireapp/core@5.3.0) (2018-08-09)
+
+
+### Features
+
+* **bot-api:** Add Bot API (WEBFOUND-13) ([#814](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/814)) ([01394ee](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/01394ee))
+
+
+
+
+<a name="5.2.5"></a>
+## [5.2.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.2.4...@wireapp/core@5.2.5) (2018-08-08)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="5.2.4"></a>
+## [5.2.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.2.3...@wireapp/core@5.2.4) (2018-08-08)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="5.2.3"></a>
+## [5.2.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.2.2...@wireapp/core@5.2.3) (2018-08-08)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="5.2.2"></a>
+## [5.2.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.2.1...@wireapp/core@5.2.2) (2018-08-07)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="5.2.1"></a>
+## [5.2.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.2.0...@wireapp/core@5.2.1) (2018-08-07)
+
+
+### Bug Fixes
+
+* **core:** Remove timer from conversation clearing ([#956](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/956)) ([1e9f358](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/1e9f358))
+
+
+
+
+<a name="5.2.0"></a>
+# [5.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.1.1...@wireapp/core@5.2.0) (2018-08-07)
+
+
+### Features
+
+* **core:** Send conversation clearing (WEBFOUND-23) ([#955](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/955)) ([52aba12](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/52aba12))
+
+
+
+
+<a name="5.1.1"></a>
+## [5.1.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.1.0...@wireapp/core@5.1.1) (2018-08-07)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="5.1.0"></a>
+# [5.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.0.3...@wireapp/core@5.1.0) (2018-08-07)
+
+
+### Features
+
+* **core:** Emit edited messages (WEBFOUND-18) ([#944](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/944)) ([c36e66a](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/c36e66a))
+* **core:** Send and receive locations (WEBFOUND-21) ([#951](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/951)) ([fc0b137](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/fc0b137))
+
+
+
+
+<a name="5.0.3"></a>
+## [5.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.0.2...@wireapp/core@5.0.3) (2018-08-07)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="5.0.2"></a>
+## [5.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.0.1...@wireapp/core@5.0.2) (2018-08-07)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="5.0.1"></a>
+## [5.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.0.0...@wireapp/core@5.0.1) (2018-08-06)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
 <a name="5.0.0"></a>
 # [5.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@4.0.8...@wireapp/core@5.0.0) (2018-08-03)
 

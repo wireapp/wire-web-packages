@@ -40,7 +40,7 @@ const {FileEngine} = require('@wireapp/store-engine');
   const backend = process.env.WIRE_BACKEND === 'staging' ? APIClient.BACKEND.STAGING : APIClient.BACKEND.PRODUCTION;
   const engine = new FileEngine(path.join(__dirname, '.tmp', 'sender'));
   await engine.init(undefined, {fileExtension: '.json'});
-  const apiClient = new APIClient(new Config(engine, backend));
+  const apiClient = new APIClient({store: engine, urls: backend});
   const account = new Account(apiClient);
   await account.login(login);
   await account.listen();
@@ -121,7 +121,11 @@ const {FileEngine} = require('@wireapp/store-engine');
     await account.service.conversation.send(CONVERSATION_ID, filePayload);
   }
 
-  const methods = [sendAndDeleteMessage, sendEphemeralText, sendPing, sendText, sendAndEdit, sendFile, sendImage];
+  async function clearConversation() {
+    await account.service.conversation.clearConversation(CONVERSATION_ID);
+  }
+
+  const methods = [sendAndDeleteMessage, sendAndEdit, sendEphemeralText, sendFile, sendImage, sendPing, sendText];
 
   const timeoutInMillis = 2000;
   setInterval(() => {
