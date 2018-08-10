@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="5.5.0"></a>
+# [5.5.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.4.2...@wireapp/core@5.5.0) (2018-08-09)
+
+
+### Features
+
+* **core:** Get clients ([#968](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/968)) ([ef014ae](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/ef014ae))
+
+
+
+
+<a name="5.4.2"></a>
+## [5.4.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.4.1...@wireapp/core@5.4.2) (2018-08-09)
+
+
+### Bug Fixes
+
+* **core:** Emit assets correctly (WEBFOUND-20) ([#973](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/973)) ([e4e4b8a](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/e4e4b8a))
+
+
+
+
+<a name="5.4.1"></a>
+## [5.4.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.4.0...@wireapp/core@5.4.1) (2018-08-09)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="5.4.0"></a>
+# [5.4.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.3.1...@wireapp/core@5.4.0) (2018-08-09)
+
+
+### Features
+
+* **core:** Archive conversations ([#966](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/966)) ([7dc7fea](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/7dc7fea))
+
+
+
+
+<a name="5.3.1"></a>
+## [5.3.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.3.0...@wireapp/core@5.3.1) (2018-08-09)
+
+
+
+
+**Note:** Version bump only for package @wireapp/core
+
+<a name="5.3.0"></a>
+# [5.3.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.2.5...@wireapp/core@5.3.0) (2018-08-09)
+
+
+### Features
+
+* **bot-api:** Add Bot API (WEBFOUND-13) ([#814](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/814)) ([01394ee](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/01394ee))
+
+
+
+
 <a name="5.2.5"></a>
 ## [5.2.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.2.4...@wireapp/core@5.2.5) (2018-08-08)
 
