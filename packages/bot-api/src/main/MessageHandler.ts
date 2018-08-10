@@ -52,7 +52,7 @@ abstract class MessageHandler {
         conversation => conversation.type === CONVERSATION_TYPE.REGULAR
       );
       const conversationIds: string[] = groupConversations.map(conversation => conversation.id);
-      await Promise.all(conversationIds.map(async id => this.sendText(id, text)));
+      await Promise.all(conversationIds.map(id => this.sendText(id, text)));
     }
   }
 
