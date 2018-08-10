@@ -24,7 +24,7 @@ const {Account} = require('@wireapp/core');
 const {GenericMessage, Text} = require('@wireapp/protocol-messaging');
 const {MemoryEngine} = require('@wireapp/store-engine');
 
-const createMessage = (conversationRepository, content) => {
+const createMessage = content => {
   const customTextMessage = GenericMessage.create({
     messageId: new UUID(4).format(),
     text: Text.create({content}),
@@ -33,21 +33,17 @@ const createMessage = (conversationRepository, content) => {
   return GenericMessage.encode(customTextMessage).finish();
 };
 
-const generatePreKeyBundles = (users, devicesPerUser) => {
-  const preKeyBundles = {};
-
-  new Array(users)
-    .fill()
-    .map(() => new UUID(4).format())
-    .forEach(userId => {
-      preKeyBundles[userId] = {};
-      new Array(devicesPerUser)
-        .fill()
-        .map(() => new UUID(4).format())
-        .forEach(deviceId => (preKeyBundles[userId][deviceId] = {}));
-    });
-
-  return preKeyBundles;
+const generatePreKeyBundle = (userCount, devicesPerUser) => {
+  const prekeyBundle = {};
+  for (let userIndex = 0; userIndex < userCount; userIndex++) {
+    const userId = new UUID(4).format();
+    prekeyBundle[userId] = {};
+    for (let deviceIndex = 0; deviceIndex < devicesPerUser; deviceIndex++) {
+      const deviceId = new UUID(4).format();
+      prekeyBundle[userId][deviceId] = {};
+    }
+  }
+  return prekeyBundle;
 };
 
 describe('ConversationService', () => {
@@ -67,11 +63,11 @@ describe('ConversationService', () => {
   describe("'shouldSendAsExternal'", () => {
     it('returns true for a big payload', () => {
       const {conversation} = account.service;
-      const preKeyBundles = generatePreKeyBundles(128, 4);
+      const preKeyBundles = generatePreKeyBundle(128, 4);
 
       const longMessage =
         'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem';
-      const plainText = createMessage(conversation, longMessage);
+      const plainText = createMessage(longMessage);
 
       const shouldSendAsExternal = conversation.shouldSendAsExternal(plainText, preKeyBundles);
       expect(shouldSendAsExternal).toBe(true);
@@ -79,14 +75,100 @@ describe('ConversationService', () => {
 
     it('returns false for a small payload', async done => {
       const {conversation} = account.service;
-      const preKeyBundles = generatePreKeyBundles(2, 1);
+      const preKeyBundles = generatePreKeyBundle(2, 1);
 
       const shortMessage = new UUID(4).format();
-      const plainText = createMessage(conversation, shortMessage);
+      const plainText = createMessage(shortMessage);
 
       const shouldSendAsExternal = conversation.shouldSendAsExternal(plainText, preKeyBundles);
       expect(shouldSendAsExternal).toBe(false);
 
+      done();
+    });
+
+    it('adds missing prekeys', async done => {
+      const {conversation} = account.service;
+
+      const recipientId = new UUID(4).format();
+      const missingClientId = new UUID(4).format();
+      const initialPreKeyBundles = {
+        [recipientId]: {
+          [new UUID(4).format()]: {},
+        },
+      };
+
+      spyOn(account.apiClient.conversation.api, 'postOTRMessage').and.callFake(
+        (sendingClientId, conversationId, message) => {
+          if (message.recipients[recipientId] && !message.recipients[recipientId][missingClientId]) {
+            return {
+              response: {
+                data: {
+                  deleted: {},
+                  missing: {
+                    [recipientId]: [missingClientId],
+                  },
+                  redundant: {},
+                  time: new Date().toISOString(),
+                },
+                status: 412,
+              },
+            };
+          }
+        }
+      );
+      spyOn(account.apiClient.user.api, 'postMultiPreKeyBundles').and.returnValue(
+        Promise.resolve({
+          [recipientId]: {
+            [missingClientId]: {},
+          },
+        })
+      );
+      const payload = createMessage('Hello, world!');
+      const recipients = await account.service.cryptography.encrypt(payload, initialPreKeyBundles);
+      await conversation.sendOTRMessage(new UUID(4).format(), new UUID(4).format(), recipients, payload);
+      done();
+    });
+
+    it('removes deleted prekeys', async done => {
+      const {conversation} = account.service;
+
+      const recipientId = new UUID(4).format();
+      const deletedClientId = new UUID(4).format();
+      const initialPreKeyBundles = {
+        [recipientId]: {
+          [new UUID(4).format()]: {},
+        },
+      };
+
+      spyOn(account.apiClient.conversation.api, 'postOTRMessage').and.callFake(
+        (sendingClientId, conversationId, message) => {
+          if (message.recipients[recipientId] && message.recipients[recipientId][deletedClientId]) {
+            return {
+              response: {
+                data: {
+                  deleted: {
+                    [recipientId]: [deletedClientId],
+                  },
+                  missing: {},
+                  redundant: {},
+                  time: new Date().toISOString(),
+                },
+                status: 412,
+              },
+            };
+          }
+        }
+      );
+      spyOn(account.apiClient.user.api, 'postMultiPreKeyBundles').and.returnValue(
+        Promise.resolve({
+          [recipientId]: {
+            [deletedClientId]: {},
+          },
+        })
+      );
+      const payload = createMessage('Hello, world!');
+      const recipients = await account.service.cryptography.encrypt(payload, initialPreKeyBundles);
+      await conversation.sendOTRMessage(new UUID(4).format(), new UUID(4).format(), recipients, payload);
       done();
     });
   });
