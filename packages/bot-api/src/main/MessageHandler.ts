@@ -17,6 +17,7 @@
  *
  */
 
+import {CONVERSATION_TYPE} from '@wireapp/api-client/dist/commonjs/conversation/';
 import {Account} from '@wireapp/core';
 import {PayloadBundleIncoming, ReactionType} from '@wireapp/core/dist/conversation/root';
 
@@ -41,6 +42,17 @@ abstract class MessageHandler {
     if (this.account && this.account.service) {
       const textPayload = this.account.service.conversation.createText(text);
       await this.account.service.conversation.send(conversationId, textPayload);
+    }
+  }
+
+  public async sendTextToAllGroupConversations(text: string): Promise<void> {
+    if (this.account && this.account.service) {
+      const allConversations = await this.account.service.conversation.getConversations();
+      const groupConversations = allConversations.filter(
+        conversation => conversation.type === CONVERSATION_TYPE.REGULAR
+      );
+      const conversationIds: string[] = groupConversations.map(conversation => conversation.id);
+      await Promise.all(conversationIds.map(async id => this.sendText(id, text)));
     }
   }
 
