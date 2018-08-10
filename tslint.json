@@ -12,9 +12,14 @@
     "no-object-literal-type-assertion": true,
     "no-return-await": true,
     "no-sparse-arrays": true,
+    "ordered-imports": [
+      true,
+      {
+        "named-imports-order": "any"
+      }
+    ],
     "no-this-assignment": true,
     "object-literal-sort-keys": true,
-    "ordered-imports": true,
     "prefer-conditional-expression": true,
     "prefer-const": true,
     "prefer-object-spread": true,
