@@ -1,3 +1,4 @@
+.travis.yml
 **/.tmp/**
 **/bin/**
 **/coverage/**
@@ -8,4 +9,3 @@ CHANGELOG.md
 node_modules
 package.json
 packages/react-ui-kit/*.js
-.travis.yml
