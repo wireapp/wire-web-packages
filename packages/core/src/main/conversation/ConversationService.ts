@@ -463,9 +463,9 @@ class ConversationService {
     plainTextArray: Uint8Array
   ): Promise<NewOTRMessage> {
     if (error.response && error.response.status === StatusCode.PRECONDITION_FAILED) {
-      const {missing, deleted} = error.response.data;
-      if (missing) {
-        const missingPreKeyBundles = await this.apiClient.user.api.postMultiPreKeyBundles(missing);
+      const {missing: missingDevices, deleted: deletedDevices} = error.response.data;
+      if (missingDevices) {
+        const missingPreKeyBundles = await this.apiClient.user.api.postMultiPreKeyBundles(missingDevices);
         const reEncryptedPayloads = await this.cryptographyService.encrypt(plainTextArray, missingPreKeyBundles);
         for (const recipientId in message.recipients) {
           for (const deviceId in reEncryptedPayloads[recipientId]) {
@@ -474,10 +474,10 @@ class ConversationService {
         }
         return message;
       }
-      if (deleted) {
+      if (deletedDevices) {
         for (const recipientId in message.recipients) {
-          for (const deviceId in deleted) {
-            delete message.recipients[recipientId][deviceId];
+          for (const deletedDeviceId in deletedDevices) {
+            delete message.recipients[recipientId][deletedDeviceId];
           }
         }
         return message;
