@@ -8,7 +8,6 @@
   },
   "exact": true,
   "ignoreChanges": ["**/demo/**"],
-  "lerna": "2.11.0",
   "loglevel": "verbose",
   "npmClient": "yarn",
   "npmClientArgs": ["--exact"],

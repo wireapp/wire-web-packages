@@ -18,8 +18,8 @@
  */
 
 import {
-  Conversation,
   CONVERSATION_TYPE,
+  Conversation,
   NewConversation,
   NewOTRMessage,
   OTRRecipients,
