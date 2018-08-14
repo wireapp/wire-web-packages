@@ -20,6 +20,7 @@
 import styled, {keyframes} from 'styled-components';
 import {COLOR} from '../Identity';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 const PILL_TYPE = {
   error: 'ERROR',
@@ -43,7 +44,7 @@ const pillAnimation = keyframes`
     }
 `;
 
-const Pill = styled.span`
+const StyledPill = styled.span`
   ${({type}) => {
     const backgroundColor = type ? backgroundColors[type] : 'transparent';
     const margin = type ? '12px 0 0 0' : '0 8px';
@@ -76,11 +77,20 @@ const Pill = styled.span`
         animation: ${pillAnimation} 300ms ease-out;`};
 `;
 
+const Pill = ({active, children, type, ...props}) => (
+  <StyledPill active={active} type={type} data-uie-name="element-pill" data-uie-status={type} {...props}>
+    {children}
+  </StyledPill>
+);
+
 Pill.propTypes = {
+  active: PropTypes.boolean,
+  children: PropTypes.node,
   type: PropTypes.oneOf(Object.keys(PILL_TYPE)),
 };
 
 Pill.defaultProps = {
+  active: true,
   type: null,
 };
 
