@@ -37,17 +37,19 @@ class Runtime {
 
   public static getOSFamily(): OperatingSystem {
     const family = Runtime.getOS().family.toLowerCase();
-    if (family.indexOf('windows') > -1) {
+    if (family.includes('windows')) {
       return OperatingSystem.WINDOWS;
-    } else if (family.indexOf('android') > -1) {
-      return OperatingSystem.ANDROID;
-    } else if (family.indexOf('ios') > -1) {
-      return OperatingSystem.IOS;
-    } else if (['os x', 'mac os'].includes(family)) {
-      return OperatingSystem.MAC;
-    } else {
-      return OperatingSystem.LINUX;
     }
+    if (family.includes('android')) {
+      return OperatingSystem.ANDROID;
+    }
+    if (family.includes('ios')) {
+      return OperatingSystem.IOS;
+    }
+    if (['os x', 'mac os'].includes(family)) {
+      return OperatingSystem.MAC;
+    }
+    return OperatingSystem.LINUX;
   }
 
   public static getBrowserName(): string {
