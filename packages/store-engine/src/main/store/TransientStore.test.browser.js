@@ -26,12 +26,12 @@ describe('store.TransientStore', () => {
   let engine = undefined;
   let store = undefined;
 
-  beforeEach(async done => {
+  beforeEach(async () => {
     engine = new LocalStorageEngine();
     await engine.init(STORE_NAME);
+
     store = new Store.TransientStore(engine);
     await store.init(TABLE_NAME);
-    done();
   });
 
   afterEach(() => {
@@ -45,37 +45,26 @@ describe('store.TransientStore', () => {
     const primaryKey = 'access-tokens';
     const ttl = 1000;
 
-    it("saves a record together with it's expiration date.", done => {
-      store
-        .set(primaryKey, entity, ttl)
-        .then(bundle => {
-          expect(bundle.expires).toEqual(jasmine.any(Number));
-          done();
-        })
-        .catch(error => done.fail(error));
+    it("saves a record together with it's expiration date.", async () => {
+      const bundle = await store.set(primaryKey, entity, ttl);
+      expect(bundle.expires).toEqual(jasmine.any(Number));
     });
 
-    it("saves a record together with it's timeoutID.", done => {
-      store
-        .set(primaryKey, entity, ttl)
-        .then(bundle => {
-          expect(bundle.timeoutID).toBeDefined();
-          done();
-        })
-        .catch(error => done.fail(error));
+    it("saves a record together with it's timeoutID.", async () => {
+      const bundle = await store.set(primaryKey, entity, ttl);
+      expect(bundle.timeoutID).toBeDefined();
     });
 
-    it("doesn't overwrite an existing record.", done => {
-      store
-        .set(primaryKey, entity, ttl)
-        .then(bundle => {
-          return store.set(primaryKey, {access_token: 'ABC'}, ttl);
-        })
-        .catch(error => {
-          expect(error).toEqual(jasmine.any(Store.RecordAlreadyExistsError));
-          expect(error.code).toBe(1);
-          done();
-        });
+    it("doesn't overwrite an existing record.", async done => {
+      await store.set(primaryKey, entity, ttl);
+      try {
+        store.set(primaryKey, {access_token: 'ABC'}, ttl);
+        done.fail();
+      } catch (error) {
+        expect(error).toEqual(jasmine.any(Store.RecordAlreadyExistsError));
+        expect(error.code).toBe(1);
+        done();
+      }
     });
   });
 

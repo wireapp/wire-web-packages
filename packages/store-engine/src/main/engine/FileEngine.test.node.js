@@ -127,9 +127,9 @@ describe('FileEngine', () => {
           done.fail();
         } catch (error) {
           expect(error instanceof expectedError).toBe(true);
+          done();
         }
       }
-      done();
     });
   });
 
@@ -144,7 +144,7 @@ describe('FileEngine', () => {
       it(description, done => testFunction(done, engine));
     });
 
-    it('accepts custom file extensions.', async done => {
+    it('accepts custom file extensions.', async () => {
       const options = {
         fileExtension: '.json',
       };
@@ -152,7 +152,6 @@ describe('FileEngine', () => {
       await engine.init(STORE_NAME, options);
 
       expect(engine.options.fileExtension).toBe(options.fileExtension);
-      done();
     });
   });
 

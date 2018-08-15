@@ -32,21 +32,18 @@ describe('FileSystemEngine', () => {
     return storeEngine;
   }
 
-  beforeEach(async done => {
+  beforeEach(async () => {
     engine = await initEngine();
-    done();
   });
 
-  afterEach(async done => {
+  afterEach(async () => {
     await fs.rmdir(STORE_NAME);
-    done();
   });
 
   describe('"init"', () => {
-    it('resolves with a browser-specific URL to the filesystem.', async done => {
+    it('resolves with a browser-specific URL to the filesystem.', async () => {
       const fileSystem = await engine.init();
       expect(fileSystem.root.toURL().startsWith('filesystem:')).toBe(true);
-      done();
     });
   });
 

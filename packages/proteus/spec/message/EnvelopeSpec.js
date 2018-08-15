@@ -31,16 +31,10 @@ describe('Envelope', () => {
   let base_key;
   let ratchet_key;
 
-  beforeAll(async done => {
-    try {
-      identity_key = Proteus.keys.IdentityKey.new((await Proteus.keys.KeyPair.new()).public_key);
-      base_key = (await Proteus.keys.KeyPair.new()).public_key;
-      ratchet_key = (await Proteus.keys.KeyPair.new()).public_key;
-
-      done();
-    } catch (err) {
-      done.fail(err);
-    }
+  beforeAll(async () => {
+    identity_key = Proteus.keys.IdentityKey.new((await Proteus.keys.KeyPair.new()).public_key);
+    base_key = (await Proteus.keys.KeyPair.new()).public_key;
+    ratchet_key = (await Proteus.keys.KeyPair.new()).public_key;
   });
 
   it('encapsulates a CipherMessage', () => {
@@ -79,12 +73,14 @@ describe('Envelope', () => {
     expect(env_cpy.verify(mac_key)).toBe(true);
   });
 
-  it('fails when passing invalid input', () => {
+  it('fails when passing invalid input', done => {
     const empty_buffer = new ArrayBuffer(0);
     try {
       Proteus.message.Envelope.deserialise(empty_buffer);
+      done.fail();
     } catch (error) {
       expect(error instanceof CBOR.DecodeError).toBe(true);
+      done();
     }
   });
 });

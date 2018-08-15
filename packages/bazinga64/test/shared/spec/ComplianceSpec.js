@@ -24,10 +24,9 @@ describe('Compliance', () => {
   describe('decode Base64', () => {
     let sodium;
 
-    beforeAll(async done => {
+    beforeAll(async () => {
       await _sodium.ready;
       sodium = _sodium;
-      done();
     });
 
     it('is compliant with libsodium on short sequences', () => {

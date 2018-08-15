@@ -30,9 +30,8 @@ describe('MemoryEngine', () => {
     return storeEngine;
   }
 
-  beforeEach(async done => {
+  beforeEach(async () => {
     engine = await initEngine();
-    done();
   });
 
   describe('"append"', () => {

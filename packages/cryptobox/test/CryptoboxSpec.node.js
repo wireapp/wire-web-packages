@@ -32,7 +32,7 @@ describe('Cryptobox', () => {
   }
 
   describe('"encrypt / decrypt"', () => {
-    it('encrypts messages for multiple clients and decrypts', async done => {
+    it('encrypts messages for multiple clients and decrypts', async () => {
       const alice = await createCryptobox('alice');
       const text = 'Hello, World!';
 
@@ -54,27 +54,21 @@ describe('Cryptobox', () => {
         await mallory.store.load_prekey(0)
       );
 
-      Promise.all([
-        alice.encrypt('session-with-bob', text, bobBundle.serialise()),
-        alice.encrypt('session-with-eve', text, eveBundle.serialise()),
-        alice.encrypt('session-with-mallory', text, malloryBundle.serialise()),
-      ])
-        .then(async ([bobPayload, evePayload, malloryPayload]) => {
-          let decrypted = await bob.decrypt('session-with-alice', bobPayload);
-          expect(Buffer.from(decrypted).toString('utf8')).toBe(text);
+      const bobPayload = await alice.encrypt('session-with-bob', text, bobBundle.serialise());
+      const evePayload = await alice.encrypt('session-with-eve', text, eveBundle.serialise());
+      const malloryPayload = await alice.encrypt('session-with-mallory', text, malloryBundle.serialise());
 
-          decrypted = await eve.decrypt('session-with-alice', evePayload);
-          expect(Buffer.from(decrypted).toString('utf8')).toBe(text);
+      const bobDecrypted = await bob.decrypt('session-with-alice', bobPayload);
+      expect(Buffer.from(bobDecrypted).toString('utf8')).toBe(text);
 
-          decrypted = await mallory.decrypt('session-with-alice', malloryPayload);
-          expect(Buffer.from(decrypted).toString('utf8')).toBe(text);
+      const eveDecrypted = await eve.decrypt('session-with-alice', evePayload);
+      expect(Buffer.from(eveDecrypted).toString('utf8')).toBe(text);
 
-          done();
-        })
-        .catch(done.fail);
+      const malloryDecrypted = await mallory.decrypt('session-with-alice', malloryPayload);
+      expect(Buffer.from(malloryDecrypted).toString('utf8')).toBe(text);
     });
 
-    it("throws an error when receiving a PreKey message that was encoded with a PreKey which does not exist anymore on the receiver's side", async () => {
+    it("throws an error when receiving a PreKey message that was encoded with a PreKey which does not exist anymore on the receiver's side", async done => {
       const cryptobox = require('./fixtures/qa-break-session/cryptobox');
       const event = require('./fixtures/qa-break-session/event');
       const sessionId = `${event.from}@${event.data.sender}`;
@@ -88,14 +82,16 @@ describe('Cryptobox', () => {
 
       try {
         await alice.decrypt(sessionId, ciphertext.buffer);
+        done.fail();
       } catch (error) {
         expect(error.code).toBe(Proteus.errors.ProteusError.CODE.CASE_101);
+        done();
       }
     });
   });
 
   describe('"serialize / deserialize"', () => {
-    it('can be used to export and import Cryptobox instances', async done => {
+    it('can be used to export and import Cryptobox instances', async () => {
       // Test serialization
       const amountOfAlicePreKeys = 15;
       const alice = await createCryptobox('alice', amountOfAlicePreKeys);
@@ -159,8 +155,6 @@ describe('Cryptobox', () => {
       const encrypted = await eve.encrypt(sessionName, messageEveToBob);
       const decrypted = await bob.decrypt('bob-to-alice', encrypted);
       expect(Buffer.from(decrypted).toString('utf8')).toBe(messageEveToBob);
-
-      done();
     });
   });
 });

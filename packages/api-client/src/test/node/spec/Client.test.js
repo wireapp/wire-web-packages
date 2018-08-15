@@ -207,7 +207,7 @@ describe('Client', () => {
         .reply(200, undefined);
     });
 
-    it('can logout a user', async done => {
+    it('can logout a user', async () => {
       const client = new APIClient();
 
       const context = client.createContext(
@@ -217,12 +217,7 @@ describe('Client', () => {
       );
       await client.initEngine(context);
 
-      try {
-        await client.logout();
-        done();
-      } catch (error) {
-        done.fail(error);
-      }
+      await client.logout();
     });
   });
 
@@ -247,7 +242,7 @@ describe('Client', () => {
         .reply(200, accessTokenData);
     });
 
-    it('automatically gets an access token after registration', done => {
+    it('automatically gets an access token after registration', async () => {
       const client = new APIClient({
         schemaCallback: db => {
           db.version(1).stores({
@@ -255,14 +250,10 @@ describe('Client', () => {
           });
         },
       });
-      client
-        .register(registerData)
-        .then(context => {
-          expect(context.userId).toBe(registerData.id);
-          expect(client.accessTokenStore.accessToken.access_token).toBe(accessTokenData.access_token);
-          done();
-        })
-        .catch(done.fail);
+      const context = await client.register(registerData);
+
+      expect(context.userId).toBe(registerData.id);
+      expect(client.accessTokenStore.accessToken.access_token).toBe(accessTokenData.access_token);
     });
   });
 });

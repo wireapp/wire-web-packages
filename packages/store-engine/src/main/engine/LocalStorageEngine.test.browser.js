@@ -30,9 +30,8 @@ describe('LocalStorageEngine', () => {
     return storeEngine;
   }
 
-  beforeEach(async done => {
+  beforeEach(async () => {
     engine = await initEngine();
-    done();
   });
 
   afterEach(() => window.localStorage.clear());

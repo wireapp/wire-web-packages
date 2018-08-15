@@ -29,7 +29,7 @@ describe('IndexedDBEngine', () => {
         await storeEngine.init(STORE_NAME);
         done.fail('Expected error');
       } catch (error) {
-        expect(error instanceof StoreEngineError.UnsupportedError).toBe(true);
+        expect(error).toEqual(jasmine.any(StoreEngineError.UnsupportedError));
         done();
       }
     });
