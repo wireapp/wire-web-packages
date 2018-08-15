@@ -294,7 +294,7 @@ class Demo extends React.PureComponent {
 
         <Content>
           <Container style={{alignItems: 'center', display: 'flex', justifyContent: 'space-around'}}>
-            <Logo scale={3} />
+            <Logo scale={3} color={COLOR.BLUE} />
             <Loading />
             <Loading progress={0.33} />
             <Loading progress={0.66} />
