@@ -41,10 +41,10 @@ const messageEchoCache = {};
   const apiClient = new APIClient({store: engine, urls: backend});
   const account = new Account(apiClient);
 
-  const sendConfirmation = async (messageId, conversationId, messageTimer) => {
-    if (messageTimer) {
+  const sendConfirmation = async (messageId, conversationId, messageTimer, userId) => {
+    if (messageTimer && userId) {
       setTimeout(async () => {
-        const confirmationPayload = account.service.conversation.createConfirmationEphemeral(messageId);
+        const confirmationPayload = account.service.conversation.createConfirmationEphemeral(messageId, [userId]);
         await account.service.conversation.send(conversationId, confirmationPayload);
       }, messageTimer);
     } else {
@@ -61,7 +61,7 @@ const messageEchoCache = {};
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
     );
 
-    await sendConfirmation(messageId, conversationId, messageTimer);
+    await sendConfirmation(messageId, conversationId, messageTimer, from);
 
     const textPayload = account.service.conversation.createText(content.text);
     messageEchoCache[messageId] = textPayload.id;

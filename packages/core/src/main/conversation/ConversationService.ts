@@ -169,11 +169,21 @@ class ConversationService {
 
     const confirmationObject: PayloadBundleOutgoingUnsent = {
       ...payloadBundle,
-      type: GenericMessageType.CONFIRMATION,
+      type: PayloadBundleType.CONFIRMATION,
     };
 
     await this.send(conversationId, confirmationObject);
-    await this.deleteMessageEveryone(conversationId, confirmationContent.confirmMessageId);
+
+    const messageDelete = MessageDelete.create({
+      messageId: confirmationContent.confirmMessageId,
+    });
+
+    const genericMessage = GenericMessage.create({
+      [GenericMessageType.DELETED]: messageDelete,
+      messageId: payloadBundle.id,
+    });
+
+    await this.sendGenericMessage(this.clientID, conversationId, genericMessage, confirmationContent.userIds);
 
     return {
       ...payloadBundle,
@@ -213,10 +223,11 @@ class ConversationService {
   private async sendGenericMessage(
     sendingClientId: string,
     conversationId: string,
-    genericMessage: GenericMessage
+    genericMessage: GenericMessage,
+    userIds?: string[]
   ): Promise<void> {
     const plainTextArray = GenericMessage.encode(genericMessage).finish();
-    const preKeyBundles = await this.getPreKeyBundle(conversationId);
+    const preKeyBundles = await this.getPreKeyBundle(conversationId, false, userIds);
     const recipients = await this.cryptographyService.encrypt(plainTextArray, preKeyBundles);
 
     return this.sendOTRMessage(sendingClientId, conversationId, recipients, plainTextArray);
@@ -824,13 +835,15 @@ class ConversationService {
 
   public createConfirmationEphemeral(
     confirmMessageId: string,
+    userIds: string[],
     messageId: string = ConversationService.createId()
   ): PayloadBundleOutgoingUnsent {
     const confirmationPayload = this.createConfirmation(confirmMessageId, messageId);
+    (confirmationPayload.content as ConfirmationContent).userIds = userIds;
 
     return {
       ...confirmationPayload,
-      type: GenericMessageType.CONFIRMATION_EPHEMERAL,
+      type: PayloadBundleType.CONFIRMATION_EPHEMERAL,
     };
   }
 
