@@ -3,6 +3,126 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="5.7.14"></a>
+## [5.7.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.7.13...@wireapp/core@5.7.14) (2018-08-15)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.7.13"></a>
+## [5.7.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.7.12...@wireapp/core@5.7.13) (2018-08-15)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.7.12"></a>
+## [5.7.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.7.11...@wireapp/core@5.7.12) (2018-08-15)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.7.11"></a>
+## [5.7.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.7.10...@wireapp/core@5.7.11) (2018-08-14)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.7.10"></a>
+## [5.7.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.7.9...@wireapp/core@5.7.10) (2018-08-14)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.7.9"></a>
+## [5.7.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.7.8...@wireapp/core@5.7.9) (2018-08-14)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.7.8"></a>
+## [5.7.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.7.7...@wireapp/core@5.7.8) (2018-08-14)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.7.7"></a>
+## [5.7.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.7.6...@wireapp/core@5.7.7) (2018-08-14)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.7.6"></a>
+## [5.7.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.7.5...@wireapp/core@5.7.6) (2018-08-14)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.7.5"></a>
+## [5.7.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.7.4...@wireapp/core@5.7.5) (2018-08-14)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.7.4"></a>
+## [5.7.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.7.3...@wireapp/core@5.7.4) (2018-08-13)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.7.3"></a>
+## [5.7.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.7.2...@wireapp/core@5.7.3) (2018-08-13)
+
+
+### Bug Fixes
+
+* **core,bot-api:** Handle missing payload bundle types ([#990](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/990)) ([09f6f63](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/09f6f63))
+
+
+
+
+
+<a name="5.7.2"></a>
+## [5.7.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.7.1...@wireapp/core@5.7.2) (2018-08-10)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
 <a name="5.7.1"></a>
 ## [5.7.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.7.0...@wireapp/core@5.7.1) (2018-08-10)
 
