@@ -46,10 +46,7 @@ const messageEchoCache = {};
     await account.service.conversation.send(conversationId, confirmationPayload);
 
     if (messageTimer && userId) {
-      setTimeout(
-        () => account.service.conversation.deleteMessageEveryone(conversationId, messageId, [userId]),
-        messageTimer
-      );
+      await account.service.conversation.deleteMessageEveryone(conversationId, messageId, [userId]);
     }
   };
 

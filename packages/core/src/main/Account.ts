@@ -258,12 +258,12 @@ class Account extends EventEmitter {
         unwrappedMessage.messageTimer =
           typeof expireAfterMillis === 'number' ? expireAfterMillis : (expireAfterMillis as Long).toNumber();
         return unwrappedMessage;
-      } else {
-        return this.mapGenericMessage(genericMessage, otrMessage);
       }
-    } else {
-      throw decryptedMessage.error;
+
+      return this.mapGenericMessage(genericMessage, otrMessage);
     }
+
+    throw decryptedMessage.error;
   }
 
   private mapGenericMessage(genericMessage: any, event: ConversationOtrMessageAddEvent): PayloadBundleIncoming {

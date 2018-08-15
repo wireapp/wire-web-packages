@@ -562,7 +562,7 @@ class ConversationService {
       messageId: payloadBundle.id,
     });
 
-    await this.sendGenericMessage(this.clientID, conversationId, sessionReset);
+    await this.sendGenericMessage(this.clientID, conversationId, sessionReset, userIds);
 
     return {
       ...payloadBundle,
