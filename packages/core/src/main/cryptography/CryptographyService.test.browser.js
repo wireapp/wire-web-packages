@@ -166,14 +166,19 @@ describe('CryptographyService', () => {
       }
     });
 
-    it('does not decrypt when hash is an empty array', async () => {
+    it('does not decrypt when hash is an empty array', async done => {
       const bytes = new Uint8Array(16);
       window.crypto.getRandomValues(bytes);
       const byteBuffer = Buffer.from(bytes.buffer);
 
       const {cipherText, keyBytes} = await encryptAsset(byteBuffer);
 
-      await decryptAsset(cipherText, keyBytes, new Uint8Array([]));
+      try {
+        await decryptAsset(cipherText, keyBytes, new Uint8Array([]));
+        done.fail();
+      } catch (error) {
+        done();
+      }
     });
   });
 

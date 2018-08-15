@@ -569,6 +569,7 @@ describe('Session', () => {
       expect(Object.keys(bob.session_states).length).toBe(1);
     });
   });
+
   describe('Process', () => {
     it('works until the max counter gap', async () => {
       const alice_ident = await Proteus.keys.IdentityKeyPair.new();

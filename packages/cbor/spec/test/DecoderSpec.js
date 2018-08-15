@@ -149,6 +149,7 @@ describe('CBOR.Decoder', () => {
   it('handles optional values', done => {
     try {
       decoder('f6').u8();
+      done.fail();
     } catch (error) {
       expect(error instanceof CBOR.DecodeError);
       expect(error.message).toEqual(CBOR.DecodeError.UNEXPECTED_TYPE);

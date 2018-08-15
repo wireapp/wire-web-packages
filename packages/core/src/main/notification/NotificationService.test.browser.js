@@ -125,7 +125,7 @@ describe('NotificationService', () => {
     spyOn(engine, 'create').and.callThrough();
 
     const returnValue = await notificationService.setLastEventDate(lesserDate);
-    expect(returnValue).toEqual(greaterDate + 'x');
+    expect(returnValue).toEqual(greaterDate);
 
     expect(notificationService.database.getLastEventDate).toHaveBeenCalledTimes(1);
     expect(engine.read).toHaveBeenCalledTimes(1);
