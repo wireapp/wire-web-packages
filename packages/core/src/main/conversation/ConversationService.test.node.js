@@ -33,14 +33,14 @@ const createMessage = content => {
   return GenericMessage.encode(customTextMessage).finish();
 };
 
-const generatePreKeyBundle = (userCount, devicesPerUser) => {
+const generatePreKeyBundle = (userCount, clientsPerUser) => {
   const prekeyBundle = {};
   for (let userIndex = 0; userIndex < userCount; userIndex++) {
     const userId = new UUID(4).format();
     prekeyBundle[userId] = {};
-    for (let deviceIndex = 0; deviceIndex < devicesPerUser; deviceIndex++) {
-      const deviceId = new UUID(4).format();
-      prekeyBundle[userId][deviceId] = {};
+    for (let clientIndex = 0; clientIndex < clientsPerUser; clientIndex++) {
+      const clientId = new UUID(4).format();
+      prekeyBundle[userId][clientId] = {};
     }
   }
   return prekeyBundle;
