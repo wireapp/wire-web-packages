@@ -87,7 +87,7 @@ const messageEchoCache = {};
 
     const fileBuffer = await account.service.conversation.getAsset(content.uploaded);
 
-    await sendConfirmation(messageId, conversationId, messageTimer);
+    await sendConfirmation(messageId, conversationId, messageTimer, from);
 
     const fileMetaDataPayload = await account.service.conversation.createFileMetadata({
       length: fileBuffer.length,
@@ -161,7 +161,7 @@ const messageEchoCache = {};
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
     );
 
-    await sendConfirmation(messageId, conversationId, messageTimer);
+    await sendConfirmation(messageId, conversationId, messageTimer, from);
 
     const imageBuffer = await account.service.conversation.getAsset(uploaded);
     const imagePayload = await account.service.conversation.createImage({
@@ -202,7 +202,7 @@ const messageEchoCache = {};
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
     );
 
-    await sendConfirmation(messageId, conversationId, messageTimer);
+    await sendConfirmation(messageId, conversationId, messageTimer, from);
 
     const pingPayload = account.service.conversation.createPing();
     account.service.conversation.messageTimer.setMessageLevelTimer(conversationId, messageTimer);
