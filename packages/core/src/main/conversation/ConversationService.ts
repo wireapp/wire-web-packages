@@ -107,7 +107,7 @@ class ConversationService {
     return genericMessage;
   }
 
-  private async getPreKeyBundles(
+  private async getPreKeyBundle(
     conversationId: string,
     skipOwnClients = false,
     userIds?: string[]
@@ -192,7 +192,7 @@ class ConversationService {
     genericMessage: GenericMessage
   ): Promise<void> {
     const plainTextArray = GenericMessage.encode(genericMessage).finish();
-    const preKeyBundles = await this.getPreKeyBundles(conversationId);
+    const preKeyBundles = await this.getPreKeyBundle(conversationId);
     const recipients = await this.cryptographyService.encrypt(plainTextArray, preKeyBundles);
 
     return this.sendOTRMessage(sendingClientId, conversationId, recipients, plainTextArray);
@@ -257,7 +257,7 @@ class ConversationService {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    const preKeyBundles = await this.getPreKeyBundles(conversationId);
+    const preKeyBundles = await this.getPreKeyBundle(conversationId);
     const plainTextArray = GenericMessage.encode(genericMessage).finish();
     const payload = await AssetCryptography.encryptAsset(plainTextArray);
 
@@ -296,7 +296,7 @@ class ConversationService {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    const preKeyBundles = await this.getPreKeyBundles(conversationId);
+    const preKeyBundles = await this.getPreKeyBundle(conversationId);
     const plainTextArray = GenericMessage.encode(genericMessage).finish();
     const payload = await AssetCryptography.encryptAsset(plainTextArray);
 
@@ -336,7 +336,7 @@ class ConversationService {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    const preKeyBundles = await this.getPreKeyBundles(conversationId);
+    const preKeyBundles = await this.getPreKeyBundle(conversationId);
     const plainTextArray = GenericMessage.encode(genericMessage).finish();
     const payload = await AssetCryptography.encryptAsset(plainTextArray);
 
@@ -396,7 +396,7 @@ class ConversationService {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    const preKeyBundles = await this.getPreKeyBundles(conversationId);
+    const preKeyBundles = await this.getPreKeyBundle(conversationId);
     const plainTextArray = GenericMessage.encode(genericMessage).finish();
     const payload = await AssetCryptography.encryptAsset(plainTextArray);
 
@@ -463,22 +463,22 @@ class ConversationService {
     plainTextArray: Uint8Array
   ): Promise<NewOTRMessage> {
     if (error.response && error.response.status === StatusCode.PRECONDITION_FAILED) {
-      const {missing: missingDevices, deleted: deletedDevices} = error.response.data;
+      const {missing: missingClients, deleted: deletedClients} = error.response.data;
 
-      if (deletedDevices) {
+      if (deletedClients) {
         for (const recipientId in message.recipients) {
-          for (const deletedDeviceId in deletedDevices) {
-            delete message.recipients[recipientId][deletedDeviceId];
+          for (const deletedClientId in deletedClients) {
+            delete message.recipients[recipientId][deletedClientId];
           }
         }
       }
 
-      if (missingDevices) {
-        const missingPreKeyBundles = await this.apiClient.user.api.postMultiPreKeyBundles(missingDevices);
+      if (missingClients) {
+        const missingPreKeyBundles = await this.apiClient.user.api.postMultiPreKeyBundles(missingClients);
         const reEncryptedPayloads = await this.cryptographyService.encrypt(plainTextArray, missingPreKeyBundles);
         for (const recipientId in message.recipients) {
-          for (const deviceId in reEncryptedPayloads[recipientId]) {
-            message.recipients[recipientId][deviceId] = reEncryptedPayloads[recipientId][deviceId];
+          for (const clientId in reEncryptedPayloads[recipientId]) {
+            message.recipients[recipientId][clientId] = reEncryptedPayloads[recipientId][clientId];
           }
         }
       }
@@ -580,7 +580,7 @@ class ConversationService {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    const preKeyBundles = await this.getPreKeyBundles(conversationId);
+    const preKeyBundles = await this.getPreKeyBundle(conversationId);
     const plainTextArray = GenericMessage.encode(genericMessage).finish();
 
     if (this.shouldSendAsExternal(plainTextArray, preKeyBundles)) {
