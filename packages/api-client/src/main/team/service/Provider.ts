@@ -18,11 +18,11 @@
  */
 
 interface Provider {
+  description: string;
+  email: string;
   id: string;
   name: string;
-  email: string;
   url: string;
-  description: string;
 }
 
 export {Provider};
