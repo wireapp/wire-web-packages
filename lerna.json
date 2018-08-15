@@ -11,6 +11,7 @@
   "loglevel": "verbose",
   "npmClient": "yarn",
   "npmClientArgs": ["--exact"],
+  "registry": "https://registry.npmjs.org/",
   "useWorkspaces": true,
   "version": "independent",
   "yes": true
