@@ -58,7 +58,7 @@ describe('store.TransientStore', () => {
     it("doesn't overwrite an existing record.", async done => {
       await store.set(primaryKey, entity, ttl);
       try {
-        store.set(primaryKey, {access_token: 'ABC'}, ttl);
+        await store.set(primaryKey, {access_token: 'ABC'}, ttl);
         done.fail();
       } catch (error) {
         expect(error).toEqual(jasmine.any(Store.RecordAlreadyExistsError));

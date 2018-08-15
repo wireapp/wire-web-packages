@@ -88,25 +88,18 @@ describe('cryptobox.Cryptobox', () => {
   });
 
   describe('"create"', () => {
-    it('initializes a Cryptobox with a new identity and the last resort PreKey and saves these', done => {
+    it('initializes a Cryptobox with a new identity and the last resort PreKey and saves these', async () => {
       const box = new cryptobox.Cryptobox(engine);
 
-      box
-        .create()
-        .then(() => {
-          expect(box.identity).toBeDefined();
-          return box.store.load_identity();
-        })
-        .then(identity => {
-          expect(identity).toBeDefined();
-          expect(identity.public_key.fingerprint()).toBeDefined();
-          return box.store.load_prekey(Proteus.keys.PreKey.MAX_PREKEY_ID);
-        })
-        .then(preKey => {
-          expect(preKey.key_id).toBe(Proteus.keys.PreKey.MAX_PREKEY_ID);
-          done();
-        })
-        .catch(done.fail);
+      await box.create();
+      expect(box.identity).toBeDefined();
+
+      const identity = await box.store.load_identity();
+      expect(identity).toBeDefined();
+      expect(identity.public_key.fingerprint()).toBeDefined();
+
+      const preKey = await box.store.load_prekey(Proteus.keys.PreKey.MAX_PREKEY_ID);
+      expect(preKey.key_id).toBe(Proteus.keys.PreKey.MAX_PREKEY_ID);
     });
 
     it('initializes a Cryptobox with a defined amount of PreKeys (including the last resort PreKey)', async () => {

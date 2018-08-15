@@ -90,7 +90,7 @@ describe('CryptographyService', () => {
   });
 
   describe('"encrypt"', () => {
-    it('generates a set of encrypted data based on PreKeys from multiple clients.', done => {
+    it('generates a set of encrypted data based on PreKeys from multiple clients.', async () => {
       const firstUserID = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
       const secondUserID = '2bde49aa-bdb5-458f-98cf-7d3552b10916';
 
@@ -129,13 +129,11 @@ describe('CryptographyService', () => {
       };
 
       const text = new Uint8Array([72, 101, 108, 108, 111, 33]); // "Hello!"
-      cryptography.encrypt(text, preKeyBundleMap).then(otrBundle => {
-        expect(Object.keys(otrBundle).length).toBe(2);
-        expect(Object.keys(otrBundle[firstUserID]).length).toBe(3);
-        expect(Object.keys(otrBundle[secondUserID]).length).toBe(2);
-        expect(otrBundle[firstUserID][firstClientId]).toEqual(jasmine.any(String));
-        done();
-      });
+      const otrBundle = await cryptography.encrypt(text, preKeyBundleMap);
+      expect(Object.keys(otrBundle).length).toBe(2);
+      expect(Object.keys(otrBundle[firstUserID]).length).toBe(3);
+      expect(Object.keys(otrBundle[secondUserID]).length).toBe(2);
+      expect(otrBundle[firstUserID][firstClientId]).toEqual(jasmine.any(String));
     });
   });
 
