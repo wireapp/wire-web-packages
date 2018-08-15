@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "jasmine": "3.2.0",
-    "karma": "2.0.5",
+    "karma": "3.0.0",
     "karma-chrome-launcher": "2.2.0",
     "karma-jasmine": "1.1.2",
     "karma-jasmine-diff-reporter": "1.2.0",
@@ -53,5 +53,5 @@
     "test:node": "jasmine --config=jasmine.json"
   },
   "types": "./dist/commonjs/index.d.ts",
-  "version": "0.12.0"
+  "version": "0.12.4"
 }
