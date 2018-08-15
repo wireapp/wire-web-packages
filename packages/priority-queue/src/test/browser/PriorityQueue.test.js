@@ -43,16 +43,16 @@ describe('PriorityQueue', () => {
       queue.add(businessLogic);
     });
 
-    it('supports limiting the amount of retries', done => {
+    it('supports limiting the amount of retries', async done => {
       const businessLogic = () => Promise.reject(new Error('Error'));
       const queue = new PriorityQueue({maxRetries: 1});
-      queue
-        .add(businessLogic)
-        .then(done.fail)
-        .catch(() => {
-          expect(queue.size).toBe(0);
-          done();
-        });
+      try {
+        await queue.add(businessLogic);
+        done.fail();
+      } catch (error) {
+        expect(queue.size).toBe(0);
+        done();
+      }
     });
   });
 
@@ -113,7 +113,7 @@ describe('PriorityQueue', () => {
   describe('"run"', () => {
     it('works with primitive values', done => {
       const queue = new PriorityQueue();
-      const zebra = () => Promise.resolve('zebra').then(done());
+      const zebra = async () => Promise.resolve('zebra').then(done());
 
       queue.add('ape');
       queue.add('cat');

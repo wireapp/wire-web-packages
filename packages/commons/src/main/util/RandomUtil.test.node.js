@@ -34,10 +34,9 @@ describe('RandomUtil', () => {
   });
 
   describe('"randomArrayElement"', () => {
-    it('returns undefined on empty array', done => {
+    it('returns undefined on empty array', () => {
       const actual = RandomUtil.randomArrayElement([]);
       expect(actual).toEqual(undefined);
-      done();
     });
   });
 });

@@ -74,47 +74,33 @@ describe('store.TransientStore', () => {
     };
     const ttl = 900;
 
-    it("returns a saved record together with it's expiration.", done => {
+    it("returns a saved record together with it's expiration.", async () => {
       const primaryKey = 'access-tokens';
 
-      store
-        .set(primaryKey, entity, ttl)
-        .then(() => {
-          store
-            .get(primaryKey)
-            .then(bundle => expect(bundle.payload).toEqual(entity))
-            .then(done);
-        })
-        .catch(error => done.fail(error));
+      await store.set(primaryKey, entity, ttl);
+      const bundle = await store.get(primaryKey);
+      expect(bundle.payload).toEqual(entity);
     });
 
-    it('returns a saved record with an "@" in it\'s primary key.', done => {
+    it('returns a saved record with an "@" in it\'s primary key.', async () => {
       const primaryKey = '@access@tokens';
 
-      store
-        .set(primaryKey, entity, ttl)
-        .then(() => {
-          store
-            .get(primaryKey)
-            .then(bundle => expect(bundle.payload).toEqual(entity))
-            .then(done);
-        })
-        .catch(error => done.fail(error));
+      await store.set(primaryKey, entity, ttl);
+
+      const bundle = await store.get(primaryKey);
+      expect(bundle.payload).toEqual(entity);
     });
 
-    it('returns a non-existent record as "undefined".', done => {
+    it('returns a non-existent record as "undefined".', async () => {
       const primaryKey = 'not-existing';
 
-      store
-        .get(primaryKey)
-        .then(bundle => expect(bundle).toBeUndefined())
-        .then(done)
-        .catch(error => done.fail(error));
+      const bundle = await store.get(primaryKey);
+      expect(bundle).toBeUndefined();
     });
   });
 
   describe('"init"', () => {
-    it('initially reads data from persistent storage.', done => {
+    it('initially reads data from persistent storage.', async () => {
       const timeLapse = 2;
 
       const items = [
@@ -136,13 +122,8 @@ describe('store.TransientStore', () => {
         window.localStorage.setItem(`${STORE_NAME}@${TABLE_NAME}@${item.payload.token}`, JSON.stringify(item));
       }
 
-      store
-        .init(TABLE_NAME)
-        .then(bundles => {
-          expect(bundles.length).toBe(items.length);
-          done();
-        })
-        .catch(error => done.fail(error));
+      const bundles = await store.init(TABLE_NAME);
+      expect(bundles.length).toBe(items.length);
     });
   });
 

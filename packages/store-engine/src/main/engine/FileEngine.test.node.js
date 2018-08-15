@@ -33,17 +33,14 @@ describe('FileEngine', () => {
     return storeEngine;
   }
 
-  beforeEach(async done => {
+  beforeEach(async () => {
     FileEngine.path = path;
     engine = await initEngine();
-    done();
   });
 
-  afterEach(done =>
-    fs
-      .remove(TEST_DIRECTORY)
-      .then(done)
-      .catch(done.fail));
+  afterEach(async () => {
+    await fs.remove(TEST_DIRECTORY);
+  });
 
   describe('"enforcePathRestrictions"', () => {
     const enforcePathRestrictions = (...opts) => () => FileEngine.enforcePathRestrictions(...opts);

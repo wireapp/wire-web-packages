@@ -82,21 +82,20 @@ describe('PriorityQueue', () => {
       });
     });
 
-    it('works with thunked primitive values', done => {
+    it('works with thunked primitive values', async () => {
       queue = new PriorityQueue();
 
-      Promise.all([
+      const results = await Promise.all([
         queue.add(() => 'ape'),
         queue.add(() => 'cat'),
         queue.add(() => 'dog'),
         queue.add(() => 'zebra'),
-      ]).then(results => {
-        expect(results[0]).toBe('ape');
-        expect(results[1]).toBe('cat');
-        expect(results[2]).toBe('dog');
-        expect(results[3]).toBe('zebra');
-        done();
-      });
+      ]);
+
+      expect(results[0]).toBe('ape');
+      expect(results[1]).toBe('cat');
+      expect(results[2]).toBe('dog');
+      expect(results[3]).toBe('zebra');
     });
 
     it('catches throwing thunked functions', done => {
