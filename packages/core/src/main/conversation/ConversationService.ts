@@ -465,15 +465,15 @@ class ConversationService {
     if (error.response && error.response.status === StatusCode.PRECONDITION_FAILED) {
       const {missing: missingClients, deleted: deletedClients} = error.response.data;
 
-      if (deletedClients) {
+      if (Object.keys(deletedClients).length) {
         for (const recipientId in message.recipients) {
-          for (const deletedClientId in deletedClients) {
+          for (const deletedClientId of deletedClients[recipientId]) {
             delete message.recipients[recipientId][deletedClientId];
           }
         }
       }
 
-      if (missingClients) {
+      if (Object.keys(missingClients).length) {
         const missingPreKeyBundles = await this.apiClient.user.api.postMultiPreKeyBundles(missingClients);
         const reEncryptedPayloads = await this.cryptographyService.encrypt(plainTextArray, missingPreKeyBundles);
         for (const recipientId in message.recipients) {
