@@ -36,16 +36,12 @@ describe('CryptographyService', () => {
   let aliceLastResortPreKey;
   let bob;
 
-  beforeEach(async done => {
+  beforeEach(async () => {
     cryptography = new CryptographyService(undefined, await createEngine('wire'), undefined);
-    cryptography.cryptobox
-      .create()
-      .then(async preKeys => {
-        aliceLastResortPreKey = preKeys.filter(preKey => preKey.key_id === Proteus.keys.PreKey.MAX_PREKEY_ID)[0];
-        bob = new Cryptobox(await createEngine('wire'));
-        return bob.create();
-      })
-      .then(done);
+    const preKeys = await cryptography.cryptobox.create();
+    aliceLastResortPreKey = preKeys.filter(preKey => preKey.key_id === Proteus.keys.PreKey.MAX_PREKEY_ID)[0];
+    bob = new Cryptobox(await createEngine('wire'));
+    await bob.create();
   });
 
   describe('"constructor"', () => {
@@ -66,7 +62,7 @@ describe('CryptographyService', () => {
   });
 
   describe('"decrypt"', () => {
-    it('decrypts a Base64-encoded cipher message.', async done => {
+    it('decrypts a Base64-encoded cipher message.', async () => {
       const alicePublicKey = cryptography.cryptobox.identity.public_key;
       const publicPreKeyBundle = Proteus.keys.PreKeyBundle.new(alicePublicKey, aliceLastResortPreKey);
       const text = 'Hello Alice!';
@@ -79,7 +75,6 @@ describe('CryptographyService', () => {
       const decryptResult = await cryptography.decrypt('bob-user-id@bob-client-id', encodedPreKeyMessage);
       const plaintext = Buffer.from(decryptResult.value).toString('utf8');
       expect(plaintext).toBe(text);
-      done();
     });
   });
 
@@ -145,7 +140,7 @@ describe('CryptographyService', () => {
   });
 
   describe('"encryptAsset"', () => {
-    it('encrypts and decrypts ArrayBuffer', async done => {
+    it('encrypts and decrypts ArrayBuffer', async () => {
       const bytes = new Uint8Array(16);
       window.crypto.getRandomValues(bytes);
       const byteBuffer = Buffer.from(bytes.buffer);
@@ -154,7 +149,6 @@ describe('CryptographyService', () => {
       const decryptedBuffer = await decryptAsset(encryptedAsset);
 
       expect(decryptedBuffer).toEqual(byteBuffer);
-      done();
     });
 
     it('does not decrypt when the hash is missing', async done => {
@@ -172,19 +166,14 @@ describe('CryptographyService', () => {
       }
     });
 
-    it('does not decrypt when hash is an empty array', async done => {
+    it('does not decrypt when hash is an empty array', async () => {
       const bytes = new Uint8Array(16);
       window.crypto.getRandomValues(bytes);
       const byteBuffer = Buffer.from(bytes.buffer);
 
       const {cipherText, keyBytes} = await encryptAsset(byteBuffer);
 
-      try {
-        await decryptAsset(cipherText, keyBytes, new Uint8Array([]));
-        done.fail();
-      } catch (error) {
-        done();
-      }
+      await decryptAsset(cipherText, keyBytes, new Uint8Array([]));
     });
   });
 
