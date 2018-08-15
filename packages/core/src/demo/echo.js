@@ -42,14 +42,14 @@ const messageEchoCache = {};
   const account = new Account(apiClient);
 
   const sendConfirmation = async (messageId, conversationId, messageTimer, userId) => {
+    const confirmationPayload = account.service.conversation.createConfirmation(messageId);
+    await account.service.conversation.send(conversationId, confirmationPayload);
+
     if (messageTimer && userId) {
-      setTimeout(async () => {
-        const confirmationPayload = account.service.conversation.createConfirmationEphemeral(messageId, [userId]);
-        await account.service.conversation.send(conversationId, confirmationPayload);
-      }, messageTimer);
-    } else {
-      const confirmationPayload = account.service.conversation.createConfirmation(messageId);
-      await account.service.conversation.send(conversationId, confirmationPayload);
+      setTimeout(
+        () => account.service.conversation.deleteMessageEveryone(conversationId, messageId, [userId]),
+        messageTimer
+      );
     }
   };
 
