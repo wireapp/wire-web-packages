@@ -444,7 +444,7 @@ class ConversationService {
     return {
       ...payloadBundle,
       conversation: conversationId,
-      messageTimer: 0,
+      messageTimer: this.messageTimer.getMessageTimer(conversationId),
       state: PayloadBundleState.OUTGOING_SENT,
     };
   }
