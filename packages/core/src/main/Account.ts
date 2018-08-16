@@ -537,12 +537,11 @@ class Account extends EventEmitter {
             break;
         }
       } else {
-        const conversationEvent = event as ConversationEvent;
-        this.logger.log(
-          `Received unsupported event "${event.type}" in conversation "${conversationEvent.conversation}" from user "${
-            conversationEvent.from
-          }".`
-        );
+        const {type, conversation, from} = event as ConversationEvent;
+        const conversationText = conversation ? ` in conversation "${conversation}"` : '';
+        const fromText = from ? ` from user "${from}".` : '';
+
+        this.logger.log(`Received unsupported event "${type}"${conversationText}${fromText}`, {event});
       }
     }
   }
