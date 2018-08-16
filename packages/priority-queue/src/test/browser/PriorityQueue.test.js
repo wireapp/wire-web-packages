@@ -163,12 +163,7 @@ describe('PriorityQueue', () => {
         });
       };
 
-      const unlock = () => {
-        return new Promise(resolve => {
-          isLocked = false;
-          resolve();
-        });
-      };
+      const unlock = async () => (isLocked = false);
 
       const queue = new PriorityQueue();
       queue.add(businessLogic);
@@ -232,9 +227,7 @@ describe('PriorityQueue', () => {
         });
       };
 
-      const unlock = async () => {
-        isLocked = false;
-      };
+      const unlock = async () => (isLocked = false);
 
       const queue = new PriorityQueue({maxRetries: Infinity, retryDelay: 100});
       setTimeout(() => queue.add(unlock, Priority.HIGH), 1000);
