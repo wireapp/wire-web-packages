@@ -42,42 +42,49 @@ const messageEchoCache = {};
   const account = new Account(apiClient);
 
   const handleIncomingMessage = async messageData => {
+    const CONFIRM_TYPES = [
+      PayloadBundleType.ASSET,
+      PayloadBundleType.ASSET_IMAGE,
+      PayloadBundleType.LOCATION,
+      PayloadBundleType.PING,
+      PayloadBundleType.TEXT,
+    ];
+
     const {conversation: conversationId, content, from, id: messageId, messageTimer = 0, type} = messageData;
 
     logger.log(
       `Receiving: "${type}" ("${messageId}") in "${conversationId}" from "${from}":`,
-      content,
-      messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
+      messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : '',
+      content
     );
 
-    if (messageId) {
+    if (CONFIRM_TYPES.includes(type)) {
       const confirmationPayload = account.service.conversation.createConfirmation(messageId);
       logger.log(
-        `Sending: "${confirmationPayload.type}" ("${
-          confirmationPayload.id
-        }") in "${conversationId}" for "${messageId}"`,
+        `Sending: "${confirmationPayload.type}" ("${confirmationPayload.id}") in "${conversationId}"`,
         confirmationPayload.content
       );
       await account.service.conversation.send(conversationId, confirmationPayload);
-    }
 
-    if (messageTimer) {
-      logger.log(
-        `Sending: "PayloadBundleType.MESSAGE_DELETE" in "${conversationId}" for "${messageId}" (encrypted for "${from}")`
-      );
-      await account.service.conversation.deleteMessageEveryone(conversationId, messageId, [from]);
+      if (messageTimer) {
+        logger.log(
+          `Sending: "PayloadBundleType.MESSAGE_DELETE" in "${conversationId}" for "${messageId}" (encrypted for "${from}")`
+        );
+        await account.service.conversation.deleteMessageEveryone(conversationId, messageId, [from]);
+      }
     }
   };
 
   const sendMessageResponse = async (data, payload) => {
     const {conversation: conversationId, id: messageId, messageTimer = 0} = data;
 
-    account.service.conversation.messageTimer.setMessageLevelTimer(conversationId, messageTimer);
     logger.log(
-      `Sending: "${data.type}" in "${conversationId}" for "${messageId}"`,
+      `Sending: "${data.type}" ("${messageId}") in "${conversationId}"`,
       data.content,
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
     );
+
+    account.service.conversation.messageTimer.setMessageLevelTimer(conversationId, messageTimer);
     await account.service.conversation.send(conversationId, payload);
     account.service.conversation.messageTimer.setMessageLevelTimer(conversationId, 0);
   };
@@ -100,7 +107,7 @@ const messageEchoCache = {};
 
     const cacheOriginal = assetOriginalCache[messageId];
     if (!cacheOriginal) {
-      throw new Error(`Uploaded data for message ID "${messageId} was received before the metadata."`);
+      logger.warn(`Uploaded data for message ID "${messageId} was received before the metadata."`);
     }
 
     const fileBuffer = await account.service.conversation.getAsset(content.uploaded);
@@ -117,20 +124,22 @@ const messageEchoCache = {};
 
     try {
       const filePayload = await account.service.conversation.createFileData({data: fileBuffer}, fileMetaDataPayload.id);
+      messageEchoCache[messageId] = filePayload.id;
       await sendMessageResponse(data, filePayload);
-
-      delete assetOriginalCache[data.messageId];
     } catch (error) {
-      console.error(`Error while sending asset: "${error.stack}"`);
+      logger.warn(`Error while sending asset: "${error.stack}"`);
       const fileAbortPayload = await account.service.conversation.createFileAbort(0, fileMetaDataPayload.id);
       await sendMessageResponse(data, fileAbortPayload);
     }
   });
 
   account.on(PayloadBundleType.ASSET_META, async data => {
-    const {content, id: messageId} = data;
+    const {
+      content: {original},
+      id: messageId,
+    } = data;
 
-    assetOriginalCache[messageId] = content.original;
+    assetOriginalCache[messageId] = original;
 
     await handleIncomingMessage(data);
   });
@@ -151,23 +160,23 @@ const messageEchoCache = {};
       type: cacheOriginal.mimeType,
     });
 
+    await handleIncomingMessage(data);
     await sendMessageResponse(data, fileMetaDataPayload);
 
     const fileAbortPayload = await account.service.conversation.createFileAbort(0, fileMetaDataPayload.id);
-
     await sendMessageResponse(data, fileAbortPayload);
 
-    delete assetOriginalCache[data.messageId];
+    delete assetOriginalCache[messageId];
+    delete messageEchoCache[messageId];
   });
 
   account.on(PayloadBundleType.ASSET_IMAGE, async data => {
     const {
       content: {uploaded, original},
+      id: messageId,
     } = data;
 
     const imageBuffer = await account.service.conversation.getAsset(uploaded);
-
-    await handleIncomingMessage(data);
 
     const imagePayload = await account.service.conversation.createImage({
       data: imageBuffer,
@@ -176,12 +185,13 @@ const messageEchoCache = {};
       width: original.image.width,
     });
 
+    messageEchoCache[messageId] = imagePayload.id;
+
+    await handleIncomingMessage(data);
     await sendMessageResponse(data, imagePayload);
   });
 
   account.on(PayloadBundleType.LOCATION, async data => {
-    await handleIncomingMessage(data);
-
     const locationPayload = account.service.conversation.createLocation({
       latitude: 52.5069313,
       longitude: 13.1445635,
@@ -189,6 +199,7 @@ const messageEchoCache = {};
       zoom: 10,
     });
 
+    await handleIncomingMessage(data);
     await sendMessageResponse(data, locationPayload);
   });
 
@@ -228,16 +239,18 @@ const messageEchoCache = {};
   });
 
   account.on(PayloadBundleType.MESSAGE_DELETE, async data => {
-    const {conversation: conversationId, id: messageId, content} = data;
+    const {
+      conversation: conversationId,
+      content: {originalMessageId},
+    } = data;
 
     await handleIncomingMessage(data);
 
-    await account.service.conversation.deleteMessageEveryone(
-      conversationId,
-      messageEchoCache[content.originalMessageId]
-    );
+    if (messageEchoCache[originalMessageId]) {
+      await account.service.conversation.deleteMessageEveryone(conversationId, messageEchoCache[originalMessageId]);
 
-    delete messageEchoCache[messageId];
+      delete messageEchoCache[originalMessageId];
+    }
   });
 
   account.on(PayloadBundleType.MESSAGE_EDIT, async data => {
@@ -250,7 +263,6 @@ const messageEchoCache = {};
     messageEchoCache[messageId] = editedPayload.id;
 
     await handleIncomingMessage(data);
-
     await sendMessageResponse(data, editedPayload);
   });
 
