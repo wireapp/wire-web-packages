@@ -85,10 +85,10 @@ const messageEchoCache = {};
   account.on(PayloadBundleType.TEXT, async data => {
     const {content, id: messageId} = data;
 
-    await handleIncomingMessage(data);
-
     const textPayload = account.service.conversation.createText(content.text);
     messageEchoCache[messageId] = textPayload.id;
+
+    await handleIncomingMessage(data);
 
     await sendMessageResponse(data, textPayload);
   });
@@ -130,9 +130,9 @@ const messageEchoCache = {};
   account.on(PayloadBundleType.ASSET_META, async data => {
     const {content, id: messageId} = data;
 
-    await handleIncomingMessage(data);
-
     assetOriginalCache[messageId] = content.original;
+
+    await handleIncomingMessage(data);
   });
 
   account.on(PayloadBundleType.ASSET_ABORT, async data => {
@@ -165,9 +165,10 @@ const messageEchoCache = {};
       content: {uploaded, original},
     } = data;
 
+    const imageBuffer = await account.service.conversation.getAsset(uploaded);
+
     await handleIncomingMessage(data);
 
-    const imageBuffer = await account.service.conversation.getAsset(uploaded);
     const imagePayload = await account.service.conversation.createImage({
       data: imageBuffer,
       height: original.image.height,
@@ -200,7 +201,9 @@ const messageEchoCache = {};
   });
 
   account.on(PayloadBundleType.REACTION, async data => {
-    const {emoji, originalMessageId} = data.content;
+    const {
+      content: {emoji, originalMessageId},
+    } = data;
 
     await handleIncomingMessage(data);
 
@@ -233,14 +236,19 @@ const messageEchoCache = {};
       conversationId,
       messageEchoCache[content.originalMessageId]
     );
+
     delete messageEchoCache[messageId];
   });
 
   account.on(PayloadBundleType.MESSAGE_EDIT, async data => {
-    const {text, originalMessageId} = data.content;
+    const {
+      content: {text, originalMessageId},
+    } = data;
+
     await handleIncomingMessage(data);
 
     const editedPayload = account.service.conversation.createEditedText(text, messageEchoCache[originalMessageId]);
+
     await sendMessageResponse(data, editedPayload);
   });
 
