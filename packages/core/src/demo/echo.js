@@ -243,11 +243,13 @@ const messageEchoCache = {};
   account.on(PayloadBundleType.MESSAGE_EDIT, async data => {
     const {
       content: {text, originalMessageId},
+      id: messageId,
     } = data;
 
-    await handleIncomingMessage(data);
-
     const editedPayload = account.service.conversation.createEditedText(text, messageEchoCache[originalMessageId]);
+    messageEchoCache[messageId] = editedPayload.id;
+
+    await handleIncomingMessage(data);
 
     await sendMessageResponse(data, editedPayload);
   });
