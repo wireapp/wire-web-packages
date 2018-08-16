@@ -19,7 +19,6 @@
 
 interface ConfirmationContent {
   confirmMessageId: string;
-  userIds?: string[];
 }
 
 export {ConfirmationContent};
