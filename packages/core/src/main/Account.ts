@@ -251,15 +251,16 @@ class Account extends EventEmitter {
     if (decryptedMessage.isSuccess) {
       const genericMessage = GenericMessage.decode(decryptedMessage.value);
 
-      if (genericMessage.content === GenericMessageType.EPHEMERAL && genericMessage.ephemeral) {
+      if (genericMessage.content === GenericMessageType.EPHEMERAL) {
         const unwrappedMessage = this.mapGenericMessage(genericMessage.ephemeral, otrMessage);
-        unwrappedMessage.id = genericMessage.messageId;
-        const expireAfterMillis = genericMessage.ephemeral.expireAfterMillis;
-        unwrappedMessage.messageTimer =
-          typeof expireAfterMillis === 'number' ? expireAfterMillis : (expireAfterMillis as Long).toNumber();
+        if (genericMessage.ephemeral) {
+          unwrappedMessage.id = genericMessage.messageId;
+          const expireAfterMillis = genericMessage.ephemeral.expireAfterMillis;
+          unwrappedMessage.messageTimer =
+            typeof expireAfterMillis === 'number' ? expireAfterMillis : (expireAfterMillis as Long).toNumber();
+        }
         return unwrappedMessage;
       }
-
       return this.mapGenericMessage(genericMessage, otrMessage);
     }
 
