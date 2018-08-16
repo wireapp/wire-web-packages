@@ -320,13 +320,13 @@ class Account extends EventEmitter {
       }
       case GenericMessageType.EDITED: {
         const {
-          text: {content: editedContent},
+          text: {content: editedText},
           replacingMessageId,
         } = genericMessage[GenericMessageType.EDITED];
 
         const content: EditedTextContent = {
           originalMessageId: replacingMessageId,
-          text: editedContent,
+          text: editedText,
         };
 
         return {
