@@ -70,9 +70,14 @@ const messageEchoCache = {};
   };
 
   const sendMessageResponse = async (data, payload) => {
-    const {conversation: conversationId, messageTimer = 0} = data;
+    const {conversation: conversationId, id: messageId, messageTimer = 0} = data;
 
     account.service.conversation.messageTimer.setMessageLevelTimer(conversationId, messageTimer);
+    logger.log(
+      `Sending: "${data.type}" in "${conversationId}" for "${messageId}"`,
+      data.content,
+      messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
+    );
     await account.service.conversation.send(conversationId, payload);
     account.service.conversation.messageTimer.setMessageLevelTimer(conversationId, 0);
   };
