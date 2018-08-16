@@ -254,6 +254,7 @@ describe('Session', () => {
 
       assert_serialise_deserialise(alice_ident, alice);
       assert_serialise_deserialise(bob_ident, bob);
+
       done();
     });
 

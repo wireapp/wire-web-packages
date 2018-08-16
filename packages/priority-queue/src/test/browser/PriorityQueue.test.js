@@ -69,7 +69,7 @@ describe('PriorityQueue', () => {
       expect(queue.size).toBe(4);
     });
 
-    it('adds objects with priorities', done => {
+    it('adds objects with priorities', async () => {
       const queue = new PriorityQueue();
       queue.isPending = true;
 
@@ -78,35 +78,27 @@ describe('PriorityQueue', () => {
       queue.add(() => 'dog', Priority.HIGH);
       queue.add(() => 'zebra');
 
-      Promise.resolve()
-        .then(() => {
-          return queue.first.fn();
-        })
-        .then(value => {
-          expect(value).toBe('dog');
-          return queue.last.fn();
-        })
-        .then(value => {
-          expect(value).toBe('cat');
-          done();
-        });
+      let value = await queue.first.fn();
+      expect(value).toBe('dog');
+
+      value = await queue.last.fn();
+      expect(value).toBe('cat');
     });
 
-    it('works with thunked Promises', done => {
+    it('works with thunked Promises', async () => {
       const queue = new PriorityQueue();
 
-      Promise.all([
+      const results = await Promise.all([
         queue.add(() => Promise.resolve('ape')),
         queue.add(() => Promise.resolve('cat')),
         queue.add(() => Promise.resolve('dog')),
         queue.add(() => Promise.resolve('zebra')),
-      ]).then(results => {
-        expect(results[0]).toBe('ape');
-        expect(results[1]).toBe('cat');
-        expect(results[2]).toBe('dog');
-        expect(results[3]).toBe('zebra');
-        done();
-      });
+      ]);
+
+      expect(results[0]).toBe('ape');
+      expect(results[1]).toBe('cat');
+      expect(results[2]).toBe('dog');
+      expect(results[3]).toBe('zebra');
     });
   });
 
@@ -227,7 +219,7 @@ describe('PriorityQueue', () => {
   });
 
   describe('"size"', () => {
-    it('returns the size of the items left after Promise execution', done => {
+    it('returns the size of the items left after Promise execution', async () => {
       let isLocked = true;
 
       const businessLogic = () => {
@@ -240,24 +232,19 @@ describe('PriorityQueue', () => {
         });
       };
 
-      const unlock = () => {
-        return new Promise(resolve => {
-          isLocked = false;
-          resolve();
-        });
+      const unlock = async () => {
+        isLocked = false;
       };
 
       const queue = new PriorityQueue({maxRetries: Infinity, retryDelay: 100});
       setTimeout(() => queue.add(unlock, Priority.HIGH), 1000);
-      queue.add(businessLogic).then(() => {
-        expect(queue.size).toBe(0);
-        done();
-      });
+      await queue.add(businessLogic);
+      expect(queue.size).toBe(0);
     });
   });
 
   describe('"comparator"', () => {
-    it('uses a descending priority order by default', done => {
+    it('uses a descending priority order by default', async () => {
       const queue = new PriorityQueue();
       queue.isPending = true;
 
@@ -266,21 +253,13 @@ describe('PriorityQueue', () => {
       queue.add(() => 'dog');
       queue.add(() => 'zebra', Priority.LOW);
 
-      Promise.resolve()
-        .then(() => {
-          return queue.last.fn();
-        })
-        .then(value => {
-          expect(value).toBe('zebra');
-          return queue.first.fn();
-        })
-        .then(value => {
-          expect(value).toBe('ape');
-          done();
-        });
+      let value = await queue.last.fn();
+      expect(value).toBe('zebra');
+      value = await queue.first.fn();
+      expect(value).toBe('ape');
     });
 
-    it('supports a custom comparator', done => {
+    it('supports a custom comparator', async () => {
       const ascendingPriority = (first, second) => first.priority - second.priority;
       const queue = new PriorityQueue({comparator: ascendingPriority});
       queue.isPending = true;
@@ -290,18 +269,10 @@ describe('PriorityQueue', () => {
       queue.add(() => 'dog');
       queue.add(() => 'zebra', Priority.LOW);
 
-      Promise.resolve()
-        .then(() => {
-          return queue.first.fn();
-        })
-        .then(value => {
-          expect(value).toBe('zebra');
-          return queue.last.fn();
-        })
-        .then(value => {
-          expect(value).toBe('ape');
-          done();
-        });
+      let value = await queue.first.fn();
+      expect(value).toBe('zebra');
+      value = await queue.last.fn();
+      expect(value).toBe('ape');
     });
 
     it('continues after the maximum amount of retries', done => {
