@@ -271,11 +271,9 @@ class Account extends EventEmitter {
   private mapGenericMessage(genericMessage: any, event: ConversationOtrMessageAddEvent): PayloadBundleIncoming {
     switch (genericMessage.content) {
       case GenericMessageType.TEXT: {
-        const {content: textContent} = genericMessage[GenericMessageType.TEXT];
+        const text = genericMessage[GenericMessageType.TEXT].content;
 
-        const content: TextContent = {
-          text: textContent,
-        };
+        const content: TextContent = {text};
 
         return {
           content,
@@ -289,11 +287,9 @@ class Account extends EventEmitter {
         };
       }
       case GenericMessageType.CONFIRMATION: {
-        const {firstMessageId} = genericMessage[GenericMessageType.CONFIRMATION];
+        const confirmMessageId = genericMessage[GenericMessageType.CONFIRMATION].firstMessageId;
 
-        const content: ConfirmationContent = {
-          confirmMessageId: firstMessageId,
-        };
+        const content: ConfirmationContent = {confirmMessageId};
 
         return {
           content,
@@ -307,11 +303,9 @@ class Account extends EventEmitter {
         };
       }
       case GenericMessageType.DELETED: {
-        const {messageId} = genericMessage[GenericMessageType.DELETED];
+        const originalMessageId = genericMessage[GenericMessageType.DELETED].messageId;
 
-        const content: DeletedContent = {
-          originalMessageId: messageId,
-        };
+        const content: DeletedContent = {originalMessageId};
 
         return {
           content,
