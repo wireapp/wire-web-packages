@@ -815,11 +815,11 @@ class ConversationService {
     };
   }
 
-  public async createText(
+  public createText(
     text: string,
     linkPreviews?: LinkPreviewContent[],
     messageId: string = ConversationService.createId()
-  ): Promise<PayloadBundleOutgoingUnsent> {
+  ): PayloadBundleOutgoingUnsent {
     const content: TextContent = {text, linkPreviews};
 
     return {
