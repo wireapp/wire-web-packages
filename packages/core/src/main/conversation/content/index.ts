@@ -29,3 +29,4 @@ export * from './LinkPreviewContent';
 export * from './LocationContent';
 export * from './ReactionContent';
 export * from './TextContent';
+export * from './TweetContent';

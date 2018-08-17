@@ -43,6 +43,7 @@ import {
 } from '../conversation/root';
 
 import {
+  Article,
   Asset,
   Cleared,
   ClientAction,
@@ -75,6 +76,7 @@ import {
   ReactionContent,
   RemoteData,
   TextContent,
+  TweetContent,
 } from '../conversation/content/';
 
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
@@ -593,8 +595,8 @@ class ConversationService {
       content: payloadBundleContent.text,
     });
 
-    if (payloadBundleContent.linkPreviews) {
-      for (const linkPreview of payloadBundleContent.linkPreviews) {
+    if (payloadBundleContent.linkPreview) {
+      for (const linkPreview of payloadBundleContent.linkPreview) {
         const linkPreviewMessage = LinkPreview.create({
           permanentUrl: linkPreview.permanentUrl,
           summary: linkPreview.summary,
@@ -606,6 +608,43 @@ class ConversationService {
           linkPreviewMessage.tweet = Tweet.create({
             author: linkPreview.tweet.author,
             username: linkPreview.tweet.username,
+          });
+        }
+
+        if (linkPreview.image) {
+          const encryptedAsset = linkPreview.image;
+
+          const imageMetadata = Asset.ImageMetaData.create({
+            height: encryptedAsset.image.height,
+            width: encryptedAsset.image.width,
+          });
+
+          const original = Asset.Original.create({
+            [GenericMessageType.IMAGE]: imageMetadata,
+            mimeType: encryptedAsset.image.type,
+            name: null,
+            size: encryptedAsset.image.data.length,
+          });
+
+          const remoteData = Asset.RemoteData.create({
+            assetId: encryptedAsset.asset.key,
+            assetToken: encryptedAsset.asset.token,
+            otrKey: encryptedAsset.asset.keyBytes,
+            sha256: encryptedAsset.asset.sha256,
+          });
+
+          const assetMessage = Asset.create({
+            original,
+            uploaded: remoteData,
+          });
+
+          assetMessage.status = AssetTransferState.UPLOADED;
+
+          linkPreviewMessage.article = Article.create({
+            image: assetMessage,
+            permanentUrl: linkPreview.permanentUrl,
+            summary: linkPreview.summary,
+            title: linkPreview.title,
           });
         }
 
@@ -691,12 +730,12 @@ class ConversationService {
   public createEditedText(
     newMessageText: string,
     originalMessageId: string,
-    newLinkPreviews?: LinkPreviewContent[],
+    newLinkPreview?: LinkPreviewContent[],
     messageId: string = ConversationService.createId()
   ): PayloadBundleOutgoingUnsent {
     return {
       content: {
-        linkPreviews: newLinkPreviews,
+        linkPreview: newLinkPreview,
         originalMessageId,
         text: newMessageText,
       },
@@ -784,6 +823,35 @@ class ConversationService {
     };
   }
 
+  public async createLinkPreview(
+    url: string,
+    urlOffset: number,
+    permanentUrl: string,
+    image?: ImageContent,
+    summary?: string,
+    title?: string,
+    tweet?: TweetContent
+  ): Promise<LinkPreviewContent> {
+    const linkPreview: LinkPreviewContent = {
+      permanentUrl,
+      summary,
+      title,
+      tweet,
+      url,
+      urlOffset,
+    };
+
+    if (image) {
+      const imageAsset = await this.assetService.uploadImageAsset(image);
+      linkPreview.image = {
+        asset: imageAsset,
+        image,
+      };
+    }
+
+    return linkPreview;
+  }
+
   public createLocation(
     location: LocationContent,
     messageId: string = ConversationService.createId()
@@ -817,10 +885,10 @@ class ConversationService {
 
   public createText(
     text: string,
-    linkPreviews?: LinkPreviewContent[],
+    linkPreview?: LinkPreviewContent[],
     messageId: string = ConversationService.createId()
   ): PayloadBundleOutgoingUnsent {
-    const content: TextContent = {text, linkPreviews};
+    const content: TextContent = {text, linkPreview};
 
     return {
       content,

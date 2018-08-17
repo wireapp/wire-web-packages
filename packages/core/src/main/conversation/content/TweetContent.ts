@@ -17,16 +17,9 @@
  *
  */
 
-import {ImageAssetContent, TweetContent} from '../content/';
-
-interface LinkPreviewContent {
-  image?: ImageAssetContent;
-  permanentUrl: string;
-  summary?: string;
-  title?: string;
-  tweet?: TweetContent;
-  url: string;
-  urlOffset: number;
+interface TweetContent {
+  author?: string;
+  username?: string;
 }
 
-export {LinkPreviewContent};
+export {TweetContent};
