@@ -36,11 +36,12 @@ describe('MessageHandler', () => {
   describe('"sendImage"', () => {
     it('just returns without account or service', async () => {
       bot.account = new Account();
-      await bot.account.init();
-
       bot.addHandler(mainHandler);
 
-      spyOn(bot.account.service.conversation, 'send').and.returnValue(Promise.resolve());
+      await bot.account.init();
+
+      spyOn(bot.account.service.conversation, 'send');
+
       await mainHandler.sendImage();
 
       expect(bot.account.service.conversation.send).toHaveBeenCalledTimes(0);
