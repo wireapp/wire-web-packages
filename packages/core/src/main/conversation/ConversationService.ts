@@ -50,12 +50,14 @@ import {
   Ephemeral,
   GenericMessage,
   Knock,
+  LinkPreview,
   Location,
   MessageDelete,
   MessageEdit,
   MessageHide,
   Reaction,
   Text,
+  Tweet,
 } from '@wireapp/protocol-messaging';
 import {
   ClientActionContent,
@@ -68,6 +70,7 @@ import {
   FileMetaDataContent,
   ImageAssetContent,
   ImageContent,
+  LinkPreviewContent,
   LocationContent,
   ReactionContent,
   RemoteData,
@@ -584,11 +587,35 @@ class ConversationService {
       state: PayloadBundleState.OUTGOING_SENT,
     };
 
+    const payloadBundleContent = payloadBundle.content as TextContent;
+
+    const textMessage = Text.create({
+      content: payloadBundleContent.text,
+    });
+
+    if (payloadBundleContent.linkPreviews) {
+      for (const linkPreview of payloadBundleContent.linkPreviews) {
+        const linkPreviewMessage = LinkPreview.create({
+          permanentUrl: linkPreview.permanentUrl,
+          summary: linkPreview.summary,
+          url: linkPreview.url,
+          urlOffset: linkPreview.urlOffset,
+        });
+
+        if (linkPreview.tweet) {
+          linkPreviewMessage.tweet = Tweet.create({
+            author: linkPreview.tweet.author,
+            username: linkPreview.tweet.username,
+          });
+        }
+
+        textMessage.linkPreview.push(linkPreviewMessage);
+      }
+    }
+
     let genericMessage = GenericMessage.create({
       messageId: payloadBundle.id,
-      [GenericMessageType.TEXT]: Text.create({
-        content: (payloadBundle.content as TextContent).text,
-      }),
+      [GenericMessageType.TEXT]: textMessage,
     });
 
     const expireAfterMillis = this.messageTimer.getMessageTimer(conversationId);
@@ -664,10 +691,12 @@ class ConversationService {
   public createEditedText(
     newMessageText: string,
     originalMessageId: string,
+    newLinkPreviews?: LinkPreviewContent[],
     messageId: string = ConversationService.createId()
   ): PayloadBundleOutgoingUnsent {
     return {
       content: {
+        linkPreviews: newLinkPreviews,
         originalMessageId,
         text: newMessageText,
       },
@@ -786,8 +815,12 @@ class ConversationService {
     };
   }
 
-  public createText(text: string, messageId: string = ConversationService.createId()): PayloadBundleOutgoingUnsent {
-    const content: TextContent = {text};
+  public async createText(
+    text: string,
+    linkPreviews?: LinkPreviewContent[],
+    messageId: string = ConversationService.createId()
+  ): Promise<PayloadBundleOutgoingUnsent> {
+    const content: TextContent = {text, linkPreviews};
 
     return {
       content,
