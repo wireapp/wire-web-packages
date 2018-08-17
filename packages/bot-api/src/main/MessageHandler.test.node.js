@@ -17,34 +17,37 @@
  *
  */
 
-const {Bot, MessageHandler} = require('@wireapp/bot-api');
+const {MessageHandler} = require('@wireapp/bot-api');
 const {Account} = require('@wireapp/core');
+const UUID = require('pure-uuid');
+const UUID_VERSION = 4;
 
 describe('MessageHandler', () => {
-  let bot;
   let mainHandler;
 
   beforeEach(async () => {
-    bot = new Bot({
-      email: 'email@example.com',
-      password: 'my-secret-password',
-    });
-
     mainHandler = new MessageHandler();
   });
 
   describe('"sendImage"', () => {
-    it('just returns without account or service', async () => {
-      bot.account = new Account();
-      bot.addHandler(mainHandler);
+    it('calls send() with account and service', async () => {
+      mainHandler.account = new Account();
+      await mainHandler.account.init();
 
-      await bot.account.init();
+      const imagePayload = {
+        data: new UUID(UUID_VERSION).format(),
+      };
 
-      spyOn(bot.account.service.conversation, 'send');
+      const image = {
+        data: new UUID(UUID_VERSION).format(),
+      };
 
-      await mainHandler.sendImage();
+      spyOn(mainHandler.account.service.conversation, 'send').and.returnValue(Promise.resolve());
+      spyOn(mainHandler.account.service.conversation, 'createImage').and.returnValue(Promise.resolve(imagePayload));
 
-      expect(bot.account.service.conversation.send).toHaveBeenCalledTimes(0);
+      await mainHandler.sendImage('random-id', image);
+      expect(mainHandler.account.service.conversation.createImage).toHaveBeenCalledWith(image);
+      expect(mainHandler.account.service.conversation.send).toHaveBeenCalledWith('random-id', imagePayload);
     });
   });
 });
