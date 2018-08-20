@@ -18,7 +18,6 @@
  */
 
 import {MemoryEngine} from '@wireapp/store-engine/dist/commonjs/engine';
-import {AxiosResponse} from 'axios';
 import * as logdown from 'logdown';
 
 import {AssetAPI} from './asset/';
@@ -150,53 +149,53 @@ class APIClient {
     };
   }
 
-  public init(clientType: ClientType = ClientType.NONE): Promise<Context> {
-    let context: Context;
-    let accessToken: AccessTokenData;
-    return this.transport.http
-      .postAccess()
-      .then((createdAccessToken: AccessTokenData) => {
-        context = this.createContext(createdAccessToken.user, clientType);
-        accessToken = createdAccessToken;
-      })
-      .then(() => this.initEngine(context))
-      .then(() => this.accessTokenStore.updateToken(accessToken))
-      .then(() => context);
+  public async init(clientType: ClientType = ClientType.NONE): Promise<Context> {
+    const initialAccessToken = await this.transport.http.refreshAccessToken();
+    const context = this.createContext(initialAccessToken.user, clientType);
+    const accessToken = initialAccessToken;
+
+    await this.initEngine(context);
+    this.accessTokenStore.updateToken(accessToken);
+
+    return context;
   }
 
-  public login(loginData: LoginData): Promise<Context> {
-    let context: Context;
-    let accessToken: AccessTokenData;
-    let cookieResponse: AxiosResponse;
+  public async login(loginData: LoginData): Promise<Context> {
+    if (this.context) {
+      await this.logout({ignoreError: true});
+    }
 
-    return Promise.resolve()
-      .then(() => this.context && this.logout({ignoreError: true}))
-      .then(() => this.auth.api.postLogin(loginData))
-      .then((response: AxiosResponse<any>) => {
-        cookieResponse = response;
-        accessToken = response.data;
-        context = this.createContext(accessToken.user, loginData.clientType);
-      })
-      .then(() => this.initEngine(context))
-      .then(() => retrieveCookie(cookieResponse, this.config.store))
-      .then(() => this.accessTokenStore.updateToken(accessToken))
-      .then(() => context);
+    const cookieResponse = await this.auth.api.postLogin(loginData);
+    const accessToken: AccessTokenData = cookieResponse.data;
+
+    this.logger.info(`Saved initial access token. It will expire in "${accessToken.expires_in}" seconds.`, accessToken);
+
+    const context: Context = this.createContext(accessToken.user, loginData.clientType);
+
+    await this.initEngine(context);
+    await retrieveCookie(cookieResponse, this.config.store);
+    await this.accessTokenStore.updateToken(accessToken);
+
+    return context;
   }
 
-  public register(userAccount: RegisterData, clientType: ClientType = ClientType.PERMANENT): Promise<Context> {
-    return (
-      Promise.resolve()
-        .then(() => this.context && this.logout({ignoreError: true}))
-        .then(() => this.auth.api.postRegister(userAccount))
-        /**
-         * Note:
-         * It's necessary to initialize the context (Client.createContext()) and the store (Client.initEngine())
-         * for saving the retrieved cookie from POST /access (Client.init()) in a Node environment.
-         */
-        .then((user: User) => this.createContext(user.id, clientType))
-        .then((context: Context) => this.initEngine(context))
-        .then(() => this.init(clientType))
-    );
+  public async register(userAccount: RegisterData, clientType: ClientType = ClientType.PERMANENT): Promise<Context> {
+    if (this.context) {
+      await this.logout({ignoreError: true});
+    }
+
+    const user: User = await this.auth.api.postRegister(userAccount);
+
+    /**
+     * Note:
+     * It's necessary to initialize the context (Client.createContext()) and the store (Client.initEngine())
+     * for saving the retrieved cookie from POST /access (Client.init()) in a Node environment.
+     */
+    const context: Context = await this.createContext(user.id, clientType);
+
+    await this.initEngine(context);
+
+    return this.init(clientType);
   }
 
   public logout(options = {ignoreError: false}): Promise<void> {

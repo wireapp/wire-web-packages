@@ -115,6 +115,7 @@ class HttpClient extends EventEmitter {
         // Map Axios errors
         const isNetworkError = !error.response && error.request && Object.keys(error.request).length === 0;
         const isForbidden = error.response && error.response.status === StatusCode.FORBIDDEN;
+        const isUnauthorized = error.response && error.response.status === StatusCode.UNAUTHORIZED;
         const isBackendError =
           error.response &&
           error.response.data &&
@@ -129,27 +130,27 @@ class HttpClient extends EventEmitter {
           return Promise.reject(networkError);
         }
 
-        if (isForbidden && this.accessTokenStore && this.accessTokenStore.accessToken && !retry) {
-          return this.refreshAccessToken().then(() => this._sendRequest(config, tokenAsParam, true));
-        }
-
         if (isBackendError) {
           error = BackendErrorMapper.map(error.response.data);
+        }
+
+        if ((isForbidden || isUnauthorized) && this.accessTokenStore && this.accessTokenStore.accessToken && !retry) {
+          return this.refreshAccessToken().then(() => this._sendRequest(config, tokenAsParam, true));
         }
 
         return Promise.reject(error);
       });
   }
 
-  public refreshAccessToken(): Promise<AccessTokenData> {
+  public async refreshAccessToken(): Promise<AccessTokenData> {
     let expiredAccessToken: AccessTokenData | undefined;
     if (this.accessTokenStore.accessToken && this.accessTokenStore.accessToken.access_token) {
       expiredAccessToken = this.accessTokenStore.accessToken;
     }
 
-    return this.postAccess(expiredAccessToken).then((accessToken: AccessTokenData) =>
-      this.accessTokenStore.updateToken(accessToken)
-    );
+    const accessToken = await this.postAccess(expiredAccessToken);
+    this.logger.info(`Saved updated access token. It will expire in "${accessToken.expires_in}" seconds.`, accessToken);
+    return this.accessTokenStore.updateToken(accessToken);
   }
 
   public postAccess(expiredAccessToken?: AccessTokenData): Promise<AccessTokenData> {
@@ -160,7 +161,7 @@ class HttpClient extends EventEmitter {
       withCredentials: true,
     };
 
-    if (expiredAccessToken) {
+    if (expiredAccessToken && expiredAccessToken.access_token) {
       config.headers['Authorization'] = `${expiredAccessToken.token_type} ${decodeURIComponent(
         expiredAccessToken.access_token
       )}`;
