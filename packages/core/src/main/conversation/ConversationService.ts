@@ -43,7 +43,6 @@ import {
 } from '../conversation/root';
 
 import {
-  Article,
   Asset,
   Cleared,
   ClientAction,
@@ -600,6 +599,7 @@ class ConversationService {
         const linkPreviewMessage = LinkPreview.create({
           permanentUrl: linkPreview.permanentUrl,
           summary: linkPreview.summary,
+          title: linkPreview.title,
           url: linkPreview.url,
           urlOffset: linkPreview.urlOffset,
         });
@@ -622,7 +622,6 @@ class ConversationService {
           const original = Asset.Original.create({
             [GenericMessageType.IMAGE]: imageMetadata,
             mimeType: encryptedAsset.image.type,
-            name: null,
             size: encryptedAsset.image.data.length,
           });
 
@@ -638,14 +637,7 @@ class ConversationService {
             uploaded: remoteData,
           });
 
-          assetMessage.status = AssetTransferState.UPLOADED;
-
-          linkPreviewMessage.article = Article.create({
-            image: assetMessage,
-            permanentUrl: linkPreview.permanentUrl,
-            summary: linkPreview.summary,
-            title: linkPreview.title,
-          });
+          linkPreviewMessage.image = assetMessage;
         }
 
         textMessage.linkPreview.push(linkPreviewMessage);
