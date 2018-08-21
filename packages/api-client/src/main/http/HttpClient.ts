@@ -124,7 +124,7 @@ class HttpClient extends EventEmitter {
         }
 
         if (response) {
-          const { data: errorData, status: errorStatus } = response;
+          const {data: errorData, status: errorStatus} = response;
           const isBackendError = errorData && errorData.code && errorData.label && errorData.message;
 
           if (isBackendError) {
