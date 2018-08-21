@@ -37,9 +37,6 @@ const StyledCheckbox = Input.withComponent('input').extend.attrs({
   height: 16px;
   width: 16px;
   margin-bottom: 0;
-  &:disabled {
-    opac
-  }
 `;
 
 const checkSvg =
