@@ -276,7 +276,7 @@ class Account extends EventEmitter {
         const content: TextContent = {text};
 
         if (linkPreview.length) {
-          content.linkPreview = linkPreview;
+          content.linkPreviews = linkPreview;
         }
 
         return {

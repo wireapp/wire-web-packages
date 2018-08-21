@@ -70,7 +70,7 @@ import {
   FileMetaDataContent,
   ImageAssetContent,
   ImageContent,
-  LinkPreviewContent,
+  LinkPreviewUploadedContent,
   LocationContent,
   ReactionContent,
   RemoteData,
@@ -594,8 +594,8 @@ class ConversationService {
       content: payloadBundleContent.text,
     });
 
-    if (payloadBundleContent.linkPreview) {
-      for (const linkPreview of payloadBundleContent.linkPreview) {
+    if (payloadBundleContent.linkPreviews) {
+      for (const linkPreview of payloadBundleContent.linkPreviews) {
         const linkPreviewMessage = LinkPreview.create({
           permanentUrl: linkPreview.permanentUrl,
           summary: linkPreview.summary,
@@ -611,8 +611,8 @@ class ConversationService {
           });
         }
 
-        if (linkPreview.image) {
-          const encryptedAsset = linkPreview.image;
+        if (linkPreview.imageUploaded) {
+          const encryptedAsset = linkPreview.imageUploaded;
 
           const imageMetadata = Asset.ImageMetaData.create({
             height: encryptedAsset.image.height,
@@ -722,7 +722,7 @@ class ConversationService {
   public createEditedText(
     newMessageText: string,
     originalMessageId: string,
-    newLinkPreview?: LinkPreviewContent[],
+    newLinkPreviews?: LinkPreviewUploadedContent[],
     messageId: string = ConversationService.createId()
   ): PayloadBundleOutgoingUnsent {
     const content: EditedTextContent = {
@@ -730,8 +730,8 @@ class ConversationService {
       text: newMessageText,
     };
 
-    if (newLinkPreview) {
-      content.linkPreview = newLinkPreview;
+    if (newLinkPreviews) {
+      content.linkPreviews = newLinkPreviews;
     }
 
     return {
@@ -828,8 +828,9 @@ class ConversationService {
     summary?: string,
     title?: string,
     tweet?: TweetContent
-  ): Promise<LinkPreviewContent> {
-    const linkPreview: LinkPreviewContent = {
+  ): Promise<LinkPreviewUploadedContent> {
+    const linkPreview: LinkPreviewUploadedContent = {
+      image,
       permanentUrl,
       summary,
       title,
@@ -840,7 +841,7 @@ class ConversationService {
 
     if (image) {
       const imageAsset = await this.assetService.uploadImageAsset(image);
-      linkPreview.image = {
+      linkPreview.imageUploaded = {
         asset: imageAsset,
         image,
       };
@@ -882,10 +883,10 @@ class ConversationService {
 
   public createText(
     text: string,
-    linkPreview?: LinkPreviewContent[],
+    linkPreviews?: LinkPreviewUploadedContent[],
     messageId: string = ConversationService.createId()
   ): PayloadBundleOutgoingUnsent {
-    const content: TextContent = {text, linkPreview};
+    const content: TextContent = {text, linkPreviews};
 
     return {
       content,
