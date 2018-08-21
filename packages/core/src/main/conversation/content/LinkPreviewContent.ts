@@ -21,7 +21,7 @@ import {ImageAssetContent, ImageContent, TweetContent} from '../content/';
 
 interface LinkPreviewContent {
   image?: ImageContent;
-  permanentUrl: string;
+  permanentUrl?: string;
   summary?: string;
   title?: string;
   tweet?: TweetContent;

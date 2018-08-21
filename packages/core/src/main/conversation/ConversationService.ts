@@ -823,7 +823,7 @@ class ConversationService {
   public async createLinkPreview(
     url: string,
     urlOffset: number,
-    permanentUrl: string,
+    permanentUrl?: string,
     image?: ImageContent,
     summary?: string,
     title?: string,
@@ -886,7 +886,11 @@ class ConversationService {
     linkPreviews?: LinkPreviewUploadedContent[],
     messageId: string = ConversationService.createId()
   ): PayloadBundleOutgoingUnsent {
-    const content: TextContent = {text, linkPreviews};
+    const content: TextContent = {text};
+
+    if (linkPreviews) {
+      content.linkPreviews = linkPreviews;
+    }
 
     return {
       content,

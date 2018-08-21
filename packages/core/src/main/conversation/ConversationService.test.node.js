@@ -49,15 +49,14 @@ const generatePreKeyBundle = (userCount, clientsPerUser) => {
 describe('ConversationService', () => {
   let account;
 
-  beforeAll(async done => {
+  beforeAll(async () => {
     const engine = new MemoryEngine();
     await engine.init('');
 
     const client = new APIClient({store: engine, urls: APIClient.BACKEND.STAGING});
+
     account = new Account(client);
     await account.init();
-
-    done();
   });
 
   describe("'shouldSendAsExternal'", () => {
@@ -175,6 +174,42 @@ describe('ConversationService', () => {
 
       await account.service.conversation.sendOTRMessage(recipientId, new UUID(4).format(), recipients, payload);
       expect(recipients[recipientId][deletedClientId]).toBeUndefined();
+    });
+  });
+
+  describe('"createText"', () => {
+    it('adds link previews correctly', async () => {
+      account.apiClient.context = {
+        userId: new UUID(4).format(),
+      };
+
+      const url = 'http://example.com';
+      const urlOffset = 0;
+      const text = url;
+
+      const linkPreview = await account.service.conversation.createLinkPreview(url, urlOffset);
+      const textMessage = account.service.conversation.createText(text, [linkPreview]);
+
+      expect(textMessage.content.linkPreviews).toEqual(jasmine.any(Array));
+      expect(textMessage.content.linkPreviews.length).toBe(1);
+
+      expect(textMessage.content.linkPreviews[0]).toEqual(
+        jasmine.objectContaining({
+          url,
+          urlOffset,
+        })
+      );
+    });
+
+    it('does not add link previews', async () => {
+      account.apiClient.context = {
+        userId: new UUID(4).format(),
+      };
+
+      const text = 'Hello, world!';
+      const textMessage = account.service.conversation.createText(text);
+
+      expect(textMessage.content.linkPreviews).toBeUndefined();
     });
   });
 });
