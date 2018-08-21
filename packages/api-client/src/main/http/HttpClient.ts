@@ -83,7 +83,7 @@ class HttpClient extends EventEmitter {
     return `${this.baseURL}${url}`;
   }
 
-  public _sendRequest(config: AxiosRequestConfig, tokenAsParam: boolean = false, retry = false): AxiosPromise {
+  public _sendRequest(config: AxiosRequestConfig, tokenAsParam = false, firstTry = true): AxiosPromise {
     config.baseURL = this.baseURL;
 
     if (this.accessTokenStore.accessToken) {
@@ -134,8 +134,8 @@ class HttpClient extends EventEmitter {
           error = BackendErrorMapper.map(error.response.data);
         }
 
-        if ((isForbidden || isUnauthorized) && this.accessTokenStore && this.accessTokenStore.accessToken && !retry) {
-          return this.refreshAccessToken().then(() => this._sendRequest(config, tokenAsParam, true));
+        if ((isForbidden || isUnauthorized) && this.accessTokenStore && this.accessTokenStore.accessToken && firstTry) {
+          return this.refreshAccessToken().then(() => this._sendRequest(config, tokenAsParam, false));
         }
 
         return Promise.reject(error);
