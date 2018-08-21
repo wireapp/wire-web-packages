@@ -63,6 +63,10 @@ const StyledLabel = styled.label`
   ${StyledCheckbox}:checked + &::before {
     background: #000 url('data:image/svg+xml; utf8, ${checkSvg}') no-repeat center;
   }
+
+  ${StyledCheckbox}:focus + &::before {
+    border-color: ${COLOR.BLUE};
+  }
 `;
 
 const Checkbox = ({id, children, style, disabled, ...props}) => {
