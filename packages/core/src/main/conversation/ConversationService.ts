@@ -182,12 +182,12 @@ class ConversationService {
 
     const base64CipherText = Encoder.toBase64(cipherText).asString;
 
-    const customTextMessage = GenericMessage.create({
+    const genericMessage = GenericMessage.create({
       external: externalMessage,
       messageId,
     });
 
-    const plainTextArray = GenericMessage.encode(customTextMessage).finish();
+    const plainTextArray = GenericMessage.encode(genericMessage).finish();
     const recipients = await this.cryptographyService.encrypt(plainTextArray, preKeyBundles);
 
     return this.sendOTRMessage(sendingClientId, conversationId, recipients, plainTextArray, base64CipherText);
@@ -211,12 +211,19 @@ class ConversationService {
     payloadBundle: PayloadBundleOutgoingUnsent,
     userIds?: string[]
   ): Promise<PayloadBundleOutgoing> {
-    const {originalMessageId, text} = payloadBundle.content as EditedTextContent;
+    const {originalMessageId, text, linkPreviews} = payloadBundle.content as EditedTextContent;
+
+    const textMessage = Text.create({content: text});
+
+    if (linkPreviews) {
+      textMessage.linkPreview = this.buildLinkPreviews(linkPreviews);
+    }
 
     const editedMessage = MessageEdit.create({
       replacingMessageId: originalMessageId,
-      text: Text.create({content: text}),
+      text: textMessage,
     });
+    console.log({editedMessage});
 
     const genericMessage = GenericMessage.create({
       [GenericMessageType.EDITED]: editedMessage,
@@ -576,6 +583,60 @@ class ConversationService {
     };
   }
 
+  private buildLinkPreviews(linkPreviews: LinkPreviewUploadedContent[]): LinkPreview[] {
+    const builtLinkPreviews = [];
+
+    for (const linkPreview of linkPreviews) {
+      const linkPreviewMessage = LinkPreview.create({
+        permanentUrl: linkPreview.permanentUrl,
+        summary: linkPreview.summary,
+        title: linkPreview.title,
+        url: linkPreview.url,
+        urlOffset: linkPreview.urlOffset,
+      });
+
+      if (linkPreview.tweet) {
+        linkPreviewMessage.tweet = Tweet.create({
+          author: linkPreview.tweet.author,
+          username: linkPreview.tweet.username,
+        });
+      }
+
+      if (linkPreview.imageUploaded) {
+        const encryptedAsset = linkPreview.imageUploaded;
+
+        const imageMetadata = Asset.ImageMetaData.create({
+          height: encryptedAsset.image.height,
+          width: encryptedAsset.image.width,
+        });
+
+        const original = Asset.Original.create({
+          [GenericMessageType.IMAGE]: imageMetadata,
+          mimeType: encryptedAsset.image.type,
+          size: encryptedAsset.image.data.length,
+        });
+
+        const remoteData = Asset.RemoteData.create({
+          assetId: encryptedAsset.asset.key,
+          assetToken: encryptedAsset.asset.token,
+          otrKey: encryptedAsset.asset.keyBytes,
+          sha256: encryptedAsset.asset.sha256,
+        });
+
+        const assetMessage = Asset.create({
+          original,
+          uploaded: remoteData,
+        });
+
+        linkPreviewMessage.image = assetMessage;
+
+        builtLinkPreviews.push(linkPreviewMessage);
+      }
+    }
+
+    return builtLinkPreviews;
+  }
+
   private async sendText(
     conversationId: string,
     originalPayloadBundle: PayloadBundleOutgoingUnsent,
@@ -588,60 +649,14 @@ class ConversationService {
       state: PayloadBundleState.OUTGOING_SENT,
     };
 
-    const payloadBundleContent = payloadBundle.content as TextContent;
+    const {text, linkPreviews} = payloadBundle.content as TextContent;
 
     const textMessage = Text.create({
-      content: payloadBundleContent.text,
+      content: text,
     });
 
-    if (payloadBundleContent.linkPreviews) {
-      for (const linkPreview of payloadBundleContent.linkPreviews) {
-        const linkPreviewMessage = LinkPreview.create({
-          permanentUrl: linkPreview.permanentUrl,
-          summary: linkPreview.summary,
-          title: linkPreview.title,
-          url: linkPreview.url,
-          urlOffset: linkPreview.urlOffset,
-        });
-
-        if (linkPreview.tweet) {
-          linkPreviewMessage.tweet = Tweet.create({
-            author: linkPreview.tweet.author,
-            username: linkPreview.tweet.username,
-          });
-        }
-
-        if (linkPreview.imageUploaded) {
-          const encryptedAsset = linkPreview.imageUploaded;
-
-          const imageMetadata = Asset.ImageMetaData.create({
-            height: encryptedAsset.image.height,
-            width: encryptedAsset.image.width,
-          });
-
-          const original = Asset.Original.create({
-            [GenericMessageType.IMAGE]: imageMetadata,
-            mimeType: encryptedAsset.image.type,
-            size: encryptedAsset.image.data.length,
-          });
-
-          const remoteData = Asset.RemoteData.create({
-            assetId: encryptedAsset.asset.key,
-            assetToken: encryptedAsset.asset.token,
-            otrKey: encryptedAsset.asset.keyBytes,
-            sha256: encryptedAsset.asset.sha256,
-          });
-
-          const assetMessage = Asset.create({
-            original,
-            uploaded: remoteData,
-          });
-
-          linkPreviewMessage.image = assetMessage;
-        }
-
-        textMessage.linkPreview.push(linkPreviewMessage);
-      }
+    if (linkPreviews) {
+      textMessage.linkPreview = this.buildLinkPreviews(linkPreviews);
     }
 
     let genericMessage = GenericMessage.create({

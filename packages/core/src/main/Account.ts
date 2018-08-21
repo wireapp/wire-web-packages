@@ -326,7 +326,7 @@ class Account extends EventEmitter {
       }
       case GenericMessageType.EDITED: {
         const {
-          text: {content: editedText},
+          text: {content: editedText, linkPreview: editedLinkPreview},
           replacingMessageId,
         } = genericMessage[GenericMessageType.EDITED];
 
@@ -334,6 +334,10 @@ class Account extends EventEmitter {
           originalMessageId: replacingMessageId,
           text: editedText,
         };
+
+        if (editedLinkPreview.length) {
+          content.linkPreviews = editedLinkPreview;
+        }
 
         return {
           content,
