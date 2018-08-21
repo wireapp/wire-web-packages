@@ -63,17 +63,11 @@ class APIClient {
   public notification: {api: NotificationAPI};
   public self: {api: SelfAPI};
   public teams: {
-    invitation: {api?: TeamInvitationAPI};
-    member: {api?: MemberAPI};
-    payment: {api?: PaymentAPI};
-    service: {api?: ServiceAPI};
-    team: {api?: TeamAPI};
-  } = {
-    invitation: {api: undefined},
-    member: {api: undefined},
-    payment: {api: undefined},
-    service: {api: undefined},
-    team: {api: undefined},
+    invitation: {api: TeamInvitationAPI};
+    member: {api: MemberAPI};
+    payment: {api: PaymentAPI};
+    service: {api: ServiceAPI};
+    team: {api: TeamAPI};
   };
   public user: {api: UserAPI};
 
@@ -193,7 +187,6 @@ class APIClient {
     const context = await this.createContext(user.id, clientType);
 
     await this.initEngine(context);
-
     return this.init(clientType);
   }
 
