@@ -195,15 +195,14 @@ describe('ConversationService', () => {
       };
       const urlOffset = 0;
 
-      const linkPreview = await account.service.conversation.createLinkPreview(
-        url,
-        urlOffset,
-        undefined,
+      const linkPreview = await account.service.conversation.createLinkPreview({
         permanentUrl,
         summary,
         title,
-        tweet
-      );
+        tweet,
+        url,
+        urlOffset,
+      });
       const textMessage = account.service.conversation.createText(text, [linkPreview]);
 
       expect(textMessage.content.text).toEqual(text);
@@ -258,7 +257,7 @@ describe('ConversationService', () => {
       const text = url;
       const urlOffset = 0;
 
-      const linkPreview = await account.service.conversation.createLinkPreview(url, urlOffset, image);
+      const linkPreview = await account.service.conversation.createLinkPreview({image, url, urlOffset});
       const textMessage = account.service.conversation.createText(text, [linkPreview]);
 
       expect(account.service.asset.uploadImageAsset).toHaveBeenCalledTimes(1);
@@ -268,7 +267,6 @@ describe('ConversationService', () => {
 
       expect(textMessage.content.linkPreviews[0]).toEqual(
         jasmine.objectContaining({
-          image,
           url,
           urlOffset,
         })

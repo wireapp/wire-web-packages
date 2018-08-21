@@ -70,12 +70,12 @@ import {
   FileMetaDataContent,
   ImageAssetContent,
   ImageContent,
+  LinkPreviewContent,
   LinkPreviewUploadedContent,
   LocationContent,
   ReactionContent,
   RemoteData,
   TextContent,
-  TweetContent,
 } from '../conversation/content/';
 
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
@@ -820,34 +820,25 @@ class ConversationService {
     };
   }
 
-  public async createLinkPreview(
-    url: string,
-    urlOffset: number,
-    image?: ImageContent,
-    permanentUrl?: string,
-    summary?: string,
-    title?: string,
-    tweet?: TweetContent
-  ): Promise<LinkPreviewUploadedContent> {
-    const linkPreview: LinkPreviewUploadedContent = {
-      image,
-      permanentUrl,
-      summary,
-      title,
-      tweet,
-      url,
-      urlOffset,
+  public async createLinkPreview(linkPreview: LinkPreviewContent): Promise<LinkPreviewUploadedContent> {
+    const linkPreviewUploaded: LinkPreviewUploadedContent = {
+      ...linkPreview,
     };
 
-    if (image) {
-      const imageAsset = await this.assetService.uploadImageAsset(image);
-      linkPreview.imageUploaded = {
+    const linkPreviewImage = linkPreview.image;
+
+    if (linkPreviewImage) {
+      const imageAsset = await this.assetService.uploadImageAsset(linkPreviewImage);
+
+      delete linkPreviewUploaded.image;
+
+      linkPreviewUploaded.imageUploaded = {
         asset: imageAsset,
-        image,
+        image: linkPreviewImage,
       };
     }
 
-    return linkPreview;
+    return linkPreviewUploaded;
   }
 
   public createLocation(
