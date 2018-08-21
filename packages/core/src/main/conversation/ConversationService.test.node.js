@@ -184,17 +184,38 @@ describe('ConversationService', () => {
       };
 
       const url = 'http://example.com';
-      const urlOffset = 0;
-      const text = url;
 
-      const linkPreview = await account.service.conversation.createLinkPreview(url, urlOffset);
+      const permanentUrl = url;
+      const summary = 'Summary';
+      const text = url;
+      const title = 'Title';
+      const tweet = {
+        author: 'Author',
+        username: 'Username',
+      };
+      const urlOffset = 0;
+
+      const linkPreview = await account.service.conversation.createLinkPreview(
+        url,
+        urlOffset,
+        undefined,
+        permanentUrl,
+        summary,
+        title,
+        tweet
+      );
       const textMessage = account.service.conversation.createText(text, [linkPreview]);
 
+      expect(textMessage.content.text).toEqual(text);
       expect(textMessage.content.linkPreviews).toEqual(jasmine.any(Array));
       expect(textMessage.content.linkPreviews.length).toBe(1);
 
       expect(textMessage.content.linkPreviews[0]).toEqual(
         jasmine.objectContaining({
+          permanentUrl,
+          summary,
+          title,
+          tweet,
           url,
           urlOffset,
         })
@@ -210,6 +231,48 @@ describe('ConversationService', () => {
       const textMessage = account.service.conversation.createText(text);
 
       expect(textMessage.content.linkPreviews).toBeUndefined();
+    });
+
+    it('uploads link previews', async () => {
+      account.apiClient.context = {
+        userId: new UUID(4).format(),
+      };
+
+      spyOn(account.service.asset, 'uploadImageAsset').and.returnValue(
+        Promise.resolve({
+          cipherText: Buffer.from([]),
+          key: '',
+          keyBytes: Buffer.from([]),
+          sha256: Buffer.from([]),
+          token: '',
+        })
+      );
+
+      const url = 'http://example.com';
+      const image = {
+        data: Buffer.from([]),
+        height: 123,
+        type: 'image/jpeg',
+        width: 456,
+      };
+      const text = url;
+      const urlOffset = 0;
+
+      const linkPreview = await account.service.conversation.createLinkPreview(url, urlOffset, image);
+      const textMessage = account.service.conversation.createText(text, [linkPreview]);
+
+      expect(account.service.asset.uploadImageAsset).toHaveBeenCalledTimes(1);
+
+      expect(textMessage.content.linkPreviews).toEqual(jasmine.any(Array));
+      expect(textMessage.content.linkPreviews.length).toBe(1);
+
+      expect(textMessage.content.linkPreviews[0]).toEqual(
+        jasmine.objectContaining({
+          image,
+          url,
+          urlOffset,
+        })
+      );
     });
   });
 });

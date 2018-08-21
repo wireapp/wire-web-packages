@@ -115,8 +115,8 @@ const messageIdCache = {};
         const newLinkPreview = await account.service.conversation.createLinkPreview(
           linkPreview.url,
           linkPreview.urlOffset,
-          linkPreview.permanentUrl,
           linkPreviewImage,
+          linkPreview.permanentUrl,
           linkPreview.summary,
           linkPreview.title,
           linkPreview.tweet

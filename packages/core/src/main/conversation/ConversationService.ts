@@ -823,8 +823,8 @@ class ConversationService {
   public async createLinkPreview(
     url: string,
     urlOffset: number,
-    permanentUrl?: string,
     image?: ImageContent,
+    permanentUrl?: string,
     summary?: string,
     title?: string,
     tweet?: TweetContent

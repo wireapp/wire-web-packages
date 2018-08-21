@@ -73,6 +73,7 @@ class Account extends EventEmitter {
 
   private readonly apiClient: APIClient;
   public service?: {
+    asset: AssetService;
     client: ClientService;
     conversation: ConversationService;
     connection: ConnectionService;
@@ -98,6 +99,7 @@ class Account extends EventEmitter {
     const selfService = new SelfService(this.apiClient);
 
     this.service = {
+      asset: assetService,
       client: clientService,
       connection: connectionService,
       conversation: conversationService,
