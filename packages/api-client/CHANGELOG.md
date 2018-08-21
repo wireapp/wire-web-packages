@@ -3,6 +3,81 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="1.14.1"></a>
+## [1.14.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.14.0...@wireapp/api-client@1.14.1) (2018-08-21)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+<a name="1.14.0"></a>
+# [1.14.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.13.19...@wireapp/api-client@1.14.0) (2018-08-20)
+
+
+### Features
+
+* **core,api-client:** Send link previews (WEBFOUND-33) ([#1022](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1022)) ([3c10247](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/3c10247))
+
+
+
+
+
+<a name="1.13.19"></a>
+## [1.13.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.13.18...@wireapp/api-client@1.13.19) (2018-08-20)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+<a name="1.13.18"></a>
+## [1.13.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.13.17...@wireapp/api-client@1.13.18) (2018-08-17)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+<a name="1.13.17"></a>
+## [1.13.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.13.16...@wireapp/api-client@1.13.17) (2018-08-16)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+<a name="1.13.16"></a>
+## [1.13.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.13.15...@wireapp/api-client@1.13.16) (2018-08-16)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+<a name="1.13.15"></a>
+## [1.13.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.13.14...@wireapp/api-client@1.13.15) (2018-08-16)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+<a name="1.13.14"></a>
+## [1.13.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.13.13...@wireapp/api-client@1.13.14) (2018-08-16)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
 <a name="1.13.13"></a>
 ## [1.13.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.13.12...@wireapp/api-client@1.13.13) (2018-08-15)
 

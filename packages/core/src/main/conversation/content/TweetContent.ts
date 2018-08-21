@@ -17,11 +17,9 @@
  *
  */
 
-import {LinkPreviewUploadedContent} from '../content';
-
-interface TextContent {
-  text: string;
-  linkPreviews?: LinkPreviewUploadedContent[];
+interface TweetContent {
+  author?: string;
+  username?: string;
 }
 
-export {TextContent};
+export {TweetContent};

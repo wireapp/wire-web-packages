@@ -12,6 +12,8 @@ import {
   HiddenContent,
   ImageAssetContent,
   ImageContent,
+  LinkPreviewContent,
+  LinkPreviewUploadedContent,
   LocationContent,
   ReactionContent,
   TextContent,
@@ -31,6 +33,8 @@ type ConversationContent =
   | HiddenContent
   | ImageAssetContent
   | ImageContent
+  | LinkPreviewContent
+  | LinkPreviewUploadedContent
   | LocationContent
   | ReactionContent
   | TextContent;

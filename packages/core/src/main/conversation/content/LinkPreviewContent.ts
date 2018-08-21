@@ -17,11 +17,20 @@
  *
  */
 
-import {LinkPreviewUploadedContent} from '../content';
+import {ImageAssetContent, ImageContent, TweetContent} from '../content/';
 
-interface TextContent {
-  text: string;
-  linkPreviews?: LinkPreviewUploadedContent[];
+interface LinkPreviewContent {
+  image?: ImageContent;
+  permanentUrl?: string;
+  summary?: string;
+  title?: string;
+  tweet?: TweetContent;
+  url: string;
+  urlOffset: number;
 }
 
-export {TextContent};
+interface LinkPreviewUploadedContent extends LinkPreviewContent {
+  imageUploaded?: ImageAssetContent;
+}
+
+export {LinkPreviewContent, LinkPreviewUploadedContent};

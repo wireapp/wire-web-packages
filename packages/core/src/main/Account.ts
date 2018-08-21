@@ -40,6 +40,7 @@ import {ClientInfo, ClientService} from './client/root';
 import {ConnectionService} from './connection/root';
 import {
   AssetContent,
+  ConfirmationContent,
   DeletedContent,
   EditedTextContent,
   HiddenContent,
@@ -72,6 +73,7 @@ class Account extends EventEmitter {
 
   private readonly apiClient: APIClient;
   public service?: {
+    asset: AssetService;
     client: ClientService;
     conversation: ConversationService;
     connection: ConnectionService;
@@ -97,6 +99,7 @@ class Account extends EventEmitter {
     const selfService = new SelfService(this.apiClient);
 
     this.service = {
+      asset: assetService,
       client: clientService,
       connection: connectionService,
       conversation: conversationService,
@@ -253,26 +256,31 @@ class Account extends EventEmitter {
 
       if (genericMessage.content === GenericMessageType.EPHEMERAL) {
         const unwrappedMessage = this.mapGenericMessage(genericMessage.ephemeral, otrMessage);
+        unwrappedMessage.id = genericMessage.messageId;
         if (genericMessage.ephemeral) {
           const expireAfterMillis = genericMessage.ephemeral.expireAfterMillis;
           unwrappedMessage.messageTimer =
             typeof expireAfterMillis === 'number' ? expireAfterMillis : (expireAfterMillis as Long).toNumber();
         }
         return unwrappedMessage;
-      } else {
-        return this.mapGenericMessage(genericMessage, otrMessage);
       }
-    } else {
-      throw decryptedMessage.error;
+      return this.mapGenericMessage(genericMessage, otrMessage);
     }
+
+    throw decryptedMessage.error;
   }
 
   private mapGenericMessage(genericMessage: any, event: ConversationOtrMessageAddEvent): PayloadBundleIncoming {
     switch (genericMessage.content) {
       case GenericMessageType.TEXT: {
-        const content: TextContent = {
-          text: genericMessage.text.content,
-        };
+        const {content: text, linkPreview} = genericMessage[GenericMessageType.TEXT];
+
+        const content: TextContent = {text};
+
+        if (linkPreview.length) {
+          content.linkPreviews = linkPreview;
+        }
+
         return {
           content,
           conversation: event.conversation,
@@ -284,10 +292,27 @@ class Account extends EventEmitter {
           type: PayloadBundleType.TEXT,
         };
       }
-      case GenericMessageType.DELETED: {
-        const content: DeletedContent = {
-          originalMessageId: genericMessage.deleted.messageId,
+      case GenericMessageType.CONFIRMATION: {
+        const confirmMessageId = genericMessage[GenericMessageType.CONFIRMATION].firstMessageId;
+
+        const content: ConfirmationContent = {confirmMessageId};
+
+        return {
+          content,
+          conversation: event.conversation,
+          from: event.from,
+          id: genericMessage.messageId,
+          messageTimer: 0,
+          state: PayloadBundleState.INCOMING,
+          timestamp: new Date(event.time).getTime(),
+          type: PayloadBundleType.CONFIRMATION,
         };
+      }
+      case GenericMessageType.DELETED: {
+        const originalMessageId = genericMessage[GenericMessageType.DELETED].messageId;
+
+        const content: DeletedContent = {originalMessageId};
+
         return {
           content,
           conversation: event.conversation,
@@ -300,10 +325,20 @@ class Account extends EventEmitter {
         };
       }
       case GenericMessageType.EDITED: {
+        const {
+          text: {content: editedText, linkPreview: editedLinkPreview},
+          replacingMessageId,
+        } = genericMessage[GenericMessageType.EDITED];
+
         const content: EditedTextContent = {
-          originalMessageId: genericMessage.edited.replacingMessageId,
-          text: genericMessage.edited.text.content,
+          originalMessageId: replacingMessageId,
+          text: editedText,
         };
+
+        if (editedLinkPreview.length) {
+          content.linkPreviews = editedLinkPreview;
+        }
+
         return {
           content,
           conversation: event.conversation,
@@ -316,10 +351,16 @@ class Account extends EventEmitter {
         };
       }
       case GenericMessageType.HIDDEN: {
+        const {
+          conversationId,
+          hidden: {messageId},
+        } = genericMessage[GenericMessageType.HIDDEN];
+
         const content: HiddenContent = {
-          conversationId: genericMessage.hidden.conversationId,
-          originalMessageId: genericMessage.hidden.messageId,
+          conversationId,
+          originalMessageId: messageId,
         };
+
         return {
           content,
           conversation: event.conversation,
@@ -331,13 +372,27 @@ class Account extends EventEmitter {
           type: PayloadBundleType.MESSAGE_HIDE,
         };
       }
-      case GenericMessageType.LOCATION: {
-        const content: LocationContent = {
-          latitude: genericMessage.location.latitude,
-          longitude: genericMessage.location.longitude,
-          name: genericMessage.location.name,
-          zoom: genericMessage.location.zoom,
+      case GenericMessageType.KNOCK: {
+        return {
+          conversation: event.conversation,
+          from: event.from,
+          id: genericMessage.messageId,
+          messageTimer: 0,
+          state: PayloadBundleState.INCOMING,
+          timestamp: new Date(event.time).getTime(),
+          type: PayloadBundleType.PING,
         };
+      }
+      case GenericMessageType.LOCATION: {
+        const {latitude, longitude, name, zoom} = genericMessage[GenericMessageType.LOCATION];
+
+        const content: LocationContent = {
+          latitude,
+          longitude,
+          name,
+          zoom,
+        };
+
         return {
           content,
           conversation: event.conversation,
@@ -350,16 +405,17 @@ class Account extends EventEmitter {
         };
       }
       case GenericMessageType.ASSET: {
-        const {uploaded, original} = genericMessage.asset;
+        const {notUploaded, original, preview, status, uploaded} = genericMessage[GenericMessageType.ASSET];
         const isImage = !!uploaded && !!uploaded.assetId && !!original && !!original.image;
 
         const content: AssetContent = {
-          abortReason: genericMessage.asset.notUploaded,
-          original: genericMessage.asset.original,
-          preview: genericMessage.asset.preview,
-          status: genericMessage.asset.status,
-          uploaded: genericMessage.asset.uploaded,
+          abortReason: notUploaded,
+          original,
+          preview,
+          status,
+          uploaded,
         };
+
         return {
           content,
           conversation: event.conversation,
@@ -372,10 +428,13 @@ class Account extends EventEmitter {
         };
       }
       case GenericMessageType.REACTION: {
+        const {emoji, messageId} = genericMessage[GenericMessageType.REACTION];
+
         const content: ReactionContent = {
-          originalMessageId: genericMessage.reaction.messageId,
-          type: genericMessage.reaction.emoji,
+          originalMessageId: messageId,
+          type: emoji,
         };
+
         return {
           content,
           conversation: event.conversation,
@@ -390,6 +449,7 @@ class Account extends EventEmitter {
       default: {
         this.logger.warn(`Unhandled event type "${genericMessage.content}": ${JSON.stringify(genericMessage)}`);
         return {
+          content: genericMessage.content,
           conversation: event.conversation,
           from: event.from,
           id: genericMessage.messageId,
@@ -526,12 +586,11 @@ class Account extends EventEmitter {
             break;
         }
       } else {
-        const conversationEvent = event as ConversationEvent;
-        this.logger.log(
-          `Received unsupported event "${event.type}" in conversation "${conversationEvent.conversation}" from user "${
-            conversationEvent.from
-          }".`
-        );
+        const {type, conversation, from} = event as ConversationEvent;
+        const conversationText = conversation ? ` in conversation "${conversation}"` : '';
+        const fromText = from ? ` from user "${from}".` : '';
+
+        this.logger.log(`Received unsupported event "${type}"${conversationText}${fromText}`, {event});
       }
     }
   }
