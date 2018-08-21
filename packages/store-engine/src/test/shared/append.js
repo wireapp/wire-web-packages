@@ -1,7 +1,7 @@
 const TABLE_NAME = 'the-simpsons';
 
 module.exports = {
-  'appends text to an existing record.': async (done, engine) => {
+  'appends text to an existing record.': async engine => {
     const PRIMARY_KEY = 'primary-key';
 
     const text = 'Hello';
@@ -10,7 +10,5 @@ module.exports = {
     await engine.append(TABLE_NAME, primaryKey, textExtension);
     const record = await engine.read(TABLE_NAME, primaryKey);
     expect(record).toBe(`${text}${textExtension}`);
-
-    done();
   },
 };

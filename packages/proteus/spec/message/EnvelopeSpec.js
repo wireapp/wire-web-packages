@@ -73,14 +73,13 @@ describe('Envelope', () => {
     expect(env_cpy.verify(mac_key)).toBe(true);
   });
 
-  it('fails when passing invalid input', done => {
+  it('fails when passing invalid input', () => {
     const empty_buffer = new ArrayBuffer(0);
     try {
       Proteus.message.Envelope.deserialise(empty_buffer);
-      done.fail();
+      fail();
     } catch (error) {
       expect(error instanceof CBOR.DecodeError).toBe(true);
-      done();
     }
   });
 });

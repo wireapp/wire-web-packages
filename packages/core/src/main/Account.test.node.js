@@ -292,7 +292,7 @@ describe('Account', () => {
       expect(clientType).toBe(ClientType.TEMPORARY);
     });
 
-    it('does not log in with incorrect credentials', async done => {
+    it('does not log in with incorrect credentials', async () => {
       const storeEngine = new MemoryEngine();
       await storeEngine.init('account.test');
 
@@ -308,12 +308,10 @@ describe('Account', () => {
           password: 'wrong',
         });
 
-        done.fail('Should not be logged in');
+        fail('Should not be logged in');
       } catch (error) {
         expect(error.code).toBe(StatusCode.FORBIDDEN);
         expect(error.label).toBe(BackendErrorLabel.INVALID_CREDENTIALS);
-
-        done();
       }
     });
   });

@@ -146,10 +146,10 @@ describe('CBOR.Decoder', () => {
     expect('\u00fc').toBe(decoder('62c3bc').text());
   });
 
-  it('handles optional values', done => {
+  it('handles optional values', () => {
     try {
       decoder('f6').u8();
-      done.fail();
+      fail();
     } catch (error) {
       expect(error instanceof CBOR.DecodeError);
       expect(error.message).toEqual(CBOR.DecodeError.UNEXPECTED_TYPE);
@@ -159,8 +159,6 @@ describe('CBOR.Decoder', () => {
 
       decoded = decoder('01');
       expect(1).toBe(decoded.optional(() => decoded.u8()));
-
-      done();
     }
   });
 

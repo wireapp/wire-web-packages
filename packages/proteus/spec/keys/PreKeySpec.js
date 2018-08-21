@@ -41,69 +41,63 @@ describe('PreKey', () => {
       expect(pk.key_id).toBe(Proteus.keys.PreKey.MAX_PREKEY_ID);
     });
 
-    it('rejects undefined IDs', async done => {
+    it('rejects undefined IDs', async () => {
       try {
         await Proteus.keys.PreKey.new(undefined);
-        done.fail();
+        fail();
       } catch (error) {
         expect(error instanceof Proteus.errors.InputError.TypeError).toBe(true);
         expect(error.code).toBe(Proteus.errors.InputError.CODE.CASE_404);
-        done();
       }
     });
 
-    it('rejects string IDs', async done => {
+    it('rejects string IDs', async () => {
       try {
         await Proteus.keys.PreKey.new('foo');
-        done.fail();
+        fail();
       } catch (error) {
         expect(error instanceof Proteus.errors.InputError.TypeError).toBe(true);
         expect(error.code).toBe(Proteus.errors.InputError.CODE.CASE_403);
-        done();
       }
     });
 
-    it('rejects too low IDs', async done => {
+    it('rejects too low IDs', async () => {
       try {
         await Proteus.keys.PreKey.new(-1);
-        done.fail();
+        fail();
       } catch (error) {
         expect(error instanceof Proteus.errors.InputError.RangeError).toBe(true);
         expect(error.code).toBe(Proteus.errors.InputError.CODE.CASE_400);
-        done();
       }
     });
 
-    it('rejects too high IDs', async done => {
+    it('rejects too high IDs', async () => {
       try {
         await Proteus.keys.PreKey.new(65537);
-        done.fail();
+        fail();
       } catch (error) {
         expect(error instanceof Proteus.errors.InputError.RangeError).toBe(true);
         expect(error.code).toBe(Proteus.errors.InputError.CODE.CASE_400);
-        done();
       }
     });
 
-    it('rejects floating point IDs', async done => {
+    it('rejects floating point IDs', async () => {
       try {
         await Proteus.keys.PreKey.new(4242.42);
-        done.fail();
+        fail();
       } catch (error) {
         expect(error instanceof Proteus.errors.InputError.TypeError).toBe(true);
         expect(error.code).toBe(Proteus.errors.InputError.CODE.CASE_403);
-        done();
       }
     });
 
-    it('throws errors with error codes', async done => {
+    it('throws errors with error codes', async () => {
       try {
         await Proteus.keys.PreKey.new(Proteus.keys.PreKey.MAX_PREKEY_ID + 1);
-        done.fail();
+        fail();
       } catch (error) {
         expect(error instanceof Proteus.errors.InputError.RangeError).toBe(true);
         expect(error.code).toBe(Proteus.errors.InputError.CODE.CASE_400);
-        done();
       }
     });
 

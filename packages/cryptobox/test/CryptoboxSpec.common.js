@@ -49,15 +49,14 @@ describe('cryptobox.Cryptobox', () => {
   });
 
   describe('"decrypt"', () => {
-    it("doesn't decrypt empty ArrayBuffers", async done => {
+    it("doesn't decrypt empty ArrayBuffers", async () => {
       const box = new cryptobox.Cryptobox(engine);
       const sessionId = 'sessionWithBob';
       try {
         await box.decrypt(sessionId, new ArrayBuffer(0));
-        done.fail();
+        fail();
       } catch (error) {
         expect(error).toEqual(jasmine.any(cryptobox.DecryptionError));
-        done();
       }
     });
 
@@ -139,7 +138,7 @@ describe('cryptobox.Cryptobox', () => {
       expect(box.identity.public_key.fingerprint()).toBe(initialFingerPrint);
     });
 
-    it('fails to initialize a Cryptobox of which the identity is missing', async done => {
+    it('fails to initialize a Cryptobox of which the identity is missing', async () => {
       let box = new cryptobox.Cryptobox(engine);
 
       await box.create();
@@ -152,14 +151,13 @@ describe('cryptobox.Cryptobox', () => {
       expect(box.identity).not.toBeDefined();
       try {
         await box.load();
-        done.fail();
+        fail();
       } catch (error) {
         expect(error).toEqual(jasmine.any(cryptobox.error.CryptoboxError));
-        done();
       }
     });
 
-    it('fails to initialize a Cryptobox of which the last resort PreKey is missing', async done => {
+    it('fails to initialize a Cryptobox of which the last resort PreKey is missing', async () => {
       let box = new cryptobox.Cryptobox(engine);
 
       await box.create();
@@ -172,10 +170,9 @@ describe('cryptobox.Cryptobox', () => {
       expect(box.identity).not.toBeDefined();
       try {
         await box.load();
-        done.fail();
+        fail();
       } catch (error) {
         expect(error).toEqual(jasmine.any(cryptobox.error.CryptoboxError));
-        done();
       }
     });
   });
@@ -230,7 +227,7 @@ describe('cryptobox.Cryptobox', () => {
         expect(session.id).toBe(sessionId);
       });
 
-      it('fails for outdated PreKey formats', async done => {
+      it('fails for outdated PreKey formats', async () => {
         const remotePreKey = {
           id: 65535,
           key: 'hAEZ//9YIOxZw78oQCH6xKyAI7WqagtbvRZ/LaujG+T790hOTbf7WCDqAE5Dc75VfmYji6wEz976hJ2hYuODYE6pA59DNFn/KQ==',
@@ -240,10 +237,9 @@ describe('cryptobox.Cryptobox', () => {
 
         try {
           await box.session_from_prekey(sessionId, decodedPreKeyBundleBuffer);
-          done.fail();
+          fail();
         } catch (error) {
           expect(error).toEqual(jasmine.any(cryptobox.InvalidPreKeyFormatError));
-          done();
         }
       });
     });

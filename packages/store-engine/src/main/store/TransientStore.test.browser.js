@@ -55,15 +55,14 @@ describe('store.TransientStore', () => {
       expect(bundle.timeoutID).toBeDefined();
     });
 
-    it("doesn't overwrite an existing record.", async done => {
+    it("doesn't overwrite an existing record.", async () => {
       await store.set(primaryKey, entity, ttl);
       try {
         await store.set(primaryKey, {access_token: 'ABC'}, ttl);
-        done.fail();
+        fail();
       } catch (error) {
         expect(error).toEqual(jasmine.any(Store.RecordAlreadyExistsError));
         expect(error.code).toBe(1);
-        done();
       }
     });
   });
@@ -149,48 +148,34 @@ describe('store.TransientStore', () => {
 
     afterEach(() => jasmine.clock().uninstall());
 
-    it('publishes an event when an entity expires.', done => {
+    it('publishes an event when an entity expires.', async done => {
       store.on(Store.TransientStore.TOPIC.EXPIRED, expiredBundle => {
         expect(expiredBundle.payload).toBe(entity);
         expect(expiredBundle.primaryKey).toBe(primaryKey);
         done();
       });
 
-      store
-        .set(primaryKey, entity, minuteInMillis)
-        .then(() => jasmine.clock().tick(minuteInMillis + 1))
-        .catch(error => done.fail(error));
+      try {
+        await store.set(primaryKey, entity, minuteInMillis);
+        jasmine.clock().tick(minuteInMillis + 1);
+      } catch (error) {
+        fail(error);
+      }
     });
 
-    it('deletes expired entities.', done => {
-      store
-        .set(primaryKey, entity, minuteInMillis)
-        .then(() => {
-          jasmine.clock().tick(minuteInMillis + 1);
-          return store.get(primaryKey);
-        })
-        .then(bundle => {
-          expect(bundle).toBeUndefined();
-          done();
-        })
-        .catch(error => done.fail(error));
+    it('deletes expired entities.', async () => {
+      await store.set(primaryKey, entity, minuteInMillis);
+      jasmine.clock().tick(minuteInMillis + 1);
+      const bundle = await store.get(primaryKey);
+      expect(bundle).toBeUndefined();
     });
 
-    it('keeps the same timer when being called multiple times.', done => {
-      let timeoutID = undefined;
+    it('keeps the same timer when being called multiple times.', async () => {
+      const {timeoutID} = await store.set(primaryKey, entity, minuteInMillis);
 
-      store
-        .set(primaryKey, entity, minuteInMillis)
-        .then(bundle => {
-          timeoutID = bundle.timeoutID;
-          const cacheKey = store.constructCacheKey(primaryKey);
-          return store.startTimer(cacheKey, minuteInMillis);
-        })
-        .then(bundle => {
-          expect(bundle.timeoutID).toBe(timeoutID);
-          done();
-        })
-        .catch(error => done.fail(error));
+      const cacheKey = store.constructCacheKey(primaryKey);
+      const bundle = await store.startTimer(cacheKey, minuteInMillis);
+      expect(bundle.timeoutID).toBe(timeoutID);
     });
   });
 });

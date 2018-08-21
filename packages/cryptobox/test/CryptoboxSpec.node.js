@@ -68,7 +68,7 @@ describe('Cryptobox', () => {
       expect(Buffer.from(malloryDecrypted).toString('utf8')).toBe(text);
     });
 
-    it("throws an error when receiving a PreKey message that was encoded with a PreKey which does not exist anymore on the receiver's side", async done => {
+    it("throws an error when receiving a PreKey message that was encoded with a PreKey which does not exist anymore on the receiver's side", async () => {
       const cryptobox = require('./fixtures/qa-break-session/cryptobox');
       const event = require('./fixtures/qa-break-session/event');
       const sessionId = `${event.from}@${event.data.sender}`;
@@ -82,10 +82,9 @@ describe('Cryptobox', () => {
 
       try {
         await alice.decrypt(sessionId, ciphertext.buffer);
-        done.fail();
+        fail();
       } catch (error) {
         expect(error.code).toBe(Proteus.errors.ProteusError.CODE.CASE_101);
-        done();
       }
     });
   });

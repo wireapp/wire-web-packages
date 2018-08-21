@@ -167,7 +167,7 @@ describe('CryptographyService', () => {
       expect(decryptedBuffer).toEqual(byteBuffer);
     });
 
-    it('does not decrypt when the hash is missing', async done => {
+    it('does not decrypt when the hash is missing', async () => {
       const bytes = new Uint8Array(16);
       await promisify(crypto.randomFill)(bytes);
       const byteBuffer = Buffer.from(bytes.buffer);
@@ -176,10 +176,8 @@ describe('CryptographyService', () => {
 
       try {
         await decryptAsset(cipherText, keyBytes, null);
-        done.fail();
-      } catch (error) {
-        done();
-      }
+        fail();
+      } catch (error) {}
     });
 
     it('does not decrypt when hash is an empty array', async () => {

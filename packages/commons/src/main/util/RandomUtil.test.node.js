@@ -21,15 +21,14 @@ const {RandomUtil} = require('@wireapp/commons');
 
 describe('RandomUtil', () => {
   describe('"randomInt"', () => {
-    it('respects limit', done => {
+    it('respects limit', () => {
       const iterations = 100;
       const randomLimit = 10;
       for (let index = 0; index < iterations; index++) {
         if (RandomUtil.randomInt(randomLimit) > randomLimit) {
-          done.fail(`randomInt() exeeded limit "${randomLimit}"`);
+          fail(`randomInt() exeeded limit "${randomLimit}"`);
         }
       }
-      done();
     });
   });
 

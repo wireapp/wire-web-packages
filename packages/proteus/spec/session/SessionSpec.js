@@ -205,7 +205,7 @@ describe('Session', () => {
       );
     });
 
-    it('handles a counter mismatch', async done => {
+    it('handles a counter mismatch', async () => {
       const alice_ident = await Proteus.keys.IdentityKeyPair.new();
       const alice_store = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10));
 
@@ -244,7 +244,7 @@ describe('Session', () => {
         ciphertexts.map(async text => {
           try {
             await alice.decrypt(alice_store, text);
-            done.fail();
+            fail();
           } catch (error) {
             expect(error instanceof Proteus.errors.DecryptError.DuplicateMessage).toBe(true);
             expect(error.code).toBe(Proteus.errors.DecryptError.CODE.CASE_209);
@@ -254,8 +254,6 @@ describe('Session', () => {
 
       assert_serialise_deserialise(alice_ident, alice);
       assert_serialise_deserialise(bob_ident, bob);
-
-      done();
     });
 
     it('handles multiple prekey messages', async () => {
@@ -407,7 +405,7 @@ describe('Session', () => {
       assert_serialise_deserialise(bob_ident, bob);
     });
 
-    it('fails retry init from message', async done => {
+    it('fails retry init from message', async () => {
       const alice_ident = await Proteus.keys.IdentityKeyPair.new();
 
       const bob_ident = await Proteus.keys.IdentityKeyPair.new();
@@ -426,12 +424,10 @@ describe('Session', () => {
       try {
         await Proteus.session.Session.init_from_message(bob_ident, bob_store, hello_bob_encrypted);
 
-        done.fail();
+        fail();
       } catch (error) {
         expect(error instanceof Proteus.errors.DecryptError).toBe(true);
         expect(error.code).toBe(Proteus.errors.DecryptError.CODE.CASE_206);
-
-        done();
       }
     });
 

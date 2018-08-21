@@ -111,7 +111,7 @@ describe('cryptobox.CryptoboxSession', () => {
   });
 
   describe('"Session reset"', () => {
-    it('throws an error when a session is broken', async done => {
+    it('throws an error when a session is broken', async () => {
       const aliceEngine = new MemoryEngine();
       await aliceEngine.init('store-alice');
 
@@ -138,11 +138,10 @@ describe('cryptobox.CryptoboxSession', () => {
 
       try {
         await alice.encrypt('alice-to-bob', `I'm back!`);
-        done.fail();
+        fail();
       } catch (error) {
         expect(error).toEqual(jasmine.any(StoreEngineError.RecordNotFoundError));
         expect(error.code).toBe(2);
-        done();
       }
     });
   });

@@ -105,7 +105,7 @@ describe('FileEngine', () => {
       expect(enforcePathRestrictions('C:/', '\\Windows\\System32\\drivers\\etc\\hosts')).toThrowError(expectedError);
     });
 
-    it('is applied to all store operations.', async done => {
+    it('is applied to all store operations.', async () => {
       const functionNames = [
         'append',
         'create',
@@ -121,10 +121,9 @@ describe('FileEngine', () => {
       for (const operation of functionNames) {
         try {
           await engine[operation]('../etc', 'primary-key', {});
-          done.fail();
+          fail();
         } catch (error) {
           expect(error instanceof expectedError).toBe(true);
-          done();
         }
       }
     });
@@ -132,7 +131,7 @@ describe('FileEngine', () => {
 
   describe('"append"', () => {
     Object.entries(require('../../test/shared/append')).map(([description, testFunction]) => {
-      it(description, done => testFunction(done, engine));
+      it(description, () => testFunction(engine));
     });
   });
 
