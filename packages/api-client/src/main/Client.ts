@@ -145,10 +145,9 @@ class APIClient {
   public async init(clientType: ClientType = ClientType.NONE): Promise<Context> {
     const initialAccessToken = await this.transport.http.refreshAccessToken();
     const context = this.createContext(initialAccessToken.user, clientType);
-    const accessToken = initialAccessToken;
 
     await this.initEngine(context);
-    this.accessTokenStore.updateToken(accessToken);
+    this.accessTokenStore.updateToken(initialAccessToken);
 
     return context;
   }
