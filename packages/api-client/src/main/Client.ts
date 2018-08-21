@@ -197,21 +197,20 @@ class APIClient {
     return this.init(clientType);
   }
 
-  public logout(options = {ignoreError: false}): Promise<void> {
-    return this.auth.api
-      .postLogout()
-      .catch(error => {
-        if (options.ignoreError) {
-          this.logger.error(error);
-        } else {
-          throw error;
-        }
-      })
-      .then(() => this.disconnect('Closed by client logout'))
-      .then(() => this.accessTokenStore.delete())
-      .then(() => {
-        delete this.context;
-      });
+  public async logout(options = {ignoreError: false}): Promise<void> {
+    try {
+      await this.auth.api.postLogout();
+    } catch (error) {
+      if (options.ignoreError) {
+        this.logger.error(error);
+      } else {
+        throw error;
+      }
+    }
+
+    this.disconnect('Closed by client logout');
+    await this.accessTokenStore.delete();
+    delete this.context;
   }
 
   public connect(): Promise<WebSocketClient> {
