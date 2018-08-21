@@ -37,12 +37,16 @@ const StyledCheckbox = Input.withComponent('input').extend.attrs({
   height: 16px;
   width: 16px;
   margin-bottom: 0;
+  &:disabled {
+    opac
+  }
 `;
 
 const checkSvg =
   '<svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 8 6"><path fill="white" d="M2.8 6L8 .7 7.3 0 2.8 4.6.7 2.4l-.7.7z"/></svg>';
 
 const StyledLabel = styled.label`
+  ${({disabled}) => (disabled ? 'opacity: .56' : '')}
   display: flex;
   &::before {
     content: '';
@@ -53,6 +57,7 @@ const StyledLabel = styled.label`
     border: 2px solid rgba(0, 0, 0, 0.4);
     border-radius: 4px;
     margin: 0 8px 0 -16px;
+    ${({disabled}) => (disabled ? 'opacity: .56' : '')}
   }
 
   ${StyledCheckbox}:checked + &::before {
@@ -60,14 +65,16 @@ const StyledLabel = styled.label`
   }
 `;
 
-const Checkbox = ({id, children, style, ...props}) => {
+const Checkbox = ({id, children, style, disabled, ...props}) => {
   if (!id) {
     id = Math.random().toString();
   }
   return (
     <StyledContainerCheckbox style={style}>
-      <StyledCheckbox id={id} {...props} />
-      <StyledLabel htmlFor={id}>{children}</StyledLabel>
+      <StyledCheckbox id={id} disabled={disabled} {...props} />
+      <StyledLabel htmlFor={id} disabled={disabled}>
+        {children}
+      </StyledLabel>
     </StyledContainerCheckbox>
   );
 };
