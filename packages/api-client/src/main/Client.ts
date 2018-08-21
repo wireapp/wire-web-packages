@@ -36,7 +36,6 @@ import {SelfAPI} from './self/';
 import {retrieveCookie} from './shims/node/cookie';
 import {WebSocketClient} from './tcp/';
 import {MemberAPI, PaymentAPI, ServiceAPI, TeamAPI, TeamInvitationAPI} from './team/';
-import {User} from './user';
 import {UserAPI} from './user/';
 
 const {version}: {version: string} = require('../../package.json');
@@ -166,11 +165,11 @@ class APIClient {
     }
 
     const cookieResponse = await this.auth.api.postLogin(loginData);
-    const accessToken: AccessTokenData = cookieResponse.data;
+    const accessToken = cookieResponse.data as AccessTokenData;
 
     this.logger.info(`Saved initial access token. It will expire in "${accessToken.expires_in}" seconds.`, accessToken);
 
-    const context: Context = this.createContext(accessToken.user, loginData.clientType);
+    const context = this.createContext(accessToken.user, loginData.clientType);
 
     await this.initEngine(context);
     await retrieveCookie(cookieResponse, this.config.store);
@@ -184,14 +183,14 @@ class APIClient {
       await this.logout({ignoreError: true});
     }
 
-    const user: User = await this.auth.api.postRegister(userAccount);
+    const user = await this.auth.api.postRegister(userAccount);
 
     /**
      * Note:
      * It's necessary to initialize the context (Client.createContext()) and the store (Client.initEngine())
      * for saving the retrieved cookie from POST /access (Client.init()) in a Node environment.
      */
-    const context: Context = await this.createContext(user.id, clientType);
+    const context = await this.createContext(user.id, clientType);
 
     await this.initEngine(context);
 
