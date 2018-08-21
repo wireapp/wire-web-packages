@@ -123,18 +123,20 @@ class HttpClient extends EventEmitter {
           return Promise.reject(networkError);
         }
 
-        const {data: errorData, status: errorStatus} = response;
-        const isBackendError = errorData && errorData.code && errorData.label && errorData.message;
+        if (response) {
+          const { data: errorData, status: errorStatus } = response;
+          const isBackendError = errorData && errorData.code && errorData.label && errorData.message;
 
-        if (isBackendError) {
-          const isForbidden = errorStatus === StatusCode.FORBIDDEN;
-          const isInvalidCredentials = errorData.label === BackendErrorLabel.INVALID_CREDENTIALS;
-          const hasAccessToken = this.accessTokenStore && this.accessTokenStore.accessToken;
-          if (isForbidden && isInvalidCredentials && hasAccessToken && !retry) {
-            return this.refreshAccessToken().then(() => this._sendRequest(config, tokenAsParam, true));
+          if (isBackendError) {
+            const isForbidden = errorStatus === StatusCode.FORBIDDEN;
+            const isInvalidCredentials = errorData.label === BackendErrorLabel.INVALID_CREDENTIALS;
+            const hasAccessToken = this.accessTokenStore && this.accessTokenStore.accessToken;
+            if (isForbidden && isInvalidCredentials && hasAccessToken && !retry) {
+              return this.refreshAccessToken().then(() => this._sendRequest(config, tokenAsParam, true));
+            }
+
+            error = BackendErrorMapper.map(errorData);
           }
-
-          error = BackendErrorMapper.map(errorData);
         }
 
         return Promise.reject(error);
