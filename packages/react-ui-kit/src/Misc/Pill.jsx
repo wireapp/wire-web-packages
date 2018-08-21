@@ -34,7 +34,6 @@ const backgroundColors = {
 };
 
 const pillAnimation = keyframes`
-@keyframes pill-activate {
     0% {
       background-color: transparent;
     }
@@ -55,6 +54,7 @@ const Pill = styled.span.attrs({
         margin: ${margin};
     `;
   }};
+  display: inline-block;
   font-size: 12px;
   text-decoration: none;
   padding: 8px 24px;

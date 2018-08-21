@@ -3,6 +3,111 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="5.9.1"></a>
+## [5.9.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.9.0...@wireapp/core@5.9.1) (2018-08-21)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.9.0"></a>
+# [5.9.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.8.4...@wireapp/core@5.9.0) (2018-08-20)
+
+
+### Features
+
+* **core,api-client:** Send link previews (WEBFOUND-33) ([#1022](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1022)) ([3c10247](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/3c10247))
+
+
+
+
+
+<a name="5.8.4"></a>
+## [5.8.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.8.3...@wireapp/core@5.8.4) (2018-08-20)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.8.3"></a>
+## [5.8.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.8.2...@wireapp/core@5.8.3) (2018-08-17)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.8.2"></a>
+## [5.8.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.8.1...@wireapp/core@5.8.2) (2018-08-16)
+
+
+### Bug Fixes
+
+* **core:** Get correct reaction type ([#1019](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1019)) ([d2e67ba](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/d2e67ba))
+
+
+
+
+
+<a name="5.8.1"></a>
+## [5.8.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.8.0...@wireapp/core@5.8.1) (2018-08-16)
+
+
+### Bug Fixes
+
+* **core:** Emit confirmation ([#1017](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1017)) ([4f8839d](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/4f8839d))
+
+
+
+
+
+<a name="5.8.0"></a>
+# [5.8.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.7.21...@wireapp/core@5.8.0) (2018-08-16)
+
+
+### Features
+
+* **core:** Targeted message encryption (WEBFOUND-17) ([#939](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/939)) ([3e94394](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/3e94394))
+
+
+
+
+
+<a name="5.7.21"></a>
+## [5.7.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.7.20...@wireapp/core@5.7.21) (2018-08-16)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.7.20"></a>
+## [5.7.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.7.19...@wireapp/core@5.7.20) (2018-08-16)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.7.19"></a>
+## [5.7.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.7.18...@wireapp/core@5.7.19) (2018-08-16)
+
+
+### Bug Fixes
+
+* **core:** Emit ping ([#1014](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1014)) ([c0c2337](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/c0c2337))
+
+
+
+
+
 <a name="5.7.18"></a>
 ## [5.7.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.7.17...@wireapp/core@5.7.18) (2018-08-15)
 

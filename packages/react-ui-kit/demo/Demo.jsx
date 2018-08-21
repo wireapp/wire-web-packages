@@ -39,6 +39,7 @@ import {
   Column,
   Columns,
   Container,
+  ContainerLG,
   ContainerMD,
   ContainerSM,
   ContainerXS,
@@ -297,7 +298,7 @@ class Demo extends React.PureComponent {
             <Logo scale={3} color={COLOR.BLUE} />
             <Loading />
             <Loading progress={0.33} />
-            <Loading progress={0.66} />
+            <Loading progress={0.66} size={100} />
           </Container>
           <Container>
             <H1>Pills</H1>
@@ -360,6 +361,7 @@ class Demo extends React.PureComponent {
             <ContainerXS style={ContainerStyle}>ContainerXS</ContainerXS>
             <ContainerSM style={ContainerStyle}>ContainerSM</ContainerSM>
             <ContainerMD style={ContainerStyle}>ContainerMD</ContainerMD>
+            <ContainerLG style={ContainerStyle}>ContainerLG</ContainerLG>
             <H2>Columns</H2>
             <Line />
 
