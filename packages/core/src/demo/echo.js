@@ -95,8 +95,8 @@ const messageIdCache = {};
 
     const linkPreviews = [];
 
-    if (content.linkPreview) {
-      for (const linkPreview of content.linkPreview) {
+    if (content.linkPreviews) {
+      for (const linkPreview of content.linkPreviews) {
         const originalLinkPreviewImage =
           linkPreview.article && linkPreview.article.image ? linkPreview.article.image : linkPreview.image;
         let linkPreviewImage;
