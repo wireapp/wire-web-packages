@@ -725,12 +725,17 @@ class ConversationService {
     newLinkPreview?: LinkPreviewContent[],
     messageId: string = ConversationService.createId()
   ): PayloadBundleOutgoingUnsent {
+    const content: EditedTextContent = {
+      originalMessageId,
+      text: newMessageText,
+    };
+
+    if (newLinkPreview) {
+      content.linkPreview = newLinkPreview;
+    }
+
     return {
-      content: {
-        linkPreview: newLinkPreview,
-        originalMessageId,
-        text: newMessageText,
-      },
+      content,
       from: this.apiClient.context!.userId,
       id: messageId,
       state: PayloadBundleState.OUTGOING_UNSENT,

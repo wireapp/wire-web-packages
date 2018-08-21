@@ -97,10 +97,11 @@ const messageIdCache = {};
 
     if (content.linkPreview) {
       for (const linkPreview of content.linkPreview) {
+        const originalLinkPreviewImage =
+          linkPreview.article && linkPreview.article.image ? linkPreview.article.image : linkPreview.image;
         let linkPreviewImage;
 
-        if (linkPreview.article && linkPreview.article.image) {
-          const originalLinkPreviewImage = linkPreview.article.image;
+        if (originalLinkPreviewImage) {
           const imageBuffer = await account.service.conversation.getAsset(originalLinkPreviewImage.uploaded);
 
           linkPreviewImage = {

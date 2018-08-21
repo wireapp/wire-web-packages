@@ -22,7 +22,7 @@ import {LinkPreviewContent} from '../content/';
 interface EditedTextContent {
   originalMessageId: string;
   text: string;
-  linkPreview?: LinkPreviewContent;
+  linkPreview?: LinkPreviewContent[];
 }
 
 export {EditedTextContent};

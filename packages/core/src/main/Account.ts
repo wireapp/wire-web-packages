@@ -273,7 +273,11 @@ class Account extends EventEmitter {
       case GenericMessageType.TEXT: {
         const {content: text, linkPreview} = genericMessage[GenericMessageType.TEXT];
 
-        const content: TextContent = {text, linkPreview};
+        const content: TextContent = {text};
+
+        if (linkPreview.length) {
+          content.linkPreview = linkPreview;
+        }
 
         return {
           content,
