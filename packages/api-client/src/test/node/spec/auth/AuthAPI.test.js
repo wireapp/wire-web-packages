@@ -20,7 +20,7 @@
 const {APIClient} = require('@wireapp/api-client');
 const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/');
 
-describe('"AuthAPI"', () => {
+describe('AuthAPI', () => {
   const apiClient = new APIClient();
 
   it('sets the client to permanent', async () => {
