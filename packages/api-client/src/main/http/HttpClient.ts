@@ -130,12 +130,12 @@ class HttpClient extends EventEmitter {
           return Promise.reject(networkError);
         }
 
-        if (isBackendError) {
-          error = BackendErrorMapper.map(error.response.data);
-        }
-
         if ((isForbidden || isUnauthorized) && this.accessTokenStore && this.accessTokenStore.accessToken && firstTry) {
           return this.refreshAccessToken().then(() => this._sendRequest(config, tokenAsParam, false));
+        }
+
+        if (isBackendError) {
+          error = BackendErrorMapper.map(error.response.data);
         }
 
         return Promise.reject(error);
