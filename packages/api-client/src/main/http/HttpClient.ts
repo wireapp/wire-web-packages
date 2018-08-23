@@ -115,7 +115,6 @@ class HttpClient extends EventEmitter {
         // Map Axios errors
         const isNetworkError = !error.response && error.request && Object.keys(error.request).length === 0;
         const isForbidden = error.response && error.response.status === StatusCode.FORBIDDEN;
-        const isUnauthorized = error.response && error.response.status === StatusCode.UNAUTHORIZED;
         const isBackendError =
           error.response &&
           error.response.data &&
@@ -130,7 +129,7 @@ class HttpClient extends EventEmitter {
           return Promise.reject(networkError);
         }
 
-        if ((isForbidden || isUnauthorized) && this.accessTokenStore && this.accessTokenStore.accessToken && firstTry) {
+        if (isForbidden && this.accessTokenStore && this.accessTokenStore.accessToken && firstTry) {
           return this.refreshAccessToken().then(() => this._sendRequest(config, tokenAsParam, false));
         }
 
