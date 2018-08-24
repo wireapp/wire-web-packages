@@ -86,7 +86,7 @@ class WebSocketClient extends EventEmitter {
         this.emit(WebSocketClient.TOPIC.ON_MESSAGE, notification);
       };
 
-      this.socket.onerror = () => {
+      this.socket.onerror = () =>
         this.client.refreshAccessToken().catch(error => {
           if (error instanceof NetworkError) {
             this.logger.warn(error);
@@ -94,7 +94,6 @@ class WebSocketClient extends EventEmitter {
             throw error;
           }
         });
-      };
 
       this.socket.onopen = () => (this.socket ? (this.socket.binaryType = 'arraybuffer') : undefined);
     }
