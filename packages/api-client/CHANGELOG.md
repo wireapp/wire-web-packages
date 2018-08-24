@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="1.14.7"></a>
+## [1.14.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.14.6...@wireapp/api-client@1.14.7) (2018-08-23)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+<a name="1.14.6"></a>
+## [1.14.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.14.5...@wireapp/api-client@1.14.6) (2018-08-23)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+<a name="1.14.5"></a>
+## [1.14.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.14.4...@wireapp/api-client@1.14.5) (2018-08-23)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+<a name="1.14.4"></a>
+## [1.14.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.14.3...@wireapp/api-client@1.14.4) (2018-08-23)
+
+
+### Bug Fixes
+
+* **api-client:** Remove double data from getCharges & getInvoices ([#1038](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1038)) ([75b478e](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/75b478e))
+
+
+
+
+
+<a name="1.14.3"></a>
+## [1.14.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.14.2...@wireapp/api-client@1.14.3) (2018-08-22)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+<a name="1.14.2"></a>
+## [1.14.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.14.1...@wireapp/api-client@1.14.2) (2018-08-21)
+
+
+### Bug Fixes
+
+* **api-client:** Check for invalid credentials label to trigger access token refresh ([#1032](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1032)) ([7745079](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/7745079))
+
+
+
+
+
 <a name="1.14.1"></a>
 ## [1.14.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.14.0...@wireapp/api-client@1.14.1) (2018-08-21)
 

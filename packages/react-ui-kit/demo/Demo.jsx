@@ -45,6 +45,7 @@ import {
   ContainerXS,
   Content,
   DeviceIcon,
+  DownloadIcon,
   EditIcon,
   ErrorMessage,
   FacebookIcon,
@@ -213,7 +214,16 @@ class Demo extends React.PureComponent {
     const digits = 2;
     const alpha = color.alpha() < 1 ? color.alpha().toFixed(digits) : 0;
 
-    return <ColorElement key={name} name={name} color={COLOR[name]} value={value} alpha={alpha} />;
+    return (
+      <ColorElement
+        onClick={() => navigator.clipboard.writeText(alpha ? color.toString() : value)}
+        key={name}
+        name={name}
+        color={COLOR[name]}
+        value={value}
+        alpha={alpha}
+      />
+    );
   }
 
   render() {
@@ -321,6 +331,7 @@ class Demo extends React.PureComponent {
               <CamIcon width={32} />
               <CheckIcon width={32} />
               <DeviceIcon height={32} />
+              <DownloadIcon height={32} />
               <EditIcon height={32} />
               <FileIcon height={32} />
               <GifIcon width={32} />
@@ -480,10 +491,10 @@ class Demo extends React.PureComponent {
               <Column>Checkbox</Column>
               <Column>
                 <Checkbox id="ToULink" defaultChecked={true}>
-                  <Text bold fontSize="11px" textTransform="uppercase">
+                  <CheckboxLabel>
                     {'ToU '}
-                  </Text>
-                  <Link href="#">{'Link'}</Link>
+                    <Link href="#">{'Link'}</Link>
+                  </CheckboxLabel>
                 </Checkbox>
               </Column>
             </Columns>
@@ -491,9 +502,7 @@ class Demo extends React.PureComponent {
               <Column>Disabled Checkbox</Column>
               <Column>
                 <Checkbox id="disabled" disabled>
-                  <Text bold fontSize="11px" textTransform="uppercase">
-                    {'Disabled'}
-                  </Text>
+                  <CheckboxLabel>{'Disabled'}</CheckboxLabel>
                 </Checkbox>
               </Column>
             </Columns>

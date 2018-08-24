@@ -17,40 +17,11 @@
  *
  */
 
-import {Text} from './Text';
-import media from '../mediaQueries';
+import IconHOC from './IconHOC';
+import React from 'react';
 
-const Paragraph = Text.withComponent('p').extend`
-  margin-top: 0;
-  margin-bottom: 16px;
-`;
+const size = 16;
+const download = <path d="M0 14h16v2H0v-2zM7 0h2v7h4l-5 4-5-4h4V0z" />;
+const DownloadIcon = IconHOC(download, size, size);
 
-Paragraph.propTypes = {
-  ...Text.propTypes,
-};
-
-Paragraph.defaultProps = {
-  ...Text.defaultProps,
-  block: true,
-};
-
-const Lead = Text.withComponent('p').extend`
-  margin-bottom: 56px;
-  margin-top: 0;
-  ${media.mobile`
-    font-size: 20px;
-  `};
-`;
-
-Lead.propTypes = {
-  ...Text.propTypes,
-};
-
-Lead.defaultProps = {
-  ...Text.defaultProps,
-  block: true,
-  center: true,
-  fontSize: '24px',
-};
-
-export {Paragraph, Lead};
+export {DownloadIcon};
