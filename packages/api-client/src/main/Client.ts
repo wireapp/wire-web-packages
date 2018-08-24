@@ -33,7 +33,7 @@ import {HttpClient} from './http/';
 import {InvitationAPI} from './invitation/';
 import {NotificationAPI} from './notification/';
 import {SelfAPI} from './self/';
-import {retrieveCookie} from './shims/node/cookie';
+import {saveCookie} from './shims/node/cookie';
 import {WebSocketClient} from './tcp/';
 import {MemberAPI, PaymentAPI, ServiceAPI, TeamAPI, TeamInvitationAPI} from './team/';
 import {UserAPI} from './user/';
@@ -84,7 +84,7 @@ class APIClient {
     this.config = {...defaultConfig, ...config};
     this.accessTokenStore = new AccessTokenStore();
 
-    const httpClient = new HttpClient(this.config.urls.rest, this.accessTokenStore, this.config.store);
+    const httpClient = new HttpClient(this.config.urls.rest, this.accessTokenStore, this.config.store, this);
 
     this.transport = {
       http: httpClient,
@@ -160,12 +160,15 @@ class APIClient {
     const cookieResponse = await this.auth.api.postLogin(loginData);
     const accessToken = cookieResponse.data as AccessTokenData;
 
-    this.logger.info(`Saved initial access token. It will expire in "${accessToken.expires_in}" seconds.`, accessToken);
+    this.logger.info(`Saved initial access token. It will expire in "${accessToken.expires_in}" seconds.`, {
+      ...accessToken,
+      access_token: `${accessToken.access_token.substr(0, 20)}...`,
+    });
 
     const context = this.createContext(accessToken.user, loginData.clientType);
 
     await this.initEngine(context);
-    await retrieveCookie(cookieResponse, this.config.store);
+    await saveCookie(cookieResponse, this.config.store);
     await this.accessTokenStore.updateToken(accessToken);
 
     return context;

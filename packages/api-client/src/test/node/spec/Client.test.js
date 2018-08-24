@@ -128,14 +128,33 @@ describe('Client', () => {
       },
     ];
 
+    const cookie_zuid_login =
+      'SBMt4gP7v-SAxxP_8OEVVeTw11CeUBAV1Jx5AwdQNjcbgTIqvkhfmd8COLG5V3OrOJ==.v=1.k=1.d=1535117120.t=1234';
+    const cookie_zuid_refresh =
+      'Xfnt4gP7v-SAxxP_8OEVVeTw110eUBAV1Jx5bwdQNjcbgTIqvhhfmd8CBLG5V3OrOJ==.v=1.k=1.d=2535100120.t=5678';
+    const cookie_login = `zuid=${cookie_zuid_login}; Path=/access; Domain=example.com; HttpOnly; Secure`;
+    const cookie_refresh = `zuid=${cookie_zuid_refresh}; Path=/access; Domain=example.com; HttpOnly; Secure`;
+
     beforeEach(() => {
       nock(baseURL)
         .post(`${AuthAPI.URL.LOGIN}`, {
           email: loginData.email,
           password: loginData.password,
         })
-        .query({persist: loginData.clientType === 'permanent'})
-        .reply(200, accessTokenData);
+        .query({persist: true})
+        .reply(200, accessTokenData, {
+          'set-cookie': cookie_login,
+        });
+
+      nock(baseURL)
+        .post(`${AuthAPI.URL.LOGIN}`, {
+          email: loginData.email,
+          password: loginData.password,
+        })
+        .query({persist: false})
+        .reply(200, accessTokenData, {
+          'set-cookie': cookie_login,
+        });
 
       nock(baseURL)
         .post(`${AuthAPI.URL.ACCESS}/${AuthAPI.URL.LOGOUT}`)
@@ -174,7 +193,6 @@ describe('Client', () => {
       nock(baseURL)
         .get(UserAPI.URL.USERS)
         .query({handles: 'webappbot'})
-        .twice()
         .reply(200, userData);
 
       nock(baseURL)
@@ -197,6 +215,81 @@ describe('Client', () => {
           done();
         })
         .catch(done.fail);
+    });
+
+    it('refreshes the cookie on a permanent client', async () => {
+      nock(baseURL)
+        .get(UserAPI.URL.USERS)
+        .query({handles: 'webappbot'})
+        .once()
+        .reply(403, {
+          code: 403,
+          label: 'invalid-credentials',
+          message: 'Token expired',
+        });
+
+      nock(baseURL)
+        .get(UserAPI.URL.USERS)
+        .query({handles: 'webappbot'})
+        .reply(200, userData);
+
+      nock(baseURL)
+        .post(AuthAPI.URL.ACCESS)
+        .reply(200, accessTokenData, {
+          'set-cookie': cookie_refresh,
+        });
+
+      const client = new APIClient();
+      const context = await client.login({
+        ...loginData,
+        clientType: 'permanent',
+      });
+
+      const cookiesAfterLogin = await client.config.store.readAll(AUTH_TABLE_NAME);
+      expect(cookiesAfterLogin).toContain(jasmine.objectContaining({zuid: cookie_zuid_login}));
+      expect(context.userId).toBe(accessTokenData.user);
+
+      client.accessTokenStore.accessToken.access_token = undefined;
+
+      const response = await client.user.api.getUsers({handles: ['webappbot']});
+
+      expect(response.name).toBe(userData.name);
+
+      const cookiesAfterRefresh = await client.config.store.readAll(AUTH_TABLE_NAME);
+      expect(cookiesAfterRefresh).toContain(jasmine.objectContaining({zuid: cookie_zuid_refresh}));
+    });
+
+    it('throws an error on a temporary client after failed refresh', async () => {
+      nock(baseURL)
+        .get(UserAPI.URL.USERS)
+        .query({handles: 'webappbot'})
+        .once()
+        .reply(403, {
+          code: 403,
+          label: 'invalid-credentials',
+          message: 'Token expired',
+        });
+
+      nock(baseURL)
+        .get(UserAPI.URL.USERS)
+        .query({handles: 'webappbot'})
+        .reply(200, userData);
+
+      const client = new APIClient();
+      const context = await client.login(loginData);
+
+      const cookiesAfterLogin = await client.config.store.readAll(AUTH_TABLE_NAME);
+      expect(cookiesAfterLogin).toContain(jasmine.objectContaining({zuid: cookie_zuid_login}));
+      expect(context.userId).toBe(accessTokenData.user);
+
+      client.accessTokenStore.accessToken.access_token = undefined;
+
+      try {
+        await client.user.api.getUsers({handles: ['webappbot']});
+        fail('No error thrown');
+      } catch (error) {
+        expect(error.message).toBe('Got logged out from backend.');
+      }
     });
   });
 

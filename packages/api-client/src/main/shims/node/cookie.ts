@@ -16,10 +16,10 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-
 import {error as StoreEngineError} from '@wireapp/store-engine';
 import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine';
-import {AxiosPromise, AxiosRequestConfig, AxiosResponse} from 'axios';
+import {AxiosRequestConfig, AxiosResponse} from 'axios';
+import * as logdown from 'logdown';
 import {Cookie as ToughCookie} from 'tough-cookie';
 import {AUTH_COOKIE_KEY, AUTH_TABLE_NAME, AccessTokenData, Cookie} from '../../auth';
 import {HttpClient} from '../../http';
@@ -29,7 +29,12 @@ interface PersistedCookie {
   zuid: string;
 }
 
-const loadExistingCookie = (engine: CRUDEngine): Promise<Cookie> => {
+const logger = logdown('@wireapp/api-client/shims/node/cookie', {
+  logger: console,
+  markdown: false,
+});
+
+function loadExistingCookie(engine: CRUDEngine): Promise<Cookie> {
   return engine
     .read<PersistedCookie>(AUTH_TABLE_NAME, AUTH_COOKIE_KEY)
     .catch((error: Error) => {
@@ -47,9 +52,9 @@ const loadExistingCookie = (engine: CRUDEngine): Promise<Cookie> => {
         ? new Cookie(fileContent.zuid, fileContent.expiration)
         : new Cookie('', '0');
     });
-};
+}
 
-const setInternalCookie = (cookie: Cookie, engine: CRUDEngine): Promise<string> => {
+function setInternalCookie(cookie: Cookie, engine: CRUDEngine): Promise<string> {
   const entity: PersistedCookie = {expiration: cookie.expiration, zuid: cookie.zuid};
   return engine.create(AUTH_TABLE_NAME, AUTH_COOKIE_KEY, entity).catch(error => {
     if (
@@ -61,25 +66,30 @@ const setInternalCookie = (cookie: Cookie, engine: CRUDEngine): Promise<string> 
       throw error;
     }
   });
-};
+}
 
-export const retrieveCookie = async (response: AxiosResponse, engine: CRUDEngine): Promise<AccessTokenData> => {
+export async function saveCookie(response: AxiosResponse, cookieStore: CRUDEngine): Promise<AccessTokenData> {
   if (response.headers && response.headers['set-cookie']) {
-    const cookies = response.headers['set-cookie'].map(ToughCookie.parse);
-    for (const cookie of cookies) {
-      await setInternalCookie(new Cookie(cookie.value, cookie.expires), engine);
+    const cookies: string[] | string = response.headers['set-cookie'];
+    const parsedCookies =
+      cookies instanceof Array ? cookies.map(cookie => ToughCookie.parse(cookie)) : [ToughCookie.parse(cookies)];
+    for (const cookie of parsedCookies) {
+      if (cookie) {
+        await setInternalCookie(new Cookie(cookie.value, cookie.expires.toString()), cookieStore);
+        logger.info(`Saved internal cookie.`, {...cookie, value: `${cookie.value.substr(0, 20)}...`});
+      }
     }
   }
 
   return response.data;
-};
+}
 
 // https://github.com/wearezeta/backend-api-docs/wiki/API-User-Authentication#token-refresh
-export const sendRequestWithCookie = (
+export async function sendRequestWithCookie(
   client: HttpClient,
   config: AxiosRequestConfig,
   engine: CRUDEngine
-): AxiosPromise => {
+): Promise<AxiosResponse> {
   return loadExistingCookie(engine).then((cookie: Cookie) => {
     if (!cookie.isExpired) {
       config.headers = config.headers || {};
@@ -89,4 +99,4 @@ export const sendRequestWithCookie = (
 
     return client._sendRequest(config);
   });
-};
+}

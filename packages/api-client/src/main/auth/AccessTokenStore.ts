@@ -44,6 +44,11 @@ class AccessTokenStore extends EventEmitter {
       this.accessToken = accessToken;
       this.emit(AccessTokenStore.TOPIC.ACCESS_TOKEN_REFRESH, this.accessToken);
     }
+
+    this.logger.info(`Saved updated access token. It will expire in "${accessToken.expires_in}" seconds.`, {
+      ...accessToken,
+      access_token: `${accessToken.access_token.substr(0, 20)}...`,
+    });
     return this.accessToken;
   }
 }

@@ -23,8 +23,9 @@ import axios, {AxiosError, AxiosPromise, AxiosRequestConfig, AxiosResponse} from
 import * as EventEmitter from 'events';
 import * as logdown from 'logdown';
 import {AccessTokenData, AccessTokenStore, AuthAPI} from '../auth/';
+import {APIClient} from '../Client';
 import {BackendErrorLabel, BackendErrorMapper, ConnectionState, ContentType, NetworkError, StatusCode} from '../http/';
-import {sendRequestWithCookie} from '../shims/node/cookie';
+import {saveCookie, sendRequestWithCookie} from '../shims/node/cookie';
 
 class HttpClient extends EventEmitter {
   private readonly logger = logdown('@wireapp/api-client/http/HttpClient', {
@@ -41,7 +42,8 @@ class HttpClient extends EventEmitter {
   constructor(
     private readonly baseURL: string,
     public accessTokenStore: AccessTokenStore,
-    private readonly engine: CRUDEngine
+    private readonly cookieStore: CRUDEngine,
+    private readonly client: APIClient
   ) {
     super();
 
@@ -83,7 +85,7 @@ class HttpClient extends EventEmitter {
     return `${this.baseURL}${url}`;
   }
 
-  public _sendRequest(config: AxiosRequestConfig, tokenAsParam = false, firstTry = true): AxiosPromise {
+  public _sendRequest(config: AxiosRequestConfig, tokenAsParam = false): AxiosPromise {
     config.baseURL = this.baseURL;
 
     if (this.accessTokenStore.accessToken) {
@@ -131,8 +133,8 @@ class HttpClient extends EventEmitter {
             const isForbidden = errorStatus === StatusCode.FORBIDDEN;
             const isInvalidCredentials = errorData.label === BackendErrorLabel.INVALID_CREDENTIALS;
             const hasAccessToken = this.accessTokenStore && this.accessTokenStore.accessToken;
-            if (isForbidden && isInvalidCredentials && hasAccessToken && firstTry) {
-              return this.refreshAccessToken().then(() => this._sendRequest(config, tokenAsParam, true));
+            if (isForbidden && isInvalidCredentials && hasAccessToken) {
+              return this.refreshAccessToken().then(() => this._sendRequest(config, tokenAsParam));
             }
 
             error = BackendErrorMapper.map(errorData);
@@ -149,15 +151,19 @@ class HttpClient extends EventEmitter {
       expiredAccessToken = this.accessTokenStore.accessToken;
     }
 
-    const accessToken = await this.postAccess(expiredAccessToken);
-    this.logger.info(`Saved updated access token. It will expire in "${accessToken.expires_in}" seconds.`, {
-      ...accessToken,
-      access_token: `${accessToken.access_token.substr(0, 10)}...`,
-    });
+    let response;
+    try {
+      response = await this.postAccess(expiredAccessToken);
+    } catch (error) {
+      await this.client.logout({ignoreError: true});
+      throw new Error('Got logged out from backend.');
+    }
+
+    const accessToken: AccessTokenData = await saveCookie(response, this.cookieStore);
     return this.accessTokenStore.updateToken(accessToken);
   }
 
-  public postAccess(expiredAccessToken?: AccessTokenData): Promise<AccessTokenData> {
+  public postAccess(expiredAccessToken?: AccessTokenData): Promise<AxiosResponse> {
     const config: AxiosRequestConfig = {
       headers: {},
       method: 'post',
@@ -171,7 +177,7 @@ class HttpClient extends EventEmitter {
       )}`;
     }
 
-    return sendRequestWithCookie(this, config, this.engine).then((response: AxiosResponse) => response.data);
+    return sendRequestWithCookie(this, config, this.cookieStore);
   }
 
   public sendRequest(config: AxiosRequestConfig, tokenAsParam: boolean = false): AxiosPromise {
