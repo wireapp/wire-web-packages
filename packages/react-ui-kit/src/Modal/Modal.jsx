@@ -59,16 +59,16 @@ const ModalBody = styled.div`
 `;
 
 const ModalClose = styled(CloseIcon)`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 13px;
-  display: flex;
-  justify-content: center;
   align-items: center;
-  width: 40px;
-  height: 40px;
   cursor: pointer;
+  display: flex;
+  height: 40px;
+  justify-content: center;
+  padding: 13px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 40px;
 `;
 
 const ModalContent = styled.div`
@@ -84,10 +84,10 @@ const ModalBackground = styled(OverlayBackground)`
 const noop = () => {};
 
 const Modal = ({children, fullscreen, onClose, onBackgroundClick, ...props}) => (
-  <OverlayWrapper {...props}>
+  <OverlayWrapper {...props} data-uie-name="modal">
     <ModalBody fullscreen={fullscreen}>
       <ModalContent>{children}</ModalContent>
-      {onClose !== noop && <ModalClose onClick={onClose} data-uie-name="modal-close" />}
+      {onClose !== noop && <ModalClose onClick={onClose} data-uie-name="do-close" />}
     </ModalBody>
     {!fullscreen && (
       <ModalBackground
