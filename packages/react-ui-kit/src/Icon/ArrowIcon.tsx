@@ -44,4 +44,4 @@ const arrow: React.SFC<ArrowProps> = (
 ) => <path transform={`rotate(${rotation[direction]} 8 8)`} d="M5.8 1.5L7.3 0l8 8-8 8-1.5-1.5L11.3 9H.7V7h10.6" />;
 const ArrowIcon = IconHOC<ArrowProps>(arrow, size, size);
 
-export {ArrowIcon};
+export {Rotation, ArrowProps, ArrowIcon};

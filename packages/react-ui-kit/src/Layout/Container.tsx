@@ -33,9 +33,9 @@ interface Level {
 }
 
 interface ContainerProps {
-  centerText: boolean;
+  centerText?: boolean;
   level: keyof Level;
-  verticalCenter: boolean;
+  verticalCenter?: boolean;
 }
 
 const LEVEL: Level = {

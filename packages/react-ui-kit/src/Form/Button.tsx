@@ -22,10 +22,10 @@ import {Text} from '../Text';
 import {defaultTransition} from '../Identity/motions';
 
 interface ButtonProps {
-  backgroundColor: string;
-  block: boolean;
-  disabled: boolean;
-  noCapital: boolean;
+  backgroundColor?: string;
+  block?: boolean;
+  disabled?: boolean;
+  noCapital?: boolean;
 }
 
 const darkenAmount = 0.06;

@@ -24,8 +24,8 @@ import {Text, TextProps} from './Text';
 import {defaultTransition} from '../Identity/motions';
 
 interface LinkProps extends TextProps {
-  color: any;
-  component: string;
+  color?: any;
+  component?: string;
 };
 
 const Link: React.SFC<LinkProps> = ({color, component, ...props}) => {
@@ -60,4 +60,4 @@ Link.defaultProps = {
   textTransform: 'uppercase',
 };
 
-export {Link};
+export {Link, LinkProps};

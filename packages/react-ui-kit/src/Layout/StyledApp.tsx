@@ -21,7 +21,7 @@ import styled from 'styled-components';
 import {COLOR} from '../Identity';
 
 export interface StyledAppProps {
-  backgroundColor: string;
+  backgroundColor?: string;
 }
 
 const StyledApp = styled.div<StyledAppProps>`

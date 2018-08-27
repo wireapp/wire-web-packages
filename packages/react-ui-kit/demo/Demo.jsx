@@ -17,6 +17,8 @@
  *
  */
 
+// @ts-check
+
 import {
   AddPeopleIcon,
   AndroidIcon,

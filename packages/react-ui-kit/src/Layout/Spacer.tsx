@@ -20,7 +20,7 @@
 import * as React from 'react';
 
 interface SpacerProps {
-  size: number | string;
+  size?: number | string;
   vertical?: boolean;
 }
 

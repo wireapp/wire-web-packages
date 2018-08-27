@@ -40,14 +40,14 @@ const DigitInput = styled.input`
 `;
 
 interface CodeInputProps {
-  autoFocus: boolean;
-  digits: number;
-  onCodeComplete: (completeCode?: string) => void;
-  style: React.CSSProperties | null;
+  autoFocus?: boolean;
+  digits?: number;
+  onCodeComplete?: (completeCode?: string) => void;
+  style?: React.CSSProperties | null;
 };
 
 interface CodeInputStateProps {
-  values: number[];
+  values?: number[];
 }
 
 class CodeInput extends React.PureComponent<CodeInputProps, CodeInputStateProps> {

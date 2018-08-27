@@ -24,7 +24,7 @@ import {Content} from '../Layout';
 import {Link} from '../Text';
 
 interface MenuProps {
-  open?: boolean
+  open?: boolean;
 }
 
 const MenuWrapper = styled.div`
@@ -135,8 +135,8 @@ const MenuLink = styled(Link)<MenuLinkProps>`
 `;
 
 interface HeaderMenuProps {
-  children: Node | null;
-  logoElement: HTMLDivElement | null;
+  children?: Node;
+  logoElement?: HTMLDivElement;
 }
 
 interface HeaderMenuStateProps {

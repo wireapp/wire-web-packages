@@ -78,8 +78,8 @@ const MenuModalBackground = styled(OverlayBackground)`
 const noop = () => {};
 
 interface MenuModalProps {
-  children: Node;
-  onBackgroundClick: () => void;
+  children?: Node;
+  onBackgroundClick?: () => void;
 }
 
 const MenuModal = ({children = null, onBackgroundClick = noop, ...props}: MenuModalProps) => (
@@ -92,8 +92,8 @@ const MenuModal = ({children = null, onBackgroundClick = noop, ...props}: MenuMo
 );
 
 interface MenuItemProps {
-  children: Node;
-  onClick: () => void;
+  children?: Node;
+  onClick?: () => void;
 }
 
 const MenuItem = ({children = null, ...props}: MenuItemProps) => <MenuItemContent {...props}>{children}</MenuItemContent>;
