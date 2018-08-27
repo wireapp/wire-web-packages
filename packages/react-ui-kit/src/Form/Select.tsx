@@ -17,9 +17,9 @@
  *
  */
 
+import styled from 'styled-components';
 import {COLOR} from '../Identity';
 import {Input} from './Input';
-import styled from 'styled-components';
 
 const ArrowDown = `
   <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">

@@ -17,9 +17,9 @@
  *
  */
 
-import {GUTTER} from './sizes';
 import media from '../mediaQueries';
 import styled from 'styled-components';
+import {GUTTER} from './sizes';
 
 const Columns = styled.div`
   display: flex;

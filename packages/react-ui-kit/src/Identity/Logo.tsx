@@ -17,10 +17,10 @@
  *
  */
 
+import * as React from 'react';
+import IconHOC from '../Icon/IconHOC';
 import styled, {css} from 'styled-components';
 import {COLOR} from './colors';
-import IconHOC from '../Icon/IconHOC';
-import * as React from 'react';
 import {defaultTransition} from '../Identity/motions';
 
 const width = 57;

@@ -17,12 +17,12 @@
  *
  */
 
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import styled from 'styled-components';
 import {COLOR} from '../Identity';
 import {Input} from './Input';
-import * as PropTypes from 'prop-types';
-import * as React from 'react';
 import {Text} from '../Text';
-import styled from 'styled-components';
 
 const StyledContainerCheckbox = styled.div`
   display: flex;

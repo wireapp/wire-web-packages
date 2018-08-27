@@ -17,8 +17,8 @@
  *
  */
 
-import {GUTTER} from './sizes';
 import styled from 'styled-components';
+import {GUTTER} from './sizes';
 
 const Content = styled.div`
   flex-grow: 1;

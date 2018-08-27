@@ -17,10 +17,10 @@
  *
  */
 
-import {COLOR} from '../Identity';
-import {GUTTER} from '../Layout/sizes';
 import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
+import {COLOR} from '../Identity';
+import {GUTTER} from '../Layout/sizes';
 
 const Line = styled.hr`
   border: none;

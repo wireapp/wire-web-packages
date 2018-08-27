@@ -17,23 +17,15 @@
  *
  */
 
-import {ANIMATION, DURATION} from '../Identity/motions';
-import styled, {css, keyframes} from 'styled-components';
 import * as PropTypes from 'prop-types';
 import * as React from 'react';
-
-interface Component {
-  className: string;
-  progress: number | null;
-  size: number
-}
+import styled, {css, keyframes} from 'styled-components';
+import {ANIMATION, DURATION} from '../Identity/motions';
 
 const pathLength = 125.68;
 
-function LoadingComponent({className, progress, size}: Component) {
-  const additionalProps: {
-    strokeDashoffset?: string;
-  } = {};
+function LoadingComponent({className, progress, size}) {
+  const additionalProps = {};
 
   if (progress !== null) {
     additionalProps.strokeDashoffset = `${pathLength - pathLength * progress}`;

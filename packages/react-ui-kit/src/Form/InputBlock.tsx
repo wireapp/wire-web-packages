@@ -17,9 +17,9 @@
  *
  */
 
+import styled from 'styled-components';
 import {Input, InputSubmitCombo} from './';
 import {COLOR} from '../Identity';
-import styled from 'styled-components';
 
 const InputBlock = styled.div`
   background-color: ${COLOR.GRAY_LIGHTEN_88};

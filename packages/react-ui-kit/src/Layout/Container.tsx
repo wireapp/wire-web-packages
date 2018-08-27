@@ -19,11 +19,11 @@
 
 /* eslint-disable no-magic-numbers */
 
-import {GUTTER, WIDTH} from './sizes';
 import * as PropTypes from 'prop-types';
-import {defaultProps} from 'recompose';
-import media from '../mediaQueries';
 import styled from 'styled-components';
+import media from '../mediaQueries';
+import {GUTTER, WIDTH} from './sizes';
+import {defaultProps} from 'recompose';
 
 const LEVEL = {
   lg: `max-width: ${WIDTH.DESKTOP_MAX}px;`,

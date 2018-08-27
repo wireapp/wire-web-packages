@@ -17,10 +17,10 @@
  *
  */
 
+import * as PropTypes from 'prop-types';
 import styled, {css} from 'styled-components';
 import {COLOR} from '../Identity';
 import {Encoder} from 'bazinga64';
-import * as PropTypes from 'prop-types';
 
 const placeholderStyle = css`
   color: ${COLOR.GRAY_DARKEN_24};

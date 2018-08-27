@@ -17,9 +17,9 @@
  *
  */
 
-import IconHOC from './IconHOC';
-import * as PropTypes from 'prop-types';
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import IconHOC from './IconHOC';
 
 const rotation = {
   right: 0,

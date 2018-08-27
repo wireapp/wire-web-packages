@@ -17,9 +17,9 @@
  *
  */
 
-import {COLOR} from '../Identity';
 import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
+import {COLOR} from '../Identity';
 
 const RoundContainer = styled.div`
   width: ${props => parseFloat(props.size)}px;

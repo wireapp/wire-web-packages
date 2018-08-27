@@ -17,12 +17,12 @@
  *
  */
 
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import styled from 'styled-components';
 import {COLOR} from '../Identity';
 import {Content} from '../Layout';
 import {Link} from '../Text';
-import * as PropTypes from 'prop-types';
-import * as React from 'react';
-import styled from 'styled-components';
 
 const MenuWrapper = styled.div`
   height: 64px;

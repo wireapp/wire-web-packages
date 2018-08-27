@@ -17,8 +17,8 @@
  *
  */
 
-import IconHOC from './IconHOC';
 import * as React from 'react';
+import IconHOC from './IconHOC';
 
 const size = 12;
 const plane = <path d="M0 10.7c0 1 .8 1.6 1.8 1L11.3 7c1-.6 1-1.4 0-2L1.8.3C.8-.3 0 .3 0 1.3V6h9L0 7.5v3.2z" />;

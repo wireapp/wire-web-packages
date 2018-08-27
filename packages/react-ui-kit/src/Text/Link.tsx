@@ -17,10 +17,10 @@
  *
  */
 
-import {COLOR} from '../Identity';
-import Color from 'color';
 import * as PropTypes from 'prop-types';
 import * as React from 'react';
+import Color from 'color';
+import {COLOR} from '../Identity';
 import {Text} from './Text';
 import {defaultTransition} from '../Identity/motions';
 

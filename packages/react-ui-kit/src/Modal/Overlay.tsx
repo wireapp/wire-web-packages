@@ -17,11 +17,11 @@
  *
  */
 
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import styled from 'styled-components';
 import {ANIMATION, DURATION, EASE} from '../Identity/motions';
 import {COLOR} from '../Identity';
-import * as PropTypes from 'prop-types';
-import * as React from 'react';
-import styled from 'styled-components';
 
 const OverlayWrapper = styled.div`
   position: fixed;

@@ -17,8 +17,8 @@
  *
  */
 
-import IconHOC from './IconHOC';
 import * as React from 'react';
+import IconHOC from './IconHOC';
 
 const size = 16;
 const message = <path d="M9.8 13h.2a6 6 0 0 0 6-6V6a6 6 0 0 0-6-6H6a6 6 0 0 0-6 6v1a6 6 0 0 0 6 6h.2L8 16l1.8-3z" />;

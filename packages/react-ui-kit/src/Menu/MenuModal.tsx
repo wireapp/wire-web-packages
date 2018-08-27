@@ -17,12 +17,12 @@
  *
  */
 
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import styled from 'styled-components';
 import {ANIMATION, DURATION, EASE} from '../Identity/motions';
 import {OverlayBackground, OverlayWrapper} from '../Modal/Overlay';
 import {COLOR} from '../Identity/';
-import * as PropTypes from 'prop-types';
-import * as React from 'react';
-import styled from 'styled-components';
 
 const MenuModalWrapper = styled(OverlayWrapper)`
   padding: 0;

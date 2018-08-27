@@ -17,8 +17,8 @@
  *
  */
 
-import * as PropTypes from 'prop-types';
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const CodeInputWrapper = styled.div`

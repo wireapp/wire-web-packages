@@ -17,8 +17,8 @@
  *
  */
 
-import {COLOR} from '../Identity';
 import styled from 'styled-components';
+import {COLOR} from '../Identity';
 
 const Box = styled.div`
   border: 2px solid ${COLOR.GRAY_LIGHTEN_72};

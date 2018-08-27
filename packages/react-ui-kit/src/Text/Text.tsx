@@ -17,10 +17,10 @@
  *
  */
 
-import {COLOR} from '../Identity';
 import * as PropTypes from 'prop-types';
-import {defaultProps} from 'recompose';
 import styled from 'styled-components';
+import {COLOR} from '../Identity';
+import {defaultProps} from 'recompose';
 
 const Text = styled.span`
   /* appearance */

@@ -17,12 +17,12 @@
  *
  */
 
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import styled from 'styled-components';
 import {OverlayBackground, OverlayWrapper} from './Overlay';
 import {COLOR} from '../Identity';
 import {CloseIcon} from '../Icon';
-import * as PropTypes from 'prop-types';
-import * as React from 'react';
-import styled from 'styled-components';
 
 const ModalBody = styled.div`
   ${props =>

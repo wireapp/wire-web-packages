@@ -17,6 +17,8 @@
  *
  */
 
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import {
   ArrowIcon,
   AttachmentIcon,
@@ -33,8 +35,6 @@ import {
   TrashIcon,
 } from '../Icon';
 import {COLOR} from '../Identity';
-import * as PropTypes from 'prop-types';
-import * as React from 'react';
 import {defaultTransition} from '../Identity/motions';
 
 const darkenAmount = 0.08;

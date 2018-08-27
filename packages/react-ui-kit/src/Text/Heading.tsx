@@ -19,8 +19,8 @@
 
 import * as PropTypes from 'prop-types';
 import * as React from 'react';
-import {Text} from './Text';
 import media from '../mediaQueries';
+import {Text} from './Text';
 
 const H1 = Text.withComponent('h1').extend`
   font-size: 48px;

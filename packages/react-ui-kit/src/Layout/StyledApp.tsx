@@ -17,9 +17,9 @@
  *
  */
 
-import {COLOR} from '../Identity';
 import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
+import {COLOR} from '../Identity';
 
 const StyledApp = styled.div`
   background-color: ${props => props.backgroundColor};
