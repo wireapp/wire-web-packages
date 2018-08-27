@@ -17,7 +17,6 @@
  *
  */
 
-import * as PropTypes from 'prop-types';
 import * as React from 'react';
 import styled, {css, keyframes} from 'styled-components';
 import {ANIMATION, DURATION} from '../Identity/motions';
@@ -30,7 +29,7 @@ interface LoadingComponentProps {
   size: number,
 }
 
-function LoadingComponent({className, progress, size}: LoadingComponentProps) {
+function LoadingComponent({className, progress = null, size}: LoadingComponentProps) {
   const additionalProps: {
     strokeDashoffset?: string;
   } = {};
@@ -53,10 +52,6 @@ function LoadingComponent({className, progress, size}: LoadingComponentProps) {
     </svg>
   );
 }
-
-LoadingComponent.defaultProps = {
-  progress: null,
-};
 
 const fillAnimation = keyframes`
   0% {

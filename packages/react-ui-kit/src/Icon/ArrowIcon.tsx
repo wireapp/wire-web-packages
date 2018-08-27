@@ -27,8 +27,8 @@ interface Rotation {
   up: number;
 }
 
-export interface ArrowProps {
-  direction: keyof Rotation;
+interface ArrowProps {
+  direction?: keyof Rotation;
 }
 
 const rotation: Rotation = {
@@ -40,10 +40,8 @@ const rotation: Rotation = {
 
 const size = 16;
 const arrow: React.SFC<ArrowProps> = (
-  {direction} // eslint-disable-line react/prop-types
+  {direction = 'right'}
 ) => <path transform={`rotate(${rotation[direction]} 8 8)`} d="M5.8 1.5L7.3 0l8 8-8 8-1.5-1.5L11.3 9H.7V7h10.6" />;
 const ArrowIcon = IconHOC<ArrowProps>(arrow, size, size);
-
-ArrowIcon.defaultProps.direction = 'right';
 
 export {ArrowIcon};

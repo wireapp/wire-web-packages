@@ -28,7 +28,7 @@ export interface IconHOCProps {
 }
 
 function IconHOC<T>(svgBody, realWidth = 0, realHeight = 0) {
-  function wrapper<T>({color, scale, width, height, ...props}) {
+  function wrapper<T>({color = COLOR.ICON, scale = 1, width = null, height = null, ...props}) {
     let newScale = scale;
     if (width || height) {
       const widthScale = width ? width / realWidth : Infinity;
@@ -42,13 +42,6 @@ function IconHOC<T>(svgBody, realWidth = 0, realHeight = 0) {
         {typeof svgBody === 'function' ? svgBody(props) : svgBody}
       </svg>
     ) as any;
-  };
-
-  wrapper.defaultProps = {
-    color: COLOR.ICON,
-    height: null,
-    scale: 1,
-    width: null,
   };
 
   return wrapper;

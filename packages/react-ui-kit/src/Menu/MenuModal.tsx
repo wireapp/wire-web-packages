@@ -18,7 +18,6 @@
  */
 
 import * as React from 'react';
-import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {ANIMATION, DURATION, EASE} from '../Identity/motions';
 import {OverlayBackground, OverlayWrapper} from '../Modal/Overlay';
@@ -83,7 +82,7 @@ interface MenuModalProps {
   onBackgroundClick: () => void;
 }
 
-const MenuModal = ({children, onBackgroundClick, ...props}: MenuModalProps) => (
+const MenuModal = ({children = null, onBackgroundClick = noop, ...props}: MenuModalProps) => (
   <MenuModalWrapper {...props}>
     <MenuModalBody>
       <MenuModalContent>{children}</MenuModalContent>
@@ -97,16 +96,6 @@ interface MenuItemProps {
   onClick: () => void;
 }
 
-const MenuItem = ({children, ...props}: MenuItemProps) => <MenuItemContent {...props}>{children}</MenuItemContent>;
-
-MenuItem.defaultProps = {
-  children: null,
-  onClick: noop,
-};
-
-MenuModal.defaultProps = {
-  children: null,
-  onBackgroundClick: noop,
-};
+const MenuItem = ({children = null, ...props}: MenuItemProps) => <MenuItemContent {...props}>{children}</MenuItemContent>;
 
 export {MenuModal, MenuItem};

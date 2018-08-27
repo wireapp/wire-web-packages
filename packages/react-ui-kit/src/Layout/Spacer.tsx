@@ -24,13 +24,8 @@ interface SpacerProps {
   vertical?: boolean;
 }
 
-function Spacer({size, vertical}: SpacerProps) {
+function Spacer({size = 8, vertical = false}: SpacerProps): JSX.Element {
   return (<div style={vertical ? {display: 'inline-block', width: size} : {height: size}} />);
 }
-
-Spacer.defaultProps = {
-  size: 8,
-  vertical: false,
-};
 
 export {Spacer};

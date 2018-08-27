@@ -70,15 +70,11 @@ const OverlayBackground = styled.div`
   animation: ${ANIMATION.fadeIn} ${DURATION.PROACTIVE_SLOW} ${EASE.QUART};
 `;
 
-const Overlay = ({children, ...props}: OverlayProps) => (
+const Overlay = ({children = null, ...props}: OverlayProps) => (
   <OverlayWrapper {...props} data-uie-name="modal">
     <OverlayContent>{children}</OverlayContent>
     <OverlayBackground data-uie-name="overlay-background" />
   </OverlayWrapper>
 );
-
-Overlay.defaultProps = {
-  children: null,
-};
 
 export {Overlay, OverlayBackground, OverlayWrapper};

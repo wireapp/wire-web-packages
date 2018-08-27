@@ -21,7 +21,7 @@ import {css} from 'styled-components';
 import {WIDTH} from './Layout/sizes';
 
 type QueryMap = {
-  [index: string]: (content: TemplateStringsArray) => string;
+  [index: string]: (content: TemplateStringsArray, width?: number) => string;
 };
 
 export const QUERY = {

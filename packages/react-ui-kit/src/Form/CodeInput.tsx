@@ -18,7 +18,6 @@
  */
 
 import * as React from 'react';
-import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const CodeInputWrapper = styled.div`
@@ -43,11 +42,17 @@ const DigitInput = styled.input`
 interface CodeInputProps {
   autoFocus: boolean;
   digits: number;
-  onCodeComplete: () => void;
-  style: object | null;
+  onCodeComplete: (completeCode?: string) => void;
+  style: React.CSSProperties | null;
 };
 
-class CodeInput extends React.PureComponent<CodeInputProps> {
+interface CodeInputStateProps {
+  values: number[];
+}
+
+class CodeInput extends React.PureComponent<CodeInputProps, CodeInputStateProps> {
+  inputs: HTMLInputElement[];
+
   static defaultProps: CodeInputProps = {
     autoFocus: false,
     digits: 6,
@@ -91,20 +96,20 @@ class CodeInput extends React.PureComponent<CodeInputProps> {
     }
   };
 
-  nextField = currentFieldNum => {
+  nextField = (currentFieldNum: number) => {
     const nextFieldNum = currentFieldNum + 1;
     if (nextFieldNum < this.props.digits) {
       this.inputs[nextFieldNum].focus();
     }
   };
 
-  prevField = currentFieldNum => {
+  prevField = (currentFieldNum: number) => {
     if (currentFieldNum > 0) {
       this.inputs[currentFieldNum - 1].focus();
     }
   };
 
-  handleKeyDown = (fieldNum, event) => {
+  handleKeyDown = (fieldNum: number, event) => {
     switch (event.key) {
       case 'Backspace':
         this.setValue(fieldNum, '');

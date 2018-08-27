@@ -139,7 +139,16 @@ interface HeaderMenuProps {
   logoElement: HTMLDivElement | null;
 }
 
-class HeaderMenu extends React.PureComponent<HeaderMenuProps, {isOpen?: boolean;}> {
+interface HeaderMenuStateProps {
+  isOpen?: boolean;
+}
+
+class HeaderMenu extends React.PureComponent<HeaderMenuProps, HeaderMenuStateProps> {
+  defaultProps: HeaderMenuProps = {
+    children: null,
+    logoElement: null,
+  };
+
   state = {
     isOpen: false,
   };
@@ -177,11 +186,6 @@ class HeaderMenu extends React.PureComponent<HeaderMenuProps, {isOpen?: boolean;
 MenuLink.defaultProps = {
   ...MenuLink.defaultProps,
   button: false,
-};
-
-HeaderMenu.defaultProps = {
-  children: null,
-  logoElement: null,
 };
 
 export {HeaderMenu, MenuLink};

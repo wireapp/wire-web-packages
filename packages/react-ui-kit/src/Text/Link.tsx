@@ -24,7 +24,8 @@ import {Text, TextProps} from './Text';
 import {defaultTransition} from '../Identity/motions';
 
 interface LinkProps extends TextProps {
-  component?: (() => void) | string;
+  color: any;
+  component: string;
 };
 
 const Link: React.SFC<LinkProps> = ({color, component, ...props}) => {
@@ -32,7 +33,7 @@ const Link: React.SFC<LinkProps> = ({color, component, ...props}) => {
   const hoverColor = Color(color)
     .mix(Color(COLOR.BLACK), darker)
     .toString();
-  const StyledLink = Text.withComponent(component).extend`
+  const StyledLink = Text.withComponent(component as any).extend`
     text-decoration: none;
     ${defaultTransition}
     cursor: pointer;

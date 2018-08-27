@@ -20,17 +20,25 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 
-class ShakeBox extends React.PureComponent {
+interface ShakeBoxProps {
+  amp?: number;
+  children?: Node;
+  damping?: number;
+  speed?: number;
+  threshold?: number;
+}
+
+interface ShakeBoxStateProps {
+  isShaking?: boolean;
+  offset?: number;
+}
+
+class ShakeBox extends React.PureComponent<ShakeBoxProps, ShakeBoxStateProps> {
   state = {isShaking: false, offset: 0};
   currentOffset = 0;
-
-  static propTypes = {
-    amp: PropTypes.number,
-    children: PropTypes.node,
-    damping: PropTypes.number,
-    speed: PropTypes.number,
-    threshold: PropTypes.number,
-  };
+  targetOffset?: number;
+  reqAni?: number;
+  box?: HTMLDivElement;
 
   static defaultProps = {
     amp: 8,
