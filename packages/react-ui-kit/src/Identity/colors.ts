@@ -19,7 +19,7 @@
 
 /* eslint-disable sort-keys, sort-vars, no-magic-numbers */
 
-import Color from 'color';
+import * as Color from 'color';
 
 const steps = [];
 const percent = 100;
@@ -34,16 +34,16 @@ function shade(color, amount = 0.08) {
     .toString();
 }
 
-function tint(color, amount) {
+function tint(color, amount: number) {
   return Color(color)
     .mix(Color(WHITE), amount)
     .toString();
 }
 
-function opaque(color, amount) {
+function opaque(color, amount: number) {
   return Color(color)
     .fade(1 - amount)
-    .toString(2);
+    .toString();
 }
 
 const BLACK = '#000';
@@ -58,9 +58,9 @@ const BASE_COLOR = {
   YELLOW: '#febf02',
 };
 
-const DARK_COLOR = {};
-const LIGHT_COLOR = {};
-const OPAQUE_COLOR = {};
+const DARK_COLOR: {[index: string]: string} = {};
+const LIGHT_COLOR: {[index: string]: string} = {};
+const OPAQUE_COLOR: {[index: string]: string} = {};
 
 Object.entries(BASE_COLOR).forEach(([key, value]) => {
   steps.forEach(step => {

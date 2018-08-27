@@ -20,6 +20,10 @@
 import {css} from 'styled-components';
 import {WIDTH} from './Layout/sizes';
 
+type QueryMap = {
+  [index: string]: (content: TemplateStringsArray) => string;
+};
+
 export const QUERY = {
   desktop: `min-width: ${WIDTH.DESKTOP_MIN}px`,
   desktopXL: `min-width: ${WIDTH.DESKTOP_XL_MIN}px`,
@@ -30,10 +34,12 @@ export const QUERY = {
   tabletUp: `min-width: ${WIDTH.TABLET_MIN}px`,
 };
 
-export default Object.entries(QUERY).reduce(
+const media = Object.entries(QUERY).reduce<QueryMap>(
   (accumulator, [key, value]) => ({
     ...accumulator,
     [key]: content => `@media (${value}){${css(content)}}`,
   }),
   {}
 );
+
+export default media;
