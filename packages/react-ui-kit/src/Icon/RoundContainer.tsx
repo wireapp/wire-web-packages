@@ -17,13 +17,17 @@
  *
  */
 
-import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {COLOR} from '../Identity';
 
-const RoundContainer = styled.div`
-  width: ${props => parseFloat(props.size)}px;
-  height: ${props => parseFloat(props.size)}px;
+export interface RoundContainerProps {
+  color?: string;
+  size?: number;
+}
+
+const RoundContainer = styled.div<RoundContainerProps>`
+  width: ${props => parseFloat(props.size.toString())}px;
+  height: ${props => parseFloat(props.size.toString())}px;
   border-radius: 50%;
   border: none;
   background-color: ${props => props.color};
@@ -32,11 +36,6 @@ const RoundContainer = styled.div`
   justify-content: center;
   align-items: center;
 `;
-
-RoundContainer.propTypes = {
-  color: PropTypes.string,
-  size: PropTypes.number,
-};
 
 RoundContainer.defaultProps = {
   color: COLOR.BLUE,

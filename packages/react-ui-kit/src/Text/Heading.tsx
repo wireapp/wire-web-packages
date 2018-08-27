@@ -17,7 +17,6 @@
  *
  */
 
-import * as PropTypes from 'prop-types';
 import * as React from 'react';
 import media from '../mediaQueries';
 import {Text} from './Text';
@@ -63,7 +62,11 @@ const H4 = Text.withComponent('h4').extend`
   margin-top: 20px;
 `;
 
-const Heading = ({level, ...props}) => {
+interface HeadingProps extends Text {
+   level?: string, block?: boolean
+}
+
+const Heading: React.SFC<HeadingProps> = ({level, ...props}) => {
   switch (level) {
     case '2':
       return <H2 {...props} />;
@@ -77,18 +80,14 @@ const Heading = ({level, ...props}) => {
   }
 };
 
-Heading.propTypes = {
-  ...Text.propTypes,
-  level: PropTypes.oneOf(['1', '2', '3', '4']),
-};
 
 H1.defaultProps = H2.defaultProps = H3.defaultProps = H4.defaultProps = {
-  ...Text.defaultProps,
+  ...H1.defaultProps,
   block: true,
 };
 
 Heading.defaultProps = {
-  ...Text.defaultProps,
+  ...Heading.defaultProps,
   block: true,
   level: '1',
 };

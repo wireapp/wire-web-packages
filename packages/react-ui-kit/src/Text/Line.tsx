@@ -17,7 +17,6 @@
  *
  */
 
-import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {COLOR} from '../Identity';
 import {GUTTER} from '../Layout/sizes';
@@ -28,10 +27,6 @@ const Line = styled.hr`
   margin-top: ${GUTTER}px;
   margin-bottom: ${GUTTER}px;
 `;
-
-Line.propTypes = {
-  color: PropTypes.string,
-};
 
 Line.defaultProps = {
   color: COLOR.GRAY_LIGHTEN_72,

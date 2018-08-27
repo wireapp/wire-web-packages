@@ -17,11 +17,14 @@
  *
  */
 
-import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {COLOR} from '../Identity';
 
-const StyledApp = styled.div`
+export interface StyledAppProps {
+  backgroundColor: string;
+}
+
+const StyledApp = styled.div<StyledAppProps>`
   background-color: ${props => props.backgroundColor};
   color: ${COLOR.TEXT};
   display: flex;
@@ -36,10 +39,6 @@ const StyledApp = styled.div`
     box-sizing: border-box;
   }
 `;
-
-StyledApp.propTypes = {
-  backgroundColor: PropTypes.string,
-};
 
 StyledApp.defaultProps = {
   backgroundColor: COLOR.GRAY_LIGHTEN_88,

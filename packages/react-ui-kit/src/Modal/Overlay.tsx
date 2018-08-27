@@ -18,10 +18,13 @@
  */
 
 import * as React from 'react';
-import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {ANIMATION, DURATION, EASE} from '../Identity/motions';
 import {COLOR} from '../Identity';
+
+interface OverlayProps {
+  children?: Node | null;
+}
 
 const OverlayWrapper = styled.div`
   position: fixed;
@@ -67,16 +70,12 @@ const OverlayBackground = styled.div`
   animation: ${ANIMATION.fadeIn} ${DURATION.PROACTIVE_SLOW} ${EASE.QUART};
 `;
 
-const Overlay = ({children, ...props}) => (
+const Overlay = ({children, ...props}: OverlayProps) => (
   <OverlayWrapper {...props} data-uie-name="modal">
     <OverlayContent>{children}</OverlayContent>
     <OverlayBackground data-uie-name="overlay-background" />
   </OverlayWrapper>
 );
-
-Overlay.propTypes = {
-  children: PropTypes.node,
-};
 
 Overlay.defaultProps = {
   children: null,

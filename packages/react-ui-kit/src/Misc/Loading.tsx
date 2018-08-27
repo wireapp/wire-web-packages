@@ -24,8 +24,16 @@ import {ANIMATION, DURATION} from '../Identity/motions';
 
 const pathLength = 125.68;
 
-function LoadingComponent({className, progress, size}) {
-  const additionalProps = {};
+interface LoadingComponentProps {
+  className: string,
+  progress?: number,
+  size: number,
+}
+
+function LoadingComponent({className, progress, size}: LoadingComponentProps) {
+  const additionalProps: {
+    strokeDashoffset?: string;
+  } = {};
 
   if (progress !== null) {
     additionalProps.strokeDashoffset = `${pathLength - pathLength * progress}`;
@@ -46,11 +54,6 @@ function LoadingComponent({className, progress, size}) {
   );
 }
 
-LoadingComponent.propTypes = {
-  className: PropTypes.string.isRequired,
-  progress: PropTypes.number,
-  size: PropTypes.number.isRequired,
-};
 LoadingComponent.defaultProps = {
   progress: null,
 };
@@ -67,7 +70,12 @@ const fillAnimation = keyframes`
 const rotationOffset = -0.75;
 const rotationDelay = `${parseFloat(DURATION.EXTRA_LONG) * rotationOffset}s`;
 
-const Loading = styled<{progress: Component['progress']}>(LoadingComponent)`
+interface LoadingProps {
+  progress?: number;
+  size?: number;
+}
+
+const Loading = styled<LoadingProps>(LoadingComponent)`
   ${props =>
     props.progress === null &&
     css`
@@ -80,10 +88,6 @@ const Loading = styled<{progress: Component['progress']}>(LoadingComponent)`
     `};
 `;
 
-Loading.propTypes = {
-  progress: PropTypes.number,
-  size: PropTypes.number,
-};
 
 Loading.defaultProps = {
   progress: null,

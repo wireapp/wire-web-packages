@@ -49,7 +49,7 @@ function opaque(color, amount: number) {
 const BLACK = '#000';
 const WHITE = '#fff';
 
-const BASE_COLOR = {
+const BASE_COLOR: {[index: string]: string} = {
   BLUE: '#2391d3',
   GRAY: '#bac8d1',
   GREEN: '#00c800',
@@ -78,7 +78,7 @@ const COMPONENT_COLOR = {
   TEXT: DARK_COLOR.GRAY_DARKEN_72,
 };
 
-export const COLOR = {
+export const COLOR: any = {
   ...BASE_COLOR,
   ...DARK_COLOR,
   ...LIGHT_COLOR,

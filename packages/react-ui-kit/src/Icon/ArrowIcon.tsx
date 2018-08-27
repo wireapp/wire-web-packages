@@ -18,10 +18,20 @@
  */
 
 import * as React from 'react';
-import * as PropTypes from 'prop-types';
 import IconHOC from './IconHOC';
 
-const rotation = {
+interface Rotation {
+  right: number;
+  down: number;
+  left: number;
+  up: number;
+}
+
+export interface ArrowProps {
+  direction: keyof Rotation;
+}
+
+const rotation: Rotation = {
   right: 0,
   down: 90, // eslint-disable-line sort-keys
   left: 180,
@@ -29,12 +39,11 @@ const rotation = {
 };
 
 const size = 16;
-const arrow = (
+const arrow: React.SFC<ArrowProps> = (
   {direction} // eslint-disable-line react/prop-types
 ) => <path transform={`rotate(${rotation[direction]} 8 8)`} d="M5.8 1.5L7.3 0l8 8-8 8-1.5-1.5L11.3 9H.7V7h10.6" />;
-const ArrowIcon = IconHOC(arrow, size, size);
+const ArrowIcon = IconHOC<ArrowProps>(arrow, size, size);
 
-ArrowIcon.propTypes.direction = PropTypes.oneOf(Object.keys(rotation));
 ArrowIcon.defaultProps.direction = 'right';
 
 export {ArrowIcon};

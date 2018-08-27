@@ -25,12 +25,8 @@ const Paragraph = Text.withComponent('p').extend`
   margin-bottom: 16px;
 `;
 
-Paragraph.propTypes = {
-  ...Text.propTypes,
-};
-
 Paragraph.defaultProps = {
-  ...Text.defaultProps,
+  ...Paragraph.defaultProps,
   block: true,
 };
 
@@ -42,12 +38,7 @@ const Lead = Text.withComponent('p').extend`
   `};
 `;
 
-Lead.propTypes = {
-  ...Text.propTypes,
-};
-
 Lead.defaultProps = {
-  ...Text.defaultProps,
   block: true,
   center: true,
   fontSize: '24px',

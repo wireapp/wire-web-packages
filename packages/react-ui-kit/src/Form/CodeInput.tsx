@@ -40,22 +40,22 @@ const DigitInput = styled.input`
   }
 `;
 
-class CodeInput extends React.PureComponent {
-  static propTypes = {
-    autoFocus: PropTypes.bool,
-    digits: PropTypes.number,
-    onCodeComplete: PropTypes.func,
-    style: PropTypes.object,
-  };
+interface CodeInputProps {
+  autoFocus: boolean;
+  digits: number;
+  onCodeComplete: () => void;
+  style: object | null;
+};
 
-  static defaultProps = {
+class CodeInput extends React.PureComponent<CodeInputProps> {
+  static defaultProps: CodeInputProps = {
     autoFocus: false,
     digits: 6,
     onCodeComplete: () => {},
     style: null,
   };
 
-  constructor(props) {
+  constructor(props: CodeInputProps) {
     super(props);
     this.state = {
       values: Array(props.digits).fill(''),

@@ -18,14 +18,15 @@
  */
 
 import * as React from 'react';
-import * as PropTypes from 'prop-types';
 
-const Spacer = ({size, vertical}) => <div style={vertical ? {display: 'inline-block', width: size} : {height: size}} />;
+interface SpacerProps {
+  size: number | string;
+  vertical?: boolean;
+}
 
-Spacer.propTypes = {
-  size: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  vertical: PropTypes.bool,
-};
+function Spacer({size, vertical}: SpacerProps) {
+  return (<div style={vertical ? {display: 'inline-block', width: size} : {height: size}} />);
+}
 
 Spacer.defaultProps = {
   size: 8,

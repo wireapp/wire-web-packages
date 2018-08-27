@@ -17,12 +17,16 @@
  *
  */
 
-import * as PropTypes from 'prop-types';
 import styled, {css} from 'styled-components';
 import {COLOR} from '../Identity';
 import {Encoder} from 'bazinga64';
 
-const placeholderStyle = css`
+export interface InputProps {
+  markInvalid?: boolean;
+  placeholderTextTransform?: string;
+}
+
+const placeholderStyle = css<InputProps>`
   color: ${COLOR.GRAY_DARKEN_24};
   font-size: 11px;
   text-transform: ${props => props.placeholderTextTransform};
@@ -36,7 +40,7 @@ const invalidDot = `
 `;
 const base64Dot = Encoder.toBase64(invalidDot).asString;
 
-const Input = styled.input`
+const Input = styled.input<InputProps>`
   background: ${COLOR.WHITE};
   border-radius: 4px;
   border: none;
@@ -70,11 +74,6 @@ const Input = styled.input`
     props.markInvalid &&
     `background: ${COLOR.WHITE} url('data:image/svg+xml;base64,${base64Dot}') no-repeat right 20px center`};
 `;
-
-Input.propTypes = {
-  markInvalid: PropTypes.bool,
-  placeholderTextTransform: PropTypes.string,
-};
 
 Input.defaultProps = {
   markInvalid: false,

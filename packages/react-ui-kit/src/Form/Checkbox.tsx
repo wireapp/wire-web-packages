@@ -18,11 +18,20 @@
  */
 
 import * as React from 'react';
-import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {COLOR} from '../Identity';
-import {Input} from './Input';
+import {Input, InputProps} from './Input';
 import {Text} from '../Text';
+
+interface CheckboxProps extends InputProps, StyledLabelProps {
+  children?: Node;
+  id?: string;
+  style?: React.CSSProperties;
+}
+
+interface StyledLabelProps {
+  disabled?: boolean;
+}
 
 const StyledContainerCheckbox = styled.div`
   display: flex;
@@ -42,7 +51,7 @@ const StyledCheckbox = Input.withComponent('input').extend.attrs({
 const checkSvg =
   '<svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 8 6"><path fill="white" d="M2.8 6L8 .7 7.3 0 2.8 4.6.7 2.4l-.7.7z"/></svg>';
 
-const StyledLabel = styled.label`
+const StyledLabel = styled.label<StyledLabelProps>`
   ${({disabled}) => (disabled ? 'opacity: .56' : '')}
   display: flex;
   &::before {
@@ -66,7 +75,7 @@ const StyledLabel = styled.label`
   }
 `;
 
-const Checkbox = ({id, children, style, disabled, ...props}) => {
+const Checkbox: React.SFC<CheckboxProps> = ({id, children, style, disabled, ...props}) => {
   if (!id) {
     id = Math.random().toString();
   }
@@ -95,14 +104,8 @@ CheckboxLabel.defaultProps = {
   textTransform: 'uppercase',
 };
 
-Checkbox.propTypes = {
-  ...Input.propTypes,
-  children: PropTypes.node,
-  id: PropTypes.string,
-};
-
 Checkbox.defaultProps = {
-  ...Input.defaultProps,
+  ...Checkbox.defaultProps,
   children: null,
   id: null,
 };

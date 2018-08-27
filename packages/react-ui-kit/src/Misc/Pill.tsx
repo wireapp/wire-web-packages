@@ -17,14 +17,19 @@
  *
  */
 
-import * as PropTypes from 'prop-types';
 import styled, {keyframes} from 'styled-components';
 import {COLOR} from '../Identity';
 
-const PILL_TYPE = {
-  error: 'ERROR',
-  success: 'SUCCESS',
-  warning: 'WARNING',
+interface PillProps {
+  active?: boolean,
+  children?: Node,
+  type?: PILL_TYPE;
+}
+
+enum PILL_TYPE {
+  error = 'ERROR',
+  success = 'SUCCESS',
+  warning = 'WARNING',
 };
 
 const backgroundColors = {
@@ -42,7 +47,7 @@ const pillAnimation = keyframes`
     }
 `;
 
-const Pill = styled.span.attrs({
+const Pill = styled.span.attrs<PillProps>({
   'data-uie-name': 'element-pill',
   'data-uie-status': ({type}) => type,
 })`
@@ -78,12 +83,6 @@ const Pill = styled.span.attrs({
         background-color: #eee;
         animation: ${pillAnimation} 300ms ease-out;`};
 `;
-
-Pill.propTypes = {
-  active: PropTypes.boolean,
-  children: PropTypes.node,
-  type: PropTypes.oneOf(Object.keys(PILL_TYPE)),
-};
 
 Pill.defaultProps = {
   active: false,

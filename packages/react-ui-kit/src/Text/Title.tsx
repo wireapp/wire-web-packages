@@ -26,12 +26,8 @@ const Title = Text.withComponent('div').extend`
   color: ${COLOR.GRAY};
 `;
 
-Title.propTypes = {
-  ...Text.propTypes,
-};
-
 Title.defaultProps = {
-  ...Text.defaultProps,
+  ...Title.defaultProps,
   block: true,
   center: true,
   fontSize: '32px',

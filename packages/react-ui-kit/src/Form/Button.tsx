@@ -17,13 +17,19 @@
  *
  */
 
-import * as PropTypes from 'prop-types';
 import {COLOR} from '../Identity';
 import {Text} from '../Text';
 import {defaultTransition} from '../Identity/motions';
 
+interface ButtonProps {
+  backgroundColor: string;
+  block: boolean;
+  disabled: boolean;
+  noCapital: boolean;
+}
+
 const darkenAmount = 0.06;
-const Button = Text.withComponent('button').extend`
+const Button = Text.withComponent('button').extend<ButtonProps>`
   /* appearance */
   background-color: ${props => (props.disabled ? COLOR.DISABLED : props.backgroundColor)};
   border-radius: 8px;
@@ -51,16 +57,8 @@ const Button = Text.withComponent('button').extend`
    }
 `;
 
-Button.propTypes = {
-  ...Text.propTypes,
-  backgroundColor: PropTypes.string,
-  block: PropTypes.bool,
-  disabled: PropTypes.bool,
-  noCapital: PropTypes.bool,
-};
-
 Button.defaultProps = {
-  ...Text.defaultProps,
+  ...Button.defaultProps,
   backgroundColor: COLOR.BLUE,
   block: false,
   bold: true,
@@ -68,7 +66,7 @@ Button.defaultProps = {
   color: COLOR.WHITE,
   disabled: false,
   noCapital: false,
-  nowrap: true,
+  noWrap: true,
   textTransform: 'uppercase',
   truncate: true,
 };

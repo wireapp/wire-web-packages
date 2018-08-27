@@ -19,13 +19,26 @@
 
 /* eslint-disable no-magic-numbers */
 
-import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
 import media from '../mediaQueries';
 import {GUTTER, WIDTH} from './sizes';
 import {defaultProps} from 'recompose';
 
-const LEVEL = {
+interface Level {
+  lg: string;
+  md: string;
+  sm: string;
+  xs: string;
+  xxs: string;
+}
+
+interface ContainerProps {
+  centerText: boolean;
+  level: keyof Level;
+  verticalCenter: boolean;
+}
+
+const LEVEL: Level = {
   lg: `max-width: ${WIDTH.DESKTOP_MAX}px;`,
   md: `max-width: ${WIDTH.TABLET_MAX}px;`,
   sm: `max-width: ${WIDTH.TABLET_MIN}px;`,
@@ -33,7 +46,7 @@ const LEVEL = {
   xxs: `max-width: ${WIDTH.TINY}px;`,
 };
 
-const Container = styled.div`
+const Container = styled.div<ContainerProps>`
   position: relative;
   margin: ${props => (props.verticalCenter ? 'auto' : '0 auto')};
   text-align: ${props => (props.centerText ? 'center' : 'left')};
@@ -51,12 +64,6 @@ const Container = styled.div`
           `};`}
   }};
 `;
-
-Container.propTypes = {
-  centerText: PropTypes.bool,
-  level: PropTypes.oneOf(Object.keys(LEVEL)),
-  verticalCenter: PropTypes.bool,
-};
 
 Container.defaultProps = {
   centerText: false,

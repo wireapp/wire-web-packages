@@ -17,12 +17,23 @@
  *
  */
 
-import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {COLOR} from '../Identity';
 import {defaultProps} from 'recompose';
 
-const Text = styled.span`
+export interface TextProps extends Text {
+  block?: boolean;
+  bold?: boolean;
+  center?: boolean;
+  fontSize?: string;
+  light?: boolean;
+  muted?: boolean;
+  noWrap?: boolean;
+  textTransform?: string;
+  truncate?: boolean;
+};
+
+const Text = styled.span<TextProps>`
   /* appearance */
   color: ${props => props.color};
   font-size: ${props => props.fontSize};
@@ -39,19 +50,6 @@ const Text = styled.span`
         text-overflow: ellipsis;
       `};
 `;
-
-Text.propTypes = {
-  block: PropTypes.bool,
-  bold: PropTypes.bool,
-  center: PropTypes.bool,
-  color: PropTypes.string,
-  fontSize: PropTypes.string,
-  light: PropTypes.bool,
-  muted: PropTypes.bool,
-  noWrap: PropTypes.bool,
-  textTransform: PropTypes.oneOf(['lowercase', 'uppercase', 'capitalize', 'inherit', 'none', 'unset']),
-  truncate: PropTypes.bool,
-};
 
 Text.defaultProps = {
   block: false,

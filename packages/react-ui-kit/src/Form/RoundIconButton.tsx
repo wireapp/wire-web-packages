@@ -18,7 +18,6 @@
  */
 
 import * as React from 'react';
-import * as PropTypes from 'prop-types';
 import {
   ArrowIcon,
   AttachmentIcon,
@@ -37,9 +36,24 @@ import {
 import {COLOR} from '../Identity';
 import {defaultTransition} from '../Identity/motions';
 
+export interface RoundIconButtonProps {
+  children?: Node;
+  color?: string;
+  disabled?: boolean;
+  icon?: ICON_NAME;
+  iconColor?: string;
+  iconHeight?: number;
+  iconWidth?: number;
+  size?: number;
+}
+
+export interface ButtonProps {
+  size?: number;
+}
+
 const darkenAmount = 0.08;
 
-const Button = RoundContainer.withComponent('button').extend`
+const Button = RoundContainer.withComponent('button').extend<ButtonProps>`
   background-color: ${props => (props.disabled ? COLOR.DISABLED : props.color)};
   min-width: ${props => props.size}px;
   outline: none;
@@ -52,22 +66,22 @@ const Button = RoundContainer.withComponent('button').extend`
    }
 `;
 
-const ICON_NAME = {
-  ARROW: 'arrow',
-  ATTACHMENT: 'attachment',
-  CHECK: 'check',
-  CLOSE: 'close',
-  GIF: 'gif',
-  IMAGE: 'image',
-  PING: 'ping',
-  PLANE: 'plane',
-  PROFILE: 'profile',
-  TEAM: 'team',
-  TIMED: 'timed',
-  TRASH: 'trash',
+enum ICON_NAME {
+  ARROW = 'arrow',
+  ATTACHMENT = 'attachment',
+  CHECK = 'check',
+  CLOSE = 'close',
+  GIF = 'gif',
+  IMAGE = 'image',
+  PING = 'ping',
+  PLANE = 'plane',
+  PROFILE = 'profile',
+  TEAM = 'team',
+  TIMED = 'timed',
+  TRASH = 'trash',
 };
 
-const RoundIconButton = ({icon, iconColor, iconHeight, iconWidth, children, ...props}) => (
+const RoundIconButton: React.SFC<RoundIconButtonProps> = ({icon, iconColor, iconHeight, iconWidth, children, ...props}) => (
   <Button {...props}>
     {(() => {
       switch (icon) {
@@ -117,17 +131,6 @@ const RoundIconButton = ({icon, iconColor, iconHeight, iconWidth, children, ...p
     {children}
   </Button>
 );
-
-RoundIconButton.propTypes = {
-  children: PropTypes.node,
-  color: PropTypes.string,
-  disabled: PropTypes.bool,
-  icon: PropTypes.oneOf(Object.values(ICON_NAME)),
-  iconColor: PropTypes.string,
-  iconHeight: PropTypes.number,
-  iconWidth: PropTypes.number,
-  size: PropTypes.number,
-};
 
 RoundIconButton.defaultProps = {
   children: null,

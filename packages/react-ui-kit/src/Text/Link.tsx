@@ -17,14 +17,17 @@
  *
  */
 
-import * as PropTypes from 'prop-types';
 import * as React from 'react';
-import Color from 'color';
+import * as Color from 'color';
 import {COLOR} from '../Identity';
-import {Text} from './Text';
+import {Text, TextProps} from './Text';
 import {defaultTransition} from '../Identity/motions';
 
-const Link = ({color, component, ...props}) => {
+interface LinkProps extends TextProps {
+  component?: (() => void) | string;
+};
+
+const Link: React.SFC<LinkProps> = ({color, component, ...props}) => {
   const darker = 0.16;
   const hoverColor = Color(color)
     .mix(Color(COLOR.BLACK), darker)
@@ -47,13 +50,8 @@ const Link = ({color, component, ...props}) => {
   return <StyledLink {...props} />;
 };
 
-Link.propTypes = {
-  ...Text.propTypes,
-  component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
-};
-
 Link.defaultProps = {
-  ...Text.defaultProps,
+  ...Link.defaultProps,
   bold: true,
   color: COLOR.LINK,
   component: 'a',

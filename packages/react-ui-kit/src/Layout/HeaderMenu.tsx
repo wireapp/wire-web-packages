@@ -18,17 +18,20 @@
  */
 
 import * as React from 'react';
-import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {COLOR} from '../Identity';
 import {Content} from '../Layout';
 import {Link} from '../Text';
 
+interface MenuProps {
+  open?: boolean
+}
+
 const MenuWrapper = styled.div`
   height: 64px;
 `;
 
-const MenuContent = styled(Content)`
+const MenuContent = styled(Content)<MenuProps>`
   height: 64px;
   align-items: center;
   justify-content: space-between;
@@ -42,7 +45,7 @@ const MenuContent = styled(Content)`
   left: 0;`};
 `;
 
-const MenuItems = styled.div`
+const MenuItems = styled.div<MenuProps>`
   @media (max-width: 767px){
     display: flex;
     flex-direction: column;
@@ -60,7 +63,7 @@ const MenuItems = styled.div`
     ${props => props.open && `transform: translateX(0);`}
 `;
 
-const MenuOpenButton = styled.div`
+const MenuOpenButton = styled.div<MenuProps>`
   @media (min-width: 768px) {
     display: none;
   }
@@ -98,7 +101,11 @@ const MenuLogo = styled.div`
   z-index: 2;
 `;
 
-const MenuLink = styled(Link)`
+interface MenuLinkProps {
+  button?: boolean;
+}
+
+const MenuLink = styled(Link)<MenuLinkProps>`
   @media (min-width: 768px) {
     margin: 12px 26px 0 10px;
 
@@ -127,7 +134,12 @@ const MenuLink = styled(Link)`
   }
 `;
 
-class HeaderMenu extends React.PureComponent {
+interface HeaderMenuProps {
+  children: Node | null;
+  logoElement: HTMLDivElement | null;
+}
+
+class HeaderMenu extends React.PureComponent<HeaderMenuProps, {isOpen?: boolean;}> {
   state = {
     isOpen: false,
   };
@@ -162,19 +174,9 @@ class HeaderMenu extends React.PureComponent {
   }
 }
 
-MenuLink.propTypes = {
-  ...Link.propTypes,
-  button: PropTypes.bool,
-};
-
 MenuLink.defaultProps = {
-  ...Link.defaultProps,
+  ...MenuLink.defaultProps,
   button: false,
-};
-
-HeaderMenu.propTypes = {
-  children: PropTypes.node,
-  logoElement: PropTypes.node,
 };
 
 HeaderMenu.defaultProps = {

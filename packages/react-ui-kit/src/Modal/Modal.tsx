@@ -24,7 +24,7 @@ import {OverlayBackground, OverlayWrapper} from './Overlay';
 import {COLOR} from '../Identity';
 import {CloseIcon} from '../Icon';
 
-const ModalBody = styled.div`
+const ModalBody = styled.div<{fullscreen?: boolean}>`
   ${props =>
     props.fullscreen
       ? `
@@ -83,7 +83,14 @@ const ModalBackground = styled(OverlayBackground)`
 
 const noop = () => {};
 
-const Modal = ({children, fullscreen, onClose, onBackgroundClick, ...props}) => (
+interface ModalProps {
+  children?: Node | null;
+  fullscreen?: boolean;
+  onBackgroundClick: () => void;
+  onClose: () => void;
+}
+
+const Modal: React.SFC<ModalProps> = ({children, fullscreen, onClose, onBackgroundClick, ...props}) => (
   <OverlayWrapper {...props} data-uie-name="modal">
     <ModalBody fullscreen={fullscreen}>
       <ModalContent>{children}</ModalContent>
@@ -97,13 +104,6 @@ const Modal = ({children, fullscreen, onClose, onBackgroundClick, ...props}) => 
     )}
   </OverlayWrapper>
 );
-
-Modal.propTypes = {
-  children: PropTypes.node,
-  fullscreen: PropTypes.bool,
-  onBackgroundClick: PropTypes.func,
-  onClose: PropTypes.func,
-};
 
 Modal.defaultProps = {
   children: null,

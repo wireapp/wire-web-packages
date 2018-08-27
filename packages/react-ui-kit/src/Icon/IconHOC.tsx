@@ -18,11 +18,17 @@
  */
 
 import * as React from 'react';
-import * as PropTypes from 'prop-types';
 import {COLOR} from '../Identity/colors';
 
-const IconHOC = (svgBody, realWidth = 0, realHeight = 0) => {
-  const wrapper = ({color, scale, width, height, ...props}) => {
+export interface IconHOCProps {
+  color?: string;
+  height?: number;
+  scale?: number;
+  width?: number;
+}
+
+function IconHOC<T>(svgBody, realWidth = 0, realHeight = 0) {
+  function wrapper<T>({color, scale, width, height, ...props}) {
     let newScale = scale;
     if (width || height) {
       const widthScale = width ? width / realWidth : Infinity;
@@ -35,13 +41,7 @@ const IconHOC = (svgBody, realWidth = 0, realHeight = 0) => {
       <svg width={newWidth} height={newHeight} fill={color} viewBox={`0 0 ${realWidth} ${realHeight}`} {...props}>
         {typeof svgBody === 'function' ? svgBody(props) : svgBody}
       </svg>
-    );
-  };
-  wrapper.propTypes = {
-    color: PropTypes.string,
-    height: PropTypes.number,
-    scale: PropTypes.number,
-    width: PropTypes.number,
+    ) as any;
   };
 
   wrapper.defaultProps = {
@@ -50,6 +50,7 @@ const IconHOC = (svgBody, realWidth = 0, realHeight = 0) => {
     scale: 1,
     width: null,
   };
+
   return wrapper;
 };
 
