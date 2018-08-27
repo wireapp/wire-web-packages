@@ -17,23 +17,18 @@
  *
  */
 
-import {WIDTH} from './Layout/sizes';
-import {css} from 'styled-components';
+/* eslint-disable sort-keys, sort-vars, no-magic-numbers */
 
-export const QUERY = {
-  desktop: `min-width: ${WIDTH.DESKTOP_MIN}px`,
-  desktopXL: `min-width: ${WIDTH.DESKTOP_XL_MIN}px`,
-  mobile: `max-width: ${WIDTH.MOBILE}px`,
-  mobileUp: `min-width: ${WIDTH.MOBILE}px`,
-  tablet: `min-width: ${WIDTH.TABLET_MIN}px) and (max-width: ${WIDTH.TABLET_MAX}px`,
-  tabletDown: `max-width: ${WIDTH.TABLET_MAX}px`,
-  tabletUp: `min-width: ${WIDTH.TABLET_MIN}px`,
+export const WIDTH = {
+  DESKTOP_MAX: 1199,
+  DESKTOP_MIN: 920,
+  DESKTOP_XL_MAX: 1600,
+  DESKTOP_XL_MIN: 1200,
+  MOBILE: 480,
+  TABLET_MAX: 919,
+  TABLET_MIN: 640,
+  TINY: 320,
 };
 
-export default Object.entries(QUERY).reduce(
-  (accumulator, [key, value]) => ({
-    ...accumulator,
-    [key]: content => `@media (${value}){${css(content)}}`,
-  }),
-  {}
-);
+export const STEP = 8;
+export const GUTTER = STEP + STEP;
