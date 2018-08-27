@@ -18,8 +18,8 @@
  */
 
 import {COLOR} from '../Identity/colors';
-import PropTypes from 'prop-types';
-import React from 'react';
+import * as PropTypes from 'prop-types';
+import * as React from 'react';
 
 const IconHOC = (svgBody, realWidth = 0, realHeight = 0) => {
   const wrapper = ({color, scale, width, height, ...props}) => {

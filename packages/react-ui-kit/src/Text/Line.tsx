@@ -19,7 +19,7 @@
 
 import {COLOR} from '../Identity';
 import {GUTTER} from '../Layout/sizes';
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const Line = styled.hr`

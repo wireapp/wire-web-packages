@@ -20,8 +20,8 @@
 import {OverlayBackground, OverlayWrapper} from './Overlay';
 import {COLOR} from '../Identity';
 import {CloseIcon} from '../Icon';
-import PropTypes from 'prop-types';
-import React from 'react';
+import * as PropTypes from 'prop-types';
+import * as React from 'react';
 import styled from 'styled-components';
 
 const ModalBody = styled.div`

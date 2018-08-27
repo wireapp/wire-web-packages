@@ -20,7 +20,7 @@
 /* eslint-disable no-magic-numbers */
 
 import {GUTTER, WIDTH} from './sizes';
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 import {defaultProps} from 'recompose';
 import media from '../mediaQueries';
 import styled from 'styled-components';

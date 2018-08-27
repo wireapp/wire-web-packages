@@ -20,8 +20,8 @@
 import {ANIMATION, DURATION, EASE} from '../Identity/motions';
 import {OverlayBackground, OverlayWrapper} from '../Modal/Overlay';
 import {COLOR} from '../Identity/';
-import PropTypes from 'prop-types';
-import React from 'react';
+import * as PropTypes from 'prop-types';
+import * as React from 'react';
 import styled from 'styled-components';
 
 const MenuModalWrapper = styled(OverlayWrapper)`

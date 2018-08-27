@@ -18,7 +18,7 @@
  */
 
 import IconHOC from './IconHOC';
-import React from 'react';
+import * as React from 'react';
 
 const size = 16;
 const download = <path d="M0 14h16v2H0v-2zM7 0h2v7h4l-5 4-5-4h4V0z" />;

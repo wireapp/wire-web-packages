@@ -17,8 +17,8 @@
  *
  */
 
-import PropTypes from 'prop-types';
-import React from 'react';
+import * as PropTypes from 'prop-types';
+import * as React from 'react';
 
 class ShakeBox extends React.PureComponent {
   state = {isShaking: false, offset: 0};

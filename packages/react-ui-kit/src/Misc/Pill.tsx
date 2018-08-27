@@ -19,7 +19,7 @@
 
 import styled, {keyframes} from 'styled-components';
 import {COLOR} from '../Identity';
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 
 const PILL_TYPE = {
   error: 'ERROR',

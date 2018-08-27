@@ -19,13 +19,22 @@
 
 import {ANIMATION, DURATION} from '../Identity/motions';
 import styled, {css, keyframes} from 'styled-components';
-import PropTypes from 'prop-types';
-import React from 'react';
+import * as PropTypes from 'prop-types';
+import * as React from 'react';
+
+interface Component {
+  className: string;
+  progress: number | null;
+  size: number
+}
 
 const pathLength = 125.68;
 
-function LoadingComponent({className, progress, size}) {
-  const additionalProps = {};
+function LoadingComponent({className, progress, size}: Component) {
+  const additionalProps: {
+    strokeDashoffset?: string;
+  } = {};
+
   if (progress !== null) {
     additionalProps.strokeDashoffset = `${pathLength - pathLength * progress}`;
   }
@@ -44,6 +53,7 @@ function LoadingComponent({className, progress, size}) {
     </svg>
   );
 }
+
 LoadingComponent.propTypes = {
   className: PropTypes.string.isRequired,
   progress: PropTypes.number,
@@ -65,7 +75,7 @@ const fillAnimation = keyframes`
 const rotationOffset = -0.75;
 const rotationDelay = `${parseFloat(DURATION.EXTRA_LONG) * rotationOffset}s`;
 
-const Loading = styled(LoadingComponent)`
+const Loading = styled<{progress: Component['progress']}>(LoadingComponent)`
   ${props =>
     props.progress === null &&
     css`

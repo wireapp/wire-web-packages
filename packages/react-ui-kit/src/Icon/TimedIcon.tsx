@@ -18,7 +18,7 @@
  */
 
 import IconHOC from './IconHOC';
-import React from 'react';
+import * as React from 'react';
 
 const width = 12;
 const height = 16;

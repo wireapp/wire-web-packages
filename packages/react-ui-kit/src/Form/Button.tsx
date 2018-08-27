@@ -18,7 +18,7 @@
  */
 
 import {COLOR} from '../Identity';
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 import {Text} from '../Text';
 import {defaultTransition} from '../Identity/motions';
 

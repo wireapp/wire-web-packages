@@ -17,8 +17,8 @@
  *
  */
 
+import * as React from 'react';
 import IconHOC from '../IconHOC';
-import React from 'react';
 
 const size = 32;
 const microsoft = (

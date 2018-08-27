@@ -19,8 +19,8 @@
 
 import {COLOR} from '../Identity';
 import {Input} from './Input';
-import PropTypes from 'prop-types';
-import React from 'react';
+import * as PropTypes from 'prop-types';
+import * as React from 'react';
 import {Text} from '../Text';
 import styled from 'styled-components';
 

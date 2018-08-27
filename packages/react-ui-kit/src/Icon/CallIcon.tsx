@@ -18,7 +18,7 @@
  */
 
 import IconHOC from './IconHOC';
-import React from 'react';
+import * as React from 'react';
 
 const size = 16;
 const call = (

@@ -20,7 +20,7 @@
 import styled, {css} from 'styled-components';
 import {COLOR} from './colors';
 import IconHOC from '../Icon/IconHOC';
-import React from 'react';
+import * as React from 'react';
 import {defaultTransition} from '../Identity/motions';
 
 const width = 57;

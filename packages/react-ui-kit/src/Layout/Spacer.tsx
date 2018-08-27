@@ -17,8 +17,8 @@
  *
  */
 
-import PropTypes from 'prop-types';
-import React from 'react';
+import * as PropTypes from 'prop-types';
+import * as React from 'react';
 
 const Spacer = ({size, vertical}) => <div style={vertical ? {display: 'inline-block', width: size} : {height: size}} />;
 
