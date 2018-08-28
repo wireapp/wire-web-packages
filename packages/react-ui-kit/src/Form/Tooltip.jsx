@@ -18,6 +18,7 @@
  */
 
 import {COLOR} from '../Identity';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const Tooltip = styled.div.attrs({'data-text': ({text}) => text})`
@@ -64,7 +65,6 @@ const Tooltip = styled.div.attrs({'data-text': ({text}) => text})`
     max-width: 200px;
     text-align: center;
     font-size: 12px;
-    max-width: 128px;
     line-height: 14px;
     box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.12);
     ${({light}) =>
@@ -89,5 +89,21 @@ const Tooltip = styled.div.attrs({'data-text': ({text}) => text})`
     transform: translateY(0) translateX(0);
   }`};
 `;
+
+Tooltip.propTypes = {
+  bottom: PropTypes.bool,
+  disabled: PropTypes.bool,
+  left: PropTypes.bool,
+  right: PropTypes.bool,
+  text: PropTypes.string,
+};
+
+Tooltip.defaultProps = {
+  bottom: false,
+  disabled: false,
+  left: false,
+  right: false,
+  text: '',
+};
 
 export {Tooltip};
