@@ -17,8 +17,8 @@
  *
  */
 
-import media from '../mediaQueries';
 import styled from 'styled-components';
+import media from '../mediaQueries';
 import {GUTTER} from './sizes';
 
 const Columns = styled.div`

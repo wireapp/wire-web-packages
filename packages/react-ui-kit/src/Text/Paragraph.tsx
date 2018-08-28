@@ -17,8 +17,8 @@
  *
  */
 
-import {Text} from './Text';
 import media from '../mediaQueries';
+import {Text} from './Text';
 
 const Paragraph = Text.withComponent('p').extend`
   margin-top: 0;

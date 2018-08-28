@@ -19,8 +19,8 @@
 
 import * as React from 'react';
 import styled from 'styled-components';
-import {ANIMATION, DURATION, EASE} from '../Identity/motions';
 import {COLOR} from '../Identity';
+import {ANIMATION, DURATION, EASE} from '../Identity/motions';
 
 interface OverlayProps {
   children?: Node | null;

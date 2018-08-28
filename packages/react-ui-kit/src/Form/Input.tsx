@@ -17,9 +17,9 @@
  *
  */
 
+import {Encoder} from 'bazinga64';
 import styled, {css} from 'styled-components';
 import {COLOR} from '../Identity';
-import {Encoder} from 'bazinga64';
 
 export interface InputProps {
   markInvalid?: boolean;

@@ -17,9 +17,9 @@
  *
  */
 
+import {defaultProps} from 'recompose';
 import styled from 'styled-components';
 import {COLOR} from '../Identity';
-import {defaultProps} from 'recompose';
 
 export interface TextProps extends Text {
   block?: boolean;
@@ -31,7 +31,7 @@ export interface TextProps extends Text {
   noWrap?: boolean;
   textTransform?: string;
   truncate?: boolean;
-};
+}
 
 const Text = styled.span<TextProps>`
   /* appearance */

@@ -44,7 +44,7 @@ interface CodeInputProps {
   digits?: number;
   onCodeComplete?: (completeCode?: string) => void;
   style?: React.CSSProperties | null;
-};
+}
 
 interface CodeInputStateProps {
   values?: number[];

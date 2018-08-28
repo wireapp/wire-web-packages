@@ -18,8 +18,8 @@
  */
 
 import {COLOR} from '../Identity';
-import {Text} from '../Text';
 import {defaultTransition} from '../Identity/motions';
+import {Text} from '../Text';
 
 interface ButtonProps {
   backgroundColor?: string;

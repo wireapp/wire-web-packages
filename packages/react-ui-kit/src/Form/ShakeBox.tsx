@@ -17,8 +17,8 @@
  *
  */
 
-import * as React from 'react';
 import * as PropTypes from 'prop-types';
+import * as React from 'react';
 
 interface ShakeBoxProps {
   amp?: number;

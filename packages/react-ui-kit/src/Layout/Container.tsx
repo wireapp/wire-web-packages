@@ -19,10 +19,10 @@
 
 /* eslint-disable no-magic-numbers */
 
+import {defaultProps} from 'recompose';
 import styled from 'styled-components';
 import media from '../mediaQueries';
 import {GUTTER, WIDTH} from './sizes';
-import {defaultProps} from 'recompose';
 
 interface Level {
   lg: string;

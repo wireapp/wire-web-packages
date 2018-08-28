@@ -19,9 +19,9 @@
 
 import * as React from 'react';
 import styled from 'styled-components';
-import {OverlayBackground, OverlayWrapper} from './Overlay';
-import {COLOR} from '../Identity';
 import {CloseIcon} from '../Icon';
+import {COLOR} from '../Identity';
+import {OverlayBackground, OverlayWrapper} from './Overlay';
 
 const ModalBody = styled.div<{fullscreen?: boolean}>`
   ${props =>

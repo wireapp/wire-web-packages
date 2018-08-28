@@ -18,10 +18,10 @@
  */
 
 import * as React from 'react';
-import IconHOC from '../Icon/IconHOC';
 import styled, {css} from 'styled-components';
-import {COLOR} from './colors';
+import IconHOC from '../Icon/IconHOC';
 import {defaultTransition} from '../Identity/motions';
+import {COLOR} from './colors';
 
 const width = 57;
 const height = 18;

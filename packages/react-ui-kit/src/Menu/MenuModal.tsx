@@ -19,9 +19,9 @@
 
 import * as React from 'react';
 import styled from 'styled-components';
+import {COLOR} from '../Identity/';
 import {ANIMATION, DURATION, EASE} from '../Identity/motions';
 import {OverlayBackground, OverlayWrapper} from '../Modal/Overlay';
-import {COLOR} from '../Identity/';
 
 const MenuModalWrapper = styled(OverlayWrapper)`
   padding: 0;
@@ -96,6 +96,8 @@ interface MenuItemProps {
   onClick?: () => void;
 }
 
-const MenuItem = ({children = null, ...props}: MenuItemProps) => <MenuItemContent {...props}>{children}</MenuItemContent>;
+const MenuItem = ({children = null, ...props}: MenuItemProps) => (
+  <MenuItemContent {...props}>{children}</MenuItemContent>
+);
 
 export {MenuModal, MenuItem};

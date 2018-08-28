@@ -42,9 +42,9 @@ function IconHOC<T>(svgBody, realWidth = 0, realHeight = 0) {
         {typeof svgBody === 'function' ? svgBody(props) : svgBody}
       </svg>
     ) as any;
-  };
+  }
 
   return wrapper;
-};
+}
 
 export default IconHOC;

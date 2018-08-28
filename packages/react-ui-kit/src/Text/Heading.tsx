@@ -63,8 +63,8 @@ const H4 = Text.withComponent('h4').extend`
 `;
 
 interface HeadingProps extends Text {
-   level?: string;
-   block?: boolean;
+  level?: string;
+  block?: boolean;
 }
 
 const Heading: React.SFC<HeadingProps> = ({level, ...props}) => {
@@ -80,7 +80,6 @@ const Heading: React.SFC<HeadingProps> = ({level, ...props}) => {
       return <H1 {...props} />;
   }
 };
-
 
 H1.defaultProps = H2.defaultProps = H3.defaultProps = H4.defaultProps = {
   ...H1.defaultProps,

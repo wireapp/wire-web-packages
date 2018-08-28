@@ -79,9 +79,16 @@ enum ICON_NAME {
   TEAM = 'team',
   TIMED = 'timed',
   TRASH = 'trash',
-};
+}
 
-const RoundIconButton: React.SFC<RoundIconButtonProps> = ({icon, iconColor, iconHeight, iconWidth, children, ...props}) => (
+const RoundIconButton: React.SFC<RoundIconButtonProps> = ({
+  icon,
+  iconColor,
+  iconHeight,
+  iconWidth,
+  children,
+  ...props
+}) => (
   <Button {...props}>
     {(() => {
       switch (icon) {

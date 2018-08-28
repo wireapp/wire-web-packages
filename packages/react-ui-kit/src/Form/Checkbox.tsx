@@ -20,8 +20,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import {COLOR} from '../Identity';
-import {Input, InputProps} from './Input';
 import {Text} from '../Text';
+import {Input, InputProps} from './Input';
 
 interface CheckboxProps extends InputProps, StyledLabelProps {
   children?: Node;

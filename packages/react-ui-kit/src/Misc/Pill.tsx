@@ -21,8 +21,8 @@ import styled, {keyframes} from 'styled-components';
 import {COLOR} from '../Identity';
 
 interface PillProps {
-  active?: boolean,
-  children?: Node,
+  active?: boolean;
+  children?: Node;
   type?: PILL_TYPE;
 }
 
@@ -30,7 +30,7 @@ enum PILL_TYPE {
   error = 'ERROR',
   success = 'SUCCESS',
   warning = 'WARNING',
-};
+}
 
 const backgroundColors = {
   [PILL_TYPE.error]: COLOR.RED_OPAQUE_16,

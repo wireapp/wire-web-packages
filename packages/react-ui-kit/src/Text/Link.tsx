@@ -17,16 +17,16 @@
  *
  */
 
-import * as React from 'react';
 import * as Color from 'color';
+import * as React from 'react';
 import {COLOR} from '../Identity';
-import {Text, TextProps} from './Text';
 import {defaultTransition} from '../Identity/motions';
+import {Text, TextProps} from './Text';
 
 interface LinkProps extends TextProps {
   color?: any;
   component?: string;
-};
+}
 
 const Link: React.SFC<LinkProps> = ({color, component, ...props}) => {
   const darker = 0.16;

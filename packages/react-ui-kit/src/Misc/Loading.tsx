@@ -24,9 +24,9 @@ import {ANIMATION, DURATION} from '../Identity/motions';
 const pathLength = 125.68;
 
 interface LoadingComponentProps {
-  className: string,
-  progress?: number,
-  size: number,
+  className: string;
+  progress?: number;
+  size: number;
 }
 
 function LoadingComponent({className, progress = null, size}: LoadingComponentProps) {
@@ -82,7 +82,6 @@ const Loading = styled<LoadingProps>(LoadingComponent)`
       }
     `};
 `;
-
 
 Loading.defaultProps = {
   progress: null,

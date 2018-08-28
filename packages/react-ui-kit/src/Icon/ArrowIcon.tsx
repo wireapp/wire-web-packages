@@ -33,15 +33,16 @@ interface ArrowProps {
 
 const rotation: Rotation = {
   right: 0,
-  down: 90, // eslint-disable-line sort-keys
+  //tslint:disable-next-line
+  down: 90,
   left: 180,
   up: 270,
 };
 
 const size = 16;
-const arrow: React.SFC<ArrowProps> = (
-  {direction = 'right'}
-) => <path transform={`rotate(${rotation[direction]} 8 8)`} d="M5.8 1.5L7.3 0l8 8-8 8-1.5-1.5L11.3 9H.7V7h10.6" />;
+const arrow: React.SFC<ArrowProps> = ({direction = 'right'}) => (
+  <path transform={`rotate(${rotation[direction]} 8 8)`} d="M5.8 1.5L7.3 0l8 8-8 8-1.5-1.5L11.3 9H.7V7h10.6" />
+);
 const ArrowIcon = IconHOC<ArrowProps>(arrow, size, size);
 
 export {Rotation, ArrowProps, ArrowIcon};
