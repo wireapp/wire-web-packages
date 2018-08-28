@@ -19,7 +19,7 @@
     "typescript": "3.0.1",
     "webpack": "4.17.1",
     "webpack-cli": "3.1.0",
-    "webpack-dev-server": "3.1.5"
+    "webpack-dev-server": "3.1.6"
   },
   "license": "GPL-3.0",
   "main": "./dist/index.js",
@@ -38,5 +38,5 @@
     "test:project": "yarn dist && yarn test",
     "test:browser": "exit 0"
   },
-  "version": "2.6.1"
+  "version": "2.8.0"
 }

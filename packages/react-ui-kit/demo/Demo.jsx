@@ -91,6 +91,7 @@ import {
   OptionsIcon,
   Overlay,
   PILL_TYPE,
+  Pagination,
   Paragraph,
   Pill,
   PingIcon,
@@ -108,6 +109,7 @@ import {
   Text,
   TimedIcon,
   Title,
+  Tooltip,
   TrashIcon,
   TwitterIcon,
   Uppercase,
@@ -163,11 +165,14 @@ ${props.value}${
 
 class Demo extends React.PureComponent {
   state = {
+    currentPage: 0,
     isFullscreenModalOpen: false,
     isMenuModalOpen: false,
     isModalOpen: false,
     isOverlayOpen: false,
   };
+
+  goPage = index => this.setState(state => ({currentPage: index}));
 
   closeMenuModal = () => this.setState({isMenuModalOpen: false});
 
@@ -247,6 +252,8 @@ class Demo extends React.PureComponent {
       justifyContent: 'center',
     };
 
+    const paginatedList = [[1, 2], [3, 4], [5, 6], [7, 8], [9, 10], [11, 12], [13, 14], [15, 16], [17, 18]]; // eslint-disable-line no-magic-numbers
+
     return (
       <StyledApp>
         <Helmet
@@ -307,10 +314,31 @@ class Demo extends React.PureComponent {
 
         <Content>
           <Container style={{alignItems: 'center', display: 'flex', justifyContent: 'space-around'}}>
-            <Logo scale={3} color={COLOR.BLUE} />
-            <Loading />
+            <Tooltip light right text="This is our logo with a whole bunch of text in here">
+              <Logo scale={3} color={COLOR.BLUE} />
+            </Tooltip>
+            <Tooltip text="This is our logo with a whole bunch of text in here">
+              <Loading />
+            </Tooltip>
             <Loading progress={0.33} />
             <Loading progress={0.66} size={100} />
+          </Container>
+          <Container>
+            <H1>Pagination</H1>
+            <ContainerXS>
+              {paginatedList[this.state.currentPage].map(item => (
+                <Small key={item} center bold block style={{border: `1px solid ${COLOR.GRAY}`, margin: 10}}>
+                  {`- ${item}`}
+                </Small>
+              ))}
+              <Pagination
+                currentPage={this.state.currentPage}
+                goPage={this.goPage}
+                nextPageComponent={() => 'Next'}
+                numberOfPages={paginatedList.length}
+                previousPageComponent={() => 'Previous'}
+              />
+            </ContainerXS>
           </Container>
           <Container>
             <H1>Pills</H1>
@@ -556,30 +584,34 @@ class Demo extends React.PureComponent {
                     event.preventDefault();
                   }}
                 >
-                  <Input placeholder="Placeholder" type="email" required />
+                  <Tooltip text="This shows a placeholder input">
+                    <Input placeholder="Placeholder" type="email" required />
+                  </Tooltip>
                   <Button type="submit" formNoValidate>
                     Submit Button
                   </Button>
                   <InputBlock>
                     <Input placeholder="InputBlock" markInvalid />
-                    <InputSubmitCombo>
-                      <Input placeholder="InputSubmitCombo" name="password" />
-                      <RoundIconButton type="submit" icon={ICON_NAME.ARROW} formNoValidate />
-                      <RoundIconButton type="submit" icon={ICON_NAME.ATTACHMENT} formNoValidate />
-                      <RoundIconButton type="submit" icon={ICON_NAME.CHECK} formNoValidate />
-                      <RoundIconButton type="submit" icon={ICON_NAME.CLOSE} formNoValidate />
-                      <RoundIconButton type="submit" icon={ICON_NAME.GIF} formNoValidate />
-                      <RoundIconButton type="submit" icon={ICON_NAME.IMAGE} formNoValidate />
-                      <RoundIconButton type="submit" icon={ICON_NAME.PING} formNoValidate />
-                      <RoundIconButton type="submit" icon={ICON_NAME.PLANE} formNoValidate />
-                      <RoundIconButton type="submit" icon={ICON_NAME.PROFILE} formNoValidate />
-                      <RoundIconButton type="submit" icon={ICON_NAME.TEAM} formNoValidate />
-                      <RoundIconButton type="submit" icon={ICON_NAME.TIMED} formNoValidate />
-                      <RoundIconButton type="submit" icon={ICON_NAME.TRASH} formNoValidate />
-                      <RoundIconButton type="submit" formNoValidate>
-                        M
-                      </RoundIconButton>
-                    </InputSubmitCombo>
+                    <Tooltip text="Lots of icons here">
+                      <InputSubmitCombo>
+                        <Input placeholder="InputSubmitCombo" name="password" />
+                        <RoundIconButton type="submit" icon={ICON_NAME.ARROW} formNoValidate />
+                        <RoundIconButton type="submit" icon={ICON_NAME.ATTACHMENT} formNoValidate />
+                        <RoundIconButton type="submit" icon={ICON_NAME.CHECK} formNoValidate />
+                        <RoundIconButton type="submit" icon={ICON_NAME.CLOSE} formNoValidate />
+                        <RoundIconButton type="submit" icon={ICON_NAME.GIF} formNoValidate />
+                        <RoundIconButton type="submit" icon={ICON_NAME.IMAGE} formNoValidate />
+                        <RoundIconButton type="submit" icon={ICON_NAME.PING} formNoValidate />
+                        <RoundIconButton type="submit" icon={ICON_NAME.PLANE} formNoValidate />
+                        <RoundIconButton type="submit" icon={ICON_NAME.PROFILE} formNoValidate />
+                        <RoundIconButton type="submit" icon={ICON_NAME.TEAM} formNoValidate />
+                        <RoundIconButton type="submit" icon={ICON_NAME.TIMED} formNoValidate />
+                        <RoundIconButton type="submit" icon={ICON_NAME.TRASH} formNoValidate />
+                        <RoundIconButton type="submit" formNoValidate>
+                          M
+                        </RoundIconButton>
+                      </InputSubmitCombo>
+                    </Tooltip>
                   </InputBlock>
                 </Form>
               </ShakeBox>

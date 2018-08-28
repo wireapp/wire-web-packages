@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.3.14"></a>
+## [0.3.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@0.3.13...@wireapp/bot-api@0.3.14) (2018-08-28)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+<a name="0.3.13"></a>
+## [0.3.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@0.3.12...@wireapp/bot-api@0.3.13) (2018-08-28)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+<a name="0.3.12"></a>
+## [0.3.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@0.3.11...@wireapp/bot-api@0.3.12) (2018-08-27)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
 <a name="0.3.11"></a>
 ## [0.3.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@0.3.10...@wireapp/bot-api@0.3.11) (2018-08-24)
 
