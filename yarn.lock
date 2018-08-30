@@ -775,9 +775,9 @@
   dependencies:
     tweetnacl "^1.0.0"
 
-"@types/filesystem@*", "@types/filesystem@0.0.28":
-  version "0.0.28"
-  resolved "https://registry.yarnpkg.com/@types/filesystem/-/filesystem-0.0.28.tgz#3fd7735830f2c7413cb5ac45780bc45904697b0e"
+"@types/filesystem@*", "@types/filesystem@0.0.29":
+  version "0.0.29"
+  resolved "https://registry.yarnpkg.com/@types/filesystem/-/filesystem-0.0.29.tgz#ee3748eb5be140dcf980c3bd35f11aec5f7a3748"
   dependencies:
     "@types/filewriter" "*"
 
