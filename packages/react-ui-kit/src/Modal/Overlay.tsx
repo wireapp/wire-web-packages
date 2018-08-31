@@ -23,7 +23,7 @@ import {COLOR} from '../Identity';
 import {ANIMATION, DURATION, EASE} from '../Identity/motions';
 
 interface OverlayProps {
-  children?: Node | null;
+  children?: Node;
 }
 
 const OverlayWrapper = styled.div`

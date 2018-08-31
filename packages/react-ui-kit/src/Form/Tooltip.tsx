@@ -17,11 +17,19 @@
  *
  */
 
-import {COLOR} from '../Identity';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import {COLOR} from '../Identity';
 
-const Tooltip = styled.div.attrs({'data-text': ({text}) => text})`
+interface ToolTipProps {
+  bottom?: boolean;
+  disabled?: boolean;
+  left?: boolean;
+  light?: boolean;
+  right?: boolean;
+  text?: string;
+}
+
+const Tooltip = styled.div.attrs<ToolTipProps>({'data-text': ({text}) => text})`
   position: relative;
   display: flex;
   flex-direction: column;
@@ -90,18 +98,11 @@ const Tooltip = styled.div.attrs({'data-text': ({text}) => text})`
   }`};
 `;
 
-Tooltip.propTypes = {
-  bottom: PropTypes.bool,
-  disabled: PropTypes.bool,
-  left: PropTypes.bool,
-  right: PropTypes.bool,
-  text: PropTypes.string,
-};
-
 Tooltip.defaultProps = {
   bottom: false,
   disabled: false,
   left: false,
+  light: false,
   right: false,
   text: '',
 };

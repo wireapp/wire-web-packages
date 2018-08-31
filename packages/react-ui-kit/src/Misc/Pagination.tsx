@@ -17,12 +17,20 @@
  *
  */
 
-import {Bold, Link} from '../Text';
+import * as React from 'react';
 import {COLOR} from '../Identity';
 import {FlexBox} from '../Layout';
-import React from 'react';
+import {Bold, Link} from '../Text';
 
-const Pagination = ({
+interface PaginationProps {
+  currentPage?: number;
+  goPage?: (page: number) => void;
+  nextPageComponent?: any;
+  numberOfPages?: number;
+  previousPageComponent?: any;
+}
+
+const Pagination: React.SFC<PaginationProps> = ({
   currentPage = 0,
   numberOfPages = 1,
   goPage,

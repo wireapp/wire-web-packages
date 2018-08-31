@@ -21,7 +21,7 @@ import {defaultProps} from 'recompose';
 import styled from 'styled-components';
 import {COLOR} from '../Identity';
 
-export interface TextProps extends Text {
+export interface TextProps {
   block?: boolean;
   bold?: boolean;
   center?: boolean;
@@ -31,6 +31,8 @@ export interface TextProps extends Text {
   noWrap?: boolean;
   textTransform?: string;
   truncate?: boolean;
+  style?: React.CSSProperties;
+  onClick?: () => void;
 }
 
 const Text = styled.span<TextProps>`

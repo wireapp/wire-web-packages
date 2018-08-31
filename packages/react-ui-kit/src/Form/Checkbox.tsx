@@ -23,14 +23,14 @@ import {COLOR} from '../Identity';
 import {Text} from '../Text';
 import {Input, InputProps} from './Input';
 
+interface StyledLabelProps {
+  disabled?: boolean;
+}
+
 interface CheckboxProps extends InputProps, StyledLabelProps {
   children?: Node;
   id?: string;
   style?: React.CSSProperties;
-}
-
-interface StyledLabelProps {
-  disabled?: boolean;
 }
 
 const StyledContainerCheckbox = styled.div`

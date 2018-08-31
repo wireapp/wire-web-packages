@@ -83,7 +83,7 @@ const ModalBackground = styled(OverlayBackground)`
 const noop = () => {};
 
 interface ModalProps {
-  children?: Node | null;
+  children?: Node;
   fullscreen?: boolean;
   onBackgroundClick: () => void;
   onClose: () => void;

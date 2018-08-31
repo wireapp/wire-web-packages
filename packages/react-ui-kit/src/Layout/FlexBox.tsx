@@ -17,10 +17,16 @@
  *
  */
 
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-const FlexBox = styled.div`
+interface FlexBoxProps {
+  align?: string;
+  column?: boolean;
+  justify?: string;
+  wrap?: boolean;
+}
+
+const FlexBox = styled.div<FlexBoxProps>`
   display: flex;
   flex-direction: ${props => (props.column ? 'column' : 'row')};
   align-items: ${props => props.align};
@@ -28,12 +34,6 @@ const FlexBox = styled.div`
   flex-wrap: ${props => (props.wrap ? 'wrap' : 'no-wrap')};
 `;
 
-FlexBox.propTypes = {
-  align: PropTypes.string,
-  column: PropTypes.bool,
-  justify: PropTypes.string,
-  wrap: PropTypes.bool,
-};
 FlexBox.defaultProps = {
   align: 'flex-start',
   column: false,

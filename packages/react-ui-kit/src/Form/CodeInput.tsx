@@ -43,7 +43,7 @@ interface CodeInputProps {
   autoFocus?: boolean;
   digits?: number;
   onCodeComplete?: (completeCode?: string) => void;
-  style?: React.CSSProperties | null;
+  style?: React.CSSProperties;
 }
 
 interface CodeInputStateProps {
