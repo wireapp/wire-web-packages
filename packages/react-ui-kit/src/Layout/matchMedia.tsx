@@ -1,9 +1,22 @@
-import PropTypes from 'prop-types';
-import {QUERY} from '../mediaQueries';
-import React from 'react';
+import * as React from 'react';
 import {defaultProps} from 'recompose';
+import {QUERY} from '../mediaQueries';
 
-class MatchMedia extends React.PureComponent {
+interface MatchMediaProps {
+  children: Node;
+  not?: boolean;
+  query: string;
+}
+
+class MatchMedia extends React.PureComponent<MatchMediaProps> {
+  defaultProps: MatchMediaProps = {
+    not: false,
+  };
+  matchMedia: MediaQueryList;
+  state: {
+    isMatching: boolean;
+  };
+
   constructor(props) {
     super(props);
     this.matchMedia = window.matchMedia(`(${props.query})`);
@@ -24,16 +37,6 @@ class MatchMedia extends React.PureComponent {
     return isMatching ? this.props.children : null;
   }
 }
-
-MatchMedia.propTypes = {
-  children: PropTypes.node.isRequired,
-  not: PropTypes.bool,
-  query: PropTypes.string.isRequired,
-};
-
-MatchMedia.defaultProps = {
-  not: false,
-};
 
 const IsDesktop = defaultProps({query: QUERY.desktop})(MatchMedia);
 const IsDesktopXL = defaultProps({query: QUERY.desktopXL})(MatchMedia);
