@@ -78,11 +78,14 @@ const MenuModalBackground = styled(OverlayBackground)<React.HTMLAttributes<HTMLD
 const noop = () => {};
 
 interface MenuModalProps {
-  children?: Node;
   onBackgroundClick?: () => void;
 }
 
-const MenuModal = ({children = null, onBackgroundClick = noop, ...props}: MenuModalProps) => (
+const MenuModal = ({
+  children = null,
+  onBackgroundClick = noop,
+  ...props
+}: MenuModalProps & React.HTMLAttributes<HTMLDivElement>) => (
   <MenuModalWrapper {...props}>
     <MenuModalBody>
       <MenuModalContent>{children}</MenuModalContent>
@@ -92,11 +95,10 @@ const MenuModal = ({children = null, onBackgroundClick = noop, ...props}: MenuMo
 );
 
 interface MenuItemProps {
-  children?: Node;
   onClick?: () => void;
 }
 
-const MenuItem = ({children = null, ...props}: MenuItemProps) => (
+const MenuItem = ({children = null, ...props}: MenuItemProps & React.HTMLAttributes<HTMLLIElement>) => (
   <MenuItemContent {...props}>{children}</MenuItemContent>
 );
 
