@@ -182,7 +182,7 @@ class HeaderMenu extends React.PureComponent<HeaderMenuProps & React.HTMLAttribu
 }
 
 MenuLink.defaultProps = {
-  ...MenuLink.defaultProps,
+  ...Link.defaultProps,
   button: false,
 };
 
