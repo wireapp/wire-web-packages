@@ -39,7 +39,7 @@ export default class PriorityQueue {
     this.config = {...this.config, ...config};
   }
 
-  public add(thunkedPromise: any, priority: Priority = Priority.MEDIUM, label?: string): Promise<any> {
+  public add(thunkedPromise: any, priority: Priority = Priority.MEDIUM, label?: string): Promise<void> {
     if (typeof thunkedPromise !== 'function') {
       thunkedPromise = () => thunkedPromise;
     }
