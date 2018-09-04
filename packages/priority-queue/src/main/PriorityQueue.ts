@@ -55,7 +55,7 @@ export default class PriorityQueue {
       queueObject.timestamp = Date.now() + this.size;
       this.queue.push(queueObject);
       this.queue.sort(this.config.comparator);
-      this.run();
+      return this.run();
     });
   }
 
@@ -83,13 +83,13 @@ export default class PriorityQueue {
     return this.queue.length;
   }
 
-  private resolveItems(): void {
+  private resolveItems(): Promise<void> {
     const queueObject = this.first;
     if (!queueObject) {
-      return;
+      return Promise.resolve();
     }
 
-    Promise.resolve(queueObject.fn())
+    return Promise.resolve(queueObject.fn())
       .then((result: any) => {
         return {shouldContinue: true, wrappedResolve: () => queueObject.resolve(result)};
       })
@@ -107,21 +107,22 @@ export default class PriorityQueue {
       .then(({shouldContinue, wrappedResolve}: {shouldContinue: boolean; wrappedResolve?: Function}) => {
         if (shouldContinue) {
           if (wrappedResolve) {
-            wrappedResolve();
+            return wrappedResolve();
           }
           this.isPending = false;
           const nextItem: Item | undefined = this.queue.shift();
           if (nextItem) {
-            this.resolveItems();
+            return this.resolveItems();
           }
+          return;
         }
       });
   }
 
-  private run(): void {
+  private async run(): Promise<void> {
     if (!this.isPending && this.first) {
       this.isPending = true;
-      this.resolveItems();
+      await this.resolveItems();
     }
   }
 
