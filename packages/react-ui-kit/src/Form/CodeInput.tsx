@@ -30,7 +30,7 @@ interface CodeInputState {
   values?: number[];
 }
 
-const CodeInputWrapper = styled.div`
+const CodeInputWrapper = styled.div<React.HTMLAttributes<HTMLDivElement>>`
   display: flex;
   justify-content: center;
 `;
