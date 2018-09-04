@@ -24,8 +24,7 @@
   "license": "GPL-3.0",
   "main": "dist/index.js",
   "files": [
-    "dist",
-    "README.md"
+    "dist"
   ],
   "name": "@wireapp/react-ui-kit",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit",
