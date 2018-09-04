@@ -24,12 +24,15 @@ import {ANIMATION, DURATION} from '../Identity/motions';
 const pathLength = 125.68;
 
 interface LoadingComponentProps {
-  className: string;
   progress?: number;
   size: number;
 }
 
-function LoadingComponent({className, progress = null, size}: LoadingComponentProps) {
+function LoadingComponent({
+  className,
+  progress = null,
+  size,
+}: LoadingComponentProps & React.HTMLAttributes<SVGElement>) {
   const additionalProps: {
     strokeDashoffset?: string;
   } = {};
