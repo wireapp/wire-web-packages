@@ -26,7 +26,7 @@ interface CodeInputProps {
   onCodeComplete?: (completeCode?: string) => void;
 }
 
-interface CodeInputStateProps {
+interface CodeInputState {
   values?: number[];
 }
 
@@ -49,10 +49,7 @@ const DigitInput = styled.input<React.HTMLAttributes<HTMLInputElement>>`
   }
 `;
 
-class CodeInput extends React.PureComponent<
-  CodeInputProps & React.HTMLAttributes<HTMLInputElement>,
-  CodeInputStateProps
-> {
+class CodeInput extends React.PureComponent<CodeInputProps & React.HTMLAttributes<HTMLInputElement>, CodeInputState> {
   inputs: HTMLInputElement[];
 
   static defaultProps: CodeInputProps = {
