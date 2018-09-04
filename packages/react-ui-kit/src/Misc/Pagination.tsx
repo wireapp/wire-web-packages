@@ -30,7 +30,7 @@ interface PaginationProps {
   previousPageComponent?: any;
 }
 
-const Pagination: React.SFC<PaginationProps> = ({
+const Pagination: React.SFC<PaginationProps & React.HTMLAttributes<HTMLDivElement>> = ({
   currentPage = 0,
   numberOfPages = 1,
   goPage,

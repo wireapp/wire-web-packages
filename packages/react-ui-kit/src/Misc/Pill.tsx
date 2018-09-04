@@ -47,7 +47,7 @@ const pillAnimation = keyframes`
     }
 `;
 
-const Pill = styled.span.attrs<PillProps>({
+const Pill = styled.span.attrs<PillProps & React.HTMLAttributes<HTMLSpanElement>>({
   'data-uie-name': 'element-pill',
   'data-uie-status': ({type}) => type,
 })`

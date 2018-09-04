@@ -21,7 +21,7 @@ import styled from 'styled-components';
 import media from '../mediaQueries';
 import {GUTTER} from './sizes';
 
-const Columns = styled.div`
+const Columns = styled.div<React.HTMLAttributes<HTMLDivElement>>`
   display: flex;
   margin-left: -${GUTTER}px;
   ${media.mobile`
@@ -29,7 +29,7 @@ const Columns = styled.div`
   `};
 `;
 
-const Column = styled.div`
+const Column = styled.div<React.HTMLAttributes<HTMLDivElement>>`
   display: block;
   flex-grow: 1;
   flex-basis: 0;

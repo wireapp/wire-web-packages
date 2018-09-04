@@ -24,7 +24,7 @@ export interface StyledAppProps {
   backgroundColor?: string;
 }
 
-const StyledApp = styled.div<StyledAppProps>`
+const StyledApp = styled.div<StyledAppProps & React.HTMLAttributes<HTMLDivElement>>`
   background-color: ${props => props.backgroundColor};
   color: ${COLOR.TEXT};
   display: flex;

@@ -20,7 +20,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-interface CodeInputProps extends React.HTMLAttributes<HTMLDivElement> {
+interface CodeInputProps {
   autoFocus?: boolean;
   digits?: number;
   onCodeComplete?: (completeCode?: string) => void;
@@ -35,7 +35,7 @@ const CodeInputWrapper = styled.div`
   justify-content: center;
 `;
 
-const DigitInput = styled.input`
+const DigitInput = styled.input<React.HTMLAttributes<HTMLInputElement>>`
   line-height: 56px;
   width: 48px;
   font-size: 32px;
@@ -49,7 +49,10 @@ const DigitInput = styled.input`
   }
 `;
 
-class CodeInput extends React.PureComponent<CodeInputProps, CodeInputStateProps> {
+class CodeInput extends React.PureComponent<
+  CodeInputProps & React.HTMLAttributes<HTMLInputElement>,
+  CodeInputStateProps
+> {
   inputs: HTMLInputElement[];
 
   static defaultProps: CodeInputProps = {

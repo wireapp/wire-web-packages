@@ -20,7 +20,7 @@
 import styled from 'styled-components';
 import {GUTTER} from './sizes';
 
-const Content = styled.div`
+const Content = styled.div<React.HTMLAttributes<HTMLDivElement>>`
   flex-grow: 1;
   display: flex;
   flex-direction: column;

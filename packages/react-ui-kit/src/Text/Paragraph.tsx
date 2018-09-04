@@ -17,10 +17,11 @@
  *
  */
 
+import styled from 'styled-components';
 import media from '../mediaQueries';
 import {Text} from './Text';
 
-const Paragraph = Text.withComponent('p').extend`
+const Paragraph = styled(Text.withComponent('p'))<React.HTMLAttributes<HTMLParagraphElement>>`
   margin-top: 0;
   margin-bottom: 16px;
 `;
@@ -30,7 +31,7 @@ Paragraph.defaultProps = {
   block: true,
 };
 
-const Lead = Text.withComponent('p').extend`
+const Lead = styled(Text.withComponent('p'))<React.HTMLAttributes<HTMLParagraphElement>>`
   margin-bottom: 56px;
   margin-top: 0;
   ${media.mobile`

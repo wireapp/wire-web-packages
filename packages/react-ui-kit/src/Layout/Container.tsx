@@ -46,7 +46,7 @@ const LEVEL: Level = {
   xxs: `max-width: ${WIDTH.TINY}px;`,
 };
 
-const Container = styled.div<ContainerProps>`
+const Container = styled.div<ContainerProps & React.HTMLAttributes<HTMLDivElement>>`
   position: relative;
   margin: ${props => (props.verticalCenter ? 'auto' : '0 auto')};
   text-align: ${props => (props.centerText ? 'center' : 'left')};
@@ -71,10 +71,10 @@ Container.defaultProps = {
   verticalCenter: false,
 };
 
-const ContainerLG = defaultProps({level: 'lg'})(Container);
-const ContainerMD = defaultProps({level: 'md'})(Container);
-const ContainerSM = defaultProps({level: 'sm'})(Container);
-const ContainerXS = defaultProps({level: 'xs'})(Container);
-const ContainerXXS = defaultProps({level: 'xxs'})(Container);
+const ContainerLG = defaultProps<ContainerProps & React.HTMLAttributes<HTMLDivElement>>({level: 'lg'})(Container);
+const ContainerMD = defaultProps<ContainerProps & React.HTMLAttributes<HTMLDivElement>>({level: 'md'})(Container);
+const ContainerSM = defaultProps<ContainerProps & React.HTMLAttributes<HTMLDivElement>>({level: 'sm'})(Container);
+const ContainerXS = defaultProps<ContainerProps & React.HTMLAttributes<HTMLDivElement>>({level: 'xs'})(Container);
+const ContainerXXS = defaultProps<ContainerProps & React.HTMLAttributes<HTMLDivElement>>({level: 'xxs'})(Container);
 
 export {Container, ContainerLG, ContainerMD, ContainerSM, ContainerXS, ContainerXXS};

@@ -23,7 +23,7 @@ import {CloseIcon} from '../Icon';
 import {COLOR} from '../Identity';
 import {OverlayBackground, OverlayWrapper} from './Overlay';
 
-const ModalBody = styled.div<{fullscreen?: boolean}>`
+const ModalBody = styled.div<{fullscreen?: boolean} & React.HTMLAttributes<HTMLDivElement>>`
   ${props =>
     props.fullscreen
       ? `
@@ -70,7 +70,7 @@ const ModalClose = styled(CloseIcon)`
   width: 40px;
 `;
 
-const ModalContent = styled.div`
+const ModalContent = styled.div<React.HTMLAttributes<HTMLDivElement>>`
   max-width: 100%;
   overflow-y: auto;
   padding: 40px;
@@ -83,13 +83,18 @@ const ModalBackground = styled(OverlayBackground)`
 const noop = () => {};
 
 interface ModalProps {
-  children?: Node;
   fullscreen?: boolean;
   onBackgroundClick: () => void;
   onClose: () => void;
 }
 
-const Modal: React.SFC<ModalProps> = ({children, fullscreen, onClose, onBackgroundClick, ...props}) => (
+const Modal: React.SFC<ModalProps & React.HTMLAttributes<HTMLDivElement>> = ({
+  children,
+  fullscreen,
+  onClose,
+  onBackgroundClick,
+  ...props
+}) => (
   <OverlayWrapper {...props} data-uie-name="modal">
     <ModalBody fullscreen={fullscreen}>
       <ModalContent>{children}</ModalContent>
@@ -105,7 +110,6 @@ const Modal: React.SFC<ModalProps> = ({children, fullscreen, onClose, onBackgrou
 );
 
 Modal.defaultProps = {
-  children: null,
   fullscreen: false,
   onBackgroundClick: noop,
   onClose: noop,

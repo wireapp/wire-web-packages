@@ -17,11 +17,12 @@
  *
  */
 
+import styled from 'styled-components';
 import {COLOR} from '../Identity';
 import {Link} from './Link';
 import {Text} from './Text';
 
-const Label = Text.withComponent('span');
+const Label = Text.withComponent<React.HTMLAttributes<HTMLSpanElement>>(styled.span``);
 
 Label.defaultProps = {
   ...Text.defaultProps,
@@ -30,6 +31,6 @@ Label.defaultProps = {
   fontSize: '12px',
 };
 
-const LabelLink = Label.withComponent(Link);
+const LabelLink = Label.withComponent<React.HTMLAttributes<HTMLAnchorElement>>(Link);
 
 export {Label, LabelLink};

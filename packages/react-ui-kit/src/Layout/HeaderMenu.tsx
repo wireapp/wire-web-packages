@@ -31,11 +31,11 @@ interface MenuLinkProps {
   button?: boolean;
 }
 
-interface HeaderMenuProps extends React.HTMLAttributes<HTMLDivElement> {
+interface HeaderMenuProps {
   logoElement?: React.ReactNode;
 }
 
-interface HeaderMenuStateProps {
+interface HeaderMenuState {
   isOpen?: boolean;
 }
 
@@ -43,7 +43,7 @@ const MenuWrapper = styled.div`
   height: 64px;
 `;
 
-const MenuContent = styled(Content)<MenuProps>`
+const MenuContent = styled(Content)<MenuProps & React.HTMLAttributes<HTMLDivElement>>`
   height: 64px;
   align-items: center;
   justify-content: space-between;
@@ -57,7 +57,7 @@ const MenuContent = styled(Content)<MenuProps>`
   left: 0;`};
 `;
 
-const MenuItems = styled.div<MenuProps>`
+const MenuItems = styled.div<MenuProps & React.HTMLAttributes<HTMLDivElement>>`
   @media (max-width: 767px){
     display: flex;
     flex-direction: column;
@@ -75,7 +75,7 @@ const MenuItems = styled.div<MenuProps>`
     ${props => props.open && `transform: translateX(0);`}
 `;
 
-const MenuOpenButton = styled.div<MenuProps>`
+const MenuOpenButton = styled.div<MenuProps & React.HTMLAttributes<HTMLDivElement>>`
   @media (min-width: 768px) {
     display: none;
   }
@@ -109,11 +109,11 @@ const MenuOpenButton = styled.div<MenuProps>`
   `};
 `;
 
-const MenuLogo = styled.div`
+const MenuLogo = styled.div<React.HTMLAttributes<HTMLDivElement>>`
   z-index: 2;
 `;
 
-const MenuLink = styled(Link)<MenuLinkProps>`
+const MenuLink = styled(Link)<MenuLinkProps & React.HTMLAttributes<HTMLAnchorElement>>`
   @media (min-width: 768px) {
     margin: 12px 26px 0 10px;
 
@@ -142,9 +142,8 @@ const MenuLink = styled(Link)<MenuLinkProps>`
   }
 `;
 
-class HeaderMenu extends React.PureComponent<HeaderMenuProps, HeaderMenuStateProps> {
+class HeaderMenu extends React.PureComponent<HeaderMenuProps & React.HTMLAttributes<HTMLDivElement>, HeaderMenuState> {
   static defaultProps: HeaderMenuProps = {
-    children: null,
     logoElement: null,
   };
 

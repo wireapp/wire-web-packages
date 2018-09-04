@@ -21,7 +21,7 @@ import styled from 'styled-components';
 import {COLOR} from '../Identity';
 import {GUTTER} from '../Layout/sizes';
 
-const Line = styled.hr`
+const Line = styled.hr<React.HTMLAttributes<HTMLHRElement>>`
   border: none;
   border-bottom: 1px solid ${props => props.color};
   margin-top: ${GUTTER}px;

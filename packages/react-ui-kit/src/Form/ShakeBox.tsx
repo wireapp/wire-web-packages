@@ -19,7 +19,7 @@
 
 import * as React from 'react';
 
-interface ShakeBoxProps extends React.HTMLAttributes<HTMLDivElement> {
+interface ShakeBoxProps {
   amp?: number;
   damping?: number;
   speed?: number;
@@ -31,7 +31,7 @@ interface ShakeBoxStateProps {
   offset?: number;
 }
 
-class ShakeBox extends React.PureComponent<ShakeBoxProps, ShakeBoxStateProps> {
+class ShakeBox extends React.PureComponent<ShakeBoxProps & React.HTMLAttributes<HTMLDivElement>, ShakeBoxStateProps> {
   state = {isShaking: false, offset: 0};
   currentOffset = 0;
   targetOffset?: number;

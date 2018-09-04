@@ -21,13 +21,17 @@ import styled from 'styled-components';
 import {COLOR} from '../Identity';
 import {Input} from './Input';
 
+export interface SelectProps {
+  disabled?: boolean;
+}
+
 const ArrowDown = `
   <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
     <path fill="${COLOR.TEXT}" fillRule="evenodd" d="M0 2h8L4 7" />
   </svg>
 `;
 
-const Select = styled(Input.withComponent('select'))`
+const Select = styled<SelectProps & React.HTMLAttributes<HTMLSelectElement>>(Input.withComponent('select'))`
   background-color: ${props => (props.disabled ? COLOR.GRAY_LIGHTEN_92 : COLOR.WHITE)};
   ${props =>
     !props.disabled &&

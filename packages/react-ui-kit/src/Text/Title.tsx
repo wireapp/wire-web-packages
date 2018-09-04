@@ -17,10 +17,11 @@
  *
  */
 
+import styled from 'styled-components';
 import {COLOR} from '../Identity';
 import {Text} from './Text';
 
-const Title = Text.withComponent('div').extend`
+const Title = styled(Text.withComponent('div'))<React.HTMLAttributes<HTMLDivElement>>`
   font-weight: 600;
   margin-bottom: 8px;
   color: ${COLOR.GRAY};

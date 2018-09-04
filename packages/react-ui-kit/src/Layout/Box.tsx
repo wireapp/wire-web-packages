@@ -20,7 +20,7 @@
 import styled from 'styled-components';
 import {COLOR} from '../Identity';
 
-const Box = styled.div`
+const Box = styled.div<React.HTMLAttributes<HTMLDivElement>>`
   border: 2px solid ${COLOR.GRAY_LIGHTEN_72};
   border-radius: 8px;
   padding: 16px 32px;

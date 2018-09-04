@@ -26,6 +26,7 @@ export interface TextProps {
   block?: boolean;
   bold?: boolean;
   center?: boolean;
+  color?: string;
   fontSize?: string;
   light?: boolean;
   muted?: boolean;

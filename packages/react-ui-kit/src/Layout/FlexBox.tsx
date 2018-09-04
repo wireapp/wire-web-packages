@@ -26,7 +26,7 @@ interface FlexBoxProps {
   wrap?: boolean;
 }
 
-const FlexBox = styled.div<FlexBoxProps>`
+const FlexBox = styled.div<FlexBoxProps & React.HTMLAttributes<HTMLDivElement>>`
   display: flex;
   flex-direction: ${props => (props.column ? 'column' : 'row')};
   align-items: ${props => props.align};

@@ -23,12 +23,12 @@ import {COLOR} from '../Identity/';
 import {ANIMATION, DURATION, EASE} from '../Identity/motions';
 import {OverlayBackground, OverlayWrapper} from '../Modal/Overlay';
 
-const MenuModalWrapper = styled(OverlayWrapper)`
+const MenuModalWrapper = styled(OverlayWrapper)<React.HTMLAttributes<HTMLDivElement>>`
   padding: 0;
   overflow-y: hidden;
 `;
 
-const MenuModalBody = styled.div`
+const MenuModalBody = styled.div<React.HTMLAttributes<HTMLDivElement>>`
   position: relative;
   box-shadow: 0 16px 64px 0 rgba(0, 0, 0, 0.16);
   justify-content: space-between;
@@ -48,7 +48,7 @@ const MenuModalBody = styled.div`
   }
 `;
 
-const MenuModalContent = styled.ul`
+const MenuModalContent = styled.ul<React.HTMLAttributes<HTMLUListElement>>`
   min-width: 100%;
   max-width: 100%;
   padding: 0;
@@ -61,7 +61,7 @@ const MenuModalContent = styled.ul`
   }
 `;
 
-const MenuItemContent = styled.li`
+const MenuItemContent = styled.li<React.HTMLAttributes<HTMLLIElement>>`
   color: ${COLOR.TEXT};
   display: flex;
   align-items: center;
@@ -71,7 +71,7 @@ const MenuItemContent = styled.li`
   list-style-type: none;
 `;
 
-const MenuModalBackground = styled(OverlayBackground)`
+const MenuModalBackground = styled(OverlayBackground)<React.HTMLAttributes<HTMLDivElement>>`
   background: rgba(50, 54, 57, 0.4);
 `;
 

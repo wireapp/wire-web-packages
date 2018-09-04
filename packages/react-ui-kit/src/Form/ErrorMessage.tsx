@@ -17,10 +17,11 @@
  *
  */
 
+import styled from 'styled-components';
 import {COLOR} from '../Identity';
-import {Text} from '../Text';
+import {Text, TextProps} from '../Text';
 
-const ErrorMessage = Text.extend`
+const ErrorMessage = styled(Text)<TextProps & React.HTMLAttributes<HTMLSpanElement>>`
   display: block;
   margin-bottom: 12px;
   a {

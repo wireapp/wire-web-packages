@@ -70,7 +70,7 @@ interface LoadingProps {
   size?: number;
 }
 
-const Loading = styled<LoadingProps>(LoadingComponent)`
+const Loading = styled<LoadingProps & React.HTMLAttributes<SVGElement>>(LoadingComponent)`
   ${props =>
     props.progress === null &&
     css`

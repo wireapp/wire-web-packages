@@ -29,7 +29,7 @@ interface ToolTipProps {
   text?: string;
 }
 
-const Tooltip = styled.div.attrs<ToolTipProps>({'data-text': ({text}) => text})`
+const Tooltip = styled.div.attrs<ToolTipProps & React.HTMLAttributes<HTMLDivElement>>({'data-text': ({text}) => text})`
   position: relative;
   display: flex;
   flex-direction: column;

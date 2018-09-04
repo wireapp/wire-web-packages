@@ -19,24 +19,23 @@
 
 import * as Color from 'color';
 import * as React from 'react';
+import styled from 'styled-components';
 import {COLOR} from '../Identity';
 import {defaultTransition} from '../Identity/motions';
 import {Text, TextProps} from './Text';
 
 interface LinkProps extends TextProps {
-  color?: string;
-  component?: string;
+  component?: React.ComponentType;
 }
 
-const Link: React.SFC<LinkProps> = ({color, component, ...props}) => {
+const Link: React.SFC<LinkProps & React.HTMLAttributes<HTMLAnchorElement>> = ({color, component, ...props}) => {
   const darker = 0.16;
   const hoverColor = Color(color)
     .mix(Color(COLOR.BLACK), darker)
     .toString();
-  const StyledLink = Text.withComponent(component as any).extend`
+  const StyledLink = styled(Text.withComponent(component))`
     text-decoration: none;
-    ${defaultTransition}
-    cursor: pointer;
+    ${defaultTransition} cursor: pointer;
     color: ${color};
 
     &:visited,
@@ -52,10 +51,9 @@ const Link: React.SFC<LinkProps> = ({color, component, ...props}) => {
 };
 
 Link.defaultProps = {
-  ...Link.defaultProps,
   bold: true,
   color: COLOR.LINK,
-  component: 'a',
+  component: styled.a``,
   fontSize: '11px',
   textTransform: 'uppercase',
 };

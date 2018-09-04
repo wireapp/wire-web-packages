@@ -21,7 +21,7 @@ import styled from 'styled-components';
 import {COLOR} from '../Identity';
 import {Input, InputSubmitCombo} from './';
 
-const InputBlock = styled.div`
+const InputBlock = styled.div<React.HTMLAttributes<HTMLDivElement>>`
   background-color: ${COLOR.GRAY_LIGHTEN_88};
   border-radius: 4px;
   box-shadow: inset 16px 16px 0 ${COLOR.WHITE}, inset -16px -16px 0 ${COLOR.WHITE};

@@ -22,11 +22,9 @@ import styled from 'styled-components';
 import {COLOR} from '../Identity';
 import {ANIMATION, DURATION, EASE} from '../Identity/motions';
 
-interface OverlayProps {
-  children?: Node;
-}
+interface OverlayProps {}
 
-const OverlayWrapper = styled.div`
+const OverlayWrapper = styled.div<React.HTMLAttributes<HTMLDivElement>>`
   position: fixed;
   display: flex;
   top: 0;
@@ -38,7 +36,7 @@ const OverlayWrapper = styled.div`
   overflow-y: auto;
 `;
 
-const OverlayContent = styled.div`
+const OverlayContent = styled.div<React.HTMLAttributes<HTMLDivElement>>`
   max-width: 100%;
   overflow-y: auto;
   position: relative;
@@ -59,7 +57,7 @@ const OverlayContent = styled.div`
   }
 `;
 
-const OverlayBackground = styled.div`
+const OverlayBackground = styled.div<React.HTMLAttributes<HTMLDivElement>>`
   position: fixed;
   top: 0px;
   left: 0px;
@@ -70,7 +68,7 @@ const OverlayBackground = styled.div`
   animation: ${ANIMATION.fadeIn} ${DURATION.PROACTIVE_SLOW} ${EASE.QUART};
 `;
 
-const Overlay = ({children = null, ...props}: OverlayProps) => (
+const Overlay = ({children = null, ...props}: OverlayProps & React.HTMLAttributes<HTMLDivElement>) => (
   <OverlayWrapper {...props} data-uie-name="modal">
     <OverlayContent>{children}</OverlayContent>
     <OverlayBackground data-uie-name="overlay-background" />

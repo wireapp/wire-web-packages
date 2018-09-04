@@ -18,6 +18,7 @@
  */
 
 import * as React from 'react';
+import styled from 'styled-components';
 import {COLOR} from '../Identity';
 import media from '../mediaQueries';
 import {Text} from './Text';
@@ -34,11 +35,9 @@ interface HeadingProps {
   noWrap?: boolean;
   textTransform?: string;
   truncate?: boolean;
-  style?: React.CSSProperties;
-  onClick?: () => void;
 }
 
-const H1 = Text.withComponent('h1').extend<HeadingProps>`
+const H1 = styled(Text.withComponent('h1'))<HeadingProps & React.HTMLAttributes<HTMLHeadingElement>>`
   font-size: 48px;
   font-weight: 300;
   line-height: 56px;
@@ -48,10 +47,10 @@ const H1 = Text.withComponent('h1').extend<HeadingProps>`
   ${media.mobile`
     font-size: 40px;
     line-height: 48px;
-  `}
+  `};
 `;
 
-const H2 = Text.withComponent('h2').extend<HeadingProps>`
+const H2 = styled(Text.withComponent('h2'))<HeadingProps & React.HTMLAttributes<HTMLHeadingElement>>`
   font-size: 24px;
   font-weight: 700;
   line-height: 32px;
@@ -63,23 +62,23 @@ const H2 = Text.withComponent('h2').extend<HeadingProps>`
     line-height: 28px;
     margin-bottom: 20px;
     margin-top: 44px;
-  `}
+  `};
 `;
 
-const H3 = Text.withComponent('h3').extend<HeadingProps>`
+const H3 = styled(Text.withComponent('h3'))<HeadingProps & React.HTMLAttributes<HTMLHeadingElement>>`
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 16px;
 `;
 
-const H4 = Text.withComponent('h4').extend<HeadingProps>`
+const H4 = styled(Text.withComponent('h4'))<HeadingProps & React.HTMLAttributes<HTMLHeadingElement>>`
   font-size: 11px;
   font-weight: 300;
   margin-bottom: 5px;
   margin-top: 20px;
 `;
 
-const Heading: React.SFC<HeadingProps> = ({level, ...props}) => {
+const Heading: React.SFC<HeadingProps & React.HTMLAttributes<HTMLHeadingElement>> = ({level, ...props}) => {
   switch (level) {
     case '2':
       return <H2 {...props} />;

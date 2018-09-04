@@ -37,7 +37,9 @@ const StyledContainerCheckbox = styled.div<React.HTMLAttributes<HTMLDivElement>>
   align-items: center;
 `;
 
-const StyledCheckbox = styled<CheckboxProps & React.HTMLAttributes<HTMLSelectElement>>(Input.withComponent('select'))`
+const StyledCheckbox = styled<React.HTMLAttributes<HTMLSelectElement>>(Input.withComponent(styled.select``))<
+  CheckboxProps & React.HTMLAttributes<HTMLSelectElement>
+>`
   opacity: 0;
   height: 16px;
   width: 16px;
