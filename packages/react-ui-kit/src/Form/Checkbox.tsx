@@ -27,20 +27,17 @@ interface StyledLabelProps {
   disabled?: boolean;
 }
 
-interface CheckboxProps extends React.HTMLAttributes<HTMLInputElement>, InputProps, StyledLabelProps {
+interface CheckboxProps extends InputProps, StyledLabelProps {
   id?: string;
-  style?: React.CSSProperties;
 }
 
-const StyledContainerCheckbox = styled.div`
+const StyledContainerCheckbox = styled.div<React.HTMLAttributes<HTMLDivElement>>`
   display: flex;
   justify-content: flex-start;
   align-items: center;
 `;
 
-const StyledCheckbox = Input.withComponent('input').extend.attrs({
-  type: 'checkbox',
-})`
+const StyledCheckbox = styled<CheckboxProps & React.HTMLAttributes<HTMLSelectElement>>(Input.withComponent('select'))`
   opacity: 0;
   height: 16px;
   width: 16px;
@@ -50,7 +47,7 @@ const StyledCheckbox = Input.withComponent('input').extend.attrs({
 const checkSvg =
   '<svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 8 6"><path fill="white" d="M2.8 6L8 .7 7.3 0 2.8 4.6.7 2.4l-.7.7z"/></svg>';
 
-const StyledLabel = styled.label<StyledLabelProps>`
+const StyledLabel = styled.label<StyledLabelProps & React.HTMLAttributes<HTMLLabelElement>>`
   ${({disabled}) => (disabled ? 'opacity: .56' : '')}
   display: flex;
   &::before {
@@ -74,7 +71,13 @@ const StyledLabel = styled.label<StyledLabelProps>`
   }
 `;
 
-const Checkbox: React.SFC<CheckboxProps> = ({id, children, style, disabled, ...props}) => {
+const Checkbox: React.SFC<CheckboxProps & React.HTMLAttributes<HTMLSelectElement>> = ({
+  id,
+  children,
+  style,
+  disabled,
+  ...props
+}) => {
   if (!id) {
     id = Math.random().toString();
   }
@@ -88,7 +91,7 @@ const Checkbox: React.SFC<CheckboxProps> = ({id, children, style, disabled, ...p
   );
 };
 
-const CheckboxLabel = Text.extend`
+const CheckboxLabel = styled(Text)`
   a {
     text-decoration: none;
     color: ${COLOR.LINK};
@@ -96,7 +99,6 @@ const CheckboxLabel = Text.extend`
 `;
 
 CheckboxLabel.defaultProps = {
-  ...Text.defaultProps,
   bold: true,
   color: COLOR.GRAY_DARKEN_24,
   fontSize: '11px',
@@ -104,8 +106,6 @@ CheckboxLabel.defaultProps = {
 };
 
 Checkbox.defaultProps = {
-  ...Checkbox.defaultProps,
-  children: null,
   id: null,
 };
 

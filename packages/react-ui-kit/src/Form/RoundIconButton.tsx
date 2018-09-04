@@ -18,6 +18,7 @@
  */
 
 import * as React from 'react';
+import styled from 'styled-components';
 import {
   ArrowIcon,
   AttachmentIcon,
@@ -36,10 +37,8 @@ import {
 import {COLOR} from '../Identity';
 import {defaultTransition} from '../Identity/motions';
 
-export interface RoundIconButtonProps {
-  children?: Node;
+export interface RoundIconButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   color?: string;
-  disabled?: boolean;
   icon?: ICON_NAME;
   iconColor?: string;
   iconHeight?: number;
@@ -47,23 +46,23 @@ export interface RoundIconButtonProps {
   size?: number;
 }
 
-export interface ButtonProps {
+export interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
+  disabled?: boolean;
   size?: number;
 }
 
 const darkenAmount = 0.08;
 
-const Button = RoundContainer.withComponent('button').extend<ButtonProps>`
+const Button = styled<ButtonProps>(RoundContainer.withComponent('button'))`
   background-color: ${props => (props.disabled ? COLOR.DISABLED : props.color)};
   min-width: ${props => props.size}px;
   outline: none;
   padding: 0;
   cursor: ${props => (props.disabled ? 'default' : 'pointer')};
-  ${defaultTransition}
-  &:hover,
+  ${defaultTransition} &:hover,
   &:focus {
-    background-color: ${props => (props.disabled ? COLOR.DISABLED : COLOR.shade(props.color, darkenAmount))}
-   }
+    background-color: ${props => (props.disabled ? COLOR.DISABLED : COLOR.shade(props.color, darkenAmount))};
+  }
 `;
 
 enum ICON_NAME {
@@ -140,13 +139,8 @@ const RoundIconButton: React.SFC<RoundIconButtonProps> = ({
 );
 
 RoundIconButton.defaultProps = {
-  children: null,
   color: COLOR.BLUE,
-  disabled: false,
-  icon: null,
   iconColor: COLOR.WHITE,
-  iconHeight: null,
-  iconWidth: null,
   size: 32,
 };
 

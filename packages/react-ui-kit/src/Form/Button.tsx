@@ -17,11 +17,12 @@
  *
  */
 
+import styled from 'styled-components';
 import {COLOR} from '../Identity';
 import {defaultTransition} from '../Identity/motions';
-import {Text} from '../Text';
+import {Text, TextProps} from '../Text';
 
-interface ButtonProps {
+interface ButtonProps extends TextProps {
   backgroundColor?: string;
   block?: boolean;
   disabled?: boolean;
@@ -29,8 +30,9 @@ interface ButtonProps {
 }
 
 const darkenAmount = 0.06;
-const Button = Text.withComponent('button').extend<ButtonProps>`
-  /* appearance */
+const Button = styled<ButtonProps & React.HTMLAttributes<HTMLButtonElement>>(
+  Text.withComponent(styled.button<ButtonProps & React.HTMLAttributes<HTMLButtonElement>>``)
+)`
   background-color: ${props => (props.disabled ? COLOR.DISABLED : props.backgroundColor)};
   border-radius: 8px;
   border: 0;
@@ -39,9 +41,7 @@ const Button = Text.withComponent('button').extend<ButtonProps>`
   text-decoration: none;
   margin-bottom: 16px;
   touch-action: manipulation;
-  ${defaultTransition}
-
-  /* positioning */
+  ${defaultTransition};
   height: 48px;
   line-height: 48px;
   max-width: 100%;
@@ -51,14 +51,12 @@ const Button = Text.withComponent('button').extend<ButtonProps>`
   width: ${props => (props.block ? '100%' : 'auto')};
   &:hover,
   &:focus {
-    /* appearance */
     text-decoration: none;
-    background-color: ${props => (props.disabled ? COLOR.DISABLED : COLOR.shade(props.backgroundColor, darkenAmount))}
-   }
+    background-color: ${props => (props.disabled ? COLOR.DISABLED : COLOR.shade(props.backgroundColor, darkenAmount))};
+  }
 `;
 
 Button.defaultProps = {
-  ...Button.defaultProps,
   backgroundColor: COLOR.BLUE,
   block: false,
   bold: true,
