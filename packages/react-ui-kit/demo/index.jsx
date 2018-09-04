@@ -34,8 +34,8 @@ function render(Component) {
 function runApp() {
   render(Demo);
   if (module.hot) {
-    module.hot.accept('./Demo', () => {
-      const NextApp = require('./Demo').default;
+    module.hot.accept('./Demo.jsx', () => {
+      const NextApp = require('./Demo.jsx').default;
       render(NextApp);
     });
   }
