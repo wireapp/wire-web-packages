@@ -20,6 +20,16 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
+interface CodeInputProps extends React.HTMLAttributes<HTMLDivElement> {
+  autoFocus?: boolean;
+  digits?: number;
+  onCodeComplete?: (completeCode?: string) => void;
+}
+
+interface CodeInputStateProps {
+  values?: number[];
+}
+
 const CodeInputWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -39,17 +49,6 @@ const DigitInput = styled.input`
   }
 `;
 
-interface CodeInputProps {
-  autoFocus?: boolean;
-  digits?: number;
-  onCodeComplete?: (completeCode?: string) => void;
-  style?: React.CSSProperties;
-}
-
-interface CodeInputStateProps {
-  values?: number[];
-}
-
 class CodeInput extends React.PureComponent<CodeInputProps, CodeInputStateProps> {
   inputs: HTMLInputElement[];
 
@@ -57,7 +56,6 @@ class CodeInput extends React.PureComponent<CodeInputProps, CodeInputStateProps>
     autoFocus: false,
     digits: 6,
     onCodeComplete: () => {},
-    style: null,
   };
 
   constructor(props: CodeInputProps) {

@@ -18,6 +18,7 @@
  */
 
 import {Encoder} from 'bazinga64';
+import * as React from 'react';
 import styled, {css} from 'styled-components';
 import {COLOR} from '../Identity';
 

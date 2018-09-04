@@ -28,7 +28,7 @@ interface MatchMediaProps {
 }
 
 class MatchMedia extends React.PureComponent<MatchMediaProps> {
-  defaultProps = {
+  static defaultProps = {
     not: false,
   };
   matchMedia: MediaQueryList;

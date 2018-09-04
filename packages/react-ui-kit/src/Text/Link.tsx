@@ -24,7 +24,7 @@ import {defaultTransition} from '../Identity/motions';
 import {Text, TextProps} from './Text';
 
 interface LinkProps extends TextProps {
-  color?: any;
+  color?: string;
   component?: string;
 }
 

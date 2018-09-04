@@ -18,10 +18,27 @@
  */
 
 import * as React from 'react';
+import {COLOR} from '../Identity';
 import media from '../mediaQueries';
 import {Text} from './Text';
 
-const H1 = Text.withComponent('h1').extend`
+interface HeadingProps {
+  block?: boolean;
+  bold?: boolean;
+  center?: boolean;
+  color?: string;
+  fontSize?: string;
+  level?: string;
+  light?: boolean;
+  muted?: boolean;
+  noWrap?: boolean;
+  textTransform?: string;
+  truncate?: boolean;
+  style?: React.CSSProperties;
+  onClick?: () => void;
+}
+
+const H1 = Text.withComponent('h1').extend<HeadingProps>`
   font-size: 48px;
   font-weight: 300;
   line-height: 56px;
@@ -34,7 +51,7 @@ const H1 = Text.withComponent('h1').extend`
   `}
 `;
 
-const H2 = Text.withComponent('h2').extend`
+const H2 = Text.withComponent('h2').extend<HeadingProps>`
   font-size: 24px;
   font-weight: 700;
   line-height: 32px;
@@ -49,23 +66,18 @@ const H2 = Text.withComponent('h2').extend`
   `}
 `;
 
-const H3 = Text.withComponent('h3').extend`
+const H3 = Text.withComponent('h3').extend<HeadingProps>`
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 16px;
 `;
 
-const H4 = Text.withComponent('h4').extend`
+const H4 = Text.withComponent('h4').extend<HeadingProps>`
   font-size: 11px;
   font-weight: 300;
   margin-bottom: 5px;
   margin-top: 20px;
 `;
-
-interface HeadingProps extends Text {
-  level?: string;
-  block?: boolean;
-}
 
 const Heading: React.SFC<HeadingProps> = ({level, ...props}) => {
   switch (level) {
@@ -81,15 +93,20 @@ const Heading: React.SFC<HeadingProps> = ({level, ...props}) => {
   }
 };
 
-H1.defaultProps = H2.defaultProps = H3.defaultProps = H4.defaultProps = {
-  ...H1.defaultProps,
-  block: true,
-};
+H1.defaultProps = H2.defaultProps = H3.defaultProps = H4.defaultProps = Heading.defaultProps;
 
 Heading.defaultProps = {
-  ...Heading.defaultProps,
   block: true,
+  bold: false,
+  center: false,
+  color: COLOR.TEXT,
+  fontSize: '16px',
   level: '1',
+  light: false,
+  muted: false,
+  noWrap: false,
+  textTransform: 'none',
+  truncate: false,
 };
 
 export {Heading, H1, H2, H3, H4};

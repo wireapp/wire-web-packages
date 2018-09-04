@@ -17,12 +17,10 @@
  *
  */
 
-import * as PropTypes from 'prop-types';
 import * as React from 'react';
 
-interface ShakeBoxProps {
+interface ShakeBoxProps extends React.HTMLAttributes<HTMLDivElement> {
   amp?: number;
-  children?: Node;
   damping?: number;
   speed?: number;
   threshold?: number;

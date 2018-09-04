@@ -67,10 +67,10 @@ Text.defaultProps = {
   truncate: false,
 };
 
-const Bold = defaultProps<Partial<TextProps>>({bold: true})(Text);
-const Small = defaultProps<Partial<TextProps>>({fontSize: '12px'})(Text);
-const Muted = defaultProps<Partial<TextProps>>({muted: true})(Text);
-const Uppercase = defaultProps<Partial<TextProps>>({textTransform: 'uppercase'})(Text);
-const Large = defaultProps<Partial<TextProps>>({fontSize: '48px', light: true})(Text);
+const Bold = defaultProps<TextProps>({bold: true})(Text);
+const Small = defaultProps<TextProps>({fontSize: '12px'})(Text);
+const Muted = defaultProps<TextProps>({muted: true})(Text);
+const Uppercase = defaultProps<TextProps>({textTransform: 'uppercase'})(Text);
+const Large = defaultProps<TextProps>({fontSize: '48px', light: true})(Text);
 
 export {Bold, Muted, Small, Text, Uppercase, Large};

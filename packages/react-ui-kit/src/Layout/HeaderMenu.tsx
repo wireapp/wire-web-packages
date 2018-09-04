@@ -27,6 +27,18 @@ interface MenuProps {
   open?: boolean;
 }
 
+interface MenuLinkProps {
+  button?: boolean;
+}
+
+interface HeaderMenuProps extends React.HTMLAttributes<HTMLDivElement> {
+  logoElement?: React.ReactNode;
+}
+
+interface HeaderMenuStateProps {
+  isOpen?: boolean;
+}
+
 const MenuWrapper = styled.div`
   height: 64px;
 `;
@@ -101,10 +113,6 @@ const MenuLogo = styled.div`
   z-index: 2;
 `;
 
-interface MenuLinkProps {
-  button?: boolean;
-}
-
 const MenuLink = styled(Link)<MenuLinkProps>`
   @media (min-width: 768px) {
     margin: 12px 26px 0 10px;
@@ -134,17 +142,8 @@ const MenuLink = styled(Link)<MenuLinkProps>`
   }
 `;
 
-interface HeaderMenuProps {
-  children?: Node;
-  logoElement?: HTMLDivElement;
-}
-
-interface HeaderMenuStateProps {
-  isOpen?: boolean;
-}
-
 class HeaderMenu extends React.PureComponent<HeaderMenuProps, HeaderMenuStateProps> {
-  defaultProps: HeaderMenuProps = {
+  static defaultProps: HeaderMenuProps = {
     children: null,
     logoElement: null,
   };

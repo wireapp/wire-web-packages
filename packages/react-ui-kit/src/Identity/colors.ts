@@ -18,8 +18,9 @@
  */
 
 /* eslint-disable sort-keys, sort-vars, no-magic-numbers */
-
 import * as Color from 'color';
+
+export type ColorParam = Color | string | ArrayLike<number> | number | {[key: string]: any};
 
 const steps = [];
 const percent = 100;
@@ -28,19 +29,19 @@ for (let index = 8; index < percent; index += 8) {
   steps.push(index);
 }
 
-function shade(color, amount = 0.08) {
+function shade(color: ColorParam, amount = 0.08) {
   return Color(color)
     .mix(Color(BLACK), amount)
     .toString();
 }
 
-function tint(color, amount: number) {
+function tint(color: ColorParam, amount: number) {
   return Color(color)
     .mix(Color(WHITE), amount)
     .toString();
 }
 
-function opaque(color, amount: number) {
+function opaque(color: ColorParam, amount: number) {
   return Color(color)
     .fade(1 - amount)
     .toString();

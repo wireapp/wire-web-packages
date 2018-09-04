@@ -27,8 +27,7 @@ interface StyledLabelProps {
   disabled?: boolean;
 }
 
-interface CheckboxProps extends InputProps, StyledLabelProps {
-  children?: Node;
+interface CheckboxProps extends React.HTMLAttributes<HTMLInputElement>, InputProps, StyledLabelProps {
   id?: string;
   style?: React.CSSProperties;
 }
