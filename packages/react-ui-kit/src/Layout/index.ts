@@ -30,6 +30,7 @@ export * from './Footer';
 export * from './Header';
 export * from './HeaderMenu';
 export * from './matchMedia';
+export * from './mediaMatcher';
 export * from './Spacer';
 export * from './StyledApp';
 export * from './sizes';
