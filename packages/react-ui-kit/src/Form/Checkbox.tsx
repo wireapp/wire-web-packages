@@ -29,9 +29,7 @@ const StyledContainerCheckbox = styled.div<React.HTMLAttributes<HTMLDivElement>>
   align-items: center;
 `;
 
-const StyledCheckbox = styled<React.HTMLAttributes<HTMLInputElement>>(
-  Input.withComponent(styled.input.attrs({type: 'checkbox'})``)
-)<CheckboxProps & React.HTMLAttributes<HTMLInputElement>>`
+const StyledCheckbox = styled(Input).attrs<React.HTMLAttributes<HTMLInputElement>>({type: 'checkbox'})`
   opacity: 0;
   height: 16px;
   width: 16px;
@@ -69,7 +67,8 @@ interface StyledLabelProps {
   disabled?: boolean;
 }
 
-interface CheckboxProps extends InputProps, StyledLabelProps {
+interface CheckboxProps extends InputProps {
+  disabled?: boolean;
   id?: string;
 }
 
