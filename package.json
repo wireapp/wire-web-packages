@@ -20,7 +20,7 @@
       "eslint --fix",
       "git add"
     ],
-    "*.ts": [
+    "*.{ts,tsx}": [
       "tslint --config tslint.json --project tsconfig.json --fix",
       "git add"
     ],
