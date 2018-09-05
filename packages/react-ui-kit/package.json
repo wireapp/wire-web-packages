@@ -4,7 +4,7 @@
     "@types/react": "16.4.12",
     "@types/react-dom": "16.0.7",
     "@types/recompose": "0.26.4",
-    "bazinga64": "5.3.7",
+    "bazinga64": "5.3.8",
     "color": "3.0.0",
     "react": "16.4.2",
     "react-dom": "16.4.2",
@@ -45,5 +45,5 @@
     "test:project": "yarn dist && yarn test",
     "test:browser": "exit 0"
   },
-  "version": "3.0.1"
+  "version": "3.0.2"
 }
