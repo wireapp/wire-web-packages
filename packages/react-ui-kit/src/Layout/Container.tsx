@@ -67,7 +67,7 @@ const Container = styled.div<ContainerProps & React.HTMLAttributes<HTMLDivElemen
 
 Container.defaultProps = {
   centerText: false,
-  level: null,
+  level: undefined,
   verticalCenter: false,
 };
 
