@@ -94,9 +94,7 @@ const MenuModal = ({
   </MenuModalWrapper>
 );
 
-interface MenuItemProps {
-  onClick?: () => void;
-}
+interface MenuItemProps {}
 
 const MenuItem = ({children = null, ...props}: MenuItemProps & React.HTMLAttributes<HTMLLIElement>) => (
   <MenuItemContent {...props}>{children}</MenuItemContent>
