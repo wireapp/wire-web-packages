@@ -28,7 +28,6 @@ const Title = styled(Text.withComponent('div'))<React.HTMLAttributes<HTMLDivElem
 `;
 
 Title.defaultProps = {
-  ...Title.defaultProps,
   block: true,
   center: true,
   fontSize: '32px',

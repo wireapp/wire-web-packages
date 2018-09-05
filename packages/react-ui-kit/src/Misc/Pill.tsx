@@ -22,7 +22,6 @@ import {COLOR} from '../Identity';
 
 interface PillProps {
   active?: boolean;
-  children?: Node;
   type?: PILL_TYPE;
 }
 
