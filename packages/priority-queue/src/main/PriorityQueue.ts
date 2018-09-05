@@ -44,7 +44,7 @@ export default class PriorityQueue {
       thunkedPromise = () => thunkedPromise;
     }
 
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const queueObject = new Item();
       queueObject.fn = thunkedPromise;
       queueObject.label = label;
@@ -55,7 +55,7 @@ export default class PriorityQueue {
       queueObject.timestamp = Date.now() + this.size;
       this.queue.push(queueObject);
       this.queue.sort(this.config.comparator);
-      await this.run();
+      this.run();
     });
   }
 
@@ -83,13 +83,13 @@ export default class PriorityQueue {
     return this.queue.length;
   }
 
-  private resolveItems(): Promise<void> {
+  private resolveItems(): void {
     const queueObject = this.first;
     if (!queueObject) {
-      return Promise.resolve();
+      return;
     }
 
-    return Promise.resolve(queueObject.fn())
+    Promise.resolve(queueObject.fn())
       .then((result: any) => {
         return {shouldContinue: true, wrappedResolve: () => queueObject.resolve(result)};
       })
@@ -107,22 +107,21 @@ export default class PriorityQueue {
       .then(({shouldContinue, wrappedResolve}: {shouldContinue: boolean; wrappedResolve?: Function}) => {
         if (shouldContinue) {
           if (wrappedResolve) {
-            return wrappedResolve();
+            wrappedResolve();
           }
           this.isPending = false;
           const nextItem: Item | undefined = this.queue.shift();
           if (nextItem) {
-            return this.resolveItems();
+            this.resolveItems();
           }
-          return;
         }
       });
   }
 
-  private async run(): Promise<void> {
+  private run(): void {
     if (!this.isPending && this.first) {
       this.isPending = true;
-      await this.resolveItems();
+      this.resolveItems();
     }
   }
 
