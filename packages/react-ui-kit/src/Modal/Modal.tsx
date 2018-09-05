@@ -23,7 +23,11 @@ import {CloseIcon} from '../Icon';
 import {COLOR} from '../Identity';
 import {OverlayBackground, OverlayWrapper} from './Overlay';
 
-const ModalBody = styled.div<{fullscreen?: boolean} & React.HTMLAttributes<HTMLDivElement>>`
+interface ModalBodyProps {
+  fullscreen?: boolean;
+}
+
+const ModalBody = styled.div<ModalBodyProps & React.HTMLAttributes<HTMLDivElement>>`
   ${props =>
     props.fullscreen
       ? `
