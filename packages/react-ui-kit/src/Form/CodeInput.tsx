@@ -76,7 +76,8 @@ class CodeInput extends React.PureComponent<CodeInputProps & React.HTMLAttribute
     }
   };
 
-  handlePaste = (fieldIndex: number, pastedValue: string) => {
+  handlePaste = (fieldIndex: number, event: React.ClipboardEvent<HTMLInputElement>) => {
+    const pastedValue = event.clipboardData.getData('Text');
     const cleanedPaste = pastedValue.replace(/[^0-9]/, '');
     if (new RegExp(`^[0-9]+$`).test(cleanedPaste)) {
       const values = [...this.state.values];
@@ -142,7 +143,7 @@ class CodeInput extends React.PureComponent<CodeInputProps & React.HTMLAttribute
         <DigitInput
           autoFocus={fieldIndex === 0 && this.props.autoFocus}
           key={fieldIndex}
-          onPaste={event => this.handlePaste(fieldIndex, event.clipboardData.getData('Text'))}
+          onPaste={event => this.handlePaste(fieldIndex, event)}
           onFocus={this.forceSelection}
           onMouseDown={this.forceSelectionPreventDefault}
           onTouchStart={this.forceSelectionPreventDefault}
