@@ -41,8 +41,8 @@ const DigitInput = styled.input<React.HTMLAttributes<HTMLInputElement>>`
 
 interface CodeInputProps {
   autoFocus?: boolean;
-  digits: number;
-  onCodeComplete: (completeCode?: string) => void;
+  digits?: number;
+  onCodeComplete?: (completeCode?: string) => void;
 }
 
 interface CodeInputState {
@@ -89,14 +89,14 @@ class CodeInput extends React.PureComponent<CodeInputProps & React.HTMLAttribute
 
   handleCompleteCode = () => {
     const completeCode = this.state.values.join('');
-    if (completeCode.length === this.props.digits) {
+    if (completeCode.length === this.props.digits && this.props.onCodeComplete) {
       this.props.onCodeComplete(completeCode);
     }
   };
 
   nextField = (currentFieldIndex: number) => {
     const nextFieldIndex = currentFieldIndex + 1;
-    if (nextFieldIndex < this.props.digits) {
+    if (nextFieldIndex < (this.props.digits || CodeInput.defaultProps.digits)) {
       this.inputs[nextFieldIndex].focus();
     }
   };
@@ -138,7 +138,7 @@ class CodeInput extends React.PureComponent<CodeInputProps & React.HTMLAttribute
   render() {
     const {values} = this.state;
     const inputs = [];
-    for (let fieldIndex = 0; fieldIndex < this.props.digits; fieldIndex++) {
+    for (let fieldIndex = 0; fieldIndex < (this.props.digits || CodeInput.defaultProps.digits); fieldIndex++) {
       inputs.push(
         <DigitInput
           autoFocus={fieldIndex === 0 && this.props.autoFocus}
