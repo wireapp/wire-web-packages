@@ -35,7 +35,9 @@ export interface TextProps {
   truncate?: boolean;
 }
 
-const Text = styled.span<TextProps & React.HTMLAttributes<HTMLSpanElement>>`
+type HTMLTextProps = TextProps & React.HTMLAttributes<HTMLSpanElement>;
+
+const Text = styled.span<HTMLTextProps>`
   color: ${props => props.color};
   font-size: ${props => props.fontSize};
   font-weight: ${props => (props.bold ? '600' : props.light ? '200' : '300')};
@@ -65,10 +67,10 @@ Text.defaultProps = {
   truncate: false,
 };
 
-const Bold = defaultProps<TextProps & React.HTMLAttributes<HTMLSpanElement>>({bold: true})(Text);
-const Small = defaultProps<TextProps & React.HTMLAttributes<HTMLSpanElement>>({fontSize: '12px'})(Text);
-const Muted = defaultProps<TextProps & React.HTMLAttributes<HTMLSpanElement>>({muted: true})(Text);
-const Uppercase = defaultProps<TextProps & React.HTMLAttributes<HTMLSpanElement>>({textTransform: 'uppercase'})(Text);
-const Large = defaultProps<TextProps & React.HTMLAttributes<HTMLSpanElement>>({fontSize: '48px', light: true})(Text);
+const Bold = defaultProps<HTMLTextProps>({bold: true})(Text);
+const Small = defaultProps<HTMLTextProps>({fontSize: '12px'})(Text);
+const Muted = defaultProps<HTMLTextProps>({muted: true})(Text);
+const Uppercase = defaultProps<HTMLTextProps>({textTransform: 'uppercase'})(Text);
+const Large = defaultProps<HTMLTextProps>({fontSize: '48px', light: true})(Text);
 
 export {Bold, Muted, Small, Text, Uppercase, Large};

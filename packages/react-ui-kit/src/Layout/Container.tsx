@@ -38,6 +38,8 @@ interface ContainerProps {
   verticalCenter?: boolean;
 }
 
+type HTMLContainerProps = ContainerProps & React.HTMLAttributes<HTMLDivElement>;
+
 const LEVEL: Level = {
   lg: `max-width: ${WIDTH.DESKTOP_MAX}px;`,
   md: `max-width: ${WIDTH.TABLET_MAX}px;`,
@@ -46,7 +48,7 @@ const LEVEL: Level = {
   xxs: `max-width: ${WIDTH.TINY}px;`,
 };
 
-const Container = styled.div<ContainerProps & React.HTMLAttributes<HTMLDivElement>>`
+const Container = styled.div<HTMLContainerProps>`
   position: relative;
   margin: ${props => (props.verticalCenter ? 'auto' : '0 auto')};
   text-align: ${props => (props.centerText ? 'center' : 'left')};
@@ -71,10 +73,10 @@ Container.defaultProps = {
   verticalCenter: false,
 };
 
-const ContainerLG = defaultProps<ContainerProps & React.HTMLAttributes<HTMLDivElement>>({level: 'lg'})(Container);
-const ContainerMD = defaultProps<ContainerProps & React.HTMLAttributes<HTMLDivElement>>({level: 'md'})(Container);
-const ContainerSM = defaultProps<ContainerProps & React.HTMLAttributes<HTMLDivElement>>({level: 'sm'})(Container);
-const ContainerXS = defaultProps<ContainerProps & React.HTMLAttributes<HTMLDivElement>>({level: 'xs'})(Container);
-const ContainerXXS = defaultProps<ContainerProps & React.HTMLAttributes<HTMLDivElement>>({level: 'xxs'})(Container);
+const ContainerLG = defaultProps<HTMLContainerProps>({level: 'lg'})(Container);
+const ContainerMD = defaultProps<HTMLContainerProps>({level: 'md'})(Container);
+const ContainerSM = defaultProps<HTMLContainerProps>({level: 'sm'})(Container);
+const ContainerXS = defaultProps<HTMLContainerProps>({level: 'xs'})(Container);
+const ContainerXXS = defaultProps<HTMLContainerProps>({level: 'xxs'})(Container);
 
 export {Container, ContainerLG, ContainerMD, ContainerSM, ContainerXS, ContainerXXS};

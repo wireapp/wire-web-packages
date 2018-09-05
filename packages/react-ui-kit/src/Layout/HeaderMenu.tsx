@@ -23,27 +23,17 @@ import {COLOR} from '../Identity';
 import {Content} from '../Layout';
 import {Link} from '../Text';
 
-interface MenuProps {
-  open?: boolean;
-}
-
-interface MenuLinkProps {
-  button?: boolean;
-}
-
-interface HeaderMenuProps {
-  logoElement?: React.ReactNode;
-}
-
-interface HeaderMenuState {
-  isOpen?: boolean;
-}
-
 const MenuWrapper = styled.div`
   height: 64px;
 `;
 
-const MenuContent = styled(Content)<MenuProps & React.HTMLAttributes<HTMLDivElement>>`
+interface MenuProps {
+  open?: boolean;
+}
+
+type HTMLMenuProps = MenuProps & React.HTMLAttributes<HTMLDivElement>;
+
+const MenuContent = styled(Content)<HTMLMenuProps>`
   height: 64px;
   align-items: center;
   justify-content: space-between;
@@ -57,7 +47,7 @@ const MenuContent = styled(Content)<MenuProps & React.HTMLAttributes<HTMLDivElem
   left: 0;`};
 `;
 
-const MenuItems = styled.div<MenuProps & React.HTMLAttributes<HTMLDivElement>>`
+const MenuItems = styled.div<HTMLMenuProps>`
   @media (max-width: 767px){
     display: flex;
     flex-direction: column;
@@ -75,7 +65,7 @@ const MenuItems = styled.div<MenuProps & React.HTMLAttributes<HTMLDivElement>>`
     ${props => props.open && `transform: translateX(0);`}
 `;
 
-const MenuOpenButton = styled.div<MenuProps & React.HTMLAttributes<HTMLDivElement>>`
+const MenuOpenButton = styled.div<HTMLMenuProps>`
   @media (min-width: 768px) {
     display: none;
   }
@@ -113,6 +103,10 @@ const MenuLogo = styled.div<React.HTMLAttributes<HTMLDivElement>>`
   z-index: 2;
 `;
 
+interface MenuLinkProps {
+  button?: boolean;
+}
+
 const MenuLink = styled(Link)<MenuLinkProps & React.HTMLAttributes<HTMLAnchorElement>>`
   @media (min-width: 768px) {
     margin: 12px 26px 0 10px;
@@ -141,6 +135,14 @@ const MenuLink = styled(Link)<MenuLinkProps & React.HTMLAttributes<HTMLAnchorEle
     max-width: 480px;
   }
 `;
+
+interface HeaderMenuProps {
+  logoElement?: React.ReactNode;
+}
+
+interface HeaderMenuState {
+  isOpen?: boolean;
+}
 
 class HeaderMenu extends React.PureComponent<HeaderMenuProps & React.HTMLAttributes<HTMLDivElement>, HeaderMenuState> {
   static defaultProps: HeaderMenuProps = {

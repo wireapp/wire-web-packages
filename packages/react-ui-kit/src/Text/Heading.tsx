@@ -37,7 +37,9 @@ interface HeadingProps {
   truncate?: boolean;
 }
 
-const H1 = styled(Text.withComponent('h1'))<HeadingProps & React.HTMLAttributes<HTMLHeadingElement>>`
+type HTMLHeadingProps = HeadingProps & React.HTMLAttributes<HTMLHeadingElement>;
+
+const H1 = styled(Text.withComponent('h1'))<HTMLHeadingProps>`
   font-size: 48px;
   font-weight: 300;
   line-height: 56px;
@@ -50,7 +52,7 @@ const H1 = styled(Text.withComponent('h1'))<HeadingProps & React.HTMLAttributes<
   `};
 `;
 
-const H2 = styled(Text.withComponent('h2'))<HeadingProps & React.HTMLAttributes<HTMLHeadingElement>>`
+const H2 = styled(Text.withComponent('h2'))<HTMLHeadingProps>`
   font-size: 24px;
   font-weight: 700;
   line-height: 32px;
@@ -65,20 +67,20 @@ const H2 = styled(Text.withComponent('h2'))<HeadingProps & React.HTMLAttributes<
   `};
 `;
 
-const H3 = styled(Text.withComponent('h3'))<HeadingProps & React.HTMLAttributes<HTMLHeadingElement>>`
+const H3 = styled(Text.withComponent('h3'))<HTMLHeadingProps>`
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 16px;
 `;
 
-const H4 = styled(Text.withComponent('h4'))<HeadingProps & React.HTMLAttributes<HTMLHeadingElement>>`
+const H4 = styled(Text.withComponent('h4'))<HTMLHeadingProps>`
   font-size: 11px;
   font-weight: 300;
   margin-bottom: 5px;
   margin-top: 20px;
 `;
 
-const Heading: React.SFC<HeadingProps & React.HTMLAttributes<HTMLHeadingElement>> = ({level, ...props}) => {
+const Heading: React.SFC<HTMLHeadingProps> = ({level, ...props}) => {
   switch (level) {
     case '2':
       return <H2 {...props} />;
