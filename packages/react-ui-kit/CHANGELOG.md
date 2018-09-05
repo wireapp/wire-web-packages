@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="4.0.0"></a>
+# [4.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@3.0.2...@wireapp/react-ui-kit@4.0.0) (2018-09-05)
+
+
+### Code Refactoring
+
+* **react-ui-kit:** Rewrite in TypeScript ([#1073](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1073)) ([7438f73](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/7438f73))
+
+
+### BREAKING CHANGES
+
+* **react-ui-kit:** Complete rewrite in TypeScript
+
+
+
+
+
+<a name="3.0.2"></a>
+## [3.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@3.0.1...@wireapp/react-ui-kit@3.0.2) (2018-09-05)
+
+
+### Bug Fixes
+
+* UI-Kit Demo ([#1077](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1077)) ([aae4057](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/aae4057))
+
+
+
+
+
+<a name="3.0.1"></a>
+## [3.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@3.0.0...@wireapp/react-ui-kit@3.0.1) (2018-09-03)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
 <a name="3.0.0"></a>
 # [3.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@2.9.0...@wireapp/react-ui-kit@3.0.0) (2018-08-31)
 
