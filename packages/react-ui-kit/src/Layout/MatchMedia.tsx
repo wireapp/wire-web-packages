@@ -11,7 +11,7 @@ interface MatchMediaState {
   isMatching: boolean;
 }
 
-class MatchMedia extends React.PureComponent<MatchMediaProps & React.HTMLAttributes<HTMLElement>, MatchMediaState> {
+class MatchMedia extends React.PureComponent<MatchMediaProps, MatchMediaState> {
   static defaultProps = {
     not: false,
   };
@@ -40,20 +40,12 @@ class MatchMedia extends React.PureComponent<MatchMediaProps & React.HTMLAttribu
   }
 }
 
-const IsDesktop = defaultProps<MatchMediaProps & React.HTMLAttributes<HTMLElement>>({query: QUERY.desktop})(MatchMedia);
-const IsDesktopXL = defaultProps<MatchMediaProps & React.HTMLAttributes<HTMLElement>>({query: QUERY.desktopXL})(
-  MatchMedia
-);
-const IsMobile = defaultProps<MatchMediaProps & React.HTMLAttributes<HTMLElement>>({query: QUERY.mobile})(MatchMedia);
-const IsMobileUp = defaultProps<MatchMediaProps & React.HTMLAttributes<HTMLElement>>({query: QUERY.mobileUp})(
-  MatchMedia
-);
-const IsTablet = defaultProps<MatchMediaProps & React.HTMLAttributes<HTMLElement>>({query: QUERY.tablet})(MatchMedia);
-const IsTabletDown = defaultProps<MatchMediaProps & React.HTMLAttributes<HTMLElement>>({query: QUERY.tabletDown})(
-  MatchMedia
-);
-const IsTabletUp = defaultProps<MatchMediaProps & React.HTMLAttributes<HTMLElement>>({query: QUERY.tabletUp})(
-  MatchMedia
-);
+const IsDesktop = defaultProps<MatchMediaProps>({query: QUERY.desktop})(MatchMedia);
+const IsDesktopXL = defaultProps<MatchMediaProps>({query: QUERY.desktopXL})(MatchMedia);
+const IsMobile = defaultProps<MatchMediaProps>({query: QUERY.mobile})(MatchMedia);
+const IsMobileUp = defaultProps<MatchMediaProps>({query: QUERY.mobileUp})(MatchMedia);
+const IsTablet = defaultProps<MatchMediaProps>({query: QUERY.tablet})(MatchMedia);
+const IsTabletDown = defaultProps<MatchMediaProps>({query: QUERY.tabletDown})(MatchMedia);
+const IsTabletUp = defaultProps<MatchMediaProps>({query: QUERY.tabletUp})(MatchMedia);
 
 export {MatchMedia, IsDesktop, IsDesktopXL, IsMobile, IsMobileUp, IsTablet, IsTabletDown, IsTabletUp};
