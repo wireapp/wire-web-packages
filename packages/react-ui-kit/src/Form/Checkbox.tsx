@@ -23,23 +23,15 @@ import {COLOR} from '../Identity';
 import {Text} from '../Text';
 import {Input, InputProps} from './Input';
 
-interface StyledLabelProps {
-  disabled?: boolean;
-}
-
-interface CheckboxProps extends InputProps, StyledLabelProps {
-  id?: string;
-}
-
 const StyledContainerCheckbox = styled.div<React.HTMLAttributes<HTMLDivElement>>`
   display: flex;
   justify-content: flex-start;
   align-items: center;
 `;
 
-const StyledCheckbox = styled<React.HTMLAttributes<HTMLSelectElement>>(Input.withComponent(styled.select``))<
-  CheckboxProps & React.HTMLAttributes<HTMLSelectElement>
->`
+const StyledCheckbox = styled<React.HTMLAttributes<HTMLInputElement>>(
+  Input.withComponent(styled.input.attrs({type: 'checkbox'})``)
+)<CheckboxProps & React.HTMLAttributes<HTMLInputElement>>`
   opacity: 0;
   height: 16px;
   width: 16px;
@@ -73,7 +65,15 @@ const StyledLabel = styled.label<StyledLabelProps & React.HTMLAttributes<HTMLLab
   }
 `;
 
-const Checkbox: React.SFC<CheckboxProps & React.HTMLAttributes<HTMLSelectElement>> = ({
+interface StyledLabelProps {
+  disabled?: boolean;
+}
+
+interface CheckboxProps extends InputProps, StyledLabelProps {
+  id?: string;
+}
+
+const Checkbox: React.SFC<CheckboxProps & React.HTMLAttributes<HTMLInputElement>> = ({
   id,
   children,
   style,
@@ -108,7 +108,7 @@ CheckboxLabel.defaultProps = {
 };
 
 Checkbox.defaultProps = {
-  id: null,
+  id: undefined,
 };
 
 export {Checkbox, CheckboxLabel};

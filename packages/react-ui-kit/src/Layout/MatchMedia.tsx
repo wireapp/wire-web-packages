@@ -1,6 +1,6 @@
-import {QUERY} from '@wireapp/react-ui-kit/src/mediaQueries';
 import * as React from 'react';
 import {defaultProps} from 'recompose';
+import {QUERY} from '../mediaQueries';
 
 interface MatchMediaProps {
   not?: boolean;
