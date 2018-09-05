@@ -17,17 +17,16 @@
  *
  */
 
-/* eslint-disable sort-keys, sort-vars, no-magic-numbers */
-
+/* tslint:disable */
 export const WIDTH = {
-  DESKTOP_MAX: 1199,
-  DESKTOP_MIN: 920,
-  DESKTOP_XL_MAX: 1600,
-  DESKTOP_XL_MIN: 1200,
-  MOBILE: 480,
-  TABLET_MAX: 919,
-  TABLET_MIN: 640,
   TINY: 320,
+  MOBILE: 480,
+  TABLET_MIN: 640,
+  TABLET_MAX: 919,
+  DESKTOP_MIN: 920,
+  DESKTOP_MAX: 1199,
+  DESKTOP_XL_MIN: 1200,
+  DESKTOP_XL_MAX: 1600,
 };
 
 export const STEP = 8;
