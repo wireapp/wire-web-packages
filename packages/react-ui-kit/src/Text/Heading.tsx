@@ -92,20 +92,14 @@ const Heading: React.SFC<HeadingProps & React.HTMLAttributes<HTMLHeadingElement>
   }
 };
 
-H1.defaultProps = H2.defaultProps = H3.defaultProps = H4.defaultProps = Heading.defaultProps;
-
 Heading.defaultProps = {
   block: true,
-  bold: false,
-  center: false,
   color: COLOR.TEXT,
-  fontSize: '16px',
   level: '1',
-  light: false,
-  muted: false,
   noWrap: false,
   textTransform: 'none',
-  truncate: false,
 };
+
+H1.defaultProps = H2.defaultProps = H3.defaultProps = H4.defaultProps = Heading.defaultProps;
 
 export {Heading, H1, H2, H3, H4};
