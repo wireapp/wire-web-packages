@@ -39,12 +39,12 @@ export default class PriorityQueue {
     this.config = {...this.config, ...config};
   }
 
-  public add(thunkedPromise: any, priority: Priority = Priority.MEDIUM, label?: string): Promise<void> {
+  public add(thunkedPromise: any, priority: Priority = Priority.MEDIUM, label?: string): Promise<any> {
     if (typeof thunkedPromise !== 'function') {
       thunkedPromise = () => thunkedPromise;
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       const queueObject = new Item();
       queueObject.fn = thunkedPromise;
       queueObject.label = label;
@@ -55,7 +55,7 @@ export default class PriorityQueue {
       queueObject.timestamp = Date.now() + this.size;
       this.queue.push(queueObject);
       this.queue.sort(this.config.comparator);
-      return this.run();
+      await this.run();
     });
   }
 
