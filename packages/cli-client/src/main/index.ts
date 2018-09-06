@@ -68,7 +68,7 @@ storeEngine
       );
     });
 
-    account
+    return account
       .login(loginData)
       .then(() => account.listen())
       .catch((error: AxiosError) => {
@@ -110,10 +110,9 @@ storeEngine
           }
           return;
         });
-      })
-      .catch((error: Error) => {
-        console.error(error.message, error);
-        process.exit(1);
       });
   })
-  .catch(error => console.error(error));
+  .catch((error: Error) => {
+    console.error(error.message, error);
+    process.exit(1);
+  });
