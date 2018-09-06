@@ -75,12 +75,12 @@ const messageIdCache = {};
     }
   };
 
-  const sendMessageResponse = async (data, payload) => {
-    const {conversation: conversationId, id: messageId, messageTimer = 0} = data;
+  const sendMessageResponse = async (conversationId, payload) => {
+    const {content, id: messageId, messageTimer = 0, type} = payload;
 
     logger.log(
-      `Sending: "${data.type}" ("${messageId}") in "${conversationId}"`,
-      data.content,
+      `Sending: "${type}" ("${messageId}") in "${conversationId}"`,
+      content,
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
     );
 
@@ -90,15 +90,20 @@ const messageIdCache = {};
   };
 
   account.on(PayloadBundleType.TEXT, async data => {
-    const {content, id: messageId} = data;
+    const {
+      content: {linkPreviews, text},
+      id: messageId,
+    } = data;
     let textPayload;
 
     const newLinkPreviews = [];
 
-    if (content.linkPreviews) {
-      for (const linkPreview of content.linkPreviews) {
+    if (linkPreviews) {
+      for (const originalLinkPreview of linkPreviews) {
         const originalLinkPreviewImage =
-          linkPreview.article && linkPreview.article.image ? linkPreview.article.image : linkPreview.image;
+          originalLinkPreview.article && originalLinkPreview.article.image
+            ? originalLinkPreview.article.image
+            : originalLinkPreview.image;
         let linkPreviewImage;
 
         if (originalLinkPreviewImage) {
@@ -113,7 +118,7 @@ const messageIdCache = {};
         }
 
         const newLinkPreview = await account.service.conversation.createLinkPreview({
-          ...linkPreview,
+          ...originalLinkPreview,
           image: linkPreviewImage,
         });
 
@@ -122,20 +127,22 @@ const messageIdCache = {};
 
       await handleIncomingMessage(data);
 
-      const messageIdOriginal = messageIdCache[messageId];
+      const cachedMessageId = messageIdCache[messageId];
 
-      if (messageIdOriginal) {
-        textPayload = account.service.conversation.createText(content.text, newLinkPreviews, messageIdOriginal);
-      } else {
+      if (!cachedMessageId) {
         logger.warn(`Link preview for message ID "${messageId} was received before the original message."`);
         return;
       }
+
+      textPayload = account.service.conversation.createText(text, newLinkPreviews, cachedMessageId);
     } else {
-      textPayload = account.service.conversation.createText(content.text);
-      messageIdCache[messageId] = textPayload.id;
+      await handleIncomingMessage(data);
+      textPayload = account.service.conversation.createText(text, newLinkPreviews);
     }
 
-    await sendMessageResponse(data, textPayload);
+    messageIdCache[messageId] = textPayload.id;
+
+    await sendMessageResponse(data.conversation, textPayload);
   });
 
   account.on(PayloadBundleType.CONFIRMATION, data => handleIncomingMessage(data));
@@ -159,16 +166,16 @@ const messageIdCache = {};
       type: cacheOriginal.mimeType,
     });
 
-    await sendMessageResponse(data, fileMetaDataPayload);
+    await sendMessageResponse(data.conversation, fileMetaDataPayload);
 
     try {
       const filePayload = await account.service.conversation.createFileData({data: fileBuffer}, fileMetaDataPayload.id);
       messageIdCache[messageId] = filePayload.id;
-      await sendMessageResponse(data, filePayload);
+      await sendMessageResponse(data.conversation, filePayload);
     } catch (error) {
       logger.warn(`Error while sending asset: "${error.stack}"`);
       const fileAbortPayload = await account.service.conversation.createFileAbort(0, fileMetaDataPayload.id);
-      await sendMessageResponse(data, fileAbortPayload);
+      await sendMessageResponse(data.conversation, fileAbortPayload);
     }
   });
 
@@ -201,10 +208,10 @@ const messageIdCache = {};
     });
 
     await handleIncomingMessage(data);
-    await sendMessageResponse(data, fileMetaDataPayload);
+    await sendMessageResponse(data.conversation, fileMetaDataPayload);
 
     const fileAbortPayload = await account.service.conversation.createFileAbort(0, fileMetaDataPayload.id);
-    await sendMessageResponse(data, fileAbortPayload);
+    await sendMessageResponse(data.conversation, fileAbortPayload);
 
     delete assetOriginalCache[messageId];
     delete messageIdCache[messageId];
@@ -228,7 +235,7 @@ const messageIdCache = {};
     messageIdCache[messageId] = imagePayload.id;
 
     await handleIncomingMessage(data);
-    await sendMessageResponse(data, imagePayload);
+    await sendMessageResponse(data.conversation, imagePayload);
   });
 
   account.on(PayloadBundleType.LOCATION, async data => {
@@ -240,7 +247,7 @@ const messageIdCache = {};
     });
 
     await handleIncomingMessage(data);
-    await sendMessageResponse(data, locationPayload);
+    await sendMessageResponse(data.conversation, locationPayload);
   });
 
   account.on(PayloadBundleType.PING, async data => {
@@ -248,7 +255,7 @@ const messageIdCache = {};
 
     const pingPayload = account.service.conversation.createPing();
 
-    await sendMessageResponse(data, pingPayload);
+    await sendMessageResponse(data.conversation, pingPayload);
   });
 
   account.on(PayloadBundleType.REACTION, async data => {
@@ -260,7 +267,7 @@ const messageIdCache = {};
 
     const reactionPayload = account.service.conversation.createReaction(originalMessageId, type);
 
-    await sendMessageResponse(data, reactionPayload);
+    await sendMessageResponse(data.conversation, reactionPayload);
   });
 
   account.on(PayloadBundleType.TYPING, async data => {
@@ -295,21 +302,69 @@ const messageIdCache = {};
 
   account.on(PayloadBundleType.MESSAGE_EDIT, async data => {
     const {
-      content: {text, originalMessageId},
+      content: {text, originalMessageId, linkPreviews},
       id: messageId,
     } = data;
+    let editedPayload;
 
-    const originalMessage = messageIdCache[originalMessageId];
-    if (!originalMessage) {
+    const cachedOriginalMessageId = messageIdCache[originalMessageId];
+
+    if (!cachedOriginalMessageId) {
       logger.warn(`Edited message for message ID "${messageId} was received before the original message."`);
       return;
     }
 
-    const editedPayload = account.service.conversation.createEditedText(text, originalMessage);
+    const newLinkPreviews = [];
+
+    if (linkPreviews) {
+      for (const originalLinkPreview of linkPreviews) {
+        const originalLinkPreviewImage =
+          originalLinkPreview.article && originalLinkPreview.article.image
+            ? originalLinkPreview.article.image
+            : originalLinkPreview.image;
+        let linkPreviewImage;
+
+        if (originalLinkPreviewImage) {
+          const imageBuffer = await account.service.conversation.getAsset(originalLinkPreviewImage.uploaded);
+
+          linkPreviewImage = {
+            data: imageBuffer,
+            height: originalLinkPreviewImage.original.image.height,
+            type: originalLinkPreviewImage.original.mimeType,
+            width: originalLinkPreviewImage.original.image.width,
+          };
+        }
+
+        const newLinkPreview = await account.service.conversation.createLinkPreview({
+          ...originalLinkPreview,
+          image: linkPreviewImage,
+        });
+
+        newLinkPreviews.push(newLinkPreview);
+      }
+
+      await handleIncomingMessage(data);
+
+      const cachedMessageId = messageIdCache[messageId];
+
+      if (!cachedMessageId) {
+        logger.warn(`Link preview for edited message ID "${messageId} was received before the original message."`);
+        return;
+      }
+      editedPayload = account.service.conversation.createEditedText(
+        text,
+        cachedOriginalMessageId,
+        newLinkPreviews,
+        cachedMessageId
+      );
+    } else {
+      await handleIncomingMessage(data);
+      editedPayload = account.service.conversation.createEditedText(text, cachedOriginalMessageId, newLinkPreviews);
+    }
+
     messageIdCache[messageId] = editedPayload.id;
 
-    await handleIncomingMessage(data);
-    await sendMessageResponse(data, editedPayload);
+    await sendMessageResponse(data.conversation, editedPayload);
   });
 
   account.on(PayloadBundleType.MESSAGE_HIDE, data => handleIncomingMessage(data));

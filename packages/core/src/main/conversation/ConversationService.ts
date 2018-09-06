@@ -215,7 +215,7 @@ class ConversationService {
 
     const textMessage = Text.create({content: text});
 
-    if (linkPreviews) {
+    if (linkPreviews && linkPreviews.length) {
       textMessage.linkPreview = this.buildLinkPreviews(linkPreviews);
     }
 
