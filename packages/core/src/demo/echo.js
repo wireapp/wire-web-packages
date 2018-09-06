@@ -75,8 +75,9 @@ const messageIdCache = {};
     }
   };
 
-  const sendMessageResponse = async (conversationId, payload) => {
+  const sendMessageResponse = async (data, payload) => {
     const {content, id: messageId, messageTimer = 0, type} = payload;
+    const conversationId = data.conversation;
 
     logger.log(
       `Sending: "${type}" ("${messageId}") in "${conversationId}"`,
@@ -142,7 +143,7 @@ const messageIdCache = {};
 
     messageIdCache[messageId] = textPayload.id;
 
-    await sendMessageResponse(data.conversation, textPayload);
+    await sendMessageResponse(data, textPayload);
   });
 
   account.on(PayloadBundleType.CONFIRMATION, data => handleIncomingMessage(data));
@@ -166,16 +167,16 @@ const messageIdCache = {};
       type: cacheOriginal.mimeType,
     });
 
-    await sendMessageResponse(data.conversation, fileMetaDataPayload);
+    await sendMessageResponse(data, fileMetaDataPayload);
 
     try {
       const filePayload = await account.service.conversation.createFileData({data: fileBuffer}, fileMetaDataPayload.id);
       messageIdCache[messageId] = filePayload.id;
-      await sendMessageResponse(data.conversation, filePayload);
+      await sendMessageResponse(data, filePayload);
     } catch (error) {
       logger.warn(`Error while sending asset: "${error.stack}"`);
       const fileAbortPayload = await account.service.conversation.createFileAbort(0, fileMetaDataPayload.id);
-      await sendMessageResponse(data.conversation, fileAbortPayload);
+      await sendMessageResponse(data, fileAbortPayload);
     }
   });
 
@@ -208,10 +209,10 @@ const messageIdCache = {};
     });
 
     await handleIncomingMessage(data);
-    await sendMessageResponse(data.conversation, fileMetaDataPayload);
+    await sendMessageResponse(data, fileMetaDataPayload);
 
     const fileAbortPayload = await account.service.conversation.createFileAbort(0, fileMetaDataPayload.id);
-    await sendMessageResponse(data.conversation, fileAbortPayload);
+    await sendMessageResponse(data, fileAbortPayload);
 
     delete assetOriginalCache[messageId];
     delete messageIdCache[messageId];
@@ -235,7 +236,7 @@ const messageIdCache = {};
     messageIdCache[messageId] = imagePayload.id;
 
     await handleIncomingMessage(data);
-    await sendMessageResponse(data.conversation, imagePayload);
+    await sendMessageResponse(data, imagePayload);
   });
 
   account.on(PayloadBundleType.LOCATION, async data => {
@@ -247,7 +248,7 @@ const messageIdCache = {};
     });
 
     await handleIncomingMessage(data);
-    await sendMessageResponse(data.conversation, locationPayload);
+    await sendMessageResponse(data, locationPayload);
   });
 
   account.on(PayloadBundleType.PING, async data => {
@@ -255,7 +256,7 @@ const messageIdCache = {};
 
     const pingPayload = account.service.conversation.createPing();
 
-    await sendMessageResponse(data.conversation, pingPayload);
+    await sendMessageResponse(data, pingPayload);
   });
 
   account.on(PayloadBundleType.REACTION, async data => {
@@ -267,7 +268,7 @@ const messageIdCache = {};
 
     const reactionPayload = account.service.conversation.createReaction(originalMessageId, type);
 
-    await sendMessageResponse(data.conversation, reactionPayload);
+    await sendMessageResponse(data, reactionPayload);
   });
 
   account.on(PayloadBundleType.TYPING, async data => {
@@ -364,7 +365,7 @@ const messageIdCache = {};
 
     messageIdCache[messageId] = editedPayload.id;
 
-    await sendMessageResponse(data.conversation, editedPayload);
+    await sendMessageResponse(data, editedPayload);
   });
 
   account.on(PayloadBundleType.MESSAGE_HIDE, data => handleIncomingMessage(data));
