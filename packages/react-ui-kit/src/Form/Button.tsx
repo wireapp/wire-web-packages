@@ -20,7 +20,7 @@
 import styled from 'styled-components';
 import {COLOR} from '../Identity';
 import {defaultTransition} from '../Identity/motions';
-import {Text, TextProps} from '../Text';
+import {Link, Text, TextProps} from '../Text';
 
 interface ButtonProps extends TextProps {
   backgroundColor?: string;
@@ -32,7 +32,7 @@ interface ButtonProps extends TextProps {
 type HTMLButtonProps = ButtonProps & React.HTMLAttributes<HTMLButtonElement>;
 
 const darkenAmount = 0.06;
-const Button = styled(Text.withComponent(styled.button<HTMLButtonProps>``))<HTMLButtonProps>`
+const Button = styled<HTMLButtonProps>(Text.withComponent(styled.button<HTMLButtonProps>``))<HTMLButtonProps>`
   background-color: ${props => (props.disabled ? COLOR.DISABLED : props.backgroundColor)};
   border-radius: 8px;
   border: 0;
@@ -63,12 +63,15 @@ Button.defaultProps = {
   center: true,
   color: COLOR.WHITE,
   disabled: false,
+  fontSize: '16px',
   noCapital: false,
   noWrap: true,
   textTransform: 'uppercase',
   truncate: true,
 };
 
-const ButtonLink = Button.withComponent('a');
+const ButtonLink = styled(Button.withComponent(Link))`
+  display: inline-block !important;
+`;
 
 export {Button, ButtonLink};
