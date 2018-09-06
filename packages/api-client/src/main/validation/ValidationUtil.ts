@@ -24,7 +24,7 @@ class ValidationUtil {
   static obfuscateCookie(cookie: ToughCookie, enabled = true): ToughCookie {
     if (enabled) {
       const obfuscatedCookie = cookie.clone();
-      obfuscatedCookie.value = cookie.value.substr(0, 20);
+      obfuscatedCookie.value = `${cookie.value.substr(0, 20)}...`;
       return obfuscatedCookie;
     }
     return cookie;
@@ -34,7 +34,7 @@ class ValidationUtil {
     if (enabled && accessToken.access_token) {
       return {
         ...accessToken,
-        access_token: `${accessToken.access_token.substr(0, 20)} ...`,
+        access_token: `${accessToken.access_token.substr(0, 20)}...`,
       };
     }
     return accessToken;
