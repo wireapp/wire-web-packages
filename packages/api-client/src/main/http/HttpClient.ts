@@ -22,6 +22,7 @@ import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine';
 import axios, {AxiosError, AxiosPromise, AxiosRequestConfig, AxiosResponse} from 'axios';
 import * as EventEmitter from 'events';
 import * as logdown from 'logdown';
+import {ValidationUtil} from '../../validation/';
 import {AccessTokenData, AccessTokenStore, AuthAPI} from '../auth/';
 import {BackendErrorLabel, BackendErrorMapper, ConnectionState, ContentType, NetworkError, StatusCode} from '../http/';
 import {sendRequestWithCookie} from '../shims/node/cookie';
@@ -150,10 +151,10 @@ class HttpClient extends EventEmitter {
     }
 
     const accessToken = await this.postAccess(expiredAccessToken);
-    this.logger.info(`Saved updated access token. It will expire in "${accessToken.expires_in}" seconds.`, {
-      ...accessToken,
-      access_token: `${(accessToken.access_token || '').substr(0, 10)}...`,
-    });
+    this.logger.info(
+      `Saved updated access token. It will expire in "${accessToken.expires_in}" seconds.`,
+      ValidationUtil.obfuscateAccessToken(accessToken)
+    );
     return this.accessTokenStore.updateToken(accessToken);
   }
 
