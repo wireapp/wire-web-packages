@@ -114,7 +114,7 @@ describe('Session', () => {
       }
     });
 
-    fit('encrypts and decrypts messages', async () => {
+    it('encrypts and decrypts messages', async () => {
       const alice_ident = await Proteus.keys.IdentityKeyPair.new();
       const alice_store = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10));
 
