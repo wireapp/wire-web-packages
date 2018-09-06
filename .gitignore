@@ -1,9 +1,10 @@
 *hot-update.js*
 .DS_Store
 *.env
-.idea
 .awcache
+.idea
 .tmp
+.vscode
 .yarnclean
 bower_components
 coverage
