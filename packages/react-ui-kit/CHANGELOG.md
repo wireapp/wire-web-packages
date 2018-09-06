@@ -3,6 +3,128 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="4.0.2"></a>
+## [4.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.0.1...@wireapp/react-ui-kit@4.0.2) (2018-09-06)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Typed props ([#1082](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1082)) ([873322f](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/873322f))
+
+
+
+
+
+<a name="4.0.1"></a>
+## [4.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.0.0...@wireapp/react-ui-kit@4.0.1) (2018-09-06)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** ButtonLink ([#1078](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1078)) ([ae91ba9](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/ae91ba9))
+
+
+
+
+
+<a name="4.0.0"></a>
+# [4.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@3.0.2...@wireapp/react-ui-kit@4.0.0) (2018-09-05)
+
+
+### Code Refactoring
+
+* **react-ui-kit:** Rewrite in TypeScript ([#1073](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1073)) ([7438f73](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/7438f73))
+
+
+### BREAKING CHANGES
+
+* **react-ui-kit:** Complete rewrite in TypeScript
+
+
+
+
+
+<a name="3.0.2"></a>
+## [3.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@3.0.1...@wireapp/react-ui-kit@3.0.2) (2018-09-05)
+
+
+### Bug Fixes
+
+* UI-Kit Demo ([#1077](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1077)) ([aae4057](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/aae4057))
+
+
+
+
+
+<a name="3.0.1"></a>
+## [3.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@3.0.0...@wireapp/react-ui-kit@3.0.1) (2018-09-03)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+<a name="3.0.0"></a>
+# [3.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@2.9.0...@wireapp/react-ui-kit@3.0.0) (2018-08-31)
+
+
+*  refactor(react-ui-kit): New MatchMedia components (#1067) ([ae02c6b](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/ae02c6b)), closes [#1067](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1067)
+
+
+### BREAKING CHANGES
+
+* The MediaMatcher is not a function anymore. It is now a stateful component.
+
+
+
+
+
+<a name="2.9.0"></a>
+# [2.9.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@2.8.0...@wireapp/react-ui-kit@2.9.0) (2018-08-29)
+
+
+### Features
+
+* **react-ui-kit:** added mediaMatcher ([#1061](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1061)) ([d616fe4](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/d616fe4))
+
+
+
+
+
+<a name="2.8.0"></a>
+# [2.8.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@2.7.1...@wireapp/react-ui-kit@2.8.0) (2018-08-28)
+
+
+### Features
+
+* **react-ui-kit:** Pagination ([#1054](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1054)) ([49d5c75](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/49d5c75))
+
+
+
+
+
+<a name="2.7.1"></a>
+## [2.7.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@2.7.0...@wireapp/react-ui-kit@2.7.1) (2018-08-28)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+<a name="2.7.0"></a>
+# [2.7.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@2.6.1...@wireapp/react-ui-kit@2.7.0) (2018-08-27)
+
+
+### Features
+
+* **react-ui-kit:** add FlexBox component ([#1050](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1050)) ([ebf128f](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/ebf128f))
+
+
+
+
+
 <a name="2.6.1"></a>
 ## [2.6.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@2.6.0...@wireapp/react-ui-kit@2.6.1) (2018-08-23)
 

@@ -3,6 +3,126 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="5.9.21"></a>
+## [5.9.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.9.20...@wireapp/core@5.9.21) (2018-09-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.9.20"></a>
+## [5.9.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.9.19...@wireapp/core@5.9.20) (2018-09-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.9.19"></a>
+## [5.9.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.9.18...@wireapp/core@5.9.19) (2018-09-05)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.9.18"></a>
+## [5.9.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.9.17...@wireapp/core@5.9.18) (2018-09-05)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.9.17"></a>
+## [5.9.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.9.16...@wireapp/core@5.9.17) (2018-09-03)
+
+
+### Bug Fixes
+
+* **core:** Get correct hidden message ID ([#1071](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1071)) ([c5a55bf](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/c5a55bf))
+
+
+
+
+
+<a name="5.9.16"></a>
+## [5.9.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.9.15...@wireapp/core@5.9.16) (2018-08-31)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.9.15"></a>
+## [5.9.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.9.14...@wireapp/core@5.9.15) (2018-08-29)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.9.14"></a>
+## [5.9.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.9.13...@wireapp/core@5.9.14) (2018-08-28)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.9.13"></a>
+## [5.9.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.9.12...@wireapp/core@5.9.13) (2018-08-28)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.9.12"></a>
+## [5.9.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.9.11...@wireapp/core@5.9.12) (2018-08-28)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.9.11"></a>
+## [5.9.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.9.10...@wireapp/core@5.9.11) (2018-08-28)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.9.10"></a>
+## [5.9.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.9.9...@wireapp/core@5.9.10) (2018-08-27)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.9.9"></a>
+## [5.9.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.9.8...@wireapp/core@5.9.9) (2018-08-24)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
 <a name="5.9.8"></a>
 ## [5.9.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.9.7...@wireapp/core@5.9.8) (2018-08-23)
 

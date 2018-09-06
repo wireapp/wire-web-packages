@@ -3,6 +3,7 @@
     "declaration": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["DOM", "ES2016", "ES2017.object"],
+    "jsx": "react",
     "module": "CommonJS",
     "moduleResolution": "node",
     "noEmitOnError": true,
