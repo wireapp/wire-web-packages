@@ -22,10 +22,10 @@ import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine';
 import axios, {AxiosError, AxiosPromise, AxiosRequestConfig, AxiosResponse} from 'axios';
 import * as EventEmitter from 'events';
 import * as logdown from 'logdown';
-import {ValidationUtil} from '../../validation/';
 import {AccessTokenData, AccessTokenStore, AuthAPI} from '../auth/';
 import {BackendErrorLabel, BackendErrorMapper, ConnectionState, ContentType, NetworkError, StatusCode} from '../http/';
 import {sendRequestWithCookie} from '../shims/node/cookie';
+import {ValidationUtil} from '../validation/';
 
 class HttpClient extends EventEmitter {
   private readonly logger = logdown('@wireapp/api-client/http/HttpClient', {

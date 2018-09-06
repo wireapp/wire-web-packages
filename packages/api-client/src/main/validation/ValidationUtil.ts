@@ -23,14 +23,19 @@ import {AccessTokenData} from '../auth';
 class ValidationUtil {
   static obfuscateCookie(cookie: ToughCookie, enabled = true): ToughCookie {
     if (enabled) {
-      cookie.value = cookie.value.substr(0, 20);
+      const obfuscatedCookie = cookie.clone();
+      obfuscatedCookie.value = cookie.value.substr(0, 20);
+      return obfuscatedCookie;
     }
     return cookie;
   }
 
-  static obfuscateAccessToken(accessToken: AccessTokenData, enabled = false): AccessTokenData {
+  static obfuscateAccessToken(accessToken: AccessTokenData, enabled = true): AccessTokenData {
     if (enabled && accessToken.access_token) {
-      accessToken.access_token = accessToken.access_token.substr(0, 20);
+      return {
+        ...accessToken,
+        access_token: `${accessToken.access_token.substr(0, 20)} ...`,
+      };
     }
     return accessToken;
   }
