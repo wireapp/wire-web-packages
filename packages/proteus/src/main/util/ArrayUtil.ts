@@ -22,13 +22,7 @@ import ProteusError from '../errors/ProteusError';
 /** Concatenates array buffers (usually 8-bit unsigned). */
 const ArrayUtil = {
   assert_is_not_zeros(array: number[] | Uint8Array): void {
-    let only_zeroes = true;
-    for (const val in array) {
-      if (parseInt(val) > 0) {
-        only_zeroes = false;
-        break;
-      }
-    }
+    const only_zeroes = Array.from(array).every(val => val === 0);
 
     if (only_zeroes === true) {
       throw new ProteusError('Array consists only of zeroes.', ProteusError.CODE.CASE_100);

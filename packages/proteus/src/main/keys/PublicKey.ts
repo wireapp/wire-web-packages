@@ -18,10 +18,10 @@
  */
 
 import * as CBOR from '@wireapp/cbor';
-import * as ed2curve from 'ed2curve';
 import * as sodium from 'libsodium-wrappers-sumo';
 
-import InputError from '../errors/InputError';
+//import InputError from '../errors/InputError';
+import ArrayUtil from '../util/ArrayUtil';
 import ClassUtil from '../util/ClassUtil';
 
 class PublicKey {
@@ -76,12 +76,18 @@ class PublicKey {
       }
     }
 
-    const pub_curve = ed2curve.convertPublicKey(self.pub_edward);
-    if (pub_curve) {
+    try {
+      ArrayUtil.assert_is_not_zeros(self.pub_edward);
+      const pub_curve = sodium.crypto_sign_ed25519_pk_to_curve25519(self.pub_edward);
+      ArrayUtil.assert_is_not_zeros(pub_curve);
+
       self.pub_curve = pub_curve;
       return self;
+    } catch (error) {
+      //console.log(error);
+      //throw new InputError.ConversionError('Could not convert public key with libsodium.', 409);
+      return self;
     }
-    throw new InputError.ConversionError('Could not convert private key with ed2curve.', 409);
   }
 }
 
