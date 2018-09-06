@@ -628,9 +628,9 @@ class ConversationService {
         });
 
         linkPreviewMessage.image = assetMessage;
-
-        builtLinkPreviews.push(linkPreviewMessage);
       }
+
+      builtLinkPreviews.push(linkPreviewMessage);
     }
 
     return builtLinkPreviews;
