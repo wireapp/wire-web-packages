@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@types/color": "3.0.0",
     "bazinga64": "5.3.8",
     "color": "3.0.0",
     "recompose": "0.30.0",
@@ -31,7 +32,6 @@
     "styled-components": "3.4.5"
   },
   "optionalDependencies": {
-    "@types/color": "3.0.0",
     "@types/react-dom": "16.0.7",
     "@types/react": "16.4.12",
     "@types/recompose": "0.26.4",
