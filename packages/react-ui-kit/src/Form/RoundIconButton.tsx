@@ -51,11 +51,13 @@ export interface ButtonProps {
   size?: number;
 }
 
+type HTMLButtonType = React.HTMLAttributes<HTMLButtonElement> & {type: string; formNoValidate: boolean};
+
 const darkenAmount = 0.08;
 
-const Button = styled<ButtonProps & React.HTMLAttributes<HTMLButtonElement>>(
-  RoundContainer.withComponent(styled.button``)
-)<ButtonProps>`
+const Button = styled<ButtonProps & HTMLButtonType>(RoundContainer.withComponent(styled.button<HTMLButtonType>``))<
+  ButtonProps
+>`
   background-color: ${props => (props.disabled ? COLOR.DISABLED : props.color)};
   min-width: ${props => props.size}px;
   outline: none;
@@ -82,7 +84,7 @@ enum ICON_NAME {
   TRASH = 'trash',
 }
 
-const RoundIconButton: React.SFC<RoundIconButtonProps & React.HTMLAttributes<HTMLButtonElement>> = ({
+const RoundIconButton: React.SFC<RoundIconButtonProps & HTMLButtonType> = ({
   icon,
   iconColor,
   iconHeight,
