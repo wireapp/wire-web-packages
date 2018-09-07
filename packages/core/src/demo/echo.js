@@ -90,6 +90,36 @@ const messageIdCache = {};
     account.service.conversation.messageTimer.setMessageLevelTimer(conversationId, 0);
   };
 
+  const buildLinkPreviews = async originalLinkPreviews => {
+    const newLinkPreviews = [];
+    for (const originalLinkPreview of originalLinkPreviews) {
+      const originalLinkPreviewImage =
+        originalLinkPreview.article && originalLinkPreview.article.image
+          ? originalLinkPreview.article.image
+          : originalLinkPreview.image;
+      let linkPreviewImage;
+
+      if (originalLinkPreviewImage) {
+        const imageBuffer = await account.service.conversation.getAsset(originalLinkPreviewImage.uploaded);
+
+        linkPreviewImage = {
+          data: imageBuffer,
+          height: originalLinkPreviewImage.original.image.height,
+          type: originalLinkPreviewImage.original.mimeType,
+          width: originalLinkPreviewImage.original.image.width,
+        };
+      }
+
+      const newLinkPreview = await account.service.conversation.createLinkPreview({
+        ...originalLinkPreview,
+        image: linkPreviewImage,
+      });
+
+      newLinkPreviews.push(newLinkPreview);
+    }
+    return newLinkPreviews;
+  };
+
   account.on(PayloadBundleType.TEXT, async data => {
     const {
       content: {linkPreviews, text},
@@ -97,34 +127,8 @@ const messageIdCache = {};
     } = data;
     let textPayload;
 
-    const newLinkPreviews = [];
-
     if (linkPreviews) {
-      for (const originalLinkPreview of linkPreviews) {
-        const originalLinkPreviewImage =
-          originalLinkPreview.article && originalLinkPreview.article.image
-            ? originalLinkPreview.article.image
-            : originalLinkPreview.image;
-        let linkPreviewImage;
-
-        if (originalLinkPreviewImage) {
-          const imageBuffer = await account.service.conversation.getAsset(originalLinkPreviewImage.uploaded);
-
-          linkPreviewImage = {
-            data: imageBuffer,
-            height: originalLinkPreviewImage.original.image.height,
-            type: originalLinkPreviewImage.original.mimeType,
-            width: originalLinkPreviewImage.original.image.width,
-          };
-        }
-
-        const newLinkPreview = await account.service.conversation.createLinkPreview({
-          ...originalLinkPreview,
-          image: linkPreviewImage,
-        });
-
-        newLinkPreviews.push(newLinkPreview);
-      }
+      const newLinkPreviews = await buildLinkPreviews(linkPreviews);
 
       await handleIncomingMessage(data);
 
@@ -138,7 +142,7 @@ const messageIdCache = {};
       textPayload = account.service.conversation.createText(text, newLinkPreviews, cachedMessageId);
     } else {
       await handleIncomingMessage(data);
-      textPayload = account.service.conversation.createText(text, newLinkPreviews);
+      textPayload = account.service.conversation.createText(text);
     }
 
     messageIdCache[messageId] = textPayload.id;
@@ -315,34 +319,8 @@ const messageIdCache = {};
       return;
     }
 
-    const newLinkPreviews = [];
-
     if (linkPreviews) {
-      for (const originalLinkPreview of linkPreviews) {
-        const originalLinkPreviewImage =
-          originalLinkPreview.article && originalLinkPreview.article.image
-            ? originalLinkPreview.article.image
-            : originalLinkPreview.image;
-        let linkPreviewImage;
-
-        if (originalLinkPreviewImage) {
-          const imageBuffer = await account.service.conversation.getAsset(originalLinkPreviewImage.uploaded);
-
-          linkPreviewImage = {
-            data: imageBuffer,
-            height: originalLinkPreviewImage.original.image.height,
-            type: originalLinkPreviewImage.original.mimeType,
-            width: originalLinkPreviewImage.original.image.width,
-          };
-        }
-
-        const newLinkPreview = await account.service.conversation.createLinkPreview({
-          ...originalLinkPreview,
-          image: linkPreviewImage,
-        });
-
-        newLinkPreviews.push(newLinkPreview);
-      }
+      const newLinkPreviews = await buildLinkPreviews(linkPreviews);
 
       await handleIncomingMessage(data);
 
@@ -360,7 +338,7 @@ const messageIdCache = {};
       );
     } else {
       await handleIncomingMessage(data);
-      editedPayload = account.service.conversation.createEditedText(text, cachedOriginalMessageId, newLinkPreviews);
+      editedPayload = account.service.conversation.createEditedText(text, cachedOriginalMessageId);
     }
 
     messageIdCache[messageId] = editedPayload.id;
