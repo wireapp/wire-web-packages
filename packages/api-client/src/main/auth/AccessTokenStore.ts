@@ -20,6 +20,7 @@
 import * as EventEmitter from 'events';
 import * as logdown from 'logdown';
 import {AccessTokenData} from '../auth';
+import {ObfuscationUtil} from '../obfuscation/';
 
 class AccessTokenStore extends EventEmitter {
   private readonly logger = logdown('@wireapp/api-client/AccessTokenStore', {
@@ -45,10 +46,10 @@ class AccessTokenStore extends EventEmitter {
       this.emit(AccessTokenStore.TOPIC.ACCESS_TOKEN_REFRESH, this.accessToken);
     }
 
-    this.logger.info(`Saved updated access token. It will expire in "${accessToken.expires_in}" seconds.`, {
-      ...accessToken,
-      access_token: `${accessToken.access_token.substr(0, 20)}...`,
-    });
+    this.logger.info(
+      `Saved updated access token. It will expire in "${accessToken.expires_in}" seconds.`,
+      ObfuscationUtil.obfuscateAccessToken(accessToken)
+    );
     return this.accessToken;
   }
 }

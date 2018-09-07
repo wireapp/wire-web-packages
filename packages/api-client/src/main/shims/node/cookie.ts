@@ -18,11 +18,16 @@
  */
 import {error as StoreEngineError} from '@wireapp/store-engine';
 import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine';
+<<<<<<< HEAD
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
+=======
+import {AxiosPromise, AxiosRequestConfig, AxiosResponse} from 'axios';
+>>>>>>> master
 import * as logdown from 'logdown';
 import {Cookie as ToughCookie} from 'tough-cookie';
-import {AUTH_COOKIE_KEY, AUTH_TABLE_NAME, AccessTokenData, Cookie} from '../../auth';
-import {HttpClient} from '../../http';
+import {AUTH_COOKIE_KEY, AUTH_TABLE_NAME, AccessTokenData, Cookie} from '../../auth/';
+import {HttpClient} from '../../http/';
+import {ObfuscationUtil} from '../../obfuscation/';
 
 interface PersistedCookie {
   expiration: string;
@@ -34,7 +39,11 @@ const logger = logdown('@wireapp/api-client/shims/node/cookie', {
   markdown: false,
 });
 
+<<<<<<< HEAD
 function loadExistingCookie(engine: CRUDEngine): Promise<Cookie> {
+=======
+const loadExistingCookie = (engine: CRUDEngine): Promise<Cookie> => {
+>>>>>>> master
   return engine
     .read<PersistedCookie>(AUTH_TABLE_NAME, AUTH_COOKIE_KEY)
     .catch((error: Error) => {
@@ -76,7 +85,10 @@ export async function saveCookie(response: AxiosResponse, cookieStore: CRUDEngin
     for (const cookie of parsedCookies) {
       if (cookie) {
         await setInternalCookie(new Cookie(cookie.value, cookie.expires.toString()), cookieStore);
-        logger.info(`Saved internal cookie.`, {...cookie, value: `${cookie.value.substr(0, 20)}...`});
+        logger.info(
+          `Saved internal cookie. It will expire in "${cookie.expires}" seconds.`,
+          ObfuscationUtil.obfuscateCookie(cookie)
+        );
       }
     }
   }
