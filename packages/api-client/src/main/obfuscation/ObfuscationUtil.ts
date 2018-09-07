@@ -17,14 +17,16 @@
  *
  */
 
-import {AccessTokenData} from '@wireapp/api-client/src/main/auth';
+import {AccessTokenData} from '@wireapp/api-client/src/main/auth/';
 import {Cookie as ToughCookie} from 'tough-cookie';
+
+const obfuscationLengthLimit = 20;
 
 const obfuscateAccessToken = (accessToken: AccessTokenData, enabled = true): AccessTokenData => {
   if (enabled) {
     return {
       ...accessToken,
-      access_token: `${accessToken.access_token.substr(0, 20)}...`,
+      access_token: `${accessToken.access_token.substr(0, obfuscationLengthLimit)}...`,
     };
   }
   return accessToken;
@@ -33,7 +35,7 @@ const obfuscateAccessToken = (accessToken: AccessTokenData, enabled = true): Acc
 const obfuscateCookie = (cookie: ToughCookie, enabled = true): ToughCookie => {
   if (enabled) {
     const obfuscatedCookie = cookie.clone();
-    obfuscatedCookie.value = `${cookie.value.substr(0, 20)}...`;
+    obfuscatedCookie.value = `${cookie.value.substr(0, obfuscationLengthLimit)}...`;
     return obfuscatedCookie;
   }
   return cookie;
