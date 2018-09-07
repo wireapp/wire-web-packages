@@ -25,12 +25,7 @@ import * as logdown from 'logdown';
 import {AccessTokenData, AccessTokenStore, AuthAPI} from '../auth/';
 import {APIClient} from '../Client';
 import {BackendErrorLabel, BackendErrorMapper, ConnectionState, ContentType, NetworkError, StatusCode} from '../http/';
-<<<<<<< HEAD
 import {saveCookie, sendRequestWithCookie} from '../shims/node/cookie';
-=======
-import {ObfuscationUtil} from '../obfuscation/';
-import {sendRequestWithCookie} from '../shims/node/cookie';
->>>>>>> master
 
 class HttpClient extends EventEmitter {
   private readonly logger = logdown('@wireapp/api-client/http/HttpClient', {
@@ -159,7 +154,6 @@ class HttpClient extends EventEmitter {
     let response;
     try {
       response = await this.postAccess(expiredAccessToken);
-
     } catch (error) {
       await this.client.logout({ignoreError: true});
       throw new Error('Got logged out from backend.');

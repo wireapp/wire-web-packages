@@ -18,11 +18,7 @@
  */
 import {error as StoreEngineError} from '@wireapp/store-engine';
 import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine';
-<<<<<<< HEAD
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
-=======
-import {AxiosPromise, AxiosRequestConfig, AxiosResponse} from 'axios';
->>>>>>> master
 import * as logdown from 'logdown';
 import {Cookie as ToughCookie} from 'tough-cookie';
 import {AUTH_COOKIE_KEY, AUTH_TABLE_NAME, AccessTokenData, Cookie} from '../../auth/';
@@ -39,11 +35,7 @@ const logger = logdown('@wireapp/api-client/shims/node/cookie', {
   markdown: false,
 });
 
-<<<<<<< HEAD
 function loadExistingCookie(engine: CRUDEngine): Promise<Cookie> {
-=======
-const loadExistingCookie = (engine: CRUDEngine): Promise<Cookie> => {
->>>>>>> master
   return engine
     .read<PersistedCookie>(AUTH_TABLE_NAME, AUTH_COOKIE_KEY)
     .catch((error: Error) => {
