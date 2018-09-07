@@ -18,7 +18,7 @@
  */
 
 const {Cookie: ToughCookie} = require('tough-cookie');
-const {obfuscateAccessToken, obfuscateCookie} = require('@wireapp/api-client/dist/commonjs/obfuscation/');
+const {ObfuscationUtil} = require('@wireapp/api-client/dist/commonjs/obfuscation/');
 
 describe('"ValidationUtil"', () => {
   const accessTokenData = {
@@ -34,22 +34,22 @@ describe('"ValidationUtil"', () => {
   );
 
   it('obfuscates an access token', () => {
-    const obfuscatedToken = obfuscateAccessToken(accessTokenData);
+    const obfuscatedToken = ObfuscationUtil.obfuscateAccessToken(accessTokenData);
     expect(obfuscatedToken.access_token).not.toBe(accessTokenData.access_token);
   });
 
   it(`doesn't obfuscate an access token when disabled`, () => {
-    const obfuscatedToken = obfuscateAccessToken(accessTokenData, false);
+    const obfuscatedToken = ObfuscationUtil.obfuscateAccessToken(accessTokenData, false);
     expect(obfuscatedToken.access_token).toBe(accessTokenData.access_token);
   });
 
   it('obfuscates a cookie', () => {
-    const obfuscatedCookie = obfuscateCookie(cookie);
+    const obfuscatedCookie = ObfuscationUtil.obfuscateCookie(cookie);
     expect(cookie.value).not.toBe(obfuscatedCookie.value);
   });
 
   it(`doesn't obfuscate a cookie when disabled`, () => {
-    const obfuscatedCookie = obfuscateCookie(cookie, false);
+    const obfuscatedCookie = ObfuscationUtil.obfuscateCookie(cookie, false);
     expect(cookie.value).toBe(obfuscatedCookie.value);
   });
 });

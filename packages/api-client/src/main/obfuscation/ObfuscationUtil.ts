@@ -20,6 +20,16 @@
 import {AccessTokenData} from '@wireapp/api-client/src/main/auth';
 import {Cookie as ToughCookie} from 'tough-cookie';
 
+const obfuscateAccessToken = (accessToken: AccessTokenData, enabled = true): AccessTokenData => {
+  if (enabled) {
+    return {
+      ...accessToken,
+      access_token: `${accessToken.access_token.substr(0, 20)}...`,
+    };
+  }
+  return accessToken;
+};
+
 const obfuscateCookie = (cookie: ToughCookie, enabled = true): ToughCookie => {
   if (enabled) {
     const obfuscatedCookie = cookie.clone();
@@ -29,14 +39,4 @@ const obfuscateCookie = (cookie: ToughCookie, enabled = true): ToughCookie => {
   return cookie;
 };
 
-const obfuscateAccessToken = (accessToken: AccessTokenData, enabled = true): AccessTokenData => {
-  if (enabled && accessToken.access_token) {
-    return {
-      ...accessToken,
-      access_token: `${accessToken.access_token.substr(0, 20)}...`,
-    };
-  }
-  return accessToken;
-};
-
-export {obfuscateCookie, obfuscateAccessToken};
+export const ObfuscationUtil = {obfuscateAccessToken, obfuscateCookie};

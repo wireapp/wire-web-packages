@@ -24,7 +24,7 @@ import * as logdown from 'logdown';
 import {Cookie as ToughCookie} from 'tough-cookie';
 import {AUTH_COOKIE_KEY, AUTH_TABLE_NAME, AccessTokenData, Cookie} from '../../auth/';
 import {HttpClient} from '../../http/';
-import {obfuscateCookie} from '../../obfuscation';
+import {ObfuscationUtil} from '../../obfuscation/';
 
 interface PersistedCookie {
   expiration: string;
@@ -75,7 +75,10 @@ export const retrieveCookie = async (response: AxiosResponse, engine: CRUDEngine
     const cookies = response.headers['set-cookie'].map(ToughCookie.parse);
     for (const cookie of cookies) {
       await setInternalCookie(new Cookie(cookie.value, cookie.expires), engine);
-      logger.info(`Saved internal cookie. It will expire in "${cookie.expires}" seconds.`, obfuscateCookie(cookie));
+      logger.info(
+        `Saved internal cookie. It will expire in "${cookie.expires}" seconds.`,
+        ObfuscationUtil.obfuscateCookie(cookie)
+      );
     }
   }
 

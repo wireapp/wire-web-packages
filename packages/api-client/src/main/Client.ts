@@ -32,7 +32,7 @@ import {GiphyAPI} from './giphy/';
 import {HttpClient} from './http/';
 import {InvitationAPI} from './invitation/';
 import {NotificationAPI} from './notification/';
-import {obfuscateAccessToken} from './obfuscation/';
+import {ObfuscationUtil} from './obfuscation/';
 import {SelfAPI} from './self/';
 import {retrieveCookie} from './shims/node/cookie';
 import {WebSocketClient} from './tcp/';
@@ -163,7 +163,7 @@ class APIClient {
 
     this.logger.info(
       `Saved initial access token. It will expire in "${accessToken.expires_in}" seconds.`,
-      obfuscateAccessToken(accessToken)
+      ObfuscationUtil.obfuscateAccessToken(accessToken)
     );
 
     const context = this.createContext(accessToken.user, loginData.clientType);
