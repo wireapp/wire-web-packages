@@ -141,49 +141,37 @@ describe('Client', () => {
           email: loginData.email,
           password: loginData.password,
         })
-        .query({persist: true})
-        .reply(200, accessTokenData, {
-          'set-cookie': cookie_login,
-        });
-
-      nock(baseURL)
-        .post(`${AuthAPI.URL.LOGIN}`, {
-          email: loginData.email,
-          password: loginData.password,
-        })
-        .query({persist: false})
+        .query(true)
         .reply(200, accessTokenData, {
           'set-cookie': cookie_login,
         });
 
       nock(baseURL)
         .post(`${AuthAPI.URL.ACCESS}/${AuthAPI.URL.LOGOUT}`)
-        .reply(200, undefined);
+        .reply(200);
     });
 
-    it('creates a context from a successful login', done => {
+    afterEach(() => {
+      nock.cleanAll();
+    });
+
+    it('creates a context from a successful login', () => {
       const client = new APIClient();
-      client.login(loginData).then(context => {
+      return client.login(loginData).then(context => {
         expect(context.userId).toBe(accessTokenData.user);
         expect(client.accessTokenStore.accessToken.access_token).toBe(accessTokenData.access_token);
-        done();
       });
     });
 
-    it('can login after a logout', done => {
+    it('can login after a logout', () => {
       const client = new APIClient();
-      client
-        .login(loginData)
-        .then(() => client.logout())
-        .then(done)
-        .catch(done.fail);
+      return client.login(loginData).then(() => client.logout());
     });
 
-    it('refreshes an access token when it becomes invalid', done => {
+    it('refreshes an access token when it becomes invalid', () => {
       nock(baseURL)
         .get(UserAPI.URL.USERS)
         .query({handles: 'webappbot'})
-        .once()
         .reply(403, {
           code: 403,
           label: 'invalid-credentials',
@@ -200,7 +188,7 @@ describe('Client', () => {
         .reply(200, accessTokenData);
 
       const client = new APIClient();
-      client
+      return client
         .login(loginData)
         .then(context => {
           expect(context.userId).toBe(accessTokenData.user);
@@ -212,16 +200,13 @@ describe('Client', () => {
         .then(response => {
           expect(response.name).toBe(userData.name);
           expect(client.accessTokenStore.accessToken.access_token).toBeDefined();
-          done();
-        })
-        .catch(done.fail);
+        });
     });
 
     it('refreshes the cookie on a permanent client', async () => {
       nock(baseURL)
         .get(UserAPI.URL.USERS)
         .query({handles: 'webappbot'})
-        .once()
         .reply(403, {
           code: 403,
           label: 'invalid-credentials',
@@ -263,7 +248,6 @@ describe('Client', () => {
       nock(baseURL)
         .get(UserAPI.URL.USERS)
         .query({handles: 'webappbot'})
-        .once()
         .reply(403, {
           code: 403,
           label: 'invalid-credentials',
@@ -297,10 +281,10 @@ describe('Client', () => {
     beforeEach(() => {
       nock(baseURL)
         .post(`${AuthAPI.URL.ACCESS}/${AuthAPI.URL.LOGOUT}`)
-        .reply(200, undefined);
+        .reply(200);
     });
 
-    it('can logout a user', async done => {
+    it('can logout a user', async () => {
       const client = new APIClient();
 
       const context = client.createContext(
@@ -310,12 +294,7 @@ describe('Client', () => {
       );
       await client.initEngine(context);
 
-      try {
-        await client.logout();
-        done();
-      } catch (error) {
-        done.fail(error);
-      }
+      await client.logout();
     });
 
     it('ignores errors when told to', async () => {
@@ -369,7 +348,7 @@ describe('Client', () => {
         .reply(200, accessTokenData);
     });
 
-    it('automatically gets an access token after registration', done => {
+    it('automatically gets an access token after registration', () => {
       const client = new APIClient({
         schemaCallback: db => {
           db.version(1).stores({
@@ -377,14 +356,11 @@ describe('Client', () => {
           });
         },
       });
-      client
-        .register(registerData)
-        .then(context => {
-          expect(context.userId).toBe(registerData.id);
-          expect(client.accessTokenStore.accessToken.access_token).toBe(accessTokenData.access_token);
-          done();
-        })
-        .catch(done.fail);
+
+      return client.register(registerData).then(context => {
+        expect(context.userId).toBe(registerData.id);
+        expect(client.accessTokenStore.accessToken.access_token).toBe(accessTokenData.access_token);
+      });
     });
   });
 });
