@@ -69,7 +69,7 @@ const setInternalCookie = (cookie: Cookie, engine: CRUDEngine): Promise<string> 
   });
 };
 
-export async function saveCookie(response: AxiosResponse, cookieStore: CRUDEngine): Promise<AccessTokenData> {
+export const saveCookie = async (response: AxiosResponse, cookieStore: CRUDEngine): Promise<AccessTokenData> => {
   if (response.headers && response.headers['set-cookie']) {
     const cookies: string[] | string = response.headers['set-cookie'];
     const parsedCookies =
@@ -86,14 +86,14 @@ export async function saveCookie(response: AxiosResponse, cookieStore: CRUDEngin
   }
 
   return response.data;
-}
+};
 
 // https://github.com/wearezeta/backend-api-docs/wiki/API-User-Authentication#token-refresh
-export async function sendRequestWithCookie(
+export const sendRequestWithCookie = async (
   client: HttpClient,
   config: AxiosRequestConfig,
   engine: CRUDEngine
-): Promise<AxiosResponse> {
+): Promise<AxiosResponse> => {
   return loadExistingCookie(engine).then((cookie: Cookie) => {
     if (!cookie.isExpired) {
       config.headers = config.headers || {};
@@ -103,4 +103,4 @@ export async function sendRequestWithCookie(
 
     return client._sendRequest(config);
   });
-}
+};
