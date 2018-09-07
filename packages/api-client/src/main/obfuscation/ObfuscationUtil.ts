@@ -17,28 +17,26 @@
  *
  */
 
+import {AccessTokenData} from '@wireapp/api-client/src/main/auth';
 import {Cookie as ToughCookie} from 'tough-cookie';
-import {AccessTokenData} from '../auth';
 
-class ValidationUtil {
-  static obfuscateCookie(cookie: ToughCookie, enabled = true): ToughCookie {
-    if (enabled) {
-      const obfuscatedCookie = cookie.clone();
-      obfuscatedCookie.value = `${cookie.value.substr(0, 20)}...`;
-      return obfuscatedCookie;
-    }
-    return cookie;
+const obfuscateCookie = (cookie: ToughCookie, enabled = true): ToughCookie => {
+  if (enabled) {
+    const obfuscatedCookie = cookie.clone();
+    obfuscatedCookie.value = `${cookie.value.substr(0, 20)}...`;
+    return obfuscatedCookie;
   }
+  return cookie;
+};
 
-  static obfuscateAccessToken(accessToken: AccessTokenData, enabled = true): AccessTokenData {
-    if (enabled && accessToken.access_token) {
-      return {
-        ...accessToken,
-        access_token: `${accessToken.access_token.substr(0, 20)}...`,
-      };
-    }
-    return accessToken;
+const obfuscateAccessToken = (accessToken: AccessTokenData, enabled = true): AccessTokenData => {
+  if (enabled && accessToken.access_token) {
+    return {
+      ...accessToken,
+      access_token: `${accessToken.access_token.substr(0, 20)}...`,
+    };
   }
-}
+  return accessToken;
+};
 
-export {ValidationUtil};
+export {obfuscateCookie, obfuscateAccessToken};

@@ -24,8 +24,8 @@ import * as EventEmitter from 'events';
 import * as logdown from 'logdown';
 import {AccessTokenData, AccessTokenStore, AuthAPI} from '../auth/';
 import {BackendErrorLabel, BackendErrorMapper, ConnectionState, ContentType, NetworkError, StatusCode} from '../http/';
+import {obfuscateAccessToken} from '../obfuscation/';
 import {sendRequestWithCookie} from '../shims/node/cookie';
-import {ValidationUtil} from '../validation/';
 
 class HttpClient extends EventEmitter {
   private readonly logger = logdown('@wireapp/api-client/http/HttpClient', {
@@ -153,7 +153,7 @@ class HttpClient extends EventEmitter {
     const accessToken = await this.postAccess(expiredAccessToken);
     this.logger.info(
       `Saved updated access token. It will expire in "${accessToken.expires_in}" seconds.`,
-      ValidationUtil.obfuscateAccessToken(accessToken)
+      obfuscateAccessToken(accessToken)
     );
     return this.accessTokenStore.updateToken(accessToken);
   }
