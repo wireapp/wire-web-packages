@@ -35,7 +35,7 @@ const logger = logdown('@wireapp/api-client/shims/node/cookie', {
   markdown: false,
 });
 
-function loadExistingCookie(engine: CRUDEngine): Promise<Cookie> {
+const loadExistingCookie = (engine: CRUDEngine): Promise<Cookie> => {
   return engine
     .read<PersistedCookie>(AUTH_TABLE_NAME, AUTH_COOKIE_KEY)
     .catch((error: Error) => {
@@ -53,9 +53,9 @@ function loadExistingCookie(engine: CRUDEngine): Promise<Cookie> {
         ? new Cookie(fileContent.zuid, fileContent.expiration)
         : new Cookie('', '0');
     });
-}
+};
 
-function setInternalCookie(cookie: Cookie, engine: CRUDEngine): Promise<string> {
+const setInternalCookie = (cookie: Cookie, engine: CRUDEngine): Promise<string> => {
   const entity: PersistedCookie = {expiration: cookie.expiration, zuid: cookie.zuid};
   return engine.create(AUTH_TABLE_NAME, AUTH_COOKIE_KEY, entity).catch(error => {
     if (
@@ -67,7 +67,7 @@ function setInternalCookie(cookie: Cookie, engine: CRUDEngine): Promise<string> 
       throw error;
     }
   });
-}
+};
 
 export async function saveCookie(response: AxiosResponse, cookieStore: CRUDEngine): Promise<AccessTokenData> {
   if (response.headers && response.headers['set-cookie']) {
