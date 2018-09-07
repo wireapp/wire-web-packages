@@ -23,7 +23,6 @@ import axios, {AxiosError, AxiosPromise, AxiosRequestConfig, AxiosResponse} from
 import * as EventEmitter from 'events';
 import * as logdown from 'logdown';
 import {AccessTokenData, AccessTokenStore, AuthAPI} from '../auth/';
-import {APIClient} from '../Client';
 import {BackendErrorLabel, BackendErrorMapper, ConnectionState, ContentType, NetworkError, StatusCode} from '../http/';
 import {saveCookie, sendRequestWithCookie} from '../shims/node/cookie';
 
@@ -42,8 +41,7 @@ class HttpClient extends EventEmitter {
   constructor(
     private readonly baseURL: string,
     public accessTokenStore: AccessTokenStore,
-    private readonly cookieStore: CRUDEngine,
-    private readonly client: APIClient
+    private readonly cookieStore: CRUDEngine
   ) {
     super();
 
@@ -155,7 +153,6 @@ class HttpClient extends EventEmitter {
     try {
       response = await this.postAccess(expiredAccessToken);
     } catch (error) {
-      await this.client.logout({ignoreError: true});
       throw new Error('Got logged out from backend.');
     }
 

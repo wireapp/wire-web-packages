@@ -85,7 +85,7 @@ class APIClient {
     this.config = {...defaultConfig, ...config};
     this.accessTokenStore = new AccessTokenStore();
 
-    const httpClient = new HttpClient(this.config.urls.rest, this.accessTokenStore, this.config.store, this);
+    const httpClient = new HttpClient(this.config.urls.rest, this.accessTokenStore, this.config.store);
 
     this.transport = {
       http: httpClient,
