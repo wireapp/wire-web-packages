@@ -25,7 +25,7 @@ import {
   PaymentDataUpdate,
   PaymentPlan,
   PaymentStripeCharge,
-  PaymentStripeInvoice,
+  PaymentStripeInvoices,
   PaymentStripePlan,
 } from '.';
 import {HttpClient} from '../../http';
@@ -127,7 +127,7 @@ class PaymentAPI {
     teamId: string,
     limit: number = PaymentAPI.DEFAULT_INVOICES_CHUNK_SIZE,
     startAfterInvoiceId?: string
-  ): Promise<PaymentStripeInvoice[]> {
+  ): Promise<PaymentStripeInvoices> {
     const config: AxiosRequestConfig = {
       method: 'get',
       params: {
