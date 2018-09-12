@@ -292,7 +292,10 @@ describe('ConversationService', () => {
         userId: new UUID(4).format(),
       };
 
-      const textMessage = account.service.conversation.createText(text, [mention]);
+      const textMessage = account.service.conversation
+        .createText(text)
+        .withMentions([mention])
+        .build();
 
       expect(textMessage.content.text).toEqual(text);
       expect(textMessage.content.mentions).toEqual(jasmine.any(Array));
@@ -307,7 +310,7 @@ describe('ConversationService', () => {
       };
 
       const text = 'Hello, world!';
-      const textMessage = account.service.conversation.createText(text);
+      const textMessage = account.service.conversation.createText(text).build();
 
       expect(textMessage.content.mentions).toBeUndefined();
     });
