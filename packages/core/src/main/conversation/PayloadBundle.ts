@@ -44,6 +44,7 @@ interface PayloadBundle {
   state: PayloadBundleState;
   timestamp: number;
   type: PayloadBundleType;
+  withLinkPreview?: (linkPreview: LinkPreviewUploadedContent) => PayloadBundleOutgoingUnsent;
   withLinkPreviews?: (linkPreviews: LinkPreviewUploadedContent[]) => PayloadBundleOutgoingUnsent;
 }
 

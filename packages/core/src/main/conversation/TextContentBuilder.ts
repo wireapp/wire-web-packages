@@ -49,7 +49,14 @@ class TextContentBuilder {
     return this.payloadBundle.type;
   }
 
-  public withLinkPreviews(linkPreviews: LinkPreviewUploadedContent[]): TextContentBuilder {
+  public withLinkPreviews(linkPreview: LinkPreviewUploadedContent): TextContentBuilder {
+    const content = this.payloadBundle.content as TextContent;
+    content.linkPreviews = [linkPreview];
+
+    return this;
+  }
+
+  public withLinkPreview(linkPreviews: LinkPreviewUploadedContent[]): TextContentBuilder {
     const content = this.payloadBundle.content as TextContent;
     content.linkPreviews = linkPreviews;
 
