@@ -52,7 +52,7 @@ const {FileEngine} = require('@wireapp/store-engine');
   logger.log('Client ID', account.apiClient.context.clientId);
 
   async function sendAndDeleteMessage() {
-    const deleteTextPayload = account.service.conversation.createText('Delete me!').build();
+    const deleteTextPayload = account.service.conversation.createText('Delete me!');
     const {id: messageId} = await account.service.conversation.send(CONVERSATION_ID, deleteTextPayload);
 
     const fiveSecondsInMillis = 5000;
@@ -69,7 +69,7 @@ const {FileEngine} = require('@wireapp/store-engine');
 
   async function sendEphemeralText(expiry = MESSAGE_TIMER) {
     account.service.conversation.messageTimer.setMessageLevelTimer(CONVERSATION_ID, expiry);
-    const payload = account.service.conversation.createText(`Expires after ${expiry}ms ...`).build();
+    const payload = account.service.conversation.createText(`Expires after ${expiry}ms ...`);
     await account.service.conversation.send(CONVERSATION_ID, payload);
     account.service.conversation.messageTimer.setMessageLevelTimer(CONVERSATION_ID, 0);
   }
@@ -82,15 +82,15 @@ const {FileEngine} = require('@wireapp/store-engine');
   }
 
   async function sendText() {
-    const payload = account.service.conversation.createText('Hello, World!').build();
+    const payload = account.service.conversation.createText('Hello, World!');
     await account.service.conversation.send(CONVERSATION_ID, payload);
   }
 
   async function sendAndEdit() {
-    const payload = account.service.conversation.createText('Hello, Wolrd!').build();
+    const payload = account.service.conversation.createText('Hello, Wolrd!');
     const {id: originalMessageId} = await account.service.conversation.send(CONVERSATION_ID, payload);
     setInterval(async () => {
-      const editedPayload = account.service.conversation.createEditedText('Hello, World!', originalMessageId).build();
+      const editedPayload = account.service.conversation.createEditedText('Hello, World!', originalMessageId);
       await account.service.conversation.send(CONVERSATION_ID, editedPayload);
     }, 2000);
   }

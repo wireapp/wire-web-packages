@@ -17,7 +17,7 @@
  *
  */
 
-import {ConversationContent} from './content/ConversationContent';
+import {ConversationContent, LinkPreviewUploadedContent} from '../conversation/content';
 
 enum PayloadBundleState {
   INCOMING = 'PayloadBundleState.INCOMING',
@@ -44,6 +44,7 @@ interface PayloadBundle {
   state: PayloadBundleState;
   timestamp: number;
   type: PayloadBundleType;
+  withLinkPreviews?: (linkPreviews: LinkPreviewUploadedContent[]) => PayloadBundleOutgoingUnsent;
 }
 
 enum PayloadBundleType {

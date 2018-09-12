@@ -20,6 +20,7 @@
 export * from './AssetContent';
 export * from './ClientActionContent';
 export * from './ConfirmationContent';
+export * from './ConversationContent';
 export * from './DeletedContent';
 export * from './EditedTextContent';
 export * from './FileContent';

@@ -139,13 +139,10 @@ const messageIdCache = {};
         return;
       }
 
-      textPayload = account.service.conversation
-        .createText(text, cachedMessageId)
-        .withLinkPreviews(newLinkPreviews)
-        .build();
+      textPayload = account.service.conversation.createText(text, cachedMessageId).withLinkPreviews(newLinkPreviews);
     } else {
       await handleIncomingMessage(data);
-      textPayload = account.service.conversation.createText(text).build();
+      textPayload = account.service.conversation.createText(text);
     }
 
     messageIdCache[messageId] = textPayload.id;
