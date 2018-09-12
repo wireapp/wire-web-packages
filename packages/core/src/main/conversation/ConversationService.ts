@@ -746,17 +746,58 @@ class ConversationService {
   public createEditedText(
     newMessageText: string,
     originalMessageId: string,
+    messageId?: string
+  ): PayloadBundleOutgoingUnsent;
+  public createEditedText(
+    newMessageText: string,
+    originalMessageId: string,
+    newMentions?: MentionContent[],
+    messageId?: string
+  ): PayloadBundleOutgoingUnsent;
+  public createEditedText(
+    newMessageText: string,
+    originalMessageId: string,
     newLinkPreviews?: LinkPreviewUploadedContent[],
-    messageId: string = ConversationService.createId()
+    messageId?: string
+  ): PayloadBundleOutgoingUnsent;
+  public createEditedText(
+    newMessageText: string,
+    originalMessageId: string,
+    newLinkPreviews?: LinkPreviewUploadedContent[],
+    newMentions?: MentionContent[],
+    messageId?: string
+  ): PayloadBundleOutgoingUnsent;
+  public createEditedText(
+    newMessageText: string,
+    originalMessageId: string,
+    messageIdOrNewLinkPreviewsOrNewMentions?: string | LinkPreviewUploadedContent[] | MentionContent[],
+    messageIdOrNewMentions?: string | MentionContent[],
+    messageId?: string
   ): PayloadBundleOutgoingUnsent {
     const content: EditedTextContent = {
       originalMessageId,
       text: newMessageText,
     };
 
-    if (newLinkPreviews) {
-      content.linkPreviews = newLinkPreviews;
+    if (messageIdOrNewLinkPreviewsOrNewMentions && messageIdOrNewLinkPreviewsOrNewMentions.length) {
+      if (typeof messageIdOrNewLinkPreviewsOrNewMentions === 'string') {
+        messageId = messageIdOrNewLinkPreviewsOrNewMentions;
+      } else if ('urlOffset' in messageIdOrNewLinkPreviewsOrNewMentions[0]) {
+        content.linkPreviews = messageIdOrNewLinkPreviewsOrNewMentions as LinkPreviewUploadedContent[];
+      } else if ('start' in messageIdOrNewLinkPreviewsOrNewMentions[0]) {
+        content.mentions = messageIdOrNewLinkPreviewsOrNewMentions as MentionContent[];
+      }
     }
+
+    if (messageIdOrNewMentions && messageIdOrNewMentions.length) {
+      if (typeof messageIdOrNewMentions === 'string') {
+        messageId = messageIdOrNewMentions;
+      } else {
+        content.mentions = messageIdOrNewMentions;
+      }
+    }
+
+    messageId = messageId || ConversationService.createId();
 
     return {
       content,

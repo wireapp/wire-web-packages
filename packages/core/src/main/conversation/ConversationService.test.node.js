@@ -295,7 +295,7 @@ describe('ConversationService', () => {
       expect(textMessage.content.mentions[0]).toEqual(jasmine.objectContaining(mention));
     });
 
-    fit('does not add mentions', () => {
+    it('does not add mentions', () => {
       account.apiClient.context = {
         userId: new UUID(4).format(),
       };

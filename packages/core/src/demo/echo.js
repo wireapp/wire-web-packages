@@ -122,12 +122,12 @@ const messageIdCache = {};
 
   account.on(PayloadBundleType.TEXT, async data => {
     const {
-      content: {linkPreviews, text},
+      content: {linkPreviews, mentions, text},
       id: messageId,
     } = data;
     let textPayload;
 
-    if (linkPreviews) {
+    if (linkPreviews && linkPreviews.length) {
       const newLinkPreviews = await buildLinkPreviews(linkPreviews);
 
       await handleIncomingMessage(data);
@@ -139,10 +139,10 @@ const messageIdCache = {};
         return;
       }
 
-      textPayload = account.service.conversation.createText(text, newLinkPreviews, cachedMessageId);
+      textPayload = account.service.conversation.createText(text, newLinkPreviews, mentions, cachedMessageId);
     } else {
       await handleIncomingMessage(data);
-      textPayload = account.service.conversation.createText(text);
+      textPayload = account.service.conversation.createText(text, mentions);
     }
 
     messageIdCache[messageId] = textPayload.id;
@@ -307,7 +307,7 @@ const messageIdCache = {};
 
   account.on(PayloadBundleType.MESSAGE_EDIT, async data => {
     const {
-      content: {text, originalMessageId, linkPreviews},
+      content: {linkPreviews, mentions, originalMessageId, text},
       id: messageId,
     } = data;
     let editedPayload;
@@ -334,11 +334,12 @@ const messageIdCache = {};
         text,
         cachedOriginalMessageId,
         newLinkPreviews,
+        mentions,
         cachedMessageId
       );
     } else {
       await handleIncomingMessage(data);
-      editedPayload = account.service.conversation.createEditedText(text, cachedOriginalMessageId);
+      editedPayload = account.service.conversation.createEditedText(text, cachedOriginalMessageId, mentions);
     }
 
     messageIdCache[messageId] = editedPayload.id;
