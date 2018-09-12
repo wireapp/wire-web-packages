@@ -37,7 +37,7 @@ class TextContentBuilder {
     return this.payloadBundle.id;
   }
 
-  public get state(): PayloadBundleState {
+  public get state(): PayloadBundleState.OUTGOING_UNSENT {
     return this.payloadBundle.state;
   }
 
