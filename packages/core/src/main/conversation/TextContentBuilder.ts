@@ -17,36 +17,16 @@
  *
  */
 
-import {ConversationContent, LinkPreviewUploadedContent, TextContent} from '../conversation/content/';
-import {PayloadBundleOutgoingUnsent, PayloadBundleState, PayloadBundleType} from '../conversation/root';
+import {LinkPreviewUploadedContent, TextContent} from '../conversation/content/';
+import {PayloadBundleOutgoingUnsent} from '../conversation/root';
 
 class TextContentBuilder {
   constructor(private readonly payloadBundle: PayloadBundleOutgoingUnsent) {
     this.payloadBundle = payloadBundle;
   }
 
-  public get content(): ConversationContent | undefined {
-    return this.payloadBundle.content;
-  }
-
-  public get from(): string {
-    return this.payloadBundle.from;
-  }
-
-  public get id(): string {
-    return this.payloadBundle.id;
-  }
-
-  public get state(): PayloadBundleState.OUTGOING_UNSENT {
-    return this.payloadBundle.state;
-  }
-
-  public get timestamp(): number {
-    return this.payloadBundle.timestamp;
-  }
-
-  public get type(): PayloadBundleType {
-    return this.payloadBundle.type;
+  build(): PayloadBundleOutgoingUnsent {
+    return this.payloadBundle;
   }
 
   public withLinkPreviews(linkPreviews: LinkPreviewUploadedContent[]): TextContentBuilder {
