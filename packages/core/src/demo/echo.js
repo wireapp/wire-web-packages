@@ -53,7 +53,10 @@ const messageIdCache = {};
     const {conversation: conversationId, content, from, id: messageId, messageTimer = 0, type} = messageData;
 
     logger.log(
-      `Receiving: "${type}" ("${messageId}") in "${conversationId}" from "${from}":`,
+      `Receiving: "${type}" ("${messageId}") in "${conversationId}" from "${from}"`,
+      content.mentions && content.mentions.length
+        ? `mentioning "${content.mentions.map(mention => mention.userId).join(',')}"`
+        : '',
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : '',
       content
     );
@@ -146,7 +149,10 @@ const messageIdCache = {};
         .build();
     } else {
       await handleIncomingMessage(data);
-      textPayload = account.service.conversation.createText(text).build();
+      textPayload = account.service.conversation
+        .createText(text)
+        .withMentions(mentions)
+        .build();
     }
 
     messageIdCache[messageId] = textPayload.id;
@@ -341,7 +347,10 @@ const messageIdCache = {};
         .build();
     } else {
       await handleIncomingMessage(data);
-      editedPayload = account.service.conversation.createEditedText(text, cachedOriginalMessageId, mentions);
+      editedPayload = account.service.conversation
+        .createEditedText(text, cachedOriginalMessageId)
+        .withMentions()
+        .build();
     }
 
     messageIdCache[messageId] = editedPayload.id;
