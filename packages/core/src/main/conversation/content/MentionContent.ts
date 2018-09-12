@@ -18,9 +18,9 @@
  */
 
 interface MentionContent {
-  userId?: string;
-  start: number;
   end: number;
+  start: number;
+  userId?: string;
 }
 
 export {MentionContent};
