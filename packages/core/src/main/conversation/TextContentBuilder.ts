@@ -25,18 +25,8 @@ class TextContentBuilder {
     this.payloadBundle = payloadBundle;
   }
 
-  build(): PayloadBundleOutgoingUnsent {
+  public build(): PayloadBundleOutgoingUnsent {
     return this.payloadBundle;
-  }
-
-  public withMentions(mentions?: MentionContent[]): TextContentBuilder {
-    const content = this.payloadBundle.content as TextContent;
-
-    if (mentions && mentions.length) {
-      content.mentions = mentions;
-    }
-
-    return this;
   }
 
   public withLinkPreviews(linkPreviews?: LinkPreviewUploadedContent[]): TextContentBuilder {
@@ -44,6 +34,16 @@ class TextContentBuilder {
 
     if (linkPreviews && linkPreviews.length) {
       content.linkPreviews = linkPreviews;
+    }
+
+    return this;
+  }
+
+  public withMentions(mentions?: MentionContent[]): TextContentBuilder {
+    const content = this.payloadBundle.content as TextContent;
+
+    if (mentions && mentions.length) {
+      content.mentions = mentions;
     }
 
     return this;
