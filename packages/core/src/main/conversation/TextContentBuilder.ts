@@ -29,16 +29,22 @@ class TextContentBuilder {
     return this.payloadBundle;
   }
 
-  public withMentions(mentions: MentionContent[]): TextContentBuilder {
+  public withMentions(mentions?: MentionContent[]): TextContentBuilder {
     const content = this.payloadBundle.content as TextContent;
-    content.mentions = mentions;
+
+    if (mentions && mentions.length) {
+      content.mentions = mentions;
+    }
 
     return this;
   }
 
-  public withLinkPreviews(linkPreviews: LinkPreviewUploadedContent[]): TextContentBuilder {
+  public withLinkPreviews(linkPreviews?: LinkPreviewUploadedContent[]): TextContentBuilder {
     const content = this.payloadBundle.content as TextContent;
-    content.linkPreviews = linkPreviews;
+
+    if (linkPreviews && linkPreviews.length) {
+      content.linkPreviews = linkPreviews;
+    }
 
     return this;
   }
