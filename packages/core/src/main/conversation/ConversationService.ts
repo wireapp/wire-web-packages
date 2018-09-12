@@ -60,6 +60,7 @@ import {
   Text,
   Tweet,
 } from '@wireapp/protocol-messaging';
+
 import {
   ClientActionContent,
   ConfirmationContent,
@@ -74,11 +75,12 @@ import {
   LinkPreviewContent,
   LinkPreviewUploadedContent,
   LocationContent,
-  MentionContent,
   ReactionContent,
   RemoteData,
   TextContent,
 } from '../conversation/content/';
+
+import {TextContentBuilder} from './TextContentBuilder';
 
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
 import {CryptographyService, EncryptedAsset} from '../cryptography/root';
@@ -746,60 +748,14 @@ class ConversationService {
   public createEditedText(
     newMessageText: string,
     originalMessageId: string,
-    messageId?: string
-  ): PayloadBundleOutgoingUnsent;
-  public createEditedText(
-    newMessageText: string,
-    originalMessageId: string,
-    newMentions?: MentionContent[],
-    messageId?: string
-  ): PayloadBundleOutgoingUnsent;
-  public createEditedText(
-    newMessageText: string,
-    originalMessageId: string,
-    newLinkPreviews?: LinkPreviewUploadedContent[],
-    messageId?: string
-  ): PayloadBundleOutgoingUnsent;
-  public createEditedText(
-    newMessageText: string,
-    originalMessageId: string,
-    newLinkPreviews?: LinkPreviewUploadedContent[],
-    newMentions?: MentionContent[],
-    messageId?: string
-  ): PayloadBundleOutgoingUnsent;
-  public createEditedText(
-    newMessageText: string,
-    originalMessageId: string,
-    messageIdOrNewLinkPreviewsOrNewMentions?: string | LinkPreviewUploadedContent[] | MentionContent[],
-    messageIdOrNewMentions?: string | MentionContent[],
-    messageId?: string
-  ): PayloadBundleOutgoingUnsent {
+    messageId: string = ConversationService.createId()
+  ): TextContentBuilder {
     const content: EditedTextContent = {
       originalMessageId,
       text: newMessageText,
     };
 
-    if (messageIdOrNewLinkPreviewsOrNewMentions && messageIdOrNewLinkPreviewsOrNewMentions.length) {
-      if (typeof messageIdOrNewLinkPreviewsOrNewMentions === 'string') {
-        messageId = messageIdOrNewLinkPreviewsOrNewMentions;
-      } else if ('urlOffset' in messageIdOrNewLinkPreviewsOrNewMentions[0]) {
-        content.linkPreviews = messageIdOrNewLinkPreviewsOrNewMentions as LinkPreviewUploadedContent[];
-      } else if ('start' in messageIdOrNewLinkPreviewsOrNewMentions[0]) {
-        content.mentions = messageIdOrNewLinkPreviewsOrNewMentions as MentionContent[];
-      }
-    }
-
-    if (messageIdOrNewMentions && messageIdOrNewMentions.length) {
-      if (typeof messageIdOrNewMentions === 'string') {
-        messageId = messageIdOrNewMentions;
-      } else {
-        content.mentions = messageIdOrNewMentions;
-      }
-    }
-
-    messageId = messageId || ConversationService.createId();
-
-    return {
+    const payloadBundle: PayloadBundleOutgoingUnsent = {
       content,
       from: this.apiClient.context!.userId,
       id: messageId,
@@ -807,6 +763,8 @@ class ConversationService {
       timestamp: Date.now(),
       type: PayloadBundleType.MESSAGE_EDIT,
     };
+
+    return new TextContentBuilder(payloadBundle);
   }
 
   public async createFileData(file: FileContent, messageId: string): Promise<PayloadBundleOutgoingUnsent> {
@@ -937,48 +895,10 @@ class ConversationService {
     };
   }
 
-  public createText(text: string, messageId?: string): PayloadBundleOutgoingUnsent;
-  public createText(
-    text: string,
-    linkPreviews?: LinkPreviewUploadedContent[],
-    messageId?: string
-  ): PayloadBundleOutgoingUnsent;
-  public createText(text: string, mentions?: MentionContent[], messageId?: string): PayloadBundleOutgoingUnsent;
-  public createText(
-    text: string,
-    linkPreviews?: LinkPreviewUploadedContent[],
-    mentions?: MentionContent[],
-    messageId?: string
-  ): PayloadBundleOutgoingUnsent;
-  public createText(
-    text: string,
-    messageIdOrlinkPreviewsOrMentions?: string | LinkPreviewUploadedContent[] | MentionContent[],
-    messageIdOrMentions?: string | MentionContent[],
-    messageId?: string
-  ): PayloadBundleOutgoingUnsent {
+  public createText(text: string, messageId: string = ConversationService.createId()): TextContentBuilder {
     const content: TextContent = {text};
 
-    if (messageIdOrlinkPreviewsOrMentions && messageIdOrlinkPreviewsOrMentions.length) {
-      if (typeof messageIdOrlinkPreviewsOrMentions === 'string') {
-        messageId = messageIdOrlinkPreviewsOrMentions;
-      } else if ('urlOffset' in messageIdOrlinkPreviewsOrMentions[0]) {
-        content.linkPreviews = messageIdOrlinkPreviewsOrMentions as LinkPreviewUploadedContent[];
-      } else if ('start' in messageIdOrlinkPreviewsOrMentions[0]) {
-        content.mentions = messageIdOrlinkPreviewsOrMentions as MentionContent[];
-      }
-    }
-
-    if (messageIdOrMentions && messageIdOrMentions.length) {
-      if (typeof messageIdOrMentions === 'string') {
-        messageId = messageIdOrMentions;
-      } else {
-        content.mentions = messageIdOrMentions;
-      }
-    }
-
-    messageId = messageId || ConversationService.createId();
-
-    return {
+    const payloadBundle: PayloadBundleOutgoingUnsent = {
       content,
       from: this.apiClient.context!.userId,
       id: messageId,
@@ -986,6 +906,8 @@ class ConversationService {
       timestamp: Date.now(),
       type: PayloadBundleType.TEXT,
     };
+
+    return new TextContentBuilder(payloadBundle);
   }
 
   public createConfirmation(
