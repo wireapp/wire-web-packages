@@ -52,6 +52,7 @@ import {
   Knock,
   LinkPreview,
   Location,
+  Mention,
   MessageDelete,
   MessageEdit,
   MessageHide,
@@ -73,6 +74,7 @@ import {
   LinkPreviewContent,
   LinkPreviewUploadedContent,
   LocationContent,
+  MentionContent,
   ReactionContent,
   RemoteData,
   TextContent,
@@ -211,12 +213,16 @@ class ConversationService {
     payloadBundle: PayloadBundleOutgoingUnsent,
     userIds?: string[]
   ): Promise<PayloadBundleOutgoing> {
-    const {originalMessageId, text, linkPreviews} = payloadBundle.content as EditedTextContent;
+    const {originalMessageId, text, linkPreviews, mentions} = payloadBundle.content as EditedTextContent;
 
     const textMessage = Text.create({content: text});
 
     if (linkPreviews && linkPreviews.length) {
       textMessage.linkPreview = this.buildLinkPreviews(linkPreviews);
+    }
+
+    if (mentions && mentions.length) {
+      textMessage.mention = mentions.map(mention => Mention.create(mention));
     }
 
     const editedMessage = MessageEdit.create({
@@ -648,14 +654,18 @@ class ConversationService {
       state: PayloadBundleState.OUTGOING_SENT,
     };
 
-    const {text, linkPreviews} = payloadBundle.content as TextContent;
+    const {text, linkPreviews, mentions} = payloadBundle.content as TextContent;
 
     const textMessage = Text.create({
       content: text,
     });
 
-    if (linkPreviews) {
+    if (linkPreviews && linkPreviews.length) {
       textMessage.linkPreview = this.buildLinkPreviews(linkPreviews);
+    }
+
+    if (mentions && mentions.length) {
+      textMessage.mention = mentions.map(mention => Mention.create(mention));
     }
 
     let genericMessage = GenericMessage.create({
@@ -886,16 +896,46 @@ class ConversationService {
     };
   }
 
+  public createText(text: string, messageId?: string): PayloadBundleOutgoingUnsent;
   public createText(
     text: string,
     linkPreviews?: LinkPreviewUploadedContent[],
-    messageId: string = ConversationService.createId()
+    messageId?: string
+  ): PayloadBundleOutgoingUnsent;
+  public createText(text: string, mentions?: MentionContent[], messageId?: string): PayloadBundleOutgoingUnsent;
+  public createText(
+    text: string,
+    linkPreviews?: LinkPreviewUploadedContent[],
+    mentions?: MentionContent[],
+    messageId?: string
+  ): PayloadBundleOutgoingUnsent;
+  public createText(
+    text: string,
+    messageIdOrlinkPreviewsOrMentions?: string | LinkPreviewUploadedContent[] | MentionContent[],
+    messageIdOrMentions?: string | MentionContent[],
+    messageId?: string
   ): PayloadBundleOutgoingUnsent {
     const content: TextContent = {text};
 
-    if (linkPreviews) {
-      content.linkPreviews = linkPreviews;
+    if (messageIdOrlinkPreviewsOrMentions && messageIdOrlinkPreviewsOrMentions.length) {
+      if (typeof messageIdOrlinkPreviewsOrMentions === 'string') {
+        messageId = messageIdOrlinkPreviewsOrMentions;
+      } else if ('urlOffset' in messageIdOrlinkPreviewsOrMentions[0]) {
+        content.linkPreviews = messageIdOrlinkPreviewsOrMentions as LinkPreviewUploadedContent[];
+      } else if ('start' in messageIdOrlinkPreviewsOrMentions[0]) {
+        content.mentions = messageIdOrlinkPreviewsOrMentions as MentionContent[];
+      }
     }
+
+    if (messageIdOrMentions && messageIdOrMentions.length) {
+      if (typeof messageIdOrMentions === 'string') {
+        messageId = messageIdOrMentions;
+      } else {
+        content.mentions = messageIdOrMentions;
+      }
+    }
+
+    messageId = messageId || ConversationService.createId();
 
     return {
       content,

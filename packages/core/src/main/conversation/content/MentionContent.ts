@@ -17,10 +17,10 @@
  *
  */
 
-import {TextContent} from '../content/';
-
-interface EditedTextContent extends TextContent {
-  originalMessageId: string;
+interface MentionContent {
+  userId?: string;
+  start: number;
+  end: number;
 }
 
-export {EditedTextContent};
+export {MentionContent};

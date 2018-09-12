@@ -26,6 +26,7 @@ export * from './FileContent';
 export * from './HiddenContent';
 export * from './ImageContent';
 export * from './LinkPreviewContent';
+export * from './MentionContent';
 export * from './LocationContent';
 export * from './ReactionContent';
 export * from './TextContent';
