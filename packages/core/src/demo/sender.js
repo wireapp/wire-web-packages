@@ -126,28 +126,18 @@ const {FileEngine} = require('@wireapp/store-engine');
   }
 
   async function sendMention() {
-    const mockedMention = {
+    const mentionEveryone = {
       end: 14,
       start: 6,
-      userId: new UUID(4).format(),
     };
     const payload = account.service.conversation
       .createText('Hello @everyone!')
-      .withMentions([mockedMention])
+      .withMentions([mentionEveryone])
       .build();
     await account.service.conversation.send(CONVERSATION_ID, payload);
   }
 
-  const methods = [
-    sendAndDeleteMessage,
-    sendAndEdit,
-    sendEphemeralText,
-    sendFile,
-    sendImage,
-    sendPing,
-    sendText,
-    sendMention,
-  ];
+  const methods = [sendMention];
 
   const timeoutInMillis = 2000;
   setInterval(() => {
