@@ -127,12 +127,12 @@ const {FileEngine} = require('@wireapp/store-engine');
 
   async function sendMention() {
     const mockedMention = {
-      end: 11,
+      end: 14,
       start: 6,
       userId: new UUID(4).format(),
     };
     const payload = account.service.conversation
-      .createText('Hello, World!')
+      .createText('Hello @everyone!')
       .withMentions([mockedMention])
       .build();
     await account.service.conversation.send(CONVERSATION_ID, payload);
