@@ -13,6 +13,7 @@ const fs = require('fs');
 const path = require('path');
 const TimeUnits = require('./TimeUnits');
 const {promisify} = require('util');
+const UUID = require('pure-uuid');
 require('dotenv').config({path: path.join(__dirname, 'sender.env')});
 
 const logger = logdown('@wireapp/core/demo/sender.js', {
@@ -24,7 +25,6 @@ logger.state.isEnabled = true;
 const {Account} = require('@wireapp/core');
 const {APIClient} = require('@wireapp/api-client');
 const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/');
-const {Config} = require('@wireapp/api-client/dist/commonjs/Config');
 const {FileEngine} = require('@wireapp/store-engine');
 
 (async () => {
@@ -125,7 +125,29 @@ const {FileEngine} = require('@wireapp/store-engine');
     await account.service.conversation.clearConversation(CONVERSATION_ID);
   }
 
-  const methods = [sendAndDeleteMessage, sendAndEdit, sendEphemeralText, sendFile, sendImage, sendPing, sendText];
+  async function sendMention() {
+    const mockedMention = {
+      end: 11,
+      start: 6,
+      userId: new UUID(4).format(),
+    };
+    const payload = account.service.conversation
+      .createText('Hello, World!')
+      .withMentions([mockedMention])
+      .build();
+    await account.service.conversation.send(CONVERSATION_ID, payload);
+  }
+
+  const methods = [
+    sendAndDeleteMessage,
+    sendAndEdit,
+    sendEphemeralText,
+    sendFile,
+    sendImage,
+    sendPing,
+    sendText,
+    sendMention,
+  ];
 
   const timeoutInMillis = 2000;
   setInterval(() => {
