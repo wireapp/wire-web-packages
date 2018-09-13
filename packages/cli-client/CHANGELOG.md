@@ -3,6 +3,62 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.0.0"></a>
+# [3.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@2.1.176...@wireapp/cli-client@3.0.0) (2018-09-12)
+
+
+### Code Refactoring
+
+* **core:** Add TextContentBuilder ([#1099](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/issues/1099)) ([18848bd](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/commit/18848bd))
+
+
+### BREAKING CHANGES
+
+* **core:** createText() now returns a TextContentBuilder. 
+
+
+
+
+
+<a name="2.1.176"></a>
+## [2.1.176](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@2.1.175...@wireapp/cli-client@2.1.176) (2018-09-12)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+<a name="2.1.175"></a>
+## [2.1.175](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@2.1.174...@wireapp/cli-client@2.1.175) (2018-09-07)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+<a name="2.1.174"></a>
+## [2.1.174](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@2.1.173...@wireapp/cli-client@2.1.174) (2018-09-07)
+
+
+### Bug Fixes
+
+* **api-client,cli-client,proteus,store-engine,travis-bot:** Remove floating promises ([#1074](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/issues/1074)) ([b4947d2](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/commit/b4947d2))
+
+
+
+
+
+<a name="2.1.173"></a>
+## [2.1.173](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@2.1.172...@wireapp/cli-client@2.1.173) (2018-09-07)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
 <a name="2.1.172"></a>
 ## [2.1.172](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@2.1.171...@wireapp/cli-client@2.1.172) (2018-09-06)
 

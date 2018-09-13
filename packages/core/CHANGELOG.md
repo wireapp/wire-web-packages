@@ -3,6 +3,62 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="6.0.0"></a>
+# [6.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.9.25...@wireapp/core@6.0.0) (2018-09-12)
+
+
+### Code Refactoring
+
+* **core:** Add TextContentBuilder ([#1099](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1099)) ([18848bd](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/18848bd))
+
+
+### BREAKING CHANGES
+
+* **core:** createText() now returns a TextContentBuilder. 
+
+
+
+
+
+<a name="5.9.25"></a>
+## [5.9.25](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.9.24...@wireapp/core@5.9.25) (2018-09-12)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.9.24"></a>
+## [5.9.24](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.9.23...@wireapp/core@5.9.24) (2018-09-07)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.9.23"></a>
+## [5.9.23](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.9.22...@wireapp/core@5.9.23) (2018-09-07)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="5.9.22"></a>
+## [5.9.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.9.21...@wireapp/core@5.9.22) (2018-09-07)
+
+
+### Bug Fixes
+
+* **api-client,core:** Obfuscate access tokens and cookies, fix link previews [WEBFOUND-37] ([#1083](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1083)) ([bb9950d](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/bb9950d))
+
+
+
+
+
 <a name="5.9.21"></a>
 ## [5.9.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@5.9.20...@wireapp/core@5.9.21) (2018-09-06)
 

@@ -48,7 +48,7 @@ abstract class MessageHandler {
 
   public async sendText(conversationId: string, text: string): Promise<void> {
     if (this.account && this.account.service) {
-      const textPayload = this.account.service.conversation.createText(text);
+      const textPayload = this.account.service.conversation.createText(text).build();
       await this.account.service.conversation.send(conversationId, textPayload);
     }
   }

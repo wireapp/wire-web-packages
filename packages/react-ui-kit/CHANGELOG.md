@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="4.0.4"></a>
+## [4.0.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.0.3...@wireapp/react-ui-kit@4.0.4) (2018-09-12)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Remove optional and peer dependencies ([#1097](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1097)) ([2cddd18](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/2cddd18))
+
+
+
+
+
+<a name="4.0.3"></a>
+## [4.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.0.2...@wireapp/react-ui-kit@4.0.3) (2018-09-07)
+
+
+### Bug Fixes
+
+* **api-client,cli-client,proteus,store-engine,travis-bot:** Remove floating promises ([#1074](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1074)) ([b4947d2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/b4947d2))
+
+
+
+
+
 <a name="4.0.2"></a>
 ## [4.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.0.1...@wireapp/react-ui-kit@4.0.2) (2018-09-06)
 
