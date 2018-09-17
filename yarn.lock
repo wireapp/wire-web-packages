@@ -980,9 +980,9 @@
     "@webassemblyjs/wast-parser" "1.7.6"
     "@xtuc/long" "4.2.1"
 
-"@wireapp/protocol-messaging@1.21.0":
-  version "1.21.0"
-  resolved "https://registry.yarnpkg.com/@wireapp/protocol-messaging/-/protocol-messaging-1.21.0.tgz#0798bb455503059a76e27870cb649d0ef8ae3d0e"
+"@wireapp/protocol-messaging@1.21.6":
+  version "1.21.6"
+  resolved "https://registry.yarnpkg.com/@wireapp/protocol-messaging/-/protocol-messaging-1.21.6.tgz#f182e075eaf9fd3a334368b4404a05a2ea8ed2c9"
   dependencies:
     protobufjs "6.8.8"
 
