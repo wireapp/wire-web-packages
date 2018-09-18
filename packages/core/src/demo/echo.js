@@ -254,6 +254,10 @@ const messageIdCache = {};
     await sendMessageResponse(data, imagePayload);
   });
 
+  account.on(PayloadBundleType.CLEARED, async data => {
+    await handleIncomingMessage(data);
+  });
+
   account.on(PayloadBundleType.LOCATION, async data => {
     const locationPayload = account.service.conversation.createLocation(data.content);
 
