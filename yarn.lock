@@ -9159,9 +9159,9 @@ strong-log-transformer@^2.0.0:
     minimist "^1.2.0"
     through "^2.3.4"
 
-styled-components@3.4.6:
-  version "3.4.6"
-  resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-3.4.6.tgz#134f1ab89ed732686bf7de3ff8fca557283cbd60"
+styled-components@3.4.8:
+  version "3.4.8"
+  resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-3.4.8.tgz#7004ae2c895c1a8a3f51b8754178a31079071468"
   dependencies:
     buffer "^5.0.3"
     css-to-react-native "^2.0.3"
