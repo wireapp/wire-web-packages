@@ -53,6 +53,8 @@ class LRUCache<T> {
 
   public deleteAll(): void {
     this.map = {};
+    this.head = null;
+    this.end = null;
   }
 
   public get(key: string): T | undefined {
