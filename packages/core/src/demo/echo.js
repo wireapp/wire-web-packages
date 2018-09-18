@@ -245,12 +245,7 @@ const messageIdCache = {};
   });
 
   account.on(PayloadBundleType.LOCATION, async data => {
-    const locationPayload = account.service.conversation.createLocation({
-      latitude: 52.5069313,
-      longitude: 13.1445635,
-      name: 'Berlin',
-      zoom: 10,
-    });
+    const locationPayload = account.service.conversation.createLocation(data.content);
 
     await handleIncomingMessage(data);
     await sendMessageResponse(data, locationPayload);
