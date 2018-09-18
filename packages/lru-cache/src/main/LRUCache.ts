@@ -138,7 +138,7 @@ class LRUCache<T> {
         value,
       };
 
-      const isOverCapacity = Object.keys(this.map).length >= this.capacity;
+      const isOverCapacity = this.size() >= this.capacity;
       if (isOverCapacity) {
         if (this.end) {
           delete this.map[this.end.key];
