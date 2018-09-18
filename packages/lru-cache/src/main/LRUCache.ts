@@ -29,7 +29,7 @@ export interface Node<T> {
 }
 
 class LRUCache<T> {
-  private readonly map: NodeMap<T>;
+  private map: NodeMap<T>;
   private head: Node<T> | null;
   private end: Node<T> | null;
 
@@ -49,6 +49,10 @@ class LRUCache<T> {
     }
 
     return false;
+  }
+
+  public deleteAll(): void {
+    this.map = {};
   }
 
   public get(key: string): T | undefined {
