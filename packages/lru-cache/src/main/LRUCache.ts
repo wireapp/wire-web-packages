@@ -192,6 +192,22 @@ class LRUCache<T> {
 
     return `${string} (oldest)`;
   }
+
+  public [Symbol.iterator]() {
+    let node = this.head;
+    return {
+      next: () => {
+        if (node) {
+          const obj = {done: false, value: node.value};
+          node = node.next;
+          return obj;
+        } else {
+          node = this.head;
+          return {done: true};
+        }
+      },
+    };
+  }
 }
 
 export {LRUCache};

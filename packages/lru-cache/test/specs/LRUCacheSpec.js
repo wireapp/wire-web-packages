@@ -102,6 +102,19 @@ describe('LRUCache', () => {
     });
   });
 
+  describe('"iterator"', () => {
+    it('iterates over the nodes', () => {
+      const cache = new LRUCache(4);
+      cache.set('1', 'Apple');
+      cache.set('2', 'Orange');
+      cache.set('3', 'Tomato');
+      cache.set('4', 'Plum');
+      for (const value of cache) {
+        expect(value).toBeDefined();
+      }
+    });
+  });
+
   describe('"keys"', () => {
     it('lists all keys of the cache starting with the latest item in the cache', () => {
       const cache = new LRUCache(3);
