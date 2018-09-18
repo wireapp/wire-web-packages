@@ -9139,9 +9139,9 @@ styled-components@3.4.6:
     stylis-rule-sheet "^0.0.10"
     supports-color "^3.2.3"
 
-styled-normalize@8.0.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/styled-normalize/-/styled-normalize-8.0.0.tgz#54881c9389540bf9fb2a3d34dca2e2d4d68601f2"
+styled-normalize@8.0.1:
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/styled-normalize/-/styled-normalize-8.0.1.tgz#f1c390de61075cdcc45ae38a1c8c381c5667a0af"
 
 stylis-rule-sheet@^0.0.10:
   version "0.0.10"
