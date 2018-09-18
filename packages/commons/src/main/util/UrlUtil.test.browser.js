@@ -21,46 +21,41 @@ import {UrlUtil} from '@wireapp/commons';
 
 describe('UrlUtil', () => {
   describe('"pathWithParams"', () => {
-    it('keeps URL if no additional params are given', done => {
+    it('keeps URL if no additional params are given', () => {
       const urlBase = 'https://wire.com/';
       const expected = urlBase;
       const actual = UrlUtil.pathWithParams(urlBase);
       expect(actual).toEqual(expected);
-      done();
     });
 
-    it('constructs path with queries from plain path', done => {
+    it('constructs path with queries from plain path', () => {
       const urlBase = 'https://wire.com/';
       const expected = `${urlBase}?q=1`;
       const actual = UrlUtil.pathWithParams(urlBase, 'q=1');
       expect(actual).toEqual(expected);
-      done();
     });
 
-    it('constructs path with queries from a path with queries', done => {
+    it('constructs path with queries from a path with queries', () => {
       const urlBase = 'https://wire.com/?q=1';
       const expected = `${urlBase}?b=2`;
       const actual = UrlUtil.pathWithParams(urlBase, 'b=2');
       expect(actual).toEqual(expected);
-      done();
     });
   });
 
   describe('"getURLParameter"', () => {
-    it('returns empty string if parameter does not exist', done => {
+    it('returns empty string if parameter does not exist', () => {
       const expected = '';
       const actual = UrlUtil.getURLParameter('q');
       expect(actual).toEqual(expected);
-      done();
     });
   });
 
   describe('"hasURLParameter"', () => {
-    it('returns false if parameter does not exist', done => {
+    it('returns false if parameter does not exist', () => {
       const expected = false;
       const actual = UrlUtil.hasURLParameter('q');
       expect(actual).toEqual(expected);
-      done();
     });
   });
 });

@@ -30,16 +30,15 @@ describe('LocalStorageEngine', () => {
     return storeEngine;
   }
 
-  beforeEach(async done => {
+  beforeEach(async () => {
     engine = await initEngine();
-    done();
   });
 
   afterEach(() => window.localStorage.clear());
 
   describe('"append"', () => {
     Object.entries(require('../../test/shared/append')).map(([description, testFunction]) => {
-      it(description, done => testFunction(done, engine));
+      it(description, () => testFunction(engine));
     });
   });
 

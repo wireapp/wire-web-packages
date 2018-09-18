@@ -23,14 +23,13 @@ describe('FileSystemEngine', () => {
   const STORE_NAME = 'store-name';
 
   describe('"init"', () => {
-    it('throws an error if the store is not supported by the targeted platform.', async done => {
+    it('throws an error if the store is not supported by the targeted platform.', async () => {
       const storeEngine = new FileSystemEngine();
       try {
         await storeEngine.init(STORE_NAME);
-        done.fail('Expected error');
+        fail('Expected error');
       } catch (error) {
         expect(error instanceof StoreEngineError.UnsupportedError).toBe(true);
-        done();
       }
     });
   });

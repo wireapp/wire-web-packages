@@ -35,9 +35,8 @@ describe('IndexedDBEngine', () => {
     return storeEngine;
   }
 
-  beforeEach(async done => {
+  beforeEach(async () => {
     engine = await initEngine();
-    done();
   });
 
   afterEach(() => {
@@ -50,7 +49,7 @@ describe('IndexedDBEngine', () => {
 
   describe('"append"', () => {
     Object.entries(require('../../test/shared/append')).map(([description, testFunction]) => {
-      it(description, done => testFunction(done, engine));
+      it(description, () => testFunction(engine));
     });
   });
 
@@ -59,7 +58,7 @@ describe('IndexedDBEngine', () => {
       it(description, done => testFunction(done, engine));
     });
 
-    it('writes into an existing database.', async done => {
+    it('writes into an existing database.', async () => {
       const TABLE_NAME = 'friends';
       const PRIMARY_KEY = 'camilla';
       const entity = {
@@ -77,16 +76,11 @@ describe('IndexedDBEngine', () => {
       engine = new IndexedDBEngine();
       await engine.initWithDb(db);
 
-      engine
-        .create(TABLE_NAME, PRIMARY_KEY, entity)
-        .then(primaryKey => {
-          expect(primaryKey).toEqual(PRIMARY_KEY);
-          expect(engine.storeName).toBe(name);
-          expect(engine.db.name).toBe(name);
-          expect(Object.keys(engine.db._dbSchema).length).toBe(1);
-          done();
-        })
-        .catch(done.fail);
+      const primaryKey = await engine.create(TABLE_NAME, PRIMARY_KEY, entity);
+      expect(primaryKey).toEqual(PRIMARY_KEY);
+      expect(engine.storeName).toBe(name);
+      expect(engine.db.name).toBe(name);
+      expect(Object.keys(engine.db._dbSchema).length).toBe(1);
     });
   });
 

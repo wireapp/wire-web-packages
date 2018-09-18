@@ -65,32 +65,31 @@ describe('WebSocketClient', () => {
   describe('"connect"', () => {
     beforeEach(() => startEchoServer());
 
-    afterEach(done => {
+    afterEach(() => {
       if (server) {
         server.close(() => {
           server = undefined;
-          done();
         });
       }
     });
 
-    it('connects to a WebSocket.', done => {
+    it('connects to a WebSocket.', async done => {
       const message = 'Hello, World!';
       const client = new WebSocketClient(WEBSOCKET_URL, FAKE_HTTP_CLIENT);
 
-      client
-        .connect()
-        .then(webSocketClient => {
-          expect(webSocketClient).toBeDefined();
+      try {
+        const webSocketClient = await client.connect();
+        expect(webSocketClient).toBeDefined();
 
-          webSocketClient.on(WebSocketClient.TOPIC.ON_MESSAGE, data => {
-            expect(data.fromServer).toBe(`Echo: ${message}`);
-            done();
-          });
+        webSocketClient.on(WebSocketClient.TOPIC.ON_MESSAGE, data => {
+          expect(data.fromServer).toBe(`Echo: ${message}`);
+          done();
+        });
 
-          webSocketClient.socket.addEventListener('open', () => webSocketClient.socket.send(message));
-        })
-        .catch(done.fail);
+        webSocketClient.socket.addEventListener('open', () => webSocketClient.socket.send(message));
+      } catch (error) {
+        done.fail(error);
+      }
     });
 
     it(

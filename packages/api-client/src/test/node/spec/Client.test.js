@@ -142,25 +142,20 @@ describe('Client', () => {
         .reply(200, undefined);
     });
 
-    it('creates a context from a successful login', done => {
+    it('creates a context from a successful login', async () => {
       const client = new APIClient();
-      client.login(loginData).then(context => {
-        expect(context.userId).toBe(accessTokenData.user);
-        expect(client.accessTokenStore.accessToken.access_token).toBe(accessTokenData.access_token);
-        done();
-      });
+      const context = await client.login(loginData);
+      expect(context.userId).toBe(accessTokenData.user);
+      expect(client.accessTokenStore.accessToken.access_token).toBe(accessTokenData.access_token);
     });
 
-    it('can login after a logout', done => {
+    it('can login after a logout', async () => {
       const client = new APIClient();
-      client
-        .login(loginData)
-        .then(() => client.logout())
-        .then(done)
-        .catch(done.fail);
+      await client.login(loginData);
+      await client.logout();
     });
 
-    it('refreshes an access token when it becomes invalid', done => {
+    it('refreshes an access token when it becomes invalid', async () => {
       nock(baseURL)
         .get(UserAPI.URL.USERS)
         .query({handles: 'webappbot'})
@@ -182,21 +177,14 @@ describe('Client', () => {
         .reply(200, accessTokenData);
 
       const client = new APIClient();
-      client
-        .login(loginData)
-        .then(context => {
-          expect(context.userId).toBe(accessTokenData.user);
-          // Overwrite access token
-          client.accessTokenStore.accessToken.access_token = undefined;
-          // Make a backend call
-          return client.user.api.getUsers({handles: ['webappbot']});
-        })
-        .then(response => {
-          expect(response.name).toBe(userData.name);
-          expect(client.accessTokenStore.accessToken.access_token).toBeDefined();
-          done();
-        })
-        .catch(done.fail);
+      const context = await client.login(loginData);
+      expect(context.userId).toBe(accessTokenData.user);
+      // Overwrite access token
+      client.accessTokenStore.accessToken.access_token = undefined;
+      // Make a backend call
+      const response = await client.user.api.getUsers({handles: ['webappbot']});
+      expect(response.name).toBe(userData.name);
+      expect(client.accessTokenStore.accessToken.access_token).toBeDefined();
     });
   });
 
@@ -207,7 +195,7 @@ describe('Client', () => {
         .reply(200, undefined);
     });
 
-    it('can logout a user', async done => {
+    it('can logout a user', async () => {
       const client = new APIClient();
 
       const context = client.createContext(
@@ -217,12 +205,7 @@ describe('Client', () => {
       );
       await client.initEngine(context);
 
-      try {
-        await client.logout();
-        done();
-      } catch (error) {
-        done.fail(error);
-      }
+      await client.logout();
     });
 
     it('ignores errors when told to', async () => {
@@ -276,7 +259,7 @@ describe('Client', () => {
         .reply(200, accessTokenData);
     });
 
-    it('automatically gets an access token after registration', done => {
+    it('automatically gets an access token after registration', async () => {
       const client = new APIClient({
         schemaCallback: db => {
           db.version(1).stores({
@@ -284,14 +267,10 @@ describe('Client', () => {
           });
         },
       });
-      client
-        .register(registerData)
-        .then(context => {
-          expect(context.userId).toBe(registerData.id);
-          expect(client.accessTokenStore.accessToken.access_token).toBe(accessTokenData.access_token);
-          done();
-        })
-        .catch(done.fail);
+      const context = await client.register(registerData);
+
+      expect(context.userId).toBe(registerData.id);
+      expect(client.accessTokenStore.accessToken.access_token).toBe(accessTokenData.access_token);
     });
   });
 });

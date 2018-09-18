@@ -20,25 +20,23 @@
 const Proteus = require('@wireapp/proteus');
 
 describe('Public Key', () => {
-  it('rejects shared secrets at the point of infinity', async done => {
+  it('rejects shared secrets at the point of infinity', async () => {
+    const emptyCurve = new Uint8Array([1].concat(Array.from({length: 30})));
+    const alice_keypair = await Proteus.keys.KeyPair.new();
+    const bob_keypair = await Proteus.keys.KeyPair.new();
+
+    const alice_sk = alice_keypair.secret_key.shared_secret(bob_keypair.public_key);
+    const bob_sk = bob_keypair.secret_key.shared_secret(alice_keypair.public_key);
+
+    expect(alice_sk).toEqual(bob_sk);
+
+    bob_keypair.public_key.pub_curve = emptyCurve;
+
     try {
-      const emptyCurve = new Uint8Array([1].concat(Array.from({length: 30})));
-      const alice_keypair = await Proteus.keys.KeyPair.new();
-      const bob_keypair = await Proteus.keys.KeyPair.new();
-
-      const alice_sk = alice_keypair.secret_key.shared_secret(bob_keypair.public_key);
-      const bob_sk = bob_keypair.secret_key.shared_secret(alice_keypair.public_key);
-
-      expect(alice_sk).toEqual(bob_sk);
-
-      bob_keypair.public_key.pub_curve = emptyCurve;
-
       alice_keypair.secret_key.shared_secret(bob_keypair.public_key);
-
-      done.fail();
+      fail();
     } catch (error) {
       expect(error instanceof TypeError).toBe(true);
-      done();
     }
   });
 });

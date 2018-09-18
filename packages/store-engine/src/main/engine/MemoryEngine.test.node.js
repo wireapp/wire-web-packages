@@ -30,14 +30,13 @@ describe('MemoryEngine', () => {
     return storeEngine;
   }
 
-  beforeEach(async done => {
+  beforeEach(async () => {
     engine = await initEngine();
-    done();
   });
 
   describe('"append"', () => {
     Object.entries(require('../../test/shared/append')).map(([description, testFunction]) => {
-      it(description, done => testFunction(done, engine));
+      it(description, () => testFunction(engine));
     });
   });
 

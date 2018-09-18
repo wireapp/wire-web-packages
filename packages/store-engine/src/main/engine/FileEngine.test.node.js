@@ -33,17 +33,14 @@ describe('FileEngine', () => {
     return storeEngine;
   }
 
-  beforeEach(async done => {
+  beforeEach(async () => {
     FileEngine.path = path;
     engine = await initEngine();
-    done();
   });
 
-  afterEach(done =>
-    fs
-      .remove(TEST_DIRECTORY)
-      .then(done)
-      .catch(done.fail));
+  afterEach(async () => {
+    await fs.remove(TEST_DIRECTORY);
+  });
 
   describe('"enforcePathRestrictions"', () => {
     const enforcePathRestrictions = (...opts) => () => FileEngine.enforcePathRestrictions(...opts);
@@ -108,7 +105,7 @@ describe('FileEngine', () => {
       expect(enforcePathRestrictions('C:/', '\\Windows\\System32\\drivers\\etc\\hosts')).toThrowError(expectedError);
     });
 
-    it('is applied to all store operations.', async done => {
+    it('is applied to all store operations.', async () => {
       const functionNames = [
         'append',
         'create',
@@ -124,18 +121,17 @@ describe('FileEngine', () => {
       for (const operation of functionNames) {
         try {
           await engine[operation]('../etc', 'primary-key', {});
-          done.fail();
+          fail();
         } catch (error) {
           expect(error instanceof expectedError).toBe(true);
         }
       }
-      done();
     });
   });
 
   describe('"append"', () => {
     Object.entries(require('../../test/shared/append')).map(([description, testFunction]) => {
-      it(description, done => testFunction(done, engine));
+      it(description, () => testFunction(engine));
     });
   });
 
@@ -144,7 +140,7 @@ describe('FileEngine', () => {
       it(description, done => testFunction(done, engine));
     });
 
-    it('accepts custom file extensions.', async done => {
+    it('accepts custom file extensions.', async () => {
       const options = {
         fileExtension: '.json',
       };
@@ -152,7 +148,6 @@ describe('FileEngine', () => {
       await engine.init(STORE_NAME, options);
 
       expect(engine.options.fileExtension).toBe(options.fileExtension);
-      done();
     });
   });
 
