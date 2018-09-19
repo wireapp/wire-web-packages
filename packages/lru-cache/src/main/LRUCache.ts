@@ -18,7 +18,7 @@
  */
 
 export interface NodeMap<T> {
-  [index: string]: Node<T>;
+  [index: string]: T;
 }
 
 export interface Node<T> {
@@ -29,7 +29,7 @@ export interface Node<T> {
 }
 
 class LRUCache<T> {
-  private map: NodeMap<T>;
+  private map: NodeMap<Node<T>>;
   private head: Node<T> | null;
   private end: Node<T> | null;
 
@@ -37,37 +37,6 @@ class LRUCache<T> {
     this.map = {};
     this.head = null;
     this.end = null;
-  }
-
-  private remove(node: Node<T>): Node<T> {
-    if (node.previous) {
-      node.previous.next = node.next;
-    } else {
-      this.head = node.next;
-    }
-
-    if (node.next !== null) {
-      node.next.previous = node.previous;
-    } else {
-      this.end = node.previous;
-    }
-
-    return node;
-  }
-
-  private setHead(node: Node<T>): void {
-    node.next = this.head;
-    node.previous = null;
-
-    if (this.head) {
-      this.head.previous = node;
-    }
-
-    this.head = node;
-
-    if (!this.end) {
-      this.end = this.head;
-    }
   }
 
   public delete(key: string): boolean {
@@ -100,8 +69,8 @@ class LRUCache<T> {
     return undefined;
   }
 
-  public getAll(): {[id: string]: T} {
-    return Object.keys(this.map).reduce((accumulator: {[id: string]: T}, id) => {
+  public getAll(): NodeMap<T> {
+    return Object.keys(this.map).reduce((accumulator: NodeMap<T>, id) => {
       const node = this.map[id];
       accumulator[id] = node.value;
       return accumulator;
@@ -132,6 +101,22 @@ class LRUCache<T> {
       return this.end.value;
     }
     return null;
+  }
+
+  private remove(node: Node<T>): Node<T> {
+    if (node.previous) {
+      node.previous.next = node.next;
+    } else {
+      this.head = node.next;
+    }
+
+    if (node.next !== null) {
+      node.next.previous = node.previous;
+    } else {
+      this.end = node.previous;
+    }
+
+    return node;
   }
 
   public set(key: string, value: T): T | undefined {
@@ -171,6 +156,21 @@ class LRUCache<T> {
     }
 
     return undefined;
+  }
+
+  private setHead(node: Node<T>): void {
+    node.next = this.head;
+    node.previous = null;
+
+    if (this.head) {
+      this.head.previous = node;
+    }
+
+    this.head = node;
+
+    if (!this.end) {
+      this.end = this.head;
+    }
   }
 
   public size(): number {
