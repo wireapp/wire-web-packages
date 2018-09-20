@@ -17,7 +17,6 @@
  *
  */
 
-export * from './Currency';
 export * from './InvoiceData';
 export * from './PaymentAPI';
 export * from './PaymentBillingData';
@@ -29,3 +28,4 @@ export * from './PaymentStripeCharge';
 export * from './PaymentStripeInvoice';
 export * from './PaymentStripeInvoices';
 export * from './PaymentStripePlan';
+export * from './SupportedCurrency';

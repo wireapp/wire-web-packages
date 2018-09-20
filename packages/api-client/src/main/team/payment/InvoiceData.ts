@@ -17,12 +17,12 @@
  *
  */
 
-import {Currency} from '../payment/';
+import {SupportedCurrency} from '../payment/';
 
 interface InvoiceData {
   amount: number;
   company: string;
-  currency: Currency;
+  currency: SupportedCurrency;
   date: number;
 }
 

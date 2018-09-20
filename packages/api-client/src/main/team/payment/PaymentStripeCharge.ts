@@ -19,13 +19,13 @@
 
 // https://stripe.com/docs/api#charge_object
 
-import {Currency} from '../payment/';
+import {SupportedCurrency} from '../payment/';
 
 interface PaymentStripeCharge {
   id: string;
   amount: number;
   created: number;
-  currency: Currency;
+  currency: SupportedCurrency;
   failureCode: string;
   failureMessage: string;
   invoice: string;
