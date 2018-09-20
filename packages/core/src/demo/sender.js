@@ -126,12 +126,15 @@ const {FileEngine} = require('@wireapp/store-engine');
   }
 
   async function sendMention() {
+    const mention = '@everyone';
+    const text = `Hello ${mention}!`;
+
     const mentionEveryone = {
-      end: 14,
-      start: 6,
+      length: mention.length,
+      start: text.indexOf(mention),
     };
     const payload = account.service.conversation
-      .createText('Hello @everyone!')
+      .createText(text)
       .withMentions([mentionEveryone])
       .build();
     await account.service.conversation.send(CONVERSATION_ID, payload);
