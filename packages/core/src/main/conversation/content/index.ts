@@ -18,6 +18,7 @@
  */
 
 export * from './AssetContent';
+export * from './ClearedContent';
 export * from './ClientActionContent';
 export * from './ConfirmationContent';
 export * from './ConversationContent';

@@ -17,21 +17,7 @@
  *
  */
 
-// https://stripe.com/docs/api#charge_object
-
-import {SupportedCurrency} from '../payment/';
-
-interface PaymentStripeCharge {
-  id: string;
-  amount: number;
-  created: number;
-  currency: SupportedCurrency;
-  failureCode: string;
-  failureMessage: string;
-  invoice: string;
-  livemode: boolean;
-  paid: boolean;
-  status: 'succeeded' | 'pending' | 'failed';
-}
-
-export {PaymentStripeCharge};
+module.exports = {
+  plugins: ['@babel/plugin-proposal-class-properties'],
+  presets: ['@babel/preset-react', '@babel/preset-env'],
+};

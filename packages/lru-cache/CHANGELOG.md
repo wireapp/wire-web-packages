@@ -3,6 +3,65 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.0.2"></a>
+## [3.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache/compare/@wireapp/lru-cache@3.0.1...@wireapp/lru-cache@3.0.2) (2018-09-19)
+
+
+### Bug Fixes
+
+* **lru-cache:** Use generator for iteration ([#1139](https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache/issues/1139)) ([8dbf96f](https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache/commit/8dbf96f))
+
+
+
+
+
+<a name="3.0.1"></a>
+## [3.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache/compare/@wireapp/lru-cache@3.0.0...@wireapp/lru-cache@3.0.1) (2018-09-19)
+
+**Note:** Version bump only for package @wireapp/lru-cache
+
+
+
+
+
+<a name="3.0.0"></a>
+# [3.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache/compare/@wireapp/lru-cache@2.2.0...@wireapp/lru-cache@3.0.0) (2018-09-19)
+
+
+### Code Refactoring
+
+* **lru-cache:** Implement iterator and getAll returns object ([#1126](https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache/issues/1126)) ([60da2d0](https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache/commit/60da2d0))
+
+
+### BREAKING CHANGES
+
+* **lru-cache:** getAll now returns an object instead of an array.
+
+
+
+
+
+<a name="2.2.0"></a>
+# [2.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache/compare/@wireapp/lru-cache@2.1.54...@wireapp/lru-cache@2.2.0) (2018-09-18)
+
+
+### Features
+
+* **lru-cache:** Implement deleteAll ([#1124](https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache/issues/1124)) ([3fd0bb6](https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache/commit/3fd0bb6))
+
+
+
+
+
+<a name="2.1.54"></a>
+## [2.1.54](https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache/compare/@wireapp/lru-cache@2.1.53...@wireapp/lru-cache@2.1.54) (2018-09-17)
+
+**Note:** Version bump only for package @wireapp/lru-cache
+
+
+
+
+
 <a name="2.1.53"></a>
 ## [2.1.53](https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache/compare/@wireapp/lru-cache@2.1.52...@wireapp/lru-cache@2.1.53) (2018-09-12)
 

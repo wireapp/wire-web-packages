@@ -3,6 +3,156 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="6.3.7"></a>
+## [6.3.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@6.3.6...@wireapp/core@6.3.7) (2018-09-20)
+
+
+### Bug Fixes
+
+* **core:** Make notification services public ([#1142](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1142)) ([d5e81d5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/d5e81d5))
+
+
+
+
+
+<a name="6.3.6"></a>
+## [6.3.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@6.3.5...@wireapp/core@6.3.6) (2018-09-19)
+
+
+### Bug Fixes
+
+* **core:** Add Article for old iOS devices ([#1140](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1140)) ([f0a4535](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/f0a4535))
+
+
+
+
+
+<a name="6.3.5"></a>
+## [6.3.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@6.3.4...@wireapp/core@6.3.5) (2018-09-19)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="6.3.4"></a>
+## [6.3.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@6.3.3...@wireapp/core@6.3.4) (2018-09-19)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="6.3.3"></a>
+## [6.3.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@6.3.2...@wireapp/core@6.3.3) (2018-09-19)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="6.3.2"></a>
+## [6.3.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@6.3.1...@wireapp/core@6.3.2) (2018-09-19)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="6.3.1"></a>
+## [6.3.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@6.3.0...@wireapp/core@6.3.1) (2018-09-18)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="6.3.0"></a>
+# [6.3.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@6.2.1...@wireapp/core@6.3.0) (2018-09-18)
+
+
+### Features
+
+* **core:** Mute conversation ([#1128](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1128)) ([a3a6bd4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/a3a6bd4))
+
+
+
+
+
+<a name="6.2.1"></a>
+## [6.2.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@6.2.0...@wireapp/core@6.2.1) (2018-09-18)
+
+
+### Bug Fixes
+
+* **core:** Incoming mentions ([#1127](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1127)) ([273eee3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/273eee3))
+
+
+
+
+
+<a name="6.2.0"></a>
+# [6.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@6.1.4...@wireapp/core@6.2.0) (2018-09-18)
+
+
+### Features
+
+* **core:** Emit "cleared" messages ([#1125](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1125)) ([887d053](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/887d053))
+
+
+
+
+
+<a name="6.1.4"></a>
+## [6.1.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@6.1.3...@wireapp/core@6.1.4) (2018-09-18)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="6.1.3"></a>
+## [6.1.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@6.1.2...@wireapp/core@6.1.3) (2018-09-18)
+
+
+### Bug Fixes
+
+* **core:** Ephemeral timeout for location messages ([#1123](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1123)) ([b1f216e](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/b1f216e))
+
+
+
+
+
+<a name="6.1.2"></a>
+## [6.1.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@6.1.1...@wireapp/core@6.1.2) (2018-09-18)
+
+
+### Bug Fixes
+
+* **core:** Connection request and location in demo ([#1122](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1122)) ([7df2f63](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/7df2f63))
+
+
+
+
+
+<a name="6.1.1"></a>
+## [6.1.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@6.1.0...@wireapp/core@6.1.1) (2018-09-17)
+
+
+### Bug Fixes
+
+* **core:** Mentions Protobuf adjustments ([#1117](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1117)) ([c75b4bb](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/c75b4bb))
+
+
+
+
+
 <a name="6.1.0"></a>
 # [6.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@6.0.0...@wireapp/core@6.1.0) (2018-09-13)
 
