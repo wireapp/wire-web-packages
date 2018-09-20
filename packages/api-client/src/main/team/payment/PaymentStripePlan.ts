@@ -18,12 +18,12 @@
  */
 
 // https://stripe.com/docs/api#plans
-import {PaymentInterval} from '../payment/';
+import {Currency, PaymentInterval} from '../payment/';
 
 interface PaymentStripePlan {
   id: string;
   amount: number;
-  currency: 'eur' | 'chf' | 'usd';
+  currency: Currency;
   interval: PaymentInterval;
   name: string;
   trialPeriodDays: number;

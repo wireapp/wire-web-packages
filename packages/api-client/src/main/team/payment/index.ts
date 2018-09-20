@@ -17,6 +17,7 @@
  *
  */
 
+export * from './Currency';
 export * from './InvoiceData';
 export * from './PaymentAPI';
 export * from './PaymentBillingData';
