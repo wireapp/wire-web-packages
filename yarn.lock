@@ -5835,9 +5835,9 @@ karma-coverage@1.1.2:
     minimatch "^3.0.0"
     source-map "^0.5.1"
 
-karma-jasmine-diff-reporter@1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/karma-jasmine-diff-reporter/-/karma-jasmine-diff-reporter-1.2.0.tgz#508fd59b9d4ebd7101b83302e11b5ea980f3e96c"
+karma-jasmine-diff-reporter@1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/karma-jasmine-diff-reporter/-/karma-jasmine-diff-reporter-1.2.1.tgz#4166f9e242956e57819009c6ab677c6d07cb3ca7"
   dependencies:
     chalk "^1.1.0"
     diff "^1.4.0"
