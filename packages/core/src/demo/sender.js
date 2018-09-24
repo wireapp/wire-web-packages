@@ -93,7 +93,7 @@ const {FileEngine} = require('@wireapp/store-engine');
     const payload = account.service.conversation.createText('Hello, Wolrd!').build();
     const {id: originalMessageId} = await account.service.conversation.send(CONVERSATION_ID, payload);
     setInterval(async () => {
-      const editedPayload = account.service.conversation.createEditedText('Hello, World!', originalMessageId);
+      const editedPayload = account.service.conversation.createEditedText('Hello, World!', originalMessageId).build();
       await account.service.conversation.send(CONVERSATION_ID, editedPayload);
     }, 2000);
   }
