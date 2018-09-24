@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "@wireapp/commons": "0.6.17",
+    "commander": "2.18.0",
     "cross-env": "5.2.0",
     "dotenv": "6.0.0",
     "istanbul": "1.1.0-alpha.1",

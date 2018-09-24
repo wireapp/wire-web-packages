@@ -8,12 +8,15 @@ process.on('unhandledRejection', error =>
   console.error(`Uncaught rejection "${error.constructor.name}": ${error.message}`, error)
 );
 
+const program = require('commander');
 const logdown = require('logdown');
 const fs = require('fs');
 const path = require('path');
 const TimeUnits = require('./TimeUnits');
 const {promisify} = require('util');
-const UUID = require('pure-uuid');
+
+program.option('-c, --conversationId <conversationId>').parse(process.argv);
+
 require('dotenv').config({path: path.join(__dirname, 'sender.env')});
 
 const logger = logdown('@wireapp/core/demo/sender.js', {
@@ -28,7 +31,7 @@ const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/');
 const {FileEngine} = require('@wireapp/store-engine');
 
 (async () => {
-  const CONVERSATION_ID = process.env.WIRE_CONVERSATION_ID;
+  const CONVERSATION_ID = program.conversationId;
   const MESSAGE_TIMER = 5000;
 
   const login = {
