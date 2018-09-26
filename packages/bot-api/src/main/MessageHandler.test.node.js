@@ -25,14 +25,91 @@ const UUID_VERSION = 4;
 describe('MessageHandler', () => {
   let mainHandler;
 
+  const MainHandler = class extends MessageHandler {
+    constructor() {
+      super();
+    }
+    async handleEvent(payload) {}
+  };
+
   beforeEach(async () => {
-    mainHandler = new MessageHandler();
+    mainHandler = new MainHandler();
+    mainHandler.account = new Account();
+    await mainHandler.account.init();
+    mainHandler.account.apiClient.createContext('', '');
+  });
+
+  describe('"sendConfirmation"', () => {
+    it('calls send() with account and service', async () => {
+      const confirmMessageId = new UUID(UUID_VERSION).format();
+      const conversationId = new UUID(UUID_VERSION).format();
+
+      const confirmationPayload = {
+        data: confirmMessageId,
+      };
+
+      spyOn(mainHandler.account.service.conversation, 'createConfirmation').and.returnValue(
+        Promise.resolve(confirmationPayload)
+      );
+      spyOn(mainHandler.account.service.conversation, 'send').and.returnValue(Promise.resolve());
+
+      await mainHandler.sendConfirmation(conversationId, confirmMessageId);
+      expect(mainHandler.account.service.conversation.createConfirmation).toHaveBeenCalledWith(confirmMessageId);
+      expect(mainHandler.account.service.conversation.send).toHaveBeenCalledWith(conversationId, confirmationPayload);
+    });
+  });
+
+  describe('"sendEditedText"', () => {
+    it('calls send() with account and service', async () => {
+      const conversationId = new UUID(UUID_VERSION).format();
+      const originalMessageId = new UUID(UUID_VERSION).format();
+      const newMessageText = new UUID(UUID_VERSION).format();
+
+      spyOn(mainHandler.account.service.conversation, 'createEditedText').and.callThrough();
+      spyOn(mainHandler.account.service.conversation, 'send').and.returnValue(Promise.resolve());
+
+      await mainHandler.sendEditedText(conversationId, originalMessageId, newMessageText);
+      expect(mainHandler.account.service.conversation.createEditedText).toHaveBeenCalledWith(
+        newMessageText,
+        originalMessageId
+      );
+      expect(mainHandler.account.service.conversation.send).toHaveBeenCalledWith(
+        conversationId,
+        jasmine.objectContaining({content: jasmine.objectContaining({originalMessageId, text: newMessageText})})
+      );
+    });
+  });
+
+  describe('"sendFile"', () => {
+    it('calls send() with account and service', async () => {
+      const conversationId = new UUID(UUID_VERSION).format();
+      const file = new UUID(UUID_VERSION).format();
+      const metadata = new UUID(UUID_VERSION).format();
+
+      const filePayload = {
+        data: file,
+      };
+      const metadataPayload = {
+        data: metadata,
+        id: new UUID(UUID_VERSION).format(),
+      };
+
+      spyOn(mainHandler.account.service.conversation, 'createFileMetadata').and.returnValue(
+        Promise.resolve(metadataPayload)
+      );
+      spyOn(mainHandler.account.service.conversation, 'createFileData').and.returnValue(Promise.resolve(filePayload));
+      spyOn(mainHandler.account.service.conversation, 'send').and.returnValue(Promise.resolve());
+
+      await mainHandler.sendFile(conversationId, file, metadata);
+      expect(mainHandler.account.service.conversation.createFileMetadata).toHaveBeenCalledWith(metadata);
+      expect(mainHandler.account.service.conversation.createFileData).toHaveBeenCalledWith(file, metadataPayload.id);
+      expect(mainHandler.account.service.conversation.send).toHaveBeenCalledWith(conversationId, filePayload);
+    });
   });
 
   describe('"sendImage"', () => {
     it('calls send() with account and service', async () => {
-      mainHandler.account = new Account();
-      await mainHandler.account.init();
+      const conversationId = new UUID(UUID_VERSION).format();
 
       const imagePayload = {
         data: new UUID(UUID_VERSION).format(),
@@ -45,9 +122,9 @@ describe('MessageHandler', () => {
       spyOn(mainHandler.account.service.conversation, 'send').and.returnValue(Promise.resolve());
       spyOn(mainHandler.account.service.conversation, 'createImage').and.returnValue(Promise.resolve(imagePayload));
 
-      await mainHandler.sendImage('random-id', image);
+      await mainHandler.sendImage(conversationId, image);
       expect(mainHandler.account.service.conversation.createImage).toHaveBeenCalledWith(image);
-      expect(mainHandler.account.service.conversation.send).toHaveBeenCalledWith('random-id', imagePayload);
+      expect(mainHandler.account.service.conversation.send).toHaveBeenCalledWith(conversationId, imagePayload);
     });
   });
 });

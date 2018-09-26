@@ -40,11 +40,9 @@ abstract class MessageHandler {
     }
   }
 
-  async clearConversation(instanceId: string, conversationId: string): Promise<void> {
+  async clearConversation(conversationId: string): Promise<void> {
     if (this.account && this.account.service) {
       await this.account.service.conversation.clearConversation(conversationId);
-    } else {
-      throw new Error(`Account service for instance ${instanceId} not set.`);
     }
   }
 
@@ -105,20 +103,13 @@ abstract class MessageHandler {
     }
   }
 
-  public async sendFile(
-    instanceId: string,
-    conversationId: string,
-    file: FileContent,
-    metadata: FileMetaDataContent
-  ): Promise<void> {
+  public async sendFile(conversationId: string, file: FileContent, metadata: FileMetaDataContent): Promise<void> {
     if (this.account && this.account.service) {
       const metadataPayload = await this.account.service.conversation.createFileMetadata(metadata);
       await this.account.service.conversation.send(conversationId, metadataPayload);
 
       const filePayload = await this.account.service.conversation.createFileData(file, metadataPayload.id);
       await this.account.service.conversation.send(conversationId, filePayload);
-    } else {
-      throw new Error(`Account service for instance ${instanceId} not set.`);
     }
   }
 
