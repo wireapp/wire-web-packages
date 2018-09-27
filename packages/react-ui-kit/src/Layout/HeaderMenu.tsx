@@ -136,6 +136,97 @@ const MenuLink = styled(Link)<MenuLinkProps & React.HTMLAttributes<HTMLAnchorEle
   }
 `;
 
+const StyledHeaderSubMenuWrapper = styled.div<React.HTMLAttributes<HTMLDivElement>>`
+  position: relative;
+  @media (min-width: 768px) {
+    display: inline-block;
+  }
+  @media (max-width: 768px) {
+    display: block;
+  }
+`;
+
+const StyledHeaderSubMenu = styled.span<React.HTMLAttributes<HTMLSpanElement>>`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  @media (min-width: 768px) {
+    min-width: 240px;
+    align-items: left;
+    position: absolute;
+    background-color: white;
+    border: 2px solid ${COLOR.GRAY_LIGHTEN_72};
+    border-radius: 8px;
+    padding: 8px 8px;
+    top: 10px;
+    left: -20px;
+    z-index: 1;
+    a {
+      margin: 0px;
+      padding-left: 10px !important;
+      height: 30px;
+      display: flex;
+      align-items: center;
+    }
+    a:hover {
+      background-color: ${COLOR.GRAY_LIGHTEN_72};
+    }
+  }
+  @media (max-width: 768px) {
+    align-items: center;
+    border-top: 2px solid ${COLOR.GRAY_LIGHTEN_72};
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    * {
+      font-weight: 200 !important;
+    }
+  }
+`;
+
+interface HeaderSubMenuProps {
+  menuItem: React.ReactNode;
+}
+
+interface HeaderSubMenuState {
+  isOpen?: boolean;
+}
+
+class HeaderSubMenu extends React.PureComponent<
+  HeaderSubMenuProps & React.HTMLAttributes<HTMLDivElement>,
+  HeaderSubMenuState
+> {
+  state: HeaderSubMenuState = {
+    isOpen: false,
+  };
+
+  toggleMenu = event => {
+    event.stopPropagation();
+    this.setState(({isOpen}) => ({isOpen: !isOpen}));
+  };
+
+  closeMenu = () => {
+    this.setState({isOpen: false});
+  };
+
+  render() {
+    const {menuItem, children} = this.props;
+    return (
+      <MenuLink>
+        <span onClick={this.toggleMenu} style={{margin: 0}}>
+          {menuItem}
+        </span>
+        {this.state.isOpen && (
+          <StyledHeaderSubMenuWrapper onClick={this.closeMenu}>
+            <StyledHeaderSubMenu>{children}</StyledHeaderSubMenu>
+          </StyledHeaderSubMenuWrapper>
+        )}
+      </MenuLink>
+    );
+  }
+}
+
 interface HeaderMenuProps {
   logoElement?: React.ReactNode;
 }
@@ -188,4 +279,4 @@ MenuLink.defaultProps = {
   button: false,
 };
 
-export {HeaderMenu, MenuLink};
+export {HeaderMenu, MenuLink, HeaderSubMenu};
