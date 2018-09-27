@@ -310,7 +310,7 @@ class Demo extends React.PureComponent {
           </MenuLink>
           <MenuLink href="#">test1</MenuLink>
           <MenuLink href="#">test2</MenuLink>
-          <HeaderSubMenu menuItem={<MenuLink>Sub</MenuLink>}>
+          <HeaderSubMenu caption={'SubSubSubSub'}>
             <MenuLink>sub1</MenuLink>
             <MenuLink>sub2</MenuLink>
           </HeaderSubMenu>

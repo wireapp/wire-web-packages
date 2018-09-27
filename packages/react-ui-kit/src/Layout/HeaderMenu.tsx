@@ -20,6 +20,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import {COLOR} from '../Identity';
+import {ANIMATION, DURATION, EASE} from '../Identity/motions';
 import {Content} from '../Layout';
 import {Link} from '../Text';
 
@@ -151,16 +152,18 @@ const StyledHeaderSubMenu = styled.span<React.HTMLAttributes<HTMLSpanElement>>`
   flex-direction: column;
   justify-content: center;
   @media (min-width: 768px) {
-    min-width: 240px;
+    min-width: 200px;
     align-items: left;
     position: absolute;
     background-color: white;
-    border: 2px solid ${COLOR.GRAY_LIGHTEN_72};
+    box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.16);
     border-radius: 8px;
     padding: 8px 8px;
     top: 10px;
     left: -20px;
     z-index: 1;
+    animation: ${ANIMATION.fadeIn} ${DURATION.DEFAULT} ${EASE.EXPONENTIAL},
+      ${ANIMATION.topDownMovementLight} ${DURATION.DEFAULT} ${EASE.EXPONENTIAL};
     a {
       margin: 0px;
       padding-left: 10px !important;
@@ -170,15 +173,17 @@ const StyledHeaderSubMenu = styled.span<React.HTMLAttributes<HTMLSpanElement>>`
     }
     a:hover {
       background-color: ${COLOR.GRAY_LIGHTEN_72};
+      border-radius: 4px;
     }
   }
   @media (max-width: 768px) {
     align-items: center;
-    border-top: 2px solid ${COLOR.GRAY_LIGHTEN_72};
+    border-top: 1px solid ${COLOR.GRAY_LIGHTEN_72};
+    margin-top: 16px;
+    padding-top: 8px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
     * {
       font-weight: 200 !important;
     }
@@ -186,7 +191,7 @@ const StyledHeaderSubMenu = styled.span<React.HTMLAttributes<HTMLSpanElement>>`
 `;
 
 interface HeaderSubMenuProps {
-  menuItem: React.ReactNode;
+  caption: string;
 }
 
 interface HeaderSubMenuState {
@@ -211,12 +216,10 @@ class HeaderSubMenu extends React.PureComponent<
   };
 
   render() {
-    const {menuItem, children} = this.props;
+    const {caption, children} = this.props;
     return (
-      <MenuLink>
-        <span onClick={this.toggleMenu} style={{margin: 0}}>
-          {menuItem}
-        </span>
+      <MenuLink style={{textAlign: 'center'}}>
+        <span onClick={this.toggleMenu}>{caption}</span>
         {this.state.isOpen && (
           <StyledHeaderSubMenuWrapper onClick={this.closeMenu}>
             <StyledHeaderSubMenu>{children}</StyledHeaderSubMenu>
