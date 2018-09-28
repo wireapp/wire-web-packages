@@ -15,6 +15,11 @@
     "tslint-config-prettier": "1.15.0",
     "tslint-plugin-prettier": "2.0.0"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "lint-staged": {
     "*.{js,jsx}": [
       "eslint --fix",
@@ -42,7 +47,6 @@
     "lint:js": "eslint --ignore-path .gitignore --ext .js,.jsx .",
     "lint:other": "yarn prettier --list-different",
     "lint:ts": "tslint --config tslint.json --project tsconfig.json \"**/*.ts\"",
-    "precommit": "lint-staged",
     "prettier": "prettier \"**/*.{json,md,scss,yml}\"",
     "release": "lerna publish",
     "test": "yarn && yarn lint:js && yarn lint:ts && yarn lint:other && node bin/testUpdated.js",
