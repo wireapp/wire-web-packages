@@ -63,9 +63,9 @@ import {SelfService} from './self/root';
 
 import {APIClient} from '@wireapp/api-client';
 import {UserConnectionEvent} from '@wireapp/api-client/dist/commonjs/event';
-import {UserService} from '@wireapp/core/src/main/user';
 import * as EventEmitter from 'events';
 import * as logdown from 'logdown';
+import {UserService} from './user/';
 
 class Account extends EventEmitter {
   private readonly logger = logdown('@wireapp/core/Account', {
