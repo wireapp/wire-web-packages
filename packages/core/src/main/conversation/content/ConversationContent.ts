@@ -2,6 +2,7 @@ import {Connection} from '@wireapp/api-client/dist/commonjs/connection/';
 import {ClientActionType} from '../root';
 import {
   AssetContent,
+  ClearedContent,
   ClientActionContent,
   ConfirmationContent,
   DeletedContent,
@@ -12,8 +13,6 @@ import {
   HiddenContent,
   ImageAssetContent,
   ImageContent,
-  LinkPreviewContent,
-  LinkPreviewUploadedContent,
   LocationContent,
   ReactionContent,
   TextContent,
@@ -21,6 +20,7 @@ import {
 
 type ConversationContent =
   | AssetContent
+  | ClearedContent
   | ClientActionContent
   | ClientActionType
   | ConfirmationContent
@@ -33,8 +33,6 @@ type ConversationContent =
   | HiddenContent
   | ImageAssetContent
   | ImageContent
-  | LinkPreviewContent
-  | LinkPreviewUploadedContent
   | LocationContent
   | ReactionContent
   | TextContent;

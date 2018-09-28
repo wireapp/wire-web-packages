@@ -17,15 +17,9 @@
  *
  */
 
-import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine';
-import {AxiosRequestConfig, AxiosResponse} from 'axios';
-import {AccessTokenData} from '../../auth';
-import {HttpClient} from '../../http';
+interface ClearedContent {
+  clearedTimestamp: number;
+  conversationId: string;
+}
 
-export const retrieveCookie = (
-  response: AxiosResponse<AccessTokenData>,
-  engine: CRUDEngine
-): Promise<AccessTokenData> => Promise.resolve(response.data);
-
-export const sendRequestWithCookie = <T>(client: HttpClient, config: AxiosRequestConfig): Promise<AxiosResponse<T>> =>
-  client._sendRequest<T>(config);
+export {ClearedContent};

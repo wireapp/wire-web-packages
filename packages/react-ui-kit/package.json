@@ -1,31 +1,29 @@
 {
   "dependencies": {
     "@types/color": "3.0.0",
-    "bazinga64": "5.3.9",
+    "bazinga64": "5.3.13",
     "color": "3.0.0",
-    "react": "16.5.0",
-    "react-dom": "16.5.0",
+    "react": "16.5.2",
+    "react-dom": "16.5.2",
     "recompose": "0.30.0",
-    "styled-components": "3.4.6",
-    "styled-normalize": "8.0.0"
+    "styled-components": "3.4.9",
+    "styled-normalize": "8.0.1"
   },
   "devDependencies": {
+    "@babel/core": "7.1.0",
+    "@babel/plugin-proposal-class-properties": "7.1.0",
+    "@babel/preset-env": "7.1.0",
+    "@babel/preset-react": "7.0.0",
+    "@babel/preset-typescript": "7.1.0",
     "@types/styled-components": "3.0.1",
-    "awesome-typescript-loader": "5.2.1",
-    "babel-cli": "6.26.0",
-    "babel-core": "6.26.3",
-    "babel-loader": "7.1.5",
-    "babel-plugin-transform-class-properties": "6.24.1",
-    "babel-plugin-transform-object-rest-spread": "6.26.0",
-    "babel-preset-env": "1.7.0",
-    "babel-preset-react": "6.24.1",
+    "babel-loader": "8.0.4",
     "react-helmet": "5.2.0",
-    "react-hot-loader": "4.3.6",
+    "react-hot-loader": "4.3.11",
     "rimraf": "2.6.2",
-    "typescript": "3.0.3",
-    "webpack": "4.18.0",
-    "webpack-cli": "3.1.0",
-    "webpack-dev-server": "3.1.8"
+    "typescript": "3.1.1",
+    "webpack": "4.20.2",
+    "webpack-cli": "3.1.1",
+    "webpack-dev-server": "3.1.9"
   },
   "license": "GPL-3.0",
   "main": "dist/index.js",
@@ -43,5 +41,5 @@
     "test:project": "yarn dist && yarn test",
     "test:browser": "exit 0"
   },
-  "version": "4.0.4"
+  "version": "4.0.14"
 }

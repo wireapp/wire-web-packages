@@ -3,6 +3,69 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.6.21"></a>
+## [0.6.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.6.20...@wireapp/commons@0.6.21) (2018-09-28)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+<a name="0.6.20"></a>
+## [0.6.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.6.19...@wireapp/commons@0.6.20) (2018-09-25)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+<a name="0.6.19"></a>
+## [0.6.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.6.18...@wireapp/commons@0.6.19) (2018-09-24)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+<a name="0.6.18"></a>
+## [0.6.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.6.17...@wireapp/commons@0.6.18) (2018-09-24)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+<a name="0.6.17"></a>
+## [0.6.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.6.16...@wireapp/commons@0.6.17) (2018-09-19)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+<a name="0.6.16"></a>
+## [0.6.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.6.15...@wireapp/commons@0.6.16) (2018-09-18)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+<a name="0.6.15"></a>
+## [0.6.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.6.14...@wireapp/commons@0.6.15) (2018-09-17)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
 <a name="0.6.14"></a>
 ## [0.6.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.6.13...@wireapp/commons@0.6.14) (2018-09-12)
 
