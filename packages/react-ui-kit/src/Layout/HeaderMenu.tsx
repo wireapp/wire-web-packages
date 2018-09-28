@@ -22,6 +22,7 @@ import styled from 'styled-components';
 import {COLOR} from '../Identity';
 import {ANIMATION, DURATION, EASE} from '../Identity/motions';
 import {Content} from '../Layout';
+import {QUERY} from '../mediaQueries';
 import {Link} from '../Text';
 
 const MenuWrapper = styled.div`
@@ -49,7 +50,7 @@ const MenuContent = styled(Content)<HTMLMenuProps>`
 `;
 
 const MenuItems = styled.div<HTMLMenuProps>`
-  @media (max-width: 767px){
+  @media (${QUERY.tabletDown}){
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -67,7 +68,7 @@ const MenuItems = styled.div<HTMLMenuProps>`
 `;
 
 const MenuOpenButton = styled.div<HTMLMenuProps>`
-  @media (min-width: 768px) {
+  @media (${QUERY.desktop}) {
     display: none;
   }
 
@@ -109,7 +110,7 @@ interface MenuLinkProps {
 }
 
 const MenuLink = styled(Link)<MenuLinkProps & React.HTMLAttributes<HTMLAnchorElement>>`
-  @media (min-width: 768px) {
+  @media (${QUERY.desktop}) {
     margin: 12px 26px 0 10px;
 
     &:first-child {
@@ -127,7 +128,7 @@ const MenuLink = styled(Link)<MenuLinkProps & React.HTMLAttributes<HTMLAnchorEle
   padding: 10px 16px;
   border: 1px solid rgb(219, 226, 231);
   border-radius: 4px;
-  `} @media(max-width: 767px) {
+  `} @media (${QUERY.tabletDown}) {
     border: none;
     font-size: 32px !important;
     text-transform: none !important;
@@ -138,12 +139,19 @@ const MenuLink = styled(Link)<MenuLinkProps & React.HTMLAttributes<HTMLAnchorEle
 `;
 
 const StyledHeaderSubMenuWrapper = styled.div<React.HTMLAttributes<HTMLDivElement>>`
-  position: relative;
-  @media (min-width: 768px) {
+  @media (${QUERY.desktop}) {
+    position: absolute;
     display: inline-block;
+    left: -18px;
+    top: 0px;
+    padding-top: 20px;
+    z-index: 1;
   }
-  @media (max-width: 768px) {
+  @media (${QUERY.tabletDown}) {
+    position: relative;
     display: block;
+    animation: ${ANIMATION.fadeIn} ${DURATION.DEFAULT} ${EASE.EXPONENTIAL},
+      ${ANIMATION.topDownMovement} ${DURATION.DEFAULT} ${EASE.EXPONENTIAL};
   }
 `;
 
@@ -151,17 +159,13 @@ const StyledHeaderSubMenu = styled.span<React.HTMLAttributes<HTMLSpanElement>>`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  @media (min-width: 768px) {
+  @media (${QUERY.desktop}) {
     min-width: 200px;
     align-items: left;
-    position: absolute;
     background-color: white;
     box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.16);
     border-radius: 8px;
     padding: 8px 8px;
-    top: 10px;
-    left: -20px;
-    z-index: 1;
     animation: ${ANIMATION.fadeIn} ${DURATION.DEFAULT} ${EASE.EXPONENTIAL},
       ${ANIMATION.topDownMovementLight} ${DURATION.DEFAULT} ${EASE.EXPONENTIAL};
     a {
@@ -176,7 +180,7 @@ const StyledHeaderSubMenu = styled.span<React.HTMLAttributes<HTMLSpanElement>>`
       border-radius: 4px;
     }
   }
-  @media (max-width: 768px) {
+  @media (${QUERY.tabletDown}) {
     align-items: center;
     border-top: 1px solid ${COLOR.GRAY_LIGHTEN_72};
     margin-top: 16px;
@@ -208,18 +212,24 @@ class HeaderSubMenu extends React.PureComponent<
 
   toggleMenu = event => {
     event.stopPropagation();
-    this.setState(({isOpen}) => ({isOpen: !isOpen}));
+    this.setState(({isOpen}) => ({
+      isOpen: !isOpen,
+    }));
   };
 
-  closeMenu = () => {
-    this.setState({isOpen: false});
-  };
+  openMenu = () => this.setState({isOpen: true});
+  closeMenu = () => this.setState({isOpen: false});
 
   render() {
     const {caption, children} = this.props;
+    const isDesktop = window.matchMedia(`(${QUERY.desktop})`).matches;
     return (
-      <MenuLink style={{textAlign: 'center'}}>
-        <span onClick={this.toggleMenu}>{caption}</span>
+      <MenuLink
+        onMouseLeave={isDesktop ? this.closeMenu : undefined}
+        onMouseOver={isDesktop ? this.openMenu : undefined}
+        style={{textAlign: 'center', position: 'relative'}}
+      >
+        <span onClick={!isDesktop ? this.toggleMenu : undefined}>{caption}</span>
         {this.state.isOpen && (
           <StyledHeaderSubMenuWrapper onClick={this.closeMenu}>
             <StyledHeaderSubMenu>{children}</StyledHeaderSubMenu>
