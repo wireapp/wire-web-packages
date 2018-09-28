@@ -38,11 +38,11 @@ class ChangelogBot {
   constructor(private readonly loginData: LoginDataBackend, private readonly messageData: ChangelogData) {}
 
   get message(): string {
-    const {content, repoSlug} = this.messageData;
-    return `\n**Changelog for "${repoSlug}":**\n\n${content}\n`;
+    const {content, isCustomMessage, repoSlug} = this.messageData;
+    return isCustomMessage ? content : `\n**Changelog for "${repoSlug}":**\n\n${content}\n`;
   }
 
-  async sendMessage(customMessage?: string): Promise<void> {
+  async sendMessage(): Promise<void> {
     let {conversationIds} = this.messageData;
 
     const engine = new MemoryEngine();
@@ -68,7 +68,7 @@ class ChangelogBot {
     for (const conversationId of conversationIds) {
       if (conversationId) {
         logger.log(`Sending message to conversation "${conversationId}" ...`);
-        const textPayload = await account.service.conversation.createText(customMessage || this.message).build();
+        const textPayload = await account.service.conversation.createText(this.message).build();
         await account.service.conversation.send(conversationId, textPayload);
       }
     }

@@ -22,6 +22,7 @@ import {LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
 interface ChangelogData {
   content: string;
   conversationIds?: string[];
+  isCustomMessage?: boolean;
   repoSlug: string;
 }
 

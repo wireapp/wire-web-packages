@@ -25,6 +25,7 @@ import {ChangelogData, LoginDataBackend, Parameters} from './interfaces';
 export async function start(parameters: Parameters): Promise<void> {
   const {backend, conversationIds, email, password, travisCommitRange, travisRepoSlug} = parameters;
   let message = parameters.message;
+  const isCustomMessage = !!message;
 
   const loginData: LoginDataBackend = {
     backend,
@@ -55,6 +56,7 @@ export async function start(parameters: Parameters): Promise<void> {
 
   const messageData: ChangelogData = {
     content: message,
+    isCustomMessage,
     repoSlug: travisRepoSlug,
   };
 
