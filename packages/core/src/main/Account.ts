@@ -63,6 +63,7 @@ import {SelfService} from './self/root';
 
 import {APIClient} from '@wireapp/api-client';
 import {UserConnectionEvent} from '@wireapp/api-client/dist/commonjs/event';
+import {UserService} from '@wireapp/core/src/main/user';
 import * as EventEmitter from 'events';
 import * as logdown from 'logdown';
 
@@ -81,6 +82,7 @@ class Account extends EventEmitter {
     cryptography: CryptographyService;
     notification: NotificationService;
     self: SelfService;
+    user: UserService;
   };
 
   constructor(apiClient: APIClient = new APIClient()) {
@@ -91,13 +93,15 @@ class Account extends EventEmitter {
   public async init(): Promise<void> {
     this.logger.log('init');
 
+    const assetService = new AssetService(this.apiClient);
     const cryptographyService = new CryptographyService(this.apiClient, this.apiClient.config.store);
+
     const clientService = new ClientService(this.apiClient, this.apiClient.config.store, cryptographyService);
     const connectionService = new ConnectionService(this.apiClient);
-    const assetService = new AssetService(this.apiClient);
     const conversationService = new ConversationService(this.apiClient, cryptographyService, assetService);
     const notificationService = new NotificationService(this.apiClient, this.apiClient.config.store);
     const selfService = new SelfService(this.apiClient);
+    const userService = new UserService(this.apiClient);
 
     this.service = {
       asset: assetService,
@@ -107,6 +111,7 @@ class Account extends EventEmitter {
       cryptography: cryptographyService,
       notification: notificationService,
       self: selfService,
+      user: userService,
     };
   }
 
