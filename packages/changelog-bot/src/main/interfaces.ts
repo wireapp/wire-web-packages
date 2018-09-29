@@ -17,15 +17,25 @@
  *
  */
 
-import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine';
-import {AxiosRequestConfig, AxiosResponse} from 'axios';
-import {AccessTokenData} from '../../auth';
-import {HttpClient} from '../../http';
+import {LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
 
-export const retrieveCookie = (
-  response: AxiosResponse<AccessTokenData>,
-  engine: CRUDEngine
-): Promise<AccessTokenData> => Promise.resolve(response.data);
+interface ChangelogData {
+  content: string;
+  conversationIds?: string[];
+  isCustomMessage?: boolean;
+  repoSlug: string;
+}
 
-export const sendRequestWithCookie = <T>(client: HttpClient, config: AxiosRequestConfig): Promise<AxiosResponse<T>> =>
-  client._sendRequest<T>(config);
+type LoginDataBackend = LoginData & {backend?: string};
+
+interface Parameters {
+  conversationIds?: string;
+  backend?: string;
+  email: string;
+  message?: string;
+  password: string;
+  travisCommitRange: string;
+  travisRepoSlug: string;
+}
+
+export {ChangelogData, LoginDataBackend, Parameters};
