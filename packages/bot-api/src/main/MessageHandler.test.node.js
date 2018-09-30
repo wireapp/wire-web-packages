@@ -88,9 +88,7 @@ describe('MessageHandler', () => {
         data: confirmMessageId,
       };
 
-      spyOn(mainHandler.account.service.conversation, 'createConfirmation').and.returnValue(
-        Promise.resolve(confirmationPayload)
-      );
+      spyOn(mainHandler.account.service.conversation, 'createConfirmation').and.returnValue(confirmationPayload);
 
       await mainHandler.sendConfirmation(conversationId, confirmMessageId);
       expect(mainHandler.account.service.conversation.createConfirmation).toHaveBeenCalledWith(confirmMessageId);
@@ -175,19 +173,40 @@ describe('MessageHandler', () => {
         data: file,
       };
       const metadataPayload = {
-        data: metadata,
         id: new UUID(UUID_VERSION).format(),
       };
 
-      spyOn(mainHandler.account.service.conversation, 'createFileMetadata').and.returnValue(
-        Promise.resolve(metadataPayload)
-      );
+      spyOn(mainHandler.account.service.conversation, 'createFileMetadata').and.returnValue(metadataPayload);
       spyOn(mainHandler.account.service.conversation, 'createFileData').and.returnValue(Promise.resolve(filePayload));
+      spyOn(mainHandler.account.service.conversation, 'createFileAbort').and.returnValue(Promise.resolve());
 
       await mainHandler.sendFile(conversationId, file, metadata);
       expect(mainHandler.account.service.conversation.createFileMetadata).toHaveBeenCalledWith(metadata);
       expect(mainHandler.account.service.conversation.createFileData).toHaveBeenCalledWith(file, metadataPayload.id);
+      expect(mainHandler.account.service.conversation.createFileAbort).not.toHaveBeenCalled();
       expect(mainHandler.account.service.conversation.send).toHaveBeenCalledWith(conversationId, filePayload);
+    });
+
+    it('calls send() with abort payload if uploading fails', async () => {
+      const conversationId = new UUID(UUID_VERSION).format();
+      const file = new UUID(UUID_VERSION).format();
+      const metadata = new UUID(UUID_VERSION).format();
+
+      const abortPayload = {
+        data: file,
+      };
+      const metadataPayload = {
+        id: new UUID(UUID_VERSION).format(),
+      };
+
+      spyOn(mainHandler.account.service.conversation, 'createFileMetadata').and.returnValue(metadataPayload);
+      spyOn(mainHandler.account.service.conversation, 'createFileData').and.returnValue(Promise.reject(new Error()));
+      spyOn(mainHandler.account.service.conversation, 'createFileAbort').and.returnValue(Promise.resolve(abortPayload));
+
+      await mainHandler.sendFile(conversationId, file, metadata);
+      expect(mainHandler.account.service.conversation.createFileMetadata).toHaveBeenCalledWith(metadata);
+      expect(mainHandler.account.service.conversation.createFileData).toHaveBeenCalledWith(file, metadataPayload.id);
+      expect(mainHandler.account.service.conversation.send).toHaveBeenCalledWith(conversationId, abortPayload);
     });
   });
 

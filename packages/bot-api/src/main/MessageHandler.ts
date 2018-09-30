@@ -28,6 +28,7 @@ import {
   MentionContent,
 } from '@wireapp/core/dist/conversation/content/';
 import {PayloadBundleIncoming, ReactionType} from '@wireapp/core/dist/conversation/root';
+import {Asset} from '@wireapp/protocol-messaging';
 
 abstract class MessageHandler {
   public account: Account | undefined = undefined;
@@ -54,7 +55,7 @@ abstract class MessageHandler {
 
   public async sendConfirmation(conversationId: string, confirmMessageId: string): Promise<void> {
     if (this.account && this.account.service) {
-      const confirmationPayload = await this.account.service.conversation.createConfirmation(confirmMessageId);
+      const confirmationPayload = this.account.service.conversation.createConfirmation(confirmMessageId);
       await this.account.service.conversation.send(conversationId, confirmationPayload);
     }
   }
@@ -105,11 +106,19 @@ abstract class MessageHandler {
 
   public async sendFile(conversationId: string, file: FileContent, metadata: FileMetaDataContent): Promise<void> {
     if (this.account && this.account.service) {
-      const metadataPayload = await this.account.service.conversation.createFileMetadata(metadata);
+      const metadataPayload = this.account.service.conversation.createFileMetadata(metadata);
       await this.account.service.conversation.send(conversationId, metadataPayload);
 
-      const filePayload = await this.account.service.conversation.createFileData(file, metadataPayload.id);
-      await this.account.service.conversation.send(conversationId, filePayload);
+      try {
+        const filePayload = await this.account.service.conversation.createFileData(file, metadataPayload.id);
+        await this.account.service.conversation.send(conversationId, filePayload);
+      } catch (error) {
+        const abortPayload = await this.account.service.conversation.createFileAbort(
+          Asset.NotUploaded.FAILED,
+          metadataPayload.id
+        );
+        await this.account.service.conversation.send(conversationId, abortPayload);
+      }
     }
   }
 
