@@ -113,13 +113,6 @@ abstract class MessageHandler {
     }
   }
 
-  public async sendLocation(conversationId: string, location: LocationContent): Promise<void> {
-    if (this.account && this.account.service) {
-      const locationPayload = await this.account.service.conversation.createLocation(location);
-      await this.account.service.conversation.send(conversationId, locationPayload);
-    }
-  }
-
   public async sendImage(conversationId: string, image: ImageContent): Promise<void> {
     if (this.account && this.account.service) {
       const imagePayload = await this.account.service.conversation.createImage(image);
@@ -127,9 +120,16 @@ abstract class MessageHandler {
     }
   }
 
+  public async sendLocation(conversationId: string, location: LocationContent): Promise<void> {
+    if (this.account && this.account.service) {
+      const locationPayload = this.account.service.conversation.createLocation(location);
+      await this.account.service.conversation.send(conversationId, locationPayload);
+    }
+  }
+
   public async sendPing(conversationId: string): Promise<void> {
     if (this.account && this.account.service) {
-      const pingPayload = await this.account.service.conversation.createPing();
+      const pingPayload = this.account.service.conversation.createPing();
       await this.account.service.conversation.send(conversationId, pingPayload);
     }
   }
