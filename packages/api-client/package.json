@@ -5,11 +5,11 @@
     "./dist/commonjs/shims/node/cookie": "./dist/commonjs/shims/browser/cookie.js"
   },
   "dependencies": {
-    "@types/node": "10.10.3",
+    "@types/node": "10.11.2",
     "@types/spark-md5": "3.0.1",
     "@types/tough-cookie": "2.3.3",
-    "@wireapp/priority-queue": "0.2.19",
-    "@wireapp/store-engine": "0.12.19",
+    "@wireapp/priority-queue": "0.2.21",
+    "@wireapp/store-engine": "0.12.21",
     "axios": "0.18.0",
     "html5-websocket": "2.0.3",
     "logdown": "3.2.7",
@@ -20,8 +20,8 @@
   "devDependencies": {
     "@babel/core": "7.1.0",
     "@babel/preset-react": "7.0.0",
-    "@wireapp/react-ui-kit": "4.0.12",
-    "babel-loader": "8.0.2",
+    "@wireapp/react-ui-kit": "4.0.14",
+    "babel-loader": "8.0.4",
     "browser-sync": "2.24.7",
     "concurrently": "4.0.1",
     "cross-env": "5.2.0",
@@ -39,10 +39,10 @@
     "rimraf": "2.6.2",
     "sinon": "6.3.4",
     "sinon-har-server": "0.3.0",
-    "typescript": "3.0.3",
-    "webpack": "4.19.1",
+    "typescript": "3.1.1",
+    "webpack": "4.20.2",
     "webpack-cli": "3.1.1",
-    "webpack-dev-server": "3.1.8"
+    "webpack-dev-server": "3.1.9"
   },
   "description": "Wire API Client to send and receive data.",
   "files": [
@@ -67,5 +67,5 @@
     "watch": "webpack-dev-server --config webpack.config.js"
   },
   "types": "./dist/commonjs/Client.d.ts",
-  "version": "1.15.22"
+  "version": "1.15.25"
 }
