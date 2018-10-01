@@ -27,7 +27,7 @@ class UserService {
   public async getUsers(userIds: string[]): Promise<User[]>;
   public async getUsers(userIds: string | string[]): Promise<User | User[]> {
     if (typeof userIds === 'string') {
-      return this.apiClient.user.api.getUsersByIds([userIds]);
+      userIds = [userIds];
     }
     return this.apiClient.user.api.getUsersByIds(userIds);
   }
