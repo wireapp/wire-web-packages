@@ -174,7 +174,6 @@ const StyledHeaderSubMenu = styled.span<React.HTMLAttributes<HTMLSpanElement>>`
       height: 30px;
       display: flex;
       align-items: center;
-      white-space: nowrap;
     }
     a:hover {
       background-color: ${COLOR.GRAY_LIGHTEN_72};
@@ -223,7 +222,7 @@ class HeaderSubMenu extends React.PureComponent<
 
   render() {
     const {caption, children} = this.props;
-    const isDesktop = window.matchMedia(`(${QUERY.desktop})`).matches;
+    const isDesktop = typeof window !== 'undefined' && window.matchMedia(`(${QUERY.desktop})`).matches;
     return (
       <MenuLink
         onMouseLeave={isDesktop ? this.closeMenu : undefined}
@@ -259,8 +258,10 @@ class HeaderMenu extends React.PureComponent<HeaderMenuProps & React.HTMLAttribu
   };
 
   toggleMenu = () => {
-    window.scrollTo(0, 0);
-    this.setState(({isOpen}) => ({isOpen: !isOpen}));
+    if (typeof window !== 'undefined') {
+      window.scrollTo(0, 0);
+      this.setState(({isOpen}) => ({isOpen: !isOpen}));
+    }
   };
 
   closeMenu = () => {
