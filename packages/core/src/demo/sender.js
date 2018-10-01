@@ -128,18 +128,30 @@ const {FileEngine} = require('@wireapp/store-engine');
     await account.service.conversation.clearConversation(CONVERSATION_ID);
   }
 
-  async function sendMention() {
-    const mention = '@everyone';
-    const text = `Hello ${mention}!`;
+  async function sendMentions() {
+    const conversation = await account.service.conversation.getConversations(CONVERSATION_ID);
+    const userIds = conversation.members.others.map(participant => participant.id);
+    const users = await account.service.user.getUsers(userIds);
 
-    const mentionEveryone = {
-      length: mention.length,
-      start: text.indexOf(mention),
-    };
+    let text = 'Hello';
+
+    const mentions = users.map(user => {
+      text += ' ';
+      const mentionText = `@${user.name}`;
+      const mention = {
+        length: mentionText.length,
+        start: text.length,
+        userId: user.id,
+      };
+      text += mentionText;
+      return mention;
+    });
+
     const payload = account.service.conversation
       .createText(text)
-      .withMentions([mentionEveryone])
+      .withMentions(mentions)
       .build();
+
     await account.service.conversation.send(CONVERSATION_ID, payload);
   }
 
@@ -151,7 +163,7 @@ const {FileEngine} = require('@wireapp/store-engine');
     sendImage,
     sendPing,
     sendText,
-    sendMention,
+    sendMentions,
   ];
 
   const timeoutInMillis = 2000;
