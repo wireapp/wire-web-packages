@@ -5661,10 +5661,10 @@ html-entities@^1.2.0:
   resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-1.2.1.tgz#0df29351f0721163515dfb9e5543e5f6eed5162f"
   integrity sha1-DfKTUfByEWNRXfueVUPl9u7VFi8=
 
-html5-websocket@2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/html5-websocket/-/html5-websocket-2.0.3.tgz#d58e01dc4228452781b7863b359d8ce51d328e1c"
-  integrity sha512-/grE6kHJ60yNNCd69f5I0Nz4MJQgpqG9O80i7ZAWg6J9eyfxbOWCoPrlrS1zTItGg0B2om40Z1edSS0V2SGikQ==
+html5-websocket@2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/html5-websocket/-/html5-websocket-2.0.4.tgz#531aa0f5b927f7458aaae28003210189d95dec06"
+  integrity sha512-lMzVYlkgwaHfMW+Z73RnpyN9aZuTvx6CTvroocCunQB1eJl16LPIIWCU43oXFhqQ3GvB96z2CVXVWYPT1785Ig==
   dependencies:
     ws "^3.1.0"
 
