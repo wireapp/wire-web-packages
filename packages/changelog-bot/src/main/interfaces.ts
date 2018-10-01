@@ -17,10 +17,25 @@
  *
  */
 
-import setGlobalStyles from '../globalStyles';
+import {LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
 
-setGlobalStyles();
+interface ChangelogData {
+  content: string;
+  conversationIds?: string[];
+  isCustomMessage?: boolean;
+  repoSlug: string;
+}
 
-export * from './Logo';
-export * from './colors';
-export * from './Animation';
+type LoginDataBackend = LoginData & {backend?: string};
+
+interface Parameters {
+  conversationIds?: string;
+  backend?: string;
+  email: string;
+  message?: string;
+  password: string;
+  travisCommitRange: string;
+  travisRepoSlug: string;
+}
+
+export {ChangelogData, LoginDataBackend, Parameters};

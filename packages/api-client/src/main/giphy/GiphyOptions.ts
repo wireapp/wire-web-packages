@@ -17,10 +17,10 @@
  *
  */
 
-import setGlobalStyles from '../globalStyles';
+interface GiphyOptions {
+  limit?: number;
+  offset?: number;
+  sort?: 'relevant' | 'recent';
+}
 
-setGlobalStyles();
-
-export * from './Logo';
-export * from './colors';
-export * from './Animation';
+export {GiphyOptions};
