@@ -17,10 +17,6 @@
  *
  */
 
-import setGlobalStyles from '../globalStyles';
+import {GiphyService} from './GiphyService';
 
-setGlobalStyles();
-
-export * from './Logo';
-export * from './colors';
-export * from './Animation';
+export {GiphyService};

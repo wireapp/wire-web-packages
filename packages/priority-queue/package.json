@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@types/node": "10.11.2",
+    "@types/node": "10.11.3",
     "pure-uuid": "1.5.4"
   },
   "devDependencies": {
@@ -37,5 +37,5 @@
     "test:node": "cross-env JASMINE_CONFIG_PATH=src/test/node/support/jasmine.json jasmine"
   },
   "types": "./dist/index.d.ts",
-  "version": "0.2.21"
+  "version": "0.2.22"
 }
