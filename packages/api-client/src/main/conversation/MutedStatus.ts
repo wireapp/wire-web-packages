@@ -17,16 +17,10 @@
  *
  */
 
-import {MutedStatus} from '../conversation/';
-
-interface MemberUpdate {
-  hidden_ref?: string;
-  hidden?: boolean;
-  otr_archived_ref?: string;
-  otr_archived?: boolean;
-  otr_muted_ref?: string | null;
-  otr_muted?: boolean | null;
-  otr_muted_status?: MutedStatus | null;
+enum MutedStatus {
+  NORMAL = 0,
+  MENTION = 1,
+  OTHER = 2,
 }
 
-export {MemberUpdate};
+export {MutedStatus};

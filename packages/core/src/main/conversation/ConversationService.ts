@@ -21,6 +21,7 @@ import {
   CONVERSATION_TYPE,
   Conversation,
   MemberUpdate,
+  MutedStatus,
   NewConversation,
   NewOTRMessage,
   OTRRecipients,
@@ -1153,7 +1154,17 @@ class ConversationService {
 
   public async toggleMuteConversation(
     conversationId: string,
+    muted: MutedStatus,
+    muteTimestamp?: number | Date
+  ): Promise<void>;
+  public async toggleMuteConversation(
+    conversationId: string,
     muted: boolean,
+    muteTimestamp?: number | Date
+  ): Promise<void>;
+  public async toggleMuteConversation(
+    conversationId: string,
+    muted: boolean | MutedStatus,
     muteTimestamp: number | Date = new Date()
   ): Promise<void> {
     if (typeof muteTimestamp === 'number') {
@@ -1161,9 +1172,15 @@ class ConversationService {
     }
 
     const payload: MemberUpdate = {
-      otr_muted: muted,
       otr_muted_ref: muteTimestamp.toISOString(),
     };
+
+    if (typeof muted === 'boolean') {
+      payload.otr_muted_status = muted ? MutedStatus.MENTION : MutedStatus.NORMAL;
+      payload.otr_muted = muted;
+    } else {
+      payload.otr_muted_status = muted;
+    }
 
     await this.apiClient.conversation.api.putMembershipProperties(conversationId, payload);
   }
