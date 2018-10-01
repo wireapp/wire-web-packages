@@ -31,7 +31,7 @@ const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/');
 const {FileEngine} = require('@wireapp/store-engine');
 
 (async () => {
-  const CONVERSATION_ID = program.conversationId;
+  const CONVERSATION_ID = program.conversationId || process.env.WIRE_CONVERSATION_ID;
   const MESSAGE_TIMER = 5000;
 
   const login = {
