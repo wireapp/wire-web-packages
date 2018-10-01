@@ -155,17 +155,18 @@ describe('Client', () => {
       nock.cleanAll();
     });
 
-    it('creates a context from a successful login', () => {
+    it('creates a context from a successful login', async () => {
       const client = new APIClient();
-      return client.login(loginData).then(context => {
-        expect(context.userId).toBe(accessTokenData.user);
-        expect(client.accessTokenStore.accessToken.access_token).toBe(accessTokenData.access_token);
-      });
+      const context = await client.login(loginData);
+      expect(context.userId).toBe(accessTokenData.user);
+      expect(client.accessTokenStore.accessToken.access_token).toBe(accessTokenData.access_token);
     });
 
-    it('can login after a logout', () => {
+    it('can login after a logout', async () => {
       const client = new APIClient();
-      return client.login(loginData).then(() => client.logout());
+      await client.login(loginData);
+      await client.logout();
+      expect(client.accessTokenStore.accessToken).not.toBeDefined();
     });
 
     it('refreshes an access token when it becomes invalid', () => {

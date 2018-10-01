@@ -21,7 +21,7 @@ import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine';
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
 import * as logdown from 'logdown';
 import {Cookie as ToughCookie} from 'tough-cookie';
-import {AUTH_COOKIE_KEY, AUTH_TABLE_NAME, AccessTokenData, Cookie} from '../../auth/';
+import {AUTH_COOKIE_KEY, AUTH_TABLE_NAME, Cookie} from '../../auth/';
 import {HttpClient} from '../../http/';
 import {ObfuscationUtil} from '../../obfuscation/';
 
