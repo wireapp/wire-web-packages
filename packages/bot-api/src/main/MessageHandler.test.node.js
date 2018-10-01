@@ -45,7 +45,7 @@ describe('MessageHandler', () => {
       spyOn(mainHandler.account.service.conversation, 'send').and.returnValue(Promise.resolve());
       spyOn(mainHandler.account.service.conversation, 'createImage').and.returnValue(Promise.resolve(imagePayload));
 
-      await mainHandler.sendImage('random-id', image);
+      await mainHandler.sendImage(image).toConversation('random-id');
       expect(mainHandler.account.service.conversation.createImage).toHaveBeenCalledWith(image);
       expect(mainHandler.account.service.conversation.send).toHaveBeenCalledWith('random-id', imagePayload);
     });

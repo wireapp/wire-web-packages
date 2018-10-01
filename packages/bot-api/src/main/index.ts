@@ -19,4 +19,5 @@
 
 export * from './Bot';
 export * from './BotConfig';
+export * from './ConversationBundler';
 export * from './MessageHandler';

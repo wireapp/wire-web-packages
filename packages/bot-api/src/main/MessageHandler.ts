@@ -17,13 +17,13 @@
  *
  */
 
-import {CONVERSATION_TYPE} from '@wireapp/api-client/dist/commonjs/conversation/';
 import {Account} from '@wireapp/core';
 import {ImageContent} from '@wireapp/core/dist/conversation/content/';
 import {PayloadBundleIncoming, ReactionType} from '@wireapp/core/dist/conversation/root';
+import {ConversationChooser} from './ConversationBundler';
 
 abstract class MessageHandler {
-  public account: Account | undefined = undefined;
+  public account: Account | undefined;
 
   abstract handleEvent(payload: PayloadBundleIncoming): void;
 
@@ -39,29 +39,20 @@ abstract class MessageHandler {
     }
   }
 
-  public async sendImage(conversationId: string, image: ImageContent): Promise<void> {
+  public sendImage(image: ImageContent): ConversationChooser {
     if (this.account && this.account.service) {
-      const imagePayload = await this.account.service.conversation.createImage(image);
-      await this.account.service.conversation.send(conversationId, imagePayload);
+      const imagePayload = this.account.service.conversation.createImage(image);
+      return new ConversationChooser(this.account, imagePayload);
     }
+    throw new Error('No account. Not logged in?');
   }
 
-  public async sendText(conversationId: string, text: string): Promise<void> {
+  public sendText(text: string): ConversationChooser {
     if (this.account && this.account.service) {
       const textPayload = this.account.service.conversation.createText(text).build();
-      await this.account.service.conversation.send(conversationId, textPayload);
+      return new ConversationChooser(this.account, textPayload);
     }
-  }
-
-  public async sendTextToAllConversations(text: string, type?: CONVERSATION_TYPE): Promise<void> {
-    if (this.account && this.account.service) {
-      let allConversations = await this.account.service.conversation.getConversations();
-      if (type) {
-        allConversations = allConversations.filter(conversation => conversation.type === type);
-      }
-      const conversationIds: string[] = allConversations.map(conversation => conversation.id);
-      await Promise.all(conversationIds.map(id => this.sendText(id, text)));
-    }
+    throw new Error('No account. Not logged in?');
   }
 
   public async sendConnectionRequest(userId: string): Promise<void> {
