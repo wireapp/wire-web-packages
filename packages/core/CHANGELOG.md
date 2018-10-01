@@ -3,6 +3,48 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="6.5.0"></a>
+# [6.5.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@6.4.0...@wireapp/core@6.5.0) (2018-10-01)
+
+
+### Features
+
+* **core:** Add user service ([#1173](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1173)) ([ec87f66](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/ec87f66))
+
+
+
+
+
+<a name="6.4.0"></a>
+# [6.4.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@6.3.15...@wireapp/core@6.4.0) (2018-10-01)
+
+
+### Features
+
+* **core,api-client:** Implement giphy service ([#1172](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1172)) ([a1b4c2e](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/a1b4c2e))
+
+
+
+
+
+<a name="6.3.15"></a>
+## [6.3.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@6.3.14...@wireapp/core@6.3.15) (2018-10-01)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+<a name="6.3.14"></a>
+## [6.3.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@6.3.13...@wireapp/core@6.3.14) (2018-10-01)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
 <a name="6.3.13"></a>
 ## [6.3.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@6.3.12...@wireapp/core@6.3.13) (2018-09-28)
 
