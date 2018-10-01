@@ -7,7 +7,7 @@
     "rimraf": "2.6.2",
     "typescript": "3.1.1",
     "webpack": "4.20.2",
-    "webpack-cli": "3.1.1"
+    "webpack-cli": "3.1.2"
   },
   "files": [
     "dist"
@@ -33,5 +33,5 @@
     "test:node": "jasmine --config=jasmine.json"
   },
   "types": "dist/commonjs/LRUCache.d.ts",
-  "version": "3.0.4"
+  "version": "3.0.5"
 }

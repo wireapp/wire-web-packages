@@ -17,10 +17,20 @@
  *
  */
 
-import setGlobalStyles from '../globalStyles';
+import {APIClient} from '@wireapp/api-client';
+import {User} from '@wireapp/api-client/dist/commonjs/user';
 
-setGlobalStyles();
+class UserService {
+  constructor(private readonly apiClient: APIClient) {}
 
-export * from './Logo';
-export * from './colors';
-export * from './Animation';
+  public async getUsers(userId: string): Promise<User>;
+  public async getUsers(userIds: string[]): Promise<User[]>;
+  public async getUsers(userIds: string | string[]): Promise<User | User[]> {
+    if (typeof userIds === 'string') {
+      userIds = [userIds];
+    }
+    return this.apiClient.user.api.getUsersByIds(userIds);
+  }
+}
+
+export {UserService};

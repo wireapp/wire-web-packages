@@ -17,10 +17,19 @@
  *
  */
 
-import setGlobalStyles from '../globalStyles';
+import {GiphyImage} from './GiphyImage';
 
-setGlobalStyles();
+interface GiphyResult {
+  data: GiphyImage;
+  meta: {
+    status: number;
+    msg: string;
+    response_id: string;
+  };
+}
 
-export * from './Logo';
-export * from './colors';
-export * from './Animation';
+type GiphySearchResult = GiphyResult & {
+  data: GiphyImage[];
+};
+
+export {GiphyResult, GiphySearchResult};
