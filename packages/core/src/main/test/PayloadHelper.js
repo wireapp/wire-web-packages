@@ -8,13 +8,13 @@ function getUUID() {
 
 module.exports = {
   getUUID,
-  getUrlParameter: function(url, parameter) {
+  getUrlParameter: (url, parameter) => {
     if (typeof window === 'undefined') {
       return require('url').parse(url, true).query[parameter];
     }
     return new URL(url).searchParams.get(parameter);
   },
-  mockUserPayload: function(userId) {
+  mockUserPayload: userId => {
     return {
       locale: 'en',
       accent_id: 3,

@@ -23,13 +23,13 @@ import {User} from '@wireapp/api-client/dist/commonjs/user';
 class UserService {
   constructor(private readonly apiClient: APIClient) {}
 
-  public async getUsers(id: string): Promise<User>;
-  public async getUsers(id: string[]): Promise<User[]>;
-  public async getUsers(id: string | string[]): Promise<User | User[]> {
-    if (typeof id === 'string') {
-      return this.apiClient.user.api.getUsersByIds([id]);
+  public async getUsers(userId: string): Promise<User>;
+  public async getUsers(userIds: string[]): Promise<User[]>;
+  public async getUsers(userIds: string | string[]): Promise<User | User[]> {
+    if (typeof userIds === 'string') {
+      return this.apiClient.user.api.getUsersByIds([userIds]);
     }
-    return this.apiClient.user.api.getUsersByIds(id);
+    return this.apiClient.user.api.getUsersByIds(userIds);
   }
 }
 
