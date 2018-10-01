@@ -18,7 +18,7 @@
     "tough-cookie": "2.4.3"
   },
   "devDependencies": {
-    "@babel/core": "7.1.0",
+    "@babel/core": "7.1.2",
     "@babel/preset-react": "7.0.0",
     "@wireapp/react-ui-kit": "4.0.14",
     "babel-loader": "8.0.4",
@@ -41,7 +41,7 @@
     "sinon-har-server": "0.3.0",
     "typescript": "3.1.1",
     "webpack": "4.20.2",
-    "webpack-cli": "3.1.1",
+    "webpack-cli": "3.1.2",
     "webpack-dev-server": "3.1.9"
   },
   "description": "Wire API Client to send and receive data.",
