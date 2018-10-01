@@ -1458,6 +1458,18 @@
   resolved "https://registry.yarnpkg.com/@types/generate-changelog/-/generate-changelog-1.7.0.tgz#3857dd209247d6bed1c8b0832d1f04ea8081c6ba"
   integrity sha512-wLeyRMCAfBi38YoOanxaNSg5KEqbfMCXUMtiJEl7p4Lx3AHbm7pVlsiL2WpxwlJQdr3fyXrAj7E7UFnBLL26Vg==
 
+"@types/libsodium-wrappers-sumo@0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@types/libsodium-wrappers-sumo/-/libsodium-wrappers-sumo-0.7.0.tgz#1ac9675309d1120f492712cbf4f9e726f942c723"
+  integrity sha512-EZw6onkQ9rNQwVlXoA6U5Z4NdkytOx0SYhswOlAfp50QR58rx5CFMYLDkPqtju1rRvtSSEznduYClz+Zw7WUQw==
+  dependencies:
+    "@types/libsodium-wrappers" "*"
+
+"@types/libsodium-wrappers@*":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@types/libsodium-wrappers/-/libsodium-wrappers-0.7.0.tgz#0ed83d9151b61c76bb579d4da5146bd503c47303"
+  integrity sha512-QmfzFXp8bKr5fYiuojn60yYOVOAsIAvx+p3Si2xmbfWTC/HTwzMALUDZ8lzUATUscLV/eMWY1L16SHv1mN31UQ==
+
 "@types/long@^4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@types/long/-/long-4.0.0.tgz#719551d2352d301ac8b81db732acb6bdc28dbdef"
