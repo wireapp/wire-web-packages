@@ -44,41 +44,6 @@ describe('MessageHandler', () => {
     spyOn(mainHandler.account.service.conversation, 'send').and.returnValue(Promise.resolve());
   });
 
-  describe('"addUser"', () => {
-    it('calls addUser() with conversation ID and user ID', async () => {
-      const conversationId = new UUID(UUID_VERSION).format();
-      const userId = new UUID(UUID_VERSION).format();
-
-      spyOn(mainHandler.account.service.conversation, 'addUser').and.returnValue(Promise.resolve());
-
-      await mainHandler.addUser(conversationId, userId);
-      expect(mainHandler.account.service.conversation.addUser).toHaveBeenCalledWith(conversationId, userId);
-    });
-  });
-
-  describe('"clearConversation"', () => {
-    it('calls clearConversation() with conversation ID', async () => {
-      const conversationId = new UUID(UUID_VERSION).format();
-
-      spyOn(mainHandler.account.service.conversation, 'clearConversation').and.returnValue(Promise.resolve());
-
-      await mainHandler.clearConversation(conversationId);
-      expect(mainHandler.account.service.conversation.clearConversation).toHaveBeenCalledWith(conversationId);
-    });
-  });
-
-  describe('"removeUser"', () => {
-    it('calls removeUser() with conversation ID and user ID', async () => {
-      const conversationId = new UUID(UUID_VERSION).format();
-      const userId = new UUID(UUID_VERSION).format();
-
-      spyOn(mainHandler.account.service.conversation, 'removeUser').and.returnValue(Promise.resolve());
-
-      await mainHandler.removeUser(conversationId, userId);
-      expect(mainHandler.account.service.conversation.removeUser).toHaveBeenCalledWith(conversationId, userId);
-    });
-  });
-
   describe('"sendConfirmation"', () => {
     it('calls send() with account and service', async () => {
       const confirmMessageId = new UUID(UUID_VERSION).format();
@@ -96,19 +61,8 @@ describe('MessageHandler', () => {
     });
   });
 
-  describe('"sendConnectionRequest"', () => {
-    it('calls createConnection() with userId', async () => {
-      const userId = new UUID(UUID_VERSION).format();
-
-      spyOn(mainHandler.account.service.connection, 'createConnection').and.returnValue(Promise.resolve());
-
-      await mainHandler.sendConnectionRequest(userId);
-      expect(mainHandler.account.service.connection.createConnection).toHaveBeenCalledWith(userId);
-    });
-  });
-
   describe('"sendConnectionResponse"', () => {
-    it('calls acceptConnection() with userId', async () => {
+    it('sends the correct data when accepting the connection', async () => {
       const userId = new UUID(UUID_VERSION).format();
       const acceptConnection = true;
 
@@ -120,7 +74,7 @@ describe('MessageHandler', () => {
       expect(mainHandler.account.service.connection.ignoreConnection).not.toHaveBeenCalled();
     });
 
-    it('calls ignoreConnection() with userId', async () => {
+    it('sends the correct data when ignoring the connection', async () => {
       const userId = new UUID(UUID_VERSION).format();
       const acceptConnection = false;
 
@@ -133,18 +87,8 @@ describe('MessageHandler', () => {
     });
   });
 
-  it('calls removeUser() with account and service', async () => {
-    const conversationId = new UUID(UUID_VERSION).format();
-    const userId = new UUID(UUID_VERSION).format();
-
-    spyOn(mainHandler.account.service.conversation, 'removeUser').and.returnValue(Promise.resolve());
-
-    await mainHandler.removeUser(conversationId, userId);
-    expect(mainHandler.account.service.conversation.removeUser).toHaveBeenCalledWith(conversationId, userId);
-  });
-
   describe('"sendEditedText"', () => {
-    it('calls send() with account and service', async () => {
+    it('sends the correct data', async () => {
       const conversationId = new UUID(UUID_VERSION).format();
       const originalMessageId = new UUID(UUID_VERSION).format();
       const newMessageText = new UUID(UUID_VERSION).format();
@@ -161,10 +105,35 @@ describe('MessageHandler', () => {
         jasmine.objectContaining({content: jasmine.objectContaining({originalMessageId, text: newMessageText})})
       );
     });
+
+    it('sends the correct data with mentions', async () => {
+      const conversationId = new UUID(UUID_VERSION).format();
+      const originalMessageId = new UUID(UUID_VERSION).format();
+      const newMessageText = new UUID(UUID_VERSION).format();
+      const mentionData = [
+        {
+          data: new UUID(UUID_VERSION).format(),
+        },
+      ];
+
+      spyOn(mainHandler.account.service.conversation, 'createEditedText').and.callThrough();
+
+      await mainHandler.sendEditedText(conversationId, originalMessageId, newMessageText, mentionData);
+      expect(mainHandler.account.service.conversation.createEditedText).toHaveBeenCalledWith(
+        newMessageText,
+        originalMessageId
+      );
+      expect(mainHandler.account.service.conversation.send).toHaveBeenCalledWith(
+        conversationId,
+        jasmine.objectContaining({
+          content: jasmine.objectContaining({mentions: mentionData, originalMessageId, text: newMessageText}),
+        })
+      );
+    });
   });
 
   describe('"sendFile"', () => {
-    it('calls send() with account and service', async () => {
+    it('sends the correct data', async () => {
       const conversationId = new UUID(UUID_VERSION).format();
       const file = new UUID(UUID_VERSION).format();
       const metadata = new UUID(UUID_VERSION).format();
@@ -187,7 +156,7 @@ describe('MessageHandler', () => {
       expect(mainHandler.account.service.conversation.send).toHaveBeenCalledWith(conversationId, filePayload);
     });
 
-    it('calls send() with abort payload if uploading fails', async () => {
+    it('sends the correct data if uploading fails', async () => {
       const conversationId = new UUID(UUID_VERSION).format();
       const file = new UUID(UUID_VERSION).format();
       const metadata = new UUID(UUID_VERSION).format();
@@ -211,7 +180,7 @@ describe('MessageHandler', () => {
   });
 
   describe('"sendImage"', () => {
-    it('calls send() with account and service', async () => {
+    it('sends the correct data', async () => {
       const conversationId = new UUID(UUID_VERSION).format();
 
       const imagePayload = {
@@ -233,45 +202,8 @@ describe('MessageHandler', () => {
     });
   });
 
-  describe('"sendLocation"', () => {
-    it('calls send() with account and service', async () => {
-      const conversationId = new UUID(UUID_VERSION).format();
-
-      const locationPayload = {
-        data: new UUID(UUID_VERSION).format(),
-      };
-
-      const locationData = {
-        latitude: new UUID(UUID_VERSION).format(),
-        longitude: new UUID(UUID_VERSION).format(),
-      };
-
-      spyOn(mainHandler.account.service.conversation, 'createLocation').and.returnValue(locationPayload);
-
-      await mainHandler.sendLocation(conversationId, locationData);
-      expect(mainHandler.account.service.conversation.createLocation).toHaveBeenCalledWith(locationData);
-      expect(mainHandler.account.service.conversation.send).toHaveBeenCalledWith(conversationId, locationPayload);
-    });
-  });
-
-  describe('"sendPing"', () => {
-    it('calls send() with account and service', async () => {
-      const conversationId = new UUID(UUID_VERSION).format();
-
-      const pingPayload = {
-        data: new UUID(UUID_VERSION).format(),
-      };
-
-      spyOn(mainHandler.account.service.conversation, 'createPing').and.returnValue(pingPayload);
-
-      await mainHandler.sendPing(conversationId);
-      expect(mainHandler.account.service.conversation.createPing).toHaveBeenCalled();
-      expect(mainHandler.account.service.conversation.send).toHaveBeenCalledWith(conversationId, pingPayload);
-    });
-  });
-
   describe('"sendReaction"', () => {
-    it('calls send() with account and service', async () => {
+    it('sends the correct data', async () => {
       const conversationId = new UUID(UUID_VERSION).format();
       const originalMessageId = new UUID(UUID_VERSION).format();
       const reactionType = ReactionType.LIKE;
@@ -292,7 +224,27 @@ describe('MessageHandler', () => {
   });
 
   describe('"sendText"', () => {
-    it('calls send() with account and service', async () => {
+    it('sends the correct data', async () => {
+      const conversationId = new UUID(UUID_VERSION).format();
+      const messageText = new UUID(UUID_VERSION).format();
+      const mentionData = [
+        {
+          data: new UUID(UUID_VERSION).format(),
+        },
+      ];
+
+      spyOn(mainHandler.account.service.conversation, 'createText').and.callThrough();
+
+      await mainHandler.sendText(conversationId, messageText, mentionData);
+
+      expect(mainHandler.account.service.conversation.createText).toHaveBeenCalledWith(messageText);
+      expect(mainHandler.account.service.conversation.send).toHaveBeenCalledWith(
+        conversationId,
+        jasmine.objectContaining({content: jasmine.objectContaining({mentions: mentionData, text: messageText})})
+      );
+    });
+
+    it('sends the correct data with mentions', async () => {
       const conversationId = new UUID(UUID_VERSION).format();
       const message = new UUID(UUID_VERSION).format();
 
@@ -309,7 +261,7 @@ describe('MessageHandler', () => {
   });
 
   describe('"sendTyping"', () => {
-    it('calls sendTypingStart()', async () => {
+    it('sends the correct data when typing started', async () => {
       const conversationId = new UUID(UUID_VERSION).format();
 
       spyOn(mainHandler.account.service.conversation, 'sendTypingStart').and.returnValue(Promise.resolve());
@@ -321,7 +273,7 @@ describe('MessageHandler', () => {
       expect(mainHandler.account.service.conversation.sendTypingStop).not.toHaveBeenCalled();
     });
 
-    it('calls sendTypingStop()', async () => {
+    it('sends the correct data when typing stopped', async () => {
       const conversationId = new UUID(UUID_VERSION).format();
 
       spyOn(mainHandler.account.service.conversation, 'sendTypingStart').and.returnValue(Promise.resolve());
