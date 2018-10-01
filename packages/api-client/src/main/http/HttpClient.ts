@@ -152,18 +152,18 @@ class HttpClient extends EventEmitter {
       expiredAccessToken = this.accessTokenStore.accessToken;
     }
 
-    let response;
+    let response: AxiosResponse<AccessTokenData> | undefined;
     try {
       response = await this.postAccess(expiredAccessToken);
     } catch (error) {
       throw new Error('Got logged out from backend.');
     }
 
-    const accessToken: AccessTokenData = await saveCookie(response, this.cookieStore);
+    const accessToken = await saveCookie(response, this.cookieStore);
     return this.accessTokenStore.updateToken(accessToken);
   }
 
-  public postAccess(expiredAccessToken?: AccessTokenData): Promise<AxiosResponse> {
+  public postAccess(expiredAccessToken?: AccessTokenData): Promise<AxiosResponse<AccessTokenData>> {
     const config: AxiosRequestConfig = {
       headers: {},
       method: 'post',

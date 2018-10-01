@@ -69,7 +69,7 @@ const setInternalCookie = (cookie: Cookie, engine: CRUDEngine): Promise<string> 
   });
 };
 
-export const saveCookie = async (response: AxiosResponse, cookieStore: CRUDEngine): Promise<AccessTokenData> => {
+export const saveCookie = async <T>(response: AxiosResponse<T>, cookieStore: CRUDEngine): Promise<T> => {
   if (response.headers && response.headers['set-cookie']) {
     const cookies: string[] | string = response.headers['set-cookie'];
     const parsedCookies =
