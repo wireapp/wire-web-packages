@@ -21,6 +21,7 @@ const {Account} = require('@wireapp/core');
 const {PayloadBundleType} = require('@wireapp/core/dist/conversation/root');
 const {APIClient} = require('@wireapp/api-client');
 const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/ClientType');
+const {ConnectionStatus} = require('@wireapp/api-client/dist/commonjs/connection/');
 const {CONVERSATION_TYPING} = require('@wireapp/api-client/dist/commonjs/event/');
 const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine/');
 
@@ -53,7 +54,10 @@ const messageIdCache = {};
     const {conversation: conversationId, content, from, id: messageId, messageTimer = 0, type} = messageData;
 
     logger.log(
-      `Receiving: "${type}" ("${messageId}") in "${conversationId}" from "${from}":`,
+      `Receiving: "${type}" ("${messageId}") in "${conversationId}" from "${from}"`,
+      content.mentions && content.mentions.length
+        ? `mentioning "${content.mentions.map(mention => mention.userId).join(',')}"`
+        : '',
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : '',
       content
     );
@@ -122,12 +126,12 @@ const messageIdCache = {};
 
   account.on(PayloadBundleType.TEXT, async data => {
     const {
-      content: {linkPreviews, text},
+      content: {linkPreviews, mentions, text},
       id: messageId,
     } = data;
     let textPayload;
 
-    if (linkPreviews) {
+    if (linkPreviews && linkPreviews.length) {
       const newLinkPreviews = await buildLinkPreviews(linkPreviews);
 
       await handleIncomingMessage(data);
@@ -139,10 +143,17 @@ const messageIdCache = {};
         return;
       }
 
-      textPayload = account.service.conversation.createText(text, newLinkPreviews, cachedMessageId);
+      textPayload = account.service.conversation
+        .createText(text, cachedMessageId)
+        .withLinkPreviews(newLinkPreviews)
+        .withMentions(mentions)
+        .build();
     } else {
       await handleIncomingMessage(data);
-      textPayload = account.service.conversation.createText(text);
+      textPayload = account.service.conversation
+        .createText(text)
+        .withMentions(mentions)
+        .build();
     }
 
     messageIdCache[messageId] = textPayload.id;
@@ -150,7 +161,7 @@ const messageIdCache = {};
     await sendMessageResponse(data, textPayload);
   });
 
-  account.on(PayloadBundleType.CONFIRMATION, data => handleIncomingMessage(data));
+  account.on(PayloadBundleType.CONFIRMATION, handleIncomingMessage);
 
   account.on(PayloadBundleType.ASSET, async data => {
     const {content, id: messageId} = data;
@@ -243,13 +254,10 @@ const messageIdCache = {};
     await sendMessageResponse(data, imagePayload);
   });
 
+  account.on(PayloadBundleType.CLEARED, handleIncomingMessage);
+
   account.on(PayloadBundleType.LOCATION, async data => {
-    const locationPayload = account.service.conversation.createLocation({
-      latitude: 52.5069313,
-      longitude: 13.1445635,
-      name: 'Berlin',
-      zoom: 10,
-    });
+    const locationPayload = account.service.conversation.createLocation(data.content);
 
     await handleIncomingMessage(data);
     await sendMessageResponse(data, locationPayload);
@@ -307,7 +315,7 @@ const messageIdCache = {};
 
   account.on(PayloadBundleType.MESSAGE_EDIT, async data => {
     const {
-      content: {text, originalMessageId, linkPreviews},
+      content: {linkPreviews, mentions, originalMessageId, text},
       id: messageId,
     } = data;
     let editedPayload;
@@ -330,15 +338,17 @@ const messageIdCache = {};
         logger.warn(`Link preview for edited message ID "${messageId} was received before the original message."`);
         return;
       }
-      editedPayload = account.service.conversation.createEditedText(
-        text,
-        cachedOriginalMessageId,
-        newLinkPreviews,
-        cachedMessageId
-      );
+      editedPayload = account.service.conversation
+        .createEditedText(text, cachedOriginalMessageId, cachedMessageId)
+        .withLinkPreviews(newLinkPreviews)
+        .withMentions(mentions)
+        .build();
     } else {
       await handleIncomingMessage(data);
-      editedPayload = account.service.conversation.createEditedText(text, cachedOriginalMessageId);
+      editedPayload = account.service.conversation
+        .createEditedText(text, cachedOriginalMessageId)
+        .withMentions()
+        .build();
     }
 
     messageIdCache[messageId] = editedPayload.id;
@@ -346,11 +356,13 @@ const messageIdCache = {};
     await sendMessageResponse(data, editedPayload);
   });
 
-  account.on(PayloadBundleType.MESSAGE_HIDE, data => handleIncomingMessage(data));
+  account.on(PayloadBundleType.MESSAGE_HIDE, handleIncomingMessage);
 
   account.on(PayloadBundleType.CONNECTION_REQUEST, async data => {
     await handleIncomingMessage(data);
-    await account.service.connection.acceptConnection(data.connection.to);
+    if (data.content.status === ConnectionStatus.PENDING) {
+      await account.service.connection.acceptConnection(data.content.to);
+    }
   });
 
   try {

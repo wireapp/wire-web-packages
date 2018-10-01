@@ -4,14 +4,14 @@
   },
   "dependencies": {
     "@types/dotenv": "4.0.3",
-    "@wireapp/core": "5.9.24",
+    "@wireapp/core": "6.5.0",
     "commander": "2.18.0",
     "dotenv": "6.0.0",
     "fs-extra": "7.0.0"
   },
   "devDependencies": {
     "rimraf": "2.6.2",
-    "typescript": "3.0.3"
+    "typescript": "3.1.1"
   },
   "description": "Command-line interface for Wire's secure messaging platform.",
   "files": [
@@ -31,5 +31,5 @@
     "prepare": "yarn build"
   },
   "types": "./dist/commonjs/index.d.ts",
-  "version": "2.1.175"
+  "version": "3.0.25"
 }

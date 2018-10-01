@@ -3,6 +3,87 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.0.88"></a>
+## [3.0.88](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@3.0.87...@wireapp/cbor@3.0.88) (2018-10-01)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+<a name="3.0.87"></a>
+## [3.0.87](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@3.0.86...@wireapp/cbor@3.0.87) (2018-09-28)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+<a name="3.0.86"></a>
+## [3.0.86](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@3.0.85...@wireapp/cbor@3.0.86) (2018-09-25)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+<a name="3.0.85"></a>
+## [3.0.85](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@3.0.84...@wireapp/cbor@3.0.85) (2018-09-24)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+<a name="3.0.84"></a>
+## [3.0.84](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@3.0.83...@wireapp/cbor@3.0.84) (2018-09-24)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+<a name="3.0.83"></a>
+## [3.0.83](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@3.0.82...@wireapp/cbor@3.0.83) (2018-09-19)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+<a name="3.0.82"></a>
+## [3.0.82](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@3.0.81...@wireapp/cbor@3.0.82) (2018-09-18)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+<a name="3.0.81"></a>
+## [3.0.81](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@3.0.80...@wireapp/cbor@3.0.81) (2018-09-17)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+<a name="3.0.80"></a>
+## [3.0.80](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@3.0.79...@wireapp/cbor@3.0.80) (2018-09-12)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
 <a name="3.0.79"></a>
 ## [3.0.79](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@3.0.78...@wireapp/cbor@3.0.79) (2018-09-05)
 

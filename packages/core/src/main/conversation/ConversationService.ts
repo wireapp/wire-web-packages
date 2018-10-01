@@ -20,6 +20,7 @@
 import {
   CONVERSATION_TYPE,
   Conversation,
+  MemberUpdate,
   NewConversation,
   NewOTRMessage,
   OTRRecipients,
@@ -43,6 +44,7 @@ import {
 } from '../conversation/root';
 
 import {
+  Article,
   Asset,
   Cleared,
   ClientAction,
@@ -52,6 +54,7 @@ import {
   Knock,
   LinkPreview,
   Location,
+  Mention,
   MessageDelete,
   MessageEdit,
   MessageHide,
@@ -59,7 +62,9 @@ import {
   Text,
   Tweet,
 } from '@wireapp/protocol-messaging';
+
 import {
+  ClearedContent,
   ClientActionContent,
   ConfirmationContent,
   EditedTextContent,
@@ -77,6 +82,8 @@ import {
   RemoteData,
   TextContent,
 } from '../conversation/content/';
+
+import {TextContentBuilder} from './TextContentBuilder';
 
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
 import {CryptographyService, EncryptedAsset} from '../cryptography/root';
@@ -211,12 +218,16 @@ class ConversationService {
     payloadBundle: PayloadBundleOutgoingUnsent,
     userIds?: string[]
   ): Promise<PayloadBundleOutgoing> {
-    const {originalMessageId, text, linkPreviews} = payloadBundle.content as EditedTextContent;
+    const {originalMessageId, text, linkPreviews, mentions} = payloadBundle.content as EditedTextContent;
 
     const textMessage = Text.create({content: text});
 
     if (linkPreviews && linkPreviews.length) {
       textMessage.linkPreview = this.buildLinkPreviews(linkPreviews);
+    }
+
+    if (mentions && mentions.length) {
+      textMessage.mentions = mentions.map(mention => Mention.create(mention));
     }
 
     const editedMessage = MessageEdit.create({
@@ -444,10 +455,15 @@ class ConversationService {
       zoom,
     });
 
-    const genericMessage = GenericMessage.create({
+    let genericMessage = GenericMessage.create({
       [GenericMessageType.LOCATION]: locationMessage,
       messageId: payloadBundle.id,
     });
+
+    const expireAfterMillis = this.messageTimer.getMessageTimer(conversationId);
+    if (expireAfterMillis > 0) {
+      genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
+    }
 
     await this.sendGenericMessage(this.clientID, conversationId, genericMessage, userIds);
 
@@ -630,6 +646,13 @@ class ConversationService {
         linkPreviewMessage.image = assetMessage;
       }
 
+      linkPreviewMessage.article = Article.create({
+        image: linkPreviewMessage.image,
+        permanentUrl: linkPreviewMessage.permanentUrl,
+        summary: linkPreviewMessage.summary,
+        title: linkPreviewMessage.title,
+      });
+
       builtLinkPreviews.push(linkPreviewMessage);
     }
 
@@ -648,14 +671,18 @@ class ConversationService {
       state: PayloadBundleState.OUTGOING_SENT,
     };
 
-    const {text, linkPreviews} = payloadBundle.content as TextContent;
+    const {text, linkPreviews, mentions} = payloadBundle.content as TextContent;
 
     const textMessage = Text.create({
       content: text,
     });
 
-    if (linkPreviews) {
+    if (linkPreviews && linkPreviews.length) {
       textMessage.linkPreview = this.buildLinkPreviews(linkPreviews);
+    }
+
+    if (mentions && mentions.length) {
+      textMessage.mentions = mentions.map(mention => Mention.create(mention));
     }
 
     let genericMessage = GenericMessage.create({
@@ -700,18 +727,19 @@ class ConversationService {
 
   public async clearConversation(
     conversationId: string,
-    timestamp: number | Date = new Date()
+    timestamp: number | Date = new Date(),
+    messageId: string = ConversationService.createId()
   ): Promise<PayloadBundleOutgoing> {
-    const messageId = ConversationService.createId();
-
     if (timestamp instanceof Date) {
       timestamp = timestamp.getTime();
     }
 
-    const clearedMessage = Cleared.create({
+    const content: ClearedContent = {
       clearedTimestamp: timestamp,
       conversationId,
-    });
+    };
+
+    const clearedMessage = Cleared.create(content);
 
     const genericMessage = GenericMessage.create({
       [GenericMessageType.CLEARED]: clearedMessage,
@@ -736,19 +764,14 @@ class ConversationService {
   public createEditedText(
     newMessageText: string,
     originalMessageId: string,
-    newLinkPreviews?: LinkPreviewUploadedContent[],
     messageId: string = ConversationService.createId()
-  ): PayloadBundleOutgoingUnsent {
+  ): TextContentBuilder {
     const content: EditedTextContent = {
       originalMessageId,
       text: newMessageText,
     };
 
-    if (newLinkPreviews) {
-      content.linkPreviews = newLinkPreviews;
-    }
-
-    return {
+    const payloadBundle: PayloadBundleOutgoingUnsent = {
       content,
       from: this.apiClient.context!.userId,
       id: messageId,
@@ -756,6 +779,8 @@ class ConversationService {
       timestamp: Date.now(),
       type: PayloadBundleType.MESSAGE_EDIT,
     };
+
+    return new TextContentBuilder(payloadBundle);
   }
 
   public async createFileData(file: FileContent, messageId: string): Promise<PayloadBundleOutgoingUnsent> {
@@ -886,18 +911,10 @@ class ConversationService {
     };
   }
 
-  public createText(
-    text: string,
-    linkPreviews?: LinkPreviewUploadedContent[],
-    messageId: string = ConversationService.createId()
-  ): PayloadBundleOutgoingUnsent {
+  public createText(text: string, messageId: string = ConversationService.createId()): TextContentBuilder {
     const content: TextContent = {text};
 
-    if (linkPreviews) {
-      content.linkPreviews = linkPreviews;
-    }
-
-    return {
+    const payloadBundle: PayloadBundleOutgoingUnsent = {
       content,
       from: this.apiClient.context!.userId,
       id: messageId,
@@ -905,6 +922,8 @@ class ConversationService {
       timestamp: Date.now(),
       type: PayloadBundleType.TEXT,
     };
+
+    return new TextContentBuilder(payloadBundle);
   }
 
   public createConfirmation(
@@ -1030,15 +1049,15 @@ class ConversationService {
   }
 
   public async getConversations(conversationId: string): Promise<Conversation>;
-  public async getConversations(conversationId?: string[]): Promise<Conversation[]>;
-  public async getConversations(conversationId?: string | string[]): Promise<Conversation[] | Conversation> {
-    if (!conversationId || !conversationId.length) {
+  public async getConversations(conversationIds?: string[]): Promise<Conversation[]>;
+  public async getConversations(conversationIds?: string | string[]): Promise<Conversation[] | Conversation> {
+    if (!conversationIds || !conversationIds.length) {
       return this.apiClient.conversation.api.getAllConversations();
     }
-    if (typeof conversationId === 'string') {
-      return this.apiClient.conversation.api.getConversation(conversationId);
+    if (typeof conversationIds === 'string') {
+      return this.apiClient.conversation.api.getConversation(conversationIds);
     }
-    return this.apiClient.conversation.api.getConversationsByIds(conversationId);
+    return this.apiClient.conversation.api.getConversationsByIds(conversationIds);
   }
 
   public async getAsset({assetId, assetToken, otrKey, sha256}: RemoteData): Promise<Buffer> {
@@ -1117,12 +1136,33 @@ class ConversationService {
 
   public async toggleArchiveConversation(
     conversationId: string,
-    newState: boolean,
+    archived: boolean,
     archiveTimestamp: number | Date = new Date()
   ): Promise<void> {
-    const payload = {
-      otr_archived: newState,
-      otr_archived_ref: new Date(archiveTimestamp).toISOString(),
+    if (typeof archiveTimestamp === 'number') {
+      archiveTimestamp = new Date(archiveTimestamp);
+    }
+
+    const payload: MemberUpdate = {
+      otr_archived: archived,
+      otr_archived_ref: archiveTimestamp.toISOString(),
+    };
+
+    await this.apiClient.conversation.api.putMembershipProperties(conversationId, payload);
+  }
+
+  public async toggleMuteConversation(
+    conversationId: string,
+    muted: boolean,
+    muteTimestamp: number | Date = new Date()
+  ): Promise<void> {
+    if (typeof muteTimestamp === 'number') {
+      muteTimestamp = new Date(muteTimestamp);
+    }
+
+    const payload: MemberUpdate = {
+      otr_muted: muted,
+      otr_muted_ref: muteTimestamp.toISOString(),
     };
 
     await this.apiClient.conversation.api.putMembershipProperties(conversationId, payload);

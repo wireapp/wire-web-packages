@@ -203,7 +203,10 @@ describe('ConversationService', () => {
         url,
         urlOffset,
       });
-      const textMessage = account.service.conversation.createText(text, [linkPreview]);
+      const textMessage = account.service.conversation
+        .createText(text)
+        .withLinkPreviews([linkPreview])
+        .build();
 
       expect(textMessage.content.text).toEqual(text);
       expect(textMessage.content.linkPreviews).toEqual(jasmine.any(Array));
@@ -221,13 +224,13 @@ describe('ConversationService', () => {
       );
     });
 
-    it('does not add link previews', async () => {
+    it('does not add link previews', () => {
       account.apiClient.context = {
         userId: new UUID(4).format(),
       };
 
       const text = 'Hello, world!';
-      const textMessage = account.service.conversation.createText(text);
+      const textMessage = account.service.conversation.createText(text).build();
 
       expect(textMessage.content.linkPreviews).toBeUndefined();
     });
@@ -258,7 +261,10 @@ describe('ConversationService', () => {
       const urlOffset = 0;
 
       const linkPreview = await account.service.conversation.createLinkPreview({image, url, urlOffset});
-      const textMessage = account.service.conversation.createText(text, [linkPreview]);
+      const textMessage = account.service.conversation
+        .createText(text)
+        .withLinkPreviews([linkPreview])
+        .build();
 
       expect(account.service.asset.uploadImageAsset).toHaveBeenCalledTimes(1);
 
@@ -271,6 +277,42 @@ describe('ConversationService', () => {
           urlOffset,
         })
       );
+    });
+
+    it('adds mentions correctly', () => {
+      account.apiClient.context = {
+        userId: new UUID(4).format(),
+      };
+
+      const text = 'Hello @user!';
+
+      const mention = {
+        end: 11,
+        start: 6,
+        userId: new UUID(4).format(),
+      };
+
+      const textMessage = account.service.conversation
+        .createText(text)
+        .withMentions([mention])
+        .build();
+
+      expect(textMessage.content.text).toEqual(text);
+      expect(textMessage.content.mentions).toEqual(jasmine.any(Array));
+      expect(textMessage.content.mentions.length).toBe(1);
+
+      expect(textMessage.content.mentions[0]).toEqual(jasmine.objectContaining(mention));
+    });
+
+    it('does not add mentions', () => {
+      account.apiClient.context = {
+        userId: new UUID(4).format(),
+      };
+
+      const text = 'Hello, world!';
+      const textMessage = account.service.conversation.createText(text).build();
+
+      expect(textMessage.content.mentions).toBeUndefined();
     });
   });
 });
