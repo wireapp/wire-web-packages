@@ -9348,10 +9348,10 @@ recompose@0.30.0:
     react-lifecycles-compat "^3.0.2"
     symbol-observable "^1.0.4"
 
-reconnecting-websocket@3.2.2:
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/reconnecting-websocket/-/reconnecting-websocket-3.2.2.tgz#8097514e926e9855e03c39e76efa2e3d1f371bee"
-  integrity sha512-SWSfoXiaHVOqXuPWFgGWeUxKnb5HIY7I/Fh5C/hy4wUOgeOh7YIMXEiv5/eHBlNs4tNzCrO5YDR9AH62NWle0Q==
+reconnecting-websocket@4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/reconnecting-websocket/-/reconnecting-websocket-4.1.1.tgz#18fa7d49dae7c234144f5f7cce8d122a8181e01a"
+  integrity sha512-18Q1QOrJeDc1X8T+BfTJpbA8uV97XDawjPW/El9P0hBEf4B7JTaFTJd6PxC3l6mmAo3flv/CF79N/eSsmgUXwA==
 
 redent@^1.0.0:
   version "1.0.0"
