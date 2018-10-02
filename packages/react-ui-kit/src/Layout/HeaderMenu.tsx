@@ -220,7 +220,7 @@ class HeaderSubMenu extends React.PureComponent<
         textTransform={'uppercase'}
         onMouseLeave={isDesktop ? this.closeMenu : undefined}
         onMouseOver={isDesktop ? this.openMenu : undefined}
-        style={{textAlign: 'center', display: 'inline-block', position: 'relative'}}
+        style={{textAlign: 'center', display: 'inline-block', position: 'relative', cursor: 'pointer'}}
       >
         <span onClick={!isDesktop ? this.toggleMenu : undefined}>{caption}</span>
         <Opacity
