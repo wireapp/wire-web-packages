@@ -19,11 +19,11 @@
 
 import * as React from 'react';
 import styled from 'styled-components';
-import {COLOR} from '../Identity';
-import {ANIMATION, DURATION, EASE} from '../Identity/motions';
+import {COLOR, Opacity, Slide, YAxisMovement} from '../Identity';
+import {DURATION} from '../Identity/motions';
 import {Content} from '../Layout';
 import {QUERY} from '../mediaQueries';
-import {Link} from '../Text';
+import {Link, Text} from '../Text';
 
 const MenuWrapper = styled.div`
   height: 64px;
@@ -128,7 +128,9 @@ const MenuLink = styled(Link)<MenuLinkProps & React.HTMLAttributes<HTMLAnchorEle
   padding: 10px 16px;
   border: 1px solid rgb(219, 226, 231);
   border-radius: 4px;
-  `} @media (${QUERY.tabletDown}) {
+  `}
+
+  @media (${QUERY.tabletDown}) {
     border: none;
     font-size: 32px !important;
     text-transform: none !important;
@@ -138,59 +140,44 @@ const MenuLink = styled(Link)<MenuLinkProps & React.HTMLAttributes<HTMLAnchorEle
   }
 `;
 
-const StyledHeaderSubMenuWrapper = styled.div<React.HTMLAttributes<HTMLDivElement>>`
-  @media (${QUERY.desktop}) {
-    position: absolute;
-    display: inline-block;
-    left: -18px;
-    top: 0px;
-    padding-top: 20px;
-    z-index: 1;
-  }
-  @media (${QUERY.tabletDown}) {
-    position: relative;
-    display: block;
-    animation: ${ANIMATION.fadeIn} ${DURATION.DEFAULT} ${EASE.EXPONENTIAL},
-      ${ANIMATION.topDownMovement} ${DURATION.DEFAULT} ${EASE.EXPONENTIAL};
-  }
-`;
-
-const StyledHeaderSubMenu = styled.span<React.HTMLAttributes<HTMLSpanElement>>`
+const DesktopStyledHeaderSubMenu = styled.span<React.HTMLAttributes<HTMLSpanElement>>`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  @media (${QUERY.desktop}) {
-    min-width: 200px;
-    align-items: left;
-    background-color: white;
-    box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.16);
-    border-radius: 8px;
-    padding: 8px 8px;
-    animation: ${ANIMATION.fadeIn} ${DURATION.DEFAULT} ${EASE.EXPONENTIAL},
-      ${ANIMATION.topDownMovementLight} ${DURATION.DEFAULT} ${EASE.EXPONENTIAL};
-    a {
-      margin: 0px;
-      padding-left: 10px !important;
-      height: 30px;
-      display: flex;
-      align-items: center;
-    }
-    a:hover {
-      background-color: ${COLOR.GRAY_LIGHTEN_72};
-      border-radius: 4px;
-    }
-  }
-  @media (${QUERY.tabletDown}) {
-    align-items: center;
-    border-top: 1px solid ${COLOR.GRAY_LIGHTEN_72};
-    margin-top: 16px;
-    padding-top: 8px;
+
+  min-width: 200px;
+  align-items: left;
+  background-color: white;
+  box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.16);
+  border-radius: 8px;
+  padding: 8px 8px;
+  a {
+    margin: 0px;
+    padding-left: 10px !important;
+    height: 30px;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    * {
-      font-weight: 200 !important;
-    }
+    align-items: center;
+  }
+  a:hover {
+    background-color: ${COLOR.GRAY_LIGHTEN_72};
+    border-radius: 4px;
+  }
+`;
+
+const MobileStyledHeaderSubMenu = styled.span<React.HTMLAttributes<HTMLSpanElement>>`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  align-items: center;
+  border-top: 1px solid ${COLOR.GRAY_LIGHTEN_72};
+  margin-top: 16px;
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  * {
+    font-weight: 200 !important;
   }
 `;
 
@@ -217,25 +204,61 @@ class HeaderSubMenu extends React.PureComponent<
     }));
   };
 
-  openMenu = () => this.setState({isOpen: true});
-  closeMenu = () => this.setState({isOpen: false});
+  openMenu = () => !this.state.isOpen && this.setState({isOpen: true});
+  closeMenu = () => this.state.isOpen && this.setState({isOpen: false});
 
   render() {
     const {caption, children} = this.props;
     const isDesktop = window.matchMedia(`(${QUERY.desktop})`).matches;
     return (
-      <MenuLink
+      <Text
+        bold
+        color={COLOR.LINK}
+        fontSize={'11px'}
+        textTransform={'uppercase'}
         onMouseLeave={isDesktop ? this.closeMenu : undefined}
         onMouseOver={isDesktop ? this.openMenu : undefined}
-        style={{textAlign: 'center', position: 'relative'}}
+        style={{textAlign: 'center', display: 'inline-block', position: 'relative'}}
       >
         <span onClick={!isDesktop ? this.toggleMenu : undefined}>{caption}</span>
-        {this.state.isOpen && (
-          <StyledHeaderSubMenuWrapper onClick={this.closeMenu}>
-            <StyledHeaderSubMenu>{children}</StyledHeaderSubMenu>
-          </StyledHeaderSubMenuWrapper>
-        )}
-      </MenuLink>
+        <Opacity
+          in={this.state.isOpen && isDesktop}
+          timeout={DURATION.DEFAULT}
+          style={{display: 'inline-block', position: 'absolute', left: -18, zIndex: 1, paddingTop: 8, marginTop: 12}}
+          mountOnEnter={false}
+          unmountOnExit={false}
+        >
+          <YAxisMovement
+            in={this.state.isOpen && isDesktop}
+            startValue={'-30px'}
+            endValue={'0px'}
+            style={{display: 'inline-block'}}
+            timeout={DURATION.DEFAULT}
+            mountOnEnter={false}
+            unmountOnExit={true}
+          >
+            <DesktopStyledHeaderSubMenu onClick={this.closeMenu}>{children}</DesktopStyledHeaderSubMenu>
+          </YAxisMovement>
+        </Opacity>
+        <Opacity
+          in={this.state.isOpen && !isDesktop}
+          timeout={DURATION.DEFAULT}
+          mountOnEnter={false}
+          unmountOnExit={false}
+          style={{position: 'relative', display: 'block'}}
+        >
+          <Slide
+            in={this.state.isOpen && !isDesktop}
+            startValue={'-73%'}
+            endValue={'0'}
+            timeout={DURATION.DEFAULT}
+            mountOnEnter={false}
+            unmountOnExit={true}
+          >
+            <MobileStyledHeaderSubMenu onClick={this.closeMenu}>{children}</MobileStyledHeaderSubMenu>
+          </Slide>
+        </Opacity>
+      </Text>
     );
   }
 }
