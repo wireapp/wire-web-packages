@@ -17,10 +17,11 @@
  *
  */
 
+import * as Color from 'color';
 import * as React from 'react';
 import styled from 'styled-components';
 import {COLOR, Opacity, Slide, YAxisMovement} from '../Identity';
-import {DURATION} from '../Identity/motions';
+import {DURATION, defaultTransition} from '../Identity/motions';
 import {Content} from '../Layout';
 import {QUERY} from '../mediaQueries';
 import {Link, Text} from '../Text';
@@ -109,10 +110,21 @@ interface MenuLinkProps {
   button?: boolean;
 }
 
-const MenuLink = styled(Link)<MenuLinkProps & React.HTMLAttributes<HTMLAnchorElement>>`
+const MenuLink = styled(Text)<MenuLinkProps & React.HTMLAttributes<HTMLAnchorElement>>`
+  text-decoration: none;
+  ${defaultTransition};
+  cursor: pointer;
+  color: ${COLOR.LINK};
+
+  &:hover {
+    color: ${Color(COLOR.LINK)
+      .mix(Color(COLOR.BLACK), 0.16)
+      .toString()};
+  }
   @media (${QUERY.desktop}) {
     margin: 12px 26px 0 10px;
-
+    text-transform: uppercase;
+    font-size: 11px;
     &:first-child {
       margin-left: 0;
     }
@@ -151,7 +163,7 @@ const DesktopStyledHeaderSubMenu = styled.span<React.HTMLAttributes<HTMLSpanElem
   box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.16);
   border-radius: 8px;
   padding: 8px 8px;
-  a {
+  span {
     margin: 0px;
     padding-left: 10px !important;
     padding-right: 10px !important;
@@ -159,10 +171,10 @@ const DesktopStyledHeaderSubMenu = styled.span<React.HTMLAttributes<HTMLSpanElem
     display: flex;
     align-items: center;
     white-space: nowrap;
-  }
-  a:hover {
-    background-color: ${COLOR.GRAY_LIGHTEN_72};
-    border-radius: 4px;
+    &:hover {
+      background-color: ${COLOR.GRAY_LIGHTEN_72};
+      border-radius: 4px;
+    }
   }
 `;
 
@@ -213,16 +225,12 @@ class HeaderSubMenu extends React.PureComponent<
     const {caption, children} = this.props;
     const isDesktop = typeof window !== 'undefined' && window.matchMedia(`(${QUERY.desktop})`).matches;
     return (
-      <Text
-        bold
-        color={COLOR.LINK}
-        fontSize={'11px'}
-        textTransform={'uppercase'}
+      <MenuLink
         onMouseLeave={isDesktop ? this.closeMenu : undefined}
         onMouseOver={isDesktop ? this.openMenu : undefined}
         style={{textAlign: 'center', display: 'inline-block', position: 'relative', cursor: 'pointer'}}
       >
-        <span onClick={!isDesktop ? this.toggleMenu : undefined}>{caption}</span>
+        <span onClick={this.toggleMenu}>{caption}</span>
         <Opacity
           in={this.state.isOpen && isDesktop}
           timeout={DURATION.DEFAULT}
@@ -260,7 +268,7 @@ class HeaderSubMenu extends React.PureComponent<
             <MobileStyledHeaderSubMenu onClick={this.closeMenu}>{children}</MobileStyledHeaderSubMenu>
           </Slide>
         </Opacity>
-      </Text>
+      </MenuLink>
     );
   }
 }
