@@ -226,7 +226,7 @@ class HeaderSubMenu extends React.PureComponent<
         <Opacity
           in={this.state.isOpen && isDesktop}
           timeout={DURATION.DEFAULT}
-          style={{display: 'inline-block', position: 'absolute', left: -18, zIndex: 1, paddingTop: 8, marginTop: 12}}
+          style={{display: 'inline-block', position: 'absolute', left: -18, zIndex: 1, paddingTop: 20, marginTop: 10}}
           mountOnEnter={false}
           unmountOnExit={false}
         >

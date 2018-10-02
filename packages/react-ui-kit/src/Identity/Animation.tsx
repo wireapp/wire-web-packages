@@ -33,6 +33,7 @@ const Opacity = transition.div`
     opacity: ${({endValue = 1}) => endValue};
   }
   &:exit-active {
+    pointer-events: none;
     opacity: ${({startValue = 0}) => startValue};
     transition: all ${({timeout = DURATION.DEFAULT}) => timeout}ms ${EASE.QUART};
   }
