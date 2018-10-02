@@ -21,6 +21,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import {COLOR} from '../Identity';
 import {ANIMATION, DURATION, EASE} from '../Identity/motions';
+import {QUERY} from '../mediaQueries';
 
 interface OverlayProps {}
 
@@ -52,7 +53,7 @@ const OverlayContent = styled.div<React.HTMLAttributes<HTMLDivElement>>`
     color: ${COLOR.WHITE};
   }
 
-  @media (max-width: 767px) {
+  @media (${QUERY.tabletDown}) {
     width: 100%;
   }
 `;
@@ -65,7 +66,7 @@ const OverlayBackground = styled.div<React.HTMLAttributes<HTMLDivElement>>`
   width: 100vw;
   background: rgba(0, 0, 0, 0.88);
   z-index: 9998;
-  animation: ${ANIMATION.fadeIn} ${DURATION.PROACTIVE_SLOW} ${EASE.QUART};
+  animation: ${ANIMATION.fadeIn} ${DURATION.PROACTIVE_SLOW}ms ${EASE.QUART};
 `;
 
 const Overlay = ({children = null, ...props}: OverlayProps & React.HTMLAttributes<HTMLDivElement>) => (
