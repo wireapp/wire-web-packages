@@ -188,7 +188,7 @@ class Demo extends React.PureComponent {
     const animationInterval = 1000;
     this.setState({
       animationToggleTimerId: window.setInterval(() => {
-        // this.setState(({showAnimation}) => ({showAnimation: !showAnimation}));
+        this.setState(({showAnimation}) => ({showAnimation: !showAnimation}));
       }, animationInterval),
     });
   }
