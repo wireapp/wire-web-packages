@@ -259,7 +259,7 @@ class HeaderSubMenu extends React.PureComponent<
         >
           <Slide
             in={this.state.isOpen && !isDesktop}
-            startValue={'-73%'}
+            startValue={'-58%'}
             endValue={'0'}
             timeout={DURATION.DEFAULT}
             mountOnEnter={false}
