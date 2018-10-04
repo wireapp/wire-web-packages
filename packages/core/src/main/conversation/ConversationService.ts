@@ -1135,24 +1135,7 @@ class ConversationService {
     this.clientID = clientID;
   }
 
-  public async toggleArchiveConversation(
-    conversationId: string,
-    archived: boolean,
-    archiveTimestamp: number | Date = new Date()
-  ): Promise<void> {
-    if (typeof archiveTimestamp === 'number') {
-      archiveTimestamp = new Date(archiveTimestamp);
-    }
-
-    const payload: MemberUpdate = {
-      otr_archived: archived,
-      otr_archived_ref: archiveTimestamp.toISOString(),
-    };
-
-    await this.apiClient.conversation.api.putMembershipProperties(conversationId, payload);
-  }
-
-  public async setConversationMutedStatus(
+  public setConversationMutedStatus(
     conversationId: string,
     status: MutedStatus,
     muteTimestamp: number | Date = new Date()
@@ -1167,7 +1150,24 @@ class ConversationService {
       otr_muted_status: status,
     };
 
-    await this.apiClient.conversation.api.putMembershipProperties(conversationId, payload);
+    return this.apiClient.conversation.api.putMembershipProperties(conversationId, payload);
+  }
+
+  public toggleArchiveConversation(
+    conversationId: string,
+    archived: boolean,
+    archiveTimestamp: number | Date = new Date()
+  ): Promise<void> {
+    if (typeof archiveTimestamp === 'number') {
+      archiveTimestamp = new Date(archiveTimestamp);
+    }
+
+    const payload: MemberUpdate = {
+      otr_archived: archived,
+      otr_archived_ref: archiveTimestamp.toISOString(),
+    };
+
+    return this.apiClient.conversation.api.putMembershipProperties(conversationId, payload);
   }
 
   /** @deprecated */

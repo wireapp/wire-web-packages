@@ -18,9 +18,9 @@
  */
 
 enum MutedStatus {
-  NORMAL = 0,
-  MENTION = 1,
-  OTHER = 2,
+  ALL_NOTIFICATIONS = 0b00,
+  NO_NOTIFICATIONS = 0b11,
+  ONLY_MENTIONS = 0b10,
 }
 
 export {MutedStatus};
