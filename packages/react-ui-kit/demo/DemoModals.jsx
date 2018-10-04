@@ -42,6 +42,8 @@ class DemoModals extends React.PureComponent {
     isOverlayOpen: false,
   };
 
+  closeMenuModal = () => this.setState({isMenuModalOpen: false});
+
   render() {
     return (
       <Container>
