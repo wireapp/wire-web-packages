@@ -1145,7 +1145,7 @@ class ConversationService {
     }
 
     const payload: MemberUpdate = {
-      otr_muted: null,
+      otr_muted: status !== MutedStatus.ALL_NOTIFICATIONS,
       otr_muted_ref: muteTimestamp.toISOString(),
       otr_muted_status: status,
     };
@@ -1183,7 +1183,7 @@ class ConversationService {
     const payload: MemberUpdate = {
       otr_muted: muted,
       otr_muted_ref: muteTimestamp.toISOString(),
-      otr_muted_status: muted ? MutedStatus.MENTION : MutedStatus.NORMAL,
+      otr_muted_status: muted ? MutedStatus.ONLY_MENTIONS : MutedStatus.ALL_NOTIFICATIONS,
     };
 
     await this.apiClient.conversation.api.putMembershipProperties(conversationId, payload);
