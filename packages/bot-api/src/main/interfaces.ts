@@ -17,9 +17,17 @@
  *
  */
 
-type BotConfig = {
-  conversations: string[];
-  owners: string[];
-};
+import {ClientType} from '@wireapp/api-client/dist/commonjs/client/';
 
-export {BotConfig};
+interface BotConfig {
+  clientType?: ClientType;
+  conversations?: string[];
+  owners?: string[];
+}
+
+interface BotCredentials {
+  email: string;
+  password: string;
+}
+
+export {BotConfig, BotCredentials};
