@@ -38,9 +38,10 @@ describe('Bot', () => {
         clientType: ClientType.PERMANENT,
       };
 
-      bot = new Bot(credentials, config);
+      const bot2 = new Bot(credentials, config);
 
-      expect(bot.config).toEqual(jasmine.objectContaining(config));
+      expect(bot.config).not.toEqual(jasmine.objectContaining(config));
+      expect(bot2.config).toEqual(jasmine.objectContaining(config));
     });
   });
 });
