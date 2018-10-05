@@ -20,7 +20,7 @@
 import {AxiosRequestConfig} from 'axios';
 
 import {PreKeyBundle} from '../auth';
-import {NewClient, RegisteredClient} from '../client/index';
+import {NewClient, RegisteredClient} from '../client/';
 import {HttpClient} from '../http';
 
 class ClientAPI {

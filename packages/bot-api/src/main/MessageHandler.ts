@@ -18,8 +18,8 @@
  */
 
 import {Account} from '@wireapp/core';
+import {PayloadBundleIncoming, ReactionType} from '@wireapp/core/dist/conversation/';
 import {ImageContent} from '@wireapp/core/dist/conversation/content/';
-import {PayloadBundleIncoming, ReactionType} from '@wireapp/core/dist/conversation/root';
 
 abstract class MessageHandler {
   public account: Account | undefined = undefined;
