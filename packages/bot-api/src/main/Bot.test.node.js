@@ -17,6 +17,28 @@
  *
  */
 
-export * from './Bot';
-export * from './interfaces';
-export * from './MessageHandler';
+const {Bot} = require('@wireapp/bot-api');
+const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/');
+
+describe('Bot', () => {
+  let bot;
+
+  const credentials = {
+    email: 'email@example.com',
+    password: 'my-password',
+  };
+
+  beforeEach(() => (bot = new Bot(credentials)));
+
+  describe('"constructor"', () => {
+    it('merges the configuration correctly', () => {
+      const config = {
+        clientType: ClientType.PERMANENT,
+      };
+
+      bot = new Bot(credentials, config);
+
+      expect(bot.config).toEqual(jasmine.objectContaining(config));
+    });
+  });
+});
