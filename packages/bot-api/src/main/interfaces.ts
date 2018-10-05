@@ -20,13 +20,18 @@
 import {ClientType} from '@wireapp/api-client/dist/commonjs/client/';
 
 interface BotConfig {
+  /** Set the client type (permanent or temporary). */
   clientType?: ClientType;
+  /** Set allowed conversations (if empty, all conversations are allowed). */
   conversations?: string[];
+  /** Set allowed message owners (if empty, all users are allowed). */
   owners?: string[];
 }
 
 interface BotCredentials {
+  /** Your bot's email address on Wire. */
   email: string;
+  /** Your bot's password on Wire. */
   password: string;
 }
 
