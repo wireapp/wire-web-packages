@@ -17,10 +17,12 @@
  *
  */
 
+/* tslint:disable:object-literal-sort-keys */
 enum MutedStatus {
   ALL_NOTIFICATIONS = 0b00,
+  ONLY_MENTIONS = 0b01,
   NO_NOTIFICATIONS = 0b11,
-  ONLY_MENTIONS = 0b10,
 }
+/* tslint:enable:object-literal-sort-keys */
 
 export {MutedStatus};
