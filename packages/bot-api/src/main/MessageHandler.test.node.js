@@ -25,7 +25,9 @@ const UUID_VERSION = 4;
 describe('MessageHandler', () => {
   let mainHandler;
 
-  beforeEach(() => (mainHandler = new MessageHandler()));
+  beforeEach(() => {
+    mainHandler = new MessageHandler();
+  });
 
   describe('"sendImage"', () => {
     it('calls send() with account and service', async () => {

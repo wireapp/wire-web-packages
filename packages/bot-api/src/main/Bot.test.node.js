@@ -28,7 +28,9 @@ describe('Bot', () => {
     password: 'my-password',
   };
 
-  beforeEach(() => (bot = new Bot(credentials)));
+  beforeEach(() => {
+    bot = new Bot(credentials);
+  });
 
   describe('"constructor"', () => {
     it('merges the configuration correctly', () => {
