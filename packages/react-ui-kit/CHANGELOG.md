@@ -3,6 +3,79 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.1...@wireapp/react-ui-kit@4.3.2) (2018-10-05)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Scrollable HeaderMenu items ([#1201](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1201)) ([12d5986](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/12d5986))
+
+
+
+
+
+## [4.3.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.0...@wireapp/react-ui-kit@4.3.1) (2018-10-04)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+<a name="4.3.0"></a>
+# [4.3.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.2.3...@wireapp/react-ui-kit@4.3.0) (2018-10-04)
+
+
+### Features
+
+* **react-ui-kit:** Header menu advanced animations ([#1192](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1192)) ([34c1ca5](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/34c1ca5))
+
+
+
+
+
+<a name="4.2.3"></a>
+## [4.2.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.2.2...@wireapp/react-ui-kit@4.2.3) (2018-10-02)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+<a name="4.2.2"></a>
+## [4.2.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.2.1...@wireapp/react-ui-kit@4.2.2) (2018-10-01)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Remove no-wrap in the menu link ([#1185](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1185)) ([d57895b](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/d57895b))
+
+
+
+
+
+<a name="4.2.1"></a>
+## [4.2.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.2.0...@wireapp/react-ui-kit@4.2.1) (2018-10-01)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+<a name="4.2.0"></a>
+# [4.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.1.0...@wireapp/react-ui-kit@4.2.0) (2018-10-01)
+
+
+### Features
+
+* **react-ui-kit:** Header Submenu ([#1163](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1163)) ([d9e7c57](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/d9e7c57))
+
+
+
+
+
 <a name="4.1.0"></a>
 # [4.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.0.14...@wireapp/react-ui-kit@4.1.0) (2018-10-01)
 

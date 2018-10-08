@@ -17,11 +17,14 @@
  *
  */
 
+import * as Color from 'color';
 import * as React from 'react';
 import styled from 'styled-components';
-import {COLOR} from '../Identity';
+import {COLOR, Opacity, Slide, YAxisMovement} from '../Identity';
+import {DURATION, defaultTransition} from '../Identity/motions';
 import {Content} from '../Layout';
-import {Link} from '../Text';
+import {QUERY} from '../mediaQueries';
+import {Link, Text} from '../Text';
 
 const MenuWrapper = styled.div`
   height: 64px;
@@ -41,18 +44,15 @@ const MenuContent = styled(Content)<HTMLMenuProps>`
   ${props =>
     props.open &&
     `
-  position: fixed;
-  width: 100%;
-  z-index: 10000;
-  left: 0;`};
+    position: fixed;
+    width: 100%;
+    z-index: 10000;
+    left: 0;
+  `};
 `;
 
 const MenuItems = styled.div<HTMLMenuProps>`
-  @media (max-width: 767px){
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  @media (${QUERY.tabletDown}){
     position: fixed;
     top: 0;
     bottom: 0;
@@ -61,12 +61,21 @@ const MenuItems = styled.div<HTMLMenuProps>`
     background-color: ${COLOR.WHITE};
     z-index: 1;
     transform: translateX(110%);
-    transition: transform 0.25s ease-in-out;
+    transition: transform 0.25s ease;
     ${props => props.open && `transform: translateX(0);`}
 `;
 
+const ScrollableItems = styled.div<HTMLMenuProps>`
+  @media (${QUERY.tabletDown}){
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    height: 100%;
+`;
+
 const MenuOpenButton = styled.div<HTMLMenuProps>`
-  @media (min-width: 768px) {
+  @media (${QUERY.desktop}) {
     display: none;
   }
 
@@ -107,10 +116,21 @@ interface MenuLinkProps {
   button?: boolean;
 }
 
-const MenuLink = styled(Link)<MenuLinkProps & React.HTMLAttributes<HTMLAnchorElement>>`
-  @media (min-width: 768px) {
-    margin: 12px 26px 0 10px;
+const MenuLink = styled(Text)<MenuLinkProps & React.HTMLAttributes<HTMLAnchorElement>>`
+  text-decoration: none;
+  ${defaultTransition};
+  cursor: pointer;
+  color: ${COLOR.LINK};
 
+  &:hover {
+    color: ${Color(COLOR.LINK)
+      .mix(Color(COLOR.BLACK), 0.16)
+      .toString()};
+  }
+  @media (${QUERY.desktop}) {
+    margin: 12px 26px 0 10px;
+    text-transform: uppercase;
+    font-size: 11px;
     &:first-child {
       margin-left: 0;
     }
@@ -126,7 +146,9 @@ const MenuLink = styled(Link)<MenuLinkProps & React.HTMLAttributes<HTMLAnchorEle
   padding: 10px 16px;
   border: 1px solid rgb(219, 226, 231);
   border-radius: 4px;
-  `} @media(max-width: 767px) {
+  `}
+
+  @media (${QUERY.tabletDown}) {
     border: none;
     font-size: 32px !important;
     text-transform: none !important;
@@ -135,6 +157,108 @@ const MenuLink = styled(Link)<MenuLinkProps & React.HTMLAttributes<HTMLAnchorEle
     max-width: 480px;
   }
 `;
+
+const DesktopStyledHeaderSubMenu = styled.span<React.HTMLAttributes<HTMLSpanElement>>`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  min-width: 200px;
+  align-items: left;
+  background-color: white;
+  box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.16);
+  border-radius: 8px;
+  padding: 8px 8px;
+  span {
+    margin: 0px;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    &:hover {
+      background-color: ${COLOR.GRAY_LIGHTEN_72};
+      border-radius: 4px;
+    }
+  }
+`;
+
+const MobileStyledHeaderSubMenu = styled.span<React.HTMLAttributes<HTMLSpanElement>>`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  align-items: center;
+  border-top: 1px solid ${COLOR.GRAY_LIGHTEN_72};
+  margin-top: 16px;
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  * {
+    font-weight: 200 !important;
+  }
+`;
+
+interface HeaderSubMenuProps {
+  caption: string;
+  isOpen: boolean;
+}
+
+const HeaderSubMenu: React.SFC<HeaderSubMenuProps & React.HTMLAttributes<HTMLSpanElement>> = ({
+  caption,
+  isOpen,
+  children,
+  ...props
+}) => {
+  const isDesktop = typeof window !== 'undefined' && window.matchMedia(`(${QUERY.desktop})`).matches;
+  return (
+    <MenuLink
+      {...props}
+      style={{textAlign: 'center', display: 'inline-block', position: 'relative', cursor: 'pointer'}}
+    >
+      <span>{caption}</span>
+      <Opacity
+        in={isOpen && isDesktop}
+        timeout={DURATION.DEFAULT}
+        style={{display: 'inline-block', position: 'absolute', left: -18, zIndex: 1, paddingTop: 20, marginTop: 10}}
+        mountOnEnter={false}
+        unmountOnExit={false}
+      >
+        <YAxisMovement
+          in={isOpen && isDesktop}
+          startValue={'-30px'}
+          endValue={'0px'}
+          style={{display: 'inline-block'}}
+          timeout={DURATION.DEFAULT}
+          mountOnEnter={false}
+          unmountOnExit={true}
+        >
+          <DesktopStyledHeaderSubMenu>{children}</DesktopStyledHeaderSubMenu>
+        </YAxisMovement>
+      </Opacity>
+      <Opacity
+        in={isOpen && !isDesktop}
+        timeout={DURATION.DEFAULT}
+        mountOnEnter={false}
+        unmountOnExit={false}
+        style={{position: 'relative', display: 'block'}}
+      >
+        <Slide
+          in={isOpen && !isDesktop}
+          startValue={'-58%'}
+          endValue={'0'}
+          timeout={DURATION.DEFAULT}
+          mountOnEnter={false}
+          unmountOnExit={true}
+        >
+          <MobileStyledHeaderSubMenu>{children}</MobileStyledHeaderSubMenu>
+        </Slide>
+      </Opacity>
+    </MenuLink>
+  );
+};
 
 interface HeaderMenuProps {
   logoElement?: React.ReactNode;
@@ -154,8 +278,10 @@ class HeaderMenu extends React.PureComponent<HeaderMenuProps & React.HTMLAttribu
   };
 
   toggleMenu = () => {
-    window.scrollTo(0, 0);
-    this.setState(({isOpen}) => ({isOpen: !isOpen}));
+    if (typeof window !== 'undefined') {
+      window.scrollTo(0, 0);
+      this.setState(({isOpen}) => ({isOpen: !isOpen}));
+    }
   };
 
   closeMenu = () => {
@@ -170,7 +296,7 @@ class HeaderMenu extends React.PureComponent<HeaderMenuProps & React.HTMLAttribu
         <MenuContent open={isOpen}>
           <MenuLogo onClick={this.closeMenu}>{logoElement}</MenuLogo>
           <MenuItems onClick={this.closeMenu} open={isOpen}>
-            {children}
+            <ScrollableItems>{children}</ScrollableItems>
           </MenuItems>
           <MenuOpenButton onClick={this.toggleMenu} open={isOpen} data-uie-name="do-toggle-header-menu">
             <div />
@@ -188,4 +314,4 @@ MenuLink.defaultProps = {
   button: false,
 };
 
-export {HeaderMenu, MenuLink};
+export {HeaderMenu, MenuLink, HeaderSubMenu};

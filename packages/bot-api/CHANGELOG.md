@@ -3,6 +3,87 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@1.1.0...@wireapp/bot-api@1.1.1) (2018-10-05)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+# [1.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@1.0.32...@wireapp/bot-api@1.1.0) (2018-10-05)
+
+
+### Features
+
+* **bot-api:** Allow client type option, cleanup ([#1202](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/issues/1202)) ([d37044d](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/commit/d37044d))
+
+
+
+
+
+## [1.0.32](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@1.0.31...@wireapp/bot-api@1.0.32) (2018-10-04)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+<a name="1.0.31"></a>
+## [1.0.31](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@1.0.30...@wireapp/bot-api@1.0.31) (2018-10-04)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+<a name="1.0.30"></a>
+## [1.0.30](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@1.0.29...@wireapp/bot-api@1.0.30) (2018-10-02)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+<a name="1.0.29"></a>
+## [1.0.29](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@1.0.28...@wireapp/bot-api@1.0.29) (2018-10-02)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+<a name="1.0.28"></a>
+## [1.0.28](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@1.0.27...@wireapp/bot-api@1.0.28) (2018-10-01)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+<a name="1.0.27"></a>
+## [1.0.27](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@1.0.26...@wireapp/bot-api@1.0.27) (2018-10-01)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+<a name="1.0.26"></a>
+## [1.0.26](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@1.0.25...@wireapp/bot-api@1.0.26) (2018-10-01)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
 <a name="1.0.25"></a>
 ## [1.0.25](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@1.0.24...@wireapp/bot-api@1.0.25) (2018-10-01)
 
