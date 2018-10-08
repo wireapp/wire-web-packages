@@ -19,7 +19,6 @@
 
 const {MessageHandler} = require('@wireapp/bot-api');
 const {Account} = require('@wireapp/core');
-const {ReactionType} = require('@wireapp/core/dist/conversation/root');
 const {CONVERSATION_TYPING} = require('@wireapp/api-client/dist/commonjs/event');
 
 const UUID = require('pure-uuid');
@@ -42,23 +41,6 @@ describe('MessageHandler', () => {
     mainHandler.account.apiClient.createContext('', '');
 
     spyOn(mainHandler.account.service.conversation, 'send').and.returnValue(Promise.resolve());
-  });
-
-  describe('"sendConfirmation"', () => {
-    it('calls send() with account and service', async () => {
-      const confirmMessageId = new UUID(UUID_VERSION).format();
-      const conversationId = new UUID(UUID_VERSION).format();
-
-      const confirmationPayload = {
-        data: confirmMessageId,
-      };
-
-      spyOn(mainHandler.account.service.conversation, 'createConfirmation').and.returnValue(confirmationPayload);
-
-      await mainHandler.sendConfirmation(conversationId, confirmMessageId);
-      expect(mainHandler.account.service.conversation.createConfirmation).toHaveBeenCalledWith(confirmMessageId);
-      expect(mainHandler.account.service.conversation.send).toHaveBeenCalledWith(conversationId, confirmationPayload);
-    });
   });
 
   describe('"sendConnectionResponse"', () => {
@@ -84,51 +66,6 @@ describe('MessageHandler', () => {
       await mainHandler.sendConnectionResponse(userId, acceptConnection);
       expect(mainHandler.account.service.connection.ignoreConnection).toHaveBeenCalledWith(userId);
       expect(mainHandler.account.service.connection.acceptConnection).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('"sendEditedText"', () => {
-    it('sends the correct data', async () => {
-      const conversationId = new UUID(UUID_VERSION).format();
-      const originalMessageId = new UUID(UUID_VERSION).format();
-      const newMessageText = new UUID(UUID_VERSION).format();
-
-      spyOn(mainHandler.account.service.conversation, 'createEditedText').and.callThrough();
-
-      await mainHandler.sendEditedText(conversationId, originalMessageId, newMessageText);
-      expect(mainHandler.account.service.conversation.createEditedText).toHaveBeenCalledWith(
-        newMessageText,
-        originalMessageId
-      );
-      expect(mainHandler.account.service.conversation.send).toHaveBeenCalledWith(
-        conversationId,
-        jasmine.objectContaining({content: jasmine.objectContaining({originalMessageId, text: newMessageText})})
-      );
-    });
-
-    it('sends the correct data with mentions', async () => {
-      const conversationId = new UUID(UUID_VERSION).format();
-      const originalMessageId = new UUID(UUID_VERSION).format();
-      const newMessageText = new UUID(UUID_VERSION).format();
-      const mentionData = [
-        {
-          data: new UUID(UUID_VERSION).format(),
-        },
-      ];
-
-      spyOn(mainHandler.account.service.conversation, 'createEditedText').and.callThrough();
-
-      await mainHandler.sendEditedText(conversationId, originalMessageId, newMessageText, mentionData);
-      expect(mainHandler.account.service.conversation.createEditedText).toHaveBeenCalledWith(
-        newMessageText,
-        originalMessageId
-      );
-      expect(mainHandler.account.service.conversation.send).toHaveBeenCalledWith(
-        conversationId,
-        jasmine.objectContaining({
-          content: jasmine.objectContaining({mentions: mentionData, originalMessageId, text: newMessageText}),
-        })
-      );
     });
   });
 
@@ -176,50 +113,6 @@ describe('MessageHandler', () => {
       expect(mainHandler.account.service.conversation.createFileMetadata).toHaveBeenCalledWith(metadata);
       expect(mainHandler.account.service.conversation.createFileData).toHaveBeenCalledWith(file, metadataPayload.id);
       expect(mainHandler.account.service.conversation.send).toHaveBeenCalledWith(conversationId, abortPayload);
-    });
-  });
-
-  describe('"sendImage"', () => {
-    it('sends the correct data', async () => {
-      const conversationId = new UUID(UUID_VERSION).format();
-
-      const imagePayload = {
-        data: new UUID(UUID_VERSION).format(),
-      };
-
-      const imageData = {
-        data: Buffer.from(new UUID(UUID_VERSION).format()),
-        height: new UUID(UUID_VERSION).format(),
-        type: new UUID(UUID_VERSION).format(),
-        width: 1,
-      };
-
-      spyOn(mainHandler.account.service.conversation, 'createImage').and.returnValue(Promise.resolve(imagePayload));
-
-      await mainHandler.sendImage(conversationId, imageData);
-      expect(mainHandler.account.service.conversation.createImage).toHaveBeenCalledWith(imageData);
-      expect(mainHandler.account.service.conversation.send).toHaveBeenCalledWith(conversationId, imagePayload);
-    });
-  });
-
-  describe('"sendReaction"', () => {
-    it('sends the correct data', async () => {
-      const conversationId = new UUID(UUID_VERSION).format();
-      const originalMessageId = new UUID(UUID_VERSION).format();
-      const reactionType = ReactionType.LIKE;
-
-      const reactionData = {
-        data: new UUID(UUID_VERSION).format(),
-      };
-
-      spyOn(mainHandler.account.service.conversation, 'createReaction').and.returnValue(reactionData);
-
-      await mainHandler.sendReaction(conversationId, originalMessageId, reactionType);
-      expect(mainHandler.account.service.conversation.createReaction).toHaveBeenCalledWith(
-        originalMessageId,
-        reactionType
-      );
-      expect(mainHandler.account.service.conversation.send).toHaveBeenCalledWith(conversationId, reactionData);
     });
   });
 
