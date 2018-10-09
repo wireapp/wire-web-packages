@@ -9007,10 +9007,10 @@ punycode@^2.1.0:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
 
-pure-uuid@1.5.4:
-  version "1.5.4"
-  resolved "https://registry.yarnpkg.com/pure-uuid/-/pure-uuid-1.5.4.tgz#e762f4950773d81d7a42f8003b948f3510a30925"
-  integrity sha512-aVa7X13aUi0x4afW8F15Rb1Py+elrJrwRvtIeZmYV0khDE2gKBVyU9Yd7fM7RxJlu3biuop2jmBlBzjfF+/x5A==
+pure-uuid@1.5.5:
+  version "1.5.5"
+  resolved "https://registry.yarnpkg.com/pure-uuid/-/pure-uuid-1.5.5.tgz#aad315cebe9e31e612280fe1c9c9f8b48facf664"
+  integrity sha512-eyy6npqlYYGudiBMxbL5EE/5aVVSdEdn2gMoDcAQWTP5OP849Y/QiYVgTLZ3CxfkPX6Y5A2dyj0kPIP2lcQ3Qw==
 
 q@^1.5.1:
   version "1.5.1"
