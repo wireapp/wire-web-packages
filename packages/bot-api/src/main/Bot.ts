@@ -25,7 +25,7 @@ import {MemoryEngine} from '@wireapp/store-engine';
 import * as logdown from 'logdown';
 import UUID from 'pure-uuid';
 
-import {BotConfig, BotCredentials} from './interfaces';
+import {BotConfig, BotCredentials} from './Interfaces';
 import {MessageHandler} from './MessageHandler';
 
 const defaultConfig: Required<BotConfig> = {
