@@ -20,6 +20,7 @@
       }
     ],
     "no-this-assignment": true,
+    "no-unnecessary-type-assertion": true,
     "no-unused-expression": true,
     "object-literal-sort-keys": true,
     "prefer-conditional-expression": true,
