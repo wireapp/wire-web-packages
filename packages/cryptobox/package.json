@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@types/fs-extra": "5.0.4",
-    "@types/node": "10.11.5",
+    "@types/node": "10.11.6",
     "@wireapp/lru-cache": "3.0.5",
     "@wireapp/priority-queue": "0.2.24",
     "@wireapp/proteus": "7.3.36",
@@ -35,7 +35,7 @@
     "pure-uuid": "1.5.5",
     "rimraf": "2.6.2",
     "run-sequence": "2.2.1",
-    "typescript": "3.1.1",
+    "typescript": "3.1.2",
     "webpack": "4.20.2",
     "webpack-cli": "3.1.2"
   },
