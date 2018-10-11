@@ -495,7 +495,7 @@ class ConversationService {
     }
   }
 
-  private async onClientMismatch(
+  public async onClientMismatch(
     error: AxiosError,
     message: NewOTRMessage,
     plainTextArray: Uint8Array
@@ -1070,6 +1070,10 @@ class ConversationService {
     });
   }
 
+  public getClientID(): string {
+    return this.clientID;
+  }
+
   public async addUser(conversationId: string, userId: string): Promise<string>;
   public async addUser(conversationId: string, userIds: string[]): Promise<string[]>;
   public async addUser(conversationId: string, userIds: string | string[]): Promise<string | string[]> {
@@ -1130,7 +1134,7 @@ class ConversationService {
     return this.apiClient.conversation.api.postTyping(conversationId, {status: CONVERSATION_TYPING.STOPPED});
   }
 
-  public setClientID(clientID: string) {
+  public setClientID(clientID: string): void {
     this.clientID = clientID;
   }
 
