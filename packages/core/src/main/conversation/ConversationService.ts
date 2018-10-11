@@ -510,11 +510,9 @@ class ConversationService {
       if (deletedUserIds.length) {
         for (const deletedUserId of deletedUserIds) {
           for (const deletedClientId of deleted[deletedUserId]) {
-            if (message.recipients[deletedUserId]) {
-              delete message.recipients[deletedUserId][deletedClientId];
-              console.log('deleted', deletedClientId);
-            } else {
-              console.log('message.recipients[deletedUserId] does not exist');
+            const deletedUser = message.recipients[deletedUserId];
+            if (deletedUser) {
+              delete deletedUser[deletedClientId];
             }
           }
         }
