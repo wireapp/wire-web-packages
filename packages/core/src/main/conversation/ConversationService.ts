@@ -510,8 +510,8 @@ class ConversationService {
       if (deletedUserIds.length) {
         for (const deletedUserId of deletedUserIds) {
           for (const deletedClientId of deleted[deletedUserId]) {
-            if (message.recipients[deletedUserId]) {
-              const deletedUser = message.recipients[deletedUserId];
+            const deletedUser = message.recipients[deletedUserId];
+            if (deletedUser) {
               delete deletedUser[deletedClientId];
             }
           }

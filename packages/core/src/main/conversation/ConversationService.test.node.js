@@ -86,10 +86,13 @@ describe('ConversationService', () => {
     });
 
     it('adds missing prekeys', async () => {
-      const recipientId = new UUID(4).format();
-      const missingClientId = new UUID(4).format();
+      const recipientId1 = new UUID(4).format();
+      const missingClientId1 = new UUID(4).format();
+      const recipientId2 = new UUID(4).format();
+      const missingClientId2 = new UUID(4).format();
+
       const initialPreKeyBundles = {
-        [recipientId]: {
+        [recipientId1]: {
           [new UUID(4).format()]: {},
         },
       };
@@ -97,14 +100,15 @@ describe('ConversationService', () => {
       spyOn(account.apiClient.conversation.api, 'postOTRMessage').and.callFake(
         (sendingClientId, conversationId, message) =>
           new Promise((resolve, reject) => {
-            if (message.recipients[recipientId] && !message.recipients[recipientId][missingClientId]) {
+            if (message.recipients[recipientId1] && !message.recipients[recipientId1][missingClientId1]) {
               // eslint-disable-next-line prefer-promise-reject-errors
               reject({
                 response: {
                   data: {
                     deleted: {},
                     missing: {
-                      [recipientId]: [missingClientId],
+                      [recipientId1]: [missingClientId1],
+                      [recipientId2]: [missingClientId2],
                     },
                     redundant: {},
                     time: new Date().toISOString(),
@@ -119,23 +123,30 @@ describe('ConversationService', () => {
       );
       spyOn(account.apiClient.user.api, 'postMultiPreKeyBundles').and.returnValue(
         Promise.resolve({
-          [recipientId]: {
-            [missingClientId]: {},
+          [recipientId1]: {
+            [missingClientId1]: {},
+          },
+          [recipientId2]: {
+            [missingClientId2]: {},
           },
         })
       );
 
       const payload = createMessage('Hello, world!');
       const recipients = await account.service.cryptography.encrypt(payload, initialPreKeyBundles);
-      expect(recipients[recipientId][missingClientId]).toBeUndefined();
+      expect(recipients[recipientId1]).toBeDefined();
+      expect(recipients[recipientId1][missingClientId1]).toBeUndefined();
+      expect(recipients[recipientId2]).toBeUndefined();
 
-      await account.service.conversation.sendOTRMessage(recipientId, new UUID(4).format(), recipients, payload);
-      expect(recipients[recipientId][missingClientId]).toBeDefined();
+      await account.service.conversation.sendOTRMessage(recipientId1, new UUID(4).format(), recipients, payload);
+      expect(recipients[recipientId1][missingClientId1]).toBeDefined();
+      expect(recipients[recipientId2][missingClientId2]).toBeDefined();
     });
 
     it('removes deleted prekeys', async () => {
       const recipientId = new UUID(4).format();
       const deletedClientId = new UUID(4).format();
+
       const initialPreKeyBundles = {
         [recipientId]: {
           [new UUID(4).format()]: {},
@@ -173,6 +184,7 @@ describe('ConversationService', () => {
       expect(recipients[recipientId][deletedClientId]).toBeDefined();
 
       await account.service.conversation.sendOTRMessage(recipientId, new UUID(4).format(), recipients, payload);
+      expect(recipients[recipientId]).toBeDefined();
       expect(recipients[recipientId][deletedClientId]).toBeUndefined();
     });
   });
