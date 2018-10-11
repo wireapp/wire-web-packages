@@ -502,11 +502,13 @@ class ConversationService {
   ): Promise<NewOTRMessage> {
     if (error.response && error.response.status === StatusCode.PRECONDITION_FAILED) {
       const {missing: missingClients, deleted: deletedClients} = error.response.data;
+      const deletedClientIds = Object.keys(deletedClients);
 
-      if (Object.keys(deletedClients).length) {
+      if (deletedClientIds.length) {
         for (const recipientId in message.recipients) {
-          for (const deletedClientId of deletedClients[recipientId]) {
+          for (const deletedClientId of deletedClientIds) {
             delete message.recipients[recipientId][deletedClientId];
+            console.log('deleted', deletedClientId);
           }
         }
       }

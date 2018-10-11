@@ -25,27 +25,31 @@ import {ConversationService} from '../conversation/root';
 import {CryptographyService} from '../cryptography/root';
 
 class BroadcastService {
-  private readonly clientID: string = '';
-
   constructor(
     private readonly apiClient: APIClient,
     private readonly conversationService: ConversationService,
     private readonly cryptographyService: CryptographyService
-  ) {
-    this.clientID = this.conversationService.getClientID();
-  }
+  ) {}
 
   private async getPreKeyBundle(teamId: string, skipOwnClients = false): Promise<UserPreKeyBundleMap> {
-    const teamMembers = await this.apiClient.teams.member.api.getMembers(teamId);
+    const {members: teamMembers} = await this.apiClient.teams.member.api.getMembers(teamId);
+    console.log({teamMembers});
 
     const members = teamMembers.map(member => ({id: member.user}));
-    const preKeys = await Promise.all(members.map(member => this.apiClient.user.api.getUserPreKeys(member.id)));
 
-    if (!skipOwnClients) {
+    if (skipOwnClients) {
       const selfUser = await this.apiClient.self.api.getSelf();
-      const selfPreKey = await this.apiClient.user.api.getUserPreKeys(selfUser.id);
-      preKeys.push(selfPreKey);
+      for (const index in members) {
+        const member = members[index];
+
+        if (member.id === selfUser.id) {
+          delete members[index];
+          break;
+        }
+      }
     }
+
+    const preKeys = await Promise.all(members.map(member => this.apiClient.user.api.getUserPreKeys(member.id)));
 
     return preKeys.reduce((bundleMap: UserPreKeyBundleMap, bundle) => {
       bundleMap[bundle.user] = {};
@@ -57,11 +61,13 @@ class BroadcastService {
   }
 
   public async broadcastGenericMessage(teamId: string, genericMessage: GenericMessage): Promise<void> {
-    const plainTextArray = GenericMessage.encode(genericMessage).finish();
-    const preKeyBundles = await this.getPreKeyBundle(teamId);
-    const recipients = await this.cryptographyService.encrypt(plainTextArray, preKeyBundles);
+    const clientId = this.conversationService.getClientID();
 
-    return this.sendOTRBroadcastMessage(this.clientID, recipients, plainTextArray);
+    const plainTextArray = GenericMessage.encode(genericMessage).finish();
+    const preKeyBundle = await this.getPreKeyBundle(teamId);
+    const recipients = await this.cryptographyService.encrypt(plainTextArray, preKeyBundle);
+
+    return this.sendOTRBroadcastMessage(clientId, recipients, plainTextArray);
   }
 
   private async sendOTRBroadcastMessage(

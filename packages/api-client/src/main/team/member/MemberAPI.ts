@@ -32,13 +32,13 @@ class MemberAPI {
     };
   }
 
-  public getMembers(teamId: string): Promise<MemberData[]> {
+  public getMembers(teamId: string): Promise<{members: MemberData[]}> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${TeamAPI.URL.TEAMS}/${teamId}/${MemberAPI.URL.MEMBERS}`,
     };
 
-    return this.client.sendJSON<MemberData[]>(config).then(response => response.data);
+    return this.client.sendJSON<{members: MemberData[]}>(config).then(response => response.data);
   }
 
   public getMember(teamId: string, userId: string): Promise<void> {
