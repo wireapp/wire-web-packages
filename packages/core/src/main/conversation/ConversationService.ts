@@ -24,6 +24,7 @@ import {
   NewConversation,
   NewOTRMessage,
   OTRRecipients,
+  UserClients,
 } from '@wireapp/api-client/dist/commonjs/conversation/';
 import {CONVERSATION_TYPING, ConversationMemberLeaveEvent} from '@wireapp/api-client/dist/commonjs/event/';
 import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/';
@@ -501,24 +502,34 @@ class ConversationService {
     plainTextArray: Uint8Array
   ): Promise<NewOTRMessage> {
     if (error.response && error.response.status === StatusCode.PRECONDITION_FAILED) {
-      const {missing: missingClients, deleted: deletedClients} = error.response.data;
-      const deletedClientIds = Object.keys(deletedClients);
+      const {missing, deleted}: {missing: UserClients; deleted: UserClients} = error.response.data;
 
-      if (deletedClientIds.length) {
-        for (const recipientId in message.recipients) {
-          for (const deletedClientId of deletedClientIds) {
-            delete message.recipients[recipientId][deletedClientId];
-            console.log('deleted', deletedClientId);
+      const deletedUserIds = Object.keys(deleted);
+      const missingUserIds = Object.keys(missing);
+
+      if (deletedUserIds.length) {
+        for (const deletedUserId of deletedUserIds) {
+          for (const deletedClientId of deleted[deletedUserId]) {
+            if (message.recipients[deletedUserId]) {
+              delete message.recipients[deletedUserId][deletedClientId];
+              console.log('deleted', deletedClientId);
+            } else {
+              console.log('message.recipients[deletedUserId] does not exist');
+            }
           }
         }
       }
 
-      if (Object.keys(missingClients).length) {
-        const missingPreKeyBundles = await this.apiClient.user.api.postMultiPreKeyBundles(missingClients);
+      if (missingUserIds.length) {
+        const missingPreKeyBundles = await this.apiClient.user.api.postMultiPreKeyBundles(missing);
         const reEncryptedPayloads = await this.cryptographyService.encrypt(plainTextArray, missingPreKeyBundles);
-        for (const recipientId in message.recipients) {
-          for (const clientId in reEncryptedPayloads[recipientId]) {
-            message.recipients[recipientId][clientId] = reEncryptedPayloads[recipientId][clientId];
+        for (const missingUserId of missingUserIds) {
+          for (const missingClientId in reEncryptedPayloads[missingUserId]) {
+            const missingUser = message.recipients[missingUserId];
+            if (!missingUser) {
+              message.recipients[missingUserId] = {};
+            }
+            message.recipients[missingUserId][missingClientId] = reEncryptedPayloads[missingUserId][missingClientId];
           }
         }
       }

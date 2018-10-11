@@ -33,20 +33,12 @@ class BroadcastService {
 
   private async getPreKeyBundle(teamId: string, skipOwnClients = false): Promise<UserPreKeyBundleMap> {
     const {members: teamMembers} = await this.apiClient.teams.member.api.getMembers(teamId);
-    console.log({teamMembers});
 
-    const members = teamMembers.map(member => ({id: member.user}));
+    let members = teamMembers.map(member => ({id: member.user}));
 
     if (skipOwnClients) {
       const selfUser = await this.apiClient.self.api.getSelf();
-      for (const index in members) {
-        const member = members[index];
-
-        if (member.id === selfUser.id) {
-          delete members[index];
-          break;
-        }
-      }
+      members = members.filter(member => member.id !== selfUser.id);
     }
 
     const preKeys = await Promise.all(members.map(member => this.apiClient.user.api.getUserPreKeys(member.id)));
