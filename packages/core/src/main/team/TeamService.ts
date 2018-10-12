@@ -18,7 +18,7 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {MemberData, NewTeamData, TeamChunkData, TeamData} from '@wireapp/api-client/dist/commonjs/team';
+import {MemberData, Members, NewTeamData, TeamChunkData, TeamData} from '@wireapp/api-client/dist/commonjs/team';
 
 class TeamService {
   constructor(private readonly apiClient: APIClient) {}
@@ -35,7 +35,7 @@ class TeamService {
     return this.apiClient.teams.team.api.deleteTeam(teamId, password);
   }
 
-  public getMembers(teamId: string): Promise<{members: MemberData[]}> {
+  public getMembers(teamId: string): Promise<Members> {
     return this.apiClient.teams.member.api.getMembers(teamId);
   }
 

@@ -19,4 +19,5 @@
 
 export * from './MemberAPI';
 export * from './MemberData';
+export * from './Members';
 export * from './PermissionsData';
