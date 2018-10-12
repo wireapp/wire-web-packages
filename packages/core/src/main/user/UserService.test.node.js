@@ -33,9 +33,7 @@ const PayloadHelper = require('../test/PayloadHelper');
 describe('UserService', () => {
   let hasState;
 
-  afterAll(() => {
-    nock.cleanAll();
-  });
+  afterAll(() => nock.cleanAll());
 
   beforeAll(() => {
     nock(Backend.PRODUCTION.rest)
@@ -114,9 +112,7 @@ describe('UserService', () => {
       .persist();
   });
 
-  beforeEach(() => {
-    hasState = {};
-  });
+  beforeEach(() => (hasState = {}));
 
   describe('getUsers', () => {
     it('fetches users', async () => {
