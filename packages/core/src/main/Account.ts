@@ -17,11 +17,9 @@
  *
  */
 
-import {APIClient} from '@wireapp/api-client';
 import {Context, LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
 import {ClientType, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
 import {IncomingNotification} from '@wireapp/api-client/dist/commonjs/conversation/';
-import {UserConnectionEvent} from '@wireapp/api-client/dist/commonjs/event';
 import {
   CONVERSATION_EVENT,
   ConversationEvent,
@@ -29,6 +27,7 @@ import {
   ConversationOtrMessageAddEvent,
   IncomingEvent,
   USER_EVENT,
+  UserConnectionEvent,
   UserEvent,
 } from '@wireapp/api-client/dist/commonjs/event/';
 import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/';
@@ -37,10 +36,18 @@ import * as cryptobox from '@wireapp/cryptobox';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/error/';
 import * as Long from 'long';
-import {LoginSanitizer} from './auth/root';
+import {LoginSanitizer} from './auth/';
 import {BroadcastService} from './broadcast/';
-import {ClientInfo, ClientService} from './client/root';
-import {ConnectionService} from './connection/root';
+import {ClientInfo, ClientService} from './client/';
+import {ConnectionService} from './connection/';
+import {
+  AssetService,
+  ConversationService,
+  GenericMessageType,
+  PayloadBundleIncoming,
+  PayloadBundleState,
+  PayloadBundleType,
+} from './conversation/';
 import {
   AssetContent,
   ClearedContent,
@@ -52,23 +59,16 @@ import {
   ReactionContent,
   TextContent,
 } from './conversation/content/';
-import {
-  AssetService,
-  ConversationService,
-  GenericMessageType,
-  PayloadBundleIncoming,
-  PayloadBundleState,
-  PayloadBundleType,
-} from './conversation/root';
-import {CryptographyService} from './cryptography/root';
-import {GiphyService} from './giphy/root';
-import {NotificationService} from './notification/root';
-import {SelfService} from './self/root';
+import {CryptographyService} from './cryptography/';
+import {GiphyService} from './giphy/';
+import {NotificationService} from './notification/';
+import {SelfService} from './self/';
 import {TeamService} from './team/';
-import {UserService} from './user/';
 
+import {APIClient} from '@wireapp/api-client';
 import * as EventEmitter from 'events';
 import * as logdown from 'logdown';
+import {UserService} from './user/';
 
 class Account extends EventEmitter {
   private readonly logger = logdown('@wireapp/core/Account', {
