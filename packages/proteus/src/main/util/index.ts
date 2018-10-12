@@ -17,10 +17,10 @@
  *
  */
 
-import {CONVERSATION_TYPING} from '../event/';
+import ArrayUtil from './ArrayUtil';
+import ClassUtil from './ClassUtil';
+import KeyDerivationUtil from './KeyDerivationUtil';
+import MemoryUtil from './MemoryUtil';
+import RandomUtil from './RandomUtil';
 
-interface Typing {
-  status: CONVERSATION_TYPING.STARTED | CONVERSATION_TYPING.STOPPED;
-}
-
-export {Typing};
+export {ArrayUtil, ClassUtil, KeyDerivationUtil, MemoryUtil, RandomUtil};
