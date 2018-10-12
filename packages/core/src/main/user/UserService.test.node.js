@@ -32,8 +32,6 @@ const PayloadHelper = require('../test/PayloadHelper');
 
 describe('UserService', () => {
   let hasState;
-  let requestedUserId;
-  let requestedRecipients;
 
   afterAll(() => {
     nock.cleanAll();
@@ -46,8 +44,8 @@ describe('UserService', () => {
       .reply(uri => {
         const ids = PayloadHelper.getUrlParameter(uri, 'ids');
 
-        const userPayloads = ids.split(',').map(userId => {
-          return PayloadHelper.mockUserPayload(userId);
+        const userPayloads = ids.split(',').map(requestedUserId => {
+          return PayloadHelper.mockUserPayload(requestedUserId);
         });
 
         return [StatusCode.OK, JSON.stringify(userPayloads)];
@@ -55,14 +53,14 @@ describe('UserService', () => {
       .persist();
 
     nock(Backend.PRODUCTION.rest)
-      .post(BroadcastAPI.URL.BROADCAST, body => {
-        requestedRecipients = body.recipients;
-        hasState[body.sender] = true;
+      .post(BroadcastAPI.URL.BROADCAST, requestBody => {
+        hasState[requestBody.sender] = true;
         return true;
       })
       .query(() => true)
-      .reply(() => {
+      .reply((uri, requestBody) => {
         const userClients = {};
+        const requestedRecipients = requestBody.recipients;
 
         for (const recipient in requestedRecipients) {
           userClients[recipient] = [];
@@ -76,12 +74,7 @@ describe('UserService', () => {
       .persist();
 
     nock(Backend.PRODUCTION.rest)
-      .get(uri => {
-        if (uri.startsWith(TeamAPI.URL.TEAMS) && uri.endsWith(MemberAPI.URL.MEMBERS)) {
-          return true;
-        }
-        return false;
-      })
+      .get(new RegExp(`${TeamAPI.URL.TEAMS}/.*/${MemberAPI.URL.MEMBERS}`))
       .query(() => true)
       .reply(() => {
         const data = {
@@ -101,15 +94,11 @@ describe('UserService', () => {
       .persist();
 
     nock(Backend.PRODUCTION.rest)
-      .get(uri => {
-        if (uri.startsWith(UserAPI.URL.USERS) && uri.endsWith(UserAPI.URL.PRE_KEYS)) {
-          requestedUserId = uri.replace(`${UserAPI.URL.USERS}/`, '').replace(`/${UserAPI.URL.PRE_KEYS}`, '');
-          return true;
-        }
-        return false;
-      })
+      .get(new RegExp(`${UserAPI.URL.USERS}/.*/${UserAPI.URL.PRE_KEYS}`))
       .query(() => true)
-      .reply(() => {
+      .reply(uri => {
+        const requestedUserId = uri.replace(`${UserAPI.URL.USERS}/`, '').replace(`/${UserAPI.URL.PRE_KEYS}`, '');
+
         const data = {
           clients: [
             {
@@ -127,8 +116,6 @@ describe('UserService', () => {
 
   beforeEach(() => {
     hasState = {};
-    requestedUserId = '';
-    requestedRecipients = {};
   });
 
   describe('getUsers', () => {
