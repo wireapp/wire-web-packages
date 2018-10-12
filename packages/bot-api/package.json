@@ -1,13 +1,13 @@
 {
   "dependencies": {
-    "@wireapp/core": "6.5.8",
+    "@wireapp/core": "6.5.10",
     "pure-uuid": "1.5.5"
   },
   "devDependencies": {
     "cross-env": "5.2.0",
     "jasmine": "3.2.0",
     "rimraf": "2.6.2",
-    "typescript": "3.1.1"
+    "typescript": "3.1.2"
   },
   "files": [
     "dist"
@@ -27,5 +27,5 @@
     "test:node": "jasmine --config=jasmine.json",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "1.2.0"
+  "version": "1.2.2"
 }
