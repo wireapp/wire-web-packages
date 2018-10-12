@@ -27,6 +27,7 @@ import {
   ConversationOtrMessageAddEvent,
   IncomingEvent,
   USER_EVENT,
+  UserConnectionEvent,
   UserEvent,
 } from '@wireapp/api-client/dist/commonjs/event/';
 import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/';
@@ -63,7 +64,6 @@ import {NotificationService} from './notification/';
 import {SelfService} from './self/';
 
 import {APIClient} from '@wireapp/api-client';
-import {UserConnectionEvent} from '@wireapp/api-client/dist/commonjs/event';
 import * as EventEmitter from 'events';
 import * as logdown from 'logdown';
 import {UserService} from './user/';
