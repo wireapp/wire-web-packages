@@ -33,6 +33,7 @@ const PayloadHelper = require('../test/PayloadHelper');
 describe('UserService', () => {
   let hasState;
   let requestedUserId;
+  let requestedRecipients;
 
   afterAll(() => {
     nock.cleanAll();
@@ -55,11 +56,23 @@ describe('UserService', () => {
 
     nock(Backend.PRODUCTION.rest)
       .post(BroadcastAPI.URL.BROADCAST, body => {
+        requestedRecipients = body.recipients;
         hasState[body.sender] = true;
         return true;
       })
       .query(() => true)
-      .reply(StatusCode.OK, '{}')
+      .reply(() => {
+        const userClients = {};
+
+        for (const recipient in requestedRecipients) {
+          userClients[recipient] = [];
+          for (const device in requestedRecipients[recipient]) {
+            userClients[recipient].push(device);
+          }
+        }
+
+        return [StatusCode.OK, JSON.stringify(userClients)];
+      })
       .persist();
 
     nock(Backend.PRODUCTION.rest)
@@ -115,6 +128,7 @@ describe('UserService', () => {
   beforeEach(() => {
     hasState = {};
     requestedUserId = '';
+    requestedRecipients = {};
   });
 
   describe('getUsers', () => {
