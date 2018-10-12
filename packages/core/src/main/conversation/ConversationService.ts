@@ -476,6 +476,7 @@ class ConversationService {
     };
   }
 
+  // TODO: Move this to a generic "message sending class".
   private async sendOTRMessage(
     sendingClientId: string,
     conversationId: string,
@@ -496,6 +497,7 @@ class ConversationService {
     }
   }
 
+  // TODO: Move this to a generic "message sending class" and make it private.
   public async onClientMismatch(
     error: AxiosError,
     message: NewOTRMessage,
