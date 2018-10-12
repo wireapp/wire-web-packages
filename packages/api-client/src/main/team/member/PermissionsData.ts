@@ -17,9 +17,11 @@
  *
  */
 
+import {Permission} from '../member/';
+
 interface PermissionsData {
-  copy: number;
-  self: number;
+  copy: Permission;
+  self: Permission;
 }
 
 export {PermissionsData};

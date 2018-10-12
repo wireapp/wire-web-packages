@@ -37,7 +37,7 @@ class UserService {
   }
 
   public setAvailability(teamId: string, type: AvailabilityType): Promise<void> {
-    const genericMessage = new GenericMessage({
+    const genericMessage = GenericMessage.create({
       availability: new Availability({type}),
       messageId: new UUID(4).format(),
     });

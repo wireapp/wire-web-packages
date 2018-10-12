@@ -21,8 +21,8 @@ import {APIClient} from '@wireapp/api-client';
 import {NewOTRMessage, OTRRecipients} from '@wireapp/api-client/dist/commonjs/conversation/';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/';
 import {GenericMessage} from '@wireapp/protocol-messaging';
-import {ConversationService} from '../conversation/root';
-import {CryptographyService} from '../cryptography/root';
+import {ConversationService} from '../conversation/';
+import {CryptographyService} from '../cryptography/';
 
 class BroadcastService {
   constructor(
