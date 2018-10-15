@@ -17,7 +17,7 @@
  *
  */
 
-import {ServiceRef} from '../conversation/';
+import {MutedStatus, ServiceRef} from '../conversation/';
 
 interface Member {
   hidden_ref?: string;

@@ -22,6 +22,7 @@ import {
   CONVERSATION_ACCESS_ROLE,
   Conversation,
   ConversationMessageTimerUpdate,
+  MemberUpdate,
 } from '../conversation/';
 import {BackendEvent} from './BackendEvent';
 
