@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@7.0.0...@wireapp/core@7.1.0) (2018-10-12)
+
+
+### Features
+
+* **api-client,core:** Set availability status (WEBFOUND-50) ([#1223](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1223)) ([b9e064c](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/b9e064c))
+
+
+
+
+
+# [7.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@6.5.10...@wireapp/core@7.0.0) (2018-10-12)
+
+
+### Code Refactoring
+
+* **api-client,core,cryptobox,proteus:** Rename root to index ([#1200](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1200)) ([6b937ac](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/6b937ac))
+
+
+### BREAKING CHANGES
+
+* **api-client,core,cryptobox,proteus:** Some modules can't be imported with `/root` anymore - use `/index` instead.
+
+
+
+
+
+## [6.5.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@6.5.9...@wireapp/core@6.5.10) (2018-10-11)
+
+
+### Bug Fixes
+
+* **core:** Add missing users on message sending ([#1224](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1224)) ([29ac8f0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/29ac8f0))
+
+
+
+
+
+## [6.5.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@6.5.8...@wireapp/core@6.5.9) (2018-10-09)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [6.5.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@6.5.7...@wireapp/core@6.5.8) (2018-10-05)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
 ## [6.5.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@6.5.6...@wireapp/core@6.5.7) (2018-10-04)
 
 **Note:** Version bump only for package @wireapp/core

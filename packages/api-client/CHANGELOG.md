@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@2.0.0...@wireapp/api-client@2.1.0) (2018-10-12)
+
+
+### Features
+
+* **api-client,core:** Set availability status (WEBFOUND-50) ([#1223](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1223)) ([b9e064c](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/b9e064c))
+
+
+
+
+
+# [2.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.16.10...@wireapp/api-client@2.0.0) (2018-10-12)
+
+
+### Code Refactoring
+
+* **api-client,core,cryptobox,proteus:** Rename root to index ([#1200](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1200)) ([6b937ac](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/6b937ac))
+
+
+### BREAKING CHANGES
+
+* **api-client,core,cryptobox,proteus:** Some modules can't be imported with `/root` anymore - use `/index` instead.
+
+
+
+
+
+## [1.16.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.16.9...@wireapp/api-client@1.16.10) (2018-10-11)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [1.16.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.16.8...@wireapp/api-client@1.16.9) (2018-10-09)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [1.16.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.16.7...@wireapp/api-client@1.16.8) (2018-10-05)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
 ## [1.16.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@1.16.6...@wireapp/api-client@1.16.7) (2018-10-04)
 
 **Note:** Version bump only for package @wireapp/api-client

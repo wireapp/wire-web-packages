@@ -17,9 +17,9 @@
  *
  */
 
-import {Context, LoginData} from '@wireapp/api-client/dist/commonjs/auth/index';
-import {ClientType, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/index';
-import {IncomingNotification} from '@wireapp/api-client/dist/commonjs/conversation/index';
+import {Context, LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
+import {ClientType, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
+import {IncomingNotification} from '@wireapp/api-client/dist/commonjs/conversation/';
 import {
   CONVERSATION_EVENT,
   ConversationEvent,
@@ -27,17 +27,27 @@ import {
   ConversationOtrMessageAddEvent,
   IncomingEvent,
   USER_EVENT,
+  UserConnectionEvent,
   UserEvent,
-} from '@wireapp/api-client/dist/commonjs/event/index';
-import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/index';
-import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/index';
+} from '@wireapp/api-client/dist/commonjs/event/';
+import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/';
+import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/';
 import * as cryptobox from '@wireapp/cryptobox';
 import {GenericMessage} from '@wireapp/protocol-messaging';
-import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/error/index';
+import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/error/';
 import * as Long from 'long';
-import {LoginSanitizer} from './auth/root';
-import {ClientInfo, ClientService} from './client/root';
-import {ConnectionService} from './connection/root';
+import {LoginSanitizer} from './auth/';
+import {BroadcastService} from './broadcast/';
+import {ClientInfo, ClientService} from './client/';
+import {ConnectionService} from './connection/';
+import {
+  AssetService,
+  ConversationService,
+  GenericMessageType,
+  PayloadBundleIncoming,
+  PayloadBundleState,
+  PayloadBundleType,
+} from './conversation/';
 import {
   AssetContent,
   ClearedContent,
@@ -49,21 +59,13 @@ import {
   ReactionContent,
   TextContent,
 } from './conversation/content/';
-import {
-  AssetService,
-  ConversationService,
-  GenericMessageType,
-  PayloadBundleIncoming,
-  PayloadBundleState,
-  PayloadBundleType,
-} from './conversation/root';
-import {CryptographyService} from './cryptography/root';
-import {GiphyService} from './giphy/root';
-import {NotificationService} from './notification/root';
-import {SelfService} from './self/root';
+import {CryptographyService} from './cryptography/';
+import {GiphyService} from './giphy/';
+import {NotificationService} from './notification/';
+import {SelfService} from './self/';
+import {TeamService} from './team/';
 
 import {APIClient} from '@wireapp/api-client';
-import {UserConnectionEvent} from '@wireapp/api-client/dist/commonjs/event';
 import * as EventEmitter from 'events';
 import * as logdown from 'logdown';
 import {UserService} from './user/';
@@ -77,6 +79,7 @@ class Account extends EventEmitter {
   private readonly apiClient: APIClient;
   public service?: {
     asset: AssetService;
+    broadcast: BroadcastService;
     client: ClientService;
     connection: ConnectionService;
     conversation: ConversationService;
@@ -84,6 +87,7 @@ class Account extends EventEmitter {
     giphy: GiphyService;
     notification: NotificationService;
     self: SelfService;
+    team: TeamService;
     user: UserService;
   };
 
@@ -104,10 +108,14 @@ class Account extends EventEmitter {
     const conversationService = new ConversationService(this.apiClient, cryptographyService, assetService);
     const notificationService = new NotificationService(this.apiClient, this.apiClient.config.store);
     const selfService = new SelfService(this.apiClient);
-    const userService = new UserService(this.apiClient);
+    const teamService = new TeamService(this.apiClient);
+
+    const broadcastService = new BroadcastService(this.apiClient, conversationService, cryptographyService);
+    const userService = new UserService(this.apiClient, broadcastService);
 
     this.service = {
       asset: assetService,
+      broadcast: broadcastService,
       client: clientService,
       connection: connectionService,
       conversation: conversationService,
@@ -115,6 +123,7 @@ class Account extends EventEmitter {
       giphy: giphyService,
       notification: notificationService,
       self: selfService,
+      team: teamService,
       user: userService,
     };
   }
