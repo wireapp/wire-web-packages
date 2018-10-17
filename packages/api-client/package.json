@@ -49,7 +49,7 @@
     "dist/commonjs"
   ],
   "license": "GPL-3.0",
-  "main": "./dist/commonjs/Client.js",
+  "main": "./dist/commonjs/APIClient.js",
   "name": "@wireapp/api-client",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client",
   "scripts": {
