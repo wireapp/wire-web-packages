@@ -93,10 +93,12 @@ export const DEPRECATED_ACCENT_COLORS: AccentColor[] = [
   VIOLET,
   VIVID_RED,
 ];
+
 /**
  * Use with caution:
  * This only exists to support deprecated color schemes and
  * is only permitted for usage in a read only manner.
+ *
  * @param id - AccentColor ID
  * @returns AccentColor with given ID | undefined
  */
