@@ -66,6 +66,6 @@
     "test:node": "cross-env NODE_DEBUG=@wireapp/api-client* JASMINE_CONFIG_PATH=src/test/node/support/jasmine.json jasmine",
     "watch": "webpack-dev-server --config webpack.config.js"
   },
-  "types": "./dist/commonjs/Client.d.ts",
+  "types": "./dist/commonjs/APIClient.d.ts",
   "version": "2.1.2"
 }
