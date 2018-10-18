@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@2.0.6...@wireapp/changelog-bot@2.0.7) (2018-10-17)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [2.0.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@2.0.5...@wireapp/changelog-bot@2.0.6) (2018-10-17)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [2.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@2.0.4...@wireapp/changelog-bot@2.0.5) (2018-10-17)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [2.0.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@2.0.3...@wireapp/changelog-bot@2.0.4) (2018-10-17)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [2.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@2.0.2...@wireapp/changelog-bot@2.0.3) (2018-10-15)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [2.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@2.0.1...@wireapp/changelog-bot@2.0.2) (2018-10-15)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
 ## [2.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@2.0.0...@wireapp/changelog-bot@2.0.1) (2018-10-12)
 
 **Note:** Version bump only for package @wireapp/changelog-bot

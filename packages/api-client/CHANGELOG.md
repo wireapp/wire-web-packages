@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@2.1.2...@wireapp/api-client@2.1.3) (2018-10-17)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [2.1.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@2.1.1...@wireapp/api-client@2.1.2) (2018-10-15)
+
+
+### Bug Fixes
+
+* **api-client:** Mark expires_in in RegisterData as optional ([#1230](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1230)) ([187ea66](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/187ea66))
+
+
+
+
+
+## [2.1.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@2.1.0...@wireapp/api-client@2.1.1) (2018-10-15)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
 # [2.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@2.0.0...@wireapp/api-client@2.1.0) (2018-10-12)
 
 
