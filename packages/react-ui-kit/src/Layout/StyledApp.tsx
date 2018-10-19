@@ -47,7 +47,7 @@ StyledAppContainer.defaultProps = {
 };
 
 const StyledApp = ({children, ...props}) => (
-  <StyledAppContainer>
+  <StyledAppContainer {...props}>
     <GlobalStyle />
     {children}
   </StyledAppContainer>
