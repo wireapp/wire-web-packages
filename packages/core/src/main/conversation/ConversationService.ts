@@ -234,8 +234,8 @@ class ConversationService {
 
     if (quote) {
       textMessage.quote = Quote.create({
-        id: quote.id,
-        sha256: quote.sha256,
+        quotedMessageId: quote.quotedMessageId,
+        quotedMessageSha256: quote.quotedMessageSha256,
       });
     }
 
@@ -708,8 +708,8 @@ class ConversationService {
 
     if (quote) {
       textMessage.quote = Quote.create({
-        id: quote.id,
-        sha256: quote.sha256,
+        quotedMessageId: quote.quotedMessageId,
+        quotedMessageSha256: quote.quotedMessageSha256,
       });
     }
 

@@ -18,8 +18,8 @@
  */
 
 interface QuoteContent {
-  id: string;
-  sha256: Uint8Array;
+  quotedMessageId: string;
+  quotedMessageSha256: Uint8Array;
 }
 
 export {QuoteContent};
