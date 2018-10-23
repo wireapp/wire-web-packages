@@ -37,7 +37,7 @@ function LoadingComponent({
     strokeDashoffset?: string;
   } = {};
 
-  if (typeof progress !== 'undefined') {
+  if (progress) {
     additionalProps.strokeDashoffset = `${pathLength - pathLength * progress}`;
   }
   return (
@@ -75,7 +75,7 @@ interface LoadingProps {
 
 const Loading = styled<LoadingProps & React.HTMLAttributes<SVGElement>>(LoadingComponent)`
   ${props =>
-    typeof props.progress === 'undefined' &&
+    !props.progress &&
     css`
       circle:nth-of-type(2) {
         transform-origin: 50% 50%;
