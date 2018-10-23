@@ -58,7 +58,7 @@ const messageIdCache = {};
       content.mentions && content.mentions.length
         ? `mentioning "${content.mentions.map(mention => mention.userId).join(',')}"`
         : '',
-      content.quote ? `quoting "${content.quote.id}"` : '',
+      content.quote ? `quoting "${content.quote.quotedMessageId}"` : '',
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : '',
       content
     );
