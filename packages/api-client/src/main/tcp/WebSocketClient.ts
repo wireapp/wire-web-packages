@@ -22,9 +22,9 @@ import * as logdown from 'logdown';
 import {IncomingNotification} from '../conversation/';
 import {HttpClient, NetworkError} from '../http/';
 
+import ReconnectingWebSocket, {Options} from 'reconnecting-websocket';
 import NodeWebSocket = require('ws');
 import * as buffer from '../shims/node/buffer';
-const ReconnectingWebsocket = require('reconnecting-websocket');
 
 class WebSocketClient extends EventEmitter {
   private clientId: string | undefined;
@@ -34,7 +34,7 @@ class WebSocketClient extends EventEmitter {
     markdown: false,
   });
 
-  private socket: WebSocket | undefined;
+  private socket: ReconnectingWebSocket | undefined;
 
   public static CLOSE_EVENT_CODE = {
     GOING_AWAY: 1001,
@@ -43,7 +43,7 @@ class WebSocketClient extends EventEmitter {
     UNSUPPORTED_DATA: 1003,
   };
 
-  public static RECONNECTING_OPTIONS = {
+  public static RECONNECTING_OPTIONS: Options = {
     WebSocket: typeof window !== 'undefined' ? WebSocket : NodeWebSocket,
     connectionTimeout: 4000,
     debug: false,
@@ -74,7 +74,7 @@ class WebSocketClient extends EventEmitter {
   public connect(clientId?: string): Promise<WebSocketClient> {
     this.clientId = clientId;
 
-    this.socket = new ReconnectingWebsocket(
+    this.socket = new ReconnectingWebSocket(
       () => this.buildWebSocketURL(),
       undefined,
       WebSocketClient.RECONNECTING_OPTIONS
