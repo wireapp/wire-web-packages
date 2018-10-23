@@ -22,7 +22,7 @@ import * as logdown from 'logdown';
 import {IncomingNotification} from '../conversation/';
 import {HttpClient, NetworkError} from '../http/';
 
-import * as Html5WebSocket from 'html5-websocket';
+import NodeWebSocket = require('ws');
 import * as buffer from '../shims/node/buffer';
 const ReconnectingWebsocket = require('reconnecting-websocket');
 
@@ -44,8 +44,8 @@ class WebSocketClient extends EventEmitter {
   };
 
   public static RECONNECTING_OPTIONS = {
+    WebSocket: typeof window !== 'undefined' ? WebSocket : NodeWebSocket,
     connectionTimeout: 4000,
-    constructor: typeof window !== 'undefined' ? WebSocket : Html5WebSocket,
     debug: false,
     maxReconnectionDelay: 10000,
     maxRetries: Infinity,
