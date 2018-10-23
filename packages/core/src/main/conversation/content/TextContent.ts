@@ -17,11 +17,12 @@
  *
  */
 
-import {LinkPreviewUploadedContent, MentionContent} from '../content';
+import {LinkPreviewUploadedContent, MentionContent, QuoteContent} from '../content/';
 
 interface TextContent {
   linkPreviews?: LinkPreviewUploadedContent[];
   mentions?: MentionContent[];
+  quote?: QuoteContent;
   text: string;
 }
 

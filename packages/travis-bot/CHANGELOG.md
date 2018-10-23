@@ -3,6 +3,110 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@3.0.9...@wireapp/travis-bot@3.0.10) (2018-10-23)
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+
+
+
+
+## [3.0.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@3.0.8...@wireapp/travis-bot@3.0.9) (2018-10-23)
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+
+
+
+
+## [3.0.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@3.0.7...@wireapp/travis-bot@3.0.8) (2018-10-19)
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+
+
+
+
+## [3.0.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@3.0.6...@wireapp/travis-bot@3.0.7) (2018-10-17)
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+
+
+
+
+## [3.0.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@3.0.5...@wireapp/travis-bot@3.0.6) (2018-10-17)
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+
+
+
+
+## [3.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@3.0.4...@wireapp/travis-bot@3.0.5) (2018-10-17)
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+
+
+
+
+## [3.0.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@3.0.3...@wireapp/travis-bot@3.0.4) (2018-10-17)
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+
+
+
+
+## [3.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@3.0.2...@wireapp/travis-bot@3.0.3) (2018-10-15)
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+
+
+
+
+## [3.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@3.0.1...@wireapp/travis-bot@3.0.2) (2018-10-15)
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+
+
+
+
+## [3.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@3.0.0...@wireapp/travis-bot@3.0.1) (2018-10-12)
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+
+
+
+
+# [3.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@2.0.35...@wireapp/travis-bot@3.0.0) (2018-10-12)
+
+
+### Code Refactoring
+
+* **api-client,core,cryptobox,proteus:** Rename root to index ([#1200](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/issues/1200)) ([6b937ac](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/commit/6b937ac))
+
+
+### BREAKING CHANGES
+
+* **api-client,core,cryptobox,proteus:** Some modules can't be imported with `/root` anymore - use `/index` instead.
+
+
+
+
+
+## [2.0.35](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@2.0.34...@wireapp/travis-bot@2.0.35) (2018-10-11)
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+
+
+
+
 ## [2.0.34](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@2.0.33...@wireapp/travis-bot@2.0.34) (2018-10-09)
 
 **Note:** Version bump only for package @wireapp/travis-bot

@@ -3,6 +3,79 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.7.3...@wireapp/commons@0.8.0) (2018-10-23)
+
+
+### Features
+
+* **commons:** Add website supported languages ([#1246](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/issues/1246)) ([cc83b09](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/commit/cc83b09))
+
+
+
+
+
+## [0.7.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.7.2...@wireapp/commons@0.7.3) (2018-10-19)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.7.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.7.1...@wireapp/commons@0.7.2) (2018-10-17)
+
+
+### Bug Fixes
+
+* **commons:** Typo ([1eb93ac](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/commit/1eb93ac))
+
+
+
+
+
+## [0.7.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.7.0...@wireapp/commons@0.7.1) (2018-10-17)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+# [0.7.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.6.27...@wireapp/commons@0.7.0) (2018-10-17)
+
+
+### Features
+
+* **commons:** Add AccentColor ([#1234](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/issues/1234)) ([9a46330](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/commit/9a46330))
+
+
+
+
+
+## [0.6.27](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.6.26...@wireapp/commons@0.6.27) (2018-10-17)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.6.26](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.6.25...@wireapp/commons@0.6.26) (2018-10-12)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.6.25](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.6.24...@wireapp/commons@0.6.25) (2018-10-11)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
 ## [0.6.24](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.6.23...@wireapp/commons@0.6.24) (2018-10-09)
 
 **Note:** Version bump only for package @wireapp/commons

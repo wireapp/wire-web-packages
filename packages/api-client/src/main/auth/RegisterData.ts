@@ -18,14 +18,14 @@
  */
 
 import {TeamData} from '../team/team/TeamData';
-import {UserAsset} from '../user';
+import {UserAsset} from '../user/';
 
 interface RegisterData {
   accent_id?: number;
   assets?: UserAsset[];
   email?: string;
   email_code?: string;
-  expires_in: number; // used with "temporary guests"
+  expires_in?: number; // used with "temporary guests"
   invitation_code?: string;
   label?: string;
   locale?: string;

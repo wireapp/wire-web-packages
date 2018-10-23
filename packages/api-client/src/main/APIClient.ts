@@ -17,20 +17,19 @@
  *
  */
 
-import {MemoryEngine} from '@wireapp/store-engine/dist/commonjs/engine';
+import {MemoryEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
 import * as logdown from 'logdown';
 
 import {AssetAPI} from './asset/';
-import {AuthAPI, Context, LoginData, RegisterData} from './auth';
-import {AccessTokenStore} from './auth/';
+import {AccessTokenStore, AuthAPI, Context, LoginData, RegisterData} from './auth/';
+import {BroadcastAPI} from './broadcast/';
 import {ClientAPI, ClientType} from './client/';
 import {Config} from './Config';
 import {ConnectionAPI} from './connection/';
 import {ConversationAPI} from './conversation/';
-import {Backend} from './env';
+import {Backend} from './env/';
 import {GiphyAPI} from './giphy/';
 import {HttpClient} from './http/';
-import {InvitationAPI} from './invitation/';
 import {NotificationAPI} from './notification/';
 import {ObfuscationUtil} from './obfuscation/';
 import {SelfAPI} from './self/';
@@ -56,11 +55,11 @@ class APIClient {
   // APIs
   public asset: {api: AssetAPI};
   public auth: {api: AuthAPI};
+  public broadcast: {api: BroadcastAPI};
   public client: {api: ClientAPI};
   public connection: {api: ConnectionAPI};
   public conversation: {api: ConversationAPI};
   public giphy: {api: GiphyAPI};
-  public invitation: {api: InvitationAPI};
   public notification: {api: NotificationAPI};
   public self: {api: SelfAPI};
   public teams: {
@@ -98,6 +97,9 @@ class APIClient {
     this.auth = {
       api: new AuthAPI(this.transport.http, this.config.store),
     };
+    this.broadcast = {
+      api: new BroadcastAPI(this.transport.http),
+    };
     this.client = {
       api: new ClientAPI(this.transport.http),
     };
@@ -109,9 +111,6 @@ class APIClient {
     };
     this.giphy = {
       api: new GiphyAPI(this.transport.http),
-    };
-    this.invitation = {
-      api: new InvitationAPI(this.transport.http),
     };
     this.notification = {
       api: new NotificationAPI(this.transport.http),

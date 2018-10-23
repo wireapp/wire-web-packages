@@ -17,13 +17,10 @@
  *
  */
 
-interface InvitationRequest {
-  email?: string;
-  invitee_name: string;
-  inviter_name: string;
-  locale?: string;
-  message: string;
-  phone?: string;
-}
+import ArrayUtil from './ArrayUtil';
+import ClassUtil from './ClassUtil';
+import KeyDerivationUtil from './KeyDerivationUtil';
+import MemoryUtil from './MemoryUtil';
+import RandomUtil from './RandomUtil';
 
-export {InvitationRequest};
+export {ArrayUtil, ClassUtil, KeyDerivationUtil, MemoryUtil, RandomUtil};

@@ -3,6 +3,70 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@9.0.4...@wireapp/cryptobox@9.0.5) (2018-10-23)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [9.0.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@9.0.3...@wireapp/cryptobox@9.0.4) (2018-10-19)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [9.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@9.0.2...@wireapp/cryptobox@9.0.3) (2018-10-17)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [9.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@9.0.1...@wireapp/cryptobox@9.0.2) (2018-10-15)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [9.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@9.0.0...@wireapp/cryptobox@9.0.1) (2018-10-12)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+# [9.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.7.30...@wireapp/cryptobox@9.0.0) (2018-10-12)
+
+
+### Code Refactoring
+
+* **api-client,core,cryptobox,proteus:** Rename root to index ([#1200](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/issues/1200)) ([6b937ac](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/commit/6b937ac))
+
+
+### BREAKING CHANGES
+
+* **api-client,core,cryptobox,proteus:** Some modules can't be imported with `/root` anymore - use `/index` instead.
+
+
+
+
+
+## [8.7.30](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.7.29...@wireapp/cryptobox@8.7.30) (2018-10-11)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
 ## [8.7.29](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@8.7.28...@wireapp/cryptobox@8.7.29) (2018-10-09)
 
 **Note:** Version bump only for package @wireapp/cryptobox

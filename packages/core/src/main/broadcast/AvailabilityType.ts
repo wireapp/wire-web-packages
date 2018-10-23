@@ -17,13 +17,8 @@
  *
  */
 
-interface Invitation {
-  created_at: string;
-  email?: string;
-  id: string;
-  inviter: string;
-  name: string;
-  phone?: string;
-}
+import {Availability} from '@wireapp/protocol-messaging';
 
-export {Invitation};
+type AvailabilityType = Availability.Type;
+
+export {AvailabilityType};

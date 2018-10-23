@@ -17,8 +17,8 @@
  *
  */
 
-import {LinkPreviewUploadedContent, MentionContent, TextContent} from '../conversation/content/';
-import {PayloadBundleOutgoingUnsent} from '../conversation/root';
+import {PayloadBundleOutgoingUnsent} from '../conversation/';
+import {LinkPreviewUploadedContent, MentionContent, QuoteContent, TextContent} from '../conversation/content/';
 
 class TextContentBuilder {
   constructor(private readonly payloadBundle: PayloadBundleOutgoingUnsent) {
@@ -44,6 +44,16 @@ class TextContentBuilder {
 
     if (mentions && mentions.length) {
       content.mentions = mentions;
+    }
+
+    return this;
+  }
+
+  public withQuote(quote?: QuoteContent): TextContentBuilder {
+    const content = this.payloadBundle.content as TextContent;
+
+    if (quote) {
+      content.quote = quote;
     }
 
     return this;
