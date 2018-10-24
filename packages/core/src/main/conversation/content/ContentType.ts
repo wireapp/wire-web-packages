@@ -37,8 +37,10 @@ import {
   TextContent,
 } from '../content/';
 
+export const isAbortedAssetContent = (content: ConversationContent): content is AssetContent =>
+  !!(content as AssetContent).abortReason;
 export const isAssetContent = (content: ConversationContent): content is AssetContent =>
-  !!((content as AssetContent).original || (content as AssetContent).preview);
+  !!((content as AssetContent).uploaded || (content as AssetContent).preview);
 export const isClearedContent = (content: ConversationContent): content is ClearedContent =>
   !!(content as ClearedContent).clearedTimestamp;
 export const isClientActionContent = (content: ConversationContent): content is ClientActionContent =>

@@ -18,10 +18,10 @@
  */
 
 import * as crypto from 'crypto';
-import * as iconv from 'iconv-lite';
 import * as Long from 'long';
+
 import {PayloadBundleIncoming} from '../conversation/';
-import {AssetContent, ContentType, LocationContent, TextContent} from '../conversation/content/';
+import {AssetContent, ContentType, ConversationContent, LocationContent, TextContent} from '../conversation/content/';
 
 class MessageHashService {
   constructor(private readonly message: PayloadBundleIncoming) {}
@@ -34,20 +34,34 @@ class MessageHashService {
       .toString(encoding);
   }
 
+  private convertToUtf16BE(str: string): Buffer {
+    const BOMChar = '\uFEFF';
+
+    str = `${BOMChar}${str}`;
+
+    const buffer = Buffer.from(str, 'ucs2');
+
+    for (let index = 0; index < buffer.length; index += 2) {
+      const tempValue = buffer[index];
+      buffer[index] = buffer[index + 1];
+      buffer[index + 1] = tempValue;
+    }
+
+    return buffer;
+  }
+
   private getAssetBuffer(content: AssetContent): Buffer {
     if (content.uploaded) {
       const assetId = content.uploaded.assetId;
-      const textBuffer = Buffer.from(assetId);
-      const timestampBuffer = this.getTimestampBuffer();
-
-      return Buffer.concat([textBuffer, timestampBuffer]);
+      const withoutDashes = assetId.replace(/-/g, '');
+      return Buffer.from(withoutDashes, 'hex');
     } else {
       return Buffer.from([]);
     }
   }
 
-  private getTimestampBuffer(): Buffer {
-    const timestampBytes = new Long(this.message.timestamp).toBytesBE();
+  private getTimestampBuffer(timestamp: number): Buffer {
+    const timestampBytes = Long.fromInt(timestamp).toBytesBE();
     return Buffer.from(timestampBytes);
   }
 
@@ -55,38 +69,41 @@ class MessageHashService {
     const latitudeApproximate = Math.round(content.latitude * 1000);
     const longitudeApproximate = Math.round(content.longitude * 1000);
 
-    const latitudeBytes = new Long(latitudeApproximate).toBytesBE();
-    const longitudeBytes = new Long(longitudeApproximate).toBytesBE();
+    const latitudeLong = Long.fromInt(latitudeApproximate).toBytesBE();
+    const longitudeLong = Long.fromInt(longitudeApproximate).toBytesBE();
 
-    const latitudeBuffer = Buffer.from(latitudeBytes);
-    const longitudeBuffer = Buffer.from(longitudeBytes);
-    const timestampBuffer = this.getTimestampBuffer();
+    const latitudeBuffer = Buffer.from(latitudeLong);
+    const longitudeBuffer = Buffer.from(longitudeLong);
 
-    return Buffer.concat([latitudeBuffer, longitudeBuffer, timestampBuffer]);
+    return Buffer.concat([latitudeBuffer, longitudeBuffer]);
   }
 
   private getTextBuffer(content: TextContent): Buffer {
-    const textBuffer = iconv.encode(content.text, 'utf16be', {addBOM: true});
-    const timestampBuffer = this.getTimestampBuffer();
+    return this.convertToUtf16BE(content.text);
+  }
 
-    return Buffer.concat([textBuffer, timestampBuffer]);
+  private getBuffer(content: ConversationContent): Buffer {
+    let buffer: Buffer;
+
+    if (ContentType.isLocationContent(content)) {
+      buffer = this.getLocationBuffer(content);
+    } else if (ContentType.isTextContent(content)) {
+      buffer = this.getTextBuffer(content);
+    } else if (ContentType.isAssetContent(content)) {
+      buffer = this.getAssetBuffer(content);
+    } else {
+      throw new Error(`Unknown message type (message id "${this.message.id}").`);
+    }
+
+    const timestampBuffer = this.getTimestampBuffer(this.message.timestamp);
+    return Buffer.concat([buffer, timestampBuffer]);
   }
 
   getHash(): string {
     const messageContent = this.message.content;
 
     if (messageContent) {
-      let buffer: Buffer;
-
-      if (ContentType.isLocationContent(messageContent)) {
-        buffer = this.getLocationBuffer(messageContent);
-      } else if (ContentType.isTextContent(messageContent)) {
-        buffer = this.getTextBuffer(messageContent);
-      } else if (ContentType.isAssetContent(messageContent)) {
-        buffer = this.getAssetBuffer(messageContent);
-      } else {
-        throw new Error(`Unknown message type (message id "${this.message.id}").`);
-      }
+      const buffer = this.getBuffer(messageContent);
       return this.createSha256Hash(buffer);
     } else {
       throw new Error(`Message with ID "${this.message.id}" has no content.`);
