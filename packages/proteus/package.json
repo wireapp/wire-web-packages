@@ -3,7 +3,7 @@
     "@types/chai": "4.1.6",
     "@types/ed2curve": "0.2.2",
     "@types/node": "10.12.0",
-    "@wireapp/cbor": "3.0.93",
+    "@wireapp/cbor": "3.0.94",
     "ed2curve": "0.2.1",
     "libsodium-wrappers-sumo": "0.7.3"
   },
@@ -15,7 +15,7 @@
     "jasmine": "3.2.0",
     "rimraf": "2.6.2",
     "typescript": "3.1.3",
-    "webpack": "4.21.0",
+    "webpack": "4.22.0",
     "webpack-cli": "3.1.2"
   },
   "files": [
@@ -36,5 +36,5 @@
     "test:node": "jasmine"
   },
   "types": "dist/index.d.ts",
-  "version": "8.0.3"
+  "version": "8.0.4"
 }
