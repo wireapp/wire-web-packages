@@ -9,6 +9,7 @@
     "@types/tough-cookie": "2.3.3",
     "@wireapp/priority-queue": "0.2.31",
     "@wireapp/store-engine": "1.0.6",
+    "@types/ws": "6.0.1",
     "axios": "0.18.0",
     "logdown": "3.2.7",
     "reconnecting-websocket": "4.1.10",
