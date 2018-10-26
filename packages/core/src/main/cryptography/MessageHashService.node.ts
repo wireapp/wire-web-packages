@@ -20,18 +20,25 @@
 import * as crypto from 'crypto';
 import * as Long from 'long';
 
-import {PayloadBundleIncoming} from '../conversation/';
 import {AssetContent, ContentType, ConversationContent, LocationContent, TextContent} from '../conversation/content/';
 
-class MessageHashService {
-  constructor(private readonly message: PayloadBundleIncoming) {}
+type BufferEncoding = 'ascii' | 'utf8' | 'utf16le' | 'ucs2' | 'base64' | 'latin1' | 'binary' | 'hex';
+type AvailableMessageContent = AssetContent | LocationContent | TextContent;
 
-  private createSha256Hash(buffer: Buffer, encoding = 'hex'): string {
+class MessageHashService {
+  private readonly messageContent: AvailableMessageContent;
+  private readonly timestamp: number;
+
+  constructor(messageContent: AvailableMessageContent, timestamp?: number) {
+    this.messageContent = messageContent;
+    this.timestamp = timestamp || Math.round(new Date().getTime() / 1000);
+  }
+
+  private createSha256Hash(buffer: Buffer): Buffer {
     return crypto
       .createHash('sha256')
       .update(buffer)
-      .digest()
-      .toString(encoding);
+      .digest();
   }
 
   private convertToUtf16BE(str: string): Buffer {
@@ -92,22 +99,19 @@ class MessageHashService {
     } else if (ContentType.isAssetContent(content)) {
       buffer = this.getAssetBuffer(content);
     } else {
-      throw new Error(`Unknown message type (message id "${this.message.id}").`);
+      throw new Error(`Unknown message type. ${content}`);
     }
 
-    const timestampBuffer = this.getTimestampBuffer(this.message.timestamp);
+    const timestampBuffer = this.getTimestampBuffer(this.timestamp);
     return Buffer.concat([buffer, timestampBuffer]);
   }
 
-  getHash(): string {
-    const messageContent = this.message.content;
-
-    if (messageContent) {
-      const buffer = this.getBuffer(messageContent);
-      return this.createSha256Hash(buffer);
-    } else {
-      throw new Error(`Message with ID "${this.message.id}" has no content.`);
-    }
+  getHash(): Buffer;
+  getHash(encoding: BufferEncoding): string;
+  getHash(encoding?: BufferEncoding): string | Buffer {
+    const buffer = this.getBuffer(this.messageContent);
+    const hashBuffer = this.createSha256Hash(buffer);
+    return encoding ? hashBuffer.toString('hex') : hashBuffer;
   }
 }
 

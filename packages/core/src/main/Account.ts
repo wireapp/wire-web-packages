@@ -59,7 +59,7 @@ import {
   ReactionContent,
   TextContent,
 } from './conversation/content/';
-import {CryptographyService, MessageHashService} from './cryptography/';
+import {CryptographyService} from './cryptography/';
 import {GiphyService} from './giphy/';
 import {NotificationService} from './notification/';
 import {SelfService} from './self/';
@@ -579,9 +579,6 @@ class Account extends EventEmitter {
     for (const event of notification.payload) {
       const data = await this.handleEvent(event);
       if (data) {
-        const hashService = new MessageHashService(data);
-        const hash = hashService.getHash();
-        console.log({hash});
         switch (data.type) {
           case PayloadBundleType.ASSET_IMAGE:
           case PayloadBundleType.CLEARED:
