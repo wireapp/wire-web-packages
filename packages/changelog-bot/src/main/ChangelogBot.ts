@@ -92,7 +92,7 @@ class ChangelogBot {
 
     if (!changelog.match(listItems)) {
       const excludedTypes = ChangelogBot.SETUP.EXCLUDED_COMMIT_TYPES.join(', ');
-      const errorMessage = `Could not generate a meaningful changelog from the commit types given (excluded ${excludedTypes})`;
+      const errorMessage = `Could not generate a meaningful changelog from the commit types given (excluded ${excludedTypes}).`;
       throw new Error(errorMessage);
     }
 
