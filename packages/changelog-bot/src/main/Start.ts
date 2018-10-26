@@ -53,11 +53,8 @@ export async function start(parameters: Parameters): Promise<void> {
   if (!message) {
     message = await ChangelogBot.generateChangelog(travisRepoSlug, travisCommitRange);
     if (!message) {
-      throw new Error(
-        `Could not generate a meaningful changelog from the commit types given (excluded ${ChangelogBot.SETUP.EXCLUDED_COMMIT_TYPES.join(
-          ', '
-        )}).`
-      );
+      const excluded = ChangelogBot.SETUP.EXCLUDED_COMMIT_TYPES.join(', ');
+      throw new Error(`Could not generate a meaningful changelog from the commit types given (excluded ${excluded}).`);
     }
   }
 
