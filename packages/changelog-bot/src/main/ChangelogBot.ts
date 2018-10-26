@@ -35,6 +35,10 @@ const logger = logdown('@wireapp/changelog-bot/ChangelogBot', {
 logger.state.isEnabled = true;
 
 class ChangelogBot {
+  public static SETUP = {
+    EXCLUDED_COMMIT_TYPES: ['build', 'chore', 'docs', 'refactor', 'test'],
+  };
+
   constructor(private readonly loginData: LoginDataBackend, private readonly messageData: ChangelogData) {}
 
   get message(): string {
@@ -74,17 +78,25 @@ class ChangelogBot {
     }
   }
 
-  static async generateChangelog(repoSlug: string, previousGitTag: string, maximumChars?: number): Promise<string> {
+  static async generateChangelog(
+    repoSlug: string,
+    previousGitTag: string,
+    maximumChars?: number
+  ): Promise<string | undefined> {
     const headlines = new RegExp('^#+ (.*)$', 'gm');
     const listItems = new RegExp('^\\* (.*) \\(\\[.*$', 'gm');
     const githubIssueLinks = new RegExp('\\[[^\\]]+\\]\\((https:[^)]+)\\)', 'gm');
     const omittedMessage = '... (content omitted)';
 
     const changelog = await Changelog.generate({
-      exclude: ['build', 'chore', 'docs', 'refactor', 'test'],
+      exclude: ChangelogBot.SETUP.EXCLUDED_COMMIT_TYPES,
       repoUrl: `https://github.com/${repoSlug}`,
       tag: previousGitTag,
     });
+
+    if (!changelog.match(listItems)) {
+      return undefined;
+    }
 
     let styledChangelog = changelog
       .replace(headlines, '**$1**')
