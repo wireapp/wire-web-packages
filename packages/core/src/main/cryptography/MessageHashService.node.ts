@@ -60,8 +60,7 @@ class MessageHashService {
   private getAssetBuffer(content: AssetContent): Buffer {
     if (content.uploaded) {
       const assetId = content.uploaded.assetId;
-      const withoutDashes = assetId.replace(/-/g, '');
-      return Buffer.from(withoutDashes, 'hex');
+      return this.convertToUtf16BE(assetId);
     } else {
       return Buffer.from([]);
     }
