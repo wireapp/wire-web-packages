@@ -327,7 +327,7 @@ describe('ConversationService', () => {
       expect(textMessage.content.mentions).toBeUndefined();
     });
 
-    it('adds a quote correctly', () => {
+    it('adds a quote correctly', async () => {
       account.apiClient.context = {
         userId: new UUID(4).format(),
       };
@@ -342,10 +342,10 @@ describe('ConversationService', () => {
         sha256: textSHA256,
       };
 
-      const replyMessage = account.service.conversation
+      const replyMessage = await account.service.conversation
         .createText(text)
         .withQuote(quote)
-        .build();
+        .then(contentBuilder => contentBuilder.build());
 
       expect(replyMessage.content.text).toEqual(text);
       expect(replyMessage.content.quote).toEqual(jasmine.objectContaining({id: quoteId, sha256: textSHA256}));

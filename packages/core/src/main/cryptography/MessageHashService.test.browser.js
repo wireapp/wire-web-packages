@@ -41,7 +41,7 @@ describe('MessageHashService', () => {
       expect(messageHashService.getLocationBytes).not.toHaveBeenCalled();
     });
 
-    it('correctly creates a timestamp bytes buffer.', async () => {
+    it('correctly creates a timestamp bytes buffer.', () => {
       const expectedHexValue = '000000005bcdcc09';
       const content = {
         text: 'Hello!',
@@ -65,7 +65,7 @@ describe('MessageHashService', () => {
 
       const messageHashService = new MessageHashService(content, timestamp);
 
-      const hashValue = await messageHashService.getHash().then(buffer => buffer.toString('hex'));
+      const hashValue = await messageHashService.getHash().then(bytes => bytes.toString('hex'));
       expect(hashValue).toBe(expectedHashValue);
     });
 
@@ -79,7 +79,7 @@ describe('MessageHashService', () => {
 
       const messageHashService = new MessageHashService(content, timestamp);
 
-      const hashValue = await messageHashService.getHash().then(buffer => buffer.toString('hex'));
+      const hashValue = await messageHashService.getHash().then(bytes => bytes.toString('hex'));
       expect(hashValue).toBe(expectedHashValue);
     });
 
@@ -93,7 +93,7 @@ describe('MessageHashService', () => {
 
       const messageHashService = new MessageHashService(content, timestamp);
 
-      const hashValue = await messageHashService.getHash().then(buffer => buffer.toString('hex'));
+      const hashValue = await messageHashService.getHash().then(bytes => bytes.toString('hex'));
       expect(hashValue).toBe(expectedHashValue);
     });
 
@@ -107,7 +107,7 @@ describe('MessageHashService', () => {
 
       const messageHashService = new MessageHashService(content, timestamp);
 
-      const hashValue = await messageHashService.getHash().then(buffer => buffer.toString('hex'));
+      const hashValue = await messageHashService.getHash().then(bytes => bytes.toString('hex'));
       expect(hashValue).toBe(expectedHashValue);
     });
 
@@ -122,7 +122,7 @@ describe('MessageHashService', () => {
 
       const messageHashService = new MessageHashService(content, timestamp);
 
-      const hashValue = await messageHashService.getHash().then(buffer => buffer.toString('hex'));
+      const hashValue = await messageHashService.getHash().then(bytes => bytes.toString('hex'));
       expect(hashValue).toBe(expectedHashValue);
     });
 
@@ -137,7 +137,7 @@ describe('MessageHashService', () => {
 
       const messageHashService = new MessageHashService(content, timestamp);
 
-      const hashValue = await messageHashService.getHash().then(buffer => buffer.toString('hex'));
+      const hashValue = await messageHashService.getHash().then(bytes => bytes.toString('hex'));
       expect(hashValue).toBe(expectedHashValue);
     });
 
@@ -153,7 +153,7 @@ describe('MessageHashService', () => {
 
       const messageHashService = new MessageHashService(content, timestamp);
 
-      const hashValue = await messageHashService.getHash().then(buffer => buffer.toString('hex'));
+      const hashValue = await messageHashService.getHash().then(bytes => bytes.toString('hex'));
       expect(hashValue).toBe(expectedHashValue);
     });
 
@@ -169,7 +169,7 @@ describe('MessageHashService', () => {
 
       const messageHashService = new MessageHashService(content, timestamp);
 
-      const hashValue = await messageHashService.getHash().then(buffer => buffer.toString('hex'));
+      const hashValue = await messageHashService.getHash().then(bytes => bytes.toString('hex'));
       expect(hashValue).toBe(expectedHashValue);
     });
   });
