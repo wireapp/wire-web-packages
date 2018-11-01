@@ -16,6 +16,7 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
+
 import {Connection} from '@wireapp/api-client/dist/commonjs/connection/';
 import {ClientActionType} from '../';
 import {
@@ -37,38 +38,74 @@ import {
   TextContent,
 } from '../content/';
 
-export const isAbortedAssetContent = (content: ConversationContent): content is AssetContent =>
-  !!(content as AssetContent).abortReason;
-export const isAssetContent = (content: ConversationContent): content is AssetContent =>
-  !!((content as AssetContent).uploaded || (content as AssetContent).preview);
-export const isClearedContent = (content: ConversationContent): content is ClearedContent =>
-  !!(content as ClearedContent).clearedTimestamp;
-export const isClientActionContent = (content: ConversationContent): content is ClientActionContent =>
-  !!(content as ClientActionContent).clientAction;
-export const isClientActionType = (content: ConversationContent): content is ClientActionType =>
-  typeof content === 'number';
-export const isConfirmationContent = (content: ConversationContent): content is ConfirmationContent =>
-  !!(content as ConfirmationContent).confirmMessageId;
-export const isConnection = (content: ConversationContent): content is Connection =>
-  !!(content as Connection).from && !!(content as Connection).to;
-export const isDeletedContent = (content: ConversationContent): content is DeletedContent =>
-  !!(content as DeletedContent).originalMessageId && !(content as any).text;
-export const isEditedTextContent = (content: ConversationContent): content is EditedTextContent =>
-  !!(content as EditedTextContent).text && !!(content as EditedTextContent).originalMessageId;
-export const isFileAssetAbortContent = (content: ConversationContent): content is FileAssetAbortContent =>
-  !!(content as FileAssetAbortContent).reason;
-export const isFileAssetContent = (content: ConversationContent): content is FileAssetContent =>
-  !!(content as FileAssetContent).asset && !!(content as FileAssetContent).file;
-export const isFileAssetMetaDataContent = (content: ConversationContent): content is FileAssetMetaDataContent =>
-  !!(content as FileAssetMetaDataContent).metaData;
-export const isHiddenContent = (content: ConversationContent): content is HiddenContent =>
-  !!(content as HiddenContent).conversationId;
-export const isImageAssetContent = (content: ConversationContent): content is ImageAssetContent =>
-  !!(content as ImageAssetContent).asset && !!(content as ImageAssetContent).image;
-export const isImageContent = (content: ConversationContent): content is ImageContent =>
-  !!(content as ImageContent).data && !!(content as ImageContent).type;
-export const isLocationContent = (content: ConversationContent): content is LocationContent =>
-  !!(content as LocationContent).latitude && !!(content as LocationContent).longitude;
-export const isReactionContent = (content: ConversationContent): content is ReactionContent =>
-  !!(content as ReactionContent).type && !!(content as ReactionContent).originalMessageId;
-export const isTextContent = (content: ConversationContent): content is TextContent => !!(content as TextContent).text;
+export function isAbortedAssetContent(content: ConversationContent): content is AssetContent {
+  return !!(content as AssetContent).abortReason;
+}
+
+export function isAssetContent(content: ConversationContent): content is AssetContent {
+  return !!((content as AssetContent).uploaded || (content as AssetContent).preview);
+}
+
+export function isClearedContent(content: ConversationContent): content is ClearedContent {
+  return !!(content as ClearedContent).clearedTimestamp;
+}
+
+export function isClientActionContent(content: ConversationContent): content is ClientActionContent {
+  return !!(content as ClientActionContent).clientAction;
+}
+
+export function isClientActionType(content: ConversationContent): content is ClientActionType {
+  return typeof content === 'number';
+}
+
+export function isConfirmationContent(content: ConversationContent): content is ConfirmationContent {
+  return !!(content as ConfirmationContent).confirmMessageId;
+}
+
+export function isConnection(content: ConversationContent): content is Connection {
+  return !!(content as Connection).from && !!(content as Connection).to;
+}
+
+export function isDeletedContent(content: ConversationContent): content is DeletedContent {
+  return !!(content as DeletedContent).originalMessageId && !(content as any).text;
+}
+
+export function isEditedTextContent(content: ConversationContent): content is EditedTextContent {
+  return !!(content as EditedTextContent).text && !!(content as EditedTextContent).originalMessageId;
+}
+
+export function isFileAssetAbortContent(content: ConversationContent): content is FileAssetAbortContent {
+  return !!(content as FileAssetAbortContent).reason;
+}
+
+export function isFileAssetContent(content: ConversationContent): content is FileAssetContent {
+  return !!(content as FileAssetContent).asset && !!(content as FileAssetContent).file;
+}
+
+export function isFileAssetMetaDataContent(content: ConversationContent): content is FileAssetMetaDataContent {
+  return !!(content as FileAssetMetaDataContent).metaData;
+}
+
+export function isHiddenContent(content: ConversationContent): content is HiddenContent {
+  return !!(content as HiddenContent).conversationId;
+}
+
+export function isImageAssetContent(content: ConversationContent): content is ImageAssetContent {
+  return !!(content as ImageAssetContent).asset && !!(content as ImageAssetContent).image;
+}
+
+export function isImageContent(content: ConversationContent): content is ImageContent {
+  return !!(content as ImageContent).data && !!(content as ImageContent).type;
+}
+
+export function isLocationContent(content: ConversationContent): content is LocationContent {
+  return !!(content as LocationContent).latitude && !!(content as LocationContent).longitude;
+}
+
+export function isReactionContent(content: ConversationContent): content is ReactionContent {
+  return !!(content as ReactionContent).type && !!(content as ReactionContent).originalMessageId;
+}
+
+export function isTextContent(content: ConversationContent): content is TextContent {
+  return !!(content as TextContent).text;
+}
