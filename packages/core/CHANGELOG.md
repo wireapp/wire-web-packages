@@ -3,6 +3,62 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.2.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@7.2.6...@wireapp/core@7.2.7) (2018-10-31)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [7.2.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@7.2.5...@wireapp/core@7.2.6) (2018-10-26)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [7.2.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@7.2.4...@wireapp/core@7.2.5) (2018-10-25)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [7.2.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@7.2.3...@wireapp/core@7.2.4) (2018-10-24)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [7.2.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@7.2.2...@wireapp/core@7.2.3) (2018-10-23)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [7.2.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@7.2.1...@wireapp/core@7.2.2) (2018-10-23)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [7.2.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@7.2.0...@wireapp/core@7.2.1) (2018-10-23)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
 # [7.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@7.1.7...@wireapp/core@7.2.0) (2018-10-23)
 
 

@@ -3,6 +3,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.13...@wireapp/react-ui-kit@4.3.14) (2018-10-31)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [4.3.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.12...@wireapp/react-ui-kit@4.3.13) (2018-10-26)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [4.3.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.11...@wireapp/react-ui-kit@4.3.12) (2018-10-25)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [4.3.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.10...@wireapp/react-ui-kit@4.3.11) (2018-10-24)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Add types for styled-components ([#1253](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1253)) ([a990fba](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/a990fba))
+
+
+
+
+
+## [4.3.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.9...@wireapp/react-ui-kit@4.3.10) (2018-10-23)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Set initial loading progress to undefined ([#1248](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1248)) ([1a91240](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/1a91240))
+
+
+
+
+
+## [4.3.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.8...@wireapp/react-ui-kit@4.3.9) (2018-10-23)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Pass default Button props to ButtonLink ([#1247](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1247)) ([872c714](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/872c714))
+
+
+
+
+
+## [4.3.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.7...@wireapp/react-ui-kit@4.3.8) (2018-10-23)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
 ## [4.3.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.6...@wireapp/react-ui-kit@4.3.7) (2018-10-23)
 
 **Note:** Version bump only for package @wireapp/react-ui-kit
