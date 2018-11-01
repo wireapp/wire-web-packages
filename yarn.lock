@@ -6992,10 +6992,10 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.1.6.tgz#1c00c743b433cd0a4e80758f7b64a57440d9ff00"
   integrity sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=
 
-lint-staged@8.0.3:
-  version "8.0.3"
-  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-8.0.3.tgz#977a43d66914e2242d3c3c0b41bc10737622c61a"
-  integrity sha512-G1Ija5l6mF/BRkHSs3oK1Adz/e17HP3iT9hFAf8IC+UJWDLe4Xc5FxYXgEWN1NOA6vbnekEhWC4FjqzJ2Ba2lA==
+lint-staged@8.0.4:
+  version "8.0.4"
+  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-8.0.4.tgz#d3c909fcf7897152cdce2d6e42500cd9b5b41a0d"
+  integrity sha512-Rs0VxXoyFqHMrPQgKAMy+O907+m5Po71UVPhBi7BUBwU7ZZ2aoc+mZmpOX3DVPCoTcy6+hqJa9yIZfacNpJHdg==
   dependencies:
     chalk "^2.3.1"
     commander "^2.14.1"
@@ -7019,7 +7019,7 @@ lint-staged@8.0.3:
     path-is-inside "^1.0.2"
     pify "^3.0.0"
     please-upgrade-node "^3.0.2"
-    staged-git-files "1.1.1"
+    staged-git-files "1.1.2"
     string-argv "^0.0.2"
     stringify-object "^3.2.2"
 
@@ -10313,10 +10313,10 @@ ssri@^6.0.0:
   resolved "https://registry.yarnpkg.com/ssri/-/ssri-6.0.0.tgz#fc21bfc90e03275ac3e23d5a42e38b8a1cbc130d"
   integrity sha512-zYOGfVHPhxyzwi8MdtdNyxv3IynWCIM4jYReR48lqu0VngxgH1c+C6CmipRdJ55eVByTJV/gboFEEI7TEQI8DA==
 
-staged-git-files@1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/staged-git-files/-/staged-git-files-1.1.1.tgz#37c2218ef0d6d26178b1310719309a16a59f8f7b"
-  integrity sha512-H89UNKr1rQJvI1c/PIR3kiAMBV23yvR7LItZiV74HWZwzt7f3YHuujJ9nJZlt58WlFox7XQsOahexwk7nTe69A==
+staged-git-files@1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/staged-git-files/-/staged-git-files-1.1.2.tgz#4326d33886dc9ecfa29a6193bf511ba90a46454b"
+  integrity sha512-0Eyrk6uXW6tg9PYkhi/V/J4zHp33aNyi2hOCmhFLqLTIhbgqWn5jlSzI+IU0VqrZq6+DbHcabQl/WP6P3BG0QA==
 
 static-extend@^0.1.1:
   version "0.1.2"
