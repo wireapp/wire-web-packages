@@ -20,9 +20,8 @@
 import * as crypto from 'crypto';
 import * as Long from 'long';
 
-import {AssetContent, ContentType, ConversationContent, LocationContent, TextContent} from '../conversation/content/';
+import {AssetContent, ContentType, ConversationContent, LocationContent, TextContent} from '../conversation/content';
 
-type BufferEncoding = 'ascii' | 'utf8' | 'utf16le' | 'ucs2' | 'base64' | 'latin1' | 'binary' | 'hex';
 type AvailableMessageContent = AssetContent | LocationContent | TextContent;
 
 class MessageHashService {
@@ -57,7 +56,7 @@ class MessageHashService {
     return buffer;
   }
 
-  private getAssetBuffer(content: AssetContent): Buffer {
+  private getAssetBytes(content: AssetContent): Buffer {
     if (content.uploaded) {
       const assetId = content.uploaded.assetId;
       return this.convertToUtf16BE(assetId);
@@ -71,7 +70,7 @@ class MessageHashService {
     return Buffer.from(timestampBytes);
   }
 
-  private getLocationBuffer(content: LocationContent): Buffer {
+  private getLocationBytes(content: LocationContent): Buffer {
     const latitudeApproximate = Math.round(content.latitude * 1000);
     const longitudeApproximate = Math.round(content.longitude * 1000);
 
@@ -84,33 +83,31 @@ class MessageHashService {
     return Buffer.concat([latitudeBuffer, longitudeBuffer]);
   }
 
-  private getTextBuffer(content: TextContent): Buffer {
+  private getTextBytes(content: TextContent): Buffer {
     return this.convertToUtf16BE(content.text);
   }
 
-  private getBuffer(content: ConversationContent): Buffer {
-    let buffer: Buffer;
+  private getBytes(content: ConversationContent): Buffer {
+    let bytes: Buffer;
 
     if (ContentType.isLocationContent(content)) {
-      buffer = this.getLocationBuffer(content);
+      bytes = this.getLocationBytes(content);
     } else if (ContentType.isTextContent(content)) {
-      buffer = this.getTextBuffer(content);
+      bytes = this.getTextBytes(content);
     } else if (ContentType.isAssetContent(content)) {
-      buffer = this.getAssetBuffer(content);
+      bytes = this.getAssetBytes(content);
     } else {
       throw new Error(`Unknown message type. ${content}`);
     }
 
     const timestampBuffer = this.getTimestampBuffer(this.timestamp);
-    return Buffer.concat([buffer, timestampBuffer]);
+    return Buffer.concat([bytes, timestampBuffer]);
   }
 
-  getHash(): Buffer;
-  getHash(encoding: BufferEncoding): string;
-  getHash(encoding?: BufferEncoding): string | Buffer {
-    const buffer = this.getBuffer(this.messageContent);
-    const hashBuffer = this.createSha256Hash(buffer);
-    return encoding ? hashBuffer.toString('hex') : hashBuffer;
+  getHash(): Promise<Buffer> {
+    const buffer = this.getBytes(this.messageContent);
+    const hash = this.createSha256Hash(buffer);
+    return Promise.resolve(hash);
   }
 }
 

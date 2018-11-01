@@ -144,19 +144,19 @@ const messageIdCache = {};
         return;
       }
 
-      textPayload = account.service.conversation
+      textPayload = await account.service.conversation
         .createText(text, cachedMessageId)
         .withLinkPreviews(newLinkPreviews)
         .withMentions(mentions)
         .withQuote(quote)
-        .build();
+        .then(builder => builder.build());
     } else {
       await handleIncomingMessage(data);
-      textPayload = account.service.conversation
+      textPayload = await account.service.conversation
         .createText(text)
         .withMentions(mentions)
         .withQuote(quote)
-        .build();
+        .then(builder => builder.build());
     }
 
     messageIdCache[messageId] = textPayload.id;
@@ -341,12 +341,12 @@ const messageIdCache = {};
         logger.warn(`Link preview for edited message ID "${messageId} was received before the original message."`);
         return;
       }
-      editedPayload = account.service.conversation
+      editedPayload = await account.service.conversation
         .createEditedText(text, cachedOriginalMessageId, cachedMessageId)
         .withLinkPreviews(newLinkPreviews)
         .withMentions(mentions)
         .withQuote(quote)
-        .build();
+        .then(builder => builder.build());
     } else {
       await handleIncomingMessage(data);
       editedPayload = account.service.conversation
