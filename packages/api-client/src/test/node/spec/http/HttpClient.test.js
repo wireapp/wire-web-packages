@@ -22,7 +22,7 @@ const axios = require('axios');
 
 describe('HttpClient', () => {
   describe('"_sendRequest"', () => {
-    fit('retries on 401 unauthorized error', async () => {
+    it('retries on 401 unauthorized error', async () => {
       const mockedAccessTokenStore = {
         accessToken: {
           access_token:
@@ -43,7 +43,8 @@ describe('HttpClient', () => {
 
       await client._sendRequest({});
     });
-    fit('does not retry on 403 forbidden error', async done => {
+
+    it('does not retry on 403 forbidden error', async done => {
       const mockedAccessTokenStore = {
         accessToken: {
           access_token:
