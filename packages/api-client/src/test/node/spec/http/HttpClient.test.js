@@ -34,10 +34,11 @@ describe('HttpClient', () => {
       };
 
       const client = new HttpClient('https://test.zinfra.io', mockedAccessTokenStore, undefined);
+      const requestSpy = spyOn(axios, 'request');
       // eslint-disable-next-line prefer-promise-reject-errors
-      axios.request = () => Promise.reject({response: {status: StatusCode.UNAUTHORIZED}});
+      requestSpy.and.returnValue(Promise.reject({response: {status: StatusCode.UNAUTHORIZED}}));
       client.refreshAccessToken = () => {
-        axios.request = () => Promise.resolve();
+        requestSpy.and.returnValue(Promise.resolve());
         return Promise.resolve(mockedAccessTokenStore.access_token);
       };
 
@@ -57,7 +58,7 @@ describe('HttpClient', () => {
       const errorMessage = 'cookie invalid';
 
       const client = new HttpClient('https://test.zinfra.io', mockedAccessTokenStore, undefined);
-      axios.request = () =>
+      spyOn(axios, 'request').and.returnValue(
         // eslint-disable-next-line prefer-promise-reject-errors
         Promise.reject({
           response: {
@@ -68,7 +69,8 @@ describe('HttpClient', () => {
             },
             status: StatusCode.FORBIDDEN,
           },
-        });
+        })
+      );
       client.refreshAccessToken = () => {
         return Promise.reject(new Error('Should not refresh access token'));
       };
