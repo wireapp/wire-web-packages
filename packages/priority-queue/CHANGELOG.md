@@ -3,6 +3,70 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.41](https://github.com/wireapp/wire-web-packages/tree/master/packages/priority-queue/compare/@wireapp/priority-queue@0.2.40...@wireapp/priority-queue@0.2.41) (2018-11-15)
+
+**Note:** Version bump only for package @wireapp/priority-queue
+
+
+
+
+
+## [0.2.40](https://github.com/wireapp/wire-web-packages/tree/master/packages/priority-queue/compare/@wireapp/priority-queue@0.2.39...@wireapp/priority-queue@0.2.40) (2018-11-15)
+
+**Note:** Version bump only for package @wireapp/priority-queue
+
+
+
+
+
+## [0.2.39](https://github.com/wireapp/wire-web-packages/tree/master/packages/priority-queue/compare/@wireapp/priority-queue@0.2.38...@wireapp/priority-queue@0.2.39) (2018-11-12)
+
+**Note:** Version bump only for package @wireapp/priority-queue
+
+
+
+
+
+## [0.2.38](https://github.com/wireapp/wire-web-packages/tree/master/packages/priority-queue/compare/@wireapp/priority-queue@0.2.37...@wireapp/priority-queue@0.2.38) (2018-11-09)
+
+**Note:** Version bump only for package @wireapp/priority-queue
+
+
+
+
+
+## [0.2.37](https://github.com/wireapp/wire-web-packages/tree/master/packages/priority-queue/compare/@wireapp/priority-queue@0.2.36...@wireapp/priority-queue@0.2.37) (2018-11-08)
+
+**Note:** Version bump only for package @wireapp/priority-queue
+
+
+
+
+
+## [0.2.36](https://github.com/wireapp/wire-web-packages/tree/master/packages/priority-queue/compare/@wireapp/priority-queue@0.2.35...@wireapp/priority-queue@0.2.36) (2018-11-07)
+
+**Note:** Version bump only for package @wireapp/priority-queue
+
+
+
+
+
+## [0.2.35](https://github.com/wireapp/wire-web-packages/tree/master/packages/priority-queue/compare/@wireapp/priority-queue@0.2.34...@wireapp/priority-queue@0.2.35) (2018-11-05)
+
+**Note:** Version bump only for package @wireapp/priority-queue
+
+
+
+
+
+## [0.2.34](https://github.com/wireapp/wire-web-packages/tree/master/packages/priority-queue/compare/@wireapp/priority-queue@0.2.33...@wireapp/priority-queue@0.2.34) (2018-11-01)
+
+**Note:** Version bump only for package @wireapp/priority-queue
+
+
+
+
+
 ## [0.2.33](https://github.com/wireapp/wire-web-packages/tree/master/packages/priority-queue/compare/@wireapp/priority-queue@0.2.32...@wireapp/priority-queue@0.2.33) (2018-10-31)
 
 **Note:** Version bump only for package @wireapp/priority-queue
