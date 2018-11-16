@@ -10589,10 +10589,10 @@ styled-components@4.1.1:
     stylis-rule-sheet "^0.0.10"
     supports-color "^5.5.0"
 
-styled-normalize@8.0.3:
-  version "8.0.3"
-  resolved "https://registry.yarnpkg.com/styled-normalize/-/styled-normalize-8.0.3.tgz#c8d71240a0fa6e17d1443dd5aa837c8287a77f26"
-  integrity sha512-2PFV3BLYxlsQcdVkl0adUIzUB8/KyP6Uqd+XB/e/yiqUTrQHk6ZJ1XsRiMVyzdiEtHyY2yDTo5h01ITIEx9ibw==
+styled-normalize@8.0.4:
+  version "8.0.4"
+  resolved "https://registry.yarnpkg.com/styled-normalize/-/styled-normalize-8.0.4.tgz#6a0885dc16c61d88813dab8f5137da928fe0c947"
+  integrity sha512-dXkKPnT+JcpqYnS0iQiBhUCOdheDz9xEm3H+ZARJV7l4WCXmRkwCx20ujkIYfESoYaiefbuX+F+rbtF6Ku5kvA==
 
 styled-transition-group@1.0.0:
   version "1.0.0"
