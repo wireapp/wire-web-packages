@@ -6856,10 +6856,10 @@ karma-jasmine-diff-reporter@2.0.0:
     diff "^3.5.0"
     karma ">=0.9"
 
-karma-jasmine@1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/karma-jasmine/-/karma-jasmine-1.1.2.tgz#394f2b25ffb4a644b9ada6f22d443e2fd08886c3"
-  integrity sha1-OU8rJf+0pkS5rabyLUQ+L9CIhsM=
+karma-jasmine@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/karma-jasmine/-/karma-jasmine-2.0.0.tgz#07f688a18c679a07983acd3a2e3973c51aa4e0c7"
+  integrity sha512-MxgbjgIkm+BFPoMkkaXb/2zAgRaeSe+ZWI6n+vpx4eisokHsHiZt9WGFj2qPrLXG2qrzEOyorCl8g/nqNXtBgA==
 
 karma-sourcemap-loader@0.3.7:
   version "0.3.7"
