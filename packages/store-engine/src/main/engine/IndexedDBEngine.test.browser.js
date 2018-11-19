@@ -125,6 +125,7 @@ describe('IndexedDBEngine', () => {
         done.fail();
       } catch (error) {
         expect(error instanceof StoreEngineError.LowDiskSpaceError).toBe(true);
+        done();
       }
     });
   });

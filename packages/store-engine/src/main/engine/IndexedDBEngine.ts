@@ -12,6 +12,7 @@ export default class IndexedDBEngine implements CRUDEngine {
   private db?: DexieInstance;
   public storeName = '';
 
+  // Check if IndexedDB is accessible (which won't be the case when browsing with Firefox in private mode or being on page "about:blank")
   private canUseIndexedDB(): Promise<void> {
     const platform = typeof global === 'undefined' ? window : global;
     if ('indexedDB' in platform) {
@@ -28,7 +29,7 @@ export default class IndexedDBEngine implements CRUDEngine {
         };
       });
     } else {
-      return Promise.reject(new Error('Could not find indexedDB in global scope'));
+      return Promise.reject(new UnsupportedError('Could not find indexedDB in global scope'));
     }
   }
 
@@ -44,17 +45,8 @@ export default class IndexedDBEngine implements CRUDEngine {
   }
 
   public async isSupported(): Promise<void> {
-    const message = `IndexedDB is not available on your platform.`;
-    const unsupportedError = new UnsupportedError(message);
-
-    try {
-      // Check if IndexedDB is accessible (which won't be the case when browsing with Firefox in private mode)
-      await this.canUseIndexedDB();
-      await this.hasEnoughQuota();
-    } catch (error) {
-      // This will be triggered on pages like "about:blank"
-      throw unsupportedError;
-    }
+    await this.canUseIndexedDB();
+    await this.hasEnoughQuota();
   }
 
   public async init(storeName: string): Promise<any> {
