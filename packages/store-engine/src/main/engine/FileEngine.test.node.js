@@ -135,13 +135,14 @@ describe('FileEngine', () => {
   });
 
   describe('"init"', () => {
-    it('returns the path to where data will be saved.', async () => {
+    it('resolves with the directory to which the records will be saved.', async () => {
       const options = {
         fileExtension: '.json',
       };
       engine = new FileEngine(BASE_DIRECTORY);
       const directory = await engine.init(STORE_NAME, options);
-      expect(typeof directory).toBe('string');
+      const fileStatus = fs.statSync(directory);
+      expect(fileStatus.isDirectory()).toBe(true);
     });
   });
 

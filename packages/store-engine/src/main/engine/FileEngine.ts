@@ -30,6 +30,7 @@ export default class FileEngine implements CRUDEngine {
 
     FileEngine.enforcePathRestrictions(this.baseDirectory, storeName);
     this.storeName = path.resolve(this.baseDirectory, storeName);
+    await fs.ensureDir(this.storeName);
 
     this.options = {...this.options, ...options};
     return Promise.resolve(this.storeName);
