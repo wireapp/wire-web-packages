@@ -1155,7 +1155,7 @@ class ConversationService {
   public setConversationMutedStatus(
     conversationId: string,
     status: MutedStatus,
-    muteTimestamp: number | Date = new Date()
+    muteTimestamp: number | Date
   ): Promise<void> {
     if (typeof muteTimestamp === 'number') {
       muteTimestamp = new Date(muteTimestamp);
@@ -1190,7 +1190,7 @@ class ConversationService {
   public async toggleMuteConversation(
     conversationId: string,
     muted: boolean,
-    muteTimestamp: number | Date = new Date()
+    muteTimestamp: number | Date
   ): Promise<void> {
     if (typeof muteTimestamp === 'number') {
       muteTimestamp = new Date(muteTimestamp);
