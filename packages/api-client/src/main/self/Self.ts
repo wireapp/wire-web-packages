@@ -17,7 +17,7 @@
  *
  */
 
-import {Picture} from '../self/';
+import {Picture, SSOSignature} from '../self/';
 import {UserAsset} from '../user/';
 
 interface Self {
@@ -30,8 +30,9 @@ interface Self {
   id: string;
   locale: string;
   name: string;
-  picture?: Picture[];
   phone?: string;
+  picture?: Picture[];
+  sso_id?: SSOSignature;
   team?: string;
 }
 

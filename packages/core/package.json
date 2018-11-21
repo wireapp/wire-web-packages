@@ -3,35 +3,35 @@
     "./dist/cryptography/AssetCryptography.node": "./dist/cryptography/AssetCryptography.browser.js"
   },
   "dependencies": {
-    "@types/node": "10.12.0",
-    "@wireapp/api-client": "2.1.3",
-    "@wireapp/cryptobox": "9.0.3",
-    "@wireapp/protocol-messaging": "1.21.6",
-    "@wireapp/store-engine": "1.0.2",
-    "bazinga64": "5.3.16",
+    "@types/node": "10.12.9",
+    "@wireapp/api-client": "3.1.19",
+    "@wireapp/cryptobox": "9.0.24",
+    "@wireapp/protocol-messaging": "1.22.1",
+    "@wireapp/store-engine": "1.1.2",
+    "bazinga64": "5.3.29",
     "logdown": "3.2.7",
     "protobufjs": "6.8.8",
     "pure-uuid": "1.5.5"
   },
   "devDependencies": {
-    "@wireapp/commons": "0.7.2",
+    "@wireapp/commons": "0.9.14",
     "commander": "2.19.0",
     "cross-env": "5.2.0",
     "dotenv": "6.1.0",
     "faker": "4.1.0",
     "istanbul": "1.1.0-alpha.1",
-    "jasmine": "3.2.0",
-    "karma": "3.0.0",
+    "jasmine": "3.3.0",
+    "karma": "3.1.1",
     "karma-chrome-launcher": "2.2.0",
-    "karma-jasmine": "1.1.2",
+    "karma-jasmine": "2.0.1",
     "karma-jasmine-diff-reporter": "2.0.0",
     "karma-sourcemap-loader": "0.3.7",
     "karma-spec-reporter": "0.0.32",
-    "nock": "10.0.1",
+    "nock": "10.0.2",
     "rimraf": "2.6.2",
-    "typescript": "3.1.3",
+    "typescript": "3.1.6",
     "uglifyjs-webpack-plugin": "1.3.0",
-    "webpack": "4.20.2",
+    "webpack": "4.26.0",
     "webpack-cli": "3.1.2"
   },
   "description": "Wire for Web's communication core.",
@@ -58,5 +58,5 @@
     "test:node": "jasmine --config=jasmine.json"
   },
   "types": "./dist/Account.d.ts",
-  "version": "7.1.6"
+  "version": "7.2.27"
 }

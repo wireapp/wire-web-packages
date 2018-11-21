@@ -3,6 +3,110 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.3.29](https://github.com/wireapp/wire-web-packages/tree/master/packages/bazinga64/compare/bazinga64@5.3.28...bazinga64@5.3.29) (2018-11-20)
+
+**Note:** Version bump only for package bazinga64
+
+
+
+
+
+## [5.3.28](https://github.com/wireapp/wire-web-packages/tree/master/packages/bazinga64/compare/bazinga64@5.3.27...bazinga64@5.3.28) (2018-11-19)
+
+**Note:** Version bump only for package bazinga64
+
+
+
+
+
+## [5.3.27](https://github.com/wireapp/wire-web-packages/tree/master/packages/bazinga64/compare/bazinga64@5.3.26...bazinga64@5.3.27) (2018-11-16)
+
+**Note:** Version bump only for package bazinga64
+
+
+
+
+
+## [5.3.26](https://github.com/wireapp/wire-web-packages/tree/master/packages/bazinga64/compare/bazinga64@5.3.25...bazinga64@5.3.26) (2018-11-16)
+
+**Note:** Version bump only for package bazinga64
+
+
+
+
+
+## [5.3.25](https://github.com/wireapp/wire-web-packages/tree/master/packages/bazinga64/compare/bazinga64@5.3.24...bazinga64@5.3.25) (2018-11-07)
+
+**Note:** Version bump only for package bazinga64
+
+
+
+
+
+## [5.3.24](https://github.com/wireapp/wire-web-packages/tree/master/packages/bazinga64/compare/bazinga64@5.3.23...bazinga64@5.3.24) (2018-11-05)
+
+**Note:** Version bump only for package bazinga64
+
+
+
+
+
+## [5.3.23](https://github.com/wireapp/wire-web-packages/tree/master/packages/bazinga64/compare/bazinga64@5.3.22...bazinga64@5.3.23) (2018-11-01)
+
+**Note:** Version bump only for package bazinga64
+
+
+
+
+
+## [5.3.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/bazinga64/compare/bazinga64@5.3.21...bazinga64@5.3.22) (2018-10-31)
+
+**Note:** Version bump only for package bazinga64
+
+
+
+
+
+## [5.3.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/bazinga64/compare/bazinga64@5.3.20...bazinga64@5.3.21) (2018-10-26)
+
+**Note:** Version bump only for package bazinga64
+
+
+
+
+
+## [5.3.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/bazinga64/compare/bazinga64@5.3.19...bazinga64@5.3.20) (2018-10-25)
+
+**Note:** Version bump only for package bazinga64
+
+
+
+
+
+## [5.3.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/bazinga64/compare/bazinga64@5.3.18...bazinga64@5.3.19) (2018-10-24)
+
+**Note:** Version bump only for package bazinga64
+
+
+
+
+
+## [5.3.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/bazinga64/compare/bazinga64@5.3.17...bazinga64@5.3.18) (2018-10-23)
+
+**Note:** Version bump only for package bazinga64
+
+
+
+
+
+## [5.3.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/bazinga64/compare/bazinga64@5.3.16...bazinga64@5.3.17) (2018-10-19)
+
+**Note:** Version bump only for package bazinga64
+
+
+
+
+
 ## [5.3.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/bazinga64/compare/bazinga64@5.3.15...bazinga64@5.3.16) (2018-10-12)
 
 **Note:** Version bump only for package bazinga64

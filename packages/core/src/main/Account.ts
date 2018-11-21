@@ -71,10 +71,7 @@ import * as logdown from 'logdown';
 import {UserService} from './user/';
 
 class Account extends EventEmitter {
-  private readonly logger = logdown('@wireapp/core/Account', {
-    logger: console,
-    markdown: false,
-  });
+  private readonly logger: logdown.Logger;
 
   private readonly apiClient: APIClient;
   public service?: {
@@ -94,6 +91,10 @@ class Account extends EventEmitter {
   constructor(apiClient: APIClient = new APIClient()) {
     super();
     this.apiClient = apiClient;
+    this.logger = logdown('@wireapp/core/Account', {
+      logger: console,
+      markdown: false,
+    });
   }
 
   public async init(): Promise<void> {
@@ -292,7 +293,7 @@ class Account extends EventEmitter {
   private mapGenericMessage(genericMessage: any, event: ConversationOtrMessageAddEvent): PayloadBundleIncoming {
     switch (genericMessage.content) {
       case GenericMessageType.TEXT: {
-        const {content: text, linkPreview: linkPreviews, mentions} = genericMessage[GenericMessageType.TEXT];
+        const {content: text, linkPreview: linkPreviews, mentions, quote} = genericMessage[GenericMessageType.TEXT];
 
         const content: TextContent = {text};
 
@@ -302,6 +303,10 @@ class Account extends EventEmitter {
 
         if (mentions && mentions.length) {
           content.mentions = mentions;
+        }
+
+        if (quote) {
+          content.quote = quote;
         }
 
         return {
@@ -363,7 +368,7 @@ class Account extends EventEmitter {
       }
       case GenericMessageType.EDITED: {
         const {
-          text: {content: editedText, linkPreview: editedLinkPreviews, mentions: editedMentions},
+          text: {content: editedText, linkPreview: editedLinkPreviews, mentions: editedMentions, quote: editedQuote},
           replacingMessageId,
         } = genericMessage[GenericMessageType.EDITED];
 
@@ -378,6 +383,10 @@ class Account extends EventEmitter {
 
         if (editedMentions && editedMentions.length) {
           content.mentions = editedMentions;
+        }
+
+        if (editedQuote) {
+          content.quote = editedQuote;
         }
 
         return {

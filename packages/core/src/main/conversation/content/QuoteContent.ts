@@ -17,11 +17,9 @@
  *
  */
 
-import {Invitation} from '../invitation/';
-
-interface InvitationList {
-  has_more: boolean;
-  invitations: Invitation[];
+interface QuoteContent {
+  quotedMessageId: string;
+  quotedMessageSha256: Uint8Array;
 }
 
-export {InvitationList};
+export {QuoteContent};

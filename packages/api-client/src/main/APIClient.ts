@@ -30,7 +30,6 @@ import {ConversationAPI} from './conversation/';
 import {Backend} from './env/';
 import {GiphyAPI} from './giphy/';
 import {HttpClient} from './http/';
-import {InvitationAPI} from './invitation/';
 import {NotificationAPI} from './notification/';
 import {ObfuscationUtil} from './obfuscation/';
 import {SelfAPI} from './self/';
@@ -47,10 +46,7 @@ const defaultConfig: Config = {
 };
 
 class APIClient {
-  private readonly logger = logdown('@wireapp/api-client/Client', {
-    logger: console,
-    markdown: false,
-  });
+  private readonly logger: logdown.Logger;
 
   private readonly STORE_NAME_PREFIX = 'wire';
   // APIs
@@ -61,7 +57,6 @@ class APIClient {
   public connection: {api: ConnectionAPI};
   public conversation: {api: ConversationAPI};
   public giphy: {api: GiphyAPI};
-  public invitation: {api: InvitationAPI};
   public notification: {api: NotificationAPI};
   public self: {api: SelfAPI};
   public teams: {
@@ -85,6 +80,10 @@ class APIClient {
   constructor(config?: Config) {
     this.config = {...defaultConfig, ...config};
     this.accessTokenStore = new AccessTokenStore();
+    this.logger = logdown('@wireapp/api-client/Client', {
+      logger: console,
+      markdown: false,
+    });
 
     const httpClient = new HttpClient(this.config.urls.rest, this.accessTokenStore, this.config.store);
 
@@ -113,9 +112,6 @@ class APIClient {
     };
     this.giphy = {
       api: new GiphyAPI(this.transport.http),
-    };
-    this.invitation = {
-      api: new InvitationAPI(this.transport.http),
     };
     this.notification = {
       api: new NotificationAPI(this.transport.http),

@@ -17,7 +17,9 @@
  *
  */
 
-export * from './Invitation';
-export * from './InvitationAPI';
-export * from './InvitationList';
-export * from './InvitationRequest';
+interface SSOSignature {
+  subject: string;
+  tenant: string;
+}
+
+export {SSOSignature};
