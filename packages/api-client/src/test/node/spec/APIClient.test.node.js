@@ -25,7 +25,7 @@ const {AUTH_TABLE_NAME, AuthAPI} = require('@wireapp/api-client/dist/commonjs/au
 const {UserAPI} = require('@wireapp/api-client/dist/commonjs/user/');
 const {MemoryEngine} = require('@wireapp/store-engine');
 
-describe('Client', () => {
+describe('APIClient', () => {
   const baseURL = APIClient.BACKEND.PRODUCTION.rest;
 
   let accessTokenData = {
