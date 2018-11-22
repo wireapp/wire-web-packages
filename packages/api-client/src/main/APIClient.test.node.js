@@ -160,7 +160,7 @@ describe('APIClient', () => {
         .catch(done.fail);
     });
 
-    fit('refreshes an access token when it becomes invalid', done => {
+    it('refreshes an access token when it becomes invalid', done => {
       const queriedHandle = 'webappbot';
 
       nock(baseURL)
