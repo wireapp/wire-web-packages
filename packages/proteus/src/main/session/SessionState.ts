@@ -39,8 +39,6 @@ import Message from '../message/Message';
 import PreKeyMessage from '../message/PreKeyMessage';
 import SessionTag from '../message/SessionTag';
 
-import MessageKeys from '../session/MessageKeys';
-
 import ChainKey from './ChainKey';
 import RecvChain from './RecvChain';
 import RootKey from './RootKey';

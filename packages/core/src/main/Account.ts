@@ -35,7 +35,6 @@ import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/';
 import * as cryptobox from '@wireapp/cryptobox';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/error/';
-import * as Long from 'long';
 import {LoginSanitizer} from './auth/';
 import {BroadcastService} from './broadcast/';
 import {ClientInfo, ClientService} from './client/';
