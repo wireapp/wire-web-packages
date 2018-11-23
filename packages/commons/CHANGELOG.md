@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.14...@wireapp/commons@0.9.15) (2018-11-22)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.9.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.13...@wireapp/commons@0.9.14) (2018-11-20)
+
+
+### Bug Fixes
+
+* **commons:** Add Chromium to supported list ([#1321](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/issues/1321)) ([cecb584](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/commit/cecb584))
+
+
+
+
+
+## [0.9.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.12...@wireapp/commons@0.9.13) (2018-11-20)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.9.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.11...@wireapp/commons@0.9.12) (2018-11-19)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.9.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.10...@wireapp/commons@0.9.11) (2018-11-16)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.9.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.9...@wireapp/commons@0.9.10) (2018-11-16)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
 ## [0.9.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.8...@wireapp/commons@0.9.9) (2018-11-15)
 
 **Note:** Version bump only for package @wireapp/commons
