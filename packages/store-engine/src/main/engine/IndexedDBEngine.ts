@@ -4,6 +4,7 @@ import {LowDiskSpaceError, RecordTypeError, UnsupportedError} from './error/';
 import RecordAlreadyExistsError from './error/RecordAlreadyExistsError';
 import RecordNotFoundError from './error/RecordNotFoundError';
 
+// @see https://dexie.org/docs/Typescript#create-a-subclass
 export interface DexieInstance extends Dexie {
   [index: string]: any;
 }
@@ -51,15 +52,19 @@ export default class IndexedDBEngine implements CRUDEngine {
 
   public async init(storeName: string): Promise<DexieInstance> {
     await this.isSupported();
-    this.db = new Dexie(storeName);
-    this.storeName = this.db.name;
-    return this.db;
+    return this.assignDb(new Dexie(storeName));
   }
 
   public initWithDb(db: DexieInstance): Promise<DexieInstance> {
+    return Promise.resolve(this.assignDb(db));
+  }
+
+  // If you want to add listeners to the database and you don't care if it is a new database (init)
+  // or an existing (initWithDB) one, then this method is the right place to do it.
+  private assignDb(db: DexieInstance): DexieInstance {
     this.db = db;
     this.storeName = this.db.name;
-    return Promise.resolve(this.db);
+    return this.db;
   }
 
   public purge(): Promise<void> {
