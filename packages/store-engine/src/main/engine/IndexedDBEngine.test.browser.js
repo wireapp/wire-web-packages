@@ -114,8 +114,9 @@ describe('IndexedDBEngine', () => {
   describe('"hasEnoughQuota"', () => {
     it('says if there is enough storage available to use IndexedDB', async () => {
       engine = new IndexedDBEngine();
-      const hasEnoughQuota = await engine.hasEnoughQuota();
-      expect(hasEnoughQuota).toBe(true);
+      expect(async () => {
+        await engine.hasEnoughQuota();
+      }).not.toThrow();
     });
 
     it('throws an error if there is no quota available', async done => {

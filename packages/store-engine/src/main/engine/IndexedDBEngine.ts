@@ -36,9 +36,7 @@ export default class IndexedDBEngine implements CRUDEngine {
   }
 
   // @see https://developers.google.com/web/updates/2017/08/estimating-available-storage-space
-  private async hasEnoughQuota(): Promise<boolean> {
-    const hasEnoughQuota = true;
-
+  private async hasEnoughQuota(): Promise<void> {
     if ('storage' in navigator && 'estimate' in navigator.storage) {
       const {quota, usage} = await navigator.storage.estimate();
 
@@ -51,7 +49,7 @@ export default class IndexedDBEngine implements CRUDEngine {
       }
     }
 
-    return Promise.resolve(hasEnoughQuota);
+    return Promise.resolve();
   }
 
   public async isSupported(): Promise<void> {
