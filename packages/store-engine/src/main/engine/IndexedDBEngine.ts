@@ -4,6 +4,7 @@ import {LowDiskSpaceError, RecordTypeError, UnsupportedError} from './error/';
 import RecordAlreadyExistsError from './error/RecordAlreadyExistsError';
 import RecordNotFoundError from './error/RecordNotFoundError';
 
+// @see https://dexie.org/docs/Typescript#create-a-subclass
 export interface DexieInstance extends Dexie {
   [index: string]: any;
 }
