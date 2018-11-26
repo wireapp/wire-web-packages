@@ -17,6 +17,7 @@
  *
  */
 
+import {AccessTokenData} from '@wireapp/api-client/src/main/auth/';
 import * as EventEmitter from 'events';
 import * as logdown from 'logdown';
 import {IncomingNotification} from '../conversation/';
@@ -76,19 +77,15 @@ class WebSocketClient extends EventEmitter {
   public connect(clientId?: string): Promise<WebSocketClient> {
     this.clientId = clientId;
 
-    this.socket = new ReconnectingWebSocket(
-      () => this.buildWebSocketURL(),
-      undefined,
-      WebSocketClient.RECONNECTING_OPTIONS
-    );
+    this.socket = new ReconnectingWebSocket(this.buildWebSocketURL, undefined, WebSocketClient.RECONNECTING_OPTIONS);
 
     if (this.socket) {
-      this.socket.onmessage = (event: MessageEvent) => {
+      this.socket.onmessage = (event: MessageEvent): void => {
         const notification: IncomingNotification = JSON.parse(buffer.bufferToString(event.data));
         this.emit(WebSocketClient.TOPIC.ON_MESSAGE, notification);
       };
 
-      this.socket.onerror = () =>
+      this.socket.onerror = (): Promise<void | AccessTokenData> =>
         this.client.refreshAccessToken().catch(error => {
           if (error instanceof NetworkError) {
             this.logger.warn(error);
@@ -97,7 +94,11 @@ class WebSocketClient extends EventEmitter {
           }
         });
 
-      this.socket.onopen = () => (this.socket ? (this.socket.binaryType = 'arraybuffer') : undefined);
+      this.socket.onopen = (): void => {
+        if (this.socket) {
+          this.socket.binaryType = 'arraybuffer';
+        }
+      };
     }
 
     return Promise.resolve(this);
