@@ -17,23 +17,12 @@
  *
  */
 
-import {Picture, SSOSignature} from '../self/';
-import {UserAsset} from '../user/';
-
-interface Self {
-  accent_id?: number;
-  assets: UserAsset[];
-  deleted?: boolean;
-  email?: string;
-  expires_at?: string;
-  handle?: string;
-  id: string;
-  locale: string;
-  name: string;
-  phone?: string;
-  picture?: Picture[];
-  sso_id?: SSOSignature;
-  team?: string;
+/* tslint:disable:object-literal-sort-keys */
+enum MutedStatus {
+  ALL_NOTIFICATIONS = 0b00,
+  ONLY_MENTIONS = 0b01,
+  NO_NOTIFICATIONS = 0b11,
 }
+/* tslint:enable:object-literal-sort-keys */
 
-export {Self};
+export {MutedStatus};

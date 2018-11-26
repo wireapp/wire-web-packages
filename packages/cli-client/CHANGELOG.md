@@ -3,6 +3,246 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.44](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.43...@wireapp/cli-client@4.0.44) (2018-11-26)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.43](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.42...@wireapp/cli-client@4.0.43) (2018-11-23)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.42](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.41...@wireapp/cli-client@4.0.42) (2018-11-23)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.41](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.40...@wireapp/cli-client@4.0.41) (2018-11-23)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.40](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.39...@wireapp/cli-client@4.0.40) (2018-11-22)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.39](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.38...@wireapp/cli-client@4.0.39) (2018-11-22)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.38](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.37...@wireapp/cli-client@4.0.38) (2018-11-21)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.37](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.36...@wireapp/cli-client@4.0.37) (2018-11-21)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.36](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.35...@wireapp/cli-client@4.0.36) (2018-11-21)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.35](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.34...@wireapp/cli-client@4.0.35) (2018-11-20)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.34](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.33...@wireapp/cli-client@4.0.34) (2018-11-20)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.33](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.32...@wireapp/cli-client@4.0.33) (2018-11-20)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.32](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.31...@wireapp/cli-client@4.0.32) (2018-11-19)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.31](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.30...@wireapp/cli-client@4.0.31) (2018-11-19)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.30](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.29...@wireapp/cli-client@4.0.30) (2018-11-16)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.29](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.28...@wireapp/cli-client@4.0.29) (2018-11-16)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.28](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.27...@wireapp/cli-client@4.0.28) (2018-11-16)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.27](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.26...@wireapp/cli-client@4.0.27) (2018-11-16)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.26](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.25...@wireapp/cli-client@4.0.26) (2018-11-16)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.25](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.24...@wireapp/cli-client@4.0.25) (2018-11-15)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.24](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.23...@wireapp/cli-client@4.0.24) (2018-11-15)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.23](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.22...@wireapp/cli-client@4.0.23) (2018-11-14)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.21...@wireapp/cli-client@4.0.22) (2018-11-12)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.20...@wireapp/cli-client@4.0.21) (2018-11-09)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.19...@wireapp/cli-client@4.0.20) (2018-11-08)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.18...@wireapp/cli-client@4.0.19) (2018-11-07)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.17...@wireapp/cli-client@4.0.18) (2018-11-05)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.16...@wireapp/cli-client@4.0.17) (2018-11-01)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.15...@wireapp/cli-client@4.0.16) (2018-10-31)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [4.0.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.14...@wireapp/cli-client@4.0.15) (2018-10-26)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
 ## [4.0.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@4.0.13...@wireapp/cli-client@4.0.14) (2018-10-25)
 
 **Note:** Version bump only for package @wireapp/cli-client

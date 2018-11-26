@@ -17,10 +17,6 @@
  *
  */
 
-import ArrayUtil from './ArrayUtil';
-import ClassUtil from './ClassUtil';
-import KeyDerivationUtil from './KeyDerivationUtil';
-import MemoryUtil from './MemoryUtil';
-import RandomUtil from './RandomUtil';
-
-export {ArrayUtil, ClassUtil, KeyDerivationUtil, MemoryUtil, RandomUtil};
+// traverse all test files for webpack dependency resolution
+const testsContext = require.context('./', true, /test\.browser\.js$/);
+testsContext.keys().forEach(testsContext);
