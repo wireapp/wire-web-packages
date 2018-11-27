@@ -30,6 +30,11 @@ enum OperatingSystem {
   WINDOWS = 'OperatingSystem.WINDOWS',
 }
 
+interface BrowserVersion {
+  major: number;
+  minor: number;
+}
+
 class Runtime {
   private static getPlatform(): Platform {
     return platform || {};
@@ -52,17 +57,27 @@ class Runtime {
     return OperatingSystem.LINUX;
   }
 
+  /** @deprecated */
   public static getBrowserName(): string {
-    return (Runtime.getPlatform().name || UNKNOWN_PROPERTY).toLowerCase();
+    return Runtime.getName();
   }
 
-  public static getBrowserVersion(): {major: number; minor: number} {
-    const [majorVersion, minorVersion] = (Runtime.getPlatform().version || UNKNOWN_PROPERTY).split('.');
-    return {major: parseInt(majorVersion, 10), minor: parseInt(minorVersion, 10)};
+  /** @deprecated */
+  public static getBrowserVersion(): BrowserVersion {
+    return Runtime.getVersion();
+  }
+
+  public static getName(): string {
+    return (Runtime.getPlatform().name || UNKNOWN_PROPERTY).toLowerCase();
   }
 
   public static getUserAgent(): string {
     return (Runtime.getPlatform().ua || UNKNOWN_PROPERTY).toLowerCase();
+  }
+
+  public static getVersion(): BrowserVersion {
+    const [majorVersion, minorVersion] = (Runtime.getPlatform().version || UNKNOWN_PROPERTY).split('.');
+    return {major: parseInt(majorVersion, 10), minor: parseInt(minorVersion, 10)};
   }
 
   public static isWebappSupportedBrowser(): boolean {
@@ -71,8 +86,8 @@ class Runtime {
     }
 
     return Object.entries(WEBAPP_SUPPORTED_BROWSERS).some(([browser, supportedVersion]) => {
-      const isBrowserSupported = Runtime.getBrowserName() === browser;
-      const currentVersion = Runtime.getBrowserVersion();
+      const isBrowserSupported = Runtime.getName() === browser;
+      const currentVersion = Runtime.getVersion();
       const isSupportedMajorVersion = currentVersion.major >= supportedVersion.major;
       const isHigherMajorVersion = currentVersion.major > supportedVersion.major;
       const isSupportedMinorVersion = isHigherMajorVersion || currentVersion.minor >= supportedVersion.minor;
