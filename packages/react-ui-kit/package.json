@@ -2,7 +2,7 @@
   "dependencies": {
     "@types/color": "3.0.0",
     "@types/styled-components": "4.0.3",
-    "bazinga64": "5.3.29",
+    "bazinga64": "5.3.30",
     "color": "3.1.0",
     "react": "16.6.3",
     "react-dom": "16.6.3",
@@ -24,7 +24,7 @@
     "react-hot-loader": "4.3.12",
     "rimraf": "2.6.2",
     "typescript": "3.1.6",
-    "webpack": "4.26.0",
+    "webpack": "4.26.1",
     "webpack-cli": "3.1.2",
     "webpack-dev-server": "3.1.10"
   },
@@ -44,5 +44,5 @@
     "test:project": "yarn dist && yarn test",
     "test:browser": "exit 0"
   },
-  "version": "4.3.27"
+  "version": "4.3.28"
 }
