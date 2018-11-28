@@ -59,7 +59,7 @@ export function isClientActionType(content: ConversationContent): content is Cli
 }
 
 export function isConfirmationContent(content: ConversationContent): content is ConfirmationContent {
-  return !!(content as ConfirmationContent).confirmMessageId;
+  return !!(content as ConfirmationContent).firstMessageId;
 }
 
 export function isConnection(content: ConversationContent): content is Connection {

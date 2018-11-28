@@ -17,8 +17,8 @@
  *
  */
 
+import * as sodium from 'libsodium-wrappers';
 import * as Long from 'long';
-const crypto = window.crypto;
 
 import {AssetContent, ContentType, ConversationContent, LocationContent, TextContent} from '../conversation/content';
 
@@ -33,9 +33,9 @@ class MessageHashService {
     this.timestamp = timestamp || Math.round(new Date().getTime() / 1000);
   }
 
-  private createSha256Hash(bytes: number[]): PromiseLike<ArrayBuffer> {
-    const buffer = new Uint8Array(bytes).buffer;
-    return crypto.subtle.digest('SHA-256', buffer);
+  private createSha256Hash(bytes: number[]): ArrayBuffer {
+    const buffer = new Uint8Array(bytes);
+    return sodium.crypto_generichash(256, buffer, 'uint8array').buffer;
   }
 
   private convertToUtf16BE(str: string): number[] {
@@ -98,9 +98,9 @@ class MessageHashService {
     return bytes.concat(timestampBytes);
   }
 
-  getHash(): PromiseLike<ArrayBuffer> {
+  getHash(): Buffer {
     const bytes = this.getBytes(this.messageContent);
-    return this.createSha256Hash(bytes);
+    return Buffer.from(this.createSha256Hash(bytes));
   }
 }
 

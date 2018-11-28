@@ -104,10 +104,9 @@ class MessageHashService {
     return Buffer.concat([bytes, timestampBuffer]);
   }
 
-  getHash(): Promise<Buffer> {
+  getHash(): Buffer {
     const buffer = this.getBytes(this.messageContent);
-    const hash = this.createSha256Hash(buffer);
-    return Promise.resolve(hash);
+    return this.createSha256Hash(buffer);
   }
 }
 

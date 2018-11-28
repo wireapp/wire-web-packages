@@ -155,14 +155,14 @@ const messageIdCache = {};
         .withLinkPreviews(newLinkPreviews)
         .withMentions(mentions)
         .withQuote(quote)
-        .then(contentBuilder => contentBuilder.build());
+        .build();
     } else {
       await handleIncomingMessage(data);
       textPayload = await account.service.conversation
         .createText(text)
         .withMentions(mentions)
         .withQuote(quote)
-        .then(contentBuilder => contentBuilder.build());
+        .build();
     }
 
     messageIdCache[messageId] = textPayload.id;
@@ -355,11 +355,11 @@ const messageIdCache = {};
         .then(contentBuilder => contentBuilder.build());
     } else {
       await handleIncomingMessage(data);
-      editedPayload = account.service.conversation
+      editedPayload = await account.service.conversation
         .createEditedText(text, cachedOriginalMessageId)
         .withMentions(mentions)
         .withQuote(quote)
-        .build();
+        .then(contentBuilder => contentBuilder.build());
     }
 
     messageIdCache[messageId] = editedPayload.id;

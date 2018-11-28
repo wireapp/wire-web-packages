@@ -57,13 +57,13 @@ class TextContentBuilder {
     return this;
   }
 
-  public async withQuote(quote: QuoteMessageContent, timestamp: number): Promise<TextContentBuilder>;
-  public async withQuote(quote?: QuoteContent): Promise<TextContentBuilder>;
-  public async withQuote(quote?: QuoteContent | QuoteMessageContent, timestamp?: number): Promise<TextContentBuilder> {
+  public withQuote(quote: QuoteMessageContent, timestamp: number): TextContentBuilder;
+  public withQuote(quote?: QuoteContent): TextContentBuilder;
+  public withQuote(quote?: QuoteContent | QuoteMessageContent, timestamp?: number): TextContentBuilder {
     if (quote) {
       if (timestamp) {
         const messageHashService = new MessageHashService((quote as QuoteMessageContent).content, timestamp);
-        const messageHashBuffer = await messageHashService.getHash();
+        const messageHashBuffer = messageHashService.getHash();
 
         this.content.quote = {
           quotedMessageId: quote.quotedMessageId,
