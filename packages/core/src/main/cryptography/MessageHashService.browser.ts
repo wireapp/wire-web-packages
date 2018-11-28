@@ -17,7 +17,7 @@
  *
  */
 
-import * as sodium from 'libsodium-wrappers';
+import * as sodium from 'libsodium-wrappers-sumo';
 import * as Long from 'long';
 
 import {AssetContent, ContentType, ConversationContent, LocationContent, TextContent} from '../conversation/content';
@@ -34,8 +34,8 @@ class MessageHashService {
   }
 
   private createSha256Hash(bytes: number[]): ArrayBuffer {
-    const buffer = new Uint8Array(bytes);
-    return sodium.crypto_generichash(256, buffer).buffer;
+    const byteArray = new Uint8Array(bytes);
+    return sodium.crypto_hash_sha256(byteArray).buffer;
   }
 
   private convertToUtf16BE(str: string): number[] {
