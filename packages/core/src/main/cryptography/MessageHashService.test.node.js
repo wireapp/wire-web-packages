@@ -25,7 +25,7 @@ const {MessageHashService} = require('@wireapp/core/dist/cryptography/');
 
 describe('MessageHashService', () => {
   describe('"getHash"', () => {
-    it('correctly identifies the message type.', async () => {
+    it('correctly identifies the message type.', () => {
       const content = {
         text: 'Hello!',
       };
@@ -35,13 +35,13 @@ describe('MessageHashService', () => {
       spyOn(messageHashService, 'getTextBytes').and.callThrough();
       spyOn(messageHashService, 'getLocationBytes').and.callThrough();
 
-      await messageHashService.getHash();
+      messageHashService.getHash();
 
       expect(messageHashService.getTextBytes).toHaveBeenCalled();
       expect(messageHashService.getLocationBytes).not.toHaveBeenCalled();
     });
 
-    it('correctly creates a timestamp bytes buffer.', async () => {
+    it('correctly creates a timestamp bytes buffer.', () => {
       const expectedHexValue = '000000005bcdcc09';
       const content = {
         text: 'Hello!',
@@ -55,7 +55,7 @@ describe('MessageHashService', () => {
       expect(hexValue).toBe(expectedHexValue);
     });
 
-    it('correctly creates a markdown text bytes buffer.', async () => {
+    it('correctly creates a markdown text bytes buffer.', () => {
       const expectedHashValue = 'f25a925d55116800e66872d2a82d8292adf1d4177195703f976bc884d32b5c94';
 
       const content = {
@@ -65,11 +65,11 @@ describe('MessageHashService', () => {
 
       const messageHashService = new MessageHashService(content, timestamp);
 
-      const hashValue = await messageHashService.getHash().then(buffer => buffer.toString('hex'));
+      const hashValue = messageHashService.getHash().toString('hex');
       expect(hashValue).toBe(expectedHashValue);
     });
 
-    it('correctly creates an arabic text bytes buffer.', async () => {
+    it('correctly creates an arabic text bytes buffer.', () => {
       const expectedHashValue = '5830012f6f14c031bf21aded5b07af6e2d02d01074f137d106d4645e4dc539ca';
 
       const content = {
@@ -79,11 +79,11 @@ describe('MessageHashService', () => {
 
       const messageHashService = new MessageHashService(content, timestamp);
 
-      const hashValue = await messageHashService.getHash().then(buffer => buffer.toString('hex'));
+      const hashValue = messageHashService.getHash().toString('hex');
       expect(hashValue).toBe(expectedHashValue);
     });
 
-    it('correctly creates an emoji text bytes buffer.', async () => {
+    it('correctly creates an emoji text bytes buffer.', () => {
       const expectedHashValue = '4f8ee55a8b71a7eb7447301d1bd0c8429971583b15a91594b45dee16f208afd5';
 
       const content = {
@@ -93,11 +93,11 @@ describe('MessageHashService', () => {
 
       const messageHashService = new MessageHashService(content, timestamp);
 
-      const hashValue = await messageHashService.getHash().then(buffer => buffer.toString('hex'));
+      const hashValue = messageHashService.getHash().toString('hex');
       expect(hashValue).toBe(expectedHashValue);
     });
 
-    it('correctly creates a link text bytes buffer.', async () => {
+    it('correctly creates a link text bytes buffer.', () => {
       const expectedHashValue = 'ef39934807203191c404ebb3acba0d33ec9dce669f9acec49710d520c365b657';
 
       const content = {
@@ -107,7 +107,7 @@ describe('MessageHashService', () => {
 
       const messageHashService = new MessageHashService(content, timestamp);
 
-      const hashValue = await messageHashService.getHash().then(buffer => buffer.toString('hex'));
+      const hashValue = messageHashService.getHash().toString('hex');
       expect(hashValue).toBe(expectedHashValue);
     });
 
@@ -122,11 +122,11 @@ describe('MessageHashService', () => {
 
       const messageHashService = new MessageHashService(content, timestamp);
 
-      const hashValue = await messageHashService.getHash().then(buffer => buffer.toString('hex'));
+      const hashValue = messageHashService.getHash().toString('hex');
       expect(hashValue).toBe(expectedHashValue);
     });
 
-    it('correctly creates another location bytes buffer.', async () => {
+    it('correctly creates another location bytes buffer.', () => {
       const expectedHashValue = '803b2698104f58772dbd715ec6ee5853d835df98a4736742b2a676b2217c9499';
 
       const content = {
@@ -137,11 +137,11 @@ describe('MessageHashService', () => {
 
       const messageHashService = new MessageHashService(content, timestamp);
 
-      const hashValue = await messageHashService.getHash().then(buffer => buffer.toString('hex'));
+      const hashValue = messageHashService.getHash().toString('hex');
       expect(hashValue).toBe(expectedHashValue);
     });
 
-    it('correctly creates an asset bytes buffer.', async () => {
+    it('correctly creates an asset bytes buffer.', () => {
       const expectedHashValue = 'bf20de149847ae999775b3cc88e5ff0c0382e9fa67b9d382b1702920b8afa1de';
 
       const content = {
@@ -153,11 +153,11 @@ describe('MessageHashService', () => {
 
       const messageHashService = new MessageHashService(content, timestamp);
 
-      const hashValue = await messageHashService.getHash().then(buffer => buffer.toString('hex'));
+      const hashValue = messageHashService.getHash().toString('hex');
       expect(hashValue).toBe(expectedHashValue);
     });
 
-    it('correctly creates another asset bytes buffer.', async () => {
+    it('correctly creates another asset bytes buffer.', () => {
       const expectedHashValue = '2235f5b6c00d9b0917675399d0314c8401f0525457b00aa54a38998ab93b90d6';
 
       const content = {
@@ -169,7 +169,7 @@ describe('MessageHashService', () => {
 
       const messageHashService = new MessageHashService(content, timestamp);
 
-      const hashValue = await messageHashService.getHash().then(buffer => buffer.toString('hex'));
+      const hashValue = messageHashService.getHash().toString('hex');
       expect(hashValue).toBe(expectedHashValue);
     });
   });
