@@ -1805,10 +1805,10 @@
     "@webassemblyjs/wast-parser" "1.7.11"
     "@xtuc/long" "4.2.1"
 
-"@wireapp/protocol-messaging@1.22.1":
-  version "1.22.1"
-  resolved "https://registry.yarnpkg.com/@wireapp/protocol-messaging/-/protocol-messaging-1.22.1.tgz#2cdfde7ce51487fd38a52c2cce1ec2f4c100372e"
-  integrity sha512-yw95stCSbaBcAU8iXBXle5xDpJecpbhO6GEeMV4huA2hlNTtZIe3i+V4zpUu9QpeXQhIAKTnJMVDZh3TQN9lKw==
+"@wireapp/protocol-messaging@1.23.0":
+  version "1.23.0"
+  resolved "https://registry.yarnpkg.com/@wireapp/protocol-messaging/-/protocol-messaging-1.23.0.tgz#aa26b96eb0933c9b95d34d9502098d7c582036a0"
+  integrity sha512-/B+xvw/3EmSGE4Ej63FOzNSxWnCPdNdrzetVY0BNiVdj3sioW8+EPcOltjgI2PPDTDKZnTu9+cnsJclYx7HA2Q==
   dependencies:
     protobufjs "6.8.8"
 
