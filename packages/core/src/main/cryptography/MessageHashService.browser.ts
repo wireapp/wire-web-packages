@@ -35,7 +35,7 @@ class MessageHashService {
 
   private createSha256Hash(bytes: number[]): ArrayBuffer {
     const buffer = new Uint8Array(bytes);
-    return sodium.crypto_generichash(256, buffer, 'uint8array').buffer;
+    return sodium.crypto_generichash(256, buffer).buffer;
   }
 
   private convertToUtf16BE(str: string): number[] {
