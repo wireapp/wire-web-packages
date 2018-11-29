@@ -1,7 +1,6 @@
 {
   "browser": {
-    "./dist/cryptography/AssetCryptography.node": "./dist/cryptography/AssetCryptography.browser.js",
-    "./dist/cryptography/MessageHashService.node": "./dist/cryptography/MessageHashService.browser.js"
+    "./dist/cryptography/AssetCryptography.node": "./dist/cryptography/AssetCryptography.browser.js"
   },
   "dependencies": {
     "@types/node": "10.12.10",
