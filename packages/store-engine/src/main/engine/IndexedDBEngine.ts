@@ -80,7 +80,7 @@ export default class IndexedDBEngine implements CRUDEngine {
 
   private mapDatabaseError(error: Dexie.DexieError, tableName: string, primaryKey: string): Error {
     const isAlreadyExisting = error instanceof Dexie.ConstraintError;
-    // @see https://github.com/dfahlander/Dexie.js/issues/776
+    /** @see https://github.com/dfahlander/Dexie.js/issues/776 */
     const hasNotEnoughDiskSpace =
       error.name === Dexie.errnames.QuotaExceeded || (error.inner && error.inner.name === Dexie.errnames.QuotaExceeded);
 
