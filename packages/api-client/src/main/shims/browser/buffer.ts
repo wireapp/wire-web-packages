@@ -20,7 +20,8 @@
 import * as SparkMD5 from 'spark-md5';
 
 // Note: In favour of 'TextDecoder' which is not supported in MS Edge
-export const bufferToString = (buffer: ArrayBuffer): string => String.fromCharCode.apply(null, new Uint8Array(buffer));
+export const bufferToString = (buffer: ArrayBuffer): string =>
+  String.fromCharCode.apply(null, Array.prototype.slice.call(buffer));
 
 export const base64MD5FromBuffer = (buffer: ArrayBuffer) => window.btoa(SparkMD5.ArrayBuffer.hash(buffer, true));
 
