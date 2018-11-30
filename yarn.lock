@@ -1132,10 +1132,10 @@
     inquirer "^6.2.0"
     npmlog "^4.1.2"
 
-"@lerna/publish@^3.5.0":
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/@lerna/publish/-/publish-3.5.0.tgz#e6543375457846557f3cb803f7795a577333a941"
-  integrity sha512-CoK+wzPP/0xG54Iwf9WEbB3VgwayoiVYsubhYpC072Ue7V6mGXQh97KZMm8NzCoMDg35ZGqa85Kxpeqd5hqQlw==
+"@lerna/publish@^3.5.1":
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/@lerna/publish/-/publish-3.5.1.tgz#20ea36e05a76755760b67c78719d424fc129f777"
+  integrity sha512-ltw2YdWWzev9cZRAzons5ywZh9NJARPX67meeA95oMDVMrhD4Y9VHQNJ3T8ueec/W78/4sKlMSr3ecWyPNp5bg==
   dependencies:
     "@lerna/batch-packages" "^3.1.2"
     "@lerna/check-working-tree" "^3.5.0"
@@ -6734,10 +6734,10 @@ lcov-parse@^0.0.10:
   resolved "https://registry.yarnpkg.com/lcov-parse/-/lcov-parse-0.0.10.tgz#1b0b8ff9ac9c7889250582b70b71315d9da6d9a3"
   integrity sha1-GwuP+ayceIklBYK3C3ExXZ2m2aM=
 
-lerna@3.5.0:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/lerna/-/lerna-3.5.0.tgz#fd989b8992701e90e10aa5b3970d6f7a3512ba64"
-  integrity sha512-12kZb2yCJtx3rhLycepzHTbR6suqLaqky2hSldGQh9+B7FXFgvbQJXwzoi+Y7+1cstmKHHyockdRYFLiLmiEYA==
+lerna@3.5.1:
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/lerna/-/lerna-3.5.1.tgz#350b24b58fc2d7bc2c1e1f4ef3058afe827cfa68"
+  integrity sha512-0AyxMr2UpR3RAJsyrfNtYvfcI01YVSSnbRdzum7frZAtb7S+8NSY2ip7aDbN6/YsQK2K/zOCQ4shu/nwgub8aw==
   dependencies:
     "@lerna/add" "^3.5.0"
     "@lerna/bootstrap" "^3.5.0"
@@ -6751,7 +6751,7 @@ lerna@3.5.0:
     "@lerna/init" "^3.5.0"
     "@lerna/link" "^3.5.0"
     "@lerna/list" "^3.5.0"
-    "@lerna/publish" "^3.5.0"
+    "@lerna/publish" "^3.5.1"
     "@lerna/run" "^3.5.0"
     "@lerna/version" "^3.5.0"
     import-local "^1.0.0"
@@ -8632,10 +8632,10 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
-prettier@1.15.2:
-  version "1.15.2"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.15.2.tgz#d31abe22afa4351efa14c7f8b94b58bb7452205e"
-  integrity sha512-YgPLFFA0CdKL4Eg2IHtUSjzj/BWgszDHiNQAe0VAIBse34148whfdzLagRL+QiKS+YfK5ftB6X4v/MBw8yCoug==
+prettier@1.15.3:
+  version "1.15.3"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.15.3.tgz#1feaac5bdd181237b54dbe65d874e02a1472786a"
+  integrity sha512-gAU9AGAPMaKb3NNSUUuhhFAS7SCO4ALTN4nRIn6PJ075Qd28Yn2Ig2ahEJWdJwJmlEBTUfC7mMUSFy8MwsOCfg==
 
 pretty-format@^23.6.0:
   version "23.6.0"
