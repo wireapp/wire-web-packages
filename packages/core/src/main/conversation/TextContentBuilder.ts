@@ -18,43 +18,67 @@
  */
 
 import {PayloadBundleOutgoingUnsent} from '../conversation/';
-import {LinkPreviewUploadedContent, MentionContent, QuoteContent, TextContent} from '../conversation/content/';
+import {
+  LinkPreviewUploadedContent,
+  MentionContent,
+  QuoteContent,
+  QuoteMessageContent,
+  TextContent,
+} from '../conversation/content/';
+import {MessageHashService} from '../cryptography/';
 
 class TextContentBuilder {
-  constructor(private readonly payloadBundle: PayloadBundleOutgoingUnsent) {
+  private readonly content: TextContent;
+  private readonly payloadBundle: PayloadBundleOutgoingUnsent;
+
+  constructor(payloadBundle: PayloadBundleOutgoingUnsent) {
     this.payloadBundle = payloadBundle;
+    this.content = this.payloadBundle.content as TextContent;
   }
 
   public build(): PayloadBundleOutgoingUnsent {
+    this.payloadBundle.content = this.content;
     return this.payloadBundle;
   }
 
   public withLinkPreviews(linkPreviews?: LinkPreviewUploadedContent[]): TextContentBuilder {
-    const content = this.payloadBundle.content as TextContent;
-
     if (linkPreviews && linkPreviews.length) {
-      content.linkPreviews = linkPreviews;
+      this.content.linkPreviews = linkPreviews;
     }
 
     return this;
   }
 
   public withMentions(mentions?: MentionContent[]): TextContentBuilder {
-    const content = this.payloadBundle.content as TextContent;
-
     if (mentions && mentions.length) {
-      content.mentions = mentions;
+      this.content.mentions = mentions;
     }
 
     return this;
   }
 
-  public withQuote(quote?: QuoteContent): TextContentBuilder {
-    const content = this.payloadBundle.content as TextContent;
-
+  public withQuote(quote: QuoteMessageContent, timestamp: number): TextContentBuilder;
+  public withQuote(quote?: QuoteContent): TextContentBuilder;
+  public withQuote(quote?: QuoteContent | QuoteMessageContent, timestamp?: number): TextContentBuilder {
     if (quote) {
-      content.quote = quote;
+      if (timestamp) {
+        const messageHashService = new MessageHashService((quote as QuoteMessageContent).content, timestamp);
+        const messageHashBuffer = messageHashService.getHash();
+
+        this.content.quote = {
+          quotedMessageId: quote.quotedMessageId,
+          quotedMessageSha256: new Uint8Array(messageHashBuffer),
+        };
+      } else {
+        this.content.quote = quote as QuoteContent;
+      }
     }
+
+    return this;
+  }
+
+  public withReadConfirmation(expectsReadConfirmation = true): TextContentBuilder {
+    this.content.expectsReadConfirmation = expectsReadConfirmation;
 
     return this;
   }

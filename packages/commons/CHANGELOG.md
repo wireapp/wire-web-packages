@@ -3,6 +3,161 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.15...@wireapp/commons@0.9.16) (2018-11-26)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.9.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.14...@wireapp/commons@0.9.15) (2018-11-22)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.9.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.13...@wireapp/commons@0.9.14) (2018-11-20)
+
+
+### Bug Fixes
+
+* **commons:** Add Chromium to supported list ([#1321](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/issues/1321)) ([cecb584](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/commit/cecb584))
+
+
+
+
+
+## [0.9.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.12...@wireapp/commons@0.9.13) (2018-11-20)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.9.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.11...@wireapp/commons@0.9.12) (2018-11-19)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.9.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.10...@wireapp/commons@0.9.11) (2018-11-16)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.9.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.9...@wireapp/commons@0.9.10) (2018-11-16)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.9.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.8...@wireapp/commons@0.9.9) (2018-11-15)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.9.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.7...@wireapp/commons@0.9.8) (2018-11-15)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.9.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.6...@wireapp/commons@0.9.7) (2018-11-12)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.9.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.5...@wireapp/commons@0.9.6) (2018-11-08)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.9.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.4...@wireapp/commons@0.9.5) (2018-11-07)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.9.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.3...@wireapp/commons@0.9.4) (2018-11-05)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.9.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.2...@wireapp/commons@0.9.3) (2018-11-01)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.9.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.1...@wireapp/commons@0.9.2) (2018-10-31)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.9.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.0...@wireapp/commons@0.9.1) (2018-10-26)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+# [0.9.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.8.1...@wireapp/commons@0.9.0) (2018-10-25)
+
+
+### Bug Fixes
+
+* **commons:** Specify default Website language ([#1254](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/issues/1254)) ([8bc1c2b](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/commit/8bc1c2b))
+
+
+### Features
+
+* **commons:** Teams supported languages ([#1255](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/issues/1255)) ([c29f499](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/commit/c29f499))
+
+
+
+
+
+## [0.8.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.8.0...@wireapp/commons@0.8.1) (2018-10-24)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
 # [0.8.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.7.3...@wireapp/commons@0.8.0) (2018-10-23)
 
 

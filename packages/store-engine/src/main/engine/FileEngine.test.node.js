@@ -43,7 +43,8 @@ describe('FileEngine', () => {
     fs
       .remove(TEST_DIRECTORY)
       .then(done)
-      .catch(done.fail));
+      .catch(done.fail)
+  );
 
   describe('"enforcePathRestrictions"', () => {
     const enforcePathRestrictions = (...opts) => () => FileEngine.enforcePathRestrictions(...opts);
@@ -130,6 +131,18 @@ describe('FileEngine', () => {
         }
       }
       done();
+    });
+  });
+
+  describe('"init"', () => {
+    it('resolves with the directory to which the records will be saved.', async () => {
+      const options = {
+        fileExtension: '.json',
+      };
+      engine = new FileEngine(BASE_DIRECTORY);
+      const directory = await engine.init(STORE_NAME, options);
+      const fileStatus = fs.statSync(directory);
+      expect(fileStatus.isDirectory()).toBe(true);
     });
   });
 

@@ -17,6 +17,9 @@
  *
  */
 
-// traverse all testfiles for webpack dependency resolution
-const testsContext = require.context('./', true, /test\.js$/);
-testsContext.keys().forEach(testsContext);
+interface SSOSignature {
+  subject: string;
+  tenant: string;
+}
+
+export {SSOSignature};

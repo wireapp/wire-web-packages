@@ -70,10 +70,7 @@ import * as logdown from 'logdown';
 import {UserService} from './user/';
 
 class Account extends EventEmitter {
-  private readonly logger = logdown('@wireapp/core/Account', {
-    logger: console,
-    markdown: false,
-  });
+  private readonly logger: logdown.Logger;
 
   private readonly apiClient: APIClient;
   public service?: {
@@ -93,6 +90,10 @@ class Account extends EventEmitter {
   constructor(apiClient: APIClient = new APIClient()) {
     super();
     this.apiClient = apiClient;
+    this.logger = logdown('@wireapp/core/Account', {
+      logger: console,
+      markdown: false,
+    });
   }
 
   public async init(): Promise<void> {
@@ -320,9 +321,9 @@ class Account extends EventEmitter {
         };
       }
       case GenericMessageType.CONFIRMATION: {
-        const confirmMessageId = genericMessage[GenericMessageType.CONFIRMATION].firstMessageId;
+        const {firstMessageId, moreMessageIds, type} = genericMessage[GenericMessageType.CONFIRMATION];
 
-        const content: ConfirmationContent = {confirmMessageId};
+        const content: ConfirmationContent = {firstMessageId, moreMessageIds, type};
 
         return {
           content,

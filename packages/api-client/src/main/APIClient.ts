@@ -46,10 +46,7 @@ const defaultConfig: Config = {
 };
 
 class APIClient {
-  private readonly logger = logdown('@wireapp/api-client/Client', {
-    logger: console,
-    markdown: false,
-  });
+  private readonly logger: logdown.Logger;
 
   private readonly STORE_NAME_PREFIX = 'wire';
   // APIs
@@ -83,6 +80,10 @@ class APIClient {
   constructor(config?: Config) {
     this.config = {...defaultConfig, ...config};
     this.accessTokenStore = new AccessTokenStore();
+    this.logger = logdown('@wireapp/api-client/Client', {
+      logger: console,
+      markdown: false,
+    });
 
     const httpClient = new HttpClient(this.config.urls.rest, this.accessTokenStore, this.config.store);
 
@@ -236,13 +237,15 @@ class APIClient {
         if (this.config.schemaCallback) {
           this.config.schemaCallback(db);
         } else {
-          throw new Error('Could not initialize database - missing schema definition');
+          const message = `Could not initialize store "${dbName}". Missing schema definition.`;
+          throw new Error(message);
         }
         // In case the database got purged, db.close() is called automatically and we have to reopen it.
         await db.open();
       }
     } catch (error) {
-      throw new Error(`Could not initialize database: "${error.message}`);
+      this.logger.error(`Could not initialize store "${dbName}": ${error.message}`);
+      throw error;
     }
     return this.config.store;
   }

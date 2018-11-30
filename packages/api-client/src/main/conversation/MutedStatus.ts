@@ -17,9 +17,12 @@
  *
  */
 
-enum ConfirmationType {
-  DELIVERED = 0,
-  READ = 1,
+/* tslint:disable:object-literal-sort-keys */
+enum MutedStatus {
+  ALL_NOTIFICATIONS = 0b00,
+  ONLY_MENTIONS = 0b01,
+  NO_NOTIFICATIONS = 0b11,
 }
+/* tslint:enable:object-literal-sort-keys */
 
-export {ConfirmationType};
+export {MutedStatus};

@@ -17,20 +17,9 @@
  *
  */
 
-import * as SparkMD5 from 'spark-md5';
+interface KnockContent {
+  hotKnock?: boolean;
+  expectsReadConfirmation?: boolean;
+}
 
-// Note: In favour of 'TextDecoder' which is not supported in MS Edge
-export const bufferToString = (buffer: ArrayBuffer): string => {
-  let binaryString = '';
-  const bytes = new Uint8Array(buffer);
-
-  for (let i = 0; i < bytes.length; i++) {
-    binaryString += String.fromCharCode(bytes[i]);
-  }
-
-  return binaryString;
-};
-
-export const base64MD5FromBuffer = (buffer: ArrayBuffer) => window.btoa(SparkMD5.ArrayBuffer.hash(buffer, true));
-
-export const concatToBuffer = (...items: any[]) => new Blob(items);
+export {KnockContent};
