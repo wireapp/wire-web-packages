@@ -21,7 +21,6 @@ import {APIClient} from '@wireapp/api-client';
 import {LoginData, PreKey} from '@wireapp/api-client/dist/commonjs/auth/';
 import {ClientClassification, ClientType, NewClient, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
 import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
-import * as logdown from 'logdown';
 import {CryptographyService} from '../cryptography/';
 import {ClientInfo} from './';
 import ClientBackendRepository from './ClientBackendRepository';
@@ -37,8 +36,6 @@ export interface MetaClient extends RegisteredClient {
 }
 
 export default class ClientService {
-  private readonly logger: logdown.Logger;
-
   private readonly database: ClientDatabaseRepository;
   private readonly backend: ClientBackendRepository;
 
@@ -49,10 +46,6 @@ export default class ClientService {
   ) {
     this.database = new ClientDatabaseRepository(this.storeEngine);
     this.backend = new ClientBackendRepository(this.apiClient);
-    this.logger = logdown('@wireapp/core/client/ClientService', {
-      logger: console,
-      markdown: false,
-    });
   }
 
   public deleteLocalClient(): Promise<string> {

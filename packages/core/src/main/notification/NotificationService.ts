@@ -21,23 +21,16 @@ import {APIClient} from '@wireapp/api-client';
 import {Notification, NotificationEvent} from '@wireapp/api-client/dist/commonjs/notification/';
 import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
 import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/error/';
-import * as logdown from 'logdown';
 import NotificationBackendRepository from './NotificationBackendRepository';
 import NotificationDatabaseRepository from './NotificationDatabaseRepository';
 
 export default class NotificationService {
-  private readonly logger: logdown.Logger;
-
   private readonly backend: NotificationBackendRepository;
   private readonly database: NotificationDatabaseRepository;
 
   constructor(private readonly apiClient: APIClient, private readonly storeEngine: CRUDEngine) {
     this.backend = new NotificationBackendRepository(this.apiClient);
     this.database = new NotificationDatabaseRepository(this.storeEngine);
-    this.logger = logdown('@wireapp/core/notification/NotificationService', {
-      logger: console,
-      markdown: false,
-    });
   }
 
   public initializeNotificationStream(clientId: string): Promise<string> {
