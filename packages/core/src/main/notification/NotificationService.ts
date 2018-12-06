@@ -41,7 +41,7 @@ export default class NotificationService {
   }
 
   public initializeNotificationStream(clientId: string): Promise<string> {
-    this.logger.log('initializeNotificationStream');
+    this.logger.log('Initializing notification stream');
     return this.setLastEventDate(new Date(0))
       .then(() => this.backend.getLastNotification(clientId))
       .then(notification => this.setLastNotificationId(notification));
@@ -53,12 +53,12 @@ export default class NotificationService {
   }
 
   public getNotificationEventList(): Promise<NotificationEvent[]> {
-    this.logger.log('getNotificationEventList');
+    this.logger.log('Geting notification event list');
     return this.database.getNotificationEventList();
   }
 
   public setLastEventDate(eventDate: Date): Promise<Date> {
-    this.logger.log('setLastEventDate');
+    this.logger.log('Setting last event date');
     return this.database
       .getLastEventDate()
       .then(databaseLastEventDate => {
@@ -76,10 +76,10 @@ export default class NotificationService {
   }
 
   public setLastNotificationId(lastNotification: Notification): Promise<string> {
-    this.logger.log('setLastNotificationId');
+    this.logger.log('Setting last notification ID');
     return this.database
       .getLastNotificationId()
       .then(() => this.database.updateLastNotificationId(lastNotification))
-      .catch(error => this.database.createLastNotificationId(lastNotification));
+      .catch(() => this.database.createLastNotificationId(lastNotification));
   }
 }

@@ -56,7 +56,7 @@ export default class ClientService {
   }
 
   public deleteLocalClient(): Promise<string> {
-    this.logger.log('deleteLocalClient');
+    this.logger.log('Deleting local client');
     return this.database.deleteLocalClient();
   }
 
@@ -65,17 +65,17 @@ export default class ClientService {
   }
 
   public getLocalClient(): Promise<MetaClient> {
-    this.logger.log('getLocalClient');
+    this.logger.log('Getting local client');
     return this.database.getLocalClient();
   }
 
   public createLocalClient(client: RegisteredClient): Promise<MetaClient> {
-    this.logger.log('createLocalClient');
+    this.logger.log('Creating local client');
     return this.database.createLocalClient(client);
   }
 
   public async synchronizeClients(): Promise<MetaClient[]> {
-    this.logger.log('synchronizeClients');
+    this.logger.log('Synchronizing clients');
     const registeredClients = await this.backend.getClients();
     const filteredClients = registeredClients.filter(client => client.id !== this.apiClient.context!.clientId);
     return this.database.createClientList(this.apiClient.context!.userId, filteredClients);
@@ -90,7 +90,7 @@ export default class ClientService {
       model: `${pkg.name} v${pkg.version}`,
     }
   ): Promise<RegisteredClient> {
-    this.logger.log('register');
+    this.logger.log('Registering');
     if (!this.apiClient.context) {
       throw new Error('Context is not set.');
     }

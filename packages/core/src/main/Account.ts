@@ -98,7 +98,7 @@ class Account extends EventEmitter {
   }
 
   public async init(): Promise<void> {
-    this.logger.log('init');
+    this.logger.log('Initializing services');
 
     const assetService = new AssetService(this.apiClient);
     const cryptographyService = new CryptographyService(this.apiClient, this.apiClient.config.store);
@@ -134,7 +134,7 @@ class Account extends EventEmitter {
     initClient: boolean = true,
     clientInfo?: ClientInfo
   ): Promise<Context | undefined> {
-    this.logger.log('login');
+    this.logger.log('Logging in');
     return this.resetContext()
       .then(() => this.init())
       .then(() => LoginSanitizer.removeNonPrintableCharacters(loginData))
@@ -150,7 +150,7 @@ class Account extends EventEmitter {
     loginData: LoginData,
     clientInfo?: ClientInfo
   ): Promise<{isNewClient: boolean; localClient: RegisteredClient}> {
-    this.logger.log('initClient');
+    this.logger.log('Initializing client');
     if (!this.service) {
       throw new Error('Services are not set.');
     }
@@ -207,7 +207,7 @@ class Account extends EventEmitter {
     loginData: LoginData,
     clientInfo?: ClientInfo
   ): Promise<{isNewClient: boolean; localClient: RegisteredClient}> {
-    this.logger.log('registerClient');
+    this.logger.log('Registering client');
     if (!this.service) {
       throw new Error('Services are not set.');
     }
@@ -226,7 +226,7 @@ class Account extends EventEmitter {
   }
 
   private resetContext(): Promise<void> {
-    this.logger.log('resetContext');
+    this.logger.log('Resetting context');
     return Promise.resolve().then(() => {
       delete this.apiClient.context;
       delete this.service;
@@ -234,12 +234,12 @@ class Account extends EventEmitter {
   }
 
   public logout(): Promise<void> {
-    this.logger.log('logout');
+    this.logger.log('Logging out');
     return this.apiClient.logout().then(() => this.resetContext());
   }
 
   public listen(notificationHandler?: Function): Promise<Account> {
-    this.logger.log('listen');
+    this.logger.log('Start listening for events');
     if (!this.apiClient.context) {
       throw new Error('Context is not set - Please login first');
     }
@@ -554,7 +554,7 @@ class Account extends EventEmitter {
   }
 
   private async handleEvent(event: IncomingEvent): Promise<PayloadBundleIncoming | void> {
-    this.logger.log('handleEvent', event.type);
+    this.logger.log(`Handling event of type "${event.type}"`);
     const ENCRYPTED_EVENTS = [CONVERSATION_EVENT.OTR_MESSAGE_ADD];
     const META_EVENTS = [
       CONVERSATION_EVENT.MEMBER_JOIN,
@@ -576,7 +576,7 @@ class Account extends EventEmitter {
   }
 
   private async handleNotification(notification: IncomingNotification): Promise<void> {
-    this.logger.log('handleNotification');
+    this.logger.log('Handling notification');
     for (const event of notification.payload) {
       const data = await this.handleEvent(event);
       if (data) {
@@ -618,9 +618,6 @@ class Account extends EventEmitter {
                 conversation,
               } = event as ConversationMessageTimerUpdateEvent;
               const expireAfterMillis = Number(message_timer);
-              this.logger.log(
-                `Received "${expireAfterMillis}" ms timer on conversation level for conversation "${conversation}".`
-              );
               this.service!.conversation.messageTimer.setConversationLevelTimer(conversation, expireAfterMillis);
             }
 
