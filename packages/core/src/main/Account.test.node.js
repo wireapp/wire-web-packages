@@ -328,7 +328,7 @@ describe('Account', () => {
     });
   });
 
-  fdescribe('handleEvent', () => {
+  describe('handleEvent', () => {
     it('propagates errors to the outer calling function', async done => {
       const storeEngine = new MemoryEngine();
       await storeEngine.init('account.test');
