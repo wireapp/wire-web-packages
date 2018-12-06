@@ -239,15 +239,14 @@ class Account extends EventEmitter {
         this.apiClient.transport.ws.removeAllListeners(WebSocketClient.TOPIC.ON_MESSAGE);
 
         if (notificationHandler) {
-          return this.apiClient.transport.ws.on(
-            WebSocketClient.TOPIC.ON_MESSAGE,
-            (notification: IncomingNotification) => notificationHandler(notification)
+          this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, (notification: IncomingNotification) =>
+            notificationHandler(notification)
           );
+        } else {
+          this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, this.handleNotification.bind(this));
         }
-        return this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, this.handleNotification.bind(this));
+        return this.apiClient.connect();
       })
-      .catch(error => console.log('error!', error))
-      .then(() => this.apiClient.connect())
       .then(() => this);
   }
 
