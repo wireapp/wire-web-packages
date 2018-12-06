@@ -67,7 +67,6 @@ class CryptographyService {
   }
 
   public async createCryptobox(): Promise<SerializedPreKey[]> {
-    this.logger.log('Creating Cryptobox');
     const initialPreKeys: ProteusKeys.PreKey[] = await this.cryptobox.create();
 
     return initialPreKeys
@@ -112,7 +111,6 @@ class CryptographyService {
   }
 
   public async encrypt(plainText: Uint8Array, preKeyBundles: UserPreKeyBundleMap): Promise<OTRRecipients> {
-    this.logger.log('Encrypting plaintext');
     const recipients: OTRRecipients = {};
     const encryptions: Promise<SessionPayloadBundle>[] = [];
 
@@ -166,12 +164,10 @@ class CryptographyService {
   }
 
   public async initCryptobox(): Promise<void> {
-    this.logger.log('Initializing Cryptobox');
     await this.cryptobox.load();
   }
 
   public deleteCryptographyStores(): Promise<boolean[]> {
-    this.logger.log('Deleting cryptography stores');
     return this.database.deleteStores();
   }
 
