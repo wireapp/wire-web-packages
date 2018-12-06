@@ -239,14 +239,15 @@ class Account extends EventEmitter {
         this.apiClient.transport.ws.removeAllListeners(WebSocketClient.TOPIC.ON_MESSAGE);
 
         if (notificationHandler) {
-          this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, (notification: IncomingNotification) =>
-            notificationHandler(notification)
+          return this.apiClient.transport.ws.on(
+            WebSocketClient.TOPIC.ON_MESSAGE,
+            (notification: IncomingNotification) => notificationHandler(notification)
           );
-        } else {
-          this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, this.handleNotification.bind(this));
         }
-        return this.apiClient.connect();
+        return this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, this.handleNotification.bind(this));
       })
+      .catch(error => console.log('error!', error))
+      .then(() => this.apiClient.connect())
       .then(() => this);
   }
 
@@ -568,7 +569,14 @@ class Account extends EventEmitter {
 
   private async handleNotification(notification: IncomingNotification): Promise<void> {
     for (const event of notification.payload) {
-      const data = await this.handleEvent(event);
+      let data;
+
+      try {
+        data = await this.handleEvent(event);
+      } catch (error) {
+        this.emit('error', error);
+      }
+
       if (data) {
         switch (data.type) {
           case PayloadBundleType.ASSET_IMAGE:
