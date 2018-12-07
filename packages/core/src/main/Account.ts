@@ -574,6 +574,7 @@ class Account extends EventEmitter {
         data = await this.handleEvent(event);
       } catch (error) {
         this.emit('error', error);
+        return;
       }
 
       if (data) {
