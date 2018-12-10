@@ -216,8 +216,7 @@ class ConversationService {
 
     if (this.shouldSendAsExternal(plainTextArray, preKeyBundles)) {
       const encryptedAsset = await AssetCryptography.encryptAsset(plainTextArray);
-      await this.sendExternalGenericMessage(this.clientID, conversationId, encryptedAsset, preKeyBundles);
-      return;
+      return this.sendExternalGenericMessage(this.clientID, conversationId, encryptedAsset, preKeyBundles);
     }
 
     const recipients = await this.cryptographyService.encrypt(plainTextArray, preKeyBundles);
