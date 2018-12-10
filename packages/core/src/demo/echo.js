@@ -400,6 +400,8 @@ const messageIdCache = {};
     await account.login(login);
     await account.listen();
 
+    account.on('error', error => logger.error(error));
+
     const name = await account.service.self.getName();
 
     logger.log('Name', name);
