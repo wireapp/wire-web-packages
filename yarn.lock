@@ -1511,10 +1511,10 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@types/recompose@0.30.1":
-  version "0.30.1"
-  resolved "https://registry.yarnpkg.com/@types/recompose/-/recompose-0.30.1.tgz#5c4326d11418af91ad937e55e0ecdd8acc4314fb"
-  integrity sha512-FSq5smx94OYCRgVXd803i8mXo7+ZWfAH3Xt9ETLUJySTp0MnP+njGoTMek+v4gwbeOSEHtoEbYem2EX+KA+c+g==
+"@types/recompose@0.30.2":
+  version "0.30.2"
+  resolved "https://registry.yarnpkg.com/@types/recompose/-/recompose-0.30.2.tgz#3bdb7fd37460242ef82f6d6a7428e3c96d3a1b9a"
+  integrity sha512-O22WmEWoA2z2nbGmX4LqZ9zKzInN+KoyN0Stks9PMhj4GqDDwy2x3Gh0apNhCMzy3HLrCPkb+mH2QxZNtK5grw==
   dependencies:
     "@types/react" "*"
 
