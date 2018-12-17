@@ -18,6 +18,6 @@
  */
 
 export function isUUIDv4(candidate: string): boolean {
-  const uuidv4Regex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
-  return uuidv4Regex.test(candidate.toLowerCase());
+  const uuidv4Regex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  return uuidv4Regex.test(candidate);
 }
