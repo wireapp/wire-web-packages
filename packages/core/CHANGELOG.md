@@ -3,6 +3,136 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.3...@wireapp/core@8.1.4) (2018-12-17)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.2...@wireapp/core@8.1.3) (2018-12-10)
+
+
+### Bug Fixes
+
+* **core:** Check if external message is needed ([#1378](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1378)) ([fc2dc44](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/fc2dc44))
+
+
+
+
+
+## [8.1.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.1...@wireapp/core@8.1.2) (2018-12-10)
+
+
+### Bug Fixes
+
+* **core:** Read expectsReadConfirmation flag ([#1370](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1370)) ([0dcc818](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/0dcc818))
+
+
+
+
+
+## [8.1.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.0...@wireapp/core@8.1.1) (2018-12-10)
+
+
+### Bug Fixes
+
+* **core:** Don't use external messages for asset sending ([#1374](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1374)) ([afdf2bf](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/afdf2bf))
+
+
+
+
+
+# [8.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.0.6...@wireapp/core@8.1.0) (2018-12-07)
+
+
+### Features
+
+* **core:** Add error emit ([#1371](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1371)) ([5e8c159](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/5e8c159))
+
+
+
+
+
+## [8.0.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.0.5...@wireapp/core@8.0.6) (2018-12-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.0.4...@wireapp/core@8.0.5) (2018-12-03)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.0.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.0.3...@wireapp/core@8.0.4) (2018-11-30)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.0.2...@wireapp/core@8.0.3) (2018-11-30)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.0.1...@wireapp/core@8.0.2) (2018-11-29)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.0.0...@wireapp/core@8.0.1) (2018-11-29)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [8.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@7.3.8...@wireapp/core@8.0.0) (2018-11-29)
+
+
+* [ci skip] feat(core): Read receipts [BREAKING] (WEBFOUND-56) (#1336) ([f7501b3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/f7501b3)), closes [#1336](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1336)
+
+
+### Bug Fixes
+
+* **core:** Exclude flaky smoke test ([#1347](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1347)) ([85e67c8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/85e67c8))
+* **core:** Use hash.js for message hashing ([#1346](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1346)) ([5c9994a](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/5c9994a))
+
+
+### Features
+
+* **core:** Message Hashing for Quotes (WEBFOUND-58) ([#1277](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1277)) ([13a0f81](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/13a0f81))
+
+
+### BREAKING CHANGES
+
+* **core:** - Removed `ConfirmationType`
+- Removed `createConfirmation()`
+- Changed method signature of `createPing()`
+* **core:** removed createConfirmation(), removed ConfirmationType, changed the method signature of createPing()
+* **core:** removed createConfirmation(), removed ConfirmationType, changed the method signature of createPing()
+* removed createConfirmation(), removed ConfirmationType, changed the method signature of createPing()
+
+
+
+
+
 ## [7.3.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@7.3.7...@wireapp/core@7.3.8) (2018-11-27)
 
 **Note:** Version bump only for package @wireapp/core

@@ -3,6 +3,63 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.10.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.10.3...@wireapp/commons@0.10.4) (2018-12-17)
+
+
+### Bug Fixes
+
+* Improved isUUIDv4 check ([#1391](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/issues/1391)) ([f515e8b](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/commit/f515e8b))
+
+
+
+
+
+## [0.10.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.10.2...@wireapp/commons@0.10.3) (2018-12-07)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.10.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.10.1...@wireapp/commons@0.10.2) (2018-12-06)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.10.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.10.0...@wireapp/commons@0.10.1) (2018-12-03)
+
+
+### Bug Fixes
+
+* **commons:** Add edge to the list of supported browsers ([#1359](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/issues/1359)) ([8b17f1d](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/commit/8b17f1d))
+
+
+
+
+
+# [0.10.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.17...@wireapp/commons@0.10.0) (2018-11-30)
+
+
+### Features
+
+* **commons:** Account pages languages & Language query ([#1351](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/issues/1351)) ([bfcd621](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/commit/bfcd621))
+
+
+
+
+
+## [0.9.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.16...@wireapp/commons@0.9.17) (2018-11-30)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
 ## [0.9.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.15...@wireapp/commons@0.9.16) (2018-11-26)
 
 **Note:** Version bump only for package @wireapp/commons

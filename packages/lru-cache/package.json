@@ -3,10 +3,10 @@
   "devDependencies": {
     "cross-env": "5.2.0",
     "istanbul": "1.1.0-alpha.1",
-    "jasmine": "3.3.0",
+    "jasmine": "3.3.1",
     "rimraf": "2.6.2",
-    "typescript": "3.1.6",
-    "webpack": "4.26.1",
+    "typescript": "3.2.2",
+    "webpack": "4.27.1",
     "webpack-cli": "3.1.2"
   },
   "files": [
@@ -33,5 +33,5 @@
     "test:node": "jasmine --config=jasmine.json"
   },
   "types": "dist/commonjs/LRUCache.d.ts",
-  "version": "3.0.17"
+  "version": "3.0.20"
 }
