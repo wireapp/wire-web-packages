@@ -15,11 +15,6 @@
     "tslint-config-prettier": "1.17.0",
     "tslint-plugin-prettier": "2.0.1"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "*.{js,jsx}": [
       "eslint --fix",
