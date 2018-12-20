@@ -19,7 +19,7 @@
 
 const {LogFactory} = require('@wireapp/commons');
 
-fdescribe('LogFactory', () => {
+describe('LogFactory', () => {
   describe('getLogger', () => {
     it('sets a different color for every new logger', () => {
       const firstLogger = LogFactory.getLogger('FirstLogger', {forceEnable: false});
