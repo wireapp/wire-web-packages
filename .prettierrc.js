@@ -1,4 +1,4 @@
-{
+module.exports = {
   "arrowParens": "avoid",
   "bracketSpacing": false,
   "jsxBracketSameLine": false,
@@ -10,4 +10,4 @@
   "tabWidth": 2,
   "trailingComma": "es5",
   "useTabs": false
-}
+};
