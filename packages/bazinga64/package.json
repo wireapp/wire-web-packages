@@ -13,7 +13,7 @@
     "libsodium-wrappers": "0.7.3",
     "rimraf": "2.6.2",
     "typescript": "3.2.2",
-    "webpack": "4.27.1"
+    "webpack": "4.28.0"
   },
   "files": [
     "dist"
@@ -47,5 +47,5 @@
     "test:node": "cross-env JASMINE_CONFIG_PATH=test/shared/support/jasmine.json jasmine"
   },
   "types": "dist/bazinga64.d.ts",
-  "version": "5.3.33"
+  "version": "5.3.34"
 }
