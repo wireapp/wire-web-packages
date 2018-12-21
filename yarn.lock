@@ -1468,6 +1468,11 @@
     array-from "^2.1.1"
     lodash.get "^4.4.2"
 
+"@types/ansi-regex@4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@types/ansi-regex/-/ansi-regex-4.0.0.tgz#cb20bb66da7700ea9b26f16971f03f0e092eddad"
+  integrity sha512-r1W316vjsZXn1/csLC4HcCJs6jIHIzksHJd7xx+Dl+PAb0S2Dh9cR8ZsIMEfGmbBtP7JNWlf2KKahSkDP6rg3g==
+
 "@types/bro-fs@0.4.1":
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/@types/bro-fs/-/bro-fs-0.4.1.tgz#02e7e29fa94a5521631cd51317a14019312c8405"
@@ -9770,14 +9775,6 @@ sax@^1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
   integrity sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
-
-scheduler@^0.11.2:
-  version "0.11.2"
-  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.11.2.tgz#a8db5399d06eba5abac51b705b7151d2319d33d3"
-  integrity sha512-+WCP3s3wOaW4S7C1tl3TEXp4l9lJn0ZK8G3W3WKRWmw77Z2cIFUW2MiNTMHn5sCjxN+t7N43HAOOgMjyAg5hlg==
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
 
 scheduler@^0.12.0:
   version "0.12.0"
