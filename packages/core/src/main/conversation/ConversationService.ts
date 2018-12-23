@@ -195,7 +195,7 @@ class ConversationService {
     const base64CipherText = Encoder.toBase64(cipherText).asString;
 
     const genericMessage = GenericMessage.create({
-      external: externalMessage,
+      [GenericMessageType.EXTERNAL]: externalMessage,
       messageId,
     });
 
@@ -213,6 +213,12 @@ class ConversationService {
   ): Promise<void> {
     const plainTextArray = GenericMessage.encode(genericMessage).finish();
     const preKeyBundles = await this.getPreKeyBundle(conversationId, userIds);
+
+    if (this.shouldSendAsExternal(plainTextArray, preKeyBundles)) {
+      const encryptedAsset = await AssetCryptography.encryptAsset(plainTextArray);
+      return this.sendExternalGenericMessage(this.clientID, conversationId, encryptedAsset, preKeyBundles);
+    }
+
     const recipients = await this.cryptographyService.encrypt(plainTextArray, preKeyBundles);
 
     return this.sendOTRMessage(sendingClientId, conversationId, recipients, plainTextArray);
@@ -307,11 +313,7 @@ class ConversationService {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    const preKeyBundles = await this.getPreKeyBundle(conversationId, userIds);
-    const plainTextArray = GenericMessage.encode(genericMessage).finish();
-    const payload = await AssetCryptography.encryptAsset(plainTextArray);
-
-    await this.sendExternalGenericMessage(this.clientID, conversationId, payload, preKeyBundles);
+    await this.sendGenericMessage(this.clientID, conversationId, genericMessage, userIds);
 
     return {
       ...payloadBundle,
@@ -353,11 +355,7 @@ class ConversationService {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    const preKeyBundles = await this.getPreKeyBundle(conversationId, userIds);
-    const plainTextArray = GenericMessage.encode(genericMessage).finish();
-    const payload = await AssetCryptography.encryptAsset(plainTextArray);
-
-    await this.sendExternalGenericMessage(this.clientID, conversationId, payload, preKeyBundles);
+    await this.sendGenericMessage(this.clientID, conversationId, genericMessage, userIds);
 
     return {
       ...payloadBundle,
@@ -395,11 +393,7 @@ class ConversationService {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    const preKeyBundles = await this.getPreKeyBundle(conversationId, userIds);
-    const plainTextArray = GenericMessage.encode(genericMessage).finish();
-    const payload = await AssetCryptography.encryptAsset(plainTextArray);
-
-    await this.sendExternalGenericMessage(this.clientID, conversationId, payload, preKeyBundles);
+    await this.sendGenericMessage(this.clientID, conversationId, genericMessage, userIds);
 
     return {
       ...payloadBundle,
@@ -457,11 +451,7 @@ class ConversationService {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    const preKeyBundles = await this.getPreKeyBundle(conversationId, userIds);
-    const plainTextArray = GenericMessage.encode(genericMessage).finish();
-    const payload = await AssetCryptography.encryptAsset(plainTextArray);
-
-    await this.sendExternalGenericMessage(this.clientID, conversationId, payload, preKeyBundles);
+    await this.sendGenericMessage(this.clientID, conversationId, genericMessage, userIds);
 
     return {
       ...payloadBundle,
@@ -753,19 +743,8 @@ class ConversationService {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    const preKeyBundles = await this.getPreKeyBundle(conversationId, userIds);
-    const plainTextArray = GenericMessage.encode(genericMessage).finish();
+    await this.sendGenericMessage(this.clientID, conversationId, genericMessage, userIds);
 
-    if (this.shouldSendAsExternal(plainTextArray, preKeyBundles)) {
-      const encryptedAsset = await AssetCryptography.encryptAsset(plainTextArray);
-
-      await this.sendExternalGenericMessage(this.clientID, conversationId, encryptedAsset, preKeyBundles);
-      return payloadBundle;
-    }
-
-    const encryptedPayload = await this.cryptographyService.encrypt(plainTextArray, preKeyBundles);
-
-    await this.sendOTRMessage(this.clientID, conversationId, encryptedPayload, plainTextArray);
     return payloadBundle;
   }
 
