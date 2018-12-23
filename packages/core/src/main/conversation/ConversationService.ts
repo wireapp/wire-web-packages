@@ -33,7 +33,6 @@ import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/';
 import {AxiosError} from 'axios';
 import {Encoder} from 'bazinga64';
-import UUID from 'pure-uuid';
 import {
   AbortReason,
   AssetService,
@@ -67,6 +66,8 @@ import {
   Text,
   Tweet,
 } from '@wireapp/protocol-messaging';
+
+const UUID = require('pure-uuid');
 
 import {
   ClearedContent,
