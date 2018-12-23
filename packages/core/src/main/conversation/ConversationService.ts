@@ -17,6 +17,7 @@
  *
  */
 
+import {APIClient} from '@wireapp/api-client';
 import {
   CONVERSATION_TYPE,
   Conversation,
@@ -32,6 +33,7 @@ import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/';
 import {AxiosError} from 'axios';
 import {Encoder} from 'bazinga64';
+import UUID from 'pure-uuid';
 import {
   AbortReason,
   AssetService,
@@ -91,10 +93,6 @@ import {TextContentBuilder} from './TextContentBuilder';
 
 import {CryptographyService, EncryptedAsset} from '../cryptography/';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
-
-import {APIClient} from '@wireapp/api-client';
-
-const UUID = require('pure-uuid');
 
 class ConversationService {
   private clientID: string = '';

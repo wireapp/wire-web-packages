@@ -22,7 +22,7 @@ import {User} from '@wireapp/api-client/dist/commonjs/user/';
 import {Availability, GenericMessage} from '@wireapp/protocol-messaging';
 import {AvailabilityType, BroadcastService} from '../broadcast/';
 
-const UUID = require('pure-uuid');
+import UUID from 'pure-uuid';
 
 class UserService {
   constructor(private readonly apiClient: APIClient, private readonly broadcastService: BroadcastService) {}
