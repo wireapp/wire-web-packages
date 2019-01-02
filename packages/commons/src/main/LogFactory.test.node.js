@@ -20,6 +20,13 @@
 const {LogFactory} = require('@wireapp/commons');
 
 describe('LogFactory', () => {
+  describe('createLoggerName', () => {
+    it('provides a convenient solution to get a nice logger name', () => {
+      const loggerName = LogFactory.createLoggerName(__filename);
+      expect(loggerName).toBe('@wireapp/commons::LogFactory.test.node');
+    });
+  });
+
   describe('getLogger', () => {
     it('sets a different color for every new logger', () => {
       const firstLogger = LogFactory.getLogger('FirstLogger', {forceEnable: false});

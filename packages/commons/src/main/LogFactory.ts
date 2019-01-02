@@ -21,6 +21,7 @@ import ansiRegex = require('ansi-regex');
 import * as fs from 'fs-extra';
 import * as logdown from 'logdown';
 import * as moment from 'moment';
+import * as path from 'path';
 
 interface LoggerOptions {
   color?: string;
@@ -79,6 +80,15 @@ class LogFactory {
       } catch (error) {
         console.warn(`Cannot write to log file "${this.logFilePath}": ${error.message}`, error);
       }
+    }
+  }
+
+  static createLoggerName(fileName: string, separator: string = '::'): string {
+    if (typeof window === 'undefined') {
+      const suffix = path.basename(fileName, path.extname(fileName));
+      return [process.env.npm_package_name, suffix].join(separator);
+    } else {
+      return [LogFactory.NAMESPACE, fileName].join(separator);
     }
   }
 
