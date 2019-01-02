@@ -24,9 +24,9 @@
     "react-hot-loader": "4.6.3",
     "rimraf": "2.6.2",
     "typescript": "3.2.2",
-    "webpack": "4.28.1",
+    "webpack": "4.28.2",
     "webpack-cli": "3.1.2",
-    "webpack-dev-server": "3.1.10"
+    "webpack-dev-server": "3.1.14"
   },
   "license": "GPL-3.0",
   "main": "dist/index.js",

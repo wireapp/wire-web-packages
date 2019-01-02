@@ -33,16 +33,16 @@
     "karma-jasmine-diff-reporter": "2.0.0",
     "karma-sourcemap-loader": "0.3.7",
     "karma-spec-reporter": "0.0.32",
-    "nock": "10.0.4",
+    "nock": "10.0.5",
     "optimist": "0.6.1",
     "react-hot-loader": "4.6.3",
     "rimraf": "2.6.2",
     "sinon": "7.2.2",
     "sinon-har-server": "0.3.0",
     "typescript": "3.2.2",
-    "webpack": "4.28.1",
+    "webpack": "4.28.2",
     "webpack-cli": "3.1.2",
-    "webpack-dev-server": "3.1.10"
+    "webpack-dev-server": "3.1.14"
   },
   "description": "Wire API Client to send and receive data.",
   "files": [
