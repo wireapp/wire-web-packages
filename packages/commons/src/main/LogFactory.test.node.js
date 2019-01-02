@@ -22,8 +22,8 @@ const {LogFactory} = require('@wireapp/commons');
 describe('LogFactory', () => {
   describe('createLoggerName', () => {
     it('provides a convenient solution to get a nice logger name', () => {
-      const loggerName = LogFactory.createLoggerName(__filename);
-      expect(loggerName).toBe('@wireapp/commons::LogFactory.test.node');
+      const loggerName = LogFactory.createLoggerName('LogFactory', '@wireapp/commons', '::');
+      expect(loggerName).toBe('@wireapp/commons::LogFactory');
     });
   });
 
@@ -36,11 +36,9 @@ describe('LogFactory', () => {
     });
 
     it('shares the prefix with all logger instances', () => {
-      const namespace = 'OurCompany-';
-      LogFactory.NAMESPACE = namespace;
-
-      const firstLogger = LogFactory.getLogger('FirstLogger', {forceEnable: false});
-      const secondLogger = LogFactory.getLogger('SecondLogger', {forceEnable: false});
+      const namespace = 'OurCompany';
+      const firstLogger = LogFactory.getLogger('FirstLogger', {forceEnable: false, namespace});
+      const secondLogger = LogFactory.getLogger('SecondLogger', {forceEnable: false, namespace});
 
       expect(firstLogger.opts.prefix.startsWith(namespace)).toBe(true);
       expect(secondLogger.opts.prefix.startsWith(namespace)).toBe(true);

@@ -22,9 +22,8 @@ import {LogFactory} from '@wireapp/commons';
 describe('LogFactory', () => {
   describe('createLoggerName', () => {
     it('provides a convenient solution to get a nice logger name', () => {
-      LogFactory.NAMESPACE = '@wireapp/commons';
-      const loggerName = LogFactory.createLoggerName('LogFactory.test.browser');
-      expect(loggerName).toBe('@wireapp/commons::LogFactory.test.browser');
+      const loggerName = LogFactory.createLoggerName('LogFactory', '@wireapp/commons', '::');
+      expect(loggerName).toBe('@wireapp/commons::LogFactory');
     });
   });
 });
