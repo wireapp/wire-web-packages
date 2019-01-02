@@ -35,9 +35,18 @@ describe('LogFactory', () => {
     });
 
     it('supports namespaces', () => {
+      const name = 'LogFactory';
       const namespace = 'OurCompany';
-      const logger = LogFactory.getLogger('FirstLogger', {forceEnable: false, namespace});
+      const logger = LogFactory.getLogger(name, {forceEnable: false, namespace});
       expect(logger.opts.prefix.startsWith(namespace)).toBe(true);
+    });
+
+    it('supports namespaces and separators', () => {
+      const name = 'LogFactory';
+      const namespace = 'OurCompany';
+      const separator = '-';
+      const logger = LogFactory.getLogger('LogFactory', {forceEnable: false, namespace, separator});
+      expect(logger.opts.prefix).toBe(`${namespace}${separator}${name}`);
     });
 
     it('prefixes Node.js packages by default', () => {

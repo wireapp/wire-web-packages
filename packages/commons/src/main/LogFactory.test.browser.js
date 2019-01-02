@@ -26,4 +26,27 @@ describe('LogFactory', () => {
       expect(loggerName).toBe('@wireapp/commons::LogFactory');
     });
   });
+
+  describe('getLogger', () => {
+    it('sets a different color for every new logger', () => {
+      const firstLogger = LogFactory.getLogger('FirstLogger', {forceEnable: false});
+      const secondLogger = LogFactory.getLogger('SecondLogger', {forceEnable: false});
+      expect(firstLogger.opts.prefixColor).not.toBe(secondLogger.opts.prefixColor);
+    });
+
+    it('supports namespaces', () => {
+      const name = 'LogFactory';
+      const namespace = 'OurCompany';
+      const logger = LogFactory.getLogger(name, {forceEnable: false, namespace});
+      expect(logger.opts.prefix.startsWith(namespace)).toBe(true);
+    });
+
+    it('supports namespaces and separators', () => {
+      const name = 'LogFactory';
+      const namespace = 'OurCompany';
+      const separator = '-';
+      const logger = LogFactory.getLogger('LogFactory', {forceEnable: false, namespace, separator});
+      expect(logger.opts.prefix).toBe(`${namespace}${separator}${name}`);
+    });
+  });
 });
