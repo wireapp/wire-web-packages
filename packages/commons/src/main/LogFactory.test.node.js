@@ -31,17 +31,18 @@ describe('LogFactory', () => {
     it('sets a different color for every new logger', () => {
       const firstLogger = LogFactory.getLogger('FirstLogger', {forceEnable: false});
       const secondLogger = LogFactory.getLogger('SecondLogger', {forceEnable: false});
-
       expect(firstLogger.opts.prefixColor).not.toBe(secondLogger.opts.prefixColor);
     });
 
-    it('shares the prefix with all logger instances', () => {
+    it('supports namespaces', () => {
       const namespace = 'OurCompany';
-      const firstLogger = LogFactory.getLogger('FirstLogger', {forceEnable: false, namespace});
-      const secondLogger = LogFactory.getLogger('SecondLogger', {forceEnable: false, namespace});
+      const logger = LogFactory.getLogger('FirstLogger', {forceEnable: false, namespace});
+      expect(logger.opts.prefix.startsWith(namespace)).toBe(true);
+    });
 
-      expect(firstLogger.opts.prefix.startsWith(namespace)).toBe(true);
-      expect(secondLogger.opts.prefix.startsWith(namespace)).toBe(true);
+    it('prefixes Node.js packages by default', () => {
+      const logger = LogFactory.getLogger(__filename, {forceEnable: false});
+      expect(logger.opts.prefix).toBe('@wireapp/commons::LogFactory.test.node');
     });
   });
 });
