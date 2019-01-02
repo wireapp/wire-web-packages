@@ -83,7 +83,7 @@ class LogFactory {
     }
   }
 
-  static createLoggerName(fileName: string, separator: string = '::'): string {
+  static createLoggerName(fileName: string, separator: string): string {
     if (typeof window === 'undefined') {
       const suffix = path.basename(fileName, path.extname(fileName));
       return [process.env.npm_package_name, suffix].join(separator);
