@@ -17,7 +17,6 @@
  *
  */
 
-import {APIClient} from '@wireapp/api-client';
 import {
   CONVERSATION_TYPE,
   Conversation,
@@ -67,8 +66,6 @@ import {
   Tweet,
 } from '@wireapp/protocol-messaging';
 
-const UUID = require('pure-uuid');
-
 import {
   ClearedContent,
   ClientActionContent,
@@ -94,6 +91,10 @@ import {TextContentBuilder} from './TextContentBuilder';
 
 import {CryptographyService, EncryptedAsset} from '../cryptography/';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
+
+import {APIClient} from '@wireapp/api-client';
+
+const UUID = require('pure-uuid');
 
 class ConversationService {
   private clientID: string = '';
