@@ -17,7 +17,7 @@
  *
  */
 
-import {LogFactory} from '@wireapp/commons';
+const {LogFactory} = require('@wireapp/commons');
 
 describe('LogFactory', () => {
   describe('createLoggerName', () => {

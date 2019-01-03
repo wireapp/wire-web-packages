@@ -20,35 +20,7 @@
 const {LogFactory} = require('@wireapp/commons');
 
 describe('LogFactory', () => {
-  describe('createLoggerName', () => {
-    it('provides a convenient solution to get a nice logger name', () => {
-      const loggerName = LogFactory.createLoggerName('LogFactory', '@wireapp/commons', '::');
-      expect(loggerName).toBe('@wireapp/commons::LogFactory');
-    });
-  });
-
   describe('getLogger', () => {
-    it('sets a different color for every new logger', () => {
-      const firstLogger = LogFactory.getLogger('FirstLogger');
-      const secondLogger = LogFactory.getLogger('SecondLogger');
-      expect(firstLogger.opts.prefixColor).not.toBe(secondLogger.opts.prefixColor);
-    });
-
-    it('supports namespaces', () => {
-      const name = 'LogFactory';
-      const namespace = 'OurCompany';
-      const logger = LogFactory.getLogger(name, {namespace});
-      expect(logger.opts.prefix.startsWith(namespace)).toBe(true);
-    });
-
-    it('supports namespaces and separators', () => {
-      const name = 'LogFactory';
-      const namespace = 'OurCompany';
-      const separator = '-';
-      const logger = LogFactory.getLogger('LogFactory', {namespace, separator});
-      expect(logger.opts.prefix).toBe(`${namespace}${separator}${name}`);
-    });
-
     it('prefixes Node.js packages by default', () => {
       const logger = LogFactory.getLogger(__filename);
       expect(logger.opts.prefix).toBe('@wireapp/commons::LogFactory.test.node');
