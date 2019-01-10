@@ -7057,17 +7057,17 @@ libnpmteam@^1.0.1:
     get-stream "^4.0.0"
     npm-registry-fetch "^3.8.0"
 
-libsodium-sumo@0.7.3:
-  version "0.7.3"
-  resolved "https://registry.yarnpkg.com/libsodium-sumo/-/libsodium-sumo-0.7.3.tgz#c38d99dc3b2c056870ca8f3ac8f1ecbb150ecbbf"
-  integrity sha512-zCik0rx9XVNKMLY/t+kI6L/+LGomPx/UZ5iiU2YzCDN2K3GPxY2e0OnjJuX/W3/03fRV7W0btNOOgWpvab2P5g==
+libsodium-sumo@0.7.4:
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/libsodium-sumo/-/libsodium-sumo-0.7.4.tgz#fb99816dac06df5d34cd9e04a99253d23fc0d6bd"
+  integrity sha512-xBQaiQ7X0pKmeT7+stva/JplcqdDzd3sag2nVC+UIenYg33w5QUihuZfI1+7JVODvCr4MXFsHm9lv+eIVrJALA==
 
-libsodium-wrappers-sumo@0.7.3:
-  version "0.7.3"
-  resolved "https://registry.yarnpkg.com/libsodium-wrappers-sumo/-/libsodium-wrappers-sumo-0.7.3.tgz#eeb4fc93a9802c34558e0f2ec350295ba6246fc8"
-  integrity sha512-JNEZ74zu83BiPxXiYCexVOJdLaNpQTig5bC28MsPzBjzUwIDdLSabEfQNbEtODaNcqq3UlEgYa8IGvDF1jrINA==
+libsodium-wrappers-sumo@0.7.4:
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/libsodium-wrappers-sumo/-/libsodium-wrappers-sumo-0.7.4.tgz#68443ea2e57fb51e4aefb3f9487be7321fbaf68c"
+  integrity sha512-znWGEGMXru7uIilryz+FvOTrNfT7yK0+17yOqVqp6nRulB9fjfML3VtFKMShOyWjlPqrFFPgYyeVrFb9I2th3g==
   dependencies:
-    libsodium-sumo "0.7.3"
+    libsodium-sumo "0.7.4"
 
 libsodium-wrappers@0.7.3:
   version "0.7.3"
