@@ -4,10 +4,10 @@
     "cross-env": "5.2.0",
     "istanbul": "1.1.0-alpha.1",
     "jasmine": "3.3.1",
-    "rimraf": "2.6.2",
-    "typescript": "3.2.2",
-    "webpack": "4.28.1",
-    "webpack-cli": "3.1.2"
+    "rimraf": "2.6.3",
+    "typescript": "3.2.4",
+    "webpack": "4.29.0",
+    "webpack-cli": "3.2.1"
   },
   "files": [
     "dist"
@@ -33,5 +33,5 @@
     "test:node": "jasmine --config=jasmine.json"
   },
   "types": "dist/commonjs/LRUCache.d.ts",
-  "version": "3.0.22"
+  "version": "3.0.26"
 }

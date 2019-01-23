@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.9...@wireapp/core@8.1.10) (2019-01-17)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.8...@wireapp/core@8.1.9) (2019-01-03)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.7...@wireapp/core@8.1.8) (2019-01-03)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.6...@wireapp/core@8.1.7) (2019-01-02)
+
+
+### Bug Fixes
+
+* Revert "chore(deps-dev): bump uglifyjs-webpack-plugin from 1.3.0 to 2.1.1" ([#1426](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1426)) ([ecb036a](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/ecb036a))
+
+
+
+
+
 ## [8.1.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.5...@wireapp/core@8.1.6) (2018-12-21)
 
 **Note:** Version bump only for package @wireapp/core

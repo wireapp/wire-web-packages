@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@2.1.0...@wireapp/changelog-bot@2.1.1) (2019-01-17)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+# [2.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@2.0.61...@wireapp/changelog-bot@2.1.0) (2019-01-03)
+
+
+### Features
+
+* **changelog-bot:** Exclude commit types, exit on empty log ([#1434](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/issues/1434)) ([d6a9f9d](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/commit/d6a9f9d))
+
+
+
+
+
+## [2.0.61](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@2.0.60...@wireapp/changelog-bot@2.0.61) (2019-01-03)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [2.0.60](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@2.0.59...@wireapp/changelog-bot@2.0.60) (2019-01-02)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
 ## [2.0.59](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@2.0.58...@wireapp/changelog-bot@2.0.59) (2018-12-21)
 
 **Note:** Version bump only for package @wireapp/changelog-bot
