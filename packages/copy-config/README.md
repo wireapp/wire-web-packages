@@ -22,34 +22,29 @@ Create a configuration file following the [cosmiconfig standard](https://github.
 
 ```js
 {
-  configDirName?: 'config',
+  externalDir?: 'config',
   files: {
     sourceFile: 'destinationFile',
     sourceDir: 'destinationDir/',
     anotherFile: ['anotherDir/', 'destinationDir/'],
   },
-  forceDelete: false,
-  gitAdditionalOptions?: '--depth 1',
-  gitConfigurationUrl?: 'https://github.com/wireapp/wire-web-config-default',
-  gitConfigurationVersion?: 'v0.7.1',
-  ignoreFiles?: ['.DS_Store'],
-  noClone?: false;
+  gitConfigurationUrl?: 'https://github.com/wireapp/wire-web-config-default#v0.7.1',
 }
 ```
 
 Additionally, the following parameters can also be set via environment variables:
 
-| parameter                 | environment variable                    |
-| ------------------------- | --------------------------------------- |
-| `configDirName`           | `WIRE_CONFIGURATION_EXTERNAL_DIR`       |
-| `forceDelete`             | `WIRE_CONFIGURATION_FORCE_DELETE`       |
-| `gitAdditionalOptions`    | `WIRE_CONFIGURATION_GIT_OPTIONS`        |
-| `gitConfigurationUrl`     | `WIRE_CONFIGURATION_REPOSITORY`         |
-| `gitConfigurationVersion` | `WIRE_CONFIGURATION_REPOSITORY_VERSION` |
-| `ignoreFiles`             | `WIRE_CONFIGURATION_IGNORE_FILES`       |
-| `noClone`                 | `WIRE_CONFIGURATION_NO_CLONE`           |
+| parameter             | environment variable              |
+| --------------------- | --------------------------------- |
+| `externalDir`         | `WIRE_CONFIGURATION_EXTERNAL_DIR` |
+| `files`               | `WIRE_CONFIGURATION_FILES`        |
+| `gitConfigurationUrl` | `WIRE_CONFIGURATION_REPOSITORY`   |
 
-When setting `ignoreFiles` via environment variables, the filenames should be separated by `,`.
+Example for setting `files` via environment variable:
+
+```sh
+export WIRE_CONFIGURATION_FILES="sourceFile:destinationFile;sourceDir:destinationDir;anotherFile:[anotherDir/,destinationDir/]"
+```
 
 ## Run
 

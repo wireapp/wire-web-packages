@@ -34,27 +34,17 @@ const copyAsync = (source: string, destination: string): Promise<string[]> =>
   );
 
 export interface CopyConfigOptions {
-  configDirName?: string;
+  externalDir?: string;
   files: {
     [source: string]: string | string[];
   };
-  forceDelete?: boolean;
-  gitAdditionalOptions?: string;
-  gitConfigurationUrl?: string;
-  gitConfigurationVersion?: string;
-  ignoreFiles?: string[];
-  noClone?: boolean;
+  repositoryUrl?: string;
 }
 
 const defaultOptions: Required<CopyConfigOptions> = {
-  configDirName: 'config',
+  externalDir: '',
   files: {},
-  forceDelete: false,
-  gitAdditionalOptions: '--depth 1',
-  gitConfigurationUrl: 'https://github.com/wireapp/wire-web-config-default',
-  gitConfigurationVersion: 'v0.7.1',
-  ignoreFiles: ['.DS_Store'],
-  noClone: false,
+  repositoryUrl: 'https://github.com/wireapp/wire-web-config-default#v0.7.1',
 };
 
 export class CopyConfig {
@@ -63,26 +53,31 @@ export class CopyConfig {
   constructor(filesOrOptions: CopyConfigOptions) {
     this.config = {...defaultOptions, ...filesOrOptions};
     this.readEnvVars();
-    this.config.configDirName = path.resolve(this.config.configDirName);
+    this.config.externalDir = path.resolve(this.config.externalDir);
   }
 
   private readEnvVars(): void {
-    const setBoolean = (variable: string | undefined, configKey: keyof CopyConfigOptions) =>
-      typeof variable !== 'undefined' && (this.config[configKey] = Boolean(variable));
-
     const setString = (variable: string | undefined, configKey: keyof CopyConfigOptions) =>
       typeof variable !== 'undefined' && (this.config[configKey] = String(variable));
 
-    const setArray = (variable: string | undefined, configKey: keyof CopyConfigOptions) =>
-      typeof variable !== 'undefined' && (this.config[configKey] = variable.split(','));
+    const setFiles = (files: string | undefined) => {
+      if (typeof files !== 'undefined') {
+        files
+          .split(';')
+          .map(fileTuple => fileTuple.split(':'))
+          .forEach(([source, dest]) => {
+            let destination: string | string[] = dest;
+            if (/^\[.*\]$/.test(destination)) {
+              destination = dest.split(',');
+            }
+            this.config.files[source] = dest;
+          });
+      }
+    };
 
-    setArray(process.env.WIRE_CONFIGURATION_IGNORE_FILES, 'ignoreFiles');
-    setBoolean(process.env.WIRE_CONFIGURATION_FORCE_DELETE, 'forceDelete');
-    setBoolean(process.env.WIRE_CONFIGURATION_NO_CLONE, 'noClone');
-    setString(process.env.WIRE_CONFIGURATION_EXTERNAL_DIR, 'configDirName');
-    setString(process.env.WIRE_CONFIGURATION_GIT_OPTIONS, 'gitAdditionalOptions');
-    setString(process.env.WIRE_CONFIGURATION_REPOSITORY_VERSION, 'gitConfigurationVersion');
-    setString(process.env.WIRE_CONFIGURATION_REPOSITORY, 'gitConfigurationUrl');
+    setString(process.env.WIRE_CONFIGURATION_EXTERNAL_DIR, 'externalDir');
+    setString(process.env.WIRE_CONFIGURATION_REPOSITORY, 'repositoryUrl');
+    setFiles(process.env.WIRE_CONFIGURATION_FILES);
   }
 
   private resolveFiles(): void {
@@ -94,7 +89,7 @@ export class CopyConfig {
     filesArray.forEach(source => {
       const destination = this.config.files[source];
 
-      const joinedSource = path.join(this.config.configDirName, source);
+      const joinedSource = path.join(this.config.externalDir, source);
       const resolvedDestination =
         destination instanceof Array ? destination.map(dest => path.resolve(dest)) : path.resolve(destination);
 
@@ -105,12 +100,14 @@ export class CopyConfig {
   }
 
   public async copyDirOrFile(source: string, destination: string): Promise<string[]> {
-    const isDir = (dir: string) => /(\\|\/|\*)$/.test(dir);
+    const isFile = (path: string) => /[^.\/\\]+\..+$/.test(path);
 
     console.log(`Copying "${source}" -> "${destination}"`);
 
-    if (!isDir(destination)) {
-      if (isDir(source)) {
+    await fs.ensureDir(destination);
+
+    if (isFile(destination)) {
+      if (!isFile(source)) {
         throw new Error('Cannot copy a directory into a file.');
       }
 
@@ -124,20 +121,21 @@ export class CopyConfig {
   }
 
   private async clone(): Promise<void> {
-    const {gitAdditionalOptions, gitConfigurationVersion, gitConfigurationUrl, configDirName} = this.config;
+    const {repositoryUrl, externalDir} = this.config;
+    const [bareUrl, branch = 'master'] = repositoryUrl.split('#');
 
     const {stderr: stderrVersion} = await execAsync('git --version');
 
     if (stderrVersion) {
-      throw new Error(stderrVersion);
+      throw new Error(`No git installation found: ${stderrVersion}`);
     }
 
-    if (this.config.forceDelete) {
-      await rimrafAsync(configDirName);
+    if (!externalDir) {
+      await rimrafAsync(externalDir);
     }
 
-    console.log(`Cloning "${gitConfigurationUrl}" ...`);
-    const command = `git clone ${gitAdditionalOptions} -b ${gitConfigurationVersion} ${gitConfigurationUrl} ${configDirName}`;
+    console.log(`Cloning "${bareUrl}" (branch "${branch}") ...`);
+    const command = `git clone --depth 1 -b ${bareUrl} ${branch} ${externalDir || 'config'}`;
 
     const {stderr: stderrClone} = await execAsync(command);
 
@@ -149,7 +147,7 @@ export class CopyConfig {
   public async copy(): Promise<string[]> {
     let copiedFiles: string[] = [];
 
-    if (!this.config.noClone) {
+    if (!this.config.externalDir) {
       await this.clone();
     }
 

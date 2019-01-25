@@ -20,21 +20,21 @@
 //@ts-check
 
 const path = require('path');
-const fs = require('fs');
+const fs = require('fs-extra');
 
 const {CopyConfig} = require('../../');
-const TEMP_DIR = path.resolve(__dirname, '..', '..', '.temp');
+const TEMP_DIR = path.resolve(__dirname, '..', '..', '.temp/');
 const ERROR_NOTFOUND = -2;
 
 describe('CopyConfig', () => {
+  afterEach(() => fs.remove(TEMP_DIR));
+
   it('copies a single file', async () => {
     const copyConfig = new CopyConfig({
-      configDirName: '',
+      externalDir: '.',
       files: {
         './spec/helpers/test1.txt': TEMP_DIR,
       },
-      forceDelete: true,
-      noClone: true,
     });
 
     const copiedResult = await copyConfig.copy();
@@ -47,12 +47,10 @@ describe('CopyConfig', () => {
 
   it('copies all files', async () => {
     const copyConfig = new CopyConfig({
-      configDirName: '',
+      externalDir: '.',
       files: {
         './spec/helpers/**': TEMP_DIR,
       },
-      forceDelete: true,
-      noClone: true,
     });
 
     const copiedResult = await copyConfig.copy();
@@ -67,12 +65,10 @@ describe('CopyConfig', () => {
 
   it('reports errors', async () => {
     const copyConfig = new CopyConfig({
-      configDirName: '',
+      externalDir: '.',
       files: {
         'non-existant': TEMP_DIR,
       },
-      forceDelete: true,
-      noClone: true,
     });
 
     try {
@@ -84,19 +80,19 @@ describe('CopyConfig', () => {
   });
 
   it('reads environment variables', async () => {
-    process.env.WIRE_CONFIGURATION_NO_CLONE = 'true';
-    process.env.WIRE_CONFIGURATION_IGNORE_FILES = '.DS_Store,ignored_file';
+    process.env.WIRE_CONFIGURATION_EXTERNAL_DIR = 'externalDir';
+    process.env.WIRE_CONFIGURATION_FILES = `./spec/helpers/**:${TEMP_DIR}`;
 
     const copyConfig = new CopyConfig({
-      configDirName: '',
-      files: {
-        './spec/helpers/**': TEMP_DIR,
-      },
+      files: {},
     });
 
-    expect(copyConfig.config.noClone).toBe(true);
-    expect(copyConfig.config.ignoreFiles).toEqual(['.DS_Store', 'ignored_file']);
+    expect(copyConfig.config.externalDir.endsWith('externalDir')).toBe(true);
+    expect(copyConfig.config.files).toEqual({
+      './spec/helpers/**': TEMP_DIR,
+    });
 
-    delete process.env.WIRE_CONFIGURATION_NO_CLONE;
+    delete process.env.WIRE_CONFIGURATION_EXTERNAL_DIR;
+    delete process.env.WIRE_CONFIGURATION_FILES;
   });
 });
