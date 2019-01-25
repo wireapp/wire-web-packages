@@ -28,7 +28,7 @@ configExplorer
   .search()
   .then(configFile => {
     if (configFile) {
-      console.log(`Found configuration file ${configFile.filepath}.`);
+      console.log(`Found configuration file "${configFile.filepath}".`);
     }
     const config = configFile ? configFile.config : undefined;
     return new CopyConfig(config as CopyConfigOptions).copy();

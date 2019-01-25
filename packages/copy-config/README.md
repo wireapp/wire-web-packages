@@ -16,18 +16,29 @@ Wire's internal configuration copy tool.
 yarn add @wireapp/copy-config
 ```
 
-### Setup
+### CLI Setup
 
-Create a configuration file following the [cosmiconfig standard](https://github.com/davidtheclark/cosmiconfig#cosmiconfig) (e.g. `.copyconfigrc.json`) to your project with the following parameters (default parameters listed):
+Create a configuration file following the [cosmiconfig standard](https://github.com/davidtheclark/cosmiconfig#cosmiconfig) (e.g. `.copyconfigrc.json`) to your project with the following parameters:
 
 ```js
 {
-  externalDir: 'config',
+  /**
+   * Specify an external directory to copy from.
+   * Disables cloning to and initial deletion of the source directory.
+   */
+  externalDir: '/external/dir',
+  /**
+   * Which files to copy (`{source: destination}`)
+   */
   files: {
     '/path/to/sourceFile.txt': '/path/to/destinationFile.txt',
     '/path/to/sourceDir/': '/path/to/destinationDir/',
-    '/path/to/anotherDir/*': ['/path/to/thirDir/', '/path/to/destinationDir/'],
+    '/path/to/anotherDir/*': ['/path/to/thirdDir/', '/path/to/destinationDir/'],
   },
+  /**
+   * From where to clone the configuration
+   * If no version is specified, `master` branch is used.
+   */
   repositoryUrl: 'https://github.com/wireapp/wire-web-config-default#v0.7.1',
 }
 ```
@@ -44,11 +55,15 @@ Some examples for setting `files` via environment variable:
 
 ```sh
 export WIRE_CONFIGURATION_FILES="/path/to/sourceFile.txt:/path/to/destinationFile.txt;/path/to/sourceDir/:/path/to/destinationDir/"
-export WIRE_CONFIGURATION_FILES="/path/to/anotherDir/*:[/path/to/thirDir/,/path/to/destinationDir/]"
+export WIRE_CONFIGURATION_FILES="/path/to/anotherDir/*:[/path/to/thirdDir/,/path/to/destinationDir/]"
 ```
 
-## Run
+### CLI Usage
 
 ```
 copy-config
 ```
+
+### API Usage
+
+See [`cli.ts`](./src/main/cli.ts).
