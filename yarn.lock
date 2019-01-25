@@ -1562,6 +1562,13 @@
   dependencies:
     "@types/color-convert" "*"
 
+"@types/copy@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@types/copy/-/copy-0.3.0.tgz#fae833333bacf1cd21c1d4da6340fe89ed7d7af0"
+  integrity sha512-/zyPdk/TnEBKICl1S69suij7gEs3hpxsNTGKRs35MpOkVXjKk68k/AH43nCdwJF2IwltoQV9zJWUI+2AhyjXLQ==
+  dependencies:
+    "@types/vinyl" "*"
+
 "@types/cosmiconfig@5.0.3":
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/@types/cosmiconfig/-/cosmiconfig-5.0.3.tgz#880644bb155d4038d3b752159684b777b0a159dd"
@@ -1698,6 +1705,13 @@
   version "2.3.5"
   resolved "https://registry.yarnpkg.com/@types/tough-cookie/-/tough-cookie-2.3.5.tgz#9da44ed75571999b65c37b60c9b2b88db54c585d"
   integrity sha512-SCcK7mvGi3+ZNz833RRjFIxrn4gI1PPR3NtuIS+6vMkvmsGjosqTJwRt5bAEFLRz+wtJMWv8+uOnZf2hi2QXTg==
+
+"@types/vinyl@*":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@types/vinyl/-/vinyl-2.0.2.tgz#4f3b8dae8f5828d3800ef709b0cff488ee852de3"
+  integrity sha512-2iYpNuOl98SrLPBZfEN9Mh2JCJ2EI9HU35SfgBEb51DcmaHkhp8cKMblYeBqMQiwXMgAD3W60DbQ4i/UdLiXhw==
+  dependencies:
+    "@types/node" "*"
 
 "@webassemblyjs/ast@1.7.11":
   version "1.7.11"

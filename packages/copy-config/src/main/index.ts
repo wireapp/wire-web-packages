@@ -18,14 +18,20 @@
  */
 
 import {exec} from 'child_process';
+import * as os from 'os';
 import * as path from 'path';
-import * as rimraf from 'rimraf';
 import {promisify} from 'util';
 
-const copy = require('copy');
+import copy = require('copy');
+import * as fs from 'fs-extra';
+import * as rimraf from 'rimraf';
 
-const rimrafPromise = promisify(rimraf);
-const execPromise = promisify(exec);
+const rimrafAsync = promisify(rimraf);
+const execAsync = promisify(exec);
+const copyAsync = (source: string, destination: string): Promise<string[]> =>
+  new Promise((resolve, reject) =>
+    copy(source, destination, (error, files = []) => (error ? reject(error) : resolve(files.map(file => file.path))))
+  );
 
 export interface CopyConfigOptions {
   configDirName?: string;
@@ -88,44 +94,52 @@ export class CopyConfig {
     filesArray.forEach(source => {
       const destination = this.config.files[source];
 
-      const resolvedSource = path.join(this.config.configDirName, source);
+      const joinedSource = path.join(this.config.configDirName, source);
       const resolvedDestination =
         destination instanceof Array ? destination.map(dest => path.resolve(dest)) : path.resolve(destination);
 
       delete this.config.files[source];
 
-      this.config.files[resolvedSource] = resolvedDestination;
+      this.config.files[joinedSource] = resolvedDestination;
     });
   }
 
-  public copyDirOrFile(source: string, destination: string): Promise<string[]> {
-    return new Promise((resolve, reject) => {
-      copy(source, destination, (error: Error | null, files: any[]) => {
-        if (error) {
-          return reject(error);
-        }
-        resolve(files.map(file => file.path));
-      });
-    });
+  public async copyDirOrFile(source: string, destination: string): Promise<string[]> {
+    const isDir = (dir: string) => /(\\|\/|\*)$/.test(dir);
+
+    console.log(`Copying "${source}" -> "${destination}"`);
+
+    if (!isDir(destination)) {
+      if (isDir(source)) {
+        throw new Error('Cannot copy a directory into a file.');
+      }
+
+      const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'copyconfig-'));
+      const result = await copyAsync(source, tempDir);
+      await fs.rename(result[0], destination);
+      return [destination];
+    }
+
+    return copyAsync(source, destination);
   }
 
   private async clone(): Promise<void> {
     const {gitAdditionalOptions, gitConfigurationVersion, gitConfigurationUrl, configDirName} = this.config;
 
-    const {stderr: stderrVersion} = await execPromise('git --version');
+    const {stderr: stderrVersion} = await execAsync('git --version');
 
     if (stderrVersion) {
       throw new Error(stderrVersion);
     }
 
     if (this.config.forceDelete) {
-      await rimrafPromise(configDirName);
+      await rimrafAsync(configDirName);
     }
 
     console.log(`Cloning "${gitConfigurationUrl}" ...`);
     const command = `git clone ${gitAdditionalOptions} -b ${gitConfigurationVersion} ${gitConfigurationUrl} ${configDirName}`;
 
-    const {stderr: stderrClone} = await execPromise(command);
+    const {stderr: stderrClone} = await execAsync(command);
 
     if (stderrClone.includes('fatal')) {
       throw new Error(stderrClone);
