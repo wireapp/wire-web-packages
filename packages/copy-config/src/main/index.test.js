@@ -81,15 +81,16 @@ describe('CopyConfig', () => {
 
   it('reads environment variables', async () => {
     process.env.WIRE_CONFIGURATION_EXTERNAL_DIR = 'externalDir';
-    process.env.WIRE_CONFIGURATION_FILES = `./spec/helpers/**:${TEMP_DIR}`;
+    process.env.WIRE_CONFIGURATION_FILES = `./spec/helpers/**:${TEMP_DIR};./spec/helpers/test1.txt:[${TEMP_DIR}/test1.txt,${TEMP_DIR}/test2.txt]`;
 
     const copyConfig = new CopyConfig({
       files: {},
     });
 
-    expect(copyConfig.config.externalDir.endsWith('externalDir')).toBe(true);
-    expect(copyConfig.config.files).toEqual({
+    expect(copyConfig.options.externalDir.endsWith('externalDir')).toBe(true);
+    expect(copyConfig.options.files).toEqual({
       './spec/helpers/**': TEMP_DIR,
+      './spec/helpers/test1.txt': [`${TEMP_DIR}/test1.txt`, `${TEMP_DIR}/test2.txt`],
     });
 
     delete process.env.WIRE_CONFIGURATION_EXTERNAL_DIR;

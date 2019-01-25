@@ -61,16 +61,18 @@ export class CopyConfig {
       typeof variable !== 'undefined' && (this.options[optionKey] = String(variable));
 
     const setFiles = (files: string | undefined) => {
+      const fileArrayRegex = /^\[(.*)\]$/;
+
       if (typeof files !== 'undefined') {
         files
           .split(';')
           .map(fileTuple => fileTuple.split(':'))
           .forEach(([source, dest]) => {
             let destination: string | string[] = dest;
-            if (/^\[.*\]$/.test(destination)) {
-              destination = dest.split(',');
+            if (fileArrayRegex.test(destination)) {
+              destination = dest.replace(fileArrayRegex, '$1').split(',');
             }
-            this.options.files[source] = dest;
+            this.options.files[source] = destination;
           });
       }
     };

@@ -24,9 +24,9 @@ Create a configuration file following the [cosmiconfig standard](https://github.
 {
   externalDir: 'config',
   files: {
-    sourceFile: 'destinationFile',
-    sourceDir: 'destinationDir/',
-    anotherFile: ['anotherDir/', 'destinationDir/'],
+    '/path/to/sourceFile.txt': '/path/to/destinationFile.txt',
+    '/path/to/sourceDir/': '/path/to/destinationDir/',
+    '/path/to/anotherDir/*': ['/path/to/thirDir/', '/path/to/destinationDir/'],
   },
   repositoryUrl: 'https://github.com/wireapp/wire-web-config-default#v0.7.1',
 }
@@ -43,8 +43,8 @@ Additionally, the parameters can also be set via environment variables (which th
 Some examples for setting `files` via environment variable:
 
 ```sh
-export WIRE_CONFIGURATION_FILES="sourceFile:destinationFilesourceDir:destinationDir"
-export WIRE_CONFIGURATION_FILES="anotherFile:[anotherDir/,destinationDir/]"
+export WIRE_CONFIGURATION_FILES="/path/to/sourceFile.txt:/path/to/destinationFile.txt;/path/to/sourceDir/:/path/to/destinationDir/"
+export WIRE_CONFIGURATION_FILES="/path/to/anotherDir/*:[/path/to/thirDir/,/path/to/destinationDir/]"
 ```
 
 ## Run
