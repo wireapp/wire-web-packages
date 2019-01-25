@@ -24,6 +24,7 @@ import {promisify} from 'util';
 
 import copy = require('copy');
 import * as fs from 'fs-extra';
+import * as logdown from 'logdown';
 import * as rimraf from 'rimraf';
 
 import {CopyConfigOptions} from './CopyConfigOptions';
@@ -43,11 +44,15 @@ const defaultOptions: Required<CopyConfigOptions> = {
 
 export class CopyConfig {
   private readonly options: Required<CopyConfigOptions>;
+  private readonly logger: logdown.Logger;
 
   constructor(filesOrOptions: CopyConfigOptions) {
     this.options = {...defaultOptions, ...filesOrOptions};
     this.readEnvVars();
     this.options.externalDir = this.options.externalDir ? path.resolve(this.options.externalDir) : '';
+    this.logger = logdown('@wireapp/copy-config/CopyConfig', {
+      markdown: false,
+    });
   }
 
   private readEnvVars(): void {
@@ -98,7 +103,7 @@ export class CopyConfig {
   public async copyDirOrFile(source: string, destination: string): Promise<string[]> {
     const isFile = (path: string) => /[^.\/\\]+\..+$/.test(path);
 
-    console.log(`Copying "${source}" -> "${destination}"`);
+    this.logger.info(`Copying "${source}" -> "${destination}"`);
 
     await fs.ensureDir(destination);
 
@@ -130,7 +135,7 @@ export class CopyConfig {
       await rimrafAsync(externalDir);
     }
 
-    console.log(`Cloning "${bareUrl}" (branch "${branch}") ...`);
+    this.logger.info(`Cloning "${bareUrl}" (branch "${branch}") ...`);
     const command = `git clone --depth 1 -b ${bareUrl} ${branch} ${externalDir || 'config'}`;
 
     const {stderr: stderrClone} = await execAsync(command);

@@ -20,22 +20,27 @@
  */
 
 import cosmiconfig = require('cosmiconfig');
+import * as logdown from 'logdown';
+
 import {CopyConfig, CopyConfigOptions} from './';
 
 const configExplorer = cosmiconfig('copyconfig');
+const logger = logdown('@wireapp/copy-config/cli', {
+  markdown: false,
+});
 
 configExplorer
   .search()
   .then(configFile => {
     if (configFile) {
-      console.log(`Found configuration file "${configFile.filepath}".`);
+      logger.info(`Found configuration file "${configFile.filepath}".`);
     }
     const config = configFile ? configFile.config : undefined;
     return new CopyConfig(config as CopyConfigOptions).copy();
   })
   .then(copiedFiles => {
     const copyMessage = copiedFiles.length ? `Copied ${copiedFiles.length}` : "Didn't copy any";
-    console.log(`${copyMessage} file${copiedFiles.length === 1 ? '' : 's'}.`);
+    logger.info(`${copyMessage} file${copiedFiles.length === 1 ? '' : 's'}.`);
   })
   .catch(error => {
     console.error(error.stack);

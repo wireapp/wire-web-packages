@@ -64,6 +64,12 @@ export WIRE_CONFIGURATION_FILES="/path/to/anotherDir/*:[/path/to/thirdDir/,/path
 copy-config
 ```
 
+If you need logging, set the following environment variable:
+
+```sh
+export NODE_DEBUG="@wireapp/copy-config/*"
+```
+
 ### API Usage
 
 See [`cli.ts`](./src/main/cli.ts).
