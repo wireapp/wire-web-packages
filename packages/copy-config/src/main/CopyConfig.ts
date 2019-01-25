@@ -45,11 +45,22 @@ const defaultOptions: Required<CopyConfigOptions> = {
 export class CopyConfig {
   private readonly options: Required<CopyConfigOptions>;
   private readonly logger: logdown.Logger;
+  private readonly baseDir: string = 'config';
+  private readonly noClone: boolean = false;
+  private readonly noCleanup: boolean = false;
 
   constructor(filesOrOptions: CopyConfigOptions) {
     this.options = {...defaultOptions, ...filesOrOptions};
     this.readEnvVars();
-    this.options.externalDir = this.options.externalDir ? path.resolve(this.options.externalDir) : '';
+
+    if (this.options.externalDir) {
+      this.noClone = true;
+      this.noCleanup = true;
+      this.baseDir = this.options.externalDir;
+    }
+
+    this.baseDir = path.resolve(this.baseDir);
+
     this.logger = logdown('@wireapp/copy-config/CopyConfig', {
       markdown: false,
     });
@@ -90,7 +101,7 @@ export class CopyConfig {
     filesArray.forEach(source => {
       const destination = this.options.files[source];
 
-      const joinedSource = path.join(this.options.externalDir, source);
+      const joinedSource = path.join(this.baseDir, source);
       const resolvedDestination =
         destination instanceof Array ? destination.map(dest => path.resolve(dest)) : path.resolve(destination);
 
@@ -122,8 +133,7 @@ export class CopyConfig {
   }
 
   private async clone(): Promise<void> {
-    const {repositoryUrl, externalDir} = this.options;
-    const [bareUrl, branch = 'master'] = repositoryUrl.split('#');
+    const [bareUrl, branch = 'master'] = this.options.repositoryUrl.split('#');
 
     const {stderr: stderrVersion} = await execAsync('git --version');
 
@@ -131,12 +141,13 @@ export class CopyConfig {
       throw new Error(`No git installation found: ${stderrVersion}`);
     }
 
-    if (!externalDir) {
-      await rimrafAsync(externalDir);
+    if (!this.noCleanup) {
+      this.logger.info(`Cleaning up configuration dir before cloning ...`);
+      await rimrafAsync(this.options.externalDir);
     }
 
     this.logger.info(`Cloning "${bareUrl}" (branch "${branch}") ...`);
-    const command = `git clone --depth 1 -b ${bareUrl} ${branch} ${externalDir || 'config'}`;
+    const command = `git clone --depth 1 -b ${bareUrl} ${branch} ${this.baseDir}`;
 
     const {stderr: stderrClone} = await execAsync(command);
 
@@ -148,7 +159,7 @@ export class CopyConfig {
   public async copy(): Promise<string[]> {
     let copiedFiles: string[] = [];
 
-    if (!this.options.externalDir) {
+    if (!this.noClone) {
       await this.clone();
     }
 
@@ -165,8 +176,6 @@ export class CopyConfig {
       }
     }
 
-    copiedFiles = copiedFiles.sort();
-
-    return copiedFiles;
+    return copiedFiles.sort();
   }
 }

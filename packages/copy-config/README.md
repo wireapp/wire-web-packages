@@ -58,16 +58,16 @@ export WIRE_CONFIGURATION_FILES="/path/to/sourceFile.txt:/path/to/destinationFil
 export WIRE_CONFIGURATION_FILES="/path/to/anotherDir/*:[/path/to/thirdDir/,/path/to/destinationDir/]"
 ```
 
-### CLI Usage
-
-```
-copy-config
-```
-
 If you need logging, set the following environment variable:
 
 ```sh
 export NODE_DEBUG="@wireapp/copy-config/*"
+```
+
+### CLI Usage
+
+```
+copy-config
 ```
 
 ### API Usage
