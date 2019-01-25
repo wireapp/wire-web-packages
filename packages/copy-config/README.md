@@ -18,7 +18,7 @@ yarn add @wireapp/copy-config
 
 ### CLI Setup
 
-Create a configuration file following the [cosmiconfig standard](https://github.com/davidtheclark/cosmiconfig#cosmiconfig) (e.g. `.copyconfigrc.json`) to your project with the following parameters:
+Create a configuration file following the [cosmiconfig standard](https://github.com/davidtheclark/cosmiconfig#cosmiconfig) (e.g. `.copyconfigrc.js`) to your project with the following parameters:
 
 ```js
 {
