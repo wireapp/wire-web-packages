@@ -17,5 +17,21 @@
  *
  */
 
-export * from './CopyConfig';
-export * from './CopyConfigOptions';
+export interface CopyConfigOptions {
+  /**
+   * An external directory to copy from.
+   * Disables cloning to and initial deletion of the source directory.
+   */
+  externalDir?: string;
+  /**
+   * Which files to copy (`{source: destination}`)
+   */
+  files?: {
+    [source: string]: string | string[];
+  };
+  /**
+   * From where to clone the configuration.
+   * If no version is specified, `master` branch is used.
+   */
+  repositoryUrl?: string;
+}

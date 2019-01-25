@@ -22,7 +22,7 @@
 const path = require('path');
 const fs = require('fs-extra');
 
-const {CopyConfig} = require('../../');
+const {CopyConfig} = require('../../dist');
 const TEMP_DIR = path.resolve(__dirname, '..', '..', '.temp/');
 const ERROR_NOTFOUND = -2;
 
