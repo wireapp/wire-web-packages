@@ -35,7 +35,7 @@ const copyAsync = (source: string, destination: string): Promise<string[]> =>
 
 export interface CopyConfigOptions {
   externalDir?: string;
-  files: {
+  files?: {
     [source: string]: string | string[];
   };
   repositoryUrl?: string;
@@ -48,17 +48,17 @@ const defaultOptions: Required<CopyConfigOptions> = {
 };
 
 export class CopyConfig {
-  private readonly config: Required<CopyConfigOptions>;
+  private readonly options: Required<CopyConfigOptions>;
 
   constructor(filesOrOptions: CopyConfigOptions) {
-    this.config = {...defaultOptions, ...filesOrOptions};
+    this.options = {...defaultOptions, ...filesOrOptions};
     this.readEnvVars();
-    this.config.externalDir = path.resolve(this.config.externalDir);
+    this.options.externalDir = path.resolve(this.options.externalDir);
   }
 
   private readEnvVars(): void {
-    const setString = (variable: string | undefined, configKey: keyof CopyConfigOptions) =>
-      typeof variable !== 'undefined' && (this.config[configKey] = String(variable));
+    const setString = (variable: string | undefined, optionKey: keyof CopyConfigOptions) =>
+      typeof variable !== 'undefined' && (this.options[optionKey] = String(variable));
 
     const setFiles = (files: string | undefined) => {
       if (typeof files !== 'undefined') {
@@ -70,7 +70,7 @@ export class CopyConfig {
             if (/^\[.*\]$/.test(destination)) {
               destination = dest.split(',');
             }
-            this.config.files[source] = dest;
+            this.options.files[source] = dest;
           });
       }
     };
@@ -81,21 +81,21 @@ export class CopyConfig {
   }
 
   private resolveFiles(): void {
-    const filesArray = Object.keys(this.config.files);
+    const filesArray = Object.keys(this.options.files);
     if (!filesArray.length) {
       throw new Error('No source files or directories specified.');
     }
 
     filesArray.forEach(source => {
-      const destination = this.config.files[source];
+      const destination = this.options.files[source];
 
-      const joinedSource = path.join(this.config.externalDir, source);
+      const joinedSource = path.join(this.options.externalDir, source);
       const resolvedDestination =
         destination instanceof Array ? destination.map(dest => path.resolve(dest)) : path.resolve(destination);
 
-      delete this.config.files[source];
+      delete this.options.files[source];
 
-      this.config.files[joinedSource] = resolvedDestination;
+      this.options.files[joinedSource] = resolvedDestination;
     });
   }
 
@@ -121,7 +121,7 @@ export class CopyConfig {
   }
 
   private async clone(): Promise<void> {
-    const {repositoryUrl, externalDir} = this.config;
+    const {repositoryUrl, externalDir} = this.options;
     const [bareUrl, branch = 'master'] = repositoryUrl.split('#');
 
     const {stderr: stderrVersion} = await execAsync('git --version');
@@ -147,14 +147,14 @@ export class CopyConfig {
   public async copy(): Promise<string[]> {
     let copiedFiles: string[] = [];
 
-    if (!this.config.externalDir) {
+    if (!this.options.externalDir) {
       await this.clone();
     }
 
     this.resolveFiles();
 
-    for (const file in this.config.files) {
-      const destination = this.config.files[file];
+    for (const file in this.options.files) {
+      const destination = this.options.files[file];
       if (destination instanceof Array) {
         const results = await Promise.all(destination.map(dest => this.copyDirOrFile(file, dest)));
         results.forEach(result => (copiedFiles = copiedFiles.concat(result)));

@@ -18,32 +18,33 @@ yarn add @wireapp/copy-config
 
 ### Setup
 
-Create a configuration file following the [cosmiconfig standard](https://github.com/davidtheclark/cosmiconfig#cosmiconfig) (e.g. `.copyconfigrc.json`) to your project with the following parameters (optional parameters are followed by a `?`, default parameters listed):
+Create a configuration file following the [cosmiconfig standard](https://github.com/davidtheclark/cosmiconfig#cosmiconfig) (e.g. `.copyconfigrc.json`) to your project with the following parameters (default parameters listed):
 
 ```js
 {
-  externalDir?: 'config',
+  externalDir: 'config',
   files: {
     sourceFile: 'destinationFile',
     sourceDir: 'destinationDir/',
     anotherFile: ['anotherDir/', 'destinationDir/'],
   },
-  gitConfigurationUrl?: 'https://github.com/wireapp/wire-web-config-default#v0.7.1',
+  repositoryUrl: 'https://github.com/wireapp/wire-web-config-default#v0.7.1',
 }
 ```
 
-Additionally, the following parameters can also be set via environment variables:
+Additionally, the parameters can also be set via environment variables (which then take precedence above all other configuration):
 
-| parameter             | environment variable              |
-| --------------------- | --------------------------------- |
-| `externalDir`         | `WIRE_CONFIGURATION_EXTERNAL_DIR` |
-| `files`               | `WIRE_CONFIGURATION_FILES`        |
-| `gitConfigurationUrl` | `WIRE_CONFIGURATION_REPOSITORY`   |
+| Parameter       | Environment variable              |
+| --------------- | --------------------------------- |
+| `externalDir`   | `WIRE_CONFIGURATION_EXTERNAL_DIR` |
+| `files`         | `WIRE_CONFIGURATION_FILES`        |
+| `repositoryUrl` | `WIRE_CONFIGURATION_REPOSITORY`   |
 
-Example for setting `files` via environment variable:
+Some examples for setting `files` via environment variable:
 
 ```sh
-export WIRE_CONFIGURATION_FILES="sourceFile:destinationFile;sourceDir:destinationDir;anotherFile:[anotherDir/,destinationDir/]"
+export WIRE_CONFIGURATION_FILES="sourceFile:destinationFilesourceDir:destinationDir"
+export WIRE_CONFIGURATION_FILES="anotherFile:[anotherDir/,destinationDir/]"
 ```
 
 ## Run
