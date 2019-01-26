@@ -1562,10 +1562,10 @@
   dependencies:
     "@types/color-convert" "*"
 
-"@types/copy@0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@types/copy/-/copy-0.3.0.tgz#fae833333bacf1cd21c1d4da6340fe89ed7d7af0"
-  integrity sha512-/zyPdk/TnEBKICl1S69suij7gEs3hpxsNTGKRs35MpOkVXjKk68k/AH43nCdwJF2IwltoQV9zJWUI+2AhyjXLQ==
+"@types/copy@0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@types/copy/-/copy-0.3.1.tgz#9e48b8074d5045e84f862c817a7b1d409fbd5504"
+  integrity sha512-pPGzQ6C+9R7MViAJXl4VoqFrf6WK3UjpDLbqKiotr4DCY8AMzfIi2Kiy41pd+yPxb4cihjmtoO53Fonzctz+Aw==
   dependencies:
     "@types/vinyl" "*"
 
