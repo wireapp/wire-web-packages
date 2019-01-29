@@ -47,7 +47,7 @@ export class CopyConfig {
   private readonly baseDir: string = 'config';
   private readonly noClone: boolean = false;
   private readonly noCleanup: boolean = false;
-  private readonly filter: string[] = ['.DS_Store'];
+  private readonly filterFiles: string[] = ['.DS_Store'];
 
   constructor(filesOrOptions: CopyConfigOptions) {
     this.options = {...defaultOptions, ...filesOrOptions};
@@ -112,7 +112,7 @@ export class CopyConfig {
 
   public async copyDirOrFile(source: string, destination: string): Promise<string[]> {
     const filter = (src: string): boolean => {
-      for (const fileName in this.filter) {
+      for (const fileName in this.filterFiles) {
         if (src.endsWith(fileName)) {
           return false;
         }
