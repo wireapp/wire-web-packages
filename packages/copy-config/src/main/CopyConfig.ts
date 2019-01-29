@@ -124,16 +124,21 @@ export class CopyConfig {
 
     this.logger.info(`Copying "${source}" -> "${destination}"`);
 
-    await fs.ensureDir(destination);
+    if (isFile(destination)) {
+      if (!isFile(source)) {
+        throw new Error('Cannot copy a directory into a file.');
+      }
+      await fs.ensureDir(path.dirname(destination));
+    } else {
+      await fs.ensureDir(destination);
+    }
 
     if (isGlob(source)) {
       return copyAsync(source, destination);
     }
 
-    if (isFile(source)) {
+    if (isFile(source) && !isFile(destination)) {
       destination = path.join(destination, path.basename(source));
-    } else if (isFile(destination)) {
-      throw new Error('Cannot copy a directory into a file.');
     }
 
     await fs.copy(source, destination, {filter, overwrite: true, recursive: true});
@@ -150,7 +155,7 @@ export class CopyConfig {
     }
 
     if (!this.noCleanup) {
-      this.logger.info(`Cleaning up configuration dir before cloning ...`);
+      this.logger.info(`Removing clone directory before cloning ...`);
       await rimrafAsync(this.baseDir);
     }
 
