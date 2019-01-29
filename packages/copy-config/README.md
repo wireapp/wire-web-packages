@@ -18,32 +18,13 @@ yarn add @wireapp/copy-config
 
 ### CLI Setup
 
-Create a configuration file following the [cosmiconfig standard](https://github.com/davidtheclark/cosmiconfig#cosmiconfig) (e.g. `.copyconfigrc.js`) to your project with the following parameters:
+Create a configuration file following the [cosmiconfig standard](https://github.com/davidtheclark/cosmiconfig#cosmiconfig) (e.g. `.copyconfigrc.js`) to your project and add parameters (see [`CopyConfigOptions.ts`](./src/main/CopyConfigOptions.ts)).
 
-```js
-{
-  /**
-   * Specify an external directory to copy from.
-   * Disables cloning to and initial deletion of the source directory.
-   */
-  externalDir: '/external/dir',
-  /**
-   * Which files to copy (`{source: destination}`)
-   */
-  files: {
-    '/path/to/sourceFile.txt': '/path/to/destinationFile.txt',
-    '/path/to/sourceDir/': '/path/to/destinationDir/',
-    '/path/to/anotherDir/*': ['/path/to/thirdDir/', '/path/to/destinationDir/'],
-  },
-  /**
-   * From where to clone the configuration
-   * If no version is specified, `master` branch is used.
-   */
-  repositoryUrl: 'https://github.com/wireapp/wire-web-config-default#v0.7.1',
-}
-```
+**Note**: the `files` parameter needs to be specified, all other are optional.
 
-Additionally, the parameters can also be set via environment variables (which then take precedence above all other configuration):
+#### Environment variables
+
+Additionally, some parameters can be set via environment variables (which then take precedence above all other configuration):
 
 | Parameter       | Environment variable              |
 | --------------- | --------------------------------- |
@@ -54,7 +35,7 @@ Additionally, the parameters can also be set via environment variables (which th
 Some examples for setting `files` via environment variable:
 
 ```sh
-export WIRE_CONFIGURATION_FILES="/path/to/sourceFile.txt:/path/to/destinationFile.txt;/path/to/sourceDir/:/path/to/destinationDir/"
+export WIRE_CONFIGURATION_FILES="/path/to/source.txt:/path/to/destination.txt;/path/to/source/:/path/to/destination/"
 export WIRE_CONFIGURATION_FILES="/path/to/anotherDir/*:[/path/to/thirdDir/,/path/to/destinationDir/]"
 ```
 

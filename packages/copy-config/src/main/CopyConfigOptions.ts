@@ -21,10 +21,21 @@ export interface CopyConfigOptions {
   /**
    * An external directory to copy from.
    * Disables cloning to and initial deletion of the source directory.
+   *
+   * @example `/home/user/externalDir`
    */
   externalDir?: string;
   /**
    * Which files to copy (`{source: destination}`)
+   *
+   * @example
+   * {
+   *   '/path/to/source.txt': '/path/to/destination.txt',
+   *   '/path/to/source/': '/path/to/destination/',
+   *   '/path/to/anotherDir/*': [
+   *     '/path/to/thirdDir/', '/path/to/destinationDir/
+   *   ']
+   * }
    */
   files?: {
     [source: string]: string | string[];
@@ -32,6 +43,8 @@ export interface CopyConfigOptions {
   /**
    * From where to clone the configuration.
    * If no version is specified, `master` branch is used.
+   *
+   * @example `https://github.com/wireapp/wire-web-config-default#v0.7.1`
    */
   repositoryUrl?: string;
 }
