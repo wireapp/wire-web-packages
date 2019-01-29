@@ -143,7 +143,7 @@ export class CopyConfig {
 
     if (!this.noCleanup) {
       this.logger.info(`Cleaning up configuration dir before cloning ...`);
-      await rimrafAsync(this.options.externalDir);
+      await rimrafAsync(this.baseDir);
     }
 
     this.logger.info(`Cloning "${bareUrl}" (branch "${branch}") ...`);
