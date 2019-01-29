@@ -26,20 +26,13 @@ Create a configuration file following the [cosmiconfig standard](https://github.
 
 Additionally, some parameters can be set via environment variables (which then take precedence above all other configuration):
 
-| Parameter       | Environment variable              |
-| --------------- | --------------------------------- |
-| `externalDir`   | `WIRE_CONFIGURATION_EXTERNAL_DIR` |
-| `files`         | `WIRE_CONFIGURATION_FILES`        |
-| `repositoryUrl` | `WIRE_CONFIGURATION_REPOSITORY`   |
+| Parameter       | Environment variable              | Example                                                                               |
+| --------------- | --------------------------------- | ------------------------------------------------------------------------------------- |
+| `externalDir`   | `WIRE_CONFIGURATION_EXTERNAL_DIR` | `/home/user/externalDir`                                                              |
+| `files`         | `WIRE_CONFIGURATION_FILES`        | `/path/to/source.txt:/path/to/destination.txt;/path/to/source/:/path/to/destination/` |
+| `repositoryUrl` | `WIRE_CONFIGURATION_REPOSITORY`   | `/path/to/anotherDir/*:[/path/to/thirdDir/,/path/to/destinationDir/]`                 |
 
-Some examples for setting `files` via environment variable:
-
-```sh
-export WIRE_CONFIGURATION_FILES="/path/to/source.txt:/path/to/destination.txt;/path/to/source/:/path/to/destination/"
-export WIRE_CONFIGURATION_FILES="/path/to/anotherDir/*:[/path/to/thirdDir/,/path/to/destinationDir/]"
-```
-
-If you need logging, set the following environment variable:
+If you need logging, set the `NODE_DEBUG` environment variable:
 
 ```sh
 export NODE_DEBUG="@wireapp/copy-config/*"
