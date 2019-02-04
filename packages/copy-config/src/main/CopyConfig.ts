@@ -84,9 +84,8 @@ export class CopyConfig {
 
     files
       .split(';')
-      .map(fileTuple => fileTuple.split(/:/))
+      .map(fileTuple => String.raw`${fileTuple}`.split(/:(?!\\)/))
       .forEach(([source, dest]) => {
-        console.log('SRC', dest);
         let destination: string | string[] = dest;
         if (fileArrayRegex.test(destination)) {
           destination = dest.replace(fileArrayRegex, '$1').split(',');
