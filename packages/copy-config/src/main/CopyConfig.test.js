@@ -111,4 +111,16 @@ describe('CopyConfig', () => {
     delete process.env.WIRE_CONFIGURATION_EXTERNAL_DIR;
     delete process.env.WIRE_CONFIGURATION_FILES;
   });
+
+  it('is compatible with Window paths', () => {
+    const copyString = 'C:\\source:D:\\target';
+
+    const copyConfig = new CopyConfig({
+      files: {},
+    });
+
+    const resolvedPaths = copyConfig.getFilesFromString(copyString);
+    expect(Object.keys(resolvedPaths)[0]).toBe('C:\\source');
+    expect(Object.values(resolvedPaths)[0]).toBe('D:\\target');
+  });
 });
