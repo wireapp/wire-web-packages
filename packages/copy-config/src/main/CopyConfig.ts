@@ -72,7 +72,8 @@ export class CopyConfig {
     setString(process.env.WIRE_CONFIGURATION_EXTERNAL_DIR, 'externalDir');
     setString(process.env.WIRE_CONFIGURATION_REPOSITORY, 'repositoryUrl');
     if (typeof process.env.WIRE_CONFIGURATION_FILES !== 'undefined') {
-      this.getFilesFromString(process.env.WIRE_CONFIGURATION_FILES);
+      const files = this.getFilesFromString(process.env.WIRE_CONFIGURATION_FILES);
+      Object.assign(this.options.files, files);
     }
   }
 
@@ -83,7 +84,7 @@ export class CopyConfig {
 
     files
       .split(';')
-      .map(fileTuple => fileTuple.split(':'))
+      .map(fileTuple => fileTuple.split(/:/))
       .forEach(([source, dest]) => {
         console.log('SRC', dest);
         let destination: string | string[] = dest;
