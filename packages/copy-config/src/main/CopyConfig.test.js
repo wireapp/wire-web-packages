@@ -94,7 +94,7 @@ describe('CopyConfig', () => {
     expect(copiedResult.length).toBe(1);
   });
 
-  it('can be configures using environment variables', async () => {
+  it('can be configured using environment variables', async () => {
     process.env.WIRE_CONFIGURATION_EXTERNAL_DIR = 'externalDir';
     process.env.WIRE_CONFIGURATION_FILES = `./spec/helpers/**:${TEMP_DIR};./spec/helpers/test1.txt:[${TEMP_DIR}/test1.txt,${TEMP_DIR}/test2.txt]`;
 
