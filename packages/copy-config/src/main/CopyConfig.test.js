@@ -112,7 +112,7 @@ describe('CopyConfig', () => {
     delete process.env.WIRE_CONFIGURATION_FILES;
   });
 
-  it('is compatible with Window paths', () => {
+  it('is compatible with Windows paths', () => {
     const copyString = 'C:\\source:D:\\target';
 
     const copyConfig = new CopyConfig({
