@@ -69,7 +69,7 @@ describe('CopyConfig', () => {
       const copyConfig = new CopyConfig({
         externalDir: '.',
         files: {
-          './spec/helpers/.env': `${TEMP_DIR}/.env`,
+          './spec/helpers/.env.test': `${TEMP_DIR}/.env`,
         },
       });
 
