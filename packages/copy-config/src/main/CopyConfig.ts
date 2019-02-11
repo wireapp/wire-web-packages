@@ -18,22 +18,29 @@
  */
 
 import {exec} from 'child_process';
+import * as fs from 'fs-extra';
+import * as logdown from 'logdown';
 import * as path from 'path';
+import * as rimraf from 'rimraf';
 import {promisify} from 'util';
 
 import copy = require('copy');
-import * as fs from 'fs-extra';
-import * as logdown from 'logdown';
-import * as rimraf from 'rimraf';
-
 import {CopyConfigOptions} from './CopyConfigOptions';
 
+const isFile = (path: string) => /[^.\/\\]+\..+$/.test(path);
 const rimrafAsync = promisify(rimraf);
 const execAsync = promisify(exec);
-const copyAsync = (source: string, destination: string): Promise<string[]> =>
-  new Promise((resolve, reject) =>
+const copyAsync = async (source: string, destination: string): Promise<string[]> => {
+  if (isFile(destination)) {
+    await fs.ensureDir(path.dirname(destination));
+  } else {
+    await fs.ensureDir(destination);
+  }
+
+  return new Promise((resolve, reject) =>
     copy(source, destination, (error, files = []) => (error ? reject(error) : resolve(files.map(file => file.path))))
   );
+};
 
 const defaultOptions: Required<CopyConfigOptions> = {
   externalDir: '',
@@ -69,26 +76,31 @@ export class CopyConfig {
     const setString = (variable: string | undefined, optionKey: keyof CopyConfigOptions) =>
       typeof variable !== 'undefined' && (this.options[optionKey] = String(variable));
 
-    const setFiles = (files: string | undefined) => {
-      const fileArrayRegex = /^\[(.*)\]$/;
-
-      if (typeof files !== 'undefined') {
-        files
-          .split(';')
-          .map(fileTuple => fileTuple.split(':'))
-          .forEach(([source, dest]) => {
-            let destination: string | string[] = dest;
-            if (fileArrayRegex.test(destination)) {
-              destination = dest.replace(fileArrayRegex, '$1').split(',');
-            }
-            this.options.files[source] = destination;
-          });
-      }
-    };
-
     setString(process.env.WIRE_CONFIGURATION_EXTERNAL_DIR, 'externalDir');
     setString(process.env.WIRE_CONFIGURATION_REPOSITORY, 'repositoryUrl');
-    setFiles(process.env.WIRE_CONFIGURATION_FILES);
+    if (typeof process.env.WIRE_CONFIGURATION_FILES !== 'undefined') {
+      const files = this.getFilesFromString(process.env.WIRE_CONFIGURATION_FILES);
+      Object.assign(this.options.files, files);
+    }
+  }
+
+  private getFilesFromString(files: string): {[source: string]: string | string[]} {
+    const resolvedPaths: {[source: string]: string | string[]} = {};
+
+    const fileArrayRegex = /^\[(.*)\]$/;
+
+    files
+      .split(';')
+      .map(fileTuple => String.raw`${fileTuple}`.split(/:(?!\\)/))
+      .forEach(([source, dest]) => {
+        let destination: string | string[] = dest;
+        if (fileArrayRegex.test(destination)) {
+          destination = dest.replace(fileArrayRegex, '$1').split(',');
+        }
+        resolvedPaths[source] = destination;
+      });
+
+    return resolvedPaths;
   }
 
   private resolveFiles(): void {
@@ -119,18 +131,13 @@ export class CopyConfig {
       }
       return true;
     };
-    const isFile = (path: string) => /[^.\/\\]+\..+$/.test(path);
+
     const isGlob = (path: string) => /\*$/.test(path);
 
     this.logger.info(`Copying "${source}" -> "${destination}"`);
 
-    if (isFile(destination)) {
-      if (!isFile(source)) {
-        throw new Error('Cannot copy a directory into a file.');
-      }
-      await fs.ensureDir(path.dirname(destination));
-    } else {
-      await fs.ensureDir(destination);
+    if (isFile(destination) && !isFile(source)) {
+      throw new Error('Cannot copy a directory into a file.');
     }
 
     if (isGlob(source)) {
@@ -141,7 +148,10 @@ export class CopyConfig {
       destination = path.join(destination, path.basename(source));
     }
 
+    // Info: "fs.copy" creates all sub-folders which are needed along the way:
+    // @see https://github.com/jprichardson/node-fs-extra/blob/7.0.1/lib/copy/copy.js#L43
     await fs.copy(source, destination, {filter, overwrite: true, recursive: true});
+
     return [destination];
   }
 
