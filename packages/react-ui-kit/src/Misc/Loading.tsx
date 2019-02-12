@@ -30,14 +30,14 @@ interface LoadingComponentProps {
 
 function LoadingComponent({
   className,
-  progress = null,
+  progress = undefined,
   size,
 }: LoadingComponentProps & React.HTMLAttributes<SVGElement>) {
   const additionalProps: {
     strokeDashoffset?: string;
   } = {};
 
-  if (progress !== null) {
+  if (progress) {
     additionalProps.strokeDashoffset = `${pathLength - pathLength * progress}`;
   }
   return (
@@ -66,7 +66,7 @@ const fillAnimation = keyframes`
 `;
 
 const rotationOffset = -0.75;
-const rotationDelay = `${parseFloat(DURATION.EXTRA_LONG) * rotationOffset}s`;
+const rotationDelay = DURATION.EXTRA_LONG * rotationOffset;
 
 interface LoadingProps {
   progress?: number;
@@ -75,19 +75,19 @@ interface LoadingProps {
 
 const Loading = styled<LoadingProps & React.HTMLAttributes<SVGElement>>(LoadingComponent)`
   ${props =>
-    props.progress === null &&
+    !props.progress &&
     css`
       circle:nth-of-type(2) {
         transform-origin: 50% 50%;
         stroke-dasharray: ${pathLength};
-        animation: ${fillAnimation} ${DURATION.EXTRA_LONG} ease-in-out infinite,
-          ${ANIMATION.rotate} ${DURATION.EXTRA_LONG} linear ${rotationDelay} infinite;
+        animation: ${fillAnimation} ${DURATION.EXTRA_LONG}ms ease-in-out infinite,
+          ${ANIMATION.rotate} ${DURATION.EXTRA_LONG}ms linear ${rotationDelay}ms infinite;
       }
     `};
 `;
 
 Loading.defaultProps = {
-  progress: null,
+  progress: undefined,
   size: 43,
 };
 

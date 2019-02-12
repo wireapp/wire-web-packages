@@ -28,7 +28,7 @@ const {Account} = require('@wireapp/core');
 const {MemoryEngine} = require('@wireapp/store-engine');
 
 const {name, version} = require('../../package.json');
-const logger = logdown('@wireapp/core/StatusBot', {
+const logger = logdown('@wireapp/core/demo/StatusBot', {
   logger: console,
   markdown: false,
 });
@@ -70,7 +70,7 @@ if (!message) {
     await account.login(login);
 
     const text = message || `I am posting from ${name} v${version} (Build #${process.env.TRAVIS_BUILD_NUMBER}). 🌞`;
-    const payload = account.service.conversation.createText(text);
+    const payload = account.service.conversation.createText(text).build();
     conversationIds.forEach(async conversationId => await account.service.conversation.send(conversationId, payload));
   } catch (error) {
     logger.error('Error:', error.stack);

@@ -13,5 +13,9 @@ Collection of npm modules created by Wire's web team.
 ### Getting Started
 
 ```bash
+## Download dependencies and link packages
 yarn && yarn boot
+
+## Build all packages and test them
+yarn test:all
 ```

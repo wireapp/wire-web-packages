@@ -18,8 +18,8 @@
  */
 
 interface PermissionsData {
-  self: number;
   copy: number;
+  self: number;
 }
 
 export {PermissionsData};

@@ -18,9 +18,10 @@ const logger = logdown('@wireapp/core/demo/echo.js', {
 logger.state.isEnabled = true;
 
 const {Account} = require('@wireapp/core');
-const {PayloadBundleType} = require('@wireapp/core/dist/conversation/root');
+const {PayloadBundleType} = require('@wireapp/core/dist/conversation/');
 const {APIClient} = require('@wireapp/api-client');
 const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/ClientType');
+const {ConnectionStatus} = require('@wireapp/api-client/dist/commonjs/connection/');
 const {CONVERSATION_TYPING} = require('@wireapp/api-client/dist/commonjs/event/');
 const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine/');
 
@@ -49,22 +50,42 @@ const messageIdCache = {};
       PayloadBundleType.PING,
       PayloadBundleType.TEXT,
     ];
-
     const {conversation: conversationId, content, from, id: messageId, messageTimer = 0, type} = messageData;
+    const additionalContent = [];
+
+    if (content.mentions && content.mentions.length) {
+      additionalContent.push(`mentioning "${content.mentions.map(mention => mention.userId).join(',')}"`);
+    }
+
+    if (content.quote) {
+      additionalContent.push(`quoting "${content.quote.quotedMessageId}"`);
+    }
+
+    if (messageTimer) {
+      additionalContent.push(`(ephemeral message, ${messageTimer} ms timeout)`);
+    }
+
+    if (content.expectsReadConfirmation) {
+      additionalContent.push('(expecting read confirmation)');
+    }
 
     logger.log(
-      `Receiving: "${type}" ("${messageId}") in "${conversationId}" from "${from}":`,
-      messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : '',
-      content
+      `Receiving: "${type}" ("${messageId}") in "${conversationId}" from "${from}" ${additionalContent.join(' ')}`
     );
 
     if (CONFIRM_TYPES.includes(type)) {
-      const confirmationPayload = account.service.conversation.createConfirmation(messageId);
+      const deliveredPayload = account.service.conversation.createConfirmationDelivered(messageId);
       logger.log(
-        `Sending: "${confirmationPayload.type}" ("${confirmationPayload.id}") in "${conversationId}"`,
-        confirmationPayload.content
+        `Sending: "${deliveredPayload.type}" ("${deliveredPayload.id}") in "${conversationId}"`,
+        deliveredPayload.content
       );
-      await account.service.conversation.send(conversationId, confirmationPayload);
+      await account.service.conversation.send(conversationId, deliveredPayload);
+
+      if (content.expectsReadConfirmation) {
+        const readPayload = account.service.conversation.createConfirmationRead(messageId);
+        logger.log(`Sending: "${readPayload.type}" ("${readPayload.id}") in "${conversationId}"`, readPayload.content);
+        await account.service.conversation.send(conversationId, readPayload);
+      }
 
       if (messageTimer) {
         logger.log(
@@ -76,11 +97,12 @@ const messageIdCache = {};
   };
 
   const sendMessageResponse = async (data, payload) => {
-    const {conversation: conversationId, id: messageId, messageTimer = 0} = data;
+    const {content, id: messageId, messageTimer = 0, type} = payload;
+    const conversationId = data.conversation;
 
     logger.log(
-      `Sending: "${data.type}" ("${messageId}") in "${conversationId}"`,
-      data.content,
+      `Sending: "${type}" ("${messageId}") in "${conversationId}"`,
+      content,
       messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
     );
 
@@ -89,56 +111,78 @@ const messageIdCache = {};
     account.service.conversation.messageTimer.setMessageLevelTimer(conversationId, 0);
   };
 
+  const buildLinkPreviews = async originalLinkPreviews => {
+    const newLinkPreviews = [];
+    for (const originalLinkPreview of originalLinkPreviews) {
+      const originalLinkPreviewImage =
+        originalLinkPreview.article && originalLinkPreview.article.image
+          ? originalLinkPreview.article.image
+          : originalLinkPreview.image;
+      let linkPreviewImage;
+
+      if (originalLinkPreviewImage) {
+        const imageBuffer = await account.service.conversation.getAsset(originalLinkPreviewImage.uploaded);
+
+        linkPreviewImage = {
+          data: imageBuffer,
+          height: originalLinkPreviewImage.original.image.height,
+          type: originalLinkPreviewImage.original.mimeType,
+          width: originalLinkPreviewImage.original.image.width,
+        };
+      }
+
+      const newLinkPreview = await account.service.conversation.createLinkPreview({
+        ...originalLinkPreview,
+        image: linkPreviewImage,
+      });
+
+      newLinkPreviews.push(newLinkPreview);
+    }
+    return newLinkPreviews;
+  };
+
   account.on(PayloadBundleType.TEXT, async data => {
-    const {content, id: messageId} = data;
+    const {
+      content: {expectsReadConfirmation, linkPreviews, mentions, quote, text},
+      id: messageId,
+    } = data;
     let textPayload;
 
-    const newLinkPreviews = [];
-
-    if (content.linkPreviews) {
-      for (const linkPreview of content.linkPreviews) {
-        const originalLinkPreviewImage =
-          linkPreview.article && linkPreview.article.image ? linkPreview.article.image : linkPreview.image;
-        let linkPreviewImage;
-
-        if (originalLinkPreviewImage) {
-          const imageBuffer = await account.service.conversation.getAsset(originalLinkPreviewImage.uploaded);
-
-          linkPreviewImage = {
-            data: imageBuffer,
-            height: originalLinkPreviewImage.original.image.height,
-            type: originalLinkPreviewImage.original.mimeType,
-            width: originalLinkPreviewImage.original.image.width,
-          };
-        }
-
-        const newLinkPreview = await account.service.conversation.createLinkPreview({
-          ...linkPreview,
-          image: linkPreviewImage,
-        });
-
-        newLinkPreviews.push(newLinkPreview);
-      }
+    if (linkPreviews && linkPreviews.length) {
+      const newLinkPreviews = await buildLinkPreviews(linkPreviews);
 
       await handleIncomingMessage(data);
 
-      const messageIdOriginal = messageIdCache[messageId];
+      const cachedMessageId = messageIdCache[messageId];
 
-      if (messageIdOriginal) {
-        textPayload = account.service.conversation.createText(content.text, newLinkPreviews, messageIdOriginal);
-      } else {
+      if (!cachedMessageId) {
         logger.warn(`Link preview for message ID "${messageId} was received before the original message."`);
         return;
       }
+
+      textPayload = account.service.conversation
+        .createText(text, cachedMessageId)
+        .withLinkPreviews(newLinkPreviews)
+        .withMentions(mentions)
+        .withQuote(quote)
+        .withReadConfirmation(expectsReadConfirmation)
+        .build();
     } else {
-      textPayload = account.service.conversation.createText(content.text);
-      messageIdCache[messageId] = textPayload.id;
+      await handleIncomingMessage(data);
+      textPayload = account.service.conversation
+        .createText(text)
+        .withMentions(mentions)
+        .withQuote(quote)
+        .withReadConfirmation(expectsReadConfirmation)
+        .build();
     }
+
+    messageIdCache[messageId] = textPayload.id;
 
     await sendMessageResponse(data, textPayload);
   });
 
-  account.on(PayloadBundleType.CONFIRMATION, data => handleIncomingMessage(data));
+  account.on(PayloadBundleType.CONFIRMATION, handleIncomingMessage);
 
   account.on(PayloadBundleType.ASSET, async data => {
     const {content, id: messageId} = data;
@@ -231,22 +275,24 @@ const messageIdCache = {};
     await sendMessageResponse(data, imagePayload);
   });
 
+  account.on(PayloadBundleType.CLEARED, handleIncomingMessage);
+
   account.on(PayloadBundleType.LOCATION, async data => {
-    const locationPayload = account.service.conversation.createLocation({
-      latitude: 52.5069313,
-      longitude: 13.1445635,
-      name: 'Berlin',
-      zoom: 10,
-    });
+    const locationPayload = account.service.conversation.createLocation(data.content);
 
     await handleIncomingMessage(data);
     await sendMessageResponse(data, locationPayload);
   });
 
   account.on(PayloadBundleType.PING, async data => {
+    const {
+      content: {expectsReadConfirmation},
+    } = data;
     await handleIncomingMessage(data);
 
-    const pingPayload = account.service.conversation.createPing();
+    const pingPayload = account.service.conversation.createPing({
+      expectsReadConfirmation,
+    });
 
     await sendMessageResponse(data, pingPayload);
   });
@@ -295,34 +341,66 @@ const messageIdCache = {};
 
   account.on(PayloadBundleType.MESSAGE_EDIT, async data => {
     const {
-      content: {text, originalMessageId},
+      content: {expectsReadConfirmation, linkPreviews, mentions, originalMessageId, quote, text},
       id: messageId,
     } = data;
+    let editedPayload;
 
-    const originalMessage = messageIdCache[originalMessageId];
-    if (!originalMessage) {
+    const cachedOriginalMessageId = messageIdCache[originalMessageId];
+
+    if (!cachedOriginalMessageId) {
       logger.warn(`Edited message for message ID "${messageId} was received before the original message."`);
       return;
     }
 
-    const editedPayload = account.service.conversation.createEditedText(text, originalMessage);
+    if (linkPreviews) {
+      const newLinkPreviews = await buildLinkPreviews(linkPreviews);
+
+      await handleIncomingMessage(data);
+
+      const cachedMessageId = messageIdCache[messageId];
+
+      if (!cachedMessageId) {
+        logger.warn(`Link preview for edited message ID "${messageId} was received before the original message."`);
+        return;
+      }
+      editedPayload = account.service.conversation
+        .createEditedText(text, cachedOriginalMessageId, cachedMessageId)
+        .withLinkPreviews(newLinkPreviews)
+        .withMentions(mentions)
+        .withQuote(quote)
+        .withReadConfirmation(expectsReadConfirmation)
+        .build();
+    } else {
+      await handleIncomingMessage(data);
+      editedPayload = account.service.conversation
+        .createEditedText(text, cachedOriginalMessageId)
+        .withMentions(mentions)
+        .withQuote(quote)
+        .withReadConfirmation(expectsReadConfirmation)
+        .build();
+    }
+
     messageIdCache[messageId] = editedPayload.id;
 
-    await handleIncomingMessage(data);
     await sendMessageResponse(data, editedPayload);
   });
 
-  account.on(PayloadBundleType.MESSAGE_HIDE, data => handleIncomingMessage(data));
+  account.on(PayloadBundleType.MESSAGE_HIDE, handleIncomingMessage);
 
   account.on(PayloadBundleType.CONNECTION_REQUEST, async data => {
     await handleIncomingMessage(data);
-    await account.service.connection.acceptConnection(data.connection.to);
+    if (data.content.status === ConnectionStatus.PENDING) {
+      await account.service.connection.acceptConnection(data.content.to);
+    }
   });
 
   try {
     logger.log('Logging in ...');
     await account.login(login);
     await account.listen();
+
+    account.on('error', error => logger.error(error));
 
     const name = await account.service.self.getName();
 

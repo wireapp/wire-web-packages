@@ -21,6 +21,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import {COLOR} from '../Identity/';
 import {ANIMATION, DURATION, EASE} from '../Identity/motions';
+import {QUERY} from '../mediaQueries';
 import {OverlayBackground, OverlayWrapper} from '../Modal/Overlay';
 
 const MenuModalWrapper = styled(OverlayWrapper)<React.HTMLAttributes<HTMLDivElement>>`
@@ -42,8 +43,8 @@ const MenuModalBody = styled.div<React.HTMLAttributes<HTMLDivElement>>`
   margin-left: auto;
   margin-right: auto;
   width: 767px;
-  animation: ${ANIMATION.bottomUpMovement} ${DURATION.DEFAULT} ${EASE.EXPONENTIAL};
-  @media (max-width: 767px) {
+  animation: ${ANIMATION.bottomUpMovement} ${DURATION.DEFAULT}ms ${EASE.EXPONENTIAL};
+  @media (${QUERY.tabletDown}) {
     width: 100%;
   }
 `;

@@ -19,13 +19,19 @@
 
 import * as EventEmitter from 'events';
 import * as logdown from 'logdown';
-import {AccessTokenData} from '../auth';
+import {AccessTokenData} from '../auth/';
 
 class AccessTokenStore extends EventEmitter {
-  private readonly logger = logdown('@wireapp/api-client/AccessTokenStore', {
-    logger: console,
-    markdown: false,
-  });
+  private readonly logger: logdown.Logger;
+
+  constructor() {
+    super();
+
+    this.logger = logdown('@wireapp/api-client/AccessTokenStore', {
+      logger: console,
+      markdown: false,
+    });
+  }
 
   public static TOPIC = {
     ACCESS_TOKEN_REFRESH: 'AccessTokenStore.TOPIC.ACCESS_TOKEN_REFRESH',

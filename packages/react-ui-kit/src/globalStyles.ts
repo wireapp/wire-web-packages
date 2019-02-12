@@ -17,21 +17,13 @@
  *
  */
 
-import {injectGlobal} from 'styled-components';
+import {createGlobalStyle} from 'styled-components';
 import styledNormalize from 'styled-normalize';
 
-let areGlobalStylesSet = false;
-
-export default function applyGlobalStyles() {
-  if (!areGlobalStylesSet) {
-    // eslint-disable-next-line
-    injectGlobal`
+export default createGlobalStyle`
       ${styledNormalize}
 
       p {
         margin-top: 0;
       }
     `;
-    areGlobalStylesSet = true;
-  }
-}

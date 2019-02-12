@@ -25,8 +25,7 @@ import {exec} from 'child_process';
 import {promisify} from 'util';
 
 import * as Changelog from 'generate-changelog';
-
-const logdown = require('logdown');
+import * as logdown from 'logdown';
 
 const logger = logdown('@wireapp/travis-bot/TravisBot', {
   logger: console,
@@ -84,6 +83,8 @@ class TravisBot {
     await account.login(this.loginData);
     await account.listen();
 
+    account.on('error', error => console.error(error));
+
     if (!conversationIds) {
       const allConversations = await client.conversation.api.getAllConversations();
       const groupConversations = allConversations.filter(conversation => conversation.type === 0);
@@ -97,7 +98,7 @@ class TravisBot {
         }
         if (id) {
           logger.log(`Sending message to conversation ${id} ...`);
-          const textPayload = await account.service.conversation.createText(this.message);
+          const textPayload = await account.service.conversation.createText(this.message).build();
           await account.service.conversation.send(id, textPayload);
         }
       })

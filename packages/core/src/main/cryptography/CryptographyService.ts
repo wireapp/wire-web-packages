@@ -18,16 +18,16 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {PreKey as SerializedPreKey} from '@wireapp/api-client/dist/commonjs/auth/index';
-import {RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/index';
-import {OTRRecipients} from '@wireapp/api-client/dist/commonjs/conversation/index';
-import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/index';
+import {PreKey as SerializedPreKey} from '@wireapp/api-client/dist/commonjs/auth/';
+import {RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
+import {OTRRecipients} from '@wireapp/api-client/dist/commonjs/conversation/';
+import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/';
 import {Cryptobox} from '@wireapp/cryptobox';
 import {errors as ProteusErrors, keys as ProteusKeys} from '@wireapp/proteus';
-import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/index';
+import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
 import {Decoder, Encoder} from 'bazinga64';
 import * as logdown from 'logdown';
-import {SessionPayloadBundle} from '../cryptography/root';
+import {SessionPayloadBundle} from '../cryptography/';
 import CryptographyDatabaseRepository from './CryptographyDatabaseRepository';
 
 export interface MetaClient extends RegisteredClient {
@@ -48,10 +48,7 @@ export type DecryptionResult =
     };
 
 class CryptographyService {
-  private readonly logger = logdown('@wireapp/core/cryptography/CryptographyService', {
-    logger: console,
-    markdown: false,
-  });
+  private readonly logger: logdown.Logger;
 
   public cryptobox: Cryptobox;
   private readonly database: CryptographyDatabaseRepository;
@@ -59,6 +56,10 @@ class CryptographyService {
   constructor(readonly apiClient: APIClient, private readonly storeEngine: CRUDEngine) {
     this.cryptobox = new Cryptobox(this.storeEngine);
     this.database = new CryptographyDatabaseRepository(this.storeEngine);
+    this.logger = logdown('@wireapp/core/cryptography/CryptographyService', {
+      logger: console,
+      markdown: false,
+    });
   }
 
   public static constructSessionId(userId: string, clientId: string): string {
@@ -66,7 +67,6 @@ class CryptographyService {
   }
 
   public async createCryptobox(): Promise<SerializedPreKey[]> {
-    this.logger.log('createCryptobox');
     const initialPreKeys: ProteusKeys.PreKey[] = await this.cryptobox.create();
 
     return initialPreKeys
@@ -81,7 +81,7 @@ class CryptographyService {
   }
 
   public async decrypt(sessionId: string, encodedCiphertext: string): Promise<DecryptionResult> {
-    this.logger.log('decrypt');
+    this.logger.log(`Decrypting message for session ID "${sessionId}"`);
     const messageBytes: Uint8Array = Decoder.fromBase64(encodedCiphertext).asBytes;
 
     try {
@@ -91,6 +91,7 @@ class CryptographyService {
         value: result,
       };
     } catch (error) {
+      this.logger.error(`Could not decrypt message: ${error.message}`);
       const isOutdatedMessage = error instanceof ProteusErrors.DecryptError.OutdatedMessage;
       const isDuplicateMessage = error instanceof ProteusErrors.DecryptError.DuplicateMessage;
 
@@ -110,7 +111,6 @@ class CryptographyService {
   }
 
   public async encrypt(plainText: Uint8Array, preKeyBundles: UserPreKeyBundleMap): Promise<OTRRecipients> {
-    this.logger.log('encrypt');
     const recipients: OTRRecipients = {};
     const encryptions: Promise<SessionPayloadBundle>[] = [];
 
@@ -144,7 +144,7 @@ class CryptographyService {
     plainText: Uint8Array,
     base64EncodedPreKey: string
   ): Promise<SessionPayloadBundle> {
-    this.logger.log('encryptPayloadForSession');
+    this.logger.log(`Encrypting Payload for session ID "${sessionId}"`);
     let encryptedPayload;
 
     try {
@@ -156,6 +156,7 @@ class CryptographyService {
       );
       encryptedPayload = Encoder.toBase64(payloadAsBuffer).asString;
     } catch (error) {
+      this.logger.error(`Could not encrypt payload: ${error.message}`);
       encryptedPayload = '💣';
     }
 
@@ -163,12 +164,10 @@ class CryptographyService {
   }
 
   public async initCryptobox(): Promise<void> {
-    this.logger.log('initCryptobox');
     await this.cryptobox.load();
   }
 
   public deleteCryptographyStores(): Promise<boolean[]> {
-    this.logger.log('deleteCryptographyStores');
     return this.database.deleteStores();
   }
 

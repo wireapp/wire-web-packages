@@ -3,6 +3,399 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.0.31](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.30...@wireapp/proteus@8.0.31) (2019-01-29)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.30](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.29...@wireapp/proteus@8.0.30) (2019-01-24)
+
+
+### Bug Fixes
+
+* **proteus:** Typo in error message ([#1476](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/issues/1476)) ([4a43d08](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/commit/4a43d08))
+
+
+
+
+
+## [8.0.29](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.28...@wireapp/proteus@8.0.29) (2019-01-17)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.28](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.27...@wireapp/proteus@8.0.28) (2019-01-03)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.27](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.26...@wireapp/proteus@8.0.27) (2019-01-03)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.26](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.25...@wireapp/proteus@8.0.26) (2019-01-02)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.25](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.24...@wireapp/proteus@8.0.25) (2018-12-21)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.24](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.23...@wireapp/proteus@8.0.24) (2018-12-20)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.23](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.22...@wireapp/proteus@8.0.23) (2018-12-17)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.21...@wireapp/proteus@8.0.22) (2018-12-07)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.20...@wireapp/proteus@8.0.21) (2018-12-06)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.19...@wireapp/proteus@8.0.20) (2018-11-30)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.18...@wireapp/proteus@8.0.19) (2018-11-26)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.17...@wireapp/proteus@8.0.18) (2018-11-22)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.16...@wireapp/proteus@8.0.17) (2018-11-20)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.15...@wireapp/proteus@8.0.16) (2018-11-16)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.14...@wireapp/proteus@8.0.15) (2018-11-15)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.13...@wireapp/proteus@8.0.14) (2018-11-15)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.12...@wireapp/proteus@8.0.13) (2018-11-12)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.11...@wireapp/proteus@8.0.12) (2018-11-09)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.10...@wireapp/proteus@8.0.11) (2018-11-08)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.9...@wireapp/proteus@8.0.10) (2018-11-07)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.8...@wireapp/proteus@8.0.9) (2018-11-05)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.7...@wireapp/proteus@8.0.8) (2018-11-01)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.6...@wireapp/proteus@8.0.7) (2018-10-31)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.5...@wireapp/proteus@8.0.6) (2018-10-26)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.4...@wireapp/proteus@8.0.5) (2018-10-25)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.3...@wireapp/proteus@8.0.4) (2018-10-23)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.2...@wireapp/proteus@8.0.3) (2018-10-19)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.1...@wireapp/proteus@8.0.2) (2018-10-17)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [8.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.0...@wireapp/proteus@8.0.1) (2018-10-12)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+# [8.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.3.37...@wireapp/proteus@8.0.0) (2018-10-12)
+
+
+### Code Refactoring
+
+* **api-client,core,cryptobox,proteus:** Rename root to index ([#1200](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/issues/1200)) ([6b937ac](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/commit/6b937ac))
+
+
+### BREAKING CHANGES
+
+* **api-client,core,cryptobox,proteus:** Some modules can't be imported with `/root` anymore - use `/index` instead.
+
+
+
+
+
+## [7.3.37](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.3.36...@wireapp/proteus@7.3.37) (2018-10-11)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [7.3.36](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.3.35...@wireapp/proteus@7.3.36) (2018-10-09)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [7.3.35](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.3.34...@wireapp/proteus@7.3.35) (2018-10-04)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+<a name="7.3.34"></a>
+## [7.3.34](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.3.33...@wireapp/proteus@7.3.34) (2018-10-01)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+<a name="7.3.33"></a>
+## [7.3.33](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.3.32...@wireapp/proteus@7.3.33) (2018-10-01)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+<a name="7.3.32"></a>
+## [7.3.32](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.3.31...@wireapp/proteus@7.3.32) (2018-09-28)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+<a name="7.3.31"></a>
+## [7.3.31](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.3.30...@wireapp/proteus@7.3.31) (2018-09-25)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+<a name="7.3.30"></a>
+## [7.3.30](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.3.29...@wireapp/proteus@7.3.30) (2018-09-24)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+<a name="7.3.29"></a>
+## [7.3.29](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.3.28...@wireapp/proteus@7.3.29) (2018-09-24)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+<a name="7.3.28"></a>
+## [7.3.28](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.3.27...@wireapp/proteus@7.3.28) (2018-09-19)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+<a name="7.3.27"></a>
+## [7.3.27](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.3.26...@wireapp/proteus@7.3.27) (2018-09-18)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+<a name="7.3.26"></a>
+## [7.3.26](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.3.25...@wireapp/proteus@7.3.26) (2018-09-17)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+<a name="7.3.25"></a>
+## [7.3.25](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.3.24...@wireapp/proteus@7.3.25) (2018-09-12)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+<a name="7.3.24"></a>
+## [7.3.24](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.3.23...@wireapp/proteus@7.3.24) (2018-09-07)
+
+
+### Bug Fixes
+
+* **api-client,cli-client,proteus,store-engine,travis-bot:** Remove floating promises ([#1074](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/issues/1074)) ([b4947d2](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/commit/b4947d2))
+
+
+
+
+
 <a name="7.3.23"></a>
 ## [7.3.23](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@7.3.22...@wireapp/proteus@7.3.23) (2018-09-05)
 

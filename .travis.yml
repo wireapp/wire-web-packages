@@ -40,7 +40,7 @@ before_script:
   - yarn boot
   - export IS_MASTER_BRANCH="$([[ "${TRAVIS_BRANCH}" == "master" && "${TRAVIS_PULL_REQUEST}" == "false" ]] && echo "0" || echo "1")"
   - export HAS_UPDATES="$(npx lerna updated > /dev/null 2>&1; echo "${?}")"
-  - export IS_DEPENDENCY_BUMP="$([[ "${TRAVIS_COMMIT_MESSAGE}" == "build"* ]] && echo "0" || echo "1")"
+  - export IS_DEPENDENCY_BUMP="$(([[ "${TRAVIS_COMMIT_MESSAGE}" == "chore"* ]] || [[ "${TRAVIS_COMMIT_MESSAGE}" == "build"* ]]) && echo "0" || echo "1")"
   - export WILL_RELEASE="$([[ "${IS_MASTER_BRANCH}" == "0" && "${HAS_UPDATES}" == "0" && "${IS_DEPENDENCY_BUMP}" == "1" ]] && echo "0" || echo "1")"
   - echo -e "IS_MASTER_BRANCH = ${IS_MASTER_BRANCH}\\nHAS_UPDATES = ${HAS_UPDATES}\\nWILL_RELEASE = ${WILL_RELEASE}\\nIS_DEPENDENCY_BUMP = ${IS_DEPENDENCY_BUMP}"
 

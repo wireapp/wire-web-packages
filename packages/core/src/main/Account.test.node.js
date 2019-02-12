@@ -19,7 +19,7 @@
 
 const nock = require('nock');
 const {Account} = require('@wireapp/core');
-const {PayloadBundleState, PayloadBundleType} = require('@wireapp/core/dist/conversation/root');
+const {PayloadBundleState, PayloadBundleType} = require('@wireapp/core/dist/conversation/');
 const {APIClient} = require('@wireapp/api-client');
 const {AuthAPI} = require('@wireapp/api-client/dist/commonjs/auth/');
 const {BackendErrorLabel, StatusCode} = require('@wireapp/api-client/dist/commonjs/http/');
@@ -29,6 +29,7 @@ const {GenericMessage, Text} = require('@wireapp/protocol-messaging');
 const {MemoryEngine} = require('@wireapp/store-engine');
 const {NotificationAPI} = require('@wireapp/api-client/dist/commonjs/notification/');
 const {ValidationUtil} = require('@wireapp/commons');
+const {WebSocketClient} = require('@wireapp/api-client/dist/commonjs/tcp/');
 
 const BASE_URL = 'mock-backend.wire.com';
 const BASE_URL_HTTPS = `https://${BASE_URL}`;
@@ -83,6 +84,10 @@ describe('Account', () => {
       .reply(StatusCode.OK, undefined);
 
     nock(BASE_URL_HTTPS)
+      .post(AuthAPI.URL.ACCESS)
+      .reply(StatusCode.OK, accessTokenData);
+
+    nock(BASE_URL_HTTPS)
       .post(ClientAPI.URL.CLIENTS)
       .reply(StatusCode.OK, {id: CLIENT_ID});
 
@@ -120,7 +125,7 @@ describe('Account', () => {
       expect(account.apiClient.context.userId).toBeDefined();
 
       const text = 'FIFA World Cup';
-      const payload = account.service.conversation.createText(text);
+      const payload = account.service.conversation.createText(text).build();
 
       expect(payload.timestamp).toBeGreaterThan(0);
 
@@ -320,6 +325,38 @@ describe('Account', () => {
 
         done();
       }
+    });
+  });
+
+  describe('handleEvent', () => {
+    it('propagates errors to the outer calling function', async done => {
+      const storeEngine = new MemoryEngine();
+      await storeEngine.init('account.test');
+
+      const apiClient = new APIClient({store: storeEngine, urls: MOCK_BACKEND});
+      const account = new Account(apiClient);
+      spyOn(account, 'handleEvent').and.throwError('Test error');
+
+      await account.init();
+
+      await account.login({
+        clientType: ClientType.TEMPORARY,
+        email: 'hello@example.com',
+        password: 'my-secret',
+      });
+
+      await account.listen();
+
+      account.on('error', error => {
+        expect(error.message).toBe('Test error');
+        done();
+      });
+
+      const notification = {
+        payload: [{}],
+      };
+
+      account.apiClient.transport.ws.emit(WebSocketClient.TOPIC.ON_MESSAGE, notification);
     });
   });
 });

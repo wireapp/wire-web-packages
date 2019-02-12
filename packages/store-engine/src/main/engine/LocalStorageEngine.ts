@@ -1,6 +1,6 @@
 import CRUDEngine from './CRUDEngine';
 import {isBrowser} from './EnvironmentUtil';
-import {RecordAlreadyExistsError, RecordNotFoundError, RecordTypeError, UnsupportedError} from './error';
+import {RecordAlreadyExistsError, RecordNotFoundError, RecordTypeError, UnsupportedError} from './error/';
 
 export default class LocalStorageEngine implements CRUDEngine {
   public storeName = '';
@@ -12,9 +12,10 @@ export default class LocalStorageEngine implements CRUDEngine {
     }
   }
 
-  public async init(storeName: string): Promise<any> {
+  public async init(storeName: string): Promise<Storage> {
     await this.isSupported();
     this.storeName = storeName;
+    return window.localStorage;
   }
 
   public async purge(): Promise<void> {

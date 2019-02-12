@@ -26,4 +26,6 @@ export * from './PaymentInterval';
 export * from './PaymentPlan';
 export * from './PaymentStripeCharge';
 export * from './PaymentStripeInvoice';
+export * from './PaymentStripeInvoices';
 export * from './PaymentStripePlan';
+export * from './SupportedCurrency';
