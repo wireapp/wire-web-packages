@@ -26,17 +26,21 @@ import {promisify} from 'util';
 import * as fs from 'fs-extra';
 import * as logdown from 'logdown';
 
-const crawler = require('npm-license-crawler');
+const pkginfo = require('npm-registry-package-info');
 const execAsync = promisify(exec);
 
 import {CollectorOptions} from './CollectorOptions';
 
 interface CrawlerResult {
-  [repository: string]: {
-    licenses: string;
-    licenseUrl: string;
-    parents: string;
-    repository: string;
+  data: {
+    [id: string]: {
+      homepage?: string;
+      license?: string;
+      name: string;
+      repository?: {
+        url: string;
+      };
+    };
   };
 }
 
@@ -66,7 +70,6 @@ export class LicenseCollector {
   private readonly repositories: Repository[];
   private readonly dependencies: string[];
   private TMP_DIR: string;
-  private useYarn: boolean;
 
   constructor(options: CollectorOptions) {
     this.options = {...defaultOptions, ...options};
@@ -82,7 +85,6 @@ export class LicenseCollector {
     this.dependencies = [];
     this.repositories = this.options.repositories.map(url => ({dir: '', name: '', url}));
     this.TMP_DIR = '';
-    this.useYarn = true;
   }
 
   private async checkPrerequisites(): Promise<void> {
@@ -90,19 +92,6 @@ export class LicenseCollector {
 
     if (stderrVersion) {
       throw new Error(`No git installation found: ${stderrVersion}`);
-    }
-
-    const {stderr: stderrYarn} = await execAsync('yarn --version');
-
-    if (stderrYarn) {
-      this.logger.error(`No yarn installation found: ${stderrYarn}.`);
-      this.useYarn = false;
-
-      const {stderr: stderrNpm} = await execAsync('npm --version');
-
-      if (stderrNpm) {
-        throw new Error(`No yarn and no npm installation found: ${stderrVersion}`);
-      }
     }
   }
 
@@ -175,68 +164,48 @@ export class LicenseCollector {
         const dependencies = Object.keys(packageJson.dependencies || []).filter(Boolean);
         const devDependencies = Object.keys(packageJson.devDependencies || []).filter(Boolean);
 
+        const plural = (length: number) => (length === 1 ? 'y' : 'ies');
+
         this.logger.info(
-          `${name}: Found ${dependencies.length} production dependencies and ${
+          `${name}: Found ${dependencies.length} production dependenc${plural(dependencies.length)} and ${
             devDependencies.length
-          } dev dependencies in "${packageFileNames[index]}".`
+          } dev dependenc${plural(devDependencies.length)} in "${packageFileNames[index]}".`
         );
 
         for (const dependency of dependencies) {
-          if (!this.dependencies.includes(dependency)) {
+          if (!this.dependencies.includes(dependency) && !this.options.filter.includes(dependency)) {
             this.dependencies.push(dependency);
           }
         }
 
         if (this.options.devDependencies) {
           for (const devDependency of devDependencies) {
-            if (!this.dependencies.includes(devDependency)) {
+            if (!this.dependencies.includes(devDependency) && !this.options.filter.includes(devDependency)) {
               this.dependencies.push(devDependency);
             }
           }
         }
-      }
-
-      process.chdir(cloneDir);
-
-      if (this.useYarn) {
-        this.logger.info(`${name}: Running "yarn install" ...`);
-        await execAsync(`yarn install --ignore-scripts`);
-      } else {
-        this.logger.info(`${name}: Running "npm install" ...`);
-        await execAsync(`npm install --ignore-scripts`);
       }
     }
   }
 
   private format(result: CrawlerResult): License[] {
     const licenses = [];
-    const packages = Object.keys(result).sort();
+    const packages = Object.keys(result.data).sort();
 
-    this.logger.info(`Extracted ${packages.length} licenses (including sub-dependencies).`);
-
-    this.logger.info(
-      `Merging licenses (keeping only direct dependencies${
-        this.options.devDependencies ? '' : ', removing dev dependencies'
-      }).`
-    );
+    this.logger.info(`Extracted ${packages.length} licenses.`);
 
     for (const packageName of packages) {
-      if (!this.dependencies.includes(packageName) || this.options.filter.includes(packageName)) {
-        continue;
-      }
+      const currentPackage = result.data[packageName];
 
-      const currentPackage = result[packageName];
+      const link = currentPackage.homepage || (currentPackage.repository ? currentPackage.repository.url : 'none');
 
       const license: License = {
-        license: currentPackage.licenses,
-        link: currentPackage.repository,
+        license: currentPackage.license || 'none',
+        link,
         package: packageName,
         platform: 'web/desktop',
       };
-
-      if (currentPackage.parents !== 'UNDEFINED') {
-        license.parent = currentPackage.parents;
-      }
 
       licenses.push(license);
     }
@@ -246,20 +215,16 @@ export class LicenseCollector {
     return licenses;
   }
 
-  private crawl(): Promise<CrawlerResult> {
-    this.logger.info(`Extracting all licenses with "npm-license-crawler" ...`);
+  private async crawl(): Promise<CrawlerResult> {
+    this.logger.info(`Extracting all licenses ...`);
 
-    const crawlerOptions = {
-      omitVersion: true,
-      start: this.TMP_DIR,
+    const opts = {
+      packages: this.dependencies,
     };
 
     return new Promise((resolve, reject) => {
-      const CONSOLE_LOG = console.log;
-      console.log = () => {};
-      crawler.dumpLicenses(crawlerOptions, (error: Error | null, res: CrawlerResult) => {
-        console.log = CONSOLE_LOG;
-        return error ? reject(error) : resolve(res);
+      return pkginfo(opts, (error: Error | null, data: CrawlerResult) => {
+        return error ? reject(error) : resolve(data);
       });
     });
   }
