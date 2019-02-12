@@ -9,7 +9,7 @@
   },
   "description": "Wire's internal license collection tool",
   "devDependencies": {
-    "@types/node": "10.12.19"
+    "@types/node": "11.9.0"
   },
   "files": [
     "dist"
