@@ -1745,6 +1745,14 @@
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.5.6.tgz#9c03d3fed70a8d517c191b7734da2879b50ca26c"
   integrity sha512-ZBFR7TROLVzCkswA3Fmqq+IIJt62/T7aY/Dmz+QkU7CaW2QFqAitCE8Ups7IzmGhcN1YWMBT4Qcoc07jU9hOJQ==
 
+"@types/react-native@*":
+  version "0.57.35"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.57.35.tgz#362bbfa28a5700bac6fd814f8cb4aae1521cd9d3"
+  integrity sha512-RQnpq9qi1JiAF9331r+WcBSsTYhpl3wcMZPI+UvZWwNG1X7HxZCgaU3+7/zb8VT8GAuKmmp0SUYXhxXba3C53A==
+  dependencies:
+    "@types/prop-types" "*"
+    "@types/react" "*"
+
 "@types/react@*":
   version "16.7.7"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.7.7.tgz#1e5e23e7dd922968ed4b484cdec00a5402c9f31b"
@@ -1773,13 +1781,14 @@
   resolved "https://registry.yarnpkg.com/@types/spark-md5/-/spark-md5-3.0.1.tgz#351b383b32fa7a6a579b836ef8786293c4a7e73b"
   integrity sha512-sjiWYRmuuFZMo/DdysQe/yX6x40Q0WZXsNgvbUIg7gUaQYNoXx4CqWq27rDikQyc+0JKkqsoNiIBAA0GUxbUXw==
 
-"@types/styled-components@4.0.3":
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/@types/styled-components/-/styled-components-4.0.3.tgz#8287e54e446302369eecc521243a2f32cf9122ee"
-  integrity sha512-LzntHlOKEOxUxMkVmQPNG88TsldeHO2NlwNkzHnw4wL8qhHQgd7u+u3yw84hZgoFh4ugsLCbFtjYcbP7v5WC5Q==
+"@types/styled-components@4.1.9":
+  version "4.1.9"
+  resolved "https://registry.yarnpkg.com/@types/styled-components/-/styled-components-4.1.9.tgz#68cecd5e15f8e1eef81b61a919e172c4053edbff"
+  integrity sha512-qg1VcvnQm6BHr7KV7Rneq2WUa6U0WVJCPasDfah0JafeE/wdNqxGXurefSVXGRCHzKqkoAvakjtA9n1dTizqdA==
   dependencies:
-    "@types/node" "*"
     "@types/react" "*"
+    "@types/react-native" "*"
+    csstype "^2.2.0"
 
 "@types/tough-cookie@2.3.5":
   version "2.3.5"
