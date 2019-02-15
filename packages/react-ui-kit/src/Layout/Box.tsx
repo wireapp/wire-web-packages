@@ -17,7 +17,7 @@
  *
  */
 
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import {COLOR} from '../Identity';
 
 const Box = styled.div<React.HTMLAttributes<HTMLDivElement>>`

@@ -17,7 +17,7 @@
  *
  */
 
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import {COLOR} from '../Identity';
 import {defaultTransition} from '../Identity/motions';
 import {Link, Text, TextProps} from '../Text';

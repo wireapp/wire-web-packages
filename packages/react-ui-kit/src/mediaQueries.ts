@@ -17,7 +17,7 @@
  *
  */
 
-import {css} from 'styled-components';
+import {css} from '@emotion/core';
 import {WIDTH} from './Layout/sizes';
 
 type QueryMap = {

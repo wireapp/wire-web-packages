@@ -17,8 +17,9 @@
  *
  */
 
+import {css, keyframes} from '@emotion/core';
+import styled from '@emotion/styled';
 import * as React from 'react';
-import styled, {css, keyframes} from 'styled-components';
 import {ANIMATION, DURATION} from '../Identity/motions';
 
 const pathLength = 125.68;
@@ -73,7 +74,7 @@ interface LoadingProps {
   size?: number;
 }
 
-const Loading = styled(LoadingComponent)<LoadingProps & React.HTMLAttributes<SVGElement>>`
+const Loading = styled(LoadingComponent)`
   ${props =>
     !props.progress &&
     css`

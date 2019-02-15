@@ -17,10 +17,10 @@
  *
  */
 
+import styled from '@emotion/styled';
 import * as Color from 'color';
 import * as React from 'react';
-import styled from 'styled-components';
-import {COLOR, Opacity, Slide, YAxisMovement} from '../Identity';
+import {COLOR} from '../Identity'; //import {COLOR, Opacity, Slide, YAxisMovement} from '../Identity';
 import {DURATION, defaultTransition} from '../Identity/motions';
 import {Content} from '../Layout';
 import {QUERY} from '../mediaQueries';
@@ -251,7 +251,7 @@ const HeaderSubMenu: React.SFC<HeaderSubMenuProps & React.HTMLAttributes<HTMLSpa
       style={{textAlign: 'center', display: 'inline-block', position: 'relative', cursor: 'pointer'}}
     >
       <span>{caption}</span>
-      <Opacity
+      {/* <Opacity
         in={isOpen && isDesktop}
         timeout={DURATION.DEFAULT}
         style={{display: 'inline-block', position: 'absolute', left: -18, zIndex: 1, paddingTop: 20, marginTop: 10}}
@@ -266,9 +266,9 @@ const HeaderSubMenu: React.SFC<HeaderSubMenuProps & React.HTMLAttributes<HTMLSpa
           timeout={DURATION.DEFAULT}
           mountOnEnter={false}
           unmountOnExit={true}
-        >
-          <DesktopStyledHeaderSubMenu>{children}</DesktopStyledHeaderSubMenu>
-        </YAxisMovement>
+        > */}
+      <DesktopStyledHeaderSubMenu>{children}</DesktopStyledHeaderSubMenu>
+      {/* </YAxisMovement>
       </Opacity>
       <Opacity
         in={isOpen && !isDesktop}
@@ -284,10 +284,10 @@ const HeaderSubMenu: React.SFC<HeaderSubMenuProps & React.HTMLAttributes<HTMLSpa
           timeout={DURATION.DEFAULT}
           mountOnEnter={false}
           unmountOnExit={true}
-        >
-          <MobileStyledHeaderSubMenu>{children}</MobileStyledHeaderSubMenu>
-        </Slide>
-      </Opacity>
+        > */}
+      <MobileStyledHeaderSubMenu>{children}</MobileStyledHeaderSubMenu>
+      {/* </Slide>
+      </Opacity> */}
     </MenuSubLink>
   );
 };

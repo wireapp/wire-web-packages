@@ -17,21 +17,22 @@
  *
  */
 
+import {css, jsx} from '@emotion/core';
+import styled from '@emotion/styled';
 import {Encoder} from 'bazinga64';
 import * as React from 'react';
-import styled, {css} from 'styled-components';
 import {COLOR} from '../Identity';
 import {TextProps} from '../Text';
 
-export interface InputProps extends TextProps {
+export interface InputProps extends TextProps, React.InputHTMLAttributes<HTMLInputElement> {
   markInvalid?: boolean;
   placeholderTextTransform?: string;
 }
 
-const placeholderStyle = css<InputProps>`
+const placeholderStyle = (props: InputProps) => css`
   color: ${COLOR.GRAY_DARKEN_24};
   font-size: 11px;
-  text-transform: ${props => props.placeholderTextTransform};
+  text-transform: ${props.placeholderTextTransform};
 `;
 
 const dotSize = 8;
@@ -42,7 +43,9 @@ const invalidDot = `
 `;
 const base64Dot = Encoder.toBase64(invalidDot).asString;
 
-const Input = styled.input<InputProps & React.InputHTMLAttributes<HTMLInputElement>>`
+const Input = styled((props: InputProps) => {
+  return <input type={props.type} {...props} />;
+})`
   background: ${COLOR.WHITE};
   border-radius: 4px;
   border: none;
@@ -58,15 +61,15 @@ const Input = styled.input<InputProps & React.InputHTMLAttributes<HTMLInputEleme
 
   &::-webkit-input-placeholder {
     /* WebKit, Blink, Edge */
-    ${placeholderStyle};
+    ${props => placeholderStyle(props)};
   }
   &::-ms-input-placeholder {
     /* Microsoft Edge */
-    ${placeholderStyle};
+    ${props => placeholderStyle(props)};
   }
   &::-moz-placeholder {
     /* Mozilla Firefox 19+ */
-    ${placeholderStyle};
+    ${props => placeholderStyle(props)};
     opacity: 1;
   }
   &:invalid {

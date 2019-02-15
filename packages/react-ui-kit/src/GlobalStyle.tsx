@@ -16,14 +16,20 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
+import {Global, css} from '@emotion/core';
+import emotionNormalize from 'emotion-normalize';
+import * as React from 'react';
 
-import {createGlobalStyle} from 'styled-components';
-import styledNormalize from 'styled-normalize';
+const globalCss = css`
+  ${emotionNormalize}
 
-export default createGlobalStyle`
-      ${styledNormalize}
+  p {
+    margin-top: 0;
+  }
+`;
 
-      p {
-        margin-top: 0;
-      }
-    `;
+const GlobalStyle = () => {
+  return <Global styles={globalCss} />;
+};
+
+export {GlobalStyle};

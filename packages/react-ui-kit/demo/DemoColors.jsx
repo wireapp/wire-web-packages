@@ -20,7 +20,7 @@
 import {COLOR, Container, H1, H2, Line} from '@wireapp/react-ui-kit';
 import Color from 'color';
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 const ColorElement = styled.div.attrs({
   'data-text': props => `${props.name}

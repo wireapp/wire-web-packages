@@ -17,9 +17,9 @@
  *
  */
 
+import styled from '@emotion/styled';
 import * as React from 'react';
 import {defaultProps} from 'recompose';
-import styled from 'styled-components';
 import {COLOR} from '../Identity';
 
 export interface TextProps {

@@ -17,7 +17,7 @@
  *
  */
 
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import {GUTTER} from './sizes';
 
 const Content = styled.div<React.HTMLAttributes<HTMLDivElement>>`

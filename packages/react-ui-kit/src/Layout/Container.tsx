@@ -17,8 +17,8 @@
  *
  */
 
+import styled from '@emotion/styled';
 import {defaultProps} from 'recompose';
-import styled, {StyledComponent} from 'styled-components';
 import media from '../mediaQueries';
 import {GUTTER, WIDTH} from './sizes';
 

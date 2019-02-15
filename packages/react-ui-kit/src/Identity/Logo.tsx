@@ -17,8 +17,9 @@
  *
  */
 
+import {css} from '@emotion/core';
+import styled from '@emotion/styled';
 import * as React from 'react';
-import styled, {css} from 'styled-components';
 import IconHOC from '../Icon/IconHOC';
 import {defaultTransition} from '../Identity/motions';
 import {COLOR} from './colors';

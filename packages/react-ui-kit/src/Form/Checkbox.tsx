@@ -17,8 +17,9 @@
  *
  */
 
+import {css} from '@emotion/core';
+import styled from '@emotion/styled';
 import * as React from 'react';
-import styled from 'styled-components';
 import {COLOR} from '../Identity';
 import {Text} from '../Text';
 import {Input, InputProps} from './Input';
@@ -29,7 +30,7 @@ const StyledContainerCheckbox = styled.div<React.HTMLAttributes<HTMLDivElement>>
   align-items: center;
 `;
 
-const StyledCheckbox = styled(Input).attrs<React.InputHTMLAttributes<HTMLInputElement>>({type: 'checkbox'})`
+const StyledCheckbox = css`
   opacity: 0;
   height: 16px;
   width: 16px;
@@ -83,7 +84,7 @@ const Checkbox: React.SFC<CheckboxProps & React.InputHTMLAttributes<HTMLInputEle
   }
   return (
     <StyledContainerCheckbox style={style}>
-      <StyledCheckbox id={id} disabled={disabled} {...props} />
+      <Input type={'checkbox'} id={id} css={StyledCheckbox} disabled={disabled} {...props} />
       <StyledLabel htmlFor={id} disabled={disabled}>
         {children}
       </StyledLabel>

@@ -17,7 +17,8 @@
  *
  */
 
-import styled from 'styled-components';
+import styled from '@emotion/styled';
+import * as React from 'react';
 import {COLOR} from '../Identity';
 
 interface ToolTipProps {
@@ -29,7 +30,7 @@ interface ToolTipProps {
   text?: string;
 }
 
-const Tooltip = styled.div.attrs({'data-text': ({text}) => text})<ToolTipProps & React.HTMLAttributes<HTMLDivElement>>`
+const StyledTooltip = styled.div<ToolTipProps & React.HTMLAttributes<HTMLDivElement>>`
   position: relative;
   display: flex;
   flex-direction: column;
@@ -97,6 +98,8 @@ const Tooltip = styled.div.attrs({'data-text': ({text}) => text})<ToolTipProps &
     transform: translateY(0) translateX(0);
   }`};
 `;
+
+const Tooltip = ({text, ...props}: ToolTipProps) => <StyledTooltip data-text={text} {...props} />;
 
 Tooltip.defaultProps = {
   bottom: false,

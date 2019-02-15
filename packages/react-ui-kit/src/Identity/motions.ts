@@ -17,7 +17,7 @@
  *
  */
 
-import {keyframes} from 'styled-components';
+import {keyframes} from '@emotion/core';
 
 // https://motion.wire.com/_guidelines_/rules.html
 

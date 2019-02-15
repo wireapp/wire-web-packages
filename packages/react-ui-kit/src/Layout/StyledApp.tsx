@@ -17,9 +17,9 @@
  *
  */
 
+import styled from '@emotion/styled';
 import * as React from 'react';
-import styled from 'styled-components';
-import GlobalStyle from '../globalStyles';
+import {GlobalStyle} from '../GlobalStyle';
 import {COLOR} from '../Identity';
 
 export interface StyledAppProps {
