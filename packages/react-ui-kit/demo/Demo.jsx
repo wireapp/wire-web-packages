@@ -29,9 +29,9 @@ import {
   Loading,
   Logo,
   MenuLink,
-  // PILL_TYPE,
+  PILL_TYPE,
   Pagination,
-  // Pill,
+  Pill,
   QUERY,
   Small,
   StyledApp,
@@ -143,11 +143,11 @@ class Demo extends React.PureComponent {
           </Container>
           <Container>
             <H1>Pills</H1>
-            {/* <Pill>Default Pill</Pill>
+            <Pill>Default Pill</Pill>
             <Pill active>Active default Pill</Pill>
             <Pill type={PILL_TYPE.error}>Error Pill</Pill>
             <Pill type={PILL_TYPE.success}>Success Pill</Pill>
-            <Pill type={PILL_TYPE.warning}>Warning Pill</Pill> */}
+            <Pill type={PILL_TYPE.warning}>Warning Pill</Pill>
           </Container>
           <DemoIcons />
           <DemoLayouts />
