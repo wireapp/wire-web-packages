@@ -22,22 +22,14 @@ import Color from 'color';
 import React from 'react';
 import styled from '@emotion/styled';
 
-const ColorElement = styled.div.attrs({
-  'data-text': props => `${props.name}
-${props.value}${
-    props.alpha
-      ? `
-α: ${props.alpha}`
-      : ''
-  }`,
-  style: ({color}) => ({backgroundColor: color}),
-})`
+const ColorElement = styled(({name, alpha, ...props}) => <div data-text={props.name} α={alpha} {...props} />)`
   width: 80px;
   height: 80px;
   border-radius: 40px;
   border: 1px solid black;
   position: relative;
   display: inline-block;
+  background-color: ${props => props.backgroundColor};
   &::after {
     width: 100%;
     position: absolute;
@@ -75,7 +67,7 @@ class DemoColors extends React.PureComponent {
         onClick={() => navigator.clipboard.writeText(alpha ? color.toString() : value)}
         key={name}
         name={name}
-        color={COLOR[name]}
+        backgroundColor={COLOR[name]}
         value={value}
         alpha={alpha}
       />

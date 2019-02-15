@@ -38,7 +38,7 @@ import {
   Tooltip,
 } from '@wireapp/react-ui-kit';
 // import DemoAnimations from './DemoAnimations';
-// import DemoColors from './DemoColors';
+import DemoColors from './DemoColors';
 import DemoIcons from './DemoIcons';
 import DemoInputs from './DemoInputs';
 import DemoLayouts from './DemoLayouts';
@@ -155,7 +155,7 @@ class Demo extends React.PureComponent {
           <DemoModals />
           <DemoTypography />
           {/* <DemoAnimations /> */}
-          {/* <DemoColors /> */}
+          <DemoColors />
         </Content>
         <Footer>Footer</Footer>
       </StyledApp>
