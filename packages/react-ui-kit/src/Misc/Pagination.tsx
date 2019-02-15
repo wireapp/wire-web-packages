@@ -47,7 +47,11 @@ const Pagination: React.SFC<PaginationProps & React.HTMLAttributes<HTMLDivElemen
     const endLength = 1;
     const skipLength = 1;
     const normalizeCount = endLength + skipLength + spanLength;
-    const dots = <Bold fontSize={'11px'}>{'…'}</Bold>;
+    const dots = (
+      <Bold key={'dots'} fontSize={'11px'}>
+        {'…'}
+      </Bold>
+    );
     const renderPageNumber = pageIndex =>
       currentPage === pageIndex ? (
         <Bold

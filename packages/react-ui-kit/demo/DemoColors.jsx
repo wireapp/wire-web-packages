@@ -22,7 +22,9 @@ import Color from 'color';
 import React from 'react';
 import styled from '@emotion/styled';
 
-const ColorElement = styled(({name, alpha, ...props}) => <div data-text={props.name} α={alpha} {...props} />)`
+const ColorElement = styled(({name, alpha, ...props}) => <div data-text={props.name} α={alpha} {...props} />, {
+  shouldForwardProp: prop => prop !== 'backgroundColor',
+})`
   width: 80px;
   height: 80px;
   border-radius: 40px;

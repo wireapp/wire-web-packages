@@ -152,6 +152,7 @@ class CodeInput extends React.PureComponent<CodeInputProps & React.HTMLAttribute
           ref={node => (this.inputs[fieldIndex] = node)}
           type="text"
           value={values[fieldIndex]}
+          onChange={() => {}}
         />
       );
     }

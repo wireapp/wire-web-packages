@@ -43,9 +43,14 @@ const invalidDot = `
 `;
 const base64Dot = Encoder.toBase64(invalidDot).asString;
 
-const Input = styled((props: InputProps) => {
-  return <input type={props.type} {...props} />;
-})`
+const Input = styled(
+  (props: InputProps) => {
+    return <input type={props.type} {...props} />;
+  },
+  {
+    shouldForwardProp: prop => prop !== 'placeholderTextTransform' && prop !== 'markInvalid',
+  }
+)`
   background: ${COLOR.WHITE};
   border-radius: 4px;
   border: none;

@@ -48,9 +48,12 @@ const pillAnimation = keyframes`
     }
 `;
 
-const Pill = styled((props: PillProps) => (
-  <span data-uie-name="element-pill" data-uie-status={props.type} {...props} />
-))<PillProps & React.HTMLAttributes<HTMLSpanElement>>`
+const Pill = styled(
+  (props: PillProps) => <span data-uie-name="element-pill" data-uie-status={props.type} {...props} />,
+  {
+    shouldForwardProp: prop => prop !== 'active' && prop !== 'type',
+  }
+)<PillProps & React.HTMLAttributes<HTMLSpanElement>>`
   ${({type}) => {
     const backgroundColor = type ? backgroundColors[type] : 'transparent';
     const margin = type ? '12px 0 0 0' : '0 8px';
