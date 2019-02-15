@@ -17,92 +17,109 @@
  *
  */
 
+import * as React from 'react';
+import {CSSTransition} from 'react-transition-group';
 import {defaultProps} from 'recompose';
-import transition from 'styled-transition-group';
 import {DURATION, EASE} from './motions';
 
-const Opacity = transition.div`
-  &:enter {
-    opacity: ${({startValue = 0}) => startValue};
-  }
-  &:enter-active {
-    opacity: ${({endValue = 1}) => endValue};
-    transition: all ${({timeout = DURATION.DEFAULT}) => timeout}ms ${EASE.QUART};
-  }
-  &:exit {
-    opacity: ${({endValue = 1}) => endValue};
-  }
-  &:exit-active {
-    pointer-events: none;
-    opacity: ${({startValue = 0}) => startValue};
-    transition: all ${({timeout = DURATION.DEFAULT}) => timeout}ms ${EASE.QUART};
-  }
-`;
+const Opacity = ({startValue = 0, endValue = 1, timeout = DURATION.DEFAULT, children, ...props}) => (
+  <CSSTransition unmountOnExit timeout={timeout} classNames={'opacity'} {...props}>
+    {status => {
+      // tslint:disable:object-literal-sort-keys
+      const transitionStyles = {
+        entering: {opacity: 0},
+        entered: {opacity: 1},
+        exiting: {opacity: 1},
+        exited: {opacity: 0},
+      };
+      // tslint:enable:object-literal-sort-keys
+      return <div style={{...transitionStyles[status]}}>{children}</div>;
+    }}
+  </CSSTransition>
+);
 
-const YAxisMovement = transition.div`
-  &:enter {
-    transform: translateY(${({startValue}) => startValue});
-  }
-  &:enter-active {
-    transform: translateY(${({endValue}) => endValue});
-    transition: all ${({timeout = DURATION.DEFAULT}) => timeout}ms ${EASE.EXPONENTIAL};
-  }
-  &:exit {
-    transform: translateY(${({endValue}) => endValue});
-  }
-  &:exit-active {
-    transform: translateY(${({startValue}) => startValue});
-    transition: all ${({timeout = DURATION.DEFAULT}) => timeout}ms ${EASE.EXPONENTIAL};
-  }
-`;
+// const Opacity1 = transition.div`
+//   &:enter {
+//     opacity: ${({startValue = 0}) => startValue};
+//   }
+//   &:enter-active {
+//     opacity: ${({endValue = 1}) => endValue};
+//     transition: all ${({timeout = DURATION.DEFAULT}) => timeout}ms ${EASE.QUART};
+//   }
+//   &:exit {
+//     opacity: ${({endValue = 1}) => endValue};
+//   }
+//   &:exit-active {
+//     pointer-events: none;
+//     opacity: ${({startValue = 0}) => startValue};
+//     transition: all ${({timeout = DURATION.DEFAULT}) => timeout}ms ${EASE.QUART};
+//   }
+// `;
 
-const TopDownMovement = defaultProps({startValue: '-100%', endValue: '0%'})(YAxisMovement);
-const BottomUpMovement = defaultProps({startValue: '100%', endValue: '0%'})(YAxisMovement);
+// const YAxisMovement = transition.div`
+//   &:enter {
+//     transform: translateY(${({startValue}) => startValue});
+//   }
+//   &:enter-active {
+//     transform: translateY(${({endValue}) => endValue});
+//     transition: all ${({timeout = DURATION.DEFAULT}) => timeout}ms ${EASE.EXPONENTIAL};
+//   }
+//   &:exit {
+//     transform: translateY(${({endValue}) => endValue});
+//   }
+//   &:exit-active {
+//     transform: translateY(${({startValue}) => startValue});
+//     transition: all ${({timeout = DURATION.DEFAULT}) => timeout}ms ${EASE.EXPONENTIAL};
+//   }
+// `;
 
-const Slide = transition.div`
-&:enter {
-  margin-top: ${({startValue = '-100%'}) => startValue};
-}
-&:enter-active {
-  margin-top: ${({endValue = '0'}) => endValue};
-  transition: all ${({timeout = DURATION.DEFAULT}) => timeout}ms ${EASE.QUART};
-}
-&:exit {
-  margin-top: ${({endValue = '0'}) => endValue};
-}
-&:exit-active {
-  margin-top: ${({startValue = '-100%'}) => startValue};
-  transition: all ${({timeout = DURATION.DEFAULT}) => timeout}ms ${EASE.QUART};
-}
-`;
+// const TopDownMovement = defaultProps({startValue: '-100%', endValue: '0%'})(YAxisMovement);
+// const BottomUpMovement = defaultProps({startValue: '100%', endValue: '0%'})(YAxisMovement);
 
-const XAxisMovement = transition.div`
-  &:enter {
-    transform: translateX(${({startValue}) => startValue});
-  }
-  &:enter-active {
-    transform: translateX(${({endValue}) => endValue});
-    transition: all ${({timeout = DURATION.DEFAULT}) => timeout}ms ${EASE.EXPONENTIAL};
-  }
-  &:exit {
-    transform: translateX(${({endValue}) => endValue});
-  }
-  &:exit-active {
-    transform: translateX(${({startValue}) => startValue});
-    transition: all ${({timeout = DURATION.DEFAULT}) => timeout}ms ${EASE.EXPONENTIAL};
-  }
-`;
+// const Slide = transition.div`
+// &:enter {
+//   margin-top: ${({startValue = '-100%'}) => startValue};
+// }
+// &:enter-active {
+//   margin-top: ${({endValue = '0'}) => endValue};
+//   transition: all ${({timeout = DURATION.DEFAULT}) => timeout}ms ${EASE.QUART};
+// }
+// &:exit {
+//   margin-top: ${({endValue = '0'}) => endValue};
+// }
+// &:exit-active {
+//   margin-top: ${({startValue = '-100%'}) => startValue};
+//   transition: all ${({timeout = DURATION.DEFAULT}) => timeout}ms ${EASE.QUART};
+// }
+// `;
 
-const LeftRightMovement = defaultProps({startValue: '-100vh', endValue: '0vh'})(XAxisMovement);
-const RightLeftMovement = defaultProps({startValue: '100vh', endValue: '0vh'})(XAxisMovement);
+// const XAxisMovement = transition.div`
+//   &:enter {
+//     transform: translateX(${({startValue}) => startValue});
+//   }
+//   &:enter-active {
+//     transform: translateX(${({endValue}) => endValue});
+//     transition: all ${({timeout = DURATION.DEFAULT}) => timeout}ms ${EASE.EXPONENTIAL};
+//   }
+//   &:exit {
+//     transform: translateX(${({endValue}) => endValue});
+//   }
+//   &:exit-active {
+//     transform: translateX(${({startValue}) => startValue});
+//     transition: all ${({timeout = DURATION.DEFAULT}) => timeout}ms ${EASE.EXPONENTIAL};
+//   }
+// `;
+
+// const LeftRightMovement = defaultProps({startValue: '-100vh', endValue: '0vh'})(XAxisMovement);
+// const RightLeftMovement = defaultProps({startValue: '100vh', endValue: '0vh'})(XAxisMovement);
 
 export {
-  Slide,
+  // Slide,
   Opacity,
-  TopDownMovement,
-  BottomUpMovement,
-  YAxisMovement,
-  LeftRightMovement,
-  RightLeftMovement,
-  XAxisMovement,
+  // TopDownMovement,
+  // BottomUpMovement,
+  // YAxisMovement,
+  // LeftRightMovement,
+  // RightLeftMovement,
+  // XAxisMovement,
 };

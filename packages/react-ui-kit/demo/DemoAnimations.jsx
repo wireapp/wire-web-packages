@@ -18,19 +18,19 @@
  */
 
 import {
-  BottomUpMovement,
+  // BottomUpMovement,
   Button,
   Column,
   Columns,
   Container,
   H1,
-  LeftRightMovement,
+  // LeftRightMovement,
   Line,
   Opacity,
-  RightLeftMovement,
-  TopDownMovement,
-  XAxisMovement,
-  YAxisMovement,
+  // RightLeftMovement,
+  // TopDownMovement,
+  // XAxisMovement,
+  // YAxisMovement,
 } from '@wireapp/react-ui-kit';
 import React from 'react';
 
@@ -63,7 +63,7 @@ class DemoAnimations extends React.PureComponent {
             </Opacity>
           </Column>
         </Columns>
-        <Columns>
+        {/* <Columns>
           <Column>
             <Button
               onClick={() => this.setState(({showTopDownAnimation}) => ({showTopDownAnimation: !showTopDownAnimation}))}
@@ -137,7 +137,7 @@ class DemoAnimations extends React.PureComponent {
               {'Combined Animation'}
             </XAxisMovement>
           </Opacity>
-        </TopDownMovement>
+        </TopDownMovement> */}
       </Container>
     );
   }
