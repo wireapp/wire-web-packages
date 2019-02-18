@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.0.33](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.32...@wireapp/proteus@8.0.33) (2019-02-14)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Update style-components types ([#1523](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/issues/1523)) ([4c82a79](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/commit/4c82a79))
+
+
+
+
+
+## [8.0.32](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.31...@wireapp/proteus@8.0.32) (2019-02-14)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
 ## [8.0.31](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@8.0.30...@wireapp/proteus@8.0.31) (2019-01-29)
 
 **Note:** Version bump only for package @wireapp/proteus
