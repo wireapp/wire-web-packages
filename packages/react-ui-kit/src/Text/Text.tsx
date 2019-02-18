@@ -19,7 +19,6 @@
 
 import styled from '@emotion/styled';
 import * as React from 'react';
-import {defaultProps} from 'recompose';
 import {COLOR} from '../Identity';
 
 export interface TextProps {
@@ -67,10 +66,10 @@ Text.defaultProps = {
   truncate: false,
 };
 
-const Bold = defaultProps<HTMLTextProps>({bold: true})(Text);
-const Small = defaultProps<HTMLTextProps>({fontSize: '12px'})(Text);
-const Muted = defaultProps<HTMLTextProps>({muted: true})(Text);
-const Uppercase = defaultProps<HTMLTextProps>({textTransform: 'uppercase'})(Text);
-const Large = defaultProps<HTMLTextProps>({fontSize: '48px', light: true})(Text);
+const Bold = props => <Text bold {...props} />;
+const Small = props => <Text fontSize={'12px'} {...props} />;
+const Muted = props => <Text muted {...props} />;
+const Uppercase = props => <Text textTransform={'uppercase'} {...props} />;
+const Large = props => <Text fontSize={'48px'} light {...props} />;
 
 export {Bold, Muted, Small, Text, Uppercase, Large};

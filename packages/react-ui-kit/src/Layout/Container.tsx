@@ -18,7 +18,7 @@
  */
 
 import styled from '@emotion/styled';
-import {defaultProps} from 'recompose';
+import * as React from 'react';
 import media from '../mediaQueries';
 import {GUTTER, WIDTH} from './sizes';
 
@@ -71,10 +71,10 @@ Container.defaultProps = {
   verticalCenter: false,
 };
 
-const ContainerLG = defaultProps<HTMLContainerProps>({level: 'lg'})(Container);
-const ContainerMD = defaultProps<HTMLContainerProps>({level: 'md'})(Container);
-const ContainerSM = defaultProps<HTMLContainerProps>({level: 'sm'})(Container);
-const ContainerXS = defaultProps<HTMLContainerProps>({level: 'xs'})(Container);
-const ContainerXXS = defaultProps<HTMLContainerProps>({level: 'xxs'})(Container);
+const ContainerLG = props => <Container level={'lg'} {...props} />;
+const ContainerMD = props => <Container level={'md'} {...props} />;
+const ContainerSM = props => <Container level={'sm'} {...props} />;
+const ContainerXS = props => <Container level={'xs'} {...props} />;
+const ContainerXXS = props => <Container level={'xxs'} {...props} />;
 
 export {Container, ContainerLG, ContainerMD, ContainerSM, ContainerXS, ContainerXXS};
