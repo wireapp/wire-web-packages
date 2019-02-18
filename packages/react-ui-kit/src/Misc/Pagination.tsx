@@ -47,8 +47,8 @@ const Pagination: React.SFC<PaginationProps & React.HTMLAttributes<HTMLDivElemen
     const endLength = 1;
     const skipLength = 1;
     const normalizeCount = endLength + skipLength + spanLength;
-    const dots = (
-      <Bold key={'dots'} fontSize={'11px'}>
+    const dots = (key: string) => (
+      <Bold key={key} fontSize={'11px'}>
         {'…'}
       </Bold>
     );
@@ -74,10 +74,10 @@ const Pagination: React.SFC<PaginationProps & React.HTMLAttributes<HTMLDivElemen
 
     const pages = Array.from(Array(numberOfPages), (nothing, index) => renderPageNumber(index));
     if (afterCount > skipLength) {
-      pages.splice(normalizedCurrent + spanLength + 1, afterCount, dots);
+      pages.splice(normalizedCurrent + spanLength + 1, afterCount, dots('dots-end'));
     }
     if (beforeCount > skipLength) {
-      pages.splice(endLength, beforeCount, dots);
+      pages.splice(endLength, beforeCount, dots('dots-start'));
     }
 
     return pages;
