@@ -17,7 +17,7 @@
  *
  */
 
-import * as React from 'react';
+import React from 'react';
 
 interface SpacerProps {
   size?: number | string;

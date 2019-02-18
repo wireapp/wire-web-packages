@@ -18,7 +18,7 @@
  */
 
 import styled from '@emotion/styled';
-import * as React from 'react';
+import React from 'react';
 import media from '../mediaQueries';
 import {GUTTER, WIDTH} from './sizes';
 

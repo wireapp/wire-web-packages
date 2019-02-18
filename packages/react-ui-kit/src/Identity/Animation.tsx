@@ -18,7 +18,7 @@
  */
 
 import {ClassNames} from '@emotion/core';
-import * as React from 'react';
+import React from 'react';
 import {CSSTransition} from 'react-transition-group';
 import {DURATION, EASE} from './motions';
 

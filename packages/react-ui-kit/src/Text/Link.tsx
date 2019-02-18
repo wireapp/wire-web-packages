@@ -18,45 +18,49 @@
  */
 
 import styled from '@emotion/styled';
-import * as Color from 'color';
-import * as React from 'react';
+import Color from 'color';
+import React from 'react';
 import {COLOR} from '../Identity';
 import {defaultTransition} from '../Identity/motions';
 import {Text, TextProps} from './Text';
 
-interface LinkProps extends TextProps {
+export interface LinkProps extends TextProps {
   component?: React.ComponentType;
 }
 
-const Link: React.SFC<LinkProps & any> = ({color, component, ...props}) => {
-  const darker = 0.16;
-  const hoverColor = Color(color)
-    .mix(Color(COLOR.BLACK), darker)
-    .toString();
-  const StyledLink = styled(Text.withComponent(component))`
-    text-decoration: none;
-    ${defaultTransition};
-    cursor: pointer;
-    color: ${color};
-
-    &:visited,
-    &:link,
-    &:active {
+const Link = styled(
+  ({
+    color = COLOR.LINK,
+    bold = true,
+    fontSize = '11px',
+    textTransform = 'uppercase',
+    component = styled.a``,
+    ...props
+  }: LinkProps) => {
+    const darker = 0.16;
+    const hoverColor = Color(color)
+      .mix(Color(COLOR.BLACK), darker)
+      .toString();
+    const StyledLink = styled(Text.withComponent(component))`
+      text-decoration: none;
+      ${defaultTransition};
+      cursor: pointer;
       color: ${color};
-    }
-    &:hover {
-      color: ${hoverColor};
-    }
-  `;
-  return <StyledLink {...props} />;
-};
 
-Link.defaultProps = {
-  bold: true,
-  color: COLOR.LINK,
-  component: styled.a``,
-  fontSize: '11px',
-  textTransform: 'uppercase',
-};
+      &:visited,
+      &:link,
+      &:active {
+        color: ${color};
+      }
+      &:hover {
+        color: ${hoverColor};
+      }
+    `;
+    return <StyledLink color={color} bold fontSize={fontSize} textTransform={textTransform} {...props} />;
+  },
+  {
+    shouldForwardProp: prop => prop !== 'bold' && prop !== 'color',
+  }
+)``;
 
-export {Link, LinkProps};
+export {Link};

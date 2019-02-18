@@ -17,17 +17,17 @@
  *
  */
 
-import * as React from 'react';
+import React from 'react';
 import IconHOC from './IconHOC';
 
-interface Rotation {
+export interface Rotation {
   right: number;
   down: number;
   left: number;
   up: number;
 }
 
-interface ArrowProps {
+export interface ArrowProps {
   direction?: keyof Rotation;
 }
 
@@ -46,4 +46,4 @@ const arrow: React.SFC<ArrowProps> = ({direction = 'right'}) => (
 );
 const ArrowIcon = IconHOC<ArrowProps>(arrow, size, size);
 
-export {Rotation, ArrowProps, ArrowIcon};
+export {ArrowIcon};

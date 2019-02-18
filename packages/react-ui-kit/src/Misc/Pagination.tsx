@@ -17,7 +17,7 @@
  *
  */
 
-import * as React from 'react';
+import React from 'react';
 import {COLOR} from '../Identity';
 import {FlexBox} from '../Layout';
 import {Bold, Link} from '../Text';

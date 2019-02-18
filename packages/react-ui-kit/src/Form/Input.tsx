@@ -20,7 +20,7 @@
 import {css, jsx} from '@emotion/core';
 import styled from '@emotion/styled';
 import {Encoder} from 'bazinga64';
-import * as React from 'react';
+import React from 'react';
 import {COLOR} from '../Identity';
 import {TextProps} from '../Text';
 
@@ -44,9 +44,9 @@ const invalidDot = `
 const base64Dot = Encoder.toBase64(invalidDot).asString;
 
 const Input = styled(
-  (props: InputProps) => {
-    return <input type={props.type} {...props} />;
-  },
+  React.forwardRef((props: InputProps, ref: React.Ref<HTMLInputElement>) => {
+    return <input ref={ref} type={props.type} {...props} />;
+  }),
   {
     shouldForwardProp: prop => prop !== 'placeholderTextTransform' && prop !== 'markInvalid',
   }

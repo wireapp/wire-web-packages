@@ -18,7 +18,7 @@
  */
 
 import styled from '@emotion/styled';
-import * as React from 'react';
+import React from 'react';
 import {COLOR} from '../Identity/';
 import {ANIMATION, DURATION, EASE} from '../Identity/motions';
 import {QUERY} from '../mediaQueries';

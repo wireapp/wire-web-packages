@@ -19,7 +19,7 @@
 
 import {css, keyframes} from '@emotion/core';
 import styled from '@emotion/styled';
-import * as React from 'react';
+import React from 'react';
 import {ANIMATION, DURATION} from '../Identity/motions';
 
 const pathLength = 125.68;

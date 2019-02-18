@@ -19,7 +19,7 @@
 
 import {css, keyframes} from '@emotion/core';
 import styled from '@emotion/styled';
-import * as React from 'react';
+import React from 'react';
 import {COLOR} from '../Identity';
 
 interface PillProps {

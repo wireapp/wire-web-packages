@@ -18,8 +18,8 @@
  */
 
 import styled from '@emotion/styled';
-import * as Color from 'color';
-import * as React from 'react';
+import Color from 'color';
+import React from 'react';
 import {COLOR, Opacity, Slide, YAxisMovement} from '../Identity';
 import {DURATION, defaultTransition} from '../Identity/motions';
 import {Content} from '../Layout';

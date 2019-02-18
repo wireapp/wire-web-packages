@@ -12,6 +12,7 @@
     "react-transition-group": "2.5.3"
   },
   "devDependencies": {
+    "@babel/cli": "7.2.3",
     "@babel/core": "7.2.2",
     "@babel/plugin-proposal-class-properties": "7.3.0",
     "@babel/preset-env": "7.3.1",
@@ -35,7 +36,7 @@
   "name": "@wireapp/react-ui-kit",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit",
   "scripts": {
-    "build": "tsc",
+    "build": "babel --config-file ./babel.config.js -x .ts,.tsx ./src -d ./dist",
     "clean": "rimraf dist",
     "dist": "yarn clean && yarn build",
     "start": "webpack-dev-server",

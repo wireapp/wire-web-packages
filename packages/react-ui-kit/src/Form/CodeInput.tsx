@@ -18,7 +18,7 @@
  */
 
 import styled from '@emotion/styled';
-import * as React from 'react';
+import React from 'react';
 
 const CodeInputWrapper = styled.div<React.HTMLAttributes<HTMLDivElement>>`
   display: flex;

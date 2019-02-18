@@ -16,9 +16,8 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-
 import styled from '@emotion/styled';
-import * as React from 'react';
+import React from 'react';
 import {COLOR} from '../Identity';
 import {Text} from '../Text';
 import {Input, InputProps} from './Input';

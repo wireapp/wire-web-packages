@@ -3,6 +3,8 @@
     "jsx": "react",
     "outDir": "dist",
     "rootDir": "src",
+    "module": "commonjs",
+    "esModuleInterop": true,
     "strict": false,
     "declaration": true,
     "noImplicitAny": false,
