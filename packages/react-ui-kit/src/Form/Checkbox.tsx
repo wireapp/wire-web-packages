@@ -17,7 +17,6 @@
  *
  */
 
-import {css} from '@emotion/core';
 import styled from '@emotion/styled';
 import * as React from 'react';
 import {COLOR} from '../Identity';
@@ -30,18 +29,11 @@ const StyledContainerCheckbox = styled.div<React.HTMLAttributes<HTMLDivElement>>
   align-items: center;
 `;
 
-const StyledCheckbox = css`
-  opacity: 0;
-  height: 16px;
-  width: 16px;
-  margin-bottom: 0;
-`;
-
 const checkSvg =
   '<svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 8 6"><path fill="white" d="M2.8 6L8 .7 7.3 0 2.8 4.6.7 2.4l-.7.7z"/></svg>';
 
 const StyledLabel = styled.label<StyledLabelProps & React.HTMLAttributes<HTMLLabelElement>>`
-  ${({disabled}) => (disabled ? 'opacity: .56' : '')}
+  ${({disabled}) => (disabled ? 'opacity: .56;' : '')}
   display: flex;
   &::before {
     content: '';
@@ -52,14 +44,14 @@ const StyledLabel = styled.label<StyledLabelProps & React.HTMLAttributes<HTMLLab
     border: 2px solid rgba(0, 0, 0, 0.4);
     border-radius: 4px;
     margin: 0 8px 0 -16px;
-    ${({disabled}) => (disabled ? 'opacity: .56' : '')}
+    ${({disabled}) => (disabled ? 'opacity: .56;' : '')}
   }
 
-  ${StyledCheckbox}:checked + &::before {
+  ${Input}:checked + &::before {
     background: #000 url('data:image/svg+xml; utf8, ${checkSvg}') no-repeat center;
   }
 
-  ${StyledCheckbox}:focus + &::before {
+  ${Input}:focus + &::before {
     border-color: ${COLOR.BLUE};
   }
 `;
@@ -84,7 +76,18 @@ const Checkbox: React.SFC<CheckboxProps & React.InputHTMLAttributes<HTMLInputEle
   }
   return (
     <StyledContainerCheckbox style={style}>
-      <Input type={'checkbox'} id={id} css={StyledCheckbox} disabled={disabled} {...props} />
+      <Input
+        type={'checkbox'}
+        id={id}
+        style={{
+          height: '16px',
+          marginBottom: '0',
+          opacity: 0,
+          width: '16px',
+        }}
+        disabled={disabled}
+        {...props}
+      />
       <StyledLabel htmlFor={id} disabled={disabled}>
         {children}
       </StyledLabel>
