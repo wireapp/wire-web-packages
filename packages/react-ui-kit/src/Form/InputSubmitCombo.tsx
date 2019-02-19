@@ -27,7 +27,7 @@ const InputSubmitCombo = styled(Input.withComponent('div'))<React.HTMLAttributes
   padding-right: 16px;
   padding-left: 0;
   margin-bottom: 16px;
-  [Input] {
+  ${Input} {
     padding: 0 0 0 16px;
     margin: 0 8px 0 0;
     flex-grow: 1;
