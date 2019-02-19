@@ -59,4 +59,4 @@ Link.defaultProps = {
   textTransform: 'uppercase',
 };
 
-export {Link, LinkProps};
+export {Link};

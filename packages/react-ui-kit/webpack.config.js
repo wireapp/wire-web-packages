@@ -40,7 +40,7 @@ module.exports = {
       {
         exclude: /node_modules/,
         loader: 'babel-loader',
-        test: /\.(js|ts)x?$/,
+        test: /\.[jt]sx?$/,
       },
     ],
   },

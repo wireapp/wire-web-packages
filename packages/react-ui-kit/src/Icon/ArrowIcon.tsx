@@ -46,4 +46,4 @@ const arrow: React.SFC<ArrowProps> = ({direction = 'right'}) => (
 );
 const ArrowIcon = IconHOC<ArrowProps>(arrow, size, size);
 
-export {Rotation, ArrowProps, ArrowIcon};
+export {ArrowIcon};
