@@ -16,25 +16,31 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-
-import styled from '@emotion/styled';
-import media from '../mediaQueries';
+/** @jsx jsx */
+import {ObjectInterpolation, jsx} from '@emotion/core';
+import media, {QueryKeys} from '../mediaQueries';
 import {GUTTER} from './sizes';
 
-const Columns = styled.div<React.HTMLAttributes<HTMLDivElement>>`
-  display: flex;
-  margin-left: -${GUTTER}px;
-  ${media.mobile`
-    flex-direction: column;
-  `};
-`;
+type ColumnsProps = React.HTMLAttributes<HTMLDivElement>;
 
-const Column = styled.div<React.HTMLAttributes<HTMLDivElement>>`
-  display: block;
-  flex-grow: 1;
-  flex-basis: 0;
-  flex-shrink: 1;
-  margin-left: ${GUTTER}px;
-`;
+const columnsStyle: (props: ColumnsProps) => ObjectInterpolation<undefined> = props => ({
+  display: 'flex',
+  marginLeft: `-${GUTTER}px`,
+  [media[QueryKeys.MOBILE]]: {flexDirection: 'column'},
+});
+
+const Columns = (props: ColumnsProps) => <div css={columnsStyle(props)} {...props} />;
+
+type ColumnProps = React.HTMLAttributes<HTMLDivElement>;
+
+const columnStyle: (props: ColumnProps) => ObjectInterpolation<undefined> = props => ({
+  display: 'block',
+  flexBasis: '0',
+  flexGrow: 1,
+  flexShrink: 1,
+  marginLeft: `${GUTTER}px`,
+});
+
+const Column = (props: ColumnProps) => <div css={columnStyle(props)} {...props} />;
 
 export {Column, Columns};

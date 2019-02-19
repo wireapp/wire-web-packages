@@ -16,19 +16,11 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-
-import styled from '@emotion/styled';
-import React from 'react';
-import media from '../mediaQueries';
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
+import {ObjectInterpolation} from '@emotion/styled';
+import media, {QueryKeys} from '../mediaQueries';
 import {GUTTER, WIDTH} from './sizes';
-
-interface Level {
-  lg: string;
-  md: string;
-  sm: string;
-  xs: string;
-  xxs: string;
-}
 
 interface ContainerProps {
   centerText?: boolean;
@@ -36,34 +28,37 @@ interface ContainerProps {
   verticalCenter?: boolean;
 }
 
-type HTMLContainerProps = ContainerProps & React.HTMLAttributes<HTMLDivElement>;
+export interface Level {
+  lg: number;
+  md: number;
+  sm: number;
+  xs: number;
+  xxs: number;
+}
 
 const LEVEL: Level = {
-  lg: `max-width: ${WIDTH.DESKTOP_MAX}px;`,
-  md: `max-width: ${WIDTH.TABLET_MAX}px;`,
-  sm: `max-width: ${WIDTH.TABLET_MIN}px;`,
-  xs: `max-width: ${WIDTH.MOBILE}px;`,
-  xxs: `max-width: ${WIDTH.TINY}px;`,
+  lg: WIDTH.DESKTOP_MAX,
+  md: WIDTH.TABLET_MAX,
+  sm: WIDTH.TABLET_MIN,
+  xs: WIDTH.MOBILE,
+  xxs: WIDTH.TINY,
 };
 
-const Container = styled.div<HTMLContainerProps>`
-  position: relative;
-  margin: ${props => (props.verticalCenter ? 'auto' : '0 auto')};
-  text-align: ${props => (props.centerText ? 'center' : 'left')};
-  width: 100%;
+const containerStyles: (props: ContainerProps) => ObjectInterpolation<undefined> = props => ({
+  margin: props.verticalCenter ? 'auto' : '0 auto',
+  maxWidth: props.level ? `${LEVEL[props.level]}px` : undefined,
+  position: 'relative',
+  textAlign: props.centerText ? 'center' : 'left',
+  width: '100%',
+  [media[QueryKeys.DESKTOP]]: props.level
+    ? undefined
+    : {
+        padding: 0,
+        width: `${WIDTH.DESKTOP_MIN - GUTTER * 2}px`,
+      },
+});
 
-  ${({level}) =>
-    LEVEL[level!] ||
-    `${media.desktop`
-            padding: 0;
-            width: ${WIDTH.DESKTOP_MIN - GUTTER * 2}px;
-          `};
-          ${media.desktopXL`
-            padding: 0;
-            width: ${WIDTH.DESKTOP_MIN - GUTTER * 2}px;
-          `};`}
-  }};
-`;
+const Container = (props: ContainerProps) => <div css={containerStyles(props)} {...props} />;
 
 Container.defaultProps = {
   centerText: false,
@@ -71,10 +66,10 @@ Container.defaultProps = {
   verticalCenter: false,
 };
 
-const ContainerLG = props => <Container level={'lg'} {...props} />;
-const ContainerMD = props => <Container level={'md'} {...props} />;
-const ContainerSM = props => <Container level={'sm'} {...props} />;
-const ContainerXS = props => <Container level={'xs'} {...props} />;
-const ContainerXXS = props => <Container level={'xxs'} {...props} />;
+const ContainerLG = (props: ContainerProps) => <Container level={'lg'} {...props} />;
+const ContainerMD = (props: ContainerProps) => <Container level={'md'} {...props} />;
+const ContainerSM = (props: ContainerProps) => <Container level={'sm'} {...props} />;
+const ContainerXS = (props: ContainerProps) => <Container level={'xs'} {...props} />;
+const ContainerXXS = (props: ContainerProps) => <Container level={'xxs'} {...props} />;
 
 export {Container, ContainerLG, ContainerMD, ContainerSM, ContainerXS, ContainerXXS};

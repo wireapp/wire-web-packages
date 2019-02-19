@@ -16,13 +16,20 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-
-import styled from '@emotion/styled';
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
+import {ObjectInterpolation} from '@emotion/styled';
 import {COLOR} from '../Identity';
-import {Link} from './Link';
-import {Text} from './Text';
+import {Text, TextProps, textStyles} from './Text';
 
-const Label = Text.withComponent(styled.span<React.HTMLAttributes<HTMLSpanElement>>``);
+type LabelProps = TextProps;
+
+const labelStyles: (props: LabelProps) => ObjectInterpolation<undefined> = props => ({
+  ...textStyles(props),
+});
+
+const Label = (props: LabelProps) => <span css={labelStyles(props)} {...props} />;
+const LabelLink = (props: LabelProps) => <a css={labelStyles(props)} {...props} />;
 
 Label.defaultProps = {
   ...Text.defaultProps,
@@ -30,7 +37,5 @@ Label.defaultProps = {
   color: COLOR.LINK,
   fontSize: '12px',
 };
-
-const LabelLink = Label.withComponent<any>(Link);
 
 export {Label, LabelLink};

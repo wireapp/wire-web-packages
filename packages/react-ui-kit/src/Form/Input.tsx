@@ -17,7 +17,7 @@
  *
  */
 
-import {css, jsx} from '@emotion/core';
+import {css} from '@emotion/core';
 import styled from '@emotion/styled';
 import {Encoder} from 'bazinga64';
 import React from 'react';

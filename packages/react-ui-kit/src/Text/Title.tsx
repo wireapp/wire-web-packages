@@ -16,16 +16,22 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-
-import styled from '@emotion/styled';
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
+import {ObjectInterpolation} from '@emotion/styled';
 import {COLOR} from '../Identity';
-import {Text} from './Text';
+import {TextProps, textStyles} from './Text';
 
-const Title = styled(Text.withComponent('div'))<React.HTMLAttributes<HTMLDivElement>>`
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: ${COLOR.GRAY};
-`;
+type TitleProps = TextProps;
+
+const titleStyles: (props: TitleProps) => ObjectInterpolation<undefined> = props => ({
+  ...textStyles(props),
+  color: COLOR.GRAY,
+  fontWeight: 600,
+  marginBottom: '8px',
+});
+
+const Title = (props: TitleProps) => <div css={titleStyles(props)} {...props} />;
 
 Title.defaultProps = {
   block: true,

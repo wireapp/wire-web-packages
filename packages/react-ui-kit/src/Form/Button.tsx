@@ -16,11 +16,12 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-
-import styled from '@emotion/styled';
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
+import {ObjectInterpolation} from '@emotion/styled';
 import {COLOR} from '../Identity';
 import {defaultTransition} from '../Identity/motions';
-import {Link, Text, TextProps} from '../Text';
+import {TextProps, linkStyles, textStyles} from '../Text';
 
 interface ButtonProps extends TextProps {
   backgroundColor?: string;
@@ -29,35 +30,37 @@ interface ButtonProps extends TextProps {
   noCapital?: boolean;
 }
 
-type HTMLButtonProps = ButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>;
+const buttonStyles: (props: ButtonProps) => ObjectInterpolation<undefined> = props => ({
+  ...textStyles,
+  '&:hover, &:focus': {
+    backgroundColor: props.disabled ? COLOR.DISABLED : COLOR.shade(props.backgroundColor, 0.06),
+    textDecoration: 'none',
+  },
+  backgroundColor: props.disabled ? COLOR.DISABLED : props.backgroundColor,
+  border: 0,
+  borderRadius: '8px',
+  cursor: props.disabled ? 'default' : 'pointer',
+  display: 'inline-block',
+  height: '48px',
+  lineHeight: '48px',
+  marginBottom: '16px',
+  maxWidth: '100%',
+  minWidth: '150px',
+  outline: 'none',
+  padding: '0 32px',
+  textDecoration: 'none',
+  touchAction: 'manipulation',
+  // ${defaultTransition},
+  width: props.block ? '100%' : 'auto',
+});
 
-const darkenAmount = 0.06;
-const Button = styled(Text.withComponent(styled.button<HTMLButtonProps>``), {
-  shouldForwardProp: prop =>
-    prop !== 'backgroundColor' && prop !== 'block' && prop !== 'disabled' && prop !== 'noCapital',
-})<HTMLButtonProps>`
-  background-color: ${props => (props.disabled ? COLOR.DISABLED : props.backgroundColor)};
-  border-radius: 8px;
-  border: 0;
-  cursor: ${props => (props.disabled ? 'default' : 'pointer')};
-  display: inline-block;
-  text-decoration: none;
-  margin-bottom: 16px;
-  touch-action: manipulation;
-  ${defaultTransition};
-  height: 48px;
-  line-height: 48px;
-  max-width: 100%;
-  outline: none;
-  padding: 0 32px;
-  min-width: 150px;
-  width: ${props => (props.block ? '100%' : 'auto')};
-  &:hover,
-  &:focus {
-    text-decoration: none;
-    background-color: ${props => (props.disabled ? COLOR.DISABLED : COLOR.shade(props.backgroundColor, darkenAmount))};
-  }
-`;
+const buttonLinkStyles: (props: ButtonProps) => ObjectInterpolation<undefined> = props => ({
+  ...linkStyles,
+  display: 'inline-block !important',
+});
+
+const Button = (props: ButtonProps) => <button css={buttonStyles(props)} {...props} />;
+const ButtonLink = (props: ButtonProps) => <a css={buttonLinkStyles(props)} {...props} />;
 
 Button.defaultProps = {
   backgroundColor: COLOR.BLUE,
@@ -72,10 +75,6 @@ Button.defaultProps = {
   textTransform: 'uppercase',
   truncate: true,
 };
-
-const ButtonLink = styled(Button.withComponent(Link))`
-  display: inline-block !important;
-`;
 
 ButtonLink.defaultProps = {
   ...Button.defaultProps,

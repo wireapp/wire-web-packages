@@ -16,7 +16,8 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-import {Global, css} from '@emotion/core';
+/** @jsx jsx */
+import {Global, css, jsx} from '@emotion/core';
 import emotionNormalize from 'emotion-normalize';
 import React from 'react';
 

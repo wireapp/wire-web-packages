@@ -16,8 +16,8 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-
-import {css, keyframes} from '@emotion/core';
+/** @jsx jsx */
+import {css, jsx, keyframes} from '@emotion/core';
 import styled from '@emotion/styled';
 import React from 'react';
 import {COLOR} from '../Identity';

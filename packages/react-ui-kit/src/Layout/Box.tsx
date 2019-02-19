@@ -16,14 +16,19 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-
-import styled from '@emotion/styled';
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
+import React from 'react';
 import {COLOR} from '../Identity';
 
-const Box = styled.div<React.HTMLAttributes<HTMLDivElement>>`
-  border: 2px solid ${COLOR.GRAY_LIGHTEN_72};
-  border-radius: 8px;
-  padding: 16px 32px;
-`;
+type BoxProps = React.HTMLAttributes<HTMLDivElement>;
 
-export {Box};
+const boxStyles = (props: BoxProps) => ({
+  border: `2px solid ${COLOR.GRAY_LIGHTEN_72}`,
+  borderradius: '8px',
+  padding: '16px 32px',
+});
+
+const Box = (props: BoxProps) => <div css={boxStyles(props)} {...props} />;
+
+export {Box, boxStyles};

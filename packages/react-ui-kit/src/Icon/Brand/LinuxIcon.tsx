@@ -16,8 +16,8 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-
-import React from 'react';
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
 import IconHOC from '../IconHOC';
 
 const size = 32;

@@ -16,9 +16,10 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-
-import styled from '@emotion/styled';
-import React from 'react';
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
+import {ObjectInterpolation} from '@emotion/styled';
+import {TextTransformProperty} from 'csstype';
 import {COLOR} from '../Identity';
 
 export interface TextProps {
@@ -30,40 +31,24 @@ export interface TextProps {
   light?: boolean;
   muted?: boolean;
   noWrap?: boolean;
-  textTransform?: string;
+  textTransform?: TextTransformProperty;
   truncate?: boolean;
 }
 
-type HTMLTextProps = TextProps & React.HTMLAttributes<HTMLSpanElement>;
+export const textStyles: (props: TextProps) => ObjectInterpolation<undefined> = props => ({
+  color: props.color,
+  display: props.block ? 'block' : 'inline',
+  fontSize: props.fontSize,
+  fontWeight: props.bold ? 600 : props.light ? 200 : 300,
+  opacity: props.muted ? 0.56 : 1,
+  overflow: props.truncate ? 'hidden' : undefined,
+  textAlign: props.center ? 'center' : 'left',
+  textOverflow: props.truncate ? 'ellipsis' : undefined,
+  textTransform: props.textTransform,
+  whiteSpace: props.noWrap ? 'nowrap' : undefined,
+});
 
-const Text = styled('span', {
-  shouldForwardProp: prop =>
-    prop !== 'bold' &&
-    prop !== 'light' &&
-    prop !== 'center' &&
-    prop !== 'block' &&
-    prop !== 'noWrap' &&
-    prop !== 'textTransform' &&
-    prop !== 'color' &&
-    prop !== 'fontSize' &&
-    prop !== 'truncate' &&
-    prop !== 'muted',
-})<HTMLTextProps>`
-  color: ${props => props.color};
-  font-size: ${props => props.fontSize};
-  font-weight: ${props => (props.bold ? '600' : props.light ? '200' : '300')};
-  opacity: ${props => (props.muted ? '0.56' : '1')};
-  text-align: ${props => (props.center ? 'center' : 'left')};
-  text-transform: ${props => props.textTransform};
-  display: ${props => (props.block ? 'block' : 'inline')};
-  ${props => props.noWrap && 'white-space: nowrap;'};
-  ${props =>
-    props.truncate &&
-    `
-        overflow: hidden;
-        text-overflow: ellipsis;
-      `};
-`;
+const Text = (props: TextProps) => <span css={textStyles(props)} {...props} />;
 
 Text.defaultProps = {
   block: false,
@@ -78,10 +63,10 @@ Text.defaultProps = {
   truncate: false,
 };
 
-const Bold = props => <Text bold {...props} />;
-const Small = props => <Text fontSize={'12px'} {...props} />;
-const Muted = props => <Text muted {...props} />;
-const Uppercase = props => <Text textTransform={'uppercase'} {...props} />;
-const Large = props => <Text fontSize={'48px'} light {...props} />;
+const Bold = (props: TextProps) => <Text bold {...props} />;
+const Small = (props: TextProps) => <Text fontSize={'12px'} {...props} />;
+const Muted = (props: TextProps) => <Text muted {...props} />;
+const Uppercase = (props: TextProps) => <Text textTransform={'uppercase'} {...props} />;
+const Large = (props: TextProps) => <Text fontSize={'48px'} light {...props} />;
 
 export {Bold, Muted, Small, Text, Uppercase, Large};

@@ -16,51 +16,41 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-
-import styled from '@emotion/styled';
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
 import Color from 'color';
 import React from 'react';
 import {COLOR} from '../Identity';
 import {defaultTransition} from '../Identity/motions';
-import {Text, TextProps} from './Text';
+import {TextProps, textStyles} from './Text';
 
-export interface LinkProps extends TextProps, React.AnchorHTMLAttributes<HTMLAnchorElement> {
-  component?: React.ComponentType;
+export interface LinkProps extends TextProps {
+  component?: React.ComponentType | string;
 }
 
-const Link = styled(
-  ({
-    color = COLOR.LINK,
-    bold = true,
-    fontSize = '11px',
-    textTransform = 'uppercase',
-    component = styled.a``,
-    ...props
-  }: LinkProps) => {
-    const darker = 0.16;
-    const hoverColor = Color(color)
-      .mix(Color(COLOR.BLACK), darker)
-      .toString();
-    const StyledLink = styled(Text.withComponent(component))`
-      text-decoration: none;
-      ${defaultTransition};
-      cursor: pointer;
-      color: ${color};
+export const linkStyles = props => {
+  const darker = 0.16;
+  const hoverColor = Color(props.color)
+    .mix(Color(COLOR.BLACK), darker)
+    .toString();
+  return {
+    ...textStyles(props),
+    // ${defaultTransition};
+    '&:hover': {
+      color: hoverColor,
+    },
+    '&:visited, &:link, &:active': {
+      color: props.color,
+    },
+    color: props.color,
+    cursor: 'pointer',
+    textDecoration: 'none',
+  };
+};
 
-      &:visited,
-      &:link,
-      &:active {
-        color: ${color};
-      }
-      &:hover {
-        color: ${hoverColor};
-      }
-    `;
-    return <StyledLink color={color} bold fontSize={fontSize} textTransform={textTransform} {...props} />;
-  },
-  {
-    shouldForwardProp: prop => prop !== 'bold' && prop !== 'color',
-  }
-)``;
+const Link = ({component = 'a', ...props}: LinkProps) =>
+  React.createElement(component, {css: linkStyles(props), ...props} as any, null);
+
+//TODO default props
 
 export {Link};

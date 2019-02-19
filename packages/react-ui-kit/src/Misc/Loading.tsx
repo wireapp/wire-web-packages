@@ -16,8 +16,8 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-
-import {css, keyframes} from '@emotion/core';
+/** @jsx jsx */
+import {css, jsx, keyframes} from '@emotion/core';
 import styled from '@emotion/styled';
 import React from 'react';
 import {ANIMATION, DURATION} from '../Identity/motions';
@@ -26,13 +26,13 @@ const pathLength = 125.68;
 
 interface LoadingComponentProps {
   progress?: number;
-  size: number;
+  size?: number;
 }
 
 function LoadingComponent({
   className,
   progress = undefined,
-  size,
+  size = 43,
 }: LoadingComponentProps & React.HTMLAttributes<SVGElement>) {
   const additionalProps: {
     strokeDashoffset?: string;

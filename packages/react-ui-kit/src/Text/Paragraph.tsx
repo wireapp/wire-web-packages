@@ -16,28 +16,39 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
+import {ObjectInterpolation} from '@emotion/styled';
+import media, {QueryKeys} from '../mediaQueries';
+import {Text, TextProps, textStyles} from './Text';
 
-import styled from '@emotion/styled';
-import media from '../mediaQueries';
-import {Text} from './Text';
+type ParagraphProps = TextProps;
 
-const Paragraph = styled(Text.withComponent('p'))<React.HTMLAttributes<HTMLParagraphElement>>`
-  margin-top: 0;
-  margin-bottom: 16px;
-`;
+const paragraphStyles: (props: ParagraphProps) => ObjectInterpolation<undefined> = props => ({
+  ...textStyles(props),
+  marginBottom: '16px',
+  marginTop: 0,
+});
+
+const Paragraph = (props: ParagraphProps) => <p css={paragraphStyles(props)} {...props} />;
 
 Paragraph.defaultProps = {
-  ...Paragraph.defaultProps,
+  ...Text.defaultProps,
   block: true,
 };
 
-const Lead = styled(Text.withComponent('p'))<React.HTMLAttributes<HTMLParagraphElement>>`
-  margin-bottom: 56px;
-  margin-top: 0;
-  ${media.mobile`
-    font-size: 20px;
-  `};
-`;
+type LeadProps = TextProps;
+
+const leadStyles: (props: LeadProps) => ObjectInterpolation<undefined> = props => ({
+  ...textStyles(props),
+  marginBottom: '56px',
+  marginTop: 0,
+  [media[QueryKeys.MOBILE]]: {
+    fontSize: '20px',
+  },
+});
+
+const Lead = (props: LeadProps) => <p css={leadStyles(props)} {...props} />;
 
 Lead.defaultProps = {
   block: true,
