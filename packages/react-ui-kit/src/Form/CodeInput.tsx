@@ -16,7 +16,8 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
 import styled from '@emotion/styled';
 import React from 'react';
 

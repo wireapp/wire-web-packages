@@ -16,8 +16,8 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-
-import {css} from '@emotion/core';
+/** @jsx jsx */
+import {css, jsx} from '@emotion/core';
 import styled from '@emotion/styled';
 import {Encoder} from 'bazinga64';
 import React from 'react';
