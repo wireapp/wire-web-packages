@@ -36,11 +36,11 @@
   "name": "@wireapp/react-ui-kit",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit",
   "scripts": {
-    "build": "babel --config-file ./babel.config.js -x .ts,.tsx ./src -d ./dist",
+    "build": "tsc && babel --config-file ./babel.config.js --extensions .ts,.tsx ./src -d ./dist --source-maps",
     "clean": "rimraf dist",
     "dist": "yarn clean && yarn build",
     "start": "webpack-dev-server",
-    "test": "yarn test:browser",
+    "test": "tsc && yarn test:browser",
     "test:project": "yarn dist && yarn test",
     "test:browser": "exit 0"
   },

@@ -5,6 +5,7 @@
     "rootDir": "src",
     "module": "commonjs",
     "esModuleInterop": true,
+    "emitDeclarationOnly": true,
     "strict": false,
     "declaration": true,
     "noImplicitAny": false,

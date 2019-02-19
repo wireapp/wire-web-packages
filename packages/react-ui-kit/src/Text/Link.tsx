@@ -24,7 +24,7 @@ import {COLOR} from '../Identity';
 import {defaultTransition} from '../Identity/motions';
 import {Text, TextProps} from './Text';
 
-export interface LinkProps extends TextProps {
+export interface LinkProps extends TextProps, React.AnchorHTMLAttributes<HTMLAnchorElement> {
   component?: React.ComponentType;
 }
 

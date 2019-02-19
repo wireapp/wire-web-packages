@@ -36,7 +36,19 @@ export interface TextProps {
 
 type HTMLTextProps = TextProps & React.HTMLAttributes<HTMLSpanElement>;
 
-const Text = styled.span<HTMLTextProps>`
+const Text = styled('span', {
+  shouldForwardProp: prop =>
+    prop !== 'bold' &&
+    prop !== 'light' &&
+    prop !== 'center' &&
+    prop !== 'block' &&
+    prop !== 'noWrap' &&
+    prop !== 'textTransform' &&
+    prop !== 'color' &&
+    prop !== 'fontSize' &&
+    prop !== 'truncate' &&
+    prop !== 'muted',
+})<HTMLTextProps>`
   color: ${props => props.color};
   font-size: ${props => props.fontSize};
   font-weight: ${props => (props.bold ? '600' : props.light ? '200' : '300')};
