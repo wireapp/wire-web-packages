@@ -55,8 +55,10 @@ const desktopStyledHeaderSubMenuStyles: (
   },
 });
 
+const DesktopStyledHeaderSubMenuClass = 'desktopStyledHeaderSubMenu';
+
 const DesktopStyledHeaderSubMenu = (props: DesktopStyledHeaderSubMenuProps) => (
-  <div css={desktopStyledHeaderSubMenuStyles(props)} {...props} />
+  <div className={DesktopStyledHeaderSubMenuClass} css={desktopStyledHeaderSubMenuStyles(props)} {...props} />
 );
 
 export interface InternalMobileStyledHeaderSubMenuProps {
@@ -144,4 +146,4 @@ const HeaderSubMenu: React.SFC<HeaderSubMenuProps & React.HTMLAttributes<HTMLSpa
   );
 };
 
-export {HeaderSubMenu, DesktopStyledHeaderSubMenu, MobileStyledHeaderSubMenu};
+export {HeaderSubMenu, DesktopStyledHeaderSubMenu, DesktopStyledHeaderSubMenuClass, MobileStyledHeaderSubMenu};
