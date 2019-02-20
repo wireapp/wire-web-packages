@@ -16,7 +16,6 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-/** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import Color from 'color';
 import React from 'react';
@@ -37,7 +36,6 @@ export const linkStyles: (props: InternalLinkProps) => ObjectInterpolation<undef
     .toString();
   return {
     ...textStyles(props),
-    // ${defaultTransition};
     '&:hover': {
       color: hoverColor,
     },
@@ -47,11 +45,12 @@ export const linkStyles: (props: InternalLinkProps) => ObjectInterpolation<undef
     color: props.color,
     cursor: 'pointer',
     textDecoration: 'none',
+    transition: defaultTransition,
   };
 };
 
-const Link = ({component = 'a', ...props}: LinkProps) =>
-  React.createElement(component, {css: linkStyles(props), ...props} as any, null);
+const Link = ({component = 'a', children, ...props}: LinkProps) =>
+  jsx(component, {css: linkStyles(props), ...props} as any, children);
 
 Link.defaultProps = {
   bold: true,
