@@ -40,7 +40,7 @@ import {
 import DemoAnimations from './DemoAnimations';
 import DemoColors from './DemoColors';
 import DemoIcons from './DemoIcons';
-import DemoInputs from './DemoInputs';
+//import DemoInputs from './DemoInputs';
 import DemoLayouts from './DemoLayouts';
 import DemoModals from './DemoModals';
 import DemoTypography from './DemoTypography';
@@ -151,7 +151,7 @@ class Demo extends React.PureComponent {
           </Container>
           <DemoIcons />
           <DemoLayouts />
-          <DemoInputs />
+          {/*<DemoInputs />*/}
           <DemoModals />
           <DemoTypography />
           <DemoAnimations />

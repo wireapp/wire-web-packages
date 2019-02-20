@@ -23,7 +23,7 @@ export * from './Form';
 export * from './Input';
 export * from './InputSubmitCombo';
 export * from './InputBlock';
-export * from './RoundIconButton';
+//export * from './RoundIconButton';
 export * from './Select';
 export * from './CodeInput';
 export * from './ErrorMessage';
