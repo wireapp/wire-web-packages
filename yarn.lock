@@ -538,7 +538,7 @@
     "@babel/helper-plugin-utils" "^7.0.0"
     "@babel/plugin-syntax-jsx" "^7.2.0"
 
-"@babel/plugin-transform-react-jsx@^7.0.0", "@babel/plugin-transform-react-jsx@^7.1.6":
+"@babel/plugin-transform-react-jsx@^7.0.0":
   version "7.3.0"
   resolved "https://registry.yarnpkg.com/@babel/plugin-transform-react-jsx/-/plugin-transform-react-jsx-7.3.0.tgz#f2cab99026631c767e2745a5368b331cfe8f5290"
   integrity sha512-a/+aRb7R06WcKvQLOu4/TpjKOdvVEKRLWFpKcNuHhiREPgGRB4TQJxq07+EZLS8LFVYpfq1a5lDUnuMdcCpBKg==
@@ -722,23 +722,6 @@
     esutils "^2.0.2"
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
-
-"@emotion/babel-plugin-jsx-pragmatic@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@emotion/babel-plugin-jsx-pragmatic/-/babel-plugin-jsx-pragmatic-0.1.0.tgz#fc980ee7f50f7b949ca76b4897e992739076b93d"
-  integrity sha512-qO0St0wzQ7adbDPl0GzbptNBVg0G773uX4o07sSEzMnlsE+sAZn6CtmDJU69efALHjGfsuOAKhL/zBBEy5JGcA==
-  dependencies:
-    "@babel/plugin-syntax-jsx" "^7.2.0"
-
-"@emotion/babel-preset-css-prop@10.0.7":
-  version "10.0.7"
-  resolved "https://registry.yarnpkg.com/@emotion/babel-preset-css-prop/-/babel-preset-css-prop-10.0.7.tgz#ddb57f69ee6a8131f8c9ac4dd68dbec54bd6a6aa"
-  integrity sha512-GfOJtSm9daEL0KfdWDusy2vTJvXQpO82mTLextuXnTsSFiTaOt7WNP7z3T1onLEHCsgRHTsgjnBHX2qr2oT+yw==
-  dependencies:
-    "@babel/plugin-transform-react-jsx" "^7.1.6"
-    "@emotion/babel-plugin-jsx-pragmatic" "^0.1.0"
-    babel-plugin-emotion "^10.0.7"
-    object-assign "^4.1.1"
 
 "@emotion/cache@^10.0.7":
   version "10.0.7"

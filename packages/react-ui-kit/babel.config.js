@@ -19,5 +19,5 @@
 
 module.exports = {
   plugins: ['babel-plugin-emotion', '@babel/plugin-proposal-class-properties'],
-  presets: ['@emotion/babel-preset-css-prop', '@babel/preset-react', '@babel/preset-typescript', '@babel/preset-env'],
+  presets: ['@babel/preset-react', '@babel/preset-typescript', '@babel/preset-env'],
 };
