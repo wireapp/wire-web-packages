@@ -24,10 +24,6 @@ import {MenuItems} from './MenuItems';
 import {MenuOpenButton} from './MenuOpenButton';
 import {MenuScrollableItems} from './MenuScrollableItems';
 
-const MenuWrapper: React.SFC<React.HTMLAttributes<HTMLDivElement>> = () => <div style={{height: '64px'}} />;
-
-const MenuLogo: React.SFC<React.HTMLAttributes<HTMLDivElement>> = () => <div style={{zIndex: 2}} />;
-
 interface HeaderMenuProps {
   logoElement?: React.ReactNode;
 }
@@ -60,9 +56,11 @@ class HeaderMenu extends React.PureComponent<HeaderMenuProps & React.HTMLAttribu
     const {isOpen} = this.state;
     const {children, logoElement = null, ...props} = this.props;
     return (
-      <MenuWrapper {...props} data-uie-name="element-header-menu">
+      <div style={{height: '64px'}} {...props} data-uie-name="element-header-menu">
         <MenuContent open={isOpen}>
-          <MenuLogo onClick={this.closeMenu}>{logoElement}</MenuLogo>
+          <div style={{zIndex: 2}} onClick={this.closeMenu}>
+            {logoElement}
+          </div>
           <MenuItems onClick={this.closeMenu} open={isOpen}>
             <MenuScrollableItems>{children}</MenuScrollableItems>
           </MenuItems>
@@ -72,7 +70,7 @@ class HeaderMenu extends React.PureComponent<HeaderMenuProps & React.HTMLAttribu
             <div />
           </MenuOpenButton>
         </MenuContent>
-      </MenuWrapper>
+      </div>
     );
   }
 }
