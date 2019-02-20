@@ -17,15 +17,16 @@
  *
  */
 /** @jsx jsx */
-import {css, jsx, keyframes} from '@emotion/core';
-import styled from '@emotion/styled';
+import {ObjectInterpolation, jsx, keyframes} from '@emotion/core';
 import React from 'react';
 import {COLOR} from '../Identity';
+import {DURATION, EASE} from '../Identity/motions';
 
-interface PillProps {
+export interface InternalPillProps {
   active?: boolean;
   type?: PILL_TYPE;
 }
+export interface PillProps extends InternalPillProps, React.HTMLAttributes<HTMLSpanElement> {}
 
 enum PILL_TYPE {
   error = 'ERROR',
@@ -33,13 +34,13 @@ enum PILL_TYPE {
   warning = 'WARNING',
 }
 
-const backgroundColors = {
-  [PILL_TYPE.error]: COLOR.RED_OPAQUE_16,
-  [PILL_TYPE.success]: COLOR.GREEN_OPAQUE_16,
-  [PILL_TYPE.warning]: COLOR.YELLOW_OPAQUE_16,
-};
-
-const pillAnimation = keyframes`
+const pillStyles: (props: InternalPillProps) => ObjectInterpolation<undefined> = props => {
+  const backgroundColors = {
+    [PILL_TYPE.error]: COLOR.RED_OPAQUE_16,
+    [PILL_TYPE.success]: COLOR.GREEN_OPAQUE_16,
+    [PILL_TYPE.warning]: COLOR.YELLOW_OPAQUE_16,
+  };
+  const pillAnimation = keyframes`
     0% {
       background-color: transparent;
     }
@@ -47,50 +48,35 @@ const pillAnimation = keyframes`
       background-color: #eee;
     }
 `;
+  return {
+    '&:first-child': {
+      marginLeft: 0,
+    },
+    '&:last-child': {
+      marginRight: 0,
+    },
+    animation: `${pillAnimation} ${DURATION.DEFAULT}ms ${EASE.QUART}`,
+    backgroundColor: props.active ? '#eee' : props.type ? backgroundColors[props.type] : 'transparent',
+    borderRadius: '160px',
+    cursor: props.active ? 'default' : undefined,
+    display: 'inline-block',
+    fontSize: '12px',
+    lineHeight: '16px',
+    margin: props.type ? '12px 0 0 0' : '0 8px',
+    minHeight: '32px',
+    padding: '8px 24px',
+    textAlign: 'center',
+    textDecoration: 'none',
+  };
+};
 
-const Pill = styled(
-  (props: PillProps) => <span data-uie-name="element-pill" data-uie-status={props.type} {...props} />,
-  {
-    shouldForwardProp: prop => prop !== 'active' && prop !== 'type',
-  }
-)<PillProps & React.HTMLAttributes<HTMLSpanElement>>`
-  ${({type}) => {
-    const backgroundColor = type ? backgroundColors[type] : 'transparent';
-    const margin = type ? '12px 0 0 0' : '0 8px';
-    return `
-        background-color: ${backgroundColor};
-        margin: ${margin};
-    `;
-  }};
-  display: inline-block;
-  font-size: 12px;
-  text-decoration: none;
-  padding: 8px 24px;
-  border-radius: 160px;
-  min-height: 32px;
-  line-height: 16px;
-  text-align: center;
-
-  &:first-child {
-    margin-left: 0;
-  }
-
-  &:last-child {
-    margin-right: 0;
-  }
-
-  ${({active}) =>
-    active &&
-    css`
-      cursor: default;
-      background-color: #eee;
-      animation: ${pillAnimation} 300ms ease-out;
-    `};
-`;
+const Pill = (props: PillProps) => (
+  <span css={pillStyles(props)} data-uie-name="element-pill" data-uie-status={props.type} {...props} />
+);
 
 Pill.defaultProps = {
   active: false,
   type: null,
 };
 
-export {Pill, PILL_TYPE};
+export {Pill, PILL_TYPE, pillStyles};
