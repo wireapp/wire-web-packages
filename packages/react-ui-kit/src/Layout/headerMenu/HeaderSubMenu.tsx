@@ -18,49 +18,72 @@
  */
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
+import {COLOR, Opacity, Slide, YAxisMovement} from '../../Identity';
+import {DURATION} from '../../Identity/motions';
+import {QUERY} from '../../mediaQueries';
+import {MenuSubLink} from './MenuSubLink';
 
-const DesktopStyledHeaderSubMenu = styled.span<React.HTMLAttributes<HTMLSpanElement>>`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+export interface InternalDesktopStyledHeaderSubMenuProps {}
+export interface DesktopStyledHeaderSubMenuProps
+  extends InternalDesktopStyledHeaderSubMenuProps,
+    React.HTMLAttributes<HTMLDivElement> {}
 
-  min-width: 200px;
-  align-items: left;
-  background-color: white;
-  box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.16);
-  border-radius: 8px;
-  padding: 8px 8px;
-  span {
-    margin: 0px;
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
-    &:hover {
-      background-color: ${COLOR.GRAY_LIGHTEN_72};
-      border-radius: 4px;
-    }
-  }
-`;
+const desktopStyledHeaderSubMenuStyles: (
+  props: InternalDesktopStyledHeaderSubMenuProps
+) => ObjectInterpolation<undefined> = props => ({
+  alignItems: 'left',
+  backgroundColor: 'white',
+  borderRadius: '8px',
+  boxShadow: '0 8px 24px 0 rgba(0, 0, 0, 0.16)',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  minWidth: '200px',
+  padding: '8px 8px',
+  span: {
+    '&:hover': {
+      backgroundColor: COLOR.GRAY_LIGHTEN_72,
+      borderRadius: '4px',
+    },
+    alignItems: 'center',
+    display: 'flex',
+    height: '30px',
+    margin: 0,
+    paddingLeft: '10px !important',
+    paddingRight: '10px !important',
+    whiteSpace: 'nowrap',
+  },
+});
 
-const MobileStyledHeaderSubMenu = styled.span<React.HTMLAttributes<HTMLSpanElement>>`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+const DesktopStyledHeaderSubMenu = (props: DesktopStyledHeaderSubMenuProps) => (
+  <div css={desktopStyledHeaderSubMenuStyles(props)} {...props} />
+);
 
-  align-items: center;
-  border-top: 1px solid ${COLOR.GRAY_LIGHTEN_72};
-  margin-top: 16px;
-  padding-top: 8px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  * {
-    font-weight: 200 !important;
-  }
-`;
+export interface InternalMobileStyledHeaderSubMenuProps {
+  open?: boolean;
+}
+export interface MobileStyledHeaderSubMenuProps
+  extends InternalMobileStyledHeaderSubMenuProps,
+    React.HTMLAttributes<HTMLSpanElement> {}
+
+const mobileStyledHeaderSubMenuStyles: (
+  props: InternalMobileStyledHeaderSubMenuProps
+) => ObjectInterpolation<undefined> = props => ({
+  '*': {
+    fontWeight: 200,
+  },
+  alignItems: 'center',
+  borderTop: `1px solid ${COLOR.GRAY_LIGHTEN_72}`,
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  marginTop: '16px',
+  paddingTop: '8px',
+});
+
+const MobileStyledHeaderSubMenu = (props: MobileStyledHeaderSubMenuProps) => (
+  <span css={mobileStyledHeaderSubMenuStyles(props)} {...props} />
+);
 
 interface HeaderSubMenuProps {
   caption: string;
@@ -120,3 +143,5 @@ const HeaderSubMenu: React.SFC<HeaderSubMenuProps & React.HTMLAttributes<HTMLSpa
     </MenuSubLink>
   );
 };
+
+export {HeaderSubMenu, DesktopStyledHeaderSubMenu, MobileStyledHeaderSubMenu};

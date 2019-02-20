@@ -20,6 +20,7 @@
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import media, {QueryKeys} from '../../mediaQueries';
 import {InternalLinkProps, Link, linkStyles} from '../../Text';
+import {DesktopStyledHeaderSubMenu} from './HeaderSubMenu';
 
 export interface InternalMenuLinkProps extends InternalLinkProps {
   button?: boolean;
@@ -36,13 +37,16 @@ const menuLinkStyles: (props: InternalMenuLinkProps) => ObjectInterpolation<unde
       marginRight: 0,
     },
     margin: '12px 26px 0 10px',
-    // `${DesktopStyledHeaderSubMenu} &:first-child`: {
-    //   marginLeft: '10px',
-    // },
-
-    // `${DesktopStyledHeaderSubMenu} &:last-child`: {
-    //   marginRight: '26px',
-    // },
+    [`${DesktopStyledHeaderSubMenu}`]: {
+      '&:first-child': {
+        marginLeft: '10px',
+      },
+    },
+    [`${DesktopStyledHeaderSubMenu}`]: {
+      '&:last-child': {
+        marginRight: '26px',
+      },
+    },
   },
   [media[QueryKeys.TABLET_DOWN]]: {
     border: 'none',

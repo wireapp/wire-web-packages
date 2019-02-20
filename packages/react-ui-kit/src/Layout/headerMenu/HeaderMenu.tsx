@@ -18,21 +18,15 @@
  */
 /** @jsx jsx */
 import {jsx} from '@emotion/core';
-import styled from '@emotion/styled';
 import React from 'react';
 import {MenuContent} from './MenuContent';
 import {MenuItems} from './MenuItems';
 import {MenuOpenButton} from './MenuOpenButton';
 import {MenuScrollableItems} from './MenuScrollableItems';
-import {MenuSubLink} from './MenuSubLink';
 
-const MenuWrapper = styled.div`
-  height: 64px;
-`;
+const MenuWrapper: React.SFC<React.HTMLAttributes<HTMLDivElement>> = () => <div style={{height: '64px'}} />;
 
-const MenuLogo = styled.div<React.HTMLAttributes<HTMLDivElement>>`
-  z-index: 2;
-`;
+const MenuLogo: React.SFC<React.HTMLAttributes<HTMLDivElement>> = () => <div style={{zIndex: 2}} />;
 
 interface HeaderMenuProps {
   logoElement?: React.ReactNode;
@@ -47,7 +41,7 @@ class HeaderMenu extends React.PureComponent<HeaderMenuProps & React.HTMLAttribu
     logoElement: null,
   };
 
-  state = {
+  state: HeaderMenuState = {
     isOpen: false,
   };
 

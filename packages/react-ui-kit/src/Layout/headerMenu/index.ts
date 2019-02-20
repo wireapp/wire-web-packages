@@ -17,15 +17,11 @@
  *
  */
 
-export * from './Box';
-export * from './Column';
-export * from './Container';
-export * from './Content';
-export * from './FlexBox';
-export * from './Footer';
-export * from './Header';
-export * from './headerMenu/index';
-export * from './MatchMedia';
-export * from './Spacer';
-export * from './StyledApp';
-export * from './sizes';
+export * from './HeaderMenu';
+export * from './HeaderSubMenu';
+export * from './MenuContent';
+export * from './MenuItems';
+export * from './MenuLink';
+export * from './MenuOpenButton';
+export * from './MenuScrollableItems';
+export * from './MenuSubLink';

@@ -29,7 +29,7 @@ interface MenuSubLinkProps extends InternalMenuSubLinkProps, React.HTMLAttribute
 const menuSubLinkStyles: (props: InternalMenuSubLinkProps) => ObjectInterpolation<undefined> = props => ({
   ...textStyles(props),
   '&:hover': {
-    color: COLOR(COLOR.LINK)
+    color: Color(COLOR.LINK)
       .mix(Color(COLOR.BLACK), 0.16)
       .toString(),
   },
