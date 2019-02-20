@@ -17,7 +17,9 @@
  *
  */
 
-import React from 'react';
+/** @jsx jsx */
+
+import {jsx} from '@emotion/core';
 import IconHOC from './IconHOC';
 
 const size = 16;

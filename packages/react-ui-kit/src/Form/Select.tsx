@@ -57,4 +57,6 @@ const Select = styled(Input.withComponent('select'))<SelectProps & React.HTMLAtt
   }
 `;
 
+const Select2 = (...props) => <select {...props} />;
+
 export {Select};

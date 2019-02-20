@@ -17,25 +17,31 @@
  *
  */
 
-import styled from '@emotion/styled';
+/** @jsx jsx */
+
+import {ObjectInterpolation, jsx} from '@emotion/core';
 import {COLOR} from '../Identity';
 
-export interface RoundContainerProps {
+export interface InternalRoundContainerProps {
   color?: string;
   size?: number;
 }
 
-const RoundContainer = styled.div<RoundContainerProps>`
-  width: ${props => parseFloat(props.size.toString())}px;
-  height: ${props => parseFloat(props.size.toString())}px;
-  border-radius: 50%;
-  border: none;
-  background-color: ${props => props.color};
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+export interface RoundContainerProps extends InternalRoundContainerProps, React.HTMLAttributes<HTMLDivElement> {}
+
+const roundContainerStyles: (props: InternalRoundContainerProps) => ObjectInterpolation<undefined> = props => ({
+  alignItems: 'center',
+  backgroundColor: props.color,
+  border: 'none',
+  borderRadiues: '50%',
+  display: 'flex',
+  height: `${props.size}px`,
+  justifyContent: 'center',
+  margin: '0 auto',
+  width: `${props.size}px`,
+});
+
+const RoundContainer = (props: RoundContainerProps) => <div css={roundContainerStyles(props)} {...props} />;
 
 RoundContainer.defaultProps = {
   color: COLOR.BLUE,
