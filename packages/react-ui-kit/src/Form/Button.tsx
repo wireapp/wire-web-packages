@@ -50,7 +50,7 @@ const buttonStyles: (props: ButtonProps) => ObjectInterpolation<undefined> = pro
   padding: '0 32px',
   textDecoration: 'none',
   touchAction: 'manipulation',
-  // ${defaultTransition},
+  transition: defaultTransition,
   width: props.block ? '100%' : 'auto',
 });
 

@@ -20,6 +20,7 @@
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import Color from 'color';
 import {COLOR} from '../../Identity';
+import {defaultTransition} from '../../Identity/motions';
 import media, {QueryKeys} from '../../mediaQueries';
 import {InternalTextProps, textStyles} from '../../Text';
 
@@ -37,7 +38,7 @@ const menuSubLinkStyles: (props: InternalMenuSubLinkProps) => ObjectInterpolatio
   cursor: 'pointer',
   fontWeight: 600,
   textDecoration: 'none',
-  // ${defaultTransition},
+  transition: defaultTransition,
   [media[QueryKeys.DESKTOP]]: {
     '&:first-child': {
       marginLeft: 0,
