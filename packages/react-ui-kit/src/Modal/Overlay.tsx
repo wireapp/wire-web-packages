@@ -17,58 +17,70 @@
  *
  */
 /** @jsx jsx */
-import {jsx} from '@emotion/core';
-import styled from '@emotion/styled';
+import {ObjectInterpolation, jsx} from '@emotion/core';
 import React from 'react';
 import {COLOR} from '../Identity';
 import {ANIMATION, DURATION, EASE} from '../Identity/motions';
-import {QUERY} from '../mediaQueries';
+import media, {QueryKeys} from '../mediaQueries';
 
 interface OverlayProps {}
 
-const OverlayWrapper = styled.div<React.HTMLAttributes<HTMLDivElement>>`
-  position: fixed;
-  display: flex;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 24px;
-  z-index: 9997;
-  overflow-y: auto;
-`;
+const OverlayWrapper = (props: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    css={{
+      bottom: 0,
+      display: 'flex',
+      left: 0,
+      overflowY: 'auto',
+      padding: '24px',
+      position: 'fixed',
+      right: 0,
+      top: 0,
+      zIndex: 9997,
+    }}
+    {...props}
+  />
+);
 
-const OverlayContent = styled.div<React.HTMLAttributes<HTMLDivElement>>`
-  max-width: 100%;
-  overflow-y: auto;
-  position: relative;
-  justify-content: space-between;
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  z-index: 9999;
-  margin: auto;
-  -webkit-transform: translate3d(0, 0, 0);
+const OverlayContent = (props: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    css={{
+      '*': {
+        color: COLOR.WHITE,
+      },
+      '-webkit-transform': 'translate3d(0, 0, 0)',
+      alignItems: 'center',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      margin: 'auto',
+      maxWidth: '100%',
+      overflowY: 'auto',
+      position: 'relative',
+      zIndex: 9999,
+      [media[QueryKeys.TABLET_DOWN]]: {
+        width: '100%',
+      },
+    }}
+    {...props}
+  />
+);
 
-  * {
-    color: ${COLOR.WHITE};
-  }
+export interface InternalOverlayBackgroundProps {}
+export interface OverlayBackgroundProps extends InternalOverlayBackgroundProps, React.HTMLAttributes<HTMLDivElement> {}
 
-  @media (${QUERY.tabletDown}) {
-    width: 100%;
-  }
-`;
+const overlayBackgroundStyles: (props: InternalOverlayBackgroundProps) => ObjectInterpolation<undefined> = () => ({
+  animation: `${ANIMATION.fadeIn} ${DURATION.PROACTIVE_SLOW}ms ${EASE.QUART}`,
+  background: 'rgba(0, 0, 0, 0.88)',
+  height: '100vh',
+  left: '0px',
+  position: 'fixed',
+  top: '0px',
+  width: '100vw',
+  zIndex: 9998,
+});
 
-const OverlayBackground = styled.div<React.HTMLAttributes<HTMLDivElement>>`
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  height: 100vh;
-  width: 100vw;
-  background: rgba(0, 0, 0, 0.88);
-  z-index: 9998;
-  animation: ${ANIMATION.fadeIn} ${DURATION.PROACTIVE_SLOW}ms ${EASE.QUART};
-`;
+const OverlayBackground = (props: OverlayBackgroundProps) => <div css={overlayBackgroundStyles} {...props} />;
 
 const Overlay = ({children = null, ...props}: OverlayProps & React.HTMLAttributes<HTMLDivElement>) => (
   <OverlayWrapper {...props} data-uie-name="modal">
@@ -77,4 +89,4 @@ const Overlay = ({children = null, ...props}: OverlayProps & React.HTMLAttribute
   </OverlayWrapper>
 );
 
-export {Overlay, OverlayBackground, OverlayWrapper};
+export {Overlay, OverlayBackground, overlayBackgroundStyles, OverlayWrapper};
