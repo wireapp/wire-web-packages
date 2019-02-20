@@ -17,18 +17,20 @@
  *
  */
 /** @jsx jsx */
-import {jsx} from '@emotion/core';
+import {ObjectInterpolation, jsx} from '@emotion/core';
 import Color from 'color';
 import React from 'react';
 import {COLOR} from '../Identity';
 import {defaultTransition} from '../Identity/motions';
-import {TextProps, textStyles} from './Text';
+import {InternalTextProps, textStyles} from './Text';
 
-export interface LinkProps extends TextProps {
+export interface InternalLinkProps extends InternalTextProps {
   component?: React.ComponentType | string;
 }
 
-export const linkStyles = props => {
+export interface LinkProps extends InternalLinkProps, React.HTMLAttributes<HTMLAnchorElement> {}
+
+export const linkStyles: (props: InternalLinkProps) => ObjectInterpolation<undefined> = props => {
   const darker = 0.16;
   const hoverColor = Color(props.color)
     .mix(Color(COLOR.BLACK), darker)
@@ -51,6 +53,12 @@ export const linkStyles = props => {
 const Link = ({component = 'a', ...props}: LinkProps) =>
   React.createElement(component, {css: linkStyles(props), ...props} as any, null);
 
-//TODO default props
+Link.defaultProps = {
+  bold: true,
+  color: COLOR.LINK,
+  component: 'a',
+  fontSize: '11px',
+  textTransform: 'uppercase',
+};
 
 export {Link};

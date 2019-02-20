@@ -20,11 +20,12 @@
 import {jsx} from '@emotion/core';
 import {ObjectInterpolation} from '@emotion/styled';
 import media, {QueryKeys} from '../mediaQueries';
-import {Text, TextProps, textStyles} from './Text';
+import {InternalTextProps, Text, textStyles} from './Text';
 
-type ParagraphProps = TextProps;
+export interface InternalParagraphProps extends InternalTextProps {}
+export interface ParagraphProps extends InternalTextProps, React.HTMLAttributes<HTMLParagraphElement> {}
 
-const paragraphStyles: (props: ParagraphProps) => ObjectInterpolation<undefined> = props => ({
+const paragraphStyles: (props: InternalParagraphProps) => ObjectInterpolation<undefined> = props => ({
   ...textStyles(props),
   marginBottom: '16px',
   marginTop: 0,
@@ -37,9 +38,10 @@ Paragraph.defaultProps = {
   block: true,
 };
 
-type LeadProps = TextProps;
+export interface InternalLeadProps extends InternalTextProps {}
+export interface LeadProps extends InternalTextProps, React.HTMLAttributes<HTMLParagraphElement> {}
 
-const leadStyles: (props: LeadProps) => ObjectInterpolation<undefined> = props => ({
+const leadStyles: (props: InternalLeadProps) => ObjectInterpolation<undefined> = props => ({
   ...textStyles(props),
   marginBottom: '56px',
   marginTop: 0,
@@ -56,4 +58,4 @@ Lead.defaultProps = {
   fontSize: '24px',
 };
 
-export {Paragraph, Lead};
+export {Paragraph, paragraphStyles, Lead, leadStyles};

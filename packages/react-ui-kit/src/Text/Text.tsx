@@ -22,7 +22,7 @@ import {ObjectInterpolation} from '@emotion/styled';
 import {TextTransformProperty} from 'csstype';
 import {COLOR} from '../Identity';
 
-export interface TextProps {
+export interface InternalTextProps {
   block?: boolean;
   bold?: boolean;
   center?: boolean;
@@ -35,7 +35,9 @@ export interface TextProps {
   truncate?: boolean;
 }
 
-export const textStyles: (props: TextProps) => ObjectInterpolation<undefined> = props => ({
+export interface TextProps extends InternalTextProps, React.HTMLAttributes<HTMLSpanElement> {}
+
+export const textStyles: (props: InternalTextProps) => ObjectInterpolation<undefined> = props => ({
   color: props.color,
   display: props.block ? 'block' : 'inline',
   fontSize: props.fontSize,

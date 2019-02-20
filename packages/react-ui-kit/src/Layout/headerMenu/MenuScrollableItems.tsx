@@ -18,17 +18,28 @@
  */
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
+import media, {QueryKeys} from '../../mediaQueries';
 
-export interface InternalHeaderProps {}
-export interface HeaderProps extends InternalHeaderProps, React.HTMLAttributes<HTMLHeadingElement> {}
+export interface InternalMenuScrollableItemsProps {
+  open?: boolean;
+}
+export interface MenuScrollableItemsProps
+  extends InternalMenuScrollableItemsProps,
+    React.HTMLAttributes<HTMLDivElement> {}
 
-const headerStyles: (props: InternalHeaderProps) => ObjectInterpolation<undefined> = props => ({
-  alignItems: 'center',
-  display: 'flex',
-  height: '64px',
-  justifyContent: 'space-between',
+const menuScrollableItemsStyles: (
+  props: InternalMenuScrollableItemsProps
+) => ObjectInterpolation<undefined> = props => ({
+  [media[QueryKeys.TABLET_DOWN]]: {
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    margin: 'auto',
+  },
 });
 
-const Header = (props: HeaderProps) => <header css={headerStyles(props)} {...props} />;
+const MenuScrollableItems = (props: MenuScrollableItemsProps) => (
+  <div css={menuScrollableItemsStyles(props)} {...props} />
+);
 
-export {Header, headerStyles};
+export {MenuScrollableItems, menuScrollableItemsStyles};

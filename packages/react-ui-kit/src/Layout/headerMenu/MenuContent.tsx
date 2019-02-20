@@ -18,17 +18,26 @@
  */
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
+import {InternalTextProps} from '../../Text';
+import {contentStyles} from '../Content';
 
-export interface InternalHeaderProps {}
-export interface HeaderProps extends InternalHeaderProps, React.HTMLAttributes<HTMLHeadingElement> {}
+export interface InternalMenuContentProps extends InternalTextProps {
+  open?: boolean;
+}
+export interface MenuContentProps extends InternalMenuContentProps, React.HTMLAttributes<HTMLDivElement> {}
 
-const headerStyles: (props: InternalHeaderProps) => ObjectInterpolation<undefined> = props => ({
+const menuContentStyles: (props: InternalMenuContentProps) => ObjectInterpolation<undefined> = props => ({
+  ...contentStyles,
   alignItems: 'center',
-  display: 'flex',
+  flexDirection: 'row',
   height: '64px',
   justifyContent: 'space-between',
+  left: props.open ? 0 : undefined,
+  position: props.open ? 'fixed' : undefined,
+  width: props.open ? '100%' : undefined,
+  zIndex: props.open ? 10000 : undefined,
 });
 
-const Header = (props: HeaderProps) => <header css={headerStyles(props)} {...props} />;
+const MenuContent = (props: MenuContentProps) => <div css={menuContentStyles(props)} {...props} />;
 
-export {Header, headerStyles};
+export {MenuContent, menuContentStyles};
