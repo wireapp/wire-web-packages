@@ -20,7 +20,7 @@
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import {GUTTER} from './sizes';
 
-export interface ContentProps<T = HTMLParagraphElement> extends React.HTMLProps<T> {}
+export interface ContentProps<T = HTMLDivElement> extends React.HTMLProps<T> {}
 
 const contentStyles: (props: ContentProps) => ObjectInterpolation<undefined> = props => ({
   display: 'flex',
@@ -29,6 +29,6 @@ const contentStyles: (props: ContentProps) => ObjectInterpolation<undefined> = p
   padding: `0 ${GUTTER}px`,
 });
 
-const Content = (props: ContentProps) => <p css={contentStyles(props)} {...props} />;
+const Content = (props: ContentProps) => <div css={contentStyles(props)} {...props} />;
 
 export {Content, contentStyles};

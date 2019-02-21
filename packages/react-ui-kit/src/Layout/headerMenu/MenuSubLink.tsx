@@ -24,7 +24,7 @@ import {defaultTransition} from '../../Identity/motions';
 import media, {QueryKeys} from '../../mediaQueries';
 import {TextProps, textStyles} from '../../Text';
 
-interface MenuSubLinkProps<T = HTMLParagraphElement> extends TextProps<T> {}
+interface MenuSubLinkProps<T = HTMLDivElement> extends TextProps<T> {}
 
 const menuSubLinkStyles: (props: MenuSubLinkProps) => ObjectInterpolation<undefined> = props => ({
   ...textStyles(props),
@@ -60,6 +60,6 @@ const menuSubLinkStyles: (props: MenuSubLinkProps) => ObjectInterpolation<undefi
   },
 });
 
-const MenuSubLink = (props: MenuSubLinkProps) => <p css={menuSubLinkStyles(props)} {...props} />;
+const MenuSubLink = (props: MenuSubLinkProps) => <div css={menuSubLinkStyles(props)} {...props} />;
 
 export {MenuSubLink, menuSubLinkStyles};
