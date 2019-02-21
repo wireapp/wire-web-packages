@@ -22,7 +22,7 @@ import {COLOR} from '../Identity';
 import {INPUT_CLASSANME} from './Input';
 import {INPUT_SUBMIT_COMBO_CLASSNAME} from './InputSubmitCombo';
 
-const InputBlock = (props: React.HTMLAttributes<HTMLDivElement>) => (
+const InputBlock = (props: React.HTMLProps<HTMLDivElement>) => (
   <div
     css={{
       backgroundColor: COLOR.GRAY_LIGHTEN_88,

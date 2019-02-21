@@ -26,7 +26,7 @@ export interface InternalSelectProps {
   disabled?: boolean;
 }
 
-export interface SelectProps extends InternalSelectProps, React.HTMLAttributes<HTMLSelectElement> {}
+export interface SelectProps extends InternalSelectProps, React.HTMLProps<HTMLSelectElement> {}
 
 const ArrowDown = `
   <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">

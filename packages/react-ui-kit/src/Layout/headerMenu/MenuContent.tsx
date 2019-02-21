@@ -24,7 +24,7 @@ import {contentStyles} from '../Content';
 export interface InternalMenuContentProps extends InternalTextProps {
   open?: boolean;
 }
-export interface MenuContentProps extends InternalMenuContentProps, React.HTMLAttributes<HTMLDivElement> {}
+export interface MenuContentProps extends InternalMenuContentProps, React.HTMLProps<HTMLDivElement> {}
 
 const menuContentStyles: (props: InternalMenuContentProps) => ObjectInterpolation<undefined> = props => ({
   ...contentStyles,

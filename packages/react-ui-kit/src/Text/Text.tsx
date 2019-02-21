@@ -35,7 +35,7 @@ export interface InternalTextProps {
   truncate?: boolean;
 }
 
-export interface TextProps extends InternalTextProps, React.HTMLAttributes<HTMLSpanElement> {}
+export interface TextProps extends InternalTextProps, React.HTMLProps<HTMLSpanElement> {}
 
 export const textStyles: (props: InternalTextProps) => ObjectInterpolation<undefined> = props => ({
   color: props.color,

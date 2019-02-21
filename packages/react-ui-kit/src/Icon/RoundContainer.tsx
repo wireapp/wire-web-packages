@@ -27,7 +27,7 @@ export interface InternalRoundContainerProps {
   size?: number;
 }
 
-export interface RoundContainerProps extends InternalRoundContainerProps, React.HTMLAttributes<HTMLDivElement> {}
+export interface RoundContainerProps extends InternalRoundContainerProps, React.HTMLProps<HTMLDivElement> {}
 
 const roundContainerStyle: (props: InternalRoundContainerProps) => ObjectInterpolation<undefined> = props => ({
   alignItems: 'center',

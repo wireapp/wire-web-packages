@@ -26,7 +26,7 @@ import {MenuSubLink} from './MenuSubLink';
 export interface InternalDesktopStyledHeaderSubMenuProps {}
 export interface DesktopStyledHeaderSubMenuProps
   extends InternalDesktopStyledHeaderSubMenuProps,
-    React.HTMLAttributes<HTMLDivElement> {}
+    React.HTMLProps<HTMLDivElement> {}
 
 const desktopStyledHeaderSubMenuStyles: (
   props: InternalDesktopStyledHeaderSubMenuProps
@@ -66,7 +66,7 @@ export interface InternalMobileStyledHeaderSubMenuProps {
 }
 export interface MobileStyledHeaderSubMenuProps
   extends InternalMobileStyledHeaderSubMenuProps,
-    React.HTMLAttributes<HTMLSpanElement> {}
+    React.HTMLProps<HTMLSpanElement> {}
 
 const mobileStyledHeaderSubMenuStyles: (
   props: InternalMobileStyledHeaderSubMenuProps
@@ -92,7 +92,7 @@ interface HeaderSubMenuProps {
   isOpen: boolean;
 }
 
-const HeaderSubMenu: React.SFC<HeaderSubMenuProps & React.HTMLAttributes<HTMLSpanElement>> = ({
+const HeaderSubMenu: React.SFC<HeaderSubMenuProps & React.HTMLProps<HTMLSpanElement>> = ({
   caption,
   isOpen,
   children,

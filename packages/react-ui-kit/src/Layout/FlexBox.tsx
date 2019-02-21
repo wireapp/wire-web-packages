@@ -25,7 +25,7 @@ export interface InternalFlexBoxProps {
   justify?: string;
   wrap?: boolean;
 }
-export interface FlexBoxProps extends InternalFlexBoxProps, React.HTMLAttributes<HTMLDivElement> {}
+export interface FlexBoxProps extends InternalFlexBoxProps, React.HTMLProps<HTMLDivElement> {}
 
 const flexBoxStyles: (props: InternalFlexBoxProps) => ObjectInterpolation<undefined> = props => ({
   alignItems: props.align,

@@ -21,12 +21,12 @@ import {jsx} from '@emotion/core';
 import styled from '@emotion/styled';
 import React from 'react';
 
-const CodeInputWrapper = styled.div<React.HTMLAttributes<HTMLDivElement>>`
+const CodeInputWrapper = styled.div<React.HTMLProps<HTMLDivElement>>`
   display: flex;
   justify-content: center;
 `;
 
-const DigitInput = styled.input<React.HTMLAttributes<HTMLInputElement>>`
+const DigitInput = styled.input<React.HTMLProps<HTMLInputElement>>`
   line-height: 56px;
   width: 48px;
   font-size: 32px;
@@ -49,7 +49,7 @@ interface CodeInputProps {
 interface CodeInputState {
   values: string[];
 }
-class CodeInput extends React.PureComponent<CodeInputProps & React.HTMLAttributes<HTMLInputElement>, CodeInputState> {
+class CodeInput extends React.PureComponent<CodeInputProps & React.HTMLProps<HTMLInputElement>, CodeInputState> {
   inputs: HTMLInputElement[];
 
   static defaultProps = {

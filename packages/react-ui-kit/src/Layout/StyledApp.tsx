@@ -25,9 +25,7 @@ import {COLOR} from '../Identity';
 export interface InternalStyledAppContainerProps {
   backgroundColor?: string;
 }
-export interface StyledAppContainerProps
-  extends InternalStyledAppContainerProps,
-    React.HTMLAttributes<HTMLDivElement> {}
+export interface StyledAppContainerProps extends InternalStyledAppContainerProps, React.HTMLProps<HTMLDivElement> {}
 
 const StyledAppContainerStyles: (props: InternalStyledAppContainerProps) => ObjectInterpolation<undefined> = props => ({
   '*': {

@@ -31,7 +31,7 @@ interface ToolTipProps {
   text?: string;
 }
 
-const StyledTooltip = styled.div<ToolTipProps & React.HTMLAttributes<HTMLDivElement>>`
+const StyledTooltip = styled.div<ToolTipProps & React.HTMLProps<HTMLDivElement>>`
   position: relative;
   display: flex;
   flex-direction: column;

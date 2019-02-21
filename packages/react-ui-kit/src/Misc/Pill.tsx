@@ -26,7 +26,7 @@ export interface InternalPillProps {
   active?: boolean;
   type?: PILL_TYPE;
 }
-export interface PillProps extends InternalPillProps, React.HTMLAttributes<HTMLSpanElement> {}
+export interface PillProps extends InternalPillProps, React.HTMLProps<HTMLSpanElement> {}
 
 enum PILL_TYPE {
   error = 'ERROR',

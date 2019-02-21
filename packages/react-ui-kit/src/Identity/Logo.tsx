@@ -28,7 +28,7 @@ export interface InternalLogoProps {
   hover?: boolean;
   color?: string;
 }
-export interface LogoProps extends InternalLogoProps, React.HTMLAttributes<SVGElement> {}
+export interface LogoProps extends InternalLogoProps, React.HTMLProps<SVGElement> {}
 
 const logoStyles: (props: InternalLogoProps) => ObjectInterpolation<undefined> = props => ({
   '&:hover path': {

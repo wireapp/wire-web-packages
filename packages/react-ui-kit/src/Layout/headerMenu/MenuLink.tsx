@@ -25,7 +25,7 @@ import {DesktopStyledHeaderSubMenuClass} from './HeaderSubMenu';
 export interface InternalMenuLinkProps extends InternalLinkProps {
   button?: boolean;
 }
-export interface MenuLinkProps extends InternalMenuLinkProps, React.HTMLAttributes<HTMLAnchorElement> {}
+export interface MenuLinkProps extends InternalMenuLinkProps, React.HTMLProps<HTMLAnchorElement> {}
 
 const menuLinkStyles: (props: InternalMenuLinkProps) => ObjectInterpolation<undefined> = props => ({
   ...linkStyles(props),

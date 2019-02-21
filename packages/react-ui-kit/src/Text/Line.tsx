@@ -25,7 +25,7 @@ import {GUTTER} from '../Layout/sizes';
 export interface InternalLineProps {
   color?: string;
 }
-export interface LineProps extends InternalLineProps, React.HTMLAttributes<HTMLHRElement> {}
+export interface LineProps extends InternalLineProps, React.HTMLProps<HTMLHRElement> {}
 
 const lineStyles: (props: InternalLineProps) => ObjectInterpolation<undefined> = props => ({
   border: 'none',

@@ -38,7 +38,7 @@ const menuModalWrapperStyles: (props: InternalOverlayWrapperProps) => ObjectInte
 
 const MenuModalWrapper = (props: OverlayWrapperProps) => <div css={menuModalWrapperStyles} {...props} />;
 
-const MenuModalBody = (props: React.HTMLAttributes<HTMLDivElement>) => (
+const MenuModalBody = (props: React.HTMLProps<HTMLDivElement>) => (
   <div
     css={{
       alignItems: 'flex-end',
@@ -63,7 +63,7 @@ const MenuModalBody = (props: React.HTMLAttributes<HTMLDivElement>) => (
   />
 );
 
-const MenuModalContent = (props: React.HTMLAttributes<HTMLUListElement>) => (
+const MenuModalContent = (props: React.HTMLProps<HTMLUListElement>) => (
   <ul
     css={{
       li: {
@@ -81,7 +81,7 @@ const MenuModalContent = (props: React.HTMLAttributes<HTMLUListElement>) => (
   />
 );
 
-const MenuItemContent = (props: React.HTMLAttributes<HTMLLIElement>) => (
+const MenuItemContent = (props: React.HTMLProps<HTMLLIElement>) => (
   <li
     css={{
       alignItems: 'center',
@@ -113,7 +113,7 @@ const MenuModal = ({
   children = null,
   onBackgroundClick = noop,
   ...props
-}: MenuModalProps & React.HTMLAttributes<HTMLDivElement>) => (
+}: MenuModalProps & React.HTMLProps<HTMLDivElement>) => (
   <MenuModalWrapper {...props}>
     <MenuModalBody>
       <MenuModalContent>{children}</MenuModalContent>
@@ -124,7 +124,7 @@ const MenuModal = ({
 
 interface MenuItemProps {}
 
-const MenuItem = ({children = null, ...props}: MenuItemProps & React.HTMLAttributes<HTMLLIElement>) => (
+const MenuItem = ({children = null, ...props}: MenuItemProps & React.HTMLProps<HTMLLIElement>) => (
   <MenuItemContent {...props}>{children}</MenuItemContent>
 );
 

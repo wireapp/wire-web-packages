@@ -32,7 +32,7 @@ import {
 export interface InternalModalBodyProps {
   fullscreen?: boolean;
 }
-export interface ModalBodyProps extends InternalModalBodyProps, React.HTMLAttributes<HTMLDivElement> {}
+export interface ModalBodyProps extends InternalModalBodyProps, React.HTMLProps<HTMLDivElement> {}
 
 const modalBodyStyles: (props: InternalModalBodyProps) => ObjectInterpolation<undefined> = props => ({
   alignItems: 'center',
@@ -57,7 +57,7 @@ const modalBodyStyles: (props: InternalModalBodyProps) => ObjectInterpolation<un
 
 const ModalBody = (props: ModalBodyProps) => <div css={modalBodyStyles} {...props} />;
 
-const ModalClose = (props: React.HTMLAttributes<SVGElement>) => (
+const ModalClose = (props: React.HTMLProps<SVGElement>) => (
   <CloseIcon
     css={{
       alignItems: 'center',
@@ -75,7 +75,7 @@ const ModalClose = (props: React.HTMLAttributes<SVGElement>) => (
   />
 );
 
-const ModalContent = (props: React.HTMLAttributes<HTMLDivElement>) => (
+const ModalContent = (props: React.HTMLProps<HTMLDivElement>) => (
   <div
     css={{
       maxWidth: '100%',
@@ -101,7 +101,7 @@ interface ModalProps {
   onClose?: () => void;
 }
 
-const Modal: React.SFC<ModalProps & React.HTMLAttributes<HTMLDivElement>> = ({
+const Modal: React.SFC<ModalProps & React.HTMLProps<HTMLDivElement>> = ({
   children,
   fullscreen,
   onClose,

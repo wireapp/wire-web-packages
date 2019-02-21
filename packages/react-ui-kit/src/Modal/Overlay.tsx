@@ -24,7 +24,7 @@ import {ANIMATION, DURATION, EASE} from '../Identity/motions';
 import media, {QueryKeys} from '../mediaQueries';
 
 export interface InternalOverlayWrapperProps {}
-export interface OverlayWrapperProps extends InternalOverlayWrapperProps, React.HTMLAttributes<HTMLDivElement> {}
+export interface OverlayWrapperProps extends InternalOverlayWrapperProps, React.HTMLProps<HTMLDivElement> {}
 
 const overlayWrapperStyles: (props: InternalOverlayWrapperProps) => ObjectInterpolation<undefined> = () => ({
   bottom: 0,
@@ -40,7 +40,7 @@ const overlayWrapperStyles: (props: InternalOverlayWrapperProps) => ObjectInterp
 
 const OverlayWrapper = (props: OverlayWrapperProps) => <div css={overlayWrapperStyles} {...props} />;
 
-const OverlayContent = (props: React.HTMLAttributes<HTMLDivElement>) => (
+const OverlayContent = (props: React.HTMLProps<HTMLDivElement>) => (
   <div
     css={{
       '*': {
@@ -65,7 +65,7 @@ const OverlayContent = (props: React.HTMLAttributes<HTMLDivElement>) => (
 );
 
 export interface InternalOverlayBackgroundProps {}
-export interface OverlayBackgroundProps extends InternalOverlayBackgroundProps, React.HTMLAttributes<HTMLDivElement> {}
+export interface OverlayBackgroundProps extends InternalOverlayBackgroundProps, React.HTMLProps<HTMLDivElement> {}
 
 const overlayBackgroundStyles: (props: InternalOverlayBackgroundProps) => ObjectInterpolation<undefined> = () => ({
   animation: `${ANIMATION.fadeIn} ${DURATION.PROACTIVE_SLOW}ms ${EASE.QUART}`,
@@ -81,7 +81,7 @@ const overlayBackgroundStyles: (props: InternalOverlayBackgroundProps) => Object
 const OverlayBackground = (props: OverlayBackgroundProps) => <div css={overlayBackgroundStyles} {...props} />;
 
 export interface InternalOverlayProps {}
-export interface OverlayProps extends InternalOverlayProps, React.HTMLAttributes<HTMLDivElement> {}
+export interface OverlayProps extends InternalOverlayProps, React.HTMLProps<HTMLDivElement> {}
 
 const Overlay = ({children = null, ...props}: OverlayProps) => (
   <OverlayWrapper {...props} data-uie-name="modal">

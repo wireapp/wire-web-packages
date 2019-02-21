@@ -25,7 +25,7 @@ export interface InternalLoadingProps {
   progress?: number;
   size?: number;
 }
-export interface LoadingProps extends InternalLoadingProps, React.HTMLAttributes<SVGElement> {}
+export interface LoadingProps extends InternalLoadingProps, React.HTMLProps<SVGElement> {}
 
 const Loading = ({progress = undefined, size = 43, ...props}: LoadingProps) => {
   const pathLength = 125.68;

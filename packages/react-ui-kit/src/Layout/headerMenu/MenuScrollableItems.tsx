@@ -23,9 +23,7 @@ import media, {QueryKeys} from '../../mediaQueries';
 export interface InternalMenuScrollableItemsProps {
   open?: boolean;
 }
-export interface MenuScrollableItemsProps
-  extends InternalMenuScrollableItemsProps,
-    React.HTMLAttributes<HTMLDivElement> {}
+export interface MenuScrollableItemsProps extends InternalMenuScrollableItemsProps, React.HTMLProps<HTMLDivElement> {}
 
 const menuScrollableItemsStyles: (
   props: InternalMenuScrollableItemsProps

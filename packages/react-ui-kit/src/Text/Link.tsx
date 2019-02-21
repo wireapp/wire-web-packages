@@ -27,7 +27,7 @@ export interface InternalLinkProps extends InternalTextProps {
   component?: React.ComponentType | string;
 }
 
-export interface LinkProps extends InternalLinkProps, React.HTMLAttributes<HTMLAnchorElement> {}
+export interface LinkProps extends InternalLinkProps, React.HTMLProps<HTMLAnchorElement> {}
 
 export const linkStyles: (props: InternalLinkProps) => ObjectInterpolation<undefined> = props => {
   const darker = 0.16;

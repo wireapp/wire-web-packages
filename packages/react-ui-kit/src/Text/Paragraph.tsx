@@ -23,7 +23,7 @@ import media, {QueryKeys} from '../mediaQueries';
 import {InternalTextProps, Text, textStyles} from './Text';
 
 export interface InternalParagraphProps extends InternalTextProps {}
-export interface ParagraphProps extends InternalParagraphProps, React.HTMLAttributes<HTMLParagraphElement> {}
+export interface ParagraphProps extends InternalParagraphProps, React.HTMLProps<HTMLParagraphElement> {}
 
 const paragraphStyles: (props: InternalParagraphProps) => ObjectInterpolation<undefined> = props => ({
   ...textStyles(props),
@@ -39,7 +39,7 @@ Paragraph.defaultProps = {
 };
 
 export interface InternalLeadProps extends InternalTextProps {}
-export interface LeadProps extends InternalLeadProps, React.HTMLAttributes<HTMLParagraphElement> {}
+export interface LeadProps extends InternalLeadProps, React.HTMLProps<HTMLParagraphElement> {}
 
 const leadStyles: (props: InternalLeadProps) => ObjectInterpolation<undefined> = props => ({
   ...textStyles(props),

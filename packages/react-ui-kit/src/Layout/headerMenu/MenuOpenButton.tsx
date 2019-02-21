@@ -24,7 +24,7 @@ import media, {QueryKeys} from '../../mediaQueries';
 export interface InternalMenuOpenButtonProps {
   open?: boolean;
 }
-export interface MenuOpenButtonProps extends InternalMenuOpenButtonProps, React.HTMLAttributes<HTMLDivElement> {}
+export interface MenuOpenButtonProps extends InternalMenuOpenButtonProps, React.HTMLProps<HTMLDivElement> {}
 
 const menuOpenButtonStyles: (props: InternalMenuOpenButtonProps) => ObjectInterpolation<undefined> = props => ({
   display: 'block',

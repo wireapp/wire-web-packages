@@ -24,7 +24,7 @@ import media, {QueryKeys} from '../../mediaQueries';
 export interface InternalMenuItemsProps {
   open?: boolean;
 }
-export interface MenuItemsProps extends InternalMenuItemsProps, React.HTMLAttributes<HTMLDivElement> {}
+export interface MenuItemsProps extends InternalMenuItemsProps, React.HTMLProps<HTMLDivElement> {}
 
 const menuItemsStyles: (props: InternalMenuItemsProps) => ObjectInterpolation<undefined> = props => ({
   [media[QueryKeys.TABLET_DOWN]]: {

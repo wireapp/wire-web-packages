@@ -32,7 +32,7 @@ interface HeaderMenuState {
   isOpen?: boolean;
 }
 
-class HeaderMenu extends React.PureComponent<HeaderMenuProps & React.HTMLAttributes<HTMLDivElement>, HeaderMenuState> {
+class HeaderMenu extends React.PureComponent<HeaderMenuProps & React.HTMLProps<HTMLDivElement>, HeaderMenuState> {
   static defaultProps: HeaderMenuProps = {
     logoElement: null,
   };

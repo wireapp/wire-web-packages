@@ -22,7 +22,7 @@ import {COLOR} from '../Identity';
 import {Text, TextProps, textStyles} from '../Text';
 import {INPUT_CLASSANME, Input, InputProps} from './Input';
 
-const StyledContainerCheckbox = (props: React.HTMLAttributes<HTMLDivElement>) => (
+const StyledContainerCheckbox = (props: React.HTMLProps<HTMLDivElement>) => (
   <div
     css={{
       alignItems: 'center',
@@ -36,7 +36,7 @@ const StyledContainerCheckbox = (props: React.HTMLAttributes<HTMLDivElement>) =>
 export interface InternalStyledLabelProps {
   disabled?: boolean;
 }
-export interface StyledLabelProps extends InternalStyledLabelProps, React.LabelHTMLAttributes<HTMLLabelElement> {}
+export interface StyledLabelProps extends InternalStyledLabelProps, React.LabelHTMLProps<HTMLLabelElement> {}
 
 const StyledLabel = (props: StyledLabelProps) => {
   const checkSvg =
@@ -73,7 +73,7 @@ interface CheckboxProps extends InputProps {
   id?: string;
 }
 
-const Checkbox: React.SFC<CheckboxProps & React.InputHTMLAttributes<HTMLInputElement>> = ({
+const Checkbox: React.SFC<CheckboxProps & React.InputHTMLProps<HTMLInputElement>> = ({
   id,
   children,
   style,

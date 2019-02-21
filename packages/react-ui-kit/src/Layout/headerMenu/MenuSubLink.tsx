@@ -25,7 +25,7 @@ import media, {QueryKeys} from '../../mediaQueries';
 import {InternalTextProps, textStyles} from '../../Text';
 
 interface InternalMenuSubLinkProps extends InternalTextProps {}
-interface MenuSubLinkProps extends InternalMenuSubLinkProps, React.HTMLAttributes<HTMLParagraphElement> {}
+interface MenuSubLinkProps extends InternalMenuSubLinkProps, React.HTMLProps<HTMLParagraphElement> {}
 
 const menuSubLinkStyles: (props: InternalMenuSubLinkProps) => ObjectInterpolation<undefined> = props => ({
   ...textStyles(props),

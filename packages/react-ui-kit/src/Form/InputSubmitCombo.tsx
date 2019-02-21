@@ -22,7 +22,7 @@ import {INPUT_CLASSANME, InternalInputProps} from './Input';
 
 const INPUT_SUBMIT_COMBO_CLASSNAME = 'inputSubmitCombo';
 
-const InputSubmitCombo = (props: InternalInputProps & React.HTMLAttributes<HTMLDivElement>) => (
+const InputSubmitCombo = (props: InternalInputProps & React.HTMLProps<HTMLDivElement>) => (
   <div
     className={INPUT_SUBMIT_COMBO_CLASSNAME}
     css={{
