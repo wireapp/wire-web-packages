@@ -69,9 +69,9 @@ const overlayBackgroundStyles: (props: OverlayBackgroundProps) => ObjectInterpol
   animation: `${ANIMATION.fadeIn} ${DURATION.PROACTIVE_SLOW}ms ${EASE.QUART}`,
   background: 'rgba(0, 0, 0, 0.88)',
   height: '100vh',
-  left: '0px',
+  left: 0,
   position: 'fixed',
-  top: '0px',
+  top: 0,
   width: '100vw',
   zIndex: 9998,
 });

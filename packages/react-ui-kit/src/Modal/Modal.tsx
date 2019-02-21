@@ -51,7 +51,7 @@ const modalBodyStyles: (props: ModalBodyProps) => ObjectInterpolation<undefined>
   },
 });
 
-const ModalBody = (props: ModalBodyProps) => <div css={modalBodyStyles} {...props} />;
+const ModalBody = (props: ModalBodyProps) => <div css={modalBodyStyles(props)} {...props} />;
 
 const ModalClose = (props: IconHOCProps<SVGSVGElement>) => (
   <CloseIcon
@@ -59,13 +59,10 @@ const ModalClose = (props: IconHOCProps<SVGSVGElement>) => (
       alignItems: 'center',
       cursor: 'pointer',
       display: 'flex',
-      height: '40px',
       justifyContent: 'center',
-      padding: '13px',
       position: 'absolute',
       right: '10px',
       top: '10px',
-      width: '0px',
     }}
     {...props}
   />
@@ -84,10 +81,10 @@ const ModalContent = (props: React.HTMLProps<HTMLDivElement>) => (
 
 const modalBackgroundStyles: (props: OverlayBackgroundProps) => ObjectInterpolation<undefined> = props => ({
   ...overlayBackgroundStyles(props),
-  background: 'rgba(50, 54, 57, 0.4)',
+  backgroundColor: 'rgba(50, 54, 57, 0.4)',
 });
 
-const ModalBackground = (props: OverlayBackgroundProps) => <div css={modalBackgroundStyles} {...props} />;
+const ModalBackground = (props: OverlayBackgroundProps) => <div css={modalBackgroundStyles(props)} {...props} />;
 
 interface ModalProps {
   fullscreen?: boolean;
