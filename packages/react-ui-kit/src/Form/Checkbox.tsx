@@ -22,17 +22,6 @@ import {COLOR} from '../Identity';
 import {Text, TextProps, textStyles} from '../Text';
 import {INPUT_CLASSNAME, Input, InputProps} from './Input';
 
-const StyledContainerCheckbox = (props: React.HTMLProps<HTMLDivElement>) => (
-  <div
-    css={{
-      alignItems: 'center',
-      display: 'flex',
-      justifyContent: 'flex-start',
-    }}
-    {...props}
-  />
-);
-
 export interface StyledLabelProps<T = HTMLLabelElement> extends React.HTMLProps<T> {
   disabled?: boolean;
 }
@@ -72,8 +61,15 @@ interface CheckboxProps<T = HTMLInputElement> extends InputProps<T> {
   id?: string;
 }
 
-const Checkbox: React.SFC<CheckboxProps> = ({id, children, style, disabled, ...props}) => (
-  <StyledContainerCheckbox style={style}>
+const Checkbox: React.SFC<CheckboxProps> = ({id = Math.random().toString(), children, style, disabled, ...props}) => (
+  <div
+    css={{
+      alignItems: 'center',
+      display: 'flex',
+      justifyContent: 'flex-start',
+    }}
+    style={style}
+  >
     <Input
       type={'checkbox'}
       id={id}
@@ -89,13 +85,27 @@ const Checkbox: React.SFC<CheckboxProps> = ({id, children, style, disabled, ...p
     <StyledLabel htmlFor={id} disabled={disabled}>
       {children}
     </StyledLabel>
-  </StyledContainerCheckbox>
+  </div>
 );
 
-const CheckboxLabel = (props: TextProps) => (
+export interface CheckboxLabelProps<T = HTMLSpanElement> extends TextProps<T> {}
+
+const CheckboxLabel = ({
+  bold = true,
+  color = COLOR.GRAY_DARKEN_24,
+  fontSize = '11px',
+  textTransform = 'uppercase',
+  ...props
+}: CheckboxLabelProps) => (
   <Text
     css={{
-      ...textStyles,
+      ...textStyles({
+        bold,
+        color,
+        fontSize,
+        textTransform,
+        ...props,
+      }),
       a: {
         color: COLOR.LINK,
         textDecoration: 'none',
@@ -104,17 +114,5 @@ const CheckboxLabel = (props: TextProps) => (
     {...props}
   />
 );
-
-CheckboxLabel.defaultProps = {
-  ...Text.defaultProps,
-  bold: true,
-  color: COLOR.GRAY_DARKEN_24,
-  fontSize: '11px',
-  textTransform: 'uppercase',
-};
-
-Checkbox.defaultProps = {
-  id: Math.random().toString(),
-};
 
 export {Checkbox, CheckboxLabel};

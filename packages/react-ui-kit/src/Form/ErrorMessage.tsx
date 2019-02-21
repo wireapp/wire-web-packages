@@ -24,7 +24,7 @@ import {Text, TextProps, textStyles} from '../Text';
 const ErrorMessage = (props: TextProps) => (
   <Text
     css={{
-      ...textStyles,
+      ...textStyles(props),
       a: {
         color: COLOR.LINK,
         textDecoration: 'none',

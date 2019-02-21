@@ -82,8 +82,8 @@ const ModalContent = (props: React.HTMLProps<HTMLDivElement>) => (
   />
 );
 
-const modalBackgroundStyles: (props: OverlayBackgroundProps) => ObjectInterpolation<undefined> = () => ({
-  ...overlayBackgroundStyles,
+const modalBackgroundStyles: (props: OverlayBackgroundProps) => ObjectInterpolation<undefined> = props => ({
+  ...overlayBackgroundStyles(props),
   background: 'rgba(50, 54, 57, 0.4)',
 });
 

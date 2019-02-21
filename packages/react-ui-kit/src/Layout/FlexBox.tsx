@@ -18,28 +18,29 @@
  */
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
+import {FlexWrapProperty} from 'csstype';
 
 export interface FlexBoxProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   align?: string;
   column?: boolean;
   justify?: string;
+  wrap: FlexWrapProperty;
 }
 
 const flexBoxStyles: (props: FlexBoxProps) => ObjectInterpolation<undefined> = props => ({
   alignItems: props.align,
   display: 'flex',
   flexDirection: props.column ? 'column' : 'row',
-  flexWrap: props.wrap ? 'wrap' : 'nowrap',
+  flexWrap: props.wrap,
   justifyContent: props.justify,
 });
 
-const FlexBox = (props: FlexBoxProps) => <div css={flexBoxStyles(props)} {...props} />;
-
-FlexBox.defaultProps = {
-  align: 'flex-start',
-  column: false,
-  justify: 'flex-start',
-  wrap: false,
-};
+const FlexBox = ({
+  align = 'flex-start',
+  column = false,
+  justify = 'flex-start',
+  wrap = 'nowrap',
+  ...props
+}: FlexBoxProps) => <div css={flexBoxStyles({align, column, justify, wrap, ...props})} {...props} />;
 
 export {FlexBox, flexBoxStyles};

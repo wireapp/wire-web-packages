@@ -48,20 +48,36 @@ export const textStyles: (props: TextProps) => ObjectInterpolation<undefined> = 
   whiteSpace: props.noWrap ? 'nowrap' : undefined,
 });
 
-const Text = (props: TextProps) => <span css={textStyles(props)} {...props} />;
-
-Text.defaultProps = {
-  block: false,
-  bold: false,
-  center: false,
-  color: COLOR.TEXT,
-  fontSize: '16px',
-  light: false,
-  muted: false,
-  noWrap: false,
-  textTransform: 'none',
-  truncate: false,
-};
+const Text = ({
+  block = false,
+  bold = false,
+  center = false,
+  color = COLOR.TEXT,
+  fontSize = '16px',
+  light = false,
+  muted = false,
+  noWrap = false,
+  textTransform = 'none',
+  truncate = false,
+  ...props
+}: TextProps) => (
+  <span
+    css={textStyles({
+      block,
+      bold,
+      center,
+      color,
+      fontSize,
+      light,
+      muted,
+      noWrap,
+      textTransform,
+      truncate,
+      ...props,
+    })}
+    {...props}
+  />
+);
 
 const Bold = (props: TextProps) => <Text bold {...props} />;
 const Small = (props: TextProps) => <Text fontSize={'12px'} {...props} />;

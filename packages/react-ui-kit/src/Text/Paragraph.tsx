@@ -30,12 +30,9 @@ const paragraphStyles: (props: ParagraphProps) => ObjectInterpolation<undefined>
   marginTop: 0,
 });
 
-const Paragraph = (props: ParagraphProps) => <p css={paragraphStyles(props)} {...props} />;
-
-Paragraph.defaultProps = {
-  ...Text.defaultProps,
-  block: true,
-};
+const Paragraph = ({block = true, ...props}: ParagraphProps) => (
+  <p css={paragraphStyles({block, ...props})} {...props} />
+);
 
 export interface LeadProps<T = HTMLParagraphElement> extends TextProps<T> {}
 
@@ -48,12 +45,8 @@ const leadStyles: (props: LeadProps) => ObjectInterpolation<undefined> = props =
   },
 });
 
-const Lead = (props: LeadProps) => <p css={leadStyles(props)} {...props} />;
-
-Lead.defaultProps = {
-  block: true,
-  center: true,
-  fontSize: '24px',
-};
+const Lead = ({block = true, center = true, fontSize = '24px', ...props}: LeadProps) => (
+  <p css={leadStyles({block, center, fontSize, ...props})} {...props} />
+);
 
 export {Paragraph, paragraphStyles, Lead, leadStyles};

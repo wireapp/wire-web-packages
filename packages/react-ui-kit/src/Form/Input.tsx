@@ -82,7 +82,7 @@ const Input = React.forwardRef(
   ) => (
     <input
       className={INPUT_CLASSNAME}
-      css={inputStyle({markInvalid, placeholderTextTransform})}
+      css={inputStyle({markInvalid, placeholderTextTransform, ...props})}
       ref={ref}
       type={props.type}
       {...props}

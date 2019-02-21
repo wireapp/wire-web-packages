@@ -69,13 +69,8 @@ const pillStyles: (props: PillProps) => ObjectInterpolation<undefined> = props =
   };
 };
 
-const Pill = (props: PillProps) => (
-  <span css={pillStyles(props)} data-uie-name="element-pill" data-uie-status={props.type} {...props} />
+const Pill = ({active = false, type = null, ...props}: PillProps) => (
+  <span css={pillStyles({active, type, ...props})} data-uie-name="element-pill" data-uie-status={type} {...props} />
 );
-
-Pill.defaultProps = {
-  active: false,
-  type: null,
-};
 
 export {Pill, PILL_TYPE, pillStyles};
