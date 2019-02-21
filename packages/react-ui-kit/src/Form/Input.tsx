@@ -78,9 +78,20 @@ const inputStyle: (props: InputProps) => ObjectInterpolation<undefined> = props 
 
 const INPUT_CLASSANME = 'input';
 
-const Input = React.forwardRef((props: InputProps, ref: React.Ref<HTMLInputElement>) => (
-  <input className={INPUT_CLASSANME} css={inputStyle(props)} ref={ref} type={props.type} {...props} />
-));
+const Input = React.forwardRef(
+  (
+    {markInvalid = false, placeholderTextTransform = 'uppercase', ...props}: InputProps,
+    ref: React.Ref<HTMLInputElement>
+  ) => (
+    <input
+      className={INPUT_CLASSANME}
+      css={inputStyle({markInvalid, placeholderTextTransform})}
+      ref={ref}
+      type={props.type}
+      {...props}
+    />
+  )
+);
 
 Input.defaultProps = {
   markInvalid: false,
