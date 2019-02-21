@@ -30,8 +30,8 @@ const StyledAppContainerStyles: (props: StyledAppContainerProps) => ObjectInterp
   '*': {
     boxSizing: 'border-box',
   },
-  '-moz-osx-font-smoothing': 'grayscale',
-  '-webkit-font-smoothing': 'antialiased',
+  MozOsxFontSmoothing: 'grayscale',
+  WebkitFontSmoothing: 'antialiased',
   backgroundColor: props.backgroundColor,
   color: COLOR.TEXT,
   display: 'flex',

@@ -21,6 +21,7 @@ import {jsx} from '@emotion/core';
 import {ObjectInterpolation} from '@emotion/styled';
 import {TextTransformProperty} from 'csstype';
 import {COLOR} from '../Identity';
+import {splitProps} from '../util';
 
 export interface TextProps<T = HTMLSpanElement> extends React.HTMLProps<T> {
   block?: boolean;
@@ -34,6 +35,21 @@ export interface TextProps<T = HTMLSpanElement> extends React.HTMLProps<T> {
   textTransform?: TextTransformProperty;
   truncate?: boolean;
 }
+
+const splitTextProps = (props: Object) => {
+  return splitProps(props, [
+    'block',
+    'bold',
+    'center',
+    'color',
+    'fontSize',
+    'light',
+    'muted',
+    'noWrap',
+    'textTransform',
+    'truncate',
+  ]);
+};
 
 export const textStyles: (props: TextProps) => ObjectInterpolation<undefined> = props => ({
   color: props.color,
@@ -85,4 +101,4 @@ const Muted = (props: TextProps) => <Text muted {...props} />;
 const Uppercase = (props: TextProps) => <Text textTransform={'uppercase'} {...props} />;
 const Large = (props: TextProps) => <Text fontSize={'48px'} light {...props} />;
 
-export {Bold, Muted, Small, Text, Uppercase, Large};
+export {Bold, Muted, Small, Text, Uppercase, Large, splitTextProps};

@@ -20,7 +20,7 @@
 import {jsx} from '@emotion/core';
 import {ObjectInterpolation} from '@emotion/styled';
 import {COLOR} from '../Identity';
-import {Text, TextProps, textStyles} from './Text';
+import {Text, TextProps, splitTextProps, textStyles} from './Text';
 
 export interface LabelProps<T = HTMLSpanElement> extends TextProps<T> {}
 
@@ -28,8 +28,8 @@ const labelStyles: (props: LabelProps) => ObjectInterpolation<undefined> = props
   ...textStyles(props),
 });
 
-const Label = (props: LabelProps) => <span css={labelStyles(props)} {...props} />;
-const LabelLink = (props: LabelProps<HTMLAnchorElement>) => <a css={labelStyles(props)} {...props} />;
+const Label = (props: LabelProps) => <span css={labelStyles(props)} {...splitTextProps(props)} />;
+const LabelLink = (props: LabelProps<HTMLAnchorElement>) => <a css={labelStyles(props)} {...splitTextProps(props)} />;
 
 Label.defaultProps = {
   ...Text.defaultProps,

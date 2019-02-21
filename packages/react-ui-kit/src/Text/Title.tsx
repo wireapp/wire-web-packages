@@ -20,7 +20,7 @@
 import {jsx} from '@emotion/core';
 import {ObjectInterpolation} from '@emotion/styled';
 import {COLOR} from '../Identity';
-import {TextProps, textStyles} from './Text';
+import {TextProps, splitTextProps, textStyles} from './Text';
 
 export interface TitleProps<T = HTMLDivElement> extends TextProps<T> {}
 
@@ -31,7 +31,7 @@ const titleStyles: (props: TitleProps) => ObjectInterpolation<undefined> = props
   marginBottom: '8px',
 });
 
-const Title = (props: TitleProps) => <div css={titleStyles(props)} {...props} />;
+const Title = (props: TitleProps) => <div css={titleStyles(props)} {...splitTextProps(props)} />;
 
 Title.defaultProps = {
   block: true,

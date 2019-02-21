@@ -21,7 +21,7 @@ import Color from 'color';
 import React from 'react';
 import {COLOR} from '../Identity';
 import {defaultTransition} from '../Identity/motions';
-import {TextProps, textStyles} from './Text';
+import {TextProps, splitTextProps, textStyles} from './Text';
 
 export interface LinkProps<T = HTMLAnchorElement> extends TextProps<T> {
   component?: React.ComponentType | string;
@@ -48,7 +48,7 @@ export const linkStyles: (props: LinkProps) => ObjectInterpolation<undefined> = 
 };
 
 const Link = ({component = 'a', children, ...props}: LinkProps) =>
-  jsx(component, {css: linkStyles(props), ...props} as any, children);
+  jsx(component, {css: linkStyles(props), ...splitTextProps(props)} as any, children);
 
 Link.defaultProps = {
   bold: true,
