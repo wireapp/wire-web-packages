@@ -26,7 +26,7 @@ import {promisify} from 'util';
 import * as fs from 'fs-extra';
 import * as logdown from 'logdown';
 
-const pkginfo = require('npm-registry-package-info');
+import pkginfo = require('npm-registry-package-info');
 const execAsync = promisify(exec);
 
 import {CollectorOptions} from './CollectorOptions';
@@ -218,12 +218,12 @@ export class LicenseCollector {
   private async crawl(): Promise<CrawlerResult> {
     this.logger.info(`Extracting all licenses ...`);
 
-    const opts = {
+    const opts: pkginfo.Options = {
       packages: this.dependencies,
     };
 
     return new Promise((resolve, reject) => {
-      return pkginfo(opts, (error: Error | null, data: CrawlerResult) => {
+      return pkginfo(opts, (error: Error | null, data: pkginfo.Data) => {
         return error ? reject(error) : resolve(data);
       });
     });
