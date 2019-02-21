@@ -19,15 +19,13 @@
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
 
-export interface InternalFlexBoxProps {
+export interface FlexBoxProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   align?: string;
   column?: boolean;
   justify?: string;
-  wrap?: boolean;
 }
-export interface FlexBoxProps extends InternalFlexBoxProps, React.HTMLProps<HTMLDivElement> {}
 
-const flexBoxStyles: (props: InternalFlexBoxProps) => ObjectInterpolation<undefined> = props => ({
+const flexBoxStyles: (props: FlexBoxProps) => ObjectInterpolation<undefined> = props => ({
   alignItems: props.align,
   display: 'flex',
   flexDirection: props.column ? 'column' : 'row',

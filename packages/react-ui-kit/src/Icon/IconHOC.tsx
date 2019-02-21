@@ -20,7 +20,7 @@
 import {jsx} from '@emotion/core';
 import {COLOR} from '../Identity/colors';
 
-export interface IconHOCProps {
+export interface IconHOCProps<T = SVGSVGElement> extends React.SVGProps<T> {
   color?: string;
   height?: number;
   scale?: number;

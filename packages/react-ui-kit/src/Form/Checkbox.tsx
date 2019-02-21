@@ -33,10 +33,9 @@ const StyledContainerCheckbox = (props: React.HTMLProps<HTMLDivElement>) => (
   />
 );
 
-export interface InternalStyledLabelProps {
+export interface StyledLabelProps<T = HTMLLabelElement> extends React.HTMLProps<T> {
   disabled?: boolean;
 }
-export interface StyledLabelProps extends InternalStyledLabelProps, React.LabelHTMLProps<HTMLLabelElement> {}
 
 const StyledLabel = (props: StyledLabelProps) => {
   const checkSvg =
@@ -69,17 +68,11 @@ const StyledLabel = (props: StyledLabelProps) => {
   );
 };
 
-interface CheckboxProps extends InputProps {
+interface CheckboxProps<T = HTMLInputElement> extends InputProps<T> {
   id?: string;
 }
 
-const Checkbox: React.SFC<CheckboxProps & React.InputHTMLProps<HTMLInputElement>> = ({
-  id,
-  children,
-  style,
-  disabled,
-  ...props
-}) => (
+const Checkbox: React.SFC<CheckboxProps> = ({id, children, style, disabled, ...props}) => (
   <StyledContainerCheckbox style={style}>
     <Input
       type={'checkbox'}

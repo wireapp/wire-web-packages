@@ -19,15 +19,14 @@
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import media, {QueryKeys} from '../../mediaQueries';
-import {InternalLinkProps, Link, linkStyles} from '../../Text';
+import {Link, LinkProps, linkStyles} from '../../Text';
 import {DesktopStyledHeaderSubMenuClass} from './HeaderSubMenu';
 
-export interface InternalMenuLinkProps extends InternalLinkProps {
+export interface MenuLinkProps<T = HTMLAnchorElement> extends LinkProps<T> {
   button?: boolean;
 }
-export interface MenuLinkProps extends InternalMenuLinkProps, React.HTMLProps<HTMLAnchorElement> {}
 
-const menuLinkStyles: (props: InternalMenuLinkProps) => ObjectInterpolation<undefined> = props => ({
+const menuLinkStyles: (props: MenuLinkProps) => ObjectInterpolation<undefined> = props => ({
   ...linkStyles(props),
   [media[QueryKeys.DESKTOP]]: {
     '&:first-child': {

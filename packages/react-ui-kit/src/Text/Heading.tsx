@@ -24,7 +24,7 @@ import {COLOR} from '../Identity';
 import media, {QueryKeys} from '../mediaQueries';
 import {TextProps, textStyles} from './Text';
 
-interface HeadingProps extends TextProps {
+interface HeadingProps<T = HTMLHeadingElement> extends TextProps<T> {
   level?: string;
 }
 

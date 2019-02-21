@@ -21,11 +21,10 @@ import {jsx, keyframes} from '@emotion/core';
 import React from 'react';
 import {ANIMATION, DURATION} from '../Identity/motions';
 
-export interface InternalLoadingProps {
+export interface LoadingProps<T = SVGSVGElement> extends React.SVGProps<T> {
   progress?: number;
   size?: number;
 }
-export interface LoadingProps extends InternalLoadingProps, React.HTMLProps<SVGElement> {}
 
 const Loading = ({progress = undefined, size = 43, ...props}: LoadingProps) => {
   const pathLength = 125.68;

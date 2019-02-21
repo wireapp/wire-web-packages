@@ -20,14 +20,11 @@
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import media, {QueryKeys} from '../../mediaQueries';
 
-export interface InternalMenuScrollableItemsProps {
+export interface MenuScrollableItemsProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   open?: boolean;
 }
-export interface MenuScrollableItemsProps extends InternalMenuScrollableItemsProps, React.HTMLProps<HTMLDivElement> {}
 
-const menuScrollableItemsStyles: (
-  props: InternalMenuScrollableItemsProps
-) => ObjectInterpolation<undefined> = props => ({
+const menuScrollableItemsStyles: (props: MenuScrollableItemsProps) => ObjectInterpolation<undefined> = props => ({
   [media[QueryKeys.TABLET_DOWN]]: {
     alignItems: 'center',
     display: 'flex',

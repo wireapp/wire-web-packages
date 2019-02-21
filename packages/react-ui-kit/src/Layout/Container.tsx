@@ -22,7 +22,7 @@ import {ObjectInterpolation} from '@emotion/styled';
 import media, {QueryKeys} from '../mediaQueries';
 import {GUTTER, WIDTH} from './sizes';
 
-interface ContainerProps {
+export interface ContainerProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   centerText?: boolean;
   level?: keyof Level;
   verticalCenter?: boolean;

@@ -22,12 +22,11 @@ import Color from 'color';
 import {COLOR} from '../../Identity';
 import {defaultTransition} from '../../Identity/motions';
 import media, {QueryKeys} from '../../mediaQueries';
-import {InternalTextProps, textStyles} from '../../Text';
+import {TextProps, textStyles} from '../../Text';
 
-interface InternalMenuSubLinkProps extends InternalTextProps {}
-interface MenuSubLinkProps extends InternalMenuSubLinkProps, React.HTMLProps<HTMLParagraphElement> {}
+interface MenuSubLinkProps<T = HTMLParagraphElement> extends TextProps<T> {}
 
-const menuSubLinkStyles: (props: InternalMenuSubLinkProps) => ObjectInterpolation<undefined> = props => ({
+const menuSubLinkStyles: (props: MenuSubLinkProps) => ObjectInterpolation<undefined> = props => ({
   ...textStyles(props),
   '&:hover': {
     color: Color(COLOR.LINK)

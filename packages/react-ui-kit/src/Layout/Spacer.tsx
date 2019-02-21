@@ -20,8 +20,8 @@
 import {jsx} from '@emotion/core';
 import React from 'react';
 
-interface SpacerProps {
-  size?: number | string;
+export interface SpacerProps<T = HTMLDivElement> extends React.HTMLProps<T> {
+  size?: number;
   vertical?: boolean;
 }
 

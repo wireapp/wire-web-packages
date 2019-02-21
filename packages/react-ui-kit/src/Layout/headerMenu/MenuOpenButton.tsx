@@ -21,12 +21,11 @@ import {ObjectInterpolation, jsx} from '@emotion/core';
 import {COLOR} from '../../Identity';
 import media, {QueryKeys} from '../../mediaQueries';
 
-export interface InternalMenuOpenButtonProps {
+export interface MenuOpenButtonProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   open?: boolean;
 }
-export interface MenuOpenButtonProps extends InternalMenuOpenButtonProps, React.HTMLProps<HTMLDivElement> {}
 
-const menuOpenButtonStyles: (props: InternalMenuOpenButtonProps) => ObjectInterpolation<undefined> = props => ({
+const menuOpenButtonStyles: (props: MenuOpenButtonProps) => ObjectInterpolation<undefined> = props => ({
   display: 'block',
   div: {
     backgroundColor: COLOR.TEXT,

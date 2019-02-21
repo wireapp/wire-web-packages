@@ -20,6 +20,7 @@
 import {jsx} from '@emotion/core';
 import styled from '@emotion/styled';
 import React from 'react';
+import {InputProps} from './Input';
 
 const CodeInputWrapper = styled.div<React.HTMLProps<HTMLDivElement>>`
   display: flex;
@@ -40,7 +41,7 @@ const DigitInput = styled.input<React.HTMLProps<HTMLInputElement>>`
   }
 `;
 
-interface CodeInputProps {
+interface CodeInputProps<T = HTMLInputElement> extends InputProps<T> {
   autoFocus?: boolean;
   digits?: number;
   onCodeComplete?: (completeCode?: string) => void;
@@ -49,7 +50,7 @@ interface CodeInputProps {
 interface CodeInputState {
   values: string[];
 }
-class CodeInput extends React.PureComponent<CodeInputProps & React.HTMLProps<HTMLInputElement>, CodeInputState> {
+class CodeInput extends React.PureComponent<CodeInputProps, CodeInputState> {
   inputs: HTMLInputElement[];
 
   static defaultProps = {

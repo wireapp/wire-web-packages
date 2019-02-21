@@ -38,7 +38,7 @@ import {
 import {COLOR} from '../Identity';
 import {defaultTransition} from '../Identity/motions';
 
-export interface RoundIconButtonProps extends RoundContainerProps {
+export interface RoundIconButtonProps<T = HTMLDivElement> extends RoundContainerProps<T> {
   icon?: ICON_NAME;
   iconColor?: string;
   iconHeight?: number;

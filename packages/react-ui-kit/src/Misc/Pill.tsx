@@ -22,11 +22,10 @@ import React from 'react';
 import {COLOR} from '../Identity';
 import {DURATION, EASE} from '../Identity/motions';
 
-export interface InternalPillProps {
+export interface PillProps<T = HTMLSpanElement> extends React.HTMLProps<T> {
   active?: boolean;
   type?: PILL_TYPE;
 }
-export interface PillProps extends InternalPillProps, React.HTMLProps<HTMLSpanElement> {}
 
 enum PILL_TYPE {
   error = 'ERROR',
@@ -34,7 +33,7 @@ enum PILL_TYPE {
   warning = 'WARNING',
 }
 
-const pillStyles: (props: InternalPillProps) => ObjectInterpolation<undefined> = props => {
+const pillStyles: (props: PillProps) => ObjectInterpolation<undefined> = props => {
   const backgroundColors = {
     [PILL_TYPE.error]: COLOR.RED_OPAQUE_16,
     [PILL_TYPE.success]: COLOR.GREEN_OPAQUE_16,

@@ -22,7 +22,7 @@ import {ObjectInterpolation} from '@emotion/styled';
 import {COLOR} from '../Identity';
 import {Text, TextProps, textStyles} from './Text';
 
-type LabelProps = TextProps;
+export interface LabelProps<T = HTMLSpanElement> extends TextProps<T> {}
 
 const labelStyles: (props: LabelProps) => ObjectInterpolation<undefined> = props => ({
   ...textStyles(props),

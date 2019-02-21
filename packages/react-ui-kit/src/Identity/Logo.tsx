@@ -20,17 +20,16 @@
 /** @jsx jsx */
 
 import {ObjectInterpolation, jsx} from '@emotion/core';
-import IconHOC from '../Icon/IconHOC';
+import IconHOC, {IconHOCProps} from '../Icon/IconHOC';
 import {defaultTransition} from '../Identity/motions';
 import {COLOR} from './colors';
 
-export interface InternalLogoProps {
+export interface LogoProps<T = SVGSVGElement> extends IconHOCProps<T> {
   hover?: boolean;
   color?: string;
 }
-export interface LogoProps extends InternalLogoProps, React.HTMLProps<SVGElement> {}
 
-const logoStyles: (props: InternalLogoProps) => ObjectInterpolation<undefined> = props => ({
+const logoStyles: (props: LogoProps) => ObjectInterpolation<undefined> = props => ({
   '&:hover path': {
     fill: props.hover ? COLOR.GRAY_DARKEN_72 : undefined,
   },

@@ -20,10 +20,9 @@
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import {GUTTER} from './sizes';
 
-export interface InternalContentProps {}
-export interface ContentProps extends InternalContentProps, React.HTMLProps<HTMLDivElement> {}
+export interface ContentProps<T = HTMLParagraphElement> extends React.HTMLProps<T> {}
 
-const contentStyles: (props: InternalContentProps) => ObjectInterpolation<undefined> = props => ({
+const contentStyles: (props: ContentProps) => ObjectInterpolation<undefined> = props => ({
   display: 'flex',
   flexDirection: 'column',
   flexGrow: 1,

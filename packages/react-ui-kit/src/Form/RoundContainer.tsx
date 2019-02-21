@@ -22,14 +22,12 @@
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import {COLOR} from '../Identity';
 
-export interface InternalRoundContainerProps {
+export interface RoundContainerProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   color?: string;
   size?: number;
 }
 
-export interface RoundContainerProps extends InternalRoundContainerProps, React.HTMLProps<HTMLDivElement> {}
-
-const roundContainerStyle: (props: InternalRoundContainerProps) => ObjectInterpolation<undefined> = props => ({
+const roundContainerStyle: (props: RoundContainerProps) => ObjectInterpolation<undefined> = props => ({
   alignItems: 'center',
   backgroundColor: props.color,
   border: 'none',

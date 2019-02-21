@@ -21,12 +21,11 @@ import {ObjectInterpolation, jsx} from '@emotion/core';
 import {COLOR} from '../../Identity';
 import media, {QueryKeys} from '../../mediaQueries';
 
-export interface InternalMenuItemsProps {
+export interface MenuItemsProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   open?: boolean;
 }
-export interface MenuItemsProps extends InternalMenuItemsProps, React.HTMLProps<HTMLDivElement> {}
 
-const menuItemsStyles: (props: InternalMenuItemsProps) => ObjectInterpolation<undefined> = props => ({
+const menuItemsStyles: (props: MenuItemsProps) => ObjectInterpolation<undefined> = props => ({
   [media[QueryKeys.TABLET_DOWN]]: {
     backgroundColor: COLOR.WHITE,
     bottom: 0,

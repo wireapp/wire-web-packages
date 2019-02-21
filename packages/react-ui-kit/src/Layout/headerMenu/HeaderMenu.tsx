@@ -24,7 +24,7 @@ import {MenuItems} from './MenuItems';
 import {MenuOpenButton} from './MenuOpenButton';
 import {MenuScrollableItems} from './MenuScrollableItems';
 
-interface HeaderMenuProps {
+export interface HeaderMenuProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   logoElement?: React.ReactNode;
 }
 
@@ -32,7 +32,7 @@ interface HeaderMenuState {
   isOpen?: boolean;
 }
 
-class HeaderMenu extends React.PureComponent<HeaderMenuProps & React.HTMLProps<HTMLDivElement>, HeaderMenuState> {
+class HeaderMenu extends React.PureComponent<HeaderMenuProps, HeaderMenuState> {
   static defaultProps: HeaderMenuProps = {
     logoElement: null,
   };

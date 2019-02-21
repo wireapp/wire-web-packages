@@ -18,15 +18,11 @@
  */
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
-import styled from '@emotion/styled';
 import {COLOR} from '../Identity';
-import {Input} from './Input';
 
-export interface InternalSelectProps {
+export interface SelectProps<T = HTMLSelectElement> extends React.HTMLProps<T> {
   disabled?: boolean;
 }
-
-export interface SelectProps extends InternalSelectProps, React.HTMLProps<HTMLSelectElement> {}
 
 const ArrowDown = `
   <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
@@ -34,7 +30,7 @@ const ArrowDown = `
   </svg>
 `;
 
-const selectStyle: (props: InternalSelectProps) => ObjectInterpolation<undefined> = ({disabled}) => ({
+const selectStyle: (props: SelectProps) => ObjectInterpolation<undefined> = ({disabled}) => ({
   '&:-moz-focusring': {
     color: 'transparent',
     textShadow: '0 0 0 #000',

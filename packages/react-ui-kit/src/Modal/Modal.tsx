@@ -20,21 +20,16 @@
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import React from 'react';
 import {CloseIcon} from '../Icon';
+import {IconHOCProps} from '../Icon/IconHOC';
 import {COLOR} from '../Identity';
 import media, {QueryKeys} from '../mediaQueries';
-import {
-  InternalOverlayBackgroundProps,
-  OverlayBackgroundProps,
-  OverlayWrapper,
-  overlayBackgroundStyles,
-} from './Overlay';
+import {OverlayBackgroundProps, OverlayWrapper, overlayBackgroundStyles} from './Overlay';
 
-export interface InternalModalBodyProps {
+export interface ModalBodyProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   fullscreen?: boolean;
 }
-export interface ModalBodyProps extends InternalModalBodyProps, React.HTMLProps<HTMLDivElement> {}
 
-const modalBodyStyles: (props: InternalModalBodyProps) => ObjectInterpolation<undefined> = props => ({
+const modalBodyStyles: (props: ModalBodyProps) => ObjectInterpolation<undefined> = props => ({
   alignItems: 'center',
   backgroundColor: COLOR.GRAY_LIGHTEN_88,
   borderRadius: props.fullscreen ? 0 : '8px',
@@ -57,7 +52,7 @@ const modalBodyStyles: (props: InternalModalBodyProps) => ObjectInterpolation<un
 
 const ModalBody = (props: ModalBodyProps) => <div css={modalBodyStyles} {...props} />;
 
-const ModalClose = (props: React.HTMLProps<SVGElement>) => (
+const ModalClose = (props: IconHOCProps<SVGSVGElement>) => (
   <CloseIcon
     css={{
       alignItems: 'center',
@@ -86,7 +81,7 @@ const ModalContent = (props: React.HTMLProps<HTMLDivElement>) => (
   />
 );
 
-const modalBackgroundStyles: (props: InternalOverlayBackgroundProps) => ObjectInterpolation<undefined> = () => ({
+const modalBackgroundStyles: (props: OverlayBackgroundProps) => ObjectInterpolation<undefined> = () => ({
   ...overlayBackgroundStyles,
   background: 'rgba(50, 54, 57, 0.4)',
 });

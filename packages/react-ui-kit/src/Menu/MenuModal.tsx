@@ -22,15 +22,9 @@ import React from 'react';
 import {COLOR} from '../Identity/';
 import {ANIMATION, DURATION, EASE} from '../Identity/motions';
 import media, {QueryKeys} from '../mediaQueries';
-import {
-  InternalOverlayBackgroundProps,
-  InternalOverlayWrapperProps,
-  OverlayBackgroundProps,
-  OverlayWrapperProps,
-  overlayBackgroundStyles,
-} from '../Modal/Overlay';
+import {OverlayBackgroundProps, OverlayWrapperProps, overlayBackgroundStyles} from '../Modal/Overlay';
 
-const menuModalWrapperStyles: (props: InternalOverlayWrapperProps) => ObjectInterpolation<undefined> = () => ({
+const menuModalWrapperStyles: (props: OverlayWrapperProps) => ObjectInterpolation<undefined> = () => ({
   ...overlayBackgroundStyles,
   overflowY: 'hidden',
   padding: 0,
@@ -81,22 +75,7 @@ const MenuModalContent = (props: React.HTMLProps<HTMLUListElement>) => (
   />
 );
 
-const MenuItemContent = (props: React.HTMLProps<HTMLLIElement>) => (
-  <li
-    css={{
-      alignItems: 'center',
-      color: COLOR.TEXT,
-      cursor: 'pointer',
-      display: 'flex',
-      height: '56px',
-      listStyleType: 'none',
-      maxWidth: '100%',
-    }}
-    {...props}
-  />
-);
-
-const modalBackgroundStyles: (props: InternalOverlayBackgroundProps) => ObjectInterpolation<undefined> = () => ({
+const modalBackgroundStyles: (props: OverlayBackgroundProps) => ObjectInterpolation<undefined> = () => ({
   ...overlayBackgroundStyles,
   background: 'rgba(50, 54, 57, 0.4)',
 });
@@ -105,7 +84,7 @@ const MenuModalBackground = (props: OverlayBackgroundProps) => <div css={modalBa
 
 const noop = () => {};
 
-interface MenuModalProps {
+interface MenuModalProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   onBackgroundClick?: () => void;
 }
 
@@ -122,10 +101,23 @@ const MenuModal = ({
   </MenuModalWrapper>
 );
 
-interface MenuItemProps {}
+export interface MenuItemProps<T = HTMLLIElement> extends React.HTMLProps<T> {}
 
 const MenuItem = ({children = null, ...props}: MenuItemProps & React.HTMLProps<HTMLLIElement>) => (
-  <MenuItemContent {...props}>{children}</MenuItemContent>
+  <li
+    css={{
+      alignItems: 'center',
+      color: COLOR.TEXT,
+      cursor: 'pointer',
+      display: 'flex',
+      height: '56px',
+      listStyleType: 'none',
+      maxWidth: '100%',
+    }}
+    {...props}
+  >
+    {children}
+  </li>
 );
 
 export {MenuModal, MenuItem};

@@ -21,15 +21,13 @@ import Color from 'color';
 import React from 'react';
 import {COLOR} from '../Identity';
 import {defaultTransition} from '../Identity/motions';
-import {InternalTextProps, textStyles} from './Text';
+import {TextProps, textStyles} from './Text';
 
-export interface InternalLinkProps extends InternalTextProps {
+export interface LinkProps<T = HTMLAnchorElement> extends TextProps<T> {
   component?: React.ComponentType | string;
 }
 
-export interface LinkProps extends InternalLinkProps, React.HTMLProps<HTMLAnchorElement> {}
-
-export const linkStyles: (props: InternalLinkProps) => ObjectInterpolation<undefined> = props => {
+export const linkStyles: (props: LinkProps) => ObjectInterpolation<undefined> = props => {
   const darker = 0.16;
   const hoverColor = Color(props.color)
     .mix(Color(COLOR.BLACK), darker)

@@ -22,12 +22,11 @@ import {ObjectInterpolation, jsx} from '@emotion/core';
 import {GlobalStyle} from '../GlobalStyle';
 import {COLOR} from '../Identity';
 
-export interface InternalStyledAppContainerProps {
+export interface StyledAppContainerProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   backgroundColor?: string;
 }
-export interface StyledAppContainerProps extends InternalStyledAppContainerProps, React.HTMLProps<HTMLDivElement> {}
 
-const StyledAppContainerStyles: (props: InternalStyledAppContainerProps) => ObjectInterpolation<undefined> = props => ({
+const StyledAppContainerStyles: (props: StyledAppContainerProps) => ObjectInterpolation<undefined> = props => ({
   '*': {
     boxSizing: 'border-box',
   },

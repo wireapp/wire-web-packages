@@ -23,7 +23,7 @@ import {COLOR} from '../Identity';
 import {FlexBox} from '../Layout';
 import {Bold, Link} from '../Text';
 
-interface PaginationProps {
+interface PaginationProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   currentPage?: number;
   goPage?: (page: number) => void;
   nextPageComponent?: any;
@@ -31,7 +31,7 @@ interface PaginationProps {
   previousPageComponent?: any;
 }
 
-const Pagination: React.SFC<PaginationProps & React.HTMLProps<HTMLDivElement>> = ({
+const Pagination: React.SFC<PaginationProps> = ({
   currentPage = 0,
   numberOfPages = 1,
   goPage,

@@ -18,11 +18,13 @@
  */
 /** @jsx jsx */
 import {jsx} from '@emotion/core';
-import {INPUT_CLASSANME, InternalInputProps} from './Input';
+import {INPUT_CLASSANME, InputProps} from './Input';
+
+export interface InputSubmitComboProps<T = HTMLDivElement> extends InputProps<T> {}
 
 const INPUT_SUBMIT_COMBO_CLASSNAME = 'inputSubmitCombo';
 
-const InputSubmitCombo = (props: InternalInputProps & React.HTMLProps<HTMLDivElement>) => (
+const InputSubmitCombo = (props: InputSubmitComboProps) => (
   <div
     className={INPUT_SUBMIT_COMBO_CLASSNAME}
     css={{

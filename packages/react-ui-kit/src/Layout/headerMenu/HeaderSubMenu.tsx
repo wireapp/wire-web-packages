@@ -23,13 +23,10 @@ import {DURATION} from '../../Identity/motions';
 import {QUERY} from '../../mediaQueries';
 import {MenuSubLink} from './MenuSubLink';
 
-export interface InternalDesktopStyledHeaderSubMenuProps {}
-export interface DesktopStyledHeaderSubMenuProps
-  extends InternalDesktopStyledHeaderSubMenuProps,
-    React.HTMLProps<HTMLDivElement> {}
+export interface DesktopStyledHeaderSubMenuProps<T = HTMLDivElement> extends React.HTMLProps<T> {}
 
 const desktopStyledHeaderSubMenuStyles: (
-  props: InternalDesktopStyledHeaderSubMenuProps
+  props: DesktopStyledHeaderSubMenuProps
 ) => ObjectInterpolation<undefined> = props => ({
   alignItems: 'left',
   backgroundColor: 'white',
@@ -61,15 +58,12 @@ const DesktopStyledHeaderSubMenu = (props: DesktopStyledHeaderSubMenuProps) => (
   <div className={DesktopStyledHeaderSubMenuClass} css={desktopStyledHeaderSubMenuStyles(props)} {...props} />
 );
 
-export interface InternalMobileStyledHeaderSubMenuProps {
+export interface MobileStyledHeaderSubMenuProps<T = HTMLSpanElement> extends React.HTMLProps<T> {
   open?: boolean;
 }
-export interface MobileStyledHeaderSubMenuProps
-  extends InternalMobileStyledHeaderSubMenuProps,
-    React.HTMLProps<HTMLSpanElement> {}
 
 const mobileStyledHeaderSubMenuStyles: (
-  props: InternalMobileStyledHeaderSubMenuProps
+  props: MobileStyledHeaderSubMenuProps
 ) => ObjectInterpolation<undefined> = props => ({
   '*': {
     fontWeight: 200,
@@ -87,17 +81,12 @@ const MobileStyledHeaderSubMenu = (props: MobileStyledHeaderSubMenuProps) => (
   <span css={mobileStyledHeaderSubMenuStyles(props)} {...props} />
 );
 
-interface HeaderSubMenuProps {
+export interface HeaderSubMenuProps<T = HTMLParagraphElement> extends React.HTMLProps<T> {
   caption: string;
   isOpen: boolean;
 }
 
-const HeaderSubMenu: React.SFC<HeaderSubMenuProps & React.HTMLProps<HTMLSpanElement>> = ({
-  caption,
-  isOpen,
-  children,
-  ...props
-}) => {
+const HeaderSubMenu: React.SFC<HeaderSubMenuProps> = ({caption, isOpen, children, ...props}) => {
   const isDesktop = typeof window !== 'undefined' && window.matchMedia(`(${QUERY.desktop})`).matches;
   return (
     <MenuSubLink

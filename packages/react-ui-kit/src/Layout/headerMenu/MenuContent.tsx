@@ -18,15 +18,14 @@
  */
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
-import {InternalTextProps} from '../../Text';
+import {TextProps} from '../../Text';
 import {contentStyles} from '../Content';
 
-export interface InternalMenuContentProps extends InternalTextProps {
+export interface MenuContentProps<T = HTMLDivElement> extends TextProps<T> {
   open?: boolean;
 }
-export interface MenuContentProps extends InternalMenuContentProps, React.HTMLProps<HTMLDivElement> {}
 
-const menuContentStyles: (props: InternalMenuContentProps) => ObjectInterpolation<undefined> = props => ({
+const menuContentStyles: (props: MenuContentProps) => ObjectInterpolation<undefined> = props => ({
   ...contentStyles,
   alignItems: 'center',
   flexDirection: 'row',

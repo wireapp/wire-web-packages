@@ -22,16 +22,14 @@ import {Encoder} from 'bazinga64';
 import {TextTransformProperty} from 'csstype';
 import React from 'react';
 import {COLOR} from '../Identity';
-import {InternalTextProps} from '../Text';
+import {TextProps} from '../Text';
 
-export interface InternalInputProps extends InternalTextProps {
+export interface InputProps<T = HTMLInputElement> extends TextProps<T> {
   markInvalid?: boolean;
   placeholderTextTransform?: TextTransformProperty;
 }
 
-export interface InputProps extends InternalInputProps, React.HTMLProps<HTMLInputElement> {}
-
-const inputStyle: (props: InternalInputProps) => ObjectInterpolation<undefined> = props => {
+const inputStyle: (props: InputProps) => ObjectInterpolation<undefined> = props => {
   const dotSize = 8;
   const invalidDot = `
     <svg xmlns="http://www.w3.org/2000/svg" width="${dotSize}" height="${dotSize}" viewBox="0 0 8 8">
