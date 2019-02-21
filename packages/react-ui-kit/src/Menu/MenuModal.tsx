@@ -23,6 +23,7 @@ import {COLOR} from '../Identity/';
 import {ANIMATION, DURATION, EASE} from '../Identity/motions';
 import media, {QueryKeys} from '../mediaQueries';
 import {OverlayBackgroundProps, OverlayWrapperProps, overlayBackgroundStyles} from '../Modal/Overlay';
+import {noop} from '../util';
 
 const menuModalWrapperStyles: (props: OverlayWrapperProps) => ObjectInterpolation<undefined> = () => ({
   ...overlayBackgroundStyles,
@@ -81,8 +82,6 @@ const modalBackgroundStyles: (props: OverlayBackgroundProps) => ObjectInterpolat
 });
 
 const MenuModalBackground = (props: OverlayBackgroundProps) => <div css={modalBackgroundStyles} {...props} />;
-
-const noop = () => {};
 
 interface MenuModalProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   onBackgroundClick?: () => void;

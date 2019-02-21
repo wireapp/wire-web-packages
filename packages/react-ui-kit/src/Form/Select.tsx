@@ -19,6 +19,7 @@
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import {COLOR} from '../Identity';
+import {inlineSVG} from '../util';
 
 export interface SelectProps<T = HTMLSelectElement> extends React.HTMLProps<T> {
   disabled?: boolean;
@@ -40,7 +41,7 @@ const selectStyle: (props: SelectProps) => ObjectInterpolation<undefined> = ({di
   },
   MozAppearance: 'none',
   WebkitAppearance: 'none',
-  background: disabled ? `center right 16px no-repeat url('data:image/svg+xml;utf8,${ArrowDown}')` : 'unset',
+  background: disabled ? 'unset' : `center right 16px no-repeat url("${inlineSVG(ArrowDown)}")`,
   cursor: disabled ? 'normal' : 'pointer',
   fontWeight: 300,
   paddingRight: '30px',

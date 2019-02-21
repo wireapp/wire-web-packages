@@ -20,7 +20,7 @@
 import {jsx} from '@emotion/core';
 import {COLOR} from '../Identity';
 import {Text, TextProps, textStyles} from '../Text';
-import {INPUT_CLASSANME, Input, InputProps} from './Input';
+import {INPUT_CLASSNAME, Input, InputProps} from './Input';
 
 const StyledContainerCheckbox = (props: React.HTMLProps<HTMLDivElement>) => (
   <div
@@ -43,10 +43,10 @@ const StyledLabel = (props: StyledLabelProps) => {
   return (
     <label
       css={{
-        [`${INPUT_CLASSANME}:checked + &::before`]: {
+        [`${INPUT_CLASSNAME}:checked + &::before`]: {
           background: `#000 url('data:image/svg+xml; utf8, ${checkSvg}') no-repeat center`,
         },
-        [`${INPUT_CLASSANME}:focus + &::before`]: {
+        [`${INPUT_CLASSNAME}:focus + &::before`]: {
           borderColor: COLOR.BLUE,
         },
         '&::before': {

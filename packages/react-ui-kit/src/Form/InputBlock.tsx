@@ -19,7 +19,7 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core';
 import {COLOR} from '../Identity';
-import {INPUT_CLASSANME} from './Input';
+import {INPUT_CLASSNAME} from './Input';
 import {INPUT_SUBMIT_COMBO_CLASSNAME} from './InputSubmitCombo';
 
 const InputBlock = (props: React.HTMLProps<HTMLDivElement>) => (
@@ -29,10 +29,10 @@ const InputBlock = (props: React.HTMLProps<HTMLDivElement>) => (
       borderRadius: '4px',
       boxShadow: `inset 16px 16px 0 ${COLOR.WHITE}, inset -16px -16px 0 ${COLOR.WHITE}`,
       marginBottom: '16px',
-      [`& > ${INPUT_CLASSANME}`]: {
+      [`& > ${INPUT_CLASSNAME}`]: {
         margin: 0,
       },
-      [`& > ${INPUT_CLASSANME} + ${INPUT_CLASSANME}, & > ${INPUT_CLASSANME} + ${INPUT_SUBMIT_COMBO_CLASSNAME}`]: {
+      [`& > ${INPUT_CLASSNAME} + ${INPUT_CLASSNAME}, & > ${INPUT_CLASSNAME} + ${INPUT_SUBMIT_COMBO_CLASSNAME}`]: {
         margin: '1px 0 0',
       },
     }}

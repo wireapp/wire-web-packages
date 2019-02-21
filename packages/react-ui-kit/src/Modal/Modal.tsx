@@ -23,6 +23,7 @@ import {CloseIcon} from '../Icon';
 import {IconHOCProps} from '../Icon/IconHOC';
 import {COLOR} from '../Identity';
 import media, {QueryKeys} from '../mediaQueries';
+import {noop} from '../util';
 import {OverlayBackgroundProps, OverlayWrapper, overlayBackgroundStyles} from './Overlay';
 
 export interface ModalBodyProps<T = HTMLDivElement> extends React.HTMLProps<T> {
@@ -87,8 +88,6 @@ const modalBackgroundStyles: (props: OverlayBackgroundProps) => ObjectInterpolat
 });
 
 const ModalBackground = (props: OverlayBackgroundProps) => <div css={modalBackgroundStyles} {...props} />;
-
-const noop = () => {};
 
 interface ModalProps {
   fullscreen?: boolean;

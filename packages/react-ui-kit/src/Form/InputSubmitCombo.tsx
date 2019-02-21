@@ -18,7 +18,7 @@
  */
 /** @jsx jsx */
 import {jsx} from '@emotion/core';
-import {INPUT_CLASSANME, InputProps} from './Input';
+import {INPUT_CLASSNAME, InputProps} from './Input';
 
 export interface InputSubmitComboProps<T = HTMLDivElement> extends InputProps<T> {}
 
@@ -34,7 +34,7 @@ const InputSubmitCombo = (props: InputSubmitComboProps) => (
       marginBottom: '16px',
       paddingLeft: 0,
       paddingRight: '16px',
-      [INPUT_CLASSANME]: {
+      [INPUT_CLASSNAME]: {
         flexGrow: 1,
         margin: '0 8px 0 0',
         padding: '0 0 0 16px',
