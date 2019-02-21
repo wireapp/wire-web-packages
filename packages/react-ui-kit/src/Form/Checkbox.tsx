@@ -18,48 +18,56 @@
  */
 /** @jsx jsx */
 import {jsx} from '@emotion/core';
-import styled from '@emotion/styled';
-import React from 'react';
 import {COLOR} from '../Identity';
-import {Text} from '../Text';
+import {Text, TextProps, textStyles} from '../Text';
 import {Input, InputProps} from './Input';
 
-const StyledContainerCheckbox = styled.div<React.HTMLAttributes<HTMLDivElement>>`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-`;
+const StyledContainerCheckbox = (props: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    css={{
+      alignItems: 'center',
+      display: 'flex',
+      justifyContent: 'flex-start',
+    }}
+    {...props}
+  />
+);
 
-const checkSvg =
-  '<svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 8 6"><path fill="white" d="M2.8 6L8 .7 7.3 0 2.8 4.6.7 2.4l-.7.7z"/></svg>';
-
-const StyledLabel = styled.label<StyledLabelProps & React.HTMLAttributes<HTMLLabelElement>>`
-  ${({disabled}) => (disabled ? 'opacity: .56;' : '')}
-  display: flex;
-  &::before {
-    content: '';
-    display: inline-block;
-    box-sizing: border-box;
-    width: 16px;
-    height: 16px;
-    border: 2px solid rgba(0, 0, 0, 0.4);
-    border-radius: 4px;
-    margin: 0 8px 0 -16px;
-    ${({disabled}) => (disabled ? 'opacity: .56;' : '')}
-  }
-
-  ${Input}:checked + &::before {
-    background: #000 url('data:image/svg+xml; utf8, ${checkSvg}') no-repeat center;
-  }
-
-  ${Input}:focus + &::before {
-    border-color: ${COLOR.BLUE};
-  }
-`;
-
-interface StyledLabelProps {
+export interface InternalStyledLabelProps {
   disabled?: boolean;
 }
+export interface StyledLabelProps extends InternalStyledLabelProps, React.LabelHTMLAttributes<HTMLLabelElement> {}
+
+const StyledLabel = (props: StyledLabelProps) => {
+  const checkSvg =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 8 6"><path fill="white" d="M2.8 6L8 .7 7.3 0 2.8 4.6.7 2.4l-.7.7z"/></svg>';
+  return (
+    <label
+      css={{
+        // '${Input}:checked + &::before': {
+        //   background: `#000 url('data:image/svg+xml; utf8, ${checkSvg}') no-repeat center`,
+        // },
+        // '${Input}:focus + &::before': {
+        //   borderColor: COLOR.BLUE,
+        // },
+        '&::before': {
+          border: '2px solid rgba(0, 0, 0, 0.4)',
+          borderRadius: '4px',
+          boxSizing: 'border-box',
+          content: '',
+          display: 'inline-block',
+          height: '16px',
+          margin: '0 8px 0 -16px',
+          opacity: props.disabled ? 0.56 : 1,
+          width: '16px',
+        },
+        display: 'flex',
+        opacity: props.disabled ? 0.56 : 1,
+      }}
+      {...props}
+    />
+  );
+};
 
 interface CheckboxProps extends InputProps {
   id?: string;
@@ -71,39 +79,41 @@ const Checkbox: React.SFC<CheckboxProps & React.InputHTMLAttributes<HTMLInputEle
   style,
   disabled,
   ...props
-}) => {
-  if (!id) {
-    id = Math.random().toString();
-  }
-  return (
-    <StyledContainerCheckbox style={style}>
-      <Input
-        type={'checkbox'}
-        id={id}
-        style={{
-          height: '16px',
-          marginBottom: '0',
-          opacity: 0,
-          width: '16px',
-        }}
-        disabled={disabled}
-        {...props}
-      />
-      <StyledLabel htmlFor={id} disabled={disabled}>
-        {children}
-      </StyledLabel>
-    </StyledContainerCheckbox>
-  );
-};
+}) => (
+  <StyledContainerCheckbox style={style}>
+    <Input
+      type={'checkbox'}
+      id={id}
+      style={{
+        height: '16px',
+        marginBottom: '0',
+        opacity: 0,
+        width: '16px',
+      }}
+      disabled={disabled}
+      {...props}
+    />
+    <StyledLabel htmlFor={id} disabled={disabled}>
+      {children}
+    </StyledLabel>
+  </StyledContainerCheckbox>
+);
 
-const CheckboxLabel = styled(Text)`
-  a {
-    text-decoration: none;
-    color: ${COLOR.LINK};
-  }
-`;
+const CheckboxLabel = (props: TextProps) => (
+  <Text
+    css={{
+      ...textStyles,
+      a: {
+        color: COLOR.LINK,
+        textDecoration: 'none',
+      },
+    }}
+    {...props}
+  />
+);
 
 CheckboxLabel.defaultProps = {
+  ...Text.defaultProps,
   bold: true,
   color: COLOR.GRAY_DARKEN_24,
   fontSize: '11px',
@@ -111,7 +121,7 @@ CheckboxLabel.defaultProps = {
 };
 
 Checkbox.defaultProps = {
-  id: undefined,
+  id: Math.random().toString(),
 };
 
 export {Checkbox, CheckboxLabel};
