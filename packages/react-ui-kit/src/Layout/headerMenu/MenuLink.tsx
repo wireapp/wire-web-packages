@@ -19,7 +19,7 @@
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import media, {QueryKeys} from '../../mediaQueries';
-import {Link, LinkProps, linkStyles, splitTextProps} from '../../Text';
+import {Link, LinkProps, linkStyles, splitLinkProps} from '../../Text';
 import {DesktopStyledHeaderSubMenuClass} from './HeaderSubMenu';
 
 export interface MenuLinkProps<T = HTMLAnchorElement> extends LinkProps<T> {
@@ -58,7 +58,9 @@ const menuLinkStyles: (props: MenuLinkProps) => ObjectInterpolation<undefined> =
   padding: props.button ? '10px 16px' : undefined,
 });
 
-const MenuLink = (props: MenuLinkProps) => <a css={menuLinkStyles(props)} {...splitTextProps(props)} />;
+const MenuLink = ({button = false, ...props}: MenuLinkProps) => (
+  <a css={menuLinkStyles(props)} {...splitLinkProps(props)} />
+);
 
 MenuLink.defaultProps = {
   ...Link.defaultProps,

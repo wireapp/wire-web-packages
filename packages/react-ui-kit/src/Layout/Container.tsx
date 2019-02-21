@@ -58,13 +58,9 @@ const containerStyles: (props: ContainerProps) => ObjectInterpolation<undefined>
       },
 });
 
-const Container = (props: ContainerProps) => <div css={containerStyles(props)} {...props} />;
-
-Container.defaultProps = {
-  centerText: false,
-  level: undefined,
-  verticalCenter: false,
-};
+const Container = ({centerText = false, level = undefined, verticalCenter = false, ...props}: ContainerProps) => (
+  <div css={containerStyles({centerText, level, verticalCenter, ...props})} {...props} />
+);
 
 const ContainerLG = (props: ContainerProps) => <Container level={'lg'} {...props} />;
 const ContainerMD = (props: ContainerProps) => <Container level={'md'} {...props} />;

@@ -21,13 +21,14 @@ import Color from 'color';
 import React from 'react';
 import {COLOR} from '../Identity';
 import {defaultTransition} from '../Identity/motions';
+import {splitProps} from '../util';
 import {TextProps, splitTextProps, textStyles} from './Text';
 
 export interface LinkProps<T = HTMLAnchorElement> extends TextProps<T> {
   component?: React.ComponentType | string;
 }
 
-export const linkStyles: (props: LinkProps) => ObjectInterpolation<undefined> = props => {
+const linkStyles: (props: LinkProps) => ObjectInterpolation<undefined> = props => {
   const darker = 0.16;
   const hoverColor = Color(props.color)
     .mix(Color(COLOR.BLACK), darker)
@@ -47,6 +48,8 @@ export const linkStyles: (props: LinkProps) => ObjectInterpolation<undefined> = 
   };
 };
 
+const splitLinkProps = (props: Object) => splitProps(splitTextProps(props), ['component']);
+
 const Link = ({component = 'a', children, ...props}: LinkProps) =>
   jsx(component, {css: linkStyles(props), ...splitTextProps(props)} as any, children);
 
@@ -58,4 +61,4 @@ Link.defaultProps = {
   textTransform: 'uppercase',
 };
 
-export {Link};
+export {Link, linkStyles, splitLinkProps};
