@@ -104,6 +104,7 @@ const CheckboxLabel = ({
         color,
         fontSize,
         textTransform,
+        ...props,
       }),
       a: {
         color: COLOR.LINK,

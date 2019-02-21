@@ -42,7 +42,9 @@ const StyledAppContainerStyles: (props: StyledAppContainerProps) => ObjectInterp
   minHeight: '100vh',
 });
 
-const StyledAppContainer = (props: StyledAppContainerProps) => <div css={StyledAppContainerStyles(props)} {...props} />;
+const StyledAppContainer = ({backgroundColor = COLOR.GRAY_LIGHTEN_88, ...props}: StyledAppContainerProps) => (
+  <div css={StyledAppContainerStyles({backgroundColor, ...props})} {...props} />
+);
 
 StyledAppContainer.defaultProps = {
   backgroundColor: COLOR.GRAY_LIGHTEN_88,

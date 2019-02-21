@@ -86,6 +86,7 @@ const Button = ({
       noWrap,
       textTransform,
       truncate,
+      ...props,
     })}
     {...props}
   />
@@ -117,6 +118,7 @@ const ButtonLink = ({
       noWrap,
       textTransform,
       truncate,
+      ...props,
     })}
     {...props}
   />
