@@ -29,7 +29,7 @@ const labelStyles: (props: LabelProps) => ObjectInterpolation<undefined> = props
 });
 
 const Label = (props: LabelProps) => <span css={labelStyles(props)} {...props} />;
-const LabelLink = (props: LabelProps) => <a css={labelStyles(props)} {...props} />;
+const LabelLink = (props: LabelProps<HTMLAnchorElement>) => <a css={labelStyles(props)} {...props} />;
 
 Label.defaultProps = {
   ...Text.defaultProps,
