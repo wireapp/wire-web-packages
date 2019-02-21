@@ -18,14 +18,18 @@
  */
 /** @jsx jsx */
 import {jsx} from '@emotion/core';
-import styled from '@emotion/styled';
 
-const Form = styled.form<React.HTMLAttributes<HTMLFormElement>>`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin-bottom: 0;
-  width: 100%;
-`;
+const Form = (props: React.HTMLAttributes<HTMLFormElement>) => (
+  <form
+    css={{
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      marginBottom: 0,
+      width: '100%',
+    }}
+    {...props}
+  />
+);
 
 export {Form};
