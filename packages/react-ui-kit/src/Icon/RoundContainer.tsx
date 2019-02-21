@@ -29,7 +29,7 @@ export interface InternalRoundContainerProps {
 
 export interface RoundContainerProps extends InternalRoundContainerProps, React.HTMLAttributes<HTMLDivElement> {}
 
-const roundContainerStyles: (props: InternalRoundContainerProps) => ObjectInterpolation<undefined> = props => ({
+const roundContainerStyle: (props: InternalRoundContainerProps) => ObjectInterpolation<undefined> = props => ({
   alignItems: 'center',
   backgroundColor: props.color,
   border: 'none',
@@ -41,11 +41,8 @@ const roundContainerStyles: (props: InternalRoundContainerProps) => ObjectInterp
   width: `${props.size}px`,
 });
 
-const RoundContainer = (props: RoundContainerProps) => <div css={roundContainerStyles(props)} {...props} />;
+const RoundContainer = ({color = COLOR.BLUE, size = 72, ...props}: RoundContainerProps) => (
+  <div css={roundContainerStyle({color, size, ...props})} {...props} />
+);
 
-RoundContainer.defaultProps = {
-  color: COLOR.BLUE,
-  size: 72,
-};
-
-export {RoundContainer};
+export {roundContainerStyle, RoundContainer};

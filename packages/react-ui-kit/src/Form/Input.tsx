@@ -22,12 +22,14 @@ import styled from '@emotion/styled';
 import {Encoder} from 'bazinga64';
 import React from 'react';
 import {COLOR} from '../Identity';
-import {TextProps} from '../Text';
+import {InternalTextProps} from '../Text';
 
-export interface InputProps extends TextProps, React.InputHTMLAttributes<HTMLInputElement> {
+export interface InternalInputProps extends InternalTextProps {
   markInvalid?: boolean;
   placeholderTextTransform?: string;
 }
+
+export interface InputProps extends InternalInputProps, React.InputHTMLAttributes<HTMLInputElement> {}
 
 const placeholderStyle = (props: InputProps) => css`
   color: ${COLOR.GRAY_DARKEN_24};
