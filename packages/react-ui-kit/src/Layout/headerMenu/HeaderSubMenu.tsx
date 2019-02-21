@@ -52,10 +52,10 @@ const desktopStyledHeaderSubMenuStyles: (
   },
 });
 
-const DesktopStyledHeaderSubMenuClass = 'desktopStyledHeaderSubMenu';
+const DESKTOP_HEADER_SUB_MENU_CLASSNAME = 'desktopStyledHeaderSubMenu';
 
 const DesktopStyledHeaderSubMenu = (props: DesktopStyledHeaderSubMenuProps) => (
-  <div className={DesktopStyledHeaderSubMenuClass} css={desktopStyledHeaderSubMenuStyles(props)} {...props} />
+  <div className={DESKTOP_HEADER_SUB_MENU_CLASSNAME} css={desktopStyledHeaderSubMenuStyles(props)} {...props} />
 );
 
 export interface MobileStyledHeaderSubMenuProps<T = HTMLSpanElement> extends React.HTMLProps<T> {
@@ -135,4 +135,4 @@ const HeaderSubMenu: React.SFC<HeaderSubMenuProps> = ({caption, isOpen, children
   );
 };
 
-export {HeaderSubMenu, DesktopStyledHeaderSubMenu, DesktopStyledHeaderSubMenuClass, MobileStyledHeaderSubMenu};
+export {HeaderSubMenu, DesktopStyledHeaderSubMenu, DESKTOP_HEADER_SUB_MENU_CLASSNAME, MobileStyledHeaderSubMenu};

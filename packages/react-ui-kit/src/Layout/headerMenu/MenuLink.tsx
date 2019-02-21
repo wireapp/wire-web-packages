@@ -20,7 +20,7 @@
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import media, {QueryKeys} from '../../mediaQueries';
 import {Link, LinkProps, linkStyles, splitLinkProps} from '../../Text';
-import {DesktopStyledHeaderSubMenuClass} from './HeaderSubMenu';
+import {DESKTOP_HEADER_SUB_MENU_CLASSNAME} from './HeaderSubMenu';
 
 export interface MenuLinkProps<T = HTMLAnchorElement> extends LinkProps<T> {
   button?: boolean;
@@ -29,18 +29,18 @@ export interface MenuLinkProps<T = HTMLAnchorElement> extends LinkProps<T> {
 const menuLinkStyles: (props: MenuLinkProps) => ObjectInterpolation<undefined> = props => ({
   ...linkStyles(props),
   [media[QueryKeys.DESKTOP]]: {
-    '&:first-child': {
+    '&:first-of-type': {
       marginLeft: 0,
     },
-    '&:last-child': {
+    '&:last-of-type': {
       marginRight: 0,
     },
     margin: '12px 26px 0 10px',
-    [`.${DesktopStyledHeaderSubMenuClass} &`]: {
-      '&:first-child': {
+    [`.${DESKTOP_HEADER_SUB_MENU_CLASSNAME} &`]: {
+      '&:first-of-type': {
         marginLeft: '10px',
       },
-      '&:last-child': {
+      '&:last-of-type': {
         marginRight: '26px',
       },
     },

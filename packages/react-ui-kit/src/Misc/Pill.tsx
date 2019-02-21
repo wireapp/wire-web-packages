@@ -48,10 +48,10 @@ const pillStyles: (props: PillProps) => ObjectInterpolation<undefined> = props =
     }
 `;
   return {
-    '&:first-child': {
+    '&:first-of-type': {
       marginLeft: 0,
     },
-    '&:last-child': {
+    '&:last-of-type': {
       marginRight: 0,
     },
     animation: `${pillAnimation} ${DURATION.DEFAULT}ms ${EASE.QUART}`,
