@@ -53,7 +53,7 @@ const StyledLabel = (props: StyledLabelProps) => {
           border: '2px solid rgba(0, 0, 0, 0.4)',
           borderRadius: '4px',
           boxSizing: 'border-box',
-          content: '',
+          content: '""',
           display: 'inline-block',
           height: '16px',
           margin: '0 8px 0 -16px',

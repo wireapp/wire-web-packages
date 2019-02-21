@@ -54,13 +54,13 @@ const buttonStyles: (props: ButtonProps) => ObjectInterpolation<undefined> = pro
   width: props.block ? '100%' : 'auto',
 });
 
-const buttonLinkStyles: (props: ButtonProps) => ObjectInterpolation<undefined> = props => ({
+const buttonLinkStyles: (props: ButtonProps<HTMLAnchorElement>) => ObjectInterpolation<undefined> = props => ({
   ...linkStyles,
   display: 'inline-block !important',
 });
 
 const Button = (props: ButtonProps) => <button css={buttonStyles(props)} {...props} />;
-const ButtonLink = (props: ButtonProps) => <a css={buttonLinkStyles(props)} {...props} />;
+const ButtonLink = (props: ButtonProps<HTMLAnchorElement>) => <a css={buttonLinkStyles(props)} {...props} />;
 
 Button.defaultProps = {
   backgroundColor: COLOR.BLUE,
