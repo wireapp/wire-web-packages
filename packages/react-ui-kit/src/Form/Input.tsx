@@ -93,9 +93,4 @@ const Input = React.forwardRef(
   )
 );
 
-Input.defaultProps = {
-  markInvalid: false,
-  placeholderTextTransform: 'uppercase',
-};
-
 export {INPUT_CLASSANME, Input, inputStyle};
