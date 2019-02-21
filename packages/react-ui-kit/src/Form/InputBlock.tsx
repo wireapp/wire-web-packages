@@ -18,21 +18,26 @@
  */
 /** @jsx jsx */
 import {jsx} from '@emotion/core';
-import styled from '@emotion/styled';
 import {COLOR} from '../Identity';
-import {Input, InputSubmitCombo} from './';
+import {INPUT_CLASSANME} from './Input';
+import {INPUT_SUBMIT_COMBO_CLASSNAME} from './InputSubmitCombo';
 
-const InputBlock = styled.div<React.HTMLAttributes<HTMLDivElement>>`
-  background-color: ${COLOR.GRAY_LIGHTEN_88};
-  border-radius: 4px;
-  box-shadow: inset 16px 16px 0 ${COLOR.WHITE}, inset -16px -16px 0 ${COLOR.WHITE};
-  margin-bottom: 16px;
-  & > ${() => Input} {
-    margin: 0;
-  }
-  & > ${() => Input} + ${() => Input}, & > ${() => Input} + ${() => InputSubmitCombo} {
-    margin: 1px 0 0;
-  }
-`;
+const InputBlock = (props: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    css={{
+      backgroundColor: COLOR.GRAY_LIGHTEN_88,
+      borderRadius: '4px',
+      boxShadow: `inset 16px 16px 0 ${COLOR.WHITE}, inset -16px -16px 0 ${COLOR.WHITE}`,
+      marginBottom: '16px',
+      [`& > ${INPUT_CLASSANME}`]: {
+        margin: 0,
+      },
+      [`& > ${INPUT_CLASSANME} + ${INPUT_CLASSANME}, & > ${INPUT_CLASSANME} + ${INPUT_SUBMIT_COMBO_CLASSNAME}`]: {
+        margin: '1px 0 0',
+      },
+    }}
+    {...props}
+  />
+);
 
 export {InputBlock};

@@ -31,6 +31,8 @@ export interface InternalInputProps extends InternalTextProps {
 
 export interface InputProps extends InternalInputProps, React.InputHTMLAttributes<HTMLInputElement> {}
 
+const INPUT_CLASSANME = 'input';
+
 const placeholderStyle = (props: InputProps) => css`
   color: ${COLOR.GRAY_DARKEN_24};
   font-size: 11px;
@@ -47,7 +49,7 @@ const base64Dot = Encoder.toBase64(invalidDot).asString;
 
 const Input = styled(
   React.forwardRef((props: InputProps, ref: React.Ref<HTMLInputElement>) => {
-    return <input ref={ref} type={props.type} {...props} />;
+    return <input className={INPUT_CLASSANME} ref={ref} type={props.type} {...props} />;
   }),
   {
     shouldForwardProp: prop => prop !== 'placeholderTextTransform' && prop !== 'markInvalid',
@@ -92,4 +94,4 @@ Input.defaultProps = {
   placeholderTextTransform: 'uppercase',
 };
 
-export {Input};
+export {INPUT_CLASSANME, Input};
