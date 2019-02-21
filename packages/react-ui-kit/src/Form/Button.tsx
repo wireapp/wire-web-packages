@@ -31,7 +31,7 @@ interface ButtonProps<T = HTMLButtonElement> extends TextProps<T> {
 }
 
 const buttonStyles: (props: ButtonProps) => ObjectInterpolation<undefined> = props => ({
-  ...textStyles,
+  ...textStyles(props),
   '&:hover, &:focus': {
     backgroundColor: props.disabled ? COLOR.DISABLED : COLOR.shade(props.backgroundColor, 0.06),
     textDecoration: 'none',
@@ -55,29 +55,71 @@ const buttonStyles: (props: ButtonProps) => ObjectInterpolation<undefined> = pro
 });
 
 const buttonLinkStyles: (props: ButtonProps<HTMLAnchorElement>) => ObjectInterpolation<undefined> = props => ({
-  ...linkStyles,
+  ...linkStyles(props),
   display: 'inline-block !important',
 });
 
-const Button = (props: ButtonProps) => <button css={buttonStyles(props)} {...props} />;
-const ButtonLink = (props: ButtonProps<HTMLAnchorElement>) => <a css={buttonLinkStyles(props)} {...props} />;
-
-Button.defaultProps = {
-  backgroundColor: COLOR.BLUE,
-  block: false,
-  bold: true,
-  center: true,
-  color: COLOR.WHITE,
-  disabled: false,
-  fontSize: '16px',
-  noCapital: false,
-  noWrap: true,
-  textTransform: 'uppercase',
-  truncate: true,
-};
-
-ButtonLink.defaultProps = {
-  ...Button.defaultProps,
-};
+const Button = ({
+  backgroundColor = COLOR.BLUE,
+  block = false,
+  bold = true,
+  center = true,
+  color = COLOR.WHITE,
+  disabled = false,
+  fontSize = '16px',
+  noCapital = false,
+  noWrap = true,
+  textTransform = 'uppercase',
+  truncate = true,
+  ...props
+}: ButtonProps) => (
+  <button
+    css={buttonStyles({
+      backgroundColor,
+      block,
+      bold,
+      center,
+      color,
+      disabled,
+      fontSize,
+      noCapital,
+      noWrap,
+      textTransform,
+      truncate,
+    })}
+    {...props}
+  />
+);
+const ButtonLink = ({
+  backgroundColor = COLOR.BLUE,
+  block,
+  bold = true,
+  center = true,
+  color = COLOR.WHITE,
+  disabled = false,
+  fontSize = '16px',
+  noCapital = false,
+  noWrap = true,
+  textTransform = 'uppercase',
+  truncate = true,
+  ...props
+}: ButtonProps<HTMLAnchorElement>) => (
+  <a
+    css={buttonLinkStyles({
+      backgroundColor,
+      block,
+      bold,
+      center,
+      color,
+      disabled,
+      fontSize,
+      noCapital,
+      noWrap,
+      textTransform,
+      truncate,
+    })}
+    {...props}
+  />
+);
 
 export {Button, ButtonLink};

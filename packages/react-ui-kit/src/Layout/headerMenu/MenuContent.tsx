@@ -26,7 +26,7 @@ export interface MenuContentProps<T = HTMLDivElement> extends TextProps<T> {
 }
 
 const menuContentStyles: (props: MenuContentProps) => ObjectInterpolation<undefined> = props => ({
-  ...contentStyles,
+  ...contentStyles(props),
   alignItems: 'center',
   flexDirection: 'row',
   height: '64px',
