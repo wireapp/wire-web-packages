@@ -17,12 +17,11 @@
  *
  */
 /** @jsx jsx */
-import {jsx} from '@emotion/core';
-import styled from '@emotion/styled';
+import {ObjectInterpolation, jsx} from '@emotion/core';
 import React from 'react';
 import {COLOR} from '../Identity';
 
-interface ToolTipProps {
+interface ToolTipProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   bottom?: boolean;
   disabled?: boolean;
   left?: boolean;
@@ -31,84 +30,51 @@ interface ToolTipProps {
   text?: string;
 }
 
-const StyledTooltip = styled.div<ToolTipProps & React.HTMLProps<HTMLDivElement>>`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+const tooltipStyle: (props: ToolTipProps) => ObjectInterpolation<undefined> = ({
+  bottom,
+  left,
+  right,
+  light,
+  disabled,
+}) => ({
+  '&::after': {
+    backgroundColor: light ? COLOR.WHITE : COLOR.TEXT,
+    borderRadius: '4px',
+    bottom: bottom || left || right ? 'auto' : 'calc(100% + 8px)',
+    boxShadow: '0 2px 16px 0 rgba(0, 0, 0, 0.12)',
+    color: light ? COLOR.TEXT : COLOR.WHITE,
+    content: 'attr(data-text)',
+    display: 'block',
+    fontSize: '12px',
+    fontWeight: light ? 400 : 600,
+    left: left ? 'calc(100% + 8px)' : 'auto',
+    lineHeight: '14px',
+    maxWidth: '200px',
+    minWidth: '120px',
+    opacity: 0,
+    padding: '12px',
+    pointerEvents: 'none',
+    position: 'absolute',
+    right: right ? 'calc(100% + 8px)' : 'auto',
+    textAlign: 'center',
+    top: bottom ? 'calc(100% + 8px)' : 'auto',
+    transform: left || right ? `translateX(${left ? -16 : 16}px)` : `translateY(${bottom ? -16 : 16}px)`,
+    transition: 'all 0.15s ease-in-out',
+  },
+  '&:hover::after': disabled || {
+    opacity: 1,
+    transform: 'translateY(0) translateX(0)',
+    transition: 'all 0.25s ease-in-out',
+  },
+  alignItems: 'center',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  position: 'relative',
+});
 
-  &::after {
-    position: absolute;
-    content: attr(data-text);
-    display: block;
-    opacity: 0;
-    transform: translateY(16px);
-    bottom: calc(100% + 8px);
-    ${({bottom}) =>
-      bottom &&
-      `
-      transform: translateY(-16px);
-      bottom: auto;
-      top: calc(100% + 8px);
-    `};
-    ${({left}) =>
-      left &&
-      `
-      transform: translateX(16px);
-      bottom: auto;
-      right: calc(100% + 8px);
-    `};
-    ${({right}) =>
-      right &&
-      `
-      transform: translateX(-16px);
-      bottom: auto;
-      right: auto;
-      left: calc(100% + 8px);
-    `};
-    pointer-events: none;
-    border-radius: 4px;
-    transition: all 0.15s ease-in-out;
-    padding: 12px;
-    min-width: 120px;
-    max-width: 200px;
-    text-align: center;
-    font-size: 12px;
-    line-height: 14px;
-    box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.12);
-    ${({light}) =>
-      light
-        ? `
-    background-color: ${COLOR.WHITE};
-    color: ${COLOR.TEXT};
-    font-weight: 400;
-    `
-        : `
-    background-color: ${COLOR.TEXT};
-    color: ${COLOR.WHITE};
-    font-weight: 600;
-    `};
-  }
-  ${({disabled}) =>
-    !disabled &&
-    `
-  &:hover::after {
-    transition: all 0.25s ease-in-out;
-    opacity: 1;
-    transform: translateY(0) translateX(0);
-  }`};
-`;
-
-const Tooltip = ({text, ...props}: ToolTipProps) => <StyledTooltip data-text={text} {...props} />;
-
-Tooltip.defaultProps = {
-  bottom: false,
-  disabled: false,
-  left: false,
-  light: false,
-  right: false,
-  text: '',
-};
+const Tooltip = ({bottom = false, left = false, right = false, light = false, text = '', ...props}: ToolTipProps) => (
+  <div css={tooltipStyle({bottom, left, right, light, ...props})} data-text={text} {...props} />
+);
 
 export {Tooltip};
