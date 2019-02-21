@@ -18,18 +18,23 @@
  */
 /** @jsx jsx */
 import {jsx} from '@emotion/core';
-import styled from '@emotion/styled';
 import {COLOR} from '../Identity';
-import {Text, TextProps} from '../Text';
+import {Text, TextProps, textStyles} from '../Text';
 
-const ErrorMessage = styled(Text)<TextProps & React.HTMLAttributes<HTMLSpanElement>>`
-  display: block;
-  margin-bottom: 12px;
-  a {
-    color: ${COLOR.LINK};
-    text-decoration: none;
-  }
-`;
+const ErrorMessage = (props: TextProps) => (
+  <Text
+    css={{
+      ...textStyles,
+      a: {
+        color: COLOR.LINK,
+        textDecoration: 'none',
+      },
+      display: 'block',
+      marginBottom: '12px',
+    }}
+    {...props}
+  />
+);
 
 ErrorMessage.defaultProps = {
   ...Text.defaultProps,
