@@ -18,7 +18,6 @@
  */
 /** @jsx jsx */
 import {jsx} from '@emotion/core';
-import styled from '@emotion/styled';
 import React from 'react';
 import {
   ArrowIcon,
@@ -31,6 +30,7 @@ import {
   PlaneIcon,
   ProfileIcon,
   RoundContainer,
+  RoundContainerProps,
   TeamIcon,
   TimedIcon,
   TrashIcon,
@@ -38,33 +38,13 @@ import {
 import {COLOR} from '../Identity';
 import {defaultTransition} from '../Identity/motions';
 
-export interface RoundIconButtonProps extends ButtonProps {
+export interface RoundIconButtonProps extends RoundContainerProps {
   icon?: ICON_NAME;
   iconColor?: string;
   iconHeight?: number;
   iconWidth?: number;
+  disabled?: boolean;
 }
-
-export interface ButtonProps {
-  color?: string;
-  size?: number;
-}
-
-const darkenAmount = 0.08;
-
-const Button = styled(RoundContainer.withComponent(styled.button<React.ButtonHTMLAttributes<HTMLButtonElement>>``))<
-  ButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>
->`
-  background-color: ${props => (props.disabled ? COLOR.DISABLED : props.color)};
-  min-width: ${props => props.size}px;
-  outline: none;
-  padding: 0;
-  cursor: ${props => (props.disabled ? 'default' : 'pointer')};
-  ${defaultTransition} &:hover,
-  &:focus {
-    background-color: ${props => (props.disabled ? COLOR.DISABLED : COLOR.shade(props.color, darkenAmount))};
-  }
-`;
 
 enum ICON_NAME {
   ARROW = 'arrow',
@@ -81,63 +61,81 @@ enum ICON_NAME {
   TRASH = 'trash',
 }
 
-const RoundIconButton: React.SFC<RoundIconButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>> = ({
+const RoundIconButton: React.SFC<RoundIconButtonProps> = ({
   icon,
   iconColor,
   iconHeight,
   iconWidth,
   children,
   ...props
-}) => (
-  <Button {...props}>
-    {(() => {
-      switch (icon) {
-        case ICON_NAME.ATTACHMENT: {
-          return <AttachmentIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+}) => {
+  const darkenAmount = 0.08;
+  return (
+    <RoundContainer
+      css={{
+        '&:hover, &:focus': {
+          backgroundColor: props.disabled ? COLOR.DISABLED : COLOR.shade(props.color, darkenAmount),
+        },
+        backgroundColor: props.disabled ? COLOR.DISABLED : props.color,
+        cursor: props.disabled ? 'default' : 'pointer',
+        minWidth: `${props.size}px`,
+        outline: 'none',
+        padding: 0,
+        transition: defaultTransition,
+      }}
+      {...props}
+    >
+      {(() => {
+        switch (icon) {
+          case ICON_NAME.ATTACHMENT: {
+            return <AttachmentIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+          }
+          case ICON_NAME.CHECK: {
+            return <CheckIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+          }
+          case ICON_NAME.CLOSE: {
+            return <CloseIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+          }
+          case ICON_NAME.GIF: {
+            return <GifIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+          }
+          case ICON_NAME.IMAGE: {
+            return <ImageIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+          }
+          case ICON_NAME.PING: {
+            return <PingIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+          }
+          case ICON_NAME.PLANE: {
+            return <PlaneIcon color={iconColor} height={iconHeight} width={iconWidth} style={{marginLeft: 2}} />;
+          }
+          case ICON_NAME.PROFILE: {
+            const defaultSize = 24;
+            return (
+              <ProfileIcon color={iconColor} height={iconHeight || defaultSize} width={iconWidth || defaultSize} />
+            );
+          }
+          case ICON_NAME.TEAM: {
+            const defaultSize = 24;
+            return <TeamIcon color={iconColor} height={iconHeight || defaultSize} width={iconWidth || defaultSize} />;
+          }
+          case ICON_NAME.TIMED: {
+            return <TimedIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+          }
+          case ICON_NAME.TRASH: {
+            return <TrashIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+          }
+          case ICON_NAME.ARROW: {
+            return <ArrowIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+          }
+          default: {
+            return null;
+          }
         }
-        case ICON_NAME.CHECK: {
-          return <CheckIcon color={iconColor} height={iconHeight} width={iconWidth} />;
-        }
-        case ICON_NAME.CLOSE: {
-          return <CloseIcon color={iconColor} height={iconHeight} width={iconWidth} />;
-        }
-        case ICON_NAME.GIF: {
-          return <GifIcon color={iconColor} height={iconHeight} width={iconWidth} />;
-        }
-        case ICON_NAME.IMAGE: {
-          return <ImageIcon color={iconColor} height={iconHeight} width={iconWidth} />;
-        }
-        case ICON_NAME.PING: {
-          return <PingIcon color={iconColor} height={iconHeight} width={iconWidth} />;
-        }
-        case ICON_NAME.PLANE: {
-          return <PlaneIcon color={iconColor} height={iconHeight} width={iconWidth} style={{marginLeft: 2}} />;
-        }
-        case ICON_NAME.PROFILE: {
-          const defaultSize = 24;
-          return <ProfileIcon color={iconColor} height={iconHeight || defaultSize} width={iconWidth || defaultSize} />;
-        }
-        case ICON_NAME.TEAM: {
-          const defaultSize = 24;
-          return <TeamIcon color={iconColor} height={iconHeight || defaultSize} width={iconWidth || defaultSize} />;
-        }
-        case ICON_NAME.TIMED: {
-          return <TimedIcon color={iconColor} height={iconHeight} width={iconWidth} />;
-        }
-        case ICON_NAME.TRASH: {
-          return <TrashIcon color={iconColor} height={iconHeight} width={iconWidth} />;
-        }
-        case ICON_NAME.ARROW: {
-          return <ArrowIcon color={iconColor} height={iconHeight} width={iconWidth} />;
-        }
-        default: {
-          return null;
-        }
-      }
-    })()}
-    {children}
-  </Button>
-);
+      })()}
+      {children}
+    </RoundContainer>
+  );
+};
 
 RoundIconButton.defaultProps = {
   color: COLOR.BLUE,
