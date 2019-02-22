@@ -17,8 +17,9 @@
  *
  */
 
-import styled from '@emotion/styled';
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
 
-const Footer = styled.footer``;
+const Footer = () => <footer />;
 
 export {Footer};

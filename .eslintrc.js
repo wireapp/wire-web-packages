@@ -60,6 +60,7 @@ module.exports = {
     "prefer-promise-reject-errors": 2,
     "prettier/prettier": 2,
     "react/prefer-stateless-function": 2,
+    "react/prop-types": 0,
     "sort-imports": 2,
     "sort-keys": [
       2,

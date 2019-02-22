@@ -84,4 +84,4 @@ export const ANIMATION = {
   `,
 };
 
-export const defaultTransition = 'transition: all 0.24s;';
+export const defaultTransition = 'all 0.24s';

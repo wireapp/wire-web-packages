@@ -17,12 +17,14 @@
  *
  */
 
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
 import React from 'react';
 import {COLOR} from '../Identity';
 import {FlexBox} from '../Layout';
 import {Bold, Link} from '../Text';
 
-interface PaginationProps {
+interface PaginationProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   currentPage?: number;
   goPage?: (page: number) => void;
   nextPageComponent?: any;
@@ -30,7 +32,7 @@ interface PaginationProps {
   previousPageComponent?: any;
 }
 
-const Pagination: React.SFC<PaginationProps & React.HTMLAttributes<HTMLDivElement>> = ({
+const Pagination: React.SFC<PaginationProps> = ({
   currentPage = 0,
   numberOfPages = 1,
   goPage,

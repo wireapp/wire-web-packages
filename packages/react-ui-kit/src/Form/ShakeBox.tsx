@@ -17,6 +17,8 @@
  *
  */
 
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
 import React from 'react';
 
 interface ShakeBoxProps {
@@ -31,7 +33,7 @@ interface ShakeBoxStateProps {
   offset?: number;
 }
 
-class ShakeBox extends React.PureComponent<ShakeBoxProps & React.HTMLAttributes<HTMLDivElement>, ShakeBoxStateProps> {
+class ShakeBox extends React.PureComponent<ShakeBoxProps & React.HTMLProps<HTMLDivElement>, ShakeBoxStateProps> {
   state = {isShaking: false, offset: 0};
   currentOffset = 0;
   targetOffset?: number;
