@@ -31,7 +31,7 @@ const roundContainerStyle: (props: RoundContainerProps) => ObjectInterpolation<u
   alignItems: 'center',
   backgroundColor: props.color,
   border: 'none',
-  borderRadiues: '50%',
+  borderRadius: '50%',
   display: 'flex',
   height: `${props.size}px`,
   justifyContent: 'center',

@@ -76,6 +76,7 @@ const RoundIconButton: React.SFC<RoundIconButtonProps> = ({
         '&:hover, &:focus': {
           backgroundColor: props.disabled ? COLOR.DISABLED : COLOR.shade(props.color, darkenAmount),
         },
+        appearance: 'none',
         backgroundColor: props.disabled ? COLOR.DISABLED : props.color,
         cursor: props.disabled ? 'default' : 'pointer',
         minWidth: `${props.size}px`,

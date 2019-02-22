@@ -39,8 +39,7 @@ const selectStyle: (props: SelectProps) => ObjectInterpolation<undefined> = ({di
   '&:disabled': {
     color: COLOR.GRAY,
   },
-  MozAppearance: 'none',
-  WebkitAppearance: 'none',
+  appearance: 'none',
   background: disabled ? 'unset' : `center right 16px no-repeat url("${inlineSVG(ArrowDown)}")`,
   cursor: disabled ? 'normal' : 'pointer',
   fontWeight: 300,
