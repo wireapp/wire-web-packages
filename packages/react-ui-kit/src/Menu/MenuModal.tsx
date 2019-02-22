@@ -27,6 +27,9 @@ import {noop} from '../util';
 
 const menuModalWrapperStyles: (props: OverlayWrapperProps) => ObjectInterpolation<undefined> = props => ({
   ...overlayBackgroundStyles(props),
+  alignItems: 'flex-end',
+  alignSelf: 'flex-end',
+  display: 'flex',
   overflowY: 'hidden',
   padding: 0,
 });
@@ -36,8 +39,6 @@ const MenuModalWrapper = (props: OverlayWrapperProps) => <div css={menuModalWrap
 const MenuModalBody = (props: React.HTMLProps<HTMLDivElement>) => (
   <div
     css={{
-      alignItems: 'flex-end',
-      alignSelf: 'flex-end',
       animation: `${ANIMATION.bottomUpMovement} ${DURATION.DEFAULT}ms ${EASE.EXPONENTIAL}`,
       backgroundColor: '#fff',
       boxShadow: '0 16px 64px 0 rgba(0, 0, 0, 0.16)',

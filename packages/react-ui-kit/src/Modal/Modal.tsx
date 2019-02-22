@@ -60,6 +60,8 @@ const ModalClose = (props: IconHOCProps<SVGSVGElement>) => (
       cursor: 'pointer',
       display: 'flex',
       justifyContent: 'center',
+      marginRight: '10px',
+      marginTop: '10px',
       position: 'absolute',
       right: '10px',
       top: '10px',
