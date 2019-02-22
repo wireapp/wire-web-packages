@@ -18,8 +18,9 @@
  */
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
+import {COLOR} from '../../Identity';
 import media, {QueryKeys} from '../../mediaQueries';
-import {Link, LinkProps, filterLinkProps, linkStyles} from '../../Text';
+import {LinkProps, filterLinkProps, linkStyles} from '../../Text';
 import {DESKTOP_HEADER_SUB_MENU_CLASSNAME} from './HeaderSubMenu';
 
 export interface MenuLinkProps<T = HTMLAnchorElement> extends LinkProps<T> {
@@ -58,13 +59,27 @@ const menuLinkStyles: (props: MenuLinkProps) => ObjectInterpolation<undefined> =
   padding: props.button ? '10px 16px' : undefined,
 });
 
-const MenuLink = ({button = false, ...props}: MenuLinkProps) => (
-  <a css={menuLinkStyles(props)} {...filterLinkProps(props)} />
+const MenuLink = ({
+  bold = true,
+  color = COLOR.LINK,
+  component = 'a',
+  fontSize = '11px',
+  textTransform = 'uppercase',
+  button = false,
+  ...props
+}: MenuLinkProps) => (
+  <a
+    css={menuLinkStyles({
+      bold,
+      button,
+      color,
+      component,
+      fontSize,
+      textTransform,
+      ...props,
+    })}
+    {...filterLinkProps(props)}
+  />
 );
-
-MenuLink.defaultProps = {
-  ...Link.defaultProps,
-  button: false,
-};
 
 export {MenuLink, menuLinkStyles};

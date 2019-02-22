@@ -23,7 +23,7 @@ import {CloseIcon} from '../Icon';
 import {IconHOCProps} from '../Icon/IconHOC';
 import {COLOR} from '../Identity';
 import media, {QueryKeys} from '../mediaQueries';
-import {noop} from '../util';
+import {filterProps, noop} from '../util';
 import {OverlayBackgroundProps, OverlayWrapper, overlayBackgroundStyles} from './Overlay';
 
 export interface ModalBodyProps<T = HTMLDivElement> extends React.HTMLProps<T> {
@@ -51,7 +51,9 @@ const modalBodyStyles: (props: ModalBodyProps) => ObjectInterpolation<undefined>
   },
 });
 
-const ModalBody = (props: ModalBodyProps) => <div css={modalBodyStyles(props)} {...props} />;
+const filterModalBodyProps = (props: Object) => filterProps(props, ['fullscreen']);
+
+const ModalBody = (props: ModalBodyProps) => <div css={modalBodyStyles(props)} {...filterModalBodyProps(props)} />;
 
 const ModalClose = (props: IconHOCProps<SVGSVGElement>) => (
   <CloseIcon

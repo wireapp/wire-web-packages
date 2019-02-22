@@ -45,7 +45,6 @@ const OverlayContent = (props: React.HTMLProps<HTMLDivElement>) => (
       '*': {
         color: COLOR.WHITE,
       },
-      '-webkit-transform': 'translate3d(0, 0, 0)',
       alignItems: 'center',
       display: 'flex',
       flexDirection: 'column',
@@ -54,6 +53,7 @@ const OverlayContent = (props: React.HTMLProps<HTMLDivElement>) => (
       maxWidth: '100%',
       overflowY: 'auto',
       position: 'relative',
+      transform: 'translate3d(0, 0, 0)',
       zIndex: 9999,
       [media[QueryKeys.TABLET_DOWN]]: {
         width: '100%',
