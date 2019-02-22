@@ -17,9 +17,9 @@
  *
  */
 /** @jsx jsx */
-import {jsx} from '@emotion/core';
+import {ObjectInterpolation, jsx} from '@emotion/core';
 import React from 'react';
-import {InputProps} from './Input';
+import {InputProps, inputStyle} from './Input';
 
 const CodeInputWrapper = (props: React.HTMLProps<HTMLDivElement>) => (
   <div
@@ -31,24 +31,21 @@ const CodeInputWrapper = (props: React.HTMLProps<HTMLDivElement>) => (
   />
 );
 
-const DigitInput = React.forwardRef((props: React.HTMLProps<HTMLInputElement>, ref: React.Ref<HTMLInputElement>) => (
-  <input
-    ref={ref}
-    css={{
-      '& + &': {
-        marginLeft: '19px',
-      },
-      border: 'none',
-      borderRadius: '4px',
-      color: 'black',
-      fontSize: '32px',
-      lineHeight: '56px',
-      outline: 'none',
-      textAlign: 'center',
-      width: '48px',
-    }}
-    {...props}
-  />
+interface DigitInputProps<T = HTMLInputElement> extends InputProps<T> {}
+
+const digitInputStyle: (props: DigitInputProps) => ObjectInterpolation<undefined> = props => ({
+  ...inputStyle(props),
+  '& + &': {
+    marginLeft: '19px',
+  },
+  fontSize: '32px',
+  lineHeight: '56px',
+  textAlign: 'center',
+  width: '48px',
+});
+
+const DigitInput = React.forwardRef((props: DigitInputProps, ref: React.Ref<HTMLInputElement>) => (
+  <input ref={ref} css={digitInputStyle(props)} {...props} />
 ));
 
 export interface CodeInputProps<T = HTMLInputElement> extends InputProps<T> {
