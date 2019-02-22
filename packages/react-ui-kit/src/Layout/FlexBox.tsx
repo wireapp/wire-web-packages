@@ -24,19 +24,19 @@ export interface FlexBoxProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   align?: string;
   column?: boolean;
   justify?: string;
-  wrap: FlexWrapProperty;
+  flexWrap?: FlexWrapProperty;
 }
 
 const flexBoxStyles: (props: FlexBoxProps) => ObjectInterpolation<undefined> = ({
   align = 'flex-start',
   column = false,
   justify = 'flex-start',
-  wrap = 'nowrap',
+  flexWrap = 'nowrap',
 }) => ({
   alignItems: align,
   display: 'flex',
   flexDirection: column ? 'column' : 'row',
-  flexWrap: wrap,
+  flexWrap: flexWrap,
   justifyContent: justify,
 });
 
