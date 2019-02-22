@@ -16,8 +16,8 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-/** @jsx jsx */
 
+/** @jsx jsx */
 import {jsx} from '@emotion/core';
 import IconHOC from '../IconHOC';
 

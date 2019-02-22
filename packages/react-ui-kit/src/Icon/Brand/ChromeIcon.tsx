@@ -18,7 +18,6 @@
  */
 
 /** @jsx jsx */
-
 import {jsx} from '@emotion/core';
 import IconHOC from '../IconHOC';
 

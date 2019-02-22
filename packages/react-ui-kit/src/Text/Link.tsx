@@ -16,6 +16,8 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
+
+/** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import Color from 'color';
 import React from 'react';

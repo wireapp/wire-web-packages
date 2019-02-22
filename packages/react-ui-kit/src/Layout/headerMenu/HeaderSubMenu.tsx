@@ -16,6 +16,7 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
+
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import {COLOR, Opacity, Slide, YAxisMovement} from '../../Identity';

@@ -18,7 +18,6 @@
  */
 
 /** @jsx jsx */
-
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import IconHOC, {IconHOCProps} from '../Icon/IconHOC';
 import {defaultTransition} from '../Identity/motions';
