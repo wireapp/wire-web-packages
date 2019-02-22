@@ -22,6 +22,7 @@ import {ObjectInterpolation} from '@emotion/styled';
 import {COLOR} from '../Identity';
 import {defaultTransition} from '../Identity/motions';
 import {TextProps, linkStyles, textStyles} from '../Text';
+import {filterProps} from '../util';
 
 export interface ButtonProps<T = HTMLButtonElement> extends TextProps<T> {
   backgroundColor?: string;
@@ -29,6 +30,10 @@ export interface ButtonProps<T = HTMLButtonElement> extends TextProps<T> {
   disabled?: boolean;
   noCapital?: boolean;
 }
+
+const filterButtonProps = (props: Object) => {
+  return filterProps(props, ['backgroundColor', 'block', 'disabled', 'noCapital']);
+};
 
 const buttonStyles: (props: ButtonProps) => ObjectInterpolation<undefined> = props => ({
   ...textStyles(props),
@@ -88,7 +93,7 @@ const Button = ({
       truncate,
       ...props,
     })}
-    {...props}
+    {...filterButtonProps(props)}
   />
 );
 const ButtonLink = ({
@@ -120,8 +125,8 @@ const ButtonLink = ({
       truncate,
       ...props,
     })}
-    {...props}
+    {...filterButtonProps(props)}
   />
 );
 
-export {Button, ButtonLink, buttonStyles};
+export {Button, ButtonLink, buttonStyles, filterButtonProps};

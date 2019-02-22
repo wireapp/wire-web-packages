@@ -22,7 +22,7 @@ import {jsx} from '@emotion/core';
 import {ObjectInterpolation} from '@emotion/styled';
 import {COLOR} from '../Identity';
 import media, {QueryKeys} from '../mediaQueries';
-import {TextProps, splitTextProps, textStyles} from './Text';
+import {TextProps, filterTextProps, textStyles} from './Text';
 
 interface HeadingProps<T = HTMLHeadingElement> extends TextProps<T> {
   level?: string;
@@ -42,7 +42,7 @@ const h1Styles: (props: HeadingProps) => ObjectInterpolation<undefined> = props 
   },
 });
 
-const H1 = (props: HeadingProps) => <h1 css={h1Styles(props)} {...splitTextProps(props)} />;
+const H1 = (props: HeadingProps) => <h1 css={h1Styles(props)} {...filterTextProps(props)} />;
 
 const h2Styles: (props: HeadingProps) => ObjectInterpolation<undefined> = props => ({
   ...textStyles(props),
@@ -59,7 +59,7 @@ const h2Styles: (props: HeadingProps) => ObjectInterpolation<undefined> = props 
   },
 });
 
-const H2 = (props: HeadingProps) => <h2 css={h2Styles(props)} {...splitTextProps(props)} />;
+const H2 = (props: HeadingProps) => <h2 css={h2Styles(props)} {...filterTextProps(props)} />;
 
 const h3Styles: (props: HeadingProps) => ObjectInterpolation<undefined> = props => ({
   ...textStyles(props),
@@ -68,7 +68,7 @@ const h3Styles: (props: HeadingProps) => ObjectInterpolation<undefined> = props 
   marginBottom: '16px',
 });
 
-const H3 = (props: HeadingProps) => <h3 css={h3Styles(props)} {...splitTextProps(props)} />;
+const H3 = (props: HeadingProps) => <h3 css={h3Styles(props)} {...filterTextProps(props)} />;
 
 const h4Styles: (props: HeadingProps) => ObjectInterpolation<undefined> = props => ({
   ...textStyles(props),
@@ -78,7 +78,7 @@ const h4Styles: (props: HeadingProps) => ObjectInterpolation<undefined> = props 
   marginTop: '20px',
 });
 
-const H4 = (props: HeadingProps) => <h3 css={h4Styles(props)} {...splitTextProps(props)} />;
+const H4 = (props: HeadingProps) => <h3 css={h4Styles(props)} {...filterTextProps(props)} />;
 
 const Heading = ({level, ...props}) => {
   switch (level) {

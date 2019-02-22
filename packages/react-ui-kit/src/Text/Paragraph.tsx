@@ -20,7 +20,7 @@
 import {jsx} from '@emotion/core';
 import {ObjectInterpolation} from '@emotion/styled';
 import media, {QueryKeys} from '../mediaQueries';
-import {TextProps, splitTextProps, textStyles} from './Text';
+import {TextProps, filterTextProps, textStyles} from './Text';
 
 export interface ParagraphProps<T = HTMLParagraphElement> extends TextProps<T> {}
 
@@ -31,7 +31,7 @@ const paragraphStyles: (props: ParagraphProps) => ObjectInterpolation<undefined>
 });
 
 const Paragraph = ({block = true, ...props}: ParagraphProps) => (
-  <p css={paragraphStyles({block, ...props})} {...splitTextProps(props)} />
+  <p css={paragraphStyles({block, ...props})} {...filterTextProps(props)} />
 );
 
 export interface LeadProps<T = HTMLParagraphElement> extends TextProps<T> {}
@@ -46,7 +46,7 @@ const leadStyles: (props: LeadProps) => ObjectInterpolation<undefined> = props =
 });
 
 const Lead = ({block = true, center = true, fontSize = '24px', ...props}: LeadProps) => (
-  <p css={leadStyles({block, center, fontSize, ...props})} {...splitTextProps(props)} />
+  <p css={leadStyles({block, center, fontSize, ...props})} {...filterTextProps(props)} />
 );
 
 export {Paragraph, paragraphStyles, Lead, leadStyles};

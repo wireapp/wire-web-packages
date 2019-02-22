@@ -19,7 +19,7 @@
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import media, {QueryKeys} from '../../mediaQueries';
-import {Link, LinkProps, linkStyles, splitLinkProps} from '../../Text';
+import {Link, LinkProps, filterLinkProps, linkStyles} from '../../Text';
 import {DESKTOP_HEADER_SUB_MENU_CLASSNAME} from './HeaderSubMenu';
 
 export interface MenuLinkProps<T = HTMLAnchorElement> extends LinkProps<T> {
@@ -59,7 +59,7 @@ const menuLinkStyles: (props: MenuLinkProps) => ObjectInterpolation<undefined> =
 });
 
 const MenuLink = ({button = false, ...props}: MenuLinkProps) => (
-  <a css={menuLinkStyles(props)} {...splitLinkProps(props)} />
+  <a css={menuLinkStyles(props)} {...filterLinkProps(props)} />
 );
 
 MenuLink.defaultProps = {

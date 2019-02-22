@@ -34,14 +34,13 @@ import {
   TrashIcon,
 } from '../Icon';
 import {COLOR} from '../Identity';
-import {ButtonProps, buttonStyles} from './Button';
+import {ButtonProps, buttonStyles, filterButtonProps} from './Button';
 
 export interface RoundIconButtonProps<T = HTMLButtonElement> extends ButtonProps<T> {
   icon?: ICON_NAME;
   iconColor?: string;
   iconHeight?: number;
   iconWidth?: number;
-  disabled?: boolean;
 }
 
 const roundIconButtonStyle: (props: RoundIconButtonProps) => ObjectInterpolation<undefined> = props => ({
@@ -80,7 +79,7 @@ const RoundIconButton: React.SFC<RoundIconButtonProps> = ({
   children,
   ...props
 }) => (
-  <button css={roundIconButtonStyle(props)} {...props}>
+  <button css={roundIconButtonStyle(props)} {...filterButtonProps(props)}>
     {(() => {
       switch (icon) {
         case ICON_NAME.ATTACHMENT: {

@@ -21,8 +21,8 @@ import Color from 'color';
 import React from 'react';
 import {COLOR} from '../Identity';
 import {defaultTransition} from '../Identity/motions';
-import {splitProps} from '../util';
-import {TextProps, splitTextProps, textStyles} from './Text';
+import {filterProps} from '../util';
+import {TextProps, filterTextProps, textStyles} from './Text';
 
 export interface LinkProps<T = HTMLAnchorElement> extends TextProps<T> {
   component?: React.ComponentType | string;
@@ -48,17 +48,21 @@ const linkStyles: (props: LinkProps) => ObjectInterpolation<undefined> = props =
   };
 };
 
-const splitLinkProps = (props: Object) => splitProps(splitTextProps(props), ['component']);
+const filterLinkProps = (props: Object) => filterProps(filterTextProps(props), ['component']);
 
-const Link = ({component = 'a', children, ...props}: LinkProps) =>
-  jsx(component, {css: linkStyles(props), ...splitTextProps(props)} as any, children);
+const Link = ({
+  bold = true,
+  color = COLOR.LINK,
+  component = 'a',
+  fontSize = '11px',
+  textTransform = 'uppercase',
+  children,
+  ...props
+}: LinkProps) =>
+  jsx(
+    component,
+    {css: linkStyles({bold, color, component, fontSize, textTransform, ...props}), ...filterLinkProps(props)} as any,
+    children
+  );
 
-Link.defaultProps = {
-  bold: true,
-  color: COLOR.LINK,
-  component: 'a',
-  fontSize: '11px',
-  textTransform: 'uppercase',
-};
-
-export {Link, linkStyles, splitLinkProps};
+export {Link, linkStyles, filterLinkProps};
