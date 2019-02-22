@@ -27,8 +27,15 @@ export interface MenuLinkProps<T = HTMLAnchorElement> extends LinkProps<T> {
   button?: boolean;
 }
 
-const menuLinkStyles: (props: MenuLinkProps) => ObjectInterpolation<undefined> = props => ({
-  ...linkStyles(props),
+const menuLinkStyles: (props: MenuLinkProps) => ObjectInterpolation<undefined> = ({
+  bold = true,
+  color = COLOR.LINK,
+  fontSize = '11px',
+  textTransform = 'uppercase',
+  button = false,
+  ...props
+}) => ({
+  ...linkStyles({bold, color, fontSize, textTransform, ...props}),
   [media[QueryKeys.DESKTOP]]: {
     '&:first-of-type': {
       marginLeft: 0,
@@ -54,32 +61,11 @@ const menuLinkStyles: (props: MenuLinkProps) => ObjectInterpolation<undefined> =
     padding: '8px 24px',
     textTransform: 'none !important',
   },
-  border: props.button ? '1px solid rgb(219, 226, 231)' : undefined,
-  borderRadius: props.button ? '4px' : undefined,
-  padding: props.button ? '10px 16px' : undefined,
+  border: button ? '1px solid rgb(219, 226, 231)' : undefined,
+  borderRadius: button ? '4px' : undefined,
+  padding: button ? '10px 16px' : undefined,
 });
 
-const MenuLink = ({
-  bold = true,
-  color = COLOR.LINK,
-  component = 'a',
-  fontSize = '11px',
-  textTransform = 'uppercase',
-  button = false,
-  ...props
-}: MenuLinkProps) => (
-  <a
-    css={menuLinkStyles({
-      bold,
-      button,
-      color,
-      component,
-      fontSize,
-      textTransform,
-      ...props,
-    })}
-    {...filterLinkProps(props)}
-  />
-);
+const MenuLink = (props: MenuLinkProps) => <a css={menuLinkStyles(props)} {...filterLinkProps(props)} />;
 
 export {MenuLink, menuLinkStyles};

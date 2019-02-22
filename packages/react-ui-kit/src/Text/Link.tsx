@@ -33,7 +33,6 @@ const linkStyles: (props: LinkProps) => ObjectInterpolation<undefined> = ({
   color = COLOR.LINK,
   fontSize = '11px',
   textTransform = 'uppercase',
-  children,
   ...props
 }) => {
   const darker = 0.16;
@@ -41,7 +40,7 @@ const linkStyles: (props: LinkProps) => ObjectInterpolation<undefined> = ({
     .mix(Color(COLOR.BLACK), darker)
     .toString();
   return {
-    ...textStyles(props),
+    ...textStyles({bold, color, fontSize, textTransform, ...props}),
     '&:hover': {
       color: hoverColor,
     },
