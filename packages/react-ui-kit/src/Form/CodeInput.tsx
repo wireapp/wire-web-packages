@@ -31,8 +31,9 @@ const CodeInputWrapper = (props: React.HTMLProps<HTMLDivElement>) => (
   />
 );
 
-const DigitInput = (props: React.HTMLProps<HTMLInputElement>) => (
+const DigitInput = React.forwardRef((props: React.HTMLProps<HTMLInputElement>, ref: React.Ref<HTMLInputElement>) => (
   <input
+    ref={ref}
     css={{
       '& + &': {
         marginLeft: '19px',
@@ -48,7 +49,7 @@ const DigitInput = (props: React.HTMLProps<HTMLInputElement>) => (
     }}
     {...props}
   />
-);
+));
 
 export interface CodeInputProps<T = HTMLInputElement> extends InputProps<T> {
   autoFocus?: boolean;
