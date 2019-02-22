@@ -32,6 +32,7 @@ export interface InputProps<T = HTMLInputElement> extends TextProps<T> {
 const inputStyle: (props: InputProps) => ObjectInterpolation<undefined> = ({
   markInvalid = false,
   placeholderTextTransform = 'uppercase',
+  disabled = false,
 }) => {
   const invalidDot = `
     <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
@@ -61,6 +62,8 @@ const inputStyle: (props: InputProps) => ObjectInterpolation<undefined> = ({
     },
     background: markInvalid
       ? `${COLOR.WHITE} url("${inlineSVG(invalidDot)}") no-repeat right 20px center`
+      : disabled
+      ? COLOR.shade(COLOR.WHITE, 0.06)
       : COLOR.WHITE,
     border: 'none',
     borderRadius: '4px',

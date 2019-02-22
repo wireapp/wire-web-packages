@@ -20,8 +20,9 @@
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import {COLOR} from '../Identity';
 import {inlineSVG} from '../util';
+import {InputProps, inputStyle} from './Input';
 
-export interface SelectProps<T = HTMLSelectElement> extends React.HTMLProps<T> {
+export interface SelectProps<T = HTMLSelectElement> extends InputProps<T> {
   disabled?: boolean;
 }
 
@@ -31,7 +32,8 @@ const ArrowDown = `
   </svg>
 `;
 
-const selectStyle: (props: SelectProps) => ObjectInterpolation<undefined> = ({disabled}) => ({
+const selectStyle: (props: SelectProps) => ObjectInterpolation<undefined> = ({disabled = false, ...props}) => ({
+  ...inputStyle(props as any),
   '&:-moz-focusring': {
     color: 'transparent',
     textShadow: '0 0 0 #000',
@@ -40,7 +42,9 @@ const selectStyle: (props: SelectProps) => ObjectInterpolation<undefined> = ({di
     color: COLOR.GRAY,
   },
   appearance: 'none',
-  background: disabled ? 'unset' : `center right 16px no-repeat url("${inlineSVG(ArrowDown)}")`,
+  background: disabled
+    ? COLOR.shade(COLOR.WHITE, 0.06)
+    : `${COLOR.WHITE} center right 16px no-repeat url("${inlineSVG(ArrowDown)}")`,
   cursor: disabled ? 'normal' : 'pointer',
   fontWeight: 300,
   paddingRight: '30px',

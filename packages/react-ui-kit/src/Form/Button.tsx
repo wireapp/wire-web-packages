@@ -94,18 +94,7 @@ const buttonLinkStyles: (props: ButtonProps<HTMLAnchorElement>) => ObjectInterpo
   truncate = true,
   ...props
 }) => ({
-  ...linkStyles({
-    block,
-    bold,
-    center,
-    color,
-    disabled,
-    fontSize,
-    noWrap,
-    textTransform,
-    truncate,
-    ...props,
-  }),
+  ...buttonStyles({backgroundColor, noCapital, ...props} as any),
   display: 'inline-block !important',
 });
 
