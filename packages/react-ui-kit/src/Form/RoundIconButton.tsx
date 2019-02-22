@@ -17,7 +17,7 @@
  *
  */
 /** @jsx jsx */
-import {jsx} from '@emotion/core';
+import {ObjectInterpolation, jsx} from '@emotion/core';
 import React from 'react';
 import {
   ArrowIcon,
@@ -29,22 +29,36 @@ import {
   PingIcon,
   PlaneIcon,
   ProfileIcon,
-  RoundContainer,
-  RoundContainerProps,
   TeamIcon,
   TimedIcon,
   TrashIcon,
 } from '../Icon';
 import {COLOR} from '../Identity';
-import {defaultTransition} from '../Identity/motions';
+import {ButtonProps, buttonStyles} from './Button';
 
-export interface RoundIconButtonProps<T = HTMLDivElement> extends RoundContainerProps<T> {
+export interface RoundIconButtonProps<T = HTMLButtonElement> extends ButtonProps<T> {
   icon?: ICON_NAME;
   iconColor?: string;
   iconHeight?: number;
   iconWidth?: number;
   disabled?: boolean;
 }
+
+const roundIconButtonStyle: (props: RoundIconButtonProps) => ObjectInterpolation<undefined> = props => ({
+  ...buttonStyles(props),
+  alignItems: 'center',
+  appearance: 'none',
+  border: 'none',
+  borderRadius: '50%',
+  display: 'flex',
+  height: `${props.size}px`,
+  justifyContent: 'center',
+  lineHeight: 'initial',
+  margin: '0 auto',
+  minWidth: `${props.size}px`,
+  padding: 0,
+  width: `${props.size}px`,
+});
 
 enum ICON_NAME {
   ARROW = 'arrow',
@@ -68,80 +82,61 @@ const RoundIconButton: React.SFC<RoundIconButtonProps> = ({
   iconWidth,
   children,
   ...props
-}) => {
-  const darkenAmount = 0.08;
-  return (
-    <RoundContainer
-      css={{
-        '&:hover, &:focus': {
-          backgroundColor: props.disabled ? COLOR.DISABLED : COLOR.shade(props.color, darkenAmount),
-        },
-        appearance: 'none',
-        backgroundColor: props.disabled ? COLOR.DISABLED : props.color,
-        cursor: props.disabled ? 'default' : 'pointer',
-        minWidth: `${props.size}px`,
-        outline: 'none',
-        padding: 0,
-        transition: defaultTransition,
-      }}
-      {...props}
-    >
-      {(() => {
-        switch (icon) {
-          case ICON_NAME.ATTACHMENT: {
-            return <AttachmentIcon color={iconColor} height={iconHeight} width={iconWidth} />;
-          }
-          case ICON_NAME.CHECK: {
-            return <CheckIcon color={iconColor} height={iconHeight} width={iconWidth} />;
-          }
-          case ICON_NAME.CLOSE: {
-            return <CloseIcon color={iconColor} height={iconHeight} width={iconWidth} />;
-          }
-          case ICON_NAME.GIF: {
-            return <GifIcon color={iconColor} height={iconHeight} width={iconWidth} />;
-          }
-          case ICON_NAME.IMAGE: {
-            return <ImageIcon color={iconColor} height={iconHeight} width={iconWidth} />;
-          }
-          case ICON_NAME.PING: {
-            return <PingIcon color={iconColor} height={iconHeight} width={iconWidth} />;
-          }
-          case ICON_NAME.PLANE: {
-            return <PlaneIcon color={iconColor} height={iconHeight} width={iconWidth} style={{marginLeft: 2}} />;
-          }
-          case ICON_NAME.PROFILE: {
-            const defaultSize = 24;
-            return (
-              <ProfileIcon color={iconColor} height={iconHeight || defaultSize} width={iconWidth || defaultSize} />
-            );
-          }
-          case ICON_NAME.TEAM: {
-            const defaultSize = 24;
-            return <TeamIcon color={iconColor} height={iconHeight || defaultSize} width={iconWidth || defaultSize} />;
-          }
-          case ICON_NAME.TIMED: {
-            return <TimedIcon color={iconColor} height={iconHeight} width={iconWidth} />;
-          }
-          case ICON_NAME.TRASH: {
-            return <TrashIcon color={iconColor} height={iconHeight} width={iconWidth} />;
-          }
-          case ICON_NAME.ARROW: {
-            return <ArrowIcon color={iconColor} height={iconHeight} width={iconWidth} />;
-          }
-          default: {
-            return null;
-          }
+}) => (
+  <button css={roundIconButtonStyle(props)} {...props}>
+    {(() => {
+      switch (icon) {
+        case ICON_NAME.ATTACHMENT: {
+          return <AttachmentIcon color={iconColor} height={iconHeight} width={iconWidth} />;
         }
-      })()}
-      {children}
-    </RoundContainer>
-  );
-};
+        case ICON_NAME.CHECK: {
+          return <CheckIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+        }
+        case ICON_NAME.CLOSE: {
+          return <CloseIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+        }
+        case ICON_NAME.GIF: {
+          return <GifIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+        }
+        case ICON_NAME.IMAGE: {
+          return <ImageIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+        }
+        case ICON_NAME.PING: {
+          return <PingIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+        }
+        case ICON_NAME.PLANE: {
+          return <PlaneIcon color={iconColor} height={iconHeight} width={iconWidth} style={{marginLeft: 2}} />;
+        }
+        case ICON_NAME.PROFILE: {
+          const defaultSize = 24;
+          return <ProfileIcon color={iconColor} height={iconHeight || defaultSize} width={iconWidth || defaultSize} />;
+        }
+        case ICON_NAME.TEAM: {
+          const defaultSize = 24;
+          return <TeamIcon color={iconColor} height={iconHeight || defaultSize} width={iconWidth || defaultSize} />;
+        }
+        case ICON_NAME.TIMED: {
+          return <TimedIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+        }
+        case ICON_NAME.TRASH: {
+          return <TrashIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+        }
+        case ICON_NAME.ARROW: {
+          return <ArrowIcon color={iconColor} height={iconHeight} width={iconWidth} />;
+        }
+        default: {
+          return null;
+        }
+      }
+    })()}
+    {children}
+  </button>
+);
 
 RoundIconButton.defaultProps = {
-  color: COLOR.BLUE,
+  backgroundColor: COLOR.BLUE,
   iconColor: COLOR.WHITE,
   size: 32,
 };
 
-export {RoundIconButton, ICON_NAME};
+export {RoundIconButton, ICON_NAME, roundIconButtonStyle};

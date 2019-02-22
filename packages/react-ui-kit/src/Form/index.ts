@@ -24,7 +24,6 @@ export * from './Input';
 export * from './InputSubmitCombo';
 export * from './InputBlock';
 export * from './RoundIconButton';
-export * from './RoundContainer';
 export * from './Select';
 export * from './CodeInput';
 export * from './ErrorMessage';

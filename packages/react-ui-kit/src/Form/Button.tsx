@@ -23,7 +23,7 @@ import {COLOR} from '../Identity';
 import {defaultTransition} from '../Identity/motions';
 import {TextProps, linkStyles, textStyles} from '../Text';
 
-interface ButtonProps<T = HTMLButtonElement> extends TextProps<T> {
+export interface ButtonProps<T = HTMLButtonElement> extends TextProps<T> {
   backgroundColor?: string;
   block?: boolean;
   disabled?: boolean;
@@ -124,4 +124,4 @@ const ButtonLink = ({
   />
 );
 
-export {Button, ButtonLink};
+export {Button, ButtonLink, buttonStyles};

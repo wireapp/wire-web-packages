@@ -18,6 +18,7 @@
  */
 /** @jsx jsx */
 import {jsx} from '@emotion/core';
+import {COLOR} from '../Identity';
 import {INPUT_CLASSNAME, InputProps} from './Input';
 
 export interface InputSubmitComboProps<T = HTMLDivElement> extends InputProps<T> {}
@@ -29,9 +30,10 @@ const InputSubmitCombo = (props: InputSubmitComboProps) => (
     className={INPUT_SUBMIT_COMBO_CLASSNAME}
     css={{
       alignItems: 'center',
+      backgroundColor: COLOR.WHITE,
       display: 'flex',
       justifyContent: 'space-between',
-      marginBottom: '16px',
+      marginBottom: '4px',
       paddingLeft: 0,
       paddingRight: '16px',
       [INPUT_CLASSNAME]: {
