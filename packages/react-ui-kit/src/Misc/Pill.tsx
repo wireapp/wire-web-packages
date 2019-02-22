@@ -21,6 +21,7 @@ import {ObjectInterpolation, jsx, keyframes} from '@emotion/core';
 import React from 'react';
 import {COLOR} from '../Identity';
 import {DURATION, EASE} from '../Identity/motions';
+import {filterProps} from '../util';
 
 export interface PillProps<T = HTMLSpanElement> extends React.HTMLProps<T> {
   active?: boolean;
@@ -69,8 +70,10 @@ const pillStyles: (props: PillProps) => ObjectInterpolation<undefined> = ({activ
   };
 };
 
+const filterPillProps = (props: Object) => filterProps(props, ['active']);
+
 const Pill = (props: PillProps) => (
-  <span css={pillStyles(props)} data-uie-name="element-pill" data-uie-status={props.type} {...props} />
+  <span css={pillStyles(props)} data-uie-name="element-pill" data-uie-status={props.type} {...filterPillProps(props)} />
 );
 
-export {Pill, PILL_TYPE, pillStyles};
+export {Pill, PILL_TYPE, pillStyles, filterPillProps};

@@ -21,6 +21,7 @@
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import {GlobalStyle} from '../GlobalStyle';
 import {COLOR} from '../Identity';
+import {filterProps} from '../util';
 
 export interface StyledAppContainerProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   backgroundColor?: string;
@@ -44,11 +45,11 @@ const StyledAppContainerStyles: (props: StyledAppContainerProps) => ObjectInterp
   minHeight: '100vh',
 });
 
-const StyledAppContainer = (props: StyledAppContainerProps) => <div css={StyledAppContainerStyles(props)} {...props} />;
+const filterStyledAppContainerProps = (props: Object) => filterProps(props, ['backgroundColor']);
 
-StyledAppContainer.defaultProps = {
-  backgroundColor: COLOR.GRAY_LIGHTEN_88,
-};
+const StyledAppContainer = (props: StyledAppContainerProps) => (
+  <div css={StyledAppContainerStyles(props)} {...filterStyledAppContainerProps(props)} />
+);
 
 const StyledApp = ({children, ...props}) => (
   <StyledAppContainer {...props}>

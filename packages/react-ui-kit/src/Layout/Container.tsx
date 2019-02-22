@@ -19,6 +19,7 @@
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import media, {QueryKeys} from '../mediaQueries';
+import {filterProps} from '../util';
 import {GUTTER, WIDTH} from './sizes';
 
 export interface ContainerProps<T = HTMLDivElement> extends React.HTMLProps<T> {
@@ -61,7 +62,9 @@ const containerStyles: (props: ContainerProps) => ObjectInterpolation<undefined>
       },
 });
 
-const Container = (props: ContainerProps) => <div css={containerStyles(props)} {...props} />;
+const filterContainerProps = (props: Object) => filterProps(props, ['centerText', 'level', 'verticalCenter']);
+
+const Container = (props: ContainerProps) => <div css={containerStyles(props)} {...filterContainerProps(props)} />;
 
 const ContainerLG = (props: ContainerProps) => <Container level={'lg'} {...props} />;
 const ContainerMD = (props: ContainerProps) => <Container level={'md'} {...props} />;

@@ -20,6 +20,7 @@
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import React from 'react';
 import {COLOR} from '../Identity';
+import {filterProps} from '../util';
 
 interface ToolTipProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   bottom?: boolean;
@@ -73,6 +74,10 @@ const tooltipStyle: (props: ToolTipProps) => ObjectInterpolation<undefined> = ({
   position: 'relative',
 });
 
-const Tooltip = ({text = '', ...props}: ToolTipProps) => <div css={tooltipStyle(props)} data-text={text} {...props} />;
+const filterMenuLinkProps = (props: Object) => filterProps(props, ['bottom', 'disabled', 'left', 'light', 'right']);
+
+const Tooltip = ({text = '', ...props}: ToolTipProps) => (
+  <div css={tooltipStyle(props)} data-text={text} {...filterMenuLinkProps(props)} />
+);
 
 export {Tooltip};
