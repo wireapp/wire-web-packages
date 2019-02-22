@@ -17,8 +17,7 @@
  *
  */
 /** @jsx jsx */
-import {jsx} from '@emotion/core';
-import {ObjectInterpolation} from '@emotion/styled';
+import {ObjectInterpolation, jsx} from '@emotion/core';
 import {COLOR} from '../Identity';
 import {defaultTransition} from '../Identity/motions';
 import {TextProps, linkStyles, textStyles} from '../Text';

@@ -17,8 +17,7 @@
  *
  */
 /** @jsx jsx */
-import {jsx} from '@emotion/core';
-import {ObjectInterpolation} from '@emotion/styled';
+import {ObjectInterpolation, jsx} from '@emotion/core';
 import media, {QueryKeys} from '../mediaQueries';
 import {TextProps, filterTextProps, textStyles} from './Text';
 

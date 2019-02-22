@@ -17,8 +17,7 @@
  *
  */
 /** @jsx jsx */
-import {jsx} from '@emotion/core';
-import {ObjectInterpolation} from '@emotion/styled';
+import {ObjectInterpolation, jsx} from '@emotion/core';
 import {COLOR} from '../Identity';
 import {LinkProps, linkStyles} from './Link';
 import {TextProps, filterTextProps, textStyles} from './Text';
