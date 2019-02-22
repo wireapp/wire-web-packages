@@ -28,8 +28,15 @@ interface HeadingProps<T = HTMLHeadingElement> extends TextProps<T> {
   level?: string;
 }
 
-const h1Styles: (props: HeadingProps) => ObjectInterpolation<undefined> = props => ({
-  ...textStyles(props),
+const h1Styles: (props: HeadingProps) => ObjectInterpolation<undefined> = ({
+  block = true,
+  color = COLOR.TEXT,
+  level = '1',
+  noWrap = false,
+  textTransform = 'none',
+  ...props
+}) => ({
+  ...textStyles({block, color, noWrap, textTransform, ...props}),
   fontSize: '48px',
   fontWeight: 300,
   lineHeight: '56px',
@@ -44,8 +51,14 @@ const h1Styles: (props: HeadingProps) => ObjectInterpolation<undefined> = props 
 
 const H1 = (props: HeadingProps) => <h1 css={h1Styles(props)} {...filterTextProps(props)} />;
 
-const h2Styles: (props: HeadingProps) => ObjectInterpolation<undefined> = props => ({
-  ...textStyles(props),
+const h2Styles: (props: HeadingProps) => ObjectInterpolation<undefined> = ({
+  block = true,
+  color = COLOR.TEXT,
+  noWrap = false,
+  textTransform = 'none',
+  ...props
+}) => ({
+  ...textStyles({block, color, noWrap, textTransform, ...props}),
   fontSize: '24px',
   fontWeight: 700,
   lineHeight: '32px',
@@ -61,8 +74,14 @@ const h2Styles: (props: HeadingProps) => ObjectInterpolation<undefined> = props 
 
 const H2 = (props: HeadingProps) => <h2 css={h2Styles(props)} {...filterTextProps(props)} />;
 
-const h3Styles: (props: HeadingProps) => ObjectInterpolation<undefined> = props => ({
-  ...textStyles(props),
+const h3Styles: (props: HeadingProps) => ObjectInterpolation<undefined> = ({
+  block = true,
+  color = COLOR.TEXT,
+  noWrap = false,
+  textTransform = 'none',
+  ...props
+}) => ({
+  ...textStyles({block, color, noWrap, textTransform, ...props}),
   fontSize: '16px',
   fontWeight: 600,
   marginBottom: '16px',
@@ -70,8 +89,14 @@ const h3Styles: (props: HeadingProps) => ObjectInterpolation<undefined> = props 
 
 const H3 = (props: HeadingProps) => <h3 css={h3Styles(props)} {...filterTextProps(props)} />;
 
-const h4Styles: (props: HeadingProps) => ObjectInterpolation<undefined> = props => ({
-  ...textStyles(props),
+const h4Styles: (props: HeadingProps) => ObjectInterpolation<undefined> = ({
+  block = true,
+  color = COLOR.TEXT,
+  noWrap = false,
+  textTransform = 'none',
+  ...props
+}) => ({
+  ...textStyles({block, color, noWrap, textTransform, ...props}),
   fontSize: '11px',
   fontWeight: 300,
   marginBottom: '5px',
@@ -93,15 +118,5 @@ const Heading = ({level, ...props}) => {
       return <H1 {...props} />;
   }
 };
-
-Heading.defaultProps = {
-  block: true,
-  color: COLOR.TEXT,
-  level: '1',
-  noWrap: false,
-  textTransform: 'none',
-};
-
-H1.defaultProps = H2.defaultProps = H3.defaultProps = H4.defaultProps = Heading.defaultProps;
 
 export {Heading, H1, H2, H3, H4};

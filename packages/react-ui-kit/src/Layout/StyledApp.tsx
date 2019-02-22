@@ -26,13 +26,15 @@ export interface StyledAppContainerProps<T = HTMLDivElement> extends React.HTMLP
   backgroundColor?: string;
 }
 
-const StyledAppContainerStyles: (props: StyledAppContainerProps) => ObjectInterpolation<undefined> = props => ({
+const StyledAppContainerStyles: (props: StyledAppContainerProps) => ObjectInterpolation<undefined> = ({
+  backgroundColor = COLOR.GRAY_LIGHTEN_88,
+}) => ({
   '*': {
     boxSizing: 'border-box',
   },
   MozOsxFontSmoothing: 'grayscale',
   WebkitFontSmoothing: 'antialiased',
-  backgroundColor: props.backgroundColor,
+  backgroundColor: backgroundColor,
   color: COLOR.TEXT,
   display: 'flex',
   flexDirection: 'column',
@@ -42,9 +44,7 @@ const StyledAppContainerStyles: (props: StyledAppContainerProps) => ObjectInterp
   minHeight: '100vh',
 });
 
-const StyledAppContainer = ({backgroundColor = COLOR.GRAY_LIGHTEN_88, ...props}: StyledAppContainerProps) => (
-  <div css={StyledAppContainerStyles({backgroundColor, ...props})} {...props} />
-);
+const StyledAppContainer = (props: StyledAppContainerProps) => <div css={StyledAppContainerStyles(props)} {...props} />;
 
 StyledAppContainer.defaultProps = {
   backgroundColor: COLOR.GRAY_LIGHTEN_88,

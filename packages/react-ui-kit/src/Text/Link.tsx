@@ -28,9 +28,16 @@ export interface LinkProps<T = HTMLAnchorElement> extends TextProps<T> {
   component?: React.ComponentType | string;
 }
 
-const linkStyles: (props: LinkProps) => ObjectInterpolation<undefined> = props => {
+const linkStyles: (props: LinkProps) => ObjectInterpolation<undefined> = ({
+  bold = true,
+  color = COLOR.LINK,
+  fontSize = '11px',
+  textTransform = 'uppercase',
+  children,
+  ...props
+}) => {
   const darker = 0.16;
-  const hoverColor = Color(props.color)
+  const hoverColor = Color(color)
     .mix(Color(COLOR.BLACK), darker)
     .toString();
   return {
@@ -39,9 +46,9 @@ const linkStyles: (props: LinkProps) => ObjectInterpolation<undefined> = props =
       color: hoverColor,
     },
     '&:visited, &:link, &:active': {
-      color: props.color,
+      color: color,
     },
-    color: props.color,
+    color: color,
     cursor: 'pointer',
     textDecoration: 'none',
     transition: defaultTransition,
@@ -50,19 +57,7 @@ const linkStyles: (props: LinkProps) => ObjectInterpolation<undefined> = props =
 
 const filterLinkProps = (props: Object) => filterProps(filterTextProps(props), ['component']);
 
-const Link = ({
-  bold = true,
-  color = COLOR.LINK,
-  component = 'a',
-  fontSize = '11px',
-  textTransform = 'uppercase',
-  children,
-  ...props
-}: LinkProps) =>
-  jsx(
-    component,
-    {css: linkStyles({bold, color, component, fontSize, textTransform, ...props}), ...filterLinkProps(props)} as any,
-    children
-  );
+const Link = ({component = 'a', ...props}: LinkProps) =>
+  jsx(component, {css: linkStyles(props), ...filterLinkProps(props)} as any, props.children);
 
 export {Link, linkStyles, filterLinkProps};

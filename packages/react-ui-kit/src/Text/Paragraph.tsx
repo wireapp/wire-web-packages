@@ -24,20 +24,23 @@ import {TextProps, filterTextProps, textStyles} from './Text';
 
 export interface ParagraphProps<T = HTMLParagraphElement> extends TextProps<T> {}
 
-const paragraphStyles: (props: ParagraphProps) => ObjectInterpolation<undefined> = props => ({
-  ...textStyles(props),
+const paragraphStyles: (props: ParagraphProps) => ObjectInterpolation<undefined> = ({block = true, ...props}) => ({
+  ...textStyles({block, ...props}),
   marginBottom: '16px',
   marginTop: 0,
 });
 
-const Paragraph = ({block = true, ...props}: ParagraphProps) => (
-  <p css={paragraphStyles({block, ...props})} {...filterTextProps(props)} />
-);
+const Paragraph = (props: ParagraphProps) => <p css={paragraphStyles(props)} {...filterTextProps(props)} />;
 
 export interface LeadProps<T = HTMLParagraphElement> extends TextProps<T> {}
 
-const leadStyles: (props: LeadProps) => ObjectInterpolation<undefined> = props => ({
-  ...textStyles(props),
+const leadStyles: (props: LeadProps) => ObjectInterpolation<undefined> = ({
+  block = true,
+  center = true,
+  fontSize = '24px',
+  ...props
+}) => ({
+  ...textStyles({block, center, fontSize, ...props}),
   marginBottom: '56px',
   marginTop: 0,
   [media[QueryKeys.MOBILE]]: {
@@ -45,8 +48,6 @@ const leadStyles: (props: LeadProps) => ObjectInterpolation<undefined> = props =
   },
 });
 
-const Lead = ({block = true, center = true, fontSize = '24px', ...props}: LeadProps) => (
-  <p css={leadStyles({block, center, fontSize, ...props})} {...filterTextProps(props)} />
-);
+const Lead = (props: LeadProps) => <p css={leadStyles(props)} {...filterTextProps(props)} />;
 
 export {Paragraph, paragraphStyles, Lead, leadStyles};

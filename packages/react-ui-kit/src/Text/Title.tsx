@@ -24,19 +24,18 @@ import {TextProps, filterTextProps, textStyles} from './Text';
 
 export interface TitleProps<T = HTMLDivElement> extends TextProps<T> {}
 
-const titleStyles: (props: TitleProps) => ObjectInterpolation<undefined> = props => ({
-  ...textStyles(props),
-  color: COLOR.GRAY,
-  fontWeight: 600,
+const titleStyles: (props: TitleProps) => ObjectInterpolation<undefined> = ({
+  block = true,
+  center = true,
+  fontSize = '32px',
+  color = COLOR.GRAY,
+  bold = true,
+  ...props
+}) => ({
+  ...textStyles({bold, block, color, center, fontSize, ...props}),
   marginBottom: '8px',
 });
 
 const Title = (props: TitleProps) => <div css={titleStyles(props)} {...filterTextProps(props)} />;
-
-Title.defaultProps = {
-  block: true,
-  center: true,
-  fontSize: '32px',
-};
 
 export {Title};

@@ -51,20 +51,7 @@ const filterTextProps = (props: Object) => {
   ]);
 };
 
-export const textStyles: (props: TextProps) => ObjectInterpolation<undefined> = props => ({
-  color: props.color,
-  display: props.block ? 'block' : 'inline',
-  fontSize: props.fontSize,
-  fontWeight: props.bold ? 600 : props.light ? 200 : 300,
-  opacity: props.muted ? 0.56 : 1,
-  overflow: props.truncate ? 'hidden' : undefined,
-  textAlign: props.center ? 'center' : 'left',
-  textOverflow: props.truncate ? 'ellipsis' : undefined,
-  textTransform: props.textTransform,
-  whiteSpace: props.noWrap ? 'nowrap' : undefined,
-});
-
-const Text = ({
+export const textStyles: (props: TextProps) => ObjectInterpolation<undefined> = ({
   block = false,
   bold = false,
   center = false,
@@ -75,25 +62,20 @@ const Text = ({
   noWrap = false,
   textTransform = 'none',
   truncate = false,
-  ...props
-}: TextProps) => (
-  <span
-    css={textStyles({
-      block,
-      bold,
-      center,
-      color,
-      fontSize,
-      light,
-      muted,
-      noWrap,
-      textTransform,
-      truncate,
-      ...props,
-    })}
-    {...filterTextProps(props)}
-  />
-);
+}) => ({
+  color: color,
+  display: block ? 'block' : 'inline',
+  fontSize: fontSize,
+  fontWeight: bold ? 600 : light ? 200 : 300,
+  opacity: muted ? 0.56 : 1,
+  overflow: truncate ? 'hidden' : undefined,
+  textAlign: center ? 'center' : 'left',
+  textOverflow: truncate ? 'ellipsis' : undefined,
+  textTransform: textTransform,
+  whiteSpace: noWrap ? 'nowrap' : undefined,
+});
+
+const Text = (props: TextProps) => <span css={textStyles(props)} {...filterTextProps(props)} />;
 
 const Bold = (props: TextProps) => <Text bold {...props} />;
 const Small = (props: TextProps) => <Text fontSize={'12px'} {...props} />;

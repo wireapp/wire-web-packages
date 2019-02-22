@@ -25,22 +25,25 @@ import {TextProps, filterTextProps, textStyles} from './Text';
 
 export interface LabelProps<T = HTMLSpanElement> extends TextProps<T> {}
 
-const labelStyles: (props: LabelProps) => ObjectInterpolation<undefined> = props => ({
-  ...textStyles(props),
+const labelStyles: (props: LabelProps) => ObjectInterpolation<undefined> = ({
+  bold = true,
+  color = COLOR.LINK,
+  fontSize = '12px',
+  ...props
+}) => ({
+  ...textStyles({bold, color, fontSize, ...props}),
 });
 
-const Label = ({bold = true, color = COLOR.LINK, fontSize = '12px', ...props}: LabelProps) => (
-  <span css={labelStyles({bold, color, fontSize, ...props})} {...filterTextProps(props)} />
-);
+const Label = (props: LabelProps) => <span css={labelStyles(props)} {...filterTextProps(props)} />;
 
 export interface LabelLinkProps<T = HTMLAnchorElement> extends LinkProps<T> {}
 
-const labelLinkStyles: (props: LabelLinkProps) => ObjectInterpolation<undefined> = props => ({
-  ...linkStyles(props),
+const labelLinkStyles: (props: LabelLinkProps) => ObjectInterpolation<undefined> = ({fontSize = '12px', ...props}) => ({
+  ...linkStyles({fontSize, ...props}),
 });
 
-const LabelLink = ({bold = true, color = COLOR.LINK, fontSize = '12px', ...props}: LabelProps<HTMLAnchorElement>) => (
-  <a css={labelLinkStyles({bold, color, fontSize, ...props})} {...filterTextProps(props)} />
+const LabelLink = (props: LabelProps<HTMLAnchorElement>) => (
+  <a css={labelLinkStyles(props)} {...filterTextProps(props)} />
 );
 
 export {Label, LabelLink};

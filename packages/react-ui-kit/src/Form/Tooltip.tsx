@@ -31,11 +31,11 @@ interface ToolTipProps<T = HTMLDivElement> extends React.HTMLProps<T> {
 }
 
 const tooltipStyle: (props: ToolTipProps) => ObjectInterpolation<undefined> = ({
-  bottom,
-  left,
-  right,
-  light,
-  disabled,
+  disabled = false,
+  bottom = false,
+  left = false,
+  right = false,
+  light = false,
 }) => ({
   '&::after': {
     backgroundColor: light ? COLOR.WHITE : COLOR.TEXT,
@@ -73,8 +73,6 @@ const tooltipStyle: (props: ToolTipProps) => ObjectInterpolation<undefined> = ({
   position: 'relative',
 });
 
-const Tooltip = ({bottom = false, left = false, right = false, light = false, text = '', ...props}: ToolTipProps) => (
-  <div css={tooltipStyle({bottom, left, right, light, ...props})} data-text={text} {...props} />
-);
+const Tooltip = ({text = '', ...props}: ToolTipProps) => <div css={tooltipStyle(props)} data-text={text} {...props} />;
 
 export {Tooltip};

@@ -44,13 +44,17 @@ const LEVEL: Level = {
   xxs: WIDTH.TINY,
 };
 
-const containerStyles: (props: ContainerProps) => ObjectInterpolation<undefined> = props => ({
-  margin: props.verticalCenter ? 'auto' : '0 auto',
-  maxWidth: props.level ? `${LEVEL[props.level]}px` : undefined,
+const containerStyles: (props: ContainerProps) => ObjectInterpolation<undefined> = ({
+  centerText = false,
+  level = undefined,
+  verticalCenter = false,
+}) => ({
+  margin: verticalCenter ? 'auto' : '0 auto',
+  maxWidth: level ? `${LEVEL[level]}px` : undefined,
   position: 'relative',
-  textAlign: props.centerText ? 'center' : 'left',
+  textAlign: centerText ? 'center' : 'left',
   width: '100%',
-  [media[QueryKeys.DESKTOP]]: props.level
+  [media[QueryKeys.DESKTOP]]: level
     ? undefined
     : {
         padding: 0,
@@ -58,9 +62,7 @@ const containerStyles: (props: ContainerProps) => ObjectInterpolation<undefined>
       },
 });
 
-const Container = ({centerText = false, level = undefined, verticalCenter = false, ...props}: ContainerProps) => (
-  <div css={containerStyles({centerText, level, verticalCenter, ...props})} {...props} />
-);
+const Container = (props: ContainerProps) => <div css={containerStyles(props)} {...props} />;
 
 const ContainerLG = (props: ContainerProps) => <Container level={'lg'} {...props} />;
 const ContainerMD = (props: ContainerProps) => <Container level={'md'} {...props} />;

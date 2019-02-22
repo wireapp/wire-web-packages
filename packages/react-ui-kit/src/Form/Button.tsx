@@ -26,8 +26,6 @@ import {filterProps} from '../util';
 
 export interface ButtonProps<T = HTMLButtonElement> extends TextProps<T> {
   backgroundColor?: string;
-  block?: boolean;
-  disabled?: boolean;
   noCapital?: boolean;
 }
 
@@ -35,16 +33,40 @@ const filterButtonProps = (props: Object) => {
   return filterProps(props, ['backgroundColor', 'block', 'disabled', 'noCapital']);
 };
 
-const buttonStyles: (props: ButtonProps) => ObjectInterpolation<undefined> = props => ({
-  ...textStyles(props),
+const buttonStyles: (props: ButtonProps) => ObjectInterpolation<undefined> = ({
+  backgroundColor = COLOR.BLUE,
+  block = false,
+  disabled = false,
+  noCapital = false,
+  bold = true,
+  center = true,
+  color = COLOR.WHITE,
+  fontSize = '16px',
+  noWrap = true,
+  textTransform = 'uppercase',
+  truncate = true,
+  ...props
+}) => ({
+  ...textStyles({
+    block,
+    bold,
+    center,
+    color,
+    disabled,
+    fontSize,
+    noWrap,
+    textTransform,
+    truncate,
+    ...props,
+  }),
   '&:hover, &:focus': {
-    backgroundColor: props.disabled ? COLOR.DISABLED : COLOR.shade(props.backgroundColor, 0.06),
+    backgroundColor: disabled ? COLOR.DISABLED : COLOR.shade(backgroundColor, 0.06),
     textDecoration: 'none',
   },
-  backgroundColor: props.disabled ? COLOR.DISABLED : props.backgroundColor,
+  backgroundColor: disabled ? COLOR.DISABLED : backgroundColor,
   border: 0,
   borderRadius: '8px',
-  cursor: props.disabled ? 'default' : 'pointer',
+  cursor: disabled ? 'default' : 'pointer',
   display: 'inline-block',
   height: '48px',
   lineHeight: '48px',
@@ -56,77 +78,41 @@ const buttonStyles: (props: ButtonProps) => ObjectInterpolation<undefined> = pro
   textDecoration: 'none',
   touchAction: 'manipulation',
   transition: defaultTransition,
-  width: props.block ? '100%' : 'auto',
+  width: block ? '100%' : 'auto',
 });
 
-const buttonLinkStyles: (props: ButtonProps<HTMLAnchorElement>) => ObjectInterpolation<undefined> = props => ({
-  ...linkStyles(props),
+const buttonLinkStyles: (props: ButtonProps<HTMLAnchorElement>) => ObjectInterpolation<undefined> = ({
+  backgroundColor = COLOR.BLUE,
+  block = true,
+  bold = true,
+  center = true,
+  color = COLOR.WHITE,
+  disabled = false,
+  fontSize = '16px',
+  noCapital = false,
+  noWrap = true,
+  textTransform = 'uppercase',
+  truncate = true,
+  ...props
+}) => ({
+  ...linkStyles({
+    block,
+    bold,
+    center,
+    color,
+    disabled,
+    fontSize,
+    noWrap,
+    textTransform,
+    truncate,
+    ...props,
+  }),
   display: 'inline-block !important',
 });
 
-const Button = ({
-  backgroundColor = COLOR.BLUE,
-  block = false,
-  bold = true,
-  center = true,
-  color = COLOR.WHITE,
-  disabled = false,
-  fontSize = '16px',
-  noCapital = false,
-  noWrap = true,
-  textTransform = 'uppercase',
-  truncate = true,
-  ...props
-}: ButtonProps) => (
-  <button
-    css={buttonStyles({
-      backgroundColor,
-      block,
-      bold,
-      center,
-      color,
-      disabled,
-      fontSize,
-      noCapital,
-      noWrap,
-      textTransform,
-      truncate,
-      ...props,
-    })}
-    {...filterButtonProps(props)}
-  />
-);
-const ButtonLink = ({
-  backgroundColor = COLOR.BLUE,
-  block,
-  bold = true,
-  center = true,
-  color = COLOR.WHITE,
-  disabled = false,
-  fontSize = '16px',
-  noCapital = false,
-  noWrap = true,
-  textTransform = 'uppercase',
-  truncate = true,
-  ...props
-}: ButtonProps<HTMLAnchorElement>) => (
-  <a
-    css={buttonLinkStyles({
-      backgroundColor,
-      block,
-      bold,
-      center,
-      color,
-      disabled,
-      fontSize,
-      noCapital,
-      noWrap,
-      textTransform,
-      truncate,
-      ...props,
-    })}
-    {...filterButtonProps(props)}
-  />
+const Button = (props: ButtonProps) => <button css={buttonStyles(props)} {...filterButtonProps(props)} />;
+const ButtonLink = (props: ButtonProps<HTMLAnchorElement>) => (
+  <a css={buttonLinkStyles(props)} {...filterButtonProps(props)} />
 );
 
 export {Button, ButtonLink, buttonStyles, filterButtonProps};

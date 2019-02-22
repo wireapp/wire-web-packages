@@ -22,14 +22,17 @@ import {TextTransformProperty} from 'csstype';
 import React from 'react';
 import {COLOR} from '../Identity';
 import {TextProps} from '../Text';
-import {inlineSVG} from '../util';
+import {filterProps, inlineSVG} from '../util';
 
 export interface InputProps<T = HTMLInputElement> extends TextProps<T> {
   markInvalid?: boolean;
   placeholderTextTransform?: TextTransformProperty;
 }
 
-const inputStyle: (props: InputProps) => ObjectInterpolation<undefined> = props => {
+const inputStyle: (props: InputProps) => ObjectInterpolation<undefined> = ({
+  markInvalid = false,
+  placeholderTextTransform = 'uppercase',
+}) => {
   const invalidDot = `
     <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
       <circle cx="4" cy="4" r="4" fill="${COLOR.RED}" />
@@ -39,7 +42,7 @@ const inputStyle: (props: InputProps) => ObjectInterpolation<undefined> = props 
   const placeholderStyle = {
     color: COLOR.GRAY_DARKEN_24,
     fontSize: '11px',
-    textTransform: props.placeholderTextTransform,
+    textTransform: placeholderTextTransform,
   };
 
   return {
@@ -56,7 +59,7 @@ const inputStyle: (props: InputProps) => ObjectInterpolation<undefined> = props 
     '&:invalid': {
       boxShadow: 'none',
     },
-    background: props.markInvalid
+    background: markInvalid
       ? `${COLOR.WHITE} url("${inlineSVG(invalidDot)}") no-repeat right 20px center`
       : COLOR.WHITE,
     border: 'none',
@@ -74,20 +77,10 @@ const inputStyle: (props: InputProps) => ObjectInterpolation<undefined> = props 
 };
 
 const INPUT_CLASSNAME = 'input';
+const filterInputProps = (props: Object) => filterProps(props, ['markInvalid', 'placeholderTextTransform']);
 
-const Input = React.forwardRef(
-  (
-    {markInvalid = false, placeholderTextTransform = 'uppercase', ...props}: InputProps,
-    ref: React.Ref<HTMLInputElement>
-  ) => (
-    <input
-      className={INPUT_CLASSNAME}
-      css={inputStyle({markInvalid, placeholderTextTransform, ...props})}
-      ref={ref}
-      type={props.type}
-      {...props}
-    />
-  )
-);
+const Input = React.forwardRef(({type, ...props}: InputProps, ref: React.Ref<HTMLInputElement>) => (
+  <input className={INPUT_CLASSNAME} css={inputStyle(props)} ref={ref} type={type} {...filterInputProps(props)} />
+));
 
 export {INPUT_CLASSNAME, Input, inputStyle};
