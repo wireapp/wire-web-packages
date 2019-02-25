@@ -19,19 +19,19 @@
 
 import EventEmitter from 'events';
 import logdown from 'logdown';
+import ReconnectingWebSocket, {Options} from 'reconnecting-websocket';
+import NodeWebSocket = require('ws');
+import {AccessTokenData} from '../auth';
 import {IncomingNotification} from '../conversation/';
 import {HttpClient, NetworkError} from '../http/';
-
-import Html5WebSocket from 'html5-websocket';
 import * as buffer from '../shims/node/buffer';
-const ReconnectingWebsocket = require('reconnecting-websocket');
 
 class WebSocketClient extends EventEmitter {
   private clientId: string | undefined;
 
   private readonly logger: logdown.Logger;
 
-  private socket: WebSocket | undefined;
+  private socket: ReconnectingWebSocket | undefined;
 
   public static CLOSE_EVENT_CODE = {
     GOING_AWAY: 1001,
@@ -40,9 +40,9 @@ class WebSocketClient extends EventEmitter {
     UNSUPPORTED_DATA: 1003,
   };
 
-  public static RECONNECTING_OPTIONS = {
+  public static RECONNECTING_OPTIONS: Options = {
+    WebSocket: typeof window !== 'undefined' ? WebSocket : NodeWebSocket,
     connectionTimeout: 4000,
-    constructor: typeof window !== 'undefined' ? WebSocket : Html5WebSocket,
     debug: false,
     maxReconnectionDelay: 10000,
     maxRetries: Infinity,
@@ -76,19 +76,15 @@ class WebSocketClient extends EventEmitter {
   public connect(clientId?: string): Promise<WebSocketClient> {
     this.clientId = clientId;
 
-    this.socket = new ReconnectingWebsocket(
-      () => this.buildWebSocketURL(),
-      undefined,
-      WebSocketClient.RECONNECTING_OPTIONS
-    );
+    this.socket = new ReconnectingWebSocket(this.buildWebSocketURL, undefined, WebSocketClient.RECONNECTING_OPTIONS);
 
     if (this.socket) {
-      this.socket.onmessage = (event: MessageEvent) => {
+      this.socket.onmessage = (event: MessageEvent): void => {
         const notification: IncomingNotification = JSON.parse(buffer.bufferToString(event.data));
         this.emit(WebSocketClient.TOPIC.ON_MESSAGE, notification);
       };
 
-      this.socket.onerror = () =>
+      this.socket.onerror = (): Promise<void | AccessTokenData> =>
         this.client.refreshAccessToken().catch(error => {
           if (error instanceof NetworkError) {
             this.logger.warn(error);
@@ -97,7 +93,11 @@ class WebSocketClient extends EventEmitter {
           }
         });
 
-      this.socket.onopen = () => (this.socket ? (this.socket.binaryType = 'arraybuffer') : undefined);
+      this.socket.onopen = (): void => {
+        if (this.socket) {
+          this.socket.binaryType = 'arraybuffer';
+        }
+      };
     }
 
     return Promise.resolve(this);

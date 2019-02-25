@@ -1,6 +1,5 @@
 {
   "browser": {
-    "html5-websocket": "./dist/commonjs/shims/browser/websocket.js",
     "./dist/commonjs/shims/node/buffer": "./dist/commonjs/shims/browser/buffer.js",
     "./dist/commonjs/shims/node/cookie": "./dist/commonjs/shims/browser/cookie.js"
   },
@@ -8,14 +7,15 @@
     "@types/node": "11.9.5",
     "@types/spark-md5": "3.0.1",
     "@types/tough-cookie": "2.3.5",
+    "@types/ws": "6.0.1",
     "@wireapp/priority-queue": "0.2.64",
     "@wireapp/store-engine": "1.1.25",
     "axios": "0.18.0",
-    "html5-websocket": "2.0.4",
     "logdown": "3.2.7",
-    "reconnecting-websocket": "3.2.2",
+    "reconnecting-websocket": "4.1.10",
     "spark-md5": "3.0.0",
-    "tough-cookie": "3.0.1"
+    "tough-cookie": "3.0.1",
+    "ws": "6.1.4"
   },
   "devDependencies": {
     "@babel/core": "7.3.3",
