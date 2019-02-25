@@ -5,7 +5,7 @@
   "dependencies": {
     "@types/generate-changelog": "1.7.0",
     "@types/node": "11.9.4",
-    "@wireapp/core": "8.1.15",
+    "@wireapp/core": "8.1.17",
     "commander": "2.19.0",
     "generate-changelog": "1.7.1"
   },
@@ -13,7 +13,7 @@
   "devDependencies": {
     "logdown": "3.2.7",
     "rimraf": "2.6.3",
-    "typescript": "3.3.3"
+    "typescript": "3.3.3333"
   },
   "files": [
     "dist"
@@ -31,5 +31,5 @@
     "test:project": "yarn dist && yarn test"
   },
   "types": "dist/ChangelogBot.d.ts",
-  "version": "2.1.6"
+  "version": "2.1.8"
 }
