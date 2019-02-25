@@ -44,10 +44,13 @@ const {FileEngine} = require('@wireapp/store-engine');
   const backend = process.env.WIRE_BACKEND === 'staging' ? APIClient.BACKEND.STAGING : APIClient.BACKEND.PRODUCTION;
   const engine = new FileEngine(path.join(__dirname, '.tmp', 'sender'));
   await engine.init(undefined, {fileExtension: '.json'});
+
   const apiClient = new APIClient({store: engine, urls: backend});
   const account = new Account(apiClient);
   await account.login(login);
   await account.listen();
+
+  account.on('error', error => logger.error(error));
 
   const name = await account.service.self.getName();
 
@@ -163,20 +166,16 @@ const {FileEngine} = require('@wireapp/store-engine');
 
     const {id: messageId} = await account.service.conversation.send(CONVERSATION_ID, textPayload);
 
-    const sha256String = crypto
-      .createHash('sha256')
-      .update(text)
-      .digest('hex');
-    const quotedMessageSha256 = new Uint8Array(Buffer.from(sha256String));
-
     const quoteText = 'Hello again';
+
+    const quote = {
+      content: textPayload.content,
+      quotedMessageId: messageId,
+    };
 
     const quotePayload = account.service.conversation
       .createText(quoteText)
-      .withQuote({
-        quotedMessageId: messageId,
-        quotedMessageSha256,
-      })
+      .withQuote(quote, textPayload.timestamp)
       .build();
 
     await account.service.conversation.send(CONVERSATION_ID, quotePayload);

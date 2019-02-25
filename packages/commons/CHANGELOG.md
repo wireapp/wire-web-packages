@@ -3,6 +3,173 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@1.0.7...@wireapp/commons@1.0.8) (2019-02-25)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [1.0.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@1.0.6...@wireapp/commons@1.0.7) (2019-02-19)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [1.0.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@1.0.5...@wireapp/commons@1.0.6) (2019-02-14)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Update style-components types ([#1523](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/issues/1523)) ([4c82a79](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/commit/4c82a79))
+
+
+
+
+
+## [1.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@1.0.4...@wireapp/commons@1.0.5) (2019-02-14)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [1.0.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@1.0.3...@wireapp/commons@1.0.4) (2019-01-29)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [1.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@1.0.2...@wireapp/commons@1.0.3) (2019-01-24)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [1.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@1.0.1...@wireapp/commons@1.0.2) (2019-01-17)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [1.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@1.0.0...@wireapp/commons@1.0.1) (2019-01-03)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+# [1.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.11.1...@wireapp/commons@1.0.0) (2019-01-03)
+
+
+### Features
+
+* **commons:** Add convenience method to create a logger name ([#1427](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/issues/1427)) ([afa03ef](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/commit/afa03ef))
+
+
+### BREAKING CHANGES
+
+* **commons:** `LogFactory.NAMESPACE` got removed. To add a namespace to your logger instance, simply call `LogFactory.getLogger('MyLogger', {namespace: 'MyPackage'})`.
+
+
+
+
+
+## [0.11.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.11.0...@wireapp/commons@0.11.1) (2019-01-02)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+# [0.11.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.10.5...@wireapp/commons@0.11.0) (2018-12-21)
+
+
+### Features
+
+* **commons:** Add factory for loggers ([#1395](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/issues/1395)) ([a604a8c](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/commit/a604a8c))
+
+
+
+
+
+## [0.10.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.10.4...@wireapp/commons@0.10.5) (2018-12-20)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.10.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.10.3...@wireapp/commons@0.10.4) (2018-12-17)
+
+
+### Bug Fixes
+
+* Improved isUUIDv4 check ([#1391](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/issues/1391)) ([f515e8b](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/commit/f515e8b))
+
+
+
+
+
+## [0.10.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.10.2...@wireapp/commons@0.10.3) (2018-12-07)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.10.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.10.1...@wireapp/commons@0.10.2) (2018-12-06)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [0.10.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.10.0...@wireapp/commons@0.10.1) (2018-12-03)
+
+
+### Bug Fixes
+
+* **commons:** Add edge to the list of supported browsers ([#1359](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/issues/1359)) ([8b17f1d](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/commit/8b17f1d))
+
+
+
+
+
+# [0.10.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.17...@wireapp/commons@0.10.0) (2018-11-30)
+
+
+### Features
+
+* **commons:** Account pages languages & Language query ([#1351](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/issues/1351)) ([bfcd621](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/commit/bfcd621))
+
+
+
+
+
+## [0.9.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.16...@wireapp/commons@0.9.17) (2018-11-30)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
 ## [0.9.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@0.9.15...@wireapp/commons@0.9.16) (2018-11-26)
 
 **Note:** Version bump only for package @wireapp/commons

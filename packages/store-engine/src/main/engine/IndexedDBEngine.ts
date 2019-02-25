@@ -1,3 +1,22 @@
+/*
+ * Wire
+ * Copyright (C) 2018 Wire Swiss GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see http://www.gnu.org/licenses/.
+ *
+ */
+
 import Dexie from 'dexie';
 import CRUDEngine from './CRUDEngine';
 import {LowDiskSpaceError, RecordTypeError, UnsupportedError} from './error/';
@@ -78,20 +97,27 @@ export default class IndexedDBEngine implements CRUDEngine {
     return this.db ? this.db.delete() : Dexie.delete(this.storeName);
   }
 
+  private mapDatabaseError(error: Dexie.DexieError, tableName: string, primaryKey: string): Error {
+    const isAlreadyExisting = error instanceof Dexie.ConstraintError;
+    /** @see https://github.com/dfahlander/Dexie.js/issues/776 */
+    const hasNotEnoughDiskSpace =
+      error.name === Dexie.errnames.QuotaExceeded || (error.inner && error.inner.name === Dexie.errnames.QuotaExceeded);
+
+    if (isAlreadyExisting) {
+      const message = `Record "${primaryKey}" already exists in "${tableName}". You need to delete the record first if you want to overwrite it.`;
+      return new RecordAlreadyExistsError(message);
+    } else if (hasNotEnoughDiskSpace) {
+      const message = `Cannot save "${primaryKey}" in "${tableName}" because there is low disk space.`;
+      return new LowDiskSpaceError(message);
+    } else {
+      return error;
+    }
+  }
+
   public create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
     if (entity) {
       return this.db![tableName].add(entity, primaryKey).catch((error: Dexie.DexieError) => {
-        if (error instanceof Dexie.ConstraintError) {
-          const message = `Record "${primaryKey}" already exists in "${tableName}". You need to delete the record first if you want to overwrite it.`;
-          throw new RecordAlreadyExistsError(message);
-        } else if (error instanceof Dexie.AbortError) {
-          // TODO: Exchange with "Dexie.QuotaExceededError" when bug in Dexie gets fixed:
-          // https://github.com/dfahlander/Dexie.js/issues/776
-          const message = `Cannot save "${primaryKey}" in "${tableName}" because there is low disk space.`;
-          throw new LowDiskSpaceError(message);
-        } else {
-          throw error;
-        }
+        throw this.mapDatabaseError(error, tableName, primaryKey);
       });
     }
     const message = `Record "${primaryKey}" cannot be saved in "${tableName}" because it's "undefined" or "null".`;

@@ -50,26 +50,42 @@ const messageIdCache = {};
       PayloadBundleType.PING,
       PayloadBundleType.TEXT,
     ];
-
     const {conversation: conversationId, content, from, id: messageId, messageTimer = 0, type} = messageData;
+    const additionalContent = [];
+
+    if (content.mentions && content.mentions.length) {
+      additionalContent.push(`mentioning "${content.mentions.map(mention => mention.userId).join(',')}"`);
+    }
+
+    if (content.quote) {
+      additionalContent.push(`quoting "${content.quote.quotedMessageId}"`);
+    }
+
+    if (messageTimer) {
+      additionalContent.push(`(ephemeral message, ${messageTimer} ms timeout)`);
+    }
+
+    if (content.expectsReadConfirmation) {
+      additionalContent.push('(expecting read confirmation)');
+    }
 
     logger.log(
-      `Receiving: "${type}" ("${messageId}") in "${conversationId}" from "${from}"`,
-      content.mentions && content.mentions.length
-        ? `mentioning "${content.mentions.map(mention => mention.userId).join(',')}"`
-        : '',
-      content.quote ? `quoting "${content.quote.quotedMessageId}"` : '',
-      messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : '',
-      content
+      `Receiving: "${type}" ("${messageId}") in "${conversationId}" from "${from}" ${additionalContent.join(' ')}`
     );
 
     if (CONFIRM_TYPES.includes(type)) {
-      const confirmationPayload = account.service.conversation.createConfirmation(messageId);
+      const deliveredPayload = account.service.conversation.createConfirmationDelivered(messageId);
       logger.log(
-        `Sending: "${confirmationPayload.type}" ("${confirmationPayload.id}") in "${conversationId}"`,
-        confirmationPayload.content
+        `Sending: "${deliveredPayload.type}" ("${deliveredPayload.id}") in "${conversationId}"`,
+        deliveredPayload.content
       );
-      await account.service.conversation.send(conversationId, confirmationPayload);
+      await account.service.conversation.send(conversationId, deliveredPayload);
+
+      if (content.expectsReadConfirmation) {
+        const readPayload = account.service.conversation.createConfirmationRead(messageId);
+        logger.log(`Sending: "${readPayload.type}" ("${readPayload.id}") in "${conversationId}"`, readPayload.content);
+        await account.service.conversation.send(conversationId, readPayload);
+      }
 
       if (messageTimer) {
         logger.log(
@@ -127,7 +143,7 @@ const messageIdCache = {};
 
   account.on(PayloadBundleType.TEXT, async data => {
     const {
-      content: {linkPreviews, mentions, quote, text},
+      content: {expectsReadConfirmation, linkPreviews, mentions, quote, text},
       id: messageId,
     } = data;
     let textPayload;
@@ -149,6 +165,7 @@ const messageIdCache = {};
         .withLinkPreviews(newLinkPreviews)
         .withMentions(mentions)
         .withQuote(quote)
+        .withReadConfirmation(expectsReadConfirmation)
         .build();
     } else {
       await handleIncomingMessage(data);
@@ -156,6 +173,7 @@ const messageIdCache = {};
         .createText(text)
         .withMentions(mentions)
         .withQuote(quote)
+        .withReadConfirmation(expectsReadConfirmation)
         .build();
     }
 
@@ -267,9 +285,14 @@ const messageIdCache = {};
   });
 
   account.on(PayloadBundleType.PING, async data => {
+    const {
+      content: {expectsReadConfirmation},
+    } = data;
     await handleIncomingMessage(data);
 
-    const pingPayload = account.service.conversation.createPing();
+    const pingPayload = account.service.conversation.createPing({
+      expectsReadConfirmation,
+    });
 
     await sendMessageResponse(data, pingPayload);
   });
@@ -318,7 +341,7 @@ const messageIdCache = {};
 
   account.on(PayloadBundleType.MESSAGE_EDIT, async data => {
     const {
-      content: {linkPreviews, mentions, originalMessageId, quote, text},
+      content: {expectsReadConfirmation, linkPreviews, mentions, originalMessageId, quote, text},
       id: messageId,
     } = data;
     let editedPayload;
@@ -346,6 +369,7 @@ const messageIdCache = {};
         .withLinkPreviews(newLinkPreviews)
         .withMentions(mentions)
         .withQuote(quote)
+        .withReadConfirmation(expectsReadConfirmation)
         .build();
     } else {
       await handleIncomingMessage(data);
@@ -353,6 +377,7 @@ const messageIdCache = {};
         .createEditedText(text, cachedOriginalMessageId)
         .withMentions(mentions)
         .withQuote(quote)
+        .withReadConfirmation(expectsReadConfirmation)
         .build();
     }
 
@@ -374,6 +399,8 @@ const messageIdCache = {};
     logger.log('Logging in ...');
     await account.login(login);
     await account.listen();
+
+    account.on('error', error => logger.error(error));
 
     const name = await account.service.self.getName();
 

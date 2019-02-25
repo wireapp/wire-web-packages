@@ -35,7 +35,6 @@ import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/';
 import * as cryptobox from '@wireapp/cryptobox';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/error/';
-import * as Long from 'long';
 import {LoginSanitizer} from './auth/';
 import {BroadcastService} from './broadcast/';
 import {ClientInfo, ClientService} from './client/';
@@ -55,6 +54,7 @@ import {
   DeletedContent,
   EditedTextContent,
   HiddenContent,
+  KnockContent,
   LocationContent,
   ReactionContent,
   TextContent,
@@ -98,8 +98,6 @@ class Account extends EventEmitter {
   }
 
   public async init(): Promise<void> {
-    this.logger.log('init');
-
     const assetService = new AssetService(this.apiClient);
     const cryptographyService = new CryptographyService(this.apiClient, this.apiClient.config.store);
 
@@ -134,7 +132,6 @@ class Account extends EventEmitter {
     initClient: boolean = true,
     clientInfo?: ClientInfo
   ): Promise<Context | undefined> {
-    this.logger.log('login');
     return this.resetContext()
       .then(() => this.init())
       .then(() => LoginSanitizer.removeNonPrintableCharacters(loginData))
@@ -150,7 +147,6 @@ class Account extends EventEmitter {
     loginData: LoginData,
     clientInfo?: ClientInfo
   ): Promise<{isNewClient: boolean; localClient: RegisteredClient}> {
-    this.logger.log('initClient');
     if (!this.service) {
       throw new Error('Services are not set.');
     }
@@ -192,7 +188,6 @@ class Account extends EventEmitter {
   }
 
   public loadAndValidateLocalClient(): Promise<RegisteredClient> {
-    this.logger.log('loadAndValidateLocalClient');
     let loadedClient: RegisteredClient;
     return this.service!.cryptography.initCryptobox()
       .then(() => this.service!.client.getLocalClient())
@@ -207,13 +202,13 @@ class Account extends EventEmitter {
     loginData: LoginData,
     clientInfo?: ClientInfo
   ): Promise<{isNewClient: boolean; localClient: RegisteredClient}> {
-    this.logger.log('registerClient');
     if (!this.service) {
       throw new Error('Services are not set.');
     }
     let registeredClient: RegisteredClient;
 
-    return this.service!.client.register(loginData, clientInfo)
+    return this.service.client
+      .register(loginData, clientInfo)
       .then((client: RegisteredClient) => (registeredClient = client))
       .then(() => {
         this.logger.log('Client is created');
@@ -226,7 +221,6 @@ class Account extends EventEmitter {
   }
 
   private resetContext(): Promise<void> {
-    this.logger.log('resetContext');
     return Promise.resolve().then(() => {
       delete this.apiClient.context;
       delete this.service;
@@ -234,12 +228,10 @@ class Account extends EventEmitter {
   }
 
   public logout(): Promise<void> {
-    this.logger.log('logout');
     return this.apiClient.logout().then(() => this.resetContext());
   }
 
   public listen(notificationHandler?: Function): Promise<Account> {
-    this.logger.log('listen');
     if (!this.apiClient.context) {
       throw new Error('Context is not set - Please login first');
     }
@@ -280,7 +272,7 @@ class Account extends EventEmitter {
         if (genericMessage.ephemeral) {
           const expireAfterMillis = genericMessage.ephemeral.expireAfterMillis;
           unwrappedMessage.messageTimer =
-            typeof expireAfterMillis === 'number' ? expireAfterMillis : (expireAfterMillis as Long).toNumber();
+            typeof expireAfterMillis === 'number' ? expireAfterMillis : expireAfterMillis.toNumber();
         }
         return unwrappedMessage;
       }
@@ -293,9 +285,11 @@ class Account extends EventEmitter {
   private mapGenericMessage(genericMessage: any, event: ConversationOtrMessageAddEvent): PayloadBundleIncoming {
     switch (genericMessage.content) {
       case GenericMessageType.TEXT: {
-        const {content: text, linkPreview: linkPreviews, mentions, quote} = genericMessage[GenericMessageType.TEXT];
+        const {content: text, expectsReadConfirmation, linkPreview: linkPreviews, mentions, quote} = genericMessage[
+          GenericMessageType.TEXT
+        ];
 
-        const content: TextContent = {text};
+        const content: TextContent = {expectsReadConfirmation, text};
 
         if (linkPreviews && linkPreviews.length) {
           content.linkPreviews = linkPreviews;
@@ -321,9 +315,9 @@ class Account extends EventEmitter {
         };
       }
       case GenericMessageType.CONFIRMATION: {
-        const confirmMessageId = genericMessage[GenericMessageType.CONFIRMATION].firstMessageId;
+        const {firstMessageId, moreMessageIds, type} = genericMessage[GenericMessageType.CONFIRMATION];
 
-        const content: ConfirmationContent = {confirmMessageId};
+        const content: ConfirmationContent = {firstMessageId, moreMessageIds, type};
 
         return {
           content,
@@ -368,11 +362,13 @@ class Account extends EventEmitter {
       }
       case GenericMessageType.EDITED: {
         const {
+          expectsReadConfirmation,
           text: {content: editedText, linkPreview: editedLinkPreviews, mentions: editedMentions, quote: editedQuote},
           replacingMessageId,
         } = genericMessage[GenericMessageType.EDITED];
 
         const content: EditedTextContent = {
+          expectsReadConfirmation,
           originalMessageId: replacingMessageId,
           text: editedText,
         };
@@ -420,7 +416,11 @@ class Account extends EventEmitter {
         };
       }
       case GenericMessageType.KNOCK: {
+        const {expectsReadConfirmation} = genericMessage[GenericMessageType.KNOCK];
+        const content: KnockContent = {expectsReadConfirmation};
+
         return {
+          content,
           conversation: event.conversation,
           from: event.from,
           id: genericMessage.messageId,
@@ -554,7 +554,7 @@ class Account extends EventEmitter {
   }
 
   private async handleEvent(event: IncomingEvent): Promise<PayloadBundleIncoming | void> {
-    this.logger.log('handleEvent', event.type);
+    this.logger.log(`Handling event of type "${event.type}"`, event);
     const ENCRYPTED_EVENTS = [CONVERSATION_EVENT.OTR_MESSAGE_ADD];
     const META_EVENTS = [
       CONVERSATION_EVENT.MEMBER_JOIN,
@@ -576,9 +576,16 @@ class Account extends EventEmitter {
   }
 
   private async handleNotification(notification: IncomingNotification): Promise<void> {
-    this.logger.log('handleNotification');
     for (const event of notification.payload) {
-      const data = await this.handleEvent(event);
+      let data;
+
+      try {
+        data = await this.handleEvent(event);
+      } catch (error) {
+        this.emit('error', error);
+        continue;
+      }
+
       if (data) {
         switch (data.type) {
           case PayloadBundleType.ASSET_IMAGE:
@@ -618,9 +625,6 @@ class Account extends EventEmitter {
                 conversation,
               } = event as ConversationMessageTimerUpdateEvent;
               const expireAfterMillis = Number(message_timer);
-              this.logger.log(
-                `Received "${expireAfterMillis}" ms timer on conversation level for conversation "${conversation}".`
-              );
               this.service!.conversation.messageTimer.setConversationLevelTimer(conversation, expireAfterMillis);
             }
 

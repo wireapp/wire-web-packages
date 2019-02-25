@@ -3,6 +3,178 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.46...@wireapp/react-ui-kit@5.0.0) (2019-02-25)
+
+
+### Code Refactoring
+
+* **react-ui-kit:** Migrate to Emotion ([#1530](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1530)) ([cb0eee9](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/cb0eee9))
+
+
+### BREAKING CHANGES
+
+* **react-ui-kit:** - Migrated the whole UI-Kit from `styled components` to `emotion`
+- Migrated UI-Kit animations from `styled-react-transition-group` to `react-transition-group`
+- `RoundContainer` got removed - Please consider using `RoundIconButton`
+- Removed `recompose` dependency
+- More precise typescript types
+- Fixed `Container` media query behaviour
+- Migrated from `innerRef` to `ref` with `React.forwardRef`
+
+
+
+
+
+## [4.3.46](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.45...@wireapp/react-ui-kit@4.3.46) (2019-02-21)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [4.3.45](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.44...@wireapp/react-ui-kit@4.3.45) (2019-02-19)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [4.3.44](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.43...@wireapp/react-ui-kit@4.3.44) (2019-02-14)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Update style-components types ([#1523](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1523)) ([4c82a79](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/4c82a79))
+
+
+
+
+
+## [4.3.43](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.42...@wireapp/react-ui-kit@4.3.43) (2019-02-14)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Declare global types ([#1522](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1522)) ([beaf2aa](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/beaf2aa))
+
+
+
+
+
+## [4.3.42](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.41...@wireapp/react-ui-kit@4.3.42) (2019-02-05)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [4.3.41](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.40...@wireapp/react-ui-kit@4.3.41) (2019-01-29)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [4.3.40](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.39...@wireapp/react-ui-kit@4.3.40) (2019-01-24)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [4.3.39](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.38...@wireapp/react-ui-kit@4.3.39) (2019-01-17)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [4.3.38](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.37...@wireapp/react-ui-kit@4.3.38) (2019-01-03)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [4.3.37](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.36...@wireapp/react-ui-kit@4.3.37) (2019-01-03)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [4.3.36](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.35...@wireapp/react-ui-kit@4.3.36) (2019-01-02)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [4.3.35](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.34...@wireapp/react-ui-kit@4.3.35) (2018-12-21)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [4.3.34](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.33...@wireapp/react-ui-kit@4.3.34) (2018-12-20)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [4.3.33](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.32...@wireapp/react-ui-kit@4.3.33) (2018-12-17)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [4.3.32](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.31...@wireapp/react-ui-kit@4.3.32) (2018-12-07)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [4.3.31](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.30...@wireapp/react-ui-kit@4.3.31) (2018-12-06)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [4.3.30](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.29...@wireapp/react-ui-kit@4.3.30) (2018-11-30)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [4.3.29](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.28...@wireapp/react-ui-kit@4.3.29) (2018-11-29)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
 ## [4.3.28](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@4.3.27...@wireapp/react-ui-kit@4.3.28) (2018-11-26)
 
 **Note:** Version bump only for package @wireapp/react-ui-kit

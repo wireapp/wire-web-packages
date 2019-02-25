@@ -78,6 +78,7 @@ import {
   FileMetaDataContent,
   ImageAssetContent,
   ImageContent,
+  KnockContent,
   LinkPreviewContent,
   LinkPreviewUploadedContent,
   LocationContent,
@@ -154,11 +155,12 @@ class ConversationService {
     payloadBundle: PayloadBundleOutgoingUnsent,
     userIds?: string[]
   ): Promise<PayloadBundleOutgoing> {
-    const confirmationContent = payloadBundle.content as ConfirmationContent;
+    const {firstMessageId, moreMessageIds, type} = payloadBundle.content as ConfirmationContent;
 
     const confirmationMessage = Confirmation.create({
-      firstMessageId: confirmationContent.confirmMessageId,
-      type: Confirmation.Type.DELIVERED,
+      firstMessageId,
+      moreMessageIds,
+      type,
     });
 
     const genericMessage = GenericMessage.create({
@@ -193,7 +195,7 @@ class ConversationService {
     const base64CipherText = Encoder.toBase64(cipherText).asString;
 
     const genericMessage = GenericMessage.create({
-      external: externalMessage,
+      [GenericMessageType.EXTERNAL]: externalMessage,
       messageId,
     });
 
@@ -211,6 +213,12 @@ class ConversationService {
   ): Promise<void> {
     const plainTextArray = GenericMessage.encode(genericMessage).finish();
     const preKeyBundles = await this.getPreKeyBundle(conversationId, userIds);
+
+    if (this.shouldSendAsExternal(plainTextArray, preKeyBundles)) {
+      const encryptedAsset = await AssetCryptography.encryptAsset(plainTextArray);
+      return this.sendExternalGenericMessage(this.clientID, conversationId, encryptedAsset, preKeyBundles);
+    }
+
     const recipients = await this.cryptographyService.encrypt(plainTextArray, preKeyBundles);
 
     return this.sendOTRMessage(sendingClientId, conversationId, recipients, plainTextArray);
@@ -221,9 +229,19 @@ class ConversationService {
     payloadBundle: PayloadBundleOutgoingUnsent,
     userIds?: string[]
   ): Promise<PayloadBundleOutgoing> {
-    const {originalMessageId, text, linkPreviews, mentions, quote} = payloadBundle.content as EditedTextContent;
+    const {
+      expectsReadConfirmation,
+      linkPreviews,
+      mentions,
+      originalMessageId,
+      quote,
+      text,
+    } = payloadBundle.content as EditedTextContent;
 
-    const textMessage = Text.create({content: text});
+    const textMessage = Text.create({
+      content: text,
+      expectsReadConfirmation,
+    });
 
     if (linkPreviews && linkPreviews.length) {
       textMessage.linkPreview = this.buildLinkPreviews(linkPreviews);
@@ -269,16 +287,17 @@ class ConversationService {
       throw new Error('No content for sendFileData provided.');
     }
 
-    const encryptedAsset = payloadBundle.content as FileAssetContent;
+    const {asset, expectsReadConfirmation} = payloadBundle.content as FileAssetContent;
 
     const remoteData = Asset.RemoteData.create({
-      assetId: encryptedAsset.asset.key,
-      assetToken: encryptedAsset.asset.token,
-      otrKey: encryptedAsset.asset.keyBytes,
-      sha256: encryptedAsset.asset.sha256,
+      assetId: asset.key,
+      assetToken: asset.token,
+      otrKey: asset.keyBytes,
+      sha256: asset.sha256,
     });
 
     const assetMessage = Asset.create({
+      expectsReadConfirmation,
       uploaded: remoteData,
     });
 
@@ -294,11 +313,7 @@ class ConversationService {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    const preKeyBundles = await this.getPreKeyBundle(conversationId, userIds);
-    const plainTextArray = GenericMessage.encode(genericMessage).finish();
-    const payload = await AssetCryptography.encryptAsset(plainTextArray);
-
-    await this.sendExternalGenericMessage(this.clientID, conversationId, payload, preKeyBundles);
+    await this.sendGenericMessage(this.clientID, conversationId, genericMessage, userIds);
 
     return {
       ...payloadBundle,
@@ -317,16 +332,21 @@ class ConversationService {
       throw new Error('No content for sendFileMetaData provided.');
     }
 
-    const encryptedAsset = payloadBundle.content as FileAssetMetaDataContent;
+    const {expectsReadConfirmation, metaData} = payloadBundle.content as FileAssetMetaDataContent;
 
     const original = Asset.Original.create({
-      mimeType: encryptedAsset.metaData.type,
-      name: encryptedAsset.metaData.name,
-      size: encryptedAsset.metaData.length,
+      mimeType: metaData.type,
+      name: metaData.name,
+      size: metaData.length,
+    });
+
+    const assetMessage = Asset.create({
+      expectsReadConfirmation,
+      original,
     });
 
     let genericMessage = GenericMessage.create({
-      [GenericMessageType.ASSET]: Asset.create({original}),
+      [GenericMessageType.ASSET]: assetMessage,
       messageId: payloadBundle.id,
     });
 
@@ -335,11 +355,7 @@ class ConversationService {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    const preKeyBundles = await this.getPreKeyBundle(conversationId, userIds);
-    const plainTextArray = GenericMessage.encode(genericMessage).finish();
-    const payload = await AssetCryptography.encryptAsset(plainTextArray);
-
-    await this.sendExternalGenericMessage(this.clientID, conversationId, payload, preKeyBundles);
+    await this.sendGenericMessage(this.clientID, conversationId, genericMessage, userIds);
 
     return {
       ...payloadBundle,
@@ -358,10 +374,11 @@ class ConversationService {
       throw new Error('No content for sendFileAbort provided.');
     }
 
-    const abortContent = payloadBundle.content as FileAssetAbortContent;
+    const {expectsReadConfirmation, reason} = payloadBundle.content as FileAssetAbortContent;
 
     const assetMessage = Asset.create({
-      notUploaded: abortContent.reason,
+      expectsReadConfirmation: expectsReadConfirmation,
+      notUploaded: reason,
     });
 
     assetMessage.status = AssetTransferState.NOT_UPLOADED;
@@ -376,11 +393,7 @@ class ConversationService {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    const preKeyBundles = await this.getPreKeyBundle(conversationId, userIds);
-    const plainTextArray = GenericMessage.encode(genericMessage).finish();
-    const payload = await AssetCryptography.encryptAsset(plainTextArray);
-
-    await this.sendExternalGenericMessage(this.clientID, conversationId, payload, preKeyBundles);
+    await this.sendGenericMessage(this.clientID, conversationId, genericMessage, userIds);
 
     return {
       ...payloadBundle,
@@ -399,28 +412,29 @@ class ConversationService {
       throw new Error('No content for sendImage provided.');
     }
 
-    const encryptedAsset = payloadBundle.content as ImageAssetContent;
+    const {asset, expectsReadConfirmation, image} = payloadBundle.content as ImageAssetContent;
 
     const imageMetadata = Asset.ImageMetaData.create({
-      height: encryptedAsset.image.height,
-      width: encryptedAsset.image.width,
+      height: image.height,
+      width: image.width,
     });
 
     const original = Asset.Original.create({
       [GenericMessageType.IMAGE]: imageMetadata,
-      mimeType: encryptedAsset.image.type,
+      mimeType: image.type,
       name: null,
-      size: encryptedAsset.image.data.length,
+      size: image.data.length,
     });
 
     const remoteData = Asset.RemoteData.create({
-      assetId: encryptedAsset.asset.key,
-      assetToken: encryptedAsset.asset.token,
-      otrKey: encryptedAsset.asset.keyBytes,
-      sha256: encryptedAsset.asset.sha256,
+      assetId: asset.key,
+      assetToken: asset.token,
+      otrKey: asset.keyBytes,
+      sha256: asset.sha256,
     });
 
     const assetMessage = Asset.create({
+      expectsReadConfirmation,
       original,
       uploaded: remoteData,
     });
@@ -437,11 +451,7 @@ class ConversationService {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    const preKeyBundles = await this.getPreKeyBundle(conversationId, userIds);
-    const plainTextArray = GenericMessage.encode(genericMessage).finish();
-    const payload = await AssetCryptography.encryptAsset(plainTextArray);
-
-    await this.sendExternalGenericMessage(this.clientID, conversationId, payload, preKeyBundles);
+    await this.sendGenericMessage(this.clientID, conversationId, genericMessage, userIds);
 
     return {
       ...payloadBundle,
@@ -456,9 +466,10 @@ class ConversationService {
     payloadBundle: PayloadBundleOutgoingUnsent,
     userIds?: string[]
   ): Promise<PayloadBundleOutgoing> {
-    const {latitude, longitude, name, zoom} = payloadBundle.content as LocationContent;
+    const {expectsReadConfirmation, latitude, longitude, name, zoom} = payloadBundle.content as LocationContent;
 
     const locationMessage = Location.create({
+      expectsReadConfirmation,
       latitude,
       longitude,
       name,
@@ -553,8 +564,15 @@ class ConversationService {
     payloadBundle: PayloadBundleOutgoingUnsent,
     userIds?: string[]
   ): Promise<PayloadBundleOutgoing> {
+    const {expectsReadConfirmation, hotKnock = false} = payloadBundle.content as KnockContent;
+
+    const knockMessage = Knock.create({
+      expectsReadConfirmation,
+      hotKnock,
+    });
+
     let genericMessage = GenericMessage.create({
-      [GenericMessageType.KNOCK]: Knock.create(),
+      [GenericMessageType.KNOCK]: knockMessage,
       messageId: payloadBundle.id,
     });
 
@@ -640,24 +658,24 @@ class ConversationService {
       }
 
       if (linkPreview.imageUploaded) {
-        const encryptedAsset = linkPreview.imageUploaded;
+        const {asset, image} = linkPreview.imageUploaded;
 
         const imageMetadata = Asset.ImageMetaData.create({
-          height: encryptedAsset.image.height,
-          width: encryptedAsset.image.width,
+          height: image.height,
+          width: image.width,
         });
 
         const original = Asset.Original.create({
           [GenericMessageType.IMAGE]: imageMetadata,
-          mimeType: encryptedAsset.image.type,
-          size: encryptedAsset.image.data.length,
+          mimeType: image.type,
+          size: image.data.length,
         });
 
         const remoteData = Asset.RemoteData.create({
-          assetId: encryptedAsset.asset.key,
-          assetToken: encryptedAsset.asset.token,
-          otrKey: encryptedAsset.asset.keyBytes,
-          sha256: encryptedAsset.asset.sha256,
+          assetId: asset.key,
+          assetToken: asset.token,
+          otrKey: asset.keyBytes,
+          sha256: asset.sha256,
         });
 
         const assetMessage = Asset.create({
@@ -693,10 +711,11 @@ class ConversationService {
       state: PayloadBundleState.OUTGOING_SENT,
     };
 
-    const {text, linkPreviews, mentions, quote} = payloadBundle.content as TextContent;
+    const {expectsReadConfirmation, linkPreviews, mentions, quote, text} = payloadBundle.content as TextContent;
 
     const textMessage = Text.create({
       content: text,
+      expectsReadConfirmation,
     });
 
     if (linkPreviews && linkPreviews.length) {
@@ -724,19 +743,8 @@ class ConversationService {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    const preKeyBundles = await this.getPreKeyBundle(conversationId, userIds);
-    const plainTextArray = GenericMessage.encode(genericMessage).finish();
+    await this.sendGenericMessage(this.clientID, conversationId, genericMessage, userIds);
 
-    if (this.shouldSendAsExternal(plainTextArray, preKeyBundles)) {
-      const encryptedAsset = await AssetCryptography.encryptAsset(plainTextArray);
-
-      await this.sendExternalGenericMessage(this.clientID, conversationId, encryptedAsset, preKeyBundles);
-      return payloadBundle;
-    }
-
-    const encryptedPayload = await this.cryptographyService.encrypt(plainTextArray, preKeyBundles);
-
-    await this.sendOTRMessage(this.clientID, conversationId, encryptedPayload, plainTextArray);
     return payloadBundle;
   }
 
@@ -812,18 +820,23 @@ class ConversationService {
     return new TextContentBuilder(payloadBundle);
   }
 
-  public async createFileData(file: FileContent, messageId: string): Promise<PayloadBundleOutgoingUnsent> {
+  public async createFileData(
+    file: FileContent,
+    originalMessageId: string,
+    expectsReadConfirmation?: boolean
+  ): Promise<PayloadBundleOutgoingUnsent> {
     const imageAsset = await this.assetService.uploadFileAsset(file);
 
     const content: FileAssetContent = {
       asset: imageAsset,
+      expectsReadConfirmation,
       file,
     };
 
     return {
       content,
       from: this.apiClient.context!.userId,
-      id: messageId,
+      id: originalMessageId,
       state: PayloadBundleState.OUTGOING_UNSENT,
       timestamp: Date.now(),
       type: PayloadBundleType.ASSET,
@@ -832,9 +845,11 @@ class ConversationService {
 
   public createFileMetadata(
     metaData: FileMetaDataContent,
+    expectsReadConfirmation?: boolean,
     messageId: string = ConversationService.createId()
   ): PayloadBundleOutgoingUnsent {
     const content: FileAssetMetaDataContent = {
+      expectsReadConfirmation,
       metaData,
     };
 
@@ -848,15 +863,20 @@ class ConversationService {
     };
   }
 
-  public async createFileAbort(reason: AbortReason, messageId: string): Promise<PayloadBundleOutgoingUnsent> {
+  public async createFileAbort(
+    reason: AbortReason,
+    originalMessageId: string,
+    expectsReadConfirmation?: boolean
+  ): Promise<PayloadBundleOutgoingUnsent> {
     const content: FileAssetAbortContent = {
+      expectsReadConfirmation,
       reason,
     };
 
     return {
       content,
       from: this.apiClient.context!.userId,
-      id: messageId,
+      id: originalMessageId,
       state: PayloadBundleState.OUTGOING_UNSENT,
       timestamp: Date.now(),
       type: PayloadBundleType.ASSET_ABORT,
@@ -869,12 +889,14 @@ class ConversationService {
 
   public async createImage(
     image: ImageContent,
+    expectsReadConfirmation?: boolean,
     messageId: string = ConversationService.createId()
   ): Promise<PayloadBundleOutgoingUnsent> {
     const imageAsset = await this.assetService.uploadImageAsset(image);
 
     const content: ImageAssetContent = {
       asset: imageAsset,
+      expectsReadConfirmation,
       image,
     };
 
@@ -955,11 +977,12 @@ class ConversationService {
     return new TextContentBuilder(payloadBundle);
   }
 
-  public createConfirmation(
-    confirmMessageId: string,
+  public createConfirmationDelivered(
+    firstMessageId: string,
+    moreMessageIds?: string[],
     messageId: string = ConversationService.createId()
   ): PayloadBundleOutgoingUnsent {
-    const content: ConfirmationContent = {confirmMessageId};
+    const content: ConfirmationContent = {firstMessageId, moreMessageIds, type: Confirmation.Type.DELIVERED};
     return {
       content,
       from: this.apiClient.context!.userId,
@@ -970,8 +993,28 @@ class ConversationService {
     };
   }
 
-  public createPing(messageId: string = ConversationService.createId()): PayloadBundleOutgoingUnsent {
+  public createConfirmationRead(
+    firstMessageId: string,
+    moreMessageIds?: string[],
+    messageId: string = ConversationService.createId()
+  ): PayloadBundleOutgoingUnsent {
+    const content: ConfirmationContent = {firstMessageId, moreMessageIds, type: Confirmation.Type.READ};
     return {
+      content,
+      from: this.apiClient.context!.userId,
+      id: messageId,
+      state: PayloadBundleState.OUTGOING_UNSENT,
+      timestamp: Date.now(),
+      type: PayloadBundleType.CONFIRMATION,
+    };
+  }
+
+  public createPing(
+    ping?: KnockContent,
+    messageId: string = ConversationService.createId()
+  ): PayloadBundleOutgoingUnsent {
+    return {
+      content: ping,
       from: this.apiClient.context!.userId,
       id: messageId,
       state: PayloadBundleState.OUTGOING_UNSENT,

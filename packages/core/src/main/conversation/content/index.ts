@@ -17,6 +17,8 @@
  *
  */
 
+import * as ContentType from './ContentType';
+
 export * from './AssetContent';
 export * from './ClearedContent';
 export * from './ClientActionContent';
@@ -27,6 +29,7 @@ export * from './EditedTextContent';
 export * from './FileContent';
 export * from './HiddenContent';
 export * from './ImageContent';
+export * from './KnockContent';
 export * from './LinkPreviewContent';
 export * from './LocationContent';
 export * from './MentionContent';
@@ -34,3 +37,5 @@ export * from './QuoteContent';
 export * from './ReactionContent';
 export * from './TextContent';
 export * from './TweetContent';
+
+export {ContentType};

@@ -17,13 +17,18 @@
  *
  */
 
-import styled from 'styled-components';
+/** @jsx jsx */
+import {ObjectInterpolation, jsx} from '@emotion/core';
 
-const Header = styled.header`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 64px;
-`;
+export interface HeaderProps<T = HTMLHeadingElement> extends React.HTMLProps<T> {}
 
-export {Header};
+const headerStyles: (props: HeaderProps) => ObjectInterpolation<undefined> = props => ({
+  alignItems: 'center',
+  display: 'flex',
+  height: '64px',
+  justifyContent: 'space-between',
+});
+
+const Header = (props: HeaderProps) => <header css={headerStyles(props)} {...props} />;
+
+export {Header, headerStyles};

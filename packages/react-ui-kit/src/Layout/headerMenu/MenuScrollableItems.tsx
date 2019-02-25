@@ -17,29 +17,25 @@
  *
  */
 
-import styled from 'styled-components';
-import {COLOR} from '../Identity';
+/** @jsx jsx */
+import {ObjectInterpolation, jsx} from '@emotion/core';
+import media, {QueryKeys} from '../../mediaQueries';
 
-export interface RoundContainerProps {
-  color?: string;
-  size?: number;
+export interface MenuScrollableItemsProps<T = HTMLDivElement> extends React.HTMLProps<T> {
+  open?: boolean;
 }
 
-const RoundContainer = styled.div<RoundContainerProps>`
-  width: ${props => parseFloat(props.size.toString())}px;
-  height: ${props => parseFloat(props.size.toString())}px;
-  border-radius: 50%;
-  border: none;
-  background-color: ${props => props.color};
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+const menuScrollableItemsStyles: (props: MenuScrollableItemsProps) => ObjectInterpolation<undefined> = props => ({
+  [media[QueryKeys.TABLET_DOWN]]: {
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    margin: 'auto',
+  },
+});
 
-RoundContainer.defaultProps = {
-  color: COLOR.BLUE,
-  size: 72,
-};
+const MenuScrollableItems = (props: MenuScrollableItemsProps) => (
+  <div css={menuScrollableItemsStyles(props)} {...props} />
+);
 
-export {RoundContainer};
+export {MenuScrollableItems, menuScrollableItemsStyles};
