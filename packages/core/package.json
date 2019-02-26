@@ -31,7 +31,7 @@
     "nock": "10.0.6",
     "rimraf": "2.6.3",
     "typescript": "3.3.3333",
-    "uglifyjs-webpack-plugin": "1.3.0",
+    "uglifyjs-webpack-plugin": "2.1.2",
     "webpack": "4.29.5",
     "webpack-cli": "3.2.3"
   },
