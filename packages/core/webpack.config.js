@@ -21,7 +21,7 @@ module.exports = {
   optimization: {
     minimizer: [
       new TerserJSPlugin({
-        /* Dexie has issues with UglifyJS */
+        /* Dexie has issues with Terser */
         exclude: /dexie/g,
         sourceMap: true,
       }),
