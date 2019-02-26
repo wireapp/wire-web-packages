@@ -1,5 +1,5 @@
 const pkg = require('./package.json');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const TerserJSPlugin = require('terser-webpack-plugin');
 const webpack = require('webpack');
 
 const projectName = pkg.name.replace('@wireapp/', '');
@@ -20,7 +20,7 @@ module.exports = {
   },
   optimization: {
     minimizer: [
-      new UglifyJSPlugin({
+      new TerserJSPlugin({
         /* Dexie has issues with UglifyJS */
         exclude: /dexie/g,
         sourceMap: true,
