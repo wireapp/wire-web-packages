@@ -27,7 +27,7 @@ export interface LogoProps<T = SVGSVGElement> extends SVGIconProps<T> {
   hover?: boolean;
 }
 
-const logoStyles: (props: LogoProps) => ObjectInterpolation<undefined> = ({hover, color = COLOR.GRAY_DARKEN_48}) => ({
+const logoStyles: <T>(props: LogoProps<T>) => ObjectInterpolation<undefined> = ({hover, color = COLOR.GRAY_DARKEN_48}) => ({
   '&:hover path': {
     fill: hover ? COLOR.shade(color, 0.06) : undefined,
   },
