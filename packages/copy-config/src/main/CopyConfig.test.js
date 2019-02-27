@@ -140,7 +140,7 @@ describe('CopyConfig', () => {
           files: {
             './package.json': TEMP_DIR,
           },
-          repositoryUrl: 'git@github.com:wireapp/wire-web-config-default#master',
+          repositoryUrl: 'https://github.com/wireapp/wire-web-config-default#master',
         });
 
         await copyConfig.copy();
