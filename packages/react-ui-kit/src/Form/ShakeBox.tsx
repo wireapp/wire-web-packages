@@ -19,46 +19,52 @@
 
 /** @jsx jsx */
 import {jsx} from '@emotion/core';
-import {forwardRef, useEffect, useImperativeHandle, useState} from 'react';
+import React, {useEffect, useImperativeHandle, useState} from 'react';
 
-interface ShakeBoxProps extends React.HTMLProps<HTMLDivElement> {
+export interface ShakeBoxProps extends React.HTMLProps<HTMLDivElement> {
   amp?: number;
   damping?: number;
   speed?: number;
   threshold?: number;
 }
 
-const ShakeBox = forwardRef(({children, amp = 8, damping = 0.75, speed = 4, threshold = 1}: ShakeBoxProps, ref) => {
-  const [offset, setOffset] = useState(0);
-  let reqAni = 0;
+export interface ShakeBoxRef {
+  shake: () => void;
+}
 
-  const shakeLoop = (targetOffset, currentOffset = 0) => {
-    if (targetOffset > 0 && currentOffset < targetOffset) {
-      currentOffset += speed;
-    } else if (targetOffset < 0 && currentOffset > targetOffset) {
-      currentOffset -= speed;
-    } else {
-      currentOffset = targetOffset - (currentOffset - targetOffset);
-      targetOffset *= -damping;
-    }
-    if (Math.abs(targetOffset) >= threshold) {
-      reqAni = requestAnimationFrame(() => shakeLoop(targetOffset, currentOffset));
-    } else {
-      currentOffset = 0;
-    }
-    setOffset(currentOffset);
-  };
+const ShakeBox: React.FC<ShakeBoxProps> = React.forwardRef<ShakeBoxRef, ShakeBoxProps>(
+  ({children, amp = 8, damping = 0.75, speed = 4, threshold = 1}: ShakeBoxProps, ref) => {
+    const [offset, setOffset] = useState(0);
+    let reqAni = 0;
 
-  useImperativeHandle(ref, () => ({
-    shake: () => {
-      cancelAnimationFrame(reqAni);
-      shakeLoop(amp);
-    },
-  }));
+    const shakeLoop = (targetOffset, currentOffset = 0) => {
+      if (targetOffset > 0 && currentOffset < targetOffset) {
+        currentOffset += speed;
+      } else if (targetOffset < 0 && currentOffset > targetOffset) {
+        currentOffset -= speed;
+      } else {
+        currentOffset = targetOffset - (currentOffset - targetOffset);
+        targetOffset *= -damping;
+      }
+      if (Math.abs(targetOffset) >= threshold) {
+        reqAni = requestAnimationFrame(() => shakeLoop(targetOffset, currentOffset));
+      } else {
+        currentOffset = 0;
+      }
+      setOffset(currentOffset);
+    };
 
-  useEffect(() => () => cancelAnimationFrame(reqAni), []);
+    useImperativeHandle(ref, () => ({
+      shake: () => {
+        cancelAnimationFrame(reqAni);
+        shakeLoop(amp);
+      },
+    }));
 
-  return <div style={{transform: `translateX(${offset}px)`}}>{children}</div>;
-});
+    useEffect(() => () => cancelAnimationFrame(reqAni), []);
+
+    return <div style={{transform: `translateX(${offset}px)`}}>{children}</div>;
+  }
+);
 
 export {ShakeBox};
