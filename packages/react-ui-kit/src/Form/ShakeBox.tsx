@@ -19,72 +19,56 @@
 
 /** @jsx jsx */
 import {jsx} from '@emotion/core';
-import React from 'react';
+import {useEffect, useState} from 'react';
+import {noop} from '../util';
 
-interface ShakeBoxProps {
+interface ShakeBoxProps extends React.HTMLProps<HTMLDivElement> {
   amp?: number;
   damping?: number;
   speed?: number;
   threshold?: number;
+  getShakeFunc?: Function;
 }
 
-interface ShakeBoxStateProps {
-  isShaking?: boolean;
-  offset?: number;
-}
+const ShakeBox = ({
+  children,
+  amp = 8,
+  damping = 0.75,
+  speed = 4,
+  threshold = 1,
+  getShakeFunc = noop,
+}: ShakeBoxProps) => {
+  const [offset, setOffset] = useState(0);
+  let reqAni = 0;
 
-class ShakeBox extends React.PureComponent<ShakeBoxProps & React.HTMLProps<HTMLDivElement>, ShakeBoxStateProps> {
-  state = {isShaking: false, offset: 0};
-  currentOffset = 0;
-  targetOffset?: number;
-  reqAni?: number;
-  box?: HTMLDivElement;
-
-  static defaultProps = {
-    amp: 8,
-    children: null,
-    damping: 0.75,
-    speed: 4,
-    threshold: 1,
-  };
-
-  shakeLoop = () => {
-    const {speed, threshold} = this.props;
-    if (this.targetOffset > 0 && this.currentOffset < this.targetOffset) {
-      this.currentOffset += speed;
-    } else if (this.targetOffset < 0 && this.currentOffset > this.targetOffset) {
-      this.currentOffset -= speed;
+  const shakeLoop = (targetOffset, currentOffset = 0) => {
+    if (targetOffset > 0 && currentOffset < targetOffset) {
+      currentOffset += speed;
+    } else if (targetOffset < 0 && currentOffset > targetOffset) {
+      currentOffset -= speed;
     } else {
-      this.currentOffset = this.targetOffset - (this.currentOffset - this.targetOffset);
-      this.targetOffset *= -this.props.damping;
+      currentOffset = targetOffset - (currentOffset - targetOffset);
+      targetOffset *= -damping;
     }
-    if (Math.abs(this.targetOffset) >= threshold) {
-      this.reqAni = requestAnimationFrame(this.shakeLoop);
+    if (Math.abs(targetOffset) >= threshold) {
+      reqAni = requestAnimationFrame(() => shakeLoop(targetOffset, currentOffset));
     } else {
-      this.currentOffset = 0;
-      this.setState({isShaking: false});
+      currentOffset = 0;
     }
-    this.setState({offset: this.currentOffset});
+    setOffset(currentOffset);
   };
 
-  shake = () => {
-    this.setState({isShaking: true});
-    this.targetOffset = this.props.amp;
-    cancelAnimationFrame(this.reqAni);
-    this.shakeLoop();
+  const shake = () => {
+    cancelAnimationFrame(reqAni);
+    shakeLoop(amp);
   };
 
-  componentWillUnmount() {
-    cancelAnimationFrame(this.reqAni);
-  }
+  useEffect(() => {
+    getShakeFunc(shake);
+    return () => cancelAnimationFrame(reqAni);
+  }, []);
 
-  render() {
-    return (
-      <div ref={node => (this.box = node)} style={{transform: `translateX(${this.state.offset}px)`}}>
-        {this.props.children}
-      </div>
-    );
-  }
-}
+  return <div style={{transform: `translateX(${offset}px)`}}>{children}</div>;
+};
 
 export {ShakeBox};
