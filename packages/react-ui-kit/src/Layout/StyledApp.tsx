@@ -62,10 +62,7 @@ const StyledAppContainerStyle: <T>(props: StyledAppContainerProps<T>) => ObjectI
       color: COLOR.LINK,
     },
   },
-  b: {
-    fontWeight: 600,
-  },
-  strong: {
+  'b, strong': {
     fontWeight: 600,
   },
 });
