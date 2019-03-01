@@ -19,25 +19,16 @@
 
 /** @jsx jsx */
 import {jsx} from '@emotion/core';
-import {useEffect, useState} from 'react';
-import {noop} from '../util';
+import {forwardRef, useEffect, useImperativeHandle, useState} from 'react';
 
 interface ShakeBoxProps extends React.HTMLProps<HTMLDivElement> {
   amp?: number;
   damping?: number;
   speed?: number;
   threshold?: number;
-  getShakeFunc?: Function;
 }
 
-const ShakeBox = ({
-  children,
-  amp = 8,
-  damping = 0.75,
-  speed = 4,
-  threshold = 1,
-  getShakeFunc = noop,
-}: ShakeBoxProps) => {
+const ShakeBox = forwardRef(({children, amp = 8, damping = 0.75, speed = 4, threshold = 1}: ShakeBoxProps, ref) => {
   const [offset, setOffset] = useState(0);
   let reqAni = 0;
 
@@ -58,17 +49,16 @@ const ShakeBox = ({
     setOffset(currentOffset);
   };
 
-  const shake = () => {
-    cancelAnimationFrame(reqAni);
-    shakeLoop(amp);
-  };
+  useImperativeHandle(ref, () => ({
+    shake: () => {
+      cancelAnimationFrame(reqAni);
+      shakeLoop(amp);
+    },
+  }));
 
-  useEffect(() => {
-    getShakeFunc(shake);
-    return () => cancelAnimationFrame(reqAni);
-  }, []);
+  useEffect(() => () => cancelAnimationFrame(reqAni), []);
 
   return <div style={{transform: `translateX(${offset}px)`}}>{children}</div>;
-};
+});
 
 export {ShakeBox};

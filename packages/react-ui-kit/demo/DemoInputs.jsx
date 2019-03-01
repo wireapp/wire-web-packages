@@ -45,10 +45,10 @@ import {
   ShakeBox,
   Tooltip,
 } from '@wireapp/react-ui-kit';
-import React from 'react';
+import React, {useRef} from 'react';
 
 const DemoInputs = () => {
-  let doShake = () => {};
+  const shakeBox = useRef();
 
   return (
     <Container>
@@ -176,11 +176,11 @@ const DemoInputs = () => {
       <H2>Form</H2>
       <Line />
       <ContainerXS>
-        <ShakeBox getShakeFunc={shakeFunc => (doShake = shakeFunc)}>
+        <ShakeBox ref={shakeBox}>
           <Form
             onSubmit={event => {
-              doShake();
               event.preventDefault();
+              shakeBox.current.shake();
             }}
           >
             <Tooltip text="This shows a placeholder input">
