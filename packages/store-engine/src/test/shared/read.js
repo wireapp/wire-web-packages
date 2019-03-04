@@ -17,9 +17,9 @@
  *
  */
 
-const TABLE_NAME = 'the-simpsons';
+const {error: StoreEngineError} = require('@wireapp/store-engine');
 
-const StoreEngine = require('@wireapp/store-engine');
+const TABLE_NAME = 'the-simpsons';
 
 module.exports = {
   'returns a database record.': (done, engine) => {
@@ -44,7 +44,7 @@ module.exports = {
       .read(TABLE_NAME, PRIMARY_KEY)
       .then(() => done.fail(new Error('Method is supposed to throw an error.')))
       .catch(error => {
-        expect(error).toEqual(jasmine.any(StoreEngine.error.RecordNotFoundError));
+        expect(error).toEqual(jasmine.any(StoreEngineError.RecordNotFoundError));
         done();
       });
   },

@@ -19,7 +19,7 @@
 
 import {APIClient} from '@wireapp/api-client';
 import {Notification, NotificationEvent} from '@wireapp/api-client/dist/commonjs/notification/';
-import {CRUDEngine, RecordNotFoundError} from '@wireapp/store-engine';
+import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import NotificationBackendRepository from './NotificationBackendRepository';
 import NotificationDatabaseRepository from './NotificationDatabaseRepository';
 
@@ -56,7 +56,10 @@ export default class NotificationService {
         return databaseLastEventDate;
       })
       .catch(error => {
-        if (error instanceof RecordNotFoundError || error.constructor.name === 'RecordNotFoundError') {
+        if (
+          error instanceof StoreEngineError.RecordNotFoundError ||
+          error.constructor.name === StoreEngineError.RecordNotFoundError.constructor.name
+        ) {
           return this.database.createLastEventDate(eventDate);
         }
         throw error;

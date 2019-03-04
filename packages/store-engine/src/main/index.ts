@@ -21,16 +21,4 @@ import {CRUDEngine, FileEngine, FileSystemEngine, IndexedDBEngine, LocalStorageE
 import * as error from './engine/error/';
 import * as Store from './store/';
 
-const RecordNotFoundError = error.RecordNotFoundError;
-
-export {
-  CRUDEngine,
-  FileEngine,
-  FileSystemEngine,
-  IndexedDBEngine,
-  LocalStorageEngine,
-  MemoryEngine,
-  RecordNotFoundError,
-  error,
-  Store,
-};
+export {CRUDEngine, FileEngine, FileSystemEngine, IndexedDBEngine, LocalStorageEngine, MemoryEngine, error, Store};

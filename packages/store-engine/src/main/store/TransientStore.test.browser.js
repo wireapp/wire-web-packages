@@ -17,7 +17,7 @@
  *
  */
 
-import {LocalStorageEngine, Store} from '@wireapp/store-engine';
+import {LocalStorageEngine, Store, error as StoreEngineError} from '@wireapp/store-engine';
 
 describe('store.TransientStore', () => {
   const STORE_NAME = 'database-name';
@@ -68,11 +68,9 @@ describe('store.TransientStore', () => {
     it("doesn't overwrite an existing record.", done => {
       store
         .set(primaryKey, entity, ttl)
-        .then(bundle => {
-          return store.set(primaryKey, {access_token: 'ABC'}, ttl);
-        })
+        .then(() => store.set(primaryKey, {access_token: 'ABC'}, ttl))
         .catch(error => {
-          expect(error).toEqual(jasmine.any(Store.RecordAlreadyExistsError));
+          expect(error).toEqual(jasmine.any(StoreEngineError.RecordAlreadyExistsError));
           expect(error.code).toBe(1);
           done();
         });
