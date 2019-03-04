@@ -58,7 +58,7 @@ const pillStyle: <T>(props: PillProps<T>) => ObjectInterpolation<undefined> = ({
       marginRight: 0,
     },
     animation: `${pillAnimation} ${DURATION.DEFAULT}ms ${EASE.QUART}`,
-    backgroundColor: backgroundColor,
+    backgroundColor,
     borderRadius: '160px',
     cursor: active ? 'default' : undefined,
     display: 'inline-block',
