@@ -54,7 +54,7 @@ export async function start(parameters: Parameters): Promise<void> {
 
   if (!travisCommitRange) {
     if (travisTag) {
-      logger.info('Info: Using the two last tags as commit range since no commit range was specified.');
+      logger.info('Info: Using the latest tag as commit base since no commit range was specified.');
       travisCommitRange = await ChangelogBot.runCommand(`git describe --abbrev=0 --tags "${travisTag}^"`);
     } else {
       throw new Error('You need to specify a commit range or a tag. Otherwise this bot will not work.');

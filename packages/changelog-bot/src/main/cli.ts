@@ -19,7 +19,7 @@
  *
  */
 
-import * as program from 'commander';
+import program from 'commander';
 import logdown from 'logdown';
 
 import {Parameters} from './Interfaces';
@@ -69,11 +69,9 @@ const parameters: Parameters = {
 
 logger.log(`wire-changelog-bot v${version}`);
 
-startChangelogBot(parameters)
-  .then(() => process.exit(0))
-  .catch(error => {
-    // Info:
-    // Don't log error payloads here (on a global level) as they can leak sensitive information. Stack traces are ok!
-    logger.error(error.message, error.stack);
-    process.exit(1);
-  });
+startChangelogBot(parameters).catch(error => {
+  // Info:
+  // Don't log error payloads here (on a global level) as they can leak sensitive information. Stack traces are ok!
+  logger.error(error.stack);
+  process.exit(1);
+});
