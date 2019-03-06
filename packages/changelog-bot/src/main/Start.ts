@@ -32,6 +32,7 @@ export async function start(parameters: Parameters): Promise<void> {
   const {backend, conversationIds, email, excludeCommitTypes, password, travisRepoSlug, travisTag} = parameters;
   let {travisCommitRange, message} = parameters;
   const isCustomMessage = !!message;
+  const MAXIMUM_CHARS = 10000;
 
   const loginData: LoginDataBackend = {
     backend,
@@ -62,7 +63,12 @@ export async function start(parameters: Parameters): Promise<void> {
   }
 
   if (!message) {
-    message = await ChangelogBot.generateChangelog(travisRepoSlug, travisCommitRange, undefined, excludeCommitTypes);
+    message = await ChangelogBot.generateChangelog(
+      travisRepoSlug,
+      travisCommitRange,
+      MAXIMUM_CHARS,
+      excludeCommitTypes
+    );
   }
 
   const messageData: ChangelogData = {
