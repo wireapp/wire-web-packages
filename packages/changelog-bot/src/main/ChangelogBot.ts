@@ -116,8 +116,6 @@ class ChangelogBot {
       .replace(githubCommitLinks, '$1')
       .replace(githubPRLinks, '$1/files?diff=unified)');
 
-    console.log(styledChangelog);
-
     if (maximumChars && styledChangelog.length > maximumChars) {
       styledChangelog = styledChangelog.substr(0, maximumChars - omittedMessage.length);
 
