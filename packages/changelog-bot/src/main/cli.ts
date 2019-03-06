@@ -44,6 +44,7 @@ program
   .option('-b, --backend <type>', 'Backend type ("production" or "staging")')
   .option('-s, --slug <slug>', 'A repo slug')
   .option('-r, --range <range>', 'The commit range')
+  .option('-t, --tag <tag>', 'The commit tag')
   .option('-x, --exclude-commit-types <type,...>', 'Commit types to exclude (e.g. chore,build,...)')
   .parse(process.argv);
 
@@ -63,6 +64,7 @@ const parameters: Parameters = {
   password: program.password || process.env.WIRE_CHANGELOG_BOT_PASSWORD,
   travisCommitRange: program.range || process.env.TRAVIS_COMMIT_RANGE,
   travisRepoSlug: program.slug || process.env.TRAVIS_REPO_SLUG,
+  travisTag: program.tag || process.env.TRAVIS_TAG,
 };
 
 logger.log(`wire-changelog-bot v${version}`);
