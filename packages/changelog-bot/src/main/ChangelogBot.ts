@@ -58,7 +58,11 @@ class ChangelogBot {
     const client = new APIClient({store: engine, urls: backendUrls});
 
     const account = new Account(client);
-    await account.login(this.loginData);
+    try {
+      await account.login(this.loginData);
+    } catch (error) {
+      throw new Error(JSON.stringify(error));
+    }
 
     if (!conversationIds) {
       const allConversations = await client.conversation.api.getAllConversations();
