@@ -37,7 +37,7 @@ logger.state.isEnabled = true;
 
 class ChangelogBot {
   public static SETUP = {
-    EXCLUDED_COMMIT_TYPES: ['build', 'chore', 'docs', 'refactor', 'test'],
+    EXCLUDED_COMMIT_TYPES: ['build', 'chore', 'docs', 'refactor', 'runfix', 'test'],
   };
 
   constructor(private readonly loginData: LoginDataBackend, private readonly messageData: ChangelogData) {}
