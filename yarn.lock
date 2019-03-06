@@ -5543,14 +5543,6 @@ generate-changelog@1.7.1:
     commander "^2.9.0"
     github-url-from-git "^1.4.0"
 
-"generate-changelog@git+https://github.com/wireapp/generate-changelog#v1.7.2":
-  version "1.7.1"
-  resolved "git+https://github.com/wireapp/generate-changelog#4918cd9d3ddd9c94e8de4b1ed1ae353d52909472"
-  dependencies:
-    bluebird "^3.0.6"
-    commander "^2.9.0"
-    github-url-from-git "^1.4.0"
-
 genfun@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/genfun/-/genfun-5.0.0.tgz#9dd9710a06900a5c4a5bf57aca5da4e52fe76537"

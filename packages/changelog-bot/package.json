@@ -7,7 +7,7 @@
     "@types/node": "11.10.4",
     "@wireapp/core": "8.1.36",
     "commander": "2.19.0",
-    "generate-changelog": "git+https://github.com/wireapp/generate-changelog#v1.7.2"
+    "generate-changelog": "1.7.1"
   },
   "description": "A changelog notification bot.",
   "devDependencies": {

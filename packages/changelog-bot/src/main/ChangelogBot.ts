@@ -90,8 +90,9 @@ class ChangelogBot {
     excludedCommitTypes?: string[]
   ): Promise<string> {
     const headlines = new RegExp('^#+ (.*)$', 'gm');
-    const listItems = new RegExp('^\\* (.*) \\(\\[.*$', 'gm');
-    const githubIssueLinks = new RegExp('\\[[^\\]]+\\]\\((https:[^)]+)\\)', 'gm');
+    const listItems = new RegExp('^(\\s*)\\* ', 'gm');
+    const githubCommitLinks = new RegExp('( \\(\\[#\\d+\\]\\([^)]+\\)\\)) .*$', 'gm');
+    const githubPRLinks = new RegExp('(/pull/[\\d]+)\\)', 'gm');
     const omittedMessage = '... (content omitted)';
 
     const exclude = excludedCommitTypes || ChangelogBot.SETUP.EXCLUDED_COMMIT_TYPES;
@@ -111,8 +112,11 @@ class ChangelogBot {
 
     let styledChangelog = changelog
       .replace(headlines, '**$1**')
-      .replace(listItems, '– $1')
-      .replace(githubIssueLinks, '$1/files?diff=unified');
+      .replace(listItems, '$1- ')
+      .replace(githubCommitLinks, '$1')
+      .replace(githubPRLinks, '$1/files?diff=unified)');
+
+    console.log(styledChangelog);
 
     if (maximumChars && styledChangelog.length > maximumChars) {
       styledChangelog = styledChangelog.substr(0, maximumChars - omittedMessage.length);
