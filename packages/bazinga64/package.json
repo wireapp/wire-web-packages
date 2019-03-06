@@ -49,6 +49,5 @@
     "test:browser": "karma start",
     "test:node": "nyc jasmine --config=jasmine.json"
   },
-  "types": "dist/bazinga64.d.ts",
   "version": "5.3.46"
 }
