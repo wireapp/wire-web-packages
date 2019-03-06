@@ -17,12 +17,13 @@
  *
  */
 
-const dist = 'dist/';
+import {Config, ConfigOptions} from 'karma';
+import * as jasmineConfig from './jasmine.json';
 
-module.exports = function(config) {
-  config.set({
+module.exports = function(config: Config) {
+  const options: ConfigOptions = {
     autoWatch: false,
-    basePath: '',
+    basePath: jasmineConfig.spec_dir,
     browserNoActivityTimeout: 90000,
     browsers: ['ChromeNoSandbox'],
     client: {
@@ -36,18 +37,16 @@ module.exports = function(config) {
         flags: ['--no-sandbox'],
       },
     },
-    exclude: [],
-    files: [`${dist}bazinga64.test.bundle.js`],
-    frameworks: ['jasmine'],
+    files: ['**/*.ts'],
+    frameworks: ['jasmine', 'karma-typescript'],
     logLevel: config.LOG_INFO,
     port: 9876,
     preprocessors: {
-      '**/*.js': ['sourcemap'],
+      '**/*.ts': ['karma-typescript'],
     },
-    reporters: ['jasmine-diff', 'spec'],
+    reporters: ['progress', 'karma-typescript'],
     singleRun: true,
-    specReporter: {
-      showSpecTiming: true,
-    },
-  });
+  };
+
+  config.set({...options});
 };
