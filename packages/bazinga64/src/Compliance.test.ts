@@ -17,8 +17,16 @@
  *
  */
 
-import * as sodium from 'libsodium-wrappers-sumo';
+import * as _sodium from 'libsodium-wrappers-sumo';
 import * as bazinga64 from './index';
+
+let sodium: typeof _sodium;
+
+beforeAll(async done => {
+  await _sodium.ready;
+  sodium = _sodium;
+  done();
+});
 
 describe('decode Base64', () => {
   it('is compliant with libsodium on short sequences', () => {
