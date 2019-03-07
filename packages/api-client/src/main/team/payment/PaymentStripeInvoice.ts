@@ -1,3 +1,5 @@
+import {SupportedCurrency} from './SupportedCurrency';
+
 /*
  * Wire
  * Copyright (C) 2018 Wire Swiss GmbH
@@ -24,6 +26,7 @@ interface PaymentStripeInvoice {
   date: number;
   paid: boolean;
   closed: boolean;
+  currency: SupportedCurrency;
   url: string;
   total: number;
 }

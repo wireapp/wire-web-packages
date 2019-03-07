@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2019 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,15 +17,11 @@
  *
  */
 
-import {MemberRole} from '../MemberRole';
-
-interface TeamInvitation {
-  created_at: Date;
-  created_by: string;
-  role: MemberRole;
-  email: string;
-  id: string;
-  team: string;
+enum MemberRole {
+  ADMIN = 'admin',
+  PARTNER = 'partner',
+  MEMBER = 'member',
+  OWNER = 'owner',
 }
 
-export {TeamInvitation};
+export {MemberRole};
