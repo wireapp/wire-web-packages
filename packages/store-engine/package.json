@@ -15,7 +15,9 @@
     "karma-jasmine-diff-reporter": "2.0.0",
     "karma-sourcemap-loader": "0.3.7",
     "karma-spec-reporter": "0.0.32",
+    "nyc": "13.3.0",
     "rimraf": "2.6.3",
+    "ts-node": "8.0.3",
     "typescript": "3.3.3333",
     "webpack": "4.29.6",
     "webpack-cli": "3.2.3"
@@ -50,7 +52,7 @@
     "test": "yarn test:node && yarn test:browser",
     "test:browser": "webpack --progress && karma start",
     "test:project": "yarn dist && yarn test",
-    "test:node": "jasmine --config=jasmine.json"
+    "test:node": "nyc jasmine --config=jasmine.json"
   },
   "types": "./dist/commonjs/index.d.ts",
   "version": "1.1.28"

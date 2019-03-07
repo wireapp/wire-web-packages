@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "allowJs": true,
     "outDir": "dist/commonjs",
     "rootDir": "src/main"
   },
