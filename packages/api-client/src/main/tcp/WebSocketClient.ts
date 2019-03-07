@@ -20,10 +20,11 @@
 import EventEmitter from 'events';
 import logdown from 'logdown';
 import {IncomingNotification} from '../conversation/';
-import {HttpClient, NetworkError} from '../http/';
+import {BackendErrorLabel, HttpClient, NetworkError, StatusCode} from '../http/';
 
 import Html5WebSocket from 'html5-websocket';
 import * as buffer from '../shims/node/buffer';
+
 const ReconnectingWebsocket = require('reconnecting-websocket');
 
 class WebSocketClient extends EventEmitter {
@@ -90,8 +91,15 @@ class WebSocketClient extends EventEmitter {
 
       this.socket.onerror = () =>
         this.client.refreshAccessToken().catch(error => {
+          const hasInvalidCookie =
+            error.code === StatusCode.FORBIDDEN && error.label === BackendErrorLabel.INVALID_CREDENTIALS;
+
           if (error instanceof NetworkError) {
             this.logger.warn(error);
+          } else if (hasInvalidCookie) {
+            const closeReason = `Cannot renew access token because cookie is invalid: ${error.message}`;
+            this.logger.warn(closeReason, error);
+            this.disconnect(closeReason);
           } else {
             throw error;
           }
