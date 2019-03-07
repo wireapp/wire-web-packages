@@ -22,6 +22,8 @@ import {PermissionsData} from './PermissionsData';
 interface MemberData {
   user: string;
   permissions: PermissionsData;
+  created_at: number;
+  created_by: string;
 }
 
 export {MemberData};
