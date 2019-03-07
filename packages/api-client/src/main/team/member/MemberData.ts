@@ -20,10 +20,10 @@
 import {PermissionsData} from './PermissionsData';
 
 interface MemberData {
-  user: string;
-  permissions: PermissionsData;
   created_at: Date;
   created_by: string;
+  permissions: PermissionsData;
+  user: string;
 }
 
 export {MemberData};
