@@ -20,9 +20,10 @@
 import EventEmitter from 'events';
 import logdown from 'logdown';
 import {IncomingNotification} from '../conversation/';
-import {BackendErrorLabel, HttpClient, NetworkError, StatusCode} from '../http/';
+import {BackendErrorMapper, HttpClient, NetworkError} from '../http/';
 
 import Html5WebSocket from 'html5-websocket';
+import {InvalidTokenError} from '../auth';
 import * as buffer from '../shims/node/buffer';
 
 const ReconnectingWebsocket = require('reconnecting-websocket');
@@ -52,6 +53,8 @@ class WebSocketClient extends EventEmitter {
   };
 
   public static TOPIC = {
+    ON_DISCONNECT: 'WebSocketClient.TOPIC.ON_DISCONNECT',
+    ON_ERROR: 'WebSocketClient.TOPIC.ON_ERROR',
     ON_MESSAGE: 'WebSocketClient.TOPIC.ON_MESSAGE',
   };
 
@@ -91,17 +94,17 @@ class WebSocketClient extends EventEmitter {
 
       this.socket.onerror = () =>
         this.client.refreshAccessToken().catch(error => {
-          const hasInvalidCookie =
-            error.code === StatusCode.FORBIDDEN && error.label === BackendErrorLabel.INVALID_CREDENTIALS;
-
           if (error instanceof NetworkError) {
             this.logger.warn(error);
-          } else if (hasInvalidCookie) {
-            const closeReason = `Cannot renew access token because cookie is invalid: ${error.message}`;
-            this.logger.warn(closeReason, error);
-            this.disconnect(closeReason);
           } else {
-            throw error;
+            const mappedError = BackendErrorMapper.map(error);
+            if (error instanceof InvalidTokenError) {
+              const closeReason = `Cannot renew access token because cookie is invalid: ${error.message}`;
+              this.emit(WebSocketClient.TOPIC.ON_DISCONNECT, mappedError);
+              this.disconnect(closeReason);
+            } else {
+              this.emit(WebSocketClient.TOPIC.ON_ERROR, mappedError);
+            }
           }
         });
 
