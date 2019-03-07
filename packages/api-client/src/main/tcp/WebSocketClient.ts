@@ -99,9 +99,7 @@ class WebSocketClient extends EventEmitter {
           } else {
             const mappedError = BackendErrorMapper.map(error);
             if (error instanceof InvalidTokenError) {
-              const closeReason = `Cannot renew access token because cookie is invalid: ${error.message}`;
               this.emit(WebSocketClient.TOPIC.ON_DISCONNECT, mappedError);
-              this.disconnect(closeReason);
             } else {
               this.emit(WebSocketClient.TOPIC.ON_ERROR, mappedError);
             }
