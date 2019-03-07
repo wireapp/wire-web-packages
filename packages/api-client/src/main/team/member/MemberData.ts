@@ -22,7 +22,7 @@ import {PermissionsData} from './PermissionsData';
 interface MemberData {
   user: string;
   permissions: PermissionsData;
-  created_at: number;
+  created_at: Date;
   created_by: string;
 }
 
