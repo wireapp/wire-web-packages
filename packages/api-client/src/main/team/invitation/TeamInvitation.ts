@@ -22,9 +22,9 @@ import {MemberRole} from '../MemberRole';
 interface TeamInvitation {
   created_at: Date;
   created_by: string;
-  role: MemberRole;
   email: string;
   id: string;
+  role: MemberRole;
   team: string;
 }
 

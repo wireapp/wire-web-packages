@@ -22,9 +22,9 @@
 import {SupportedCurrency} from '../payment/';
 
 enum PaymentStripeChargeStatus {
-  SUCCEEDED = 'succeeded',
-  PENDING = 'pending',
   FAILED = 'failed',
+  PENDING = 'pending',
+  SUCCEEDED = 'succeeded',
 }
 
 interface PaymentStripeCharge {

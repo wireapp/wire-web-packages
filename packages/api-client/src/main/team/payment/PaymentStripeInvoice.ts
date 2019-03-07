@@ -21,14 +21,14 @@ import {SupportedCurrency} from './SupportedCurrency';
 
 // https://stripe.com/docs/api#invoice_object
 interface PaymentStripeInvoice {
-  id: string;
-  number: string;
-  date: number;
-  paid: boolean;
   closed: boolean;
   currency: SupportedCurrency;
-  url: string;
+  date: number;
+  id: string;
+  number: string;
+  paid: boolean;
   total: number;
+  url: string;
 }
 
 export {PaymentStripeInvoice};

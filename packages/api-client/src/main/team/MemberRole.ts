@@ -19,9 +19,9 @@
 
 enum MemberRole {
   ADMIN = 'admin',
-  PARTNER = 'partner',
   MEMBER = 'member',
   OWNER = 'owner',
+  PARTNER = 'partner',
 }
 
 export {MemberRole};

@@ -21,10 +21,10 @@ import {InvoiceData, PaymentPlan} from './';
 import {PaymentPlanID} from './PaymentPlan';
 
 enum PaymentStatus {
-  TRAILING = 'trialing',
   ACTIVE = 'active',
-  PAST_DUE = 'past_due',
   CANCELED = 'canceled',
+  PAST_DUE = 'past_due',
+  TRAILING = 'trialing',
   UNPAID = 'unpaid',
 }
 
@@ -39,9 +39,9 @@ interface PaymentCardData {
 }
 
 interface PaymentSuspension {
-  invoice: string;
-  graceEnding: number;
   created: number;
+  graceEnding: number;
+  invoice: string;
 }
 
 interface PaymentData {
