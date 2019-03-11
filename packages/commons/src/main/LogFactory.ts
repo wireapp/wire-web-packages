@@ -76,7 +76,7 @@ class LogFactory {
     }
   }
 
-  static async writeMessage(message: string, logFilePath: string): void {
+  static async writeMessage(message: string, logFilePath: string): Promise<void> {
     const withoutColor = message.replace(ansiRegex(), '');
     try {
       await fs.outputFile(logFilePath, `${withoutColor}\r\n`, {
