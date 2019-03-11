@@ -1709,6 +1709,13 @@
   resolved "https://registry.yarnpkg.com/@types/jasmine/-/jasmine-3.3.9.tgz#ee886a9113db567e722a8a0c37f0e6283f2cefa3"
   integrity sha512-vw3VyFPa9mlba6NZPBZC3q2Zrnkgy5xuCVI43/tTLX6umdYrYvcFtQUKi2zH3PjFZQ9XCxNM/NMrM9uk8TPOzg==
 
+"@types/jszip@3.1.5":
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/@types/jszip/-/jszip-3.1.5.tgz#664b424b15aadf0489e871d319f4b18ddc6e24ea"
+  integrity sha512-DXjYsQr0B9rbjI8n7ZoIFXFMNHDBb9XLYRgwVYxhtsnr/HfFglpxb/InshOBAzkmW4WjgtvnA212voeVV2vwiA==
+  dependencies:
+    "@types/node" "*"
+
 "@types/karma@3.0.2":
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/@types/karma/-/karma-3.0.2.tgz#c66654ea7167ae9fb62880ad2ef99cc18b64940d"
@@ -6479,6 +6486,11 @@ ignore@^4.0.6:
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-4.0.6.tgz#750e3db5862087b4737ebac8207ffd1ef27b25fc"
   integrity sha512-cyFDKrqc/YdcWFniJhzI42+AzS+gNwmUzOSFcRCQYwySuBBBy/KjuxWLZ/FHEH6Moq1NizMOBWyTcv8O4OZIMg==
 
+immediate@~3.0.5:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/immediate/-/immediate-3.0.6.tgz#9db1dbd0faf8de6fbe0f5dd5e56bb606280de69b"
+  integrity sha1-nbHb0Pr43m++D13V5Wu2BigN5ps=
+
 immutable@^3:
   version "3.8.2"
   resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.2.tgz#c2439951455bb39913daf281376f1530e104adf3"
@@ -7416,6 +7428,16 @@ jsx-ast-utils@^2.0.1:
   dependencies:
     array-includes "^3.0.3"
 
+jszip@3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/jszip/-/jszip-3.2.0.tgz#1c179e8692777490ca4e9b8f3ced08f9b820da2c"
+  integrity sha512-4WjbsaEtBK/DHeDZOPiPw5nzSGLDEDDreFRDEgnoMwmknPjTqa+23XuYFk6NiGbeiAeZCctiQ/X/z0lQBmDVOQ==
+  dependencies:
+    lie "~3.3.0"
+    pako "~1.0.2"
+    readable-stream "~2.3.6"
+    set-immediate-shim "~1.0.1"
+
 just-debounce@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/just-debounce/-/just-debounce-1.0.0.tgz#87fccfaeffc0b68cd19d55f6722943f929ea35ea"
@@ -7733,6 +7755,13 @@ libsodium@0.7.4:
     nopt "^2.2.0"
     read-installed "~3.1.3"
     treeify "^1.0.1"
+
+lie@~3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/lie/-/lie-3.3.0.tgz#dcf82dee545f46074daf200c7c1c5a08e0f40f6a"
+  integrity sha512-UaiMJzeWRlEujzAuw5LokY1L5ecNQYZKfmyZ9L7wDHb/p5etKaxXhohBcrw0EYby+G/NA52vRSN4N39dxHAIwQ==
+  dependencies:
+    immediate "~3.0.5"
 
 liftoff@^2.5.0:
   version "2.5.0"
@@ -9492,7 +9521,7 @@ pad@^2.2.2:
   dependencies:
     wcwidth "^1.0.1"
 
-pako@~1.0.5:
+pako@~1.0.2, pako@~1.0.5:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.8.tgz#6844890aab9c635af868ad5fecc62e8acbba3ea4"
   integrity sha512-6i0HVbUfcKaTv+EG8ZTr75az7GFXcLYk9UyLEg7Notv/Ma+z/UG3TCoz6GiNeOrn1E/e63I0X/Hpw18jHOTUnA==
@@ -10936,6 +10965,11 @@ set-getter@^0.1.0:
   integrity sha1-12nBgsnVpR9AkUXy+6guXoboA3Y=
   dependencies:
     to-object-path "^0.3.0"
+
+set-immediate-shim@~1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/set-immediate-shim/-/set-immediate-shim-1.0.1.tgz#4b2b1b27eb808a9f8dcc481a58e5e56f599f3f61"
+  integrity sha1-SysbJ+uAip+NzEgaWOXlb1mfP2E=
 
 set-value@^0.4.3:
   version "0.4.3"
