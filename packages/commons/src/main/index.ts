@@ -37,7 +37,7 @@ export {
   RandomUtil,
   Runtime,
   StringUtil,
+  TypeUtil,
   UrlUtil,
   ValidationUtil,
-  TypeUtil,
 };
