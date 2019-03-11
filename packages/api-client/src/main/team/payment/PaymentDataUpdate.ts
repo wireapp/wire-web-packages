@@ -20,9 +20,9 @@
 import {PaymentInterval} from '../payment/';
 
 interface PaymentDataUpdate {
+  coupon?: string;
   interval?: PaymentInterval;
   source?: string;
-  coupon?: string;
 }
 
 export {PaymentDataUpdate};
