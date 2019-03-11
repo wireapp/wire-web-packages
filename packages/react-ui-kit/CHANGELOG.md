@@ -3,6 +3,166 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.21...@wireapp/react-ui-kit@5.0.22) (2019-03-07)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [5.0.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.20...@wireapp/react-ui-kit@5.0.21) (2019-03-06)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [5.0.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.19...@wireapp/react-ui-kit@5.0.20) (2019-03-06)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [5.0.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.18...@wireapp/react-ui-kit@5.0.19) (2019-03-06)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [5.0.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.17...@wireapp/react-ui-kit@5.0.18) (2019-03-04)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Initial Pill animation ([#1598](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1598)) ([2464ac4](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/2464ac4))
+
+
+
+
+
+## [5.0.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.16...@wireapp/react-ui-kit@5.0.17) (2019-03-04)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Raise prio for Link CSS ([#1591](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1591)) ([ce64aaa](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/ce64aaa))
+
+
+
+
+
+## [5.0.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.15...@wireapp/react-ui-kit@5.0.16) (2019-03-01)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Add global styles ([#1590](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1590)) ([6bc1ebb](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/6bc1ebb))
+
+
+
+
+
+## [5.0.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.14...@wireapp/react-ui-kit@5.0.15) (2019-02-28)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Filter FlexBox properties ([3342035](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/3342035))
+* **react-ui-kit:** FlexBox LegacyRef ([13b15dc](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/13b15dc))
+* **react-ui-kit:** Forward FlexBox ref ([3d5c32a](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/3d5c32a))
+
+
+
+
+
+## [5.0.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.13...@wireapp/react-ui-kit@5.0.14) (2019-02-28)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Export heading styles ([c6f1138](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/c6f1138))
+
+
+
+
+
+## [5.0.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.12...@wireapp/react-ui-kit@5.0.13) (2019-02-28)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Export heading style functions ([#1582](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1582)) ([80f97b9](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/80f97b9))
+
+
+
+
+
+## [5.0.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.11...@wireapp/react-ui-kit@5.0.12) (2019-02-28)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Use correct initial state for MatchMedia ([#1581](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1581)) ([6653dfc](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/6653dfc))
+
+
+
+
+
+## [5.0.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.10...@wireapp/react-ui-kit@5.0.11) (2019-02-27)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Apply remaining props to SVGIcon ([#1579](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1579)) ([b107845](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/b107845))
+
+
+
+
+
+## [5.0.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.9...@wireapp/react-ui-kit@5.0.10) (2019-02-27)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Forward Container refs ([#1578](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1578)) ([6b66a84](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/6b66a84))
+
+
+
+
+
+## [5.0.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.8...@wireapp/react-ui-kit@5.0.9) (2019-02-27)
+
+
+### Bug Fixes
+
+* Export react types ([#1576](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1576)) ([b2fd565](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/b2fd565))
+
+
+
+
+
+## [5.0.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.7...@wireapp/react-ui-kit@5.0.8) (2019-02-26)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [5.0.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.6...@wireapp/react-ui-kit@5.0.7) (2019-02-26)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
 ## [5.0.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.5...@wireapp/react-ui-kit@5.0.6) (2019-02-26)
 
 **Note:** Version bump only for package @wireapp/react-ui-kit

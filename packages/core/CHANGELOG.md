@@ -3,6 +3,185 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.46](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.45...@wireapp/core@8.1.46) (2019-03-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.45](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.44...@wireapp/core@8.1.45) (2019-03-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.44](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.43...@wireapp/core@8.1.44) (2019-03-11)
+
+
+### Bug Fixes
+
+* **api-client:** bump @types/node from 11.10.5 to 11.11.0 ([c94a359](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/c94a359))
+
+
+
+
+
+## [8.1.43](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.42...@wireapp/core@8.1.43) (2019-03-07)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.42](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.41...@wireapp/core@8.1.42) (2019-03-07)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.41](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.40...@wireapp/core@8.1.41) (2019-03-07)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.40](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.39...@wireapp/core@8.1.40) (2019-03-07)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.39](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.38...@wireapp/core@8.1.39) (2019-03-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.38](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.37...@wireapp/core@8.1.38) (2019-03-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.37](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.36...@wireapp/core@8.1.37) (2019-03-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.36](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.35...@wireapp/core@8.1.36) (2019-03-04)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.35](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.34...@wireapp/core@8.1.35) (2019-03-04)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.34](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.33...@wireapp/core@8.1.34) (2019-03-01)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.33](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.32...@wireapp/core@8.1.33) (2019-02-28)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.32](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.31...@wireapp/core@8.1.32) (2019-02-28)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.31](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.30...@wireapp/core@8.1.31) (2019-02-28)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.30](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.29...@wireapp/core@8.1.30) (2019-02-28)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.29](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.28...@wireapp/core@8.1.29) (2019-02-27)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.28](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.27...@wireapp/core@8.1.28) (2019-02-27)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.27](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.26...@wireapp/core@8.1.27) (2019-02-27)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.26](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.25...@wireapp/core@8.1.26) (2019-02-26)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.25](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.24...@wireapp/core@8.1.25) (2019-02-26)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
 ## [8.1.24](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.23...@wireapp/core@8.1.24) (2019-02-26)
 
 **Note:** Version bump only for package @wireapp/core

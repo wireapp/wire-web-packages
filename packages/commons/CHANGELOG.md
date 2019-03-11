@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@1.0.13...@wireapp/commons@1.0.14) (2019-03-11)
+
+
+### Bug Fixes
+
+* **api-client:** bump @types/node from 11.10.5 to 11.11.0 ([c94a359](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/commit/c94a359))
+
+
+
+
+
+## [1.0.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@1.0.12...@wireapp/commons@1.0.13) (2019-03-07)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [1.0.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@1.0.11...@wireapp/commons@1.0.12) (2019-03-06)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [1.0.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@1.0.10...@wireapp/commons@1.0.11) (2019-03-04)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
 ## [1.0.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@1.0.9...@wireapp/commons@1.0.10) (2019-02-26)
 
 **Note:** Version bump only for package @wireapp/commons

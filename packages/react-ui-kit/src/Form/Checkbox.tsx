@@ -19,8 +19,9 @@
 
 /** @jsx jsx */
 import {jsx} from '@emotion/core';
+import React from 'react';
 import {COLOR} from '../Identity';
-import {Text, TextProps, textStyles} from '../Text';
+import {Text, TextProps, textStyle} from '../Text';
 import {INPUT_CLASSNAME, Input, InputProps} from './Input';
 
 export interface StyledLabelProps<T = HTMLLabelElement> extends React.HTMLProps<T> {
@@ -62,7 +63,10 @@ interface CheckboxProps<T = HTMLInputElement> extends InputProps<T> {
   id?: string;
 }
 
-const Checkbox: React.SFC<CheckboxProps> = ({id = Math.random().toString(), children, style, disabled, ...props}) => (
+const Checkbox: React.FC<CheckboxProps<HTMLInputElement>> = React.forwardRef<
+  HTMLInputElement,
+  CheckboxProps<HTMLInputElement>
+>(({id = Math.random().toString(), children, style, disabled, ...props}, ref) => (
   <div
     css={{
       alignItems: 'center',
@@ -81,13 +85,14 @@ const Checkbox: React.SFC<CheckboxProps> = ({id = Math.random().toString(), chil
         width: '16px',
       }}
       disabled={disabled}
+      ref={ref}
       {...props}
     />
     <StyledLabel htmlFor={id} disabled={disabled}>
       {children}
     </StyledLabel>
   </div>
-);
+));
 
 export interface CheckboxLabelProps<T = HTMLSpanElement> extends TextProps<T> {}
 
@@ -100,7 +105,7 @@ const CheckboxLabel = ({
 }: CheckboxLabelProps) => (
   <Text
     css={{
-      ...textStyles({
+      ...textStyle({
         bold,
         color,
         fontSize,

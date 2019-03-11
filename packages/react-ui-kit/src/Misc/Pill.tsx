@@ -35,18 +35,19 @@ enum PILL_TYPE {
   warning = 'WARNING',
 }
 
-const pillStyles: <T>(props: PillProps<T>) => ObjectInterpolation<undefined> = ({active = false, type = null}) => {
+const pillStyle: <T>(props: PillProps<T>) => ObjectInterpolation<undefined> = ({active = false, type = null}) => {
   const backgroundColors = {
     [PILL_TYPE.error]: COLOR.RED_OPAQUE_16,
     [PILL_TYPE.success]: COLOR.GREEN_OPAQUE_16,
     [PILL_TYPE.warning]: COLOR.YELLOW_OPAQUE_16,
   };
+  const backgroundColor = active ? '#eee' : type ? backgroundColors[type] : 'transparent';
   const pillAnimation = keyframes`
     0% {
       background-color: transparent;
     }
     100% {
-      background-color: #eee;
+      background-color: ${backgroundColor};
     }
 `;
   return {
@@ -57,7 +58,7 @@ const pillStyles: <T>(props: PillProps<T>) => ObjectInterpolation<undefined> = (
       marginRight: 0,
     },
     animation: `${pillAnimation} ${DURATION.DEFAULT}ms ${EASE.QUART}`,
-    backgroundColor: active ? '#eee' : type ? backgroundColors[type] : 'transparent',
+    backgroundColor,
     borderRadius: '160px',
     cursor: active ? 'default' : undefined,
     display: 'inline-block',
@@ -74,7 +75,7 @@ const pillStyles: <T>(props: PillProps<T>) => ObjectInterpolation<undefined> = (
 const filterPillProps = (props: Object) => filterProps(props, ['active']);
 
 const Pill = (props: PillProps) => (
-  <span css={pillStyles(props)} data-uie-name="element-pill" data-uie-status={props.type} {...filterPillProps(props)} />
+  <span css={pillStyle(props)} data-uie-name="element-pill" data-uie-status={props.type} {...filterPillProps(props)} />
 );
 
-export {Pill, PILL_TYPE, pillStyles, filterPillProps};
+export {Pill, PILL_TYPE, pillStyle, filterPillProps};
