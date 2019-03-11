@@ -67,16 +67,16 @@ class LogFactory {
     }
   }
 
-  static async writeTransportToFile(logTransport: logdown.TransportOptions): Promise<void> {
+  static async writeTransport(logTransport: logdown.TransportOptions): Promise<void> {
     const [time] = logTransport.args;
     const logMessage = `${time} ${logTransport.msg}`;
 
     if (this.logFilePath) {
-      await LogFactory.writeMessageToFile(this.logFilePath, logMessage);
+      await LogFactory.writeMessage(logMessage, this.logFilePath);
     }
   }
 
-  static writeMessageToFile(logFilePath: string, message: string): Promise<void> {
+  static writeMessage(message: string, logFilePath: string): Promise<void> {
     const withoutColor = message.replace(ansiRegex(), '');
     return fs.outputFile(logFilePath, `${withoutColor}\r\n`, {
       encoding: 'utf8',
@@ -103,7 +103,7 @@ class LogFactory {
 
     if (logdown.transports.length === 0) {
       logdown.transports.push(LogFactory.addTimestamp.bind({namespace: config.namespace}));
-      logdown.transports.push(LogFactory.writeTransportToFile.bind({logFilePath: config.logFilePath}));
+      logdown.transports.push(LogFactory.writeTransport.bind({logFilePath: config.logFilePath}));
     }
     const loggerName = this.createLoggerName(name, config.namespace, config.separator);
 
