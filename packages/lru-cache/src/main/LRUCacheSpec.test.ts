@@ -17,8 +17,6 @@
  *
  */
 
-/* eslint no-magic-numbers: "off" */
-
 import {LRUCache} from './LRUCache';
 
 describe('constructor', () => {
