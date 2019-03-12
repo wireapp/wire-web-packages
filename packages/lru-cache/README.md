@@ -22,4 +22,4 @@ yarn add @wireapp/lru-cache
 
 **Node.js**
 
-- [LRUCacheSpec.js](src/main/LRUCacheSpec.js)
+- [LRUCacheSpec.js](./src/main/LRUCacheSpec.test.ts)
