@@ -1,7 +1,7 @@
 {
   "all": false,
   "branches": 100,
-  "check-coverage": true,
+  "check-coverage": false,
   "exclude": ["**/*.d.ts", "**/*.test*.ts"],
   "extension": [".ts"],
   "include": ["src/**/*.ts"],

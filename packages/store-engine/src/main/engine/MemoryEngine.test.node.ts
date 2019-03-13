@@ -17,37 +17,98 @@
  *
  */
 
-import append from '../test/append';
+import appendSpec from '../test/appendSpec';
+import createSpec from '../test/createSpec';
+import deleteAllSpec from '../test/deleteAllSpec';
+import deleteSpec from '../test/deleteSpec';
+import purgeSpec from '../test/purgeSpec';
+import readAllPrimaryKeysSpec from '../test/readAllPrimaryKeysSpec';
+import readAllSpec from '../test/readAllSpec';
+import readSpec from '../test/readSpec';
+import updateOrCreateSpec from '../test/updateOrCreateSpec';
+import updateSpec from '../test/updateSpec';
 import CRUDEngine from './CRUDEngine';
 import MemoryEngine from './MemoryEngine';
 
-describe('MemoryEngine', () => {
-  const STORE_NAME = 'store-name';
+const STORE_NAME = 'store-name';
 
-  let engine: CRUDEngine;
+let engine: CRUDEngine;
 
-  async function initEngine(shouldCreateNewEngine = true) {
-    const storeEngine = shouldCreateNewEngine ? new MemoryEngine() : engine;
-    await storeEngine.init(STORE_NAME);
-    return storeEngine;
-  }
+async function initEngine(shouldCreateNewEngine = true) {
+  const storeEngine = shouldCreateNewEngine ? new MemoryEngine() : engine;
+  await storeEngine.init(STORE_NAME);
+  return storeEngine;
+}
 
-  beforeEach(async done => {
-    engine = await initEngine();
-    done();
+beforeEach(async done => {
+  engine = await initEngine();
+  done();
+});
+
+describe('init', () => {
+  it('resolves with direct access to the complete in-memory store.', async () => {
+    engine = new MemoryEngine();
+    const inMemory = await engine.init(STORE_NAME);
+    expect(inMemory[STORE_NAME]).toBeDefined();
   });
+});
 
-  describe('init', () => {
-    it('resolves with direct access to the complete in-memory store.', async () => {
-      engine = new MemoryEngine();
-      const inMemory = await engine.init(STORE_NAME);
-      expect(inMemory[STORE_NAME]).toBeDefined();
-    });
+describe('append', () => {
+  Object.entries(appendSpec).map(([description, testFunction]) => {
+    it(description, done => testFunction(done, engine));
   });
+});
 
-  describe('append', () => {
-    Object.entries(append).map(([description, testFunction]) => {
-      it(description, done => testFunction(done, engine));
-    });
+describe('create', () => {
+  Object.entries(createSpec).map(([description, testFunction]) => {
+    it(description, done => testFunction(done, engine));
+  });
+});
+
+describe('delete', () => {
+  Object.entries(deleteSpec).map(([description, testFunction]) => {
+    it(description, done => testFunction(done, engine));
+  });
+});
+
+describe('deleteAll', () => {
+  Object.entries(deleteAllSpec).map(([description, testFunction]) => {
+    it(description, done => testFunction(done, engine));
+  });
+});
+
+describe('purge', () => {
+  Object.entries(purgeSpec).map(([description, testFunction]) => {
+    it(description, done => testFunction(done, engine, initEngine));
+  });
+});
+
+describe('readAllPrimaryKeys', () => {
+  Object.entries(readAllPrimaryKeysSpec).map(([description, testFunction]) => {
+    it(description, done => testFunction(done, engine));
+  });
+});
+
+describe('readAll', () => {
+  Object.entries(readAllSpec).map(([description, testFunction]) => {
+    it(description, done => testFunction(done, engine));
+  });
+});
+
+describe('read', () => {
+  Object.entries(readSpec).map(([description, testFunction]) => {
+    it(description, done => testFunction(done, engine));
+  });
+});
+
+describe('updateOrCreate', () => {
+  Object.entries(updateOrCreateSpec).map(([description, testFunction]) => {
+    it(description, done => testFunction(done, engine));
+  });
+});
+
+describe('update', () => {
+  Object.entries(updateSpec).map(([description, testFunction]) => {
+    it(description, done => testFunction(done, engine));
   });
 });

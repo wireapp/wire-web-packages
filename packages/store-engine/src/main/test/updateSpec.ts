@@ -1,6 +1,5 @@
 import {CRUDEngine} from '../engine';
-
-const StoreEngine = require('@wireapp/store-engine');
+import {RecordNotFoundError} from '../engine/error';
 
 const TABLE_NAME = 'the-simpsons';
 
@@ -14,7 +13,7 @@ interface DomainEntity {
 }
 
 export default {
-  'fails if the record does not exist.': (done: DoneFn, engine: CRUDEngine) => {
+  'fails if the record does not exist.': async (done: DoneFn, engine: CRUDEngine) => {
     const PRIMARY_KEY = 'primary-key';
 
     const updates = {
@@ -25,13 +24,13 @@ export default {
       },
     };
 
-    engine
-      .update(TABLE_NAME, PRIMARY_KEY, updates)
-      .then(() => done.fail('Update on non-existing record should have failed'))
-      .catch(error => {
-        expect(error).toEqual(jasmine.any(StoreEngine.error.RecordNotFoundError));
-        done();
-      });
+    try {
+      await engine.update(TABLE_NAME, PRIMARY_KEY, updates);
+      console.log('B');
+    } catch (error) {
+      expect(error).toEqual(jasmine.any(RecordNotFoundError));
+      done();
+    }
   },
   'updates an existing database record.': (done: DoneFn, engine: CRUDEngine) => {
     const PRIMARY_KEY = 'primary-key';
