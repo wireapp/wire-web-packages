@@ -17,53 +17,41 @@
  *
  */
 
-import {CRUDEngine} from '../main/engine';
+import {CRUDEngine} from '../engine';
+import RecordNotFoundError from '../engine/error/RecordNotFoundError';
 
 const TABLE_NAME = 'the-simpsons';
 
 interface DomainEntity {
-  name: string;
+  some: string;
 }
 
 export default {
-  'creates a record if it does not exist in the database.': (done: DoneFn, engine: CRUDEngine) => {
+  'returns a database record.': (done: DoneFn, engine: CRUDEngine) => {
     const PRIMARY_KEY = 'primary-key';
 
     const entity = {
-      name: 'Old monitor',
-    };
-
-    const expectedAmountOfProperties = 1;
-
-    engine
-      .updateOrCreate(TABLE_NAME, PRIMARY_KEY, entity)
-      .then(primaryKey => engine.read<DomainEntity>(TABLE_NAME, primaryKey))
-      .then(updatedRecord => {
-        expect(updatedRecord.name).toBe(entity.name);
-        expect(Object.keys(updatedRecord).length).toBe(expectedAmountOfProperties);
-        done();
-      })
-      .catch(done.fail);
-  },
-  'updates an existing database record.': (done: DoneFn, engine: CRUDEngine) => {
-    const PRIMARY_KEY = 'primary-key';
-
-    const entity = {
-      name: 'Old monitor',
-    };
-
-    const update = {
-      name: 'Old monitor2',
+      some: 'value',
     };
 
     engine
       .create(TABLE_NAME, PRIMARY_KEY, entity)
-      .then(() => engine.updateOrCreate(TABLE_NAME, PRIMARY_KEY, update))
       .then(primaryKey => engine.read<DomainEntity>(TABLE_NAME, primaryKey))
-      .then(updatedRecord => {
-        expect(updatedRecord.name).toBe(update.name);
+      .then(record => {
+        expect(record.some).toBe(entity.some);
         done();
       })
-      .catch(done.fail);
+      .catch(error => done.fail(error));
+  },
+  'throws an error if a record cannot be found.': (done: DoneFn, engine: CRUDEngine) => {
+    const PRIMARY_KEY = 'primary-key';
+
+    engine
+      .read(TABLE_NAME, PRIMARY_KEY)
+      .then(() => done.fail(new Error('Method is supposed to throw an error.')))
+      .catch(error => {
+        expect(error).toEqual(jasmine.any(RecordNotFoundError));
+        done();
+      });
   },
 };

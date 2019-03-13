@@ -17,17 +17,12 @@
  *
  */
 
-import {CRUDEngine} from '../main/engine';
+import {CRUDEngine} from '../engine';
 
 const TABLE_NAME = 'the-simpsons';
 
-interface DomainEntity {
-  firstName: string;
-  lastName: string;
-}
-
 export default {
-  'returns multiple database records.': (done: DoneFn, engine: CRUDEngine) => {
+  'deletes all records from a database table.': (done: DoneFn, engine: CRUDEngine) => {
     const homer = {
       entity: {
         firstName: 'Homer',
@@ -52,19 +47,18 @@ export default {
       primaryKey: 'marge-simpson',
     };
 
-    const allEntities = [homer, lisa, marge];
-
     Promise.all([
       engine.create(TABLE_NAME, homer.primaryKey, homer.entity),
       engine.create(TABLE_NAME, lisa.primaryKey, lisa.entity),
       engine.create(TABLE_NAME, marge.primaryKey, marge.entity),
     ])
-      .then(() => engine.readAll<DomainEntity>(TABLE_NAME))
-      .then(records => {
-        expect(records.length).toBe(allEntities.length);
-        for (const counter in records) {
-          expect(records[counter].firstName).toBe(allEntities[counter].entity.firstName);
-        }
+      .then(() => engine.deleteAll(TABLE_NAME))
+      .then(hasBeenDeleted => {
+        expect(hasBeenDeleted).toBe(true);
+        return engine.readAllPrimaryKeys(TABLE_NAME);
+      })
+      .then(primaryKeys => {
+        expect(primaryKeys.length).toBe(0);
         done();
       })
       .catch(error => done.fail(error));

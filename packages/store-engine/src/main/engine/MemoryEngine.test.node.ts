@@ -17,7 +17,7 @@
  *
  */
 
-import append from '../../test/append';
+import append from '../test/append';
 import CRUDEngine from './CRUDEngine';
 import MemoryEngine from './MemoryEngine';
 

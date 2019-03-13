@@ -1,4 +1,4 @@
-import {CRUDEngine} from '../main/engine';
+import {CRUDEngine} from '../engine';
 
 const StoreEngine = require('@wireapp/store-engine');
 

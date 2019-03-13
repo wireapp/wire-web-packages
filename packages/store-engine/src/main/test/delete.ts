@@ -17,12 +17,12 @@
  *
  */
 
-import {CRUDEngine} from '../main/engine';
+import {CRUDEngine} from '../engine';
 
 const TABLE_NAME = 'the-simpsons';
 
 export default {
-  'gets the primary keys of all records in a table.': (done: DoneFn, engine: CRUDEngine) => {
+  'deletes a record.': (done: DoneFn, engine: CRUDEngine) => {
     const homer = {
       entity: {
         firstName: 'Homer',
@@ -47,19 +47,35 @@ export default {
       primaryKey: 'marge-simpson',
     };
 
-    const allEntities = [homer, lisa, marge];
+    const expectedRemainingEntities = 2;
 
     Promise.all([
       engine.create(TABLE_NAME, homer.primaryKey, homer.entity),
       engine.create(TABLE_NAME, lisa.primaryKey, lisa.entity),
       engine.create(TABLE_NAME, marge.primaryKey, marge.entity),
     ])
+      .then(() => engine.delete(TABLE_NAME, lisa.primaryKey))
       .then(() => engine.readAllPrimaryKeys(TABLE_NAME))
       .then(primaryKeys => {
-        expect(primaryKeys.length).toBe(allEntities.length);
-        for (const counter in allEntities) {
-          expect(primaryKeys[counter]).toBe(allEntities[counter].primaryKey);
-        }
+        expect(primaryKeys.length).toBe(expectedRemainingEntities);
+        expect(primaryKeys[0]).toBe(homer.primaryKey);
+        expect(primaryKeys[1]).toBe(marge.primaryKey);
+        done();
+      })
+      .catch(error => done.fail(error));
+  },
+  'returns the primary key of a deleted record.': (done: DoneFn, engine: CRUDEngine) => {
+    const PRIMARY_KEY = 'primary-key';
+
+    const entity = {
+      some: 'value',
+    };
+
+    engine
+      .create(TABLE_NAME, PRIMARY_KEY, entity)
+      .then(primaryKey => engine.delete(TABLE_NAME, primaryKey))
+      .then(primaryKey => {
+        expect(primaryKey).toBe(PRIMARY_KEY);
         done();
       })
       .catch(error => done.fail(error));
