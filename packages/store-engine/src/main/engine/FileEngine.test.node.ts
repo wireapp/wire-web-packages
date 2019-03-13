@@ -19,6 +19,7 @@
 
 import * as fs from 'fs-extra';
 import * as path from 'path';
+import {FileEngine} from '../engine';
 import appendSpec from '../test/appendSpec';
 import createSpec from '../test/createSpec';
 import deleteAllSpec from '../test/deleteAllSpec';
@@ -31,7 +32,6 @@ import updateOrCreateSpec from '../test/updateOrCreateSpec';
 import updateSpec from '../test/updateSpec';
 import CRUDEngine from './CRUDEngine';
 import {PathValidationError} from './error';
-import FileEngine from './FileEngine';
 
 const BASE_DIRECTORY = path.join(process.cwd(), '.tmp');
 const STORE_NAME = 'the-simpsons';

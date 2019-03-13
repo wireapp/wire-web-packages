@@ -17,8 +17,8 @@
  *
  */
 
+import {FileSystemEngine} from '../engine';
 import {UnsupportedError} from '../engine/error';
-import FileSystemEngine from './FileSystemEngine';
 
 const STORE_NAME = 'store-name';
 
