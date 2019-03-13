@@ -164,7 +164,8 @@ export class CopyConfig {
 
     if (stderrVersion || this.options.forceDownload) {
       if (bareUrl.startsWith('git')) {
-        bareUrl = bareUrl.replace(/^git(?::\/\/([^@]+@)?|@)([^:]+):(.*)(?:\.git)?/, 'https://$1$2/$3');
+        const gitProtocolRegex = new RegExp('^git(?::\\/\\/([^@]+@)?|@)([^:]+):(.*)(?:\\.git)?');
+        bareUrl = bareUrl.replace(gitProtocolRegex, 'https://$1$2/$3');
       }
       const url = `${bareUrl}/archive/${branch}.zip`;
       this.logger.info(`Downloading "${url}" ...`);
