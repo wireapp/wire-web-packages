@@ -1,10 +1,10 @@
 {
   "dependencies": {
-    "@emotion/core": "10.0.7",
-    "@emotion/styled": "10.0.7",
+    "@emotion/core": "10.0.9",
+    "@emotion/styled": "10.0.9",
     "@types/color": "3.0.0",
-    "@types/react": "16.8.7",
-    "bazinga64": "5.3.48",
+    "@types/react": "16.8.8",
+    "bazinga64": "5.3.49",
     "color": "3.1.0",
     "emotion-normalize": "10.0.0",
     "react": "16.8.4",
@@ -19,9 +19,9 @@
     "@babel/preset-react": "7.0.0",
     "@babel/preset-typescript": "7.3.3",
     "babel-loader": "8.0.5",
-    "babel-plugin-emotion": "10.0.7",
+    "babel-plugin-emotion": "10.0.9",
     "react-helmet": "5.2.0",
-    "react-hot-loader": "4.7.2",
+    "react-hot-loader": "4.8.0",
     "rimraf": "2.6.3",
     "typescript": "3.3.3333",
     "webpack": "4.29.6",
@@ -44,5 +44,5 @@
     "test:project": "yarn dist && yarn test",
     "test:browser": "exit 0"
   },
-  "version": "5.0.21"
+  "version": "5.0.25"
 }

@@ -67,43 +67,43 @@ class LogFactory {
     }
   }
 
-  static async writeToFile(logTransport: logdown.TransportOptions): Promise<void> {
+  static async writeTransport(logTransport: logdown.TransportOptions): Promise<void> {
     const [time] = logTransport.args;
     const logMessage = `${time} ${logTransport.msg}`;
-    const withoutColor = logMessage.replace(ansiRegex(), '');
 
     if (this.logFilePath) {
-      try {
-        await fs.outputFile(this.logFilePath, `${withoutColor}\r\n`, {
-          encoding: 'utf8',
-          flag: 'a',
-        });
-      } catch (error) {
-        console.warn(`Cannot write to log file "${this.logFilePath}": ${error.message}`, error);
-      }
+      await LogFactory.writeMessage(logMessage, this.logFilePath);
     }
   }
 
-  static createLoggerName(fileName: string, namespace: string, separator: string): string {
+  static async writeMessage(message: string, logFilePath: string): Promise<void> {
+    const withoutColor = message.replace(ansiRegex(), '');
+    return fs.outputFile(logFilePath, `${withoutColor}\r\n`, {
+      encoding: 'utf8',
+      flag: 'a',
+    });
+  }
+
+  static createLoggerName(fileName: string, namespace?: string, separator?: string): string {
     if (typeof window === 'undefined') {
       fileName = path.basename(fileName, path.extname(fileName));
     }
-    return [namespace, fileName].join(separator);
+    return [namespace, fileName].filter(Boolean).join(separator);
   }
 
   static getLogger(name: string, options?: LoggerOptions): logdown.Logger {
-    const defaults = {
+    const defaults: LoggerOptions = {
       color: LogFactory.getColor(),
       forceEnable: false,
       logFilePath: '',
-      namespace: typeof window === 'undefined' ? String(process.env.npm_package_name) : '',
+      namespace: typeof window === 'undefined' ? process.env.npm_package_name || '' : '',
       separator: '::',
     };
-    const config = {...defaults, ...options};
+    const config: LoggerOptions = {...defaults, ...options};
 
     if (logdown.transports.length === 0) {
       logdown.transports.push(LogFactory.addTimestamp.bind({namespace: config.namespace}));
-      logdown.transports.push(LogFactory.writeToFile.bind({logFilePath: config.logFilePath}));
+      logdown.transports.push(LogFactory.writeTransport.bind({logFilePath: config.logFilePath}));
     }
     const loggerName = this.createLoggerName(name, config.namespace, config.separator);
 

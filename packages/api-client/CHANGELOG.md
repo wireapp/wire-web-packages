@@ -3,6 +3,129 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.2.61](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@3.2.60...@wireapp/api-client@3.2.61) (2019-03-12)
+
+
+### Bug Fixes
+
+* **api-client:** Return type of putPaymentBilling ([#1632](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1632)) ([6aa1dcc](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/6aa1dcc))
+
+
+
+
+
+## [3.2.60](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@3.2.59...@wireapp/api-client@3.2.60) (2019-03-12)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [3.2.59](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@3.2.58...@wireapp/api-client@3.2.59) (2019-03-12)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [3.2.58](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@3.2.57...@wireapp/api-client@3.2.58) (2019-03-11)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [3.2.57](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@3.2.56...@wireapp/api-client@3.2.57) (2019-03-11)
+
+
+### Bug Fixes
+
+* **api-client:** Return type of PUT billing ([#1621](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1621)) ([642cf3c](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/642cf3c))
+
+
+
+
+
+## [3.2.56](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@3.2.55...@wireapp/api-client@3.2.56) (2019-03-11)
+
+
+### Bug Fixes
+
+* **api-client:** Add Invoice custom flag ([#1620](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1620)) ([604afb3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/604afb3))
+
+
+
+
+
+## [3.2.55](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@3.2.54...@wireapp/api-client@3.2.55) (2019-03-11)
+
+
+### Bug Fixes
+
+* **api-client:** Make MemberData's created_at and created_by attributes optional ([37243c5](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/37243c5))
+
+
+
+
+
+## [3.2.54](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@3.2.53...@wireapp/api-client@3.2.54) (2019-03-11)
+
+
+### Bug Fixes
+
+* **api-client:** bump @types/node from 11.10.5 to 11.11.0 ([c94a359](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/c94a359))
+
+
+
+
+
+## [3.2.53](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@3.2.52...@wireapp/api-client@3.2.53) (2019-03-07)
+
+
+### Bug Fixes
+
+* **api-client:** Disconnect WebSocket when cookie is invalid ([#1613](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1613)) ([461f1cf](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/461f1cf))
+
+
+
+
+
+## [3.2.52](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@3.2.51...@wireapp/api-client@3.2.52) (2019-03-07)
+
+
+### Bug Fixes
+
+* **api-client:** Additional invoice type values ([#1612](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1612)) ([2d1e64a](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/2d1e64a))
+
+
+
+
+
+## [3.2.51](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@3.2.50...@wireapp/api-client@3.2.51) (2019-03-07)
+
+
+### Bug Fixes
+
+* **api-client:** Export MemberRole ([bbbfc30](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/bbbfc30))
+
+
+
+
+
+## [3.2.50](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@3.2.49...@wireapp/api-client@3.2.50) (2019-03-07)
+
+
+### Bug Fixes
+
+* **api-client:** Team & Payment type update ([#1611](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1611)) ([2d98f5a](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/2d98f5a))
+
+
+
+
+
 ## [3.2.49](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@3.2.48...@wireapp/api-client@3.2.49) (2019-03-06)
 
 **Note:** Version bump only for package @wireapp/api-client
