@@ -1,9 +1,13 @@
 {
   "all": false,
+  "branches": 100,
+  "check-coverage": true,
   "exclude": ["**/*.d.ts", "**/*.test*.ts"],
   "extension": [".ts"],
   "include": ["src/**/*.ts"],
+  "lines": 100,
   "per-file": false,
   "reporter": ["html"],
-  "require": ["ts-node/register"]
+  "require": ["ts-node/register"],
+  "statements": 100
 }
