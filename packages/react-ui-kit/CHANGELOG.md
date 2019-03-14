@@ -3,6 +3,92 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.26](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.25...@wireapp/react-ui-kit@5.0.26) (2019-03-13)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [5.0.25](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.24...@wireapp/react-ui-kit@5.0.25) (2019-03-12)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [5.0.24](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.23...@wireapp/react-ui-kit@5.0.24) (2019-03-12)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [5.0.23](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.22...@wireapp/react-ui-kit@5.0.23) (2019-03-11)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [5.0.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.21...@wireapp/react-ui-kit@5.0.22) (2019-03-07)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [5.0.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.20...@wireapp/react-ui-kit@5.0.21) (2019-03-06)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [5.0.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.19...@wireapp/react-ui-kit@5.0.20) (2019-03-06)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [5.0.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.18...@wireapp/react-ui-kit@5.0.19) (2019-03-06)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [5.0.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.17...@wireapp/react-ui-kit@5.0.18) (2019-03-04)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Initial Pill animation ([#1598](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1598)) ([2464ac4](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/2464ac4))
+
+
+
+
+
+## [5.0.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.16...@wireapp/react-ui-kit@5.0.17) (2019-03-04)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Raise prio for Link CSS ([#1591](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1591)) ([ce64aaa](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/ce64aaa))
+
+
+
+
+
 ## [5.0.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@5.0.15...@wireapp/react-ui-kit@5.0.16) (2019-03-01)
 
 
