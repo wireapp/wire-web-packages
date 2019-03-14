@@ -33,7 +33,7 @@ class LRUCache<T> {
   private head: Node<T> | null;
   private end: Node<T> | null;
 
-  constructor(private readonly capacity: number = 100) {
+  constructor(public readonly capacity: number = 100) {
     this.map = {};
     this.head = null;
     this.end = null;
@@ -156,6 +156,16 @@ class LRUCache<T> {
     }
 
     return undefined;
+  }
+
+  public setOnce(key: string, value: T): T | undefined {
+    const matchedNode = this.map[key];
+
+    if (matchedNode) {
+      return undefined;
+    } else {
+      return this.set(key, value);
+    }
   }
 
   private setHead(node: Node<T>): void {

@@ -25,6 +25,8 @@ const fs = require('fs-extra');
 const {CopyConfig} = require('../../dist');
 const TEMP_DIR = path.resolve(__dirname, '..', '..', '.temp/');
 
+const TWENTY_SECONDS = 20000;
+
 describe('CopyConfig', () => {
   afterEach(() => fs.remove(TEMP_DIR));
 
@@ -127,7 +129,51 @@ describe('CopyConfig', () => {
 
       expect(copiedResult.length).toBe(1);
     });
+
+    it(
+      'downloads zip archives from an https url',
+      async () => {
+        await fs.ensureDir(TEMP_DIR);
+        await fs.writeFile(path.join(TEMP_DIR, 'test1.txt'), '');
+
+        const copyConfig = new CopyConfig({
+          files: {
+            './package.json': TEMP_DIR,
+          },
+          forceDownload: true,
+          repositoryUrl: 'https://github.com/wireapp/wire-web-config-default#master',
+        });
+
+        await copyConfig.copy();
+
+        const files = await fs.readdir(copyConfig.baseDir);
+        expect(files).toContain('wire-webapp');
+      },
+      TWENTY_SECONDS
+    );
   });
+
+  it(
+    'downloads zip archives from a git url',
+    async () => {
+      await fs.ensureDir(TEMP_DIR);
+      await fs.writeFile(path.join(TEMP_DIR, 'test1.txt'), '');
+
+      const copyConfig = new CopyConfig({
+        files: {
+          './package.json': TEMP_DIR,
+        },
+        forceDownload: true,
+        repositoryUrl: 'git@github.com:wireapp/wire-web-config-default#master',
+      });
+
+      await copyConfig.copy();
+
+      const files = await fs.readdir(copyConfig.baseDir);
+      expect(files).toContain('wire-webapp');
+    },
+    TWENTY_SECONDS
+  );
 
   describe('getFilesFromString', () => {
     it('is compatible with Windows paths', () => {
