@@ -39,6 +39,8 @@ module.exports = function(config: Config) {
     files: [
       'engine/error/**/*.ts',
       'engine/EnvironmentUtil.ts',
+      'engine/FileSystemEngine.ts',
+      'engine/FileSystemEngine.test.browser.ts',
       'engine/LocalStorageEngine.ts',
       'engine/LocalStorageEngine.test.browser.ts',
       'engine/IndexedDBEngine.ts',
