@@ -179,7 +179,7 @@ describe('Role', () => {
       expect(isOwner(({} as unknown) as PermissionsData)).toBe(false);
     });
 
-    it('undefined member is false', () => {
+    it('undefined permissionsData is false', () => {
       expect(isOwner((undefined as unknown) as PermissionsData)).toBe(false);
     });
   });
@@ -217,7 +217,7 @@ describe('Role', () => {
       expect(isAtLeastMember(({} as unknown) as PermissionsData)).toBe(false);
     });
 
-    it('undefined member is false', () => {
+    it('undefined permissionsData is false', () => {
       expect(isAtLeastMember((undefined as unknown) as PermissionsData)).toBe(false);
     });
   });
@@ -255,7 +255,7 @@ describe('Role', () => {
       expect(isAtLeastAdmin(({} as unknown) as PermissionsData)).toBe(false);
     });
 
-    it('undefined member is false', () => {
+    it('undefined permissionsData is false', () => {
       expect(isAtLeastAdmin((undefined as unknown) as PermissionsData)).toBe(false);
     });
   });
