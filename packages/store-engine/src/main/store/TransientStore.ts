@@ -71,7 +71,7 @@ export default class TransientStore extends EventEmitter {
    * @param {string} primaryKey - Primary key from which the FQN is created
    * @returns {string} A fully qualified name
    */
-  public constructCacheKey(primaryKey: string): string {
+  private constructCacheKey(primaryKey: string): string {
     return `${this.engine.storeName}@${this.tableName}@${primaryKey}`;
   }
 
@@ -180,7 +180,7 @@ export default class TransientStore extends EventEmitter {
     return this.delete(expiredBundle.primaryKey).then(() => expiredBundle);
   }
 
-  public startTimer(cacheKey: string): Promise<TransientBundle> {
+  private startTimer(cacheKey: string): Promise<TransientBundle> {
     const primaryKey = this.constructPrimaryKey(cacheKey);
     return this.get(primaryKey).then(async (bundle: TransientBundle | undefined) => {
       if (!bundle) {

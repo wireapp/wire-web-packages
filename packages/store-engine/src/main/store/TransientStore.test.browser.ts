@@ -230,8 +230,8 @@ describe('store.TransientStore', () => {
         .set(primaryKey, entity, minuteInMillis)
         .then(bundle => {
           timeoutID = bundle.timeoutID as number;
-          const cacheKey = store.constructCacheKey(primaryKey);
-          return store.startTimer(cacheKey);
+          const cacheKey = store['constructCacheKey'](primaryKey);
+          return store['startTimer'](cacheKey);
         })
         .then(bundle => {
           expect(bundle.timeoutID).toBe(timeoutID);
