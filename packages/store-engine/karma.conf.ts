@@ -37,13 +37,10 @@ module.exports = function(config: Config) {
       },
     },
     files: [
-      // 'engine/index.ts',
-      // 'engine/FileEngine.ts',
-
-      'engine/IndexedDBEngine.ts',
-      'engine/IndexedDBEngine.test.node.ts',
-      'engine/FileEngine.test.browser.ts',
       'engine/error/**/*.ts',
+      'engine/IndexedDBEngine.ts',
+      'engine/IndexedDBEngine.test.browser.ts',
+      'test/**/*.ts',
     ],
     frameworks: ['jasmine', 'karma-typescript'],
     logLevel: config.LOG_INFO,
