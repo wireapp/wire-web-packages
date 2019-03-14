@@ -17,6 +17,20 @@
  *
  */
 
-// traverse all test files for webpack dependency resolution
-const testsContext = require.context('./', true, /test\.browser\.js$/);
-testsContext.keys().forEach(testsContext);
+import {FileEngine} from '../engine';
+import {UnsupportedError} from './error';
+
+const STORE_NAME = 'store-name';
+
+describe('init', () => {
+  it('throws an error if the store is not supported by the targeted platform.', async done => {
+    const storeEngine = new FileEngine();
+    try {
+      await storeEngine.init(STORE_NAME);
+      done.fail('Expected error');
+    } catch (error) {
+      expect(error instanceof UnsupportedError).toBe(true);
+      done();
+    }
+  });
+});

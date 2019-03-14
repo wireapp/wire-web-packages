@@ -17,15 +17,13 @@
  *
  */
 
-const pkg = require('./package.json');
+import {Config, ConfigOptions} from 'karma';
 
-const dist = 'dist/';
-const projectName = pkg.name.replace('@wireapp/', '');
-
-module.exports = function(config) {
-  config.set({
+module.exports = function(config: Config) {
+  const options: ConfigOptions = {
     autoWatch: false,
-    basePath: '',
+    basePath: 'src/main',
+    browserNoActivityTimeout: 90000,
     browsers: ['ChromeNoSandbox'],
     client: {
       useIframe: false,
@@ -38,17 +36,24 @@ module.exports = function(config) {
         flags: ['--allow-file-access-from-files', '--no-sandbox', '--unlimited-quota-for-files'],
       },
     },
-    files: ['https://unpkg.com/dexie@2.0.2/dist/dexie.js', `${dist}${projectName}.test.bundle.js`],
-    frameworks: ['jasmine'],
+    files: [
+      // 'engine/index.ts',
+      // 'engine/FileEngine.ts',
+
+      'engine/IndexedDBEngine.ts',
+      'engine/IndexedDBEngine.test.node.ts',
+      'engine/FileEngine.test.browser.ts',
+      'engine/error/**/*.ts',
+    ],
+    frameworks: ['jasmine', 'karma-typescript'],
     logLevel: config.LOG_INFO,
     port: 9876,
     preprocessors: {
-      '**/*.js': ['sourcemap'],
+      '**/*.ts': ['karma-typescript'],
     },
-    reporters: ['jasmine-diff', 'spec'],
+    reporters: ['progress', 'karma-typescript'],
     singleRun: true,
-    specReporter: {
-      showSpecTiming: true,
-    },
-  });
+  };
+
+  config.set(options);
 };
