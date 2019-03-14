@@ -1,3 +1,5 @@
+import {SupportedCurrency} from './SupportedCurrency';
+
 /*
  * Wire
  * Copyright (C) 2018 Wire Swiss GmbH
@@ -19,13 +21,14 @@
 
 // https://stripe.com/docs/api#invoice_object
 interface PaymentStripeInvoice {
+  closed: boolean;
+  currency: SupportedCurrency;
+  date: number;
   id: string;
   number: string;
-  date: number;
   paid: boolean;
-  closed: boolean;
-  url: string;
   total: number;
+  url: string;
 }
 
 export {PaymentStripeInvoice};

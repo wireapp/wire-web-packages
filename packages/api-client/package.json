@@ -5,11 +5,11 @@
     "./dist/commonjs/shims/node/cookie": "./dist/commonjs/shims/browser/cookie.js"
   },
   "dependencies": {
-    "@types/node": "11.9.5",
+    "@types/node": "11.11.3",
     "@types/spark-md5": "3.0.1",
     "@types/tough-cookie": "2.3.5",
-    "@wireapp/priority-queue": "0.2.65",
-    "@wireapp/store-engine": "1.1.26",
+    "@wireapp/priority-queue": "0.2.72",
+    "@wireapp/store-engine": "1.1.32",
     "axios": "0.18.0",
     "html5-websocket": "2.0.4",
     "logdown": "3.2.7",
@@ -20,14 +20,14 @@
   "devDependencies": {
     "@babel/core": "7.3.4",
     "@babel/preset-react": "7.0.0",
-    "@wireapp/react-ui-kit": "5.0.16",
+    "@wireapp/react-ui-kit": "5.0.27",
     "babel-loader": "8.0.5",
     "browser-sync": "2.26.3",
     "concurrently": "4.1.0",
     "cross-env": "5.2.0",
     "istanbul": "1.1.0-alpha.1",
     "jasmine": "3.3.1",
-    "karma": "4.0.0",
+    "karma": "4.0.1",
     "karma-chrome-launcher": "2.2.0",
     "karma-jasmine": "2.0.1",
     "karma-jasmine-diff-reporter": "2.0.0",
@@ -35,12 +35,12 @@
     "karma-spec-reporter": "0.0.32",
     "nock": "10.0.6",
     "optimist": "0.6.1",
-    "react-hot-loader": "4.7.1",
+    "react-hot-loader": "4.8.0",
     "rimraf": "2.6.3",
-    "sinon": "7.2.5",
+    "sinon": "7.2.7",
     "sinon-har-server": "0.3.0",
     "typescript": "3.3.3333",
-    "webpack": "4.29.5",
+    "webpack": "4.29.6",
     "webpack-cli": "3.2.3",
     "webpack-dev-server": "3.2.1"
   },
@@ -67,5 +67,5 @@
     "watch": "webpack-dev-server --config webpack.config.js"
   },
   "types": "./dist/commonjs/APIClient.d.ts",
-  "version": "3.2.44"
+  "version": "3.2.63"
 }
