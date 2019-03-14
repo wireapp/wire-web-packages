@@ -18,6 +18,16 @@
  */
 
 import * as fs from 'bro-fs';
+import appendSpec from '../test/appendSpec';
+import createSpec from '../test/createSpec';
+import deleteAllSpec from '../test/deleteAllSpec';
+import deleteSpec from '../test/deleteSpec';
+import purgeSpec from '../test/purgeSpec';
+import readAllPrimaryKeysSpec from '../test/readAllPrimaryKeysSpec';
+import readAllSpec from '../test/readAllSpec';
+import readSpec from '../test/readSpec';
+import updateOrCreateSpec from '../test/updateOrCreateSpec';
+import updateSpec from '../test/updateSpec';
 import CRUDEngine from './CRUDEngine';
 import FileSystemEngine from './FileSystemEngine';
 
@@ -46,5 +56,65 @@ describe('init', () => {
     const fileSystem = await engine.init('test-store');
     expect(fileSystem.root.toURL().startsWith('filesystem:')).toBe(true);
     done();
+  });
+});
+
+describe('append', () => {
+  Object.entries(appendSpec).map(([description, testFunction]) => {
+    it(description, done => testFunction(done, engine));
+  });
+});
+
+describe('create', () => {
+  Object.entries(createSpec).map(([description, testFunction]) => {
+    it(description, done => testFunction(done, engine));
+  });
+});
+
+describe('delete', () => {
+  Object.entries(deleteSpec).map(([description, testFunction]) => {
+    it(description, done => testFunction(done, engine));
+  });
+});
+
+describe('deleteAll', () => {
+  Object.entries(deleteAllSpec).map(([description, testFunction]) => {
+    it(description, done => testFunction(done, engine));
+  });
+});
+
+describe('purge', () => {
+  Object.entries(purgeSpec).map(([description, testFunction]) => {
+    it(description, done => testFunction(done, engine, initEngine));
+  });
+});
+
+describe('readAllPrimaryKeys', () => {
+  Object.entries(readAllPrimaryKeysSpec).map(([description, testFunction]) => {
+    it(description, done => testFunction(done, engine));
+  });
+});
+
+describe('readAll', () => {
+  Object.entries(readAllSpec).map(([description, testFunction]) => {
+    it(description, done => testFunction(done, engine));
+  });
+});
+
+describe('read', () => {
+  Object.entries(readSpec).map(([description, testFunction]) => {
+    it(description, done => testFunction(done, engine));
+  });
+});
+
+describe('updateOrCreate', () => {
+  Object.entries(updateOrCreateSpec).map(([description, testFunction]) => {
+    it(description, done => testFunction(done, engine));
+  });
+});
+
+describe('update', () => {
+  Object.entries(updateSpec).map(([description, testFunction]) => {
+    it(description, done => testFunction(done, engine));
   });
 });
