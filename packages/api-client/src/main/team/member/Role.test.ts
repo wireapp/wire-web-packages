@@ -17,7 +17,6 @@
  *
  */
 
-import {MemberData} from './MemberData';
 import {Permissions, combinePermissions} from './Permissions';
 import {PermissionsData} from './PermissionsData';
 import {Role, isAdmin, isAtLeastAdmin, isAtLeastMember, isMember, isOwner, roleToPermissions} from './Role';
