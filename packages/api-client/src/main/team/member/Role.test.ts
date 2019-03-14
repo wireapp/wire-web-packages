@@ -19,7 +19,17 @@
 
 import {Permissions, combinePermissions} from './Permissions';
 import {PermissionsData} from './PermissionsData';
-import {Role, isAdmin, isAtLeastAdmin, isAtLeastMember, isMember, isOwner, roleToPermissions} from './Role';
+import {
+  Role,
+  isAdmin,
+  isAtLeastAdmin,
+  isAtLeastMember,
+  isAtLeastPartner,
+  isMember,
+  isOwner,
+  isPartner,
+  roleToPermissions,
+} from './Role';
 
 describe('Role', () => {
   describe('hasPermissions', () => {
@@ -82,6 +92,48 @@ describe('Role', () => {
     });
   });
 
+  describe('isPartner', () => {
+    it('OWNER is false', () => {
+      expect(isPartner({self: roleToPermissions(Role.OWNER), copy: 0})).toBe(false);
+    });
+
+    it('ADMIN is false', () => {
+      expect(isPartner({self: roleToPermissions(Role.ADMIN), copy: 0})).toBe(false);
+    });
+
+    it('MEMBER is false', () => {
+      expect(isPartner({self: roleToPermissions(Role.MEMBER), copy: 0})).toBe(false);
+    });
+
+    it('PARTNER is true', () => {
+      expect(isPartner({self: roleToPermissions(Role.PARTNER), copy: 0})).toBe(true);
+    });
+
+    it('NONE is false', () => {
+      expect(isPartner({self: roleToPermissions(Role.NONE), copy: 0})).toBe(false);
+    });
+
+    it('0 is false', () => {
+      expect(isPartner({self: 0, copy: 0})).toBe(false);
+    });
+
+    it('-1 is false', () => {
+      expect(isPartner({self: -1, copy: 0})).toBe(false);
+    });
+
+    it('string is false', () => {
+      expect(isPartner(({self: 'MEMBER', copy: 0} as unknown) as PermissionsData)).toBe(false);
+    });
+
+    it('empty permissionsData is false', () => {
+      expect(isPartner(({} as unknown) as PermissionsData)).toBe(false);
+    });
+
+    it('undefined permissionsData is false', () => {
+      expect(isPartner((undefined as unknown) as PermissionsData)).toBe(false);
+    });
+  });
+
   describe('isMember', () => {
     it('OWNER is false', () => {
       expect(isMember({self: roleToPermissions(Role.OWNER), copy: 0})).toBe(false);
@@ -93,6 +145,14 @@ describe('Role', () => {
 
     it('MEMBER is true', () => {
       expect(isMember({self: roleToPermissions(Role.MEMBER), copy: 0})).toBe(true);
+    });
+
+    it('PARTNER is false', () => {
+      expect(isMember({self: roleToPermissions(Role.PARTNER), copy: 0})).toBe(false);
+    });
+
+    it('NONE is false', () => {
+      expect(isMember({self: roleToPermissions(Role.NONE), copy: 0})).toBe(false);
     });
 
     it('0 is false', () => {
@@ -129,6 +189,14 @@ describe('Role', () => {
       expect(isAdmin({self: roleToPermissions(Role.MEMBER), copy: 0})).toBe(false);
     });
 
+    it('PARTNER is false', () => {
+      expect(isAdmin({self: roleToPermissions(Role.PARTNER), copy: 0})).toBe(false);
+    });
+
+    it('NONE is false', () => {
+      expect(isAdmin({self: roleToPermissions(Role.NONE), copy: 0})).toBe(false);
+    });
+
     it('0 is false', () => {
       expect(isAdmin({self: 0, copy: 0})).toBe(false);
     });
@@ -163,6 +231,14 @@ describe('Role', () => {
       expect(isOwner({self: roleToPermissions(Role.MEMBER), copy: 0})).toBe(false);
     });
 
+    it('PARTNER is false', () => {
+      expect(isOwner({self: roleToPermissions(Role.PARTNER), copy: 0})).toBe(false);
+    });
+
+    it('NONE is false', () => {
+      expect(isOwner({self: roleToPermissions(Role.NONE), copy: 0})).toBe(false);
+    });
+
     it('0 is false', () => {
       expect(isOwner({self: 0, copy: 0})).toBe(false);
     });
@@ -184,6 +260,52 @@ describe('Role', () => {
     });
   });
 
+  describe('isAtLeastPartner', () => {
+    it('OWNER is true', () => {
+      expect(isAtLeastPartner({self: roleToPermissions(Role.OWNER), copy: 0})).toBe(true);
+    });
+
+    it('ADMIN is true', () => {
+      expect(isAtLeastPartner({self: roleToPermissions(Role.ADMIN), copy: 0})).toBe(true);
+    });
+
+    it('MEMBER is true', () => {
+      expect(isAtLeastPartner({self: roleToPermissions(Role.MEMBER), copy: 0})).toBe(true);
+    });
+
+    it('PARTNER is true', () => {
+      expect(isAtLeastPartner({self: roleToPermissions(Role.PARTNER), copy: 0})).toBe(true);
+    });
+
+    it('NONE is false', () => {
+      expect(isAtLeastPartner({self: roleToPermissions(Role.NONE), copy: 0})).toBe(false);
+    });
+
+    it('Unknown above is false', () => {
+      expect(isAtLeastPartner({self: roleToPermissions(Role.PARTNER) + 1234, copy: 0})).toBe(false);
+    });
+
+    it('0 is false', () => {
+      expect(isAtLeastPartner({self: 0, copy: 0})).toBe(false);
+    });
+
+    it('-1 is false', () => {
+      expect(isAtLeastPartner({self: -1, copy: 0})).toBe(false);
+    });
+
+    it('string is false', () => {
+      expect(isAtLeastPartner(({self: 'OWNER', copy: 0} as unknown) as PermissionsData)).toBe(false);
+    });
+
+    it('empty permissionsData is false', () => {
+      expect(isAtLeastPartner(({} as unknown) as PermissionsData)).toBe(false);
+    });
+
+    it('undefined permissionsData is false', () => {
+      expect(isAtLeastPartner((undefined as unknown) as PermissionsData)).toBe(false);
+    });
+  });
+
   describe('isAtLeastMember', () => {
     it('OWNER is true', () => {
       expect(isAtLeastMember({self: roleToPermissions(Role.OWNER), copy: 0})).toBe(true);
@@ -195,6 +317,14 @@ describe('Role', () => {
 
     it('MEMBER is true', () => {
       expect(isAtLeastMember({self: roleToPermissions(Role.MEMBER), copy: 0})).toBe(true);
+    });
+
+    it('PARTNER is false', () => {
+      expect(isAtLeastMember({self: roleToPermissions(Role.PARTNER), copy: 0})).toBe(false);
+    });
+
+    it('NONE is false', () => {
+      expect(isAtLeastMember({self: roleToPermissions(Role.NONE), copy: 0})).toBe(false);
     });
 
     it('Unknown above is false', () => {
@@ -233,6 +363,14 @@ describe('Role', () => {
 
     it('MEMBER is false', () => {
       expect(isAtLeastAdmin({self: roleToPermissions(Role.MEMBER), copy: 0})).toBe(false);
+    });
+
+    it('PARTNER is false', () => {
+      expect(isAtLeastAdmin({self: roleToPermissions(Role.PARTNER), copy: 0})).toBe(false);
+    });
+
+    it('NONE is false', () => {
+      expect(isAtLeastAdmin({self: roleToPermissions(Role.NONE), copy: 0})).toBe(false);
     });
 
     it('Unknown above is false', () => {
