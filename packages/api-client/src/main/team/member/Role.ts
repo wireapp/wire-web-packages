@@ -82,19 +82,19 @@ const permissionsToRole = (permissions: PermissionsData): Role => {
 };
 
 const isPartner = (permissions: PermissionsData): boolean => {
-  return permissions && permissionsToRole(permissions) === Role.PARTNER;
+  return !!(permissions && permissionsToRole(permissions) === Role.PARTNER);
 };
 
 const isMember = (permissions: PermissionsData): boolean => {
-  return permissions && permissionsToRole(permissions) === Role.MEMBER;
+  return !!(permissions && permissionsToRole(permissions) === Role.MEMBER);
 };
 
 const isAdmin = (permissions: PermissionsData): boolean => {
-  return permissions && permissionsToRole(permissions) === Role.ADMIN;
+  return !!(permissions && permissionsToRole(permissions) === Role.ADMIN);
 };
 
 const isOwner = (permissions: PermissionsData): boolean => {
-  return permissions && permissionsToRole(permissions) === Role.OWNER;
+  return !!(permissions && permissionsToRole(permissions) === Role.OWNER);
 };
 
 const isAtLeastPartner = (permissions: PermissionsData): boolean => {
