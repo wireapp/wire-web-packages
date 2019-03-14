@@ -10056,10 +10056,10 @@ punycode@^2.1.0, punycode@^2.1.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
 
-pure-uuid@1.5.6:
-  version "1.5.6"
-  resolved "https://registry.yarnpkg.com/pure-uuid/-/pure-uuid-1.5.6.tgz#313dc69835b42c0e3468199538edcbb730ddfa09"
-  integrity sha512-yUXFK0Xt+twSu6efNkBWPEBryDQ/3uaeA5nMKaGP4RM6WJyap657lU9yS4NSPB7X485sAkmP8SNv0vCxkXhrNA==
+pure-uuid@1.5.7:
+  version "1.5.7"
+  resolved "https://registry.yarnpkg.com/pure-uuid/-/pure-uuid-1.5.7.tgz#c089845d85e3b33a070bf4dc8cce30906880e9bd"
+  integrity sha512-g8kcLZcJi1ePpuNxrnI6a4re2ze89FPnV6dXaDuW4K9+n+SzvolhR2uoZhHJvz1Ilba0U8hvb1clxTLN49EvuQ==
 
 q@^1.5.1:
   version "1.5.1"
