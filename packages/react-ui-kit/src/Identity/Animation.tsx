@@ -37,15 +37,13 @@ type MovementProps = TransitionProps & {
   endValue?: string;
 };
 
-type TransitionContainerProps = Partial<any> & {
+type TransitionContainerProps = {
   children: React.ReactNode;
   component?: keyof JSX.IntrinsicElements;
 };
 
-const TransitionContainer = ({children, component, ...props}: TransitionContainerProps) => (
-  <TransitionGroup component={component} {...props}>
-    {children}
-  </TransitionGroup>
+const TransitionContainer = ({component, ...props}: TransitionContainerProps) => (
+  <TransitionGroup component={component} {...props} />
 );
 
 const Transition = ({animationStyle, timeout, component = 'div', children, ...props}: TransitionProps) => (
