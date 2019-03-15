@@ -42,9 +42,7 @@ type TransitionContainerProps = {
   component?: keyof JSX.IntrinsicElements;
 };
 
-const TransitionContainer = ({component, ...props}: TransitionContainerProps) => (
-  <TransitionGroup component={component} {...props} />
-);
+const TransitionContainer = (props: TransitionContainerProps) => <TransitionGroup {...props} />;
 
 const Transition = ({animationStyle, timeout, component = 'div', children, ...props}: TransitionProps) => (
   <ClassNames>
