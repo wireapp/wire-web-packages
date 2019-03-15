@@ -40,6 +40,9 @@ type MovementProps = TransitionProps & {
 type TransitionContainerProps = {
   children: React.ReactNode;
   component?: keyof JSX.IntrinsicElements;
+  appear: boolean;
+  enter: boolean;
+  exit: boolean;
 };
 
 const TransitionContainer = (props: TransitionContainerProps) => <TransitionGroup {...props} />;
