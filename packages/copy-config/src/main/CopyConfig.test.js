@@ -28,6 +28,8 @@ const TEMP_DIR = path.resolve(__dirname, '..', '..', '.temp/');
 const TWENTY_SECONDS = 20000;
 
 describe('CopyConfig', () => {
+  afterEach(() => fs.remove(TEMP_DIR));
+
   describe('constructor', () => {
     it('can be configured using environment variables', async () => {
       process.env.WIRE_CONFIGURATION_EXTERNAL_DIR = 'externalDir';
@@ -144,8 +146,8 @@ describe('CopyConfig', () => {
 
         await copyConfig.copy();
 
-        const files = await fs.readdir(copyConfig.options.baseDir);
-        expect(files).toContain('wire-webapp');
+        const files = await fs.readdir(TEMP_DIR);
+        expect(files).toContain('package.json');
       },
       TWENTY_SECONDS
     );
@@ -167,8 +169,8 @@ describe('CopyConfig', () => {
 
       await copyConfig.copy();
 
-      const files = await fs.readdir(copyConfig.options.baseDir);
-      expect(files).toContain('wire-webapp');
+      const files = await fs.readdir(TEMP_DIR);
+      expect(files).toContain('package.json');
     },
     TWENTY_SECONDS
   );
