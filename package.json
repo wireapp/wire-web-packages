@@ -13,7 +13,9 @@
     "prettier": "1.16.4",
     "tslint": "5.14.0",
     "tslint-config-prettier": "1.18.0",
-    "tslint-plugin-prettier": "2.0.1"
+    "tslint-plugin-prettier": "2.0.1",
+    "tslint-react": "3.6.0",
+    "tslint-react-hooks": "2.0.0"
   },
   "lint-staged": {
     "*.{js,jsx}": [
@@ -41,7 +43,7 @@
     "lint": "yarn lint:js && yarn lint:other && yarn lint:ts",
     "lint:js": "eslint --ignore-path .gitignore --ext .js,.jsx .",
     "lint:other": "yarn prettier --list-different",
-    "lint:ts": "tslint --config tslint.json --project tsconfig.json \"**/*.ts\"",
+    "lint:ts": "tslint --config tslint.json --project tsconfig.json \"**/*.ts?(x)\"",
     "prettier": "prettier \"**/*.{json,md,scss,yml}\"",
     "release": "lerna publish",
     "test": "yarn && yarn lint:js && yarn lint:ts && yarn lint:other && node bin/testUpdated.js",
