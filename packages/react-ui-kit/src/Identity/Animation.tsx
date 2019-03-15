@@ -50,7 +50,6 @@ const Transition = ({animationStyle, timeout, component = 'div', children, ...pr
   <ClassNames>
     {({css}) => (
       <CSSTransition timeout={timeout} classNames={css(animationStyle)} {...props}>
-        <TransitionContainer />
         {component ? React.createElement(component, {}, children) : children}
       </CSSTransition>
     )}
