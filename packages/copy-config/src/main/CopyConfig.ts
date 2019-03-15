@@ -154,8 +154,7 @@ export class CopyConfig {
     const {stderr: stderrVersion} = await utils.execAsync('git --version');
 
     if (!this.noCleanup) {
-      this.logger.info(`Removing clone directory before cloning ...`);
-      await utils.rimrafAsync(this.baseDir);
+      await this.removeBasedir();
     }
 
     if (stderrVersion) {
@@ -202,6 +201,15 @@ export class CopyConfig {
       }
     }
 
+    if (!this.noCleanup) {
+      await this.removeBasedir();
+    }
+
     return copiedFiles.sort();
+  }
+
+  public async removeBasedir(): Promise<void> {
+    this.logger.info(`Cleaning up "${this.baseDir}" ...`);
+    await utils.rimrafAsync(this.baseDir);
   }
 }

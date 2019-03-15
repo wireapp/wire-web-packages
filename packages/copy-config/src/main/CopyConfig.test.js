@@ -28,8 +28,6 @@ const TEMP_DIR = path.resolve(__dirname, '..', '..', '.temp/');
 const TWENTY_SECONDS = 20000;
 
 describe('CopyConfig', () => {
-  afterEach(() => fs.remove(TEMP_DIR));
-
   describe('constructor', () => {
     it('can be configured using environment variables', async () => {
       process.env.WIRE_CONFIGURATION_EXTERNAL_DIR = 'externalDir';
