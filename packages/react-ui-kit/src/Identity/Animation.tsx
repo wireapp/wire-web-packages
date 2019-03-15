@@ -37,12 +37,11 @@ type MovementProps = TransitionProps & {
   endValue?: string;
 };
 
-type TransitionContainerProps = {
-  children: React.ReactNode;
+type TransitionContainerProps = React.HTMLProps<any> & {
   component?: keyof JSX.IntrinsicElements;
-  appear: boolean;
-  enter: boolean;
-  exit: boolean;
+  appear?: boolean;
+  enter?: boolean;
+  exit?: boolean;
 };
 
 const TransitionContainer = (props: TransitionContainerProps) => <TransitionGroup {...props} />;
@@ -51,6 +50,7 @@ const Transition = ({animationStyle, timeout, component = 'div', children, ...pr
   <ClassNames>
     {({css}) => (
       <CSSTransition timeout={timeout} classNames={css(animationStyle)} {...props}>
+        <TransitionContainer />
         {component ? React.createElement(component, {}, children) : children}
       </CSSTransition>
     )}
