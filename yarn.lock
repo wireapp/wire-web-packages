@@ -12107,6 +12107,18 @@ tslint-plugin-prettier@2.0.1:
     lines-and-columns "^1.1.6"
     tslib "^1.7.1"
 
+tslint-react-hooks@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/tslint-react-hooks/-/tslint-react-hooks-2.0.0.tgz#452d7eed160420023dc1f26ad3b08ad861fb5d05"
+  integrity sha512-SC0BvRVX+SaSrT/kVcD/xzunBzleeX3TPHX010g9EfXPKLQzyg971VU/j1HnfutvPILDI1Qkhjqseb1+WIBiOw==
+
+tslint-react@3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/tslint-react/-/tslint-react-3.6.0.tgz#7f462c95c4a0afaae82507f06517ff02942196a1"
+  integrity sha512-AIv1QcsSnj7e9pFir6cJ6vIncTqxfqeFF3Lzh8SuuBljueYzEAtByuB6zMaD27BL0xhMEqsZ9s5eHuCONydjBw==
+  dependencies:
+    tsutils "^2.13.1"
+
 tslint@5.14.0:
   version "5.14.0"
   resolved "https://registry.yarnpkg.com/tslint/-/tslint-5.14.0.tgz#be62637135ac244fc9b37ed6ea5252c9eba1616e"
@@ -12126,7 +12138,7 @@ tslint@5.14.0:
     tslib "^1.8.0"
     tsutils "^2.29.0"
 
-tsutils@^2.29.0:
+tsutils@^2.13.1, tsutils@^2.29.0:
   version "2.29.0"
   resolved "https://registry.yarnpkg.com/tsutils/-/tsutils-2.29.0.tgz#32b488501467acbedd4b85498673a0812aca0b99"
   integrity sha512-g5JVHCIJwzfISaXpXE1qvNalca5Jwob6FjI4AoPlqMusJ6ftFE7IkkFoMhVLRgK+4Kx3gkzb8UZK5t5yTTvEmA==
