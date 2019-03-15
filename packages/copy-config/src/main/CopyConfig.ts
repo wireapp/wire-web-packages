@@ -25,6 +25,7 @@ import {CopyConfigOptions} from './CopyConfigOptions';
 import * as utils from './utils';
 
 const defaultOptions: Required<CopyConfigOptions> = {
+  baseDir: 'config',
   externalDir: '',
   files: {},
   forceDownload: false,
@@ -34,7 +35,7 @@ const defaultOptions: Required<CopyConfigOptions> = {
 export class CopyConfig {
   private readonly options: Required<CopyConfigOptions>;
   private readonly logger: logdown.Logger;
-  private readonly baseDir: string = 'config';
+  private readonly baseDir: string;
   private readonly noClone: boolean = false;
   private readonly noCleanup: boolean = false;
   private readonly filterFiles: string[] = ['.DS_Store'];
@@ -46,9 +47,9 @@ export class CopyConfig {
     if (this.options.externalDir) {
       this.noClone = true;
       this.noCleanup = true;
-      this.baseDir = this.options.externalDir;
+      this.options.baseDir = this.options.externalDir;
     }
-    this.baseDir = path.resolve(this.baseDir);
+    this.baseDir = path.resolve(this.options.baseDir);
 
     this.logger = logdown('@wireapp/copy-config/CopyConfig', {
       markdown: false,
