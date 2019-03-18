@@ -181,6 +181,11 @@ export class CopyConfig {
     }
   }
 
+  private async removeBasedir(): Promise<void> {
+    this.logger.info(`Cleaning up "${this.options.baseDir}" ...`);
+    await utils.rimrafAsync(this.options.baseDir);
+  }
+
   public async copy(): Promise<string[]> {
     let copiedFiles: string[] = [];
 
@@ -206,10 +211,5 @@ export class CopyConfig {
     }
 
     return copiedFiles.sort();
-  }
-
-  public async removeBasedir(): Promise<void> {
-    this.logger.info(`Cleaning up "${this.options.baseDir}" ...`);
-    await utils.rimrafAsync(this.options.baseDir);
   }
 }
