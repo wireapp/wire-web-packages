@@ -21,7 +21,7 @@ export interface CopyConfigOptions {
   /**
    * The directory to clone or download into.
    *
-   * @example `/home/user/externalDir`
+   * @example `./config`
    */
   baseDir?: string;
   /**
