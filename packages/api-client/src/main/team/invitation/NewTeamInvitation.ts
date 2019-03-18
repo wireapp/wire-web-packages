@@ -17,8 +17,11 @@
  *
  */
 
+import {MemberRole} from '../MemberRole';
+
 interface NewTeamInvitation {
   email: string;
+  role: MemberRole;
   inviter_name: string;
   locale: string;
 }
