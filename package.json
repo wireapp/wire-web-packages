@@ -1,7 +1,7 @@
 {
   "devDependencies": {
     "babel-eslint": "10.0.1",
-    "eslint": "5.15.2",
+    "eslint": "5.15.3",
     "eslint-config-prettier": "4.1.0",
     "eslint-plugin-jasmine": "2.10.1",
     "eslint-plugin-no-unsanitized": "3.0.2",
