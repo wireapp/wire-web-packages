@@ -10,7 +10,7 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": false,
-    "removeComments": true,
+    "removeComments": false,
     "sourceMap": true,
     "strict": true,
     "target": "es5"
