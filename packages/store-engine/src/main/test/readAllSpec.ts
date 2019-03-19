@@ -17,10 +17,17 @@
  *
  */
 
+import {CRUDEngine} from '../engine';
+
 const TABLE_NAME = 'the-simpsons';
 
-module.exports = {
-  'gets the primary keys of all records in a table.': (done, engine) => {
+interface DomainEntity {
+  firstName: string;
+  lastName: string;
+}
+
+export default {
+  'returns multiple database records.': (done: DoneFn, engine: CRUDEngine) => {
     const homer = {
       entity: {
         firstName: 'Homer',
@@ -52,13 +59,14 @@ module.exports = {
       engine.create(TABLE_NAME, lisa.primaryKey, lisa.entity),
       engine.create(TABLE_NAME, marge.primaryKey, marge.entity),
     ])
-      .then(() => engine.readAllPrimaryKeys(TABLE_NAME))
-      .then(primaryKeys => {
-        expect(primaryKeys.length).toBe(allEntities.length);
-        for (const counter in allEntities) {
-          expect(primaryKeys[counter]).toBe(allEntities[counter].primaryKey);
+      .then(() => engine.readAll<DomainEntity>(TABLE_NAME))
+      .then(records => {
+        expect(records.length).toBe(allEntities.length);
+        for (const counter in records) {
+          expect(records[counter].firstName).toBe(allEntities[counter].entity.firstName);
         }
         done();
-      });
+      })
+      .catch(error => done.fail(error));
   },
 };

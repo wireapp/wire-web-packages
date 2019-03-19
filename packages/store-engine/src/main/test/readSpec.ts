@@ -17,12 +17,17 @@
  *
  */
 
-const {error: StoreEngineError} = require('@wireapp/store-engine');
+import {CRUDEngine} from '../engine';
+import RecordNotFoundError from '../engine/error/RecordNotFoundError';
 
 const TABLE_NAME = 'the-simpsons';
 
-module.exports = {
-  'returns a database record.': (done, engine) => {
+interface DomainEntity {
+  some: string;
+}
+
+export default {
+  'returns a database record.': (done: DoneFn, engine: CRUDEngine) => {
     const PRIMARY_KEY = 'primary-key';
 
     const entity = {
@@ -31,20 +36,21 @@ module.exports = {
 
     engine
       .create(TABLE_NAME, PRIMARY_KEY, entity)
-      .then(primaryKey => engine.read(TABLE_NAME, primaryKey))
+      .then(primaryKey => engine.read<DomainEntity>(TABLE_NAME, primaryKey))
       .then(record => {
         expect(record.some).toBe(entity.some);
         done();
-      });
+      })
+      .catch(error => done.fail(error));
   },
-  'throws an error if a record cannot be found.': (done, engine) => {
+  'throws an error if a record cannot be found.': (done: DoneFn, engine: CRUDEngine) => {
     const PRIMARY_KEY = 'primary-key';
 
     engine
       .read(TABLE_NAME, PRIMARY_KEY)
       .then(() => done.fail(new Error('Method is supposed to throw an error.')))
       .catch(error => {
-        expect(error).toEqual(jasmine.any(StoreEngineError.RecordNotFoundError));
+        expect(error).toEqual(jasmine.any(RecordNotFoundError));
         done();
       });
   },

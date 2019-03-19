@@ -3,6 +3,81 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.2.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.2.3...@wireapp/core@8.2.4) (2019-03-19)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.2.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.2.2...@wireapp/core@8.2.3) (2019-03-18)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.2.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.2.1...@wireapp/core@8.2.2) (2019-03-15)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.2.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.2.0...@wireapp/core@8.2.1) (2019-03-14)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [8.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.60...@wireapp/core@8.2.0) (2019-03-14)
+
+
+### Features
+
+* **api-client:** Add Permission & Role helpers ([#1642](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1642)) ([0ee7133](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/0ee7133))
+
+
+
+
+
+## [8.1.60](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.59...@wireapp/core@8.1.60) (2019-03-14)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.59](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.58...@wireapp/core@8.1.59) (2019-03-14)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.58](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.57...@wireapp/core@8.1.58) (2019-03-14)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.1.57](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.56...@wireapp/core@8.1.57) (2019-03-14)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
 ## [8.1.56](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.1.55...@wireapp/core@8.1.56) (2019-03-13)
 
 **Note:** Version bump only for package @wireapp/core

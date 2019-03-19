@@ -17,12 +17,13 @@
  *
  */
 
+import {CRUDEngine} from '../engine';
+import {RecordAlreadyExistsError, RecordTypeError} from '../engine/error';
+
 const TABLE_NAME = 'the-simpsons';
 
-const StoreEngine = require('@wireapp/store-engine');
-
-module.exports = {
-  'creates a serialized database record.': (done, engine) => {
+export default {
+  'creates a serialized database record.': (done: DoneFn, engine: CRUDEngine) => {
     const PRIMARY_KEY = 'primary-key';
 
     const entity = {
@@ -37,7 +38,7 @@ module.exports = {
       })
       .catch(done.fail);
   },
-  "doesn't save empty values.": (done, engine) => {
+  "doesn't save empty values.": (done: DoneFn, engine: CRUDEngine) => {
     const PRIMARY_KEY = 'primary-key';
 
     const entity = undefined;
@@ -46,11 +47,11 @@ module.exports = {
       .create(TABLE_NAME, PRIMARY_KEY, entity)
       .then(() => done.fail(new Error('Method is supposed to throw an error.')))
       .catch(error => {
-        expect(error).toEqual(jasmine.any(StoreEngine.error.RecordTypeError));
+        expect(error).toEqual(jasmine.any(RecordTypeError));
         done();
       });
   },
-  "doesn't save null values.": (done, engine) => {
+  "doesn't save null values.": (done: DoneFn, engine: CRUDEngine) => {
     const PRIMARY_KEY = 'primary-key';
 
     const entity = undefined;
@@ -59,11 +60,11 @@ module.exports = {
       .create(TABLE_NAME, PRIMARY_KEY, entity)
       .then(() => done.fail(new Error('Method is supposed to throw an error.')))
       .catch(error => {
-        expect(error).toEqual(jasmine.any(StoreEngine.error.RecordTypeError));
+        expect(error).toEqual(jasmine.any(RecordTypeError));
         done();
       });
   },
-  'throws an error when attempting to overwrite a record.': (done, engine) => {
+  'throws an error when attempting to overwrite a record.': (done: DoneFn, engine: CRUDEngine) => {
     const PRIMARY_KEY = 'primary-key';
 
     const firstEntity = {
@@ -78,7 +79,7 @@ module.exports = {
       .create(TABLE_NAME, PRIMARY_KEY, firstEntity)
       .then(() => engine.create(TABLE_NAME, PRIMARY_KEY, secondEntity))
       .catch(error => {
-        expect(error).toEqual(jasmine.any(StoreEngine.error.RecordAlreadyExistsError));
+        expect(error).toEqual(jasmine.any(RecordAlreadyExistsError));
         done();
       });
   },

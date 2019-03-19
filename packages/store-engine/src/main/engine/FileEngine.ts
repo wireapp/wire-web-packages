@@ -31,11 +31,11 @@ import {
 
 export default class FileEngine implements CRUDEngine {
   public storeName = '';
-  private options: {fileExtension: string} = {
+  public options: {fileExtension: string} = {
     fileExtension: '.dat',
   };
   // Using a reference to Node.js' "path" module to influence the platform-specific behaviour in our tests
-  private static readonly path = path;
+  public static path: any = path;
 
   constructor(private readonly baseDirectory = './') {}
 
@@ -80,7 +80,7 @@ export default class FileEngine implements CRUDEngine {
   }
 
   private resolvePath(tableName: string, primaryKey = ''): Promise<string> {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       const tableNamePath = FileEngine.enforcePathRestrictions(this.storeName, tableName);
       const primaryKeyPath = FileEngine.enforcePathRestrictions(
         tableNamePath,

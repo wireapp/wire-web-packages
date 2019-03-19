@@ -17,10 +17,16 @@
  *
  */
 
+import {CRUDEngine} from '../engine';
+
 const TABLE_NAME = 'the-simpsons';
 
-module.exports = {
-  'database can be reinitialized after purge': async (done, engine, initEngine) => {
+export default {
+  'database can be reinitialized after purge': async (
+    done: DoneFn,
+    engine: CRUDEngine,
+    initEngine: (shouldCreateNewEngine?: boolean) => Promise<CRUDEngine>
+  ) => {
     await engine.create(TABLE_NAME, 'one', {name: 'Alpha'});
     const SAVED_RECORDS = 1;
     let keys = await engine.readAllPrimaryKeys(TABLE_NAME);
@@ -39,7 +45,11 @@ module.exports = {
 
     done();
   },
-  'deletes the database and all of its records.': async (done, engine, initEngine) => {
+  'deletes the database and all of its records.': async (
+    done: DoneFn,
+    engine: CRUDEngine,
+    initEngine: (shouldCreateNewEngine?: boolean) => Promise<CRUDEngine>
+  ) => {
     await engine.create(TABLE_NAME, 'one', {name: 'Alpha'});
     await engine.create(TABLE_NAME, 'two', {name: 'Bravo'});
     await engine.create(TABLE_NAME, 'three', {name: 'Charlie'});

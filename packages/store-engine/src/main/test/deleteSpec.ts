@@ -17,10 +17,12 @@
  *
  */
 
+import {CRUDEngine} from '../engine';
+
 const TABLE_NAME = 'the-simpsons';
 
-module.exports = {
-  'deletes a record.': (done, engine) => {
+export default {
+  'deletes a record.': (done: DoneFn, engine: CRUDEngine) => {
     const homer = {
       entity: {
         firstName: 'Homer',
@@ -59,9 +61,10 @@ module.exports = {
         expect(primaryKeys[0]).toBe(homer.primaryKey);
         expect(primaryKeys[1]).toBe(marge.primaryKey);
         done();
-      });
+      })
+      .catch(error => done.fail(error));
   },
-  'returns the primary key of a deleted record.': (done, engine) => {
+  'returns the primary key of a deleted record.': (done: DoneFn, engine: CRUDEngine) => {
     const PRIMARY_KEY = 'primary-key';
 
     const entity = {
@@ -74,6 +77,7 @@ module.exports = {
       .then(primaryKey => {
         expect(primaryKey).toBe(PRIMARY_KEY);
         done();
-      });
+      })
+      .catch(error => done.fail(error));
   },
 };

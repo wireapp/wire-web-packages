@@ -17,19 +17,20 @@
  *
  */
 
-const TABLE_NAME = 'the-simpsons';
+import {FileSystemEngine} from '../engine';
+import {UnsupportedError} from '../engine/error';
 
-module.exports = {
-  'appends text to an existing record.': async (done, engine) => {
-    const PRIMARY_KEY = 'primary-key';
+const STORE_NAME = 'store-name';
 
-    const text = 'Hello';
-    const textExtension = '\r\nWorld';
-    const primaryKey = await engine.create(TABLE_NAME, PRIMARY_KEY, text);
-    await engine.append(TABLE_NAME, primaryKey, textExtension);
-    const record = await engine.read(TABLE_NAME, primaryKey);
-    expect(record).toBe(`${text}${textExtension}`);
-
-    done();
-  },
-};
+describe('init', () => {
+  it('throws an error if the store is not supported by the targeted platform.', async done => {
+    const storeEngine = new FileSystemEngine();
+    try {
+      await storeEngine.init(STORE_NAME);
+      done.fail('Expected error');
+    } catch (error) {
+      expect(error instanceof UnsupportedError).toBe(true);
+      done();
+    }
+  });
+});

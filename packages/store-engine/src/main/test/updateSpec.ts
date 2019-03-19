@@ -17,12 +17,22 @@
  *
  */
 
-const {error: StoreEngineError} = require('@wireapp/store-engine');
+import {CRUDEngine} from '../engine';
+import {RecordNotFoundError} from '../engine/error';
 
 const TABLE_NAME = 'the-simpsons';
 
-module.exports = {
-  'fails if the record does not exist.': (done, engine) => {
+interface DomainEntity {
+  name: string;
+  age: number;
+  size: {
+    height: number;
+    width: number;
+  };
+}
+
+export default {
+  'fails if the record does not exist.': async (done: DoneFn, engine: CRUDEngine) => {
     const PRIMARY_KEY = 'primary-key';
 
     const updates = {
@@ -33,15 +43,15 @@ module.exports = {
       },
     };
 
-    engine
-      .update(TABLE_NAME, PRIMARY_KEY, updates)
-      .then(() => done.fail('Update on non-existing record should have failed'))
-      .catch(error => {
-        expect(error).toEqual(jasmine.any(StoreEngineError.RecordNotFoundError));
-        done();
-      });
+    try {
+      await engine.update(TABLE_NAME, PRIMARY_KEY, updates);
+      console.log('B');
+    } catch (error) {
+      expect(error).toEqual(jasmine.any(RecordNotFoundError));
+      done();
+    }
   },
-  'updates an existing database record.': (done, engine) => {
+  'updates an existing database record.': (done: DoneFn, engine: CRUDEngine) => {
     const PRIMARY_KEY = 'primary-key';
 
     const entity = {
@@ -61,7 +71,7 @@ module.exports = {
     engine
       .create(TABLE_NAME, PRIMARY_KEY, entity)
       .then(() => engine.update(TABLE_NAME, PRIMARY_KEY, updates))
-      .then(primaryKey => engine.read(TABLE_NAME, primaryKey))
+      .then(primaryKey => engine.read<DomainEntity>(TABLE_NAME, primaryKey))
       .then(updatedRecord => {
         expect(updatedRecord.name).toBe(entity.name);
         expect(updatedRecord.age).toBe(updates.age);

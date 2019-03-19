@@ -17,10 +17,16 @@
  *
  */
 
+import {CRUDEngine} from '../engine';
+
 const TABLE_NAME = 'the-simpsons';
 
-module.exports = {
-  'creates a record if it does not exist in the database.': (done, engine) => {
+interface DomainEntity {
+  name: string;
+}
+
+export default {
+  'creates a record if it does not exist in the database.': (done: DoneFn, engine: CRUDEngine) => {
     const PRIMARY_KEY = 'primary-key';
 
     const entity = {
@@ -31,7 +37,7 @@ module.exports = {
 
     engine
       .updateOrCreate(TABLE_NAME, PRIMARY_KEY, entity)
-      .then(primaryKey => engine.read(TABLE_NAME, primaryKey))
+      .then(primaryKey => engine.read<DomainEntity>(TABLE_NAME, primaryKey))
       .then(updatedRecord => {
         expect(updatedRecord.name).toBe(entity.name);
         expect(Object.keys(updatedRecord).length).toBe(expectedAmountOfProperties);
@@ -39,7 +45,7 @@ module.exports = {
       })
       .catch(done.fail);
   },
-  'updates an existing database record.': (done, engine) => {
+  'updates an existing database record.': (done: DoneFn, engine: CRUDEngine) => {
     const PRIMARY_KEY = 'primary-key';
 
     const entity = {
@@ -53,7 +59,7 @@ module.exports = {
     engine
       .create(TABLE_NAME, PRIMARY_KEY, entity)
       .then(() => engine.updateOrCreate(TABLE_NAME, PRIMARY_KEY, update))
-      .then(primaryKey => engine.read(TABLE_NAME, primaryKey))
+      .then(primaryKey => engine.read<DomainEntity>(TABLE_NAME, primaryKey))
       .then(updatedRecord => {
         expect(updatedRecord.name).toBe(update.name);
         done();

@@ -17,10 +17,12 @@
  *
  */
 
+import {CRUDEngine} from '../engine';
+
 const TABLE_NAME = 'the-simpsons';
 
-module.exports = {
-  'deletes all records from a database table.': (done, engine) => {
+export default {
+  'gets the primary keys of all records in a table.': (done: DoneFn, engine: CRUDEngine) => {
     const homer = {
       entity: {
         firstName: 'Homer',
@@ -45,19 +47,21 @@ module.exports = {
       primaryKey: 'marge-simpson',
     };
 
+    const allEntities = [homer, lisa, marge];
+
     Promise.all([
       engine.create(TABLE_NAME, homer.primaryKey, homer.entity),
       engine.create(TABLE_NAME, lisa.primaryKey, lisa.entity),
       engine.create(TABLE_NAME, marge.primaryKey, marge.entity),
     ])
-      .then(() => engine.deleteAll(TABLE_NAME))
-      .then(hasBeenDeleted => {
-        expect(hasBeenDeleted).toBe(true);
-        return engine.readAllPrimaryKeys(TABLE_NAME);
-      })
+      .then(() => engine.readAllPrimaryKeys(TABLE_NAME))
       .then(primaryKeys => {
-        expect(primaryKeys.length).toBe(0);
+        expect(primaryKeys.length).toBe(allEntities.length);
+        for (const counter in allEntities) {
+          expect(primaryKeys[counter]).toBe(allEntities[counter].primaryKey);
+        }
         done();
-      });
+      })
+      .catch(error => done.fail(error));
   },
 };
