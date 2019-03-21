@@ -17,6 +17,10 @@
     "tslint-react": "3.6.0",
     "tslint-react-hooks": "2.0.0"
   },
+  "engines": {
+    "node": ">= 10",
+    "yarn": ">= 1"
+  },
   "lint-staged": {
     "*.{js,jsx}": [
       "eslint --fix",
