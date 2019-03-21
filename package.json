@@ -18,7 +18,7 @@
     "tslint-react-hooks": "2.0.0"
   },
   "engines": {
-    "node": "10.x.x",
+    "node": ">= 10",
     "yarn": "1.x.x"
   },
   "lint-staged": {
