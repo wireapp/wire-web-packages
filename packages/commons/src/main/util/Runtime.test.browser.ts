@@ -17,13 +17,15 @@
  *
  */
 
+/* tslint:disable:no-object-literal-type-assertion */
+
 import * as platform from 'platform';
-import {Runtime} from '@wireapp/commons';
+import {OS, Runtime} from './Runtime';
 
 describe('Runtime', () => {
   describe('"isAndroid"', () => {
     it('knows if running on Android', () => {
-      spyOn(Runtime, 'getOS').and.returnValue({family: 'Android'});
+      spyOn(Runtime, 'getOS').and.returnValue({family: 'Android'} as OS);
       expect(Runtime.isAndroid()).toBe(true);
       expect(Runtime.isIOS()).toBe(false);
       expect(Runtime.isMobileOS()).toBe(true);
@@ -32,7 +34,7 @@ describe('Runtime', () => {
 
   describe('"getBrowserName"', () => {
     it('works if platform fails to load properly', () => {
-      spyOn(Runtime, 'getPlatform').and.returnValue({});
+      spyOn(Runtime, 'getPlatform').and.returnValue({} as Platform);
       expect(Runtime.getBrowserName()).toBe('unknown');
     });
   });
@@ -62,7 +64,7 @@ describe('Runtime', () => {
 
   describe('"isIOS"', () => {
     it('knows if running on iOS', () => {
-      spyOn(Runtime, 'getOS').and.returnValue({family: 'iOS'});
+      spyOn(Runtime, 'getOS').and.returnValue({family: 'iOS'} as OS);
       expect(Runtime.isAndroid()).toBe(false);
       expect(Runtime.isIOS()).toBe(true);
       expect(Runtime.isMobileOS()).toBe(true);
@@ -71,52 +73,52 @@ describe('Runtime', () => {
 
   describe('"isLinux"', () => {
     it('detects pure Linux', () => {
-      spyOn(Runtime, 'getOS').and.returnValue({family: 'Linux'});
+      spyOn(Runtime, 'getOS').and.returnValue({family: 'Linux'} as OS);
       expect(Runtime.isLinux()).toBe(true);
       expect(Runtime.isMacOS()).toBe(false);
       expect(Runtime.isWindows()).toBe(false);
     });
 
     it('detects Debian', () => {
-      spyOn(Runtime, 'getOS').and.returnValue({family: 'Debian'});
+      spyOn(Runtime, 'getOS').and.returnValue({family: 'Debian'} as OS);
       expect(Runtime.isLinux()).toBe(true);
     });
 
     it('detects Fedora', () => {
-      spyOn(Runtime, 'getOS').and.returnValue({family: 'Fedora'});
+      spyOn(Runtime, 'getOS').and.returnValue({family: 'Fedora'} as OS);
       expect(Runtime.isLinux()).toBe(true);
     });
 
     it('detects Ubuntu', () => {
-      spyOn(Runtime, 'getOS').and.returnValue({family: 'Ubuntu'});
+      spyOn(Runtime, 'getOS').and.returnValue({family: 'Ubuntu'} as OS);
       expect(Runtime.isLinux()).toBe(true);
     });
   });
 
   describe('"isMacOS"', () => {
     it('detects OS X', () => {
-      spyOn(Runtime, 'getOS').and.returnValue({family: 'OS X'});
+      spyOn(Runtime, 'getOS').and.returnValue({family: 'OS X'} as OS);
       expect(Runtime.isLinux()).toBe(false);
       expect(Runtime.isMacOS()).toBe(true);
       expect(Runtime.isWindows()).toBe(false);
     });
 
     it('detects Mac OS', () => {
-      spyOn(Runtime, 'getOS').and.returnValue({family: 'Mac OS'});
+      spyOn(Runtime, 'getOS').and.returnValue({family: 'Mac OS'} as OS);
       expect(Runtime.isMacOS()).toBe(true);
     });
   });
 
   describe('"isWindows"', () => {
     it('detects Windows', () => {
-      spyOn(Runtime, 'getOS').and.returnValue({family: 'Windows'});
+      spyOn(Runtime, 'getOS').and.returnValue({family: 'Windows'} as OS);
       expect(Runtime.isLinux()).toBe(false);
       expect(Runtime.isMacOS()).toBe(false);
       expect(Runtime.isWindows()).toBe(true);
     });
 
     it('detects Windows 7', () => {
-      spyOn(Runtime, 'getOS').and.returnValue({family: 'windows server 2008 r2 / 7'});
+      spyOn(Runtime, 'getOS').and.returnValue({family: 'windows server 2008 r2 / 7'} as OS);
       expect(Runtime.isWindows()).toBe(true);
     });
   });
