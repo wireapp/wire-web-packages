@@ -23,7 +23,7 @@ import * as platform from 'platform';
 import {OS, Runtime} from './Runtime';
 
 describe('Runtime', () => {
-  describe('"isAndroid"', () => {
+  describe('isAndroid', () => {
     it('knows if running on Android', () => {
       spyOn(Runtime, 'getOS').and.returnValue({family: 'Android'} as OS);
       expect(Runtime.isAndroid()).toBe(true);
@@ -32,14 +32,14 @@ describe('Runtime', () => {
     });
   });
 
-  describe('"getBrowserName"', () => {
+  describe('getBrowserName', () => {
     it('works if platform fails to load properly', () => {
       spyOn(Runtime, 'getPlatform').and.returnValue({} as Platform);
       expect(Runtime.getBrowserName()).toBe('unknown');
     });
   });
 
-  describe('"isChrome"', () => {
+  describe('isChrome', () => {
     it('knows if running in Chrome', () => {
       const userAgent =
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36';
@@ -53,7 +53,7 @@ describe('Runtime', () => {
     });
   });
 
-  describe('"isElectron"', () => {
+  describe('isElectron', () => {
     it('knows if running in Electron', () => {
       const userAgent =
         'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.75 Electron/0.37.5 Safari/537.36';
@@ -62,7 +62,7 @@ describe('Runtime', () => {
     });
   });
 
-  describe('"isIOS"', () => {
+  describe('isIOS', () => {
     it('knows if running on iOS', () => {
       spyOn(Runtime, 'getOS').and.returnValue({family: 'iOS'} as OS);
       expect(Runtime.isAndroid()).toBe(false);
@@ -71,7 +71,7 @@ describe('Runtime', () => {
     });
   });
 
-  describe('"isLinux"', () => {
+  describe('isLinux', () => {
     it('detects pure Linux', () => {
       spyOn(Runtime, 'getOS').and.returnValue({family: 'Linux'} as OS);
       expect(Runtime.isLinux()).toBe(true);
@@ -95,7 +95,7 @@ describe('Runtime', () => {
     });
   });
 
-  describe('"isMacOS"', () => {
+  describe('isMacOS', () => {
     it('detects OS X', () => {
       spyOn(Runtime, 'getOS').and.returnValue({family: 'OS X'} as OS);
       expect(Runtime.isLinux()).toBe(false);
@@ -109,7 +109,7 @@ describe('Runtime', () => {
     });
   });
 
-  describe('"isWindows"', () => {
+  describe('isWindows', () => {
     it('detects Windows', () => {
       spyOn(Runtime, 'getOS').and.returnValue({family: 'Windows'} as OS);
       expect(Runtime.isLinux()).toBe(false);
