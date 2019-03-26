@@ -33,7 +33,6 @@ import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/';
 import {AxiosError} from 'axios';
 import {Encoder} from 'bazinga64';
 import {
-  AbortReason,
   AssetService,
   AssetTransferState,
   GenericMessageType,
@@ -42,7 +41,6 @@ import {
   PayloadBundleOutgoingUnsent,
   PayloadBundleState,
   PayloadBundleType,
-  ReactionType,
 } from '../conversation/';
 
 import {
@@ -68,18 +66,13 @@ import {
 
 import {
   ClearedContent,
-  ClientActionContent,
   ConfirmationContent,
   EditedTextContent,
   FileAssetAbortContent,
   FileAssetContent,
   FileAssetMetaDataContent,
-  FileContent,
-  FileMetaDataContent,
   ImageAssetContent,
-  ImageContent,
   KnockContent,
-  LinkPreviewContent,
   LinkPreviewUploadedContent,
   LocationContent,
   ReactionContent,
@@ -87,18 +80,16 @@ import {
   TextContent,
 } from '../conversation/content/';
 
-import {TextContentBuilder} from './TextContentBuilder';
-
 import {CryptographyService, EncryptedAsset} from '../cryptography/';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
 
 import {APIClient} from '@wireapp/api-client';
-
-const UUID = require('pure-uuid');
+import {MessageBuilder} from './MessageBuilder';
 
 class ConversationService {
   private clientID: string = '';
   public readonly messageTimer: MessageTimer;
+  public readonly messageBuilder: MessageBuilder;
 
   constructor(
     private readonly apiClient: APIClient,
@@ -106,6 +97,7 @@ class ConversationService {
     private readonly assetService: AssetService
   ) {
     this.messageTimer = new MessageTimer();
+    this.messageBuilder = new MessageBuilder(this.apiClient, this.assetService);
   }
 
   private createEphemeral(originalGenericMessage: GenericMessage, expireAfterMillis: number): GenericMessage {
@@ -151,7 +143,6 @@ class ConversationService {
   }
 
   private async sendConfirmation(
-    conversationId: string,
     payloadBundle: PayloadBundleOutgoingUnsent,
     userIds?: string[]
   ): Promise<PayloadBundleOutgoing> {
@@ -168,11 +159,10 @@ class ConversationService {
       messageId: payloadBundle.id,
     });
 
-    await this.sendGenericMessage(this.clientID, conversationId, genericMessage, userIds);
+    await this.sendGenericMessage(this.clientID, payloadBundle.conversation, genericMessage, userIds);
 
     return {
       ...payloadBundle,
-      conversation: conversationId,
       messageTimer: 0,
       state: PayloadBundleState.OUTGOING_SENT,
     };
@@ -185,7 +175,7 @@ class ConversationService {
     preKeyBundles: UserPreKeyBundleMap
   ): Promise<void> {
     const {cipherText, keyBytes, sha256} = asset;
-    const messageId = ConversationService.createId();
+    const messageId = MessageBuilder.createId();
 
     const externalMessage = {
       otrKey: new Uint8Array(keyBytes),
@@ -225,7 +215,6 @@ class ConversationService {
   }
 
   private async sendEditedText(
-    conversationId: string,
     payloadBundle: PayloadBundleOutgoingUnsent,
     userIds?: string[]
   ): Promise<PayloadBundleOutgoing> {
@@ -268,18 +257,16 @@ class ConversationService {
       messageId: payloadBundle.id,
     });
 
-    await this.sendGenericMessage(this.clientID, conversationId, genericMessage, userIds);
+    await this.sendGenericMessage(this.clientID, payloadBundle.conversation, genericMessage, userIds);
 
     return {
       ...payloadBundle,
-      conversation: conversationId,
       messageTimer: 0,
       state: PayloadBundleState.OUTGOING_SENT,
     };
   }
 
   private async sendFileData(
-    conversationId: string,
     payloadBundle: PayloadBundleOutgoingUnsent,
     userIds?: string[]
   ): Promise<PayloadBundleOutgoing> {
@@ -308,23 +295,21 @@ class ConversationService {
       messageId: payloadBundle.id,
     });
 
-    const expireAfterMillis = this.messageTimer.getMessageTimer(conversationId);
+    const expireAfterMillis = this.messageTimer.getMessageTimer(payloadBundle.conversation);
     if (expireAfterMillis > 0) {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    await this.sendGenericMessage(this.clientID, conversationId, genericMessage, userIds);
+    await this.sendGenericMessage(this.clientID, payloadBundle.conversation, genericMessage, userIds);
 
     return {
       ...payloadBundle,
-      conversation: conversationId,
-      messageTimer: this.messageTimer.getMessageTimer(conversationId),
+      messageTimer: this.messageTimer.getMessageTimer(payloadBundle.conversation),
       state: PayloadBundleState.OUTGOING_SENT,
     };
   }
 
   private async sendFileMetaData(
-    conversationId: string,
     payloadBundle: PayloadBundleOutgoingUnsent,
     userIds?: string[]
   ): Promise<PayloadBundleOutgoing> {
@@ -350,23 +335,21 @@ class ConversationService {
       messageId: payloadBundle.id,
     });
 
-    const expireAfterMillis = this.messageTimer.getMessageTimer(conversationId);
+    const expireAfterMillis = this.messageTimer.getMessageTimer(payloadBundle.conversation);
     if (expireAfterMillis > 0) {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    await this.sendGenericMessage(this.clientID, conversationId, genericMessage, userIds);
+    await this.sendGenericMessage(this.clientID, payloadBundle.conversation, genericMessage, userIds);
 
     return {
       ...payloadBundle,
-      conversation: conversationId,
-      messageTimer: this.messageTimer.getMessageTimer(conversationId),
+      messageTimer: this.messageTimer.getMessageTimer(payloadBundle.conversation),
       state: PayloadBundleState.OUTGOING_SENT,
     };
   }
 
   private async sendFileAbort(
-    conversationId: string,
     payloadBundle: PayloadBundleOutgoingUnsent,
     userIds?: string[]
   ): Promise<PayloadBundleOutgoing> {
@@ -388,23 +371,21 @@ class ConversationService {
       messageId: payloadBundle.id,
     });
 
-    const expireAfterMillis = this.messageTimer.getMessageTimer(conversationId);
+    const expireAfterMillis = this.messageTimer.getMessageTimer(payloadBundle.conversation);
     if (expireAfterMillis > 0) {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    await this.sendGenericMessage(this.clientID, conversationId, genericMessage, userIds);
+    await this.sendGenericMessage(this.clientID, payloadBundle.conversation, genericMessage, userIds);
 
     return {
       ...payloadBundle,
-      conversation: conversationId,
-      messageTimer: this.messageTimer.getMessageTimer(conversationId),
+      messageTimer: this.messageTimer.getMessageTimer(payloadBundle.conversation),
       state: PayloadBundleState.OUTGOING_SENT,
     };
   }
 
   private async sendImage(
-    conversationId: string,
     payloadBundle: PayloadBundleOutgoingUnsent,
     userIds?: string[]
   ): Promise<PayloadBundleOutgoing> {
@@ -446,24 +427,22 @@ class ConversationService {
       messageId: payloadBundle.id,
     });
 
-    const expireAfterMillis = this.messageTimer.getMessageTimer(conversationId);
+    const expireAfterMillis = this.messageTimer.getMessageTimer(payloadBundle.conversation);
     if (expireAfterMillis > 0) {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    await this.sendGenericMessage(this.clientID, conversationId, genericMessage, userIds);
+    await this.sendGenericMessage(this.clientID, payloadBundle.conversation, genericMessage, userIds);
 
     return {
       ...payloadBundle,
       content: assetMessage,
-      conversation: conversationId,
-      messageTimer: this.messageTimer.getMessageTimer(conversationId),
+      messageTimer: this.messageTimer.getMessageTimer(payloadBundle.conversation),
       state: PayloadBundleState.OUTGOING_SENT,
     };
   }
 
   private async sendLocation(
-    conversationId: string,
     payloadBundle: PayloadBundleOutgoingUnsent,
     userIds?: string[]
   ): Promise<PayloadBundleOutgoing> {
@@ -482,17 +461,16 @@ class ConversationService {
       messageId: payloadBundle.id,
     });
 
-    const expireAfterMillis = this.messageTimer.getMessageTimer(conversationId);
+    const expireAfterMillis = this.messageTimer.getMessageTimer(payloadBundle.conversation);
     if (expireAfterMillis > 0) {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    await this.sendGenericMessage(this.clientID, conversationId, genericMessage, userIds);
+    await this.sendGenericMessage(this.clientID, payloadBundle.conversation, genericMessage, userIds);
 
     return {
       ...payloadBundle,
-      conversation: conversationId,
-      messageTimer: this.messageTimer.getMessageTimer(conversationId),
+      messageTimer: this.messageTimer.getMessageTimer(payloadBundle.conversation),
       state: PayloadBundleState.OUTGOING_SENT,
     };
   }
@@ -561,7 +539,6 @@ class ConversationService {
   }
 
   private async sendPing(
-    conversationId: string,
     payloadBundle: PayloadBundleOutgoingUnsent,
     userIds?: string[]
   ): Promise<PayloadBundleOutgoing> {
@@ -577,23 +554,22 @@ class ConversationService {
       messageId: payloadBundle.id,
     });
 
-    const expireAfterMillis = this.messageTimer.getMessageTimer(conversationId);
+    const expireAfterMillis = this.messageTimer.getMessageTimer(payloadBundle.conversation);
     if (expireAfterMillis > 0) {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    await this.sendGenericMessage(this.clientID, conversationId, genericMessage, userIds);
+    await this.sendGenericMessage(this.clientID, payloadBundle.conversation, genericMessage, userIds);
 
     return {
       ...payloadBundle,
-      conversation: conversationId,
-      messageTimer: this.messageTimer.getMessageTimer(conversationId),
+      conversation: payloadBundle.conversation,
+      messageTimer: this.messageTimer.getMessageTimer(payloadBundle.conversation),
       state: PayloadBundleState.OUTGOING_SENT,
     };
   }
 
   private async sendReaction(
-    conversationId: string,
     payloadBundle: PayloadBundleOutgoingUnsent,
     userIds?: string[]
   ): Promise<PayloadBundleOutgoing> {
@@ -609,18 +585,16 @@ class ConversationService {
       messageId: payloadBundle.id,
     });
 
-    await this.sendGenericMessage(this.clientID, conversationId, genericMessage, userIds);
+    await this.sendGenericMessage(this.clientID, payloadBundle.conversation, genericMessage, userIds);
 
     return {
       ...payloadBundle,
-      conversation: conversationId,
       messageTimer: 0,
       state: PayloadBundleState.OUTGOING_SENT,
     };
   }
 
   private async sendSessionReset(
-    conversationId: string,
     payloadBundle: PayloadBundleOutgoingUnsent,
     userIds?: string[]
   ): Promise<PayloadBundleOutgoing> {
@@ -629,12 +603,11 @@ class ConversationService {
       messageId: payloadBundle.id,
     });
 
-    await this.sendGenericMessage(this.clientID, conversationId, sessionReset, userIds);
+    await this.sendGenericMessage(this.clientID, payloadBundle.conversation, sessionReset, userIds);
 
     return {
       ...payloadBundle,
-      conversation: conversationId,
-      messageTimer: this.messageTimer.getMessageTimer(conversationId),
+      messageTimer: this.messageTimer.getMessageTimer(payloadBundle.conversation),
       state: PayloadBundleState.OUTGOING_SENT,
     };
   }
@@ -701,14 +674,12 @@ class ConversationService {
   }
 
   private async sendText(
-    conversationId: string,
     originalPayloadBundle: PayloadBundleOutgoingUnsent,
     userIds?: string[]
   ): Promise<PayloadBundleOutgoing> {
     const payloadBundle: PayloadBundleOutgoing = {
       ...originalPayloadBundle,
-      conversation: conversationId,
-      messageTimer: this.messageTimer.getMessageTimer(conversationId),
+      messageTimer: this.messageTimer.getMessageTimer(originalPayloadBundle.conversation),
       state: PayloadBundleState.OUTGOING_SENT,
     };
 
@@ -739,12 +710,12 @@ class ConversationService {
       [GenericMessageType.TEXT]: textMessage,
     });
 
-    const expireAfterMillis = this.messageTimer.getMessageTimer(conversationId);
+    const expireAfterMillis = this.messageTimer.getMessageTimer(payloadBundle.conversation);
     if (expireAfterMillis > 0) {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    await this.sendGenericMessage(this.clientID, conversationId, genericMessage, userIds);
+    await this.sendGenericMessage(this.clientID, payloadBundle.conversation, genericMessage, userIds);
 
     return payloadBundle;
   }
@@ -766,7 +737,7 @@ class ConversationService {
   public async clearConversation(
     conversationId: string,
     timestamp: number | Date = new Date(),
-    messageId: string = ConversationService.createId()
+    messageId: string = MessageBuilder.createId()
   ): Promise<PayloadBundleOutgoing> {
     if (timestamp instanceof Date) {
       timestamp = timestamp.getTime();
@@ -799,247 +770,8 @@ class ConversationService {
     };
   }
 
-  public createEditedText(
-    newMessageText: string,
-    originalMessageId: string,
-    messageId: string = ConversationService.createId()
-  ): TextContentBuilder {
-    const content: EditedTextContent = {
-      originalMessageId,
-      text: newMessageText,
-    };
-
-    const payloadBundle: PayloadBundleOutgoingUnsent = {
-      content,
-      from: this.apiClient.context!.userId,
-      id: messageId,
-      state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
-      type: PayloadBundleType.MESSAGE_EDIT,
-    };
-
-    return new TextContentBuilder(payloadBundle);
-  }
-
-  public async createFileData(
-    file: FileContent,
-    originalMessageId: string,
-    expectsReadConfirmation?: boolean
-  ): Promise<PayloadBundleOutgoingUnsent> {
-    const imageAsset = await this.assetService.uploadFileAsset(file);
-
-    const content: FileAssetContent = {
-      asset: imageAsset,
-      expectsReadConfirmation,
-      file,
-    };
-
-    return {
-      content,
-      from: this.apiClient.context!.userId,
-      id: originalMessageId,
-      state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
-      type: PayloadBundleType.ASSET,
-    };
-  }
-
-  public createFileMetadata(
-    metaData: FileMetaDataContent,
-    expectsReadConfirmation?: boolean,
-    messageId: string = ConversationService.createId()
-  ): PayloadBundleOutgoingUnsent {
-    const content: FileAssetMetaDataContent = {
-      expectsReadConfirmation,
-      metaData,
-    };
-
-    return {
-      content,
-      from: this.apiClient.context!.userId,
-      id: messageId,
-      state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
-      type: PayloadBundleType.ASSET_META,
-    };
-  }
-
-  public async createFileAbort(
-    reason: AbortReason,
-    originalMessageId: string,
-    expectsReadConfirmation?: boolean
-  ): Promise<PayloadBundleOutgoingUnsent> {
-    const content: FileAssetAbortContent = {
-      expectsReadConfirmation,
-      reason,
-    };
-
-    return {
-      content,
-      from: this.apiClient.context!.userId,
-      id: originalMessageId,
-      state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
-      type: PayloadBundleType.ASSET_ABORT,
-    };
-  }
-
-  public static createId(): string {
-    return new UUID(4).format();
-  }
-
-  public async createImage(
-    image: ImageContent,
-    expectsReadConfirmation?: boolean,
-    messageId: string = ConversationService.createId()
-  ): Promise<PayloadBundleOutgoingUnsent> {
-    const imageAsset = await this.assetService.uploadImageAsset(image);
-
-    const content: ImageAssetContent = {
-      asset: imageAsset,
-      expectsReadConfirmation,
-      image,
-    };
-
-    return {
-      content,
-      from: this.apiClient.context!.userId,
-      id: messageId,
-      state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
-      type: PayloadBundleType.ASSET_IMAGE,
-    };
-  }
-
-  public async createLinkPreview(linkPreview: LinkPreviewContent): Promise<LinkPreviewUploadedContent> {
-    const linkPreviewUploaded: LinkPreviewUploadedContent = {
-      ...linkPreview,
-    };
-
-    const linkPreviewImage = linkPreview.image;
-
-    if (linkPreviewImage) {
-      const imageAsset = await this.assetService.uploadImageAsset(linkPreviewImage);
-
-      delete linkPreviewUploaded.image;
-
-      linkPreviewUploaded.imageUploaded = {
-        asset: imageAsset,
-        image: linkPreviewImage,
-      };
-    }
-
-    return linkPreviewUploaded;
-  }
-
-  public createLocation(
-    location: LocationContent,
-    messageId: string = ConversationService.createId()
-  ): PayloadBundleOutgoingUnsent {
-    return {
-      content: location,
-      from: this.apiClient.context!.userId,
-      id: messageId,
-      state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
-      type: PayloadBundleType.LOCATION,
-    };
-  }
-
-  public createReaction(
-    originalMessageId: string,
-    type: ReactionType,
-    messageId: string = ConversationService.createId()
-  ): PayloadBundleOutgoingUnsent {
-    const content: ReactionContent = {originalMessageId, type};
-
-    return {
-      content,
-      from: this.apiClient.context!.userId,
-      id: messageId,
-      state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
-      type: PayloadBundleType.REACTION,
-    };
-  }
-
-  public createText(text: string, messageId: string = ConversationService.createId()): TextContentBuilder {
-    const content: TextContent = {text};
-
-    const payloadBundle: PayloadBundleOutgoingUnsent = {
-      content,
-      from: this.apiClient.context!.userId,
-      id: messageId,
-      state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
-      type: PayloadBundleType.TEXT,
-    };
-
-    return new TextContentBuilder(payloadBundle);
-  }
-
-  public createConfirmationDelivered(
-    firstMessageId: string,
-    moreMessageIds?: string[],
-    messageId: string = ConversationService.createId()
-  ): PayloadBundleOutgoingUnsent {
-    const content: ConfirmationContent = {firstMessageId, moreMessageIds, type: Confirmation.Type.DELIVERED};
-    return {
-      content,
-      from: this.apiClient.context!.userId,
-      id: messageId,
-      state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
-      type: PayloadBundleType.CONFIRMATION,
-    };
-  }
-
-  public createConfirmationRead(
-    firstMessageId: string,
-    moreMessageIds?: string[],
-    messageId: string = ConversationService.createId()
-  ): PayloadBundleOutgoingUnsent {
-    const content: ConfirmationContent = {firstMessageId, moreMessageIds, type: Confirmation.Type.READ};
-    return {
-      content,
-      from: this.apiClient.context!.userId,
-      id: messageId,
-      state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
-      type: PayloadBundleType.CONFIRMATION,
-    };
-  }
-
-  public createPing(
-    ping?: KnockContent,
-    messageId: string = ConversationService.createId()
-  ): PayloadBundleOutgoingUnsent {
-    return {
-      content: ping,
-      from: this.apiClient.context!.userId,
-      id: messageId,
-      state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
-      type: PayloadBundleType.PING,
-    };
-  }
-
-  public createSessionReset(messageId: string = ConversationService.createId()): PayloadBundleOutgoingUnsent {
-    const content: ClientActionContent = {
-      clientAction: ClientAction.RESET_SESSION,
-    };
-    return {
-      content,
-      from: this.apiClient.context!.userId,
-      id: messageId,
-      state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
-      type: PayloadBundleType.CLIENT_ACTION,
-    };
-  }
-
   public async deleteMessageLocal(conversationId: string, messageIdToHide: string): Promise<PayloadBundleOutgoing> {
-    const messageId = ConversationService.createId();
+    const messageId = MessageBuilder.createId();
 
     const messageHide = MessageHide.create({
       conversationId,
@@ -1071,7 +803,7 @@ class ConversationService {
     messageIdToDelete: string,
     userIds?: string[]
   ): Promise<PayloadBundleOutgoing> {
-    const messageId = ConversationService.createId();
+    const messageId = MessageBuilder.createId();
 
     const messageDelete = MessageDelete.create({
       messageId: messageIdToDelete,
@@ -1167,33 +899,33 @@ class ConversationService {
   ): Promise<PayloadBundleOutgoing> {
     switch (payloadBundle.type) {
       case PayloadBundleType.ASSET:
-        return this.sendFileData(conversationId, payloadBundle, userIds);
+        return this.sendFileData(payloadBundle, userIds);
       case PayloadBundleType.ASSET_ABORT:
-        return this.sendFileAbort(conversationId, payloadBundle, userIds);
+        return this.sendFileAbort(payloadBundle, userIds);
       case PayloadBundleType.ASSET_META:
-        return this.sendFileMetaData(conversationId, payloadBundle, userIds);
+        return this.sendFileMetaData(payloadBundle, userIds);
       case PayloadBundleType.ASSET_IMAGE:
-        return this.sendImage(conversationId, payloadBundle, userIds);
+        return this.sendImage(payloadBundle, userIds);
       case PayloadBundleType.CLIENT_ACTION: {
         if (payloadBundle.content === ClientAction.RESET_SESSION) {
-          return this.sendSessionReset(conversationId, payloadBundle, userIds);
+          return this.sendSessionReset(payloadBundle, userIds);
         }
         throw new Error(
           `No send method implemented for "${payloadBundle.type}" and ClientAction "${payloadBundle.content}".`
         );
       }
       case PayloadBundleType.CONFIRMATION:
-        return this.sendConfirmation(conversationId, payloadBundle, userIds);
+        return this.sendConfirmation(payloadBundle, userIds);
       case PayloadBundleType.LOCATION:
-        return this.sendLocation(conversationId, payloadBundle, userIds);
+        return this.sendLocation(payloadBundle, userIds);
       case PayloadBundleType.MESSAGE_EDIT:
-        return this.sendEditedText(conversationId, payloadBundle, userIds);
+        return this.sendEditedText(payloadBundle, userIds);
       case PayloadBundleType.PING:
-        return this.sendPing(conversationId, payloadBundle, userIds);
+        return this.sendPing(payloadBundle, userIds);
       case PayloadBundleType.REACTION:
-        return this.sendReaction(conversationId, payloadBundle, userIds);
+        return this.sendReaction(payloadBundle, userIds);
       case PayloadBundleType.TEXT:
-        return this.sendText(conversationId, payloadBundle, userIds);
+        return this.sendText(payloadBundle, userIds);
       default:
         throw new Error(`No send method implemented for "${payloadBundle.type}".`);
     }
@@ -1243,24 +975,6 @@ class ConversationService {
     };
 
     return this.apiClient.conversation.api.putMembershipProperties(conversationId, payload);
-  }
-
-  /** @deprecated */
-  public async toggleMuteConversation(
-    conversationId: string,
-    muted: boolean,
-    muteTimestamp: number | Date
-  ): Promise<void> {
-    if (typeof muteTimestamp === 'number') {
-      muteTimestamp = new Date(muteTimestamp);
-    }
-
-    const payload: MemberUpdate = {
-      otr_muted: muted,
-      otr_muted_ref: muteTimestamp.toISOString(),
-    };
-
-    await this.apiClient.conversation.api.putMembershipProperties(conversationId, payload);
   }
 }
 

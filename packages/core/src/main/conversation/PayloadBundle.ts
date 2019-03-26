@@ -26,12 +26,10 @@ enum PayloadBundleState {
 }
 
 type PayloadBundleIncoming = PayloadBundle & {
-  conversation: string;
   messageTimer: number;
   state: PayloadBundleState.INCOMING;
 };
 type PayloadBundleOutgoing = PayloadBundle & {
-  conversation: string;
   messageTimer: number;
   state: PayloadBundleState.OUTGOING_SENT;
 };
@@ -39,6 +37,7 @@ type PayloadBundleOutgoingUnsent = PayloadBundle & {state: PayloadBundleState.OU
 
 interface PayloadBundle {
   content?: ConversationContent;
+  conversation: string;
   from: string;
   id: string;
   state: PayloadBundleState;
