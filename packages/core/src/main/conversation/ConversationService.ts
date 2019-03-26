@@ -88,6 +88,7 @@ import {
   ImageAssetMessage,
   ImageAssetMessageOutgoing,
   LocationMessage,
+  Message,
   PingMessage,
   ReactionMessage,
   ResetSessionMessage,
@@ -869,38 +870,38 @@ class ConversationService {
     return userId;
   }
 
-  public async send(payloadBundle: PayloadBundle, userIds?: string[]): Promise<PayloadBundle> {
+  public async send(payloadBundle: Message, userIds?: string[]): Promise<PayloadBundle> {
     switch (payloadBundle.type) {
       case PayloadBundleType.ASSET:
-        return this.sendFileData(payloadBundle as FileAssetMessage, userIds);
+        return this.sendFileData(payloadBundle, userIds);
       case PayloadBundleType.ASSET_ABORT:
-        return this.sendFileAbort(payloadBundle as FileAssetAbortMessage, userIds);
+        return this.sendFileAbort(payloadBundle, userIds);
       case PayloadBundleType.ASSET_META:
-        return this.sendFileMetaData(payloadBundle as FileAssetMetaDataMessage, userIds);
+        return this.sendFileMetaData(payloadBundle, userIds);
       case PayloadBundleType.ASSET_IMAGE:
-        return this.sendImage(payloadBundle as ImageAssetMessageOutgoing, userIds);
+        return this.sendImage(payloadBundle, userIds);
       case PayloadBundleType.CLIENT_ACTION: {
-        if (payloadBundle.content === ClientAction.RESET_SESSION) {
-          return this.sendSessionReset(payloadBundle as ResetSessionMessage, userIds);
+        if (payloadBundle.content.clientAction === ClientAction.RESET_SESSION) {
+          return this.sendSessionReset(payloadBundle, userIds);
         }
         throw new Error(
           `No send method implemented for "${payloadBundle.type}" and ClientAction "${payloadBundle.content}".`
         );
       }
       case PayloadBundleType.CONFIRMATION:
-        return this.sendConfirmation(payloadBundle as ConfirmationMessage, userIds);
+        return this.sendConfirmation(payloadBundle, userIds);
       case PayloadBundleType.LOCATION:
-        return this.sendLocation(payloadBundle as LocationMessage, userIds);
+        return this.sendLocation(payloadBundle, userIds);
       case PayloadBundleType.MESSAGE_EDIT:
-        return this.sendEditedText(payloadBundle as EditedTextMessage, userIds);
+        return this.sendEditedText(payloadBundle, userIds);
       case PayloadBundleType.PING:
-        return this.sendPing(payloadBundle as PingMessage, userIds);
+        return this.sendPing(payloadBundle, userIds);
       case PayloadBundleType.REACTION:
-        return this.sendReaction(payloadBundle as ReactionMessage, userIds);
+        return this.sendReaction(payloadBundle, userIds);
       case PayloadBundleType.TEXT:
-        return this.sendText(payloadBundle as TextMessage, userIds);
+        return this.sendText(payloadBundle, userIds);
       default:
-        throw new Error(`No send method implemented for "${payloadBundle.type}".`);
+        throw new Error(`No send method implemented for "${payloadBundle['type']}".`);
     }
   }
 
