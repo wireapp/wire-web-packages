@@ -68,6 +68,7 @@ import {TeamService} from './team/';
 import {APIClient} from '@wireapp/api-client';
 import EventEmitter from 'events';
 import logdown from 'logdown';
+import {MessageBuilder} from './conversation/MessageBuilder';
 import {UserService} from './user/';
 
 class Account extends EventEmitter {
@@ -514,7 +515,7 @@ class Account extends EventEmitter {
       content: event.data,
       conversation: event.conversation,
       from: event.from,
-      id: ConversationService.createId(),
+      id: MessageBuilder.createId(),
       messageTimer: 0,
       state: PayloadBundleState.INCOMING,
       timestamp: new Date(event.time).getTime(),
@@ -544,7 +545,7 @@ class Account extends EventEmitter {
         content: connection,
         conversation: connection.conversation,
         from: connection.from,
-        id: ConversationService.createId(),
+        id: MessageBuilder.createId(),
         messageTimer: 0,
         state: PayloadBundleState.INCOMING,
         timestamp: new Date(connection.last_update).getTime(),
