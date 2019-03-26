@@ -60,10 +60,10 @@ class MessageBuilder {
   constructor(private readonly apiClient: APIClient, private readonly assetService: AssetService) {}
 
   public createEditedText(
+    conversationId: string,
     newMessageText: string,
     originalMessageId: string,
-    messageId: string = MessageBuilder.createId(),
-    conversationId: string
+    messageId: string = MessageBuilder.createId()
   ): TextContentBuilder {
     const content: EditedTextContent = {
       originalMessageId,
