@@ -43,7 +43,7 @@ import {
   AssetService,
   ConversationService,
   GenericMessageType,
-  PayloadBundleIncoming,
+  PayloadBundle,
   PayloadBundleState,
   PayloadBundleType,
 } from './conversation/';
@@ -68,7 +68,7 @@ import {TeamService} from './team/';
 import {APIClient} from '@wireapp/api-client';
 import EventEmitter from 'events';
 import logdown from 'logdown';
-import {MessageBuilder} from './conversation/MessageBuilder';
+import {MessageBuilder} from './conversation/message/MessageBuilder';
 import {UserService} from './user/';
 
 class Account extends EventEmitter {
@@ -252,7 +252,7 @@ class Account extends EventEmitter {
       .then(() => this);
   }
 
-  private async decodeGenericMessage(otrMessage: ConversationOtrMessageAddEvent): Promise<PayloadBundleIncoming> {
+  private async decodeGenericMessage(otrMessage: ConversationOtrMessageAddEvent): Promise<PayloadBundle> {
     if (!this.service) {
       throw new Error('Services are not set.');
     }
@@ -283,7 +283,7 @@ class Account extends EventEmitter {
     throw decryptedMessage.error;
   }
 
-  private mapGenericMessage(genericMessage: any, event: ConversationOtrMessageAddEvent): PayloadBundleIncoming {
+  private mapGenericMessage(genericMessage: any, event: ConversationOtrMessageAddEvent): PayloadBundle {
     switch (genericMessage.content) {
       case GenericMessageType.TEXT: {
         const {content: text, expectsReadConfirmation, linkPreview: linkPreviews, mentions, quote} = genericMessage[
@@ -348,7 +348,7 @@ class Account extends EventEmitter {
       case GenericMessageType.DELETED: {
         const originalMessageId = genericMessage[GenericMessageType.DELETED].messageId;
 
-        const content: DeletedContent = {originalMessageId};
+        const content: DeletedContent = {messageId: originalMessageId};
 
         return {
           content,
@@ -402,7 +402,7 @@ class Account extends EventEmitter {
 
         const content: HiddenContent = {
           conversationId,
-          originalMessageId: messageId,
+          messageId,
         };
 
         return {
@@ -510,7 +510,7 @@ class Account extends EventEmitter {
     }
   }
 
-  private mapConversationEvent(event: ConversationEvent): PayloadBundleIncoming {
+  private mapConversationEvent(event: ConversationEvent): PayloadBundle {
     return {
       content: event.data,
       conversation: event.conversation,
@@ -538,7 +538,7 @@ class Account extends EventEmitter {
     }
   }
 
-  private mapUserEvent(event: UserEvent): PayloadBundleIncoming | void {
+  private mapUserEvent(event: UserEvent): PayloadBundle | void {
     if (event.type === USER_EVENT.CONNECTION) {
       const {connection} = event as UserConnectionEvent;
       return {
@@ -554,7 +554,7 @@ class Account extends EventEmitter {
     }
   }
 
-  private async handleEvent(event: IncomingEvent): Promise<PayloadBundleIncoming | void> {
+  private async handleEvent(event: IncomingEvent): Promise<PayloadBundle | void> {
     this.logger.log(`Handling event of type "${event.type}"`, event);
     const ENCRYPTED_EVENTS = [CONVERSATION_EVENT.OTR_MESSAGE_ADD];
     const META_EVENTS = [

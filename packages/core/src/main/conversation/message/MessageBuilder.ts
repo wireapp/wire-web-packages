@@ -19,8 +19,8 @@
 
 import {APIClient} from '@wireapp/api-client';
 import {ClientAction, Confirmation} from '@wireapp/protocol-messaging';
-import {AbortReason, PayloadBundleOutgoingUnsent, PayloadBundleState, PayloadBundleType, ReactionType} from '.';
-import {AssetService} from './AssetService';
+import {AbortReason, PayloadBundleState, PayloadBundleType, ReactionType} from '..';
+import {AssetService} from '../AssetService';
 import {
   ClientActionContent,
   ConfirmationContent,
@@ -38,7 +38,20 @@ import {
   LocationContent,
   ReactionContent,
   TextContent,
-} from './content';
+} from '../content';
+import {
+  ConfirmationMessage,
+  EditedTextMessage,
+  FileAssetAbortMessage,
+  FileAssetMessage,
+  FileAssetMetaDataMessage,
+  ImageAssetMessageOutgoing,
+  LocationMessage,
+  PingMessage,
+  ReactionMessage,
+  ResetSessionMessage,
+  TextMessage,
+} from './Message';
 import {TextContentBuilder} from './TextContentBuilder';
 
 const UUID = require('pure-uuid');
@@ -57,7 +70,7 @@ class MessageBuilder {
       text: newMessageText,
     };
 
-    const payloadBundle: PayloadBundleOutgoingUnsent = {
+    const payloadBundle: EditedTextMessage = {
       content,
       conversation: conversationId,
       from: this.getSelfUserId(),
@@ -75,7 +88,7 @@ class MessageBuilder {
     file: FileContent,
     originalMessageId: string,
     expectsReadConfirmation?: boolean
-  ): Promise<PayloadBundleOutgoingUnsent> {
+  ): Promise<FileAssetMessage> {
     const imageAsset = await this.assetService.uploadFileAsset(file);
 
     const content: FileAssetContent = {
@@ -100,7 +113,7 @@ class MessageBuilder {
     metaData: FileMetaDataContent,
     expectsReadConfirmation?: boolean,
     messageId: string = MessageBuilder.createId()
-  ): PayloadBundleOutgoingUnsent {
+  ): FileAssetMetaDataMessage {
     const content: FileAssetMetaDataContent = {
       expectsReadConfirmation,
       metaData,
@@ -122,7 +135,7 @@ class MessageBuilder {
     reason: AbortReason,
     originalMessageId: string,
     expectsReadConfirmation?: boolean
-  ): Promise<PayloadBundleOutgoingUnsent> {
+  ): Promise<FileAssetAbortMessage> {
     const content: FileAssetAbortContent = {
       expectsReadConfirmation,
       reason,
@@ -144,7 +157,7 @@ class MessageBuilder {
     image: ImageContent,
     expectsReadConfirmation?: boolean,
     messageId: string = MessageBuilder.createId()
-  ): Promise<PayloadBundleOutgoingUnsent> {
+  ): Promise<ImageAssetMessageOutgoing> {
     const imageAsset = await this.assetService.uploadImageAsset(image);
 
     const content: ImageAssetContent = {
@@ -161,6 +174,114 @@ class MessageBuilder {
       state: PayloadBundleState.OUTGOING_UNSENT,
       timestamp: Date.now(),
       type: PayloadBundleType.ASSET_IMAGE,
+    };
+  }
+
+  public createLocation(
+    conversationId: string,
+    location: LocationContent,
+    messageId: string = MessageBuilder.createId()
+  ): LocationMessage {
+    return {
+      content: location,
+      conversation: conversationId,
+      from: this.getSelfUserId(),
+      id: messageId,
+      state: PayloadBundleState.OUTGOING_UNSENT,
+      timestamp: Date.now(),
+      type: PayloadBundleType.LOCATION,
+    };
+  }
+
+  public createReaction(
+    conversationId: string,
+    originalMessageId: string,
+    type: ReactionType,
+    messageId: string = MessageBuilder.createId()
+  ): ReactionMessage {
+    const content: ReactionContent = {originalMessageId, type};
+
+    return {
+      content,
+      conversation: conversationId,
+      from: this.getSelfUserId(),
+      id: messageId,
+      state: PayloadBundleState.OUTGOING_UNSENT,
+      timestamp: Date.now(),
+      type: PayloadBundleType.REACTION,
+    };
+  }
+
+  public createText(
+    conversationId: string,
+    text: string,
+    messageId: string = MessageBuilder.createId()
+  ): TextContentBuilder {
+    const content: TextContent = {text};
+
+    const payloadBundle: TextMessage = {
+      content,
+      conversation: conversationId,
+      from: this.getSelfUserId(),
+      id: messageId,
+      state: PayloadBundleState.OUTGOING_UNSENT,
+      timestamp: Date.now(),
+      type: PayloadBundleType.TEXT,
+    };
+
+    return new TextContentBuilder(payloadBundle);
+  }
+
+  public createConfirmation(
+    conversationId: string,
+    firstMessageId: string,
+    type: Confirmation.Type,
+    moreMessageIds?: string[],
+    messageId: string = MessageBuilder.createId()
+  ): ConfirmationMessage {
+    const content: ConfirmationContent = {firstMessageId, moreMessageIds, type};
+    return {
+      content,
+      conversation: conversationId,
+      from: this.getSelfUserId(),
+      id: messageId,
+      state: PayloadBundleState.OUTGOING_UNSENT,
+      timestamp: Date.now(),
+      type: PayloadBundleType.CONFIRMATION,
+    };
+  }
+
+  public createPing(
+    conversationId: string,
+    ping: KnockContent,
+    messageId: string = MessageBuilder.createId()
+  ): PingMessage {
+    return {
+      content: ping,
+      conversation: conversationId,
+      from: this.getSelfUserId(),
+      id: messageId,
+      state: PayloadBundleState.OUTGOING_UNSENT,
+      timestamp: Date.now(),
+      type: PayloadBundleType.PING,
+    };
+  }
+
+  public createSessionReset(
+    conversationId: string,
+    messageId: string = MessageBuilder.createId()
+  ): ResetSessionMessage {
+    const content: ClientActionContent = {
+      clientAction: ClientAction.RESET_SESSION,
+    };
+    return {
+      content,
+      conversation: conversationId,
+      from: this.getSelfUserId(),
+      id: messageId,
+      state: PayloadBundleState.OUTGOING_UNSENT,
+      timestamp: Date.now(),
+      type: PayloadBundleType.CLIENT_ACTION,
     };
   }
 
@@ -183,131 +304,6 @@ class MessageBuilder {
     }
 
     return linkPreviewUploaded;
-  }
-
-  public createLocation(
-    location: LocationContent,
-    messageId: string = MessageBuilder.createId(),
-    conversationId: string
-  ): PayloadBundleOutgoingUnsent {
-    return {
-      content: location,
-      conversation: conversationId,
-      from: this.getSelfUserId(),
-      id: messageId,
-      state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
-      type: PayloadBundleType.LOCATION,
-    };
-  }
-
-  public createReaction(
-    conversationId: string,
-    originalMessageId: string,
-    type: ReactionType,
-    messageId: string = MessageBuilder.createId()
-  ): PayloadBundleOutgoingUnsent {
-    const content: ReactionContent = {originalMessageId, type};
-
-    return {
-      content,
-      conversation: conversationId,
-      from: this.getSelfUserId(),
-      id: messageId,
-      state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
-      type: PayloadBundleType.REACTION,
-    };
-  }
-
-  public createText(
-    conversationId: string,
-    text: string,
-    messageId: string = MessageBuilder.createId()
-  ): TextContentBuilder {
-    const content: TextContent = {text};
-
-    const payloadBundle: PayloadBundleOutgoingUnsent = {
-      content,
-      conversation: conversationId,
-      from: this.getSelfUserId(),
-      id: messageId,
-      state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
-      type: PayloadBundleType.TEXT,
-    };
-
-    return new TextContentBuilder(payloadBundle);
-  }
-
-  public createConfirmationDelivered(
-    conversationId: string,
-    firstMessageId: string,
-    moreMessageIds?: string[],
-    messageId: string = MessageBuilder.createId()
-  ): PayloadBundleOutgoingUnsent {
-    const content: ConfirmationContent = {firstMessageId, moreMessageIds, type: Confirmation.Type.DELIVERED};
-    return {
-      content,
-      conversation: conversationId,
-      from: this.getSelfUserId(),
-      id: messageId,
-      state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
-      type: PayloadBundleType.CONFIRMATION,
-    };
-  }
-
-  public createConfirmationRead(
-    conversationId: string,
-    firstMessageId: string,
-    moreMessageIds?: string[],
-    messageId: string = MessageBuilder.createId()
-  ): PayloadBundleOutgoingUnsent {
-    const content: ConfirmationContent = {firstMessageId, moreMessageIds, type: Confirmation.Type.READ};
-    return {
-      content,
-      conversation: conversationId,
-      from: this.getSelfUserId(),
-      id: messageId,
-      state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
-      type: PayloadBundleType.CONFIRMATION,
-    };
-  }
-
-  public createPing(
-    conversationId: string,
-    ping?: KnockContent,
-    messageId: string = MessageBuilder.createId()
-  ): PayloadBundleOutgoingUnsent {
-    return {
-      content: ping,
-      conversation: conversationId,
-      from: this.getSelfUserId(),
-      id: messageId,
-      state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
-      type: PayloadBundleType.PING,
-    };
-  }
-
-  public createSessionReset(
-    conversationId: string,
-    messageId: string = MessageBuilder.createId()
-  ): PayloadBundleOutgoingUnsent {
-    const content: ClientActionContent = {
-      clientAction: ClientAction.RESET_SESSION,
-    };
-    return {
-      content,
-      conversation: conversationId,
-      from: this.getSelfUserId(),
-      id: messageId,
-      state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
-      type: PayloadBundleType.CLIENT_ACTION,
-    };
   }
 
   public static createId(): string {
