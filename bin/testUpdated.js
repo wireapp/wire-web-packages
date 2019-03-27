@@ -28,6 +28,9 @@ try {
   process.exit(0);
 }
 
+console.info('updated packages', output && output.toString());
+process.exit(0);
+
 const updatedProjects = output
   .toString()
   .replace(/- /g, '')

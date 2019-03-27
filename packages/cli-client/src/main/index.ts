@@ -68,6 +68,8 @@ storeEngine
       );
     });
 
+    console.info('CCC');
+
     account.on('error', error => console.error(error));
 
     return account
