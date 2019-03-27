@@ -3,6 +3,82 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@9.0.1...@wireapp/core@9.0.2) (2019-03-27)
+
+
+### Bug Fixes
+
+* **core:** Add missing message types ([#1691](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1691)) ([9cbba5d](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/9cbba5d))
+
+
+
+
+
+## [9.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@9.0.0...@wireapp/core@9.0.1) (2019-03-27)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [9.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.2.10...@wireapp/core@9.0.0) (2019-03-27)
+
+
+### Code Refactoring
+
+* **core:** Expect conversation ID when creating messages & Message types [BREAKING] ([#1686](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1686)) ([2a4a0b9](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/2a4a0b9))
+
+
+### BREAKING CHANGES
+
+* **core:**  - Removed PayloadBundle sub types
+ - Extracted message create functions from ConversationService
+ - Moved conversationId params from message send functions to message create functions
+
+Old API:
+```ts
+const textPayload = await account.service.conversation.createText(this.message).build();
+await account.service.conversation.send(conversationId, textPayload);
+```
+
+New API:
+```ts
+const textPayload = await account.service.conversation.messageBuilder.createText(conversationId, this.message).build();
+await account.service.conversation.send(textPayload);
+```
+
+
+
+
+
+## [8.2.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.2.9...@wireapp/core@8.2.10) (2019-03-25)
+
+
+### Bug Fixes
+
+* **core:** Return Asset shape after sending image ([#1680](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1680)) ([14a0790](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/14a0790))
+
+
+
+
+
+## [8.2.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.2.8...@wireapp/core@8.2.9) (2019-03-25)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [8.2.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.2.7...@wireapp/core@8.2.8) (2019-03-25)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
 ## [8.2.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@8.2.6...@wireapp/core@8.2.7) (2019-03-21)
 
 **Note:** Version bump only for package @wireapp/core

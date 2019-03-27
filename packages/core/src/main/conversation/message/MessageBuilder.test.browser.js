@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2019 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,11 @@
  *
  */
 
-// traverse all test files for webpack dependency resolution
-const testsContext = require.context('./', true, /test\.(browser\.)?js$/);
-testsContext.keys().forEach(testsContext);
+const {MessageBuilder} = require('@wireapp/core/dist/conversation/message/MessageBuilder');
+
+describe('createId', () => {
+  it('creates a random ID.', () => {
+    const id = MessageBuilder.createId();
+    expect(typeof id).toBe('string');
+  });
+});

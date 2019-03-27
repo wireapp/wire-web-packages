@@ -20,7 +20,7 @@
 import {APIClient} from '@wireapp/api-client';
 import {ClientType} from '@wireapp/api-client/dist/commonjs/client/';
 import {Account} from '@wireapp/core';
-import {PayloadBundleIncoming, PayloadBundleType} from '@wireapp/core/dist/conversation/';
+import {PayloadBundle, PayloadBundleType} from '@wireapp/core/dist/conversation/';
 import {MemoryEngine} from '@wireapp/store-engine';
 import logdown from 'logdown';
 import UUID from 'pure-uuid';
@@ -66,6 +66,15 @@ class Bot {
 
   private isOwner(userId: string): boolean {
     return this.config.owners.length === 0 ? true : this.config.owners.includes(userId);
+  }
+
+  public async sendText(conversationId: string, message: string): Promise<void> {
+    if (this.account && this.account.service) {
+      const textPayload = await this.account.service.conversation.messageBuilder
+        .createText(conversationId, message)
+        .build();
+      await this.account.service.conversation.send(textPayload);
+    }
   }
 
   public async start(): Promise<void> {
@@ -114,7 +123,7 @@ class Bot {
     this.handlers.forEach(handler => (handler.account = this.account));
   }
 
-  private handlePayload(payload: PayloadBundleIncoming): void {
+  private handlePayload(payload: PayloadBundle): void {
     if (this.validateMessage(payload.conversation, payload.from)) {
       this.handlers.forEach(handler => handler.handleEvent(payload));
     }

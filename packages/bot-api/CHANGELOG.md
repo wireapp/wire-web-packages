@@ -3,6 +3,87 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@4.0.1...@wireapp/bot-api@4.0.2) (2019-03-27)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [4.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@4.0.0...@wireapp/bot-api@4.0.1) (2019-03-27)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+# [4.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@3.3.3...@wireapp/bot-api@4.0.0) (2019-03-27)
+
+
+### Code Refactoring
+
+* **core:** Expect conversation ID when creating messages & Message types [BREAKING] ([#1686](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/issues/1686)) ([2a4a0b9](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/commit/2a4a0b9))
+
+
+### BREAKING CHANGES
+
+* **core:**  - Removed PayloadBundle sub types
+ - Extracted message create functions from ConversationService
+ - Moved conversationId params from message send functions to message create functions
+
+Old API:
+```ts
+const textPayload = await account.service.conversation.createText(this.message).build();
+await account.service.conversation.send(conversationId, textPayload);
+```
+
+New API:
+```ts
+const textPayload = await account.service.conversation.messageBuilder.createText(conversationId, this.message).build();
+await account.service.conversation.send(textPayload);
+```
+
+
+
+
+
+## [3.3.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@3.3.2...@wireapp/bot-api@3.3.3) (2019-03-25)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [3.3.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@3.3.1...@wireapp/bot-api@3.3.2) (2019-03-25)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [3.3.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@3.3.0...@wireapp/bot-api@3.3.1) (2019-03-25)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+# [3.3.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@3.2.4...@wireapp/bot-api@3.3.0) (2019-03-21)
+
+
+### Features
+
+* **bot-api:** Expose send text method ([#1670](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/issues/1670)) ([0eea3b3](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/commit/0eea3b3))
+
+
+
+
+
 ## [3.2.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@3.2.3...@wireapp/bot-api@3.2.4) (2019-03-21)
 
 **Note:** Version bump only for package @wireapp/bot-api
