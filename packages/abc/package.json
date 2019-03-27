@@ -11,6 +11,7 @@
   "license": "GPL-3.0",
   "main": "./dist/commonjs/APIClient.js",
   "name": "@wireapp/abc",
+  "private": true,
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/abc",
   "scripts": {
     "test": "jasmine"
