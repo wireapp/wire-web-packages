@@ -20,23 +20,22 @@
 const {execSync} = require('child_process');
 
 let output;
-console.info('Checking for updated packages');
+console.info('Checking for changed packages...');
+
 try {
-  output = execSync(`npx lerna updated`);
+  output = execSync(`npx lerna changed --all --json`);
 } catch (error) {
-  console.info(`No project updates - skipping tests`);
+  console.info(`No local packages have changed since the last tagged releases.`);
   process.exit(0);
 }
 
-const updatedProjects = output
-  .toString()
-  .replace(/- /g, '')
-  .match(/[^\r\n]+/g);
+const changedPackages = JSON.parse(output.toString());
+const packageNames = changedPackages.map(project => project.name);
 
 console.info('Building all packages');
 execSync(`yarn dist`, {stdio: [0, 1]});
 
-updatedProjects.forEach(project => {
-  console.info(`Running tests for project "${project}"`);
-  execSync(`npx lerna run --scope ${project} test`, {stdio: [0, 1]});
+packageNames.forEach(packageName => {
+  console.info(`Running tests for package "${packageName}"...`);
+  execSync(`npx lerna run --scope ${packageName} test`, {stdio: [0, 1]});
 });
