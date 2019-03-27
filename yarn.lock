@@ -1622,10 +1622,10 @@
   resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.26.tgz#a38c438ae84fa02431d6892edf86e46edcbca291"
   integrity sha512-aj2mrBLn5ky0GmAg6IPXrQjnN0iB/ulozuJ+oZdrHRAzRbXjGmu4UXsNCjFvPbSaaPZmniocdOzsM392qLOlmQ==
 
-"@types/bro-fs@0.4.1":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@types/bro-fs/-/bro-fs-0.4.1.tgz#02e7e29fa94a5521631cd51317a14019312c8405"
-  integrity sha512-/JVVuoolSE3Js0hsQ2Sxk6vw+DXQ+2Qo+gFzHIIz0LQPdsZn5SMu+AeBII7XM6f3BFwxpicUvacIc5lBRikdkw==
+"@types/bro-fs@0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@types/bro-fs/-/bro-fs-0.4.2.tgz#c8a84901cc2872130bd84cdb18554afe50934002"
+  integrity sha512-JATRI4WgTL3yOOkG8Kmw45FKwZGFque+3kn6dzTQl6zmW5WhsNo3+40WlyhjoU2Vapt+bG7PT29RosB7DmnK7A==
   dependencies:
     "@types/filesystem" "*"
 
