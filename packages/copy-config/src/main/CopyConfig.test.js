@@ -133,12 +133,15 @@ describe('CopyConfig', () => {
       await fs.ensureDir(TEMP_DIR);
       await fs.writeFile(path.join(TEMP_DIR, 'test1.txt'), '');
 
+      const HTTPS_URL = 'https://github.com/wireapp/wire-web-config-default#master';
+      const ZIP_URL = 'https://github.com/wireapp/wire-web-config-default/archive/master.zip';
+
       const copyConfig = new CopyConfig({
         files: {
           './package.json': TEMP_DIR,
         },
         forceDownload: true,
-        repositoryUrl: 'https://github.com/wireapp/wire-web-config-default#master',
+        repositoryUrl: HTTPS_URL,
       });
 
       spyOn(utils, 'downloadFileAsync').and.returnValue(Promise.resolve());
@@ -146,10 +149,7 @@ describe('CopyConfig', () => {
 
       await copyConfig.copy();
 
-      expect(utils.downloadFileAsync).toHaveBeenCalledWith(
-        'https://github.com/wireapp/wire-web-config-default/archive/master.zip',
-        path.resolve(__dirname, '../../config')
-      );
+      expect(utils.downloadFileAsync).toHaveBeenCalledWith(ZIP_URL, jasmine.any(String));
     });
   });
 
@@ -157,12 +157,15 @@ describe('CopyConfig', () => {
     await fs.ensureDir(TEMP_DIR);
     await fs.writeFile(path.join(TEMP_DIR, 'test1.txt'), '');
 
+    const GIT_URL = 'git@github.com:wireapp/wire-web-config-default#master';
+    const ZIP_URL = 'https://github.com/wireapp/wire-web-config-default/archive/master.zip';
+
     const copyConfig = new CopyConfig({
       files: {
         './package.json': TEMP_DIR,
       },
       forceDownload: true,
-      repositoryUrl: 'git@github.com:wireapp/wire-web-config-default#master',
+      repositoryUrl: GIT_URL,
     });
 
     spyOn(utils, 'downloadFileAsync').and.returnValue(Promise.resolve());
@@ -170,10 +173,7 @@ describe('CopyConfig', () => {
 
     await copyConfig.copy();
 
-    expect(utils.downloadFileAsync).toHaveBeenCalledWith(
-      'https://github.com/wireapp/wire-web-config-default/archive/master.zip',
-      path.resolve(__dirname, '../../config')
-    );
+    expect(utils.downloadFileAsync).toHaveBeenCalledWith(ZIP_URL, jasmine.any(String));
   });
 
   describe('getFilesFromString', () => {
