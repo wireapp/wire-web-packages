@@ -870,7 +870,7 @@ class ConversationService {
     return userId;
   }
 
-  public async send(payloadBundle: Message, userIds?: string[]): Promise<PayloadBundle> {
+  public async send(payloadBundle: Message, userIds?: string[]) {
     switch (payloadBundle.type) {
       case PayloadBundleType.ASSET:
         return this.sendFileData(payloadBundle, userIds);
