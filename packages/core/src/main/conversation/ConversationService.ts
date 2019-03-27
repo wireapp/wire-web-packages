@@ -879,7 +879,7 @@ class ConversationService {
       case PayloadBundleType.ASSET_META:
         return this.sendFileMetaData(payloadBundle, userIds);
       case PayloadBundleType.ASSET_IMAGE:
-        return this.sendImage(payloadBundle, userIds);
+        return this.sendImage(payloadBundle as ImageAssetMessageOutgoing, userIds);
       case PayloadBundleType.CLIENT_ACTION: {
         if (payloadBundle.content.clientAction === ClientAction.RESET_SESSION) {
           return this.sendSessionReset(payloadBundle, userIds);
