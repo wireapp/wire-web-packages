@@ -50,7 +50,7 @@
     "lint:ts": "tslint --config tslint.json --project tsconfig.json \"**/*.ts?(x)\"",
     "prettier": "prettier \"**/*.{json,md,scss,yml}\"",
     "release": "lerna publish",
-    "test": "node bin/testUpdated.js",
+    "test": "yarn && yarn lint:js && yarn lint:ts && yarn lint:other && node bin/testUpdated.js",
     "test:all": "yarn && yarn dist && yarn lint && lerna run test"
   },
   "workspaces": [
