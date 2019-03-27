@@ -95,7 +95,6 @@ import {
   TextMessage,
 } from './message/Message';
 import {MessageBuilder} from './message/MessageBuilder';
-import {PayloadBundle} from './message/PayloadBundle';
 
 class ConversationService {
   private clientID: string = '';
