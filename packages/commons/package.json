@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@types/ansi-regex": "4.0.0",
-    "@types/node": "11.11.4",
+    "@types/node": "11.11.6",
     "@types/platform": "1.3.2",
     "ansi-regex": "4.1.0",
     "fs-extra": "7.0.1",
@@ -11,17 +11,15 @@
     "url-search-params-polyfill": "5.0.0"
   },
   "devDependencies": {
+    "@types/karma": "3.0.2",
     "jasmine": "3.3.1",
     "karma": "4.0.1",
     "karma-chrome-launcher": "2.2.0",
     "karma-jasmine": "2.0.1",
     "karma-jasmine-diff-reporter": "2.0.0",
-    "karma-sourcemap-loader": "0.3.7",
-    "karma-spec-reporter": "0.0.32",
+    "karma-typescript": "4.0.0",
     "rimraf": "2.6.3",
-    "typescript": "3.3.4000",
-    "webpack": "4.29.6",
-    "webpack-cli": "3.3.0"
+    "typescript": "3.3.4000"
   },
   "description": "Collection of common components that are used across Wire web applications.",
   "files": [
@@ -36,16 +34,14 @@
   "name": "@wireapp/commons",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/commons",
   "scripts": {
-    "build": "yarn build:node && yarn build:browser",
-    "build:browser": "webpack --progress",
-    "build:node": "tsc",
+    "build": "tsc",
     "clean": "rimraf dist",
     "dist": "yarn clean && yarn build",
     "test": "yarn test:node && yarn test:browser",
-    "test:browser": "webpack --progress && karma start",
+    "test:browser": "karma start",
     "test:project": "yarn dist && yarn test",
     "test:node": "jasmine --config=jasmine.json"
   },
   "types": "./dist/commonjs/index.d.ts",
-  "version": "1.4.1"
+  "version": "1.4.3"
 }
