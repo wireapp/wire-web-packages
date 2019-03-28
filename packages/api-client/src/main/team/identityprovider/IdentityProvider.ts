@@ -18,15 +18,15 @@
  */
 
 interface IdentityProvider {
+  extraInfo: string;
   id: string;
   metadata: IdentityProviderMetaData;
-  extraInfo: string;
 }
 
 interface IdentityProviderMetaData {
+  certAuthnResponse: string[];
   issuer: string;
   requestURI: string;
-  certAuthnResponse: string[];
 }
 
 export {IdentityProvider, IdentityProviderMetaData};
