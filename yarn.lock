@@ -7778,9 +7778,10 @@ libsodium@0.7.4:
   resolved "https://registry.yarnpkg.com/libsodium/-/libsodium-0.7.4.tgz#a5bccd65e3a13b34147ea109be3c65d89f90b074"
   integrity sha512-fTU3vUdrxQzhPAAjmTSqKk4LzYbR0OtcYjp1P92AlH50JIxXZFEIXWh1yryCmU6RLGfwS2IzBdZjbmpYf/TlyQ==
 
-"license-checker@git+https://github.com/mwittig/license-checker#d546e3f738e14c62e732346fa355162d46700893":
+"license-checker@git+https://github.com/mwittig/license-checker.git#d546e3f738e14c62e732346fa355162d46700893":
   version "1.0.0"
-  resolved "git+https://github.com/mwittig/license-checker#d546e3f738e14c62e732346fa355162d46700893"
+  uid d546e3f738e14c62e732346fa355162d46700893
+  resolved "git+https://github.com/mwittig/license-checker.git#d546e3f738e14c62e732346fa355162d46700893"
   dependencies:
     chalk "~0.5.1"
     mkdirp "^0.3.5"
@@ -8971,14 +8972,15 @@ npm-bundled@^1.0.1:
   resolved "https://registry.yarnpkg.com/npm-bundled/-/npm-bundled-1.0.6.tgz#e7ba9aadcef962bb61248f91721cd932b3fe6bdd"
   integrity sha512-8/JCaftHwbd//k6y2rEWp6k1wxVfpFzB6t1p825+cUb7Ym2XQfhwIC5KwhrvzZRJu+LtDE585zVaS32+CGtf0g==
 
-npm-license-crawler@0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/npm-license-crawler/-/npm-license-crawler-0.2.0.tgz#82531bc679fa7b433d7d0375091ce4edf789db70"
-  integrity sha512-M0XsYKLEe74/vuxd0ks4mO1hDYxQxYb/VHMT+dPQr56Q35V0dYeBP9qcX5NnvyUPpGbHejihpeK45xpMGWtY7w==
+npm-license-crawler@0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/npm-license-crawler/-/npm-license-crawler-0.2.1.tgz#a76a82e0a0407e2032c03dc5b1d518cf9eac9e1d"
+  integrity sha512-CRchloUjZk/ZSAkb5JbCKNFojLWtbjxwsB7w48kauHXK+5bjby2HXFvGvicVx7uNBY6HBWEPw20qKc/4jlL+1Q==
   dependencies:
     async "^2.6.1"
+    chalk "^2.4.2"
     jquery-extend "~2.0.3"
-    license-checker "git+https://github.com/mwittig/license-checker#d546e3f738e14c62e732346fa355162d46700893"
+    license-checker "git+https://github.com/mwittig/license-checker.git#d546e3f738e14c62e732346fa355162d46700893"
     mkdirp "^0.5.1"
     nopt "^3.0.6"
     nopt-defaults "^0.0.1"
