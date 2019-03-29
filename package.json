@@ -11,7 +11,6 @@
     "lerna": "3.13.1",
     "lint-staged": "8.1.5",
     "prettier": "1.16.4",
-    "ts-node": "8.0.3",
     "tslint": "5.14.0",
     "tslint-config-prettier": "1.18.0",
     "tslint-plugin-prettier": "2.0.1",
@@ -51,7 +50,7 @@
     "lint:ts": "tslint --config tslint.json --project tsconfig.json \"**/*.ts?(x)\"",
     "prettier": "prettier \"**/*.{json,md,scss,yml}\"",
     "release": "lerna publish",
-    "test": "yarn && yarn lint:js && yarn lint:ts && yarn lint:other && ts-node bin/testUpdated.ts",
+    "test": "yarn && yarn lint:js && yarn lint:ts && yarn lint:other && node bin/testUpdated.js",
     "test:all": "yarn && yarn dist && yarn lint && lerna run test"
   },
   "workspaces": [
