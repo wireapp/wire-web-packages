@@ -46,7 +46,7 @@ describe('MessageHashService', () => {
       const content = {
         text: 'Hello!',
       };
-      const timestamp = 1540213769000;
+      const timestamp = 1540213769;
 
       const messageHashService = new MessageHashService(content, timestamp);
       const buffer = messageHashService.getTimestampBuffer(timestamp);
@@ -133,7 +133,7 @@ describe('MessageHashService', () => {
         latitude: 51.509143,
         longitude: -0.117277,
       };
-      const timestamp = 1540213769;
+      const timestamp = 1540213769000;
 
       const messageHashService = new MessageHashService(content, timestamp);
 
@@ -149,7 +149,7 @@ describe('MessageHashService', () => {
           assetId: '3-2-1-38d4f5b9',
         },
       };
-      const timestamp = 1540213769;
+      const timestamp = 1540213769000;
 
       const messageHashService = new MessageHashService(content, timestamp);
 
@@ -165,7 +165,7 @@ describe('MessageHashService', () => {
           assetId: '3-3-3-82a62735',
         },
       };
-      const timestamp = 1540213965;
+      const timestamp = 1540213965000;
 
       const messageHashService = new MessageHashService(content, timestamp);
 
