@@ -17,10 +17,6 @@
  *
  */
 
-import setGlobalStyles from './globalStyles';
-
-setGlobalStyles();
-
 export * from './Form';
 export * from './Icon';
 export * from './Identity';
@@ -29,3 +25,4 @@ export * from './Menu';
 export * from './Misc';
 export * from './Modal';
 export * from './Text';
+export * from './mediaQueries';

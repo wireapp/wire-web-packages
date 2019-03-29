@@ -17,10 +17,10 @@
  *
  */
 
-import {AxiosRequestConfig, AxiosResponse} from 'axios';
+import {AxiosRequestConfig} from 'axios';
 
-import {Connection, ConnectionRequest, ConnectionUpdate, UserConnectionList} from '../connection';
-import {HttpClient} from '../http';
+import {Connection, ConnectionRequest, ConnectionUpdate, UserConnectionList} from '../connection/';
+import {HttpClient} from '../http/';
 
 class ConnectionAPI {
   constructor(private readonly client: HttpClient) {}
@@ -40,7 +40,7 @@ class ConnectionAPI {
       url: `${ConnectionAPI.URL.CONNECTIONS}/${userId}`,
     };
 
-    return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
+    return this.client.sendJSON<Connection>(config).then(response => response.data);
   }
 
   /**
@@ -59,7 +59,7 @@ class ConnectionAPI {
       url: ConnectionAPI.URL.CONNECTIONS,
     };
 
-    return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
+    return this.client.sendJSON<UserConnectionList>(config).then(response => response.data);
   }
 
   /**
@@ -102,7 +102,7 @@ class ConnectionAPI {
       url: ConnectionAPI.URL.CONNECTIONS,
     };
 
-    return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
+    return this.client.sendJSON<Connection>(config).then(response => response.data);
   }
 
   /**
@@ -119,7 +119,7 @@ class ConnectionAPI {
       url: `${ConnectionAPI.URL.CONNECTIONS}/${userId}`,
     };
 
-    return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
+    return this.client.sendJSON<Connection>(config).then(response => response.data);
   }
 }
 

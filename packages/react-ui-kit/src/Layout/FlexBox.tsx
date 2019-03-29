@@ -17,28 +17,38 @@
  *
  */
 
-import styled from 'styled-components';
+/** @jsx jsx */
+import {ObjectInterpolation, jsx} from '@emotion/core';
+import {FlexWrapProperty} from 'csstype';
+import React from 'react';
+import {filterProps} from '../util';
 
-interface FlexBoxProps {
+export interface FlexBoxProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   align?: string;
   column?: boolean;
   justify?: string;
-  wrap?: boolean;
+  flexWrap?: FlexWrapProperty;
 }
 
-const FlexBox = styled.div<FlexBoxProps & React.HTMLAttributes<HTMLDivElement>>`
-  display: flex;
-  flex-direction: ${props => (props.column ? 'column' : 'row')};
-  align-items: ${props => props.align};
-  justify-content: ${props => props.justify};
-  flex-wrap: ${props => (props.wrap ? 'wrap' : 'no-wrap')};
-`;
+const flexBoxStyle: <T>(props: FlexBoxProps<T>) => ObjectInterpolation<undefined> = ({
+  align = 'flex-start',
+  column = false,
+  justify = 'flex-start',
+  flexWrap = 'nowrap',
+}) => ({
+  alignItems: align,
+  display: 'flex',
+  flexDirection: column ? 'column' : 'row',
+  flexWrap: flexWrap,
+  justifyContent: justify,
+});
 
-FlexBox.defaultProps = {
-  align: 'flex-start',
-  column: false,
-  justify: 'flex-start',
-  wrap: false,
+const filterFlexBoxProps = (props: Object) => {
+  return filterProps(props, ['align', 'column', 'justify', 'flexWrap']);
 };
 
-export {FlexBox};
+const FlexBox: React.FC<FlexBoxProps> = React.forwardRef<HTMLDivElement, FlexBoxProps>((props, ref) => (
+  <div ref={ref} css={flexBoxStyle(props)} {...filterFlexBoxProps(props)} />
+));
+
+export {FlexBox, flexBoxStyle};

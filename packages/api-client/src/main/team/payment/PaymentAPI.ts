@@ -17,8 +17,9 @@
  *
  */
 
-import {AxiosPromise, AxiosRequestConfig, AxiosResponse} from 'axios';
+import {AxiosRequestConfig} from 'axios';
 
+import {HttpClient} from '../../http/';
 import {
   PaymentBillingData,
   PaymentData,
@@ -27,8 +28,7 @@ import {
   PaymentStripeCharge,
   PaymentStripeInvoices,
   PaymentStripePlan,
-} from '.';
-import {HttpClient} from '../../http';
+} from './';
 
 class PaymentAPI {
   static readonly DEFAULT_INVOICES_CHUNK_SIZE = 10;
@@ -47,14 +47,14 @@ class PaymentAPI {
     };
   }
 
-  public putPaymentData(teamId: string, paymentData: PaymentDataUpdate): AxiosPromise {
+  public putPaymentData(teamId: string, paymentData: PaymentDataUpdate): Promise<PaymentData> {
     const config: AxiosRequestConfig = {
       data: paymentData,
       method: 'put',
       url: `${PaymentAPI.URL.TEAMS}/${teamId}/${PaymentAPI.URL.BILLING}`,
     };
 
-    return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
+    return this.client.sendJSON<PaymentData>(config).then(response => response.data);
   }
 
   public getPaymentData(teamId: string): Promise<PaymentData> {
@@ -63,7 +63,7 @@ class PaymentAPI {
       url: `${PaymentAPI.URL.TEAMS}/${teamId}/${PaymentAPI.URL.BILLING}`,
     };
 
-    return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
+    return this.client.sendJSON<PaymentData>(config).then(response => response.data);
   }
 
   public deletePaymentData(teamId: string, data: Object): Promise<PaymentData> {
@@ -73,17 +73,17 @@ class PaymentAPI {
       url: `${PaymentAPI.URL.TEAMS}/${teamId}/${PaymentAPI.URL.BILLING}`,
     };
 
-    return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
+    return this.client.sendJSON<PaymentData>(config).then(response => response.data);
   }
 
-  public putPaymentBilling(teamId: string, billingInfo: PaymentBillingData): AxiosPromise {
+  public putPaymentBilling(teamId: string, billingInfo: PaymentBillingData): Promise<PaymentBillingData> {
     const config: AxiosRequestConfig = {
       data: billingInfo,
       method: 'put',
       url: `${PaymentAPI.URL.TEAMS}/${teamId}/${PaymentAPI.URL.BILLING}/${PaymentAPI.URL.INFO}`,
     };
 
-    return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
+    return this.client.sendJSON<PaymentBillingData>(config).then(response => response.data);
   }
 
   public getPaymentBilling(teamId: string): Promise<PaymentBillingData> {
@@ -92,17 +92,17 @@ class PaymentAPI {
       url: `${PaymentAPI.URL.TEAMS}/${teamId}/${PaymentAPI.URL.BILLING}/${PaymentAPI.URL.INFO}`,
     };
 
-    return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
+    return this.client.sendJSON<PaymentBillingData>(config).then(response => response.data);
   }
 
-  public putPaymentPlan(teamId: string, plan: PaymentPlan): AxiosPromise {
+  public putPaymentPlan(teamId: string, plan: PaymentPlan): Promise<void> {
     const config: AxiosRequestConfig = {
       data: plan,
       method: 'put',
       url: `${PaymentAPI.URL.TEAMS}/${teamId}/${PaymentAPI.URL.BILLING}/${PaymentAPI.URL.PLAN}/${plan.id}`,
     };
 
-    return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
+    return this.client.sendJSON<void>(config).then(response => response.data);
   }
 
   public getPlans(teamId: string): Promise<PaymentStripePlan[]> {
@@ -111,7 +111,7 @@ class PaymentAPI {
       url: `${PaymentAPI.URL.TEAMS}/${teamId}/${PaymentAPI.URL.BILLING}/${PaymentAPI.URL.PLANS}`,
     };
 
-    return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
+    return this.client.sendJSON<PaymentStripePlan[]>(config).then(response => response.data);
   }
 
   public getCharges(teamId: string): Promise<PaymentStripeCharge[]> {
@@ -120,7 +120,7 @@ class PaymentAPI {
       url: `${PaymentAPI.URL.TEAMS}/${teamId}/${PaymentAPI.URL.BILLING}/${PaymentAPI.URL.CHARGES}`,
     };
 
-    return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
+    return this.client.sendJSON<PaymentStripeCharge[]>(config).then(response => response.data);
   }
 
   public getInvoices(
@@ -137,7 +137,7 @@ class PaymentAPI {
       url: `${PaymentAPI.URL.TEAMS}/${teamId}/${PaymentAPI.URL.BILLING}/${PaymentAPI.URL.INVOICES}`,
     };
 
-    return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
+    return this.client.sendJSON<PaymentStripeInvoices>(config).then(response => response.data);
   }
 
   public getSupportedCurrencies(teamId: string): Promise<string[]> {
@@ -146,7 +146,7 @@ class PaymentAPI {
       url: `${PaymentAPI.URL.TEAMS}/${teamId}/${PaymentAPI.URL.BILLING}/${PaymentAPI.URL.CURRENCIES}`,
     };
 
-    return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
+    return this.client.sendJSON<string[]>(config).then(response => response.data);
   }
 }
 

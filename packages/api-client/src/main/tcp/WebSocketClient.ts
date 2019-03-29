@@ -17,22 +17,21 @@
  *
  */
 
-import * as EventEmitter from 'events';
-import * as logdown from 'logdown';
+import EventEmitter from 'events';
+import logdown from 'logdown';
 import {IncomingNotification} from '../conversation/';
-import {HttpClient, NetworkError} from '../http/';
+import {BackendErrorMapper, HttpClient, NetworkError} from '../http/';
 
-import * as Html5WebSocket from 'html5-websocket';
+import Html5WebSocket from 'html5-websocket';
+import {InvalidTokenError} from '../auth';
 import * as buffer from '../shims/node/buffer';
+
 const ReconnectingWebsocket = require('reconnecting-websocket');
 
 class WebSocketClient extends EventEmitter {
   private clientId: string | undefined;
 
-  private readonly logger = logdown('@wireapp/api-client/tcp/WebSocketClient', {
-    logger: console,
-    markdown: false,
-  });
+  private readonly logger: logdown.Logger;
 
   private socket: WebSocket | undefined;
 
@@ -54,11 +53,18 @@ class WebSocketClient extends EventEmitter {
   };
 
   public static TOPIC = {
+    ON_DISCONNECT: 'WebSocketClient.TOPIC.ON_DISCONNECT',
+    ON_ERROR: 'WebSocketClient.TOPIC.ON_ERROR',
     ON_MESSAGE: 'WebSocketClient.TOPIC.ON_MESSAGE',
   };
 
   constructor(private readonly baseURL: string, public client: HttpClient) {
     super();
+
+    this.logger = logdown('@wireapp/api-client/tcp/WebSocketClient', {
+      logger: console,
+      markdown: false,
+    });
   }
 
   private buildWebSocketURL(accessToken: string = this.client.accessTokenStore.accessToken!.access_token): string {
@@ -91,7 +97,12 @@ class WebSocketClient extends EventEmitter {
           if (error instanceof NetworkError) {
             this.logger.warn(error);
           } else {
-            throw error;
+            const mappedError = BackendErrorMapper.map(error);
+            if (error instanceof InvalidTokenError) {
+              this.emit(WebSocketClient.TOPIC.ON_DISCONNECT, mappedError);
+            } else {
+              this.emit(WebSocketClient.TOPIC.ON_ERROR, mappedError);
+            }
           }
         });
 

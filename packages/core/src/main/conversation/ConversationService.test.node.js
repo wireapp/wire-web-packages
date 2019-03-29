@@ -19,14 +19,15 @@
 
 /* eslint-disable no-magic-numbers */
 const {APIClient} = require('@wireapp/api-client');
-const UUID = require('pure-uuid');
 const {Account} = require('@wireapp/core');
 const {GenericMessage, Text} = require('@wireapp/protocol-messaging');
 const {MemoryEngine} = require('@wireapp/store-engine');
 
+const PayloadHelper = require('../test/PayloadHelper');
+
 const createMessage = content => {
   const customTextMessage = GenericMessage.create({
-    messageId: new UUID(4).format(),
+    messageId: PayloadHelper.getUUID(),
     text: Text.create({content}),
   });
 
@@ -36,10 +37,10 @@ const createMessage = content => {
 const generatePreKeyBundle = (userCount, clientsPerUser) => {
   const prekeyBundle = {};
   for (let userIndex = 0; userIndex < userCount; userIndex++) {
-    const userId = new UUID(4).format();
+    const userId = PayloadHelper.getUUID();
     prekeyBundle[userId] = {};
     for (let clientIndex = 0; clientIndex < clientsPerUser; clientIndex++) {
-      const clientId = new UUID(4).format();
+      const clientId = PayloadHelper.getUUID();
       prekeyBundle[userId][clientId] = {};
     }
   }
@@ -76,7 +77,7 @@ describe('ConversationService', () => {
       const {conversation} = account.service;
       const preKeyBundles = generatePreKeyBundle(2, 1);
 
-      const shortMessage = new UUID(4).format();
+      const shortMessage = PayloadHelper.getUUID();
       const plainText = createMessage(shortMessage);
 
       const shouldSendAsExternal = conversation.shouldSendAsExternal(plainText, preKeyBundles);
@@ -86,25 +87,29 @@ describe('ConversationService', () => {
     });
 
     it('adds missing prekeys', async () => {
-      const recipientId = new UUID(4).format();
-      const missingClientId = new UUID(4).format();
+      const aliceId = PayloadHelper.getUUID();
+      const aliceClientId = PayloadHelper.getUUID();
+      const bobId = PayloadHelper.getUUID();
+      const bobClientId = PayloadHelper.getUUID();
+
       const initialPreKeyBundles = {
-        [recipientId]: {
-          [new UUID(4).format()]: {},
+        [aliceId]: {
+          [PayloadHelper.getUUID()]: {},
         },
       };
 
       spyOn(account.apiClient.conversation.api, 'postOTRMessage').and.callFake(
         (sendingClientId, conversationId, message) =>
           new Promise((resolve, reject) => {
-            if (message.recipients[recipientId] && !message.recipients[recipientId][missingClientId]) {
+            if (message.recipients[aliceId] && !message.recipients[aliceId][aliceClientId]) {
               // eslint-disable-next-line prefer-promise-reject-errors
               reject({
                 response: {
                   data: {
                     deleted: {},
                     missing: {
-                      [recipientId]: [missingClientId],
+                      [aliceId]: [aliceClientId],
+                      [bobId]: [bobClientId],
                     },
                     redundant: {},
                     time: new Date().toISOString(),
@@ -119,40 +124,47 @@ describe('ConversationService', () => {
       );
       spyOn(account.apiClient.user.api, 'postMultiPreKeyBundles').and.returnValue(
         Promise.resolve({
-          [recipientId]: {
-            [missingClientId]: {},
+          [aliceId]: {
+            [aliceClientId]: {},
+          },
+          [bobId]: {
+            [bobClientId]: {},
           },
         })
       );
 
       const payload = createMessage('Hello, world!');
       const recipients = await account.service.cryptography.encrypt(payload, initialPreKeyBundles);
-      expect(recipients[recipientId][missingClientId]).toBeUndefined();
+      expect(recipients[aliceId]).toBeDefined();
+      expect(recipients[aliceId][aliceClientId]).toBeUndefined();
+      expect(recipients[bobId]).toBeUndefined();
 
-      await account.service.conversation.sendOTRMessage(recipientId, new UUID(4).format(), recipients, payload);
-      expect(recipients[recipientId][missingClientId]).toBeDefined();
+      await account.service.conversation.sendOTRMessage(aliceId, PayloadHelper.getUUID(), recipients, payload);
+      expect(recipients[aliceId][aliceClientId]).toBeDefined();
+      expect(recipients[bobId][bobClientId]).toBeDefined();
     });
 
     it('removes deleted prekeys', async () => {
-      const recipientId = new UUID(4).format();
-      const deletedClientId = new UUID(4).format();
+      const aliceId = PayloadHelper.getUUID();
+      const aliceClientId = PayloadHelper.getUUID();
+
       const initialPreKeyBundles = {
-        [recipientId]: {
-          [new UUID(4).format()]: {},
-          [deletedClientId]: {},
+        [aliceId]: {
+          [PayloadHelper.getUUID()]: {},
+          [aliceClientId]: {},
         },
       };
 
       spyOn(account.apiClient.conversation.api, 'postOTRMessage').and.callFake(
         (sendingClientId, conversationId, message) =>
           new Promise((resolve, reject) => {
-            if (message.recipients[recipientId] && message.recipients[recipientId][deletedClientId]) {
+            if (message.recipients[aliceId] && message.recipients[aliceId][aliceClientId]) {
               // eslint-disable-next-line prefer-promise-reject-errors
               reject({
                 response: {
                   data: {
                     deleted: {
-                      [recipientId]: [deletedClientId],
+                      [aliceId]: [aliceClientId],
                     },
                     missing: {},
                     redundant: {},
@@ -170,17 +182,18 @@ describe('ConversationService', () => {
 
       const payload = createMessage('Hello, world!');
       const recipients = await account.service.cryptography.encrypt(payload, initialPreKeyBundles);
-      expect(recipients[recipientId][deletedClientId]).toBeDefined();
+      expect(recipients[aliceId][aliceClientId]).toBeDefined();
 
-      await account.service.conversation.sendOTRMessage(recipientId, new UUID(4).format(), recipients, payload);
-      expect(recipients[recipientId][deletedClientId]).toBeUndefined();
+      await account.service.conversation.sendOTRMessage(aliceId, PayloadHelper.getUUID(), recipients, payload);
+      expect(recipients[aliceId]).toBeDefined();
+      expect(recipients[aliceId][aliceClientId]).toBeUndefined();
     });
   });
 
   describe('"createText"', () => {
     it('adds link previews correctly', async () => {
       account.apiClient.context = {
-        userId: new UUID(4).format(),
+        userId: PayloadHelper.getUUID(),
       };
 
       const url = 'http://example.com';
@@ -195,7 +208,7 @@ describe('ConversationService', () => {
       };
       const urlOffset = 0;
 
-      const linkPreview = await account.service.conversation.createLinkPreview({
+      const linkPreview = await account.service.conversation.messageBuilder.createLinkPreview({
         permanentUrl,
         summary,
         title,
@@ -203,7 +216,10 @@ describe('ConversationService', () => {
         url,
         urlOffset,
       });
-      const textMessage = account.service.conversation.createText(text, [linkPreview]);
+      const textMessage = account.service.conversation.messageBuilder
+        .createText(undefined, text)
+        .withLinkPreviews([linkPreview])
+        .build();
 
       expect(textMessage.content.text).toEqual(text);
       expect(textMessage.content.linkPreviews).toEqual(jasmine.any(Array));
@@ -221,20 +237,20 @@ describe('ConversationService', () => {
       );
     });
 
-    it('does not add link previews', async () => {
+    it('does not add link previews', () => {
       account.apiClient.context = {
-        userId: new UUID(4).format(),
+        userId: PayloadHelper.getUUID(),
       };
 
       const text = 'Hello, world!';
-      const textMessage = account.service.conversation.createText(text);
+      const textMessage = account.service.conversation.messageBuilder.createText(undefined, text).build();
 
       expect(textMessage.content.linkPreviews).toBeUndefined();
     });
 
     it('uploads link previews', async () => {
       account.apiClient.context = {
-        userId: new UUID(4).format(),
+        userId: PayloadHelper.getUUID(),
       };
 
       spyOn(account.service.asset, 'uploadImageAsset').and.returnValue(
@@ -257,8 +273,11 @@ describe('ConversationService', () => {
       const text = url;
       const urlOffset = 0;
 
-      const linkPreview = await account.service.conversation.createLinkPreview({image, url, urlOffset});
-      const textMessage = account.service.conversation.createText(text, [linkPreview]);
+      const linkPreview = await account.service.conversation.messageBuilder.createLinkPreview({image, url, urlOffset});
+      const textMessage = account.service.conversation.messageBuilder
+        .createText(undefined, text)
+        .withLinkPreviews([linkPreview])
+        .build();
 
       expect(account.service.asset.uploadImageAsset).toHaveBeenCalledTimes(1);
 
@@ -271,6 +290,94 @@ describe('ConversationService', () => {
           urlOffset,
         })
       );
+    });
+
+    it('adds mentions correctly', () => {
+      account.apiClient.context = {
+        userId: PayloadHelper.getUUID(),
+      };
+
+      const text = 'Hello @user!';
+
+      const mention = {
+        end: 11,
+        start: 6,
+        userId: PayloadHelper.getUUID(),
+      };
+
+      const textMessage = account.service.conversation.messageBuilder
+        .createText(undefined, text)
+        .withMentions([mention])
+        .build();
+
+      expect(textMessage.content.text).toEqual(text);
+      expect(textMessage.content.mentions).toEqual(jasmine.any(Array));
+      expect(textMessage.content.mentions.length).toBe(1);
+
+      expect(textMessage.content.mentions[0]).toEqual(jasmine.objectContaining(mention));
+    });
+
+    it('does not add mentions', () => {
+      account.apiClient.context = {
+        userId: PayloadHelper.getUUID(),
+      };
+
+      const text = 'Hello, world!';
+      const textMessage = account.service.conversation.messageBuilder.createText(text).build();
+
+      expect(textMessage.content.mentions).toBeUndefined();
+    });
+
+    it('adds a quote correctly', () => {
+      account.apiClient.context = {
+        userId: PayloadHelper.getUUID(),
+      };
+
+      const quoteId = PayloadHelper.getUUID();
+      const textSHA256 = PayloadHelper.getUUID();
+
+      const text = 'I totally agree.';
+
+      const quote = {
+        id: quoteId,
+        sha256: textSHA256,
+      };
+
+      const replyMessage = account.service.conversation.messageBuilder
+        .createText(undefined, text)
+        .withQuote(quote)
+        .build();
+
+      expect(replyMessage.content.text).toEqual(text);
+      expect(replyMessage.content.quote).toEqual(jasmine.objectContaining({id: quoteId, sha256: textSHA256}));
+      expect(replyMessage.content.quote).toEqual(jasmine.objectContaining(quote));
+    });
+
+    it('does not add a quote', () => {
+      account.apiClient.context = {
+        userId: PayloadHelper.getUUID(),
+      };
+
+      const text = 'Hello, world!';
+      const textMessage = account.service.conversation.messageBuilder.createText(undefined, text).build();
+
+      expect(textMessage.content.quote).toBeUndefined();
+    });
+
+    it('adds a read confirmation request correctly', () => {
+      account.apiClient.context = {
+        userId: PayloadHelper.getUUID(),
+      };
+
+      const text = 'Please read me';
+
+      const replyMessage = account.service.conversation.messageBuilder
+        .createText(undefined, text)
+        .withReadConfirmation(true)
+        .build();
+
+      expect(replyMessage.content.text).toEqual(text);
+      expect(replyMessage.content.expectsReadConfirmation).toEqual(true);
     });
   });
 });

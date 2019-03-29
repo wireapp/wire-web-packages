@@ -1,17 +1,41 @@
+/*
+ * Wire
+ * Copyright (C) 2018 Wire Swiss GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see http://www.gnu.org/licenses/.
+ *
+ */
+
 import CRUDEngine from './CRUDEngine';
-import {RecordAlreadyExistsError, RecordNotFoundError, RecordTypeError} from './error';
+import {RecordAlreadyExistsError, RecordNotFoundError, RecordTypeError} from './error/';
+
+export interface MemoryStore {
+  [index: string]: {[index: string]: any};
+}
 
 export default class MemoryEngine implements CRUDEngine {
   public storeName = '';
-  private readonly stores: {[index: string]: {[index: string]: any}} = {};
+  private readonly stores: MemoryStore = {};
 
   public async isSupported(): Promise<void> {
     // Always available
   }
 
-  public async init(storeName: string): Promise<any> {
+  public async init(storeName: string): Promise<MemoryStore> {
     this.storeName = storeName;
     this.stores[this.storeName] = this.stores[this.storeName] || {};
+    return this.stores;
   }
 
   public async purge(): Promise<void> {
@@ -61,10 +85,8 @@ export default class MemoryEngine implements CRUDEngine {
 
   public read<T>(tableName: string, primaryKey: string): Promise<T> {
     this.prepareTable(tableName);
-    const record = this.stores[this.storeName][tableName][primaryKey];
-
-    if (record) {
-      return Promise.resolve(record);
+    if (this.stores[this.storeName][tableName].hasOwnProperty(primaryKey)) {
+      return Promise.resolve(this.stores[this.storeName][tableName][primaryKey]);
     } else {
       const message = `Record "${primaryKey}" in "${tableName}" could not be found.`;
       return Promise.reject(new RecordNotFoundError(message));
@@ -87,16 +109,12 @@ export default class MemoryEngine implements CRUDEngine {
     return Promise.resolve(Object.keys(this.stores[this.storeName][tableName]));
   }
 
-  public update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  public async update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
     this.prepareTable(tableName);
-    return this.read(tableName, primaryKey)
-      .then((entity: Object) => {
-        return {...entity, ...changes};
-      })
-      .then((updatedEntity: Object) => {
-        this.stores[this.storeName][tableName][primaryKey] = updatedEntity;
-        return primaryKey;
-      });
+    const entity: Object = await this.read(tableName, primaryKey);
+    const updatedEntity: Object = {...entity, ...changes};
+    this.stores[this.storeName][tableName][primaryKey] = updatedEntity;
+    return primaryKey;
   }
 
   public updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {

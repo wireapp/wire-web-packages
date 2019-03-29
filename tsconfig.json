@@ -2,17 +2,17 @@
   "compilerOptions": {
     "declaration": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["DOM", "ES2016", "ES2017.object"],
+    "lib": ["dom", "esnext"],
     "jsx": "react",
-    "module": "CommonJS",
+    "module": "commonjs",
     "moduleResolution": "node",
-    "noEmitOnError": true,
+    "noEmitOnError": false,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": false,
-    "removeComments": true,
+    "removeComments": false,
     "sourceMap": true,
     "strict": true,
-    "target": "ES5"
+    "target": "es6"
   }
 }

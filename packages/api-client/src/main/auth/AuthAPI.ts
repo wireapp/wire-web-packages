@@ -17,13 +17,13 @@
  *
  */
 
-import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine';
-import {AxiosPromise, AxiosRequestConfig, AxiosResponse} from 'axios';
-import {LoginData} from '../auth';
+import {CRUDEngine} from '@wireapp/store-engine';
+import {AxiosRequestConfig, AxiosResponse} from 'axios';
+import {AccessTokenData, LoginData} from '../auth/';
 import {ClientType} from '../client/';
-import {HttpClient} from '../http';
+import {HttpClient} from '../http/';
 import {sendRequestWithCookie} from '../shims/node/cookie';
-import {User} from '../user';
+import {User} from '../user/';
 import {RegisterData} from './RegisterData';
 
 class AuthAPI {
@@ -34,7 +34,6 @@ class AuthAPI {
       ACCESS: '/access',
       COOKIES: '/cookies',
       INITIATE_LOGIN: 'initiate-login',
-      INVITATIONS: '/invitations',
       LOGIN: '/login',
       LOGOUT: 'logout',
       REGISTER: '/register',
@@ -56,7 +55,7 @@ class AuthAPI {
     return this.client.sendRequest(config);
   }
 
-  public postCookiesRemove(password: string, labels?: string[], ids?: string[]): AxiosPromise {
+  public async postCookiesRemove(password: string, labels?: string[], ids?: string[]): Promise<void> {
     const config: AxiosRequestConfig = {
       data: {
         ids,
@@ -68,10 +67,10 @@ class AuthAPI {
       withCredentials: true,
     };
 
-    return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
+    await this.client.sendJSON(config);
   }
 
-  public postLogin(loginData: LoginData): Promise<AxiosResponse<any>> {
+  public postLogin(loginData: LoginData): Promise<AxiosResponse<AccessTokenData>> {
     const login = {
       ...loginData,
       clientType: undefined,
@@ -88,17 +87,17 @@ class AuthAPI {
       withCredentials: true,
     };
 
-    return this.client.sendJSON(config).then((response: AxiosResponse) => response);
+    return this.client.sendJSON(config);
   }
 
-  public postLogout(): AxiosPromise {
+  public async postLogout(): Promise<void> {
     const config: AxiosRequestConfig = {
       method: 'post',
       url: `${AuthAPI.URL.ACCESS}/${AuthAPI.URL.LOGOUT}`,
       withCredentials: true,
     };
 
-    return sendRequestWithCookie(this.client, config, this.engine).then((response: AxiosResponse) => response.data);
+    await sendRequestWithCookie(this.client, config, this.engine);
   }
 
   public postRegister(userAccount: RegisterData): Promise<User> {
@@ -109,7 +108,7 @@ class AuthAPI {
       withCredentials: true,
     };
 
-    return this.client.sendJSON(config).then((response: AxiosResponse) => response.data);
+    return this.client.sendJSON<User>(config).then(response => response.data);
   }
 
   public async headInitiateLogin(ssoCode: string): Promise<void> {

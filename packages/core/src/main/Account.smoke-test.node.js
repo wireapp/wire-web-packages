@@ -22,7 +22,7 @@
 require('dotenv').config();
 
 const AccountHelper = require('./test/AccountHelper');
-const {PayloadBundleType} = require('@wireapp/core/dist/conversation/root');
+const {PayloadBundleType} = require('@wireapp/core/dist/conversation/');
 const {ValidationUtil} = require('@wireapp/commons');
 const {UnconnectedUserError} = require('@wireapp/api-client/dist/commonjs/user/');
 const logdown = require('logdown');
@@ -71,7 +71,7 @@ function acceptConnection(receiver, senderId) {
 }
 
 function sendText(sender, conversationId, message = 'Hello, World!') {
-  const payload = sender.service.conversation.createText(message);
+  const payload = sender.service.conversation.createText(message).build();
   return sender.service.conversation.send(conversationId, payload);
 }
 
@@ -83,7 +83,7 @@ async function connect(sender, receiver) {
 
 beforeAll(() => (jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000));
 
-describe('Account', () => {
+xdescribe('Account', () => {
   let alice;
   let bob;
   let eve;

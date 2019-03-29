@@ -19,7 +19,7 @@
 
 import {message as ProteusMessage, session as ProteusSession} from '@wireapp/proteus';
 import DecryptionError from './DecryptionError';
-import {CryptoboxCRUDStore} from './store/root';
+import {CryptoboxCRUDStore} from './store/';
 
 class CryptoboxSession {
   public id: string;
@@ -47,11 +47,11 @@ class CryptoboxSession {
   }
 
   public fingerprint_local(): string {
-    return this.session.local_identity!.public_key.fingerprint();
+    return this.session.local_identity.public_key.fingerprint();
   }
 
   public fingerprint_remote(): string {
-    return this.session.remote_identity!.fingerprint();
+    return this.session.remote_identity.fingerprint();
   }
 }
 

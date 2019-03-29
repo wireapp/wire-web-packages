@@ -17,64 +17,75 @@
  *
  */
 
-import {defaultProps} from 'recompose';
-import styled from 'styled-components';
-import media from '../mediaQueries';
+/** @jsx jsx */
+import {ObjectInterpolation, jsx} from '@emotion/core';
+import React from 'react';
+import media, {QueryKeys} from '../mediaQueries';
+import {Omit, filterProps} from '../util';
 import {GUTTER, WIDTH} from './sizes';
 
-interface Level {
-  lg: string;
-  md: string;
-  sm: string;
-  xs: string;
-  xxs: string;
-}
-
-interface ContainerProps {
+export interface ContainerProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   centerText?: boolean;
   level?: keyof Level;
   verticalCenter?: boolean;
 }
 
-type HTMLContainerProps = ContainerProps & React.HTMLAttributes<HTMLDivElement>;
+export interface Level {
+  lg: number;
+  md: number;
+  sm: number;
+  xs: number;
+  xxs: number;
+}
 
 const LEVEL: Level = {
-  lg: `max-width: ${WIDTH.DESKTOP_MAX}px;`,
-  md: `max-width: ${WIDTH.TABLET_MAX}px;`,
-  sm: `max-width: ${WIDTH.TABLET_MIN}px;`,
-  xs: `max-width: ${WIDTH.MOBILE}px;`,
-  xxs: `max-width: ${WIDTH.TINY}px;`,
+  lg: WIDTH.DESKTOP_MAX,
+  md: WIDTH.TABLET_MAX,
+  sm: WIDTH.TABLET_MIN,
+  xs: WIDTH.MOBILE,
+  xxs: WIDTH.TINY,
 };
 
-const Container = styled.div<HTMLContainerProps>`
-  position: relative;
-  margin: ${props => (props.verticalCenter ? 'auto' : '0 auto')};
-  text-align: ${props => (props.centerText ? 'center' : 'left')};
-  width: 100%;
+const containerStyle: <T>(props: ContainerProps<T>) => ObjectInterpolation<undefined> = ({
+  centerText = false,
+  level = undefined,
+  verticalCenter = false,
+}) => ({
+  margin: verticalCenter ? 'auto' : '0 auto',
+  maxWidth: level ? `${LEVEL[level]}px` : undefined,
+  position: 'relative',
+  textAlign: centerText ? 'center' : 'left',
+  width: '100%',
+  [media[QueryKeys.DESKTOP]]: level
+    ? undefined
+    : {
+        padding: 0,
+        width: `${WIDTH.DESKTOP_MIN - GUTTER * 2}px`,
+      },
+});
 
-  ${({level}) =>
-    LEVEL[level!] ||
-    `${media.desktop`
-            padding: 0;
-            width: ${WIDTH.DESKTOP_MIN - GUTTER * 2}px;
-          `};
-          ${media.desktopXL`
-            padding: 0;
-            width: ${WIDTH.DESKTOP_MIN - GUTTER * 2}px;
-          `};`}
-  }};
-`;
+const filterContainerProps = (props: Object) => filterProps(props, ['centerText', 'level', 'verticalCenter']);
 
-Container.defaultProps = {
-  centerText: false,
-  level: undefined,
-  verticalCenter: false,
-};
+const Container: React.FC<ContainerProps> = React.forwardRef<HTMLDivElement, ContainerProps>((props, ref) => (
+  <div ref={ref} css={containerStyle(props)} {...filterContainerProps(props)} />
+));
 
-const ContainerLG = defaultProps<HTMLContainerProps>({level: 'lg'})(Container);
-const ContainerMD = defaultProps<HTMLContainerProps>({level: 'md'})(Container);
-const ContainerSM = defaultProps<HTMLContainerProps>({level: 'sm'})(Container);
-const ContainerXS = defaultProps<HTMLContainerProps>({level: 'xs'})(Container);
-const ContainerXXS = defaultProps<HTMLContainerProps>({level: 'xxs'})(Container);
+export interface LevelContainerProps extends Omit<ContainerProps, 'level'> {}
+
+const ContainerLG = React.forwardRef<HTMLDivElement, LevelContainerProps>((props, ref) => (
+  <Container ref={ref} level={'lg'} {...props} />
+));
+const ContainerMD = React.forwardRef<HTMLDivElement, LevelContainerProps>((props, ref) => (
+  <Container ref={ref} level={'md'} {...props} />
+));
+const ContainerSM = React.forwardRef<HTMLDivElement, LevelContainerProps>((props, ref) => (
+  <Container ref={ref} level={'sm'} {...props} />
+));
+const ContainerXS = React.forwardRef<HTMLDivElement, LevelContainerProps>((props, ref) => (
+  <Container ref={ref} level={'xs'} {...props} />
+));
+const ContainerXXS = React.forwardRef<HTMLDivElement, LevelContainerProps>((props, ref) => (
+  <Container ref={ref} level={'xxs'} {...props} />
+));
 
 export {Container, ContainerLG, ContainerMD, ContainerSM, ContainerXS, ContainerXXS};

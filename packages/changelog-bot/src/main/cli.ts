@@ -19,13 +19,12 @@
  *
  */
 
-// @ts-check
+import program from 'commander';
+import logdown from 'logdown';
 
-import chalk from 'chalk';
-import {start as startChangelogBot} from './start';
+import {Parameters} from './Interfaces';
+import {start as startChangelogBot} from './Start';
 
-const program = require('commander');
-const logdown = require('logdown');
 const {description, version}: {description: string; version: string} = require('../package.json');
 
 const logger = logdown('@wireapp/changelog-bot/cli', {
@@ -42,33 +41,37 @@ program
   .option('-e, --email <email>', 'Your email address')
   .option('-m, --message <message>', 'Custom message')
   .option('-p, --password <password>', 'Your password')
+  .option('-b, --backend <type>', 'Backend type ("production" or "staging")')
+  .option('-s, --slug <slug>', 'A repo slug')
+  .option('-r, --range <range>', 'The commit range')
+  .option('-t, --tag <tag>', 'The commit tag')
+  .option('-x, --exclude-commit-types <type,...>', 'Commit types to exclude (e.g. chore,build,...)')
   .parse(process.argv);
 
-const TRAVIS_ENV_VARS = ['TRAVIS_COMMIT_RANGE', 'TRAVIS_REPO_SLUG'];
+let excludeCommitTypes =
+  typeof program.excludeCommitTypes !== 'undefined' ? program.excludeCommitTypes : process.env.EXCLUDE_COMMIT_TYPES;
 
-const parameters = {
+if (typeof excludeCommitTypes !== 'undefined') {
+  excludeCommitTypes = excludeCommitTypes.includes(',') ? excludeCommitTypes.split(',') : [excludeCommitTypes];
+}
+
+const parameters: Parameters = {
+  backend: program.backend,
   conversationIds: program.conversations || process.env.WIRE_CHANGELOG_BOT_CONVERSATION_IDS,
   email: program.email || process.env.WIRE_CHANGELOG_BOT_EMAIL,
+  excludeCommitTypes,
   message: program.message,
   password: program.password || process.env.WIRE_CHANGELOG_BOT_PASSWORD,
+  travisCommitRange: program.range || process.env.TRAVIS_COMMIT_RANGE,
+  travisRepoSlug: program.slug || process.env.TRAVIS_REPO_SLUG,
+  travisTag: program.tag || process.env.TRAVIS_TAG,
 };
 
-logger.log(chalk`{bold wire-changelog-bot v${version}}`);
+logger.log(`wire-changelog-bot v${version}`);
 
-TRAVIS_ENV_VARS.forEach(envVar => {
-  if (!process.env[envVar]) {
-    logger.error(
-      chalk`{bold Error:} Travis environment variable "${envVar}" is not set.\nRead more: https://docs.travis-ci.com/user/environment-variables/#Default-Environment-Variables`
-    );
-    process.exit(1);
-  }
+startChangelogBot(parameters).catch(error => {
+  // Info:
+  // Don't log error payloads here (on a global level) as they can leak sensitive information. Stack traces are ok!
+  logger.error(error.stack);
+  process.exit(1);
 });
-
-startChangelogBot(parameters)
-  .then(() => process.exit(0))
-  .catch(error => {
-    // Info:
-    // Don't log error payloads here (on a global level) as they can leak sensitive information. Stack traces are ok!
-    logger.error('Error at:', error.stack);
-    process.exit(1);
-  });

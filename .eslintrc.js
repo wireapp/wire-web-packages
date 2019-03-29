@@ -5,13 +5,22 @@ module.exports = {
     "jasmine": true,
     "node": true
   },
+  "extends": ["prettier", "plugin:no-unsanitized/DOM", "plugin:react/recommended"],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      "experimentalObjectRestSpread": true
+    }
+  },
   "plugins": [
     "jasmine",
     "no-unsanitized",
     "prettier",
     "react"
   ],
-  "extends": ["prettier", "plugin:no-unsanitized/DOM", "plugin:react/recommended"],
   "rules": {
     "curly": 2,
     "dot-notation": 2,
@@ -51,6 +60,7 @@ module.exports = {
     "prefer-promise-reject-errors": 2,
     "prettier/prettier": 2,
     "react/prefer-stateless-function": 2,
+    "react/prop-types": 0,
     "sort-imports": 2,
     "sort-keys": [
       2,
@@ -63,13 +73,9 @@ module.exports = {
     "sort-vars": 2,
     "strict": [2, "global"]
   },
-  "parser": "babel-eslint",
-  "parserOptions": {
-    "ecmaVersion": 6,
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "jsx": true,
-      "experimentalObjectRestSpread": true
+  "settings": {
+    "react": {
+      "version": "detect"
     }
   }
 };

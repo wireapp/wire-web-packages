@@ -18,17 +18,26 @@
  */
 
 // https://stripe.com/docs/api#charge_object
+
+import {SupportedCurrency} from '../payment/';
+
+enum PaymentStripeChargeStatus {
+  FAILED = 'failed',
+  PENDING = 'pending',
+  SUCCEEDED = 'succeeded',
+}
+
 interface PaymentStripeCharge {
   id: string;
   amount: number;
   created: number;
-  currency: 'eur';
+  currency: SupportedCurrency;
   failureCode: string;
   failureMessage: string;
   invoice: string;
   livemode: boolean;
   paid: boolean;
-  status: 'succeeded' | 'pending' | 'failed';
+  status: PaymentStripeChargeStatus;
 }
 
-export {PaymentStripeCharge};
+export {PaymentStripeCharge, PaymentStripeChargeStatus};

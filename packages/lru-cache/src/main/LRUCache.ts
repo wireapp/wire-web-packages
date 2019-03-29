@@ -18,7 +18,7 @@
  */
 
 export interface NodeMap<T> {
-  [index: string]: Node<T>;
+  [index: string]: T;
 }
 
 export interface Node<T> {
@@ -29,11 +29,11 @@ export interface Node<T> {
 }
 
 class LRUCache<T> {
-  private readonly map: NodeMap<T>;
+  private map: NodeMap<Node<T>>;
   private head: Node<T> | null;
   private end: Node<T> | null;
 
-  constructor(private readonly capacity: number = 100) {
+  constructor(public readonly capacity: number = 100) {
     this.map = {};
     this.head = null;
     this.end = null;
@@ -51,6 +51,12 @@ class LRUCache<T> {
     return false;
   }
 
+  public deleteAll(): void {
+    this.map = {};
+    this.head = null;
+    this.end = null;
+  }
+
   public get(key: string): T | undefined {
     const node = this.map[key];
 
@@ -63,13 +69,12 @@ class LRUCache<T> {
     return undefined;
   }
 
-  public getAll(): {[id: string]: T}[] {
-    return Object.keys(this.map).map(id => {
+  public getAll(): NodeMap<T> {
+    return Object.keys(this.map).reduce((accumulator: NodeMap<T>, id) => {
       const node = this.map[id];
-      return {
-        [id]: node.value,
-      };
-    });
+      accumulator[id] = node.value;
+      return accumulator;
+    }, {});
   }
 
   public keys(): string[] {
@@ -132,7 +137,7 @@ class LRUCache<T> {
         value,
       };
 
-      const isOverCapacity = Object.keys(this.map).length >= this.capacity;
+      const isOverCapacity = this.size() >= this.capacity;
       if (isOverCapacity) {
         if (this.end) {
           delete this.map[this.end.key];
@@ -151,6 +156,16 @@ class LRUCache<T> {
     }
 
     return undefined;
+  }
+
+  public setOnce(key: string, value: T): T | undefined {
+    const matchedNode = this.map[key];
+
+    if (matchedNode) {
+      return undefined;
+    } else {
+      return this.set(key, value);
+    }
   }
 
   private setHead(node: Node<T>): void {
@@ -185,6 +200,15 @@ class LRUCache<T> {
     }
 
     return `${string} (oldest)`;
+  }
+
+  public *[Symbol.iterator](): Iterator<T> {
+    let entry = this.head;
+
+    while (entry) {
+      yield entry.value;
+      entry = entry.next;
+    }
   }
 }
 

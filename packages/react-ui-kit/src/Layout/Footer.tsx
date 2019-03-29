@@ -17,8 +17,11 @@
  *
  */
 
-import styled from 'styled-components';
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
 
-const Footer = styled.footer``;
+interface FooterProps extends React.HTMLProps<HTMLElement> {}
+
+const Footer = (props: FooterProps) => <footer {...props} />;
 
 export {Footer};

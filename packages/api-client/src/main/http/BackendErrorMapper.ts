@@ -17,19 +17,19 @@
  *
  */
 
-import {BackendError, BackendErrorLabel, StatusCode} from '.';
 import {
   IdentifierExistsError,
   InvalidCredentialsError,
+  InvalidTokenError,
   LoginTooFrequentError,
   MissingCookieError,
   SuspendedAccountError,
   TokenExpiredError,
-} from '../auth';
-import {ConversationIsUnknownError, ConversationOperationError} from '../conversation';
-import {InviteEmailInUseError, ServiceNotFoundError} from '../team';
-import {InvalidInvitationCodeError} from '../team/index';
-import {UnconnectedUserError, UserIsUnknownError} from '../user';
+} from '../auth/';
+import {ConversationIsUnknownError, ConversationOperationError} from '../conversation/';
+import {InvalidInvitationCodeError, InviteEmailInUseError, ServiceNotFoundError} from '../team/';
+import {UnconnectedUserError, UserIsUnknownError} from '../user/';
+import {BackendError, BackendErrorLabel, StatusCode} from './';
 
 class BackendErrorMapper {
   public static get ERRORS(): {
@@ -59,6 +59,7 @@ class BackendErrorMapper {
           ),
           ['Token expired']: new TokenExpiredError('Authentication failed because the token is expired.'),
           ['Missing cookie']: new MissingCookieError('Authentication failed because the cookie is missing.'),
+          ['Invalid token']: new InvalidTokenError('Authentication failed because the token is invalid.'),
         },
         [BackendErrorLabel.NOT_CONNECTED]: {
           ['Users are not connected']: new UnconnectedUserError('Users are not connected.'),
@@ -95,9 +96,8 @@ class BackendErrorMapper {
 
   public static map(error: BackendError): BackendError {
     try {
-      const mappedError: BackendError | undefined = BackendErrorMapper.ERRORS[Number(error.code)][error.label][
-        error.message
-      ] as BackendError;
+      const mappedError: BackendError | undefined =
+        BackendErrorMapper.ERRORS[Number(error.code)][error.label][error.message];
       if (mappedError) {
         return mappedError;
       }

@@ -17,31 +17,67 @@
  *
  */
 
-import styled from 'styled-components';
+/** @jsx jsx */
+import {ObjectInterpolation, jsx} from '@emotion/core';
+import Color from 'color';
+import {GlobalStyle} from '../GlobalStyle';
 import {COLOR} from '../Identity';
+import {defaultTransition} from '../Identity/motions';
+import {filterProps} from '../util';
 
-export interface StyledAppProps {
+export interface StyledAppContainerProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   backgroundColor?: string;
 }
 
-const StyledApp = styled.div<StyledAppProps & React.HTMLAttributes<HTMLDivElement>>`
-  background-color: ${props => props.backgroundColor};
-  color: ${COLOR.TEXT};
-  display: flex;
-  flex-direction: column;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif;
-  font-weight: 300;
-  line-height: 1.5;
-  min-height: 100vh;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  * {
-    box-sizing: border-box;
-  }
-`;
+const StyledAppContainerStyle: <T>(props: StyledAppContainerProps<T>) => ObjectInterpolation<undefined> = ({
+  backgroundColor = COLOR.GRAY_LIGHTEN_88,
+}) => ({
+  MozOsxFontSmoothing: 'grayscale',
+  WebkitFontSmoothing: 'antialiased',
+  backgroundColor: backgroundColor,
+  color: COLOR.TEXT,
+  display: 'flex',
+  flexDirection: 'column',
+  fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif',
+  fontWeight: 300,
+  lineHeight: 1.5,
+  minHeight: '100vh',
 
-StyledApp.defaultProps = {
-  backgroundColor: COLOR.GRAY_LIGHTEN_88,
-};
+  '*': {
+    boxSizing: 'border-box',
+  },
+  a: {
+    color: COLOR.LINK,
+    fontWeight: 400,
+    textDecoration: 'none',
+    transition: defaultTransition,
+
+    '&:hover': {
+      color: Color(COLOR.LINK)
+        .mix(Color(COLOR.BLACK), 0.16)
+        .toString(),
+      cursor: 'pointer',
+    },
+    '&:visited,&:link,&:active': {
+      color: COLOR.LINK,
+    },
+  },
+  'b, strong': {
+    fontWeight: 600,
+  },
+});
+
+const filterStyledAppContainerProps = (props: Object) => filterProps(props, ['backgroundColor']);
+
+const StyledAppContainer = (props: StyledAppContainerProps) => (
+  <div css={StyledAppContainerStyle(props)} {...filterStyledAppContainerProps(props)} />
+);
+
+const StyledApp = ({children, ...props}) => (
+  <StyledAppContainer {...props}>
+    <GlobalStyle />
+    {children}
+  </StyledAppContainer>
+);
 
 export {StyledApp};

@@ -17,40 +17,52 @@
  *
  */
 
+import {exec} from 'child_process';
+import {promisify} from 'util';
+
 import {APIClient} from '@wireapp/api-client';
-import {LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
 import {Account} from '@wireapp/core';
 import {MemoryEngine} from '@wireapp/store-engine';
-import {exec} from 'child_process';
 import * as Changelog from 'generate-changelog';
-import {promisify} from 'util';
-import {ChangelogData} from './ChangelogData';
+import logdown from 'logdown';
 
-const logdown = require('logdown');
+import {ChangelogData, LoginDataBackend} from './Interfaces';
 
 const logger = logdown('@wireapp/changelog-bot/ChangelogBot', {
   logger: console,
   markdown: false,
 });
 
+logger.state.isEnabled = true;
+
 class ChangelogBot {
-  constructor(private readonly loginData: LoginData, private readonly messageData: ChangelogData) {}
+  public static SETUP = {
+    EXCLUDED_COMMIT_TYPES: ['build', 'chore', 'docs', 'refactor', 'runfix', 'test'],
+  };
+
+  constructor(private readonly loginData: LoginDataBackend, private readonly messageData: ChangelogData) {}
 
   get message(): string {
-    const {content, repoSlug} = this.messageData;
-    return `\n**Changelog for "${repoSlug}":**\n\n${content}\n`;
+    const {content, isCustomMessage, repoSlug} = this.messageData;
+    return isCustomMessage ? content : `\n**Changelog for "${repoSlug}":**\n\n${content}\n`;
   }
 
-  async sendMessage(customMessage?: string): Promise<void> {
+  async sendMessage(): Promise<void> {
     let {conversationIds} = this.messageData;
 
     const engine = new MemoryEngine();
-    await engine.init('');
+    await engine.init('changelog-bot');
 
-    const client = new APIClient({store: engine, urls: APIClient.BACKEND.PRODUCTION});
+    const backendUrls = this.loginData.backend === 'staging' ? APIClient.BACKEND.STAGING : APIClient.BACKEND.PRODUCTION;
+
+    const client = new APIClient({store: engine, urls: backendUrls});
 
     const account = new Account(client);
-    await account.login(this.loginData);
+    try {
+      await account.login(this.loginData);
+    } catch (error) {
+      throw new Error(JSON.stringify(error));
+    }
 
     if (!conversationIds) {
       const allConversations = await client.conversation.api.getAllConversations();
@@ -58,36 +70,53 @@ class ChangelogBot {
       conversationIds = groupConversations.map(conversation => conversation.id);
     }
 
-    await Promise.all(
-      conversationIds.map(async id => {
-        if (!account.service) {
-          throw new Error(`Account service is not set. Not logged in?`);
-        }
-        if (id) {
-          logger.log(`Sending message to conversation ${id} ...`);
-          const textPayload = await account.service.conversation.createText(customMessage || this.message);
-          await account.service.conversation.send(id, textPayload);
-        }
-      })
-    );
+    if (!account.service) {
+      throw new Error(`Account service is not set. Not logged in?`);
+    }
+
+    for (const conversationId of conversationIds) {
+      if (conversationId) {
+        logger.log(`Sending message to conversation "${conversationId}" ...`);
+        const textPayload = await account.service.conversation.messageBuilder
+          .createText(conversationId, this.message)
+          .build();
+        await account.service.conversation.send(textPayload);
+      }
+    }
   }
 
-  static async generateChangelog(repoSlug: string, previousGitTag: string, maximumChars?: number): Promise<string> {
+  static async generateChangelog(
+    repoSlug: string,
+    previousGitTag: string,
+    maximumChars?: number,
+    excludedCommitTypes?: string[]
+  ): Promise<string> {
     const headlines = new RegExp('^#+ (.*)$', 'gm');
-    const listItems = new RegExp('^\\* (.*) \\(\\[.*$', 'gm');
-    const githubIssueLinks = new RegExp('\\[[^\\]]+\\]\\((https:[^)]+)\\)', 'gm');
+    const listItems = new RegExp('^(\\s*)\\* ', 'gm');
+    const githubCommitLinks = new RegExp('( \\(\\[#\\d+\\]\\([^)]+\\)\\)) .*$', 'gm');
+    const githubPRLinks = new RegExp('(/pull/[\\d]+)\\)', 'gm');
     const omittedMessage = '... (content omitted)';
 
+    const exclude = excludedCommitTypes || ChangelogBot.SETUP.EXCLUDED_COMMIT_TYPES;
+
     const changelog = await Changelog.generate({
-      exclude: ['build', 'chore', 'docs', 'refactor', 'test'],
+      exclude,
       repoUrl: `https://github.com/${repoSlug}`,
       tag: previousGitTag,
     });
 
+    if (!changelog.match(listItems)) {
+      const excludedTypes = exclude.join(', ');
+      const errorMessage = `Could not generate a meaningful changelog from the commit types given (excluded "${excludedTypes}").`;
+      logger.warn(errorMessage);
+      process.exit();
+    }
+
     let styledChangelog = changelog
       .replace(headlines, '**$1**')
-      .replace(listItems, '– $1')
-      .replace(githubIssueLinks, '$1/files?diff=unified');
+      .replace(listItems, '$1- ')
+      .replace(githubCommitLinks, '$1')
+      .replace(githubPRLinks, '$1/files?diff=unified)');
 
     if (maximumChars && styledChangelog.length > maximumChars) {
       styledChangelog = styledChangelog.substr(0, maximumChars - omittedMessage.length);

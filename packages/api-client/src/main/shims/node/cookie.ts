@@ -17,10 +17,9 @@
  *
  */
 
-import {error as StoreEngineError} from '@wireapp/store-engine';
-import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine';
-import {AxiosPromise, AxiosRequestConfig, AxiosResponse} from 'axios';
-import * as logdown from 'logdown';
+import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
+import {AxiosRequestConfig, AxiosResponse} from 'axios';
+import logdown from 'logdown';
 import {Cookie as ToughCookie} from 'tough-cookie';
 import {AUTH_COOKIE_KEY, AUTH_TABLE_NAME, AccessTokenData, Cookie} from '../../auth/';
 import {HttpClient} from '../../http/';
@@ -76,7 +75,7 @@ export const retrieveCookie = async (response: AxiosResponse, engine: CRUDEngine
     for (const cookie of cookies) {
       await setInternalCookie(new Cookie(cookie.value, cookie.expires), engine);
       logger.info(
-        `Saved internal cookie. It will expire in "${cookie.expires}" seconds.`,
+        `Saved internal cookie. It will expire on "${cookie.expires}".`,
         ObfuscationUtil.obfuscateCookie(cookie)
       );
     }
@@ -86,11 +85,11 @@ export const retrieveCookie = async (response: AxiosResponse, engine: CRUDEngine
 };
 
 // https://github.com/wearezeta/backend-api-docs/wiki/API-User-Authentication#token-refresh
-export const sendRequestWithCookie = (
+export const sendRequestWithCookie = <T>(
   client: HttpClient,
   config: AxiosRequestConfig,
   engine: CRUDEngine
-): AxiosPromise => {
+): Promise<AxiosResponse<T>> => {
   return loadExistingCookie(engine).then((cookie: Cookie) => {
     if (!cookie.isExpired) {
       config.headers = config.headers || {};
@@ -98,6 +97,6 @@ export const sendRequestWithCookie = (
       config.withCredentials = true;
     }
 
-    return client._sendRequest(config);
+    return client._sendRequest<T>(config);
   });
 };

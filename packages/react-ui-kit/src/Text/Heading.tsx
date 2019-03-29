@@ -17,70 +17,94 @@
  *
  */
 
-import * as React from 'react';
-import styled from 'styled-components';
+/** @jsx jsx */
+import {ObjectInterpolation, jsx} from '@emotion/core';
 import {COLOR} from '../Identity';
-import media from '../mediaQueries';
-import {Text} from './Text';
+import media, {QueryKeys} from '../mediaQueries';
+import {TextProps, filterTextProps, textStyle} from './Text';
 
-interface HeadingProps {
-  block?: boolean;
-  bold?: boolean;
-  center?: boolean;
-  color?: string;
-  fontSize?: string;
+interface HeadingProps<T = HTMLHeadingElement> extends TextProps<T> {
   level?: string;
-  light?: boolean;
-  muted?: boolean;
-  noWrap?: boolean;
-  textTransform?: string;
-  truncate?: boolean;
 }
 
-type HTMLHeadingProps = HeadingProps & React.HTMLAttributes<HTMLHeadingElement>;
+const h1Style: <T>(props: HeadingProps<T>) => ObjectInterpolation<undefined> = ({
+  block = true,
+  color = COLOR.TEXT,
+  level = '1',
+  noWrap = false,
+  textTransform = 'none',
+  ...props
+}) => ({
+  ...textStyle({block, color, noWrap, textTransform, ...props}),
+  fontSize: '48px',
+  fontWeight: 300,
+  lineHeight: '56px',
+  marginBottom: '64px',
+  marginTop: 0,
+  minHeight: '48px',
+  [media[QueryKeys.MOBILE]]: {
+    fontSize: '40px',
+    lineHeight: '48px',
+  },
+});
 
-const H1 = styled(Text.withComponent('h1'))<HTMLHeadingProps>`
-  font-size: 48px;
-  font-weight: 300;
-  line-height: 56px;
-  margin-bottom: 64px;
-  margin-top: 0;
-  min-height: 48px;
-  ${media.mobile`
-    font-size: 40px;
-    line-height: 48px;
-  `};
-`;
+const H1 = (props: HeadingProps) => <h1 css={h1Style(props)} {...filterTextProps(props)} />;
 
-const H2 = styled(Text.withComponent('h2'))<HTMLHeadingProps>`
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 32px;
-  margin-bottom: 24px;
-  margin-top: 48px;
+const h2Style: <T>(props: HeadingProps<T>) => ObjectInterpolation<undefined> = ({
+  block = true,
+  color = COLOR.TEXT,
+  noWrap = false,
+  textTransform = 'none',
+  ...props
+}) => ({
+  ...textStyle({block, color, noWrap, textTransform, ...props}),
+  fontSize: '24px',
+  fontWeight: 700,
+  lineHeight: '32px',
+  marginBottom: '24px',
+  marginTop: '48px',
+  [media[QueryKeys.MOBILE]]: {
+    fontSize: '20px',
+    lineHeight: '28px',
+    marginBottom: '20px',
+    marginTop: '44px',
+  },
+});
 
-  ${media.mobile`
-    font-size: 20px;
-    line-height: 28px;
-    margin-bottom: 20px;
-    margin-top: 44px;
-  `};
-`;
+const H2 = (props: HeadingProps) => <h2 css={h2Style(props)} {...filterTextProps(props)} />;
 
-const H3 = styled(Text.withComponent('h3'))<HTMLHeadingProps>`
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 16px;
-`;
+const h3Style: <T>(props: HeadingProps<T>) => ObjectInterpolation<undefined> = ({
+  block = true,
+  color = COLOR.TEXT,
+  noWrap = false,
+  textTransform = 'none',
+  ...props
+}) => ({
+  ...textStyle({block, color, noWrap, textTransform, ...props}),
+  fontSize: '16px',
+  fontWeight: 600,
+  marginBottom: '16px',
+});
 
-const H4 = styled(Text.withComponent('h4'))<HTMLHeadingProps>`
-  font-size: 11px;
-  font-weight: 300;
-  margin-bottom: 5px;
-  margin-top: 20px;
-`;
+const H3 = (props: HeadingProps) => <h3 css={h3Style(props)} {...filterTextProps(props)} />;
 
-const Heading: React.SFC<HTMLHeadingProps> = ({level, ...props}) => {
+const h4Style: <T>(props: HeadingProps<T>) => ObjectInterpolation<undefined> = ({
+  block = true,
+  color = COLOR.TEXT,
+  noWrap = false,
+  textTransform = 'none',
+  ...props
+}) => ({
+  ...textStyle({block, color, noWrap, textTransform, ...props}),
+  fontSize: '11px',
+  fontWeight: 300,
+  marginBottom: '5px',
+  marginTop: '20px',
+});
+
+const H4 = (props: HeadingProps) => <h3 css={h4Style(props)} {...filterTextProps(props)} />;
+
+const Heading = ({level, ...props}) => {
   switch (level) {
     case '2':
       return <H2 {...props} />;
@@ -94,14 +118,4 @@ const Heading: React.SFC<HTMLHeadingProps> = ({level, ...props}) => {
   }
 };
 
-Heading.defaultProps = {
-  block: true,
-  color: COLOR.TEXT,
-  level: '1',
-  noWrap: false,
-  textTransform: 'none',
-};
-
-H1.defaultProps = H2.defaultProps = H3.defaultProps = H4.defaultProps = Heading.defaultProps;
-
-export {Heading, H1, H2, H3, H4};
+export {Heading, H1, h1Style, H2, h2Style, H3, h3Style, H4, h4Style};

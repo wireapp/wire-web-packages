@@ -20,35 +20,43 @@
 import {APIClient} from '@wireapp/api-client';
 import {ClientType} from '@wireapp/api-client/dist/commonjs/client/';
 import {Account} from '@wireapp/core';
-import {PayloadBundleIncoming, PayloadBundleType} from '@wireapp/core/dist/conversation/root';
+import {PayloadBundle, PayloadBundleType} from '@wireapp/core/dist/conversation/';
 import {MemoryEngine} from '@wireapp/store-engine';
-import * as logdown from 'logdown';
+import logdown from 'logdown';
 import UUID from 'pure-uuid';
-import {BotConfig} from './BotConfig';
+
+import {BotConfig, BotCredentials} from './Interfaces';
 import {MessageHandler} from './MessageHandler';
+
+const defaultConfig: Required<BotConfig> = {
+  backend: 'production',
+  clientType: ClientType.TEMPORARY,
+  conversations: [],
+  owners: [],
+};
 
 class Bot {
   public account?: Account;
 
-  private readonly credentials: {email: string; password: string};
-  private readonly config: BotConfig;
+  private readonly config: Required<BotConfig>;
   private readonly handlers: Map<string, MessageHandler>;
-  private readonly logger: logdown.Logger = logdown('@wireapp/standup-bot/StandupBot', {
-    logger: console,
-    markdown: false,
-  });
+  private readonly logger: logdown.Logger;
 
-  constructor(credentials: {email: string; password: string}, config: BotConfig = {conversations: [], owners: []}) {
-    this.config = config;
+  constructor(private readonly credentials: BotCredentials, config?: BotConfig) {
+    this.config = {...defaultConfig, ...config};
     this.credentials = credentials;
     this.handlers = new Map();
+    this.logger = logdown('@wireapp/bot-api/Bot', {
+      logger: console,
+      markdown: false,
+    });
   }
 
-  public addHandler(handler: MessageHandler) {
+  public addHandler(handler: MessageHandler): void {
     this.handlers.set(new UUID(4).format(), handler);
   }
 
-  public removeHandler(key: string) {
+  public removeHandler(key: string): void {
     this.handlers.delete(key);
   }
 
@@ -60,15 +68,27 @@ class Bot {
     return this.config.owners.length === 0 ? true : this.config.owners.includes(userId);
   }
 
+  public async sendText(conversationId: string, message: string): Promise<void> {
+    if (this.account && this.account.service) {
+      const textPayload = await this.account.service.conversation.messageBuilder
+        .createText(conversationId, message)
+        .build();
+      await this.account.service.conversation.send(textPayload);
+    }
+  }
+
   public async start(): Promise<void> {
     const login = {
-      clientType: ClientType.TEMPORARY,
+      clientType: this.config.clientType,
       email: this.credentials.email,
       password: this.credentials.password,
     };
     const engine = new MemoryEngine();
     await engine.init(this.credentials.email);
-    const apiClient = new APIClient({store: engine, urls: APIClient.BACKEND.PRODUCTION});
+    const apiClient = new APIClient({
+      store: engine,
+      urls: this.config.backend === 'staging' ? APIClient.BACKEND.STAGING : APIClient.BACKEND.PRODUCTION,
+    });
     this.account = new Account(apiClient);
 
     this.account.on(PayloadBundleType.ASSET, this.handlePayload.bind(this));
@@ -98,11 +118,12 @@ class Bot {
 
     await this.account.login(login);
     await this.account.listen();
+    this.account.on('error', error => this.logger.error(error));
 
     this.handlers.forEach(handler => (handler.account = this.account));
   }
 
-  private handlePayload(payload: PayloadBundleIncoming): void {
+  private handlePayload(payload: PayloadBundle): void {
     if (this.validateMessage(payload.conversation, payload.from)) {
       this.handlers.forEach(handler => handler.handleEvent(payload));
     }

@@ -17,20 +17,25 @@
  *
  */
 
-import styled from 'styled-components';
+/** @jsx jsx */
+import {ObjectInterpolation, jsx} from '@emotion/core';
 import {COLOR} from '../Identity';
-import {Text} from './Text';
+import {TextProps, filterTextProps, textStyle} from './Text';
 
-const Title = styled(Text.withComponent('div'))<React.HTMLAttributes<HTMLDivElement>>`
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: ${COLOR.GRAY};
-`;
+export interface TitleProps<T = HTMLDivElement> extends TextProps<T> {}
 
-Title.defaultProps = {
-  block: true,
-  center: true,
-  fontSize: '32px',
-};
+const titleStyle: <T>(props: TitleProps<T>) => ObjectInterpolation<undefined> = ({
+  block = true,
+  center = true,
+  fontSize = '32px',
+  color = COLOR.GRAY,
+  bold = true,
+  ...props
+}) => ({
+  ...textStyle({bold, block, color, center, fontSize, ...props}),
+  marginBottom: '8px',
+});
+
+const Title = (props: TitleProps) => <div css={titleStyle(props)} {...filterTextProps(props)} />;
 
 export {Title};
