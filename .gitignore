@@ -3,6 +3,7 @@
 *.env
 .awcache
 .idea
+.nyc_output
 .tmp
 .vscode
 .yarnclean
