@@ -44,16 +44,20 @@ const endsWithAny = (suffixes: string[], str: string) => suffixes.some(suffix =>
 
 (async () => {
   let PLATFORM;
+  const extensions = ['.asc', 'sig'];
 
   const [platform, version] = commander.wrapperBuild.toLowerCase().split('#');
   const basePath = commander.path || path.resolve('.');
 
   if (platform === 'linux') {
     PLATFORM = 'Linux';
+    extensions.push('.AppImage', '.deb');
   } else if (platform === 'windows') {
     PLATFORM = 'Windows';
+    extensions.push('.exe');
   } else if (platform === 'macos') {
     PLATFORM = 'macOS';
+    extensions.push('.pkg');
   } else {
     throw new Error('Invalid platform');
   }
@@ -72,9 +76,7 @@ const endsWithAny = (suffixes: string[], str: string) => suffixes.some(suffix =>
   });
 
   const files = await fs.readdir(basePath);
-  const uploadFiles = files.filter(fileName =>
-    endsWithAny(['.asc', '.sig', '.AppImage', '.deb', '.exe', '.pkg'], fileName)
-  );
+  const uploadFiles = files.filter(fileName => endsWithAny(extensions, fileName));
 
   for (const fileName in uploadFiles) {
     const resolvedPath = path.join(basePath, fileName);

@@ -16,7 +16,7 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
-import axios, {AxiosResponse} from 'axios';
+import axios from 'axios';
 import * as fs from 'fs-extra';
 
 interface GitHubDraftData {
