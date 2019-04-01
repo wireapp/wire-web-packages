@@ -1,0 +1,39 @@
+{
+  "bin": {
+    "deploy-github": "dist/github-draft-cli.js",
+    "deploy-hockey": "dist/hockey-cli.js",
+    "deploy-s3": "dist/s3-cli.js",
+    "deploy-s3-releases": "dist/s3-win-releases-cli.js"
+  },
+  "dependencies": {
+    "aws-sdk": "2.432.0",
+    "axios": "0.18.0",
+    "find-down": "0.1.4",
+    "form-data": "2.3.3",
+    "fs-extra": "7.0.1",
+    "jszip": "3.2.1"
+  },
+  "description": "Wire's internal deployment tools",
+  "devDependencies": {
+    "@types/form-data": "2.2.1",
+    "@types/fs-extra": "5.0.5",
+    "@types/jszip": "3.1.5",
+    "axios": "0.18.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "license": "GPL-3.0",
+  "main": "dist/index.js",
+  "name": "@wireapp/deploy-tools",
+  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/deploy-tools",
+  "scripts": {
+    "build": "yarn build:node",
+    "build:node": "tsc",
+    "clean": "rimraf dist",
+    "dist": "yarn clean && yarn build",
+    "test": "yarn test:node",
+    "test:node": "jasmine --config=jasmine.json"
+  },
+  "version": "0.5.2"
+}
