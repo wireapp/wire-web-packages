@@ -1,6 +1,6 @@
 {
   "bin": {
-    "deploy-github": "dist/github-draft-cli.js",
+    "deploy-github-draft": "dist/github-draft-cli.js",
     "deploy-hockey": "dist/hockey-cli.js",
     "deploy-s3": "dist/s3-cli.js",
     "deploy-s3-releases": "dist/s3-win-releases-cli.js"
