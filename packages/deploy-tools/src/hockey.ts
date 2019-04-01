@@ -31,6 +31,17 @@ interface HockeyOptions {
   version: string;
 }
 
+interface HockeyVersionData {
+  config_url: string;
+  id: string;
+  public_url: string;
+  shortversion: string;
+  status: 1 | 2;
+  timestamp: number;
+  title: string;
+  version: string;
+}
+
 interface UploadOptions extends HockeyOptions {
   filePath: string;
   hockeyVersionId: number | string;
@@ -62,7 +73,7 @@ function zip(originalFile: string, zipFile: string): Promise<string> {
   });
 }
 
-async function createVersion(options: HockeyOptions): Promise<{id: string}> {
+async function createVersion(options: HockeyOptions): Promise<HockeyVersionData> {
   const {hockeyAppId, hockeyToken, version} = options;
   const [majorVersion, minorVersion, patchVersion] = version.split('.');
 
@@ -83,7 +94,7 @@ async function createVersion(options: HockeyOptions): Promise<{id: string}> {
   console.log(`Creating app version "${majorVersion}.${minorVersion}" on Hockey ...`);
 
   try {
-    const response = await axios.post(hockeyUrl, postData, {headers});
+    const response = await axios.post<HockeyVersionData>(hockeyUrl, postData, {headers});
     console.log(`Received version "${response.data.id}" from Hockey.`);
     return response.data;
   } catch (error) {
@@ -125,7 +136,7 @@ async function uploadVersion(options: UploadOptions): Promise<void> {
   console.log(`Uploading version "${hockeyVersionId}" to Hockey ...`);
 
   try {
-    await axios.put(hockeyUrl, formData, {headers, maxContentLength: 524288000});
+    await axios.put<void>(hockeyUrl, formData, {headers, maxContentLength: 524288000});
     console.log('Done uploading to Hockey.');
   } catch (error) {
     console.error(error);

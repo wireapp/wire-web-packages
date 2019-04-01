@@ -21,7 +21,7 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 
 import {checkCommanderOptions, execAsync} from './deploy-utils';
-import {createDraft, uploadAsset} from './github';
+import {createDraft, uploadAsset} from './github-draft';
 
 commander
   .name('github-draft.js')
@@ -38,7 +38,7 @@ if (!commander.wrapperBuild.includes('#')) {
   process.exit(1);
 }
 
-const draftUrl = `https://api.github.com/repos/wireapp/wire-desktop/releases`;
+const repoSlug = 'wireapp/wire-desktop';
 
 const endsWithAny = (suffixes: string[], str: string) => suffixes.some(suffix => str.endsWith(suffix));
 
@@ -62,17 +62,14 @@ const endsWithAny = (suffixes: string[], str: string) => suffixes.some(suffix =>
   const changelog = '...';
   const githubToken = commander.githubToken;
 
-  const draftResponse = await createDraft({
+  const {id: draftId} = await createDraft({
     changelog,
     commitish,
-    draftUrl,
     githubToken,
+    repoSlug,
     tagName: `${platform}/${version}`,
     title: `${version} - ${PLATFORM}`,
   });
-
-  const {upload_url, url: fullDraftUrl} = draftResponse.data;
-  const uploadUrl = upload_url.split('{')[0];
 
   const files = await fs.readdir(basePath);
   const uploadFiles = files.filter(fileName =>
@@ -81,7 +78,7 @@ const endsWithAny = (suffixes: string[], str: string) => suffixes.some(suffix =>
 
   for (const fileName in uploadFiles) {
     const resolvedPath = path.join(basePath, fileName);
-    await uploadAsset({fileName, filePath: resolvedPath, githubToken, fullDraftUrl, uploadUrl});
+    await uploadAsset({draftId, fileName, filePath: resolvedPath, githubToken, repoSlug});
   }
 
   console.log('Done creating draft.');

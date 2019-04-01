@@ -19,30 +19,50 @@
 import axios, {AxiosResponse} from 'axios';
 import * as fs from 'fs-extra';
 
-interface DraftOptions {
+interface GitHubDraftData {
+  assets_url: string;
+  body: string;
+  created_at: string;
+  draft: boolean;
+  html_url: string;
+  id: number;
+  name: string;
+  node_id: string;
+  prerelease: boolean;
+  published_at: string;
+  tag_name: string;
+  tarball_url: string;
+  target_commitish: string;
+  upload_url: string;
+  url: string;
+  zipball_url: string;
+}
+
+interface BaseOptions {
+  githubToken: string;
+  repoSlug: string;
+}
+
+interface DraftOptions extends BaseOptions {
   changelog: string;
   commitish: string;
-  draftUrl: string;
-  githubToken: string;
   tagName: string;
   title: string;
 }
 
-interface UploadOptions {
+interface UploadOptions extends BaseOptions {
+  draftId: number;
   fileName: string;
   filePath: string;
-  fullDraftUrl: string;
-  githubToken: string;
-  uploadUrl: string;
 }
 
-interface GitHubDraftData {
-  upload_url: string;
-  url: string;
-}
+const GITHUB_API_URL = 'https://api.github.com';
+const GITHUB_UPLOADS_URL = 'https://uploads.github.com';
 
-async function createDraft(options: DraftOptions): Promise<AxiosResponse<GitHubDraftData>> {
-  const {changelog, commitish, draftUrl, githubToken, tagName, title} = options;
+async function createDraft(options: DraftOptions): Promise<GitHubDraftData> {
+  const {changelog, commitish, githubToken, repoSlug, tagName, title} = options;
+
+  const draftUrl = `${GITHUB_API_URL}/repos/${repoSlug}/releases`;
 
   const draftData = {
     body: changelog,
@@ -63,7 +83,7 @@ async function createDraft(options: DraftOptions): Promise<AxiosResponse<GitHubD
   try {
     const draftResponse = await axios.post<GitHubDraftData>(draftUrl, draftData, {headers: AuthorizationHeaders});
     console.log('Draft created.');
-    return draftResponse;
+    return draftResponse.data;
   } catch (error) {
     console.error('Error response from GitHub:', error.response.data);
     throw new Error(
@@ -73,8 +93,10 @@ async function createDraft(options: DraftOptions): Promise<AxiosResponse<GitHubD
 }
 
 async function uploadAsset(options: UploadOptions): Promise<void> {
-  const {fileName, filePath, fullDraftUrl, githubToken, uploadUrl} = options;
+  const {draftId, fileName, filePath, githubToken, repoSlug} = options;
 
+  const fullDraftUrl = `${GITHUB_API_URL}/repos/${repoSlug}/releases`;
+  const uploadUrl = `${GITHUB_UPLOADS_URL}/repos/${repoSlug}/releases/${draftId}/assets`;
   console.log(`Uploading asset "${fileName}" ...`);
 
   const AuthorizationHeaders = {
