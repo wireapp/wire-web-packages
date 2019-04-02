@@ -39,16 +39,13 @@ if (!commander.wrapperBuild.includes('#')) {
   process.exit(1);
 }
 
-async function getUploadFile(platform: string, basePath: string): Promise<FindResult> {
+function getUploadFile(platform: string, basePath: string): Promise<FindResult> {
   if (platform.includes('linux')) {
-    const debImage = await find('.deb', {cwd: basePath});
-    return debImage;
+    return find('.deb', {cwd: basePath});
   } else if (platform.includes('windows')) {
-    const setupExe = await find('-Setup.exe', {cwd: basePath});
-    return setupExe;
+    return find('-Setup.exe', {cwd: basePath});
   } else if (platform.includes('macos')) {
-    const setupPkg = await find('.pkg', {cwd: basePath});
-    return setupPkg;
+    return find('.pkg', {cwd: basePath});
   } else {
     throw new Error(`Invalid platform "${platform}"`);
   }

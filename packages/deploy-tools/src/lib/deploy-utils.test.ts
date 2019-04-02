@@ -21,15 +21,22 @@ import {find} from './deploy-utils';
 describe('deploy-utils', () => {
   it('safeguard prevents further code execution', async () => {
     try {
-      await find('invalid-file', {cwd: '.', safeGuard: true});
-      fail('findDown should throw an error with safeguard');
+      await find('invalid-file', {safeGuard: true});
+      fail('find should throw an error with safeguard');
     } catch (error) {}
 
     try {
-      const result = await find('invalid-file', {cwd: '.', safeGuard: false});
+      const result = await find('invalid-file', {safeGuard: false});
       expect(result).toBe(null);
     } catch (error) {
-      fail('findDown should not throw an error without safeguard');
+      fail('find should not throw an error without safeguard');
     }
+  });
+
+  fit('find finds files', async () => {
+    const result = await find('deploy-utils.test.ts', {cwd: __dirname, safeGuard: false});
+    expect(result).not.toBe(null);
+    expect(result!.fileName).toEqual(jasmine.any(String));
+    expect(result!.filePath).toEqual(jasmine.any(String));
   });
 });

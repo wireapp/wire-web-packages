@@ -41,7 +41,7 @@ interface S3CopyOptions extends S3Options {
   s3ToPath: string;
 }
 
-async function getUploadFiles(platform: string, basePath: string, version: string): Promise<FindResult[]> {
+async function findUploadFiles(platform: string, basePath: string, version: string): Promise<FindResult[]> {
   if (platform.includes('linux')) {
     const appImage = await find('.AppImage', {cwd: basePath});
     const debImage = await find('.deb', {cwd: basePath});
@@ -78,7 +78,7 @@ async function getUploadFiles(platform: string, basePath: string, version: strin
     const setupPkg = await find('.pkg', {cwd: basePath});
     return [setupPkg];
   } else {
-    throw new Error('Invalid platform');
+    throw new Error(`Invalid platform "${platform}"`);
   }
 }
 
@@ -136,4 +136,4 @@ async function copyOnS3(copyOptions: S3CopyOptions): Promise<void> {
     .promise();
 }
 
-export {copyOnS3, deleteFromS3, getUploadFiles, uploadToS3, DeleteOptions, S3UploadOptions, S3CopyOptions};
+export {copyOnS3, deleteFromS3, findUploadFiles, uploadToS3, DeleteOptions, S3UploadOptions, S3CopyOptions};

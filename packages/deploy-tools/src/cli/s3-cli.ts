@@ -22,7 +22,7 @@ import commander from 'commander';
 import path from 'path';
 
 import {checkCommanderOptions} from '../lib/deploy-utils';
-import {getUploadFiles, uploadToS3} from '../lib/s3';
+import {findUploadFiles, uploadToS3} from '../lib/s3';
 
 commander
   .name('s3.js')
@@ -48,7 +48,7 @@ if (!commander.wrapperBuild.includes('#')) {
   const [platform, version] = commander.wrapperBuild.toLowerCase().split('#');
   const {bucket, secretKey, keyId} = commander;
 
-  const files = await getUploadFiles(platform, searchBasePath, version);
+  const files = await findUploadFiles(platform, searchBasePath, version);
 
   for (const file of files) {
     const {fileName, filePath} = file;

@@ -59,7 +59,7 @@ const endsWithAny = (suffixes: string[], str: string) => suffixes.some(suffix =>
     PLATFORM = 'macOS';
     extensions.push('.pkg');
   } else {
-    throw new Error('Invalid platform');
+    throw new Error(`Invalid platform "${platform}"`);
   }
 
   const commitish = await execAsync('git rev-parse HEAD');
