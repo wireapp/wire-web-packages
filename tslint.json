@@ -8,7 +8,6 @@
       true,
       {
         "allow-single-line-comments": false,
-        "enforce-trailing-newline": true,
         "match": "Copyright \\(C\\) \\d{4} Wire Swiss GmbH"
       }
     ],
