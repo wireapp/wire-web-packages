@@ -1,9 +1,9 @@
 {
   "bin": {
-    "deploy-github-draft": "dist/github-draft-cli.js",
-    "deploy-hockey": "dist/hockey-cli.js",
-    "deploy-s3": "dist/s3-cli.js",
-    "deploy-s3-releases": "dist/s3-win-releases-cli.js"
+    "deploy-github-draft": "dist/cli/github-draft-cli.js",
+    "deploy-hockey": "dist/cli/hockey-cli.js",
+    "deploy-s3": "dist/cli/s3-cli.js",
+    "deploy-s3-releases": "dist/cli/s3-win-releases-cli.js"
   },
   "dependencies": {
     "aws-sdk": "2.432.0",
@@ -18,7 +18,9 @@
     "@types/form-data": "2.2.1",
     "@types/fs-extra": "5.0.5",
     "@types/jszip": "3.1.5",
-    "axios": "0.18.0"
+    "axios": "0.18.0",
+    "jasmine": "3.3.1",
+    "nyc": "13.3.0"
   },
   "files": [
     "dist"
@@ -33,7 +35,7 @@
     "clean": "rimraf dist",
     "dist": "yarn clean && yarn build",
     "test": "yarn test:node",
-    "test:node": "exit 0"
+    "test:node": "nyc jasmine --config=jasmine.json"
   },
   "version": "0.0.1"
 }

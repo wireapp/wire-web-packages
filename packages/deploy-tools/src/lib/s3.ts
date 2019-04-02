@@ -17,9 +17,9 @@
  */
 
 import S3 from 'aws-sdk/clients/s3';
-import * as fs from 'fs-extra';
-import * as path from 'path';
-import {FindResult, findDown} from './deploy-utils';
+import fs from 'fs-extra';
+import path from 'path';
+import {FindResult, find} from './deploy-utils';
 
 interface BaseOptions {
   accessKeyId: string;
@@ -43,8 +43,8 @@ interface CopyOptions extends BaseOptions {
 
 async function getUploadFiles(platform: string, basePath: string, version: string): Promise<FindResult[]> {
   if (platform === 'linux') {
-    const appImage = await findDown('.AppImage', {cwd: basePath});
-    const debImage = await findDown('.deb', {cwd: basePath});
+    const appImage = await find('.AppImage', {cwd: basePath});
+    const debImage = await find('.deb', {cwd: basePath});
     const repositoryFiles = [
       `debian/pool/main/${debImage.fileName}`,
       'debian/dists/stable/Contents-amd64',
@@ -60,9 +60,9 @@ async function getUploadFiles(platform: string, basePath: string, version: strin
 
     return [...repositoryFiles, appImage, debImage];
   } else if (platform === 'windows') {
-    const setupExe = await findDown('-Setup.exe', {cwd: basePath});
-    const nupkgFile = await findDown('-full.nupkg', {cwd: basePath});
-    const releasesFile = await findDown('RELEASES', {cwd: basePath});
+    const setupExe = await find('-Setup.exe', {cwd: basePath});
+    const nupkgFile = await find('-full.nupkg', {cwd: basePath});
+    const releasesFile = await find('RELEASES', {cwd: basePath});
 
     const [, appShortName] = new RegExp('(.+)-[\\d.]+-full\\.nupkg').exec(nupkgFile.fileName) || ['', ''];
 
@@ -75,7 +75,7 @@ async function getUploadFiles(platform: string, basePath: string, version: strin
 
     return [nupkgFile, releasesRenamed, setupExeRenamed];
   } else if (platform === 'macos') {
-    const setupPkg = await findDown('.pkg', {cwd: basePath});
+    const setupPkg = await find('.pkg', {cwd: basePath});
     return [setupPkg];
   } else {
     throw new Error('Invalid platform');
@@ -91,8 +91,6 @@ async function uploadToS3(uploadOptions: UploadOptions): Promise<void> {
     throw new Error(`File "${filePath} not found`);
   }
 
-  console.log(`Uploading "${path.basename(filePath)}" to "${s3Path}" ...`);
-
   const file = fs.createReadStream(filePath);
 
   await new S3({
@@ -106,8 +104,6 @@ async function uploadToS3(uploadOptions: UploadOptions): Promise<void> {
       Key: s3Path,
     })
     .promise();
-
-  console.log('Uploaded to S3.');
 }
 
 async function deleteFromS3(deleteOptions: DeleteOptions): Promise<void> {
@@ -122,8 +118,6 @@ async function deleteFromS3(deleteOptions: DeleteOptions): Promise<void> {
       Key: s3Path,
     })
     .promise();
-
-  console.log(`Deleted "${s3Path}" from S3`);
 }
 
 async function copyOnS3(copyOptions: CopyOptions): Promise<void> {
@@ -140,8 +134,6 @@ async function copyOnS3(copyOptions: CopyOptions): Promise<void> {
       Key: s3ToPath,
     })
     .promise();
-
-  console.log(`Copied "${s3FromPath}" to "${s3ToPath}" on S3`);
 }
 
 export {copyOnS3, deleteFromS3, getUploadFiles, uploadToS3, DeleteOptions, UploadOptions, CopyOptions};

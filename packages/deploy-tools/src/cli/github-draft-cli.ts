@@ -16,9 +16,9 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
-import * as commander from 'commander';
-import * as fs from 'fs-extra';
-import * as path from 'path';
+import commander from 'commander';
+import fs from 'fs-extra';
+import path from 'path';
 
 import {checkCommanderOptions, execAsync} from '../lib/deploy-utils';
 import {createDraft, uploadAsset} from '../lib/github-draft';
@@ -66,6 +66,8 @@ const endsWithAny = (suffixes: string[], str: string) => suffixes.some(suffix =>
   const changelog = '...';
   const githubToken = commander.githubToken;
 
+  console.log('Creating a draft ...');
+
   const {id: draftId} = await createDraft({
     changelog,
     commitish,
@@ -75,12 +77,17 @@ const endsWithAny = (suffixes: string[], str: string) => suffixes.some(suffix =>
     title: `${version} - ${PLATFORM}`,
   });
 
+  console.log('Draft created.');
+
   const files = await fs.readdir(basePath);
   const uploadFiles = files.filter(fileName => endsWithAny(extensions, fileName));
 
   for (const fileName in uploadFiles) {
     const resolvedPath = path.join(basePath, fileName);
+
+    console.log(`Uploading asset "${fileName}" ...`);
     await uploadAsset({draftId, fileName, filePath: resolvedPath, githubToken, repoSlug});
+    console.log(`Asset "${fileName}" uploaded.`);
   }
 
   console.log('Done creating draft.');

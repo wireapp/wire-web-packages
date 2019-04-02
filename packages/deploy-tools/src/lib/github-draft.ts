@@ -17,7 +17,7 @@
  */
 
 import axios from 'axios';
-import * as fs from 'fs-extra';
+import fs from 'fs-extra';
 
 interface GitHubDraftData {
   assets_url: string;
@@ -77,12 +77,8 @@ async function createDraft(options: DraftOptions): Promise<GitHubDraftData> {
     Authorization: `token ${githubToken}`,
   };
 
-  console.log('Creating a draft ...');
-  console.log(draftData);
-
   try {
     const draftResponse = await axios.post<GitHubDraftData>(draftUrl, draftData, {headers: AuthorizationHeaders});
-    console.log('Draft created.');
     return draftResponse.data;
   } catch (error) {
     console.error('Error response from GitHub:', error.response.data);
@@ -95,9 +91,8 @@ async function createDraft(options: DraftOptions): Promise<GitHubDraftData> {
 async function uploadAsset(options: UploadOptions): Promise<void> {
   const {draftId, fileName, filePath, githubToken, repoSlug} = options;
 
-  const fullDraftUrl = `${GITHUB_API_URL}/repos/${repoSlug}/releases`;
+  const draftUrl = `${GITHUB_API_URL}/repos/${repoSlug}/releases`;
   const uploadUrl = `${GITHUB_UPLOADS_URL}/repos/${repoSlug}/releases/${draftId}/assets`;
-  console.log(`Uploading asset "${fileName}" ...`);
 
   const AuthorizationHeaders = {
     Authorization: `token ${githubToken}`,
@@ -112,14 +107,15 @@ async function uploadAsset(options: UploadOptions): Promise<void> {
   try {
     await axios.post(`${uploadUrl}?name=${fileName}`, file, {headers, maxContentLength: 104857600});
   } catch (uploadError) {
+    console.error('Error response from GitHub:', uploadError.response.data);
     console.error(
       `Upload failed with status code "${uploadError.response.status}": ${uploadError.response.statusText}"`
     );
-    console.log('Deleting draft because upload failed');
+    console.info('Deleting draft because upload failed ...');
 
     try {
-      await axios.delete(fullDraftUrl, {headers: AuthorizationHeaders});
-      console.log('Draft deleted');
+      await axios.delete(draftUrl, {headers: AuthorizationHeaders});
+      console.info('Draft deleted');
     } catch (deleteError) {
       console.error('Error response from GitHub:', deleteError.response.data);
       throw new Error(
@@ -129,7 +125,6 @@ async function uploadAsset(options: UploadOptions): Promise<void> {
       throw new Error('Uploading asset failed');
     }
   }
-  console.log(`Asset "${fileName}" uploaded.`);
 }
 
-export {createDraft, uploadAsset};
+export {createDraft, uploadAsset, GitHubDraftData, BaseOptions, DraftOptions, UploadOptions};

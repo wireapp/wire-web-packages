@@ -18,10 +18,10 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
-import * as commander from 'commander';
-import * as path from 'path';
+import commander from 'commander';
+import path from 'path';
 
-import {checkCommanderOptions, findDown} from '../lib/deploy-utils';
+import {checkCommanderOptions, find} from '../lib/deploy-utils';
 import {copyOnS3, deleteFromS3} from '../lib/s3';
 
 commander
@@ -53,8 +53,8 @@ if (!commander.wrapperBuild.includes('#')) {
   const searchBasePath = commander.path || path.resolve('.');
   const s3BasePath = `${commander.s3path || ''}/`.replace('//', '/');
 
-  const nupkgFile = await findDown('-full.nupkg', {cwd: searchBasePath});
-  const setupExe = await findDown('-Setup.exe', {cwd: searchBasePath});
+  const nupkgFile = await find('-full.nupkg', {cwd: searchBasePath});
+  const setupExe = await find('-Setup.exe', {cwd: searchBasePath});
   const [, appShortName] = new RegExp('(.+)-[\\d.]+-full\\.nupkg').exec(nupkgFile.fileName) || ['', ''];
   const [, appFullName] = new RegExp('(.+)-Setup\\.exe').exec(setupExe.fileName) || ['', ''];
 
@@ -75,8 +75,13 @@ if (!commander.wrapperBuild.includes('#')) {
   const secretAccessKey = commander.secretKey;
   const accessKeyId = commander.keyId;
 
+  console.log(`Deleting "${staticReleaseKey}" from S3 ...`);
   await deleteFromS3({accessKeyId, bucket, secretAccessKey, s3Path: staticReleaseKey});
+
+  console.log(`Deleting "${staticExeKey}" from S3 ...`);
   await deleteFromS3({accessKeyId, bucket, secretAccessKey, s3Path: staticExeKey});
+
+  console.log(`Copying "${bucket}/${latestReleaseKey}" to "${staticReleaseKey}" on S3 ...`);
   await copyOnS3({
     accessKeyId,
     bucket,
@@ -84,6 +89,8 @@ if (!commander.wrapperBuild.includes('#')) {
     s3ToPath: staticReleaseKey,
     secretAccessKey,
   });
+
+  console.log(`Copying "${bucket}/${latestExeKey}" to "${staticExeKey}" on S3 ...`);
   await copyOnS3({
     accessKeyId,
     bucket,
@@ -92,7 +99,7 @@ if (!commander.wrapperBuild.includes('#')) {
     secretAccessKey,
   });
 
-  console.log('Done updating RELEASES on S3.');
+  console.log('Done updating releases on S3.');
 })().catch(error => {
   console.error(error);
   process.exit(1);

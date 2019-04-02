@@ -18,8 +18,8 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
-import * as commander from 'commander';
-import * as path from 'path';
+import commander from 'commander';
+import path from 'path';
 
 import {checkCommanderOptions} from '../lib/deploy-utils';
 import {getUploadFiles, uploadToS3} from '../lib/s3';
@@ -46,18 +46,21 @@ if (!commander.wrapperBuild.includes('#')) {
   const searchBasePath = commander.path || path.join(__dirname, '../../wrap');
   const s3BasePath = `${commander.s3path || ''}/`;
   const [platform, version] = commander.wrapperBuild.toLowerCase().split('#');
+  const {bucket, secretKey, keyId} = commander;
 
   const files = await getUploadFiles(platform, searchBasePath, version);
 
   for (const file of files) {
     const {fileName, filePath} = file;
     const s3Path = `${s3BasePath}${fileName}`.replace('//', '/');
+
+    console.log(`Uploading "${fileName}" to "${bucket}/${s3Path}" ...`);
     await uploadToS3({
-      accessKeyId: commander.keyId,
-      bucket: commander.bucket,
+      accessKeyId: keyId,
+      bucket,
       filePath,
       s3Path,
-      secretAccessKey: commander.secretKey,
+      secretAccessKey: secretKey,
     });
   }
 

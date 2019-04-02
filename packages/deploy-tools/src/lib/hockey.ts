@@ -56,8 +56,6 @@ function zip(originalFile: string, zipFile: string): Promise<string> {
     streamFiles: true,
   };
 
-  console.log(`Compressing "${resolvedOriginal} ..."`);
-
   return new Promise((resolve, reject) => {
     const readStream = fs.createReadStream(resolvedOriginal).on('error', reject);
     const writeStream = fs
@@ -146,4 +144,4 @@ async function uploadVersion(options: UploadOptions): Promise<void> {
   }
 }
 
-export {createVersion, uploadVersion, zip};
+export {createVersion, HockeyOptions, HockeyVersionData, UploadOptions, uploadVersion, zip};

@@ -16,11 +16,11 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
-import * as commander from 'commander';
-import * as fs from 'fs-extra';
-import * as path from 'path';
+import commander from 'commander';
+import fs from 'fs-extra';
+import path from 'path';
 
-import {FindResult, checkCommanderOptions, findDown} from '../lib/deploy-utils';
+import {FindResult, checkCommanderOptions, find} from '../lib/deploy-utils';
 import {createVersion, uploadVersion, zip} from '../lib/hockey';
 
 commander
@@ -41,16 +41,16 @@ if (!commander.wrapperBuild.includes('#')) {
 
 async function getUploadFile(platform: string, basePath: string): Promise<FindResult> {
   if (platform === 'linux') {
-    const debImage = await findDown('.deb', {cwd: basePath});
+    const debImage = await find('.deb', {cwd: basePath});
     return debImage;
   } else if (platform === 'windows') {
-    const setupExe = await findDown('-Setup.exe', {cwd: basePath});
+    const setupExe = await find('-Setup.exe', {cwd: basePath});
     return setupExe;
   } else if (platform === 'macos') {
-    const setupPkg = await findDown('.pkg', {cwd: basePath});
+    const setupPkg = await find('.pkg', {cwd: basePath});
     return setupPkg;
   } else {
-    throw new Error('Invalid platform');
+    throw new Error(`Invalid platform "${platform}"`);
   }
 }
 
@@ -58,27 +58,37 @@ async function getUploadFile(platform: string, basePath: string): Promise<FindRe
   const {hockeyId, hockeyToken, wrapperBuild} = commander;
   const [platform, version] = wrapperBuild.toLowerCase().split('#');
   const searchBasePath = commander.path || path.resolve('.');
+  const [majorVersion, minorVersion] = version.split('.');
 
   const {filePath} = await getUploadFile(platform, searchBasePath);
 
-  const zipFile = await zip(filePath, filePath.replace('.exe', '.zip'));
+  console.log(`Compressing "${filePath} ..."`);
+
+  const zipFile = await zip(filePath, filePath.replace(/\.([^.]+)$/, '.zip'));
+
+  console.log(`Creating app version "${majorVersion}.${minorVersion}" on Hockey ...`);
 
   const {id: hockeyVersionId} = await createVersion({
     hockeyAppId: hockeyId,
-    hockeyToken: hockeyToken,
-    version: version,
+    hockeyToken,
+    version,
   });
+
+  console.log(`Received version "${hockeyVersionId}" from Hockey.`);
+
+  console.log(`Uploading version "${hockeyVersionId}" to Hockey ...`);
 
   await uploadVersion({
     filePath: zipFile,
     hockeyAppId: hockeyId,
-    hockeyToken: hockeyToken,
+    hockeyToken,
     hockeyVersionId,
-    version: version,
+    version,
   });
 
   await fs.remove(zipFile);
-  console.log('Done.');
+
+  console.log('Done uploading to Hockey.');
 })().catch(error => {
   console.error(error);
   process.exit(1);
