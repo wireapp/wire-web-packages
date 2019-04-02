@@ -20,8 +20,8 @@ import * as commander from 'commander';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
-import {checkCommanderOptions, execAsync} from './deploy-utils';
-import {createDraft, uploadAsset} from './github-draft';
+import {checkCommanderOptions, execAsync} from '../lib/deploy-utils';
+import {createDraft, uploadAsset} from '../lib/github-draft';
 
 commander
   .name('github-draft.js')

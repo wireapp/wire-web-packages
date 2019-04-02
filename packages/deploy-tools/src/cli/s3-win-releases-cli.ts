@@ -20,8 +20,9 @@
 
 import * as commander from 'commander';
 import * as path from 'path';
-import {checkCommanderOptions, findDown} from './deploy-utils';
-import {copyOnS3, deleteFromS3} from './s3';
+
+import {checkCommanderOptions, findDown} from '../lib/deploy-utils';
+import {copyOnS3, deleteFromS3} from '../lib/s3';
 
 commander
   .name('s3-win-releases.js')

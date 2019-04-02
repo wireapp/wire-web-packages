@@ -20,8 +20,8 @@ import * as commander from 'commander';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
-import {FindResult, checkCommanderOptions, findDown} from './deploy-utils';
-import {createVersion, uploadVersion, zip} from './hockey';
+import {FindResult, checkCommanderOptions, findDown} from '../lib/deploy-utils';
+import {createVersion, uploadVersion, zip} from '../lib/hockey';
 
 commander
   .name('hockey.js')

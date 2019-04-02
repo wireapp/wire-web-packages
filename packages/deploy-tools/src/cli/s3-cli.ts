@@ -21,8 +21,8 @@
 import * as commander from 'commander';
 import * as path from 'path';
 
-import {checkCommanderOptions} from './deploy-utils';
-import {getUploadFiles, uploadToS3} from './s3';
+import {checkCommanderOptions} from '../lib/deploy-utils';
+import {getUploadFiles, uploadToS3} from '../lib/s3';
 
 commander
   .name('s3.js')
