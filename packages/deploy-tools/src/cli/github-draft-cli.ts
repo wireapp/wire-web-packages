@@ -49,13 +49,13 @@ const endsWithAny = (suffixes: string[], str: string) => suffixes.some(suffix =>
   const [platform, version] = commander.wrapperBuild.toLowerCase().split('#');
   const basePath = commander.path || path.resolve('.');
 
-  if (platform === 'linux') {
+  if (platform.includes('linux')) {
     PLATFORM = 'Linux';
     extensions.push('.AppImage', '.deb');
-  } else if (platform === 'windows') {
+  } else if (platform.includes('windows')) {
     PLATFORM = 'Windows';
     extensions.push('.exe');
-  } else if (platform === 'macos') {
+  } else if (platform.includes('macos')) {
     PLATFORM = 'macOS';
     extensions.push('.pkg');
   } else {

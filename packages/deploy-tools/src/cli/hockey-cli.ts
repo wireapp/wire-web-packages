@@ -40,13 +40,13 @@ if (!commander.wrapperBuild.includes('#')) {
 }
 
 async function getUploadFile(platform: string, basePath: string): Promise<FindResult> {
-  if (platform === 'linux') {
+  if (platform.includes('linux')) {
     const debImage = await find('.deb', {cwd: basePath});
     return debImage;
-  } else if (platform === 'windows') {
+  } else if (platform.includes('windows')) {
     const setupExe = await find('-Setup.exe', {cwd: basePath});
     return setupExe;
-  } else if (platform === 'macos') {
+  } else if (platform.includes('macos')) {
     const setupPkg = await find('.pkg', {cwd: basePath});
     return setupPkg;
   } else {

@@ -89,11 +89,8 @@ async function createVersion(options: HockeyOptions): Promise<HockeyVersionData>
     status: 2,
   };
 
-  console.log(`Creating app version "${majorVersion}.${minorVersion}" on Hockey ...`);
-
   try {
     const response = await axios.post<HockeyVersionData>(hockeyUrl, postData, {headers});
-    console.log(`Received version "${response.data.id}" from Hockey.`);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -131,11 +128,8 @@ async function uploadVersion(options: UploadOptions): Promise<void> {
     'X-HockeyAppToken': hockeyToken,
   };
 
-  console.log(`Uploading version "${hockeyVersionId}" to Hockey ...`);
-
   try {
     await axios.put<void>(hockeyUrl, formData, {headers, maxContentLength: 524288000});
-    console.log('Done uploading to Hockey.');
   } catch (error) {
     console.error(error);
     throw new Error(

@@ -42,7 +42,7 @@ interface CopyOptions extends BaseOptions {
 }
 
 async function getUploadFiles(platform: string, basePath: string, version: string): Promise<FindResult[]> {
-  if (platform === 'linux') {
+  if (platform.includes('linux')) {
     const appImage = await find('.AppImage', {cwd: basePath});
     const debImage = await find('.deb', {cwd: basePath});
     const repositoryFiles = [
@@ -59,7 +59,7 @@ async function getUploadFiles(platform: string, basePath: string, version: strin
     ].map(fileName => ({fileName, filePath: path.join(basePath, fileName)}));
 
     return [...repositoryFiles, appImage, debImage];
-  } else if (platform === 'windows') {
+  } else if (platform.includes('windows')) {
     const setupExe = await find('-Setup.exe', {cwd: basePath});
     const nupkgFile = await find('-full.nupkg', {cwd: basePath});
     const releasesFile = await find('RELEASES', {cwd: basePath});
@@ -74,7 +74,7 @@ async function getUploadFiles(platform: string, basePath: string, version: strin
     const releasesRenamed = {...releasesFile, fileName: `${appShortName}-${version}-RELEASES`};
 
     return [nupkgFile, releasesRenamed, setupExeRenamed];
-  } else if (platform === 'macos') {
+  } else if (platform.includes('macos')) {
     const setupPkg = await find('.pkg', {cwd: basePath});
     return [setupPkg];
   } else {
