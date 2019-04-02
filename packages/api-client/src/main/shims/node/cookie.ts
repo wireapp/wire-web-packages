@@ -74,7 +74,7 @@ export const retrieveCookie = async (response: AxiosResponse, engine: CRUDEngine
     const cookies = response.headers['set-cookie'].map(ToughCookie.parse);
     for (const cookie of cookies) {
       await setInternalCookie(new Cookie(cookie.value, cookie.expires), engine);
-      logger.info(
+      logger.log(
         `Saved internal cookie. It will expire on "${cookie.expires}".`,
         ObfuscationUtil.obfuscateCookie(cookie)
       );

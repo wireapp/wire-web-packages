@@ -154,7 +154,7 @@ class HttpClient extends EventEmitter {
     }
 
     const accessToken = await this.postAccess(expiredAccessToken);
-    this.logger.info(
+    this.logger.log(
       `Saved updated access token. It will expire in "${accessToken.expires_in}" seconds.`,
       ObfuscationUtil.obfuscateAccessToken(accessToken)
     );

@@ -177,7 +177,7 @@ class APIClient extends EventEmitter {
     const cookieResponse = await this.auth.api.postLogin(loginData);
     const accessToken = cookieResponse.data;
 
-    this.logger.info(
+    this.logger.log(
       `Saved initial access token. It will expire in "${accessToken.expires_in}" seconds.`,
       ObfuscationUtil.obfuscateAccessToken(accessToken)
     );
