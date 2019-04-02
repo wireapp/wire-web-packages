@@ -8,8 +8,7 @@
       true,
       {
         "allow-single-line-comments": false,
-        "enforce-trailing-newline": true,
-        "match": "/*\\n* Wire\\n* Copyright (C) \\d{5}"
+        "enforce-trailing-newline": true
       }
     ],
     "jsdoc-format": [true, "check-multiline-start"],
