@@ -27,7 +27,7 @@
       "git add"
     ],
     "*.{ts,tsx}": [
-      "tslint --project tsconfig.json --fix",
+      "tslint --config tslint.json --project tsconfig.json --fix",
       "git add"
     ],
     "*.{json,md,scss,yml}": [
@@ -47,7 +47,7 @@
     "lint": "yarn lint:js && yarn lint:other && yarn lint:ts",
     "lint:js": "eslint --ignore-path .gitignore --ext .js,.jsx .",
     "lint:other": "yarn prettier --list-different",
-    "lint:ts": "tslint --project tsconfig.json \"**/*.ts?(x)\"",
+    "lint:ts": "tslint --config tslint.json --project tsconfig.json \"**/*.ts?(x)\"",
     "prettier": "prettier \"**/*.{json,md,scss,yml}\"",
     "release": "lerna publish",
     "test": "yarn && yarn lint:js && yarn lint:ts && yarn lint:other && node bin/testUpdated.js",
