@@ -3,7 +3,7 @@
     "@types/bro-fs": "0.4.2",
     "@types/filesystem": "0.0.29",
     "@types/fs-extra": "5.0.5",
-    "@types/node": "11.12.2",
+    "@types/node": "11.13.0",
     "bro-fs": "0.5.0",
     "dexie": "2.0.4",
     "fs-extra": "7.0.1"
@@ -19,7 +19,7 @@
     "nyc": "13.3.0",
     "rimraf": "2.6.3",
     "ts-node": "8.0.3",
-    "typescript": "3.3.4000",
+    "typescript": "3.4.1",
     "webpack": "4.29.6",
     "webpack-cli": "3.3.0"
   },
@@ -55,6 +55,5 @@
     "test:project": "yarn dist && yarn test",
     "test:node": "nyc jasmine --config=jasmine.json"
   },
-  "types": "./dist/commonjs/index.d.ts",
-  "version": "1.1.40"
+  "version": "1.1.41"
 }

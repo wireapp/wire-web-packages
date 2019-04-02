@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@types/node": "11.12.2",
+    "@types/node": "11.13.0",
     "pure-uuid": "1.5.7"
   },
   "devDependencies": {
@@ -13,7 +13,7 @@
     "karma-sourcemap-loader": "0.3.7",
     "karma-spec-reporter": "0.0.32",
     "rimraf": "2.6.3",
-    "typescript": "3.3.4000",
+    "typescript": "3.4.1",
     "webpack": "4.29.6",
     "webpack-cli": "3.3.0"
   },
@@ -36,6 +36,5 @@
     "test:project": "yarn dist && yarn test",
     "test:node": "cross-env JASMINE_CONFIG_PATH=src/test/node/support/jasmine.json jasmine"
   },
-  "types": "./dist/index.d.ts",
-  "version": "0.2.76"
+  "version": "0.2.77"
 }
