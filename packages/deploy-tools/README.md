@@ -15,3 +15,9 @@ Wire's internal deployment tools.
 ```
 yarn add @wireapp/deploy-tools
 ```
+
+### Usage
+
+- **GitHub**: See [`github-draft-cli.ts`](./src/cli/github-draft-cli.ts)
+- **Hockey**: See [`hockey-cli.ts`](./src/cli/hockey-cli.ts)
+- **S3**: See [`s3-cli.ts`](./src/cli/s3-cli.ts)
