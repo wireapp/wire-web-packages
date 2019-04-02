@@ -21,22 +21,22 @@ import fs from 'fs-extra';
 import path from 'path';
 import {FindResult, find} from './deploy-utils';
 
-interface BaseOptions {
+interface S3Options {
   accessKeyId: string;
   bucket: string;
   secretAccessKey: string;
 }
 
-interface DeleteOptions extends BaseOptions {
+interface DeleteOptions extends S3Options {
   s3Path: string;
 }
 
-interface UploadOptions extends BaseOptions {
+interface S3UploadOptions extends S3Options {
   filePath: string;
   s3Path: string;
 }
 
-interface CopyOptions extends BaseOptions {
+interface S3CopyOptions extends S3Options {
   s3FromPath: string;
   s3ToPath: string;
 }
@@ -82,7 +82,7 @@ async function getUploadFiles(platform: string, basePath: string, version: strin
   }
 }
 
-async function uploadToS3(uploadOptions: UploadOptions): Promise<void> {
+async function uploadToS3(uploadOptions: S3UploadOptions): Promise<void> {
   const {accessKeyId, secretAccessKey, bucket, filePath, s3Path} = uploadOptions;
 
   const lstat = await fs.lstat(filePath);
@@ -120,7 +120,7 @@ async function deleteFromS3(deleteOptions: DeleteOptions): Promise<void> {
     .promise();
 }
 
-async function copyOnS3(copyOptions: CopyOptions): Promise<void> {
+async function copyOnS3(copyOptions: S3CopyOptions): Promise<void> {
   const {accessKeyId, secretAccessKey, bucket, s3FromPath, s3ToPath} = copyOptions;
 
   await new S3({
@@ -136,4 +136,4 @@ async function copyOnS3(copyOptions: CopyOptions): Promise<void> {
     .promise();
 }
 
-export {copyOnS3, deleteFromS3, getUploadFiles, uploadToS3, DeleteOptions, UploadOptions, CopyOptions};
+export {copyOnS3, deleteFromS3, getUploadFiles, uploadToS3, DeleteOptions, S3UploadOptions, S3CopyOptions};

@@ -38,19 +38,19 @@ interface GitHubDraftData {
   zipball_url: string;
 }
 
-interface BaseOptions {
+interface GitHubOptions {
   githubToken: string;
   repoSlug: string;
 }
 
-interface DraftOptions extends BaseOptions {
+interface GitHubDraftOptions extends GitHubOptions {
   changelog: string;
   commitish: string;
   tagName: string;
   title: string;
 }
 
-interface UploadOptions extends BaseOptions {
+interface GitHubUploadOptions extends GitHubOptions {
   draftId: number;
   fileName: string;
   filePath: string;
@@ -59,7 +59,7 @@ interface UploadOptions extends BaseOptions {
 const GITHUB_API_URL = 'https://api.github.com';
 const GITHUB_UPLOADS_URL = 'https://uploads.github.com';
 
-async function createDraft(options: DraftOptions): Promise<GitHubDraftData> {
+async function createDraft(options: GitHubDraftOptions): Promise<GitHubDraftData> {
   const {changelog, commitish, githubToken, repoSlug, tagName, title} = options;
 
   const draftUrl = `${GITHUB_API_URL}/repos/${repoSlug}/releases`;
@@ -88,7 +88,7 @@ async function createDraft(options: DraftOptions): Promise<GitHubDraftData> {
   }
 }
 
-async function uploadAsset(options: UploadOptions): Promise<void> {
+async function uploadAsset(options: GitHubUploadOptions): Promise<void> {
   const {draftId, fileName, filePath, githubToken, repoSlug} = options;
 
   const draftUrl = `${GITHUB_API_URL}/repos/${repoSlug}/releases`;
@@ -127,4 +127,4 @@ async function uploadAsset(options: UploadOptions): Promise<void> {
   }
 }
 
-export {createDraft, uploadAsset, GitHubDraftData, BaseOptions, DraftOptions, UploadOptions};
+export {createDraft, uploadAsset, GitHubDraftData, GitHubOptions, GitHubDraftOptions, GitHubUploadOptions};

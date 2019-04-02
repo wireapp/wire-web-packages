@@ -16,7 +16,7 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
-import * as path from 'path';
+import path from 'path';
 
 import axios from 'axios';
 import FormData from 'form-data';
@@ -42,7 +42,7 @@ interface HockeyVersionData {
   version: string;
 }
 
-interface UploadOptions extends HockeyOptions {
+interface HockeyUploadOptions extends HockeyOptions {
   filePath: string;
   hockeyVersionId: number | string;
 }
@@ -100,7 +100,7 @@ async function createVersion(options: HockeyOptions): Promise<HockeyVersionData>
   }
 }
 
-async function uploadVersion(options: UploadOptions): Promise<void> {
+async function uploadVersion(options: HockeyUploadOptions): Promise<void> {
   const {filePath, hockeyAppId, hockeyToken, hockeyVersionId, version} = options;
   const semverVersion = version.split('.');
   const resolvedFile = path.resolve(filePath);
@@ -138,4 +138,4 @@ async function uploadVersion(options: UploadOptions): Promise<void> {
   }
 }
 
-export {createVersion, HockeyOptions, HockeyVersionData, UploadOptions, uploadVersion, zip};
+export {createVersion, HockeyOptions, HockeyVersionData, HockeyUploadOptions, uploadVersion, zip};
