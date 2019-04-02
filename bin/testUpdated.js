@@ -23,9 +23,9 @@ let output;
 console.info('Checking for changed packages...');
 
 try {
-  output = execSync(`npx lerna changed --all --json`);
+  output = execSync('npx lerna changed --all --json');
 } catch (error) {
-  console.info(`No local packages have changed since the last tagged releases.`);
+  console.info('No local packages have changed since the last tagged releases.');
   process.exit(0);
 }
 
@@ -33,7 +33,7 @@ const changedPackages = JSON.parse(output.toString());
 const packageNames = changedPackages.map(project => project.name);
 
 console.info('Building all packages');
-execSync(`yarn dist`, {stdio: [0, 1]});
+execSync('yarn dist', {stdio: [0, 1]});
 
 packageNames.forEach(packageName => {
   console.info(`Running tests for package "${packageName}"...`);
