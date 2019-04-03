@@ -41,11 +41,11 @@ if (!commander.wrapperBuild.includes('#')) {
 
 function getUploadFile(platform: string, basePath: string): Promise<FindResult> {
   if (platform.includes('linux')) {
-    return find('.deb', {cwd: basePath});
+    return find('*.deb', {cwd: basePath});
   } else if (platform.includes('windows')) {
-    return find('-Setup.exe', {cwd: basePath});
+    return find('*-Setup.exe', {cwd: basePath});
   } else if (platform.includes('macos')) {
-    return find('.pkg', {cwd: basePath});
+    return find('*.pkg', {cwd: basePath});
   } else {
     throw new Error(`Invalid platform "${platform}"`);
   }

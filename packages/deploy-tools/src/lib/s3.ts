@@ -43,8 +43,8 @@ interface S3CopyOptions extends S3Options {
 
 async function findUploadFiles(platform: string, basePath: string, version: string): Promise<FindResult[]> {
   if (platform.includes('linux')) {
-    const appImage = await find('.AppImage', {cwd: basePath});
-    const debImage = await find('.deb', {cwd: basePath});
+    const appImage = await find('*.AppImage', {cwd: basePath});
+    const debImage = await find('*.deb', {cwd: basePath});
     const repositoryFiles = [
       `debian/pool/main/${debImage.fileName}`,
       'debian/dists/stable/Contents-amd64',
@@ -60,8 +60,8 @@ async function findUploadFiles(platform: string, basePath: string, version: stri
 
     return [...repositoryFiles, appImage, debImage];
   } else if (platform.includes('windows')) {
-    const setupExe = await find('-Setup.exe', {cwd: basePath});
-    const nupkgFile = await find('-full.nupkg', {cwd: basePath});
+    const setupExe = await find('*-Setup.exe', {cwd: basePath});
+    const nupkgFile = await find('*-full.nupkg', {cwd: basePath});
     const releasesFile = await find('RELEASES', {cwd: basePath});
 
     const [, appShortName] = new RegExp('(.+)-[\\d.]+-full\\.nupkg').exec(nupkgFile.fileName) || ['', ''];
@@ -75,7 +75,7 @@ async function findUploadFiles(platform: string, basePath: string, version: stri
 
     return [nupkgFile, releasesRenamed, setupExeRenamed];
   } else if (platform.includes('macos')) {
-    const setupPkg = await find('.pkg', {cwd: basePath});
+    const setupPkg = await find('*.pkg', {cwd: basePath});
     return [setupPkg];
   } else {
     throw new Error(`Invalid platform "${platform}"`);

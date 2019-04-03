@@ -53,8 +53,8 @@ if (!commander.wrapperBuild.includes('#')) {
   const searchBasePath = commander.path || path.resolve('.');
   const s3BasePath = `${commander.s3path || ''}/`.replace('//', '/');
 
-  const nupkgFile = await find('-full.nupkg', {cwd: searchBasePath});
-  const setupExe = await find('-Setup.exe', {cwd: searchBasePath});
+  const nupkgFile = await find('*-full.nupkg', {cwd: searchBasePath});
+  const setupExe = await find('*-Setup.exe', {cwd: searchBasePath});
   const [, appShortName] = new RegExp('(.+)-[\\d.]+-full\\.nupkg').exec(nupkgFile.fileName) || ['', ''];
   const [, appFullName] = new RegExp('(.+)-Setup\\.exe').exec(setupExe.fileName) || ['', ''];
 

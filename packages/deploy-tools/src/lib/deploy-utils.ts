@@ -20,8 +20,8 @@ import {exec} from 'child_process';
 import {promisify} from 'util';
 
 import commander from 'commander';
+import globby from 'globby';
 import path from 'path';
-const findDown = require('find-down');
 
 interface FindOptions {
   cwd?: string;
@@ -50,25 +50,25 @@ async function execAsync(command: string) {
   return stdout.trim();
 }
 
-async function find(fileName: string, options: {cwd?: string; safeGuard: false}): Promise<FindResult | null>;
-async function find(fileName: string, options: {cwd?: string; safeGuard?: boolean}): Promise<FindResult>;
-async function find(fileName: string, options?: FindOptions): Promise<FindResult | null> {
+async function find(fileGlob: string, options: {cwd?: string; safeGuard: false}): Promise<FindResult | null>;
+async function find(fileGlob: string, options: {cwd?: string; safeGuard?: boolean}): Promise<FindResult>;
+async function find(fileGlob: string, options?: FindOptions): Promise<FindResult | null> {
   const fullOptions: Required<FindOptions> = {
     cwd: '.',
     safeGuard: true,
     ...options,
   };
-  const file: string | null = await findDown(fileName, {cwd: fullOptions.cwd});
+  const matches = await globby(`${fullOptions.cwd}/**/${fileGlob}`, {onlyFiles: true});
 
-  if (file) {
+  if (matches.length > 0) {
+    const file = path.resolve(matches[0]);
     return {fileName: path.basename(file), filePath: file};
   }
 
   if (fullOptions.safeGuard) {
-    throw new Error(`Could not find "${fileName}".`);
+    throw new Error(`Could not find "${fileGlob}".`);
   }
 
   return null;
 }
-
 export {checkCommanderOptions, execAsync, find, FindOptions, FindResult};
