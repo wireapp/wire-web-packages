@@ -10,7 +10,7 @@
     "dotenv": "7.0.0",
     "electron-builder": "20.39.0",
     "electron-packager": "13.1.1",
-    "electron-winstaller": "3.0.4",
+    "electron-winstaller": "2.7.0",
     "fs-extra": "7.0.1",
     "git-rev-sync": "1.12.0"
   },
