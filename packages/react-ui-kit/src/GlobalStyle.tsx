@@ -23,10 +23,6 @@ import emotionNormalize from 'emotion-normalize';
 
 const globalCss = css`
   ${emotionNormalize}
-
-  p {
-    margin-top: 0;
-  }
 `;
 
 const GlobalStyle = () => {

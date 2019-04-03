@@ -19,10 +19,9 @@
 
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
-import Color from 'color';
 import {GlobalStyle} from '../GlobalStyle';
 import {COLOR} from '../Identity';
-import {defaultTransition} from '../Identity/motions';
+import {textLinkStyle} from '../Text';
 import {filterProps} from '../util';
 
 export interface StyledAppContainerProps<T = HTMLDivElement> extends React.HTMLProps<T> {
@@ -46,24 +45,14 @@ const StyledAppContainerStyle: <T>(props: StyledAppContainerProps<T>) => ObjectI
   '*': {
     boxSizing: 'border-box',
   },
-  a: {
-    color: COLOR.LINK,
-    fontWeight: 400,
-    textDecoration: 'none',
-    transition: defaultTransition,
-
-    '&:hover': {
-      color: Color(COLOR.LINK)
-        .mix(Color(COLOR.BLACK), 0.16)
-        .toString(),
-      cursor: 'pointer',
-    },
-    '&:visited,&:link,&:active': {
-      color: COLOR.LINK,
-    },
+  'a:not([class])': {
+    ...textLinkStyle({}),
   },
   'b, strong': {
     fontWeight: 600,
+  },
+  'p:not([class])': {
+    marginTop: 0,
   },
 });
 
