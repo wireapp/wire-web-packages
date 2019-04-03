@@ -65,7 +65,7 @@ class IdentityProviderAPI {
 
   public async postIdentityProvider(data: string | NewIdentityProviderMetadataURL): Promise<IdentityProvider> {
     const config: AxiosRequestConfig = {
-      data: data,
+      data,
       method: 'post',
       url: `${IdentityProviderAPI.URL.PROVIDER}`,
     };
