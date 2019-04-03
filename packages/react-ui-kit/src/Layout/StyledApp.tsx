@@ -36,11 +36,11 @@ const styledAppContainerStyle: <T>(props: StyledAppContainerProps<T>) => ObjectI
 const filterStyledAppContainerProps = (props: Object) => filterProps(props, ['backgroundColor']);
 
 const StyledAppContainer = (props: StyledAppContainerProps) => (
-  <div css={``} {...filterStyledAppContainerProps(props)} />
+  <div css={styledAppContainerStyle(props)} {...filterStyledAppContainerProps(props)} />
 );
 
 const StyledApp = ({children, ...props}) => (
-  <StyledAppContainer css={styledAppContainerStyle(props)} {...props}>
+  <StyledAppContainer {...props}>
     <GlobalStyle />
     {children}
   </StyledAppContainer>
