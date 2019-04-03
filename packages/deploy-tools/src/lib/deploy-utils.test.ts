@@ -33,7 +33,7 @@ describe('deploy-utils', () => {
     }
   });
 
-  fit('find finds files', async () => {
+  it('find finds files', async () => {
     const result = await find('deploy-utils.test.ts', {cwd: __dirname, safeGuard: false});
     expect(result).not.toBe(null);
     expect(result!.fileName).toEqual(jasmine.any(String));
