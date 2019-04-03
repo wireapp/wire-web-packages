@@ -107,7 +107,7 @@ const DemoInputs = () => {
         <Column>Plain Link</Column>
         <Column>
           <Text>
-            You can download it <a>here</a>.
+            You can download it <a href="#">here</a>.
           </Text>
         </Column>
       </Columns>

@@ -52,7 +52,7 @@ const StyledLabel = (props: StyledLabelProps) => {
           opacity: props.disabled ? 0.56 : 1,
           width: '16px',
         },
-        'a:not([class])': {
+        a: {
           ...linkStyle({}),
         },
         display: 'flex',
