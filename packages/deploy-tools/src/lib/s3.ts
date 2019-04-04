@@ -27,22 +27,19 @@ interface S3DeployerOptions {
   secretAccessKey: string;
 }
 
-interface S3Options {
-  accessKeyId: string;
+interface DeleteOptions {
   bucket: string;
-  secretAccessKey: string;
-}
-
-interface DeleteOptions extends S3Options {
   s3Path: string;
 }
 
-interface S3UploadOptions extends S3Options {
+interface S3UploadOptions {
+  bucket: string;
   filePath: string;
   s3Path: string;
 }
 
-interface S3CopyOptions extends S3Options {
+interface S3CopyOptions {
+  bucket: string;
   s3FromPath: string;
   s3ToPath: string;
 }

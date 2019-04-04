@@ -99,7 +99,7 @@ class GitHubDraftDeployer {
     };
   }
 
-  async createDraft(options: GitHubDraftOptions): Promise<GitHubAPIDraftData | void> {
+  async createDraft(options: GitHubDraftOptions): Promise<GitHubAPIDraftData | {id: 0}> {
     const {changelog, commitOrBranch: commitish, tagName, title} = options;
     const {repoSlug, githubToken} = this.options;
 
@@ -120,7 +120,7 @@ class GitHubDraftDeployer {
 
     if (this.options.dryRun) {
       logDry('createDraft', {url: draftUrl, draftData});
-      return;
+      return {id: 0};
     }
 
     try {

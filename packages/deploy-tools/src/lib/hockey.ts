@@ -33,7 +33,7 @@ interface HockeyOptions {
   version: string;
 }
 
-interface HockeyUploadOptions extends HockeyOptions {
+interface HockeyUploadOptions {
   filePath: string;
   hockeyVersionId: number | string;
 }
@@ -95,7 +95,7 @@ class HockeyDeployer {
     };
   }
 
-  async createVersion(): Promise<HockeyAPIVersionData | void> {
+  async createVersion(): Promise<HockeyAPIVersionData | {id: 0}> {
     const {hockeyAppId, hockeyToken, version} = this.options;
     const [majorVersion, minorVersion, patchVersion] = version.split('.');
 
@@ -113,7 +113,7 @@ class HockeyDeployer {
 
     if (this.options.dryRun) {
       logDry('createVersion', {hockeyUrl, postData});
-      return;
+      return {id: 0};
     }
 
     try {
@@ -127,8 +127,9 @@ class HockeyDeployer {
     }
   }
 
-  async uploadVersion(options: HockeyUploadOptions): Promise<void> {
-    const {filePath, hockeyAppId, hockeyToken, hockeyVersionId} = options;
+  async uploadVersion(uploadOptions: HockeyUploadOptions): Promise<void> {
+    const {filePath, hockeyVersionId} = uploadOptions;
+    const {hockeyAppId, hockeyToken} = this.options;
     const resolvedFile = path.resolve(filePath);
 
     const hockeyUrl = `${HOCKEY_API_URL}/${hockeyAppId}/app_versions/${hockeyVersionId}`;

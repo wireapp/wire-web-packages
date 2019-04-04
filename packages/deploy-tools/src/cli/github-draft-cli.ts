@@ -70,6 +70,7 @@ const endsWithAny = (suffixes: string[], str: string) => suffixes.some(suffix =>
   const githubToken = commander.githubToken;
 
   console.log('Creating a draft ...');
+
   const githubDraftDeployer = new GitHubDraftDeployer({
     dryRun: commander.dryRun || false,
     githubToken,

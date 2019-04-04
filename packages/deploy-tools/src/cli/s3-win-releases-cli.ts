@@ -22,7 +22,7 @@ import commander from 'commander';
 import path from 'path';
 
 import {checkCommanderOptions, find} from '../lib/deploy-utils';
-import {copyOnS3, deleteFromS3} from '../lib/s3';
+import {S3Deployer} from '../lib/s3';
 
 commander
   .name('s3-win-releases.js')
@@ -77,27 +77,24 @@ if (!commander.wrapperBuild.includes('#')) {
   const accessKeyId = commander.keyId;
 
   console.log(`Deleting "${staticReleaseKey}" from S3 ...`);
-  await deleteFromS3({accessKeyId, bucket, secretAccessKey, s3Path: staticReleaseKey});
+  const s3Deployer = new S3Deployer({accessKeyId, secretAccessKey});
+  await s3Deployer.deleteFromS3({bucket, s3Path: staticReleaseKey});
 
   console.log(`Deleting "${staticExeKey}" from S3 ...`);
-  await deleteFromS3({accessKeyId, bucket, secretAccessKey, s3Path: staticExeKey});
+  await s3Deployer.deleteFromS3({bucket, s3Path: staticExeKey});
 
   console.log(`Copying "${bucket}/${latestReleaseKey}" to "${staticReleaseKey}" on S3 ...`);
-  await copyOnS3({
-    accessKeyId,
+  await s3Deployer.copyOnS3({
     bucket,
     s3FromPath: `${bucket}/${latestReleaseKey}`,
     s3ToPath: staticReleaseKey,
-    secretAccessKey,
   });
 
   console.log(`Copying "${bucket}/${latestExeKey}" to "${staticExeKey}" on S3 ...`);
-  await copyOnS3({
-    accessKeyId,
+  await s3Deployer.copyOnS3({
     bucket,
     s3FromPath: `${bucket}/${latestExeKey}`,
     s3ToPath: staticExeKey,
-    secretAccessKey,
   });
 
   console.log('Done updating releases on S3.');

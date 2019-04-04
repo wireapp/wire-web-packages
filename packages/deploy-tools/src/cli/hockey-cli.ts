@@ -22,8 +22,8 @@ import commander from 'commander';
 import fs from 'fs-extra';
 import path from 'path';
 
-import {FindResult, checkCommanderOptions, find} from '../lib/deploy-utils';
-import {createVersion, uploadVersion, zip} from '../lib/hockey';
+import {FindResult, checkCommanderOptions, find, zip} from '../lib/deploy-utils';
+import {HockeyDeployer} from '../lib/hockey';
 
 commander
   .name('hockey.js')
@@ -68,22 +68,21 @@ function getUploadFile(platform: string, basePath: string): Promise<FindResult> 
 
   console.log(`Creating app version "${majorVersion}.${minorVersion}" on Hockey ...`);
 
-  const {id: hockeyVersionId} = await createVersion({
+  const hockeyDeployer = new HockeyDeployer({
+    dryRun: commander.dryRun || false,
     hockeyAppId: hockeyId,
     hockeyToken,
     version,
   });
 
-  console.log(`Received version "${hockeyVersionId}" from Hockey.`);
+  const {id: hockeyVersionId} = await hockeyDeployer.createVersion();
 
+  console.log(`Received version "${hockeyVersionId}" from Hockey.`);
   console.log(`Uploading version "${hockeyVersionId}" to Hockey ...`);
 
-  await uploadVersion({
+  await hockeyDeployer.uploadVersion({
     filePath: zipFile,
-    hockeyAppId: hockeyId,
-    hockeyToken,
     hockeyVersionId,
-    version,
   });
 
   await fs.remove(zipFile);
