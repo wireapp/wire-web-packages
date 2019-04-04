@@ -1,9 +1,9 @@
 {
   "bin": {
-    "wire-build-linux": "dist/cli/build-linux.js",
-    "wire-build-macos": "dist/cli/build-macos.js",
-    "wire-build-win": "dist/cli/build-windows.js",
-    "wire-build-win-installer": "dist/cli/build-windows-installer.js"
+    "wire-build-linux": "dist/cli/build-linux-cli.js",
+    "wire-build-macos": "dist/cli/build-macos-cli.js",
+    "wire-build-win": "dist/cli/build-windows-cli.js",
+    "wire-build-win-installer": "dist/cli/build-windows-installer-cli.js"
   },
   "dependencies": {
     "commander": "2.20.0",

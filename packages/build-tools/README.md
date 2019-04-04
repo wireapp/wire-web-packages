@@ -18,6 +18,7 @@ yarn add @wireapp/build-tools
 
 ### Usage
 
-- **Linux**: See [`./src/cli/build-linux.ts)
-- **macOS**: See [`./src/cli/build-macos.ts)
-- **Windows**: See [`./src/cli/build-windows.ts)
+- **Linux**: See [`build-linux-cli.ts`](./src/cli/build-linux-cli.ts)
+- **macOS**: See [`build-macos-cli.ts`](./src/cli/build-macos-cli.ts)
+- **Windows**: See [`build-windows-cli.ts`](./src/cli/build-windows-cli.ts)
+- **Windows Installer**: See [`build-windows-installer-cli.ts`](./src/cli/build-windows-installer-cli.ts)
