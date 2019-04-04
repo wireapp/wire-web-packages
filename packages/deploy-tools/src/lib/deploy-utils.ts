@@ -20,7 +20,9 @@ import {exec} from 'child_process';
 import {promisify} from 'util';
 
 import commander from 'commander';
+import fs from 'fs-extra';
 import globby from 'globby';
+import JSZip from 'jszip';
 import path from 'path';
 
 enum FileExtension {
@@ -82,4 +84,43 @@ async function find(fileGlob: string, options?: FindOptions): Promise<FindResult
 
   return null;
 }
-export {TWO_HUNDRED_MB_IN_BYTES, checkCommanderOptions, execAsync, find, FindOptions, FindResult, FileExtension};
+
+function logDry<T>(functionName: string, options: T): void {
+  console.info(`[${functionName}]: Would run with the following options:`, options);
+}
+
+function zip(originalFile: string, zipFile: string): Promise<string> {
+  const resolvedOriginal = path.resolve(originalFile);
+  const resolvedZip = path.resolve(zipFile);
+
+  const jszipOptions = {
+    compressionOptions: {level: 9},
+    streamFiles: true,
+  };
+
+  return new Promise((resolve, reject) => {
+    const readStream = fs.createReadStream(resolvedOriginal).on('error', reject);
+    const writeStream = fs
+      .createWriteStream(resolvedZip)
+      .on('error', reject)
+      .on('finish', () => resolve(resolvedZip));
+    const jszip = new JSZip().file(path.basename(resolvedOriginal), readStream);
+
+    jszip
+      .generateNodeStream(jszipOptions)
+      .pipe(writeStream)
+      .on('error', reject);
+  });
+}
+
+export {
+  TWO_HUNDRED_MB_IN_BYTES,
+  checkCommanderOptions,
+  execAsync,
+  find,
+  FindOptions,
+  FindResult,
+  FileExtension,
+  logDry,
+  zip,
+};

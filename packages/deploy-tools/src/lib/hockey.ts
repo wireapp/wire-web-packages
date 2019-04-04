@@ -21,13 +21,13 @@ import path from 'path';
 import axios from 'axios';
 import FormData from 'form-data';
 import fs from 'fs-extra';
-import JSZip from 'jszip';
 
-import {TWO_HUNDRED_MB_IN_BYTES} from './deploy-utils';
+import {TWO_HUNDRED_MB_IN_BYTES, logDry} from './deploy-utils';
 
 const HOCKEY_API_URL = 'https://rink.hockeyapp.net/api/2/apps';
 
 interface HockeyOptions {
+  dryRun?: boolean;
   hockeyAppId: string;
   hockeyToken: string;
   version: string;
@@ -85,89 +85,86 @@ interface HockeyAPIUpdateVersionOptions extends HockeyAPIOptions {
   notify?: 0 | 1;
 }
 
-function zip(originalFile: string, zipFile: string): Promise<string> {
-  const resolvedOriginal = path.resolve(originalFile);
-  const resolvedZip = path.resolve(zipFile);
+class HockeyDeployer {
+  private readonly options: Required<HockeyOptions>;
 
-  const jszipOptions = {
-    compressionOptions: {level: 9},
-    streamFiles: true,
-  };
+  constructor(options: HockeyOptions) {
+    this.options = {
+      dryRun: false,
+      ...options,
+    };
+  }
 
-  return new Promise((resolve, reject) => {
-    const readStream = fs.createReadStream(resolvedOriginal).on('error', reject);
-    const writeStream = fs
-      .createWriteStream(resolvedZip)
-      .on('error', reject)
-      .on('finish', () => resolve(resolvedZip));
-    const jszip = new JSZip().file(path.basename(resolvedOriginal), readStream);
+  async createVersion(): Promise<HockeyAPIVersionData | void> {
+    const {hockeyAppId, hockeyToken, version} = this.options;
+    const [majorVersion, minorVersion, patchVersion] = version.split('.');
 
-    jszip
-      .generateNodeStream(jszipOptions)
-      .pipe(writeStream)
-      .on('error', reject);
-  });
-}
+    const hockeyUrl = `${HOCKEY_API_URL}/${hockeyAppId}/app_versions/new`;
 
-async function createVersion(options: HockeyOptions): Promise<HockeyAPIVersionData> {
-  const {hockeyAppId, hockeyToken, version} = options;
-  const [majorVersion, minorVersion, patchVersion] = version.split('.');
+    const headers = {
+      'X-HockeyAppToken': hockeyToken,
+    };
 
-  const hockeyUrl = `${HOCKEY_API_URL}/${hockeyAppId}/app_versions/new`;
+    const postData: HockeyAPICreateVersionOptions = {
+      bundle_short_version: `${majorVersion}.${minorVersion}`,
+      bundle_version: patchVersion,
+      notes: 'Jenkins Build',
+    };
 
-  const headers = {
-    'X-HockeyAppToken': hockeyToken,
-  };
+    if (this.options.dryRun) {
+      logDry('createVersion', {hockeyUrl, postData});
+      return;
+    }
 
-  const postData: HockeyAPICreateVersionOptions = {
-    bundle_short_version: `${majorVersion}.${minorVersion}`,
-    bundle_version: patchVersion,
-    notes: 'Jenkins Build',
-  };
+    try {
+      const response = await axios.post<HockeyAPIVersionData>(hockeyUrl, postData, {headers});
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw new Error(
+        `Hockey version creation failed with status code "${error.response.status}": "${error.response.statusText}"`
+      );
+    }
+  }
 
-  try {
-    const response = await axios.post<HockeyAPIVersionData>(hockeyUrl, postData, {headers});
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw new Error(
-      `Hockey version creation failed with status code "${error.response.status}": "${error.response.statusText}"`
-    );
+  async uploadVersion(options: HockeyUploadOptions): Promise<void> {
+    const {filePath, hockeyAppId, hockeyToken, hockeyVersionId} = options;
+    const resolvedFile = path.resolve(filePath);
+
+    const hockeyUrl = `${HOCKEY_API_URL}/${hockeyAppId}/app_versions/${hockeyVersionId}`;
+
+    const postData: HockeyAPIUpdateVersionOptions = {
+      notify: 0,
+      status: 2,
+    };
+
+    const readStream = fs.createReadStream(resolvedFile).on('error', error => {
+      throw error;
+    });
+    const formData = new FormData();
+
+    Object.entries(postData).forEach(([key, value]) => formData.append(key, value));
+    formData.append('files', readStream);
+
+    const headers = {
+      ...formData.getHeaders(),
+      'X-HockeyAppToken': hockeyToken,
+    };
+
+    if (this.options.dryRun) {
+      logDry('uploadVersion', {hockeyUrl, postData});
+      return;
+    }
+
+    try {
+      await axios.put<void>(hockeyUrl, formData, {headers, maxContentLength: TWO_HUNDRED_MB_IN_BYTES});
+    } catch (error) {
+      console.error(error);
+      throw new Error(
+        `Hockey version upload failed with status code "${error.response.status}": "${error.response.statusText}"`
+      );
+    }
   }
 }
 
-async function uploadVersion(options: HockeyUploadOptions): Promise<void> {
-  const {filePath, hockeyAppId, hockeyToken, hockeyVersionId} = options;
-  const resolvedFile = path.resolve(filePath);
-
-  const hockeyUrl = `${HOCKEY_API_URL}/${hockeyAppId}/app_versions/${hockeyVersionId}`;
-
-  const postData: HockeyAPIUpdateVersionOptions = {
-    notify: 0,
-    status: 2,
-  };
-
-  const readStream = fs.createReadStream(resolvedFile).on('error', error => {
-    throw error;
-  });
-  const formData = new FormData();
-
-  Object.entries(postData).forEach(([key, value]) => formData.append(key, value));
-  formData.append('files', readStream);
-
-  const headers = {
-    ...formData.getHeaders(),
-    'X-HockeyAppToken': hockeyToken,
-  };
-
-  try {
-    await axios.put<void>(hockeyUrl, formData, {headers, maxContentLength: TWO_HUNDRED_MB_IN_BYTES});
-  } catch (error) {
-    console.error(error);
-    throw new Error(
-      `Hockey version upload failed with status code "${error.response.status}": "${error.response.statusText}"`
-    );
-  }
-}
-
-export {createVersion, HockeyOptions, HockeyAPIVersionData, HockeyUploadOptions, uploadVersion, zip};
+export {HockeyDeployer, HockeyOptions, HockeyAPIVersionData, HockeyUploadOptions};

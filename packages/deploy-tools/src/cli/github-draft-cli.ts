@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /*
  * Wire
  * Copyright (C) 2019 Wire Swiss GmbH
@@ -21,7 +23,7 @@ import fs from 'fs-extra';
 import path from 'path';
 
 import {FileExtension, checkCommanderOptions, execAsync} from '../lib/deploy-utils';
-import {createDraft, uploadAsset} from '../lib/github-draft';
+import {GitHubDraftDeployer} from '../lib/github-draft';
 
 commander
   .name('github-draft.js')
@@ -29,6 +31,7 @@ commander
   .option('-t, --github-token <token>', 'Specify the GitHub access token')
   .option('-w, --wrapper-build <build>', 'Specify the wrapper build (e.g. "Linux#3.7.1234")')
   .option('-p, --path <path>', 'Specify the local path to look for files (e.g. "../../wrap")')
+  .option('-d, --dry-run', 'Just log without actually uploading')
   .parse(process.argv);
 
 checkCommanderOptions(commander, ['githubToken', 'wrapperBuild']);
@@ -67,12 +70,15 @@ const endsWithAny = (suffixes: string[], str: string) => suffixes.some(suffix =>
   const githubToken = commander.githubToken;
 
   console.log('Creating a draft ...');
-
-  const {id: draftId} = await createDraft({
-    changelog,
-    commitish,
+  const githubDraftDeployer = new GitHubDraftDeployer({
+    dryRun: commander.dryRun || false,
     githubToken,
     repoSlug,
+  });
+
+  const {id: draftId} = await githubDraftDeployer.createDraft({
+    changelog,
+    commitOrBranch: commitish,
     tagName: `${platform}/${version}`,
     title: `${version} - ${PLATFORM}`,
   });
@@ -86,7 +92,7 @@ const endsWithAny = (suffixes: string[], str: string) => suffixes.some(suffix =>
     const resolvedPath = path.join(basePath, fileName);
 
     console.log(`Uploading asset "${fileName}" ...`);
-    await uploadAsset({draftId, fileName, filePath: resolvedPath, githubToken, repoSlug});
+    await githubDraftDeployer.uploadAsset({draftId, fileName, filePath: resolvedPath});
     console.log(`Asset "${fileName}" uploaded.`);
   }
 

@@ -19,7 +19,7 @@
 import axios from 'axios';
 import fs from 'fs-extra';
 
-import {TWO_HUNDRED_MB_IN_BYTES} from './deploy-utils';
+import {TWO_HUNDRED_MB_IN_BYTES, logDry} from './deploy-utils';
 
 /** @see https://developer.github.com/v3/repos/releases/#create-a-release */
 interface GitHubAPIDraftData {
@@ -67,19 +67,20 @@ interface GitHubAPICreateDraftOptions {
   target_commitish?: string;
 }
 
-interface GitHubOptions {
+interface GitHubDraftDeployerOptions {
+  dryRun?: boolean;
   githubToken: string;
   repoSlug: string;
 }
 
-interface GitHubDraftOptions extends GitHubOptions {
+interface GitHubDraftOptions {
   changelog: string;
-  commitish: string;
+  commitOrBranch: string;
   tagName: string;
   title: string;
 }
 
-interface GitHubUploadOptions extends GitHubOptions {
+interface GitHubUploadOptions {
   draftId: number;
   fileName: string;
   filePath: string;
@@ -88,79 +89,96 @@ interface GitHubUploadOptions extends GitHubOptions {
 const GITHUB_API_URL = 'https://api.github.com';
 const GITHUB_UPLOADS_URL = 'https://uploads.github.com';
 
-async function createDraft(options: GitHubDraftOptions): Promise<GitHubAPIDraftData> {
-  const {changelog, commitish, githubToken, repoSlug, tagName, title} = options;
+class GitHubDraftDeployer {
+  private readonly options: Required<GitHubDraftDeployerOptions>;
 
-  const draftUrl = `${GITHUB_API_URL}/repos/${repoSlug}/releases`;
-
-  const draftData: GitHubAPICreateDraftOptions = {
-    body: changelog,
-    draft: true,
-    name: title,
-    prerelease: false,
-    tag_name: tagName,
-    target_commitish: commitish,
-  };
-
-  const AuthorizationHeaders = {
-    Authorization: `token ${githubToken}`,
-  };
-
-  try {
-    const draftResponse = await axios.post<GitHubAPIDraftData>(draftUrl, draftData, {headers: AuthorizationHeaders});
-    return draftResponse.data;
-  } catch (error) {
-    console.error('Error response from GitHub:', error.response.data);
-    throw new Error(
-      `Draft creation failed with status code "${error.response.status}": "${error.response.statusText}"`
-    );
+  constructor(options: GitHubDraftDeployerOptions) {
+    this.options = {
+      dryRun: false,
+      ...options,
+    };
   }
-}
 
-async function uploadAsset(options: GitHubUploadOptions): Promise<void> {
-  const {draftId, fileName, filePath, githubToken, repoSlug} = options;
+  async createDraft(options: GitHubDraftOptions): Promise<GitHubAPIDraftData | void> {
+    const {changelog, commitOrBranch: commitish, tagName, title} = options;
+    const {repoSlug, githubToken} = this.options;
 
-  const draftUrl = `${GITHUB_API_URL}/repos/${repoSlug}/releases`;
-  const uploadUrl = `${GITHUB_UPLOADS_URL}/repos/${repoSlug}/releases/${draftId}/assets`;
+    const draftUrl = `${GITHUB_API_URL}/repos/${repoSlug}/releases`;
 
-  const AuthorizationHeaders = {
-    Authorization: `token ${githubToken}`,
-  };
+    const draftData: GitHubAPICreateDraftOptions = {
+      body: changelog,
+      draft: true,
+      name: title,
+      prerelease: false,
+      tag_name: tagName,
+      target_commitish: commitish,
+    };
 
-  const headers = {
-    ...AuthorizationHeaders,
-    'Content-type': 'application/binary',
-  };
-  const file = await fs.readFile(filePath);
+    const AuthorizationHeaders = {
+      Authorization: `token ${githubToken}`,
+    };
 
-  try {
-    await axios.post(`${uploadUrl}?name=${fileName}`, file, {headers, maxContentLength: TWO_HUNDRED_MB_IN_BYTES});
-  } catch (uploadError) {
-    console.error('Error response from GitHub:', uploadError.response.data);
-    console.error(
-      `Upload failed with status code "${uploadError.response.status}": ${uploadError.response.statusText}"`
-    );
-    console.info('Deleting draft because upload failed ...');
+    if (this.options.dryRun) {
+      logDry('createDraft', {url: draftUrl, draftData});
+      return;
+    }
 
     try {
-      await axios.delete(draftUrl, {headers: AuthorizationHeaders});
-      console.info('Draft deleted');
-    } catch (deleteError) {
-      console.error('Error response from GitHub:', deleteError.response.data);
+      const draftResponse = await axios.post<GitHubAPIDraftData>(draftUrl, draftData, {headers: AuthorizationHeaders});
+      return draftResponse.data;
+    } catch (error) {
+      console.error('Error response from GitHub:', error.response.data);
       throw new Error(
-        `Deletion failed with status code "${deleteError.response.status}: ${deleteError.response.statusText}"`
+        `Draft creation failed with status code "${error.response.status}": "${error.response.statusText}"`
       );
-    } finally {
-      throw new Error('Uploading asset failed');
+    }
+  }
+
+  async uploadAsset(options: GitHubUploadOptions): Promise<void> {
+    const {draftId, fileName, filePath} = options;
+    const {repoSlug, githubToken} = this.options;
+
+    const draftUrl = `${GITHUB_API_URL}/repos/${repoSlug}/releases`;
+    const uploadUrl = `${GITHUB_UPLOADS_URL}/repos/${repoSlug}/releases/${draftId}/assets`;
+
+    const AuthorizationHeaders = {
+      Authorization: `token ${githubToken}`,
+    };
+
+    const headers = {
+      ...AuthorizationHeaders,
+      'Content-type': 'application/binary',
+    };
+    const file = await fs.readFile(filePath);
+    const url = `${uploadUrl}?name=${fileName}`;
+
+    if (this.options.dryRun) {
+      logDry('uploadAsset', {url, file, headers, maxContentLength: TWO_HUNDRED_MB_IN_BYTES});
+      return;
+    }
+
+    try {
+      await axios.post(url, file, {headers, maxContentLength: TWO_HUNDRED_MB_IN_BYTES});
+    } catch (uploadError) {
+      console.error('Error response from GitHub:', uploadError.response.data);
+      console.error(
+        `Upload failed with status code "${uploadError.response.status}": ${uploadError.response.statusText}"`
+      );
+      console.info('Deleting draft because upload failed ...');
+
+      try {
+        await axios.delete(draftUrl, {headers: AuthorizationHeaders});
+        console.info('Draft deleted');
+      } catch (deleteError) {
+        console.error('Error response from GitHub:', deleteError.response.data);
+        throw new Error(
+          `Deletion failed with status code "${deleteError.response.status}: ${deleteError.response.statusText}"`
+        );
+      } finally {
+        throw new Error('Uploading asset failed');
+      }
     }
   }
 }
 
-export {
-  createDraft,
-  uploadAsset,
-  GitHubAPIDraftData as GitHubDraftData,
-  GitHubOptions,
-  GitHubDraftOptions,
-  GitHubUploadOptions,
-};
+export {GitHubDraftDeployer, GitHubAPIDraftData, GitHubDraftDeployerOptions, GitHubDraftOptions, GitHubUploadOptions};

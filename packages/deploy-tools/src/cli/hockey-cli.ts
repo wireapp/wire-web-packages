@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /*
  * Wire
  * Copyright (C) 2019 Wire Swiss GmbH
@@ -30,6 +32,7 @@ commander
   .option('-t, --hockey-token <token>', 'Specify the Hockey API token')
   .option('-w, --wrapper-build <build>', 'Specify the wrapper build (e.g. "Linux#3.7.1234")')
   .option('-p, --path <path>', 'Specify the local path to search for files (e.g. "../../wrap")')
+  .option('-d, --dry-run', 'Just log without actually uploading')
   .parse(process.argv);
 
 checkCommanderOptions(commander, ['hockeyToken', 'hockeyId', 'wrapperBuild']);

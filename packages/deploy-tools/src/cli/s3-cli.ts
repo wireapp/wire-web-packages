@@ -33,6 +33,7 @@ commander
   .option('-p, --path <path>', 'Specify the local path to search for files (e.g. "../../wrap")')
   .option('-i, --key-id <path>', 'Specify the AWS access key ID')
   .option('-k, --secret-key <path>', 'Specify the AWS secret access key ID')
+  .option('-d, --dry-run', 'Just log without actually uploading')
   .parse(process.argv);
 
 checkCommanderOptions(commander, ['bucket', 'keyId', 'secretKey', 'wrapperBuild']);

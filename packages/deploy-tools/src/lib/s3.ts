@@ -19,7 +19,13 @@
 import S3 from 'aws-sdk/clients/s3';
 import fs from 'fs-extra';
 import path from 'path';
-import {FindResult, find} from './deploy-utils';
+import {FindResult, find, logDry} from './deploy-utils';
+
+interface S3DeployerOptions {
+  accessKeyId: string;
+  dryRun?: boolean;
+  secretAccessKey: string;
+}
 
 interface S3Options {
   accessKeyId: string;
@@ -41,99 +47,117 @@ interface S3CopyOptions extends S3Options {
   s3ToPath: string;
 }
 
-async function findUploadFiles(platform: string, basePath: string, version: string): Promise<FindResult[]> {
-  if (platform.includes('linux')) {
-    const appImage = await find('*.AppImage', {cwd: basePath});
-    const debImage = await find('*.deb', {cwd: basePath});
-    const repositoryFiles = [
-      `debian/pool/main/${debImage.fileName}`,
-      'debian/dists/stable/Contents-amd64',
-      'debian/dists/stable/Contents-amd64.bz2',
-      'debian/dists/stable/Contents-amd64.gz',
-      'debian/dists/stable/InRelease',
-      'debian/dists/stable/Release',
-      'debian/dists/stable/Release.gpg',
-      'debian/dists/stable/main/binary-amd64/Packages',
-      'debian/dists/stable/main/binary-amd64/Packages.bz2',
-      'debian/dists/stable/main/binary-amd64/Packages.gz',
-    ].map(fileName => ({fileName, filePath: path.join(basePath, fileName)}));
+class S3Deployer {
+  private readonly options: Required<S3DeployerOptions>;
+  private readonly S3Instance: S3;
 
-    return [...repositoryFiles, appImage, debImage];
-  } else if (platform.includes('windows')) {
-    const setupExe = await find('*-Setup.exe', {cwd: basePath});
-    const nupkgFile = await find('*-full.nupkg', {cwd: basePath});
-    const releasesFile = await find('RELEASES', {cwd: basePath});
+  constructor(options: S3DeployerOptions) {
+    this.options = {
+      dryRun: false,
+      ...options,
+    };
+    this.S3Instance = new S3({
+      accessKeyId: options.accessKeyId,
+      secretAccessKey: options.secretAccessKey,
+    });
+  }
 
-    const [, appShortName] = new RegExp('(.+)-[\\d.]+-full\\.nupkg').exec(nupkgFile.fileName) || ['', ''];
+  async findUploadFiles(platform: string, basePath: string, version: string): Promise<FindResult[]> {
+    if (platform.includes('linux')) {
+      const appImage = await find('*.AppImage', {cwd: basePath});
+      const debImage = await find('*.deb', {cwd: basePath});
+      const repositoryFiles = [
+        `debian/pool/main/${debImage.fileName}`,
+        'debian/dists/stable/Contents-amd64',
+        'debian/dists/stable/Contents-amd64.bz2',
+        'debian/dists/stable/Contents-amd64.gz',
+        'debian/dists/stable/InRelease',
+        'debian/dists/stable/Release',
+        'debian/dists/stable/Release.gpg',
+        'debian/dists/stable/main/binary-amd64/Packages',
+        'debian/dists/stable/main/binary-amd64/Packages.bz2',
+        'debian/dists/stable/main/binary-amd64/Packages.gz',
+      ].map(fileName => ({fileName, filePath: path.join(basePath, fileName)}));
 
-    if (!appShortName) {
-      throw new Error('App short name not found');
+      return [...repositoryFiles, appImage, debImage];
+    } else if (platform.includes('windows')) {
+      const setupExe = await find('*-Setup.exe', {cwd: basePath});
+      const nupkgFile = await find('*-full.nupkg', {cwd: basePath});
+      const releasesFile = await find('RELEASES', {cwd: basePath});
+
+      const [, appShortName] = new RegExp('(.+)-[\\d.]+-full\\.nupkg').exec(nupkgFile.fileName) || ['', ''];
+
+      if (!appShortName) {
+        throw new Error('App short name not found');
+      }
+
+      const setupExeRenamed = {...setupExe, fileName: `${appShortName}-${version}.exe`};
+      const releasesRenamed = {...releasesFile, fileName: `${appShortName}-${version}-RELEASES`};
+
+      return [nupkgFile, releasesRenamed, setupExeRenamed];
+    } else if (platform.includes('macos')) {
+      const setupPkg = await find('*.pkg', {cwd: basePath});
+      return [setupPkg];
+    } else {
+      throw new Error(`Invalid platform "${platform}"`);
+    }
+  }
+
+  async uploadToS3(uploadOptions: S3UploadOptions): Promise<void> {
+    const {bucket, filePath, s3Path} = uploadOptions;
+
+    const lstat = await fs.lstat(filePath);
+
+    if (!lstat.isFile()) {
+      throw new Error(`File "${filePath} not found`);
     }
 
-    const setupExeRenamed = {...setupExe, fileName: `${appShortName}-${version}.exe`};
-    const releasesRenamed = {...releasesFile, fileName: `${appShortName}-${version}-RELEASES`};
+    const file = fs.createReadStream(filePath);
 
-    return [nupkgFile, releasesRenamed, setupExeRenamed];
-  } else if (platform.includes('macos')) {
-    const setupPkg = await find('*.pkg', {cwd: basePath});
-    return [setupPkg];
-  } else {
-    throw new Error(`Invalid platform "${platform}"`);
-  }
-}
-
-async function uploadToS3(uploadOptions: S3UploadOptions): Promise<void> {
-  const {accessKeyId, secretAccessKey, bucket, filePath, s3Path} = uploadOptions;
-
-  const lstat = await fs.lstat(filePath);
-
-  if (!lstat.isFile()) {
-    throw new Error(`File "${filePath} not found`);
-  }
-
-  const file = fs.createReadStream(filePath);
-
-  await new S3({
-    accessKeyId,
-    secretAccessKey,
-  })
-    .upload({
+    const uploadConfig = {
       ACL: 'public-read',
       Body: file,
       Bucket: bucket,
       Key: s3Path,
-    })
-    .promise();
-}
+    };
 
-async function deleteFromS3(deleteOptions: DeleteOptions): Promise<void> {
-  const {accessKeyId, secretAccessKey, bucket, s3Path} = deleteOptions;
+    if (this.options.dryRun) {
+      logDry('uploadToS3', uploadConfig);
+      return;
+    }
 
-  await new S3({
-    accessKeyId,
-    secretAccessKey,
-  })
-    .deleteObject({
-      Bucket: bucket,
-      Key: s3Path,
-    })
-    .promise();
-}
+    await this.S3Instance.upload(uploadConfig).promise();
+  }
 
-async function copyOnS3(copyOptions: S3CopyOptions): Promise<void> {
-  const {accessKeyId, secretAccessKey, bucket, s3FromPath, s3ToPath} = copyOptions;
+  async deleteFromS3(deleteOptions: DeleteOptions): Promise<void> {
+    const deleteConfig = {
+      Bucket: deleteOptions.bucket,
+      Key: deleteOptions.s3Path,
+    };
 
-  await new S3({
-    accessKeyId,
-    secretAccessKey,
-  })
-    .copyObject({
+    if (this.options.dryRun) {
+      logDry('deleteFromS3', deleteConfig);
+      return;
+    }
+
+    await this.S3Instance.deleteObject(deleteConfig).promise();
+  }
+
+  async copyOnS3(copyOptions: S3CopyOptions): Promise<void> {
+    const copyConfig = {
       ACL: 'public-read',
-      Bucket: bucket,
-      CopySource: s3FromPath,
-      Key: s3ToPath,
-    })
-    .promise();
+      Bucket: copyOptions.bucket,
+      CopySource: copyOptions.s3FromPath,
+      Key: copyOptions.s3ToPath,
+    };
+
+    if (this.options.dryRun) {
+      logDry('copyOnS3', copyConfig);
+      return;
+    }
+
+    await this.S3Instance.copyObject(copyConfig).promise();
+  }
 }
 
-export {copyOnS3, deleteFromS3, findUploadFiles, uploadToS3, DeleteOptions, S3UploadOptions, S3CopyOptions};
+export {S3Deployer, DeleteOptions, S3UploadOptions, S3CopyOptions};
