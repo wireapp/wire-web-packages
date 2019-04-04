@@ -1,9 +1,9 @@
 {
   "bin": {
-    "deploy-github-draft": "dist/cli/github-draft-cli.js",
-    "deploy-hockey": "dist/cli/hockey-cli.js",
-    "deploy-s3": "dist/cli/s3-cli.js",
-    "deploy-s3-releases": "dist/cli/s3-win-releases-cli.js"
+    "wire-deploy-github-draft": "dist/cli/github-draft-cli.js",
+    "wire-deploy-hockey": "dist/cli/hockey-cli.js",
+    "wire-deploy-s3": "dist/cli/s3-cli.js",
+    "wire-deploy-s3-win-releases": "dist/cli/s3-win-releases-cli.js"
   },
   "dependencies": {
     "aws-sdk": "2.432.0",
@@ -22,7 +22,9 @@
     "@types/node": "11.13.0",
     "axios": "0.18.0",
     "jasmine": "3.3.1",
-    "nyc": "13.3.0"
+    "nyc": "13.3.0",
+    "rimraf": "2.6.3",
+    "typescript": "3.4.1"
   },
   "files": [
     "dist"

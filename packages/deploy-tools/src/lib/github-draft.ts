@@ -19,7 +19,10 @@
 import axios from 'axios';
 import fs from 'fs-extra';
 
-interface GitHubDraftData {
+import {TWO_HUNDRED_MB_IN_BYTES} from './deploy-utils';
+
+/** @see https://developer.github.com/v3/repos/releases/#create-a-release */
+interface GitHubAPIDraftData {
   assets_url: string;
   body: string;
   created_at: string;
@@ -36,6 +39,32 @@ interface GitHubDraftData {
   upload_url: string;
   url: string;
   zipball_url: string;
+}
+
+/** @see https://developer.github.com/v3/repos/releases/#create-a-release */
+interface GitHubAPICreateDraftOptions {
+  /** Text describing the contents of the tag. */
+  body?: string;
+  /**
+   * `true` to create a draft (unpublished) release,
+   * `false` to create a published one. Default: `false`
+   */
+  draft?: boolean;
+  /** The name of the release. */
+  name?: string;
+  /**
+   * `true` to identify the release as a prerelease.
+   * `false` to identify the release as a full release. Default: `false`
+   */
+  prerelease?: boolean;
+  /** **Required**. The name of the tag. */
+  tag_name: string;
+  /**
+   * Specifies the commitish value that determines where the Git tag is created from.
+   * Can be any branch or commit SHA. Unused if the Git tag already exists.
+   * Default: the repository's default branch (usually `master`).
+   */
+  target_commitish?: string;
 }
 
 interface GitHubOptions {
@@ -59,12 +88,12 @@ interface GitHubUploadOptions extends GitHubOptions {
 const GITHUB_API_URL = 'https://api.github.com';
 const GITHUB_UPLOADS_URL = 'https://uploads.github.com';
 
-async function createDraft(options: GitHubDraftOptions): Promise<GitHubDraftData> {
+async function createDraft(options: GitHubDraftOptions): Promise<GitHubAPIDraftData> {
   const {changelog, commitish, githubToken, repoSlug, tagName, title} = options;
 
   const draftUrl = `${GITHUB_API_URL}/repos/${repoSlug}/releases`;
 
-  const draftData = {
+  const draftData: GitHubAPICreateDraftOptions = {
     body: changelog,
     draft: true,
     name: title,
@@ -78,7 +107,7 @@ async function createDraft(options: GitHubDraftOptions): Promise<GitHubDraftData
   };
 
   try {
-    const draftResponse = await axios.post<GitHubDraftData>(draftUrl, draftData, {headers: AuthorizationHeaders});
+    const draftResponse = await axios.post<GitHubAPIDraftData>(draftUrl, draftData, {headers: AuthorizationHeaders});
     return draftResponse.data;
   } catch (error) {
     console.error('Error response from GitHub:', error.response.data);
@@ -105,7 +134,7 @@ async function uploadAsset(options: GitHubUploadOptions): Promise<void> {
   const file = await fs.readFile(filePath);
 
   try {
-    await axios.post(`${uploadUrl}?name=${fileName}`, file, {headers, maxContentLength: 104857600});
+    await axios.post(`${uploadUrl}?name=${fileName}`, file, {headers, maxContentLength: TWO_HUNDRED_MB_IN_BYTES});
   } catch (uploadError) {
     console.error('Error response from GitHub:', uploadError.response.data);
     console.error(
@@ -127,4 +156,11 @@ async function uploadAsset(options: GitHubUploadOptions): Promise<void> {
   }
 }
 
-export {createDraft, uploadAsset, GitHubDraftData, GitHubOptions, GitHubDraftOptions, GitHubUploadOptions};
+export {
+  createDraft,
+  uploadAsset,
+  GitHubAPIDraftData as GitHubDraftData,
+  GitHubOptions,
+  GitHubDraftOptions,
+  GitHubUploadOptions,
+};

@@ -20,7 +20,7 @@ import commander from 'commander';
 import fs from 'fs-extra';
 import path from 'path';
 
-import {checkCommanderOptions, execAsync} from '../lib/deploy-utils';
+import {FileExtension, checkCommanderOptions, execAsync} from '../lib/deploy-utils';
 import {createDraft, uploadAsset} from '../lib/github-draft';
 
 commander
@@ -44,20 +44,20 @@ const endsWithAny = (suffixes: string[], str: string) => suffixes.some(suffix =>
 
 (async () => {
   let PLATFORM;
-  const extensions = ['.asc', 'sig'];
+  const extensions = [FileExtension.ASC, FileExtension.SIG];
 
   const [platform, version] = commander.wrapperBuild.toLowerCase().split('#');
   const basePath = commander.path || path.resolve('.');
 
   if (platform.includes('linux')) {
     PLATFORM = 'Linux';
-    extensions.push('.AppImage', '.deb');
+    extensions.push(FileExtension.APPIMAGE, FileExtension.DEB);
   } else if (platform.includes('windows')) {
     PLATFORM = 'Windows';
-    extensions.push('.exe');
+    extensions.push(FileExtension.EXE);
   } else if (platform.includes('macos')) {
     PLATFORM = 'macOS';
-    extensions.push('.pkg');
+    extensions.push(FileExtension.PKG);
   } else {
     throw new Error(`Invalid platform "${platform}"`);
   }

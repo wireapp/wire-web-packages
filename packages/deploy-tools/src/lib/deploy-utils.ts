@@ -23,6 +23,17 @@ import commander from 'commander';
 import globby from 'globby';
 import path from 'path';
 
+enum FileExtension {
+  APPIMAGE = '.AppImage',
+  ASC = '.asc',
+  DEB = '.deb',
+  EXE = '.exe',
+  PKG = '.pkg',
+  SIG = '.sig',
+}
+
+const TWO_HUNDRED_MB_IN_BYTES = 209715200;
+
 interface FindOptions {
   cwd?: string;
   safeGuard?: boolean;
@@ -71,4 +82,4 @@ async function find(fileGlob: string, options?: FindOptions): Promise<FindResult
 
   return null;
 }
-export {checkCommanderOptions, execAsync, find, FindOptions, FindResult};
+export {TWO_HUNDRED_MB_IN_BYTES, checkCommanderOptions, execAsync, find, FindOptions, FindResult, FileExtension};
