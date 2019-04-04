@@ -17,9 +17,10 @@
  *
  */
 
-import dotenv from 'dotenv';
-import gitRev from 'git-rev-sync';
+import {execSync} from 'child_process';
 import path from 'path';
+
+import dotenv from 'dotenv';
 
 import {CommonConfig} from './Config';
 
@@ -38,7 +39,9 @@ const getCommonConfig = (options: CommonConfigOptions) => {
   let commitId = 'unknown';
 
   try {
-    commitId = gitRev.short();
+    commitId = execSync('git rev-parse HEAD')
+      .toString()
+      .trim();
   } catch (error) {}
 
   const IS_PRODUCTION = process.env.APP_ENV !== 'internal';
