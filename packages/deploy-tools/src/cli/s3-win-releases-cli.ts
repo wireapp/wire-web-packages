@@ -73,11 +73,11 @@ if (!commander.wrapperBuild.includes('#')) {
   const latestReleaseKey = `${s3BasePath}/${appShortName}-${version}-RELEASES`;
   const latestExeKey = `${s3BasePath}/${appShortName}-${version}.exe`;
 
-  const secretAccessKey = commander.secretKey;
-  const accessKeyId = commander.keyId;
+  const {secretKey: secretAccessKey, keyId: accessKeyId} = commander;
+
+  const s3Deployer = new S3Deployer({accessKeyId, dryRun: commander.dryRun || false, secretAccessKey});
 
   console.log(`Deleting "${staticReleaseKey}" from S3 ...`);
-  const s3Deployer = new S3Deployer({accessKeyId, secretAccessKey});
   await s3Deployer.deleteFromS3({bucket, s3Path: staticReleaseKey});
 
   console.log(`Deleting "${staticExeKey}" from S3 ...`);

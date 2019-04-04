@@ -47,9 +47,9 @@ if (!commander.wrapperBuild.includes('#')) {
   const searchBasePath = commander.path || path.join(__dirname, '../../wrap');
   const s3BasePath = `${commander.s3path || ''}/`;
   const [platform, version] = commander.wrapperBuild.toLowerCase().split('#');
-  const {bucket, secretKey, keyId} = commander;
+  const {bucket, secretKey: secretAccessKey, keyId: accessKeyId} = commander;
 
-  const s3Deployer = new S3Deployer({accessKeyId: keyId, secretAccessKey: secretKey});
+  const s3Deployer = new S3Deployer({accessKeyId, dryRun: commander.dryRun || false, secretAccessKey});
 
   const files = await s3Deployer.findUploadFiles(platform, searchBasePath, version);
 
