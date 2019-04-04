@@ -18,15 +18,22 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
+import path from 'path';
+
 import commander from 'commander';
 import fs from 'fs-extra';
-import path from 'path';
+import logdown from 'logdown';
 
 import {FindResult, checkCommanderOptions, find, zip} from '../lib/deploy-utils';
 import {HockeyDeployer} from '../lib/hockey';
 
+const logger = logdown('@wireapp/deploy-tools/wire-deploy-hockey', {
+  logger: console,
+  markdown: false,
+});
+
 commander
-  .name('hockey.js')
+  .name('wire-deploy-hockey')
   .description('Upload files to Hockey')
   .option('-i, --hockey-id <id>', 'Specify the Hockey app ID')
   .option('-t, --hockey-token <token>', 'Specify the Hockey API token')
@@ -62,11 +69,11 @@ function getUploadFile(platform: string, basePath: string): Promise<FindResult> 
 
   const {filePath} = await getUploadFile(platform, searchBasePath);
 
-  console.log(`Compressing "${filePath} ..."`);
+  logger.log(`Compressing "${filePath} ..."`);
 
   const zipFile = await zip(filePath, filePath.replace(/\.([^.]+)$/, '.zip'));
 
-  console.log(`Creating app version "${majorVersion}.${minorVersion}" on Hockey ...`);
+  logger.log(`Creating app version "${majorVersion}.${minorVersion}" on Hockey ...`);
 
   const hockeyDeployer = new HockeyDeployer({
     dryRun: commander.dryRun || false,
@@ -77,8 +84,8 @@ function getUploadFile(platform: string, basePath: string): Promise<FindResult> 
 
   const {id: hockeyVersionId} = await hockeyDeployer.createVersion();
 
-  console.log(`Received version "${hockeyVersionId}" from Hockey.`);
-  console.log(`Uploading version "${hockeyVersionId}" to Hockey ...`);
+  logger.log(`Received version "${hockeyVersionId}" from Hockey.`);
+  logger.log(`Uploading version "${hockeyVersionId}" to Hockey ...`);
 
   await hockeyDeployer.uploadVersion({
     filePath: zipFile,
@@ -87,8 +94,8 @@ function getUploadFile(platform: string, basePath: string): Promise<FindResult> 
 
   await fs.remove(zipFile);
 
-  console.log('Done uploading to Hockey.');
+  logger.log('Done uploading to Hockey.');
 })().catch(error => {
-  console.error(error);
+  logger.error(error);
   process.exit(1);
 });

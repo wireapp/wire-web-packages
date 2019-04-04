@@ -18,15 +18,22 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
+import path from 'path';
+
 import commander from 'commander';
 import fs from 'fs-extra';
-import path from 'path';
+import logdown from 'logdown';
 
 import {FileExtension, checkCommanderOptions, execAsync} from '../lib/deploy-utils';
 import {GitHubDraftDeployer} from '../lib/github-draft';
 
+const logger = logdown('@wireapp/deploy-tools/wire-deploy-github-draft', {
+  logger: console,
+  markdown: false,
+});
+
 commander
-  .name('github-draft.js')
+  .name('wire-deploy-github-draft')
   .description('Create a release draft on GitHub')
   .option('-t, --github-token <token>', 'Specify the GitHub access token')
   .option('-w, --wrapper-build <build>', 'Specify the wrapper build (e.g. "Linux#3.7.1234")')
@@ -69,7 +76,7 @@ const endsWithAny = (suffixes: string[], str: string) => suffixes.some(suffix =>
   const changelog = '...';
   const githubToken = commander.githubToken;
 
-  console.log('Creating a draft ...');
+  logger.log('Creating a draft ...');
 
   const githubDraftDeployer = new GitHubDraftDeployer({
     dryRun: commander.dryRun || false,
@@ -84,7 +91,7 @@ const endsWithAny = (suffixes: string[], str: string) => suffixes.some(suffix =>
     title: `${version} - ${PLATFORM}`,
   });
 
-  console.log('Draft created.');
+  logger.log('Draft created.');
 
   const files = await fs.readdir(basePath);
   const uploadFiles = files.filter(fileName => endsWithAny(extensions, fileName));
@@ -92,13 +99,13 @@ const endsWithAny = (suffixes: string[], str: string) => suffixes.some(suffix =>
   for (const fileName in uploadFiles) {
     const resolvedPath = path.join(basePath, fileName);
 
-    console.log(`Uploading asset "${fileName}" ...`);
+    logger.log(`Uploading asset "${fileName}" ...`);
     await githubDraftDeployer.uploadAsset({draftId, fileName, filePath: resolvedPath});
-    console.log(`Asset "${fileName}" uploaded.`);
+    logger.log(`Asset "${fileName}" uploaded.`);
   }
 
-  console.log('Done creating draft.');
+  logger.log('Done creating draft.');
 })().catch(error => {
-  console.error(error);
+  logger.error(error);
   process.exit(1);
 });

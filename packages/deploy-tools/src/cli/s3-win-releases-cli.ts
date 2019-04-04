@@ -19,13 +19,19 @@
  */
 
 import commander from 'commander';
+import logdown from 'logdown';
 import path from 'path';
 
 import {checkCommanderOptions, find} from '../lib/deploy-utils';
 import {S3Deployer} from '../lib/s3';
 
+const logger = logdown('@wireapp/deploy-tools/wire-deploy-s3-win-releases', {
+  logger: console,
+  markdown: false,
+});
+
 commander
-  .name('s3-win-releases.js')
+  .name('wire-deploy-s3-win-releases')
   .description('Copy releases files on S3')
   .option('-b, --bucket <bucket>', 'Specify the S3 bucket to upload to')
   .option('-w, --wrapper-build <build>', 'Specify the wrapper build (e.g. "Linux#3.7.1234")')
@@ -77,28 +83,28 @@ if (!commander.wrapperBuild.includes('#')) {
 
   const s3Deployer = new S3Deployer({accessKeyId, dryRun: commander.dryRun || false, secretAccessKey});
 
-  console.log(`Deleting "${staticReleaseKey}" from S3 ...`);
+  logger.log(`Deleting "${staticReleaseKey}" from S3 ...`);
   await s3Deployer.deleteFromS3({bucket, s3Path: staticReleaseKey});
 
-  console.log(`Deleting "${staticExeKey}" from S3 ...`);
+  logger.log(`Deleting "${staticExeKey}" from S3 ...`);
   await s3Deployer.deleteFromS3({bucket, s3Path: staticExeKey});
 
-  console.log(`Copying "${bucket}/${latestReleaseKey}" to "${staticReleaseKey}" on S3 ...`);
+  logger.log(`Copying "${bucket}/${latestReleaseKey}" to "${staticReleaseKey}" on S3 ...`);
   await s3Deployer.copyOnS3({
     bucket,
     s3FromPath: `${bucket}/${latestReleaseKey}`,
     s3ToPath: staticReleaseKey,
   });
 
-  console.log(`Copying "${bucket}/${latestExeKey}" to "${staticExeKey}" on S3 ...`);
+  logger.log(`Copying "${bucket}/${latestExeKey}" to "${staticExeKey}" on S3 ...`);
   await s3Deployer.copyOnS3({
     bucket,
     s3FromPath: `${bucket}/${latestExeKey}`,
     s3ToPath: staticExeKey,
   });
 
-  console.log('Done updating releases on S3.');
+  logger.log('Done updating releases on S3.');
 })().catch(error => {
-  console.error(error);
+  logger.error(error);
   process.exit(1);
 });

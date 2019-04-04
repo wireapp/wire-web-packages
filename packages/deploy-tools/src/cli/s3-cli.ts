@@ -19,13 +19,19 @@
  */
 
 import commander from 'commander';
+import logdown from 'logdown';
 import path from 'path';
 
 import {checkCommanderOptions} from '../lib/deploy-utils';
 import {S3Deployer} from '../lib/s3';
 
+const logger = logdown('@wireapp/deploy-tools/wire-deploy-s3', {
+  logger: console,
+  markdown: false,
+});
+
 commander
-  .name('s3.js')
+  .name('wire-deploy-s3')
   .description('Upload files to S3')
   .option('-b, --bucket <bucket>', 'Specify the S3 bucket to upload to')
   .option('-w, --wrapper-build <build>', 'Specify the wrapper build (e.g. "Linux#3.7.1234")')
@@ -57,7 +63,7 @@ if (!commander.wrapperBuild.includes('#')) {
     const {fileName, filePath} = file;
     const s3Path = `${s3BasePath}${fileName}`.replace('//', '/');
 
-    console.log(`Uploading "${fileName}" to "${bucket}/${s3Path}" ...`);
+    logger.log(`Uploading "${fileName}" to "${bucket}/${s3Path}" ...`);
     await s3Deployer.uploadToS3({
       bucket,
       filePath,
@@ -65,8 +71,8 @@ if (!commander.wrapperBuild.includes('#')) {
     });
   }
 
-  console.log('Done uploading to S3.');
+  logger.log('Done uploading to S3.');
 })().catch(error => {
-  console.error(error);
+  logger.error(error);
   process.exit(1);
 });
