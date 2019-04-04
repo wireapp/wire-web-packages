@@ -18,6 +18,7 @@
 
 import axios from 'axios';
 import fs from 'fs-extra';
+import logdown from 'logdown';
 
 import {TWO_HUNDRED_MB_IN_BYTES, logDry} from './deploy-utils';
 
@@ -91,12 +92,17 @@ const GITHUB_UPLOADS_URL = 'https://uploads.github.com';
 
 class GitHubDraftDeployer {
   private readonly options: Required<GitHubDraftDeployerOptions>;
+  private readonly logger: logdown.Logger;
 
   constructor(options: GitHubDraftDeployerOptions) {
     this.options = {
       dryRun: false,
       ...options,
     };
+    this.logger = logdown('@wireapp/deploy-tools/GitHubDraftDeployer', {
+      logger: console,
+      markdown: false,
+    });
   }
 
   async createDraft(options: GitHubDraftOptions): Promise<GitHubAPIDraftData | {id: 0}> {
@@ -127,7 +133,7 @@ class GitHubDraftDeployer {
       const draftResponse = await axios.post<GitHubAPIDraftData>(draftUrl, draftData, {headers: AuthorizationHeaders});
       return draftResponse.data;
     } catch (error) {
-      console.error('Error response from GitHub:', error.response.data);
+      this.logger.error('Error response from GitHub:', error.response.data);
       throw new Error(
         `Draft creation failed with status code "${error.response.status}": "${error.response.statusText}"`
       );
@@ -160,17 +166,17 @@ class GitHubDraftDeployer {
     try {
       await axios.post(url, file, {headers, maxContentLength: TWO_HUNDRED_MB_IN_BYTES});
     } catch (uploadError) {
-      console.error('Error response from GitHub:', uploadError.response.data);
-      console.error(
+      this.logger.error('Error response from GitHub:', uploadError.response.data);
+      this.logger.error(
         `Upload failed with status code "${uploadError.response.status}": ${uploadError.response.statusText}"`
       );
-      console.info('Deleting draft because upload failed ...');
+      this.logger.info('Deleting draft because upload failed ...');
 
       try {
         await axios.delete(draftUrl, {headers: AuthorizationHeaders});
-        console.info('Draft deleted');
+        this.logger.info('Draft deleted');
       } catch (deleteError) {
-        console.error('Error response from GitHub:', deleteError.response.data);
+        this.logger.error('Error response from GitHub:', deleteError.response.data);
         throw new Error(
           `Deletion failed with status code "${deleteError.response.status}: ${deleteError.response.statusText}"`
         );

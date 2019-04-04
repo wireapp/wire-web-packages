@@ -17,13 +17,24 @@
  */
 
 import {exec} from 'child_process';
+import path from 'path';
 import {promisify} from 'util';
 
 import commander from 'commander';
 import fs from 'fs-extra';
 import globby from 'globby';
 import JSZip from 'jszip';
-import path from 'path';
+import logdown from 'logdown';
+
+interface FindOptions {
+  cwd?: string;
+  safeGuard?: boolean;
+}
+
+interface FindResult {
+  fileName: string;
+  filePath: string;
+}
 
 enum FileExtension {
   APPIMAGE = '.AppImage',
@@ -35,16 +46,6 @@ enum FileExtension {
 }
 
 const TWO_HUNDRED_MB_IN_BYTES = 209715200;
-
-interface FindOptions {
-  cwd?: string;
-  safeGuard?: boolean;
-}
-
-interface FindResult {
-  fileName: string;
-  filePath: string;
-}
 
 function checkCommanderOptions(commanderInstance: typeof commander, options: string[]) {
   options.forEach(option => {
@@ -86,7 +87,11 @@ async function find(fileGlob: string, options?: FindOptions): Promise<FindResult
 }
 
 function logDry<T>(functionName: string, options: T): void {
-  console.info(`[${functionName}]: Would run with the following options:`, options);
+  const logger = logdown('@wireapp/deploy-tools/DryLogger', {
+    logger: console,
+    markdown: false,
+  });
+  logger.info(`[${functionName}]: Would run with the following options:`, options);
 }
 
 function zip(originalFile: string, zipFile: string): Promise<string> {

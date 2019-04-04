@@ -16,9 +16,12 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
+import path from 'path';
+
 import S3 from 'aws-sdk/clients/s3';
 import fs from 'fs-extra';
-import path from 'path';
+import logdown from 'logdown';
+
 import {FindResult, find, logDry} from './deploy-utils';
 
 interface S3DeployerOptions {

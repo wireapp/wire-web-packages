@@ -21,6 +21,7 @@ import path from 'path';
 import axios from 'axios';
 import FormData from 'form-data';
 import fs from 'fs-extra';
+import logdown from 'logdown';
 
 import {TWO_HUNDRED_MB_IN_BYTES, logDry} from './deploy-utils';
 
@@ -87,12 +88,17 @@ interface HockeyAPIUpdateVersionOptions extends HockeyAPIOptions {
 
 class HockeyDeployer {
   private readonly options: Required<HockeyOptions>;
+  private readonly logger: logdown.Logger;
 
   constructor(options: HockeyOptions) {
     this.options = {
       dryRun: false,
       ...options,
     };
+    this.logger = logdown('@wireapp/deploy-tools/HockeyDeployer', {
+      logger: console,
+      markdown: false,
+    });
   }
 
   async createVersion(): Promise<HockeyAPIVersionData | {id: 0}> {
@@ -120,7 +126,7 @@ class HockeyDeployer {
       const response = await axios.post<HockeyAPIVersionData>(hockeyUrl, postData, {headers});
       return response.data;
     } catch (error) {
-      console.error(error);
+      this.logger.error(error);
       throw new Error(
         `Hockey version creation failed with status code "${error.response.status}": "${error.response.statusText}"`
       );
@@ -160,7 +166,7 @@ class HockeyDeployer {
     try {
       await axios.put<void>(hockeyUrl, formData, {headers, maxContentLength: TWO_HUNDRED_MB_IN_BYTES});
     } catch (error) {
-      console.error(error);
+      this.logger.error(error);
       throw new Error(
         `Hockey version upload failed with status code "${error.response.status}": "${error.response.statusText}"`
       );
