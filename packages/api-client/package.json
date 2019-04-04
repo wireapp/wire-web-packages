@@ -20,13 +20,13 @@
   "devDependencies": {
     "@babel/core": "7.4.3",
     "@babel/preset-react": "7.0.0",
-    "@wireapp/react-ui-kit": "5.2.2",
+    "@wireapp/react-ui-kit": "5.3.0",
     "babel-loader": "8.0.5",
     "browser-sync": "2.26.3",
     "concurrently": "4.1.0",
     "cross-env": "5.2.0",
     "istanbul": "1.1.0-alpha.1",
-    "jasmine": "3.3.1",
+    "jasmine": "3.4.0",
     "karma": "4.0.1",
     "karma-chrome-launcher": "2.2.0",
     "karma-jasmine": "2.0.1",
@@ -67,5 +67,5 @@
     "watch": "webpack-dev-server --config webpack.config.js"
   },
   "types": "./dist/commonjs/APIClient.d.ts",
-  "version": "3.6.0"
+  "version": "3.6.1"
 }
