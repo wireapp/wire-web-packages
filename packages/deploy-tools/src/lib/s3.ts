@@ -20,7 +20,6 @@ import path from 'path';
 
 import S3 from 'aws-sdk/clients/s3';
 import fs from 'fs-extra';
-import logdown from 'logdown';
 
 import {FindResult, find, logDry} from './deploy-utils';
 
