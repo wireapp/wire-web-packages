@@ -48,9 +48,10 @@ describe('isValidEmail', () => {
   });
 
   it('recognizes invalid emails', () => {
-    expect(ValidationUtil.isValidEmail('l@l.l')).toBe(false);
+    expect(ValidationUtil.isValidEmail('a@a.a')).toBe(false);
     expect(ValidationUtil.isValidEmail('test')).toBe(false);
     expect(ValidationUtil.isValidEmail('test@')).toBe(false);
-    expect(ValidationUtil.isValidEmail('test@test')).toBe(false);
+    expect(ValidationUtil.isValidEmail('test@example')).toBe(false);
+    expect(ValidationUtil.isValidEmail('@example.com')).toBe(false);
   });
 });
