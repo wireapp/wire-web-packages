@@ -25,3 +25,17 @@ export function isUUIDv4(candidate: string): boolean {
   const uuidv4Regex = new RegExp(`^${PATTERN.UUID_V4}$`, 'i');
   return uuidv4Regex.test(candidate);
 }
+
+export const DEFAULT_PASSWORD_MIN_LENGTH = 8;
+export const DEFAULT_PASSWORD_MAX_LENGTH = 1024;
+
+export function getNewPasswordPattern(
+  minLength = DEFAULT_PASSWORD_MIN_LENGTH,
+  maxLength = DEFAULT_PASSWORD_MAX_LENGTH
+): string {
+  const specialCharacters = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~';
+  const numbers = '0-9';
+  const lowercaseCharacters = 'a-z';
+  const uppercaseCharacters = 'A-Z';
+  return `(?=.*[${numbers}])(?=.*[${lowercaseCharacters}])(?=.*[${uppercaseCharacters}])(?=.*[${specialCharacters}])[${specialCharacters}${lowercaseCharacters}${uppercaseCharacters}${numbers}]{${minLength},${maxLength}}`;
+}
