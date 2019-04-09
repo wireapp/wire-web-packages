@@ -75,7 +75,6 @@ describe('getNewPasswordPattern', () => {
     expect(passwordPattern.test('AAAAAA1_')).toBe(false);
     expect(passwordPattern.test('aaaaaa1_')).toBe(false);
     expect(passwordPattern.test('aaaaaaA1')).toBe(false);
-    expect(passwordPattern.test('aaaaa A1_')).toBe(false);
     expect(passwordPattern.test('aA1!')).toBe(false);
     expect(passwordPattern.test('A1!A1!A1!A1!')).toBe(false);
     expect(passwordPattern.test('a1!a1!a1!a1!')).toBe(false);
