@@ -60,17 +60,20 @@ describe('getNewPasswordPattern', () => {
   it('recognizes valid passwords', () => {
     const customPasswordLength = 4;
     expect(new RegExp(ValidationUtil.getNewPasswordPattern(customPasswordLength)).test('aA1_')).toBe(true);
-    expect(new RegExp(ValidationUtil.getNewPasswordPattern()).test('aAAAAA1_')).toBe(true);
+    expect(new RegExp(ValidationUtil.getNewPasswordPattern()).test('Passw0rd!')).toBe(true);
+    expect(new RegExp(ValidationUtil.getNewPasswordPattern()).test('Pass w0rd!')).toBe(true);
+    expect(new RegExp(ValidationUtil.getNewPasswordPattern()).test('Päss w0rd!')).toBe(true);
+    expect(new RegExp(ValidationUtil.getNewPasswordPattern()).test('Päss\uD83D\uDC3Cw0rd!')).toBe(true);
   });
 
   it('recognizes invalid passwords', () => {
     const customPasswordLength = 5;
     const passwordPattern = new RegExp(ValidationUtil.getNewPasswordPattern());
     expect(new RegExp(ValidationUtil.getNewPasswordPattern(customPasswordLength)).test('aA1_')).toBe(false);
-    expect(passwordPattern.test('aA1_')).toBe(false);
-    expect(passwordPattern.test('AAAAAA1_')).toBe(false);
-    expect(passwordPattern.test('aaaaaa1_')).toBe(false);
-    expect(passwordPattern.test('aaaaaaA1')).toBe(false);
-    expect(passwordPattern.test('aaaaa A1_')).toBe(false);
+    expect(passwordPattern.test('aA1!')).toBe(false);
+    expect(passwordPattern.test('A1!A1!A1!A1!')).toBe(false);
+    expect(passwordPattern.test('a1!a1!a1!a1!')).toBe(false);
+    expect(passwordPattern.test('aA!aA!aA!aA!')).toBe(false);
+    expect(passwordPattern.test('aA1aA1aA1aA1')).toBe(false);
   });
 });
