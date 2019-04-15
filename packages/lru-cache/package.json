@@ -6,9 +6,9 @@
     "jasmine": "3.4.0",
     "nyc": "13.3.0",
     "rimraf": "2.6.3",
-    "ts-node": "8.0.3",
-    "typescript": "3.4.2",
-    "webpack": "4.29.6",
+    "ts-node": "8.1.0",
+    "typescript": "3.4.3",
+    "webpack": "4.30.0",
     "webpack-cli": "3.3.0"
   },
   "files": [
@@ -27,5 +27,5 @@
     "test": "nyc jasmine --config=jasmine.json"
   },
   "types": "dist/commonjs/LRUCache.d.ts",
-  "version": "3.1.6"
+  "version": "3.1.7"
 }

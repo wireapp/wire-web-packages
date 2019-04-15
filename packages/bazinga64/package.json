@@ -16,9 +16,9 @@
     "libsodium-wrappers": "0.7.4",
     "nyc": "13.3.0",
     "rimraf": "2.6.3",
-    "ts-node": "8.0.3",
-    "typescript": "3.4.2",
-    "webpack": "4.29.6"
+    "ts-node": "8.1.0",
+    "typescript": "3.4.3",
+    "webpack": "4.30.0"
   },
   "files": [
     "dist"
@@ -51,5 +51,5 @@
     "test:browser": "karma start",
     "test:node": "nyc jasmine --config=jasmine.json"
   },
-  "version": "5.3.56"
+  "version": "5.3.57"
 }
