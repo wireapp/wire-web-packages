@@ -1979,6 +1979,11 @@
     "@webassemblyjs/wast-parser" "1.8.5"
     "@xtuc/long" "4.2.2"
 
+"@wireapp/prettier-config@0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@wireapp/prettier-config/-/prettier-config-0.0.1.tgz#dbad1985d14487320ff9c8a9bc27ec0869a37b4a"
+  integrity sha512-lzdTQv+bMbDe34TG81fbep/VpNsS4RKc07g1SIVJhXkJbpULI24zw0xrUSaDdCskwBB6Axaw1dZPsvkcwmnWtA==
+
 "@wireapp/protocol-messaging@1.23.0":
   version "1.23.0"
   resolved "https://registry.yarnpkg.com/@wireapp/protocol-messaging/-/protocol-messaging-1.23.0.tgz#aa26b96eb0933c9b95d34d9502098d7c582036a0"
