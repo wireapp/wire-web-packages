@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Wire Prettier config",
   "main": "index.json",
-  "repository": "git@github.com:wireapp/prettier-config.git",
+  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/prettier-config",
   "author": "Wire",
   "license": "MIT"
 }
