@@ -1,0 +1,14 @@
+{
+  "description": "Wire ESLint config",
+  "license": "GPL-3.0",
+  "main": "index.js",
+  "name": "@wireapp/eslint-config",
+  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/eslint-config",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "eslint": ">=5",
+    "eslint-plugin-prettier": ">=3",
+    "eslint-config-prettier": ">=4",
+    "prettier": ">=1.17"
+  }
+}
