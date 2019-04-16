@@ -13,7 +13,7 @@
     "ecmaVersion": 6,
     "sourceType": "module"
   },
-  "plugins": ["prettier", "no-unsanitized", "jsdoc"],
+  "plugins": ["prettier", "no-unsanitized", "jsdoc", "react"],
   "rules": {
     "curly": 2,
     "dot-notation": 2,
