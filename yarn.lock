@@ -1979,6 +1979,16 @@
     "@webassemblyjs/wast-parser" "1.8.5"
     "@xtuc/long" "4.2.2"
 
+"@wireapp/eslint-config@0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@wireapp/eslint-config/-/eslint-config-0.0.8.tgz#1667144fe615c643cd40ccfbaf649c69ef3959b7"
+  integrity sha512-yfG1wsf/0vKFYSGvC+cEtDnwYOJfc1gp0I3O8yD5uwFz+x6URcJDLQ4P7KnqM18+lmqf4VVVn6s2VRDMuWIa4Q==
+
+"@wireapp/prettier-config@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@wireapp/prettier-config/-/prettier-config-0.1.0.tgz#9013de56087eb865b7fd3559d6d3a81558573719"
+  integrity sha512-/NnQFYE+Hbz46Cfz3NhiOT9JxfaKFON4lHI+qzg19Zb2d8B0pxd/I6HZRSRH6ofV29IP+OT+IynvUFQOO2WUpg==
+
 "@wireapp/protocol-messaging@1.23.0":
   version "1.23.0"
   resolved "https://registry.yarnpkg.com/@wireapp/protocol-messaging/-/protocol-messaging-1.23.0.tgz#aa26b96eb0933c9b95d34d9502098d7c582036a0"
