@@ -3,15 +3,15 @@
   "license": "GPL-3.0",
   "main": "eslintrc.json",
   "name": "@wireapp/eslint-config",
-  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/eslint-config",
-  "version": "0.0.7",
   "peerDependencies": {
+    "eslint": ">=5",
     "eslint-config-prettier": ">=4",
     "eslint-plugin-jsdoc": ">=4",
     "eslint-plugin-no-unsanitized": ">=3",
     "eslint-plugin-prettier": ">=3",
     "eslint-plugin-react": ">=7",
-    "eslint": ">=5",
     "prettier": ">=1.17"
-  }
+  },
+  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/eslint-config",
+  "version": "0.0.7"
 }
