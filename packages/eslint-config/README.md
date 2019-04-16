@@ -27,7 +27,7 @@ yarn add --dev @wireapp/eslint-config \
 
 **Install (Windows)**:
 
-```bash
+```powershell
 yarn add --dev @wireapp/eslint-config ^
                eslint-config-prettier ^
                eslint-plugin-no-unsanitized ^
