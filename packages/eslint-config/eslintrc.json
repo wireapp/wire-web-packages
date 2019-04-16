@@ -55,6 +55,7 @@
     "prefer-spread": "error",
     "prefer-template": "error",
     "prettier/prettier": "error",
+    "react/jsx-uses-vars": "error",
     "react/prefer-stateless-function": "error",
     "react/prop-types": "off",
     "sort-imports": "error",
