@@ -10,7 +10,7 @@ For licensing information, see the attached LICENSE file and the list of third-p
 
 > Wire's [ESLint](https://eslint.org/docs/developer-guide/shareable-configs) config.
 
-## Usage
+### Usage
 
 **Install (macOS, Linux)**:
 
