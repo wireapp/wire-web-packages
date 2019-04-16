@@ -3,5 +3,5 @@ module.exports = {
     "jasmine": true,
   },
   "extends": "@wireapp/eslint-config",
-  "plugins": "jasmine"
+  "plugins": ["jasmine"]
 };
