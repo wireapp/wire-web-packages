@@ -30,6 +30,6 @@ $ yarn add --dev @wireapp/prettier-config \
 ```jsonc
 {
   // ...
-  "extends": "@wireapp/prettier-config"
+  "extends": "@wireapp/eslint-config"
 }
 ```
