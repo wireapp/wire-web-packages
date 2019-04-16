@@ -4,7 +4,7 @@
   "main": "index.js",
   "name": "@wireapp/eslint-config",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/eslint-config",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "peerDependencies": {
     "eslint": ">=5",
     "eslint-plugin-prettier": ">=3",
