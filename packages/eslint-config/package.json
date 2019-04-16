@@ -9,6 +9,7 @@
     "eslint": ">=5",
     "eslint-plugin-prettier": ">=3",
     "eslint-config-prettier": ">=4",
+    "eslint-plugin-react": ">=7",
     "prettier": ">=1.17"
   }
 }

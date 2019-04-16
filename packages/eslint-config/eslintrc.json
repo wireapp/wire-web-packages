@@ -4,7 +4,7 @@
     "es6": true,
     "node": true
   },
-  "extends": ["prettier"],
+  "extends": ["prettier", "plugin:react/recommended"],
   "parser": "babel-eslint",
   "parserOptions": {
     "ecmaFeatures": {
@@ -48,6 +48,8 @@
     "prefer-spread": 2,
     "prefer-template": 2,
     "prettier/prettier": 2,
+    "react/prefer-stateless-function": 2,
+    "react/prop-types": 0,
     "sort-imports": 2,
     "sort-keys": [
       2,
@@ -59,5 +61,10 @@
     ],
     "sort-vars": 2,
     "strict": [2, "global"]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }
