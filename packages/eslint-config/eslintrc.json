@@ -13,11 +13,12 @@
     "ecmaVersion": 6,
     "sourceType": "module"
   },
-  "plugins": ["prettier", "no-unsanitized"],
+  "plugins": ["prettier", "no-unsanitized", "jsdoc"],
   "rules": {
     "curly": 2,
     "dot-notation": 2,
     "id-length": 2,
+    "jsdoc/require-hyphen-before-param-description": 2,
     "no-console": [
       2,
       {
@@ -66,7 +67,24 @@
       }
     ],
     "sort-vars": 2,
-    "strict": [2, "global"]
+    "strict": [2, "global"],
+    "valid-jsdoc": [
+      "error",
+      {
+        "prefer": {
+          "class": "class",
+          "return": "returns"
+        },
+        "preferType": {
+          "Boolean": "boolean",
+          "Number": "number",
+          "object": "Object",
+          "String": "string"
+        },
+        "requireParamDescription": true,
+        "requireReturnDescription": true
+      }
+    ]
   },
   "settings": {
     "react": {

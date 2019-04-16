@@ -16,9 +16,10 @@ For licensing information, see the attached LICENSE file and the list of third-p
 
 ```bash
 $ yarn add --dev @wireapp/prettier-config \
-                 eslint-plugin-no-unsanitized \
-                 eslint-plugin-prettier \
                  eslint-config-prettier \
+                 eslint-plugin-no-unsanitized \
+                 eslint-plugin-jsdoc \
+                 eslint-plugin-prettier \
                  eslint-plugin-react \
                  prettier \
                  eslint
