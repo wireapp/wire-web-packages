@@ -4,7 +4,7 @@
     "es6": true,
     "node": true
   },
-  "extends": ["prettier", "plugin:react/recommended"],
+  "extends": ["prettier", "plugin:react/recommended", "plugin:no-unsanitized/DOM"],
   "parser": "babel-eslint",
   "parserOptions": {
     "ecmaFeatures": {
@@ -13,7 +13,7 @@
     "ecmaVersion": 6,
     "sourceType": "module"
   },
-  "plugins": ["prettier"],
+  "plugins": ["prettier", "no-unsanitized"],
   "rules": {
     "curly": 2,
     "dot-notation": 2,

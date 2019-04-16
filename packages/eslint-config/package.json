@@ -4,8 +4,9 @@
   "main": "eslintrc.json",
   "name": "@wireapp/eslint-config",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/eslint-config",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "peerDependencies": {
+    "eslint-plugin-no-unsanitized": ">=3",
     "eslint-config-prettier": ">=4",
     "eslint-plugin-prettier": ">=3",
     "eslint-plugin-react": ">=7",
