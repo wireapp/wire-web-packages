@@ -25,7 +25,7 @@ $ yarn add --dev @wireapp/eslint-config \
                  eslint
 ```
 
-**Edit `eslintrc`**:
+**Edit `.eslintrc.json`**:
 
 ```jsonc
 {
