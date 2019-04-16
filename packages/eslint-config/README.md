@@ -12,7 +12,7 @@ For licensing information, see the attached LICENSE file and the list of third-p
 
 ## Usage
 
-**Install**:
+**Install (macOS, Linux)**:
 
 ```bash
 yarn add --dev @wireapp/eslint-config \
@@ -20,7 +20,21 @@ yarn add --dev @wireapp/eslint-config \
                eslint-plugin-no-unsanitized \
                eslint-plugin-jsdoc \
                eslint-plugin-prettier \
-               eslint-plugin-react \               prettier \
+               eslint-plugin-react \
+               prettier \
+               eslint
+```
+
+**Install (Windows)**:
+
+```bash
+yarn add --dev @wireapp/eslint-config ^
+               eslint-config-prettier ^
+               eslint-plugin-no-unsanitized ^
+               eslint-plugin-jsdoc ^
+               eslint-plugin-prettier ^
+               eslint-plugin-react ^
+               prettier ^
                eslint
 ```
 
