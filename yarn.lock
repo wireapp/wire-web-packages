@@ -1979,11 +1979,6 @@
     "@webassemblyjs/wast-parser" "1.8.5"
     "@xtuc/long" "4.2.2"
 
-"@wireapp/prettier-config@0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@wireapp/prettier-config/-/prettier-config-0.0.1.tgz#dbad1985d14487320ff9c8a9bc27ec0869a37b4a"
-  integrity sha512-lzdTQv+bMbDe34TG81fbep/VpNsS4RKc07g1SIVJhXkJbpULI24zw0xrUSaDdCskwBB6Axaw1dZPsvkcwmnWtA==
-
 "@wireapp/protocol-messaging@1.23.0":
   version "1.23.0"
   resolved "https://registry.yarnpkg.com/@wireapp/protocol-messaging/-/protocol-messaging-1.23.0.tgz#aa26b96eb0933c9b95d34d9502098d7c582036a0"
@@ -3585,6 +3580,11 @@ commander@~2.17.1:
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.17.1.tgz#bd77ab7de6de94205ceacc72f1716d29f20a77bf"
   integrity sha512-wPMUt6FnH2yzG95SA6mzjQOEKUU3aLaDEmzs1ti+1E9h+CsrZghRlqEM/EJ4KscsQVG8uNN4uVreUeT8+drlgg==
 
+comment-parser@^0.5.4:
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/comment-parser/-/comment-parser-0.5.4.tgz#089840b9cccacad2b769b231ed43081d501b9487"
+  integrity sha512-0h7W6Y1Kb6zKQMJqdX41C5qf9ITCVIsD2qP2RaqDF3GFkXFrmuAuv5zUOuo19YzyC9scjBNpqzuaRQ2Sy5pxMQ==
+
 commondir@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/commondir/-/commondir-1.0.1.tgz#ddd800da0c66127393cca5950ea968a3aaf1253b"
@@ -4802,6 +4802,15 @@ eslint-plugin-jasmine@2.10.1:
   version "2.10.1"
   resolved "https://registry.yarnpkg.com/eslint-plugin-jasmine/-/eslint-plugin-jasmine-2.10.1.tgz#5733b709e751f4bc40e31e1c16989bd2cdfbec97"
   integrity sha1-VzO3CedR9LxA4x4cFpib0s377Jc=
+
+eslint-plugin-jsdoc@4.8.3:
+  version "4.8.3"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-4.8.3.tgz#1060e8b5c1ac83b2dd613c2d62fe1612394aafa9"
+  integrity sha512-lKOaphUUzv0qKJrAdEwQGEWcNN2Foae5W111u1ASKQeliyJkKXCVxia0dakATuI/s2ojr6Q3FVzWwT6uE1icBg==
+  dependencies:
+    comment-parser "^0.5.4"
+    jsdoctypeparser "3.1.0"
+    lodash "^4.17.11"
 
 eslint-plugin-no-unsanitized@3.0.2:
   version "3.0.2"
@@ -7382,6 +7391,11 @@ jsbn@~0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/jsbn/-/jsbn-0.1.1.tgz#a5e654c2e5a2deb5f201d96cefbca80c0ef2f513"
   integrity sha1-peZUwuWi3rXyAdls77yoDA7y9RM=
+
+jsdoctypeparser@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/jsdoctypeparser/-/jsdoctypeparser-3.1.0.tgz#2f65f75165c4d9c632bb4fda13ed36b78321a43b"
+  integrity sha512-JNbkKpDFqbYjg+IU3FNo7qjX7Opy7CwjHywT32zgAcz/d4lX6Umn5jOHVETUdnNNgGrMk0nEx1gvP0F4M0hzlQ==
 
 jsesc@^1.3.0:
   version "1.3.0"
