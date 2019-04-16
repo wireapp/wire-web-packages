@@ -29,6 +29,12 @@
     "no-else-return": 2,
     "no-inner-declarations": 2,
     "no-lonely-if": 2,
+    "no-magic-numbers": [
+      2,
+      {
+        "ignore": [-1, 0, 1, 2]
+      }
+    ],
     "no-shadow": 2,
     "no-undef": 2,
     "no-unneeded-ternary": 2,

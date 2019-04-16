@@ -6,13 +6,5 @@ module.exports = {
   "plugins": [
     "jasmine",
     "no-unsanitized",
-  ],
-  "rules": {
-    "no-magic-numbers": [
-      2,
-      {
-        "ignore": [-1, 0, 1]
-      }
-    ],
-  },
+  ]
 };
