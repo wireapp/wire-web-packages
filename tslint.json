@@ -1,6 +1,6 @@
 {
   "extends": ["@wireapp/tslint-config"],
   "linterOptions": {
-    "exclude": ["**/bower_components/**", "**/dist/**", "**/node_modules/**"]
+    "exclude": ["**/bower_components/**", "**/dist/**", "**/node_modules/**", "**/*.d.ts"]
   }
 }
