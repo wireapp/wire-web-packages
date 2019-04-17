@@ -36,11 +36,11 @@ yarn add --dev @wireapp/tslint-config ^
                tslint
 ```
 
-**Edit `.eslintrc.json`**:
+**Edit `tslint.json`**:
 
 ```jsonc
 {
   // ...
-  "extends": "@wireapp/eslint-config"
+  "extends": "@wireapp/tslint-config"
 }
 ```
