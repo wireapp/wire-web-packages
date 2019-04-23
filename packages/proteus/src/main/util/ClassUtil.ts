@@ -21,7 +21,7 @@ export interface ParameterlessConstructor<T> {
   new (): T;
 }
 
-const ClassUtil = {
+export const ClassUtil = {
   new_instance<T>(proposedClass: ParameterlessConstructor<T>): T {
     try {
       return new proposedClass();
@@ -30,5 +30,3 @@ const ClassUtil = {
     }
   },
 };
-
-export default ClassUtil;

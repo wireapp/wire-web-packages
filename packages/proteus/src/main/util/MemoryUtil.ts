@@ -35,4 +35,4 @@ const MemoryUtil = {
   },
 };
 
-export default MemoryUtil;
+export {MemoryUtil};

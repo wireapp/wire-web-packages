@@ -17,7 +17,7 @@
  *
  */
 
-import ProteusError from '../errors/ProteusError';
+import {ProteusError} from '../errors/ProteusError';
 
 /** Concatenates array buffers (usually 8-bit unsigned). */
 const ArrayUtil = {
@@ -47,4 +47,4 @@ const ArrayUtil = {
   },
 };
 
-export default ArrayUtil;
+export {ArrayUtil};

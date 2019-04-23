@@ -46,4 +46,4 @@ const media = Object.entries(QUERY).reduce<QueryMap | {}>(
   {}
 );
 
-export default media;
+export {media};

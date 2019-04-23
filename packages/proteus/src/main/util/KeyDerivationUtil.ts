@@ -19,8 +19,8 @@
 
 import * as sodium from 'libsodium-wrappers-sumo';
 
-import ArrayUtil from '../util/ArrayUtil';
-import MemoryUtil from '../util/MemoryUtil';
+import {ArrayUtil} from '../util/ArrayUtil';
+import {MemoryUtil} from '../util/MemoryUtil';
 
 const KeyDerivationUtil = {
   /**
@@ -87,4 +87,4 @@ const KeyDerivationUtil = {
   },
 };
 
-export default KeyDerivationUtil;
+export {KeyDerivationUtil};
