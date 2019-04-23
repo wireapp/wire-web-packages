@@ -76,9 +76,10 @@ class WebSocketClient extends EventEmitter {
   public connect(clientId?: string): Promise<WebSocketClient> {
     this.clientId = clientId;
 
-    this.socket = new ReconnectingWebSocket(this.buildWebSocketURL, undefined, WebSocketClient.RECONNECTING_OPTIONS);
+    this.socket = new ReconnectingWebSocket(this.buildWebSocketURL, [], WebSocketClient.RECONNECTING_OPTIONS);
 
     if (this.socket) {
+      // TODO: Consider switching to "addEventListener('message', ...)"
       this.socket.onmessage = (event: MessageEvent): void => {
         const notification: IncomingNotification = JSON.parse(buffer.bufferToString(event.data));
         this.emit(WebSocketClient.TOPIC.ON_MESSAGE, notification);
