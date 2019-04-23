@@ -21,7 +21,7 @@ import * as CBOR from '@wireapp/cbor';
 
 import {InputError} from '../errors/InputError';
 import {PublicKey} from '../keys/PublicKey';
-import {ClassUtil} from '../util/ClassUtil';
+import * as ClassUtil from '../util/ClassUtil';
 import {Message} from './Message';
 import {SessionTag} from './SessionTag';
 

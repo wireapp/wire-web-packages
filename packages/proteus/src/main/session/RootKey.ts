@@ -24,7 +24,7 @@ import {DerivedSecrets} from '../derived/DerivedSecrets';
 import {InputError} from '../errors/InputError';
 import {KeyPair} from '../keys/KeyPair';
 import {PublicKey} from '../keys/PublicKey';
-import {ClassUtil} from '../util/ClassUtil';
+import * as ClassUtil from '../util/ClassUtil';
 import {ChainKey} from './ChainKey';
 
 export class RootKey {

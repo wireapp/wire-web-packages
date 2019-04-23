@@ -21,7 +21,7 @@ import * as CBOR from '@wireapp/cbor';
 
 import {CipherKey} from '../derived/CipherKey';
 import {MacKey} from '../derived/MacKey';
-import {ClassUtil} from '../util/ClassUtil';
+import * as ClassUtil from '../util/ClassUtil';
 
 class MessageKeys {
   cipher_key: CipherKey;

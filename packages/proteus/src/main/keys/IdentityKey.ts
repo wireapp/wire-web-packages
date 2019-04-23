@@ -19,7 +19,7 @@
 
 import * as CBOR from '@wireapp/cbor';
 
-import {ClassUtil} from '../util/ClassUtil';
+import * as ClassUtil from '../util/ClassUtil';
 import {PublicKey} from './PublicKey';
 
 /**

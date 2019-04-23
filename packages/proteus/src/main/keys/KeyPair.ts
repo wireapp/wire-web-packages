@@ -21,7 +21,7 @@ import * as CBOR from '@wireapp/cbor';
 import * as ed2curve from 'ed2curve';
 import * as _sodium from 'libsodium-wrappers-sumo';
 
-import {ClassUtil} from '../util/ClassUtil';
+import * as ClassUtil from '../util/ClassUtil';
 import {PublicKey} from './PublicKey';
 import {SecretKey} from './SecretKey';
 

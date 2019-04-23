@@ -20,7 +20,7 @@
 import * as CBOR from '@wireapp/cbor';
 
 import {MacKey} from '../derived/MacKey';
-import {ClassUtil} from '../util/ClassUtil';
+import * as ClassUtil from '../util/ClassUtil';
 import {Message} from './Message';
 
 class Envelope {

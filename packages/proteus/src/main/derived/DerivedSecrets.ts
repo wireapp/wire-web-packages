@@ -17,10 +17,10 @@
  *
  */
 
-import {ClassUtil} from '../util/ClassUtil';
+import * as ClassUtil from '../util/ClassUtil';
 
-import {KeyDerivationUtil} from '../util/KeyDerivationUtil';
-import {MemoryUtil} from '../util/MemoryUtil';
+import * as KeyDerivationUtil from '../util/KeyDerivationUtil';
+import * as MemoryUtil from '../util/MemoryUtil';
 import {CipherKey} from './CipherKey';
 import {MacKey} from './MacKey';
 

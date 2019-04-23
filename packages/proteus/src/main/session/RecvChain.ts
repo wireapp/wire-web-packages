@@ -20,7 +20,7 @@
 import * as CBOR from '@wireapp/cbor';
 
 import {PublicKey} from '../keys/PublicKey';
-import {ClassUtil} from '../util/ClassUtil';
+import * as ClassUtil from '../util/ClassUtil';
 
 import {DecryptError} from '../errors/DecryptError';
 import {ProteusError} from '../errors/ProteusError';

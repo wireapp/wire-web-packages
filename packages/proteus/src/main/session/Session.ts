@@ -19,12 +19,12 @@
 
 import * as CBOR from '@wireapp/cbor';
 
-import {ClassUtil} from '../util/ClassUtil';
+import * as ClassUtil from '../util/ClassUtil';
+import * as MemoryUtil from '../util/MemoryUtil';
 
 import {DecodeError} from '../errors/DecodeError';
 import {DecryptError} from '../errors/DecryptError';
 import {ProteusError} from '../errors/ProteusError';
-import {MemoryUtil} from '../util/MemoryUtil';
 import {SessionState} from './SessionState';
 
 import {IdentityKey} from '../keys/IdentityKey';

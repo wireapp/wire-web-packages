@@ -19,11 +19,11 @@
 
 import * as CBOR from '@wireapp/cbor';
 
-import {ArrayUtil} from '../util/ArrayUtil';
-import {ClassUtil} from '../util/ClassUtil';
+import * as ArrayUtil from '../util/ArrayUtil';
+import * as ClassUtil from '../util/ClassUtil';
+import * as MemoryUtil from '../util/MemoryUtil';
 
 import {DecryptError} from '../errors/DecryptError';
-import {MemoryUtil} from '../util/MemoryUtil';
 
 import {DerivedSecrets} from '../derived/DerivedSecrets';
 

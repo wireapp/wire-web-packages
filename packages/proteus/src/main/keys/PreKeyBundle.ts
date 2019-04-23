@@ -20,7 +20,7 @@
 import * as CBOR from '@wireapp/cbor';
 import * as sodium from 'libsodium-wrappers-sumo';
 
-import {ClassUtil} from '../util/ClassUtil';
+import * as ClassUtil from '../util/ClassUtil';
 import {IdentityKey} from './IdentityKey';
 import {IdentityKeyPair} from './IdentityKeyPair';
 import {PreKey} from './PreKey';

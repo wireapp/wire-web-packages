@@ -20,7 +20,7 @@
 import * as CBOR from '@wireapp/cbor';
 
 import {KeyPair} from '../keys/KeyPair';
-import {ClassUtil} from '../util/ClassUtil';
+import * as ClassUtil from '../util/ClassUtil';
 import {ChainKey} from './ChainKey';
 
 class SendChain {

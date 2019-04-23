@@ -21,12 +21,10 @@ export interface ParameterlessConstructor<T> {
   new (): T;
 }
 
-export const ClassUtil = {
-  new_instance<T>(proposedClass: ParameterlessConstructor<T>): T {
-    try {
-      return new proposedClass();
-    } catch (error) {
-      return error._instance;
-    }
-  },
-};
+export function new_instance<T>(proposedClass: ParameterlessConstructor<T>): T {
+  try {
+    return new proposedClass();
+  } catch (error) {
+    return error._instance;
+  }
+}

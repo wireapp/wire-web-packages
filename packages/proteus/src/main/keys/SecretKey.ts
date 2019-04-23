@@ -21,10 +21,10 @@ import * as CBOR from '@wireapp/cbor';
 import * as ed2curve from 'ed2curve';
 import * as sodium from 'libsodium-wrappers-sumo';
 
-import {ClassUtil} from '../util/ClassUtil';
+import * as ClassUtil from '../util/ClassUtil';
 
 import {InputError} from '../errors/InputError';
-import {ArrayUtil} from '../util/ArrayUtil';
+import * as ArrayUtil from '../util/ArrayUtil';
 import {PublicKey} from './PublicKey';
 
 class SecretKey {
