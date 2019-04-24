@@ -10,8 +10,8 @@ For licensing information, see the attached LICENSE file and the list of third-p
 
 Collection of npm modules created by Wire's web team.
 
+- [bazinga64](https://npmjs.com/package/bazinga64)
 - [@wireapp/api-client](https://npmjs.com/package/@wireapp/api-client)
-- [@wireapp/bazinga64](https://npmjs.com/package/@wireapp/bazinga64)
 - [@wireapp/bot-api](https://npmjs.com/package/@wireapp/bot-api)
 - [@wireapp/cbor](https://npmjs.com/package/@wireapp/cbor)
 - [@wireapp/changelog-bot](https://npmjs.com/package/@wireapp/changelog-bot)
