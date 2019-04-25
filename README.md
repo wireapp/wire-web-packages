@@ -10,35 +10,44 @@ For licensing information, see the attached LICENSE file and the list of third-p
 
 Collection of npm modules created by Wire's web team:
 
-- [@wireapp/api-client](https://npmjs.com/package/@wireapp/api-client)
-- [@wireapp/cli-client](https://npmjs.com/package/@wireapp/cli-client)
-- [@wireapp/commons](https://npmjs.com/package/@wireapp/commons)
-- [@wireapp/core](https://npmjs.com/package/@wireapp/core)
-- [@wireapp/license-collector](https://npmjs.com/package/@wireapp/license-collector)
-- [@wireapp/lru-cache](https://npmjs.com/package/@wireapp/lru-cache)
-- [@wireapp/priority-queue](https://npmjs.com/package/@wireapp/priority-queue)
-- [@wireapp/proteus](https://npmjs.com/package/@wireapp/proteus)
-- [@wireapp/react-ui-kit](https://npmjs.com/package/@wireapp/react-ui-kit)
-- [@wireapp/store-engine](https://npmjs.com/package/@wireapp/store-engine)
-
-**Crypto**
-
-- [bazinga64](https://npmjs.com/package/bazinga64)
-- [@wireapp/cbor](https://npmjs.com/package/@wireapp/cbor)
-- [@wireapp/cryptobox](https://npmjs.com/package/@wireapp/cryptobox)
-
 **Bots**
 
 - [@wireapp/bot-api](https://npmjs.com/package/@wireapp/bot-api)
 - [@wireapp/changelog-bot](https://npmjs.com/package/@wireapp/changelog-bot)
 - [@wireapp/travis-bot](https://npmjs.com/package/@wireapp/travis-bot)
 
-**Config / Linters**
+**Common utilities**
+
+- [@wireapp/commons](https://npmjs.com/package/@wireapp/commons)
+- [@wireapp/lru-cache](https://npmjs.com/package/@wireapp/lru-cache)
+- [@wireapp/priority-queue](https://npmjs.com/package/@wireapp/priority-queue)
+- [@wireapp/store-engine](https://npmjs.com/package/@wireapp/store-engine)
+
+**Configuration**
 
 - [@wireapp/copy-config](https://npmjs.com/package/@wireapp/copy-config)
 - [@wireapp/eslint-config](https://npmjs.com/package/@wireapp/eslint-config)
 - [@wireapp/prettier-config](https://npmjs.com/package/@wireapp/prettier-config)
 - [@wireapp/tslint-config](https://npmjs.com/package/@wireapp/tslint-config)
+
+**Connectivity**
+
+- [@wireapp/api-client](https://npmjs.com/package/@wireapp/api-client)
+- [@wireapp/cli-client](https://npmjs.com/package/@wireapp/cli-client)
+- [@wireapp/core](https://npmjs.com/package/@wireapp/core)
+
+**Cryptography**
+
+- [bazinga64](https://npmjs.com/package/bazinga64)
+- [@wireapp/cbor](https://npmjs.com/package/@wireapp/cbor)
+- [@wireapp/cryptobox](https://npmjs.com/package/@wireapp/cryptobox)
+- [@wireapp/proteus](https://npmjs.com/package/@wireapp/proteus)
+
+**Internal tools**
+- [@wireapp/license-collector](https://npmjs.com/package/@wireapp/license-collector)
+
+**User Interface**
+- [@wireapp/react-ui-kit](https://npmjs.com/package/@wireapp/react-ui-kit)
 
 ### Getting Started
 
