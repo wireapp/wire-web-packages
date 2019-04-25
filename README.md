@@ -47,7 +47,7 @@ Collection of npm modules created by Wire's web team:
 - [@wireapp/copy-config](https://npmjs.com/package/@wireapp/copy-config)
 - [@wireapp/license-collector](https://npmjs.com/package/@wireapp/license-collector)
 
-**User Interface**
+**User interface**
 
 - [@wireapp/react-ui-kit](https://npmjs.com/package/@wireapp/react-ui-kit)
 
