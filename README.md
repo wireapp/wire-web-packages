@@ -25,7 +25,6 @@ Collection of npm modules created by Wire's web team:
 
 **Configuration**
 
-- [@wireapp/copy-config](https://npmjs.com/package/@wireapp/copy-config)
 - [@wireapp/eslint-config](https://npmjs.com/package/@wireapp/eslint-config)
 - [@wireapp/prettier-config](https://npmjs.com/package/@wireapp/prettier-config)
 - [@wireapp/tslint-config](https://npmjs.com/package/@wireapp/tslint-config)
@@ -44,9 +43,12 @@ Collection of npm modules created by Wire's web team:
 - [@wireapp/proteus](https://npmjs.com/package/@wireapp/proteus)
 
 **Internal tools**
+
+- [@wireapp/copy-config](https://npmjs.com/package/@wireapp/copy-config)
 - [@wireapp/license-collector](https://npmjs.com/package/@wireapp/license-collector)
 
 **User Interface**
+
 - [@wireapp/react-ui-kit](https://npmjs.com/package/@wireapp/react-ui-kit)
 
 ### Getting Started
