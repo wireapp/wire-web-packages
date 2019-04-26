@@ -35,7 +35,7 @@ const STORE_NAME = 'store-name';
 
 let engine: CRUDEngine;
 
-async function initEngine(shouldCreateNewEngine = true) {
+async function initEngine(shouldCreateNewEngine = true): Promise<CRUDEngine> {
   const storeEngine = shouldCreateNewEngine ? new FileSystemEngine() : engine;
   await storeEngine.init(STORE_NAME);
   return storeEngine;
