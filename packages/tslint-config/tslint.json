@@ -26,7 +26,6 @@
     "no-return-await": true,
     "no-sparse-arrays": true,
     "no-this-assignment": true,
-    "no-unused-variable": true,
     "no-unused-expression": true,
     "object-literal-sort-keys": true,
     "ordered-imports": [true, {"named-imports-order": "lowercase-last"}],
@@ -37,6 +36,7 @@
     "prefer-template": true,
     "prettier": true,
     "react-hooks-nesting": "error",
-    "space-within-parens": [true, 0]
+    "space-within-parens": [true, 0],
+    "typedef": [true, "call-signature"]
   }
 }
