@@ -1984,27 +1984,12 @@
     "@webassemblyjs/wast-parser" "1.8.5"
     "@xtuc/long" "4.2.2"
 
-"@wireapp/eslint-config@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@wireapp/eslint-config/-/eslint-config-1.0.0.tgz#13ad48b6fa4ed3303e6d3e914691c11003fdf421"
-  integrity sha512-Z847IrRpQuhjLt4UVPpJFsL8DAfQRBj2w7EHHBTdLaaoFKKcNvl9Sh86EPL8DdTJmjfdR+3GEYHFo8DXTDCW1A==
-
-"@wireapp/prettier-config@0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@wireapp/prettier-config/-/prettier-config-0.1.0.tgz#9013de56087eb865b7fd3559d6d3a81558573719"
-  integrity sha512-/NnQFYE+Hbz46Cfz3NhiOT9JxfaKFON4lHI+qzg19Zb2d8B0pxd/I6HZRSRH6ofV29IP+OT+IynvUFQOO2WUpg==
-
 "@wireapp/protocol-messaging@1.23.0":
   version "1.23.0"
   resolved "https://registry.yarnpkg.com/@wireapp/protocol-messaging/-/protocol-messaging-1.23.0.tgz#aa26b96eb0933c9b95d34d9502098d7c582036a0"
   integrity sha512-/B+xvw/3EmSGE4Ej63FOzNSxWnCPdNdrzetVY0BNiVdj3sioW8+EPcOltjgI2PPDTDKZnTu9+cnsJclYx7HA2Q==
   dependencies:
     protobufjs "6.8.8"
-
-"@wireapp/tslint-config@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@wireapp/tslint-config/-/tslint-config-1.0.1.tgz#03e0c53153453203084cd670ba4cfe3ee6d2205b"
-  integrity sha512-wreWDIpPFgnpjBcmAwRFnQRumZuG0f7zPdVcZzXk2Jmd67Yw9uMJ8trx7a1/9s8B9DSVfVVTJ1pXx7FvTVNTxQ==
 
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
