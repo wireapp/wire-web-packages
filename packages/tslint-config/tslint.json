@@ -27,6 +27,7 @@
     "no-sparse-arrays": true,
     "no-this-assignment": true,
     "no-unused-expression": true,
+    "no-unused-variable": true,
     "object-literal-sort-keys": true,
     "ordered-imports": [true, {"named-imports-order": "lowercase-last"}],
     "prefer-conditional-expression": true,
