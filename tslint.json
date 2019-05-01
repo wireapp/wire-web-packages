@@ -1,5 +1,5 @@
 {
-  "extends": ["./packages/tslint-config/tslint.json"],
+  "extends": ["./packages/tslint-config"],
   "linterOptions": {
     "exclude": ["**/bower_components/**", "**/dist/**", "**/node_modules/**", "**/*.d.ts"]
   }
