@@ -2,7 +2,6 @@
   "devDependencies": {
     "babel-eslint": "10.0.1",
     "eslint": "5.16.0",
-    "eslint-plugin-import": "2.17.2",
     "eslint-config-prettier": "4.2.0",
     "eslint-plugin-import": "2.17.2",
     "eslint-plugin-jasmine": "2.10.1",
