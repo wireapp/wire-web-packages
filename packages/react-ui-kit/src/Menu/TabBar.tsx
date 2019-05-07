@@ -48,7 +48,7 @@ export interface TabBarItemProps<T = HTMLSpanElement> extends TextProps<T> {
 const tabBarItemStyle: <T>(props: TabBarItemProps<T>) => ObjectInterpolation<undefined> = ({
   block = true,
   center = true,
-  color = COLOR.GRAY,
+  color = COLOR.TEXT,
   bold = true,
   active = false,
   fontSize = '11px',
@@ -58,7 +58,6 @@ const tabBarItemStyle: <T>(props: TabBarItemProps<T>) => ObjectInterpolation<und
   return {
     ...textStyle({bold, block, color, center, fontSize, textTransform, ...props}),
     borderBottom: active ? `1px solid ${COLOR.GRAY_DARKEN_48}` : 'none',
-    color: COLOR.TEXT,
     cursor: 'pointer',
     display: 'flex',
     flexGrow: 1,
