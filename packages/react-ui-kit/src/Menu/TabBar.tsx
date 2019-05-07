@@ -41,7 +41,7 @@ const TabBar = ({children = null, ...props}: TabBarProps & React.HTMLProps<HTMLD
   </div>
 );
 
-export interface TabBarItemProps<T = HTMLDivElement> extends TextProps<T> {
+export interface TabBarItemProps<T = HTMLSpanElement> extends TextProps<T> {
   active: boolean;
 }
 
