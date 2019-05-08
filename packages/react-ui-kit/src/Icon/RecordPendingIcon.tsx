@@ -23,19 +23,9 @@ import {SVGIcon, SVGIconProps} from './SVGIcon';
 
 const RecordPendingIcon = (props: SVGIconProps) => (
   <SVGIcon realWidth={16} realHeight={16} {...props}>
-    <defs>
-      <path d="M4 7a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 1a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm-.5-4.5H6v1H3.5v-1zm0-2h1v3h-1v-3z" id="a"/>
-    </defs>
-    <g fill="none" fill-rule="evenodd" opacity=".4">
-      <circle fill-opacity=".24" fill="#FB0807" cx="8" cy="8" r="8"/>
-      <g transform="translate(4 4)">
-        <mask id="b" fill="#fff">
-        <use xlink:href="#a"/>
-        </mask>
-        <g mask="url(#b)" fill="#FB0807">
-          <path d="M0 0h8v8H0z"/>
-        </g>
-      </g>
+    <g fill="#FB0807">
+      <circle fill-opacity=".24" cx="8" cy="8" r="8" />
+      <path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 1a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm-.5-4.5H10v1H7.5v-1zm0-2h1v3h-1v-3z" />
     </g>
   </SVGIcon>
 );
