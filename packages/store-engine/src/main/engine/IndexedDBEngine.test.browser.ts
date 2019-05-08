@@ -51,7 +51,7 @@ beforeEach(async done => {
   done();
 });
 
-afterEach((done) => {
+afterEach(done => {
   if (engine && engine.db) {
     engine.db.close();
   }
