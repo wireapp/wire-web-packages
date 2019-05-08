@@ -51,12 +51,14 @@ beforeEach(async done => {
   done();
 });
 
-afterEach(() => {
+afterEach((done) => {
   if (engine && engine.db) {
     engine.db.close();
   }
 
-  window.indexedDB.deleteDatabase(STORE_NAME);
+  const deleteRequest = window.indexedDB.deleteDatabase(STORE_NAME);
+  deleteRequest.onerror = () => done.fail('Error deleting database');
+  deleteRequest.onsuccess = () => done()
 });
 
 describe('init', () => {
