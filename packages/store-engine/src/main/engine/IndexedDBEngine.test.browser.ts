@@ -58,7 +58,7 @@ afterEach((done) => {
 
   const deleteRequest = window.indexedDB.deleteDatabase(STORE_NAME);
   deleteRequest.onerror = () => done.fail('Error deleting database');
-  deleteRequest.onsuccess = () => done()
+  deleteRequest.onsuccess = () => done();
 });
 
 describe('init', () => {
