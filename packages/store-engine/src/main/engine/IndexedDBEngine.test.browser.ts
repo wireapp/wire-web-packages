@@ -46,16 +46,13 @@ async function initEngine(shouldCreateNewEngine = true) {
   return storeEngine;
 }
 
-beforeEach(async done => {
+beforeEach(async () => {
   engine = await initEngine();
-  done();
 });
 
-afterEach(done => {
+afterEach(async () => {
   if (engine && engine.db) {
-    engine.db.delete().then(() => done());
-  } else {
-    done();
+    await engine.db.delete();
   }
 });
 
