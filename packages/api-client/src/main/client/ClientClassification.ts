@@ -21,6 +21,7 @@ enum ClientClassification {
   DESKTOP = 'desktop',
   PHONE = 'phone',
   TABLET = 'tablet',
+  LEGAL_HOLD = 'legalhold',
 }
 
 export {ClientClassification};
