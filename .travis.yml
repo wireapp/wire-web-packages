@@ -29,7 +29,7 @@ node_js:
   - '10'
 
 addons:
-  chrome: stable
+  chrome: beta
 
 # http://docs.travis-ci.com/user/build-lifecycle/
 before_install:
