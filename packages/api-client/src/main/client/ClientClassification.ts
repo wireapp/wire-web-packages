@@ -17,11 +17,10 @@
  *
  */
 
-enum ClientClassification {
+export enum ClientClassification {
   DESKTOP = 'desktop',
+  LEGAL_HOLD = 'legal_hold',
   PHONE = 'phone',
   TABLET = 'tablet',
   LEGAL_HOLD = 'legalhold',
 }
-
-export {ClientClassification};
