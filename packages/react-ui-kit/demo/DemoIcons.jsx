@@ -24,6 +24,7 @@ import {
   ArrowIcon,
   AttachmentIcon,
   AudioVideoIcon,
+  AvatarInviteIcon,
   CallIcon,
   CamIcon,
   CheckIcon,
@@ -75,6 +76,7 @@ class DemoIcons extends React.PureComponent {
           <ArrowIcon direction="up" height={32} />
           <AttachmentIcon height={32} />
           <AudioVideoIcon height={32} />
+          <AvatarInviteIcon height={64} />
           <CallIcon height={32} />
           <CamIcon width={32} />
           <CheckIcon width={32} />

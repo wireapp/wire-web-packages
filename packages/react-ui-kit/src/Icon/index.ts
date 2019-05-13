@@ -21,6 +21,7 @@ export * from './AddPeopleIcon';
 export * from './ArrowIcon';
 export * from './AttachmentIcon';
 export * from './AudioVideoIcon';
+export * from './AvatarInviteIcon';
 export * from './CallIcon';
 export * from './CamIcon';
 export * from './CheckIcon';
