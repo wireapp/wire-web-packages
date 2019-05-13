@@ -19,7 +19,7 @@
 
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {filterProps} from '../util';
 
 interface Props<T = HTMLDivElement> extends React.HTMLProps<T> {
@@ -31,8 +31,6 @@ interface Props<T = HTMLDivElement> extends React.HTMLProps<T> {
   backgroundColor: string;
   fetchImage?: () => {};
 }
-
-interface State {}
 
 const avatarStyle: <T>(props: Props<T>) => ObjectInterpolation<undefined> = props => {
   const BORDER_SIZE_LIMIT = 32;
@@ -63,55 +61,47 @@ const avatarStyle: <T>(props: Props<T>) => ObjectInterpolation<undefined> = prop
 const filteredAvatarProps = (props: Object) =>
   filterProps(props, ['size', 'forceInitials', 'name', 'base64Image', 'borderColor', 'backgroundColor', 'fetchImage']);
 
-class Avatar extends React.PureComponent<Props, State> {
-  observer: IntersectionObserver;
+const Avatar = (props: Props) => {
+  const {base64Image, forceInitials, name, fetchImage} = props;
+  const element = useRef<HTMLDivElement>();
 
-  element = React.createRef<HTMLDivElement>();
-
-  getInitials = (name: string) =>
+  const getInitials = (name: string) =>
     name
       .split(' ')
       .map(([initial]) => initial && initial.toUpperCase())
       .join('');
 
-  checkVisibility: IntersectionObserverCallback = ([{isIntersecting}]) => {
-    if (isIntersecting) {
-      this.observer.disconnect();
-      const {base64Image, fetchImage} = this.props;
-      if (!base64Image && fetchImage) {
-        fetchImage();
-      }
-    }
-  };
-
-  componentDidMount() {
-    const {fetchImage} = this.props;
+  useEffect(() => {
+    let observer = undefined;
     if (!fetchImage) {
-      this.observer = new IntersectionObserver(this.checkVisibility);
-      this.observer.observe(this.element.current);
+      observer = new IntersectionObserver(([{isIntersecting}]) => {
+        if (isIntersecting) {
+          observer.disconnect();
+          if (!base64Image && fetchImage) {
+            fetchImage();
+          }
+        }
+      });
+      observer.observe(element.current);
     }
-  }
 
-  componentWillUnmount() {
-    if (this.observer) {
-      this.observer.disconnect();
-    }
-  }
+    return () => {
+      if (observer) {
+        observer.disconnect();
+      }
+    };
+  }, [fetchImage]);
 
-  render() {
-    const {base64Image, forceInitials, name} = this.props;
-
-    return (
-      <div
-        ref={this.element}
-        css={avatarStyle(this.props)}
-        data-uie-name={!forceInitials && base64Image ? 'element-avatar-image' : 'element-avatar-initials'}
-        {...filteredAvatarProps(this.props)}
-      >
-        {(forceInitials || !base64Image) && this.getInitials(name)}
-      </div>
-    );
-  }
-}
+  return (
+    <div
+      ref={element}
+      css={avatarStyle(props)}
+      data-uie-name={!forceInitials && base64Image ? 'element-avatar-image' : 'element-avatar-initials'}
+      {...filteredAvatarProps(props)}
+    >
+      {(forceInitials || !base64Image) && getInitials(name)}
+    </div>
+  );
+};
 
 export {Avatar};
