@@ -23,13 +23,13 @@ import React, {useEffect, useRef} from 'react';
 import {filterProps} from '../util';
 
 interface Props<T = HTMLDivElement> extends React.HTMLProps<T> {
-  size: number;
-  forceInitials?: boolean;
-  name: string;
+  backgroundColor: string;
   base64Image?: string;
   borderColor?: string;
-  backgroundColor: string;
   fetchImage?: () => {};
+  forceInitials?: boolean;
+  name: string;
+  size: number;
 }
 
 const avatarStyle: <T>(props: Props<T>) => ObjectInterpolation<undefined> = props => {
