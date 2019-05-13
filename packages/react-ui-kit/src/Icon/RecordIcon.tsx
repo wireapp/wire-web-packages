@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2019 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,5 +17,17 @@
  *
  */
 
-export * from './MenuModal';
-export * from './TabBar';
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
+import {SVGIcon, SVGIconProps} from './SVGIcon';
+
+const RecordIcon = (props: SVGIconProps) => (
+  <SVGIcon realWidth={16} realHeight={16} {...props}>
+    <g fill="#FB0807" fill-rule="evenodd">
+      <circle fill-opacity=".24" cx="8" cy="8" r="8" />
+      <circle cx="8" cy="8" r="4" />
+    </g>
+  </SVGIcon>
+);
+
+export {RecordIcon};

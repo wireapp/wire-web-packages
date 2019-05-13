@@ -1,0 +1,7 @@
+{
+  "env": {
+    "jasmine": true
+  },
+  "extends": "./packages/eslint-config/eslintrc.json",
+  "plugins": ["jasmine"]
+}

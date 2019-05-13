@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2019 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,5 +17,17 @@
  *
  */
 
-export * from './MenuModal';
-export * from './TabBar';
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
+import {SVGIcon, SVGIconProps} from './SVGIcon';
+
+const RecordPendingIcon = (props: SVGIconProps) => (
+  <SVGIcon realWidth={16} realHeight={16} {...props}>
+    <g fill="#FB0807">
+      <circle fill-opacity=".24" cx="8" cy="8" r="8" />
+      <path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 1a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm-.5-4.5H10v1H7.5v-1zm0-2h1v3h-1v-3z" />
+    </g>
+  </SVGIcon>
+);
+
+export {RecordPendingIcon};
