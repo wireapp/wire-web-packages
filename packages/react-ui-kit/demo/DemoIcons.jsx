@@ -109,7 +109,7 @@ class DemoIcons extends React.PureComponent {
         </div>
         <Line />
         <H1>Brand Icons</H1>
-        <div style={{display: 'grid', gridGap: 16, gridTemplateColumns: 'repeat(, 1fr)'}}>
+        <div style={{display: 'grid', gridGap: 16, gridTemplateColumns: 'repeat(9, 1fr)'}}>
           <AndroidIcon width={48} />
           <AppleIcon width={48} />
           <ChromeIcon width={48} />
