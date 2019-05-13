@@ -24,7 +24,6 @@ import {
   ArrowIcon,
   AttachmentIcon,
   AudioVideoIcon,
-  AvatarInviteIcon,
   CallIcon,
   CamIcon,
   CheckIcon,
@@ -40,6 +39,7 @@ import {
   H1,
   HangupIcon,
   ImageIcon,
+  InviteIcon,
   LeaveIcon,
   Line,
   LinkedInIcon,
@@ -73,12 +73,11 @@ class DemoIcons extends React.PureComponent {
       <Container>
         <Line />
         <H1>Icons</H1>
-        <Container style={{alignItems: 'center', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around'}}>
+        <div style={{display: 'grid', gridGap: 16, gridTemplateColumns: 'repeat(8, 1fr)'}}>
           <AddPeopleIcon height={32} />
           <ArrowIcon direction="up" height={32} />
           <AttachmentIcon height={32} />
           <AudioVideoIcon height={32} />
-          <AvatarInviteIcon height={64} />
           <CallIcon height={32} />
           <CamIcon width={32} />
           <CheckIcon width={32} />
@@ -89,6 +88,7 @@ class DemoIcons extends React.PureComponent {
           <GifIcon width={32} />
           <HangupIcon width={32} />
           <ImageIcon height={32} />
+          <InviteIcon height={32} />
           <LeaveIcon height={32} />
           <MessageIcon height={32} />
           <MoreIcon height={32} />
@@ -97,8 +97,8 @@ class DemoIcons extends React.PureComponent {
           <PingIcon height={32} />
           <PlaneIcon height={32} />
           <ProfileIcon height={32} />
-          <RecordPendingIcon width={32} />
           <RecordIcon width={32} />
+          <RecordPendingIcon width={32} />
           <ServicesIcon height={32} />
           <SettingsIcon height={32} />
           <SpeakerIcon height={32} />
@@ -106,10 +106,10 @@ class DemoIcons extends React.PureComponent {
           <TimedIcon height={32} />
           <TrashIcon height={32} />
           <WireIcon width={32} />
-        </Container>
+        </div>
         <Line />
         <H1>Brand Icons</H1>
-        <Container style={{alignItems: 'center', display: 'flex', justifyContent: 'space-around'}}>
+        <div style={{display: 'grid', gridGap: 16, gridTemplateColumns: 'repeat(, 1fr)'}}>
           <AndroidIcon width={48} />
           <AppleIcon width={48} />
           <ChromeIcon width={48} />
@@ -119,7 +119,7 @@ class DemoIcons extends React.PureComponent {
           <LinuxIcon width={48} />
           <MicrosoftIcon width={48} />
           <TwitterIcon width={48} />
-        </Container>
+        </div>
       </Container>
     );
   }
