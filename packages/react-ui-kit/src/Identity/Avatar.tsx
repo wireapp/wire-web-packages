@@ -58,7 +58,7 @@ const avatarStyle: <T>(props: Props<T>) => ObjectInterpolation<undefined> = prop
   };
 };
 
-const filteredAvatarProps = (props: Object) =>
+const filteredAvatarProps = (props: Props) =>
   filterProps(props, ['size', 'forceInitials', 'name', 'base64Image', 'borderColor', 'backgroundColor', 'fetchImage']);
 
 const Avatar = (props: Props) => {
