@@ -185,7 +185,7 @@ class Demo extends React.PureComponent {
                 borderColor={'#fb0807'}
                 backgroundColor={'#2085C2'}
                 fetchImage={() => {
-                  console.error('Trying to fetch non existing asset');
+                  console.info('Trying to fetch asset');
                 }}
               />
               <Avatar
