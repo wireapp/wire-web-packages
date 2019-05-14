@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@4.1.2...@wireapp/api-client@4.1.3) (2019-05-14)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [4.1.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@4.1.1...@wireapp/api-client@4.1.2) (2019-05-13)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [4.1.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@4.1.0...@wireapp/api-client@4.1.1) (2019-05-13)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+# [4.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@4.0.5...@wireapp/api-client@4.1.0) (2019-05-13)
+
+
+### Features
+
+* **tslint-config:** Enforce type definitions to exist ([#1786](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1786)) ([be7c254](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/be7c254))
+
+
+
+
+
 ## [4.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@4.0.4...@wireapp/api-client@4.0.5) (2019-05-09)
 
 **Note:** Version bump only for package @wireapp/api-client

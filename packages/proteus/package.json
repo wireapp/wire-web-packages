@@ -2,8 +2,8 @@
   "dependencies": {
     "@types/chai": "4.1.7",
     "@types/ed2curve": "0.2.2",
-    "@types/node": "11.13.7",
-    "@wireapp/cbor": "4.0.0",
+    "@types/node": "~10",
+    "@wireapp/cbor": "4.0.2",
     "ed2curve": "0.2.1",
     "libsodium-wrappers-sumo": "0.7.4"
   },
@@ -14,9 +14,9 @@
     "chai": "4.2.0",
     "jasmine": "3.4.0",
     "rimraf": "2.6.3",
-    "typescript": "3.4.4",
-    "webpack": "4.30.0",
-    "webpack-cli": "3.3.1"
+    "typescript": "3.4.5",
+    "webpack": "4.31.0",
+    "webpack-cli": "3.3.2"
   },
   "files": [
     "dist"
@@ -35,5 +35,5 @@
     "test:project": "yarn dist && yarn test",
     "test:node": "jasmine"
   },
-  "version": "9.0.0"
+  "version": "9.1.1"
 }

@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@types/node": "11.13.7",
+    "@types/node": "~10",
     "pure-uuid": "1.5.7"
   },
   "devDependencies": {
@@ -13,9 +13,9 @@
     "karma-sourcemap-loader": "0.3.7",
     "karma-spec-reporter": "0.0.32",
     "rimraf": "2.6.3",
-    "typescript": "3.4.4",
-    "webpack": "4.30.0",
-    "webpack-cli": "3.3.1"
+    "typescript": "3.4.5",
+    "webpack": "4.31.0",
+    "webpack-cli": "3.3.2"
   },
   "description": "A Promise-based dynamic priority queue runner.",
   "files": [
@@ -36,5 +36,5 @@
     "test:project": "yarn dist && yarn test",
     "test:node": "cross-env JASMINE_CONFIG_PATH=src/test/node/support/jasmine.json jasmine"
   },
-  "version": "1.0.0"
+  "version": "1.0.2"
 }
