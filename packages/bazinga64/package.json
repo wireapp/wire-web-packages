@@ -14,11 +14,11 @@
     "karma-spec-reporter": "0.0.32",
     "karma-typescript": "4.0.0",
     "libsodium-wrappers": "0.7.4",
-    "nyc": "14.0.0",
+    "nyc": "14.1.1",
     "rimraf": "2.6.3",
     "ts-node": "8.1.0",
-    "typescript": "3.4.4",
-    "webpack": "4.30.0"
+    "typescript": "3.4.5",
+    "webpack": "4.31.0"
   },
   "files": [
     "dist"
@@ -51,5 +51,5 @@
     "test:browser": "karma start",
     "test:node": "nyc jasmine --config=jasmine.json"
   },
-  "version": "5.3.60"
+  "version": "5.4.1"
 }

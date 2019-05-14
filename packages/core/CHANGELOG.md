@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@10.1.3...@wireapp/core@10.2.0) (2019-05-14)
+
+
+### Features
+
+* **api-client:** Add legal hold classification ([#1829](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1829)) ([3874936](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/3874936))
+
+
+
+
+
+## [10.1.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@10.1.2...@wireapp/core@10.1.3) (2019-05-14)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [10.1.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@10.1.1...@wireapp/core@10.1.2) (2019-05-13)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [10.1.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@10.1.0...@wireapp/core@10.1.1) (2019-05-13)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [10.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@10.0.5...@wireapp/core@10.1.0) (2019-05-13)
+
+
+### Features
+
+* **tslint-config:** Enforce type definitions to exist ([#1786](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1786)) ([be7c254](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/be7c254))
+
+
+
+
+
 ## [10.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@10.0.4...@wireapp/core@10.0.5) (2019-05-09)
 
 **Note:** Version bump only for package @wireapp/core

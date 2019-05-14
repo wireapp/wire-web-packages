@@ -20,7 +20,7 @@
 import {ClientClassification} from './ClientClassification';
 
 export interface RegisteredClient {
-  /** The IP address */
+  /** The IP address from which the client was registered */
   address?: string;
   class: ClientClassification;
   /** The cookie label */
