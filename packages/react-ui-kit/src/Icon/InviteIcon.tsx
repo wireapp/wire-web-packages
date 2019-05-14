@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2019 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,17 +17,14 @@
  *
  */
 
-/* tslint:disable:object-literal-sort-keys */
-export const WIDTH = {
-  TINY: 320,
-  MOBILE: 480,
-  TABLET_MIN: 640,
-  TABLET_MAX: 919,
-  DESKTOP_MIN: 920,
-  DESKTOP_MAX: 1199,
-  DESKTOP_XL_MIN: 1200,
-  DESKTOP_XL_MAX: 1600,
-};
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
+import {SVGIcon, SVGIconProps} from './SVGIcon';
 
-export const STEP = 8;
-export const GUTTER = STEP + STEP;
+const InviteIcon = (props: SVGIconProps) => (
+  <SVGIcon realWidth={16} realHeight={16} {...props}>
+    <path d="M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12zm0 2A8 8 0 1 1 8 0a8 8 0 0 1 0 16zM7 7h5v2H7V7zm0-4h2v6H7V3z" />
+  </SVGIcon>
+);
+
+export {InviteIcon};

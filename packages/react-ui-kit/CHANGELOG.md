@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.4.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@6.3.0...@wireapp/react-ui-kit@6.4.0) (2019-05-13)
+
+
+### Features
+
+* **react-ui-kit:** Add Avatar component ([#1823](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1823)) ([db25656](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/db25656))
+
+
+
+
+
+# [6.3.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@6.2.0...@wireapp/react-ui-kit@6.3.0) (2019-05-13)
+
+
+### Features
+
+* **react-ui-kit:** New invite icon (clock) ([#1822](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1822)) ([79c8bc2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/79c8bc2))
+
+
+
+
+
+# [6.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@6.1.2...@wireapp/react-ui-kit@6.2.0) (2019-05-13)
+
+
+### Features
+
+* **tslint-config:** Enforce type definitions to exist ([#1786](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/1786)) ([be7c254](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/be7c254))
+
+
+
+
+
 ## [6.1.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@6.1.1...@wireapp/react-ui-kit@6.1.2) (2019-05-09)
 
 
