@@ -11,7 +11,7 @@
     "eslint-plugin-react": "7.13.0",
     "husky": "2.3.0",
     "lerna": "3.14.0",
-    "lint-staged": "8.1.6",
+    "lint-staged": "8.1.7",
     "prettier": "1.17.1",
     "tslint": "5.16.0",
     "tslint-config-prettier": "1.18.0",
