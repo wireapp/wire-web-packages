@@ -31,6 +31,10 @@ class AccountAPI {
     PROVIDER: '/provider',
   };
 
+  /**
+   * Delete account
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/delete
+   */
   public async postDeleteAccount(key: string, code: string): Promise<void> {
     const config: AxiosRequestConfig = {
       data: {
@@ -38,24 +42,32 @@ class AccountAPI {
         key,
       },
       method: 'post',
-      url: `${AccountAPI.URL.DELETE}`,
+      url: AccountAPI.URL.DELETE,
     };
 
     await this.client.sendJSON(config);
   }
 
+  /**
+   * Start password reset flow
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/password-reset
+   */
   public async postPasswordReset(email: string): Promise<void> {
     const config: AxiosRequestConfig = {
       data: {
         email,
       },
       method: 'post',
-      url: `${AccountAPI.URL.PASSWORD_RESET}`,
+      url: AccountAPI.URL.PASSWORD_RESET,
     };
 
     await this.client.sendJSON(config);
   }
 
+  /**
+   * Finish password reset flow
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/password-reset/complete
+   */
   public async postPasswordResetComplete(password: string, key: string, code: string): Promise<void> {
     const config: AxiosRequestConfig = {
       data: {
@@ -70,6 +82,10 @@ class AccountAPI {
     await this.client.sendJSON(config);
   }
 
+  /**
+   * Verify email address
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/activate
+   */
   public async getVerifyEmail(key: string, code: string): Promise<void> {
     const config: AxiosRequestConfig = {
       method: 'get',
@@ -77,12 +93,16 @@ class AccountAPI {
         code,
         key,
       },
-      url: `${AccountAPI.URL.ACTIVATE}`,
+      url: AccountAPI.URL.ACTIVATE,
     };
 
     await this.client.sendJSON(config);
   }
 
+  /**
+   * Verify service
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/provider/activate
+   */
   public async getVerifyBot(key: string, code: string): Promise<void> {
     const config: AxiosRequestConfig = {
       method: 'get',
