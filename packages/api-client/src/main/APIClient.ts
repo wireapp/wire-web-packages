@@ -36,7 +36,15 @@ import * as ObfuscationUtil from './obfuscation/';
 import {SelfAPI} from './self/';
 import {retrieveCookie} from './shims/node/cookie';
 import {WebSocketClient} from './tcp/';
-import {IdentityProviderAPI, MemberAPI, PaymentAPI, ServiceAPI, TeamAPI, TeamInvitationAPI} from './team/';
+import {
+  IdentityProviderAPI,
+  LegalHoldAPI,
+  MemberAPI,
+  PaymentAPI,
+  ServiceAPI,
+  TeamAPI,
+  TeamInvitationAPI,
+} from './team/';
 import {UserAPI} from './user/';
 
 const {version}: {version: string} = require('../../package.json');
@@ -63,6 +71,7 @@ class APIClient extends EventEmitter {
   public teams: {
     identityProvider: {api: IdentityProviderAPI};
     invitation: {api: TeamInvitationAPI};
+    legalhold: {api: LegalHoldAPI};
     member: {api: MemberAPI};
     payment: {api: PaymentAPI};
     service: {api: ServiceAPI};
@@ -139,6 +148,9 @@ class APIClient extends EventEmitter {
       },
       invitation: {
         api: new TeamInvitationAPI(this.transport.http),
+      },
+      legalhold: {
+        api: new LegalHoldAPI(this.transport.http),
       },
       member: {
         api: new MemberAPI(this.transport.http),

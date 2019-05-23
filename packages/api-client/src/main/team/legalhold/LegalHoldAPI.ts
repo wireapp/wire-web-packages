@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2019 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,70 +19,57 @@
 
 import {AxiosRequestConfig} from 'axios';
 
-import {HttpClient} from '../../http/';
-import {MemberData, Members} from '../member/';
+import {HttpClient} from '../../http';
 import {TeamAPI} from '../team/TeamAPI';
 
-class MemberAPI {
+class LegalHoldAPI {
   constructor(private readonly client: HttpClient) {}
 
   static URL = {
-    MEMBERS: 'members',
+    APPROVE_LEGAL_HOLD: 'approve',
+    LEGAL_HOLD: 'legalhold',
   };
 
-  public getMembers(teamId: string): Promise<Members> {
+  public getMemberLegalHold(teamId: string, userId: string): Promise<void> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${TeamAPI.URL.TEAMS}/${teamId}/${MemberAPI.URL.MEMBERS}`,
+      url: `${TeamAPI.URL.TEAMS}/${teamId}/${LegalHoldAPI.URL.LEGAL_HOLD}/${userId}`,
     };
 
-    return this.client.sendJSON<Members>(config).then(response => response.data);
+    return this.client.sendJSON<void>(config).then(response => response.data);
   }
 
-  public getMember(teamId: string, userId: string): Promise<MemberData> {
+  public deleteMemberLegalHold(teamId: string, userId: string): Promise<void> {
     const config: AxiosRequestConfig = {
-      method: 'get',
-      url: `${TeamAPI.URL.TEAMS}/${teamId}/${MemberAPI.URL.MEMBERS}/${userId}`,
+      method: 'delete',
+      url: `${TeamAPI.URL.TEAMS}/${teamId}/${LegalHoldAPI.URL.LEGAL_HOLD}/${userId}`,
     };
 
-    return this.client.sendJSON<MemberData>(config).then(response => response.data);
+    return this.client.sendJSON<void>(config).then(response => response.data);
   }
 
-  public deleteMember(teamId: string, userId: string, password: string): Promise<void> {
+  public postMemberLegalHold(teamId: string, userId: string): Promise<void> {
+    const config: AxiosRequestConfig = {
+      method: 'post',
+      url: `${TeamAPI.URL.TEAMS}/${teamId}/${LegalHoldAPI.URL.LEGAL_HOLD}/${userId}`,
+    };
+
+    return this.client.sendJSON<void>(config).then(response => response.data);
+  }
+
+  public putMemberLegalHold(teamId: string, userId: string, password: string): Promise<void> {
     const config: AxiosRequestConfig = {
       data: {
         password,
       },
-      method: 'delete',
-      url: `${TeamAPI.URL.TEAMS}/${teamId}/${MemberAPI.URL.MEMBERS}/${userId}`,
-    };
-
-    return this.client.sendJSON<void>(config).then(response => response.data);
-  }
-
-  public postMembers(teamId: string, member: MemberData): Promise<void> {
-    const config: AxiosRequestConfig = {
-      data: {
-        member: member,
-      },
-      method: 'post',
-      url: `${TeamAPI.URL.TEAMS}/${teamId}/${MemberAPI.URL.MEMBERS}`,
-    };
-
-    return this.client.sendJSON<void>(config).then(response => response.data);
-  }
-
-  public putMembers(teamId: string, member: MemberData): Promise<void> {
-    const config: AxiosRequestConfig = {
-      data: {
-        member: member,
-      },
       method: 'put',
-      url: `${TeamAPI.URL.TEAMS}/${teamId}/${MemberAPI.URL.MEMBERS}`,
+      url: `${TeamAPI.URL.TEAMS}/${teamId}/${LegalHoldAPI.URL.LEGAL_HOLD}/${userId}/${
+        LegalHoldAPI.URL.APPROVE_LEGAL_HOLD
+      }`,
     };
 
     return this.client.sendJSON<void>(config).then(response => response.data);
   }
 }
 
-export {MemberAPI};
+export {LegalHoldAPI};
