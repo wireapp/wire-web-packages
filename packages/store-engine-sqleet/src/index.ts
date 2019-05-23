@@ -71,7 +71,7 @@ export class SQLeetEngine implements CRUDEngine {
 
   async purge(): Promise<void> {
     // From api.coffee: "Databases **must** be closed, when you're finished with them, or the
-    // memory consumption will grow forever"
+    // memory consumption will grow forever
     this.db.close();
     this.db = null;
   }

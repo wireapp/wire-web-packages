@@ -28,6 +28,14 @@ export type SQLiteTableDefinition = Record<string, SQLiteType>;
 
 export type SQLiteDatabaseDefinition = Record<string, SQLiteTableDefinition>;
 
+export function mapPropertiesToColumns(value: Object): SQLiteTableDefinition {
+  const columns: SQLiteTableDefinition = {};
+  Object.entries(value).forEach(([key, value]) => {
+    columns[key] = mapValueToType(value);
+  });
+  return columns;
+}
+
 export function mapValueToType(value: any): SQLiteType {
   let jsType = '';
 
