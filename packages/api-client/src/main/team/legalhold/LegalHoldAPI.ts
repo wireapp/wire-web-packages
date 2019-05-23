@@ -21,6 +21,8 @@ import {AxiosRequestConfig} from 'axios';
 
 import {HttpClient} from '../../http';
 import {TeamAPI} from '../team/TeamAPI';
+import {LegalHoldData} from './LegalHoldData';
+import {NewLegalHoldData} from './NewLegalHoldData';
 
 class LegalHoldAPI {
   constructor(private readonly client: HttpClient) {}
@@ -28,36 +30,37 @@ class LegalHoldAPI {
   static URL = {
     APPROVE_LEGAL_HOLD: 'approve',
     LEGAL_HOLD: 'legalhold',
+    SETTINGS_LEGAL_HOLD: 'settings',
   };
 
-  public getMemberLegalHold(teamId: string, userId: string): Promise<void> {
+  public async getMemberLegalHold(teamId: string, userId: string): Promise<void> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${TeamAPI.URL.TEAMS}/${teamId}/${LegalHoldAPI.URL.LEGAL_HOLD}/${userId}`,
     };
 
-    return this.client.sendJSON<void>(config).then(response => response.data);
+    await this.client.sendJSON<void>(config);
   }
 
-  public deleteMemberLegalHold(teamId: string, userId: string): Promise<void> {
+  public async deleteMemberLegalHold(teamId: string, userId: string): Promise<void> {
     const config: AxiosRequestConfig = {
       method: 'delete',
       url: `${TeamAPI.URL.TEAMS}/${teamId}/${LegalHoldAPI.URL.LEGAL_HOLD}/${userId}`,
     };
 
-    return this.client.sendJSON<void>(config).then(response => response.data);
+    await this.client.sendJSON<void>(config);
   }
 
-  public postMemberLegalHold(teamId: string, userId: string): Promise<void> {
+  public async postMemberLegalHold(teamId: string, userId: string): Promise<void> {
     const config: AxiosRequestConfig = {
       method: 'post',
       url: `${TeamAPI.URL.TEAMS}/${teamId}/${LegalHoldAPI.URL.LEGAL_HOLD}/${userId}`,
     };
 
-    return this.client.sendJSON<void>(config).then(response => response.data);
+    await this.client.sendJSON<void>(config);
   }
 
-  public putMemberLegalHold(teamId: string, userId: string, password: string): Promise<void> {
+  public async putMemberLegalHold(teamId: string, userId: string, password: string): Promise<void> {
     const config: AxiosRequestConfig = {
       data: {
         password,
@@ -68,7 +71,37 @@ class LegalHoldAPI {
       }`,
     };
 
-    return this.client.sendJSON<void>(config).then(response => response.data);
+    await this.client.sendJSON<void>(config);
+  }
+
+  public async getLegalHoldSettings(teamId: string): Promise<LegalHoldData> {
+    const config: AxiosRequestConfig = {
+      method: 'get',
+      url: `${TeamAPI.URL.TEAMS}/${teamId}/${LegalHoldAPI.URL.LEGAL_HOLD}/${LegalHoldAPI.URL.SETTINGS_LEGAL_HOLD}`,
+    };
+
+    return (await this.client.sendJSON<LegalHoldData>(config)).data;
+  }
+
+  public async deleteLegalHoldSettings(teamId: string): Promise<void> {
+    const config: AxiosRequestConfig = {
+      method: 'delete',
+      url: `${TeamAPI.URL.TEAMS}/${teamId}/${LegalHoldAPI.URL.LEGAL_HOLD}/${LegalHoldAPI.URL.SETTINGS_LEGAL_HOLD}`,
+    };
+
+    await this.client.sendJSON<void>(config);
+  }
+
+  public async postLegalHoldSettings(teamId: string, legalHoldData: NewLegalHoldData): Promise<LegalHoldData> {
+    const config: AxiosRequestConfig = {
+      data: {
+        legalHoldData,
+      },
+      method: 'post',
+      url: `${TeamAPI.URL.TEAMS}/${teamId}/${LegalHoldAPI.URL.LEGAL_HOLD}/${LegalHoldAPI.URL.SETTINGS_LEGAL_HOLD}`,
+    };
+
+    return (await this.client.sendJSON<LegalHoldData>(config)).data;
   }
 }
 
