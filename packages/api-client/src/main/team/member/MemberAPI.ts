@@ -26,13 +26,11 @@ import {TeamAPI} from '../team/TeamAPI';
 class MemberAPI {
   constructor(private readonly client: HttpClient) {}
 
-  static get URL() {
-    return {
-      APPROVE_LEGAL_HOLD: 'approve',
-      LEGAL_HOLD: 'legalhold',
-      MEMBERS: 'members',
-    };
-  }
+  static URL = {
+    APPROVE_LEGAL_HOLD: 'approve',
+    LEGAL_HOLD: 'legalhold',
+    MEMBERS: 'members',
+  };
 
   public getMembers(teamId: string): Promise<Members> {
     const config: AxiosRequestConfig = {
