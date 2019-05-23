@@ -36,8 +36,8 @@ describe('create', () => {
       },
     };
 
-    const engine = new SQLeetEngine(schema);
-    await engine.init('', webAssembly);
+    const engine = new SQLeetEngine(webAssembly);
+    await engine.init('', schema);
     await engine.create<Record>('users', '1', {name: 'Otto'});
     const result = await engine.read<Record>('users', '1');
     expect(result.name).toBe('Otto');

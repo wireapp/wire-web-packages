@@ -18,7 +18,7 @@
  */
 
 import {CRUDEngine} from '@wireapp/store-engine';
-import {SQLiteDatabaseDefinition, SQLiteTableDefinition, createTableIfNotExists} from './SchemaConverter';
+import {SQLiteDatabaseDefinition, SQLiteTableDefinition, SQLiteType, createTableIfNotExists} from './SchemaConverter';
 
 const initSqlJs = require('sql.js');
 
@@ -30,28 +30,42 @@ declare global {
 
 export class SQLeetEngine implements CRUDEngine {
   private db: any;
+  private readonly dbConfig: any;
   public storeName = '';
-  private readonly schema: SQLiteDatabaseDefinition;
+  private schema: SQLiteDatabaseDefinition;
 
-  constructor(schema: SQLiteDatabaseDefinition) {
-    this.schema = schema;
-  }
-
-  append(tableName: string, primaryKey: string, additions: string): Promise<string> {
-    throw new Error('Method not implemented.');
-  }
-
-  async init(storeName: string, wasmLocation?: Uint8Array | string, encryptionKey?: string): Promise<any> {
-    const SQL = await initSqlJs(
+  constructor(wasmLocation?: Uint8Array | string) {
+    this.dbConfig =
       typeof wasmLocation === 'string'
         ? {
             locateFile: () => wasmLocation,
           }
         : {
             wasmBinary: wasmLocation,
-          }
-    );
-    this.db = new SQL.Database();
+          };
+    this.schema = {
+      objects: {
+        key: SQLiteType.TEXT,
+        value: SQLiteType.TEXT,
+      },
+    };
+  }
+
+  append(tableName: string, primaryKey: string, additions: string): Promise<string> {
+    throw new Error('Method not implemented.');
+  }
+
+  async init(
+    storeName: string,
+    schema: SQLiteDatabaseDefinition,
+    encryptionKey?: string,
+    existingDatabase?: Uint8Array
+  ): Promise<any> {
+    this.storeName = storeName;
+    this.schema = schema;
+
+    const SQL = await initSqlJs(this.dbConfig);
+    this.db = new SQL.Database(existingDatabase);
 
     // Setup encryption scheme
     if (encryptionKey) {
