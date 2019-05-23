@@ -7,7 +7,7 @@
     "babel-loader": "8.0.5",
     "@wireapp/store-engine": "2.1.2",
     "@types/node": "~10",
-    "@types/sql.js": "0.0.29",
+    "@types/sql.js": "1.0.0",
     "sql.js": "https://github.com/pwnsdx/sqleet.js"
   },
   "devDependencies": {

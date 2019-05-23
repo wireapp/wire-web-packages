@@ -1897,10 +1897,10 @@
   resolved "https://registry.yarnpkg.com/@types/spark-md5/-/spark-md5-3.0.1.tgz#351b383b32fa7a6a579b836ef8786293c4a7e73b"
   integrity sha512-sjiWYRmuuFZMo/DdysQe/yX6x40Q0WZXsNgvbUIg7gUaQYNoXx4CqWq27rDikQyc+0JKkqsoNiIBAA0GUxbUXw==
 
-"@types/sql.js@0.0.29":
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/@types/sql.js/-/sql.js-0.0.29.tgz#dccd3fa0c29dd2fd17ace5a4bdb90bb1e637d096"
-  integrity sha512-QDdqZ0k+p1YnphkSdZerpuH/hOs/wE9VftNgsw56IIG5Qm3X+VZ6NbnnvmFNkRoBn5Ke/juE/gypZ/y4Cr3faw==
+"@types/sql.js@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/sql.js/-/sql.js-1.0.0.tgz#1b1bdd4397cb5f0b717f51e9b3bd8ccf49e9d78d"
+  integrity sha512-MLq0mvjdcAxNEZ2zu3HAkLP6skvPkm+hSftX3YpVSUVzDH6sCvuE5yvxC+RPM3eAC2sfArYENypxHwXwYYxWoA==
   dependencies:
     "@types/node" "*"
 
