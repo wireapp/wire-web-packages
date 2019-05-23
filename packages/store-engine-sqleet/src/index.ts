@@ -41,18 +41,24 @@ export class SQLeetEngine implements CRUDEngine {
     throw new Error('Method not implemented.');
   }
 
-  async init(storeName: string, wasmLocation?: Uint8Array | string): Promise<any> {
-    const SQL =
+  async init(storeName: string, wasmLocation?: Uint8Array | string, encryptionKey?: string): Promise<any> {
+    const SQL = await initSqlJs(
       typeof wasmLocation === 'string'
-        ? await initSqlJs({
+        ? {
             locateFile: () => wasmLocation,
-          })
-        : await initSqlJs({
+          }
+        : {
             wasmBinary: wasmLocation,
-          });
-
+          }
+    );
     this.db = new SQL.Database();
 
+    // Setup encryption scheme
+    if (encryptionKey) {
+      this.db.key(`raw:${encryptionKey}`);
+    }
+
+    // Create tables
     let statement: string = '';
     for (const tableName in this.schema) {
       const columns: SQLiteTableDefinition = this.schema[tableName];
@@ -64,6 +70,9 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   async purge(): Promise<void> {
+    // From api.coffee: "Databases **must** be closed, when you're finished with them, or the
+    // memory consumption will grow forever"
+    this.db.close();
     this.db = null;
   }
 
