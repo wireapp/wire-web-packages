@@ -36,7 +36,7 @@ describe('SchemaConverter', () => {
 
       const statement = createTableIfNotExists('user', userColumns);
       const expected =
-        'CREATE TABLE IF NOT EXISTS user (key text,age integer,favoriteShows text,hometown text,isRobot boolean,lastSeen datetime,name text);';
+        'CREATE TABLE IF NOT EXISTS user (key varchar(255) PRIMARY KEY,age integer,favoriteShows text,hometown text,isRobot boolean,lastSeen datetime,name text);';
       expect(statement).toBe(expected);
     });
   });
@@ -51,7 +51,7 @@ describe('SchemaConverter', () => {
       });
 
       const expected =
-        'CREATE TABLE IF NOT EXISTS prekeys (key text,created real,id text,serialised text,version text);';
+        'CREATE TABLE IF NOT EXISTS prekeys (key varchar(255) PRIMARY KEY,created real,id text,serialised text,version text);';
       expect(statement).toBe(expected);
     });
   });

@@ -72,6 +72,8 @@ export function mapValueToType(value: any): SQLiteType {
 }
 
 export function createTableIfNotExists<T>(tableName: string, columns: SQLiteTableDefinition<T>): string {
-  const statements = ['key text'].concat(Object.entries(columns).map(([key, type]) => `${key} ${type}`));
+  const statements = ['key varchar(255) PRIMARY KEY'].concat(
+    Object.entries(columns).map(([key, type]) => `${key} ${type}`)
+  );
   return `CREATE TABLE IF NOT EXISTS ${tableName} (${statements.join(',')});`;
 }
