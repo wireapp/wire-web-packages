@@ -22,12 +22,6 @@ import {SQLiteDatabaseDefinition, SQLiteType, createTableIfNotExists} from './Sc
 
 const initSqlJs = require('sql.js');
 
-declare global {
-  interface Window {
-    WebAssembly: any;
-  }
-}
-
 export class SQLeetEngine implements CRUDEngine {
   private db: any;
   private readonly dbConfig: any;
@@ -35,14 +29,13 @@ export class SQLeetEngine implements CRUDEngine {
   private schema: SQLiteDatabaseDefinition<Record<string, any>>;
 
   constructor(wasmLocation?: Uint8Array | string) {
-    this.dbConfig =
-      typeof wasmLocation === 'string'
-        ? {
-            locateFile: () => wasmLocation,
-          }
-        : {
-            wasmBinary: wasmLocation,
-          };
+    this.dbConfig = {};
+
+    if (typeof wasmLocation === 'string') {
+      this.dbConfig.locateFile = () => wasmLocation;
+    } else if (wasmLocation instanceof Uint8Array) {
+      this.dbConfig.wasmBinary = wasmLocation;
+    }
     this.schema = {
       objects: {
         key: SQLiteType.TEXT,
@@ -95,7 +88,7 @@ export class SQLeetEngine implements CRUDEngine {
     entity: Record<string, any>
   ): {columns: string[]; values: Record<string, any>} {
     const columns = Object.keys(entity).filter(column => {
-      // Ensure the column name exist, to avoid any SQL injection
+      // Ensure the column name exists to avoid SQL injection
       return typeof this.schema[tableName][column] !== 'undefined';
     });
     if (!columns) {
@@ -171,7 +164,7 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   async isSupported(): Promise<void> {
-    const webAssembly = window.WebAssembly;
+    const webAssembly = (window as any).WebAssembly;
     if (typeof webAssembly === 'object' && typeof webAssembly.instantiate === 'function') {
       const module = new webAssembly.Module(Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00));
       if (module instanceof webAssembly.Module) {
