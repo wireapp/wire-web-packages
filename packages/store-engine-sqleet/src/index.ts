@@ -58,8 +58,8 @@ export class SQLeetEngine implements CRUDEngine {
   async init(
     storeName: string,
     schema: SQLiteDatabaseDefinition,
-    encryptionKey?: string,
-    existingDatabase?: Uint8Array
+    existingDatabase?: Uint8Array,
+    encryptionKey?: string
   ): Promise<any> {
     this.storeName = storeName;
     this.schema = schema;
