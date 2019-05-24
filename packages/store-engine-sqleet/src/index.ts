@@ -136,6 +136,7 @@ export class SQLeetEngine implements CRUDEngine {
     const record = statement.getAsObject({
       '@primaryKey': primaryKey,
     });
+    statement.free();
 
     return record;
   }
