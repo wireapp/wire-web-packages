@@ -62,7 +62,9 @@ export function mapValueToType(value: any): SQLiteType {
     case 'Number': {
       return isInt(value as number) ? SQLiteType.INTEGER : SQLiteType.REAL;
     }
-    case 'String':
+    case 'String': {
+      return SQLiteType.TEXT;
+    }
     default: {
       return SQLiteType.TEXT;
     }
