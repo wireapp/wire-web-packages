@@ -17,13 +17,14 @@
  *
  */
 
-import {CRUDEngine, LocalStorageEngine} from '@wireapp/store-engine';
+import {CRUDEngine, IndexedDBEngine} from '@wireapp/store-engine';
 import {SQLiteDatabaseDefinition, SQLiteType, createTableIfNotExists} from './SchemaConverter';
 
 const initSqlJs = require('sql.js');
 
 export class SQLeetEngine implements CRUDEngine {
   private db: any;
+  private indexedDB?: IndexedDBEngine;
   private readonly dbConfig: any;
   public storeName = '';
   private schema: SQLiteDatabaseDefinition<Record<string, any>>;
@@ -58,17 +59,19 @@ export class SQLeetEngine implements CRUDEngine {
     this.schema = schema;
 
     if (persist) {
-      this.localStorage = new LocalStorageEngine();
-      this.localStorage.init(storeName);
+      this.indexedDB = new IndexedDBEngine();
+      this.indexedDB.init(storeName);
     }
 
     const SQL = await initSqlJs(this.dbConfig);
 
-    this.db = new SQL.Database();
+    const existingDatabase = this.load();
+    this.db = new SQL.Database(existingDatabase ? existingDatabase : undefined);
 
+    // Settings
     this.db.run('PRAGMA encoding="UTF-8";');
     if (encryptionKey) {
-      this.db.key(`raw:${encryptionKey}`);
+      this.db.run(`PRAGMA key="raw:${encryptionKey}";`);
     }
 
     // Create tables
@@ -91,17 +94,24 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   private async save(): Promise<void> {
-    if (!this.localStorage) {
-      return;
+    if (!this.indexedDB) {
+      throw new Error('IndexedDB need to be available');
     }
-    const database = await this.export();
-    this.localStorage.updateOrCreate(this.storeName, this.storeName, database);
-  }
-
-  private async export(): Promise<string> {
     const database = this.db.export();
     const decoder = new TextDecoder('utf8');
-    return decoder.decode(database);
+    await this.indexedDB.updateOrCreate(this.storeName, this.storeName, decoder.decode(database));
+  }
+
+  private async load(): Promise<Uint8Array | undefined> {
+    if (!this.indexedDB) {
+      throw new Error('IndexedDB need to be available');
+    }
+    const database = await this.indexedDB.read<string>(this.storeName, this.storeName);
+    if (!database) {
+      return undefined;
+    }
+    const encoder = new TextEncoder();
+    return encoder.encode(database);
   }
 
   async purge(): Promise<void> {
@@ -174,7 +184,11 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   readAllPrimaryKeys(tableName: string): Promise<string[]> {
-    throw new Error('Method not implemented.');
+    const statement = this.db.prepare(`SELECT key FROM ${tableName};`);
+    const record = statement.getAsObject();
+    console.log(record);
+    statement.free();
+    return record;
   }
 
   async update(tableName: string, primaryKey: string, changes: Record<string, any>): Promise<string> {
@@ -188,8 +202,16 @@ export class SQLeetEngine implements CRUDEngine {
     return primaryKey;
   }
 
-  updateOrCreate<T>(tableName: string, primaryKey: string, changes: T): Promise<string> {
-    throw new Error('Method not implemented.');
+  async updateOrCreate<T>(tableName: string, primaryKey: string, changes: Record<string, any>): Promise<string> {
+    const {columns, values} = this.buildValues(tableName, changes);
+    const statement = `REPLACE INTO ${tableName} (key,${columns.join(',')}) VALUES (@primaryKey,${Object.keys(
+      values
+    ).join(',')});`;
+    this.db.run(statement, {
+      ...values,
+      '@primaryKey': primaryKey,
+    });
+    return primaryKey;
   }
 
   async isSupported(): Promise<void> {

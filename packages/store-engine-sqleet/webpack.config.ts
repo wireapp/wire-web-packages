@@ -20,6 +20,10 @@
 import webpack from 'webpack';
 
 const config: webpack.Configuration = {
+  externals: {
+    dexie: 'Dexie',
+    'fs-extra': '{}',
+  },
   mode: 'development',
   module: {
     rules: [
