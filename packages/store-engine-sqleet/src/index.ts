@@ -17,7 +17,8 @@
  *
  */
 
-import {CRUDEngine, IndexedDBEngine} from '@wireapp/store-engine';
+import {CRUDEngine} from '@wireapp/store-engine';
+import {IndexedDBEngine} from '@wireapp/store-engine/dist/commonjs/engine/IndexedDBEngine';
 import {SQLiteDatabaseDefinition, SQLiteType, createTableIfNotExists} from './SchemaConverter';
 
 const initSqlJs = require('sql.js');
