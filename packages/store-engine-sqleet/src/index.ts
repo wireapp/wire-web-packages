@@ -60,7 +60,7 @@ export class SQLeetEngine implements CRUDEngine {
     const SQL = await initSqlJs(this.dbConfig);
     this.db = new SQL.Database(existingDatabase);
 
-    // Setup encryption scheme
+    this.db.run('PRAGMA encoding="UTF-8";');
     if (encryptionKey) {
       this.db.key(`raw:${encryptionKey}`);
     }
