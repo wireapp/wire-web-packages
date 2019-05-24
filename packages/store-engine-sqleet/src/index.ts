@@ -17,7 +17,7 @@
  *
  */
 
-import {CRUDEngine} from '@wireapp/store-engine';
+import {CRUDEngine, LocalStorageEngine} from '@wireapp/store-engine';
 import {SQLiteDatabaseDefinition, SQLiteType, createTableIfNotExists} from './SchemaConverter';
 
 const initSqlJs = require('sql.js');
@@ -51,14 +51,20 @@ export class SQLeetEngine implements CRUDEngine {
   async init<T>(
     storeName: string,
     schema: SQLiteDatabaseDefinition<T>,
-    existingDatabase?: Uint8Array,
-    encryptionKey?: string
+    encryptionKey?: string,
+    persist?: boolean
   ): Promise<any> {
     this.storeName = storeName;
     this.schema = schema;
 
+    if (persist) {
+      this.localStorage = new LocalStorageEngine();
+      this.localStorage.init(storeName);
+    }
+
     const SQL = await initSqlJs(this.dbConfig);
-    this.db = new SQL.Database(existingDatabase);
+
+    this.db = new SQL.Database();
 
     this.db.run('PRAGMA encoding="UTF-8";');
     if (encryptionKey) {
@@ -73,7 +79,29 @@ export class SQLeetEngine implements CRUDEngine {
     }
     this.db.run(statement);
 
+    if (persist) {
+      const saveInterval = setInterval(async () => this.save(), 10000);
+      window.addEventListener('beforeunload', async event => {
+        clearInterval(saveInterval);
+        await this.save();
+      });
+    }
+
     return this.db;
+  }
+
+  private async save(): Promise<void> {
+    if (!this.localStorage) {
+      return;
+    }
+    const database = await this.export();
+    this.localStorage.updateOrCreate(this.storeName, this.storeName, database);
+  }
+
+  private async export(): Promise<string> {
+    const database = this.db.export();
+    const decoder = new TextDecoder('utf8');
+    return decoder.decode(database);
   }
 
   async purge(): Promise<void> {
