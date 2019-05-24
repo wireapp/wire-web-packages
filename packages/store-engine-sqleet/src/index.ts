@@ -18,7 +18,7 @@
  */
 
 import {CRUDEngine} from '@wireapp/store-engine';
-import {SQLiteDatabaseDefinition, SQLiteTableDefinition, SQLiteType, createTableIfNotExists} from './SchemaConverter';
+import {SQLiteDatabaseDefinition, SQLiteType, createTableIfNotExists} from './SchemaConverter';
 
 const initSqlJs = require('sql.js');
 
@@ -32,7 +32,7 @@ export class SQLeetEngine implements CRUDEngine {
   private db: any;
   private readonly dbConfig: any;
   public storeName = '';
-  private schema: SQLiteDatabaseDefinition;
+  private schema: SQLiteDatabaseDefinition<Record<string, any>>;
 
   constructor(wasmLocation?: Uint8Array | string) {
     this.dbConfig =
@@ -55,9 +55,9 @@ export class SQLeetEngine implements CRUDEngine {
     throw new Error('Method not implemented.');
   }
 
-  async init(
+  async init<T>(
     storeName: string,
-    schema: SQLiteDatabaseDefinition,
+    schema: SQLiteDatabaseDefinition<T>,
     existingDatabase?: Uint8Array,
     encryptionKey?: string
   ): Promise<any> {
@@ -75,7 +75,7 @@ export class SQLeetEngine implements CRUDEngine {
     // Create tables
     let statement: string = '';
     for (const tableName in this.schema) {
-      const columns: SQLiteTableDefinition = this.schema[tableName];
+      const columns = this.schema[tableName];
       statement += createTableIfNotExists(tableName, columns);
     }
     this.db.run(statement);
@@ -90,7 +90,10 @@ export class SQLeetEngine implements CRUDEngine {
     this.db = null;
   }
 
-  async create<T>(tableName: string, primaryKey: string, entity: Record<string, any>): Promise<string> {
+  private buildValues(
+    tableName: string,
+    entity: Record<string, any>
+  ): {columns: string[]; values: Record<string, any>} {
     const columns = Object.keys(entity).filter(column => {
       // Ensure the column name exist, to avoid any SQL injection
       return typeof this.schema[tableName][column] !== 'undefined';
@@ -98,11 +101,16 @@ export class SQLeetEngine implements CRUDEngine {
     if (!columns) {
       throw new Error('Entity is empty');
     }
-    const values: {[key: string]: any} = {};
+    const values: Record<string, any> = {};
     for (const columnIndex in columns) {
       const column = columns[columnIndex];
       values[`@${column}`] = entity[column];
     }
+    return {columns, values};
+  }
+
+  async create<T>(tableName: string, primaryKey: string, entity: Record<string, any>): Promise<string> {
+    const {columns, values} = this.buildValues(tableName, entity);
     const statement = `INSERT INTO ${tableName} (key,${columns.join(',')}) VALUES (@primaryKey,${Object.keys(
       values
     ).join(',')});`;
@@ -147,11 +155,18 @@ export class SQLeetEngine implements CRUDEngine {
     throw new Error('Method not implemented.');
   }
 
-  update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
-    throw new Error('Method not implemented.');
+  async update(tableName: string, primaryKey: string, changes: Record<string, any>): Promise<string> {
+    const {columns, values} = this.buildValues(tableName, changes);
+    const newValues = columns.map(column => `${column}='${values[`@${column}`]}'`);
+    const statement = `UPDATE ${tableName} SET ${newValues.join(',')} WHERE key=@primaryKey;`;
+    this.db.run(statement, {
+      ...values,
+      '@primaryKey': primaryKey,
+    });
+    return primaryKey;
   }
 
-  updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  updateOrCreate<T>(tableName: string, primaryKey: string, changes: T): Promise<string> {
     throw new Error('Method not implemented.');
   }
 

@@ -22,15 +22,16 @@ import {SQLeetEngine} from './index';
 import {SQLiteDatabaseDefinition, SQLiteType} from './SchemaConverter';
 import {SQLeetWebAssembly} from './SQLeet';
 
-interface Record {
+interface DBRecord {
+  age?: number;
   name: string;
 }
 
 const webAssembly: Uint8Array = Decoder.fromBase64(SQLeetWebAssembly).asBytes;
 
-describe('create', () => {
+describe('"create"', () => {
   it('saves a record to the database', async () => {
-    const schema: SQLiteDatabaseDefinition = {
+    const schema: SQLiteDatabaseDefinition<DBRecord> = {
       users: {
         name: SQLiteType.TEXT,
       },
@@ -38,8 +39,29 @@ describe('create', () => {
 
     const engine = new SQLeetEngine(webAssembly);
     await engine.init('', schema);
-    await engine.create<Record>('users', '1', {name: 'Otto'});
-    const result = await engine.read<Record>('users', '1');
+    await engine.create<DBRecord>('users', '1', {name: 'Otto'});
+    const result = await engine.read<DBRecord>('users', '1');
     expect(result.name).toBe('Otto');
+  });
+});
+
+describe('"update"', () => {
+  it('updates a record in the database', async () => {
+    const schema: SQLiteDatabaseDefinition<DBRecord> = {
+      users: {
+        age: SQLiteType.INTEGER,
+        name: SQLiteType.TEXT,
+      },
+    };
+
+    const engine = new SQLeetEngine(webAssembly);
+    await engine.init('', schema);
+    await engine.create<DBRecord>('users', '1', {name: 'Otto', age: 1});
+    const result = await engine.read<DBRecord>('users', '1');
+    expect(result.name).toBe('Otto');
+    await engine.update('users', '1', {name: 'Hans', age: 2});
+    const changedResult = await engine.read<DBRecord>('users', '1');
+    expect(changedResult.age).toBe(2);
+    expect(changedResult.name).toBe('Hans');
   });
 });

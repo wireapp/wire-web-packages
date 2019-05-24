@@ -32,11 +32,11 @@ describe('SchemaConverter', () => {
       };
 
       const userColumns = mapPropertiesToColumns(user);
-      expect(userColumns.age).toBe('real');
+      expect(userColumns.age).toBe(SQLiteType.INTEGER);
 
       const statement = createTableIfNotExists('user', userColumns);
       const expected =
-        'CREATE TABLE IF NOT EXISTS user (key text,age real,favoriteShows text,hometown text,isRobot boolean,lastSeen datetime,name text);';
+        'CREATE TABLE IF NOT EXISTS user (key text,age integer,favoriteShows text,hometown text,isRobot boolean,lastSeen datetime,name text);';
       expect(statement).toBe(expected);
     });
   });

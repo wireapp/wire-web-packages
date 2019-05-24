@@ -20,30 +20,32 @@
 export enum SQLiteType {
   BOOLEAN = 'boolean',
   DATETIME = 'datetime',
+  INTEGER = 'integer',
   REAL = 'real',
   TEXT = 'text',
 }
 
-export type SQLiteTableDefinition = Record<string, SQLiteType>;
+export type SQLiteTableDefinition<T> = Partial<Record<keyof T, SQLiteType>>;
 
-export type SQLiteDatabaseDefinition = Record<string, SQLiteTableDefinition>;
+export type SQLiteDatabaseDefinition<T> = Record<string, SQLiteTableDefinition<T>>;
 
-export function mapPropertiesToColumns(value: Object): SQLiteTableDefinition {
-  const columns: SQLiteTableDefinition = {};
-  Object.entries(value).forEach(([key, value]) => {
-    columns[key] = mapValueToType(value);
-  });
-  return columns;
+export function mapPropertiesToColumns<T>(value: T): SQLiteTableDefinition<T> {
+  return Object.entries(value).reduce((result: SQLiteTableDefinition<T>, [key, value]) => {
+    result[key as keyof T] = mapValueToType(value);
+    return result;
+  }, {});
 }
 
 export function mapValueToType(value: any): SQLiteType {
+  const isInt = (n: number) => n % 1 === 0;
+
   let jsType = '';
 
   try {
     jsType = value.constructor.name;
   } catch (error) {
     // Info: Can happen when the value is "null"
-    jsType = 'String;';
+    jsType = 'String';
   }
 
   switch (jsType) {
@@ -57,22 +59,16 @@ export function mapValueToType(value: any): SQLiteType {
       return SQLiteType.DATETIME;
     }
     case 'Number': {
-      return SQLiteType.REAL;
+      return isInt(value as number) ? SQLiteType.INTEGER : SQLiteType.REAL;
     }
-    case 'String': {
+    case 'String':
+    default: {
       return SQLiteType.TEXT;
     }
-    default:
-      return SQLiteType.TEXT;
   }
 }
 
-export function createTableIfNotExists(tableName: string, columns: SQLiteTableDefinition): string {
-  const statements: string[] = ['key text'];
-
-  Object.entries(columns).forEach(entry => {
-    statements.push(`${entry[0]} ${entry[1]}`);
-  });
-
+export function createTableIfNotExists<T>(tableName: string, columns: SQLiteTableDefinition<T>): string {
+  const statements = ['key text'].concat(Object.entries(columns).map(([key, type]) => `${key} ${type}`));
   return `CREATE TABLE IF NOT EXISTS ${tableName} (${statements.join(',')});`;
 }
