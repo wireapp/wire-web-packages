@@ -23,6 +23,8 @@ import {SQLiteDatabaseDefinition, SQLiteType, createTableIfNotExists} from './Sc
 const initSqlJs = require('sql.js');
 
 export class SQLeetEngine implements CRUDEngine {
+  private static readonly SAVING_INTERVAL = 10000;
+
   private db: any;
   private indexedDB?: IndexedDBEngine;
   private readonly dbConfig: any;
@@ -53,20 +55,20 @@ export class SQLeetEngine implements CRUDEngine {
     storeName: string,
     schema: SQLiteDatabaseDefinition<T>,
     encryptionKey?: string,
-    persist?: boolean
+    persistData?: boolean
   ): Promise<any> {
     this.storeName = storeName;
     this.schema = schema;
 
-    if (persist) {
+    let existingDatabase: Uint8Array | undefined = undefined;
+    if (persistData) {
       this.indexedDB = new IndexedDBEngine();
       await this.indexedDB.init(storeName);
+      existingDatabase = await this.load();
     }
 
     const SQL = await initSqlJs(this.dbConfig);
-
-    const existingDatabase = this.load();
-    this.db = new SQL.Database(existingDatabase ? existingDatabase : undefined);
+    this.db = new SQL.Database(existingDatabase);
 
     // Settings
     this.db.run('PRAGMA encoding="UTF-8";');
@@ -82,8 +84,8 @@ export class SQLeetEngine implements CRUDEngine {
     }
     this.db.run(statement);
 
-    if (persist) {
-      const saveInterval = setInterval(async () => this.save(), 10000);
+    if (persistData) {
+      const saveInterval = setInterval(async () => this.save(), SQLeetEngine.SAVING_INTERVAL);
       window.addEventListener('beforeunload', async event => {
         clearInterval(saveInterval);
         await this.save();
