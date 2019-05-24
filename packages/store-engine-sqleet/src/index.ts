@@ -60,7 +60,7 @@ export class SQLeetEngine implements CRUDEngine {
 
     if (persist) {
       this.indexedDB = new IndexedDBEngine();
-      this.indexedDB.init(storeName);
+      await this.indexedDB.init(storeName);
     }
 
     const SQL = await initSqlJs(this.dbConfig);
@@ -203,15 +203,7 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   async updateOrCreate<T>(tableName: string, primaryKey: string, changes: Record<string, any>): Promise<string> {
-    const {columns, values} = this.buildValues(tableName, changes);
-    const statement = `REPLACE INTO ${tableName} (key,${columns.join(',')}) VALUES (@primaryKey,${Object.keys(
-      values
-    ).join(',')});`;
-    this.db.run(statement, {
-      ...values,
-      '@primaryKey': primaryKey,
-    });
-    return primaryKey;
+    throw new Error('Method not implemented.');
   }
 
   async isSupported(): Promise<void> {
