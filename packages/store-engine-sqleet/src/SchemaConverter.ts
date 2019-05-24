@@ -29,11 +29,12 @@ export type SQLiteTableDefinition<T> = Partial<Record<keyof T, SQLiteType>>;
 
 export type SQLiteDatabaseDefinition<T> = Record<string, SQLiteTableDefinition<T>>;
 
-export function mapPropertiesToColumns<T>(value: T): SQLiteTableDefinition<T> {
-  return Object.entries(value).reduce((result: SQLiteTableDefinition<T>, [key, value]) => {
-    result[key as keyof T] = mapValueToType(value);
-    return result;
-  }, {});
+export function mapPropertiesToColumns<T>(properties: T): SQLiteTableDefinition<T> {
+  const definition: SQLiteTableDefinition<T> = {};
+  for (const key in properties) {
+    definition[key] = mapValueToType(properties[key]);
+  }
+  return definition;
 }
 
 export function mapValueToType(value: any): SQLiteType {
