@@ -7,14 +7,14 @@
     "@types/node": "~10",
     "@types/sql.js": "1.0.0",
     "@wireapp/store-engine": "2.1.2",
-    "sql.js": "https://github.com/pwnsdx/sqleet.js#0fdaa48e2f279df79738b7e4c3bdb29ac1c7bc77"
+    "bazinga64": "5.4.2",
+    "sql.js": "https://github.com/pwnsdx/sqleet.js#a078babcad5e6beda01370466328e47b3c4a2de7"
   },
   "devDependencies": {
     "@types/jasmine": "3.3.12",
     "@types/karma": "3.0.2",
     "@types/webpack": "4.4.32",
     "babel-loader": "8.0.5",
-    "bazinga64": "5.4.2",
     "jasmine": "3.4.0",
     "karma": "4.1.0",
     "karma-chrome-launcher": "2.2.0",
