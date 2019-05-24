@@ -27,7 +27,7 @@ interface DBRecord {
   name: string;
 }
 
-const webAssembly: Uint8Array = Decoder.fromBase64(SQLeetWebAssembly).asBytes;
+const webAssembly = Decoder.fromBase64(SQLeetWebAssembly).asBytes;
 
 describe('"create"', () => {
   it('saves a record to the database', async () => {
