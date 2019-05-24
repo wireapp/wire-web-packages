@@ -157,7 +157,7 @@ export class SQLeetEngine implements CRUDEngine {
 
   async update(tableName: string, primaryKey: string, changes: Record<string, any>): Promise<string> {
     const {columns, values} = this.buildValues(tableName, changes);
-    const newValues = columns.map(column => `${column}='${values[`@${column}`]}'`);
+    const newValues = columns.map(column => `${column}=@${column}`);
     const statement = `UPDATE ${tableName} SET ${newValues.join(',')} WHERE key=@primaryKey;`;
     this.db.run(statement, {
       ...values,
