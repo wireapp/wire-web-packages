@@ -11936,9 +11936,9 @@ sprintf-js@~1.0.2:
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
 
-"sql.js@https://github.com/pwnsdx/sqleet.js":
+"sql.js@https://github.com/pwnsdx/sqleet.js#0fdaa48e2f279df79738b7e4c3bdb29ac1c7bc77":
   version "1.0.0"
-  resolved "https://github.com/pwnsdx/sqleet.js#baf65360ed3866f37bbbdbd6a49f97da803bc5fe"
+  resolved "https://github.com/pwnsdx/sqleet.js#0fdaa48e2f279df79738b7e4c3bdb29ac1c7bc77"
 
 sshpk@^1.7.0:
   version "1.16.1"
