@@ -75,7 +75,7 @@ describe('"save"', () => {
       },
     };
 
-    const storeName = 'persistenceTest';
+    const storeName = 'wire@production@52c607b1-4362-4b7b-bcb4-5bff6154f8e2@permanent';
     const encryptionKey = 'wire';
 
     const engine = new SQLeetEngine(webAssembly);
