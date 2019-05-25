@@ -65,3 +65,27 @@ describe('"update"', () => {
     expect(changedResult.name).toBe('Hans');
   });
 });
+
+describe('"save"', () => {
+  it('save and load a database', async () => {
+    const schema: SQLiteDatabaseDefinition<DBRecord> = {
+      users: {
+        age: SQLiteType.INTEGER,
+        name: SQLiteType.TEXT,
+      },
+    };
+
+    const storeName = 'persistenceTest';
+    const encryptionKey = 'wire';
+
+    const engine = new SQLeetEngine(webAssembly);
+    await engine.init(storeName, schema, encryptionKey, true);
+    await engine.create<DBRecord>('users', '1', {name: 'Otto', age: 1});
+    await engine.save();
+    await engine.purge();
+    await engine.init(storeName, schema, encryptionKey, true);
+    const result = await engine.read<DBRecord>('users', '1');
+    expect(result.age).toBe(1);
+    expect(result.name).toBe('Otto');
+  });
+});

@@ -24,7 +24,7 @@ import {SQLiteDatabaseDefinition, SQLiteType, createTableIfNotExists} from './Sc
 const initSqlJs = require('sql.js');
 
 export class SQLeetEngine implements CRUDEngine {
-  private static readonly SAVING_INTERVAL = 10000;
+  //private static readonly SAVING_INTERVAL = 10000;
 
   private db: any;
   private indexedDB?: IndexedDBEngine;
@@ -85,31 +85,36 @@ export class SQLeetEngine implements CRUDEngine {
     }
     this.db.run(statement);
 
-    if (persistData) {
+    /*if (persistData) {
       const saveInterval = setInterval(async () => this.save(), SQLeetEngine.SAVING_INTERVAL);
       window.addEventListener('beforeunload', async event => {
         clearInterval(saveInterval);
         await this.save();
       });
-    }
+    }*/
 
     return this.db;
   }
 
-  private async save(): Promise<void> {
+  public async save(): Promise<void> {
     if (!this.indexedDB) {
       throw new Error('IndexedDB need to be available');
     }
     const database = this.db.export();
     const decoder = new TextDecoder('utf8');
-    await this.indexedDB.updateOrCreate(this.storeName, this.storeName, decoder.decode(database));
+    await this.indexedDB.updateOrCreate(this.storeName, 'sqlite', decoder.decode(database));
   }
 
   private async load(): Promise<Uint8Array | undefined> {
     if (!this.indexedDB) {
       throw new Error('IndexedDB need to be available');
     }
-    const database = await this.indexedDB.read<string>(this.storeName, this.storeName);
+    let database: string;
+    try {
+      database = await this.indexedDB.read<string>(this.storeName, 'sqlite');
+    } catch (error) {
+      return undefined;
+    }
     if (!database) {
       return undefined;
     }
@@ -122,6 +127,7 @@ export class SQLeetEngine implements CRUDEngine {
     // memory consumption will grow forever
     this.db.close();
     this.db = null;
+    this.indexedDB = undefined;
   }
 
   private buildValues(
