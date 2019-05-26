@@ -18,16 +18,37 @@
  */
 
 import {CRUDEngine} from '@wireapp/store-engine';
-import {IndexedDBEngine} from '@wireapp/store-engine/dist/commonjs/engine/IndexedDBEngine';
+import {DexieInstance, IndexedDBEngine} from '@wireapp/store-engine/dist/commonjs/engine/IndexedDBEngine';
 import {SQLiteDatabaseDefinition, SQLiteType, createTableIfNotExists} from './SchemaConverter';
 
 const initSqlJs = require('sql.js');
 
+const stringToBinary = (str: string) => {
+  const arrayLength = str.length;
+  const arr = new Uint8Array(arrayLength);
+  for (let i = 0; i < arrayLength; i++) {
+    arr[i] = str.charCodeAt(i);
+  }
+  return arr;
+};
+const binaryToString = (arr: Uint8Array) => {
+  const uarr = new Uint8Array(arr);
+  const strings = [];
+  const chunksize = 0xffff;
+  // There is a maximum stack size. We cannot call String.fromCharCode with as many arguments as we want
+  for (let i = 0; i * chunksize < uarr.length; i++) {
+    strings[i] = String.fromCharCode.apply(null, <any>uarr.subarray(i * chunksize, (i + 1) * chunksize));
+  }
+  return strings.join('');
+};
+
 export class SQLeetEngine implements CRUDEngine {
-  //private static readonly SAVING_INTERVAL = 10000;
+  private static readonly SAVING_INTERVAL = 10000;
+  private static readonly PRIMARY_KEY_NAME = 'database';
 
   private db: any;
   private indexedDB?: IndexedDBEngine;
+  private indexedDBInstance?: DexieInstance;
   private readonly dbConfig: any;
   public storeName = '';
   private schema: SQLiteDatabaseDefinition<Record<string, any>>;
@@ -64,7 +85,9 @@ export class SQLeetEngine implements CRUDEngine {
     let existingDatabase: Uint8Array | undefined = undefined;
     if (persistData) {
       this.indexedDB = new IndexedDBEngine();
-      await this.indexedDB.init(storeName);
+      this.indexedDBInstance = await this.indexedDB.init(this.storeName);
+      this.indexedDBInstance.version(1).stores({[this.storeName]: ''});
+      await this.indexedDBInstance.open();
       existingDatabase = await this.load();
     }
 
@@ -74,7 +97,7 @@ export class SQLeetEngine implements CRUDEngine {
     // Settings
     this.db.run('PRAGMA encoding="UTF-8";');
     if (encryptionKey) {
-      this.db.run(`PRAGMA key="raw:${encryptionKey}";`);
+      this.db.run(`PRAGMA key="${encryptionKey}";`);
     }
 
     // Create tables
@@ -85,13 +108,13 @@ export class SQLeetEngine implements CRUDEngine {
     }
     this.db.run(statement);
 
-    /*if (persistData) {
+    if (persistData) {
       const saveInterval = setInterval(async () => this.save(), SQLeetEngine.SAVING_INTERVAL);
       window.addEventListener('beforeunload', async event => {
         clearInterval(saveInterval);
         await this.save();
       });
-    }*/
+    }
 
     return this.db;
   }
@@ -100,9 +123,8 @@ export class SQLeetEngine implements CRUDEngine {
     if (!this.indexedDB) {
       throw new Error('IndexedDB need to be available');
     }
-    const database = this.db.export();
-    const decoder = new TextDecoder('utf8');
-    await this.indexedDB.updateOrCreate(this.storeName, 'sqlite', decoder.decode(database));
+    const database: Uint8Array = this.db.export();
+    await this.indexedDB.updateOrCreate(this.storeName, SQLeetEngine.PRIMARY_KEY_NAME, binaryToString(database));
   }
 
   private async load(): Promise<Uint8Array | undefined> {
@@ -111,15 +133,14 @@ export class SQLeetEngine implements CRUDEngine {
     }
     let database: string;
     try {
-      database = await this.indexedDB.read<string>(this.storeName, 'sqlite');
+      database = await this.indexedDB.read<string>(this.storeName, SQLeetEngine.PRIMARY_KEY_NAME);
     } catch (error) {
       return undefined;
     }
     if (!database) {
       return undefined;
     }
-    const encoder = new TextEncoder();
-    return encoder.encode(database);
+    return stringToBinary(database);
   }
 
   async purge(): Promise<void> {
@@ -127,6 +148,9 @@ export class SQLeetEngine implements CRUDEngine {
     // memory consumption will grow forever
     this.db.close();
     this.db = null;
+    if (this.indexedDBInstance) {
+      this.indexedDBInstance.close();
+    }
     this.indexedDB = undefined;
   }
 
