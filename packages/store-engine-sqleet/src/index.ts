@@ -151,6 +151,7 @@ export class SQLeetEngine implements CRUDEngine {
     if (this.indexedDBInstance) {
       this.indexedDBInstance.close();
     }
+    this.indexedDBInstance = undefined;
     this.indexedDB = undefined;
   }
 
