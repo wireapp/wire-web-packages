@@ -23,12 +23,17 @@ export enum LegalHoldStatus {
   ENABLED_CONFIGURED = 'enabled_configured',
 }
 
-export interface LegalHoldData {
-  enabled: LegalHoldStatus;
-  // settings data is only present when legal hold is LegalHoldStatus.ENABLED_CONFIGURED
-  settings?: {
+export interface LegalHoldDataUnconfigured {
+  enabled: Exclude<LegalHoldStatus, LegalHoldStatus.ENABLED_CONFIGURED>;
+}
+
+export interface LegalHoldDataConfigured {
+  enabled: LegalHoldStatus.ENABLED_CONFIGURED;
+  settings: {
     base_url: string;
     fingerprint: string;
     team_id: string;
   };
 }
+
+export type LegalHoldData = LegalHoldDataUnconfigured | LegalHoldDataConfigured;
