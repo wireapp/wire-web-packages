@@ -25,8 +25,8 @@ import {
   RecordTypeError,
   UnsupportedError,
 } from '@wireapp/store-engine/dist/commonjs/engine/error/';
-import * as fs from 'fs-extra';
-import * as path from 'path';
+import fs from 'fs-extra';
+import path from 'path';
 
 export class FileEngine implements CRUDEngine {
   [index: string]: any;
