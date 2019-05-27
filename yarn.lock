@@ -1790,10 +1790,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/karma@3.0.2":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@types/karma/-/karma-3.0.2.tgz#c66654ea7167ae9fb62880ad2ef99cc18b64940d"
-  integrity sha512-xm+iMKgLSpTPo1Z7wLKbrZt8aLzA1udb9UOb9+OSDMFIufqlbp0DXQpY75EQ3ETi6EJiaohIodBlMs+UD4NSMQ==
+"@types/karma@3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@types/karma/-/karma-3.0.3.tgz#7b920e8cc6dc9e0ffed52677d254a42da9eeb8d5"
+  integrity sha512-mkJejrAacgignkBce2+qD9S4VncjEfAT0Dion0fRcqpav3Sd2KiLTHODZOXRP3S8b0ZY5sXr9meDB3P8MSH8Cg==
   dependencies:
     "@types/bluebird" "*"
     "@types/node" "*"
