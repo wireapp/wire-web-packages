@@ -24,7 +24,7 @@ import {TeamAPI} from '../team/TeamAPI';
 import {LegalHoldData} from './LegalHoldData';
 import {NewLegalHoldData} from './NewLegalHoldData';
 
-class LegalHoldAPI {
+export class LegalHoldAPI {
   constructor(private readonly client: HttpClient) {}
 
   static URL = {
@@ -80,7 +80,8 @@ class LegalHoldAPI {
       url: `${TeamAPI.URL.TEAMS}/${teamId}/${LegalHoldAPI.URL.LEGAL_HOLD}/${LegalHoldAPI.URL.SETTINGS_LEGAL_HOLD}`,
     };
 
-    return (await this.client.sendJSON<LegalHoldData>(config)).data;
+    const response = await this.client.sendJSON<LegalHoldData>(config);
+    return response.data;
   }
 
   public async deleteSettings(teamId: string): Promise<void> {
@@ -101,8 +102,7 @@ class LegalHoldAPI {
       url: `${TeamAPI.URL.TEAMS}/${teamId}/${LegalHoldAPI.URL.LEGAL_HOLD}/${LegalHoldAPI.URL.SETTINGS_LEGAL_HOLD}`,
     };
 
-    return (await this.client.sendJSON<LegalHoldData>(config)).data;
+    const response = await this.client.sendJSON<LegalHoldData>(config);
+    return response.data;
   }
 }
-
-export {LegalHoldAPI};

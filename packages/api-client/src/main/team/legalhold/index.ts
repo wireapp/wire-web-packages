@@ -18,3 +18,5 @@
  */
 
 export * from './LegalHoldAPI';
+export * from './LegalHoldData';
+export * from './NewLegalHoldData';
