@@ -24,7 +24,7 @@ export enum LegalHoldStatus {
 }
 
 export interface LegalHoldDataUnconfigured {
-  enabled: LegalHoldStatus.DISABLED | LegalHoldStatus.ENABLED_NOT_CONFIGURED;
+  enabled: Exclude<LegalHoldStatus, LegalHoldStatus.ENABLED_CONFIGURED>;
 }
 
 export interface LegalHoldDataConfigured {
