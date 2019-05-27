@@ -1,0 +1,29 @@
+{
+  "dependencies": {
+    "@types/node": "~10",
+    "@wireapp/store-engine": "2.1.2"
+  },
+  "devDependencies": {
+    "@types/jasmine": "3.3.12",
+    "jasmine": "3.4.0",
+    "rimraf": "2.6.3",
+    "ts-node": "8.1.0",
+    "typescript": "3.4.5"
+  },
+  "description": "",
+  "files": [
+    "dist"
+  ],
+  "license": "GPL-3.0",
+  "main": "./dist/index.js",
+  "name": "@wireapp/store-engine-sqleet",
+  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf dist",
+    "dist": "yarn clean && yarn build",
+    "test": "karma start",
+    "test:project": "yarn dist && yarn test"
+  },
+  "version": "0.0.0"
+}
