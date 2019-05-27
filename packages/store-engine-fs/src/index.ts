@@ -30,6 +30,7 @@ import * as path from 'path';
 
 export class FileEngine implements CRUDEngine {
   [index: string]: any;
+
   public storeName = '';
   public options: {fileExtension: string} = {
     fileExtension: '.dat',
@@ -40,9 +41,9 @@ export class FileEngine implements CRUDEngine {
   constructor(private readonly baseDirectory = './') {}
 
   public async isSupported(): Promise<void> {
-    const isNode = typeof window === 'undefined';
+    const isNodeOrElectron = typeof process === 'object';
 
-    if (!isNode) {
+    if (!isNodeOrElectron) {
       const message = `Node.js File System Module is not available on your platform.`;
       throw new UnsupportedError(message);
     }
