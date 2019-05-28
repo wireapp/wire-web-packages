@@ -18,40 +18,16 @@
  */
 
 import {CRUDEngine} from '@wireapp/store-engine';
-import {DexieInstance, IndexedDBEngine} from '@wireapp/store-engine/dist/commonjs/engine/IndexedDBEngine';
 import {SQLiteDatabaseDefinition, SQLiteType, createTableIfNotExists} from './SchemaConverter';
 
 const initSqlJs = require('sql.js');
 
-const stringToBinary = (str: string) => {
-  const arrayLength = str.length;
-  const arr = new Uint8Array(arrayLength);
-  for (let i = 0; i < arrayLength; i++) {
-    arr[i] = str.charCodeAt(i);
-  }
-  return arr;
-};
-const binaryToString = (arr: Uint8Array) => {
-  const uarr = new Uint8Array(arr);
-  const strings = [];
-  const chunksize = 0xffff;
-  // There is a maximum stack size. We cannot call String.fromCharCode with as many arguments as we want
-  for (let i = 0; i * chunksize < uarr.length; i++) {
-    strings[i] = String.fromCharCode.apply(null, <any>uarr.subarray(i * chunksize, (i + 1) * chunksize));
-  }
-  return strings.join('');
-};
-
 export class SQLeetEngine implements CRUDEngine {
-  private static readonly SAVING_INTERVAL = 10000;
-  private static readonly PRIMARY_KEY_NAME = 'database';
-
   private db: any;
-  private indexedDB?: IndexedDBEngine;
-  private indexedDBInstance?: DexieInstance;
+  private hasEncryptionEnabled: boolean = false;
+  private schema: SQLiteDatabaseDefinition<Record<string, any>>;
   private readonly dbConfig: any;
   public storeName = '';
-  private schema: SQLiteDatabaseDefinition<Record<string, any>>;
 
   constructor(wasmLocation?: Uint8Array | string) {
     this.dbConfig = {};
@@ -77,18 +53,14 @@ export class SQLeetEngine implements CRUDEngine {
     storeName: string,
     schema: SQLiteDatabaseDefinition<T>,
     encryptionKey?: string,
-    persistData?: boolean
+    existingEncodedDatabase?: string
   ): Promise<any> {
     this.storeName = storeName;
     this.schema = schema;
 
     let existingDatabase: Uint8Array | undefined = undefined;
-    if (persistData) {
-      this.indexedDB = new IndexedDBEngine();
-      this.indexedDBInstance = await this.indexedDB.init(this.storeName);
-      this.indexedDBInstance.version(1).stores({[this.storeName]: ''});
-      await this.indexedDBInstance.open();
-      existingDatabase = await this.load();
+    if (existingEncodedDatabase) {
+      existingDatabase = await this.load(existingEncodedDatabase);
     }
 
     const SQL = await initSqlJs(this.dbConfig);
@@ -98,6 +70,8 @@ export class SQLeetEngine implements CRUDEngine {
     this.db.run('PRAGMA encoding="UTF-8";');
     if (encryptionKey) {
       this.db.run(`PRAGMA key="${encryptionKey}";`);
+      this.hasEncryptionEnabled = true;
+      encryptionKey = null;
     }
 
     // Create tables
@@ -108,39 +82,33 @@ export class SQLeetEngine implements CRUDEngine {
     }
     this.db.run(statement);
 
-    if (persistData) {
-      const saveInterval = setInterval(async () => this.save(), SQLeetEngine.SAVING_INTERVAL);
-      window.addEventListener('beforeunload', async event => {
-        clearInterval(saveInterval);
-        await this.save();
-      });
-    }
-
     return this.db;
   }
 
-  public async save(): Promise<void> {
-    if (!this.indexedDB) {
-      throw new Error('IndexedDB need to be available');
+  public async export(): Promise<string> {
+    if (!this.db) {
+      throw new Error('SQLite need to be available');
     }
-    const database: Uint8Array = this.db.export();
-    await this.indexedDB.updateOrCreate(this.storeName, SQLeetEngine.PRIMARY_KEY_NAME, binaryToString(database));
+    if (!this.hasEncryptionEnabled) {
+      throw new Error('You cannot export an unencrypted database');
+    }
+    const database: Uint8Array = new Uint8Array(this.db.export());
+    const strings = [];
+    const chunksize = 0xffff;
+    // There is a maximum stack size. We cannot call String.fromCharCode with as many arguments as we want
+    for (let i = 0; i * chunksize < database.length; i++) {
+      strings[i] = String.fromCharCode.apply(null, <any>database.subarray(i * chunksize, (i + 1) * chunksize));
+    }
+    return strings.join('');
   }
 
-  private async load(): Promise<Uint8Array | undefined> {
-    if (!this.indexedDB) {
-      throw new Error('IndexedDB need to be available');
+  private async load(database: string): Promise<Uint8Array | undefined> {
+    const arrayLength = database.length;
+    const databaseBinary = new Uint8Array(arrayLength);
+    for (let i = 0; i < arrayLength; i++) {
+      databaseBinary[i] = database.charCodeAt(i);
     }
-    let database: string;
-    try {
-      database = await this.indexedDB.read<string>(this.storeName, SQLeetEngine.PRIMARY_KEY_NAME);
-    } catch (error) {
-      return undefined;
-    }
-    if (!database) {
-      return undefined;
-    }
-    return stringToBinary(database);
+    return databaseBinary;
   }
 
   async purge(): Promise<void> {
@@ -148,11 +116,6 @@ export class SQLeetEngine implements CRUDEngine {
     // memory consumption will grow forever
     this.db.close();
     this.db = null;
-    if (this.indexedDBInstance) {
-      this.indexedDBInstance.close();
-    }
-    this.indexedDBInstance = undefined;
-    this.indexedDB = undefined;
   }
 
   private buildValues(

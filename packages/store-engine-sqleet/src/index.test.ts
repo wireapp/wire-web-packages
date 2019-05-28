@@ -17,6 +17,7 @@
  *
  */
 
+import {DexieInstance, IndexedDBEngine} from '@wireapp/store-engine/dist/commonjs/engine/IndexedDBEngine';
 import {Decoder} from 'bazinga64';
 import {SQLeetEngine} from './index';
 import {SQLiteDatabaseDefinition, SQLiteType} from './SchemaConverter';
@@ -66,8 +67,8 @@ describe('"update"', () => {
   });
 });
 
-describe('"save"', () => {
-  it('save and load a database', async () => {
+describe('"export"', () => {
+  it('export and load a database', async () => {
     const schema: SQLiteDatabaseDefinition<DBRecord> = {
       users: {
         age: SQLiteType.INTEGER,
@@ -77,14 +78,27 @@ describe('"save"', () => {
 
     const storeName = 'wire@production@52c607b1-4362-4b7b-bcb4-5bff6154f8e2@permanent';
     const encryptionKey = 'wire';
+    const primaryKeyName = 'database';
+
+    const indexedDB = new IndexedDBEngine();
+    const indexedDBInstance = await indexedDB.init(this.storeName);
+    indexedDBInstance.version(1).stores({[this.storeName]: ''});
+    await indexedDBInstance.open();
 
     const engine = new SQLeetEngine(webAssembly);
-    await engine.init(storeName, schema, encryptionKey, true);
+
+    // Write and save
+    await engine.init(storeName, schema, encryptionKey);
     await engine.create<DBRecord>('users', '1', {name: 'Otto', age: 1});
-    await engine.save();
+    await indexedDB.updateOrCreate(this.storeName, primaryKeyName, await engine.export());
+
     await engine.purge();
-    await engine.init(storeName, schema, encryptionKey, true);
+
+    // Import and read
+    const savedDatabase = await indexedDB.read<string>(this.storeName, primaryKeyName);
+    await engine.init(storeName, schema, encryptionKey, savedDatabase);
     const result = await engine.read<DBRecord>('users', '1');
+
     expect(result.age).toBe(1);
     expect(result.name).toBe('Otto');
   });
