@@ -379,5 +379,21 @@ describe('ConversationService', () => {
       expect(replyMessage.content.text).toEqual(text);
       expect(replyMessage.content.expectsReadConfirmation).toEqual(true);
     });
+
+    it('adds a legal hold status correctly', () => {
+      account.apiClient.context = {
+        userId: PayloadHelper.getUUID(),
+      };
+
+      const text = 'Please read me';
+
+      const replyMessage = account.service.conversation.messageBuilder
+        .createText(undefined, text)
+        .withLegalHoldStatus(1)
+        .build();
+
+      expect(replyMessage.content.text).toEqual(text);
+      expect(replyMessage.content.legalHoldStatus).toEqual(1);
+    });
   });
 });

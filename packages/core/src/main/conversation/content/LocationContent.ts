@@ -20,6 +20,7 @@
 interface LocationContent {
   expectsReadConfirmation?: boolean;
   latitude: number;
+  legalHoldStatus?: number;
   longitude: number;
   name?: string;
   zoom?: number;

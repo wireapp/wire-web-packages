@@ -34,6 +34,7 @@ interface RemoteData {
   assetId: string;
   assetToken?: string;
   expectsReadConfirmation?: boolean;
+  legalHoldStatus?: number;
   otrKey: Uint8Array | Buffer;
   sha256: Uint8Array | Buffer;
 }
@@ -77,21 +78,25 @@ interface ImageAssetContent {
   expectsReadConfirmation?: boolean;
   asset: EncryptedAssetUploaded;
   image: ImageContent;
+  legalHoldStatus?: number;
 }
 
 interface FileAssetContent {
-  expectsReadConfirmation?: boolean;
   asset: EncryptedAssetUploaded;
+  expectsReadConfirmation?: boolean;
   file: FileContent;
+  legalHoldStatus?: number;
 }
 
 interface FileAssetMetaDataContent {
   expectsReadConfirmation?: boolean;
+  legalHoldStatus?: number;
   metaData: FileMetaDataContent;
 }
 
 interface FileAssetAbortContent {
   expectsReadConfirmation?: boolean;
+  legalHoldStatus?: number;
   reason: AbortReason;
 }
 

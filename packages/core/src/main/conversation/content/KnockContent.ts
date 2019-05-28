@@ -20,6 +20,7 @@
 interface KnockContent {
   hotKnock?: boolean;
   expectsReadConfirmation?: boolean;
+  legalHoldStatus?: number;
 }
 
 export {KnockContent};

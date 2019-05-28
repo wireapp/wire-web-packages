@@ -21,6 +21,7 @@ import {LinkPreviewUploadedContent, MentionContent, QuoteContent} from '../conte
 
 interface TextContent {
   expectsReadConfirmation?: boolean;
+  legalHoldStatus?: number;
   linkPreviews?: LinkPreviewUploadedContent[];
   mentions?: MentionContent[];
   quote?: QuoteContent;

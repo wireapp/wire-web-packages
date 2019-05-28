@@ -87,7 +87,8 @@ class MessageBuilder {
     conversationId: string,
     file: FileContent,
     originalMessageId: string,
-    expectsReadConfirmation?: boolean
+    expectsReadConfirmation?: boolean,
+    legalHoldStatus?: number
   ): Promise<FileAssetMessage> {
     const imageAsset = await this.assetService.uploadFileAsset(file);
 
@@ -95,6 +96,7 @@ class MessageBuilder {
       asset: imageAsset,
       expectsReadConfirmation,
       file,
+      legalHoldStatus,
     };
 
     return {
@@ -112,10 +114,12 @@ class MessageBuilder {
     conversationId: string,
     metaData: FileMetaDataContent,
     expectsReadConfirmation?: boolean,
+    legalHoldStatus?: number,
     messageId: string = MessageBuilder.createId()
   ): FileAssetMetaDataMessage {
     const content: FileAssetMetaDataContent = {
       expectsReadConfirmation,
+      legalHoldStatus,
       metaData,
     };
 
@@ -134,10 +138,12 @@ class MessageBuilder {
     conversationId: string,
     reason: AbortReason,
     originalMessageId: string,
-    expectsReadConfirmation?: boolean
+    expectsReadConfirmation?: boolean,
+    legalHoldStatus?: number
   ): Promise<FileAssetAbortMessage> {
     const content: FileAssetAbortContent = {
       expectsReadConfirmation,
+      legalHoldStatus,
       reason,
     };
 
@@ -156,6 +162,7 @@ class MessageBuilder {
     conversationId: string,
     image: ImageContent,
     expectsReadConfirmation?: boolean,
+    legalHoldStatus?: number,
     messageId: string = MessageBuilder.createId()
   ): Promise<ImageAssetMessageOutgoing> {
     const imageAsset = await this.assetService.uploadImageAsset(image);
@@ -164,6 +171,7 @@ class MessageBuilder {
       asset: imageAsset,
       expectsReadConfirmation,
       image,
+      legalHoldStatus,
     };
 
     return {

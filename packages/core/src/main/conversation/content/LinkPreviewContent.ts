@@ -22,6 +22,7 @@ import {ImageAssetContent, ImageContent, TweetContent} from '../content/';
 interface LinkPreviewContent {
   expectsReadConfirmation?: boolean;
   image?: ImageContent;
+  legalHoldStatus?: number;
   permanentUrl?: string;
   summary?: string;
   title?: string;

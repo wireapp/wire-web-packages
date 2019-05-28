@@ -73,7 +73,11 @@ class TextContentBuilder {
 
   public withReadConfirmation(expectsReadConfirmation = false): TextContentBuilder {
     this.content.expectsReadConfirmation = expectsReadConfirmation;
+    return this;
+  }
 
+  public withLegalHoldStatus(legalHoldStatus = 0): TextContentBuilder {
+    this.content.legalHoldStatus = legalHoldStatus;
     return this;
   }
 }
