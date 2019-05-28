@@ -103,9 +103,8 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   private async load(database: string): Promise<Uint8Array | undefined> {
-    const arrayLength = database.length;
-    const databaseBinary = new Uint8Array(arrayLength);
-    for (let i = 0; i < arrayLength; i++) {
+    const databaseBinary = new Uint8Array(database.length);
+    for (let i = 0; i < database.length; i++) {
       databaseBinary[i] = database.charCodeAt(i);
     }
     return databaseBinary;
