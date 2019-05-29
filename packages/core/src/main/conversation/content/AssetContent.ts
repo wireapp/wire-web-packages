@@ -18,11 +18,11 @@
  */
 
 import {AbortReason, AssetTransferState} from '../../conversation/';
-import {FileContent, FileMetaDataContent, ImageContent} from '../../conversation/content/';
+import {FileContent, FileMetaDataContent, ImageContent, LegalHoldStatus} from '../../conversation/content/';
 import {EncryptedAssetUploaded} from '../../cryptography/';
 
 // https://github.com/wireapp/generic-message-proto/blob/v1.20.0/proto/messages.proto#L201
-interface AssetContent {
+export interface AssetContent {
   abortReason?: AbortReason;
   original?: Original;
   preview?: Preview;
@@ -30,16 +30,16 @@ interface AssetContent {
   uploaded?: RemoteData;
 }
 
-interface RemoteData {
+export interface RemoteData {
   assetId: string;
   assetToken?: string;
   expectsReadConfirmation?: boolean;
-  legalHoldStatus?: number;
+  legalHoldStatus?: LegalHoldStatus;
   otrKey: Uint8Array | Buffer;
   sha256: Uint8Array | Buffer;
 }
 
-interface Original {
+export interface Original {
   audio?: AudioMetaData;
   caption?: string;
   image?: ImageMetaData;
@@ -50,66 +50,52 @@ interface Original {
   video?: VideoMetaData;
 }
 
-interface ImageMetaData {
+export interface ImageMetaData {
   height: number;
   width: number;
   tag?: string;
 }
 
-interface VideoMetaData {
+export interface VideoMetaData {
   height?: number;
   width?: number;
   duration?: number;
 }
 
-interface AudioMetaData {
+export interface AudioMetaData {
   duration?: number;
   loudness?: Uint8Array | Buffer;
 }
 
-interface Preview {
+export interface Preview {
   mimeType: string;
   size: number;
   remote?: RemoteData;
   image?: ImageMetaData;
 }
 
-interface ImageAssetContent {
+export interface ImageAssetContent {
   expectsReadConfirmation?: boolean;
   asset: EncryptedAssetUploaded;
   image: ImageContent;
-  legalHoldStatus?: number;
+  legalHoldStatus?: LegalHoldStatus;
 }
 
-interface FileAssetContent {
+export interface FileAssetContent {
   asset: EncryptedAssetUploaded;
   expectsReadConfirmation?: boolean;
   file: FileContent;
-  legalHoldStatus?: number;
+  legalHoldStatus?: LegalHoldStatus;
 }
 
-interface FileAssetMetaDataContent {
+export interface FileAssetMetaDataContent {
   expectsReadConfirmation?: boolean;
-  legalHoldStatus?: number;
+  legalHoldStatus?: LegalHoldStatus;
   metaData: FileMetaDataContent;
 }
 
-interface FileAssetAbortContent {
+export interface FileAssetAbortContent {
   expectsReadConfirmation?: boolean;
-  legalHoldStatus?: number;
+  legalHoldStatus?: LegalHoldStatus;
   reason: AbortReason;
 }
-
-export {
-  AssetContent,
-  AudioMetaData,
-  FileAssetContent,
-  FileAssetMetaDataContent,
-  FileAssetAbortContent,
-  ImageAssetContent,
-  ImageMetaData,
-  Original,
-  Preview,
-  RemoteData,
-  VideoMetaData,
-};

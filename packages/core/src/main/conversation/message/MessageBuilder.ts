@@ -33,6 +33,7 @@ import {
   ImageAssetContent,
   ImageContent,
   KnockContent,
+  LegalHoldStatus,
   LinkPreviewContent,
   LinkPreviewUploadedContent,
   LocationContent,
@@ -63,7 +64,7 @@ class MessageBuilder {
     conversationId: string,
     newMessageText: string,
     originalMessageId: string,
-    messageId: string = MessageBuilder.createId()
+    messageId = MessageBuilder.createId()
   ): TextContentBuilder {
     const content: EditedTextContent = {
       originalMessageId,
@@ -88,7 +89,7 @@ class MessageBuilder {
     file: FileContent,
     originalMessageId: string,
     expectsReadConfirmation?: boolean,
-    legalHoldStatus?: number
+    legalHoldStatus?: LegalHoldStatus
   ): Promise<FileAssetMessage> {
     const imageAsset = await this.assetService.uploadFileAsset(file);
 
@@ -113,9 +114,9 @@ class MessageBuilder {
   public createFileMetadata(
     conversationId: string,
     metaData: FileMetaDataContent,
+    messageId = MessageBuilder.createId(),
     expectsReadConfirmation?: boolean,
-    legalHoldStatus?: number,
-    messageId: string = MessageBuilder.createId()
+    legalHoldStatus?: LegalHoldStatus
   ): FileAssetMetaDataMessage {
     const content: FileAssetMetaDataContent = {
       expectsReadConfirmation,
@@ -139,7 +140,7 @@ class MessageBuilder {
     reason: AbortReason,
     originalMessageId: string,
     expectsReadConfirmation?: boolean,
-    legalHoldStatus?: number
+    legalHoldStatus?: LegalHoldStatus
   ): Promise<FileAssetAbortMessage> {
     const content: FileAssetAbortContent = {
       expectsReadConfirmation,
@@ -161,9 +162,9 @@ class MessageBuilder {
   public async createImage(
     conversationId: string,
     image: ImageContent,
+    messageId = MessageBuilder.createId(),
     expectsReadConfirmation?: boolean,
-    legalHoldStatus?: number,
-    messageId: string = MessageBuilder.createId()
+    legalHoldStatus?: LegalHoldStatus
   ): Promise<ImageAssetMessageOutgoing> {
     const imageAsset = await this.assetService.uploadImageAsset(image);
 
@@ -188,7 +189,7 @@ class MessageBuilder {
   public createLocation(
     conversationId: string,
     location: LocationContent,
-    messageId: string = MessageBuilder.createId()
+    messageId = MessageBuilder.createId()
   ): LocationMessage {
     return {
       content: location,
@@ -205,7 +206,7 @@ class MessageBuilder {
     conversationId: string,
     originalMessageId: string,
     type: ReactionType,
-    messageId: string = MessageBuilder.createId()
+    messageId = MessageBuilder.createId()
   ): ReactionMessage {
     const content: ReactionContent = {originalMessageId, type};
 
@@ -220,11 +221,7 @@ class MessageBuilder {
     };
   }
 
-  public createText(
-    conversationId: string,
-    text: string,
-    messageId: string = MessageBuilder.createId()
-  ): TextContentBuilder {
+  public createText(conversationId: string, text: string, messageId = MessageBuilder.createId()): TextContentBuilder {
     const content: TextContent = {text};
 
     const payloadBundle: TextMessage = {
@@ -244,8 +241,8 @@ class MessageBuilder {
     conversationId: string,
     firstMessageId: string,
     type: Confirmation.Type,
-    moreMessageIds?: string[],
-    messageId: string = MessageBuilder.createId()
+    messageId = MessageBuilder.createId(),
+    moreMessageIds?: string[]
   ): ConfirmationMessage {
     const content: ConfirmationContent = {firstMessageId, moreMessageIds, type};
     return {
@@ -262,7 +259,7 @@ class MessageBuilder {
   public createPing(
     conversationId: string,
     ping: KnockContent = {},
-    messageId: string = MessageBuilder.createId()
+    messageId = MessageBuilder.createId()
   ): PingMessage {
     return {
       content: ping,
@@ -275,10 +272,7 @@ class MessageBuilder {
     };
   }
 
-  public createSessionReset(
-    conversationId: string,
-    messageId: string = MessageBuilder.createId()
-  ): ResetSessionMessage {
+  public createSessionReset(conversationId: string, messageId = MessageBuilder.createId()): ResetSessionMessage {
     const content: ClientActionContent = {
       clientAction: ClientAction.RESET_SESSION,
     };

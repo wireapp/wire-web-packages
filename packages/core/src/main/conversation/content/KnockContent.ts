@@ -17,10 +17,10 @@
  *
  */
 
-interface KnockContent {
+import {LegalHoldStatus} from './LegalHoldStatus';
+
+export interface KnockContent {
   hotKnock?: boolean;
   expectsReadConfirmation?: boolean;
-  legalHoldStatus?: number;
+  legalHoldStatus?: LegalHoldStatus;
 }
-
-export {KnockContent};

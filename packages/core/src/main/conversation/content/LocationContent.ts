@@ -17,13 +17,13 @@
  *
  */
 
-interface LocationContent {
+import {LegalHoldStatus} from './LegalHoldStatus';
+
+export interface LocationContent {
   expectsReadConfirmation?: boolean;
   latitude: number;
-  legalHoldStatus?: number;
+  legalHoldStatus?: LegalHoldStatus;
   longitude: number;
   name?: string;
   zoom?: number;
 }
-
-export {LocationContent};

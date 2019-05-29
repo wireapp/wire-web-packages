@@ -18,10 +18,17 @@
  */
 
 import {MessageHashService} from '../../cryptography';
-import {LinkPreviewUploadedContent, MentionContent, QuoteContent, QuoteMessageContent, TextContent} from '../content';
+import {
+  LegalHoldStatus,
+  LinkPreviewUploadedContent,
+  MentionContent,
+  QuoteContent,
+  QuoteMessageContent,
+  TextContent,
+} from '../content';
 import {EditedTextMessage, TextMessage} from './Message';
 
-class TextContentBuilder {
+export class TextContentBuilder {
   private readonly content: TextContent;
   private readonly payloadBundle: TextMessage | EditedTextMessage;
 
@@ -76,10 +83,8 @@ class TextContentBuilder {
     return this;
   }
 
-  public withLegalHoldStatus(legalHoldStatus = 0): TextContentBuilder {
+  public withLegalHoldStatus(legalHoldStatus = LegalHoldStatus.DISABLED): TextContentBuilder {
     this.content.legalHoldStatus = legalHoldStatus;
     return this;
   }
 }
-
-export {TextContentBuilder};
