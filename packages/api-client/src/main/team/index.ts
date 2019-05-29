@@ -19,6 +19,7 @@
 
 export * from './identityprovider/';
 export {NewTeamInvitation, TeamInvitation, TeamInvitationAPI, TeamInvitationChunk} from './invitation/';
+export {LegalHoldAPI} from './legalhold/';
 export {MemberAPI, MemberData, Members, PermissionsData} from './member/';
 export {NewTeamData, TeamAPI, TeamChunkData, TeamData, TeamInfo} from './team/';
 export {PaymentAPI, PaymentData} from './payment/';

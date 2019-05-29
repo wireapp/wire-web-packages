@@ -2,15 +2,13 @@
   "dependencies": {
     "@types/bro-fs": "0.4.2",
     "@types/filesystem": "0.0.29",
-    "@types/fs-extra": "7.0.0",
     "@types/node": "~10",
     "bro-fs": "0.5.0",
-    "dexie": "2.0.4",
-    "fs-extra": "8.0.1"
+    "dexie": "2.0.4"
   },
   "devDependencies": {
     "@types/jasmine": "3.3.12",
-    "@types/karma": "3.0.2",
+    "@types/karma": "3.0.3",
     "jasmine": "3.4.0",
     "karma": "4.1.0",
     "karma-chrome-launcher": "2.2.0",
@@ -18,9 +16,9 @@
     "karma-sourcemap-loader": "0.3.7",
     "nyc": "14.1.1",
     "rimraf": "2.6.3",
-    "ts-node": "8.1.0",
+    "ts-node": "8.2.0",
     "typescript": "3.4.5",
-    "webpack": "4.31.0",
+    "webpack": "4.32.2",
     "webpack-cli": "3.3.2"
   },
   "description": "Provides a generic storage layer for File, FileSystem, IndexedDB, Memory & LocalStorage.",
@@ -55,5 +53,5 @@
     "test:project": "yarn dist && yarn test",
     "test:node": "nyc jasmine --config=jasmine.json"
   },
-  "version": "2.1.2"
+  "version": "3.0.0"
 }

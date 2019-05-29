@@ -2,30 +2,30 @@
   "dependencies": {
     "@emotion/core": "10.0.10",
     "@types/color": "3.0.0",
-    "bazinga64": "5.4.1",
+    "bazinga64": "5.4.3",
     "color": "3.1.1",
     "emotion-normalize": "10.0.0",
     "react-transition-group": "4.0.1"
   },
   "devDependencies": {
     "@babel/cli": "7.4.4",
-    "@babel/core": "7.4.4",
+    "@babel/core": "7.4.5",
     "@babel/plugin-proposal-class-properties": "7.4.4",
-    "@babel/preset-env": "7.4.4",
+    "@babel/preset-env": "7.4.5",
     "@babel/preset-react": "7.0.0",
     "@babel/preset-typescript": "7.3.3",
-    "@types/react": "16.8.17",
+    "@types/react": "16.8.19",
     "babel-loader": "8.0.6",
     "babel-plugin-emotion": "10.0.9",
     "react": "16.8.6",
     "react-dom": "16.8.6",
     "react-helmet": "5.2.1",
-    "react-hot-loader": "4.8.5",
+    "react-hot-loader": "4.8.8",
     "rimraf": "2.6.3",
     "typescript": "3.4.5",
-    "webpack": "4.31.0",
+    "webpack": "4.32.2",
     "webpack-cli": "3.3.2",
-    "webpack-dev-server": "3.3.1"
+    "webpack-dev-server": "3.4.1"
   },
   "peerDependencies": {
     "@types/react": "^16.8.0",
@@ -53,5 +53,5 @@
     "test:project": "yarn dist && yarn test",
     "test:browser": "exit 0"
   },
-  "version": "6.4.3"
+  "version": "6.4.5"
 }

@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2019 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +17,23 @@
  *
  */
 
-import {CRUDEngine, FileSystemEngine, IndexedDBEngine, LocalStorageEngine, MemoryEngine} from './engine/';
-import * as error from './engine/error/';
-import * as Store from './store/';
+export enum LegalHoldStatus {
+  DISABLED = 'disabled',
+  ENABLED_NOT_CONFIGURED = 'enabled_not_configured',
+  ENABLED_CONFIGURED = 'enabled_configured',
+}
 
-export {CRUDEngine, FileSystemEngine, IndexedDBEngine, LocalStorageEngine, MemoryEngine, error, Store};
+export interface LegalHoldDataUnconfigured {
+  enabled: Exclude<LegalHoldStatus, LegalHoldStatus.ENABLED_CONFIGURED>;
+}
+
+export interface LegalHoldDataConfigured {
+  enabled: LegalHoldStatus.ENABLED_CONFIGURED;
+  settings: {
+    base_url: string;
+    fingerprint: string;
+    team_id: string;
+  };
+}
+
+export type LegalHoldData = LegalHoldDataUnconfigured | LegalHoldDataConfigured;

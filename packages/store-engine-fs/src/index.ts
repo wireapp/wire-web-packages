@@ -17,19 +17,20 @@
  *
  */
 
-import * as fs from 'fs-extra';
-import * as path from 'path';
-import {CRUDEngine} from './CRUDEngine';
-import {isBrowser} from './EnvironmentUtil';
+import {CRUDEngine} from '@wireapp/store-engine';
 import {
   PathValidationError,
   RecordAlreadyExistsError,
   RecordNotFoundError,
   RecordTypeError,
   UnsupportedError,
-} from './error/';
+} from '@wireapp/store-engine/dist/commonjs/engine/error/';
+import fs from 'fs-extra';
+import path from 'path';
 
 export class FileEngine implements CRUDEngine {
+  [index: string]: any;
+
   public storeName = '';
   public options: {fileExtension: string} = {
     fileExtension: '.dat',
@@ -40,7 +41,9 @@ export class FileEngine implements CRUDEngine {
   constructor(private readonly baseDirectory = './') {}
 
   public async isSupported(): Promise<void> {
-    if (isBrowser()) {
+    const isNodeOrElectron = typeof process === 'object';
+
+    if (!isNodeOrElectron) {
       const message = `Node.js File System Module is not available on your platform.`;
       throw new UnsupportedError(message);
     }
