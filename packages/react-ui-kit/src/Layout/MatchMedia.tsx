@@ -62,4 +62,15 @@ const IsTablet = (props: NamedMatchMediaProps) => <MatchMedia query={QueryKeys.T
 const IsTabletDown = (props: NamedMatchMediaProps) => <MatchMedia query={QueryKeys.TABLET_DOWN} {...props} />;
 const IsTabletUp = (props: NamedMatchMediaProps) => <MatchMedia query={QueryKeys.TABLET_UP} {...props} />;
 
-export {useMatchMedia, MatchMedia, IsDesktop, IsDesktopXL, IsMobile, IsMobileDown, IsMobileUp, IsTablet, IsTabletDown, IsTabletUp};
+export {
+  useMatchMedia,
+  MatchMedia,
+  IsDesktop,
+  IsDesktopXL,
+  IsMobile,
+  IsMobileDown,
+  IsMobileUp,
+  IsTablet,
+  IsTabletDown,
+  IsTabletUp,
+};
