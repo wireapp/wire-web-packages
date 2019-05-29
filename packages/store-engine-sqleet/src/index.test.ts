@@ -39,7 +39,7 @@ describe('"create"', () => {
     };
 
     const engine = new SQLeetEngine(webAssembly);
-    await engine.init('', schema);
+    await engine.init('', schema, 'test');
     await engine.create<DBRecord>('users', '1', {name: 'Otto'});
     const result = await engine.read<DBRecord>('users', '1');
     expect(result.name).toBe('Otto');
@@ -56,7 +56,7 @@ describe('"update"', () => {
     };
 
     const engine = new SQLeetEngine(webAssembly);
-    await engine.init('', schema);
+    await engine.init('', schema, 'test');
     await engine.create<DBRecord>('users', '1', {name: 'Otto', age: 1});
     const result = await engine.read<DBRecord>('users', '1');
     expect(result.name).toBe('Otto');
@@ -92,12 +92,11 @@ describe('"export"', () => {
     await engine.create<DBRecord>('users', '1', {name: 'Otto', age: 1});
     await indexedDB.updateOrCreate(this.storeName, primaryKeyName, await engine.export());
 
-    await engine.purge();
-
     // Import and read
     const savedDatabase = await indexedDB.read<string>(this.storeName, primaryKeyName);
-    await engine.init(storeName, schema, encryptionKey, savedDatabase);
-    const result = await engine.read<DBRecord>('users', '1');
+    const engineNew = new SQLeetEngine(webAssembly, savedDatabase);
+    await engineNew.init(storeName, schema, encryptionKey);
+    const result = await engineNew.read<DBRecord>('users', '1');
 
     expect(result.age).toBe(1);
     expect(result.name).toBe('Otto');

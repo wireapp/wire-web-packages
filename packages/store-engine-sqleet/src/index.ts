@@ -24,12 +24,12 @@ const initSqlJs = require('sql.js');
 
 export class SQLeetEngine implements CRUDEngine {
   private db: any;
-  private hasEncryptionEnabled: boolean = false;
   private schema: SQLiteDatabaseDefinition<Record<string, any>>;
   private readonly dbConfig: any;
+  private rawDatabase: string | undefined;
   public storeName = '';
 
-  constructor(wasmLocation?: Uint8Array | string) {
+  constructor(wasmLocation: Uint8Array | string, rawDatabase?: string) {
     this.dbConfig = {};
 
     if (typeof wasmLocation === 'string') {
@@ -43,24 +43,23 @@ export class SQLeetEngine implements CRUDEngine {
         value: SQLiteType.TEXT,
       },
     };
+    if (rawDatabase) {
+      this.rawDatabase = rawDatabase;
+    }
   }
 
   append(tableName: string, primaryKey: string, additions: string): Promise<string> {
     throw new Error('Method not implemented.');
   }
 
-  async init<T>(
-    storeName: string,
-    schema: SQLiteDatabaseDefinition<T>,
-    encryptionKey?: string,
-    existingEncodedDatabase?: string
-  ): Promise<any> {
+  async init<T>(storeName: string, schema: SQLiteDatabaseDefinition<T>, encryptionKey: string): Promise<any> {
     this.storeName = storeName;
     this.schema = schema;
 
     let existingDatabase: Uint8Array | undefined = undefined;
-    if (existingEncodedDatabase) {
-      existingDatabase = await this.load(existingEncodedDatabase);
+    if (this.rawDatabase) {
+      existingDatabase = await this.load(this.rawDatabase);
+      this.rawDatabase = undefined;
     }
 
     const SQL = await initSqlJs(this.dbConfig);
@@ -68,11 +67,8 @@ export class SQLeetEngine implements CRUDEngine {
 
     // Settings
     this.db.run('PRAGMA encoding="UTF-8";');
-    if (encryptionKey) {
-      this.db.run(`PRAGMA key="${encryptionKey}";`);
-      this.hasEncryptionEnabled = true;
-      encryptionKey = null;
-    }
+    this.db.run(`PRAGMA key=${this.escape(encryptionKey)};`);
+    encryptionKey = null;
 
     // Create tables
     let statement: string = '';
@@ -85,12 +81,9 @@ export class SQLeetEngine implements CRUDEngine {
     return this.db;
   }
 
-  public async export(): Promise<string> {
+  public async export<T>(): Promise<string> {
     if (!this.db) {
       throw new Error('SQLite need to be available');
-    }
-    if (!this.hasEncryptionEnabled) {
-      throw new Error('You cannot export an unencrypted database');
     }
     const database: Uint8Array = new Uint8Array(this.db.export());
     const strings = [];
@@ -110,11 +103,16 @@ export class SQLeetEngine implements CRUDEngine {
     return databaseBinary;
   }
 
+  private escape(value: string, delimiter: string = `"`): string {
+    return `${delimiter}${value.replace(new RegExp(delimiter, 'g'), `\\${delimiter}`)}${delimiter}`;
+  }
+
   async purge(): Promise<void> {
     // From api.coffee: "Databases **must** be closed, when you're finished with them, or the
     // memory consumption will grow forever
     this.db.close();
     this.db = null;
+    this.rawDatabase = undefined;
   }
 
   private buildValues(
