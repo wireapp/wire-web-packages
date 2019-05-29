@@ -22,6 +22,7 @@ const {APIClient} = require('@wireapp/api-client');
 const {Account} = require('@wireapp/core');
 const {GenericMessage, Text} = require('@wireapp/protocol-messaging');
 const {MemoryEngine} = require('@wireapp/store-engine');
+const {LegalHoldStatus} = require('@wireapp/core/dist/conversation/content/LegalHoldStatus');
 
 const PayloadHelper = require('../test/PayloadHelper');
 
@@ -389,11 +390,11 @@ describe('ConversationService', () => {
 
       const replyMessage = account.service.conversation.messageBuilder
         .createText(undefined, text)
-        .withLegalHoldStatus(1)
+        .withLegalHoldStatus(LegalHoldStatus.ENABLED)
         .build();
 
       expect(replyMessage.content.text).toEqual(text);
-      expect(replyMessage.content.legalHoldStatus).toEqual(1);
+      expect(replyMessage.content.legalHoldStatus).toEqual(LegalHoldStatus.ENABLED);
     });
   });
 });
