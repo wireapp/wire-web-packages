@@ -309,7 +309,7 @@ class Account extends EventEmitter {
           content.quote = quote;
         }
 
-        if (legalHoldStatus) {
+        if (typeof legalHoldStatus !== 'undefined') {
           content.legalHoldStatus = legalHoldStatus;
         }
 

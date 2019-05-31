@@ -79,12 +79,16 @@ export class TextContentBuilder {
   }
 
   public withReadConfirmation(expectsReadConfirmation = false): TextContentBuilder {
-    this.content.expectsReadConfirmation = expectsReadConfirmation;
+    if (typeof expectsReadConfirmation !== 'undefined') {
+      this.content.expectsReadConfirmation = expectsReadConfirmation;
+    }
     return this;
   }
 
   public withLegalHoldStatus(legalHoldStatus = LegalHoldStatus.DISABLED): TextContentBuilder {
-    this.content.legalHoldStatus = legalHoldStatus;
+    if (typeof legalHoldStatus !== 'undefined') {
+      this.content.legalHoldStatus = legalHoldStatus;
+    }
     return this;
   }
 }
