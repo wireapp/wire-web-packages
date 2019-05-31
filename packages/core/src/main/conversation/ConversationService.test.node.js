@@ -388,6 +388,13 @@ describe('ConversationService', () => {
 
       const text = 'Please read me';
 
+      const firstMessage = account.service.conversation.messageBuilder
+        .createText(undefined, text)
+        .withLegalHoldStatus()
+        .build();
+
+      expect(firstMessage.content.legalHoldStatus).toEqual(LegalHoldStatus.DISABLED);
+
       const replyMessage = account.service.conversation.messageBuilder
         .createText(undefined, text)
         .withLegalHoldStatus(LegalHoldStatus.ENABLED)
