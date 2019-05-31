@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@11.0.2...@wireapp/core@11.0.3) (2019-05-29)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [11.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@11.0.1...@wireapp/core@11.0.2) (2019-05-29)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [11.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@11.0.0...@wireapp/core@11.0.1) (2019-05-28)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [11.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@10.2.7...@wireapp/core@11.0.0) (2019-05-28)
+
+
+### Code Refactoring
+
+* **store-engine:** Remove FileEngine ([#1867](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1867)) ([cde57c2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/cde57c2))
+
+
+### BREAKING CHANGES
+
+* **store-engine:** All engines, except the `MemoryEngine`, got moved into seperate packages
+
+
+
+
+
+## [10.2.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@10.2.6...@wireapp/core@10.2.7) (2019-05-27)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
 ## [10.2.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@10.2.5...@wireapp/core@10.2.6) (2019-05-22)
 
 **Note:** Version bump only for package @wireapp/core
