@@ -22,7 +22,7 @@ const {APIClient} = require('@wireapp/api-client');
 const {Account} = require('@wireapp/core');
 const {GenericMessage, Text} = require('@wireapp/protocol-messaging');
 const {MemoryEngine} = require('@wireapp/store-engine');
-const {LegalHoldStatus} = require('@wireapp/core/dist/conversation/content/LegalHoldStatus');
+const {LegalHoldStatus} = require('@wireapp/core/dist/conversation/content/');
 
 const PayloadHelper = require('../test/PayloadHelper');
 
