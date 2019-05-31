@@ -1,9 +1,5 @@
 //@ts-check
 
-/**
- * @typedef {import('@wireapp/core/dist/conversation').PayloadBundle} PayloadBundle
- */
-
 process.on('uncaughtException', (/** @type {Error & {code: number}} */ error) =>
   logger.error(`Uncaught exception "${error.constructor.name}" (${error.code}): ${error.message}`, error)
 );
