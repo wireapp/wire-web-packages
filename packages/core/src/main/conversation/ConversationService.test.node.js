@@ -381,7 +381,7 @@ describe('ConversationService', () => {
       expect(replyMessage.content.expectsReadConfirmation).toEqual(true);
     });
 
-    it('adds a legal hold status correctly', () => {
+    it('adds a legal hold status', () => {
       account.apiClient.context = {
         userId: PayloadHelper.getUUID(),
       };
