@@ -2,7 +2,7 @@
   "dependencies": {
     "@emotion/core": "10.0.10",
     "@types/color": "3.0.0",
-    "bazinga64": "5.4.3",
+    "bazinga64": "5.4.6",
     "color": "3.1.1",
     "emotion-normalize": "10.0.0",
     "react-transition-group": "4.1.0"
@@ -20,12 +20,12 @@
     "react": "16.8.6",
     "react-dom": "16.8.6",
     "react-helmet": "5.2.1",
-    "react-hot-loader": "4.8.8",
+    "react-hot-loader": "4.9.0",
     "rimraf": "2.6.3",
-    "typescript": "3.4.5",
+    "typescript": "3.5.1",
     "webpack": "4.32.2",
     "webpack-cli": "3.3.2",
-    "webpack-dev-server": "3.4.1"
+    "webpack-dev-server": "3.5.1"
   },
   "peerDependencies": {
     "@types/react": "^16.8.0",
@@ -53,5 +53,5 @@
     "test:project": "yarn dist && yarn test",
     "test:browser": "exit 0"
   },
-  "version": "6.5.0"
+  "version": "6.5.3"
 }
