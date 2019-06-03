@@ -197,7 +197,13 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   async updateOrCreate<T>(tableName: string, primaryKey: string, changes: Record<string, any>): Promise<string> {
-    throw new Error('Method not implemented.');
+    const doesEntryExist = Object.keys(await this.read(tableName, primaryKey)).length > 0;
+    if (doesEntryExist) {
+      await this.update(tableName, primaryKey, changes);
+    } else {
+      await this.create(tableName, primaryKey, changes);
+    }
+    return primaryKey;
   }
 
   async isSupported(): Promise<void> {

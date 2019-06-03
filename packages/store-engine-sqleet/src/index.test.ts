@@ -46,6 +46,23 @@ describe('"create"', () => {
   });
 });
 
+describe('"updateOrCreate"', () => {
+  it('create then update a record to the database', async () => {
+    const schema: SQLiteDatabaseDefinition<DBRecord> = {
+      users: {
+        name: SQLiteType.TEXT,
+      },
+    };
+
+    const engine = new SQLeetEngine(webAssembly);
+    await engine.init('', schema, 'test');
+    await engine.updateOrCreate<DBRecord>('users', '1', {name: 'Otto'});
+    await engine.updateOrCreate<DBRecord>('users', '1', {name: 'Lion'});
+    const result = await engine.read<DBRecord>('users', '1');
+    expect(result.name).toBe('Lion');
+  });
+});
+
 describe('"update"', () => {
   it('updates a record in the database', async () => {
     const schema: SQLiteDatabaseDefinition<DBRecord> = {
