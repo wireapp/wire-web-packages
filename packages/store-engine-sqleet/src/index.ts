@@ -17,6 +17,8 @@
  *
  */
 
+///<reference path="./webassembly.d.ts" />
+
 import {CRUDEngine} from '@wireapp/store-engine';
 import {SQLiteDatabaseDefinition, SQLiteType, createTableIfNotExists} from './SchemaConverter';
 
@@ -210,7 +212,7 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   async isSupported(): Promise<void> {
-    const webAssembly = (window as any).WebAssembly;
+    const webAssembly = window.WebAssembly;
     if (typeof webAssembly === 'object' && typeof webAssembly.instantiate === 'function') {
       const module = new webAssembly.Module(Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00));
       if (module instanceof webAssembly.Module) {
