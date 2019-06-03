@@ -21,7 +21,7 @@ import {LegalHoldStatus} from '.';
 import {ReactionType} from '../';
 
 export interface ReactionContent {
-  originalMessageId: string;
   legalHoldStatus?: LegalHoldStatus;
+  originalMessageId: string;
   type: ReactionType;
 }
