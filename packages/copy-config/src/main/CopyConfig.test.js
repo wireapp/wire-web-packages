@@ -36,6 +36,7 @@ describe('CopyConfig', () => {
 
       const copyConfig = new CopyConfig({
         files: {},
+        repositoryUrl: '',
       });
 
       expect(copyConfig.options.externalDir.endsWith('externalDir')).toBe(true);
@@ -56,6 +57,7 @@ describe('CopyConfig', () => {
         files: {
           './spec/helpers/test1.txt': TEMP_DIR,
         },
+        repositoryUrl: '',
       });
 
       const copiedResult = await copyConfig.copy();
@@ -72,6 +74,7 @@ describe('CopyConfig', () => {
         files: {
           './spec/helpers/.env.test': `${TEMP_DIR}/.env`,
         },
+        repositoryUrl: '',
       });
 
       const copiedResult = await copyConfig.copy();
@@ -85,6 +88,7 @@ describe('CopyConfig', () => {
         files: {
           './spec/helpers/**': TEMP_DIR,
         },
+        repositoryUrl: '',
       });
 
       const copiedResult = await copyConfig.copy();
@@ -103,6 +107,7 @@ describe('CopyConfig', () => {
         files: {
           'non-existant': TEMP_DIR,
         },
+        repositoryUrl: '',
       });
 
       try {
@@ -122,6 +127,7 @@ describe('CopyConfig', () => {
         files: {
           './spec/helpers/test1.txt': TEMP_DIR,
         },
+        repositoryUrl: '',
       });
 
       const copiedResult = await copyConfig.copy();
@@ -181,7 +187,9 @@ describe('CopyConfig', () => {
       const copyString = 'C:\\source:D:\\target';
 
       const copyConfig = new CopyConfig({
+        externalDir: '.',
         files: {},
+        repositoryUrl: '',
       });
 
       const resolvedPaths = copyConfig.getFilesFromString(copyString);

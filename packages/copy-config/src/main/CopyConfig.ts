@@ -63,7 +63,7 @@ export class CopyConfig {
   private readEnvVars(): void {
     const externalDir = process.env.WIRE_CONFIGURATION_EXTERNAL_DIR;
     const repositoryUrl = process.env.WIRE_CONFIGURATION_REPOSITORY;
-    const configurationFiles = process.env.WIRE_CONFIGURATION_REPOSITORY;
+    const configurationFiles = process.env.WIRE_CONFIGURATION_FILES;
 
     if (typeof externalDir !== 'undefined') {
       this.options.externalDir = String(externalDir);
