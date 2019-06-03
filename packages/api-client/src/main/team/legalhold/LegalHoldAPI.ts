@@ -22,7 +22,7 @@ import {AxiosRequestConfig} from 'axios';
 import {HttpClient} from '../../http';
 import {TeamAPI} from '../team/TeamAPI';
 import {LegalHoldData} from './LegalHoldData';
-import {LegalHoldMemberStatus} from './LegalHoldMemberData';
+import {LegalHoldMemberStatus} from './LegalHoldMemberStatus';
 import {NewLegalHoldData} from './NewLegalHoldData';
 
 export class LegalHoldAPI {
