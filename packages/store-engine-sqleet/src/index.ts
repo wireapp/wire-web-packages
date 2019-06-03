@@ -17,7 +17,11 @@
  *
  */
 
-///<reference path="./webassembly.d.ts" />
+declare global {
+  interface Window {
+    WebAssembly: typeof WebAssembly;
+  }
+}
 
 import {CRUDEngine} from '@wireapp/store-engine';
 import {SQLiteDatabaseDefinition, SQLiteType, createTableIfNotExists} from './SchemaConverter';
@@ -221,6 +225,6 @@ export class SQLeetEngine implements CRUDEngine {
         }
       }
     }
-    throw new Error('Webassembly is not supported');
+    throw new Error('WebAssembly is not supported');
   }
 }
