@@ -17,11 +17,11 @@
  *
  */
 
+import {LegalHoldStatus} from '.';
 import {ReactionType} from '../';
 
-interface ReactionContent {
+export interface ReactionContent {
   originalMessageId: string;
+  legalHoldStatus?: LegalHoldStatus;
   type: ReactionType;
 }
-
-export {ReactionContent};
