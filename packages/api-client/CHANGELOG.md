@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.0.6...@wireapp/api-client@5.0.7) (2019-06-03)
+
+
+### Bug Fixes
+
+* **api-client:** Remove legal hold member data ([#1889](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1889)) ([7175ce0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/7175ce0))
+
+
+
+
+
+## [5.0.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.0.5...@wireapp/api-client@5.0.6) (2019-06-03)
+
+
+### Bug Fixes
+
+* **api-client:** Directly assign legal hold data on POST ([#1887](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1887)) ([0dc75b7](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/0dc75b7))
+
+
+
+
+
+## [5.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.0.4...@wireapp/api-client@5.0.5) (2019-06-03)
+
+
+### Bug Fixes
+
+* **api-client:** Add legal hold member data ([#1886](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1886)) ([c7c57fd](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/c7c57fd))
+
+
+
+
+
+## [5.0.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.0.3...@wireapp/api-client@5.0.4) (2019-05-31)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
 ## [5.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.0.2...@wireapp/api-client@5.0.3) (2019-05-29)
 
 

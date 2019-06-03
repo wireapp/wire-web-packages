@@ -17,7 +17,11 @@
  *
  */
 
-///<reference path="./webassembly.d.ts" />
+declare global {
+  interface Window {
+    WebAssembly: typeof WebAssembly;
+  }
+}
 
 import {CRUDEngine} from '@wireapp/store-engine';
 import {SQLiteDatabaseDefinition, SQLiteType, createTableIfNotExists} from './SchemaConverter';
@@ -70,7 +74,8 @@ export class SQLeetEngine implements CRUDEngine {
     // Settings
     this.db.run('PRAGMA encoding="UTF-8";');
     this.db.run(`PRAGMA key=${this.escape(encryptionKey)};`);
-    encryptionKey = null;
+    // Remove traces of encryption key
+    encryptionKey = '';
 
     // Create tables
     let statement: string = '';
@@ -89,10 +94,10 @@ export class SQLeetEngine implements CRUDEngine {
     }
     const database: Uint8Array = new Uint8Array(this.db.export());
     const strings = [];
-    const chunksize = 0xffff;
-    // There is a maximum stack size. We cannot call String.fromCharCode with as many arguments as we want
-    for (let i = 0; i * chunksize < database.length; i++) {
-      strings[i] = String.fromCharCode.apply(null, <any>database.subarray(i * chunksize, (i + 1) * chunksize));
+    const chunkSize = 0xffff;
+    // There is a maximum stack size. We cannot call `String.fromCharCode` with as many arguments as we want
+    for (let i = 0; i * chunkSize < database.length; i++) {
+      strings[i] = String.fromCharCode.apply(null, <any>database.subarray(i * chunkSize, (i + 1) * chunkSize));
     }
     return strings.join('');
   }
@@ -110,8 +115,7 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   async purge(): Promise<void> {
-    // From api.coffee: "Databases **must** be closed, when you're finished with them, or the
-    // memory consumption will grow forever
+    // Databases must be closed, when you're finished with them, or the memory consumption will grow forever.
     this.db.close();
     this.db = null;
     this.rawDatabase = undefined;
@@ -221,6 +225,6 @@ export class SQLeetEngine implements CRUDEngine {
         }
       }
     }
-    throw new Error('Webassembly is not supported');
+    throw new Error('WebAssembly is not supported');
   }
 }
