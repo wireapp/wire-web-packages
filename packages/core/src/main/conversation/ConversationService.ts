@@ -570,12 +570,12 @@ class ConversationService {
   }
 
   private async sendReaction(payloadBundle: ReactionMessage, userIds?: string[]): Promise<ReactionMessage> {
-    const reactionContent = payloadBundle.content;
+    const {legalHoldStatus, originalMessageId, type} = payloadBundle.content;
 
     const reaction = Reaction.create({
-      emoji: reactionContent.type,
-      legalHoldStatus: reactionContent.legalHoldStatus,
-      messageId: reactionContent.originalMessageId,
+      emoji: type,
+      legalHoldStatus,
+      messageId: originalMessageId,
     });
 
     const genericMessage = GenericMessage.create({
