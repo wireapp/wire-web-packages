@@ -33,7 +33,7 @@ const defaultOptions: Required<CopyConfigOptions> = {
 };
 
 export class CopyConfig {
-  private options: Required<CopyConfigOptions>;
+  private readonly options: Required<CopyConfigOptions>;
   private readonly logger: logdown.Logger;
   private readonly noClone: boolean = false;
   private readonly noCleanup: boolean = false;
@@ -61,19 +61,20 @@ export class CopyConfig {
   }
 
   private readEnvVars(): void {
-    const setString = (optionKey: keyof CopyConfigOptions, variable?: string) => {
-      if (typeof variable !== 'undefined') {
-        this.options = {
-          ...this.options,
-          [optionKey]: String(variable),
-        };
-      }
-    };
+    const externalDir = process.env.WIRE_CONFIGURATION_EXTERNAL_DIR;
+    const repositoryUrl = process.env.WIRE_CONFIGURATION_REPOSITORY;
+    const configurationFiles = process.env.WIRE_CONFIGURATION_REPOSITORY;
 
-    setString('externalDir', process.env.WIRE_CONFIGURATION_EXTERNAL_DIR);
-    setString('repositoryUrl', process.env.WIRE_CONFIGURATION_REPOSITORY);
-    if (typeof process.env.WIRE_CONFIGURATION_FILES !== 'undefined') {
-      const files = this.getFilesFromString(process.env.WIRE_CONFIGURATION_FILES);
+    if (typeof externalDir !== 'undefined') {
+      this.options.externalDir = String(externalDir);
+    }
+
+    if (typeof repositoryUrl !== 'undefined') {
+      this.options.repositoryUrl = String(repositoryUrl);
+    }
+
+    if (typeof configurationFiles !== 'undefined') {
+      const files = this.getFilesFromString(configurationFiles);
       Object.assign(this.options.files, files);
     }
   }
