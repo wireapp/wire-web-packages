@@ -29,6 +29,7 @@ interface DBRecord {
 }
 
 const webAssembly = Decoder.fromBase64(SQLeetWebAssembly).asBytes;
+const GENERIC_ENCRYPTION_KEY = 'test';
 
 describe('"create"', () => {
   it('saves a record to the database', async () => {
@@ -39,10 +40,30 @@ describe('"create"', () => {
     };
 
     const engine = new SQLeetEngine(webAssembly);
-    await engine.init('', schema, 'test');
+    await engine.init('', schema, GENERIC_ENCRYPTION_KEY);
     await engine.create<DBRecord>('users', '1', {name: 'Otto'});
     const result = await engine.read<DBRecord>('users', '1');
     expect(result.name).toBe('Otto');
+  });
+});
+
+describe('"readAll"', () => {
+  it('can read a set of records in the database', async () => {
+    const schema: SQLiteDatabaseDefinition<DBRecord> = {
+      users: {
+        name: SQLiteType.TEXT,
+      },
+    };
+
+    const engine = new SQLeetEngine(webAssembly);
+    await engine.init('', schema, GENERIC_ENCRYPTION_KEY);
+
+    const RECORDS_COUNT = 100;
+    for (let i = 0; i < RECORDS_COUNT; i++) {
+      await engine.create<DBRecord>('users', i.toString(), {name: 'Lion'});
+    }
+    const results = await engine.readAll<DBRecord>('users');
+    expect(results.length).toBe(RECORDS_COUNT);
   });
 });
 
@@ -55,7 +76,7 @@ describe('"updateOrCreate"', () => {
     };
 
     const engine = new SQLeetEngine(webAssembly);
-    await engine.init('', schema, 'test');
+    await engine.init('', schema, GENERIC_ENCRYPTION_KEY);
     await engine.updateOrCreate<DBRecord>('users', '1', {name: 'Otto'});
     await engine.updateOrCreate<DBRecord>('users', '1', {name: 'Lion'});
     const result = await engine.read<DBRecord>('users', '1');
@@ -73,7 +94,7 @@ describe('"update"', () => {
     };
 
     const engine = new SQLeetEngine(webAssembly);
-    await engine.init('', schema, 'test');
+    await engine.init('', schema, GENERIC_ENCRYPTION_KEY);
     await engine.create<DBRecord>('users', '1', {name: 'Otto', age: 1});
     const result = await engine.read<DBRecord>('users', '1');
     expect(result.name).toBe('Otto');

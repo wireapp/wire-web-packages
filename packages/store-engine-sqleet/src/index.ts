@@ -174,7 +174,10 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   readAll<T>(tableName: string): Promise<T[]> {
-    throw new Error('Method not implemented.');
+    const columns = Object.keys(this.schema[tableName]).join(',');
+    const selectRecordStatement = `SELECT key, ${columns} FROM ${tableName};`;
+    const records = this.db.exec(selectRecordStatement);
+    return records[0].values;
   }
 
   readAllPrimaryKeys(tableName: string): Promise<string[]> {
