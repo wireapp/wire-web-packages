@@ -574,6 +574,7 @@ class ConversationService {
 
     const reaction = Reaction.create({
       emoji: reactionContent.type,
+      legalHoldStatus: reactionContent.legalHoldStatus,
       messageId: reactionContent.originalMessageId,
     });
 
