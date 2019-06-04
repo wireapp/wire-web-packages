@@ -128,7 +128,9 @@ export class SQLeetEngine implements CRUDEngine {
       return this.schema[tableName] && typeof this.schema[tableName][column] !== 'undefined';
     });
     if (columns.length === 0) {
-      throw new Error(`Entity is empty for table "${tableName}"`);
+      throw new Error(
+        `Entity is empty for table "${tableName}". Are you sure you set the right scheme / column names?`
+      );
     }
     const values: Record<string, any> = {};
     for (const columnIndex in columns) {
