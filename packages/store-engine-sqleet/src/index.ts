@@ -171,7 +171,7 @@ export class SQLeetEngine implements CRUDEngine {
 
   async read<T>(tableName: string, primaryKey: string): Promise<T> {
     const columns = Object.keys(this.schema[tableName]).join(',');
-    const selectRecordStatement = `SELECT key, ${columns} FROM ${escapeTableName(tableName)} WHERE key = @primaryKey;`;
+    const selectRecordStatement = `SELECT ${columns} FROM ${escapeTableName(tableName)} WHERE key = @primaryKey;`;
 
     const statement = this.db.prepare(selectRecordStatement);
     const record = statement.getAsObject({
