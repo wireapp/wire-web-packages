@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2019 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,21 +18,27 @@
  */
 
 /** @jsx jsx */
-import {ObjectInterpolation, jsx} from '@emotion/core';
-import {COLOR} from '../Identity';
-import {GUTTER} from '../Layout/sizes';
+import {jsx} from '@emotion/core';
+import {Rotation} from './ArrowIcon';
+import {SVGIcon, SVGIconProps} from './SVGIcon';
 
-export interface LineProps<T = HTMLHRElement> extends React.HTMLProps<T> {
-  color?: string;
+export interface Props extends SVGIconProps {
+  direction?: keyof Rotation;
 }
 
-const lineStyle: <T>(props: LineProps<T>) => ObjectInterpolation<undefined> = ({color = COLOR.GRAY_LIGHTEN_72}) => ({
-  border: 'none',
-  borderBottom: `1px solid ${color}`,
-  marginBottom: `${GUTTER}px`,
-  marginTop: `${GUTTER}px`,
-});
+/* tslint:disable:object-literal-sort-keys */
+const rotation: Rotation = {
+  down: 0,
+  left: 90,
+  up: 180,
+  right: 270,
+};
+/* tslint:enable:object-literal-sort-keys */
 
-const Line = (props: LineProps) => <hr css={lineStyle(props)} {...props} />;
+const TriangleIcon = ({direction = 'down', ...props}: Props) => (
+  <SVGIcon realWidth={8} realHeight={8} {...props}>
+    <path transform={`rotate(${rotation[direction]} 4 4)`} fillRule="evenodd" d="M0 2h8L4 7" />
+  </SVGIcon>
+);
 
-export {Line, lineStyle};
+export {TriangleIcon};

@@ -21,12 +21,15 @@
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import {COLOR} from '../Identity';
 import {defaultTransition} from '../Identity/motions';
+import {Loading} from '../Misc';
 import {TextProps, filterTextProps, textStyle} from '../Text';
 import {filterProps} from '../util';
 
 export interface ButtonProps<T = HTMLButtonElement> extends TextProps<T> {
   backgroundColor?: string;
   noCapital?: boolean;
+  showLoading?: boolean;
+  loadingColor?: string;
 }
 
 const filterButtonProps = (props: Object) => {
@@ -87,12 +90,18 @@ const buttonStyle: <T>(props: ButtonProps<T>) => ObjectInterpolation<undefined> 
 
 const buttonLinkStyle: (props: ButtonProps<HTMLAnchorElement>) => ObjectInterpolation<undefined> = props => ({
   ...buttonStyle(props),
-  display: 'inline-block !important',
+  display: 'inline-flex !important',
 });
 
-const Button = (props: ButtonProps) => <button css={buttonStyle(props)} {...filterButtonProps(props)} />;
-const ButtonLink = (props: ButtonProps<HTMLAnchorElement>) => (
-  <a css={buttonLinkStyle(props)} {...filterButtonLinkProps(props)} />
+const Button = ({showLoading, children, loadingColor = COLOR.WHITE, ...props}: ButtonProps) => (
+  <button css={buttonStyle(props)} {...filterButtonProps(props)}>
+    {showLoading ? <Loading size={30} color={loadingColor} style={{display: 'flex', margin: 'auto'}} /> : children}
+  </button>
+);
+const ButtonLink = ({children, showLoading, loadingColor = COLOR.WHITE, ...props}: ButtonProps<HTMLAnchorElement>) => (
+  <a css={buttonLinkStyle(props)} {...filterButtonLinkProps(props)}>
+    {showLoading ? <Loading size={30} color={loadingColor} style={{display: 'flex', margin: 'auto'}} /> : children}
+  </a>
 );
 
 export {Button, ButtonLink, buttonStyle, filterButtonProps, buttonLinkStyle};

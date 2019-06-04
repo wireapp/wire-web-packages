@@ -88,7 +88,15 @@ const DemoInputs = () => {
         <Column>Disabled Button</Column>
         <Column>
           <Button disabled onClick={() => alert('This should not work')}>
-            Default Button
+            Disabled Button
+          </Button>
+        </Column>
+      </Columns>
+      <Columns>
+        <Column>Loading Button</Column>
+        <Column>
+          <Button showLoading disabled onClick={() => alert('This should not work')}>
+            Loading Button
           </Button>
         </Column>
       </Columns>
@@ -96,6 +104,14 @@ const DemoInputs = () => {
         <Column>ButtonLink</Column>
         <Column>
           <ButtonLink backgroundColor={COLOR.GREEN}>ButtonLink</ButtonLink>
+        </Column>
+      </Columns>
+      <Columns>
+        <Column>Loading ButtonLink</Column>
+        <Column>
+          <ButtonLink showLoading backgroundColor={COLOR.GREEN}>
+            ButtonLink
+          </ButtonLink>
         </Column>
       </Columns>
 
