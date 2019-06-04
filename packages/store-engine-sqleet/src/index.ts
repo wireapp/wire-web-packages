@@ -207,6 +207,7 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   async update(tableName: string, primaryKey: string, changes: Record<string, any>): Promise<string> {
+    await this.read(tableName, primaryKey);
     const {columns, values} = this.buildValues(tableName, changes);
     const newValues = columns.map(column => `${column}=@${column}`);
     const statement = `UPDATE ${escapeTableName(tableName)} SET ${newValues.join(',')} WHERE key=@primaryKey;`;
@@ -214,15 +215,19 @@ export class SQLeetEngine implements CRUDEngine {
       ...values,
       '@primaryKey': primaryKey,
     });
+
     return primaryKey;
   }
 
   async updateOrCreate<T>(tableName: string, primaryKey: string, changes: Record<string, any>): Promise<string> {
-    const doesEntryExist = Object.keys(await this.read(tableName, primaryKey)).length > 0;
-    if (doesEntryExist) {
+    try {
       await this.update(tableName, primaryKey, changes);
-    } else {
-      await this.create(tableName, primaryKey, changes);
+    } catch (error) {
+      if (error instanceof RecordNotFoundError) {
+        await this.create(tableName, primaryKey, changes);
+      } else {
+        throw error;
+      }
     }
     return primaryKey;
   }
