@@ -110,10 +110,6 @@ export class SQLeetEngine implements CRUDEngine {
     return databaseBinary;
   }
 
-  private escape(value: string, delimiter: string = `"`): string {
-    return `${delimiter}${value.replace(new RegExp(delimiter, 'g'), `\\${delimiter}`)}${delimiter}`;
-  }
-
   async purge(): Promise<void> {
     // Databases must be closed, when you're finished with them, or the memory consumption will grow forever.
     this.db.close();

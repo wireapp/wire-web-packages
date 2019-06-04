@@ -71,9 +71,17 @@ export function mapValueToType(value: any): SQLiteType {
   }
 }
 
+export const escape = (value: string, delimiter: string = `"`) => {
+  return `${delimiter}${value.replace(new RegExp(delimiter, 'g'), `\\${delimiter}`)}${delimiter}`;
+};
+
+export const escapeTableName = (tableName: string) => {
+  return escape(tableName, '`');
+};
+
 export function createTableIfNotExists<T>(tableName: string, columns: SQLiteTableDefinition<T>): string {
   const statements = ['key varchar(255) PRIMARY KEY'].concat(
     Object.entries(columns).map(([key, type]) => `${key} ${type}`)
   );
-  return `CREATE TABLE IF NOT EXISTS ${tableName} (${statements.join(',')});`;
+  return `CREATE TABLE IF NOT EXISTS ${escapeTableName(tableName)} (${statements.join(',')});`;
 }
