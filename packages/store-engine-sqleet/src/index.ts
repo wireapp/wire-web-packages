@@ -24,6 +24,12 @@ declare global {
 }
 
 import {CRUDEngine} from '@wireapp/store-engine';
+import {
+  RecordAlreadyExistsError,
+  RecordNotFoundError,
+  RecordTypeError,
+  UnsupportedError,
+} from '@wireapp/store-engine/dist/commonjs/engine/error/';
 import {SQLiteDatabaseDefinition, SQLiteType, createTableIfNotExists, escape, escapeTableName} from './SchemaConverter';
 
 const initSqlJs = require('sql.js');
