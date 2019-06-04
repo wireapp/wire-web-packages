@@ -194,6 +194,11 @@ export class SQLeetEngine implements CRUDEngine {
     });
     statement.free();
 
+    if (Object.keys(record).length === 0) {
+      const message = `Record "${primaryKey}" in "${tableName}" could not be found.`;
+      throw new RecordNotFoundError(message);
+    }
+
     for (const value in record) {
       if (typeof value === 'string') {
         try {
