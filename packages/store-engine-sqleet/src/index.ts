@@ -144,14 +144,27 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   async create<T>(tableName: string, primaryKey: string, entity: Record<string, any>): Promise<string> {
+    if (!entity) {
+      const message = `Record "${primaryKey}" cannot be saved in "${tableName}" because it's "undefined" or "null".`;
+      throw new RecordTypeError(message);
+    }
     const {columns, values} = this.buildValues(tableName, entity);
     const statement = `INSERT INTO ${escapeTableName(tableName)} (key,${columns.join(
       ','
     )}) VALUES (@primaryKey,${Object.keys(values).join(',')});`;
-    this.db.run(statement, {
-      ...values,
-      '@primaryKey': primaryKey,
-    });
+    try {
+      this.db.run(statement, {
+        ...values,
+        '@primaryKey': primaryKey,
+      });
+    } catch (error) {
+      if (error.message.startsWith(`UNIQUE constraint failed: `)) {
+        const message = `Record "${primaryKey}" already exists in "${tableName}". You need to delete the record first if you want to overwrite it.`;
+        throw new RecordAlreadyExistsError(message);
+      } else {
+        throw error;
+      }
+    }
     return primaryKey;
   }
 
