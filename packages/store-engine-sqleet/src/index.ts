@@ -143,7 +143,7 @@ export class SQLeetEngine implements CRUDEngine {
       const column = columns[columnIndex];
       let value: any = entity[column];
       // Stringify objects for the database
-      if (this.schema[tableName][column] === SQLiteType.TEXT && typeof value !== 'string') {
+      if (this.schema[tableName][column] === SQLiteType.JSON) {
         value = JSON.stringify(value);
       }
       values[`@${column}`] = value;
@@ -205,11 +205,9 @@ export class SQLeetEngine implements CRUDEngine {
       throw new RecordNotFoundError(message);
     }
 
-    for (const value in record) {
-      if (typeof value === 'string') {
-        try {
-          record[value] = JSON.parse(record[value]);
-        } catch (error) {}
+    for (const column in record) {
+      if (this.schema[tableName][column] === SQLiteType.JSON) {
+        record[column] = JSON.parse(record[column]);
       }
     }
 

@@ -21,6 +21,8 @@ export enum SQLiteType {
   BOOLEAN = 'boolean',
   DATETIME = 'datetime',
   INTEGER = 'integer',
+  // See https://stackoverflow.com/a/8417411
+  JSON = 'json',
   REAL = 'real',
   TEXT = 'text',
 }
@@ -51,7 +53,7 @@ export function mapValueToType(value: any): SQLiteType {
 
   switch (jsType) {
     case 'Array': {
-      return SQLiteType.TEXT;
+      return SQLiteType.JSON;
     }
     case 'Boolean': {
       return SQLiteType.BOOLEAN;
@@ -61,6 +63,9 @@ export function mapValueToType(value: any): SQLiteType {
     }
     case 'Number': {
       return isInt(value as number) ? SQLiteType.INTEGER : SQLiteType.REAL;
+    }
+    case 'Object': {
+      return SQLiteType.JSON;
     }
     case 'String': {
       return SQLiteType.TEXT;

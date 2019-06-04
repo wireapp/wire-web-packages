@@ -238,7 +238,7 @@ describe('SQLeetEngine', () => {
             'the-simpsons': {
               age: SQLiteType.INTEGER,
               name: SQLiteType.TEXT,
-              size: SQLiteType.TEXT,
+              size: SQLiteType.JSON,
             },
           })
         )
