@@ -39,76 +39,112 @@ interface DBRecord {
 
 describe('SQLeetEngine', () => {
   const webAssembly = Decoder.fromBase64(SQLeetWebAssembly).asBytes;
-  const STORE_NAME = 'users';
+  const STORE_NAME = 'testing';
   const GENERIC_ENCRYPTION_KEY = 'test';
-  let engine: SQLeetEngine;
+  let engine: SQLeetEngine = new SQLeetEngine(webAssembly);
 
-  async function initEngine(shouldCreateNewEngine = true): Promise<SQLeetEngine> {
-    const storeEngine = shouldCreateNewEngine ? new SQLeetEngine(webAssembly) : engine;
-    await storeEngine.init(
-      STORE_NAME,
-      {
-        users: {
-          firstName: SQLiteType.TEXT,
-          lastName: SQLiteType.TEXT,
-          name: SQLiteType.TEXT,
-        },
-      },
-      GENERIC_ENCRYPTION_KEY
-    );
-    return storeEngine;
+  async function initEngine(scheme: {}, shouldCreateNewEngine = true): Promise<SQLeetEngine> {
+    if (shouldCreateNewEngine) {
+      engine = new SQLeetEngine(webAssembly);
+    }
+    await engine.init(STORE_NAME, scheme, GENERIC_ENCRYPTION_KEY);
+    return engine;
   }
 
   beforeEach(async done => {
-    engine = await initEngine();
     done();
   });
 
-  afterEach(done =>
-    engine
-      .purge()
-      .then(done)
-      .catch(done.fail)
-  );
+  afterEach(async () => {
+    if (engine) {
+      await engine.purge();
+    }
+  });
 
   describe('delete', () => {
     Object.entries(deleteSpec).map(([description, testFunction]) => {
-      it(description, done => testFunction(done, engine));
+      it(description, async done =>
+        testFunction(
+          done,
+          await initEngine({
+            'the-simpsons': {
+              firstName: SQLiteType.TEXT,
+              lastName: SQLiteType.TEXT,
+              some: SQLiteType.TEXT,
+            },
+          })
+        )
+      );
     });
   });
 
   describe('purge', () => {
     Object.entries(purgeSpec).map(([description, testFunction]) => {
-      it(description, done => testFunction(done, engine, initEngine));
+      const initEnginePurge = async (shouldCreateNewEngine = true) =>
+        initEngine(
+          {
+            'the-simpsons': {
+              name: SQLiteType.TEXT,
+            },
+          },
+          shouldCreateNewEngine
+        );
+      it(description, async done => testFunction(done, await initEnginePurge(), initEnginePurge));
     });
   });
 
   describe('deleteAll', () => {
     Object.entries(deleteAllSpec).map(([description, testFunction]) => {
-      it(description, done => testFunction(done, engine));
+      it(description, async done =>
+        testFunction(
+          done,
+          await initEngine({
+            'the-simpsons': {
+              firstName: SQLiteType.TEXT,
+              lastName: SQLiteType.TEXT,
+            },
+          })
+        )
+      );
     });
   });
 
   describe('readAllPrimaryKeys', () => {
     Object.entries(readAllPrimaryKeysSpec).map(([description, testFunction]) => {
-      it(description, done => testFunction(done, engine));
+      it(description, async done =>
+        testFunction(
+          done,
+          await initEngine({
+            'the-simpsons': {
+              firstName: SQLiteType.TEXT,
+              lastName: SQLiteType.TEXT,
+            },
+          })
+        )
+      );
     });
   });
 
   describe('"create"', () => {
     Object.entries(createSpec).map(([description, testFunction]) => {
-      it(description, done => testFunction(done, engine));
+      it(description, async done =>
+        testFunction(
+          done,
+          await initEngine({
+            'the-simpsons': {
+              some: SQLiteType.TEXT,
+            },
+          })
+        )
+      );
     });
 
     it('saves a record to the database', async () => {
-      const schema: SQLiteDatabaseDefinition<DBRecord> = {
+      const engine = await initEngine({
         users: {
           name: SQLiteType.TEXT,
         },
-      };
-
-      const engine = new SQLeetEngine(webAssembly);
-      await engine.init('', schema, GENERIC_ENCRYPTION_KEY);
+      });
       await engine.create<DBRecord>('users', '1', {name: 'Otto'});
       const result = await engine.read<DBRecord>('users', '1');
       expect(result.name).toBe('Otto');
@@ -117,13 +153,32 @@ describe('SQLeetEngine', () => {
 
   describe('read', () => {
     Object.entries(readSpec).map(([description, testFunction]) => {
-      it(description, done => testFunction(done, engine));
+      it(description, async done =>
+        testFunction(
+          done,
+          await initEngine({
+            'the-simpsons': {
+              some: SQLiteType.TEXT,
+            },
+          })
+        )
+      );
     });
   });
 
   describe('"readAll"', () => {
     Object.entries(readAllSpec).map(([description, testFunction]) => {
-      it(description, done => testFunction(done, engine));
+      it(description, async done =>
+        testFunction(
+          done,
+          await initEngine({
+            'the-simpsons': {
+              firstName: SQLiteType.TEXT,
+              lastName: SQLiteType.TEXT,
+            },
+          })
+        )
+      );
     });
 
     it('can read a set of records in the database', async () => {
@@ -147,7 +202,16 @@ describe('SQLeetEngine', () => {
 
   describe('"updateOrCreate"', () => {
     Object.entries(updateOrCreateSpec).map(([description, testFunction]) => {
-      it(description, done => testFunction(done, engine));
+      it(description, async done =>
+        testFunction(
+          done,
+          await initEngine({
+            'the-simpsons': {
+              name: SQLiteType.TEXT,
+            },
+          })
+        )
+      );
     });
 
     it('create then update a record to the database', async () => {
@@ -167,7 +231,18 @@ describe('SQLeetEngine', () => {
 
   describe('"update"', () => {
     Object.entries(updateSpec).map(([description, testFunction]) => {
-      it(description, done => testFunction(done, engine));
+      it(description, async done =>
+        testFunction(
+          done,
+          await initEngine({
+            'the-simpsons': {
+              age: SQLiteType.INTEGER,
+              name: SQLiteType.TEXT,
+              size: SQLiteType.TEXT,
+            },
+          })
+        )
+      );
     });
 
     it('updates a record in the database', async () => {
