@@ -24,7 +24,7 @@ declare global {
 }
 
 import {CRUDEngine} from '@wireapp/store-engine';
-import {SQLiteDatabaseDefinition, SQLiteType, createTableIfNotExists} from './SchemaConverter';
+import {SQLiteDatabaseDefinition, SQLiteType, createTableIfNotExists, escape, escapeTableName} from './SchemaConverter';
 
 const initSqlJs = require('sql.js');
 
@@ -73,7 +73,7 @@ export class SQLeetEngine implements CRUDEngine {
 
     // Settings
     this.db.run('PRAGMA encoding="UTF-8";');
-    this.db.run(`PRAGMA key=${this.escape(encryptionKey)};`);
+    this.db.run(`PRAGMA key=${escape(encryptionKey)};`);
     // Remove traces of encryption key
     encryptionKey = '';
 
@@ -138,9 +138,9 @@ export class SQLeetEngine implements CRUDEngine {
 
   async create<T>(tableName: string, primaryKey: string, entity: Record<string, any>): Promise<string> {
     const {columns, values} = this.buildValues(tableName, entity);
-    const statement = `INSERT INTO ${tableName} (key,${columns.join(',')}) VALUES (@primaryKey,${Object.keys(
-      values
-    ).join(',')});`;
+    const statement = `INSERT INTO ${escapeTableName(tableName)} (key,${columns.join(
+      ','
+    )}) VALUES (@primaryKey,${Object.keys(values).join(',')});`;
     this.db.run(statement, {
       ...values,
       '@primaryKey': primaryKey,
@@ -149,7 +149,7 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   async delete(tableName: string, primaryKey: string): Promise<string> {
-    const statement = `DELETE FROM ${tableName} WHERE key=@primaryKey;`;
+    const statement = `DELETE FROM ${escapeTableName(tableName)} WHERE key=@primaryKey;`;
     this.db.run(statement, {
       '@primaryKey': primaryKey,
     });
@@ -157,14 +157,14 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   async deleteAll(tableName: string): Promise<boolean> {
-    const statement = `DELETE FROM ${tableName}`;
+    const statement = `DELETE FROM ${escapeTableName(tableName)}`;
     this.db.run(statement);
     return true;
   }
 
   async read<T>(tableName: string, primaryKey: string): Promise<T> {
     const columns = Object.keys(this.schema[tableName]).join(',');
-    const selectRecordStatement = `SELECT key, ${columns} FROM ${tableName} WHERE key = @primaryKey;`;
+    const selectRecordStatement = `SELECT key, ${columns} FROM ${escapeTableName(tableName)} WHERE key = @primaryKey;`;
 
     const statement = this.db.prepare(selectRecordStatement);
     const record = statement.getAsObject({
@@ -177,7 +177,7 @@ export class SQLeetEngine implements CRUDEngine {
 
   readAll<T>(tableName: string): Promise<T[]> {
     const columns = Object.keys(this.schema[tableName]).join(',');
-    const selectRecordStatement = `SELECT key, ${columns} FROM ${tableName};`;
+    const selectRecordStatement = `SELECT key, ${columns} FROM ${escapeTableName(tableName)};`;
     const records = this.db.exec(selectRecordStatement);
     return records[0].values;
   }
@@ -194,7 +194,7 @@ export class SQLeetEngine implements CRUDEngine {
   async update(tableName: string, primaryKey: string, changes: Record<string, any>): Promise<string> {
     const {columns, values} = this.buildValues(tableName, changes);
     const newValues = columns.map(column => `${column}=@${column}`);
-    const statement = `UPDATE ${tableName} SET ${newValues.join(',')} WHERE key=@primaryKey;`;
+    const statement = `UPDATE ${escapeTableName(tableName)} SET ${newValues.join(',')} WHERE key=@primaryKey;`;
     this.db.run(statement, {
       ...values,
       '@primaryKey': primaryKey,
