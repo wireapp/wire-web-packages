@@ -237,6 +237,6 @@ export class SQLeetEngine implements CRUDEngine {
         }
       }
     }
-    throw new Error('WebAssembly is not supported');
+    throw new UnsupportedError('WebAssembly is not supported');
   }
 }
