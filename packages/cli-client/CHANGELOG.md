@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@6.0.11...@wireapp/cli-client@6.0.12) (2019-06-04)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [6.0.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@6.0.10...@wireapp/cli-client@6.0.11) (2019-06-04)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [6.0.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@6.0.9...@wireapp/cli-client@6.0.10) (2019-06-04)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [6.0.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@6.0.8...@wireapp/cli-client@6.0.9) (2019-06-03)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
 ## [6.0.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@6.0.7...@wireapp/cli-client@6.0.8) (2019-06-03)
 
 **Note:** Version bump only for package @wireapp/cli-client
