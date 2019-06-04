@@ -29,6 +29,7 @@ export interface ButtonProps<T = HTMLButtonElement> extends TextProps<T> {
   backgroundColor?: string;
   noCapital?: boolean;
   showLoading?: boolean;
+  loadingColor?: string;
 }
 
 const filterButtonProps = (props: Object) => {
@@ -92,9 +93,9 @@ const buttonLinkStyle: (props: ButtonProps<HTMLAnchorElement>) => ObjectInterpol
   display: 'inline-block !important',
 });
 
-const Button = ({showLoading, children, ...props}: ButtonProps) => (
+const Button = ({showLoading, children, loadingColor = COLOR.WHITE, ...props}: ButtonProps) => (
   <button css={buttonStyle(props)} {...filterButtonProps(props)}>
-    {showLoading ? <Loading size={30} color={props.color} style={{display: 'flex', margin: 'auto'}} /> : children}
+    {showLoading ? <Loading size={30} color={loadingColor} style={{display: 'flex', margin: 'auto'}} /> : children}
   </button>
 );
 const ButtonLink = (props: ButtonProps<HTMLAnchorElement>) => (
