@@ -133,7 +133,12 @@ export class SQLeetEngine implements CRUDEngine {
     const values: Record<string, any> = {};
     for (const columnIndex in columns) {
       const column = columns[columnIndex];
-      values[`@${column}`] = entity[column];
+      let value: any = entity[column];
+      // Stringify objects for the database
+      if (this.schema[tableName][column] === SQLiteType.TEXT && typeof value !== 'string') {
+        value = JSON.stringify(value);
+      }
+      values[`@${column}`] = value;
     }
     return {columns, values};
   }
@@ -173,6 +178,14 @@ export class SQLeetEngine implements CRUDEngine {
       '@primaryKey': primaryKey,
     });
     statement.free();
+
+    for (const value in record) {
+      if (typeof value === 'string') {
+        try {
+          record[value] = JSON.parse(record[value]);
+        } catch (error) {}
+      }
+    }
 
     return record;
   }
