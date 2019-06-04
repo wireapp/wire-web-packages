@@ -123,10 +123,10 @@ export class SQLeetEngine implements CRUDEngine {
   ): {columns: string[]; values: Record<string, any>} {
     const columns = Object.keys(entity).filter(column => {
       // Ensure the column name exists to avoid SQL injection
-      return typeof this.schema[tableName][column] !== 'undefined';
+      return this.schema[tableName] && typeof this.schema[tableName][column] !== 'undefined';
     });
-    if (!columns) {
-      throw new Error('Entity is empty');
+    if (columns.length === 0) {
+      throw new Error(`Entity is empty for table "${tableName}"`);
     }
     const values: Record<string, any> = {};
     for (const columnIndex in columns) {
