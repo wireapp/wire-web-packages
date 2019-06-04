@@ -186,12 +186,13 @@ export class SQLeetEngine implements CRUDEngine {
     return records[0].values;
   }
 
-  readAllPrimaryKeys(tableName: string): Promise<string[]> {
-    const statement = this.db.prepare(`SELECT key FROM ${tableName};`);
-    const record = statement.getAsObject();
-    console.log(record);
-    statement.free();
-    return record;
+  async readAllPrimaryKeys(tableName: string): Promise<string[]> {
+    const statement = `SELECT key FROM ${escapeTableName(tableName)};`;
+    const record = this.db.exec(statement);
+    if (record[0] && record[0].values) {
+      return record[0].values.map((value: string[]) => value[0]);
+    }
+    return [];
   }
 
   async update(tableName: string, primaryKey: string, changes: Record<string, any>): Promise<string> {
