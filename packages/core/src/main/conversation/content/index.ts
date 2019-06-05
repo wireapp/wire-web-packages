@@ -25,6 +25,8 @@ export {ContentType};
 export * from './AssetContent';
 export * from './ClearedContent';
 export * from './ClientActionContent';
+export * from './ClientAddContent';
+export * from './ClientRemoveContent';
 export * from './ConfirmationContent';
 export * from './ConversationContent';
 export * from './DeletedContent';

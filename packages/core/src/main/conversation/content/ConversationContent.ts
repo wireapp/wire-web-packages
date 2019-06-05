@@ -23,6 +23,8 @@ import {
   AssetContent,
   ClearedContent,
   ClientActionContent,
+  ClientAddContent,
+  ClientRemoveContent,
   ConfirmationContent,
   DeletedContent,
   EditedTextContent,
@@ -38,11 +40,13 @@ import {
   TextContent,
 } from './';
 
-type ConversationContent =
+export type ConversationContent =
   | AssetContent
   | ClearedContent
   | ClientActionContent
   | ClientActionType
+  | ClientAddContent
+  | ClientRemoveContent
   | ConfirmationContent
   | Connection
   | DeletedContent
@@ -57,5 +61,3 @@ type ConversationContent =
   | LocationContent
   | ReactionContent
   | TextContent;
-
-export {ConversationContent};
