@@ -95,8 +95,8 @@ export class SQLeetEngine implements CRUDEngine {
     // Create tables
     let statement: string = '';
     for (const tableName in this.schema) {
-      const columns = this.schema[tableName];
-      statement += createTableIfNotExists(tableName, columns);
+      const table = this.schema[tableName];
+      statement += createTableIfNotExists(tableName, table);
     }
     this.db.run(statement);
 
@@ -228,7 +228,7 @@ export class SQLeetEngine implements CRUDEngine {
     }
 
     for (const column in record) {
-      if (this.schema[tableName][column] === SQLiteType.JSON) {
+      if (table[column] === SQLiteType.JSON) {
         record[column] = JSON.parse(record[column]);
       }
     }
@@ -237,7 +237,8 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   readAll<T>(tableName: string): Promise<T[]> {
-    const columns = getFormattedColumnsFromTableName(this.schema[tableName], true);
+    const table = this.schema[tableName];
+    const columns = getFormattedColumnsFromTableName(table, true);
     const escapedTableName = escape(tableName);
     const selectRecordStatement = `SELECT ${columns} FROM ${escapedTableName};`;
     const records = this.db.exec(selectRecordStatement);
