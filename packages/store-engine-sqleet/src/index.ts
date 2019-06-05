@@ -193,6 +193,9 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   async read<T>(tableName: string, primaryKey: string): Promise<T> {
+    if (!this.schema[tableName]) {
+      throw new Error('Table does not exist');
+    }
     const columns = Object.keys(this.schema[tableName]).join(',');
     const selectRecordStatement = `SELECT ${columns} FROM ${escapeTableName(tableName)} WHERE key = @primaryKey;`;
 
@@ -249,7 +252,8 @@ export class SQLeetEngine implements CRUDEngine {
     try {
       await this.update(tableName, primaryKey, changes);
     } catch (error) {
-      if (error instanceof RecordNotFoundError) {
+      const isRecordNotFound = error instanceof RecordNotFoundError;
+      if (isRecordNotFound) {
         await this.create(tableName, primaryKey, changes);
       } else {
         throw error;
@@ -258,8 +262,8 @@ export class SQLeetEngine implements CRUDEngine {
     return primaryKey;
   }
 
-  async isSupported(): Promise<void> {
-    const webAssembly = window.WebAssembly;
+  async isSupported(checkAgainst = window): Promise<void> {
+    const webAssembly = checkAgainst.WebAssembly;
     if (typeof webAssembly === 'object' && typeof webAssembly.instantiate === 'function') {
       const module = new webAssembly.Module(Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00));
       if (module instanceof webAssembly.Module) {

@@ -31,51 +31,6 @@ export type SQLiteTableDefinition<T> = Partial<Record<keyof T, SQLiteType>>;
 
 export type SQLiteDatabaseDefinition<T> = Record<string, SQLiteTableDefinition<T>>;
 
-export function mapPropertiesToColumns<T>(properties: T): SQLiteTableDefinition<T> {
-  const definition: SQLiteTableDefinition<T> = {};
-  for (const key in properties) {
-    definition[key] = mapValueToType(properties[key]);
-  }
-  return definition;
-}
-
-export function mapValueToType(value: any): SQLiteType {
-  const isInt = (n: number) => n % 1 === 0;
-
-  let jsType = '';
-
-  try {
-    jsType = value.constructor.name;
-  } catch (error) {
-    // Info: Can happen when the value is "null"
-    jsType = 'String';
-  }
-
-  switch (jsType) {
-    case 'Array': {
-      return SQLiteType.JSON;
-    }
-    case 'Boolean': {
-      return SQLiteType.BOOLEAN;
-    }
-    case 'Date': {
-      return SQLiteType.DATETIME;
-    }
-    case 'Number': {
-      return isInt(value as number) ? SQLiteType.INTEGER : SQLiteType.REAL;
-    }
-    case 'Object': {
-      return SQLiteType.JSON;
-    }
-    case 'String': {
-      return SQLiteType.TEXT;
-    }
-    default: {
-      return SQLiteType.TEXT;
-    }
-  }
-}
-
 export const escape = (value: string, delimiter: string = `"`) => {
   return `${delimiter}${value.replace(new RegExp(delimiter, 'g'), `\\${delimiter}`)}${delimiter}`;
 };

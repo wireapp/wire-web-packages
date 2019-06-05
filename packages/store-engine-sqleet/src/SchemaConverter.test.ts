@@ -17,30 +17,9 @@
  *
  */
 
-import {SQLiteType, createTableIfNotExists, mapPropertiesToColumns} from './SchemaConverter';
+import {SQLiteType, createTableIfNotExists} from './SchemaConverter';
 
 describe('SchemaConverter', () => {
-  describe('mapPropertiesToColumns', () => {
-    it('can be used to create a schema from a payload', () => {
-      const user = {
-        age: 170,
-        favoriteShows: ['Futurama', 'Gigantor', 'Mr. Robot'],
-        hometown: 'localhost',
-        isRobot: true,
-        lastSeen: new Date(),
-        name: 'Otto',
-      };
-
-      const userColumns = mapPropertiesToColumns(user);
-      expect(userColumns.age).toBe(SQLiteType.INTEGER);
-
-      const statement = createTableIfNotExists('user', userColumns);
-      const expected =
-        'CREATE TABLE IF NOT EXISTS `user` (key varchar(255) PRIMARY KEY,age integer,favoriteShows json,hometown text,isRobot boolean,lastSeen datetime,name text);';
-      expect(statement).toBe(expected);
-    });
-  });
-
   describe('createTableIfNotExists', () => {
     it('constructs a string to create a table', () => {
       const statement = createTableIfNotExists('prekeys', {

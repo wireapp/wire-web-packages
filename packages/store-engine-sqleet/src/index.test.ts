@@ -51,14 +51,29 @@ describe('SQLeetEngine', () => {
     return engine;
   }
 
-  beforeEach(async done => {
-    done();
-  });
-
   afterEach(async () => {
     if (engine) {
       await engine.purge();
     }
+  });
+
+  describe('"isSupported"', () => {
+    it('throws an error when WebAssembly is not available', async done => {
+      const engine = await initEngine(
+        {
+          'the-simpsons': {
+            name: SQLiteType.TEXT,
+          },
+        },
+        true
+      );
+      try {
+        await engine.isSupported({...window, WebAssembly: undefined});
+      } catch (error) {
+        return done();
+      }
+      done.fail();
+    });
   });
 
   describe('delete', () => {
@@ -149,6 +164,24 @@ describe('SQLeetEngine', () => {
       const result = await engine.read<DBRecord>('users', '1');
       expect(result.name).toBe('Otto');
     });
+
+    it('prevents sql injection in the column name', async done => {
+      const engine = await initEngine({
+        users: {
+          name: SQLiteType.TEXT,
+        },
+      });
+      try {
+        const entity = {'name\'"`': 'Otto'};
+        await engine.create<DBRecord>('users', '1', entity);
+      } catch (error) {
+        expect(error.message).toBe(
+          'Entity is empty for table "users". Are you sure you set the right scheme / column names?'
+        );
+        return done();
+      }
+      done.fail();
+    });
   });
 
   describe('read', () => {
@@ -200,6 +233,19 @@ describe('SQLeetEngine', () => {
     });
   });
 
+  describe('"append"', () => {
+    it('throws an error', async done => {
+      const engine = new SQLeetEngine(webAssembly);
+      await engine.init('', {}, GENERIC_ENCRYPTION_KEY);
+      try {
+        await engine.append('test', '1', 'string');
+      } catch (error) {
+        return done();
+      }
+      done.fail();
+    });
+  });
+
   describe('"updateOrCreate"', () => {
     Object.entries(updateOrCreateSpec).map(([description, testFunction]) => {
       it(description, async done =>
@@ -226,6 +272,21 @@ describe('SQLeetEngine', () => {
       await engine.updateOrCreate<DBRecord>('users', '1', {name: 'Lion'});
       const result = await engine.read<DBRecord>('users', '1');
       expect(result.name).toBe('Lion');
+    });
+
+    it('fails if the table name does not exist', async () => {
+      const schema: SQLiteDatabaseDefinition<DBRecord> = {
+        users: {
+          name: SQLiteType.TEXT,
+        },
+      };
+
+      await engine.init('', schema, GENERIC_ENCRYPTION_KEY);
+      try {
+        await engine.updateOrCreate<DBRecord>('ffff', '1', {name: 'Otto'});
+      } catch (error) {
+        expect(error.message).toBe('Table does not exist');
+      }
     });
   });
 
@@ -266,6 +327,25 @@ describe('SQLeetEngine', () => {
   });
 
   describe('"export"', () => {
+    it('cannot export if sqlite is not available', async done => {
+      const schema: SQLiteDatabaseDefinition<DBRecord> = {
+        users: {
+          name: SQLiteType.TEXT,
+        },
+      };
+
+      await engine.init('', schema, GENERIC_ENCRYPTION_KEY);
+      await engine.updateOrCreate<DBRecord>('users', '1', {name: 'Otto'});
+      await engine.purge();
+      try {
+        await engine.export();
+      } catch (error) {
+        expect(error.message).toBe('SQLite need to be available');
+        return done();
+      }
+      done.fail();
+    });
+
     it('export and load a database', async () => {
       const schema: SQLiteDatabaseDefinition<DBRecord> = {
         users: {
