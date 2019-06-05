@@ -17,6 +17,8 @@
  *
  */
 
+export const SQLeetEnginePrimaryKeyName: string = '`key`';
+
 export enum SQLiteType {
   BOOLEAN = 'boolean',
   DATETIME = 'datetime',
@@ -31,17 +33,22 @@ export type SQLiteTableDefinition<T> = Partial<Record<keyof T, SQLiteType>>;
 
 export type SQLiteDatabaseDefinition<T> = Record<string, SQLiteTableDefinition<T>>;
 
-export const escape = (value: string, delimiter: string = `"`) => {
+export const escape = (value: string, delimiter: string = '`') => {
   return `${delimiter}${value.replace(new RegExp(delimiter, 'g'), `\\${delimiter}`)}${delimiter}`;
-};
-
-export const escapeTableName = (tableName: string) => {
-  return escape(tableName, '`');
 };
 
 export function createTableIfNotExists<T>(tableName: string, columns: SQLiteTableDefinition<T>): string {
   const statements = ['key varchar(255) PRIMARY KEY'].concat(
     Object.entries(columns).map(([key, type]) => `${key} ${type}`)
   );
-  return `CREATE TABLE IF NOT EXISTS ${escapeTableName(tableName)} (${statements.join(',')});`;
+  return `CREATE TABLE IF NOT EXISTS ${escape(tableName)} (${statements.join(',')});`;
+}
+
+export function getFormattedColumnsFromTableName(
+  tableNameColumns: Partial<Record<string, SQLiteType>>,
+  withKey: boolean = false
+): string {
+  return `${withKey ? `${SQLeetEnginePrimaryKeyName},` : ''}${Object.keys(tableNameColumns)
+    .map(column => escape(column))
+    .join(',')}`;
 }

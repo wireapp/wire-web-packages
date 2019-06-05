@@ -30,7 +30,14 @@ import {
   RecordTypeError,
   UnsupportedError,
 } from '@wireapp/store-engine/dist/commonjs/engine/error/';
-import {SQLiteDatabaseDefinition, SQLiteType, createTableIfNotExists, escape, escapeTableName} from './SchemaConverter';
+import {
+  SQLeetEnginePrimaryKeyName,
+  SQLiteDatabaseDefinition,
+  SQLiteType,
+  createTableIfNotExists,
+  escape,
+  getFormattedColumnsFromTableName,
+} from './SchemaConverter';
 
 const initSqlJs = require('sql.js');
 
@@ -80,8 +87,8 @@ export class SQLeetEngine implements CRUDEngine {
     this.db = new SQL.Database(existingDatabase);
 
     // Settings
-    this.db.run('PRAGMA encoding="UTF-8";');
-    this.db.run(`PRAGMA key=${escape(encryptionKey)};`);
+    this.db.run('PRAGMA `encoding`="UTF-8";');
+    this.db.run(`PRAGMA \`key\`=${escape(encryptionKey)};`);
     // Remove traces of encryption key
     encryptionKey = '';
 
@@ -129,26 +136,30 @@ export class SQLeetEngine implements CRUDEngine {
 
   private buildValues(
     tableName: string,
-    entity: Record<string, any>
-  ): {columns: string[]; values: Record<string, any>} {
-    const columns = Object.keys(entity).filter(column => {
-      // Ensure the column name exists to avoid SQL injection
-      return this.schema[tableName] && typeof this.schema[tableName][column] !== 'undefined';
-    });
-    if (columns.length === 0) {
-      throw new Error(
-        `Entity is empty for table "${tableName}". Are you sure you set the right scheme / column names?`
-      );
+    columns: Record<string, SQLiteType>
+  ): {columns: Record<string, SQLiteType>; values: Record<string, any>} {
+    const table = this.schema[tableName];
+    if (!table) {
+      throw new Error(`Table "${tableName}" does not exist.`);
     }
     const values: Record<string, any> = {};
-    for (const columnIndex in columns) {
-      const column = columns[columnIndex];
-      let value: any = entity[column];
+    for (const column in columns) {
+      // Ensure the column name exists to avoid SQL injection
+      if (typeof table[column] !== 'string') {
+        delete columns[column];
+        continue;
+      }
+      let value: any = columns[column];
       // Stringify objects for the database
-      if (this.schema[tableName][column] === SQLiteType.JSON) {
+      if (table[column] === SQLiteType.JSON) {
         value = JSON.stringify(value);
       }
       values[`@${column}`] = value;
+    }
+    if (Object.keys(columns).length === 0) {
+      throw new Error(
+        `Entity is empty for table "${tableName}". Are you sure you set the right scheme / column names?`
+      );
     }
     return {columns, values};
   }
@@ -159,9 +170,12 @@ export class SQLeetEngine implements CRUDEngine {
       throw new RecordTypeError(message);
     }
     const {columns, values} = this.buildValues(tableName, entity);
-    const statement = `INSERT INTO ${escapeTableName(tableName)} (key,${columns.join(
-      ','
-    )}) VALUES (@primaryKey,${Object.keys(values).join(',')});`;
+    const newValues = Object.keys(values).join(',');
+    const escapedTableName = escape(tableName);
+    const statement = `INSERT INTO ${escapedTableName} (${getFormattedColumnsFromTableName(
+      columns,
+      true
+    )}) VALUES (@primaryKey,${newValues});`;
     try {
       this.db.run(statement, {
         ...values,
@@ -179,7 +193,8 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   async delete(tableName: string, primaryKey: string): Promise<string> {
-    const statement = `DELETE FROM ${escapeTableName(tableName)} WHERE key=@primaryKey;`;
+    const escapedTableName = escape(tableName);
+    const statement = `DELETE FROM ${escapedTableName} WHERE ${SQLeetEnginePrimaryKeyName}=@primaryKey;`;
     this.db.run(statement, {
       '@primaryKey': primaryKey,
     });
@@ -187,18 +202,20 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   async deleteAll(tableName: string): Promise<boolean> {
-    const statement = `DELETE FROM ${escapeTableName(tableName)}`;
+    const escapedTableName = escape(tableName);
+    const statement = `DELETE FROM ${escapedTableName}`;
     this.db.run(statement);
     return true;
   }
 
   async read<T>(tableName: string, primaryKey: string): Promise<T> {
-    if (!this.schema[tableName]) {
+    const table = this.schema[tableName];
+    if (!table) {
       throw new Error('Table does not exist');
     }
-    const columns = Object.keys(this.schema[tableName]).join(',');
-    const selectRecordStatement = `SELECT ${columns} FROM ${escapeTableName(tableName)} WHERE key = @primaryKey;`;
-
+    const columns = getFormattedColumnsFromTableName(table);
+    const escapedTableName = escape(tableName);
+    const selectRecordStatement = `SELECT ${columns} FROM ${escapedTableName} WHERE ${SQLeetEnginePrimaryKeyName}=@primaryKey;`;
     const statement = this.db.prepare(selectRecordStatement);
     const record = statement.getAsObject({
       '@primaryKey': primaryKey,
@@ -220,14 +237,16 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   readAll<T>(tableName: string): Promise<T[]> {
-    const columns = Object.keys(this.schema[tableName]).join(',');
-    const selectRecordStatement = `SELECT key, ${columns} FROM ${escapeTableName(tableName)};`;
+    const columns = getFormattedColumnsFromTableName(this.schema[tableName], true);
+    const escapedTableName = escape(tableName);
+    const selectRecordStatement = `SELECT ${columns} FROM ${escapedTableName};`;
     const records = this.db.exec(selectRecordStatement);
     return records[0].values;
   }
 
   async readAllPrimaryKeys(tableName: string): Promise<string[]> {
-    const statement = `SELECT key FROM ${escapeTableName(tableName)};`;
+    const escapedTableName = escape(tableName);
+    const statement = `SELECT ${SQLeetEnginePrimaryKeyName} FROM ${escapedTableName};`;
     const record = this.db.exec(statement);
     if (record[0] && record[0].values) {
       return record[0].values.map((value: string[]) => value[0]);
@@ -238,13 +257,14 @@ export class SQLeetEngine implements CRUDEngine {
   async update(tableName: string, primaryKey: string, changes: Record<string, any>): Promise<string> {
     await this.read(tableName, primaryKey);
     const {columns, values} = this.buildValues(tableName, changes);
-    const newValues = columns.map(column => `${column}=@${column}`);
-    const statement = `UPDATE ${escapeTableName(tableName)} SET ${newValues.join(',')} WHERE key=@primaryKey;`;
+    const newValues = Object.keys(columns)
+      .map(column => `${escape(column)}=@${column}`)
+      .join(',');
+    const statement = `UPDATE ${escape(tableName)} SET ${newValues} WHERE ${SQLeetEnginePrimaryKeyName}=@primaryKey;`;
     this.db.run(statement, {
       ...values,
       '@primaryKey': primaryKey,
     });
-
     return primaryKey;
   }
 
