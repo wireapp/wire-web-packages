@@ -65,6 +65,8 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   async init<T>(storeName: string, schema: SQLiteDatabaseDefinition<T>, encryptionKey: string): Promise<any> {
+    await this.isSupported();
+
     this.storeName = storeName;
     this.schema = schema;
 
