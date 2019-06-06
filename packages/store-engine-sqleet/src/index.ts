@@ -36,6 +36,7 @@ import {
   SQLiteType,
   createTableIfNotExists,
   escape,
+  getFormattedColumnsFromColumns,
   getFormattedColumnsFromTableName,
   getProtectedColumnReferences,
   hashColumnName,
@@ -138,35 +139,36 @@ export class SQLeetEngine implements CRUDEngine {
 
   private buildValues(
     tableName: string,
-    columns: Record<string, SQLiteType>
-  ): {columns: Record<string, SQLiteType>; values: Record<string, any>; references: Record<string, string>} {
+    entities: Record<string, SQLiteType>
+  ): {columns: Record<string, string>; values: Record<string, any>} {
     const table = this.schema[tableName];
     if (!table) {
       throw new Error(`Table "${tableName}" does not exist.`);
     }
     const values: Record<string, any> = {};
-    const references: Record<string, string> = {};
-    for (const column in columns) {
-      // Ensure the column name exists to avoid SQL injection
-      if (typeof table[column] !== 'string') {
-        delete columns[column];
+    const columns: Record<string, string> = {};
+    for (const entity in entities) {
+      // Ensure the column name exists in the scheme as a first line of defense against SQL injection
+      if (typeof table[entity] !== 'string') {
         continue;
       }
-      let value: any = columns[column];
+      let value: any = entities[entity];
       // Stringify objects for the database
-      if (table[column] === SQLiteType.JSON) {
+      if (table[entity] === SQLiteType.JSON) {
         value = JSON.stringify(value);
       }
-      const reference = `@${hashColumnName(column)}`;
+      const reference = `@${hashColumnName(entity)}`;
       values[reference] = value;
-      references[reference] = column;
+      columns[reference] = entity;
     }
+
     if (Object.keys(columns).length === 0) {
       throw new Error(
         `Entity is empty for table "${tableName}". Are you sure you set the right scheme / column names?`
       );
     }
-    return {columns, values, references};
+
+    return {columns, values};
   }
 
   async create<T>(tableName: string, primaryKey: string, entity: Record<string, any>): Promise<string> {
@@ -177,7 +179,7 @@ export class SQLeetEngine implements CRUDEngine {
     const {columns, values} = this.buildValues(tableName, entity);
     const newValues = Object.keys(values).join(',');
     const escapedTableName = escape(tableName);
-    const statement = `INSERT INTO ${escapedTableName} (${getFormattedColumnsFromTableName(
+    const statement = `INSERT INTO ${escapedTableName} (${getFormattedColumnsFromColumns(
       columns,
       true
     )}) VALUES (@primaryKey,${newValues});`;
@@ -262,9 +264,10 @@ export class SQLeetEngine implements CRUDEngine {
 
   async update(tableName: string, primaryKey: string, changes: Record<string, any>): Promise<string> {
     await this.read(tableName, primaryKey);
-    const {values, references} = this.buildValues(tableName, changes);
-    const statement = `UPDATE ${escape(tableName)} SET ${getProtectedColumnReferences(
-      references
+    const {values, columns} = this.buildValues(tableName, changes);
+    const escapedTableName = escape(tableName);
+    const statement = `UPDATE ${escapedTableName} SET ${getProtectedColumnReferences(
+      columns
     )} WHERE ${SQLeetEnginePrimaryKeyName}=@primaryKey;`;
     this.db.run(statement, {
       ...values,

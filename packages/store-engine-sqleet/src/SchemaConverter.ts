@@ -55,9 +55,18 @@ export function getFormattedColumnsFromTableName(
     .join(',')}`;
 }
 
-export function getProtectedColumnReferences(references: Record<string, string>): string {
-  return Object.keys(references)
-    .map((reference: string) => `${escape(references[reference])}=${reference}`)
+export function getFormattedColumnsFromColumns(
+  tableNameColumns: Record<string, string>,
+  withKey: boolean = false
+): string {
+  return `${withKey ? `${SQLeetEnginePrimaryKeyName},` : ''}${Object.values(tableNameColumns)
+    .map(column => escape(column))
+    .join(',')}`;
+}
+
+export function getProtectedColumnReferences(columns: Record<string, string>): string {
+  return Object.keys(columns)
+    .map((reference: string) => `${escape(columns[reference])}=${reference}`)
     .join(',');
 }
 
