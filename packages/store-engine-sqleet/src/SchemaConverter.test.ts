@@ -30,7 +30,7 @@ describe('SchemaConverter', () => {
       });
 
       const expected =
-        'CREATE TABLE IF NOT EXISTS `prekeys` (key varchar(255) PRIMARY KEY,created real,id text,serialised text,version text);';
+        'CREATE TABLE IF NOT EXISTS `prekeys` (`key` varchar(255) PRIMARY KEY,`created` real,`id` text,`serialised` text,`version` text);';
       expect(statement).toBe(expected);
     });
   });

@@ -40,8 +40,8 @@ export const escape = (value: string, delimiter: string = '`') => {
 };
 
 export function createTableIfNotExists<T>(tableName: string, columns: SQLiteTableDefinition<T>): string {
-  const statements = ['key varchar(255) PRIMARY KEY'].concat(
-    Object.entries(columns).map(([key, type]) => `${key} ${type}`)
+  const statements = ['`key` varchar(255) PRIMARY KEY'].concat(
+    Object.entries(columns).map(([key, type]) => `${escape(key)} ${type}`)
   );
   return `CREATE TABLE IF NOT EXISTS ${escape(tableName)} (${statements.join(',')});`;
 }
