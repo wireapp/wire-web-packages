@@ -17,12 +17,6 @@
  *
  */
 
-declare global {
-  interface Window {
-    WebAssembly: typeof WebAssembly;
-  }
-}
-
 import {CRUDEngine} from '@wireapp/store-engine';
 import {
   RecordAlreadyExistsError,
@@ -69,6 +63,7 @@ export class SQLeetEngine implements CRUDEngine {
     }
   }
 
+  // TODO: Remove "append" functionality from "CRUDEngine" completely
   append(tableName: string, primaryKey: string, additions: string): Promise<string> {
     throw new Error('Method not implemented.');
   }
@@ -91,6 +86,7 @@ export class SQLeetEngine implements CRUDEngine {
     // Settings
     this.db.run('PRAGMA `encoding`="UTF-8";');
     this.db.run(`PRAGMA \`key\`=${escape(encryptionKey)};`);
+
     // Remove traces of encryption key
     encryptionKey = '';
 
@@ -216,7 +212,7 @@ export class SQLeetEngine implements CRUDEngine {
   async read<T>(tableName: string, primaryKey: string): Promise<T> {
     const table = this.schema[tableName];
     if (!table) {
-      throw new Error('Table does not exist');
+      throw new Error(`Table "${tableName}" does not exist.`);
     }
     const columns = getFormattedColumnsFromTableName(table);
     const escapedTableName = escape(tableName);
@@ -287,16 +283,15 @@ export class SQLeetEngine implements CRUDEngine {
     return primaryKey;
   }
 
-  async isSupported(checkAgainst = window): Promise<void> {
-    const webAssembly = checkAgainst.WebAssembly;
-    if (typeof webAssembly === 'object' && typeof webAssembly.instantiate === 'function') {
-      const module = new webAssembly.Module(Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00));
-      if (module instanceof webAssembly.Module) {
-        if (new webAssembly.Instance(module) instanceof webAssembly.Instance) {
+  async isSupported(): Promise<void> {
+    if (typeof WebAssembly === 'object' && typeof WebAssembly.instantiate === 'function') {
+      const module = new WebAssembly.Module(Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00));
+      if (module instanceof WebAssembly.Module) {
+        if (new WebAssembly.Instance(module) instanceof WebAssembly.Instance) {
           return;
         }
       }
     }
-    throw new UnsupportedError('WebAssembly is not supported');
+    throw new UnsupportedError('WebAssembly is not supported.');
   }
 }
