@@ -37,6 +37,8 @@ import {
   createTableIfNotExists,
   escape,
   getFormattedColumnsFromTableName,
+  getProtectedColumnReferences,
+  hashColumnName,
 } from './SchemaConverter';
 
 const initSqlJs = require('sql.js');
@@ -137,12 +139,13 @@ export class SQLeetEngine implements CRUDEngine {
   private buildValues(
     tableName: string,
     columns: Record<string, SQLiteType>
-  ): {columns: Record<string, SQLiteType>; values: Record<string, any>} {
+  ): {columns: Record<string, SQLiteType>; values: Record<string, any>; references: Record<string, string>} {
     const table = this.schema[tableName];
     if (!table) {
       throw new Error(`Table "${tableName}" does not exist.`);
     }
     const values: Record<string, any> = {};
+    const references: Record<string, string> = {};
     for (const column in columns) {
       // Ensure the column name exists to avoid SQL injection
       if (typeof table[column] !== 'string') {
@@ -154,14 +157,16 @@ export class SQLeetEngine implements CRUDEngine {
       if (table[column] === SQLiteType.JSON) {
         value = JSON.stringify(value);
       }
-      values[`@${column}`] = value;
+      const reference = `@${hashColumnName(column)}`;
+      values[reference] = value;
+      references[reference] = column;
     }
     if (Object.keys(columns).length === 0) {
       throw new Error(
         `Entity is empty for table "${tableName}". Are you sure you set the right scheme / column names?`
       );
     }
-    return {columns, values};
+    return {columns, values, references};
   }
 
   async create<T>(tableName: string, primaryKey: string, entity: Record<string, any>): Promise<string> {
@@ -257,11 +262,10 @@ export class SQLeetEngine implements CRUDEngine {
 
   async update(tableName: string, primaryKey: string, changes: Record<string, any>): Promise<string> {
     await this.read(tableName, primaryKey);
-    const {columns, values} = this.buildValues(tableName, changes);
-    const newValues = Object.keys(columns)
-      .map(column => `${escape(column)}=@${column}`)
-      .join(',');
-    const statement = `UPDATE ${escape(tableName)} SET ${newValues} WHERE ${SQLeetEnginePrimaryKeyName}=@primaryKey;`;
+    const {values, references} = this.buildValues(tableName, changes);
+    const statement = `UPDATE ${escape(tableName)} SET ${getProtectedColumnReferences(
+      references
+    )} WHERE ${SQLeetEnginePrimaryKeyName}=@primaryKey;`;
     this.db.run(statement, {
       ...values,
       '@primaryKey': primaryKey,
