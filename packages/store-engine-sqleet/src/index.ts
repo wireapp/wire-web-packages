@@ -141,8 +141,8 @@ export class SQLeetEngine implements CRUDEngine {
     if (!table) {
       throw new Error(`Table "${tableName}" does not exist.`);
     }
-    const values: Record<string, any> = {};
     const columns: Record<string, string> = {};
+    const values: Record<string, any> = {};
     for (const entity in entities) {
       // Ensure the column name exists in the scheme as a first line of defense against SQL injection
       if (typeof table[entity] !== 'string') {
@@ -154,8 +154,8 @@ export class SQLeetEngine implements CRUDEngine {
         value = JSON.stringify(value);
       }
       const reference = `@${hashColumnName(entity)}`;
-      values[reference] = value;
       columns[reference] = entity;
+      values[reference] = value;
     }
 
     if (Object.keys(columns).length === 0) {
