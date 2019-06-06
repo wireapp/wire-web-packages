@@ -19,8 +19,6 @@
 
 import * as CBOR from '@wireapp/cbor';
 import {DecodeError} from '../errors/DecodeError';
-import {CipherMessage} from './CipherMessage';
-import {PreKeyMessage} from './PreKeyMessage';
 
 export class Message {
   constructor() {}
@@ -52,3 +50,8 @@ export class Message {
     }
   }
 }
+
+// these import statements have to come after the Message definition because otherwise
+// it creates a circular dependency with the message subtypes
+import {CipherMessage} from './CipherMessage';
+import {PreKeyMessage} from './PreKeyMessage';
