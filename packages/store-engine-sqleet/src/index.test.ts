@@ -57,25 +57,6 @@ describe('SQLeetEngine', () => {
     }
   });
 
-  describe('"isSupported"', () => {
-    it('throws an error when WebAssembly is not available', async done => {
-      const engine = await initEngine(
-        {
-          'the-simpsons': {
-            name: SQLiteType.TEXT,
-          },
-        },
-        true
-      );
-      try {
-        await engine.isSupported({...window, WebAssembly: undefined});
-      } catch (error) {
-        return done();
-      }
-      done.fail();
-    });
-  });
-
   describe('delete', () => {
     Object.entries(deleteSpec).map(([description, testFunction]) => {
       it(description, async done =>
@@ -140,7 +121,7 @@ describe('SQLeetEngine', () => {
     });
   });
 
-  describe('"create"', () => {
+  describe('create', () => {
     Object.entries(createSpec).map(([description, testFunction]) => {
       it(description, async done =>
         testFunction(
@@ -199,7 +180,7 @@ describe('SQLeetEngine', () => {
     });
   });
 
-  describe('"readAll"', () => {
+  describe('readAll', () => {
     Object.entries(readAllSpec).map(([description, testFunction]) => {
       it(description, async done =>
         testFunction(
@@ -233,7 +214,7 @@ describe('SQLeetEngine', () => {
     });
   });
 
-  describe('"append"', () => {
+  describe('append', () => {
     it('throws an error', async done => {
       const engine = new SQLeetEngine(webAssembly);
       await engine.init('', {}, GENERIC_ENCRYPTION_KEY);
@@ -246,7 +227,7 @@ describe('SQLeetEngine', () => {
     });
   });
 
-  describe('"updateOrCreate"', () => {
+  describe('updateOrCreate', () => {
     Object.entries(updateOrCreateSpec).map(([description, testFunction]) => {
       it(description, async done =>
         testFunction(
@@ -290,7 +271,7 @@ describe('SQLeetEngine', () => {
     });
   });
 
-  describe('"update"', () => {
+  describe('update', () => {
     Object.entries(updateSpec).map(([description, testFunction]) => {
       it(description, async done =>
         testFunction(
@@ -326,7 +307,7 @@ describe('SQLeetEngine', () => {
     });
   });
 
-  describe('"export"', () => {
+  describe('export', () => {
     it('cannot export if sqlite is not available', async done => {
       const schema: SQLiteDatabaseDefinition<DBRecord> = {
         users: {
