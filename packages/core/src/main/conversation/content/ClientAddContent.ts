@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2019 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +17,8 @@
  *
  */
 
-/** @jsx jsx */
-import {jsx} from '@emotion/core';
-import {SVGIcon, SVGIconProps} from './SVGIcon';
+import {RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
 
-export const ImageIcon = (props: SVGIconProps) => (
-  <SVGIcon realWidth={16} realHeight={16} {...props}>
-    <path d="M0 1c0-.6.4-1 1-1h14c.6 0 1 .4 1 1v14c0 .6-.4 1-1 1H1a1 1 0 0 1-1-1V1zm14 1H2v9l4-2 8 3.5V2zm-4 6a2 2 0 1 1 0-4 2 2 0 0 1 0 4z" />
-  </SVGIcon>
-);
+export interface ClientAddContent {
+  client: RegisteredClient;
+}
