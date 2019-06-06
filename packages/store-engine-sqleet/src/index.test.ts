@@ -266,7 +266,7 @@ describe('SQLeetEngine', () => {
       try {
         await engine.updateOrCreate<DBRecord>('ffff', '1', {name: 'Otto'});
       } catch (error) {
-        expect(error.message).toBe('Table does not exist');
+        expect(error.message).toBe('Table "ffff" does not exist.');
       }
     });
   });
