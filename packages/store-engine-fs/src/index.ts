@@ -124,7 +124,7 @@ export class FileEngine implements CRUDEngine {
     try {
       await fs.remove(directory);
       return true;
-    } catch (e) {
+    } catch (error) {
       return false;
     }
   }
