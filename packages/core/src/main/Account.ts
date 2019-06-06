@@ -575,26 +575,26 @@ export class Account extends EventEmitter {
         const {client} = event as UserClientAddEvent;
         return {
           content: {client},
-          conversation: '',
-          from: '',
+          conversation: this.apiClient.context!.userId,
+          from: this.apiClient.context!.userId,
           id: MessageBuilder.createId(),
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date().getTime(),
-          type: PayloadBundleType.CONNECTION_REQUEST,
+          type: PayloadBundleType.CLIENT_ADD,
         };
       }
       case USER_EVENT.CLIENT_REMOVE: {
         const {client} = event as UserClientRemoveEvent;
         return {
           content: {client},
-          conversation: '',
-          from: '',
+          conversation: this.apiClient.context!.userId,
+          from: this.apiClient.context!.userId,
           id: MessageBuilder.createId(),
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date().getTime(),
-          type: PayloadBundleType.CONNECTION_REQUEST,
+          type: PayloadBundleType.CLIENT_REMOVE,
         };
       }
     }
@@ -638,6 +638,8 @@ export class Account extends EventEmitter {
           case PayloadBundleType.ASSET_IMAGE:
           case PayloadBundleType.CLEARED:
           case PayloadBundleType.CLIENT_ACTION:
+          case PayloadBundleType.CLIENT_ADD:
+          case PayloadBundleType.CLIENT_REMOVE:
           case PayloadBundleType.CONFIRMATION:
           case PayloadBundleType.CONNECTION_REQUEST:
           case PayloadBundleType.LOCATION:
