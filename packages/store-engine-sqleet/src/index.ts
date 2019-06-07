@@ -235,7 +235,7 @@ export class SQLeetEngine implements CRUDEngine {
     return record;
   }
 
-  readAll<T>(tableName: string): Promise<T[]> {
+  async readAll<T>(tableName: string): Promise<T[]> {
     const table = this.schema[tableName];
     const columns = getFormattedColumnsFromTableName(table, true);
     const escapedTableName = escape(tableName);
