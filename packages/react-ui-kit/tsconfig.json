@@ -9,8 +9,9 @@
     "noUnusedParameters": false,
     "outDir": "dist",
     "rootDir": "src",
-    "strict": false
+    "strict": false,
+    "types": ["node", "jest"]
   },
-  "exclude": ["dist", "node_modules", "../../node_modules"],
+  "exclude": ["dist", "node_modules"],
   "extends": "../../tsconfig.json"
 }
