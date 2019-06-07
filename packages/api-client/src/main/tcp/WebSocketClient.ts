@@ -167,8 +167,6 @@ export class WebSocketClient extends EventEmitter {
       }
 
       this.logger.warn(`WebSocket connection is closed. Current ready state: "${this.socket.readyState}"`);
-    } else {
-      console.log('no socket');
     }
   };
 }
