@@ -148,10 +148,10 @@ export class SQLeetEngine implements CRUDEngine {
       if (typeof table[entity] !== 'string') {
         continue;
       }
-      let value: any = entities[entity];
+      let value = entities[entity];
       // Stringify objects for the database
       if (table[entity] === SQLiteType.JSON) {
-        value = JSON.stringify(value);
+        value = JSON.stringify(value) as SQLiteType;
       }
       const reference = `@${hashColumnName(entity)}`;
       columns[reference] = entity;
