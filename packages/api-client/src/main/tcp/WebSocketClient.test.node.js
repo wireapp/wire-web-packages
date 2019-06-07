@@ -61,7 +61,7 @@ function startEchoServer() {
   server.on('error', error => console.error(`Echo WebSocket server error: "${error.message}"`));
 }
 
-fdescribe('WebSocketClient', () => {
+describe('WebSocketClient', () => {
   describe('"connect"', () => {
     beforeEach(() => startEchoServer());
 
@@ -74,7 +74,7 @@ fdescribe('WebSocketClient', () => {
       }
     });
 
-    fit('connects to a WebSocket.', done => {
+    it('connects to a WebSocket.', done => {
       const message = 'Hello, World!';
       const client = new WebSocketClient(WEBSOCKET_URL, fakeHttpClient);
       spyOn(client, 'sendPing').and.returnValue();
