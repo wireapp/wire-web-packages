@@ -17,5 +17,9 @@
  *
  */
 
+import * as CommonConfig from './config/CommonConfig';
+export {CommonConfig};
+
 export {LogFactory, LoggerOptions} from './LogFactory';
+
 export * from './util/';
