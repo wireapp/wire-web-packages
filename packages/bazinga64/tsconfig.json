@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "src",
+    "types": ["node", "jasmine"]
   },
   "exclude": ["dist", "karma.conf.ts", "node_modules"],
   "extends": "../../tsconfig.json"
