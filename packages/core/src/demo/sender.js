@@ -104,7 +104,7 @@ const {FileEngine} = require('@wireapp/store-engine-fs');
         .createEditedText(CONVERSATION_ID, 'Hello, World!', originalMessageId)
         .build();
       await account.service.conversation.send(editedPayload);
-    }, 2000);
+    }, TimeUtil.TimeInMillis.SECOND * 2);
   }
 
   async function sendImage() {
