@@ -18,7 +18,7 @@
  */
 
 import React from 'react';
-import {matchComponent} from '../../test/testUtil';
+import {matchComponent} from '../test/testUtil';
 import {Label, LabelLink} from './Label';
 
 describe('"Label"', () => {

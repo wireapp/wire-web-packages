@@ -18,8 +18,8 @@
  */
 
 import React from 'react';
-import {matchComponent} from '../../test/testUtil';
 import {COLOR} from '../Identity';
+import {matchComponent} from '../test/testUtil';
 import {Bold, Large, Muted, Small, Text, Uppercase} from './Text';
 
 describe('"Text"', () => {

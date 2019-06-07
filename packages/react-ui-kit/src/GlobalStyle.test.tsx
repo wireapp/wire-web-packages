@@ -18,8 +18,8 @@
  */
 
 import React from 'react';
-import {matchComponent} from '../test/testUtil';
 import {GlobalStyle} from './GlobalStyle';
+import {matchComponent} from './test/testUtil';
 
 describe('"GlobalStyle"', () => {
   it('renders', () => matchComponent(<GlobalStyle />));

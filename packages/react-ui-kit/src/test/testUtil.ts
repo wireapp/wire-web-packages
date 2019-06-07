@@ -20,4 +20,4 @@
 import renderer from 'react-test-renderer';
 
 export const matchComponent = (component: JSX.Element) =>
-  ((expect as unknown) as jest.Expect)(renderer.create(component).toJSON()).toMatchSnapshot();
+  (expect as any)(renderer.create(component).toJSON()).toMatchSnapshot();

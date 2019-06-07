@@ -14,7 +14,6 @@
     "@babel/preset-env": "7.4.5",
     "@babel/preset-react": "7.0.0",
     "@babel/preset-typescript": "7.3.3",
-    "@types/jest": "24.0.13",
     "@types/react": "16.8.19",
     "@types/react-test-renderer": "16.8.1",
     "babel-jest": "24.8.0",

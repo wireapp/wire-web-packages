@@ -18,7 +18,7 @@
  */
 
 import React from 'react';
-import {matchComponent} from '../../test/testUtil';
+import {matchComponent} from '../test/testUtil';
 import {Checkbox, CheckboxLabel} from './Checkbox';
 
 describe('"Checkbox"', () => {
