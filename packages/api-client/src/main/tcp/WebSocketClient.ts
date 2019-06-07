@@ -56,6 +56,7 @@ export class WebSocketClient extends EventEmitter {
   private pingInterval?: NodeJS.Timeout;
   private socket?: WebSocket;
   public client: HttpClient;
+  public isOnline: boolean;
 
   public static CONFIG = {
     PING_INTERVAL: 5000,
@@ -77,6 +78,7 @@ export class WebSocketClient extends EventEmitter {
     this.baseUrl = baseUrl;
     this.client = client;
     this.hasUnansweredPing = false;
+    this.isOnline = false;
 
     this.logger = logdown('@wireapp/api-client/tcp/WebSocketClient', {
       logger: console,
@@ -107,9 +109,6 @@ export class WebSocketClient extends EventEmitter {
       const data = buffer.bufferToString(event.data);
       if (data === PING_MESSAGE.PONG) {
         this.logger.info('Received pong from WebSocket');
-        if (this.hasUnansweredPing) {
-          this.emit(TOPIC.ON_RECONNECT);
-        }
         this.hasUnansweredPing = false;
       } else {
         const notification: IncomingNotification = JSON.parse(data);
@@ -119,25 +118,37 @@ export class WebSocketClient extends EventEmitter {
 
     this.socket.onerror = event => {
       this.logger.warn(`WebSocket connection error: "${(event as any).message}"`);
-      this.client.refreshAccessToken().catch(error => {
-        if (error instanceof NetworkError) {
-          this.logger.warn(error);
-        } else {
-          const mappedError = BackendErrorMapper.map(error);
-          this.emit(error instanceof InvalidTokenError ? TOPIC.ON_DISCONNECT : TOPIC.ON_ERROR, mappedError);
-        }
-      });
+      return this.refreshAccessToken();
     };
 
-    this.socket.onopen = () => {
+    this.socket.onopen = async () => {
       if (this.socket) {
         this.socket.binaryType = 'arraybuffer';
       }
+
       this.logger.info(`Connected WebSocket to "${this.baseUrl}"`);
       this.pingInterval = setInterval(this.sendPing, WebSocketClient.CONFIG.PING_INTERVAL);
+
+      if (!this.isOnline) {
+        this.emit(TOPIC.ON_RECONNECT);
+        await this.refreshAccessToken();
+      }
     };
 
     return this;
+  }
+
+  private async refreshAccessToken(): Promise<void> {
+    try {
+      await this.client.refreshAccessToken();
+    } catch (error) {
+      if (error instanceof NetworkError) {
+        this.logger.warn(error);
+      } else {
+        const mappedError = BackendErrorMapper.map(error);
+        this.emit(error instanceof InvalidTokenError ? TOPIC.ON_DISCONNECT : TOPIC.ON_ERROR, mappedError);
+      }
+    }
   }
 
   public disconnect(reason = 'Unknown reason', keepClosed = true): void {
@@ -156,6 +167,8 @@ export class WebSocketClient extends EventEmitter {
         this.emit(TOPIC.ON_OFFLINE);
       }
     }
+
+    this.isOnline = false;
   }
 
   private readonly sendPing = (): void => {
