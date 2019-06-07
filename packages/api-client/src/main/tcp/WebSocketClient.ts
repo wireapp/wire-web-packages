@@ -17,13 +17,14 @@
  *
  */
 
+import {TimeUtil} from '@wireapp/commons';
 import EventEmitter from 'events';
+import Html5WebSocket from 'html5-websocket';
 import logdown from 'logdown';
+
+import {InvalidTokenError} from '../auth';
 import {IncomingNotification} from '../conversation/';
 import {BackendErrorMapper, HttpClient, NetworkError} from '../http/';
-
-import Html5WebSocket from 'html5-websocket';
-import {InvalidTokenError} from '../auth';
 import * as buffer from '../shims/node/buffer';
 
 const ReconnectingWebsocket = require('reconnecting-websocket');
@@ -43,12 +44,12 @@ export class WebSocketClient extends EventEmitter {
   };
 
   public static RECONNECTING_OPTIONS = {
-    connectionTimeout: 4000,
+    connectionTimeout: TimeUtil.TimeInMillis.SECOND * 4,
     constructor: typeof window !== 'undefined' ? WebSocket : Html5WebSocket,
     debug: false,
-    maxReconnectionDelay: 10000,
+    maxReconnectionDelay: TimeUtil.TimeInMillis.SECOND * 10,
     maxRetries: Infinity,
-    minReconnectionDelay: 4000,
+    minReconnectionDelay: TimeUtil.TimeInMillis.SECOND * 4,
     reconnectionDelayGrowFactor: 1.3,
   };
 
