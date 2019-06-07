@@ -18,4 +18,15 @@
  */
 
 export {LogFactory, LoggerOptions} from './LogFactory';
-export * from './util/';
+export {Runtime} from './util/Runtime';
+
+import * as CommonConfig from './config/CommonConfig';
+import * as AccentColor from './util/AccentColor';
+import * as ArrayUtil from './util/ArrayUtil';
+import * as RandomUtil from './util/RandomUtil';
+import * as StringUtil from './util/StringUtil';
+import * as TypeUtil from './util/TypeUtil';
+import * as UrlUtil from './util/UrlUtil';
+import * as ValidationUtil from './util/ValidationUtil';
+
+export {AccentColor, ArrayUtil, CommonConfig, RandomUtil, StringUtil, TypeUtil, UrlUtil, ValidationUtil};

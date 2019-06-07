@@ -17,7 +17,6 @@
  *
  */
 
-import {TimeUtil} from '@wireapp/commons';
 import EventEmitter from 'events';
 import Html5WebSocket from 'html5-websocket';
 import logdown from 'logdown';
@@ -51,7 +50,7 @@ export class WebSocketClient extends EventEmitter {
   private socket?: WebSocket;
 
   public static CONFIG = {
-    PING_INTERVAL: TimeUtil.TimeInMillis.SECOND * 5,
+    PING_INTERVAL: 5000,
   };
 
   public static RECONNECTING_OPTIONS = {
