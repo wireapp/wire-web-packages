@@ -137,7 +137,7 @@ export class WebSocketClient extends EventEmitter {
     });
   }
 
-  public disconnect(reason = 'Unknown reason'): void {
+  public disconnect(reason = 'Unknown reason', keepClosed = true): void {
     if (this.socket) {
       this.logger.info(`Disconnecting from WebSocket`);
       // TODO: 'any' can be removed once this issue is resolved:
@@ -145,7 +145,7 @@ export class WebSocketClient extends EventEmitter {
       (this.socket as any).close(WebSocketClient.CLOSE_EVENT_CODE.NORMAL_CLOSURE, reason, {
         delay: 0,
         fastClose: true,
-        keepClosed: true,
+        keepClosed,
       });
 
       if (this.pingInterval) {
@@ -160,6 +160,7 @@ export class WebSocketClient extends EventEmitter {
       if (isReadyStateOpen) {
         if (this.hasAlreadySentUnansweredPing) {
           this.logger.warn('Ping interval check failed');
+          this.disconnect('Failed ping check', false);
         }
         this.logger.info('Sending ping to WebSocket');
         this.hasAlreadySentUnansweredPing = true;
