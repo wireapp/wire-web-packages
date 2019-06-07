@@ -81,7 +81,7 @@ export class SQLeetEngine implements CRUDEngine {
     }
 
     const SQL = await initSqlJs(this.dbConfig);
-    this.db = new SQL.Database(existingDatabase as Uint8Array);
+    this.db = new SQL.Database(existingDatabase);
 
     // Settings
     this.db.run('PRAGMA `encoding`="UTF-8";');
