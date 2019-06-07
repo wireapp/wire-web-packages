@@ -19,12 +19,12 @@
 
 import {TimeUtil} from '@wireapp/commons';
 import EventEmitter from 'events';
-import Html5WebSocket from 'html5-websocket';
 import logdown from 'logdown';
-
-import {InvalidTokenError} from '../auth';
 import {IncomingNotification} from '../conversation/';
 import {BackendErrorMapper, HttpClient, NetworkError} from '../http/';
+
+import Html5WebSocket from 'html5-websocket';
+import {InvalidTokenError} from '../auth';
 import * as buffer from '../shims/node/buffer';
 
 const ReconnectingWebsocket = require('reconnecting-websocket');
