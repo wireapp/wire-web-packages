@@ -248,7 +248,7 @@ export class Account extends EventEmitter {
           });
         } else {
           console.log('on activated');
-          this.apiClient.transport.ws.on(WebSocketTopic.ON_MESSAGE, this.handleNotification);
+          this.apiClient.transport.ws.on(WebSocketTopic.ON_MESSAGE, this.handleNotification.bind(this));
         }
         return this.apiClient.connect();
       })
@@ -623,7 +623,7 @@ export class Account extends EventEmitter {
     }
   }
 
-  private readonly handleNotification = async (notification: IncomingNotification): Promise<void> => {
+  private async handleNotification(notification: IncomingNotification): Promise<void> {
     for (const event of notification.payload) {
       let data;
 
@@ -695,5 +695,5 @@ export class Account extends EventEmitter {
         this.logger.log(`Received unsupported event "${type}"${conversationText}${fromText}`, {event});
       }
     }
-  };
+  }
 }
