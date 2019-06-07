@@ -42,12 +42,16 @@ declare const WebAssembly: any;
 
 export class SQLeetEngine implements CRUDEngine {
   private db: any;
-  private schema: SQLiteDatabaseDefinition<Record<string, any>>;
   private readonly dbConfig: any;
   private rawDatabase: string | undefined;
   public storeName = '';
 
-  constructor(wasmLocation: Uint8Array | string, rawDatabase?: string) {
+  constructor(
+    wasmLocation: Uint8Array | string,
+    private readonly schema: SQLiteDatabaseDefinition<Record<string, any>>,
+    private readonly encryptionKey: string,
+    rawDatabase?: string
+  ) {
     this.dbConfig = {};
 
     if (typeof wasmLocation === 'string') {
@@ -55,12 +59,6 @@ export class SQLeetEngine implements CRUDEngine {
     } else if (wasmLocation instanceof Uint8Array) {
       this.dbConfig.wasmBinary = wasmLocation;
     }
-    this.schema = {
-      objects: {
-        key: SQLiteType.TEXT,
-        value: SQLiteType.TEXT,
-      },
-    };
     if (rawDatabase) {
       this.rawDatabase = rawDatabase;
     }
@@ -71,11 +69,10 @@ export class SQLeetEngine implements CRUDEngine {
     throw new Error('Method not implemented.');
   }
 
-  async init<T>(storeName: string, schema: SQLiteDatabaseDefinition<T>, encryptionKey: string): Promise<any> {
+  async init(storeName: string): Promise<any> {
     await this.isSupported();
 
     this.storeName = storeName;
-    this.schema = schema;
 
     let existingDatabase: Uint8Array | undefined = undefined;
     if (this.rawDatabase) {
@@ -88,10 +85,7 @@ export class SQLeetEngine implements CRUDEngine {
 
     // Settings
     this.db.run('PRAGMA `encoding`="UTF-8";');
-    this.db.run(`PRAGMA \`key\`=${escape(encryptionKey)};`);
-
-    // Remove traces of encryption key
-    encryptionKey = '';
+    this.db.run(`PRAGMA \`key\`=${escape(this.encryptionKey)};`);
 
     // Create tables
     let statement: string = '';
