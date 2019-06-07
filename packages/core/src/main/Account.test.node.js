@@ -110,7 +110,7 @@ describe('Account', () => {
   });
 
   describe('"createText"', () => {
-    it('creates a text payload', async done => {
+    it('creates a text payload', async () => {
       const account = await createAccount();
       expect(account.apiClient.context).toBeUndefined();
 
@@ -128,13 +128,11 @@ describe('Account', () => {
       const payload = account.service.conversation.messageBuilder.createText(text).build();
 
       expect(payload.timestamp).toBeGreaterThan(0);
-
-      done();
     });
   });
 
   describe('"init"', () => {
-    it('initializes the Protocol buffers', async done => {
+    it('initializes the Protocol buffers', async () => {
       const account = new Account();
 
       await account.init();
@@ -148,7 +146,6 @@ describe('Account', () => {
       });
 
       expect(message.content).toBe('text');
-      done();
     });
   });
 
@@ -281,7 +278,7 @@ describe('Account', () => {
   });
 
   describe('"login"', () => {
-    it('logs in with correct credentials', async done => {
+    it('logs in with correct credentials', async () => {
       const storeEngine = new MemoryEngine();
       await storeEngine.init('account.test');
 
@@ -298,11 +295,9 @@ describe('Account', () => {
       expect(clientId).toBe(CLIENT_ID);
       expect(ValidationUtil.isUUIDv4(userId)).toBe(true);
       expect(clientType).toBe(ClientType.TEMPORARY);
-
-      done();
     });
 
-    it('does not log in with incorrect credentials', async done => {
+    it('does not log in with incorrect credentials', async () => {
       const storeEngine = new MemoryEngine();
       await storeEngine.init('account.test');
 
@@ -318,12 +313,10 @@ describe('Account', () => {
           password: 'wrong',
         });
 
-        done.fail('Should not be logged in');
+        fail('Should not be logged in');
       } catch (error) {
         expect(error.code).toBe(StatusCode.FORBIDDEN);
         expect(error.label).toBe(BackendErrorLabel.INVALID_CREDENTIALS);
-
-        done();
       }
     });
   });
