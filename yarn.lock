@@ -1737,6 +1737,11 @@
   dependencies:
     tweetnacl "^1.0.0"
 
+"@types/emscripten@*":
+  version "0.0.32"
+  resolved "https://registry.yarnpkg.com/@types/emscripten/-/emscripten-0.0.32.tgz#8188e78d6f9813f1b5132e4b844183f776e68b03"
+  integrity sha512-Yl8t0O13liu9KULrgMvimRP04ui92Bq7yB/FCZ950rhVijDDMqsxcxZWI1Hv5anAyQqSc0Tazj7NCKAjBNsNng==
+
 "@types/events@*":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@types/events/-/events-3.0.0.tgz#2862f3f58a9a7f7c3e78d79f130dd4d71c25c2a7"
@@ -1883,11 +1888,12 @@
   resolved "https://registry.yarnpkg.com/@types/spark-md5/-/spark-md5-3.0.1.tgz#351b383b32fa7a6a579b836ef8786293c4a7e73b"
   integrity sha512-sjiWYRmuuFZMo/DdysQe/yX6x40Q0WZXsNgvbUIg7gUaQYNoXx4CqWq27rDikQyc+0JKkqsoNiIBAA0GUxbUXw==
 
-"@types/sql.js@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@types/sql.js/-/sql.js-1.0.0.tgz#1b1bdd4397cb5f0b717f51e9b3bd8ccf49e9d78d"
-  integrity sha512-MLq0mvjdcAxNEZ2zu3HAkLP6skvPkm+hSftX3YpVSUVzDH6sCvuE5yvxC+RPM3eAC2sfArYENypxHwXwYYxWoA==
+"@types/sql.js@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@types/sql.js/-/sql.js-1.0.1.tgz#037a83e226601b6237d4f210373538ca5e988b0f"
+  integrity sha512-BFjo/g7kpzRihujrRdft0DmPmss+oZ6t6CEsOGdgPx8LlhSSizEeKYRY9L8SNBMmLvtlElYbbn52RDJ3LS0DvA==
   dependencies:
+    "@types/emscripten" "*"
     "@types/node" "*"
 
 "@types/tapable@*":
