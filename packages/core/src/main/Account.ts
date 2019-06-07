@@ -243,11 +243,12 @@ export class Account extends EventEmitter {
         this.apiClient.transport.ws.removeAllListeners(WebSocketTopic.ON_MESSAGE);
 
         if (notificationHandler) {
-          this.apiClient.transport.ws.on(WebSocketTopic.ON_MESSAGE, (notification: IncomingNotification) =>
-            notificationHandler(notification)
-          );
+          this.apiClient.transport.ws.on(WebSocketTopic.ON_MESSAGE, (notification: IncomingNotification) => {
+            notificationHandler(notification);
+          });
         } else {
-          this.apiClient.transport.ws.on(WebSocketTopic.ON_MESSAGE, this.handleNotification.bind(this));
+          console.log('on activated');
+          this.apiClient.transport.ws.on(WebSocketTopic.ON_MESSAGE, this.handleNotification);
         }
         return this.apiClient.connect();
       })
@@ -622,7 +623,7 @@ export class Account extends EventEmitter {
     }
   }
 
-  private async handleNotification(notification: IncomingNotification): Promise<void> {
+  private readonly handleNotification = async (notification: IncomingNotification): Promise<void> => {
     for (const event of notification.payload) {
       let data;
 
@@ -694,5 +695,5 @@ export class Account extends EventEmitter {
         this.logger.log(`Received unsupported event "${type}"${conversationText}${fromText}`, {event});
       }
     }
-  }
+  };
 }
