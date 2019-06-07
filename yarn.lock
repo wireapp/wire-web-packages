@@ -2039,7 +2039,7 @@
   resolved "https://registry.yarnpkg.com/@types/libsodium-wrappers/-/libsodium-wrappers-0.7.5.tgz#3cdda11ebf6b70bf40cfa2c483d7622897277bc4"
   integrity sha512-CfxNQj3+fUwGhV20/yRoiMRjLN6+3cDRAjN2eQ0XKgq/IBhvROsbWxPa34JIiMKGdfHKy92OaMnViyoWw2Nrkg==
 
-"@types/long@^4.0.0":
+"@types/long@4.0.0", "@types/long@^4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@types/long/-/long-4.0.0.tgz#719551d2352d301ac8b81db732acb6bdc28dbdef"
   integrity sha512-1w52Nyx4Gq47uuu0EVcsHBxZFJgurQ+rTKS3qMHxR1GY2T8c2AJYd6vZoZ9q1rupaDjU0yT+Jc2XTyXkjeMA+Q==
