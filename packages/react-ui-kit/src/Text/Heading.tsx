@@ -104,7 +104,7 @@ const h4Style: <T>(props: HeadingProps<T>) => ObjectInterpolation<undefined> = (
 
 const H4 = (props: HeadingProps) => <h3 css={h4Style(props)} {...filterTextProps(props)} />;
 
-const Heading = ({level, ...props}) => {
+const Heading = ({level, ...props}: HeadingProps) => {
   switch (level) {
     case '2':
       return <H2 {...props} />;
