@@ -17,29 +17,41 @@
  *
  */
 
+import {TimeUtil} from '@wireapp/commons';
 import EventEmitter from 'events';
+import Html5WebSocket from 'html5-websocket';
 import logdown from 'logdown';
+
+import {InvalidTokenError} from '../auth';
 import {IncomingNotification} from '../conversation/';
 import {BackendErrorMapper, HttpClient, NetworkError} from '../http/';
-
-import Html5WebSocket from 'html5-websocket';
-import {InvalidTokenError} from '../auth';
 import * as buffer from '../shims/node/buffer';
 
 const ReconnectingWebsocket = require('reconnecting-websocket');
 
+export enum TOPIC {
+  ON_DISCONNECT = 'WebSocketClient.TOPIC.ON_DISCONNECT',
+  ON_ERROR = 'WebSocketClient.TOPIC.ON_ERROR',
+  ON_MESSAGE = 'WebSocketClient.TOPIC.ON_MESSAGE',
+}
+
+export enum CLOSE_EVENT_CODE {
+  GOING_AWAY = 1001,
+  NORMAL_CLOSURE = 1000,
+  PROTOCOL_ERROR = 1002,
+  UNSUPPORTED_DATA = 1003,
+}
+
 export class WebSocketClient extends EventEmitter {
-  private clientId: string | undefined;
-
+  private readonly baseUrl: string;
   private readonly logger: logdown.Logger;
+  private clientId?: string;
+  private hasAlreadySentUnansweredPing: boolean;
+  private pingInterval?: NodeJS.Timeout;
+  private socket?: WebSocket;
 
-  private socket: WebSocket | undefined;
-
-  public static CLOSE_EVENT_CODE = {
-    GOING_AWAY: 1001,
-    NORMAL_CLOSURE: 1000,
-    PROTOCOL_ERROR: 1002,
-    UNSUPPORTED_DATA: 1003,
+  public static CONFIG = {
+    PING_INTERVAL: TimeUtil.TimeInMillis.SECOND * 5,
   };
 
   public static RECONNECTING_OPTIONS = {
@@ -52,14 +64,14 @@ export class WebSocketClient extends EventEmitter {
     reconnectionDelayGrowFactor: 1.3,
   };
 
-  public static TOPIC = {
-    ON_DISCONNECT: 'WebSocketClient.TOPIC.ON_DISCONNECT',
-    ON_ERROR: 'WebSocketClient.TOPIC.ON_ERROR',
-    ON_MESSAGE: 'WebSocketClient.TOPIC.ON_MESSAGE',
-  };
+  public static CLOSE_EVENT_CODE = CLOSE_EVENT_CODE;
+  public static TOPIC = TOPIC;
 
-  constructor(private readonly baseURL: string, public client: HttpClient) {
+  constructor(baseUrl: string, public client: HttpClient) {
     super();
+
+    this.baseUrl = baseUrl;
+    this.hasAlreadySentUnansweredPing = false;
 
     this.logger = logdown('@wireapp/api-client/tcp/WebSocketClient', {
       logger: console,
@@ -67,8 +79,8 @@ export class WebSocketClient extends EventEmitter {
     });
   }
 
-  private buildWebSocketURL(accessToken: string = this.client.accessTokenStore.accessToken!.access_token): string {
-    let url = `${this.baseURL}/await?access_token=${accessToken}`;
+  private buildWebSocketUrl(accessToken = this.client.accessTokenStore.accessToken!.access_token): string {
+    let url = `${this.baseUrl}/await?access_token=${accessToken}`;
     if (this.clientId) {
       // Note: If no client ID is given, then the WebSocket connection will receive all notifications for all clients
       // of the connected user
@@ -78,21 +90,28 @@ export class WebSocketClient extends EventEmitter {
   }
 
   public connect(clientId?: string): Promise<WebSocketClient> {
-    this.clientId = clientId;
+    return new Promise(resolve => {
+      this.clientId = clientId;
 
-    this.socket = new ReconnectingWebsocket(
-      () => this.buildWebSocketURL(),
-      undefined,
-      WebSocketClient.RECONNECTING_OPTIONS
-    );
+      this.socket = new ReconnectingWebsocket(
+        () => this.buildWebSocketUrl(),
+        undefined,
+        WebSocketClient.RECONNECTING_OPTIONS
+      ) as WebSocket;
 
-    if (this.socket) {
       this.socket.onmessage = (event: MessageEvent) => {
-        const notification: IncomingNotification = JSON.parse(buffer.bufferToString(event.data));
-        this.emit(WebSocketClient.TOPIC.ON_MESSAGE, notification);
+        const data = buffer.bufferToString(event.data);
+        if (data === 'pong') {
+          this.logger.info('Received pong from WebSocket');
+          this.hasAlreadySentUnansweredPing = false;
+        } else {
+          const notification: IncomingNotification = JSON.parse(data);
+          this.emit(TOPIC.ON_MESSAGE, notification);
+        }
       };
 
-      this.socket.onerror = () =>
+      this.socket.onerror = event => {
+        this.logger.warn(`WebSocket connection error: "${(event as any).message}"`);
         this.client.refreshAccessToken().catch(error => {
           if (error instanceof NetworkError) {
             this.logger.warn(error);
@@ -105,23 +124,51 @@ export class WebSocketClient extends EventEmitter {
             }
           }
         });
+      };
 
-      this.socket.onopen = () => (this.socket ? (this.socket.binaryType = 'arraybuffer') : undefined);
-    }
-
-    return Promise.resolve(this);
+      this.socket.onopen = () => {
+        if (this.socket) {
+          this.socket.binaryType = 'arraybuffer';
+        }
+        this.logger.info(`Connected WebSocket to "${this.baseUrl}"`);
+        this.pingInterval = setInterval(this.sendPing, WebSocketClient.CONFIG.PING_INTERVAL);
+        resolve(this);
+      };
+    });
   }
 
   public disconnect(reason = 'Unknown reason'): void {
     if (this.socket) {
+      this.logger.info(`Disconnecting from WebSocket`);
       // TODO: 'any' can be removed once this issue is resolved:
       // https://github.com/pladaria/reconnecting-websocket/issues/44
-      const socket: any = this.socket;
-      socket.close(WebSocketClient.CLOSE_EVENT_CODE.NORMAL_CLOSURE, reason, {
+      (this.socket as any).close(WebSocketClient.CLOSE_EVENT_CODE.NORMAL_CLOSURE, reason, {
         delay: 0,
         fastClose: true,
         keepClosed: true,
       });
+
+      if (this.pingInterval) {
+        clearInterval(this.pingInterval);
+      }
     }
   }
+
+  private readonly sendPing = () => {
+    if (this.socket) {
+      const isReadyStateOpen = this.socket.readyState === 1;
+      if (isReadyStateOpen) {
+        if (this.hasAlreadySentUnansweredPing) {
+          this.logger.warn('Ping interval check failed');
+        }
+        this.logger.info('Sending ping to WebSocket');
+        this.hasAlreadySentUnansweredPing = true;
+        return this.socket.send('ping');
+      }
+
+      this.logger.warn(`WebSocket connection is closed. Current ready state: "${this.socket.readyState}"`);
+    } else {
+      console.log('no socket');
+    }
+  };
 }

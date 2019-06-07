@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2019 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,5 +17,20 @@
  *
  */
 
-export {LogFactory, LoggerOptions} from './LogFactory';
-export * from './util/';
+export enum TimeInMillis {
+  SECOND = 1000,
+  MINUTE = SECOND * 60,
+  HOUR = MINUTE * 60,
+  DAY = HOUR * 24,
+  WEEK = DAY * 7,
+  YEAR = DAY * 365,
+}
+
+export enum TimeUnits {
+  ONE_SECOND_IN_MILLIS = 1000,
+  ONE_MINUTE_IN_MILLIS = ONE_SECOND_IN_MILLIS * 60,
+  ONE_HOUR_IN_MILLIS = ONE_MINUTE_IN_MILLIS * 60,
+  ONE_DAY_IN_MILLIS = ONE_DAY_IN_MILLIS * 24,
+  ONE_WEEK_IN_MILLIS = ONE_WEEK_IN_MILLIS * 7,
+  ONE_YEAR_IN_MILLIS = ONE_YEAR_IN_MILLIS * 365,
+}
