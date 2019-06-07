@@ -38,6 +38,8 @@ import {
   hashColumnName,
 } from './SchemaConverter';
 
+declare const WebAssembly: any;
+
 export class SQLeetEngine implements CRUDEngine {
   private db: any;
   private schema: SQLiteDatabaseDefinition<Record<string, any>>;
@@ -82,7 +84,7 @@ export class SQLeetEngine implements CRUDEngine {
     }
 
     const SQL = await initSqlJs(this.dbConfig);
-    this.db = new SQL.Database(existingDatabase);
+    this.db = new SQL.Database(existingDatabase as Uint8Array);
 
     // Settings
     this.db.run('PRAGMA `encoding`="UTF-8";');

@@ -13,6 +13,7 @@
   "devDependencies": {
     "@types/jasmine": "3.3.12",
     "@types/karma": "3.0.2",
+    "@types/uint32": "0.2.0",
     "@types/webpack": "4.4.32",
     "babel-loader": "8.0.5",
     "bazinga64": "5.4.2",
@@ -36,7 +37,7 @@
   "name": "@wireapp/store-engine-sqleet",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet",
   "scripts": {
-    "build": "webpack",
+    "build": "tsc",
     "clean": "rimraf dist",
     "dist": "yarn clean && yarn build",
     "test": "karma start",

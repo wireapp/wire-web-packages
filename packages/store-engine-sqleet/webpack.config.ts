@@ -19,7 +19,7 @@
 
 import webpack from 'webpack';
 
-const config: webpack.Configuration = {
+const defaultConfig: webpack.Configuration = {
   externals: {
     dexie: 'Dexie',
     'fs-extra': '{}',
@@ -42,5 +42,27 @@ const config: webpack.Configuration = {
   },
 };
 
-// tslint:disable:no-default-export
-export default config;
+const nodeConfig = {
+  ...defaultConfig,
+  ...{
+    output: {
+      filename: 'SQLeetEngine.node.js',
+      path: `${__dirname}/dist`,
+    },
+    target: 'node',
+  },
+};
+
+const webConfig = {
+  ...defaultConfig,
+  ...{
+    output: {
+      filename: 'SQLeetEngine.web.js',
+      library: 'StoreEngine',
+      path: `${__dirname}/dist`,
+    },
+    target: 'web',
+  },
+};
+
+module.exports = [nodeConfig, webConfig];
