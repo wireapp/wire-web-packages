@@ -17,7 +17,7 @@
  *
  */
 
-const {WebSocketClient} = require('@wireapp/api-client/dist/commonjs/tcp/WebSocketClient');
+const {WebSocketClient, TOPIC: WebSocketTopic} = require('@wireapp/api-client/dist/commonjs/tcp/WebSocketClient');
 const WebSocketServer = require('ws').Server;
 
 const ACCESS_TOKEN_PAYLOAD = {
@@ -83,7 +83,7 @@ describe('WebSocketClient', () => {
         .then(webSocketClient => {
           expect(webSocketClient).toBeDefined();
 
-          webSocketClient.on(WebSocketClient.TOPIC.ON_MESSAGE, data => {
+          webSocketClient.on(WebSocketTopic.ON_MESSAGE, data => {
             expect(data.fromServer).toBe(`Echo: ${message}`);
             done();
           });

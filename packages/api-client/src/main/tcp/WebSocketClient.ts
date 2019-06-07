@@ -32,6 +32,8 @@ export enum TOPIC {
   ON_DISCONNECT = 'WebSocketClient.TOPIC.ON_DISCONNECT',
   ON_ERROR = 'WebSocketClient.TOPIC.ON_ERROR',
   ON_MESSAGE = 'WebSocketClient.TOPIC.ON_MESSAGE',
+  ON_OFFLINE = 'WebSocketClient.TOPIC.ON_OFFLINE',
+  ON_RECONNECT = 'WebSocketClient.TOPIC.ON_RECONNECT',
 }
 
 export enum CLOSE_EVENT_CODE {
@@ -41,11 +43,16 @@ export enum CLOSE_EVENT_CODE {
   UNSUPPORTED_DATA = 1003,
 }
 
+export enum PING_MESSAGE {
+  PING = 'ping',
+  PONG = 'pong',
+}
+
 export class WebSocketClient extends EventEmitter {
   private readonly baseUrl: string;
   private readonly logger: logdown.Logger;
   private clientId?: string;
-  private hasAlreadySentUnansweredPing: boolean;
+  private hasUnansweredPing: boolean;
   private pingInterval?: NodeJS.Timeout;
   private socket?: WebSocket;
 
@@ -63,14 +70,11 @@ export class WebSocketClient extends EventEmitter {
     reconnectionDelayGrowFactor: 1.3,
   };
 
-  public static CLOSE_EVENT_CODE = CLOSE_EVENT_CODE;
-  public static TOPIC = TOPIC;
-
   constructor(baseUrl: string, public client: HttpClient) {
     super();
 
     this.baseUrl = baseUrl;
-    this.hasAlreadySentUnansweredPing = false;
+    this.hasUnansweredPing = false;
 
     this.logger = logdown('@wireapp/api-client/tcp/WebSocketClient', {
       logger: console,
@@ -100,9 +104,12 @@ export class WebSocketClient extends EventEmitter {
 
       this.socket.onmessage = (event: MessageEvent) => {
         const data = buffer.bufferToString(event.data);
-        if (data === 'pong') {
+        if (data === PING_MESSAGE.PONG) {
           this.logger.info('Received pong from WebSocket');
-          this.hasAlreadySentUnansweredPing = false;
+          if (this.hasUnansweredPing) {
+            this.emit(TOPIC.ON_RECONNECT);
+          }
+          this.hasUnansweredPing = false;
         } else {
           const notification: IncomingNotification = JSON.parse(data);
           this.emit(TOPIC.ON_MESSAGE, notification);
@@ -116,11 +123,7 @@ export class WebSocketClient extends EventEmitter {
             this.logger.warn(error);
           } else {
             const mappedError = BackendErrorMapper.map(error);
-            if (error instanceof InvalidTokenError) {
-              this.emit(WebSocketClient.TOPIC.ON_DISCONNECT, mappedError);
-            } else {
-              this.emit(WebSocketClient.TOPIC.ON_ERROR, mappedError);
-            }
+            this.emit(error instanceof InvalidTokenError ? TOPIC.ON_DISCONNECT : TOPIC.ON_ERROR, mappedError);
           }
         });
       };
@@ -138,10 +141,10 @@ export class WebSocketClient extends EventEmitter {
 
   public disconnect(reason = 'Unknown reason', keepClosed = true): void {
     if (this.socket) {
-      this.logger.info(`Disconnecting from WebSocket`);
+      this.logger.info(`Disconnecting from WebSocket (reason: "${reason}")`);
       // TODO: 'any' can be removed once this issue is resolved:
       // https://github.com/pladaria/reconnecting-websocket/issues/44
-      (this.socket as any).close(WebSocketClient.CLOSE_EVENT_CODE.NORMAL_CLOSURE, reason, {
+      (this.socket as any).close(CLOSE_EVENT_CODE.NORMAL_CLOSURE, reason, {
         delay: 0,
         fastClose: true,
         keepClosed,
@@ -149,24 +152,20 @@ export class WebSocketClient extends EventEmitter {
 
       if (this.pingInterval) {
         clearInterval(this.pingInterval);
+        this.emit(TOPIC.ON_OFFLINE);
       }
     }
   }
 
-  private readonly sendPing = () => {
+  private readonly sendPing = (): void => {
     if (this.socket) {
-      const isReadyStateOpen = this.socket.readyState === 1;
-      if (isReadyStateOpen) {
-        if (this.hasAlreadySentUnansweredPing) {
-          this.logger.warn('Ping interval check failed');
-          this.disconnect('Failed ping check', false);
-        }
-        this.logger.info('Sending ping to WebSocket');
-        this.hasAlreadySentUnansweredPing = true;
-        return this.socket.send('ping');
+      if (this.hasUnansweredPing) {
+        this.logger.warn('Ping interval check failed');
+        return this.disconnect('Failed ping check', false);
       }
-
-      this.logger.warn(`WebSocket connection is closed. Current ready state: "${this.socket.readyState}"`);
+      this.logger.info('Sending ping to WebSocket');
+      this.hasUnansweredPing = true;
+      return this.socket.send(PING_MESSAGE.PING);
     }
   };
 }

@@ -29,7 +29,7 @@ const {GenericMessage, Text} = require('@wireapp/protocol-messaging');
 const {MemoryEngine} = require('@wireapp/store-engine');
 const {NotificationAPI} = require('@wireapp/api-client/dist/commonjs/notification/');
 const {ValidationUtil} = require('@wireapp/commons');
-const {WebSocketClient} = require('@wireapp/api-client/dist/commonjs/tcp/');
+const {TOPIC: WebSocketTopic} = require('@wireapp/api-client/dist/commonjs/tcp/');
 
 const BASE_URL = 'mock-backend.wire.com';
 const BASE_URL_HTTPS = `https://${BASE_URL}`;
@@ -356,7 +356,7 @@ describe('Account', () => {
         payload: [{}],
       };
 
-      account.apiClient.transport.ws.emit(WebSocketClient.TOPIC.ON_MESSAGE, notification);
+      account.apiClient.transport.ws.emit(WebSocketTopic.ON_MESSAGE, notification);
     });
   });
 });
