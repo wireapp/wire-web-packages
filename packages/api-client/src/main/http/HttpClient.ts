@@ -37,7 +37,7 @@ export class HttpClient extends EventEmitter {
   };
 
   constructor(
-    private readonly baseURL: string,
+    private readonly baseUrl: string,
     public accessTokenStore: AccessTokenStore,
     private readonly engine: CRUDEngine
   ) {
@@ -81,7 +81,7 @@ export class HttpClient extends EventEmitter {
   }
 
   public createUrl(url: string): string {
-    return `${this.baseURL}${url}`;
+    return `${this.baseUrl}${url}`;
   }
 
   public async _sendRequest<T>(
@@ -89,7 +89,7 @@ export class HttpClient extends EventEmitter {
     tokenAsParam = false,
     firstTry = true
   ): Promise<AxiosResponse<T>> {
-    config.baseURL = this.baseURL;
+    config.baseURL = this.baseUrl;
 
     if (this.accessTokenStore.accessToken) {
       const {token_type, access_token} = this.accessTokenStore.accessToken;

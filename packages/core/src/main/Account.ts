@@ -247,7 +247,6 @@ export class Account extends EventEmitter {
             notificationHandler(notification);
           });
         } else {
-          console.log('on activated');
           this.apiClient.transport.ws.on(WebSocketTopic.ON_MESSAGE, this.handleNotification.bind(this));
         }
         return this.apiClient.connect();

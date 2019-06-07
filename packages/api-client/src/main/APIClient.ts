@@ -104,7 +104,6 @@ export class APIClient extends EventEmitter {
     });
 
     const httpClient = new HttpClient(this.config.urls.rest, this.accessTokenStore, this.config.store);
-
     const webSocket = new WebSocketClient(this.config.urls.ws, httpClient);
 
     webSocket.on(WebSocketTopic.ON_DISCONNECT, async (error: InvalidTokenError) => {
@@ -113,9 +112,9 @@ export class APIClient extends EventEmitter {
       this.emit(APIClient.TOPIC.ON_LOGOUT, error);
     });
 
-    webSocket.on(WebSocketTopic.ON_DISCONNECT, async (error: InvalidTokenError) => {
-      this.emit(APIClient.TOPIC.ON_LOGOUT, error);
-    });
+    webSocket.on(WebSocketTopic.ON_DISCONNECT, (error: InvalidTokenError) =>
+      this.emit(APIClient.TOPIC.ON_LOGOUT, error)
+    );
 
     this.transport = {
       http: httpClient,

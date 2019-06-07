@@ -320,7 +320,7 @@ describe('Account', () => {
   });
 
   describe('handleEvent', () => {
-    fit('propagates errors to the outer calling function', async done => {
+    it('propagates errors to the outer calling function', async done => {
       const storeEngine = new MemoryEngine();
       await storeEngine.init('account.test');
 

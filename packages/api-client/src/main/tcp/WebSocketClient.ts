@@ -21,7 +21,7 @@ import EventEmitter from 'events';
 import Html5WebSocket from 'html5-websocket';
 import logdown from 'logdown';
 
-import {InvalidTokenError} from '../auth';
+import {InvalidTokenError} from '../auth/';
 import {IncomingNotification} from '../conversation/';
 import {BackendErrorMapper, HttpClient, NetworkError} from '../http/';
 import * as buffer from '../shims/node/buffer';
@@ -55,6 +55,7 @@ export class WebSocketClient extends EventEmitter {
   private hasUnansweredPing: boolean;
   private pingInterval?: NodeJS.Timeout;
   private socket?: WebSocket;
+  public client: HttpClient;
 
   public static CONFIG = {
     PING_INTERVAL: 5000,
@@ -70,10 +71,11 @@ export class WebSocketClient extends EventEmitter {
     reconnectionDelayGrowFactor: 1.3,
   };
 
-  constructor(baseUrl: string, public client: HttpClient) {
+  constructor(baseUrl: string, client: HttpClient) {
     super();
 
     this.baseUrl = baseUrl;
+    this.client = client;
     this.hasUnansweredPing = false;
 
     this.logger = logdown('@wireapp/api-client/tcp/WebSocketClient', {
@@ -92,51 +94,50 @@ export class WebSocketClient extends EventEmitter {
     return url;
   }
 
-  public connect(clientId?: string): Promise<WebSocketClient> {
-    return new Promise(resolve => {
-      this.clientId = clientId;
+  public async connect(clientId?: string): Promise<WebSocketClient> {
+    this.clientId = clientId;
 
-      this.socket = new ReconnectingWebsocket(
-        () => this.buildWebSocketUrl(),
-        undefined,
-        WebSocketClient.RECONNECTING_OPTIONS
-      ) as WebSocket;
+    this.socket = new ReconnectingWebsocket(
+      () => this.buildWebSocketUrl(),
+      undefined,
+      WebSocketClient.RECONNECTING_OPTIONS
+    ) as WebSocket;
 
-      this.socket.onmessage = (event: MessageEvent) => {
-        const data = buffer.bufferToString(event.data);
-        if (data === PING_MESSAGE.PONG) {
-          this.logger.info('Received pong from WebSocket');
-          if (this.hasUnansweredPing) {
-            this.emit(TOPIC.ON_RECONNECT);
-          }
-          this.hasUnansweredPing = false;
+    this.socket.onmessage = (event: MessageEvent) => {
+      const data = buffer.bufferToString(event.data);
+      if (data === PING_MESSAGE.PONG) {
+        this.logger.info('Received pong from WebSocket');
+        if (this.hasUnansweredPing) {
+          this.emit(TOPIC.ON_RECONNECT);
+        }
+        this.hasUnansweredPing = false;
+      } else {
+        const notification: IncomingNotification = JSON.parse(data);
+        this.emit(TOPIC.ON_MESSAGE, notification);
+      }
+    };
+
+    this.socket.onerror = event => {
+      this.logger.warn(`WebSocket connection error: "${(event as any).message}"`);
+      this.client.refreshAccessToken().catch(error => {
+        if (error instanceof NetworkError) {
+          this.logger.warn(error);
         } else {
-          const notification: IncomingNotification = JSON.parse(data);
-          this.emit(TOPIC.ON_MESSAGE, notification);
+          const mappedError = BackendErrorMapper.map(error);
+          this.emit(error instanceof InvalidTokenError ? TOPIC.ON_DISCONNECT : TOPIC.ON_ERROR, mappedError);
         }
-      };
+      });
+    };
 
-      this.socket.onerror = event => {
-        this.logger.warn(`WebSocket connection error: "${(event as any).message}"`);
-        this.client.refreshAccessToken().catch(error => {
-          if (error instanceof NetworkError) {
-            this.logger.warn(error);
-          } else {
-            const mappedError = BackendErrorMapper.map(error);
-            this.emit(error instanceof InvalidTokenError ? TOPIC.ON_DISCONNECT : TOPIC.ON_ERROR, mappedError);
-          }
-        });
-      };
+    this.socket.onopen = () => {
+      if (this.socket) {
+        this.socket.binaryType = 'arraybuffer';
+      }
+      this.logger.info(`Connected WebSocket to "${this.baseUrl}"`);
+      this.pingInterval = setInterval(this.sendPing, WebSocketClient.CONFIG.PING_INTERVAL);
+    };
 
-      this.socket.onopen = () => {
-        if (this.socket) {
-          this.socket.binaryType = 'arraybuffer';
-        }
-        this.logger.info(`Connected WebSocket to "${this.baseUrl}"`);
-        this.pingInterval = setInterval(this.sendPing, WebSocketClient.CONFIG.PING_INTERVAL);
-        resolve(this);
-      };
-    });
+    return this;
   }
 
   public disconnect(reason = 'Unknown reason', keepClosed = true): void {

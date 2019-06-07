@@ -18,9 +18,9 @@
  */
 
 const {WebSocketClient, TOPIC: WebSocketTopic} = require('@wireapp/api-client/dist/commonjs/tcp/WebSocketClient');
-const WebSocketServer = require('ws').Server;
+const {Server: WebSocketServer} = require('ws');
 
-const ACCESS_TOKEN_PAYLOAD = {
+const accessTokenPayload = {
   access_token:
     'iJCRCjc8oROO-dkrkqCXOade997oa8Jhbz6awMUQPBQo80VenWqp_oNvfY6AnU5BxEsdDPOBfBP-uz_b0gAKBQ==.v=1.k=1.d=1498600993.t=a.l=.u=aaf9a833-ef30-4c22-86a0-9adc8a15b3b4.c=15037015562284012115',
   expires_in: 900,
@@ -28,11 +28,11 @@ const ACCESS_TOKEN_PAYLOAD = {
   user: 'aaf9a833-ef30-4c22-86a0-9adc8a15b3b4',
 };
 
-const FAKE_HTTP_CLIENT = {
+const fakeHttpClient = {
   accessTokenStore: {
-    accessToken: ACCESS_TOKEN_PAYLOAD,
+    accessToken: accessTokenPayload,
   },
-  refreshAccessToken: () => Promise.resolve(ACCESS_TOKEN_PAYLOAD),
+  refreshAccessToken: () => Promise.resolve(accessTokenPayload),
 };
 
 const WEBSOCKET_PORT = 8087;
@@ -42,7 +42,7 @@ let server = undefined;
 function startEchoServer() {
   server = new WebSocketServer({port: WEBSOCKET_PORT});
   server.on('connection', ws => {
-    ws.on('message', message =>
+    ws.on('message', message => {
       server.clients.forEach(client => {
         const payload = {
           fromServer: `Echo: ${message}`,
@@ -54,14 +54,14 @@ function startEchoServer() {
         };
 
         client.send(JSON.stringify(payload), options);
-      })
-    );
+      });
+    });
   });
 
   server.on('error', error => console.error(`Echo WebSocket server error: "${error.message}"`));
 }
 
-describe('WebSocketClient', () => {
+fdescribe('WebSocketClient', () => {
   describe('"connect"', () => {
     beforeEach(() => startEchoServer());
 
@@ -74,9 +74,10 @@ describe('WebSocketClient', () => {
       }
     });
 
-    it('connects to a WebSocket.', done => {
+    fit('connects to a WebSocket.', done => {
       const message = 'Hello, World!';
-      const client = new WebSocketClient(WEBSOCKET_URL, FAKE_HTTP_CLIENT);
+      const client = new WebSocketClient(WEBSOCKET_URL, fakeHttpClient);
+      spyOn(client, 'sendPing').and.returnValue();
 
       client
         .connect()
@@ -96,7 +97,8 @@ describe('WebSocketClient', () => {
     it(
       'automatically reconnects with a WebSocket.',
       done => {
-        const client = new WebSocketClient(WEBSOCKET_URL, FAKE_HTTP_CLIENT);
+        const client = new WebSocketClient(WEBSOCKET_URL, fakeHttpClient);
+        spyOn(client, 'sendPing').and.returnValue();
 
         client
           .connect()
