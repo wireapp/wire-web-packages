@@ -26,7 +26,7 @@ import {APIClient} from '@wireapp/api-client';
 import {AccessTokenStore} from '@wireapp/api-client/dist/commonjs/auth/';
 import {IndexedDBEngine} from '@wireapp/store-engine/dist/commonjs/engine';
 import ReactDOM from 'react-dom';
-import {TOPIC as WebSocketTopic} from '@wireapp/api-client/dist/commonjs/tcp/';
+import {WebSocketTopic} from '@wireapp/api-client/dist/commonjs/tcp/';
 import logdown from 'logdown';
 
 const logger = logdown('@wireapp/api-client/demo/demo.js');

@@ -36,7 +36,7 @@ import {NotificationAPI} from './notification/';
 import * as ObfuscationUtil from './obfuscation/';
 import {SelfAPI} from './self/';
 import {retrieveCookie} from './shims/node/cookie';
-import {TOPIC as WebSocketTopic, WebSocketClient} from './tcp/';
+import {WebSocketClient, WebSocketTopic} from './tcp/';
 import {
   IdentityProviderAPI,
   LegalHoldAPI,

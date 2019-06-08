@@ -29,7 +29,7 @@ import * as buffer from '../shims/node/buffer';
 
 const ReconnectingWebsocket = require('reconnecting-websocket');
 
-export enum TOPIC {
+export enum WebSocketTopic {
   ON_DISCONNECT = 'WebSocketClient.TOPIC.ON_DISCONNECT',
   ON_ERROR = 'WebSocketClient.TOPIC.ON_ERROR',
   ON_MESSAGE = 'WebSocketClient.TOPIC.ON_MESSAGE',
@@ -37,14 +37,14 @@ export enum TOPIC {
   ON_RECONNECT = 'WebSocketClient.TOPIC.ON_RECONNECT',
 }
 
-export enum CLOSE_EVENT_CODE {
+export enum CloseEventCode {
   GOING_AWAY = 1001,
   NORMAL_CLOSURE = 1000,
   PROTOCOL_ERROR = 1002,
   UNSUPPORTED_DATA = 1003,
 }
 
-export enum PING_MESSAGE {
+export enum PingMessage {
   PING = 'ping',
   PONG = 'pong',
 }
@@ -108,12 +108,12 @@ export class WebSocketClient extends EventEmitter {
 
     this.socket.onmessage = (event: MessageEvent) => {
       const data = buffer.bufferToString(event.data);
-      if (data === PING_MESSAGE.PONG) {
+      if (data === PingMessage.PONG) {
         this.logger.info('Received pong from WebSocket');
         this.hasUnansweredPing = false;
       } else {
         const notification: IncomingNotification = JSON.parse(data);
-        this.emit(TOPIC.ON_MESSAGE, notification);
+        this.emit(WebSocketTopic.ON_MESSAGE, notification);
       }
     };
 
@@ -131,7 +131,7 @@ export class WebSocketClient extends EventEmitter {
       this.pingInterval = setInterval(this.sendPing, WebSocketClient.CONFIG.PING_INTERVAL);
 
       if (!this.isOnline) {
-        this.emit(TOPIC.ON_RECONNECT);
+        this.emit(WebSocketTopic.ON_RECONNECT);
         await this.refreshAccessToken();
       }
     };
@@ -147,7 +147,10 @@ export class WebSocketClient extends EventEmitter {
         this.logger.warn(error);
       } else {
         const mappedError = BackendErrorMapper.map(error);
-        this.emit(error instanceof InvalidTokenError ? TOPIC.ON_DISCONNECT : TOPIC.ON_ERROR, mappedError);
+        this.emit(
+          error instanceof InvalidTokenError ? WebSocketTopic.ON_DISCONNECT : WebSocketTopic.ON_ERROR,
+          mappedError
+        );
       }
     }
   }
@@ -157,7 +160,7 @@ export class WebSocketClient extends EventEmitter {
       this.logger.info(`Disconnecting from WebSocket (reason: "${reason}")`);
       // TODO: 'any' can be removed once this issue is resolved:
       // https://github.com/pladaria/reconnecting-websocket/issues/44
-      (this.socket as any).close(CLOSE_EVENT_CODE.NORMAL_CLOSURE, reason, {
+      (this.socket as any).close(CloseEventCode.NORMAL_CLOSURE, reason, {
         delay: 0,
         fastClose: true,
         keepClosed,
@@ -165,7 +168,7 @@ export class WebSocketClient extends EventEmitter {
 
       if (this.pingInterval) {
         clearInterval(this.pingInterval);
-        this.emit(TOPIC.ON_OFFLINE);
+        this.emit(WebSocketTopic.ON_OFFLINE);
       }
     }
 
@@ -180,7 +183,7 @@ export class WebSocketClient extends EventEmitter {
       }
       this.logger.info('Sending ping to WebSocket');
       this.hasUnansweredPing = true;
-      return this.socket.send(PING_MESSAGE.PING);
+      return this.socket.send(PingMessage.PING);
     }
   };
 }

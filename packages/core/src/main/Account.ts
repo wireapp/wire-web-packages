@@ -33,7 +33,7 @@ import {
   UserEvent,
 } from '@wireapp/api-client/dist/commonjs/event/';
 import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/';
-import {TOPIC as WebSocketTopic} from '@wireapp/api-client/dist/commonjs/tcp/';
+import {WebSocketTopic} from '@wireapp/api-client/dist/commonjs/tcp/';
 import * as cryptobox from '@wireapp/cryptobox';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 import {error as StoreEngineError} from '@wireapp/store-engine';

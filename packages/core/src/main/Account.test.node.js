@@ -29,7 +29,7 @@ const {GenericMessage, Text} = require('@wireapp/protocol-messaging');
 const {MemoryEngine} = require('@wireapp/store-engine');
 const {NotificationAPI} = require('@wireapp/api-client/dist/commonjs/notification/');
 const {ValidationUtil} = require('@wireapp/commons');
-const {TOPIC: WebSocketTopic} = require('@wireapp/api-client/dist/commonjs/tcp/');
+const {WebSocketTopic} = require('@wireapp/api-client/dist/commonjs/tcp/');
 const {Server: MockSocketServer} = require('mock-socket');
 
 const BASE_URL = 'mock-backend.wire.com';

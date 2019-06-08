@@ -17,7 +17,7 @@
  *
  */
 
-const {WebSocketClient, TOPIC: WebSocketTopic} = require('@wireapp/api-client/dist/commonjs/tcp/WebSocketClient');
+const {WebSocketClient, WebSocketTopic} = require('@wireapp/api-client/dist/commonjs/tcp/WebSocketClient');
 const {Server: WebSocketServer} = require('ws');
 
 const accessTokenPayload = {
