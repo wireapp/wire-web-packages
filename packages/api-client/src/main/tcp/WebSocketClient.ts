@@ -60,7 +60,7 @@ export class WebSocketClient extends EventEmitter {
   public isOnline: boolean;
 
   public static CONFIG = {
-    PING_INTERVAL: 5000,
+    PING_INTERVAL: TimeUtil.TimeInMillis.SECOND * 5,
   };
 
   public static RECONNECTING_OPTIONS = {
