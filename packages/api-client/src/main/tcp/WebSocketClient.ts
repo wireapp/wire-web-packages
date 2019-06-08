@@ -30,11 +30,11 @@ import * as buffer from '../shims/node/buffer';
 const ReconnectingWebsocket = require('reconnecting-websocket');
 
 export enum WebSocketTopic {
-  ON_DISCONNECT = 'WebSocketClient.TOPIC.ON_DISCONNECT',
-  ON_ERROR = 'WebSocketClient.TOPIC.ON_ERROR',
-  ON_MESSAGE = 'WebSocketClient.TOPIC.ON_MESSAGE',
-  ON_OFFLINE = 'WebSocketClient.TOPIC.ON_OFFLINE',
-  ON_RECONNECT = 'WebSocketClient.TOPIC.ON_RECONNECT',
+  ON_DISCONNECT = 'WebSocketTopic.ON_DISCONNECT',
+  ON_ERROR = 'WebSocketTopic.ON_ERROR',
+  ON_MESSAGE = 'WebSocketTopic.ON_MESSAGE',
+  ON_OFFLINE = 'WebSocketTopic.ON_OFFLINE',
+  ON_RECONNECT = 'WebSocketTopic.ON_RECONNECT',
 }
 
 export enum CloseEventCode {
