@@ -39,15 +39,15 @@ interface DBRecord {
 
 describe('SQLeetEngine', () => {
   const webAssembly = Decoder.fromBase64(SQLeetWebAssembly).asBytes;
-  const STORE_NAME = 'testing';
+  const STORE_NAME = 'wire@production@52c607b1-4362-4b7b-bcb4-5bff6154f8e2@permanent';
   const GENERIC_ENCRYPTION_KEY = 'test';
-  let engine: SQLeetEngine = new SQLeetEngine(webAssembly);
+  let engine: SQLeetEngine | undefined = undefined;
 
-  async function initEngine(scheme: {}, shouldCreateNewEngine = true): Promise<SQLeetEngine> {
-    if (shouldCreateNewEngine) {
-      engine = new SQLeetEngine(webAssembly);
+  async function initEngine(scheme: {}, shouldCreateNewEngine = true, rawDatabase?: string): Promise<SQLeetEngine> {
+    if (!engine || shouldCreateNewEngine) {
+      engine = new SQLeetEngine(webAssembly, scheme, GENERIC_ENCRYPTION_KEY, rawDatabase);
     }
-    await engine.init(STORE_NAME, scheme, GENERIC_ENCRYPTION_KEY);
+    await engine.init(STORE_NAME);
     return engine;
   }
 
@@ -187,14 +187,11 @@ describe('SQLeetEngine', () => {
     });
 
     it('reads a set of records in the database', async () => {
-      const schema: SQLiteDatabaseDefinition<DBRecord> = {
+      const engine = await initEngine({
         users: {
           name: SQLiteType.TEXT,
         },
-      };
-
-      const engine = new SQLeetEngine(webAssembly);
-      await engine.init('', schema, GENERIC_ENCRYPTION_KEY);
+      });
 
       const RECORDS_COUNT = 100;
       for (let i = 0; i < RECORDS_COUNT; i++) {
@@ -207,8 +204,7 @@ describe('SQLeetEngine', () => {
 
   describe('append', () => {
     it('throws an error', async () => {
-      const engine = new SQLeetEngine(webAssembly);
-      await engine.init('', {}, GENERIC_ENCRYPTION_KEY);
+      const engine = await initEngine({});
       try {
         await engine.append('test', '1', 'string');
         fail();
@@ -230,13 +226,11 @@ describe('SQLeetEngine', () => {
     });
 
     it('creates then updates a record to the database', async () => {
-      const schema: SQLiteDatabaseDefinition<DBRecord> = {
+      const engine = await initEngine({
         users: {
           name: SQLiteType.TEXT,
         },
-      };
-
-      await engine.init('', schema, GENERIC_ENCRYPTION_KEY);
+      });
       await engine.updateOrCreate<DBRecord>('users', '1', {name: 'Otto'});
       await engine.updateOrCreate<DBRecord>('users', '1', {name: 'Lion'});
 
@@ -245,13 +239,11 @@ describe('SQLeetEngine', () => {
     });
 
     it('fails if the table name does not exist', async () => {
-      const schema: SQLiteDatabaseDefinition<DBRecord> = {
+      const engine = await initEngine({
         users: {
           name: SQLiteType.TEXT,
         },
-      };
-
-      await engine.init('', schema, GENERIC_ENCRYPTION_KEY);
+      });
 
       try {
         await engine.updateOrCreate<DBRecord>('ffff', '1', {name: 'Otto'});
@@ -279,15 +271,12 @@ describe('SQLeetEngine', () => {
     });
 
     it('updates a record in the database', async () => {
-      const schema: SQLiteDatabaseDefinition<DBRecord> = {
+      const engine = await initEngine({
         users: {
           age: SQLiteType.INTEGER,
           name: SQLiteType.TEXT,
         },
-      };
-
-      const engine = new SQLeetEngine(webAssembly);
-      await engine.init('', schema, GENERIC_ENCRYPTION_KEY);
+      });
       await engine.create<DBRecord>('users', '1', {name: 'Otto', age: 1});
       const result = await engine.read<DBRecord>('users', '1');
       expect(result.name).toBe('Otto');
@@ -299,14 +288,12 @@ describe('SQLeetEngine', () => {
   });
 
   describe('export', () => {
-    it('cannot export if sqlite is not available', async () => {
-      const schema: SQLiteDatabaseDefinition<DBRecord> = {
+    it('cannot export if SQLite is not available', async () => {
+      const engine = await initEngine({
         users: {
           name: SQLiteType.TEXT,
         },
-      };
-
-      await engine.init('', schema, GENERIC_ENCRYPTION_KEY);
+      });
       await engine.updateOrCreate<DBRecord>('users', '1', {name: 'Otto'});
       await engine.purge();
 
@@ -326,8 +313,6 @@ describe('SQLeetEngine', () => {
         },
       };
 
-      const storeName = 'wire@production@52c607b1-4362-4b7b-bcb4-5bff6154f8e2@permanent';
-      const encryptionKey = 'wire';
       const primaryKeyName = 'database';
 
       const indexedDB = new IndexedDBEngine();
@@ -335,17 +320,15 @@ describe('SQLeetEngine', () => {
       indexedDBInstance.version(1).stores({[this.storeName]: ''});
       await indexedDBInstance.open();
 
-      const engine = new SQLeetEngine(webAssembly);
+      const engine = await initEngine(schema);
 
       // Write and save
-      await engine.init(storeName, schema, encryptionKey);
       await engine.create<DBRecord>('users', '1', {name: 'Otto', age: 1});
       await indexedDB.updateOrCreate(this.storeName, primaryKeyName, await engine.export());
 
       // Import and read
       const savedDatabase = await indexedDB.read<string>(this.storeName, primaryKeyName);
-      const engineNew = new SQLeetEngine(webAssembly, savedDatabase);
-      await engineNew.init(storeName, schema, encryptionKey);
+      const engineNew = await initEngine(schema, true, savedDatabase);
       const result = await engineNew.read<DBRecord>('users', '1');
 
       expect(result.age).toBe(1);
