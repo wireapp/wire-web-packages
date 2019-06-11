@@ -33,7 +33,8 @@
   "name": "@wireapp/cryptobox",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox",
   "scripts": {
-    "build": "tsc",
+    "build": "yarn build:node",
+    "build:node": "tsc",
     "clean": "rimraf dist/commonjs",
     "dist": "yarn clean && yarn build",
     "test": "yarn test:node && yarn test:browser",
