@@ -20,5 +20,6 @@
 module.exports = {
   setupFilesAfterEnv: [],
   snapshotSerializers: ['jest-emotion'],
+  testPathIgnorePatterns: ['node_modules', 'dist'],
   verbose: true,
 };
