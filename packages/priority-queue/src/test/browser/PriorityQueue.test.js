@@ -43,15 +43,16 @@ describe('PriorityQueue', () => {
       queue.add(businessLogic);
     });
 
-    it('supports limiting the amount of retries', async () => {
+    it('supports limiting the amount of retries', done => {
       const businessLogic = () => Promise.reject(new Error('Error'));
       const queue = new PriorityQueue({maxRetries: 1});
-      try {
-        await queue.add(businessLogic);
-        fail();
-      } catch (error) {
-        expect(queue.size).toBe(0);
-      }
+      queue
+        .add(businessLogic)
+        .then(done.fail)
+        .catch(() => {
+          expect(queue.size).toBe(0);
+          done();
+        });
     });
   });
 
