@@ -61,11 +61,11 @@
       "packages/*"
     ],
     "nohoist": [
+      "**/@jest/**/*",
       "**/@types/**/*",
-      "**/jest-emotion",
       "**/emotion-normalize",
-      "**/react",
-      "**/@jest/**/*"
+      "**/jest-emotion",
+      "**/react"
     ]
   }
 }
