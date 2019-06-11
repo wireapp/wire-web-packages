@@ -63,6 +63,7 @@
     "nohoist": [
       "**/@types/**/*",
       "**/jest-emotion",
+      "**/emotion-normalize",
       "**/@jest/**/*",
       "**/@emotion/**/*"
     ]
