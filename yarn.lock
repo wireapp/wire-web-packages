@@ -2150,19 +2150,6 @@
   dependencies:
     protobufjs "6.8.8"
 
-"@wireapp/store-engine@2.1.2":
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/@wireapp/store-engine/-/store-engine-2.1.2.tgz#a8c2491dd4476d2cc24cbf9f9f8f9f17068b9b55"
-  integrity sha512-xnlRMF5gLg+ci+d25RK7qpnx342Ghp24olOwA/4xiUvMCdzulJq6u4zMRxqSAyDdpgroSHSeDQnBo88rWnos9g==
-  dependencies:
-    "@types/bro-fs" "0.4.2"
-    "@types/filesystem" "0.0.29"
-    "@types/fs-extra" "7.0.0"
-    "@types/node" "~10"
-    bro-fs "0.5.0"
-    dexie "2.0.4"
-    fs-extra "8.0.1"
-
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@xtuc/ieee754/-/ieee754-1.2.0.tgz#eef014a3145ae477a1cbc00cd1e552336dceb790"

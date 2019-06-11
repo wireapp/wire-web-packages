@@ -6,7 +6,7 @@
     "@babel/preset-typescript": "7.3.3",
     "@types/node": "~10",
     "@types/sql.js": "1.0.1",
-    "@wireapp/store-engine": "2.1.2",
+    "@wireapp/store-engine": "3.0.6",
     "sql.js": "https://github.com/pwnsdx/sqleet.js#a078babcad5e6beda01370466328e47b3c4a2de7",
     "uint32": "0.2.1"
   },
@@ -34,7 +34,8 @@
   "name": "@wireapp/store-engine-sqleet",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet",
   "scripts": {
-    "build": "tsc",
+    "build": "yarn build:node",
+    "build:node": "tsc",
     "clean": "rimraf dist",
     "dist": "yarn clean && yarn build",
     "test": "karma start",
