@@ -142,20 +142,20 @@ describe('APIClient', () => {
         .reply(200, undefined);
     });
 
-    it('creates a context from a successful login', () => {
+    it('creates a context from a successful login', async () => {
       const client = new APIClient();
-      return client.login(loginData).then(context => {
-        expect(context.userId).toBe(accessTokenData.user);
-        expect(client.accessTokenStore.accessToken.access_token).toBe(accessTokenData.access_token);
-      });
+      const context = await client.login(loginData);
+      expect(context.userId).toBe(accessTokenData.user);
+      expect(client.accessTokenStore.accessToken.access_token).toBe(accessTokenData.access_token);
     });
 
-    it('can login after a logout', () => {
+    it('can login after a logout', async () => {
       const client = new APIClient();
-      return client.login(loginData).then(() => client.logout());
+      await client.login(loginData);
+      return await client.logout();
     });
 
-    it('refreshes an access token when it becomes invalid', () => {
+    it('refreshes an access token when it becomes invalid', async () => {
       const queriedHandle = 'webappbot';
 
       nock(baseUrl)
@@ -175,23 +175,13 @@ describe('APIClient', () => {
         .reply(200, accessTokenData);
 
       const client = new APIClient();
-      return client
-        .login(loginData)
-        .then(context => {
-          expect(context.userId).toBe(accessTokenData.user);
-          // Make access token invalid
-          client.accessTokenStore.accessToken.access_token = undefined;
-          /**
-           * Make a backend call. This will fail because the access token was invalidated.
-           * Thus the client needs to run an access token refresh in the background and
-           * automatically retry the backend call right after.
-           */
-          return client.user.api.getUsers({handles: [queriedHandle]});
-        })
-        .then(response => {
-          expect(response.name).toBe(userData.name);
-          expect(client.accessTokenStore.accessToken.access_token).toBeDefined();
-        });
+      const context = await client.login(loginData);
+      expect(context.userId).toBe(accessTokenData.user);
+      // Make access token invalid
+      client.accessTokenStore.accessToken.access_token = undefined;
+      const response = await client.user.api.getUsers({handles: [queriedHandle]});
+      expect(response.name).toBe(userData.name);
+      expect(client.accessTokenStore.accessToken.access_token).toBeDefined();
     });
   });
 
@@ -267,7 +257,7 @@ describe('APIClient', () => {
         .reply(200, accessTokenData);
     });
 
-    it('automatically gets an access token after registration', () => {
+    it('automatically gets an access token after registration', async () => {
       const client = new APIClient({
         schemaCallback: db => {
           db.version(1).stores({
@@ -276,10 +266,9 @@ describe('APIClient', () => {
         },
       });
 
-      return client.register(registerData).then(context => {
-        expect(context.userId).toBe(registerData.id);
-        expect(client.accessTokenStore.accessToken.access_token).toBe(accessTokenData.access_token);
-      });
+      const context = await client.register(registerData);
+      expect(context.userId).toBe(registerData.id);
+      expect(client.accessTokenStore.accessToken.access_token).toBe(accessTokenData.access_token);
     });
   });
 });
