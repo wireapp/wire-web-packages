@@ -160,17 +160,15 @@ describe('store.TransientStore', () => {
 
     afterEach(() => jasmine.clock().uninstall());
 
-    it('publishes an event when an entity expires.', done => {
+    it('publishes an event when an entity expires.', async done => {
       store.on(TransientStore.TOPIC.EXPIRED, expiredBundle => {
         expect(expiredBundle.payload).toBe(entity);
         expect(expiredBundle.primaryKey).toBe(primaryKey);
         done();
       });
 
-      store
-        .set(primaryKey, entity, minuteInMillis)
-        .then(() => jasmine.clock().tick(minuteInMillis + 1))
-        .catch(error => done.fail(error));
+      await store.set(primaryKey, entity, minuteInMillis);
+      jasmine.clock().tick(minuteInMillis + 1);
     });
 
     it('deletes expired entities.', async () => {

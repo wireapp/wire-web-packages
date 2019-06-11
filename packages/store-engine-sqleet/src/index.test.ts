@@ -256,18 +256,17 @@ describe('SQLeetEngine', () => {
 
   describe('update', () => {
     Object.entries(updateSpec).map(([description, testFunction]) => {
-      it(description, async done =>
-        testFunction(
-          done,
-          await initEngine({
-            'the-simpsons': {
-              age: SQLiteType.INTEGER,
-              name: SQLiteType.TEXT,
-              size: SQLiteType.JSON,
-            },
-          })
-        )
-      );
+      it(description, async () => {
+        const engine = await initEngine({
+          'the-simpsons': {
+            age: SQLiteType.INTEGER,
+            name: SQLiteType.TEXT,
+            size: SQLiteType.JSON,
+          },
+        });
+
+        await testFunction(engine);
+      });
     });
 
     it('updates a record in the database', async () => {

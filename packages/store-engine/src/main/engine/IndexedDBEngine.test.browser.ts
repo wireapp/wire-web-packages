@@ -163,7 +163,7 @@ describe('IndexedDBEngine', () => {
 
   describe('purge', () => {
     Object.entries(purgeSpec).map(([description, testFunction]) => {
-      it(description, done => testFunction(done, engine, initEngine));
+      it(description, () => testFunction(engine, initEngine));
     });
   });
 
