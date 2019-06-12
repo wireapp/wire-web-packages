@@ -24,6 +24,7 @@ import {
   RecordTypeError,
   UnsupportedError,
 } from '@wireapp/store-engine/dist/commonjs/engine/error/';
+import {zipObject} from 'lodash';
 import initSqlJs from 'sql.js';
 
 import {
@@ -239,9 +240,18 @@ export class SQLeetEngine implements CRUDEngine {
     const table = this.schema[tableName];
     const columns = getFormattedColumnsFromTableName(table, true);
     const escapedTableName = escape(tableName);
+
     const selectRecordStatement = `SELECT ${columns} FROM ${escapedTableName};`;
-    const records = this.db.exec(selectRecordStatement);
-    return records[0].values;
+    let records = this.db.exec(selectRecordStatement);
+
+    // Ensure the record is not empty
+    if (records && records[0]) {
+      records = records[0];
+    } else {
+      return [];
+    }
+
+    return records.values.map((record: any[]) => zipObject(records.columns, record));
   }
 
   async readAllPrimaryKeys(tableName: string): Promise<string[]> {
