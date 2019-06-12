@@ -10,8 +10,11 @@
   },
   "description": "Wire's internal license collection tool",
   "devDependencies": {
+    "@types/fs-extra": "7.0.0",
     "@types/node": "~10",
-    "@types/npm-registry-package-info": "1.0.0"
+    "@types/npm-registry-package-info": "1.0.0",
+    "rimraf": "2.6.3",
+    "typescript": "3.5.1"
   },
   "files": [
     "dist"
@@ -27,5 +30,5 @@
     "dist": "yarn clean && yarn build",
     "test": "exit 0"
   },
-  "version": "0.1.20"
+  "version": "0.1.22"
 }

@@ -17,5 +17,14 @@
  *
  */
 
-export * from './CollectorOptions';
-export * from './LicenseCollector';
+import React from 'react';
+import {matchComponent} from '../test/testUtil';
+import {Heading} from './Heading';
+
+describe('"Heading"', () => {
+  it('renders H1', () => matchComponent(<Heading>H1</Heading>));
+  it('renders H1', () => matchComponent(<Heading level="1">H1</Heading>));
+  it('renders H2', () => matchComponent(<Heading level="2">H2</Heading>));
+  it('renders H3', () => matchComponent(<Heading level="3">H3</Heading>));
+  it('renders H4', () => matchComponent(<Heading level="4">H4</Heading>));
+});

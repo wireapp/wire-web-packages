@@ -5,19 +5,19 @@
     "eslint-config-prettier": "4.3.0",
     "eslint-plugin-import": "2.17.3",
     "eslint-plugin-jasmine": "2.10.1",
-    "eslint-plugin-jsdoc": "7.2.3",
+    "eslint-plugin-jsdoc": "8.0.1",
     "eslint-plugin-no-unsanitized": "3.0.2",
     "eslint-plugin-prettier": "3.1.0",
     "eslint-plugin-react": "7.13.0",
-    "husky": "2.4.0",
-    "lerna": "3.14.1",
+    "husky": "2.4.1",
+    "lerna": "3.15.0",
     "lint-staged": "8.2.0",
-    "prettier": "1.18.0",
+    "prettier": "1.18.2",
     "tslint": "5.17.0",
     "tslint-config-prettier": "1.18.0",
     "tslint-plugin-prettier": "2.0.1",
     "tslint-react": "4.0.0",
-    "tslint-react-hooks": "2.1.0"
+    "tslint-react-hooks": "2.1.1"
   },
   "engines": {
     "node": ">= 10.9",
@@ -56,7 +56,16 @@
     "test": "yarn && yarn lint:js && yarn lint:ts && yarn lint:other && node bin/testUpdated.js",
     "test:all": "yarn && yarn dist && yarn lint && lerna run test"
   },
-  "workspaces": [
-    "packages/*"
-  ]
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/@jest/**/*",
+      "**/@types/**/*",
+      "**/emotion-normalize",
+      "**/jest-emotion",
+      "**/react"
+    ]
+  }
 }

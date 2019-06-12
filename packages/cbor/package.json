@@ -7,7 +7,7 @@
     "jasmine": "3.4.0",
     "rimraf": "2.6.3",
     "webpack": "4.33.0",
-    "webpack-cli": "3.3.2"
+    "webpack-cli": "3.3.4"
   },
   "files": [
     "dist"
@@ -32,5 +32,5 @@
     "test:browser": "exit 0",
     "test:node": "jasmine --config=jasmine.json"
   },
-  "version": "4.0.6"
+  "version": "4.0.9"
 }

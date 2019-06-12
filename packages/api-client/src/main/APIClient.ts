@@ -36,7 +36,7 @@ import {NotificationAPI} from './notification/';
 import * as ObfuscationUtil from './obfuscation/';
 import {SelfAPI} from './self/';
 import {retrieveCookie} from './shims/node/cookie';
-import {WebSocketClient} from './tcp/';
+import {WebSocketClient, WebSocketTopic} from './tcp/';
 import {
   IdentityProviderAPI,
   LegalHoldAPI,
@@ -50,6 +50,10 @@ import {UserAPI} from './user/';
 
 const {version}: {version: string} = require('../../package.json');
 
+export enum APIClientTopic {
+  ON_LOGOUT = 'APIClientTopic.ON_LOGOUT',
+}
+
 const defaultConfig: Config = {
   store: new MemoryEngine(),
   urls: Backend.PRODUCTION,
@@ -57,7 +61,6 @@ const defaultConfig: Config = {
 
 export class APIClient extends EventEmitter {
   private readonly logger: logdown.Logger;
-
   private readonly STORE_NAME_PREFIX = 'wire';
 
   // APIs
@@ -89,9 +92,7 @@ export class APIClient extends EventEmitter {
   public config: Config;
 
   public static BACKEND = Backend;
-  public static TOPIC = {
-    ON_LOGOUT: 'APIClient.TOPIC.ON_LOGOUT',
-  };
+  public static TOPIC = APIClientTopic;
   public static VERSION = version;
 
   constructor(config?: Config) {
@@ -104,12 +105,12 @@ export class APIClient extends EventEmitter {
     });
 
     const httpClient = new HttpClient(this.config.urls.rest, this.accessTokenStore, this.config.store);
-
     const webSocket = new WebSocketClient(this.config.urls.ws, httpClient);
-    webSocket.on(WebSocketClient.TOPIC.ON_DISCONNECT, async (error: InvalidTokenError) => {
+
+    webSocket.on(WebSocketTopic.ON_DISCONNECT, async (error: InvalidTokenError) => {
       this.logger.warn(`Cannot renew access token because cookie is invalid: ${error.message}`, error);
       await this.logout();
-      this.emit(APIClient.TOPIC.ON_LOGOUT, error);
+      this.emit(APIClientTopic.ON_LOGOUT, error);
     });
 
     this.transport = {

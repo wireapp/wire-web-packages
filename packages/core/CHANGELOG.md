@@ -3,6 +3,89 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.3.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.3.8...@wireapp/core@12.3.9) (2019-06-12)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [12.3.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.3.7...@wireapp/core@12.3.8) (2019-06-12)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [12.3.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.3.6...@wireapp/core@12.3.7) (2019-06-12)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [12.3.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.3.5...@wireapp/core@12.3.6) (2019-06-12)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [12.3.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.3.4...@wireapp/core@12.3.5) (2019-06-12)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [12.3.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.3.3...@wireapp/core@12.3.4) (2019-06-12)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [12.3.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.3.2...@wireapp/core@12.3.3) (2019-06-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [12.3.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.3.1...@wireapp/core@12.3.2) (2019-06-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [12.3.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.3.0...@wireapp/core@12.3.1) (2019-06-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [12.3.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.2.0...@wireapp/core@12.3.0) (2019-06-11)
+
+
+### Features
+
+* **api-client:** Detect WebSocket connection changes ([#1910](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1910)) ([f9e661f](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/f9e661f))
+
+
+
+
+
 # [12.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.1.3...@wireapp/core@12.2.0) (2019-06-07)
 
 

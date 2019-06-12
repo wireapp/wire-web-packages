@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.0.8...@wireapp/store-engine@3.0.9) (2019-06-12)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [3.0.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.0.7...@wireapp/store-engine@3.0.8) (2019-06-12)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [3.0.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.0.6...@wireapp/store-engine@3.0.7) (2019-06-11)
+
+
+### Bug Fixes
+
+* **store-engine-sqleet,store-engine-fs:** Streamline dependencies ([#1924](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/1924)) ([93f3a73](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/93f3a73))
+
+
+
+
+
+## [3.0.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.0.5...@wireapp/store-engine@3.0.6) (2019-06-11)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
 ## [3.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.0.4...@wireapp/store-engine@3.0.5) (2019-06-07)
 
 **Note:** Version bump only for package @wireapp/store-engine
