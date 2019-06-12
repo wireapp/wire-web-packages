@@ -22,6 +22,7 @@ import {CRUDEngine} from '../engine';
 const TABLE_NAME = 'the-simpsons';
 
 interface DomainEntity {
+  key: string;
   firstName: string;
   lastName: string;
 }
@@ -57,6 +58,12 @@ export const readAllSpec = {
     await engine.create(TABLE_NAME, marge.primaryKey, marge.entity);
     const records = await engine.readAll<DomainEntity>(TABLE_NAME);
     expect(records.length).toBe(3);
-    expect(records).toEqual(jasmine.arrayContaining([homer.entity, lisa.entity, marge.entity]));
+    expect(records).toEqual(
+      jasmine.arrayContaining([
+        {key: homer.primaryKey, ...homer.entity},
+        {key: lisa.primaryKey, ...lisa.entity},
+        {key: marge.primaryKey, ...marge.entity},
+      ])
+    );
   },
 };
