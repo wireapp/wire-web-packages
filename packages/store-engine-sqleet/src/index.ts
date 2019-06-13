@@ -40,6 +40,7 @@ import {
 
 declare const WebAssembly: any;
 
+// https://lowrey.me/lodash-zipobject-in-es6-javascript/
 const zipObject = (props: any[], values: any[]) =>
   props.reduce((prev, prop, i) => ({...prev, ...{[prop]: values[i]}}), {});
 
