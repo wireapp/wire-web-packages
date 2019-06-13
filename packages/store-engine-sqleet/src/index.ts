@@ -240,7 +240,7 @@ export class SQLeetEngine implements CRUDEngine {
 
   async readAll<T>(tableName: string): Promise<T[]> {
     const table = this.schema[tableName];
-    const columns = getFormattedColumnsFromTableName(table, true);
+    const columns = getFormattedColumnsFromTableName(table);
     const escapedTableName = escape(tableName);
 
     const selectRecordStatement = `SELECT ${columns} FROM ${escapedTableName};`;
