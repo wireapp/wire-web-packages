@@ -24,7 +24,6 @@ import {
   RecordTypeError,
   UnsupportedError,
 } from '@wireapp/store-engine/dist/commonjs/engine/error/';
-import {zipObject} from 'lodash';
 import initSqlJs from 'sql.js';
 
 import {
@@ -40,6 +39,9 @@ import {
 } from './SchemaConverter';
 
 declare const WebAssembly: any;
+
+const zipObject = (props: any[], values: any[]) =>
+  props.reduce((prev, prop, i) => ({...prev, ...{[prop]: values[i]}}), {});
 
 export class SQLeetEngine implements CRUDEngine {
   private db: any;

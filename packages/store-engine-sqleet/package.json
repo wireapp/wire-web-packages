@@ -7,7 +7,6 @@
     "@types/lodash": "4.14.134",
     "@types/sql.js": "1.0.1",
     "@wireapp/store-engine": "3.0.9",
-    "lodash": "4.17.11",
     "sql.js": "https://github.com/pwnsdx/sqleet.js#a078babcad5e6beda01370466328e47b3c4a2de7",
     "uint32": "0.2.1"
   },
