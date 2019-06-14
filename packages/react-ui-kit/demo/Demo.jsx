@@ -50,7 +50,7 @@ import {DemoTypography} from './DemoTypography';
 import Helmet from 'react-helmet';
 import {avatarBase64} from './avatarImage';
 
-export const Demo = () => {
+const Demo = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [showFirstDropdown, setShowFirstDropdown] = useState(false);
   const [showSecondDropdown, setShowSecondDropdown] = useState(false);
@@ -216,3 +216,8 @@ export const Demo = () => {
     </StyledApp>
   );
 };
+
+Demo.displayName = 'Demo';
+
+// eslint-disable-next-line import/no-default-export
+export default Demo;
