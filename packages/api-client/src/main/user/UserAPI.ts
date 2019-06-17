@@ -19,7 +19,7 @@
 
 import {AxiosRequestConfig} from 'axios';
 
-import {chunk, flatten} from '@wireapp/commons/dist/commonjs/util/ArrayUtil';
+import {chunk, flatten, removeDuplicates} from '@wireapp/commons/dist/commonjs/util/ArrayUtil';
 import {ClientPreKey, PreKeyBundle} from '../auth/';
 import {PublicClient} from '../client/';
 import {UserClients} from '../conversation/UserClients';
@@ -263,11 +263,13 @@ export class UserAPI {
     const {handles, ids} = parameters;
 
     if (handles) {
-      const handleChunks = chunk(handles, limit);
+      const uniqueHandles = removeDuplicates(handles);
+      const handleChunks = chunk(uniqueHandles, limit);
       const tasks = handleChunks.map(handleChunk => this._getUsers({handles: handleChunk}));
       return Promise.all(tasks).then(flatten);
     } else if (ids) {
-      const idChunks = chunk(ids, limit);
+      const uniqueIds = removeDuplicates(ids);
+      const idChunks = chunk(uniqueIds, limit);
       const tasks = idChunks.map(idChunk => this._getUsers({ids: idChunk}));
       return Promise.all(tasks).then(flatten);
     } else {
