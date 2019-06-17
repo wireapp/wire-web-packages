@@ -256,8 +256,10 @@ export class UserAPI {
    * @param parameters Multiple user's handles or IDs
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/users
    */
+  public async getUsers(parameters: {ids: string[]}, limit?: number): Promise<User[]>;
+  public async getUsers(parameters: {handles: string[]}, limit?: number): Promise<User[]>;
   public async getUsers(
-    parameters: {handles?: string[]; ids?: string[]},
+    parameters: {ids?: string[]; handles?: string[]},
     limit: number = UserAPI.DEFAULT_USERS_CHUNK_SIZE
   ): Promise<User[]> {
     const {handles, ids} = parameters;
