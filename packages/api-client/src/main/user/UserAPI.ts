@@ -270,7 +270,7 @@ export class UserAPI {
       const tasks = handleChunks.map(handleChunk => this._getUsers({handles: handleChunk}));
       return Promise.all(tasks).then(flatten);
     }
-    
+
     if (ids && ids.length) {
       const uniqueIds = removeDuplicates(ids);
       const idChunks = chunk(uniqueIds, limit);
