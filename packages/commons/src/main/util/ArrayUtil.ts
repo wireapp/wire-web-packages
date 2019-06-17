@@ -40,3 +40,5 @@ export function getIntersection<T>(array1: T[], array2: T[]): T[] {
 export function removeDuplicates<T>(array: T[]): T[] {
   return Array.from(new Set(array));
 }
+
+export const flatten = <T>(arrays: T[][]): T[] => ([] as T[]).concat(...arrays);
