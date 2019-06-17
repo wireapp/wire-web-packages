@@ -277,6 +277,7 @@ export class UserAPI {
       const tasks = idChunks.map(idChunk => this._getUsers({ids: idChunk}));
       return Promise.all(tasks).then(flatten);
     }
+
     return [];
   }
 
