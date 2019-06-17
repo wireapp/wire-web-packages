@@ -272,9 +272,8 @@ export class UserAPI {
       const idChunks = chunk(uniqueIds, limit);
       const tasks = idChunks.map(idChunk => this._getUsers({ids: idChunk}));
       return Promise.all(tasks).then(flatten);
-    } else {
-      return [];
     }
+    return [];
   }
 
   public async _getUsers(parameters: {handles?: string[]; ids?: string[]}): Promise<User[]> {
