@@ -300,26 +300,14 @@ export class UserAPI {
   }
 
   /**
-   * List users.
+   * DEPRECATED: List users.
+   * @deprecated
    * @param userIds Multiple user's IDs
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/users
    */
   public async getUsersByIds(userIds: string[]): Promise<User[]> {
     const maxChunkSize = 100;
-    let allUsers: User[] = [];
-
-    for (let index = 0; index < userIds.length; index += maxChunkSize) {
-      const requestChunk = userIds.slice(index, index + maxChunkSize);
-      if (requestChunk.length) {
-        const conversationChunk = await this.getUsers({ids: requestChunk});
-
-        if (conversationChunk.length) {
-          allUsers = allUsers.concat(conversationChunk);
-        }
-      }
-    }
-
-    return allUsers;
+    return this.getUsers({ids: userIds}, maxChunkSize);
   }
 
   /**
