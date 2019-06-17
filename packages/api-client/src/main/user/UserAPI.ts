@@ -19,6 +19,7 @@
 
 import {AxiosRequestConfig} from 'axios';
 
+import {chunk} from '@wireapp/commons/dist/commonjs/util/ArrayUtil';
 import {ClientPreKey, PreKeyBundle} from '../auth/';
 import {PublicClient} from '../client/';
 import {UserClients} from '../conversation/UserClients';
@@ -38,6 +39,7 @@ import {
 } from '../user/';
 
 export class UserAPI {
+  static DEFAULT_USERS_CHUNK_SIZE = 50;
   static readonly URL = {
     ACTIVATE: '/activate',
     CALLS: '/calls',
@@ -254,7 +256,26 @@ export class UserAPI {
    * @param parameters Multiple user's handles or IDs
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/users
    */
-  public getUsers(parameters: {handles?: string[]; ids?: string[]}): Promise<User[]> {
+  public async getUsers(
+    parameters: {handles?: string[]; ids?: string[]},
+    limit: number = UserAPI.DEFAULT_USERS_CHUNK_SIZE
+  ): Promise<User[]> {
+    const {handles, ids} = parameters;
+
+    if (handles) {
+      const handleChunks = chunk(handles, limit);
+      const tasks = handleChunks.map(handleChunk => this._getUsers({handles: handleChunk}));
+      return (await Promise.all(tasks)).flat();
+    } else if (ids) {
+      const idChunks = chunk(ids, limit);
+      const tasks = idChunks.map(idChunk => this._getUsers({ids: idChunk}));
+      return (await Promise.all(tasks)).flat();
+    } else {
+      return [];
+    }
+  }
+
+  public async _getUsers(parameters: {handles?: string[]; ids?: string[]}): Promise<User[]> {
     const config: AxiosRequestConfig = {
       method: 'get',
       params: {},
