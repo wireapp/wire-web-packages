@@ -39,7 +39,7 @@ import {
 } from '../user/';
 
 export class UserAPI {
-  static DEFAULT_USERS_CHUNK_SIZE = 50;
+  static readonly DEFAULT_USERS_CHUNK_SIZE = 50;
   static readonly URL = {
     ACTIVATE: '/activate',
     CALLS: '/calls',
