@@ -278,6 +278,8 @@ export class UserAPI {
     return [];
   }
 
+  public async _getUsers(parameters: {ids: string[]}): Promise<User[]>;
+  public async _getUsers(parameters: {handles: string[]}): Promise<User[]>;
   public async _getUsers(parameters: {handles?: string[]; ids?: string[]}): Promise<User[]> {
     const config: AxiosRequestConfig = {
       method: 'get',
