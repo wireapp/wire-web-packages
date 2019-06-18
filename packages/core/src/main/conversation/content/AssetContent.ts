@@ -18,7 +18,13 @@
  */
 
 import {AbortReason, AssetTransferState} from '../../conversation/';
-import {FileContent, FileMetaDataContent, ImageContent, LegalHoldStatus} from '../../conversation/content/';
+import {
+  AudioContent,
+  FileContent,
+  FileMetaDataContent,
+  ImageContent,
+  LegalHoldStatus,
+} from '../../conversation/content/';
 import {EncryptedAssetUploaded} from '../../cryptography/';
 
 // https://github.com/wireapp/generic-message-proto/blob/v1.20.0/proto/messages.proto#L201
@@ -67,11 +73,24 @@ export interface AudioMetaData {
   loudness?: Uint8Array | Buffer;
 }
 
+export interface AudioAssetMetaDataContent {
+  expectsReadConfirmation?: boolean;
+  legalHoldStatus?: LegalHoldStatus;
+  metaData: AudioMetaData;
+}
+
 export interface Preview {
   mimeType: string;
   size: number;
   remote?: RemoteData;
   image?: ImageMetaData;
+}
+
+export interface AudioAssetContent {
+  expectsReadConfirmation?: boolean;
+  asset: EncryptedAssetUploaded;
+  audio: AudioContent;
+  legalHoldStatus?: LegalHoldStatus;
 }
 
 export interface ImageAssetContent {

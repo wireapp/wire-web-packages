@@ -39,6 +39,7 @@ export interface PayloadBundle {
 export enum PayloadBundleType {
   ASSET = 'PayloadBundleType.ASSET',
   ASSET_ABORT = 'PayloadBundleType.ASSET_ABORT',
+  ASSET_AUDIO = 'PayloadBundleType.ASSET_AUDIO',
   ASSET_IMAGE = 'PayloadBundleType.ASSET_IMAGE',
   ASSET_META = 'PayloadBundleType.ASSET_META',
   AVAILABILITY = 'PayloadBundleType.AVAILABILITY',

@@ -17,25 +17,9 @@
  *
  */
 
-export enum GenericMessageType {
-  ASSET = 'asset',
-  ASSET_ABORT = 'assetAbort',
-  ASSET_META = 'assetMeta',
-  AUDIO = 'audio',
-  AVAILABILITY = 'availability',
-  CALLING = 'calling',
-  CLEARED = 'cleared',
-  CLIENT_ACTION = 'clientAction',
-  CONFIRMATION = 'confirmation',
-  DELETED = 'deleted',
-  EDITED = 'edited',
-  EPHEMERAL = 'ephemeral',
-  EXTERNAL = 'external',
-  HIDDEN = 'hidden',
-  IMAGE = 'image',
-  KNOCK = 'knock',
-  LAST_READ = 'lastRead',
-  LOCATION = 'location',
-  REACTION = 'reaction',
-  TEXT = 'text',
+export interface AudioContent {
+  data: Buffer;
+  durationInMillis?: number | Long;
+  normalizedLoudness?: Uint8Array;
+  type: string;
 }

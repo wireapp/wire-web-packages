@@ -22,6 +22,8 @@ import {ClientAction, Confirmation} from '@wireapp/protocol-messaging';
 import {AbortReason, PayloadBundleState, PayloadBundleType} from '..';
 import {AssetService} from '../AssetService';
 import {
+  AudioAssetContent,
+  AudioContent,
   ClientActionContent,
   ConfirmationContent,
   EditedTextContent,
@@ -41,6 +43,7 @@ import {
   TextContent,
 } from '../content';
 import {
+  AudioAssetMessageOutgoing,
   ConfirmationMessage,
   EditedTextMessage,
   FileAssetAbortMessage,
@@ -59,6 +62,33 @@ const UUID = require('pure-uuid');
 
 export class MessageBuilder {
   constructor(private readonly apiClient: APIClient, private readonly assetService: AssetService) {}
+
+  public async createAudio(
+    conversationId: string,
+    audio: AudioContent,
+    messageId = MessageBuilder.createId(),
+    expectsReadConfirmation?: boolean,
+    legalHoldStatus?: LegalHoldStatus
+  ): Promise<AudioAssetMessageOutgoing> {
+    const imageAsset = await this.assetService.uploadAudioAsset(audio);
+
+    const content: AudioAssetContent = {
+      asset: imageAsset,
+      audio,
+      expectsReadConfirmation,
+      legalHoldStatus,
+    };
+
+    return {
+      content,
+      conversation: conversationId,
+      from: this.getSelfUserId(),
+      id: messageId,
+      state: PayloadBundleState.OUTGOING_UNSENT,
+      timestamp: Date.now(),
+      type: PayloadBundleType.ASSET_AUDIO,
+    };
+  }
 
   public createEditedText(
     conversationId: string,

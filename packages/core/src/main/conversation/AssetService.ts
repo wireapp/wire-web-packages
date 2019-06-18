@@ -19,7 +19,7 @@
 
 import {APIClient} from '@wireapp/api-client';
 import {AssetRetentionPolicy} from '@wireapp/api-client/dist/commonjs/asset/AssetRetentionPolicy';
-import {FileContent, ImageContent} from '../conversation/content/';
+import {AudioContent, FileContent, ImageContent} from '../conversation/content/';
 import {EncryptedAssetUploaded} from '../cryptography/';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
 
@@ -42,6 +42,10 @@ export class AssetService {
       sha256,
       token,
     };
+  }
+
+  public uploadAudioAsset(audio: AudioContent, options?: AssetOptions): Promise<EncryptedAssetUploaded> {
+    return this.postAsset(audio.data, options);
   }
 
   public uploadImageAsset(image: ImageContent, options?: AssetOptions): Promise<EncryptedAssetUploaded> {

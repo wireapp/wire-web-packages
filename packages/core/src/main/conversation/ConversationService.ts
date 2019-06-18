@@ -77,6 +77,8 @@ import * as AssetCryptography from '../cryptography/AssetCryptography.node';
 
 import {APIClient} from '@wireapp/api-client';
 import {
+  AudioAssetMessage,
+  AudioAssetMessageOutgoing,
   ClearConversationMessage,
   ConfirmationMessage,
   DeleteMessage,
@@ -449,6 +451,61 @@ export class ConversationService {
 
     return {
       ...payloadBundle,
+      messageTimer: this.messageTimer.getMessageTimer(payloadBundle.conversation),
+      state: PayloadBundleState.OUTGOING_SENT,
+    };
+  }
+
+  private async sendAudio(payloadBundle: AudioAssetMessageOutgoing, userIds?: string[]): Promise<AudioAssetMessage> {
+    if (!payloadBundle.content) {
+      throw new Error('No content for sendImage provided.');
+    }
+
+    const {asset, audio, expectsReadConfirmation, legalHoldStatus} = payloadBundle.content;
+
+    const audioMetadata = Asset.AudioMetaData.create({
+      durationInMillis: audio.durationInMillis,
+      normalizedLoudness: audio.normalizedLoudness,
+    });
+
+    const original = Asset.Original.create({
+      [GenericMessageType.AUDIO]: audioMetadata,
+      mimeType: audio.type,
+      name: null,
+      size: audio.data.length,
+    });
+
+    const remoteData = Asset.RemoteData.create({
+      assetId: asset.key,
+      assetToken: asset.token,
+      otrKey: asset.keyBytes,
+      sha256: asset.sha256,
+    });
+
+    const assetMessage = Asset.create({
+      expectsReadConfirmation,
+      legalHoldStatus,
+      original,
+      uploaded: remoteData,
+    });
+
+    assetMessage.status = AssetTransferState.UPLOADED;
+
+    let genericMessage = GenericMessage.create({
+      [GenericMessageType.ASSET]: assetMessage,
+      messageId: payloadBundle.id,
+    });
+
+    const expireAfterMillis = this.messageTimer.getMessageTimer(payloadBundle.conversation);
+    if (expireAfterMillis > 0) {
+      genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
+    }
+
+    await this.sendGenericMessage(this.clientID, payloadBundle.conversation, genericMessage, userIds);
+
+    return {
+      ...payloadBundle,
+      content: assetMessage as AssetContent,
       messageTimer: this.messageTimer.getMessageTimer(payloadBundle.conversation),
       state: PayloadBundleState.OUTGOING_SENT,
     };
@@ -900,6 +957,8 @@ export class ConversationService {
         return this.sendFileData(payloadBundle, userIds);
       case PayloadBundleType.ASSET_ABORT:
         return this.sendFileAbort(payloadBundle, userIds);
+      case PayloadBundleType.ASSET_AUDIO:
+        return this.sendAudio(payloadBundle as AudioAssetMessageOutgoing, userIds);
       case PayloadBundleType.ASSET_META:
         return this.sendFileMetaData(payloadBundle, userIds);
       case PayloadBundleType.ASSET_IMAGE:

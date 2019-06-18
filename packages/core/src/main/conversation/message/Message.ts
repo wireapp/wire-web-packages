@@ -19,6 +19,8 @@
 
 import {
   AssetContent,
+  AudioAssetContent,
+  AudioAssetMetaDataContent,
   ClearedContent,
   ClientActionContent,
   ConfirmationContent,
@@ -56,9 +58,25 @@ export interface FileAssetMetaDataMessage extends PayloadBundle {
   type: PayloadBundleType.ASSET_META;
 }
 
+export interface AudioAssetMetaDataMessage extends PayloadBundle {
+  content: AudioAssetMetaDataContent;
+  type: PayloadBundleType.ASSET_META;
+}
+
 export interface FileAssetAbortMessage extends PayloadBundle {
   content: FileAssetAbortContent;
   type: PayloadBundleType.ASSET_ABORT;
+}
+
+// TODO Merge AudioAssetMessageOutgoing & AudioAssetMessage
+export interface AudioAssetMessageOutgoing extends PayloadBundle {
+  content: AudioAssetContent;
+  type: PayloadBundleType.ASSET_AUDIO;
+}
+
+export interface AudioAssetMessage extends PayloadBundle {
+  content: AssetContent;
+  type: PayloadBundleType.ASSET_AUDIO;
 }
 
 // TODO Merge ImageAssetMessageOutgoing & ImageAssetMessage
@@ -113,6 +131,8 @@ export interface DeleteMessage extends PayloadBundle {
 }
 
 export type Message =
+  | AudioAssetMessage
+  | AudioAssetMessageOutgoing
   | ClearConversationMessage
   | ConfirmationMessage
   | DeleteMessage

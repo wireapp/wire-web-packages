@@ -635,6 +635,7 @@ export class Account extends EventEmitter {
 
       if (data) {
         switch (data.type) {
+          case PayloadBundleType.ASSET_AUDIO:
           case PayloadBundleType.ASSET_IMAGE:
           case PayloadBundleType.CLEARED:
           case PayloadBundleType.CLIENT_ACTION:
