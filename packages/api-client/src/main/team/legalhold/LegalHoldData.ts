@@ -35,7 +35,7 @@ export interface LegalHoldDataUnconfigured {
 
 export interface LegalHoldDataConfigured {
   enabled: LegalHoldStatus.ENABLED_CONFIGURED;
-  settings: LegalHoldSettings;
+  info: LegalHoldSettings;
 }
 
 export type LegalHoldData = LegalHoldDataUnconfigured | LegalHoldDataConfigured;
