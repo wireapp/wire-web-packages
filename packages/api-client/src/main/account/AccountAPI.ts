@@ -21,8 +21,6 @@ import {AxiosRequestConfig} from 'axios';
 import {HttpClient} from '../http';
 
 export class AccountAPI {
-  constructor(private readonly client: HttpClient) {}
-
   static URL = {
     ACTIVATE: '/activate',
     DELETE: '/delete',
@@ -30,6 +28,7 @@ export class AccountAPI {
     PASSWORD_RESET_COMPLETE: 'complete',
     PROVIDER: '/provider',
   };
+  constructor(private readonly client: HttpClient) {}
 
   /**
    * Delete account

@@ -57,15 +57,6 @@ export class FileSystemEngine implements CRUDEngine {
     return fileSystem;
   }
 
-  private createDirectoryPath(tableName: string): string {
-    return `${this.storeName}/${tableName}`;
-  }
-
-  private createFilePath(tableName: string, primaryKey: string): string {
-    const directory = this.createDirectoryPath(tableName);
-    return `${directory}/${primaryKey}${this.config.fileExtension}`;
-  }
-
   async append(tableName: string, primaryKey: string, additions: string): Promise<string> {
     const filePath = this.createFilePath(tableName, primaryKey);
     const record = await this.read(tableName, primaryKey);
@@ -202,5 +193,14 @@ export class FileSystemEngine implements CRUDEngine {
         throw error;
       })
       .then(() => primaryKey);
+  }
+
+  private createDirectoryPath(tableName: string): string {
+    return `${this.storeName}/${tableName}`;
+  }
+
+  private createFilePath(tableName: string, primaryKey: string): string {
+    const directory = this.createDirectoryPath(tableName);
+    return `${directory}/${primaryKey}${this.config.fileExtension}`;
   }
 }
