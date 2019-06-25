@@ -17,8 +17,49 @@
  *
  */
 
-describe('', () => {
-  it('works', () => {
-    expect('a').toBe('a');
+import {CRUDEngine} from '@wireapp/store-engine';
+import {appendSpec} from '@wireapp/store-engine/dist/commonjs/test/appendSpec';
+import Dexie from 'dexie';
+import {IndexedDBEngine} from './index';
+
+describe('IndexedDBEngine', () => {
+  const STORE_NAME = 'store-name';
+
+  let engine: CRUDEngine;
+
+  async function initEngine(shouldCreateNewEngine = true): Promise<IndexedDBEngine | CRUDEngine> {
+    const storeEngine = shouldCreateNewEngine ? new IndexedDBEngine() : engine;
+    const db = await storeEngine.init(STORE_NAME);
+    db.version(1).stores({
+      'the-simpsons': ',firstName,lastName',
+    });
+    await db.open();
+    return storeEngine;
+  }
+
+  beforeEach(async () => {
+    engine = await initEngine();
+  });
+
+  afterEach(done => {
+    if (engine && engine.db) {
+      engine.db.close();
+      const deleteRequest = window.indexedDB.deleteDatabase(STORE_NAME);
+      deleteRequest.onsuccess = () => done();
+    }
+  });
+
+  describe('init', () => {
+    it('resolves with the database instance to which the records will be saved.', async () => {
+      engine = new IndexedDBEngine();
+      const instance = await engine.init(STORE_NAME);
+      expect(instance instanceof Dexie).toBe(true);
+    });
+  });
+
+  describe('append', () => {
+    Object.entries(appendSpec).map(([description, testFunction]) => {
+      it(description, () => testFunction(engine));
+    });
   });
 });
