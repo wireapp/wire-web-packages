@@ -5,9 +5,13 @@
   },
   "devDependencies": {
     "@types/jasmine": "3.3.13",
+    "@types/karma": "3.0.3",
     "@types/node": "~10",
     "jasmine": "3.4.0",
-    "nyc": "14.1.1",
+    "karma": "4.1.0",
+    "karma-chrome-launcher": "2.2.0",
+    "karma-jasmine": "2.0.1",
+    "karma-typescript": "4.1.0",
     "rimraf": "2.6.3",
     "ts-node": "8.3.0",
     "typescript": "3.5.2"
@@ -23,10 +27,10 @@
   "scripts": {
     "build": "yarn build:node",
     "build:node": "tsc",
-    "clean": "rimraf .nyc_output coverage dist",
+    "clean": "rimraf dist",
     "dist": "yarn clean && yarn build",
-    "test": "nyc jasmine --config=jasmine.json",
+    "test": "karma start",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "1.1.1"
+  "version": "0.0.0"
 }
