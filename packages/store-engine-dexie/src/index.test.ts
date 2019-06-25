@@ -19,6 +19,15 @@
 
 import {CRUDEngine} from '@wireapp/store-engine';
 import {appendSpec} from '@wireapp/store-engine/dist/commonjs/test/appendSpec';
+import {createSpec} from '@wireapp/store-engine/dist/commonjs/test/createSpec';
+import {deleteAllSpec} from '@wireapp/store-engine/dist/commonjs/test/deleteAllSpec';
+import {deleteSpec} from '@wireapp/store-engine/dist/commonjs/test/deleteSpec';
+import {purgeSpec} from '@wireapp/store-engine/dist/commonjs/test/purgeSpec';
+import {readAllPrimaryKeysSpec} from '@wireapp/store-engine/dist/commonjs/test/readAllPrimaryKeysSpec';
+import {readAllSpec} from '@wireapp/store-engine/dist/commonjs/test/readAllSpec';
+import {readSpec} from '@wireapp/store-engine/dist/commonjs/test/readSpec';
+import {updateOrCreateSpec} from '@wireapp/store-engine/dist/commonjs/test/updateOrCreateSpec';
+import {updateSpec} from '@wireapp/store-engine/dist/commonjs/test/updateSpec';
 import Dexie from 'dexie';
 import {IndexedDBEngine} from './index';
 
@@ -59,6 +68,87 @@ describe('IndexedDBEngine', () => {
 
   describe('append', () => {
     Object.entries(appendSpec).map(([description, testFunction]) => {
+      it(description, () => testFunction(engine));
+    });
+  });
+
+  describe('create', () => {
+    describe('create', () => {
+      Object.entries(createSpec).map(([description, testFunction]) => {
+        it(description, () => testFunction(engine));
+      });
+    });
+
+    it('writes into an existing database.', async () => {
+      const TABLE_NAME = 'friends';
+      const PRIMARY_KEY = 'camilla';
+      const entity = {
+        age: 25,
+        anotherProperty: 'not all properties needs to be indexed',
+        name: 'Camilla',
+      };
+      const name = 'MyDatabase';
+
+      const db = new Dexie(name);
+      db.version(1).stores({
+        [TABLE_NAME]: ', name, age',
+      });
+
+      engine = new IndexedDBEngine();
+      await engine.initWithDb(db);
+
+      const primaryKey = await engine.create(TABLE_NAME, PRIMARY_KEY, entity);
+      expect(primaryKey).toEqual(PRIMARY_KEY);
+      expect(engine.storeName).toBe(name);
+      expect(engine.db.name).toBe(name);
+      expect(Object.keys(engine.db._dbSchema).length).toBe(1);
+    });
+  });
+
+  describe('delete', () => {
+    Object.entries(deleteSpec).map(([description, testFunction]) => {
+      it(description, () => testFunction(engine));
+    });
+  });
+
+  describe('deleteAll', () => {
+    Object.entries(deleteAllSpec).map(([description, testFunction]) => {
+      it(description, () => testFunction(engine));
+    });
+  });
+
+  describe('purge', () => {
+    Object.entries(purgeSpec).map(([description, testFunction]) => {
+      it(description, () => testFunction(engine, initEngine));
+    });
+  });
+
+  describe('readAllPrimaryKeys', () => {
+    Object.entries(readAllPrimaryKeysSpec).map(([description, testFunction]) => {
+      it(description, () => testFunction(engine));
+    });
+  });
+
+  describe('readAll', () => {
+    Object.entries(readAllSpec).map(([description, testFunction]) => {
+      it(description, () => testFunction(engine));
+    });
+  });
+
+  describe('read', () => {
+    Object.entries(readSpec).map(([description, testFunction]) => {
+      it(description, () => testFunction(engine));
+    });
+  });
+
+  describe('updateOrCreate', () => {
+    Object.entries(updateOrCreateSpec).map(([description, testFunction]) => {
+      it(description, () => testFunction(engine));
+    });
+  });
+
+  describe('update', () => {
+    Object.entries(updateSpec).map(([description, testFunction]) => {
       it(description, () => testFunction(engine));
     });
   });
