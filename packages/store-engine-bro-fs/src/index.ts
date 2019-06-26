@@ -45,7 +45,7 @@ export class FileSystemEngine implements CRUDEngine {
 
   constructor() {}
 
-  public async isSupported(): Promise<void> {
+  async isSupported(): Promise<void> {
     if (typeof window === 'undefined' || !fs.isSupported()) {
       const message = `File and Directory Entries API is not available on your platform.`;
       throw new UnsupportedError(message);
