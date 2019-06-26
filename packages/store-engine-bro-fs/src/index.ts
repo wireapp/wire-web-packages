@@ -52,7 +52,7 @@ export class FileSystemEngine implements CRUDEngine {
     }
   }
 
-  public async init(storeName = '', options?: FileSystemEngineOptions): Promise<FileSystem> {
+  async init(storeName = '', options?: FileSystemEngineOptions): Promise<FileSystem> {
     await this.isSupported();
     this.config = {...this.config, ...options};
     this.storeName = storeName;
