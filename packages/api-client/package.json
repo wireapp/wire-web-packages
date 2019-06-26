@@ -12,7 +12,6 @@
     "@wireapp/priority-queue": "1.0.14",
     "@wireapp/store-engine": "3.2.0",
     "axios": "0.19.0",
-    "dexie": "2.0.4",
     "html5-websocket": "2.0.4",
     "logdown": "3.2.8",
     "reconnecting-websocket": "3.2.2",
