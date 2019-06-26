@@ -20,6 +20,14 @@
 import {CRUDEngine} from '@wireapp/store-engine';
 import {appendSpec} from '@wireapp/store-engine/dist/commonjs/test/appendSpec';
 import {createSpec} from '@wireapp/store-engine/dist/commonjs/test/createSpec';
+import {deleteAllSpec} from '@wireapp/store-engine/dist/commonjs/test/deleteAllSpec';
+import {deleteSpec} from '@wireapp/store-engine/dist/commonjs/test/deleteSpec';
+import {purgeSpec} from '@wireapp/store-engine/dist/commonjs/test/purgeSpec';
+import {readAllPrimaryKeysSpec} from '@wireapp/store-engine/dist/commonjs/test/readAllPrimaryKeysSpec';
+import {readAllSpec} from '@wireapp/store-engine/dist/commonjs/test/readAllSpec';
+import {readSpec} from '@wireapp/store-engine/dist/commonjs/test/readSpec';
+import {updateOrCreateSpec} from '@wireapp/store-engine/dist/commonjs/test/updateOrCreateSpec';
+import {updateSpec} from '@wireapp/store-engine/dist/commonjs/test/updateSpec';
 import * as fs from 'bro-fs';
 import {FileSystemEngine} from './index';
 
@@ -55,6 +63,54 @@ describe('FileSystemEngine', () => {
 
   describe('create', () => {
     Object.entries(createSpec).map(([description, testFunction]) => {
+      it(description, () => testFunction(engine));
+    });
+  });
+
+  describe('delete', () => {
+    Object.entries(deleteSpec).map(([description, testFunction]) => {
+      it(description, () => testFunction(engine));
+    });
+  });
+
+  describe('deleteAll', () => {
+    Object.entries(deleteAllSpec).map(([description, testFunction]) => {
+      it(description, () => testFunction(engine));
+    });
+  });
+
+  describe('purge', () => {
+    Object.entries(purgeSpec).map(([description, testFunction]) => {
+      it(description, () => testFunction(engine, initEngine));
+    });
+  });
+
+  describe('readAllPrimaryKeys', () => {
+    Object.entries(readAllPrimaryKeysSpec).map(([description, testFunction]) => {
+      it(description, () => testFunction(engine));
+    });
+  });
+
+  describe('readAll', () => {
+    Object.entries(readAllSpec).map(([description, testFunction]) => {
+      it(description, () => testFunction(engine));
+    });
+  });
+
+  describe('read', () => {
+    Object.entries(readSpec).map(([description, testFunction]) => {
+      it(description, () => testFunction(engine));
+    });
+  });
+
+  describe('updateOrCreate', () => {
+    Object.entries(updateOrCreateSpec).map(([description, testFunction]) => {
+      it(description, () => testFunction(engine));
+    });
+  });
+
+  describe('update', () => {
+    Object.entries(updateSpec).map(([description, testFunction]) => {
       it(description, () => testFunction(engine));
     });
   });
