@@ -21,6 +21,7 @@ import {CONVERSATION_TYPING} from '@wireapp/api-client/dist/commonjs/event/';
 import {Account} from '@wireapp/core';
 import {PayloadBundle, ReactionType} from '@wireapp/core/dist/conversation/';
 import {
+  CallingContent,
   FileContent,
   FileMetaDataContent,
   ImageContent,
@@ -164,6 +165,16 @@ export abstract class MessageHandler {
         originalMessageId,
         type,
       });
+      await this.account.service.conversation.send(reactionPayload);
+    }
+  }
+
+  public async sendCall(conversationId: string, callingPayload: CallingContent): Promise<void> {
+    if (this.account && this.account.service) {
+      const reactionPayload = this.account.service.conversation.messageBuilder.createCall(
+        conversationId,
+        callingPayload,
+      );
       await this.account.service.conversation.send(reactionPayload);
     }
   }
