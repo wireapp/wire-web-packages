@@ -192,13 +192,13 @@ export class UserAPI {
    * @param propertyKey The property key to get
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getProperty
    */
-  public getProperty<T extends string>(propertyKey: T): Promise<Record<T, string>> {
+  public getProperty<T extends string>(propertyKey: T): Promise<Record<T, any>> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${UserAPI.URL.PROPERTIES}/${propertyKey}`,
     };
 
-    return this.client.sendJSON<Record<T, string>>(config).then(response => response.data);
+    return this.client.sendJSON<Record<T, any>>(config).then(response => response.data);
   }
 
   /**
@@ -409,7 +409,7 @@ export class UserAPI {
    * @param propertyData The property data to set
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/setProperty
    */
-  public async putProperty<T extends string>(propertyKey: T, propertyData: Record<T, string>): Promise<void> {
+  public async putProperty<T extends string>(propertyKey: T, propertyData: Record<T, any>): Promise<void> {
     const config: AxiosRequestConfig = {
       data: propertyData,
       method: 'put',
