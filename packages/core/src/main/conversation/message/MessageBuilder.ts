@@ -206,11 +206,11 @@ export class MessageBuilder {
 
   public createCall(
     conversationId: string,
-    callingPayload: CallingContent,
+    content: CallingContent,
     messageId = MessageBuilder.createId(),
   ): CallMessage {
     return {
-      content: callingPayload,
+      content,
       conversation: conversationId,
       from: this.getSelfUserId(),
       id: messageId,
