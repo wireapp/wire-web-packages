@@ -19,6 +19,7 @@
 
 import {AxiosRequestConfig} from 'axios';
 import {HttpClient} from '../http';
+import {CallConfigData} from './CallConfigData';
 
 export class AccountAPI {
   constructor(private readonly client: HttpClient) {}
@@ -114,5 +115,23 @@ export class AccountAPI {
     };
 
     await this.client.sendJSON(config);
+  }
+
+  /**
+   * Retrieve all TURN server addresses and credentials.
+   * Clients are expected to do a DNS lookup to resolve the IP addresses of the given hostnames
+   *
+   * @param limit Limits the number of ICE-Candidates returned. [1..10]
+   */
+  public async getCallConfig(limit: number): Promise<CallConfigData> {
+    const config: AxiosRequestConfig = {
+      method: 'get',
+      params: {
+        limit,
+      },
+      url: `calls/config/v2`,
+    };
+
+    return this.client.sendJSON<CallConfigData>(config).then(response => response.data);
   }
 }
