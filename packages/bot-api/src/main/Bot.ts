@@ -18,6 +18,7 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
+import {Context} from '@wireapp/api-client/dist/commonjs/auth';
 import {ClientType} from '@wireapp/api-client/dist/commonjs/client/';
 import {Account} from '@wireapp/core';
 import {PayloadBundle, PayloadBundleType} from '@wireapp/core/dist/conversation/';
@@ -77,7 +78,7 @@ export class Bot {
     }
   }
 
-  public async start(): Promise<void> {
+  public async start(): Promise<Context> {
     const login = {
       clientType: this.config.clientType,
       email: this.credentials.email,
@@ -116,11 +117,13 @@ export class Bot {
     this.account.on(PayloadBundleType.TYPING, this.handlePayload.bind(this));
     this.account.on(PayloadBundleType.UNKNOWN, this.handlePayload.bind(this));
 
-    await this.account.login(login);
+    const context = await this.account.login(login);
     await this.account.listen();
     this.account.on('error', error => this.logger.error(error));
 
     this.handlers.forEach(handler => (handler.account = this.account));
+
+    return context;
   }
 
   private handlePayload(payload: PayloadBundle): void {
