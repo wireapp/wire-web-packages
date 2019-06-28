@@ -915,9 +915,9 @@ export class ConversationService {
   }
 
   /**
-   * @param {Message} payloadBundle - Outgoing message
-   * @param {string[]} userIds - Only send message to specified user IDs
-   * @returns {Message} Sent message
+   * @param payloadBundle - Outgoing message
+   * @param userIds - Only send message to specified user IDs
+   * @returns Sent message
    */
   // tslint:disable-next-line:typedef
   public async send(payloadBundle: Message, userIds?: string[]) {
