@@ -130,20 +130,6 @@ export class Account extends EventEmitter {
     };
   }
 
-  get clientId(): string {
-    if (this.apiClient.context && this.apiClient.context.clientId) {
-      return this.apiClient.context.clientId;
-    }
-    throw new Error(`No user context available. Please login first.`);
-  }
-
-  get userId(): string {
-    if (this.apiClient.context) {
-      return this.apiClient.context.userId;
-    }
-    throw new Error(`No user context available. Please login first.`);
-  }
-
   public login(
     loginData: LoginData,
     initClient: boolean = true,
