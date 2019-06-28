@@ -345,6 +345,7 @@ export class Account extends EventEmitter {
           content: genericMessage.calling.content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
