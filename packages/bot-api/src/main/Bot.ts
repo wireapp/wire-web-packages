@@ -18,7 +18,6 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {Context} from '@wireapp/api-client/dist/commonjs/auth';
 import {ClientType} from '@wireapp/api-client/dist/commonjs/client/';
 import {Account} from '@wireapp/core';
 import {PayloadBundle, PayloadBundleType} from '@wireapp/core/dist/conversation/';
@@ -78,7 +77,7 @@ export class Bot {
     }
   }
 
-  public async start(): Promise<Context> {
+  public async start(): Promise<void> {
     const login = {
       clientType: this.config.clientType,
       email: this.credentials.email,
@@ -91,7 +90,6 @@ export class Bot {
       urls: this.config.backend === 'staging' ? APIClient.BACKEND.STAGING : APIClient.BACKEND.PRODUCTION,
     });
     this.account = new Account(apiClient);
-    this.account.on('error', error => this.logger.error(error));
 
     this.account.on(PayloadBundleType.ASSET, this.handlePayload.bind(this));
     this.account.on(PayloadBundleType.ASSET_ABORT, this.handlePayload.bind(this));
@@ -118,10 +116,11 @@ export class Bot {
     this.account.on(PayloadBundleType.TYPING, this.handlePayload.bind(this));
     this.account.on(PayloadBundleType.UNKNOWN, this.handlePayload.bind(this));
 
-    const context = await this.account.login(login);
+    await this.account.login(login);
     await this.account.listen();
+    this.account.on('error', error => this.logger.error(error));
+
     this.handlers.forEach(handler => (handler.account = this.account));
-    return context;
   }
 
   private handlePayload(payload: PayloadBundle): void {
