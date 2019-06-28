@@ -130,20 +130,29 @@ export class Account extends EventEmitter {
     };
   }
 
-  public login(
-    loginData: LoginData,
-    initClient: boolean = true,
-    clientInfo?: ClientInfo,
-  ): Promise<Context | undefined> {
-    return this.resetContext()
-      .then(() => this.init())
-      .then(() => LoginSanitizer.removeNonPrintableCharacters(loginData))
-      .then(() => this.apiClient.login(loginData))
-      .then(() => {
-        return initClient
-          ? this.initClient(loginData, clientInfo).then(() => this.apiClient.context)
-          : this.apiClient.context;
-      });
+  get clientId(): string {
+    if (this.apiClient.context && this.apiClient.context.clientId) {
+      return this.apiClient.context.clientId;
+    }
+    throw new Error(`No user context available. Please login first.`);
+  }
+
+  get userId(): string {
+    if (this.apiClient.context) {
+      return this.apiClient.context.userId;
+    }
+    throw new Error(`No user context available. Please login first.`);
+  }
+
+  async login(loginData: LoginData, initClient: boolean = true, clientInfo?: ClientInfo): Promise<Context> {
+    await this.resetContext();
+    await this.init();
+    LoginSanitizer.removeNonPrintableCharacters(loginData);
+    const context = this.apiClient.login(loginData);
+    if (initClient) {
+      await this.initClient(loginData, clientInfo);
+    }
+    return context;
   }
 
   public initClient(
