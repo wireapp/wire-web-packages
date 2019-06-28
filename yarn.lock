@@ -2020,10 +2020,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/generate-changelog@1.7.0":
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@types/generate-changelog/-/generate-changelog-1.7.0.tgz#3857dd209247d6bed1c8b0832d1f04ea8081c6ba"
-  integrity sha512-wLeyRMCAfBi38YoOanxaNSg5KEqbfMCXUMtiJEl7p4Lx3AHbm7pVlsiL2WpxwlJQdr3fyXrAj7E7UFnBLL26Vg==
+"@types/generate-changelog@1.8.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@types/generate-changelog/-/generate-changelog-1.8.0.tgz#ed9d3f0b3255ab64c3ab022ec65792d7a5bf8c6f"
+  integrity sha512-JEpf0zZOuJHrHAiTOL8s9fP6uyvooJkxDoCUJFquWN9N9WyjU+14F1j0aDcn1Zc3PkdPwnQSUYlljv1UHgz8pQ==
 
 "@types/glob@*", "@types/glob@^7.1.1":
   version "7.1.1"
