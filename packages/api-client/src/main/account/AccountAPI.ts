@@ -26,6 +26,9 @@ export class AccountAPI {
 
   static URL = {
     ACTIVATE: '/activate',
+    CALLS: '/calls',
+    CALLS_CONFIG: 'config',
+    CALLS_CONFIG_V2: 'v2',
     DELETE: '/delete',
     PASSWORD_RESET: '/password-reset',
     PASSWORD_RESET_COMPLETE: 'complete',
@@ -129,7 +132,7 @@ export class AccountAPI {
       params: {
         limit,
       },
-      url: `calls/config/v2`,
+      url: `${AccountAPI.URL.CALLS}/${AccountAPI.URL.CALLS_CONFIG}/${AccountAPI.URL.CALLS_CONFIG_V2}`,
     };
 
     return this.client.sendJSON<CallConfigData>(config).then(response => response.data);
