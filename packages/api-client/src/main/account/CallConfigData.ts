@@ -18,9 +18,9 @@
  */
 
 export interface ICECandidate {
+  credential: string;
   urls: string[];
   username: string;
-  credential: string;
 }
 
 export interface CallConfigData {
