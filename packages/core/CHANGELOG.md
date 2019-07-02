@@ -3,6 +3,150 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.13.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.13.0...@wireapp/core@12.13.1) (2019-07-02)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [12.13.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.12.2...@wireapp/core@12.13.0) (2019-06-28)
+
+
+### Features
+
+* **core:** Add client ID to encrypted messages ([#2010](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2010)) ([daf173e](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/daf173e))
+
+
+
+
+
+## [12.12.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.12.1...@wireapp/core@12.12.2) (2019-06-28)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [12.12.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.12.0...@wireapp/core@12.12.1) (2019-06-28)
+
+
+### Bug Fixes
+
+* **core:** Send call messages ([#2008](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2008)) ([1d14bdf](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/1d14bdf))
+
+
+
+
+
+# [12.12.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.11.1...@wireapp/core@12.12.0) (2019-06-28)
+
+
+### Features
+
+* **core:** Expose User ID & Client ID ([#2007](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2007)) ([e41e0bb](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/e41e0bb))
+
+
+
+
+
+## [12.11.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.11.0...@wireapp/core@12.11.1) (2019-06-28)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [12.11.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.10.0...@wireapp/core@12.11.0) (2019-06-28)
+
+
+### Features
+
+* **core:** Propagate calling events ([#2002](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2002)) ([e90ff0e](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/e90ff0e))
+
+
+
+
+
+# [12.10.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.9.0...@wireapp/core@12.10.0) (2019-06-27)
+
+
+### Features
+
+* **bot-api,core:** Expose call signaling ([#1998](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1998)) ([ecced28](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/ecced28))
+
+
+
+
+
+# [12.9.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.8.0...@wireapp/core@12.9.0) (2019-06-27)
+
+
+### Features
+
+* **core:** Send calling messages ([#1997](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1997)) ([da87945](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/da87945))
+
+
+
+
+
+# [12.8.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.7.3...@wireapp/core@12.8.0) (2019-06-27)
+
+
+### Features
+
+* **core:** Receive calling messages ([#1996](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1996)) ([8f913c9](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/8f913c9))
+
+
+
+
+
+## [12.7.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.7.2...@wireapp/core@12.7.3) (2019-06-27)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [12.7.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.7.1...@wireapp/core@12.7.2) (2019-06-26)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [12.7.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.7.0...@wireapp/core@12.7.1) (2019-06-26)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [12.7.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.6.1...@wireapp/core@12.7.0) (2019-06-25)
+
+
+### Features
+
+* **store-engine,store-engine-dexie:** Distribute IndexedDBEngine in separate package ([#1980](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1980)) ([90daae9](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/90daae9))
+
+
+
+
+
+## [12.6.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.6.0...@wireapp/core@12.6.1) (2019-06-25)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
 # [12.6.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.5.1...@wireapp/core@12.6.0) (2019-06-24)
 
 

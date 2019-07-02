@@ -304,7 +304,6 @@ export class ConversationAPI {
    */
   public postJoin(conversationId: string): Promise<ConversationEvent> {
     const config: AxiosRequestConfig = {
-      data: {},
       method: 'post',
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}`,
     };
@@ -361,7 +360,6 @@ export class ConversationAPI {
    */
   public postSelf(): Promise<Conversation> {
     const config: AxiosRequestConfig = {
-      data: {},
       method: 'post',
       url: `${ConversationAPI.URL.CONVERSATIONS}/self`,
     };

@@ -3,14 +3,14 @@
     "collect-licenses": "dist/cli.js"
   },
   "dependencies": {
-    "fs-extra": "8.0.1",
+    "fs-extra": "8.1.0",
     "logdown": "3.2.8",
     "npm-license-crawler": "0.2.1",
     "npm-registry-package-info": "1.0.5"
   },
   "description": "Wire's internal license collection tool",
   "devDependencies": {
-    "@types/fs-extra": "7.0.0",
+    "@types/fs-extra": "8.0.0",
     "@types/node": "~10",
     "@types/npm-registry-package-info": "1.0.0",
     "rimraf": "2.6.3",
@@ -30,5 +30,5 @@
     "dist": "yarn clean && yarn build",
     "test": "exit 0"
   },
-  "version": "0.2.0"
+  "version": "0.2.2"
 }

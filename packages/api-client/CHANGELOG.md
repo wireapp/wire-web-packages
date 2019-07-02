@@ -3,6 +3,93 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.11.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.11.1...@wireapp/api-client@5.11.2) (2019-07-02)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [5.11.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.11.0...@wireapp/api-client@5.11.1) (2019-06-28)
+
+
+### Bug Fixes
+
+* **api-client:** Make call config limit parameter optional ([#2005](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2005)) ([ca2174f](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/ca2174f))
+
+
+
+
+
+# [5.11.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.10.0...@wireapp/api-client@5.11.0) (2019-06-28)
+
+
+### Features
+
+* **api-client:** CallConfig endpoint ([#2003](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2003)) ([27921e5](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/27921e5))
+
+
+
+
+
+# [5.10.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.9.2...@wireapp/api-client@5.10.0) (2019-06-27)
+
+
+### Features
+
+* **api-client:** Precise property typings, cleanup ([#1995](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1995)) ([4f53f32](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/4f53f32))
+
+
+
+
+
+## [5.9.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.9.1...@wireapp/api-client@5.9.2) (2019-06-26)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [5.9.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.9.0...@wireapp/api-client@5.9.1) (2019-06-26)
+
+
+### Bug Fixes
+
+* **api-client:** Remove Dexie dependency ([#1989](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1989)) ([78d5ceb](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/78d5ceb))
+
+
+
+
+
+# [5.9.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.8.0...@wireapp/api-client@5.9.0) (2019-06-25)
+
+
+### Features
+
+* **store-engine,store-engine-dexie:** Distribute IndexedDBEngine in separate package ([#1980](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1980)) ([90daae9](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/90daae9))
+
+
+
+
+
+# [5.8.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.7.1...@wireapp/api-client@5.8.0) (2019-06-25)
+
+
+### Bug Fixes
+
+* **api-client:** Update LegalHoldSettings attributes ([#1979](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1979)) ([403dbbf](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/403dbbf))
+
+
+### Features
+
+* **eslint-config:** Sort imports and keys automatically ([#1971](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1971)) ([c7954c8](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/c7954c8))
+
+
+
+
+
 ## [5.7.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.7.0...@wireapp/api-client@5.7.1) (2019-06-24)
 
 **Note:** Version bump only for package @wireapp/api-client

@@ -18,7 +18,5 @@
  */
 
 export * from './CRUDEngine';
-export * from './FileSystemEngine';
-export * from './IndexedDBEngine';
 export * from './LocalStorageEngine';
 export * from './MemoryEngine';

@@ -100,6 +100,20 @@ export class Account extends EventEmitter {
     });
   }
 
+  get clientId(): string {
+    if (this.apiClient.context && this.apiClient.context.clientId) {
+      return this.apiClient.context.clientId;
+    }
+    throw new Error(`No user context available. Please login first.`);
+  }
+
+  get userId(): string {
+    if (this.apiClient.context) {
+      return this.apiClient.context.userId;
+    }
+    throw new Error(`No user context available. Please login first.`);
+  }
+
   public async init(): Promise<void> {
     const assetService = new AssetService(this.apiClient);
     const cryptographyService = new CryptographyService(this.apiClient, this.apiClient.config.store);
@@ -319,11 +333,25 @@ export class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
           type: PayloadBundleType.TEXT,
+        };
+      }
+      case GenericMessageType.CALLING: {
+        return {
+          content: genericMessage.calling.content,
+          conversation: event.conversation,
+          from: event.from,
+          fromClientId: event.data.sender,
+          id: genericMessage.messageId,
+          messageTimer: 0,
+          state: PayloadBundleState.INCOMING,
+          timestamp: new Date(event.time).getTime(),
+          type: PayloadBundleType.CALL,
         };
       }
       case GenericMessageType.CONFIRMATION: {
@@ -335,6 +363,7 @@ export class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -349,6 +378,7 @@ export class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -365,6 +395,7 @@ export class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -408,6 +439,7 @@ export class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -427,6 +459,7 @@ export class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -442,6 +475,7 @@ export class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -463,6 +497,7 @@ export class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -486,6 +521,7 @@ export class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -505,6 +541,7 @@ export class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -518,6 +555,7 @@ export class Account extends EventEmitter {
           content: genericMessage.content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -636,6 +674,7 @@ export class Account extends EventEmitter {
       if (data) {
         switch (data.type) {
           case PayloadBundleType.ASSET_IMAGE:
+          case PayloadBundleType.CALL:
           case PayloadBundleType.CLEARED:
           case PayloadBundleType.CLIENT_ACTION:
           case PayloadBundleType.CLIENT_ADD:

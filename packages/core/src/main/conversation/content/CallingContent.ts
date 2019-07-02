@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2019 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,19 +17,4 @@
  *
  */
 
-import {FileSystemEngine} from '../engine';
-import {UnsupportedError} from '../engine/error';
-
-const STORE_NAME = 'store-name';
-
-describe('init', () => {
-  it('throws an error if the store is not supported by the targeted platform.', async () => {
-    const storeEngine = new FileSystemEngine();
-    try {
-      await storeEngine.init(STORE_NAME);
-      fail('Expected error');
-    } catch (error) {
-      expect(error instanceof UnsupportedError).toBe(true);
-    }
-  });
-});
+export type CallingContent = string;

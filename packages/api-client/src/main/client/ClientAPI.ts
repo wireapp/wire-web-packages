@@ -53,7 +53,6 @@ export class ClientAPI {
 
   public getClient(clientId: string): Promise<RegisteredClient> {
     const config: AxiosRequestConfig = {
-      data: {},
       method: 'get',
       url: `${ClientAPI.URL.CLIENTS}/${clientId}`,
     };
@@ -63,7 +62,6 @@ export class ClientAPI {
 
   public getClients(): Promise<RegisteredClient[]> {
     const config: AxiosRequestConfig = {
-      data: {},
       method: 'get',
       url: ClientAPI.URL.CLIENTS,
     };
@@ -73,7 +71,6 @@ export class ClientAPI {
 
   public getClientPreKeys(clientId: string): Promise<PreKeyBundle> {
     const config: AxiosRequestConfig = {
-      data: {},
       method: 'get',
       url: `${ClientAPI.URL.CLIENTS}/${clientId}/prekeys`,
     };
