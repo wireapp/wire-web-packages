@@ -6,7 +6,7 @@
     "axios": "0.19.0",
     "copy": "0.3.2",
     "cosmiconfig": "5.2.1",
-    "fs-extra": "8.0.1",
+    "fs-extra": "8.1.0",
     "jszip": "3.2.1",
     "logdown": "3.2.8",
     "rimraf": "2.6.3"
@@ -15,7 +15,7 @@
   "devDependencies": {
     "@types/copy": "0.3.1",
     "@types/cosmiconfig": "5.0.3",
-    "@types/fs-extra": "7.0.0",
+    "@types/fs-extra": "8.0.0",
     "@types/jszip": "3.1.6",
     "@types/rimraf": "2.0.2",
     "jasmine": "3.4.0"
@@ -35,5 +35,5 @@
     "test": "yarn test:node",
     "test:node": "jasmine --config=jasmine.json"
   },
-  "version": "0.6.0"
+  "version": "0.7.0"
 }

@@ -74,9 +74,6 @@ import {MessageBuilder} from './conversation/message/MessageBuilder';
 import {UserService} from './user/';
 
 export class Account extends EventEmitter {
-  private readonly logger: logdown.Logger;
-
-  private readonly apiClient: APIClient;
   public service?: {
     asset: AssetService;
     broadcast: BroadcastService;
@@ -90,6 +87,9 @@ export class Account extends EventEmitter {
     team: TeamService;
     user: UserService;
   };
+  private readonly logger: logdown.Logger;
+
+  private readonly apiClient: APIClient;
 
   constructor(apiClient: APIClient = new APIClient()) {
     super();
@@ -98,6 +98,20 @@ export class Account extends EventEmitter {
       logger: console,
       markdown: false,
     });
+  }
+
+  get clientId(): string {
+    if (this.apiClient.context && this.apiClient.context.clientId) {
+      return this.apiClient.context.clientId;
+    }
+    throw new Error(`No user context available. Please login first.`);
+  }
+
+  get userId(): string {
+    if (this.apiClient.context) {
+      return this.apiClient.context.userId;
+    }
+    throw new Error(`No user context available. Please login first.`);
   }
 
   public async init(): Promise<void> {
@@ -201,6 +215,30 @@ export class Account extends EventEmitter {
       .then(() => loadedClient);
   }
 
+  public logout(): Promise<void> {
+    return this.apiClient.logout().then(() => this.resetContext());
+  }
+
+  public listen(notificationHandler?: Function): Promise<Account> {
+    if (!this.apiClient.context) {
+      throw new Error('Context is not set - Please login first');
+    }
+    return Promise.resolve()
+      .then(() => {
+        this.apiClient.transport.ws.removeAllListeners(WebSocketTopic.ON_MESSAGE);
+
+        if (notificationHandler) {
+          this.apiClient.transport.ws.on(WebSocketTopic.ON_MESSAGE, (notification: IncomingNotification) => {
+            notificationHandler(notification);
+          });
+        } else {
+          this.apiClient.transport.ws.on(WebSocketTopic.ON_MESSAGE, this.handleNotification.bind(this));
+        }
+        return this.apiClient.connect();
+      })
+      .then(() => this);
+  }
+
   private registerClient(
     loginData: LoginData,
     clientInfo?: ClientInfo,
@@ -228,30 +266,6 @@ export class Account extends EventEmitter {
       delete this.apiClient.context;
       delete this.service;
     });
-  }
-
-  public logout(): Promise<void> {
-    return this.apiClient.logout().then(() => this.resetContext());
-  }
-
-  public listen(notificationHandler?: Function): Promise<Account> {
-    if (!this.apiClient.context) {
-      throw new Error('Context is not set - Please login first');
-    }
-    return Promise.resolve()
-      .then(() => {
-        this.apiClient.transport.ws.removeAllListeners(WebSocketTopic.ON_MESSAGE);
-
-        if (notificationHandler) {
-          this.apiClient.transport.ws.on(WebSocketTopic.ON_MESSAGE, (notification: IncomingNotification) => {
-            notificationHandler(notification);
-          });
-        } else {
-          this.apiClient.transport.ws.on(WebSocketTopic.ON_MESSAGE, this.handleNotification.bind(this));
-        }
-        return this.apiClient.connect();
-      })
-      .then(() => this);
   }
 
   private async decodeGenericMessage(otrMessage: ConversationOtrMessageAddEvent): Promise<PayloadBundle> {
@@ -319,11 +333,25 @@ export class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
           type: PayloadBundleType.TEXT,
+        };
+      }
+      case GenericMessageType.CALLING: {
+        return {
+          content: genericMessage.calling.content,
+          conversation: event.conversation,
+          from: event.from,
+          fromClientId: event.data.sender,
+          id: genericMessage.messageId,
+          messageTimer: 0,
+          state: PayloadBundleState.INCOMING,
+          timestamp: new Date(event.time).getTime(),
+          type: PayloadBundleType.CALL,
         };
       }
       case GenericMessageType.CONFIRMATION: {
@@ -335,6 +363,7 @@ export class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -349,6 +378,7 @@ export class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -365,6 +395,7 @@ export class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -408,6 +439,7 @@ export class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -427,6 +459,7 @@ export class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -442,6 +475,7 @@ export class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -463,6 +497,7 @@ export class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -486,6 +521,7 @@ export class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -505,6 +541,7 @@ export class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -518,6 +555,7 @@ export class Account extends EventEmitter {
           content: genericMessage.content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -636,6 +674,7 @@ export class Account extends EventEmitter {
       if (data) {
         switch (data.type) {
           case PayloadBundleType.ASSET_IMAGE:
+          case PayloadBundleType.CALL:
           case PayloadBundleType.CLEARED:
           case PayloadBundleType.CLIENT_ACTION:
           case PayloadBundleType.CLIENT_ADD:

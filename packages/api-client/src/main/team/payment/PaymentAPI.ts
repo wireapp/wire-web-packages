@@ -32,7 +32,6 @@ import {
 
 export class PaymentAPI {
   static readonly DEFAULT_INVOICES_CHUNK_SIZE = 10;
-  constructor(private readonly client: HttpClient) {}
 
   static URL = {
     BILLING: 'billing',
@@ -44,6 +43,7 @@ export class PaymentAPI {
     PLANS: 'plans',
     TEAMS: '/teams',
   };
+  constructor(private readonly client: HttpClient) {}
 
   public putPaymentData(teamId: string, paymentData: PaymentDataUpdate): Promise<PaymentData> {
     const config: AxiosRequestConfig = {
@@ -64,9 +64,9 @@ export class PaymentAPI {
     return this.client.sendJSON<PaymentData>(config).then(response => response.data);
   }
 
-  public deletePaymentData(teamId: string, data: Object): Promise<PaymentData> {
+  public deletePaymentData(teamId: string, paymentData: Object): Promise<PaymentData> {
     const config: AxiosRequestConfig = {
-      data,
+      data: paymentData,
       method: 'delete',
       url: `${PaymentAPI.URL.TEAMS}/${teamId}/${PaymentAPI.URL.BILLING}`,
     };

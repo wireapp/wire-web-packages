@@ -24,11 +24,10 @@ import {NewClient, RegisteredClient} from '../client/';
 import {HttpClient} from '../http/';
 
 export class ClientAPI {
-  constructor(private readonly client: HttpClient) {}
-
   static URL = {
     CLIENTS: '/clients',
   };
+  constructor(private readonly client: HttpClient) {}
 
   public postClient(newClient: NewClient): Promise<RegisteredClient> {
     const config: AxiosRequestConfig = {
@@ -54,7 +53,6 @@ export class ClientAPI {
 
   public getClient(clientId: string): Promise<RegisteredClient> {
     const config: AxiosRequestConfig = {
-      data: {},
       method: 'get',
       url: `${ClientAPI.URL.CLIENTS}/${clientId}`,
     };
@@ -64,7 +62,6 @@ export class ClientAPI {
 
   public getClients(): Promise<RegisteredClient[]> {
     const config: AxiosRequestConfig = {
-      data: {},
       method: 'get',
       url: ClientAPI.URL.CLIENTS,
     };
@@ -74,7 +71,6 @@ export class ClientAPI {
 
   public getClientPreKeys(clientId: string): Promise<PreKeyBundle> {
     const config: AxiosRequestConfig = {
-      data: {},
       method: 'get',
       url: `${ClientAPI.URL.CLIENTS}/${clientId}/prekeys`,
     };

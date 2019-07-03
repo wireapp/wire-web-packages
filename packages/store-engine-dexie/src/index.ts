@@ -17,11 +17,8 @@
  *
  */
 
+import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import Dexie from 'dexie';
-import {CRUDEngine} from './CRUDEngine';
-import {LowDiskSpaceError, RecordTypeError, UnsupportedError} from './error/';
-import {RecordAlreadyExistsError} from './error/RecordAlreadyExistsError';
-import {RecordNotFoundError} from './error/RecordNotFoundError';
 
 /** @see https://dexie.org/docs/Typescript#create-a-subclass */
 export interface DexieInstance extends Dexie {
@@ -29,8 +26,90 @@ export interface DexieInstance extends Dexie {
 }
 
 export class IndexedDBEngine implements CRUDEngine {
-  private db?: DexieInstance;
   public storeName = '';
+  private db?: DexieInstance;
+
+  public async isSupported(): Promise<void> {
+    await this.canUseIndexedDB();
+    await this.hasEnoughQuota();
+  }
+
+  public async init(storeName: string): Promise<DexieInstance> {
+    await this.isSupported();
+    return this.assignDb(new Dexie(storeName));
+  }
+
+  public initWithDb(db: DexieInstance): Promise<DexieInstance> {
+    return Promise.resolve(this.assignDb(db));
+  }
+
+  public purge(): Promise<void> {
+    return this.db ? this.db.delete() : Dexie.delete(this.storeName);
+  }
+
+  public create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
+    if (entity) {
+      return this.db![tableName].add(entity, primaryKey).catch((error: Dexie.DexieError) => {
+        throw this.mapDatabaseError(error, tableName, primaryKey);
+      });
+    }
+    const message = `Record "${primaryKey}" cannot be saved in "${tableName}" because it's "undefined" or "null".`;
+    return Promise.reject(new StoreEngineError.RecordTypeError(message));
+  }
+
+  public delete(tableName: string, primaryKey: string): Promise<string> {
+    return Promise.resolve()
+      .then(() => this.db![tableName].delete(primaryKey))
+      .then(() => primaryKey);
+  }
+
+  public deleteAll(tableName: string): Promise<boolean> {
+    return this.db![tableName].clear().then(() => true);
+  }
+
+  public read<T>(tableName: string, primaryKey: string): Promise<T> {
+    return this.db![tableName].get(primaryKey).then((record: T) => {
+      if (record) {
+        return record;
+      }
+      const message = `Record "${primaryKey}" in "${tableName}" could not be found.`;
+      throw new StoreEngineError.RecordNotFoundError(message);
+    });
+  }
+
+  public readAll<T>(tableName: string): Promise<T[]> {
+    return this.db![tableName].toArray();
+  }
+
+  public readAllPrimaryKeys(tableName: string): Promise<string[]> {
+    return this.db![tableName].toCollection().keys();
+  }
+
+  public update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+    return this.db![tableName].update(primaryKey, changes).then((updatedRecords: number) => {
+      if (updatedRecords === 0) {
+        const message = `Record "${primaryKey}" in "${tableName}" could not be found.`;
+        throw new StoreEngineError.RecordNotFoundError(message);
+      }
+      return primaryKey;
+    });
+  }
+
+  public updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+    return this.db![tableName].put(changes, primaryKey);
+  }
+
+  public append(tableName: string, primaryKey: string, additions: string): Promise<string> {
+    return this.db![tableName].get(primaryKey).then((record: any) => {
+      if (typeof record === 'string') {
+        record += additions;
+      } else {
+        const message = `Cannot append text to record "${primaryKey}" because it's not a string.`;
+        throw new StoreEngineError.RecordTypeError(message);
+      }
+      return this.updateOrCreate(tableName, primaryKey, record);
+    });
+  }
 
   // Check if IndexedDB is accessible (which won't be the case when browsing with Firefox in private mode or being on
   // page "about:blank")
@@ -50,7 +129,7 @@ export class IndexedDBEngine implements CRUDEngine {
         };
       });
     } else {
-      return Promise.reject(new UnsupportedError('Could not find indexedDB in global scope'));
+      return Promise.reject(new StoreEngineError.UnsupportedError('Could not find indexedDB in global scope'));
     }
   }
 
@@ -63,26 +142,12 @@ export class IndexedDBEngine implements CRUDEngine {
         const diskIsFull = usage >= quota;
         if (diskIsFull) {
           const errorMessage = `Out of disk space. Using "${usage}" out of "${quota}" bytes.`;
-          return Promise.reject(new LowDiskSpaceError(errorMessage));
+          return Promise.reject(new StoreEngineError.LowDiskSpaceError(errorMessage));
         }
       }
     }
 
     return Promise.resolve();
-  }
-
-  public async isSupported(): Promise<void> {
-    await this.canUseIndexedDB();
-    await this.hasEnoughQuota();
-  }
-
-  public async init(storeName: string): Promise<DexieInstance> {
-    await this.isSupported();
-    return this.assignDb(new Dexie(storeName));
-  }
-
-  public initWithDb(db: DexieInstance): Promise<DexieInstance> {
-    return Promise.resolve(this.assignDb(db));
   }
 
   // If you want to add listeners to the database and you don't care if it is a new database (init)
@@ -93,10 +158,6 @@ export class IndexedDBEngine implements CRUDEngine {
     return this.db;
   }
 
-  public purge(): Promise<void> {
-    return this.db ? this.db.delete() : Dexie.delete(this.storeName);
-  }
-
   private mapDatabaseError(error: Dexie.DexieError, tableName: string, primaryKey: string): Error {
     const isAlreadyExisting = error instanceof Dexie.ConstraintError;
     /** @see https://github.com/dfahlander/Dexie.js/issues/776 */
@@ -105,76 +166,12 @@ export class IndexedDBEngine implements CRUDEngine {
 
     if (isAlreadyExisting) {
       const message = `Record "${primaryKey}" already exists in "${tableName}". You need to delete the record first if you want to overwrite it.`;
-      return new RecordAlreadyExistsError(message);
+      return new StoreEngineError.RecordAlreadyExistsError(message);
     } else if (hasNotEnoughDiskSpace) {
       const message = `Cannot save "${primaryKey}" in "${tableName}" because there is low disk space.`;
-      return new LowDiskSpaceError(message);
+      return new StoreEngineError.LowDiskSpaceError(message);
     } else {
       return error;
     }
-  }
-
-  public create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
-    if (entity) {
-      return this.db![tableName].add(entity, primaryKey).catch((error: Dexie.DexieError) => {
-        throw this.mapDatabaseError(error, tableName, primaryKey);
-      });
-    }
-    const message = `Record "${primaryKey}" cannot be saved in "${tableName}" because it's "undefined" or "null".`;
-    return Promise.reject(new RecordTypeError(message));
-  }
-
-  public delete(tableName: string, primaryKey: string): Promise<string> {
-    return Promise.resolve()
-      .then(() => this.db![tableName].delete(primaryKey))
-      .then(() => primaryKey);
-  }
-
-  public deleteAll(tableName: string): Promise<boolean> {
-    return this.db![tableName].clear().then(() => true);
-  }
-
-  public read<T>(tableName: string, primaryKey: string): Promise<T> {
-    return this.db![tableName].get(primaryKey).then((record: T) => {
-      if (record) {
-        return record;
-      }
-      const message = `Record "${primaryKey}" in "${tableName}" could not be found.`;
-      throw new RecordNotFoundError(message);
-    });
-  }
-
-  public readAll<T>(tableName: string): Promise<T[]> {
-    return this.db![tableName].toArray();
-  }
-
-  public readAllPrimaryKeys(tableName: string): Promise<string[]> {
-    return this.db![tableName].toCollection().keys();
-  }
-
-  public update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
-    return this.db![tableName].update(primaryKey, changes).then((updatedRecords: number) => {
-      if (updatedRecords === 0) {
-        const message = `Record "${primaryKey}" in "${tableName}" could not be found.`;
-        throw new RecordNotFoundError(message);
-      }
-      return primaryKey;
-    });
-  }
-
-  public updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
-    return this.db![tableName].put(changes, primaryKey);
-  }
-
-  public append(tableName: string, primaryKey: string, additions: string): Promise<string> {
-    return this.db![tableName].get(primaryKey).then((record: any) => {
-      if (typeof record === 'string') {
-        record += additions;
-      } else {
-        const message = `Cannot append text to record "${primaryKey}" because it's not a string.`;
-        throw new RecordTypeError(message);
-      }
-      return this.updateOrCreate(tableName, primaryKey, record);
-    });
   }
 }

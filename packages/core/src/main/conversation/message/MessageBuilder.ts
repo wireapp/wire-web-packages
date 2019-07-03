@@ -22,6 +22,7 @@ import {ClientAction, Confirmation} from '@wireapp/protocol-messaging';
 import {AbortReason, PayloadBundleState, PayloadBundleType} from '..';
 import {AssetService} from '../AssetService';
 import {
+  CallingContent,
   ClientActionContent,
   ConfirmationContent,
   EditedTextContent,
@@ -41,6 +42,7 @@ import {
   TextContent,
 } from '../content';
 import {
+  CallMessage,
   ConfirmationMessage,
   EditedTextMessage,
   FileAssetAbortMessage,
@@ -58,6 +60,9 @@ import {TextContentBuilder} from './TextContentBuilder';
 const UUID = require('pure-uuid');
 
 export class MessageBuilder {
+  public static createId(): string {
+    return new UUID(4).format();
+  }
   constructor(private readonly apiClient: APIClient, private readonly assetService: AssetService) {}
 
   public createEditedText(
@@ -202,6 +207,22 @@ export class MessageBuilder {
     };
   }
 
+  public createCall(
+    conversationId: string,
+    content: CallingContent,
+    messageId = MessageBuilder.createId(),
+  ): CallMessage {
+    return {
+      content,
+      conversation: conversationId,
+      from: this.getSelfUserId(),
+      id: messageId,
+      state: PayloadBundleState.OUTGOING_UNSENT,
+      timestamp: Date.now(),
+      type: PayloadBundleType.CALL,
+    };
+  }
+
   public createReaction(
     conversationId: string,
     reaction: ReactionContent,
@@ -303,10 +324,6 @@ export class MessageBuilder {
     }
 
     return linkPreviewUploaded;
-  }
-
-  public static createId(): string {
-    return new UUID(4).format();
   }
 
   private getSelfUserId(): string {

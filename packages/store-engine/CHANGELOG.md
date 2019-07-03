@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.4.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.3.1...@wireapp/store-engine@3.4.0) (2019-07-02)
+
+
+### Features
+
+* **tslint-config:** Add member ordering ([#1972](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/1972)) ([5a19864](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/5a19864))
+
+
+
+
+
+## [3.3.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.3.0...@wireapp/store-engine@3.3.1) (2019-07-02)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+# [3.3.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.2.0...@wireapp/store-engine@3.3.0) (2019-06-26)
+
+
+### Features
+
+* **store-engine,store-engine-bro-fs:** Distribute FileSystemEngine in separate package ([#1990](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/1990)) ([5c71587](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/5c71587))
+
+
+
+
+
+# [3.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.1.1...@wireapp/store-engine@3.2.0) (2019-06-25)
+
+
+### Features
+
+* **store-engine,store-engine-dexie:** Distribute IndexedDBEngine in separate package ([#1980](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/1980)) ([90daae9](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/90daae9))
+
+
+
+
+
 ## [3.1.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.1.0...@wireapp/store-engine@3.1.1) (2019-06-24)
 
 **Note:** Version bump only for package @wireapp/store-engine
