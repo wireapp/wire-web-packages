@@ -77,5 +77,10 @@ after_success:
       echo "${SSH_REPO}"
       git remote set-url origin "${SSH_REPO}"
       yarn release
-      NODE_DEBUG="@wireapp:*" node packages/core/src/demo/status-bot.js "4ae15efc-d061-4013-98f2-bcd81ab39b60"
+      IS_RELEASE_SUCCESS=$?
+      if [[ $IS_RELEASE_SUCCESS -eq 0 ]]; then
+        NODE_DEBUG="@wireapp:*" node packages/core/src/demo/status-bot.js "4ae15efc-d061-4013-98f2-bcd81ab39b60"
+      else
+        exit $IS_RELEASE_SUCCESS
+      fi
     fi
