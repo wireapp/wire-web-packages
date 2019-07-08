@@ -28,9 +28,9 @@ interface MemberDataBase {
 
 interface MemberDataCreated extends MemberDataBase {
   /** Timestamp of invitation creation. */
-  created_at?: Date;
+  created_at: Date;
   /** ID of the inviting user. */
-  created_by?: string;
+  created_by: string;
 }
 
 export type MemberData = MemberDataBase | MemberDataCreated;
