@@ -23,5 +23,6 @@ export interface NewTeamData {
   members?: MemberData[];
   name: string;
   icon: string;
+  icon_key: string;
   binding?: boolean;
 }
