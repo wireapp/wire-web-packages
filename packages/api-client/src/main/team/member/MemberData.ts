@@ -26,11 +26,11 @@ interface MemberDataBase {
   user: string;
 }
 
-interface MemberDataCreated extends MemberDataBase {
+interface MemberDataInvite extends MemberDataBase {
   /** Timestamp of invitation creation. */
   created_at: Date;
   /** ID of the inviting user. */
   created_by: string;
 }
 
-export type MemberData = MemberDataBase | MemberDataCreated;
+export type MemberData = MemberDataBase | MemberDataInvite;

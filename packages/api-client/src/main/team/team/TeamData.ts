@@ -27,7 +27,7 @@ export interface TeamData {
   currency?: SupportedCurrency;
   /** Team icon (asset ID) */
   icon: string;
-  /** Team icon asset key */
+  /** Team icon (asset key) */
   icon_key?: string;
   id: string;
   name: string;

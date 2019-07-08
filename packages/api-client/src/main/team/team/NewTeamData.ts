@@ -27,6 +27,6 @@ export interface NewTeamData {
   name: string;
   /** Team icon (asset ID) */
   icon: string;
-  /** Team icon asset key */
+  /** Team icon (asset key) */
   icon_key?: string;
 }
