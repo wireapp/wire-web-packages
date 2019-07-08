@@ -24,6 +24,7 @@ export interface TeamData {
   creator: string;
   currency?: SupportedCurrency;
   icon: string;
+  icon_key: string;
   id: string;
   name: string;
 }
