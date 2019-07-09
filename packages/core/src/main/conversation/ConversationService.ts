@@ -897,7 +897,7 @@ export class ConversationService {
     });
   }
 
-  public async getUnencryptedAsset(assetId: string, assetToken: string): Promise<ArrayBuffer> {
+  public async getUnencryptedAsset(assetId: string, assetToken?: string): Promise<ArrayBuffer> {
     return this.apiClient.asset.api.getAsset(assetId, assetToken);
   }
 
