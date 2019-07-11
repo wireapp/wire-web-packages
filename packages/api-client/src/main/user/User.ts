@@ -18,10 +18,10 @@
  */
 
 import {ServiceRef} from '../conversation/';
-import {UserAsset} from '../user/';
+import {UserAccentColor, UserAsset} from '../user/';
 
 export interface User {
-  accent_id?: number;
+  accent_id?: UserAccentColor;
   assets: UserAsset[];
   deleted?: boolean;
   email?: string;

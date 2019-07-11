@@ -18,10 +18,10 @@
  */
 
 import {TeamData} from '../team/team/TeamData';
-import {UserAsset} from '../user/';
+import {UserAccentColor, UserAsset} from '../user/';
 
 export interface RegisterData {
-  accent_id?: number;
+  accent_id?: UserAccentColor;
   assets?: UserAsset[];
   email?: string;
   email_code?: string;

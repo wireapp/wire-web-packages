@@ -18,10 +18,10 @@
  */
 
 import {Picture, SSOSignature} from '../self/';
-import {UserAsset} from '../user/';
+import {UserAccentColor, UserAsset} from '../user/';
 
 export interface Self {
-  accent_id?: number;
+  accent_id?: UserAccentColor;
   assets: UserAsset[];
   deleted?: boolean;
   email?: string;

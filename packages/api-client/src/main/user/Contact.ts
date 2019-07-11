@@ -17,8 +17,10 @@
  *
  */
 
+import {UserAccentColor} from '../user/';
+
 export interface Contact {
-  accent_id?: number;
+  accent_id?: UserAccentColor;
   handle: string;
   id: string;
   name: string;
