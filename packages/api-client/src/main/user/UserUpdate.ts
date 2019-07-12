@@ -17,7 +17,7 @@
  *
  */
 
-import {UserAccentColor} from '@wireapp/commons/util/AccentColor';
+import {UserAccentColor} from '@wireapp/commons/dist/commonjs/util/AccentColor';
 import {UserAsset} from '../user/';
 
 export interface UserUpdate {
