@@ -17,7 +17,7 @@
  *
  */
 
-import {UserAccentColor} from '@wireapp/commons/util/AccentColor';
+import {UserAccentColor} from '@wireapp/commons/dist/commonjs/util/AccentColor';
 import {TeamData} from '../team/team/TeamData';
 import {UserAsset} from '../user/';
 
