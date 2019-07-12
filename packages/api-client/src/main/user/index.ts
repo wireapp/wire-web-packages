@@ -28,7 +28,6 @@ export * from './RTCIceServer';
 export * from './SearchResult';
 export * from './SendActivationCode';
 export * from './User';
-export * from './UserAccentColor';
 export * from './UserAPI';
 export * from './UserAsset';
 export * from './UserError';

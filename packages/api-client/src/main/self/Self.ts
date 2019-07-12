@@ -17,8 +17,9 @@
  *
  */
 
+import {UserAccentColor} from '@wireapp/commons/util/AccentColor';
 import {Picture, SSOSignature} from '../self/';
-import {UserAccentColor, UserAsset} from '../user/';
+import {UserAsset} from '../user/';
 
 export interface Self {
   accent_id?: UserAccentColor;

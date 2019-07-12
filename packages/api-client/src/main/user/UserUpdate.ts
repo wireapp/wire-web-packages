@@ -17,7 +17,8 @@
  *
  */
 
-import {UserAccentColor, UserAsset} from '../user/';
+import {UserAccentColor} from '@wireapp/commons/util/AccentColor';
+import {UserAsset} from '../user/';
 
 export interface UserUpdate {
   accent_id?: UserAccentColor;

@@ -17,8 +17,9 @@
  *
  */
 
+import {UserAccentColor} from '@wireapp/commons/util/AccentColor';
 import {ServiceRef} from '../conversation/';
-import {UserAccentColor, UserAsset} from '../user/';
+import {UserAsset} from '../user/';
 
 export interface User {
   accent_id?: UserAccentColor;
