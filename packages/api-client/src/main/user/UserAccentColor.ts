@@ -16,4 +16,12 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-export type UserAccentColor = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+export enum UserAccentColor {
+  BRIGHT_ORANGE = 5,
+  DEPRECATED_YELLOW = 3,
+  SOFT_PINK = 6,
+  STRONG_BLUE = 1,
+  STRONG_LIME_GREEN = 2,
+  VIOLET = 7,
+  VIVID_RED = 4,
+}
