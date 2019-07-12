@@ -17,12 +17,12 @@
  *
  */
 
-import {UserAccentColor} from '@wireapp/commons/dist/commonjs/util/AccentColor';
+import {AccentColor} from '@wireapp/commons';
 import {TeamData} from '../team/team/TeamData';
 import {UserAsset} from '../user/';
 
 export interface RegisterData {
-  accent_id?: UserAccentColor;
+  accent_id?: AccentColor.UserAccentColor;
   assets?: UserAsset[];
   email?: string;
   email_code?: string;

@@ -17,10 +17,10 @@
  *
  */
 
-import {UserAccentColor} from '@wireapp/commons/dist/commonjs/util/AccentColor';
+import {AccentColor} from '@wireapp/commons';
 
 export interface Contact {
-  accent_id?: UserAccentColor;
+  accent_id?: AccentColor.UserAccentColor;
   handle: string;
   id: string;
   name: string;

@@ -17,12 +17,12 @@
  *
  */
 
-import {UserAccentColor} from '@wireapp/commons/dist/commonjs/util/AccentColor';
+import {AccentColor} from '@wireapp/commons';
 import {Picture, SSOSignature} from '../self/';
 import {UserAsset} from '../user/';
 
 export interface Self {
-  accent_id?: UserAccentColor;
+  accent_id?: AccentColor.UserAccentColor;
   assets: UserAsset[];
   deleted?: boolean;
   email?: string;

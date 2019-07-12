@@ -17,11 +17,11 @@
  *
  */
 
-import {UserAccentColor} from '@wireapp/commons/dist/commonjs/util/AccentColor';
+import {AccentColor} from '@wireapp/commons';
 import {UserAsset} from '../user/';
 
 export interface UserUpdate {
-  accent_id?: UserAccentColor;
+  accent_id?: AccentColor.UserAccentColor;
   assets?: UserAsset[];
   name: string;
 }
