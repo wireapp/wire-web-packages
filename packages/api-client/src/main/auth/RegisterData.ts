@@ -22,7 +22,7 @@ import {TeamData} from '../team/team/TeamData';
 import {UserAsset} from '../user/';
 
 export interface RegisterData {
-  accent_id?: AccentColor.UserAccentColor;
+  accent_id?: AccentColor.AccentColorID;
   assets?: UserAsset[];
   email?: string;
   email_code?: string;

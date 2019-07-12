@@ -22,7 +22,7 @@ import {ServiceRef} from '../conversation/';
 import {UserAsset} from '../user/';
 
 export interface User {
-  accent_id?: AccentColor.UserAccentColor;
+  accent_id?: AccentColor.AccentColorID;
   assets: UserAsset[];
   deleted?: boolean;
   email?: string;

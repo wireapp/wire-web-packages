@@ -19,7 +19,7 @@
 
 import * as RandomUtil from './RandomUtil';
 
-export enum UserAccentColor {
+export enum AccentColorID {
   BRIGHT_ORANGE = 5,
   SOFT_PINK = 6,
   STRONG_BLUE = 1,
@@ -32,49 +32,49 @@ export enum UserAccentColor {
 
 export interface AccentColor {
   color: string;
-  id: UserAccentColor;
+  id: AccentColorID;
   name: string;
 }
 
 export const STRONG_BLUE: AccentColor = {
   color: '#2391d3',
-  id: UserAccentColor.STRONG_BLUE,
+  id: AccentColorID.STRONG_BLUE,
   name: 'StrongBlue',
 };
 
 export const STRONG_LIME_GREEN: AccentColor = {
   color: '#00c800',
-  id: UserAccentColor.STRONG_LIME_GREEN,
+  id: AccentColorID.STRONG_LIME_GREEN,
   name: 'StrongLimeGreen',
 };
 
 export const DEPRECATED_YELLOW: AccentColor = {
   color: '#febf02',
-  id: UserAccentColor.YELLOW,
+  id: AccentColorID.YELLOW,
   name: 'Yellow',
 };
 
 export const VIVID_RED: AccentColor = {
   color: '#fb0807',
-  id: UserAccentColor.VIVID_RED,
+  id: AccentColorID.VIVID_RED,
   name: 'VividRed',
 };
 
 export const BRIGHT_ORANGE: AccentColor = {
   color: '#ff8900',
-  id: UserAccentColor.BRIGHT_ORANGE,
+  id: AccentColorID.BRIGHT_ORANGE,
   name: 'BrightOrange',
 };
 
 export const SOFT_PINK: AccentColor = {
   color: '#fe5ebd',
-  id: UserAccentColor.SOFT_PINK,
+  id: AccentColorID.SOFT_PINK,
   name: 'SoftPink',
 };
 
 export const VIOLET: AccentColor = {
   color: '#9c00fe',
-  id: UserAccentColor.VIOLET,
+  id: AccentColorID.VIOLET,
   name: 'Violet',
 };
 
