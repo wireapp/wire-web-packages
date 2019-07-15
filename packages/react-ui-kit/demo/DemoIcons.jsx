@@ -25,6 +25,7 @@ import {
   AttachmentIcon,
   AudioVideoIcon,
   CallIcon,
+  CameraIcon,
   CamIcon,
   CheckIcon,
   ChromeIcon,
@@ -77,6 +78,7 @@ export const DemoIcons = () => (
       <AttachmentIcon height={32} />
       <AudioVideoIcon height={32} />
       <CallIcon height={32} />
+      <CameraIcon width={32} />
       <CamIcon width={32} />
       <CheckIcon width={32} />
       <DeviceIcon height={32} />
@@ -116,6 +118,7 @@ export const DemoIcons = () => (
       <AttachmentIcon height={32} shadow />
       <AudioVideoIcon height={32} shadow />
       <CallIcon height={32} shadow />
+      <CameraIcon width={32} shadow />
       <CamIcon width={32} shadow />
       <CheckIcon width={32} shadow />
       <DeviceIcon height={32} shadow />
