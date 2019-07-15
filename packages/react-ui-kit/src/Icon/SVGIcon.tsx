@@ -44,6 +44,7 @@ export const SVGIcon = ({
   color = COLOR.ICON,
   shadow,
   children,
+  style,
   ...props
 }: InternalSVGIconProps) => {
   let newScale = scale;
@@ -57,7 +58,7 @@ export const SVGIcon = ({
   const shadowId = shadow && Math.random().toString();
   return (
     <svg
-      style={{overflow: 'visible'}}
+      style={{...style, overflow: 'visible'}}
       fill={color}
       viewBox={`0 0 ${realWidth} ${realHeight}`}
       width={newWidth}
