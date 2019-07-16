@@ -17,41 +17,39 @@
  *
  */
 
-import {ProteusError} from './ProteusError';
+import {ProteusError} from './';
 
-export class DecodeError extends ProteusError {
-  static CODE = {
-    CASE_300: 300,
-    CASE_301: 301,
-    CASE_302: 302,
-    CASE_303: 303,
-  };
+export enum CODE {
+  CASE_300 = 300,
+  CASE_301 = 301,
+  CASE_302 = 302,
+  CASE_303 = 303,
+}
 
+export class BaseError extends ProteusError.BaseError {
   constructor(message = 'Unknown decoding error', code = 3) {
     super(message, code);
-    Object.setPrototypeOf(this, DecodeError.prototype);
+    Object.setPrototypeOf(this, BaseError.prototype);
   }
 }
 
-export namespace DecodeError {
-  export class InvalidType extends DecodeError {
-    constructor(message = 'Invalid type', code: number) {
-      super(message, code);
-      Object.setPrototypeOf(this, InvalidType.prototype);
-    }
+export class InvalidType extends BaseError {
+  constructor(message = 'Invalid type', code: number) {
+    super(message, code);
+    Object.setPrototypeOf(this, InvalidType.prototype);
   }
+}
 
-  export class InvalidArrayLen extends DecodeError {
-    constructor(message = 'Invalid array length', code: number) {
-      super(message, code);
-      Object.setPrototypeOf(this, InvalidArrayLen.prototype);
-    }
+export class InvalidArrayLen extends BaseError {
+  constructor(message = 'Invalid array length', code: number) {
+    super(message, code);
+    Object.setPrototypeOf(this, InvalidArrayLen.prototype);
   }
+}
 
-  export class LocalIdentityChanged extends DecodeError {
-    constructor(message = 'Local identity changed', code: number) {
-      super(message, code);
-      Object.setPrototypeOf(this, LocalIdentityChanged.prototype);
-    }
+export class LocalIdentityChanged extends BaseError {
+  constructor(message = 'Local identity changed', code: number) {
+    super(message, code);
+    Object.setPrototypeOf(this, LocalIdentityChanged.prototype);
   }
 }

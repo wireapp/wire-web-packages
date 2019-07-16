@@ -17,7 +17,12 @@
  *
  */
 
-export * from './DecodeError';
-export * from './DecryptError';
-export * from './InputError';
-export * from './ProteusError';
+import * as DecodeError from './DecodeError';
+import * as DecryptError from './DecryptError';
+import * as InputError from './InputError';
+import * as ProteusError from './ProteusError';
+
+export {DecodeError};
+export {DecryptError};
+export {InputError};
+export {ProteusError};

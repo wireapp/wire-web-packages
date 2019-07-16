@@ -17,47 +17,45 @@
  *
  */
 
-import {ProteusError} from './ProteusError';
+import {ProteusError} from './';
 
-export class InputError extends ProteusError {
-  static CODE = {
-    CASE_400: 400,
-    CASE_401: 401,
-    CASE_402: 402,
-    CASE_403: 403,
-    CASE_404: 404,
-    CASE_405: 405,
-    CASE_406: 406,
-    CASE_407: 407,
-    CASE_408: 408,
-    CASE_409: 409,
-  };
+export enum CODE {
+  CASE_400 = 400,
+  CASE_401 = 401,
+  CASE_402 = 402,
+  CASE_403 = 403,
+  CASE_404 = 404,
+  CASE_405 = 405,
+  CASE_406 = 406,
+  CASE_407 = 407,
+  CASE_408 = 408,
+  CASE_409 = 409,
+}
 
+export class BaseError extends ProteusError.BaseError {
   constructor(message = 'Invalid input', code = 4) {
     super(message, code);
-    Object.setPrototypeOf(this, InputError.prototype);
+    Object.setPrototypeOf(this, BaseError.prototype);
   }
 }
 
-export namespace InputError {
-  export class RangeError extends InputError {
-    constructor(message = 'Invalid array length', code: number) {
-      super(message, code);
-      Object.setPrototypeOf(this, RangeError.prototype);
-    }
+export class RangeError extends BaseError {
+  constructor(message = 'Invalid array length', code: number) {
+    super(message, code);
+    Object.setPrototypeOf(this, RangeError.prototype);
   }
+}
 
-  export class TypeError extends InputError {
-    constructor(message = 'Invalid type', code: number) {
-      super(message, code);
-      Object.setPrototypeOf(this, TypeError.prototype);
-    }
+export class TypeError extends BaseError {
+  constructor(message = 'Invalid type', code: number) {
+    super(message, code);
+    Object.setPrototypeOf(this, TypeError.prototype);
   }
+}
 
-  export class ConversionError extends InputError {
-    constructor(message = 'Conversion error', code: number) {
-      super(message, code);
-      Object.setPrototypeOf(this, ConversionError.prototype);
-    }
+export class ConversionError extends BaseError {
+  constructor(message = 'Conversion error', code: number) {
+    super(message, code);
+    Object.setPrototypeOf(this, ConversionError.prototype);
   }
 }

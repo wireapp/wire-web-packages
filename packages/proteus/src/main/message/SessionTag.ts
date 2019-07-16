@@ -20,7 +20,7 @@
 import * as CBOR from '@wireapp/cbor';
 import * as sodium from 'libsodium-wrappers-sumo';
 
-import {DecodeError} from '../errors/DecodeError';
+import {DecodeError} from '../errors/';
 import * as ClassUtil from '../util/ClassUtil';
 import * as RandomUtil from '../util/RandomUtil';
 

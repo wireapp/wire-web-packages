@@ -22,9 +22,7 @@ import * as CBOR from '@wireapp/cbor';
 import * as ClassUtil from '../util/ClassUtil';
 import * as MemoryUtil from '../util/MemoryUtil';
 
-import {DecodeError} from '../errors/DecodeError';
-import {DecryptError} from '../errors/DecryptError';
-import {ProteusError} from '../errors/ProteusError';
+import {DecodeError, DecryptError, ProteusError} from '../errors/';
 import {SessionState} from './SessionState';
 
 import {IdentityKey} from '../keys/IdentityKey';
@@ -156,7 +154,7 @@ export class Session {
           pre_key_message.base_key,
         );
       }
-      throw new ProteusError(
+      throw new ProteusError.BaseError(
         `Unable to find PreKey ID "${pre_key_message.prekey_id}" in PreKey store "${pre_key_store.constructor.name}".`,
         ProteusError.CODE.CASE_101,
       );
@@ -219,7 +217,7 @@ export class Session {
 
       if (!session_state) {
         return reject(
-          new ProteusError(
+          new ProteusError.BaseError(
             `Could not find session for tag '${(this.session_tag || '').toString()}'.`,
             ProteusError.CODE.CASE_102,
           ),
@@ -247,7 +245,7 @@ export class Session {
         }
         return resolve(this._decrypt_prekey_message(envelope, msg, prekey_store));
       }
-      throw new DecryptError('Unknown message type.', DecryptError.CODE.CASE_200);
+      throw new DecryptError.BaseError('Unknown message type.', DecryptError.CODE.CASE_200);
     });
   }
 

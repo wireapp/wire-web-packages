@@ -17,18 +17,18 @@
  *
  */
 
-export class ProteusError extends Error {
-  static CODE: Record<string, number> = {
-    CASE_100: 100,
-    CASE_101: 101,
-    CASE_102: 102,
-    CASE_103: 103,
-    CASE_104: 104,
-  };
+export enum CODE {
+  CASE_100 = 100,
+  CASE_101 = 101,
+  CASE_102 = 102,
+  CASE_103 = 103,
+  CASE_104 = 104,
+}
 
+export class BaseError extends Error {
   constructor(public message: string, public code = 1) {
     super(message);
-    Object.setPrototypeOf(this, ProteusError.prototype);
+    Object.setPrototypeOf(this, BaseError.prototype);
 
     this.code = code;
     this.message = message;
