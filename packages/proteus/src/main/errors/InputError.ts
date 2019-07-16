@@ -17,7 +17,7 @@
  *
  */
 
-import {ProteusError} from './';
+import * as ProteusError from '../errors/ProteusError';
 
 export enum CODE {
   CASE_400 = 400,
