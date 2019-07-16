@@ -23,7 +23,7 @@ import * as ArrayUtil from '../util/ArrayUtil';
 import * as ClassUtil from '../util/ClassUtil';
 import * as MemoryUtil from '../util/MemoryUtil';
 
-import {DecryptError} from '../errors/DecryptError';
+import {DecryptError} from '../errors/';
 
 import {DerivedSecrets} from '../derived/DerivedSecrets';
 

@@ -21,7 +21,7 @@ import * as CBOR from '@wireapp/cbor';
 import * as ed2curve from 'ed2curve';
 import * as sodium from 'libsodium-wrappers-sumo';
 
-import {InputError} from '../errors/InputError';
+import {InputError} from '../errors/';
 import * as ClassUtil from '../util/ClassUtil';
 
 export class PublicKey {

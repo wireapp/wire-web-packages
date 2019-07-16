@@ -19,7 +19,7 @@
 
 import * as CBOR from '@wireapp/cbor';
 
-import {InputError} from '../errors/InputError';
+import {InputError} from '../errors/';
 import {PublicKey} from '../keys/PublicKey';
 import * as ClassUtil from '../util/ClassUtil';
 import {Message} from './Message';

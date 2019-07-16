@@ -25,7 +25,7 @@ import * as ClassUtil from '../util/ClassUtil';
 import {PublicKey} from './PublicKey';
 import {SecretKey} from './SecretKey';
 
-import {InputError} from '../errors/InputError';
+import {InputError} from '../errors/';
 
 /** Construct an ephemeral key pair. */
 export class KeyPair {

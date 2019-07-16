@@ -23,7 +23,7 @@ import * as sodium from 'libsodium-wrappers-sumo';
 
 import * as ClassUtil from '../util/ClassUtil';
 
-import {InputError} from '../errors/InputError';
+import {InputError} from '../errors/';
 import * as ArrayUtil from '../util/ArrayUtil';
 import {PublicKey} from './PublicKey';
 

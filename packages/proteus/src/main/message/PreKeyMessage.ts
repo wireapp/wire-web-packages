@@ -23,7 +23,7 @@ import {IdentityKey} from '../keys/IdentityKey';
 import {PublicKey} from '../keys/PublicKey';
 import * as ClassUtil from '../util/ClassUtil';
 
-import {InputError} from '../errors/InputError';
+import {InputError} from '../errors/';
 import {CipherMessage} from './CipherMessage';
 import {Message} from './Message';
 

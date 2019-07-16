@@ -19,10 +19,8 @@
 
 import * as CBOR from '@wireapp/cbor';
 
+import {InputError} from '../errors/';
 import * as ClassUtil from '../util/ClassUtil';
-
-import {InputError} from '../errors/InputError';
-
 import {KeyPair} from './KeyPair';
 
 /**

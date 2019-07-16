@@ -17,7 +17,7 @@
  *
  */
 
-import {ProteusError} from '../errors/ProteusError';
+import {ProteusError} from '../errors/';
 
 export function assert_is_not_zeros(array: number[] | Uint8Array): void {
   let only_zeroes = true;
@@ -29,7 +29,7 @@ export function assert_is_not_zeros(array: number[] | Uint8Array): void {
   }
 
   if (only_zeroes === true) {
-    throw new ProteusError('Array consists only of zeroes.', ProteusError.CODE.CASE_100);
+    throw new ProteusError.BaseError('Array consists only of zeroes.', ProteusError.CODE.CASE_100);
   }
 }
 

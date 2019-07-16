@@ -21,7 +21,7 @@ import * as CBOR from '@wireapp/cbor';
 
 import {CipherKey} from '../derived/CipherKey';
 import {DerivedSecrets} from '../derived/DerivedSecrets';
-import {InputError} from '../errors/InputError';
+import {InputError} from '../errors/';
 import {KeyPair} from '../keys/KeyPair';
 import {PublicKey} from '../keys/PublicKey';
 import * as ClassUtil from '../util/ClassUtil';

@@ -19,15 +19,11 @@
 
 import * as CBOR from '@wireapp/cbor';
 
+import {DecryptError, ProteusError} from '../errors/';
 import {PublicKey} from '../keys/PublicKey';
-import * as ClassUtil from '../util/ClassUtil';
-
-import {DecryptError} from '../errors/DecryptError';
-import {ProteusError} from '../errors/ProteusError';
-
 import {CipherMessage} from '../message/CipherMessage';
 import {Envelope} from '../message/Envelope';
-
+import * as ClassUtil from '../util/ClassUtil';
 import {ChainKey} from './ChainKey';
 import {MessageKeys} from './MessageKeys';
 
@@ -102,7 +98,7 @@ export class RecvChain {
 
   commit_message_keys(keys: MessageKeys[]): void {
     if (keys.length > RecvChain.MAX_COUNTER_GAP) {
-      throw new ProteusError(
+      throw new ProteusError.BaseError(
         `Number of message keys (${keys.length}) exceed message chain counter gap (${RecvChain.MAX_COUNTER_GAP}).`,
         ProteusError.CODE.CASE_103,
       );
@@ -117,7 +113,7 @@ export class RecvChain {
     keys.map(key => this.message_keys.push(key));
 
     if (keys.length > RecvChain.MAX_COUNTER_GAP) {
-      throw new ProteusError(
+      throw new ProteusError.BaseError(
         `Skipped message keys which exceed the message chain counter gap (${RecvChain.MAX_COUNTER_GAP}).`,
         ProteusError.CODE.CASE_104,
       );
