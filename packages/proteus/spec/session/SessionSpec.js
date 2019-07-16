@@ -426,7 +426,7 @@ describe('Session', () => {
 
         fail();
       } catch (error) {
-        expect(error instanceof Proteus.errors.DecryptError).toBe(true);
+        expect(error instanceof Proteus.errors.DecryptError.BaseError).toBe(true);
         expect(error.code).toBe(Proteus.errors.DecryptError.CODE.CASE_206);
       }
     });

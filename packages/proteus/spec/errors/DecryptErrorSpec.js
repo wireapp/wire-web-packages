@@ -44,12 +44,12 @@ describe('DecryptError', () => {
 
     it('assures that specializations are the same type as generics', () => {
       const error = new Proteus.errors.DecryptError.InvalidMessage(error_message, error_code);
-      expect(error instanceof Proteus.errors.DecryptError).toBe(true);
+      expect(error instanceof Proteus.errors.DecryptError.BaseError).toBe(true);
       expect(error instanceof Proteus.errors.DecryptError.InvalidMessage).toBe(true);
     });
 
     it('is possible to create an error from a generic class', () => {
-      const error = new Proteus.errors.DecryptError();
+      const error = new Proteus.errors.DecryptError.BaseError();
       expect(error.message).toBeDefined();
     });
   });
