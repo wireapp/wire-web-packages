@@ -22,6 +22,7 @@
     "no-duplicate-variable": [true, "check-parameters"],
     "no-floating-promises": true,
     "no-invalid-template-strings": true,
+    "no-namespace": true,
     "no-object-literal-type-assertion": true,
     "no-return-await": true,
     "no-sparse-arrays": true,
