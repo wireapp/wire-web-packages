@@ -132,7 +132,6 @@ const messageIdCache = {};
   };
 
   const sendMessageResponse = async (data, payload) => {
-    return;
     const {content, id: messageId, messageTimer = 0, type} = payload;
     const conversationId = data.conversation;
 
