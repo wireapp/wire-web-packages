@@ -64,7 +64,6 @@ import {
 } from '@wireapp/protocol-messaging';
 
 import {
-  AssetContent,
   ClearedContent,
   DeletedContent,
   HiddenContent,
@@ -87,7 +86,6 @@ import {
   FileAssetMessage,
   FileAssetMetaDataMessage,
   HideMessage,
-  ImageAssetMessage,
   ImageAssetMessageOutgoing,
   LocationMessage,
   Message,
@@ -319,8 +317,8 @@ export class ConversationService {
     }
 
     const editedMessage = MessageEdit.create({
+      [GenericMessageType.TEXT]: textMessage,
       replacingMessageId: originalMessageId,
-      text: textMessage,
     });
 
     const genericMessage = GenericMessage.create({
@@ -456,7 +454,10 @@ export class ConversationService {
     };
   }
 
-  private async sendImage(payloadBundle: ImageAssetMessageOutgoing, userIds?: string[]): Promise<ImageAssetMessage> {
+  private async sendImage(
+    payloadBundle: ImageAssetMessageOutgoing,
+    userIds?: string[],
+  ): Promise<ImageAssetMessageOutgoing> {
     if (!payloadBundle.content) {
       throw new Error('No content for sendImage provided.');
     }
@@ -505,7 +506,6 @@ export class ConversationService {
 
     return {
       ...payloadBundle,
-      content: assetMessage as AssetContent,
       messageTimer: this.messageTimer.getMessageTimer(payloadBundle.conversation),
       state: PayloadBundleState.OUTGOING_SENT,
     };
@@ -660,8 +660,8 @@ export class ConversationService {
     }
 
     let genericMessage = GenericMessage.create({
-      messageId: payloadBundle.id,
       [GenericMessageType.TEXT]: textMessage,
+      messageId: payloadBundle.id,
     });
 
     const expireAfterMillis = this.messageTimer.getMessageTimer(payloadBundle.conversation);
@@ -718,13 +718,15 @@ export class ConversationService {
   public async deleteMessageLocal(conversationId: string, messageIdToHide: string): Promise<HideMessage> {
     const messageId = MessageBuilder.createId();
 
-    const content: HiddenContent = MessageHide.create({
+    const content: HiddenContent = {
       conversationId,
       messageId: messageIdToHide,
-    });
+    };
+
+    const messageHide = MessageHide.create(content);
 
     const genericMessage = GenericMessage.create({
-      [GenericMessageType.HIDDEN]: content,
+      [GenericMessageType.HIDDEN]: messageHide,
       messageId,
     });
 
@@ -751,12 +753,14 @@ export class ConversationService {
   ): Promise<DeleteMessage> {
     const messageId = MessageBuilder.createId();
 
-    const content: DeletedContent = MessageDelete.create({
+    const content: DeletedContent = {
       messageId: messageIdToDelete,
-    });
+    };
+
+    const messageDelete = MessageDelete.create(content);
 
     const genericMessage = GenericMessage.create({
-      [GenericMessageType.DELETED]: content,
+      [GenericMessageType.DELETED]: messageDelete,
       messageId,
     });
 
@@ -823,7 +827,7 @@ export class ConversationService {
       }
 
       linkPreviewMessage.article = Article.create({
-        image: linkPreviewMessage.image,
+        [GenericMessageType.IMAGE]: linkPreviewMessage.image,
         permanentUrl: linkPreviewMessage.permanentUrl,
         summary: linkPreviewMessage.summary,
         title: linkPreviewMessage.title,
