@@ -33,7 +33,8 @@ export enum CODE {
   CASE_210 = 210,
   CASE_211 = 211,
   CASE_212 = 212,
-  CASE_213 = 213, // REMOTE_ENCRYPTION_FAILURE: Created by the receiver when getting a decryption failure symbol (💣)
+  /** REMOTE_ENCRYPTION_FAILURE: Created by the receiver when getting a decryption failure symbol (💣) */
+  CASE_213 = 213,
 }
 
 export class BaseError extends ProteusError.BaseError {
