@@ -30,7 +30,7 @@ export interface StyledLabelProps<T = HTMLLabelElement> extends React.HTMLProps<
   markInvalid?: boolean;
 }
 
-const filterStyledLabelProps = (props: Object) => filterProps(props, ['markInvalid']);
+const filterStyledLabelProps = (props: StyledLabelProps) => filterProps(props, ['markInvalid']);
 
 const StyledLabel = (props: StyledLabelProps) => {
   const checkSvg =
@@ -70,7 +70,7 @@ interface CheckboxProps<T = HTMLInputElement> extends InputProps<T> {
   id?: string;
 }
 
-const filterCheckboxProps = (props: Object) => filterProps(props, ['markInvalid']);
+const filterCheckboxProps = (props: CheckboxProps) => filterProps(props, ['markInvalid']);
 
 export const Checkbox: React.FC<CheckboxProps<HTMLInputElement>> = React.forwardRef<
   HTMLInputElement,

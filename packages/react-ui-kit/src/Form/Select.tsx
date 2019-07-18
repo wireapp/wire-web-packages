@@ -57,6 +57,6 @@ export const selectStyle: <T>(props: SelectProps<T>) => ObjectInterpolation<unde
   paddingRight: '30px',
 });
 
-const filterSelectProps = (props: Object) => filterProps(props, ['markInvalid']);
+const filterSelectProps = (props: SelectProps) => filterProps(props, ['markInvalid']);
 
 export const Select = (props: SelectProps) => <select css={selectStyle(props)} {...filterSelectProps(props)} />;
