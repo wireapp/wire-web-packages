@@ -86,7 +86,7 @@ import {
   FileAssetMessage,
   FileAssetMetaDataMessage,
   HideMessage,
-  ImageAssetMessageOutgoing,
+  ImageAssetMessage,
   LocationMessage,
   Message,
   PingMessage,
@@ -454,10 +454,7 @@ export class ConversationService {
     };
   }
 
-  private async sendImage(
-    payloadBundle: ImageAssetMessageOutgoing,
-    userIds?: string[],
-  ): Promise<ImageAssetMessageOutgoing> {
+  private async sendImage(payloadBundle: ImageAssetMessage, userIds?: string[]): Promise<ImageAssetMessage> {
     if (!payloadBundle.content) {
       throw new Error('No content for sendImage provided.');
     }
@@ -937,7 +934,7 @@ export class ConversationService {
       case PayloadBundleType.ASSET_META:
         return this.sendFileMetaData(payloadBundle, userIds);
       case PayloadBundleType.ASSET_IMAGE:
-        return this.sendImage(payloadBundle as ImageAssetMessageOutgoing, userIds);
+        return this.sendImage(payloadBundle, userIds);
       case PayloadBundleType.CALL:
         return this.sendCall(payloadBundle, userIds);
       case PayloadBundleType.CLIENT_ACTION: {

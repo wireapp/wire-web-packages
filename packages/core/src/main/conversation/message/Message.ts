@@ -18,7 +18,6 @@
  */
 
 import {
-  AssetContent,
   CallingContent,
   ClearedContent,
   ClientActionContent,
@@ -67,14 +66,8 @@ export interface FileAssetAbortMessage extends PayloadBundle {
   type: PayloadBundleType.ASSET_ABORT;
 }
 
-// TODO Merge ImageAssetMessageOutgoing & ImageAssetMessage
-export interface ImageAssetMessageOutgoing extends PayloadBundle {
-  content: ImageAssetContent;
-  type: PayloadBundleType.ASSET_IMAGE;
-}
-
 export interface ImageAssetMessage extends PayloadBundle {
-  content: AssetContent;
+  content: ImageAssetContent;
   type: PayloadBundleType.ASSET_IMAGE;
 }
 
@@ -129,7 +122,6 @@ export type Message =
   | FileAssetMetaDataMessage
   | HideMessage
   | ImageAssetMessage
-  | ImageAssetMessageOutgoing
   | LocationMessage
   | PingMessage
   | ReactionMessage

@@ -48,7 +48,7 @@ import {
   FileAssetAbortMessage,
   FileAssetMessage,
   FileAssetMetaDataMessage,
-  ImageAssetMessageOutgoing,
+  ImageAssetMessage,
   LocationMessage,
   PingMessage,
   ReactionMessage,
@@ -167,7 +167,7 @@ export class MessageBuilder {
     messageId = MessageBuilder.createId(),
     expectsReadConfirmation?: boolean,
     legalHoldStatus?: LegalHoldStatus,
-  ): Promise<ImageAssetMessageOutgoing> {
+  ): Promise<ImageAssetMessage> {
     const imageAsset = await this.assetService.uploadImageAsset(image);
 
     const content: ImageAssetContent = {
