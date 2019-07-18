@@ -521,6 +521,7 @@ export class Account extends EventEmitter {
         } = genericMessage[GenericMessageType.ASSET];
         const isImage = !!uploaded && !!uploaded.assetId && !!original && !!original.image;
 
+        //TODO: isImage ? ImageAssetContent
         const content: AssetContent = {
           abortReason: notUploaded,
           expectsReadConfirmation,
