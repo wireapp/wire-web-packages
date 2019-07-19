@@ -73,7 +73,7 @@ export class NotificationService {
     try {
       await this.database.getLastNotificationId();
       return this.database.updateLastNotificationId(lastNotification);
-    } catch (e) {
+    } catch (error) {
       return this.database.createLastNotificationId(lastNotification);
     }
   }

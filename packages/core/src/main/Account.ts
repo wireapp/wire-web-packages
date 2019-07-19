@@ -158,7 +158,6 @@ export class Account extends EventEmitter {
 
     if (initClient) {
       await this.initClient(loginData, clientInfo);
-      return this.apiClient.context;
     }
 
     return this.apiClient.context;
@@ -249,7 +248,7 @@ export class Account extends EventEmitter {
 
   public async logout(): Promise<void> {
     await this.apiClient.logout();
-    return this.resetContext();
+    await this.resetContext();
   }
 
   public async listen(notificationHandler?: Function): Promise<Account> {
