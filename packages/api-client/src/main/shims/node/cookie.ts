@@ -52,8 +52,9 @@ const loadExistingCookie = async (engine: CRUDEngine): Promise<Cookie> => {
   }
 };
 
-const setInternalCookie = async (cookie: Cookie, engine: CRUDEngine): Promise<string> => {
+const setInternalCookie = (cookie: Cookie, engine: CRUDEngine): Promise<string> => {
   const entity: PersistedCookie = {expiration: cookie.expiration, zuid: cookie.zuid};
+
   try {
     return engine.create(AUTH_TABLE_NAME, AUTH_COOKIE_KEY, entity);
   } catch (error) {

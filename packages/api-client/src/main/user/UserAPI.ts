@@ -278,16 +278,14 @@ export class UserAPI {
     if (handles && handles.length) {
       const uniqueHandles = ArrayUtil.removeDuplicates(handles);
       const handleChunks = ArrayUtil.chunk(uniqueHandles, limit);
-      const tasks = handleChunks.map(handleChunk => this._getUsers({handles: handleChunk}));
-      const resolvedTasks = await Promise.all(tasks);
+      const resolvedTasks = await Promise.all(handleChunks.map(handleChunk => this._getUsers({handles: handleChunk})));
       return ArrayUtil.flatten(resolvedTasks);
     }
 
     if (ids && ids.length) {
       const uniqueIds = ArrayUtil.removeDuplicates(ids);
       const idChunks = ArrayUtil.chunk(uniqueIds, limit);
-      const tasks = idChunks.map(idChunk => this._getUsers({ids: idChunk}));
-      const resolvedTasks = await Promise.all(tasks);
+      const resolvedTasks = await Promise.all(idChunks.map(idChunk => this._getUsers({ids: idChunk})));
       return ArrayUtil.flatten(resolvedTasks);
     }
 
