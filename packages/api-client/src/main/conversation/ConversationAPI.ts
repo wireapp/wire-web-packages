@@ -385,13 +385,11 @@ export class ConversationAPI {
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.OTR}/${ConversationAPI.URL.MESSAGES}`,
     };
 
-    if (typeof messageData.recipients === 'object') {
-      const response = await this.client.sendJSON<ClientMismatch>(config);
-      return response.data;
-    }
-
-    const response_1 = await this.client.sendProtocolBuffer<ClientMismatch>(config);
-    return response_1.data;
+    const response =
+      typeof messageData.recipients === 'object'
+        ? await this.client.sendJSON<ClientMismatch>(config)
+        : await this.client.sendProtocolBuffer<ClientMismatch>(config);
+    return response.data;
   }
 
   /**

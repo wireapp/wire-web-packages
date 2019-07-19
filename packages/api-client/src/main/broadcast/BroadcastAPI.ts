@@ -64,12 +64,10 @@ export class BroadcastAPI {
       url: BroadcastAPI.URL.BROADCAST,
     };
 
-    if (typeof messageData.recipients === 'object') {
-      const response = await this.client.sendJSON<UserClients>(config);
-      return response.data;
-    }
-
-    const response_1 = await this.client.sendProtocolBuffer<UserClients>(config);
-    return response_1.data;
+    const response =
+      typeof messageData.recipients === 'object'
+        ? await this.client.sendJSON<UserClients>(config)
+        : await this.client.sendProtocolBuffer<UserClients>(config);
+    return response.data;
   }
 }
