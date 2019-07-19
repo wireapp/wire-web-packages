@@ -89,9 +89,7 @@ export class SelfAPI {
       url: `${SelfAPI.URL.SELF}/${SelfAPI.URL.NAME}`,
     };
 
-    const response = await this.client.sendJSON<{
-      name: string;
-    }>(config);
+    const response = await this.client.sendJSON<{name: string}>(config);
     return response.data;
   }
 
