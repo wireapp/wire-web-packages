@@ -101,21 +101,22 @@ describe('ConversationService', () => {
         (sendingClientId, conversationId, message) =>
           new Promise((resolve, reject) => {
             if (message.recipients[aliceId] && !message.recipients[aliceId][aliceClientId]) {
-              // eslint-disable-next-line prefer-promise-reject-errors
-              reject({
-                response: {
-                  data: {
-                    deleted: {},
-                    missing: {
-                      [aliceId]: [aliceClientId],
-                      [bobId]: [bobClientId],
+              reject(
+                new Error({
+                  response: {
+                    data: {
+                      deleted: {},
+                      missing: {
+                        [aliceId]: [aliceClientId],
+                        [bobId]: [bobClientId],
+                      },
+                      redundant: {},
+                      time: new Date().toISOString(),
                     },
-                    redundant: {},
-                    time: new Date().toISOString(),
+                    status: 412,
                   },
-                  status: 412,
-                },
-              });
+                }),
+              );
             } else {
               resolve();
             }
