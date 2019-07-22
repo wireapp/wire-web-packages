@@ -20,6 +20,7 @@
 import * as CBOR from '@wireapp/cbor';
 import * as sodium from 'libsodium-wrappers-sumo';
 
+import {InputError} from '../errors/InputError';
 import * as ArrayUtil from '../util/ArrayUtil';
 import * as ClassUtil from '../util/ClassUtil';
 
@@ -83,7 +84,7 @@ export class PublicKey {
       self.pub_curve = pub_curve;
       return self;
     } catch (error) {
-      return self;
+      throw new InputError.ConversionError('Could not convert private key with libsodium.', 409);
     }
   }
 }
