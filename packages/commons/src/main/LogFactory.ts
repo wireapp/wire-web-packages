@@ -23,7 +23,9 @@ import * as logdown from 'logdown';
 import * as moment from 'moment';
 import * as path from 'path';
 
-interface LoggerOptions {
+export type Logger = logdown.Logger;
+
+export interface LoggerOptions {
   color?: string;
   forceEnable?: boolean;
   logFilePath?: string;
@@ -31,9 +33,8 @@ interface LoggerOptions {
   separator?: string;
 }
 
-class LogFactory {
+export class LogFactory {
   private static readonly logFilePath?: string = undefined;
-  private static readonly namespace?: string = undefined;
 
   static COLOR_STEP = {
     B: 97,
@@ -62,48 +63,46 @@ class LogFactory {
   }
 
   static addTimestamp(logTransport: logdown.TransportOptions): void {
-    if (this.namespace && ~logTransport.msg.indexOf(this.namespace)) {
-      logTransport.args.unshift(`[${moment().format('YYYY-MM-DD HH:mm:ss')}]`);
-    }
+    logTransport.args.unshift(`[${moment().format('YYYY-MM-DD HH:mm:ss')}]`);
   }
 
-  static async writeToFile(logTransport: logdown.TransportOptions): Promise<void> {
+  static async writeTransport(logTransport: logdown.TransportOptions): Promise<void> {
     const [time] = logTransport.args;
     const logMessage = `${time} ${logTransport.msg}`;
-    const withoutColor = logMessage.replace(ansiRegex(), '');
 
     if (this.logFilePath) {
-      try {
-        await fs.outputFile(this.logFilePath, `${withoutColor}\r\n`, {
-          encoding: 'utf8',
-          flag: 'a',
-        });
-      } catch (error) {
-        console.warn(`Cannot write to log file "${this.logFilePath}": ${error.message}`, error);
-      }
+      await LogFactory.writeMessage(logMessage, this.logFilePath);
     }
   }
 
-  static createLoggerName(fileName: string, namespace: string, separator: string): string {
+  static async writeMessage(message: string, logFilePath: string): Promise<void> {
+    const withoutColor = message.replace(ansiRegex(), '');
+    return fs.outputFile(logFilePath, `${withoutColor}\r\n`, {
+      encoding: 'utf8',
+      flag: 'a',
+    });
+  }
+
+  static createLoggerName(fileName: string, namespace?: string, separator?: string): string {
     if (typeof window === 'undefined') {
       fileName = path.basename(fileName, path.extname(fileName));
     }
-    return [namespace, fileName].join(separator);
+    return [namespace, fileName].filter(Boolean).join(separator);
   }
 
   static getLogger(name: string, options?: LoggerOptions): logdown.Logger {
-    const defaults = {
+    const defaults: LoggerOptions = {
       color: LogFactory.getColor(),
       forceEnable: false,
       logFilePath: '',
-      namespace: typeof window === 'undefined' ? String(process.env.npm_package_name) : '',
+      namespace: '',
       separator: '::',
     };
-    const config = {...defaults, ...options};
+    const config: LoggerOptions = {...defaults, ...options};
 
     if (logdown.transports.length === 0) {
       logdown.transports.push(LogFactory.addTimestamp.bind({namespace: config.namespace}));
-      logdown.transports.push(LogFactory.writeToFile.bind({logFilePath: config.logFilePath}));
+      logdown.transports.push(LogFactory.writeTransport.bind({logFilePath: config.logFilePath}));
     }
     const loggerName = this.createLoggerName(name, config.namespace, config.separator);
 
@@ -120,5 +119,3 @@ class LogFactory {
     return logger;
   }
 }
-
-export {LogFactory, LoggerOptions};

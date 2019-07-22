@@ -24,8 +24,14 @@ import {AvailabilityType, BroadcastService} from '../broadcast/';
 
 const UUID = require('pure-uuid');
 
-class UserService {
-  constructor(private readonly apiClient: APIClient, private readonly broadcastService: BroadcastService) {}
+export class UserService {
+  private readonly apiClient: APIClient;
+  private readonly broadcastService: BroadcastService;
+
+  constructor(apiClient: APIClient, broadcastService: BroadcastService) {
+    this.apiClient = apiClient;
+    this.broadcastService = broadcastService;
+  }
 
   public async getUsers(userId: string): Promise<User>;
   public async getUsers(userIds: string[]): Promise<User[]>;
@@ -33,7 +39,7 @@ class UserService {
     if (typeof userIds === 'string') {
       userIds = [userIds];
     }
-    return this.apiClient.user.api.getUsersByIds(userIds);
+    return this.apiClient.user.api.getUsers({ids: userIds});
   }
 
   public setAvailability(teamId: string, type: AvailabilityType): Promise<void> {
@@ -45,5 +51,3 @@ class UserService {
     return this.broadcastService.broadcastGenericMessage(teamId, genericMessage);
   }
 }
-
-export {UserService};

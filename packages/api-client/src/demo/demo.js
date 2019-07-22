@@ -17,17 +17,17 @@
  *
  */
 
+import {APIClient} from '@wireapp/api-client';
+import {AccessTokenStore} from '@wireapp/api-client/dist/commonjs/auth/';
+import {WebSocketTopic} from '@wireapp/api-client/dist/commonjs/tcp/';
 import {Button, Form, Input} from '@wireapp/react-ui-kit/Form';
 import {COLOR, Logo} from '@wireapp/react-ui-kit/Identity';
 import {ContainerXS, Content, Header, StyledApp} from '@wireapp/react-ui-kit/Layout';
 import {H1, Link, Text} from '@wireapp/react-ui-kit/Text';
-import React, {Component} from 'react';
-import {APIClient} from '@wireapp/api-client';
-import {AccessTokenStore} from '@wireapp/api-client/dist/commonjs/auth/';
-import {IndexedDBEngine} from '@wireapp/store-engine/dist/commonjs/engine';
-import ReactDOM from 'react-dom';
-import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/';
+import {IndexedDBEngine} from '@wireapp/store-engine-dexie';
 import logdown from 'logdown';
+import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
 
 const logger = logdown('@wireapp/api-client/demo/demo.js');
 logger.state.isEnabled = true;
@@ -62,9 +62,9 @@ class Auth extends Component {
   doAuth(event) {
     event.preventDefault();
     this.setState({authenticated: false});
-    return Promise.resolve()
-      .then(() => window.wire.client.init())
-      .catch(error => window.wire.client.login(this.state.login))
+    return window.wire.client
+      .init()
+      .catch(() => window.wire.client.login(this.state.login))
       .then(context => {
         logger.log('Login successful', context);
         this.setState({authenticated: true});
@@ -115,6 +115,7 @@ class Auth extends Component {
     );
   }
 }
+
 window.onload = function() {
   const config = {
     schemaCallback: db => {
@@ -124,7 +125,7 @@ window.onload = function() {
     urls: BACKEND_ENV,
   };
   const client = new APIClient(config);
-  client.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, notification => {
+  client.transport.ws.on(WebSocketTopic.ON_MESSAGE, notification => {
     logger.log('Received notification via WebSocket', notification);
   });
   client.accessTokenStore.on(AccessTokenStore.TOPIC.ACCESS_TOKEN_REFRESH, accessToken => {

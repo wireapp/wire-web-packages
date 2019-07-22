@@ -17,15 +17,15 @@
  *
  */
 
-import * as React from 'react';
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
+import React from 'react';
 
-interface SpacerProps {
-  size?: number | string;
+export interface SpacerProps<T = HTMLDivElement> extends React.HTMLProps<T> {
+  size?: number;
   vertical?: boolean;
 }
 
-function Spacer({size = 8, vertical = false}: SpacerProps): JSX.Element {
+export function Spacer({size = 8, vertical = false}: SpacerProps): JSX.Element {
   return <div style={vertical ? {display: 'inline-block', width: size} : {height: size}} />;
 }
-
-export {Spacer};

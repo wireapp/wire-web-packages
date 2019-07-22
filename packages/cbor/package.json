@@ -1,14 +1,13 @@
 {
   "description": "Implementation of Concise Binary Object Representation (CBOR) data format (RFC7049).",
   "devDependencies": {
-    "@types/node": "11.9.0",
-    "coveralls": "3.0.2",
+    "@types/node": "~10",
     "cross-env": "5.2.0",
     "istanbul": "1.1.0-alpha.1",
-    "jasmine": "3.3.1",
+    "jasmine": "3.4.0",
     "rimraf": "2.6.3",
-    "webpack": "4.29.3",
-    "webpack-cli": "3.2.3"
+    "webpack": "4.36.1",
+    "webpack-cli": "3.3.6"
   },
   "files": [
     "dist"
@@ -33,6 +32,5 @@
     "test:browser": "exit 0",
     "test:node": "jasmine --config=jasmine.json"
   },
-  "types": "dist/index.d.ts",
-  "version": "3.0.117"
+  "version": "4.3.4"
 }

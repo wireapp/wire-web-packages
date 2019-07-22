@@ -1,15 +1,44 @@
+/*
+ * Wire
+ * Copyright (C) 2017 Wire Swiss GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see http://www.gnu.org/licenses/.
+ *
+ */
+
 //@ts-check
 
-process.on('uncaughtException', (/** @type {any} */ error) =>
-  logger.error(`Uncaught exception "${error.constructor.name}" (${error.code}): ${error.message}`, error)
+process.on('uncaughtException', (/** @type {Error & {code: number}} */ error) =>
+  logger.error(`Uncaught exception "${error.constructor.name}" (${error.code}): ${error.message}`, error),
 );
-process.on('unhandledRejection', (/** @type {any} */ error) =>
-  logger.error(`Uncaught rejection "${error.constructor.name}" (${error.code}): ${error.message}`, error)
+process.on('unhandledRejection', (reason, promise) =>
+  logger.error('Unhandled Rejection at:', promise, 'reason:', reason),
 );
 
 const path = require('path');
 const logdown = require('logdown');
-require('dotenv').config({path: path.join(__dirname, 'echo.env')});
+
+const {Account} = require('@wireapp/core');
+const {PayloadBundleType} = require('@wireapp/core/dist/conversation/');
+const {APIClient} = require('@wireapp/api-client');
+const {WebSocketTopic} = require('@wireapp/api-client/dist/commonjs/tcp/');
+const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/ClientType');
+const {ConnectionStatus} = require('@wireapp/api-client/dist/commonjs/connection/');
+const {CONVERSATION_TYPING} = require('@wireapp/api-client/dist/commonjs/event/');
+const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine/');
+const {LegalHoldStatus} = require('@wireapp/protocol-messaging');
+const dotenv = require('dotenv');
 
 const logger = logdown('@wireapp/core/demo/echo.js', {
   logger: console,
@@ -17,13 +46,7 @@ const logger = logdown('@wireapp/core/demo/echo.js', {
 });
 logger.state.isEnabled = true;
 
-const {Account} = require('@wireapp/core');
-const {PayloadBundleType} = require('@wireapp/core/dist/conversation/');
-const {APIClient} = require('@wireapp/api-client');
-const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/ClientType');
-const {ConnectionStatus} = require('@wireapp/api-client/dist/commonjs/connection/');
-const {CONVERSATION_TYPING} = require('@wireapp/api-client/dist/commonjs/event/');
-const {MemoryEngine} = require('@wireapp/store-engine/dist/commonjs/engine/');
+dotenv.config({path: path.join(__dirname, 'echo.env')});
 
 const assetOriginalCache = {};
 const messageIdCache = {};
@@ -50,7 +73,7 @@ const messageIdCache = {};
       PayloadBundleType.PING,
       PayloadBundleType.TEXT,
     ];
-    const {conversation: conversationId, content, from, id: messageId, messageTimer = 0, type} = messageData;
+    const {content, conversation: conversationId, from, id: messageId, messageTimer = 0, type} = messageData;
     const additionalContent = [];
 
     if (content.mentions && content.mentions.length) {
@@ -69,27 +92,39 @@ const messageIdCache = {};
       additionalContent.push('(expecting read confirmation)');
     }
 
+    if (content.legalHoldStatus === LegalHoldStatus.ENABLED) {
+      additionalContent.push('(sent to legal hold)');
+    }
+
     logger.log(
-      `Receiving: "${type}" ("${messageId}") in "${conversationId}" from "${from}" ${additionalContent.join(' ')}`
+      `Receiving: "${type}" ("${messageId}") in "${conversationId}" from "${from}" ${additionalContent.join(' ')}`,
     );
 
     if (CONFIRM_TYPES.includes(type)) {
-      const deliveredPayload = account.service.conversation.createConfirmationDelivered(messageId);
+      const deliveredPayload = account.service.conversation.messageBuilder.createConfirmation(
+        conversationId,
+        messageId,
+        0,
+      );
       logger.log(
         `Sending: "${deliveredPayload.type}" ("${deliveredPayload.id}") in "${conversationId}"`,
-        deliveredPayload.content
+        deliveredPayload.content,
       );
-      await account.service.conversation.send(conversationId, deliveredPayload);
+      await account.service.conversation.send(deliveredPayload);
 
       if (content.expectsReadConfirmation) {
-        const readPayload = account.service.conversation.createConfirmationRead(messageId);
+        const readPayload = account.service.conversation.messageBuilder.createConfirmation(
+          conversationId,
+          messageId,
+          1,
+        );
         logger.log(`Sending: "${readPayload.type}" ("${readPayload.id}") in "${conversationId}"`, readPayload.content);
-        await account.service.conversation.send(conversationId, readPayload);
+        await account.service.conversation.send(readPayload);
       }
 
       if (messageTimer) {
         logger.log(
-          `Sending: "PayloadBundleType.MESSAGE_DELETE" in "${conversationId}" for "${messageId}" (encrypted for "${from}")`
+          `Sending: "PayloadBundleType.MESSAGE_DELETE" in "${conversationId}" for "${messageId}" (encrypted for "${from}")`,
         );
         await account.service.conversation.deleteMessageEveryone(conversationId, messageId, [from]);
       }
@@ -103,11 +138,11 @@ const messageIdCache = {};
     logger.log(
       `Sending: "${type}" ("${messageId}") in "${conversationId}"`,
       content,
-      messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : ''
+      messageTimer ? `(ephemeral message, ${messageTimer} ms timeout)` : '',
     );
 
     account.service.conversation.messageTimer.setMessageLevelTimer(conversationId, messageTimer);
-    await account.service.conversation.send(conversationId, payload);
+    await account.service.conversation.send(payload);
     account.service.conversation.messageTimer.setMessageLevelTimer(conversationId, 0);
   };
 
@@ -131,7 +166,7 @@ const messageIdCache = {};
         };
       }
 
-      const newLinkPreview = await account.service.conversation.createLinkPreview({
+      const newLinkPreview = await account.service.conversation.messageBuilder.createLinkPreview({
         ...originalLinkPreview,
         image: linkPreviewImage,
       });
@@ -141,9 +176,14 @@ const messageIdCache = {};
     return newLinkPreviews;
   };
 
+  apiClient.transport.ws.on(WebSocketTopic.ON_OFFLINE, () => logger.info('API Client is offline'));
+
+  apiClient.transport.ws.on(WebSocketTopic.ON_RECONNECT, () => logger.info('API Client is reconnected'));
+
   account.on(PayloadBundleType.TEXT, async data => {
     const {
-      content: {expectsReadConfirmation, linkPreviews, mentions, quote, text},
+      content: {expectsReadConfirmation, legalHoldStatus, linkPreviews, mentions, quote, text},
+      conversation: conversationId,
       id: messageId,
     } = data;
     let textPayload;
@@ -160,20 +200,22 @@ const messageIdCache = {};
         return;
       }
 
-      textPayload = account.service.conversation
-        .createText(text, cachedMessageId)
+      textPayload = account.service.conversation.messageBuilder
+        .createText(conversationId, text, cachedMessageId)
         .withLinkPreviews(newLinkPreviews)
         .withMentions(mentions)
         .withQuote(quote)
         .withReadConfirmation(expectsReadConfirmation)
+        .withLegalHoldStatus(legalHoldStatus)
         .build();
     } else {
       await handleIncomingMessage(data);
-      textPayload = account.service.conversation
-        .createText(text)
+      textPayload = account.service.conversation.messageBuilder
+        .createText(conversationId, text)
         .withMentions(mentions)
         .withQuote(quote)
         .withReadConfirmation(expectsReadConfirmation)
+        .withLegalHoldStatus(legalHoldStatus)
         .build();
     }
 
@@ -185,7 +227,7 @@ const messageIdCache = {};
   account.on(PayloadBundleType.CONFIRMATION, handleIncomingMessage);
 
   account.on(PayloadBundleType.ASSET, async data => {
-    const {content, id: messageId} = data;
+    const {content, conversation: conversationId, id: messageId} = data;
 
     const cacheOriginal = assetOriginalCache[messageId];
     if (!cacheOriginal) {
@@ -197,7 +239,7 @@ const messageIdCache = {};
 
     await handleIncomingMessage(data);
 
-    const fileMetaDataPayload = await account.service.conversation.createFileMetadata({
+    const fileMetaDataPayload = await account.service.conversation.messageBuilder.createFileMetadata(conversationId, {
       length: fileBuffer.length,
       name: cacheOriginal.name,
       type: cacheOriginal.mimeType,
@@ -206,12 +248,20 @@ const messageIdCache = {};
     await sendMessageResponse(data, fileMetaDataPayload);
 
     try {
-      const filePayload = await account.service.conversation.createFileData({data: fileBuffer}, fileMetaDataPayload.id);
+      const filePayload = await account.service.conversation.messageBuilder.createFileData(
+        conversationId,
+        {data: fileBuffer},
+        fileMetaDataPayload.id,
+      );
       messageIdCache[messageId] = filePayload.id;
       await sendMessageResponse(data, filePayload);
     } catch (error) {
       logger.warn(`Error while sending asset: "${error.stack}"`);
-      const fileAbortPayload = await account.service.conversation.createFileAbort(0, fileMetaDataPayload.id);
+      const fileAbortPayload = await account.service.conversation.messageBuilder.createFileAbort(
+        conversationId,
+        0,
+        fileMetaDataPayload.id,
+      );
       await sendMessageResponse(data, fileAbortPayload);
     }
   });
@@ -228,7 +278,7 @@ const messageIdCache = {};
   });
 
   account.on(PayloadBundleType.ASSET_ABORT, async data => {
-    const {id: messageId} = data;
+    const {conversation: conversationId, id: messageId} = data;
 
     await handleIncomingMessage(data);
 
@@ -238,7 +288,7 @@ const messageIdCache = {};
       return;
     }
 
-    const fileMetaDataPayload = await account.service.conversation.createFileMetadata({
+    const fileMetaDataPayload = await account.service.conversation.messageBuilder.createFileMetadata(conversationId, {
       length: 0,
       name: cacheOriginal.name,
       type: cacheOriginal.mimeType,
@@ -247,7 +297,11 @@ const messageIdCache = {};
     await handleIncomingMessage(data);
     await sendMessageResponse(data, fileMetaDataPayload);
 
-    const fileAbortPayload = await account.service.conversation.createFileAbort(0, fileMetaDataPayload.id);
+    const fileAbortPayload = await account.service.conversation.messageBuilder.createFileAbort(
+      conversationId,
+      0,
+      fileMetaDataPayload.id,
+    );
     await sendMessageResponse(data, fileAbortPayload);
 
     delete assetOriginalCache[messageId];
@@ -257,12 +311,13 @@ const messageIdCache = {};
   account.on(PayloadBundleType.ASSET_IMAGE, async data => {
     const {
       content: {uploaded, original},
+      conversation: conversationId,
       id: messageId,
     } = data;
 
     const imageBuffer = await account.service.conversation.getAsset(uploaded);
 
-    const imagePayload = await account.service.conversation.createImage({
+    const imagePayload = await account.service.conversation.messageBuilder.createImage(conversationId, {
       data: imageBuffer,
       height: original.image.height,
       type: original.mimeType,
@@ -275,10 +330,15 @@ const messageIdCache = {};
     await sendMessageResponse(data, imagePayload);
   });
 
+  account.on(PayloadBundleType.CALL, async data => {
+    logger.info(`Received calling payload`, JSON.parse(data.content));
+  });
+
   account.on(PayloadBundleType.CLEARED, handleIncomingMessage);
 
   account.on(PayloadBundleType.LOCATION, async data => {
-    const locationPayload = account.service.conversation.createLocation(data.content);
+    const {content, conversation: conversationId} = data;
+    const locationPayload = account.service.conversation.messageBuilder.createLocation(conversationId, content);
 
     await handleIncomingMessage(data);
     await sendMessageResponse(data, locationPayload);
@@ -286,12 +346,14 @@ const messageIdCache = {};
 
   account.on(PayloadBundleType.PING, async data => {
     const {
-      content: {expectsReadConfirmation},
+      content: {expectsReadConfirmation, legalHoldStatus},
+      conversation: conversationId,
     } = data;
     await handleIncomingMessage(data);
 
-    const pingPayload = account.service.conversation.createPing({
+    const pingPayload = account.service.conversation.messageBuilder.createPing(conversationId, {
       expectsReadConfirmation,
+      legalHoldStatus,
     });
 
     await sendMessageResponse(data, pingPayload);
@@ -299,12 +361,17 @@ const messageIdCache = {};
 
   account.on(PayloadBundleType.REACTION, async data => {
     const {
-      content: {type, originalMessageId},
+      content: {legalHoldStatus, originalMessageId, type},
+      conversation: conversationId,
     } = data;
 
     await handleIncomingMessage(data);
 
-    const reactionPayload = account.service.conversation.createReaction(originalMessageId, type);
+    const reactionPayload = account.service.conversation.messageBuilder.createReaction(conversationId, {
+      legalHoldStatus,
+      originalMessageId,
+      type,
+    });
 
     await sendMessageResponse(data, reactionPayload);
   });
@@ -326,8 +393,8 @@ const messageIdCache = {};
 
   account.on(PayloadBundleType.MESSAGE_DELETE, async data => {
     const {
-      conversation: conversationId,
       content: {originalMessageId},
+      conversation: conversationId,
     } = data;
 
     await handleIncomingMessage(data);
@@ -341,7 +408,8 @@ const messageIdCache = {};
 
   account.on(PayloadBundleType.MESSAGE_EDIT, async data => {
     const {
-      content: {expectsReadConfirmation, linkPreviews, mentions, originalMessageId, quote, text},
+      content: {expectsReadConfirmation, legalHoldStatus, linkPreviews, mentions, originalMessageId, quote, text},
+      conversation: conversationId,
       id: messageId,
     } = data;
     let editedPayload;
@@ -364,20 +432,22 @@ const messageIdCache = {};
         logger.warn(`Link preview for edited message ID "${messageId} was received before the original message."`);
         return;
       }
-      editedPayload = account.service.conversation
-        .createEditedText(text, cachedOriginalMessageId, cachedMessageId)
+      editedPayload = account.service.conversation.messageBuilder
+        .createEditedText(conversationId, text, cachedOriginalMessageId, cachedMessageId)
         .withLinkPreviews(newLinkPreviews)
         .withMentions(mentions)
         .withQuote(quote)
         .withReadConfirmation(expectsReadConfirmation)
+        .withLegalHoldStatus(legalHoldStatus)
         .build();
     } else {
       await handleIncomingMessage(data);
-      editedPayload = account.service.conversation
-        .createEditedText(text, cachedOriginalMessageId)
+      editedPayload = account.service.conversation.messageBuilder
+        .createEditedText(conversationId, text, cachedOriginalMessageId)
         .withMentions(mentions)
         .withQuote(quote)
         .withReadConfirmation(expectsReadConfirmation)
+        .withLegalHoldStatus(legalHoldStatus)
         .build();
     }
 
@@ -393,6 +463,14 @@ const messageIdCache = {};
     if (data.content.status === ConnectionStatus.PENDING) {
       await account.service.connection.acceptConnection(data.content.to);
     }
+  });
+
+  account.on(PayloadBundleType.CLIENT_ADD, async data => {
+    logger.log(`User added client with ID "${data.content.client.id}"`, data);
+  });
+
+  account.on(PayloadBundleType.CLIENT_REMOVE, async data => {
+    logger.log(`User removed client with ID "${data.content.client.id}"`, data);
   });
 
   try {

@@ -19,45 +19,35 @@
 
 import {ConversationMembers} from '../conversation/';
 
-enum CONVERSATION_TYPE {
+export enum CONVERSATION_TYPE {
   REGULAR = 0,
   SELF = 1,
   ONE_TO_ONE = 2,
   CONNECT = 3,
 }
 
-enum CONVERSATION_ACCESS_ROLE {
+export enum CONVERSATION_ACCESS_ROLE {
   ACTIVATED = 'activated',
   NON_ACTIVATED = 'non_activated',
   PRIVATE = 'private',
   TEAM = 'team',
 }
 
-enum CONVERSATION_ACCESS {
+export enum CONVERSATION_ACCESS {
   CODE = 'code',
   INVITE = 'invite',
   LINK = 'link',
   PRIVATE = 'private',
 }
 
-interface Conversation {
-  access:
-    | CONVERSATION_ACCESS.PRIVATE
-    | CONVERSATION_ACCESS.INVITE
-    | CONVERSATION_ACCESS.LINK
-    | CONVERSATION_ACCESS.CODE;
-  access_role:
-    | CONVERSATION_ACCESS_ROLE.ACTIVATED
-    | CONVERSATION_ACCESS_ROLE.PRIVATE
-    | CONVERSATION_ACCESS_ROLE.TEAM
-    | CONVERSATION_ACCESS_ROLE.NON_ACTIVATED;
+export interface Conversation {
+  access: CONVERSATION_ACCESS;
+  access_role: CONVERSATION_ACCESS_ROLE;
   creator: string;
   id: string;
   members: ConversationMembers;
   message_timer: number | null;
   name: string;
   team?: string;
-  type: CONVERSATION_TYPE.REGULAR | CONVERSATION_TYPE.SELF | CONVERSATION_TYPE.ONE_TO_ONE | CONVERSATION_TYPE.CONNECT;
+  type: CONVERSATION_TYPE;
 }
-
-export {CONVERSATION_ACCESS_ROLE, CONVERSATION_ACCESS, CONVERSATION_TYPE, Conversation};

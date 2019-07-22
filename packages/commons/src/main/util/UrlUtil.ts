@@ -17,26 +17,43 @@
  *
  */
 
-export function pathWithParams(path: string, additionalParams: string) {
-  const searchParams = window.location.search
-    .replace(/^\?/, '')
-    .split('&')
-    .filter(searchParam => searchParam);
+import 'url-search-params-polyfill';
+
+export function pathWithParams(
+  path: string,
+  additionalParams?: Record<string, any>,
+  whitelistParams?: string[],
+  search = window.location.search,
+): string {
+  const params: Record<string, any> = paramsToRecord(search);
 
   if (additionalParams) {
-    searchParams.push(additionalParams);
+    Object.assign(params, additionalParams);
   }
-  const joinedParams = searchParams.join('&');
-  return `${path}${joinedParams.length ? `?${joinedParams}` : ''}`;
+
+  if (whitelistParams) {
+    Object.keys(params).forEach(key => {
+      if (!whitelistParams.includes(key)) {
+        delete params[key];
+      }
+    });
+  }
+  const queryString = new URLSearchParams(params).toString();
+  return `${path}${queryString ? `?${queryString}` : ''}`;
 }
 
-export function getURLParameter(parameterName: string) {
-  return (window.location.search.split(`${parameterName}=`)[1] || '').split('&')[0];
+export function paramsToRecord(params: string): Record<string, any> {
+  const records: Record<string, any> = {};
+  new URLSearchParams(params).forEach((value, key) => {
+    records[key] = value;
+  });
+  return records;
 }
 
-export function hasURLParameter(parameterName: string) {
-  return window.location.search
-    .split(/\?|&/)
-    .map((parameter): string => parameter.split('=')[0])
-    .some(key => key === parameterName);
+export function getURLParameter(parameterName: string, search = window.location.search): string {
+  return new URLSearchParams(search).get(parameterName) || '';
+}
+
+export function hasURLParameter(parameterName: string, search = window.location.search): boolean {
+  return !!new URLSearchParams(search).has(parameterName);
 }

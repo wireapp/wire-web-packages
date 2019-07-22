@@ -22,7 +22,7 @@ import {NewOTRMessage, UserClients} from '../conversation/';
 import {HttpClient} from '../http/';
 import {ValidationError} from '../validation/';
 
-class BroadcastAPI {
+export class BroadcastAPI {
   constructor(private readonly client: HttpClient) {}
 
   static readonly URL = {
@@ -35,13 +35,13 @@ class BroadcastAPI {
    * @param messageData The message content
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/tab.html#!/postOtrBroadcast
    */
-  public postBroadcastMessage(
+  public async postBroadcastMessage(
     clientId: string,
     messageData?: NewOTRMessage,
     params?: {
       ignore_missing?: boolean;
       report_missing?: string;
-    }
+    },
   ): Promise<UserClients> {
     if (!clientId) {
       throw new ValidationError('Unable to send OTR message without client ID.');
@@ -64,12 +64,10 @@ class BroadcastAPI {
       url: BroadcastAPI.URL.BROADCAST,
     };
 
-    if (typeof messageData.recipients === 'object') {
-      return this.client.sendJSON<UserClients>(config).then(response => response.data);
-    }
-
-    return this.client.sendProtocolBuffer<UserClients>(config).then(response => response.data);
+    const response =
+      typeof messageData.recipients === 'object'
+        ? await this.client.sendJSON<UserClients>(config)
+        : await this.client.sendProtocolBuffer<UserClients>(config);
+    return response.data;
   }
 }
-
-export {BroadcastAPI};

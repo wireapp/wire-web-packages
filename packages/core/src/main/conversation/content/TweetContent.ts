@@ -17,9 +17,5 @@
  *
  */
 
-interface TweetContent {
-  author?: string;
-  username?: string;
-}
-
-export {TweetContent};
+import {ITweet} from '@wireapp/protocol-messaging';
+export {ITweet as TweetContent};

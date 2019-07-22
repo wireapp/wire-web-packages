@@ -17,9 +17,9 @@
  *
  */
 
-import * as Color from 'color';
+import Color from 'color';
 
-export type ColorParam = Color | string | ArrayLike<number> | number | {[key: string]: any};
+export type ColorParam = Color | string | ArrayLike<number> | number | Record<string, any>;
 
 const steps = [];
 const percent = 100;
@@ -28,19 +28,19 @@ for (let index = 8; index < percent; index += 8) {
   steps.push(index);
 }
 
-function shade(color: ColorParam, amount = 0.08) {
+function shade(color: ColorParam, amount = 0.08): string {
   return Color(color)
     .mix(Color(BLACK), amount)
     .toString();
 }
 
-function tint(color: ColorParam, amount: number) {
+function tint(color: ColorParam, amount: number): string {
   return Color(color)
     .mix(Color(WHITE), amount)
     .toString();
 }
 
-function opaque(color: ColorParam, amount: number) {
+function opaque(color: ColorParam, amount: number): string {
   return Color(color)
     .fade(1 - amount)
     .toString();
@@ -49,7 +49,7 @@ function opaque(color: ColorParam, amount: number) {
 const BLACK = '#000';
 const WHITE = '#fff';
 
-const BASE_COLOR: {[index: string]: string} = {
+const BASE_COLOR: Record<string, string> = {
   BLUE: '#2391d3',
   GRAY: '#bac8d1',
   GREEN: '#00c800',
@@ -58,9 +58,9 @@ const BASE_COLOR: {[index: string]: string} = {
   YELLOW: '#febf02',
 };
 
-const DARK_COLOR: {[index: string]: string} = {};
-const LIGHT_COLOR: {[index: string]: string} = {};
-const OPAQUE_COLOR: {[index: string]: string} = {};
+const DARK_COLOR: Record<string, string> = {};
+const LIGHT_COLOR: Record<string, string> = {};
+const OPAQUE_COLOR: Record<string, string> = {};
 
 Object.entries(BASE_COLOR).forEach(([key, value]) => {
   steps.forEach(step => {
@@ -86,5 +86,6 @@ export const COLOR: any = {
   ...COMPONENT_COLOR,
   BLACK,
   WHITE,
+  opaque,
   shade,
 };

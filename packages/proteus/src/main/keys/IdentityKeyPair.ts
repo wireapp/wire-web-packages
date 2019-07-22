@@ -19,12 +19,12 @@
 
 import * as CBOR from '@wireapp/cbor';
 
-import ClassUtil from '../util/ClassUtil';
-import IdentityKey from './IdentityKey';
-import KeyPair from './KeyPair';
-import SecretKey from './SecretKey';
+import * as ClassUtil from '../util/ClassUtil';
+import {IdentityKey} from './IdentityKey';
+import {KeyPair} from './KeyPair';
+import {SecretKey} from './SecretKey';
 
-class IdentityKeyPair {
+export class IdentityKeyPair {
   public_key: IdentityKey;
   secret_key: SecretKey;
   version: number;
@@ -90,5 +90,3 @@ class IdentityKeyPair {
     return self;
   }
 }
-
-export default IdentityKeyPair;

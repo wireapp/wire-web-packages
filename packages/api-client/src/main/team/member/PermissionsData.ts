@@ -17,9 +17,11 @@
  *
  */
 
-interface PermissionsData {
-  copy: number;
-  self: number;
-}
+import {Permissions} from './Permissions';
 
-export {PermissionsData};
+export interface PermissionsData {
+  /** The permissions bitmask which this user can assign to others */
+  copy: Permissions;
+  /** The permissions bitmask which applies to this user */
+  self: Permissions;
+}

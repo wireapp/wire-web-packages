@@ -19,7 +19,9 @@
 
 import {ClientType} from '@wireapp/api-client/dist/commonjs/client/';
 
-interface BotConfig {
+export interface BotConfig {
+  /** Set the backend (staging or production) */
+  backend?: 'production' | 'staging';
   /** Set the client type (permanent or temporary). */
   clientType?: ClientType;
   /** Set allowed conversations (if empty, all conversations are allowed). */
@@ -28,11 +30,9 @@ interface BotConfig {
   owners?: string[];
 }
 
-interface BotCredentials {
+export interface BotCredentials {
   /** Your bot's email address on Wire. */
   email: string;
   /** Your bot's password on Wire. */
   password: string;
 }
-
-export {BotConfig, BotCredentials};

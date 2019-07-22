@@ -20,13 +20,13 @@
 import * as CBOR from '@wireapp/cbor';
 import * as sodium from 'libsodium-wrappers-sumo';
 
-import ClassUtil from '../util/ClassUtil';
+import * as ClassUtil from '../util/ClassUtil';
 
-import InputError from '../errors/InputError';
-import ArrayUtil from '../util/ArrayUtil';
-import PublicKey from './PublicKey';
+import {InputError} from '../errors/InputError';
+import * as ArrayUtil from '../util/ArrayUtil';
+import {PublicKey} from './PublicKey';
 
-class SecretKey {
+export class SecretKey {
   sec_curve: Uint8Array;
   sec_edward: Uint8Array;
 
@@ -96,5 +96,3 @@ class SecretKey {
     }
   }
 }
-
-export default SecretKey;

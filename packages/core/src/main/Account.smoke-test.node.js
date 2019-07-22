@@ -88,7 +88,7 @@ xdescribe('Account', () => {
   let bob;
   let eve;
 
-  beforeAll(async done => {
+  beforeAll(async () => {
     if (CAN_RUN) {
       logger.log('Running smoke tests for @wireapp/core ...');
 
@@ -97,9 +97,9 @@ xdescribe('Account', () => {
       } catch (error) {
         logger.error(
           `Cannot login with email "${process.env.ALICE_EMAIL}". Aborting test.`,
-          error && error.response && error.response.data ? error.response.data : ''
+          error && error.response && error.response.data ? error.response.data : '',
         );
-        return done.fail(error);
+        return fail(error);
       }
 
       try {
@@ -107,9 +107,9 @@ xdescribe('Account', () => {
       } catch (error) {
         logger.error(
           `Cannot login with email "${process.env.BOB_EMAIL}". Aborting test.`,
-          error && error.response && error.response.data ? error.response.data : ''
+          error && error.response && error.response.data ? error.response.data : '',
         );
-        return done.fail(error);
+        return fail(error);
       }
 
       try {
@@ -117,69 +117,65 @@ xdescribe('Account', () => {
       } catch (error) {
         logger.error(
           `Cannot login with email "${process.env.EVE_EMAIL}". Aborting test.`,
-          error && error.response && error.response.data ? error.response.data : ''
+          error && error.response && error.response.data ? error.response.data : '',
         );
-        return done.fail(error);
+        return fail(error);
       }
     } else {
       logger.warn('Skipping smoke tests because environment variables are not set.');
     }
-    done();
   });
 
   describe('"Message Sending"', () => {
-    beforeAll(async done => {
+    beforeAll(() => {
       if (CAN_RUN) {
         expect(ValidationUtil.isUUIDv4(alice.apiClient.context.userId)).toBe(true);
         expect(ValidationUtil.isUUIDv4(bob.apiClient.context.userId)).toBe(true);
       }
-      done();
     });
 
-    beforeEach(async done => {
+    beforeEach(async () => {
       if (CAN_RUN) {
         await alice.service.conversation.leaveConversations();
         await bob.service.conversation.leaveConversations();
         await eve.service.conversation.leaveConversations();
       }
-      done();
     });
 
-    it('sends and receive messages.', async done => {
+    it('sends and receives messages.', async () => {
       if (!CAN_RUN) {
-        return done();
+        return;
       }
 
       const message = 'Hello, Bob!';
 
       bob.on(PayloadBundleType.TEXT, async payload => {
         expect(payload.content.text).toBe(message);
-        done();
       });
 
       await bob.listen();
       const conversationId = await connect(
         alice,
-        bob
+        bob,
       );
       await sendText(alice, conversationId, message);
     });
 
-    it('creates conversations and adds participants.', async done => {
+    it('creates conversations and adds participants.', async () => {
       if (!CAN_RUN) {
-        return done();
+        return;
       }
 
       // Alice connects to Bob
       await connect(
         alice,
-        bob
+        bob,
       );
 
       // Alice connects to Eve (Bob doesn't know Eve)
       await connect(
         alice,
-        eve
+        eve,
       );
 
       // Bob creates a conversation with Alice
@@ -194,7 +190,6 @@ xdescribe('Account', () => {
 
       // Alice adds Eve to the conversation
       await alice.service.conversation.addUser(conversationId, getId(eve));
-      done();
     });
   });
 });

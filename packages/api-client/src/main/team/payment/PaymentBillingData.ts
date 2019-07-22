@@ -17,15 +17,16 @@
  *
  */
 
-interface PaymentBillingData {
+import {SupportedCurrency} from './SupportedCurrency';
+
+export interface PaymentBillingData {
   city: string;
   company: string;
   country: string;
+  currency?: SupportedCurrency;
   firstname: string;
   lastname: string;
   state?: string;
   street: string;
   zip: string;
 }
-
-export {PaymentBillingData};

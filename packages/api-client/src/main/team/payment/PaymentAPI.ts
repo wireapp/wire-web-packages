@@ -30,103 +30,108 @@ import {
   PaymentStripePlan,
 } from './';
 
-class PaymentAPI {
+export class PaymentAPI {
   static readonly DEFAULT_INVOICES_CHUNK_SIZE = 10;
   constructor(private readonly client: HttpClient) {}
 
-  static get URL() {
-    return {
-      BILLING: 'billing',
-      CHARGES: 'charges',
-      CURRENCIES: 'currencies',
-      INFO: 'info',
-      INVOICES: 'invoices',
-      PLAN: 'plan',
-      PLANS: 'plans',
-      TEAMS: '/teams',
-    };
-  }
+  static URL = {
+    BILLING: 'billing',
+    CHARGES: 'charges',
+    CURRENCIES: 'currencies',
+    INFO: 'info',
+    INVOICES: 'invoices',
+    PLAN: 'plan',
+    PLANS: 'plans',
+    TEAMS: '/teams',
+  };
 
-  public putPaymentData(teamId: string, paymentData: PaymentDataUpdate): Promise<void> {
+  public async putPaymentData(teamId: string, paymentData: PaymentDataUpdate): Promise<PaymentData> {
     const config: AxiosRequestConfig = {
       data: paymentData,
       method: 'put',
       url: `${PaymentAPI.URL.TEAMS}/${teamId}/${PaymentAPI.URL.BILLING}`,
     };
 
-    return this.client.sendJSON<void>(config).then(response => response.data);
+    const response = await this.client.sendJSON<PaymentData>(config);
+    return response.data;
   }
 
-  public getPaymentData(teamId: string): Promise<PaymentData> {
+  public async getPaymentData(teamId: string): Promise<PaymentData> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${PaymentAPI.URL.TEAMS}/${teamId}/${PaymentAPI.URL.BILLING}`,
     };
 
-    return this.client.sendJSON<PaymentData>(config).then(response => response.data);
+    const response = await this.client.sendJSON<PaymentData>(config);
+    return response.data;
   }
 
-  public deletePaymentData(teamId: string, data: Object): Promise<PaymentData> {
+  public async deletePaymentData(teamId: string, paymentData: Object): Promise<PaymentData> {
     const config: AxiosRequestConfig = {
-      data,
+      data: paymentData,
       method: 'delete',
       url: `${PaymentAPI.URL.TEAMS}/${teamId}/${PaymentAPI.URL.BILLING}`,
     };
 
-    return this.client.sendJSON<PaymentData>(config).then(response => response.data);
+    const response = await this.client.sendJSON<PaymentData>(config);
+    return response.data;
   }
 
-  public putPaymentBilling(teamId: string, billingInfo: PaymentBillingData): Promise<void> {
+  public async putPaymentBilling(teamId: string, billingInfo: PaymentBillingData): Promise<PaymentBillingData> {
     const config: AxiosRequestConfig = {
       data: billingInfo,
       method: 'put',
       url: `${PaymentAPI.URL.TEAMS}/${teamId}/${PaymentAPI.URL.BILLING}/${PaymentAPI.URL.INFO}`,
     };
 
-    return this.client.sendJSON<void>(config).then(response => response.data);
+    const response = await this.client.sendJSON<PaymentBillingData>(config);
+    return response.data;
   }
 
-  public getPaymentBilling(teamId: string): Promise<PaymentBillingData> {
+  public async getPaymentBilling(teamId: string): Promise<PaymentBillingData> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${PaymentAPI.URL.TEAMS}/${teamId}/${PaymentAPI.URL.BILLING}/${PaymentAPI.URL.INFO}`,
     };
 
-    return this.client.sendJSON<PaymentBillingData>(config).then(response => response.data);
+    const response = await this.client.sendJSON<PaymentBillingData>(config);
+    return response.data;
   }
 
-  public putPaymentPlan(teamId: string, plan: PaymentPlan): Promise<void> {
+  public async putPaymentPlan(teamId: string, plan: PaymentPlan): Promise<void> {
     const config: AxiosRequestConfig = {
       data: plan,
       method: 'put',
       url: `${PaymentAPI.URL.TEAMS}/${teamId}/${PaymentAPI.URL.BILLING}/${PaymentAPI.URL.PLAN}/${plan.id}`,
     };
 
-    return this.client.sendJSON<void>(config).then(response => response.data);
+    await this.client.sendJSON(config);
   }
 
-  public getPlans(teamId: string): Promise<PaymentStripePlan[]> {
+  public async getPlans(teamId: string): Promise<PaymentStripePlan[]> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${PaymentAPI.URL.TEAMS}/${teamId}/${PaymentAPI.URL.BILLING}/${PaymentAPI.URL.PLANS}`,
     };
 
-    return this.client.sendJSON<PaymentStripePlan[]>(config).then(response => response.data);
+    const response = await this.client.sendJSON<PaymentStripePlan[]>(config);
+    return response.data;
   }
 
-  public getCharges(teamId: string): Promise<PaymentStripeCharge[]> {
+  public async getCharges(teamId: string): Promise<PaymentStripeCharge[]> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${PaymentAPI.URL.TEAMS}/${teamId}/${PaymentAPI.URL.BILLING}/${PaymentAPI.URL.CHARGES}`,
     };
 
-    return this.client.sendJSON<PaymentStripeCharge[]>(config).then(response => response.data);
+    const response = await this.client.sendJSON<PaymentStripeCharge[]>(config);
+    return response.data;
   }
 
-  public getInvoices(
+  public async getInvoices(
     teamId: string,
     limit: number = PaymentAPI.DEFAULT_INVOICES_CHUNK_SIZE,
-    startAfterInvoiceId?: string
+    startAfterInvoiceId?: string,
   ): Promise<PaymentStripeInvoices> {
     const config: AxiosRequestConfig = {
       method: 'get',
@@ -137,17 +142,17 @@ class PaymentAPI {
       url: `${PaymentAPI.URL.TEAMS}/${teamId}/${PaymentAPI.URL.BILLING}/${PaymentAPI.URL.INVOICES}`,
     };
 
-    return this.client.sendJSON<PaymentStripeInvoices>(config).then(response => response.data);
+    const response = await this.client.sendJSON<PaymentStripeInvoices>(config);
+    return response.data;
   }
 
-  public getSupportedCurrencies(teamId: string): Promise<string[]> {
+  public async getSupportedCurrencies(teamId: string): Promise<string[]> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${PaymentAPI.URL.TEAMS}/${teamId}/${PaymentAPI.URL.BILLING}/${PaymentAPI.URL.CURRENCIES}`,
     };
 
-    return this.client.sendJSON<string[]>(config).then(response => response.data);
+    const response = await this.client.sendJSON<string[]>(config);
+    return response.data;
   }
 }
-
-export {PaymentAPI};

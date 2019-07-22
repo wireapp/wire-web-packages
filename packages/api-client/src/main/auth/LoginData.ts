@@ -1,5 +1,3 @@
-import {ClientType} from '../client/';
-
 /*
  * Wire
  * Copyright (C) 2018 Wire Swiss GmbH
@@ -19,7 +17,9 @@ import {ClientType} from '../client/';
  *
  */
 
-interface LoginData {
+import {ClientType} from '../client/';
+
+export interface LoginData {
   code?: string;
   email?: string;
   handle?: string;
@@ -27,5 +27,3 @@ interface LoginData {
   clientType: ClientType;
   phone?: string;
 }
-
-export {LoginData};

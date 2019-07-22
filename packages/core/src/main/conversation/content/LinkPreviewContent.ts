@@ -17,21 +17,15 @@
  *
  */
 
-import {ImageAssetContent, ImageContent, TweetContent} from '../content/';
+import {ILinkPreview} from '@wireapp/protocol-messaging';
+import {ImageAssetContent, ImageContent, LegalHoldStatus} from '../content/';
 
-interface LinkPreviewContent {
+export interface LinkPreviewContent extends Omit<ILinkPreview, 'image'> {
   expectsReadConfirmation?: boolean;
   image?: ImageContent;
-  permanentUrl?: string;
-  summary?: string;
-  title?: string;
-  tweet?: TweetContent;
-  url: string;
-  urlOffset: number;
+  legalHoldStatus?: LegalHoldStatus;
 }
 
-interface LinkPreviewUploadedContent extends LinkPreviewContent {
+export interface LinkPreviewUploadedContent extends LinkPreviewContent {
   imageUploaded?: ImageAssetContent;
 }
-
-export {LinkPreviewContent, LinkPreviewUploadedContent};

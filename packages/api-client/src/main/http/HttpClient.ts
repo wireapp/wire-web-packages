@@ -17,17 +17,18 @@
  *
  */
 
+import {TimeUtil} from '@wireapp/commons';
 import {PriorityQueue} from '@wireapp/priority-queue';
-import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
+import {CRUDEngine} from '@wireapp/store-engine';
 import axios, {AxiosError, AxiosRequestConfig, AxiosResponse} from 'axios';
-import * as EventEmitter from 'events';
-import * as logdown from 'logdown';
+import EventEmitter from 'events';
+import logdown from 'logdown';
 import {AccessTokenData, AccessTokenStore, AuthAPI} from '../auth/';
 import {BackendErrorMapper, ConnectionState, ContentType, NetworkError, StatusCode} from '../http/';
-import {ObfuscationUtil} from '../obfuscation/';
+import * as ObfuscationUtil from '../obfuscation/';
 import {sendRequestWithCookie} from '../shims/node/cookie';
 
-class HttpClient extends EventEmitter {
+export class HttpClient extends EventEmitter {
   private readonly logger: logdown.Logger;
   private connectionState: ConnectionState;
   private readonly requestQueue: PriorityQueue;
@@ -37,9 +38,9 @@ class HttpClient extends EventEmitter {
   };
 
   constructor(
-    private readonly baseURL: string,
+    private readonly baseUrl: string,
     public accessTokenStore: AccessTokenStore,
-    private readonly engine: CRUDEngine
+    private readonly engine: CRUDEngine,
   ) {
     super();
 
@@ -52,7 +53,7 @@ class HttpClient extends EventEmitter {
 
     this.requestQueue = new PriorityQueue({
       maxRetries: 0,
-      retryDelay: 1000,
+      retryDelay: TimeUtil.TimeInMillis.SECOND,
     });
 
     // Log all failing HTTP requests
@@ -64,9 +65,7 @@ class HttpClient extends EventEmitter {
           backendResponse = JSON.stringify(error.response.data);
         } finally {
           this.logger.error(
-            `HTTP Error (${error.response.status}) on '${error.response.config.url}': ${
-              error.message
-            } (${backendResponse})`
+            `HTTP Error (${error.response.status}) on '${error.response.config.url}': ${error.message} (${backendResponse})`,
           );
         }
       }
@@ -82,16 +81,16 @@ class HttpClient extends EventEmitter {
     }
   }
 
-  public createUrl(url: string) {
-    return `${this.baseURL}${url}`;
+  public createUrl(url: string): string {
+    return `${this.baseUrl}${url}`;
   }
 
   public async _sendRequest<T>(
     config: AxiosRequestConfig,
     tokenAsParam = false,
-    firstTry = true
+    firstTry = true,
   ): Promise<AxiosResponse<T>> {
-    config.baseURL = this.baseURL;
+    config.baseURL = this.baseUrl;
 
     if (this.accessTokenStore.accessToken) {
       const {token_type, access_token} = this.accessTokenStore.accessToken;
@@ -125,7 +124,7 @@ class HttpClient extends EventEmitter {
         const message = `Cannot do "${error.config.method}" request to "${error.config.url}".`;
         const networkError = new NetworkError(message);
         this.updateConnectionState(ConnectionState.DISCONNECTED);
-        return Promise.reject(networkError);
+        throw networkError;
       }
 
       if (response) {
@@ -138,12 +137,13 @@ class HttpClient extends EventEmitter {
           const isUnauthorized = errorStatus === StatusCode.UNAUTHORIZED;
           const hasAccessToken = this.accessTokenStore && this.accessTokenStore.accessToken;
           if (isUnauthorized && hasAccessToken && firstTry) {
-            return this.refreshAccessToken().then(() => this._sendRequest<T>(config, tokenAsParam, false));
+            await this.refreshAccessToken();
+            return this._sendRequest<T>(config, tokenAsParam, false);
           }
         }
       }
 
-      return Promise.reject(error);
+      throw error;
     }
   }
 
@@ -156,12 +156,12 @@ class HttpClient extends EventEmitter {
     const accessToken = await this.postAccess(expiredAccessToken);
     this.logger.info(
       `Saved updated access token. It will expire in "${accessToken.expires_in}" seconds.`,
-      ObfuscationUtil.obfuscateAccessToken(accessToken)
+      ObfuscationUtil.obfuscateAccessToken(accessToken),
     );
     return this.accessTokenStore.updateToken(accessToken);
   }
 
-  public postAccess(expiredAccessToken?: AccessTokenData): Promise<AccessTokenData> {
+  public async postAccess(expiredAccessToken?: AccessTokenData): Promise<AccessTokenData> {
     const config: AxiosRequestConfig = {
       headers: {},
       method: 'post',
@@ -171,11 +171,12 @@ class HttpClient extends EventEmitter {
 
     if (expiredAccessToken && expiredAccessToken.access_token) {
       config.headers['Authorization'] = `${expiredAccessToken.token_type} ${decodeURIComponent(
-        expiredAccessToken.access_token
+        expiredAccessToken.access_token,
       )}`;
     }
 
-    return sendRequestWithCookie<AccessTokenData>(this, config, this.engine).then(response => response.data);
+    const response = await sendRequestWithCookie<AccessTokenData>(this, config, this.engine);
+    return response.data;
   }
 
   public sendRequest<T>(config: AxiosRequestConfig, tokenAsParam: boolean = false): Promise<AxiosResponse<T>> {
@@ -190,10 +191,16 @@ class HttpClient extends EventEmitter {
     return this.sendRequest<T>(config);
   }
 
+  public sendXML<T>(config: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+    config.headers = {
+      ...config.headers,
+      'Content-Type': ContentType.APPLICATION_XML,
+    };
+    return this.sendRequest<T>(config);
+  }
+
   public sendProtocolBuffer<T>(config: AxiosRequestConfig): Promise<AxiosResponse<T>> {
     config.headers['Content-Type'] = ContentType.APPLICATION_PROTOBUF;
     return this.sendRequest<T>(config);
   }
 }
-
-export {HttpClient};

@@ -19,13 +19,13 @@
 
 import * as CBOR from '@wireapp/cbor';
 
-import InputError from '../errors/InputError';
-import PublicKey from '../keys/PublicKey';
-import ClassUtil from '../util/ClassUtil';
-import Message from './Message';
-import SessionTag from './SessionTag';
+import {InputError} from '../errors/InputError';
+import {PublicKey} from '../keys/PublicKey';
+import * as ClassUtil from '../util/ClassUtil';
+import {Message} from './Message';
+import {SessionTag} from './SessionTag';
 
-class CipherMessage extends Message {
+export class CipherMessage extends Message {
   cipher_text: Uint8Array;
   counter: number;
   prev_counter: number;
@@ -46,7 +46,7 @@ class CipherMessage extends Message {
     counter: number,
     prev_counter: number,
     ratchet_key: PublicKey,
-    cipher_text: Uint8Array
+    cipher_text: Uint8Array,
   ): CipherMessage {
     const cm = ClassUtil.new_instance(CipherMessage);
 
@@ -114,5 +114,3 @@ class CipherMessage extends Message {
     }
   }
 }
-
-export default CipherMessage;

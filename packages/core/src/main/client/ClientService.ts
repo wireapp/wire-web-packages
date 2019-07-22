@@ -20,11 +20,11 @@
 import {APIClient} from '@wireapp/api-client';
 import {LoginData, PreKey} from '@wireapp/api-client/dist/commonjs/auth/';
 import {ClientClassification, ClientType, NewClient, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
-import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
+import {CRUDEngine} from '@wireapp/store-engine';
 import {CryptographyService} from '../cryptography/';
 import {ClientInfo} from './';
-import ClientBackendRepository from './ClientBackendRepository';
-import ClientDatabaseRepository from './ClientDatabaseRepository';
+import {ClientBackendRepository} from './ClientBackendRepository';
+import {ClientDatabaseRepository} from './ClientDatabaseRepository';
 
 const pkg = require('../../package.json');
 
@@ -35,14 +35,14 @@ export interface MetaClient extends RegisteredClient {
   };
 }
 
-export default class ClientService {
+export class ClientService {
   private readonly database: ClientDatabaseRepository;
   private readonly backend: ClientBackendRepository;
 
   constructor(
     private readonly apiClient: APIClient,
     private readonly storeEngine: CRUDEngine,
-    private readonly cryptographyService: CryptographyService
+    private readonly cryptographyService: CryptographyService,
   ) {
     this.database = new ClientDatabaseRepository(this.storeEngine);
     this.backend = new ClientBackendRepository(this.apiClient);
@@ -77,35 +77,33 @@ export default class ClientService {
       classification: ClientClassification.DESKTOP,
       cookieLabel: 'default',
       model: `${pkg.name} v${pkg.version}`,
-    }
+    },
   ): Promise<RegisteredClient> {
     if (!this.apiClient.context) {
       throw new Error('Context is not set.');
     }
+
     if (loginData.clientType === ClientType.NONE) {
       throw new Error(`Can't register client of type "${ClientType.NONE}"`);
     }
 
     const serializedPreKeys: PreKey[] = await this.cryptographyService.createCryptobox();
 
-    let newClient: NewClient;
-    if (this.cryptographyService.cryptobox.lastResortPreKey) {
-      newClient = {
-        class: clientInfo.classification,
-        cookie: clientInfo.cookieLabel,
-        label: clientInfo.label,
-        lastkey: this.cryptographyService.cryptobox.serialize_prekey(
-          this.cryptographyService.cryptobox.lastResortPreKey
-        ),
-        location: clientInfo.location,
-        model: clientInfo.model,
-        password: loginData.password ? String(loginData.password) : undefined,
-        prekeys: serializedPreKeys,
-        type: loginData.clientType,
-      };
-    } else {
+    if (!this.cryptographyService.cryptobox.lastResortPreKey) {
       throw new Error('Cryptobox got initialized without a last resort PreKey.');
     }
+
+    const newClient: NewClient = {
+      class: clientInfo.classification,
+      cookie: clientInfo.cookieLabel,
+      label: clientInfo.label,
+      lastkey: this.cryptographyService.cryptobox.serialize_prekey(this.cryptographyService.cryptobox.lastResortPreKey),
+      location: clientInfo.location,
+      model: clientInfo.model,
+      password: loginData.password ? String(loginData.password) : undefined,
+      prekeys: serializedPreKeys,
+      type: loginData.clientType,
+    };
 
     const client = await this.backend.postClient(newClient);
     await this.createLocalClient(client);

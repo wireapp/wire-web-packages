@@ -22,23 +22,21 @@ import {AxiosRequestConfig} from 'axios';
 import {GiphyOptions, GiphyResult, GiphySearchResult} from '../giphy/';
 import {HttpClient} from '../http/';
 
-class GiphyAPI {
+export class GiphyAPI {
   constructor(private readonly client: HttpClient) {}
 
-  static get URL() {
-    return {
-      GIPHY: 'giphy/v1/gifs',
-      PROXY: '/proxy',
-      RANDOM: 'random',
-      SEARCH: 'search',
-    };
-  }
+  static URL = {
+    GIPHY: 'giphy/v1/gifs',
+    PROXY: '/proxy',
+    RANDOM: 'random',
+    SEARCH: 'search',
+  };
 
   /**
    * Get a random GIF from Giphy.
    * @param tag GIF tag to limit randomness
    */
-  public getGiphyRandom(tag?: string): Promise<GiphyResult> {
+  public async getGiphyRandom(tag?: string): Promise<GiphyResult> {
     const config: AxiosRequestConfig = {
       method: 'get',
       params: {
@@ -47,14 +45,15 @@ class GiphyAPI {
       url: `${GiphyAPI.URL.PROXY}/${GiphyAPI.URL.GIPHY}/${GiphyAPI.URL.RANDOM}`,
     };
 
-    return this.client.sendJSON<GiphyResult>(config).then(response => response.data);
+    const response = await this.client.sendJSON<GiphyResult>(config);
+    return response.data;
   }
 
   /**
    * Get GIF search results from Giphy.
    * @param options Search options
    */
-  public getGiphySearch(query: string, options?: GiphyOptions): Promise<GiphySearchResult> {
+  public async getGiphySearch(query: string, options?: GiphyOptions): Promise<GiphySearchResult> {
     const defaultOptions: GiphyOptions = {
       limit: 25,
       offset: 0,
@@ -70,8 +69,7 @@ class GiphyAPI {
       url: `${GiphyAPI.URL.PROXY}/${GiphyAPI.URL.GIPHY}/${GiphyAPI.URL.SEARCH}`,
     };
 
-    return this.client.sendJSON<GiphySearchResult>(config).then(response => response.data);
+    const response = await this.client.sendJSON<GiphySearchResult>(config);
+    return response.data;
   }
 }
-
-export {GiphyAPI};

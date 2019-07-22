@@ -17,7 +17,8 @@
  *
  */
 
-interface CRUDEngine {
+export interface CRUDEngine {
+  [index: string]: any;
   storeName: string;
 
   /**
@@ -116,5 +117,3 @@ interface CRUDEngine {
    */
   isSupported(): Promise<void>;
 }
-
-export default CRUDEngine;

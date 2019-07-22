@@ -17,54 +17,46 @@
  *
  */
 
-import * as React from 'react';
-import {defaultProps} from 'recompose';
-import {QUERY} from '../mediaQueries';
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
+import React, {ReactFragment, useEffect, useState} from 'react';
+import {QUERY, QueryKeys} from '../mediaQueries';
 
-interface MatchMediaProps {
+type Query = string | keyof QueryKeys;
+
+export interface MatchMediaProps extends React.HTMLProps<ReactFragment> {
   not?: boolean;
-  query: string;
+  query: Query;
 }
 
-interface MatchMediaState {
-  isMatching: boolean;
-}
+export const useMatchMedia = (query: Query) => {
+  const matchMedia = window.matchMedia(`(${query})`);
 
-class MatchMedia extends React.PureComponent<MatchMediaProps, MatchMediaState> {
-  static defaultProps = {
-    not: false,
-  };
-  matchMedia: MediaQueryList;
-  constructor(props: MatchMediaProps) {
-    super(props);
-    this.matchMedia = window.matchMedia(`(${props.query})`);
-    this.state = {
-      isMatching: this.matchMedia.matches,
-    };
-  }
+  const [isMatching, setIsMatching] = useState(matchMedia.matches);
 
-  updateState = () => this.setState({isMatching: this.matchMedia.matches});
+  const updateMatching = () => setIsMatching(matchMedia.matches);
 
-  componentDidMount() {
-    this.matchMedia.addListener(this.updateState);
-  }
+  useEffect(() => {
+    matchMedia.addListener(updateMatching);
+    return () => matchMedia.removeListener(updateMatching);
+  });
 
-  componentWillUnmount() {
-    this.matchMedia.removeListener(this.updateState);
-  }
+  return isMatching;
+};
 
-  render() {
-    const isMatching = this.props.not ? !this.state.isMatching : this.state.isMatching;
-    return isMatching ? this.props.children : null;
-  }
-}
+export const MatchMedia: React.FC<MatchMediaProps> = ({query, children, not}) => {
+  const matchQuery = useMatchMedia(QUERY[query] || query);
+  const isMatching = not ? !matchQuery : matchQuery;
+  return <React.Fragment>{isMatching ? children : null}</React.Fragment>;
+};
 
-const IsDesktop = defaultProps<MatchMediaProps>({query: QUERY.desktop})(MatchMedia);
-const IsDesktopXL = defaultProps<MatchMediaProps>({query: QUERY.desktopXL})(MatchMedia);
-const IsMobile = defaultProps<MatchMediaProps>({query: QUERY.mobile})(MatchMedia);
-const IsMobileUp = defaultProps<MatchMediaProps>({query: QUERY.mobileUp})(MatchMedia);
-const IsTablet = defaultProps<MatchMediaProps>({query: QUERY.tablet})(MatchMedia);
-const IsTabletDown = defaultProps<MatchMediaProps>({query: QUERY.tabletDown})(MatchMedia);
-const IsTabletUp = defaultProps<MatchMediaProps>({query: QUERY.tabletUp})(MatchMedia);
+export type NamedMatchMediaProps = Omit<MatchMediaProps, 'query'>;
 
-export {MatchMedia, IsDesktop, IsDesktopXL, IsMobile, IsMobileUp, IsTablet, IsTabletDown, IsTabletUp};
+export const IsDesktop = (props: NamedMatchMediaProps) => <MatchMedia query={QueryKeys.DESKTOP} {...props} />;
+export const IsDesktopXL = (props: NamedMatchMediaProps) => <MatchMedia query={QueryKeys.DESKTOP_XL} {...props} />;
+export const IsMobile = (props: NamedMatchMediaProps) => <MatchMedia query={QueryKeys.MOBILE} {...props} />;
+export const IsMobileDown = (props: NamedMatchMediaProps) => <MatchMedia query={QueryKeys.MOBILE_DOWN} {...props} />;
+export const IsMobileUp = (props: NamedMatchMediaProps) => <MatchMedia query={QueryKeys.MOBILE_UP} {...props} />;
+export const IsTablet = (props: NamedMatchMediaProps) => <MatchMedia query={QueryKeys.TABLET} {...props} />;
+export const IsTabletDown = (props: NamedMatchMediaProps) => <MatchMedia query={QueryKeys.TABLET_DOWN} {...props} />;
+export const IsTabletUp = (props: NamedMatchMediaProps) => <MatchMedia query={QueryKeys.TABLET_UP} {...props} />;

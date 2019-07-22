@@ -26,7 +26,7 @@ const {UserAPI} = require('@wireapp/api-client/dist/commonjs/user/');
 const {MemoryEngine} = require('@wireapp/store-engine');
 
 describe('APIClient', () => {
-  const baseURL = APIClient.BACKEND.PRODUCTION.rest;
+  const baseUrl = APIClient.BACKEND.PRODUCTION.rest;
 
   let accessTokenData = {
     access_token:
@@ -39,20 +39,20 @@ describe('APIClient', () => {
   describe('"constructor"', () => {
     it('constructs a client with production backend and StoreEngine by default', () => {
       const client = new APIClient();
-      expect(client.transport.http.baseURL).toBe(APIClient.BACKEND.PRODUCTION.rest);
-      expect(client.transport.ws.baseURL).toBe(APIClient.BACKEND.PRODUCTION.ws);
+      expect(client.transport.http.baseUrl).toBe(APIClient.BACKEND.PRODUCTION.rest);
+      expect(client.transport.ws.baseUrl).toBe(APIClient.BACKEND.PRODUCTION.ws);
     });
 
     it('constructs StoreEngine when only the URLs is provided', () => {
       const client = new APIClient({urls: APIClient.BACKEND.PRODUCTION});
-      expect(client.transport.http.baseURL).toBe(APIClient.BACKEND.PRODUCTION.rest);
-      expect(client.transport.ws.baseURL).toBe(APIClient.BACKEND.PRODUCTION.ws);
+      expect(client.transport.http.baseUrl).toBe(APIClient.BACKEND.PRODUCTION.rest);
+      expect(client.transport.ws.baseUrl).toBe(APIClient.BACKEND.PRODUCTION.ws);
     });
 
     it('constructs URLs when only the StoreEngine is provided', () => {
       const client = new APIClient({store: new MemoryEngine()});
-      expect(client.transport.http.baseURL).toBe(APIClient.BACKEND.PRODUCTION.rest);
-      expect(client.transport.ws.baseURL).toBe(APIClient.BACKEND.PRODUCTION.ws);
+      expect(client.transport.http.baseUrl).toBe(APIClient.BACKEND.PRODUCTION.rest);
+      expect(client.transport.ws.baseUrl).toBe(APIClient.BACKEND.PRODUCTION.ws);
     });
 
     it('constructs schema callback when provided', () => {
@@ -129,7 +129,7 @@ describe('APIClient', () => {
     ];
 
     beforeEach(() => {
-      nock(baseURL)
+      nock(baseUrl)
         .post(`${AuthAPI.URL.LOGIN}`, {
           email: loginData.email,
           password: loginData.password,
@@ -137,94 +137,73 @@ describe('APIClient', () => {
         .query({persist: loginData.clientType === 'permanent'})
         .reply(200, accessTokenData);
 
-      nock(baseURL)
+      nock(baseUrl)
         .post(`${AuthAPI.URL.ACCESS}/${AuthAPI.URL.LOGOUT}`)
         .reply(200, undefined);
     });
 
-    it('creates a context from a successful login', done => {
+    it('creates a context from a successful login', async () => {
       const client = new APIClient();
-      client.login(loginData).then(context => {
-        expect(context.userId).toBe(accessTokenData.user);
-        expect(client.accessTokenStore.accessToken.access_token).toBe(accessTokenData.access_token);
-        done();
-      });
+      const context = await client.login(loginData);
+      expect(context.userId).toBe(accessTokenData.user);
+      expect(client.accessTokenStore.accessToken.access_token).toBe(accessTokenData.access_token);
     });
 
-    it('can login after a logout', done => {
+    it('can login after a logout', async () => {
       const client = new APIClient();
-      client
-        .login(loginData)
-        .then(() => client.logout())
-        .then(done)
-        .catch(done.fail);
+      await client.login(loginData);
+      return await client.logout();
     });
 
-    it('refreshes an access token when it becomes invalid', done => {
+    it('refreshes an access token when it becomes invalid', async () => {
       const queriedHandle = 'webappbot';
 
-      nock(baseURL)
+      nock(baseUrl)
         .get(UserAPI.URL.USERS)
         .query({handles: queriedHandle})
         .once()
         .reply(401);
 
-      nock(baseURL)
+      nock(baseUrl)
         .get(UserAPI.URL.USERS)
         .query({handles: queriedHandle})
         .twice()
         .reply(200, userData);
 
-      nock(baseURL)
+      nock(baseUrl)
         .post(AuthAPI.URL.ACCESS)
         .reply(200, accessTokenData);
 
       const client = new APIClient();
-      client
-        .login(loginData)
-        .then(context => {
-          expect(context.userId).toBe(accessTokenData.user);
-          // Make access token invalid
-          client.accessTokenStore.accessToken.access_token = undefined;
-          /**
-           * Make a backend call. This will fail because the access token was made invalid.
-           * Thus the client needs to run an access token refresh in the background and
-           * automatically retry the backend call right after.
-           */
-          return client.user.api.getUsers({handles: [queriedHandle]});
-        })
-        .then(response => {
-          expect(response.name).toBe(userData.name);
-          expect(client.accessTokenStore.accessToken.access_token).toBeDefined();
-          done();
-        })
-        .catch(done.fail);
+      const context = await client.login(loginData);
+      expect(context.userId).toBe(accessTokenData.user);
+      // Make access token invalid
+      client.accessTokenStore.accessToken.access_token = undefined;
+      const response = await client.user.api.getUsers({handles: [queriedHandle]});
+      expect(response.name).toBe(userData.name);
+      expect(client.accessTokenStore.accessToken.access_token).toBeDefined();
     });
   });
 
   describe('"logout"', () => {
     beforeEach(() => {
-      nock(baseURL)
+      nock(baseUrl)
         .post(`${AuthAPI.URL.ACCESS}/${AuthAPI.URL.LOGOUT}`)
         .reply(200, undefined);
     });
 
-    it('can logout a user', async done => {
+    it('can logout a user', async () => {
       const client = new APIClient();
 
       const context = client.createContext(
         '3721e5d3-558d-45ac-b476-b4a64a8f74c1',
         'temporary',
-        'dce3d529-51e6-40c2-9147-e091eef48e73'
+        'dce3d529-51e6-40c2-9147-e091eef48e73',
       );
+
       await client.initEngine(context);
 
-      try {
-        await client.logout();
-        done();
-      } catch (error) {
-        done.fail(error);
-      }
+      await client.logout();
     });
 
     it('ignores errors when told to', async () => {
@@ -269,16 +248,16 @@ describe('APIClient', () => {
     };
 
     beforeEach(() => {
-      nock(baseURL)
+      nock(baseUrl)
         .post(AuthAPI.URL.REGISTER, registerData)
         .reply(200, registerData);
 
-      nock(baseURL)
+      nock(baseUrl)
         .post(AuthAPI.URL.ACCESS)
         .reply(200, accessTokenData);
     });
 
-    it('automatically gets an access token after registration', done => {
+    it('automatically gets an access token after registration', async () => {
       const client = new APIClient({
         schemaCallback: db => {
           db.version(1).stores({
@@ -286,14 +265,10 @@ describe('APIClient', () => {
           });
         },
       });
-      client
-        .register(registerData)
-        .then(context => {
-          expect(context.userId).toBe(registerData.id);
-          expect(client.accessTokenStore.accessToken.access_token).toBe(accessTokenData.access_token);
-          done();
-        })
-        .catch(done.fail);
+
+      const context = await client.register(registerData);
+      expect(context.userId).toBe(registerData.id);
+      expect(client.accessTokenStore.accessToken.access_token).toBe(accessTokenData.access_token);
     });
   });
 });

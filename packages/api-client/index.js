@@ -31,8 +31,8 @@ logger.state.isEnabled = true;
 
 const {APIClient} = require('@wireapp/api-client');
 const path = require('path');
-const {FileEngine} = require('@wireapp/store-engine');
-const {WebSocketClient} = require('@wireapp/api-client/dist/commonjs/tcp/');
+const {FileEngine} = require('@wireapp/store-engine-fs');
+const {WebSocketTopic} = require('@wireapp/api-client/dist/commonjs/tcp/');
 const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/');
 
 const login = {
@@ -50,26 +50,28 @@ const config = {
 
 const apiClient = new APIClient(config);
 
-// Trying to login (works only if there is already a valid cookie stored in the FileEngine)
-apiClient
-  .init()
-  .catch(error => {
+(async () => {
+  let context;
+
+  try {
+    // Trying to login (works only if there is already a valid cookie stored in the FileEngine)
+    context = await apiClient.init();
+  } catch (error) {
     logger.log(`Authentication via existing authenticator (Session Cookie or Access Token) failed: ${error.message}`);
-    return apiClient.login(login);
-  })
-  .then(context => {
+    context = await apiClient.login(login);
+  }
+
+  try {
     logger.log(`Got self user with ID "${context.userId}".`);
-    return apiClient.user.api.getUsers({handles: ['webappbot']});
-  })
-  .then(userData => {
+    const userData = await apiClient.user.api.getUsers({handles: ['webappbot']});
+
     logger.log(`Found user with name "${userData[0].name}" by handle "${userData[0].handle}".`);
-    return apiClient.connect();
-  })
-  .then(webSocketClient => {
-    webSocketClient.on(WebSocketClient.TOPIC.ON_MESSAGE, notification => {
+    const webSocketClient = await apiClient.connect();
+
+    webSocketClient.on(WebSocketTopic.ON_MESSAGE, notification => {
       logger.log('Received notification via WebSocket', notification);
     });
-  })
-  .catch(error => {
+  } catch (error) {
     logger.error(error.message, error);
-  });
+  }
+})();

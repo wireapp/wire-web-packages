@@ -17,10 +17,5 @@
  *
  */
 
-interface MentionContent {
-  length: number;
-  start: number;
-  userId?: string;
-}
-
-export {MentionContent};
+import {IMention} from '@wireapp/protocol-messaging';
+export {IMention as MentionContent};

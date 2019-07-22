@@ -17,11 +17,12 @@
  *
  */
 
+import {AccentColor} from '@wireapp/commons';
 import {Picture, SSOSignature} from '../self/';
 import {UserAsset} from '../user/';
 
-interface Self {
-  accent_id?: number;
+export interface Self {
+  accent_id?: AccentColor.AccentColorID;
   assets: UserAsset[];
   deleted?: boolean;
   email?: string;
@@ -35,5 +36,3 @@ interface Self {
   sso_id?: SSOSignature;
   team?: string;
 }
-
-export {Self};

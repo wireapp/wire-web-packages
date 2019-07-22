@@ -17,4 +17,6 @@
  *
  */
 
-export default WebSocket;
+export type NodeWebSocket = WebSocket;
+
+export {NodeWebSocket as WebSocket};

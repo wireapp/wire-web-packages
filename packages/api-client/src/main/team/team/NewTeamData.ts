@@ -19,11 +19,14 @@
 
 import {MemberData} from '../member/MemberData';
 
-interface NewTeamData {
+export interface NewTeamData {
+  /** User binding team */
+  binding?: boolean;
+  /** Initial team member IDs (between 1 and 127) */
   members?: MemberData[];
   name: string;
+  /** Team icon (asset ID) */
   icon: string;
-  binding?: boolean;
+  /** Team icon (asset key) */
+  icon_key?: string;
 }
-
-export {NewTeamData};

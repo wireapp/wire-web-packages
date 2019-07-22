@@ -37,7 +37,7 @@ import {ConversationEvent, ConversationMemberJoinEvent, ConversationMemberLeaveE
 import {HttpClient} from '../http/';
 import {ValidationError} from '../validation/';
 
-class ConversationAPI {
+export class ConversationAPI {
   static readonly MAX_CHUNK_SIZE = 500;
   static readonly URL = {
     BOTS: 'bots',
@@ -74,13 +74,14 @@ class ConversationAPI {
    * @param userId The user to remove
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/removeMember
    */
-  public deleteMember(conversationId: string, userId: string): Promise<ConversationMemberLeaveEvent> {
+  public async deleteMember(conversationId: string, userId: string): Promise<ConversationMemberLeaveEvent> {
     const config: AxiosRequestConfig = {
       method: 'delete',
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.MEMBERS}/${userId}`,
     };
 
-    return this.client.sendJSON<ConversationMemberLeaveEvent>(config).then(response => response.data);
+    const response = await this.client.sendJSON<ConversationMemberLeaveEvent>(config);
+    return response.data;
   }
 
   /**
@@ -114,13 +115,14 @@ class ConversationAPI {
    * @param conversationId The conversation ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversation
    */
-  public getConversation(conversationId: string): Promise<Conversation> {
+  public async getConversation(conversationId: string): Promise<Conversation> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}`,
     };
 
-    return this.client.sendJSON<Conversation>(config).then(response => response.data);
+    const response = await this.client.sendJSON<Conversation>(config);
+    return response.data;
   }
 
   /**
@@ -129,7 +131,7 @@ class ConversationAPI {
    * @param conversationId Conversation ID to start from (exclusive)
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversationIds
    */
-  public getConversationIds(limit: number, conversationId?: string): Promise<ConversationIds> {
+  public async getConversationIds(limit: number, conversationId?: string): Promise<ConversationIds> {
     const config: AxiosRequestConfig = {
       method: 'get',
       params: {
@@ -139,7 +141,8 @@ class ConversationAPI {
       url: `${ConversationAPI.URL.CONVERSATIONS}/ids`,
     };
 
-    return this.client.sendJSON<ConversationIds>(config).then(response => response.data);
+    const response = await this.client.sendJSON<ConversationIds>(config);
+    return response.data;
   }
 
   /**
@@ -151,7 +154,7 @@ class ConversationAPI {
    */
   public getConversations(
     startConversationId?: string,
-    limit = ConversationAPI.MAX_CHUNK_SIZE
+    limit = ConversationAPI.MAX_CHUNK_SIZE,
   ): Promise<Conversations> {
     return this._getConversations(startConversationId, undefined, limit);
   }
@@ -169,7 +172,7 @@ class ConversationAPI {
       const {conversations} = await this._getConversations(
         undefined,
         chunkedConversationIds,
-        ConversationAPI.MAX_CHUNK_SIZE
+        ConversationAPI.MAX_CHUNK_SIZE,
       );
       return conversations;
     };
@@ -196,10 +199,10 @@ class ConversationAPI {
    * @param limit Max. number of conversations to return
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversations
    */
-  private _getConversations(
+  private async _getConversations(
     startConversationId?: string,
     filteredConversationIds?: string[],
-    limit = ConversationAPI.MAX_CHUNK_SIZE
+    limit = ConversationAPI.MAX_CHUNK_SIZE,
   ): Promise<Conversations> {
     const config: AxiosRequestConfig = {
       method: 'get',
@@ -214,7 +217,8 @@ class ConversationAPI {
       config.params.ids = filteredConversationIds.join(',');
     }
 
-    return this.client.sendJSON<Conversations>(config).then(response => response.data);
+    const response = await this.client.sendJSON<Conversations>(config);
+    return response.data;
   }
 
   /**
@@ -222,13 +226,14 @@ class ConversationAPI {
    * @param conversationId The Conversation ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/getSelf
    */
-  public getMembershipProperties(conversationId: string): Promise<Member> {
+  public async getMembershipProperties(conversationId: string): Promise<Member> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/self`,
     };
 
-    return this.client.sendJSON<Member>(config).then(response => response.data);
+    const response = await this.client.sendJSON<Member>(config);
+    return response.data;
   }
 
   /**
@@ -252,14 +257,15 @@ class ConversationAPI {
    * @param invitationData The new conversation
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/addMembers
    */
-  public postAddMembers(conversationId: string, invitationData: Invite): Promise<ConversationEvent> {
+  public async postAddMembers(conversationId: string, invitationData: Invite): Promise<ConversationEvent> {
     const config: AxiosRequestConfig = {
       data: invitationData,
       method: 'post',
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.MEMBERS}`,
     };
 
-    return this.client.sendJSON<ConversationEvent>(config).then(response => response.data);
+    const response = await this.client.sendJSON<ConversationEvent>(config);
+    return response.data;
   }
 
   /**
@@ -286,14 +292,15 @@ class ConversationAPI {
    * @param conversationData The new conversation
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/createGroupConversation
    */
-  public postConversation(conversationData: NewConversation): Promise<Conversation> {
+  public async postConversation(conversationData: NewConversation): Promise<Conversation> {
     const config: AxiosRequestConfig = {
       data: conversationData,
       method: 'post',
       url: ConversationAPI.URL.CONVERSATIONS,
     };
 
-    return this.client.sendJSON<Conversation>(config).then(response => response.data);
+    const response = await this.client.sendJSON<Conversation>(config);
+    return response.data;
   }
 
   /**
@@ -316,14 +323,15 @@ class ConversationAPI {
    * @param conversationCode The conversation code
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/joinConversationByCode
    */
-  public postJoinByCode(conversationCode: ConversationCode): Promise<ConversationEvent> {
+  public async postJoinByCode(conversationCode: ConversationCode): Promise<ConversationEvent> {
     const config: AxiosRequestConfig = {
       data: conversationCode,
       method: 'post',
       url: `${ConversationAPI.URL.CONVERSATIONS}${ConversationAPI.URL.JOIN}`,
     };
 
-    return this.client.sendJSON<ConversationEvent>(config).then(response => response.data);
+    const response = await this.client.sendJSON<ConversationEvent>(config);
+    return response.data;
   }
 
   /**
@@ -331,14 +339,14 @@ class ConversationAPI {
    * @param conversationId The conversation ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/joinConversation
    */
-  public postJoin(conversationId: string): Promise<ConversationEvent> {
+  public async postJoin(conversationId: string): Promise<ConversationEvent> {
     const config: AxiosRequestConfig = {
-      data: {},
       method: 'post',
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}`,
     };
 
-    return this.client.sendJSON<ConversationEvent>(config).then(response => response.data);
+    const response = await this.client.sendJSON<ConversationEvent>(config);
+    return response.data;
   }
 
   /**
@@ -348,14 +356,14 @@ class ConversationAPI {
    * @param messageData The message content
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/postOtrMessage
    */
-  public postOTRMessage(
+  public async postOTRMessage(
     clientId: string,
     conversationId: string,
     messageData?: NewOTRMessage,
     params?: {
       ignore_missing?: boolean;
       report_missing?: string;
-    }
+    },
   ): Promise<ClientMismatch> {
     if (!clientId) {
       throw new ValidationError('Unable to send OTR message without client ID.');
@@ -374,30 +382,28 @@ class ConversationAPI {
         ignore_missing: !!messageData.data,
         ...params,
       },
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.OTR}/${
-        ConversationAPI.URL.MESSAGES
-      }`,
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.OTR}/${ConversationAPI.URL.MESSAGES}`,
     };
 
-    if (typeof messageData.recipients === 'object') {
-      return this.client.sendJSON<ClientMismatch>(config).then(response => response.data);
-    }
-
-    return this.client.sendProtocolBuffer<ClientMismatch>(config).then(response => response.data);
+    const response =
+      typeof messageData.recipients === 'object'
+        ? await this.client.sendJSON<ClientMismatch>(config)
+        : await this.client.sendProtocolBuffer<ClientMismatch>(config);
+    return response.data;
   }
 
   /**
    * Create a self-conversation.
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/createSelfConversation
    */
-  public postSelf(): Promise<Conversation> {
+  public async postSelf(): Promise<Conversation> {
     const config: AxiosRequestConfig = {
-      data: {},
       method: 'post',
       url: `${ConversationAPI.URL.CONVERSATIONS}/self`,
     };
 
-    return this.client.sendJSON<Conversation>(config).then(response => response.data);
+    const response = await this.client.sendJSON<Conversation>(config);
+    return response.data;
   }
 
   /**
@@ -422,14 +428,18 @@ class ConversationAPI {
    * @param conversationData The new conversation
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/updateConversation
    */
-  public putConversation(conversationId: string, conversationData: ConversationUpdate): Promise<ConversationEvent> {
+  public async putConversation(
+    conversationId: string,
+    conversationData: ConversationUpdate,
+  ): Promise<ConversationEvent> {
     const config: AxiosRequestConfig = {
       data: conversationData,
       method: 'put',
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}`,
     };
 
-    return this.client.sendJSON<ConversationEvent>(config).then(response => response.data);
+    const response = await this.client.sendJSON<ConversationEvent>(config);
+    return response.data;
   }
 
   /**
@@ -438,9 +448,9 @@ class ConversationAPI {
    * @param conversationData The new message timer
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/updateConversationMessageTimer
    */
-  public putConversationMessageTimer(
+  public async putConversationMessageTimer(
     conversationId: string,
-    messageTimerData: ConversationMessageTimerUpdate
+    messageTimerData: ConversationMessageTimerUpdate,
   ): Promise<ConversationEvent> {
     const config: AxiosRequestConfig = {
       data: messageTimerData,
@@ -448,7 +458,8 @@ class ConversationAPI {
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/message-timer`,
     };
 
-    return this.client.sendJSON<ConversationEvent>(config).then(response => response.data);
+    const response = await this.client.sendJSON<ConversationEvent>(config);
+    return response.data;
   }
 
   /**
@@ -457,7 +468,7 @@ class ConversationAPI {
    * @param userIds List of user IDs to add to a conversation
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/addMembers
    */
-  public postMembers(conversationId: string, userIds: string[]): Promise<ConversationMemberJoinEvent> {
+  public async postMembers(conversationId: string, userIds: string[]): Promise<ConversationMemberJoinEvent> {
     const config: AxiosRequestConfig = {
       data: {
         users: userIds,
@@ -466,7 +477,8 @@ class ConversationAPI {
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.MEMBERS}`,
     };
 
-    return this.client.sendJSON<ConversationMemberJoinEvent>(config).then(response => response.data);
+    const response = await this.client.sendJSON<ConversationMemberJoinEvent>(config);
+    return response.data;
   }
 
   /**
@@ -485,5 +497,3 @@ class ConversationAPI {
     await this.client.sendJSON(config);
   }
 }
-
-export {ConversationAPI};

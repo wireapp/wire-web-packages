@@ -17,146 +17,157 @@
  *
  */
 
-import * as React from 'react';
-import styled from 'styled-components';
+/** @jsx jsx */
+import {ObjectInterpolation, jsx} from '@emotion/core';
+import React, {useEffect, useState} from 'react';
+import {noop} from '../util';
+import {InputProps, inputStyle} from './Input';
 
-const CodeInputWrapper = styled.div<React.HTMLAttributes<HTMLDivElement>>`
-  display: flex;
-  justify-content: center;
-`;
+const CodeInputWrapper = (props: React.HTMLProps<HTMLDivElement>) => (
+  <div
+    css={{
+      display: 'flex',
+      justifyContent: 'center',
+    }}
+    {...props}
+  />
+);
 
-const DigitInput = styled.input<React.HTMLAttributes<HTMLInputElement>>`
-  line-height: 56px;
-  width: 48px;
-  font-size: 32px;
-  border: none;
-  border-radius: 4px;
-  text-align: center;
-  color: black;
-  outline: none;
-  & + & {
-    margin-left: 19px;
-  }
-`;
+type DigitInputProps<T = HTMLInputElement> = InputProps<T>;
 
-interface CodeInputProps {
+const digitInputStyle: <T>(props: DigitInputProps<T>) => ObjectInterpolation<undefined> = props => ({
+  ...inputStyle(props),
+  '& + &': {
+    marginLeft: '19px',
+  },
+  fontSize: '32px',
+  lineHeight: '56px',
+  padding: 0,
+  textAlign: 'center',
+  width: '48px',
+});
+
+const DigitInput: React.FC<DigitInputProps<HTMLInputElement>> = React.forwardRef<
+  HTMLInputElement,
+  DigitInputProps<HTMLInputElement>
+>((props, ref) => <input ref={ref} css={digitInputStyle(props)} {...props} />);
+
+export interface CodeInputProps<T = HTMLInputElement> extends InputProps<T> {
   autoFocus?: boolean;
   digits?: number;
+  markInvalid?: boolean;
   onCodeComplete?: (completeCode?: string) => void;
 }
 
-interface CodeInputState {
-  values: string[];
-}
-class CodeInput extends React.PureComponent<CodeInputProps & React.HTMLAttributes<HTMLInputElement>, CodeInputState> {
-  inputs: HTMLInputElement[];
+export const CodeInput = ({
+  style,
+  digits = 6,
+  autoFocus = false,
+  markInvalid,
+  onCodeComplete = noop,
+}: CodeInputProps) => {
+  const [values, setValues] = useState(Array(digits).fill(''));
+  const inputs = Array(digits);
 
-  static defaultProps = {
-    autoFocus: false,
-    digits: 6,
-    onCodeComplete: () => {},
+  const forceSelection = (
+    event:
+      | React.MouseEvent<HTMLInputElement>
+      | React.TouchEvent<HTMLInputElement>
+      | React.KeyboardEvent<HTMLInputElement>
+      | React.FocusEvent<HTMLInputElement>,
+  ) => {
+    const target = event.target as HTMLInputElement;
+    target.select();
   };
 
-  constructor(props: CodeInputProps) {
-    super(props);
-    this.state = {
-      values: Array(props.digits).fill(''),
-    };
-    this.inputs = [];
-  }
+  const forceSelectionPreventDefault = (
+    event: React.MouseEvent<HTMLInputElement> | React.TouchEvent<HTMLInputElement>,
+  ) => {
+    forceSelection(event);
+    event.preventDefault();
+  };
 
-  setValue = (fieldIndex: number, value: string) => {
+  const nextField = (currentFieldIndex: number) => {
+    const nextFieldIndex = currentFieldIndex + 1;
+    if (nextFieldIndex < digits) {
+      inputs[nextFieldIndex].focus();
+    }
+  };
+
+  const previousField = (currentFieldIndex: number) => {
+    if (currentFieldIndex > 0) {
+      inputs[currentFieldIndex - 1].focus();
+    }
+  };
+
+  const setValue = (fieldIndex: number, value: string) => {
     if (/^[0-9]?$/.test(value)) {
-      const values = [...this.state.values];
-      values[fieldIndex] = value;
-      this.setState({values}, this.handleCompleteCode);
+      const valuesCopy = values.slice();
+      valuesCopy[fieldIndex] = value;
+      setValues(valuesCopy);
       if (value.length) {
-        this.nextField(fieldIndex);
+        nextField(fieldIndex);
       }
     }
   };
 
-  handlePaste = (fieldIndex: number, event: React.ClipboardEvent<HTMLInputElement>) => {
-    const pastedValue = event.clipboardData.getData('Text');
-    const cleanedPaste = pastedValue.replace(/[^0-9]/, '');
-    if (new RegExp(`^[0-9]+$`).test(cleanedPaste)) {
-      const values = [...this.state.values];
-      const newValues = cleanedPaste.split('');
-      values.splice.apply(values, [fieldIndex, newValues.length, ...newValues]);
-      this.setState({values: values.slice(0, this.props.digits)}, this.handleCompleteCode);
-    }
-  };
-
-  handleCompleteCode = () => {
-    const completeCode = this.state.values.join('');
-    if (completeCode.length === this.props.digits && this.props.onCodeComplete) {
-      this.props.onCodeComplete(completeCode);
-    }
-  };
-
-  nextField = (currentFieldIndex: number) => {
-    const nextFieldIndex = currentFieldIndex + 1;
-    if (nextFieldIndex < (this.props.digits || CodeInput.defaultProps.digits)) {
-      this.inputs[nextFieldIndex].focus();
-    }
-  };
-
-  previousField = (currentFieldIndex: number) => {
-    if (currentFieldIndex > 0) {
-      this.inputs[currentFieldIndex - 1].focus();
-    }
-  };
-
-  handleKeyDown = (fieldIndex: number, event: React.KeyboardEvent<HTMLInputElement>) => {
-    switch (event.key) {
+  const handleKeyDown = (fieldIndex: number, {key}: React.KeyboardEvent<HTMLInputElement>) => {
+    switch (key) {
       case 'Backspace':
-        this.setValue(fieldIndex, '');
-        this.previousField(fieldIndex);
+        setValue(fieldIndex, '');
+        previousField(fieldIndex);
         break;
       case 'ArrowLeft':
-        this.previousField(fieldIndex);
+        previousField(fieldIndex);
         break;
       case 'ArrowRight':
-        this.nextField(fieldIndex);
+        nextField(fieldIndex);
         break;
     }
-    if (/^[0-9]$/.test(event.key)) {
-      this.setValue(fieldIndex, event.key);
+    if (/^[0-9]$/.test(key)) {
+      setValue(fieldIndex, key);
     }
   };
 
-  forceSelection(event: any) {
-    const target: HTMLInputElement = event.target;
-    target.select();
-  }
-
-  forceSelectionPreventDefault = (event: React.MouseEvent<HTMLInputElement> | React.TouchEvent<HTMLInputElement>) => {
-    this.forceSelection(event);
-    event.preventDefault();
-  };
-
-  render() {
-    const {values} = this.state;
-    const inputs = [];
-    for (let fieldIndex = 0; fieldIndex < (this.props.digits || CodeInput.defaultProps.digits); fieldIndex++) {
-      inputs.push(
-        <DigitInput
-          autoFocus={fieldIndex === 0 && this.props.autoFocus}
-          key={fieldIndex}
-          onPaste={event => this.handlePaste(fieldIndex, event)}
-          onFocus={this.forceSelection}
-          onMouseDown={this.forceSelectionPreventDefault}
-          onTouchStart={this.forceSelectionPreventDefault}
-          onKeyDown={event => this.handleKeyDown(fieldIndex, event)}
-          onKeyUp={this.forceSelection}
-          ref={node => (this.inputs[fieldIndex] = node)}
-          type="text"
-          value={values[fieldIndex]}
-        />
+  const handlePaste = (fieldIndex: number, event: React.ClipboardEvent<HTMLInputElement>) => {
+    const pastedValue = event.clipboardData.getData('Text');
+    const cleanedPaste = pastedValue.replace(/[^0-9]/g, '');
+    if (/^[0-9]+$/.test(cleanedPaste)) {
+      setValues(
+        values
+          .slice(0, fieldIndex)
+          .concat(cleanedPaste.split(''))
+          .slice(0, digits),
       );
     }
-    return <CodeInputWrapper style={this.props.style}>{inputs}</CodeInputWrapper>;
-  }
-}
+  };
 
-export {CodeInput};
+  useEffect(() => {
+    const completeCode = values.join('');
+    if (completeCode.length === digits) {
+      onCodeComplete(completeCode);
+    }
+  }, [values]);
+
+  return (
+    <CodeInputWrapper style={style}>
+      {Array.from({length: digits}, (_, index) => (
+        <DigitInput
+          autoFocus={index === 0 && autoFocus}
+          key={index}
+          onPaste={event => handlePaste(index, event)}
+          onFocus={forceSelection}
+          onMouseDown={forceSelectionPreventDefault}
+          onTouchStart={forceSelectionPreventDefault}
+          onKeyDown={event => handleKeyDown(index, event)}
+          onKeyUp={forceSelection}
+          markInvalid={markInvalid}
+          ref={node => (inputs[index] = node)}
+          type="text"
+          value={values[index]}
+          onChange={() => {}}
+        />
+      ))}
+    </CodeInputWrapper>
+  );
+};

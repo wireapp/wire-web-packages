@@ -17,11 +17,15 @@
  *
  */
 
+import {LegalHoldMemberStatus} from '../legalhold';
 import {PermissionsData} from './PermissionsData';
 
-interface MemberData {
-  user: string;
+export interface MemberData {
+  /** Timestamp of invitation creation. */
+  created_at?: Date;
+  /** ID of the inviting user. */
+  created_by?: string;
+  legalhold_status?: LegalHoldMemberStatus;
   permissions: PermissionsData;
+  user: string;
 }
-
-export {MemberData};

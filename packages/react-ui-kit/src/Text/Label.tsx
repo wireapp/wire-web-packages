@@ -17,20 +17,34 @@
  *
  */
 
-import styled from 'styled-components';
+/** @jsx jsx */
+import {ObjectInterpolation, jsx} from '@emotion/core';
 import {COLOR} from '../Identity';
-import {Link} from './Link';
-import {Text} from './Text';
+import {LinkProps, linkStyle} from './Link';
+import {TextProps, filterTextProps, textStyle} from './Text';
 
-const Label = Text.withComponent<React.HTMLAttributes<HTMLSpanElement>>(styled.span``);
+export type LabelProps<T = HTMLSpanElement> = TextProps<T>;
 
-Label.defaultProps = {
-  ...Text.defaultProps,
-  bold: true,
-  color: COLOR.LINK,
-  fontSize: '12px',
-};
+const labelStyle: <T>(props: LabelProps<T>) => ObjectInterpolation<undefined> = ({
+  bold = true,
+  color = COLOR.LINK,
+  fontSize = '12px',
+  ...props
+}) => ({
+  ...textStyle({bold, color, fontSize, ...props}),
+});
 
-const LabelLink = Label.withComponent<any>(Link);
+export const Label = (props: LabelProps) => <span css={labelStyle(props)} {...filterTextProps(props)} />;
 
-export {Label, LabelLink};
+export type LabelLinkProps<T = HTMLAnchorElement> = LinkProps<T>;
+
+const labelLinkStyle: <T>(props: LabelLinkProps<T>) => ObjectInterpolation<undefined> = ({
+  fontSize = '12px',
+  ...props
+}) => ({
+  ...linkStyle({fontSize, ...props}),
+});
+
+export const LabelLink = (props: LabelProps<HTMLAnchorElement>) => (
+  <a css={labelLinkStyle(props)} {...filterTextProps(props)} />
+);

@@ -1,20 +1,20 @@
 {
   "dependencies": {
     "@types/chai": "4.1.7",
-    "@types/node": "11.9.0",
-    "@wireapp/cbor": "3.0.117",
-    "libsodium-wrappers-sumo": "0.7.4"
+    "@types/node": "~10",
+    "@wireapp/cbor": "4.3.4",
+    "libsodium-wrappers-sumo": "0.7.5"
   },
   "description": "Axolotl protocol implementation for JavaScript.",
   "devDependencies": {
     "@types/libsodium-wrappers-sumo": "0.7.1",
     "bower": "1.8.8",
     "chai": "4.2.0",
-    "jasmine": "3.3.1",
+    "jasmine": "3.4.0",
     "rimraf": "2.6.3",
-    "typescript": "3.3.3",
-    "webpack": "4.29.3",
-    "webpack-cli": "3.2.3"
+    "typescript": "3.5.3",
+    "webpack": "4.36.1",
+    "webpack-cli": "3.3.6"
   },
   "files": [
     "dist"
@@ -33,6 +33,5 @@
     "test:project": "yarn dist && yarn test",
     "test:node": "jasmine"
   },
-  "types": "dist/index.d.ts",
-  "version": "8.0.31"
+  "version": "9.3.6"
 }

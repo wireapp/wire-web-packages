@@ -31,16 +31,10 @@ describe('Envelope', () => {
   let base_key;
   let ratchet_key;
 
-  beforeAll(async done => {
-    try {
-      identity_key = Proteus.keys.IdentityKey.new((await Proteus.keys.KeyPair.new()).public_key);
-      base_key = (await Proteus.keys.KeyPair.new()).public_key;
-      ratchet_key = (await Proteus.keys.KeyPair.new()).public_key;
-
-      done();
-    } catch (err) {
-      done.fail(err);
-    }
+  beforeAll(async () => {
+    identity_key = Proteus.keys.IdentityKey.new((await Proteus.keys.KeyPair.new()).public_key);
+    base_key = (await Proteus.keys.KeyPair.new()).public_key;
+    ratchet_key = (await Proteus.keys.KeyPair.new()).public_key;
   });
 
   it('encapsulates a CipherMessage', () => {
@@ -55,7 +49,7 @@ describe('Envelope', () => {
       42,
       base_key,
       identity_key,
-      Proteus.message.CipherMessage.new(session_tag, 42, 43, ratchet_key, new Uint8Array([1, 2, 3, 4]))
+      Proteus.message.CipherMessage.new(session_tag, 42, 43, ratchet_key, new Uint8Array([1, 2, 3, 4])),
     );
 
     const env = Proteus.message.Envelope.new(mac_key, msg);
@@ -67,7 +61,7 @@ describe('Envelope', () => {
       42,
       base_key,
       identity_key,
-      Proteus.message.CipherMessage.new(session_tag, 42, 43, ratchet_key, new Uint8Array([1, 2, 3, 4]))
+      Proteus.message.CipherMessage.new(session_tag, 42, 43, ratchet_key, new Uint8Array([1, 2, 3, 4])),
     );
 
     const env = Proteus.message.Envelope.new(mac_key, msg);

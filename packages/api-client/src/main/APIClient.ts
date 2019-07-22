@@ -17,11 +17,13 @@
  *
  */
 
-import {MemoryEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
-import * as logdown from 'logdown';
+import {CRUDEngine, MemoryEngine} from '@wireapp/store-engine';
+import EventEmitter from 'events';
+import logdown from 'logdown';
 
+import {AccountAPI} from './account/AccountAPI';
 import {AssetAPI} from './asset/';
-import {AccessTokenStore, AuthAPI, Context, LoginData, RegisterData} from './auth/';
+import {AccessTokenStore, AuthAPI, Context, InvalidTokenError, LoginData, RegisterData} from './auth/';
 import {BroadcastAPI} from './broadcast/';
 import {ClientAPI, ClientType} from './client/';
 import {Config} from './Config';
@@ -31,25 +33,38 @@ import {Backend} from './env/';
 import {GiphyAPI} from './giphy/';
 import {HttpClient} from './http/';
 import {NotificationAPI} from './notification/';
-import {ObfuscationUtil} from './obfuscation/';
+import * as ObfuscationUtil from './obfuscation/';
 import {SelfAPI} from './self/';
 import {retrieveCookie} from './shims/node/cookie';
-import {WebSocketClient} from './tcp/';
-import {MemberAPI, PaymentAPI, ServiceAPI, TeamAPI, TeamInvitationAPI} from './team/';
+import {WebSocketClient, WebSocketTopic} from './tcp/';
+import {
+  IdentityProviderAPI,
+  LegalHoldAPI,
+  MemberAPI,
+  PaymentAPI,
+  ServiceAPI,
+  TeamAPI,
+  TeamInvitationAPI,
+} from './team/';
 import {UserAPI} from './user/';
 
 const {version}: {version: string} = require('../../package.json');
+
+export enum APIClientTopic {
+  ON_LOGOUT = 'APIClientTopic.ON_LOGOUT',
+}
 
 const defaultConfig: Config = {
   store: new MemoryEngine(),
   urls: Backend.PRODUCTION,
 };
 
-class APIClient {
+export class APIClient extends EventEmitter {
   private readonly logger: logdown.Logger;
-
   private readonly STORE_NAME_PREFIX = 'wire';
+
   // APIs
+  public account: {api: AccountAPI};
   public asset: {api: AssetAPI};
   public auth: {api: AuthAPI};
   public broadcast: {api: BroadcastAPI};
@@ -60,7 +75,9 @@ class APIClient {
   public notification: {api: NotificationAPI};
   public self: {api: SelfAPI};
   public teams: {
+    identityProvider: {api: IdentityProviderAPI};
     invitation: {api: TeamInvitationAPI};
+    legalhold: {api: LegalHoldAPI};
     member: {api: MemberAPI};
     payment: {api: PaymentAPI};
     service: {api: ServiceAPI};
@@ -75,9 +92,11 @@ class APIClient {
   public config: Config;
 
   public static BACKEND = Backend;
+  public static TOPIC = APIClientTopic;
   public static VERSION = version;
 
   constructor(config?: Config) {
+    super();
     this.config = {...defaultConfig, ...config};
     this.accessTokenStore = new AccessTokenStore();
     this.logger = logdown('@wireapp/api-client/Client', {
@@ -86,12 +105,22 @@ class APIClient {
     });
 
     const httpClient = new HttpClient(this.config.urls.rest, this.accessTokenStore, this.config.store);
+    const webSocket = new WebSocketClient(this.config.urls.ws, httpClient);
+
+    webSocket.on(WebSocketTopic.ON_DISCONNECT, async (error: InvalidTokenError) => {
+      this.logger.warn(`Cannot renew access token because cookie is invalid: ${error.message}`, error);
+      await this.logout();
+      this.emit(APIClientTopic.ON_LOGOUT, error);
+    });
 
     this.transport = {
       http: httpClient,
-      ws: new WebSocketClient(this.config.urls.ws, httpClient),
+      ws: webSocket,
     };
 
+    this.account = {
+      api: new AccountAPI(this.transport.http),
+    };
     this.asset = {
       api: new AssetAPI(this.transport.http),
     };
@@ -121,8 +150,14 @@ class APIClient {
     };
 
     this.teams = {
+      identityProvider: {
+        api: new IdentityProviderAPI(this.transport.http),
+      },
       invitation: {
         api: new TeamInvitationAPI(this.transport.http),
+      },
+      legalhold: {
+        api: new LegalHoldAPI(this.transport.http),
       },
       member: {
         api: new MemberAPI(this.transport.http),
@@ -163,7 +198,7 @@ class APIClient {
 
     this.logger.info(
       `Saved initial access token. It will expire in "${accessToken.expires_in}" seconds.`,
-      ObfuscationUtil.obfuscateAccessToken(accessToken)
+      ObfuscationUtil.obfuscateAccessToken(accessToken),
     );
 
     const context = this.createContext(accessToken.user, loginData.clientType);
@@ -226,7 +261,7 @@ class APIClient {
     this.transport.ws.disconnect(reason);
   }
 
-  private async initEngine(context: Context) {
+  private async initEngine(context: Context): Promise<CRUDEngine> {
     const clientType = context.clientType === ClientType.NONE ? '' : `@${context.clientType}`;
     const dbName = `${this.STORE_NAME_PREFIX}@${this.config.urls.name}@${context.userId}${clientType}`;
     this.logger.log(`Initialising store with name "${dbName}"`);
@@ -250,5 +285,3 @@ class APIClient {
     return this.config.store;
   }
 }
-
-export {APIClient};

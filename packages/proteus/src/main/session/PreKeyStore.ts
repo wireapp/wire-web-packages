@@ -17,12 +17,10 @@
  *
  */
 
-import PreKey from '../keys/PreKey';
+import {PreKey} from '../keys/PreKey';
 
-abstract class PreKeyStore {
+export abstract class PreKeyStore {
   abstract load_prekeys(): Promise<PreKey[]>;
   abstract load_prekey(prekey_id: number): Promise<PreKey | undefined>;
   abstract delete_prekey(prekey_id: number): Promise<number>;
 }
-
-export default PreKeyStore;

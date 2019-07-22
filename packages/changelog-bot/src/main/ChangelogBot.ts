@@ -18,13 +18,14 @@
  */
 
 import {exec} from 'child_process';
-import * as Changelog from 'generate-changelog';
-import * as logdown from 'logdown';
 import {promisify} from 'util';
 
 import {APIClient} from '@wireapp/api-client';
 import {Account} from '@wireapp/core';
 import {MemoryEngine} from '@wireapp/store-engine';
+import * as Changelog from 'generate-changelog';
+import logdown from 'logdown';
+
 import {ChangelogData, LoginDataBackend} from './Interfaces';
 
 const logger = logdown('@wireapp/changelog-bot/ChangelogBot', {
@@ -34,9 +35,9 @@ const logger = logdown('@wireapp/changelog-bot/ChangelogBot', {
 
 logger.state.isEnabled = true;
 
-class ChangelogBot {
+export class ChangelogBot {
   public static SETUP = {
-    EXCLUDED_COMMIT_TYPES: ['build', 'chore', 'docs', 'refactor', 'test'],
+    EXCLUDED_COMMIT_TYPES: ['build', 'chore', 'docs', 'refactor', 'runfix', 'test'],
   };
 
   constructor(private readonly loginData: LoginDataBackend, private readonly messageData: ChangelogData) {}
@@ -57,7 +58,11 @@ class ChangelogBot {
     const client = new APIClient({store: engine, urls: backendUrls});
 
     const account = new Account(client);
-    await account.login(this.loginData);
+    try {
+      await account.login(this.loginData);
+    } catch (error) {
+      throw new Error(JSON.stringify(error));
+    }
 
     if (!conversationIds) {
       const allConversations = await client.conversation.api.getAllConversations();
@@ -66,14 +71,16 @@ class ChangelogBot {
     }
 
     if (!account.service) {
-      throw new Error(`Account service is not set. Not logged in?`);
+      throw new Error('Account service is not set. Not logged in?');
     }
 
     for (const conversationId of conversationIds) {
       if (conversationId) {
         logger.log(`Sending message to conversation "${conversationId}" ...`);
-        const textPayload = await account.service.conversation.createText(this.message).build();
-        await account.service.conversation.send(conversationId, textPayload);
+        const textPayload = await account.service.conversation.messageBuilder
+          .createText(conversationId, this.message)
+          .build();
+        await account.service.conversation.send(textPayload);
       }
     }
   }
@@ -82,11 +89,12 @@ class ChangelogBot {
     repoSlug: string,
     previousGitTag: string,
     maximumChars?: number,
-    excludedCommitTypes?: string[]
+    excludedCommitTypes?: string[],
   ): Promise<string> {
     const headlines = new RegExp('^#+ (.*)$', 'gm');
-    const listItems = new RegExp('^\\* (.*) \\(\\[.*$', 'gm');
-    const githubIssueLinks = new RegExp('\\[[^\\]]+\\]\\((https:[^)]+)\\)', 'gm');
+    const listItems = new RegExp('^(\\s*)\\* ', 'gm');
+    const githubCommitLinks = new RegExp('( \\(\\[#\\d+\\]\\([^)]+\\)\\)) .*$', 'gm');
+    const githubPRLinks = new RegExp('(/pull/[\\d]+)\\)', 'gm');
     const omittedMessage = '... (content omitted)';
 
     const exclude = excludedCommitTypes || ChangelogBot.SETUP.EXCLUDED_COMMIT_TYPES;
@@ -106,8 +114,9 @@ class ChangelogBot {
 
     let styledChangelog = changelog
       .replace(headlines, '**$1**')
-      .replace(listItems, '– $1')
-      .replace(githubIssueLinks, '$1/files?diff=unified');
+      .replace(listItems, '$1- ')
+      .replace(githubCommitLinks, '$1')
+      .replace(githubPRLinks, '$1/files?diff=unified)');
 
     if (maximumChars && styledChangelog.length > maximumChars) {
       styledChangelog = styledChangelog.substr(0, maximumChars - omittedMessage.length);
@@ -134,5 +143,3 @@ class ChangelogBot {
     return stdout.trim();
   }
 }
-
-export {ChangelogBot};

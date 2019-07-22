@@ -32,7 +32,7 @@ module.exports = {
   },
   devtool: 'source-map',
   entry: {
-    bundle: ['react-hot-loader/patch', DEMO_DIR + '/index.jsx'],
+    bundle: ['react-hot-loader/patch', `${DEMO_DIR}/index.jsx`],
   },
   mode: 'development',
   module: {
@@ -52,6 +52,7 @@ module.exports = {
   resolve: {
     alias: {
       '@wireapp/react-ui-kit': path.resolve(__dirname, 'src'),
+      'react-dom': '@hot-loader/react-dom',
     },
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },

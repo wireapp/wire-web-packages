@@ -17,55 +17,42 @@
  *
  */
 
-import {exec} from 'child_process';
-import * as fs from 'fs-extra';
-import * as logdown from 'logdown';
-import * as path from 'path';
-import * as rimraf from 'rimraf';
-import {promisify} from 'util';
+import fs from 'fs-extra';
+import logdown from 'logdown';
+import path from 'path';
 
-import copy = require('copy');
 import {CopyConfigOptions} from './CopyConfigOptions';
-
-const isFile = (path: string) => /[^.\/\\]+\..+$/.test(path);
-const rimrafAsync = promisify(rimraf);
-const execAsync = promisify(exec);
-const copyAsync = async (source: string, destination: string): Promise<string[]> => {
-  if (isFile(destination)) {
-    await fs.ensureDir(path.dirname(destination));
-  } else {
-    await fs.ensureDir(destination);
-  }
-
-  return new Promise((resolve, reject) =>
-    copy(source, destination, (error, files = []) => (error ? reject(error) : resolve(files.map(file => file.path))))
-  );
-};
+import * as utils from './utils';
 
 const defaultOptions: Required<CopyConfigOptions> = {
+  baseDir: 'config',
   externalDir: '',
   files: {},
-  repositoryUrl: 'https://github.com/wireapp/wire-web-config-default#v0.7.1',
+  forceDownload: false,
+  repositoryUrl: 'https://github.com/wireapp/wire-web-config-default#master',
 };
 
 export class CopyConfig {
   private readonly options: Required<CopyConfigOptions>;
   private readonly logger: logdown.Logger;
-  private readonly baseDir: string = 'config';
   private readonly noClone: boolean = false;
   private readonly noCleanup: boolean = false;
   private readonly filterFiles: string[] = ['.DS_Store'];
 
-  constructor(filesOrOptions: CopyConfigOptions) {
-    this.options = {...defaultOptions, ...filesOrOptions};
+  constructor(options: CopyConfigOptions) {
+    this.options = {...defaultOptions, ...options};
     this.readEnvVars();
+
+    if (!this.options.repositoryUrl && !this.options.externalDir) {
+      throw new Error('Option "repositoryUrl" or "externalDir" required');
+    }
 
     if (this.options.externalDir) {
       this.noClone = true;
       this.noCleanup = true;
-      this.baseDir = this.options.externalDir;
+      this.options.baseDir = this.options.externalDir;
     }
-    this.baseDir = path.resolve(this.baseDir);
+    this.options.baseDir = path.resolve(this.options.baseDir);
 
     this.logger = logdown('@wireapp/copy-config/CopyConfig', {
       markdown: false,
@@ -74,20 +61,26 @@ export class CopyConfig {
   }
 
   private readEnvVars(): void {
-    const setString = (variable: string | undefined, optionKey: keyof CopyConfigOptions) =>
-      typeof variable !== 'undefined' && (this.options[optionKey] = String(variable));
+    const externalDir = process.env.WIRE_CONFIGURATION_EXTERNAL_DIR;
+    const repositoryUrl = process.env.WIRE_CONFIGURATION_REPOSITORY;
+    const configurationFiles = process.env.WIRE_CONFIGURATION_FILES;
 
-    setString(process.env.WIRE_CONFIGURATION_EXTERNAL_DIR, 'externalDir');
-    setString(process.env.WIRE_CONFIGURATION_REPOSITORY, 'repositoryUrl');
-    if (typeof process.env.WIRE_CONFIGURATION_FILES !== 'undefined') {
-      const files = this.getFilesFromString(process.env.WIRE_CONFIGURATION_FILES);
+    if (typeof externalDir !== 'undefined') {
+      this.options.externalDir = String(externalDir);
+    }
+
+    if (typeof repositoryUrl !== 'undefined') {
+      this.options.repositoryUrl = String(repositoryUrl);
+    }
+
+    if (typeof configurationFiles !== 'undefined') {
+      const files = this.getFilesFromString(configurationFiles);
       Object.assign(this.options.files, files);
     }
   }
 
-  private getFilesFromString(files: string): {[source: string]: string | string[]} {
-    const resolvedPaths: {[source: string]: string | string[]} = {};
-
+  private getFilesFromString(files: string): Record<string, string | string[]> {
+    const resolvedPaths: Record<string, string | string[]> = {};
     const fileArrayRegex = /^\[(.*)\]$/;
 
     files
@@ -113,7 +106,7 @@ export class CopyConfig {
     filesArray.forEach(source => {
       const destination = this.options.files[source];
 
-      const joinedSource = path.join(this.baseDir, source);
+      const joinedSource = path.join(this.options.baseDir, source);
       const resolvedDestination =
         destination instanceof Array ? destination.map(dest => path.resolve(dest)) : path.resolve(destination);
 
@@ -135,49 +128,73 @@ export class CopyConfig {
 
     const isGlob = (path: string) => /\*$/.test(path);
 
-    this.logger.info(`Copying "${source}" -> "${destination}"`);
-
-    if (isFile(destination) && !isFile(source)) {
+    if (utils.isFile(destination) && !utils.isFile(source)) {
       throw new Error('Cannot copy a directory into a file.');
     }
 
     if (isGlob(source)) {
-      return copyAsync(source, destination);
+      this.logger.info(`Resolving "${source}"`);
+
+      const copiedFiles = await utils.copyAsync(source, destination);
+
+      for (const copiedFile of copiedFiles) {
+        const [copiedFrom, copiedTo] = copiedFile.history;
+        this.logger.info(`Copying "${copiedFrom}" -> "${copiedTo}"`);
+      }
+
+      return copiedFiles.map(file => file.path);
     }
 
-    if (isFile(source) && !isFile(destination)) {
+    if (utils.isFile(source) && !utils.isFile(destination)) {
       destination = path.join(destination, path.basename(source));
     }
 
+    this.logger.info(`Copying "${source}" -> "${destination}"`);
+
     // Info: "fs.copy" creates all sub-folders which are needed along the way:
-    // @see https://github.com/jprichardson/node-fs-extra/blob/7.0.1/lib/copy/copy.js#L43
+    // see https://github.com/jprichardson/node-fs-extra/blob/7.0.1/lib/copy/copy.js#L43
     await fs.copy(source, destination, {filter, overwrite: true, recursive: true});
 
     return [destination];
   }
 
   private async clone(): Promise<void> {
-    const [bareUrl, branch = 'master'] = this.options.repositoryUrl.split('#');
-
-    const {stderr: stderrVersion} = await execAsync('git --version');
-
-    if (stderrVersion) {
-      throw new Error(`No git installation found: ${stderrVersion}`);
-    }
+    const repositoryData = this.options.repositoryUrl.split('#');
+    let bareUrl = repositoryData[0];
+    const branch = repositoryData[1] || 'master';
+    const {stderr: stderrVersion} = await utils.execAsync('git --version');
 
     if (!this.noCleanup) {
-      this.logger.info(`Removing clone directory before cloning ...`);
-      await rimrafAsync(this.baseDir);
+      await this.removeBasedir();
     }
 
-    this.logger.info(`Cloning "${bareUrl}" (branch "${branch}") ...`);
-    const command = `git clone --depth 1 -b ${branch} ${bareUrl} ${this.baseDir}`;
-
-    const {stderr: stderrClone} = await execAsync(command);
-
-    if (stderrClone.includes('fatal')) {
-      throw new Error(stderrClone);
+    if (stderrVersion) {
+      this.logger.error(`No git installation found: (error: "${stderrVersion}"). Trying to download the zip file ...`);
     }
+
+    if (stderrVersion || this.options.forceDownload) {
+      if (bareUrl.startsWith('git')) {
+        const gitProtocolRegex = new RegExp('^git(?::\\/\\/([^@]+@)?|@)([^:]+):(.*)(?:\\.git)?');
+        bareUrl = bareUrl.replace(gitProtocolRegex, 'https://$1$2/$3');
+      }
+      const url = `${bareUrl}/archive/${branch}.zip`;
+      this.logger.info(`Downloading "${url}" ...`);
+      await utils.downloadFileAsync(url, this.options.baseDir);
+    } else {
+      this.logger.info(`Cloning "${bareUrl}" (branch "${branch}") ...`);
+      const command = `git clone --depth 1 -b ${branch} ${bareUrl} ${this.options.baseDir}`;
+
+      const {stderr: stderrClone} = await utils.execAsync(command);
+
+      if (stderrClone.includes('fatal')) {
+        throw new Error(stderrClone);
+      }
+    }
+  }
+
+  private async removeBasedir(): Promise<void> {
+    this.logger.info(`Cleaning up "${this.options.baseDir}" ...`);
+    await utils.rimrafAsync(this.options.baseDir);
   }
 
   public async copy(): Promise<string[]> {
@@ -198,6 +215,10 @@ export class CopyConfig {
         const result = await this.copyDirOrFile(file, destination);
         copiedFiles = copiedFiles.concat(result);
       }
+    }
+
+    if (!this.noCleanup) {
+      await this.removeBasedir();
     }
 
     return copiedFiles.sort();

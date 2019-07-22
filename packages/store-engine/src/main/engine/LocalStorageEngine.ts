@@ -1,8 +1,27 @@
-import CRUDEngine from './CRUDEngine';
+/*
+ * Wire
+ * Copyright (C) 2018 Wire Swiss GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see http://www.gnu.org/licenses/.
+ *
+ */
+
+import {CRUDEngine} from './CRUDEngine';
 import {isBrowser} from './EnvironmentUtil';
 import {RecordAlreadyExistsError, RecordNotFoundError, RecordTypeError, UnsupportedError} from './error/';
 
-export default class LocalStorageEngine implements CRUDEngine {
+export class LocalStorageEngine implements CRUDEngine {
   public storeName = '';
 
   public async isSupported(): Promise<void> {
@@ -23,7 +42,11 @@ export default class LocalStorageEngine implements CRUDEngine {
   }
 
   private createKey(tableName: string, primaryKey: string): string {
-    return `${this.storeName}@${tableName}@${primaryKey}`;
+    return `${this.createPrefix(tableName)}${primaryKey}`;
+  }
+
+  private createPrefix(tableName: string): string {
+    return `${this.storeName}@${tableName}@`;
   }
 
   public create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
@@ -65,7 +88,7 @@ export default class LocalStorageEngine implements CRUDEngine {
   public deleteAll(tableName: string): Promise<boolean> {
     return Promise.resolve().then(() => {
       Object.keys(localStorage).forEach((key: string) => {
-        const prefix = `${this.storeName}@${tableName}@`;
+        const prefix = this.createPrefix(tableName);
         if (key.startsWith(prefix)) {
           localStorage.removeItem(key);
         }
@@ -94,7 +117,7 @@ export default class LocalStorageEngine implements CRUDEngine {
     const promises: Promise<T>[] = [];
 
     Object.keys(localStorage).forEach((key: string) => {
-      const prefix = `${this.storeName}@${tableName}@`;
+      const prefix = this.createPrefix(tableName);
       if (key.startsWith(prefix)) {
         const primaryKey = key.replace(prefix, '');
         promises.push(this.read(tableName, primaryKey));
@@ -108,7 +131,7 @@ export default class LocalStorageEngine implements CRUDEngine {
     const primaryKeys: string[] = [];
 
     Object.keys(localStorage).forEach((primaryKey: string) => {
-      const prefix = `${this.storeName}@${tableName}@`;
+      const prefix = this.createPrefix(tableName);
       if (primaryKey.startsWith(prefix)) {
         primaryKeys.push(primaryKey.replace(prefix, ''));
       }
@@ -119,10 +142,10 @@ export default class LocalStorageEngine implements CRUDEngine {
 
   public update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
     return this.read(tableName, primaryKey)
-      .then((entity: Object) => {
+      .then(entity => {
         return {...entity, ...changes};
       })
-      .then((updatedEntity: Object) => {
+      .then(updatedEntity => {
         return this.create(tableName, primaryKey, updatedEntity).catch(error => {
           if (error instanceof RecordAlreadyExistsError) {
             return this.delete(tableName, primaryKey).then(() => this.create(tableName, primaryKey, updatedEntity));

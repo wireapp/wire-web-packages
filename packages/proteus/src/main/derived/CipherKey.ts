@@ -20,9 +20,9 @@
 import * as CBOR from '@wireapp/cbor';
 import * as sodium from 'libsodium-wrappers-sumo';
 
-import ClassUtil from '../util/ClassUtil';
+import * as ClassUtil from '../util/ClassUtil';
 
-class CipherKey {
+export class CipherKey {
   key: Uint8Array;
 
   constructor() {
@@ -41,7 +41,7 @@ class CipherKey {
    * @returns Encrypted payload
    */
   encrypt(plaintext: string | Uint8Array, nonce: Uint8Array): Uint8Array {
-    // @todo Re-validate if the ArrayBuffer check is needed (Prerequisite: Integration tests)
+    // TODO: Re-validate if the ArrayBuffer check is needed (Prerequisite: Integration tests)
     if (plaintext instanceof ArrayBuffer && plaintext.byteLength !== undefined) {
       plaintext = new Uint8Array(plaintext);
     }
@@ -75,5 +75,3 @@ class CipherKey {
     return CipherKey.new(key_bytes);
   }
 }
-
-export default CipherKey;

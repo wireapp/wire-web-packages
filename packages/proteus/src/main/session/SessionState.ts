@@ -19,33 +19,33 @@
 
 import * as CBOR from '@wireapp/cbor';
 
-import ArrayUtil from '../util/ArrayUtil';
-import ClassUtil from '../util/ClassUtil';
+import * as ArrayUtil from '../util/ArrayUtil';
+import * as ClassUtil from '../util/ClassUtil';
+import * as MemoryUtil from '../util/MemoryUtil';
 
-import DecryptError from '../errors/DecryptError';
-import MemoryUtil from '../util/MemoryUtil';
+import {DecryptError} from '../errors/DecryptError';
 
-import DerivedSecrets from '../derived/DerivedSecrets';
+import {DerivedSecrets} from '../derived/DerivedSecrets';
 
-import IdentityKey from '../keys/IdentityKey';
-import IdentityKeyPair from '../keys/IdentityKeyPair';
-import KeyPair from '../keys/KeyPair';
-import PreKeyBundle from '../keys/PreKeyBundle';
-import PublicKey from '../keys/PublicKey';
+import {IdentityKey} from '../keys/IdentityKey';
+import {IdentityKeyPair} from '../keys/IdentityKeyPair';
+import {KeyPair} from '../keys/KeyPair';
+import {PreKeyBundle} from '../keys/PreKeyBundle';
+import {PublicKey} from '../keys/PublicKey';
 
-import CipherMessage from '../message/CipherMessage';
-import Envelope from '../message/Envelope';
-import Message from '../message/Message';
-import PreKeyMessage from '../message/PreKeyMessage';
-import SessionTag from '../message/SessionTag';
+import {CipherMessage} from '../message/CipherMessage';
+import {Envelope} from '../message/Envelope';
+import {Message} from '../message/Message';
+import {PreKeyMessage} from '../message/PreKeyMessage';
+import {SessionTag} from '../message/SessionTag';
 
-import ChainKey from './ChainKey';
-import RecvChain from './RecvChain';
-import RootKey from './RootKey';
-import SendChain from './SendChain';
-import Session from './Session';
+import {ChainKey} from './ChainKey';
+import {RecvChain} from './RecvChain';
+import {RootKey} from './RootKey';
+import {SendChain} from './SendChain';
+import {Session} from './Session';
 
-class SessionState {
+export class SessionState {
   prev_counter: number;
   recv_chains: RecvChain[];
   root_key: RootKey;
@@ -61,7 +61,7 @@ class SessionState {
   static async init_as_alice(
     alice_identity_pair: IdentityKeyPair,
     alice_base: IdentityKeyPair | KeyPair,
-    bob_pkbundle: PreKeyBundle
+    bob_pkbundle: PreKeyBundle,
   ): Promise<SessionState> {
     const master_key = ArrayUtil.concatenate_array_buffers([
       alice_identity_pair.secret_key.shared_secret(bob_pkbundle.public_key),
@@ -93,7 +93,7 @@ class SessionState {
     bob_ident: IdentityKeyPair,
     bob_prekey: KeyPair,
     alice_ident: IdentityKey,
-    alice_base: PublicKey
+    alice_base: PublicKey,
   ): SessionState {
     const master_key = ArrayUtil.concatenate_array_buffers([
       bob_prekey.secret_key.shared_secret(alice_ident.public_key),
@@ -151,7 +151,7 @@ class SessionState {
     identity_key: IdentityKey,
     pending: (number | PublicKey)[] | null,
     tag: SessionTag,
-    plaintext: string | Uint8Array
+    plaintext: string | Uint8Array,
   ): Envelope {
     const msgkeys = this.send_chain.chain_key.message_keys();
 
@@ -160,7 +160,7 @@ class SessionState {
       this.send_chain.chain_key.idx,
       this.prev_counter,
       this.send_chain.ratchet_key.public_key,
-      msgkeys.encrypt(plaintext)
+      msgkeys.encrypt(plaintext),
     );
 
     if (pending) {
@@ -189,10 +189,8 @@ class SessionState {
 
       if (!envelope.verify(mks.mac_key)) {
         throw new DecryptError.InvalidSignature(
-          `Envelope verification failed for message with counters in sync at '${
-            msg.counter
-          }'. The received message was possibly encrypted for another client.`,
-          DecryptError.CODE.CASE_206
+          `Envelope verification failed for message with counters in sync at '${msg.counter}'. The received message was possibly encrypted for another client.`,
+          DecryptError.CODE.CASE_206,
         );
       }
 
@@ -204,10 +202,8 @@ class SessionState {
 
       if (!envelope.verify(mk.mac_key)) {
         throw new DecryptError.InvalidSignature(
-          `Envelope verification failed for message with counter ahead. Message index is '${
-            msg.counter
-          }' while receive chain index is '${rc.chain_key.idx}'.`,
-          DecryptError.CODE.CASE_207
+          `Envelope verification failed for message with counter ahead. Message index is '${msg.counter}' while receive chain index is '${rc.chain_key.idx}'.`,
+          DecryptError.CODE.CASE_207,
         );
       }
 
@@ -278,5 +274,3 @@ class SessionState {
     return self;
   }
 }
-
-export default SessionState;

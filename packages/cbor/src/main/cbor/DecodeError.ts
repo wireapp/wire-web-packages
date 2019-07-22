@@ -17,10 +17,10 @@
  *
  */
 
-import BaseError from './BaseError';
-import Type from './Type';
+import {BaseError} from './BaseError';
+import {Type} from './Type';
 
-class DecodeError extends BaseError {
+export class DecodeError extends BaseError {
   static readonly INT_OVERFLOW = 'Integer overflow';
   static readonly INVALID_TYPE = 'Invalid type';
   static readonly TOO_LONG = 'Field too long';
@@ -35,5 +35,3 @@ class DecodeError extends BaseError {
     this.extra = extra;
   }
 }
-
-export default DecodeError;

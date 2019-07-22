@@ -19,6 +19,12 @@
 
 export interface CopyConfigOptions {
   /**
+   * The directory to clone or download into.
+   *
+   * @example `./config`
+   */
+  baseDir?: string;
+  /**
    * An external directory to copy from.
    * Disables cloning to and initial deletion of the source directory.
    *
@@ -37,14 +43,13 @@ export interface CopyConfigOptions {
    *   ']
    * }
    */
-  files?: {
-    [source: string]: string | string[];
-  };
+  files?: Record<string, string | string[]>;
+  /** Force using HTTPS download over `git clone` */
+  forceDownload?: boolean;
   /**
    * From where to clone the configuration.
-   * If no version is specified, `master` branch is used.
    *
    * @example `https://github.com/wireapp/wire-web-config-default#v0.7.1`
    */
-  repositoryUrl?: string;
+  repositoryUrl: string;
 }

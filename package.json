@@ -1,19 +1,29 @@
 {
   "devDependencies": {
-    "babel-eslint": "10.0.1",
-    "eslint": "5.13.0",
-    "eslint-config-prettier": "4.0.0",
+    "babel-eslint": "10.0.2",
+    "eslint": "6.1.0",
+    "eslint-config-prettier": "6.0.0",
+    "eslint-plugin-import": "2.18.2",
     "eslint-plugin-jasmine": "2.10.1",
+    "eslint-plugin-jsdoc": "15.6.1",
     "eslint-plugin-no-unsanitized": "3.0.2",
-    "eslint-plugin-prettier": "3.0.1",
-    "eslint-plugin-react": "7.12.4",
-    "husky": "1.3.1",
-    "lerna": "3.11.1",
-    "lint-staged": "8.1.3",
-    "prettier": "1.16.4",
-    "tslint": "5.12.1",
+    "eslint-plugin-prettier": "3.1.0",
+    "eslint-plugin-react": "7.14.2",
+    "eslint-plugin-simple-import-sort": "4.0.0",
+    "eslint-plugin-sort-keys-fix": "1.0.1",
+    "husky": "3.0.1",
+    "lerna": "3.16.1",
+    "lint-staged": "9.2.0",
+    "prettier": "1.18.2",
+    "tslint": "5.18.0",
     "tslint-config-prettier": "1.18.0",
-    "tslint-plugin-prettier": "2.0.1"
+    "tslint-plugin-prettier": "2.0.1",
+    "tslint-react": "4.0.0",
+    "tslint-react-hooks": "2.2.1"
+  },
+  "engines": {
+    "node": ">= 10.9",
+    "yarn": ">= 1"
   },
   "lint-staged": {
     "*.{js,jsx}": [
@@ -29,6 +39,7 @@
       "git add"
     ]
   },
+  "prettier": "./packages/prettier-config",
   "private": true,
   "scripts": {
     "boot": "lerna bootstrap --reject-cycles",
@@ -41,13 +52,22 @@
     "lint": "yarn lint:js && yarn lint:other && yarn lint:ts",
     "lint:js": "eslint --ignore-path .gitignore --ext .js,.jsx .",
     "lint:other": "yarn prettier --list-different",
-    "lint:ts": "tslint --config tslint.json --project tsconfig.json \"**/*.ts\"",
+    "lint:ts": "tslint --config tslint.json --project tsconfig.json \"**/*.ts?(x)\"",
     "prettier": "prettier \"**/*.{json,md,scss,yml}\"",
-    "release": "lerna publish",
+    "release": "lerna publish && lerna publish from-package",
     "test": "yarn && yarn lint:js && yarn lint:ts && yarn lint:other && node bin/testUpdated.js",
     "test:all": "yarn && yarn dist && yarn lint && lerna run test"
   },
-  "workspaces": [
-    "packages/*"
-  ]
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/@jest/**/*",
+      "**/@types/**/*",
+      "**/emotion-normalize",
+      "**/jest-emotion",
+      "**/react"
+    ]
+  }
 }

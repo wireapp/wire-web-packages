@@ -17,9 +17,5 @@
  *
  */
 
-interface ClearedContent {
-  clearedTimestamp: number;
-  conversationId: string;
-}
-
-export {ClearedContent};
+import {ICleared} from '@wireapp/protocol-messaging';
+export {ICleared as ClearedContent};

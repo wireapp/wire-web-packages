@@ -18,10 +18,10 @@
  */
 
 import {message as ProteusMessage, session as ProteusSession} from '@wireapp/proteus';
-import DecryptionError from './DecryptionError';
+import {DecryptionError} from './DecryptionError';
 import {CryptoboxCRUDStore} from './store/';
 
-class CryptoboxSession {
+export class CryptoboxSession {
   public id: string;
   public session: ProteusSession.Session;
 
@@ -41,9 +41,7 @@ class CryptoboxSession {
   }
 
   public encrypt(plaintext: string | Uint8Array): Promise<ArrayBuffer> {
-    return this.session.encrypt(plaintext).then(function(ciphertext: ProteusMessage.Envelope) {
-      return ciphertext.serialise();
-    });
+    return this.session.encrypt(plaintext).then((ciphertext: ProteusMessage.Envelope) => ciphertext.serialise());
   }
 
   public fingerprint_local(): string {
@@ -54,5 +52,3 @@ class CryptoboxSession {
     return this.session.remote_identity.fingerprint();
   }
 }
-
-export default CryptoboxSession;

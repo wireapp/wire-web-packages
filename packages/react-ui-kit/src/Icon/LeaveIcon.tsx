@@ -17,11 +17,12 @@
  *
  */
 
-import * as React from 'react';
-import IconHOC from './IconHOC';
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
+import {SVGIcon, SVGIconProps} from './SVGIcon';
 
-const size = 16;
-const leave = <path d="M2 14h7v2H0V0h9v2H2v12zm3-7v2h7v4l4-5-4-5v4H5z" />;
-const LeaveIcon = IconHOC(leave, size, size);
-
-export {LeaveIcon};
+export const LeaveIcon = (props: SVGIconProps) => (
+  <SVGIcon realWidth={16} realHeight={16} {...props}>
+    <path d="M2 14h7v2H0V0h9v2H2v12zm3-7v2h7v4l4-5-4-5v4H5z" />
+  </SVGIcon>
+);

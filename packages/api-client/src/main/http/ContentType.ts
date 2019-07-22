@@ -17,9 +17,8 @@
  *
  */
 
-class ContentType {
-  public static readonly APPLICATION_JSON = 'application/json;charset=UTF-8';
-  public static readonly APPLICATION_PROTOBUF = 'application/x-protobuf';
+export enum ContentType {
+  APPLICATION_JSON = 'application/json;charset=UTF-8',
+  APPLICATION_PROTOBUF = 'application/x-protobuf',
+  APPLICATION_XML = 'application/xml',
 }
-
-export {ContentType};

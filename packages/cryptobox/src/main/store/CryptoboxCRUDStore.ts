@@ -1,6 +1,24 @@
+/*
+ * Wire
+ * Copyright (C) 2018 Wire Swiss GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see http://www.gnu.org/licenses/.
+ *
+ */
+
 import {keys as ProteusKeys, session as ProteusSession} from '@wireapp/proteus';
-import {error as StoreEngineError} from '@wireapp/store-engine';
-import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
+import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import {Decoder, Encoder} from 'bazinga64';
 import {PersistedRecord, SerialisedRecord} from '../store/';
 
@@ -14,7 +32,7 @@ export enum CrudStoreStores {
   SESSIONS = 'sessions',
 }
 
-class CryptoboxCRUDStore implements ProteusSession.PreKeyStore {
+export class CryptoboxCRUDStore implements ProteusSession.PreKeyStore {
   public static readonly KEYS = CRUDStoreKeys;
   public static readonly STORES = CrudStoreStores;
 
@@ -153,11 +171,9 @@ class CryptoboxCRUDStore implements ProteusSession.PreKeyStore {
       });
   }
 
-  public async read_sessions(
-    identity: ProteusKeys.IdentityKeyPair
-  ): Promise<{[sessionId: string]: ProteusSession.Session}> {
+  public async read_sessions(identity: ProteusKeys.IdentityKeyPair): Promise<Record<string, ProteusSession.Session>> {
     const sessionIds = await this.engine.readAllPrimaryKeys(CryptoboxCRUDStore.STORES.SESSIONS);
-    const sessions: {[sessionId: string]: ProteusSession.Session} = {};
+    const sessions: Record<string, ProteusSession.Session> = {};
 
     for (const sessionId of sessionIds) {
       sessions[sessionId] = await this.read_session(identity, sessionId);
@@ -184,5 +200,3 @@ class CryptoboxCRUDStore implements ProteusSession.PreKeyStore {
       .then((primary_key: string) => primary_key);
   }
 }
-
-export {CryptoboxCRUDStore};

@@ -17,12 +17,15 @@
  *
  */
 
-import styled from 'styled-components';
+/** @jsx jsx */
+import {ObjectInterpolation, jsx} from '@emotion/core';
 import {COLOR} from '../Identity';
-import {Input} from './Input';
+import {filterProps, inlineSVG} from '../util';
+import {InputProps, inputStyle} from './Input';
 
-export interface SelectProps {
+export interface SelectProps<T = HTMLSelectElement> extends InputProps<T> {
   disabled?: boolean;
+  markInvalid?: boolean;
 }
 
 const ArrowDown = `
@@ -31,29 +34,29 @@ const ArrowDown = `
   </svg>
 `;
 
-const Select = styled<SelectProps & React.HTMLAttributes<HTMLSelectElement>>(Input.withComponent('select'))`
-  background-color: ${props => (props.disabled ? COLOR.GRAY_LIGHTEN_92 : COLOR.WHITE)};
-  ${props =>
-    !props.disabled &&
-    `
-    background-image: url('data:image/svg+xml;utf8,${ArrowDown}');
-    background-repeat: no-repeat;
-    background-position: center right 16px;
-    cursor: pointer;
-  `};
-  font-weight: 300;
-  padding-right: 32px;
-  -moz-appearance: none;
-  -webkit-appearance: none;
+export const selectStyle: <T>(props: SelectProps<T>) => ObjectInterpolation<undefined> = ({
+  disabled = false,
+  markInvalid,
+  ...props
+}) => ({
+  ...inputStyle(props),
+  '&:-moz-focusring': {
+    color: 'transparent',
+    textShadow: '0 0 0 #000',
+  },
+  '&:disabled': {
+    color: COLOR.GRAY,
+  },
+  appearance: 'none',
+  background: disabled
+    ? COLOR.shade(COLOR.WHITE, 0.06)
+    : `${COLOR.WHITE} center right 16px no-repeat url("${inlineSVG(ArrowDown)}")`,
+  boxShadow: markInvalid ? `0 0 0 1px ${COLOR.RED}` : 'none',
+  cursor: disabled ? 'normal' : 'pointer',
+  fontWeight: 300,
+  paddingRight: '30px',
+});
 
-  &:-moz-focusring {
-    color: transparent;
-    text-shadow: 0 0 0 #000;
-  }
+const filterSelectProps = (props: SelectProps) => filterProps(props, ['markInvalid']);
 
-  &:disabled {
-    color: ${COLOR.GRAY};
-  }
-`;
-
-export {Select};
+export const Select = (props: SelectProps) => <select css={selectStyle(props)} {...filterSelectProps(props)} />;

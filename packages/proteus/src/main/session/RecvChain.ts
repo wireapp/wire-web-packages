@@ -19,19 +19,19 @@
 
 import * as CBOR from '@wireapp/cbor';
 
-import PublicKey from '../keys/PublicKey';
-import ClassUtil from '../util/ClassUtil';
+import {PublicKey} from '../keys/PublicKey';
+import * as ClassUtil from '../util/ClassUtil';
 
-import DecryptError from '../errors/DecryptError';
-import ProteusError from '../errors/ProteusError';
+import {DecryptError} from '../errors/DecryptError';
+import {ProteusError} from '../errors/ProteusError';
 
-import CipherMessage from '../message/CipherMessage';
-import Envelope from '../message/Envelope';
+import {CipherMessage} from '../message/CipherMessage';
+import {Envelope} from '../message/Envelope';
 
-import ChainKey from './ChainKey';
-import MessageKeys from './MessageKeys';
+import {ChainKey} from './ChainKey';
+import {MessageKeys} from './MessageKeys';
 
-class RecvChain {
+export class RecvChain {
   chain_key: ChainKey;
   message_keys: MessageKeys[];
   ratchet_key: PublicKey;
@@ -53,9 +53,7 @@ class RecvChain {
 
   try_message_keys(envelope: Envelope, msg: CipherMessage): Uint8Array {
     if (this.message_keys[0] && this.message_keys[0].counter > msg.counter) {
-      const message = `Message too old. Counter for oldest staged chain key is '${
-        this.message_keys[0].counter
-      }' while message counter is '${msg.counter}'.`;
+      const message = `Message too old. Counter for oldest staged chain key is '${this.message_keys[0].counter}' while message counter is '${msg.counter}'.`;
       throw new DecryptError.OutdatedMessage(message, DecryptError.CODE.CASE_208);
     }
 
@@ -68,9 +66,7 @@ class RecvChain {
     }
     const mk = this.message_keys.splice(idx, 1)[0];
     if (!envelope.verify(mk.mac_key)) {
-      const message = `Envelope verification failed for message with counter behind. Message index is '${
-        msg.counter
-      }' while receive chain index is '${this.chain_key.idx}'.`;
+      const message = `Envelope verification failed for message with counter behind. Message index is '${msg.counter}' while receive chain index is '${this.chain_key.idx}'.`;
       throw new DecryptError.InvalidSignature(message, DecryptError.CODE.CASE_210);
     }
 
@@ -83,12 +79,12 @@ class RecvChain {
       if (this.chain_key.idx === 0) {
         throw new DecryptError.TooDistantFuture(
           'Skipped too many messages at the beginning of a receive chain.',
-          DecryptError.CODE.CASE_211
+          DecryptError.CODE.CASE_211,
         );
       }
       throw new DecryptError.TooDistantFuture(
         `Skipped too many messages within a used receive chain. Receive chain counter is '${this.chain_key.idx}'`,
-        DecryptError.CODE.CASE_212
+        DecryptError.CODE.CASE_212,
       );
     }
 
@@ -108,7 +104,7 @@ class RecvChain {
     if (keys.length > RecvChain.MAX_COUNTER_GAP) {
       throw new ProteusError(
         `Number of message keys (${keys.length}) exceed message chain counter gap (${RecvChain.MAX_COUNTER_GAP}).`,
-        ProteusError.CODE.CASE_103
+        ProteusError.CODE.CASE_103,
       );
     }
 
@@ -123,7 +119,7 @@ class RecvChain {
     if (keys.length > RecvChain.MAX_COUNTER_GAP) {
       throw new ProteusError(
         `Skipped message keys which exceed the message chain counter gap (${RecvChain.MAX_COUNTER_GAP}).`,
-        ProteusError.CODE.CASE_104
+        ProteusError.CODE.CASE_104,
       );
     }
   }
@@ -172,5 +168,3 @@ class RecvChain {
     return self;
   }
 }
-
-export default RecvChain;

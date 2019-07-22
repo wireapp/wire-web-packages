@@ -27,14 +27,16 @@ import {
   ConversationOtrMessageAddEvent,
   IncomingEvent,
   USER_EVENT,
+  UserClientAddEvent,
+  UserClientRemoveEvent,
   UserConnectionEvent,
   UserEvent,
 } from '@wireapp/api-client/dist/commonjs/event/';
 import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/';
-import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/';
+import {WebSocketTopic} from '@wireapp/api-client/dist/commonjs/tcp/';
 import * as cryptobox from '@wireapp/cryptobox';
 import {GenericMessage} from '@wireapp/protocol-messaging';
-import {RecordNotFoundError} from '@wireapp/store-engine/dist/commonjs/engine/error/';
+import {error as StoreEngineError} from '@wireapp/store-engine';
 import {LoginSanitizer} from './auth/';
 import {BroadcastService} from './broadcast/';
 import {ClientInfo, ClientService} from './client/';
@@ -43,7 +45,7 @@ import {
   AssetService,
   ConversationService,
   GenericMessageType,
-  PayloadBundleIncoming,
+  PayloadBundle,
   PayloadBundleState,
   PayloadBundleType,
 } from './conversation/';
@@ -66,11 +68,12 @@ import {SelfService} from './self/';
 import {TeamService} from './team/';
 
 import {APIClient} from '@wireapp/api-client';
-import * as EventEmitter from 'events';
-import * as logdown from 'logdown';
+import EventEmitter from 'events';
+import logdown from 'logdown';
+import {MessageBuilder} from './conversation/message/MessageBuilder';
 import {UserService} from './user/';
 
-class Account extends EventEmitter {
+export class Account extends EventEmitter {
   private readonly logger: logdown.Logger;
 
   private readonly apiClient: APIClient;
@@ -95,6 +98,20 @@ class Account extends EventEmitter {
       logger: console,
       markdown: false,
     });
+  }
+
+  get clientId(): string {
+    if (this.apiClient.context && this.apiClient.context.clientId) {
+      return this.apiClient.context.clientId;
+    }
+    throw new Error(`No user context available. Please login first.`);
+  }
+
+  get userId(): string {
+    if (this.apiClient.context) {
+      return this.apiClient.context.userId;
+    }
+    throw new Error(`No user context available. Please login first.`);
   }
 
   public async init(): Promise<void> {
@@ -127,131 +144,133 @@ class Account extends EventEmitter {
     };
   }
 
-  public login(
+  public async login(
     loginData: LoginData,
     initClient: boolean = true,
-    clientInfo?: ClientInfo
+    clientInfo?: ClientInfo,
   ): Promise<Context | undefined> {
-    return this.resetContext()
-      .then(() => this.init())
-      .then(() => LoginSanitizer.removeNonPrintableCharacters(loginData))
-      .then(() => this.apiClient.login(loginData))
-      .then(() => {
-        return initClient
-          ? this.initClient(loginData, clientInfo).then(() => this.apiClient.context)
-          : this.apiClient.context;
-      });
+    await this.resetContext();
+    await this.init();
+
+    LoginSanitizer.removeNonPrintableCharacters(loginData);
+
+    await this.apiClient.login(loginData);
+
+    if (initClient) {
+      await this.initClient(loginData, clientInfo);
+    }
+
+    return this.apiClient.context;
   }
 
-  public initClient(
+  public async initClient(
     loginData: LoginData,
-    clientInfo?: ClientInfo
+    clientInfo?: ClientInfo,
   ): Promise<{isNewClient: boolean; localClient: RegisteredClient}> {
     if (!this.service) {
       throw new Error('Services are not set.');
     }
 
-    return this.loadAndValidateLocalClient()
-      .then(localClient => ({isNewClient: false, localClient}))
-      .catch(error => {
-        // There was no client so we need to "create" and "register" a client
-        const notFoundInDatabase =
-          error instanceof cryptobox.error.CryptoboxError ||
-          error.constructor.name === 'CryptoboxError' ||
-          error instanceof RecordNotFoundError ||
-          error.constructor.name === 'RecordNotFoundError';
-        const notFoundOnBackend = error.response && error.response.status === StatusCode.NOT_FOUND;
+    try {
+      const localClient = await this.loadAndValidateLocalClient();
+      return {isNewClient: false, localClient};
+    } catch (error) {
+      // There was no client so we need to "create" and "register" a client
+      const notFoundInDatabase =
+        error instanceof cryptobox.error.CryptoboxError ||
+        error.constructor.name === 'CryptoboxError' ||
+        error instanceof StoreEngineError.RecordNotFoundError ||
+        error.constructor.name === StoreEngineError.RecordNotFoundError.constructor.name;
+      const notFoundOnBackend = error.response && error.response.status === StatusCode.NOT_FOUND;
 
-        if (notFoundInDatabase) {
-          this.logger.log('Could not find valid client in database');
+      if (notFoundInDatabase) {
+        this.logger.log('Could not find valid client in database');
+        return this.registerClient(loginData, clientInfo);
+      }
+
+      if (notFoundOnBackend) {
+        this.logger.log('Could not find valid client on backend');
+        const client = await this.service!.client.getLocalClient();
+        const shouldDeleteWholeDatabase = client.type === ClientType.TEMPORARY;
+        if (shouldDeleteWholeDatabase) {
+          this.logger.log('Last client was temporary - Deleting database');
+
+          await this.apiClient.config.store.purge();
+          await this.apiClient.init(loginData.clientType);
+
           return this.registerClient(loginData, clientInfo);
         }
-        if (notFoundOnBackend) {
-          this.logger.log('Could not find valid client on backend');
-          return this.service!.client.getLocalClient().then(client => {
-            const shouldDeleteWholeDatabase = client.type === ClientType.TEMPORARY;
-            if (shouldDeleteWholeDatabase) {
-              this.logger.log('Last client was temporary - Deleting database');
-              return this.apiClient.config.store
-                .purge()
-                .then(() => this.apiClient.init(loginData.clientType))
-                .then(() => this.registerClient(loginData, clientInfo));
-            }
-            this.logger.log('Last client was permanent - Deleting cryptography stores');
-            return this.service!.cryptography.deleteCryptographyStores().then(() =>
-              this.registerClient(loginData, clientInfo)
-            );
-          });
-        }
-        throw error;
-      });
+
+        this.logger.log('Last client was permanent - Deleting cryptography stores');
+        await this.service!.cryptography.deleteCryptographyStores();
+        return this.registerClient(loginData, clientInfo);
+      }
+
+      throw error;
+    }
   }
 
-  public loadAndValidateLocalClient(): Promise<RegisteredClient> {
-    let loadedClient: RegisteredClient;
-    return this.service!.cryptography.initCryptobox()
-      .then(() => this.service!.client.getLocalClient())
-      .then(client => (loadedClient = client))
-      .then(() => this.apiClient.client.api.getClient(loadedClient.id))
-      .then(() => (this.apiClient.context!.clientId = loadedClient.id))
-      .then(() => this.service!.conversation.setClientID(loadedClient.id))
-      .then(() => loadedClient);
+  public async loadAndValidateLocalClient(): Promise<RegisteredClient> {
+    await this.service!.cryptography.initCryptobox();
+
+    const loadedClient = await this.service!.client.getLocalClient();
+    await this.apiClient.client.api.getClient(loadedClient.id);
+
+    this.apiClient.context!.clientId = loadedClient.id;
+    this.service!.conversation.setClientID(loadedClient.id);
+
+    return loadedClient;
   }
 
-  private registerClient(
+  private async registerClient(
     loginData: LoginData,
-    clientInfo?: ClientInfo
+    clientInfo?: ClientInfo,
   ): Promise<{isNewClient: boolean; localClient: RegisteredClient}> {
     if (!this.service) {
       throw new Error('Services are not set.');
     }
-    let registeredClient: RegisteredClient;
+    const registeredClient = await this.service.client.register(loginData, clientInfo);
+    this.logger.log('Client is created');
 
-    return this.service.client
-      .register(loginData, clientInfo)
-      .then((client: RegisteredClient) => (registeredClient = client))
-      .then(() => {
-        this.logger.log('Client is created');
-        this.apiClient.context!.clientId = registeredClient.id;
-        this.service!.conversation.setClientID(registeredClient.id);
-        return this.service!.notification.initializeNotificationStream(registeredClient.id);
-      })
-      .then(() => this.service!.client.synchronizeClients())
-      .then(() => ({isNewClient: true, localClient: registeredClient}));
+    this.apiClient.context!.clientId = registeredClient.id;
+    this.service!.conversation.setClientID(registeredClient.id);
+
+    await this.service!.notification.initializeNotificationStream(registeredClient.id);
+    await this.service!.client.synchronizeClients();
+
+    return {isNewClient: true, localClient: registeredClient};
   }
 
-  private resetContext(): Promise<void> {
-    return Promise.resolve().then(() => {
-      delete this.apiClient.context;
-      delete this.service;
-    });
+  private resetContext(): void {
+    delete this.apiClient.context;
+    delete this.service;
   }
 
-  public logout(): Promise<void> {
-    return this.apiClient.logout().then(() => this.resetContext());
+  public async logout(): Promise<void> {
+    await this.apiClient.logout();
+    await this.resetContext();
   }
 
-  public listen(notificationHandler?: Function): Promise<Account> {
+  public async listen(notificationHandler?: Function): Promise<Account> {
     if (!this.apiClient.context) {
       throw new Error('Context is not set - Please login first');
     }
-    return Promise.resolve()
-      .then(() => {
-        this.apiClient.transport.ws.removeAllListeners(WebSocketClient.TOPIC.ON_MESSAGE);
 
-        if (notificationHandler) {
-          this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, (notification: IncomingNotification) =>
-            notificationHandler(notification)
-          );
-        } else {
-          this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, this.handleNotification.bind(this));
-        }
-        return this.apiClient.connect();
-      })
-      .then(() => this);
+    this.apiClient.transport.ws.removeAllListeners(WebSocketTopic.ON_MESSAGE);
+
+    if (notificationHandler) {
+      this.apiClient.transport.ws.on(WebSocketTopic.ON_MESSAGE, (notification: IncomingNotification) => {
+        notificationHandler(notification);
+      });
+    } else {
+      this.apiClient.transport.ws.on(WebSocketTopic.ON_MESSAGE, this.handleNotification.bind(this));
+    }
+
+    await this.apiClient.connect();
+    return this;
   }
 
-  private async decodeGenericMessage(otrMessage: ConversationOtrMessageAddEvent): Promise<PayloadBundleIncoming> {
+  private async decodeGenericMessage(otrMessage: ConversationOtrMessageAddEvent): Promise<PayloadBundle> {
     if (!this.service) {
       throw new Error('Services are not set.');
     }
@@ -282,14 +301,19 @@ class Account extends EventEmitter {
     throw decryptedMessage.error;
   }
 
-  private mapGenericMessage(genericMessage: any, event: ConversationOtrMessageAddEvent): PayloadBundleIncoming {
+  private mapGenericMessage(genericMessage: any, event: ConversationOtrMessageAddEvent): PayloadBundle {
     switch (genericMessage.content) {
       case GenericMessageType.TEXT: {
-        const {content: text, expectsReadConfirmation, linkPreview: linkPreviews, mentions, quote} = genericMessage[
-          GenericMessageType.TEXT
-        ];
+        const {
+          content: text,
+          expectsReadConfirmation,
+          legalHoldStatus,
+          linkPreview: linkPreviews,
+          mentions,
+          quote,
+        } = genericMessage[GenericMessageType.TEXT];
 
-        const content: TextContent = {expectsReadConfirmation, text};
+        const content: TextContent = {expectsReadConfirmation, legalHoldStatus, text};
 
         if (linkPreviews && linkPreviews.length) {
           content.linkPreviews = linkPreviews;
@@ -303,15 +327,33 @@ class Account extends EventEmitter {
           content.quote = quote;
         }
 
+        if (typeof legalHoldStatus !== 'undefined') {
+          content.legalHoldStatus = legalHoldStatus;
+        }
+
         return {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
           type: PayloadBundleType.TEXT,
+        };
+      }
+      case GenericMessageType.CALLING: {
+        return {
+          content: genericMessage.calling.content,
+          conversation: event.conversation,
+          from: event.from,
+          fromClientId: event.data.sender,
+          id: genericMessage.messageId,
+          messageTimer: 0,
+          state: PayloadBundleState.INCOMING,
+          timestamp: new Date(event.time).getTime(),
+          type: PayloadBundleType.CALL,
         };
       }
       case GenericMessageType.CONFIRMATION: {
@@ -323,6 +365,7 @@ class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -337,6 +380,7 @@ class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -347,12 +391,13 @@ class Account extends EventEmitter {
       case GenericMessageType.DELETED: {
         const originalMessageId = genericMessage[GenericMessageType.DELETED].messageId;
 
-        const content: DeletedContent = {originalMessageId};
+        const content: DeletedContent = {messageId: originalMessageId};
 
         return {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -363,12 +408,19 @@ class Account extends EventEmitter {
       case GenericMessageType.EDITED: {
         const {
           expectsReadConfirmation,
-          text: {content: editedText, linkPreview: editedLinkPreviews, mentions: editedMentions, quote: editedQuote},
+          text: {
+            content: editedText,
+            legalHoldStatus,
+            linkPreview: editedLinkPreviews,
+            mentions: editedMentions,
+            quote: editedQuote,
+          },
           replacingMessageId,
         } = genericMessage[GenericMessageType.EDITED];
 
         const content: EditedTextContent = {
           expectsReadConfirmation,
+          legalHoldStatus,
           originalMessageId: replacingMessageId,
           text: editedText,
         };
@@ -389,6 +441,7 @@ class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -401,13 +454,14 @@ class Account extends EventEmitter {
 
         const content: HiddenContent = {
           conversationId,
-          originalMessageId: messageId,
+          messageId,
         };
 
         return {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -416,13 +470,14 @@ class Account extends EventEmitter {
         };
       }
       case GenericMessageType.KNOCK: {
-        const {expectsReadConfirmation} = genericMessage[GenericMessageType.KNOCK];
-        const content: KnockContent = {expectsReadConfirmation};
+        const {expectsReadConfirmation, legalHoldStatus} = genericMessage[GenericMessageType.KNOCK];
+        const content: KnockContent = {expectsReadConfirmation, legalHoldStatus};
 
         return {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -431,10 +486,14 @@ class Account extends EventEmitter {
         };
       }
       case GenericMessageType.LOCATION: {
-        const {latitude, longitude, name, zoom} = genericMessage[GenericMessageType.LOCATION];
+        const {expectsReadConfirmation, latitude, legalHoldStatus, longitude, name, zoom} = genericMessage[
+          GenericMessageType.LOCATION
+        ];
 
         const content: LocationContent = {
+          expectsReadConfirmation,
           latitude,
+          legalHoldStatus,
           longitude,
           name,
           zoom,
@@ -444,6 +503,7 @@ class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -452,11 +512,21 @@ class Account extends EventEmitter {
         };
       }
       case GenericMessageType.ASSET: {
-        const {notUploaded, original, preview, status, uploaded} = genericMessage[GenericMessageType.ASSET];
+        const {
+          expectsReadConfirmation,
+          legalHoldStatus,
+          notUploaded,
+          original,
+          preview,
+          status,
+          uploaded,
+        } = genericMessage[GenericMessageType.ASSET];
         const isImage = !!uploaded && !!uploaded.assetId && !!original && !!original.image;
 
         const content: AssetContent = {
           abortReason: notUploaded,
+          expectsReadConfirmation,
+          legalHoldStatus,
           original,
           preview,
           status,
@@ -467,6 +537,7 @@ class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -475,9 +546,10 @@ class Account extends EventEmitter {
         };
       }
       case GenericMessageType.REACTION: {
-        const {emoji, messageId} = genericMessage[GenericMessageType.REACTION];
+        const {emoji, legalHoldStatus, messageId} = genericMessage[GenericMessageType.REACTION];
 
         const content: ReactionContent = {
+          legalHoldStatus,
           originalMessageId: messageId,
           type: emoji,
         };
@@ -486,6 +558,7 @@ class Account extends EventEmitter {
           content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -499,6 +572,7 @@ class Account extends EventEmitter {
           content: genericMessage.content,
           conversation: event.conversation,
           from: event.from,
+          fromClientId: event.data.sender,
           id: genericMessage.messageId,
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
@@ -509,12 +583,12 @@ class Account extends EventEmitter {
     }
   }
 
-  private mapConversationEvent(event: ConversationEvent): PayloadBundleIncoming {
+  private mapConversationEvent(event: ConversationEvent): PayloadBundle {
     return {
       content: event.data,
       conversation: event.conversation,
       from: event.from,
-      id: ConversationService.createId(),
+      id: MessageBuilder.createId(),
       messageTimer: 0,
       state: PayloadBundleState.INCOMING,
       timestamp: new Date(event.time).getTime(),
@@ -537,23 +611,51 @@ class Account extends EventEmitter {
     }
   }
 
-  private mapUserEvent(event: UserEvent): PayloadBundleIncoming | void {
-    if (event.type === USER_EVENT.CONNECTION) {
-      const {connection} = event as UserConnectionEvent;
-      return {
-        content: connection,
-        conversation: connection.conversation,
-        from: connection.from,
-        id: ConversationService.createId(),
-        messageTimer: 0,
-        state: PayloadBundleState.INCOMING,
-        timestamp: new Date(connection.last_update).getTime(),
-        type: PayloadBundleType.CONNECTION_REQUEST,
-      };
+  private mapUserEvent(event: UserEvent): PayloadBundle | void {
+    switch (event.type) {
+      case USER_EVENT.CONNECTION: {
+        const {connection} = event as UserConnectionEvent;
+        return {
+          content: connection,
+          conversation: connection.conversation,
+          from: connection.from,
+          id: MessageBuilder.createId(),
+          messageTimer: 0,
+          state: PayloadBundleState.INCOMING,
+          timestamp: new Date(connection.last_update).getTime(),
+          type: PayloadBundleType.CONNECTION_REQUEST,
+        };
+      }
+      case USER_EVENT.CLIENT_ADD: {
+        const {client} = event as UserClientAddEvent;
+        return {
+          content: {client},
+          conversation: this.apiClient.context!.userId,
+          from: this.apiClient.context!.userId,
+          id: MessageBuilder.createId(),
+          messageTimer: 0,
+          state: PayloadBundleState.INCOMING,
+          timestamp: new Date().getTime(),
+          type: PayloadBundleType.CLIENT_ADD,
+        };
+      }
+      case USER_EVENT.CLIENT_REMOVE: {
+        const {client} = event as UserClientRemoveEvent;
+        return {
+          content: {client},
+          conversation: this.apiClient.context!.userId,
+          from: this.apiClient.context!.userId,
+          id: MessageBuilder.createId(),
+          messageTimer: 0,
+          state: PayloadBundleState.INCOMING,
+          timestamp: new Date().getTime(),
+          type: PayloadBundleType.CLIENT_REMOVE,
+        };
+      }
     }
   }
 
-  private async handleEvent(event: IncomingEvent): Promise<PayloadBundleIncoming | void> {
+  private async handleEvent(event: IncomingEvent): Promise<PayloadBundle | void> {
     this.logger.log(`Handling event of type "${event.type}"`, event);
     const ENCRYPTED_EVENTS = [CONVERSATION_EVENT.OTR_MESSAGE_ADD];
     const META_EVENTS = [
@@ -562,7 +664,7 @@ class Account extends EventEmitter {
       CONVERSATION_EVENT.RENAME,
       CONVERSATION_EVENT.TYPING,
     ];
-    const USER_EVENTS = [USER_EVENT.CONNECTION];
+    const USER_EVENTS = [USER_EVENT.CONNECTION, USER_EVENT.CLIENT_ADD, USER_EVENT.CLIENT_REMOVE];
 
     if (ENCRYPTED_EVENTS.includes(event.type as CONVERSATION_EVENT)) {
       return this.decodeGenericMessage(event as ConversationOtrMessageAddEvent);
@@ -589,8 +691,11 @@ class Account extends EventEmitter {
       if (data) {
         switch (data.type) {
           case PayloadBundleType.ASSET_IMAGE:
+          case PayloadBundleType.CALL:
           case PayloadBundleType.CLEARED:
           case PayloadBundleType.CLIENT_ACTION:
+          case PayloadBundleType.CLIENT_ADD:
+          case PayloadBundleType.CLIENT_REMOVE:
           case PayloadBundleType.CONFIRMATION:
           case PayloadBundleType.CONNECTION_REQUEST:
           case PayloadBundleType.LOCATION:
@@ -647,5 +752,3 @@ class Account extends EventEmitter {
     }
   }
 }
-
-export {Account};

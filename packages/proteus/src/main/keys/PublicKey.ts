@@ -20,11 +20,10 @@
 import * as CBOR from '@wireapp/cbor';
 import * as sodium from 'libsodium-wrappers-sumo';
 
-//import InputError from '../errors/InputError';
-import ArrayUtil from '../util/ArrayUtil';
-import ClassUtil from '../util/ClassUtil';
+import * as ArrayUtil from '../util/ArrayUtil';
+import * as ClassUtil from '../util/ClassUtil';
 
-class PublicKey {
+export class PublicKey {
   pub_edward: Uint8Array;
   pub_curve: Uint8Array;
 
@@ -84,11 +83,7 @@ class PublicKey {
       self.pub_curve = pub_curve;
       return self;
     } catch (error) {
-      //console.log(error);
-      //throw new InputError.ConversionError('Could not convert public key with libsodium.', 409);
       return self;
     }
   }
 }
-
-export default PublicKey;

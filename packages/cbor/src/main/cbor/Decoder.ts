@@ -17,8 +17,8 @@
  *
  */
 
-import DecodeError from './DecodeError';
-import Type from './Type';
+import {DecodeError} from './DecodeError';
+import {Type} from './Type';
 
 export interface DecoderConfig {
   max_array_length: number;
@@ -38,7 +38,7 @@ const DEFAULT_CONFIG: DecoderConfig = {
   max_text_length: 5 * BYTES_IN_MEGABYTE,
 };
 
-class Decoder {
+export class Decoder {
   private view: DataView;
 
   constructor(private readonly buffer: ArrayBuffer, private readonly config = DEFAULT_CONFIG) {
@@ -537,5 +537,3 @@ class Decoder {
     return this._skip_value(this.config.max_nesting);
   }
 }
-
-export default Decoder;

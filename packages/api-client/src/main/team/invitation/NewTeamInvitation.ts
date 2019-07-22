@@ -17,10 +17,11 @@
  *
  */
 
-interface NewTeamInvitation {
+import {Role} from '../member';
+
+export interface NewTeamInvitation {
   email: string;
   inviter_name: string;
   locale: string;
+  role: Role;
 }
-
-export {NewTeamInvitation};

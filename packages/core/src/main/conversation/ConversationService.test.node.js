@@ -22,6 +22,7 @@ const {APIClient} = require('@wireapp/api-client');
 const {Account} = require('@wireapp/core');
 const {GenericMessage, Text} = require('@wireapp/protocol-messaging');
 const {MemoryEngine} = require('@wireapp/store-engine');
+const {LegalHoldStatus} = require('@wireapp/core/dist/conversation/content/');
 
 const PayloadHelper = require('../test/PayloadHelper');
 
@@ -73,7 +74,7 @@ describe('ConversationService', () => {
       expect(shouldSendAsExternal).toBe(true);
     });
 
-    it('returns false for a small payload', async done => {
+    it('returns false for a small payload', async () => {
       const {conversation} = account.service;
       const preKeyBundles = generatePreKeyBundle(2, 1);
 
@@ -82,8 +83,6 @@ describe('ConversationService', () => {
 
       const shouldSendAsExternal = conversation.shouldSendAsExternal(plainText, preKeyBundles);
       expect(shouldSendAsExternal).toBe(false);
-
-      done();
     });
 
     it('adds missing prekeys', async () => {
@@ -120,7 +119,7 @@ describe('ConversationService', () => {
             } else {
               resolve();
             }
-          })
+          }),
       );
       spyOn(account.apiClient.user.api, 'postMultiPreKeyBundles').and.returnValue(
         Promise.resolve({
@@ -130,7 +129,7 @@ describe('ConversationService', () => {
           [bobId]: {
             [bobClientId]: {},
           },
-        })
+        }),
       );
 
       const payload = createMessage('Hello, world!');
@@ -176,7 +175,7 @@ describe('ConversationService', () => {
             } else {
               resolve();
             }
-          })
+          }),
       );
       spyOn(account.apiClient.user.api, 'postMultiPreKeyBundles').and.returnValue(Promise.resolve());
 
@@ -208,7 +207,7 @@ describe('ConversationService', () => {
       };
       const urlOffset = 0;
 
-      const linkPreview = await account.service.conversation.createLinkPreview({
+      const linkPreview = await account.service.conversation.messageBuilder.createLinkPreview({
         permanentUrl,
         summary,
         title,
@@ -216,8 +215,8 @@ describe('ConversationService', () => {
         url,
         urlOffset,
       });
-      const textMessage = account.service.conversation
-        .createText(text)
+      const textMessage = account.service.conversation.messageBuilder
+        .createText(undefined, text)
         .withLinkPreviews([linkPreview])
         .build();
 
@@ -233,7 +232,7 @@ describe('ConversationService', () => {
           tweet,
           url,
           urlOffset,
-        })
+        }),
       );
     });
 
@@ -243,7 +242,7 @@ describe('ConversationService', () => {
       };
 
       const text = 'Hello, world!';
-      const textMessage = account.service.conversation.createText(text).build();
+      const textMessage = account.service.conversation.messageBuilder.createText(undefined, text).build();
 
       expect(textMessage.content.linkPreviews).toBeUndefined();
     });
@@ -260,7 +259,7 @@ describe('ConversationService', () => {
           keyBytes: Buffer.from([]),
           sha256: Buffer.from([]),
           token: '',
-        })
+        }),
       );
 
       const url = 'http://example.com';
@@ -273,9 +272,9 @@ describe('ConversationService', () => {
       const text = url;
       const urlOffset = 0;
 
-      const linkPreview = await account.service.conversation.createLinkPreview({image, url, urlOffset});
-      const textMessage = account.service.conversation
-        .createText(text)
+      const linkPreview = await account.service.conversation.messageBuilder.createLinkPreview({image, url, urlOffset});
+      const textMessage = account.service.conversation.messageBuilder
+        .createText(undefined, text)
         .withLinkPreviews([linkPreview])
         .build();
 
@@ -288,7 +287,7 @@ describe('ConversationService', () => {
         jasmine.objectContaining({
           url,
           urlOffset,
-        })
+        }),
       );
     });
 
@@ -305,8 +304,8 @@ describe('ConversationService', () => {
         userId: PayloadHelper.getUUID(),
       };
 
-      const textMessage = account.service.conversation
-        .createText(text)
+      const textMessage = account.service.conversation.messageBuilder
+        .createText(undefined, text)
         .withMentions([mention])
         .build();
 
@@ -323,7 +322,7 @@ describe('ConversationService', () => {
       };
 
       const text = 'Hello, world!';
-      const textMessage = account.service.conversation.createText(text).build();
+      const textMessage = account.service.conversation.messageBuilder.createText(text).build();
 
       expect(textMessage.content.mentions).toBeUndefined();
     });
@@ -343,8 +342,8 @@ describe('ConversationService', () => {
         sha256: textSHA256,
       };
 
-      const replyMessage = account.service.conversation
-        .createText(text)
+      const replyMessage = account.service.conversation.messageBuilder
+        .createText(undefined, text)
         .withQuote(quote)
         .build();
 
@@ -359,7 +358,7 @@ describe('ConversationService', () => {
       };
 
       const text = 'Hello, world!';
-      const textMessage = account.service.conversation.createText(text).build();
+      const textMessage = account.service.conversation.messageBuilder.createText(undefined, text).build();
 
       expect(textMessage.content.quote).toBeUndefined();
     });
@@ -371,13 +370,36 @@ describe('ConversationService', () => {
 
       const text = 'Please read me';
 
-      const replyMessage = account.service.conversation
-        .createText(text)
+      const replyMessage = account.service.conversation.messageBuilder
+        .createText(undefined, text)
         .withReadConfirmation(true)
         .build();
 
       expect(replyMessage.content.text).toEqual(text);
       expect(replyMessage.content.expectsReadConfirmation).toEqual(true);
+    });
+
+    it('adds a legal hold status', () => {
+      account.apiClient.context = {
+        userId: PayloadHelper.getUUID(),
+      };
+
+      const text = 'Please read me';
+
+      const firstMessage = account.service.conversation.messageBuilder
+        .createText(undefined, text)
+        .withLegalHoldStatus()
+        .build();
+
+      expect(firstMessage.content.legalHoldStatus).toEqual(LegalHoldStatus.UNKNOWN);
+
+      const replyMessage = account.service.conversation.messageBuilder
+        .createText(undefined, text)
+        .withLegalHoldStatus(LegalHoldStatus.ENABLED)
+        .build();
+
+      expect(replyMessage.content.text).toEqual(text);
+      expect(replyMessage.content.legalHoldStatus).toEqual(LegalHoldStatus.ENABLED);
     });
   });
 });

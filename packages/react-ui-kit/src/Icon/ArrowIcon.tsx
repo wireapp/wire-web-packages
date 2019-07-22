@@ -17,17 +17,18 @@
  *
  */
 
-import * as React from 'react';
-import IconHOC from './IconHOC';
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
+import {SVGIcon, SVGIconProps} from './SVGIcon';
 
-interface Rotation {
+export interface Rotation {
   right: number;
   down: number;
   left: number;
   up: number;
 }
 
-interface ArrowProps {
+export interface ArrowProps extends SVGIconProps {
   direction?: keyof Rotation;
 }
 
@@ -40,10 +41,8 @@ const rotation: Rotation = {
 };
 /* tslint:enable:object-literal-sort-keys */
 
-const size = 16;
-const arrow: React.SFC<ArrowProps> = ({direction = 'right'}) => (
-  <path transform={`rotate(${rotation[direction]} 8 8)`} d="M5.8 1.5L7.3 0l8 8-8 8-1.5-1.5L11.3 9H.7V7h10.6" />
+export const ArrowIcon = ({direction = 'right', ...props}: ArrowProps) => (
+  <SVGIcon realWidth={16} realHeight={16} {...props}>
+    <path transform={`rotate(${rotation[direction]} 8 8)`} d="M5.8 1.5L7.3 0l8 8-8 8-1.5-1.5L11.3 9H.7V7h10.6" />
+  </SVGIcon>
 );
-const ArrowIcon = IconHOC<ArrowProps>(arrow, size, size);
-
-export {Rotation, ArrowProps, ArrowIcon};

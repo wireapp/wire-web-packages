@@ -17,12 +17,10 @@
  *
  */
 
-import Item from './Item';
+import {Item} from './Item';
 
-interface Config {
+export interface Config {
   comparator?: (a: Item, b: Item) => number;
   maxRetries?: number;
   retryDelay?: number;
 }
-
-export default Config;

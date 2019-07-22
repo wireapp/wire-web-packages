@@ -23,23 +23,22 @@ import {PreKeyBundle} from '../auth/';
 import {NewClient, RegisteredClient} from '../client/';
 import {HttpClient} from '../http/';
 
-class ClientAPI {
+export class ClientAPI {
   constructor(private readonly client: HttpClient) {}
 
-  static get URL() {
-    return {
-      CLIENTS: '/clients',
-    };
-  }
+  static URL = {
+    CLIENTS: '/clients',
+  };
 
-  public postClient(newClient: NewClient): Promise<RegisteredClient> {
+  public async postClient(newClient: NewClient): Promise<RegisteredClient> {
     const config: AxiosRequestConfig = {
       data: newClient,
       method: 'post',
       url: ClientAPI.URL.CLIENTS,
     };
 
-    return this.client.sendJSON<RegisteredClient>(config).then(response => response.data);
+    const response = await this.client.sendJSON<RegisteredClient>(config);
+    return response.data;
   }
 
   public async deleteClient(clientId: string, password?: string): Promise<void> {
@@ -54,35 +53,33 @@ class ClientAPI {
     await this.client.sendJSON(config);
   }
 
-  public getClient(clientId: string): Promise<RegisteredClient> {
+  public async getClient(clientId: string): Promise<RegisteredClient> {
     const config: AxiosRequestConfig = {
-      data: {},
       method: 'get',
       url: `${ClientAPI.URL.CLIENTS}/${clientId}`,
     };
 
-    return this.client.sendJSON<RegisteredClient>(config).then(response => response.data);
+    const response = await this.client.sendJSON<RegisteredClient>(config);
+    return response.data;
   }
 
-  public getClients(): Promise<RegisteredClient[]> {
+  public async getClients(): Promise<RegisteredClient[]> {
     const config: AxiosRequestConfig = {
-      data: {},
       method: 'get',
       url: ClientAPI.URL.CLIENTS,
     };
 
-    return this.client.sendJSON<RegisteredClient[]>(config).then(response => response.data);
+    const response = await this.client.sendJSON<RegisteredClient[]>(config);
+    return response.data;
   }
 
-  public getClientPreKeys(clientId: string): Promise<PreKeyBundle> {
+  public async getClientPreKeys(clientId: string): Promise<PreKeyBundle> {
     const config: AxiosRequestConfig = {
-      data: {},
       method: 'get',
       url: `${ClientAPI.URL.CLIENTS}/${clientId}/prekeys`,
     };
 
-    return this.client.sendJSON<PreKeyBundle>(config).then(response => response.data);
+    const response = await this.client.sendJSON<PreKeyBundle>(config);
+    return response.data;
   }
 }
-
-export {ClientAPI};

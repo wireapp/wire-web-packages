@@ -23,6 +23,7 @@ export * from './AttachmentIcon';
 export * from './AudioVideoIcon';
 export * from './CallIcon';
 export * from './CamIcon';
+export * from './CameraIcon';
 export * from './CheckIcon';
 export * from './CloseIcon';
 export * from './DeviceIcon';
@@ -32,6 +33,7 @@ export * from './FileIcon';
 export * from './GifIcon';
 export * from './HangupIcon';
 export * from './ImageIcon';
+export * from './InviteIcon';
 export * from './LeaveIcon';
 export * from './MessageIcon';
 export * from './MoreIcon';
@@ -40,12 +42,16 @@ export * from './OptionsIcon';
 export * from './PingIcon';
 export * from './PlaneIcon';
 export * from './ProfileIcon';
+export * from './RecordIcon';
+export * from './RecordPendingIcon';
+export * from './ScreenshareIcon';
 export * from './ServicesIcon';
 export * from './SettingsIcon';
 export * from './SpeakerIcon';
 export * from './TeamIcon';
 export * from './TimedIcon';
 export * from './TrashIcon';
+export * from './TriangleIcon';
 export * from './WireIcon';
 
 // Brand Icons
@@ -58,5 +64,3 @@ export * from './Brand/LinkedInIcon';
 export * from './Brand/LinuxIcon';
 export * from './Brand/MicrosoftIcon';
 export * from './Brand/TwitterIcon';
-
-export * from './RoundContainer';

@@ -17,7 +17,7 @@
  *
  */
 
-import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
+import {CRUDEngine} from '@wireapp/store-engine';
 
 export enum DatabaseStores {
   AMPLIFY = 'amplify',
@@ -27,7 +27,7 @@ export enum DatabaseStores {
   PRE_KEYS = 'prekeys',
 }
 
-class CryptographyDatabaseRepository {
+export class CryptographyDatabaseRepository {
   public static readonly STORES = DatabaseStores;
 
   constructor(private readonly storeEngine: CRUDEngine) {}
@@ -42,5 +42,3 @@ class CryptographyDatabaseRepository {
     ]);
   }
 }
-
-export default CryptographyDatabaseRepository;

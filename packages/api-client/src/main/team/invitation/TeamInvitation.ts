@@ -17,11 +17,13 @@
  *
  */
 
-interface TeamInvitation {
+import {Role} from '../member';
+
+export interface TeamInvitation {
   created_at: Date;
+  created_by: string;
   email: string;
   id: string;
+  role: Role;
   team: string;
 }
-
-export {TeamInvitation};

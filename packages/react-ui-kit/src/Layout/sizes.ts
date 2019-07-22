@@ -21,6 +21,7 @@
 export const WIDTH = {
   TINY: 320,
   MOBILE: 480,
+  MOBILE_MAX: 639,
   TABLET_MIN: 640,
   TABLET_MAX: 919,
   DESKTOP_MIN: 920,
@@ -28,7 +29,6 @@ export const WIDTH = {
   DESKTOP_XL_MIN: 1200,
   DESKTOP_XL_MAX: 1600,
 };
-/* tslint:enable:object-literal-sort-keys */
 
 export const STEP = 8;
 export const GUTTER = STEP + STEP;

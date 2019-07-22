@@ -17,12 +17,24 @@
  *
  */
 
+import {Asset} from '@wireapp/protocol-messaging';
+
 import {AbortReason, AssetTransferState} from '../../conversation/';
-import {FileContent, FileMetaDataContent, ImageContent} from '../../conversation/content/';
+import {FileContent, FileMetaDataContent, ImageContent, LegalHoldStatus} from '../../conversation/content/';
 import {EncryptedAssetUploaded} from '../../cryptography/';
 
+export type ImageMetaData = Asset.IImageMetaData;
+export type VideoMetaData = Asset.IVideoMetaData;
+export type Preview = Asset.IPreview;
+export type Original = Asset.IOriginal;
+
+export interface AssetBase {
+  expectsReadConfirmation?: boolean;
+  legalHoldStatus?: LegalHoldStatus;
+}
+
 // https://github.com/wireapp/generic-message-proto/blob/v1.20.0/proto/messages.proto#L201
-interface AssetContent {
+export interface AssetContent extends AssetBase {
   abortReason?: AbortReason;
   original?: Original;
   preview?: Preview;
@@ -30,81 +42,34 @@ interface AssetContent {
   uploaded?: RemoteData;
 }
 
-interface RemoteData {
+export interface RemoteData extends Asset.IRemoteData {
   assetId: string;
-  assetToken?: string;
-  expectsReadConfirmation?: boolean;
   otrKey: Uint8Array | Buffer;
   sha256: Uint8Array | Buffer;
 }
 
-interface Original {
-  audio?: AudioMetaData;
-  caption?: string;
-  image?: ImageMetaData;
-  mimeType: string;
-  name?: string;
-  size: number;
-  source?: string;
-  video?: VideoMetaData;
+export interface AudioMetaData extends Asset.IAudioMetaData {
+  normalizedLoudness?: Uint8Array | Buffer | null;
 }
 
-interface ImageMetaData {
-  height: number;
-  width: number;
-  tag?: string;
+export interface AudioAssetMetaDataContent extends AssetBase {
+  metaData: AudioMetaData;
 }
 
-interface VideoMetaData {
-  height?: number;
-  width?: number;
-  duration?: number;
-}
-
-interface AudioMetaData {
-  duration?: number;
-  loudness?: Uint8Array | Buffer;
-}
-
-interface Preview {
-  mimeType: string;
-  size: number;
-  remote?: RemoteData;
-  image?: ImageMetaData;
-}
-
-interface ImageAssetContent {
-  expectsReadConfirmation?: boolean;
+export interface ImageAssetContent extends AssetBase {
   asset: EncryptedAssetUploaded;
   image: ImageContent;
 }
 
-interface FileAssetContent {
-  expectsReadConfirmation?: boolean;
+export interface FileAssetContent extends AssetBase {
   asset: EncryptedAssetUploaded;
   file: FileContent;
 }
 
-interface FileAssetMetaDataContent {
-  expectsReadConfirmation?: boolean;
+export interface FileAssetMetaDataContent extends AssetBase {
   metaData: FileMetaDataContent;
 }
 
-interface FileAssetAbortContent {
-  expectsReadConfirmation?: boolean;
+export interface FileAssetAbortContent extends AssetBase {
   reason: AbortReason;
 }
-
-export {
-  AssetContent,
-  AudioMetaData,
-  FileAssetContent,
-  FileAssetMetaDataContent,
-  FileAssetAbortContent,
-  ImageAssetContent,
-  ImageMetaData,
-  Original,
-  Preview,
-  RemoteData,
-  VideoMetaData,
-};

@@ -19,17 +19,17 @@
 
 import * as CBOR from '@wireapp/cbor';
 
-import ClassUtil from '../util/ClassUtil';
+import * as ClassUtil from '../util/ClassUtil';
 
-import InputError from '../errors/InputError';
+import {InputError} from '../errors/InputError';
 
-import KeyPair from './KeyPair';
+import {KeyPair} from './KeyPair';
 
 /**
- * @classdesc Pre-generated (and regularly refreshed) pre-keys.
+ * Pre-generated (and regularly refreshed) pre-keys.
  * A Pre-Shared Key contains the public long-term identity and ephemeral handshake keys for the initial triple DH.
  */
-class PreKey {
+export class PreKey {
   static MAX_PREKEY_ID = 0xffff;
   key_id: number;
   key_pair: KeyPair;
@@ -81,7 +81,7 @@ class PreKey {
       new Array(size).fill(null).map(async (_, index) => {
         const pk = await PreKey.new((start + index) % PreKey.MAX_PREKEY_ID);
         return pk;
-      })
+      }),
     );
   }
 
@@ -128,5 +128,3 @@ class PreKey {
     return self;
   }
 }
-
-export default PreKey;

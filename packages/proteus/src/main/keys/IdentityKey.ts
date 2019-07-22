@@ -19,15 +19,16 @@
 
 import * as CBOR from '@wireapp/cbor';
 
-import ClassUtil from '../util/ClassUtil';
-import PublicKey from './PublicKey';
+import * as ClassUtil from '../util/ClassUtil';
+import {PublicKey} from './PublicKey';
 
 /**
  * Construct a long-term identity key pair.
- * @classdesc Every client has a long-term identity key pair.
+ *
+ * Every client has a long-term identity key pair.
  * Long-term identity keys are used to initialise "sessions" with other clients (triple DH).
  */
-class IdentityKey {
+export class IdentityKey {
   public_key: PublicKey;
 
   constructor() {
@@ -67,5 +68,3 @@ class IdentityKey {
     return IdentityKey.new(public_key);
   }
 }
-
-export default IdentityKey;

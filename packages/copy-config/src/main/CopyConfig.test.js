@@ -23,6 +23,7 @@ const path = require('path');
 const fs = require('fs-extra');
 
 const {CopyConfig} = require('../../dist');
+const utils = require('../../dist/utils');
 const TEMP_DIR = path.resolve(__dirname, '..', '..', '.temp/');
 
 describe('CopyConfig', () => {
@@ -35,6 +36,7 @@ describe('CopyConfig', () => {
 
       const copyConfig = new CopyConfig({
         files: {},
+        repositoryUrl: '',
       });
 
       expect(copyConfig.options.externalDir.endsWith('externalDir')).toBe(true);
@@ -55,6 +57,7 @@ describe('CopyConfig', () => {
         files: {
           './spec/helpers/test1.txt': TEMP_DIR,
         },
+        repositoryUrl: '',
       });
 
       const copiedResult = await copyConfig.copy();
@@ -71,6 +74,7 @@ describe('CopyConfig', () => {
         files: {
           './spec/helpers/.env.test': `${TEMP_DIR}/.env`,
         },
+        repositoryUrl: '',
       });
 
       const copiedResult = await copyConfig.copy();
@@ -84,6 +88,7 @@ describe('CopyConfig', () => {
         files: {
           './spec/helpers/**': TEMP_DIR,
         },
+        repositoryUrl: '',
       });
 
       const copiedResult = await copyConfig.copy();
@@ -102,6 +107,7 @@ describe('CopyConfig', () => {
         files: {
           'non-existant': TEMP_DIR,
         },
+        repositoryUrl: '',
       });
 
       try {
@@ -121,12 +127,59 @@ describe('CopyConfig', () => {
         files: {
           './spec/helpers/test1.txt': TEMP_DIR,
         },
+        repositoryUrl: '',
       });
 
       const copiedResult = await copyConfig.copy();
 
       expect(copiedResult.length).toBe(1);
     });
+
+    it('downloads zip archives from an https url', async () => {
+      await fs.ensureDir(TEMP_DIR);
+      await fs.writeFile(path.join(TEMP_DIR, 'test1.txt'), '');
+
+      const HTTPS_URL = 'https://github.com/wireapp/wire-web-config-default#master';
+      const ZIP_URL = 'https://github.com/wireapp/wire-web-config-default/archive/master.zip';
+
+      const copyConfig = new CopyConfig({
+        files: {
+          './package.json': TEMP_DIR,
+        },
+        forceDownload: true,
+        repositoryUrl: HTTPS_URL,
+      });
+
+      spyOn(utils, 'downloadFileAsync').and.returnValue(Promise.resolve());
+      spyOn(copyConfig, 'copyDirOrFile').and.returnValue(Promise.resolve([]));
+
+      await copyConfig.copy();
+
+      expect(utils.downloadFileAsync).toHaveBeenCalledWith(ZIP_URL, jasmine.any(String));
+    });
+  });
+
+  it('downloads zip archives from a git url', async () => {
+    await fs.ensureDir(TEMP_DIR);
+    await fs.writeFile(path.join(TEMP_DIR, 'test1.txt'), '');
+
+    const GIT_URL = 'git@github.com:wireapp/wire-web-config-default#master';
+    const ZIP_URL = 'https://github.com/wireapp/wire-web-config-default/archive/master.zip';
+
+    const copyConfig = new CopyConfig({
+      files: {
+        './package.json': TEMP_DIR,
+      },
+      forceDownload: true,
+      repositoryUrl: GIT_URL,
+    });
+
+    spyOn(utils, 'downloadFileAsync').and.returnValue(Promise.resolve());
+    spyOn(copyConfig, 'copyDirOrFile').and.returnValue(Promise.resolve([]));
+
+    await copyConfig.copy();
+
+    expect(utils.downloadFileAsync).toHaveBeenCalledWith(ZIP_URL, jasmine.any(String));
   });
 
   describe('getFilesFromString', () => {
@@ -134,7 +187,9 @@ describe('CopyConfig', () => {
       const copyString = 'C:\\source:D:\\target';
 
       const copyConfig = new CopyConfig({
+        externalDir: '.',
         files: {},
+        repositoryUrl: '',
       });
 
       const resolvedPaths = copyConfig.getFilesFromString(copyString);

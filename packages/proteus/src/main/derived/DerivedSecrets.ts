@@ -17,14 +17,14 @@
  *
  */
 
-import ClassUtil from '../util/ClassUtil';
+import * as ClassUtil from '../util/ClassUtil';
 
-import KeyDerivationUtil from '../util/KeyDerivationUtil';
-import MemoryUtil from '../util/MemoryUtil';
-import CipherKey from './CipherKey';
-import MacKey from './MacKey';
+import * as KeyDerivationUtil from '../util/KeyDerivationUtil';
+import * as MemoryUtil from '../util/MemoryUtil';
+import {CipherKey} from './CipherKey';
+import {MacKey} from './MacKey';
 
-class DerivedSecrets {
+export class DerivedSecrets {
   cipher_key: CipherKey;
   mac_key: MacKey;
 
@@ -57,5 +57,3 @@ class DerivedSecrets {
     return this.kdf(input, new Uint8Array(0), info);
   }
 }
-
-export default DerivedSecrets;

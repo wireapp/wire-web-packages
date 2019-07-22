@@ -25,7 +25,7 @@ import {exec} from 'child_process';
 import {promisify} from 'util';
 
 import * as Changelog from 'generate-changelog';
-import * as logdown from 'logdown';
+import logdown from 'logdown';
 
 const logger = logdown('@wireapp/travis-bot/TravisBot', {
   logger: console,
@@ -48,7 +48,7 @@ export interface MessageData {
   conversationIds?: string[];
 }
 
-class TravisBot {
+export class TravisBot {
   constructor(private readonly loginData: LoginData, private readonly messageData: MessageData) {}
 
   get message(): string {
@@ -94,14 +94,14 @@ class TravisBot {
     await Promise.all(
       conversationIds.map(async id => {
         if (!account.service) {
-          throw new Error(`Account service is not set. Account not listening?`);
+          throw new Error('Account service is not set. Account not listening?');
         }
         if (id) {
           logger.log(`Sending message to conversation ${id} ...`);
-          const textPayload = await account.service.conversation.createText(this.message).build();
-          await account.service.conversation.send(id, textPayload);
+          const textPayload = await account.service.conversation.messageBuilder.createText(id, this.message).build();
+          await account.service.conversation.send(textPayload);
         }
-      })
+      }),
     );
   }
 
@@ -146,5 +146,3 @@ class TravisBot {
     return stdout.trim();
   }
 }
-
-export {TravisBot};

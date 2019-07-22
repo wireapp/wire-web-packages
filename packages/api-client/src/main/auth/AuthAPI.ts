@@ -17,31 +17,31 @@
  *
  */
 
-import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
+import {CRUDEngine} from '@wireapp/store-engine';
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
+
 import {AccessTokenData, LoginData} from '../auth/';
 import {ClientType} from '../client/';
 import {HttpClient} from '../http/';
 import {sendRequestWithCookie} from '../shims/node/cookie';
 import {User} from '../user/';
+import {CookieList} from './CookieList';
 import {RegisterData} from './RegisterData';
 
-class AuthAPI {
+export class AuthAPI {
   constructor(private readonly client: HttpClient, private readonly engine: CRUDEngine) {}
 
-  static get URL() {
-    return {
-      ACCESS: '/access',
-      COOKIES: '/cookies',
-      INITIATE_LOGIN: 'initiate-login',
-      LOGIN: '/login',
-      LOGOUT: 'logout',
-      REGISTER: '/register',
-      SSO: '/sso',
-    };
-  }
+  static URL = {
+    ACCESS: '/access',
+    COOKIES: '/cookies',
+    INITIATE_LOGIN: 'initiate-login',
+    LOGIN: '/login',
+    LOGOUT: 'logout',
+    REGISTER: '/register',
+    SSO: '/sso',
+  };
 
-  public getCookies(labels?: string[]) {
+  public getCookies(labels?: string[]): Promise<AxiosResponse<CookieList>> {
     const config: AxiosRequestConfig = {
       method: 'get',
       params: {},
@@ -100,7 +100,7 @@ class AuthAPI {
     await sendRequestWithCookie(this.client, config, this.engine);
   }
 
-  public postRegister(userAccount: RegisterData): Promise<User> {
+  public async postRegister(userAccount: RegisterData): Promise<User> {
     const config: AxiosRequestConfig = {
       data: userAccount,
       method: 'post',
@@ -108,7 +108,8 @@ class AuthAPI {
       withCredentials: true,
     };
 
-    return this.client.sendJSON<User>(config).then(response => response.data);
+    const response = await this.client.sendJSON<User>(config);
+    return response.data;
   }
 
   public async headInitiateLogin(ssoCode: string): Promise<void> {
@@ -120,5 +121,3 @@ class AuthAPI {
     await this.client.sendJSON(config);
   }
 }
-
-export {AuthAPI};

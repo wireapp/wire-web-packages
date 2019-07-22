@@ -18,7 +18,7 @@
  */
 
 const {Cookie: ToughCookie} = require('tough-cookie');
-const {ObfuscationUtil} = require('@wireapp/api-client/dist/commonjs/obfuscation/');
+const ObfuscationUtil = require('@wireapp/api-client/dist/commonjs/obfuscation/');
 
 describe('"ObfuscationUtil"', () => {
   const accessTokenData = {
@@ -30,7 +30,7 @@ describe('"ObfuscationUtil"', () => {
   };
 
   const cookie = ToughCookie.parse(
-    'zuid=SBMt4gP7v-SAxxP_8OEVVeTw11CeUBAV1Jx5AwdQNjcbgTIqvkhfmd8COLG5V3OrOJ==.v=1.k=1.d=1535117120.t=1234; Path=/access; Domain=example.com; HttpOnly; Secure'
+    'zuid=SBMt4gP7v-SAxxP_8OEVVeTw11CeUBAV1Jx5AwdQNjcbgTIqvkhfmd8COLG5V3OrOJ==.v=1.k=1.d=1535117120.t=1234; Path=/access; Domain=example.com; HttpOnly; Secure',
   );
 
   it('obfuscates an access token', () => {

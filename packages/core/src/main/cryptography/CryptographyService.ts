@@ -24,11 +24,11 @@ import {OTRRecipients} from '@wireapp/api-client/dist/commonjs/conversation/';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/';
 import {Cryptobox} from '@wireapp/cryptobox';
 import {errors as ProteusErrors, keys as ProteusKeys} from '@wireapp/proteus';
-import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
+import {CRUDEngine} from '@wireapp/store-engine';
 import {Decoder, Encoder} from 'bazinga64';
-import * as logdown from 'logdown';
+import logdown from 'logdown';
 import {SessionPayloadBundle} from '../cryptography/';
-import CryptographyDatabaseRepository from './CryptographyDatabaseRepository';
+import {CryptographyDatabaseRepository} from './CryptographyDatabaseRepository';
 
 export interface MetaClient extends RegisteredClient {
   meta: {
@@ -47,7 +47,7 @@ export type DecryptionResult =
       error: Error;
     };
 
-class CryptographyService {
+export class CryptographyService {
   private readonly logger: logdown.Logger;
 
   public cryptobox: Cryptobox;
@@ -142,7 +142,7 @@ class CryptographyService {
   private async encryptPayloadForSession(
     sessionId: string,
     plainText: Uint8Array,
-    base64EncodedPreKey: string
+    base64EncodedPreKey: string,
   ): Promise<SessionPayloadBundle> {
     this.logger.log(`Encrypting Payload for session ID "${sessionId}"`);
     let encryptedPayload;
@@ -152,7 +152,7 @@ class CryptographyService {
       const payloadAsBuffer: ArrayBuffer = await this.cryptobox.encrypt(
         sessionId,
         plainText,
-        decodedPreKeyBundle.buffer
+        decodedPreKeyBundle.buffer,
       );
       encryptedPayload = Encoder.toBase64(payloadAsBuffer).asString;
     } catch (error) {
@@ -176,5 +176,3 @@ class CryptographyService {
     this.logger.log(`Deleted session ID "${sessionId}".`);
   }
 }
-
-export {CryptographyService};

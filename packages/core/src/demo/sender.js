@@ -2,18 +2,17 @@
 //@ts-check
 
 process.on('uncaughtException', error =>
-  console.error(`Uncaught exception "${error.constructor.name}": ${error.message}`, error)
+  console.error(`Uncaught exception "${error.constructor.name}": ${error.message}`, error),
 );
-process.on('unhandledRejection', error =>
-  console.error(`Uncaught rejection "${error.constructor.name}": ${error.message}`, error)
+process.on('unhandledRejection', (reason, promise) =>
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason),
 );
 
-const crypto = require('crypto');
 const program = require('commander');
 const logdown = require('logdown');
 const fs = require('fs');
 const path = require('path');
-const TimeUnits = require('./TimeUnits');
+const {TimeUtil} = require('@wireapp/commons');
 const {promisify} = require('util');
 
 program.option('-c, --conversationId <conversationId>').parse(process.argv);
@@ -29,11 +28,11 @@ logger.state.isEnabled = true;
 const {Account} = require('@wireapp/core');
 const {APIClient} = require('@wireapp/api-client');
 const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/');
-const {FileEngine} = require('@wireapp/store-engine');
+const {FileEngine} = require('@wireapp/store-engine-fs');
 
 (async () => {
   const CONVERSATION_ID = program.conversationId || process.env.WIRE_CONVERSATION_ID;
-  const MESSAGE_TIMER = 5000;
+  const MESSAGE_TIMER = TimeUtil.TimeInMillis.SECOND * 5;
 
   const login = {
     clientType: ClientType.TEMPORARY,
@@ -59,16 +58,18 @@ const {FileEngine} = require('@wireapp/store-engine');
   logger.log('Client ID', account.apiClient.context.clientId);
 
   async function sendAndDeleteMessage() {
-    const deleteTextPayload = account.service.conversation.createText('Delete me!').build();
-    const {id: messageId} = await account.service.conversation.send(CONVERSATION_ID, deleteTextPayload);
+    const deleteTextPayload = account.service.conversation.messageBuilder
+      .createText(CONVERSATION_ID, 'Delete me!')
+      .build();
+    const {id: messageId} = await account.service.conversation.send(deleteTextPayload);
 
-    const fiveSecondsInMillis = 5000;
+    const fiveSecondsInMillis = TimeUtil.TimeInMillis.SECOND * 5;
     setTimeout(async () => {
       await account.service.conversation.deleteMessageEveryone(CONVERSATION_ID, messageId);
     }, fiveSecondsInMillis);
   }
 
-  async function sendConversationLevelTimer(timeInMillis = TimeUnits.ONE_YEAR_IN_MILLIS) {
+  async function sendConversationLevelTimer(timeInMillis = TimeUtil.TimeInMillis.YEAR) {
     await account.apiClient.conversation.api.putConversationMessageTimer(CONVERSATION_ID, {
       message_timer: timeInMillis,
     });
@@ -76,30 +77,34 @@ const {FileEngine} = require('@wireapp/store-engine');
 
   async function sendEphemeralText(expiry = MESSAGE_TIMER) {
     account.service.conversation.messageTimer.setMessageLevelTimer(CONVERSATION_ID, expiry);
-    const payload = account.service.conversation.createText(`Expires after ${expiry}ms ...`).build();
-    await account.service.conversation.send(CONVERSATION_ID, payload);
+    const payload = account.service.conversation.messageBuilder
+      .createText(CONVERSATION_ID, `Expires after ${expiry}ms ...`)
+      .build();
+    await account.service.conversation.send(payload);
     account.service.conversation.messageTimer.setMessageLevelTimer(CONVERSATION_ID, 0);
   }
 
   async function sendPing(expiry = MESSAGE_TIMER) {
     account.service.conversation.messageTimer.setMessageLevelTimer(CONVERSATION_ID, expiry);
-    const payload = account.service.conversation.createPing();
-    await account.service.conversation.send(CONVERSATION_ID, payload);
+    const payload = account.service.conversation.messageBuilder.createPing(CONVERSATION_ID);
+    await account.service.conversation.send(payload);
     account.service.conversation.messageTimer.setMessageLevelTimer(CONVERSATION_ID, 0);
   }
 
   async function sendText() {
-    const payload = account.service.conversation.createText('Hello, World!').build();
-    await account.service.conversation.send(CONVERSATION_ID, payload);
+    const payload = account.service.conversation.messageBuilder.createText(CONVERSATION_ID, 'Hello, World!').build();
+    await account.service.conversation.send(payload);
   }
 
   async function sendAndEdit() {
-    const payload = account.service.conversation.createText('Hello, Wolrd!').build();
-    const {id: originalMessageId} = await account.service.conversation.send(CONVERSATION_ID, payload);
+    const payload = account.service.conversation.messageBuilder.createText(CONVERSATION_ID, 'Hello, Wolrd!').build();
+    const {id: originalMessageId} = await account.service.conversation.send(payload);
     setInterval(async () => {
-      const editedPayload = account.service.conversation.createEditedText('Hello, World!', originalMessageId).build();
-      await account.service.conversation.send(CONVERSATION_ID, editedPayload);
-    }, 2000);
+      const editedPayload = account.service.conversation.messageBuilder
+        .createEditedText(CONVERSATION_ID, 'Hello, World!', originalMessageId)
+        .build();
+      await account.service.conversation.send(editedPayload);
+    }, TimeUtil.TimeInMillis.SECOND * 2);
   }
 
   async function sendImage() {
@@ -110,22 +115,26 @@ const {FileEngine} = require('@wireapp/store-engine');
       type: 'image/png',
       width: 500,
     };
-    const imagePayload = await account.service.conversation.createImage(image);
-    await account.service.conversation.send(CONVERSATION_ID, imagePayload);
+    const imagePayload = await account.service.conversation.messageBuilder.createImage(CONVERSATION_ID, image);
+    await account.service.conversation.send(imagePayload);
   }
 
   async function sendFile() {
     const filename = 'wire_logo.png';
     const data = await promisify(fs.readFile)(path.join(__dirname, filename));
-    const metadataPayload = await account.service.conversation.createFileMetadata({
+    const metadataPayload = await account.service.conversation.messageBuilder.createFileMetadata(CONVERSATION_ID, {
       length: data.length,
       name: filename,
       type: 'image/png',
     });
-    await account.service.conversation.send(CONVERSATION_ID, metadataPayload);
+    await account.service.conversation.send(metadataPayload);
 
-    const filePayload = await account.service.conversation.createFileData({data}, metadataPayload.id);
-    await account.service.conversation.send(CONVERSATION_ID, filePayload);
+    const filePayload = await account.service.conversation.messageBuilder.createFileData(
+      CONVERSATION_ID,
+      {data},
+      metadataPayload.id,
+    );
+    await account.service.conversation.send(filePayload);
   }
 
   async function clearConversation() {
@@ -151,20 +160,20 @@ const {FileEngine} = require('@wireapp/store-engine');
       return mention;
     });
 
-    const payload = account.service.conversation
-      .createText(text)
+    const payload = account.service.conversation.messageBuilder
+      .createText(CONVERSATION_ID, text)
       .withMentions(mentions)
       .build();
 
-    await account.service.conversation.send(CONVERSATION_ID, payload);
+    await account.service.conversation.send(payload);
   }
 
   async function sendQuote() {
     const text = 'Hello';
 
-    const textPayload = account.service.conversation.createText(text).build();
+    const textPayload = account.service.conversation.messageBuilder.createText(CONVERSATION_ID, text).build();
 
-    const {id: messageId} = await account.service.conversation.send(CONVERSATION_ID, textPayload);
+    const {id: messageId, timestamp} = await account.service.conversation.send(textPayload);
 
     const quoteText = 'Hello again';
 
@@ -173,12 +182,12 @@ const {FileEngine} = require('@wireapp/store-engine');
       quotedMessageId: messageId,
     };
 
-    const quotePayload = account.service.conversation
-      .createText(quoteText)
-      .withQuote(quote, textPayload.timestamp)
+    const quotePayload = account.service.conversation.messageBuilder
+      .createText(CONVERSATION_ID, quoteText)
+      .withQuote(quote, timestamp)
       .build();
 
-    await account.service.conversation.send(CONVERSATION_ID, quotePayload);
+    await account.service.conversation.send(quotePayload);
   }
 
   const methods = [
@@ -193,7 +202,7 @@ const {FileEngine} = require('@wireapp/store-engine');
     sendText,
   ];
 
-  const timeoutInMillis = 2000;
+  const timeoutInMillis = TimeUtil.TimeInMillis.SECOND * 2;
   setInterval(() => {
     const randomMethod = methods[Math.floor(Math.random() * methods.length)];
     randomMethod();

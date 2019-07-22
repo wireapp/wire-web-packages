@@ -17,65 +17,99 @@
  *
  */
 
-import styled from 'styled-components';
+/** @jsx jsx */
+import {ObjectInterpolation, jsx} from '@emotion/core';
 import {COLOR} from '../Identity';
 import {defaultTransition} from '../Identity/motions';
-import {Link, Text, TextProps} from '../Text';
+import {Loading} from '../Misc';
+import {TextProps, filterTextProps, textStyle} from '../Text';
+import {filterProps} from '../util';
 
-interface ButtonProps extends TextProps {
+export interface ButtonProps<T = HTMLButtonElement> extends TextProps<T> {
   backgroundColor?: string;
-  block?: boolean;
-  disabled?: boolean;
   noCapital?: boolean;
+  showLoading?: boolean;
+  loadingColor?: string;
 }
 
-type HTMLButtonProps = ButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>;
+export const buttonStyle: <T>(props: ButtonProps<T>) => ObjectInterpolation<undefined> = ({
+  backgroundColor = COLOR.BLUE,
+  block = false,
+  disabled = false,
+  noCapital = false,
+  bold = true,
+  center = true,
+  color = COLOR.WHITE,
+  fontSize = '16px',
+  noWrap = true,
+  textTransform = 'uppercase',
+  truncate = true,
+  ...props
+}) => ({
+  ...textStyle({
+    block,
+    bold,
+    center,
+    color,
+    disabled,
+    fontSize,
+    noWrap,
+    textTransform,
+    truncate,
+    ...props,
+  }),
+  '&:hover, &:focus': {
+    backgroundColor: disabled ? COLOR.DISABLED : COLOR.shade(backgroundColor, 0.06),
+    textDecoration: 'none',
+  },
+  backgroundColor: disabled ? COLOR.DISABLED : backgroundColor,
+  border: 0,
+  borderRadius: '8px',
+  cursor: disabled ? 'default' : 'pointer',
+  display: 'inline-block',
+  height: '48px',
+  lineHeight: '48px',
+  marginBottom: '16px',
+  maxWidth: '100%',
+  minWidth: '150px',
+  outline: 'none',
+  padding: '0 32px',
+  textDecoration: 'none',
+  touchAction: 'manipulation',
+  transition: defaultTransition,
+  width: block ? '100%' : 'auto',
+});
 
-const darkenAmount = 0.06;
-const Button = styled<HTMLButtonProps>(Text.withComponent(styled.button<HTMLButtonProps>``))<HTMLButtonProps>`
-  background-color: ${props => (props.disabled ? COLOR.DISABLED : props.backgroundColor)};
-  border-radius: 8px;
-  border: 0;
-  cursor: ${props => (props.disabled ? 'default' : 'pointer')};
-  display: inline-block;
-  text-decoration: none;
-  margin-bottom: 16px;
-  touch-action: manipulation;
-  ${defaultTransition};
-  height: 48px;
-  line-height: 48px;
-  max-width: 100%;
-  outline: none;
-  padding: 0 32px;
-  min-width: 150px;
-  width: ${props => (props.block ? '100%' : 'auto')};
-  &:hover,
-  &:focus {
-    text-decoration: none;
-    background-color: ${props => (props.disabled ? COLOR.DISABLED : COLOR.shade(props.backgroundColor, darkenAmount))};
-  }
-`;
+export const buttonLinkStyle: (props: ButtonProps<HTMLAnchorElement>) => ObjectInterpolation<undefined> = props => ({
+  ...buttonStyle(props),
+  display: 'inline-flex !important',
+});
 
-Button.defaultProps = {
-  backgroundColor: COLOR.BLUE,
-  block: false,
-  bold: true,
-  center: true,
-  color: COLOR.WHITE,
-  disabled: false,
-  fontSize: '16px',
-  noCapital: false,
-  noWrap: true,
-  textTransform: 'uppercase',
-  truncate: true,
+export const filterButtonProps = (props: ButtonProps) => {
+  return filterProps(filterTextProps(props) as ButtonProps, ['backgroundColor', 'noCapital']);
 };
 
-const ButtonLink = styled(Button.withComponent(Link))`
-  display: inline-block !important;
-`;
+export const Button = ({showLoading, children, loadingColor = COLOR.WHITE, ...props}: ButtonProps) => (
+  <button css={buttonStyle(props)} {...filterButtonProps(props)}>
+    {showLoading ? <Loading size={30} color={loadingColor} style={{display: 'flex', margin: 'auto'}} /> : children}
+  </button>
+);
 
-ButtonLink.defaultProps = {
-  ...Button.defaultProps,
+const filterButtonLinkProps = (props: ButtonProps<HTMLAnchorElement>) => {
+  return filterProps(filterTextProps(props) as ButtonProps<HTMLAnchorElement>, [
+    'backgroundColor',
+    'disabled',
+    'noCapital',
+  ]);
 };
 
-export {Button, ButtonLink};
+export const ButtonLink = ({
+  children,
+  showLoading,
+  loadingColor = COLOR.WHITE,
+  ...props
+}: ButtonProps<HTMLAnchorElement>) => (
+  <a css={buttonLinkStyle(props)} {...filterButtonLinkProps(props)}>
+    {showLoading ? <Loading size={30} color={loadingColor} style={{display: 'flex', margin: 'auto'}} /> : children}
+  </a>
+);

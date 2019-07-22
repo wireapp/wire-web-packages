@@ -1,9 +1,28 @@
-import Cryptobox from './Cryptobox';
-import CryptoboxSession from './CryptoboxSession';
-import DecryptionError from './DecryptionError';
-import * as error from './error/';
-import InvalidPreKeyFormatError from './InvalidPreKeyFormatError';
-import {SerializedCryptobox} from './SerializedCryptobox';
-import * as store from './store/';
+/*
+ * Wire
+ * Copyright (C) 2018 Wire Swiss GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see http://www.gnu.org/licenses/.
+ *
+ */
 
-export {Cryptobox, CryptoboxSession, DecryptionError, InvalidPreKeyFormatError, error, store, SerializedCryptobox};
+export * from './Cryptobox';
+export * from './CryptoboxSession';
+export * from './DecryptionError';
+export * from './InvalidPreKeyFormatError';
+export * from './SerializedCryptobox';
+
+import * as error from './error/';
+import * as store from './store/';
+export {error, store};

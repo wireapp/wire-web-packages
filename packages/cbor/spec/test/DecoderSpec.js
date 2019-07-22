@@ -141,14 +141,15 @@ describe('CBOR.Decoder', () => {
 
   it('decodes text', () => {
     expect('dfsdfsdf\r\nsdf\r\nhello\r\nsdfsfsdfs').toBe(
-      decoder('781f64667364667364660d0a7364660d0a68656c6c6f0d0a736466736673646673').text()
+      decoder('781f64667364667364660d0a7364660d0a68656c6c6f0d0a736466736673646673').text(),
     );
     expect('\u00fc').toBe(decoder('62c3bc').text());
   });
 
-  it('handles optional values', done => {
+  it('handles optional values', () => {
     try {
       decoder('f6').u8();
+      fail();
     } catch (error) {
       expect(error instanceof CBOR.DecodeError);
       expect(error.message).toEqual(CBOR.DecodeError.UNEXPECTED_TYPE);
@@ -158,8 +159,6 @@ describe('CBOR.Decoder', () => {
 
       decoded = decoder('01');
       expect(1).toBe(decoded.optional(() => decoded.u8()));
-
-      done();
     }
   });
 

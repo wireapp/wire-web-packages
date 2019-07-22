@@ -23,34 +23,34 @@ import {HttpClient} from '../../http/';
 import {MemberData, Members} from '../member/';
 import {TeamAPI} from '../team/TeamAPI';
 
-class MemberAPI {
+export class MemberAPI {
   constructor(private readonly client: HttpClient) {}
 
-  static get URL() {
-    return {
-      MEMBERS: 'members',
-    };
-  }
+  static URL = {
+    MEMBERS: 'members',
+  };
 
-  public getMembers(teamId: string): Promise<Members> {
+  public async getMembers(teamId: string): Promise<Members> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${TeamAPI.URL.TEAMS}/${teamId}/${MemberAPI.URL.MEMBERS}`,
     };
 
-    return this.client.sendJSON<Members>(config).then(response => response.data);
+    const response = await this.client.sendJSON<Members>(config);
+    return response.data;
   }
 
-  public getMember(teamId: string, userId: string): Promise<void> {
+  public async getMember(teamId: string, userId: string): Promise<MemberData> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${TeamAPI.URL.TEAMS}/${teamId}/${MemberAPI.URL.MEMBERS}/${userId}`,
     };
 
-    return this.client.sendJSON<void>(config).then(response => response.data);
+    const response = await this.client.sendJSON<MemberData>(config);
+    return response.data;
   }
 
-  public deleteMember(teamId: string, userId: string, password: string): Promise<void> {
+  public async deleteMember(teamId: string, userId: string, password: string): Promise<void> {
     const config: AxiosRequestConfig = {
       data: {
         password,
@@ -59,10 +59,10 @@ class MemberAPI {
       url: `${TeamAPI.URL.TEAMS}/${teamId}/${MemberAPI.URL.MEMBERS}/${userId}`,
     };
 
-    return this.client.sendJSON<void>(config).then(response => response.data);
+    await this.client.sendJSON(config);
   }
 
-  public postMembers(teamId: string, member: MemberData): Promise<void> {
+  public async postMembers(teamId: string, member: MemberData): Promise<void> {
     const config: AxiosRequestConfig = {
       data: {
         member: member,
@@ -71,10 +71,10 @@ class MemberAPI {
       url: `${TeamAPI.URL.TEAMS}/${teamId}/${MemberAPI.URL.MEMBERS}`,
     };
 
-    return this.client.sendJSON<void>(config).then(response => response.data);
+    await this.client.sendJSON(config);
   }
 
-  public putMembers(teamId: string, member: MemberData): Promise<void> {
+  public async putMembers(teamId: string, member: MemberData): Promise<void> {
     const config: AxiosRequestConfig = {
       data: {
         member: member,
@@ -83,8 +83,6 @@ class MemberAPI {
       url: `${TeamAPI.URL.TEAMS}/${teamId}/${MemberAPI.URL.MEMBERS}`,
     };
 
-    return this.client.sendJSON<void>(config).then(response => response.data);
+    await this.client.sendJSON(config);
   }
 }
-
-export {MemberAPI};

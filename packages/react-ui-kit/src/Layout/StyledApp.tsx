@@ -17,40 +17,31 @@
  *
  */
 
-import * as React from 'react';
-import styled from 'styled-components';
-import GlobalStyle from '../globalStyles';
+/** @jsx jsx */
+import {ObjectInterpolation, jsx} from '@emotion/core';
+import {GlobalStyle} from '../GlobalStyle';
 import {COLOR} from '../Identity';
+import {filterProps} from '../util';
 
-export interface StyledAppProps {
+export interface StyledAppContainerProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   backgroundColor?: string;
 }
 
-const StyledAppContainer = styled.div<StyledAppProps & React.HTMLAttributes<HTMLDivElement>>`
-  background-color: ${props => props.backgroundColor};
-  color: ${COLOR.TEXT};
-  display: flex;
-  flex-direction: column;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif;
-  font-weight: 300;
-  line-height: 1.5;
-  min-height: 100vh;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  * {
-    box-sizing: border-box;
-  }
-`;
+const styledAppContainerStyle: <T>(props: StyledAppContainerProps<T>) => ObjectInterpolation<undefined> = ({
+  backgroundColor = COLOR.GRAY_LIGHTEN_88,
+}) => ({
+  background: backgroundColor,
+});
 
-StyledAppContainer.defaultProps = {
-  backgroundColor: COLOR.GRAY_LIGHTEN_88,
-};
+const filterStyledAppContainerProps = (props: StyledAppContainerProps) => filterProps(props, ['backgroundColor']);
 
-const StyledApp = ({children, ...props}) => (
+const StyledAppContainer = (props: StyledAppContainerProps) => (
+  <div css={styledAppContainerStyle(props)} {...filterStyledAppContainerProps(props)} />
+);
+
+export const StyledApp = ({children, ...props}) => (
   <StyledAppContainer {...props}>
     <GlobalStyle />
     {children}
   </StyledAppContainer>
 );
-
-export {StyledApp};

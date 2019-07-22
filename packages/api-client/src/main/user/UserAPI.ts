@@ -19,6 +19,7 @@
 
 import {AxiosRequestConfig} from 'axios';
 
+import {ArrayUtil} from '@wireapp/commons';
 import {ClientPreKey, PreKeyBundle} from '../auth/';
 import {PublicClient} from '../client/';
 import {UserClients} from '../conversation/UserClients';
@@ -37,7 +38,8 @@ import {
   VerifyDelete,
 } from '../user/';
 
-class UserAPI {
+export class UserAPI {
+  static readonly DEFAULT_USERS_CHUNK_SIZE = 50;
   static readonly URL = {
     ACTIVATE: '/activate',
     CALLS: '/calls',
@@ -88,7 +90,7 @@ class UserAPI {
    * @param activationKey Activation key
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/activate
    */
-  public getActivation(activationCode: string, activationKey: string): Promise<ActivationResponse> {
+  public async getActivation(activationCode: string, activationKey: string): Promise<ActivationResponse> {
     const config: AxiosRequestConfig = {
       method: 'get',
       params: {
@@ -98,20 +100,22 @@ class UserAPI {
       url: UserAPI.URL.ACTIVATE,
     };
 
-    return this.client.sendJSON<ActivationResponse>(config).then(response => response.data);
+    const response = await this.client.sendJSON<ActivationResponse>(config);
+    return response.data;
   }
 
   /**
    * Retrieve TURN server addresses and credentials.
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getCallsConfig
    */
-  public getCallsConfiguration(): Promise<RTCConfiguration> {
+  public async getCallsConfiguration(): Promise<RTCConfiguration> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${UserAPI.URL.CALLS}/config`,
     };
 
-    return this.client.sendJSON<RTCConfiguration>(config).then(response => response.data);
+    const response = await this.client.sendJSON<RTCConfiguration>(config);
+    return response.data;
   }
 
   /**
@@ -120,13 +124,14 @@ class UserAPI {
    * @param clientId The client ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getUserClient
    */
-  public getClient(userId: string, clientId: string): Promise<PublicClient> {
+  public async getClient(userId: string, clientId: string): Promise<PublicClient> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${UserAPI.URL.USERS}/${userId}/${UserAPI.URL.CLIENTS}/${clientId}`,
     };
 
-    return this.client.sendJSON<PublicClient>(config).then(response => response.data);
+    const response = await this.client.sendJSON<PublicClient>(config);
+    return response.data;
   }
 
   /**
@@ -135,13 +140,14 @@ class UserAPI {
    * @param clientId The client ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getPrekey
    */
-  public getClientPreKey(userId: string, clientId: string): Promise<ClientPreKey> {
+  public async getClientPreKey(userId: string, clientId: string): Promise<ClientPreKey> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${UserAPI.URL.USERS}/${userId}/${UserAPI.URL.PRE_KEYS}/${clientId}`,
     };
 
-    return this.client.sendJSON<ClientPreKey>(config).then(response => response.data);
+    const response = await this.client.sendJSON<ClientPreKey>(config);
+    return response.data;
   }
 
   /**
@@ -149,13 +155,14 @@ class UserAPI {
    * @param userId The user ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getUserClients
    */
-  public getClients(userId: string): Promise<PublicClient[]> {
+  public async getClients(userId: string): Promise<PublicClient[]> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${UserAPI.URL.USERS}/${userId}/${UserAPI.URL.CLIENTS}`,
     };
 
-    return this.client.sendJSON<PublicClient[]>(config).then(response => response.data);
+    const response = await this.client.sendJSON<PublicClient[]>(config);
+    return response.data;
   }
 
   /**
@@ -163,26 +170,28 @@ class UserAPI {
    * @param handle The user's handle
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getUserHandleInfo
    */
-  public getHandle(handle: string): Promise<HandleInfo> {
+  public async getHandle(handle: string): Promise<HandleInfo> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${UserAPI.URL.USERS}/${UserAPI.URL.HANDLES}/${handle}`,
     };
 
-    return this.client.sendJSON<HandleInfo>(config).then(response => response.data);
+    const response = await this.client.sendJSON<HandleInfo>(config);
+    return response.data;
   }
 
   /**
    * List all property keys.
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/listPropertyKeys
    */
-  public getProperties(): Promise<string[]> {
+  public async getProperties(): Promise<string[]> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: UserAPI.URL.PROPERTIES,
     };
 
-    return this.client.sendJSON<string[]>(config).then(response => response.data);
+    const response = await this.client.sendJSON<string[]>(config);
+    return response.data;
   }
 
   /**
@@ -190,13 +199,14 @@ class UserAPI {
    * @param propertyKey The property key to get
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getProperty
    */
-  public getProperty<T extends string>(propertyKey: string): Promise<{[key in T]: any}> {
+  public async getProperty<T extends string>(propertyKey: T): Promise<Record<T, any>> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${UserAPI.URL.PROPERTIES}/${propertyKey}`,
     };
 
-    return this.client.sendJSON<{[key in T]: any}>(config).then(response => response.data);
+    const response = await this.client.sendJSON<Record<T, any>>(config);
+    return response.data;
   }
 
   /**
@@ -205,7 +215,7 @@ class UserAPI {
    * @param limit Number of results to return
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/search
    */
-  public getSearchContacts(query: string, limit?: number): Promise<SearchResult> {
+  public async getSearchContacts(query: string, limit?: number): Promise<SearchResult> {
     const config: AxiosRequestConfig = {
       method: 'get',
       params: {
@@ -218,7 +228,8 @@ class UserAPI {
       config.params.size = limit;
     }
 
-    return this.client.sendJSON<SearchResult>(config).then(response => response.data);
+    const response = await this.client.sendJSON<SearchResult>(config);
+    return response.data;
   }
 
   /**
@@ -226,26 +237,28 @@ class UserAPI {
    * @param userId The user ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/user
    */
-  public getUser(userId: string): Promise<User> {
+  public async getUser(userId: string): Promise<User> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${UserAPI.URL.USERS}/${userId}`,
     };
 
-    return this.client.sendJSON<User>(config).then(response => response.data);
+    const response = await this.client.sendJSON<User>(config);
+    return response.data;
   }
 
   /**
    * Get a prekey for each client of a user.
    * @param userId
    */
-  public getUserPreKeys(userId: string): Promise<PreKeyBundle> {
+  public async getUserPreKeys(userId: string): Promise<PreKeyBundle> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${UserAPI.URL.USERS}/${userId}/${UserAPI.URL.PRE_KEYS}`,
     };
 
-    return this.client.sendJSON<PreKeyBundle>(config).then(response => response.data);
+    const response = await this.client.sendJSON<PreKeyBundle>(config);
+    return response.data;
   }
 
   /**
@@ -254,7 +267,34 @@ class UserAPI {
    * @param parameters Multiple user's handles or IDs
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/users
    */
-  public getUsers(parameters: {handles?: string[]; ids?: string[]}): Promise<User[]> {
+  public async getUsers(parameters: {ids: string[]}, limit?: number): Promise<User[]>;
+  public async getUsers(parameters: {handles: string[]}, limit?: number): Promise<User[]>;
+  public async getUsers(
+    parameters: {ids?: string[]; handles?: string[]},
+    limit: number = UserAPI.DEFAULT_USERS_CHUNK_SIZE,
+  ): Promise<User[]> {
+    const {handles, ids} = parameters;
+
+    if (handles && handles.length) {
+      const uniqueHandles = ArrayUtil.removeDuplicates(handles);
+      const handleChunks = ArrayUtil.chunk(uniqueHandles, limit);
+      const resolvedTasks = await Promise.all(handleChunks.map(handleChunk => this._getUsers({handles: handleChunk})));
+      return ArrayUtil.flatten(resolvedTasks);
+    }
+
+    if (ids && ids.length) {
+      const uniqueIds = ArrayUtil.removeDuplicates(ids);
+      const idChunks = ArrayUtil.chunk(uniqueIds, limit);
+      const resolvedTasks = await Promise.all(idChunks.map(idChunk => this._getUsers({ids: idChunk})));
+      return ArrayUtil.flatten(resolvedTasks);
+    }
+
+    return [];
+  }
+
+  private async _getUsers(parameters: {ids: string[]}): Promise<User[]>;
+  private async _getUsers(parameters: {handles: string[]}): Promise<User[]>;
+  private async _getUsers(parameters: {handles?: string[]; ids?: string[]}): Promise<User[]> {
     const config: AxiosRequestConfig = {
       method: 'get',
       params: {},
@@ -267,30 +307,19 @@ class UserAPI {
       config.params.ids = parameters.ids.join(',');
     }
 
-    return this.client.sendJSON<User[]>(config).then(response => response.data);
+    const response = await this.client.sendJSON<User[]>(config);
+    return response.data;
   }
 
   /**
-   * List users.
+   * DEPRECATED: List users.
+   * @deprecated
    * @param userIds Multiple user's IDs
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/users
    */
   public async getUsersByIds(userIds: string[]): Promise<User[]> {
     const maxChunkSize = 100;
-    let allUsers: User[] = [];
-
-    for (let index = 0; index < userIds.length; index += maxChunkSize) {
-      const requestChunk = userIds.slice(index, index + maxChunkSize);
-      if (requestChunk.length) {
-        const conversationChunk = await this.getUsers({ids: requestChunk});
-
-        if (conversationChunk.length) {
-          allUsers = allUsers.concat(conversationChunk);
-        }
-      }
-    }
-
-    return allUsers;
+    return this.getUsers({ids: userIds}, maxChunkSize);
   }
 
   /**
@@ -299,14 +328,15 @@ class UserAPI {
    * @param activationData Data to activate an account
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/activate_0
    */
-  public postActivation(activationData: Activate): Promise<ActivationResponse> {
+  public async postActivation(activationData: Activate): Promise<ActivationResponse> {
     const config: AxiosRequestConfig = {
       data: activationData,
       method: 'post',
       url: UserAPI.URL.ACTIVATE,
     };
 
-    return this.client.sendJSON<ActivationResponse>(config).then(response => response.data);
+    const response = await this.client.sendJSON<ActivationResponse>(config);
+    return response.data;
   }
 
   /**
@@ -344,14 +374,15 @@ class UserAPI {
    * @param handles The handles to check
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/checkUserHandles
    */
-  public postHandles(handles: CheckHandles): Promise<string[]> {
+  public async postHandles(handles: CheckHandles): Promise<string[]> {
     const config: AxiosRequestConfig = {
       data: handles,
       method: 'post',
       url: `${UserAPI.URL.USERS}/${UserAPI.URL.HANDLES}`,
     };
 
-    return this.client.sendJSON<string[]>(config).then(response => response.data);
+    const response = await this.client.sendJSON<string[]>(config);
+    return response.data;
   }
 
   /**
@@ -360,14 +391,15 @@ class UserAPI {
    * @param userClientMap A map of the user's clients
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getMultiPrekeyBundles
    */
-  public postMultiPreKeyBundles(userClientMap: UserClients): Promise<UserPreKeyBundleMap> {
+  public async postMultiPreKeyBundles(userClientMap: UserClients): Promise<UserPreKeyBundleMap> {
     const config: AxiosRequestConfig = {
       data: userClientMap,
       method: 'post',
       url: `${UserAPI.URL.USERS}/${UserAPI.URL.PRE_KEYS}`,
     };
 
-    return this.client.sendJSON<UserPreKeyBundleMap>(config).then(response => response.data);
+    const response = await this.client.sendJSON<UserPreKeyBundleMap>(config);
+    return response.data;
   }
 
   /**
@@ -392,7 +424,7 @@ class UserAPI {
    * @param propertyData The property data to set
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/setProperty
    */
-  public async putProperty(propertyKey: string, propertyData: Object): Promise<void> {
+  public async putProperty<T extends string>(propertyKey: T, propertyData: Record<T, any>): Promise<void> {
     const config: AxiosRequestConfig = {
       data: propertyData,
       method: 'put',
@@ -402,5 +434,3 @@ class UserAPI {
     await this.client.sendJSON(config);
   }
 }
-
-export {UserAPI};

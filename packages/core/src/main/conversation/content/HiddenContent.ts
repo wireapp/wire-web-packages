@@ -16,9 +16,6 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-interface HiddenContent {
-  conversationId: string;
-  originalMessageId: string;
-}
 
-export {HiddenContent};
+import {IMessageHide} from '@wireapp/protocol-messaging';
+export {IMessageHide as HiddenContent};

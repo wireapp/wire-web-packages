@@ -17,9 +17,9 @@
  *
  */
 
-import Type from './Type';
+import {Type} from './Type';
 
-class Encoder {
+export class Encoder {
   private buffer: ArrayBuffer;
   private view: DataView;
 
@@ -364,5 +364,3 @@ class Encoder {
     return this;
   }
 }
-
-export default Encoder;

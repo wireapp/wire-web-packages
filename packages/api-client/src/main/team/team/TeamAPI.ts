@@ -21,58 +21,57 @@ import {AxiosRequestConfig} from 'axios';
 
 import {NewTeamData, TeamChunkData, TeamData} from '../';
 import {HttpClient} from '../../http/';
+import {UpdateTeamData} from './UpdateTeamData';
 
-class TeamAPI {
+export class TeamAPI {
   constructor(private readonly client: HttpClient) {}
 
-  static get URL() {
-    return {
-      TEAMS: '/teams',
-    };
-  }
+  static URL = {
+    TEAMS: '/teams',
+  };
 
-  public postTeam(team: NewTeamData): Promise<void> {
+  public async postTeam(team: NewTeamData): Promise<void> {
     const config: AxiosRequestConfig = {
       data: team,
       method: 'post',
       url: `${TeamAPI.URL.TEAMS}`,
     };
 
-    return this.client.sendJSON(config).then(response => response.headers['location']);
+    const response = await this.client.sendJSON(config);
+    return response.headers['location'];
   }
 
-  public putTeam(team: TeamData): Promise<void> {
+  public async putTeam(teamId: string, teamData: UpdateTeamData): Promise<void> {
     const config: AxiosRequestConfig = {
-      data: {
-        icon: team.icon,
-        name: team.name,
-      },
+      data: teamData,
       method: 'put',
-      url: `${TeamAPI.URL.TEAMS}/${team.id}`,
+      url: `${TeamAPI.URL.TEAMS}/${teamId}`,
     };
 
-    return this.client.sendJSON<void>(config).then(response => response.data);
+    await this.client.sendJSON(config);
   }
 
-  public getTeams(): Promise<TeamChunkData> {
+  public async getTeams(): Promise<TeamChunkData> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${TeamAPI.URL.TEAMS}`,
     };
 
-    return this.client.sendJSON<TeamChunkData>(config).then(response => response.data);
+    const response = await this.client.sendJSON<TeamChunkData>(config);
+    return response.data;
   }
 
-  public getTeam(teamId: string): Promise<TeamData> {
+  public async getTeam(teamId: string): Promise<TeamData> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${TeamAPI.URL.TEAMS}/${teamId}`,
     };
 
-    return this.client.sendJSON<TeamData>(config).then(response => response.data);
+    const response = await this.client.sendJSON<TeamData>(config);
+    return response.data;
   }
 
-  public deleteTeam(teamId: string, password: string): Promise<void> {
+  public async deleteTeam(teamId: string, password: string): Promise<void> {
     const config: AxiosRequestConfig = {
       data: {
         password,
@@ -81,8 +80,6 @@ class TeamAPI {
       url: `${TeamAPI.URL.TEAMS}/${teamId}`,
     };
 
-    return this.client.sendJSON<void>(config).then(response => response.data);
+    await this.client.sendJSON(config);
   }
 }
-
-export {TeamAPI};

@@ -18,19 +18,20 @@
  */
 
 import * as hash from 'hash.js';
-import * as Long from 'long';
+import Long from 'long';
 
 import {AssetContent, ContentType, ConversationContent, LocationContent, TextContent} from '../conversation/content';
 
-type AvailableMessageContent = AssetContent | LocationContent | TextContent;
+export type AvailableMessageContent = AssetContent | LocationContent | TextContent;
 
-class MessageHashService {
+export class MessageHashService {
   private readonly messageContent: AvailableMessageContent;
   private readonly timestamp: number;
 
-  constructor(messageContent: AvailableMessageContent, timestamp?: number) {
+  constructor(messageContent: AvailableMessageContent, timestamp: number = Date.now()) {
     this.messageContent = messageContent;
-    this.timestamp = timestamp || Math.round(new Date().getTime() / 1000);
+    const unixTimestamp = new Date(timestamp).getTime();
+    this.timestamp = Math.floor(unixTimestamp / 1e3);
   }
 
   private createSha256Hash(buffer: Buffer): Buffer {
@@ -110,5 +111,3 @@ class MessageHashService {
     return this.createSha256Hash(buffer);
   }
 }
-
-export {MessageHashService};

@@ -20,15 +20,15 @@
 import * as CBOR from '@wireapp/cbor';
 import * as _sodium from 'libsodium-wrappers-sumo';
 
-import ArrayUtil from '../util/ArrayUtil';
-import ClassUtil from '../util/ClassUtil';
-import PublicKey from './PublicKey';
-import SecretKey from './SecretKey';
+import * as ArrayUtil from '../util/ArrayUtil';
+import * as ClassUtil from '../util/ClassUtil';
+import {PublicKey} from './PublicKey';
+import {SecretKey} from './SecretKey';
 
-import InputError from '../errors/InputError';
+import {InputError} from '../errors/InputError';
 
 /** Construct an ephemeral key pair. */
-class KeyPair {
+export class KeyPair {
   public_key: PublicKey;
   secret_key: SecretKey;
 
@@ -115,5 +115,3 @@ class KeyPair {
     return self;
   }
 }
-
-export default KeyPair;

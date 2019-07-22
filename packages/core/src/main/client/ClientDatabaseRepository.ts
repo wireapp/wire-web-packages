@@ -18,7 +18,7 @@
  */
 
 import {RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
-import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
+import {CRUDEngine} from '@wireapp/store-engine';
 import {CryptographyService} from '../cryptography/';
 import {MetaClient} from './ClientService';
 
@@ -26,7 +26,7 @@ export enum DatabaseStores {
   CLIENTS = 'clients',
 }
 
-class ClientDatabaseRepository {
+export class ClientDatabaseRepository {
   public static readonly STORES = DatabaseStores;
 
   public static KEYS = {
@@ -46,7 +46,7 @@ class ClientDatabaseRepository {
   public deleteLocalClient(): Promise<string> {
     return this.storeEngine.delete(
       ClientDatabaseRepository.STORES.CLIENTS,
-      ClientDatabaseRepository.KEYS.LOCAL_IDENTITY
+      ClientDatabaseRepository.KEYS.LOCAL_IDENTITY,
     );
   }
 
@@ -62,40 +62,44 @@ class ClientDatabaseRepository {
     return Promise.all(createClientTasks);
   }
 
-  public createLocalClient(client: RegisteredClient): Promise<MetaClient> {
+  public async createLocalClient(client: RegisteredClient): Promise<MetaClient> {
     const transformedClient = this.transformLocalClient(client);
-    return this.storeEngine
-      .create(ClientDatabaseRepository.STORES.CLIENTS, ClientDatabaseRepository.KEYS.LOCAL_IDENTITY, transformedClient)
-      .then(() => transformedClient);
+    await this.storeEngine.create(
+      ClientDatabaseRepository.STORES.CLIENTS,
+      ClientDatabaseRepository.KEYS.LOCAL_IDENTITY,
+      transformedClient,
+    );
+    return transformedClient;
   }
 
-  public updateLocalClient(client: RegisteredClient): Promise<MetaClient> {
+  public async updateLocalClient(client: RegisteredClient): Promise<MetaClient> {
     const transformedClient = this.transformLocalClient(client);
-    return this.storeEngine
-      .update(ClientDatabaseRepository.STORES.CLIENTS, ClientDatabaseRepository.KEYS.LOCAL_IDENTITY, transformedClient)
-      .then(() => transformedClient);
+    await this.storeEngine.update(
+      ClientDatabaseRepository.STORES.CLIENTS,
+      ClientDatabaseRepository.KEYS.LOCAL_IDENTITY,
+      transformedClient,
+    );
+    return transformedClient;
   }
 
-  public updateClient(userId: string, client: RegisteredClient): Promise<MetaClient> {
+  public async updateClient(userId: string, client: RegisteredClient): Promise<MetaClient> {
     const transformedClient = this.transformClient(userId, client);
-    return this.storeEngine
-      .update(
-        ClientDatabaseRepository.STORES.CLIENTS,
-        CryptographyService.constructSessionId(userId, client.id),
-        transformedClient
-      )
-      .then(() => transformedClient);
+    await this.storeEngine.update(
+      ClientDatabaseRepository.STORES.CLIENTS,
+      CryptographyService.constructSessionId(userId, client.id),
+      transformedClient,
+    );
+    return transformedClient;
   }
 
-  public createClient(userId: string, client: RegisteredClient): Promise<MetaClient> {
+  public async createClient(userId: string, client: RegisteredClient): Promise<MetaClient> {
     const transformedClient = this.transformClient(userId, client);
-    return this.storeEngine
-      .create(
-        ClientDatabaseRepository.STORES.CLIENTS,
-        CryptographyService.constructSessionId(userId, client.id),
-        transformedClient
-      )
-      .then(() => transformedClient);
+    await this.storeEngine.create(
+      ClientDatabaseRepository.STORES.CLIENTS,
+      CryptographyService.constructSessionId(userId, client.id),
+      transformedClient,
+    );
+    return transformedClient;
   }
 
   private transformClient(userId: string, client: RegisteredClient, verified: boolean = false): MetaClient {
@@ -112,5 +116,3 @@ class ClientDatabaseRepository {
     };
   }
 }
-
-export default ClientDatabaseRepository;

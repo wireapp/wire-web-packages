@@ -1,0 +1,90 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true
+  },
+  "extends": ["prettier", "plugin:react/recommended", "plugin:no-unsanitized/DOM"],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
+  "plugins": ["import", "jsdoc", "no-unsanitized", "prettier", "react", "simple-import-sort", "sort-keys-fix"],
+  "rules": {
+    "curly": "error",
+    "dot-notation": "error",
+    "id-length": "error",
+    "import/no-default-export": "error",
+    "jsdoc/require-hyphen-before-param-description": "error",
+    "no-console": [
+      "error",
+      {
+        "allow": ["error", "info"]
+      }
+    ],
+    "no-const-assign": "error",
+    "no-dupe-class-members": "error",
+    "no-else-return": "error",
+    "no-inner-declarations": "error",
+    "no-lonely-if": "error",
+    "no-magic-numbers": [
+      "error",
+      {
+        "ignore": [-1, 0, 1, 2]
+      }
+    ],
+    "no-shadow": "error",
+    "no-trailing-spaces": "error",
+    "no-undef": "error",
+    "no-unneeded-ternary": "error",
+    "no-unused-expressions": "error",
+    "no-unused-vars": [
+      "error",
+      {
+        "args": "none"
+      }
+    ],
+    "no-useless-return": "error",
+    "no-var": "error",
+    "one-var": ["error", "never"],
+    "prefer-arrow-callback": "error",
+    "prefer-const": "error",
+    "prefer-promise-reject-errors": "error",
+    "prefer-spread": "error",
+    "prefer-template": "error",
+    "prettier/prettier": "error",
+    "react/jsx-uses-vars": "error",
+    "react/prefer-stateless-function": "error",
+    "react/prop-types": "off",
+    "simple-import-sort/sort": "error",
+    "sort-keys-fix/sort-keys-fix": "error",
+    "sort-vars": "error",
+    "strict": ["error", "global"],
+    "valid-jsdoc": [
+      "error",
+      {
+        "prefer": {
+          "class": "class",
+          "return": "returns"
+        },
+        "preferType": {
+          "Boolean": "boolean",
+          "Number": "number",
+          "object": "Object",
+          "String": "string"
+        },
+        "requireParamDescription": true,
+        "requireReturnDescription": true
+      }
+    ]
+  },
+  "settings": {
+    "react": {
+      "version": "latest"
+    }
+  }
+}

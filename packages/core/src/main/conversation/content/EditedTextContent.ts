@@ -19,8 +19,7 @@
 
 import {QuoteContent, TextContent} from '../content/';
 
-interface EditedTextContent extends TextContent {
-  expectsReadConfirmation?: boolean;
+export interface EditedTextContent extends TextContent {
   originalMessageId: string;
   /**
    * While this field exists in the Protobuf spec, it should be
@@ -30,5 +29,3 @@ interface EditedTextContent extends TextContent {
    */
   quote?: QuoteContent;
 }
-
-export {EditedTextContent};

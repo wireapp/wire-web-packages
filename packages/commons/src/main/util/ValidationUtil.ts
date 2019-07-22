@@ -17,7 +17,26 @@
  *
  */
 
+export const PATTERN = {
+  UUID_V4: '[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}',
+};
+
 export function isUUIDv4(candidate: string): boolean {
-  const uuidv4Regex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  const uuidv4Regex = new RegExp(`^${PATTERN.UUID_V4}$`, 'i');
   return uuidv4Regex.test(candidate);
+}
+
+export function isValidEmail(email: string): boolean {
+  const regExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return regExp.test(email);
+}
+
+export const DEFAULT_PASSWORD_MIN_LENGTH = 8;
+export const DEFAULT_PASSWORD_MAX_LENGTH = 120;
+
+export function getNewPasswordPattern(
+  minLength = DEFAULT_PASSWORD_MIN_LENGTH,
+  maxLength = DEFAULT_PASSWORD_MAX_LENGTH,
+): string {
+  return `(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^0-9a-zA-Z]).{${minLength},${maxLength}}$`;
 }

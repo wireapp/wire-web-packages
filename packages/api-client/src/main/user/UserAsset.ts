@@ -17,10 +17,13 @@
  *
  */
 
-interface UserAsset {
-  key: string;
-  size: 'complete' | 'preview';
-  type: 'image';
+export enum UserAssetType {
+  COMPLETE = 'complete',
+  PREVIEW = 'preview',
 }
 
-export {UserAsset};
+export interface UserAsset {
+  key: string;
+  size: UserAssetType;
+  type: 'image';
+}

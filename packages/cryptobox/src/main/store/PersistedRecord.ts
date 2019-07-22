@@ -1,19 +1,36 @@
-import Cryptobox from '../Cryptobox';
+/*
+ * Wire
+ * Copyright (C) 2018 Wire Swiss GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see http://www.gnu.org/licenses/.
+ *
+ */
 
-// Record that is read from the store
-class PersistedRecord {
+import {Cryptobox} from '../Cryptobox';
+
+/** Record that is read from the store */
+export class PersistedRecord {
   public created: number;
   public id: string;
+  /** for backward compatibility "serialised" can be an `ArrayBuffer` or Base64-encoded */
   public serialised: ArrayBuffer | string;
   public version: string;
 
   constructor(serialised: ArrayBuffer, id: string) {
     this.created = Date.now();
     this.id = id;
-    this.serialised = serialised; // For backward compatibility "serialised" can be an ArrayBuffer or Base64-encoded
-    // String.
+    this.serialised = serialised;
     this.version = Cryptobox.VERSION;
   }
 }
-
-export {PersistedRecord};

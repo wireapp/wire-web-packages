@@ -17,26 +17,27 @@
  *
  */
 
-import styled from 'styled-components';
+/** @jsx jsx */
+import {ObjectInterpolation, jsx} from '@emotion/core';
 import {COLOR} from '../Identity';
-import {Text, TextProps} from '../Text';
+import {Text, TextProps, linkStyle, textStyle} from '../Text';
 
-const ErrorMessage = styled(Text)<TextProps & React.HTMLAttributes<HTMLSpanElement>>`
-  display: block;
-  margin-bottom: 12px;
-  a {
-    color: ${COLOR.LINK};
-    text-decoration: none;
-  }
-`;
+type ErrorMessageProps<T = HTMLSpanElement> = TextProps<T>;
 
-ErrorMessage.defaultProps = {
-  ...Text.defaultProps,
-  bold: true,
-  center: true,
-  color: COLOR.RED,
-  fontSize: '11px',
-  textTransform: 'uppercase',
-};
+export const errorMessageStyle: <T>(props: ErrorMessageProps<T>) => ObjectInterpolation<undefined> = ({
+  bold = true,
+  center = true,
+  color = COLOR.RED,
+  fontSize = '11px',
+  textTransform = 'uppercase',
+  ...props
+}) => ({
+  ...textStyle({bold, center, color, fontSize, textTransform, ...props}),
+  a: {
+    ...linkStyle({bold, fontSize, textTransform}),
+  },
+  display: 'block',
+  marginBottom: '12px',
+});
 
-export {ErrorMessage};
+export const ErrorMessage = (props: ErrorMessageProps) => <Text css={errorMessageStyle(props)} {...props} />;

@@ -16,8 +16,6 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-interface DeletedContent {
-  originalMessageId: string;
-}
 
-export {DeletedContent};
+import {IMessageDelete} from '@wireapp/protocol-messaging';
+export {IMessageDelete as DeletedContent};

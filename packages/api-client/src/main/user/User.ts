@@ -17,18 +17,18 @@
  *
  */
 
+import {AccentColor} from '@wireapp/commons';
 import {ServiceRef} from '../conversation/';
 import {UserAsset} from '../user/';
 
-interface User {
-  accent_id?: number;
+export interface User {
+  accent_id?: AccentColor.AccentColorID;
   assets: UserAsset[];
   deleted?: boolean;
+  email?: string;
   expires_at?: string;
   handle?: string;
   id: string;
   name: string;
   service?: ServiceRef;
 }
-
-export {User};

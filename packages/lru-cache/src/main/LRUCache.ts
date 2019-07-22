@@ -17,9 +17,7 @@
  *
  */
 
-export interface NodeMap<T> {
-  [index: string]: T;
-}
+export type NodeMap<T> = Record<string, T>;
 
 export interface Node<T> {
   key: string;
@@ -28,12 +26,12 @@ export interface Node<T> {
   previous: Node<T> | null;
 }
 
-class LRUCache<T> {
+export class LRUCache<T> {
   private map: NodeMap<Node<T>>;
   private head: Node<T> | null;
   private end: Node<T> | null;
 
-  constructor(private readonly capacity: number = 100) {
+  constructor(public readonly capacity: number = 100) {
     this.map = {};
     this.head = null;
     this.end = null;
@@ -158,6 +156,16 @@ class LRUCache<T> {
     return undefined;
   }
 
+  public setOnce(key: string, value: T): T | undefined {
+    const matchedNode = this.map[key];
+
+    if (matchedNode) {
+      return undefined;
+    } else {
+      return this.set(key, value);
+    }
+  }
+
   private setHead(node: Node<T>): void {
     node.next = this.head;
     node.previous = null;
@@ -201,5 +209,3 @@ class LRUCache<T> {
     }
   }
 }
-
-export {LRUCache};

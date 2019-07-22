@@ -17,14 +17,13 @@
  *
  */
 
-import {error as StoreEngineError} from '@wireapp/store-engine';
-import {CRUDEngine} from '@wireapp/store-engine/dist/commonjs/engine/';
+import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
-import * as logdown from 'logdown';
+import logdown from 'logdown';
 import {Cookie as ToughCookie} from 'tough-cookie';
 import {AUTH_COOKIE_KEY, AUTH_TABLE_NAME, AccessTokenData, Cookie} from '../../auth/';
 import {HttpClient} from '../../http/';
-import {ObfuscationUtil} from '../../obfuscation/';
+import * as ObfuscationUtil from '../../obfuscation/';
 
 interface PersistedCookie {
   expiration: string;
@@ -36,29 +35,29 @@ const logger = logdown('@wireapp/api-client/shims/node/cookie', {
   markdown: false,
 });
 
-const loadExistingCookie = (engine: CRUDEngine): Promise<Cookie> => {
-  return engine
-    .read<PersistedCookie>(AUTH_TABLE_NAME, AUTH_COOKIE_KEY)
-    .catch((error: Error) => {
-      if (
-        error instanceof StoreEngineError.RecordNotFoundError ||
-        error.constructor.name === StoreEngineError.RecordNotFoundError.name
-      ) {
-        return new Cookie('', '0');
-      }
+const loadExistingCookie = async (engine: CRUDEngine): Promise<Cookie> => {
+  try {
+    const {expiration, zuid} = await engine.read<PersistedCookie>(AUTH_TABLE_NAME, AUTH_COOKIE_KEY);
+    return new Cookie(zuid, expiration);
+  } catch (error) {
+    const notFound =
+      error instanceof StoreEngineError.RecordNotFoundError ||
+      error.constructor.name === StoreEngineError.RecordNotFoundError.name;
 
-      throw error;
-    })
-    .then((fileContent: PersistedCookie) => {
-      return typeof fileContent === 'object'
-        ? new Cookie(fileContent.zuid, fileContent.expiration)
-        : new Cookie('', '0');
-    });
+    if (notFound) {
+      return new Cookie('', '0');
+    }
+
+    throw error;
+  }
 };
 
 const setInternalCookie = (cookie: Cookie, engine: CRUDEngine): Promise<string> => {
   const entity: PersistedCookie = {expiration: cookie.expiration, zuid: cookie.zuid};
-  return engine.create(AUTH_TABLE_NAME, AUTH_COOKIE_KEY, entity).catch(error => {
+
+  try {
+    return engine.create(AUTH_TABLE_NAME, AUTH_COOKIE_KEY, entity);
+  } catch (error) {
     if (
       error instanceof StoreEngineError.RecordAlreadyExistsError ||
       error.constructor.name === StoreEngineError.RecordAlreadyExistsError.name
@@ -67,7 +66,7 @@ const setInternalCookie = (cookie: Cookie, engine: CRUDEngine): Promise<string> 
     } else {
       throw error;
     }
-  });
+  }
 };
 
 export const retrieveCookie = async (response: AxiosResponse, engine: CRUDEngine): Promise<AccessTokenData> => {
@@ -77,7 +76,7 @@ export const retrieveCookie = async (response: AxiosResponse, engine: CRUDEngine
       await setInternalCookie(new Cookie(cookie.value, cookie.expires), engine);
       logger.info(
         `Saved internal cookie. It will expire on "${cookie.expires}".`,
-        ObfuscationUtil.obfuscateCookie(cookie)
+        ObfuscationUtil.obfuscateCookie(cookie),
       );
     }
   }
@@ -86,18 +85,16 @@ export const retrieveCookie = async (response: AxiosResponse, engine: CRUDEngine
 };
 
 // https://github.com/wearezeta/backend-api-docs/wiki/API-User-Authentication#token-refresh
-export const sendRequestWithCookie = <T>(
+export const sendRequestWithCookie = async <T>(
   client: HttpClient,
   config: AxiosRequestConfig,
-  engine: CRUDEngine
+  engine: CRUDEngine,
 ): Promise<AxiosResponse<T>> => {
-  return loadExistingCookie(engine).then((cookie: Cookie) => {
-    if (!cookie.isExpired) {
-      config.headers = config.headers || {};
-      config.headers['Cookie'] = `zuid=${cookie.zuid}`;
-      config.withCredentials = true;
-    }
-
-    return client._sendRequest<T>(config);
-  });
+  const cookie = await loadExistingCookie(engine);
+  if (!cookie.isExpired) {
+    config.headers = config.headers || {};
+    config.headers['Cookie'] = `zuid=${cookie.zuid}`;
+    config.withCredentials = true;
+  }
+  return client._sendRequest<T>(config);
 };
