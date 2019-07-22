@@ -17,8 +17,8 @@
  *
  */
 
-export class TransientBundle {
-  public expires: number = 0;
-  public payload: any;
-  public timeoutID?: number | NodeJS.Timer; // Note: Only cached values have a "timeoutID"
+export interface TransientBundle {
+  expires: number;
+  payload: any;
+  timeoutID?: number | NodeJS.Timer; // Note: Only cached values have a "timeoutID"
 }

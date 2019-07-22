@@ -179,32 +179,30 @@ export class FileSystemEngine implements CRUDEngine {
     return primaryKeys;
   }
 
-  update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  async update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
     const filePath = this.createFilePath(tableName, primaryKey);
-    return this.read(tableName, primaryKey)
-      .then((record: any) => {
-        if (typeof record === 'string') {
-          record = JSON.parse(record);
-        }
-        const updatedRecord: Object = {...record, ...changes};
-        return JSON.stringify(updatedRecord);
-      })
-      .then((updatedRecord: any) => fs.writeFile(filePath, updatedRecord))
-      .then(() => primaryKey);
+    let record = await this.read(tableName, primaryKey);
+    if (typeof record === 'string') {
+      record = JSON.parse(record);
+    }
+    const updatedRecord = JSON.stringify({...record, ...changes});
+    await fs.writeFile(filePath, updatedRecord);
+    return primaryKey;
   }
 
   async purge(): Promise<void> {
     await fs.rmdir(this.storeName);
   }
 
-  updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
-    return this.update(tableName, primaryKey, changes)
-      .catch(error => {
-        if (error instanceof RecordNotFoundError) {
-          return this.create(tableName, primaryKey, changes);
-        }
-        throw error;
-      })
-      .then(() => primaryKey);
+  async updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+    try {
+      await this.update(tableName, primaryKey, changes);
+    } catch (error) {
+      if (error instanceof RecordNotFoundError) {
+        return this.create(tableName, primaryKey, changes);
+      }
+      throw error;
+    }
+    return primaryKey;
   }
 }

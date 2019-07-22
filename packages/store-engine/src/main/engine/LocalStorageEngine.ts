@@ -49,74 +49,70 @@ export class LocalStorageEngine implements CRUDEngine {
     return `${this.storeName}@${tableName}@`;
   }
 
-  public create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
+  public async create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
     if (entity) {
-      const key: string = this.createKey(tableName, primaryKey);
-      return this.read(tableName, primaryKey)
-        .catch(error => {
-          if (error instanceof RecordNotFoundError) {
-            return undefined;
-          }
+      let record;
+      const key = this.createKey(tableName, primaryKey);
+
+      try {
+        record = await this.read(tableName, primaryKey);
+      } catch (error) {
+        if (!(error instanceof RecordNotFoundError)) {
           throw error;
-        })
-        .then(record => {
-          if (record) {
-            const message = `Record "${primaryKey}" already exists in "${tableName}". You need to delete the record first if you want to overwrite it.`;
-            throw new RecordAlreadyExistsError(message);
-          } else {
-            if (typeof record === 'string') {
-              window.localStorage.setItem(key, String(entity));
-            } else {
-              window.localStorage.setItem(key, JSON.stringify(entity));
-            }
-            return primaryKey;
-          }
-        });
-    }
-    const message = `Record "${primaryKey}" cannot be saved in "${tableName}" because it's "undefined" or "null".`;
-    return Promise.reject(new RecordTypeError(message));
-  }
-
-  public delete(tableName: string, primaryKey: string): Promise<string> {
-    return Promise.resolve().then(() => {
-      const key: string = this.createKey(tableName, primaryKey);
-      window.localStorage.removeItem(key);
-      return primaryKey;
-    });
-  }
-
-  public deleteAll(tableName: string): Promise<boolean> {
-    return Promise.resolve().then(() => {
-      Object.keys(localStorage).forEach((key: string) => {
-        const prefix = this.createPrefix(tableName);
-        if (key.startsWith(prefix)) {
-          localStorage.removeItem(key);
-        }
-      });
-      return true;
-    });
-  }
-
-  public read<T>(tableName: string, primaryKey: string): Promise<T> {
-    return Promise.resolve().then(() => {
-      const key = `${this.storeName}@${tableName}@${primaryKey}`;
-      const record = window.localStorage.getItem(key);
-      if (record) {
-        try {
-          return JSON.parse(record);
-        } catch (error) {
-          return record;
         }
       }
-      const message = `Record "${primaryKey}" in "${tableName}" could not be found.`;
-      throw new RecordNotFoundError(message);
+
+      if (record) {
+        const message = `Record "${primaryKey}" already exists in "${tableName}". You need to delete the record first if you want to overwrite it.`;
+        throw new RecordAlreadyExistsError(message);
+      } else {
+        if (typeof record === 'string') {
+          window.localStorage.setItem(key, String(entity));
+        } else {
+          window.localStorage.setItem(key, JSON.stringify(entity));
+        }
+        return primaryKey;
+      }
+    }
+
+    const message = `Record "${primaryKey}" cannot be saved in "${tableName}" because it's "undefined" or "null".`;
+    throw new RecordTypeError(message);
+  }
+
+  public async delete(tableName: string, primaryKey: string): Promise<string> {
+    const key = this.createKey(tableName, primaryKey);
+    window.localStorage.removeItem(key);
+    return primaryKey;
+  }
+
+  public async deleteAll(tableName: string): Promise<boolean> {
+    Object.keys(localStorage).forEach(key => {
+      const prefix = this.createPrefix(tableName);
+      if (key.startsWith(prefix)) {
+        localStorage.removeItem(key);
+      }
     });
+    return true;
+  }
+
+  public async read<T>(tableName: string, primaryKey: string): Promise<T> {
+    const key = `${this.storeName}@${tableName}@${primaryKey}`;
+    const record = window.localStorage.getItem(key);
+    if (record) {
+      try {
+        return JSON.parse(record);
+      } catch (error) {
+        return record as any;
+      }
+    }
+    const message = `Record "${primaryKey}" in "${tableName}" could not be found.`;
+    throw new RecordNotFoundError(message);
   }
 
   public readAll<T>(tableName: string): Promise<T[]> {
     const promises: Promise<T>[] = [];
 
-    Object.keys(localStorage).forEach((key: string) => {
+    Object.keys(localStorage).forEach(key => {
       const prefix = this.createPrefix(tableName);
       if (key.startsWith(prefix)) {
         const primaryKey = key.replace(prefix, '');
@@ -140,46 +136,43 @@ export class LocalStorageEngine implements CRUDEngine {
     return Promise.resolve(primaryKeys);
   }
 
-  public update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
-    return this.read(tableName, primaryKey)
-      .then(entity => {
-        return {...entity, ...changes};
-      })
-      .then(updatedEntity => {
-        return this.create(tableName, primaryKey, updatedEntity).catch(error => {
-          if (error instanceof RecordAlreadyExistsError) {
-            return this.delete(tableName, primaryKey).then(() => this.create(tableName, primaryKey, updatedEntity));
-          } else {
-            throw error;
-          }
-        });
-      });
-  }
-
-  public updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
-    return this.update(tableName, primaryKey, changes)
-      .catch(error => {
-        if (error instanceof RecordNotFoundError) {
-          return this.create(tableName, primaryKey, changes);
-        }
-        throw error;
-      })
-      .then(() => primaryKey);
-  }
-
-  append(tableName: string, primaryKey: string, additions: string): Promise<string> {
-    return this.read(tableName, primaryKey).then((record: any) => {
-      if (typeof record === 'string') {
-        record += additions;
+  public async update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+    const entity = await this.read(tableName, primaryKey);
+    const updatedEntity = {...entity, ...changes};
+    try {
+      return this.create(tableName, primaryKey, updatedEntity);
+    } catch (error) {
+      if (error instanceof RecordAlreadyExistsError) {
+        await this.delete(tableName, primaryKey);
+        return this.create(tableName, primaryKey, updatedEntity);
       } else {
-        const message = `Cannot append text to record "${primaryKey}" because it's not a string.`;
-        throw new RecordTypeError(message);
+        throw error;
       }
+    }
+  }
 
-      const key: string = this.createKey(tableName, primaryKey);
-      window.localStorage.setItem(key, record);
+  public async updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+    try {
+      await this.update(tableName, primaryKey, changes);
+    } catch (error) {
+      if (error instanceof RecordNotFoundError) {
+        return this.create(tableName, primaryKey, changes);
+      }
+      throw error;
+    }
+    return primaryKey;
+  }
 
-      return primaryKey;
-    });
+  async append(tableName: string, primaryKey: string, additions: string): Promise<string> {
+    let record = await this.read(tableName, primaryKey);
+    if (typeof record === 'string') {
+      record += additions;
+    } else {
+      const message = `Cannot append text to record "${primaryKey}" because it's not a string.`;
+      throw new RecordTypeError(message);
+    }
+    const key = this.createKey(tableName, primaryKey);
+    window.localStorage.setItem(key, record);
+    return primaryKey;
   }
 }
