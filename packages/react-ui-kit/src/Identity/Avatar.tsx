@@ -22,7 +22,7 @@ import {ObjectInterpolation, jsx} from '@emotion/core';
 import React, {useEffect, useRef} from 'react';
 import {filterProps} from '../util';
 
-interface Props<T = HTMLDivElement> extends React.HTMLProps<T> {
+export interface Props<T = HTMLDivElement> extends React.HTMLProps<T> {
   backgroundColor: string;
   base64Image?: string;
   borderColor?: string;
@@ -30,14 +30,15 @@ interface Props<T = HTMLDivElement> extends React.HTMLProps<T> {
   forceInitials?: boolean;
   name: string;
   size: number;
+  isAvatarGridItem?: boolean;
 }
 
 const avatarStyle: <T>(props: Props<T>) => ObjectInterpolation<undefined> = props => {
   const BORDER_SIZE_LIMIT = 32;
-  const {base64Image, forceInitials, borderColor, backgroundColor, size} = props;
+  const {base64Image, forceInitials, borderColor, backgroundColor, size, isAvatarGridItem} = props;
   const borderSize = size > BORDER_SIZE_LIMIT ? 2 : 1;
   const borderWidth = base64Image ? 0 : borderSize;
-  const fontSize = `${Math.ceil(size / 3)}px`;
+  const fontSize = `${Math.ceil(size / 2.2)}px`;
 
   return {
     alignItems: 'center',
@@ -45,11 +46,12 @@ const avatarStyle: <T>(props: Props<T>) => ObjectInterpolation<undefined> = prop
     backgroundImage: forceInitials ? undefined : base64Image && `url(data:image/png;base64,${base64Image})`,
     backgroundPosition: 'center',
     backgroundSize: 'cover',
-    borderRadius: '50%',
-    boxShadow: `inset 0 0 0 ${borderWidth}px ${borderColor}`,
-    color: 'white',
+    borderRadius: isAvatarGridItem ? '0' : '50%',
+    boxShadow: isAvatarGridItem ? 'none' : `inset 0 0 0 ${borderWidth}px ${borderColor}`,
+    color: isAvatarGridItem ? borderColor : 'white',
     display: 'flex',
     fontSize,
+    fontWeight: isAvatarGridItem ? 700 : 300,
     justifyContent: 'center',
     maxHeight: `${size}px`,
     maxWidth: `${size}px`,
@@ -59,10 +61,19 @@ const avatarStyle: <T>(props: Props<T>) => ObjectInterpolation<undefined> = prop
 };
 
 const filteredAvatarProps = (props: Props) =>
-  filterProps(props, ['size', 'forceInitials', 'name', 'base64Image', 'borderColor', 'backgroundColor', 'fetchImage']);
+  filterProps(props, [
+    'size',
+    'forceInitials',
+    'name',
+    'base64Image',
+    'borderColor',
+    'backgroundColor',
+    'fetchImage',
+    'isAvatarGridItem',
+  ]);
 
 export const Avatar = (props: Props) => {
-  const {base64Image, forceInitials, name, fetchImage} = props;
+  const {base64Image, forceInitials, name, fetchImage, isAvatarGridItem} = props;
   const element = useRef<HTMLDivElement>();
 
   const getInitials = (name: string) =>
@@ -70,7 +81,7 @@ export const Avatar = (props: Props) => {
       .split(' ')
       .map(([initial]) => initial && initial.toUpperCase())
       .join('')
-      .substring(0, 2);
+      .substring(0, isAvatarGridItem ? 1 : 2);
 
   useEffect(() => {
     let observer = undefined;
