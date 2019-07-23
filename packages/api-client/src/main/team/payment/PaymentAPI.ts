@@ -66,7 +66,7 @@ export class PaymentAPI {
     return response.data;
   }
 
-  public async deletePaymentData(teamId: string, paymentData: Object): Promise<PaymentData> {
+  public async deletePaymentData<T>(teamId: string, paymentData: T): Promise<PaymentData> {
     const config: AxiosRequestConfig = {
       data: paymentData,
       method: 'delete',
