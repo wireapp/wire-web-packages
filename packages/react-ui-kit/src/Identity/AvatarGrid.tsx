@@ -20,7 +20,7 @@
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import React from 'react';
-import {Props as AvatarProps} from '../Identity/';
+import {AvatarProps} from '../Identity/';
 import {filterProps} from '../util';
 import {Avatar} from './Avatar';
 import {COLOR} from './colors';

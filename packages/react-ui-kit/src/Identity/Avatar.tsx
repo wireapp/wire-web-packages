@@ -23,7 +23,7 @@ import React, {useEffect, useRef} from 'react';
 import {filterProps} from '../util';
 import {COLOR} from './colors';
 
-export interface Props<T = HTMLDivElement> extends React.HTMLProps<T> {
+export interface AvatarProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   backgroundColor?: string;
   base64Image?: string;
   borderColor?: string;
@@ -34,7 +34,7 @@ export interface Props<T = HTMLDivElement> extends React.HTMLProps<T> {
   size: number;
 }
 
-const avatarStyle: <T>(props: Props<T>) => ObjectInterpolation<undefined> = ({
+const avatarStyle: <T>(props: AvatarProps<T>) => ObjectInterpolation<undefined> = ({
   base64Image,
   forceInitials,
   borderColor,
@@ -67,7 +67,7 @@ const avatarStyle: <T>(props: Props<T>) => ObjectInterpolation<undefined> = ({
   };
 };
 
-const filteredAvatarProps = (props: Props) =>
+const filteredAvatarProps = (props: AvatarProps) =>
   filterProps(props, [
     'size',
     'forceInitials',
@@ -79,7 +79,7 @@ const filteredAvatarProps = (props: Props) =>
     'isAvatarGridItem',
   ]);
 
-export const Avatar = (props: Props) => {
+export const Avatar = (props: AvatarProps) => {
   const {base64Image, forceInitials, name, fetchImage, isAvatarGridItem} = props;
   const element = useRef<HTMLDivElement>();
 
