@@ -225,6 +225,7 @@ const Demo = () => {
               size={48}
               items={[{borderColor: '#EB7E00', name: 'Mick Jagger'}, {borderColor: '#359AD7', name: 'Freddy Mercury'}]}
             />
+            <AvatarGrid size={48} items={[{borderColor: '#EB7E00', name: 'Mick Jagger'}]} />
           </div>
         </Container>
         <DemoIcons />

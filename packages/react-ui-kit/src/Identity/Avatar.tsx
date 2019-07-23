@@ -21,21 +21,28 @@
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import React, {useEffect, useRef} from 'react';
 import {filterProps} from '../util';
+import {COLOR} from './colors';
 
 export interface Props<T = HTMLDivElement> extends React.HTMLProps<T> {
-  backgroundColor: string;
+  backgroundColor?: string;
   base64Image?: string;
   borderColor?: string;
   fetchImage?: () => void;
   forceInitials?: boolean;
+  isAvatarGridItem?: boolean;
   name: string;
   size: number;
-  isAvatarGridItem?: boolean;
 }
 
-const avatarStyle: <T>(props: Props<T>) => ObjectInterpolation<undefined> = props => {
+const avatarStyle: <T>(props: Props<T>) => ObjectInterpolation<undefined> = ({
+  base64Image,
+  forceInitials,
+  borderColor,
+  backgroundColor = COLOR.GRAY,
+  size,
+  isAvatarGridItem,
+}) => {
   const BORDER_SIZE_LIMIT = 32;
-  const {base64Image, forceInitials, borderColor, backgroundColor, size, isAvatarGridItem} = props;
   const borderSize = size > BORDER_SIZE_LIMIT ? 2 : 1;
   const borderWidth = base64Image ? 0 : borderSize;
   const fontSize = `${Math.ceil(size / 2.2)}px`;

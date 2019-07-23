@@ -30,18 +30,18 @@ interface Props<T = HTMLDivElement> extends React.HTMLProps<T> {
   size: number;
 }
 
-const avatarGridStyle: <T>(props: Props<T>) => ObjectInterpolation<undefined> = props => {
-  const {size} = props;
+const avatarGridStyle: <T>(props: Props<T>) => ObjectInterpolation<undefined> = ({size}) => {
+  const borderWidth = 2;
   return {
     alignItems: 'start',
-    backgroundColor: COLOR.GRAY_DARKEN_80,
-    border: `1px solid ${COLOR.GRAY_DARKEN_48}`,
-    borderRadius: '6px',
+    backgroundColor: COLOR.GRAY_DARKEN_48,
+    border: `${borderWidth}px solid ${COLOR.GRAY_DARKEN_48}`,
+    borderRadius: '10px',
     display: 'grid',
-    gridGap: 0,
+    gridGap: 2,
     gridTemplateColumns: 'repeat(2, 1fr)',
     justifyItems: 'center',
-    minHeight: size,
+    minHeight: `${size + borderWidth * 2}px`,
     overflow: 'hidden',
   };
 };
@@ -50,20 +50,30 @@ const filteredAvatarGridProps = (props: Props) => filterProps(props, []);
 
 export const AvatarGrid = (props: Props) => {
   const {size} = props;
+  const items = props.items.slice(0, 4);
+  const missing = 4 - items.length;
+  for (let index = 0; index < missing; index++) {
+    items.push(null);
+  }
   return (
     <div css={avatarGridStyle(props)} {...filteredAvatarGridProps(props)}>
-      {props.items.slice(0, 4).map(item => (
-        <React.Fragment key={Math.random().toString()}>
+      {items.map(item =>
+        item ? (
           <Avatar
-            backgroundColor={COLOR.GRAY_DARKEN_80}
+            key={Math.random().toString()}
+            backgroundColor={item.backgroundColor || COLOR.GRAY_DARKEN_80}
             base64Image={item.base64Image}
             borderColor={item.borderColor}
+            fetchImage={item.fetchImage}
+            forceInitials={item.forceInitials}
             isAvatarGridItem
             name={item.name}
             size={size / 2}
           />
-        </React.Fragment>
-      ))}
+        ) : (
+          <div css={{backgroundColor: COLOR.GRAY_DARKEN_80, width: size / 2, height: size / 2}} />
+        ),
+      )}
     </div>
   );
 };
