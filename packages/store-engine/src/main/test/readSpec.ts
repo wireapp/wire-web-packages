@@ -34,7 +34,7 @@ export const readSpec = {
       some: 'value',
     };
 
-    const primaryKey = await engine.create(TABLE_NAME, PRIMARY_KEY, entity);
+    const primaryKey = await engine.create(TABLE_NAME, entity, PRIMARY_KEY);
     const record = await engine.read<DomainEntity>(TABLE_NAME, primaryKey);
     expect(record.some).toBe(entity.some);
   },

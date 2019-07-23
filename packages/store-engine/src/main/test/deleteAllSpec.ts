@@ -48,9 +48,9 @@ export const deleteAllSpec = {
     };
 
     await Promise.all([
-      engine.create(TABLE_NAME, homer.primaryKey, homer.entity),
-      engine.create(TABLE_NAME, lisa.primaryKey, lisa.entity),
-      engine.create(TABLE_NAME, marge.primaryKey, marge.entity),
+      engine.create(TABLE_NAME, homer.entity, homer.primaryKey),
+      engine.create(TABLE_NAME, lisa.entity, lisa.primaryKey),
+      engine.create(TABLE_NAME, marge.entity, marge.primaryKey),
     ]);
     const hasBeenDeleted = await engine.deleteAll(TABLE_NAME);
     expect(hasBeenDeleted).toBe(true);

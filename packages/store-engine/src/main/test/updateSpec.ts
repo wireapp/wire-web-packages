@@ -44,7 +44,7 @@ export const updateSpec = {
     };
 
     try {
-      await engine.update(TABLE_NAME, PRIMARY_KEY, updates);
+      await engine.update(TABLE_NAME, updates, PRIMARY_KEY);
       fail();
     } catch (error) {
       expect(error).toEqual(jasmine.any(RecordNotFoundError));
@@ -67,8 +67,8 @@ export const updateSpec = {
 
     const expectedAmountOfProperties = 2;
 
-    await engine.create(TABLE_NAME, PRIMARY_KEY, entity);
-    const primaryKey = await engine.update(TABLE_NAME, PRIMARY_KEY, updates);
+    await engine.create(TABLE_NAME, entity, PRIMARY_KEY);
+    const primaryKey = await engine.update(TABLE_NAME, updates, PRIMARY_KEY);
     const updatedRecord = await engine.read<DomainEntity>(TABLE_NAME, primaryKey);
     expect(updatedRecord.name).toBe(entity.name);
     expect(updatedRecord.age).toBe(updates.age);

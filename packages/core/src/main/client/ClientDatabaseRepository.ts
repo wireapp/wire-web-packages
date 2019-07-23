@@ -66,8 +66,8 @@ export class ClientDatabaseRepository {
     const transformedClient = this.transformLocalClient(client);
     await this.storeEngine.create(
       ClientDatabaseRepository.STORES.CLIENTS,
-      ClientDatabaseRepository.KEYS.LOCAL_IDENTITY,
       transformedClient,
+      ClientDatabaseRepository.KEYS.LOCAL_IDENTITY,
     );
     return transformedClient;
   }
@@ -76,8 +76,8 @@ export class ClientDatabaseRepository {
     const transformedClient = this.transformLocalClient(client);
     await this.storeEngine.update(
       ClientDatabaseRepository.STORES.CLIENTS,
-      ClientDatabaseRepository.KEYS.LOCAL_IDENTITY,
       transformedClient,
+      ClientDatabaseRepository.KEYS.LOCAL_IDENTITY,
     );
     return transformedClient;
   }
@@ -86,8 +86,8 @@ export class ClientDatabaseRepository {
     const transformedClient = this.transformClient(userId, client);
     await this.storeEngine.update(
       ClientDatabaseRepository.STORES.CLIENTS,
-      CryptographyService.constructSessionId(userId, client.id),
       transformedClient,
+      CryptographyService.constructSessionId(userId, client.id),
     );
     return transformedClient;
   }
@@ -96,8 +96,8 @@ export class ClientDatabaseRepository {
     const transformedClient = this.transformClient(userId, client);
     await this.storeEngine.create(
       ClientDatabaseRepository.STORES.CLIENTS,
-      CryptographyService.constructSessionId(userId, client.id),
       transformedClient,
+      CryptographyService.constructSessionId(userId, client.id),
     );
     return transformedClient;
   }

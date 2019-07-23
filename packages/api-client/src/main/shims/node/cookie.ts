@@ -56,13 +56,13 @@ const setInternalCookie = (cookie: Cookie, engine: CRUDEngine): Promise<string> 
   const entity: PersistedCookie = {expiration: cookie.expiration, zuid: cookie.zuid};
 
   try {
-    return engine.create(AUTH_TABLE_NAME, AUTH_COOKIE_KEY, entity);
+    return engine.create(AUTH_TABLE_NAME, entity, AUTH_COOKIE_KEY);
   } catch (error) {
     if (
       error instanceof StoreEngineError.RecordAlreadyExistsError ||
       error.constructor.name === StoreEngineError.RecordAlreadyExistsError.name
     ) {
-      return engine.update(AUTH_TABLE_NAME, AUTH_COOKIE_KEY, entity);
+      return engine.update(AUTH_TABLE_NAME, entity, AUTH_COOKIE_KEY);
     } else {
       throw error;
     }

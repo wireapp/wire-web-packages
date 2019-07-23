@@ -82,14 +82,14 @@ export class FileEngine implements CRUDEngine {
     return fs.remove(this.storeName);
   }
 
-  public async create<T>(tableName: string, primaryKey: string, entity: any): Promise<string> {
+  public async create<T>(tableName: string, entity: T, primaryKey: string): Promise<string> {
     if (entity) {
       const filePath = this.resolvePath(tableName, primaryKey);
       if (typeof entity === 'object') {
         try {
-          entity = JSON.stringify(entity);
+          entity = JSON.stringify(entity) as any;
         } catch (error) {
-          entity = entity.toString();
+          entity = (entity as any).toString();
         }
       }
 
@@ -190,7 +190,7 @@ export class FileEngine implements CRUDEngine {
     return primaryKey;
   }
 
-  public async update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  public async update<T>(tableName: string, changes: T, primaryKey: string): Promise<string> {
     const file = this.resolvePath(tableName, primaryKey);
     let record = await this.read(tableName, primaryKey);
     if (typeof record === 'string') {
@@ -201,12 +201,12 @@ export class FileEngine implements CRUDEngine {
     return primaryKey;
   }
 
-  public async updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  public async updateOrCreate<T>(tableName: string, changes: T, primaryKey: string): Promise<string> {
     try {
-      await this.update(tableName, primaryKey, changes);
+      await this.update(tableName, changes, primaryKey);
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        return this.create(tableName, primaryKey, changes);
+        return this.create(tableName, changes, primaryKey);
       }
       throw error;
     }

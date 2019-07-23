@@ -46,7 +46,7 @@ export class MemoryEngine implements CRUDEngine {
     }
   }
 
-  public create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
+  public create<T>(tableName: string, entity: T, primaryKey: string): Promise<string> {
     if (entity) {
       this.prepareTable(tableName);
 
@@ -107,20 +107,20 @@ export class MemoryEngine implements CRUDEngine {
     return Promise.resolve(Object.keys(this.stores[this.storeName][tableName]));
   }
 
-  public async update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  public async update<T>(tableName: string, changes: T, primaryKey: string): Promise<string> {
     this.prepareTable(tableName);
-    const entity: Object = await this.read(tableName, primaryKey);
-    const updatedEntity: Object = {...entity, ...changes};
+    const entity = await this.read<T>(tableName, primaryKey);
+    const updatedEntity: T = {...entity, ...changes};
     this.stores[this.storeName][tableName][primaryKey] = updatedEntity;
     return primaryKey;
   }
 
-  public updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  public updateOrCreate<T>(tableName: string, changes: T, primaryKey: string): Promise<string> {
     this.prepareTable(tableName);
-    return this.update(tableName, primaryKey, changes)
+    return this.update(tableName, changes, primaryKey)
       .catch(error => {
         if (error instanceof RecordNotFoundError) {
-          return this.create(tableName, primaryKey, changes);
+          return this.create(tableName, changes, primaryKey);
         }
         throw error;
       })
@@ -129,7 +129,7 @@ export class MemoryEngine implements CRUDEngine {
 
   append(tableName: string, primaryKey: string, additions: string): Promise<string> {
     this.prepareTable(tableName);
-    return this.read(tableName, primaryKey).then((record: any) => {
+    return this.read<string>(tableName, primaryKey).then(record => {
       if (typeof record === 'string') {
         record += additions;
       } else {

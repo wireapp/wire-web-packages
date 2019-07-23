@@ -26,7 +26,7 @@ export const purgeSpec = {
     engine: CRUDEngine,
     initEngine: (shouldCreateNewEngine?: boolean) => Promise<CRUDEngine>,
   ) => {
-    await engine.create(TABLE_NAME, 'one', {name: 'Alpha'});
+    await engine.create(TABLE_NAME, {name: 'Alpha'}, 'one');
     const SAVED_RECORDS = 1;
     let keys = await engine.readAllPrimaryKeys(TABLE_NAME);
     expect(keys.length).toBe(SAVED_RECORDS);
@@ -37,7 +37,7 @@ export const purgeSpec = {
     keys = await engine.readAllPrimaryKeys(TABLE_NAME);
     expect(keys.length).toBe(0);
 
-    await engine.create(TABLE_NAME, 'one', {name: 'Alpha'});
+    await engine.create(TABLE_NAME, {name: 'Alpha'}, 'one');
 
     keys = await engine.readAllPrimaryKeys(TABLE_NAME);
     expect(keys.length).toBe(SAVED_RECORDS);
@@ -46,10 +46,10 @@ export const purgeSpec = {
     engine: CRUDEngine,
     initEngine: (shouldCreateNewEngine?: boolean) => Promise<CRUDEngine>,
   ) => {
-    await engine.create(TABLE_NAME, 'one', {name: 'Alpha'});
-    await engine.create(TABLE_NAME, 'two', {name: 'Bravo'});
-    await engine.create(TABLE_NAME, 'three', {name: 'Charlie'});
-    await engine.create(TABLE_NAME, 'four', {name: 'Delta'});
+    await engine.create(TABLE_NAME, {name: 'Alpha'}, 'one');
+    await engine.create(TABLE_NAME, {name: 'Bravo'}, 'two');
+    await engine.create(TABLE_NAME, {name: 'Charlie'}, 'three');
+    await engine.create(TABLE_NAME, {name: 'Delta'}, 'four');
     const SAVED_RECORDS = 4;
     let keys = await engine.readAllPrimaryKeys(TABLE_NAME);
     expect(keys.length).toBe(SAVED_RECORDS);

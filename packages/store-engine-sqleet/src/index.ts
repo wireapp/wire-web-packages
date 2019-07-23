@@ -167,7 +167,7 @@ export class SQLeetEngine implements CRUDEngine {
     return {columns, values};
   }
 
-  async create<T>(tableName: string, primaryKey: string, entity: Record<string, any>): Promise<string> {
+  async create<T>(tableName: string, entity: Record<string, any>, primaryKey: string): Promise<string> {
     if (!entity) {
       const message = `Record "${primaryKey}" cannot be saved in "${tableName}" because it's "undefined" or "null".`;
       throw new RecordTypeError(message);
@@ -267,7 +267,7 @@ export class SQLeetEngine implements CRUDEngine {
     return [];
   }
 
-  async update(tableName: string, primaryKey: string, changes: Record<string, any>): Promise<string> {
+  async update(tableName: string, changes: Record<string, any>, primaryKey: string): Promise<string> {
     await this.read(tableName, primaryKey);
     const {values, columns} = this.buildValues(tableName, changes);
     const escapedTableName = escape(tableName);
@@ -281,13 +281,13 @@ export class SQLeetEngine implements CRUDEngine {
     return primaryKey;
   }
 
-  async updateOrCreate<T>(tableName: string, primaryKey: string, changes: Record<string, any>): Promise<string> {
+  async updateOrCreate(tableName: string, changes: Record<string, any>, primaryKey: string): Promise<string> {
     try {
-      await this.update(tableName, primaryKey, changes);
+      await this.update(tableName, changes, primaryKey);
     } catch (error) {
       const isRecordNotFound = error instanceof RecordNotFoundError;
       if (isRecordNotFound) {
-        await this.create(tableName, primaryKey, changes);
+        await this.create(tableName, changes, primaryKey);
       } else {
         throw error;
       }

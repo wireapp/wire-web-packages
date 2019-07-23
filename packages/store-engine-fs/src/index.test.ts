@@ -163,7 +163,7 @@ describe('FileEngine', () => {
       };
       engine = new FileEngine(BASE_DIRECTORY);
       await engine.init(STORE_NAME, options);
-      await engine.create('test', 'index', {});
+      await engine.create('test', {}, 'index');
 
       try {
         await engine.append('test', 'index', 'oh no');

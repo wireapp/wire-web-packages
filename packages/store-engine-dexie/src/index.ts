@@ -106,10 +106,10 @@ export class IndexedDBEngine implements CRUDEngine {
     }
   }
 
-  public create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
+  public create<T>(tableName: string, entity: T, primaryKey: string): Promise<string> {
     if (entity) {
       return this.db
-        .table(tableName)
+        .table<T>(tableName)
         .add(entity, primaryKey)
         .catch((error: Dexie.DexieError) => {
           throw this.mapDatabaseError(error, tableName, primaryKey);
@@ -120,8 +120,9 @@ export class IndexedDBEngine implements CRUDEngine {
   }
 
   public delete(tableName: string, primaryKey: string): Promise<string> {
-    return Promise.resolve()
-      .then(() => this.db.table(tableName).delete(primaryKey))
+    return this.db
+      .table(tableName)
+      .delete(primaryKey)
       .then(() => primaryKey);
   }
 
@@ -134,9 +135,9 @@ export class IndexedDBEngine implements CRUDEngine {
 
   public read<T>(tableName: string, primaryKey: string): Promise<T> {
     return this.db
-      .table(tableName)
+      .table<T>(tableName)
       .get(primaryKey)
-      .then((record: T) => {
+      .then(record => {
         if (record) {
           return record;
         }
@@ -146,7 +147,7 @@ export class IndexedDBEngine implements CRUDEngine {
   }
 
   public readAll<T>(tableName: string): Promise<T[]> {
-    return this.db.table(tableName).toArray();
+    return this.db.table<T>(tableName).toArray();
   }
 
   public async readAllPrimaryKeys(tableName: string): Promise<string[]> {
@@ -157,11 +158,11 @@ export class IndexedDBEngine implements CRUDEngine {
     return keys.map(key => `${key}`);
   }
 
-  public update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  public update<T>(tableName: string, changes: T, primaryKey?: string): Promise<string> {
     return this.db
-      .table(tableName)
+      .table<T>(tableName)
       .update(primaryKey, changes)
-      .then((updatedRecords: number) => {
+      .then(updatedRecords => {
         if (updatedRecords === 0) {
           const message = `Record "${primaryKey}" in "${tableName}" could not be found.`;
           throw new StoreEngineError.RecordNotFoundError(message);
@@ -170,15 +171,15 @@ export class IndexedDBEngine implements CRUDEngine {
       });
   }
 
-  public updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
-    return this.db.table(tableName).put(changes, primaryKey);
+  public updateOrCreate<T>(tableName: string, changes: T, primaryKey?: string): Promise<string> {
+    return this.db.table<T>(tableName).put(changes, primaryKey);
   }
 
   public append(tableName: string, primaryKey: string, additions: string): Promise<string> {
     return this.db
-      .table(tableName)
+      .table<string>(tableName)
       .get(primaryKey)
-      .then((record: any) => {
+      .then(record => {
         if (typeof record === 'string') {
           record += additions;
         } else {

@@ -50,12 +50,12 @@ export class NotificationDatabaseRepository {
   }
 
   public async updateLastEventDate(eventDate: Date): Promise<Date> {
-    await this.storeEngine.update(STORE_AMPLIFY, DatabaseKeys.PRIMARY_KEY_LAST_EVENT, {value: eventDate.toISOString()});
+    await this.storeEngine.update(STORE_AMPLIFY, {value: eventDate.toISOString()}, DatabaseKeys.PRIMARY_KEY_LAST_EVENT);
     return eventDate;
   }
 
   public async createLastEventDate(eventDate: Date): Promise<Date> {
-    await this.storeEngine.create(STORE_AMPLIFY, DatabaseKeys.PRIMARY_KEY_LAST_EVENT, {value: eventDate.toISOString()});
+    await this.storeEngine.create(STORE_AMPLIFY, {value: eventDate.toISOString()}, DatabaseKeys.PRIMARY_KEY_LAST_EVENT);
     return eventDate;
   }
 
@@ -67,16 +67,24 @@ export class NotificationDatabaseRepository {
   }
 
   public async updateLastNotificationId(lastNotification: Notification): Promise<string> {
-    await this.storeEngine.update(STORE_AMPLIFY, DatabaseKeys.PRIMARY_KEY_LAST_NOTIFICATION, {
-      value: lastNotification.id,
-    });
+    await this.storeEngine.update(
+      STORE_AMPLIFY,
+      {
+        value: lastNotification.id,
+      },
+      DatabaseKeys.PRIMARY_KEY_LAST_NOTIFICATION,
+    );
     return lastNotification.id;
   }
 
   public async createLastNotificationId(lastNotification: Notification): Promise<string> {
-    await this.storeEngine.create(STORE_AMPLIFY, DatabaseKeys.PRIMARY_KEY_LAST_NOTIFICATION, {
-      value: lastNotification.id,
-    });
+    await this.storeEngine.create(
+      STORE_AMPLIFY,
+      {
+        value: lastNotification.id,
+      },
+      DatabaseKeys.PRIMARY_KEY_LAST_NOTIFICATION,
+    );
     return lastNotification.id;
   }
 }

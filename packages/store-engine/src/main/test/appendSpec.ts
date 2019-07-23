@@ -27,7 +27,7 @@ export const appendSpec = {
 
     const text = 'Hello';
     const textExtension = '\r\nWorld';
-    const primaryKey = await engine.create(TABLE_NAME, PRIMARY_KEY, text);
+    const primaryKey = await engine.create(TABLE_NAME, text, PRIMARY_KEY);
     await engine.append(TABLE_NAME, primaryKey, textExtension);
     const record = await engine.read(TABLE_NAME, primaryKey);
     expect(record).toBe(`${text}${textExtension}`);

@@ -49,9 +49,9 @@ export class LocalStorageEngine implements CRUDEngine {
     return `${this.storeName}@${tableName}@`;
   }
 
-  public create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
+  public create<T>(tableName: string, entity: T, primaryKey: string): Promise<string> {
     if (entity) {
-      const key: string = this.createKey(tableName, primaryKey);
+      const key = this.createKey(tableName, primaryKey);
       return this.read(tableName, primaryKey)
         .catch(error => {
           if (error instanceof RecordNotFoundError) {
@@ -79,7 +79,7 @@ export class LocalStorageEngine implements CRUDEngine {
 
   public delete(tableName: string, primaryKey: string): Promise<string> {
     return Promise.resolve().then(() => {
-      const key: string = this.createKey(tableName, primaryKey);
+      const key = this.createKey(tableName, primaryKey);
       window.localStorage.removeItem(key);
       return primaryKey;
     });
@@ -87,7 +87,7 @@ export class LocalStorageEngine implements CRUDEngine {
 
   public deleteAll(tableName: string): Promise<boolean> {
     return Promise.resolve().then(() => {
-      Object.keys(localStorage).forEach((key: string) => {
+      Object.keys(localStorage).forEach(key => {
         const prefix = this.createPrefix(tableName);
         if (key.startsWith(prefix)) {
           localStorage.removeItem(key);
@@ -116,7 +116,7 @@ export class LocalStorageEngine implements CRUDEngine {
   public readAll<T>(tableName: string): Promise<T[]> {
     const promises: Promise<T>[] = [];
 
-    Object.keys(localStorage).forEach((key: string) => {
+    Object.keys(localStorage).forEach(key => {
       const prefix = this.createPrefix(tableName);
       if (key.startsWith(prefix)) {
         const primaryKey = key.replace(prefix, '');
@@ -130,7 +130,7 @@ export class LocalStorageEngine implements CRUDEngine {
   public readAllPrimaryKeys(tableName: string): Promise<string[]> {
     const primaryKeys: string[] = [];
 
-    Object.keys(localStorage).forEach((primaryKey: string) => {
+    Object.keys(localStorage).forEach(primaryKey => {
       const prefix = this.createPrefix(tableName);
       if (primaryKey.startsWith(prefix)) {
         primaryKeys.push(primaryKey.replace(prefix, ''));
@@ -140,15 +140,15 @@ export class LocalStorageEngine implements CRUDEngine {
     return Promise.resolve(primaryKeys);
   }
 
-  public update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  public update<T>(tableName: string, changes: T, primaryKey: string): Promise<string> {
     return this.read(tableName, primaryKey)
       .then(entity => {
         return {...entity, ...changes};
       })
       .then(updatedEntity => {
-        return this.create(tableName, primaryKey, updatedEntity).catch(error => {
+        return this.create(tableName, updatedEntity, primaryKey).catch(error => {
           if (error instanceof RecordAlreadyExistsError) {
-            return this.delete(tableName, primaryKey).then(() => this.create(tableName, primaryKey, updatedEntity));
+            return this.delete(tableName, primaryKey).then(() => this.create(tableName, updatedEntity, primaryKey));
           } else {
             throw error;
           }
@@ -156,11 +156,11 @@ export class LocalStorageEngine implements CRUDEngine {
       });
   }
 
-  public updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
-    return this.update(tableName, primaryKey, changes)
+  public updateOrCreate<T>(tableName: string, changes: T, primaryKey: string): Promise<string> {
+    return this.update<T>(tableName, changes, primaryKey)
       .catch(error => {
         if (error instanceof RecordNotFoundError) {
-          return this.create(tableName, primaryKey, changes);
+          return this.create(tableName, changes, primaryKey);
         }
         throw error;
       })
@@ -168,7 +168,7 @@ export class LocalStorageEngine implements CRUDEngine {
   }
 
   append(tableName: string, primaryKey: string, additions: string): Promise<string> {
-    return this.read(tableName, primaryKey).then((record: any) => {
+    return this.read<string>(tableName, primaryKey).then(record => {
       if (typeof record === 'string') {
         record += additions;
       } else {
@@ -176,7 +176,7 @@ export class LocalStorageEngine implements CRUDEngine {
         throw new RecordTypeError(message);
       }
 
-      const key: string = this.createKey(tableName, primaryKey);
+      const key = this.createKey(tableName, primaryKey);
       window.localStorage.setItem(key, record);
 
       return primaryKey;

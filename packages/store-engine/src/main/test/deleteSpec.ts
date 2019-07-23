@@ -50,9 +50,9 @@ export const deleteSpec = {
     const expectedRemainingEntities = 2;
 
     await Promise.all([
-      engine.create(TABLE_NAME, homer.primaryKey, homer.entity),
-      engine.create(TABLE_NAME, lisa.primaryKey, lisa.entity),
-      engine.create(TABLE_NAME, marge.primaryKey, marge.entity),
+      engine.create(TABLE_NAME, homer.entity, homer.primaryKey),
+      engine.create(TABLE_NAME, lisa.entity, lisa.primaryKey),
+      engine.create(TABLE_NAME, marge.entity, marge.primaryKey),
     ]);
     await engine.delete(TABLE_NAME, lisa.primaryKey);
     const primaryKeys = await engine.readAllPrimaryKeys(TABLE_NAME);
@@ -67,7 +67,7 @@ export const deleteSpec = {
       some: 'value',
     };
 
-    const primaryKey = await engine.create(TABLE_NAME, PRIMARY_KEY, entity);
+    const primaryKey = await engine.create(TABLE_NAME, entity, PRIMARY_KEY);
     const deletedKey = await engine.delete(TABLE_NAME, primaryKey);
     expect(deletedKey).toBe(PRIMARY_KEY);
   },

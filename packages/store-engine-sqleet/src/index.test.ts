@@ -134,7 +134,7 @@ describe('SQLeetEngine', () => {
           name: SQLiteType.TEXT,
         },
       });
-      await engine.create<DBRecord>('users', '1', {name: 'Otto'});
+      await engine.create('users', {name: 'Otto'}, '1');
       const result = await engine.read<DBRecord>('users', '1');
       expect(result.name).toBe('Otto');
     });
@@ -148,7 +148,7 @@ describe('SQLeetEngine', () => {
 
       try {
         const entity = {'name\'"`': 'Otto'};
-        await engine.create<DBRecord>('users', '1', entity);
+        await engine.create('users', entity, '1');
         fail();
       } catch (error) {
         expect(error.message).toBe(
@@ -195,7 +195,7 @@ describe('SQLeetEngine', () => {
 
       const RECORDS_COUNT = 100;
       for (let i = 0; i < RECORDS_COUNT; i++) {
-        await engine.create<DBRecord>('users', i.toString(), {name: 'Lion'});
+        await engine.create('users', {name: 'Lion'}, i.toString());
       }
       const results = await engine.readAll<DBRecord>('users');
       expect(results.length).toBe(RECORDS_COUNT);
@@ -231,8 +231,8 @@ describe('SQLeetEngine', () => {
           name: SQLiteType.TEXT,
         },
       });
-      await engine.updateOrCreate<DBRecord>('users', '1', {name: 'Otto'});
-      await engine.updateOrCreate<DBRecord>('users', '1', {name: 'Lion'});
+      await engine.updateOrCreate('users', {name: 'Otto'}, '1');
+      await engine.updateOrCreate('users', {name: 'Lion'}, '1');
 
       const result = await engine.read<DBRecord>('users', '1');
       expect(result.name).toBe('Lion');
@@ -246,7 +246,7 @@ describe('SQLeetEngine', () => {
       });
 
       try {
-        await engine.updateOrCreate<DBRecord>('ffff', '1', {name: 'Otto'});
+        await engine.updateOrCreate('ffff', {name: 'Otto'}, '1');
         fail();
       } catch (error) {
         expect(error.message).toBe('Table "ffff" does not exist.');
@@ -276,10 +276,10 @@ describe('SQLeetEngine', () => {
           name: SQLiteType.TEXT,
         },
       });
-      await engine.create<DBRecord>('users', '1', {name: 'Otto', age: 1});
+      await engine.create('users', {name: 'Otto', age: 1}, '1');
       const result = await engine.read<DBRecord>('users', '1');
       expect(result.name).toBe('Otto');
-      await engine.update('users', '1', {name: 'Hans', age: 2});
+      await engine.update('users', {name: 'Hans', age: 2}, '1');
       const changedResult = await engine.read<DBRecord>('users', '1');
       expect(changedResult.age).toBe(2);
       expect(changedResult.name).toBe('Hans');
@@ -293,7 +293,7 @@ describe('SQLeetEngine', () => {
           name: SQLiteType.TEXT,
         },
       });
-      await engine.updateOrCreate<DBRecord>('users', '1', {name: 'Otto'});
+      await engine.updateOrCreate('users', {name: 'Otto'}, '1');
       await engine.purge();
 
       try {
@@ -322,7 +322,7 @@ describe('SQLeetEngine', () => {
       const engine = await initEngine(schema);
 
       // Write and save
-      await engine.create<DBRecord>('users', '1', {name: 'Otto', age: 1});
+      await engine.create('users', {name: 'Otto', age: 1}, '1');
       await indexedDB.updateOrCreate(this.storeName, primaryKeyName, await engine.export());
 
       // Import and read

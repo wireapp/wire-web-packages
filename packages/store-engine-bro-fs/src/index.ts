@@ -83,7 +83,7 @@ export class FileSystemEngine implements CRUDEngine {
     }
   }
 
-  async create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
+  async create<T>(tableName: string, entity: T, primaryKey: string): Promise<string> {
     if (!entity) {
       const message = `Record "${primaryKey}" cannot be saved in "${tableName}" because it's "undefined" or "null".`;
       throw new RecordTypeError(message);
@@ -179,17 +179,17 @@ export class FileSystemEngine implements CRUDEngine {
     return primaryKeys;
   }
 
-  update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  update<T>(tableName: string, changes: T, primaryKey: string): Promise<string> {
     const filePath = this.createFilePath(tableName, primaryKey);
-    return this.read(tableName, primaryKey)
-      .then((record: any) => {
+    return this.read<T>(tableName, primaryKey)
+      .then(record => {
         if (typeof record === 'string') {
           record = JSON.parse(record);
         }
-        const updatedRecord: Object = {...record, ...changes};
+        const updatedRecord: T = {...record, ...changes};
         return JSON.stringify(updatedRecord);
       })
-      .then((updatedRecord: any) => fs.writeFile(filePath, updatedRecord))
+      .then(updatedRecord => fs.writeFile(filePath, updatedRecord))
       .then(() => primaryKey);
   }
 
@@ -197,11 +197,11 @@ export class FileSystemEngine implements CRUDEngine {
     await fs.rmdir(this.storeName);
   }
 
-  updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
-    return this.update(tableName, primaryKey, changes)
+  updateOrCreate<T>(tableName: string, changes: T, primaryKey: string): Promise<string> {
+    return this.update<T>(tableName, changes, primaryKey)
       .catch(error => {
         if (error instanceof RecordNotFoundError) {
-          return this.create(tableName, primaryKey, changes);
+          return this.create(tableName, changes, primaryKey);
         }
         throw error;
       })

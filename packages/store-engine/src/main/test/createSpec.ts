@@ -30,7 +30,7 @@ export const createSpec = {
       some: 'value',
     };
 
-    const primaryKey = await engine.create(TABLE_NAME, PRIMARY_KEY, entity);
+    const primaryKey = await engine.create(TABLE_NAME, entity, PRIMARY_KEY);
     expect(primaryKey).toEqual(PRIMARY_KEY);
   },
   "doesn't save empty values.": async (engine: CRUDEngine) => {
@@ -39,7 +39,7 @@ export const createSpec = {
     const entity = undefined;
 
     try {
-      await engine.create(TABLE_NAME, PRIMARY_KEY, entity);
+      await engine.create(TABLE_NAME, entity, PRIMARY_KEY);
       fail(new Error('Method is supposed to throw an error.'));
     } catch (error) {
       expect(error).toEqual(jasmine.any(RecordTypeError));
@@ -51,7 +51,7 @@ export const createSpec = {
     const entity = undefined;
 
     try {
-      await engine.create(TABLE_NAME, PRIMARY_KEY, entity);
+      await engine.create(TABLE_NAME, entity, PRIMARY_KEY);
       fail(new Error('Method is supposed to throw an error.'));
     } catch (error) {
       expect(error).toEqual(jasmine.any(RecordTypeError));
@@ -69,8 +69,8 @@ export const createSpec = {
     };
 
     try {
-      await engine.create(TABLE_NAME, PRIMARY_KEY, firstEntity);
-      await engine.create(TABLE_NAME, PRIMARY_KEY, secondEntity);
+      await engine.create(TABLE_NAME, firstEntity, PRIMARY_KEY);
+      await engine.create(TABLE_NAME, secondEntity, PRIMARY_KEY);
       fail();
     } catch (error) {
       expect(error).toEqual(jasmine.any(RecordAlreadyExistsError));

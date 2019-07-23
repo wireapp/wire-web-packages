@@ -35,7 +35,7 @@ export const updateOrCreateSpec = {
 
     const expectedAmountOfProperties = 1;
 
-    const primaryKey = await engine.updateOrCreate(TABLE_NAME, PRIMARY_KEY, entity);
+    const primaryKey = await engine.updateOrCreate(TABLE_NAME, entity, PRIMARY_KEY);
     const updatedRecord = await engine.read<DomainEntity>(TABLE_NAME, primaryKey);
     expect(updatedRecord.name).toBe(entity.name);
     expect(Object.keys(updatedRecord).length).toBe(expectedAmountOfProperties);
@@ -51,8 +51,8 @@ export const updateOrCreateSpec = {
       name: 'Old monitor2',
     };
 
-    await engine.create(TABLE_NAME, PRIMARY_KEY, entity);
-    const primaryKey = await engine.updateOrCreate(TABLE_NAME, PRIMARY_KEY, update);
+    await engine.create(TABLE_NAME, entity, PRIMARY_KEY);
+    const primaryKey = await engine.updateOrCreate(TABLE_NAME, update, PRIMARY_KEY);
     const updatedRecord = await engine.read<DomainEntity>(TABLE_NAME, primaryKey);
     expect(updatedRecord.name).toBe(update.name);
   },
