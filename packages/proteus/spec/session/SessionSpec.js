@@ -49,11 +49,8 @@ class TestStore extends Proteus.session.PreKeyStore {
   }
 
   async delete_prekey(prekey_id) {
-    for (const index in this.prekeys) {
-      if (this.prekeys[index].key_id === prekey_id) {
-        this.prekeys.splice(index, 1);
-      }
-    }
+    const matches = this.prekeys.filter(prekey => prekey.key_id === prekey_id);
+    delete matches[0];
     return prekey_id;
   }
 }
