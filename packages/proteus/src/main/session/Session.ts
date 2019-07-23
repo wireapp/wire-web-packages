@@ -96,32 +96,31 @@ export class Session {
     prekey_store: PreKeyStore,
     envelope: Envelope,
   ): Promise<[Session, Uint8Array]> {
-    if (envelope.message instanceof CipherMessage) {
+    const preKeyMessage = envelope.message;
+
+    if (preKeyMessage instanceof CipherMessage) {
       throw new DecryptError.InvalidMessage(
         "Can't initialise a session from a CipherMessage.",
         DecryptError.CODE.CASE_201,
       );
     }
 
-    if (envelope.message instanceof PreKeyMessage) {
-      const pkmsg = envelope.message;
-
+    if (preKeyMessage instanceof PreKeyMessage) {
       const session = ClassUtil.new_instance(Session);
-      session.session_tag = pkmsg.message.session_tag;
+      session.session_tag = preKeyMessage.message.session_tag;
       session.local_identity = our_identity;
-      session.remote_identity = pkmsg.identity_key;
+      session.remote_identity = preKeyMessage.identity_key;
       session.pending_prekey = null;
       session.session_states = {};
 
-      const state = await session._new_state(prekey_store, pkmsg);
-      const plain = await state.decrypt(envelope, pkmsg.message);
-      session._insert_session_state(pkmsg.message.session_tag, state);
+      const state = await session._new_state(prekey_store, preKeyMessage);
+      const plain = await state.decrypt(envelope, preKeyMessage.message);
+      session._insert_session_state(preKeyMessage.message.session_tag, state);
 
-      if (pkmsg.prekey_id < PreKey.MAX_PREKEY_ID) {
-        MemoryUtil.zeroize(await prekey_store.load_prekey(pkmsg.prekey_id));
+      if (preKeyMessage.prekey_id < PreKey.MAX_PREKEY_ID) {
+        MemoryUtil.zeroize(await prekey_store.load_prekey(preKeyMessage.prekey_id));
         try {
-          await prekey_store.delete_prekey(pkmsg.prekey_id);
-          return [session, plain];
+          await prekey_store.delete_prekey(preKeyMessage.prekey_id);
         } catch (error) {
           throw new DecryptError.PrekeyNotFound(
             `Could not delete PreKey: ${error.message}`,
@@ -129,6 +128,7 @@ export class Session {
           );
         }
       }
+
       return [session, plain];
     }
 
