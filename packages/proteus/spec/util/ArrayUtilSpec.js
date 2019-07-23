@@ -61,8 +61,7 @@ describe('HMAC-based Key Derivation Function', () => {
 
 describe('assert_is_not_zeros', () => {
   it('detects arrays consisting only of zeros', () => {
-    // eslint-disable-next-line
-    const array = new Uint8Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+    const array = new Uint8Array(32).fill(0);
 
     try {
       Proteus.util.ArrayUtil.assert_is_not_zeros(array);
