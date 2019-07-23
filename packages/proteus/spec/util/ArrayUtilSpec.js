@@ -60,7 +60,7 @@ describe('HMAC-based Key Derivation Function', () => {
 });
 
 describe('assert_is_not_zeros', () => {
-  it('detects arrays consisting only of zeros', () => {
+  it('throws if an array consists only of zeros', () => {
     const array = new Uint8Array(32).fill(0);
 
     try {
@@ -71,7 +71,7 @@ describe('assert_is_not_zeros', () => {
     }
   });
 
-  it('detects arrays consisting only of zeros', () => {
+  it('does not throw if an array consists of random numbers', () => {
     // eslint-disable-next-line
     const array = new Uint8Array([194, 3, 205, 50, 90, 113, 33, 56, 87, 189, 211, 4, 113, 152, 186, 107, 127, 199, 114, 23, 165, 171, 177, 128, 123, 65, 173, 129, 70, 132, 121, 193]);
 
