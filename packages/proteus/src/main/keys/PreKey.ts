@@ -78,10 +78,7 @@ export class PreKey {
     }
 
     return Promise.all(
-      new Array(size).fill(null).map(async (_, index) => {
-        const pk = await PreKey.new((start + index) % PreKey.MAX_PREKEY_ID);
-        return pk;
-      }),
+      new Array(size).fill(null).map((_, index) => PreKey.new((start + index) % PreKey.MAX_PREKEY_ID)),
     );
   }
 
