@@ -103,36 +103,39 @@ export class Session {
       );
     }
 
-    if (!(envelope.message instanceof PreKeyMessage)) {
-      throw new DecryptError.InvalidMessage(
-        'Unknown message format: The message is neither a "CipherMessage" nor a "PreKeyMessage".',
-        DecryptError.CODE.CASE_202,
-      );
-    }
+    if (envelope.message instanceof PreKeyMessage) {
+      const pkmsg = envelope.message;
 
-    const pkmsg = envelope.message;
+      const session = ClassUtil.new_instance(Session);
+      session.session_tag = pkmsg.message.session_tag;
+      session.local_identity = our_identity;
+      session.remote_identity = pkmsg.identity_key;
+      session.pending_prekey = null;
+      session.session_states = {};
 
-    const session = ClassUtil.new_instance(Session);
-    session.session_tag = pkmsg.message.session_tag;
-    session.local_identity = our_identity;
-    session.remote_identity = pkmsg.identity_key;
-    session.pending_prekey = null;
-    session.session_states = {};
+      const state = await session._new_state(prekey_store, pkmsg);
+      const plain = await state.decrypt(envelope, pkmsg.message);
+      session._insert_session_state(pkmsg.message.session_tag, state);
 
-    const state = await session._new_state(prekey_store, pkmsg);
-    const plain = await state.decrypt(envelope, pkmsg.message);
-    session._insert_session_state(pkmsg.message.session_tag, state);
-
-    if (pkmsg.prekey_id < PreKey.MAX_PREKEY_ID) {
-      MemoryUtil.zeroize(await prekey_store.load_prekey(pkmsg.prekey_id));
-      try {
-        await prekey_store.delete_prekey(pkmsg.prekey_id);
-        return [session, plain];
-      } catch (error) {
-        throw new DecryptError.PrekeyNotFound(`Could not delete PreKey: ${error.message}`, DecryptError.CODE.CASE_203);
+      if (pkmsg.prekey_id < PreKey.MAX_PREKEY_ID) {
+        MemoryUtil.zeroize(await prekey_store.load_prekey(pkmsg.prekey_id));
+        try {
+          await prekey_store.delete_prekey(pkmsg.prekey_id);
+          return [session, plain];
+        } catch (error) {
+          throw new DecryptError.PrekeyNotFound(
+            `Could not delete PreKey: ${error.message}`,
+            DecryptError.CODE.CASE_203,
+          );
+        }
       }
+      return [session, plain];
     }
-    return [session, plain];
+
+    throw new DecryptError.InvalidMessage(
+      'Unknown message format: The message is neither a "CipherMessage" nor a "PreKeyMessage".',
+      DecryptError.CODE.CASE_202,
+    );
   }
 
   private async _new_state(pre_key_store: PreKeyStore, pre_key_message: PreKeyMessage): Promise<SessionState> {
@@ -223,7 +226,9 @@ export class Session {
     const msg = envelope.message;
     if (msg instanceof CipherMessage) {
       return this._decrypt_cipher_message(envelope, msg);
-    } else if (msg instanceof PreKeyMessage) {
+    }
+
+    if (msg instanceof PreKeyMessage) {
       const actual_fingerprint = msg.identity_key.fingerprint();
       const expected_fingerprint = this.remote_identity.fingerprint();
 
@@ -234,6 +239,7 @@ export class Session {
 
       return this._decrypt_prekey_message(envelope, msg, prekey_store);
     }
+
     throw new DecryptError('Unknown message type.', DecryptError.CODE.CASE_200);
   }
 
