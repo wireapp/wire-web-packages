@@ -222,12 +222,20 @@ const Demo = () => {
               ]}
             />
             <AvatarGrid
-              size={48}
+              size={64}
               items={[{borderColor: '#EB7E00', name: 'Mick Jagger'}, {borderColor: '#359AD7', name: 'Freddy Mercury'}]}
             />
-            <AvatarGrid size={48} items={[{borderColor: '#EB7E00', name: 'Mick Jagger'}]} />
+            <AvatarGrid size={64} items={[{borderColor: '#EB7E00', name: 'Mick Jagger'}]} />
             <AvatarGrid
-              size={28}
+              size={32}
+              items={[
+                {borderColor: '#fb0807', name: 'Joe Doe'},
+                {borderColor: '#2085C2', name: 'Bon Jovi'},
+                {borderColor: '#EB7E00', name: 'Mick Jagger'},
+              ]}
+            />
+            <AvatarGrid
+              size={24}
               items={[
                 {borderColor: '#fb0807', name: 'Joe Doe'},
                 {borderColor: '#2085C2', name: 'Bon Jovi'},
