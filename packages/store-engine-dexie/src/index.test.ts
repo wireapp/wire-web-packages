@@ -40,7 +40,7 @@ describe('IndexedDBEngine', () => {
     const storeEngine = shouldCreateNewEngine ? new IndexedDBEngine() : engine;
     const db = await storeEngine.init(STORE_NAME);
     db.version(1).stores({
-      'the-simpsons': ',firstName,lastName',
+      ['the-simpsons']: ', firstName, lastName',
     });
     await db.open();
     return storeEngine;
@@ -61,7 +61,7 @@ describe('IndexedDBEngine', () => {
   describe('init', () => {
     it('resolves with the database instance to which the records will be saved.', async () => {
       engine = new IndexedDBEngine();
-      const instance = await engine.init(STORE_NAME);
+      const instance: Dexie = await engine.init(STORE_NAME);
       expect(instance instanceof Dexie).toBe(true);
     });
   });
@@ -84,7 +84,7 @@ describe('IndexedDBEngine', () => {
       const PRIMARY_KEY = 'camilla';
       const entity = {
         age: 25,
-        anotherProperty: 'not all properties needs to be indexed',
+        anotherProperty: 'not all properties need to be indexed',
         name: 'Camilla',
       };
       const name = 'MyDatabase';
@@ -138,6 +138,26 @@ describe('IndexedDBEngine', () => {
   describe('read', () => {
     Object.entries(readSpec).map(([description, testFunction]) => {
       it(description, () => testFunction(engine));
+    });
+  });
+
+  describe('save', () => {
+    it('generates primary keys', async () => {
+      const TABLE_NAME = 'test-table';
+
+      engine = new IndexedDBEngine();
+      const db: Dexie = await engine.init('primary-key-store');
+      db.version(1).stores({
+        [TABLE_NAME]: '++primary_key, testValue',
+      });
+      await db.open();
+
+      const entity = {
+        some: 'value',
+      };
+
+      const primaryKey = await engine.updateOrCreate(TABLE_NAME, undefined as any, entity);
+      expect(primaryKey).toBeDefined();
     });
   });
 
