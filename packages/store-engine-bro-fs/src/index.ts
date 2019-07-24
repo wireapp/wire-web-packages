@@ -179,7 +179,7 @@ export class FileSystemEngine implements CRUDEngine {
     return primaryKeys;
   }
 
-  async update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  async update<T>(tableName: string, primaryKey: string, changes: T): Promise<string> {
     const filePath = this.createFilePath(tableName, primaryKey);
     let record = await this.read(tableName, primaryKey);
     if (typeof record === 'string') {
@@ -194,7 +194,7 @@ export class FileSystemEngine implements CRUDEngine {
     await fs.rmdir(this.storeName);
   }
 
-  async updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  async updateOrCreate<T>(tableName: string, primaryKey: string, changes: T): Promise<string> {
     try {
       await this.update(tableName, primaryKey, changes);
     } catch (error) {

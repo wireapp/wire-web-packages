@@ -190,7 +190,7 @@ export class FileEngine implements CRUDEngine {
     return primaryKey;
   }
 
-  public async update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  public async update<T>(tableName: string, primaryKey: string, changes: T): Promise<string> {
     const file = this.resolvePath(tableName, primaryKey);
     let record = await this.read(tableName, primaryKey);
     if (typeof record === 'string') {
@@ -201,7 +201,7 @@ export class FileEngine implements CRUDEngine {
     return primaryKey;
   }
 
-  public async updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  public async updateOrCreate<T>(tableName: string, primaryKey: string, changes: T): Promise<string> {
     try {
       await this.update(tableName, primaryKey, changes);
     } catch (error) {

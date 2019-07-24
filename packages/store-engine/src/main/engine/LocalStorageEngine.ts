@@ -136,11 +136,11 @@ export class LocalStorageEngine implements CRUDEngine {
     return Promise.resolve(primaryKeys);
   }
 
-  public async update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
-    const entity = await this.read(tableName, primaryKey);
+  public async update<T>(tableName: string, primaryKey: string, changes: T): Promise<string> {
+    const entity = await this.read<T>(tableName, primaryKey);
     const updatedEntity = {...entity, ...changes};
     try {
-      return this.create(tableName, primaryKey, updatedEntity);
+      return this.create<T>(tableName, primaryKey, updatedEntity);
     } catch (error) {
       if (error instanceof RecordAlreadyExistsError) {
         await this.delete(tableName, primaryKey);
@@ -151,12 +151,12 @@ export class LocalStorageEngine implements CRUDEngine {
     }
   }
 
-  public async updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  public async updateOrCreate<T>(tableName: string, primaryKey: string, changes: T): Promise<string> {
     try {
-      await this.update(tableName, primaryKey, changes);
+      await this.update<T>(tableName, primaryKey, changes);
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        return this.create(tableName, primaryKey, changes);
+        return this.create<T>(tableName, primaryKey, changes);
       }
       throw error;
     }
@@ -164,7 +164,7 @@ export class LocalStorageEngine implements CRUDEngine {
   }
 
   async append(tableName: string, primaryKey: string, additions: string): Promise<string> {
-    let record = await this.read(tableName, primaryKey);
+    let record = await this.read<string>(tableName, primaryKey);
     if (typeof record === 'string') {
       record += additions;
     } else {

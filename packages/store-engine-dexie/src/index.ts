@@ -150,7 +150,7 @@ export class IndexedDBEngine implements CRUDEngine {
     return keys.map(key => `${key}`);
   }
 
-  public async update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  public async update<T>(tableName: string, primaryKey: string, changes: T): Promise<string> {
     const updatedRecords = await this.db.table(tableName).update(primaryKey, changes);
     if (updatedRecords === 0) {
       const message = `Record "${primaryKey}" in "${tableName}" could not be found.`;
@@ -159,7 +159,7 @@ export class IndexedDBEngine implements CRUDEngine {
     return primaryKey;
   }
 
-  public updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  public updateOrCreate<T>(tableName: string, primaryKey: string, changes: T): Promise<string> {
     return this.db.table(tableName).put(changes, primaryKey);
   }
 
@@ -171,6 +171,6 @@ export class IndexedDBEngine implements CRUDEngine {
       const message = `Cannot append text to record "${primaryKey}" because it's not a string.`;
       throw new StoreEngineError.RecordTypeError(message);
     }
-    return this.updateOrCreate(tableName, primaryKey, record);
+    return this.updateOrCreate<string>(tableName, primaryKey, record);
   }
 }

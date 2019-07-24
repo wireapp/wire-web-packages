@@ -101,15 +101,15 @@ export class MemoryEngine implements CRUDEngine {
     return Promise.resolve(Object.keys(this.stores[this.storeName][tableName]));
   }
 
-  public async update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  public async update<T>(tableName: string, primaryKey: string, changes: T): Promise<string> {
     this.prepareTable(tableName);
-    const entity: Object = await this.read(tableName, primaryKey);
-    const updatedEntity: Object = {...entity, ...changes};
+    const entity = await this.read<T>(tableName, primaryKey);
+    const updatedEntity: T = {...entity, ...changes};
     this.stores[this.storeName][tableName][primaryKey] = updatedEntity;
     return primaryKey;
   }
 
-  public async updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  public async updateOrCreate<T>(tableName: string, primaryKey: string, changes: T): Promise<string> {
     this.prepareTable(tableName);
     try {
       await this.update(tableName, primaryKey, changes);
