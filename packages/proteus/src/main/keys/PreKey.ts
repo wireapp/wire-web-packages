@@ -84,8 +84,7 @@ export class PreKey {
     }
 
     return Promise.all(
-      Array.from({length: size})
-        .map((_, index) => PreKey.new((start + index) % PreKey.MAX_PREKEY_ID)),
+      Array.from({length: size}).map((_, index) => PreKey.new((start + index) % PreKey.MAX_PREKEY_ID)),
     );
   }
 
