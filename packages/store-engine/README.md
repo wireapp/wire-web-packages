@@ -69,14 +69,14 @@ console.log(`Saved record with primary key "${primaryKey}".`);
 
 #### delete
 
-```javascript
+```typescript
 const primaryKey = await engine.delete(TABLE_NAME, PRIMARY_KEY);
 console.log(`Deleted record with primary key "${primaryKey}".`);
 ```
 
 #### deleteAll
 
-```javascript
+```typescript
 const wasDeleted = await engine.deleteAll(TABLE_NAME);
 if (wasDeleted) {
   console.log('The Simpsons have been deleted. Poor Simpsons!');
@@ -85,21 +85,21 @@ if (wasDeleted) {
 
 #### purge
 
-```javascript
+```typescript
 await engine.purge();
 console.log(`The Simpson universe has been deleted. D'oh!`);
 ```
 
 #### read
 
-```javascript
+```typescript
 const record = await engine.read(TABLE_NAME, PRIMARY_KEY);
 console.log(`Her name is "${record.name}".`);
 ```
 
 #### readAll
 
-```javascript
+```typescript
 const records = await engine.readAll(TABLE_NAME);
 console.log(`There are "${records.length}" Simpsons in our database.`);
 ```
