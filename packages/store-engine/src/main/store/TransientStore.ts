@@ -43,11 +43,11 @@ export class TransientStore extends EventEmitter {
     const primaryKeys = await this.engine.readAllPrimaryKeys(this.tableName);
     const readBundles: Promise<TransientBundle>[] = [];
 
-    primaryKeys.forEach(primaryKey => {
+    for (const primaryKey of primaryKeys) {
       const cacheKey = this.constructCacheKey(primaryKey);
       cacheKeys.push(cacheKey);
       readBundles.push(this.engine.read(this.tableName, primaryKey));
-    });
+    }
 
     const bundles = await Promise.all(readBundles);
 

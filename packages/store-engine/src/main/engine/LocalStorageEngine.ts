@@ -86,12 +86,12 @@ export class LocalStorageEngine implements CRUDEngine {
   }
 
   public async deleteAll(tableName: string): Promise<boolean> {
-    Object.keys(localStorage).forEach(key => {
+    for (const key of Object.keys(localStorage)) {
       const prefix = this.createPrefix(tableName);
       if (key.startsWith(prefix)) {
         localStorage.removeItem(key);
       }
-    });
+    }
     return true;
   }
 
@@ -110,15 +110,14 @@ export class LocalStorageEngine implements CRUDEngine {
   }
 
   public readAll<T>(tableName: string): Promise<T[]> {
-    const promises: Promise<T>[] = [];
-
-    Object.keys(localStorage).forEach(key => {
+    const promises = Object.keys(localStorage).reduce<Promise<T>[]>((result, key) => {
       const prefix = this.createPrefix(tableName);
       if (key.startsWith(prefix)) {
         const primaryKey = key.replace(prefix, '');
-        promises.push(this.read(tableName, primaryKey));
+        result.push(this.read<T>(tableName, primaryKey));
       }
-    });
+      return result;
+    }, []);
 
     return Promise.all(promises);
   }
