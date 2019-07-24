@@ -59,8 +59,6 @@ export class IndexedDBEngine implements CRUDEngine {
         }
       }
     }
-
-    return Promise.resolve();
   }
 
   public async isSupported(): Promise<void> {
@@ -73,8 +71,8 @@ export class IndexedDBEngine implements CRUDEngine {
     return this.assignDb(new Dexie(storeName));
   }
 
-  public initWithDb(db: Dexie): Promise<Dexie> {
-    return Promise.resolve(this.assignDb(db));
+  public async initWithDb(db: Dexie): Promise<Dexie> {
+    return this.assignDb(db);
   }
 
   // If you want to add listeners to the database and you don't care if it is a new database (init)

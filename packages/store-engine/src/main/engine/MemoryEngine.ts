@@ -46,7 +46,7 @@ export class MemoryEngine implements CRUDEngine {
     }
   }
 
-  public create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
+  public async create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
     if (entity) {
       this.prepareTable(tableName);
 
@@ -54,16 +54,15 @@ export class MemoryEngine implements CRUDEngine {
 
       if (record) {
         const message = `Record "${primaryKey}" already exists in "${tableName}". You need to delete the record first if you want to overwrite it.`;
-        const error = new RecordAlreadyExistsError(message);
-        return Promise.reject(error);
+        throw new RecordAlreadyExistsError(message);
       }
 
       this.stores[this.storeName][tableName][primaryKey] = entity;
-      return Promise.resolve(primaryKey);
+      return primaryKey;
     }
 
     const message = `Record "${primaryKey}" cannot be saved in "${tableName}" because it's "undefined" or "null".`;
-    return Promise.reject(new RecordTypeError(message));
+    throw new RecordTypeError(message);
   }
 
   public async delete(tableName: string, primaryKey: string): Promise<string> {
@@ -96,9 +95,9 @@ export class MemoryEngine implements CRUDEngine {
     return Promise.all(promises);
   }
 
-  public readAllPrimaryKeys(tableName: string): Promise<string[]> {
+  public async readAllPrimaryKeys(tableName: string): Promise<string[]> {
     this.prepareTable(tableName);
-    return Promise.resolve(Object.keys(this.stores[this.storeName][tableName]));
+    return Object.keys(this.stores[this.storeName][tableName]);
   }
 
   public async update<T>(tableName: string, primaryKey: string, changes: T): Promise<string> {
