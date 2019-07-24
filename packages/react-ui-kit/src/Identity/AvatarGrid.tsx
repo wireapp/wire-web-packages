@@ -36,7 +36,7 @@ const avatarGridStyle: <T>(props: Props<T>) => ObjectInterpolation<undefined> = 
     alignItems: 'start',
     backgroundColor: COLOR.GRAY_DARKEN_48,
     border: `${borderWidth}px solid ${COLOR.GRAY_DARKEN_48}`,
-    borderRadius: '10px',
+    borderRadius: '6px',
     display: 'grid',
     gridGap: borderWidth,
     gridTemplateColumns: 'repeat(2, 1fr)',
