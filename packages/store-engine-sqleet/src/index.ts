@@ -106,7 +106,7 @@ export class SQLeetEngine implements CRUDEngine {
     if (!this.db) {
       throw new Error('SQLite needs to be available');
     }
-    const database: Uint8Array = new Uint8Array(this.db.export());
+    const database = new Uint8Array(this.db.export());
     const strings = [];
     const chunkSize = 0xffff;
     // There is a maximum stack size. We cannot call `String.fromCharCode` with as many arguments as we want

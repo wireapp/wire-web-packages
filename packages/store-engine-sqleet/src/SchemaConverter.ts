@@ -66,7 +66,7 @@ export function getFormattedColumnsFromColumns(
 
 export function getProtectedColumnReferences(columns: Record<string, string>): string {
   return Object.keys(columns)
-    .map((reference: string) => `${escape(columns[reference])}=${reference}`)
+    .map(reference => `${escape(columns[reference])}=${reference}`)
     .join(',');
 }
 

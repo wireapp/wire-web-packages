@@ -167,7 +167,7 @@ export class FileSystemEngine implements CRUDEngine {
       entries = [];
     }
 
-    const names = entries.map((entry: FileEntry) => entry.name);
+    const names = entries.map(entry => entry.name);
 
     const primaryKeys: string[] = [];
 

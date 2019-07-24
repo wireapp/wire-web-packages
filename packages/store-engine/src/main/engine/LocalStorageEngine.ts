@@ -126,7 +126,7 @@ export class LocalStorageEngine implements CRUDEngine {
   public readAllPrimaryKeys(tableName: string): Promise<string[]> {
     const primaryKeys: string[] = [];
 
-    Object.keys(localStorage).forEach((primaryKey: string) => {
+    Object.keys(localStorage).forEach(primaryKey => {
       const prefix = this.createPrefix(tableName);
       if (primaryKey.startsWith(prefix)) {
         primaryKeys.push(primaryKey.replace(prefix, ''));
