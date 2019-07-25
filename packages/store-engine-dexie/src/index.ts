@@ -20,8 +20,10 @@
 import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import Dexie from 'dexie';
 
+type DexieObservable = {_dbSchema?: Object};
+
 export class IndexedDBEngine implements CRUDEngine {
-  private db = new Dexie('');
+  private db: Dexie & DexieObservable = new Dexie('');
   public storeName = '';
 
   // Check if IndexedDB is accessible (which won't be the case when browsing with
@@ -87,7 +89,11 @@ export class IndexedDBEngine implements CRUDEngine {
     return this.db ? this.db.delete() : Dexie.delete(this.storeName);
   }
 
-  private mapDatabaseError(error: Dexie.DexieError, tableName: string, primaryKey: string): Error {
+  private mapDatabaseError<PrimaryKey = string>(
+    error: Dexie.DexieError,
+    tableName: string,
+    primaryKey: PrimaryKey,
+  ): Error {
     const isAlreadyExisting = error instanceof Dexie.ConstraintError;
     /** @see https://github.com/dfahlander/Dexie.js/issues/776 */
     const hasNotEnoughDiskSpace =
@@ -104,7 +110,11 @@ export class IndexedDBEngine implements CRUDEngine {
     }
   }
 
-  public create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
+  public create<EntityType = Object, PrimaryKey = string>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    entity: EntityType,
+  ): Promise<PrimaryKey> {
     if (entity) {
       return this.db
         .table(tableName)
@@ -117,7 +127,7 @@ export class IndexedDBEngine implements CRUDEngine {
     return Promise.reject(new StoreEngineError.RecordTypeError(message));
   }
 
-  public async delete(tableName: string, primaryKey: string): Promise<string> {
+  public async delete<PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): Promise<PrimaryKey> {
     await this.db.table(tableName).delete(primaryKey);
     return primaryKey;
   }
@@ -127,8 +137,11 @@ export class IndexedDBEngine implements CRUDEngine {
     return true;
   }
 
-  public async read<T>(tableName: string, primaryKey: string): Promise<T> {
-    const record = await this.db.table(tableName).get(primaryKey);
+  public async read<EntityType = Object, PrimaryKey = string>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+  ): Promise<EntityType> {
+    const record = await this.db.table<EntityType>(tableName).get(primaryKey);
     if (record) {
       return record;
     }
@@ -136,19 +149,23 @@ export class IndexedDBEngine implements CRUDEngine {
     throw new StoreEngineError.RecordNotFoundError(message);
   }
 
-  public readAll<T>(tableName: string): Promise<T[]> {
+  public readAll<EntityType>(tableName: string): Promise<EntityType[]> {
     return this.db.table(tableName).toArray();
   }
 
-  public async readAllPrimaryKeys(tableName: string): Promise<string[]> {
+  public async readAllPrimaryKeys<PrimaryKey = string>(tableName: string): Promise<PrimaryKey[]> {
     const keys = await this.db
-      .table(tableName)
+      .table<PrimaryKey>(tableName)
       .toCollection()
       .keys();
-    return keys.map(key => `${key}`);
+    return keys.map(key => (key as any) as PrimaryKey);
   }
 
-  public async update<T>(tableName: string, primaryKey: string, changes: T): Promise<string> {
+  public async update<PrimaryKey = string>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    changes: Object,
+  ): Promise<PrimaryKey> {
     const updatedRecords = await this.db.table(tableName).update(primaryKey, changes);
     if (updatedRecords === 0) {
       const message = `Record "${primaryKey}" in "${tableName}" could not be found.`;
@@ -157,11 +174,19 @@ export class IndexedDBEngine implements CRUDEngine {
     return primaryKey;
   }
 
-  public updateOrCreate<T>(tableName: string, primaryKey: string, changes: T): Promise<string> {
-    return this.db.table(tableName).put(changes, primaryKey);
+  public updateOrCreate<PrimaryKey = string, ChangesType = Object>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    changes: ChangesType,
+  ): Promise<PrimaryKey> {
+    return this.db.table<ChangesType, PrimaryKey>(tableName).put(changes, primaryKey);
   }
 
-  public async append(tableName: string, primaryKey: string, additions: string): Promise<string> {
+  public async append<PrimaryKey = string>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    additions: string,
+  ): Promise<PrimaryKey> {
     let record = await this.db.table(tableName).get(primaryKey);
     if (typeof record === 'string') {
       record += additions;
@@ -169,6 +194,6 @@ export class IndexedDBEngine implements CRUDEngine {
       const message = `Cannot append text to record "${primaryKey}" because it's not a string.`;
       throw new StoreEngineError.RecordTypeError(message);
     }
-    return this.updateOrCreate<string>(tableName, primaryKey, record);
+    return this.updateOrCreate(tableName, primaryKey, record);
   }
 }

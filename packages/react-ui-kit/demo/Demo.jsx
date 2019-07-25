@@ -56,7 +56,8 @@ const Demo = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [showFirstDropdown, setShowFirstDropdown] = useState(false);
   const [showSecondDropdown, setShowSecondDropdown] = useState(false);
-  const paginatedList = [[1, 2], [3, 4], [5, 6], [7, 8], [9, 10], [11, 12], [13, 14], [15, 16], [17, 18]]; // eslint-disable-line no-magic-numbers
+  // eslint-disable-next-line no-magic-numbers
+  const paginatedList = [[1, 2], [3, 4], [5, 6], [7, 8], [9, 10], [11, 12], [13, 14], [15, 16], [17, 18]];
   const isDesktop = typeof window !== 'undefined' && window.matchMedia(`(${QUERY.desktop})`).matches;
 
   return (
@@ -207,39 +208,39 @@ const Demo = () => {
             <AvatarGrid
               size={120}
               items={[
-                {borderColor: '#fb0807', name: 'Joe Doe'},
-                {borderColor: '#2085C2', name: 'Bon Jovi'},
-                {borderColor: '#EB7E00', name: 'Mick Jagger'},
-                {base64Image: avatarBase64, borderColor: '#EB7E00', name: 'Freddy Mercury'},
+                {color: '#fb0807', name: 'Joe Doe'},
+                {color: '#2085C2', name: 'Bon Jovi'},
+                {color: '#EB7E00', name: 'Mick Jagger'},
+                {base64Image: avatarBase64, color: '#EB7E00', name: 'Freddy Mercury'},
               ]}
             />
             <AvatarGrid
               size={120}
               items={[
-                {borderColor: '#fb0807', name: 'Joe Doe'},
-                {borderColor: '#2085C2', name: 'Bon Jovi'},
-                {borderColor: '#EB7E00', name: 'Mick Jagger'},
+                {color: '#fb0807', name: 'Joe Doe'},
+                {color: '#2085C2', name: 'Bon Jovi'},
+                {color: '#EB7E00', name: 'Mick Jagger'},
               ]}
             />
             <AvatarGrid
               size={64}
-              items={[{borderColor: '#EB7E00', name: 'Mick Jagger'}, {borderColor: '#359AD7', name: 'Freddy Mercury'}]}
+              items={[{color: '#EB7E00', name: 'Mick Jagger'}, {color: '#359AD7', name: 'Freddy Mercury'}]}
             />
-            <AvatarGrid size={64} items={[{borderColor: '#EB7E00', name: 'Mick Jagger'}]} />
+            <AvatarGrid size={64} items={[{color: '#EB7E00', name: 'Mick Jagger'}]} />
             <AvatarGrid
               size={32}
               items={[
-                {borderColor: '#fb0807', name: 'Joe Doe'},
-                {borderColor: '#2085C2', name: 'Bon Jovi'},
-                {borderColor: '#EB7E00', name: 'Mick Jagger'},
+                {color: '#fb0807', name: 'Joe Doe'},
+                {color: '#2085C2', name: 'Bon Jovi'},
+                {color: '#EB7E00', name: 'Mick Jagger'},
               ]}
             />
             <AvatarGrid
               size={24}
               items={[
-                {borderColor: '#fb0807', name: 'Joe Doe'},
-                {borderColor: '#2085C2', name: 'Bon Jovi'},
-                {borderColor: '#EB7E00', name: 'Mick Jagger'},
+                {color: '#fb0807', name: 'Joe Doe'},
+                {color: '#2085C2', name: 'Bon Jovi'},
+                {color: '#EB7E00', name: 'Mick Jagger'},
               ]}
             />
           </div>

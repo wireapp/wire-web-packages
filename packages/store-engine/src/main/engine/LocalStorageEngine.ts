@@ -41,7 +41,7 @@ export class LocalStorageEngine implements CRUDEngine {
     window.localStorage.clear();
   }
 
-  private createKey(tableName: string, primaryKey: string): string {
+  private createKey<PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): string {
     return `${this.createPrefix(tableName)}${primaryKey}`;
   }
 
@@ -49,7 +49,11 @@ export class LocalStorageEngine implements CRUDEngine {
     return `${this.storeName}@${tableName}@`;
   }
 
-  public async create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
+  public async create<EntityType, PrimaryKey = string>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    entity: EntityType,
+  ): Promise<PrimaryKey> {
     if (entity) {
       let record;
       const key = this.createKey(tableName, primaryKey);
@@ -79,8 +83,8 @@ export class LocalStorageEngine implements CRUDEngine {
     throw new RecordTypeError(message);
   }
 
-  public async delete(tableName: string, primaryKey: string): Promise<string> {
-    const key = this.createKey(tableName, primaryKey);
+  public async delete<PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): Promise<PrimaryKey> {
+    const key: string = this.createKey(tableName, primaryKey);
     window.localStorage.removeItem(key);
     return primaryKey;
   }
@@ -95,7 +99,10 @@ export class LocalStorageEngine implements CRUDEngine {
     return true;
   }
 
-  public async read<T>(tableName: string, primaryKey: string): Promise<T> {
+  public async read<EntityType = Object, PrimaryKey = string>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+  ): Promise<EntityType> {
     const key = `${this.storeName}@${tableName}@${primaryKey}`;
     const record = window.localStorage.getItem(key);
     if (record) {
@@ -132,43 +139,51 @@ export class LocalStorageEngine implements CRUDEngine {
     }, []);
   }
 
-  public async update<T>(tableName: string, primaryKey: string, changes: T): Promise<string> {
-    const entity = await this.read<T>(tableName, primaryKey);
+  public async update<PrimaryKey = string, ChangesType = Object>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    changes: ChangesType,
+  ): Promise<PrimaryKey> {
+    const entity = await this.read(tableName, primaryKey);
     const updatedEntity = {...entity, ...changes};
     try {
-      return this.create<T>(tableName, primaryKey, updatedEntity);
+      return this.create(tableName, primaryKey, updatedEntity);
     } catch (error) {
       if (error instanceof RecordAlreadyExistsError) {
-        await this.delete(tableName, primaryKey);
-        return this.create(tableName, primaryKey, updatedEntity);
+        return this.delete(tableName, primaryKey).then(() => this.create(tableName, primaryKey, updatedEntity));
       } else {
         throw error;
       }
     }
   }
 
-  public async updateOrCreate<T>(tableName: string, primaryKey: string, changes: T): Promise<string> {
+  public async updateOrCreate<PrimaryKey = string, ChangesType = Object>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    changes: ChangesType,
+  ): Promise<PrimaryKey> {
     try {
-      await this.update<T>(tableName, primaryKey, changes);
+      return this.update(tableName, primaryKey, changes);
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        return this.create<T>(tableName, primaryKey, changes);
+        return this.create(tableName, primaryKey, changes);
       }
       throw error;
     }
-    return primaryKey;
   }
 
-  async append(tableName: string, primaryKey: string, additions: string): Promise<string> {
-    let record = await this.read<string>(tableName, primaryKey);
+  public async append<PrimaryKey = string>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    additions: string,
+  ): Promise<PrimaryKey> {
+    let record = await this.read(tableName, primaryKey);
     if (typeof record === 'string') {
       record += additions;
     } else {
       const message = `Cannot append text to record "${primaryKey}" because it's not a string.`;
       throw new RecordTypeError(message);
     }
-    const key = this.createKey(tableName, primaryKey);
-    window.localStorage.setItem(key, record);
     return primaryKey;
   }
 }

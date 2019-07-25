@@ -46,7 +46,11 @@ export class MemoryEngine implements CRUDEngine {
     }
   }
 
-  public async create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
+  public async create<EntityType, PrimaryKey = string>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    entity: EntityType,
+  ): Promise<PrimaryKey> {
     if (entity) {
       this.prepareTable(tableName);
 
@@ -65,7 +69,7 @@ export class MemoryEngine implements CRUDEngine {
     throw new RecordTypeError(message);
   }
 
-  public async delete(tableName: string, primaryKey: string): Promise<string> {
+  public async delete<PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): Promise<PrimaryKey> {
     this.prepareTable(tableName);
     delete this.stores[this.storeName][tableName][primaryKey];
     return primaryKey;
@@ -76,7 +80,10 @@ export class MemoryEngine implements CRUDEngine {
     return true;
   }
 
-  public async read<T>(tableName: string, primaryKey: string): Promise<T> {
+  public async read<EntityType = Object, PrimaryKey = string>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+  ): Promise<EntityType> {
     this.prepareTable(tableName);
     if (this.stores[this.storeName][tableName].hasOwnProperty(primaryKey)) {
       return this.stores[this.storeName][tableName][primaryKey];
@@ -86,10 +93,10 @@ export class MemoryEngine implements CRUDEngine {
     }
   }
 
-  public readAll<T>(tableName: string): Promise<T[]> {
+  public readAll<EntityType = Object>(tableName: string): Promise<EntityType[]> {
     this.prepareTable(tableName);
     const promises = Object.keys(this.stores[this.storeName][tableName]).map(primaryKey =>
-      this.read<T>(tableName, primaryKey),
+      this.read<EntityType>(tableName, primaryKey),
     );
 
     return Promise.all(promises);
@@ -100,15 +107,23 @@ export class MemoryEngine implements CRUDEngine {
     return Object.keys(this.stores[this.storeName][tableName]);
   }
 
-  public async update<T>(tableName: string, primaryKey: string, changes: T): Promise<string> {
+  public async update<PrimaryKey = string, ChangesType = Object>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    changes: ChangesType,
+  ): Promise<PrimaryKey> {
     this.prepareTable(tableName);
-    const entity = await this.read<T>(tableName, primaryKey);
-    const updatedEntity: T = {...entity, ...changes};
+    const entity = await this.read<ChangesType, PrimaryKey>(tableName, primaryKey);
+    const updatedEntity: ChangesType = {...entity, ...changes};
     this.stores[this.storeName][tableName][primaryKey] = updatedEntity;
     return primaryKey;
   }
 
-  public async updateOrCreate<T>(tableName: string, primaryKey: string, changes: T): Promise<string> {
+  public async updateOrCreate<PrimaryKey = string, ChangesType = Object>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    changes: ChangesType,
+  ): Promise<PrimaryKey> {
     this.prepareTable(tableName);
     try {
       await this.update(tableName, primaryKey, changes);
@@ -121,7 +136,11 @@ export class MemoryEngine implements CRUDEngine {
     return primaryKey;
   }
 
-  async append(tableName: string, primaryKey: string, additions: string): Promise<string> {
+  public async append<PrimaryKey = string>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    additions: string,
+  ): Promise<PrimaryKey> {
     this.prepareTable(tableName);
     let record = await this.read(tableName, primaryKey);
 

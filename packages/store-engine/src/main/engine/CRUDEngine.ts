@@ -28,7 +28,7 @@ export interface CRUDEngine {
    * @param additions - Text to append
    * @returns Resolves with the primary key of the extended record.
    */
-  append(tableName: string, primaryKey: string, additions: string): Promise<string>;
+  append<PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey, additions: string): Promise<PrimaryKey>;
 
   /**
    * Initializes the store engine. This needs to be done prior to operating with it.
@@ -52,7 +52,11 @@ export interface CRUDEngine {
    * @param entity - Any kind of object that should be stored
    * @returns Resolves with the primary key of the stored record.
    */
-  create<T>(tableName: string, primaryKey: string, entity: T): Promise<string>;
+  create<EntityType = Object, PrimaryKey = string>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    entity: EntityType,
+  ): Promise<PrimaryKey>;
 
   /**
    * Deletes a record by its primary key within a table.
@@ -60,7 +64,7 @@ export interface CRUDEngine {
    * @param primaryKey - Primary key to be used to delete the record
    * @returns Resolves with the primary key of the deleted record.
    */
-  delete(tableName: string, primaryKey: string): Promise<string>;
+  delete<PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): Promise<PrimaryKey>;
 
   /**
    * Deletes all records within a table.
@@ -76,14 +80,14 @@ export interface CRUDEngine {
    * @throws {RecordNotFoundError} Will be thrown, if the record could not be found.
    * @returns Resolves with the record.
    */
-  read<T>(tableName: string, primaryKey: string): Promise<T>;
+  read<EntityType = Object, PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): Promise<EntityType>;
 
   /**
    * Reads all records from a table.
    * @param tableName - Table name
    * @returns Resolves with an array of records from a table.
    */
-  readAll<T>(tableName: string): Promise<T[]>;
+  readAll<EntityType>(tableName: string): Promise<EntityType[]>;
 
   /**
    * Returns all primary keys of records that are stored in a table.
@@ -99,7 +103,11 @@ export interface CRUDEngine {
    * @param changes - Updated properties that should be saved for the record
    * @returns Resolves with the primary key of the updated record.
    */
-  update<T>(tableName: string, primaryKey: string, changes: T): Promise<string>;
+  update<PrimaryKey = string, ChangesType = Object>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    changes: ChangesType,
+  ): Promise<PrimaryKey>;
 
   /**
    * Updates a record with a set of properties.
@@ -109,7 +117,11 @@ export interface CRUDEngine {
    * @param changes - Updated properties that should be saved for the record
    * @returns Resolves with the primary key of the updated record.
    */
-  updateOrCreate<T>(tableName: string, primaryKey: string, changes: T): Promise<string>;
+  updateOrCreate<PrimaryKey = string, ChangesType = Object>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    changes: ChangesType,
+  ): Promise<PrimaryKey>;
 
   /**
    * Checks wether the engine is supported in the current environment.
