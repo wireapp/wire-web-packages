@@ -55,15 +55,15 @@ const avatarGridStyle: <T>(props: Props<T>) => ObjectInterpolation<undefined> = 
 const filteredAvatarGridProps = (props: Props) =>
   filterProps(props, ['backgroundColor', 'borderColor', 'items', 'size']);
 
-export const AvatarGrid = ({size, items, ...props}: Props) => {
-  const allProps = {...props, size, items};
+export const AvatarGrid = (props: Props) => {
+  const {size, items} = props;
   const slicedItems = items.slice(0, 4);
   const missing = 4 - slicedItems.length;
   for (let index = 0; index < missing; index++) {
     slicedItems.push(null);
   }
   return (
-    <div css={avatarGridStyle(allProps)} {...filteredAvatarGridProps(allProps)}>
+    <div css={avatarGridStyle(props)} {...filteredAvatarGridProps(props)}>
       {slicedItems.map(item =>
         item ? (
           <Avatar
