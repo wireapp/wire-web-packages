@@ -204,7 +204,7 @@ const Demo = () => {
             />
             <Avatar size={64} fontSize={20} name={'Joe Do'} backgroundColor={'#2085C2'} />
             <Avatar size={32} fontSize={20} name={'Joe Do'} borderColor={'#fb0807'} backgroundColor={'#2085C2'} />
-            <Avatar size={24} fontSize={20} name={'Joe Do'} borderColor={'#fb0807'} backgroundColor={'#2085C2'} />
+            <Avatar fontSize={20} name={'Joe Do'} borderColor={'#fb0807'} backgroundColor={'#2085C2'} />
             <AvatarGrid
               size={120}
               items={[
@@ -236,7 +236,6 @@ const Demo = () => {
               ]}
             />
             <AvatarGrid
-              size={24}
               items={[
                 {color: '#fb0807', name: 'Joe Doe'},
                 {color: '#2085C2', name: 'Bon Jovi'},
