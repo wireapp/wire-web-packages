@@ -34,4 +34,4 @@ yarn add @wireapp/license-collector
 
 ### API Usage
 
-See [`cli.ts`](./src/main/cli.ts).
+See [`cli.ts`](./src/cli.ts).

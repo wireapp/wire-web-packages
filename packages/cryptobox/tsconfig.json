@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
-    "outDir": "dist/commonjs",
-    "rootDir": "src/main"
+    "outDir": "dist",
+    "rootDir": "src"
   },
   "exclude": ["bower_components", "dist", "node_modules"],
   "extends": "../../tsconfig.json"

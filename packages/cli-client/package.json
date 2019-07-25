@@ -1,6 +1,6 @@
 {
   "bin": {
-    "wire-cli": "dist/commonjs/index.js"
+    "wire-cli": "dist/index.js"
   },
   "dependencies": {
     "@types/dotenv": "6.1.1",

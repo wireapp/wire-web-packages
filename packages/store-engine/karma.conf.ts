@@ -22,7 +22,7 @@ import {Config} from 'karma';
 module.exports = (config: Config): void => {
   config.set({
     autoWatch: false,
-    basePath: 'src/main',
+    basePath: 'src',
     browserNoActivityTimeout: 90000,
     browsers: ['ChromeNoSandbox'],
     client: {

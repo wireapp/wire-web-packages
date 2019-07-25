@@ -31,13 +31,13 @@
     "dist"
   ],
   "license": "GPL-3.0",
-  "main": "dist/commonjs/index.js",
+  "main": "dist/index.js",
   "name": "@wireapp/cryptobox",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox",
   "scripts": {
     "build": "yarn build:node",
     "build:node": "tsc",
-    "clean": "rimraf dist/commonjs",
+    "clean": "rimraf dist",
     "dist": "yarn clean && yarn build",
     "test": "yarn test:node && yarn test:browser",
     "test:browser": "webpack && karma start",

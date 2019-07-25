@@ -32,8 +32,8 @@ logger.state.isEnabled = true;
 const {APIClient} = require('@wireapp/api-client');
 const path = require('path');
 const {FileEngine} = require('@wireapp/store-engine-fs');
-const {WebSocketTopic} = require('@wireapp/api-client/dist/commonjs/tcp/');
-const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/');
+const {WebSocketTopic} = require('@wireapp/api-client/dist/tcp/');
+const {ClientType} = require('@wireapp/api-client/dist/client/');
 
 const login = {
   clientType: ClientType.PERMANENT,

@@ -19,16 +19,16 @@
 
 import Dexie from 'dexie';
 
-import {appendSpec} from '@wireapp/store-engine/dist/commonjs/test/appendSpec';
-import {createSpec} from '@wireapp/store-engine/dist/commonjs/test/createSpec';
-import {deleteAllSpec} from '@wireapp/store-engine/dist/commonjs/test/deleteAllSpec';
-import {deleteSpec} from '@wireapp/store-engine/dist/commonjs/test/deleteSpec';
-import {purgeSpec} from '@wireapp/store-engine/dist/commonjs/test/purgeSpec';
-import {readAllPrimaryKeysSpec} from '@wireapp/store-engine/dist/commonjs/test/readAllPrimaryKeysSpec';
-import {readAllSpec} from '@wireapp/store-engine/dist/commonjs/test/readAllSpec';
-import {readSpec} from '@wireapp/store-engine/dist/commonjs/test/readSpec';
-import {updateOrCreateSpec} from '@wireapp/store-engine/dist/commonjs/test/updateOrCreateSpec';
-import {updateSpec} from '@wireapp/store-engine/dist/commonjs/test/updateSpec';
+import {appendSpec} from '@wireapp/store-engine/dist/test/appendSpec';
+import {createSpec} from '@wireapp/store-engine/dist/test/createSpec';
+import {deleteAllSpec} from '@wireapp/store-engine/dist/test/deleteAllSpec';
+import {deleteSpec} from '@wireapp/store-engine/dist/test/deleteSpec';
+import {purgeSpec} from '@wireapp/store-engine/dist/test/purgeSpec';
+import {readAllPrimaryKeysSpec} from '@wireapp/store-engine/dist/test/readAllPrimaryKeysSpec';
+import {readAllSpec} from '@wireapp/store-engine/dist/test/readAllSpec';
+import {readSpec} from '@wireapp/store-engine/dist/test/readSpec';
+import {updateOrCreateSpec} from '@wireapp/store-engine/dist/test/updateOrCreateSpec';
+import {updateSpec} from '@wireapp/store-engine/dist/test/updateSpec';
 
 import {IndexedDBEngine} from './index';
 
