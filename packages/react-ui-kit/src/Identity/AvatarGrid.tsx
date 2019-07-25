@@ -84,7 +84,7 @@ export const AvatarGrid = ({borderWidth = 1, size = DEFAULT_AVATAR_SIZE - border
             css={{
               backgroundColor: COLOR.GRAY_DARKEN_80,
               height: size / 2 - borderWidth,
-              width: size / 2 - borderWidth,
+              width: size / 2,
             }}
           />
         ),
