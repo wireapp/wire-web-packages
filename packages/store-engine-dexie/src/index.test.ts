@@ -156,9 +156,11 @@ describe('IndexedDBEngine', () => {
         testValue: 'value',
       };
 
+      type ExpectedResult = typeof entity & {primaryKey: number};
+
       const primaryKey = await engine.updateOrCreate<number>(TABLE_NAME, undefined as any, entity);
       expect(primaryKey).toBe(1);
-      const record = await engine.read<any, number>(TABLE_NAME, primaryKey);
+      const record = await engine.read<ExpectedResult, number>(TABLE_NAME, primaryKey);
       expect(record.primaryKey).toBe(1);
       expect(record.testValue).toBe(entity.testValue);
     });
