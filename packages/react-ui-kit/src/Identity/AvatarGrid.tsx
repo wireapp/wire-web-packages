@@ -77,14 +77,14 @@ export const AvatarGrid = ({borderWidth = 1, size = DEFAULT_AVATAR_SIZE - border
             forceInitials={item.forceInitials}
             isAvatarGridItem
             name={item.name}
-            size={size / 2}
+            size={size / 2 - borderWidth}
           />
         ) : (
           <div
             css={{
               backgroundColor: COLOR.GRAY_DARKEN_80,
-              height: size / 2,
-              width: size / 2,
+              height: size / 2 - borderWidth,
+              width: size / 2 - borderWidth,
             }}
           />
         ),
