@@ -51,8 +51,8 @@ describe('IndexedDBEngine', () => {
   });
 
   afterEach(done => {
-    if (engine && engine.db) {
-      engine.db.close();
+    if (engine && engine['db']) {
+      engine['db'].close();
       const deleteRequest = window.indexedDB.deleteDatabase(STORE_NAME);
       deleteRequest.onsuccess = () => done();
     }
@@ -148,16 +148,19 @@ describe('IndexedDBEngine', () => {
       engine = new IndexedDBEngine();
       const db: Dexie = await engine.init('primary-key-store');
       db.version(1).stores({
-        [TABLE_NAME]: '++primary_key, testValue',
+        [TABLE_NAME]: '++primaryKey, testValue',
       });
       await db.open();
 
       const entity = {
-        some: 'value',
+        testValue: 'value',
       };
 
-      const primaryKey = await engine.updateOrCreate(TABLE_NAME, undefined as any, entity);
-      expect(primaryKey).toBeDefined();
+      const primaryKey = await engine.updateOrCreate<number>(TABLE_NAME, undefined as any, entity);
+      expect(primaryKey).toBe(1);
+      const record = await engine.read<any, number>(TABLE_NAME, primaryKey);
+      expect(record.primaryKey).toBe(1);
+      expect(record.testValue).toBe(entity.testValue);
     });
   });
 

@@ -69,7 +69,7 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   // TODO: Remove "append" functionality from "CRUDEngine" completely
-  append(tableName: string, primaryKey: string, additions: string): Promise<string> {
+  append<PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey, additions: string): Promise<PrimaryKey> {
     throw new Error('Method not implemented.');
   }
 
@@ -167,12 +167,16 @@ export class SQLeetEngine implements CRUDEngine {
     return {columns, values};
   }
 
-  async create<T>(tableName: string, primaryKey: string, entity: Record<string, any>): Promise<string> {
+  async create<EntityType = Object, PrimaryKey = string>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    entity: EntityType,
+  ): Promise<PrimaryKey> {
     if (!entity) {
       const message = `Record "${primaryKey}" cannot be saved in "${tableName}" because it's "undefined" or "null".`;
       throw new RecordTypeError(message);
     }
-    const {columns, values} = this.buildValues(tableName, entity);
+    const {columns, values} = this.buildValues(tableName, entity as any);
     const newValues = Object.keys(values).join(',');
     const escapedTableName = escape(tableName);
     const statement = `INSERT INTO ${escapedTableName} (${getFormattedColumnsFromColumns(
@@ -195,7 +199,7 @@ export class SQLeetEngine implements CRUDEngine {
     return primaryKey;
   }
 
-  async delete(tableName: string, primaryKey: string): Promise<string> {
+  async delete<PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): Promise<PrimaryKey> {
     const escapedTableName = escape(tableName);
     const statement = `DELETE FROM ${escapedTableName} WHERE ${SQLeetEnginePrimaryKeyName}=@primaryKey;`;
     this.db.run(statement, {
@@ -211,7 +215,7 @@ export class SQLeetEngine implements CRUDEngine {
     return true;
   }
 
-  async read<T>(tableName: string, primaryKey: string): Promise<T> {
+  async read<EntityType = Object, PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): Promise<EntityType> {
     const table = this.schema[tableName];
     if (!table) {
       throw new Error(`Table "${tableName}" does not exist.`);
@@ -267,9 +271,13 @@ export class SQLeetEngine implements CRUDEngine {
     return [];
   }
 
-  async update(tableName: string, primaryKey: string, changes: Record<string, any>): Promise<string> {
+  async update<PrimaryKey = string, ChangesType = Object>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    changes: ChangesType,
+  ): Promise<PrimaryKey> {
     await this.read(tableName, primaryKey);
-    const {values, columns} = this.buildValues(tableName, changes);
+    const {values, columns} = this.buildValues(tableName, changes as any);
     const escapedTableName = escape(tableName);
     const statement = `UPDATE ${escapedTableName} SET ${getProtectedColumnReferences(
       columns,
@@ -281,7 +289,11 @@ export class SQLeetEngine implements CRUDEngine {
     return primaryKey;
   }
 
-  async updateOrCreate<T>(tableName: string, primaryKey: string, changes: Record<string, any>): Promise<string> {
+  async updateOrCreate<PrimaryKey = string, ChangesType = Object>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    changes: ChangesType,
+  ): Promise<PrimaryKey> {
     try {
       await this.update(tableName, primaryKey, changes);
     } catch (error) {
