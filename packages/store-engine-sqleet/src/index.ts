@@ -46,16 +46,20 @@ const zipObject = (props: any[], values: any[]) =>
 
 export class SQLeetEngine implements CRUDEngine {
   private db: any;
-  private readonly dbConfig: any;
   private rawDatabase: string | undefined;
+  private readonly schema: SQLiteDatabaseDefinition<Record<string, any>>;
+  private readonly encryptionKey: string;
+  private readonly dbConfig: any;
   public storeName = '';
 
   constructor(
     wasmLocation: Uint8Array | string,
-    private readonly schema: SQLiteDatabaseDefinition<Record<string, any>>,
-    private readonly encryptionKey: string,
+    schema: SQLiteDatabaseDefinition<Record<string, any>>,
+    encryptionKey: string,
     rawDatabase?: string,
   ) {
+    this.schema = schema;
+    this.encryptionKey = encryptionKey;
     this.dbConfig = {};
 
     if (typeof wasmLocation === 'string') {
@@ -92,11 +96,13 @@ export class SQLeetEngine implements CRUDEngine {
     this.db.run(`PRAGMA \`key\`=${escape(this.encryptionKey)};`);
 
     // Create tables
-    let statement: string = '';
+    let statement = '';
+
     for (const tableName in this.schema) {
       const table = this.schema[tableName];
       statement += createTableIfNotExists(tableName, table);
     }
+
     this.db.run(statement);
 
     return this.db;
@@ -133,9 +139,9 @@ export class SQLeetEngine implements CRUDEngine {
     this.rawDatabase = undefined;
   }
 
-  private buildValues(
+  private buildValues<EntityType = Record<string, SQLiteType>>(
     tableName: string,
-    entities: Record<string, SQLiteType>,
+    entities: EntityType,
   ): {columns: Record<string, string>; values: Record<string, any>} {
     const table = this.schema[tableName];
     if (!table) {
@@ -148,7 +154,7 @@ export class SQLeetEngine implements CRUDEngine {
       if (typeof table[entity] !== 'string') {
         continue;
       }
-      let value = entities[entity];
+      let value: string | EntityType[Extract<keyof EntityType, string>] = entities[entity];
       // Stringify objects for the database
       if (table[entity] === SQLiteType.JSON) {
         value = JSON.stringify(value) as SQLiteType;
@@ -176,7 +182,7 @@ export class SQLeetEngine implements CRUDEngine {
       const message = `Record "${primaryKey}" cannot be saved in "${tableName}" because it's "undefined" or "null".`;
       throw new RecordTypeError(message);
     }
-    const {columns, values} = this.buildValues(tableName, entity as any);
+    const {columns, values} = this.buildValues(tableName, entity);
     const newValues = Object.keys(values).join(',');
     const escapedTableName = escape(tableName);
     const statement = `INSERT INTO ${escapedTableName} (${getFormattedColumnsFromColumns(
@@ -277,7 +283,7 @@ export class SQLeetEngine implements CRUDEngine {
     changes: ChangesType,
   ): Promise<PrimaryKey> {
     await this.read(tableName, primaryKey);
-    const {values, columns} = this.buildValues(tableName, changes as any);
+    const {values, columns} = this.buildValues(tableName, changes);
     const escapedTableName = escape(tableName);
     const statement = `UPDATE ${escapedTableName} SET ${getProtectedColumnReferences(
       columns,

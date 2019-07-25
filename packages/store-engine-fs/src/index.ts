@@ -89,20 +89,18 @@ export class FileEngine implements CRUDEngine {
   ): Promise<PrimaryKey> {
     if (entity) {
       const filePath = this.resolvePath(tableName, primaryKey);
+      let newEntity: EntityType | string = entity;
+
       if (typeof entity === 'object') {
-        try {
-          entity = JSON.stringify(entity) as any;
-        } catch (error) {
-          entity = (entity as any).toString();
-        }
+        newEntity = JSON.stringify(entity);
       }
 
       try {
-        await fs.writeFile(filePath, entity, {flag: 'wx'});
+        await fs.writeFile(filePath, newEntity, {flag: 'wx'});
         return primaryKey;
       } catch (error) {
         if (error.code === 'ENOENT') {
-          await fs.outputFile(filePath, entity);
+          await fs.outputFile(filePath, newEntity);
           return primaryKey;
         } else if (error.code === 'EEXIST') {
           const message = `Record "${primaryKey}" already exists in "${tableName}". You need to delete the record first if you want to overwrite it.`;

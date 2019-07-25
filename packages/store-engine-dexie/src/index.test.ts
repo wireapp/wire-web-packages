@@ -17,7 +17,6 @@
  *
  */
 
-import {CRUDEngine} from '@wireapp/store-engine';
 import {appendSpec} from '@wireapp/store-engine/dist/commonjs/test/appendSpec';
 import {createSpec} from '@wireapp/store-engine/dist/commonjs/test/createSpec';
 import {deleteAllSpec} from '@wireapp/store-engine/dist/commonjs/test/deleteAllSpec';
@@ -34,11 +33,11 @@ import {IndexedDBEngine} from './index';
 describe('IndexedDBEngine', () => {
   const STORE_NAME = 'store-name';
 
-  let engine: CRUDEngine;
+  let engine: IndexedDBEngine;
 
-  async function initEngine(shouldCreateNewEngine = true): Promise<IndexedDBEngine | CRUDEngine> {
+  async function initEngine(shouldCreateNewEngine = true): Promise<IndexedDBEngine> {
     const storeEngine = shouldCreateNewEngine ? new IndexedDBEngine() : engine;
-    const db = await storeEngine.init(STORE_NAME);
+    const db: Dexie = await storeEngine.init(STORE_NAME);
     db.version(1).stores({
       'the-simpsons': ', firstName, lastName',
     });
@@ -61,7 +60,7 @@ describe('IndexedDBEngine', () => {
   describe('init', () => {
     it('resolves with the database instance to which the records will be saved.', async () => {
       engine = new IndexedDBEngine();
-      const instance: Dexie = await engine.init(STORE_NAME);
+      const instance = await engine.init(STORE_NAME);
       expect(instance instanceof Dexie).toBe(true);
     });
   });
@@ -100,8 +99,8 @@ describe('IndexedDBEngine', () => {
       const primaryKey = await engine.create(TABLE_NAME, PRIMARY_KEY, entity);
       expect(primaryKey).toEqual(PRIMARY_KEY);
       expect(engine.storeName).toBe(name);
-      expect(engine.db.name).toBe(name);
-      expect(Object.keys(engine.db._dbSchema).length).toBe(1);
+      expect(engine['db'].name).toBe(name);
+      expect(Object.keys(engine['db']._dbSchema).length).toBe(1);
     });
   });
 
@@ -158,7 +157,7 @@ describe('IndexedDBEngine', () => {
 
       type ExpectedResult = typeof entity & {primaryKey: number};
 
-      const primaryKey = await engine.updateOrCreate<number>(TABLE_NAME, undefined as any, entity);
+      const primaryKey = await engine.updateOrCreate<number>(TABLE_NAME, undefined, entity);
       expect(primaryKey).toBe(1);
       const record = await engine.read<ExpectedResult, number>(TABLE_NAME, primaryKey);
       expect(record.primaryKey).toBe(1);

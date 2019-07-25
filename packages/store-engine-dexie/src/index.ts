@@ -20,8 +20,10 @@
 import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import Dexie from 'dexie';
 
+type DexieObservable = {_dbSchema?: Object};
+
 export class IndexedDBEngine implements CRUDEngine {
-  private db: Dexie = new Dexie('');
+  private db: Dexie & DexieObservable = new Dexie('');
   public storeName = '';
 
   // Check if IndexedDB is accessible (which won't be the case when browsing with Firefox in private mode or being on
