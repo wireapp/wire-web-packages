@@ -31,15 +31,16 @@ export interface AvatarProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   forceInitials?: boolean;
   isAvatarGridItem?: boolean;
   name: string;
-  size: number;
+  size?: number;
 }
 
 const avatarStyle: <T>(props: AvatarProps<T>) => ObjectInterpolation<undefined> = ({
+  color = COLOR.WHITE,
   base64Image,
   forceInitials,
   borderColor,
   backgroundColor = COLOR.GRAY,
-  size,
+  size = 28,
   isAvatarGridItem,
 }) => {
   const BORDER_SIZE_LIMIT = 32;
@@ -55,7 +56,7 @@ const avatarStyle: <T>(props: AvatarProps<T>) => ObjectInterpolation<undefined> 
     backgroundSize: 'cover',
     borderRadius: isAvatarGridItem ? '0' : '50%',
     boxShadow: isAvatarGridItem ? 'none' : `inset 0 0 0 ${borderWidth}px ${borderColor}`,
-    color: isAvatarGridItem ? borderColor : 'white',
+    color,
     display: 'flex',
     fontSize,
     fontWeight: isAvatarGridItem ? 700 : 300,

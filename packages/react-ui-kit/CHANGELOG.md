@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.8.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.8.1...@wireapp/react-ui-kit@7.8.2) (2019-07-25)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Add BLACK and WHITE to BASE_COLOR ([#2130](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2130)) ([ed7d9ed](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/ed7d9ed))
+
+
+
+
+
+## [7.8.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.8.0...@wireapp/react-ui-kit@7.8.1) (2019-07-25)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+# [7.8.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.7.0...@wireapp/react-ui-kit@7.8.0) (2019-07-24)
+
+
+### Features
+
+* **react-ui-kit:** Size in avatar optional ([#2121](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2121)) ([cef3084](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/cef3084))
+
+
+
+
+
+# [7.7.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.6.0...@wireapp/react-ui-kit@7.7.0) (2019-07-24)
+
+
+### Features
+
+* **react-ui-kit:** Smaller borders in AvatarGrid ([#2118](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2118)) ([e97c6b4](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/e97c6b4))
+
+
+
+
+
 # [7.6.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.5.3...@wireapp/react-ui-kit@7.6.0) (2019-07-24)
 
 
