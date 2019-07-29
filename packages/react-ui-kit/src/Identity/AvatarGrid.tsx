@@ -47,6 +47,7 @@ const avatarGridStyle: <T>(props: Props<T>) => ObjectInterpolation<undefined> = 
     display: 'grid',
     gridGap: borderWidth,
     gridTemplateColumns: 'repeat(2, 1fr)',
+    gridTemplateRows: 'repeat(2, 1fr)',
     height: `${size}px`,
     justifyItems: 'center',
     overflow: 'hidden',
@@ -78,13 +79,14 @@ export const AvatarGrid = ({borderWidth = 1, size = DEFAULT_AVATAR_SIZE - border
             isAvatarGridItem
             name={item.name}
             size={size / 2 - borderWidth}
+            style={{width: '100%', height: '100%'}}
           />
         ) : (
           <div
             css={{
               backgroundColor: COLOR.GRAY_DARKEN_80,
-              height: size / 2 - borderWidth,
-              width: size / 2 - borderWidth,
+              height: '100%',
+              width: '100%',
             }}
           />
         ),
