@@ -23,4 +23,4 @@ yarn add @wireapp/cryptobox
 
 #### Node.js
 
-- [demo.js](./src/demo/demo.js)
+- [demo.js](./demo/demo.js)

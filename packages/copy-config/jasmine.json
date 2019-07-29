@@ -2,6 +2,6 @@
   "helpers": ["test/helpers/**/*.js"],
   "random": true,
   "spec_dir": "src",
-  "spec_files": ["main/**/*test.js"],
+  "spec_files": ["**/*test.js"],
   "stopSpecOnExpectationFailure": true
 }
