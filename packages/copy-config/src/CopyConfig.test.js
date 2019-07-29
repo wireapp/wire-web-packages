@@ -22,8 +22,8 @@
 const path = require('path');
 const fs = require('fs-extra');
 
-const {CopyConfig} = require('../../dist');
-const utils = require('../../dist/utils');
+const {CopyConfig} = require('../dist');
+const utils = require('../dist/utils');
 const TEMP_DIR = path.resolve(__dirname, '..', '..', '.temp/');
 
 describe('CopyConfig', () => {
