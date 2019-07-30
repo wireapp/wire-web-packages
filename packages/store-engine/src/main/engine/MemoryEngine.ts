@@ -136,7 +136,7 @@ export class MemoryEngine implements CRUDEngine {
       await this.update(tableName, primaryKey, changes);
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        return this.create(tableName, primaryKey, changes);
+        await this.create(tableName, primaryKey, changes);
       }
       throw error;
     }

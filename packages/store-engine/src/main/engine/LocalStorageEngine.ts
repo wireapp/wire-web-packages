@@ -174,14 +174,14 @@ export class LocalStorageEngine implements CRUDEngine {
     changes: ChangesType,
   ): Promise<PrimaryKey> {
     try {
-      const newKey = await this.update(tableName, primaryKey, changes);
-      return newKey;
+      await this.update(tableName, primaryKey, changes);
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        return this.create(tableName, primaryKey, changes);
+        await this.create(tableName, primaryKey, changes);
       }
       throw error;
     }
+    return primaryKey;
   }
 
   private createKey<PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): string {
