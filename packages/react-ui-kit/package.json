@@ -2,7 +2,7 @@
   "dependencies": {
     "@emotion/core": "10.0.14",
     "@types/color": "3.0.0",
-    "bazinga64": "5.5.7",
+    "bazinga64": "5.5.8",
     "color": "3.1.2",
     "emotion-normalize": "10.1.0",
     "react-transition-group": "4.2.1"
@@ -26,11 +26,11 @@
     "react": "16.8.6",
     "react-dom": "16.8.6",
     "react-helmet": "5.2.1",
-    "react-hot-loader": "4.12.9",
+    "react-hot-loader": "4.12.10",
     "react-test-renderer": "16.8.6",
     "rimraf": "2.6.3",
     "typescript": "3.5.3",
-    "webpack": "4.37.0",
+    "webpack": "4.38.0",
     "webpack-cli": "3.3.6",
     "webpack-dev-server": "3.7.2",
     "webpack-env": "0.8.0"
@@ -63,5 +63,5 @@
     "test:update": "yarn test --updateSnapshot",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "7.8.2"
+  "version": "7.8.4"
 }
