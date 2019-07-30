@@ -24,7 +24,7 @@ Nowadays there are more and more storage possibilities and developers must be fa
 
 #### Engine instantiation
 
-```typescript
+```javascript
 const {MemoryEngine} = require('@wireapp/store-engine');
 const engine = new MemoryEngine('my-database');
 ```
@@ -33,17 +33,20 @@ const engine = new MemoryEngine('my-database');
 
 As a bonus to the store engine, we built a transient store which deletes data after a specified [TTL](https://en.wikipedia.org/wiki/Time_to_live):
 
-```typescript
-import {Store, MemoryEngine} from '@wireapp/store-engine';
+```javascript
+const {Store, MemoryEngine} = require('@wireapp/store-engine');
 
 const engine = new MemoryEngine('my-favorite-actors');
 const store = new Store.TransientStore(engine);
 
 const ttl = 1000;
 
-await store.init('the-simpsons');
-const transientBundle = store.set('bart', {name: 'Bart Simpson'}, ttl));
-console.log(`The record of "${transientBundle.payload.name}" expires in "${transientBundle.expires}" ms.`);
+store
+  .init('the-simpsons')
+  .then(() => store.set('bart', {name: 'Bart Simpson'}, ttl))
+  .then(transientBundle => {
+    console.log(`The record of "${transientBundle.payload.name}" will expires in "${transientBundle.expires}"ms.`);
+  });
 ```
 
 ### API
@@ -54,7 +57,7 @@ No matter which engine you use, they all support common [CRUD operations](https:
 
 The following API calls we use this data:
 
-```typescript
+```javascript
 const TABLE_NAME = 'the-simpsons';
 const PRIMARY_KEY = 'lisa-simpson';
 const ENTITY = {name: 'Lisa Simpson'};
@@ -62,59 +65,68 @@ const ENTITY = {name: 'Lisa Simpson'};
 
 #### create
 
-```typescript
-const primaryKey = await engine.create(TABLE_NAME, PRIMARY_KEY, ENTITY);
-console.log(`Saved record with primary key "${primaryKey}".`);
+```javascript
+engine.create(TABLE_NAME, PRIMARY_KEY, ENTITY).then(primaryKey => {
+  console.log(`Saved record with primary key "${primaryKey}".`);
+});
 ```
 
 #### delete
 
-```typescript
-const primaryKey = await engine.delete(TABLE_NAME, PRIMARY_KEY);
-console.log(`Deleted record with primary key "${primaryKey}".`);
+```javascript
+engine.delete(TABLE_NAME, PRIMARY_KEY).then(primaryKey => {
+  console.log(`Deleted record with primary key "${primaryKey}".`);
+});
 ```
 
 #### deleteAll
 
-```typescript
-const wasDeleted = await engine.deleteAll(TABLE_NAME);
-if (wasDeleted) {
-  console.log('The Simpsons have been deleted. Poor Simpsons!');
-}
+```javascript
+engine.deleteAll(TABLE_NAME).then(wasDeleted => {
+  if (wasDeleted) {
+    console.log('The Simpsons have been deleted. Poor Simpsons!');
+  }
+});
 ```
 
 #### purge
 
-```typescript
-await engine.purge();
-console.log(`The Simpson universe has been deleted. D'oh!`);
+```javascript
+engine.purge().then(() => {
+  console.log('The Simpson Universe has been deleted. Doh!');
+});
 ```
 
 #### read
 
-```typescript
-const record = await engine.read(TABLE_NAME, PRIMARY_KEY);
-console.log(`Her name is "${record.name}".`);
+```javascript
+engine.read(TABLE_NAME, PRIMARY_KEY).then(record => {
+  console.log(`Her name is "${record.name}".`);
+});
 ```
 
 #### readAll
 
-```typescript
-const records = await engine.readAll(TABLE_NAME);
-console.log(`There are "${records.length}" Simpsons in our database.`);
+```javascript
+engine.readAll(TABLE_NAME).then(records => {
+  console.log(`There are "${record.length}" Simpsons in our database.`);
+});
 ```
 
 #### readAllPrimaryKeys
 
-```typescript
-const primaryKeys = await engine.readAllPrimaryKeys(TABLE_NAME);
-console.log(`Identifiers of our Simpsons: "${primaryKeys.join(', ')}"`);
+```javascript
+engine.readAllPrimaryKeys(TABLE_NAME).then(primaryKeys => {
+  console.log(`Identifiers of our Simpsons: "${primaryKeys.join(', ')}"`);
+});
 ```
 
 #### update
 
-```typescript
-await engine.update(TABLE_NAME, PRIMARY_KEY, {brother: 'Bart Simpson'});
-const updatedRecord = await engine.read(TABLE_NAME, PRIMARY_KEY);
-console.log(`The brother of "${updatedRecord.name}" is "${updatedRecord.brother}".`):
+```javascript
+engine.update(TABLE_NAME, PRIMARY_KEY, {brother: 'Bart Simpson'}).then((primaryKey) => {
+  return engine.read(TABLE_NAME, PRIMARY_KEY);
+}).then((updatedRecord) => {
+  console.log(`The brother of "${updatedRecord.name}" is "${updatedRecord.brother}".`):
+})
 ```
