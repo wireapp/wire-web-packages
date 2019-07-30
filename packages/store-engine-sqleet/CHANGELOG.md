@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@0.6.2...@wireapp/store-engine-sqleet@0.6.3) (2019-07-29)
+
+**Note:** Version bump only for package @wireapp/store-engine-sqleet
+
+
+
+
+
+## [0.6.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@0.6.1...@wireapp/store-engine-sqleet@0.6.2) (2019-07-29)
+
+**Note:** Version bump only for package @wireapp/store-engine-sqleet
+
+
+
+
+
+## [0.6.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@0.6.0...@wireapp/store-engine-sqleet@0.6.1) (2019-07-25)
+
+
+### Bug Fixes
+
+* **store-engine-bro-fs,store-engine-sqleet:** Unify error types ([#2131](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/issues/2131)) ([f56a6a2](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/commit/f56a6a2))
+
+
+
+
+
+# [0.6.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@0.5.8...@wireapp/store-engine-sqleet@0.6.0) (2019-07-25)
+
+
+### Features
+
+* **store-engine,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet:** Add generic for primary key ([#2120](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/issues/2120)) ([fc3adf8](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/commit/fc3adf8))
+
+
+
+
+
 ## [0.5.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@0.5.7...@wireapp/store-engine-sqleet@0.5.8) (2019-07-24)
 
 **Note:** Version bump only for package @wireapp/store-engine-sqleet

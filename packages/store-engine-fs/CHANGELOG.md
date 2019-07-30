@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.3.2...@wireapp/store-engine-fs@1.3.3) (2019-07-29)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.3.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.3.1...@wireapp/store-engine-fs@1.3.2) (2019-07-29)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.3.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.3.0...@wireapp/store-engine-fs@1.3.1) (2019-07-25)
+
+
+### Bug Fixes
+
+* **store-engine-bro-fs,store-engine-sqleet:** Unify error types ([#2131](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/issues/2131)) ([f56a6a2](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/commit/f56a6a2))
+
+
+
+
+
+# [1.3.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.2.7...@wireapp/store-engine-fs@1.3.0) (2019-07-25)
+
+
+### Features
+
+* **store-engine,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet:** Add generic for primary key ([#2120](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/issues/2120)) ([fc3adf8](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/commit/fc3adf8))
+
+
+
+
+
 ## [1.2.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.2.6...@wireapp/store-engine-fs@1.2.7) (2019-07-24)
 
 **Note:** Version bump only for package @wireapp/store-engine-fs

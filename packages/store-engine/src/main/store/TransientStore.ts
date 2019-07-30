@@ -24,15 +24,42 @@ import {ExpiredBundle} from './ExpiredBundle';
 import {TransientBundle} from './TransientBundle';
 
 export class TransientStore extends EventEmitter {
-  private readonly bundles: Record<string, TransientBundle> = {};
-  private tableName = '';
-
   public static TOPIC = {
     EXPIRED: 'expired',
   };
+  private readonly bundles: Record<string, TransientBundle> = {};
+  private tableName = '';
 
   constructor(private readonly engine: CRUDEngine) {
     super();
+  }
+
+  public delete(primaryKey: string): Promise<string> {
+    const cacheKey = this.constructCacheKey(primaryKey);
+
+    return Promise.all([this.deleteFromStore(primaryKey), this.deleteFromCache(cacheKey)]).then(() => cacheKey);
+  }
+
+  public deleteFromCache(cacheKey: string): string {
+    const timeoutID = this.bundles[cacheKey] && this.bundles[cacheKey].timeoutID;
+    if (timeoutID) {
+      clearTimeout(<number>timeoutID);
+    }
+    delete this.bundles[cacheKey];
+    return cacheKey;
+  }
+
+  public get(primaryKey: string): Promise<TransientBundle | undefined> {
+    return this.getFromCache(primaryKey)
+      .then((cachedBundle: TransientBundle) => {
+        return cachedBundle !== undefined ? cachedBundle : this.getFromStore(primaryKey);
+      })
+      .catch(error => {
+        if (error instanceof RecordNotFoundError) {
+          return undefined;
+        }
+        throw error;
+      });
   }
 
   public async init(tableName: string): Promise<TransientBundle[]> {
@@ -63,46 +90,6 @@ export class TransientStore extends EventEmitter {
   }
 
   /**
-   * Returns a fully qualified name (FQN) which can be used to cache a transient bundle.
-   * @param primaryKey - Primary key from which the FQN is created
-   * @returns A fully qualified name
-   */
-  private constructCacheKey(primaryKey: string): string {
-    return `${this.engine.storeName}@${this.tableName}@${primaryKey}`;
-  }
-
-  private constructPrimaryKey(cacheKey: string): string {
-    return cacheKey.replace(`${this.engine.storeName}@${this.tableName}@`, '');
-  }
-
-  private createTransientBundle<T>(record: T, ttl: number): TransientBundle {
-    return {
-      expires: Date.now() + ttl,
-      payload: record,
-    };
-  }
-
-  public async get(primaryKey: string): Promise<TransientBundle | undefined> {
-    try {
-      const cachedBundle = await this.getFromCache(primaryKey);
-      return cachedBundle !== undefined ? cachedBundle : this.getFromStore(primaryKey);
-    } catch (error) {
-      if (error instanceof RecordNotFoundError) {
-        return undefined;
-      }
-      throw error;
-    }
-  }
-
-  private getFromCache(primaryKey: string): TransientBundle {
-    return this.bundles[this.constructCacheKey(primaryKey)];
-  }
-
-  private getFromStore(primaryKey: string): Promise<TransientBundle> {
-    return this.engine.read(this.tableName, primaryKey);
-  }
-
-  /**
    * Saves a transient record to the store and starts a timer to remove this record when the time to live (TTL) ended.
    * @param primaryKey - Primary key from which the FQN is created
    * @param record - A payload which should be kept in the TransientStore
@@ -124,36 +111,28 @@ export class TransientStore extends EventEmitter {
     }
   }
 
-  private async save<TransientBundle>(primaryKey: string, bundle: TransientBundle): Promise<string> {
-    const cacheKey = this.constructCacheKey(primaryKey);
-    await Promise.all([this.saveInStore(primaryKey, bundle), this.saveInCache(cacheKey, bundle)]);
-    return cacheKey;
+  /**
+   * Returns a fully qualified name (FQN) which can be used to cache a transient bundle.
+   * @param {string} primaryKey - Primary key from which the FQN is created
+   * @returns {string} A fully qualified name
+   */
+  private constructCacheKey(primaryKey: string): string {
+    return `${this.engine.storeName}@${this.tableName}@${primaryKey}`;
   }
 
-  private saveInStore<TransientBundle>(primaryKey: string, bundle: TransientBundle): Promise<string> {
-    return this.engine.create(this.tableName, primaryKey, bundle);
+  private constructPrimaryKey(cacheKey: string): string {
+    return cacheKey.replace(`${this.engine.storeName}@${this.tableName}@`, '');
   }
 
-  private saveInCache<TransientBundle>(cacheKey: string, bundle: TransientBundle): TransientBundle {
-    return (this.bundles[cacheKey] = <any>bundle);
-  }
-
-  public async delete(primaryKey: string): Promise<string> {
-    const cacheKey = this.constructCacheKey(primaryKey);
-    await Promise.all([this.deleteFromStore(primaryKey), this.deleteFromCache(cacheKey)]);
-    return cacheKey;
+  private createTransientBundle<T>(record: T, ttl: number): {expires: number; payload: T} {
+    return {
+      expires: Date.now() + ttl,
+      payload: record,
+    };
   }
 
   private deleteFromStore(primaryKey: string): Promise<string> {
     return this.engine.delete(this.tableName, primaryKey);
-  }
-
-  public deleteFromCache(cacheKey: string): string {
-    if (this.bundles[cacheKey] && this.bundles[cacheKey].timeoutID) {
-      clearTimeout(this.bundles[cacheKey].timeoutID as number);
-    }
-    delete this.bundles[cacheKey];
-    return cacheKey;
   }
 
   private async expireBundle(cacheKey: string): Promise<ExpiredBundle> {
@@ -165,6 +144,29 @@ export class TransientStore extends EventEmitter {
 
     await this.delete(expiredBundle.primaryKey);
     return expiredBundle;
+  }
+
+  private getFromCache(primaryKey: string): Promise<TransientBundle> {
+    const cacheBundle = this.bundles[this.constructCacheKey(primaryKey)];
+    return Promise.resolve(cacheBundle);
+  }
+
+  private getFromStore(primaryKey: string): Promise<TransientBundle> {
+    return this.engine.read(this.tableName, primaryKey);
+  }
+
+  private save<TransientBundle>(primaryKey: string, bundle: TransientBundle): Promise<string> {
+    const cacheKey: string = this.constructCacheKey(primaryKey);
+
+    return Promise.all([this.saveInStore(primaryKey, bundle), this.saveInCache(cacheKey, bundle)]).then(() => cacheKey);
+  }
+
+  private saveInCache<TransientBundle>(cacheKey: string, bundle: TransientBundle): TransientBundle {
+    return (this.bundles[cacheKey] = <any>bundle);
+  }
+
+  private saveInStore<TransientBundle>(primaryKey: string, bundle: TransientBundle): Promise<string> {
+    return this.engine.create(this.tableName, primaryKey, bundle);
   }
 
   private async startTimer(cacheKey: string): Promise<TransientBundle> {

@@ -26,24 +26,18 @@ export class MemoryEngine implements CRUDEngine {
   public storeName = '';
   private readonly stores: MemoryStore = {};
 
-  public async isSupported(): Promise<void> {
-    // Always available
-  }
-
-  public async init(storeName: string): Promise<MemoryStore> {
-    this.storeName = storeName;
-    this.stores[this.storeName] = this.stores[this.storeName] || {};
-    return this.stores;
-  }
-
-  public async purge(): Promise<void> {
-    delete this.stores[this.storeName];
-  }
-
-  private prepareTable(tableName: string): void {
-    if (!this.stores[this.storeName][tableName]) {
-      this.stores[this.storeName][tableName] = {};
-    }
+  append<PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey, additions: string): Promise<PrimaryKey> {
+    this.prepareTable(tableName);
+    return this.read(tableName, primaryKey).then((record: any) => {
+      if (typeof record === 'string') {
+        record += additions;
+      } else {
+        const message = `Cannot append text to record "${primaryKey}" because it's not a string.`;
+        throw new RecordTypeError(message);
+      }
+      this.stores[this.storeName][tableName][primaryKey] = record;
+      return primaryKey;
+    });
   }
 
   public async create<EntityType, PrimaryKey = string>(
@@ -80,7 +74,21 @@ export class MemoryEngine implements CRUDEngine {
     return true;
   }
 
-  public async read<EntityType = Object, PrimaryKey = string>(
+  public async init(storeName: string): Promise<MemoryStore> {
+    this.storeName = storeName;
+    this.stores[this.storeName] = this.stores[this.storeName] || {};
+    return this.stores;
+  }
+
+  public async isSupported(): Promise<void> {
+    // Always available
+  }
+
+  public async purge(): Promise<void> {
+    delete this.stores[this.storeName];
+  }
+
+  public read<EntityType = Object, PrimaryKey = string>(
     tableName: string,
     primaryKey: PrimaryKey,
   ): Promise<EntityType> {
@@ -136,22 +144,9 @@ export class MemoryEngine implements CRUDEngine {
     return primaryKey;
   }
 
-  public async append<PrimaryKey = string>(
-    tableName: string,
-    primaryKey: PrimaryKey,
-    additions: string,
-  ): Promise<PrimaryKey> {
-    this.prepareTable(tableName);
-    let record = await this.read(tableName, primaryKey);
-
-    if (typeof record === 'string') {
-      record += additions;
-    } else {
-      const message = `Cannot append text to record "${primaryKey}" because it's not a string.`;
-      throw new RecordTypeError(message);
+  private prepareTable(tableName: string): void {
+    if (!this.stores[this.storeName][tableName]) {
+      this.stores[this.storeName][tableName] = {};
     }
-
-    this.stores[this.storeName][tableName][primaryKey] = record;
-    return primaryKey;
   }
 }
