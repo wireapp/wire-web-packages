@@ -36,7 +36,7 @@ export class LocalStorageEngine implements CRUDEngine {
       const message = `Cannot append text to record "${primaryKey}" because it's not a string.`;
       throw new RecordTypeError(message);
     }
-    const key: string = this.createKey(tableName, primaryKey);
+    const key = this.createKey(tableName, primaryKey);
     window.localStorage.setItem(key, record);
     return primaryKey;
   }
@@ -76,7 +76,7 @@ export class LocalStorageEngine implements CRUDEngine {
   }
 
   public async delete<PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): Promise<PrimaryKey> {
-    const key: string = this.createKey(tableName, primaryKey);
+    const key = this.createKey(tableName, primaryKey);
     window.localStorage.removeItem(key);
     return primaryKey;
   }
