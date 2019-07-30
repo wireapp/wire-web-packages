@@ -19,7 +19,7 @@
 
 import {CRUDEngine} from '../engine';
 
-const TABLE_SIMPSONS = 'the-simpsons';
+const TABLE_HOMER = 'homer-simpson';
 const TABLE_MICKEY = 'mickey-mouse';
 const TABLE_SPONGEBOB = 'spongebob';
 
@@ -33,27 +33,27 @@ export const getTablesSpec = {
       primaryKey: 'homer-simpson',
     };
 
-    const lisa = {
+    const mickey = {
       entity: {
-        firstName: 'Lisa',
-        lastName: 'Simpson',
+        firstName: 'Mickey',
+        lastName: 'Mouse',
       },
-      primaryKey: 'lisa-simpson',
+      primaryKey: 'mickey-mouse',
     };
 
-    const marge = {
+    const spongebob = {
       entity: {
-        firstName: 'Marge',
-        lastName: 'Simpson',
+        firstName: 'Spongebob',
+        lastName: 'Squarepants',
       },
-      primaryKey: 'marge-simpson',
+      primaryKey: 'spongebob-squarepants',
     };
 
-    await engine.create(TABLE_SIMPSONS, homer.primaryKey, homer.entity);
-    await engine.create(TABLE_MICKEY, lisa.primaryKey, lisa.entity);
-    await engine.create(TABLE_SPONGEBOB, marge.primaryKey, marge.entity);
-    const tables = await engine.getTables([TABLE_SIMPSONS, TABLE_MICKEY, TABLE_SPONGEBOB]);
+    await engine.create(TABLE_HOMER, homer.primaryKey, homer.entity);
+    await engine.create(TABLE_MICKEY, mickey.primaryKey, mickey.entity);
+    await engine.create(TABLE_SPONGEBOB, spongebob.primaryKey, spongebob.entity);
+    const tables = await engine.getTables([TABLE_HOMER, TABLE_MICKEY, TABLE_SPONGEBOB]);
     expect(tables.length).toBe(3);
-    expect(tables).toEqual(jasmine.arrayContaining([homer.entity, lisa.entity, marge.entity]));
+    expect(tables).toEqual(jasmine.arrayContaining([homer.entity, mickey.entity, spongebob.entity]));
   },
 };
