@@ -96,6 +96,10 @@ export class LocalStorageEngine implements CRUDEngine {
     });
   }
 
+  public async getTables(tableNames: string[]): Promise<unknown[][]> {
+    return Promise.all(tableNames.map(tableName => this.readAll(tableName)));
+  }
+
   public async init(storeName: string): Promise<Storage> {
     await this.isSupported();
     this.storeName = storeName;
@@ -133,28 +137,26 @@ export class LocalStorageEngine implements CRUDEngine {
   }
 
   public readAll<T>(tableName: string): Promise<T[]> {
-    const promises: Promise<T>[] = [];
-
-    Object.keys(localStorage).forEach((key: string) => {
+    const promises = Object.keys(localStorage).reduce<Promise<T>[]>((result, key) => {
       const prefix = this.createPrefix(tableName);
       if (key.startsWith(prefix)) {
         const primaryKey = key.replace(prefix, '');
-        promises.push(this.read(tableName, primaryKey));
+        result.push(this.read(tableName, primaryKey));
       }
-    });
+      return result;
+    }, []);
 
     return Promise.all(promises);
   }
 
   public readAllPrimaryKeys(tableName: string): Promise<string[]> {
-    const primaryKeys: string[] = [];
-
-    Object.keys(localStorage).forEach((primaryKey: string) => {
+    const primaryKeys = Object.keys(localStorage).reduce<string[]>((result, primaryKey) => {
       const prefix = this.createPrefix(tableName);
       if (primaryKey.startsWith(prefix)) {
-        primaryKeys.push(primaryKey.replace(prefix, ''));
+        result.push(primaryKey.replace(prefix, ''));
       }
-    });
+      return result;
+    }, []);
 
     return Promise.resolve(primaryKeys);
   }

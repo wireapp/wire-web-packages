@@ -124,6 +124,10 @@ export class FileEngine implements CRUDEngine {
     }
   }
 
+  public getTables(tableNames: string[]): Promise<unknown[]> {
+    return Promise.all(tableNames.map(tableName => this.readAll(tableName)));
+  }
+
   public async read<EntityType = Object, PrimaryKey = string>(
     tableName: string,
     primaryKey: PrimaryKey,

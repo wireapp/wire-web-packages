@@ -127,6 +127,10 @@ export class FileSystemEngine implements CRUDEngine {
     }
   }
 
+  public getTables(tableNames: string[]): Promise<unknown[]> {
+    return Promise.all(tableNames.map(tableName => this.readAll(tableName)));
+  }
+
   async read<EntityType = Object, PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): Promise<EntityType> {
     const filePath = this.createFilePath(tableName, primaryKey);
     let data: string;

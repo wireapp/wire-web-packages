@@ -59,6 +59,13 @@ export interface CRUDEngine {
   deleteAll(tableName: string): Promise<boolean>;
 
   /**
+   * Returns all tables.
+   * @param tableNames - Table names
+   * @returns Resolve with all specified tables
+   */
+  getTables(tableNames: string[]): Promise<unknown[]>;
+
+  /**
    * Initializes the store engine. This needs to be done prior to operating with it.
    * @param storeName - Name of the store
    * @param settings - Database-specific settings

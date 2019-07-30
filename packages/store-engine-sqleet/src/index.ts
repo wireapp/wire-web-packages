@@ -215,6 +215,10 @@ export class SQLeetEngine implements CRUDEngine {
     return true;
   }
 
+  public getTables(tableNames: string[]): Promise<unknown[]> {
+    return Promise.all(tableNames.map(tableName => this.readAll(tableName)));
+  }
+
   async read<EntityType = Object, PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): Promise<EntityType> {
     const table = this.schema[tableName];
     if (!table) {

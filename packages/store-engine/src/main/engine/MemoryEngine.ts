@@ -79,6 +79,10 @@ export class MemoryEngine implements CRUDEngine {
     });
   }
 
+  public async getTables(tableNames: string[]): Promise<Record<string, any>[]> {
+    return tableNames.map(tableName => this.stores[tableName]);
+  }
+
   public async init(storeName: string): Promise<MemoryStore> {
     this.storeName = storeName;
     this.stores[this.storeName] = this.stores[this.storeName] || {};

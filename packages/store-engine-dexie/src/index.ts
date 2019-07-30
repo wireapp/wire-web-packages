@@ -143,6 +143,10 @@ export class IndexedDBEngine implements CRUDEngine {
       .then(() => true);
   }
 
+  public async getTables(tableNames: string[]): Promise<Dexie.Table<unknown, unknown>[]> {
+    return tableNames.map(tableName => this.db.table(tableName));
+  }
+
   public read<EntityType = Object, PrimaryKey = string>(
     tableName: string,
     primaryKey: PrimaryKey,
