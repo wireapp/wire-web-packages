@@ -201,13 +201,13 @@ export class FileSystemEngine implements CRUDEngine {
     primaryKey: PrimaryKey,
     changes: ChangesType,
   ): Promise<PrimaryKey> {
-    return this.update(tableName, primaryKey, changes)
-      .catch(error => {
-        if (error instanceof StoreEngineError.RecordNotFoundError) {
-          return this.create(tableName, primaryKey, changes);
-        }
-        throw error;
-      })
-      .then(() => primaryKey);
+    try {
+      return await this.update(tableName, primaryKey, changes);
+    } catch (error) {
+      if (error instanceof StoreEngineError.RecordNotFoundError) {
+        return this.create(tableName, primaryKey, changes);
+      }
+      throw error;
+    }
   }
 }

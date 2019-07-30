@@ -34,10 +34,11 @@ export class TransientStore extends EventEmitter {
     super();
   }
 
-  public delete(primaryKey: string): Promise<string> {
+  public async delete(primaryKey: string): Promise<string> {
     const cacheKey = this.constructCacheKey(primaryKey);
 
-    return Promise.all([this.deleteFromStore(primaryKey), this.deleteFromCache(cacheKey)]).then(() => cacheKey);
+    await Promise.all([this.deleteFromStore(primaryKey), this.deleteFromCache(cacheKey)]);
+    return cacheKey;
   }
 
   public deleteFromCache(cacheKey: string): string {
@@ -49,17 +50,16 @@ export class TransientStore extends EventEmitter {
     return cacheKey;
   }
 
-  public get(primaryKey: string): Promise<TransientBundle | undefined> {
-    return this.getFromCache(primaryKey)
-      .then((cachedBundle: TransientBundle) => {
-        return cachedBundle !== undefined ? cachedBundle : this.getFromStore(primaryKey);
-      })
-      .catch(error => {
-        if (error instanceof RecordNotFoundError) {
-          return undefined;
-        }
-        throw error;
-      });
+  public async get(primaryKey: string): Promise<TransientBundle | undefined> {
+    try {
+      const cachedBundle = await this.getFromCache(primaryKey);
+      return cachedBundle !== undefined ? cachedBundle : this.getFromStore(primaryKey);
+    } catch (error) {
+      if (error instanceof RecordNotFoundError) {
+        return undefined;
+      }
+      throw error;
+    }
   }
 
   public async init(tableName: string): Promise<TransientBundle[]> {
@@ -155,10 +155,11 @@ export class TransientStore extends EventEmitter {
     return this.engine.read(this.tableName, primaryKey);
   }
 
-  private save<TransientBundle>(primaryKey: string, bundle: TransientBundle): Promise<string> {
+  private async save<TransientBundle>(primaryKey: string, bundle: TransientBundle): Promise<string> {
     const cacheKey: string = this.constructCacheKey(primaryKey);
 
-    return Promise.all([this.saveInStore(primaryKey, bundle), this.saveInCache(cacheKey, bundle)]).then(() => cacheKey);
+    await Promise.all([this.saveInStore(primaryKey, bundle), this.saveInCache(cacheKey, bundle)]);
+    return cacheKey;
   }
 
   private saveInCache<TransientBundle>(cacheKey: string, bundle: TransientBundle): TransientBundle {

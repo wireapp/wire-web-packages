@@ -44,7 +44,7 @@ export class IndexedDBEngine implements CRUDEngine {
         };
       });
     } else {
-      return Promise.reject(new StoreEngineError.UnsupportedError('Could not find indexedDB in global scope'));
+      return Promise.reject(new StoreEngineError.UnsupportedError('Could not find IndexedDB in global scope'));
     }
   }
 
@@ -57,7 +57,7 @@ export class IndexedDBEngine implements CRUDEngine {
         const diskIsFull = usage >= quota;
         if (diskIsFull) {
           const errorMessage = `Out of disk space. Using "${usage}" out of "${quota}" bytes.`;
-          return Promise.reject(new StoreEngineError.LowDiskSpaceError(errorMessage));
+          throw new StoreEngineError.LowDiskSpaceError(errorMessage);
         }
       }
     }
@@ -110,21 +110,20 @@ export class IndexedDBEngine implements CRUDEngine {
     }
   }
 
-  public create<EntityType = Object, PrimaryKey = string>(
+  public async create<EntityType = Object, PrimaryKey = string>(
     tableName: string,
     primaryKey: PrimaryKey,
     entity: EntityType,
   ): Promise<PrimaryKey> {
     if (entity) {
-      return this.db
-        .table(tableName)
-        .add(entity, primaryKey)
-        .catch((error: Dexie.DexieError) => {
-          throw this.mapDatabaseError(error, tableName, primaryKey);
-        });
+      try {
+        return await this.db.table(tableName).add(entity, primaryKey);
+      } catch (error) {
+        throw this.mapDatabaseError(error, tableName, primaryKey);
+      }
     }
     const message = `Record "${primaryKey}" cannot be saved in "${tableName}" because it's "undefined" or "null".`;
-    return Promise.reject(new StoreEngineError.RecordTypeError(message));
+    throw new StoreEngineError.RecordTypeError(message);
   }
 
   public async delete<PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): Promise<PrimaryKey> {

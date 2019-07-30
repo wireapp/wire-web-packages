@@ -24,24 +24,21 @@ import {RecordAlreadyExistsError, RecordNotFoundError, RecordTypeError, Unsuppor
 export class LocalStorageEngine implements CRUDEngine {
   public storeName = '';
 
-  public append<PrimaryKey = string>(
+  public async append<PrimaryKey = string>(
     tableName: string,
     primaryKey: PrimaryKey,
     additions: string,
   ): Promise<PrimaryKey> {
-    return this.read(tableName, primaryKey).then((record: any) => {
-      if (typeof record === 'string') {
-        record += additions;
-      } else {
-        const message = `Cannot append text to record "${primaryKey}" because it's not a string.`;
-        throw new RecordTypeError(message);
-      }
-
-      const key: string = this.createKey(tableName, primaryKey);
-      window.localStorage.setItem(key, record);
-
-      return primaryKey;
-    });
+    let record = await this.read(tableName, primaryKey);
+    if (typeof record === 'string') {
+      record += additions;
+    } else {
+      const message = `Cannot append text to record "${primaryKey}" because it's not a string.`;
+      throw new RecordTypeError(message);
+    }
+    const key: string = this.createKey(tableName, primaryKey);
+    window.localStorage.setItem(key, record);
+    return primaryKey;
   }
 
   public async create<EntityType, PrimaryKey = string>(
@@ -159,10 +156,11 @@ export class LocalStorageEngine implements CRUDEngine {
     const entity = await this.read(tableName, primaryKey);
     const updatedEntity = {...entity, ...changes};
     try {
-      return this.create(tableName, primaryKey, updatedEntity);
+      return await this.create(tableName, primaryKey, updatedEntity);
     } catch (error) {
       if (error instanceof RecordAlreadyExistsError) {
-        return this.delete(tableName, primaryKey).then(() => this.create(tableName, primaryKey, updatedEntity));
+        await this.delete(tableName, primaryKey);
+        return this.create(tableName, primaryKey, updatedEntity);
       } else {
         throw error;
       }
@@ -175,7 +173,7 @@ export class LocalStorageEngine implements CRUDEngine {
     changes: ChangesType,
   ): Promise<PrimaryKey> {
     try {
-      return this.update(tableName, primaryKey, changes);
+      return await this.update(tableName, primaryKey, changes);
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
         return this.create(tableName, primaryKey, changes);
