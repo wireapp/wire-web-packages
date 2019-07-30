@@ -43,7 +43,6 @@ describe('IndexedDBEngine', () => {
     db.version(1).stores({
       'the-simpsons': ', firstName, lastName',
     });
-    await db.open();
     return storeEngine;
   }
 
@@ -151,7 +150,6 @@ describe('IndexedDBEngine', () => {
       db.version(1).stores({
         [TABLE_NAME]: '++primaryKey, testValue',
       });
-      await db.open();
 
       const entity = {
         testValue: 'value',
