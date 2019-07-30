@@ -117,7 +117,8 @@ export class IndexedDBEngine implements CRUDEngine {
   ): Promise<PrimaryKey> {
     if (entity) {
       try {
-        return await this.db.table(tableName).add(entity, primaryKey);
+        const newKey = await this.db.table(tableName).add(entity, primaryKey);
+        return newKey;
       } catch (error) {
         throw this.mapDatabaseError(error, tableName, primaryKey);
       }

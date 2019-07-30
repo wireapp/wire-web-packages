@@ -156,7 +156,8 @@ export class LocalStorageEngine implements CRUDEngine {
     const entity = await this.read(tableName, primaryKey);
     const updatedEntity = {...entity, ...changes};
     try {
-      return await this.create(tableName, primaryKey, updatedEntity);
+      const newKey = await this.create(tableName, primaryKey, updatedEntity);
+      return newKey;
     } catch (error) {
       if (error instanceof RecordAlreadyExistsError) {
         await this.delete(tableName, primaryKey);
@@ -173,7 +174,8 @@ export class LocalStorageEngine implements CRUDEngine {
     changes: ChangesType,
   ): Promise<PrimaryKey> {
     try {
-      return await this.update(tableName, primaryKey, changes);
+      const newKey = await this.update(tableName, primaryKey, changes);
+      return newKey;
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
         return this.create(tableName, primaryKey, changes);

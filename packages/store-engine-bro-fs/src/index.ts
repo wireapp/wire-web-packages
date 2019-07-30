@@ -202,7 +202,8 @@ export class FileSystemEngine implements CRUDEngine {
     changes: ChangesType,
   ): Promise<PrimaryKey> {
     try {
-      return await this.update(tableName, primaryKey, changes);
+      const newKey = await this.update(tableName, primaryKey, changes);
+      return newKey;
     } catch (error) {
       if (error instanceof StoreEngineError.RecordNotFoundError) {
         return this.create(tableName, primaryKey, changes);
