@@ -81,7 +81,7 @@ export const overlayBackgroundStyle: <T>(props: OverlayBackgroundProps<T>) => Ob
 export const OverlayBackground = (props: OverlayBackgroundProps) => <div css={overlayBackgroundStyle} {...props} />;
 
 export interface OverlayProps<T = HTMLDivElement> extends React.HTMLProps<T> {
-  onBackgroundClick: () => void;
+  onBackgroundClick?: () => void;
 }
 
 export const Overlay = ({onBackgroundClick = noop, children = null, ...props}: OverlayProps) => (
