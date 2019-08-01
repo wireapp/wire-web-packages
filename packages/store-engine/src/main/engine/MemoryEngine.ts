@@ -74,8 +74,16 @@ export class MemoryEngine implements CRUDEngine {
   }
 
   public async init(storeName: string): Promise<MemoryStore> {
+    return this.assignDb(storeName, {});
+  }
+
+  public async initWithObject<ObjectType = Object>(storeName: string, object: ObjectType): Promise<MemoryStore> {
+    return this.assignDb(storeName, object);
+  }
+
+  private assignDb<ObjectType = Object>(storeName: string, object: ObjectType): MemoryStore {
     this.storeName = storeName;
-    this.stores[this.storeName] = this.stores[this.storeName] || {};
+    this.stores[this.storeName] = this.stores[this.storeName] || object;
     return this.stores;
   }
 

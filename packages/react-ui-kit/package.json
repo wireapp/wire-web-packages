@@ -2,7 +2,7 @@
   "dependencies": {
     "@emotion/core": "10.0.14",
     "@types/color": "3.0.0",
-    "bazinga64": "5.5.8",
+    "bazinga64": "5.5.9",
     "color": "3.1.2",
     "emotion-normalize": "10.1.0",
     "react-transition-group": "4.2.1"
@@ -15,7 +15,7 @@
     "@babel/preset-react": "7.0.0",
     "@babel/preset-typescript": "7.3.3",
     "@hot-loader/react-dom": "16.8.6",
-    "@types/react": "16.8.23",
+    "@types/react": "16.8.24",
     "@types/react-test-renderer": "16.8.3",
     "@types/webpack-env": "1.14.0",
     "babel-jest": "24.8.0",
@@ -63,5 +63,5 @@
     "test:update": "yarn test --updateSnapshot",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "7.8.4"
+  "version": "7.9.1"
 }
