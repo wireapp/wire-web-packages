@@ -72,7 +72,6 @@ export const AvatarGrid = ({borderWidth = 1, size = DEFAULT_AVATAR_SIZE, items, 
     <IsInViewport
       once
       onEnterViewport={fetchImages}
-      disabled={!fetchImages}
       css={avatarGridStyle(allProps)}
       {...filteredAvatarGridProps(allProps)}
     >
