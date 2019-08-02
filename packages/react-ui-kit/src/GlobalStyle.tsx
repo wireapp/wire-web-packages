@@ -20,7 +20,7 @@
 /** @jsx jsx */
 import {Global, ObjectInterpolation, css, jsx} from '@emotion/core';
 import emotionNormalize from 'emotion-normalize';
-import {COLOR} from './Identity';
+import {COLOR} from './Identity/colors';
 import {textLinkStyle} from './Text';
 
 const globalStyles: () => ObjectInterpolation<undefined> = () => ({

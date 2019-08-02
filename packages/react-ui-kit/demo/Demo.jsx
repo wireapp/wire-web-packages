@@ -191,9 +191,9 @@ const Demo = () => {
               forceInitials={true}
               borderColor={'#fb0807'}
               backgroundColor={'#2085C2'}
-              fetchImage={() => {
+              fetchImage={useCallback(() => {
                 console.info('Trying to fetch asset');
-              }}
+              }, [])}
             />
             <Avatar
               size={64}
@@ -253,7 +253,12 @@ const Demo = () => {
               base64Image={imageData}
               borderColor={'#fb0807'}
               backgroundColor={'#2085C2'}
-              fetchImage={useCallback(() => setTimeout(() => setImageData(avatarBase64), FETCH_IMAGE_TIMEOUT_MS), [])}
+              fetchImage={useCallback(() => {
+                setImageData(null);
+                setTimeout(() => {
+                  setImageData(avatarBase64);
+                }, FETCH_IMAGE_TIMEOUT_MS);
+              }, [])}
             />
           </RenderHarness>
         </Container>
