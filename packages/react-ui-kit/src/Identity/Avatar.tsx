@@ -81,7 +81,7 @@ const filteredAvatarProps = (props: AvatarProps) =>
     'isAvatarGridItem',
   ]);
 
-export const Avatar = React.memo((props: AvatarProps) => {
+export const Avatar = (props: AvatarProps) => {
   const {base64Image, forceInitials, name, fetchImage, isAvatarGridItem} = props;
   const element = useRef<HTMLDivElement>();
 
@@ -123,4 +123,4 @@ export const Avatar = React.memo((props: AvatarProps) => {
       {(forceInitials || !base64Image) && getInitials(name)}
     </div>
   );
-});
+};
