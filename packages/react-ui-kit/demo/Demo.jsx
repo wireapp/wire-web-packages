@@ -209,11 +209,16 @@ const Demo = () => {
             <AvatarGrid
               size={120}
               items={[
-                {base64Image: avatarBase64, color: '#fb0807', name: 'Joe Doe'},
-                {base64Image: avatarBase64, color: '#2085C2', name: 'Bon Jovi'},
-                {base64Image: avatarBase64, color: '#EB7E00', name: 'Mick Jagger'},
-                {base64Image: avatarBase64, color: '#EB7E00', name: 'Freddy Mercury'},
+                {base64Image: imageData, color: '#fb0807', name: 'Joe Doe'},
+                {base64Image: imageData, color: '#2085C2', name: 'Bon Jovi'},
+                {base64Image: imageData, color: '#EB7E00', name: 'Mick Jagger'},
+                {base64Image: imageData, color: '#EB7E00', name: 'Freddy Mercury'},
               ]}
+              fetchImages={useCallback(() => {
+                setTimeout(() => {
+                  setImageData(avatarBase64);
+                }, FETCH_IMAGE_TIMEOUT_MS);
+              }, [])}
             />
             <AvatarGrid
               size={120}
@@ -254,7 +259,6 @@ const Demo = () => {
               borderColor={'#fb0807'}
               backgroundColor={'#2085C2'}
               fetchImage={useCallback(() => {
-                setImageData(null);
                 setTimeout(() => {
                   setImageData(avatarBase64);
                 }, FETCH_IMAGE_TIMEOUT_MS);
