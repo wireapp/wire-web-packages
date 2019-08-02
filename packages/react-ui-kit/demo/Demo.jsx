@@ -259,6 +259,7 @@ const Demo = () => {
               borderColor={'#fb0807'}
               backgroundColor={'#2085C2'}
               fetchImage={useCallback(() => {
+                setImageData(null);
                 setTimeout(() => {
                   setImageData(avatarBase64);
                 }, FETCH_IMAGE_TIMEOUT_MS);
