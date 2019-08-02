@@ -19,7 +19,7 @@
 
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
-import {IsInViewport, IsInViewportProps} from '../Misc';
+import {IsInViewport, IsInViewportProps} from '../Misc/';
 import {filterProps} from '../util';
 import {COLOR} from './colors';
 

@@ -21,7 +21,7 @@
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import React from 'react';
 import {AvatarProps} from '../Identity/';
-import {IsInViewport} from '../Misc';
+import {IsInViewport} from '../Misc/';
 import {filterProps} from '../util';
 import {Avatar, DEFAULT_AVATAR_SIZE} from './Avatar';
 import {COLOR} from './colors';

@@ -21,7 +21,7 @@
 import {Global, ObjectInterpolation, css, jsx} from '@emotion/core';
 import emotionNormalize from 'emotion-normalize';
 import {COLOR} from './Identity/colors';
-import {textLinkStyle} from './Text';
+import {textLinkStyle} from './Text/TextLink';
 
 const globalStyles: () => ObjectInterpolation<undefined> = () => ({
   '*': {
