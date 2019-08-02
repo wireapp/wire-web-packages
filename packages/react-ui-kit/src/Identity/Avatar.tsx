@@ -97,7 +97,7 @@ export const Avatar = (props: AvatarProps) => {
       data-uie-name={!forceInitials && base64Image ? 'element-avatar-image' : 'element-avatar-initials'}
       {...filteredAvatarProps(props)}
     >
-      <IsInViewport once onEnterViewport={fetchImage} disabled={!fetchImage}>
+      <IsInViewport once onEnterViewport={fetchImage} disabled={!!base64Image || !fetchImage}>
         {(forceInitials || !base64Image) && getInitials(name)}
       </IsInViewport>
     </div>
