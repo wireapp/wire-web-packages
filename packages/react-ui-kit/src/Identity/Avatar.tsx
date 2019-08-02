@@ -19,14 +19,13 @@
 
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
-import React from 'react';
-import {IsInViewport} from '../Misc';
+import {IsInViewport, IsInViewportProps} from '../Misc';
 import {filterProps} from '../util';
 import {COLOR} from './colors';
 
 export const DEFAULT_AVATAR_SIZE = 28;
 
-export interface AvatarProps<T = HTMLDivElement> extends React.HTMLProps<T> {
+export interface AvatarProps<T = HTMLDivElement> extends IsInViewportProps<T> {
   backgroundColor?: string;
   base64Image?: string;
   borderColor?: string;
@@ -92,14 +91,15 @@ export const Avatar = (props: AvatarProps) => {
       .substring(0, isAvatarGridItem ? 1 : 2);
 
   return (
-    <div
+    <IsInViewport
+      once
+      onEnterViewport={fetchImage}
+      disabled={!!base64Image}
       css={avatarStyle(props)}
       data-uie-name={!forceInitials && base64Image ? 'element-avatar-image' : 'element-avatar-initials'}
       {...filteredAvatarProps(props)}
     >
-      <IsInViewport once onEnterViewport={fetchImage} disabled={!!base64Image || !fetchImage}>
-        {(forceInitials || !base64Image) && getInitials(name)}
-      </IsInViewport>
-    </div>
+      {(forceInitials || !base64Image) && getInitials(name)}
+    </IsInViewport>
   );
 };
