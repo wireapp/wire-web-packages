@@ -92,7 +92,7 @@ export const Avatar = (props: AvatarProps) => {
 
   return (
     <IsInViewport
-      once
+      checkViewportOnce
       onEnterViewport={fetchImage}
       disabled={!!base64Image}
       css={avatarStyle(props)}

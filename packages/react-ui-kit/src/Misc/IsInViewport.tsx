@@ -23,18 +23,23 @@ import {useEffect, useRef} from 'react';
 
 export interface IsInViewportProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   onEnterViewport?: () => void;
-  once?: boolean;
+  checkViewportOnce?: boolean;
   disabled?: boolean;
 }
 
-export const IsInViewport = ({onEnterViewport, disabled = false, once = false, ...props}: IsInViewportProps) => {
+export const IsInViewport = ({
+  onEnterViewport,
+  disabled = false,
+  checkViewportOnce = false,
+  ...props
+}: IsInViewportProps) => {
   const element = useRef<HTMLDivElement>();
   useEffect(() => {
     let observer = undefined;
     if (onEnterViewport && !disabled) {
       observer = new IntersectionObserver(([{isIntersecting}]) => {
         if (isIntersecting) {
-          if (once) {
+          if (checkViewportOnce) {
             observer.disconnect();
           }
           if (onEnterViewport && !disabled) {
