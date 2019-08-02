@@ -265,6 +265,20 @@ const Demo = () => {
                 }, FETCH_IMAGE_TIMEOUT_MS);
               }, [])}
             />
+            <AvatarGrid
+              size={120}
+              items={[
+                {base64Image: imageData, color: '#fb0807', name: 'Joe Doe'},
+                {base64Image: imageData, color: '#2085C2', name: 'Bon Jovi'},
+                {base64Image: imageData, color: '#EB7E00', name: 'Mick Jagger'},
+                {base64Image: imageData, color: '#EB7E00', name: 'Freddy Mercury'},
+              ]}
+              fetchImages={useCallback(() => {
+                setTimeout(() => {
+                  setImageData(avatarBase64);
+                }, FETCH_IMAGE_TIMEOUT_MS);
+              }, [])}
+            />
           </RenderHarness>
         </Container>
         <DemoIcons />
