@@ -19,7 +19,6 @@
 
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
-import {COLOR} from '../../Identity';
 import {QueryKeys, media} from '../../mediaQueries';
 import {filterProps} from '../../util';
 import {Theme} from '../Theme';
@@ -34,7 +33,7 @@ export const menuOpenButtonStyle: <T>(theme: Theme, props: MenuOpenButtonProps<T
 ) => ({
   display: 'block',
   div: {
-    backgroundColor: COLOR.TEXT,
+    backgroundColor: theme.general.color,
     height: '2px',
     margin: '4px',
     transition: 'all 0.25s ease-in-out',

@@ -29,6 +29,20 @@ export enum THEME_ID {
 }
 
 export interface Theme {
+  TextArea: {
+    placeholderColor: string;
+    backgroundColor: string;
+  };
+  Input: {
+    placeholderColor: string;
+    backgroundColor: string;
+  };
+  Pill: {
+    color: string;
+  };
+  Select: {
+    backgroundColor: string;
+  };
   general: {
     backgroundColor: string;
     color: string;
@@ -37,12 +51,40 @@ export interface Theme {
 
 export const themes: {[themeId in THEME_ID]: Theme} = {
   [THEME_ID.LIGHT]: {
+    Input: {
+      backgroundColor: COLOR.WHITE,
+      placeholderColor: COLOR.GRAY_DARKEN_24,
+    },
+    Pill: {
+      color: COLOR.TEXT,
+    },
+    Select: {
+      backgroundColor: COLOR.WHITE,
+    },
+    TextArea: {
+      backgroundColor: COLOR.WHITE,
+      placeholderColor: COLOR.GRAY_DARKEN_24,
+    },
     general: {
       backgroundColor: COLOR.GRAY_LIGHTEN_88,
       color: COLOR.TEXT,
     },
   },
   [THEME_ID.DARK]: {
+    Input: {
+      backgroundColor: COLOR.BLACK_LIGHTEN_16,
+      placeholderColor: COLOR.GRAY_LIGHTEN_88,
+    },
+    Pill: {
+      color: COLOR.TEXT,
+    },
+    Select: {
+      backgroundColor: COLOR.BLACK_LIGHTEN_16,
+    },
+    TextArea: {
+      backgroundColor: COLOR.BLACK_LIGHTEN_16,
+      placeholderColor: COLOR.GRAY_LIGHTEN_88,
+    },
     general: {
       backgroundColor: COLOR.BLACK,
       color: COLOR.WHITE,

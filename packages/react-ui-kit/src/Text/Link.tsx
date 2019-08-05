@@ -30,7 +30,7 @@ export interface LinkProps<T = HTMLAnchorElement> extends TextProps<T> {}
 
 export const linkStyle: <T>(theme: Theme, props: LinkProps<T>) => ObjectInterpolation<undefined> = (
   theme,
-  {bold = true, color = COLOR.LINK, fontSize = '11px', textTransform = 'uppercase', ...props},
+  {bold = true, color = theme.general.color, fontSize = '11px', textTransform = 'uppercase', ...props},
 ) => {
   const darker = 0.16;
   const hoverColor = Color(color)
