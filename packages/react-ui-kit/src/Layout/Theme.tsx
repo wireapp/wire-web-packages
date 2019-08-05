@@ -29,6 +29,9 @@ export enum THEME_ID {
 }
 
 export interface Theme {
+  Checkbox: {
+    borderColor: string;
+  };
   TextArea: {
     placeholderColor: string;
     backgroundColor: string;
@@ -51,6 +54,9 @@ export interface Theme {
 
 export const themes: {[themeId in THEME_ID]: Theme} = {
   [THEME_ID.LIGHT]: {
+    Checkbox: {
+      borderColor: COLOR.BLACK_OPAQUE_40,
+    },
     Input: {
       backgroundColor: COLOR.WHITE,
       placeholderColor: COLOR.GRAY_DARKEN_24,
@@ -71,6 +77,9 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
     },
   },
   [THEME_ID.DARK]: {
+    Checkbox: {
+      borderColor: COLOR.WHITE_OPAQUE_40,
+    },
     Input: {
       backgroundColor: COLOR.BLACK_LIGHTEN_16,
       placeholderColor: COLOR.GRAY_LIGHTEN_88,

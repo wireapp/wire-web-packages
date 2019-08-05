@@ -45,7 +45,7 @@ const StyledLabel = (props: StyledLabelProps) => {
           borderColor: COLOR.BLUE,
         },
         '&::before': {
-          border: props.markInvalid ? `2px solid ${COLOR.RED}` : '2px solid rgba(0, 0, 0, 0.4)',
+          border: props.markInvalid ? `2px solid ${COLOR.RED}` : `2px solid ${theme.Checkbox.borderColor}`,
           borderRadius: '4px',
           boxSizing: 'border-box',
           content: '""',
