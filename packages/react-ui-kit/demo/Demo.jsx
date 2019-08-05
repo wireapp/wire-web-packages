@@ -39,6 +39,7 @@ import {
   QUERY,
   Small,
   StyledApp,
+  THEME_ID,
   Tooltip,
 } from '@wireapp/react-ui-kit';
 import React, {useCallback, useState} from 'react';
@@ -65,7 +66,7 @@ const Demo = () => {
   const isDesktop = typeof window !== 'undefined' && window.matchMedia(`(${QUERY.desktop})`).matches;
 
   return (
-    <StyledApp>
+    <StyledApp themeId={THEME_ID.DARK}>
       <Helmet
         meta={[
           {

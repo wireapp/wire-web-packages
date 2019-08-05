@@ -22,12 +22,16 @@ import {ObjectInterpolation, jsx} from '@emotion/core';
 import {COLOR} from '../../Identity';
 import {QueryKeys, media} from '../../mediaQueries';
 import {filterProps} from '../../util';
+import {Theme} from '../Theme';
 
 export interface MenuOpenButtonProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   open?: boolean;
 }
 
-export const menuOpenButtonStyle: <T>(props: MenuOpenButtonProps<T>) => ObjectInterpolation<undefined> = ({open}) => ({
+export const menuOpenButtonStyle: <T>(theme: Theme, props: MenuOpenButtonProps<T>) => ObjectInterpolation<undefined> = (
+  theme,
+  {open},
+) => ({
   display: 'block',
   div: {
     backgroundColor: COLOR.TEXT,
@@ -55,7 +59,7 @@ export const menuOpenButtonStyle: <T>(props: MenuOpenButtonProps<T>) => ObjectIn
 const filterMenuOpenButtonProps = (props: MenuOpenButtonProps) => filterProps(props, ['open']);
 
 export const MenuOpenButton = (props: MenuOpenButtonProps) => (
-  <div css={menuOpenButtonStyle(props)} {...filterMenuOpenButtonProps(props)}>
+  <div css={theme => menuOpenButtonStyle(theme, props)} {...filterMenuOpenButtonProps(props)}>
     <div />
     <div />
     <div />
