@@ -136,6 +136,10 @@ describe('MemoryEngine', () => {
     });
 
     it('automatically creates primary keys if no primary key is given', async () => {
+      type PrimaryKey = number | undefined;
+
+      type EntityType = {name: string};
+
       const TABLE_NAME = 'animals';
 
       const firstAnimal = {
@@ -146,14 +150,10 @@ describe('MemoryEngine', () => {
         name: 'Bear',
       };
 
-      let primaryKey = await engine.updateOrCreate<number | undefined, {name: string}>(
-        TABLE_NAME,
-        undefined,
-        firstAnimal,
-      );
+      let primaryKey = await engine.updateOrCreate<PrimaryKey, EntityType>(TABLE_NAME, undefined, firstAnimal);
       expect(primaryKey).toBe(1);
 
-      primaryKey = await engine.updateOrCreate<number | undefined, {name: string}>(TABLE_NAME, undefined, secondAnimal);
+      primaryKey = await engine.updateOrCreate<PrimaryKey, EntityType>(TABLE_NAME, undefined, secondAnimal);
       expect(primaryKey).toBe(2);
 
       const persistedRecords = await engine.readAll(TABLE_NAME);
