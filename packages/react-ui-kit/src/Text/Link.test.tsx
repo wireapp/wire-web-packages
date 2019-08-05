@@ -19,9 +19,8 @@
 
 import React from 'react';
 import {matchComponent} from '../test/testUtil';
-import {Link} from './Link';
+import {Link} from '../Text';
 
 describe('"Link"', () => {
   it('renders', () => matchComponent(<Link>Link</Link>));
-  it('renders with component', () => matchComponent(<Link component="h1">Link</Link>));
 });

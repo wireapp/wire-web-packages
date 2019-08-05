@@ -17,14 +17,23 @@
  *
  */
 
-import React from 'react';
-import {matchComponent} from '../test/testUtil';
-import {Lead, Paragraph} from '../Text';
+import {Container} from '@wireapp/react-ui-kit';
+import React, {useEffect, useState} from 'react';
 
-describe('"Paragraph"', () => {
-  it('renders', () => matchComponent(<Paragraph>Paragraph</Paragraph>));
-});
+export const RenderHarness = ({children}) => {
+  const INTERVAL_MS = 1000;
+  const [time, setTime] = useState(new Date().getTime());
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setTime(new Date().getTime());
+    }, INTERVAL_MS);
+    return () => window.clearInterval(intervalId);
+  }, []);
 
-describe('"Lead"', () => {
-  it('renders', () => matchComponent(<Lead>Lead</Lead>));
-});
+  return (
+    <Container>
+      {new Date(time).toString()}
+      {children}
+    </Container>
+  );
+};

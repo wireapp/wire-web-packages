@@ -26,6 +26,7 @@ import {
   Content,
   Footer,
   H1,
+  H2,
   HeaderMenu,
   HeaderSubMenu,
   Line,
@@ -40,7 +41,7 @@ import {
   StyledApp,
   Tooltip,
 } from '@wireapp/react-ui-kit';
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import Helmet from 'react-helmet';
 
 import {avatarBase64} from './avatarImage';
@@ -51,11 +52,14 @@ import {DemoInputs} from './DemoInputs';
 import {DemoLayouts} from './DemoLayouts';
 import {DemoModals} from './DemoModals';
 import {DemoTypography} from './DemoTypography';
+import {RenderHarness} from './RenderHarness';
 
 const Demo = () => {
+  const FETCH_IMAGE_TIMEOUT_MS = 2000;
   const [currentPage, setCurrentPage] = useState(0);
   const [showFirstDropdown, setShowFirstDropdown] = useState(false);
   const [showSecondDropdown, setShowSecondDropdown] = useState(false);
+  const [imageData, setImageData] = useState(null);
   // eslint-disable-next-line no-magic-numbers
   const paginatedList = [[1, 2], [3, 4], [5, 6], [7, 8], [9, 10], [11, 12], [13, 14], [15, 16], [17, 18]];
   const isDesktop = typeof window !== 'undefined' && window.matchMedia(`(${QUERY.desktop})`).matches;
@@ -187,9 +191,9 @@ const Demo = () => {
               forceInitials={true}
               borderColor={'#fb0807'}
               backgroundColor={'#2085C2'}
-              fetchImage={() => {
+              fetchImage={useCallback(() => {
                 console.info('Trying to fetch asset');
-              }}
+              }, [])}
             />
             <Avatar
               size={64}
@@ -205,11 +209,16 @@ const Demo = () => {
             <AvatarGrid
               size={120}
               items={[
-                {base64Image: avatarBase64, color: '#fb0807', name: 'Joe Doe'},
-                {base64Image: avatarBase64, color: '#2085C2', name: 'Bon Jovi'},
-                {base64Image: avatarBase64, color: '#EB7E00', name: 'Mick Jagger'},
-                {base64Image: avatarBase64, color: '#EB7E00', name: 'Freddy Mercury'},
+                {base64Image: imageData, color: '#fb0807', name: 'Joe Doe'},
+                {base64Image: imageData, color: '#2085C2', name: 'Bon Jovi'},
+                {base64Image: imageData, color: '#EB7E00', name: 'Mick Jagger'},
+                {base64Image: imageData, color: '#EB7E00', name: 'Freddy Mercury'},
               ]}
+              fetchImages={useCallback(() => {
+                setTimeout(() => {
+                  setImageData(avatarBase64);
+                }, FETCH_IMAGE_TIMEOUT_MS);
+              }, [])}
             />
             <AvatarGrid
               size={120}
@@ -240,6 +249,37 @@ const Demo = () => {
               ]}
             />
           </div>
+          <H2>Testing rendering behaviour</H2>
+          <RenderHarness>
+            <Avatar
+              size={120}
+              name={'Joe Do'}
+              forceInitials={false}
+              base64Image={imageData}
+              borderColor={'#fb0807'}
+              backgroundColor={'#2085C2'}
+              fetchImage={useCallback(() => {
+                setImageData(null);
+                setTimeout(() => {
+                  setImageData(avatarBase64);
+                }, FETCH_IMAGE_TIMEOUT_MS);
+              }, [])}
+            />
+            <AvatarGrid
+              size={120}
+              items={[
+                {base64Image: imageData, color: '#fb0807', name: 'Joe Doe'},
+                {base64Image: imageData, color: '#2085C2', name: 'Bon Jovi'},
+                {base64Image: imageData, color: '#EB7E00', name: 'Mick Jagger'},
+                {base64Image: imageData, color: '#EB7E00', name: 'Freddy Mercury'},
+              ]}
+              fetchImages={useCallback(() => {
+                setTimeout(() => {
+                  setImageData(avatarBase64);
+                }, FETCH_IMAGE_TIMEOUT_MS);
+              }, [])}
+            />
+          </RenderHarness>
         </Container>
         <DemoIcons />
         <DemoLayouts />

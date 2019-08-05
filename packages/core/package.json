@@ -5,7 +5,7 @@
   "dependencies": {
     "@types/long": "4.0.0",
     "@types/node": "~10",
-    "@wireapp/api-client": "6.1.15",
+    "@wireapp/api-client": "6.1.17",
     "@wireapp/cryptobox": "11.4.15",
     "@wireapp/protocol-messaging": "1.24.2",
     "@wireapp/store-engine": "3.7.0",
@@ -36,7 +36,7 @@
     "terser-webpack-plugin": "1.4.1",
     "ts-node": "8.3.0",
     "typescript": "3.5.3",
-    "webpack": "4.38.0",
+    "webpack": "4.39.1",
     "webpack-cli": "3.3.6"
   },
   "description": "Wire for Web's communication core.",
@@ -62,5 +62,5 @@
     "test:project": "yarn dist && yarn test",
     "test:node": "nyc jasmine --config=jasmine.json"
   },
-  "version": "12.17.30"
+  "version": "12.17.32"
 }
