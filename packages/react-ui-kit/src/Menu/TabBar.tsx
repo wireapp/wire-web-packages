@@ -51,7 +51,7 @@ const tabBarItemStyle: <T>(theme: Theme, props: TabBarItemProps<T>) => ObjectInt
   {
     block = true,
     center = true,
-    color = COLOR.TEXT,
+    color = theme.general.color,
     bold = true,
     active = false,
     fontSize = '11px',
