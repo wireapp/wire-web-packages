@@ -19,10 +19,15 @@
 
 /** @jsx jsx */
 import {jsx} from '@emotion/core';
+import {withTheme} from 'emotion-theming';
 import React from 'react';
-import {COLOR} from '../Identity/colors';
+import {Theme} from '../Layout';
 
-export interface InternalSVGIconProps<T = SVGSVGElement> extends SVGIconProps<T> {
+interface ThemeProps {
+  theme: Theme;
+}
+
+export interface InternalSVGIconProps<T = SVGSVGElement> extends SVGIconProps<T>, ThemeProps {
   realWidth: number;
   realHeight: number;
 }
@@ -35,46 +40,49 @@ export interface SVGIconProps<T = SVGSVGElement> extends React.SVGProps<T> {
   shadow?: boolean;
 }
 
-export const SVGIcon = ({
-  realWidth,
-  realHeight,
-  scale = 1,
-  width = null,
-  height = null,
-  color = COLOR.ICON,
-  shadow,
-  children,
-  style,
-  ...props
-}: InternalSVGIconProps) => {
-  let newScale = scale;
-  if (width || height) {
-    const widthScale = width ? width / realWidth : Infinity;
-    const heightScale = height ? height / realHeight : Infinity;
-    newScale = Math.min(widthScale, heightScale);
-  }
-  const newWidth = Math.ceil(realWidth * newScale);
-  const newHeight = Math.ceil(realHeight * newScale);
-  const shadowId = shadow && Math.random().toString();
-  return (
-    <svg
-      style={{...style, overflow: 'visible'}}
-      fill={color}
-      viewBox={`0 0 ${realWidth} ${realHeight}`}
-      width={newWidth}
-      height={newHeight}
-      {...props}
-    >
-      {shadow && (
-        <defs>
-          <filter id={shadowId} x="-50%" y="-50%" width="200%" height="200%">
-            <feOffset result="offOut" in="SourceAlpha" dx="0" dy="0" />
-            <feGaussianBlur result="blurOut" in="offOut" stdDeviation="2.5" />
-            <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
-          </filter>
-        </defs>
-      )}
-      <g filter={shadow && `url(#${shadowId})`}>{children}</g>
-    </svg>
-  );
-};
+export const SVGIcon = withTheme(
+  ({
+    theme,
+    realWidth,
+    realHeight,
+    scale = 1,
+    width = null,
+    height = null,
+    color = theme.general.color,
+    shadow,
+    children,
+    style,
+    ...props
+  }: InternalSVGIconProps) => {
+    let newScale = scale;
+    if (width || height) {
+      const widthScale = width ? width / realWidth : Infinity;
+      const heightScale = height ? height / realHeight : Infinity;
+      newScale = Math.min(widthScale, heightScale);
+    }
+    const newWidth = Math.ceil(realWidth * newScale);
+    const newHeight = Math.ceil(realHeight * newScale);
+    const shadowId = shadow && Math.random().toString();
+    return (
+      <svg
+        style={{...style, overflow: 'visible'}}
+        fill={color}
+        viewBox={`0 0 ${realWidth} ${realHeight}`}
+        width={newWidth}
+        height={newHeight}
+        {...props}
+      >
+        {shadow && (
+          <defs>
+            <filter id={shadowId} x="-50%" y="-50%" width="200%" height="200%">
+              <feOffset result="offOut" in="SourceAlpha" dx="0" dy="0" />
+              <feGaussianBlur result="blurOut" in="offOut" stdDeviation="2.5" />
+              <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+            </filter>
+          </defs>
+        )}
+        <g filter={shadow && `url(#${shadowId})`}>{children}</g>
+      </svg>
+    );
+  },
+);
