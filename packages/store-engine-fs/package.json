@@ -2,6 +2,7 @@
   "dependencies": {
     "@types/fs-extra": "8.0.0",
     "@wireapp/store-engine": "3.8.1",
+    "deepmerge": "4.0.0",
     "fs-extra": "8.1.0"
   },
   "devDependencies": {

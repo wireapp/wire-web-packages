@@ -19,6 +19,7 @@
 
 import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import * as fs from 'bro-fs';
+import deepmerge = require('deepmerge');
 
 export interface FileSystemEngineOptions {
   fileExtension: string;
@@ -185,14 +186,14 @@ export class FileSystemEngine implements CRUDEngine {
   ): Promise<PrimaryKey> {
     const filePath = this.createFilePath(tableName, primaryKey);
     return this.read(tableName, primaryKey)
-      .then((record: any) => {
+      .then(record => {
         if (typeof record === 'string') {
           record = JSON.parse(record);
         }
-        const updatedRecord: Object = {...record, ...changes};
+        const updatedRecord = deepmerge(record, changes);
         return JSON.stringify(updatedRecord);
       })
-      .then((updatedRecord: any) => fs.writeFile(filePath, updatedRecord))
+      .then(updatedRecord => fs.writeFile(filePath, updatedRecord))
       .then(() => primaryKey);
   }
 

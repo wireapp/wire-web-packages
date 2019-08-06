@@ -32,6 +32,29 @@ interface DomainEntity {
 }
 
 export const updateSpec = {
+  'deeply merges objects': async (engine: CRUDEngine) => {
+    const PRIMARY_KEY = 'primary-key';
+
+    const entity = {
+      name: 'Old monitor',
+      size: {
+        height: 1080,
+      },
+    };
+
+    const updates = {
+      age: 177,
+      size: {
+        width: 1920,
+      },
+    };
+
+    await engine.create(TABLE_NAME, PRIMARY_KEY, entity);
+    const primaryKey = await engine.update(TABLE_NAME, PRIMARY_KEY, updates);
+    const updatedRecord = await engine.read<DomainEntity>(TABLE_NAME, primaryKey);
+    expect(updatedRecord.size.height).toBe(entity.size.height);
+    expect(updatedRecord.size.width).toBe(updates.size.width);
+  },
   'fails if the record does not exist.': async (engine: CRUDEngine) => {
     const PRIMARY_KEY = 'primary-key';
 

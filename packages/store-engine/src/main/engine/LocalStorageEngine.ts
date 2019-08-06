@@ -17,6 +17,8 @@
  *
  */
 
+import deepmerge = require('deepmerge');
+
 import {CRUDEngine} from './CRUDEngine';
 import {isBrowser} from './EnvironmentUtil';
 import {RecordAlreadyExistsError, RecordNotFoundError, RecordTypeError, UnsupportedError} from './error/';
@@ -167,7 +169,7 @@ export class LocalStorageEngine implements CRUDEngine {
   ): Promise<PrimaryKey> {
     return this.read(tableName, primaryKey)
       .then(entity => {
-        return {...entity, ...changes};
+        return deepmerge(entity, changes);
       })
       .then(updatedEntity => {
         return this.create(tableName, primaryKey, updatedEntity).catch(error => {

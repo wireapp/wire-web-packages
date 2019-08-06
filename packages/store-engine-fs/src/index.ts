@@ -18,6 +18,7 @@
  */
 
 import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
+import deepmerge = require('deepmerge');
 import fs from 'fs-extra';
 import path from 'path';
 
@@ -202,7 +203,7 @@ export class FileEngine implements CRUDEngine {
     if (typeof record === 'string') {
       record = JSON.parse(record);
     }
-    const updatedRecord = JSON.stringify({...record, ...changes});
+    const updatedRecord = JSON.stringify(deepmerge(record, changes));
     await fs.outputFile(file, updatedRecord);
     return primaryKey;
   }
