@@ -90,6 +90,7 @@ export class FileSystemEngine implements CRUDEngine {
 
     if (primaryKey === undefined) {
       primaryKey = (this.autoIncrementedPrimaryKey as unknown) as PrimaryKey;
+      this.autoIncrementedPrimaryKey += 1;
     }
 
     const filePath = this.createFilePath(tableName, primaryKey);
@@ -107,7 +108,6 @@ export class FileSystemEngine implements CRUDEngine {
       }
 
       await fs.writeFile(filePath, data);
-      this.autoIncrementedPrimaryKey += 1;
       return primaryKey;
     }
   }
