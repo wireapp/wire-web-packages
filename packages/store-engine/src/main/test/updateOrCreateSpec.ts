@@ -26,6 +26,30 @@ interface DomainEntity {
 }
 
 export const updateOrCreateSpec = {
+  'automatically creates primary keys if no primary key is given.': async (engine: CRUDEngine) => {
+    type PrimaryKey = number | undefined;
+
+    type EntityType = {name: string};
+
+    const TABLE_NAME = 'animals';
+
+    const firstAnimal = {
+      name: 'Ape',
+    };
+
+    const secondAnimal = {
+      name: 'Bear',
+    };
+
+    const firstPrimaryKey = await engine.updateOrCreate<PrimaryKey, EntityType>(TABLE_NAME, undefined, firstAnimal);
+    expect(firstPrimaryKey).toBeDefined();
+
+    const secondPrimaryKey = await engine.updateOrCreate<PrimaryKey, EntityType>(TABLE_NAME, undefined, secondAnimal);
+    expect(secondPrimaryKey).not.toBe(firstPrimaryKey);
+
+    const persistedRecords = await engine.readAll(TABLE_NAME);
+    expect(persistedRecords.length).toBe(2);
+  },
   'creates a record if it does not exist in the database.': async (engine: CRUDEngine) => {
     const PRIMARY_KEY = 'primary-key';
 
