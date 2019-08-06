@@ -49,6 +49,10 @@ export class MemoryEngine implements CRUDEngine {
     if (entity) {
       this.prepareTable(tableName);
 
+      if (primaryKey === undefined) {
+        primaryKey = (this.autoIncrementedPrimaryKey as unknown) as PrimaryKey;
+      }
+
       const record = this.stores[this.storeName][tableName][primaryKey];
 
       if (record) {
@@ -58,6 +62,8 @@ export class MemoryEngine implements CRUDEngine {
       }
 
       this.stores[this.storeName][tableName][primaryKey] = entity;
+      this.autoIncrementedPrimaryKey += 1;
+
       return Promise.resolve(primaryKey);
     }
 
@@ -137,8 +143,8 @@ export class MemoryEngine implements CRUDEngine {
     changes: ChangesType,
   ): Promise<PrimaryKey> {
     this.prepareTable(tableName);
-    const entity: Object = await this.read(tableName, primaryKey);
-    const updatedEntity: Object = {...entity, ...changes};
+    const entity = await this.read(tableName, primaryKey);
+    const updatedEntity = {...entity, ...changes};
     this.stores[this.storeName][tableName][primaryKey] = updatedEntity;
     return primaryKey;
   }
@@ -149,9 +155,6 @@ export class MemoryEngine implements CRUDEngine {
     changes: ChangesType,
   ): Promise<PrimaryKey> {
     this.prepareTable(tableName);
-    if (primaryKey === undefined) {
-      primaryKey = (<unknown>this.autoIncrementedPrimaryKey) as PrimaryKey;
-    }
     return this.update(tableName, primaryKey, changes)
       .catch(error => {
         if (error instanceof RecordNotFoundError) {
@@ -160,7 +163,6 @@ export class MemoryEngine implements CRUDEngine {
         throw error;
       })
       .then(() => {
-        this.autoIncrementedPrimaryKey += 1;
         return primaryKey;
       });
   }
