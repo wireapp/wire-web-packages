@@ -149,22 +149,22 @@ export class MemoryEngine implements CRUDEngine {
     return primaryKey;
   }
 
-  updateOrCreate<PrimaryKey = string, ChangesType = Object>(
+  async updateOrCreate<PrimaryKey = string, ChangesType = Object>(
     tableName: string,
     primaryKey: PrimaryKey,
     changes: ChangesType,
   ): Promise<PrimaryKey> {
     this.prepareTable(tableName);
-    return this.update(tableName, primaryKey, changes)
-      .catch(error => {
-        if (error instanceof RecordNotFoundError) {
-          return this.create(tableName, primaryKey, changes);
-        }
-        throw error;
-      })
-      .then(() => {
-        return primaryKey;
-      });
+    try {
+      await this.update(tableName, primaryKey, changes);
+      return primaryKey;
+    } catch (error) {
+      if (error instanceof RecordNotFoundError) {
+        const newPrimaryKey = await this.create(tableName, primaryKey, changes);
+        return newPrimaryKey;
+      }
+      throw error;
+    }
   }
 
   private prepareTable(tableName: string): void {
