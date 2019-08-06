@@ -29,21 +29,8 @@ export enum THEME_ID {
 }
 
 export interface Theme {
-  Checkbox: {
-    borderColor: string;
-  };
-  TextArea: {
-    placeholderColor: string;
-    backgroundColor: string;
-  };
   Input: {
     placeholderColor: string;
-    backgroundColor: string;
-  };
-  Pill: {
-    color: string;
-  };
-  Select: {
     backgroundColor: string;
   };
   general: {
@@ -54,20 +41,7 @@ export interface Theme {
 
 export const themes: {[themeId in THEME_ID]: Theme} = {
   [THEME_ID.LIGHT]: {
-    Checkbox: {
-      borderColor: COLOR.BLACK_OPAQUE_40,
-    },
     Input: {
-      backgroundColor: COLOR.WHITE,
-      placeholderColor: COLOR.GRAY_DARKEN_24,
-    },
-    Pill: {
-      color: COLOR.TEXT,
-    },
-    Select: {
-      backgroundColor: COLOR.WHITE,
-    },
-    TextArea: {
       backgroundColor: COLOR.WHITE,
       placeholderColor: COLOR.GRAY_DARKEN_24,
     },
@@ -77,21 +51,8 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
     },
   },
   [THEME_ID.DARK]: {
-    Checkbox: {
-      borderColor: COLOR.WHITE_OPAQUE_40,
-    },
     Input: {
-      backgroundColor: COLOR.BLACK_LIGHTEN_16,
-      placeholderColor: COLOR.GRAY_LIGHTEN_88,
-    },
-    Pill: {
-      color: COLOR.TEXT,
-    },
-    Select: {
-      backgroundColor: COLOR.BLACK_LIGHTEN_16,
-    },
-    TextArea: {
-      backgroundColor: COLOR.BLACK_LIGHTEN_16,
+      backgroundColor: COLOR.BLACK_LIGHTEN_24,
       placeholderColor: COLOR.GRAY_LIGHTEN_88,
     },
     general: {

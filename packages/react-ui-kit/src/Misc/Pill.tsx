@@ -64,7 +64,7 @@ export const pillStyle: <T>(theme: Theme, props: PillProps<T>) => ObjectInterpol
     animation: `${pillAnimation} ${DURATION.DEFAULT}ms ${EASE.QUART}`,
     backgroundColor,
     borderRadius: '160px',
-    color: active ? theme.Pill.color : theme.general.color,
+    color: active ? COLOR.TEXT : theme.general.color,
     cursor: active ? 'default' : undefined,
     display: 'inline-block',
     fontSize: '12px',

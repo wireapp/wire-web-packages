@@ -57,7 +57,7 @@ export const inputStyle: <T>(theme: Theme, props: InputProps<T>) => ObjectInterp
           boxShadow: 'none',
         }
       : {},
-    background: disabled ? COLOR.shade(theme.Input.backgroundColor, 0.06) : theme.Input.backgroundColor,
+    background: theme.Input.backgroundColor,
     border: 'none',
     borderRadius: '4px',
     boxShadow: markInvalid ? `0 0 0 1px ${COLOR.RED}` : 'none',
@@ -67,6 +67,7 @@ export const inputStyle: <T>(theme: Theme, props: InputProps<T>) => ObjectInterp
     height: '56px',
     lineHeight: '24px',
     margin: '0 0 16px',
+    opacity: disabled ? 0.56 : 1,
     outline: 'none',
     padding: '0 16px',
     width: '100%',

@@ -33,6 +33,7 @@ const styledAppContainerStyle: <T>(
   props: StyledAppContainerProps<T>,
 ) => ObjectInterpolation<undefined> = (theme, {backgroundColor = theme.general.backgroundColor}) => ({
   background: backgroundColor,
+  transition: 'background 0.15s',
 });
 
 const filterStyledAppContainerProps = (props: StyledAppContainerProps) =>

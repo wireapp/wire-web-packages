@@ -36,7 +36,7 @@ export const textAreaStyle: <T>(theme: Theme, props: TextAreaProps<T>) => Object
   {markInvalid = false, placeholderTextTransform = 'uppercase', disabled = false},
 ) => {
   const placeholderStyle = {
-    color: theme.TextArea.placeholderColor,
+    color: theme.Input.placeholderColor,
     fontSize: '11px',
     textTransform: placeholderTextTransform,
   };
@@ -57,7 +57,7 @@ export const textAreaStyle: <T>(theme: Theme, props: TextAreaProps<T>) => Object
           boxShadow: 'none',
         }
       : {},
-    background: disabled ? COLOR.shade(theme.TextArea.backgroundColor, 0.06) : theme.TextArea.backgroundColor,
+    background: theme.Input.backgroundColor,
     border: 'none',
     borderRadius: '4px',
     boxShadow: markInvalid ? `0 0 0 1px ${COLOR.RED}` : 'none',
@@ -66,6 +66,7 @@ export const textAreaStyle: <T>(theme: Theme, props: TextAreaProps<T>) => Object
     fontWeight: 300,
     lineHeight: '24px',
     margin: '0 0 16px',
+    opacity: disabled ? 0.56 : 1,
     outline: 'none',
     padding: '16px 16px',
     resize: 'none',
