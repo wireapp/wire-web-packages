@@ -19,7 +19,6 @@
 
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
-import {COLOR} from '../../Identity';
 import {QueryKeys, media} from '../../mediaQueries';
 import {LinkProps, filterLinkProps, linkStyle} from '../../Text';
 import {filterProps} from '../../util';
@@ -32,7 +31,7 @@ export interface MenuLinkProps<T = HTMLAnchorElement> extends LinkProps<T> {
 
 export const menuLinkStyle: <T>(theme: Theme, props: MenuLinkProps<T>) => ObjectInterpolation<undefined> = (
   theme,
-  {bold = true, color = COLOR.LINK, fontSize = '11px', textTransform = 'uppercase', button = false, ...props},
+  {bold = true, color = theme.general.color, fontSize = '11px', textTransform = 'uppercase', button = false, ...props},
 ) => ({
   ...linkStyle(theme, {bold, color, fontSize, textTransform, ...props}),
   [media[QueryKeys.DESKTOP]]: {
