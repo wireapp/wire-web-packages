@@ -19,7 +19,6 @@
 
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
-import {COLOR} from '../Identity';
 import {Theme} from '../Layout';
 import {LinkProps, linkStyle} from './Link';
 import {TextProps, filterTextProps, textStyle} from './Text';
@@ -28,7 +27,7 @@ export type LabelProps<T = HTMLSpanElement> = TextProps<T>;
 
 const labelStyle: <T>(theme: Theme, props: LabelProps<T>) => ObjectInterpolation<undefined> = (
   theme,
-  {bold = true, color = COLOR.LINK, fontSize = '12px', ...props},
+  {bold = true, color = theme.general.color, fontSize = '12px', ...props},
 ) => ({
   ...textStyle(theme, {bold, color, fontSize, ...props}),
 });
