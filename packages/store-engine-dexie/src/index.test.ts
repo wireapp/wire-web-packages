@@ -63,9 +63,9 @@ describe('IndexedDBEngine', () => {
   afterEach(done => {
     if (engine && engine['db']) {
       engine['db'].close();
-      const deleteRequest = window.indexedDB.deleteDatabase(STORE_NAME);
-      deleteRequest.onsuccess = () => done();
     }
+    const deleteRequest = window.indexedDB.deleteDatabase(STORE_NAME);
+    deleteRequest.onsuccess = () => done();
   });
 
   describe('init', () => {
@@ -133,7 +133,7 @@ describe('IndexedDBEngine', () => {
     });
   });
 
-  describe('readAllPrimaryKeys', () => {
+  describe('readAllPrimaryKeys', async () => {
     Object.entries(readAllPrimaryKeysSpec).map(([description, testFunction]) => {
       it(description, () => testFunction(engine));
     });
