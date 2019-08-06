@@ -29,22 +29,18 @@ export const updateOrCreateSpec = {
   'automatically creates primary keys if no primary key is given.': async (engine: CRUDEngine) => {
     type PrimaryKey = number | undefined;
 
-    type EntityType = {name: string};
-
-    const TABLE_NAME = 'animals';
-
-    const firstAnimal = {
-      name: 'Ape',
+    const first = {
+      name: 'Homer',
     };
 
-    const secondAnimal = {
-      name: 'Bear',
+    const second = {
+      name: 'Marge',
     };
 
-    const firstPrimaryKey = await engine.updateOrCreate<PrimaryKey, EntityType>(TABLE_NAME, undefined, firstAnimal);
+    const firstPrimaryKey = await engine.updateOrCreate<PrimaryKey, DomainEntity>(TABLE_NAME, undefined, first);
     expect(firstPrimaryKey).toBeDefined();
 
-    const secondPrimaryKey = await engine.updateOrCreate<PrimaryKey, EntityType>(TABLE_NAME, undefined, secondAnimal);
+    const secondPrimaryKey = await engine.updateOrCreate<PrimaryKey, DomainEntity>(TABLE_NAME, undefined, second);
     expect(secondPrimaryKey).not.toBe(firstPrimaryKey);
 
     const persistedRecords = await engine.readAll(TABLE_NAME);

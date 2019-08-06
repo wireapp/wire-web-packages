@@ -37,12 +37,21 @@ describe('IndexedDBEngine', () => {
 
   let engine: IndexedDBEngine;
 
-  async function initEngine(shouldCreateNewEngine = true): Promise<IndexedDBEngine> {
+  async function initEngine(
+    shouldCreateNewEngine: boolean = true,
+    useInLineKeys: boolean = true,
+  ): Promise<IndexedDBEngine> {
     const storeEngine = shouldCreateNewEngine ? new IndexedDBEngine() : engine;
     const db: Dexie = await storeEngine.init(STORE_NAME);
-    db.version(1).stores({
-      'the-simpsons': ', firstName, lastName',
-    });
+    let schema = {
+      'the-simpsons': 'firstName, lastName',
+    };
+    if (useInLineKeys) {
+      schema = {
+        'the-simpsons': ', firstName, lastName',
+      };
+    }
+    db.version(1).stores(schema);
     await db.open();
     return storeEngine;
   }
@@ -167,7 +176,8 @@ describe('IndexedDBEngine', () => {
     });
   });
 
-  describe('updateOrCreate', () => {
+  describe('updateOrCreate', async () => {
+    engine = await initEngine(true, false);
     Object.entries(updateOrCreateSpec).map(([description, testFunction]) => {
       it(description, () => testFunction(engine));
     });
