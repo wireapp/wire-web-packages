@@ -17,6 +17,12 @@
  *
  */
 
-export * from './FeatureAPI';
-export * from './LegalHoldStatusData';
-export * from './IdentityProviderStatusData';
+export enum LegalHoldStatus {
+  DISABLED = 'disabled',
+  ENABLED_NOT_CONFIGURED = 'not_configured',
+  ENABLED_CONFIGURED = 'configured',
+}
+
+export interface LegalHoldStatusData {
+  status: LegalHoldStatus;
+}

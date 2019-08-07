@@ -20,6 +20,8 @@
 import {AxiosRequestConfig} from 'axios';
 
 import {HttpClient} from '../../http';
+import {IdentityProviderStatusData} from './IdentityProviderStatusData';
+import {LegalHoldStatusData} from './LegalHoldStatusData';
 
 export class FeatureAPI {
   constructor(private readonly client: HttpClient) {}
@@ -31,23 +33,23 @@ export class FeatureAPI {
     TEAMS: '/teams',
   };
 
-  public async getIdentityProviderFeatureFlag(teamId: string): Promise<{}> {
+  public async getIdentityProviderFeatureFlag(teamId: string): Promise<IdentityProviderStatusData> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.SSO}`,
     };
 
-    const response = await this.client.sendJSON<{}>(config);
+    const response = await this.client.sendJSON<IdentityProviderStatusData>(config);
     return response.data;
   }
 
-  public async getLegalHoldFeatureFlag(teamId: string): Promise<{}> {
+  public async getLegalHoldFeatureFlag(teamId: string): Promise<LegalHoldStatusData> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.LEGAL_HOLD}`,
     };
 
-    const response = await this.client.sendJSON<{}>(config);
+    const response = await this.client.sendJSON<LegalHoldStatusData>(config);
     return response.data;
   }
 }
