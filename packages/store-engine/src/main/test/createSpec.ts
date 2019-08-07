@@ -57,6 +57,15 @@ export const createSpec = {
       expect(error).toEqual(jasmine.any(RecordTypeError));
     }
   },
+  'saves strings and objects.': async (engine: CRUDEngine) => {
+    await engine.create(TABLE_NAME, 'primary-key-1', 'hello-world');
+    const firstRecord = await engine.read(TABLE_NAME, 'primary-key-1');
+    expect(firstRecord).toBe('hello-world');
+
+    await engine.create(TABLE_NAME, 'primary-key-2', {hello: 'world'});
+    const secondRecord = await engine.read(TABLE_NAME, 'primary-key-2');
+    expect(secondRecord).toEqual({hello: 'world'});
+  },
   'throws an error when attempting to overwrite a record.': async (engine: CRUDEngine) => {
     const PRIMARY_KEY = 'primary-key';
 
