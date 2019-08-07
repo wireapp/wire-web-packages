@@ -79,7 +79,6 @@ export class MemoryEngine implements CRUDEngine {
   }
 
   public async deleteAll(tableName: string): Promise<boolean> {
-    await Promise.resolve();
     delete this.stores[this.storeName][tableName];
     return true;
   }
