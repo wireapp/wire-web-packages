@@ -151,7 +151,10 @@ export class SQLeetEngine implements CRUDEngine {
       }
       let value: string | EntityType[Extract<keyof EntityType, string>] = entities[entity];
       // Stringify objects for the database
-      if (table[entity] === SQLiteType.JSON) {
+      if (
+        table[entity] === SQLiteType.JSON ||
+        (table[entity] === SQLiteType.JSON_OR_TEXT && typeof value === 'object' && value !== null)
+      ) {
         value = JSON.stringify(value) as SQLiteType;
       }
       const reference = `@${hashColumnName(entity)}`;
@@ -166,6 +169,15 @@ export class SQLeetEngine implements CRUDEngine {
     }
 
     return {columns, values};
+  }
+
+  private tryToParseJson(value: string): string | object {
+    if (value.startsWith('{')) {
+      try {
+        value = JSON.parse(value);
+      } catch (error) {}
+    }
+    return value;
   }
 
   async create<EntityType = Object, PrimaryKey = string>(
@@ -242,6 +254,8 @@ export class SQLeetEngine implements CRUDEngine {
     for (const column in record) {
       if (table[column] === SQLiteType.JSON) {
         record[column] = JSON.parse(record[column]);
+      } else if (table[column] === SQLiteType.JSON_OR_TEXT) {
+        record[column] = this.tryToParseJson(record[column]);
       }
     }
 

@@ -120,7 +120,7 @@ describe('SQLeetEngine', () => {
       it(description, async () => {
         const engine = await initEngine({
           'the-simpsons': {
-            some: SQLiteType.TEXT,
+            some: SQLiteType.JSON_OR_TEXT,
           },
         });
 
