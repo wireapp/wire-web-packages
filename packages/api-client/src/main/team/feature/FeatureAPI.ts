@@ -31,7 +31,7 @@ export class FeatureAPI {
     TEAMS: '/teams',
   };
 
-  public async getIdentityProviderFeatureFlag(teamId: string): Promise<IdentityProviderStatus> {
+  public async getIdentityProviderStatus(teamId: string): Promise<IdentityProviderStatus> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.SSO}`,
