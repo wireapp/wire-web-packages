@@ -39,16 +39,16 @@ describe('IndexedDBEngine', () => {
 
   async function initEngine(
     shouldCreateNewEngine: boolean = true,
-    useInLineKeys: boolean = true,
+    useInLineKeys: boolean = false,
   ): Promise<IndexedDBEngine> {
     const storeEngine = shouldCreateNewEngine ? new IndexedDBEngine() : engine;
     const db: Dexie = await storeEngine.init(STORE_NAME);
     let schema = {
-      'the-simpsons': 'firstName, lastName',
+      'the-simpsons': ', firstName, lastName',
     };
     if (useInLineKeys) {
       schema = {
-        'the-simpsons': ', firstName, lastName',
+        'the-simpsons': '++id, firstName, lastName',
       };
     }
     db.version(1).stores(schema);
