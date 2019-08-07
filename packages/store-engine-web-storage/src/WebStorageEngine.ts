@@ -21,7 +21,12 @@ import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 
 export class WebStorageEngine implements CRUDEngine {
   private autoIncrementedPrimaryKey: number = 1;
+  private readonly webStorage: Storage;
   public storeName = '';
+
+  constructor(useSessionStorage: boolean = false) {
+    this.webStorage = useSessionStorage ? window.sessionStorage : window.localStorage;
+  }
 
   public append<PrimaryKey = string>(
     tableName: string,
@@ -37,7 +42,7 @@ export class WebStorageEngine implements CRUDEngine {
       }
 
       const key = this.createKey<PrimaryKey>(tableName, primaryKey);
-      window.localStorage.setItem(`${key}`, record);
+      this.webStorage.setItem(`${key}`, record);
 
       return primaryKey;
     });
@@ -63,9 +68,9 @@ export class WebStorageEngine implements CRUDEngine {
             throw new StoreEngineError.RecordAlreadyExistsError(message);
           } else {
             if (typeof entity === 'string') {
-              window.localStorage.setItem(`${internalPrimaryKey}`, entity);
+              this.webStorage.setItem(`${internalPrimaryKey}`, entity);
             } else {
-              window.localStorage.setItem(`${internalPrimaryKey}`, JSON.stringify(entity));
+              this.webStorage.setItem(`${internalPrimaryKey}`, JSON.stringify(entity));
             }
 
             if (typeof internalPrimaryKey === 'string') {
@@ -83,7 +88,7 @@ export class WebStorageEngine implements CRUDEngine {
   public delete<PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): Promise<PrimaryKey> {
     return Promise.resolve().then(() => {
       const key = this.createKey<PrimaryKey>(tableName, primaryKey);
-      window.localStorage.removeItem(`${key}`);
+      this.webStorage.removeItem(`${key}`);
       return primaryKey;
     });
   }
@@ -114,7 +119,7 @@ export class WebStorageEngine implements CRUDEngine {
   }
 
   public async purge(): Promise<void> {
-    window.localStorage.clear();
+    this.webStorage.clear();
   }
 
   public read<EntityType = Object, PrimaryKey = string>(
@@ -123,7 +128,7 @@ export class WebStorageEngine implements CRUDEngine {
   ): Promise<EntityType> {
     return Promise.resolve().then(() => {
       const key = `${this.storeName}@${tableName}@${primaryKey}`;
-      const record = window.localStorage.getItem(key);
+      const record = this.webStorage.getItem(key);
       if (record) {
         try {
           const parsed = JSON.parse(record);
