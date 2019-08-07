@@ -153,7 +153,7 @@ export class SQLeetEngine implements CRUDEngine {
       // Stringify objects for the database
       if (
         table[entity] === SQLiteType.JSON ||
-        (table[entity] === SQLiteType.JSON_OR_TEXT && typeof value === 'object' && value !== null)
+        (table[entity] === SQLiteType.JSON_OR_TEXT && typeof value === 'object')
       ) {
         value = JSON.stringify(value) as SQLiteType;
       }
@@ -169,15 +169,6 @@ export class SQLeetEngine implements CRUDEngine {
     }
 
     return {columns, values};
-  }
-
-  private tryToParseJson(value: string): string | object {
-    if (value.startsWith('{')) {
-      try {
-        value = JSON.parse(value);
-      } catch (error) {}
-    }
-    return value;
   }
 
   async create<EntityType = Object, PrimaryKey = string>(
@@ -255,7 +246,9 @@ export class SQLeetEngine implements CRUDEngine {
       if (table[column] === SQLiteType.JSON) {
         record[column] = JSON.parse(record[column]);
       } else if (table[column] === SQLiteType.JSON_OR_TEXT) {
-        record[column] = this.tryToParseJson(record[column]);
+        try {
+          record[column] = JSON.parse(record[column]);
+        } catch (error) {}
       }
     }
 
