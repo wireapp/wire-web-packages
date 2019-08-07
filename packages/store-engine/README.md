@@ -8,13 +8,18 @@ For licensing information, see the attached LICENSE file and the list of third-p
 
 ## Store Engine
 
-This package provides an interface to operate with various storage technologies in a uniform manner. There is a `MemoryEngine` which serves as an example.
+The Store Engine is an interface which can be used to implement various storage technologies in a uniform manner. There is a `MemoryEngine` which serves as an example. Additional implementations can be found in separate packages.
 
-Additional storage engines can be found in separate packages such as:
+**Popular implementations**
 
-- [FileEngine](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs)
-- [FileSystemEngine](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-bro-fs)
-- [IndexedDBEngine](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie)
+| Store Engine | Description |
+| :-- | :-- |
+| [store-engine](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine) | Implementation for in-memory. |
+| [store-engine-bro-fs](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-bro-fs) | Implementation for the browser's [File and Directory Entries API](https://developer.mozilla.org/docs/Web/API/File_and_Directory_Entries_API). |
+| [store-engine-dexie](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie) | Implementation for the browser's [IndexedDB](https://developer.mozilla.org/docs/IndexedDB). |
+| [store-engine-fs](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs) | Implementation for Node.js' [File System](https://nodejs.org/api/fs.html). |
+| [store-engine-sqleet](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet) | Implementation for [SQLite 3](https://github.com/kripken/sql.js) (WebAssembly) with [encryption](https://github.com/resilar/sqleet). |
+| [store-engine-web-storage](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage) | Implementation for the browser's [Web Storage API](https://developer.mozilla.org/docs/Web/API/Web_Storage_API). |
 
 ### Motivation
 
