@@ -32,6 +32,7 @@ const TEN_MEGABYTES = 1024 * 1024 * 10;
 export class FileSystemEngine implements CRUDEngine {
   public storeName = '';
 
+  private autoIncrementedPrimaryKey: number = 1;
   private config: FileSystemEngineOptions = {
     fileExtension: '.dat',
     size: TEN_MEGABYTES,
@@ -88,6 +89,11 @@ export class FileSystemEngine implements CRUDEngine {
       throw new StoreEngineError.RecordTypeError(message);
     }
 
+    if (primaryKey === undefined) {
+      primaryKey = (this.autoIncrementedPrimaryKey as unknown) as PrimaryKey;
+      this.autoIncrementedPrimaryKey += 1;
+    }
+
     const filePath = this.createFilePath(tableName, primaryKey);
     const isExistent = await fs.exists(filePath);
 
@@ -101,6 +107,7 @@ export class FileSystemEngine implements CRUDEngine {
       } catch (error) {
         data = String(entity);
       }
+
       await fs.writeFile(filePath, data);
       return primaryKey;
     }
@@ -213,6 +220,6 @@ export class FileSystemEngine implements CRUDEngine {
         }
         throw error;
       })
-      .then(() => primaryKey);
+      .then(internalPrimaryKey => internalPrimaryKey);
   }
 }
