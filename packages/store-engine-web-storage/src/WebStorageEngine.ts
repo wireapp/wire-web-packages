@@ -62,8 +62,8 @@ export class WebStorageEngine implements CRUDEngine {
             const message = `Record "${primaryKey}" already exists in "${tableName}". You need to delete the record first if you want to overwrite it.`;
             throw new StoreEngineError.RecordAlreadyExistsError(message);
           } else {
-            if (typeof record === 'string') {
-              window.localStorage.setItem(`${internalPrimaryKey}`, String(entity));
+            if (typeof entity === 'string') {
+              window.localStorage.setItem(`${internalPrimaryKey}`, entity);
             } else {
               window.localStorage.setItem(`${internalPrimaryKey}`, JSON.stringify(entity));
             }
