@@ -19,6 +19,6 @@
 
 import {FeatureStatus} from './FeatureStatus';
 
-export interface IdentityProviderStatusData {
+export interface IdentityProviderStatus {
   status: FeatureStatus;
 }

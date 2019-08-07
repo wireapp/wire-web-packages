@@ -20,7 +20,7 @@
 import {AxiosRequestConfig} from 'axios';
 
 import {HttpClient} from '../../http';
-import {IdentityProviderStatusData} from './IdentityProviderStatus';
+import {IdentityProviderStatus} from './IdentityProviderStatus';
 
 export class FeatureAPI {
   constructor(private readonly client: HttpClient) {}
@@ -31,13 +31,13 @@ export class FeatureAPI {
     TEAMS: '/teams',
   };
 
-  public async getIdentityProviderFeatureFlag(teamId: string): Promise<IdentityProviderStatusData> {
+  public async getIdentityProviderFeatureFlag(teamId: string): Promise<IdentityProviderStatus> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.SSO}`,
     };
 
-    const response = await this.client.sendJSON<IdentityProviderStatusData>(config);
+    const response = await this.client.sendJSON<IdentityProviderStatus>(config);
     return response.data;
   }
 }
