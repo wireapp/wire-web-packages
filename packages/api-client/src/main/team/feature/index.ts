@@ -18,4 +18,5 @@
  */
 
 export * from './FeatureAPI';
-export * from './IdentityProviderStatusData';
+export * from './FeatureStatus';
+export * from './IdentityProviderStatus';

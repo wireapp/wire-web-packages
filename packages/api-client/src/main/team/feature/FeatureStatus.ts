@@ -17,27 +17,7 @@
  *
  */
 
-import {AxiosRequestConfig} from 'axios';
-
-import {HttpClient} from '../../http';
-import {IdentityProviderStatusData} from './IdentityProviderStatus';
-
-export class FeatureAPI {
-  constructor(private readonly client: HttpClient) {}
-
-  static URL = {
-    FEATURES: 'features',
-    SSO: 'sso',
-    TEAMS: '/teams',
-  };
-
-  public async getIdentityProviderFeatureFlag(teamId: string): Promise<IdentityProviderStatusData> {
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.SSO}`,
-    };
-
-    const response = await this.client.sendJSON<IdentityProviderStatusData>(config);
-    return response.data;
-  }
+export enum FeatureStatus {
+  DISABLED = 'disabled',
+  ENABLED = 'enabled',
 }

@@ -17,11 +17,8 @@
  *
  */
 
-export enum IdentityProviderStatus {
-  DISABLED = 'disabled',
-  ENABLED = 'enabled',
-}
+import {FeatureStatus} from './FeatureStatus';
 
 export interface IdentityProviderStatusData {
-  status: IdentityProviderStatus;
+  status: FeatureStatus;
 }
