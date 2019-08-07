@@ -19,7 +19,7 @@
 
 import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 
-export class LocalStorageEngine implements CRUDEngine {
+export class WebStorageEngine implements CRUDEngine {
   private autoIncrementedPrimaryKey: number = 1;
   public storeName = '';
 

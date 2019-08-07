@@ -21,8 +21,8 @@
   ],
   "license": "GPL-3.0",
   "main": "./dist/LocalStorageEngine.js",
-  "name": "@wireapp/store-engine-localstorage",
-  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-localstorage",
+  "name": "@wireapp/store-engine-web-storage",
+  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage",
   "scripts": {
     "build": "yarn build:node",
     "build:node": "tsc",
