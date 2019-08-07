@@ -18,5 +18,4 @@
  */
 
 export * from './FeatureAPI';
-export * from './LegalHoldStatusData';
 export * from './IdentityProviderStatusData';
