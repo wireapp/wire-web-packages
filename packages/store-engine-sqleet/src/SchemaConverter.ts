@@ -27,6 +27,7 @@ export enum SQLiteType {
   INTEGER = 'integer',
   // See https://stackoverflow.com/a/8417411
   JSON = 'json',
+  JSON_OR_TEXT = 'json_or_text',
   REAL = 'real',
   TEXT = 'text',
 }
