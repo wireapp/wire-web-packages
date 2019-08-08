@@ -17,30 +17,29 @@
  *
  */
 
-import {appendSpec} from '../test/appendSpec';
-import {createSpec} from '../test/createSpec';
-import {deleteAllSpec} from '../test/deleteAllSpec';
-import {deleteSpec} from '../test/deleteSpec';
-import {purgeSpec} from '../test/purgeSpec';
-import {readAllPrimaryKeysSpec} from '../test/readAllPrimaryKeysSpec';
-import {readAllSpec} from '../test/readAllSpec';
-import {readSpec} from '../test/readSpec';
-import {updateOrCreateSpec} from '../test/updateOrCreateSpec';
-import {updateSpec} from '../test/updateSpec';
-import {CRUDEngine} from './CRUDEngine';
-import {LocalStorageEngine} from './LocalStorageEngine';
+import {appendSpec} from '@wireapp/store-engine/dist/commonjs/test/appendSpec';
+import {createSpec} from '@wireapp/store-engine/dist/commonjs/test/createSpec';
+import {deleteAllSpec} from '@wireapp/store-engine/dist/commonjs/test/deleteAllSpec';
+import {deleteSpec} from '@wireapp/store-engine/dist/commonjs/test/deleteSpec';
+import {purgeSpec} from '@wireapp/store-engine/dist/commonjs/test/purgeSpec';
+import {readAllPrimaryKeysSpec} from '@wireapp/store-engine/dist/commonjs/test/readAllPrimaryKeysSpec';
+import {readAllSpec} from '@wireapp/store-engine/dist/commonjs/test/readAllSpec';
+import {readSpec} from '@wireapp/store-engine/dist/commonjs/test/readSpec';
+import {updateOrCreateSpec} from '@wireapp/store-engine/dist/commonjs/test/updateOrCreateSpec';
+import {updateSpec} from '@wireapp/store-engine/dist/commonjs/test/updateSpec';
+import {WebStorageEngine} from './WebStorageEngine';
 
 const STORE_NAME = 'store-name';
 
-let engine: CRUDEngine;
+let engine: WebStorageEngine;
 
-async function initEngine(shouldCreateNewEngine = true): Promise<LocalStorageEngine | CRUDEngine> {
-  const storeEngine = shouldCreateNewEngine ? new LocalStorageEngine() : engine;
+async function initEngine(shouldCreateNewEngine = true): Promise<WebStorageEngine> {
+  const storeEngine = shouldCreateNewEngine ? new WebStorageEngine() : engine;
   await storeEngine.init(STORE_NAME);
   return storeEngine;
 }
 
-describe('LocalStorageEngine', () => {
+describe('WebStorageEngine', () => {
   beforeEach(async () => {
     engine = await initEngine();
   });
@@ -49,7 +48,7 @@ describe('LocalStorageEngine', () => {
 
   describe('init', () => {
     it('resolves with direct access to the LocalStorage.', async () => {
-      engine = new LocalStorageEngine();
+      engine = new WebStorageEngine();
       const instance = await engine.init(STORE_NAME);
       expect(instance).toBe(window.localStorage);
     });

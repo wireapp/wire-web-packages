@@ -31,27 +31,8 @@ Nowadays there are more and more storage possibilities and developers must be fa
 
 ```javascript
 const {MemoryEngine} = require('@wireapp/store-engine');
-const engine = new MemoryEngine('my-database');
-```
-
-#### Transient store
-
-As a bonus to the store engine, we built a transient store which deletes data after a specified [TTL](https://en.wikipedia.org/wiki/Time_to_live):
-
-```javascript
-const {Store, MemoryEngine} = require('@wireapp/store-engine');
-
-const engine = new MemoryEngine('my-favorite-actors');
-const store = new Store.TransientStore(engine);
-
-const ttl = 1000;
-
-store
-  .init('the-simpsons')
-  .then(() => store.set('bart', {name: 'Bart Simpson'}, ttl))
-  .then(transientBundle => {
-    console.log(`The record of "${transientBundle.payload.name}" will expires in "${transientBundle.expires}"ms.`);
-  });
+const engine = new MemoryEngine();
+await engine.init('my-database-name');
 ```
 
 ### API
@@ -114,7 +95,7 @@ engine.read(TABLE_NAME, PRIMARY_KEY).then(record => {
 
 ```javascript
 engine.readAll(TABLE_NAME).then(records => {
-  console.log(`There are "${record.length}" Simpsons in our database.`);
+  console.log(`There are "${records.length}" Simpsons in our database.`);
 });
 ```
 
@@ -134,4 +115,27 @@ engine.update(TABLE_NAME, PRIMARY_KEY, {brother: 'Bart Simpson'}).then((primaryK
 }).then((updatedRecord) => {
   console.log(`The brother of "${updatedRecord.name}" is "${updatedRecord.brother}".`):
 })
+```
+
+### Transient store
+
+The Store Engine interface also provides a transient store which deletes data after a specified [TTL](https://en.wikipedia.org/wiki/Time_to_live).
+
+**Example**
+
+```javascript
+const {Store} = require('@wireapp/store-engine');
+const {WebStorageEngine} = require('@wireapp/store-engine-web-storage');
+
+const engine = new WebStorageEngine();
+const store = new Store.TransientStore(engine);
+
+(async () => {
+  const ttl = 1000;
+
+  await engine.init('my-database-name');
+  await store.init('the-simpsons');
+  const transientBundle = await store.set('bart', {name: 'Bart Simpson'}, ttl);
+  console.log(`The record of "${transientBundle.payload.name}" will expires in "${transientBundle.expires}"ms.`);
+})();
 ```

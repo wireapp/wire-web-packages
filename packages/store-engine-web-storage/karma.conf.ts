@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2019 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,10 +19,12 @@
 
 import {Config} from 'karma';
 
+const jasmineConfig = require('./jasmine.json');
+
 module.exports = (config: Config): void => {
   config.set({
     autoWatch: false,
-    basePath: 'src/main',
+    basePath: jasmineConfig.spec_dir,
     browserNoActivityTimeout: 90000,
     browsers: ['ChromeNoSandbox'],
     client: {
