@@ -136,6 +136,6 @@ const store = new Store.TransientStore(engine);
   await engine.init('my-database-name');
   await store.init('the-simpsons');
   const transientBundle = await store.set('bart', {name: 'Bart Simpson'}, ttl);
-  console.log(`The record of "${transientBundle.payload.name}" will expires in "${transientBundle.expires}"ms.`);
+  console.log(`The record of "${transientBundle.payload.name}" will expire in "${transientBundle.expires}"ms.`);
 })();
 ```
