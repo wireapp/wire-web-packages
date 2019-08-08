@@ -3,6 +3,70 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.17.40](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.17.39...@wireapp/core@12.17.40) (2019-08-08)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [12.17.39](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.17.38...@wireapp/core@12.17.39) (2019-08-08)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [12.17.38](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.17.37...@wireapp/core@12.17.38) (2019-08-07)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [12.17.37](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.17.36...@wireapp/core@12.17.37) (2019-08-07)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [12.17.36](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.17.35...@wireapp/core@12.17.36) (2019-08-07)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [12.17.35](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.17.34...@wireapp/core@12.17.35) (2019-08-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [12.17.34](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.17.33...@wireapp/core@12.17.34) (2019-08-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [12.17.33](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.17.32...@wireapp/core@12.17.33) (2019-08-05)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
 ## [12.17.32](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.17.31...@wireapp/core@12.17.32) (2019-08-02)
 
 **Note:** Version bump only for package @wireapp/core

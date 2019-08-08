@@ -25,6 +25,7 @@ export type MemoryStore = Record<string, Record<string, any>>;
 export class MemoryEngine implements CRUDEngine {
   public storeName = '';
   private readonly stores: MemoryStore = {};
+  private autoIncrementedPrimaryKey: number = 1;
 
   append<PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey, additions: string): Promise<PrimaryKey> {
     this.prepareTable(tableName);
@@ -48,6 +49,11 @@ export class MemoryEngine implements CRUDEngine {
     if (entity) {
       this.prepareTable(tableName);
 
+      if (primaryKey === undefined) {
+        primaryKey = (this.autoIncrementedPrimaryKey as unknown) as PrimaryKey;
+        this.autoIncrementedPrimaryKey += 1;
+      }
+
       const record = this.stores[this.storeName][tableName][primaryKey];
 
       if (record) {
@@ -57,6 +63,7 @@ export class MemoryEngine implements CRUDEngine {
       }
 
       this.stores[this.storeName][tableName][primaryKey] = entity;
+
       return Promise.resolve(primaryKey);
     }
 
@@ -136,26 +143,28 @@ export class MemoryEngine implements CRUDEngine {
     changes: ChangesType,
   ): Promise<PrimaryKey> {
     this.prepareTable(tableName);
-    const entity: Object = await this.read(tableName, primaryKey);
-    const updatedEntity: Object = {...entity, ...changes};
+    const entity = await this.read(tableName, primaryKey);
+    const updatedEntity = {...entity, ...changes};
     this.stores[this.storeName][tableName][primaryKey] = updatedEntity;
     return primaryKey;
   }
 
-  updateOrCreate<PrimaryKey = string, ChangesType = Object>(
+  async updateOrCreate<PrimaryKey = string, ChangesType = Object>(
     tableName: string,
     primaryKey: PrimaryKey,
     changes: ChangesType,
   ): Promise<PrimaryKey> {
     this.prepareTable(tableName);
-    return this.update(tableName, primaryKey, changes)
-      .catch(error => {
-        if (error instanceof RecordNotFoundError) {
-          return this.create(tableName, primaryKey, changes);
-        }
-        throw error;
-      })
-      .then(() => primaryKey);
+    try {
+      await this.update(tableName, primaryKey, changes);
+      return primaryKey;
+    } catch (error) {
+      if (error instanceof RecordNotFoundError) {
+        const newPrimaryKey = await this.create(tableName, primaryKey, changes);
+        return newPrimaryKey;
+      }
+      throw error;
+    }
   }
 
   private prepareTable(tableName: string): void {

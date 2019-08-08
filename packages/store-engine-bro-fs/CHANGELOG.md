@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-bro-fs/compare/@wireapp/store-engine-bro-fs@0.7.1...@wireapp/store-engine-bro-fs@0.7.2) (2019-08-08)
+
+**Note:** Version bump only for package @wireapp/store-engine-bro-fs
+
+
+
+
+
+## [0.7.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-bro-fs/compare/@wireapp/store-engine-bro-fs@0.7.0...@wireapp/store-engine-bro-fs@0.7.1) (2019-08-08)
+
+**Note:** Version bump only for package @wireapp/store-engine-bro-fs
+
+
+
+
+
+# [0.7.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-bro-fs/compare/@wireapp/store-engine-bro-fs@0.6.1...@wireapp/store-engine-bro-fs@0.7.0) (2019-08-08)
+
+
+### Features
+
+* **store-engine-web-storage:** Add WebStorageEngine ([#2170](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-bro-fs/issues/2170)) ([0f628c3](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-bro-fs/commit/0f628c3))
+
+
+
+
+
+## [0.6.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-bro-fs/compare/@wireapp/store-engine-bro-fs@0.6.0...@wireapp/store-engine-bro-fs@0.6.1) (2019-08-07)
+
+**Note:** Version bump only for package @wireapp/store-engine-bro-fs
+
+
+
+
+
+# [0.6.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-bro-fs/compare/@wireapp/store-engine-bro-fs@0.5.7...@wireapp/store-engine-bro-fs@0.6.0) (2019-08-07)
+
+
+### Features
+
+* **store-engine,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet:** Auto-increment primary keys ([#2163](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-bro-fs/issues/2163)) ([0d02747](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-bro-fs/commit/0d02747))
+
+
+
+
+
+## [0.5.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-bro-fs/compare/@wireapp/store-engine-bro-fs@0.5.6...@wireapp/store-engine-bro-fs@0.5.7) (2019-08-06)
+
+**Note:** Version bump only for package @wireapp/store-engine-bro-fs
+
+
+
+
+
+## [0.5.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-bro-fs/compare/@wireapp/store-engine-bro-fs@0.5.5...@wireapp/store-engine-bro-fs@0.5.6) (2019-08-05)
+
+**Note:** Version bump only for package @wireapp/store-engine-bro-fs
+
+
+
+
+
 ## [0.5.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-bro-fs/compare/@wireapp/store-engine-bro-fs@0.5.4...@wireapp/store-engine-bro-fs@0.5.5) (2019-08-01)
 
 **Note:** Version bump only for package @wireapp/store-engine-bro-fs

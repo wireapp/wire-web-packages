@@ -17,12 +17,16 @@
  *
  */
 
-import {CRUDEngine} from './CRUDEngine';
-import {isBrowser} from './EnvironmentUtil';
-import {RecordAlreadyExistsError, RecordNotFoundError, RecordTypeError, UnsupportedError} from './error/';
+import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 
-export class LocalStorageEngine implements CRUDEngine {
+export class WebStorageEngine implements CRUDEngine {
+  private autoIncrementedPrimaryKey: number = 1;
+  private readonly webStorage: Storage;
   public storeName = '';
+
+  constructor(useSessionStorage: boolean = false) {
+    this.webStorage = useSessionStorage ? window.sessionStorage : window.localStorage;
+  }
 
   public append<PrimaryKey = string>(
     tableName: string,
@@ -34,11 +38,11 @@ export class LocalStorageEngine implements CRUDEngine {
         record += additions;
       } else {
         const message = `Cannot append text to record "${primaryKey}" because it's not a string.`;
-        throw new RecordTypeError(message);
+        throw new StoreEngineError.RecordTypeError(message);
       }
 
-      const key: string = this.createKey(tableName, primaryKey);
-      window.localStorage.setItem(key, record);
+      const key = this.createKey<PrimaryKey>(tableName, primaryKey);
+      this.webStorage.setItem(`${key}`, record);
 
       return primaryKey;
     });
@@ -50,10 +54,10 @@ export class LocalStorageEngine implements CRUDEngine {
     entity: EntityType,
   ): Promise<PrimaryKey> {
     if (entity) {
-      const key: string = this.createKey(tableName, primaryKey);
+      const internalPrimaryKey = this.createKey<PrimaryKey>(tableName, primaryKey);
       return this.read(tableName, primaryKey)
         .catch(error => {
-          if (error instanceof RecordNotFoundError) {
+          if (error instanceof StoreEngineError.RecordNotFoundError) {
             return undefined;
           }
           throw error;
@@ -61,25 +65,30 @@ export class LocalStorageEngine implements CRUDEngine {
         .then(record => {
           if (record) {
             const message = `Record "${primaryKey}" already exists in "${tableName}". You need to delete the record first if you want to overwrite it.`;
-            throw new RecordAlreadyExistsError(message);
+            throw new StoreEngineError.RecordAlreadyExistsError(message);
           } else {
-            if (typeof record === 'string') {
-              window.localStorage.setItem(key, String(entity));
+            if (typeof entity === 'string') {
+              this.webStorage.setItem(`${internalPrimaryKey}`, entity);
             } else {
-              window.localStorage.setItem(key, JSON.stringify(entity));
+              this.webStorage.setItem(`${internalPrimaryKey}`, JSON.stringify(entity));
             }
+
+            if (typeof internalPrimaryKey === 'string') {
+              return (<unknown>internalPrimaryKey.replace(this.createPrefix(tableName), '')) as PrimaryKey;
+            }
+
             return primaryKey;
           }
         });
     }
     const message = `Record "${primaryKey}" cannot be saved in "${tableName}" because it's "undefined" or "null".`;
-    return Promise.reject(new RecordTypeError(message));
+    return Promise.reject(new StoreEngineError.RecordTypeError(message));
   }
 
   public delete<PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): Promise<PrimaryKey> {
     return Promise.resolve().then(() => {
-      const key: string = this.createKey(tableName, primaryKey);
-      window.localStorage.removeItem(key);
+      const key = this.createKey<PrimaryKey>(tableName, primaryKey);
+      this.webStorage.removeItem(`${key}`);
       return primaryKey;
     });
   }
@@ -103,14 +112,14 @@ export class LocalStorageEngine implements CRUDEngine {
   }
 
   public async isSupported(): Promise<void> {
-    if (!isBrowser() || !window.localStorage) {
+    if (typeof window === 'undefined' || !window.localStorage) {
       const message = `LocalStorage is not available on your platform.`;
-      throw new UnsupportedError(message);
+      throw new StoreEngineError.UnsupportedError(message);
     }
   }
 
   public async purge(): Promise<void> {
-    window.localStorage.clear();
+    this.webStorage.clear();
   }
 
   public read<EntityType = Object, PrimaryKey = string>(
@@ -119,7 +128,7 @@ export class LocalStorageEngine implements CRUDEngine {
   ): Promise<EntityType> {
     return Promise.resolve().then(() => {
       const key = `${this.storeName}@${tableName}@${primaryKey}`;
-      const record = window.localStorage.getItem(key);
+      const record = this.webStorage.getItem(key);
       if (record) {
         try {
           const parsed = JSON.parse(record);
@@ -129,7 +138,7 @@ export class LocalStorageEngine implements CRUDEngine {
         }
       }
       const message = `Record "${primaryKey}" in "${tableName}" could not be found.`;
-      throw new RecordNotFoundError(message);
+      throw new StoreEngineError.RecordNotFoundError(message);
     });
   }
 
@@ -171,7 +180,7 @@ export class LocalStorageEngine implements CRUDEngine {
       })
       .then(updatedEntity => {
         return this.create(tableName, primaryKey, updatedEntity).catch(error => {
-          if (error instanceof RecordAlreadyExistsError) {
+          if (error instanceof StoreEngineError.RecordAlreadyExistsError) {
             return this.delete(tableName, primaryKey).then(() => this.create(tableName, primaryKey, updatedEntity));
           } else {
             throw error;
@@ -187,16 +196,20 @@ export class LocalStorageEngine implements CRUDEngine {
   ): Promise<PrimaryKey> {
     return this.update(tableName, primaryKey, changes)
       .catch(error => {
-        if (error instanceof RecordNotFoundError) {
+        if (error instanceof StoreEngineError.RecordNotFoundError) {
           return this.create(tableName, primaryKey, changes);
         }
         throw error;
       })
-      .then(() => primaryKey);
+      .then(internalPrimaryKey => internalPrimaryKey);
   }
 
-  private createKey<PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): string {
-    return `${this.createPrefix(tableName)}${primaryKey}`;
+  private createKey<PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): PrimaryKey {
+    if (primaryKey === undefined) {
+      primaryKey = (this.autoIncrementedPrimaryKey as unknown) as PrimaryKey;
+      this.autoIncrementedPrimaryKey += 1;
+    }
+    return (`${this.createPrefix(tableName)}${primaryKey}` as unknown) as PrimaryKey;
   }
 
   private createPrefix(tableName: string): string {

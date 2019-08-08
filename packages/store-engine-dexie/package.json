@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@wireapp/store-engine": "3.7.0",
+    "@wireapp/store-engine": "3.9.3",
     "dexie": "2.0.4"
   },
   "devDependencies": {
@@ -16,7 +16,7 @@
     "ts-node": "8.3.0",
     "typescript": "3.5.3"
   },
-  "description": "",
+  "description": "Store Engine implementation for the browser's IndexedDB.",
   "files": [
     "dist"
   ],
@@ -32,5 +32,5 @@
     "test": "karma start",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "0.4.5"
+  "version": "0.5.3"
 }

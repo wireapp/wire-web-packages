@@ -3,6 +3,63 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.9.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.9.2...@wireapp/store-engine@3.9.3) (2019-08-08)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [3.9.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.9.1...@wireapp/store-engine@3.9.2) (2019-08-08)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [3.9.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.9.0...@wireapp/store-engine@3.9.1) (2019-08-07)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+# [3.9.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.8.1...@wireapp/store-engine@3.9.0) (2019-08-07)
+
+
+### Features
+
+* **store-engine,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet:** Auto-increment primary keys ([#2163](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/2163)) ([0d02747](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/0d02747))
+
+
+
+
+
+## [3.8.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.8.0...@wireapp/store-engine@3.8.1) (2019-08-06)
+
+
+### Bug Fixes
+
+* **store-engine:** Primary key should only increment on creation ([#2161](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/2161)) ([da77f88](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/da77f88))
+
+
+
+
+
+# [3.8.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.7.0...@wireapp/store-engine@3.8.0) (2019-08-05)
+
+
+### Features
+
+* **store-engine:** Auto-increment primary keys in MemoryEngine ([#2159](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/2159)) ([c040cc1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/c040cc1))
+
+
+
+
+
 # [3.7.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.6.3...@wireapp/store-engine@3.7.0) (2019-08-01)
 
 

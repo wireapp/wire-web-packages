@@ -17,7 +17,8 @@
  *
  */
 
-import renderer from 'react-test-renderer';
+import {FeatureStatus} from './FeatureStatus';
 
-export const matchComponent = (component: JSX.Element) =>
-  (expect as any)(renderer.create(component).toJSON()).toMatchSnapshot();
+export interface IdentityProviderStatus {
+  status: FeatureStatus;
+}

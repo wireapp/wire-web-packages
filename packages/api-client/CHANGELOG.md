@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.2.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@6.2.1...@wireapp/api-client@6.2.2) (2019-08-08)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [6.2.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@6.2.0...@wireapp/api-client@6.2.1) (2019-08-08)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+# [6.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@6.1.22...@wireapp/api-client@6.2.0) (2019-08-07)
+
+
+### Features
+
+* **api-client:** Feature API ([#2166](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2166)) ([0ec49ab](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/0ec49ab))
+
+
+
+
+
+## [6.1.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@6.1.21...@wireapp/api-client@6.1.22) (2019-08-07)
+
+
+### Bug Fixes
+
+* **api-client:** Remove possibility to pass URL to configure identity provider ([#2165](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2165)) ([d1d438b](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/d1d438b))
+
+
+
+
+
+## [6.1.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@6.1.20...@wireapp/api-client@6.1.21) (2019-08-07)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [6.1.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@6.1.19...@wireapp/api-client@6.1.20) (2019-08-06)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [6.1.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@6.1.18...@wireapp/api-client@6.1.19) (2019-08-06)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [6.1.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@6.1.17...@wireapp/api-client@6.1.18) (2019-08-05)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
 ## [6.1.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@6.1.16...@wireapp/api-client@6.1.17) (2019-08-02)
 
 **Note:** Version bump only for package @wireapp/api-client

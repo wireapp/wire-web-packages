@@ -17,6 +17,6 @@
  *
  */
 
-export interface NewIdentityProviderMetadataURL {
-  url: string;
-}
+export * from './FeatureAPI';
+export * from './FeatureStatus';
+export * from './IdentityProviderStatus';
