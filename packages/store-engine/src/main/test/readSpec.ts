@@ -27,6 +27,29 @@ interface DomainEntity {
 }
 
 export const readSpec = {
+  'reads primary keys as strings and numbers': async (engine: CRUDEngine) => {
+    const entityCamilla = {
+      age: 25,
+      name: 'Camilla',
+    };
+    const entityPeter = {
+      age: 30,
+      name: 'Peter',
+    };
+
+    await engine.create(TABLE_NAME, '1', entityCamilla);
+    await engine.create(TABLE_NAME, 2, entityPeter);
+
+    const resultStringCamilla = await engine.read(TABLE_NAME, '1');
+    expect(resultStringCamilla).toEqual(entityCamilla);
+    const resultNumberCamilla = await engine.read(TABLE_NAME, 1);
+    expect(resultNumberCamilla).toEqual(entityCamilla);
+
+    const resultStringPeter = await engine.read(TABLE_NAME, '2');
+    expect(resultStringPeter).toEqual(entityPeter);
+    const resultNumberPeter = await engine.read(TABLE_NAME, 2);
+    expect(resultNumberPeter).toEqual(entityPeter);
+  },
   'returns a database record.': async (engine: CRUDEngine) => {
     const PRIMARY_KEY = 'primary-key';
 
