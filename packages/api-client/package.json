@@ -21,7 +21,7 @@
   "devDependencies": {
     "@babel/core": "7.5.5",
     "@babel/preset-react": "7.0.0",
-    "@types/jasmine": "3.3.16",
+    "@types/jasmine": "3.4.0",
     "@types/react": "16.8.24",
     "@types/react-dom": "16.8.5",
     "@types/ws": "6.0.2",
@@ -42,7 +42,7 @@
     "nock": "10.0.6",
     "optimist": "0.6.1",
     "react": "16.8.6",
-    "react-dom": "16.8.6",
+    "react-dom": "16.9.0",
     "react-hot-loader": "4.12.10",
     "rimraf": "2.6.3",
     "sinon": "7.4.0",
