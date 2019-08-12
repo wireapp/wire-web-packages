@@ -46,7 +46,7 @@ export class SQLeetEngine implements CRUDEngine {
   private autoIncrementedPrimaryKey: number = 1;
   private db: any;
   private rawDatabase: string | undefined;
-  private readonly schema: SQLiteDatabaseDefinition<Record<string, any>>;
+  private readonly schema: SQLiteDatabaseDefinition<Record<string, any>> = {};
   private readonly encryptionKey: string;
   private readonly dbConfig: any;
   public storeName = '';
@@ -58,7 +58,6 @@ export class SQLeetEngine implements CRUDEngine {
     rawDatabase?: string,
   ) {
     // Map single column to SQL entity
-    this.schema = {};
     for (const tableName in providedSchema) {
       const entity = providedSchema[tableName];
       const isSingleColumnTable = typeof entity === 'string';
