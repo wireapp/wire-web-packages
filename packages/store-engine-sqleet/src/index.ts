@@ -21,7 +21,7 @@ import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import initSqlJs from 'sql.js';
 
 import {
-  MAGIC_SINGLE_COLUMN,
+  RESERVED_COLUMN,
   SQLeetEnginePrimaryKeyName,
   SQLiteDatabaseDefinition,
   SQLiteDatabaseSingleColumnDefinition,
@@ -63,7 +63,7 @@ export class SQLeetEngine implements CRUDEngine {
       const isSingleColumnTable = typeof entity === 'string';
       // tslint:disable-next-line: no-object-literal-type-assertion
       this.schema[tableName] = isSingleColumnTable
-        ? {[MAGIC_SINGLE_COLUMN]: entity as SQLiteType}
+        ? {[RESERVED_COLUMN]: entity as SQLiteType}
         : (entity as SQLiteTableDefinition<string>);
     }
 
@@ -159,7 +159,7 @@ export class SQLeetEngine implements CRUDEngine {
     // If the table contains the single magic column then convert it
     // tslint:disable-next-line: no-object-literal-type-assertion
     const entities = isSingleColumnTable(table)
-      ? ({[MAGIC_SINGLE_COLUMN]: providedEntities} as any)
+      ? ({[RESERVED_COLUMN]: providedEntities} as any)
       : (providedEntities as EntityType);
 
     const columns: Record<string, string> = {};
@@ -273,7 +273,7 @@ export class SQLeetEngine implements CRUDEngine {
     }
 
     if (isSingleColumnTable(table)) {
-      return record[MAGIC_SINGLE_COLUMN];
+      return record[RESERVED_COLUMN];
     }
 
     return record;

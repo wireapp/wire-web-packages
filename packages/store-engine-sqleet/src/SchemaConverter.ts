@@ -20,7 +20,7 @@
 const uint32 = require('uint32');
 
 export const SQLeetEnginePrimaryKeyName: string = '`key`';
-export const MAGIC_SINGLE_COLUMN = '__sc_value';
+export const RESERVED_COLUMN = '__sc_value';
 
 export enum SQLiteType {
   BOOLEAN = 'boolean',
@@ -92,5 +92,5 @@ export function hashColumnName(column: string): number {
 }
 
 export function isSingleColumnTable(table: Partial<Record<string, SQLiteType>>): boolean {
-  return typeof table[MAGIC_SINGLE_COLUMN] === 'string';
+  return typeof table[RESERVED_COLUMN] === 'string';
 }
