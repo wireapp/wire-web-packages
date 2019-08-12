@@ -21,8 +21,11 @@ import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import initSqlJs from 'sql.js';
 
 import {
+  MAGIC_SINGLE_COLUMN,
   SQLeetEnginePrimaryKeyName,
   SQLiteDatabaseDefinition,
+  SQLiteDatabaseSingleColumnDefinition,
+  SQLiteTableDefinition,
   SQLiteType,
   createTableIfNotExists,
   escape,
@@ -30,6 +33,7 @@ import {
   getFormattedColumnsFromTableName,
   getProtectedColumnReferences,
   hashColumnName,
+  isSingleColumnTable,
 } from './SchemaConverter';
 
 declare const WebAssembly: any;
@@ -49,11 +53,21 @@ export class SQLeetEngine implements CRUDEngine {
 
   constructor(
     wasmLocation: Uint8Array | string,
-    schema: SQLiteDatabaseDefinition<Record<string, any>>,
+    providedSchema: SQLiteDatabaseSingleColumnDefinition | SQLiteDatabaseDefinition<Record<string, any>>,
     encryptionKey: string,
     rawDatabase?: string,
   ) {
-    this.schema = schema;
+    // Map single column to SQL entity
+    this.schema = {};
+    for (const tableName in providedSchema) {
+      const entity = providedSchema[tableName];
+      const isSingleColumnTable = typeof entity === 'string';
+      // tslint:disable-next-line: no-object-literal-type-assertion
+      this.schema[tableName] = isSingleColumnTable
+        ? {[MAGIC_SINGLE_COLUMN]: entity as SQLiteType}
+        : (entity as SQLiteTableDefinition<string>);
+    }
+
     this.encryptionKey = encryptionKey;
     this.dbConfig = {};
 
@@ -136,12 +150,19 @@ export class SQLeetEngine implements CRUDEngine {
 
   private buildValues<EntityType = Record<string, SQLiteType>>(
     tableName: string,
-    entities: EntityType,
+    providedEntities: EntityType | SQLiteType,
   ): {columns: Record<string, string>; values: Record<string, any>} {
     const table = this.schema[tableName];
     if (!table) {
       throw new Error(`Table "${tableName}" does not exist.`);
     }
+
+    // If the table contains the single magic column then convert it
+    // tslint:disable-next-line: no-object-literal-type-assertion
+    const entities = isSingleColumnTable(table)
+      ? ({[MAGIC_SINGLE_COLUMN]: providedEntities} as any)
+      : (providedEntities as EntityType);
+
     const columns: Record<string, string> = {};
     const values: Record<string, any> = {};
     for (const entity in entities) {
@@ -250,6 +271,10 @@ export class SQLeetEngine implements CRUDEngine {
           record[column] = JSON.parse(record[column]);
         } catch (error) {}
       }
+    }
+
+    if (isSingleColumnTable(table)) {
+      return record[MAGIC_SINGLE_COLUMN];
     }
 
     return record;
