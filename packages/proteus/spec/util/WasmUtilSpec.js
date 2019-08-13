@@ -20,10 +20,12 @@
 const Proteus = require('@wireapp/proteus');
 
 describe('WASMUtil', () => {
-  it('Uses WebAssembly', async () => {
-    // To test the other way round, we would need to start Node.js
-    // with the flag `--noexpose_wasm`.
-    const result = await Proteus.util.WASMUtil.isUsingWASM();
-    expect(result).toBe(true);
+  describe('isUsingWASM', () => {
+    it('Uses WebAssembly', async () => {
+      // To test the other way round, we would need to start Node.js
+      // with the flag `--noexpose_wasm`.
+      const result = await Proteus.util.WASMUtil.isUsingWASM();
+      expect(result).toBe(true);
+    });
   });
 });
