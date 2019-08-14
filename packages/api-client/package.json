@@ -8,9 +8,9 @@
     "@types/node": "~10",
     "@types/spark-md5": "3.0.1",
     "@types/tough-cookie": "2.3.5",
-    "@wireapp/commons": "2.2.8",
+    "@wireapp/commons": "2.2.9",
     "@wireapp/priority-queue": "1.2.9",
-    "@wireapp/store-engine": "3.9.3",
+    "@wireapp/store-engine": "3.9.4",
     "axios": "0.19.0",
     "html5-websocket": "2.0.4",
     "logdown": "3.2.8",
@@ -22,11 +22,11 @@
     "@babel/core": "7.5.5",
     "@babel/preset-react": "7.0.0",
     "@types/jasmine": "3.4.0",
-    "@types/react": "16.9.0",
+    "@types/react": "16.9.1",
     "@types/react-dom": "16.8.5",
     "@types/ws": "6.0.2",
-    "@wireapp/react-ui-kit": "7.11.1",
-    "@wireapp/store-engine-fs": "1.4.3",
+    "@wireapp/react-ui-kit": "7.11.2",
+    "@wireapp/store-engine-fs": "1.4.4",
     "babel-loader": "8.0.6",
     "browser-sync": "2.26.7",
     "concurrently": "4.1.1",
@@ -41,17 +41,17 @@
     "karma-spec-reporter": "0.0.32",
     "nock": "10.0.6",
     "optimist": "0.6.1",
-    "react": "16.8.6",
+    "react": "16.9.0",
     "react-dom": "16.9.0",
-    "react-hot-loader": "4.12.10",
+    "react-hot-loader": "4.12.11",
     "rimraf": "2.6.3",
     "sinon": "7.4.1",
     "sinon-har-server": "0.3.0",
     "typescript": "3.5.3",
     "webpack": "4.39.1",
     "webpack-cli": "3.3.6",
-    "webpack-dev-server": "3.7.2",
-    "ws": "7.1.1"
+    "webpack-dev-server": "3.8.0",
+    "ws": "7.1.2"
   },
   "description": "Wire API Client to send and receive data.",
   "files": [
@@ -77,5 +77,5 @@
     "watch": "webpack-dev-server --config webpack.config.js"
   },
   "types": "./dist/commonjs/APIClient.d.ts",
-  "version": "6.2.2"
+  "version": "6.2.4"
 }
