@@ -6,8 +6,8 @@
     "@types/generate-changelog": "1.8.0",
     "@types/long": "4.0.0",
     "@types/node": "~10",
-    "@wireapp/core": "12.17.40",
-    "commander": "2.20.0",
+    "@wireapp/core": "12.17.42",
+    "commander": "3.0.0",
     "generate-changelog": "1.8.0"
   },
   "description": "A changelog notification bot.",
@@ -31,5 +31,5 @@
     "test": "exit 0",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "3.2.46"
+  "version": "3.2.48"
 }

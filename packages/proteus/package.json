@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@types/chai": "4.1.7",
+    "@types/chai": "4.2.0",
     "@types/ed2curve": "0.2.2",
     "@types/node": "~10",
     "@wireapp/cbor": "4.3.9",
@@ -15,7 +15,7 @@
     "jasmine": "3.4.0",
     "rimraf": "2.6.3",
     "typescript": "3.5.3",
-    "webpack": "4.39.1",
+    "webpack": "4.39.2",
     "webpack-cli": "3.3.6"
   },
   "files": [
@@ -35,5 +35,5 @@
     "test:project": "yarn dist && yarn test",
     "test:node": "jasmine"
   },
-  "version": "9.3.12"
+  "version": "9.4.0"
 }

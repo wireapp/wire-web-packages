@@ -5,26 +5,26 @@
   "dependencies": {
     "@types/long": "4.0.0",
     "@types/node": "~10",
-    "@wireapp/api-client": "6.2.2",
-    "@wireapp/cryptobox": "11.4.21",
+    "@wireapp/api-client": "6.2.4",
+    "@wireapp/cryptobox": "11.4.23",
     "@wireapp/protocol-messaging": "1.24.2",
-    "@wireapp/store-engine": "3.9.3",
-    "bazinga64": "5.5.10",
+    "@wireapp/store-engine": "3.9.4",
+    "bazinga64": "5.5.11",
     "hash.js": "1.1.7",
     "logdown": "3.2.8",
     "protobufjs": "6.8.8",
     "pure-uuid": "1.5.7"
   },
   "devDependencies": {
-    "@wireapp/commons": "2.2.8",
-    "commander": "2.20.0",
+    "@wireapp/commons": "2.2.9",
+    "commander": "3.0.0",
     "cross-env": "5.2.0",
-    "dotenv": "8.0.0",
+    "dotenv": "8.1.0",
     "faker": "4.1.0",
     "istanbul": "1.1.0-alpha.1",
     "jasmine": "3.4.0",
     "karma": "4.2.0",
-    "karma-chrome-launcher": "3.0.0",
+    "karma-chrome-launcher": "3.1.0",
     "karma-jasmine": "2.0.1",
     "karma-jasmine-diff-reporter": "2.0.0",
     "karma-sourcemap-loader": "0.3.7",
@@ -36,7 +36,7 @@
     "terser-webpack-plugin": "1.4.1",
     "ts-node": "8.3.0",
     "typescript": "3.5.3",
-    "webpack": "4.39.1",
+    "webpack": "4.39.2",
     "webpack-cli": "3.3.6"
   },
   "description": "Wire for Web's communication core.",
@@ -62,5 +62,5 @@
     "test:project": "yarn dist && yarn test",
     "test:node": "nyc jasmine --config=jasmine.json"
   },
-  "version": "12.17.40"
+  "version": "12.17.42"
 }
