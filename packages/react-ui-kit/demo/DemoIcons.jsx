@@ -134,13 +134,11 @@ export const DemoIcons = () => (
         justifyItems: 'center',
       }}
     >
-      {icons.map((Icon, index) => {
-        return (
-          <span key={index} title={Icon.name}>
-            <Icon height={32} width={32} />
-          </span>
-        );
-      })}
+      {icons.map((Icon, index) => (
+        <span key={index} title={Icon.name}>
+          <Icon height={32} width={32} />
+        </span>
+      ))}
     </div>
 
     <Line />
@@ -154,13 +152,11 @@ export const DemoIcons = () => (
         justifyItems: 'center',
       }}
     >
-      {icons.map((Icon, index) => {
-        return (
-          <span key={index} title={Icon.name}>
-            <Icon height={32} width={32} shadow color={COLOR.WHITE} />
-          </span>
-        );
-      })}
+      {icons.map((Icon, index) => (
+        <span key={index} title={Icon.name}>
+          <Icon height={32} width={32} shadow color={COLOR.WHITE} />
+        </span>
+      ))}
     </div>
     <Line />
     <H1>Brand Icons</H1>
@@ -172,13 +168,11 @@ export const DemoIcons = () => (
         justifyItems: 'center',
       }}
     >
-      {brandIcons.map((Icon, index) => {
-        return (
-          <span key={index} title={Icon.name}>
-            <Icon height={48} width={48} />
-          </span>
-        );
-      })}
+      {brandIcons.map((Icon, index) => (
+        <span key={index} title={Icon.name}>
+          <Icon height={48} width={48} />
+        </span>
+      ))}
     </div>
   </Container>
 );
