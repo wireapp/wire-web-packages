@@ -18,5 +18,6 @@
  */
 
 export interface LoginCodeResponse {
-  expires_in: number; // Number of seconds before the login code expires.
+  /** Number of seconds before the login code expires. */
+  expires_in: number;
 }
