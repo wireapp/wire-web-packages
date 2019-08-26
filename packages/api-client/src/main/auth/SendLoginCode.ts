@@ -20,5 +20,6 @@
 export interface SendLoginCode {
   /** E.164 phone number to send the code to. */
   phone: string;
-  voice_call?: boolean; // Request the code with a call instead (default is SMS).
+  /** Request the code with a call instead (default is SMS). */
+  voice_call?: boolean;
 }
