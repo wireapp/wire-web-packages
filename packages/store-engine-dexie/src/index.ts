@@ -70,13 +70,54 @@ export class IndexedDBEngine implements CRUDEngine {
     await this.hasEnoughQuota();
   }
 
-  public async init(storeName: string): Promise<Dexie> {
+  public async init(storeName: string, registerPersisted?: boolean): Promise<Dexie> {
     await this.isSupported();
-    return this.assignDb(new Dexie(storeName));
+    const dexie = await this.assignDb(new Dexie(storeName));
+    if (registerPersisted) {
+      await this.registerPersistentStorage();
+    }
+    return dexie;
   }
 
-  public initWithDb(db: Dexie): Promise<Dexie> {
-    return Promise.resolve(this.assignDb(db));
+  public async initWithDb(db: Dexie, registerPersisted?: boolean): Promise<Dexie> {
+    const dexie = this.assignDb(db);
+    if (registerPersisted) {
+      await this.registerPersistentStorage();
+    }
+    return dexie;
+  }
+
+  /**
+   * Register a persistent storage in the browser.
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/StorageManager/persist
+   */
+  public async registerPersistentStorage(): Promise<boolean> {
+    if (!navigator || !navigator.storage || !navigator.storage.persist) {
+      return false;
+    }
+
+    try {
+      const granted = await navigator.storage.persist();
+
+      if (granted) {
+        console.info('Storage will not be cleared except by explicit user action');
+        return true;
+      }
+
+      console.info('Storage may be cleared by the UA under storage pressure.');
+      return false;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  }
+
+  public async isStoragePersisted(): Promise<boolean> {
+    if (navigator.storage && navigator.storage.persisted) {
+      const isPersisted = await navigator.storage.persisted();
+      return isPersisted;
+    }
+    return false;
   }
 
   // If you want to add listeners to the database and you don't care if it is a new database (init)
