@@ -79,8 +79,8 @@ import React from 'react';
 const icons = [
   AddPeopleIcon,
   ArchiveIcon,
-  ArrowIcon,
   Arrow2Icon,
+  ArrowIcon,
   AttachmentIcon,
   AudioVideoIcon,
   BlockIcon,
