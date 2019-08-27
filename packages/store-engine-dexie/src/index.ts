@@ -19,7 +19,7 @@
 
 import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import Dexie from 'dexie';
-import logdown from 'logdown';
+import logdown = require('logdown');
 
 type DexieObservable = {_dbSchema?: Object};
 
