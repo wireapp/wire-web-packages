@@ -85,26 +85,6 @@ export class IndexedDBEngine implements CRUDEngine {
     return dexie;
   }
 
-  /**
-   * Register a persistent storage in the browser.
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/StorageManager/persist
-   */
-  public async registerPersistentStorage(): Promise<boolean> {
-    if (!navigator || !navigator.storage || !navigator.storage.persist) {
-      return false;
-    }
-
-    const granted = await navigator.storage.persist();
-
-    if (granted) {
-      console.info('Storage will not be cleared except by explicit user action');
-      return true;
-    }
-
-    console.info('Storage may be cleared by the UA under storage pressure.');
-    return false;
-  }
-
   public async isStoragePersisted(): Promise<boolean> {
     if (navigator.storage && navigator.storage.persisted) {
       const isPersisted = await navigator.storage.persisted();
@@ -195,6 +175,26 @@ export class IndexedDBEngine implements CRUDEngine {
       .toCollection()
       .keys();
     return keys.map(key => (key as any) as PrimaryKey);
+  }
+
+  /**
+   * Register a persistent storage in the browser.
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/StorageManager/persist
+   */
+  public async registerPersistentStorage(): Promise<boolean> {
+    if (!navigator || !navigator.storage || !navigator.storage.persist) {
+      return false;
+    }
+
+    const granted = await navigator.storage.persist();
+
+    if (granted) {
+      console.info('Storage will not be cleared except by explicit user action');
+      return true;
+    }
+
+    console.info('Storage may be cleared by the UA under storage pressure.');
+    return false;
   }
 
   public async update<PrimaryKey = string>(
