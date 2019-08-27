@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2019 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,28 +21,8 @@
 import {jsx} from '@emotion/core';
 import {SVGIcon, SVGIconProps} from './SVGIcon';
 
-export interface Rotation {
-  right: number;
-  down: number;
-  left: number;
-  up: number;
-}
-
-export interface ArrowProps extends SVGIconProps {
-  direction?: keyof Rotation;
-}
-
-/* tslint:disable:object-literal-sort-keys */
-export const rotation: Rotation = {
-  right: 0,
-  down: 90,
-  left: 180,
-  up: 270,
-};
-/* tslint:enable:object-literal-sort-keys */
-
-export const ArrowIcon = ({direction = 'right', ...props}: ArrowProps) => (
+export const NotificationIcon = (props: SVGIconProps) => (
   <SVGIcon realWidth={16} realHeight={16} {...props}>
-    <path transform={`rotate(${rotation[direction]} 8 8)`} d="M5.8 1.5L7.3 0l8 8-8 8-1.5-1.5L11.3 9H.7V7h10.6" />
+    <path d="M7 0C5 0 3.3 1.4 3 3.2c0 0-.5 3-1 4.3L.8 10.2C.4 11.2 1 12 2 12h10c1.1 0 1.6-.8 1.2-1.8L12 7.5c-.4-1.2-1-4.3-1-4.3A4 4 0 0 0 7 0zm2 14a2 2 0 1 1-4 0h4z" />
   </SVGIcon>
 );
