@@ -96,20 +96,15 @@ export class IndexedDBEngine implements CRUDEngine {
       return false;
     }
 
-    try {
-      const granted = await navigator.storage.persist();
+    const granted = await navigator.storage.persist();
 
-      if (granted) {
-        console.info('Storage will not be cleared except by explicit user action');
-        return true;
-      }
-
-      console.info('Storage may be cleared by the UA under storage pressure.');
-      return false;
-    } catch (error) {
-      console.error(error);
-      return false;
+    if (granted) {
+      console.info('Storage will not be cleared except by explicit user action');
+      return true;
     }
+
+    console.info('Storage may be cleared by the UA under storage pressure.');
+    return false;
   }
 
   public async isStoragePersisted(): Promise<boolean> {
