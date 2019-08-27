@@ -180,6 +180,7 @@ export class IndexedDBEngine implements CRUDEngine {
   /**
    * Register a persistent storage in the browser.
    * @see https://developer.mozilla.org/en-US/docs/Web/API/StorageManager/persist
+   * @see https://developers.google.com/web/updates/2016/06/persistent-storage
    */
   public async registerPersistentStorage(): Promise<boolean> {
     if (!navigator || !navigator.storage || !navigator.storage.persist) {
