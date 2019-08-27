@@ -20,6 +20,7 @@
 export * from './AddPeopleIcon';
 export * from './ArchiveIcon';
 export * from './ArrowIcon';
+export * from './Arrow2Icon';
 export * from './AttachmentIcon';
 export * from './AudioVideoIcon';
 export * from './BlockIcon';
