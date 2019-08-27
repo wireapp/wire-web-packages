@@ -22,7 +22,7 @@ import {jsx} from '@emotion/core';
 import {ArrowProps, rotation} from './ArrowIcon';
 import {SVGIcon} from './SVGIcon';
 
-export const Arrow2Icon = ({direction = 'right', ...props}: ArrowProps) => (
+export const ChevronIcon = ({direction = 'right', ...props}: ArrowProps) => (
   <SVGIcon realWidth={5} realHeight={8} {...props}>
     <path transform={`rotate(${rotation[direction]} 8 8)`} d="M0 .92L.94 0 5 4 .94 8 0 7.08 3.13 4z" />
   </SVGIcon>

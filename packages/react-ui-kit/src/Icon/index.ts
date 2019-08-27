@@ -19,7 +19,6 @@
 
 export * from './AddPeopleIcon';
 export * from './ArchiveIcon';
-export * from './Arrow2Icon';
 export * from './ArrowIcon';
 export * from './AttachmentIcon';
 export * from './AudioVideoIcon';
@@ -28,6 +27,7 @@ export * from './CallIcon';
 export * from './CameraIcon';
 export * from './CamIcon';
 export * from './CheckIcon';
+export * from './ChevronIcon';
 export * from './CloseIcon';
 export * from './DeviceIcon';
 export * from './DownloadIcon';
