@@ -19,27 +19,8 @@
 
 /** @jsx jsx */
 import {jsx} from '@emotion/core';
-import {SVGIcon, SVGIconProps} from './SVGIcon';
-
-export interface Rotation {
-  right: number;
-  down: number;
-  left: number;
-  up: number;
-}
-
-export interface ArrowProps extends SVGIconProps {
-  direction?: keyof Rotation;
-}
-
-/* tslint:disable:object-literal-sort-keys */
-const rotation: Rotation = {
-  right: 0,
-  down: 90,
-  left: 180,
-  up: 270,
-};
-/* tslint:enable:object-literal-sort-keys */
+import {ArrowProps, rotation} from './ArrowIcon';
+import {SVGIcon} from './SVGIcon';
 
 export const Arrow2Icon = ({direction = 'right', ...props}: ArrowProps) => (
   <SVGIcon realWidth={5} realHeight={8} {...props}>

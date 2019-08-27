@@ -33,7 +33,7 @@ export interface ArrowProps extends SVGIconProps {
 }
 
 /* tslint:disable:object-literal-sort-keys */
-const rotation: Rotation = {
+export const rotation: Rotation = {
   right: 0,
   down: 90,
   left: 180,
