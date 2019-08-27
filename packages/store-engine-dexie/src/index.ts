@@ -68,7 +68,7 @@ export class IndexedDBEngine implements CRUDEngine {
     await this.hasEnoughQuota();
   }
 
-  public async init(storeName: string, registerPersisted?: boolean): Promise<Dexie> {
+  public async init(storeName: string, registerPersisted: boolean = false): Promise<Dexie> {
     await this.isSupported();
     const dexie = await this.assignDb(new Dexie(storeName));
     if (registerPersisted) {
@@ -78,6 +78,7 @@ export class IndexedDBEngine implements CRUDEngine {
   }
 
   public async initWithDb(db: Dexie, registerPersisted: boolean = false): Promise<Dexie> {
+    await this.isSupported();
     const dexie = this.assignDb(db);
     if (registerPersisted) {
       await this.registerPersistentStorage();
