@@ -38,10 +38,6 @@ import {
 
 declare const WebAssembly: any;
 
-// https://lowrey.me/lodash-zipobject-in-es6-javascript/
-const zipObject = (props: any[], values: any[]) =>
-  props.reduce((prev, prop, i) => ({...prev, ...{[prop]: values[i]}}), {});
-
 export class SQLeetEngine implements CRUDEngine {
   private autoIncrementedPrimaryKey: number = 1;
   private db?: websql.Database;
@@ -264,15 +260,10 @@ export class SQLeetEngine implements CRUDEngine {
     const escapedTableName = escape(tableName);
 
     const selectRecordStatement = `SELECT ${columns} FROM ${escapedTableName};`;
-    const records = await this.db.execute(selectRecordStatement);
+    const statement = await this.db.prepare(selectRecordStatement);
+    const records = (await statement.getAsObject()) as T[];
 
-    // Ensure the record is not empty
-    if (records && records[0]) {
-      const firstRecord = records[0];
-      return firstRecord.values.map((record: any[]) => zipObject(firstRecord.columns, record));
-    }
-
-    return [];
+    return records;
   }
 
   async readAllPrimaryKeys(tableName: string): Promise<string[]> {
@@ -281,10 +272,12 @@ export class SQLeetEngine implements CRUDEngine {
     }
     const escapedTableName = escape(tableName);
     const statement = `SELECT ${SQLeetEnginePrimaryKeyName} FROM ${escapedTableName};`;
+
     const record = await this.db.execute(statement);
     if (record[0] && record[0].values) {
       return record[0].values.map((value: string[]) => value[0]);
     }
+
     return [];
   }
 
