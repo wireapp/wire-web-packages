@@ -38,10 +38,10 @@ export const updateOrCreateSpec = {
     };
 
     const firstPrimaryKey = await engine.updateOrCreate<PrimaryKey, DomainEntity>(TABLE_NAME, undefined, first);
-    expect(firstPrimaryKey).toBe(1);
+    expect(firstPrimaryKey).toEqual(1);
 
     const secondPrimaryKey = await engine.updateOrCreate<PrimaryKey, DomainEntity>(TABLE_NAME, undefined, second);
-    expect(secondPrimaryKey).toBe(2);
+    expect(secondPrimaryKey).toEqual(2);
 
     const persistedRecords = await engine.readAll(TABLE_NAME);
     expect(persistedRecords.length).toBe(2);
