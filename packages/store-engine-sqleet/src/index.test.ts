@@ -297,35 +297,5 @@ describe('SQLeetEngine', () => {
         expect(error.message).toBe('SQLite needs to be available');
       }
     });
-
-    /*it('exports and loads a database', async () => {
-      const schema: SQLiteDatabaseDefinition<DBRecord> = {
-        users: {
-          age: SQLiteType.INTEGER,
-          name: SQLiteType.TEXT,
-        },
-      };
-
-      const primaryKeyName = 'database';
-
-      const indexedDB = new IndexedDBEngine();
-      const indexedDBInstance = await indexedDB.init(this.storeName);
-      indexedDBInstance.version(1).stores({[this.storeName]: ''});
-      await indexedDBInstance.open();
-
-      const engine = await initEngine(schema);
-
-      // Write and save
-      await engine.create<DBRecord>('users', '1', {name: 'Otto', age: 1});
-      await indexedDB.updateOrCreate(this.storeName, primaryKeyName, await engine.export());
-
-      // Import and read
-      const savedDatabase = await indexedDB.read<string>(this.storeName, primaryKeyName);
-      const engineNew = await initEngine(schema, true, savedDatabase);
-      const result = await engineNew.read<DBRecord>('users', '1');
-
-      expect(result.age).toBe(1);
-      expect(result.name).toBe('Otto');
-    });*/
   });
 });
