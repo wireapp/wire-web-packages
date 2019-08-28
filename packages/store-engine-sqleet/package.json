@@ -13,6 +13,7 @@
     "@types/karma": "3.0.3",
     "@types/node": "~10",
     "@types/uint32": "0.2.0",
+    "@wireapp/store-engine": "3.9.6",
     "babel-loader": "8.0.6",
     "bazinga64": "5.5.13",
     "jasmine": "3.4.0",
