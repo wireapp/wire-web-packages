@@ -95,14 +95,14 @@ export class SQLeetEngine implements CRUDEngine {
     return this.db;
   }
 
-  public async export<T>(): Promise<string> {
+  async export<T>(): Promise<string> {
     if (!this.db) {
       throw new Error('SQLite needs to be available');
     }
     return (this.db.export('utf8') as unknown) as string;
   }
 
-  public async purge(): Promise<void> {
+  async purge(): Promise<void> {
     // Databases must be closed, when you're finished with them, or the memory consumption will grow forever
     if (this.db) {
       await this.db.close();
