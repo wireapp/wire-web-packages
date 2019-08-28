@@ -19,12 +19,21 @@
 
 import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import Dexie from 'dexie';
+import logdown = require('logdown');
 
 type DexieObservable = {_dbSchema?: Object};
 
 export class IndexedDBEngine implements CRUDEngine {
   private db: Dexie & DexieObservable = new Dexie('');
+  private readonly logger: logdown.Logger;
   public storeName = '';
+
+  constructor() {
+    this.logger = logdown('@wireapp/store-engine-dexie', {
+      logger: console,
+      markdown: false,
+    });
+  }
 
   // Check if IndexedDB is accessible (which won't be the case when browsing with Firefox in private mode or being on
   // page "about:blank")
@@ -68,13 +77,30 @@ export class IndexedDBEngine implements CRUDEngine {
     await this.hasEnoughQuota();
   }
 
-  public async init(storeName: string): Promise<Dexie> {
+  public async init(storeName: string, registerPersisted: boolean = false): Promise<Dexie> {
     await this.isSupported();
-    return this.assignDb(new Dexie(storeName));
+    const dexie = await this.assignDb(new Dexie(storeName));
+    if (registerPersisted) {
+      await this.registerPersistentStorage();
+    }
+    return dexie;
   }
 
-  public async initWithDb(db: Dexie): Promise<Dexie> {
-    return this.assignDb(db);
+  public async initWithDb(db: Dexie, registerPersisted: boolean = false): Promise<Dexie> {
+    await this.isSupported();
+    const dexie = this.assignDb(db);
+    if (registerPersisted) {
+      await this.registerPersistentStorage();
+    }
+    return dexie;
+  }
+
+  public async isStoragePersisted(): Promise<boolean> {
+    if (navigator.storage && navigator.storage.persisted) {
+      const isPersisted = await navigator.storage.persisted();
+      return isPersisted;
+    }
+    return false;
   }
 
   // If you want to add listeners to the database and you don't care if it is a new database (init)
@@ -159,6 +185,27 @@ export class IndexedDBEngine implements CRUDEngine {
       .toCollection()
       .keys();
     return keys.map(key => (key as any) as PrimaryKey);
+  }
+
+  /**
+   * Register a persistent storage in the browser.
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/StorageManager/persist
+   * @see https://developers.google.com/web/updates/2016/06/persistent-storage
+   */
+  public async registerPersistentStorage(): Promise<boolean> {
+    if (!navigator || !navigator.storage || !navigator.storage.persist) {
+      return false;
+    }
+
+    const granted = await navigator.storage.persist();
+
+    if (granted) {
+      this.logger.info('Storage will not be cleared except by explicit user action');
+      return true;
+    }
+
+    this.logger.info('Storage may be cleared by the UA under storage pressure.');
+    return false;
   }
 
   public async update<PrimaryKey = string>(
