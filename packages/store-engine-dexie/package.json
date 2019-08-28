@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "@wireapp/store-engine": "3.9.6",
     "dexie": "2.0.4"
   },
   "devDependencies": {
@@ -24,6 +23,9 @@
   "license": "GPL-3.0",
   "main": "./dist/index.js",
   "name": "@wireapp/store-engine-dexie",
+  "peerDependencies": {
+    "@wireapp/store-engine": "3.x.x"
+  },
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie",
   "scripts": {
     "build": "yarn build:node",

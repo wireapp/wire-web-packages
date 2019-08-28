@@ -2049,7 +2049,7 @@
   resolved "https://registry.yarnpkg.com/@types/events/-/events-3.0.0.tgz#2862f3f58a9a7f7c3e78d79f130dd4d71c25c2a7"
   integrity sha512-EaObqwIvayI5a8dCzhFrjKzVwKLxjoG9T6Ppd5CEo07LRKfQ8Yokw54r5+Wq7FaBQ+yXRvQAYPrHwya1/UFt9g==
 
-"@types/filesystem@*", "@types/filesystem@0.0.29":
+"@types/filesystem@*":
   version "0.0.29"
   resolved "https://registry.yarnpkg.com/@types/filesystem/-/filesystem-0.0.29.tgz#ee3748eb5be140dcf980c3bd35f11aec5f7a3748"
   integrity sha512-85/1KfRedmfPGsbK8YzeaQUyV1FQAvMPMTuWFQ5EkLd2w7szhNO96bk3Rh/SKmOfd9co2rCLf0Voy4o7ECBOvw==
@@ -2421,16 +2421,6 @@
   integrity sha512-GX+ffTWSgNI5JLIaWfHPf6R8CkMSFqoquud7zQ2PRvIZWPIeXissQDWlmxQbqrJ9sKCD85+faEA2aFLs2vjENw==
   dependencies:
     protobufjs "6.8.8"
-
-"@wireapp/store-engine@3.9.0":
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/@wireapp/store-engine/-/store-engine-3.9.0.tgz#11e5d531a0878a529585589a2531bf4442cd25c6"
-  integrity sha512-91p+CJxya/xKRIDQSf84x+maOrvPj22o+SdlKX4Qp0hKUO82RrFHjwKgRgHN20/m7qtWeEyBHHL3drPyyh7y1w==
-  dependencies:
-    "@types/bro-fs" "0.4.2"
-    "@types/filesystem" "0.0.29"
-    "@types/node" "~10"
-    bro-fs "0.5.0"
 
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"

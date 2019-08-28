@@ -1,7 +1,6 @@
 {
   "dependencies": {
     "@types/fs-extra": "8.0.0",
-    "@wireapp/store-engine": "3.9.6",
     "fs-extra": "8.1.0"
   },
   "devDependencies": {
@@ -20,6 +19,9 @@
   "license": "GPL-3.0",
   "main": "./dist/index.js",
   "name": "@wireapp/store-engine-fs",
+  "peerDependencies": {
+    "@wireapp/store-engine": "3.x.x"
+  },
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs",
   "scripts": {
     "build": "yarn build:node",
