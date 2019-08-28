@@ -6,6 +6,7 @@
     "@babel/preset-typescript": "7.3.3",
     "@wireapp/store-engine": "3.9.6",
     "uint32": "0.2.1",
+    "webpack": "4.39.3",
     "websql": "git+https://github.com/wireapp/websql.git"
   },
   "devDependencies": {
