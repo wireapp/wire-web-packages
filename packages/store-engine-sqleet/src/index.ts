@@ -79,13 +79,10 @@ export class SQLeetEngine implements CRUDEngine {
         allowWebWorkerFallback: true,
       });
     } catch (error) {
-      return console.log('An error happened while initializing the engine', error.message, 'init_error');
+      throw new Error(`An error happened while initializing the engine: ${error.message}`);
     }
 
     await this.db.mount({key: this.encryptionKey}, this.storeName);
-
-    // Settings
-    await this.db.run('PRAGMA `encoding`="UTF-8";');
 
     // Create tables
     let statement = '';
@@ -102,7 +99,7 @@ export class SQLeetEngine implements CRUDEngine {
     if (!this.db) {
       throw new Error('SQLite needs to be available');
     }
-    return this.db.export('string');
+    return (this.db.export('utf8') as unknown) as string;
   }
 
   public async purge(): Promise<void> {
@@ -219,10 +216,7 @@ export class SQLeetEngine implements CRUDEngine {
     return true;
   }
 
-  async read<EntityType = Record<string, any>, PrimaryKey = string>(
-    tableName: string,
-    primaryKey: PrimaryKey,
-  ): Promise<EntityType> {
+  async read<EntityType = Object, PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): Promise<EntityType> {
     if (!this.db) {
       throw new Error('Database is not instantiated');
     }
