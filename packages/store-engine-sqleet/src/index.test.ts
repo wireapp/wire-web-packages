@@ -17,7 +17,6 @@
  *
  */
 
-import {IndexedDBEngine} from '@wireapp/store-engine-dexie';
 import {createSpec} from '@wireapp/store-engine/dist/commonjs/test/createSpec';
 import {deleteAllSpec} from '@wireapp/store-engine/dist/commonjs/test/deleteAllSpec';
 import {deleteSpec} from '@wireapp/store-engine/dist/commonjs/test/deleteSpec';
@@ -27,10 +26,8 @@ import {readAllSpec} from '@wireapp/store-engine/dist/commonjs/test/readAllSpec'
 import {readSpec} from '@wireapp/store-engine/dist/commonjs/test/readSpec';
 import {updateOrCreateSpec} from '@wireapp/store-engine/dist/commonjs/test/updateOrCreateSpec';
 import {updateSpec} from '@wireapp/store-engine/dist/commonjs/test/updateSpec';
-import {Decoder} from 'bazinga64';
 import {SQLeetEngine} from './index';
-import {SQLiteDatabaseDefinition, SQLiteType} from './SchemaConverter';
-import {SQLeetWebAssembly} from './SQLeet';
+import {SQLiteType} from './SchemaConverter';
 
 interface DBRecord {
   age?: number;
@@ -38,14 +35,13 @@ interface DBRecord {
 }
 
 describe('SQLeetEngine', () => {
-  const webAssembly = Decoder.fromBase64(SQLeetWebAssembly).asBytes;
   const STORE_NAME = 'wire@production@52c607b1-4362-4b7b-bcb4-5bff6154f8e2@permanent';
   const GENERIC_ENCRYPTION_KEY = 'test';
   let engine: SQLeetEngine | undefined = undefined;
 
-  async function initEngine(scheme: {}, shouldCreateNewEngine = true, rawDatabase?: string): Promise<SQLeetEngine> {
+  async function initEngine(scheme: {}, shouldCreateNewEngine = true): Promise<SQLeetEngine> {
     if (!engine || shouldCreateNewEngine) {
-      engine = new SQLeetEngine(webAssembly, scheme, GENERIC_ENCRYPTION_KEY, rawDatabase);
+      engine = new SQLeetEngine('./base/websql-worker.js', scheme, GENERIC_ENCRYPTION_KEY);
     }
     await engine.init(STORE_NAME);
     return engine;
@@ -302,7 +298,7 @@ describe('SQLeetEngine', () => {
       }
     });
 
-    it('exports and loads a database', async () => {
+    /*it('exports and loads a database', async () => {
       const schema: SQLiteDatabaseDefinition<DBRecord> = {
         users: {
           age: SQLiteType.INTEGER,
@@ -330,6 +326,6 @@ describe('SQLeetEngine', () => {
 
       expect(result.age).toBe(1);
       expect(result.name).toBe('Otto');
-    });
+    });*/
   });
 });
