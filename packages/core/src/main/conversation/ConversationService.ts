@@ -921,11 +921,10 @@ export class ConversationService {
   /**
    * @param payloadBundle - Outgoing message
    * @param userIds - Only send message to specified user IDs
-   * @returns Sent message
+   * @returns Sent message in an array
    */
-  // tslint:disable-next-line:typedef
-  public async send(payloadBundle: Message, userIds?: string[]) {
-    const sentMessages = [];
+  public async send(payloadBundle: Message, userIds?: string[]): Promise<Message[]> {
+    const sentMessages: Message[] = [];
 
     switch (payloadBundle.type) {
       case PayloadBundleType.ASSET: {

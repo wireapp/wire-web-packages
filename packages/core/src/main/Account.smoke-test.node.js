@@ -70,9 +70,10 @@ function acceptConnection(receiver, senderId) {
   return receiver.service.connection.acceptConnection(senderId);
 }
 
-function sendText(sender, conversationId, message = 'Hello, World!') {
+async function sendText(sender, conversationId, message = 'Hello, World!') {
   const payload = sender.service.conversation.createText(message).build();
-  return sender.service.conversation.send(conversationId, payload)[0];
+  const [sentMessage] = await sender.service.conversation.send(conversationId, payload);
+  return sentMessage;
 }
 
 async function connect(sender, receiver) {

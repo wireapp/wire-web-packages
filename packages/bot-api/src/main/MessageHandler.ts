@@ -184,18 +184,18 @@ export abstract class MessageHandler {
     userIds?: string[],
   ): Promise<void> {
     if (this.account && this.account.service) {
-      const payload = await this.account.service.conversation.messageBuilder
+      const payload = this.account.service.conversation.messageBuilder
         .createText(conversationId, text)
         .withMentions(mentions)
         .build();
-      const [sentMessage] = await this.account.service.conversation.send(payload, userIds);
+      const sentMessages = await this.account.service.conversation.send(payload, userIds);
 
       if (linkPreview) {
         const linkPreviewPayload = await this.account.service.conversation.messageBuilder.createLinkPreview(
           linkPreview,
         );
         const editedWithPreviewPayload = this.account.service.conversation.messageBuilder
-          .createText(conversationId, text, sentMessage.id)
+          .createText(conversationId, text, sentMessages[0].id)
           .withLinkPreviews([linkPreviewPayload])
           .withMentions(mentions)
           .build();
