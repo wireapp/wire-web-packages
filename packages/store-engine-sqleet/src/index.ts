@@ -91,7 +91,7 @@ export class SQLeetEngine implements CRUDEngine {
     return this.db;
   }
 
-  async export<T>(): Promise<string> {
+  async export(): Promise<string> {
     return (this.db.export('utf8') as unknown) as string;
   }
 
