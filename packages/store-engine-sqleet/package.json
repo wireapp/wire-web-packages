@@ -4,7 +4,7 @@
     "@babel/plugin-proposal-class-properties": "7.5.5",
     "@babel/plugin-proposal-object-rest-spread": "7.5.5",
     "@babel/preset-typescript": "7.3.3",
-    "@wireapp/websql": "https://github.com/wireapp/websql#6425db5537739ff106d37c709ab0e1275d71eb18",
+    "@wireapp/websql": "0.0.2",
     "uint32": "0.2.1"
   },
   "devDependencies": {

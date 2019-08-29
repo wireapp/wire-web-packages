@@ -2424,9 +2424,10 @@
   dependencies:
     protobufjs "6.8.8"
 
-"@wireapp/websql@https://github.com/wireapp/websql#6425db5537739ff106d37c709ab0e1275d71eb18":
+"@wireapp/websql@0.0.2":
   version "0.0.2"
-  resolved "https://github.com/wireapp/websql#6425db5537739ff106d37c709ab0e1275d71eb18"
+  resolved "https://registry.yarnpkg.com/@wireapp/websql/-/websql-0.0.2.tgz#d89651c5a0aabf8431017bbe8d1fb135cf9e1c61"
+  integrity sha512-SsvtoR38TKJuheyRLoQ+v46Qxpld/L4YxsNL80ILJWs3MF27s1R8olBFZ7pzahq8Y2xCmMMuW6LhwH//dbvICg==
   dependencies:
     "@types/emscripten" "1.38.0"
     "@types/node" "12.7.1"
