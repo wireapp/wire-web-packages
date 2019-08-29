@@ -165,16 +165,21 @@ export class WebStorageEngine implements CRUDEngine {
   ): Promise<PrimaryKey> {
     const entity = await this.read(tableName, primaryKey);
     const updatedEntity = {...entity, ...changes};
+
+    let internalPrimaryKey;
+
     try {
-      return this.create(tableName, primaryKey, updatedEntity);
+      internalPrimaryKey = await this.create(tableName, primaryKey, updatedEntity);
     } catch (error) {
       if (error instanceof StoreEngineError.RecordAlreadyExistsError) {
         await this.delete(tableName, primaryKey);
-        return this.create(tableName, primaryKey, updatedEntity);
+        internalPrimaryKey = await this.create(tableName, primaryKey, updatedEntity);
       } else {
         throw error;
       }
     }
+
+    return internalPrimaryKey;
   }
 
   public async updateOrCreate<PrimaryKey = string, ChangesType = Object>(
@@ -193,6 +198,7 @@ export class WebStorageEngine implements CRUDEngine {
         throw error;
       }
     }
+
     return internalPrimaryKey;
   }
 
