@@ -924,60 +924,61 @@ export class ConversationService {
    * @returns Sent message in an array
    */
   public async send(payloadBundle: Message, userIds?: string[]): Promise<Message[]> {
-    const sentMessages: Message[] = [];
+    let sentMessage;
 
     switch (payloadBundle.type) {
       case PayloadBundleType.ASSET: {
-        sentMessages.push(await this.sendFileData(payloadBundle, userIds));
+        sentMessage = await this.sendFileData(payloadBundle, userIds);
         break;
       }
       case PayloadBundleType.ASSET_ABORT: {
-        sentMessages.push(await this.sendFileAbort(payloadBundle, userIds));
+        sentMessage = await this.sendFileAbort(payloadBundle, userIds);
         break;
       }
       case PayloadBundleType.ASSET_META: {
-        sentMessages.push(await this.sendFileMetaData(payloadBundle, userIds));
+        sentMessage = await this.sendFileMetaData(payloadBundle, userIds);
         break;
       }
       case PayloadBundleType.ASSET_IMAGE: {
-        sentMessages.push(await this.sendImage(payloadBundle as ImageAssetMessageOutgoing, userIds));
+        sentMessage = await this.sendImage(payloadBundle as ImageAssetMessageOutgoing, userIds);
         break;
       }
       case PayloadBundleType.CALL: {
-        sentMessages.push(await this.sendCall(payloadBundle, userIds));
+        sentMessage = await this.sendCall(payloadBundle, userIds);
         break;
       }
       case PayloadBundleType.CLIENT_ACTION: {
         if (payloadBundle.content.clientAction === ClientAction.RESET_SESSION) {
-          sentMessages.push(await this.sendSessionReset(payloadBundle, userIds));
+          sentMessage = await this.sendSessionReset(payloadBundle, userIds);
           break;
+        } else {
+          throw new Error(
+            `No send method implemented for "${payloadBundle.type}" and ClientAction "${payloadBundle.content}".`,
+          );
         }
-        throw new Error(
-          `No send method implemented for "${payloadBundle.type}" and ClientAction "${payloadBundle.content}".`,
-        );
       }
       case PayloadBundleType.CONFIRMATION: {
-        sentMessages.push(await this.sendConfirmation(payloadBundle, userIds));
+        sentMessage = await this.sendConfirmation(payloadBundle, userIds);
         break;
       }
       case PayloadBundleType.LOCATION: {
-        sentMessages.push(await this.sendLocation(payloadBundle, userIds));
+        sentMessage = await this.sendLocation(payloadBundle, userIds);
         break;
       }
       case PayloadBundleType.MESSAGE_EDIT: {
-        sentMessages.push(await this.sendEditedText(payloadBundle, userIds));
+        sentMessage = await this.sendEditedText(payloadBundle, userIds);
         break;
       }
       case PayloadBundleType.PING: {
-        sentMessages.push(await this.sendPing(payloadBundle, userIds));
+        sentMessage = await this.sendPing(payloadBundle, userIds);
         break;
       }
       case PayloadBundleType.REACTION: {
-        sentMessages.push(await this.sendReaction(payloadBundle, userIds));
+        sentMessage = await this.sendReaction(payloadBundle, userIds);
         break;
       }
       case PayloadBundleType.TEXT: {
-        sentMessages.push(await this.sendText(payloadBundle, userIds));
+        sentMessage = await this.sendText(payloadBundle, userIds);
         break;
       }
       default: {
@@ -985,7 +986,7 @@ export class ConversationService {
       }
     }
 
-    return sentMessages;
+    return [sentMessage];
   }
 
   public sendTypingStart(conversationId: string): Promise<void> {

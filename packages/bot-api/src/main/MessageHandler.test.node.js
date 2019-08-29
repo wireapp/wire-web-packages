@@ -40,7 +40,7 @@ describe('MessageHandler', () => {
     await mainHandler.account.init();
     mainHandler.account.apiClient.createContext('', '');
 
-    spyOn(mainHandler.account.service.conversation, 'send').and.returnValue(Promise.resolve());
+    spyOn(mainHandler.account.service.conversation, 'send').and.returnValue(Promise.resolve([]));
   });
 
   describe('"sendConnectionResponse"', () => {

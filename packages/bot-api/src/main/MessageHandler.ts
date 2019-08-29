@@ -188,14 +188,15 @@ export abstract class MessageHandler {
         .createText(conversationId, text)
         .withMentions(mentions)
         .build();
-      const sentMessages = await this.account.service.conversation.send(payload, userIds);
+
+      const [sentMessage] = await this.account.service.conversation.send(payload, userIds);
 
       if (linkPreview) {
         const linkPreviewPayload = await this.account.service.conversation.messageBuilder.createLinkPreview(
           linkPreview,
         );
         const editedWithPreviewPayload = this.account.service.conversation.messageBuilder
-          .createText(conversationId, text, sentMessages[0].id)
+          .createText(conversationId, text, sentMessage.id)
           .withLinkPreviews([linkPreviewPayload])
           .withMentions(mentions)
           .build();
