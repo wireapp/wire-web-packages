@@ -98,7 +98,7 @@ export class TravisBot {
         }
         if (id) {
           logger.log(`Sending message to conversation ${id} ...`);
-          const textPayload = await account.service.conversation.messageBuilder.createText(id, this.message).build();
+          const textPayload = account.service.conversation.messageBuilder.createText(id, this.message).build();
           await account.service.conversation.send(textPayload);
         }
       }),
