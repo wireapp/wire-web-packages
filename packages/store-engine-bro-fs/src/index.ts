@@ -217,8 +217,9 @@ export class FileSystemEngine implements CRUDEngine {
     } catch (error) {
       if (error instanceof StoreEngineError.RecordNotFoundError) {
         internalPrimaryKey = await this.create(tableName, primaryKey, changes);
+      } else {
+        throw error;
       }
-      throw error;
     }
     return internalPrimaryKey;
   }
