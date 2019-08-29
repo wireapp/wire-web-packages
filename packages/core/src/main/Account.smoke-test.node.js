@@ -72,7 +72,7 @@ function acceptConnection(receiver, senderId) {
 
 function sendText(sender, conversationId, message = 'Hello, World!') {
   const payload = sender.service.conversation.createText(message).build();
-  return sender.service.conversation.send(conversationId, payload);
+  return sender.service.conversation.send(conversationId, payload)[0];
 }
 
 async function connect(sender, receiver) {

@@ -925,40 +925,68 @@ export class ConversationService {
    */
   // tslint:disable-next-line:typedef
   public async send(payloadBundle: Message, userIds?: string[]) {
+    const sentMessages = [];
+
     switch (payloadBundle.type) {
-      case PayloadBundleType.ASSET:
-        return this.sendFileData(payloadBundle, userIds);
-      case PayloadBundleType.ASSET_ABORT:
-        return this.sendFileAbort(payloadBundle, userIds);
-      case PayloadBundleType.ASSET_META:
-        return this.sendFileMetaData(payloadBundle, userIds);
-      case PayloadBundleType.ASSET_IMAGE:
-        return this.sendImage(payloadBundle as ImageAssetMessageOutgoing, userIds);
-      case PayloadBundleType.CALL:
-        return this.sendCall(payloadBundle, userIds);
+      case PayloadBundleType.ASSET: {
+        sentMessages.push(await this.sendFileData(payloadBundle, userIds));
+        break;
+      }
+      case PayloadBundleType.ASSET_ABORT: {
+        sentMessages.push(await this.sendFileAbort(payloadBundle, userIds));
+        break;
+      }
+      case PayloadBundleType.ASSET_META: {
+        sentMessages.push(await this.sendFileMetaData(payloadBundle, userIds));
+        break;
+      }
+      case PayloadBundleType.ASSET_IMAGE: {
+        sentMessages.push(await this.sendImage(payloadBundle as ImageAssetMessageOutgoing, userIds));
+        break;
+      }
+      case PayloadBundleType.CALL: {
+        sentMessages.push(await this.sendCall(payloadBundle, userIds));
+        break;
+      }
       case PayloadBundleType.CLIENT_ACTION: {
         if (payloadBundle.content.clientAction === ClientAction.RESET_SESSION) {
-          return this.sendSessionReset(payloadBundle, userIds);
+          sentMessages.push(await this.sendSessionReset(payloadBundle, userIds));
+          break;
         }
         throw new Error(
           `No send method implemented for "${payloadBundle.type}" and ClientAction "${payloadBundle.content}".`,
         );
       }
-      case PayloadBundleType.CONFIRMATION:
-        return this.sendConfirmation(payloadBundle, userIds);
-      case PayloadBundleType.LOCATION:
-        return this.sendLocation(payloadBundle, userIds);
-      case PayloadBundleType.MESSAGE_EDIT:
-        return this.sendEditedText(payloadBundle, userIds);
-      case PayloadBundleType.PING:
-        return this.sendPing(payloadBundle, userIds);
-      case PayloadBundleType.REACTION:
-        return this.sendReaction(payloadBundle, userIds);
-      case PayloadBundleType.TEXT:
-        return this.sendText(payloadBundle, userIds);
-      default:
+      case PayloadBundleType.CONFIRMATION: {
+        sentMessages.push(await this.sendConfirmation(payloadBundle, userIds));
+        break;
+      }
+      case PayloadBundleType.LOCATION: {
+        sentMessages.push(await this.sendLocation(payloadBundle, userIds));
+        break;
+      }
+      case PayloadBundleType.MESSAGE_EDIT: {
+        sentMessages.push(await this.sendEditedText(payloadBundle, userIds));
+        break;
+      }
+      case PayloadBundleType.PING: {
+        sentMessages.push(await this.sendPing(payloadBundle, userIds));
+        break;
+      }
+      case PayloadBundleType.REACTION: {
+        sentMessages.push(await this.sendReaction(payloadBundle, userIds));
+        break;
+      }
+      case PayloadBundleType.TEXT: {
+        sentMessages.push(await this.sendText(payloadBundle, userIds));
+        break;
+      }
+      default: {
         throw new Error(`No send method implemented for "${payloadBundle['type']}".`);
+      }
     }
+
+    return sentMessages;
   }
 
   public sendTypingStart(conversationId: string): Promise<void> {

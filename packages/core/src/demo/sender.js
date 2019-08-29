@@ -81,7 +81,7 @@ const {FileEngine} = require('@wireapp/store-engine-fs');
     const deleteTextPayload = account.service.conversation.messageBuilder
       .createText(CONVERSATION_ID, 'Delete me!')
       .build();
-    const {id: messageId} = await account.service.conversation.send(deleteTextPayload);
+    const [{id: messageId}] = await account.service.conversation.send(deleteTextPayload);
 
     const fiveSecondsInMillis = TimeUtil.TimeInMillis.SECOND * 5;
     setTimeout(async () => {
@@ -118,7 +118,7 @@ const {FileEngine} = require('@wireapp/store-engine-fs');
 
   async function sendAndEdit() {
     const payload = account.service.conversation.messageBuilder.createText(CONVERSATION_ID, 'Hello, Wolrd!').build();
-    const {id: originalMessageId} = await account.service.conversation.send(payload);
+    const [{id: originalMessageId}] = await account.service.conversation.send(payload);
     setInterval(async () => {
       const editedPayload = account.service.conversation.messageBuilder
         .createEditedText(CONVERSATION_ID, 'Hello, World!', originalMessageId)
@@ -193,7 +193,7 @@ const {FileEngine} = require('@wireapp/store-engine-fs');
 
     const textPayload = account.service.conversation.messageBuilder.createText(CONVERSATION_ID, text).build();
 
-    const {id: messageId, timestamp} = await account.service.conversation.send(textPayload);
+    const [{id: messageId, timestamp}] = await account.service.conversation.send(textPayload);
 
     const quoteText = 'Hello again';
 
