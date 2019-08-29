@@ -145,7 +145,7 @@ export class WebStorageEngine implements CRUDEngine {
     return Promise.all(promises);
   }
 
-  public readAllPrimaryKeys(tableName: string): Promise<string[]> {
+  public async readAllPrimaryKeys(tableName: string): Promise<string[]> {
     const primaryKeys: string[] = [];
 
     Object.keys(localStorage).forEach((primaryKey: string) => {
@@ -155,7 +155,7 @@ export class WebStorageEngine implements CRUDEngine {
       }
     });
 
-    return Promise.resolve(primaryKeys);
+    return primaryKeys;
   }
 
   public async update<PrimaryKey = string, ChangesType = Object>(
