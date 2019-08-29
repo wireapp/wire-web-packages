@@ -40,7 +40,7 @@ declare const WebAssembly: any;
 
 export class SQLeetEngine implements CRUDEngine {
   private autoIncrementedPrimaryKey: number = 1;
-  private db?: websql.Database;
+  private readonly db: websql.Database;
   private readonly schema: SQLiteDatabaseDefinition<Record<string, any>> = {};
   public storeName = '';
 
@@ -58,6 +58,15 @@ export class SQLeetEngine implements CRUDEngine {
         ? {[RESERVED_COLUMN]: entity as SQLiteType}
         : (entity as SQLiteTableDefinition<string>);
     }
+
+    try {
+      this.db = new websql.Database(this.workerLocation, {
+        allowMainWebWorker: true,
+        allowWebWorkerFallback: true,
+      });
+    } catch (error) {
+      throw new Error(`An error happened while initializing the engine: ${error.message}`);
+    }
   }
 
   // TODO: Remove "append" functionality from "CRUDEngine" completely
@@ -69,15 +78,6 @@ export class SQLeetEngine implements CRUDEngine {
     await this.isSupported();
 
     this.storeName = storeName;
-    try {
-      this.db = new websql.Database(this.workerLocation, {
-        allowMainWebWorker: true,
-        allowWebWorkerFallback: true,
-      });
-    } catch (error) {
-      throw new Error(`An error happened while initializing the engine: ${error.message}`);
-    }
-
     await this.db.mount({key: this.encryptionKey}, this.storeName);
 
     // Create tables
@@ -92,9 +92,6 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   async export<T>(): Promise<string> {
-    if (!this.db) {
-      throw new Error('SQLite needs to be available');
-    }
     return (this.db.export('utf8') as unknown) as string;
   }
 
@@ -104,7 +101,6 @@ export class SQLeetEngine implements CRUDEngine {
       await this.db.close();
       await this.db.wipe(this.storeName);
     }
-    this.db = undefined;
   }
 
   private buildValues<EntityType = Record<string, SQLiteType>>(
@@ -156,9 +152,6 @@ export class SQLeetEngine implements CRUDEngine {
     primaryKey: PrimaryKey,
     entity: EntityType,
   ): Promise<PrimaryKey> {
-    if (!this.db) {
-      throw new Error('Database is not instantiated');
-    }
     if (!entity) {
       const message = `Record "${primaryKey}" cannot be saved in "${tableName}" because it's "undefined" or "null".`;
       throw new StoreEngineError.RecordTypeError(message);
@@ -191,9 +184,6 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   async delete<PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): Promise<PrimaryKey> {
-    if (!this.db) {
-      throw new Error('Database is not instantiated');
-    }
     const escapedTableName = escape(tableName);
     const statement = `DELETE FROM ${escapedTableName} WHERE ${SQLeetEnginePrimaryKeyName}=@primaryKey;`;
     await this.db.run(statement, {
@@ -203,9 +193,6 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   async deleteAll(tableName: string): Promise<boolean> {
-    if (!this.db) {
-      throw new Error('Database is not instantiated');
-    }
     const escapedTableName = escape(tableName);
     const statement = `DELETE FROM ${escapedTableName}`;
     await this.db.run(statement);
@@ -213,9 +200,6 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   async read<EntityType = Object, PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): Promise<EntityType> {
-    if (!this.db) {
-      throw new Error('Database is not instantiated');
-    }
     const table = this.schema[tableName];
     if (!table) {
       throw new Error(`Table "${tableName}" does not exist.`);
@@ -252,9 +236,6 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   async readAll<T>(tableName: string): Promise<T[]> {
-    if (!this.db) {
-      throw new Error('Database is not instantiated');
-    }
     const table = this.schema[tableName];
     const columns = getFormattedColumnsFromTableName(table);
     const escapedTableName = escape(tableName);
@@ -267,9 +248,6 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   async readAllPrimaryKeys(tableName: string): Promise<string[]> {
-    if (!this.db) {
-      throw new Error('Database is not instantiated');
-    }
     const escapedTableName = escape(tableName);
     const statement = `SELECT ${SQLeetEnginePrimaryKeyName} FROM ${escapedTableName};`;
 
@@ -286,9 +264,6 @@ export class SQLeetEngine implements CRUDEngine {
     primaryKey: PrimaryKey,
     changes: ChangesType,
   ): Promise<PrimaryKey> {
-    if (!this.db) {
-      throw new Error('Database is not instantiated');
-    }
     await this.read(tableName, primaryKey);
     const {values, columns} = this.buildValues(tableName, changes);
     const escapedTableName = escape(tableName);
@@ -307,9 +282,6 @@ export class SQLeetEngine implements CRUDEngine {
     primaryKey: PrimaryKey,
     changes: ChangesType,
   ): Promise<PrimaryKey> {
-    if (!this.db) {
-      throw new Error('Database is not instantiated');
-    }
     try {
       await this.update(tableName, primaryKey, changes);
     } catch (error) {

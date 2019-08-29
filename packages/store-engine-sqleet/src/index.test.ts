@@ -39,9 +39,13 @@ describe('SQLeetEngine', () => {
   const GENERIC_ENCRYPTION_KEY = 'test';
   let engine: SQLeetEngine | undefined = undefined;
 
-  async function initEngine(scheme: {}, shouldCreateNewEngine = true): Promise<SQLeetEngine> {
+  async function initEngine(
+    scheme: {},
+    shouldCreateNewEngine = true,
+    pathToWebWorker = './base/websql-worker.js',
+  ): Promise<SQLeetEngine> {
     if (!engine || shouldCreateNewEngine) {
-      engine = new SQLeetEngine('./base/websql-worker.js', scheme, GENERIC_ENCRYPTION_KEY);
+      engine = new SQLeetEngine(pathToWebWorker, scheme, GENERIC_ENCRYPTION_KEY);
     }
     await engine.init(STORE_NAME);
     return engine;
@@ -49,7 +53,9 @@ describe('SQLeetEngine', () => {
 
   afterEach(async () => {
     if (engine) {
-      await engine.purge();
+      try {
+        await engine.purge();
+      } catch (error) {}
     }
   });
 
@@ -294,7 +300,7 @@ describe('SQLeetEngine', () => {
         await engine.export();
         fail();
       } catch (error) {
-        expect(error.message).toBe('SQLite needs to be available');
+        expect(error.message).toBe('Database closed');
       }
     });
   });
