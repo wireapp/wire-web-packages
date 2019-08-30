@@ -57,5 +57,5 @@ module.exports = (config: Config): void => {
         exclude: ['worker_threads'],
       },
     },
-  } as unknown) as ConfigOptions);
+  } as any) as ConfigOptions);
 };
