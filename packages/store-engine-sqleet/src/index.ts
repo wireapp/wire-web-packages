@@ -92,7 +92,7 @@ export class SQLeetEngine implements CRUDEngine {
   }
 
   async export(): Promise<string> {
-    return (this.db.export('utf8') as unknown) as string;
+    return this.db.export('utf8') as any;
   }
 
   async purge(): Promise<void> {
