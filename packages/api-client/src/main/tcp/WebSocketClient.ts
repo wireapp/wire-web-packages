@@ -30,11 +30,13 @@ import * as buffer from '../shims/node/buffer';
 const ReconnectingWebsocket = require('reconnecting-websocket');
 
 export enum WebSocketTopic {
-  ON_DISCONNECT = 'WebSocketTopic.ON_DISCONNECT',
+  ON_OPEN = 'WebSocketTopic.ON_OPEN',
+  ON_CLOSE = 'WebSocketTopic.ON_CLOSE',
   ON_ERROR = 'WebSocketTopic.ON_ERROR',
+  ON_INVALID_TOKEN = 'WebSocketTopic.ON_INVALID_TOKEN',
   ON_MESSAGE = 'WebSocketTopic.ON_MESSAGE',
   ON_OFFLINE = 'WebSocketTopic.ON_OFFLINE',
-  ON_RECONNECT = 'WebSocketTopic.ON_RECONNECT',
+  ON_ONLINE = 'WebSocketTopic.ON_ONLINE',
 }
 
 export enum CloseEventCode {
@@ -57,7 +59,7 @@ export class WebSocketClient extends EventEmitter {
   private pingInterval?: NodeJS.Timeout;
   private socket?: WebSocket;
   public client: HttpClient;
-  public isOnline: boolean;
+  private isRefreshingAccessToken: boolean;
 
   public static CONFIG = {
     PING_INTERVAL: TimeUtil.TimeInMillis.SECOND * 5,
@@ -79,7 +81,7 @@ export class WebSocketClient extends EventEmitter {
     this.baseUrl = baseUrl;
     this.client = client;
     this.hasUnansweredPing = false;
-    this.isOnline = false;
+    this.isRefreshingAccessToken = false;
 
     this.logger = logdown('@wireapp/api-client/tcp/WebSocketClient', {
       logger: console,
@@ -110,36 +112,45 @@ export class WebSocketClient extends EventEmitter {
       const data = buffer.bufferToString(event.data);
       if (data === PingMessage.PONG) {
         this.logger.debug('Received pong from WebSocket');
-        this.hasUnansweredPing = false;
+        if (this.hasUnansweredPing) {
+          this.emit(WebSocketTopic.ON_ONLINE);
+          this.hasUnansweredPing = false;
+        }
       } else {
         const notification: IncomingNotification = JSON.parse(data);
         this.emit(WebSocketTopic.ON_MESSAGE, notification);
       }
     };
 
-    this.socket.onerror = event => {
-      this.logger.warn(`WebSocket connection error: "${(event as any).message}"`);
+    this.socket.onerror = error => {
+      this.logger.warn(`WebSocket connection error: "${error}"`);
       return this.refreshAccessToken();
     };
 
     this.socket.onopen = async () => {
+      this.emit(WebSocketTopic.ON_OPEN);
+
       if (this.socket) {
         this.socket.binaryType = 'arraybuffer';
       }
 
-      this.logger.info(`Connected WebSocket to "${this.baseUrl}"`);
+      this.logger.info(`Connected WebSocket to "${this.buildWebSocketUrl()}"`);
       this.pingInterval = setInterval(this.sendPing, WebSocketClient.CONFIG.PING_INTERVAL);
 
-      if (!this.isOnline) {
-        this.emit(WebSocketTopic.ON_RECONNECT);
-        await this.refreshAccessToken();
-      }
+      await this.refreshAccessToken();
+
+      this.emit(WebSocketTopic.ON_ONLINE);
     };
 
     return this;
   }
 
   private async refreshAccessToken(): Promise<void> {
+    if (this.isRefreshingAccessToken) {
+      return;
+    }
+    this.isRefreshingAccessToken = true;
+
     try {
       await this.client.refreshAccessToken();
     } catch (error) {
@@ -147,11 +158,14 @@ export class WebSocketClient extends EventEmitter {
         this.logger.warn(error);
       } else {
         const mappedError = BackendErrorMapper.map(error);
+        // On invalid token the WebSocket is supposed to get closed by the client
         this.emit(
-          error instanceof InvalidTokenError ? WebSocketTopic.ON_DISCONNECT : WebSocketTopic.ON_ERROR,
+          error instanceof InvalidTokenError ? WebSocketTopic.ON_INVALID_TOKEN : WebSocketTopic.ON_ERROR,
           mappedError,
         );
       }
+    } finally {
+      this.isRefreshingAccessToken = false;
     }
   }
 
@@ -168,18 +182,17 @@ export class WebSocketClient extends EventEmitter {
 
       if (this.pingInterval) {
         clearInterval(this.pingInterval);
-        this.emit(WebSocketTopic.ON_OFFLINE);
+        this.emit(WebSocketTopic.ON_CLOSE);
       }
     }
-
-    this.isOnline = false;
   }
 
   private readonly sendPing = (): void => {
     if (this.socket) {
       if (this.hasUnansweredPing) {
         this.logger.warn('Ping interval check failed');
-        return this.disconnect('Failed ping check', false);
+        this.emit(WebSocketTopic.ON_OFFLINE);
+        return;
       }
       this.logger.debug('Sending ping to WebSocket');
       this.hasUnansweredPing = true;
