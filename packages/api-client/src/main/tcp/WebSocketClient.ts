@@ -192,7 +192,6 @@ export class WebSocketClient extends EventEmitter {
       if (this.hasUnansweredPing) {
         this.logger.warn('Ping interval check failed');
         this.emit(WebSocketTopic.ON_OFFLINE);
-        return;
       }
       this.logger.debug('Sending ping to WebSocket');
       this.hasUnansweredPing = true;
