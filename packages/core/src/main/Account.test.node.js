@@ -63,7 +63,7 @@ describe('Account', () => {
       .post(AuthAPI.URL.LOGIN, body => body.email && body.password)
       .query(() => true)
       .reply((uri, body) => {
-        const parsedBody = JSON.parse(body.toString());
+        const parsedBody = JSON.parse(body);
         if (parsedBody.password === 'wrong') {
           return [
             StatusCode.FORBIDDEN,
@@ -107,6 +107,10 @@ describe('Account', () => {
     nock(MOCK_BACKEND.rest)
       .get(ClientAPI.URL.CLIENTS)
       .reply(StatusCode.OK, [{id: CLIENT_ID}]);
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   describe('"createText"', () => {
