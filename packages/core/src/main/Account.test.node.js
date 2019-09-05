@@ -63,7 +63,7 @@ describe('Account', () => {
       .post(AuthAPI.URL.LOGIN, body => body.email && body.password)
       .query(() => true)
       .reply((uri, body) => {
-        const parsedBody = JSON.parse(body);
+        const parsedBody = JSON.parse(body.toString());
         if (parsedBody.password === 'wrong') {
           return [
             StatusCode.FORBIDDEN,
