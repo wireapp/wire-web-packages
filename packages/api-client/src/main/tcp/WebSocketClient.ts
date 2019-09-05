@@ -69,6 +69,7 @@ export class WebSocketClient extends EventEmitter {
     connectionTimeout: TimeUtil.TimeInMillis.SECOND * 4,
     constructor: typeof window !== 'undefined' ? WebSocket : Html5WebSocket,
     debug: false,
+    maxEnqueuedMessages: 1,
     maxReconnectionDelay: TimeUtil.TimeInMillis.SECOND * 10,
     maxRetries: Infinity,
     minReconnectionDelay: TimeUtil.TimeInMillis.SECOND * 4,
