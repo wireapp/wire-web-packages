@@ -30,14 +30,14 @@
     "karma-sourcemap-loader": "0.3.7",
     "karma-spec-reporter": "0.0.32",
     "mock-socket": "9.0.0",
-    "nock": "11.3.2",
+    "nock": "11.3.3",
     "nyc": "14.1.1",
     "rimraf": "3.0.0",
     "terser-webpack-plugin": "1.4.1",
     "ts-node": "8.3.0",
     "typescript": "3.6.2",
     "webpack": "4.39.3",
-    "webpack-cli": "3.3.7"
+    "webpack-cli": "3.3.8"
   },
   "description": "Wire for Web's communication core.",
   "files": [
