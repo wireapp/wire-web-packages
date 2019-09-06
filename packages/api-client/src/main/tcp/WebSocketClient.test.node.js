@@ -65,6 +65,7 @@ fdescribe('WebSocketClient', () => {
     it('calls "onError" when WebSocket received error', async () => {
       const websocketClient = new WebSocketClient('url', fakeHttpClient);
       const onErrorSpy = spyOn(websocketClient, 'onError').and.callThrough();
+      const refreshTokenSpy = spyOn(websocketClient, 'refreshAccessToken').and.callThrough();
       const fakeSocket = {};
       const socket = websocketClient.socket;
       spyOn(socket, 'getReconnectingWebsocket').and.returnValue(fakeSocket);
@@ -73,6 +74,7 @@ fdescribe('WebSocketClient', () => {
       fakeSocket.onerror(new Error('error'));
 
       expect(onErrorSpy.calls.count()).toBe(1);
+      expect(refreshTokenSpy.calls.count()).toBe(1);
     });
 
     it('calls "onMessage" when WebSocket received message', async () => {
