@@ -17,7 +17,7 @@
  *
  */
 
-import {Notification, NotificationEvent} from '@wireapp/api-client/dist/commonjs/notification/';
+import {Notification} from '@wireapp/api-client/dist/commonjs/notification/';
 import {CRUDEngine} from '@wireapp/store-engine';
 import {CryptographyDatabaseRepository} from '../cryptography/CryptographyDatabaseRepository';
 
