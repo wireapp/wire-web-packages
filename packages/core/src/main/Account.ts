@@ -149,7 +149,7 @@ export class Account extends EventEmitter {
     initClient: boolean = true,
     clientInfo?: ClientInfo,
   ): Promise<Context | undefined> {
-    await this.resetContext();
+    this.resetContext();
     await this.init();
 
     LoginSanitizer.removeNonPrintableCharacters(loginData);
