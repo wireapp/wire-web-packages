@@ -17,17 +17,14 @@
  *
  */
 
-import {TimeUtil} from '@wireapp/commons';
 import EventEmitter from 'events';
 import logdown from 'logdown';
-import NodeWebSocket = require('ws');
 
+import {ErrorEvent, Event} from 'reconnecting-websocket';
 import {InvalidTokenError} from '../auth/';
 import {IncomingNotification} from '../conversation/';
 import {BackendErrorMapper, HttpClient, NetworkError} from '../http/';
-import * as buffer from '../shims/node/buffer';
-
-import ReconnectingWebsocket, {Options} from 'reconnecting-websocket';
+import {ReconnectingWebsocket} from './ReconnectingWebsocket';
 
 export enum WebSocketTopic {
   ON_OPEN = 'WebSocketTopic.ON_OPEN',
@@ -46,44 +43,20 @@ export enum CloseEventCode {
   UNSUPPORTED_DATA = 1003,
 }
 
-export enum PingMessage {
-  PING = 'ping',
-  PONG = 'pong',
-}
-
 export class WebSocketClient extends EventEmitter {
   private readonly baseUrl: string;
   private readonly logger: logdown.Logger;
   private clientId?: string;
-  private hasUnansweredPing: boolean;
-  private pingInterval?: NodeJS.Timeout;
-  private socket?: ReconnectingWebsocket;
   public client: HttpClient;
   private isRefreshingAccessToken: boolean;
-  private shouldSendPing: boolean;
-
-  public static CONFIG = {
-    PING_INTERVAL: TimeUtil.TimeInMillis.SECOND * 5,
-  };
-
-  public static RECONNECTING_OPTIONS: Options = {
-    WebSocket: typeof window !== 'undefined' ? WebSocket : NodeWebSocket,
-    connectionTimeout: TimeUtil.TimeInMillis.SECOND * 4,
-    debug: false,
-    maxReconnectionDelay: TimeUtil.TimeInMillis.SECOND * 10,
-    maxRetries: Infinity,
-    minReconnectionDelay: TimeUtil.TimeInMillis.SECOND * 4,
-    reconnectionDelayGrowFactor: 1.3,
-  };
+  private socket?: ReconnectingWebsocket;
 
   constructor(baseUrl: string, client: HttpClient) {
     super();
 
     this.baseUrl = baseUrl;
     this.client = client;
-    this.hasUnansweredPing = false;
     this.isRefreshingAccessToken = false;
-    this.shouldSendPing = true;
 
     this.logger = logdown('@wireapp/api-client/tcp/WebSocketClient', {
       logger: console,
@@ -91,64 +64,31 @@ export class WebSocketClient extends EventEmitter {
     });
   }
 
+  private readonly onMessage = (data: string) => {
+    const notification: IncomingNotification = JSON.parse(data);
+    this.emit(WebSocketTopic.ON_MESSAGE, notification);
+  };
+
+  private readonly onError = async (error: ErrorEvent) => {
+    await this.refreshAccessToken();
+  };
+
   private readonly onReconnect = () => {
-    this.logger.info('Reconnecting to WebSocket');
-    // TODO: Remove this hack once `maxEnqueuedMessages` works
-    this.hasUnansweredPing = false;
-    this.shouldSendPing = true;
     return this.buildWebSocketUrl();
   };
 
-  private buildWebSocketUrl(accessToken = this.client.accessTokenStore.accessToken!.access_token): string {
-    let url = `${this.baseUrl}/await?access_token=${accessToken}`;
-    if (this.clientId) {
-      // Note: If no client ID is given, then the WebSocket connection will receive all notifications for all clients
-      // of the connected user
-      url += `&client=${this.clientId}`;
-    }
-    return url;
-  }
+  private readonly onOpen = (event: Event) => {
+    this.emit(WebSocketTopic.ON_OPEN);
+    this.emit(WebSocketTopic.ON_ONLINE);
+  };
 
   public async connect(clientId?: string): Promise<WebSocketClient> {
     this.clientId = clientId;
+    this.socket = new ReconnectingWebsocket(this.onReconnect);
 
-    this.socket = new ReconnectingWebsocket(this.onReconnect, undefined, WebSocketClient.RECONNECTING_OPTIONS);
-
-    this.socket.onmessage = (event: MessageEvent) => {
-      const data = buffer.bufferToString(event.data);
-      if (data === PingMessage.PONG) {
-        this.logger.debug('Received pong from WebSocket');
-        if (this.hasUnansweredPing) {
-          if (!this.shouldSendPing) {
-            this.emit(WebSocketTopic.ON_ONLINE);
-          }
-          this.shouldSendPing = true;
-          this.hasUnansweredPing = false;
-        }
-      } else {
-        const notification: IncomingNotification = JSON.parse(data);
-        this.emit(WebSocketTopic.ON_MESSAGE, notification);
-      }
-    };
-
-    this.socket.onerror = error => {
-      this.logger.warn(`WebSocket connection error: "${error}"`);
-      return this.refreshAccessToken();
-    };
-
-    this.socket.onopen = async () => {
-      this.emit(WebSocketTopic.ON_OPEN);
-
-      if (this.socket) {
-        this.socket.binaryType = 'arraybuffer';
-      }
-
-      this.logger.info(`Connected WebSocket to "${this.baseUrl}"`);
-      this.pingInterval = setInterval(this.sendPing, WebSocketClient.CONFIG.PING_INTERVAL);
-
-      this.emit(WebSocketTopic.ON_ONLINE);
-    };
-
+    this.socket.setOnMessage(this.onMessage);
+    this.socket.setOnError(this.onError);
+    this.socket.setOnOpen(this.onOpen);
     return this;
   }
 
@@ -178,31 +118,17 @@ export class WebSocketClient extends EventEmitter {
 
   public disconnect(reason = 'Unknown reason', keepClosed = true): void {
     if (this.socket) {
-      this.logger.info(`Disconnecting from WebSocket (reason: "${reason}")`);
-      // TODO: 'any' can be removed once this issue is resolved:
-      // https://github.com/pladaria/reconnecting-websocket/issues/44
-      (this.socket as any).close(CloseEventCode.NORMAL_CLOSURE, reason, {
-        delay: 0,
-        fastClose: true,
-        keepClosed,
-      });
-
-      if (this.pingInterval) {
-        clearInterval(this.pingInterval);
-        this.emit(WebSocketTopic.ON_CLOSE);
-      }
+      this.socket.disconnect(reason, keepClosed);
     }
   }
 
-  private readonly sendPing = (): void => {
-    if (this.socket && this.shouldSendPing) {
-      if (this.hasUnansweredPing) {
-        this.shouldSendPing = false;
-        this.logger.warn('Ping interval check failed');
-        this.emit(WebSocketTopic.ON_OFFLINE);
-      }
-      this.hasUnansweredPing = true;
-      this.socket.send(PingMessage.PING);
+  private buildWebSocketUrl(accessToken = this.client.accessTokenStore.accessToken!.access_token): string {
+    let url = `${this.baseUrl}/await?access_token=${accessToken}`;
+    if (this.clientId) {
+      // Note: If no client ID is given, then the WebSocket connection will receive all notifications for all clients
+      // of the connected user
+      url += `&client=${this.clientId}`;
     }
-  };
+    return url;
+  }
 }
