@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2019 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,7 +60,7 @@ export class ReconnectingWebsocket {
   private onOpen?: (event: Event) => void;
   private onMessage?: (data: string) => void;
   private onError?: (error: ErrorEvent) => void;
-  private onClose?: () => void;
+  private onClose?: (event: CloseEvent) => void;
 
   constructor(private readonly onReconnect: () => string) {
     this.hasUnansweredPing = false;
@@ -71,14 +71,14 @@ export class ReconnectingWebsocket {
   }
 
   private readonly internalOnError = (error: ErrorEvent) => {
-    this.logger.warn('WebSocket connection error: ', error);
+    this.logger.warn('WebSocket connection error', error);
     if (this.onError) {
       this.onError(error);
     }
   };
 
   private readonly internalOnMessage = (event: MessageEvent) => {
-    this.logger.info('Incoming message', event);
+    this.logger.debug('Incoming message', event);
 
     const data = buffer.bufferToString(event.data);
     if (data === PingMessage.PONG) {
@@ -94,7 +94,7 @@ export class ReconnectingWebsocket {
   };
 
   private readonly internalOnOpen = (event: Event) => {
-    this.logger.info('Connecting to WebSocket', event);
+    this.logger.debug('WebSocket opened', event);
     if (this.socket) {
       this.socket.binaryType = 'arraybuffer';
     }
@@ -103,32 +103,36 @@ export class ReconnectingWebsocket {
     }
   };
 
-  private readonly internalOnReconnect = () => {
-    this.logger.info('Reconnecting to WebSocket');
+  private readonly internalOnReconnect = (): string => {
+    this.logger.debug('Connecting to WebSocket');
     this.startPinging();
     return this.onReconnect();
   };
 
-  private readonly internalOnClose = (error: CloseEvent) => {
-    this.logger.info(`WebSocket disconnect: "${error}"`);
+  private readonly internalOnClose = (event: CloseEvent) => {
+    this.logger.debug('WebSocket closed', event);
     this.stopPinging();
     if (this.onClose) {
-      this.onClose();
+      this.onClose(event);
     }
   };
 
-  public async connect(): Promise<ReconnectingWebsocket> {
-    this.socket = new RWS(this.internalOnReconnect, undefined, ReconnectingWebsocket.RECONNECTING_OPTIONS);
+  public connect(): void {
+    this.socket = this.getReconnectingWebsocket();
 
     this.socket.onmessage = this.internalOnMessage;
     this.socket.onerror = this.internalOnError;
     this.socket.onopen = this.internalOnOpen;
     this.socket.onclose = this.internalOnClose;
-
-    return this;
   }
 
-  public disconnect(reason = 'Unknown reason', keepClosed = true): void {
+  public send(message: any): void {
+    if (this.socket) {
+      this.socket.send(message);
+    }
+  }
+
+  public disconnect(reason = 'Closed by client', keepClosed = true): void {
     if (this.socket) {
       this.logger.info(`Disconnecting from WebSocket (reason: "${reason}")`);
       // TODO: 'any' can be removed once this issue is resolved:
@@ -163,6 +167,10 @@ export class ReconnectingWebsocket {
     }
   };
 
+  private getReconnectingWebsocket(): RWS {
+    return new RWS(this.internalOnReconnect, undefined, ReconnectingWebsocket.RECONNECTING_OPTIONS);
+  }
+
   public setOnOpen(onOpen: (event: Event) => void): void {
     this.onOpen = onOpen;
   }
@@ -172,7 +180,7 @@ export class ReconnectingWebsocket {
   public setOnError(onError: (error: ErrorEvent) => void): void {
     this.onError = onError;
   }
-  public setOnClose(onClose: () => void): void {
+  public setOnClose(onClose: (event: CloseEvent) => void): void {
     this.onClose = onClose;
   }
 }

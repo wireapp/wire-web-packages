@@ -20,7 +20,7 @@
 import EventEmitter from 'events';
 import logdown from 'logdown';
 
-import {ErrorEvent, Event} from 'reconnecting-websocket';
+import {CloseEvent, ErrorEvent, Event} from 'reconnecting-websocket';
 import {InvalidTokenError} from '../auth/';
 import {IncomingNotification} from '../conversation/';
 import {BackendErrorMapper, HttpClient, NetworkError} from '../http/';
@@ -49,7 +49,7 @@ export class WebSocketClient extends EventEmitter {
   private clientId?: string;
   public client: HttpClient;
   private isRefreshingAccessToken: boolean;
-  private socket?: ReconnectingWebsocket;
+  private readonly socket: ReconnectingWebsocket;
 
   constructor(baseUrl: string, client: HttpClient) {
     super();
@@ -57,6 +57,7 @@ export class WebSocketClient extends EventEmitter {
     this.baseUrl = baseUrl;
     this.client = client;
     this.isRefreshingAccessToken = false;
+    this.socket = new ReconnectingWebsocket(this.onReconnect);
 
     this.logger = logdown('@wireapp/api-client/tcp/WebSocketClient', {
       logger: console,
@@ -82,13 +83,20 @@ export class WebSocketClient extends EventEmitter {
     this.emit(WebSocketTopic.ON_ONLINE);
   };
 
+  private readonly onClose = (event: CloseEvent) => {
+    this.emit(WebSocketTopic.ON_CLOSE);
+    this.emit(WebSocketTopic.ON_OFFLINE);
+  };
+
   public async connect(clientId?: string): Promise<WebSocketClient> {
     this.clientId = clientId;
-    this.socket = new ReconnectingWebsocket(this.onReconnect);
 
     this.socket.setOnMessage(this.onMessage);
     this.socket.setOnError(this.onError);
     this.socket.setOnOpen(this.onOpen);
+    this.socket.setOnClose(this.onClose);
+
+    this.socket.connect();
     return this;
   }
 
@@ -116,7 +124,7 @@ export class WebSocketClient extends EventEmitter {
     }
   }
 
-  public disconnect(reason = 'Unknown reason', keepClosed = true): void {
+  public disconnect(reason?: string, keepClosed = true): void {
     if (this.socket) {
       this.socket.disconnect(reason, keepClosed);
     }
