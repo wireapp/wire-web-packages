@@ -18,8 +18,9 @@
  */
 
 import {ClientClassification} from './ClientClassification';
+import {ClientType} from './ClientType';
 
-export interface RegisteredClient {
+export interface UpdatedClient {
   /** The IP address from which the client was registered */
   address?: string;
   class: ClientClassification;
@@ -32,5 +33,10 @@ export interface RegisteredClient {
   model?: string;
   /** An ISO 8601 Date string */
   time: string;
-  type: 'permanent' | 'temporary';
+  type: ClientType.PERMANENT | ClientType.TEMPORARY;
 }
+
+export type RegisteredClient = UpdatedClient & {
+  /** The cookie label */
+  cookie: string;
+};
