@@ -24,8 +24,6 @@ export interface UpdatedClient {
   /** The IP address from which the client was registered */
   address?: string;
   class: ClientClassification;
-  /** The cookie label */
-  cookie: string;
   /** The client ID */
   id: string;
   label?: string;

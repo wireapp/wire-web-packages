@@ -127,13 +127,13 @@ export interface ConversationOtrMessageAddEvent extends ConversationEvent {
 
 export interface ConversationOtrMessageAddNotification {
   conversation: string;
-  time: string;
   data: {
-    text: string;
-    sender: string;
     recipient: string;
+    sender: string;
+    text: string;
   };
   from: string;
+  time: string;
   type: CONVERSATION_EVENT.OTR_MESSAGE_ADD;
 }
 

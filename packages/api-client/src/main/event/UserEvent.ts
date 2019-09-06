@@ -127,10 +127,10 @@ export interface UserUpdateEvent extends UserEvent {
 }
 
 export interface UserUpdateNotification {
-  user: {
-    picture?: Picture[];
-    id: string;
-    assets?: UserAsset[];
-  };
   type: USER_EVENT.UPDATE;
+  user: {
+    assets?: UserAsset[];
+    id: string;
+    picture?: Picture[];
+  };
 }
