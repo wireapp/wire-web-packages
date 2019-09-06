@@ -120,6 +120,7 @@ export class WebSocketClient extends EventEmitter {
       if (data === PingMessage.PONG) {
         this.logger.debug('Received pong from WebSocket');
         if (this.hasUnansweredPing) {
+          this.shouldSendPing = true;
           this.emit(WebSocketTopic.ON_ONLINE);
           this.hasUnansweredPing = false;
         }
@@ -141,7 +142,7 @@ export class WebSocketClient extends EventEmitter {
         this.socket.binaryType = 'arraybuffer';
       }
 
-      this.logger.info(`Connected WebSocket to "${this.buildWebSocketUrl()}"`);
+      this.logger.info(`Connected WebSocket to "${this.baseUrl}"`);
       this.pingInterval = setInterval(this.sendPing, WebSocketClient.CONFIG.PING_INTERVAL);
 
       this.emit(WebSocketTopic.ON_ONLINE);
@@ -200,6 +201,7 @@ export class WebSocketClient extends EventEmitter {
         this.emit(WebSocketTopic.ON_OFFLINE);
       }
       this.hasUnansweredPing = true;
+      this.logger.debug('Sending ping to WebSocket');
       this.socket.send(PingMessage.PING);
     }
   };
