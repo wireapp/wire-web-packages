@@ -24,16 +24,13 @@ import {CloseEvent, ErrorEvent, Event} from 'reconnecting-websocket';
 import {InvalidTokenError} from '../auth/';
 import {IncomingNotification} from '../conversation/';
 import {BackendErrorMapper, HttpClient, NetworkError} from '../http/';
-import {ReconnectingWebsocket} from './ReconnectingWebsocket';
+import {ReconnectingWebsocket, WEBSOCKET_STATE} from './ReconnectingWebsocket';
 
 export enum WebSocketTopic {
-  ON_OPEN = 'WebSocketTopic.ON_OPEN',
-  ON_CLOSE = 'WebSocketTopic.ON_CLOSE',
   ON_ERROR = 'WebSocketTopic.ON_ERROR',
   ON_INVALID_TOKEN = 'WebSocketTopic.ON_INVALID_TOKEN',
   ON_MESSAGE = 'WebSocketTopic.ON_MESSAGE',
-  ON_OFFLINE = 'WebSocketTopic.ON_OFFLINE',
-  ON_ONLINE = 'WebSocketTopic.ON_ONLINE',
+  ON_STATE_CHANGE = 'WebSocketTopic.ON_STATE_CHANGE',
 }
 
 export enum CloseEventCode {
@@ -50,6 +47,7 @@ export class WebSocketClient extends EventEmitter {
   public client: HttpClient;
   private isRefreshingAccessToken: boolean;
   private readonly socket: ReconnectingWebsocket;
+  private websocketState: WEBSOCKET_STATE;
 
   constructor(baseUrl: string, client: HttpClient) {
     super();
@@ -58,11 +56,19 @@ export class WebSocketClient extends EventEmitter {
     this.client = client;
     this.isRefreshingAccessToken = false;
     this.socket = new ReconnectingWebsocket(this.onReconnect);
+    this.websocketState = this.socket.getState();
 
     this.logger = logdown('@wireapp/api-client/tcp/WebSocketClient', {
       logger: console,
       markdown: false,
     });
+  }
+
+  private onStateChange(newState: WEBSOCKET_STATE): void {
+    if (newState !== this.websocketState) {
+      this.websocketState = newState;
+      this.emit(WebSocketTopic.ON_STATE_CHANGE, this.websocketState);
+    }
   }
 
   private readonly onMessage = (data: string) => {
@@ -71,21 +77,22 @@ export class WebSocketClient extends EventEmitter {
   };
 
   private readonly onError = async (error: ErrorEvent) => {
+    this.onStateChange(this.socket.getState());
+    this.emit(WebSocketTopic.ON_ERROR, error);
     await this.refreshAccessToken();
   };
 
   private readonly onReconnect = () => {
+    this.onStateChange(this.socket.getState());
     return this.buildWebSocketUrl();
   };
 
   private readonly onOpen = (event: Event) => {
-    this.emit(WebSocketTopic.ON_OPEN);
-    this.emit(WebSocketTopic.ON_ONLINE);
+    this.onStateChange(this.socket.getState());
   };
 
   private readonly onClose = (event: CloseEvent) => {
-    this.emit(WebSocketTopic.ON_CLOSE);
-    this.emit(WebSocketTopic.ON_OFFLINE);
+    this.onStateChange(this.socket.getState());
   };
 
   public async connect(clientId?: string): Promise<WebSocketClient> {

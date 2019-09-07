@@ -32,6 +32,13 @@ export enum CloseEventCode {
   UNSUPPORTED_DATA = 1003,
 }
 
+export enum WEBSOCKET_STATE {
+  CONNECTING = 0,
+  OPEN = 1,
+  CLOSING = 2,
+  CLOSED = 3,
+}
+
 export enum PingMessage {
   PING = 'ping',
   PONG = 'pong',
@@ -39,7 +46,7 @@ export enum PingMessage {
 
 export class ReconnectingWebsocket {
   private static readonly CONFIG = {
-    PING_INTERVAL: TimeUtil.TimeInMillis.SECOND * 10,
+    PING_INTERVAL: TimeUtil.TimeInMillis.SECOND * 5,
   };
 
   private static readonly RECONNECTING_OPTIONS: Options = {
@@ -130,6 +137,26 @@ export class ReconnectingWebsocket {
     if (this.socket) {
       this.socket.send(message);
     }
+  }
+
+  public getState(): WEBSOCKET_STATE {
+    if (this.socket) {
+      switch (this.socket.readyState) {
+        case WEBSOCKET_STATE.CLOSED: {
+          return WEBSOCKET_STATE.CLOSED;
+        }
+        case WEBSOCKET_STATE.CLOSING: {
+          return WEBSOCKET_STATE.CLOSING;
+        }
+        case WEBSOCKET_STATE.CONNECTING: {
+          return WEBSOCKET_STATE.CONNECTING;
+        }
+        case WEBSOCKET_STATE.OPEN: {
+          return WEBSOCKET_STATE.OPEN;
+        }
+      }
+    }
+    return WEBSOCKET_STATE.CLOSED;
   }
 
   public disconnect(reason = 'Closed by client', keepClosed = true): void {
