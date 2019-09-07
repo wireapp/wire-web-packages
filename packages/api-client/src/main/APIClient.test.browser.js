@@ -41,7 +41,7 @@ describe('Client', () => {
       const socket = await promise;
 
       expect(socket).toBeDefined();
-      apiClient.transport.ws.socket.onmessage(message);
+      apiClient.transport.ws.socket.internalOnMessage(message);
     });
   });
 });
