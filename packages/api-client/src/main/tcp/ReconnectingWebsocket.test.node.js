@@ -78,19 +78,6 @@ describe('ReconnectingWebsocket', () => {
     RWS.connect();
   });
 
-  it('sends ping messages', async done => {
-    const RWS = new ReconnectingWebsocket(() => WEBSOCKET_URL);
-    RWS.setOnMessage(data => {
-      expect(JSON.parse(data)).toEqual({fromServer: 'Echo: ping'});
-      RWS.disconnect();
-    });
-    RWS.setOnClose(event => {
-      expect(event.wasClean).toBe(true);
-      done();
-    });
-    RWS.connect();
-  }, 10000);
-
   it('closes the connection without reconnecting when server terminates the connection', async done => {
     const onReconnect = jasmine.createSpy().and.returnValue(WEBSOCKET_URL);
     const RWS = new ReconnectingWebsocket(onReconnect);
