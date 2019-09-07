@@ -39,7 +39,7 @@ export enum PingMessage {
 
 export class ReconnectingWebsocket {
   private static readonly CONFIG = {
-    PING_INTERVAL: TimeUtil.TimeInMillis.SECOND * 5,
+    PING_INTERVAL: TimeUtil.TimeInMillis.SECOND * 10,
   };
 
   private static readonly RECONNECTING_OPTIONS: Options = {
@@ -147,7 +147,12 @@ export class ReconnectingWebsocket {
 
   private startPinging(): void {
     this.hasUnansweredPing = false;
-    this.pingInterval = setInterval(this.sendPing, ReconnectingWebsocket.CONFIG.PING_INTERVAL);
+    if (this.pingInterval) {
+      this.stopPinging();
+      this.hasUnansweredPing = false;
+    } else {
+      this.pingInterval = setInterval(this.sendPing, ReconnectingWebsocket.CONFIG.PING_INTERVAL);
+    }
   }
 
   private stopPinging(): void {
@@ -161,6 +166,7 @@ export class ReconnectingWebsocket {
       if (this.hasUnansweredPing) {
         this.logger.warn('Ping interval check failed');
         this.stopPinging();
+        return;
       }
       this.hasUnansweredPing = true;
       this.socket.send(PingMessage.PING);
