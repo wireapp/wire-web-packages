@@ -34,7 +34,7 @@ const fakeHttpClient = {
   refreshAccessToken: () => Promise.resolve(accessTokenPayload),
 };
 
-fdescribe('WebSocketClient', () => {
+describe('WebSocketClient', () => {
   describe('handler', () => {
     it('calls "onOpen" when WebSocket opens', async () => {
       const websocketClient = new WebSocketClient('url', fakeHttpClient);
