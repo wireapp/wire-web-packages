@@ -64,7 +64,7 @@ describe('ReconnectingWebsocket', () => {
     }
   });
 
-  it('calls "onReconnect", "onOpen" and "onClose"', async done => {
+  it('calls "onReconnect", "onOpen" and "onClose"', done => {
     const onReconnect = jasmine.createSpy().and.returnValue(WEBSOCKET_URL);
     const RWS = new ReconnectingWebsocket(onReconnect);
     RWS.setOnOpen(() => {
