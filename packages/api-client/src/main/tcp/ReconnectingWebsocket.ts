@@ -120,20 +120,7 @@ export class ReconnectingWebsocket {
 
   public getState(): WEBSOCKET_STATE {
     if (this.socket) {
-      switch (this.socket.readyState) {
-        case WEBSOCKET_STATE.CLOSED: {
-          return WEBSOCKET_STATE.CLOSED;
-        }
-        case WEBSOCKET_STATE.CLOSING: {
-          return WEBSOCKET_STATE.CLOSING;
-        }
-        case WEBSOCKET_STATE.CONNECTING: {
-          return WEBSOCKET_STATE.CONNECTING;
-        }
-        case WEBSOCKET_STATE.OPEN: {
-          return WEBSOCKET_STATE.OPEN;
-        }
-      }
+      return this.socket.readyState;
     }
     return WEBSOCKET_STATE.CLOSED;
   }
