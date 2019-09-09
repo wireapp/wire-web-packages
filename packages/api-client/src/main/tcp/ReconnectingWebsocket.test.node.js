@@ -97,7 +97,7 @@ describe('ReconnectingWebsocket', () => {
    * Note that on a real interruption of the connection the ReconnectingWebsocket will not call "onClose" and "onOpen" again
    * but it will call "onReconnect" again. So this test checks at least the second call of "onReconnect".
    */
-  it('reconnects', async done => {
+  it('reconnects', done => {
     let reconnectCalls = 0;
     const onReconnect = jasmine.createSpy().and.returnValue(WEBSOCKET_URL);
     const RWS = new ReconnectingWebsocket(onReconnect);
