@@ -39,7 +39,15 @@ export enum WEBSOCKET_STATE {
   CLOSED = 3,
 }
 
+export enum PingMessage {
+  PING = 'ping',
+  PONG = 'pong',
+}
+
 export class ReconnectingWebsocket {
+  private static readonly CONFIG = {
+    PING_INTERVAL: TimeUtil.TimeInMillis.SECOND * 20,
+  };
   private static readonly RECONNECTING_OPTIONS: Options = {
     WebSocket: typeof window !== 'undefined' ? WebSocket : NodeWebSocket,
     connectionTimeout: TimeUtil.TimeInMillis.SECOND * 4,
@@ -52,6 +60,8 @@ export class ReconnectingWebsocket {
 
   private readonly logger: logdown.Logger;
   private socket?: RWS;
+  private pingInterval?: NodeJS.Timeout;
+  private hasUnansweredPing: boolean;
 
   private onOpen?: (event: Event) => void;
   private onMessage?: (data: string) => void;
@@ -63,6 +73,8 @@ export class ReconnectingWebsocket {
       logger: console,
       markdown: false,
     });
+
+    this.hasUnansweredPing = false;
   }
 
   private readonly internalOnError = (error: ErrorEvent) => {
@@ -76,8 +88,13 @@ export class ReconnectingWebsocket {
     this.logger.debug('Incoming message', event);
 
     const data = buffer.bufferToString(event.data);
-    if (this.onMessage) {
-      this.onMessage(data);
+    if (data === PingMessage.PONG) {
+      this.logger.debug('Received pong from WebSocket');
+      this.hasUnansweredPing = false;
+    } else {
+      if (this.onMessage) {
+        this.onMessage(data);
+      }
     }
   };
 
@@ -93,11 +110,15 @@ export class ReconnectingWebsocket {
 
   private readonly internalOnReconnect = (): string => {
     this.logger.debug('Connecting to WebSocket');
+    // The ping is needed to keep the connection alive as long as possible.
+    // Otherwise the connection would be closed after 1 min of inactivity and re-established.
+    this.startPinging();
     return this.onReconnect();
   };
 
   private readonly internalOnClose = (event: CloseEvent) => {
     this.logger.debug('WebSocket closed', event);
+    this.stopPinging();
     if (this.onClose) {
       this.onClose(event);
     }
@@ -117,6 +138,30 @@ export class ReconnectingWebsocket {
       this.socket.send(message);
     }
   }
+
+  private startPinging(): void {
+    this.stopPinging();
+    this.hasUnansweredPing = false;
+    this.pingInterval = setInterval(this.sendPing, ReconnectingWebsocket.CONFIG.PING_INTERVAL);
+  }
+
+  private stopPinging(): void {
+    if (this.pingInterval) {
+      clearInterval(this.pingInterval);
+    }
+  }
+
+  private readonly sendPing = (): void => {
+    if (this.socket) {
+      if (this.hasUnansweredPing) {
+        this.logger.warn('Ping interval check failed');
+        this.stopPinging();
+        return;
+      }
+      this.hasUnansweredPing = true;
+      this.send(PingMessage.PING);
+    }
+  };
 
   public getState(): WEBSOCKET_STATE {
     if (this.socket) {

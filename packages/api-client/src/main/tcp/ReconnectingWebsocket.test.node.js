@@ -121,4 +121,17 @@ describe('ReconnectingWebsocket', () => {
       }
     });
   }, 2000);
+
+  it('sends ping messages', done => {
+    const RWS = new ReconnectingWebsocket(() => WEBSOCKET_URL);
+    RWS.setOnMessage(data => {
+      expect(JSON.parse(data)).toEqual({fromServer: 'Echo: ping'});
+      RWS.disconnect();
+    });
+    RWS.setOnClose(event => {
+      expect(event.wasClean).toBe(true);
+      done();
+    });
+    RWS.connect();
+  }, 30000);
 });
