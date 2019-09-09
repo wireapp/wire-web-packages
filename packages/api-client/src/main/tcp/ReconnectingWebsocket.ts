@@ -26,8 +26,8 @@ import {CloseEvent, ErrorEvent, Event} from 'reconnecting-websocket/dist/events'
 import * as buffer from '../shims/node/buffer';
 
 export enum CloseEventCode {
-  GOING_AWAY = 1001,
   NORMAL_CLOSURE = 1000,
+  GOING_AWAY = 1001,
   PROTOCOL_ERROR = 1002,
   UNSUPPORTED_DATA = 1003,
 }
@@ -145,12 +145,15 @@ export class ReconnectingWebsocket {
   public setOnOpen(onOpen: (event: Event) => void): void {
     this.onOpen = onOpen;
   }
+
   public setOnMessage(onMessage: (data: string) => void): void {
     this.onMessage = onMessage;
   }
+
   public setOnError(onError: (error: ErrorEvent) => void): void {
     this.onError = onError;
   }
+
   public setOnClose(onClose: (event: CloseEvent) => void): void {
     this.onClose = onClose;
   }
