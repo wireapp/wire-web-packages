@@ -78,7 +78,7 @@ describe('ReconnectingWebsocket', () => {
     RWS.connect();
   });
 
-  it('closes the connection without reconnecting when server terminates the connection', async done => {
+  it('closes the connection without reconnecting when server terminates the connection', done => {
     const onReconnect = jasmine.createSpy().and.returnValue(WEBSOCKET_URL);
     const RWS = new ReconnectingWebsocket(onReconnect);
     RWS.setOnOpen(() => {
