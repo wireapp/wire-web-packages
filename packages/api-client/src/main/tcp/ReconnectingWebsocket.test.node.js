@@ -67,16 +67,17 @@ function startEchoServer() {
 }
 
 describe('ReconnectingWebsocket', () => {
+  let server;
   const getServerAddress = () => `http://127.0.0.1:${this.server.address().port}`;
 
   beforeEach(() => {
-    this.server = startEchoServer();
+    server = startEchoServer();
   });
 
   afterEach(done => {
-    if (this.server) {
-      this.server.close(() => {
-        this.server = undefined;
+    if (server) {
+      server.close(() => {
+        server = undefined;
         done();
       });
     }
