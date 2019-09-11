@@ -85,21 +85,6 @@ describe('WebSocketClient', () => {
       expect(refreshTokenSpy.calls.count()).toBe(1);
     });
 
-    it('emits invalid token message', async done => {
-      const websocketClient = new WebSocketClient('url', invalidTokenHttpClient);
-      const fakeSocket = {
-        close: () => {},
-      };
-      const socket = websocketClient.socket;
-      spyOn(socket, 'getReconnectingWebsocket').and.returnValue(fakeSocket);
-
-      await websocketClient.connect();
-
-      websocketClient.on(WebSocketTopic.ON_INVALID_TOKEN, () => done());
-
-      fakeSocket.onerror(new Error('error'));
-    });
-
     it('calls "onMessage" when WebSocket received message', async () => {
       const message = 'hello';
       const websocketClient = new WebSocketClient('url', fakeHttpClient);
@@ -112,6 +97,23 @@ describe('WebSocketClient', () => {
       fakeSocket.onmessage({data: Buffer.from(JSON.stringify({message}), 'utf-8')});
 
       expect(onMessageSpy.calls.count()).toBe(1);
+    });
+  });
+
+  describe('refreshAccessToken', () => {
+    it('emits the correct message for invalid tokens', async done => {
+      const websocketClient = new WebSocketClient('url', invalidTokenHttpClient);
+      const fakeSocket = {
+        close: () => {},
+      };
+      const socket = websocketClient.socket;
+      spyOn(socket, 'getReconnectingWebsocket').and.returnValue(fakeSocket);
+
+      await websocketClient.connect();
+
+      websocketClient.on(WebSocketTopic.ON_INVALID_TOKEN, () => done());
+
+      fakeSocket.onerror(new Error('error'));
     });
   });
 });
