@@ -95,9 +95,7 @@ describe('WebSocketClient', () => {
 
       await websocketClient.connect();
 
-      websocketClient.on(WebSocketTopic.ON_INVALID_TOKEN, async () => {
-        done();
-      });
+      websocketClient.on(WebSocketTopic.ON_INVALID_TOKEN, () => done());
 
       fakeSocket.onerror(new Error('error'));
     });
