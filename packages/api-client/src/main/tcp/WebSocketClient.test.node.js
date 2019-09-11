@@ -17,7 +17,8 @@
  *
  */
 
-const {WebSocketClient} = require('@wireapp/api-client/dist/commonjs/tcp/WebSocketClient');
+const {WebSocketClient, WebSocketTopic} = require('@wireapp/api-client/dist/commonjs/tcp/WebSocketClient');
+const {InvalidTokenError} = require('@wireapp/api-client/dist/commonjs/auth/');
 
 const accessTokenPayload = {
   access_token:
@@ -32,6 +33,13 @@ const fakeHttpClient = {
     accessToken: accessTokenPayload,
   },
   refreshAccessToken: () => Promise.resolve(accessTokenPayload),
+};
+
+const invalidTokenHttpClient = {
+  accessTokenStore: {
+    accessToken: accessTokenPayload,
+  },
+  refreshAccessToken: () => Promise.reject(new InvalidTokenError('Invalid token')),
 };
 
 describe('WebSocketClient', () => {
@@ -75,6 +83,23 @@ describe('WebSocketClient', () => {
 
       expect(onErrorSpy.calls.count()).toBe(1);
       expect(refreshTokenSpy.calls.count()).toBe(1);
+    });
+
+    it('emits invalid token message', async done => {
+      const websocketClient = new WebSocketClient('url', invalidTokenHttpClient);
+      const fakeSocket = {
+        close: () => {},
+      };
+      const socket = websocketClient.socket;
+      spyOn(socket, 'getReconnectingWebsocket').and.returnValue(fakeSocket);
+
+      await websocketClient.connect();
+
+      websocketClient.on(WebSocketTopic.ON_INVALID_TOKEN, async () => {
+        done();
+      });
+
+      fakeSocket.onerror(new Error('error'));
     });
 
     it('calls "onMessage" when WebSocket received message', async () => {
