@@ -16,6 +16,7 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
+
 import {APIClient} from '@wireapp/api-client';
 import {AuthAPI, Context} from '@wireapp/api-client/dist/commonjs/auth';
 import {ClientAPI, ClientType} from '@wireapp/api-client/dist/commonjs/client';
@@ -78,7 +79,7 @@ describe('Account', () => {
     nock(MOCK_BACKEND.rest)
       .post(AuthAPI.URL.LOGIN, body => body.email && body.password)
       .query(() => true)
-      .reply((context, uri, body: any) => {
+      .reply((uri, body: any) => {
         if (body.password === 'wrong') {
           return [
             StatusCode.FORBIDDEN,
