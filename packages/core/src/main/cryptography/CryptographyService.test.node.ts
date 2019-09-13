@@ -23,6 +23,7 @@ import {CRUDEngine, MemoryEngine} from '@wireapp/store-engine';
 import * as bazinga64 from 'bazinga64';
 import * as crypto from 'crypto';
 import {promisify} from 'util';
+
 import * as CryptographyHelper from '../test/CryptographyHelper';
 import {decryptAsset, encryptAsset} from './AssetCryptography.node';
 import {CryptographyService} from './CryptographyService';
