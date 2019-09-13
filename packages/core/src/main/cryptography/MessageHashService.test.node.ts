@@ -157,7 +157,7 @@ describe('MessageHashService', () => {
     it('correctly creates another asset bytes buffer.', () => {
       const expectedHashValue = '2235f5b6c00d9b0917675399d0314c8401f0525457b00aa54a38998ab93b90d6';
 
-      const content = {
+      const content: AvailableMessageContent = {
         uploaded: {
           assetId: '3-3-3-82a62735',
           otrKey: new Uint8Array(),
