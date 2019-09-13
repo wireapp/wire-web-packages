@@ -14,7 +14,7 @@
     "chai": "4.2.0",
     "jasmine": "3.4.0",
     "rimraf": "3.0.0",
-    "typescript": "3.6.2",
+    "typescript": "3.6.3",
     "webpack": "4.39.3",
     "webpack-cli": "3.3.8"
   },
@@ -35,5 +35,5 @@
     "test:project": "yarn dist && yarn test",
     "test:node": "jasmine"
   },
-  "version": "9.4.7"
+  "version": "9.4.8"
 }

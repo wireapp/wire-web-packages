@@ -5,11 +5,11 @@
   "dependencies": {
     "@types/long": "4.0.0",
     "@types/node": "~10",
-    "@wireapp/api-client": "6.5.2",
-    "@wireapp/cryptobox": "11.4.33",
+    "@wireapp/api-client": "6.5.3",
+    "@wireapp/cryptobox": "11.4.34",
     "@wireapp/protocol-messaging": "1.24.2",
-    "@wireapp/store-engine": "3.9.11",
-    "bazinga64": "5.5.16",
+    "@wireapp/store-engine": "3.9.12",
+    "bazinga64": "5.5.17",
     "hash.js": "1.1.7",
     "logdown": "3.2.8",
     "protobufjs": "6.8.8",
@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@types/jasmine": "3.4.0",
-    "@wireapp/commons": "2.2.12",
+    "@wireapp/commons": "2.2.13",
     "commander": "3.0.1",
     "cross-env": "5.2.1",
     "dotenv": "8.1.0",
@@ -31,12 +31,12 @@
     "karma-sourcemap-loader": "0.3.7",
     "karma-spec-reporter": "0.0.32",
     "mock-socket": "9.0.0",
-    "nock": "11.3.3",
+    "nock": "11.3.4",
     "nyc": "14.1.1",
     "rimraf": "3.0.0",
     "terser-webpack-plugin": "2.0.1",
     "ts-node": "8.3.0",
-    "typescript": "3.6.2",
+    "typescript": "3.6.3",
     "webpack": "4.39.3",
     "webpack-cli": "3.3.8"
   },
@@ -64,5 +64,5 @@
     "test:node": "cross-env NODE_ENV=test nyc jasmine --config=jasmine.json"
   },
   "types": "./dist/Account.d.ts",
-  "version": "12.17.65"
+  "version": "12.17.66"
 }
