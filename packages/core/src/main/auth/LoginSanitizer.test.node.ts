@@ -18,6 +18,7 @@
  */
 import {LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
 import {ClientType} from '@wireapp/api-client/dist/commonjs/client';
+
 import {LoginSanitizer} from './LoginSanitizer';
 
 describe('LoginSanitizer', () => {
