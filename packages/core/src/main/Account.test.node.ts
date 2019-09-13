@@ -46,6 +46,7 @@ import {GenericMessage, Text} from '@wireapp/protocol-messaging';
 import {MemoryEngine} from '@wireapp/store-engine';
 import {Server as MockSocketServer} from 'mock-socket';
 import nock = require('nock');
+
 import {Account} from './Account';
 import {PayloadBundle, PayloadBundleState, PayloadBundleType} from './conversation';
 
