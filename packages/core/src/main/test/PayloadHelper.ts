@@ -16,7 +16,8 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-const faker = require('faker');
+
+import faker = require('faker');
 import UUID from 'pure-uuid';
 
 export function getUUID(): string {
