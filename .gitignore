@@ -1,7 +1,7 @@
 *.env
 *hot-update.js*
 .awcache/
-.DS_Store/
+.DS_Store
 .idea/
 .nyc_output/
 .tmp/
