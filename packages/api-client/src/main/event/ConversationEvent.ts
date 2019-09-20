@@ -128,7 +128,7 @@ export interface ConversationMemberJoinEvent extends ConversationEvent {
 export interface ConversationMemberJoinNotification {
   conversation: string;
   data: {
-    user_ids: ['6f88716b-1383-44da-9d57-45b51cc64d90'];
+    user_ids: string[];
   };
   from: string;
   time: string;
