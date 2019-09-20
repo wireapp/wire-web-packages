@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@types/chai": "4.2.2",
+    "@types/chai": "4.2.3",
     "@types/ed2curve": "0.2.2",
     "@types/node": "~10",
     "@wireapp/cbor": "4.3.15",
@@ -16,7 +16,7 @@
     "rimraf": "3.0.0",
     "typescript": "3.6.3",
     "webpack": "4.40.2",
-    "webpack-cli": "3.3.8"
+    "webpack-cli": "3.3.9"
   },
   "files": [
     "dist"

@@ -5,7 +5,7 @@
     "bazinga64": "5.5.18",
     "color": "3.1.2",
     "emotion-normalize": "10.1.0",
-    "emotion-theming": "10.0.18",
+    "emotion-theming": "10.0.19",
     "react-transition-group": "4.3.0"
   },
   "devDependencies": {
@@ -21,7 +21,7 @@
     "@types/webpack-env": "1.14.0",
     "babel-jest": "24.9.0",
     "babel-loader": "8.0.6",
-    "babel-plugin-emotion": "10.0.17",
+    "babel-plugin-emotion": "10.0.19",
     "jest": "24.9.0",
     "jest-emotion": "10.0.17",
     "react": "16.9.0",
@@ -32,7 +32,7 @@
     "rimraf": "3.0.0",
     "typescript": "3.6.3",
     "webpack": "4.40.2",
-    "webpack-cli": "3.3.8",
+    "webpack-cli": "3.3.9",
     "webpack-dev-server": "3.8.1",
     "webpack-env": "0.8.0"
   },
