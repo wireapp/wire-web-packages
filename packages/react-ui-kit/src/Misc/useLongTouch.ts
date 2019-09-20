@@ -17,15 +17,13 @@
  *
  */
 
-import {useEffect, useRef} from 'react';
+import {useEffect} from 'react';
 import {useTimeout} from './useTimeout';
 
-const useLongTouch = <T extends HTMLElement>(onLongTouch: () => void, touchDuration = 800) => {
-  const ref = useRef<T>();
+const useLongTouch = (element: HTMLElement | null, onLongTouch: () => void, touchDuration = 800) => {
   const {startTimeout, removeTimeout} = useTimeout(onLongTouch, touchDuration);
 
   useEffect(() => {
-    const element = ref.current;
     if (!element) {
       return () => {};
     }
@@ -47,8 +45,6 @@ const useLongTouch = <T extends HTMLElement>(onLongTouch: () => void, touchDurat
       element.removeEventListener('touchend', onTouchEnd);
     };
   }, [onLongTouch, touchDuration]);
-
-  return ref;
 };
 
 export {useLongTouch};
