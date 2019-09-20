@@ -23,6 +23,7 @@ import React from 'react';
 import {SVGIconProps} from '../Icon/SVGIcon';
 import {COLOR} from '../Identity';
 import {Theme} from '../Layout';
+import {childrenWithDefaultProps} from '../Misc/';
 import {ButtonProps, buttonStyle, filterButtonProps} from './Button';
 
 export interface RoundIconButtonProps<T = HTMLButtonElement> extends ButtonProps<T> {}
@@ -46,18 +47,7 @@ export const roundIconButtonStyle: <T>(
 
 export const RoundIconButton: React.SFC<RoundIconButtonProps> = ({children, ...props}) => (
   <button css={theme => roundIconButtonStyle(theme, props)} {...filterButtonProps(props)}>
-    {React.Children.map<React.ReactNode, React.ReactNode>(children, node => {
-      if (typeof node === 'string') {
-        return node;
-      }
-      if (!React.isValidElement<SVGIconProps>(node)) {
-        console.error('Invalid children', node);
-        return node;
-      }
-
-      const elementChild: React.ReactElement<SVGIconProps> = node;
-      return React.cloneElement<SVGIconProps>(elementChild, {color: COLOR.WHITE, ...elementChild.props});
-    })}
+    {childrenWithDefaultProps<SVGSVGElement, SVGIconProps>({children, defaultProps: {color: COLOR.WHITE}})}
   </button>
 );
 
