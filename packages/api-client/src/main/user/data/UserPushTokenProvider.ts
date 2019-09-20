@@ -18,7 +18,7 @@
  */
 
 /** @see https://github.com/wearezeta/backend-api-docs/wiki/API-User-PushTokens#transport */
-export enum UserPushToken {
+export enum UserPushTokenProvider {
   GCM = 'GCM',
   APNS = 'APNS',
   APNS_SANDBOX = 'APNS_SANDBOX',

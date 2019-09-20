@@ -17,11 +17,11 @@
  *
  */
 
-import {UserPushToken} from './UserPushToken';
+import {UserPushTokenProvider} from './UserPushTokenProvider';
 
 export interface UserPushRemoveData {
   app: string;
   client: string;
   token: string;
-  transport: UserPushToken;
+  transport: UserPushTokenProvider;
 }
