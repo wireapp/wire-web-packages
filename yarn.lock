@@ -3359,10 +3359,10 @@ braces@^3.0.1, braces@^3.0.2:
   dependencies:
     fill-range "^7.0.1"
 
-bro-fs@0.5.0:
-  version "0.5.0"
-  resolved "https://registry.npmjs.org/bro-fs/-/bro-fs-0.5.0.tgz#72bdca85057889c227dbb34c951cf4ba4312b851"
-  integrity sha512-4CCivBcRHCWebN+sZrN7nMxGHjaFTEWsVi9GIoI7eWF+FjO4s26gwddhZNg0eya3x71tdMiyOEm2TfnXcf3vWQ==
+bro-fs@0.6.0:
+  version "0.6.0"
+  resolved "https://registry.npmjs.org/bro-fs/-/bro-fs-0.6.0.tgz#11aeb64201334e4bc653f1d86282fe805fd2a45f"
+  integrity sha512-LQh1uAZoRL44CrEEFzuI+gvUhKzQWZt6U0w0dKxP7/vPtT6B10cf52H8Lco8TG2SFqDAhPtVXONrj1tDxaFWFA==
 
 brorand@^1.0.1:
   version "1.1.0"
