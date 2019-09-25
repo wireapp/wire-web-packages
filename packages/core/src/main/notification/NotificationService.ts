@@ -19,7 +19,7 @@
 
 import {APIClient} from '@wireapp/api-client';
 import {Notification, NotificationPayload} from '@wireapp/api-client/dist/commonjs/notification/';
-import {CRUDEngine} from '@wireapp/store-engine';
+import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import {NotificationBackendRepository} from './NotificationBackendRepository';
 import {NotificationDatabaseRepository} from './NotificationDatabaseRepository';
 
@@ -29,9 +29,9 @@ export class NotificationService {
   private readonly database: NotificationDatabaseRepository;
   private readonly storeEngine: CRUDEngine;
 
-  constructor(apiClient: APIClient, storeEngine: CRUDEngine) {
+  constructor(apiClient: APIClient) {
     this.apiClient = apiClient;
-    this.storeEngine = storeEngine;
+    this.storeEngine = apiClient.config.store;
     this.backend = new NotificationBackendRepository(this.apiClient);
     this.database = new NotificationDatabaseRepository(this.storeEngine);
   }
@@ -57,7 +57,10 @@ export class NotificationService {
     try {
       databaseLastEventDate = await this.database.getLastEventDate();
     } catch (error) {
-      return this.database.createLastEventDate(eventDate);
+      if (error instanceof StoreEngineError.RecordNotFoundError) {
+        return this.database.createLastEventDate(eventDate);
+      }
+      throw error;
     }
 
     if (databaseLastEventDate && eventDate > databaseLastEventDate) {
