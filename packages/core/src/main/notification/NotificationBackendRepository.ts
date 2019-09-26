@@ -18,28 +18,12 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {NOTIFICATION_SIZE_MAXIMUM, Notification} from '@wireapp/api-client/dist/commonjs/notification/';
+import {Notification} from '@wireapp/api-client/dist/commonjs/notification/';
 
 export class NotificationBackendRepository {
   constructor(private readonly apiClient: APIClient) {}
 
   public async getAllNotifications(clientId?: string, lastNotificationId?: string): Promise<Notification[]> {
-    const notifications: Notification[] = [];
-
-    const collectNotifications = async (lastNotificationId?: string): Promise<Notification[]> => {
-      const notificationList = await this.apiClient.notification.api.getNotifications(
-        clientId,
-        NOTIFICATION_SIZE_MAXIMUM,
-        lastNotificationId,
-      );
-      const newNotifications = notificationList.notifications;
-      if (newNotifications.length > 0) {
-        lastNotificationId = newNotifications[newNotifications.length - 1].id;
-        notifications.push(...newNotifications);
-      }
-      return notificationList.has_more ? collectNotifications(lastNotificationId) : notifications;
-    };
-
     return this.apiClient.getAllNotifications(clientId, lastNotificationId);
   }
 
