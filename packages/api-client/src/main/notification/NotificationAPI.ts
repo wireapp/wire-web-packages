@@ -76,19 +76,30 @@ export class NotificationAPI {
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/push/fetchNotifications
    */
   public async getAllNotifications(clientId?: string, lastNotificationId?: string): Promise<Notification[]> {
-    const notifications: Notification[] = [];
+    let notificationList: Notification[] = [];
 
-    const collectNotifications = async (lastNotificationId?: string): Promise<Notification[]> => {
-      const notificationList = await this.getNotifications(clientId, NOTIFICATION_SIZE_MAXIMUM, lastNotificationId);
-      const newNotifications = notificationList.notifications;
-      if (newNotifications.length > 0) {
-        lastNotificationId = newNotifications[newNotifications.length - 1].id;
-        notifications.push(...newNotifications);
+    const getNotificationChunks = async (clientId?: string, lastNotificationId?: string): Promise<Notification[]> => {
+      const {notifications, has_more} = await this.getNotifications(
+        clientId,
+        NOTIFICATION_SIZE_MAXIMUM,
+        lastNotificationId,
+      );
+
+      if (notifications.length) {
+        notificationList = notificationList.concat(notifications);
       }
-      return notificationList.has_more ? collectNotifications(lastNotificationId) : notifications;
+
+      if (has_more) {
+        const lastNotification = notifications[notifications.length - 1];
+        if (lastNotification) {
+          return getNotificationChunks(clientId, lastNotification.id);
+        }
+      }
+
+      return notificationList;
     };
 
-    return collectNotifications(lastNotificationId);
+    return getNotificationChunks(lastNotificationId);
   }
 
   /**
