@@ -40,7 +40,7 @@ export class NotificationBackendRepository {
       return notificationList.has_more ? collectNotifications(lastNotificationId) : notifications;
     };
 
-    return collectNotifications(lastNotificationId);
+    return this.apiClient.getAllNotifications(clientId, lastNotificationId);
   }
 
   public getLastNotification(clientId: string): Promise<Notification> {

@@ -215,9 +215,7 @@ export class Account extends EventEmitter {
 
     const loadedClient = await this.service!.client.getLocalClient();
     await this.apiClient.client.api.getClient(loadedClient.id);
-
     this.apiClient.context!.clientId = loadedClient.id;
-    this.service!.conversation.setClientID(loadedClient.id);
 
     return loadedClient;
   }
@@ -231,9 +229,6 @@ export class Account extends EventEmitter {
     }
     const registeredClient = await this.service.client.register(loginData, clientInfo);
     this.logger.log('Client is created');
-
-    this.apiClient.context!.clientId = registeredClient.id;
-    this.service!.conversation.setClientID(registeredClient.id);
 
     await this.service!.notification.initializeNotificationStream(registeredClient.id);
     await this.service!.client.synchronizeClients();
