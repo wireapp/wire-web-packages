@@ -100,6 +100,7 @@ export class Account extends EventEmitter {
     });
   }
 
+  // TODO should use api-clients getter
   get clientId(): string {
     if (this.apiClient.context && this.apiClient.context.clientId) {
       return this.apiClient.context.clientId;
@@ -107,6 +108,7 @@ export class Account extends EventEmitter {
     throw new Error(`No user context available. Please login first.`);
   }
 
+  // TODO should use api-clients getter (we should create one)
   get userId(): string {
     if (this.apiClient.context) {
       return this.apiClient.context.userId;
@@ -228,6 +230,7 @@ export class Account extends EventEmitter {
       throw new Error('Services are not set.');
     }
     const registeredClient = await this.service.client.register(loginData, clientInfo);
+    this.apiClient.context!.clientId = registeredClient.id;
     this.logger.log('Client is created');
 
     await this.service!.notification.initializeNotificationStream(registeredClient.id);
