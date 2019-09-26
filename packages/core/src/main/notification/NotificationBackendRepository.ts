@@ -24,7 +24,7 @@ export class NotificationBackendRepository {
   constructor(private readonly apiClient: APIClient) {}
 
   public async getAllNotifications(clientId?: string, lastNotificationId?: string): Promise<Notification[]> {
-    return this.apiClient.getAllNotifications(clientId, lastNotificationId);
+    return this.apiClient.notification.api.getAllNotifications(clientId, lastNotificationId);
   }
 
   public getLastNotification(clientId: string): Promise<Notification> {
