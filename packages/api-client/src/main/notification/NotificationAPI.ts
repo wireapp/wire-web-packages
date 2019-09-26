@@ -99,7 +99,7 @@ export class NotificationAPI {
       return notificationList;
     };
 
-    return getNotificationChunks(lastNotificationId);
+    return getNotificationChunks(clientId, lastNotificationId);
   }
 
   /**
