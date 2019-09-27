@@ -296,6 +296,14 @@ export class SQLeetEngine implements CRUDEngine {
     return primaryKey;
   }
 
+  async close(): Promise<void> {
+    await this.db.close();
+    const workerInstance = await this.db._getWorkerInstance();
+    if (workerInstance.terminate && typeof workerInstance.terminate == 'function') {
+      await workerInstance.terminate();
+    }
+  }
+
   async isSupported(): Promise<void> {
     if (typeof WebAssembly === 'object' && typeof WebAssembly.instantiate === 'function') {
       const module = new WebAssembly.Module(Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00));
