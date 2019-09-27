@@ -26,8 +26,8 @@ import {
   OTRRecipients,
   UserClients,
 } from '@wireapp/api-client/dist/commonjs/conversation/';
-import {ConversationMemberUpdateData} from '@wireapp/api-client/dist/commonjs/conversation/data/';
-import {CONVERSATION_TYPING, ConversationMemberLeaveEvent} from '@wireapp/api-client/dist/commonjs/event/';
+import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/dist/commonjs/conversation/data/';
+import {ConversationMemberLeaveEvent} from '@wireapp/api-client/dist/commonjs/event/';
 import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/';
 import {AxiosError} from 'axios';

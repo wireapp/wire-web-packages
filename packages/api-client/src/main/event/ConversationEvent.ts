@@ -22,9 +22,11 @@ import {
   ConversationCodeUpdateData,
   ConversationConnectRequestData,
   ConversationCreateData,
+  ConversationMemberJoinData,
   ConversationMemberUpdateData,
   ConversationMessageTimerUpdateData,
   ConversationOtrMessageAddData,
+  ConversationRenameData,
   ConversationTypingData,
 } from '../conversation/data/';
 
@@ -44,14 +46,24 @@ export enum CONVERSATION_EVENT {
   TYPING = 'conversation.typing',
 }
 
-export enum CONVERSATION_TYPING {
-  STARTED = 'started',
-  STOPPED = 'stopped',
-}
+export type ConversationEventData =
+  | ConversationAccessUpdateData
+  | ConversationCodeUpdateData
+  | ConversationConnectRequestData
+  | ConversationCreateData
+  | ConversationMemberJoinData
+  | ConversationMemberLeaveEvent
+  | ConversationMemberUpdateData
+  | ConversationMessageTimerUpdateData
+  | ConversationOtrMessageAddData
+  | ConversationRenameData
+  | ConversationTypingData
+  | null;
 
 export interface ConversationEvent {
   conversation: string;
-  data: {} | null;
+  data: ConversationEventData;
+
   from: string;
   time: string;
   type: CONVERSATION_EVENT;
@@ -88,16 +100,12 @@ export interface ConversationDeleteEvent extends ConversationEvent {
 }
 
 export interface ConversationMemberJoinEvent extends ConversationEvent {
-  data: {
-    user_ids: string[];
-  };
+  data: ConversationMemberJoinData;
   type: CONVERSATION_EVENT.MEMBER_JOIN;
 }
 
 export interface ConversationMemberLeaveEvent extends ConversationEvent {
-  data: {
-    user_ids: string[];
-  };
+  data: ConversationMemberLeaveEvent;
   type: CONVERSATION_EVENT.MEMBER_LEAVE;
 }
 
@@ -117,9 +125,7 @@ export interface ConversationOtrMessageAddEvent extends ConversationEvent {
 }
 
 export interface ConversationRenameEvent extends ConversationEvent {
-  data: {
-    name: string;
-  };
+  data: ConversationRenameData;
   type: CONVERSATION_EVENT.RENAME;
 }
 

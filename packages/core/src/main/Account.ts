@@ -21,11 +21,11 @@ import {APIClient} from '@wireapp/api-client';
 import {Context, LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
 import {ClientType, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
 import {
+  BackendEvent,
   CONVERSATION_EVENT,
   ConversationEvent,
   ConversationMessageTimerUpdateEvent,
   ConversationOtrMessageAddEvent,
-  IncomingEvent,
   USER_EVENT,
   UserClientAddEvent,
   UserClientRemoveEvent,
@@ -653,7 +653,7 @@ export class Account extends EventEmitter {
     }
   }
 
-  private async handleEvent(event: IncomingEvent): Promise<PayloadBundle | void> {
+  private async handleEvent(event: BackendEvent): Promise<PayloadBundle | void> {
     this.logger.log(`Handling event of type "${event.type}"`, event);
     const ENCRYPTED_EVENTS = [CONVERSATION_EVENT.OTR_MESSAGE_ADD];
     const META_EVENTS = [
