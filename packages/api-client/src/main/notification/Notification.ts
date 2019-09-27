@@ -17,11 +17,11 @@
  *
  */
 
-import {IncomingEvent} from '../event';
+import {BackendEvent} from '../event';
 
 export interface Notification {
   id: string;
-  payload: IncomingEvent[];
+  payload: BackendEvent[];
   /**
    * Whether the notification is transient, i.e. not stored in the notification queue.
    * The  transient` property is only set when notifications arrive through the WebSocket.

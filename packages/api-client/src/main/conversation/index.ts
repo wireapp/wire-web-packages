@@ -17,32 +17,27 @@
  *
  */
 
-export * from './AccessUpdate';
+export * from './data/ConversationAccessUpdateData';
 export * from './ClientMismatch';
 export * from './Conversation';
 export * from './ConversationAPI';
 export * from './ConversationCode';
 export * from './ConversationError';
-export * from './ConnectRequest';
-export * from './CodeUpdate';
+export * from './data/ConversationCodeUpdateData';
 export * from './ConversationIds';
 export * from './ConversationMembers';
-export * from './ConversationMessageTimerUpdate';
+export * from './data/ConversationMessageTimerUpdateData';
 export * from './Conversations';
 export * from './ConversationUpdate';
 export * from './Invite';
 export * from './Member';
-export * from './MemberLeave';
-export * from './MemberUpdate';
+export * from './data/ConversationMemberUpdateData';
 export * from './MutedStatus';
 export * from './NewConversation';
 export * from './NewOTRMessage';
-export * from './MemberJoin';
 export * from './OtherMember';
 export * from './OTRClientMap';
-export * from './OtrMessageAdd';
+export * from './data/ConversationOtrMessageAddData';
 export * from './OTRRecipients';
-export * from './Rename';
 export * from './ServiceRef';
-export * from './Typing';
 export * from './UserClients';

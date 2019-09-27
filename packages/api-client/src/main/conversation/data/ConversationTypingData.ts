@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2019 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,8 @@
  *
  */
 
-import {MutedStatus} from '../conversation/';
+import {CONVERSATION_TYPING} from '../../event';
 
-export interface MemberUpdate {
-  hidden_ref?: string;
-  hidden?: boolean;
-  otr_archived_ref?: string;
-  otr_archived?: boolean;
-  otr_muted_ref?: string | null;
-  otr_muted?: boolean | null;
-  otr_muted_status?: MutedStatus | null;
+export interface ConversationTypingData {
+  status: CONVERSATION_TYPING.STARTED | CONVERSATION_TYPING.STOPPED;
 }

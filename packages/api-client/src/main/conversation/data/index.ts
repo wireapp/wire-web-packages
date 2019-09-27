@@ -17,5 +17,11 @@
  *
  */
 
-export * from './ConversationMemberLeaveData';
+export * from './ConversationAccessUpdateData';
+export * from './ConversationCodeUpdateData';
 export * from './ConversationConnectRequestData';
+export * from './ConversationCreateData';
+export * from './ConversationMemberUpdateData';
+export * from './ConversationMessageTimerUpdateData';
+export * from './ConversationOtrMessageAddData';
+export * from './ConversationTypingData';
