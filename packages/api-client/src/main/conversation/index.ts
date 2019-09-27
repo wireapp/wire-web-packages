@@ -30,7 +30,6 @@ export * from './ConversationMembers';
 export * from './ConversationMessageTimerUpdate';
 export * from './Conversations';
 export * from './ConversationUpdate';
-export * from './IncomingNotification';
 export * from './Invite';
 export * from './Member';
 export * from './MemberLeave';

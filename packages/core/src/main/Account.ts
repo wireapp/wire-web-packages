@@ -20,7 +20,6 @@
 import {APIClient} from '@wireapp/api-client';
 import {Context, LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
 import {ClientType, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
-import {IncomingNotification} from '@wireapp/api-client/dist/commonjs/conversation/';
 import {
   CONVERSATION_EVENT,
   ConversationEvent,
@@ -41,6 +40,7 @@ import {error as StoreEngineError} from '@wireapp/store-engine';
 import EventEmitter from 'events';
 import logdown from 'logdown';
 
+import {Notification} from '@wireapp/api-client/dist/commonjs/notification';
 import {LoginSanitizer} from './auth/';
 import {BroadcastService} from './broadcast/';
 import {ClientInfo, ClientService} from './client/';
@@ -147,8 +147,8 @@ export class Account extends EventEmitter {
     await this.apiClient.login(loginData);
 
     if (initClient) {
-      const {isNewClient, localClient} = await this.initClient(loginData, clientInfo);
-      await this.handleNotificationStream(localClient.id, isNewClient);
+      await this.initClient(loginData, clientInfo);
+      await this.handleNotificationStream();
     }
 
     if (this.apiClient.context) {
@@ -158,16 +158,11 @@ export class Account extends EventEmitter {
     throw Error('Login failed.');
   }
 
-  private async handleNotificationStream(clientId: string, isNewClient: boolean): Promise<void> {
-    if (isNewClient) {
-      await this.service!.notification.initializeNotificationStream(clientId);
-    }
+  private async handleNotificationStream(): Promise<void> {
     const notifications = await this.service!.notification.getAllNotifications();
     for (const notification of notifications) {
-      await this.handleNotification(notification);
+      await this.handleNotification(notification).catch(error => this.logger.error(error));
     }
-    // NOTE only needed for webapp
-    await this.service!.notification.setLastEventDate(new Date());
   }
 
   public async initClient(
@@ -238,7 +233,7 @@ export class Account extends EventEmitter {
     this.apiClient.context!.clientId = registeredClient.id;
     this.logger.log('Client is created');
 
-    await this.service!.notification.initializeNotificationStream(registeredClient.id);
+    await this.service!.notification.initializeNotificationStream();
     await this.service!.client.synchronizeClients();
 
     return {isNewClient: true, localClient: registeredClient};
@@ -262,7 +257,7 @@ export class Account extends EventEmitter {
     this.apiClient.transport.ws.removeAllListeners(WebSocketTopic.ON_MESSAGE);
 
     if (notificationHandler) {
-      this.apiClient.transport.ws.on(WebSocketTopic.ON_MESSAGE, (notification: IncomingNotification) => {
+      this.apiClient.transport.ws.on(WebSocketTopic.ON_MESSAGE, (notification: Notification) => {
         notificationHandler(notification);
       });
     } else {
@@ -680,7 +675,7 @@ export class Account extends EventEmitter {
     }
   }
 
-  private async handleNotification(notification: IncomingNotification): Promise<void> {
+  private async handleNotification(notification: Notification): Promise<void> {
     for (const event of notification.payload) {
       let data;
 
