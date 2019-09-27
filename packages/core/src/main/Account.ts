@@ -165,7 +165,6 @@ export class Account extends EventEmitter {
     const notifications = await this.service!.notification.getAllNotifications();
     for (const notification of notifications) {
       await this.handleNotification(notification);
-      await this.service!.notification.setLastNotificationId(notification);
     }
     // NOTE only needed for webapp
     await this.service!.notification.setLastEventDate(new Date());
@@ -687,6 +686,9 @@ export class Account extends EventEmitter {
 
       try {
         data = await this.handleEvent(event);
+        if (!notification.transient) {
+          await this.service!.notification.setLastNotificationId(notification);
+        }
       } catch (error) {
         this.emit('error', error);
         continue;
