@@ -23,6 +23,7 @@ import {
   ConversationConnectRequestData,
   ConversationCreateData,
   ConversationMemberJoinData,
+  ConversationMemberLeaveData,
   ConversationMemberUpdateData,
   ConversationMessageTimerUpdateData,
   ConversationOtrMessageAddData,
@@ -52,7 +53,7 @@ export type ConversationEventData =
   | ConversationConnectRequestData
   | ConversationCreateData
   | ConversationMemberJoinData
-  | ConversationMemberLeaveEvent
+  | ConversationMemberLeaveData
   | ConversationMemberUpdateData
   | ConversationMessageTimerUpdateData
   | ConversationOtrMessageAddData
@@ -105,7 +106,7 @@ export interface ConversationMemberJoinEvent extends ConversationEvent {
 }
 
 export interface ConversationMemberLeaveEvent extends ConversationEvent {
-  data: ConversationMemberLeaveEvent;
+  data: ConversationMemberLeaveData;
   type: CONVERSATION_EVENT.MEMBER_LEAVE;
 }
 
