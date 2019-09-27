@@ -296,12 +296,18 @@ export class SQLeetEngine implements CRUDEngine {
     return primaryKey;
   }
 
+  /** Should be called when done with all database operations. In Node.js it is important to call this function when done, otherwise the Node.js "process" cannot finish. */
   async close(): Promise<void> {
     await this.db.close();
     const workerInstance = await this.db._getWorkerInstance();
     if (workerInstance.terminate && typeof workerInstance.terminate == 'function') {
       await workerInstance.terminate();
     }
+  }
+
+  /** Should be called in web environments to persist data in IndexedDB. Otherwise the data will be lost as it only exists in memory. */
+  save(): Promise<void> {
+    return this.db.saveChanges();
   }
 
   async isSupported(): Promise<void> {
