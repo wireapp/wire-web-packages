@@ -100,20 +100,12 @@ export class Account extends EventEmitter {
     });
   }
 
-  // TODO should use api-clients getter
   get clientId(): string {
-    if (this.apiClient.context && this.apiClient.context.clientId) {
-      return this.apiClient.context.clientId;
-    }
-    throw new Error(`No user context available. Please login first.`);
+    return this.apiClient.validatedClientId;
   }
 
-  // TODO should use api-clients getter (we should create one)
   get userId(): string {
-    if (this.apiClient.context) {
-      return this.apiClient.context.userId;
-    }
-    throw new Error(`No user context available. Please login first.`);
+    return this.apiClient.validatedUserId;
   }
 
   public async init(): Promise<void> {

@@ -266,21 +266,6 @@ export class APIClient extends EventEmitter {
     this.transport.ws.disconnect(reason);
   }
 
-  public get clientId(): string | undefined {
-    if (this.context && this.context.clientId) {
-      return this.context.clientId;
-    }
-    return undefined;
-  }
-
-  /** Should be used in cases where the client ID is MANDATORY. */
-  public get validatedClientId(): string {
-    if (this.clientId) {
-      return this.clientId;
-    }
-    throw new Error('No valid client ID.');
-  }
-
   private async initEngine(context: Context): Promise<CRUDEngine> {
     const clientType = context.clientType === ClientType.NONE ? '' : `@${context.clientType}`;
     const dbName = `${this.STORE_NAME_PREFIX}@${this.config.urls.name}@${context.userId}${clientType}`;
@@ -303,5 +288,35 @@ export class APIClient extends EventEmitter {
       throw error;
     }
     return this.config.store;
+  }
+
+  public get clientId(): string | undefined {
+    if (this.context && this.context.clientId) {
+      return this.context.clientId;
+    }
+    return undefined;
+  }
+
+  public get userId(): string | undefined {
+    if (this.context && this.context.userId) {
+      return this.context.userId;
+    }
+    return undefined;
+  }
+
+  /** Should be used in cases where the user ID is MANDATORY. */
+  public get validatedUserId(): string {
+    if (this.userId) {
+      return this.userId;
+    }
+    throw new Error('No valid user ID.');
+  }
+
+  /** Should be used in cases where the client ID is MANDATORY. */
+  public get validatedClientId(): string {
+    if (this.clientId) {
+      return this.clientId;
+    }
+    throw new Error('No valid client ID.');
   }
 }
