@@ -20,4 +20,3 @@
 export * from './Notification';
 export * from './NotificationAPI';
 export * from './NotificationList';
-export * from './NotificationPreference';
