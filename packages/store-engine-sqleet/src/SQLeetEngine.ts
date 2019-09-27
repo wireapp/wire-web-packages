@@ -305,7 +305,7 @@ export class SQLeetEngine implements CRUDEngine {
     }
   }
 
-  /** Should be called in web environments to persist data in IndexedDB. Otherwise the data will be lost as it only exists in memory. */
+  /** Should be called in browser environments to persist data in IndexedDB. Otherwise the data will be lost as it only exists in memory. */
   save(): Promise<void> {
     return this.db.saveChanges();
   }
