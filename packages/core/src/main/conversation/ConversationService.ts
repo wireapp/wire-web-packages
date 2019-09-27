@@ -20,13 +20,13 @@
 import {
   CONVERSATION_TYPE,
   Conversation,
-  MemberUpdate,
   MutedStatus,
   NewConversation,
   NewOTRMessage,
   OTRRecipients,
   UserClients,
 } from '@wireapp/api-client/dist/commonjs/conversation/';
+import {ConversationMemberUpdateData} from '@wireapp/api-client/dist/commonjs/conversation/data/';
 import {CONVERSATION_TYPING, ConversationMemberLeaveEvent} from '@wireapp/api-client/dist/commonjs/event/';
 import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/';
@@ -1033,7 +1033,7 @@ export class ConversationService {
       muteTimestamp = new Date(muteTimestamp);
     }
 
-    const payload: MemberUpdate = {
+    const payload: ConversationMemberUpdateData = {
       otr_muted_ref: muteTimestamp.toISOString(),
       otr_muted_status: status,
     };
@@ -1050,7 +1050,7 @@ export class ConversationService {
       archiveTimestamp = new Date(archiveTimestamp);
     }
 
-    const payload: MemberUpdate = {
+    const payload: ConversationMemberUpdateData = {
       otr_archived: archived,
       otr_archived_ref: archiveTimestamp.toISOString(),
     };

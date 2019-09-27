@@ -23,8 +23,6 @@ import {
   Conversation,
   ConversationCode,
   ConversationIds,
-  ConversationMemberUpdateData,
-  ConversationMessageTimerUpdateData,
   ConversationUpdate,
   Conversations,
   Invite,
@@ -35,7 +33,7 @@ import {
 import {ConversationEvent, ConversationMemberJoinEvent, ConversationMemberLeaveEvent} from '../event/';
 import {HttpClient} from '../http/';
 import {ValidationError} from '../validation/';
-import {ConversationTypingData} from './data';
+import {ConversationMemberUpdateData, ConversationMessageTimerUpdateData, ConversationTypingData} from './data';
 
 export class ConversationAPI {
   static readonly MAX_CHUNK_SIZE = 500;

@@ -19,13 +19,14 @@
 
 import {
   ConversationAccessUpdateData,
+  ConversationCodeUpdateData,
+  ConversationConnectRequestData,
+  ConversationCreateData,
   ConversationMemberUpdateData,
   ConversationMessageTimerUpdateData,
   ConversationOtrMessageAddData,
-} from '../conversation/';
-import {ConversationCodeUpdateData, ConversationConnectRequestData} from '../conversation/data';
-import {ConversationCreateData} from '../conversation/data/ConversationCreateData';
-import {ConversationTypingData} from '../conversation/data/ConversationTypingData';
+  ConversationTypingData,
+} from '../conversation/data/';
 
 export enum CONVERSATION_EVENT {
   ACCESS_UPDATE = 'conversation.access-update',

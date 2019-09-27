@@ -17,27 +17,22 @@
  *
  */
 
-export * from './data/ConversationAccessUpdateData';
 export * from './ClientMismatch';
 export * from './Conversation';
 export * from './ConversationAPI';
 export * from './ConversationCode';
 export * from './ConversationError';
-export * from './data/ConversationCodeUpdateData';
 export * from './ConversationIds';
 export * from './ConversationMembers';
-export * from './data/ConversationMessageTimerUpdateData';
 export * from './Conversations';
 export * from './ConversationUpdate';
 export * from './Invite';
 export * from './Member';
-export * from './data/ConversationMemberUpdateData';
 export * from './MutedStatus';
 export * from './NewConversation';
 export * from './NewOTRMessage';
 export * from './OtherMember';
 export * from './OTRClientMap';
-export * from './data/ConversationOtrMessageAddData';
 export * from './OTRRecipients';
 export * from './ServiceRef';
 export * from './UserClients';
