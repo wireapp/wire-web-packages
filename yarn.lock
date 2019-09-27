@@ -2451,10 +2451,10 @@
   dependencies:
     protobufjs "6.8.8"
 
-"@wireapp/websql@0.0.2":
-  version "0.0.2"
-  resolved "https://registry.npmjs.org/@wireapp/websql/-/websql-0.0.2.tgz#d89651c5a0aabf8431017bbe8d1fb135cf9e1c61"
-  integrity sha512-SsvtoR38TKJuheyRLoQ+v46Qxpld/L4YxsNL80ILJWs3MF27s1R8olBFZ7pzahq8Y2xCmMMuW6LhwH//dbvICg==
+"@wireapp/websql@0.0.3":
+  version "0.0.3"
+  resolved "https://registry.npmjs.org/@wireapp/websql/-/websql-0.0.3.tgz#424988751226ec8ed43e9cbf2ff9f0fe3e9b8d1f"
+  integrity sha512-ejjpMz0AJsqG07tAGWnFsqq84UOfbO8swTreyFFVQPuipHusU4R6O0XTHUzVqB80gzOVKhD8lG19RCOrAS5xag==
   dependencies:
     "@types/emscripten" "1.38.0"
     "@types/node" "12.7.1"
