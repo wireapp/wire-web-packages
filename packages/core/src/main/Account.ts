@@ -147,7 +147,8 @@ export class Account extends EventEmitter {
     await this.apiClient.login(loginData);
 
     if (initClient) {
-      await this.initClient(loginData, clientInfo);
+      const {isNewClient, localClient} = await this.initClient(loginData, clientInfo);
+      await this.handleNotificationStream(localClient.id, isNewClient);
     }
 
     if (this.apiClient.context) {
@@ -155,6 +156,19 @@ export class Account extends EventEmitter {
     }
 
     throw Error('Login failed.');
+  }
+
+  private async handleNotificationStream(clientId: string, isNewClient: boolean): Promise<void> {
+    if (isNewClient) {
+      await this.service!.notification.initializeNotificationStream(clientId);
+    }
+    const notifications = await this.service!.notification.getAllNotifications();
+    for (const notification of notifications) {
+      await this.handleNotification(notification);
+      await this.service!.notification.setLastNotificationId(notification);
+    }
+    // NOTE only needed for webapp
+    await this.service!.notification.setLastEventDate(new Date());
   }
 
   public async initClient(
