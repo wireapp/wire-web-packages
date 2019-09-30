@@ -211,7 +211,7 @@ export class Account extends EventEmitter {
 
   public async listen(notificationHandler?: NotificationHandler): Promise<Account> {
     if (!this.apiClient.context) {
-      throw new Error('Context is not set - Please login first');
+      throw new Error('Context is not set - please login first');
     }
 
     this.apiClient.transport.ws.removeAllListeners(WebSocketTopic.ON_MESSAGE);
