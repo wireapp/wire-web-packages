@@ -117,11 +117,6 @@ describe('Account', () => {
       .persist();
 
     nock(MOCK_BACKEND.rest)
-      .get('/notifications?client=4e37b32f57f6da55&size=10000')
-      .reply(StatusCode.OK, {has_more: false, notifications: []})
-      .persist();
-
-    nock(MOCK_BACKEND.rest)
       .get(`${NotificationAPI.URL.NOTIFICATION}/${NotificationAPI.URL.LAST}`)
       .query({client: CLIENT_ID})
       .reply(StatusCode.OK, {});
@@ -351,6 +346,13 @@ describe('Account', () => {
   });
 
   describe('handleEvent', () => {
+    beforeEach(() => {
+      nock(MOCK_BACKEND.rest)
+        .get(`${NotificationAPI.URL.NOTIFICATION}?client=${CLIENT_ID}&size=10000`)
+        .reply(StatusCode.OK, {has_more: false, notifications: []})
+        .persist();
+    });
+
     it('propagates errors to the outer calling function', async done => {
       const storeEngine = new MemoryEngine();
       await storeEngine.init('account.test');

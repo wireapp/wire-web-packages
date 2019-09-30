@@ -47,8 +47,8 @@ export class NotificationService {
   public async initializeNotificationStream(): Promise<string> {
     const clientId = this.apiClient.clientId;
     await this.setLastEventDate(new Date(0));
-    const latestNotificationId = await this.backend.getLastNotification(clientId);
-    return this.setLastNotificationId(latestNotificationId);
+    const latestNotification = await this.backend.getLastNotification(clientId);
+    return this.setLastNotificationId(latestNotification);
   }
 
   public async hasHistory(): Promise<boolean> {
