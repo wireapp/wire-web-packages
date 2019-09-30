@@ -27,7 +27,7 @@ import {
 import {PayloadBundle, PayloadBundleState, PayloadBundleType} from '../conversation';
 import {MessageBuilder} from '../conversation/message/MessageBuilder';
 
-class UserMapper {
+export class UserMapper {
   public static mapUserEvent(event: UserEvent, selfUserId: string): PayloadBundle | void {
     switch (event.type) {
       case USER_EVENT.CONNECTION: {
@@ -73,4 +73,3 @@ class UserMapper {
   }
 }
 
-export {UserMapper};
