@@ -34,7 +34,7 @@ import {
   TextContent,
 } from '../conversation/content';
 
-class GenericMessageMapper {
+export class GenericMessageMapper {
   private static readonly logger = logdown('@wireapp/core/cryptography/GenericMessageMapper', {
     logger: console,
     markdown: false,
@@ -321,5 +321,3 @@ class GenericMessageMapper {
     }
   }
 }
-
-export {GenericMessageMapper};

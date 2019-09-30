@@ -47,7 +47,7 @@ export class NotificationService extends EventEmitter {
   private readonly backend: NotificationBackendRepository;
   private readonly database: NotificationDatabaseRepository;
   private readonly storeEngine: CRUDEngine;
-  private readonly logger = logdown('@wireapp/core/NotificationService', {
+  private readonly logger = logdown('@wireapp/core/notification/NotificationService', {
     logger: console,
     markdown: false,
   });

@@ -21,7 +21,7 @@ import {CONVERSATION_EVENT, ConversationEvent} from '@wireapp/api-client/dist/co
 import {MessageBuilder} from './message/MessageBuilder';
 import {PayloadBundle, PayloadBundleState, PayloadBundleType} from './message/PayloadBundle';
 
-class ConversationMapper {
+export class ConversationMapper {
   public static mapConversationEvent(event: ConversationEvent): PayloadBundle {
     return {
       content: event.data,
@@ -50,5 +50,3 @@ class ConversationMapper {
     }
   }
 }
-
-export {ConversationMapper};
