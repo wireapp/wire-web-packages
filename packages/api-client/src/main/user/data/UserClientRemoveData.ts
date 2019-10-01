@@ -18,5 +18,5 @@
  */
 
 export interface UserClientRemoveData {
-  id: string;
+  // TODO add data
 }
