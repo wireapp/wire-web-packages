@@ -103,6 +103,12 @@ describe('Account', () => {
       .reply(StatusCode.OK, {});
 
     nock(MOCK_BACKEND.rest)
+      .get(NotificationAPI.URL.NOTIFICATION)
+      .query({client: CLIENT_ID, size: 10000})
+      .reply(StatusCode.OK, {has_more: false, notifications: []})
+      .persist();
+
+    nock(MOCK_BACKEND.rest)
       .get(ClientAPI.URL.CLIENTS)
       .reply(StatusCode.OK, [{id: CLIENT_ID}]);
   });
@@ -194,9 +200,18 @@ describe('Account', () => {
   it('emits text messages', async done => {
     const account = await createAccount();
     await account.init();
+    await account.login({
+      clientType: ClientType.TEMPORARY,
+      email: 'hello@example.com',
+      password: 'my-secret',
+    });
+    await account.listen();
 
     spyOn<any>(account.service!.notification, 'handleEvent').and.returnValue({type: PayloadBundleType.TEXT});
     account.service!.notification.on(PayloadBundleType.TEXT, message => {
+      expect(message.type).toBe(PayloadBundleType.TEXT);
+    });
+    account.on(PayloadBundleType.TEXT, message => {
       expect(message.type).toBe(PayloadBundleType.TEXT);
       done();
     });
