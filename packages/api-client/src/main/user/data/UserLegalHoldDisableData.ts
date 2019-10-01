@@ -18,5 +18,6 @@
  */
 
 export interface UserLegalHoldDisableData {
-  id: string; // userId
+  /** UserID */
+  id: string;
 }
