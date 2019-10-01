@@ -22,13 +22,14 @@ import {AuthAPI, Context} from '@wireapp/api-client/dist/commonjs/auth';
 import {ClientAPI, ClientType} from '@wireapp/api-client/dist/commonjs/client';
 import {ConversationAPI} from '@wireapp/api-client/dist/commonjs/conversation';
 import {BackendErrorLabel, StatusCode} from '@wireapp/api-client/dist/commonjs/http';
-import {NotificationAPI} from '@wireapp/api-client/dist/commonjs/notification';
+import {Notification, NotificationAPI} from '@wireapp/api-client/dist/commonjs/notification';
 import {ValidationUtil} from '@wireapp/commons';
 import {GenericMessage, Text} from '@wireapp/protocol-messaging';
 import {MemoryEngine} from '@wireapp/store-engine';
 import nock = require('nock');
 
 import {Account} from './Account';
+import {PayloadBundleType} from './conversation';
 
 const BASE_URL = 'mock-backend.wire.com';
 const MOCK_BACKEND = {
@@ -188,5 +189,21 @@ describe('Account', () => {
         expect(error.label).toBe(BackendErrorLabel.INVALID_CREDENTIALS);
       }
     });
+  });
+
+  it('emits text messages', async done => {
+    const account = await createAccount();
+    await account.init();
+
+    spyOn<any>(account.service!.notification, 'handleEvent').and.returnValue({type: PayloadBundleType.TEXT});
+    account.service!.notification.on(PayloadBundleType.TEXT, message => {
+      expect(message.type).toBe(PayloadBundleType.TEXT);
+      done();
+    });
+
+    await account.service!.notification.handleNotification(({
+      payload: [{}],
+      transient: true,
+    } as unknown) as Notification);
   });
 });
