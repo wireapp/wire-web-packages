@@ -160,6 +160,7 @@ export class WebSocketClient extends EventEmitter {
    * connecting the websocket and the unlocking the websocket will be emitted.
    */
   public readonly unlock = () => {
+    this.logger.info(`Unlocking WebSocket - Emitting "${this.bufferedMessages.length}" unprocessed messages`);
     this.isSocketLocked = false;
     for (const bufferedMessage of this.bufferedMessages) {
       this.onMessage(bufferedMessage);
@@ -174,6 +175,7 @@ export class WebSocketClient extends EventEmitter {
    * during fetching notifications from the notification stream.
    */
   public readonly lock = () => {
+    this.logger.info('Locking WebSocket');
     this.isSocketLocked = true;
   };
 
