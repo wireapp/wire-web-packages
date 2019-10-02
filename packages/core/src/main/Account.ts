@@ -227,7 +227,7 @@ export class Account extends EventEmitter {
 
     // 1. Connect websocket but only buffer incoming messages
     await this.apiClient.connect(true);
-    // 2. Fetch and process notifications of the past
+    // 2. Fetch and process notifications from the past
     await this.service!.notification.handleNotificationStream(
       notificationHandler || this.service!.notification.handleNotification,
     );
