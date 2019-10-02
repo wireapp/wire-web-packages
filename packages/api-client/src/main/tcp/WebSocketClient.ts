@@ -68,7 +68,7 @@ export class WebSocketClient extends EventEmitter {
   }
 
   private readonly onMessage = (data: string) => {
-    if (this.isLocked) {
+    if (this.isLocked()) {
       this.bufferedMessages.push(data);
     } else {
       const notification: Notification = JSON.parse(data);
@@ -177,7 +177,7 @@ export class WebSocketClient extends EventEmitter {
     this.isSocketLocked = true;
   };
 
-  public get isLocked(): boolean {
+  public isLocked(): boolean {
     return this.isSocketLocked;
   }
 

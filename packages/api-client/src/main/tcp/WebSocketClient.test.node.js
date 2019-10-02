@@ -126,7 +126,7 @@ describe('WebSocketClient', () => {
       spyOn(socket, 'getReconnectingWebsocket').and.returnValue(fakeSocket);
 
       await websocketClient.connect();
-      expect(websocketClient.isLocked).toBe(false);
+      expect(websocketClient.isLocked()).toBe(false);
 
       const message = 'hello';
       websocketClient.on(WebSocketTopic.ON_MESSAGE, notification => {
@@ -139,7 +139,7 @@ describe('WebSocketClient', () => {
       fakeSocket.onmessage({data: Buffer.from(JSON.stringify({message}), 'utf-8')});
     });
 
-    it('does lock websocket if option is set', async done => {
+    it('does lock websocket if option is set', async () => {
       const websocketClient = new WebSocketClient('url', fakeHttpClient);
       const onMessageSpy = spyOn(websocketClient, 'onMessage').and.callThrough();
       const fakeSocket = {};
@@ -147,7 +147,7 @@ describe('WebSocketClient', () => {
       spyOn(socket, 'getReconnectingWebsocket').and.returnValue(fakeSocket);
 
       await websocketClient.connect(undefined, true);
-      expect(websocketClient.isLocked).toBe(true);
+      expect(websocketClient.isLocked()).toBe(true);
 
       const message = 'hello';
       websocketClient.on(WebSocketTopic.ON_MESSAGE, notification => {
@@ -157,7 +157,6 @@ describe('WebSocketClient', () => {
       fakeSocket.onmessage({data: Buffer.from(JSON.stringify({message}), 'utf-8')});
       expect(onMessageSpy.calls.count()).toBe(1);
       expect(websocketClient.bufferedMessages.length).toBe(1);
-      done();
     });
 
     it('emits buffered messages when unlocked', async done => {
@@ -168,7 +167,7 @@ describe('WebSocketClient', () => {
       spyOn(socket, 'getReconnectingWebsocket').and.returnValue(fakeSocket);
 
       await websocketClient.connect(undefined, true);
-      expect(websocketClient.isLocked).toBe(true);
+      expect(websocketClient.isLocked()).toBe(true);
 
       const message = 'hello';
       fakeSocket.onmessage({data: Buffer.from(JSON.stringify({message}), 'utf-8')});
