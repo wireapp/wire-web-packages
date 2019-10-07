@@ -74,7 +74,7 @@ export class CryptographyService {
       .filter(serializedPreKey => serializedPreKey.key);
   }
 
-  public async decrypt(sessionId: string, encodedCiphertext: string): Promise<Uint8Array> {
+  public decrypt(sessionId: string, encodedCiphertext: string): Promise<Uint8Array> {
     this.logger.log(`Decrypting message for session ID "${sessionId}"`);
     const messageBytes: Uint8Array = Decoder.fromBase64(encodedCiphertext).asBytes;
     return this.cryptobox.decrypt(sessionId, messageBytes.buffer);
