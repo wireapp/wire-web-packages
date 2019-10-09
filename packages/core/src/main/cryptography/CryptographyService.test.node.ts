@@ -167,13 +167,9 @@ describe('CryptographyService', () => {
       const text = new Uint8Array([72, 101, 108, 108, 111, 33]); // "Hello!"
       const encryptionRuns = 100;
       const otrBundles = await Promise.all(
-        Array.from(Array(encryptionRuns).keys()).map(() => {
-          return cryptographyService.encrypt(text, preKeyBundleMap);
-        }),
+        Array.from(Array(encryptionRuns).keys()).map(() => cryptographyService.encrypt(text, preKeyBundleMap)),
       );
-      const encryptedPayloads = otrBundles.map(bundle => {
-        return bundle[userId][clientId];
-      });
+      const encryptedPayloads = otrBundles.map(bundle => bundle[userId][clientId]);
       const messageCounters = encryptedPayloads.map(encodedCiphertext => {
         const messageBytes = bazinga64.Decoder.fromBase64(encodedCiphertext).asBytes;
         const messageEnvelope = Proteus.message.Envelope.deserialise(messageBytes.buffer);
@@ -181,9 +177,7 @@ describe('CryptographyService', () => {
         const cipherMessage = preKeyMessage.message;
         return cipherMessage.counter;
       });
-      const uniqueValues = messageCounters.filter((value, index, self) => {
-        return self.indexOf(value) === index;
-      });
+      const uniqueValues = messageCounters.filter((value, index, self) => self.indexOf(value) === index);
       expect(uniqueValues.length).toBe(encryptionRuns);
     });
   });
