@@ -31,6 +31,11 @@ node_js:
 addons:
   chrome: stable
 
+matrix:
+  include:
+    - os: linux
+    - os: windows
+
 # http://docs.travis-ci.com/user/build-lifecycle/
 before_install:
   - curl https://yarnpkg.com/install.sh -sSfL | bash -s --
