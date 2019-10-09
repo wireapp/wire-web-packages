@@ -8,8 +8,14 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
+        if: |
+          contains(github.event.commits[0].message, '[skip ci]') == false &&
+          contains(github.event.commits[0].message, '[ci skip]') == false
         uses: actions/checkout@v1
       - name: Set up Node.js
+        if: |
+          contains(github.event.commits[0].message, '[skip ci]') == false &&
+          contains(github.event.commits[0].message, '[ci skip]') == false
         uses: actions/setup-node@v1
         with:
           node-version: 10
