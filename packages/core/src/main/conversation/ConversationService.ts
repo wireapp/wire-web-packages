@@ -978,8 +978,7 @@ export class ConversationService {
    * @param userIds - Only send message to specified user IDs
    * @returns Sent message
    */
-  // tslint:disable-next-line:typedef
-  public async send(payloadBundle: Message, userIds?: string[]) {
+  public async send(payloadBundle: Message, userIds?: string[]): Promise<Message> {
     switch (payloadBundle.type) {
       case PayloadBundleType.ASSET:
         return this.sendFileData(payloadBundle, userIds);
