@@ -40,11 +40,6 @@ export class PriorityQueue {
   }
 
   public add<T>(thunkedPromise: () => T, priority: Priority = Priority.MEDIUM, label?: string): Promise<T> {
-    // TODO: Deprecated please remove when applicable
-    if (typeof thunkedPromise !== 'function') {
-      thunkedPromise = () => (thunkedPromise as unknown) as T;
-    }
-
     return new Promise((resolve, reject) => {
       const queueObject = new Item();
       queueObject.fn = thunkedPromise;
