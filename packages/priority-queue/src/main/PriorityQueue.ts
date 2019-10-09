@@ -17,6 +17,7 @@
  *
  */
 
+import {Performance} from 'perf_hooks';
 import {Config} from './Config';
 import {Item} from './Item';
 import {Priority} from './Priority';
@@ -34,6 +35,8 @@ export class PriorityQueue {
   };
   public isPending: boolean = false;
   private queue: Item[] = [];
+  private readonly performance: Performance =
+    typeof process === 'object' ? require('perf_hooks').performance : performance;
 
   constructor(config?: Config) {
     this.config = {...this.config, ...config};
@@ -48,7 +51,7 @@ export class PriorityQueue {
       queueObject.reject = reject;
       queueObject.resolve = resolve;
       queueObject.retry = Number(this.config.maxRetries) >= 0 ? Number(this.config.maxRetries) : queueObject.retry;
-      queueObject.timestamp = Date.now() + this.size;
+      queueObject.timestamp = this.performance.now() + this.size;
       this.queue.push(queueObject);
       this.queue.sort(this.config.comparator);
       this.run();
