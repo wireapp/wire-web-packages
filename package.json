@@ -22,7 +22,7 @@
     "tslint-react-hooks": "2.2.1"
   },
   "engines": {
-    "node": ">= 10.9",
+    "node": ">= 12",
     "yarn": ">= 1"
   },
   "lint-staged": {

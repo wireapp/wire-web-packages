@@ -2168,6 +2168,11 @@
   resolved "https://registry.npmjs.org/@types/node/-/node-10.14.21.tgz#4a9db7ef1d1671c0015e632c5fa3d46c86c58c1e"
   integrity sha512-nuFlRdBiqbF+PJIEVxm2jLFcQWN7q7iWEJGsBV4n7v1dbI9qXB8im2pMMKMCUZe092sQb5SQft2DHfuQGK5hqQ==
 
+"@types/node@~12":
+  version "12.7.12"
+  resolved "https://registry.npmjs.org/@types/node/-/node-12.7.12.tgz#7c6c571cc2f3f3ac4a59a5f2bd48f5bdbc8653cc"
+  integrity sha512-KPYGmfD0/b1eXurQ59fXD1GBzhSQfz6/lKBxkaHX9dKTzjXbK68Zt7yGUxUsCS1jeTy/8aL+d9JEr+S54mpkWQ==
+
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
   resolved "https://registry.npmjs.org/@types/normalize-package-data/-/normalize-package-data-2.4.0.tgz#e486d0d97396d79beedd0a6e33f4534ff6b4973e"
@@ -2427,10 +2432,10 @@
   dependencies:
     protobufjs "6.8.8"
 
-"@wireapp/websql@0.0.5":
-  version "0.0.5"
-  resolved "https://registry.npmjs.org/@wireapp/websql/-/websql-0.0.5.tgz#8ab88523a692068a02d9837a9bc72762496baf73"
-  integrity sha512-/EzhnnrU7f0XNKJus6mt14ZxjBsjSDuEbrtV1Al0/WFg1INe+La9nwE2Jj3yqSjcI/5omjPF+yXiW09j/wMLnQ==
+"@wireapp/websql@0.0.7":
+  version "0.0.7"
+  resolved "https://registry.npmjs.org/@wireapp/websql/-/websql-0.0.7.tgz#1c8796e42b1deedaef774c0791be1a8f268b22d5"
+  integrity sha512-r5RmZxTPSjTZk55eSQXVop8XRQuYn3NVTuew3cPtsBQmbWsj6zVMyGGsNGwQDyq4UMWubQgLwp+jKdcfLfzv5w==
   dependencies:
     "@types/emscripten" "1.38.0"
     "@types/node" "12.7.1"
