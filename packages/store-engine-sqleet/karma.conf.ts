@@ -22,7 +22,7 @@ import * as jasmineConfig from './jasmine.json';
 import webpackConfig from './webpack.config';
 
 module.exports = (config: Config): void => {
-  const karmaConfig: ConfigOptions = {
+  const options: ConfigOptions = {
     autoWatch: false,
     basePath: jasmineConfig.spec_dir,
     browserNoActivityTimeout: 90000,
@@ -53,5 +53,5 @@ module.exports = (config: Config): void => {
     },
   };
 
-  config.set(karmaConfig);
+  config.set(options);
 };
