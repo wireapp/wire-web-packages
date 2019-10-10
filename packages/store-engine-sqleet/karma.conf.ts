@@ -18,11 +18,12 @@
  */
 
 import {Config, ConfigOptions} from 'karma';
+import webpackConfig from './webpack.config';
 
 const jasmineConfig = require('./jasmine.json');
 
 module.exports = (config: Config): void => {
-  const options: ConfigOptions = {
+  const karmaConfig: ConfigOptions = {
     autoWatch: false,
     basePath: jasmineConfig.spec_dir,
     browserNoActivityTimeout: 90000,
@@ -39,22 +40,19 @@ module.exports = (config: Config): void => {
       },
     },
     files: ['**/*.ts', {pattern: '**/*.js', watched: true, served: true, included: false}],
-    frameworks: ['jasmine', 'karma-typescript'],
+    frameworks: ['jasmine'],
     logLevel: config.LOG_INFO,
     port: 9876,
     preprocessors: {
-      '**/*.ts': ['karma-typescript'],
+      '**/*.ts': ['webpack'],
     },
-    reporters: ['progress', 'karma-typescript'],
+    reporters: ['progress'],
     singleRun: true,
+    webpack: webpackConfig,
+    webpackMiddleware: {
+      stats: 'errors-only',
+    },
   };
 
-  config.set(({
-    ...options,
-    karmaTypescriptConfig: {
-      bundlerOptions: {
-        exclude: ['worker_threads'],
-      },
-    },
-  } as any) as ConfigOptions);
+  config.set(karmaConfig);
 };
