@@ -2120,10 +2120,10 @@
     "@types/istanbul-lib-coverage" "*"
     "@types/istanbul-lib-report" "*"
 
-"@types/jasmine@3.4.2":
-  version "3.4.2"
-  resolved "https://registry.npmjs.org/@types/jasmine/-/jasmine-3.4.2.tgz#49f672de24043b3c1fb919901fd3cd36f027bc93"
-  integrity sha512-SaSSGOzwUnBEn64c+HTyVTJhRf8F1CXZLnxYx2ww3UrgGBmEEw38RSux2l3fYiT9brVLP67DU5omWA6V9OHI5Q==
+"@types/jasmine@3.4.3":
+  version "3.4.3"
+  resolved "https://registry.npmjs.org/@types/jasmine/-/jasmine-3.4.3.tgz#a76de65d748f6c983f2cd54bfe1150fcd832d181"
+  integrity sha512-IrvVIfJ/wTEUjb82KudZLrggTf55nFhb62T1Xlic9lO8b3IVh88FsIh3kLdF7nsDFRq0AJtU8i2diUarjYMlxg==
 
 "@types/jest@^23.0.2":
   version "23.3.14"
@@ -2194,15 +2194,10 @@
   resolved "https://registry.npmjs.org/@types/node/-/node-12.7.1.tgz#3b5c3a26393c19b400844ac422bd0f631a94d69d"
   integrity sha512-aK9jxMypeSrhiYofWWBf/T7O+KwaiAHzM4sveCdWPn71lzUSMimRnKzhXDKfKwV1kWoBo2P1aGgaIYGLf9/ljw==
 
-"@types/node@^10.1.0":
+"@types/node@^10.1.0", "@types/node@~10":
   version "10.14.21"
   resolved "https://registry.npmjs.org/@types/node/-/node-10.14.21.tgz#4a9db7ef1d1671c0015e632c5fa3d46c86c58c1e"
   integrity sha512-nuFlRdBiqbF+PJIEVxm2jLFcQWN7q7iWEJGsBV4n7v1dbI9qXB8im2pMMKMCUZe092sQb5SQft2DHfuQGK5hqQ==
-
-"@types/node@~12":
-  version "12.7.12"
-  resolved "https://registry.npmjs.org/@types/node/-/node-12.7.12.tgz#7c6c571cc2f3f3ac4a59a5f2bd48f5bdbc8653cc"
-  integrity sha512-KPYGmfD0/b1eXurQ59fXD1GBzhSQfz6/lKBxkaHX9dKTzjXbK68Zt7yGUxUsCS1jeTy/8aL+d9JEr+S54mpkWQ==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -8884,9 +8879,10 @@ libsodium-wrappers-sumo@0.7.5:
   dependencies:
     libsodium-sumo "0.7.5"
 
-"license-checker@git+https://github.com/mwittig/license-checker.git#d546e3f738e14c62e732346fa355162d46700893":
+"license-checker@git+https://github.com/mwittig/license-checker#d546e3f738e14c62e732346fa355162d46700893":
   version "1.0.0"
-  resolved "git+https://github.com/mwittig/license-checker.git#d546e3f738e14c62e732346fa355162d46700893"
+  uid d546e3f738e14c62e732346fa355162d46700893
+  resolved "git+https://github.com/mwittig/license-checker#d546e3f738e14c62e732346fa355162d46700893"
   dependencies:
     chalk "~0.5.1"
     mkdirp "^0.3.5"
