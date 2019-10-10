@@ -18,9 +18,8 @@
  */
 
 import {Config, ConfigOptions} from 'karma';
+import * as jasmineConfig from './jasmine.json';
 import webpackConfig from './webpack.config';
-
-const jasmineConfig = require('./jasmine.json');
 
 module.exports = (config: Config): void => {
   const karmaConfig: ConfigOptions = {
