@@ -2120,10 +2120,10 @@
     "@types/istanbul-lib-coverage" "*"
     "@types/istanbul-lib-report" "*"
 
-"@types/jasmine@3.4.2":
-  version "3.4.2"
-  resolved "https://registry.npmjs.org/@types/jasmine/-/jasmine-3.4.2.tgz#49f672de24043b3c1fb919901fd3cd36f027bc93"
-  integrity sha512-SaSSGOzwUnBEn64c+HTyVTJhRf8F1CXZLnxYx2ww3UrgGBmEEw38RSux2l3fYiT9brVLP67DU5omWA6V9OHI5Q==
+"@types/jasmine@3.4.4":
+  version "3.4.4"
+  resolved "https://registry.npmjs.org/@types/jasmine/-/jasmine-3.4.4.tgz#be3fbd73e72725edb44e6f7f509cd52912d1550c"
+  integrity sha512-+/sHcTPyDS1JQacDRRRWb+vNrjBwnD+cKvTaWlxlJ/uOOFvzCkjOwNaqVjYMLfsjzNi0WtDH9RyReDXPG1Cdug==
 
 "@types/jest@^23.0.2":
   version "23.3.14"
