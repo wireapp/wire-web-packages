@@ -297,6 +297,6 @@ describe('PriorityQueue', () => {
       queue.add(promise2);
 
       setTimeout(() => queue.add(promise3), 1000);
-    }, 20000);
+    });
   });
 });
