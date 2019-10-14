@@ -116,10 +116,7 @@ export class PriorityQueue {
   private getGrowingDelay(currentRetry: number): number {
     const delay =
       currentRetry < 1 ? this.config.retryDelay : this.config.retryDelay * currentRetry * this.config.retryGrowthFactor;
-    if (delay >= this.config.maxRetryDelay) {
-      return this.config.maxRetryDelay;
-    }
-    return delay;
+    return Math.min(delay, this.config.maxRetryDelay);
   }
 
   public toString(): string {
