@@ -17,11 +17,17 @@
  *
  */
 
+import logdown from 'logdown';
 import {Config} from './Config';
 import {Item} from './Item';
 import {Priority} from './Priority';
 
 export class PriorityQueue {
+  private readonly logger: logdown.Logger = logdown('@wireapp/priority-queue/PriorityQueue', {
+    logger: console,
+    markdown: false,
+  });
+
   private readonly config: Config = {
     comparator: (a: Item, b: Item): Priority => {
       if (a.priority === b.priority) {
@@ -107,6 +113,7 @@ export class PriorityQueue {
         /* tslint:disable-next-line:no-floating-promises */
         this.processList();
       } else {
+        this.logger.log(`Retrying item "${queueObject}"`);
         setTimeout(() => this.processList(), this.getGrowingDelay(queueObject.retry));
         queueObject.retry++;
       }

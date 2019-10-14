@@ -34,6 +34,11 @@ export class Item {
   timestamp: number = 0;
 
   public toString(): string {
-    return this.fn.toString().replace(/(\r\n|\n|\r|\s+)/gm, '');
+    return `
+    label=${this.label},
+    priority=${this.priority},
+    timestamp=${this.timestamp},
+    retry=${this.retry},
+    fn=${this.fn.toString().replace(/(\r\n|\n|\r|\s+)/gm, ' ')},`;
   }
 }
