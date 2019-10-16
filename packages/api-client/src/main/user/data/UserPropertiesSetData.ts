@@ -45,7 +45,8 @@ export type WebappProperties = {
       send: boolean;
     };
     privacy: {
-      improve_wire: boolean;
+      improve_wire?: boolean;
+      report_errors?: boolean;
     };
     sound: {
       alerts: AudioPreference;
