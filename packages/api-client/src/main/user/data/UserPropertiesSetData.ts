@@ -30,7 +30,8 @@ export enum NotificationPreference {
   ON = 'on',
 }
 
-export type WebappProperties = {
+export interface WebappProperties {
+  [property_key: string]: any;
   contact_import: {
     google?: number;
     macos?: number;
@@ -53,7 +54,7 @@ export type WebappProperties = {
     };
   };
   version: number;
-};
+}
 
 export interface UserPropertiesSetData {
   key: 'webapp';
