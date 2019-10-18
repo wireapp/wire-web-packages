@@ -59,10 +59,12 @@ describe('LogFactory', () => {
   });
 
   describe('writeMessage', () => {
+    const logDir = path.join(__dirname, '../../.temp');
+
+    afterEach(() => fs.remove(logDir));
+
     it('appends text to a log file', async () => {
-      const logDir = path.join(__dirname, '../../.temp');
       const logFile = path.join(logDir, 'test.log');
-      await fs.remove(logDir);
 
       const logMessage1 = 'This is a first test';
       const logMessage2 = 'This is a second test';
