@@ -2140,9 +2140,9 @@
     "@types/libsodium-wrappers" "*"
 
 "@types/libsodium-wrappers@*":
-  version "0.7.5"
-  resolved "https://registry.npmjs.org/@types/libsodium-wrappers/-/libsodium-wrappers-0.7.5.tgz#3cdda11ebf6b70bf40cfa2c483d7622897277bc4"
-  integrity sha512-CfxNQj3+fUwGhV20/yRoiMRjLN6+3cDRAjN2eQ0XKgq/IBhvROsbWxPa34JIiMKGdfHKy92OaMnViyoWw2Nrkg==
+  version "0.7.6"
+  resolved "https://registry.npmjs.org/@types/libsodium-wrappers/-/libsodium-wrappers-0.7.6.tgz#0702395d73de9556dbde05c91ba4925eb64f5aee"
+  integrity sha512-CrTY7kY5s7dxdioA2N5x6iTNgRllWGENzGCqQD/aazsakxKB4NYTJdh83ERCScev3Po5FRnVHj2TUkc6sD1oqw==
 
 "@types/long@4.0.0", "@types/long@^4.0.0":
   version "4.0.0"
