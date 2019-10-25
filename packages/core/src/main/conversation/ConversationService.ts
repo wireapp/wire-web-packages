@@ -744,7 +744,6 @@ export class ConversationService {
     conversationId: string,
     timestamp: number | Date = new Date(),
     messageId: string = MessageBuilder.createId(),
-    source: PayloadBundleSource,
   ): Promise<ClearConversationMessage> {
     if (timestamp instanceof Date) {
       timestamp = timestamp.getTime();
@@ -772,7 +771,7 @@ export class ConversationService {
       from: this.apiClient.context!.userId,
       id: messageId,
       messageTimer: 0,
-      source,
+      source: PayloadBundleSource.LOCAL,
       state: PayloadBundleState.OUTGOING_SENT,
       timestamp: Date.now(),
       type: PayloadBundleType.CLEARED,
