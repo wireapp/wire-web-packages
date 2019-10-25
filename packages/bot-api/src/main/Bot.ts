@@ -96,27 +96,10 @@ export class Bot {
     });
     this.account = new Account(apiClient);
 
-    this.account.on(PayloadBundleType.ASSET, this.handlePayload.bind(this));
-    this.account.on(PayloadBundleType.ASSET_ABORT, this.handlePayload.bind(this));
-    this.account.on(PayloadBundleType.ASSET_IMAGE, this.handlePayload.bind(this));
-    this.account.on(PayloadBundleType.ASSET_META, this.handlePayload.bind(this));
-    this.account.on(PayloadBundleType.CALL, this.handlePayload.bind(this));
-    this.account.on(PayloadBundleType.CLIENT_ACTION, this.handlePayload.bind(this));
-    this.account.on(PayloadBundleType.CONFIRMATION, this.handlePayload.bind(this));
-    this.account.on(PayloadBundleType.CONNECTION_REQUEST, this.handlePayload.bind(this));
-    this.account.on(PayloadBundleType.CONVERSATION_CLEAR, this.handlePayload.bind(this));
-    this.account.on(PayloadBundleType.CONVERSATION_RENAME, this.handlePayload.bind(this));
-    this.account.on(PayloadBundleType.LOCATION, this.handlePayload.bind(this));
-    this.account.on(PayloadBundleType.MEMBER_JOIN, this.handlePayload.bind(this));
-    this.account.on(PayloadBundleType.MESSAGE_DELETE, this.handlePayload.bind(this));
-    this.account.on(PayloadBundleType.MESSAGE_EDIT, this.handlePayload.bind(this));
-    this.account.on(PayloadBundleType.MESSAGE_HIDE, this.handlePayload.bind(this));
-    this.account.on(PayloadBundleType.PING, this.handlePayload.bind(this));
-    this.account.on(PayloadBundleType.REACTION, this.handlePayload.bind(this));
-    this.account.on(PayloadBundleType.TEXT, this.handlePayload.bind(this));
-    this.account.on(PayloadBundleType.TIMER_UPDATE, this.handlePayload.bind(this));
-    this.account.on(PayloadBundleType.TYPING, this.handlePayload.bind(this));
-    this.account.on(PayloadBundleType.UNKNOWN, this.handlePayload.bind(this));
+    for (const payloadType of Object.values(PayloadBundleType)) {
+      this.account.removeAllListeners(payloadType);
+      this.account.on(payloadType as any, this.handlePayload.bind(this));
+    }
 
     await this.account.login(login);
     await this.account.listen();
