@@ -23,20 +23,21 @@ import {CloseEvent, ErrorEvent, Event} from 'reconnecting-websocket';
 
 import {InvalidTokenError} from '../auth/';
 import {BackendError, BackendErrorMapper, HttpClient, NetworkError} from '../http/';
+import {Notification} from '../notification';
 import {ReconnectingWebsocket, WEBSOCKET_STATE} from './ReconnectingWebsocket';
 
-export enum WebSocketTopic {
-  ON_ERROR = 'WebSocketTopic.ON_ERROR',
-  ON_INVALID_TOKEN = 'WebSocketTopic.ON_INVALID_TOKEN',
-  ON_MESSAGE = 'WebSocketTopic.ON_MESSAGE',
-  ON_STATE_CHANGE = 'WebSocketTopic.ON_STATE_CHANGE',
+enum TOPIC {
+  ON_ERROR = 'WebSocketClient.TOPIC.ON_ERROR',
+  ON_INVALID_TOKEN = 'WebSocketClient.TOPIC.ON_INVALID_TOKEN',
+  ON_MESSAGE = 'WebSocketClient.TOPIC.ON_MESSAGE',
+  ON_STATE_CHANGE = 'WebSocketClient.TOPIC.ON_STATE_CHANGE',
 }
 
 export declare interface WebSocketClient {
-  on(event: WebSocketTopic.ON_ERROR, listener: (error: Error | BackendError) => void): this;
-  on(event: WebSocketTopic.ON_INVALID_TOKEN, listener: (error: BackendError) => void): this;
-  on(event: WebSocketTopic.ON_MESSAGE, listener: (notification: Notification) => void): this;
-  on(event: WebSocketTopic.ON_STATE_CHANGE, listener: (state: WEBSOCKET_STATE) => void): this;
+  on(event: TOPIC.ON_ERROR, listener: (error: Error | BackendError) => void): this;
+  on(event: TOPIC.ON_INVALID_TOKEN, listener: (error: BackendError) => void): this;
+  on(event: TOPIC.ON_MESSAGE, listener: (notification: Notification) => void): this;
+  on(event: TOPIC.ON_STATE_CHANGE, listener: (state: WEBSOCKET_STATE) => void): this;
 }
 
 export class WebSocketClient extends EventEmitter {
@@ -50,6 +51,10 @@ export class WebSocketClient extends EventEmitter {
   private isSocketLocked: boolean;
   private bufferedMessages: string[];
   private onBeforeConnect: () => Promise<void> = () => Promise.resolve();
+
+  public static get TOPIC(): typeof TOPIC {
+    return TOPIC;
+  }
 
   constructor(baseUrl: string, client: HttpClient) {
     super();
@@ -71,7 +76,7 @@ export class WebSocketClient extends EventEmitter {
   private onStateChange(newState: WEBSOCKET_STATE): void {
     if (newState !== this.websocketState) {
       this.websocketState = newState;
-      this.emit(WebSocketTopic.ON_STATE_CHANGE, this.websocketState);
+      this.emit(WebSocketClient.TOPIC.ON_STATE_CHANGE, this.websocketState);
     }
   }
 
@@ -80,13 +85,13 @@ export class WebSocketClient extends EventEmitter {
       this.bufferedMessages.push(data);
     } else {
       const notification: Notification = JSON.parse(data);
-      this.emit(WebSocketTopic.ON_MESSAGE, notification);
+      this.emit(WebSocketClient.TOPIC.ON_MESSAGE, notification);
     }
   };
 
   private readonly onError = async (error: ErrorEvent) => {
     this.onStateChange(this.socket.getState());
-    this.emit(WebSocketTopic.ON_ERROR, error);
+    this.emit(WebSocketClient.TOPIC.ON_ERROR, error);
     await this.refreshAccessToken();
   };
 
@@ -97,7 +102,7 @@ export class WebSocketClient extends EventEmitter {
       await this.onBeforeConnect();
     } catch (error) {
       this.logger.warn(`Error during execution of "beforeReconnect"`, error);
-      this.emit(WebSocketTopic.ON_ERROR, error);
+      this.emit(WebSocketClient.TOPIC.ON_ERROR, error);
     } finally {
       this.unlock();
     }
@@ -155,7 +160,7 @@ export class WebSocketClient extends EventEmitter {
         const mappedError = BackendErrorMapper.map(error);
         // On invalid token the WebSocket is supposed to get closed by the client
         this.emit(
-          error instanceof InvalidTokenError ? WebSocketTopic.ON_INVALID_TOKEN : WebSocketTopic.ON_ERROR,
+          error instanceof InvalidTokenError ? WebSocketClient.TOPIC.ON_INVALID_TOKEN : WebSocketClient.TOPIC.ON_ERROR,
           mappedError,
         );
       }

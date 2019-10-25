@@ -22,7 +22,7 @@ import {Context, LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
 import {ClientType, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
 import * as Events from '@wireapp/api-client/dist/commonjs/event';
 import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/';
-import {WebSocketTopic} from '@wireapp/api-client/dist/commonjs/tcp/';
+import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/';
 import * as cryptobox from '@wireapp/cryptobox';
 import {error as StoreEngineError} from '@wireapp/store-engine';
 import EventEmitter from 'events';
@@ -255,8 +255,8 @@ export class Account extends EventEmitter {
       throw new Error('Context is not set - please login first');
     }
 
-    this.apiClient.transport.ws.removeAllListeners(WebSocketTopic.ON_MESSAGE);
-    this.apiClient.transport.ws.on(WebSocketTopic.ON_MESSAGE, notificationHandler);
+    this.apiClient.transport.ws.removeAllListeners(WebSocketClient.TOPIC.ON_MESSAGE);
+    this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, notificationHandler);
 
     this.service!.notification.removeAllListeners(NotificationService.TOPIC.NOTIFICATION_ERROR);
     this.service!.notification.on(NotificationService.TOPIC.NOTIFICATION_ERROR, this.handleError);
