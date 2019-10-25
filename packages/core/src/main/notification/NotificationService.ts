@@ -22,9 +22,9 @@ import * as Events from '@wireapp/api-client/dist/commonjs/event';
 import {Notification} from '@wireapp/api-client/dist/commonjs/notification/';
 import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import {EventEmitter} from 'events';
-import logdown = require('logdown');
 
-import {PayloadBundle, PayloadBundleType} from '../conversation';
+import logdown = require('logdown');
+import {PayloadBundle, PayloadBundleSource, PayloadBundleType} from '../conversation';
 import {AssetContent} from '../conversation/content';
 import {ConversationMapper} from '../conversation/ConversationMapper';
 import * as Messages from '../conversation/message/Message';
@@ -38,7 +38,7 @@ enum TOPIC {
   NOTIFICATION_ERROR = 'NotificationService.TOPIC.NOTIFICATION_ERROR',
 }
 
-export type NotificationHandler = (notification: Notification) => Promise<void>;
+export type NotificationHandler = (notification: Notification, source: PayloadBundleSource) => Promise<void>;
 
 export declare interface NotificationService {
   on(event: PayloadBundleType.ASSET, listener: (payload: Messages.FileAssetMessage) => void): this;
@@ -142,17 +142,22 @@ export class NotificationService extends EventEmitter {
   public async handleNotificationStream(notificationHandler: NotificationHandler): Promise<void> {
     const notifications = await this.getAllNotifications();
     for (const notification of notifications) {
-      await notificationHandler(notification).catch(error => this.logger.error(error));
+      await notificationHandler(notification, PayloadBundleSource.NOTIFICATION_STREAM).catch(error =>
+        this.logger.error(error),
+      );
     }
   }
 
-  public readonly handleNotification: NotificationHandler = async notification => {
+  public readonly handleNotification: NotificationHandler = async (
+    notification: Notification,
+    source: PayloadBundleSource,
+  ): Promise<void> => {
     for (const event of notification.payload) {
-      let data;
+      let data: PayloadBundle | void;
 
       try {
         this.logger.log(`Handling event of type "${event.type}" for notification with ID "${notification.id}"`, event);
-        data = await this.handleEvent(event);
+        data = await this.handleEvent(event, source);
         if (!notification.transient) {
           await this.setLastNotificationId(notification);
         }
@@ -215,11 +220,11 @@ export class NotificationService extends EventEmitter {
     }
   };
 
-  private async handleEvent(event: Events.BackendEvent): Promise<PayloadBundle | void> {
+  private async handleEvent(event: Events.BackendEvent, source: PayloadBundleSource): Promise<PayloadBundle | void> {
     switch (event.type) {
       // Encrypted events
       case Events.CONVERSATION_EVENT.OTR_MESSAGE_ADD: {
-        return this.cryptographyService.decodeGenericMessage(event);
+        return this.cryptographyService.decodeGenericMessage(event, source);
       }
       // Meta events
       case Events.CONVERSATION_EVENT.MEMBER_JOIN:
@@ -228,13 +233,13 @@ export class NotificationService extends EventEmitter {
       case Events.CONVERSATION_EVENT.TYPING: {
         const {conversation, from} = event;
         const metaEvent = {...event, from, conversation};
-        return ConversationMapper.mapConversationEvent(metaEvent);
+        return ConversationMapper.mapConversationEvent(metaEvent, source);
       }
       // User events
       case Events.USER_EVENT.CONNECTION:
       case Events.USER_EVENT.CLIENT_ADD:
       case Events.USER_EVENT.CLIENT_REMOVE: {
-        return UserMapper.mapUserEvent(event, this.apiClient.context!.userId);
+        return UserMapper.mapUserEvent(event, this.apiClient.context!.userId, source);
       }
     }
   }

@@ -32,7 +32,13 @@ import {LoginSanitizer} from './auth/';
 import {BroadcastService} from './broadcast/';
 import {ClientInfo, ClientService} from './client/';
 import {ConnectionService} from './connection/';
-import {AssetService, ConversationService, PayloadBundle, PayloadBundleType} from './conversation/';
+import {
+  AssetService,
+  ConversationService,
+  PayloadBundle,
+  PayloadBundleSource,
+  PayloadBundleType,
+} from './conversation/';
 import * as Messages from './conversation/message/Message';
 import {CoreError, NotificationError} from './CoreError';
 import {CryptographyService} from './cryptography/';
@@ -256,7 +262,11 @@ export class Account extends EventEmitter {
     }
 
     this.apiClient.transport.ws.removeAllListeners(WebSocketClient.TOPIC.ON_MESSAGE);
-    this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, notificationHandler);
+    this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, notification => {
+      notificationHandler(notification, PayloadBundleSource.WEBSOCKET).catch(error => {
+        this.logger.error(`Failed to handle notification ID "${notification.id}": ${error.message}`, error);
+      });
+    });
 
     this.service!.notification.removeAllListeners(NotificationService.TOPIC.NOTIFICATION_ERROR);
     this.service!.notification.on(NotificationService.TOPIC.NOTIFICATION_ERROR, this.handleError);
