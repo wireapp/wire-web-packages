@@ -4,7 +4,7 @@
     "@babel/plugin-proposal-class-properties": "7.5.5",
     "@babel/plugin-proposal-object-rest-spread": "7.6.2",
     "@babel/preset-typescript": "7.6.0",
-    "@wireapp/websql": "0.0.8",
+    "@wireapp/websql": "0.0.9",
     "uint32": "0.2.1"
   },
   "devDependencies": {
@@ -16,7 +16,7 @@
     "@types/webpack": "4.39.5",
     "@wireapp/store-engine": "3.9.21",
     "babel-loader": "8.0.6",
-    "bazinga64": "5.5.26",
+    "bazinga64": "5.5.27",
     "jasmine": "3.5.0",
     "karma": "4.4.1",
     "karma-chrome-launcher": "3.1.0",
@@ -46,5 +46,5 @@
     "test": "karma start",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "0.10.10"
+  "version": "0.10.11"
 }
