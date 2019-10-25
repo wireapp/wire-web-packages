@@ -22,7 +22,7 @@ import logdown from 'logdown';
 import {CloseEvent, ErrorEvent, Event} from 'reconnecting-websocket';
 
 import {InvalidTokenError} from '../auth/';
-import {BackendError, BackendErrorMapper, HttpClient, NetworkError} from '../http/';
+import {BackendErrorMapper, HttpClient, NetworkError} from '../http/';
 import {Notification} from '../notification';
 import {ReconnectingWebsocket, WEBSOCKET_STATE} from './ReconnectingWebsocket';
 
@@ -34,8 +34,8 @@ enum TOPIC {
 }
 
 export declare interface WebSocketClient {
-  on(event: TOPIC.ON_ERROR, listener: (error: Error | BackendError) => void): this;
-  on(event: TOPIC.ON_INVALID_TOKEN, listener: (error: BackendError) => void): this;
+  on(event: TOPIC.ON_ERROR, listener: (error: Error | ErrorEvent) => void): this;
+  on(event: TOPIC.ON_INVALID_TOKEN, listener: (error: InvalidTokenError) => void): this;
   on(event: TOPIC.ON_MESSAGE, listener: (notification: Notification) => void): this;
   on(event: TOPIC.ON_STATE_CHANGE, listener: (state: WEBSOCKET_STATE) => void): this;
 }

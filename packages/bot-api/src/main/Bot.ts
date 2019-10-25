@@ -20,7 +20,7 @@
 import {APIClient} from '@wireapp/api-client';
 import {ClientType} from '@wireapp/api-client/dist/commonjs/client/';
 import {Account} from '@wireapp/core';
-import {PayloadBundle, PayloadBundleType} from '@wireapp/core/dist/conversation/';
+import {PayloadBundleType} from '@wireapp/core/dist/conversation/';
 import {CRUDEngine, MemoryEngine} from '@wireapp/store-engine';
 import logdown from 'logdown';
 import UUID from 'pure-uuid';
@@ -119,12 +119,11 @@ export class Bot {
 
     await this.account.login(login);
     await this.account.listen();
-    this.account.on('error', error => this.logger.error(error));
 
     this.handlers.forEach(handler => (handler.account = this.account));
   }
 
-  private handlePayload(payload: PayloadBundle): void {
+  private handlePayload(payload: any): void {
     if (this.validateMessage(payload.conversation, payload.from)) {
       this.handlers.forEach(handler => handler.handleEvent(payload));
     }
