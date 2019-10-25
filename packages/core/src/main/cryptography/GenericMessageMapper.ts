@@ -123,7 +123,7 @@ export class GenericMessageMapper {
           messageTimer: 0,
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
-          type: PayloadBundleType.CLEARED,
+          type: PayloadBundleType.CONVERSATION_CLEAR,
         };
       }
       case GenericMessageType.DELETED: {

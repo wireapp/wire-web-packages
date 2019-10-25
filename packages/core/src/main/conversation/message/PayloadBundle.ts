@@ -45,7 +45,6 @@ export enum PayloadBundleType {
   ASSET_META = 'PayloadBundleType.ASSET_META',
   AVAILABILITY = 'PayloadBundleType.AVAILABILITY',
   CALL = 'PayloadBundleType.CALL',
-  CLEARED = 'PayloadBundleType.CLEARED',
   CLIENT_ACTION = 'PayloadBundleType.CLIENT_ACTION',
   CLIENT_ADD = 'PayloadBundleType.CLIENT_ADD',
   CLIENT_REMOVE = 'PayloadBundleType.CLIENT_REMOVE',

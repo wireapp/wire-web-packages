@@ -334,7 +334,7 @@ const messageIdCache = {};
     logger.info(`Received calling payload`, JSON.parse(data.content));
   });
 
-  account.on(PayloadBundleType.CLEARED, handleIncomingMessage);
+  account.on(PayloadBundleType.CONVERSATION_CLEAR, handleIncomingMessage);
 
   account.on(PayloadBundleType.LOCATION, async data => {
     const {content, conversation: conversationId} = data;

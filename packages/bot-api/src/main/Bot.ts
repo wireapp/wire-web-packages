@@ -99,15 +99,12 @@ export class Bot {
     this.account.on(PayloadBundleType.ASSET_ABORT, this.handlePayload.bind(this));
     this.account.on(PayloadBundleType.ASSET_IMAGE, this.handlePayload.bind(this));
     this.account.on(PayloadBundleType.ASSET_META, this.handlePayload.bind(this));
-    this.account.on(PayloadBundleType.AVAILABILITY, this.handlePayload.bind(this));
     this.account.on(PayloadBundleType.CALL, this.handlePayload.bind(this));
-    this.account.on(PayloadBundleType.CLEARED, this.handlePayload.bind(this));
     this.account.on(PayloadBundleType.CLIENT_ACTION, this.handlePayload.bind(this));
     this.account.on(PayloadBundleType.CONFIRMATION, this.handlePayload.bind(this));
     this.account.on(PayloadBundleType.CONNECTION_REQUEST, this.handlePayload.bind(this));
     this.account.on(PayloadBundleType.CONVERSATION_CLEAR, this.handlePayload.bind(this));
     this.account.on(PayloadBundleType.CONVERSATION_RENAME, this.handlePayload.bind(this));
-    this.account.on(PayloadBundleType.LAST_READ_UPDATE, this.handlePayload.bind(this));
     this.account.on(PayloadBundleType.LOCATION, this.handlePayload.bind(this));
     this.account.on(PayloadBundleType.MEMBER_JOIN, this.handlePayload.bind(this));
     this.account.on(PayloadBundleType.MESSAGE_DELETE, this.handlePayload.bind(this));

@@ -132,7 +132,6 @@ export class NotificationService extends EventEmitter {
         switch (data.type) {
           case PayloadBundleType.ASSET_IMAGE:
           case PayloadBundleType.CALL:
-          case PayloadBundleType.CLEARED:
           case PayloadBundleType.CLIENT_ACTION:
           case PayloadBundleType.CLIENT_ADD:
           case PayloadBundleType.CLIENT_REMOVE:
@@ -165,6 +164,7 @@ export class NotificationService extends EventEmitter {
           }
           case PayloadBundleType.TIMER_UPDATE:
           case PayloadBundleType.CONVERSATION_RENAME:
+          case PayloadBundleType.CONVERSATION_CLEAR:
           case PayloadBundleType.MEMBER_JOIN:
           case PayloadBundleType.TYPING:
             this.emit(data.type, event);

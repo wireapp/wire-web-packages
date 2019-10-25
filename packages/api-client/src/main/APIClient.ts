@@ -51,14 +51,18 @@ import {UserAPI} from './user/';
 
 const {version}: {version: string} = require('../../package.json');
 
-export enum APIClientTopic {
-  ON_LOGOUT = 'APIClientTopic.ON_LOGOUT',
+enum TOPIC {
+  ON_LOGOUT = 'APIClient.TOPIC.ON_LOGOUT',
 }
 
 const defaultConfig: Config = {
   store: new MemoryEngine(),
   urls: Backend.PRODUCTION,
 };
+
+export declare interface APIClient {
+  on(event: TOPIC.ON_LOGOUT, listener: (error: InvalidTokenError) => void): this;
+}
 
 export class APIClient extends EventEmitter {
   private readonly logger: logdown.Logger;
@@ -94,7 +98,9 @@ export class APIClient extends EventEmitter {
   public config: Config;
 
   public static BACKEND = Backend;
-  public static TOPIC = APIClientTopic;
+  public static get TOPIC(): typeof TOPIC {
+    return TOPIC;
+  }
   public static VERSION = version;
 
   constructor(config?: Config) {
@@ -112,7 +118,7 @@ export class APIClient extends EventEmitter {
     webSocket.on(WebSocketTopic.ON_INVALID_TOKEN, async (error: InvalidTokenError) => {
       this.logger.warn(`Cannot renew access token because cookie is invalid: ${error.message}`, error);
       await this.logout();
-      this.emit(APIClientTopic.ON_LOGOUT, error);
+      this.emit(APIClient.TOPIC.ON_LOGOUT, error);
     });
 
     this.transport = {
