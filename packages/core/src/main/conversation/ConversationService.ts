@@ -779,11 +779,7 @@ export class ConversationService {
     };
   }
 
-  public async deleteMessageLocal(
-    conversationId: string,
-    messageIdToHide: string,
-    source: PayloadBundleSource,
-  ): Promise<HideMessage> {
+  public async deleteMessageLocal(conversationId: string, messageIdToHide: string): Promise<HideMessage> {
     const messageId = MessageBuilder.createId();
 
     const content: HiddenContent = MessageHide.create({
@@ -806,7 +802,7 @@ export class ConversationService {
       from: this.apiClient.context!.userId,
       id: messageId,
       messageTimer: this.messageTimer.getMessageTimer(conversationId),
-      source,
+      source: PayloadBundleSource.LOCAL,
       state: PayloadBundleState.OUTGOING_SENT,
       timestamp: Date.now(),
       type: PayloadBundleType.MESSAGE_HIDE,
@@ -817,7 +813,6 @@ export class ConversationService {
     conversationId: string,
     messageIdToDelete: string,
     userIds: string[] | undefined,
-    source: PayloadBundleSource,
   ): Promise<DeleteMessage> {
     const messageId = MessageBuilder.createId();
 
@@ -838,7 +833,7 @@ export class ConversationService {
       from: this.apiClient.context!.userId,
       id: messageId,
       messageTimer: this.messageTimer.getMessageTimer(conversationId),
-      source,
+      source: PayloadBundleSource.LOCAL,
       state: PayloadBundleState.OUTGOING_SENT,
       timestamp: Date.now(),
       type: PayloadBundleType.MESSAGE_DELETE,
