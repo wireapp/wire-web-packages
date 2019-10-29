@@ -118,7 +118,7 @@ export interface DeleteMessage extends BasePayloadBundle {
   type: PayloadBundleType.MESSAGE_DELETE;
 }
 
-export type Message =
+export type OtrMessage =
   | CallMessage
   | ClearConversationMessage
   | ConfirmationMessage

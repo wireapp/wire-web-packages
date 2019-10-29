@@ -70,6 +70,8 @@ export enum PayloadBundleType {
   MESSAGE_HIDE = 'PayloadBundleType.MESSAGE_HIDE',
   PING = 'PayloadBundleType.PING',
   REACTION = 'PayloadBundleType.REACTION',
+  TEAM_MEMBER_JOIN = 'PayloadBundleType.TEAM_MEMBER_JOIN',
+  TEAM_MEMBER_LEAVE = 'PayloadBundleType.TEAM_MEMBER_LEAVE',
   TEXT = 'PayloadBundleType.TEXT',
   TIMER_UPDATE = 'PayloadBundleType.TIMER_UPDATE',
   TYPING = 'PayloadBundleType.TYPING',
