@@ -35,85 +35,85 @@ import {
   ReactionContent,
   TextContent,
 } from '../content';
-import {PayloadBundle, PayloadBundleType} from './PayloadBundle';
+import {BasePayloadBundle, PayloadBundleType} from './PayloadBundle';
 
-export interface TextMessage extends PayloadBundle {
+export interface TextMessage extends BasePayloadBundle {
   content: TextContent;
   type: PayloadBundleType.TEXT;
 }
 
-export interface CallMessage extends PayloadBundle {
+export interface CallMessage extends BasePayloadBundle {
   content: CallingContent;
   type: PayloadBundleType.CALL;
 }
 
-export interface EditedTextMessage extends PayloadBundle {
+export interface EditedTextMessage extends BasePayloadBundle {
   content: EditedTextContent;
   type: PayloadBundleType.MESSAGE_EDIT;
 }
 
-export interface FileAssetMessage extends PayloadBundle {
+export interface FileAssetMessage extends BasePayloadBundle {
   content: FileAssetContent;
   type: PayloadBundleType.ASSET;
 }
 
-export interface FileAssetMetaDataMessage extends PayloadBundle {
+export interface FileAssetMetaDataMessage extends BasePayloadBundle {
   content: FileAssetMetaDataContent;
   type: PayloadBundleType.ASSET_META;
 }
 
-export interface FileAssetAbortMessage extends PayloadBundle {
+export interface FileAssetAbortMessage extends BasePayloadBundle {
   content: FileAssetAbortContent;
   type: PayloadBundleType.ASSET_ABORT;
 }
 
 // TODO Merge ImageAssetMessageOutgoing & ImageAssetMessage
-export interface ImageAssetMessageOutgoing extends PayloadBundle {
+export interface ImageAssetMessageOutgoing extends BasePayloadBundle {
   content: ImageAssetContent;
   type: PayloadBundleType.ASSET_IMAGE;
 }
 
-export interface ImageAssetMessage extends PayloadBundle {
+export interface ImageAssetMessage extends BasePayloadBundle {
   content: AssetContent;
   type: PayloadBundleType.ASSET_IMAGE;
 }
 
-export interface LocationMessage extends PayloadBundle {
+export interface LocationMessage extends BasePayloadBundle {
   content: LocationContent;
   type: PayloadBundleType.LOCATION;
 }
 
-export interface ReactionMessage extends PayloadBundle {
+export interface ReactionMessage extends BasePayloadBundle {
   content: ReactionContent;
   type: PayloadBundleType.REACTION;
 }
 
-export interface ConfirmationMessage extends PayloadBundle {
+export interface ConfirmationMessage extends BasePayloadBundle {
   content: ConfirmationContent;
   type: PayloadBundleType.CONFIRMATION;
 }
 
-export interface PingMessage extends PayloadBundle {
+export interface PingMessage extends BasePayloadBundle {
   content: KnockContent;
   type: PayloadBundleType.PING;
 }
 
-export interface ResetSessionMessage extends PayloadBundle {
+export interface ResetSessionMessage extends BasePayloadBundle {
   content: ClientActionContent;
   type: PayloadBundleType.CLIENT_ACTION;
 }
 
-export interface ClearConversationMessage extends PayloadBundle {
+export interface ClearConversationMessage extends BasePayloadBundle {
   content: ClearedContent;
   type: PayloadBundleType.CONVERSATION_CLEAR;
 }
 
-export interface HideMessage extends PayloadBundle {
+export interface HideMessage extends BasePayloadBundle {
   content: HiddenContent;
   type: PayloadBundleType.MESSAGE_HIDE;
 }
 
-export interface DeleteMessage extends PayloadBundle {
+export interface DeleteMessage extends BasePayloadBundle {
   content: DeletedContent;
   type: PayloadBundleType.MESSAGE_DELETE;
 }

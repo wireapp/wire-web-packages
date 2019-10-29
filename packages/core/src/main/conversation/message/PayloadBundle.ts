@@ -19,6 +19,7 @@
 
 import {ConversationEventData, TeamEventData, UserEventData} from '@wireapp/api-client/dist/commonjs/event/';
 import {ConversationContent} from '../content';
+import {Message} from './Message';
 
 export type PayloadBundleContent = ConversationContent | ConversationEventData | TeamEventData | UserEventData;
 
@@ -34,7 +35,7 @@ export enum PayloadBundleState {
   OUTGOING_UNSENT = 'PayloadBundleState.OUTGOING_UNSENT',
 }
 
-export interface PayloadBundle {
+export interface BasePayloadBundle {
   content?: PayloadBundleContent;
   conversation: string;
   from: string;
@@ -46,6 +47,8 @@ export interface PayloadBundle {
   timestamp: number;
   type: PayloadBundleType;
 }
+
+export type PayloadBundle = Message | BasePayloadBundle;
 
 export enum PayloadBundleType {
   ASSET = 'PayloadBundleType.ASSET',
