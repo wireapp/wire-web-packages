@@ -17,8 +17,17 @@
  *
  */
 
-import {TeamMemberJoinData, TeamMemberLeaveData} from '@wireapp/api-client/dist/commonjs/team/data';
+import {
+  TeamConversationCreateData,
+  TeamMemberJoinData,
+  TeamMemberLeaveData,
+} from '@wireapp/api-client/dist/commonjs/team/data';
 import {BasePayloadBundle, PayloadBundleType} from './PayloadBundle';
+
+export interface TeamConversationCreateMessage extends BasePayloadBundle {
+  content: TeamConversationCreateData;
+  type: PayloadBundleType.TEAM_CONVERSATION_CREATE;
+}
 
 export interface TeamMemberLeaveMessage extends BasePayloadBundle {
   content: TeamMemberLeaveData;
