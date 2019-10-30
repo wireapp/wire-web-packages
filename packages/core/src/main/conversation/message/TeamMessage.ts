@@ -57,7 +57,7 @@ export interface TeamMemberLeaveMesssage extends BasePayloadBundle {
 }
 
 export interface TeamUpdateMessage extends BasePayloadBundle {
-  congent: TeamUpdateData;
+  content: TeamUpdateData;
   type: PayloadBundleType.TEAM_UPDATE;
 }
 
