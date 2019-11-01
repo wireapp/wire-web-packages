@@ -106,6 +106,14 @@ export class SQLeetEngine implements CRUDEngine {
     if (this.db) {
       await this.db.close();
       await this.db.wipe(this.storeName);
+      if (this.nodeDatabaseDir) {
+        fs.rmdirSync(this.nodeDatabaseDir, {recursive: true});
+      } else {
+        await new Promise(resolve => {
+          const request = indexedDB.deleteDatabase('/sqleet');
+          request.onsuccess = resolve;
+        });
+      }
     }
   }
 
