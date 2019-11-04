@@ -4187,10 +4187,10 @@ commander@^2.12.1, commander@^2.2.0, commander@^2.20.0, commander@^2.8.1, comman
   resolved "https://registry.npmjs.org/commander/-/commander-2.20.1.tgz#3863ce3ca92d0831dcf2a102f5fb4b5926afd0f9"
   integrity sha512-cCuLsMhJeWQ/ZpsFTbE765kvVfoeSddc4nU3up4fV+fDBcfUXnbITJ+JzhkdjzOqhURjZgujxaioam4RM9yGUg==
 
-comment-parser@^0.6.2:
-  version "0.6.2"
-  resolved "https://registry.npmjs.org/comment-parser/-/comment-parser-0.6.2.tgz#b71e8fcacad954bea616779391838150d0096dcb"
-  integrity sha512-Wdms0Q8d4vvb2Yk72OwZjwNWtMklbC5Re7lD9cjCP/AG1fhocmc0TrxGBBAXPLy8fZQPrfHGgyygwI0lA7pbzA==
+comment-parser@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.npmjs.org/comment-parser/-/comment-parser-0.7.0.tgz#9dc1f689a60d81fbcaf867d3c9eba3eb061ccfc1"
+  integrity sha512-m0SGP0RFO4P3hIBlIor4sBFPe5Y4HUeGgo/UZK/1Zdea5eUiqxroQ3lFqBDDSfWo9z9Q6LLnt2u0JqwacVEd/A==
 
 commondir@^1.0.1:
   version "1.0.1"
@@ -5564,12 +5564,12 @@ eslint-plugin-jasmine@2.10.1:
   resolved "https://registry.npmjs.org/eslint-plugin-jasmine/-/eslint-plugin-jasmine-2.10.1.tgz#5733b709e751f4bc40e31e1c16989bd2cdfbec97"
   integrity sha1-VzO3CedR9LxA4x4cFpib0s377Jc=
 
-eslint-plugin-jsdoc@16.1.1:
-  version "16.1.1"
-  resolved "https://registry.npmjs.org/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-16.1.1.tgz#fa9e66579575ebc5e68d86e0a2f3058fa6a53602"
-  integrity sha512-GvnWWoctfpFG5knKZhR04arLcZrsRF4Ihxq48y0k1rJ6UrjiTExqExs21Gd+HNdPwrPZIty03UvIuEIzpFY+lw==
+eslint-plugin-jsdoc@17.0.1:
+  version "17.0.1"
+  resolved "https://registry.npmjs.org/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-17.0.1.tgz#fd7c01b810184ebe3697374261605e1338476e22"
+  integrity sha512-5L8nNpZmc3IWP2YXuMelSCGdsKBxaXPBYIs8ug7gHWqmFtGIUhPZfKTuFIT6K5Hbcsg/zXhjTEHpCMe2M7slJQ==
   dependencies:
-    comment-parser "^0.6.2"
+    comment-parser "^0.7.0"
     debug "^4.1.1"
     jsdoctypeparser "^5.1.1"
     lodash "^4.17.15"
