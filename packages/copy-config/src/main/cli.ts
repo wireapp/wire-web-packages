@@ -19,7 +19,7 @@
  *
  */
 
-import cosmiconfig from 'cosmiconfig';
+import {cosmiconfig} from 'cosmiconfig';
 import logdown from 'logdown';
 
 import {CopyConfig, CopyConfigOptions} from './';
