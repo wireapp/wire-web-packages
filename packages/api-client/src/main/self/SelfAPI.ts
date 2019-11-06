@@ -257,12 +257,12 @@ export class SelfAPI {
   /**
    * Check if password is set.
    */
-  public async headPassword(): Promise<AxiosResponse<void>> {
+  public headPassword(): Promise<AxiosResponse<void>> {
     const config: AxiosRequestConfig = {
       method: 'head',
       url: `${SelfAPI.URL.SELF}/${SelfAPI.URL.PASSWORD}`,
     };
 
-    return this.client.sendJSON<void>(config);
+    return this.client.sendJSON(config);
   }
 }
