@@ -187,6 +187,7 @@ export class NotificationService extends EventEmitter {
           case PayloadBundleType.PING:
           case PayloadBundleType.REACTION:
           case PayloadBundleType.TEXT:
+          case PayloadBundleType.USER_UPDATE:
             this.emit(data.type, data);
             break;
           case PayloadBundleType.ASSET: {
