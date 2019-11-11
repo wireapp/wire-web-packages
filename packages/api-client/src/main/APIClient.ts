@@ -256,7 +256,7 @@ export class APIClient extends EventEmitter {
   }
 
   public connect(onBeforeConnect?: () => Promise<void>): Promise<WebSocketClient> {
-    return this.transport.ws.connect(this.context && this.context.clientId, onBeforeConnect);
+    return this.transport.ws.connect(this.context?.clientId, onBeforeConnect);
   }
 
   private createContext(userId: string, clientType: ClientType, clientId?: string): Context {
@@ -274,7 +274,7 @@ export class APIClient extends EventEmitter {
     this.logger.log(`Initialising store with name "${dbName}"`);
     try {
       const db = await this.config.store.init(dbName);
-      const isDexieStore = db && db.constructor.name === 'Dexie';
+      const isDexieStore = db?.constructor.name === 'Dexie';
       if (isDexieStore) {
         if (this.config.schemaCallback) {
           this.config.schemaCallback(db);
@@ -293,17 +293,11 @@ export class APIClient extends EventEmitter {
   }
 
   public get clientId(): string | undefined {
-    if (this.context && this.context.clientId) {
-      return this.context.clientId;
-    }
-    return undefined;
+    return this.context?.clientId ?? undefined;
   }
 
   public get userId(): string | undefined {
-    if (this.context && this.context.userId) {
-      return this.context.userId;
-    }
-    return undefined;
+    return this.context?.userId ?? undefined;
   }
 
   /** Should be used in cases where the user ID is MANDATORY. */

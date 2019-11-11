@@ -257,7 +257,7 @@ export class SQLeetEngine implements CRUDEngine {
     const statement = `SELECT ${SQLeetEnginePrimaryKeyName} FROM ${escapedTableName};`;
 
     const record = await this.db.execute(statement);
-    if (record[0] && record[0].values) {
+    if (record[0]?.values) {
       return record[0].values.map((value: string[]) => value[0]);
     }
 

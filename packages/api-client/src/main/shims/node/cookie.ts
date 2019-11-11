@@ -71,7 +71,7 @@ const setInternalCookie = async (cookie: Cookie, engine: CRUDEngine): Promise<st
 };
 
 export const retrieveCookie = async (response: AxiosResponse, engine: CRUDEngine): Promise<AccessTokenData> => {
-  if (response.headers && response.headers['set-cookie']) {
+  if (response.headers?.['set-cookie']) {
     const cookies = response.headers['set-cookie'].map(ToughCookie.parse);
     for (const cookie of cookies) {
       await setInternalCookie(new Cookie(cookie.value, cookie.expires), engine);
