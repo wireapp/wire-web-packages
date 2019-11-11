@@ -73,7 +73,7 @@ export class SQLeetEngine implements CRUDEngine {
     }
   }
 
-  async init(storeName: string): Promise<any> {
+  async init(storeName: string): Promise<websql.Database> {
     await this.isSupported();
 
     this.storeName = storeName;
