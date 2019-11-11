@@ -22,4 +22,6 @@ export interface SendLoginCode {
   phone: string;
   /** Request the code with a call instead (default is SMS). */
   voice_call?: boolean;
+  /** Forces validation via SMS/voice call code */
+  force?: boolean;
 }
