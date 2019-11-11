@@ -119,7 +119,6 @@ describe('FileEngine', () => {
 
     it('is applied to all store operations.', async () => {
       const functionNames = [
-        'append',
         'create',
         'delete',
         'deleteAll',
