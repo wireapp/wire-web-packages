@@ -73,11 +73,6 @@ export class SQLeetEngine implements CRUDEngine {
     }
   }
 
-  // TODO: Remove "append" functionality from "CRUDEngine" completely
-  append<PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey, additions: string): Promise<PrimaryKey> {
-    throw new Error('Method not implemented.');
-  }
-
   async init(storeName: string): Promise<any> {
     await this.isSupported();
 
