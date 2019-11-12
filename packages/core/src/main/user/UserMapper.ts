@@ -63,6 +63,7 @@ export class UserMapper {
         const {user} = event as UserUpdateEvent;
         return {
           content: {user},
+          conversation: selfUserId,
           from: selfUserId,
           id: MessageBuilder.createId(),
           source,
