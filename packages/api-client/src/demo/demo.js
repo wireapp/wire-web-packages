@@ -18,7 +18,6 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {AccessTokenStore} from '@wireapp/api-client/dist/commonjs/auth/';
 import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/';
 import {Button, Form, Input} from '@wireapp/react-ui-kit/Form';
 import {COLOR, Logo} from '@wireapp/react-ui-kit/Identity';
@@ -128,7 +127,7 @@ window.onload = function() {
   client.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, notification => {
     logger.log('Received notification via WebSocket', notification);
   });
-  client.accessTokenStore.on(AccessTokenStore.TOPIC.ACCESS_TOKEN_REFRESH, accessToken => {
+  client.on(APIClient.TOPIC.ACCESS_TOKEN_REFRESH, accessToken => {
     logger.log('Acquired AccessToken', accessToken);
   });
   window.wire = Object.assign({}, {client});
