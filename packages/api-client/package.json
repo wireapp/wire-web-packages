@@ -24,6 +24,7 @@
     "@types/react-dom": "16.9.4",
     "@types/ws": "6.0.3",
     "@wireapp/react-ui-kit": "7.23.23",
+    "@wireapp/store-engine": "4.1.0",
     "@wireapp/store-engine-fs": "1.5.0",
     "babel-loader": "8.0.6",
     "browser-sync": "2.26.7",
