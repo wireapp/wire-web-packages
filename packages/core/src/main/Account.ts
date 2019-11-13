@@ -18,13 +18,13 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {Context, LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
+import {Context, Cookie, LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
 import {ClientType, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
 import * as Events from '@wireapp/api-client/dist/commonjs/event';
 import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/';
 import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/';
 import * as cryptobox from '@wireapp/cryptobox';
-import {error as StoreEngineError} from '@wireapp/store-engine';
+import {CRUDEngine, MemoryEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import EventEmitter from 'events';
 import logdown from 'logdown';
 
@@ -108,9 +108,20 @@ export class Account extends EventEmitter {
     return TOPIC;
   }
 
-  constructor(apiClient: APIClient = new APIClient()) {
+  constructor(apiClient: APIClient = new APIClient(), private readonly storeEngine: CRUDEngine = new MemoryEngine()) {
     super();
     this.apiClient = apiClient;
+
+    apiClient.on(APIClient.TOPIC.COOKIE_REFRESH, async (cookie?: Cookie) => {
+      if (cookie) {
+        const AUTH_TABLE_NAME = 'authentication';
+        const AUTH_COOKIE_KEY = 'cookie';
+        const entity = {expiration: cookie.expiration, zuid: cookie.zuid};
+        await this.storeEngine.delete(AUTH_TABLE_NAME, AUTH_COOKIE_KEY);
+        await this.storeEngine.create(AUTH_TABLE_NAME, AUTH_COOKIE_KEY, entity);
+      }
+    });
+
     this.logger = logdown('@wireapp/core/Account', {
       logger: console,
       markdown: false,
@@ -127,13 +138,13 @@ export class Account extends EventEmitter {
 
   public async init(): Promise<void> {
     const assetService = new AssetService(this.apiClient);
-    const cryptographyService = new CryptographyService(this.apiClient, this.apiClient.config.store);
+    const cryptographyService = new CryptographyService(this.apiClient, this.storeEngine);
 
-    const clientService = new ClientService(this.apiClient, this.apiClient.config.store, cryptographyService);
+    const clientService = new ClientService(this.apiClient, this.storeEngine, cryptographyService);
     const connectionService = new ConnectionService(this.apiClient);
     const giphyService = new GiphyService(this.apiClient);
     const conversationService = new ConversationService(this.apiClient, cryptographyService, assetService);
-    const notificationService = new NotificationService(this.apiClient, cryptographyService);
+    const notificationService = new NotificationService(this.apiClient, cryptographyService, this.storeEngine);
     const selfService = new SelfService(this.apiClient);
     const teamService = new TeamService(this.apiClient);
 
@@ -206,7 +217,7 @@ export class Account extends EventEmitter {
         if (shouldDeleteWholeDatabase) {
           this.logger.log('Last client was temporary - Deleting database');
 
-          await this.apiClient.config.store.purge();
+          await this.storeEngine.purge();
           await this.apiClient.init(loginData.clientType);
 
           return this.registerClient(loginData, clientInfo);

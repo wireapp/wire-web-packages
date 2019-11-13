@@ -29,8 +29,8 @@ describe('AssetService', () => {
     const engine = new MemoryEngine();
     await engine.init('');
 
-    const client = new APIClient({store: engine, urls: APIClient.BACKEND.STAGING});
-    account = new Account(client);
+    const client = new APIClient({urls: APIClient.BACKEND.STAGING});
+    account = new Account(client, engine);
     await account.init();
   });
 

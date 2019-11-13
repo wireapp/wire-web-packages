@@ -42,8 +42,8 @@ async function createAccount(storageName = `test-${Date.now()}`): Promise<Accoun
   const storeEngine = new MemoryEngine();
   await storeEngine.init(storageName);
 
-  const apiClient = new APIClient({store: storeEngine, urls: MOCK_BACKEND});
-  return new Account(apiClient);
+  const apiClient = new APIClient({urls: MOCK_BACKEND});
+  return new Account(apiClient, storeEngine);
 }
 
 describe('Account', () => {
@@ -158,8 +158,8 @@ describe('Account', () => {
       const storeEngine = new MemoryEngine();
       await storeEngine.init('account.test');
 
-      const apiClient = new APIClient({store: storeEngine, urls: MOCK_BACKEND});
-      const account = new Account(apiClient);
+      const apiClient = new APIClient({urls: MOCK_BACKEND});
+      const account = new Account(apiClient, storeEngine);
 
       await account.init();
       const {clientId, clientType, userId} = (await account.login({
@@ -177,8 +177,8 @@ describe('Account', () => {
       const storeEngine = new MemoryEngine();
       await storeEngine.init('account.test');
 
-      const apiClient = new APIClient({store: storeEngine, urls: MOCK_BACKEND});
-      const account = new Account(apiClient);
+      const apiClient = new APIClient({urls: MOCK_BACKEND});
+      const account = new Account(apiClient, storeEngine);
 
       await account.init();
 

@@ -91,10 +91,9 @@ export class Bot {
     }
 
     const apiClient = new APIClient({
-      store: storeEngine,
       urls: this.config.backend === 'staging' ? APIClient.BACKEND.STAGING : APIClient.BACKEND.PRODUCTION,
     });
-    this.account = new Account(apiClient);
+    this.account = new Account(apiClient, storeEngine);
 
     for (const payloadType of Object.values(PayloadBundleType)) {
       this.account.removeAllListeners(payloadType);
