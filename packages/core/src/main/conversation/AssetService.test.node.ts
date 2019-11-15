@@ -26,12 +26,9 @@ describe('AssetService', () => {
   let account: Account;
 
   beforeAll(async () => {
-    const engine = new MemoryEngine();
-    await engine.init('');
-
     const client = new APIClient({urls: APIClient.BACKEND.STAGING});
-    account = new Account(client, engine);
-    await account.init();
+    account = new Account(client);
+    await account.init(new MemoryEngine());
   });
 
   describe('"uploadImageAsset"', () => {
