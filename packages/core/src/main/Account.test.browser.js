@@ -58,7 +58,7 @@ describe('Account', () => {
         userId: new UUID(UUIDVersion),
       };
 
-      const account = new Account(apiClient, () => engine);
+      const account = new Account(apiClient, () => Promise.resolve(engine));
       await account.init(engine);
       spyOn(account.service.client, 'register').and.callThrough();
       account.service.client.synchronizeClients = () => Promise.resolve();
@@ -78,7 +78,7 @@ describe('Account', () => {
         urls: APIClient.BACKEND.STAGING,
       });
       const clientId = new UUID(UUIDVersion).toString();
-      const account = new Account(apiClient, () => engine);
+      const account = new Account(apiClient, () => Promise.resolve(engine));
       await account.init(engine);
       spyOn(account.service.cryptography, 'initCryptobox').and.returnValue(Promise.resolve());
       spyOn(account.service.client, 'getLocalClient').and.returnValue(Promise.resolve({id: clientId}));
@@ -98,7 +98,7 @@ describe('Account', () => {
         urls: APIClient.BACKEND.STAGING,
       });
       const clientId = new UUID(UUIDVersion).toString();
-      const account = new Account(apiClient, () => engine);
+      const account = new Account(apiClient, () => Promise.resolve(engine));
       await account.init(engine);
       spyOn(account.service.client, 'register').and.returnValue(Promise.resolve({id: clientId}));
       spyOn(account.service.client, 'synchronizeClients').and.returnValue(Promise.resolve());
