@@ -21,7 +21,7 @@ import {APIClient} from '@wireapp/api-client';
 import {ClientType} from '@wireapp/api-client/dist/commonjs/client/';
 import {Account} from '@wireapp/core';
 import {PayloadBundle, PayloadBundleType} from '@wireapp/core/dist/conversation/';
-import {CRUDEngine, MemoryEngine} from '@wireapp/store-engine';
+import {CRUDEngine} from '@wireapp/store-engine';
 import logdown from 'logdown';
 import UUID from 'pure-uuid';
 
@@ -85,15 +85,11 @@ export class Bot {
       password: this.credentials.password,
     };
 
-    if (!storeEngine) {
-      storeEngine = new MemoryEngine();
-      await storeEngine.init(this.credentials.email);
-    }
-
     const apiClient = new APIClient({
       urls: this.config.backend === 'staging' ? APIClient.BACKEND.STAGING : APIClient.BACKEND.PRODUCTION,
     });
-    this.account = new Account(apiClient, storeEngine);
+
+    this.account = storeEngine ? new Account(apiClient, () => Promise.resolve(storeEngine)) : new Account(apiClient);
 
     for (const payloadType of Object.values(PayloadBundleType)) {
       this.account.removeAllListeners(payloadType);
