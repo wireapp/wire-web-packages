@@ -58,9 +58,8 @@ describe('Account', () => {
         userId: new UUID(UUIDVersion),
       };
 
-      const account = new Account(apiClient, engine);
-
-      await account.init();
+      const account = new Account(apiClient, () => engine);
+      await account.init(engine);
       spyOn(account.service.client, 'register').and.callThrough();
       account.service.client.synchronizeClients = () => Promise.resolve();
       account.service.notification.backend.getLastNotification = () => Promise.resolve({id: 'notification-id'});
@@ -72,16 +71,15 @@ describe('Account', () => {
     });
   });
 
-  describe('"loadAndValidateLocalClient"', () => {
+  describe('loadAndValidateLocalClient', () => {
     it('synchronizes the client ID', async () => {
       const engine = new IndexedDBEngine();
       const apiClient = new APIClient({
         urls: APIClient.BACKEND.STAGING,
       });
       const clientId = new UUID(UUIDVersion).toString();
-      const account = new Account(apiClient, engine);
-
-      await account.init();
+      const account = new Account(apiClient, () => engine);
+      await account.init(engine);
       spyOn(account.service.cryptography, 'initCryptobox').and.returnValue(Promise.resolve());
       spyOn(account.service.client, 'getLocalClient').and.returnValue(Promise.resolve({id: clientId}));
       spyOn(account.apiClient.client.api, 'getClient').and.returnValue(Promise.resolve({id: clientId}));
@@ -93,16 +91,15 @@ describe('Account', () => {
     });
   });
 
-  describe('"registerClient"', () => {
+  describe('registerClient', () => {
     it('synchronizes the client ID', async () => {
       const engine = new IndexedDBEngine();
       const apiClient = new APIClient({
         urls: APIClient.BACKEND.STAGING,
       });
       const clientId = new UUID(UUIDVersion).toString();
-      const account = new Account(apiClient, engine);
-
-      await account.init();
+      const account = new Account(apiClient, () => engine);
+      await account.init(engine);
       spyOn(account.service.client, 'register').and.returnValue(Promise.resolve({id: clientId}));
       spyOn(account.service.client, 'synchronizeClients').and.returnValue(Promise.resolve());
       spyOn(account.service.notification, 'initializeNotificationStream').and.returnValue(Promise.resolve());
