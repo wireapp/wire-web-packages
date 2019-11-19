@@ -352,7 +352,7 @@ export class Account extends EventEmitter {
 
   private async initEngine(context: Context): Promise<CRUDEngine> {
     const clientType = context.clientType === ClientType.NONE ? '' : `@${context.clientType}`;
-    const dbName = ['wire', this.apiClient.config.urls.name, `${context.userId}${clientType}`].join('@');
+    const dbName = `wire@${this.apiClient.config.urls.name}@${context.userId}${clientType}`;
     this.logger.log(`Initialising store with name "${dbName}"...`);
     const engine = await this.storeEngineProvider(dbName);
     return engine;
