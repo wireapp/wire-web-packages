@@ -26,19 +26,21 @@ const {APIClient} = require('@wireapp/api-client');
 const UUIDVersion = 4;
 
 describe('NotificationService', () => {
-  const storeName = undefined;
+  let storeName = undefined;
   describe('Database "setLastEventDate"', () => {
     afterEach(done => {
       if (storeName) {
         const deleteRequest = window.indexedDB.deleteDatabase(storeName);
-
         deleteRequest.onerror = done.fail;
         deleteRequest.onsuccess = done;
+      } else {
+        done();
       }
     });
 
     it('initializes last event date if database entry is not present', async () => {
-      const db = new Dexie(new UUID(UUIDVersion).format());
+      storeName = new UUID(UUIDVersion).format();
+      const db = new Dexie(storeName);
       db.version(1).stores({
         amplify: '',
       });
@@ -65,7 +67,8 @@ describe('NotificationService', () => {
     });
 
     it('updates last event date if an older database record exists', async () => {
-      const db = new Dexie(new UUID(UUIDVersion).format());
+      storeName = storeName = new UUID(UUIDVersion).format();
+      const db = new Dexie(storeName);
       db.version(1).stores({
         amplify: '',
       });
@@ -95,7 +98,8 @@ describe('NotificationService', () => {
   });
 
   it('ignores last event date update if newer database entry exists', async () => {
-    const db = new Dexie(new UUID(UUIDVersion).format());
+    storeName = new UUID(UUIDVersion).format();
+    const db = new Dexie(storeName);
     db.version(1).stores({
       amplify: '',
     });
@@ -128,7 +132,8 @@ describe('NotificationService', () => {
   });
 
   it('initializes last notification ID if database entry is not present', async () => {
-    const db = new Dexie(new UUID(UUIDVersion).format());
+    storeName = new UUID(UUIDVersion).format();
+    const db = new Dexie(storeName);
     db.version(1).stores({
       amplify: '',
     });
@@ -150,7 +155,8 @@ describe('NotificationService', () => {
   });
 
   it('updates last notification ID if database entry exists', async () => {
-    const db = new Dexie(new UUID(UUIDVersion).format());
+    storeName = new UUID(UUIDVersion).format();
+    const db = new Dexie(storeName);
     db.version(1).stores({
       amplify: '',
     });

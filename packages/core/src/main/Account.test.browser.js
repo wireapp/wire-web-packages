@@ -27,18 +27,21 @@ const UUIDVersion = 4;
 
 describe('Account', () => {
   describe('"initClient"', () => {
-    const storeName = undefined;
+    let storeName = undefined;
 
     afterEach(done => {
       if (storeName) {
         const deleteRequest = window.indexedDB.deleteDatabase(storeName);
         deleteRequest.onerror = done.fail;
         deleteRequest.onsuccess = done;
+      } else {
+        done();
       }
     });
 
     it('creates a client if there is none', async () => {
-      const db = new Dexie(new UUID(UUIDVersion).format());
+      storeName = new UUID(UUIDVersion).format();
+      const db = new Dexie(storeName);
       db.version(1).stores({
         amplify: '',
         clients: ', meta.primary_key',
