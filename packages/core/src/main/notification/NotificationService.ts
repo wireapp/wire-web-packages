@@ -76,8 +76,8 @@ export declare interface NotificationService {
 
 export class NotificationService extends EventEmitter {
   private readonly apiClient: APIClient;
-  private readonly cryptographyService: CryptographyService;
   private readonly backend: NotificationBackendRepository;
+  private readonly cryptographyService: CryptographyService;
   private readonly database: NotificationDatabaseRepository;
   private readonly logger = logdown('@wireapp/core/notification/NotificationService', {
     logger: console,
@@ -87,16 +87,12 @@ export class NotificationService extends EventEmitter {
     return TOPIC;
   }
 
-  constructor(
-    apiClient: APIClient,
-    cryptographyService: CryptographyService,
-    private readonly storeEngine: CRUDEngine,
-  ) {
+  constructor(apiClient: APIClient, cryptographyService: CryptographyService, storeEngine: CRUDEngine) {
     super();
     this.apiClient = apiClient;
     this.cryptographyService = cryptographyService;
     this.backend = new NotificationBackendRepository(this.apiClient);
-    this.database = new NotificationDatabaseRepository(this.storeEngine);
+    this.database = new NotificationDatabaseRepository(storeEngine);
   }
 
   public async getAllNotifications(): Promise<Notification[]> {
