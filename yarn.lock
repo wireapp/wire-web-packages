@@ -5641,10 +5641,10 @@ eslint-plugin-import@2.18.2:
     read-pkg-up "^2.0.0"
     resolve "^1.11.0"
 
-eslint-plugin-jasmine@2.10.1:
-  version "2.10.1"
-  resolved "https://registry.npmjs.org/eslint-plugin-jasmine/-/eslint-plugin-jasmine-2.10.1.tgz#5733b709e751f4bc40e31e1c16989bd2cdfbec97"
-  integrity sha1-VzO3CedR9LxA4x4cFpib0s377Jc=
+eslint-plugin-jasmine@4.1.0:
+  version "4.1.0"
+  resolved "https://registry.npmjs.org/eslint-plugin-jasmine/-/eslint-plugin-jasmine-4.1.0.tgz#4f6d41b1a8622348c97559cbcd29badffa74dbfa"
+  integrity sha512-Vfuk2Sm1ULR7MqGjVIOOEdQWyoFBfSwvwUeo9MrajVGJB3C24c9Mmj1Cgf8Qwmf3aS2bezPt1sckpKXWpd74Dw==
 
 eslint-plugin-jsdoc@18.1.4:
   version "18.1.4"
