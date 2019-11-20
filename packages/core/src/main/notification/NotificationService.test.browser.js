@@ -17,11 +17,11 @@
  *
  */
 
-const Dexie = require('dexie');
-const UUID = require('pure-uuid');
-const {NotificationService} = require('@wireapp/core/dist/notification/');
-const {IndexedDBEngine} = require('@wireapp/store-engine-dexie');
-const {APIClient} = require('@wireapp/api-client');
+import {APIClient} from '@wireapp/api-client';
+import {NotificationService} from '@wireapp/core/dist/notification/';
+import {IndexedDBEngine} from '@wireapp/store-engine-dexie';
+import Dexie from 'dexie';
+import UUID from 'pure-uuid';
 
 const UUIDVersion = 4;
 
