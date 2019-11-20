@@ -17,7 +17,8 @@
  *
  */
 
-import {Notification, NotificationEvent} from '@wireapp/api-client/dist/commonjs/notification/';
+import {BackendEvent} from '@wireapp/api-client/dist/commonjs/event';
+import {Notification} from '@wireapp/api-client/dist/commonjs/notification/';
 import {CRUDEngine} from '@wireapp/store-engine';
 import {CryptographyDatabaseRepository} from '../cryptography/CryptographyDatabaseRepository';
 
@@ -33,13 +34,10 @@ export enum DatabaseKeys {
 const STORE_AMPLIFY = CryptographyDatabaseRepository.STORES.AMPLIFY;
 
 export class NotificationDatabaseRepository {
-  public static readonly STORES = DatabaseStores;
-  public static readonly KEYS = DatabaseKeys;
-
   constructor(private readonly storeEngine: CRUDEngine) {}
 
-  public getNotificationEventList(): Promise<NotificationEvent[]> {
-    return this.storeEngine.readAll<NotificationEvent>(NotificationDatabaseRepository.STORES.EVENTS);
+  public getNotificationEventList(): Promise<BackendEvent[]> {
+    return this.storeEngine.readAll<BackendEvent>(DatabaseStores.EVENTS);
   }
 
   public async getLastEventDate(): Promise<Date> {
@@ -67,14 +65,7 @@ export class NotificationDatabaseRepository {
   }
 
   public async updateLastNotificationId(lastNotification: Notification): Promise<string> {
-    await this.storeEngine.update(STORE_AMPLIFY, DatabaseKeys.PRIMARY_KEY_LAST_NOTIFICATION, {
-      value: lastNotification.id,
-    });
-    return lastNotification.id;
-  }
-
-  public async createLastNotificationId(lastNotification: Notification): Promise<string> {
-    await this.storeEngine.create(STORE_AMPLIFY, DatabaseKeys.PRIMARY_KEY_LAST_NOTIFICATION, {
+    await this.storeEngine.updateOrCreate(STORE_AMPLIFY, DatabaseKeys.PRIMARY_KEY_LAST_NOTIFICATION, {
       value: lastNotification.id,
     });
     return lastNotification.id;

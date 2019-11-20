@@ -3,6 +3,313 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@4.0.2...@wireapp/store-engine@4.1.0) (2019-11-11)
+
+
+### Features
+
+* **store-engine,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet,store-engine-web-storage:** Remove "append" functionality ([#2529](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/2529)) ([d8cb079](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/d8cb0797d8553ce40a41d501e46a1d7efe81495f))
+
+
+
+
+
+## [4.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@4.0.1...@wireapp/store-engine@4.0.2) (2019-11-11)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [4.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@4.0.0...@wireapp/store-engine@4.0.1) (2019-11-06)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+# [4.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.9.21...@wireapp/store-engine@4.0.0) (2019-10-25)
+
+
+### Features
+
+* **api-client,bot-api,core,cryptobox,store-engine:** Declare emitted events (BREAKING) ([#2479](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/2479)) ([6febfe7](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/6febfe75b6196c31a465116bd182c8ca5de8bc07))
+
+
+### BREAKING CHANGES
+
+* **api-client,bot-api,core,cryptobox,store-engine:** Topics are not exported directly anymore.
+
+
+
+
+
+## [3.9.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.9.20...@wireapp/store-engine@3.9.21) (2019-10-21)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [3.9.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.9.19...@wireapp/store-engine@3.9.20) (2019-10-17)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [3.9.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.9.18...@wireapp/store-engine@3.9.19) (2019-10-16)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [3.9.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.9.17...@wireapp/store-engine@3.9.18) (2019-10-14)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## 3.9.17 (2019-10-07)
+
+
+### Bug Fixes
+
+* **core:** Pass payload to Account emitter ([#2355](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/2355)) ([b37fc0d](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/b37fc0d))
+
+
+
+
+
+## [3.9.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.9.15...@wireapp/store-engine@3.9.16) (2019-09-27)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [3.9.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.9.14...@wireapp/store-engine@3.9.15) (2019-09-23)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [3.9.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.9.13...@wireapp/store-engine@3.9.14) (2019-09-20)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [3.9.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.9.12...@wireapp/store-engine@3.9.13) (2019-09-17)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [3.9.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.9.11...@wireapp/store-engine@3.9.12) (2019-09-12)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [3.9.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.9.10...@wireapp/store-engine@3.9.11) (2019-09-06)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [3.9.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.9.9...@wireapp/store-engine@3.9.10) (2019-09-04)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [3.9.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.9.8...@wireapp/store-engine@3.9.9) (2019-08-30)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [3.9.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.9.7...@wireapp/store-engine@3.9.8) (2019-08-29)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [3.9.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.9.6...@wireapp/store-engine@3.9.7) (2019-08-29)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [3.9.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.9.5...@wireapp/store-engine@3.9.6) (2019-08-26)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [3.9.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.9.4...@wireapp/store-engine@3.9.5) (2019-08-21)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [3.9.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.9.3...@wireapp/store-engine@3.9.4) (2019-08-12)
+
+
+### Bug Fixes
+
+* **store-engine,store-engine-sqleet:** Verify that strings and objects can be saved ([#2175](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/2175)) ([f363f04](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/f363f04))
+
+
+
+
+
+## [3.9.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.9.2...@wireapp/store-engine@3.9.3) (2019-08-08)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [3.9.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.9.1...@wireapp/store-engine@3.9.2) (2019-08-08)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [3.9.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.9.0...@wireapp/store-engine@3.9.1) (2019-08-07)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+# [3.9.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.8.1...@wireapp/store-engine@3.9.0) (2019-08-07)
+
+
+### Features
+
+* **store-engine,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet:** Auto-increment primary keys ([#2163](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/2163)) ([0d02747](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/0d02747))
+
+
+
+
+
+## [3.8.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.8.0...@wireapp/store-engine@3.8.1) (2019-08-06)
+
+
+### Bug Fixes
+
+* **store-engine:** Primary key should only increment on creation ([#2161](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/2161)) ([da77f88](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/da77f88))
+
+
+
+
+
+# [3.8.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.7.0...@wireapp/store-engine@3.8.0) (2019-08-05)
+
+
+### Features
+
+* **store-engine:** Auto-increment primary keys in MemoryEngine ([#2159](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/2159)) ([c040cc1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/c040cc1))
+
+
+
+
+
+# [3.7.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.6.3...@wireapp/store-engine@3.7.0) (2019-08-01)
+
+
+### Features
+
+* **store-engine:** Add initWithObject to MemoryEngine ([#2148](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/2148)) ([ee5ec2b](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/ee5ec2b))
+
+
+
+
+
+## [3.6.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.6.2...@wireapp/store-engine@3.6.3) (2019-07-30)
+
+
+### Bug Fixes
+
+* **api-client,bazinga64,cbor,proteus,store-engine,store-engine-bro-fs:** Don't return immediately in a try-catch block ([#2140](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/2140)) ([83cbf86](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/83cbf86))
+
+
+
+
+
+## [3.6.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.6.1...@wireapp/store-engine@3.6.2) (2019-07-29)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [3.6.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.6.0...@wireapp/store-engine@3.6.1) (2019-07-29)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+# [3.6.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.5.6...@wireapp/store-engine@3.6.0) (2019-07-25)
+
+
+### Features
+
+* **store-engine,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet:** Add generic for primary key ([#2120](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/2120)) ([fc3adf8](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/fc3adf8))
+
+
+
+
+
+## [3.5.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.5.5...@wireapp/store-engine@3.5.6) (2019-07-24)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
 ## [3.5.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.5.4...@wireapp/store-engine@3.5.5) (2019-07-19)
 
 **Note:** Version bump only for package @wireapp/store-engine

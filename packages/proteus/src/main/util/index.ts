@@ -22,5 +22,6 @@ import * as ClassUtil from './ClassUtil';
 import * as KeyDerivationUtil from './KeyDerivationUtil';
 import * as MemoryUtil from './MemoryUtil';
 import * as RandomUtil from './RandomUtil';
+import * as WASMUtil from './WASMUtil';
 
-export {ArrayUtil, ClassUtil, KeyDerivationUtil, MemoryUtil, RandomUtil};
+export {ArrayUtil, ClassUtil, KeyDerivationUtil, MemoryUtil, RandomUtil, WASMUtil};

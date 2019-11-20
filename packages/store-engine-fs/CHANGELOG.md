@@ -3,6 +3,325 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.5.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.27...@wireapp/store-engine-fs@1.5.0) (2019-11-11)
+
+
+### Features
+
+* **store-engine,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet,store-engine-web-storage:** Remove "append" functionality ([#2529](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/issues/2529)) ([d8cb079](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/commit/d8cb0797d8553ce40a41d501e46a1d7efe81495f))
+
+
+
+
+
+## [1.4.27](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.26...@wireapp/store-engine-fs@1.4.27) (2019-11-11)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.4.26](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.25...@wireapp/store-engine-fs@1.4.26) (2019-11-06)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.4.25](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.24...@wireapp/store-engine-fs@1.4.25) (2019-10-25)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.4.24](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.23...@wireapp/store-engine-fs@1.4.24) (2019-10-21)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.4.23](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.22...@wireapp/store-engine-fs@1.4.23) (2019-10-18)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.4.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.21...@wireapp/store-engine-fs@1.4.22) (2019-10-17)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.4.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.20...@wireapp/store-engine-fs@1.4.21) (2019-10-16)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.4.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.19...@wireapp/store-engine-fs@1.4.20) (2019-10-14)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## 1.4.19 (2019-10-07)
+
+
+### Bug Fixes
+
+* **core:** Pass payload to Account emitter ([#2355](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/issues/2355)) ([b37fc0d](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/commit/b37fc0d))
+
+
+
+
+
+## [1.4.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.17...@wireapp/store-engine-fs@1.4.18) (2019-09-27)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.4.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.16...@wireapp/store-engine-fs@1.4.17) (2019-09-25)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.4.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.15...@wireapp/store-engine-fs@1.4.16) (2019-09-23)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.4.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.14...@wireapp/store-engine-fs@1.4.15) (2019-09-20)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.4.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.13...@wireapp/store-engine-fs@1.4.14) (2019-09-17)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.4.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.12...@wireapp/store-engine-fs@1.4.13) (2019-09-12)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.4.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.11...@wireapp/store-engine-fs@1.4.12) (2019-09-06)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.4.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.10...@wireapp/store-engine-fs@1.4.11) (2019-09-04)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.4.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.9...@wireapp/store-engine-fs@1.4.10) (2019-08-30)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.4.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.8...@wireapp/store-engine-fs@1.4.9) (2019-08-29)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.4.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.7...@wireapp/store-engine-fs@1.4.8) (2019-08-29)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.4.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.6...@wireapp/store-engine-fs@1.4.7) (2019-08-28)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.4.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.5...@wireapp/store-engine-fs@1.4.6) (2019-08-26)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.4.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.4...@wireapp/store-engine-fs@1.4.5) (2019-08-21)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.4.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.3...@wireapp/store-engine-fs@1.4.4) (2019-08-12)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.4.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.2...@wireapp/store-engine-fs@1.4.3) (2019-08-08)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.4.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.1...@wireapp/store-engine-fs@1.4.2) (2019-08-08)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.4.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.4.0...@wireapp/store-engine-fs@1.4.1) (2019-08-07)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+# [1.4.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.3.7...@wireapp/store-engine-fs@1.4.0) (2019-08-07)
+
+
+### Features
+
+* **store-engine,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet:** Auto-increment primary keys ([#2163](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/issues/2163)) ([0d02747](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/commit/0d02747))
+
+
+
+
+
+## [1.3.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.3.6...@wireapp/store-engine-fs@1.3.7) (2019-08-06)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.3.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.3.5...@wireapp/store-engine-fs@1.3.6) (2019-08-05)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.3.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.3.4...@wireapp/store-engine-fs@1.3.5) (2019-08-01)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.3.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.3.3...@wireapp/store-engine-fs@1.3.4) (2019-07-30)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.3.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.3.2...@wireapp/store-engine-fs@1.3.3) (2019-07-29)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.3.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.3.1...@wireapp/store-engine-fs@1.3.2) (2019-07-29)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
+## [1.3.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.3.0...@wireapp/store-engine-fs@1.3.1) (2019-07-25)
+
+
+### Bug Fixes
+
+* **store-engine-bro-fs,store-engine-sqleet:** Unify error types ([#2131](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/issues/2131)) ([f56a6a2](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/commit/f56a6a2))
+
+
+
+
+
+# [1.3.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.2.7...@wireapp/store-engine-fs@1.3.0) (2019-07-25)
+
+
+### Features
+
+* **store-engine,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet:** Add generic for primary key ([#2120](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/issues/2120)) ([fc3adf8](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/commit/fc3adf8))
+
+
+
+
+
+## [1.2.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.2.6...@wireapp/store-engine-fs@1.2.7) (2019-07-24)
+
+**Note:** Version bump only for package @wireapp/store-engine-fs
+
+
+
+
+
 ## [1.2.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-fs/compare/@wireapp/store-engine-fs@1.2.5...@wireapp/store-engine-fs@1.2.6) (2019-07-19)
 
 **Note:** Version bump only for package @wireapp/store-engine-fs

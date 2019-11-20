@@ -17,7 +17,9 @@
  *
  */
 
-import {CONVERSATION_TYPING} from '@wireapp/api-client/dist/commonjs/event/';
+import {CONVERSATION_TYPING} from '@wireapp/api-client/dist/commonjs/conversation/data';
+import {ConversationEvent, TeamEvent, UserEvent} from '@wireapp/api-client/dist/commonjs/event';
+import {User} from '@wireapp/api-client/dist/commonjs/user/';
 import {Account} from '@wireapp/core';
 import {PayloadBundle, ReactionType} from '@wireapp/core/dist/conversation/';
 import {
@@ -34,12 +36,20 @@ import {Asset, Confirmation} from '@wireapp/protocol-messaging';
 export abstract class MessageHandler {
   public account: Account | undefined = undefined;
 
-  abstract handleEvent(payload: PayloadBundle): void;
+  abstract handleEvent(payload: PayloadBundle | ConversationEvent | UserEvent | TeamEvent): void;
 
   public async addUser(conversationId: string, userId: string): Promise<void> {
     if (this.account && this.account.service) {
       await this.account.service.conversation.addUser(conversationId, userId);
     }
+  }
+
+  public async getUser(userId: string): Promise<User> {
+    return this.account!.service!.user.getUser(userId);
+  }
+
+  public async getUsers(userIds: string[]): Promise<User[]> {
+    return this.account!.service!.user.getUsers(userIds);
   }
 
   async clearConversation(conversationId: string): Promise<void> {

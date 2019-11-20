@@ -20,12 +20,13 @@
 import {CRUDEngine} from '@wireapp/store-engine';
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
 
-import {AccessTokenData, LoginData} from '../auth/';
+import {AccessTokenData, LoginData, SendLoginCode} from '../auth/';
 import {ClientType} from '../client/';
 import {HttpClient} from '../http/';
 import {sendRequestWithCookie} from '../shims/node/cookie';
 import {User} from '../user/';
 import {CookieList} from './CookieList';
+import {LoginCodeResponse} from './LoginCodeResponse';
 import {RegisterData} from './RegisterData';
 
 export class AuthAPI {
@@ -34,10 +35,12 @@ export class AuthAPI {
   static URL = {
     ACCESS: '/access',
     COOKIES: '/cookies',
+    INITIATE_BIND: '/sso-initiate-bind',
     INITIATE_LOGIN: 'initiate-login',
     LOGIN: '/login',
     LOGOUT: 'logout',
     REGISTER: '/register',
+    SEND: 'send',
     SSO: '/sso',
   };
 
@@ -90,6 +93,23 @@ export class AuthAPI {
     return this.client.sendJSON(config);
   }
 
+  /**
+   * This operation generates and sends a login code. A login code can be used only once and times out after 10 minutes. Only one login code may be pending at a time.
+   * @param loginRequest Phone number to use for login SMS or voice call.
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/tab.html#!/sendLoginCode
+   */
+  public postLoginSend(loginRequest: SendLoginCode): Promise<AxiosResponse<LoginCodeResponse>> {
+    // https://github.com/zinfra/backend-issues/issues/974
+    const defaultLoginRequest = {force: false};
+    const config: AxiosRequestConfig = {
+      data: {...defaultLoginRequest, ...loginRequest},
+      method: 'post',
+      url: `${AuthAPI.URL.LOGIN}/${AuthAPI.URL.SEND}`,
+    };
+
+    return this.client.sendJSON(config);
+  }
+
   public async postLogout(): Promise<void> {
     const config: AxiosRequestConfig = {
       method: 'post',
@@ -116,6 +136,15 @@ export class AuthAPI {
     const config: AxiosRequestConfig = {
       method: 'head',
       url: `${AuthAPI.URL.SSO}/${AuthAPI.URL.INITIATE_LOGIN}/${ssoCode}`,
+    };
+
+    await this.client.sendJSON(config);
+  }
+
+  public async headInitiateBind(ssoCode: string): Promise<void> {
+    const config: AxiosRequestConfig = {
+      method: 'head',
+      url: `${AuthAPI.URL.INITIATE_BIND}/${ssoCode}`,
     };
 
     await this.client.sendJSON(config);

@@ -17,13 +17,19 @@
  *
  */
 
-import {AudioPreference} from '../audio/';
-import {PreKey} from '../auth/';
-import {RegisteredClient} from '../client/';
-import {Connection} from '../connection/';
-import {NotificationPreference} from '../notification/';
-import {Self} from '../self/';
-import {BackendEvent} from './BackendEvent';
+import {
+  UserActivateData,
+  UserClientAddData,
+  UserClientLegalHoldRequestData,
+  UserClientRemoveData,
+  UserConnectionData,
+  UserDeleteData,
+  UserLegalHoldDisableData,
+  UserLegalHoldEnableData,
+  UserPropertiesSetData,
+  UserPushRemoveData,
+  UserUpdateData,
+} from '../user/data';
 
 export enum USER_EVENT {
   ACTIVATE = 'user.activate',
@@ -32,76 +38,84 @@ export enum USER_EVENT {
   CLIENT_REMOVE = 'user.client-remove',
   CONNECTION = 'user.connection',
   DELETE = 'user.delete',
+  LEGAL_HOLD_DISABLE = 'user.legalhold-disable',
+  LEGAL_HOLD_ENABLE = 'user.legalhold-enable',
   PROPERTIES_SET = 'user.properties-set',
+  PUSH_REMOVE = 'user.push-remove',
   UPDATE = 'user.update',
 }
 
-export interface UserEvent extends BackendEvent {
+export type UserEventData =
+  | UserActivateData
+  | UserClientAddData
+  | UserClientLegalHoldRequestData
+  | UserLegalHoldEnableData
+  | UserLegalHoldDisableData
+  | UserClientRemoveData
+  | UserConnectionData
+  | UserDeleteData
+  | UserPropertiesSetData
+  | UserUpdateData
+  | UserPushRemoveData
+  | null;
+
+export type UserEvent =
+  | UserActivateEvent
+  | UserClientAddEvent
+  | UserClientLegalHoldRequestEvent
+  | UserLegalHoldEnableEvent
+  | UserLegalHoldDisableEvent
+  | UserClientRemoveEvent
+  | UserConnectionEvent
+  | UserDeleteEvent
+  | UserPropertiesSetEvent
+  | UserUpdateEvent
+  | UserPushRemoveEvent;
+
+export interface BaseUserEvent {
   type: USER_EVENT;
 }
 
-export interface UserActivateEvent extends UserEvent {
+export interface UserActivateEvent extends BaseUserEvent, UserActivateData {
   type: USER_EVENT.ACTIVATE;
-  user: Self;
 }
 
-export interface UserClientAddEvent extends UserEvent {
-  client: RegisteredClient;
+export interface UserClientAddEvent extends BaseUserEvent, UserClientAddData {
   type: USER_EVENT.CLIENT_ADD;
 }
 
-export interface UserClientLegalHoldRequest extends UserEvent {
-  client_id: string;
-  last_prekey: PreKey;
-  requester: string;
-  target_user: string;
+export interface UserClientLegalHoldRequestEvent extends BaseUserEvent, UserClientLegalHoldRequestData {
   type: USER_EVENT.CLIENT_LEGAL_HOLD_REQUEST;
 }
 
-export interface UserClientRemoveEvent extends UserEvent {
-  client: {
-    id: string;
-  };
+export interface UserLegalHoldEnableEvent extends BaseUserEvent, UserLegalHoldEnableData {
+  type: USER_EVENT.LEGAL_HOLD_ENABLE;
+}
+
+export interface UserLegalHoldDisableEvent extends BaseUserEvent, UserLegalHoldDisableData {
+  type: USER_EVENT.LEGAL_HOLD_DISABLE;
+}
+
+export interface UserClientRemoveEvent extends BaseUserEvent, UserClientRemoveData {
   type: USER_EVENT.CLIENT_REMOVE;
 }
 
-export interface UserConnectionEvent extends UserEvent {
-  connection: Connection;
-  user: {
-    name: string;
-  };
+export interface UserConnectionEvent extends BaseUserEvent, UserConnectionData {
   type: USER_EVENT.CONNECTION;
 }
 
-export interface UserDeleteEvent extends UserEvent {
+export interface UserDeleteEvent extends BaseUserEvent, UserDeleteData {
   type: USER_EVENT.DELETE;
 }
 
-export interface UserPropertiesSetEvent extends UserEvent {
-  value: {
-    contact_import: Object;
-    enable_debugging: boolean;
-    settings: {
-      emoji: {
-        replace_inline: boolean;
-      };
-      notifications: NotificationPreference;
-      previews: {
-        send: boolean;
-      };
-      privacy: {
-        improve_wire: boolean;
-      };
-      sound: {
-        alerts: AudioPreference;
-      };
-    };
-    version: number;
-  };
-  key: 'webapp';
+export interface UserPropertiesSetEvent extends BaseUserEvent, UserPropertiesSetData {
   type: USER_EVENT.PROPERTIES_SET;
 }
 
-export interface UserUpdateEvent extends UserEvent {
+export interface UserUpdateEvent extends BaseUserEvent, UserUpdateData {
   type: USER_EVENT.UPDATE;
+}
+
+export interface UserPushRemoveEvent extends BaseUserEvent, UserPushRemoveData {
+  type: USER_EVENT.PUSH_REMOVE;
 }

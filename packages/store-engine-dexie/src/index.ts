@@ -19,10 +19,21 @@
 
 import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import Dexie from 'dexie';
+import logdown = require('logdown');
+
+type DexieObservable = {_dbSchema?: Object};
 
 export class IndexedDBEngine implements CRUDEngine {
-  private db: Dexie = new Dexie('');
+  private db: Dexie & DexieObservable = new Dexie('');
+  private readonly logger: logdown.Logger;
   public storeName = '';
+
+  constructor() {
+    this.logger = logdown('@wireapp/store-engine-dexie', {
+      logger: console,
+      markdown: false,
+    });
+  }
 
   // Check if IndexedDB is accessible (which won't be the case when browsing with Firefox in private mode or being on
   // page "about:blank")
@@ -55,12 +66,10 @@ export class IndexedDBEngine implements CRUDEngine {
         const diskIsFull = usage >= quota;
         if (diskIsFull) {
           const errorMessage = `Out of disk space. Using "${usage}" out of "${quota}" bytes.`;
-          return Promise.reject(new StoreEngineError.LowDiskSpaceError(errorMessage));
+          throw new StoreEngineError.LowDiskSpaceError(errorMessage);
         }
       }
     }
-
-    return Promise.resolve();
   }
 
   public async isSupported(): Promise<void> {
@@ -68,17 +77,33 @@ export class IndexedDBEngine implements CRUDEngine {
     await this.hasEnoughQuota();
   }
 
-  public async init(storeName: string): Promise<Dexie> {
+  public async init(storeName: string, registerPersisted: boolean = false): Promise<Dexie> {
     await this.isSupported();
-    return this.assignDb(new Dexie(storeName));
+    const dexie = this.assignDb(new Dexie(storeName));
+    if (registerPersisted) {
+      await this.registerPersistentStorage();
+    }
+    return dexie;
   }
 
-  public initWithDb(db: Dexie): Promise<Dexie> {
-    return Promise.resolve(this.assignDb(db));
+  public async initWithDb(db: Dexie, registerPersisted: boolean = false): Promise<Dexie> {
+    const dexie = this.assignDb(db);
+    if (registerPersisted) {
+      await this.registerPersistentStorage();
+    }
+    return dexie;
   }
 
-  // If you want to add listeners to the database and you don't care if it is a new database (init)
-  // or an existing (initWithDB) one, then this method is the right place to do it.
+  public async isStoragePersisted(): Promise<boolean> {
+    if (navigator.storage && navigator.storage.persisted) {
+      const isPersisted = await navigator.storage.persisted();
+      return isPersisted;
+    }
+    return false;
+  }
+
+  // If you want to add listeners to the database and you don't care if it is a new database (`init()`)
+  // or an existing (`initWithDb()`) one, then this method is the right place to do it.
   private assignDb(db: Dexie): Dexie {
     this.db = db;
     this.storeName = this.db.name;
@@ -89,7 +114,11 @@ export class IndexedDBEngine implements CRUDEngine {
     return this.db ? this.db.delete() : Dexie.delete(this.storeName);
   }
 
-  private mapDatabaseError(error: Dexie.DexieError, tableName: string, primaryKey: string): Error {
+  private mapDatabaseError<PrimaryKey = string>(
+    error: Dexie.DexieError,
+    tableName: string,
+    primaryKey: PrimaryKey,
+  ): Error {
     const isAlreadyExisting = error instanceof Dexie.ConstraintError;
     /** @see https://github.com/dfahlander/Dexie.js/issues/776 */
     const hasNotEnoughDiskSpace =
@@ -106,86 +135,96 @@ export class IndexedDBEngine implements CRUDEngine {
     }
   }
 
-  public create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
+  public async create<EntityType = Object, PrimaryKey = string>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    entity: EntityType,
+  ): Promise<PrimaryKey> {
     if (entity) {
-      return this.db
-        .table(tableName)
-        .add(entity, primaryKey)
-        .catch((error: Dexie.DexieError) => {
-          throw this.mapDatabaseError(error, tableName, primaryKey);
-        });
+      try {
+        const newPrimaryKey = await this.db.table(tableName).add(entity, primaryKey);
+        return newPrimaryKey;
+      } catch (error) {
+        throw this.mapDatabaseError(error, tableName, primaryKey);
+      }
     }
     const message = `Record "${primaryKey}" cannot be saved in "${tableName}" because it's "undefined" or "null".`;
-    return Promise.reject(new StoreEngineError.RecordTypeError(message));
+    throw new StoreEngineError.RecordTypeError(message);
   }
 
-  public delete(tableName: string, primaryKey: string): Promise<string> {
-    return Promise.resolve()
-      .then(() => this.db.table(tableName).delete(primaryKey))
-      .then(() => primaryKey);
+  public async delete<PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): Promise<PrimaryKey> {
+    await this.db.table(tableName).delete(primaryKey);
+    return primaryKey;
   }
 
-  public deleteAll(tableName: string): Promise<boolean> {
-    return this.db
-      .table(tableName)
-      .clear()
-      .then(() => true);
+  public async deleteAll(tableName: string): Promise<boolean> {
+    await this.db.table(tableName).clear();
+    return true;
   }
 
-  public read<T>(tableName: string, primaryKey: string): Promise<T> {
-    return this.db
-      .table(tableName)
-      .get(primaryKey)
-      .then((record: T) => {
-        if (record) {
-          return record;
-        }
-        const message = `Record "${primaryKey}" in "${tableName}" could not be found.`;
-        throw new StoreEngineError.RecordNotFoundError(message);
-      });
+  public async read<EntityType = Object, PrimaryKey = string>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+  ): Promise<EntityType> {
+    const record = await this.db.table<EntityType>(tableName).get(primaryKey);
+    if (record) {
+      return record;
+    }
+    const message = `Record "${primaryKey}" in "${tableName}" could not be found.`;
+    throw new StoreEngineError.RecordNotFoundError(message);
   }
 
-  public readAll<T>(tableName: string): Promise<T[]> {
+  public readAll<EntityType>(tableName: string): Promise<EntityType[]> {
     return this.db.table(tableName).toArray();
   }
 
-  public async readAllPrimaryKeys(tableName: string): Promise<string[]> {
+  public async readAllPrimaryKeys<PrimaryKey = string>(tableName: string): Promise<PrimaryKey[]> {
     const keys = await this.db
-      .table(tableName)
+      .table<PrimaryKey>(tableName)
       .toCollection()
       .keys();
-    return keys.map(key => `${key}`);
+    return keys.map(key => (key as any) as PrimaryKey);
   }
 
-  public update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
-    return this.db
-      .table(tableName)
-      .update(primaryKey, changes)
-      .then((updatedRecords: number) => {
-        if (updatedRecords === 0) {
-          const message = `Record "${primaryKey}" in "${tableName}" could not be found.`;
-          throw new StoreEngineError.RecordNotFoundError(message);
-        }
-        return primaryKey;
-      });
+  /**
+   * Register a persistent storage in the browser.
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/StorageManager/persist
+   * @see https://developers.google.com/web/updates/2016/06/persistent-storage
+   */
+  public async registerPersistentStorage(): Promise<boolean> {
+    if (!navigator || !navigator.storage || !navigator.storage.persist) {
+      return false;
+    }
+
+    const granted = await navigator.storage.persist();
+
+    if (granted) {
+      this.logger.info('Storage will not be cleared except by explicit user action');
+      return true;
+    }
+
+    this.logger.info('Storage may be cleared by the UA under storage pressure.');
+    return false;
   }
 
-  public updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
-    return this.db.table(tableName).put(changes, primaryKey);
+  public async update<PrimaryKey = string>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    changes: Object,
+  ): Promise<PrimaryKey> {
+    const updatedRecords = await this.db.table(tableName).update(primaryKey, changes);
+    if (updatedRecords === 0) {
+      const message = `Record "${primaryKey}" in "${tableName}" could not be found.`;
+      throw new StoreEngineError.RecordNotFoundError(message);
+    }
+    return primaryKey;
   }
 
-  public append(tableName: string, primaryKey: string, additions: string): Promise<string> {
-    return this.db
-      .table(tableName)
-      .get(primaryKey)
-      .then((record: any) => {
-        if (typeof record === 'string') {
-          record += additions;
-        } else {
-          const message = `Cannot append text to record "${primaryKey}" because it's not a string.`;
-          throw new StoreEngineError.RecordTypeError(message);
-        }
-        return this.updateOrCreate(tableName, primaryKey, record);
-      });
+  public updateOrCreate<PrimaryKey = string, ChangesType = Object>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    changes: ChangesType,
+  ): Promise<PrimaryKey> {
+    return this.db.table<ChangesType, PrimaryKey>(tableName).put(changes, primaryKey);
   }
 }

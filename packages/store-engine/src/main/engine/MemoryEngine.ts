@@ -25,30 +25,20 @@ export type MemoryStore = Record<string, Record<string, any>>;
 export class MemoryEngine implements CRUDEngine {
   public storeName = '';
   private readonly stores: MemoryStore = {};
+  private autoIncrementedPrimaryKey: number = 1;
 
-  public async isSupported(): Promise<void> {
-    // Always available
-  }
-
-  public async init(storeName: string): Promise<MemoryStore> {
-    this.storeName = storeName;
-    this.stores[this.storeName] = this.stores[this.storeName] || {};
-    return this.stores;
-  }
-
-  public async purge(): Promise<void> {
-    delete this.stores[this.storeName];
-  }
-
-  private prepareTable(tableName: string): void {
-    if (!this.stores[this.storeName][tableName]) {
-      this.stores[this.storeName][tableName] = {};
-    }
-  }
-
-  public create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
+  create<EntityType, PrimaryKey = string>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    entity: EntityType,
+  ): Promise<PrimaryKey> {
     if (entity) {
       this.prepareTable(tableName);
+
+      if (primaryKey === undefined) {
+        primaryKey = (this.autoIncrementedPrimaryKey as unknown) as PrimaryKey;
+        this.autoIncrementedPrimaryKey += 1;
+      }
 
       const record = this.stores[this.storeName][tableName][primaryKey];
 
@@ -59,6 +49,7 @@ export class MemoryEngine implements CRUDEngine {
       }
 
       this.stores[this.storeName][tableName][primaryKey] = entity;
+
       return Promise.resolve(primaryKey);
     }
 
@@ -66,22 +57,43 @@ export class MemoryEngine implements CRUDEngine {
     return Promise.reject(new RecordTypeError(message));
   }
 
-  public delete(tableName: string, primaryKey: string): Promise<string> {
+  public async delete<PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): Promise<PrimaryKey> {
     this.prepareTable(tableName);
-    return Promise.resolve().then(() => {
-      delete this.stores[this.storeName][tableName][primaryKey];
-      return primaryKey;
-    });
+    delete this.stores[this.storeName][tableName][primaryKey];
+    return primaryKey;
   }
 
-  public deleteAll(tableName: string): Promise<boolean> {
-    return Promise.resolve().then(() => {
-      delete this.stores[this.storeName][tableName];
-      return true;
-    });
+  public async deleteAll(tableName: string): Promise<boolean> {
+    delete this.stores[this.storeName][tableName];
+    return true;
   }
 
-  public read<T>(tableName: string, primaryKey: string): Promise<T> {
+  public async init(storeName: string): Promise<MemoryStore> {
+    return this.assignDb(storeName, {});
+  }
+
+  public async initWithObject<ObjectType = Object>(storeName: string, object: ObjectType): Promise<MemoryStore> {
+    return this.assignDb(storeName, object);
+  }
+
+  private assignDb<ObjectType = Object>(storeName: string, object: ObjectType): MemoryStore {
+    this.storeName = storeName;
+    this.stores[this.storeName] = this.stores[this.storeName] || object;
+    return this.stores;
+  }
+
+  public async isSupported(): Promise<void> {
+    // Always available
+  }
+
+  public async purge(): Promise<void> {
+    delete this.stores[this.storeName];
+  }
+
+  public read<EntityType = Object, PrimaryKey = string>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+  ): Promise<EntityType> {
     this.prepareTable(tableName);
     if (this.stores[this.storeName][tableName].hasOwnProperty(primaryKey)) {
       return Promise.resolve(this.stores[this.storeName][tableName][primaryKey]);
@@ -107,37 +119,39 @@ export class MemoryEngine implements CRUDEngine {
     return Promise.resolve(Object.keys(this.stores[this.storeName][tableName]));
   }
 
-  public async update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  public async update<PrimaryKey = string, ChangesType = Object>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    changes: ChangesType,
+  ): Promise<PrimaryKey> {
     this.prepareTable(tableName);
-    const entity: Object = await this.read(tableName, primaryKey);
-    const updatedEntity: Object = {...entity, ...changes};
+    const entity = await this.read(tableName, primaryKey);
+    const updatedEntity = {...entity, ...changes};
     this.stores[this.storeName][tableName][primaryKey] = updatedEntity;
     return primaryKey;
   }
 
-  public updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  async updateOrCreate<PrimaryKey = string, ChangesType = Object>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    changes: ChangesType,
+  ): Promise<PrimaryKey> {
     this.prepareTable(tableName);
-    return this.update(tableName, primaryKey, changes)
-      .catch(error => {
-        if (error instanceof RecordNotFoundError) {
-          return this.create(tableName, primaryKey, changes);
-        }
-        throw error;
-      })
-      .then(() => primaryKey);
+    try {
+      await this.update(tableName, primaryKey, changes);
+      return primaryKey;
+    } catch (error) {
+      if (error instanceof RecordNotFoundError) {
+        const newPrimaryKey = await this.create(tableName, primaryKey, changes);
+        return newPrimaryKey;
+      }
+      throw error;
+    }
   }
 
-  append(tableName: string, primaryKey: string, additions: string): Promise<string> {
-    this.prepareTable(tableName);
-    return this.read(tableName, primaryKey).then((record: any) => {
-      if (typeof record === 'string') {
-        record += additions;
-      } else {
-        const message = `Cannot append text to record "${primaryKey}" because it's not a string.`;
-        throw new RecordTypeError(message);
-      }
-      this.stores[this.storeName][tableName][primaryKey] = record;
-      return primaryKey;
-    });
+  private prepareTable(tableName: string): void {
+    if (!this.stores[this.storeName][tableName]) {
+      this.stores[this.storeName][tableName] = {};
+    }
   }
 }

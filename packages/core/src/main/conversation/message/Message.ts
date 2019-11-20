@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2019 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,121 +17,8 @@
  *
  */
 
-import {
-  AssetContent,
-  CallingContent,
-  ClearedContent,
-  ClientActionContent,
-  ConfirmationContent,
-  DeletedContent,
-  EditedTextContent,
-  FileAssetAbortContent,
-  FileAssetContent,
-  FileAssetMetaDataContent,
-  HiddenContent,
-  ImageAssetContent,
-  KnockContent,
-  LocationContent,
-  ReactionContent,
-  TextContent,
-} from '../content';
-import {PayloadBundle, PayloadBundleType} from './PayloadBundle';
+import {OtrMessage} from './OtrMessage';
+import {TeamMessage} from './TeamMessage';
+import {UserMessage} from './UserMessage';
 
-export interface TextMessage extends PayloadBundle {
-  content: TextContent;
-  type: PayloadBundleType.TEXT;
-}
-
-export interface CallMessage extends PayloadBundle {
-  content: CallingContent;
-  type: PayloadBundleType.CALL;
-}
-
-export interface EditedTextMessage extends PayloadBundle {
-  content: EditedTextContent;
-  type: PayloadBundleType.MESSAGE_EDIT;
-}
-
-export interface FileAssetMessage extends PayloadBundle {
-  content: FileAssetContent;
-  type: PayloadBundleType.ASSET;
-}
-
-export interface FileAssetMetaDataMessage extends PayloadBundle {
-  content: FileAssetMetaDataContent;
-  type: PayloadBundleType.ASSET_META;
-}
-
-export interface FileAssetAbortMessage extends PayloadBundle {
-  content: FileAssetAbortContent;
-  type: PayloadBundleType.ASSET_ABORT;
-}
-
-// TODO Merge ImageAssetMessageOutgoing & ImageAssetMessage
-export interface ImageAssetMessageOutgoing extends PayloadBundle {
-  content: ImageAssetContent;
-  type: PayloadBundleType.ASSET_IMAGE;
-}
-
-export interface ImageAssetMessage extends PayloadBundle {
-  content: AssetContent;
-  type: PayloadBundleType.ASSET_IMAGE;
-}
-
-export interface LocationMessage extends PayloadBundle {
-  content: LocationContent;
-  type: PayloadBundleType.LOCATION;
-}
-
-export interface ReactionMessage extends PayloadBundle {
-  content: ReactionContent;
-  type: PayloadBundleType.REACTION;
-}
-
-export interface ConfirmationMessage extends PayloadBundle {
-  content: ConfirmationContent;
-  type: PayloadBundleType.CONFIRMATION;
-}
-
-export interface PingMessage extends PayloadBundle {
-  content: KnockContent;
-  type: PayloadBundleType.PING;
-}
-
-export interface ResetSessionMessage extends PayloadBundle {
-  content: ClientActionContent;
-  type: PayloadBundleType.CLIENT_ACTION;
-}
-
-export interface ClearConversationMessage extends PayloadBundle {
-  content: ClearedContent;
-  type: PayloadBundleType.CLEARED;
-}
-
-export interface HideMessage extends PayloadBundle {
-  content: HiddenContent;
-  type: PayloadBundleType.MESSAGE_HIDE;
-}
-
-export interface DeleteMessage extends PayloadBundle {
-  content: DeletedContent;
-  type: PayloadBundleType.MESSAGE_DELETE;
-}
-
-export type Message =
-  | CallMessage
-  | ClearConversationMessage
-  | ConfirmationMessage
-  | DeleteMessage
-  | EditedTextMessage
-  | FileAssetAbortMessage
-  | FileAssetMessage
-  | FileAssetMetaDataMessage
-  | HideMessage
-  | ImageAssetMessage
-  | ImageAssetMessageOutgoing
-  | LocationMessage
-  | PingMessage
-  | ReactionMessage
-  | ResetSessionMessage
-  | TextMessage;
+export type Message = OtrMessage | TeamMessage | UserMessage;

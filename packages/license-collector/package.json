@@ -10,11 +10,12 @@
   },
   "description": "Wire's internal license collection tool",
   "devDependencies": {
-    "@types/fs-extra": "8.0.0",
-    "@types/node": "~10",
+    "@types/fs-extra": "8.0.1",
+    "@types/node": "~12",
     "@types/npm-registry-package-info": "1.0.0",
-    "rimraf": "2.6.3",
-    "typescript": "3.5.3"
+    "rimraf": "3.0.0",
+    "ts-node": "8.5.2",
+    "typescript": "3.6.4"
   },
   "files": [
     "dist"
@@ -28,7 +29,8 @@
     "build:node": "tsc",
     "clean": "rimraf dist",
     "dist": "yarn clean && yarn build",
+    "start": "ts-node ./src/cli.ts",
     "test": "exit 0"
   },
-  "version": "0.4.2"
+  "version": "0.4.9"
 }

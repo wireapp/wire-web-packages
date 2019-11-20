@@ -20,13 +20,15 @@
 import {MutedStatus, ServiceRef} from '../conversation/';
 
 export interface Member {
-  hidden_ref?: string;
   hidden?: boolean;
+  hidden_ref: string | null;
   id: string;
-  otr_archived_ref?: string;
   otr_archived?: boolean;
-  otr_muted_ref?: string | null;
-  otr_muted?: boolean | null;
-  otr_muted_status?: MutedStatus | null;
-  service?: ServiceRef;
+  otr_archived_ref: string | null;
+  otr_muted: boolean | null;
+  otr_muted_ref: string | null;
+  otr_muted_status: MutedStatus | null;
+  service: ServiceRef | null;
+  status_ref: string;
+  status_time: string;
 }

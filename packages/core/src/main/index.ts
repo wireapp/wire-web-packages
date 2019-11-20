@@ -20,10 +20,12 @@
 import {Account} from './Account';
 import * as auth from './auth/';
 import * as conversation from './conversation/';
+import {CoreError} from './CoreError';
 import * as cryptography from './cryptography/';
 
 export = {
   Account,
+  CoreError,
   auth,
   conversation,
   cryptography,

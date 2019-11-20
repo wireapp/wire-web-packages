@@ -17,13 +17,7 @@
  *
  */
 
-import {CRUDEngine} from '@wireapp/store-engine';
-import {
-  RecordAlreadyExistsError,
-  RecordNotFoundError,
-  RecordTypeError,
-  UnsupportedError,
-} from '@wireapp/store-engine/dist/commonjs/engine/error/';
+import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import * as fs from 'bro-fs';
 
 export interface FileSystemEngineOptions {
@@ -37,6 +31,7 @@ const TEN_MEGABYTES = 1024 * 1024 * 10;
 export class FileSystemEngine implements CRUDEngine {
   public storeName = '';
 
+  private autoIncrementedPrimaryKey: number = 1;
   private config: FileSystemEngineOptions = {
     fileExtension: '.dat',
     size: TEN_MEGABYTES,
@@ -48,7 +43,7 @@ export class FileSystemEngine implements CRUDEngine {
   async isSupported(): Promise<void> {
     if (typeof window === 'undefined' || !fs.isSupported()) {
       const message = `File and Directory Entries API is not available on your platform.`;
-      throw new UnsupportedError(message);
+      throw new StoreEngineError.UnsupportedError(message);
     }
   }
 
@@ -65,28 +60,24 @@ export class FileSystemEngine implements CRUDEngine {
     return `${this.storeName}/${tableName}`;
   }
 
-  private createFilePath(tableName: string, primaryKey: string): string {
+  private createFilePath<PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): string {
     const directory = this.createDirectoryPath(tableName);
     return `${directory}/${primaryKey}${this.config.fileExtension}`;
   }
 
-  async append(tableName: string, primaryKey: string, additions: string): Promise<string> {
-    const filePath = this.createFilePath(tableName, primaryKey);
-    const record = await this.read(tableName, primaryKey);
-
-    if (typeof record === 'string') {
-      await fs.writeFile(filePath, record + additions);
-      return primaryKey;
-    } else {
-      const message = `Cannot append text to record "${primaryKey}" because it's not a string.`;
-      throw new RecordTypeError(message);
-    }
-  }
-
-  async create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
+  async create<EntityType = Object, PrimaryKey = string>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    entity: EntityType,
+  ): Promise<PrimaryKey> {
     if (!entity) {
       const message = `Record "${primaryKey}" cannot be saved in "${tableName}" because it's "undefined" or "null".`;
-      throw new RecordTypeError(message);
+      throw new StoreEngineError.RecordTypeError(message);
+    }
+
+    if (primaryKey === undefined) {
+      primaryKey = (this.autoIncrementedPrimaryKey as unknown) as PrimaryKey;
+      this.autoIncrementedPrimaryKey += 1;
     }
 
     const filePath = this.createFilePath(tableName, primaryKey);
@@ -94,7 +85,7 @@ export class FileSystemEngine implements CRUDEngine {
 
     if (isExistent) {
       const message = `Record "${primaryKey}" already exists in "${tableName}". You need to delete the record first if you want to overwrite it.`;
-      throw new RecordAlreadyExistsError(message);
+      throw new StoreEngineError.RecordAlreadyExistsError(message);
     } else {
       let data: string;
       try {
@@ -102,12 +93,13 @@ export class FileSystemEngine implements CRUDEngine {
       } catch (error) {
         data = String(entity);
       }
+
       await fs.writeFile(filePath, data);
       return primaryKey;
     }
   }
 
-  async delete(tableName: string, primaryKey: string): Promise<string> {
+  async delete<PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): Promise<PrimaryKey> {
     const filePath = this.createFilePath(tableName, primaryKey);
     await fs.unlink(filePath);
     return primaryKey;
@@ -129,18 +121,19 @@ export class FileSystemEngine implements CRUDEngine {
     }
   }
 
-  async read<T>(tableName: string, primaryKey: string): Promise<T> {
+  async read<EntityType = Object, PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): Promise<EntityType> {
     const filePath = this.createFilePath(tableName, primaryKey);
     let data: string;
     try {
       data = await fs.readFile(filePath, {type: 'Text'});
     } catch (error) {
       const message = `Record "${primaryKey}" in "${tableName}" could not be found.`;
-      throw new RecordNotFoundError(message);
+      throw new StoreEngineError.RecordNotFoundError(message);
     }
 
     try {
-      return JSON.parse(data);
+      const parsed = JSON.parse(data);
+      return parsed;
     } catch (error) {
       return data as any;
     }
@@ -167,7 +160,7 @@ export class FileSystemEngine implements CRUDEngine {
       entries = [];
     }
 
-    const names = entries.map((entry: FileEntry) => entry.name);
+    const names = entries.map((entry: FileEntry) => `${entry.name}`);
 
     const primaryKeys: string[] = [];
 
@@ -179,32 +172,42 @@ export class FileSystemEngine implements CRUDEngine {
     return primaryKeys;
   }
 
-  update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  async update<PrimaryKey = string, ChangesType = Object>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    changes: ChangesType,
+  ): Promise<PrimaryKey> {
     const filePath = this.createFilePath(tableName, primaryKey);
-    return this.read(tableName, primaryKey)
-      .then((record: any) => {
-        if (typeof record === 'string') {
-          record = JSON.parse(record);
-        }
-        const updatedRecord: Object = {...record, ...changes};
-        return JSON.stringify(updatedRecord);
-      })
-      .then((updatedRecord: any) => fs.writeFile(filePath, updatedRecord))
-      .then(() => primaryKey);
+    let record = await this.read(tableName, primaryKey);
+    if (typeof record === 'string') {
+      record = JSON.parse(record);
+    }
+    const updatedRecord: Object = {...record, ...changes};
+    const updatedRecord_1 = JSON.stringify(updatedRecord);
+    await fs.writeFile(filePath, updatedRecord_1);
+    return primaryKey;
   }
 
   async purge(): Promise<void> {
     await fs.rmdir(this.storeName);
   }
 
-  updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
-    return this.update(tableName, primaryKey, changes)
-      .catch(error => {
-        if (error instanceof RecordNotFoundError) {
-          return this.create(tableName, primaryKey, changes);
-        }
+  async updateOrCreate<PrimaryKey = string, ChangesType = Object>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    changes: ChangesType,
+  ): Promise<PrimaryKey> {
+    let internalPrimaryKey;
+
+    try {
+      internalPrimaryKey = await this.update(tableName, primaryKey, changes);
+    } catch (error) {
+      if (error instanceof StoreEngineError.RecordNotFoundError) {
+        internalPrimaryKey = await this.create(tableName, primaryKey, changes);
+      } else {
         throw error;
-      })
-      .then(() => primaryKey);
+      }
+    }
+    return internalPrimaryKey;
   }
 }

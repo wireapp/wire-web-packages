@@ -17,24 +17,20 @@
  *
  */
 
-import {CRUDEngine} from '@wireapp/store-engine';
-import {
-  PathValidationError,
-  RecordAlreadyExistsError,
-  RecordNotFoundError,
-  RecordTypeError,
-  UnsupportedError,
-} from '@wireapp/store-engine/dist/commonjs/engine/error/';
+import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import fs from 'fs-extra';
 import path from 'path';
+
+export interface FileEngineOptions {
+  fileExtension: string;
+}
 
 export class FileEngine implements CRUDEngine {
   [index: string]: any;
 
+  private autoIncrementedPrimaryKey: number = 1;
+
   public storeName = '';
-  public options: {fileExtension: string} = {
-    fileExtension: '.dat',
-  };
   // Using a reference to Node.js' "path" module to influence the platform-specific behaviour in our tests
   public static path: any = path;
 
@@ -44,26 +40,31 @@ export class FileEngine implements CRUDEngine {
     const trustedRootDetails = FileEngine.path.parse(trustedRoot);
     if (trustedRootDetails.root === trustedRootDetails.dir && trustedRootDetails.base === '') {
       const message = `"${trustedRoot}" cannot be the root of the filesystem.`;
-      throw new PathValidationError(message);
+      throw new StoreEngineError.PathValidationError(message);
     }
 
     const unsafePath = FileEngine.path.resolve(trustedRoot, givenPath);
     if (unsafePath.startsWith(trustedRoot) === false) {
       const message = `Path traversal has been detected. Allowed path was "${trustedRoot}" but tested path "${givenPath}" attempted to reach "${unsafePath}"`;
-      throw new PathValidationError(message);
+      throw new StoreEngineError.PathValidationError(message);
     }
 
     return unsafePath;
   }
 
-  constructor(private readonly baseDirectory = './') {}
+  constructor(
+    private readonly baseDirectory: string = './',
+    public options: FileEngineOptions = {
+      fileExtension: '.dat',
+    },
+  ) {}
 
   public async isSupported(): Promise<void> {
     const isNodeOrElectron = typeof process === 'object';
 
     if (!isNodeOrElectron) {
       const message = `Node.js File System Module is not available on your platform.`;
-      throw new UnsupportedError(message);
+      throw new StoreEngineError.UnsupportedError(message);
     }
   }
 
@@ -82,43 +83,50 @@ export class FileEngine implements CRUDEngine {
     return fs.remove(this.storeName);
   }
 
-  public async create<T>(tableName: string, primaryKey: string, entity: any): Promise<string> {
+  public async create<EntityType = Object, PrimaryKey = string>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    entity: EntityType,
+  ): Promise<PrimaryKey> {
     if (entity) {
+      if (primaryKey === undefined) {
+        primaryKey = (this.autoIncrementedPrimaryKey as unknown) as PrimaryKey;
+        this.autoIncrementedPrimaryKey += 1;
+      }
+
       const filePath = this.resolvePath(tableName, primaryKey);
+      let newEntity: EntityType | string = entity;
+
       if (typeof entity === 'object') {
-        try {
-          entity = JSON.stringify(entity);
-        } catch (error) {
-          entity = entity.toString();
-        }
+        newEntity = JSON.stringify(entity);
       }
 
       try {
-        await fs.writeFile(filePath, entity, {flag: 'wx'});
+        await fs.writeFile(filePath, newEntity, {flag: 'wx'});
         return primaryKey;
       } catch (error) {
         if (error.code === 'ENOENT') {
-          await fs.outputFile(filePath, entity);
+          await fs.outputFile(filePath, newEntity);
           return primaryKey;
         } else if (error.code === 'EEXIST') {
           const message = `Record "${primaryKey}" already exists in "${tableName}". You need to delete the record first if you want to overwrite it.`;
-          throw new RecordAlreadyExistsError(message);
+          throw new StoreEngineError.RecordAlreadyExistsError(message);
         }
         throw error;
       }
     } else {
       const message = `Record "${primaryKey}" cannot be saved in "${tableName}" because it's "undefined" or "null".`;
-      throw new RecordTypeError(message);
+      throw new StoreEngineError.RecordTypeError(message);
     }
   }
 
-  async delete(tableName: string, primaryKey: string): Promise<string> {
+  public async delete<PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): Promise<PrimaryKey> {
     const file = this.resolvePath(tableName, primaryKey);
     await fs.remove(file);
     return primaryKey;
   }
 
-  async deleteAll(tableName: string): Promise<boolean> {
+  public async deleteAll(tableName: string): Promise<boolean> {
     const directory = this.resolvePath(tableName);
 
     try {
@@ -129,7 +137,10 @@ export class FileEngine implements CRUDEngine {
     }
   }
 
-  async read<T>(tableName: string, primaryKey: string): Promise<T> {
+  public async read<EntityType = Object, PrimaryKey = string>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+  ): Promise<EntityType> {
     const file = await this.resolvePath(tableName, primaryKey);
     let data: any;
 
@@ -138,7 +149,7 @@ export class FileEngine implements CRUDEngine {
     } catch (error) {
       if (error.code === 'ENOENT') {
         const message = `Record "${primaryKey}" in "${tableName}" could not be found.`;
-        throw new RecordNotFoundError(message);
+        throw new StoreEngineError.RecordNotFoundError(message);
       }
       throw error;
     }
@@ -152,7 +163,7 @@ export class FileEngine implements CRUDEngine {
     return data;
   }
 
-  async readAll<T>(tableName: string): Promise<T[]> {
+  public async readAll<T>(tableName: string): Promise<T[]> {
     const directory = this.resolvePath(tableName);
     const files = await fs.readdir(directory);
     const recordNames = files.map(file => FileEngine.path.basename(file, FileEngine.path.extname(file)));
@@ -176,44 +187,43 @@ export class FileEngine implements CRUDEngine {
     return files.map(file => FileEngine.path.parse(file).name);
   }
 
-  public async append(tableName: string, primaryKey: string, additions: string): Promise<string> {
-    const file = this.resolvePath(tableName, primaryKey);
-    let record = await this.read(tableName, primaryKey);
-    if (typeof record === 'string') {
-      record += additions;
-    } else {
-      const message = `Cannot append text to record "${primaryKey}" because it's not a string.`;
-      throw new RecordTypeError(message);
-    }
-    const updatedRecord = record;
-    await fs.outputFile(file, updatedRecord);
-    return primaryKey;
-  }
-
-  public async update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  public async update<PrimaryKey = string, ChangesType = Object>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    changes: ChangesType,
+  ): Promise<PrimaryKey> {
     const file = this.resolvePath(tableName, primaryKey);
     let record = await this.read(tableName, primaryKey);
     if (typeof record === 'string') {
       record = JSON.parse(record);
     }
+    // TODO: Apply deep merge!
     const updatedRecord = JSON.stringify({...record, ...changes});
     await fs.outputFile(file, updatedRecord);
     return primaryKey;
   }
 
-  public async updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  public async updateOrCreate<PrimaryKey = string, ChangesType = Object>(
+    tableName: string,
+    primaryKey: PrimaryKey,
+    changes: ChangesType,
+  ): Promise<PrimaryKey> {
     try {
       await this.update(tableName, primaryKey, changes);
     } catch (error) {
-      if (error instanceof RecordNotFoundError) {
+      const doesNotExist = error instanceof StoreEngineError.RecordNotFoundError;
+      const doesNotExistAndHasNoPrimaryKey = error.code === 'EISDIR' && primaryKey === undefined;
+
+      if (doesNotExist || doesNotExistAndHasNoPrimaryKey) {
         return this.create(tableName, primaryKey, changes);
       }
+
       throw error;
     }
     return primaryKey;
   }
 
-  private resolvePath(tableName: string, primaryKey = ''): string {
+  private resolvePath<PrimaryKey = string>(tableName: string, primaryKey?: PrimaryKey): string {
     const tableNamePath = FileEngine.enforcePathRestrictions(this.storeName, tableName);
     const primaryKeyPath = FileEngine.enforcePathRestrictions(
       tableNamePath,

@@ -3,6 +3,585 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.23.23](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.22...@wireapp/react-ui-kit@7.23.23) (2019-11-11)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.23.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.21...@wireapp/react-ui-kit@7.23.22) (2019-11-11)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.23.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.20...@wireapp/react-ui-kit@7.23.21) (2019-11-11)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.23.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.19...@wireapp/react-ui-kit@7.23.20) (2019-11-06)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.23.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.18...@wireapp/react-ui-kit@7.23.19) (2019-10-30)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.23.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.17...@wireapp/react-ui-kit@7.23.18) (2019-10-25)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.23.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.16...@wireapp/react-ui-kit@7.23.17) (2019-10-25)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.23.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.15...@wireapp/react-ui-kit@7.23.16) (2019-10-24)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.23.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.14...@wireapp/react-ui-kit@7.23.15) (2019-10-23)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.23.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.13...@wireapp/react-ui-kit@7.23.14) (2019-10-21)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.23.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.12...@wireapp/react-ui-kit@7.23.13) (2019-10-17)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.23.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.11...@wireapp/react-ui-kit@7.23.12) (2019-10-16)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.23.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.10...@wireapp/react-ui-kit@7.23.11) (2019-10-16)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.23.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.9...@wireapp/react-ui-kit@7.23.10) (2019-10-15)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** TabBarItem active opacity ([#2426](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2426)) ([7e47008](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/7e470085e99ced09601394695158642f92bba448))
+
+
+
+
+
+## [7.23.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.8...@wireapp/react-ui-kit@7.23.9) (2019-10-14)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.23.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.7...@wireapp/react-ui-kit@7.23.8) (2019-10-09)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.23.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.6...@wireapp/react-ui-kit@7.23.7) (2019-10-08)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.23.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.5...@wireapp/react-ui-kit@7.23.6) (2019-10-07)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.23.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.4...@wireapp/react-ui-kit@7.23.5) (2019-10-02)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Remove preventDefaults from touch events ([#2365](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2365)) ([9ec1e57](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/9ec1e57))
+
+
+
+
+
+## [7.23.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.3...@wireapp/react-ui-kit@7.23.4) (2019-10-01)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Export useLongTouch ([#2358](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2358)) ([f75c646](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/f75c646))
+
+
+
+
+
+## [7.23.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.2...@wireapp/react-ui-kit@7.23.3) (2019-10-01)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.23.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.1...@wireapp/react-ui-kit@7.23.2) (2019-09-27)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.23.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.0...@wireapp/react-ui-kit@7.23.1) (2019-09-23)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+# [7.23.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.22.0...@wireapp/react-ui-kit@7.23.0) (2019-09-20)
+
+
+### Features
+
+* **react-ui-kit:** Hook useLongTouch ([#2319](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2319)) ([049fe4d](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/049fe4d))
+
+
+
+
+
+# [7.22.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.21.0...@wireapp/react-ui-kit@7.22.0) (2019-09-20)
+
+
+### Features
+
+* **react-ui-kit:** Hook useTimeout ([#2318](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2318)) ([9b6c3ee](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/9b6c3ee))
+
+
+
+
+
+# [7.21.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.20.1...@wireapp/react-ui-kit@7.21.0) (2019-09-20)
+
+
+### Features
+
+* **react-ui-kit:** Specify RoundIconButton icons as children ([#2317](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2317)) ([7ea6a8a](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/7ea6a8a))
+
+
+
+
+
+## [7.20.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.20.0...@wireapp/react-ui-kit@7.20.1) (2019-09-20)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+# [7.20.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.19.6...@wireapp/react-ui-kit@7.20.0) (2019-09-17)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Min height for avatar component ([#2304](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2304)) ([fca2278](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/fca2278))
+
+
+### Features
+
+* **react-ui-kit:** Make breakpoint configurable for Columns co… ([#2305](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2305)) ([edeb473](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/edeb473))
+
+
+
+
+
+## [7.19.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.19.5...@wireapp/react-ui-kit@7.19.6) (2019-09-13)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.19.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.19.4...@wireapp/react-ui-kit@7.19.5) (2019-09-12)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.19.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.19.3...@wireapp/react-ui-kit@7.19.4) (2019-09-09)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.19.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.19.2...@wireapp/react-ui-kit@7.19.3) (2019-09-09)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.19.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.19.1...@wireapp/react-ui-kit@7.19.2) (2019-09-06)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.19.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.19.0...@wireapp/react-ui-kit@7.19.1) (2019-09-06)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+# [7.19.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.18.2...@wireapp/react-ui-kit@7.19.0) (2019-09-04)
+
+
+### Features
+
+* **react-ui-kit:** Add People Icon ([#2264](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2264)) ([76a01dd](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/76a01dd))
+
+
+
+
+
+## [7.18.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.18.1...@wireapp/react-ui-kit@7.18.2) (2019-08-30)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.18.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.18.0...@wireapp/react-ui-kit@7.18.1) (2019-08-29)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+# [7.18.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.17.0...@wireapp/react-ui-kit@7.18.0) (2019-08-28)
+
+
+### Features
+
+* **react-ui-kit:** Add Minus Icon ([#2234](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2234)) ([9e5acc5](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/9e5acc5))
+
+
+
+
+
+# [7.17.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.16.0...@wireapp/react-ui-kit@7.17.0) (2019-08-27)
+
+
+### Features
+
+* Add notification icon ([#2232](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2232)) ([b526697](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/b526697))
+
+
+
+
+
+# [7.16.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.15.1...@wireapp/react-ui-kit@7.16.0) (2019-08-27)
+
+
+### Features
+
+* **react-ui-kit:** Add ChevronIcon ([#2231](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2231)) ([f142ce3](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/f142ce3))
+
+
+
+
+
+## [7.15.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.15.0...@wireapp/react-ui-kit@7.15.1) (2019-08-26)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+# [7.15.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.14.0...@wireapp/react-ui-kit@7.15.0) (2019-08-21)
+
+
+### Features
+
+* **react-ui-kit:** Add plus icon ([#2216](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2216)) ([92eb44e](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/92eb44e))
+
+
+
+
+
+# [7.14.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.13.0...@wireapp/react-ui-kit@7.14.0) (2019-08-21)
+
+
+### Features
+
+* **react-ui-kit:** Add block and group icons ([#2214](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2214)) ([e8be4eb](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/e8be4eb))
+
+
+
+
+
+# [7.13.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.12.0...@wireapp/react-ui-kit@7.13.0) (2019-08-21)
+
+
+### Features
+
+* **react-ui-kit:** Add archive icon ([#2213](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2213)) ([84a4ad5](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/84a4ad5))
+
+
+
+
+
+# [7.12.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.11.2...@wireapp/react-ui-kit@7.12.0) (2019-08-21)
+
+
+### Features
+
+* **react-ui-kit:** Add InfoIcon ([#2202](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2202)) ([f2e3b53](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/f2e3b53))
+
+
+
+
+
+## [7.11.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.11.1...@wireapp/react-ui-kit@7.11.2) (2019-08-12)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.11.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.11.0...@wireapp/react-ui-kit@7.11.1) (2019-08-07)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Keep background color on overscroll ([#2169](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2169)) ([e52f5f2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/e52f5f2))
+
+
+
+
+
+# [7.11.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.10.1...@wireapp/react-ui-kit@7.11.0) (2019-08-06)
+
+
+### Features
+
+* **react-ui-kit:** Themes ([#2158](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2158)) ([e5f5d69](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/e5f5d69))
+
+
+
+
+
+## [7.10.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.10.0...@wireapp/react-ui-kit@7.10.1) (2019-08-05)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+# [7.10.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.9.3...@wireapp/react-ui-kit@7.10.0) (2019-08-02)
+
+
+### Features
+
+* **react-ui-kit:** Add IsInViewport component ([#2152](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2152)) ([d435779](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/d435779))
+
+
+
+
+
+## [7.9.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.9.2...@wireapp/react-ui-kit@7.9.3) (2019-08-01)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.9.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.9.1...@wireapp/react-ui-kit@7.9.2) (2019-08-01)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.9.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.9.0...@wireapp/react-ui-kit@7.9.1) (2019-07-31)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Fix min width for Avatar ([#2144](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2144)) ([f96ea38](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/f96ea38))
+
+
+
+
+
+# [7.9.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.8.5...@wireapp/react-ui-kit@7.9.0) (2019-07-31)
+
+
+### Features
+
+* **react-ui-kit:** Add onBackgroundClick to Overlay component ([#2143](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2143)) ([0928c75](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/0928c75))
+
+
+
+
+
+## [7.8.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.8.4...@wireapp/react-ui-kit@7.8.5) (2019-07-30)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.8.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.8.3...@wireapp/react-ui-kit@7.8.4) (2019-07-29)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Remove AvatarGrid size calculation & add minWidth ([0695ec2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/0695ec2))
+
+
+
+
+
+## [7.8.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.8.2...@wireapp/react-ui-kit@7.8.3) (2019-07-29)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Set default Avatar & AvatarGrid size ([#2129](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2129)) ([baffc6c](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/baffc6c))
+
+
+
+
+
+## [7.8.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.8.1...@wireapp/react-ui-kit@7.8.2) (2019-07-25)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Add BLACK and WHITE to BASE_COLOR ([#2130](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2130)) ([ed7d9ed](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/ed7d9ed))
+
+
+
+
+
+## [7.8.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.8.0...@wireapp/react-ui-kit@7.8.1) (2019-07-25)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+# [7.8.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.7.0...@wireapp/react-ui-kit@7.8.0) (2019-07-24)
+
+
+### Features
+
+* **react-ui-kit:** Size in avatar optional ([#2121](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2121)) ([cef3084](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/cef3084))
+
+
+
+
+
+# [7.7.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.6.0...@wireapp/react-ui-kit@7.7.0) (2019-07-24)
+
+
+### Features
+
+* **react-ui-kit:** Smaller borders in AvatarGrid ([#2118](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2118)) ([e97c6b4](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/e97c6b4))
+
+
+
+
+
+# [7.6.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.5.3...@wireapp/react-ui-kit@7.6.0) (2019-07-24)
+
+
+### Features
+
+* **react-ui-kit:** AvatarGrid component ([#2109](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2109)) ([d6a9051](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/d6a9051))
+
+
+
+
+
 ## [7.5.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.5.2...@wireapp/react-ui-kit@7.5.3) (2019-07-19)
 
 **Note:** Version bump only for package @wireapp/react-ui-kit

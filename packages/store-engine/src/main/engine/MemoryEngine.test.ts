@@ -17,7 +17,6 @@
  *
  */
 
-import {appendSpec} from '../test/appendSpec';
 import {createSpec} from '../test/createSpec';
 import {deleteAllSpec} from '../test/deleteAllSpec';
 import {deleteSpec} from '../test/deleteSpec';
@@ -51,11 +50,34 @@ describe('MemoryEngine', () => {
       const inMemory = await engine.init(STORE_NAME);
       expect(inMemory[STORE_NAME]).toBeDefined();
     });
-  });
 
-  describe('append', () => {
-    Object.entries(appendSpec).map(([description, testFunction]) => {
-      it(description, () => testFunction(engine));
+    it('writes into an existing database.', async () => {
+      const TABLE_NAME = 'friends';
+      const PRIMARY_KEY_CAMILLA = 'camilla';
+      const PRIMARY_KEY_PETER = 'peter';
+      const entityCamilla = {
+        age: 25,
+        name: 'Camilla',
+      };
+      const entityPeter = {
+        age: 30,
+        name: 'Peter',
+      };
+      const dbName = 'MyDatabase';
+
+      const db = {
+        [TABLE_NAME]: {[PRIMARY_KEY_PETER]: entityPeter},
+      };
+
+      engine = new MemoryEngine();
+      await engine.initWithObject(dbName, db);
+
+      const primaryKey = await engine.create(TABLE_NAME, PRIMARY_KEY_CAMILLA, entityCamilla);
+      expect(primaryKey).toEqual(PRIMARY_KEY_CAMILLA);
+      expect(engine.storeName).toBe(dbName);
+
+      const result = await engine.read(TABLE_NAME, PRIMARY_KEY_PETER);
+      expect(result).toEqual(entityPeter);
     });
   });
 

@@ -17,26 +17,17 @@
  *
  */
 
+import {APIClient} from '@wireapp/api-client';
 import {Context, LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
 import {ClientType, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
-import {IncomingNotification} from '@wireapp/api-client/dist/commonjs/conversation/';
-import {
-  CONVERSATION_EVENT,
-  ConversationEvent,
-  ConversationMessageTimerUpdateEvent,
-  ConversationOtrMessageAddEvent,
-  IncomingEvent,
-  USER_EVENT,
-  UserClientAddEvent,
-  UserClientRemoveEvent,
-  UserConnectionEvent,
-  UserEvent,
-} from '@wireapp/api-client/dist/commonjs/event/';
+import * as Events from '@wireapp/api-client/dist/commonjs/event';
 import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/';
-import {WebSocketTopic} from '@wireapp/api-client/dist/commonjs/tcp/';
+import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/';
 import * as cryptobox from '@wireapp/cryptobox';
-import {GenericMessage} from '@wireapp/protocol-messaging';
 import {error as StoreEngineError} from '@wireapp/store-engine';
+import EventEmitter from 'events';
+import logdown from 'logdown';
+
 import {LoginSanitizer} from './auth/';
 import {BroadcastService} from './broadcast/';
 import {ClientInfo, ClientService} from './client/';
@@ -44,34 +35,56 @@ import {ConnectionService} from './connection/';
 import {
   AssetService,
   ConversationService,
-  GenericMessageType,
   PayloadBundle,
-  PayloadBundleState,
+  PayloadBundleSource,
   PayloadBundleType,
 } from './conversation/';
-import {
-  AssetContent,
-  ClearedContent,
-  ConfirmationContent,
-  DeletedContent,
-  EditedTextContent,
-  HiddenContent,
-  KnockContent,
-  LocationContent,
-  ReactionContent,
-  TextContent,
-} from './conversation/content/';
+import * as OtrMessage from './conversation/message/OtrMessage';
+import {CoreError, NotificationError} from './CoreError';
 import {CryptographyService} from './cryptography/';
 import {GiphyService} from './giphy/';
-import {NotificationService} from './notification/';
+import {NotificationHandler, NotificationService} from './notification/';
 import {SelfService} from './self/';
 import {TeamService} from './team/';
-
-import {APIClient} from '@wireapp/api-client';
-import EventEmitter from 'events';
-import logdown from 'logdown';
-import {MessageBuilder} from './conversation/message/MessageBuilder';
 import {UserService} from './user/';
+
+enum TOPIC {
+  ERROR = 'Account.TOPIC.ERROR',
+}
+
+export declare interface Account {
+  on(event: PayloadBundleType.ASSET, listener: (payload: OtrMessage.FileAssetMessage) => void): this;
+  on(event: PayloadBundleType.ASSET_ABORT, listener: (payload: OtrMessage.FileAssetAbortMessage) => void): this;
+  on(event: PayloadBundleType.ASSET_IMAGE, listener: (payload: OtrMessage.ImageAssetMessage) => void): this;
+  on(event: PayloadBundleType.ASSET_META, listener: (payload: OtrMessage.FileAssetMetaDataMessage) => void): this;
+  on(event: PayloadBundleType.CALL, listener: (payload: OtrMessage.CallMessage) => void): this;
+  on(event: PayloadBundleType.CLIENT_ACTION, listener: (payload: OtrMessage.ResetSessionMessage) => void): this;
+  on(event: PayloadBundleType.CLIENT_ADD, listener: (payload: Events.UserClientAddEvent) => void): this;
+  on(event: PayloadBundleType.CLIENT_REMOVE, listener: (payload: Events.UserClientRemoveEvent) => void): this;
+  on(event: PayloadBundleType.CONFIRMATION, listener: (payload: OtrMessage.ConfirmationMessage) => void): this;
+  on(event: PayloadBundleType.CONNECTION_REQUEST, listener: (payload: Events.UserConnectionEvent) => void): this;
+  on(event: PayloadBundleType.USER_UPDATE, listener: (payload: Events.UserUpdateEvent) => void): this;
+  on(
+    event: PayloadBundleType.CONVERSATION_CLEAR,
+    listener: (payload: OtrMessage.ClearConversationMessage) => void,
+  ): this;
+  on(event: PayloadBundleType.CONVERSATION_RENAME, listener: (payload: Events.ConversationRenameEvent) => void): this;
+  on(event: PayloadBundleType.LOCATION, listener: (payload: OtrMessage.LocationMessage) => void): this;
+  on(event: PayloadBundleType.MEMBER_JOIN, listener: (payload: Events.TeamMemberJoinEvent) => void): this;
+  on(event: PayloadBundleType.MESSAGE_DELETE, listener: (payload: OtrMessage.DeleteMessage) => void): this;
+  on(event: PayloadBundleType.MESSAGE_EDIT, listener: (payload: OtrMessage.EditedTextMessage) => void): this;
+  on(event: PayloadBundleType.MESSAGE_HIDE, listener: (payload: OtrMessage.HideMessage) => void): this;
+  on(event: PayloadBundleType.PING, listener: (payload: OtrMessage.PingMessage) => void): this;
+  on(event: PayloadBundleType.REACTION, listener: (payload: OtrMessage.ReactionMessage) => void): this;
+  on(event: PayloadBundleType.TEXT, listener: (payload: OtrMessage.TextMessage) => void): this;
+  on(
+    event: PayloadBundleType.TIMER_UPDATE,
+    listener: (payload: Events.ConversationMessageTimerUpdateEvent) => void,
+  ): this;
+  on(event: PayloadBundleType.TYPING, listener: (payload: Events.ConversationTypingEvent) => void): this;
+  on(event: PayloadBundleType.UNKNOWN, listener: (payload: any) => void): this;
+  on(event: TOPIC.ERROR, listener: (payload: CoreError) => void): this;
+}
 
 export class Account extends EventEmitter {
   private readonly logger: logdown.Logger;
@@ -91,6 +104,10 @@ export class Account extends EventEmitter {
     user: UserService;
   };
 
+  public static get TOPIC(): typeof TOPIC {
+    return TOPIC;
+  }
+
   constructor(apiClient: APIClient = new APIClient()) {
     super();
     this.apiClient = apiClient;
@@ -101,17 +118,11 @@ export class Account extends EventEmitter {
   }
 
   get clientId(): string {
-    if (this.apiClient.context && this.apiClient.context.clientId) {
-      return this.apiClient.context.clientId;
-    }
-    throw new Error(`No user context available. Please login first.`);
+    return this.apiClient.validatedClientId;
   }
 
   get userId(): string {
-    if (this.apiClient.context) {
-      return this.apiClient.context.userId;
-    }
-    throw new Error(`No user context available. Please login first.`);
+    return this.apiClient.validatedUserId;
   }
 
   public async init(): Promise<void> {
@@ -122,7 +133,7 @@ export class Account extends EventEmitter {
     const connectionService = new ConnectionService(this.apiClient);
     const giphyService = new GiphyService(this.apiClient);
     const conversationService = new ConversationService(this.apiClient, cryptographyService, assetService);
-    const notificationService = new NotificationService(this.apiClient, this.apiClient.config.store);
+    const notificationService = new NotificationService(this.apiClient, cryptographyService);
     const selfService = new SelfService(this.apiClient);
     const teamService = new TeamService(this.apiClient);
 
@@ -144,12 +155,8 @@ export class Account extends EventEmitter {
     };
   }
 
-  public async login(
-    loginData: LoginData,
-    initClient: boolean = true,
-    clientInfo?: ClientInfo,
-  ): Promise<Context | undefined> {
-    await this.resetContext();
+  public async login(loginData: LoginData, initClient: boolean = true, clientInfo?: ClientInfo): Promise<Context> {
+    this.resetContext();
     await this.init();
 
     LoginSanitizer.removeNonPrintableCharacters(loginData);
@@ -160,7 +167,11 @@ export class Account extends EventEmitter {
       await this.initClient(loginData, clientInfo);
     }
 
-    return this.apiClient.context;
+    if (this.apiClient.context) {
+      return this.apiClient.context;
+    }
+
+    throw Error('Login failed.');
   }
 
   public async initClient(
@@ -215,9 +226,7 @@ export class Account extends EventEmitter {
 
     const loadedClient = await this.service!.client.getLocalClient();
     await this.apiClient.client.api.getClient(loadedClient.id);
-
     this.apiClient.context!.clientId = loadedClient.id;
-    this.service!.conversation.setClientID(loadedClient.id);
 
     return loadedClient;
   }
@@ -230,12 +239,10 @@ export class Account extends EventEmitter {
       throw new Error('Services are not set.');
     }
     const registeredClient = await this.service.client.register(loginData, clientInfo);
+    this.apiClient.context!.clientId = registeredClient.id;
     this.logger.log('Client is created');
 
-    this.apiClient.context!.clientId = registeredClient.id;
-    this.service!.conversation.setClientID(registeredClient.id);
-
-    await this.service!.notification.initializeNotificationStream(registeredClient.id);
+    await this.service!.notification.initializeNotificationStream();
     await this.service!.client.synchronizeClients();
 
     return {isNewClient: true, localClient: registeredClient};
@@ -248,507 +255,52 @@ export class Account extends EventEmitter {
 
   public async logout(): Promise<void> {
     await this.apiClient.logout();
-    await this.resetContext();
+    this.resetContext();
   }
 
-  public async listen(notificationHandler?: Function): Promise<Account> {
+  public async listen(
+    notificationHandler: NotificationHandler = this.service!.notification.handleNotification,
+  ): Promise<Account> {
     if (!this.apiClient.context) {
-      throw new Error('Context is not set - Please login first');
+      throw new Error('Context is not set - please login first');
     }
 
-    this.apiClient.transport.ws.removeAllListeners(WebSocketTopic.ON_MESSAGE);
-
-    if (notificationHandler) {
-      this.apiClient.transport.ws.on(WebSocketTopic.ON_MESSAGE, (notification: IncomingNotification) => {
-        notificationHandler(notification);
+    this.apiClient.transport.ws.removeAllListeners(WebSocketClient.TOPIC.ON_MESSAGE);
+    this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, notification => {
+      notificationHandler(notification, PayloadBundleSource.WEBSOCKET).catch(error => {
+        this.logger.error(`Failed to handle notification ID "${notification.id}": ${error.message}`, error);
       });
-    } else {
-      this.apiClient.transport.ws.on(WebSocketTopic.ON_MESSAGE, this.handleNotification.bind(this));
+    });
+
+    this.service!.notification.removeAllListeners(NotificationService.TOPIC.NOTIFICATION_ERROR);
+    this.service!.notification.on(NotificationService.TOPIC.NOTIFICATION_ERROR, this.handleError);
+
+    for (const payloadType of Object.values(PayloadBundleType)) {
+      this.service!.notification.removeAllListeners(payloadType);
+      this.service!.notification.on(payloadType as any, this.handlePayload);
     }
 
-    await this.apiClient.connect();
+    const onBeforeConnect = async () => this.service!.notification.handleNotificationStream(notificationHandler);
+    await this.apiClient.connect(onBeforeConnect);
     return this;
   }
 
-  private async decodeGenericMessage(otrMessage: ConversationOtrMessageAddEvent): Promise<PayloadBundle> {
-    if (!this.service) {
-      throw new Error('Services are not set.');
-    }
-
-    const {
-      from,
-      data: {sender, text: cipherText},
-    } = otrMessage;
-
-    const sessionId = CryptographyService.constructSessionId(from, sender);
-    const decryptedMessage = await this.service.cryptography.decrypt(sessionId, cipherText);
-    if (decryptedMessage.isSuccess) {
-      const genericMessage = GenericMessage.decode(decryptedMessage.value);
-
-      if (genericMessage.content === GenericMessageType.EPHEMERAL) {
-        const unwrappedMessage = this.mapGenericMessage(genericMessage.ephemeral, otrMessage);
-        unwrappedMessage.id = genericMessage.messageId;
-        if (genericMessage.ephemeral) {
-          const expireAfterMillis = genericMessage.ephemeral.expireAfterMillis;
-          unwrappedMessage.messageTimer =
-            typeof expireAfterMillis === 'number' ? expireAfterMillis : expireAfterMillis.toNumber();
-        }
-        return unwrappedMessage;
-      }
-      return this.mapGenericMessage(genericMessage, otrMessage);
-    }
-
-    throw decryptedMessage.error;
-  }
-
-  private mapGenericMessage(genericMessage: any, event: ConversationOtrMessageAddEvent): PayloadBundle {
-    switch (genericMessage.content) {
-      case GenericMessageType.TEXT: {
+  private readonly handlePayload = async (payload: PayloadBundle): Promise<void> => {
+    switch (payload.type) {
+      case PayloadBundleType.TIMER_UPDATE: {
         const {
-          content: text,
-          expectsReadConfirmation,
-          legalHoldStatus,
-          linkPreview: linkPreviews,
-          mentions,
-          quote,
-        } = genericMessage[GenericMessageType.TEXT];
-
-        const content: TextContent = {expectsReadConfirmation, legalHoldStatus, text};
-
-        if (linkPreviews && linkPreviews.length) {
-          content.linkPreviews = linkPreviews;
-        }
-
-        if (mentions && mentions.length) {
-          content.mentions = mentions;
-        }
-
-        if (quote) {
-          content.quote = quote;
-        }
-
-        if (typeof legalHoldStatus !== 'undefined') {
-          content.legalHoldStatus = legalHoldStatus;
-        }
-
-        return {
-          content,
-          conversation: event.conversation,
-          from: event.from,
-          fromClientId: event.data.sender,
-          id: genericMessage.messageId,
-          messageTimer: 0,
-          state: PayloadBundleState.INCOMING,
-          timestamp: new Date(event.time).getTime(),
-          type: PayloadBundleType.TEXT,
-        };
-      }
-      case GenericMessageType.CALLING: {
-        return {
-          content: genericMessage.calling.content,
-          conversation: event.conversation,
-          from: event.from,
-          fromClientId: event.data.sender,
-          id: genericMessage.messageId,
-          messageTimer: 0,
-          state: PayloadBundleState.INCOMING,
-          timestamp: new Date(event.time).getTime(),
-          type: PayloadBundleType.CALL,
-        };
-      }
-      case GenericMessageType.CONFIRMATION: {
-        const {firstMessageId, moreMessageIds, type} = genericMessage[GenericMessageType.CONFIRMATION];
-
-        const content: ConfirmationContent = {firstMessageId, moreMessageIds, type};
-
-        return {
-          content,
-          conversation: event.conversation,
-          from: event.from,
-          fromClientId: event.data.sender,
-          id: genericMessage.messageId,
-          messageTimer: 0,
-          state: PayloadBundleState.INCOMING,
-          timestamp: new Date(event.time).getTime(),
-          type: PayloadBundleType.CONFIRMATION,
-        };
-      }
-      case GenericMessageType.CLEARED: {
-        const content: ClearedContent = genericMessage[GenericMessageType.CLEARED];
-
-        return {
-          content,
-          conversation: event.conversation,
-          from: event.from,
-          fromClientId: event.data.sender,
-          id: genericMessage.messageId,
-          messageTimer: 0,
-          state: PayloadBundleState.INCOMING,
-          timestamp: new Date(event.time).getTime(),
-          type: PayloadBundleType.CLEARED,
-        };
-      }
-      case GenericMessageType.DELETED: {
-        const originalMessageId = genericMessage[GenericMessageType.DELETED].messageId;
-
-        const content: DeletedContent = {messageId: originalMessageId};
-
-        return {
-          content,
-          conversation: event.conversation,
-          from: event.from,
-          fromClientId: event.data.sender,
-          id: genericMessage.messageId,
-          messageTimer: 0,
-          state: PayloadBundleState.INCOMING,
-          timestamp: new Date(event.time).getTime(),
-          type: PayloadBundleType.MESSAGE_DELETE,
-        };
-      }
-      case GenericMessageType.EDITED: {
-        const {
-          expectsReadConfirmation,
-          text: {
-            content: editedText,
-            legalHoldStatus,
-            linkPreview: editedLinkPreviews,
-            mentions: editedMentions,
-            quote: editedQuote,
-          },
-          replacingMessageId,
-        } = genericMessage[GenericMessageType.EDITED];
-
-        const content: EditedTextContent = {
-          expectsReadConfirmation,
-          legalHoldStatus,
-          originalMessageId: replacingMessageId,
-          text: editedText,
-        };
-
-        if (editedLinkPreviews && editedLinkPreviews.length) {
-          content.linkPreviews = editedLinkPreviews;
-        }
-
-        if (editedMentions && editedMentions.length) {
-          content.mentions = editedMentions;
-        }
-
-        if (editedQuote) {
-          content.quote = editedQuote;
-        }
-
-        return {
-          content,
-          conversation: event.conversation,
-          from: event.from,
-          fromClientId: event.data.sender,
-          id: genericMessage.messageId,
-          messageTimer: 0,
-          state: PayloadBundleState.INCOMING,
-          timestamp: new Date(event.time).getTime(),
-          type: PayloadBundleType.MESSAGE_EDIT,
-        };
-      }
-      case GenericMessageType.HIDDEN: {
-        const {conversationId, messageId} = genericMessage[GenericMessageType.HIDDEN];
-
-        const content: HiddenContent = {
-          conversationId,
-          messageId,
-        };
-
-        return {
-          content,
-          conversation: event.conversation,
-          from: event.from,
-          fromClientId: event.data.sender,
-          id: genericMessage.messageId,
-          messageTimer: 0,
-          state: PayloadBundleState.INCOMING,
-          timestamp: new Date(event.time).getTime(),
-          type: PayloadBundleType.MESSAGE_HIDE,
-        };
-      }
-      case GenericMessageType.KNOCK: {
-        const {expectsReadConfirmation, legalHoldStatus} = genericMessage[GenericMessageType.KNOCK];
-        const content: KnockContent = {expectsReadConfirmation, legalHoldStatus};
-
-        return {
-          content,
-          conversation: event.conversation,
-          from: event.from,
-          fromClientId: event.data.sender,
-          id: genericMessage.messageId,
-          messageTimer: 0,
-          state: PayloadBundleState.INCOMING,
-          timestamp: new Date(event.time).getTime(),
-          type: PayloadBundleType.PING,
-        };
-      }
-      case GenericMessageType.LOCATION: {
-        const {expectsReadConfirmation, latitude, legalHoldStatus, longitude, name, zoom} = genericMessage[
-          GenericMessageType.LOCATION
-        ];
-
-        const content: LocationContent = {
-          expectsReadConfirmation,
-          latitude,
-          legalHoldStatus,
-          longitude,
-          name,
-          zoom,
-        };
-
-        return {
-          content,
-          conversation: event.conversation,
-          from: event.from,
-          fromClientId: event.data.sender,
-          id: genericMessage.messageId,
-          messageTimer: 0,
-          state: PayloadBundleState.INCOMING,
-          timestamp: new Date(event.time).getTime(),
-          type: PayloadBundleType.LOCATION,
-        };
-      }
-      case GenericMessageType.ASSET: {
-        const {
-          expectsReadConfirmation,
-          legalHoldStatus,
-          notUploaded,
-          original,
-          preview,
-          status,
-          uploaded,
-        } = genericMessage[GenericMessageType.ASSET];
-        const isImage = !!uploaded && !!uploaded.assetId && !!original && !!original.image;
-
-        const content: AssetContent = {
-          abortReason: notUploaded,
-          expectsReadConfirmation,
-          legalHoldStatus,
-          original,
-          preview,
-          status,
-          uploaded,
-        };
-
-        return {
-          content,
-          conversation: event.conversation,
-          from: event.from,
-          fromClientId: event.data.sender,
-          id: genericMessage.messageId,
-          messageTimer: 0,
-          state: PayloadBundleState.INCOMING,
-          timestamp: new Date(event.time).getTime(),
-          type: isImage ? PayloadBundleType.ASSET_IMAGE : PayloadBundleType.ASSET,
-        };
-      }
-      case GenericMessageType.REACTION: {
-        const {emoji, legalHoldStatus, messageId} = genericMessage[GenericMessageType.REACTION];
-
-        const content: ReactionContent = {
-          legalHoldStatus,
-          originalMessageId: messageId,
-          type: emoji,
-        };
-
-        return {
-          content,
-          conversation: event.conversation,
-          from: event.from,
-          fromClientId: event.data.sender,
-          id: genericMessage.messageId,
-          messageTimer: 0,
-          state: PayloadBundleState.INCOMING,
-          timestamp: new Date(event.time).getTime(),
-          type: PayloadBundleType.REACTION,
-        };
-      }
-      default: {
-        this.logger.warn(`Unhandled event type "${genericMessage.content}": ${JSON.stringify(genericMessage)}`);
-        return {
-          content: genericMessage.content,
-          conversation: event.conversation,
-          from: event.from,
-          fromClientId: event.data.sender,
-          id: genericMessage.messageId,
-          messageTimer: 0,
-          state: PayloadBundleState.INCOMING,
-          timestamp: new Date(event.time).getTime(),
-          type: PayloadBundleType.UNKNOWN,
-        };
+          data: {message_timer},
+          conversation,
+        } = (payload as unknown) as Events.ConversationMessageTimerUpdateEvent;
+        const expireAfterMillis = Number(message_timer);
+        this.service!.conversation.messageTimer.setConversationLevelTimer(conversation, expireAfterMillis);
+        break;
       }
     }
-  }
+    this.emit(payload.type, payload);
+  };
 
-  private mapConversationEvent(event: ConversationEvent): PayloadBundle {
-    return {
-      content: event.data,
-      conversation: event.conversation,
-      from: event.from,
-      id: MessageBuilder.createId(),
-      messageTimer: 0,
-      state: PayloadBundleState.INCOMING,
-      timestamp: new Date(event.time).getTime(),
-      type: this.mapConversationEventType(event.type),
-    };
-  }
-
-  private mapConversationEventType(type: CONVERSATION_EVENT): PayloadBundleType {
-    switch (type) {
-      case CONVERSATION_EVENT.MEMBER_JOIN:
-        return PayloadBundleType.MEMBER_JOIN;
-      case CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE:
-        return PayloadBundleType.TIMER_UPDATE;
-      case CONVERSATION_EVENT.RENAME:
-        return PayloadBundleType.CONVERSATION_RENAME;
-      case CONVERSATION_EVENT.TYPING:
-        return PayloadBundleType.TYPING;
-      default:
-        return PayloadBundleType.UNKNOWN;
-    }
-  }
-
-  private mapUserEvent(event: UserEvent): PayloadBundle | void {
-    switch (event.type) {
-      case USER_EVENT.CONNECTION: {
-        const {connection} = event as UserConnectionEvent;
-        return {
-          content: connection,
-          conversation: connection.conversation,
-          from: connection.from,
-          id: MessageBuilder.createId(),
-          messageTimer: 0,
-          state: PayloadBundleState.INCOMING,
-          timestamp: new Date(connection.last_update).getTime(),
-          type: PayloadBundleType.CONNECTION_REQUEST,
-        };
-      }
-      case USER_EVENT.CLIENT_ADD: {
-        const {client} = event as UserClientAddEvent;
-        return {
-          content: {client},
-          conversation: this.apiClient.context!.userId,
-          from: this.apiClient.context!.userId,
-          id: MessageBuilder.createId(),
-          messageTimer: 0,
-          state: PayloadBundleState.INCOMING,
-          timestamp: new Date().getTime(),
-          type: PayloadBundleType.CLIENT_ADD,
-        };
-      }
-      case USER_EVENT.CLIENT_REMOVE: {
-        const {client} = event as UserClientRemoveEvent;
-        return {
-          content: {client},
-          conversation: this.apiClient.context!.userId,
-          from: this.apiClient.context!.userId,
-          id: MessageBuilder.createId(),
-          messageTimer: 0,
-          state: PayloadBundleState.INCOMING,
-          timestamp: new Date().getTime(),
-          type: PayloadBundleType.CLIENT_REMOVE,
-        };
-      }
-    }
-  }
-
-  private async handleEvent(event: IncomingEvent): Promise<PayloadBundle | void> {
-    this.logger.log(`Handling event of type "${event.type}"`, event);
-    const ENCRYPTED_EVENTS = [CONVERSATION_EVENT.OTR_MESSAGE_ADD];
-    const META_EVENTS = [
-      CONVERSATION_EVENT.MEMBER_JOIN,
-      CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE,
-      CONVERSATION_EVENT.RENAME,
-      CONVERSATION_EVENT.TYPING,
-    ];
-    const USER_EVENTS = [USER_EVENT.CONNECTION, USER_EVENT.CLIENT_ADD, USER_EVENT.CLIENT_REMOVE];
-
-    if (ENCRYPTED_EVENTS.includes(event.type as CONVERSATION_EVENT)) {
-      return this.decodeGenericMessage(event as ConversationOtrMessageAddEvent);
-    } else if (META_EVENTS.includes(event.type as CONVERSATION_EVENT)) {
-      const {conversation, from} = event as ConversationEvent;
-      const metaEvent = {...event, from, conversation};
-      return this.mapConversationEvent(metaEvent as ConversationEvent);
-    } else if (USER_EVENTS.includes(event.type as USER_EVENT)) {
-      return this.mapUserEvent(event as UserEvent);
-    }
-  }
-
-  private async handleNotification(notification: IncomingNotification): Promise<void> {
-    for (const event of notification.payload) {
-      let data;
-
-      try {
-        data = await this.handleEvent(event);
-      } catch (error) {
-        this.emit('error', error);
-        continue;
-      }
-
-      if (data) {
-        switch (data.type) {
-          case PayloadBundleType.ASSET_IMAGE:
-          case PayloadBundleType.CALL:
-          case PayloadBundleType.CLEARED:
-          case PayloadBundleType.CLIENT_ACTION:
-          case PayloadBundleType.CLIENT_ADD:
-          case PayloadBundleType.CLIENT_REMOVE:
-          case PayloadBundleType.CONFIRMATION:
-          case PayloadBundleType.CONNECTION_REQUEST:
-          case PayloadBundleType.LOCATION:
-          case PayloadBundleType.MESSAGE_DELETE:
-          case PayloadBundleType.MESSAGE_EDIT:
-          case PayloadBundleType.MESSAGE_HIDE:
-          case PayloadBundleType.PING:
-          case PayloadBundleType.REACTION:
-          case PayloadBundleType.TEXT:
-            this.emit(data.type, data);
-            break;
-          case PayloadBundleType.ASSET: {
-            const assetContent = data.content as AssetContent;
-            const isMetaData = !!assetContent && !!assetContent.original && !assetContent.uploaded;
-            const isAbort = !!assetContent.abortReason || (!assetContent.original && !assetContent.uploaded);
-
-            if (isMetaData) {
-              data.type = PayloadBundleType.ASSET_META;
-              this.emit(PayloadBundleType.ASSET_META, data);
-            } else if (isAbort) {
-              data.type = PayloadBundleType.ASSET_ABORT;
-              this.emit(PayloadBundleType.ASSET_ABORT, data);
-            } else {
-              this.emit(PayloadBundleType.ASSET, data);
-            }
-            break;
-          }
-          case PayloadBundleType.TIMER_UPDATE: {
-            if (data.type === PayloadBundleType.TIMER_UPDATE) {
-              const {
-                data: {message_timer},
-                conversation,
-              } = event as ConversationMessageTimerUpdateEvent;
-              const expireAfterMillis = Number(message_timer);
-              this.service!.conversation.messageTimer.setConversationLevelTimer(conversation, expireAfterMillis);
-            }
-
-            this.emit(data.type, event);
-            break;
-          }
-          case PayloadBundleType.CONVERSATION_RENAME:
-          case PayloadBundleType.MEMBER_JOIN:
-          case PayloadBundleType.TYPING:
-            this.emit(data.type, event);
-            break;
-        }
-      } else {
-        const {type, conversation, from} = event as ConversationEvent;
-        const conversationText = conversation ? ` in conversation "${conversation}"` : '';
-        const fromText = from ? ` from user "${from}".` : '';
-
-        this.logger.log(`Received unsupported event "${type}"${conversationText}${fromText}`, {event});
-      }
-    }
-  }
+  private readonly handleError = (accountError: NotificationError): void => {
+    this.emit(Account.TOPIC.ERROR, accountError);
+  };
 }

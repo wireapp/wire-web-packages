@@ -17,69 +17,55 @@
  *
  */
 
-import {TimeUtil} from '@wireapp/commons';
 import EventEmitter from 'events';
-import Html5WebSocket from 'html5-websocket';
 import logdown from 'logdown';
+import {CloseEvent, ErrorEvent, Event} from 'reconnecting-websocket';
 
 import {InvalidTokenError} from '../auth/';
-import {IncomingNotification} from '../conversation/';
 import {BackendErrorMapper, HttpClient, NetworkError} from '../http/';
-import * as buffer from '../shims/node/buffer';
+import {Notification} from '../notification/';
+import {ReconnectingWebsocket, WEBSOCKET_STATE} from './ReconnectingWebsocket';
 
-const ReconnectingWebsocket = require('reconnecting-websocket');
-
-export enum WebSocketTopic {
-  ON_DISCONNECT = 'WebSocketTopic.ON_DISCONNECT',
-  ON_ERROR = 'WebSocketTopic.ON_ERROR',
-  ON_MESSAGE = 'WebSocketTopic.ON_MESSAGE',
-  ON_OFFLINE = 'WebSocketTopic.ON_OFFLINE',
-  ON_RECONNECT = 'WebSocketTopic.ON_RECONNECT',
+enum TOPIC {
+  ON_ERROR = 'WebSocketClient.TOPIC.ON_ERROR',
+  ON_INVALID_TOKEN = 'WebSocketClient.TOPIC.ON_INVALID_TOKEN',
+  ON_MESSAGE = 'WebSocketClient.TOPIC.ON_MESSAGE',
+  ON_STATE_CHANGE = 'WebSocketClient.TOPIC.ON_STATE_CHANGE',
 }
 
-export enum CloseEventCode {
-  GOING_AWAY = 1001,
-  NORMAL_CLOSURE = 1000,
-  PROTOCOL_ERROR = 1002,
-  UNSUPPORTED_DATA = 1003,
-}
-
-export enum PingMessage {
-  PING = 'ping',
-  PONG = 'pong',
+export declare interface WebSocketClient {
+  on(event: TOPIC.ON_ERROR, listener: (error: Error | ErrorEvent) => void): this;
+  on(event: TOPIC.ON_INVALID_TOKEN, listener: (error: InvalidTokenError) => void): this;
+  on(event: TOPIC.ON_MESSAGE, listener: (notification: Notification) => void): this;
+  on(event: TOPIC.ON_STATE_CHANGE, listener: (state: WEBSOCKET_STATE) => void): this;
 }
 
 export class WebSocketClient extends EventEmitter {
+  private clientId?: string;
+  private isRefreshingAccessToken: boolean;
   private readonly baseUrl: string;
   private readonly logger: logdown.Logger;
-  private clientId?: string;
-  private hasUnansweredPing: boolean;
-  private pingInterval?: NodeJS.Timeout;
-  private socket?: WebSocket;
+  private readonly socket: ReconnectingWebsocket;
+  private websocketState: WEBSOCKET_STATE;
   public client: HttpClient;
-  public isOnline: boolean;
+  private isSocketLocked: boolean;
+  private bufferedMessages: string[];
+  private onBeforeConnect: () => Promise<void> = () => Promise.resolve();
 
-  public static CONFIG = {
-    PING_INTERVAL: TimeUtil.TimeInMillis.SECOND * 5,
-  };
-
-  public static RECONNECTING_OPTIONS = {
-    connectionTimeout: TimeUtil.TimeInMillis.SECOND * 4,
-    constructor: typeof window !== 'undefined' ? WebSocket : Html5WebSocket,
-    debug: false,
-    maxReconnectionDelay: TimeUtil.TimeInMillis.SECOND * 10,
-    maxRetries: Infinity,
-    minReconnectionDelay: TimeUtil.TimeInMillis.SECOND * 4,
-    reconnectionDelayGrowFactor: 1.3,
-  };
+  public static get TOPIC(): typeof TOPIC {
+    return TOPIC;
+  }
 
   constructor(baseUrl: string, client: HttpClient) {
     super();
 
+    this.bufferedMessages = [];
+    this.isSocketLocked = false;
     this.baseUrl = baseUrl;
     this.client = client;
-    this.hasUnansweredPing = false;
-    this.isOnline = false;
+    this.isRefreshingAccessToken = false;
+    this.socket = new ReconnectingWebsocket(this.onReconnect);
+    this.websocketState = this.socket.getState();
 
     this.logger = logdown('@wireapp/api-client/tcp/WebSocketClient', {
       logger: console,
@@ -87,59 +73,84 @@ export class WebSocketClient extends EventEmitter {
     });
   }
 
-  private buildWebSocketUrl(accessToken = this.client.accessTokenStore.accessToken!.access_token): string {
-    let url = `${this.baseUrl}/await?access_token=${accessToken}`;
-    if (this.clientId) {
-      // Note: If no client ID is given, then the WebSocket connection will receive all notifications for all clients
-      // of the connected user
-      url += `&client=${this.clientId}`;
+  private onStateChange(newState: WEBSOCKET_STATE): void {
+    if (newState !== this.websocketState) {
+      this.websocketState = newState;
+      this.emit(WebSocketClient.TOPIC.ON_STATE_CHANGE, this.websocketState);
     }
-    return url;
   }
 
-  public async connect(clientId?: string): Promise<WebSocketClient> {
+  private readonly onMessage = (data: string) => {
+    if (this.isLocked()) {
+      this.bufferedMessages.push(data);
+    } else {
+      const notification: Notification = JSON.parse(data);
+      this.emit(WebSocketClient.TOPIC.ON_MESSAGE, notification);
+    }
+  };
+
+  private readonly onError = async (error: ErrorEvent) => {
+    this.onStateChange(this.socket.getState());
+    this.emit(WebSocketClient.TOPIC.ON_ERROR, error);
+    await this.refreshAccessToken();
+  };
+
+  private readonly onReconnect = async () => {
+    try {
+      this.lock();
+      this.logger.info('Calling "onBeforeConnect"');
+      await this.onBeforeConnect();
+    } catch (error) {
+      this.logger.warn(`Error during execution of "beforeReconnect"`, error);
+      this.emit(WebSocketClient.TOPIC.ON_ERROR, error);
+    } finally {
+      this.unlock();
+    }
+    this.onStateChange(this.socket.getState());
+    return this.buildWebSocketUrl();
+  };
+
+  private readonly onOpen = (event: Event) => {
+    this.onStateChange(this.socket.getState());
+  };
+
+  private readonly onClose = (event: CloseEvent) => {
+    this.onStateChange(this.socket.getState());
+  };
+
+  /**
+   * Attaches all listeners to the websocket and establishes the connection.
+   *
+   * @param clientId
+   * When provided the websocket will get messages specific to the client.
+   * If omitted the websocket will receive global messages for the account.
+   *
+   * @param onBeforeConnect
+   * Handler that is executed before the websocket is fully connected.
+   * Essentially the websocket will lock before execution of this function and
+   * unlocks after the execution of the handler and pushes all buffered messages.
+   */
+  public async connect(clientId?: string, onBeforeConnect?: () => Promise<void>): Promise<WebSocketClient> {
+    if (onBeforeConnect) {
+      this.onBeforeConnect = onBeforeConnect;
+    }
     this.clientId = clientId;
 
-    this.socket = new ReconnectingWebsocket(
-      () => this.buildWebSocketUrl(),
-      undefined,
-      WebSocketClient.RECONNECTING_OPTIONS,
-    ) as WebSocket;
+    this.socket.setOnMessage(this.onMessage);
+    this.socket.setOnError(this.onError);
+    this.socket.setOnOpen(this.onOpen);
+    this.socket.setOnClose(this.onClose);
 
-    this.socket.onmessage = (event: MessageEvent) => {
-      const data = buffer.bufferToString(event.data);
-      if (data === PingMessage.PONG) {
-        this.logger.debug('Received pong from WebSocket');
-        this.hasUnansweredPing = false;
-      } else {
-        const notification: IncomingNotification = JSON.parse(data);
-        this.emit(WebSocketTopic.ON_MESSAGE, notification);
-      }
-    };
-
-    this.socket.onerror = event => {
-      this.logger.warn(`WebSocket connection error: "${(event as any).message}"`);
-      return this.refreshAccessToken();
-    };
-
-    this.socket.onopen = async () => {
-      if (this.socket) {
-        this.socket.binaryType = 'arraybuffer';
-      }
-
-      this.logger.info(`Connected WebSocket to "${this.baseUrl}"`);
-      this.pingInterval = setInterval(this.sendPing, WebSocketClient.CONFIG.PING_INTERVAL);
-
-      if (!this.isOnline) {
-        this.emit(WebSocketTopic.ON_RECONNECT);
-        await this.refreshAccessToken();
-      }
-    };
-
+    this.socket.connect();
     return this;
   }
 
   private async refreshAccessToken(): Promise<void> {
+    if (this.isRefreshingAccessToken) {
+      return;
+    }
+    this.isRefreshingAccessToken = true;
+
     try {
       await this.client.refreshAccessToken();
     } catch (error) {
@@ -147,43 +158,64 @@ export class WebSocketClient extends EventEmitter {
         this.logger.warn(error);
       } else {
         const mappedError = BackendErrorMapper.map(error);
+        // On invalid token the WebSocket is supposed to get closed by the client
         this.emit(
-          error instanceof InvalidTokenError ? WebSocketTopic.ON_DISCONNECT : WebSocketTopic.ON_ERROR,
+          error instanceof InvalidTokenError ? WebSocketClient.TOPIC.ON_INVALID_TOKEN : WebSocketClient.TOPIC.ON_ERROR,
           mappedError,
         );
       }
+    } finally {
+      this.isRefreshingAccessToken = false;
     }
   }
 
-  public disconnect(reason = 'Unknown reason', keepClosed = true): void {
+  public disconnect(reason?: string, keepClosed = true): void {
     if (this.socket) {
-      this.logger.info(`Disconnecting from WebSocket (reason: "${reason}")`);
-      // TODO: 'any' can be removed once this issue is resolved:
-      // https://github.com/pladaria/reconnecting-websocket/issues/44
-      (this.socket as any).close(CloseEventCode.NORMAL_CLOSURE, reason, {
-        delay: 0,
-        fastClose: true,
-        keepClosed,
-      });
-
-      if (this.pingInterval) {
-        clearInterval(this.pingInterval);
-        this.emit(WebSocketTopic.ON_OFFLINE);
-      }
+      this.socket.disconnect(reason, keepClosed);
     }
-
-    this.isOnline = false;
   }
 
-  private readonly sendPing = (): void => {
-    if (this.socket) {
-      if (this.hasUnansweredPing) {
-        this.logger.warn('Ping interval check failed');
-        return this.disconnect('Failed ping check', false);
-      }
-      this.logger.debug('Sending ping to WebSocket');
-      this.hasUnansweredPing = true;
-      return this.socket.send(PingMessage.PING);
+  /**
+   * Unlocks the websocket.
+   * When unlocking the websocket all buffered messages between
+   * connecting the websocket and the unlocking the websocket will be emitted.
+   */
+  public readonly unlock = () => {
+    this.logger.info(`Unlocking WebSocket - Emitting "${this.bufferedMessages.length}" unprocessed messages`);
+    this.isSocketLocked = false;
+    for (const bufferedMessage of this.bufferedMessages) {
+      this.onMessage(bufferedMessage);
     }
+    this.bufferedMessages = [];
   };
+
+  /**
+   * Locks the websocket so messages are buffered instead of being emitted.
+   * Once the websocket gets unlocked buffered messages get emitted.
+   * This behaviour is needed in order to not miss any messages
+   * during fetching notifications from the notification stream.
+   */
+  public readonly lock = () => {
+    this.logger.info('Locking WebSocket');
+    this.isSocketLocked = true;
+  };
+
+  public isLocked(): boolean {
+    return this.isSocketLocked;
+  }
+
+  private buildWebSocketUrl(): string {
+    const store = this.client.accessTokenStore.accessToken;
+    const token = store && store.access_token ? store.access_token : '';
+    if (!token) {
+      this.logger.warn('Reconnecting WebSocket with unset token');
+    }
+    let url = `${this.baseUrl}/await?access_token=${token}`;
+    if (this.clientId) {
+      // Note: If no client ID is given, then the WebSocket connection will receive all notifications for all clients
+      // of the connected user
+      url += `&client=${this.clientId}`;
+    }
+    return url;
+  }
 }

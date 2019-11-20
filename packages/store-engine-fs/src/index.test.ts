@@ -17,8 +17,10 @@
  *
  */
 
-import {PathValidationError} from '@wireapp/store-engine/dist/commonjs/engine/error';
-import {appendSpec} from '@wireapp/store-engine/dist/commonjs/test/appendSpec';
+import fs from 'fs-extra';
+import path from 'path';
+
+import {error as StoreEngineError} from '@wireapp/store-engine';
 import {createSpec} from '@wireapp/store-engine/dist/commonjs/test/createSpec';
 import {deleteAllSpec} from '@wireapp/store-engine/dist/commonjs/test/deleteAllSpec';
 import {deleteSpec} from '@wireapp/store-engine/dist/commonjs/test/deleteSpec';
@@ -28,8 +30,7 @@ import {readAllSpec} from '@wireapp/store-engine/dist/commonjs/test/readAllSpec'
 import {readSpec} from '@wireapp/store-engine/dist/commonjs/test/readSpec';
 import {updateOrCreateSpec} from '@wireapp/store-engine/dist/commonjs/test/updateOrCreateSpec';
 import {updateSpec} from '@wireapp/store-engine/dist/commonjs/test/updateSpec';
-import fs from 'fs-extra';
-import path from 'path';
+
 import {FileEngine} from './index';
 
 describe('FileEngine', () => {
@@ -55,7 +56,7 @@ describe('FileEngine', () => {
   describe('enforcePathRestrictions', () => {
     const enforcePathRestrictions = (givenTrustedRoot: string, givenPath: string) => () =>
       FileEngine.enforcePathRestrictions(givenTrustedRoot, givenPath);
-    const expectedError = PathValidationError;
+    const expectedError = StoreEngineError.PathValidationError;
     const unixFolder = '/home/marge/test/';
     const windowsFolder = 'C:\\Users\\bart\\Documents\\Database\\';
 
@@ -118,7 +119,6 @@ describe('FileEngine', () => {
 
     it('is applied to all store operations.', async () => {
       const functionNames = [
-        'append',
         'create',
         'delete',
         'deleteAll',
@@ -149,26 +149,6 @@ describe('FileEngine', () => {
       const directory = await engine.init(STORE_NAME, options);
       const fileStatus = fs.statSync(directory);
       expect(fileStatus.isDirectory()).toBe(true);
-    });
-  });
-
-  describe('append', () => {
-    Object.entries(appendSpec).map(([description, testFunction]) => {
-      it(description, () => testFunction(engine));
-    });
-
-    it('throws if record is not a string', async () => {
-      const options = {
-        fileExtension: '.json',
-      };
-      engine = new FileEngine(BASE_DIRECTORY);
-      await engine.init(STORE_NAME, options);
-      await engine.create('test', 'index', {});
-
-      try {
-        await engine.append('test', 'index', 'oh no');
-        fail('Did not throw on append');
-      } catch (error) {}
     });
   });
 

@@ -21,14 +21,18 @@ import {APIClient} from '@wireapp/api-client';
 import {PreKey as SerializedPreKey} from '@wireapp/api-client/dist/commonjs/auth/';
 import {RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
 import {OTRRecipients} from '@wireapp/api-client/dist/commonjs/conversation/';
+import {ConversationOtrMessageAddEvent} from '@wireapp/api-client/dist/commonjs/event';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/';
 import {Cryptobox} from '@wireapp/cryptobox';
-import {errors as ProteusErrors, keys as ProteusKeys} from '@wireapp/proteus';
+import {keys as ProteusKeys} from '@wireapp/proteus';
+import {GenericMessage} from '@wireapp/protocol-messaging';
 import {CRUDEngine} from '@wireapp/store-engine';
 import {Decoder, Encoder} from 'bazinga64';
 import logdown from 'logdown';
+import {GenericMessageType, PayloadBundle, PayloadBundleSource} from '../conversation';
 import {SessionPayloadBundle} from '../cryptography/';
 import {CryptographyDatabaseRepository} from './CryptographyDatabaseRepository';
+import {GenericMessageMapper} from './GenericMessageMapper';
 
 export interface MetaClient extends RegisteredClient {
   meta: {
@@ -36,16 +40,6 @@ export interface MetaClient extends RegisteredClient {
     primary_key: string;
   };
 }
-
-export type DecryptionResult =
-  | {
-      isSuccess: true;
-      value: Uint8Array;
-    }
-  | {
-      isSuccess: false;
-      error: Error;
-    };
 
 export class CryptographyService {
   private readonly logger: logdown.Logger;
@@ -80,30 +74,10 @@ export class CryptographyService {
       .filter(serializedPreKey => serializedPreKey.key);
   }
 
-  public async decrypt(sessionId: string, encodedCiphertext: string): Promise<DecryptionResult> {
+  public decrypt(sessionId: string, encodedCiphertext: string): Promise<Uint8Array> {
     this.logger.log(`Decrypting message for session ID "${sessionId}"`);
     const messageBytes: Uint8Array = Decoder.fromBase64(encodedCiphertext).asBytes;
-
-    try {
-      const result = await this.cryptobox.decrypt(sessionId, messageBytes.buffer);
-      return {
-        isSuccess: true,
-        value: result,
-      };
-    } catch (error) {
-      this.logger.error(`Could not decrypt message: ${error.message}`);
-      const isOutdatedMessage = error instanceof ProteusErrors.DecryptError.OutdatedMessage;
-      const isDuplicateMessage = error instanceof ProteusErrors.DecryptError.DuplicateMessage;
-
-      if (isOutdatedMessage || isDuplicateMessage) {
-        return {
-          error,
-          isSuccess: false,
-        };
-      }
-
-      throw error;
-    }
+    return this.cryptobox.decrypt(sessionId, messageBytes.buffer);
   }
 
   private static dismantleSessionId(sessionId: string): string[] {
@@ -174,5 +148,31 @@ export class CryptographyService {
   public async resetSession(sessionId: string): Promise<void> {
     await this.cryptobox.session_delete(sessionId);
     this.logger.log(`Deleted session ID "${sessionId}".`);
+  }
+
+  public async decodeGenericMessage(
+    otrMessage: ConversationOtrMessageAddEvent,
+    source: PayloadBundleSource,
+  ): Promise<PayloadBundle> {
+    const {
+      from,
+      data: {sender, text: cipherText},
+    } = otrMessage;
+
+    const sessionId = CryptographyService.constructSessionId(from, sender);
+    const decryptedMessage = await this.decrypt(sessionId, cipherText);
+    const genericMessage = GenericMessage.decode(decryptedMessage);
+
+    if (genericMessage.content === GenericMessageType.EPHEMERAL) {
+      const unwrappedMessage = GenericMessageMapper.mapGenericMessage(genericMessage.ephemeral, otrMessage, source);
+      unwrappedMessage.id = genericMessage.messageId;
+      if (genericMessage.ephemeral) {
+        const expireAfterMillis = genericMessage.ephemeral.expireAfterMillis;
+        unwrappedMessage.messageTimer =
+          typeof expireAfterMillis === 'number' ? expireAfterMillis : expireAfterMillis.toNumber();
+      }
+      return unwrappedMessage;
+    }
+    return GenericMessageMapper.mapGenericMessage(genericMessage, otrMessage, source);
   }
 }

@@ -21,6 +21,7 @@
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import React from 'react';
 import {COLOR} from '../Identity';
+import {Theme} from '../Layout';
 import {TextProps, textStyle} from '../Text';
 import {filterProps} from '../util';
 
@@ -45,29 +46,33 @@ export interface TabBarItemProps<T = HTMLSpanElement> extends TextProps<T> {
   active: boolean;
 }
 
-const tabBarItemStyle: <T>(props: TabBarItemProps<T>) => ObjectInterpolation<undefined> = ({
-  block = true,
-  center = true,
-  color = COLOR.TEXT,
-  bold = true,
-  active = false,
-  fontSize = '11px',
-  textTransform = 'uppercase',
-  ...props
-}) => {
+const tabBarItemStyle: <T>(theme: Theme, props: TabBarItemProps<T>) => ObjectInterpolation<undefined> = (
+  theme,
+  {
+    block = true,
+    center = true,
+    color = theme.general.color,
+    bold = true,
+    active = false,
+    fontSize = '11px',
+    textTransform = 'uppercase',
+    ...props
+  },
+) => {
   return {
-    ...textStyle({bold, block, color, center, fontSize, textTransform, ...props}),
+    ...textStyle(theme, {bold, block, color, center, fontSize, textTransform, ...props}),
     borderBottom: active ? `1px solid ${COLOR.GRAY_DARKEN_48}` : `1px solid ${COLOR.GRAY_LIGHTEN_40}`,
     cursor: 'pointer',
     display: 'flex',
     flexGrow: 1,
     justifyContent: 'center',
+    opacity: active ? 1 : 0.56,
     padding: '8px 0',
   };
 };
 
 export const TabBarItem = ({children = null, ...props}: TabBarItemProps) => (
-  <span css={tabBarItemStyle(props)} {...props}>
+  <span css={theme => tabBarItemStyle(theme, props)} {...props}>
     {children}
   </span>
 );

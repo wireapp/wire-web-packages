@@ -1,25 +1,26 @@
 {
   "description": "Base64 encoding and decoding with ASCII string representation.",
   "devDependencies": {
-    "@types/jasmine": "3.3.14",
-    "@types/karma": "3.0.3",
-    "@types/libsodium-wrappers-sumo": "0.7.1",
-    "cross-env": "5.2.0",
-    "jasmine": "3.4.0",
-    "karma": "4.2.0",
-    "karma-chrome-launcher": "3.0.0",
-    "karma-coverage": "1.1.2",
+    "@types/jasmine": "3.4.6",
+    "@types/karma": "3.0.4",
+    "@types/libsodium-wrappers-sumo": "0.7.3",
+    "@types/node": "~12",
+    "cross-env": "6.0.3",
+    "jasmine": "3.5.0",
+    "karma": "4.4.1",
+    "karma-chrome-launcher": "3.1.0",
+    "karma-coverage": "2.0.1",
     "karma-jasmine": "2.0.1",
     "karma-jasmine-diff-reporter": "2.0.0",
     "karma-sourcemap-loader": "0.3.7",
     "karma-spec-reporter": "0.0.32",
     "karma-typescript": "4.1.1",
-    "libsodium-wrappers-sumo": "0.7.5",
+    "libsodium-wrappers-sumo": "0.7.6",
     "nyc": "14.1.1",
-    "rimraf": "2.6.3",
-    "ts-node": "8.3.0",
-    "typescript": "3.5.3",
-    "webpack": "4.36.1"
+    "rimraf": "3.0.0",
+    "ts-node": "8.5.2",
+    "typescript": "3.6.4",
+    "webpack": "4.41.2"
   },
   "files": [
     "dist"
@@ -52,5 +53,5 @@
     "test:browser": "karma start",
     "test:node": "nyc jasmine --config=jasmine.json"
   },
-  "version": "5.5.6"
+  "version": "5.5.29"
 }

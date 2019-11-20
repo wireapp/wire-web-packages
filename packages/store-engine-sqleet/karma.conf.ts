@@ -17,12 +17,12 @@
  *
  */
 
-import {Config} from 'karma';
-
-const jasmineConfig = require('./jasmine.json');
+import {Config, ConfigOptions} from 'karma';
+import * as jasmineConfig from './jasmine.json';
+import webpackConfig from './webpack.config';
 
 module.exports = (config: Config): void => {
-  config.set({
+  const options: ConfigOptions = {
     autoWatch: false,
     basePath: jasmineConfig.spec_dir,
     browserNoActivityTimeout: 90000,
@@ -38,14 +38,20 @@ module.exports = (config: Config): void => {
         flags: ['--no-sandbox'],
       },
     },
-    files: ['**/*.ts'],
-    frameworks: ['jasmine', 'karma-typescript'],
+    files: ['**/*.ts', {pattern: '**/*.js', watched: true, served: true, included: false}],
+    frameworks: ['jasmine'],
     logLevel: config.LOG_INFO,
     port: 9876,
     preprocessors: {
-      '**/*.ts': ['karma-typescript'],
+      '**/*.ts': ['webpack'],
     },
-    reporters: ['progress', 'karma-typescript'],
+    reporters: ['progress'],
     singleRun: true,
-  });
+    webpack: webpackConfig,
+    webpackMiddleware: {
+      stats: 'errors-only',
+    },
+  };
+
+  config.set(options);
 };

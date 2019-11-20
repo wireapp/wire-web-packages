@@ -18,10 +18,11 @@
  */
 
 import React from 'react';
+import {THEME_ID} from '../Layout';
 import {matchComponent} from '../test/testUtil';
-import {Link} from './Link';
+import {Link} from '../Text';
 
 describe('"Link"', () => {
   it('renders', () => matchComponent(<Link>Link</Link>));
-  it('renders with component', () => matchComponent(<Link component="h1">Link</Link>));
+  it('renders (dark theme)', () => matchComponent(<Link>Link</Link>, THEME_ID.DARK));
 });

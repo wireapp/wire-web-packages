@@ -17,8 +17,8 @@
  *
  */
 
-import {CRUDEngine} from '@wireapp/store-engine';
-import {appendSpec} from '@wireapp/store-engine/dist/commonjs/test/appendSpec';
+import Dexie from 'dexie';
+
 import {createSpec} from '@wireapp/store-engine/dist/commonjs/test/createSpec';
 import {deleteAllSpec} from '@wireapp/store-engine/dist/commonjs/test/deleteAllSpec';
 import {deleteSpec} from '@wireapp/store-engine/dist/commonjs/test/deleteSpec';
@@ -28,20 +28,29 @@ import {readAllSpec} from '@wireapp/store-engine/dist/commonjs/test/readAllSpec'
 import {readSpec} from '@wireapp/store-engine/dist/commonjs/test/readSpec';
 import {updateOrCreateSpec} from '@wireapp/store-engine/dist/commonjs/test/updateOrCreateSpec';
 import {updateSpec} from '@wireapp/store-engine/dist/commonjs/test/updateSpec';
-import Dexie from 'dexie';
+
 import {IndexedDBEngine} from './index';
 
 describe('IndexedDBEngine', () => {
   const STORE_NAME = 'store-name';
 
-  let engine: CRUDEngine;
+  let engine: IndexedDBEngine;
 
-  async function initEngine(shouldCreateNewEngine = true): Promise<IndexedDBEngine | CRUDEngine> {
+  async function initEngine(
+    shouldCreateNewEngine: boolean = true,
+    useInLineKeys: boolean = false,
+  ): Promise<IndexedDBEngine> {
     const storeEngine = shouldCreateNewEngine ? new IndexedDBEngine() : engine;
-    const db = await storeEngine.init(STORE_NAME);
-    db.version(1).stores({
-      'the-simpsons': ',firstName,lastName',
-    });
+    const db: Dexie = await storeEngine.init(STORE_NAME);
+    let schema = {
+      'the-simpsons': ', firstName, lastName',
+    };
+    if (useInLineKeys) {
+      schema = {
+        'the-simpsons': '++id, firstName, lastName',
+      };
+    }
+    db.version(1).stores(schema);
     await db.open();
     return storeEngine;
   }
@@ -51,11 +60,11 @@ describe('IndexedDBEngine', () => {
   });
 
   afterEach(done => {
-    if (engine && engine.db) {
-      engine.db.close();
-      const deleteRequest = window.indexedDB.deleteDatabase(STORE_NAME);
-      deleteRequest.onsuccess = () => done();
+    if (engine && engine['db']) {
+      engine['db'].close();
     }
+    const deleteRequest = window.indexedDB.deleteDatabase(STORE_NAME);
+    deleteRequest.onsuccess = () => done();
   });
 
   describe('init', () => {
@@ -63,12 +72,6 @@ describe('IndexedDBEngine', () => {
       engine = new IndexedDBEngine();
       const instance = await engine.init(STORE_NAME);
       expect(instance instanceof Dexie).toBe(true);
-    });
-  });
-
-  describe('append', () => {
-    Object.entries(appendSpec).map(([description, testFunction]) => {
-      it(description, () => testFunction(engine));
     });
   });
 
@@ -84,7 +87,7 @@ describe('IndexedDBEngine', () => {
       const PRIMARY_KEY = 'camilla';
       const entity = {
         age: 25,
-        anotherProperty: 'not all properties needs to be indexed',
+        anotherProperty: 'not all properties need to be indexed',
         name: 'Camilla',
       };
       const name = 'MyDatabase';
@@ -100,8 +103,8 @@ describe('IndexedDBEngine', () => {
       const primaryKey = await engine.create(TABLE_NAME, PRIMARY_KEY, entity);
       expect(primaryKey).toEqual(PRIMARY_KEY);
       expect(engine.storeName).toBe(name);
-      expect(engine.db.name).toBe(name);
-      expect(Object.keys(engine.db._dbSchema).length).toBe(1);
+      expect(engine['db'].name).toBe(name);
+      expect(Object.keys(engine['db']._dbSchema).length).toBe(1);
     });
   });
 
@@ -123,7 +126,7 @@ describe('IndexedDBEngine', () => {
     });
   });
 
-  describe('readAllPrimaryKeys', () => {
+  describe('readAllPrimaryKeys', async () => {
     Object.entries(readAllPrimaryKeysSpec).map(([description, testFunction]) => {
       it(description, () => testFunction(engine));
     });
@@ -141,7 +144,33 @@ describe('IndexedDBEngine', () => {
     });
   });
 
-  describe('updateOrCreate', () => {
+  describe('save', () => {
+    it('generates primary keys', async () => {
+      const TABLE_NAME = 'test-table';
+
+      engine = new IndexedDBEngine();
+      const db: Dexie = await engine.init('primary-key-store');
+      db.version(1).stores({
+        [TABLE_NAME]: '++primaryKey, testValue',
+      });
+      await db.open();
+
+      const entity = {
+        testValue: 'value',
+      };
+
+      type ExpectedResult = typeof entity & {primaryKey: number};
+
+      const primaryKey = await engine.updateOrCreate<number>(TABLE_NAME, undefined, entity);
+      expect(primaryKey).toBe(1);
+      const record = await engine.read<ExpectedResult, number>(TABLE_NAME, primaryKey);
+      expect(record.primaryKey).toBe(1);
+      expect(record.testValue).toBe(entity.testValue);
+    });
+  });
+
+  describe('updateOrCreate', async () => {
+    engine = await initEngine(true, false);
     Object.entries(updateOrCreateSpec).map(([description, testFunction]) => {
       it(description, () => testFunction(engine));
     });

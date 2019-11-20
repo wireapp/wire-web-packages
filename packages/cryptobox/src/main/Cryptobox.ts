@@ -34,11 +34,20 @@ import {CryptoboxCRUDStore} from './store/';
 const DEFAULT_CAPACITY = 1000;
 const {version}: {version: string} = require('../../package.json');
 
+enum TOPIC {
+  NEW_PREKEYS = 'new-prekeys',
+  NEW_SESSION = 'new-session',
+}
+
+export declare interface Cryptobox {
+  on(event: TOPIC.NEW_PREKEYS, listener: (prekeys: ProteusKeys.PreKey[]) => void): this;
+  on(event: TOPIC.NEW_SESSION, listener: (session: string) => void): this;
+}
+
 export class Cryptobox extends EventEmitter {
-  public static TOPIC = {
-    NEW_PREKEYS: 'new-prekeys',
-    NEW_SESSION: 'new-session',
-  };
+  public static get TOPIC(): typeof TOPIC {
+    return TOPIC;
+  }
 
   private cachedSessions: LRUCache<CryptoboxSession>;
   private readonly logger: logdown.Logger;
@@ -186,7 +195,7 @@ export class Cryptobox extends EventEmitter {
     );
   }
 
-  private publish_event(topic: string, event: any): void {
+  private publish_event(topic: TOPIC, event: ProteusKeys.PreKey[] | string): void {
     this.emit(topic, event);
     this.logger.log(`Published event "${topic}".`, event);
   }
@@ -371,28 +380,18 @@ export class Cryptobox extends EventEmitter {
       .then((newPreKeys: ProteusKeys.PreKey[]) => this.store.save_prekeys(newPreKeys));
   }
 
-  public encrypt(session_id: string, payload: string | Uint8Array, pre_key_bundle?: ArrayBuffer): Promise<ArrayBuffer> {
-    let encryptedBuffer: ArrayBuffer;
-    let loadedSession: CryptoboxSession;
-
-    return this.get_session_queue(session_id).add(() => {
-      return Promise.resolve()
-        .then(() => {
-          if (pre_key_bundle) {
-            return this.session_from_prekey(session_id, pre_key_bundle);
-          }
-
-          return this.session_load(session_id);
-        })
-        .then((session: CryptoboxSession) => {
-          loadedSession = session;
-          return loadedSession.encrypt(payload);
-        })
-        .then((encrypted: ArrayBuffer) => {
-          encryptedBuffer = encrypted;
-          return this.session_update(loadedSession);
-        })
-        .then(() => encryptedBuffer);
+  public async encrypt(
+    session_id: string,
+    payload: string | Uint8Array,
+    pre_key_bundle?: ArrayBuffer,
+  ): Promise<ArrayBuffer> {
+    return this.get_session_queue(session_id).add(async () => {
+      const session = pre_key_bundle
+        ? await this.session_from_prekey(session_id, pre_key_bundle)
+        : await this.session_load(session_id);
+      const encryptedBuffer = session.encrypt(payload);
+      await this.session_update(session);
+      return encryptedBuffer;
     });
   }
 

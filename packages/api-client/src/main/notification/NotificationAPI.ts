@@ -17,12 +17,11 @@
  *
  */
 
-import {TimeUtil} from '@wireapp/commons';
 import {AxiosRequestConfig} from 'axios';
 import {HttpClient} from '../http/';
 import {Notification, NotificationList} from './';
 
-const NOTIFICATION_SIZE_MAXIMUM = TimeUtil.TimeInMillis.SECOND * 10;
+export const NOTIFICATION_SIZE_MAXIMUM = 10_000;
 
 export class NotificationAPI {
   constructor(private readonly client: HttpClient) {}
@@ -50,19 +49,17 @@ export class NotificationAPI {
   }
 
   /**
-   * Fetch notifications
+   * Fetch paged notifications.
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/push/fetchNotifications
    */
   public async getNotifications(
     clientId?: string,
     size: number = NOTIFICATION_SIZE_MAXIMUM,
-    since?: Date,
-    cancelFallbackNotifications?: boolean,
+    since?: string,
   ): Promise<NotificationList> {
     const config: AxiosRequestConfig = {
       method: 'get',
       params: {
-        cancel_fallback: cancelFallbackNotifications,
         client: clientId,
         since,
         size,
@@ -75,18 +72,44 @@ export class NotificationAPI {
   }
 
   /**
+   * Fetch all notifications.
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/push/fetchNotifications
+   */
+  public async getAllNotifications(clientId?: string, lastNotificationId?: string): Promise<Notification[]> {
+    let notificationList: Notification[] = [];
+
+    const getNotificationChunks = async (clientId?: string, lastNotificationId?: string): Promise<Notification[]> => {
+      const {notifications, has_more} = await this.getNotifications(
+        clientId,
+        NOTIFICATION_SIZE_MAXIMUM,
+        lastNotificationId,
+      );
+
+      if (notifications.length) {
+        notificationList = notificationList.concat(notifications);
+      }
+
+      if (has_more) {
+        const lastNotification = notifications[notifications.length - 1];
+        if (lastNotification) {
+          return getNotificationChunks(clientId, lastNotification.id);
+        }
+      }
+
+      return notificationList;
+    };
+
+    return getNotificationChunks(clientId, lastNotificationId);
+  }
+
+  /**
    * Fetch a notification by ID.
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/push/getNotification
    */
-  public async getNotification(
-    notificationId: string,
-    clientId?: string,
-    cancelFallbackNotifications?: boolean,
-  ): Promise<Notification> {
+  public async getNotification(notificationId: string, clientId?: string): Promise<Notification> {
     const config: AxiosRequestConfig = {
       method: 'get',
       params: {
-        cancel_fallback: cancelFallbackNotifications,
         client: clientId,
       },
       url: `${NotificationAPI.URL.NOTIFICATION}/${notificationId}`,

@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 /*
  * Wire
  * Copyright (C) 2018 Wire Swiss GmbH
@@ -17,6 +16,8 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
+
+/* eslint-disable no-magic-numbers */
 
 const nock = require('nock');
 
@@ -189,7 +190,7 @@ describe('APIClient', () => {
     beforeEach(() => {
       nock(baseUrl)
         .post(`${AuthAPI.URL.ACCESS}/${AuthAPI.URL.LOGOUT}`)
-        .reply(200, undefined);
+        .reply(200);
     });
 
     it('can logout a user', async () => {

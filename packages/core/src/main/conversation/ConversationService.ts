@@ -20,14 +20,14 @@
 import {
   CONVERSATION_TYPE,
   Conversation,
-  MemberUpdate,
   MutedStatus,
   NewConversation,
   NewOTRMessage,
   OTRRecipients,
   UserClients,
 } from '@wireapp/api-client/dist/commonjs/conversation/';
-import {CONVERSATION_TYPING, ConversationMemberLeaveEvent} from '@wireapp/api-client/dist/commonjs/event/';
+import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/dist/commonjs/conversation/data/';
+import {ConversationMemberLeaveEvent} from '@wireapp/api-client/dist/commonjs/event/';
 import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/';
 import {AxiosError} from 'axios';
@@ -37,6 +37,7 @@ import {
   AssetTransferState,
   GenericMessageType,
   MessageTimer,
+  PayloadBundleSource,
   PayloadBundleState,
   PayloadBundleType,
 } from '../conversation/';
@@ -77,6 +78,7 @@ import {CryptographyService, EncryptedAsset} from '../cryptography/';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
 
 import {APIClient} from '@wireapp/api-client';
+import {MessageBuilder} from './message/MessageBuilder';
 import {
   CallMessage,
   ClearConversationMessage,
@@ -90,16 +92,14 @@ import {
   ImageAssetMessage,
   ImageAssetMessageOutgoing,
   LocationMessage,
-  Message,
+  OtrMessage,
   PingMessage,
   ReactionMessage,
   ResetSessionMessage,
   TextMessage,
-} from './message/Message';
-import {MessageBuilder} from './message/MessageBuilder';
+} from './message/OtrMessage';
 
 export class ConversationService {
-  private clientID: string = '';
   public readonly messageTimer: MessageTimer;
   public readonly messageBuilder: MessageBuilder;
 
@@ -192,7 +192,12 @@ export class ConversationService {
 
     if (this.shouldSendAsExternal(plainTextArray, preKeyBundles)) {
       const encryptedAsset = await AssetCryptography.encryptAsset(plainTextArray);
-      return this.sendExternalGenericMessage(this.clientID, conversationId, encryptedAsset, preKeyBundles);
+      return this.sendExternalGenericMessage(
+        this.apiClient.validatedClientId,
+        conversationId,
+        encryptedAsset,
+        preKeyBundles,
+      );
     }
 
     const recipients = await this.cryptographyService.encrypt(plainTextArray, preKeyBundles);
@@ -277,7 +282,12 @@ export class ConversationService {
       messageId: payloadBundle.id,
     });
 
-    await this.sendGenericMessage(this.clientID, payloadBundle.conversation, genericMessage, userIds);
+    await this.sendGenericMessage(
+      this.apiClient.validatedClientId,
+      payloadBundle.conversation,
+      genericMessage,
+      userIds,
+    );
 
     return {
       ...payloadBundle,
@@ -328,7 +338,12 @@ export class ConversationService {
       messageId: payloadBundle.id,
     });
 
-    await this.sendGenericMessage(this.clientID, payloadBundle.conversation, genericMessage, userIds);
+    await this.sendGenericMessage(
+      this.apiClient.validatedClientId,
+      payloadBundle.conversation,
+      genericMessage,
+      userIds,
+    );
 
     return {
       ...payloadBundle,
@@ -369,7 +384,12 @@ export class ConversationService {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    await this.sendGenericMessage(this.clientID, payloadBundle.conversation, genericMessage, userIds);
+    await this.sendGenericMessage(
+      this.apiClient.validatedClientId,
+      payloadBundle.conversation,
+      genericMessage,
+      userIds,
+    );
 
     return {
       ...payloadBundle,
@@ -389,9 +409,11 @@ export class ConversationService {
     const {expectsReadConfirmation, legalHoldStatus, metaData} = payloadBundle.content;
 
     const original = Asset.Original.create({
+      audio: metaData.audio,
       mimeType: metaData.type,
       name: metaData.name,
       size: metaData.length,
+      video: metaData.video,
     });
 
     const assetMessage = Asset.create({
@@ -410,7 +432,12 @@ export class ConversationService {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    await this.sendGenericMessage(this.clientID, payloadBundle.conversation, genericMessage, userIds);
+    await this.sendGenericMessage(
+      this.apiClient.validatedClientId,
+      payloadBundle.conversation,
+      genericMessage,
+      userIds,
+    );
 
     return {
       ...payloadBundle,
@@ -447,7 +474,12 @@ export class ConversationService {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    await this.sendGenericMessage(this.clientID, payloadBundle.conversation, genericMessage, userIds);
+    await this.sendGenericMessage(
+      this.apiClient.validatedClientId,
+      payloadBundle.conversation,
+      genericMessage,
+      userIds,
+    );
 
     return {
       ...payloadBundle,
@@ -501,7 +533,12 @@ export class ConversationService {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    await this.sendGenericMessage(this.clientID, payloadBundle.conversation, genericMessage, userIds);
+    await this.sendGenericMessage(
+      this.apiClient.validatedClientId,
+      payloadBundle.conversation,
+      genericMessage,
+      userIds,
+    );
 
     return {
       ...payloadBundle,
@@ -533,7 +570,12 @@ export class ConversationService {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    await this.sendGenericMessage(this.clientID, payloadBundle.conversation, genericMessage, userIds);
+    await this.sendGenericMessage(
+      this.apiClient.validatedClientId,
+      payloadBundle.conversation,
+      genericMessage,
+      userIds,
+    );
 
     return {
       ...payloadBundle,
@@ -561,7 +603,12 @@ export class ConversationService {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    await this.sendGenericMessage(this.clientID, payloadBundle.conversation, genericMessage, userIds);
+    await this.sendGenericMessage(
+      this.apiClient.validatedClientId,
+      payloadBundle.conversation,
+      genericMessage,
+      userIds,
+    );
 
     return {
       ...payloadBundle,
@@ -585,7 +632,12 @@ export class ConversationService {
       messageId: payloadBundle.id,
     });
 
-    await this.sendGenericMessage(this.clientID, payloadBundle.conversation, genericMessage, userIds);
+    await this.sendGenericMessage(
+      this.apiClient.validatedClientId,
+      payloadBundle.conversation,
+      genericMessage,
+      userIds,
+    );
 
     return {
       ...payloadBundle,
@@ -600,7 +652,7 @@ export class ConversationService {
       messageId: payloadBundle.id,
     });
 
-    await this.sendGenericMessage(this.clientID, payloadBundle.conversation, sessionReset, userIds);
+    await this.sendGenericMessage(this.apiClient.validatedClientId, payloadBundle.conversation, sessionReset, userIds);
 
     return {
       ...payloadBundle,
@@ -619,7 +671,12 @@ export class ConversationService {
       messageId: payloadBundle.id,
     });
 
-    await this.sendGenericMessage(this.clientID, payloadBundle.conversation, genericMessage, userIds);
+    await this.sendGenericMessage(
+      this.apiClient.validatedClientId,
+      payloadBundle.conversation,
+      genericMessage,
+      userIds,
+    );
 
     return {
       ...payloadBundle,
@@ -669,7 +726,12 @@ export class ConversationService {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
 
-    await this.sendGenericMessage(this.clientID, payloadBundle.conversation, genericMessage, userIds);
+    await this.sendGenericMessage(
+      this.apiClient.validatedClientId,
+      payloadBundle.conversation,
+      genericMessage,
+      userIds,
+    );
 
     return {
       ...payloadBundle,
@@ -701,7 +763,7 @@ export class ConversationService {
 
     const {id: selfConversationId} = await this.getSelfConversation();
 
-    await this.sendGenericMessage(this.clientID, selfConversationId, genericMessage);
+    await this.sendGenericMessage(this.apiClient.validatedClientId, selfConversationId, genericMessage);
 
     return {
       content,
@@ -709,9 +771,10 @@ export class ConversationService {
       from: this.apiClient.context!.userId,
       id: messageId,
       messageTimer: 0,
+      source: PayloadBundleSource.LOCAL,
       state: PayloadBundleState.OUTGOING_SENT,
       timestamp: Date.now(),
-      type: PayloadBundleType.CLEARED,
+      type: PayloadBundleType.CONVERSATION_CLEAR,
     };
   }
 
@@ -730,7 +793,7 @@ export class ConversationService {
 
     const {id: selfConversationId} = await this.getSelfConversation();
 
-    await this.sendGenericMessage(this.clientID, selfConversationId, genericMessage);
+    await this.sendGenericMessage(this.apiClient.validatedClientId, selfConversationId, genericMessage);
 
     return {
       content,
@@ -738,6 +801,7 @@ export class ConversationService {
       from: this.apiClient.context!.userId,
       id: messageId,
       messageTimer: this.messageTimer.getMessageTimer(conversationId),
+      source: PayloadBundleSource.LOCAL,
       state: PayloadBundleState.OUTGOING_SENT,
       timestamp: Date.now(),
       type: PayloadBundleType.MESSAGE_HIDE,
@@ -760,7 +824,7 @@ export class ConversationService {
       messageId,
     });
 
-    await this.sendGenericMessage(this.clientID, conversationId, genericMessage, userIds);
+    await this.sendGenericMessage(this.apiClient.validatedClientId, conversationId, genericMessage, userIds);
 
     return {
       content,
@@ -768,6 +832,7 @@ export class ConversationService {
       from: this.apiClient.context!.userId,
       id: messageId,
       messageTimer: this.messageTimer.getMessageTimer(conversationId),
+      source: PayloadBundleSource.LOCAL,
       state: PayloadBundleState.OUTGOING_SENT,
       timestamp: Date.now(),
       type: PayloadBundleType.MESSAGE_DELETE,
@@ -901,10 +966,6 @@ export class ConversationService {
     return this.apiClient.asset.api.getAsset(assetId, assetToken);
   }
 
-  public getClientID(): string {
-    return this.clientID;
-  }
-
   public async addUser(conversationId: string, userId: string): Promise<string>;
   public async addUser(conversationId: string, userIds: string[]): Promise<string[]>;
   public async addUser(conversationId: string, userIds: string | string[]): Promise<string | string[]> {
@@ -924,7 +985,7 @@ export class ConversationService {
    * @returns Sent message
    */
   // tslint:disable-next-line:typedef
-  public async send(payloadBundle: Message, userIds?: string[]) {
+  public async send(payloadBundle: OtrMessage, userIds?: string[]) {
     switch (payloadBundle.type) {
       case PayloadBundleType.ASSET:
         return this.sendFileData(payloadBundle, userIds);
@@ -969,10 +1030,6 @@ export class ConversationService {
     return this.apiClient.conversation.api.postTyping(conversationId, {status: CONVERSATION_TYPING.STOPPED});
   }
 
-  public setClientID(clientID: string): void {
-    this.clientID = clientID;
-  }
-
   public setConversationMutedStatus(
     conversationId: string,
     status: MutedStatus,
@@ -982,7 +1039,7 @@ export class ConversationService {
       muteTimestamp = new Date(muteTimestamp);
     }
 
-    const payload: MemberUpdate = {
+    const payload: ConversationMemberUpdateData = {
       otr_muted_ref: muteTimestamp.toISOString(),
       otr_muted_status: status,
     };
@@ -999,7 +1056,7 @@ export class ConversationService {
       archiveTimestamp = new Date(archiveTimestamp);
     }
 
-    const payload: MemberUpdate = {
+    const payload: ConversationMemberUpdateData = {
       otr_archived: archived,
       otr_archived_ref: archiveTimestamp.toISOString(),
     };

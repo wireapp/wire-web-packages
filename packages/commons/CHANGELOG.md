@@ -3,6 +3,148 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.23](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@2.2.22...@wireapp/commons@2.2.23) (2019-11-11)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## 2.2.22 (2019-11-06)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [2.2.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@2.2.20...@wireapp/commons@2.2.21) (2019-10-21)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [2.2.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@2.2.19...@wireapp/commons@2.2.20) (2019-10-18)
+
+
+### Bug Fixes
+
+* **commons:** Use the system's new line character ([#2447](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/issues/2447)) ([3d76e17](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/commit/3d76e1792ffdaf0f4f913a9abd112b0d80aa91dc))
+
+
+
+
+
+## [2.2.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@2.2.18...@wireapp/commons@2.2.19) (2019-10-17)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [2.2.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@2.2.17...@wireapp/commons@2.2.18) (2019-10-14)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [2.2.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@2.2.16...@wireapp/commons@2.2.17) (2019-10-08)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## 2.2.16 (2019-10-07)
+
+
+### Bug Fixes
+
+* **core:** Pass payload to Account emitter ([#2355](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/issues/2355)) ([b37fc0d](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/commit/b37fc0d))
+
+
+
+
+
+## [2.2.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@2.2.14...@wireapp/commons@2.2.15) (2019-09-27)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [2.2.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@2.2.13...@wireapp/commons@2.2.14) (2019-09-23)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [2.2.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@2.2.12...@wireapp/commons@2.2.13) (2019-09-12)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [2.2.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@2.2.11...@wireapp/commons@2.2.12) (2019-09-04)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [2.2.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@2.2.10...@wireapp/commons@2.2.11) (2019-08-29)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [2.2.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@2.2.9...@wireapp/commons@2.2.10) (2019-08-21)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## 2.2.9 (2019-08-12)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [2.2.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@2.2.7...@wireapp/commons@2.2.8) (2019-07-29)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [2.2.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@2.2.6...@wireapp/commons@2.2.7) (2019-07-24)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
 ## [2.2.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@2.2.5...@wireapp/commons@2.2.6) (2019-07-19)
 
 **Note:** Version bump only for package @wireapp/commons

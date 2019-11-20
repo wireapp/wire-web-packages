@@ -18,13 +18,18 @@
  */
 
 import {
-  CONVERSATION_ACCESS,
-  CONVERSATION_ACCESS_ROLE,
-  Conversation,
-  ConversationMessageTimerUpdate,
-  MemberUpdate,
-} from '../conversation/';
-import {BackendEvent} from './BackendEvent';
+  ConversationAccessUpdateData,
+  ConversationCodeUpdateData,
+  ConversationConnectRequestData,
+  ConversationCreateData,
+  ConversationMemberJoinData,
+  ConversationMemberLeaveData,
+  ConversationMemberUpdateData,
+  ConversationMessageTimerUpdateData,
+  ConversationOtrMessageAddData,
+  ConversationRenameData,
+  ConversationTypingData,
+} from '../conversation/data/';
 
 export enum CONVERSATION_EVENT {
   ACCESS_UPDATE = 'conversation.access-update',
@@ -42,99 +47,103 @@ export enum CONVERSATION_EVENT {
   TYPING = 'conversation.typing',
 }
 
-export enum CONVERSATION_TYPING {
-  STARTED = 'started',
-  STOPPED = 'stopped',
-}
+export type ConversationEventData =
+  | ConversationAccessUpdateData
+  | ConversationCodeUpdateData
+  | ConversationConnectRequestData
+  | ConversationCreateData
+  | ConversationMemberJoinData
+  | ConversationMemberLeaveData
+  | ConversationMemberUpdateData
+  | ConversationMessageTimerUpdateData
+  | ConversationOtrMessageAddData
+  | ConversationRenameData
+  | ConversationTypingData
+  | null;
 
-export interface ConversationEvent extends BackendEvent {
+export type ConversationEvent =
+  | ConversationAccessUpdateEvent
+  | ConversationCodeDeleteEvent
+  | ConversationConnectRequestEvent
+  | ConversationCreateEvent
+  | ConversationDeleteEvent
+  | ConversationMemberJoinEvent
+  | ConversationMemberLeaveEvent
+  | ConversationMemberUpdateEvent
+  | ConversationMessageTimerUpdateEvent
+  | ConversationOtrMessageAddEvent
+  | ConversationRenameEvent
+  | ConversationTypingEvent;
+
+export interface BaseConversationEvent {
   conversation: string;
-  data: {};
+  data: ConversationEventData;
   from: string;
   time: string;
   type: CONVERSATION_EVENT;
 }
 
-export interface ConversationAccessUpdateEvent extends ConversationEvent {
-  data: {
-    access: CONVERSATION_ACCESS;
-    access_role: CONVERSATION_ACCESS_ROLE;
-  };
+export interface ConversationAccessUpdateEvent extends BaseConversationEvent {
+  data: ConversationAccessUpdateData;
   type: CONVERSATION_EVENT.ACCESS_UPDATE;
 }
 
-export interface ConversationCodeDeleteEvent extends ConversationEvent {
+export interface ConversationCodeDeleteEvent extends BaseConversationEvent {
+  data: null;
   type: CONVERSATION_EVENT.CODE_DELETE;
 }
 
-export interface ConversationCodeUpdateEvent extends ConversationEvent {
-  data: {
-    code: string;
-    key: string;
-    uri: string;
-  };
+export interface ConversationCodeUpdateEvent extends BaseConversationEvent {
+  data: ConversationCodeUpdateData;
   type: CONVERSATION_EVENT.CODE_UPDATE;
 }
 
-export interface ConversationConnectRequestEvent extends ConversationEvent {
-  data: {
-    recipient: string;
-  };
+export interface ConversationConnectRequestEvent extends BaseConversationEvent {
+  data: ConversationConnectRequestData;
   type: CONVERSATION_EVENT.CONNECT_REQUEST;
 }
 
-export interface ConversationCreateEvent extends ConversationEvent {
-  data: Conversation;
+export interface ConversationCreateEvent extends BaseConversationEvent {
+  data: ConversationCreateData;
   type: CONVERSATION_EVENT.CREATE;
 }
 
-export interface ConversationDeleteEvent extends ConversationEvent {
+export interface ConversationDeleteEvent extends BaseConversationEvent {
+  data: null;
   type: CONVERSATION_EVENT.DELETE;
 }
 
-export interface ConversationMemberJoinEvent extends ConversationEvent {
-  data: {
-    user_ids: string[];
-  };
+export interface ConversationMemberJoinEvent extends BaseConversationEvent {
+  data: ConversationMemberJoinData;
   type: CONVERSATION_EVENT.MEMBER_JOIN;
 }
 
-export interface ConversationMemberLeaveEvent extends ConversationEvent {
-  data: {
-    user_ids: string[];
-  };
+export interface ConversationMemberLeaveEvent extends BaseConversationEvent {
+  data: ConversationMemberLeaveData;
   type: CONVERSATION_EVENT.MEMBER_LEAVE;
 }
 
-export interface ConversationMemberUpdateEvent extends ConversationEvent {
-  data: MemberUpdate;
+export interface ConversationMemberUpdateEvent extends BaseConversationEvent {
+  data: ConversationMemberUpdateData;
   type: CONVERSATION_EVENT.MEMBER_UPDATE;
 }
 
-export interface ConversationMessageTimerUpdateEvent extends ConversationEvent {
-  data: ConversationMessageTimerUpdate;
+export interface ConversationMessageTimerUpdateEvent extends BaseConversationEvent {
+  data: ConversationMessageTimerUpdateData;
   type: CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE;
 }
 
-export interface ConversationOtrMessageAddEvent extends ConversationEvent {
-  data: {
-    recipient: string;
-    sender: string;
-    text: string;
-  };
+export interface ConversationOtrMessageAddEvent extends BaseConversationEvent {
+  data: ConversationOtrMessageAddData;
   type: CONVERSATION_EVENT.OTR_MESSAGE_ADD;
 }
 
-export interface ConversationRenameEvent extends ConversationEvent {
-  data: {
-    name: string;
-  };
+export interface ConversationRenameEvent extends BaseConversationEvent {
+  data: ConversationRenameData;
   type: CONVERSATION_EVENT.RENAME;
 }
 
-export interface ConversationTypingEvent extends ConversationEvent {
-  data: {
-    status: CONVERSATION_TYPING.STARTED | CONVERSATION_TYPING.STOPPED;
-  };
+export interface ConversationTypingEvent extends BaseConversationEvent {
+  data: ConversationTypingData;
   type: CONVERSATION_EVENT.TYPING;
 }

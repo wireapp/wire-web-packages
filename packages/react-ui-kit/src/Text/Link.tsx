@@ -20,46 +20,43 @@
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import Color from 'color';
-import React from 'react';
-import {COLOR} from '../Identity';
+import {COLOR} from '../Identity/colors';
 import {defaultTransition} from '../Identity/motions';
+import {Theme} from '../Layout';
 import {filterProps} from '../util';
 import {TextProps, filterTextProps, textStyle} from './Text';
 
-export interface LinkProps<T = HTMLAnchorElement> extends TextProps<T> {
-  component?: React.ComponentType | string;
-}
+export interface LinkProps<T = HTMLAnchorElement> extends TextProps<T> {}
 
-export const linkStyle: <T>(props: LinkProps<T>) => ObjectInterpolation<undefined> = ({
-  bold = true,
-  color = COLOR.LINK,
-  fontSize = '11px',
-  textTransform = 'uppercase',
-  ...props
-}) => {
+export const linkStyle: <T>(theme: Theme, props: LinkProps<T>) => ObjectInterpolation<undefined> = (
+  theme,
+  {bold = true, color = theme.general.color, fontSize = '11px', textTransform = 'uppercase', ...props},
+) => {
   const darker = 0.16;
   const hoverColor = Color(color)
     .mix(Color(COLOR.BLACK), darker)
     .toString();
-  const componentSelector = typeof props.component === 'string' ? props.component : 'a';
   return {
-    [`${componentSelector}&, &`]: {
-      ...textStyle({bold, color, fontSize, textTransform, ...props}),
-      '&:hover': {
-        color: hoverColor,
-      },
-      '&:visited, &:link, &:active': {
-        color: color,
-      },
-      color: color,
-      cursor: 'pointer',
-      textDecoration: 'none',
-      transition: defaultTransition,
+    ...textStyle(theme, {bold, color, fontSize, textTransform, ...props}),
+    '&:hover': {
+      color: hoverColor,
     },
+    '&:visited, &:link, &:active': {
+      color: color,
+    },
+    color: color,
+    cursor: 'pointer',
+    textDecoration: 'none',
+    transition: defaultTransition,
   };
 };
 
-export const filterLinkProps = (props: LinkProps) => filterProps(filterTextProps(props) as LinkProps, ['component']);
+export const filterLinkProps = (props: LinkProps) => filterProps(filterTextProps(props) as LinkProps, []);
 
-export const Link = ({component = 'a', ...props}: LinkProps) =>
-  jsx(component, {css: linkStyle({component, ...props}), ...filterLinkProps(props)} as any, props.children);
+export const Link = (props: LinkProps) => {
+  return (
+    <a css={theme => linkStyle(theme, props)} rel="noopener noreferrer" {...filterLinkProps(props)}>
+      {props.children}
+    </a>
+  );
+};

@@ -17,8 +17,6 @@
  *
  */
 
-import {CRUDEngine} from '@wireapp/store-engine';
-import {appendSpec} from '@wireapp/store-engine/dist/commonjs/test/appendSpec';
 import {createSpec} from '@wireapp/store-engine/dist/commonjs/test/createSpec';
 import {deleteAllSpec} from '@wireapp/store-engine/dist/commonjs/test/deleteAllSpec';
 import {deleteSpec} from '@wireapp/store-engine/dist/commonjs/test/deleteSpec';
@@ -34,9 +32,9 @@ import {FileSystemEngine} from './index';
 describe('FileSystemEngine', () => {
   const STORE_NAME = 'store-name';
 
-  let engine: CRUDEngine;
+  let engine: FileSystemEngine;
 
-  async function initEngine(shouldCreateNewEngine = true): Promise<FileSystemEngine | CRUDEngine> {
+  async function initEngine(shouldCreateNewEngine = true): Promise<FileSystemEngine> {
     const storeEngine = shouldCreateNewEngine ? new FileSystemEngine() : engine;
     await storeEngine.init(STORE_NAME);
     return storeEngine;
@@ -52,12 +50,6 @@ describe('FileSystemEngine', () => {
     it('resolves with a browser-specific URL to the filesystem.', async () => {
       const fileSystem = await engine.init('test-store');
       expect(fileSystem.root.toURL().startsWith('filesystem:')).toBe(true);
-    });
-  });
-
-  describe('append', () => {
-    Object.entries(appendSpec).map(([description, testFunction]) => {
-      it(description, () => testFunction(engine));
     });
   });
 

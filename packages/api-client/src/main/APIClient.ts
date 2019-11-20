@@ -36,8 +36,9 @@ import {NotificationAPI} from './notification/';
 import * as ObfuscationUtil from './obfuscation/';
 import {SelfAPI} from './self/';
 import {retrieveCookie} from './shims/node/cookie';
-import {WebSocketClient, WebSocketTopic} from './tcp/';
+import {WebSocketClient} from './tcp/';
 import {
+  FeatureAPI,
   IdentityProviderAPI,
   LegalHoldAPI,
   MemberAPI,
@@ -50,14 +51,18 @@ import {UserAPI} from './user/';
 
 const {version}: {version: string} = require('../../package.json');
 
-export enum APIClientTopic {
-  ON_LOGOUT = 'APIClientTopic.ON_LOGOUT',
+enum TOPIC {
+  ON_LOGOUT = 'APIClient.TOPIC.ON_LOGOUT',
 }
 
 const defaultConfig: Config = {
   store: new MemoryEngine(),
   urls: Backend.PRODUCTION,
 };
+
+export declare interface APIClient {
+  on(event: TOPIC.ON_LOGOUT, listener: (error: InvalidTokenError) => void): this;
+}
 
 export class APIClient extends EventEmitter {
   private readonly logger: logdown.Logger;
@@ -75,6 +80,7 @@ export class APIClient extends EventEmitter {
   public notification: {api: NotificationAPI};
   public self: {api: SelfAPI};
   public teams: {
+    feature: {api: FeatureAPI};
     identityProvider: {api: IdentityProviderAPI};
     invitation: {api: TeamInvitationAPI};
     legalhold: {api: LegalHoldAPI};
@@ -92,7 +98,9 @@ export class APIClient extends EventEmitter {
   public config: Config;
 
   public static BACKEND = Backend;
-  public static TOPIC = APIClientTopic;
+  public static get TOPIC(): typeof TOPIC {
+    return TOPIC;
+  }
   public static VERSION = version;
 
   constructor(config?: Config) {
@@ -107,10 +115,10 @@ export class APIClient extends EventEmitter {
     const httpClient = new HttpClient(this.config.urls.rest, this.accessTokenStore, this.config.store);
     const webSocket = new WebSocketClient(this.config.urls.ws, httpClient);
 
-    webSocket.on(WebSocketTopic.ON_DISCONNECT, async (error: InvalidTokenError) => {
+    webSocket.on(WebSocketClient.TOPIC.ON_INVALID_TOKEN, async error => {
       this.logger.warn(`Cannot renew access token because cookie is invalid: ${error.message}`, error);
       await this.logout();
-      this.emit(APIClientTopic.ON_LOGOUT, error);
+      this.emit(APIClient.TOPIC.ON_LOGOUT, error);
     });
 
     this.transport = {
@@ -150,6 +158,9 @@ export class APIClient extends EventEmitter {
     };
 
     this.teams = {
+      feature: {
+        api: new FeatureAPI(this.transport.http),
+      },
       identityProvider: {
         api: new IdentityProviderAPI(this.transport.http),
       },
@@ -244,12 +255,8 @@ export class APIClient extends EventEmitter {
     delete this.context;
   }
 
-  public connect(): Promise<WebSocketClient> {
-    if (this.context && this.context.clientId) {
-      return this.transport.ws.connect(this.context.clientId);
-    } else {
-      return this.transport.ws.connect();
-    }
+  public connect(onBeforeConnect?: () => Promise<void>): Promise<WebSocketClient> {
+    return this.transport.ws.connect(this.context && this.context.clientId, onBeforeConnect);
   }
 
   private createContext(userId: string, clientType: ClientType, clientId?: string): Context {
@@ -283,5 +290,35 @@ export class APIClient extends EventEmitter {
       throw error;
     }
     return this.config.store;
+  }
+
+  public get clientId(): string | undefined {
+    if (this.context && this.context.clientId) {
+      return this.context.clientId;
+    }
+    return undefined;
+  }
+
+  public get userId(): string | undefined {
+    if (this.context && this.context.userId) {
+      return this.context.userId;
+    }
+    return undefined;
+  }
+
+  /** Should be used in cases where the user ID is MANDATORY. */
+  public get validatedUserId(): string {
+    if (this.userId) {
+      return this.userId;
+    }
+    throw new Error('No valid user ID.');
+  }
+
+  /** Should be used in cases where the client ID is MANDATORY. */
+  public get validatedClientId(): string {
+    if (this.clientId) {
+      return this.clientId;
+    }
+    throw new Error('No valid client ID.');
   }
 }

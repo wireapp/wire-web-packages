@@ -1,37 +1,42 @@
 {
   "dependencies": {
-    "@babel/core": "7.5.5",
-    "@babel/plugin-proposal-class-properties": "7.5.5",
-    "@babel/plugin-proposal-object-rest-spread": "7.5.5",
-    "@babel/preset-typescript": "7.3.3",
-    "@types/sql.js": "1.0.1",
-    "@wireapp/store-engine": "3.5.5",
-    "sql.js": "https://github.com/pwnsdx/sqleet.js#a078babcad5e6beda01370466328e47b3c4a2de7",
+    "@babel/core": "7.7.2",
+    "@babel/plugin-proposal-class-properties": "7.7.0",
+    "@babel/plugin-proposal-object-rest-spread": "7.6.2",
+    "@babel/preset-typescript": "7.7.2",
+    "@wireapp/websql": "0.0.10",
     "uint32": "0.2.1"
   },
   "devDependencies": {
-    "@types/jasmine": "3.3.14",
-    "@types/karma": "3.0.3",
-    "@types/node": "~10",
+    "@types/jasmine": "3.4.6",
+    "@types/karma": "3.0.4",
+    "@types/karma-webpack": "2.0.7",
+    "@types/node": "~12",
     "@types/uint32": "0.2.0",
+    "@types/webpack": "4.41.0",
+    "@wireapp/store-engine": "4.1.0",
     "babel-loader": "8.0.6",
-    "bazinga64": "5.5.6",
-    "jasmine": "3.4.0",
-    "karma": "4.2.0",
-    "karma-chrome-launcher": "3.0.0",
+    "bazinga64": "5.5.29",
+    "jasmine": "3.5.0",
+    "karma": "4.4.1",
+    "karma-chrome-launcher": "3.1.0",
     "karma-jasmine": "2.0.1",
-    "karma-typescript": "4.1.1",
-    "rimraf": "2.6.3",
-    "ts-node": "8.3.0",
-    "typescript": "3.5.3"
+    "karma-webpack": "4.0.2",
+    "rimraf": "3.0.0",
+    "ts-node": "8.5.2",
+    "typescript": "3.6.4",
+    "webpack": "4.41.2"
   },
-  "description": "",
+  "description": "Store Engine implementation for SQLite 3 (WebAssembly) with encryption.",
   "files": [
     "dist"
   ],
   "license": "GPL-3.0",
   "main": "./dist/index.js",
   "name": "@wireapp/store-engine-sqleet",
+  "peerDependencies": {
+    "@wireapp/store-engine": "3.x.x"
+  },
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet",
   "scripts": {
     "build": "yarn build:node",
@@ -41,5 +46,5 @@
     "test": "karma start",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "0.5.7"
+  "version": "0.11.0"
 }
