@@ -106,7 +106,6 @@ export class AuthAPI {
       data: {...defaultLoginRequest, ...loginRequest},
       method: 'post',
       url: `${AuthAPI.URL.LOGIN}/${AuthAPI.URL.SEND}`,
-      withCredentials: true,
     };
 
     return this.client.sendJSON(config);
