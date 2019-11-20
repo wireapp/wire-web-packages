@@ -17,7 +17,7 @@
  *
  */
 
-import Dexie from 'dexie';
+const Dexie = require('dexie');
 const UUID = require('pure-uuid');
 const {NotificationService} = require('@wireapp/core/dist/notification/');
 const {IndexedDBEngine} = require('@wireapp/store-engine-dexie');
