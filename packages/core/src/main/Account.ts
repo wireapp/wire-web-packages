@@ -18,7 +18,14 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {Context, Cookie, LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
+import {
+  AUTH_COOKIE_KEY,
+  AUTH_TABLE_NAME,
+  Context,
+  Cookie,
+  CookieStore,
+  LoginData,
+} from '@wireapp/api-client/dist/commonjs/auth/';
 import {ClientType, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
 import * as Events from '@wireapp/api-client/dist/commonjs/event';
 import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/';
@@ -27,7 +34,6 @@ import * as cryptobox from '@wireapp/cryptobox';
 import {CRUDEngine, MemoryEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import EventEmitter from 'events';
 import logdown from 'logdown';
-
 import {LoginSanitizer} from './auth/';
 import {BroadcastService} from './broadcast/';
 import {ClientInfo, ClientService} from './client/';
@@ -54,35 +60,59 @@ enum TOPIC {
 
 export interface Account {
   on(event: PayloadBundleType.ASSET, listener: (payload: OtrMessage.FileAssetMessage) => void): this;
+
   on(event: PayloadBundleType.ASSET_ABORT, listener: (payload: OtrMessage.FileAssetAbortMessage) => void): this;
+
   on(event: PayloadBundleType.ASSET_IMAGE, listener: (payload: OtrMessage.ImageAssetMessage) => void): this;
+
   on(event: PayloadBundleType.ASSET_META, listener: (payload: OtrMessage.FileAssetMetaDataMessage) => void): this;
+
   on(event: PayloadBundleType.CALL, listener: (payload: OtrMessage.CallMessage) => void): this;
+
   on(event: PayloadBundleType.CLIENT_ACTION, listener: (payload: OtrMessage.ResetSessionMessage) => void): this;
+
   on(event: PayloadBundleType.CLIENT_ADD, listener: (payload: Events.UserClientAddEvent) => void): this;
+
   on(event: PayloadBundleType.CLIENT_REMOVE, listener: (payload: Events.UserClientRemoveEvent) => void): this;
+
   on(event: PayloadBundleType.CONFIRMATION, listener: (payload: OtrMessage.ConfirmationMessage) => void): this;
+
   on(event: PayloadBundleType.CONNECTION_REQUEST, listener: (payload: Events.UserConnectionEvent) => void): this;
+
   on(event: PayloadBundleType.USER_UPDATE, listener: (payload: Events.UserUpdateEvent) => void): this;
+
   on(
     event: PayloadBundleType.CONVERSATION_CLEAR,
     listener: (payload: OtrMessage.ClearConversationMessage) => void,
   ): this;
+
   on(event: PayloadBundleType.CONVERSATION_RENAME, listener: (payload: Events.ConversationRenameEvent) => void): this;
+
   on(event: PayloadBundleType.LOCATION, listener: (payload: OtrMessage.LocationMessage) => void): this;
+
   on(event: PayloadBundleType.MEMBER_JOIN, listener: (payload: Events.TeamMemberJoinEvent) => void): this;
+
   on(event: PayloadBundleType.MESSAGE_DELETE, listener: (payload: OtrMessage.DeleteMessage) => void): this;
+
   on(event: PayloadBundleType.MESSAGE_EDIT, listener: (payload: OtrMessage.EditedTextMessage) => void): this;
+
   on(event: PayloadBundleType.MESSAGE_HIDE, listener: (payload: OtrMessage.HideMessage) => void): this;
+
   on(event: PayloadBundleType.PING, listener: (payload: OtrMessage.PingMessage) => void): this;
+
   on(event: PayloadBundleType.REACTION, listener: (payload: OtrMessage.ReactionMessage) => void): this;
+
   on(event: PayloadBundleType.TEXT, listener: (payload: OtrMessage.TextMessage) => void): this;
+
   on(
     event: PayloadBundleType.TIMER_UPDATE,
     listener: (payload: Events.ConversationMessageTimerUpdateEvent) => void,
   ): this;
+
   on(event: PayloadBundleType.TYPING, listener: (payload: Events.ConversationTypingEvent) => void): this;
+
   on(event: PayloadBundleType.UNKNOWN, listener: (payload: any) => void): this;
+
   on(event: TOPIC.ERROR, listener: (payload: CoreError) => void): this;
 }
 
@@ -126,11 +156,11 @@ export class Account extends EventEmitter {
 
     apiClient.on(APIClient.TOPIC.COOKIE_REFRESH, async (cookie?: Cookie) => {
       if (cookie && this.storeEngine) {
-        const AUTH_TABLE_NAME = 'authentication';
-        const AUTH_COOKIE_KEY = 'cookie';
-        const entity = {expiration: cookie.expiration, zuid: cookie.zuid};
-        await this.storeEngine.delete(AUTH_TABLE_NAME, AUTH_COOKIE_KEY);
-        await this.storeEngine.create(AUTH_TABLE_NAME, AUTH_COOKIE_KEY, entity);
+        try {
+          await this.persistCookie(this.storeEngine, cookie);
+        } catch (error) {
+          this.logger.error(`Failed to save cookie: ${error.message}`, error);
+        }
       }
     });
 
@@ -138,6 +168,11 @@ export class Account extends EventEmitter {
       logger: console,
       markdown: false,
     });
+  }
+
+  private persistCookie(storeEngine: CRUDEngine, cookie: Cookie): Promise<string> {
+    const entity = {expiration: cookie.expiration, zuid: cookie.zuid};
+    return storeEngine.updateOrCreate(AUTH_TABLE_NAME, AUTH_COOKIE_KEY, entity);
   }
 
   get clientId(): string {
@@ -330,7 +365,11 @@ export class Account extends EventEmitter {
     const clientType = context.clientType === ClientType.NONE ? '' : `@${context.clientType}`;
     const dbName = `wire@${this.apiClient.config.urls.name}@${context.userId}${clientType}`;
     this.logger.log(`Initialising store with name "${dbName}"...`);
-    const engine = await this.storeEngineProvider(dbName);
-    return engine;
+    const storeEngine = await this.storeEngineProvider(dbName);
+    const cookie = CookieStore.getCookie();
+    if (cookie) {
+      await this.persistCookie(storeEngine, cookie);
+    }
+    return storeEngine;
   }
 }
