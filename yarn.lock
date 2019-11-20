@@ -2565,16 +2565,16 @@
   dependencies:
     protobufjs "6.8.8"
 
-"@wireapp/websql@0.0.9":
-  version "0.0.9"
-  resolved "https://registry.npmjs.org/@wireapp/websql/-/websql-0.0.9.tgz#129aa113759a25069d19d70eb4c4ae2a8fed702e"
-  integrity sha512-OQ8LWQg2c70ojwGLGt8bgFO5svt07UOwnxhMkeHwbzgHOZOT9EyVJthRDrIreh6bX4K/jZuTSn08nPLDZbYGcA==
+"@wireapp/websql@0.0.10":
+  version "0.0.10"
+  resolved "https://registry.npmjs.org/@wireapp/websql/-/websql-0.0.10.tgz#bbdeebc7d7376f0a518d8cada94d95ae6d8bbff0"
+  integrity sha512-rHYDVylw9wzmYro69bhuNCCsLBXt8D/d01Rsic8WLeEDCus3RYz440FOMp04p1GKTnBZhK6MAhq0GQRE5EXg+Q==
   dependencies:
     "@types/emscripten" "1.38.0"
     "@types/node" "12.7.1"
     "@types/sharedworker" "0.0.28"
     cpr "3.0.1"
-    pseudo-worker "git+https://github.com/pwnsdx/pseudo-worker.git#c8bcc87e3730b0d6593d9ef5bc60df0860d84643"
+    pseudo-worker "1.3.0"
     webpack "4.39.2"
 
 "@xtuc/ieee754@^1.2.0":
@@ -11275,9 +11275,10 @@ prr@~1.0.1:
   resolved "https://registry.npmjs.org/prr/-/prr-1.0.1.tgz#d3fc114ba06995a45ec6893f484ceb1d78f5f476"
   integrity sha1-0/wRS6BplaRexok/SEzrHXj19HY=
 
-"pseudo-worker@git+https://github.com/pwnsdx/pseudo-worker.git#c8bcc87e3730b0d6593d9ef5bc60df0860d84643":
-  version "1.2.0"
-  resolved "git+https://github.com/pwnsdx/pseudo-worker.git#c8bcc87e3730b0d6593d9ef5bc60df0860d84643"
+pseudo-worker@1.3.0:
+  version "1.3.0"
+  resolved "https://registry.npmjs.org/pseudo-worker/-/pseudo-worker-1.3.0.tgz#85f88783292c000f934e1fffb6b28b6164ea12d0"
+  integrity sha512-ZvjwWUZM/D2O4fwEmZd8sI1svcTbtJHf90hKXOhuLJeX5QPn3s9/zK0GJkhxTEE+7mQnjquPT+SWxtkJGj0ayw==
 
 pseudomap@^1.0.2:
   version "1.0.2"
