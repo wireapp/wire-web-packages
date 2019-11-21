@@ -63,8 +63,10 @@ const Demo = () => {
   const [showSecondDropdown, setShowSecondDropdown] = useState(false);
   const [imageData, setImageData] = useState(null);
   const [theme, setTheme] = useState(THEME_ID.LIGHT);
-  // eslint-disable-next-line no-magic-numbers
+  /* eslint-disable no-magic-numbers */
   const paginatedList = [[1, 2], [3, 4], [5, 6], [7, 8], [9, 10], [11, 12], [13, 14], [15, 16], [17, 18]];
+  /* eslint-enable no-magic-numbers */
+
   const isDesktop = typeof window !== 'undefined' && window.matchMedia(`(${QUERY.desktop})`).matches;
 
   const toggleTheme = () => setTheme(theme === THEME_ID.LIGHT ? THEME_ID.DARK : THEME_ID.LIGHT);
