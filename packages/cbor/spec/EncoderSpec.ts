@@ -22,7 +22,7 @@
 import * as CBOR from '@wireapp/cbor';
 
 describe('CBOR.Encoder', () => {
-  const to_hex = (bytes: Uint8Array) => {
+  const to_hex = (bytes: Uint8Array): string => {
     let str = '';
 
     for (const byte of Array.from(bytes)) {
