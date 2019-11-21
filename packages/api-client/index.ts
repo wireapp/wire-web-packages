@@ -106,5 +106,6 @@ if (WIRE_EMAIL && WIRE_PASSWORD && WIRE_CONVERSATION_ID) {
     }
   })();
 } else {
+  logger.error(`A mandatory environment variable is undefined.`);
   process.exit(1);
 }
