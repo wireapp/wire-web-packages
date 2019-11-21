@@ -21,9 +21,9 @@ const logdown = require('logdown');
 const {APIClient} = require('@wireapp/api-client');
 const path = require('path');
 const {FileEngine} = require('@wireapp/store-engine-fs');
-const {Cookie} = require('@wireapp/api-client/dist/commonjs/auth/');
-const {WebSocketClient} = require('@wireapp/api-client/dist/commonjs/tcp/');
-const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/');
+const {Cookie} = require('@wireapp/api-client/dist/auth/');
+const {WebSocketClient} = require('@wireapp/api-client/dist/tcp/');
+const {ClientType} = require('@wireapp/api-client/dist/client/');
 
 // Try with: node demo.js -c "conversation-id" -e "mail@wire.com" -p "secret"
 const argv = require('optimist')
