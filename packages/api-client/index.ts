@@ -20,6 +20,7 @@
 import {FileEngine} from '@wireapp/store-engine-fs';
 import logdown from 'logdown';
 import path from 'path';
+
 import {APIClient} from './src/main/APIClient';
 import {AUTH_ACCESS_TOKEN_KEY, AUTH_COOKIE_KEY, AUTH_TABLE_NAME, AccessTokenData, Cookie} from './src/main/auth';
 import {ClientType} from './src/main/client';
