@@ -113,7 +113,7 @@ export class AuthAPI {
       return response.data;
     } catch (error) {
       const backendErrorLabel = error.response && error.response.data && error.response.data.label;
-      if (error.response && backendErrorLabel) {
+      if (backendErrorLabel) {
         const backendErrorMessage = error.response.data && error.response.data.message;
         switch (backendErrorLabel) {
           case BackendErrorLabel.BAD_REQUEST: {
