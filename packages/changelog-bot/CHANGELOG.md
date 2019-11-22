@@ -3,6 +3,110 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.0.3...@wireapp/changelog-bot@4.0.4) (2019-11-22)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.0.2...@wireapp/changelog-bot@4.0.3) (2019-11-21)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.0.1...@wireapp/changelog-bot@4.0.2) (2019-11-21)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.0.0...@wireapp/changelog-bot@4.0.1) (2019-11-21)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+# [4.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@3.2.129...@wireapp/changelog-bot@4.0.0) (2019-11-21)
+
+
+### Code Refactoring
+
+* **api-client,bot-api,changelog-bot,cli-client,commons,core,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet,store-engine-web-storage,travis-bot:** Remove store engine from API client ([#2558](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/issues/2558)) ([6b8ba89](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/commit/6b8ba892c85ca43cd498a7b3d56a20a31f8578a4))
+
+
+### BREAKING CHANGES
+
+* **api-client,bot-api,changelog-bot,cli-client,commons,core,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet,store-engine-web-storage,travis-bot:** Store engine has been removed from "api-client" and needs to be initialized with a provider function within the "core" construction.
+
+
+
+
+
+## [3.2.129](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@3.2.128...@wireapp/changelog-bot@3.2.129) (2019-11-21)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [3.2.128](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@3.2.127...@wireapp/changelog-bot@3.2.128) (2019-11-20)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [3.2.127](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@3.2.126...@wireapp/changelog-bot@3.2.127) (2019-11-19)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [3.2.126](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@3.2.125...@wireapp/changelog-bot@3.2.126) (2019-11-12)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [3.2.125](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@3.2.124...@wireapp/changelog-bot@3.2.125) (2019-11-11)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [3.2.124](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@3.2.123...@wireapp/changelog-bot@3.2.124) (2019-11-11)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [3.2.123](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@3.2.122...@wireapp/changelog-bot@3.2.123) (2019-11-11)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
 ## [3.2.122](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@3.2.121...@wireapp/changelog-bot@3.2.122) (2019-11-06)
 
 **Note:** Version bump only for package @wireapp/changelog-bot

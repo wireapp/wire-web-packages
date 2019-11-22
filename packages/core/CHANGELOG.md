@@ -3,6 +3,119 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [15.0.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.0.3...@wireapp/core@15.0.4) (2019-11-22)
+
+
+### Bug Fixes
+
+* **api-client:** Legal hold request event ([#2578](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2578)) ([f900ab1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/f900ab1a7804594bd16dd1068a47ee753f1e6af2))
+
+
+
+
+
+## [15.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.0.2...@wireapp/core@15.0.3) (2019-11-21)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.0.1...@wireapp/core@15.0.2) (2019-11-21)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.0.0...@wireapp/core@15.0.1) (2019-11-21)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [15.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@14.4.5...@wireapp/core@15.0.0) (2019-11-21)
+
+
+### Code Refactoring
+
+* **api-client,bot-api,changelog-bot,cli-client,commons,core,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet,store-engine-web-storage,travis-bot:** Remove store engine from API client ([#2558](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2558)) ([6b8ba89](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/6b8ba892c85ca43cd498a7b3d56a20a31f8578a4))
+
+
+### BREAKING CHANGES
+
+* **api-client,bot-api,changelog-bot,cli-client,commons,core,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet,store-engine-web-storage,travis-bot:** Store engine has been removed from "api-client" and needs to be initialized with a provider function within the "core" construction.
+
+
+
+
+
+## [14.4.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@14.4.4...@wireapp/core@14.4.5) (2019-11-21)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [14.4.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@14.4.3...@wireapp/core@14.4.4) (2019-11-20)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [14.4.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@14.4.2...@wireapp/core@14.4.3) (2019-11-19)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [14.4.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@14.4.1...@wireapp/core@14.4.2) (2019-11-12)
+
+
+### Bug Fixes
+
+* **core:** Map user events ([#2533](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2533)) ([67bb1e3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/67bb1e3b04dca2f5d305a70501e4bdccdd26ea38))
+
+
+
+
+
+## [14.4.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@14.4.0...@wireapp/core@14.4.1) (2019-11-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [14.4.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@14.3.2...@wireapp/core@14.4.0) (2019-11-11)
+
+
+### Features
+
+* **api-client,core:** Process user.update events ([#2530](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2530)) ([b0702c3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/b0702c3b8d2703b0af9405164c1b49484510ed87))
+
+
+
+
+
+## [14.3.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@14.3.1...@wireapp/core@14.3.2) (2019-11-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
 ## [14.3.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@14.3.0...@wireapp/core@14.3.1) (2019-11-06)
 
 **Note:** Version bump only for package @wireapp/core

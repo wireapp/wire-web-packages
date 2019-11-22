@@ -33,7 +33,7 @@ enum TOPIC {
   ON_STATE_CHANGE = 'WebSocketClient.TOPIC.ON_STATE_CHANGE',
 }
 
-export declare interface WebSocketClient {
+export interface WebSocketClient {
   on(event: TOPIC.ON_ERROR, listener: (error: Error | ErrorEvent) => void): this;
   on(event: TOPIC.ON_INVALID_TOKEN, listener: (error: InvalidTokenError) => void): this;
   on(event: TOPIC.ON_MESSAGE, listener: (notification: Notification) => void): this;
@@ -204,8 +204,13 @@ export class WebSocketClient extends EventEmitter {
     return this.isSocketLocked;
   }
 
-  private buildWebSocketUrl(accessToken = this.client.accessTokenStore.accessToken!.access_token): string {
-    let url = `${this.baseUrl}/await?access_token=${accessToken}`;
+  private buildWebSocketUrl(): string {
+    const store = this.client.accessTokenStore.accessToken;
+    const token = store && store.access_token ? store.access_token : '';
+    if (!token) {
+      this.logger.warn('Reconnecting WebSocket with unset token');
+    }
+    let url = `${this.baseUrl}/await?access_token=${token}`;
     if (this.clientId) {
       // Note: If no client ID is given, then the WebSocket connection will receive all notifications for all clients
       // of the connected user

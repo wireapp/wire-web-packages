@@ -3,6 +3,128 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.0.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.0.3...@wireapp/api-client@9.0.4) (2019-11-22)
+
+
+### Bug Fixes
+
+* **api-client:** Legal hold request event ([#2578](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2578)) ([f900ab1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/f900ab1a7804594bd16dd1068a47ee753f1e6af2))
+
+
+
+
+
+## [9.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.0.2...@wireapp/api-client@9.0.3) (2019-11-21)
+
+
+### Bug Fixes
+
+* **api-client:** Set asset request priority to low ([#2576](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2576)) ([23c64c5](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/23c64c54eaa6b5424023bb7df7c04708f40a7dd8))
+
+
+
+
+
+## [9.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.0.1...@wireapp/api-client@9.0.2) (2019-11-21)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [9.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.0.0...@wireapp/api-client@9.0.1) (2019-11-21)
+
+
+### Bug Fixes
+
+* **api-client:** Remove colliding dependency to "@wireapp/store-engine" ([5d6c244](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/5d6c24443636d6bd70f9585e6350d16e21bea1f7))
+
+
+
+
+
+# [9.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@8.3.4...@wireapp/api-client@9.0.0) (2019-11-21)
+
+
+### Code Refactoring
+
+* **api-client,bot-api,changelog-bot,cli-client,commons,core,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet,store-engine-web-storage,travis-bot:** Remove store engine from API client ([#2558](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2558)) ([6b8ba89](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/6b8ba892c85ca43cd498a7b3d56a20a31f8578a4))
+
+
+### Features
+
+* POST /login/send error mapping ([#2574](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2574)) ([1bb0c33](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/1bb0c33511d7a8e36dfae4b63f131cb11cb1bc21))
+
+
+### BREAKING CHANGES
+
+* **api-client,bot-api,changelog-bot,cli-client,commons,core,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet,store-engine-web-storage,travis-bot:** Store engine has been removed from "api-client" and needs to be initialized with a provider function within the "core" construction.
+
+
+
+
+
+## [8.3.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@8.3.3...@wireapp/api-client@8.3.4) (2019-11-21)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [8.3.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@8.3.2...@wireapp/api-client@8.3.3) (2019-11-20)
+
+
+### Bug Fixes
+
+* **api-client:** Don't include credentials on /login/send ([#2567](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2567)) ([1950a24](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/1950a246038a119c94c1055a6607091d86f2a504))
+
+
+
+
+
+## [8.3.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@8.3.1...@wireapp/api-client@8.3.2) (2019-11-19)
+
+
+### Bug Fixes
+
+* **api-client:** Handle WS reconnect with unset access token ([#2557](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2557)) ([19261ca](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/19261ca18a7701c5ddb1f089a0ea65be747b24a5))
+
+
+
+
+
+## [8.3.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@8.3.0...@wireapp/api-client@8.3.1) (2019-11-11)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+# [8.3.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@8.2.1...@wireapp/api-client@8.3.0) (2019-11-11)
+
+
+### Features
+
+* **api-client,core:** Process user.update events ([#2530](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2530)) ([b0702c3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/b0702c3b8d2703b0af9405164c1b49484510ed87))
+
+
+
+
+
+## [8.2.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@8.2.0...@wireapp/api-client@8.2.1) (2019-11-11)
+
+
+### Bug Fixes
+
+* **api-client:** Add undocumented force flag to /login/send endpoint data ([#2528](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2528)) ([ecedc33](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/ecedc337578577c0ab4a42c694240b1e8fb6751f))
+
+
+
+
+
 # [8.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@8.1.0...@wireapp/api-client@8.2.0) (2019-11-06)
 
 

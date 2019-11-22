@@ -18,16 +18,22 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {Context, LoginData} from '@wireapp/api-client/dist/commonjs/auth/';
+import {
+  AUTH_COOKIE_KEY,
+  AUTH_TABLE_NAME,
+  Context,
+  Cookie,
+  CookieStore,
+  LoginData,
+} from '@wireapp/api-client/dist/commonjs/auth/';
 import {ClientType, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
 import * as Events from '@wireapp/api-client/dist/commonjs/event';
 import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/';
 import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/';
 import * as cryptobox from '@wireapp/cryptobox';
-import {error as StoreEngineError} from '@wireapp/store-engine';
+import {CRUDEngine, MemoryEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import EventEmitter from 'events';
 import logdown from 'logdown';
-
 import {LoginSanitizer} from './auth/';
 import {BroadcastService} from './broadcast/';
 import {ClientInfo, ClientService} from './client/';
@@ -52,7 +58,7 @@ enum TOPIC {
   ERROR = 'Account.TOPIC.ERROR',
 }
 
-export declare interface Account {
+export interface Account {
   on(event: PayloadBundleType.ASSET, listener: (payload: OtrMessage.FileAssetMessage) => void): this;
   on(event: PayloadBundleType.ASSET_ABORT, listener: (payload: OtrMessage.FileAssetAbortMessage) => void): this;
   on(event: PayloadBundleType.ASSET_IMAGE, listener: (payload: OtrMessage.ImageAssetMessage) => void): this;
@@ -63,6 +69,7 @@ export declare interface Account {
   on(event: PayloadBundleType.CLIENT_REMOVE, listener: (payload: Events.UserClientRemoveEvent) => void): this;
   on(event: PayloadBundleType.CONFIRMATION, listener: (payload: OtrMessage.ConfirmationMessage) => void): this;
   on(event: PayloadBundleType.CONNECTION_REQUEST, listener: (payload: Events.UserConnectionEvent) => void): this;
+  on(event: PayloadBundleType.USER_UPDATE, listener: (payload: Events.UserUpdateEvent) => void): this;
   on(
     event: PayloadBundleType.CONVERSATION_CLEAR,
     listener: (payload: OtrMessage.ClearConversationMessage) => void,
@@ -85,9 +92,12 @@ export declare interface Account {
   on(event: TOPIC.ERROR, listener: (payload: CoreError) => void): this;
 }
 
+export type StoreEngineProvider = (storeName: string) => Promise<CRUDEngine>;
+
 export class Account extends EventEmitter {
   private readonly logger: logdown.Logger;
-
+  private readonly storeEngine?: CRUDEngine;
+  private readonly storeEngineProvider: StoreEngineProvider;
   private readonly apiClient: APIClient;
   public service?: {
     asset: AssetService;
@@ -107,13 +117,38 @@ export class Account extends EventEmitter {
     return TOPIC;
   }
 
-  constructor(apiClient: APIClient = new APIClient()) {
+  constructor(apiClient: APIClient = new APIClient(), storeEngineProvider?: StoreEngineProvider) {
     super();
     this.apiClient = apiClient;
+    if (storeEngineProvider) {
+      this.storeEngineProvider = storeEngineProvider;
+    } else {
+      this.storeEngineProvider = async (storeName: string) => {
+        const engine = new MemoryEngine();
+        await engine.init(storeName);
+        return engine;
+      };
+    }
+
+    apiClient.on(APIClient.TOPIC.COOKIE_REFRESH, async (cookie?: Cookie) => {
+      if (cookie && this.storeEngine) {
+        try {
+          await this.persistCookie(this.storeEngine, cookie);
+        } catch (error) {
+          this.logger.error(`Failed to save cookie: ${error.message}`, error);
+        }
+      }
+    });
+
     this.logger = logdown('@wireapp/core/Account', {
       logger: console,
       markdown: false,
     });
+  }
+
+  private persistCookie(storeEngine: CRUDEngine, cookie: Cookie): Promise<string> {
+    const entity = {expiration: cookie.expiration, zuid: cookie.zuid};
+    return storeEngine.updateOrCreate(AUTH_TABLE_NAME, AUTH_COOKIE_KEY, entity);
   }
 
   get clientId(): string {
@@ -124,15 +159,15 @@ export class Account extends EventEmitter {
     return this.apiClient.validatedUserId;
   }
 
-  public async init(): Promise<void> {
+  public async init(storeEngine: CRUDEngine): Promise<void> {
     const assetService = new AssetService(this.apiClient);
-    const cryptographyService = new CryptographyService(this.apiClient, this.apiClient.config.store);
+    const cryptographyService = new CryptographyService(this.apiClient, storeEngine);
 
-    const clientService = new ClientService(this.apiClient, this.apiClient.config.store, cryptographyService);
+    const clientService = new ClientService(this.apiClient, storeEngine, cryptographyService);
     const connectionService = new ConnectionService(this.apiClient);
     const giphyService = new GiphyService(this.apiClient);
     const conversationService = new ConversationService(this.apiClient, cryptographyService, assetService);
-    const notificationService = new NotificationService(this.apiClient, cryptographyService);
+    const notificationService = new NotificationService(this.apiClient, cryptographyService, storeEngine);
     const selfService = new SelfService(this.apiClient);
     const teamService = new TeamService(this.apiClient);
 
@@ -156,21 +191,17 @@ export class Account extends EventEmitter {
 
   public async login(loginData: LoginData, initClient: boolean = true, clientInfo?: ClientInfo): Promise<Context> {
     this.resetContext();
-    await this.init();
-
     LoginSanitizer.removeNonPrintableCharacters(loginData);
 
-    await this.apiClient.login(loginData);
+    const context = await this.apiClient.login(loginData);
+    const storeEngine = await this.initEngine(context);
+    await this.init(storeEngine);
 
     if (initClient) {
       await this.initClient(loginData, clientInfo);
     }
 
-    if (this.apiClient.context) {
-      return this.apiClient.context;
-    }
-
-    throw Error('Login failed.');
+    return context;
   }
 
   public async initClient(
@@ -205,8 +236,11 @@ export class Account extends EventEmitter {
         if (shouldDeleteWholeDatabase) {
           this.logger.log('Last client was temporary - Deleting database');
 
-          await this.apiClient.config.store.purge();
-          await this.apiClient.init(loginData.clientType);
+          if (this.storeEngine) {
+            await this.storeEngine.purge();
+          }
+          const context = await this.apiClient.init(loginData.clientType);
+          await this.initEngine(context);
 
           return this.registerClient(loginData, clientInfo);
         }
@@ -302,4 +336,16 @@ export class Account extends EventEmitter {
   private readonly handleError = (accountError: NotificationError): void => {
     this.emit(Account.TOPIC.ERROR, accountError);
   };
+
+  private async initEngine(context: Context): Promise<CRUDEngine> {
+    const clientType = context.clientType === ClientType.NONE ? '' : `@${context.clientType}`;
+    const dbName = `wire@${this.apiClient.config.urls.name}@${context.userId}${clientType}`;
+    this.logger.log(`Initialising store with name "${dbName}"...`);
+    const storeEngine = await this.storeEngineProvider(dbName);
+    const cookie = CookieStore.getCookie();
+    if (cookie) {
+      await this.persistCookie(storeEngine, cookie);
+    }
+    return storeEngine;
+  }
 }

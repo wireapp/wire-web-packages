@@ -2,20 +2,20 @@
   "dependencies": {
     "@emotion/core": "10.0.22",
     "@types/color": "3.0.0",
-    "bazinga64": "5.5.28",
+    "bazinga64": "5.5.30",
     "color": "3.1.2",
     "emotion-normalize": "10.1.0",
     "emotion-theming": "10.0.19",
     "react-transition-group": "4.3.0"
   },
   "devDependencies": {
-    "@babel/cli": "7.6.4",
-    "@babel/core": "7.6.4",
-    "@babel/plugin-proposal-class-properties": "7.5.5",
-    "@babel/preset-env": "7.6.3",
-    "@babel/preset-react": "7.6.3",
-    "@babel/preset-typescript": "7.6.0",
-    "@hot-loader/react-dom": "16.10.2",
+    "@babel/cli": "7.7.0",
+    "@babel/core": "7.7.2",
+    "@babel/plugin-proposal-class-properties": "7.7.0",
+    "@babel/preset-env": "7.7.1",
+    "@babel/preset-react": "7.7.0",
+    "@babel/preset-typescript": "7.7.2",
+    "@hot-loader/react-dom": "16.11.0",
     "@types/react": "16.9.11",
     "@types/react-test-renderer": "16.9.1",
     "@types/webpack-env": "1.14.1",
@@ -24,11 +24,11 @@
     "babel-plugin-emotion": "10.0.23",
     "jest": "24.9.0",
     "jest-emotion": "10.0.17",
-    "react": "16.11.0",
-    "react-dom": "16.11.0",
+    "react": "16.12.0",
+    "react-dom": "16.12.0",
     "react-helmet": "5.2.1",
-    "react-hot-loader": "4.12.15",
-    "react-test-renderer": "16.11.0",
+    "react-hot-loader": "4.12.18",
+    "react-test-renderer": "16.12.0",
     "rimraf": "3.0.0",
     "typescript": "3.7.2",
     "webpack": "4.41.2",
@@ -64,5 +64,5 @@
     "test:update": "yarn test --updateSnapshot",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "7.23.20"
+  "version": "7.23.24"
 }

@@ -3,10 +3,10 @@
     "dexie": "2.0.4"
   },
   "devDependencies": {
-    "@types/jasmine": "3.4.5",
-    "@types/karma": "3.0.3",
+    "@types/jasmine": "3.4.6",
+    "@types/karma": "3.0.4",
     "@types/node": "~12",
-    "@wireapp/store-engine": "4.0.1",
+    "@wireapp/store-engine": "4.1.2",
     "jasmine": "3.5.0",
     "karma": "4.4.1",
     "karma-chrome-launcher": "3.1.0",
@@ -14,7 +14,7 @@
     "karma-typescript": "4.1.1",
     "logdown": "3.2.8",
     "rimraf": "3.0.0",
-    "ts-node": "8.4.1",
+    "ts-node": "8.5.2",
     "typescript": "3.6.4"
   },
   "description": "Store Engine implementation for the browser's IndexedDB.",
@@ -25,7 +25,7 @@
   "main": "./dist/index.js",
   "name": "@wireapp/store-engine-dexie",
   "peerDependencies": {
-    "@wireapp/store-engine": "3.x.x"
+    "@wireapp/store-engine": "4.x.x"
   },
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie",
   "scripts": {
@@ -36,5 +36,5 @@
     "test": "karma start",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "0.6.21"
+  "version": "1.0.1"
 }

@@ -18,8 +18,7 @@
  */
 
 import {TimeUtil} from '@wireapp/commons';
-import {PriorityQueue} from '@wireapp/priority-queue';
-import {CRUDEngine} from '@wireapp/store-engine';
+import {Priority, PriorityQueue} from '@wireapp/priority-queue';
 import axios, {AxiosError, AxiosRequestConfig, AxiosResponse} from 'axios';
 import EventEmitter from 'events';
 import logdown from 'logdown';
@@ -32,7 +31,7 @@ enum TOPIC {
   ON_CONNECTION_STATE_CHANGE = 'HttpClient.TOPIC.ON_CONNECTION_STATE_CHANGE',
 }
 
-export declare interface HttpClient {
+export interface HttpClient {
   on(event: TOPIC.ON_CONNECTION_STATE_CHANGE, listener: (state: ConnectionState) => void): this;
 }
 
@@ -45,11 +44,7 @@ export class HttpClient extends EventEmitter {
     return TOPIC;
   }
 
-  constructor(
-    private readonly baseUrl: string,
-    public accessTokenStore: AccessTokenStore,
-    private readonly engine: CRUDEngine,
-  ) {
+  constructor(private readonly baseUrl: string, public accessTokenStore: AccessTokenStore) {
     super();
 
     this.connectionState = ConnectionState.UNDEFINED;
@@ -183,12 +178,16 @@ export class HttpClient extends EventEmitter {
       )}`;
     }
 
-    const response = await sendRequestWithCookie<AccessTokenData>(this, config, this.engine);
+    const response = await sendRequestWithCookie<AccessTokenData>(this, config);
     return response.data;
   }
 
-  public async sendRequest<T>(config: AxiosRequestConfig, tokenAsParam: boolean = false): Promise<AxiosResponse<T>> {
-    return this.requestQueue.add(() => this._sendRequest<T>(config, tokenAsParam));
+  public async sendRequest<T>(
+    config: AxiosRequestConfig,
+    tokenAsParam: boolean = false,
+    priority = Priority.MEDIUM,
+  ): Promise<AxiosResponse<T>> {
+    return this.requestQueue.add(() => this._sendRequest<T>(config, tokenAsParam), priority);
   }
 
   public sendJSON<T>(config: AxiosRequestConfig): Promise<AxiosResponse<T>> {

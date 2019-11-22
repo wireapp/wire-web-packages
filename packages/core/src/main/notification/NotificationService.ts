@@ -40,7 +40,7 @@ enum TOPIC {
 
 export type NotificationHandler = (notification: Notification, source: PayloadBundleSource) => Promise<void>;
 
-export declare interface NotificationService {
+export interface NotificationService {
   on(event: PayloadBundleType.ASSET, listener: (payload: OtrMessage.FileAssetMessage) => void): this;
   on(event: PayloadBundleType.ASSET_ABORT, listener: (payload: OtrMessage.FileAssetAbortMessage) => void): this;
   on(event: PayloadBundleType.ASSET_IMAGE, listener: (payload: OtrMessage.ImageAssetMessage) => void): this;
@@ -56,6 +56,7 @@ export declare interface NotificationService {
     listener: (payload: OtrMessage.ClearConversationMessage) => void,
   ): this;
   on(event: PayloadBundleType.CONVERSATION_RENAME, listener: (payload: Events.ConversationRenameEvent) => void): this;
+  on(event: PayloadBundleType.USER_UPDATE, listener: (payload: Events.UserUpdateEvent) => void): this;
   on(event: PayloadBundleType.LOCATION, listener: (payload: OtrMessage.LocationMessage) => void): this;
   on(event: PayloadBundleType.MEMBER_JOIN, listener: (payload: Events.TeamMemberJoinEvent) => void): this;
   on(event: PayloadBundleType.MESSAGE_DELETE, listener: (payload: OtrMessage.DeleteMessage) => void): this;
@@ -75,10 +76,9 @@ export declare interface NotificationService {
 
 export class NotificationService extends EventEmitter {
   private readonly apiClient: APIClient;
-  private readonly cryptographyService: CryptographyService;
   private readonly backend: NotificationBackendRepository;
+  private readonly cryptographyService: CryptographyService;
   private readonly database: NotificationDatabaseRepository;
-  private readonly storeEngine: CRUDEngine;
   private readonly logger = logdown('@wireapp/core/notification/NotificationService', {
     logger: console,
     markdown: false,
@@ -87,13 +87,12 @@ export class NotificationService extends EventEmitter {
     return TOPIC;
   }
 
-  constructor(apiClient: APIClient, cryptographyService: CryptographyService) {
+  constructor(apiClient: APIClient, cryptographyService: CryptographyService, storeEngine: CRUDEngine) {
     super();
     this.apiClient = apiClient;
     this.cryptographyService = cryptographyService;
-    this.storeEngine = apiClient.config.store;
     this.backend = new NotificationBackendRepository(this.apiClient);
-    this.database = new NotificationDatabaseRepository(this.storeEngine);
+    this.database = new NotificationDatabaseRepository(storeEngine);
   }
 
   public async getAllNotifications(): Promise<Notification[]> {
@@ -187,6 +186,7 @@ export class NotificationService extends EventEmitter {
           case PayloadBundleType.PING:
           case PayloadBundleType.REACTION:
           case PayloadBundleType.TEXT:
+          case PayloadBundleType.USER_UPDATE:
             this.emit(data.type, data);
             break;
           case PayloadBundleType.ASSET: {
@@ -241,6 +241,7 @@ export class NotificationService extends EventEmitter {
       // User events
       case Events.USER_EVENT.CONNECTION:
       case Events.USER_EVENT.CLIENT_ADD:
+      case Events.USER_EVENT.UPDATE:
       case Events.USER_EVENT.CLIENT_REMOVE: {
         return UserMapper.mapUserEvent(event, this.apiClient.context!.userId, source);
       }

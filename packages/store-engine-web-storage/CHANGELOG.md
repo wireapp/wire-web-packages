@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@1.0.0...@wireapp/store-engine-web-storage@1.0.1) (2019-11-22)
+
+**Note:** Version bump only for package @wireapp/store-engine-web-storage
+
+
+
+
+
+# [1.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@0.2.1...@wireapp/store-engine-web-storage@1.0.0) (2019-11-21)
+
+
+### Code Refactoring
+
+* **api-client,bot-api,changelog-bot,cli-client,commons,core,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet,store-engine-web-storage,travis-bot:** Remove store engine from API client ([#2558](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/issues/2558)) ([6b8ba89](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/commit/6b8ba892c85ca43cd498a7b3d56a20a31f8578a4))
+
+
+### BREAKING CHANGES
+
+* **api-client,bot-api,changelog-bot,cli-client,commons,core,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet,store-engine-web-storage,travis-bot:** Store engine has been removed from "api-client" and needs to be initialized with a provider function within the "core" construction.
+
+
+
+
+
+## [0.2.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@0.2.0...@wireapp/store-engine-web-storage@0.2.1) (2019-11-21)
+
+**Note:** Version bump only for package @wireapp/store-engine-web-storage
+
+
+
+
+
+# [0.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@0.1.21...@wireapp/store-engine-web-storage@0.2.0) (2019-11-11)
+
+
+### Features
+
+* **store-engine,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet,store-engine-web-storage:** Remove "append" functionality ([#2529](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/issues/2529)) ([d8cb079](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/commit/d8cb0797d8553ce40a41d501e46a1d7efe81495f))
+
+
+
+
+
+## [0.1.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@0.1.20...@wireapp/store-engine-web-storage@0.1.21) (2019-11-11)
+
+**Note:** Version bump only for package @wireapp/store-engine-web-storage
+
+
+
+
+
 ## [0.1.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@0.1.19...@wireapp/store-engine-web-storage@0.1.20) (2019-11-06)
 
 **Note:** Version bump only for package @wireapp/store-engine-web-storage

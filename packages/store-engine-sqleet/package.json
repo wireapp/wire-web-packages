@@ -1,29 +1,29 @@
 {
   "dependencies": {
-    "@babel/core": "7.6.4",
-    "@babel/plugin-proposal-class-properties": "7.5.5",
+    "@babel/core": "7.7.2",
+    "@babel/plugin-proposal-class-properties": "7.7.0",
     "@babel/plugin-proposal-object-rest-spread": "7.6.2",
-    "@babel/preset-typescript": "7.6.0",
-    "@wireapp/websql": "0.0.9",
+    "@babel/preset-typescript": "7.7.2",
+    "@wireapp/websql": "0.0.10",
     "uint32": "0.2.1"
   },
   "devDependencies": {
-    "@types/jasmine": "3.4.5",
-    "@types/karma": "3.0.3",
+    "@types/jasmine": "3.4.6",
+    "@types/karma": "3.0.4",
     "@types/karma-webpack": "2.0.7",
     "@types/node": "~12",
     "@types/uint32": "0.2.0",
-    "@types/webpack": "4.39.7",
-    "@wireapp/store-engine": "4.0.1",
+    "@types/webpack": "4.41.0",
+    "@wireapp/store-engine": "4.1.2",
     "babel-loader": "8.0.6",
-    "bazinga64": "5.5.28",
+    "bazinga64": "5.5.30",
     "jasmine": "3.5.0",
     "karma": "4.4.1",
     "karma-chrome-launcher": "3.1.0",
     "karma-jasmine": "2.0.1",
     "karma-webpack": "4.0.2",
     "rimraf": "3.0.0",
-    "ts-node": "8.4.1",
+    "ts-node": "8.5.2",
     "typescript": "3.7.2",
     "webpack": "4.41.2"
   },
@@ -35,7 +35,7 @@
   "main": "./dist/index.js",
   "name": "@wireapp/store-engine-sqleet",
   "peerDependencies": {
-    "@wireapp/store-engine": "3.x.x"
+    "@wireapp/store-engine": "4.x.x"
   },
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet",
   "scripts": {
@@ -46,5 +46,5 @@
     "test": "karma start",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "0.10.16"
+  "version": "1.0.1"
 }

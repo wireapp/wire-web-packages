@@ -17,20 +17,20 @@
  *
  */
 
-import {CRUDEngine} from '@wireapp/store-engine';
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
 
 import {AccessTokenData, LoginData, SendLoginCode} from '../auth/';
 import {ClientType} from '../client/';
-import {HttpClient} from '../http/';
-import {sendRequestWithCookie} from '../shims/node/cookie';
+import {BackendErrorLabel, HttpClient} from '../http/';
+import {retrieveCookie, sendRequestWithCookie} from '../shims/node/cookie';
 import {User} from '../user/';
+import {ForbiddenPhoneNumberError, InvalidPhoneNumberError, PasswordExistsError} from './AuthenticationError';
 import {CookieList} from './CookieList';
 import {LoginCodeResponse} from './LoginCodeResponse';
 import {RegisterData} from './RegisterData';
 
 export class AuthAPI {
-  constructor(private readonly client: HttpClient, private readonly engine: CRUDEngine) {}
+  constructor(private readonly client: HttpClient) {}
 
   static URL = {
     ACCESS: '/access',
@@ -73,7 +73,7 @@ export class AuthAPI {
     await this.client.sendJSON(config);
   }
 
-  public postLogin(loginData: LoginData): Promise<AxiosResponse<AccessTokenData>> {
+  public async postLogin(loginData: LoginData): Promise<AccessTokenData> {
     const login = {
       ...loginData,
       clientType: undefined,
@@ -90,23 +90,46 @@ export class AuthAPI {
       withCredentials: true,
     };
 
-    return this.client.sendJSON(config);
+    const response = await this.client.sendJSON<AccessTokenData>(config);
+    return retrieveCookie(response);
   }
 
   /**
-   * This operation generates and sends a login code. A login code can be used only once and times out after 10 minutes. Only one login code may be pending at a time.
+   * This operation generates and sends a login code. A login code can be used only once and times out after 10
+   * minutes. Only one login code may be pending at a time.
    * @param loginRequest Phone number to use for login SMS or voice call.
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/tab.html#!/sendLoginCode
    */
-  public postLoginSend(loginRequest: SendLoginCode): Promise<AxiosResponse<LoginCodeResponse>> {
+  public async postLoginSend(loginRequest: SendLoginCode): Promise<LoginCodeResponse> {
+    // https://github.com/zinfra/backend-issues/issues/974
+    const defaultLoginRequest = {force: false};
     const config: AxiosRequestConfig = {
-      data: loginRequest,
+      data: {...defaultLoginRequest, ...loginRequest},
       method: 'post',
       url: `${AuthAPI.URL.LOGIN}/${AuthAPI.URL.SEND}`,
-      withCredentials: true,
     };
 
-    return this.client.sendJSON(config);
+    try {
+      const response = await this.client.sendJSON<LoginCodeResponse>(config);
+      return response.data;
+    } catch (error) {
+      const backendErrorLabel = error.response && error.response.data && error.response.data.label;
+      if (backendErrorLabel) {
+        const backendErrorMessage = error.response.data && error.response.data.message;
+        switch (backendErrorLabel) {
+          case BackendErrorLabel.BAD_REQUEST: {
+            throw new InvalidPhoneNumberError(backendErrorMessage);
+          }
+          case BackendErrorLabel.UNAUTHORIZED: {
+            throw new ForbiddenPhoneNumberError(backendErrorMessage);
+          }
+          case BackendErrorLabel.PASSWORD_EXISTS: {
+            throw new PasswordExistsError(backendErrorMessage);
+          }
+        }
+      }
+      throw error;
+    }
   }
 
   public async postLogout(): Promise<void> {
@@ -116,7 +139,7 @@ export class AuthAPI {
       withCredentials: true,
     };
 
-    await sendRequestWithCookie(this.client, config, this.engine);
+    await sendRequestWithCookie(this.client, config);
   }
 
   public async postRegister(userAccount: RegisterData): Promise<User> {
@@ -128,7 +151,7 @@ export class AuthAPI {
     };
 
     const response = await this.client.sendJSON<User>(config);
-    return response.data;
+    return retrieveCookie(response);
   }
 
   public async headInitiateLogin(ssoCode: string): Promise<void> {
