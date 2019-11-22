@@ -20,12 +20,12 @@
 import {
   UserActivateData,
   UserClientAddData,
-  UserClientLegalHoldRequestData,
   UserClientRemoveData,
   UserConnectionData,
   UserDeleteData,
   UserLegalHoldDisableData,
   UserLegalHoldEnableData,
+  UserLegalHoldRequestData,
   UserPropertiesSetData,
   UserUpdateData,
 } from '@wireapp/api-client/dist/commonjs/user/data';
@@ -41,8 +41,8 @@ export interface UserClientAddMessage extends BasePayloadBundle {
   type: PayloadBundleType.USER_CLIENT_ADD;
 }
 
-export interface UserClientLegalHoldRequestMessage extends BasePayloadBundle {
-  content: UserClientLegalHoldRequestData;
+export interface UserLegalHoldRequestMessage extends BasePayloadBundle {
+  content: UserLegalHoldRequestData;
   type: PayloadBundleType.USER_LEGAL_HOLD_REQUEST;
 }
 
@@ -84,7 +84,7 @@ export interface UserUpdateMessage extends BasePayloadBundle {
 export type UserMessage =
   | UserActivateMessage
   | UserClientAddMessage
-  | UserClientLegalHoldRequestMessage
+  | UserLegalHoldRequestMessage
   | UserLegalHoldEnableMessage
   | UserLegalHoldDisableMessage
   | UserClientRemoveMessage
