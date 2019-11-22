@@ -43,7 +43,7 @@ export interface UserClientAddMessage extends BasePayloadBundle {
 
 export interface UserClientLegalHoldRequestMessage extends BasePayloadBundle {
   content: UserClientLegalHoldRequestData;
-  type: PayloadBundleType.USER_CLIENT_LEGAL_HOLD_REQUEST;
+  type: PayloadBundleType.USER_LEGAL_HOLD_REQUEST;
 }
 
 export interface UserLegalHoldEnableMessage extends BasePayloadBundle {
