@@ -18,8 +18,8 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {ClientType} from '@wireapp/api-client/dist/commonjs/client/';
-import {ConversationEvent, TeamEvent, UserEvent} from '@wireapp/api-client/dist/commonjs/event';
+import {ClientType} from '@wireapp/api-client/dist/client/';
+import {ConversationEvent, TeamEvent, UserEvent} from '@wireapp/api-client/dist/event';
 import {Account} from '@wireapp/core';
 import {PayloadBundle, PayloadBundleType} from '@wireapp/core/dist/conversation/';
 import {CRUDEngine} from '@wireapp/store-engine';
