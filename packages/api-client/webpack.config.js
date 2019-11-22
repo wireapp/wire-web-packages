@@ -36,7 +36,7 @@ module.exports = {
   entry: {
     [projectName]: `${__dirname}/${pkg.main}`,
     [`${projectName}.demo`]: `${__dirname}/src/demo/demo.js`,
-    [`${projectName}.test`]: `${__dirname}/src/main/index.test.browser.js`,
+    [`${projectName}.test`]: `${__dirname}/src/index.test.browser.js`,
   },
   externals: {
     'fs-extra': '{}',
