@@ -5610,12 +5610,10 @@ eslint-plugin-react@7.16.0:
     prop-types "^15.7.2"
     resolve "^1.12.0"
 
-eslint-plugin-simple-import-sort@4.0.0:
-  version "4.0.0"
-  resolved "https://registry.npmjs.org/eslint-plugin-simple-import-sort/-/eslint-plugin-simple-import-sort-4.0.0.tgz#048736c170b9b43f0a8c3ef85ba53881c389f3ff"
-  integrity sha512-QsxOMrXhhqvSiTmZafPc/lvSET9lhblaO2kaaSbFo1FVU/AW9mFQDXadiHJ5OqG6i0N6+Qd+RZ95iQbkg4p+0w==
-  dependencies:
-    validate-npm-package-name "^3.0.0"
+eslint-plugin-simple-import-sort@5.0.0:
+  version "5.0.0"
+  resolved "https://registry.npmjs.org/eslint-plugin-simple-import-sort/-/eslint-plugin-simple-import-sort-5.0.0.tgz#fd2abac52c0ae6050baf340c004b0b5d9aa76e8e"
+  integrity sha512-Zn6OppySnbwl/UonkzmMBbiFXZwe/tI9ZlSXwQek5h1FfPv3hcDTE3kG0SC70pBsKuVE8IMwZCMl0tKwcY89rw==
 
 eslint-plugin-sort-keys-fix@1.1.0:
   version "1.1.0"
