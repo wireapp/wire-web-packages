@@ -22,7 +22,6 @@ import logdown from 'logdown';
 import path from 'path';
 import {CRUDEngine} from '@wireapp/store-engine';
 
-import {CRUDEngine} from '@wireapp/store-engine';
 import {APIClient} from './src/APIClient';
 import {
   AUTH_ACCESS_TOKEN_KEY,
