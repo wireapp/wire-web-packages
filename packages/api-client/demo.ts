@@ -17,10 +17,10 @@
  *
  */
 
+import {CRUDEngine} from '@wireapp/store-engine';
 import {FileEngine} from '@wireapp/store-engine-fs';
 import logdown from 'logdown';
 import path from 'path';
-import {CRUDEngine} from '@wireapp/store-engine';
 
 import {APIClient} from './src/APIClient';
 import {
