@@ -17,6 +17,7 @@
  *
  */
 
+const {Context} = require('@wireapp/api-client/dist/auth');
 const {ClientType} = require('@wireapp/api-client/dist/client');
 const {MessageHandler} = require('@wireapp/bot-api');
 const {Account} = require('@wireapp/core');
@@ -37,9 +38,13 @@ describe('MessageHandler', () => {
   };
 
   beforeEach(async () => {
+    const clientType = ClientType.TEMPORARY;
     mainHandler = new MainHandler();
     mainHandler.account = new Account(undefined, storeName => Promise.resolve(new MemoryEngine()));
-    await mainHandler.account.init(ClientType.TEMPORARY);
+    spyOn(mainHandler.account.apiClient, 'init').and.callFake(() => {
+      return Promise.resolve(new Context(new Date().toISOString(), clientType));
+    });
+    await mainHandler.account.init(clientType);
     mainHandler.account.apiClient.createContext('', '');
 
     spyOn(mainHandler.account.service.conversation, 'send').and.returnValue(Promise.resolve());
