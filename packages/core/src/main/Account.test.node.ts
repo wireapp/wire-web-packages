@@ -26,7 +26,6 @@ import {Notification, NotificationAPI} from '@wireapp/api-client/dist/notificati
 import {ValidationUtil} from '@wireapp/commons';
 import {GenericMessage, Text} from '@wireapp/protocol-messaging';
 
-import {MemoryEngine} from '@wireapp/store-engine';
 import nock = require('nock');
 import {Account} from './Account';
 import {PayloadBundleSource, PayloadBundleType} from './conversation';
@@ -41,7 +40,7 @@ const MOCK_BACKEND = {
 async function createAccount(storageName = `test-${Date.now()}`): Promise<Account> {
   const apiClient = new APIClient({urls: MOCK_BACKEND});
   const account = new Account(apiClient);
-  await account.initServices(new MemoryEngine());
+  await account.init(ClientType.TEMPORARY);
   return account;
 }
 
@@ -135,7 +134,7 @@ describe('Account', () => {
     it('initializes the Protocol buffers', async () => {
       const account = new Account();
 
-      await account.initServices(new MemoryEngine());
+      await account.init(ClientType.TEMPORARY);
 
       expect(account.service!.conversation).toBeDefined();
       expect(account.service!.cryptography).toBeDefined();
@@ -154,7 +153,7 @@ describe('Account', () => {
       const apiClient = new APIClient({urls: MOCK_BACKEND});
       const account = new Account(apiClient);
 
-      await account.initServices(new MemoryEngine());
+      await account.init(ClientType.TEMPORARY);
       const {clientId, clientType, userId} = (await account.login({
         clientType: ClientType.TEMPORARY,
         email: 'hello@example.com',
@@ -170,7 +169,7 @@ describe('Account', () => {
       const apiClient = new APIClient({urls: MOCK_BACKEND});
       const account = new Account(apiClient);
 
-      await account.initServices(new MemoryEngine());
+      await account.init(ClientType.TEMPORARY);
 
       try {
         await account.login({

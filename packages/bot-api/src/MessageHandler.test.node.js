@@ -17,7 +17,7 @@
  *
  */
 
-const {MemoryEngine} = require('@wireapp/store-engine');
+const {ClientType} = require('@wireapp/api-client/dist/client');
 const {MessageHandler} = require('@wireapp/bot-api');
 const {Account} = require('@wireapp/core');
 const {CONVERSATION_TYPING} = require('@wireapp/api-client/dist/conversation/data/');
@@ -38,7 +38,7 @@ describe('MessageHandler', () => {
   beforeEach(async () => {
     mainHandler = new MainHandler();
     mainHandler.account = new Account();
-    await mainHandler.account.initServices(new MemoryEngine());
+    await mainHandler.account.init(ClientType.TEMPORARY);
     mainHandler.account.apiClient.createContext('', '');
 
     spyOn(mainHandler.account.service.conversation, 'send').and.returnValue(Promise.resolve());

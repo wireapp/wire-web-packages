@@ -174,7 +174,7 @@ export class Account extends EventEmitter {
     return context;
   }
 
-  public async initServices(storeEngine: CRUDEngine): Promise<void> {
+  private async initServices(storeEngine: CRUDEngine): Promise<void> {
     const assetService = new AssetService(this.apiClient);
     const cryptographyService = new CryptographyService(this.apiClient, storeEngine);
 

@@ -18,7 +18,6 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {MemoryEngine} from '@wireapp/store-engine';
 import UUID from 'pure-uuid';
 import {Account} from '../Account';
 
@@ -28,7 +27,7 @@ describe('AssetService', () => {
   beforeAll(async () => {
     const client = new APIClient({urls: APIClient.BACKEND.STAGING});
     account = new Account(client);
-    await account.initServices(new MemoryEngine());
+    await account.init(client.type);
   });
 
   describe('"uploadImageAsset"', () => {

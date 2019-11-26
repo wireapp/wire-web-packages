@@ -20,7 +20,6 @@ import {APIClient} from '@wireapp/api-client';
 import {ClientType} from '@wireapp/api-client/dist/client';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/user';
 import {GenericMessage, LegalHoldStatus, Text} from '@wireapp/protocol-messaging';
-import {MemoryEngine} from '@wireapp/store-engine';
 import {Account} from '../Account';
 import * as PayloadHelper from '../test/PayloadHelper';
 import {MentionContent, QuoteContent} from './content';
@@ -56,7 +55,7 @@ describe('ConversationService', () => {
   beforeAll(async () => {
     const client = new APIClient({urls: APIClient.BACKEND.STAGING});
     account = new Account(client);
-    await account.initServices(new MemoryEngine());
+    await account.init(client.type);
   });
 
   describe("'shouldSendAsExternal'", () => {
