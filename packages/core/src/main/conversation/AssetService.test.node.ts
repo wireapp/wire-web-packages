@@ -18,6 +18,7 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
+import {Context} from '@wireapp/api-client/dist/auth';
 import {ClientType} from '@wireapp/api-client/dist/client';
 import {CRUDEngine, MemoryEngine} from '@wireapp/store-engine';
 import UUID from 'pure-uuid';
@@ -27,9 +28,14 @@ describe('AssetService', () => {
   let account: Account;
 
   beforeAll(async () => {
+    const clientType = ClientType.TEMPORARY;
     const client = new APIClient({urls: APIClient.BACKEND.STAGING});
     account = new Account(client, (storeName: string): Promise<CRUDEngine> => Promise.resolve(new MemoryEngine()));
-    await account.init(ClientType.TEMPORARY);
+    spyOn(client, 'init').and.callFake(() => {
+      return Promise.resolve(new Context(new Date().toISOString(), clientType));
+    });
+
+    await account.init(clientType);
   });
 
   describe('"uploadImageAsset"', () => {

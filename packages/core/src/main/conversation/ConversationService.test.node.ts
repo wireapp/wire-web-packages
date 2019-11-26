@@ -17,6 +17,7 @@
  *
  */
 import {APIClient} from '@wireapp/api-client';
+import {Context} from '@wireapp/api-client/dist/auth';
 import {ClientType} from '@wireapp/api-client/dist/client';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/user';
 import {GenericMessage, LegalHoldStatus, Text} from '@wireapp/protocol-messaging';
@@ -54,9 +55,13 @@ describe('ConversationService', () => {
   let account: Account;
 
   beforeAll(async () => {
+    const clientType = ClientType.TEMPORARY;
     const client = new APIClient({urls: APIClient.BACKEND.STAGING});
     account = new Account(client, (storeName: string): Promise<CRUDEngine> => Promise.resolve(new MemoryEngine()));
-    await account.init(ClientType.TEMPORARY);
+    spyOn(client, 'init').and.callFake(() => {
+      return Promise.resolve(new Context(new Date().toISOString(), clientType));
+    });
+    await account.init(clientType);
   });
 
   describe("'shouldSendAsExternal'", () => {

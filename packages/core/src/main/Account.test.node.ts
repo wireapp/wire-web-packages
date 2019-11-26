@@ -39,12 +39,23 @@ const MOCK_BACKEND = {
 };
 
 async function createAccount(storageName = `test-${Date.now()}`): Promise<Account> {
+  const clientType = ClientType.TEMPORARY;
   const apiClient = new APIClient({urls: MOCK_BACKEND});
   const account = new Account(
     apiClient,
-    (storeName: string): Promise<CRUDEngine> => Promise.resolve(new MemoryEngine()),
+    (storeName: string): Promise<CRUDEngine> => {
+      const engine = new MemoryEngine();
+      engine.storeName = storeName;
+      return Promise.resolve(engine);
+    },
   );
-  await account.init(ClientType.TEMPORARY);
+  spyOn(apiClient, 'init').and.callFake(() => {
+    return Promise.resolve(new Context(storageName, clientType));
+  });
+  spyOn(apiClient, 'login').and.callFake(() => {
+    return Promise.resolve(new Context(storageName, clientType));
+  });
+  await account.init(clientType);
   return account;
 }
 
@@ -116,9 +127,8 @@ describe('Account', () => {
   });
 
   describe('"createText"', () => {
-    it('creates a text payload', async () => {
+    fit('creates a text payload', async () => {
       const account = await createAccount();
-
       await account.login({
         clientType: ClientType.TEMPORARY,
         email: 'hello@example.com',
@@ -136,12 +146,17 @@ describe('Account', () => {
 
   describe('"init"', () => {
     it('initializes the Protocol buffers', async () => {
+      const clientType = ClientType.TEMPORARY;
+      const apiClient = new APIClient();
       const account = new Account(
-        undefined,
+        apiClient,
         (storeName: string): Promise<CRUDEngine> => Promise.resolve(new MemoryEngine()),
       );
+      spyOn(apiClient, 'init').and.callFake(() => {
+        return Promise.resolve(new Context(new Date().toISOString(), clientType));
+      });
 
-      await account.init(ClientType.TEMPORARY);
+      await account.init(clientType);
 
       expect(account.service!.conversation).toBeDefined();
       expect(account.service!.cryptography).toBeDefined();
@@ -162,7 +177,9 @@ describe('Account', () => {
         apiClient,
         (storeName: string): Promise<CRUDEngine> => Promise.resolve(new MemoryEngine()),
       );
-
+      spyOn(apiClient, 'init').and.callFake(() => {
+        return Promise.resolve(new Context(new Date().toISOString(), ClientType.TEMPORARY));
+      });
       await account.init(ClientType.TEMPORARY);
       const {clientId, clientType, userId} = (await account.login({
         clientType: ClientType.TEMPORARY,
@@ -176,13 +193,16 @@ describe('Account', () => {
     });
 
     it('does not log in with incorrect credentials', async () => {
+      const clientType = ClientType.TEMPORARY;
       const apiClient = new APIClient({urls: MOCK_BACKEND});
       const account = new Account(
         apiClient,
         (storeName: string): Promise<CRUDEngine> => Promise.resolve(new MemoryEngine()),
       );
-
-      await account.init(ClientType.TEMPORARY);
+      spyOn(apiClient, 'init').and.callFake(() => {
+        return Promise.resolve(new Context(new Date().toISOString(), clientType));
+      });
+      await account.init(clientType);
 
       try {
         await account.login({
