@@ -55,7 +55,7 @@ describe('ConversationService', () => {
   beforeAll(async () => {
     const client = new APIClient({urls: APIClient.BACKEND.STAGING});
     account = new Account(client);
-    await account.init(client.type);
+    await account.init(ClientType.TEMPORARY);
   });
 
   describe("'shouldSendAsExternal'", () => {
