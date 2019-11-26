@@ -17,7 +17,9 @@
  *
  */
 
-import {APIClient, ClientType} from '@wireapp/api-client';
+import {APIClient} from '@wireapp/api-client';
+import {ClientType} from '@wireapp/api-client/dist/client';
+import {CRUDEngine, MemoryEngine} from '@wireapp/store-engine';
 import UUID from 'pure-uuid';
 import {Account} from '../Account';
 
@@ -26,7 +28,7 @@ describe('AssetService', () => {
 
   beforeAll(async () => {
     const client = new APIClient({urls: APIClient.BACKEND.STAGING});
-    account = new Account(client);
+    account = new Account(client, (storeName: string): Promise<CRUDEngine> => Promise.resolve(new MemoryEngine()));
     await account.init(ClientType.TEMPORARY);
   });
 

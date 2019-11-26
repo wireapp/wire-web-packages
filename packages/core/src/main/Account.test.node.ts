@@ -25,10 +25,11 @@ import {BackendErrorLabel, StatusCode} from '@wireapp/api-client/dist/http';
 import {Notification, NotificationAPI} from '@wireapp/api-client/dist/notification';
 import {ValidationUtil} from '@wireapp/commons';
 import {GenericMessage, Text} from '@wireapp/protocol-messaging';
-
-import nock = require('nock');
+import {CRUDEngine, MemoryEngine} from '@wireapp/store-engine';
 import {Account} from './Account';
 import {PayloadBundleSource, PayloadBundleType} from './conversation';
+
+import nock = require('nock');
 
 const BASE_URL = 'mock-backend.wire.com';
 const MOCK_BACKEND = {
@@ -39,7 +40,10 @@ const MOCK_BACKEND = {
 
 async function createAccount(storageName = `test-${Date.now()}`): Promise<Account> {
   const apiClient = new APIClient({urls: MOCK_BACKEND});
-  const account = new Account(apiClient);
+  const account = new Account(
+    apiClient,
+    (storeName: string): Promise<CRUDEngine> => Promise.resolve(new MemoryEngine()),
+  );
   await account.init(ClientType.TEMPORARY);
   return account;
 }
@@ -132,7 +136,10 @@ describe('Account', () => {
 
   describe('"init"', () => {
     it('initializes the Protocol buffers', async () => {
-      const account = new Account();
+      const account = new Account(
+        undefined,
+        (storeName: string): Promise<CRUDEngine> => Promise.resolve(new MemoryEngine()),
+      );
 
       await account.init(ClientType.TEMPORARY);
 
@@ -151,7 +158,10 @@ describe('Account', () => {
   describe('"login"', () => {
     it('logs in with correct credentials', async () => {
       const apiClient = new APIClient({urls: MOCK_BACKEND});
-      const account = new Account(apiClient);
+      const account = new Account(
+        apiClient,
+        (storeName: string): Promise<CRUDEngine> => Promise.resolve(new MemoryEngine()),
+      );
 
       await account.init(ClientType.TEMPORARY);
       const {clientId, clientType, userId} = (await account.login({
@@ -167,7 +177,10 @@ describe('Account', () => {
 
     it('does not log in with incorrect credentials', async () => {
       const apiClient = new APIClient({urls: MOCK_BACKEND});
-      const account = new Account(apiClient);
+      const account = new Account(
+        apiClient,
+        (storeName: string): Promise<CRUDEngine> => Promise.resolve(new MemoryEngine()),
+      );
 
       await account.init(ClientType.TEMPORARY);
 

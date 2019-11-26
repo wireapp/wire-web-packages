@@ -21,6 +21,7 @@ const {ClientType} = require('@wireapp/api-client/dist/client');
 const {MessageHandler} = require('@wireapp/bot-api');
 const {Account} = require('@wireapp/core');
 const {CONVERSATION_TYPING} = require('@wireapp/api-client/dist/conversation/data/');
+const {MemoryEngine, CRUDEngine} = require('@wireapp/store-engine');
 
 const UUID = require('pure-uuid');
 const UUID_VERSION = 4;
@@ -37,7 +38,9 @@ describe('MessageHandler', () => {
 
   beforeEach(async () => {
     mainHandler = new MainHandler();
-    mainHandler.account = new Account();
+    mainHandler.account = new Account(undefined, (storeName: string): Promise<CRUDEngine> =>
+      Promise.resolve(new MemoryEngine()),
+    );
     await mainHandler.account.init(ClientType.TEMPORARY);
     mainHandler.account.apiClient.createContext('', '');
 

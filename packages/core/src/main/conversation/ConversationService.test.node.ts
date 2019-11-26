@@ -20,6 +20,7 @@ import {APIClient} from '@wireapp/api-client';
 import {ClientType} from '@wireapp/api-client/dist/client';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/user';
 import {GenericMessage, LegalHoldStatus, Text} from '@wireapp/protocol-messaging';
+import {CRUDEngine, MemoryEngine} from '@wireapp/store-engine';
 import {Account} from '../Account';
 import * as PayloadHelper from '../test/PayloadHelper';
 import {MentionContent, QuoteContent} from './content';
@@ -54,7 +55,7 @@ describe('ConversationService', () => {
 
   beforeAll(async () => {
     const client = new APIClient({urls: APIClient.BACKEND.STAGING});
-    account = new Account(client);
+    account = new Account(client, (storeName: string): Promise<CRUDEngine> => Promise.resolve(new MemoryEngine()));
     await account.init(ClientType.TEMPORARY);
   });
 
