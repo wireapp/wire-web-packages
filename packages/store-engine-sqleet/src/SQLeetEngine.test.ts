@@ -187,9 +187,8 @@ describe('SQLeetEngine', () => {
       await engine.create(tableName, primaryKey, entity);
 
       const record = await engine.read<typeof entity>(tableName, primaryKey);
-
-      const actualText = String.fromCharCode.apply(null, [...record.data.content]);
-
+      const convertedText = Uint8Array.from(Object.values(record.data.content));
+      const actualText = String.fromCharCode.apply(null, [...convertedText]);
       expect(actualText).toBe(testMessage);
     });
 
