@@ -12,7 +12,7 @@
     "url-search-params-polyfill": "7.0.0"
   },
   "devDependencies": {
-    "@types/jasmine": "3.4.6",
+    "@types/jasmine": "3.5.0",
     "@types/karma": "3.0.4",
     "jasmine": "3.5.0",
     "karma": "4.4.1",
@@ -21,7 +21,7 @@
     "karma-jasmine-diff-reporter": "2.0.0",
     "karma-typescript": "4.1.1",
     "rimraf": "3.0.0",
-    "typescript": "3.6.4"
+    "typescript": "3.7.2"
   },
   "description": "Collection of common components that are used across Wire web applications.",
   "files": [
@@ -45,5 +45,5 @@
     "test:project": "yarn dist && yarn test",
     "test:node": "jasmine --config=jasmine.json"
   },
-  "version": "3.0.0"
+  "version": "3.0.1"
 }

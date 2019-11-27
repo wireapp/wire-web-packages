@@ -3,6 +3,53 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.1.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.1.2...@wireapp/api-client@9.1.3) (2019-11-26)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [9.1.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.1.1...@wireapp/api-client@9.1.2) (2019-11-25)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [9.1.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.1.0...@wireapp/api-client@9.1.1) (2019-11-25)
+
+
+### Bug Fixes
+
+* **api-client:** Remove Dexie from webpack ([#2588](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2588)) ([5e351ac](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/5e351ac7775d51fc9e4b8be220a8fdac6137e46e))
+
+
+
+
+
+# [9.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.0.5...@wireapp/api-client@9.1.0) (2019-11-25)
+
+
+### Features
+
+* **api-client:** Remove createUrl function ([#2586](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2586)) ([f65d34e](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/f65d34e9aaed5283b3429989541ce4e64aa3ddf4))
+* **api-client:** Synchronize only selected requests ([#2587](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2587)) ([d17ea09](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/d17ea095cb20a1c12267976a2fc22967ec99796e))
+
+
+
+
+
+## [9.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.0.4...@wireapp/api-client@9.0.5) (2019-11-22)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
 ## [9.0.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.0.3...@wireapp/api-client@9.0.4) (2019-11-22)
 
 

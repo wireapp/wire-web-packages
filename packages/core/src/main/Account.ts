@@ -18,6 +18,7 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
+import {RegisterData} from '@wireapp/api-client/dist/auth';
 import {
   AUTH_COOKIE_KEY,
   AUTH_TABLE_NAME,
@@ -25,11 +26,11 @@ import {
   Cookie,
   CookieStore,
   LoginData,
-} from '@wireapp/api-client/dist/commonjs/auth/';
-import {ClientType, RegisteredClient} from '@wireapp/api-client/dist/commonjs/client/';
-import * as Events from '@wireapp/api-client/dist/commonjs/event';
-import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/';
-import {WebSocketClient} from '@wireapp/api-client/dist/commonjs/tcp/';
+} from '@wireapp/api-client/dist/auth/';
+import {ClientType, RegisteredClient} from '@wireapp/api-client/dist/client/';
+import * as Events from '@wireapp/api-client/dist/event';
+import {StatusCode} from '@wireapp/api-client/dist/http/';
+import {WebSocketClient} from '@wireapp/api-client/dist/tcp/';
 import * as cryptobox from '@wireapp/cryptobox';
 import {CRUDEngine, MemoryEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import EventEmitter from 'events';
@@ -96,7 +97,7 @@ export type StoreEngineProvider = (storeName: string) => Promise<CRUDEngine>;
 
 export class Account extends EventEmitter {
   private readonly logger: logdown.Logger;
-  private readonly storeEngine?: CRUDEngine;
+  private storeEngine?: CRUDEngine;
   private readonly storeEngineProvider: StoreEngineProvider;
   private readonly apiClient: APIClient;
   public service?: {
@@ -159,7 +160,21 @@ export class Account extends EventEmitter {
     return this.apiClient.validatedUserId;
   }
 
-  public async init(storeEngine: CRUDEngine): Promise<void> {
+  public async register(registration: RegisterData, clientType: ClientType): Promise<Context> {
+    const context = await this.apiClient.register(registration, clientType);
+    const storeEngine = await this.initEngine(context);
+    await this.initServices(storeEngine);
+    return context;
+  }
+
+  public async init(clientType: ClientType): Promise<Context> {
+    const context = await this.apiClient.init(clientType);
+    const storeEngine = await this.initEngine(context);
+    await this.initServices(storeEngine);
+    return context;
+  }
+
+  public async initServices(storeEngine: CRUDEngine): Promise<void> {
     const assetService = new AssetService(this.apiClient);
     const cryptographyService = new CryptographyService(this.apiClient, storeEngine);
 
@@ -195,7 +210,7 @@ export class Account extends EventEmitter {
 
     const context = await this.apiClient.login(loginData);
     const storeEngine = await this.initEngine(context);
-    await this.init(storeEngine);
+    await this.initServices(storeEngine);
 
     if (initClient) {
       await this.initClient(loginData, clientInfo);
@@ -341,11 +356,11 @@ export class Account extends EventEmitter {
     const clientType = context.clientType === ClientType.NONE ? '' : `@${context.clientType}`;
     const dbName = `wire@${this.apiClient.config.urls.name}@${context.userId}${clientType}`;
     this.logger.log(`Initialising store with name "${dbName}"...`);
-    const storeEngine = await this.storeEngineProvider(dbName);
+    this.storeEngine = await this.storeEngineProvider(dbName);
     const cookie = CookieStore.getCookie();
     if (cookie) {
-      await this.persistCookie(storeEngine, cookie);
+      await this.persistCookie(this.storeEngine, cookie);
     }
-    return storeEngine;
+    return this.storeEngine;
   }
 }

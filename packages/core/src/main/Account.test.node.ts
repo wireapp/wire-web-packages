@@ -18,11 +18,11 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {AuthAPI, Context} from '@wireapp/api-client/dist/commonjs/auth';
-import {ClientAPI, ClientType} from '@wireapp/api-client/dist/commonjs/client';
-import {ConversationAPI} from '@wireapp/api-client/dist/commonjs/conversation';
-import {BackendErrorLabel, StatusCode} from '@wireapp/api-client/dist/commonjs/http';
-import {Notification, NotificationAPI} from '@wireapp/api-client/dist/commonjs/notification';
+import {AuthAPI, Context} from '@wireapp/api-client/dist/auth';
+import {ClientAPI, ClientType} from '@wireapp/api-client/dist/client';
+import {ConversationAPI} from '@wireapp/api-client/dist/conversation';
+import {BackendErrorLabel, StatusCode} from '@wireapp/api-client/dist/http';
+import {Notification, NotificationAPI} from '@wireapp/api-client/dist/notification';
 import {ValidationUtil} from '@wireapp/commons';
 import {GenericMessage, Text} from '@wireapp/protocol-messaging';
 
@@ -41,7 +41,7 @@ const MOCK_BACKEND = {
 async function createAccount(storageName = `test-${Date.now()}`): Promise<Account> {
   const apiClient = new APIClient({urls: MOCK_BACKEND});
   const account = new Account(apiClient);
-  await account.init(new MemoryEngine());
+  await account.initServices(new MemoryEngine());
   return account;
 }
 
@@ -135,7 +135,7 @@ describe('Account', () => {
     it('initializes the Protocol buffers', async () => {
       const account = new Account();
 
-      await account.init(new MemoryEngine());
+      await account.initServices(new MemoryEngine());
 
       expect(account.service!.conversation).toBeDefined();
       expect(account.service!.cryptography).toBeDefined();
@@ -154,7 +154,7 @@ describe('Account', () => {
       const apiClient = new APIClient({urls: MOCK_BACKEND});
       const account = new Account(apiClient);
 
-      await account.init(new MemoryEngine());
+      await account.initServices(new MemoryEngine());
       const {clientId, clientType, userId} = (await account.login({
         clientType: ClientType.TEMPORARY,
         email: 'hello@example.com',
@@ -170,7 +170,7 @@ describe('Account', () => {
       const apiClient = new APIClient({urls: MOCK_BACKEND});
       const account = new Account(apiClient);
 
-      await account.init(new MemoryEngine());
+      await account.initServices(new MemoryEngine());
 
       try {
         await account.login({
