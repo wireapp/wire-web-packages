@@ -2570,13 +2570,6 @@
   dependencies:
     protobufjs "6.8.8"
 
-"@wireapp/store-engine-dexie@0.7.0":
-  version "0.7.0"
-  resolved "https://registry.npmjs.org/@wireapp/store-engine-dexie/-/store-engine-dexie-0.7.0.tgz#5b86f8fbbdfb4f9105d3537d93e4dbec5c446aa4"
-  integrity sha512-hBXwIDZFH3Dw+jLCt4g0vV/xxIWs2Mq+3I83pFztfbYJM8/BSM4+Rz5hgHMA0GanSYFbLwdTByltnd8PlOGzQQ==
-  dependencies:
-    dexie "2.0.4"
-
 "@wireapp/websql@0.0.10":
   version "0.0.10"
   resolved "https://registry.npmjs.org/@wireapp/websql/-/websql-0.0.10.tgz#bbdeebc7d7376f0a518d8cada94d95ae6d8bbff0"
