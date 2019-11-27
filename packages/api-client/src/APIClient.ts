@@ -280,11 +280,11 @@ export class APIClient extends EventEmitter {
   }
 
   public get clientId(): string | undefined {
-    return this.context?.clientId ?? undefined;
+    return this.context?.clientId || undefined;
   }
 
   public get userId(): string | undefined {
-    return this.context?.userId ?? undefined;
+    return this.context?.userId || undefined;
   }
 
   /** Should be used in cases where the user ID is MANDATORY. */
