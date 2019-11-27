@@ -15,7 +15,7 @@
     "dist"
   ],
   "license": "GPL-3.0",
-  "main": "dist/commonjs/LRUCache.js",
+  "main": "dist/LRUCache.js",
   "name": "@wireapp/lru-cache",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache",
   "scripts": {
@@ -26,6 +26,5 @@
     "dist": "yarn clean && yarn build",
     "test": "nyc jasmine --config=jasmine.json"
   },
-  "types": "dist/commonjs/LRUCache.d.ts",
   "version": "3.3.28"
 }
