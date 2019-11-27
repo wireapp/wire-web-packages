@@ -26,7 +26,7 @@ import {readAllSpec} from '@wireapp/store-engine/dist/commonjs/test/readAllSpec'
 import {readSpec} from '@wireapp/store-engine/dist/commonjs/test/readSpec';
 import {updateOrCreateSpec} from '@wireapp/store-engine/dist/commonjs/test/updateOrCreateSpec';
 import {updateSpec} from '@wireapp/store-engine/dist/commonjs/test/updateSpec';
-import {SQLeetEngine, SQLiteType} from './index';
+import {SQLeetEngine, SQLiteProvidedSchema, SQLiteType} from './index';
 
 interface DBRecord {
   age?: number;
@@ -39,14 +39,15 @@ describe('SQLeetEngine', () => {
   let engine: SQLeetEngine | undefined = undefined;
 
   async function initEngine(
-    scheme: {},
+    scheme: SQLiteProvidedSchema<string>,
     shouldCreateNewEngine = true,
     pathToWebWorker = './base/websql-worker.js',
+    storeName = STORE_NAME,
   ): Promise<SQLeetEngine> {
     if (!engine || shouldCreateNewEngine) {
       engine = new SQLeetEngine(pathToWebWorker, scheme, GENERIC_ENCRYPTION_KEY);
     }
-    await engine.init(STORE_NAME);
+    await engine.init(storeName);
     return engine;
   }
 
@@ -158,6 +159,40 @@ describe('SQLeetEngine', () => {
   });
 
   describe('read', () => {
+    it('works with typed arrays such as Uint8Array', async () => {
+      const tableName = 'events';
+
+      const schema = {
+        [tableName]: {
+          category: SQLiteType.INTEGER,
+          conversation: SQLiteType.TEXT,
+          data: SQLiteType.JSON,
+        },
+      };
+
+      const primaryKey = 'test';
+
+      const testMessage = 'Test';
+
+      const entity = {
+        category: 16,
+        conversation: '123',
+        data: {
+          content: Uint8Array.from(Array.from(testMessage).map(char => char.charCodeAt(0))),
+        },
+      };
+
+      const engine = await initEngine(schema, true, './base/websql-worker.js', new Date().toISOString());
+
+      await engine.create(tableName, primaryKey, entity);
+
+      const record = await engine.read<typeof entity>(tableName, primaryKey);
+
+      const actualText = String.fromCharCode.apply(null, [...record.data.content]);
+
+      expect(actualText).toBe(testMessage);
+    });
+
     Object.entries(readSpec).map(([description, testFunction]) => {
       it(description, async () => {
         const engine = await initEngine({
