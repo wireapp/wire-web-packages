@@ -127,7 +127,7 @@ describe('Account', () => {
   });
 
   describe('"createText"', () => {
-    fit('creates a text payload', async () => {
+    it('creates a text payload', async () => {
       const account = await createAccount();
       await account.login({
         clientType: ClientType.TEMPORARY,

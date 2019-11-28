@@ -57,9 +57,15 @@ describe('ConversationService', () => {
   beforeAll(async () => {
     const clientType = ClientType.TEMPORARY;
     const client = new APIClient({urls: APIClient.BACKEND.STAGING});
-    account = new Account(client, (storeName: string): Promise<CRUDEngine> => Promise.resolve(new MemoryEngine()));
+    const storeEngineProvider = async (storeName: string): Promise<CRUDEngine> => {
+      const engine = new MemoryEngine();
+      await engine.init(storeName);
+      return engine;
+    };
+    account = new Account(client, storeEngineProvider);
     spyOn(client, 'init').and.callFake(() => {
-      return Promise.resolve(new Context(new Date().toISOString(), clientType));
+      const context = new Context(new Date().toISOString(), clientType);
+      return Promise.resolve(context);
     });
     await account.init(clientType);
   });
