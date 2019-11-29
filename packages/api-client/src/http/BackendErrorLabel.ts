@@ -78,9 +78,9 @@ export enum BackendErrorLabel {
 
 export enum SyntheticErrorLabel {
   ALREADY_INVITED = 'already-invited',
+  FORBIDDEN_PHONE_NUMBER = 'forbidden-phone-number',
   HANDLE_TOO_SHORT = 'handle-too-short',
   INVALID_PHONE_NUMBER = 'invalid-phone-number',
-  FORBIDDEN_PHONE_NUMBER = 'forbidden-phone-number',
   SERVICE_NOT_FOUND = 'service-not-found',
   SSO_GENERIC_ERROR = 'generic-sso-error',
   SSO_NO_SSO_CODE = 'no-sso-code-found',
