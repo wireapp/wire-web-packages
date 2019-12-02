@@ -26,7 +26,9 @@ import {readAllSpec} from '@wireapp/store-engine/dist/commonjs/test/readAllSpec'
 import {readSpec} from '@wireapp/store-engine/dist/commonjs/test/readSpec';
 import {updateOrCreateSpec} from '@wireapp/store-engine/dist/commonjs/test/updateOrCreateSpec';
 import {updateSpec} from '@wireapp/store-engine/dist/commonjs/test/updateSpec';
-import {SQLeetEngine, SQLiteType} from './index';
+import {Database} from '@wireapp/websql/dist/worker/src/Database';
+import Dexie from 'dexie';
+import {SQLeetEngine, SQLiteProvidedSchema, SQLiteType} from './index';
 
 interface DBRecord {
   age?: number;
@@ -39,9 +41,9 @@ describe('SQLeetEngine', () => {
   let engine: SQLeetEngine | undefined = undefined;
 
   async function initEngine(
-    scheme: {},
-    shouldCreateNewEngine = true,
-    pathToWebWorker = './base/websql-worker.js',
+    scheme: SQLiteProvidedSchema<string>,
+    shouldCreateNewEngine: boolean = true,
+    pathToWebWorker: string = './base/websql-worker.js',
   ): Promise<SQLeetEngine> {
     if (!engine || shouldCreateNewEngine) {
       engine = new SQLeetEngine(pathToWebWorker, scheme, GENERIC_ENCRYPTION_KEY);
@@ -291,6 +293,24 @@ describe('SQLeetEngine', () => {
       } catch (error) {
         expect(error.message).toBe('Database closed');
       }
+    });
+  });
+
+  describe('init', () => {
+    it('dumps the encrypted database in an IndexedDB after initialization', async () => {
+      const wrappingDatabase = Database.mountName;
+      let doesExist = await Dexie.exists(wrappingDatabase);
+      expect(doesExist).toBe(false);
+
+      await initEngine({
+        people: {
+          firstName: SQLiteType.TEXT,
+          lastName: SQLiteType.TEXT,
+        },
+      });
+
+      doesExist = await Dexie.exists(wrappingDatabase);
+      expect(doesExist).toBe(true);
     });
   });
 });
