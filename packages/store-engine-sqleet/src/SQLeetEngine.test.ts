@@ -26,9 +26,10 @@ import {readAllSpec} from '@wireapp/store-engine/dist/commonjs/test/readAllSpec'
 import {readSpec} from '@wireapp/store-engine/dist/commonjs/test/readSpec';
 import {updateOrCreateSpec} from '@wireapp/store-engine/dist/commonjs/test/updateOrCreateSpec';
 import {updateSpec} from '@wireapp/store-engine/dist/commonjs/test/updateSpec';
-import {Database} from '@wireapp/websql/dist/worker/src/Database';
+import {Database} from '@wireapp/websql';
 import Dexie from 'dexie';
-import {SQLeetEngine, SQLiteProvidedSchema, SQLiteType} from './index';
+
+import {SQLeetEngine, SQLiteProvidedSchema, SQLiteType} from './';
 
 interface DBRecord {
   age?: number;
@@ -298,6 +299,7 @@ describe('SQLeetEngine', () => {
 
   describe('init', () => {
     it('dumps the encrypted database in an IndexedDB after initialization', async () => {
+      console.log('Database.mountName', Database.mountName);
       const wrappingDatabase = Database.mountName;
       let doesExist = await Dexie.exists(wrappingDatabase);
       expect(doesExist).toBe(false);
