@@ -80,11 +80,9 @@ export class SQLeetEngine implements CRUDEngine {
     await this.db.mount({key: this.encryptionKey}, this.storeName, this.nodeDatabaseDir);
 
     // Create tables
-    let statement = '';
-    for (const tableName in this.schema) {
-      const table = this.schema[tableName];
-      statement += createTableIfNotExists(tableName, table);
-    }
+    const statement = Object.entries(this.schema)
+      .map(([tableName, table]) => createTableIfNotExists(tableName, table))
+      .join('');
     await this.db.run(statement);
 
     return this.db;
