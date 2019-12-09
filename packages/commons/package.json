@@ -21,7 +21,7 @@
     "karma-jasmine-diff-reporter": "2.0.0",
     "karma-typescript": "4.1.1",
     "rimraf": "3.0.0",
-    "typescript": "3.7.2"
+    "typescript": "3.7.3"
   },
   "description": "Collection of common components that are used across Wire web applications.",
   "files": [
@@ -45,5 +45,5 @@
     "test:project": "yarn dist && yarn test",
     "test:node": "jasmine --config=jasmine.json"
   },
-  "version": "3.0.2"
+  "version": "3.0.3"
 }

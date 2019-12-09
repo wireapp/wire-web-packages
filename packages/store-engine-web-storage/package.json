@@ -3,7 +3,7 @@
     "@types/jasmine": "3.5.0",
     "@types/karma": "3.0.4",
     "@types/node": "~12",
-    "@wireapp/store-engine": "4.1.6",
+    "@wireapp/store-engine": "4.1.7",
     "jasmine": "3.5.0",
     "karma": "4.4.1",
     "karma-chrome-launcher": "3.1.0",
@@ -11,7 +11,7 @@
     "karma-typescript": "4.1.1",
     "rimraf": "3.0.0",
     "ts-node": "8.5.4",
-    "typescript": "3.7.2"
+    "typescript": "3.7.3"
   },
   "description": "Store Engine wrapper for the browser's Web Storage API.",
   "files": [
@@ -32,5 +32,5 @@
     "test": "karma start",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "1.0.5"
+  "version": "1.0.6"
 }

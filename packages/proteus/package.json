@@ -16,7 +16,7 @@
     "jasmine": "3.5.0",
     "nyc": "14.1.1",
     "rimraf": "3.0.0",
-    "typescript": "3.7.2",
+    "typescript": "3.7.3",
     "webpack": "4.41.2",
     "webpack-cli": "3.3.10"
   },
@@ -37,5 +37,5 @@
     "test:project": "yarn dist && yarn test",
     "test:node": "nyc jasmine --config=jasmine.json"
   },
-  "version": "9.4.25"
+  "version": "9.4.26"
 }
