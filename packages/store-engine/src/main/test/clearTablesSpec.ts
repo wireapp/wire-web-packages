@@ -23,14 +23,10 @@ const TABLE_NAME_ONE = 'the-simpsons';
 const TABLE_NAME_TWO = 'spongebob';
 
 export const clearTablesSpec = {
-  'deletes all tables': async (
-    engine: CRUDEngine,
-    initEngine: (shouldCreateNewEngine?: boolean) => Promise<CRUDEngine>,
-  ) => {
-    engine = await initEngine(false);
-
+  'clears all tables': async (engine: CRUDEngine) => {
     await engine.create(TABLE_NAME_ONE, 'one', {name: 'Alpha'});
     await engine.create(TABLE_NAME_TWO, 'two', {name: 'Beta'});
+
     let keys = await engine.readAll(TABLE_NAME_ONE);
     expect(keys.length).toBe(1);
 
