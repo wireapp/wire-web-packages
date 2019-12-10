@@ -19,20 +19,22 @@
 
 import {CRUDEngine} from '../engine';
 
-const TABLE_NAME_ONE = 'the-simpsons';
-const TABLE_NAME_TWO = 'spongebob';
+const TABLE_NAME = 'the-simpsons';
 
 export const clearTablesSpec = {
   'clears all tables': async (engine: CRUDEngine) => {
-    await engine.create(TABLE_NAME_ONE, 'one', {name: 'Alpha'});
-    await engine.create(TABLE_NAME_TWO, 'two', {name: 'Beta'});
+    await engine.create(TABLE_NAME, 'one', {name: 'Alpha'});
 
-    let keys = await engine.readAll(TABLE_NAME_ONE);
+    let keys = await engine.readAll(TABLE_NAME);
     expect(keys.length).toBe(1);
 
     await engine.clearTables();
 
-    keys = await engine.readAll(TABLE_NAME_ONE);
+    keys = await engine.readAll(TABLE_NAME);
     expect(keys.length).toBe(0);
+
+    await engine.create(TABLE_NAME, 'two', {name: 'Beta'});
+    const {name} = await engine.read(TABLE_NAME, 'two');
+    expect(name).toBe('Beta');
   },
 };
