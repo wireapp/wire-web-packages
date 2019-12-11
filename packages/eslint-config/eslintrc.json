@@ -5,6 +5,17 @@
     "node": true
   },
   "extends": ["prettier", "plugin:react/recommended", "plugin:no-unsanitized/DOM"],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+        "@typescript-eslint/array-type": "error",
+        "@typescript-eslint/member-ordering": "error",
+        "@typescript-eslint/prefer-readonly": "error",
+        "@typescript-eslint/typedef": "error"
+      }
+    }
+  ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
@@ -14,16 +25,6 @@
     "sourceType": "module"
   },
   "plugins": ["@typescript-eslint", "import", "jsdoc", "no-unsanitized", "prettier", "react", "simple-import-sort", "sort-keys-fix"],
-  "overrides": [
-    {
-      "files": ["*.ts", "*.tsx"],
-      "rules": {
-        "@typescript-eslint/array-type": "error",
-        "@typescript-eslint/member-ordering": "error",
-        "@typescript-eslint/typedef": "error"
-      }
-    }
-  ],
   "rules": {
     "curly": "error",
     "dot-notation": "error",
@@ -38,6 +39,7 @@
     ],
     "no-const-assign": "error",
     "no-dupe-class-members": "error",
+    "no-duplicate-case": "error",
     "no-else-return": "error",
     "no-inner-declarations": "error",
     "no-lonely-if": "error",
@@ -47,6 +49,7 @@
         "ignore": [-1, 0, 1, 2]
       }
     ],
+    "no-return-await": "error",
     "no-sequences": "error",
     "no-trailing-spaces": "error",
     "no-undef": "error",
@@ -63,6 +66,7 @@
     "one-var": ["error", "never"],
     "prefer-arrow-callback": "error",
     "prefer-const": "error",
+    "prefer-object-spread": "error",
     "prefer-promise-reject-errors": "error",
     "prefer-spread": "error",
     "prefer-template": "error",
