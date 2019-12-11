@@ -5,7 +5,7 @@
     "node": true
   },
   "extends": ["prettier", "plugin:react/recommended", "plugin:no-unsanitized/DOM"],
-  "parser": "babel-eslint",
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -13,7 +13,17 @@
     "ecmaVersion": 6,
     "sourceType": "module"
   },
-  "plugins": ["import", "jsdoc", "no-unsanitized", "prettier", "react", "simple-import-sort", "sort-keys-fix"],
+  "plugins": ["@typescript-eslint", "import", "jsdoc", "no-unsanitized", "prettier", "react", "simple-import-sort", "sort-keys-fix"],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+        "@typescript-eslint/array-type": "error",
+        "@typescript-eslint/member-ordering": "error",
+        "@typescript-eslint/typedef": "error"
+      }
+    }
+  ],
   "rules": {
     "curly": "error",
     "dot-notation": "error",
@@ -37,7 +47,7 @@
         "ignore": [-1, 0, 1, 2]
       }
     ],
-    "no-shadow": "error",
+    "no-sequences": "error",
     "no-trailing-spaces": "error",
     "no-undef": "error",
     "no-unneeded-ternary": "error",
