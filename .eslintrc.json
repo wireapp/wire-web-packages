@@ -2,6 +2,9 @@
   "env": {
     "jasmine": true
   },
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
   "extends": "./packages/eslint-config/eslintrc.json",
   "plugins": ["jasmine"]
 }
