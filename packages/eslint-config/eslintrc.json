@@ -12,7 +12,8 @@
         "@typescript-eslint/array-type": "error",
         "@typescript-eslint/member-ordering": "error",
         "@typescript-eslint/prefer-readonly": "error",
-        "@typescript-eslint/typedef": "error"
+        "@typescript-eslint/typedef": "error",
+        "@typescript-eslint/consistent-type-assertions": "error"
       }
     }
   ],
