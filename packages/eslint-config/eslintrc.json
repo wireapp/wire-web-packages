@@ -29,7 +29,6 @@
   "plugins": ["@typescript-eslint", "import", "jsdoc", "no-unsanitized", "prettier", "react", "simple-import-sort", "sort-keys-fix"],
   "rules": {
     "curly": "error",
-    "dot-notation": "error",
     "id-length": "error",
     "import/no-default-export": "error",
     "jsdoc/require-hyphen-before-param-description": "error",
