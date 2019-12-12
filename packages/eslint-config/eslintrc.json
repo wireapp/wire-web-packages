@@ -11,6 +11,7 @@
       "rules": {
         "@typescript-eslint/array-type": "error",
         "@typescript-eslint/consistent-type-assertions": "error",
+        "@typescript-eslint/no-floating-promises": "error",
         "@typescript-eslint/no-this-alias": "error",
         "@typescript-eslint/prefer-readonly": "error",
         "@typescript-eslint/typedef": "error"
