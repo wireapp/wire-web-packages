@@ -117,6 +117,7 @@ export class APIClient extends EventEmitter {
 
   constructor(config?: Config) {
     super();
+    console.log('change');
     this.config = {...defaultConfig, ...config};
     this.accessTokenStore = new AccessTokenStore();
     this.accessTokenStore.on(AccessTokenStore.TOPIC.ACCESS_TOKEN_REFRESH, (accessToken: AccessTokenData) =>
