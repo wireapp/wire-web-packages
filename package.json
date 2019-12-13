@@ -56,7 +56,7 @@
     "prettier": "prettier \"**/*.{json,md,scss,yml}\"",
     "release": "lerna publish && lerna publish from-package",
     "test": "yarn && yarn lint:js && yarn lint:ts && yarn lint:other && node bin/testUpdated.js",
-    "test:all": "yarn && yarn dist && yarn lint && lerna run --parallel test"
+    "test:all": "yarn && yarn dist && yarn lint && lerna run --no-sort  --concurrency 8 test"
   },
   "workspaces": {
     "packages": [
