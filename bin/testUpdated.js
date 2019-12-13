@@ -35,6 +35,6 @@ const packageNames = changedPackages.map(project => project.name);
 console.info('Building all packages');
 execSync('yarn dist', {stdio: [0, 1]});
 
-console.info(`Running tests for package "${packageNames}"...`);
+console.info(`Running tests for packages "${packageNames}"...`);
 const scopes = packageNames.map(packageName => `--scope ${packageName}`).join(' ');
 execSync(`npx lerna run --no-sort --concurrency 8 --include-dependents ${scopes} test`, {stdio: [0, 1]});
