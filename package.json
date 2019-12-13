@@ -43,7 +43,7 @@
   "private": true,
   "scripts": {
     "boot": "lerna bootstrap --reject-cycles",
-    "clean": "lerna run clean",
+    "clean": "lerna run --parallel clean",
     "dist": "yarn clean && lerna run dist",
     "fix": "yarn fix:other && yarn fix:js && yarn fix:ts",
     "fix:js": "yarn lint:js --fix",
@@ -56,7 +56,7 @@
     "prettier": "prettier \"**/*.{json,md,scss,yml}\"",
     "release": "lerna publish && lerna publish from-package",
     "test": "yarn && yarn lint:js && yarn lint:ts && yarn lint:other && node bin/testUpdated.js",
-    "test:all": "yarn && yarn dist && yarn lint && lerna run test"
+    "test:all": "yarn && yarn dist && yarn lint && lerna run --no-sort  --concurrency 8 test"
   },
   "workspaces": {
     "packages": [
