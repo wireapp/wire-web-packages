@@ -36,9 +36,5 @@ console.info('Building all packages');
 execSync('yarn dist', {stdio: [0, 1]});
 
 console.info(`Running tests for package "${packageNames}"...`);
-execSync(
-  `npx lerna run --parallel --concurrency 8 --include-dependents ${packageNames
-    .map(packageName => `--scope ${packageName}`)
-    .join(' ')} test`,
-  {stdio: [0, 1]},
-);
+const scopes = packageNames.map(packageName => `--scope ${packageName}`).join(' ');
+execSync(`npx lerna run --parallel --concurrency 8 --include-dependents ${scopes} test`, {stdio: [0, 1]});
