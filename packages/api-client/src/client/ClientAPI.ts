@@ -20,7 +20,7 @@
 import {AxiosRequestConfig} from 'axios';
 
 import {PreKeyBundle} from '../auth/';
-import {ClientUpdateData, NewClient, RegisteredClient} from '../client/';
+import {NewClient, RegisteredClient, UpdatedClient} from '../client/';
 import {HttpClient} from '../http/';
 
 export class ClientAPI {
@@ -41,9 +41,9 @@ export class ClientAPI {
     return response.data;
   }
 
-  public async putClient(clientId: string, clientUpdateData: ClientUpdateData): Promise<void> {
+  public async putClient(clientId: string, updatedClient: UpdatedClient): Promise<void> {
     const config: AxiosRequestConfig = {
-      data: clientUpdateData,
+      data: updatedClient,
       method: 'put',
       url: `${ClientAPI.URL.CLIENTS}/${clientId}`,
     };

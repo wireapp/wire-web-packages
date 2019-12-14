@@ -35,4 +35,4 @@ export interface NewClient extends SharedClientModel {
   type: ClientType.PERMANENT | ClientType.TEMPORARY;
 }
 
-export type ClientUpdateData = Partial<SharedClientModel>;
+export type UpdatedClient = Partial<SharedClientModel>;
