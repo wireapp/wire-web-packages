@@ -32,8 +32,9 @@ export interface AccessTokenStore {
 
 export class AccessTokenStore extends EventEmitter {
   private readonly logger: logdown.Logger;
-  public accessToken: AccessTokenData | undefined;
+
   public static readonly TOPIC = TOPIC;
+  public accessToken?: AccessTokenData;
 
   constructor() {
     super();
