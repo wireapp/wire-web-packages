@@ -31,7 +31,7 @@ export interface UpdatedClient extends PublicClient {
   type: ClientType.PERMANENT | ClientType.TEMPORARY;
 }
 
-export type RegisteredClient = UpdatedClient & {
+export interface RegisteredClient extends UpdatedClient {
   /** The cookie label */
   cookie: string;
-};
+}
