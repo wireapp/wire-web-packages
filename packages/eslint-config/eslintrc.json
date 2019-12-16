@@ -30,6 +30,7 @@
   "rules": {
     "curly": "error",
     "id-length": "error",
+    "constructor-super": "error",
     "import/no-default-export": "error",
     "jsdoc/require-hyphen-before-param-description": "error",
     "no-console": [
