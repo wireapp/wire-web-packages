@@ -19,7 +19,6 @@ yarn add --dev @wireapp/eslint-config \
                @typescript-eslint/eslint-plugin \
                @typescript-eslint/parser \
                eslint-config-prettier \
-               eslint-plugin-import \
                eslint-plugin-jsdoc \
                eslint-plugin-no-unsanitized \
                eslint-plugin-prettier \
@@ -38,7 +37,6 @@ yarn add --dev @wireapp/eslint-config ^
                @typescript-eslint/eslint-plugin ^
                @typescript-eslint/parser ^
                eslint-config-prettier ^
-               eslint-plugin-import ^
                eslint-plugin-jsdoc ^
                eslint-plugin-no-unsanitized ^
                eslint-plugin-prettier ^

@@ -26,12 +26,11 @@
     "ecmaVersion": 6,
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "import", "jsdoc", "no-unsanitized", "prettier", "react", "react-hooks", "simple-import-sort", "sort-keys-fix"],
+  "plugins": ["@typescript-eslint", "jsdoc", "no-unsanitized", "prettier", "react", "react-hooks", "simple-import-sort", "sort-keys-fix"],
   "rules": {
     "curly": "error",
     "id-length": "error",
     "constructor-super": "error",
-    "import/no-default-export": "error",
     "jsdoc/require-hyphen-before-param-description": "error",
     "no-console": [
       "error",
