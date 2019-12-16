@@ -26,7 +26,7 @@
     "ecmaVersion": 6,
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "jsdoc", "no-unsanitized", "prettier", "react", "react-hooks", "simple-import-sort", "sort-keys-fix"],
+  "plugins": ["@typescript-eslint", "jsdoc", "no-unsanitized", "prettier", "react", "react-hooks", "sort-keys-fix"],
   "rules": {
     "curly": "error",
     "id-length": "error",
