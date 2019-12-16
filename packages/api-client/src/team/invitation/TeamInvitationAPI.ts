@@ -25,12 +25,12 @@ import {TeamAPI} from '../team/';
 
 export class TeamInvitationAPI {
   public static readonly MAX_CHUNK_SIZE = 100;
-  constructor(private readonly client: HttpClient) {}
-
   public static readonly URL = {
     INFO: 'info',
     INVITATIONS: 'invitations',
   };
+
+  constructor(private readonly client: HttpClient) {}
 
   public async getInvitation(teamId: string, invitationId: string): Promise<TeamInvitation> {
     const config: AxiosRequestConfig = {
