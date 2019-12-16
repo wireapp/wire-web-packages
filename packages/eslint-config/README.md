@@ -24,6 +24,7 @@ yarn add --dev @wireapp/eslint-config \
                eslint-plugin-no-unsanitized \
                eslint-plugin-prettier \
                eslint-plugin-react \
+               eslint-plugin-react-hooks \
                eslint-plugin-simple-import-sort \
                eslint-plugin-sort-keys-fix \
                prettier \
@@ -42,6 +43,7 @@ yarn add --dev @wireapp/eslint-config ^
                eslint-plugin-no-unsanitized ^
                eslint-plugin-prettier ^
                eslint-plugin-react ^
+               eslint-plugin-react-hooks ^
                eslint-plugin-simple-import-sort ^
                eslint-plugin-sort-keys-fix ^
                prettier ^
