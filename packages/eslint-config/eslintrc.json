@@ -76,7 +76,6 @@
     "react/jsx-uses-vars": "error",
     "react/prefer-stateless-function": "error",
     "react/prop-types": "off",
-    "simple-import-sort/sort": "error",
     "sort-keys-fix/sort-keys-fix": "error",
     "sort-vars": "error",
     "strict": ["error", "global"],
