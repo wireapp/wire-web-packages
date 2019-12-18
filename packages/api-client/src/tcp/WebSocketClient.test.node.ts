@@ -20,6 +20,8 @@
 /* eslint-disable dot-notation */
 
 import {InvalidTokenError} from '../auth/AuthenticationError';
+import {TEAM_EVENT} from '../event/';
+import {Notification} from '../notification';
 import {WebSocketClient} from './WebSocketClient';
 
 const accessTokenPayload = {
@@ -162,6 +164,20 @@ describe('WebSocketClient', () => {
   });
 
   describe('connect', () => {
+    const fakeNotification: Notification = {
+      id: '123',
+      payload: [
+        {
+          data: {
+            user: 'Bob',
+          },
+          team: '456',
+          time: new Date().toISOString(),
+          type: TEAM_EVENT.MEMBER_JOIN,
+        },
+      ],
+    };
+
     it('does not lock websocket by default', async done => {
       const websocketClient = new WebSocketClient('url', fakeHttpClient);
       const onMessageSpy = spyOn<any>(websocketClient, 'onMessage').and.callThrough();
@@ -171,15 +187,13 @@ describe('WebSocketClient', () => {
       await websocketClient.connect();
       expect(websocketClient.isLocked()).toBe(false);
 
-      const message = 'hello';
       websocketClient.on(WebSocketClient.TOPIC.ON_MESSAGE, notification => {
         expect(onMessageSpy.calls.count()).toBe(1);
         expect(websocketClient['bufferedMessages'].length).toBe(0);
-        expect(notification).toEqual({message});
+        expect(notification).toEqual(fakeNotification);
         done();
       });
-
-      fakeSocket.onmessage({data: Buffer.from(JSON.stringify({message}), 'utf-8')});
+      fakeSocket.onmessage({data: Buffer.from(JSON.stringify(fakeNotification), 'utf-8')});
     });
 
     it('emits buffered messages when unlocked', async done => {
@@ -192,13 +206,12 @@ describe('WebSocketClient', () => {
       await websocketClient.connect();
       expect(websocketClient.isLocked()).toBe(true);
 
-      const message = 'hello';
-      fakeSocket.onmessage({data: Buffer.from(JSON.stringify({message}), 'utf-8')});
+      fakeSocket.onmessage({data: Buffer.from(JSON.stringify(fakeNotification), 'utf-8')});
       expect(onMessageSpy.calls.count()).toBe(1);
       expect(websocketClient['bufferedMessages'].length).toBe(1);
 
       websocketClient.on(WebSocketClient.TOPIC.ON_MESSAGE, notification => {
-        expect(notification).toEqual({message});
+        expect(notification).toEqual(notification);
         expect(onMessageSpy.calls.count()).toBe(2);
         done();
       });
