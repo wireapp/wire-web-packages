@@ -17,13 +17,14 @@
  *
  */
 
-/* eslint-disable no-magic-numbers */
+/* eslint-disable no-magic-numbers, dot-notation */
 
-const nock = require('nock');
+import nock from 'nock';
 
-const {APIClient} = require('@wireapp/api-client');
-const {AUTH_TABLE_NAME, AuthAPI} = require('@wireapp/api-client/dist/auth/');
-const {UserAPI} = require('@wireapp/api-client/dist/user/');
+import {APIClient} from './APIClient';
+import {AuthAPI} from './auth/AuthAPI';
+import {AUTH_TABLE_NAME} from './auth/index';
+import {UserAPI} from './user/UserAPI';
 
 describe('APIClient', () => {
   const baseUrl = APIClient.BACKEND.PRODUCTION.rest;
@@ -39,8 +40,8 @@ describe('APIClient', () => {
   describe('"constructor"', () => {
     it('constructs a client with production backend and StoreEngine by default', () => {
       const client = new APIClient();
-      expect(client.transport.http.baseUrl).toBe(APIClient.BACKEND.PRODUCTION.rest);
-      expect(client.transport.ws.baseUrl).toBe(APIClient.BACKEND.PRODUCTION.ws);
+      expect(client.transport.http['baseUrl']).toBe(APIClient.BACKEND.PRODUCTION.rest);
+      expect(client.transport.ws['baseUrl']).toBe(APIClient.BACKEND.PRODUCTION.ws);
     });
 
     it('constructs StoreEngine when only the URLs is provided', () => {
@@ -139,7 +140,7 @@ describe('APIClient', () => {
     it('can login after a logout', async () => {
       const client = new APIClient();
       await client.login(loginData);
-      return await client.logout();
+      return client.logout();
     });
 
     it('refreshes an access token when it becomes invalid', async () => {
