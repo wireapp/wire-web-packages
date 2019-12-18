@@ -6,12 +6,12 @@
     "@types/generate-changelog": "1.8.0",
     "@types/long": "4.0.0",
     "@types/node": "~12",
-    "@wireapp/core": "15.1.12",
+    "@wireapp/core": "15.1.18",
     "generate-changelog": "1.8.0"
   },
   "description": "A Travis deployment notification bot.",
   "devDependencies": {
-    "logdown": "3.2.8",
+    "logdown": "3.3.0",
     "rimraf": "3.0.0",
     "typescript": "3.7.3"
   },
@@ -30,5 +30,5 @@
     "test": "exit 0",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "6.0.22"
+  "version": "6.0.28"
 }
