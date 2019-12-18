@@ -17,7 +17,7 @@
  *
  */
 
-const {APIClient} = require('@wireapp/api-client');
+import {APIClient} from '@wireapp/api-client';
 
 describe('"AssetAPI"', () => {
   const apiClient = new APIClient();
