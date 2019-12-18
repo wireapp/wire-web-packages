@@ -31,7 +31,7 @@ export class ConnectionAPI {
 
   /**
    * Get an existing connection to another user.
-   * @param userId The ID of the other user
+   * @param userId - The ID of the other user
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/connection
    */
   public async getConnection(userId: string): Promise<Connection> {
@@ -46,8 +46,8 @@ export class ConnectionAPI {
 
   /**
    * List the connections to other users.
-   * @param limit Number of results to return (default 100, max 500)
-   * @param connectionId The connection ID to start from
+   * @param limit - Number of results to return (default 100, max 500)
+   * @param connectionId - The connection ID to start from
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/connections
    */
   public async getConnections(connectionId?: string, limit = 100): Promise<UserConnectionList> {
@@ -94,7 +94,7 @@ export class ConnectionAPI {
   /**
    * Create a connection to another user.
    * Note: You can have no more than 1000 connections in accepted or sent state.
-   * @param connectionRequestData: The connection request
+   * @param connectionRequestData: - The connection request
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/createConnection
    */
   public async postConnection(connectionRequestData: ConnectionRequest): Promise<Connection> {
@@ -111,8 +111,8 @@ export class ConnectionAPI {
   /**
    * Update a connection.
    * Note: You can have no more than 1000 connections in accepted or sent state.
-   * @param userId The ID of the other user
-   * @param updatedConnection: The updated connection
+   * @param userId - The ID of the other user
+   * @param updatedConnection: - The updated connection
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/updateConnection
    */
   public async putConnection(userId: string, updatedConnection: ConnectionUpdate): Promise<Connection> {

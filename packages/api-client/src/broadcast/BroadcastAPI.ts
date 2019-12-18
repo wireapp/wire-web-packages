@@ -32,8 +32,8 @@ export class BroadcastAPI {
 
   /**
    * Broadcast an encrypted message to all team members and all contacts (accepts Protobuf).
-   * @param clientId The sender's client ID
-   * @param messageData The message content
+   * @param clientId - The sender's client ID
+   * @param messageData - The message content
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/tab.html#!/postOtrBroadcast
    */
   public async postBroadcastMessage(

@@ -17,7 +17,6 @@
  *
  */
 
-/* tslint:disable:object-literal-sort-keys */
 export enum Permissions {
   CREATE_CONVERSATION = 1 << 0,
   DELETE_CONVERSATION = 1 << 1,

@@ -2,9 +2,24 @@
   "env": {
     "jasmine": true
   },
+  "extends": "./packages/eslint-config/eslintrc.json",
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+        "@typescript-eslint/typedef": "off",
+        "no-unused-vars": "off"
+      }
+    }
+  ],
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "extends": "./packages/eslint-config/eslintrc.json",
-  "plugins": ["jasmine"]
+  "plugins": ["jasmine"],
+  "rules": {
+    "id-length": "off",
+    "no-dupe-class-members": "off",
+    "no-magic-numbers": "off",
+    "valid-jsdoc": "off"
+  }
 }
