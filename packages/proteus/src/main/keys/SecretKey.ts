@@ -46,7 +46,7 @@ export class SecretKey {
 
   /**
    * This function can be used to compute a message signature.
-   * @param message Message to be signed
+   * @param message - Message to be signed
    * @returns A message signature
    */
   sign(message: Uint8Array | string): Uint8Array {
@@ -56,7 +56,7 @@ export class SecretKey {
   /**
    * This function can be used to compute a shared secret given a user's secret key and another
    * user's public key.
-   * @param public_key Another user's public key
+   * @param public_key - Another user's public key
    * @returns Array buffer view of the computed shared secret
    */
   shared_secret(public_key: PublicKey): Uint8Array {

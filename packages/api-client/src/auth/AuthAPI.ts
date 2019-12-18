@@ -97,7 +97,7 @@ export class AuthAPI {
   /**
    * This operation generates and sends a login code. A login code can be used only once and times out after 10
    * minutes. Only one login code may be pending at a time.
-   * @param loginRequest Phone number to use for login SMS or voice call.
+   * @param loginRequest - Phone number to use for login SMS or voice call.
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/tab.html#!/sendLoginCode
    */
   public async postLoginSend(loginRequest: SendLoginCode): Promise<LoginCodeResponse> {
