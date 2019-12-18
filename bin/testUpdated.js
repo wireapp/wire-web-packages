@@ -32,10 +32,9 @@ try {
 const changedPackages = JSON.parse(output.toString());
 const packageNames = changedPackages.map(project => project.name);
 
-console.info('Building all packages');
-execSync('yarn dist', {stdio: [0, 1]});
+const scopes = packageNames.map(packageName => `--scope ${packageName}`).join(' ');
+console.info(`Building packages "${scopes}"`);
+execSync(`npx lerna run dist --include-dependencies ${scopes}`, {stdio: [0, 1]});
 
-packageNames.forEach(packageName => {
-  console.info(`Running tests for package "${packageName}"...`);
-  execSync(`npx lerna run --scope ${packageName} test`, {stdio: [0, 1]});
-});
+console.info(`Running tests for packages "${packageNames}"...`);
+execSync(`npx lerna run test --no-sort --concurrency 8 ${scopes}`, {stdio: [0, 1]});
