@@ -39,8 +39,8 @@ import {
 } from '../user/';
 
 export class UserAPI {
-  static readonly DEFAULT_USERS_CHUNK_SIZE = 50;
-  static readonly URL = {
+  public static readonly DEFAULT_USERS_CHUNK_SIZE = 50;
+  public static readonly URL = {
     ACTIVATE: '/activate',
     CALLS: '/calls',
     CLIENTS: 'clients',
@@ -72,7 +72,7 @@ export class UserAPI {
 
   /**
    * Delete a property.
-   * @param propertyKey The property key to delete
+   * @param propertyKey - The property key to delete
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/deleteProperty
    */
   public async deleteProperty(propertyKey: string): Promise<void> {
@@ -86,8 +86,8 @@ export class UserAPI {
 
   /**
    * Activate (i.e. confirm) an email address or phone number.
-   * @param activationCode Activation code
-   * @param activationKey Activation key
+   * @param activationCode - Activation code
+   * @param activationKey - Activation key
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/activate
    */
   public async getActivation(activationCode: string, activationKey: string): Promise<ActivationResponse> {
@@ -120,8 +120,8 @@ export class UserAPI {
 
   /**
    * Get a specific client of a user.
-   * @param userId The user ID
-   * @param clientId The client ID
+   * @param userId - The user ID
+   * @param clientId - The client ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getUserClient
    */
   public async getClient(userId: string, clientId: string): Promise<PublicClient> {
@@ -136,8 +136,8 @@ export class UserAPI {
 
   /**
    * Get a prekey for a specific client of a user.
-   * @param userId The user ID
-   * @param clientId The client ID
+   * @param userId - The user ID
+   * @param clientId - The client ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getPrekey
    */
   public async getClientPreKey(userId: string, clientId: string): Promise<ClientPreKey> {
@@ -152,7 +152,7 @@ export class UserAPI {
 
   /**
    * Get all of a user's clients.
-   * @param userId The user ID
+   * @param userId - The user ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getUserClients
    */
   public async getClients(userId: string): Promise<PublicClient[]> {
@@ -167,7 +167,7 @@ export class UserAPI {
 
   /**
    * Get information on a user handle.
-   * @param handle The user's handle
+   * @param handle - The user's handle
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getUserHandleInfo
    */
   public async getHandle(handle: string): Promise<HandleInfo> {
@@ -196,7 +196,7 @@ export class UserAPI {
 
   /**
    * Get a property value.
-   * @param propertyKey The property key to get
+   * @param propertyKey - The property key to get
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getProperty
    */
   public async getProperty<T>(propertyKey: string): Promise<T> {
@@ -211,8 +211,8 @@ export class UserAPI {
 
   /**
    * Search for users.
-   * @param query The search query
-   * @param limit Number of results to return
+   * @param query - The search query
+   * @param limit - Number of results to return
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/search
    */
   public async getSearchContacts(query: string, limit?: number): Promise<SearchResult> {
@@ -234,7 +234,7 @@ export class UserAPI {
 
   /**
    * Get a user by ID.
-   * @param userId The user ID
+   * @param userId - The user ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/user
    */
   public async getUser(userId: string): Promise<User> {
@@ -264,7 +264,7 @@ export class UserAPI {
   /**
    * List users.
    * Note: The 'ids' and 'handles' parameters are mutually exclusive.
-   * @param parameters Multiple user's handles or IDs
+   * @param parameters - Multiple user's handles or IDs
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/users
    */
   public async getUsers(parameters: {ids: string[]}, limit?: number): Promise<User[]>;
@@ -314,7 +314,7 @@ export class UserAPI {
   /**
    * DEPRECATED: List users.
    * @deprecated
-   * @param userIds Multiple user's IDs
+   * @param userIds - Multiple user's IDs
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/users
    */
   public async getUsersByIds(userIds: string[]): Promise<User[]> {
@@ -325,7 +325,7 @@ export class UserAPI {
   /**
    * Activate (i.e. confirm) an email address or phone number.
    * Note: Activation only succeeds once and the number of failed attempts for a valid key is limited.
-   * @param activationData Data to activate an account
+   * @param activationData - Data to activate an account
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/activate_0
    */
   public async postActivation(activationData: Activate): Promise<ActivationResponse> {
@@ -341,7 +341,7 @@ export class UserAPI {
 
   /**
    * Send (or resend) an email or phone activation code.
-   * @param activationCodeData Data to send an activation code
+   * @param activationCodeData - Data to send an activation code
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/sendActivationCode
    */
   public async postActivationCode(activationCodeData: SendActivationCode): Promise<void> {
@@ -356,7 +356,7 @@ export class UserAPI {
 
   /**
    * Verify account deletion with a code.
-   * @param verificationData Data to verify the account deletion
+   * @param verificationData - Data to verify the account deletion
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/verifyDeleteUser
    */
   public async postDelete(verificationData: VerifyDelete): Promise<void> {
@@ -371,7 +371,7 @@ export class UserAPI {
 
   /**
    * Check availability of user handles.
-   * @param handles The handles to check
+   * @param handles - The handles to check
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/checkUserHandles
    */
   public async postHandles(handles: CheckHandles): Promise<string[]> {
@@ -388,7 +388,7 @@ export class UserAPI {
   /**
    * Given a map of user IDs to client IDs return a prekey for each one.
    * Note: The maximum map size is 128 entries.
-   * @param userClientMap A map of the user's clients
+   * @param userClientMap - A map of the user's clients
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getMultiPrekeyBundles
    */
   public async postMultiPreKeyBundles(userClientMap: UserClients): Promise<UserPreKeyBundleMap> {
@@ -404,7 +404,7 @@ export class UserAPI {
 
   /**
    * Initiate or complete a password reset.
-   * @param resetData The data needed to initiate or complete the reset
+   * @param resetData - The data needed to initiate or complete the reset
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/beginPasswordReset
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/completePasswordReset
    */
@@ -420,8 +420,8 @@ export class UserAPI {
 
   /**
    * Set a user property.
-   * @param propertyKey The property key to set
-   * @param propertyData The property data to set
+   * @param propertyKey - The property key to set
+   * @param propertyData - The property data to set
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/setProperty
    */
   public async putProperty<T>(propertyKey: string, propertyData: T): Promise<void> {

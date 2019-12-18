@@ -44,8 +44,8 @@ export class PublicKey {
   /**
    * This function can be used to verify a message signature.
    *
-   * @param signature The signature to verify
-   * @param message The message from which the signature was computed.
+   * @param signature - The signature to verify
+   * @param message - The message from which the signature was computed.
    * @returns `true` if the signature is valid, `false` otherwise.
    */
   verify(signature: Uint8Array, message: Uint8Array | string): boolean {

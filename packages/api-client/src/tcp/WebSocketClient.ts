@@ -52,9 +52,7 @@ export class WebSocketClient extends EventEmitter {
   private bufferedMessages: string[];
   private onBeforeConnect: () => Promise<void> = () => Promise.resolve();
 
-  public static get TOPIC(): typeof TOPIC {
-    return TOPIC;
-  }
+  public static readonly TOPIC = TOPIC;
 
   constructor(baseUrl: string, client: HttpClient) {
     super();
@@ -121,11 +119,11 @@ export class WebSocketClient extends EventEmitter {
   /**
    * Attaches all listeners to the websocket and establishes the connection.
    *
-   * @param clientId
+   * @param clientId- -
    * When provided the websocket will get messages specific to the client.
    * If omitted the websocket will receive global messages for the account.
    *
-   * @param onBeforeConnect
+   * @param onBeforeConnect- -
    * Handler that is executed before the websocket is fully connected.
    * Essentially the websocket will lock before execution of this function and
    * unlocks after the execution of the handler and pushes all buffered messages.

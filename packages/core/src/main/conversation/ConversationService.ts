@@ -984,7 +984,6 @@ export class ConversationService {
    * @param userIds - Only send message to specified user IDs
    * @returns Sent message
    */
-  // tslint:disable-next-line:typedef
   public async send(payloadBundle: OtrMessage, userIds?: string[]) {
     switch (payloadBundle.type) {
       case PayloadBundleType.ASSET:

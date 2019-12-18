@@ -32,9 +32,7 @@ export interface TransientStore {
 }
 
 export class TransientStore extends EventEmitter {
-  public static get TOPIC(): typeof TOPIC {
-    return TOPIC;
-  }
+  public static readonly TOPIC = TOPIC;
   private readonly bundles: Record<string, TransientBundle> = {};
   private tableName = '';
 
@@ -52,7 +50,7 @@ export class TransientStore extends EventEmitter {
   public deleteFromCache(cacheKey: string): string {
     const timeoutID = this.bundles[cacheKey]?.timeoutID;
     if (timeoutID) {
-      clearTimeout(<number>timeoutID);
+      clearTimeout(timeoutID as number);
     }
     delete this.bundles[cacheKey];
     return cacheKey;
@@ -168,7 +166,7 @@ export class TransientStore extends EventEmitter {
   }
 
   private saveInCache<TransientBundle>(cacheKey: string, bundle: TransientBundle): TransientBundle {
-    return (this.bundles[cacheKey] = <any>bundle);
+    return (this.bundles[cacheKey] = bundle as any);
   }
 
   private saveInStore<TransientBundle>(primaryKey: string, bundle: TransientBundle): Promise<string> {
