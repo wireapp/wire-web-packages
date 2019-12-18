@@ -18,6 +18,7 @@
  */
 
 import {Cookie as ToughCookie} from 'tough-cookie';
+
 import {AccessTokenData} from '../auth';
 
 const obfuscationLengthLimit = 20;
