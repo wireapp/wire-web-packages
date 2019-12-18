@@ -17,7 +17,7 @@
  *
  */
 
-const {unsafeAlphanumeric} = require('@wireapp/api-client/dist/shims/node/random');
+import {unsafeAlphanumeric} from './random';
 
 describe('"unsafeAlphanumeric"', () => {
   it('should generate string of length 32 as default', () => {
