@@ -36,7 +36,6 @@ module.exports = {
   entry: {
     [projectName]: `${__dirname}/${pkg.main}`,
     [`${projectName}.demo`]: `${__dirname}/demo/demo.js`,
-    [`${projectName}.test`]: `${__dirname}/src/index.test.browser.js`,
   },
   externals: {
     'fs-extra': '{}',
@@ -46,7 +45,7 @@ module.exports = {
     rules: [
       {
         exclude: /node_modules/,
-        test: /\.jsx?$/,
+        test: /\.[tj]sx?$/,
         use: [
           {
             loader: 'babel-loader',
@@ -68,6 +67,6 @@ module.exports = {
     alias: {
       '@wireapp/react-ui-kit': path.resolve(__dirname, '..', 'react-ui-kit', 'dist'),
     },
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
 };
