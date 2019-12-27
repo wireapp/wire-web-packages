@@ -4,7 +4,7 @@
     "@types/jasmine": "3.5.0",
     "@types/karma": "3.0.4",
     "@types/libsodium-wrappers-sumo": "0.7.3",
-    "@types/node": "~12",
+    "@types/node": "~13",
     "cross-env": "6.0.3",
     "jasmine": "3.5.0",
     "karma": "4.4.1",

@@ -4,7 +4,7 @@
     "./dist/shims/node/cookie": "./dist/shims/browser/cookie.js"
   },
   "dependencies": {
-    "@types/node": "~12",
+    "@types/node": "~13",
     "@types/spark-md5": "3.0.2",
     "@types/tough-cookie": "2.3.6",
     "@wireapp/commons": "3.0.5",
