@@ -116,6 +116,7 @@ account
         const payload = account.service.conversation.messageBuilder.createText(conversationID, message).build();
         return account.service.conversation.send(payload);
       }
+      return undefined;
     });
   })
   .catch((error: Error) => {
