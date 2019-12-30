@@ -2,7 +2,7 @@
   "description": "Base64 encoding and decoding with ASCII string representation.",
   "devDependencies": {
     "@types/jasmine": "3.5.0",
-    "@types/karma": "3.0.4",
+    "@types/karma": "3.0.5",
     "@types/libsodium-wrappers-sumo": "0.7.3",
     "@types/node": "~12",
     "cross-env": "6.0.3",
@@ -16,11 +16,11 @@
     "karma-spec-reporter": "0.0.32",
     "karma-typescript": "4.1.1",
     "libsodium-wrappers-sumo": "0.7.6",
-    "nyc": "14.1.1",
+    "nyc": "15.0.0",
     "rimraf": "3.0.0",
     "ts-node": "8.5.4",
     "typescript": "3.7.3",
-    "webpack": "4.41.3"
+    "webpack": "4.41.4"
   },
   "files": [
     "dist"
