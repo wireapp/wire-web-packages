@@ -27,7 +27,6 @@ Collection of npm modules created by Wire's web team:
 
 - [@wireapp/eslint-config](https://npmjs.com/package/@wireapp/eslint-config)
 - [@wireapp/prettier-config](https://npmjs.com/package/@wireapp/prettier-config)
-- [@wireapp/tslint-config](https://npmjs.com/package/@wireapp/tslint-config)
 
 **Connectivity**
 
