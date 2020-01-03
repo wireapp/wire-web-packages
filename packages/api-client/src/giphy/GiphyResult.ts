@@ -19,7 +19,8 @@
 
 import {GiphyImage} from './GiphyImage';
 
-interface GiphyResultBase {
+export interface GiphyResult {
+  data: GiphyImage;
   meta: {
     status: number;
     msg: string;
@@ -27,10 +28,6 @@ interface GiphyResultBase {
   };
 }
 
-export interface GiphyResult extends GiphyResultBase {
-  data: GiphyImage;
-}
-
-export interface GiphySearchResult extends GiphyResultBase {
+export type GiphySearchResult = GiphyResult & {
   data: GiphyImage[];
-}
+};
