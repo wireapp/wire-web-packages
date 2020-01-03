@@ -24,4 +24,5 @@ export enum ConnectionStatus {
   IGNORED = 'ignored',
   PENDING = 'pending',
   SENT = 'sent',
+  UNKNOWN = 'unknown',
 }
