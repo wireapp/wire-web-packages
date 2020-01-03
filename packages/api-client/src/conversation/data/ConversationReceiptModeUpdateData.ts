@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2020 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,20 +17,11 @@
  *
  */
 
-import {GiphyImage} from './GiphyImage';
-
-interface GiphyResultBase {
-  meta: {
-    status: number;
-    msg: string;
-    response_id: string;
-  };
+export enum RECEIPT_MODE {
+  OFF = 0,
+  ON = 1,
 }
 
-export interface GiphyResult extends GiphyResultBase {
-  data: GiphyImage;
-}
-
-export interface GiphySearchResult extends GiphyResultBase {
-  data: GiphyImage[];
+export interface ConversationReceiptModeUpdateData {
+  receipt_mode: RECEIPT_MODE.OFF | RECEIPT_MODE.ON;
 }
