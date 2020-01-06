@@ -32,7 +32,6 @@ export enum Permissions {
   DELETE_TEAM = 1 << 11,
   SET_MEMBER_PERMISSIONS = 1 << 12,
 }
-/* tslint:enable:object-literal-sort-keys */
 
 export const hasPermissions = (permissions: Permissions, expectedPermissions: Permissions): boolean => {
   const validPermissions = Number.isSafeInteger(permissions) && permissions > 0;
