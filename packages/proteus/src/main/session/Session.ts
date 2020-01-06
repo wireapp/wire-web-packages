@@ -70,8 +70,8 @@ export class Session {
   }
 
   /**
-   * @param local_identity - Alice's Identity Key Pair
-   * @param remote_pkbundle - Bob's Pre-Key Bundle
+   * @param local_identity Alice's Identity Key Pair
+   * @param remote_pkbundle Bob's Pre-Key Bundle
    */
   static async init_from_prekey(local_identity: IdentityKeyPair, remote_pkbundle: PreKeyBundle): Promise<Session> {
     const alice_base = await KeyPair.new();
@@ -202,7 +202,7 @@ export class Session {
   }
 
   /**
-   * @param plaintext - The plaintext which needs to be encrypted
+   * @param plaintext The plaintext which needs to be encrypted
    */
   async encrypt(plaintext: string | Uint8Array): Promise<Envelope> {
     const session_state = this.session_states[this.session_tag.toString()];

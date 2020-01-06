@@ -34,7 +34,7 @@ export class GiphyAPI {
 
   /**
    * Get a random GIF from Giphy.
-   * @param tag - GIF tag to limit randomness
+   * @param tag GIF tag to limit randomness
    */
   public async getGiphyRandom(tag?: string): Promise<GiphyResult> {
     const config: AxiosRequestConfig = {
@@ -51,7 +51,7 @@ export class GiphyAPI {
 
   /**
    * Get GIF search results from Giphy.
-   * @param options - Search options
+   * @param options Search options
    */
   public async getGiphySearch(query: string, options?: GiphyOptions): Promise<GiphySearchResult> {
     const defaultOptions: GiphyOptions = {

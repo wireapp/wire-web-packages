@@ -54,8 +54,8 @@ export class ConversationAPI {
 
   /**
    * Remove bot from conversation.
-   * @param conversationId - The conversation ID to remove the bot from
-   * @param botId - The ID of the bot to be removed from the conversation
+   * @param conversationId The conversation ID to remove the bot from
+   * @param botId The ID of the bot to be removed from the conversation
    */
   public async deleteBot(conversationId: string, botId: string): Promise<void> {
     const config: AxiosRequestConfig = {
@@ -68,8 +68,8 @@ export class ConversationAPI {
 
   /**
    * Remove member from conversation.
-   * @param conversationId - The conversation ID to remove the user from
-   * @param userId - The user to remove
+   * @param conversationId The conversation ID to remove the user from
+   * @param userId The user to remove
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/removeMember
    */
   public async deleteMember(conversationId: string, userId: string): Promise<ConversationMemberLeaveEvent> {
@@ -110,7 +110,7 @@ export class ConversationAPI {
 
   /**
    * Get a conversation by ID.
-   * @param conversationId - The conversation ID
+   * @param conversationId The conversation ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversation
    */
   public async getConversation(conversationId: string): Promise<Conversation> {
@@ -125,8 +125,8 @@ export class ConversationAPI {
 
   /**
    * Get all conversation IDs.
-   * @param limit - Max. number of IDs to return
-   * @param conversationId - Conversation ID to start from (exclusive)
+   * @param limit Max. number of IDs to return
+   * @param conversationId Conversation ID to start from (exclusive)
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversationIds
    */
   public async getConversationIds(limit: number, conversationId?: string): Promise<ConversationIds> {
@@ -146,8 +146,8 @@ export class ConversationAPI {
   /**
    * Get conversations as chunks.
    * Note: At most 500 conversations are returned per request.
-   * @param startConversationId - Conversation ID to start from (exclusive). Mutually exclusive with `conversationIds`.
-   * @param limit - Max. number of conversations to return
+   * @param startConversationId Conversation ID to start from (exclusive). Mutually exclusive with `conversationIds`.
+   * @param limit Max. number of conversations to return
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversations
    */
   public getConversations(
@@ -160,7 +160,7 @@ export class ConversationAPI {
   /**
    * Get conversations.
    * Note: At most 500 conversations are returned per request.
-   * @param conversationId - Conversation ID to start from (exclusive). Mutually exclusive with `conversationIds`.
+   * @param conversationId Conversation ID to start from (exclusive). Mutually exclusive with `conversationIds`.
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversations
    */
   public async getConversationsByIds(filteredConversationIds: string[]): Promise<Conversation[]> {
@@ -192,9 +192,9 @@ export class ConversationAPI {
   /**
    * Get conversations.
    * Note: At most 500 conversations are returned per request.
-   * @param startConversationId - Conversation ID to start from (exclusive). Mutually exclusive with `conversationIds`.
-   * @param filteredConversationIds - Mutually exclusive with `startConversationId`. At most 32 IDs per request.
-   * @param limit - Max. number of conversations to return
+   * @param startConversationId Conversation ID to start from (exclusive). Mutually exclusive with `conversationIds`.
+   * @param filteredConversationIds Mutually exclusive with `startConversationId`. At most 32 IDs per request.
+   * @param limit Max. number of conversations to return
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversations
    */
   private async _getConversations(
@@ -221,7 +221,7 @@ export class ConversationAPI {
 
   /**
    * Get self membership properties.
-   * @param conversationId - The Conversation ID
+   * @param conversationId The Conversation ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/getSelf
    */
   public async getMembershipProperties(conversationId: string): Promise<Member> {
@@ -236,7 +236,7 @@ export class ConversationAPI {
 
   /**
    * Create a 1:1-conversation.
-   * @param conversationData - The new conversation
+   * @param conversationData The new conversation
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/createOne2OneConversation
    */
   public async post1to1(conversationData: NewConversation): Promise<void> {
@@ -251,8 +251,8 @@ export class ConversationAPI {
 
   /**
    * Add users to an existing conversation.
-   * @param conversationId - The conversation ID
-   * @param invitationData - The new conversation
+   * @param conversationId The conversation ID
+   * @param invitationData The new conversation
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/addMembers
    */
   public async postAddMembers(conversationId: string, invitationData: Invite): Promise<ConversationEvent> {
@@ -268,9 +268,9 @@ export class ConversationAPI {
 
   /**
    * Add a bot to an existing conversation.
-   * @param conversationId - ID of the conversation to add bots to
-   * @param providerId - ID of the bot provider
-   * @param serviceId - ID of the service provider
+   * @param conversationId ID of the conversation to add bots to
+   * @param providerId ID of the bot provider
+   * @param serviceId ID of the service provider
    */
   public async postBot(conversationId: string, providerId: string, serviceId: string): Promise<void> {
     const config: AxiosRequestConfig = {
@@ -287,7 +287,7 @@ export class ConversationAPI {
 
   /**
    * Create a new conversation
-   * @param conversationData - The new conversation
+   * @param conversationData The new conversation
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/createGroupConversation
    */
   public async postConversation(conversationData: NewConversation): Promise<Conversation> {
@@ -303,7 +303,7 @@ export class ConversationAPI {
 
   /**
    * Validates conversation code
-   * @param conversationCode - The conversation code
+   * @param conversationCode The conversation code
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/checkConversationCode
    */
   public async postConversationCodeCheck(conversationCode: ConversationCode): Promise<void> {
@@ -318,7 +318,7 @@ export class ConversationAPI {
 
   /**
    * Join a conversation by conversation code.
-   * @param conversationCode - The conversation code
+   * @param conversationCode The conversation code
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/joinConversationByCode
    */
   public async postJoinByCode(conversationCode: ConversationCode): Promise<ConversationEvent> {
@@ -334,7 +334,7 @@ export class ConversationAPI {
 
   /**
    * Join a conversation.
-   * @param conversationId - The conversation ID
+   * @param conversationId The conversation ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/joinConversation
    */
   public async postJoin(conversationId: string): Promise<ConversationEvent> {
@@ -349,9 +349,9 @@ export class ConversationAPI {
 
   /**
    * Post an encrypted message to a conversation.
-   * @param clientId - The sender's client ID
-   * @param conversationId - The conversation ID
-   * @param messageData - The message content
+   * @param clientId The sender's client ID
+   * @param conversationId The conversation ID
+   * @param messageData The message content
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/postOtrMessage
    */
   public async postOTRMessage(
@@ -406,8 +406,8 @@ export class ConversationAPI {
 
   /**
    * Send typing notifications.
-   * @param conversationId - The Conversation ID
-   * @param typingData - The typing status
+   * @param conversationId The Conversation ID
+   * @param typingData The typing status
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/isTyping
    */
   public async postTyping(conversationId: string, typingData: ConversationTypingData): Promise<void> {
@@ -422,8 +422,8 @@ export class ConversationAPI {
 
   /**
    * Update conversation properties.
-   * @param conversationId - The conversation ID
-   * @param conversationData - The new conversation
+   * @param conversationId The conversation ID
+   * @param conversationData The new conversation
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/updateConversation
    */
   public async putConversation(
@@ -442,8 +442,8 @@ export class ConversationAPI {
 
   /**
    * Update the message timer for a conversation.
-   * @param conversationId - The conversation ID
-   * @param conversationData - The new message timer
+   * @param conversationId The conversation ID
+   * @param conversationData The new message timer
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/updateConversationMessageTimer
    */
   public async putConversationMessageTimer(
@@ -462,8 +462,8 @@ export class ConversationAPI {
 
   /**
    * Add users to an existing conversation.
-   * @param conversationId - The conversation ID to add the users to
-   * @param userIds - List of user IDs to add to a conversation
+   * @param conversationId The conversation ID to add the users to
+   * @param userIds List of user IDs to add to a conversation
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/addMembers
    */
   public async postMembers(conversationId: string, userIds: string[]): Promise<ConversationMemberJoinEvent> {
@@ -481,8 +481,8 @@ export class ConversationAPI {
 
   /**
    * Update self membership properties.
-   * @param conversationId - The Conversation ID
-   * @param memberData - The new conversation
+   * @param conversationId The Conversation ID
+   * @param memberData The new conversation
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/updateSelf
    */
   public async putMembershipProperties(

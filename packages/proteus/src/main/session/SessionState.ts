@@ -142,10 +142,10 @@ export class SessionState {
   }
 
   /**
-   * @param identity_key - Public identity key of the local identity key pair
-   * @param pending - Pending pre-key
-   * @param tag - Session tag
-   * @param plaintext - The plaintext to encrypt
+   * @param identity_key Public identity key of the local identity key pair
+   * @param pending Pending pre-key
+   * @param tag Session tag
+   * @param plaintext The plaintext to encrypt
    */
   encrypt(
     identity_key: IdentityKey,

@@ -50,7 +50,7 @@ export class Envelope {
     return env;
   }
 
-  /** @param mac_key - The remote party's MacKey */
+  /** @param mac_key The remote party's MacKey */
   verify(mac_key: MacKey): boolean {
     return mac_key.verify(this.mac, this._message_enc);
   }

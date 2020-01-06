@@ -25,9 +25,9 @@ import * as MemoryUtil from '../util/MemoryUtil';
 /**
  * HMAC-based Key Derivation Function
  *
- * @param input - Initial Keying Material (IKM)
- * @param info - Key Derivation Data (Info)
- * @param length - Length of the derived key in bytes (L)
+ * @param input Initial Keying Material (IKM)
+ * @param info Key Derivation Data (Info)
+ * @param length Length of the derived key in bytes (L)
  */
 export function hkdf(
   salt: Uint8Array | string,

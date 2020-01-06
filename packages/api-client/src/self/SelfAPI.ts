@@ -151,7 +151,7 @@ export class SelfAPI {
 
   /**
    * Change your email address.
-   * @param emailData - The new email address
+   * @param emailData The new email address
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/changeEmail
    */
   public async putEmail(emailData: {email: string}): Promise<void> {
@@ -166,7 +166,7 @@ export class SelfAPI {
 
   /**
    * Change your handle.
-   * @param handleData - The new handle
+   * @param handleData The new handle
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/changeHandle
    */
   public async putHandle(handleData: {handle: string}): Promise<void> {
@@ -181,7 +181,7 @@ export class SelfAPI {
 
   /**
    * Change your locale.
-   * @param localeData - The new locale
+   * @param localeData The new locale
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/changeLocale
    */
   public async putLocale(localeData: {locale: string}): Promise<void> {
@@ -196,7 +196,7 @@ export class SelfAPI {
 
   /**
    * Change your password.
-   * @param passwordData - The new password
+   * @param passwordData The new password
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/changePassword
    */
   public async putPassword(passwordData: ChangePassword): Promise<void> {
@@ -211,7 +211,7 @@ export class SelfAPI {
 
   /**
    * Change your phone number.
-   * @param phoneData - The new phone number (E.164 format)
+   * @param phoneData The new phone number (E.164 format)
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/changePhone
    */
   public async putPhone(phoneData: {phone: string}): Promise<void> {
@@ -226,7 +226,7 @@ export class SelfAPI {
 
   /**
    * Opt in or out of being included in search results.
-   * @param statusData - The new search status
+   * @param statusData The new search status
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/updateSearchableStatus
    */
   public async putSearchable(statusData: SearchableStatus): Promise<void> {
@@ -241,7 +241,7 @@ export class SelfAPI {
 
   /**
    * Update your profile.
-   * @param profileData - The new profile data
+   * @param profileData The new profile data
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/updateSelf
    */
   public async putSelf(profileData: UserUpdate): Promise<void> {

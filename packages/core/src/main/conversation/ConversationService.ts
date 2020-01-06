@@ -980,8 +980,8 @@ export class ConversationService {
   }
 
   /**
-   * @param payloadBundle - Outgoing message
-   * @param userIds - Only send message to specified user IDs
+   * @param payloadBundle Outgoing message
+   * @param userIds Only send message to specified user IDs
    * @returns Sent message
    */
   public async send(payloadBundle: OtrMessage, userIds?: string[]) {

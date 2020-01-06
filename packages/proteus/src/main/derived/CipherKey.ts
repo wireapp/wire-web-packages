@@ -36,8 +36,8 @@ export class CipherKey {
   }
 
   /**
-   * @param plaintext - The text to encrypt
-   * @param nonce - Counter as nonce
+   * @param plaintext The text to encrypt
+   * @param nonce Counter as nonce
    * @returns Encrypted payload
    */
   encrypt(plaintext: string | Uint8Array, nonce: Uint8Array): Uint8Array {

@@ -125,7 +125,7 @@ export class AccountAPI {
    * Retrieve all TURN server addresses and credentials.
    * Clients are expected to do a DNS lookup to resolve the IP addresses of the given hostnames
    *
-   * @param limit - Limits the number of ICE-Candidates returned. [1..10]
+   * @param limit Limits the number of ICE-Candidates returned. [1..10]
    */
   public async getCallConfig(limit?: number): Promise<CallConfigData> {
     const config: AxiosRequestConfig = {

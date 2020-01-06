@@ -50,8 +50,8 @@ export class DerivedSecrets {
   }
 
   /**
-   * @param input - Initial key material (usually the Master Key) in byte array format
-   * @param info - Key Derivation Data
+   * @param input Initial key material (usually the Master Key) in byte array format
+   * @param info Key Derivation Data
    */
   static kdf_without_salt(input: Uint8Array | ArrayBuffer[], info: string): DerivedSecrets {
     return this.kdf(input, new Uint8Array(0), info);
