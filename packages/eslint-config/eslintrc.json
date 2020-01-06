@@ -32,7 +32,6 @@
     "curly": "error",
     "id-length": "error",
     "constructor-super": "error",
-    "jsdoc/require-hyphen-before-param-description": "error",
     "no-console": [
       "error",
       {
