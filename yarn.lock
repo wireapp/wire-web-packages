@@ -1640,10 +1640,10 @@
     inquirer "^6.2.0"
     npmlog "^4.1.2"
 
-"@lerna/publish@3.20.1":
-  version "3.20.1"
-  resolved "https://registry.npmjs.org/@lerna/publish/-/publish-3.20.1.tgz#740acc4af52ec69eb603b46b476eab093a72e95b"
-  integrity sha512-F0Eb2lyIkwMiucGVzOq91RyhJSkJsuh/9xKnKgm6VK8tuVbLDD8cNE7dLRIIDtBYWPtEmujTW+nBg/aDdJBjWg==
+"@lerna/publish@3.20.2":
+  version "3.20.2"
+  resolved "https://registry.npmjs.org/@lerna/publish/-/publish-3.20.2.tgz#a45d29813099b3249657ea913d0dc3f8ebc5cc2e"
+  integrity sha512-N7Y6PdhJ+tYQPdI1tZum8W25cDlTp4D6brvRacKZusweWexxaopbV8RprBaKexkEX/KIbncuADq7qjDBdQHzaA==
   dependencies:
     "@evocateur/libnpmaccess" "^3.1.2"
     "@evocateur/npm-registry-fetch" "^4.0.0"
@@ -1666,7 +1666,7 @@
     "@lerna/run-lifecycle" "3.16.2"
     "@lerna/run-topologically" "3.18.5"
     "@lerna/validation-error" "3.13.0"
-    "@lerna/version" "3.20.1"
+    "@lerna/version" "3.20.2"
     figgy-pudding "^3.5.1"
     fs-extra "^8.1.0"
     npm-package-arg "^6.1.0"
@@ -1779,10 +1779,10 @@
   dependencies:
     npmlog "^4.1.2"
 
-"@lerna/version@3.20.1":
-  version "3.20.1"
-  resolved "https://registry.npmjs.org/@lerna/version/-/version-3.20.1.tgz#1b6b7f30705ecb37af5c796ae2ef7f24f81d073e"
-  integrity sha512-MY80FV4uqdjxHNl6WaZ5k9hr0IGeQXo1+bKTKzMUudpr3HlTS0c0PoAwSGB2KHafGFpoyb9WHBhb1uDyhL+OfQ==
+"@lerna/version@3.20.2":
+  version "3.20.2"
+  resolved "https://registry.npmjs.org/@lerna/version/-/version-3.20.2.tgz#3709141c0f537741d9bc10cb24f56897bcb30428"
+  integrity sha512-ckBJMaBWc+xJen0cMyCE7W67QXLLrc0ELvigPIn8p609qkfNM0L0CF803MKxjVOldJAjw84b8ucNWZLvJagP/Q==
   dependencies:
     "@lerna/check-working-tree" "3.16.5"
     "@lerna/child-process" "3.16.5"
@@ -2078,10 +2078,10 @@
   resolved "https://registry.npmjs.org/@types/color-name/-/color-name-1.1.1.tgz#1c1261bbeaa10a8055bbc5d8ab84b7b2afc846a0"
   integrity sha512-rr+OQyAjxze7GgWrSaJwydHStIhHq2lvY3BOC2Mj7KnzI7XK0Uw1TOOdI9lDoajEbSWLiYgoo4f1R51erQfhPQ==
 
-"@types/color@3.0.0":
-  version "3.0.0"
-  resolved "https://registry.npmjs.org/@types/color/-/color-3.0.0.tgz#40f8a6bf2fd86e969876b339a837d8ff1b0a6e30"
-  integrity sha512-5qqtNia+m2I0/85+pd2YzAXaTyKO8j+svirO5aN+XaQJ5+eZ8nx0jPtEWZLxCi50xwYsX10xUHetFzfb1WEs4Q==
+"@types/color@3.0.1":
+  version "3.0.1"
+  resolved "https://registry.npmjs.org/@types/color/-/color-3.0.1.tgz#2900490ed04da8116c5058cd5dba3572d5a25071"
+  integrity sha512-oeUWVaAwI+xINDUx+3F2vJkl/vVB03VChFF/Gl3iQCdbcakjuoJyMOba+3BXRtnBhxZ7uBYqQBi9EpLnvSoztA==
   dependencies:
     "@types/color-convert" "*"
 
@@ -2254,9 +2254,9 @@
   integrity sha512-tHq6qdbT9U1IRSGf14CL0pUlULksvY9OZ+5eEgl1N7t+OA3tGvNpxJCzuKQlsNgCVwbAs670L1vcVQi8j9HjnA==
 
 "@types/node@*", "@types/node@>= 8", "@types/node@~12":
-  version "12.12.22"
-  resolved "https://registry.npmjs.org/@types/node/-/node-12.12.22.tgz#b8d9eae3328b96910a373cf06ac8d3c5abe9c200"
-  integrity sha512-r5i93jqbPWGXYXxianGATOxTelkp6ih/U0WVnvaqAvTqM+0U6J3kw6Xk6uq/dWNRkEVw/0SLcO5ORXbVNz4FMQ==
+  version "12.12.24"
+  resolved "https://registry.npmjs.org/@types/node/-/node-12.12.24.tgz#d4606afd8cf6c609036b854360367d1b2c78931f"
+  integrity sha512-1Ciqv9pqwVtW6FsIUKSZNB82E5Cu1I2bBTj1xuIHXLe/1zYLl3956Nbhg2MzSYHVfl9/rmanjbQIb7LibfCnug==
 
 "@types/node@12.12.14":
   version "12.12.14"
@@ -2383,10 +2383,10 @@
     "@types/webpack" "*"
     loglevel "^1.6.2"
 
-"@types/webpack-env@1.14.1":
-  version "1.14.1"
-  resolved "https://registry.npmjs.org/@types/webpack-env/-/webpack-env-1.14.1.tgz#0d8a53f308f017c53a5ddc3d07f4d6fa76b790d7"
-  integrity sha512-0Ki9jAAhKDSuLDXOIMADg54Hu60SuBTEsWaJGGy5cV+SSUQ63J2a+RrYYGrErzz39fXzTibhKrAQJAb8M7PNcA==
+"@types/webpack-env@1.15.0":
+  version "1.15.0"
+  resolved "https://registry.npmjs.org/@types/webpack-env/-/webpack-env-1.15.0.tgz#bd9956d5044b1fb43e869a9ba9148862ff98d9fd"
+  integrity sha512-TfcyNecCz8Z9/s90gBOBniyzZrTru8u2Vp0VZODq4KEBaQu8bfXvu7o/KUOecMpzjbFPUA7aqgSq628Iue5BQg==
 
 "@types/webpack-sources@*":
   version "0.1.5"
@@ -3984,7 +3984,7 @@ center-align@^0.1.1:
     align-text "^0.1.3"
     lazy-cache "^1.0.3"
 
-chai@4.2.0, chai@^4.1.2:
+chai@4.2.0:
   version "4.2.0"
   resolved "https://registry.npmjs.org/chai/-/chai-4.2.0.tgz#760aa72cf20e3795e84b12877ce0e83737aa29e5"
   integrity sha512-XQU3bhBukrOsQCuwZndwGcCVQHyZi53fQ6Ys1Fym7E4olpIqqZZhhoFJoaKVvV17lWQoXYwgWN2nF5crA8J2jw==
@@ -5698,10 +5698,10 @@ eslint-plugin-jsdoc@18.6.2:
     semver "^6.3.0"
     spdx-expression-parse "^3.0.0"
 
-eslint-plugin-jsdoc@19.2.0:
-  version "19.2.0"
-  resolved "https://registry.npmjs.org/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-19.2.0.tgz#f522b970878ae402b28ce62187305b33dfe2c834"
-  integrity sha512-QdNifBFLXCDGdy+26RXxcrqzEZarFWNybCZQVqJQYEYPlxd6lm+LPkrs6mCOhaGc2wqC6zqpedBQFX8nQJuKSw==
+eslint-plugin-jsdoc@20.0.0:
+  version "20.0.0"
+  resolved "https://registry.npmjs.org/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-20.0.0.tgz#210726135117c97fcf302ca312cfeffe7e72e80f"
+  integrity sha512-JtQw5ctQmflpp3szNnAdyQkBKs4gfVC9Yjer9+g7e0F9l/hraQ4N2fBFUBSpWafpxz9TPV6aAUeYHjM6rHRxBw==
   dependencies:
     comment-parser "^0.7.2"
     debug "^4.1.1"
@@ -9047,10 +9047,10 @@ left-pad@^1.3.0:
   resolved "https://registry.npmjs.org/left-pad/-/left-pad-1.3.0.tgz#5b8a3a7765dfe001261dde915589e782f8c94d1e"
   integrity sha512-XI5MPzVNApjAyhQzphX8BkmKsKUxD4LdyK24iZeQGinBN9yTQT3bFlCBy/aVx2HrNcqQGsdot8ghrjyrvMCoEA==
 
-lerna@3.20.1:
-  version "3.20.1"
-  resolved "https://registry.npmjs.org/lerna/-/lerna-3.20.1.tgz#68d42768fc1a243db144558a10d4191c9337646a"
-  integrity sha512-TUS6aSyVdOoXLF1CMwUsT0zCGwgO1LvRUP9zUqWRYdvZP8NofSEzd4ChkRXZWGwXyQ8ozA9bIfwWxMck2QpfIA==
+lerna@3.20.2:
+  version "3.20.2"
+  resolved "https://registry.npmjs.org/lerna/-/lerna-3.20.2.tgz#abf84e73055fe84ee21b46e64baf37b496c24864"
+  integrity sha512-bjdL7hPLpU3Y8CBnw/1ys3ynQMUjiK6l9iDWnEGwFtDy48Xh5JboR9ZJwmKGCz9A/sarVVIGwf1tlRNKUG9etA==
   dependencies:
     "@lerna/add" "3.20.0"
     "@lerna/bootstrap" "3.20.0"
@@ -9065,9 +9065,9 @@ lerna@3.20.1:
     "@lerna/init" "3.18.5"
     "@lerna/link" "3.18.5"
     "@lerna/list" "3.20.0"
-    "@lerna/publish" "3.20.1"
+    "@lerna/publish" "3.20.2"
     "@lerna/run" "3.20.0"
-    "@lerna/version" "3.20.1"
+    "@lerna/version" "3.20.2"
     import-local "^2.0.0"
     npmlog "^4.1.2"
 
@@ -10045,12 +10045,11 @@ nise@^3.0.1:
     lolex "^5.0.1"
     path-to-regexp "^1.7.0"
 
-nock@11.7.0:
-  version "11.7.0"
-  resolved "https://registry.npmjs.org/nock/-/nock-11.7.0.tgz#5eaae8b8a55c0dfc014d05692c8cf3d31d61a342"
-  integrity sha512-7c1jhHew74C33OBeRYyQENT+YXQiejpwIrEjinh6dRurBae+Ei4QjeUaPlkptIF0ZacEiVCnw8dWaxqepkiihg==
+nock@11.7.1:
+  version "11.7.1"
+  resolved "https://registry.npmjs.org/nock/-/nock-11.7.1.tgz#761971f24093e291af6e1f0af5b6eb048b94b1c1"
+  integrity sha512-fW+dlMyquAEvgtmGoRHftKrNnJ7yZcbINQDTW7OKRoTYa+11GA0u0UokWHuvCyZrG5TXkplnEv2jmj6R3vvImg==
   dependencies:
-    chai "^4.1.2"
     debug "^4.1.0"
     json-stringify-safe "^5.0.1"
     lodash "^4.17.13"
