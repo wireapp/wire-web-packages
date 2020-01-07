@@ -24,7 +24,7 @@ import {ClientType} from './client';
 
 describe('Client', () => {
   describe('"connect"', () => {
-    fit('processes WebSocket messages when executed in a web browser.', async () => {
+    it('processes WebSocket messages when executed in a web browser.', async () => {
       const apiClient = new APIClient({urls: APIClient.BACKEND.STAGING});
       const accessTokenData = {
         access_token:
@@ -40,16 +40,14 @@ describe('Client', () => {
         clientType: ClientType.TEMPORARY,
         userId: 'userId',
       };
-      // apiClient['accessTokenStore'].accessToken = accessTokenData;
+      apiClient['accessTokenStore'].accessToken = accessTokenData;
 
-      // const promise = apiClient.connect();
-      // apiClient.transport.ws['socket']['internalOnMessage'](message);
-      // const socket = await promise;
+      const promise = apiClient.connect();
+      apiClient.transport.ws['socket']['internalOnMessage'](message);
+      const socket = await promise;
 
-      // expect(socket).toBeDefined();
-      // apiClient.transport.ws['socket']['internalOnMessage'](message);
-      const aa = 'hola';
-      expect(aa).toBe(aa);
+      expect(socket).toBeDefined();
+      apiClient.transport.ws['socket']['internalOnMessage'](message);
     });
   });
 });
