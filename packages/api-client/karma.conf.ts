@@ -22,7 +22,7 @@ const webpackConfig = require('./webpack.config.js');
 
 const dist = 'dist/';
 const projectName = pkg.name.replace('@wireapp/', '');
-const testCode = 'src/**/*/*test?(.browser).ts';
+const testCode = 'src/**/*test?(.browser).ts';
 
 const preprocessors = {
   [testCode]: ['webpack'],
