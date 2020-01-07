@@ -268,10 +268,10 @@ export class APIClient extends EventEmitter {
     return this.transport.ws.connect(this.context?.clientId, onBeforeConnect);
   }
 
-  // private createContext(userId: string, clientType: ClientType, clientId?: string): Context {
-  //   this.context = this.context ? {...this.context, clientId, clientType} : new Context(userId, clientType, clientId);
-  //   return this.context;
-  // }
+  private createContext(userId: string, clientType: ClientType, clientId?: string): Context {
+    this.context = this.context ? {...this.context, clientId, clientType} : {userId, clientType, clientId};
+    return this.context;
+  }
 
   public disconnect(reason?: string): void {
     this.transport.ws.disconnect(reason);

@@ -20,23 +20,22 @@
 /* eslint-disable dot-notation */
 
 import {APIClient} from './APIClient';
-import {Context} from './auth/Context';
 import {ClientType} from './client';
 
 describe('Client', () => {
   describe('"connect"', () => {
     fit('processes WebSocket messages when executed in a web browser.', async () => {
       const apiClient = new APIClient({urls: APIClient.BACKEND.STAGING});
-      const accessTokenData = {
-        access_token:
-          'iJCRCjc8oROO-dkrkqCXOade997oa8Jhbz6awMUQPBQo80VenWqp_oNvfY6AnU5BxEsdDPOBfBP-uz_b0gAKBQ==.v=1.k=1.d=1498600993.t=a.l=.u=aaf9a833-ef30-4c22-86a0-9adc8a15b3b4.c=15037015562284012115',
-        expires_in: 900,
-        token_type: 'Bearer',
-        user: 'aaf9a833-ef30-4c22-86a0-9adc8a15b3b4',
-      };
-      const dataBuffer = new TextEncoder().encode('{}').buffer;
-      const message = new MessageEvent('message', {data: dataBuffer});
-      apiClient.context = new Context('userId', ClientType.TEMPORARY, undefined);
+      // const accessTokenData = {
+      //   access_token:
+      //     'iJCRCjc8oROO-dkrkqCXOade997oa8Jhbz6awMUQPBQo80VenWqp_oNvfY6AnU5BxEsdDPOBfBP-uz_b0gAKBQ==.v=1.k=1.d=1498600993.t=a.l=.u=aaf9a833-ef30-4c22-86a0-9adc8a15b3b4.c=15037015562284012115',
+      //   expires_in: 900,
+      //   token_type: 'Bearer',
+      //   user: 'aaf9a833-ef30-4c22-86a0-9adc8a15b3b4',
+      // };
+      // const dataBuffer = new TextEncoder().encode('{}').buffer;
+      // const message = new MessageEvent('message', {data: dataBuffer});
+      apiClient.context = {userId: 'userId', clientType: ClientType.TEMPORARY, clientId: undefined};
       // apiClient['accessTokenStore'].accessToken = accessTokenData;
 
       // const promise = apiClient.connect();
