@@ -19,7 +19,7 @@
 
 import {Cookie as ToughCookie} from 'tough-cookie';
 
-import * as ObfuscationUtil from './ObfuscationUtil';
+import {ObfuscationUtil} from './ObfuscationUtil';
 
 describe('"ObfuscationUtil"', () => {
   const accessTokenData = {

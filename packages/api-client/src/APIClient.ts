@@ -42,7 +42,7 @@ import {Backend} from './env/';
 import {GiphyAPI} from './giphy/';
 import {HttpClient} from './http/';
 import {NotificationAPI} from './notification/';
-import * as ObfuscationUtil from './obfuscation/';
+import {ObfuscationUtil} from './obfuscation/';
 import {SelfAPI} from './self/';
 import {WebSocketClient} from './tcp/';
 import {
