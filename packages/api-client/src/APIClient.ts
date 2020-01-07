@@ -116,10 +116,10 @@ export class APIClient extends EventEmitter {
   constructor(config?: Config) {
     super();
     this.config = {...defaultConfig, ...config};
-    // this.accessTokenStore = new AccessTokenStore();
-    // this.accessTokenStore.on(AccessTokenStore.TOPIC.ACCESS_TOKEN_REFRESH, (accessToken: AccessTokenData) =>
-    //   this.emit(APIClient.TOPIC.ACCESS_TOKEN_REFRESH, accessToken),
-    // );
+    this.accessTokenStore = new AccessTokenStore();
+    this.accessTokenStore.on(AccessTokenStore.TOPIC.ACCESS_TOKEN_REFRESH, (accessToken: AccessTokenData) =>
+      this.emit(APIClient.TOPIC.ACCESS_TOKEN_REFRESH, accessToken),
+    );
     CookieStore.emitter.on(CookieStore.TOPIC.COOKIE_REFRESH, (cookie?: Cookie) =>
       this.emit(APIClient.TOPIC.COOKIE_REFRESH, cookie),
     );
@@ -129,81 +129,81 @@ export class APIClient extends EventEmitter {
       markdown: false,
     });
 
-    // const httpClient = new HttpClient(this.config.urls.rest, this.accessTokenStore);
-    // const webSocket = new WebSocketClient(this.config.urls.ws, httpClient);
+    const httpClient = new HttpClient(this.config.urls.rest, this.accessTokenStore);
+    const webSocket = new WebSocketClient(this.config.urls.ws, httpClient);
 
-    // webSocket.on(WebSocketClient.TOPIC.ON_INVALID_TOKEN, async error => {
-    //   this.logger.warn(`Cannot renew access token because cookie is invalid: ${error.message}`, error);
-    //   await this.logout();
-    //   this.emit(APIClient.TOPIC.ON_LOGOUT, error);
-    // });
+    webSocket.on(WebSocketClient.TOPIC.ON_INVALID_TOKEN, async error => {
+      this.logger.warn(`Cannot renew access token because cookie is invalid: ${error.message}`, error);
+      await this.logout();
+      this.emit(APIClient.TOPIC.ON_LOGOUT, error);
+    });
 
-    // this.transport = {
-    //   http: httpClient,
-    //   ws: webSocket,
-    // };
+    this.transport = {
+      http: httpClient,
+      ws: webSocket,
+    };
 
-    // this.account = {
-    //   api: new AccountAPI(this.transport.http),
-    // };
-    // this.asset = {
-    //   api: new AssetAPI(this.transport.http),
-    // };
-    // this.auth = {
-    //   api: new AuthAPI(this.transport.http),
-    // };
-    // this.broadcast = {
-    //   api: new BroadcastAPI(this.transport.http),
-    // };
-    // this.client = {
-    //   api: new ClientAPI(this.transport.http),
-    // };
-    // this.connection = {
-    //   api: new ConnectionAPI(this.transport.http),
-    // };
-    // this.conversation = {
-    //   api: new ConversationAPI(this.transport.http),
-    // };
-    // this.giphy = {
-    //   api: new GiphyAPI(this.transport.http),
-    // };
-    // this.notification = {
-    //   api: new NotificationAPI(this.transport.http),
-    // };
-    // this.self = {
-    //   api: new SelfAPI(this.transport.http),
-    // };
+    this.account = {
+      api: new AccountAPI(this.transport.http),
+    };
+    this.asset = {
+      api: new AssetAPI(this.transport.http),
+    };
+    this.auth = {
+      api: new AuthAPI(this.transport.http),
+    };
+    this.broadcast = {
+      api: new BroadcastAPI(this.transport.http),
+    };
+    this.client = {
+      api: new ClientAPI(this.transport.http),
+    };
+    this.connection = {
+      api: new ConnectionAPI(this.transport.http),
+    };
+    this.conversation = {
+      api: new ConversationAPI(this.transport.http),
+    };
+    this.giphy = {
+      api: new GiphyAPI(this.transport.http),
+    };
+    this.notification = {
+      api: new NotificationAPI(this.transport.http),
+    };
+    this.self = {
+      api: new SelfAPI(this.transport.http),
+    };
 
-    // this.teams = {
-    //   feature: {
-    //     api: new FeatureAPI(this.transport.http),
-    //   },
-    //   identityProvider: {
-    //     api: new IdentityProviderAPI(this.transport.http),
-    //   },
-    //   invitation: {
-    //     api: new TeamInvitationAPI(this.transport.http),
-    //   },
-    //   legalhold: {
-    //     api: new LegalHoldAPI(this.transport.http),
-    //   },
-    //   member: {
-    //     api: new MemberAPI(this.transport.http),
-    //   },
-    //   payment: {
-    //     api: new PaymentAPI(this.transport.http),
-    //   },
-    //   service: {
-    //     api: new ServiceAPI(this.transport.http),
-    //   },
-    //   team: {
-    //     api: new TeamAPI(this.transport.http),
-    //   },
-    // };
+    this.teams = {
+      feature: {
+        api: new FeatureAPI(this.transport.http),
+      },
+      identityProvider: {
+        api: new IdentityProviderAPI(this.transport.http),
+      },
+      invitation: {
+        api: new TeamInvitationAPI(this.transport.http),
+      },
+      legalhold: {
+        api: new LegalHoldAPI(this.transport.http),
+      },
+      member: {
+        api: new MemberAPI(this.transport.http),
+      },
+      payment: {
+        api: new PaymentAPI(this.transport.http),
+      },
+      service: {
+        api: new ServiceAPI(this.transport.http),
+      },
+      team: {
+        api: new TeamAPI(this.transport.http),
+      },
+    };
 
-    // this.user = {
-    //   api: new UserAPI(this.transport.http),
-    // };
+    this.user = {
+      api: new UserAPI(this.transport.http),
+    };
   }
 
   public async init(clientType: ClientType = ClientType.NONE, cookie?: Cookie): Promise<Context> {
@@ -268,10 +268,10 @@ export class APIClient extends EventEmitter {
     return this.transport.ws.connect(this.context?.clientId, onBeforeConnect);
   }
 
-  // private createContext(userId: string, clientType: ClientType, clientId?: string): Context {
-  //   this.context = this.context ? {...this.context, clientId, clientType} : new Context(userId, clientType, clientId);
-  //   return this.context;
-  // }
+  private createContext(userId: string, clientType: ClientType, clientId?: string): Context {
+    this.context = this.context ? {...this.context, clientId, clientType} : new Context(userId, clientType, clientId);
+    return this.context;
+  }
 
   public disconnect(reason?: string): void {
     this.transport.ws.disconnect(reason);
