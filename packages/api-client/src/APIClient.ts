@@ -269,7 +269,7 @@ export class APIClient extends EventEmitter {
   }
 
   private createContext(userId: string, clientType: ClientType, clientId?: string): Context {
-    this.context = this.context ? {...this.context, clientId, clientType} : new Context(userId, clientType, clientId);
+    this.context = this.context ? {...this.context, clientId, clientType} : {userId, clientType, clientId};
     return this.context;
   }
 

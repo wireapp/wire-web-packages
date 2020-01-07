@@ -20,7 +20,6 @@
 /* eslint-disable dot-notation */
 
 import {APIClient} from './APIClient';
-import {Context} from './auth/Context';
 import {ClientType} from './client';
 
 describe('Client', () => {
@@ -36,7 +35,11 @@ describe('Client', () => {
       };
       const dataBuffer = new TextEncoder().encode('{}').buffer;
       const message = new MessageEvent('message', {data: dataBuffer});
-      apiClient.context = new Context('userId', ClientType.TEMPORARY, undefined);
+      apiClient.context = {
+        clientId: undefined,
+        clientType: ClientType.TEMPORARY,
+        userId: 'userId',
+      };
       apiClient['accessTokenStore'].accessToken = accessTokenData;
 
       const promise = apiClient.connect();
