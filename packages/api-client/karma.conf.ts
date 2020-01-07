@@ -25,7 +25,8 @@ const projectName = pkg.name.replace('@wireapp/', '');
 const testCode = 'src/**/*test?(.browser).ts';
 
 const preprocessors = {
-  [testCode]: ['webpack'],
+  'src/**/*.ts': ['webpack'],
+  //[testCode]: ['webpack'],
 };
 
 module.exports = (config: any): void => {
