@@ -23,7 +23,6 @@ import {
   Conversation,
   ConversationCode,
   ConversationIds,
-  ConversationUpdate,
   Conversations,
   Invite,
   Member,
@@ -43,8 +42,9 @@ import {ValidationError} from '../validation/';
 import {
   ConversationMemberUpdateData,
   ConversationMessageTimerUpdateData,
-  ConversationTypingData,
+  ConversationNameUpdateData,
   ConversationReceiptModeUpdateData,
+  ConversationTypingData,
 } from './data';
 
 export class ConversationAPI {
@@ -58,6 +58,7 @@ export class ConversationAPI {
     MEMBERS: 'members',
     MESSAGES: 'messages',
     MESSAGE_TIMER: 'message-timer',
+    NAME: 'name',
     OTR: 'otr',
     RECEIPT_MODE: 'receipt-mode',
     SELF: 'self',
@@ -437,17 +438,17 @@ export class ConversationAPI {
   /**
    * Update conversation properties.
    * @param conversationId The conversation ID
-   * @param conversationData The new conversation
+   * @param conversationNameData The new conversation name
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/updateConversation
    */
   public async putConversation(
     conversationId: string,
-    conversationData: ConversationUpdate,
+    conversationNameData: ConversationNameUpdateData,
   ): Promise<ConversationRenameEvent> {
     const config: AxiosRequestConfig = {
-      data: conversationData,
+      data: conversationNameData,
       method: 'put',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}`,
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.NAME}`,
     };
 
     const response = await this.client.sendJSON<ConversationRenameEvent>(config);
