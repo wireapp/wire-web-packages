@@ -36,10 +36,16 @@ import {
   ConversationMemberLeaveEvent,
   ConversationMessageTimerUpdateEvent,
   ConversationRenameEvent,
+  ConversationReceiptModeUpdateEvent,
 } from '../event/';
 import {HttpClient} from '../http/';
 import {ValidationError} from '../validation/';
-import {ConversationMemberUpdateData, ConversationMessageTimerUpdateData, ConversationTypingData} from './data';
+import {
+  ConversationMemberUpdateData,
+  ConversationMessageTimerUpdateData,
+  ConversationTypingData,
+  ConversationReceiptModeUpdateData,
+} from './data';
 
 export class ConversationAPI {
   public static readonly MAX_CHUNK_SIZE = 500;
@@ -51,7 +57,9 @@ export class ConversationAPI {
     JOIN: '/join',
     MEMBERS: 'members',
     MESSAGES: 'messages',
+    MESSAGE_TIMER: 'message-timer',
     OTR: 'otr',
+    RECEIPT_MODE: 'receipt-mode',
     SELF: 'self',
     TYPING: 'typing',
   };
@@ -459,10 +467,30 @@ export class ConversationAPI {
     const config: AxiosRequestConfig = {
       data: messageTimerData,
       method: 'put',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/message-timer`,
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.MESSAGE_TIMER}`,
     };
 
     const response = await this.client.sendJSON<ConversationMessageTimerUpdateEvent>(config);
+    return response.data;
+  }
+
+  /**
+   * Update the receipt mode for a conversation.
+   * @param conversationId The conversation ID
+   * @param receiptModeData The new receipt mode
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/updateConversationReceiptMode
+   */
+  public async putConversationReceiptMode(
+    conversationId: string,
+    receiptModeData: ConversationReceiptModeUpdateData,
+  ): Promise<ConversationReceiptModeUpdateEvent> {
+    const config: AxiosRequestConfig = {
+      data: receiptModeData,
+      method: 'put',
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.RECEIPT_MODE}`,
+    };
+
+    const response = await this.client.sendJSON<ConversationReceiptModeUpdateEvent>(config);
     return response.data;
   }
 
