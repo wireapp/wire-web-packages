@@ -23,7 +23,6 @@ import {
   Conversation,
   ConversationCode,
   ConversationIds,
-  ConversationUpdate,
   Conversations,
   Invite,
   Member,
@@ -38,10 +37,17 @@ import {
   ConversationRenameEvent,
   ConversationCodeUpdateEvent,
   ConversationCodeDeleteEvent,
+  ConversationReceiptModeUpdateEvent,
 } from '../event/';
 import {HttpClient} from '../http/';
 import {ValidationError} from '../validation/';
-import {ConversationMemberUpdateData, ConversationMessageTimerUpdateData, ConversationTypingData} from './data';
+import {
+  ConversationMemberUpdateData,
+  ConversationMessageTimerUpdateData,
+  ConversationNameUpdateData,
+  ConversationReceiptModeUpdateData,
+  ConversationTypingData,
+} from './data';
 
 export class ConversationAPI {
   public static readonly MAX_CHUNK_SIZE = 500;
@@ -54,7 +60,10 @@ export class ConversationAPI {
     JOIN: '/join',
     MEMBERS: 'members',
     MESSAGES: 'messages',
+    MESSAGE_TIMER: 'message-timer',
+    NAME: 'name',
     OTR: 'otr',
+    RECEIPT_MODE: 'receipt-mode',
     SELF: 'self',
     TYPING: 'typing',
   };
@@ -477,17 +486,17 @@ export class ConversationAPI {
   /**
    * Update conversation properties.
    * @param conversationId The conversation ID
-   * @param conversationData The new conversation
+   * @param conversationNameData The new conversation name
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/updateConversation
    */
   public async putConversation(
     conversationId: string,
-    conversationData: ConversationUpdate,
+    conversationNameData: ConversationNameUpdateData,
   ): Promise<ConversationRenameEvent> {
     const config: AxiosRequestConfig = {
-      data: conversationData,
+      data: conversationNameData,
       method: 'put',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}`,
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.NAME}`,
     };
 
     const response = await this.client.sendJSON<ConversationRenameEvent>(config);
@@ -507,10 +516,30 @@ export class ConversationAPI {
     const config: AxiosRequestConfig = {
       data: messageTimerData,
       method: 'put',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/message-timer`,
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.MESSAGE_TIMER}`,
     };
 
     const response = await this.client.sendJSON<ConversationMessageTimerUpdateEvent>(config);
+    return response.data;
+  }
+
+  /**
+   * Update the receipt mode for a conversation.
+   * @param conversationId The conversation ID
+   * @param receiptModeData The new receipt mode
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/updateConversationReceiptMode
+   */
+  public async putConversationReceiptMode(
+    conversationId: string,
+    receiptModeData: ConversationReceiptModeUpdateData,
+  ): Promise<ConversationReceiptModeUpdateEvent> {
+    const config: AxiosRequestConfig = {
+      data: receiptModeData,
+      method: 'put',
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.RECEIPT_MODE}`,
+    };
+
+    const response = await this.client.sendJSON<ConversationReceiptModeUpdateEvent>(config);
     return response.data;
   }
 
