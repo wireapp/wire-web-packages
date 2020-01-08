@@ -34,7 +34,7 @@ export class GiphyAPI {
 
   /**
    * Get a GIF by ID
-   * @param one or multiple image ID(s)
+   * @param ids one or multiple image ID(s)
    */
   public async getGiphyById(ids: string | string[]): Promise<GiphyResult> {
     const allIds = Array<string>().concat(ids);
