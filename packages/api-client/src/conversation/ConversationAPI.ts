@@ -36,7 +36,10 @@ import {
   ConversationMemberLeaveEvent,
   ConversationMessageTimerUpdateEvent,
   ConversationRenameEvent,
+  ConversationCodeUpdateEvent,
+  ConversationCodeDeleteEvent,
   ConversationReceiptModeUpdateEvent,
+  ConversationAccessUpdateEvent,
 } from '../event/';
 import {HttpClient} from '../http/';
 import {ValidationError} from '../validation/';
@@ -47,13 +50,16 @@ import {
   ConversationReceiptModeUpdateData,
   ConversationTypingData,
   ConversationOtherMemberUpdateData,
+  ConversationAccessUpdateData,
 } from './data';
 
 export class ConversationAPI {
   public static readonly MAX_CHUNK_SIZE = 500;
   public static readonly URL = {
+    ACCESS: 'access',
     BOTS: 'bots',
     CLIENTS: '/clients',
+    CODE: 'code',
     CODE_CHECK: '/code-check',
     CONVERSATIONS: '/conversations',
     JOIN: '/join',
@@ -69,6 +75,21 @@ export class ConversationAPI {
   };
 
   constructor(private readonly client: HttpClient) {}
+
+  /**
+   * Delete a conversation code.
+   * @param conversationId ID of conversation to delete the code for
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/deleteConversationCode
+   */
+  public async deleteConversationCode(conversationId: string): Promise<ConversationCodeDeleteEvent> {
+    const config: AxiosRequestConfig = {
+      method: 'delete',
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.CODE}`,
+    };
+
+    const response = await this.client.sendJSON<ConversationCodeDeleteEvent>(config);
+    return response.data;
+  }
 
   /**
    * Remove bot from conversation.
@@ -124,6 +145,21 @@ export class ConversationAPI {
     };
 
     return getConversationChunks();
+  }
+
+  /**
+   * Get a conversation code.
+   * @param conversationId ID of conversation to get the code for
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/getConversationCode
+   */
+  public async getConversationCode(conversationId: string): Promise<ConversationCode> {
+    const config: AxiosRequestConfig = {
+      method: 'GET',
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.CODE}`,
+    };
+
+    const response = await this.client.sendJSON<ConversationCode>(config);
+    return response.data;
   }
 
   /**
@@ -335,7 +371,22 @@ export class ConversationAPI {
   }
 
   /**
-   * Validates conversation code
+   * Create or recreate a conversation code.
+   * @param conversationId ID of conversation to request the code for
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/createConversationCode
+   */
+  public async postConversationCodeRequest(conversationId: string): Promise<ConversationCodeUpdateEvent> {
+    const config: AxiosRequestConfig = {
+      method: 'post',
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.CODE}`,
+    };
+
+    const response = await this.client.sendJSON<ConversationCodeUpdateEvent>(config);
+    return response.data;
+  }
+
+  /**
+   * Validate a conversation code.
    * @param conversationCode The conversation code
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/checkConversationCode
    */
@@ -439,7 +490,7 @@ export class ConversationAPI {
 
   /**
    * Send typing notifications.
-   * @param conversationId The Conversation ID
+   * @param conversationId The Conversation ID to send notifications in
    * @param typingData The typing status
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/isTyping
    */
@@ -454,8 +505,28 @@ export class ConversationAPI {
   }
 
   /**
+   * Update access modes for a conversation.
+   * @param conversationId The conversation ID to update the access mode of
+   * @param accessData The new access data
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/updateConversationAccess
+   */
+  public async putAccess(
+    conversationId: string,
+    accessData: ConversationAccessUpdateData,
+  ): Promise<ConversationAccessUpdateEvent> {
+    const config: AxiosRequestConfig = {
+      data: accessData,
+      method: 'put',
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.NAME}`,
+    };
+
+    const response = await this.client.sendJSON<ConversationAccessUpdateEvent>(config);
+    return response.data;
+  }
+
+  /**
    * Update conversation properties.
-   * @param conversationId The conversation ID
+   * @param conversationId The conversation ID to update properties of
    * @param conversationNameData The new conversation name
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/updateConversation
    */
