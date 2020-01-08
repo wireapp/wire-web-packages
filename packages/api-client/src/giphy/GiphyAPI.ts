@@ -37,10 +37,10 @@ export class GiphyAPI {
    * @param id ID of GIF image
    */
   public async getGiphyById(ids: string | string[]): Promise<GiphyResult> {
-    ids = [].concat(ids as any);
+    const allIds = Array<string>().concat(ids);
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${GiphyAPI.URL.PROXY}/${GiphyAPI.URL.GIPHY}/${ids.join(',')}`,
+      url: `${GiphyAPI.URL.PROXY}/${GiphyAPI.URL.GIPHY}/${allIds.join(',')}`,
     };
 
     const response = await this.client.sendJSON<GiphyResult>(config);
