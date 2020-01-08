@@ -40,8 +40,8 @@ import {HttpClient} from '../http/';
 import {ValidationError} from '../validation/';
 import {
   ConversationMemberUpdateData,
-  ConversationNameUpdateData,
   ConversationMessageTimerUpdateData,
+  ConversationNameUpdateData,
   ConversationTypingData,
 } from './data';
 
