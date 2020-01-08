@@ -33,7 +33,7 @@ export class GiphyAPI {
   };
 
   /**
-   * Get a GIF by ID
+   * Get a Giphy image by its ID.
    * @param ids one or multiple image ID(s)
    */
   public async getGiphyById(ids: string | string[]): Promise<GiphyResult> {
