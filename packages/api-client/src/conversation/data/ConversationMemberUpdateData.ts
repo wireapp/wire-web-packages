@@ -18,13 +18,24 @@
  */
 
 import {MutedStatus} from '../MutedStatus';
+import {DefaultConversationRole} from '../';
 
-export interface ConversationMemberUpdateData {
-  hidden_ref?: string;
+export interface ConversationMemberUpdateData extends Partial<ConversationOtherMemberUpdateData> {
+  /** Whether the conversation with this user is hidden */
   hidden?: boolean;
-  otr_archived_ref?: string;
+  /** A reference point for (un)hiding */
+  hidden_ref?: string;
+  /** Whether to notify on conversation updates for this user */
   otr_archived?: boolean;
+  /** A reference point for (un)archiving */
+  otr_archived_ref?: string;
+  /** A reference point for (un)muting */
   otr_muted_ref?: string | null;
+  /** Whether to notify on conversation updates for this user */
   otr_muted?: boolean | null;
   otr_muted_status?: MutedStatus | null;
+}
+
+export interface ConversationOtherMemberUpdateData {
+  conversation_role: DefaultConversationRole | string;
 }

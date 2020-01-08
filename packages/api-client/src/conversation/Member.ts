@@ -17,15 +17,20 @@
  *
  */
 
-import {MutedStatus, ServiceRef} from '../conversation/';
+import {DefaultConversationRole, MutedStatus, ServiceRef} from './';
 
 export interface Member {
-  conversation_role?: string;
+  conversation_role?: DefaultConversationRole | string;
+  /** Whether the conversation with this user is hidden */
   hidden?: boolean;
+  /** A reference point for (un)hiding */
   hidden_ref: string | null;
   id: string;
+  /** Whether to notify on conversation updates for this user */
   otr_archived?: boolean;
+  /** A reference point for (un)archiving */
   otr_archived_ref: string | null;
+  /** Whether to notify on conversation updates for this user */
   otr_muted: boolean | null;
   otr_muted_ref: string | null;
   otr_muted_status: MutedStatus | null;

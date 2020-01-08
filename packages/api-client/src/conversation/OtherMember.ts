@@ -17,10 +17,10 @@
  *
  */
 
-import {ServiceRef} from '../conversation/';
+import {DefaultConversationRole, ServiceRef} from './';
 
 export interface OtherMember {
-  conversation_role?: string;
+  conversation_role?: DefaultConversationRole | string;
   id: string;
   service?: ServiceRef;
   status: number;
