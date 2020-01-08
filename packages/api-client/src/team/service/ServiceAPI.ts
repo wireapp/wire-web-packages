@@ -38,8 +38,8 @@ export class ServiceAPI {
       method: 'get',
       params: {
         size: limit,
-        start: start,
-        tags: tags,
+        start,
+        tags,
       },
       url: `/${ServiceAPI.URL.SERVICES}`,
     };
