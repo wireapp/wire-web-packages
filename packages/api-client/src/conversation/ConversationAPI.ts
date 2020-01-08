@@ -424,7 +424,7 @@ export class ConversationAPI {
 
   /**
    * Send typing notifications.
-   * @param conversationId The Conversation ID
+   * @param conversationId The Conversation ID to send notifications in
    * @param typingData The typing status
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/isTyping
    */
@@ -440,7 +440,7 @@ export class ConversationAPI {
 
   /**
    * Update access modes for a conversation.
-   * @param conversationId The conversation ID
+   * @param conversationId The conversation ID to update the access mode of
    * @param accessData The new access data
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/updateConversationAccess
    */
@@ -460,7 +460,7 @@ export class ConversationAPI {
 
   /**
    * Update conversation properties.
-   * @param conversationId The conversation ID
+   * @param conversationId The conversation ID to update properties of
    * @param conversationNameData The new conversation name
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/updateConversation
    */
