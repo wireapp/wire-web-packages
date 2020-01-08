@@ -36,6 +36,7 @@ import {
   ConversationMessageTimerUpdateEvent,
   ConversationRenameEvent,
   ConversationReceiptModeUpdateEvent,
+  ConversationAccessUpdateEvent,
 } from '../event/';
 import {HttpClient} from '../http/';
 import {ValidationError} from '../validation/';
@@ -45,11 +46,13 @@ import {
   ConversationNameUpdateData,
   ConversationReceiptModeUpdateData,
   ConversationTypingData,
+  ConversationAccessUpdateData,
 } from './data';
 
 export class ConversationAPI {
   public static readonly MAX_CHUNK_SIZE = 500;
   public static readonly URL = {
+    ACCESS: 'access',
     BOTS: 'bots',
     CLIENTS: '/clients',
     CODE_CHECK: '/code-check',
@@ -433,6 +436,26 @@ export class ConversationAPI {
     };
 
     await this.client.sendJSON(config);
+  }
+
+  /**
+   * Update access modes for a conversation.
+   * @param conversationId The conversation ID
+   * @param accessData The new access data
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/updateConversationAccess
+   */
+  public async putAccess(
+    conversationId: string,
+    accessData: ConversationAccessUpdateData,
+  ): Promise<ConversationAccessUpdateEvent> {
+    const config: AxiosRequestConfig = {
+      data: accessData,
+      method: 'put',
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.NAME}`,
+    };
+
+    const response = await this.client.sendJSON<ConversationAccessUpdateEvent>(config);
+    return response.data;
   }
 
   /**
