@@ -30,4 +30,9 @@ export interface GiphyResult {
 
 export type GiphySearchResult = GiphyResult & {
   data: GiphyImage[];
+  pagination: {
+    total_count: number;
+    count: number;
+    offset: number;
+  };
 };

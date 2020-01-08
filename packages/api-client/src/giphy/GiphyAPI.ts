@@ -33,6 +33,21 @@ export class GiphyAPI {
   };
 
   /**
+   * Get a GIF by ID
+   * @param id ID of GIF image
+   */
+  public async getGiphyById(ids: string | string[]): Promise<GiphyResult> {
+    ids = [].concat(ids as any);
+    const config: AxiosRequestConfig = {
+      method: 'get',
+      url: `${GiphyAPI.URL.PROXY}/${GiphyAPI.URL.GIPHY}/${ids.join(',')}`,
+    };
+
+    const response = await this.client.sendJSON<GiphyResult>(config);
+    return response.data;
+  }
+
+  /**
    * Get a random GIF from Giphy.
    * @param tag GIF tag to limit randomness
    */
