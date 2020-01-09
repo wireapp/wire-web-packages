@@ -82,7 +82,7 @@
     "test:project": "yarn dist && yarn test",
     "test:browser": "karma start",
     "test:node": "cross-env NODE_DEBUG=@wireapp/api-client* nyc jasmine --config=jasmine.json",
-    "watch": "webpack-dev-server --config webpack.config.js"
+    "watch": "webpack-dev-server --config webpack.browser.js"
   },
   "version": "9.12.0"
 }

@@ -70,7 +70,7 @@ describe('ReconnectingWebsocket', () => {
   let server: WebSocketServer | undefined;
   const getServerAddress = () => {
     if (server) {
-      const address: AddressInfo = <AddressInfo>server.address();
+      const address: AddressInfo = server.address() as AddressInfo;
       return Promise.resolve(`http://127.0.0.1:${address.port}`);
     }
     throw new Error('Server is undefined');
