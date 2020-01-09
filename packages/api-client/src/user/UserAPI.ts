@@ -386,6 +386,35 @@ export class UserAPI {
   }
 
   /**
+   * Check availability of a single user handle.
+   * @param handle The handle to check
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/checkUserHandle
+   */
+  public async headHandle(handle: string): Promise<void> {
+    const config: AxiosRequestConfig = {
+      method: 'head',
+      url: `${UserAPI.URL.USERS}/${UserAPI.URL.HANDLES}/${handle}`,
+    };
+
+    await this.client.sendJSON<string[]>(config);
+  }
+
+  /**
+   * Get a user by handle.
+   * @param handle The handle of a user to search for
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getUserByHandle
+   */
+  public async getUserByHandle(handle: string): Promise<{user: string}> {
+    const config: AxiosRequestConfig = {
+      method: 'get',
+      url: `${UserAPI.URL.USERS}/${UserAPI.URL.HANDLES}/${handle}`,
+    };
+
+    const response = await this.client.sendJSON<{user: string}>(config);
+    return response.data;
+  }
+
+  /**
    * Given a map of user IDs to client IDs return a prekey for each one.
    * Note: The maximum map size is 128 entries.
    * @param userClientMap A map of the user's clients
