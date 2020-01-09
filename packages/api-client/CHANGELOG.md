@@ -3,6 +3,99 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.11.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.10.0...@wireapp/api-client@9.11.0) (2020-01-09)
+
+
+### Features
+
+* **api-client:** Add getGiphyById endpoint ([#2715](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2715)) ([71692dd](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/71692ddff489a43e2931c78954a9c19909132b7a))
+
+
+
+
+
+# [9.10.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.9.0...@wireapp/api-client@9.10.0) (2020-01-08)
+
+
+### Features
+
+* **api-client:** Add putAccess ([#2721](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2721)) ([2dae7c4](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/2dae7c43fa1b10006c79292201e873567ef581fd))
+
+
+
+
+
+# [9.9.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.8.0...@wireapp/api-client@9.9.0) (2020-01-08)
+
+
+### Features
+
+* **api-client:** Add conversation code endpoints ([#2717](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2717)) ([2b59843](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/2b598431ff19e81004544e4c728a46f5d42b9e55))
+
+
+
+
+
+# [9.8.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.7.0...@wireapp/api-client@9.8.0) (2020-01-08)
+
+
+### Features
+
+* **api-client:** Add putConversationReceiptMode ([#2716](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2716)) ([96bb812](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/96bb8122c0d92ad12f77c6879edd902afca2dbfa))
+
+
+
+
+
+# [9.7.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.6.1...@wireapp/api-client@9.7.0) (2020-01-08)
+
+
+### Bug Fixes
+
+* **api-client:** Use new endpoint to update a conversation's name ([#2718](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2718)) ([6cdd1b1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/6cdd1b16022e9c41a67ae09f2a37bb491b3da401))
+
+
+### Features
+
+* **api-client:** Add conversation role to conversation members ([#2719](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2719)) ([fec3203](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/fec32032a99cbe832150383cc31d85ad3308bad8))
+
+
+
+
+
+## [9.6.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.6.0...@wireapp/api-client@9.6.1) (2020-01-08)
+
+
+### Bug Fixes
+
+* **api-client:** Narrow conversation event return types ([#2714](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2714)) ([467f498](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/467f49872f418bbd55dbdd15509601dcac80018c))
+
+
+
+
+
+# [9.6.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.5.0...@wireapp/api-client@9.6.0) (2020-01-08)
+
+
+### Features
+
+* **api-client:** Add start and tags parameter to getServices e… ([#2713](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2713)) ([6feb8e2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/6feb8e24f9df1c4be4086e354e6ca41a3f89551c))
+
+
+
+
+
+# [9.5.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.4.0...@wireapp/api-client@9.5.0) (2020-01-08)
+
+
+### Features
+
+* **eslint-config:** Add support for TypeScript files in ESLint… ([#2648](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2648)) ([e55d69e](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/e55d69e300cff8eeb7596e6231c6e832d1219e8d))
+
+
+
+
+
 # [9.4.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.3.3...@wireapp/api-client@9.4.0) (2020-01-06)
 
 

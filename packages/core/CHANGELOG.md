@@ -3,6 +3,73 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [15.2.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.6...@wireapp/core@15.2.7) (2020-01-09)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.2.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.5...@wireapp/core@15.2.6) (2020-01-08)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.2.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.4...@wireapp/core@15.2.5) (2020-01-08)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.2.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.3...@wireapp/core@15.2.4) (2020-01-08)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.2.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.2...@wireapp/core@15.2.3) (2020-01-08)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.2.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.1...@wireapp/core@15.2.2) (2020-01-08)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.2.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.0...@wireapp/core@15.2.1) (2020-01-08)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [15.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.1.19...@wireapp/core@15.2.0) (2020-01-08)
+
+
+### Features
+
+* **eslint-config:** Add support for TypeScript files in ESLint… ([#2648](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2648)) ([e55d69e](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/e55d69e300cff8eeb7596e6231c6e832d1219e8d))
+
+
+
+
+
 ## [15.1.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.1.18...@wireapp/core@15.1.19) (2020-01-06)
 
 **Note:** Version bump only for package @wireapp/core

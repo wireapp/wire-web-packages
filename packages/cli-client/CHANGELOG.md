@@ -3,6 +3,73 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@8.1.6...@wireapp/cli-client@8.1.7) (2020-01-09)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [8.1.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@8.1.5...@wireapp/cli-client@8.1.6) (2020-01-08)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [8.1.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@8.1.4...@wireapp/cli-client@8.1.5) (2020-01-08)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [8.1.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@8.1.3...@wireapp/cli-client@8.1.4) (2020-01-08)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [8.1.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@8.1.2...@wireapp/cli-client@8.1.3) (2020-01-08)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [8.1.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@8.1.1...@wireapp/cli-client@8.1.2) (2020-01-08)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [8.1.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@8.1.0...@wireapp/cli-client@8.1.1) (2020-01-08)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+# [8.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@8.0.31...@wireapp/cli-client@8.1.0) (2020-01-08)
+
+
+### Features
+
+* **eslint-config:** Add support for TypeScript files in ESLint… ([#2648](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/issues/2648)) ([e55d69e](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/commit/e55d69e300cff8eeb7596e6231c6e832d1219e8d))
+
+
+
+
+
 ## [8.0.31](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@8.0.30...@wireapp/cli-client@8.0.31) (2020-01-06)
 
 **Note:** Version bump only for package @wireapp/cli-client
