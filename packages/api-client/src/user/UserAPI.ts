@@ -396,7 +396,7 @@ export class UserAPI {
       url: `${UserAPI.URL.USERS}/${UserAPI.URL.HANDLES}/${handle}`,
     };
 
-    await this.client.sendJSON<string[]>(config);
+    await this.client.sendJSON(config);
   }
 
   /**
