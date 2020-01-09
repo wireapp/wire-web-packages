@@ -46,7 +46,7 @@ import * as ObfuscationUtil from './obfuscation/';
 import {SelfAPI} from './self/';
 import {WebSocketClient} from './tcp/';
 import {
-  ConversationAPI as TeamConversationAPI,
+  TeamConversationAPI,
   FeatureAPI,
   IdentityProviderAPI,
   LegalHoldAPI,

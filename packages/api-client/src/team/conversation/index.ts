@@ -17,4 +17,4 @@
  *
  */
 
-export * from './ConversationAPI';
+export * from './TeamConversationAPI';

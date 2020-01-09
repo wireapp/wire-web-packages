@@ -22,7 +22,7 @@ import {AxiosRequestConfig} from 'axios';
 import {HttpClient} from '../../http';
 import {ConversationRolesList} from '../../conversation/ConversationRole';
 
-export class ConversationAPI {
+export class TeamConversationAPI {
   constructor(private readonly client: HttpClient) {}
 
   public static readonly URL = {
@@ -33,7 +33,7 @@ export class ConversationAPI {
   public async getRoles(teamId: string): Promise<ConversationRolesList> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${ConversationAPI.URL.TEAMS}/${teamId}/${ConversationAPI.URL.CONVERSATIONS}`,
+      url: `${TeamConversationAPI.URL.TEAMS}/${teamId}/${TeamConversationAPI.URL.CONVERSATIONS}`,
     };
 
     const response = await this.client.sendJSON<ConversationRolesList>(config);
