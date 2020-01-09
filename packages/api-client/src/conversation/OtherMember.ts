@@ -17,10 +17,9 @@
  *
  */
 
-import {DefaultConversationRole, ServiceRef} from './';
+import {ConversationOtherMemberUpdateData} from './data';
 
-export interface OtherMember {
-  conversation_role?: DefaultConversationRole | string;
+export interface OtherMember extends Partial<ConversationOtherMemberUpdateData> {
   id: string;
   service?: ServiceRef;
   status: number;

@@ -18,7 +18,7 @@
  */
 
 import {MutedStatus} from '../MutedStatus';
-import {DefaultConversationRole} from '../';
+import {DefaultConversationRoleName} from '../';
 
 export interface ConversationMemberUpdateData extends Partial<ConversationOtherMemberUpdateData> {
   /** Whether the conversation with this user is hidden */
@@ -37,5 +37,10 @@ export interface ConversationMemberUpdateData extends Partial<ConversationOtherM
 }
 
 export interface ConversationOtherMemberUpdateData {
-  conversation_role: DefaultConversationRole | string;
+  /**
+   * Role name, between 2 and 128 chars, 'wire_' prefix is reserved for
+   * roles designed by Wire (i.e., no custom roles can have the same prefix).
+   * @see `DefaultConversationRoleName`
+   */
+  conversation_role: DefaultConversationRoleName | string;
 }

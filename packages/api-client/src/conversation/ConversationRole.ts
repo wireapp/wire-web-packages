@@ -17,7 +17,7 @@
  *
  */
 
-export enum DefaultConversationRole {
+export enum DefaultConversationRoleName {
   WIRE_ADMIN = 'wire_admin',
   WIRE_MEMBER = 'wire_member',
 }
@@ -28,9 +28,9 @@ export interface ConversationRole {
   /**
    * Role name, between 2 and 128 chars, 'wire_' prefix is reserved for
    * roles designed by Wire (i.e., no custom roles can have the same prefix).
-   * @see `DefaultConversationRole`
+   * @see `DefaultConversationRoleName`
    */
-  conversation_role: string | DefaultConversationRole;
+  conversation_role: string | DefaultConversationRoleName;
 }
 
 export interface ConversationRolesList {
