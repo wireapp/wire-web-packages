@@ -30,7 +30,7 @@ export interface ConversationRole {
    * roles designed by Wire (i.e., no custom roles can have the same prefix).
    * @see `DefaultConversationRole`
    */
-  conversation_role: string;
+  conversation_role: string | DefaultConversationRole;
 }
 
 export interface ConversationRolesList {
