@@ -18,11 +18,17 @@
  */
 
 const pkg = require('./package.json');
+const webpackConfig = require('./webpack.config.js');
 
 const dist = 'dist/';
 const projectName = pkg.name.replace('@wireapp/', '');
+const testCode = 'src/**/*test?(.browser).ts';
 
-module.exports = function(config) {
+const preprocessors = {
+  [testCode]: ['webpack'],
+};
+
+module.exports = (config: any): void => {
   config.set({
     autoWatch: false,
     basePath: '',
@@ -38,17 +44,14 @@ module.exports = function(config) {
         flags: ['--no-sandbox'],
       },
     },
-    files: [`${dist}dexie.bundle.js`, `${dist}${projectName}.test.bundle.js`],
+    exclude: [],
+    files: [{pattern: testCode, watched: false}],
     frameworks: ['jasmine'],
     logLevel: config.LOG_INFO,
     port: 9876,
-    preprocessors: {
-      '**/*.js': ['sourcemap'],
-    },
+    preprocessors,
     reporters: ['jasmine-diff', 'spec'],
     singleRun: true,
-    specReporter: {
-      showSpecTiming: true,
-    },
+    webpack: webpackConfig,
   });
 };

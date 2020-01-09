@@ -24,7 +24,7 @@ import EventEmitter from 'events';
 import logdown from 'logdown';
 import {AccessTokenData, AccessTokenStore, AuthAPI} from '../auth/';
 import {BackendErrorMapper, ConnectionState, ContentType, NetworkError, StatusCode} from '../http/';
-import * as ObfuscationUtil from '../obfuscation/';
+import {ObfuscationUtil} from '../obfuscation/';
 import {sendRequestWithCookie} from '../shims/node/cookie';
 
 enum TOPIC {
@@ -39,10 +39,7 @@ export class HttpClient extends EventEmitter {
   private readonly logger: logdown.Logger;
   private connectionState: ConnectionState;
   private readonly requestQueue: PriorityQueue;
-
-  public static get TOPIC(): typeof TOPIC {
-    return TOPIC;
-  }
+  public static readonly TOPIC = TOPIC;
 
   constructor(private readonly baseUrl: string, public accessTokenStore: AccessTokenStore) {
     super();
@@ -169,7 +166,7 @@ export class HttpClient extends EventEmitter {
     };
 
     if (expiredAccessToken?.access_token) {
-      config.headers['Authorization'] = `${expiredAccessToken.token_type} ${decodeURIComponent(
+      config.headers.Authorization = `${expiredAccessToken.token_type} ${decodeURIComponent(
         expiredAccessToken.access_token,
       )}`;
     }

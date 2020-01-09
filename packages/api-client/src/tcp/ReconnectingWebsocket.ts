@@ -20,7 +20,7 @@
 import {TimeUtil} from '@wireapp/commons';
 import logdown from 'logdown';
 import RWS, {CloseEvent, ErrorEvent, Event, Options} from 'reconnecting-websocket';
-import NodeWebSocket = require('ws');
+const NodeWebSocket = require('ws');
 
 import * as buffer from '../shims/node/buffer';
 
@@ -97,10 +97,8 @@ export class ReconnectingWebsocket {
     if (data === PingMessage.PONG) {
       this.logger.debug('Received pong from WebSocket');
       this.hasUnansweredPing = false;
-    } else {
-      if (this.onMessage) {
-        this.onMessage(data);
-      }
+    } else if (this.onMessage) {
+      this.onMessage(data);
     }
   };
 

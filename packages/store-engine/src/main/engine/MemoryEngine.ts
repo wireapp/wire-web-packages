@@ -57,6 +57,11 @@ export class MemoryEngine implements CRUDEngine {
     return Promise.reject(new RecordTypeError(message));
   }
 
+  public async clearTables(): Promise<void> {
+    const tableNames = Object.keys(this.stores);
+    await Promise.all(tableNames.map(tableName => this.deleteAll(tableName)));
+  }
+
   public async delete<PrimaryKey = string>(tableName: string, primaryKey: PrimaryKey): Promise<PrimaryKey> {
     this.prepareTable(tableName);
     delete this.stores[this.storeName][tableName][primaryKey];
@@ -97,10 +102,9 @@ export class MemoryEngine implements CRUDEngine {
     this.prepareTable(tableName);
     if (this.stores[this.storeName][tableName].hasOwnProperty(primaryKey)) {
       return Promise.resolve(this.stores[this.storeName][tableName][primaryKey]);
-    } else {
-      const message = `Record "${primaryKey}" in "${tableName}" could not be found.`;
-      return Promise.reject(new RecordNotFoundError(message));
     }
+    const message = `Record "${primaryKey}" in "${tableName}" could not be found.`;
+    return Promise.reject(new RecordNotFoundError(message));
   }
 
   public readAll<T>(tableName: string): Promise<T[]> {

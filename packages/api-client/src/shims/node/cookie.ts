@@ -23,7 +23,7 @@ import {Cookie as ToughCookie} from 'tough-cookie';
 import {Cookie} from '../../auth/';
 import {CookieStore} from '../../auth/CookieStore';
 import {HttpClient} from '../../http/';
-import * as ObfuscationUtil from '../../obfuscation/';
+import {ObfuscationUtil} from '../../obfuscation/';
 
 const logger = logdown('@wireapp/api-client/shims/node/cookie', {
   logger: console,
@@ -45,7 +45,9 @@ export const retrieveCookie = async <T>(response: AxiosResponse<T>): Promise<T> 
   return response.data;
 };
 
-// https://github.com/wearezeta/backend-api-docs/wiki/API-User-Authentication#token-refresh
+/**
+ * @see https://github.com/wearezeta/backend-api-docs/wiki/API-User-Authentication#token-refresh
+ */
 export const sendRequestWithCookie = async <T>(
   client: HttpClient,
   config: AxiosRequestConfig,
@@ -53,7 +55,7 @@ export const sendRequestWithCookie = async <T>(
   const cookie = CookieStore.getCookie();
   if (cookie && !cookie.isExpired) {
     config.headers = config.headers || {};
-    config.headers['Cookie'] = `zuid=${cookie.zuid}`;
+    config.headers.Cookie = `zuid=${cookie.zuid}`;
     config.withCredentials = true;
   }
   return client._sendRequest<T>(config);

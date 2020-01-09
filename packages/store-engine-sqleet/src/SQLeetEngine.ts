@@ -88,8 +88,13 @@ export class SQLeetEngine implements CRUDEngine {
     return this.db;
   }
 
+  async clearTables(): Promise<void> {
+    const tableNames = Object.keys(this.schema);
+    await Promise.all(tableNames.map(tableName => this.deleteAll(tableName)));
+  }
+
   async export(): Promise<string> {
-    return this.db.export('utf8') as any;
+    return this.db.export('utf8');
   }
 
   async purge(): Promise<void> {
@@ -110,7 +115,6 @@ export class SQLeetEngine implements CRUDEngine {
     }
 
     // If the table contains the single magic column then convert it
-    // tslint:disable-next-line: no-object-literal-type-assertion
     const entities = isSingleColumnTable(table)
       ? (({[RESERVED_COLUMN]: providedEntities} as any) as EntityType)
       : (providedEntities as EntityType);
@@ -285,9 +289,8 @@ export class SQLeetEngine implements CRUDEngine {
       const isRecordNotFound = error instanceof StoreEngineError.RecordNotFoundError;
       if (isRecordNotFound) {
         return this.create(tableName, primaryKey, changes);
-      } else {
-        throw error;
       }
+      throw error;
     }
     return primaryKey;
   }
@@ -297,7 +300,7 @@ export class SQLeetEngine implements CRUDEngine {
     await this.db.close();
     const workerInstance = await this.db._getWorkerInstance();
     if (workerInstance.terminate && typeof workerInstance.terminate == 'function') {
-      await workerInstance.terminate();
+      workerInstance.terminate();
     }
   }
 

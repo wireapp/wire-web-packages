@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.26.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.25.2...@wireapp/react-ui-kit@7.26.0) (2020-01-08)
+
+
+### Features
+
+* **eslint-config:** Add support for TypeScript files in ESLint… ([#2648](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2648)) ([e55d69e](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/e55d69e300cff8eeb7596e6231c6e832d1219e8d))
+
+
+
+
+
+## 7.25.2 (2020-01-06)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.25.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.25.0...@wireapp/react-ui-kit@7.25.1) (2019-12-12)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Initial Avatar animation & image cropping ([#2651](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2651)) ([e069734](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/e069734157a113619ad01ea833bca7707ab9ec94))
+
+
+
+
+
+# [7.25.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.24.2...@wireapp/react-ui-kit@7.25.0) (2019-12-11)
+
+
+### Features
+
+* **react-ui-kit:** Animate avatar image appearance ([#2646](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2646)) ([63684ff](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/63684ffc6d2afb81cfff486d7234df976861dd7f))
+
+
+
+
+
+## [7.24.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.24.1...@wireapp/react-ui-kit@7.24.2) (2019-12-10)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
 ## [7.24.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.24.0...@wireapp/react-ui-kit@7.24.1) (2019-12-09)
 
 **Note:** Version bump only for package @wireapp/react-ui-kit

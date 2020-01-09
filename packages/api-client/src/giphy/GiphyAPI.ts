@@ -25,12 +25,27 @@ import {HttpClient} from '../http/';
 export class GiphyAPI {
   constructor(private readonly client: HttpClient) {}
 
-  static URL = {
+  public static readonly URL = {
     GIPHY: 'giphy/v1/gifs',
     PROXY: '/proxy',
     RANDOM: 'random',
     SEARCH: 'search',
   };
+
+  /**
+   * Get a Giphy image by its ID.
+   * @param ids one or multiple image ID(s)
+   */
+  public async getGiphyById(ids: string | string[]): Promise<GiphyResult> {
+    const allIds = Array<string>().concat(ids);
+    const config: AxiosRequestConfig = {
+      method: 'get',
+      url: `${GiphyAPI.URL.PROXY}/${GiphyAPI.URL.GIPHY}/${allIds.join(',')}`,
+    };
+
+    const response = await this.client.sendJSON<GiphyResult>(config);
+    return response.data;
+  }
 
   /**
    * Get a random GIF from Giphy.

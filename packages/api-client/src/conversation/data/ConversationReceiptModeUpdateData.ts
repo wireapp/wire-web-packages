@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2016 Wire Swiss GmbH
+ * Copyright (C) 2020 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,32 +17,11 @@
  *
  */
 
-module.exports = function(config) {
-  config.set({
-    autoWatch: false,
-    basePath: '',
-    browsers: ['ChromeNoSandbox'],
-    client: {
-      useIframe: false,
-    },
-    colors: true,
-    concurrency: Infinity,
-    customLaunchers: {
-      ChromeNoSandbox: {
-        base: 'ChromeHeadless',
-        flags: ['--no-sandbox'],
-      },
-    },
-    files: ['dist/cryptobox.test.bundle.js'],
-    frameworks: ['jasmine'],
-    port: 9876,
-    preprocessors: {
-      '**/*.js': ['sourcemap'],
-    },
-    reporters: ['jasmine-diff', 'spec'],
-    singleRun: true,
-    specReporter: {
-      showSpecTiming: true,
-    },
-  });
-};
+export enum RECEIPT_MODE {
+  OFF = 0,
+  ON = 1,
+}
+
+export interface ConversationReceiptModeUpdateData {
+  receipt_mode: RECEIPT_MODE.OFF | RECEIPT_MODE.ON;
+}

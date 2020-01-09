@@ -25,7 +25,7 @@ export * from './ConversationError';
 export * from './ConversationIds';
 export * from './ConversationMembers';
 export * from './Conversations';
-export * from './ConversationUpdate';
+export * from './ConversationRole';
 export * from './Invite';
 export * from './Member';
 export * from './MutedStatus';
