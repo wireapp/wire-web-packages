@@ -47,21 +47,6 @@ export class TeamConversationAPI {
   }
 
   /**
-   * Get team conversations.
-   * @param teamId ID of the team to get conversations for
-   * @see https://staging-nginz-https.zinfra.io/swagger-ui/tab.html#!//getTeamConversations
-   */
-  public async getConversations(teamId: string): Promise<TeamConversationList> {
-    const config: AxiosRequestConfig = {
-      method: 'delete',
-      url: `${TeamConversationAPI.URL.TEAMS}/${teamId}/${TeamConversationAPI.URL.CONVERSATIONS}`,
-    };
-
-    const response = await this.client.sendJSON<TeamConversationList>(config);
-    return response.data;
-  }
-
-  /**
    * Get one team conversation.
    * @param teamId ID of the team to get the conversation from
    * @param conversationId ID of the conversation to get
@@ -69,11 +54,26 @@ export class TeamConversationAPI {
    */
   public async getConversation(teamId: string, conversationId: string): Promise<TeamConversation> {
     const config: AxiosRequestConfig = {
-      method: 'delete',
+      method: 'get',
       url: `${TeamConversationAPI.URL.TEAMS}/${teamId}/${TeamConversationAPI.URL.CONVERSATIONS}/${conversationId}`,
     };
 
     const response = await this.client.sendJSON<TeamConversation>(config);
+    return response.data;
+  }
+
+  /**
+   * Get team conversations.
+   * @param teamId ID of the team to get conversations for
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/tab.html#!//getTeamConversations
+   */
+  public async getConversations(teamId: string): Promise<TeamConversationList> {
+    const config: AxiosRequestConfig = {
+      method: 'get',
+      url: `${TeamConversationAPI.URL.TEAMS}/${teamId}/${TeamConversationAPI.URL.CONVERSATIONS}`,
+    };
+
+    const response = await this.client.sendJSON<TeamConversationList>(config);
     return response.data;
   }
 
