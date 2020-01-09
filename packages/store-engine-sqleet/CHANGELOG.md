@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@1.1.2...@wireapp/store-engine-sqleet@1.2.0) (2020-01-08)
+
+
+### Features
+
+* **eslint-config:** Add support for TypeScript files in ESLint… ([#2648](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/issues/2648)) ([e55d69e](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/commit/e55d69e300cff8eeb7596e6231c6e832d1219e8d))
+
+
+
+
+
+## [1.1.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@1.1.1...@wireapp/store-engine-sqleet@1.1.2) (2020-01-06)
+
+**Note:** Version bump only for package @wireapp/store-engine-sqleet
+
+
+
+
+
+## [1.1.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@1.1.0...@wireapp/store-engine-sqleet@1.1.1) (2019-12-16)
+
+**Note:** Version bump only for package @wireapp/store-engine-sqleet
+
+
+
+
+
+# [1.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@1.0.9...@wireapp/store-engine-sqleet@1.1.0) (2019-12-10)
+
+
+### Features
+
+* **store-engine:** Add functionality to clear all tables ([#2642](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/issues/2642)) ([ee5618c](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/commit/ee5618c2505db9134d09d46791fcf7b6dd5740fe))
+
+
+
+
+
+## [1.0.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@1.0.8...@wireapp/store-engine-sqleet@1.0.9) (2019-12-09)
+
+**Note:** Version bump only for package @wireapp/store-engine-sqleet
+
+
+
+
+
+## [1.0.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@1.0.7...@wireapp/store-engine-sqleet@1.0.8) (2019-12-06)
+
+**Note:** Version bump only for package @wireapp/store-engine-sqleet
+
+
+
+
+
+## [1.0.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@1.0.6...@wireapp/store-engine-sqleet@1.0.7) (2019-11-29)
+
+**Note:** Version bump only for package @wireapp/store-engine-sqleet
+
+
+
+
+
+## [1.0.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@1.0.5...@wireapp/store-engine-sqleet@1.0.6) (2019-11-29)
+
+**Note:** Version bump only for package @wireapp/store-engine-sqleet
+
+
+
+
+
 ## [1.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@1.0.4...@wireapp/store-engine-sqleet@1.0.5) (2019-11-27)
 
 **Note:** Version bump only for package @wireapp/store-engine-sqleet

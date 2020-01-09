@@ -97,9 +97,11 @@ export type StoreEngineProvider = (storeName: string) => Promise<CRUDEngine>;
 
 export class Account extends EventEmitter {
   private readonly logger: logdown.Logger;
-  private storeEngine?: CRUDEngine;
   private readonly storeEngineProvider: StoreEngineProvider;
   private readonly apiClient: APIClient;
+  private storeEngine?: CRUDEngine;
+
+  public static readonly TOPIC = TOPIC;
   public service?: {
     asset: AssetService;
     broadcast: BroadcastService;
@@ -113,10 +115,6 @@ export class Account extends EventEmitter {
     team: TeamService;
     user: UserService;
   };
-
-  public static get TOPIC(): typeof TOPIC {
-    return TOPIC;
-  }
 
   constructor(apiClient: APIClient = new APIClient(), storeEngineProvider?: StoreEngineProvider) {
     super();
@@ -252,7 +250,7 @@ export class Account extends EventEmitter {
           this.logger.log('Last client was temporary - Deleting database');
 
           if (this.storeEngine) {
-            await this.storeEngine.purge();
+            await this.storeEngine.clearTables();
           }
           const context = await this.apiClient.init(loginData.clientType);
           await this.initEngine(context);

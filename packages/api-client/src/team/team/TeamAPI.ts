@@ -26,7 +26,7 @@ import {UpdateTeamData} from './UpdateTeamData';
 export class TeamAPI {
   constructor(private readonly client: HttpClient) {}
 
-  static URL = {
+  public static readonly URL = {
     TEAMS: '/teams',
   };
 
@@ -38,7 +38,7 @@ export class TeamAPI {
     };
 
     const response = await this.client.sendJSON(config);
-    return response.headers['location'];
+    return response.headers.location;
   }
 
   public async putTeam(teamId: string, teamData: UpdateTeamData): Promise<void> {

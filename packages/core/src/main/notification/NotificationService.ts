@@ -83,9 +83,7 @@ export class NotificationService extends EventEmitter {
     logger: console,
     markdown: false,
   });
-  public static get TOPIC(): typeof TOPIC {
-    return TOPIC;
-  }
+  public static readonly TOPIC = TOPIC;
 
   constructor(apiClient: APIClient, cryptographyService: CryptographyService, storeEngine: CRUDEngine) {
     super();
@@ -235,7 +233,7 @@ export class NotificationService extends EventEmitter {
       case Events.CONVERSATION_EVENT.RENAME:
       case Events.CONVERSATION_EVENT.TYPING: {
         const {conversation, from} = event;
-        const metaEvent = {...event, from, conversation};
+        const metaEvent = {...event, conversation, from};
         return ConversationMapper.mapConversationEvent(metaEvent, source);
       }
       // User events

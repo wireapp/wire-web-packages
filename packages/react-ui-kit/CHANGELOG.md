@@ -3,6 +3,101 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.26.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.25.2...@wireapp/react-ui-kit@7.26.0) (2020-01-08)
+
+
+### Features
+
+* **eslint-config:** Add support for TypeScript files in ESLint… ([#2648](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2648)) ([e55d69e](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/e55d69e300cff8eeb7596e6231c6e832d1219e8d))
+
+
+
+
+
+## 7.25.2 (2020-01-06)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.25.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.25.0...@wireapp/react-ui-kit@7.25.1) (2019-12-12)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Initial Avatar animation & image cropping ([#2651](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2651)) ([e069734](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/e069734157a113619ad01ea833bca7707ab9ec94))
+
+
+
+
+
+# [7.25.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.24.2...@wireapp/react-ui-kit@7.25.0) (2019-12-11)
+
+
+### Features
+
+* **react-ui-kit:** Animate avatar image appearance ([#2646](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2646)) ([63684ff](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/63684ffc6d2afb81cfff486d7234df976861dd7f))
+
+
+
+
+
+## [7.24.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.24.1...@wireapp/react-ui-kit@7.24.2) (2019-12-10)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.24.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.24.0...@wireapp/react-ui-kit@7.24.1) (2019-12-09)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+# [7.24.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.30...@wireapp/react-ui-kit@7.24.0) (2019-12-06)
+
+
+### Features
+
+* **react-ui-kit:** Add SearchIcon ([#2631](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2631)) ([f647c15](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/f647c15ee91a039df0e41e3209d45bfe4bca2a5d))
+
+
+
+
+
+## [7.23.30](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.29...@wireapp/react-ui-kit@7.23.30) (2019-12-03)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.23.29](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.28...@wireapp/react-ui-kit@7.23.29) (2019-11-29)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.23.28](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.27...@wireapp/react-ui-kit@7.23.28) (2019-11-29)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Default name value in Avatar components getInitials ([#2607](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2607)) ([7ce873c](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/7ce873c7632e02d696b6adf09c0c9b458d9b5ed5))
+
+
+
+
+
 ## [7.23.27](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.23.26...@wireapp/react-ui-kit@7.23.27) (2019-11-27)
 
 **Note:** Version bump only for package @wireapp/react-ui-kit

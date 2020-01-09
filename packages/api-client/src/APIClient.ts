@@ -42,10 +42,11 @@ import {Backend} from './env/';
 import {GiphyAPI} from './giphy/';
 import {HttpClient} from './http/';
 import {NotificationAPI} from './notification/';
-import * as ObfuscationUtil from './obfuscation/';
+import {ObfuscationUtil} from './obfuscation/';
 import {SelfAPI} from './self/';
 import {WebSocketClient} from './tcp/';
 import {
+  TeamConversationAPI,
   FeatureAPI,
   IdentityProviderAPI,
   LegalHoldAPI,
@@ -90,6 +91,7 @@ export class APIClient extends EventEmitter {
   public notification: {api: NotificationAPI};
   public self: {api: SelfAPI};
   public teams: {
+    conversation: {api: TeamConversationAPI};
     feature: {api: FeatureAPI};
     identityProvider: {api: IdentityProviderAPI};
     invitation: {api: TeamInvitationAPI};
@@ -109,9 +111,7 @@ export class APIClient extends EventEmitter {
 
   public static BACKEND = Backend;
 
-  public static get TOPIC(): typeof TOPIC {
-    return TOPIC;
-  }
+  public static readonly TOPIC = TOPIC;
 
   public static VERSION = version;
 
@@ -177,6 +177,9 @@ export class APIClient extends EventEmitter {
     };
 
     this.teams = {
+      conversation: {
+        api: new TeamConversationAPI(this.transport.http),
+      },
       feature: {
         api: new FeatureAPI(this.transport.http),
       },
@@ -250,6 +253,7 @@ export class APIClient extends EventEmitter {
 
   public async logout(options = {ignoreError: false}): Promise<void> {
     try {
+      this.disconnect('Closed by client logout');
       await this.auth.api.postLogout();
     } catch (error) {
       if (options.ignoreError) {
@@ -261,7 +265,6 @@ export class APIClient extends EventEmitter {
       CookieStore.deleteCookie();
     }
 
-    this.disconnect('Closed by client logout');
     await this.accessTokenStore.delete();
     delete this.context;
   }
@@ -271,7 +274,7 @@ export class APIClient extends EventEmitter {
   }
 
   private createContext(userId: string, clientType: ClientType, clientId?: string): Context {
-    this.context = this.context ? {...this.context, clientId, clientType} : new Context(userId, clientType, clientId);
+    this.context = this.context ? {...this.context, clientId, clientType} : {clientId, clientType, userId};
     return this.context;
   }
 

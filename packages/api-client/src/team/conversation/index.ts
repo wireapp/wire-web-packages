@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2020 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,16 +17,4 @@
  *
  */
 
-const {unsafeAlphanumeric} = require('@wireapp/api-client/dist/shims/node/random');
-
-describe('"unsafeAlphanumeric"', () => {
-  it('should generate string of length 32 as default', () => {
-    const maxLength = 32;
-    expect(unsafeAlphanumeric(maxLength).length).toBe(maxLength);
-  });
-
-  it('should generate string for the given length', () => {
-    const maxLength = 10;
-    expect(unsafeAlphanumeric(maxLength).length).toBe(maxLength);
-  });
-});
+export * from './TeamConversationAPI';

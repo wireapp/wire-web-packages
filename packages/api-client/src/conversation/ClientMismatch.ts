@@ -17,7 +17,7 @@
  *
  */
 
-import {UserClients} from '../conversation/';
+import {UserClients} from './';
 
 export interface ClientMismatch {
   deleted: UserClients;
