@@ -404,13 +404,13 @@ export class UserAPI {
    * @param handle The handle of a user to search for
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getUserByHandle
    */
-  public async getUserByHandle(handle: string): Promise<{user: string}> {
+  public async getUserByHandle(handle: string): Promise<HandleInfo> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${UserAPI.URL.USERS}/${UserAPI.URL.HANDLES}/${handle}`,
     };
 
-    const response = await this.client.sendJSON<{user: string}>(config);
+    const response = await this.client.sendJSON<HandleInfo>(config);
     return response.data;
   }
 
