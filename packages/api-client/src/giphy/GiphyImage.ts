@@ -57,7 +57,7 @@ export interface GiphyImage {
     fixed_width_still: ImageDimensions & ImageGifMeta;
     hd: ImageDimensions & ImageMP4Meta;
     looping: ImageMP4Meta;
-    original: {frames: string; hash: string} & ImageWebPMeta & ImageGifMeta & ImageMP4Meta;
+    original: {frames: string; hash: string} & ImageDimensions & ImageWebPMeta & ImageGifMeta & ImageMP4Meta;
     original_mp4: ImageDimensions & ImageMP4Meta;
     original_still: ImageDimensions & ImageGifMeta;
     preview: ImageDimensions & ImageMP4Meta;
