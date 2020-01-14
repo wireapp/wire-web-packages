@@ -17,7 +17,12 @@
  *
  */
 
+export interface RichInfoField {
+  value: string;
+  type: string;
+}
+
 export interface RichInfo {
   version: number;
-  fields: Record<string, string>[];
+  fields: RichInfoField[];
 }
