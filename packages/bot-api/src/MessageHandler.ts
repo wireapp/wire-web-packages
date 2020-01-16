@@ -39,7 +39,7 @@ export abstract class MessageHandler {
 
   abstract handleEvent(payload: PayloadBundle | ConversationEvent | UserEvent | TeamEvent): void;
 
-  public async addUserToConversation(conversationId: string, userId: string): Promise<void> {
+  public async addUser(conversationId: string, userId: string): Promise<void> {
     if (this.account?.service) {
       await this.account.service.conversation.addUser(conversationId, userId);
     }
@@ -59,7 +59,7 @@ export abstract class MessageHandler {
     return this.account!.service!.user.getUsers(userIds);
   }
 
-  public async removeUserFromConversation(conversationId: string, userId: string): Promise<void> {
+  public async removeUser(conversationId: string, userId: string): Promise<void> {
     if (this.account?.service) {
       await this.account.service.conversation.removeUser(conversationId, userId);
     }
