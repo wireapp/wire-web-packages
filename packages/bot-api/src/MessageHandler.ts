@@ -30,7 +30,6 @@ import {
   LinkPreviewContent,
   LocationContent,
   MentionContent,
-  QuoteContent,
 } from '@wireapp/core/dist/conversation/content/';
 import {Asset, Confirmation} from '@wireapp/protocol-messaging';
 
@@ -189,13 +188,9 @@ export abstract class MessageHandler {
 
   public async sendQuote(conversationId: string, quotedMessageId: string, text: string): Promise<void> {
     if (this.account?.service) {
-      const quote: QuoteContent = {
-        quotedMessageId: quotedMessageId,
-      };
-
       const replyPayload = this.account.service.conversation.messageBuilder
         .createText(conversationId, text)
-        .withQuote(quote)
+        .withQuote({quotedMessageId})
         .build();
       await this.account.service.conversation.send(replyPayload);
     }
