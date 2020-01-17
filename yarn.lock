@@ -386,20 +386,12 @@
     "@babel/helper-plugin-utils" "^7.8.0"
     "@babel/plugin-syntax-optional-catch-binding" "^7.8.0"
 
-"@babel/plugin-proposal-optional-chaining@7.7.5":
-  version "7.7.5"
-  resolved "https://registry.npmjs.org/@babel/plugin-proposal-optional-chaining/-/plugin-proposal-optional-chaining-7.7.5.tgz#f0835f044cef85b31071a924010a2a390add11d4"
-  integrity sha512-sOwFqT8JSchtJeDD+CjmWCaiFoLxY4Ps7NjvwHC/U7l4e9i5pTRNt8nDMIFSOUL+ncFbYSwruHM8WknYItWdXw==
+"@babel/plugin-proposal-optional-chaining@7.8.3", "@babel/plugin-proposal-optional-chaining@^7.8.0":
+  version "7.8.3"
+  resolved "https://registry.npmjs.org/@babel/plugin-proposal-optional-chaining/-/plugin-proposal-optional-chaining-7.8.3.tgz#ae10b3214cb25f7adb1f3bc87ba42ca10b7e2543"
+  integrity sha512-QIoIR9abkVn+seDE3OjA08jWcs3eZ9+wJCKSRgo3WdEU2csFYgdScb+8qHB3+WXsGJD55u+5hWCISI7ejXS+kg==
   dependencies:
-    "@babel/helper-plugin-utils" "^7.0.0"
-    "@babel/plugin-syntax-optional-chaining" "^7.7.4"
-
-"@babel/plugin-proposal-optional-chaining@^7.8.0":
-  version "7.8.0"
-  resolved "https://registry.npmjs.org/@babel/plugin-proposal-optional-chaining/-/plugin-proposal-optional-chaining-7.8.0.tgz#d05e4fa3c1e4ef18eaea6bc92a4b06f95eaf1df5"
-  integrity sha512-PNBHxPHE91m+LLOdGwlvyGicWfrMgiVwng5WdB3CMjd61+vn3vPw0GbgECIAUCZnyi7Jqs5htUIZRztGuV8/5g==
-  dependencies:
-    "@babel/helper-plugin-utils" "^7.8.0"
+    "@babel/helper-plugin-utils" "^7.8.3"
     "@babel/plugin-syntax-optional-chaining" "^7.8.0"
 
 "@babel/plugin-proposal-unicode-property-regex@^7.8.0":
@@ -459,7 +451,7 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.8.0"
 
-"@babel/plugin-syntax-optional-chaining@^7.7.4", "@babel/plugin-syntax-optional-chaining@^7.8.0":
+"@babel/plugin-syntax-optional-chaining@^7.8.0":
   version "7.8.0"
   resolved "https://registry.npmjs.org/@babel/plugin-syntax-optional-chaining/-/plugin-syntax-optional-chaining-7.8.0.tgz#c40f4d4d6a4f5e71d2bfd949b0a7f1e1e6792fe0"
   integrity sha512-LV1c+TTAO8Vawe3t+WXBHYWbS7endP8MSlqKPKEZOyWPEJX2akl3jfvFG828/OE7RpyoC3JXfLJDFj/jN7A8hg==
