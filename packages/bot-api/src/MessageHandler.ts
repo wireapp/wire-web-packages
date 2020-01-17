@@ -53,7 +53,7 @@ export abstract class MessageHandler {
   }
 
   public async getConversation(conversationId: string): Promise<Conversation> {
-    return (await this.account!.service!.conversation.getConversations([conversationId]))[0];
+    return this.account!.service!.conversation.getConversation(conversationId);
   }
 
   public async getConversations(conversationIds?: string[]): Promise<Conversation[]> {
