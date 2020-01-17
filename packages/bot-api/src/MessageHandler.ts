@@ -56,7 +56,7 @@ export abstract class MessageHandler {
     return this.account!.service!.conversation.getConversation(conversationId);
   }
 
-  public async getConversations(conversationIds?: string[]): Promise<Conversation[]> {
+  public getConversations(conversationIds?: string[]): Promise<Conversation[]> {
     return this.account!.service!.conversation.getConversations(conversationIds);
   }
 
