@@ -53,7 +53,7 @@ export abstract class MessageHandler {
   }
 
   public getConversation(conversationId: string): Promise<Conversation> {
-    return this.account!.service!.conversation.getConversation(conversationId);
+    return this.account!.service!.conversation.getConversations(conversationId);
   }
 
   public getConversations(conversationIds?: string[]): Promise<Conversation[]> {
