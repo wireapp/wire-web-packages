@@ -52,7 +52,7 @@ export abstract class MessageHandler {
     }
   }
 
-  public async getConversation(conversationId: string): Promise<Conversation> {
+  public getConversation(conversationId: string): Promise<Conversation> {
     return this.account!.service!.conversation.getConversation(conversationId);
   }
 
