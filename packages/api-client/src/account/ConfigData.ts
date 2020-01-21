@@ -17,7 +17,7 @@
  *
  */
 
-export interface ConfigData {
+export interface BackendConfigData {
   backendURI: string;
   backendWSURI: string;
   ssoCode?: string;

@@ -21,17 +21,17 @@ import {AxiosRequestConfig} from 'axios';
 
 import {HttpClient} from '../http';
 import {CallConfigData} from './CallConfigData';
-import {ConfigData} from './ConfigData';
+import {BackendConfigData} from './ConfigData';
 
 export class AccountAPI {
   constructor(private readonly client: HttpClient) {}
 
   public static readonly URL = {
     ACTIVATE: '/activate',
+    BACKEND_CONFIG: '/config.json',
     CALLS: '/calls',
     CALLS_CONFIG: 'config',
     CALLS_CONFIG_V2: 'v2',
-    CONFIG: '/config.json',
     DELETE: '/delete',
     PASSWORD_RESET: '/password-reset',
     PASSWORD_RESET_COMPLETE: 'complete',
@@ -142,13 +142,13 @@ export class AccountAPI {
     return response.data;
   }
 
-  public async getConfig(): Promise<ConfigData> {
+  public async getConfig(): Promise<BackendConfigData> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${AccountAPI.URL.CONFIG}`,
+      url: `${AccountAPI.URL.BACKEND_CONFIG}`,
     };
 
-    const response = await this.client.sendJSON<ConfigData>(config);
+    const response = await this.client.sendJSON<BackendConfigData>(config);
     return response.data;
   }
 }
