@@ -25,11 +25,11 @@ import {
   NewOTRMessage,
   OTRRecipients,
   UserClients,
-} from '@wireapp/api-client/dist/commonjs/conversation/';
-import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/dist/commonjs/conversation/data/';
-import {ConversationMemberLeaveEvent} from '@wireapp/api-client/dist/commonjs/event/';
-import {StatusCode} from '@wireapp/api-client/dist/commonjs/http/';
-import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user/';
+} from '@wireapp/api-client/dist/conversation/';
+import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/dist/conversation/data/';
+import {ConversationMemberLeaveEvent} from '@wireapp/api-client/dist/event/';
+import {StatusCode} from '@wireapp/api-client/dist/http/';
+import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/user/';
 import {AxiosError} from 'axios';
 import {Encoder} from 'bazinga64';
 import {
@@ -132,7 +132,7 @@ export class ConversationService {
     skipOwnClients = false,
   ): Promise<UserPreKeyBundleMap> {
     const conversation = await this.apiClient.conversation.api.getConversation(conversationId);
-    const members = userIds && userIds.length ? userIds.map(id => ({id})) : conversation.members.others;
+    const members = userIds?.length ? userIds.map(id => ({id})) : conversation.members.others;
     const preKeys = await Promise.all(members.map(member => this.apiClient.user.api.getUserPreKeys(member.id)));
 
     if (!skipOwnClients) {
@@ -232,7 +232,7 @@ export class ConversationService {
     message: NewOTRMessage,
     plainTextArray: Uint8Array,
   ): Promise<NewOTRMessage> {
-    if (error.response && error.response.status === StatusCode.PRECONDITION_FAILED) {
+    if (error.response?.status === StatusCode.PRECONDITION_FAILED) {
       const {missing, deleted}: {missing: UserClients; deleted: UserClients} = error.response.data;
 
       const deletedUserIds = Object.keys(deleted);
@@ -313,11 +313,11 @@ export class ConversationService {
       legalHoldStatus,
     });
 
-    if (linkPreviews && linkPreviews.length) {
+    if (linkPreviews?.length) {
       textMessage.linkPreview = this.buildLinkPreviews(linkPreviews);
     }
 
-    if (mentions && mentions.length) {
+    if (mentions?.length) {
       textMessage.mentions = mentions.map(mention => Mention.create(mention));
     }
 
@@ -701,11 +701,11 @@ export class ConversationService {
       legalHoldStatus,
     });
 
-    if (linkPreviews && linkPreviews.length) {
+    if (linkPreviews?.length) {
       textMessage.linkPreview = this.buildLinkPreviews(linkPreviews);
     }
 
-    if (mentions && mentions.length) {
+    if (mentions?.length) {
       textMessage.mentions = mentions.map(mention => Mention.create(mention));
     }
 
@@ -980,11 +980,10 @@ export class ConversationService {
   }
 
   /**
-   * @param payloadBundle - Outgoing message
-   * @param userIds - Only send message to specified user IDs
+   * @param payloadBundle Outgoing message
+   * @param userIds Only send message to specified user IDs
    * @returns Sent message
    */
-  // tslint:disable-next-line:typedef
   public async send(payloadBundle: OtrMessage, userIds?: string[]) {
     switch (payloadBundle.type) {
       case PayloadBundleType.ASSET:

@@ -22,7 +22,7 @@
 require('dotenv').config();
 
 const {APIClient} = require('@wireapp/api-client');
-const {ClientType} = require('@wireapp/api-client/dist/commonjs/client/');
+const {ClientType} = require('@wireapp/api-client/dist/client/');
 const logdown = require('logdown');
 const {Account} = require('@wireapp/core');
 const {MemoryEngine} = require('@wireapp/store-engine');
@@ -71,7 +71,7 @@ if (!message) {
 
     const text = message || `I am posting from ${name} v${version} (Build #${process.env.TRAVIS_BUILD_NUMBER}). 🌞`;
     const payload = account.service.conversation.createText(text).build();
-    conversationIds.forEach(async conversationId => await account.service.conversation.send(conversationId, payload));
+    conversationIds.forEach(async conversationId => account.service.conversation.send(conversationId, payload));
   } catch (error) {
     logger.error('Error:', error.stack);
   }

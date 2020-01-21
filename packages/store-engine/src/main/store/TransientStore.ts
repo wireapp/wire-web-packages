@@ -27,14 +27,12 @@ enum TOPIC {
   EXPIRED = 'expired',
 }
 
-export declare interface TransientStore {
+export interface TransientStore {
   on(event: TOPIC.EXPIRED, listener: (bundle: ExpiredBundle) => void): this;
 }
 
 export class TransientStore extends EventEmitter {
-  public static get TOPIC(): typeof TOPIC {
-    return TOPIC;
-  }
+  public static readonly TOPIC = TOPIC;
   private readonly bundles: Record<string, TransientBundle> = {};
   private tableName = '';
 
@@ -50,9 +48,9 @@ export class TransientStore extends EventEmitter {
   }
 
   public deleteFromCache(cacheKey: string): string {
-    const timeoutID = this.bundles[cacheKey] && this.bundles[cacheKey].timeoutID;
+    const timeoutID = this.bundles[cacheKey]?.timeoutID;
     if (timeoutID) {
-      clearTimeout(<number>timeoutID);
+      clearTimeout(timeoutID as number);
     }
     delete this.bundles[cacheKey];
     return cacheKey;
@@ -97,9 +95,9 @@ export class TransientStore extends EventEmitter {
 
   /**
    * Saves a transient record to the store and starts a timer to remove this record when the time to live (TTL) ended.
-   * @param primaryKey - Primary key from which the FQN is created
-   * @param record - A payload which should be kept in the TransientStore
-   * @param ttl - The time to live (TTL) in milliseconds (ex. 1000 is 1s)
+   * @param primaryKey Primary key from which the FQN is created
+   * @param record A payload which should be kept in the TransientStore
+   * @param ttl The time to live (TTL) in milliseconds (ex. 1000 is 1s)
    * @returns A transient bundle, wrapping the initial record
    */
   public async set<T>(primaryKey: string, record: T, ttl: number): Promise<TransientBundle> {
@@ -119,7 +117,7 @@ export class TransientStore extends EventEmitter {
 
   /**
    * Returns a fully qualified name (FQN) which can be used to cache a transient bundle.
-   * @param primaryKey - Primary key from which the FQN is created
+   * @param primaryKey Primary key from which the FQN is created
    * @returns A fully qualified name
    */
   private constructCacheKey(primaryKey: string): string {
@@ -168,7 +166,7 @@ export class TransientStore extends EventEmitter {
   }
 
   private saveInCache<TransientBundle>(cacheKey: string, bundle: TransientBundle): TransientBundle {
-    return (this.bundles[cacheKey] = <any>bundle);
+    return (this.bundles[cacheKey] = bundle as any);
   }
 
   private saveInStore<TransientBundle>(primaryKey: string, bundle: TransientBundle): Promise<string> {

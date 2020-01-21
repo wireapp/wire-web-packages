@@ -3,6 +3,140 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.2.1...@wireapp/store-engine-dexie@1.2.2) (2020-01-17)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+## [1.2.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.2.0...@wireapp/store-engine-dexie@1.2.1) (2020-01-12)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+# [1.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.1.3...@wireapp/store-engine-dexie@1.2.0) (2020-01-08)
+
+
+### Features
+
+* **eslint-config:** Add support for TypeScript files in ESLint… ([#2648](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/issues/2648)) ([e55d69e](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/commit/e55d69e300cff8eeb7596e6231c6e832d1219e8d))
+
+
+
+
+
+## [1.1.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.1.2...@wireapp/store-engine-dexie@1.1.3) (2020-01-06)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+## [1.1.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.1.1...@wireapp/store-engine-dexie@1.1.2) (2019-12-16)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+## [1.1.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.1.0...@wireapp/store-engine-dexie@1.1.1) (2019-12-16)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+# [1.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.0.7...@wireapp/store-engine-dexie@1.1.0) (2019-12-10)
+
+
+### Features
+
+* **store-engine:** Add functionality to clear all tables ([#2642](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/issues/2642)) ([ee5618c](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/commit/ee5618c2505db9134d09d46791fcf7b6dd5740fe))
+
+
+
+
+
+## [1.0.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.0.6...@wireapp/store-engine-dexie@1.0.7) (2019-12-06)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+## [1.0.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.0.5...@wireapp/store-engine-dexie@1.0.6) (2019-12-03)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+## [1.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.0.4...@wireapp/store-engine-dexie@1.0.5) (2019-11-29)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+## [1.0.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.0.3...@wireapp/store-engine-dexie@1.0.4) (2019-11-27)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+## [1.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.0.2...@wireapp/store-engine-dexie@1.0.3) (2019-11-27)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+## [1.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.0.1...@wireapp/store-engine-dexie@1.0.2) (2019-11-25)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+## [1.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.0.0...@wireapp/store-engine-dexie@1.0.1) (2019-11-22)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+# [1.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@0.7.1...@wireapp/store-engine-dexie@1.0.0) (2019-11-21)
+
+
+### Code Refactoring
+
+* **api-client,bot-api,changelog-bot,cli-client,commons,core,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet,store-engine-web-storage,travis-bot:** Remove store engine from API client ([#2558](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/issues/2558)) ([6b8ba89](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/commit/6b8ba892c85ca43cd498a7b3d56a20a31f8578a4))
+
+
+### BREAKING CHANGES
+
+* **api-client,bot-api,changelog-bot,cli-client,commons,core,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet,store-engine-web-storage,travis-bot:** Store engine has been removed from "api-client" and needs to be initialized with a provider function within the "core" construction.
+
+
+
+
+
 ## [0.7.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@0.7.0...@wireapp/store-engine-dexie@0.7.1) (2019-11-21)
 
 **Note:** Version bump only for package @wireapp/store-engine-dexie

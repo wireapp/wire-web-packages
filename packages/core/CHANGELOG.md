@@ -3,6 +3,454 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [15.3.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.3.2...@wireapp/core@15.3.3) (2020-01-17)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.3.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.3.1...@wireapp/core@15.3.2) (2020-01-16)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.3.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.3.0...@wireapp/core@15.3.1) (2020-01-16)
+
+
+### Bug Fixes
+
+* **core:** Giphy search return value ([#2763](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2763)) ([91756c3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/91756c3566fec9a53cd8a2e2b04ec55ef4e60868))
+
+
+
+
+
+# [15.3.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.18...@wireapp/core@15.3.0) (2020-01-16)
+
+
+### Features
+
+* **bot-api:** Use message to send a quote ([#2762](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2762)) ([d794eaf](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/d794eaff776d85e6c00c99379436d94fad77cdb2))
+
+
+
+
+
+## [15.2.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.17...@wireapp/core@15.2.18) (2020-01-15)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.2.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.16...@wireapp/core@15.2.17) (2020-01-14)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.2.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.15...@wireapp/core@15.2.16) (2020-01-14)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.2.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.14...@wireapp/core@15.2.15) (2020-01-13)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.2.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.13...@wireapp/core@15.2.14) (2020-01-12)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.2.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.12...@wireapp/core@15.2.13) (2020-01-09)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.2.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.11...@wireapp/core@15.2.12) (2020-01-09)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.2.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.10...@wireapp/core@15.2.11) (2020-01-09)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.2.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.9...@wireapp/core@15.2.10) (2020-01-09)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.2.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.8...@wireapp/core@15.2.9) (2020-01-09)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.2.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.7...@wireapp/core@15.2.8) (2020-01-09)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.2.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.6...@wireapp/core@15.2.7) (2020-01-09)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.2.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.5...@wireapp/core@15.2.6) (2020-01-08)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.2.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.4...@wireapp/core@15.2.5) (2020-01-08)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.2.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.3...@wireapp/core@15.2.4) (2020-01-08)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.2.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.2...@wireapp/core@15.2.3) (2020-01-08)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.2.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.1...@wireapp/core@15.2.2) (2020-01-08)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.2.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.2.0...@wireapp/core@15.2.1) (2020-01-08)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [15.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.1.19...@wireapp/core@15.2.0) (2020-01-08)
+
+
+### Features
+
+* **eslint-config:** Add support for TypeScript files in ESLint… ([#2648](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2648)) ([e55d69e](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/e55d69e300cff8eeb7596e6231c6e832d1219e8d))
+
+
+
+
+
+## [15.1.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.1.18...@wireapp/core@15.1.19) (2020-01-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.1.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.1.17...@wireapp/core@15.1.18) (2019-12-17)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.1.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.1.16...@wireapp/core@15.1.17) (2019-12-17)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.1.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.1.15...@wireapp/core@15.1.16) (2019-12-16)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.1.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.1.14...@wireapp/core@15.1.15) (2019-12-16)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.1.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.1.13...@wireapp/core@15.1.14) (2019-12-12)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.1.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.1.12...@wireapp/core@15.1.13) (2019-12-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.1.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.1.11...@wireapp/core@15.1.12) (2019-12-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.1.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.1.10...@wireapp/core@15.1.11) (2019-12-10)
+
+
+### Bug Fixes
+
+* **core:** Clear tables without deleting them ([#2643](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2643)) ([70b95d4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/70b95d43ce5b4ad7861b6e04f84f5aff76ed0470))
+
+
+
+
+
+## [15.1.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.1.9...@wireapp/core@15.1.10) (2019-12-10)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.1.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.1.8...@wireapp/core@15.1.9) (2019-12-09)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.1.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.1.7...@wireapp/core@15.1.8) (2019-12-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.1.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.1.6...@wireapp/core@15.1.7) (2019-12-03)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.1.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.1.5...@wireapp/core@15.1.6) (2019-11-29)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.1.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.1.4...@wireapp/core@15.1.5) (2019-11-29)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.1.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.1.3...@wireapp/core@15.1.4) (2019-11-29)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.1.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.1.2...@wireapp/core@15.1.3) (2019-11-27)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.1.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.1.1...@wireapp/core@15.1.2) (2019-11-27)
+
+
+### Bug Fixes
+
+* **core:** Update @wireapp/store-engine-dexie to latest version ([117da14](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/117da142198bc6e87b7a12bd5bb2782f841c9326))
+
+
+
+
+
+## [15.1.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.1.0...@wireapp/core@15.1.1) (2019-11-26)
+
+
+### Bug Fixes
+
+* **core:** Assign store engine when initializing it ([#2595](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2595)) ([b610925](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/b61092538b1dd7a01930e081af1fc68130c76fab))
+
+
+
+
+
+# [15.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.0.8...@wireapp/core@15.1.0) (2019-11-26)
+
+
+### Features
+
+* **core:** Expose "init" and "register" calls from API client ([#2590](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2590)) ([d1ff7ec](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/d1ff7ec4b56708fb7f398e988ea0b93eeade1a70))
+
+
+
+
+
+## [15.0.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.0.7...@wireapp/core@15.0.8) (2019-11-25)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.0.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.0.6...@wireapp/core@15.0.7) (2019-11-25)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.0.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.0.5...@wireapp/core@15.0.6) (2019-11-25)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.0.4...@wireapp/core@15.0.5) (2019-11-22)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.0.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.0.3...@wireapp/core@15.0.4) (2019-11-22)
+
+
+### Bug Fixes
+
+* **api-client:** Legal hold request event ([#2578](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2578)) ([f900ab1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/f900ab1a7804594bd16dd1068a47ee753f1e6af2))
+
+
+
+
+
+## [15.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.0.2...@wireapp/core@15.0.3) (2019-11-21)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.0.1...@wireapp/core@15.0.2) (2019-11-21)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.0.0...@wireapp/core@15.0.1) (2019-11-21)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [15.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@14.4.5...@wireapp/core@15.0.0) (2019-11-21)
+
+
+### Code Refactoring
+
+* **api-client,bot-api,changelog-bot,cli-client,commons,core,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet,store-engine-web-storage,travis-bot:** Remove store engine from API client ([#2558](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2558)) ([6b8ba89](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/6b8ba892c85ca43cd498a7b3d56a20a31f8578a4))
+
+
+### BREAKING CHANGES
+
+* **api-client,bot-api,changelog-bot,cli-client,commons,core,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet,store-engine-web-storage,travis-bot:** Store engine has been removed from "api-client" and needs to be initialized with a provider function within the "core" construction.
+
+
+
+
+
 ## [14.4.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@14.4.4...@wireapp/core@14.4.5) (2019-11-21)
 
 **Note:** Version bump only for package @wireapp/core

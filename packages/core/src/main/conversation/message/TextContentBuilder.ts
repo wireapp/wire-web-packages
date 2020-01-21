@@ -18,15 +18,8 @@
  */
 
 import {MessageHashService} from '../../cryptography';
-import {
-  LegalHoldStatus,
-  LinkPreviewUploadedContent,
-  MentionContent,
-  QuoteContent,
-  QuoteMessageContent,
-  TextContent,
-} from '../content';
-import {EditedTextMessage, TextMessage} from './OtrMessage';
+import {LegalHoldStatus, LinkPreviewUploadedContent, MentionContent, QuoteContent, TextContent} from '../content';
+import {EditedTextMessage, TextMessage, QuotableMessage} from './OtrMessage';
 
 export class TextContentBuilder {
   private readonly content: TextContent;
@@ -43,7 +36,7 @@ export class TextContentBuilder {
   }
 
   public withLinkPreviews(linkPreviews?: LinkPreviewUploadedContent[]): TextContentBuilder {
-    if (linkPreviews && linkPreviews.length) {
+    if (linkPreviews?.length) {
       this.content.linkPreviews = linkPreviews;
     }
 
@@ -51,27 +44,28 @@ export class TextContentBuilder {
   }
 
   public withMentions(mentions?: MentionContent[]): TextContentBuilder {
-    if (mentions && mentions.length) {
+    if (mentions?.length) {
       this.content.mentions = mentions;
     }
 
     return this;
   }
 
-  public withQuote(quote: QuoteMessageContent, timestamp: number): TextContentBuilder;
-  public withQuote(quote?: QuoteContent): TextContentBuilder;
-  public withQuote(quote?: QuoteContent | QuoteMessageContent, timestamp?: number): TextContentBuilder {
+  public withQuote(quote?: QuotableMessage | QuoteContent): TextContentBuilder {
     if (quote) {
-      if (timestamp) {
-        const messageHashService = new MessageHashService((quote as QuoteMessageContent).content, timestamp);
+      if ((quote as QuoteContent).quotedMessageId) {
+        this.content.quote = quote as QuoteContent;
+      } else {
+        const messageHashService = new MessageHashService(
+          (quote as QuotableMessage).content,
+          (quote as QuotableMessage).timestamp,
+        );
         const messageHashBuffer = messageHashService.getHash();
 
         this.content.quote = {
-          quotedMessageId: quote.quotedMessageId,
+          quotedMessageId: (quote as QuotableMessage).id,
           quotedMessageSha256: new Uint8Array(messageHashBuffer),
         };
-      } else {
-        this.content.quote = quote as QuoteContent;
       }
     }
 

@@ -121,7 +121,7 @@ export class Encoder {
 
     this._ensure(nbytes);
 
-    new Uint8Array(this.buffer, this.view.byteOffset).set(<Uint8Array>value);
+    new Uint8Array(this.buffer, this.view.byteOffset).set(value as Uint8Array);
 
     return this._advance(nbytes);
   }
@@ -302,7 +302,7 @@ export class Encoder {
     return this;
   }
 
-  public bool(value: number): Encoder {
+  public bool(value: boolean): Encoder {
     this._u8(0xe0 | (value ? 21 : 20));
     return this;
   }

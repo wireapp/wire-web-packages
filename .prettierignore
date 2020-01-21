@@ -1,4 +1,5 @@
 .nyc_output
+.vscode
 .travis.yml
 **/.tmp/**
 **/bin/**

@@ -3,6 +3,92 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@3.1.0...@wireapp/commons@3.2.0) (2020-01-12)
+
+
+### Features
+
+* **commons:** Re-export Logger type ([#2734](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/issues/2734)) ([6d374e5](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/commit/6d374e51a3f1ecc630742df8c923beafefaa61b2))
+
+
+
+
+
+# [3.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@3.0.6...@wireapp/commons@3.1.0) (2020-01-08)
+
+
+### Features
+
+* **eslint-config:** Add support for TypeScript files in ESLint… ([#2648](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/issues/2648)) ([e55d69e](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/commit/e55d69e300cff8eeb7596e6231c6e832d1219e8d))
+
+
+
+
+
+## [3.0.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@3.0.5...@wireapp/commons@3.0.6) (2020-01-06)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [3.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@3.0.4...@wireapp/commons@3.0.5) (2019-12-17)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [3.0.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@3.0.3...@wireapp/commons@3.0.4) (2019-12-16)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [3.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@3.0.2...@wireapp/commons@3.0.3) (2019-12-06)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [3.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@3.0.1...@wireapp/commons@3.0.2) (2019-11-27)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [3.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@3.0.0...@wireapp/commons@3.0.1) (2019-11-25)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+# [3.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@2.2.24...@wireapp/commons@3.0.0) (2019-11-21)
+
+
+### Code Refactoring
+
+* **api-client,bot-api,changelog-bot,cli-client,commons,core,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet,store-engine-web-storage,travis-bot:** Remove store engine from API client ([#2558](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/issues/2558)) ([6b8ba89](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/commit/6b8ba892c85ca43cd498a7b3d56a20a31f8578a4))
+
+
+### BREAKING CHANGES
+
+* **api-client,bot-api,changelog-bot,cli-client,commons,core,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet,store-engine-web-storage,travis-bot:** Store engine has been removed from "api-client" and needs to be initialized with a provider function within the "core" construction.
+
+
+
+
+
 ## [2.2.24](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@2.2.23...@wireapp/commons@2.2.24) (2019-11-21)
 
 **Note:** Version bump only for package @wireapp/commons

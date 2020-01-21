@@ -52,9 +52,8 @@ export class IndexedDBEngine implements CRUDEngine {
           deleteRequest.onsuccess = () => resolve();
         };
       });
-    } else {
-      return Promise.reject(new StoreEngineError.UnsupportedError('Could not find indexedDB in global scope'));
     }
+    return Promise.reject(new StoreEngineError.UnsupportedError('Could not find indexedDB in global scope'));
   }
 
   /** @see https://developers.google.com/web/updates/2017/08/estimating-available-storage-space */
@@ -95,7 +94,7 @@ export class IndexedDBEngine implements CRUDEngine {
   }
 
   public async isStoragePersisted(): Promise<boolean> {
-    if (navigator.storage && navigator.storage.persisted) {
+    if (navigator.storage?.persisted) {
       const isPersisted = await navigator.storage.persisted();
       return isPersisted;
     }
@@ -122,7 +121,7 @@ export class IndexedDBEngine implements CRUDEngine {
     const isAlreadyExisting = error instanceof Dexie.ConstraintError;
     /** @see https://github.com/dfahlander/Dexie.js/issues/776 */
     const hasNotEnoughDiskSpace =
-      error.name === Dexie.errnames.QuotaExceeded || (error.inner && error.inner.name === Dexie.errnames.QuotaExceeded);
+      error.name === Dexie.errnames.QuotaExceeded || error.inner?.name === Dexie.errnames.QuotaExceeded;
 
     if (isAlreadyExisting) {
       const message = `Record "${primaryKey}" already exists in "${tableName}". You need to delete the record first if you want to overwrite it.`;
@@ -130,9 +129,8 @@ export class IndexedDBEngine implements CRUDEngine {
     } else if (hasNotEnoughDiskSpace) {
       const message = `Cannot save "${primaryKey}" in "${tableName}" because there is low disk space.`;
       return new StoreEngineError.LowDiskSpaceError(message);
-    } else {
-      return error;
     }
+    return error;
   }
 
   public async create<EntityType = Object, PrimaryKey = string>(
@@ -160,6 +158,11 @@ export class IndexedDBEngine implements CRUDEngine {
   public async deleteAll(tableName: string): Promise<boolean> {
     await this.db.table(tableName).clear();
     return true;
+  }
+
+  public async clearTables(): Promise<void> {
+    const tableNames = this.db.tables.map(table => table.name);
+    await Promise.all(tableNames.map(tableName => this.deleteAll(tableName)));
   }
 
   public async read<EntityType = Object, PrimaryKey = string>(

@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 4.5.0 (2020-01-16)
+
+
+### Bug Fixes
+
+* **cbor:** Add missing dependency ([#2764](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/issues/2764)) ([042206b](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/commit/042206be91bfb6fa4a025f0d972317457b186a62))
+
+
+### Features
+
+* **api-client:** Add putConversationReceiptMode ([#2716](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/issues/2716)) ([96bb812](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/commit/96bb8122c0d92ad12f77c6879edd902afca2dbfa))
+
+
+
+
+
+# [4.4.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.3.26...@wireapp/cbor@4.4.0) (2020-01-08)
+
+
+### Features
+
+* **eslint-config:** Add support for TypeScript files in ESLint… ([#2648](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/issues/2648)) ([e55d69e](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/commit/e55d69e300cff8eeb7596e6231c6e832d1219e8d))
+
+
+
+
+
+## 4.3.26 (2020-01-06)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+## [4.3.25](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.3.24...@wireapp/cbor@4.3.25) (2019-11-25)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+## 4.3.24 (2019-11-21)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
 ## 4.3.23 (2019-11-06)
 
 **Note:** Version bump only for package @wireapp/cbor

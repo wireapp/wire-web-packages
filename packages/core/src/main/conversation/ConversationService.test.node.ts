@@ -17,8 +17,8 @@
  *
  */
 import {APIClient} from '@wireapp/api-client';
-import {ClientType} from '@wireapp/api-client/dist/commonjs/client';
-import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/commonjs/user';
+import {ClientType} from '@wireapp/api-client/dist/client';
+import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/user';
 import {GenericMessage, LegalHoldStatus, Text} from '@wireapp/protocol-messaging';
 import {MemoryEngine} from '@wireapp/store-engine';
 import {Account} from '../Account';
@@ -54,13 +54,9 @@ describe('ConversationService', () => {
   let account: Account;
 
   beforeAll(async () => {
-    const engine = new MemoryEngine();
-    await engine.init('');
-
-    const client = new APIClient({store: engine, urls: APIClient.BACKEND.STAGING});
-
+    const client = new APIClient({urls: APIClient.BACKEND.STAGING});
     account = new Account(client);
-    await account.init();
+    await account.initServices(new MemoryEngine());
   });
 
   describe("'shouldSendAsExternal'", () => {
@@ -104,6 +100,7 @@ describe('ConversationService', () => {
         (sendingClientId, conversationId, message) =>
           new Promise((resolve, reject) => {
             if (message!.recipients[aliceId] && !message!.recipients[aliceId][aliceClientId]) {
+              // eslint-disable-next-line prefer-promise-reject-errors
               reject({
                 response: {
                   data: {
@@ -166,6 +163,7 @@ describe('ConversationService', () => {
         (sendingClientId, conversationId, message) =>
           new Promise((resolve, reject) => {
             if (message!.recipients[aliceId] && message!.recipients[aliceId][aliceClientId]) {
+              // eslint-disable-next-line prefer-promise-reject-errors
               reject({
                 response: {
                   data: {

@@ -80,18 +80,21 @@ export class SQLeetEngine implements CRUDEngine {
     await this.db.mount({key: this.encryptionKey}, this.storeName, this.nodeDatabaseDir);
 
     // Create tables
-    let statement = '';
-    for (const tableName in this.schema) {
-      const table = this.schema[tableName];
-      statement += createTableIfNotExists(tableName, table);
-    }
+    const statement = Object.entries(this.schema)
+      .map(([tableName, table]) => createTableIfNotExists(tableName, table))
+      .join('');
     await this.db.run(statement);
 
     return this.db;
   }
 
+  async clearTables(): Promise<void> {
+    const tableNames = Object.keys(this.schema);
+    await Promise.all(tableNames.map(tableName => this.deleteAll(tableName)));
+  }
+
   async export(): Promise<string> {
-    return this.db.export('utf8') as any;
+    return this.db.export('utf8');
   }
 
   async purge(): Promise<void> {
@@ -112,9 +115,8 @@ export class SQLeetEngine implements CRUDEngine {
     }
 
     // If the table contains the single magic column then convert it
-    // tslint:disable-next-line: no-object-literal-type-assertion
     const entities = isSingleColumnTable(table)
-      ? ({[RESERVED_COLUMN]: providedEntities} as any)
+      ? (({[RESERVED_COLUMN]: providedEntities} as any) as EntityType)
       : (providedEntities as EntityType);
 
     const columns: Record<string, string> = {};
@@ -252,7 +254,7 @@ export class SQLeetEngine implements CRUDEngine {
     const statement = `SELECT ${SQLeetEnginePrimaryKeyName} FROM ${escapedTableName};`;
 
     const record = await this.db.execute(statement);
-    if (record[0] && record[0].values) {
+    if (record[0]?.values) {
       return record[0].values.map((value: string[]) => value[0]);
     }
 
@@ -267,9 +269,8 @@ export class SQLeetEngine implements CRUDEngine {
     await this.read(tableName, primaryKey);
     const {values, columns} = this.buildValues(tableName, changes);
     const escapedTableName = escape(tableName);
-    const statement = `UPDATE ${escapedTableName} SET ${getProtectedColumnReferences(
-      columns,
-    )} WHERE ${SQLeetEnginePrimaryKeyName}=@primaryKey;`;
+    const references = getProtectedColumnReferences(columns);
+    const statement = `UPDATE ${escapedTableName} SET ${references} WHERE ${SQLeetEnginePrimaryKeyName}=@primaryKey;`;
     await this.db.run(statement, {
       ...values,
       '@primaryKey': primaryKey,
@@ -288,9 +289,8 @@ export class SQLeetEngine implements CRUDEngine {
       const isRecordNotFound = error instanceof StoreEngineError.RecordNotFoundError;
       if (isRecordNotFound) {
         return this.create(tableName, primaryKey, changes);
-      } else {
-        throw error;
       }
+      throw error;
     }
     return primaryKey;
   }
@@ -300,7 +300,7 @@ export class SQLeetEngine implements CRUDEngine {
     await this.db.close();
     const workerInstance = await this.db._getWorkerInstance();
     if (workerInstance.terminate && typeof workerInstance.terminate == 'function') {
-      await workerInstance.terminate();
+      workerInstance.terminate();
     }
   }
 

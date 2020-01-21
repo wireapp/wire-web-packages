@@ -3,6 +3,458 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.4.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.3.2...@wireapp/bot-api@7.4.0) (2020-01-17)
+
+
+### Features
+
+* **bot-api:** Add get conversation endpoints ([#2766](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/issues/2766)) ([b99632a](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/commit/b99632a877320753aba38724c6d1b50533c1972c))
+
+
+
+
+
+## [7.3.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.3.1...@wireapp/bot-api@7.3.2) (2020-01-16)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.3.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.3.0...@wireapp/bot-api@7.3.1) (2020-01-16)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+# [7.3.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.2.0...@wireapp/bot-api@7.3.0) (2020-01-16)
+
+
+### Features
+
+* **bot-api:** Use message to send a quote ([#2762](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/issues/2762)) ([d794eaf](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/commit/d794eaff776d85e6c00c99379436d94fad77cdb2))
+
+
+
+
+
+# [7.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.38...@wireapp/bot-api@7.2.0) (2020-01-16)
+
+
+### Features
+
+* **bot-api:** Add quote sending ([#2761](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/issues/2761)) ([fd59573](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/commit/fd595732016774f03a03da86db75babb4f346fb8))
+
+
+
+
+
+## [7.1.38](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.37...@wireapp/bot-api@7.1.38) (2020-01-15)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.37](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.36...@wireapp/bot-api@7.1.37) (2020-01-14)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.36](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.35...@wireapp/bot-api@7.1.36) (2020-01-14)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.35](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.34...@wireapp/bot-api@7.1.35) (2020-01-13)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.34](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.33...@wireapp/bot-api@7.1.34) (2020-01-12)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.33](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.32...@wireapp/bot-api@7.1.33) (2020-01-09)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.32](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.31...@wireapp/bot-api@7.1.32) (2020-01-09)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.31](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.30...@wireapp/bot-api@7.1.31) (2020-01-09)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.30](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.29...@wireapp/bot-api@7.1.30) (2020-01-09)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.29](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.28...@wireapp/bot-api@7.1.29) (2020-01-09)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.28](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.27...@wireapp/bot-api@7.1.28) (2020-01-09)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.27](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.26...@wireapp/bot-api@7.1.27) (2020-01-09)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.26](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.25...@wireapp/bot-api@7.1.26) (2020-01-08)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.25](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.24...@wireapp/bot-api@7.1.25) (2020-01-08)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.24](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.23...@wireapp/bot-api@7.1.24) (2020-01-08)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.23](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.22...@wireapp/bot-api@7.1.23) (2020-01-08)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.21...@wireapp/bot-api@7.1.22) (2020-01-08)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.20...@wireapp/bot-api@7.1.21) (2020-01-08)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.19...@wireapp/bot-api@7.1.20) (2020-01-08)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.18...@wireapp/bot-api@7.1.19) (2020-01-06)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.17...@wireapp/bot-api@7.1.18) (2019-12-17)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.16...@wireapp/bot-api@7.1.17) (2019-12-17)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.15...@wireapp/bot-api@7.1.16) (2019-12-16)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.14...@wireapp/bot-api@7.1.15) (2019-12-16)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.13...@wireapp/bot-api@7.1.14) (2019-12-12)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.12...@wireapp/bot-api@7.1.13) (2019-12-11)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.11...@wireapp/bot-api@7.1.12) (2019-12-11)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.10...@wireapp/bot-api@7.1.11) (2019-12-10)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.9...@wireapp/bot-api@7.1.10) (2019-12-10)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.8...@wireapp/bot-api@7.1.9) (2019-12-09)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.7...@wireapp/bot-api@7.1.8) (2019-12-06)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.6...@wireapp/bot-api@7.1.7) (2019-12-03)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.5...@wireapp/bot-api@7.1.6) (2019-11-29)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.4...@wireapp/bot-api@7.1.5) (2019-11-29)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.3...@wireapp/bot-api@7.1.4) (2019-11-29)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.2...@wireapp/bot-api@7.1.3) (2019-11-27)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.1...@wireapp/bot-api@7.1.2) (2019-11-27)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.1.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.1.0...@wireapp/bot-api@7.1.1) (2019-11-26)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+# [7.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.0.9...@wireapp/bot-api@7.1.0) (2019-11-26)
+
+
+### Features
+
+* **core:** Expose "init" and "register" calls from API client ([#2590](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/issues/2590)) ([d1ff7ec](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/commit/d1ff7ec4b56708fb7f398e988ea0b93eeade1a70))
+
+
+
+
+
+## [7.0.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.0.8...@wireapp/bot-api@7.0.9) (2019-11-25)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.0.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.0.7...@wireapp/bot-api@7.0.8) (2019-11-25)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.0.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.0.6...@wireapp/bot-api@7.0.7) (2019-11-25)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.0.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.0.5...@wireapp/bot-api@7.0.6) (2019-11-22)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.0.4...@wireapp/bot-api@7.0.5) (2019-11-22)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.0.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.0.3...@wireapp/bot-api@7.0.4) (2019-11-22)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.0.2...@wireapp/bot-api@7.0.3) (2019-11-21)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.0.1...@wireapp/bot-api@7.0.2) (2019-11-21)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.0.0...@wireapp/bot-api@7.0.1) (2019-11-21)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+# [7.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@6.0.16...@wireapp/bot-api@7.0.0) (2019-11-21)
+
+
+### Code Refactoring
+
+* **api-client,bot-api,changelog-bot,cli-client,commons,core,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet,store-engine-web-storage,travis-bot:** Remove store engine from API client ([#2558](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/issues/2558)) ([6b8ba89](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/commit/6b8ba892c85ca43cd498a7b3d56a20a31f8578a4))
+
+
+### BREAKING CHANGES
+
+* **api-client,bot-api,changelog-bot,cli-client,commons,core,store-engine-bro-fs,store-engine-dexie,store-engine-fs,store-engine-sqleet,store-engine-web-storage,travis-bot:** Store engine has been removed from "api-client" and needs to be initialized with a provider function within the "core" construction.
+
+
+
+
+
 ## [6.0.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@6.0.15...@wireapp/bot-api@6.0.16) (2019-11-21)
 
 **Note:** Version bump only for package @wireapp/bot-api

@@ -18,8 +18,8 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import * as Events from '@wireapp/api-client/dist/commonjs/event';
-import {Notification} from '@wireapp/api-client/dist/commonjs/notification/';
+import * as Events from '@wireapp/api-client/dist/event';
+import {Notification} from '@wireapp/api-client/dist/notification/';
 import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import {EventEmitter} from 'events';
 
@@ -40,7 +40,7 @@ enum TOPIC {
 
 export type NotificationHandler = (notification: Notification, source: PayloadBundleSource) => Promise<void>;
 
-export declare interface NotificationService {
+export interface NotificationService {
   on(event: PayloadBundleType.ASSET, listener: (payload: OtrMessage.FileAssetMessage) => void): this;
   on(event: PayloadBundleType.ASSET_ABORT, listener: (payload: OtrMessage.FileAssetAbortMessage) => void): this;
   on(event: PayloadBundleType.ASSET_IMAGE, listener: (payload: OtrMessage.ImageAssetMessage) => void): this;
@@ -76,25 +76,21 @@ export declare interface NotificationService {
 
 export class NotificationService extends EventEmitter {
   private readonly apiClient: APIClient;
-  private readonly cryptographyService: CryptographyService;
   private readonly backend: NotificationBackendRepository;
+  private readonly cryptographyService: CryptographyService;
   private readonly database: NotificationDatabaseRepository;
-  private readonly storeEngine: CRUDEngine;
   private readonly logger = logdown('@wireapp/core/notification/NotificationService', {
     logger: console,
     markdown: false,
   });
-  public static get TOPIC(): typeof TOPIC {
-    return TOPIC;
-  }
+  public static readonly TOPIC = TOPIC;
 
-  constructor(apiClient: APIClient, cryptographyService: CryptographyService) {
+  constructor(apiClient: APIClient, cryptographyService: CryptographyService, storeEngine: CRUDEngine) {
     super();
     this.apiClient = apiClient;
     this.cryptographyService = cryptographyService;
-    this.storeEngine = apiClient.config.store;
     this.backend = new NotificationBackendRepository(this.apiClient);
-    this.database = new NotificationDatabaseRepository(this.storeEngine);
+    this.database = new NotificationDatabaseRepository(storeEngine);
   }
 
   public async getAllNotifications(): Promise<Notification[]> {
@@ -237,7 +233,7 @@ export class NotificationService extends EventEmitter {
       case Events.CONVERSATION_EVENT.RENAME:
       case Events.CONVERSATION_EVENT.TYPING: {
         const {conversation, from} = event;
-        const metaEvent = {...event, from, conversation};
+        const metaEvent = {...event, conversation, from};
         return ConversationMapper.mapConversationEvent(metaEvent, source);
       }
       // User events

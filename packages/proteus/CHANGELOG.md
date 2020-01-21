@@ -3,6 +3,84 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 9.6.0 (2020-01-16)
+
+
+### Features
+
+* **api-client:** Add putConversationReceiptMode ([#2716](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/issues/2716)) ([96bb812](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/commit/96bb8122c0d92ad12f77c6879edd902afca2dbfa))
+
+
+
+
+
+# [9.5.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@9.4.28...@wireapp/proteus@9.5.0) (2020-01-08)
+
+
+### Features
+
+* **eslint-config:** Add support for TypeScript files in ESLint… ([#2648](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/issues/2648)) ([e55d69e](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/commit/e55d69e300cff8eeb7596e6231c6e832d1219e8d))
+
+
+
+
+
+## 9.4.28 (2020-01-06)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [9.4.27](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@9.4.26...@wireapp/proteus@9.4.27) (2019-12-11)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [9.4.26](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@9.4.25...@wireapp/proteus@9.4.26) (2019-12-06)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [9.4.25](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@9.4.24...@wireapp/proteus@9.4.25) (2019-11-27)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [9.4.24](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@9.4.23...@wireapp/proteus@9.4.24) (2019-11-27)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [9.4.23](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@9.4.22...@wireapp/proteus@9.4.23) (2019-11-25)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [9.4.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@9.4.21...@wireapp/proteus@9.4.22) (2019-11-21)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
 ## [9.4.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@9.4.20...@wireapp/proteus@9.4.21) (2019-11-21)
 
 **Note:** Version bump only for package @wireapp/proteus

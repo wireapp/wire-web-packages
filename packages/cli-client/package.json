@@ -1,19 +1,20 @@
 {
   "bin": {
-    "wire-cli": "dist/commonjs/index.js"
+    "wire-cli": "dist/index.js"
   },
   "dependencies": {
-    "@types/fs-extra": "8.0.1",
-    "@types/long": "4.0.0",
-    "@wireapp/core": "14.4.5",
-    "@wireapp/store-engine-fs": "1.5.1",
-    "commander": "4.0.1",
+    "@wireapp/core": "15.3.3",
+    "@wireapp/store-engine-fs": "2.1.5",
+    "commander": "4.1.0",
     "dotenv": "8.2.0",
     "fs-extra": "8.1.0"
   },
   "devDependencies": {
+    "@types/fs-extra": "8.0.1",
+    "@types/long": "4.0.0",
     "rimraf": "3.0.0",
-    "typescript": "3.6.4"
+    "ts-node": "8.6.2",
+    "typescript": "3.7.4"
   },
   "description": "Command-line interface for Wire's secure messaging platform.",
   "files": [
@@ -28,10 +29,10 @@
     "build:node": "tsc",
     "clean": "rimraf dist",
     "dist": "yarn clean && yarn build",
+    "start": "ts-node src/index.ts",
     "test": "yarn test:node",
     "test:project": "yarn dist && yarn test",
-    "test:node": "exit 0",
-    "prepare": "yarn build"
+    "test:node": "exit 0"
   },
-  "version": "7.0.16"
+  "version": "8.1.22"
 }
