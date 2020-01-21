@@ -18,5 +18,5 @@
  */
 
 export * from './AccountAPI';
-export * from './ConfigData';
+export * from './BackendConfigData';
 export * from './CallConfigData';

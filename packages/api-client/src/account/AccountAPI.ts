@@ -21,7 +21,7 @@ import {AxiosRequestConfig} from 'axios';
 
 import {HttpClient} from '../http';
 import {CallConfigData} from './CallConfigData';
-import {BackendConfigData} from './ConfigData';
+import {BackendConfigData} from './BackendConfigData';
 
 export class AccountAPI {
   constructor(private readonly client: HttpClient) {}
