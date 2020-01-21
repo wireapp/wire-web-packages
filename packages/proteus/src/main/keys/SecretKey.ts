@@ -87,7 +87,6 @@ export class SecretKey {
     }
 
     try {
-      ArrayUtil.assert_is_not_zeros(self.sec_edward);
       const sec_curve = sodium.crypto_sign_ed25519_sk_to_curve25519(self.sec_edward);
       self.sec_curve = sec_curve;
       return self;
