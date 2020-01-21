@@ -21,6 +21,7 @@ import {AxiosRequestConfig} from 'axios';
 
 import {HttpClient} from '../http';
 import {CallConfigData} from './CallConfigData';
+import {ConfigData} from './ConfigData';
 
 export class AccountAPI {
   constructor(private readonly client: HttpClient) {}
@@ -30,6 +31,7 @@ export class AccountAPI {
     CALLS: '/calls',
     CALLS_CONFIG: 'config',
     CALLS_CONFIG_V2: 'v2',
+    CONFIG: '/config.json',
     DELETE: '/delete',
     PASSWORD_RESET: '/password-reset',
     PASSWORD_RESET_COMPLETE: 'complete',
@@ -137,6 +139,16 @@ export class AccountAPI {
     };
 
     const response = await this.client.sendJSON<CallConfigData>(config);
+    return response.data;
+  }
+
+  public async getConfig(): Promise<ConfigData> {
+    const config: AxiosRequestConfig = {
+      method: 'get',
+      url: `${AccountAPI.URL.CONFIG}`,
+    };
+
+    const response = await this.client.sendJSON<ConfigData>(config);
     return response.data;
   }
 }
