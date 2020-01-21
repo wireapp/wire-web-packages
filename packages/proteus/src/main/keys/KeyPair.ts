@@ -18,7 +18,7 @@
  */
 
 import * as CBOR from '@wireapp/cbor';
-import * as sodium from 'libsodium-wrappers-sumo';
+import * as _sodium from 'libsodium-wrappers-sumo';
 
 import * as ClassUtil from '../util/ClassUtil';
 import {PublicKey} from './PublicKey';
@@ -37,7 +37,8 @@ export class KeyPair {
   }
 
   static async new(): Promise<KeyPair> {
-    await sodium.ready;
+    await _sodium.ready;
+    const sodium = _sodium;
 
     const ed25519_key_pair = sodium.crypto_sign_keypair();
 
@@ -55,10 +56,10 @@ export class KeyPair {
    * @returns Constructed private key
    * @see https://download.libsodium.org/doc/advanced/ed25519-curve25519.html
    */
-  private _construct_private_key(ed25519_key_pair: sodium.KeyPair): SecretKey {
+  private _construct_private_key(ed25519_key_pair: _sodium.KeyPair): SecretKey {
     try {
       const sk_ed25519 = ed25519_key_pair.privateKey;
-      const sk_curve25519 = sodium.crypto_sign_ed25519_sk_to_curve25519(sk_ed25519);
+      const sk_curve25519 = _sodium.crypto_sign_ed25519_sk_to_curve25519(sk_ed25519);
       return SecretKey.new(sk_ed25519, sk_curve25519);
     } catch (error) {
       throw new InputError.ConversionError('Could not convert private key with libsodium.', 409);
@@ -69,10 +70,10 @@ export class KeyPair {
    * @param ed25519_key_pair Key pair based on Edwards-curve (Ed25519)
    * @returns Constructed public key
    */
-  private _construct_public_key(ed25519_key_pair: sodium.KeyPair): PublicKey {
+  private _construct_public_key(ed25519_key_pair: _sodium.KeyPair): PublicKey {
     try {
       const pk_ed25519 = ed25519_key_pair.publicKey;
-      const pk_curve25519 = sodium.crypto_sign_ed25519_pk_to_curve25519(pk_ed25519);
+      const pk_curve25519 = _sodium.crypto_sign_ed25519_pk_to_curve25519(pk_ed25519);
       return PublicKey.new(pk_ed25519, pk_curve25519);
     } catch (error) {
       throw new InputError.ConversionError('Could not convert public key with libsodium.', 408);
