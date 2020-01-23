@@ -32,7 +32,7 @@ export class AccountAPI {
     CALLS: '/calls',
     CALLS_CONFIG: 'config',
     CALLS_CONFIG_V2: 'v2',
-    CUSTOM_INSTANCE: '/custom-instance',
+    CUSTOM_INSTANCE: '/custom-backend',
     DELETE: '/delete',
     PASSWORD_RESET: '/password-reset',
     PASSWORD_RESET_COMPLETE: 'complete',
