@@ -2260,10 +2260,10 @@
   resolved "https://registry.npmjs.org/@types/libsodium-wrappers/-/libsodium-wrappers-0.7.7.tgz#cdb25e85458612ec80f0157c3815fac187d0b6d2"
   integrity sha512-Li91pVKcLvQJK3ZolwCPo85oxf2gKBCApgnesRxYg4OVYchLXcJB2eivX8S87vfQVv6ZRnyCO1lLDosZGJfpRg==
 
-"@types/long@4.0.0", "@types/long@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.npmjs.org/@types/long/-/long-4.0.0.tgz#719551d2352d301ac8b81db732acb6bdc28dbdef"
-  integrity sha512-1w52Nyx4Gq47uuu0EVcsHBxZFJgurQ+rTKS3qMHxR1GY2T8c2AJYd6vZoZ9q1rupaDjU0yT+Jc2XTyXkjeMA+Q==
+"@types/long@4.0.1", "@types/long@^4.0.0":
+  version "4.0.1"
+  resolved "https://registry.npmjs.org/@types/long/-/long-4.0.1.tgz#459c65fa1867dafe6a8f322c4c51695663cc55e9"
+  integrity sha512-5tXH6Bx/kNGd3MgffdmP4dy2Z+G4eaXw0SE81Tq3BNadtnMR5/ySMzX4SLEzHJzSmPNn4HIdpQsBvXMUykr58w==
 
 "@types/memory-fs@*":
   version "0.3.2"
