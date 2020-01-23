@@ -1,10 +1,10 @@
 {
   "dependencies": {
-    "@babel/core": "7.7.7",
-    "@babel/plugin-proposal-class-properties": "7.7.4",
-    "@babel/plugin-proposal-object-rest-spread": "7.7.7",
-    "@babel/plugin-proposal-optional-chaining": "7.7.5",
-    "@babel/preset-typescript": "7.7.7",
+    "@babel/core": "7.8.3",
+    "@babel/plugin-proposal-class-properties": "7.8.3",
+    "@babel/plugin-proposal-object-rest-spread": "7.8.3",
+    "@babel/plugin-proposal-optional-chaining": "7.8.3",
+    "@babel/preset-typescript": "7.8.3",
     "@wireapp/websql": "0.0.15",
     "uint32": "0.2.1"
   },
@@ -15,16 +15,16 @@
     "@types/node": "~12",
     "@types/uint32": "0.2.0",
     "@types/webpack": "4.41.2",
-    "@wireapp/store-engine": "4.3.0",
+    "@wireapp/store-engine": "4.3.2",
     "babel-loader": "8.0.6",
-    "bazinga64": "5.6.0",
+    "bazinga64": "5.6.2",
     "jasmine": "3.5.0",
     "karma": "4.4.1",
     "karma-chrome-launcher": "3.1.0",
     "karma-jasmine": "2.0.1",
     "karma-webpack": "4.0.2",
     "rimraf": "3.0.0",
-    "ts-node": "8.5.4",
+    "ts-node": "8.6.2",
     "typescript": "3.7.4",
     "webpack": "4.41.5"
   },
@@ -47,5 +47,5 @@
     "test": "karma start",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "1.2.0"
+  "version": "1.2.2"
 }

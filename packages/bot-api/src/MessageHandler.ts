@@ -32,6 +32,8 @@ import {
   MentionContent,
 } from '@wireapp/core/dist/conversation/content/';
 import {Asset, Confirmation} from '@wireapp/protocol-messaging';
+import {QuotableMessage} from '@wireapp/core/dist/conversation/message/OtrMessage';
+import {Conversation} from '@wireapp/api-client/dist/conversation';
 
 export abstract class MessageHandler {
   public account: Account | undefined = undefined;
@@ -44,6 +46,20 @@ export abstract class MessageHandler {
     }
   }
 
+  public async clearConversation(conversationId: string): Promise<void> {
+    if (this.account?.service) {
+      await this.account.service.conversation.clearConversation(conversationId);
+    }
+  }
+
+  public getConversation(conversationId: string): Promise<Conversation> {
+    return this.account!.service!.conversation.getConversations(conversationId);
+  }
+
+  public getConversations(conversationIds?: string[]): Promise<Conversation[]> {
+    return this.account!.service!.conversation.getConversations(conversationIds);
+  }
+
   public async getUser(userId: string): Promise<User> {
     return this.account!.service!.user.getUser(userId);
   }
@@ -52,15 +68,16 @@ export abstract class MessageHandler {
     return this.account!.service!.user.getUsers(userIds);
   }
 
-  async clearConversation(conversationId: string): Promise<void> {
-    if (this.account?.service) {
-      await this.account.service.conversation.clearConversation(conversationId);
-    }
-  }
-
   public async removeUser(conversationId: string, userId: string): Promise<void> {
     if (this.account?.service) {
       await this.account.service.conversation.removeUser(conversationId, userId);
+    }
+  }
+
+  public async sendCall(conversationId: string, content: CallingContent): Promise<void> {
+    if (this.account?.service) {
+      const callPayload = this.account.service.conversation.messageBuilder.createCall(conversationId, content);
+      await this.account.service.conversation.send(callPayload);
     }
   }
 
@@ -179,11 +196,18 @@ export abstract class MessageHandler {
     }
   }
 
-  public async sendCall(conversationId: string, content: CallingContent): Promise<void> {
+  public async sendQuote(conversationId: string, quotedMessage: QuotableMessage, text: string): Promise<void> {
     if (this.account?.service) {
-      const callPayload = this.account.service.conversation.messageBuilder.createCall(conversationId, content);
-      await this.account.service.conversation.send(callPayload);
+      const replyPayload = this.account.service.conversation.messageBuilder
+        .createText(conversationId, text)
+        .withQuote(quotedMessage)
+        .build();
+      await this.account.service.conversation.send(replyPayload);
     }
+  }
+
+  public sendReply(conversationId: string, quotedMessage: QuotableMessage, text: string): Promise<void> {
+    return this.sendQuote(conversationId, quotedMessage, text);
   }
 
   public async sendText(
@@ -194,7 +218,7 @@ export abstract class MessageHandler {
     userIds?: string[],
   ): Promise<void> {
     if (this.account?.service) {
-      const payload = await this.account.service.conversation.messageBuilder
+      const payload = this.account.service.conversation.messageBuilder
         .createText(conversationId, text)
         .withMentions(mentions)
         .build();

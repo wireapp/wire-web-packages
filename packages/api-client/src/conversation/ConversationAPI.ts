@@ -52,6 +52,7 @@ import {
   ConversationOtherMemberUpdateData,
   ConversationAccessUpdateData,
 } from './data';
+import {DefaultConversationRoleName} from './ConversationRole';
 
 export class ConversationAPI {
   public static readonly MAX_CHUNK_SIZE = 500;
@@ -341,7 +342,11 @@ export class ConversationAPI {
    * @param providerId ID of the bot provider
    * @param serviceId ID of the service provider
    */
-  public async postBot(conversationId: string, providerId: string, serviceId: string): Promise<void> {
+  public async postBot(
+    conversationId: string,
+    providerId: string,
+    serviceId: string,
+  ): Promise<ConversationMemberJoinEvent> {
     const config: AxiosRequestConfig = {
       data: {
         provider: providerId,
@@ -351,7 +356,8 @@ export class ConversationAPI {
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.BOTS}`,
     };
 
-    await this.client.sendJSON(config);
+    const response = await this.client.sendJSON<ConversationMemberJoinEvent>(config);
+    return response.data;
   }
 
   /**
@@ -517,7 +523,7 @@ export class ConversationAPI {
     const config: AxiosRequestConfig = {
       data: accessData,
       method: 'put',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.NAME}`,
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.ACCESS}`,
     };
 
     const response = await this.client.sendJSON<ConversationAccessUpdateEvent>(config);
@@ -593,6 +599,7 @@ export class ConversationAPI {
   public async postMembers(conversationId: string, userIds: string[]): Promise<ConversationMemberJoinEvent> {
     const config: AxiosRequestConfig = {
       data: {
+        conversation_role: DefaultConversationRoleName.WIRE_MEMBER,
         users: userIds,
       },
       method: 'post',

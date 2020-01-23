@@ -37,6 +37,7 @@ import {
   UserPreKeyBundleMap,
   VerifyDelete,
 } from '../user/';
+import {RichInfo} from './RichInfo';
 
 export class UserAPI {
   public static readonly DEFAULT_USERS_CHUNK_SIZE = 50;
@@ -50,6 +51,7 @@ export class UserAPI {
     PASSWORDRESET: '/password-reset',
     PRE_KEYS: 'prekeys',
     PROPERTIES: '/properties',
+    RICH_INFO: 'rich-info',
     SEARCH: '/search',
     SEND: 'send',
     USERS: '/users',
@@ -386,6 +388,35 @@ export class UserAPI {
   }
 
   /**
+   * Check availability of a single user handle.
+   * @param handle The handle to check
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/checkUserHandle
+   */
+  public async headHandle(handle: string): Promise<void> {
+    const config: AxiosRequestConfig = {
+      method: 'head',
+      url: `${UserAPI.URL.USERS}/${UserAPI.URL.HANDLES}/${handle}`,
+    };
+
+    await this.client.sendJSON(config);
+  }
+
+  /**
+   * Get a user by handle.
+   * @param handle The handle of a user to search for
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getUserByHandle
+   */
+  public async getUserByHandle(handle: string): Promise<HandleInfo> {
+    const config: AxiosRequestConfig = {
+      method: 'get',
+      url: `${UserAPI.URL.USERS}/${UserAPI.URL.HANDLES}/${handle}`,
+    };
+
+    const response = await this.client.sendJSON<HandleInfo>(config);
+    return response.data;
+  }
+
+  /**
    * Given a map of user IDs to client IDs return a prekey for each one.
    * Note: The maximum map size is 128 entries.
    * @param userClientMap A map of the user's clients
@@ -432,5 +463,20 @@ export class UserAPI {
     };
 
     await this.client.sendJSON(config);
+  }
+
+  /**
+   * Get rich info of a user
+   * @param userId The user ID
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getRichInfo
+   */
+  public async getRichInfo(userId: string): Promise<RichInfo> {
+    const config: AxiosRequestConfig = {
+      method: 'get',
+      url: `${UserAPI.URL.USERS}/${userId}/${UserAPI.URL.RICH_INFO}`,
+    };
+
+    const response = await this.client.sendJSON<RichInfo>(config);
+    return response.data;
   }
 }

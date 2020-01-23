@@ -6,7 +6,7 @@
     "@types/jasmine": "3.5.0",
     "@types/karma": "3.0.5",
     "@types/node": "~12",
-    "@wireapp/store-engine": "4.3.0",
+    "@wireapp/store-engine": "4.3.2",
     "jasmine": "3.5.0",
     "karma": "4.4.1",
     "karma-chrome-launcher": "3.1.0",
@@ -14,7 +14,7 @@
     "karma-typescript": "4.1.1",
     "logdown": "3.3.0",
     "rimraf": "3.0.0",
-    "ts-node": "8.5.4",
+    "ts-node": "8.6.2",
     "typescript": "3.7.4"
   },
   "description": "Store Engine implementation for the browser's IndexedDB.",
@@ -36,5 +36,5 @@
     "test": "karma start",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "1.2.0"
+  "version": "1.2.2"
 }

@@ -3,6 +3,107 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.16.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.16.3...@wireapp/api-client@9.16.4) (2020-01-23)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [9.16.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.16.2...@wireapp/api-client@9.16.3) (2020-01-17)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [9.16.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.16.1...@wireapp/api-client@9.16.2) (2020-01-16)
+
+
+### Bug Fixes
+
+* **core:** Giphy search return value ([#2763](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2763)) ([91756c3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/91756c3566fec9a53cd8a2e2b04ec55ef4e60868))
+
+
+
+
+
+## [9.16.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.16.0...@wireapp/api-client@9.16.1) (2020-01-15)
+
+
+### Bug Fixes
+
+* **api-client:** postBot return type ([#2755](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2755)) ([0b4061a](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/0b4061a3e3b9b8a6dab023a2ae0e7cce06c7c5ef))
+
+
+
+
+
+# [9.16.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.15.2...@wireapp/api-client@9.16.0) (2020-01-14)
+
+
+### Features
+
+* **api-client:** Add getRichInfo endpoint ([#2745](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2745)) ([b71bdbc](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/b71bdbc33678fe45e775b426e7b859912038013a))
+
+
+
+
+
+## [9.15.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.15.1...@wireapp/api-client@9.15.2) (2020-01-14)
+
+
+### Bug Fixes
+
+* **api-client:** putAccess URL ([#2744](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2744)) ([3533f95](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/3533f95fb141450a04f81e5c281571722de9bc97))
+
+
+
+
+
+## [9.15.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.15.0...@wireapp/api-client@9.15.1) (2020-01-12)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+# [9.15.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.14.1...@wireapp/api-client@9.15.0) (2020-01-09)
+
+
+### Features
+
+* **api-client:** Add headHandle & getUserByHandle endpoints ([#2731](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2731)) ([e891dbc](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/e891dbc0ec8c3fe64b317c3ed9abb95877f7299e))
+
+
+
+
+
+## [9.14.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.14.0...@wireapp/api-client@9.14.1) (2020-01-09)
+
+
+### Bug Fixes
+
+* **api-client:** Add default conversation role when adding memb… ([#2728](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2728)) ([6978e82](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/6978e82887f672f347fb8ca4edccfaf7f5c36be0))
+
+
+
+
+
+# [9.14.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.13.1...@wireapp/api-client@9.14.0) (2020-01-09)
+
+
+### Features
+
+* **api-client:** Add missing endpoints for team conversations ([#2729](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2729)) ([b6305a3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/b6305a30ddf76dd1e1ed22aa6ec1d23c3a43da1a))
+
+
+
+
+
 ## [9.13.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.13.0...@wireapp/api-client@9.13.1) (2020-01-09)
 
 **Note:** Version bump only for package @wireapp/api-client
