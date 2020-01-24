@@ -16,7 +16,7 @@
     "eslint-plugin-sort-keys-fix": "1.1.0",
     "husky": "4.0.10",
     "lerna": "3.20.2",
-    "lint-staged": "9.5.0",
+    "lint-staged": "10.0.2",
     "prettier": "1.19.1"
   },
   "engines": {
