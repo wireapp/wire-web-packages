@@ -19,9 +19,10 @@
 
 import {AxiosRequestConfig} from 'axios';
 
-import {HttpClient} from '../http';
+import {HttpClient, BackendErrorLabel} from '../http';
 import {CallConfigData} from './CallConfigData';
 import {DomainData} from './DomainData';
+import {DomainNotFoundError} from './AccountError';
 
 export class AccountAPI {
   constructor(private readonly client: HttpClient) {}
@@ -130,8 +131,17 @@ export class AccountAPI {
       url: `${AccountAPI.URL.CUSTOM_INSTANCE}/${AccountAPI.URL.BY_DOMAIN}/${domain}`,
     };
 
-    const response = await this.client.sendJSON<DomainData>(config);
-    return response.data;
+    try {
+      const response = await this.client.sendJSON<DomainData>(config);
+      return response.data;
+    } catch (error) {
+      switch (error.label) {
+        case BackendErrorLabel.DOMAIN_NOT_FOUND: {
+          throw new DomainNotFoundError(error.message);
+        }
+      }
+      throw error;
+    }
   }
 
   /**
