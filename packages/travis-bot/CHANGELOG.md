@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.56](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@6.0.55...@wireapp/travis-bot@6.0.56) (2020-01-24)
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+
+
+
+
+## [6.0.55](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@6.0.54...@wireapp/travis-bot@6.0.55) (2020-01-24)
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+
+
+
+
+## [6.0.54](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@6.0.53...@wireapp/travis-bot@6.0.54) (2020-01-23)
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+
+
+
+
+## [6.0.53](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@6.0.52...@wireapp/travis-bot@6.0.53) (2020-01-23)
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+
+
+
+
 ## [6.0.52](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@6.0.51...@wireapp/travis-bot@6.0.52) (2020-01-17)
 
 **Note:** Version bump only for package @wireapp/travis-bot

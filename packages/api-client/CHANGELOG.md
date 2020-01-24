@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.18.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.17.0...@wireapp/api-client@9.18.0) (2020-01-24)
+
+
+### Features
+
+* **api-client:** Handle & map domain not found error ([#2796](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2796)) ([822fb12](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/822fb12b2a34881b3a649a57f5996ded39b15245))
+
+
+
+
+
+# [9.17.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.16.4...@wireapp/api-client@9.17.0) (2020-01-24)
+
+
+### Features
+
+* **api-client:** GET domain endpoint ([#2775](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2775)) ([5c816ad](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/5c816ad757c77ed94e95b8acaa895cb938a1ccd5))
+
+
+
+
+
+## [9.16.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.16.3...@wireapp/api-client@9.16.4) (2020-01-23)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
 ## [9.16.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@9.16.2...@wireapp/api-client@9.16.3) (2020-01-17)
 
 **Note:** Version bump only for package @wireapp/api-client
