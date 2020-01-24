@@ -18,7 +18,17 @@
  */
 
 export interface BackendConfigData {
-  backendURI: string;
-  backendWSURI: string;
-  ssoCode?: string;
+  endpoints: {
+    backendURL: string;
+    backendWSURL: string;
+    blackListURL: string;
+    teamsURL: string;
+    accountsURL: string;
+    websiteURL: string;
+  };
+  configuration: {
+    ssoCode?: string;
+    noAccountCreation?: boolean;
+  };
+  title: string;
 }
