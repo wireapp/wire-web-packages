@@ -27,10 +27,10 @@ export class AccountError extends BackendError {
   }
 }
 
-export class DomainNotFoundError extends AccountError {
-  constructor(message: string, label = BackendErrorLabel.DOMAIN_NOT_FOUND, code = StatusCode.NOT_FOUND) {
+export class CustomBackendNotFoundError extends AccountError {
+  constructor(message: string, label = BackendErrorLabel.CUSTOM_BACKEND_NOT_FOUND, code = StatusCode.NOT_FOUND) {
     super(message, label, code);
-    Object.setPrototypeOf(this, DomainNotFoundError.prototype);
-    this.name = 'DomainNotFoundError';
+    Object.setPrototypeOf(this, CustomBackendNotFoundError.prototype);
+    this.name = 'CustomBackendNotFoundError';
   }
 }

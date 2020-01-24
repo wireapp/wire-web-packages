@@ -75,7 +75,7 @@ export enum BackendErrorLabel {
   // Payment errors
   EXPIRED_CARD = 'expired_card',
   // Domain errors
-  DOMAIN_NOT_FOUND = 'custom-backend-not-found',
+  CUSTOM_BACKEND_NOT_FOUND = 'custom-backend-not-found',
 }
 
 export enum SyntheticErrorLabel {
