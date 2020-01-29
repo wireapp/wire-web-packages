@@ -16,7 +16,7 @@
     "eslint-plugin-sort-keys-fix": "1.1.0",
     "husky": "4.2.1",
     "lerna": "3.20.2",
-    "lint-staged": "10.0.3",
+    "lint-staged": "10.0.4",
     "prettier": "1.19.1"
   },
   "engines": {
@@ -25,12 +25,10 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
-      "git add"
+      "eslint --fix"
     ],
     "*.{json,md,scss,yml}": [
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ]
   },
   "prettier": "./packages/prettier-config",
