@@ -26,9 +26,5 @@ export interface BackendConfigData {
     accountsURL: string;
     websiteURL: string;
   };
-  configuration: {
-    ssoCode?: string;
-    noAccountCreation?: boolean;
-  };
   title: string;
 }
