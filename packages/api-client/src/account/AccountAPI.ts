@@ -23,6 +23,7 @@ import {HttpClient, BackendErrorLabel} from '../http';
 import {CallConfigData} from './CallConfigData';
 import {DomainData} from './DomainData';
 import {CustomBackendNotFoundError} from './AccountError';
+import {SSOSettings} from './SSOSettings';
 
 export class AccountAPI {
   constructor(private readonly client: HttpClient) {}
@@ -30,14 +31,16 @@ export class AccountAPI {
   public static readonly URL = {
     ACTIVATE: '/activate',
     BY_DOMAIN: 'by-domain',
-    CALLS: '/calls',
-    CALLS_CONFIG: 'config',
     CALLS_CONFIG_V2: 'v2',
+    CALLS_CONFIG: 'config',
+    CALLS: '/calls',
     CUSTOM_BACKEND: '/custom-backend',
     DELETE: '/delete',
-    PASSWORD_RESET: '/password-reset',
     PASSWORD_RESET_COMPLETE: 'complete',
+    PASSWORD_RESET: '/password-reset',
     PROVIDER: '/provider',
+    SETTINGS: 'settings',
+    SSO: '/sso',
   };
 
   /**
@@ -142,6 +145,16 @@ export class AccountAPI {
       }
       throw error;
     }
+  }
+
+  public async getSSOSettings(): Promise<SSOSettings> {
+    const config: AxiosRequestConfig = {
+      method: 'get',
+      url: `${AccountAPI.URL.SSO}/${AccountAPI.URL.SETTINGS}`,
+    };
+
+    const response = await this.client.sendJSON<SSOSettings>(config);
+    return response.data;
   }
 
   /**
