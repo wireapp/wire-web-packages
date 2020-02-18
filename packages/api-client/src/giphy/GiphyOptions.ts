@@ -25,5 +25,6 @@ export enum GiphySorting {
 export interface GiphyOptions {
   limit?: number;
   offset?: number;
+  q?: string;
   sort?: GiphySorting;
 }
