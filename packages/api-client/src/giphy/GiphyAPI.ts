@@ -19,7 +19,7 @@
 
 import {AxiosRequestConfig} from 'axios';
 
-import {GiphySearch, GiphyResult, GiphySearchResult, GiphySorting} from '../giphy/';
+import {GiphySearch, GiphyResult, GiphySearchResult} from '../giphy/';
 import {HttpClient} from '../http/';
 
 export class GiphyAPI {
