@@ -22,9 +22,12 @@ export enum GiphySorting {
   RELEVANT = 'relevant',
 }
 
-export interface GiphyOptions {
+/** @see: https://developers.giphy.com/docs/api/endpoint/#search */
+export interface GiphySearch {
+  lang?: string;
   limit?: number;
   offset?: number;
-  q?: string;
+  q: string;
+  rating?: string;
   sort?: GiphySorting;
 }
