@@ -17,3 +17,4 @@ package-lock.json
 packages/react-ui-kit/demo/bundle*
 temp/
 yarn-error.log
+docs

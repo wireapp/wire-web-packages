@@ -1,0 +1,6 @@
+{
+  "exclude": ["**/*+(index|.test*).ts"],
+  "excludeExternals": true,
+  "inputFiles": ["./src"],
+  "out": "docs"
+}

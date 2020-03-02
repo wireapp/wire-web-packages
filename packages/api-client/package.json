@@ -75,6 +75,7 @@
     "build:node": "tsc",
     "clean": "rimraf dist",
     "coverage": "istanbul cover --report html ./node_modules/jasmine/bin/jasmine.js",
+    "docs": "yarn typedoc",
     "dist": "yarn clean && yarn build",
     "start": "yarn build:node && concurrently \"tsc -w\" \"webpack -w\" \"browser-sync start -c bs-config.js\"",
     "start:node": "ts-node demo.ts",

@@ -1,0 +1,25 @@
+name: Generate api-client docs
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Create api-client docs
+        run: |
+          cd packages/api-client/
+          yarn install
+          yarn add @wireapp/commons @wireapp/priority-queue typedoc
+          yarn docs
+      - name: Build and Deploy
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          ACCESS_TOKEN: ${{secrets.ACCESS_TOKEN}}
+          BRANCH: gh-pages
+          FOLDER: packages/api-client/docs
