@@ -2248,10 +2248,10 @@
     "@types/webpack" "*"
     "@types/webpack-dev-middleware" "*"
 
-"@types/karma@*", "@types/karma@3.0.6":
-  version "3.0.6"
-  resolved "https://registry.npmjs.org/@types/karma/-/karma-3.0.6.tgz#6aa64400d92dd0af2b5ad6eb2ae875cee061b8ca"
-  integrity sha512-2HanAMFucp8UU9yxQpFFSjnvqSxT0WhyC4ATlYZnbEjGaIp/4pCIV3nf0zefUbUseCalzZ1y3blbWjMLJ9/feg==
+"@types/karma@*", "@types/karma@4.4.0":
+  version "4.4.0"
+  resolved "https://registry.npmjs.org/@types/karma/-/karma-4.4.0.tgz#84c084cb394d64b9a28d1425fb4824cd10523221"
+  integrity sha512-+b5BsyqXBHRqw7UxzTjQNgj5hjJPAIfWQyLebTOsDrWQVJCghc5j5+U9hbRayc2qfrG07FqDi9m5s3aJ4XNRcA==
   dependencies:
     "@types/bluebird" "*"
     "@types/node" "*"
