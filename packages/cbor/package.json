@@ -2,7 +2,7 @@
   "description": "Implementation of Concise Binary Object Representation (CBOR) data format (RFC7049).",
   "devDependencies": {
     "@types/jasmine": "3.5.6",
-    "@types/karma": "3.0.6",
+    "@types/karma": "4.4.0",
     "@types/node": "~12",
     "cross-env": "7.0.0",
     "istanbul": "1.1.0-alpha.1",
@@ -13,7 +13,7 @@
     "karma-typescript": "4.1.1",
     "nyc": "15.0.0",
     "rimraf": "3.0.0",
-    "typescript": "3.7.5",
+    "typescript": "3.8.3",
     "webpack": "4.41.5",
     "webpack-cli": "3.3.11"
   },

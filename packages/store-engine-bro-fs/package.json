@@ -5,7 +5,7 @@
   },
   "devDependencies": {
     "@types/jasmine": "3.5.6",
-    "@types/karma": "3.0.6",
+    "@types/karma": "4.4.0",
     "@types/node": "~12",
     "@wireapp/store-engine": "4.3.8",
     "jasmine": "3.5.0",
@@ -15,7 +15,7 @@
     "karma-typescript": "4.1.1",
     "rimraf": "3.0.0",
     "ts-node": "8.6.2",
-    "typescript": "3.7.5"
+    "typescript": "3.8.3"
   },
   "description": "Store Engine implementation for the browser's File and Directory Entries API.",
   "files": [
