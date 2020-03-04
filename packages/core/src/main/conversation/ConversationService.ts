@@ -82,7 +82,8 @@ import {APIClient} from '@wireapp/api-client';
 import {MessageBuilder} from './message/MessageBuilder';
 import {
   CallMessage,
-  ClearConversationMessage, CompositeMessage,
+  ClearConversationMessage,
+  CompositeMessage,
   ConfirmationMessage,
   DeleteMessage,
   EditedTextMessage,
