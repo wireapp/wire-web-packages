@@ -48,6 +48,7 @@ import {
   Calling,
   Cleared,
   ClientAction,
+  Composite,
   Confirmation,
   Ephemeral,
   GenericMessage,
@@ -81,7 +82,7 @@ import {APIClient} from '@wireapp/api-client';
 import {MessageBuilder} from './message/MessageBuilder';
 import {
   CallMessage,
-  ClearConversationMessage,
+  ClearConversationMessage, CompositeMessage,
   ConfirmationMessage,
   DeleteMessage,
   EditedTextMessage,
@@ -268,17 +269,29 @@ export class ConversationService {
     throw error;
   }
 
-  private async sendConfirmation(payloadBundle: ConfirmationMessage, userIds?: string[]): Promise<ConfirmationMessage> {
-    const {firstMessageId, moreMessageIds, type} = payloadBundle.content;
-
-    const confirmationMessage = Confirmation.create({
-      firstMessageId,
-      moreMessageIds,
-      type,
+  private async sendComposite(payloadBundle: CompositeMessage, userIds?: string[]): Promise<CompositeMessage> {
+    const genericMessage = GenericMessage.create({
+      [GenericMessageType.COMPOSITE]: Composite.create(payloadBundle.content),
+      messageId: payloadBundle.id,
     });
 
+    await this.sendGenericMessage(
+      this.apiClient.validatedClientId,
+      payloadBundle.conversation,
+      genericMessage,
+      userIds,
+    );
+
+    return {
+      ...payloadBundle,
+      messageTimer: 0,
+      state: PayloadBundleState.OUTGOING_SENT,
+    };
+  }
+
+  private async sendConfirmation(payloadBundle: ConfirmationMessage, userIds?: string[]): Promise<ConfirmationMessage> {
     const genericMessage = GenericMessage.create({
-      [GenericMessageType.CONFIRMATION]: confirmationMessage,
+      [GenericMessageType.CONFIRMATION]: Confirmation.create(payloadBundle.content),
       messageId: payloadBundle.id,
     });
 
@@ -1004,6 +1017,8 @@ export class ConversationService {
           `No send method implemented for "${payloadBundle.type}" and ClientAction "${payloadBundle.content}".`,
         );
       }
+      case PayloadBundleType.COMPOSITE:
+        return this.sendComposite(payloadBundle, userIds);
       case PayloadBundleType.CONFIRMATION:
         return this.sendConfirmation(payloadBundle, userIds);
       case PayloadBundleType.LOCATION:
