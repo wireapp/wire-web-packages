@@ -18,8 +18,8 @@
  */
 
 import {
-  CONVERSATION_TYPE,
   Conversation,
+  CONVERSATION_TYPE,
   MutedStatus,
   NewConversation,
   NewOTRMessage,
@@ -235,7 +235,7 @@ export class ConversationService {
     plainTextArray: Uint8Array,
   ): Promise<NewOTRMessage> {
     if (error.response?.status === StatusCode.PRECONDITION_FAILED) {
-      const {missing, deleted}: {missing: UserClients; deleted: UserClients} = error.response.data;
+      const {missing, deleted}: { missing: UserClients; deleted: UserClients } = error.response.data;
 
       const deletedUserIds = Object.keys(deleted);
       const missingUserIds = Object.keys(missing);
@@ -291,8 +291,10 @@ export class ConversationService {
   }
 
   private async sendConfirmation(payloadBundle: ConfirmationMessage, userIds?: string[]): Promise<ConfirmationMessage> {
+    const content = Confirmation.create(payloadBundle.content);
+
     const genericMessage = GenericMessage.create({
-      [GenericMessageType.CONFIRMATION]: Confirmation.create(payloadBundle.content),
+      [GenericMessageType.CONFIRMATION]: content,
       messageId: payloadBundle.id,
     });
 
@@ -598,17 +600,11 @@ export class ConversationService {
     };
   }
 
-  private async sendPing(payloadBundle: PingMessage, userIds?: string[]): Promise<PingMessage> {
-    const {expectsReadConfirmation, hotKnock = false, legalHoldStatus} = payloadBundle.content;
-
-    const knockMessage = Knock.create({
-      expectsReadConfirmation,
-      hotKnock,
-      legalHoldStatus,
-    });
+  private async sendKnock(payloadBundle: PingMessage, userIds?: string[]): Promise<PingMessage> {
+    const content = Knock.create(payloadBundle.content);
 
     let genericMessage = GenericMessage.create({
-      [GenericMessageType.KNOCK]: knockMessage,
+      [GenericMessageType.KNOCK]: content,
       messageId: payloadBundle.id,
     });
 
@@ -1027,7 +1023,7 @@ export class ConversationService {
       case PayloadBundleType.MESSAGE_EDIT:
         return this.sendEditedText(payloadBundle, userIds);
       case PayloadBundleType.PING:
-        return this.sendPing(payloadBundle, userIds);
+        return this.sendKnock(payloadBundle, userIds);
       case PayloadBundleType.REACTION:
         return this.sendReaction(payloadBundle, userIds);
       case PayloadBundleType.TEXT:
