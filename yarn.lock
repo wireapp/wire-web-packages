@@ -2645,10 +2645,10 @@
     "@webassemblyjs/wast-parser" "1.8.5"
     "@xtuc/long" "4.2.2"
 
-"@wireapp/protocol-messaging@1.25.3":
-  version "1.25.3"
-  resolved "https://registry.npmjs.org/@wireapp/protocol-messaging/-/protocol-messaging-1.25.3.tgz#c3cc7a416882b6ddd806822090be297ec199d0cf"
-  integrity sha512-eTVFQdLy5xkuwV0JBRQRQUoNnsQDD11SACKZ+UKPC3G4zFGCYJM/7+tlcOO38f0AiqLulzIXp9pUYxIH75UxGQ==
+"@wireapp/protocol-messaging@1.25.4":
+  version "1.25.4"
+  resolved "https://registry.npmjs.org/@wireapp/protocol-messaging/-/protocol-messaging-1.25.4.tgz#49a22683c19c628997f28e24f5eca909aab4e4b9"
+  integrity sha512-Z53Cw+u2rJhE/tlEAo1onYcD4FyuDEMjW2PQV9GTuGNA9iEv+rKnmha6YDI+m5NQxrlPc7Dsebqf+u04X7fB7g==
   dependencies:
     protobufjs "6.8.8"
 
