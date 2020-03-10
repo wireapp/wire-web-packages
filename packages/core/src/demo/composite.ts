@@ -5,6 +5,14 @@ import {Account} from '../main/Account';
 
 require('dotenv').config();
 
+const args = process.argv.slice(2);
+const conversationId = args[0];
+
+if (!conversationId) {
+  console.error('Please provide a conversation ID when starting this script.');
+  process.exit(1);
+}
+
 const login: LoginData = {
   clientType: ClientType.TEMPORARY,
   email: process.env.WIRE_EMAIL,
@@ -19,7 +27,7 @@ const login: LoginData = {
   console.info(`Hello user "${userId}" with client "${clientId}" ...`);
   if (account.service) {
     const message = account.service.conversation.messageBuilder.createCompositeMessage(
-      'b894b2e4-e862-4b55-a97e-56ea3690be20',
+      conversationId,
       'Are you a robot?',
       ['Yes', 'No'],
     );
