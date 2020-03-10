@@ -26,11 +26,10 @@ const login: LoginData = {
   const {clientId, userId} = await account.login(login);
   console.info(`Hello user "${userId}" with client "${clientId}" ...`);
   if (account.service) {
-    const message = account.service.conversation.messageBuilder.createCompositeMessage(
-      conversationId,
-      'Are you a robot?',
-      ['Yes', 'No'],
-    );
+    const message = account.service.conversation.messageBuilder.createPollMessage(conversationId, 'Are you a robot?', [
+      'Yes',
+      'No',
+    ]);
     await account.service.conversation.send(message);
   }
 })().catch(error => console.error(error.message));

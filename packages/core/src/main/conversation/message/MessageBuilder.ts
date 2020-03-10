@@ -290,7 +290,7 @@ export class MessageBuilder {
     };
   }
 
-  createCompositeMessage(
+  createPollMessage(
     conversationId: string,
     text: string,
     buttons: string[],
