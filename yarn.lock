@@ -9474,10 +9474,10 @@ log4js@^4.0.0, log4js@^4.0.1:
     rfdc "^1.1.4"
     streamroller "^1.0.6"
 
-logdown@3.3.0:
-  version "3.3.0"
-  resolved "https://registry.npmjs.org/logdown/-/logdown-3.3.0.tgz#639dd2d3becaf0d9657ab63e812fa0e0f0b19fe7"
-  integrity sha512-CECrThg4JtaVNJ8P7zlWDaFveHTg3VIrrUXvc8L2840VVuyZcLW3dDrdURgzHLSAxoKJt/F55RbKdQ0alI+Njg==
+logdown@3.3.1:
+  version "3.3.1"
+  resolved "https://registry.npmjs.org/logdown/-/logdown-3.3.1.tgz#836d5a195b5949c6db631ccc9fecce0492e01d10"
+  integrity sha512-pjX0vlIJsYQlgVzFba2amXI1wZZnhrEorL68MdLI7B0/sN1TNUozBNFaHfcPHMM3A+INZ0OXFDxtnoaEgOmGjQ==
   dependencies:
     chalk "^2.3.0"
 
