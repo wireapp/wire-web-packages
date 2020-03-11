@@ -33,7 +33,7 @@ import {
 } from '@wireapp/core/dist/conversation/content/';
 import {Asset, Confirmation} from '@wireapp/protocol-messaging';
 import {QuotableMessage} from '@wireapp/core/dist/conversation/message/OtrMessage';
-import {Conversation} from '@wireapp/api-client/dist/conversation';
+import {Conversation, DefaultConversationRoleName} from '@wireapp/api-client/dist/conversation';
 
 export abstract class MessageHandler {
   public account: Account | undefined = undefined;
