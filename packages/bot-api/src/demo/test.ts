@@ -48,9 +48,7 @@ const startBot = async (bot: Bot, storeEngine: CRUDEngine) => {
   const userId = USER_ID || '';
   console.info('Creating bot', email, conversation);
   const bot = new Bot({email, password}, botConfig);
-
   const storeEngine = new MemoryEngine();
-
   try {
     await storeEngine.init('wire');
     await startBot(bot, storeEngine);
