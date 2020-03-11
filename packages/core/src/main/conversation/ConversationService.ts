@@ -1077,8 +1077,8 @@ export class ConversationService {
   }
 
   public setMemberConversationRole(
-    userId: string,
     conversationId: string,
+    userId: string,
     conversationRole: DefaultConversationRoleName | string,
   ): Promise<void> {
     return this.apiClient.conversation.api.putOtherMember(userId, conversationId, {
