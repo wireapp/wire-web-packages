@@ -7,7 +7,7 @@ import {resolve} from 'path';
 import {config} from 'dotenv';
 config({path: resolve(__dirname, '.env')});
 
-const {WIRE_CONVERSATION, WIRE_EMAIL, WIRE_PASSWORD, WIRE_USER_ID} = process.env;
+const {CONVERSATION, EMAIL, PASSWORD, USER_ID} = process.env;
 
 const botConfig: BotConfig = {
   backend: 'production',
@@ -43,10 +43,10 @@ const startBot = async (bot: Bot, storeEngine: CRUDEngine) => {
 };
 
 (async () => {
-  const email = WIRE_EMAIL || '';
-  const password = WIRE_PASSWORD || '';
-  const conversation = WIRE_CONVERSATION || '';
-  const userId = WIRE_USER_ID || '';
+  const email = EMAIL || '';
+  const password = PASSWORD || '';
+  const conversation = CONVERSATION || '';
+  const userId = USER_ID || '';
   console.info('Creating bot', email, conversation);
   const bot = new Bot({email, password}, botConfig);
 
