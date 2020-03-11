@@ -41,8 +41,8 @@ const login: LoginData = {
     } = buttonActionMessage;
 
     const buttonActionConfirmationContent: ButtonActionConfirmationContent = {
-      buttonId: buttonId,
-      referenceMessageId: referenceMessageId,
+      buttonId,
+      referenceMessageId,
     };
     const buttonActionConfirmationMessage = account.service!.conversation.messageBuilder.createButtonActionConfirmationMessage(
       conversation,
