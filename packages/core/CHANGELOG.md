@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [15.10.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.10.0...@wireapp/core@15.10.1) (2020-03-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [15.10.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.9.0...@wireapp/core@15.10.0) (2020-03-11)
+
+
+### Features
+
+* **core:** Send button action confirmation messages ([#2872](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2872)) ([8bd812b](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/8bd812bed493eded0d9fd7a7ca6e8285033eb5e4))
+
+
+
+
+
+# [15.9.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.8.1...@wireapp/core@15.9.0) (2020-03-11)
+
+
+### Features
+
+* **core:** Send button action messages ([#2871](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2871)) ([4213be1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/4213be150e8c2b396932bc7e12b43e525dd7726f))
+
+
+
+
+
 ## [15.8.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.8.0...@wireapp/core@15.8.1) (2020-03-11)
 
 

@@ -22,6 +22,8 @@ import {Button, ClientAction, Composite, Confirmation, Text} from '@wireapp/prot
 import {AbortReason, PayloadBundleSource, PayloadBundleState, PayloadBundleType} from '..';
 import {AssetService} from '../AssetService';
 import {
+  ButtonActionContent,
+  ButtonActionConfirmationContent,
   CallingContent,
   ClientActionContent,
   ConfirmationContent,
@@ -43,6 +45,8 @@ import {
   CompositeContent,
 } from '../content';
 import {
+  ButtonActionMessage,
+  ButtonActionConfirmationMessage,
   CallMessage,
   CompositeMessage,
   ConfirmationMessage,
@@ -287,6 +291,40 @@ export class MessageBuilder {
       state: PayloadBundleState.OUTGOING_UNSENT,
       timestamp: Date.now(),
       type: PayloadBundleType.CONFIRMATION,
+    };
+  }
+
+  createButtonActionMessage(
+    conversationId: string,
+    content: ButtonActionContent,
+    messageId = MessageBuilder.createId(),
+  ): ButtonActionMessage {
+    return {
+      content,
+      conversation: conversationId,
+      from: this.getSelfUserId(),
+      id: messageId,
+      source: PayloadBundleSource.LOCAL,
+      state: PayloadBundleState.OUTGOING_UNSENT,
+      timestamp: Date.now(),
+      type: PayloadBundleType.BUTTON_ACTION,
+    };
+  }
+
+  createButtonActionConfirmationMessage(
+    conversationId: string,
+    content: ButtonActionConfirmationContent,
+    messageId = MessageBuilder.createId(),
+  ): ButtonActionConfirmationMessage {
+    return {
+      content,
+      conversation: conversationId,
+      from: this.getSelfUserId(),
+      id: messageId,
+      source: PayloadBundleSource.LOCAL,
+      state: PayloadBundleState.OUTGOING_UNSENT,
+      timestamp: Date.now(),
+      type: PayloadBundleType.BUTTON_ACTION_CONFIRMATION,
     };
   }
 

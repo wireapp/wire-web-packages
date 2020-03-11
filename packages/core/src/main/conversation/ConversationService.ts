@@ -17,6 +17,7 @@
  *
  */
 
+import {APIClient} from '@wireapp/api-client';
 import {
   Conversation,
   CONVERSATION_TYPE,
@@ -31,21 +32,11 @@ import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-cl
 import {ConversationMemberLeaveEvent} from '@wireapp/api-client/dist/event/';
 import {StatusCode} from '@wireapp/api-client/dist/http/';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/user/';
-import {AxiosError} from 'axios';
-import {Encoder} from 'bazinga64';
-import {
-  AssetService,
-  AssetTransferState,
-  GenericMessageType,
-  MessageTimer,
-  PayloadBundleSource,
-  PayloadBundleState,
-  PayloadBundleType,
-} from '../conversation/';
-
 import {
   Article,
   Asset,
+  ButtonAction,
+  ButtonActionConfirmation,
   Calling,
   Cleared,
   ClientAction,
@@ -65,6 +56,17 @@ import {
   Text,
   Tweet,
 } from '@wireapp/protocol-messaging';
+import {AxiosError} from 'axios';
+import {Encoder} from 'bazinga64';
+import {
+  AssetService,
+  AssetTransferState,
+  GenericMessageType,
+  MessageTimer,
+  PayloadBundleSource,
+  PayloadBundleState,
+  PayloadBundleType,
+} from '../conversation/';
 
 import {
   AssetContent,
@@ -78,10 +80,10 @@ import {
 
 import {CryptographyService, EncryptedAsset} from '../cryptography/';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
-
-import {APIClient} from '@wireapp/api-client';
 import {MessageBuilder} from './message/MessageBuilder';
 import {
+  ButtonActionMessage,
+  ButtonActionConfirmationMessage,
   CallMessage,
   ClearConversationMessage,
   CompositeMessage,
@@ -269,6 +271,49 @@ export class ConversationService {
       return message;
     }
     throw error;
+  }
+
+  private async sendButtonAction(payloadBundle: ButtonActionMessage, userIds?: string[]) {
+    const genericMessage = GenericMessage.create({
+      [GenericMessageType.BUTTON_ACTION]: ButtonAction.create(payloadBundle.content),
+      messageId: payloadBundle.id,
+    });
+
+    await this.sendGenericMessage(
+      this.apiClient.validatedClientId,
+      payloadBundle.conversation,
+      genericMessage,
+      userIds,
+    );
+
+    return {
+      ...payloadBundle,
+      messageTimer: 0,
+      state: PayloadBundleState.OUTGOING_SENT,
+    };
+  }
+
+  private async sendButtonActionConfirmation(
+    payloadBundle: ButtonActionConfirmationMessage,
+    userIds?: string[],
+  ): Promise<ButtonActionConfirmationMessage> {
+    const genericMessage = GenericMessage.create({
+      [GenericMessageType.BUTTON_ACTION_CONFIRMATION]: ButtonActionConfirmation.create(payloadBundle.content),
+      messageId: payloadBundle.id,
+    });
+
+    await this.sendGenericMessage(
+      this.apiClient.validatedClientId,
+      payloadBundle.conversation,
+      genericMessage,
+      userIds,
+    );
+
+    return {
+      ...payloadBundle,
+      messageTimer: 0,
+      state: PayloadBundleState.OUTGOING_SENT,
+    };
   }
 
   private async sendComposite(payloadBundle: CompositeMessage, userIds?: string[]): Promise<CompositeMessage> {
@@ -1005,6 +1050,10 @@ export class ConversationService {
         return this.sendFileMetaData(payloadBundle, userIds);
       case PayloadBundleType.ASSET_IMAGE:
         return this.sendImage(payloadBundle as ImageAssetMessageOutgoing, userIds);
+      case PayloadBundleType.BUTTON_ACTION:
+        return this.sendButtonAction(payloadBundle, userIds);
+      case PayloadBundleType.BUTTON_ACTION_CONFIRMATION:
+        return this.sendButtonActionConfirmation(payloadBundle, userIds);
       case PayloadBundleType.CALL:
         return this.sendCall(payloadBundle, userIds);
       case PayloadBundleType.CLIENT_ACTION: {
