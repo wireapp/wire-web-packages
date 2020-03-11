@@ -44,7 +44,7 @@ const login: LoginData = {
     );
     await account.service.conversation.send(pollMessage);
 
-    // Send button action
+    // Send button action message
     const buttonItems = pollMessage.content.items!.filter(item => typeof item.button === 'object');
     const lastButton = buttonItems[buttonItems.length - 1].button;
     const buttonActionContent: ButtonActionContent = {
