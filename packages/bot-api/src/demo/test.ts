@@ -27,15 +27,14 @@ const loginBot = async (bot: Bot, storeEngine: CRUDEngine) => {
       `Client ID '${clientId}',`,
       `Client Type '${botConfig.clientType}'.`,
     );
-    return {clientId, userId};
+  } else {
+    throw Error('Bot does not have an account assigned which means it is not initialized properly.');
   }
-  throw Error('Bot does not have an account assigned which means it is not initialized properly.');
-  return bot;
 };
 
 const startBot = async (bot: Bot, storeEngine: CRUDEngine) => {
   try {
-    return loginBot(bot, storeEngine);
+    await loginBot(bot, storeEngine);
   } catch (error) {
     console.error(error.label);
     throw error;
