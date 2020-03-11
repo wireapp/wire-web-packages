@@ -33,7 +33,7 @@ import {
 } from '@wireapp/core/dist/conversation/content/';
 import {Asset, Confirmation} from '@wireapp/protocol-messaging';
 import {QuotableMessage} from '@wireapp/core/dist/conversation/message/OtrMessage';
-import {Conversation} from '@wireapp/api-client/dist/conversation';
+import {Conversation, DefaultConversationRoleName} from '@wireapp/api-client/dist/conversation';
 
 export abstract class MessageHandler {
   public account: Account | undefined = undefined;
@@ -72,6 +72,22 @@ export abstract class MessageHandler {
     if (this.account?.service) {
       await this.account.service.conversation.removeUser(conversationId, userId);
     }
+  }
+
+  public async setAdminRole(conversationId: string, userId: string): Promise<void> {
+    return this.account!.service!.conversation.setMemberConversationRole(
+      conversationId,
+      userId,
+      DefaultConversationRoleName.WIRE_ADMIN,
+    );
+  }
+
+  public async setMemberRole(conversationId: string, userId: string): Promise<void> {
+    return this.account!.service!.conversation.setMemberConversationRole(
+      conversationId,
+      userId,
+      DefaultConversationRoleName.WIRE_MEMBER,
+    );
   }
 
   public async sendCall(conversationId: string, content: CallingContent): Promise<void> {
