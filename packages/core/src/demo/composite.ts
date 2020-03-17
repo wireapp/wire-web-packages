@@ -4,6 +4,7 @@ import {ClientType} from '@wireapp/api-client/dist/client';
 import {Account} from '../main/Account';
 import {PayloadBundleType} from '../main/conversation';
 import {ButtonActionContent, ButtonActionConfirmationContent} from '../main/conversation/content';
+import {Text} from '@wireapp/protocol-messaging';
 
 require('dotenv').config();
 
@@ -59,7 +60,7 @@ const login: LoginData = {
     // Send poll message
     const pollMessage = account.service.conversation.messageBuilder.createPollMessage(
       conversationId,
-      'Are you a robot?',
+      Text.create({content: 'Are you a robot?'}),
       ['Yes', 'No'],
     );
     await account.service.conversation.send(pollMessage);
