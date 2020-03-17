@@ -216,7 +216,7 @@ export class ConversationService {
      * don't provide PreKeys (clients from the Pre-E2EE era).
      */
     await this.apiClient.conversation.api.postOTRMessage(sendingClientId, conversationId, message, {
-      ignore_missing: true
+      ignore_missing: true,
     });
   }
 
@@ -227,7 +227,7 @@ export class ConversationService {
     plainTextArray: Uint8Array,
   ): Promise<NewOTRMessage> {
     if (error.response?.status === StatusCode.PRECONDITION_FAILED) {
-      const {missing, deleted}: { missing: UserClients; deleted: UserClients } = error.response.data;
+      const {missing, deleted}: {missing: UserClients; deleted: UserClients} = error.response.data;
 
       const deletedUserIds = Object.keys(deleted);
       const missingUserIds = Object.keys(missing);
