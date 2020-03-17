@@ -210,7 +210,11 @@ export class ConversationService {
       sender: sendingClientId,
     };
 
-    // When creating the PreKey bundles we already found out to which users we want to send a message so we can ignore missing clients
+    /**
+     * When creating the PreKey bundles we already found out to which users we want to send a message, so we can ignore
+     * missing clients. We have to ignore missing clients because there can be the case that there are clients that
+     * don't provide PreKeys (clients from the Pre-E2EE era).
+     */
     await this.apiClient.conversation.api.postOTRMessage(sendingClientId, conversationId, message, {
       ignore_missing: true
     });
@@ -223,7 +227,7 @@ export class ConversationService {
     plainTextArray: Uint8Array,
   ): Promise<NewOTRMessage> {
     if (error.response?.status === StatusCode.PRECONDITION_FAILED) {
-      const {missing, deleted}: {missing: UserClients; deleted: UserClients} = error.response.data;
+      const {missing, deleted}: { missing: UserClients; deleted: UserClients } = error.response.data;
 
       const deletedUserIds = Object.keys(deleted);
       const missingUserIds = Object.keys(missing);
