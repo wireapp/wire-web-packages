@@ -1,7 +1,7 @@
-import {Article, Asset, LinkPreview, Mention, Quote, Text, Tweet} from "@wireapp/protocol-messaging";
-import {LinkPreviewUploadedContent} from "../content";
-import {GenericMessageType} from "../GenericMessageType";
-import {EditedTextMessage, TextMessage} from "./OtrMessage";
+import {Article, Asset, LinkPreview, Mention, Quote, Text, Tweet} from '@wireapp/protocol-messaging';
+import {LinkPreviewUploadedContent} from '../content';
+import {GenericMessageType} from '../GenericMessageType';
+import {EditedTextMessage, TextMessage} from './OtrMessage';
 
 export class MessageToProtoMapper {
   static mapLinkPreviews(linkPreviews: LinkPreviewUploadedContent[]): LinkPreview[] {
@@ -66,14 +66,7 @@ export class MessageToProtoMapper {
   }
 
   static mapText(payloadBundle: TextMessage | EditedTextMessage): Text {
-    const {
-      expectsReadConfirmation,
-      legalHoldStatus,
-      linkPreviews,
-      mentions,
-      quote,
-      text,
-    } = payloadBundle.content;
+    const {expectsReadConfirmation, legalHoldStatus, linkPreviews, mentions, quote, text} = payloadBundle.content;
 
     const textMessage = Text.create({
       content: text,

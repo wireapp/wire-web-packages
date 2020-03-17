@@ -62,12 +62,12 @@ import {
   PayloadBundleType,
 } from '../conversation/';
 
-import {AssetContent, ClearedContent, DeletedContent, HiddenContent, RemoteData,} from '../conversation/content/';
+import {AssetContent, ClearedContent, DeletedContent, HiddenContent, RemoteData} from '../conversation/content/';
 
 import {CryptographyService, EncryptedAsset} from '../cryptography/';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
 import {MessageBuilder} from './message/MessageBuilder';
-import {MessageToProtoMapper} from "./message/MessageToProtoMapper";
+import {MessageToProtoMapper} from './message/MessageToProtoMapper';
 import {
   ButtonActionConfirmationMessage,
   ButtonActionMessage,
