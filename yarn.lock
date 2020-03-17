@@ -2242,10 +2242,10 @@
     "@types/istanbul-lib-coverage" "*"
     "@types/istanbul-lib-report" "*"
 
-"@types/jasmine@3.5.6":
-  version "3.5.6"
-  resolved "https://registry.npmjs.org/@types/jasmine/-/jasmine-3.5.6.tgz#d22dc494df35c778bf55799a8656dfee9ed687e4"
-  integrity sha512-3t2+VXIUZ45ffGG1r8Hq1uO2IdJ6Zp0f3RGydGPVNyUbjlZfet9uZ9m2mXTkKyxjj9BTapCnAl+hiH0ztvW/Vg==
+"@types/jasmine@3.5.9":
+  version "3.5.9"
+  resolved "https://registry.npmjs.org/@types/jasmine/-/jasmine-3.5.9.tgz#43ca4566f0d9de23df1211ecf32a9b9f8c3a5923"
+  integrity sha512-KNL2Fq6GRmty2j6+ZmueT/Z/dkctLNH+5DFoGHNDtcgt7yME9NZd8x2p81Yuea1Xux/qAryDd3zVLUoKpDz1TA==
 
 "@types/jest@^23.0.2":
   version "23.3.14"
