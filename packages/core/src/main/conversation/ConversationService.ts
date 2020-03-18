@@ -118,10 +118,7 @@ export class ConversationService {
     return genericMessage;
   }
 
-  private async getPreKeyBundle(
-    conversationId: string,
-    userIds?: string[],
-  ): Promise<UserPreKeyBundleMap> {
+  private async getPreKeyBundle(conversationId: string, userIds?: string[]): Promise<UserPreKeyBundleMap> {
     const conversation = await this.apiClient.conversation.api.getConversation(conversationId);
     const members = userIds?.length ? userIds.map(id => ({id})) : conversation.members.others;
     const preKeys = await Promise.all(members.map(member => this.apiClient.user.api.getUserPreKeys(member.id)));
@@ -230,7 +227,7 @@ export class ConversationService {
     plainTextArray: Uint8Array,
   ): Promise<NewOTRMessage> {
     if (error.response?.status === StatusCode.PRECONDITION_FAILED) {
-      const {missing, deleted}: { missing: UserClients; deleted: UserClients } = error.response.data;
+      const {missing, deleted}: {missing: UserClients; deleted: UserClients} = error.response.data;
 
       const deletedUserIds = Object.keys(deleted);
       const missingUserIds = Object.keys(missing);
