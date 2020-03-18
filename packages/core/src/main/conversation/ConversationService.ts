@@ -126,6 +126,10 @@ export class ConversationService {
     const members = userIds?.length ? userIds.map(id => ({id})) : conversation.members.others;
     const preKeys = await Promise.all(members.map(member => this.apiClient.user.api.getUserPreKeys(member.id)));
 
+    /**
+     * If you are sending a message to a selection of users, you have to include yourself in the list of users if you
+     * want to sync a message also to your other clients.
+     */
     if (!userIds) {
       const selfPreKey = await this.apiClient.user.api.getUserPreKeys(conversation.members.self.id);
       preKeys.push(selfPreKey);
@@ -226,7 +230,7 @@ export class ConversationService {
     plainTextArray: Uint8Array,
   ): Promise<NewOTRMessage> {
     if (error.response?.status === StatusCode.PRECONDITION_FAILED) {
-      const {missing, deleted}: {missing: UserClients; deleted: UserClients} = error.response.data;
+      const {missing, deleted}: { missing: UserClients; deleted: UserClients } = error.response.data;
 
       const deletedUserIds = Object.keys(deleted);
       const missingUserIds = Object.keys(missing);
