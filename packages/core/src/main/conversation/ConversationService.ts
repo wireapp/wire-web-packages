@@ -121,13 +121,12 @@ export class ConversationService {
   private async getPreKeyBundle(
     conversationId: string,
     userIds?: string[],
-    skipOwnClients = false,
   ): Promise<UserPreKeyBundleMap> {
     const conversation = await this.apiClient.conversation.api.getConversation(conversationId);
     const members = userIds?.length ? userIds.map(id => ({id})) : conversation.members.others;
     const preKeys = await Promise.all(members.map(member => this.apiClient.user.api.getUserPreKeys(member.id)));
 
-    if (!skipOwnClients) {
+    if (!userIds) {
       const selfPreKey = await this.apiClient.user.api.getUserPreKeys(conversation.members.self.id);
       preKeys.push(selfPreKey);
     }
