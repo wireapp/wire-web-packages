@@ -75,7 +75,12 @@ export abstract class MessageHandler {
     }
   }
 
-  async sendButtonActionConfirmation(conversationId: string, userId: string, referenceMessageId: string, buttonId: string) {
+  async sendButtonActionConfirmation(
+    conversationId: string,
+    userId: string,
+    referenceMessageId: string,
+    buttonId: string,
+  ) {
     if (this.account?.service) {
       const buttonActionConfirmationContent: ButtonActionConfirmationContent = {
         buttonId,
@@ -100,7 +105,11 @@ export abstract class MessageHandler {
 
   async sendPoll(conversationId: string, text: string, buttons: string[]): Promise<void> {
     if (this.account?.service) {
-      const message = this.account.service.conversation.messageBuilder.createPollMessage(conversationId, Text.create({content: text}), buttons);
+      const message = this.account.service.conversation.messageBuilder.createPollMessage(
+        conversationId,
+        Text.create({content: text}),
+        buttons,
+      );
       await this.account.service.conversation.send(message);
     }
   }
