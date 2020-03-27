@@ -54,8 +54,7 @@ describe('SQLeetEngine', () => {
     if (engine) {
       try {
         await engine.purge();
-      } catch (error) {
-      }
+      } catch (error) {}
     }
   });
 
@@ -223,8 +222,7 @@ describe('SQLeetEngine', () => {
       const allEntries = await engine.readAll(tableName);
       expect(allEntries.length).toBe(2);
 
-      const alvin = allEntries[0];
-      const bertha = allEntries[1];
+      const [alvin, bertha] = allEntries;
 
       expect(alvin.name).toBe('Alvin');
       expect(alvin.visits).toBeNull();
