@@ -251,6 +251,18 @@ export class SQLeetEngine implements CRUDEngine {
     const records = (await statement.getAsObject()) as T[];
     await statement.free();
 
+    for (const record in records) {
+      for (const column in records[record]) {
+        if (table[column] === SQLiteType.JSON) {
+          records[record][column] = JSON.parse(records[record][column] as any);
+        } else if (table[column] === SQLiteType.JSON_OR_TEXT) {
+          try {
+            records[record][column] = JSON.parse(records[record][column] as any);
+          } catch (error) {}
+        }
+      }
+    }
+
     return records;
   }
 
