@@ -258,13 +258,13 @@ describe('SQLeetEngine', () => {
       const allEntries = await engine.readAll(tableName);
       expect(allEntries.length).toBe(2);
 
-      const [simon, alva] = allEntries;
+      const [alva, simon] = allEntries;
 
-      expect(simon.name).toBe('Alva');
-      expect(simon.visits).toEqual(visits);
+      expect(alva.name).toBe('Alva');
+      expect(alva.visits).toEqual(visits);
 
-      expect(alva.name).toBe('Simon');
-      expect(alva.visits).toBeNull();
+      expect(simon.name).toBe('Simon');
+      expect(simon.visits).toBeNull();
     });
   });
 
