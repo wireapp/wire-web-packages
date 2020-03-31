@@ -169,6 +169,34 @@ describe('SQLeetEngine', () => {
         await testFunction(engine);
       });
     });
+
+    it('parses JSON properties', async () => {
+      const tableName = 'users';
+
+      const engine = await initEngine({
+        [tableName]: {
+          name: SQLiteType.TEXT,
+          visits: SQLiteType.JSON,
+        },
+      });
+
+      const visits = {
+        anne: 2,
+        bertha: null,
+        peter: 1,
+      };
+
+      const primaryKey = await engine.create(tableName, undefined, {
+        name: 'Alva',
+        visits,
+      });
+
+      const alva = await engine.read(tableName, primaryKey);
+
+      expect(alva.name).toBe('Alva');
+      expect(alva.visits).toEqual(visits);
+      expect(alva.visits.bertha).toBeNull();
+    });
   });
 
   describe('readAll', () => {
