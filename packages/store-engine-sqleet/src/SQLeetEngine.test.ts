@@ -243,6 +243,7 @@ describe('SQLeetEngine', () => {
 
       const visits = {
         anne: 2,
+        bertha: null,
         peter: 1,
       };
 
@@ -262,6 +263,7 @@ describe('SQLeetEngine', () => {
 
       expect(alva.name).toBe('Alva');
       expect(alva.visits).toEqual(visits);
+      expect(alva.visits.bertha).toBeNull();
 
       expect(simon.name).toBe('Simon');
       expect(simon.visits).toBeNull();
