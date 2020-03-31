@@ -247,12 +247,12 @@ describe('SQLeetEngine', () => {
       };
 
       await engine.create(tableName, undefined, {
-        name: 'Simon',
+        name: 'Alva',
         visits,
       });
 
       await engine.create(tableName, undefined, {
-        name: 'Alva',
+        name: 'Simon',
       });
 
       const allEntries = await engine.readAll(tableName);
@@ -260,10 +260,10 @@ describe('SQLeetEngine', () => {
 
       const [simon, alva] = allEntries;
 
-      expect(simon.name).toBe('Simon');
+      expect(simon.name).toBe('Alva');
       expect(simon.visits).toEqual(visits);
 
-      expect(alva.name).toBe('Alva');
+      expect(alva.name).toBe('Simon');
       expect(alva.visits).toBeNull();
     });
   });
