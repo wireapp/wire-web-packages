@@ -230,6 +230,42 @@ describe('SQLeetEngine', () => {
       expect(bertha.name).toBe('Bertha');
       expect(bertha.visits).toBeNull();
     });
+
+    it('parses JSON properties', async () => {
+      const tableName = 'users';
+
+      const engine = await initEngine({
+        [tableName]: {
+          name: SQLiteType.TEXT,
+          visits: SQLiteType.JSON,
+        },
+      });
+
+      const visits = {
+        anne: 2,
+        peter: 1,
+      };
+
+      await engine.create(tableName, undefined, {
+        name: 'Simon',
+        visits,
+      });
+
+      await engine.create(tableName, undefined, {
+        name: 'Alva',
+      });
+
+      const allEntries = await engine.readAll(tableName);
+      expect(allEntries.length).toBe(2);
+
+      const [simon, alva] = allEntries;
+
+      expect(simon.name).toBe('Simon');
+      expect(simon.visits).toEqual(visits);
+
+      expect(alva.name).toBe('Alva');
+      expect(alva.visits).toBeNull();
+    });
   });
 
   describe('updateOrCreate', () => {
