@@ -255,6 +255,7 @@ describe('SQLeetEngine', () => {
       expect(alvin.visits).toBeNull();
 
       expect(bertha.name).toBe('Bertha');
+      expect(bertha.visits).toBeNull();
     });
 
     it('parses JSON properties', async () => {
@@ -289,7 +290,6 @@ describe('SQLeetEngine', () => {
 
       expect(alva.name).toBe('Alva');
       expect(alva.visits).toEqual(visits);
-      expect(alva.visits.bertha).toBeNull();
 
       expect(simon.name).toBe('Simon');
       expect(simon.visits).toBeNull();
