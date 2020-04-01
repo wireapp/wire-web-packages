@@ -17,6 +17,8 @@
  *
  */
 
+type clientIds = string[];
+
 export interface UserClients {
-  [userId: string]: string[]; // User ID → Array of Client IDs
+  [userId: string]: clientIds;
 }

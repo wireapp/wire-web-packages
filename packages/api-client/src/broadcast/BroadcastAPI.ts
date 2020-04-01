@@ -19,7 +19,7 @@
 
 import {AxiosRequestConfig} from 'axios';
 
-import {NewOTRMessage, UserClients} from '../conversation/';
+import {ClientMismatch, NewOTRMessage, UserClients} from '../conversation/';
 import {HttpClient} from '../http/';
 import {ValidationError} from '../validation/';
 
@@ -43,7 +43,7 @@ export class BroadcastAPI {
       ignore_missing?: boolean;
       report_missing?: string;
     },
-  ): Promise<UserClients> {
+  ): Promise<ClientMismatch> {
     if (!clientId) {
       throw new ValidationError('Unable to send OTR message without client ID.');
     }
