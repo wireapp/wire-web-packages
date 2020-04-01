@@ -19,7 +19,7 @@
 
 import {AxiosRequestConfig} from 'axios';
 
-import {ClientMismatch, NewOTRMessage, UserClients} from '../conversation/';
+import {ClientMismatch, NewOTRMessage} from '../conversation/';
 import {HttpClient} from '../http/';
 import {ValidationError} from '../validation/';
 
