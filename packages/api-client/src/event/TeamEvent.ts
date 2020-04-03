@@ -41,8 +41,8 @@ export type TeamEventData =
   | TeamConversationCreateData
   | TeamConversationDeleteData
   | TeamMemberLeaveData
-  | TeamUpdateData
   | TeamMemberUpdateData
+  | TeamUpdateData
   | null;
 
 export type TeamEvent =

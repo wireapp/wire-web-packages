@@ -20,6 +20,6 @@
 import {PermissionsData} from '../member/PermissionsData';
 
 export interface TeamMemberUpdateData {
-  user: string;
   permissions: PermissionsData;
+  user: string;
 }
