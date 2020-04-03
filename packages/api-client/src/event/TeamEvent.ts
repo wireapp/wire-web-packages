@@ -22,6 +22,7 @@ import {
   TeamConversationDeleteData,
   TeamMemberJoinData,
   TeamMemberLeaveData,
+  TeamMemberUpdateData,
   TeamUpdateData,
 } from '../team/data';
 
@@ -41,6 +42,7 @@ export type TeamEventData =
   | TeamConversationDeleteData
   | TeamMemberLeaveData
   | TeamUpdateData
+  | TeamMemberUpdateData
   | null;
 
 export type TeamEvent =
@@ -91,7 +93,7 @@ export interface TeamMemberLeaveEvent extends BaseTeamEvent {
 }
 
 export interface TeamMemberUpdateEvent extends BaseTeamEvent {
-  // TODO: add data
+  data: TeamMemberUpdateData;
   type: TEAM_EVENT.MEMBER_UPDATE;
 }
 
