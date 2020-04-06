@@ -51,10 +51,8 @@ export class UnconnectedUserError extends UserError {
   }
 }
 
-export const REQUEST_CANCELLED = 'REQUEST_CANCELLED';
-
 export class RequestCancellationError extends UserError {
-  constructor(message: string, label = SyntheticErrorLabel.REQUEST_CANCELLATION, code = StatusCode.UNKNOWN) {
+  constructor(message: string, label = SyntheticErrorLabel.REQUEST_CANCELLED, code = StatusCode.UNKNOWN) {
     super(message, label, code);
     Object.setPrototypeOf(this, new.target.prototype);
     this.name = 'RequestCancellationError';
