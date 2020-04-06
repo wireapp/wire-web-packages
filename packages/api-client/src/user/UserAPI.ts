@@ -38,6 +38,7 @@ import {
   VerifyDelete,
 } from '../user/';
 import {RichInfo} from './RichInfo';
+import {RequestCancellationError, REQUEST_CANCELLED} from './UserError';
 
 export class UserAPI {
   public static readonly DEFAULT_USERS_CHUNK_SIZE = 50;
@@ -232,9 +233,21 @@ export class UserAPI {
       config.params.size = limit;
     }
 
+    const handleRequest = async () => {
+      try {
+        const response = await this.client.sendJSON<SearchResult>(config);
+        return response.data;
+      } catch (error) {
+        if (error.message === REQUEST_CANCELLED) {
+          throw new RequestCancellationError('Search request got cancelled');
+        }
+        throw error;
+      }
+    };
+
     return {
-      cancel: cancelSource.cancel,
-      response: this.client.sendJSON<SearchResult>(config),
+      cancel: () => cancelSource.cancel(REQUEST_CANCELLED),
+      response: handleRequest(),
     };
   }
 

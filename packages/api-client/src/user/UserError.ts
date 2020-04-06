@@ -17,10 +17,10 @@
  *
  */
 
-import {BackendError, BackendErrorLabel, StatusCode} from '../http/';
+import {BackendError, BackendErrorLabel, StatusCode, SyntheticErrorLabel} from '../http/';
 
 export class UserError extends BackendError {
-  constructor(message: string, label: BackendErrorLabel, code: StatusCode) {
+  constructor(message: string, label: BackendErrorLabel | SyntheticErrorLabel, code: StatusCode) {
     super(message, label, code);
     Object.setPrototypeOf(this, new.target.prototype);
     this.name = 'UserError';
@@ -48,5 +48,15 @@ export class UnconnectedUserError extends UserError {
     super(message, label, code);
     Object.setPrototypeOf(this, new.target.prototype);
     this.name = 'UnconnectedUserError';
+  }
+}
+
+export const REQUEST_CANCELLED = 'REQUEST_CANCELLED';
+
+export class RequestCancellationError extends UserError {
+  constructor(message: string, label = SyntheticErrorLabel.REQUEST_CANCELLATION, code = StatusCode.UNKNOWN) {
+    super(message, label, code);
+    Object.setPrototypeOf(this, new.target.prototype);
+    this.name = 'RequestCancellationError';
   }
 }
