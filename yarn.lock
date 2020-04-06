@@ -5817,10 +5817,10 @@ eslint-plugin-jsdoc@21.0.0:
     semver "^6.3.0"
     spdx-expression-parse "^3.0.0"
 
-eslint-plugin-no-unsanitized@3.0.2:
-  version "3.0.2"
-  resolved "https://registry.npmjs.org/eslint-plugin-no-unsanitized/-/eslint-plugin-no-unsanitized-3.0.2.tgz#83c6fcf8e34715112757e03dd4ee436dce29ed45"
-  integrity sha512-JnwpoH8Sv4QOjrTDutENBHzSnyYtspdjtglYtqUtAHe6f6LLKqykJle+UwFPg23GGwt5hI3amS9CRDezW8GAww==
+eslint-plugin-no-unsanitized@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.npmjs.org/eslint-plugin-no-unsanitized/-/eslint-plugin-no-unsanitized-3.1.0.tgz#c86cdd13d22bb52882eeccbd8da5da092f7c6c9c"
+  integrity sha512-4gOd6Genbs1iN2rk+Duw/AZHglBvl6htbZZyDPUX7YdjWSu1D/iOGq7EtomDZ6VjzHKRo32042JciX+PPDrZgQ==
 
 eslint-plugin-prettier@3.1.2:
   version "3.1.2"
