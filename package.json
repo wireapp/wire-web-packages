@@ -31,17 +31,13 @@
       "prettier --write"
     ]
   },
-  "hooks": {
+  "husky": {
+    "hooks": {
 
-
-
-
-
-  "hooks": {
-
-
-    "pre-commit": "lint-staged"
-  }},
+      
+      "pre-commit": "lint-staged"
+    }
+  },
   "prettier": "./packages/prettier-config",
   "private": true,
   "scripts": {
