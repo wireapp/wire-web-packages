@@ -33,9 +33,15 @@
   },
   "hooks": {
 
-    
+
+
+
+
+  "hooks": {
+
+
     "pre-commit": "lint-staged"
-  },
+  }},
   "prettier": "./packages/prettier-config",
   "private": true,
   "scripts": {
