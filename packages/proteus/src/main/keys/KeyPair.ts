@@ -40,10 +40,7 @@ export class KeyPair {
 
     const ed25519_key_pair = sodium.crypto_sign_keypair();
 
-    return new KeyPair(
-      KeyPair.construct_public_key(ed25519_key_pair),
-      KeyPair.construct_private_key(ed25519_key_pair)
-    );
+    return new KeyPair(KeyPair.construct_public_key(ed25519_key_pair), KeyPair.construct_private_key(ed25519_key_pair));
   }
 
   /**
