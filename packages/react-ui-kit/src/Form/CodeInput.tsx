@@ -69,6 +69,7 @@ export const CodeInput = ({
   autoFocus = false,
   markInvalid,
   onCodeComplete = noop,
+  disabled,
 }: CodeInputProps) => {
   const [values, setValues] = useState(Array(digits).fill(''));
   const inputs = Array(digits);
@@ -137,7 +138,12 @@ export const CodeInput = ({
     const pastedValue = event.clipboardData.getData('Text');
     const cleanedPaste = pastedValue.replace(/[^0-9]/g, '');
     if (/^[0-9]+$/.test(cleanedPaste)) {
-      setValues(values.slice(0, fieldIndex).concat(cleanedPaste.split('')).slice(0, digits));
+      setValues(
+        values
+          .slice(0, fieldIndex)
+          .concat(cleanedPaste.split(''))
+          .slice(0, digits),
+      );
     }
   };
 
@@ -165,6 +171,7 @@ export const CodeInput = ({
           type="text"
           value={values[index]}
           onChange={() => {}}
+          disabled={disabled}
         />
       ))}
     </CodeInputWrapper>
