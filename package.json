@@ -23,6 +23,11 @@
     "node": ">= 10.9",
     "yarn": ">= 1"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "eslint --fix"
@@ -30,11 +35,6 @@
     "*.{json,md,scss,yml}": [
       "prettier --write"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "prettier": "./packages/prettier-config",
   "private": true,
@@ -54,15 +54,15 @@
     "test:all": "yarn && yarn dist && yarn lint && lerna run --no-sort  --concurrency 8 test"
   },
   "workspaces": {
-    "packages": [
-      "packages/*"
-    ],
     "nohoist": [
       "**/@jest/**/*",
       "**/@types/**/*",
       "**/emotion-normalize",
       "**/jest-emotion",
       "**/react"
+    ],
+    "packages": [
+      "packages/*"
     ]
   }
 }
