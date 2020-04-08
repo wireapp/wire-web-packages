@@ -19,9 +19,12 @@
 
 import {
   AssetContent,
+  ButtonActionContent,
+  ButtonActionConfirmationContent,
   CallingContent,
   ClearedContent,
   ClientActionContent,
+  CompositeContent,
   ConfirmationContent,
   DeletedContent,
   EditedTextContent,
@@ -42,9 +45,24 @@ export interface TextMessage extends BasePayloadBundle {
   type: PayloadBundleType.TEXT;
 }
 
+export interface ButtonActionMessage extends BasePayloadBundle {
+  content: ButtonActionContent;
+  type: PayloadBundleType.BUTTON_ACTION;
+}
+
+export interface ButtonActionConfirmationMessage extends BasePayloadBundle {
+  content: ButtonActionConfirmationContent;
+  type: PayloadBundleType.BUTTON_ACTION_CONFIRMATION;
+}
+
 export interface CallMessage extends BasePayloadBundle {
   content: CallingContent;
   type: PayloadBundleType.CALL;
+}
+
+export interface CompositeMessage extends BasePayloadBundle {
+  content: CompositeContent;
+  type: PayloadBundleType.COMPOSITE;
 }
 
 export interface EditedTextMessage extends BasePayloadBundle {
@@ -119,8 +137,11 @@ export interface DeleteMessage extends BasePayloadBundle {
 }
 
 export type OtrMessage =
+  | ButtonActionMessage
+  | ButtonActionConfirmationMessage
   | CallMessage
   | ClearConversationMessage
+  | CompositeMessage
   | ConfirmationMessage
   | DeleteMessage
   | EditedTextMessage

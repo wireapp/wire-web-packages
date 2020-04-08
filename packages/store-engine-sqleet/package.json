@@ -1,32 +1,32 @@
 {
   "dependencies": {
-    "@babel/core": "7.8.3",
+    "@babel/core": "7.9.0",
     "@babel/plugin-proposal-class-properties": "7.8.3",
-    "@babel/plugin-proposal-object-rest-spread": "7.8.3",
+    "@babel/plugin-proposal-object-rest-spread": "7.9.0",
     "@babel/plugin-proposal-optional-chaining": "7.8.3",
     "@babel/preset-typescript": "7.8.3",
     "@wireapp/websql": "0.0.15",
     "uint32": "0.2.1"
   },
   "devDependencies": {
-    "@types/jasmine": "3.5.0",
-    "@types/karma": "3.0.5",
+    "@types/jasmine": "3.5.9",
+    "@types/karma": "4.4.0",
     "@types/karma-webpack": "2.0.7",
     "@types/node": "~12",
     "@types/uint32": "0.2.0",
-    "@types/webpack": "4.41.2",
-    "@wireapp/store-engine": "4.3.2",
+    "@types/webpack": "4.41.8",
+    "@wireapp/store-engine": "4.3.11",
     "babel-loader": "8.0.6",
-    "bazinga64": "5.6.2",
+    "bazinga64": "5.6.10",
     "jasmine": "3.5.0",
     "karma": "4.4.1",
     "karma-chrome-launcher": "3.1.0",
-    "karma-jasmine": "2.0.1",
+    "karma-jasmine": "3.1.1",
     "karma-webpack": "4.0.2",
     "rimraf": "3.0.0",
     "ts-node": "8.6.2",
-    "typescript": "3.7.4",
-    "webpack": "4.41.5"
+    "typescript": "3.8.3",
+    "webpack": "4.42.1"
   },
   "description": "Store Engine implementation for SQLite 3 (WebAssembly) with encryption.",
   "files": [
@@ -47,5 +47,5 @@
     "test": "karma start",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "1.2.2"
+  "version": "1.2.15"
 }

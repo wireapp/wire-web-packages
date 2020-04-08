@@ -3,6 +3,116 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@1.2.14...@wireapp/store-engine-sqleet@1.2.15) (2020-03-31)
+
+
+### Bug Fixes
+
+* **sqleet-engine:** Parse JSON in readAll (WEBAPP-6765) ([#2913](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/issues/2913)) ([36abbba](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/commit/36abbba3546af13045ac02bb9c4a0d81fedd3fdf))
+
+
+
+
+
+## [1.2.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@1.2.13...@wireapp/store-engine-sqleet@1.2.14) (2020-03-31)
+
+**Note:** Version bump only for package @wireapp/store-engine-sqleet
+
+
+
+
+
+## [1.2.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@1.2.12...@wireapp/store-engine-sqleet@1.2.13) (2020-03-27)
+
+
+### Bug Fixes
+
+* **store-engine-sqleet:** Don't persist null values ([#2903](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/issues/2903)) ([e17cae5](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/commit/e17cae5258accf3688c8cc6f2f7470eb0e046b10))
+
+
+
+
+
+## [1.2.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@1.2.11...@wireapp/store-engine-sqleet@1.2.12) (2020-03-25)
+
+**Note:** Version bump only for package @wireapp/store-engine-sqleet
+
+
+
+
+
+## [1.2.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@1.2.10...@wireapp/store-engine-sqleet@1.2.11) (2020-03-17)
+
+**Note:** Version bump only for package @wireapp/store-engine-sqleet
+
+
+
+
+
+## [1.2.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@1.2.9...@wireapp/store-engine-sqleet@1.2.10) (2020-03-10)
+
+**Note:** Version bump only for package @wireapp/store-engine-sqleet
+
+
+
+
+
+## [1.2.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@1.2.8...@wireapp/store-engine-sqleet@1.2.9) (2020-03-09)
+
+**Note:** Version bump only for package @wireapp/store-engine-sqleet
+
+
+
+
+
+## [1.2.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@1.2.7...@wireapp/store-engine-sqleet@1.2.8) (2020-02-28)
+
+**Note:** Version bump only for package @wireapp/store-engine-sqleet
+
+
+
+
+
+## [1.2.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@1.2.6...@wireapp/store-engine-sqleet@1.2.7) (2020-02-18)
+
+**Note:** Version bump only for package @wireapp/store-engine-sqleet
+
+
+
+
+
+## [1.2.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@1.2.5...@wireapp/store-engine-sqleet@1.2.6) (2020-02-18)
+
+**Note:** Version bump only for package @wireapp/store-engine-sqleet
+
+
+
+
+
+## [1.2.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@1.2.4...@wireapp/store-engine-sqleet@1.2.5) (2020-02-06)
+
+**Note:** Version bump only for package @wireapp/store-engine-sqleet
+
+
+
+
+
+## [1.2.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@1.2.3...@wireapp/store-engine-sqleet@1.2.4) (2020-02-03)
+
+**Note:** Version bump only for package @wireapp/store-engine-sqleet
+
+
+
+
+
+## [1.2.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@1.2.2...@wireapp/store-engine-sqleet@1.2.3) (2020-01-24)
+
+**Note:** Version bump only for package @wireapp/store-engine-sqleet
+
+
+
+
+
 ## [1.2.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-sqleet/compare/@wireapp/store-engine-sqleet@1.2.1...@wireapp/store-engine-sqleet@1.2.2) (2020-01-17)
 
 **Note:** Version bump only for package @wireapp/store-engine-sqleet

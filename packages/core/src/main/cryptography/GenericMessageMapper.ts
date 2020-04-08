@@ -17,9 +17,9 @@
  *
  */
 
-import logdown from 'logdown';
-
 import {ConversationOtrMessageAddEvent} from '@wireapp/api-client/dist/event/';
+import {GenericMessage} from '@wireapp/protocol-messaging';
+import logdown from 'logdown';
 import {
   GenericMessageType,
   PayloadBundle,
@@ -39,12 +39,36 @@ import {
   ReactionContent,
   TextContent,
 } from '../conversation/content';
+import {ButtonActionMessage} from '../conversation/message/OtrMessage';
 
 export class GenericMessageMapper {
   private static readonly logger = logdown('@wireapp/core/cryptography/GenericMessageMapper', {
     logger: console,
     markdown: false,
   });
+
+  private static mapButtonActionMessage(
+    genericMessage: GenericMessage,
+    event: ConversationOtrMessageAddEvent,
+    source: PayloadBundleSource,
+  ): ButtonActionMessage {
+    const {buttonAction, messageId} = genericMessage;
+    return {
+      content: buttonAction!,
+      conversation: event.conversation,
+      from: event.from,
+      fromClientId: event.data.sender,
+      id: messageId,
+      messageTimer: 0,
+      source,
+      state: PayloadBundleState.INCOMING,
+      timestamp: new Date(event.time).getTime(),
+      type: PayloadBundleType.BUTTON_ACTION,
+    };
+  }
+
+  // TODO: Turn "any" into a specific type (or collection of types) and make the return type more specific based on the
+  // "genericMessage" input parameter.
   public static mapGenericMessage(
     genericMessage: any,
     event: ConversationOtrMessageAddEvent,
@@ -91,6 +115,9 @@ export class GenericMessageMapper {
           timestamp: new Date(event.time).getTime(),
           type: PayloadBundleType.TEXT,
         };
+      }
+      case GenericMessageType.BUTTON_ACTION: {
+        return GenericMessageMapper.mapButtonActionMessage(genericMessage, event, source);
       }
       case GenericMessageType.CALLING: {
         return {
@@ -226,7 +253,7 @@ export class GenericMessageMapper {
       }
       case GenericMessageType.KNOCK: {
         const {expectsReadConfirmation, legalHoldStatus} = genericMessage[GenericMessageType.KNOCK];
-        const content: KnockContent = {expectsReadConfirmation, legalHoldStatus};
+        const content: KnockContent = {expectsReadConfirmation, hotKnock: false, legalHoldStatus};
 
         return {
           content,

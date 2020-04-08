@@ -3,6 +3,78 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.5.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.5.8...@wireapp/cbor@4.5.9) (2020-03-17)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+## [4.5.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.5.7...@wireapp/cbor@4.5.8) (2020-03-10)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+## [4.5.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.5.6...@wireapp/cbor@4.5.7) (2020-03-09)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+## [4.5.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.5.5...@wireapp/cbor@4.5.6) (2020-02-28)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+## [4.5.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.5.4...@wireapp/cbor@4.5.5) (2020-02-18)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+## [4.5.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.5.3...@wireapp/cbor@4.5.4) (2020-02-18)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+## [4.5.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.5.2...@wireapp/cbor@4.5.3) (2020-02-06)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+## [4.5.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.5.1...@wireapp/cbor@4.5.2) (2020-02-03)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+## [4.5.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.5.0...@wireapp/cbor@4.5.1) (2020-01-24)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
 # 4.5.0 (2020-01-16)
 
 

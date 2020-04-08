@@ -3,6 +3,78 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.2.10...@wireapp/store-engine-dexie@1.2.11) (2020-03-17)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+## [1.2.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.2.9...@wireapp/store-engine-dexie@1.2.10) (2020-03-10)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+## [1.2.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.2.8...@wireapp/store-engine-dexie@1.2.9) (2020-03-09)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+## [1.2.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.2.7...@wireapp/store-engine-dexie@1.2.8) (2020-02-28)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+## [1.2.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.2.6...@wireapp/store-engine-dexie@1.2.7) (2020-02-18)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+## [1.2.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.2.5...@wireapp/store-engine-dexie@1.2.6) (2020-02-18)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+## [1.2.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.2.4...@wireapp/store-engine-dexie@1.2.5) (2020-02-06)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+## [1.2.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.2.3...@wireapp/store-engine-dexie@1.2.4) (2020-02-03)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+## [1.2.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.2.2...@wireapp/store-engine-dexie@1.2.3) (2020-01-24)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
 ## [1.2.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.2.1...@wireapp/store-engine-dexie@1.2.2) (2020-01-17)
 
 **Note:** Version bump only for package @wireapp/store-engine-dexie

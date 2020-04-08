@@ -17,9 +17,11 @@
  *
  */
 
+import {APIClient} from '@wireapp/api-client';
 import {
-  CONVERSATION_TYPE,
   Conversation,
+  CONVERSATION_TYPE,
+  DefaultConversationRoleName,
   MutedStatus,
   NewConversation,
   NewOTRMessage,
@@ -30,6 +32,24 @@ import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-cl
 import {ConversationMemberLeaveEvent} from '@wireapp/api-client/dist/event/';
 import {StatusCode} from '@wireapp/api-client/dist/http/';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/user/';
+import {
+  Asset,
+  ButtonAction,
+  ButtonActionConfirmation,
+  Calling,
+  Cleared,
+  ClientAction,
+  Composite,
+  Confirmation,
+  Ephemeral,
+  GenericMessage,
+  Knock,
+  Location,
+  MessageDelete,
+  MessageEdit,
+  MessageHide,
+  Reaction,
+} from '@wireapp/protocol-messaging';
 import {AxiosError} from 'axios';
 import {Encoder} from 'bazinga64';
 import {
@@ -42,46 +62,18 @@ import {
   PayloadBundleType,
 } from '../conversation/';
 
-import {
-  Article,
-  Asset,
-  Calling,
-  Cleared,
-  ClientAction,
-  Confirmation,
-  Ephemeral,
-  GenericMessage,
-  Knock,
-  LinkPreview,
-  Location,
-  Mention,
-  MessageDelete,
-  MessageEdit,
-  MessageHide,
-  Quote,
-  Reaction,
-  Text,
-  Tweet,
-} from '@wireapp/protocol-messaging';
-
-import {
-  AssetContent,
-  ClearedContent,
-  DeletedContent,
-  HiddenContent,
-  LinkPreviewUploadedContent,
-  RemoteData,
-  TextContent,
-} from '../conversation/content/';
+import {AssetContent, ClearedContent, DeletedContent, HiddenContent, RemoteData} from '../conversation/content/';
 
 import {CryptographyService, EncryptedAsset} from '../cryptography/';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
-
-import {APIClient} from '@wireapp/api-client';
 import {MessageBuilder} from './message/MessageBuilder';
+import {MessageToProtoMapper} from './message/MessageToProtoMapper';
 import {
+  ButtonActionConfirmationMessage,
+  ButtonActionMessage,
   CallMessage,
   ClearConversationMessage,
+  CompositeMessage,
   ConfirmationMessage,
   DeleteMessage,
   EditedTextMessage,
@@ -126,16 +118,16 @@ export class ConversationService {
     return genericMessage;
   }
 
-  private async getPreKeyBundle(
-    conversationId: string,
-    userIds?: string[],
-    skipOwnClients = false,
-  ): Promise<UserPreKeyBundleMap> {
+  private async getPreKeyBundle(conversationId: string, userIds?: string[]): Promise<UserPreKeyBundleMap> {
     const conversation = await this.apiClient.conversation.api.getConversation(conversationId);
     const members = userIds?.length ? userIds.map(id => ({id})) : conversation.members.others;
     const preKeys = await Promise.all(members.map(member => this.apiClient.user.api.getUserPreKeys(member.id)));
 
-    if (!skipOwnClients) {
+    /**
+     * If you are sending a message to a selection of users, you have to include yourself in the list of users if you
+     * want to sync a message also to your other clients.
+     */
+    if (!userIds) {
       const selfPreKey = await this.apiClient.user.api.getUserPreKeys(conversation.members.self.id);
       preKeys.push(selfPreKey);
     }
@@ -178,7 +170,7 @@ export class ConversationService {
     const plainTextArray = GenericMessage.encode(genericMessage).finish();
     const recipients = await this.cryptographyService.encrypt(plainTextArray, preKeyBundles);
 
-    return this.sendOTRMessage(sendingClientId, conversationId, recipients, plainTextArray, base64CipherText);
+    return this.sendOTRMessage(sendingClientId, conversationId, recipients, base64CipherText);
   }
 
   private async sendGenericMessage(
@@ -202,7 +194,7 @@ export class ConversationService {
 
     const recipients = await this.cryptographyService.encrypt(plainTextArray, preKeyBundles);
 
-    return this.sendOTRMessage(sendingClientId, conversationId, recipients, plainTextArray);
+    return this.sendOTRMessage(sendingClientId, conversationId, recipients);
   }
 
   // TODO: Move this to a generic "message sending class".
@@ -210,7 +202,6 @@ export class ConversationService {
     sendingClientId: string,
     conversationId: string,
     recipients: OTRRecipients,
-    plainTextArray: Uint8Array,
     data?: any,
   ): Promise<void> {
     const message: NewOTRMessage = {
@@ -218,12 +209,15 @@ export class ConversationService {
       recipients,
       sender: sendingClientId,
     };
-    try {
-      await this.apiClient.conversation.api.postOTRMessage(sendingClientId, conversationId, message);
-    } catch (error) {
-      const reEncryptedMessage = await this.onClientMismatch(error, message, plainTextArray);
-      await this.apiClient.conversation.api.postOTRMessage(sendingClientId, conversationId, reEncryptedMessage);
-    }
+
+    /**
+     * When creating the PreKey bundles we already found out to which users we want to send a message, so we can ignore
+     * missing clients. We have to ignore missing clients because there can be the case that there are clients that
+     * don't provide PreKeys (clients from the Pre-E2EE era).
+     */
+    await this.apiClient.conversation.api.postOTRMessage(sendingClientId, conversationId, message, {
+      ignore_missing: true,
+    });
   }
 
   // TODO: Move this to a generic "message sending class" and make it private.
@@ -268,17 +262,74 @@ export class ConversationService {
     throw error;
   }
 
-  private async sendConfirmation(payloadBundle: ConfirmationMessage, userIds?: string[]): Promise<ConfirmationMessage> {
-    const {firstMessageId, moreMessageIds, type} = payloadBundle.content;
-
-    const confirmationMessage = Confirmation.create({
-      firstMessageId,
-      moreMessageIds,
-      type,
+  private async sendButtonAction(payloadBundle: ButtonActionMessage, userIds?: string[]): Promise<ButtonActionMessage> {
+    const genericMessage = GenericMessage.create({
+      [GenericMessageType.BUTTON_ACTION]: ButtonAction.create(payloadBundle.content),
+      messageId: payloadBundle.id,
     });
 
+    await this.sendGenericMessage(
+      this.apiClient.validatedClientId,
+      payloadBundle.conversation,
+      genericMessage,
+      userIds,
+    );
+
+    return {
+      ...payloadBundle,
+      messageTimer: 0,
+      state: PayloadBundleState.OUTGOING_SENT,
+    };
+  }
+
+  private async sendButtonActionConfirmation(
+    payloadBundle: ButtonActionConfirmationMessage,
+    userIds?: string[],
+  ): Promise<ButtonActionConfirmationMessage> {
     const genericMessage = GenericMessage.create({
-      [GenericMessageType.CONFIRMATION]: confirmationMessage,
+      [GenericMessageType.BUTTON_ACTION_CONFIRMATION]: ButtonActionConfirmation.create(payloadBundle.content),
+      messageId: payloadBundle.id,
+    });
+
+    await this.sendGenericMessage(
+      this.apiClient.validatedClientId,
+      payloadBundle.conversation,
+      genericMessage,
+      userIds,
+    );
+
+    return {
+      ...payloadBundle,
+      messageTimer: 0,
+      state: PayloadBundleState.OUTGOING_SENT,
+    };
+  }
+
+  private async sendComposite(payloadBundle: CompositeMessage, userIds?: string[]): Promise<CompositeMessage> {
+    const genericMessage = GenericMessage.create({
+      [GenericMessageType.COMPOSITE]: Composite.create(payloadBundle.content),
+      messageId: payloadBundle.id,
+    });
+
+    await this.sendGenericMessage(
+      this.apiClient.validatedClientId,
+      payloadBundle.conversation,
+      genericMessage,
+      userIds,
+    );
+
+    return {
+      ...payloadBundle,
+      messageTimer: 0,
+      state: PayloadBundleState.OUTGOING_SENT,
+    };
+  }
+
+  private async sendConfirmation(payloadBundle: ConfirmationMessage, userIds?: string[]): Promise<ConfirmationMessage> {
+    const content = Confirmation.create(payloadBundle.content);
+
+    const genericMessage = GenericMessage.create({
+      [GenericMessageType.CONFIRMATION]: content,
       messageId: payloadBundle.id,
     });
 
@@ -297,40 +348,9 @@ export class ConversationService {
   }
 
   private async sendEditedText(payloadBundle: EditedTextMessage, userIds?: string[]): Promise<EditedTextMessage> {
-    const {
-      expectsReadConfirmation,
-      legalHoldStatus,
-      linkPreviews,
-      mentions,
-      originalMessageId,
-      quote,
-      text,
-    } = payloadBundle.content;
-
-    const textMessage = Text.create({
-      content: text,
-      expectsReadConfirmation,
-      legalHoldStatus,
-    });
-
-    if (linkPreviews?.length) {
-      textMessage.linkPreview = this.buildLinkPreviews(linkPreviews);
-    }
-
-    if (mentions?.length) {
-      textMessage.mentions = mentions.map(mention => Mention.create(mention));
-    }
-
-    if (quote) {
-      textMessage.quote = Quote.create({
-        quotedMessageId: quote.quotedMessageId,
-        quotedMessageSha256: quote.quotedMessageSha256,
-      });
-    }
-
     const editedMessage = MessageEdit.create({
-      replacingMessageId: originalMessageId,
-      text: textMessage,
+      replacingMessageId: payloadBundle.content.originalMessageId,
+      text: MessageToProtoMapper.mapText(payloadBundle),
     });
 
     const genericMessage = GenericMessage.create({
@@ -584,17 +604,11 @@ export class ConversationService {
     };
   }
 
-  private async sendPing(payloadBundle: PingMessage, userIds?: string[]): Promise<PingMessage> {
-    const {expectsReadConfirmation, hotKnock = false, legalHoldStatus} = payloadBundle.content;
-
-    const knockMessage = Knock.create({
-      expectsReadConfirmation,
-      hotKnock,
-      legalHoldStatus,
-    });
+  private async sendKnock(payloadBundle: PingMessage, userIds?: string[]): Promise<PingMessage> {
+    const content = Knock.create(payloadBundle.content);
 
     let genericMessage = GenericMessage.create({
-      [GenericMessageType.KNOCK]: knockMessage,
+      [GenericMessageType.KNOCK]: content,
       messageId: payloadBundle.id,
     });
 
@@ -686,39 +700,9 @@ export class ConversationService {
   }
 
   private async sendText(payloadBundle: TextMessage, userIds?: string[]): Promise<TextMessage> {
-    const {
-      expectsReadConfirmation,
-      legalHoldStatus,
-      linkPreviews,
-      mentions,
-      quote,
-      text,
-    } = payloadBundle.content as TextContent;
-
-    const textMessage = Text.create({
-      content: text,
-      expectsReadConfirmation,
-      legalHoldStatus,
-    });
-
-    if (linkPreviews?.length) {
-      textMessage.linkPreview = this.buildLinkPreviews(linkPreviews);
-    }
-
-    if (mentions?.length) {
-      textMessage.mentions = mentions.map(mention => Mention.create(mention));
-    }
-
-    if (quote) {
-      textMessage.quote = Quote.create({
-        quotedMessageId: quote.quotedMessageId,
-        quotedMessageSha256: quote.quotedMessageSha256,
-      });
-    }
-
     let genericMessage = GenericMessage.create({
       messageId: payloadBundle.id,
-      [GenericMessageType.TEXT]: textMessage,
+      [GenericMessageType.TEXT]: MessageToProtoMapper.mapText(payloadBundle),
     });
 
     const expireAfterMillis = this.messageTimer.getMessageTimer(payloadBundle.conversation);
@@ -839,67 +823,6 @@ export class ConversationService {
     };
   }
 
-  private buildLinkPreviews(linkPreviews: LinkPreviewUploadedContent[]): LinkPreview[] {
-    const builtLinkPreviews = [];
-
-    for (const linkPreview of linkPreviews) {
-      const linkPreviewMessage = LinkPreview.create({
-        permanentUrl: linkPreview.permanentUrl,
-        summary: linkPreview.summary,
-        title: linkPreview.title,
-        url: linkPreview.url,
-        urlOffset: linkPreview.urlOffset,
-      });
-
-      if (linkPreview.tweet) {
-        linkPreviewMessage.tweet = Tweet.create({
-          author: linkPreview.tweet.author,
-          username: linkPreview.tweet.username,
-        });
-      }
-
-      if (linkPreview.imageUploaded) {
-        const {asset, image} = linkPreview.imageUploaded;
-
-        const imageMetadata = Asset.ImageMetaData.create({
-          height: image.height,
-          width: image.width,
-        });
-
-        const original = Asset.Original.create({
-          [GenericMessageType.IMAGE]: imageMetadata,
-          mimeType: image.type,
-          size: image.data.length,
-        });
-
-        const remoteData = Asset.RemoteData.create({
-          assetId: asset.key,
-          assetToken: asset.token,
-          otrKey: asset.keyBytes,
-          sha256: asset.sha256,
-        });
-
-        const assetMessage = Asset.create({
-          original,
-          uploaded: remoteData,
-        });
-
-        linkPreviewMessage.image = assetMessage;
-      }
-
-      linkPreviewMessage.article = Article.create({
-        image: linkPreviewMessage.image,
-        permanentUrl: linkPreviewMessage.permanentUrl,
-        summary: linkPreviewMessage.summary,
-        title: linkPreviewMessage.title,
-      });
-
-      builtLinkPreviews.push(linkPreviewMessage);
-    }
-
-    return builtLinkPreviews;
-  }
-
   private shouldSendAsExternal(plainText: Uint8Array, preKeyBundles: UserPreKeyBundleMap): boolean {
     const EXTERNAL_MESSAGE_THRESHOLD_BYTES = 200 * 1024;
 
@@ -994,6 +917,10 @@ export class ConversationService {
         return this.sendFileMetaData(payloadBundle, userIds);
       case PayloadBundleType.ASSET_IMAGE:
         return this.sendImage(payloadBundle as ImageAssetMessageOutgoing, userIds);
+      case PayloadBundleType.BUTTON_ACTION:
+        return this.sendButtonAction(payloadBundle, userIds);
+      case PayloadBundleType.BUTTON_ACTION_CONFIRMATION:
+        return this.sendButtonActionConfirmation(payloadBundle, userIds);
       case PayloadBundleType.CALL:
         return this.sendCall(payloadBundle, userIds);
       case PayloadBundleType.CLIENT_ACTION: {
@@ -1004,6 +931,8 @@ export class ConversationService {
           `No send method implemented for "${payloadBundle.type}" and ClientAction "${payloadBundle.content}".`,
         );
       }
+      case PayloadBundleType.COMPOSITE:
+        return this.sendComposite(payloadBundle, userIds);
       case PayloadBundleType.CONFIRMATION:
         return this.sendConfirmation(payloadBundle, userIds);
       case PayloadBundleType.LOCATION:
@@ -1011,7 +940,7 @@ export class ConversationService {
       case PayloadBundleType.MESSAGE_EDIT:
         return this.sendEditedText(payloadBundle, userIds);
       case PayloadBundleType.PING:
-        return this.sendPing(payloadBundle, userIds);
+        return this.sendKnock(payloadBundle, userIds);
       case PayloadBundleType.REACTION:
         return this.sendReaction(payloadBundle, userIds);
       case PayloadBundleType.TEXT:
@@ -1061,5 +990,15 @@ export class ConversationService {
     };
 
     return this.apiClient.conversation.api.putMembershipProperties(conversationId, payload);
+  }
+
+  public setMemberConversationRole(
+    conversationId: string,
+    userId: string,
+    conversationRole: DefaultConversationRoleName | string,
+  ): Promise<void> {
+    return this.apiClient.conversation.api.putOtherMember(userId, conversationId, {
+      conversation_role: conversationRole,
+    });
   }
 }

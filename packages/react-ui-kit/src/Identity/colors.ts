@@ -29,15 +29,11 @@ for (let index = 8; index < percent; index += 8) {
 }
 
 function shade(color: ColorParam, amount = 0.08): string {
-  return Color(color)
-    .mix(Color(BASE_COLOR.BLACK), amount)
-    .toString();
+  return Color(color).mix(Color(BASE_COLOR.BLACK), amount).toString();
 }
 
 function tint(color: ColorParam, amount: number): string {
-  return Color(color)
-    .mix(Color(BASE_COLOR.WHITE), amount)
-    .toString();
+  return Color(color).mix(Color(BASE_COLOR.WHITE), amount).toString();
 }
 
 function opaque(color: ColorParam, amount: number): string {
@@ -61,11 +57,21 @@ const DARK_COLOR: Record<string, string> = {};
 const LIGHT_COLOR: Record<string, string> = {};
 const OPAQUE_COLOR: Record<string, string> = {};
 
-Object.entries(BASE_COLOR).forEach(([key, value]) => {
+Object.entries({
+  BLACK: BASE_COLOR.BLACK,
+  GRAY: BASE_COLOR.GRAY,
+  WHITE: BASE_COLOR.WHITE,
+}).forEach(([key, value]) => {
   steps.forEach(step => {
     const amount = step / percent;
     DARK_COLOR[`${key}_DARKEN_${step}`] = shade(value, amount);
     LIGHT_COLOR[`${key}_LIGHTEN_${step}`] = tint(value, amount);
+  });
+});
+
+Object.entries(BASE_COLOR).forEach(([key, value]) => {
+  steps.forEach(step => {
+    const amount = step / percent;
     OPAQUE_COLOR[`${key}_OPAQUE_${step}`] = opaque(value, amount);
   });
 });

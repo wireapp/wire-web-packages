@@ -24,11 +24,14 @@ import * as ContentType from './ContentType';
 export {ContentType};
 
 export * from './AssetContent';
+export * from './ButtonActionContent';
+export * from './ButtonActionConfirmationContent';
 export * from './CallingContent';
 export * from './ClearedContent';
 export * from './ClientActionContent';
 export * from './ClientAddContent';
 export * from './ClientRemoveContent';
+export * from './CompositeContent';
 export * from './ConfirmationContent';
 export * from './ConversationContent';
 export * from './DeletedContent';

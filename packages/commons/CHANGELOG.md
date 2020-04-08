@@ -3,6 +3,89 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.3.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@3.3.8...@wireapp/commons@3.3.9) (2020-03-31)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [3.3.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@3.3.7...@wireapp/commons@3.3.8) (2020-03-17)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [3.3.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@3.3.6...@wireapp/commons@3.3.7) (2020-03-10)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [3.3.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@3.3.5...@wireapp/commons@3.3.6) (2020-03-09)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [3.3.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@3.3.4...@wireapp/commons@3.3.5) (2020-02-28)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [3.3.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@3.3.3...@wireapp/commons@3.3.4) (2020-02-18)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [3.3.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@3.3.2...@wireapp/commons@3.3.3) (2020-02-06)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [3.3.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@3.3.1...@wireapp/commons@3.3.2) (2020-02-03)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+## [3.3.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@3.3.0...@wireapp/commons@3.3.1) (2020-01-24)
+
+**Note:** Version bump only for package @wireapp/commons
+
+
+
+
+
+# [3.3.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@3.2.0...@wireapp/commons@3.3.0) (2020-01-23)
+
+
+### Features
+
+* **commons:** Export email pattern ([#2780](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/issues/2780)) ([9e5765a](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/commit/9e5765ae6af920f08fdc9bfdf81a6d5133bfaa0e))
+
+
+
+
+
 # [3.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/commons/compare/@wireapp/commons@3.1.0...@wireapp/commons@3.2.0) (2020-01-12)
 
 

@@ -3,6 +3,322 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [16.0.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.0.5...@wireapp/core@16.0.6) (2020-04-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.0.4...@wireapp/core@16.0.5) (2020-04-03)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.0.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.0.3...@wireapp/core@16.0.4) (2020-04-03)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.0.2...@wireapp/core@16.0.3) (2020-04-03)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.0.1...@wireapp/core@16.0.2) (2020-04-02)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.0.0...@wireapp/core@16.0.1) (2020-03-31)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [16.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.12.6...@wireapp/core@16.0.0) (2020-03-31)
+
+
+### Features
+
+* **api-client:** Get Members by ID list (BREAKING) ([#2912](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2912)) ([15d354f](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/15d354f9d97b8aa5e9f43c019c571390455c6cb8))
+
+
+### BREAKING CHANGES
+
+* **api-client:** - Rename `getMembers` to `getAllMembers`
+
+
+
+
+
+## [15.12.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.12.5...@wireapp/core@15.12.6) (2020-03-31)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.12.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.12.4...@wireapp/core@15.12.5) (2020-03-27)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.12.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.12.3...@wireapp/core@15.12.4) (2020-03-26)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.12.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.12.2...@wireapp/core@15.12.3) (2020-03-25)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.12.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.12.1...@wireapp/core@15.12.2) (2020-03-18)
+
+
+### Bug Fixes
+
+* **core:** Skip own clients when sending to a selection of users ([#2892](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2892)) ([365170b](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/365170bac7c08c5a1a03ea650b558663b4a98c80))
+
+
+
+
+
+## [15.12.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.12.0...@wireapp/core@15.12.1) (2020-03-17)
+
+
+### Bug Fixes
+
+* **core:** Send messages only to selected clients ([#2891](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2891)) ([90de697](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/90de697dd2f215c2bea8cc1708baf1125fcf41ba))
+
+
+
+
+
+# [15.12.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.11.0...@wireapp/core@15.12.0) (2020-03-17)
+
+
+### Features
+
+* **core:** Accept rich content for poll messages ([#2889](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2889)) ([d0270e8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/d0270e8c03b158a931c1a8b97e3cada83b5e0f07))
+
+
+
+
+
+# [15.11.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.10.3...@wireapp/core@15.11.0) (2020-03-17)
+
+
+### Features
+
+* Expose protocol buffer message mapping ([#2888](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2888)) ([7bae5ad](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/7bae5adad3aaf2b8623c0a9776be61ff1818b603))
+
+
+
+
+
+## [15.10.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.10.2...@wireapp/core@15.10.3) (2020-03-13)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.10.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.10.1...@wireapp/core@15.10.2) (2020-03-13)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.10.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.10.0...@wireapp/core@15.10.1) (2020-03-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [15.10.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.9.0...@wireapp/core@15.10.0) (2020-03-11)
+
+
+### Features
+
+* **core:** Send button action confirmation messages ([#2872](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2872)) ([8bd812b](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/8bd812bed493eded0d9fd7a7ca6e8285033eb5e4))
+
+
+
+
+
+# [15.9.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.8.1...@wireapp/core@15.9.0) (2020-03-11)
+
+
+### Features
+
+* **core:** Send button action messages ([#2871](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2871)) ([4213be1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/4213be150e8c2b396932bc7e12b43e525dd7726f))
+
+
+
+
+
+## [15.8.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.8.0...@wireapp/core@15.8.1) (2020-03-11)
+
+
+### Bug Fixes
+
+* **core:** Fix parameter order for setMemberConversationRole ([#2870](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2870)) ([da2810b](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/da2810b4300e4b6505cfb87df435118e6a646509))
+
+
+
+
+
+# [15.8.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.7.0...@wireapp/core@15.8.0) (2020-03-11)
+
+
+### Features
+
+* **core:** Update member permissions ([#2869](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2869)) ([ff98c79](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/ff98c79c74b8b1d1d775385cf5d597e9bece1c4d))
+
+
+
+
+
+# [15.7.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.6.0...@wireapp/core@15.7.0) (2020-03-11)
+
+
+### Features
+
+* **core:** Emit received button action messages ([#2868](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2868)) ([2a2717f](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/2a2717f8f1983d029257841232e36dd0e1fc3930))
+
+
+
+
+
+# [15.6.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.5.0...@wireapp/core@15.6.0) (2020-03-10)
+
+
+### Features
+
+* **core:** Expose sending poll messages ([#2866](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2866)) ([a433471](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/a4334718d9596fbf9ebf0ea43ca6834df50784af))
+
+
+
+
+
+# [15.5.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.4.7...@wireapp/core@15.5.0) (2020-03-09)
+
+
+### Features
+
+* **core:** Add generic support for composite messages ([#2850](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2850)) ([1430e1e](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/1430e1eb1c5d3fd7c142b2074b4045f19f3b716f))
+
+
+
+
+
+## [15.4.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.4.6...@wireapp/core@15.4.7) (2020-02-28)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.4.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.4.5...@wireapp/core@15.4.6) (2020-02-18)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.4.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.4.4...@wireapp/core@15.4.5) (2020-02-18)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.4.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.4.3...@wireapp/core@15.4.4) (2020-02-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.4.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.4.2...@wireapp/core@15.4.3) (2020-02-03)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.4.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.4.1...@wireapp/core@15.4.2) (2020-01-24)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [15.4.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.4.0...@wireapp/core@15.4.1) (2020-01-24)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [15.4.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.3.4...@wireapp/core@15.4.0) (2020-01-23)
+
+
+### Features
+
+* Add account service ([#2792](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2792)) ([e36a557](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/e36a557f326031fc94836ba9ca0cfa3b80b0d623))
+
+
+
+
+
+## [15.3.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.3.3...@wireapp/core@15.3.4) (2020-01-23)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
 ## [15.3.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@15.3.2...@wireapp/core@15.3.3) (2020-01-17)
 
 **Note:** Version bump only for package @wireapp/core

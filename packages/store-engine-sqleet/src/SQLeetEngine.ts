@@ -107,11 +107,19 @@ export class SQLeetEngine implements CRUDEngine {
 
   private buildValues<EntityType = Record<string, SQLiteType>>(
     tableName: string,
-    providedEntities: EntityType | SQLiteType,
+    providedEntities: EntityType,
   ): {columns: Record<string, string>; values: Record<string, any>} {
     const table = this.schema[tableName];
     if (!table) {
       throw new Error(`Table "${tableName}" does not exist.`);
+    }
+
+    if (providedEntities instanceof Object) {
+      for (const [key, property] of Object.entries(providedEntities)) {
+        if (property === null || property === undefined) {
+          delete (providedEntities as any)[key];
+        }
+      }
     }
 
     // If the table contains the single magic column then convert it
@@ -128,10 +136,7 @@ export class SQLeetEngine implements CRUDEngine {
       }
       let value: string | EntityType[Extract<keyof EntityType, string>] = entities[entity];
       // Stringify objects for the database
-      if (
-        table[entity] === SQLiteType.JSON ||
-        (table[entity] === SQLiteType.JSON_OR_TEXT && typeof value === 'object')
-      ) {
+      if (table[entity] === SQLiteType.JSON || (table[entity] === SQLiteType.JSON_OR_TEXT && value instanceof Object)) {
         value = JSON.stringify(value) as SQLiteType;
       }
       const reference = `@${hashColumnName(entity)}`;
@@ -146,6 +151,25 @@ export class SQLeetEngine implements CRUDEngine {
     }
 
     return {columns, values};
+  }
+
+  private mapJSONProperties<EntityType = Object>(
+    table: Record<string, SQLiteType>,
+    entities: EntityType[],
+  ): EntityType[] {
+    for (const record in entities) {
+      for (const column in entities[record]) {
+        if (table[column] === SQLiteType.JSON) {
+          entities[record][column] = JSON.parse(entities[record][column] as any);
+        } else if (table[column] === SQLiteType.JSON_OR_TEXT) {
+          try {
+            entities[record][column] = JSON.parse(entities[record][column] as any);
+          } catch (error) {}
+        }
+      }
+    }
+
+    return entities;
   }
 
   async create<EntityType = Object, PrimaryKey = string>(
@@ -211,22 +235,13 @@ export class SQLeetEngine implements CRUDEngine {
     const statement = await this.db.prepare(selectRecordStatement, {
       '@primaryKey': primaryKey,
     });
-    const record = (await statement.getAsObject())[0];
+    const entities = await statement.getAsObject();
+    const [record] = this.mapJSONProperties(table, entities);
     await statement.free();
 
     if (typeof record === 'undefined') {
       const message = `Record "${primaryKey}" in "${tableName}" could not be found.`;
       throw new StoreEngineError.RecordNotFoundError(message);
-    }
-
-    for (const column in record) {
-      if (table[column] === SQLiteType.JSON) {
-        record[column] = JSON.parse(record[column]);
-      } else if (table[column] === SQLiteType.JSON_OR_TEXT) {
-        try {
-          record[column] = JSON.parse(record[column]);
-        } catch (error) {}
-      }
     }
 
     if (isSingleColumnTable(table)) {
@@ -243,10 +258,10 @@ export class SQLeetEngine implements CRUDEngine {
 
     const selectRecordStatement = `SELECT ${columns} FROM ${escapedTableName};`;
     const statement = await this.db.prepare(selectRecordStatement);
-    const records = (await statement.getAsObject()) as T[];
+    const entities = (await statement.getAsObject()) as T[];
     await statement.free();
 
-    return records;
+    return this.mapJSONProperties(table, entities);
   }
 
   async readAllPrimaryKeys(tableName: string): Promise<string[]> {

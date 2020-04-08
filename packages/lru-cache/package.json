@@ -1,15 +1,15 @@
 {
   "description": "Least Recently Used (LRU) Cache for JavaScript and TypeScript.",
   "devDependencies": {
-    "@types/jasmine": "3.5.0",
-    "cross-env": "6.0.3",
+    "@types/jasmine": "3.5.9",
+    "cross-env": "7.0.0",
     "jasmine": "3.5.0",
     "nyc": "15.0.0",
     "rimraf": "3.0.0",
     "ts-node": "8.6.2",
-    "typescript": "3.7.4",
-    "webpack": "4.41.5",
-    "webpack-cli": "3.3.10"
+    "typescript": "3.8.3",
+    "webpack": "4.42.1",
+    "webpack-cli": "3.3.11"
   },
   "files": [
     "dist"
@@ -27,5 +27,5 @@
     "test": "nyc jasmine --config=jasmine.json"
   },
   "types": "dist/commonjs/LRUCache.d.ts",
-  "version": "3.4.2"
+  "version": "3.4.9"
 }

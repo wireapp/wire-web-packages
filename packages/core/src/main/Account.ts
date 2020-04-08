@@ -54,6 +54,7 @@ import {NotificationHandler, NotificationService} from './notification/';
 import {SelfService} from './self/';
 import {TeamService} from './team/';
 import {UserService} from './user/';
+import {AccountService} from './account/';
 
 enum TOPIC {
   ERROR = 'Account.TOPIC.ERROR',
@@ -61,6 +62,7 @@ enum TOPIC {
 
 export interface Account {
   on(event: PayloadBundleType.ASSET, listener: (payload: OtrMessage.FileAssetMessage) => void): this;
+  on(event: PayloadBundleType.BUTTON_ACTION, listener: (payload: OtrMessage.ButtonActionMessage) => void): this;
   on(event: PayloadBundleType.ASSET_ABORT, listener: (payload: OtrMessage.FileAssetAbortMessage) => void): this;
   on(event: PayloadBundleType.ASSET_IMAGE, listener: (payload: OtrMessage.ImageAssetMessage) => void): this;
   on(event: PayloadBundleType.ASSET_META, listener: (payload: OtrMessage.FileAssetMetaDataMessage) => void): this;
@@ -103,6 +105,7 @@ export class Account extends EventEmitter {
 
   public static readonly TOPIC = TOPIC;
   public service?: {
+    account: AccountService;
     asset: AssetService;
     broadcast: BroadcastService;
     client: ClientService;
@@ -173,6 +176,7 @@ export class Account extends EventEmitter {
   }
 
   public async initServices(storeEngine: CRUDEngine): Promise<void> {
+    const accountService = new AccountService(this.apiClient);
     const assetService = new AssetService(this.apiClient);
     const cryptographyService = new CryptographyService(this.apiClient, storeEngine);
 
@@ -188,6 +192,7 @@ export class Account extends EventEmitter {
     const userService = new UserService(this.apiClient, broadcastService);
 
     this.service = {
+      account: accountService,
       asset: assetService,
       broadcast: broadcastService,
       client: clientService,

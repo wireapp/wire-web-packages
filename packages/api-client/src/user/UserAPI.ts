@@ -17,13 +17,13 @@
  *
  */
 
-import {AxiosRequestConfig} from 'axios';
+import Axios, {AxiosRequestConfig} from 'axios';
 
 import {ArrayUtil} from '@wireapp/commons';
 import {ClientPreKey, PreKeyBundle} from '../auth/';
 import {PublicClient} from '../client/';
 import {UserClients} from '../conversation/UserClients';
-import {HttpClient} from '../http/';
+import {HttpClient, RequestCancelable, SyntheticErrorLabel} from '../http/';
 import {
   Activate,
   ActivationResponse,
@@ -38,6 +38,7 @@ import {
   VerifyDelete,
 } from '../user/';
 import {RichInfo} from './RichInfo';
+import {RequestCancellationError} from './UserError';
 
 export class UserAPI {
   public static readonly DEFAULT_USERS_CHUNK_SIZE = 50;
@@ -217,8 +218,10 @@ export class UserAPI {
    * @param limit Number of results to return
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/search
    */
-  public async getSearchContacts(query: string, limit?: number): Promise<SearchResult> {
+  public async getSearchContacts(query: string, limit?: number): Promise<RequestCancelable<SearchResult>> {
+    const cancelSource = Axios.CancelToken.source();
     const config: AxiosRequestConfig = {
+      cancelToken: cancelSource.token,
       method: 'get',
       params: {
         q: query,
@@ -230,8 +233,22 @@ export class UserAPI {
       config.params.size = limit;
     }
 
-    const response = await this.client.sendJSON<SearchResult>(config);
-    return response.data;
+    const handleRequest = async () => {
+      try {
+        const response = await this.client.sendJSON<SearchResult>(config);
+        return response.data;
+      } catch (error) {
+        if (error.message === SyntheticErrorLabel.REQUEST_CANCELLED) {
+          throw new RequestCancellationError('Search request got cancelled');
+        }
+        throw error;
+      }
+    };
+
+    return {
+      cancel: () => cancelSource.cancel(SyntheticErrorLabel.REQUEST_CANCELLED),
+      response: handleRequest(),
+    };
   }
 
   /**

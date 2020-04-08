@@ -3,6 +3,105 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.26.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.26.14...@wireapp/react-ui-kit@7.26.15) (2020-03-31)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Adjust disabled input colors ([#2914](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2914)) ([523534d](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/523534d7faf0129d8f00347bfa4f781e8d158ca0))
+
+
+
+
+
+## [7.26.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.26.13...@wireapp/react-ui-kit@7.26.14) (2020-03-31)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.26.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.26.12...@wireapp/react-ui-kit@7.26.13) (2020-03-18)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.26.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.26.11...@wireapp/react-ui-kit@7.26.12) (2020-03-17)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.26.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.26.10...@wireapp/react-ui-kit@7.26.11) (2020-03-10)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.26.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.26.9...@wireapp/react-ui-kit@7.26.10) (2020-03-09)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.26.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.26.8...@wireapp/react-ui-kit@7.26.9) (2020-02-28)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.26.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.26.7...@wireapp/react-ui-kit@7.26.8) (2020-02-18)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.26.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.26.6...@wireapp/react-ui-kit@7.26.7) (2020-02-18)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.26.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.26.5...@wireapp/react-ui-kit@7.26.6) (2020-02-06)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.26.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.26.4...@wireapp/react-ui-kit@7.26.5) (2020-02-03)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.26.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.26.3...@wireapp/react-ui-kit@7.26.4) (2020-01-24)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
 ## [7.26.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.26.2...@wireapp/react-ui-kit@7.26.3) (2020-01-17)
 
 **Note:** Version bump only for package @wireapp/react-ui-kit

@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/copy-config/compare/@wireapp/copy-config@1.0.7...@wireapp/copy-config@1.0.8) (2020-03-31)
+
+**Note:** Version bump only for package @wireapp/copy-config
+
+
+
+
+
+## [1.0.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/copy-config/compare/@wireapp/copy-config@1.0.6...@wireapp/copy-config@1.0.7) (2020-03-25)
+
+**Note:** Version bump only for package @wireapp/copy-config
+
+
+
+
+
+## [1.0.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/copy-config/compare/@wireapp/copy-config@1.0.5...@wireapp/copy-config@1.0.6) (2020-03-10)
+
+**Note:** Version bump only for package @wireapp/copy-config
+
+
+
+
+
+## [1.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/copy-config/compare/@wireapp/copy-config@1.0.4...@wireapp/copy-config@1.0.5) (2020-03-09)
+
+**Note:** Version bump only for package @wireapp/copy-config
+
+
+
+
+
+## 1.0.4 (2020-02-03)
+
+**Note:** Version bump only for package @wireapp/copy-config
+
+
+
+
+
 ## [1.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/copy-config/compare/@wireapp/copy-config@1.0.2...@wireapp/copy-config@1.0.3) (2020-01-09)
 
 **Note:** Version bump only for package @wireapp/copy-config

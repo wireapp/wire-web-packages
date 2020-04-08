@@ -18,10 +18,12 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {ClientAction, Confirmation} from '@wireapp/protocol-messaging';
+import {Button, ClientAction, Composite, Confirmation, Text} from '@wireapp/protocol-messaging';
 import {AbortReason, PayloadBundleSource, PayloadBundleState, PayloadBundleType} from '..';
 import {AssetService} from '../AssetService';
 import {
+  ButtonActionContent,
+  ButtonActionConfirmationContent,
   CallingContent,
   ClientActionContent,
   ConfirmationContent,
@@ -40,9 +42,13 @@ import {
   LocationContent,
   ReactionContent,
   TextContent,
+  CompositeContent,
 } from '../content';
 import {
+  ButtonActionMessage,
+  ButtonActionConfirmationMessage,
   CallMessage,
+  CompositeMessage,
   ConfirmationMessage,
   EditedTextMessage,
   FileAssetAbortMessage,
@@ -56,6 +62,7 @@ import {
   TextMessage,
 } from './OtrMessage';
 import {TextContentBuilder} from './TextContentBuilder';
+import Item = Composite.Item;
 
 const UUID = require('pure-uuid');
 
@@ -287,9 +294,73 @@ export class MessageBuilder {
     };
   }
 
+  createButtonActionMessage(
+    conversationId: string,
+    content: ButtonActionContent,
+    messageId = MessageBuilder.createId(),
+  ): ButtonActionMessage {
+    return {
+      content,
+      conversation: conversationId,
+      from: this.getSelfUserId(),
+      id: messageId,
+      source: PayloadBundleSource.LOCAL,
+      state: PayloadBundleState.OUTGOING_UNSENT,
+      timestamp: Date.now(),
+      type: PayloadBundleType.BUTTON_ACTION,
+    };
+  }
+
+  createButtonActionConfirmationMessage(
+    conversationId: string,
+    content: ButtonActionConfirmationContent,
+    messageId = MessageBuilder.createId(),
+  ): ButtonActionConfirmationMessage {
+    return {
+      content,
+      conversation: conversationId,
+      from: this.getSelfUserId(),
+      id: messageId,
+      source: PayloadBundleSource.LOCAL,
+      state: PayloadBundleState.OUTGOING_UNSENT,
+      timestamp: Date.now(),
+      type: PayloadBundleType.BUTTON_ACTION_CONFIRMATION,
+    };
+  }
+
+  createPollMessage(
+    conversationId: string,
+    text: Text,
+    buttons: string[],
+    messageId = MessageBuilder.createId(),
+  ): CompositeMessage {
+    const buttonProtos = [];
+    for (let counter = 0; counter < buttons.length; counter++) {
+      const buttonText = buttons[counter];
+      buttonProtos.push(Button.create({id: counter.toString(10), text: buttonText}));
+    }
+
+    const content: CompositeContent = {
+      items: [Item.create({text}), ...buttonProtos.map(button => Item.create({button}))],
+    };
+
+    return {
+      content,
+      conversation: conversationId,
+      from: this.getSelfUserId(),
+      id: messageId,
+      source: PayloadBundleSource.LOCAL,
+      state: PayloadBundleState.OUTGOING_UNSENT,
+      timestamp: Date.now(),
+      type: PayloadBundleType.COMPOSITE,
+    };
+  }
+
   public createPing(
     conversationId: string,
-    ping: KnockContent = {},
+    ping: KnockContent = {
+      hotKnock: false,
+    },
     messageId = MessageBuilder.createId(),
   ): PingMessage {
     return {

@@ -1,32 +1,32 @@
 {
   "dependencies": {
     "@types/node": "~12",
-    "@wireapp/lru-cache": "3.4.2",
-    "@wireapp/priority-queue": "1.4.0",
-    "@wireapp/proteus": "9.6.0",
-    "@wireapp/store-engine": "4.3.2",
-    "bazinga64": "5.6.2",
-    "logdown": "3.3.0"
+    "@wireapp/lru-cache": "3.4.9",
+    "@wireapp/priority-queue": "1.5.6",
+    "@wireapp/proteus": "9.6.10",
+    "@wireapp/store-engine": "4.3.11",
+    "bazinga64": "5.6.10",
+    "logdown": "3.3.1"
   },
   "description": "High-level API with persistent storage for Proteus.",
   "devDependencies": {
-    "@types/karma": "3.0.5",
-    "@wireapp/store-engine-fs": "2.1.5",
+    "@types/karma": "4.4.0",
+    "@wireapp/store-engine-fs": "2.1.15",
     "browser-sync": "2.26.7",
     "cpx": "1.5.0",
-    "cross-env": "6.0.3",
+    "cross-env": "7.0.0",
     "jasmine": "3.5.0",
     "karma": "4.4.1",
     "karma-chrome-launcher": "3.1.0",
-    "karma-jasmine": "2.0.1",
+    "karma-jasmine": "3.1.1",
     "karma-jasmine-diff-reporter": "2.0.0",
     "karma-sourcemap-loader": "0.3.7",
     "karma-spec-reporter": "0.0.32",
-    "pure-uuid": "1.5.8",
+    "pure-uuid": "1.6.0",
     "rimraf": "3.0.0",
-    "typescript": "3.7.4",
-    "webpack": "4.41.5",
-    "webpack-cli": "3.3.10"
+    "typescript": "3.8.3",
+    "webpack": "4.42.1",
+    "webpack-cli": "3.3.11"
   },
   "files": [
     "dist"
@@ -45,5 +45,5 @@
     "test:project": "yarn dist && yarn test",
     "test:node": "cross-env NODE_DEBUG=@wireapp/cryptobox* jasmine --config=test/jasmine.node.json"
   },
-  "version": "12.1.4"
+  "version": "12.1.15"
 }

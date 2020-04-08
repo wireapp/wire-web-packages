@@ -60,7 +60,19 @@ export enum BackendErrorLabel {
   HANDLE_EXISTS = 'handle-exists',
   INVALID_HANDLE = 'invalid-handle',
   // Team errors
+  /**
+   * @deprecated
+   */
   NO_OTHER_OWNER = 'no-other-owner',
+  /**
+   * This error is thrown when a user deletes or downgrades owners
+   * but is not an owner or doesn't have an email.
+   */
+  MUST_BE_OWNER_WITH_EMAIL = 'must-be-owner-with-email',
+  /**
+   * This error is thrown when an owner tries to delete hisself
+   */
+  MUST_NOT_BE_OWNER_WITH_EMAIL = 'must-not-be-owner-with-email',
   NO_TEAM = 'no-team',
   NO_TEAM_MEMBER = 'no-team-member',
   TOO_MANY_TEAM_MEMBERS = 'too-many-team-members',
@@ -74,6 +86,8 @@ export enum BackendErrorLabel {
   NO_ADD_TO_MANAGED = 'no-add-to-managed',
   // Payment errors
   EXPIRED_CARD = 'expired_card',
+  // Domain errors
+  CUSTOM_BACKEND_NOT_FOUND = 'custom-backend-not-found',
 }
 
 export enum SyntheticErrorLabel {
@@ -81,6 +95,7 @@ export enum SyntheticErrorLabel {
   FORBIDDEN_PHONE_NUMBER = 'forbidden-phone-number',
   HANDLE_TOO_SHORT = 'handle-too-short',
   INVALID_PHONE_NUMBER = 'invalid-phone-number',
+  REQUEST_CANCELLED = 'request-cancelled',
   SERVICE_NOT_FOUND = 'service-not-found',
   SSO_GENERIC_ERROR = 'generic-sso-error',
   SSO_NO_SSO_CODE = 'no-sso-code-found',

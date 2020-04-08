@@ -19,21 +19,28 @@
 
 import {AxiosRequestConfig} from 'axios';
 
-import {HttpClient} from '../http';
+import {HttpClient, BackendErrorLabel} from '../http';
 import {CallConfigData} from './CallConfigData';
+import {DomainData} from './DomainData';
+import {CustomBackendNotFoundError} from './AccountError';
+import {SSOSettings} from './SSOSettings';
 
 export class AccountAPI {
   constructor(private readonly client: HttpClient) {}
 
   public static readonly URL = {
     ACTIVATE: '/activate',
+    BY_DOMAIN: 'by-domain',
     CALLS: '/calls',
     CALLS_CONFIG: 'config',
     CALLS_CONFIG_V2: 'v2',
+    CUSTOM_BACKEND: '/custom-backend',
     DELETE: '/delete',
     PASSWORD_RESET: '/password-reset',
     PASSWORD_RESET_COMPLETE: 'complete',
     PROVIDER: '/provider',
+    SETTINGS: 'settings',
+    SSO: '/sso',
   };
 
   /**
@@ -88,6 +95,23 @@ export class AccountAPI {
   }
 
   /**
+   * Finish bot password reset flow
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/provider/password-reset/complete
+   */
+  public async postBotPasswordResetComplete(password: string, key: string, code: string): Promise<void> {
+    const config: AxiosRequestConfig = {
+      data: {
+        code,
+        key,
+        password,
+      },
+      method: 'post',
+      url: `${AccountAPI.URL.PROVIDER}${AccountAPI.URL.PASSWORD_RESET}/${AccountAPI.URL.PASSWORD_RESET_COMPLETE}`,
+    };
+
+    await this.client.sendJSON(config);
+  }
+  /**
    * Verify email address
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/activate
    */
@@ -119,6 +143,35 @@ export class AccountAPI {
     };
 
     await this.client.sendJSON(config);
+  }
+
+  public async getDomain(domain: string): Promise<DomainData> {
+    const config: AxiosRequestConfig = {
+      method: 'get',
+      url: `${AccountAPI.URL.CUSTOM_BACKEND}/${AccountAPI.URL.BY_DOMAIN}/${domain}`,
+    };
+
+    try {
+      const response = await this.client.sendJSON<DomainData>(config);
+      return response.data;
+    } catch (error) {
+      switch (error.label) {
+        case BackendErrorLabel.CUSTOM_BACKEND_NOT_FOUND: {
+          throw new CustomBackendNotFoundError(error.message);
+        }
+      }
+      throw error;
+    }
+  }
+
+  public async getSSOSettings(): Promise<SSOSettings> {
+    const config: AxiosRequestConfig = {
+      method: 'get',
+      url: `${AccountAPI.URL.SSO}/${AccountAPI.URL.SETTINGS}`,
+    };
+
+    const response = await this.client.sendJSON<SSOSettings>(config);
+    return response.data;
   }
 
   /**
