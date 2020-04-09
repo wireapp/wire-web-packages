@@ -38,14 +38,14 @@ export class IdentityKeyPair {
   }
 
   static async new(): Promise<IdentityKeyPair> {
-    const key_pair = await KeyPair.new();
+    const keyPair = await KeyPair.new();
 
-    const ikp = new IdentityKeyPair();
-    ikp.version = 1;
-    ikp.secret_key = key_pair.secret_key;
-    ikp.public_key = new IdentityKey(key_pair.public_key);
+    const identityKeyPair = new IdentityKeyPair();
+    identityKeyPair.version = 1;
+    identityKeyPair.secret_key = keyPair.secret_key;
+    identityKeyPair.public_key = new IdentityKey(keyPair.public_key);
 
-    return ikp;
+    return identityKeyPair;
   }
 
   serialise(): ArrayBuffer {

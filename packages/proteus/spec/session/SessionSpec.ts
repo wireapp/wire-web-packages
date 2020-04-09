@@ -23,12 +23,12 @@ import * as Proteus from '@wireapp/proteus';
 import * as sodium from 'libsodium-wrappers-sumo';
 
 const assert_serialise_deserialise = (
-  local_identity: Proteus.keys.IdentityKeyPair,
+  localIdentity: Proteus.keys.IdentityKeyPair,
   session: Proteus.session.Session,
 ) => {
   const bytes = session.serialise();
 
-  const deser = Proteus.session.Session.deserialise(local_identity, bytes);
+  const deser = Proteus.session.Session.deserialise(localIdentity, bytes);
   const deser_bytes = deser.serialise();
 
   expect(sodium.to_hex(new Uint8Array(bytes))).toEqual(sodium.to_hex(new Uint8Array(deser_bytes)));
@@ -53,18 +53,18 @@ class TestStore extends Proteus.session.PreKeyStore {
     this.prekeys = prekeys;
   }
 
-  async load_prekey(prekey_id: number): Promise<Proteus.keys.PreKey> {
-    return this.prekeys.find(prekey => prekey.key_id === prekey_id)!;
+  async load_prekey(prekeyId: number): Promise<Proteus.keys.PreKey> {
+    return this.prekeys.find(prekey => prekey.key_id === prekeyId)!;
   }
 
   async load_prekeys(): Promise<Proteus.keys.PreKey[]> {
     return this.prekeys;
   }
 
-  async delete_prekey(prekey_id: number): Promise<number> {
-    const matches = this.prekeys.filter(prekey => prekey.key_id === prekey_id);
+  async delete_prekey(prekeyId: number): Promise<number> {
+    const matches = this.prekeys.filter(prekey => prekey.key_id === prekeyId);
     delete matches[0];
-    return prekey_id;
+    return prekeyId;
   }
 }
 

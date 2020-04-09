@@ -25,18 +25,18 @@ describe('Envelope', () => {
 
   const session_tag = new Proteus.message.SessionTag();
 
-  let identity_key: Proteus.keys.IdentityKey;
-  let base_key: Proteus.keys.PublicKey;
-  let ratchet_key: Proteus.keys.PublicKey;
+  let identityKey: Proteus.keys.IdentityKey;
+  let baseKey: Proteus.keys.PublicKey;
+  let ratchetKey: Proteus.keys.PublicKey;
 
   beforeAll(async () => {
-    identity_key = new Proteus.keys.IdentityKey((await Proteus.keys.KeyPair.new()).public_key);
-    base_key = (await Proteus.keys.KeyPair.new()).public_key;
-    ratchet_key = (await Proteus.keys.KeyPair.new()).public_key;
+    identityKey = new Proteus.keys.IdentityKey((await Proteus.keys.KeyPair.new()).public_key);
+    baseKey = (await Proteus.keys.KeyPair.new()).public_key;
+    ratchetKey = (await Proteus.keys.KeyPair.new()).public_key;
   });
 
   it('encapsulates a CipherMessage', () => {
-    const msg = new Proteus.message.CipherMessage(session_tag, 42, 3, ratchet_key, new Uint8Array([1, 2, 3, 4, 5]));
+    const msg = new Proteus.message.CipherMessage(session_tag, 42, 3, ratchetKey, new Uint8Array([1, 2, 3, 4, 5]));
     const env = new Proteus.message.Envelope(mac_key, msg);
 
     expect(env.verify(mac_key)).toBe(true);
@@ -45,9 +45,9 @@ describe('Envelope', () => {
   it('encapsulates a PreKeyMessage', () => {
     const msg = new Proteus.message.PreKeyMessage(
       42,
-      base_key,
-      identity_key,
-      new Proteus.message.CipherMessage(session_tag, 42, 43, ratchet_key, new Uint8Array([1, 2, 3, 4])),
+      baseKey,
+      identityKey,
+      new Proteus.message.CipherMessage(session_tag, 42, 43, ratchetKey, new Uint8Array([1, 2, 3, 4])),
     );
 
     const env = new Proteus.message.Envelope(mac_key, msg);
@@ -57,9 +57,9 @@ describe('Envelope', () => {
   it('encodes to and decode from CBOR', () => {
     const msg = new Proteus.message.PreKeyMessage(
       42,
-      base_key,
-      identity_key,
-      new Proteus.message.CipherMessage(session_tag, 42, 43, ratchet_key, new Uint8Array([1, 2, 3, 4])),
+      baseKey,
+      identityKey,
+      new Proteus.message.CipherMessage(session_tag, 42, 43, ratchetKey, new Uint8Array([1, 2, 3, 4])),
     );
 
     const env = new Proteus.message.Envelope(mac_key, msg);

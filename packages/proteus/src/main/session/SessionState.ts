@@ -71,27 +71,27 @@ export class SessionState {
     aliceBase: IdentityKeyPair | KeyPair,
     bobPreKeyBundle: PreKeyBundle,
   ): Promise<SessionState> {
-    const master_key = ArrayUtil.concatenate_array_buffers([
+    const masterKey = ArrayUtil.concatenate_array_buffers([
       aliceIdentityPair.secret_key.shared_secret(bobPreKeyBundle.public_key),
       aliceBase.secret_key.shared_secret(bobPreKeyBundle.identity_key.public_key),
       aliceBase.secret_key.shared_secret(bobPreKeyBundle.public_key),
     ]);
 
-    const derived_secrets = DerivedSecrets.kdf_without_salt(master_key, 'handshake');
-    MemoryUtil.zeroize(master_key);
+    const derivedSecrets = DerivedSecrets.kdf_without_salt(masterKey, 'handshake');
+    MemoryUtil.zeroize(masterKey);
 
-    const rootkey = RootKey.from_cipher_key(derived_secrets.cipher_key);
-    const chainkey = ChainKey.from_mac_key(derived_secrets.mac_key, 0);
+    const rootkey = RootKey.from_cipher_key(derivedSecrets.cipher_key);
+    const chainkey = ChainKey.from_mac_key(derivedSecrets.mac_key, 0);
 
-    const recv_chains = [new RecvChain(chainkey, bobPreKeyBundle.public_key)];
+    const recvChains = [new RecvChain(chainkey, bobPreKeyBundle.public_key)];
 
-    const send_ratchet = await KeyPair.new();
-    const [rok, chk] = rootkey.dh_ratchet(send_ratchet, bobPreKeyBundle.public_key);
-    const send_chain = new SendChain(chk, send_ratchet);
+    const sendRatchet = await KeyPair.new();
+    const [rok, chk] = rootkey.dh_ratchet(sendRatchet, bobPreKeyBundle.public_key);
+    const sendChain = new SendChain(chk, sendRatchet);
 
     const state = new SessionState();
-    state.recv_chains = recv_chains;
-    state.send_chain = send_chain;
+    state.recv_chains = recvChains;
+    state.send_chain = sendChain;
     state.root_key = rok;
     state.prev_counter = 0;
     return state;

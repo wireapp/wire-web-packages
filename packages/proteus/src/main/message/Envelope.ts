@@ -30,11 +30,11 @@ export class Envelope {
   version: number;
 
   constructor(macKey: MacKey, message: Message) {
-    const serialized_message = new Uint8Array(message.serialise());
+    const serializedMessage = new Uint8Array(message.serialise());
     this.version = 1;
-    this.mac = macKey.sign(serialized_message);
+    this.mac = macKey.sign(serializedMessage);
     this.message = message;
-    this._message_enc = serialized_message;
+    this._message_enc = serializedMessage;
   }
 
   /** @param macKey The remote party's MacKey */

@@ -35,20 +35,20 @@ export function hkdf(
   info: Uint8Array | string,
   length: number,
 ): Uint8Array {
-  const convert_type = (value: string | Uint8Array) => {
+  const convertType = (value: string | Uint8Array) => {
     if (typeof value === 'string') {
       return sodium.from_string(value);
     }
     return value;
   };
 
-  salt = convert_type(salt);
-  input = convert_type(input as Uint8Array | string);
-  info = convert_type(info);
+  salt = convertType(salt);
+  input = convertType(input as Uint8Array | string);
+  info = convertType(info);
 
   const HASH_LEN = 32;
 
-  const salt_to_key = (receivedSalt: Uint8Array): Uint8Array => {
+  const saltToKey = (receivedSalt: Uint8Array): Uint8Array => {
     const keybytes = sodium.crypto_auth_hmacsha256_KEYBYTES;
     if (receivedSalt.length > keybytes) {
       return sodium.crypto_hash_sha256(receivedSalt);
@@ -60,15 +60,15 @@ export function hkdf(
   };
 
   const extract = (receivedSalt: Uint8Array, receivedInput: Uint8Array): Uint8Array => {
-    return sodium.crypto_auth_hmacsha256(receivedInput, salt_to_key(receivedSalt));
+    return sodium.crypto_auth_hmacsha256(receivedInput, saltToKey(receivedSalt));
   };
 
   const expand = (tag: Uint8Array, receivedInfo: Uint8Array, receivedLength: number): Uint8Array => {
-    const num_blocks = Math.ceil(receivedLength / HASH_LEN);
+    const numBlocks = Math.ceil(receivedLength / HASH_LEN);
     let hmac = new Uint8Array(0);
     let result = new Uint8Array(0);
 
-    for (let index = 0; index <= num_blocks - 1; index++) {
+    for (let index = 0; index <= numBlocks - 1; index++) {
       const buf = ArrayUtil.concatenate_array_buffers([hmac, receivedInfo, new Uint8Array([index + 1])]);
       hmac = sodium.crypto_auth_hmacsha256(buf, tag);
       result = ArrayUtil.concatenate_array_buffers([result, hmac]);

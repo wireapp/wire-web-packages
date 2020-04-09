@@ -53,10 +53,10 @@ export class KeyPair {
    * @see https://download.libsodium.org/doc/advanced/ed25519-curve25519.html
    */
   static construct_private_key(ed25519KeyPair: _sodium.KeyPair): SecretKey {
-    const sk_ed25519 = ed25519KeyPair.privateKey;
-    const sk_curve25519 = ed2curve.convertSecretKey(sk_ed25519);
-    if (sk_curve25519) {
-      return new SecretKey(sk_ed25519, sk_curve25519);
+    const skEd25519 = ed25519KeyPair.privateKey;
+    const skCurve25519 = ed2curve.convertSecretKey(skEd25519);
+    if (skCurve25519) {
+      return new SecretKey(skEd25519, skCurve25519);
     }
     throw new InputError.ConversionError('Could not convert private key with ed2curve.', 409);
   }
@@ -66,10 +66,10 @@ export class KeyPair {
    * @returns Constructed public key
    */
   static construct_public_key(ed25519KeyPair: _sodium.KeyPair): PublicKey {
-    const pk_ed25519 = ed25519KeyPair.publicKey;
-    const pk_curve25519 = ed2curve.convertPublicKey(pk_ed25519);
-    if (pk_curve25519) {
-      return new PublicKey(pk_ed25519, pk_curve25519);
+    const pkEd25519 = ed25519KeyPair.publicKey;
+    const pkCurve25519 = ed2curve.convertPublicKey(pkEd25519);
+    if (pkCurve25519) {
+      return new PublicKey(pkEd25519, pkCurve25519);
     }
     throw new InputError.ConversionError('Could not convert public key with ed2curve.', 408);
   }
