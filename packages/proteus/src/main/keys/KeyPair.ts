@@ -20,6 +20,7 @@
 import * as CBOR from '@wireapp/cbor';
 import * as ed2curve from 'ed2curve';
 import * as _sodium from 'libsodium-wrappers-sumo';
+import {DecodeError} from '../errors';
 import {InputError} from '../errors/InputError';
 import {PublicKey} from './PublicKey';
 import {SecretKey} from './SecretKey';
@@ -97,6 +98,6 @@ export class KeyPair {
       return new KeyPair(publicKey, secretKey);
     }
 
-    throw new Error(`Unexpected number of properties: "${properties}"`);
+    throw new DecodeError(`Unexpected number of properties: "${properties}"`);
   }
 }
