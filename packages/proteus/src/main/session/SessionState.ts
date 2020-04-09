@@ -20,7 +20,6 @@
 import * as CBOR from '@wireapp/cbor';
 
 import * as ArrayUtil from '../util/ArrayUtil';
-import * as ClassUtil from '../util/ClassUtil';
 import * as MemoryUtil from '../util/MemoryUtil';
 
 import {DecryptError} from '../errors/DecryptError';
@@ -44,29 +43,38 @@ import {RecvChain} from './RecvChain';
 import {RootKey} from './RootKey';
 import {SendChain} from './SendChain';
 import {Session} from './Session';
+import {DecodeError} from '../errors';
+import {SecretKey} from '../keys/SecretKey';
 
 export class SessionState {
   prev_counter: number;
   recv_chains: RecvChain[];
   root_key: RootKey;
   send_chain: SendChain;
+  private static readonly propertiesLength = 4;
 
   constructor() {
     this.prev_counter = -1;
     this.recv_chains = [];
     this.root_key = new RootKey();
-    this.send_chain = new SendChain();
+    this.send_chain = new SendChain(
+      new ChainKey(),
+      new KeyPair(
+        new PublicKey(new Uint8Array([]), new Uint8Array([])),
+        new SecretKey(new Uint8Array([]), new Uint8Array([])),
+      ),
+    );
   }
 
   static async init_as_alice(
-    alice_identity_pair: IdentityKeyPair,
-    alice_base: IdentityKeyPair | KeyPair,
-    bob_pkbundle: PreKeyBundle,
+    aliceIdentityPair: IdentityKeyPair,
+    aliceBase: IdentityKeyPair | KeyPair,
+    bobPreKeyBundle: PreKeyBundle,
   ): Promise<SessionState> {
     const master_key = ArrayUtil.concatenate_array_buffers([
-      alice_identity_pair.secret_key.shared_secret(bob_pkbundle.public_key),
-      alice_base.secret_key.shared_secret(bob_pkbundle.identity_key.public_key),
-      alice_base.secret_key.shared_secret(bob_pkbundle.public_key),
+      aliceIdentityPair.secret_key.shared_secret(bobPreKeyBundle.public_key),
+      aliceBase.secret_key.shared_secret(bobPreKeyBundle.identity_key.public_key),
+      aliceBase.secret_key.shared_secret(bobPreKeyBundle.public_key),
     ]);
 
     const derived_secrets = DerivedSecrets.kdf_without_salt(master_key, 'handshake');
@@ -75,13 +83,13 @@ export class SessionState {
     const rootkey = RootKey.from_cipher_key(derived_secrets.cipher_key);
     const chainkey = ChainKey.from_mac_key(derived_secrets.mac_key, 0);
 
-    const recv_chains = [RecvChain.new(chainkey, bob_pkbundle.public_key)];
+    const recv_chains = [new RecvChain(chainkey, bobPreKeyBundle.public_key)];
 
     const send_ratchet = await KeyPair.new();
-    const [rok, chk] = rootkey.dh_ratchet(send_ratchet, bob_pkbundle.public_key);
-    const send_chain = SendChain.new(chk, send_ratchet);
+    const [rok, chk] = rootkey.dh_ratchet(send_ratchet, bobPreKeyBundle.public_key);
+    const send_chain = new SendChain(chk, send_ratchet);
 
-    const state = ClassUtil.new_instance(SessionState);
+    const state = new SessionState();
     state.recv_chains = recv_chains;
     state.send_chain = send_chain;
     state.root_key = rok;
@@ -90,15 +98,15 @@ export class SessionState {
   }
 
   static init_as_bob(
-    bob_ident: IdentityKeyPair,
-    bob_prekey: KeyPair,
-    alice_ident: IdentityKey,
-    alice_base: PublicKey,
+    bobIdent: IdentityKeyPair,
+    bobPrekey: KeyPair,
+    aliceIdent: IdentityKey,
+    aliceBase: PublicKey,
   ): SessionState {
     const master_key = ArrayUtil.concatenate_array_buffers([
-      bob_prekey.secret_key.shared_secret(alice_ident.public_key),
-      bob_ident.secret_key.shared_secret(alice_base),
-      bob_prekey.secret_key.shared_secret(alice_base),
+      bobPrekey.secret_key.shared_secret(aliceIdent.public_key),
+      bobIdent.secret_key.shared_secret(aliceBase),
+      bobPrekey.secret_key.shared_secret(aliceBase),
     ]);
 
     const derived_secrets = DerivedSecrets.kdf_without_salt(master_key, 'handshake');
@@ -106,9 +114,9 @@ export class SessionState {
 
     const rootkey = RootKey.from_cipher_key(derived_secrets.cipher_key);
     const chainkey = ChainKey.from_mac_key(derived_secrets.mac_key, 0);
-    const send_chain = SendChain.new(chainkey, bob_prekey);
+    const send_chain = new SendChain(chainkey, bobPrekey);
 
-    const state = ClassUtil.new_instance(SessionState);
+    const state = new SessionState();
     state.recv_chains = [];
     state.send_chain = send_chain;
     state.root_key = rootkey;
@@ -116,15 +124,15 @@ export class SessionState {
     return state;
   }
 
-  async ratchet(ratchet_key: PublicKey): Promise<void> {
+  async ratchet(ratchetKey: PublicKey): Promise<void> {
     const new_ratchet = await KeyPair.new();
 
-    const [recv_root_key, recv_chain_key] = this.root_key.dh_ratchet(this.send_chain.ratchet_key, ratchet_key);
+    const [recv_root_key, recv_chain_key] = this.root_key.dh_ratchet(this.send_chain.ratchet_key, ratchetKey);
 
-    const [send_root_key, send_chain_key] = recv_root_key.dh_ratchet(new_ratchet, ratchet_key);
+    const [send_root_key, send_chain_key] = recv_root_key.dh_ratchet(new_ratchet, ratchetKey);
 
-    const recv_chain = RecvChain.new(recv_chain_key, ratchet_key);
-    const send_chain = SendChain.new(send_chain_key, new_ratchet);
+    const recv_chain = new RecvChain(recv_chain_key, ratchetKey);
+    const send_chain = new SendChain(send_chain_key, new_ratchet);
 
     this.root_key = send_root_key;
     this.prev_counter = this.send_chain.chain_key.idx;
@@ -155,7 +163,7 @@ export class SessionState {
   ): Envelope {
     const msgkeys = this.send_chain.chain_key.message_keys();
 
-    let message: Message = CipherMessage.new(
+    let message: Message = new CipherMessage(
       tag,
       this.send_chain.chain_key.idx,
       this.prev_counter,
@@ -164,7 +172,7 @@ export class SessionState {
     );
 
     if (pending) {
-      message = PreKeyMessage.new(
+      message = new PreKeyMessage(
         pending[0] as number,
         pending[1] as PublicKey,
         identity_key,
@@ -172,7 +180,7 @@ export class SessionState {
       );
     }
 
-    const env = Envelope.new(msgkeys.mac_key, message);
+    const env = new Envelope(msgkeys.mac_key, message);
     this.send_chain.chain_key = this.send_chain.chain_key.next();
     return env;
   }
@@ -231,7 +239,7 @@ export class SessionState {
   }
 
   encode(encoder: CBOR.Encoder): CBOR.Encoder {
-    encoder.object(4);
+    encoder.object(SessionState.propertiesLength);
     encoder.u8(0);
     encoder.array(this.recv_chains.length);
     this.recv_chains.map(rch => rch.encode(encoder));
@@ -244,37 +252,30 @@ export class SessionState {
   }
 
   static decode(decoder: CBOR.Decoder): SessionState {
-    const self = ClassUtil.new_instance(SessionState);
+    const self = new SessionState();
 
-    const nprops = decoder.object();
-    for (let index = 0; index <= nprops - 1; index++) {
-      switch (decoder.u8()) {
-        case 0: {
-          self.recv_chains = [];
-          let len = decoder.array();
-          while (len--) {
-            self.recv_chains.push(RecvChain.decode(decoder));
-          }
-          break;
-        }
-        case 1: {
-          self.send_chain = SendChain.decode(decoder);
-          break;
-        }
-        case 2: {
-          self.root_key = RootKey.decode(decoder);
-          break;
-        }
-        case 3: {
-          self.prev_counter = decoder.u32();
-          break;
-        }
-        default: {
-          decoder.skip();
-        }
+    const propertiesLength = decoder.object();
+    if (propertiesLength === SessionState.propertiesLength) {
+      decoder.u8();
+
+      self.recv_chains = [];
+      let len = decoder.array();
+      while (len--) {
+        self.recv_chains.push(RecvChain.decode(decoder));
       }
+
+      decoder.u8();
+      self.send_chain = SendChain.decode(decoder);
+
+      decoder.u8();
+      self.root_key = RootKey.decode(decoder);
+
+      decoder.u8();
+      self.prev_counter = decoder.u32();
+
+      return self;
     }
 
-    return self;
+    throw new DecodeError(`Unexpected number of properties: "${propertiesLength}"`);
   }
 }

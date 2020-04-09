@@ -20,12 +20,12 @@
 import * as CBOR from '@wireapp/cbor';
 import * as sodium from 'libsodium-wrappers-sumo';
 
-import * as ClassUtil from '../util/ClassUtil';
 import {IdentityKey} from './IdentityKey';
 import {IdentityKeyPair} from './IdentityKeyPair';
 import {PreKey} from './PreKey';
 import {PreKeyAuth} from './PreKeyAuth';
 import {PublicKey} from './PublicKey';
+import {DecodeError} from '../errors';
 
 export interface SerialisedJSON {
   id: number;
@@ -37,41 +37,22 @@ export class PreKeyBundle {
   prekey_id: number;
   public_key: PublicKey;
   identity_key: IdentityKey;
-  signature: Uint8Array | null | undefined;
+  signature?: Uint8Array | null;
+  private static readonly propertiesLength = 5;
 
-  constructor() {
-    this.version = -1;
-    this.prekey_id = -1;
-    this.public_key = new PublicKey();
-    this.identity_key = new IdentityKey();
-    this.signature = null;
+  constructor(publicIdentityKey: IdentityKey, prekey: PreKey, signature: Uint8Array | null = null) {
+    this.version = 1;
+    this.prekey_id = prekey.key_id;
+    this.public_key = prekey.key_pair.public_key;
+    this.identity_key = publicIdentityKey;
+    this.signature = signature;
   }
 
-  static new(public_identity_key: IdentityKey, prekey: PreKey): PreKeyBundle {
-    const bundle = ClassUtil.new_instance(PreKeyBundle);
-
-    bundle.version = 1;
-    bundle.prekey_id = prekey.key_id;
-    bundle.public_key = prekey.key_pair.public_key;
-    bundle.identity_key = public_identity_key;
-    bundle.signature = null;
-
-    return bundle;
-  }
-
-  static signed(identity_pair: IdentityKeyPair, prekey: PreKey): PreKeyBundle {
+  static signed(identityPair: IdentityKeyPair, prekey: PreKey): PreKeyBundle {
     const ratchet_key = prekey.key_pair.public_key;
-    const signature = identity_pair.secret_key.sign(ratchet_key.pub_edward);
+    const signature = identityPair.secret_key.sign(ratchet_key.pub_edward);
 
-    const bundle = ClassUtil.new_instance(PreKeyBundle);
-
-    bundle.version = 1;
-    bundle.prekey_id = prekey.key_id;
-    bundle.public_key = ratchet_key;
-    bundle.identity_key = identity_pair.public_key;
-    bundle.signature = signature;
-
-    return bundle;
+    return new PreKeyBundle(identityPair.public_key, prekey, signature);
   }
 
   verify(): PreKeyAuth {
@@ -103,7 +84,7 @@ export class PreKeyBundle {
   }
 
   encode(encoder: CBOR.Encoder): CBOR.Encoder {
-    encoder.object(5);
+    encoder.object(PreKeyBundle.propertiesLength);
     encoder.u8(0);
     encoder.u8(this.version);
     encoder.u8(1);
@@ -121,31 +102,30 @@ export class PreKeyBundle {
   }
 
   static decode(decoder: CBOR.Decoder): PreKeyBundle {
-    const self = ClassUtil.new_instance(PreKeyBundle);
+    const propertiesLength = decoder.object();
+    if (propertiesLength === PreKeyBundle.propertiesLength) {
+      decoder.u8();
+      const version = decoder.u8();
 
-    const nprops = decoder.object();
-    for (let index = 0; index <= nprops - 1; index++) {
-      switch (decoder.u8()) {
-        case 0:
-          self.version = decoder.u8();
-          break;
-        case 1:
-          self.prekey_id = decoder.u16();
-          break;
-        case 2:
-          self.public_key = PublicKey.decode(decoder);
-          break;
-        case 3:
-          self.identity_key = IdentityKey.decode(decoder);
-          break;
-        case 4:
-          self.signature = decoder.optional(() => new Uint8Array(decoder.bytes()));
-          break;
-        default:
-          decoder.skip();
-      }
+      decoder.u8();
+      const preKeyId = decoder.u16();
+
+      decoder.u8();
+      const publicKey = PublicKey.decode(decoder);
+
+      decoder.u8();
+      const identityKey = IdentityKey.decode(decoder);
+
+      decoder.u8();
+      const signature = decoder.optional(() => new Uint8Array(decoder.bytes()));
+
+      const bundle = new PreKeyBundle(identityKey, new PreKey(), signature);
+      bundle.version = version;
+      bundle.prekey_id = preKeyId;
+      bundle.public_key = publicKey;
+      return bundle;
     }
 
-    return self;
+    throw new DecodeError(`Unexpected number of properties: "${propertiesLength}"`);
   }
 }

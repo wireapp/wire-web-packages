@@ -17,8 +17,6 @@
  *
  */
 
-import * as ClassUtil from '../util/ClassUtil';
-
 import * as KeyDerivationUtil from '../util/KeyDerivationUtil';
 import * as MemoryUtil from '../util/MemoryUtil';
 import {CipherKey} from './CipherKey';
@@ -29,7 +27,7 @@ export class DerivedSecrets {
   mac_key: MacKey;
 
   constructor() {
-    this.cipher_key = new CipherKey();
+    this.cipher_key = new CipherKey(new Uint8Array([]));
     this.mac_key = new MacKey(new Uint8Array([]));
   }
 
@@ -43,8 +41,8 @@ export class DerivedSecrets {
 
     MemoryUtil.zeroize(output_key_material.buffer);
 
-    const ds = ClassUtil.new_instance(DerivedSecrets);
-    ds.cipher_key = CipherKey.new(cipher_key);
+    const ds = new DerivedSecrets();
+    ds.cipher_key = new CipherKey(cipher_key);
     ds.mac_key = new MacKey(mac_key);
     return ds;
   }

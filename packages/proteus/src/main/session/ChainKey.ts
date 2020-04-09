@@ -21,12 +21,13 @@ import * as CBOR from '@wireapp/cbor';
 
 import {DerivedSecrets} from '../derived/DerivedSecrets';
 import {MacKey} from '../derived/MacKey';
-import * as ClassUtil from '../util/ClassUtil';
 import {MessageKeys} from './MessageKeys';
+import {DecodeError} from '../errors';
 
 export class ChainKey {
   idx: number;
   key: MacKey;
+  private static readonly propertiesLength = 2;
 
   constructor() {
     this.idx = -1;
@@ -34,14 +35,14 @@ export class ChainKey {
   }
 
   static from_mac_key(key: MacKey, counter: number): ChainKey {
-    const ck = ClassUtil.new_instance(ChainKey);
+    const ck = new ChainKey();
     ck.key = key;
     ck.idx = counter;
     return ck;
   }
 
   next(): ChainKey {
-    const ck = ClassUtil.new_instance(ChainKey);
+    const ck = new ChainKey();
     ck.key = new MacKey(this.key.sign('1'));
     ck.idx = this.idx + 1;
     return ck;
@@ -50,11 +51,11 @@ export class ChainKey {
   message_keys(): MessageKeys {
     const base = this.key.sign('0');
     const derived_secrets = DerivedSecrets.kdf_without_salt(base, 'hash_ratchet');
-    return MessageKeys.new(derived_secrets.cipher_key, derived_secrets.mac_key, this.idx);
+    return new MessageKeys(derived_secrets.cipher_key, derived_secrets.mac_key, this.idx);
   }
 
   encode(encoder: CBOR.Encoder): CBOR.Encoder {
-    encoder.object(2);
+    encoder.object(ChainKey.propertiesLength);
     encoder.u8(0);
     this.key.encode(encoder);
     encoder.u8(1);
@@ -62,22 +63,19 @@ export class ChainKey {
   }
 
   static decode(decoder: CBOR.Decoder): ChainKey {
-    const self = ClassUtil.new_instance(ChainKey);
+    const self = new ChainKey();
 
-    const nprops = decoder.object();
-    for (let index = 0; index <= nprops - 1; index++) {
-      switch (decoder.u8()) {
-        case 0:
-          self.key = MacKey.decode(decoder);
-          break;
-        case 1:
-          self.idx = decoder.u32();
-          break;
-        default:
-          decoder.skip();
-      }
+    const propertiesLength = decoder.object();
+    if (propertiesLength === ChainKey.propertiesLength) {
+      decoder.u8();
+      self.key = MacKey.decode(decoder);
+
+      decoder.u8();
+      self.idx = decoder.u32();
+
+      return self;
     }
 
-    return self;
+    throw new DecodeError(`Unexpected number of properties: "${propertiesLength}"`);
   }
 }

@@ -23,46 +23,46 @@ import * as Proteus from '@wireapp/proteus';
 describe('Envelope', () => {
   const mac_key = new Proteus.derived.MacKey(new Uint8Array(32).fill(1));
 
-  const session_tag = Proteus.message.SessionTag.new();
+  const session_tag = new Proteus.message.SessionTag();
 
   let identity_key: Proteus.keys.IdentityKey;
   let base_key: Proteus.keys.PublicKey;
   let ratchet_key: Proteus.keys.PublicKey;
 
   beforeAll(async () => {
-    identity_key = Proteus.keys.IdentityKey.new((await Proteus.keys.KeyPair.new()).public_key);
+    identity_key = new Proteus.keys.IdentityKey((await Proteus.keys.KeyPair.new()).public_key);
     base_key = (await Proteus.keys.KeyPair.new()).public_key;
     ratchet_key = (await Proteus.keys.KeyPair.new()).public_key;
   });
 
   it('encapsulates a CipherMessage', () => {
-    const msg = Proteus.message.CipherMessage.new(session_tag, 42, 3, ratchet_key, new Uint8Array([1, 2, 3, 4, 5]));
-    const env = Proteus.message.Envelope.new(mac_key, msg);
+    const msg = new Proteus.message.CipherMessage(session_tag, 42, 3, ratchet_key, new Uint8Array([1, 2, 3, 4, 5]));
+    const env = new Proteus.message.Envelope(mac_key, msg);
 
     expect(env.verify(mac_key)).toBe(true);
   });
 
   it('encapsulates a PreKeyMessage', () => {
-    const msg = Proteus.message.PreKeyMessage.new(
+    const msg = new Proteus.message.PreKeyMessage(
       42,
       base_key,
       identity_key,
-      Proteus.message.CipherMessage.new(session_tag, 42, 43, ratchet_key, new Uint8Array([1, 2, 3, 4])),
+      new Proteus.message.CipherMessage(session_tag, 42, 43, ratchet_key, new Uint8Array([1, 2, 3, 4])),
     );
 
-    const env = Proteus.message.Envelope.new(mac_key, msg);
+    const env = new Proteus.message.Envelope(mac_key, msg);
     expect(env.verify(mac_key)).toBe(true);
   });
 
   it('encodes to and decode from CBOR', () => {
-    const msg = Proteus.message.PreKeyMessage.new(
+    const msg = new Proteus.message.PreKeyMessage(
       42,
       base_key,
       identity_key,
-      Proteus.message.CipherMessage.new(session_tag, 42, 43, ratchet_key, new Uint8Array([1, 2, 3, 4])),
+      new Proteus.message.CipherMessage(session_tag, 42, 43, ratchet_key, new Uint8Array([1, 2, 3, 4])),
     );
 
-    const env = Proteus.message.Envelope.new(mac_key, msg);
+    const env = new Proteus.message.Envelope(mac_key, msg);
     expect(env.verify(mac_key)).toBe(true);
 
     const env_bytes = env.serialise();

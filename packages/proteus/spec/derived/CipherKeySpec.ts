@@ -69,7 +69,7 @@ describe('CipherKey sanity checks (IETF ChaCha20 test vectors)', () => {
       const plaintext = new Uint8Array(vector.message.length >> 1);
       const nonce = sodium.from_hex(vector.nonce);
 
-      const key = Proteus.derived.CipherKey.new(sodium.from_hex(vector.key));
+      const key = new Proteus.derived.CipherKey(sodium.from_hex(vector.key));
       const cipher_text = key.encrypt(plaintext, nonce);
 
       return cipher_text;
@@ -85,7 +85,7 @@ describe('CipherKey sanity checks (IETF ChaCha20 test vectors)', () => {
     const decrypt_cipher_text = (vector: Vector) => {
       const plaintext = new Uint8Array(vector.message.length >> 1);
       const nonce = sodium.from_hex(vector.nonce);
-      const key = Proteus.derived.CipherKey.new(sodium.from_hex(vector.key));
+      const key = new Proteus.derived.CipherKey(sodium.from_hex(vector.key));
       const ciphertext = key.encrypt(plaintext, nonce);
 
       return {

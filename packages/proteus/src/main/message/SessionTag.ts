@@ -21,22 +21,14 @@ import * as CBOR from '@wireapp/cbor';
 import * as sodium from 'libsodium-wrappers-sumo';
 
 import {DecodeError} from '../errors/DecodeError';
-import * as ClassUtil from '../util/ClassUtil';
 import * as RandomUtil from '../util/RandomUtil';
 
 export class SessionTag {
   tag: Uint8Array;
+  private static readonly randomBytesLength = 16;
 
   constructor() {
-    this.tag = new Uint8Array([]);
-  }
-
-  static new(): SessionTag {
-    const length = 16;
-
-    const st = ClassUtil.new_instance(SessionTag);
-    st.tag = RandomUtil.random_bytes(length);
-    return st;
+    this.tag = RandomUtil.random_bytes(SessionTag.randomBytesLength);
   }
 
   toString(): string {
@@ -58,7 +50,7 @@ export class SessionTag {
       );
     }
 
-    const st = ClassUtil.new_instance(SessionTag);
+    const st = new SessionTag();
     st.tag = new Uint8Array(bytes);
     return st;
   }

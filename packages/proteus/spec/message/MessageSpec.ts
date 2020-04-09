@@ -27,31 +27,31 @@ beforeAll(async () => {
 });
 
 describe('Message', () => {
-  const st = Proteus.message.SessionTag.new();
+  const st = new Proteus.message.SessionTag();
   st.tag.fill(42);
 
-  const bk = Proteus.keys.PublicKey.new(
+  const bk = new Proteus.keys.PublicKey(
     new Uint8Array(32).fill(0xff),
     // prettier-ignore
     new Uint8Array([63, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75]),
   );
-  const rk = Proteus.keys.PublicKey.new(
+  const rk = new Proteus.keys.PublicKey(
     new Uint8Array(32).fill(0xf0),
     // prettier-ignore
     new Uint8Array([185, 178, 44, 203, 178, 44, 203, 178, 44, 203, 178, 44, 203, 178, 44, 203, 178, 44, 203, 178, 44, 203, 178, 44, 203, 178, 44, 203, 178, 44, 203, 114]),
   );
-  const ik_pk = Proteus.keys.PublicKey.new(
+  const ik_pk = new Proteus.keys.PublicKey(
     new Uint8Array(32).fill(0xa0),
     // prettier-ignore
     new Uint8Array([92, 62, 6, 231, 99, 112, 62, 6, 231, 99, 112, 62, 6, 231, 99, 112, 62, 6, 231, 99, 112, 62, 6, 231, 99, 112, 62, 6, 231, 99, 112, 126]),
   );
-  const ik = Proteus.keys.IdentityKey.new(ik_pk);
+  const ik = new Proteus.keys.IdentityKey(ik_pk);
 
   it('serialises and deserialises a CipherMessage correctly', () => {
     const expected =
       '01a500502a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a010c020d03a1005820f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0044a0102030405060708090a';
 
-    const msg = Proteus.message.CipherMessage.new(st, 12, 13, rk, new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]));
+    const msg = new Proteus.message.CipherMessage(st, 12, 13, rk, new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]));
 
     const bytes = new Uint8Array(msg.serialise());
     expect(expected).toBe(sodium.to_hex(bytes).toLowerCase());
@@ -65,8 +65,8 @@ describe('Message', () => {
     const expected =
       '02a400181801a1005820ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff02a100a1005820a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a003a500502a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a010c020d03a1005820f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0044a0102030405060708090a';
 
-    const cmsg = Proteus.message.CipherMessage.new(st, 12, 13, rk, new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]));
-    const pkmsg = Proteus.message.PreKeyMessage.new(24, bk, ik, cmsg);
+    const cmsg = new Proteus.message.CipherMessage(st, 12, 13, rk, new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]));
+    const pkmsg = new Proteus.message.PreKeyMessage(24, bk, ik, cmsg);
 
     const bytes = new Uint8Array(pkmsg.serialise());
     expect(expected).toBe(sodium.to_hex(bytes).toLowerCase());
