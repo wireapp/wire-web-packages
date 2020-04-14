@@ -20,48 +20,40 @@
 import {Button, Composite, Text} from '@wireapp/protocol-messaging';
 import {CompositeContent, LegalHoldStatus} from '../content';
 import {CompositeMessage} from './OtrMessage';
-
-import Item = Composite.Item;
+import {MessageBuilder} from './MessageBuilder';
 
 export class CompositeContentBuilder {
-  private readonly content: CompositeContent;
+  private readonly content: CompositeContent = {};
   private readonly payloadBundle: CompositeMessage;
+  private readonly items: Composite.IItem[] = [];
 
   constructor(payloadBundle: CompositeMessage) {
     this.payloadBundle = payloadBundle;
-    this.content = this.payloadBundle.content as CompositeContent;
-    this.content.items = [];
   }
 
   build(): CompositeMessage {
     this.payloadBundle.content = this.content;
+    this.payloadBundle.content.items = this.items;
     return this.payloadBundle;
   }
 
   withReadConfirmation(expectsReadConfirmation: boolean = false): CompositeContentBuilder {
-    if (typeof expectsReadConfirmation !== 'undefined') {
-      this.content.expectsReadConfirmation = expectsReadConfirmation;
-    }
+    this.content.expectsReadConfirmation = expectsReadConfirmation;
     return this;
   }
 
-  withLegalHoldStatus(legalHoldStatus = LegalHoldStatus.UNKNOWN): CompositeContentBuilder {
-    if (typeof legalHoldStatus !== 'undefined') {
-      this.content.legalHoldStatus = legalHoldStatus;
-    }
+  withLegalHoldStatus(legalHoldStatus: LegalHoldStatus = LegalHoldStatus.UNKNOWN): CompositeContentBuilder {
+    this.content.legalHoldStatus = legalHoldStatus;
     return this;
   }
 
   addText(text: Text): CompositeContentBuilder {
-    this.content.items.push(Item.create({text}));
+    this.items.push(Composite.Item.create({text}));
     return this;
   }
 
-  addButton(buttonText: string): CompositeContentBuilder {
-    const buttonProtos = [];
-    buttonProtos.push(Button.create({id: '', text: buttonText}));
-
-    this.content.items = [...this.content.items, ...buttonProtos.map(button => Item.create({button}))];
+  addButton(buttonText: string, id: string = MessageBuilder.createId()): CompositeContentBuilder {
+    this.items.push(Composite.Item.create({button: Button.create({id, text: buttonText})}));
     return this;
   }
 }
