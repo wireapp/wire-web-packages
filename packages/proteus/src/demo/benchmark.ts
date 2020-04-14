@@ -17,8 +17,6 @@
  *
  */
 
-/* eslint-disable no-console */
-
 import * as sodium from 'libsodium-wrappers-sumo';
 import * as ed2curve from 'ed2curve';
 import * as os from 'os';
@@ -48,35 +46,35 @@ const getDuration = (action: (...options: any[]) => any): string => {
   const operatingSystem = `${os.type()} ${os.release()}`;
   const architecture = os.arch();
 
-  console.log(`Setup:\n  ${cpuModel}\n  ${memory}\n  ${operatingSystem} (${architecture})\n`);
-  console.log(`Running benchmarks with ${ITERATIONS.toLocaleString()} iterations each ...`);
+  console.info(`Setup:\n  ${cpuModel}\n  ${memory}\n  ${operatingSystem} (${architecture})\n`);
+  console.info(`Running benchmarks with ${ITERATIONS.toLocaleString()} iterations each ...`);
 
   await sodium.ready;
 
   const ed25519Keypair = sodium.crypto_sign_keypair();
 
   const signKeyPairDuration = getDuration(() => sodium.crypto_sign_keypair());
-  console.log(`Duration for sodium.crypto_sign_keypair: ${signKeyPairDuration} ms`);
+  console.info(`Duration for sodium.crypto_sign_keypair: ${signKeyPairDuration} ms`);
 
   const ed2curveConvertSkDuration = getDuration(() => ed2curve.convertSecretKey(ed25519Keypair.privateKey));
-  console.log(`Duration for ed2curve.convertSecretKey: ${ed2curveConvertSkDuration} ms`);
+  console.info(`Duration for ed2curve.convertSecretKey: ${ed2curveConvertSkDuration} ms`);
 
   const sodiumConvertSkDuration = getDuration(() =>
     sodium.crypto_sign_ed25519_sk_to_curve25519(ed25519Keypair.privateKey),
   );
-  console.log(`Duration for sodium.sign_ed25519_sk_to_curve25519: ${sodiumConvertSkDuration} ms`);
+  console.info(`Duration for sodium.sign_ed25519_sk_to_curve25519: ${sodiumConvertSkDuration} ms`);
 
   const ed2curveConvertPkDuration = getDuration(() => ed2curve.convertPublicKey(ed25519Keypair.publicKey));
-  console.log(`Duration for ed2curve.convertPublicKey: ${ed2curveConvertPkDuration} ms`);
+  console.info(`Duration for ed2curve.convertPublicKey: ${ed2curveConvertPkDuration} ms`);
 
   const sodiumConvertPkDuration = getDuration(() =>
     sodium.crypto_sign_ed25519_pk_to_curve25519(ed25519Keypair.publicKey),
   );
-  console.log(`Duration for sodium.crypto_sign_ed25519_pk_to_curve25519: ${sodiumConvertPkDuration} ms`);
+  console.info(`Duration for sodium.crypto_sign_ed25519_pk_to_curve25519: ${sodiumConvertPkDuration} ms`);
 
   const alice = await proteus.keys.KeyPair.new();
   const bob = await proteus.keys.KeyPair.new();
 
   const proteusSharedSecred = getDuration(() => alice.secret_key.shared_secret(bob.public_key));
-  console.log(`Duration for shared_secret: ${proteusSharedSecred} ms`);
+  console.info(`Duration for shared_secret: ${proteusSharedSecred} ms`);
 })().catch(console.error);
