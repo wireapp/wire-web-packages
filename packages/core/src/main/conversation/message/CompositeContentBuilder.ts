@@ -19,7 +19,7 @@
 
 import {Button, Composite, Text} from '@wireapp/protocol-messaging';
 import {CompositeContent, LegalHoldStatus} from '../content';
-import {CompositeMessage, EditedTextMessage} from './OtrMessage';
+import {CompositeMessage} from './OtrMessage';
 
 import Item = Composite.Item;
 
@@ -30,42 +30,37 @@ export class CompositeContentBuilder {
   constructor(payloadBundle: CompositeMessage) {
     this.payloadBundle = payloadBundle;
     this.content = this.payloadBundle.content as CompositeContent;
+    this.content.items = [];
   }
 
-  public build(): CompositeMessage {
+  build(): CompositeMessage {
     this.payloadBundle.content = this.content;
     return this.payloadBundle;
   }
 
-  public withReadConfirmation(expectsReadConfirmation: boolean = false): CompositeContentBuilder {
+  withReadConfirmation(expectsReadConfirmation: boolean = false): CompositeContentBuilder {
     if (typeof expectsReadConfirmation !== 'undefined') {
       this.content.expectsReadConfirmation = expectsReadConfirmation;
     }
     return this;
   }
 
-  public withLegalHoldStatus(legalHoldStatus = LegalHoldStatus.UNKNOWN): CompositeContentBuilder {
+  withLegalHoldStatus(legalHoldStatus = LegalHoldStatus.UNKNOWN): CompositeContentBuilder {
     if (typeof legalHoldStatus !== 'undefined') {
       this.content.legalHoldStatus = legalHoldStatus;
     }
     return this;
   }
 
-  public addText(text: Text): CompositeContentBuilder {
-    if (!this.content.items) {
-      this.content.items = [];
-    }
+  addText(text: Text): CompositeContentBuilder {
     this.content.items.push(Item.create({text}));
     return this;
   }
 
-  public addButton(buttonText: string): CompositeContentBuilder {
+  addButton(buttonText: string): CompositeContentBuilder {
     const buttonProtos = [];
     buttonProtos.push(Button.create({id: '', text: buttonText}));
 
-    if (!this.content.items) {
-      this.content.items = [];
-    }
     this.content.items = [...this.content.items, ...buttonProtos.map(button => Item.create({button}))];
     return this;
   }
