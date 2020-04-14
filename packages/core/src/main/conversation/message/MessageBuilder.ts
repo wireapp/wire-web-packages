@@ -18,7 +18,7 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {ClientAction, Composite, Confirmation} from '@wireapp/protocol-messaging';
+import {ClientAction, Confirmation} from '@wireapp/protocol-messaging';
 import {AbortReason, PayloadBundleSource, PayloadBundleState, PayloadBundleType} from '..';
 import {AssetService} from '../AssetService';
 import {
