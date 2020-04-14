@@ -55,7 +55,7 @@ export class CompositeContentBuilder {
     if (!this.content.items) {
       this.content.items = [];
     }
-    this.content.items = [...this.content.items, Item.create({text})];
+    this.content.items.push(Item.create({text}));
     return this;
   }
 
