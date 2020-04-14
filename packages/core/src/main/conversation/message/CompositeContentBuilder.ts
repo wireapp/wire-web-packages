@@ -25,9 +25,9 @@ import Item = Composite.Item;
 
 export class CompositeContentBuilder {
   private readonly content: CompositeContent;
-  private readonly payloadBundle: CompositeMessage | EditedTextMessage;
+  private readonly payloadBundle: CompositeMessage;
 
-  constructor(payloadBundle: CompositeMessage | EditedTextMessage) {
+  constructor(payloadBundle: CompositeMessage) {
     this.payloadBundle = payloadBundle;
     this.content = this.payloadBundle.content as CompositeContent;
   }
