@@ -19,21 +19,19 @@
 
 import * as CBOR from '@wireapp/cbor';
 import * as _sodium from 'libsodium-wrappers-sumo';
-
-import * as ClassUtil from '../util/ClassUtil';
+import {DecodeError} from '../errors';
+import {InputError} from '../errors/InputError';
 import {PublicKey} from './PublicKey';
 import {SecretKey} from './SecretKey';
 
-import {InputError} from '../errors/InputError';
-
 /** Construct an ephemeral key pair. */
 export class KeyPair {
-  public_key: PublicKey;
-  secret_key: SecretKey;
+  readonly public_key: PublicKey;
+  readonly secret_key: SecretKey;
 
-  constructor() {
-    this.public_key = new PublicKey();
-    this.secret_key = new SecretKey();
+  constructor(public_key: PublicKey, secret_key: SecretKey) {
+    this.public_key = public_key;
+    this.secret_key = secret_key;
   }
 
   static async new(): Promise<KeyPair> {
@@ -42,11 +40,7 @@ export class KeyPair {
 
     const ed25519_key_pair = sodium.crypto_sign_keypair();
 
-    const kp = ClassUtil.new_instance(KeyPair);
-    kp.secret_key = KeyPair.prototype._construct_private_key(ed25519_key_pair);
-    kp.public_key = KeyPair.prototype._construct_public_key(ed25519_key_pair);
-
-    return kp;
+    return new KeyPair(KeyPair.construct_public_key(ed25519_key_pair), KeyPair.construct_private_key(ed25519_key_pair));
   }
 
   /**
@@ -56,7 +50,7 @@ export class KeyPair {
    * @returns Constructed private key
    * @see https://download.libsodium.org/doc/advanced/ed25519-curve25519.html
    */
-  private _construct_private_key(ed25519_key_pair: _sodium.KeyPair): SecretKey {
+  static construct_private_key(ed25519_key_pair: _sodium.KeyPair): SecretKey {
     try {
       const sk_ed25519 = ed25519_key_pair.privateKey;
       const sk_curve25519 = _sodium.crypto_sign_ed25519_sk_to_curve25519(sk_ed25519);
@@ -70,7 +64,7 @@ export class KeyPair {
    * @param ed25519_key_pair Key pair based on Edwards-curve (Ed25519)
    * @returns Constructed public key
    */
-  private _construct_public_key(ed25519_key_pair: _sodium.KeyPair): PublicKey {
+  static construct_public_key(ed25519_key_pair: _sodium.KeyPair): PublicKey {
     try {
       const pk_ed25519 = ed25519_key_pair.publicKey;
       const pk_curve25519 = _sodium.crypto_sign_ed25519_pk_to_curve25519(pk_ed25519);
@@ -87,26 +81,24 @@ export class KeyPair {
     this.secret_key.encode(encoder);
 
     encoder.u8(1);
-    return this.public_key.encode(encoder);
+    this.public_key.encode(encoder);
+
+    return encoder;
   }
 
   static decode(decoder: CBOR.Decoder): KeyPair {
-    const self = ClassUtil.new_instance(KeyPair);
+    const properties = decoder.object();
 
-    const nprops = decoder.object();
-    for (let index = 0; index <= nprops - 1; index++) {
-      switch (decoder.u8()) {
-        case 0:
-          self.secret_key = SecretKey.decode(decoder);
-          break;
-        case 1:
-          self.public_key = PublicKey.decode(decoder);
-          break;
-        default:
-          decoder.skip();
-      }
+    if (properties === 2) {
+      decoder.u8();
+      const secretKey = SecretKey.decode(decoder);
+
+      decoder.u8();
+      const publicKey = PublicKey.decode(decoder);
+
+      return new KeyPair(publicKey, secretKey);
     }
 
-    return self;
+    throw new DecodeError(`Unexpected number of properties: "${properties}"`);
   }
 }
