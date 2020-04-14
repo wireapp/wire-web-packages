@@ -81,7 +81,7 @@ export class PublicKey {
       self.pub_curve = pub_curve;
       return self;
     } catch (error) {
-      throw new InputError.ConversionError('Could not convert private key with libsodium.', 409);
+      throw new InputError.ConversionError('Could not convert public key with libsodium.', 409);
     }
   }
 }

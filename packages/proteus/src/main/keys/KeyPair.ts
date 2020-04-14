@@ -56,7 +56,7 @@ export class KeyPair {
       const sk_curve25519 = _sodium.crypto_sign_ed25519_sk_to_curve25519(sk_ed25519);
       return SecretKey.new(sk_ed25519, sk_curve25519);
     } catch (error) {
-      throw new InputError.ConversionError('Could not convert private key with libsodium.', 409);
+      throw new InputError.ConversionError('Could not convert secret key with libsodium.', 409);
     }
   }
 

@@ -91,7 +91,7 @@ export class SecretKey {
       self.sec_curve = sec_curve;
       return self;
     } catch (error) {
-      throw new InputError.ConversionError('Could not convert private key with libsodium.', 408);
+      throw new InputError.ConversionError('Could not convert secret key with libsodium.', 408);
     }
   }
 }
