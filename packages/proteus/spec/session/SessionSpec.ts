@@ -269,7 +269,7 @@ describe('Session', () => {
       assert_serialise_deserialise(bob_ident, bob);
     });
 
-    fit('handles multiple prekey messages', async () => {
+    it('handles multiple prekey messages', async () => {
       const alice_ident = await Proteus.keys.IdentityKeyPair.new();
       const alice_store = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10));
 
