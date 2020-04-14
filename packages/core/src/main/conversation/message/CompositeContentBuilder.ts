@@ -37,7 +37,7 @@ export class CompositeContentBuilder {
     return this.payloadBundle;
   }
 
-  public withReadConfirmation(expectsReadConfirmation = false): CompositeContentBuilder {
+  public withReadConfirmation(expectsReadConfirmation: boolean = false): CompositeContentBuilder {
     if (typeof expectsReadConfirmation !== 'undefined') {
       this.content.expectsReadConfirmation = expectsReadConfirmation;
     }
