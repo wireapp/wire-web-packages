@@ -24,14 +24,14 @@ import {Message} from './Message';
 import {DecodeError} from '../errors';
 
 export class Envelope {
-  _message_enc: Uint8Array;
+  readonly _message_enc: Uint8Array;
+  readonly message: Message;
+  readonly version: number;
   mac: Uint8Array;
-  message: Message;
-  version: number;
 
-  constructor(macKey: MacKey, message: Message) {
+  constructor(macKey: MacKey, message: Message, version: number = 1) {
     const serializedMessage = new Uint8Array(message.serialise());
-    this.version = 1;
+    this.version = version;
     this.mac = macKey.sign(serializedMessage);
     this.message = message;
     this._message_enc = serializedMessage;
@@ -81,12 +81,11 @@ export class Envelope {
       const mac = new Uint8Array(decoder.bytes());
 
       decoder.u8();
-      const _message_enc = new Uint8Array(decoder.bytes());
+      const encodedMessage = new Uint8Array(decoder.bytes());
 
-      const message = Message.deserialise(_message_enc.buffer);
+      const message = Message.deserialise(encodedMessage.buffer);
 
-      const envelope = new Envelope(new MacKey(mac), message);
-      envelope.version = version;
+      const envelope = new Envelope(new MacKey(mac), message, version);
       envelope.mac = mac;
       return envelope;
     }

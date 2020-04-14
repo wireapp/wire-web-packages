@@ -33,26 +33,32 @@ export interface SerialisedJSON {
 }
 
 export class PreKeyBundle {
-  version: number;
-  prekey_id: number;
-  public_key: PublicKey;
-  identity_key: IdentityKey;
-  signature?: Uint8Array | null;
+  readonly version: number;
+  readonly prekey_id: number;
+  readonly public_key: PublicKey;
+  readonly identity_key: IdentityKey;
+  readonly signature?: Uint8Array | null;
   private static readonly propertiesLength = 5;
 
-  constructor(publicIdentityKey: IdentityKey, prekey: PreKey, signature: Uint8Array | null = null) {
-    this.version = 1;
-    this.prekey_id = prekey.key_id;
-    this.public_key = prekey.key_pair.public_key;
+  constructor(
+    publicIdentityKey: IdentityKey,
+    preKeyId: number,
+    publicKey: PublicKey,
+    signature: Uint8Array | null = null,
+    version: number = 1,
+  ) {
     this.identity_key = publicIdentityKey;
+    this.prekey_id = preKeyId;
+    this.public_key = publicKey;
     this.signature = signature;
+    this.version = version;
   }
 
   static signed(identityPair: IdentityKeyPair, prekey: PreKey): PreKeyBundle {
-    const ratchet_key = prekey.key_pair.public_key;
-    const signature = identityPair.secret_key.sign(ratchet_key.pub_edward);
+    const ratchetKey = prekey.key_pair.public_key;
+    const signature = identityPair.secret_key.sign(ratchetKey.pub_edward);
 
-    return new PreKeyBundle(identityPair.public_key, prekey, signature);
+    return new PreKeyBundle(identityPair.public_key, prekey.key_id, prekey.key_pair.public_key, signature);
   }
 
   verify(): PreKeyAuth {
@@ -63,6 +69,7 @@ export class PreKeyBundle {
     if (this.identity_key.public_key.verify(this.signature, this.public_key.pub_edward)) {
       return PreKeyAuth.VALID;
     }
+
     return PreKeyAuth.INVALID;
   }
 
@@ -95,10 +102,8 @@ export class PreKeyBundle {
     this.identity_key.encode(encoder);
 
     encoder.u8(4);
-    if (!this.signature) {
-      return encoder.null();
-    }
-    return encoder.bytes(this.signature);
+
+    return this.signature ? encoder.bytes(this.signature) : encoder.null();
   }
 
   static decode(decoder: CBOR.Decoder): PreKeyBundle {
@@ -119,11 +124,7 @@ export class PreKeyBundle {
       decoder.u8();
       const signature = decoder.optional(() => new Uint8Array(decoder.bytes()));
 
-      const bundle = new PreKeyBundle(identityKey, new PreKey(), signature);
-      bundle.version = version;
-      bundle.prekey_id = preKeyId;
-      bundle.public_key = publicKey;
-      return bundle;
+      return new PreKeyBundle(identityKey, preKeyId, publicKey, signature, version);
     }
 
     throw new DecodeError(`Unexpected number of properties: "${propertiesLength}"`);

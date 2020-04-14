@@ -24,11 +24,11 @@ import {DecodeError} from '../errors/DecodeError';
 import * as RandomUtil from '../util/RandomUtil';
 
 export class SessionTag {
-  tag: Uint8Array;
   private static readonly randomBytesLength = 16;
+  readonly tag: Uint8Array;
 
-  constructor() {
-    this.tag = RandomUtil.random_bytes(SessionTag.randomBytesLength);
+  constructor(tag?: Uint8Array) {
+    this.tag = tag || RandomUtil.random_bytes(SessionTag.randomBytesLength);
   }
 
   toString(): string {
@@ -50,8 +50,6 @@ export class SessionTag {
       );
     }
 
-    const st = new SessionTag();
-    st.tag = new Uint8Array(bytes);
-    return st;
+    return new SessionTag(new Uint8Array(bytes));
   }
 }

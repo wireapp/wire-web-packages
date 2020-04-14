@@ -25,8 +25,8 @@ import {InputError} from '../errors/InputError';
 import {DecodeError} from '../errors';
 
 export class PublicKey {
-  pub_edward: Uint8Array;
-  pub_curve: Uint8Array;
+  readonly pub_edward: Uint8Array;
+  readonly pub_curve: Uint8Array;
   private static readonly propertiesLength = 1;
 
   constructor(pubEdward: Uint8Array, pubCurve: Uint8Array) {

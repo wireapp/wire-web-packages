@@ -28,10 +28,10 @@ import {Message} from './Message';
 import {DecodeError} from '../errors';
 
 export class PreKeyMessage extends Message {
-  base_key: PublicKey;
-  identity_key: IdentityKey;
-  message: CipherMessage;
-  prekey_id: number;
+  readonly base_key: PublicKey;
+  readonly identity_key: IdentityKey;
+  readonly message: CipherMessage;
+  readonly prekey_id: number;
   private static readonly propertiesLength = 4;
 
   constructor(prekeyId: number, baseKey: PublicKey, identityKey: IdentityKey, message: CipherMessage) {

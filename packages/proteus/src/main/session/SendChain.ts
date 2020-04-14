@@ -24,7 +24,7 @@ import {DecodeError} from '../errors';
 
 export class SendChain {
   chain_key: ChainKey;
-  ratchet_key: KeyPair;
+  readonly ratchet_key: KeyPair;
   private static readonly propertiesLength = 2;
 
   constructor(chainKey: ChainKey, keypair: KeyPair) {

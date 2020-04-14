@@ -24,9 +24,9 @@ import {MacKey} from '../derived/MacKey';
 import {DecodeError} from '../errors';
 
 export class MessageKeys {
-  cipher_key: CipherKey;
-  counter: number;
-  mac_key: MacKey;
+  readonly cipher_key: CipherKey;
+  readonly counter: number;
+  readonly mac_key: MacKey;
   private static readonly propertiesLength = 3;
 
   constructor(cipherKey: CipherKey, macKey: MacKey, counter: number) {

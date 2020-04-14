@@ -22,8 +22,6 @@ import * as CBOR from '@wireapp/cbor';
 import {InputError} from '../errors/InputError';
 
 import {KeyPair} from './KeyPair';
-import {PublicKey} from './PublicKey';
-import {SecretKey} from './SecretKey';
 import {DecodeError} from '../errors';
 
 /**
@@ -31,30 +29,23 @@ import {DecodeError} from '../errors';
  * A Pre-Shared Key contains the public long-term identity and ephemeral handshake keys for the initial triple DH.
  */
 export class PreKey {
-  static MAX_PREKEY_ID = 0xffff;
-  key_id: number;
-  key_pair: KeyPair;
-  version: number;
+  static readonly MAX_PREKEY_ID = 0xffff;
+  readonly key_id: number;
+  readonly key_pair: KeyPair;
+  readonly version: number;
   private static readonly propertiesLength = 3;
 
-  constructor() {
-    this.key_id = -1;
-    this.key_pair = new KeyPair(
-      new PublicKey(new Uint8Array([]), new Uint8Array([])),
-      new SecretKey(new Uint8Array([]), new Uint8Array([])),
-    );
-    this.version = -1;
+  constructor(keyPair: KeyPair, keyId: number = -1, version: number = -1) {
+    this.key_id = keyId;
+    this.key_pair = keyPair;
+    this.version = version;
   }
 
   static async new(preKeyId: number): Promise<PreKey> {
     this.validate_pre_key_id(preKeyId);
 
-    const pk = new PreKey();
-
-    pk.version = 1;
-    pk.key_id = preKeyId;
-    pk.key_pair = await KeyPair.new();
-    return pk;
+    const keyPair = await KeyPair.new();
+    return new PreKey(keyPair, preKeyId, 1);
   }
 
   static validate_pre_key_id(preKeyId: number): void {
@@ -114,20 +105,18 @@ export class PreKey {
   }
 
   static decode(decoder: CBOR.Decoder): PreKey {
-    const self = new PreKey();
-
     const propertiesLength = decoder.object();
     if (propertiesLength === PreKey.propertiesLength) {
       decoder.u8();
-      self.version = decoder.u8();
+      const version = decoder.u8();
 
       decoder.u8();
-      self.key_id = decoder.u16();
+      const keyId = decoder.u16();
 
       decoder.u8();
-      self.key_pair = KeyPair.decode(decoder);
+      const keyPair = KeyPair.decode(decoder);
 
-      return self;
+      return new PreKey(keyPair, keyId, version);
     }
 
     throw new DecodeError(`Unexpected number of properties: "${propertiesLength}"`);

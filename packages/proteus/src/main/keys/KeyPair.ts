@@ -27,8 +27,8 @@ import {SecretKey} from './SecretKey';
 
 /** Construct an ephemeral key pair. */
 export class KeyPair {
-  public_key: PublicKey;
-  secret_key: SecretKey;
+  readonly public_key: PublicKey;
+  readonly secret_key: SecretKey;
   private static readonly propertiesLength = 2;
 
   constructor(publicKey: PublicKey, secretKey: SecretKey) {
@@ -40,9 +40,9 @@ export class KeyPair {
     await _sodium.ready;
     const sodium = _sodium;
 
-    const ed25519_key_pair = sodium.crypto_sign_keypair();
+    const ed25519KeyPair = sodium.crypto_sign_keypair();
 
-    return new KeyPair(KeyPair.construct_public_key(ed25519_key_pair), KeyPair.construct_private_key(ed25519_key_pair));
+    return new KeyPair(KeyPair.construct_public_key(ed25519KeyPair), KeyPair.construct_private_key(ed25519KeyPair));
   }
 
   /**

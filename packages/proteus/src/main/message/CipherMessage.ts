@@ -26,11 +26,11 @@ import {SessionTag} from './SessionTag';
 import {DecodeError} from '../errors';
 
 export class CipherMessage extends Message {
-  cipher_text: Uint8Array;
-  counter: number;
-  prev_counter: number;
-  ratchet_key: PublicKey;
-  session_tag: SessionTag;
+  readonly cipher_text: Uint8Array;
+  readonly counter: number;
+  readonly prev_counter: number;
+  readonly ratchet_key: PublicKey;
+  readonly session_tag: SessionTag;
   private static readonly propertiesLength = 5;
 
   constructor(

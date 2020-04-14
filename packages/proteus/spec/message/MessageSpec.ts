@@ -56,7 +56,7 @@ describe('Message', () => {
     const bytes = new Uint8Array(msg.serialise());
     expect(expected).toBe(sodium.to_hex(bytes).toLowerCase());
 
-    const deserialised = Proteus.message.Message.deserialise(bytes.buffer) as Proteus.message.CipherMessage;
+    const deserialised = Proteus.message.Message.deserialise<Proteus.message.CipherMessage>(bytes.buffer);
     expect(deserialised.constructor).toBe(Proteus.message.CipherMessage);
     expect(deserialised.ratchet_key.fingerprint()).toBe(rk.fingerprint());
   });
@@ -71,7 +71,7 @@ describe('Message', () => {
     const bytes = new Uint8Array(pkmsg.serialise());
     expect(expected).toBe(sodium.to_hex(bytes).toLowerCase());
 
-    const deserialised = Proteus.message.Message.deserialise(bytes.buffer) as Proteus.message.PreKeyMessage;
+    const deserialised = Proteus.message.Message.deserialise<Proteus.message.PreKeyMessage>(bytes.buffer);
     expect(deserialised.constructor).toBe(Proteus.message.PreKeyMessage);
 
     expect(deserialised.base_key.fingerprint()).toBe(bk.fingerprint());

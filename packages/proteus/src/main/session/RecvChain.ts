@@ -33,15 +33,15 @@ import {DecodeError} from '../errors';
 
 export class RecvChain {
   chain_key: ChainKey;
-  message_keys: MessageKeys[];
-  ratchet_key: PublicKey;
-  static MAX_COUNTER_GAP = 1000;
+  readonly message_keys: MessageKeys[];
+  readonly ratchet_key: PublicKey;
+  static readonly MAX_COUNTER_GAP = 1000;
   private static readonly propertiesLength = 3;
 
-  constructor(chainKey: ChainKey, publicKey: PublicKey) {
+  constructor(chainKey: ChainKey, publicKey: PublicKey, messageKeys: MessageKeys[] = []) {
     this.chain_key = chainKey;
     this.ratchet_key = publicKey;
-    this.message_keys = [];
+    this.message_keys = messageKeys;
   }
 
   try_message_keys(envelope: Envelope, msg: CipherMessage): Uint8Array {
@@ -57,13 +57,13 @@ export class RecvChain {
     if (idx === -1) {
       throw new DecryptError.DuplicateMessage(undefined, DecryptError.CODE.CASE_209);
     }
-    const mk = this.message_keys.splice(idx, 1)[0];
-    if (!envelope.verify(mk.mac_key)) {
+    const messageKey = this.message_keys.splice(idx, 1)[0];
+    if (!envelope.verify(messageKey.mac_key)) {
       const message = `Envelope verification failed for message with counter behind. Message index is '${msg.counter}' while receive chain index is '${this.chain_key.idx}'.`;
       throw new DecryptError.InvalidSignature(message, DecryptError.CODE.CASE_210);
     }
 
-    return mk.decrypt(msg.cipher_text);
+    return messageKey.decrypt(msg.cipher_text);
   }
 
   stage_message_keys(msg: CipherMessage): [ChainKey, MessageKeys, MessageKeys[]] {
@@ -81,16 +81,16 @@ export class RecvChain {
       );
     }
 
-    const keys: MessageKeys[] = [];
-    let chk = this.chain_key;
+    const messageKeys: MessageKeys[] = [];
+    let chainKey = this.chain_key;
 
     for (let index = 0; index <= num - 1; index++) {
-      keys.push(chk.message_keys());
-      chk = chk.next();
+      messageKeys.push(chainKey.message_keys());
+      chainKey = chainKey.next();
     }
 
-    const mk = chk.message_keys();
-    return [chk, mk, keys];
+    const messageKey = chainKey.message_keys();
+    return [chainKey, messageKey, messageKeys];
   }
 
   commit_message_keys(keys: MessageKeys[]): void {
@@ -147,9 +147,7 @@ export class RecvChain {
         messageKeys.push(MessageKeys.decode(decoder));
       }
 
-      const recvChain = new RecvChain(chainKey, ratchetKey);
-      recvChain.message_keys = messageKeys;
-      return recvChain;
+      return new RecvChain(chainKey, ratchetKey, messageKeys);
     }
 
     throw new DecodeError(`Unexpected number of properties: "${propertiesLength}"`);

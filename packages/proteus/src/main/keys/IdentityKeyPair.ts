@@ -23,29 +23,22 @@ import {IdentityKey} from './IdentityKey';
 import {KeyPair} from './KeyPair';
 import {SecretKey} from './SecretKey';
 import {DecodeError} from '../errors';
-import {PublicKey} from './PublicKey';
 
 export class IdentityKeyPair {
-  public_key: IdentityKey;
-  secret_key: SecretKey;
-  version: number;
+  readonly public_key: IdentityKey;
+  readonly secret_key: SecretKey;
+  readonly version: number;
   private static readonly propertiesLength = 3;
 
-  constructor() {
-    this.public_key = new IdentityKey(new PublicKey(new Uint8Array([]), new Uint8Array([])));
-    this.secret_key = new SecretKey(new Uint8Array([]), new Uint8Array([]));
-    this.version = -1;
+  constructor(public_key: IdentityKey, secret_key: SecretKey, version: number = -1) {
+    this.public_key = public_key;
+    this.secret_key = secret_key;
+    this.version = version;
   }
 
   static async new(): Promise<IdentityKeyPair> {
     const keyPair = await KeyPair.new();
-
-    const identityKeyPair = new IdentityKeyPair();
-    identityKeyPair.version = 1;
-    identityKeyPair.secret_key = keyPair.secret_key;
-    identityKeyPair.public_key = new IdentityKey(keyPair.public_key);
-
-    return identityKeyPair;
+    return new IdentityKeyPair(new IdentityKey(keyPair.public_key), keyPair.secret_key, 1);
   }
 
   serialise(): ArrayBuffer {
@@ -70,20 +63,18 @@ export class IdentityKeyPair {
   }
 
   static decode(decoder: CBOR.Decoder): IdentityKeyPair {
-    const self = new IdentityKeyPair();
-
     const propertiesLength = decoder.object();
     if (propertiesLength === IdentityKeyPair.propertiesLength) {
       decoder.u8();
-      self.version = decoder.u8();
+      const version = decoder.u8();
 
       decoder.u8();
-      self.secret_key = SecretKey.decode(decoder);
+      const secretKey = SecretKey.decode(decoder);
 
       decoder.u8();
-      self.public_key = IdentityKey.decode(decoder);
+      const publicKey = IdentityKey.decode(decoder);
 
-      return self;
+      return new IdentityKeyPair(publicKey, secretKey, version);
     }
 
     throw new DecodeError(`Unexpected number of properties: "${propertiesLength}"`);

@@ -22,7 +22,7 @@ import * as sodium from 'libsodium-wrappers-sumo';
 import {DecodeError} from '../errors';
 
 export class MacKey {
-  key: Uint8Array;
+  readonly key: Uint8Array;
   private static readonly propertiesLength = 1;
 
   /**

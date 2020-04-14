@@ -31,7 +31,7 @@ beforeAll(async () => {
 });
 
 describe('CipherKey sanity checks (IETF ChaCha20 test vectors)', () => {
-  const ietfVctors: Vector[] = [
+  const ietfVectors: Vector[] = [
     {
       key: '0000000000000000000000000000000000000000000000000000000000000000',
       message:
@@ -75,7 +75,7 @@ describe('CipherKey sanity checks (IETF ChaCha20 test vectors)', () => {
       return cipherText;
     };
 
-    ietfVctors.forEach(vector => {
+    ietfVectors.forEach(vector => {
       const cipherText = encryptPlainText(vector);
       expect(sodium.to_hex(cipherText)).toBe(vector.message);
     });
@@ -96,7 +96,7 @@ describe('CipherKey sanity checks (IETF ChaCha20 test vectors)', () => {
       };
     };
 
-    ietfVctors.forEach(vector => {
+    ietfVectors.forEach(vector => {
       const result = decryptCipherText(vector);
 
       expect(sodium.to_hex(result.ciphertext)).toBe(vector.message);

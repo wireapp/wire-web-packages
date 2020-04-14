@@ -29,7 +29,7 @@ import {DecodeError} from '../errors';
  * Long-term identity keys are used to initialise "sessions" with other clients (triple DH).
  */
 export class IdentityKey {
-  public_key: PublicKey;
+  readonly public_key: PublicKey;
   private static readonly propertiesLength = 1;
 
   constructor(publicKey: PublicKey) {

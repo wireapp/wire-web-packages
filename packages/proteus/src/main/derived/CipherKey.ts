@@ -22,7 +22,7 @@ import * as sodium from 'libsodium-wrappers-sumo';
 import {DecodeError} from '../errors';
 
 export class CipherKey {
-  key: Uint8Array;
+  readonly key: Uint8Array;
   private static readonly propertiesLength = 1;
 
   constructor(key: Uint8Array) {

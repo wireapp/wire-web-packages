@@ -27,8 +27,8 @@ import {PublicKey} from './PublicKey';
 import {DecodeError} from '../errors';
 
 export class SecretKey {
-  sec_curve: Uint8Array;
-  sec_edward: Uint8Array;
+  readonly sec_curve: Uint8Array;
+  readonly sec_edward: Uint8Array;
   private static readonly propertiesLength = 1;
 
   constructor(secEdward: Uint8Array, secCurve: Uint8Array) {
@@ -52,11 +52,11 @@ export class SecretKey {
    * @returns Array buffer view of the computed shared secret
    */
   shared_secret(publicKey: PublicKey): Uint8Array {
-    const shared_secret = sodium.crypto_scalarmult(this.sec_curve, publicKey.pub_curve);
+    const sharedSecret = sodium.crypto_scalarmult(this.sec_curve, publicKey.pub_curve);
 
-    ArrayUtil.assert_is_not_zeros(shared_secret);
+    ArrayUtil.assert_is_not_zeros(sharedSecret);
 
-    return shared_secret;
+    return sharedSecret;
   }
 
   encode(encoder: CBOR.Encoder): CBOR.Encoder {
