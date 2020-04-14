@@ -32,7 +32,7 @@ export class CompositeContentBuilder {
     this.content = this.payloadBundle.content as CompositeContent;
   }
 
-  public build(): CompositeMessage | EditedTextMessage {
+  public build(): CompositeMessage {
     this.payloadBundle.content = this.content;
     return this.payloadBundle;
   }
