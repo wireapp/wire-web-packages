@@ -108,9 +108,7 @@ export abstract class MessageHandler {
       const message = this.account.service.conversation.messageBuilder
         .createComposite(conversationId)
         .addText(Text.create({content: text}));
-
       buttons.forEach(button => message.addButton(button));
-
       await this.account.service.conversation.send(message.build());
     }
   }
