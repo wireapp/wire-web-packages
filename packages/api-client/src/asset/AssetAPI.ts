@@ -17,7 +17,7 @@
  *
  */
 
-import Axios, {AxiosRequestConfig} from 'axios';
+import axios, {AxiosRequestConfig} from 'axios';
 
 import {HttpClient, RequestCancelable, SyntheticErrorLabel} from '../http/';
 import {base64MD5FromBuffer, concatToBuffer} from '../shims/node/buffer';
@@ -84,7 +84,7 @@ export class AssetAPI {
 
     const footer = `\r\n--${BOUNDARY}--\r\n`;
 
-    const cancelSource = Axios.CancelToken.source();
+    const cancelSource = axios.CancelToken.source();
 
     const config: AxiosRequestConfig = {
       cancelToken: cancelSource.token,
