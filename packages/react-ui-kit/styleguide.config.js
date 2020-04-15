@@ -25,11 +25,11 @@ module.exports = {
         'src/Form/InputSubmitCombo.tsx',
       ],
     },
+    {name: 'Typography', components: 'src/Text/**/*.tsx'},
     {
       name: 'Icons',
       components: 'src/Icon/SVGIcon.tsx',
     },
-    // {name: 'Typography', components: 'src/Text/**/*.tsx'},
     // {name: 'Identity', components: 'src/Identity/**/*.tsx'},
     // {name: 'Layout', components: 'src/Layout/**/*.tsx'},
     // {name: 'Menu', components: 'src/Menu/**/*.tsx'},
