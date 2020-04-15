@@ -18,14 +18,15 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {Button, ClientAction, Composite, Confirmation, Text} from '@wireapp/protocol-messaging';
+import {ClientAction, Confirmation} from '@wireapp/protocol-messaging';
 import {AbortReason, PayloadBundleSource, PayloadBundleState, PayloadBundleType} from '..';
 import {AssetService} from '../AssetService';
 import {
-  ButtonActionContent,
   ButtonActionConfirmationContent,
+  ButtonActionContent,
   CallingContent,
   ClientActionContent,
+  CompositeContent,
   ConfirmationContent,
   EditedTextContent,
   FileAssetAbortContent,
@@ -42,11 +43,11 @@ import {
   LocationContent,
   ReactionContent,
   TextContent,
-  CompositeContent,
 } from '../content';
+import {CompositeContentBuilder} from './CompositeContentBuilder';
 import {
-  ButtonActionMessage,
   ButtonActionConfirmationMessage,
+  ButtonActionMessage,
   CallMessage,
   CompositeMessage,
   ConfirmationMessage,
@@ -62,7 +63,6 @@ import {
   TextMessage,
 } from './OtrMessage';
 import {TextContentBuilder} from './TextContentBuilder';
-import Item = Composite.Item;
 
 const UUID = require('pure-uuid');
 
@@ -328,23 +328,10 @@ export class MessageBuilder {
     };
   }
 
-  createPollMessage(
-    conversationId: string,
-    text: Text,
-    buttons: string[],
-    messageId = MessageBuilder.createId(),
-  ): CompositeMessage {
-    const buttonProtos = [];
-    for (let counter = 0; counter < buttons.length; counter++) {
-      const buttonText = buttons[counter];
-      buttonProtos.push(Button.create({id: counter.toString(10), text: buttonText}));
-    }
+  createComposite(conversationId: string, messageId = MessageBuilder.createId()): CompositeContentBuilder {
+    const content: CompositeContent = {};
 
-    const content: CompositeContent = {
-      items: [Item.create({text}), ...buttonProtos.map(button => Item.create({button}))],
-    };
-
-    return {
+    const payloadBundle: CompositeMessage = {
       content,
       conversation: conversationId,
       from: this.getSelfUserId(),
@@ -354,6 +341,7 @@ export class MessageBuilder {
       timestamp: Date.now(),
       type: PayloadBundleType.COMPOSITE,
     };
+    return new CompositeContentBuilder(payloadBundle);
   }
 
   public createPing(
