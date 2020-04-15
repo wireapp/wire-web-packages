@@ -33,25 +33,39 @@ export interface SerialisedJSON {
 }
 
 export class PreKeyBundle {
-  readonly version: number;
+  readonly identity_key: IdentityKey;
   readonly prekey_id: number;
   readonly public_key: PublicKey;
-  readonly identity_key: IdentityKey;
   readonly signature?: Uint8Array | null;
+  readonly version: number;
   private static readonly propertiesLength = 5;
 
+  constructor(publicIdentityKey: IdentityKey, preKey: PreKey);
   constructor(
     publicIdentityKey: IdentityKey,
     preKeyId: number,
     publicKey: PublicKey,
-    signature: Uint8Array | null = null,
-    version: number = 1,
+    signature?: Uint8Array | null,
+    version?: number,
+  );
+  constructor(
+    publicIdentityKey: IdentityKey,
+    preKeyIdOrPreKey: number | PreKey,
+    publicKeyOrSignature?: PublicKey | Uint8Array | null,
+    signatureOrVersion: Uint8Array | number | null = null,
+    versionOrNone: number = 1,
   ) {
     this.identity_key = publicIdentityKey;
-    this.prekey_id = preKeyId;
-    this.public_key = publicKey;
-    this.signature = signature;
-    this.version = version;
+    if (typeof preKeyIdOrPreKey === 'number') {
+      this.prekey_id = preKeyIdOrPreKey;
+      this.public_key = publicKeyOrSignature as PublicKey;
+      this.signature = signatureOrVersion as Uint8Array | null;
+      this.version = versionOrNone;
+    } else {
+      this.prekey_id = preKeyIdOrPreKey.key_id;
+      this.public_key = preKeyIdOrPreKey.key_pair.public_key;
+      this.version = 1;
+    }
   }
 
   static signed(identityPair: IdentityKeyPair, prekey: PreKey): PreKeyBundle {

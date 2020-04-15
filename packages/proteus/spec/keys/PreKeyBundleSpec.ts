@@ -27,7 +27,7 @@ beforeAll(async () => {
 describe('PreKeyBundle', () => {
   it('creates a bundle', async () => {
     const [id_pair, prekey] = await Promise.all([Proteus.keys.IdentityKeyPair.new(), Proteus.keys.PreKey.new(1)]);
-    const bundle = new Proteus.keys.PreKeyBundle(id_pair.public_key, prekey.key_id, prekey.key_pair.public_key);
+    const bundle = new Proteus.keys.PreKeyBundle(id_pair.public_key, prekey);
     expect(bundle.verify()).toBe(Proteus.keys.PreKeyAuth.UNKNOWN);
   });
 
@@ -39,7 +39,7 @@ describe('PreKeyBundle', () => {
 
   it('serialises and deserialise an unsigned bundle', async () => {
     const [id_pair, prekey] = await Promise.all([Proteus.keys.IdentityKeyPair.new(), Proteus.keys.PreKey.new(1)]);
-    const bundle = new Proteus.keys.PreKeyBundle(id_pair.public_key, prekey.key_id, prekey.key_pair.public_key);
+    const bundle = new Proteus.keys.PreKeyBundle(id_pair.public_key, prekey);
 
     expect(bundle.verify()).toBe(Proteus.keys.PreKeyAuth.UNKNOWN);
 

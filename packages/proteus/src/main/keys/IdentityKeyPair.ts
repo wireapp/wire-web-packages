@@ -34,6 +34,8 @@ export class IdentityKeyPair {
     this.public_key = public_key;
     this.secret_key = secret_key;
     this.version = version;
+
+    throw new Error('Using the constructor is not allowed');
   }
 
   static async new(): Promise<IdentityKeyPair> {
