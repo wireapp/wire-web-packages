@@ -25,7 +25,7 @@ import * as sodium from 'libsodium-wrappers-sumo';
 const assert_serialise_deserialise = (
   local_identity: Proteus.keys.IdentityKeyPair,
   session: Proteus.session.Session,
-) => {
+): void => {
   const bytes = session.serialise();
 
   const deser = Proteus.session.Session.deserialise(local_identity, bytes);
@@ -39,7 +39,7 @@ const assert_init_from_message = async (
   store: Proteus.session.PreKeyStore,
   envelope: Proteus.message.Envelope,
   expected: string,
-) => {
+): Promise<Proteus.session.Session> => {
   const [session, message] = await Proteus.session.Session.init_from_message(identity, store, envelope);
   expect(sodium.to_string(message)).toBe(expected);
   return session;
@@ -53,17 +53,18 @@ class TestStore extends Proteus.session.PreKeyStore {
     this.prekeys = prekeys;
   }
 
-  async load_prekey(prekey_id: number): Promise<Proteus.keys.PreKey> {
-    return this.prekeys.find(prekey => prekey.key_id === prekey_id)!;
+  async load_prekey(prekey_id: number): Promise<Proteus.keys.PreKey | undefined> {
+    const prekey = this.prekeys.find(prekey => prekey.key_id === prekey_id);
+    return prekey ? Proteus.keys.PreKey.deserialise(prekey.serialise()) : undefined;
   }
 
   async load_prekeys(): Promise<Proteus.keys.PreKey[]> {
-    return this.prekeys;
+    return this.prekeys.map(prekey => Proteus.keys.PreKey.deserialise(prekey.serialise()));
   }
 
   async delete_prekey(prekey_id: number): Promise<number> {
-    const matches = this.prekeys.filter(prekey => prekey.key_id === prekey_id);
-    delete matches[0];
+    const preKeyIndex = this.prekeys.findIndex(prekey => prekey.key_id === prekey_id);
+    this.prekeys.splice(preKeyIndex, 1);
     return prekey_id;
   }
 }
@@ -80,8 +81,8 @@ describe('Session', () => {
 
       const alice = await Proteus.keys.IdentityKeyPair.new();
       const bob = await Proteus.keys.IdentityKeyPair.new();
-      const preKey = await bobStore.load_prekey(0);
-      const bobPreKeyBundle = Proteus.keys.PreKeyBundle.new(bob.public_key, preKey);
+      const bobPreKey = await bobStore.load_prekey(0);
+      const bobPreKeyBundle = Proteus.keys.PreKeyBundle.new(bob.public_key, bobPreKey!);
       const aliceToBob = await Proteus.session.Session.init_from_prekey(alice, bobPreKeyBundle);
 
       const plaintext = 'Hello Bob!';
@@ -106,7 +107,7 @@ describe('Session', () => {
       const bob_store = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10));
 
       const bob_prekey = await bob_store.load_prekey(0);
-      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
+      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey!);
 
       const alice = await Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle);
       expect(alice.session_states[alice.session_tag.toString()].state.recv_chains.length).toEqual(1);
@@ -123,7 +124,7 @@ describe('Session', () => {
       const bob_store = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10));
 
       const bob_prekey = await bob_store.load_prekey(0);
-      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
+      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey!);
 
       const alice = await Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle);
       expect(alice.session_states[alice.session_tag.toString()].state.recv_chains.length).toBe(1);
@@ -189,7 +190,7 @@ describe('Session', () => {
       const bob_store = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10));
 
       const bob_prekey = await bob_store.load_prekey(0);
-      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
+      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey!);
 
       const alice = await Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle);
       const hello_bob = await alice.encrypt('Hello Bob!');
@@ -226,7 +227,7 @@ describe('Session', () => {
       const bob_store = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10));
 
       const bob_prekey = await bob_store.load_prekey(0);
-      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
+      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey!);
 
       const alice = await Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle);
       const message = await alice.encrypt('Hello Bob!');
@@ -277,7 +278,7 @@ describe('Session', () => {
       const bob_store = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10));
 
       const bob_prekey = await bob_store.load_prekey(0);
-      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
+      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey!);
 
       const alice = await Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle);
       const hello_bob1 = await alice.encrypt('Hello Bob1!');
@@ -287,6 +288,7 @@ describe('Session', () => {
       const [bob, decrypted] = await Proteus.session.Session.init_from_message(bob_ident, bob_store, hello_bob1);
 
       expect(decrypted).toBeDefined();
+      expect(sodium.to_string(decrypted)).toBe('Hello Bob1!');
 
       expect(Object.keys(bob.session_states).length).toBe(1);
       expect(sodium.to_string(await bob.decrypt(alice_store, hello_bob2))).toBe('Hello Bob2!');
@@ -306,10 +308,10 @@ describe('Session', () => {
       const bob_store = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10));
 
       const bob_prekey = await bob_store.load_prekey(0);
-      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
+      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey!);
 
       const alice_prekey = await alice_store.load_prekey(0);
-      const alice_bundle = Proteus.keys.PreKeyBundle.new(alice_ident.public_key, alice_prekey);
+      const alice_bundle = Proteus.keys.PreKeyBundle.new(alice_ident.public_key, alice_prekey!);
 
       const alice = await Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle);
       const hello_bob_encrypted = await alice.encrypt('Hello Bob!');
@@ -347,10 +349,10 @@ describe('Session', () => {
       const bob_store = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10));
 
       const bob_prekey = await bob_store.load_prekey(0);
-      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
+      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey!);
 
       const alice_prekey = await alice_store.load_prekey(0);
-      const alice_bundle = Proteus.keys.PreKeyBundle.new(alice_ident.public_key, alice_prekey);
+      const alice_bundle = Proteus.keys.PreKeyBundle.new(alice_ident.public_key, alice_prekey!);
 
       const alice = await Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle);
       const hello_bob_plaintext = 'Hello Bob!';
@@ -419,24 +421,23 @@ describe('Session', () => {
     });
 
     it('fails retry init from message', async () => {
+      const alice_ident = await Proteus.keys.IdentityKeyPair.new();
+
+      const bob_ident = await Proteus.keys.IdentityKeyPair.new();
+      const bob_store = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10));
+
+      const bob_prekey = await bob_store.load_prekey(0);
+      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey!);
+
+      const alice = await Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle);
+
+      const hello_bob_plaintext = 'Hello Bob!';
+      const hello_bob_encrypted = await alice.encrypt(hello_bob_plaintext);
+
+      await assert_init_from_message(bob_ident, bob_store, hello_bob_encrypted, hello_bob_plaintext);
+
       try {
-        const alice_ident = await Proteus.keys.IdentityKeyPair.new();
-
-        const bob_ident = await Proteus.keys.IdentityKeyPair.new();
-        const bob_store = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10));
-
-        const bob_prekey = await bob_store.load_prekey(0);
-        const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
-
-        const alice = await Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle);
-
-        const hello_bob_plaintext = 'Hello Bob!';
-        const hello_bob_encrypted = await alice.encrypt(hello_bob_plaintext);
-
-        await assert_init_from_message(bob_ident, bob_store, hello_bob_encrypted, hello_bob_plaintext);
-
         await Proteus.session.Session.init_from_message(bob_ident, bob_store, hello_bob_encrypted);
-
         fail();
       } catch (error) {
         expect(error instanceof Proteus.errors.DecryptError).toBe(true);
@@ -452,7 +453,7 @@ describe('Session', () => {
       const bob_store = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10));
 
       const bob_prekey = await bob_store.load_prekey(0);
-      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
+      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey!);
 
       const alice = await Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle);
 
@@ -550,8 +551,8 @@ describe('Session', () => {
       const bob_store2 = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10));
 
       const bob_prekey = await bob_store1.load_prekey(0);
-      expect(bob_prekey.key_id).toBe(0);
-      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
+      expect(bob_prekey!.key_id).toBe(0);
+      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey!);
 
       const alice = await Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle);
 
@@ -579,6 +580,7 @@ describe('Session', () => {
       expect(Object.keys(bob.session_states).length).toBe(1);
     });
   });
+
   describe('Process', () => {
     it('works until the max counter gap', async () => {
       const alice_ident = await Proteus.keys.IdentityKeyPair.new();
@@ -589,9 +591,9 @@ describe('Session', () => {
       const bob_store = new TestStore(pre_keys);
 
       const bob_prekey = await bob_store.load_prekey(Proteus.keys.PreKey.MAX_PREKEY_ID);
-      expect(bob_prekey.key_id).toBe(Proteus.keys.PreKey.MAX_PREKEY_ID);
+      expect(bob_prekey!.key_id).toBe(Proteus.keys.PreKey.MAX_PREKEY_ID);
 
-      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
+      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey!);
 
       const alice = await Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle);
 
@@ -659,7 +661,7 @@ describe('Session', () => {
       const bob_store = new TestStore(await Proteus.keys.PreKey.generate_prekeys(0, 10));
 
       const bob_prekey = await bob_store.load_prekey(0);
-      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey);
+      const bob_bundle = Proteus.keys.PreKeyBundle.new(bob_ident.public_key, bob_prekey!);
 
       const alice = await Proteus.session.Session.init_from_prekey(alice_ident, bob_bundle);
       const hello_bob = await alice.encrypt('Hello Bob!');
