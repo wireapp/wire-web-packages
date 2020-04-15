@@ -260,7 +260,6 @@ export class Session {
         const plaintext = await state.decrypt(envelope, msg.message);
 
         if (msg.prekey_id !== PreKey.MAX_PREKEY_ID) {
-          // TODO: Zeroize should be tested (and awaited) here!
           const prekey = await prekey_store.load_prekey(msg.prekey_id);
           MemoryUtil.zeroize(prekey);
           await prekey_store.delete_prekey(msg.prekey_id);
