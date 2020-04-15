@@ -39,7 +39,7 @@ export class DerivedSecrets {
     const cipherKey = new Uint8Array(outputKeyMaterial.buffer.slice(0, 32));
     const macKey = new Uint8Array(outputKeyMaterial.buffer.slice(32, 64));
 
-    MemoryUtil.zeroize(outputKeyMaterial.buffer);
+    MemoryUtil.zeroize(outputKeyMaterial);
 
     return new DerivedSecrets(new CipherKey(cipherKey), new MacKey(macKey));
   }

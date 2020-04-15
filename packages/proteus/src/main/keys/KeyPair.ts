@@ -18,7 +18,6 @@
  */
 
 import * as CBOR from '@wireapp/cbor';
-import * as ed2curve from 'ed2curve';
 import * as sodium from 'libsodium-wrappers-sumo';
 import {DecodeError} from '../errors';
 import {InputError} from '../errors/InputError';
@@ -51,26 +50,28 @@ export class KeyPair {
    * @returns Constructed private key
    * @see https://download.libsodium.org/doc/advanced/ed25519-curve25519.html
    */
-  static construct_private_key(ed25519KeyPair: sodium.KeyPair): SecretKey {
-    const skEd25519 = ed25519KeyPair.privateKey;
-    const skCurve25519 = ed2curve.convertSecretKey(skEd25519);
-    if (skCurve25519) {
-      return new SecretKey(skEd25519, skCurve25519);
+  static construct_private_key(ed25519_key_pair: sodium.KeyPair): SecretKey {
+    try {
+      const sk_ed25519 = ed25519_key_pair.privateKey;
+      const sk_curve25519 = sodium.crypto_sign_ed25519_sk_to_curve25519(sk_ed25519);
+      return new SecretKey(sk_ed25519, sk_curve25519);
+    } catch (error) {
+      throw new InputError.ConversionError('Could not convert secret key with libsodium.', 409);
     }
-    throw new InputError.ConversionError('Could not convert private key with ed2curve.', 409);
   }
 
   /**
    * @param ed25519KeyPair Key pair based on Edwards-curve (Ed25519)
    * @returns Constructed public key
    */
-  static construct_public_key(ed25519KeyPair: sodium.KeyPair): PublicKey {
-    const pkEd25519 = ed25519KeyPair.publicKey;
-    const pkCurve25519 = ed2curve.convertPublicKey(pkEd25519);
-    if (pkCurve25519) {
-      return new PublicKey(pkEd25519, pkCurve25519);
+  static construct_public_key(ed25519_key_pair: sodium.KeyPair): PublicKey {
+    try {
+      const pk_ed25519 = ed25519_key_pair.publicKey;
+      const pk_curve25519 = sodium.crypto_sign_ed25519_pk_to_curve25519(pk_ed25519);
+      return new PublicKey(pk_ed25519, pk_curve25519);
+    } catch (error) {
+      throw new InputError.ConversionError('Could not convert public key with libsodium.', 408);
     }
-    throw new InputError.ConversionError('Could not convert public key with ed2curve.', 408);
   }
 
   encode(encoder: CBOR.Encoder): CBOR.Encoder {

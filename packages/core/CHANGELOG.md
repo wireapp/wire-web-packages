@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [16.3.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.2.0...@wireapp/core@16.3.0) (2020-04-15)
+
+
+### Features
+
+* **bot-api:** Return API client on start ([#2953](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2953)) ([f45c666](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/f45c666eddd57116c7657bf27a3489c8e8579f04))
+
+
+
+
+
+# [16.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.1.2...@wireapp/core@16.2.0) (2020-04-15)
+
+
+### Features
+
+* **core:** Make apiClient public ([#2951](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2951)) ([0167b87](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/0167b87192287bae830b5a7695c2c297c13105d5))
+
+
+
+
+
 ## [16.1.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.1.1...@wireapp/core@16.1.2) (2020-04-15)
 
 **Note:** Version bump only for package @wireapp/core

@@ -18,7 +18,6 @@
  */
 
 import * as CBOR from '@wireapp/cbor';
-import * as ed2curve from 'ed2curve';
 import * as sodium from 'libsodium-wrappers-sumo';
 
 import {InputError} from '../errors/InputError';
@@ -60,12 +59,13 @@ export class PublicKey {
     if (propertiesLength === PublicKey.propertiesLength) {
       decoder.u8();
       const pubEdward = new Uint8Array(decoder.bytes());
-      const pubCurve = ed2curve.convertPublicKey(pubEdward);
-      if (pubCurve) {
-        return new PublicKey(pubEdward, pubCurve);
-      }
 
-      throw new InputError.ConversionError('Could not convert private key with ed2curve.', 409);
+      try {
+        const pubCurve = sodium.crypto_sign_ed25519_pk_to_curve25519(pubEdward);
+        return new PublicKey(pubEdward, pubCurve);
+      } catch (error) {
+        throw new InputError.ConversionError('Could not convert public key with libsodium.', 409);
+      }
     }
 
     throw new DecodeError(`Unexpected number of properties: "${propertiesLength}"`);
