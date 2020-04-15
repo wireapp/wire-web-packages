@@ -427,8 +427,8 @@ describe('Session', () => {
         await Proteus.session.Session.init_from_message(bob_ident, bob_store, hello_bob_encrypted);
         fail();
       } catch (error) {
-        expect(error instanceof Proteus.errors.DecryptError).toBe(true);
-        expect(error.code).toBe(Proteus.errors.DecryptError.CODE.CASE_206);
+        expect(error instanceof Proteus.errors.ProteusError).toBe(true);
+        expect(error.code).toBe(Proteus.errors.ProteusError.CODE.CASE_101);
       }
     });
 
