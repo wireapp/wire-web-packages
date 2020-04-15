@@ -102,7 +102,7 @@ export class AssetAPI {
         return response.data;
       } catch (error) {
         if (error.message === SyntheticErrorLabel.REQUEST_CANCELLED) {
-          throw new RequestCancellationError('Search request got cancelled');
+          throw new RequestCancellationError('Asset upload got cancelled.');
         }
         throw error;
       }
