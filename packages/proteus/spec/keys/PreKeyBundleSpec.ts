@@ -83,8 +83,7 @@ describe('PreKeyBundle', () => {
     const public_identity_key = identity_key_pair.public_key;
     const pre_key_bundle = new Proteus.keys.PreKeyBundle(
       public_identity_key,
-      pre_key.key_id,
-      pre_key.key_pair.public_key,
+      pre_key
     );
     const serialised_pre_key_bundle_json = pre_key_bundle.serialised_json();
 
