@@ -117,8 +117,8 @@ export class MemberAPI {
 
   private async _getMembers(teamId: string, parameters: {ids: string[]}): Promise<Members> {
     const config: AxiosRequestConfig = {
-      method: 'post',
       data: {user_ids: parameters.ids},
+      method: 'post',
       url: `${TeamAPI.URL.TEAMS}/${teamId}/${MemberAPI.URL.MEMBERS_BY_ID_LIST}`,
     };
 
