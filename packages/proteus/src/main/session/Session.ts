@@ -118,7 +118,7 @@ export class Session {
       session._insert_session_state(preKeyMessage.message.session_tag, state);
 
       if (preKeyMessage.prekey_id < PreKey.MAX_PREKEY_ID) {
-        const prekey = await prekey_store.load_prekey(preKeyMessage.prekey_id)
+        const prekey = await prekey_store.load_prekey(preKeyMessage.prekey_id);
         MemoryUtil.zeroize(prekey);
 
         try {
@@ -195,7 +195,6 @@ export class Session {
         return this.session_states[obj].idx < this.session_states[lowest].idx ? obj.toString() : lowest;
       });
 
-
     MemoryUtil.zeroize(this.session_states[oldest]);
     delete this.session_states[oldest];
   }
@@ -262,7 +261,7 @@ export class Session {
 
         if (msg.prekey_id !== PreKey.MAX_PREKEY_ID) {
           // TODO: Zeroize should be tested (and awaited) here!
-          const prekey = await prekey_store.load_prekey(msg.prekey_id)
+          const prekey = await prekey_store.load_prekey(msg.prekey_id);
           MemoryUtil.zeroize(prekey);
           await prekey_store.delete_prekey(msg.prekey_id);
         }
