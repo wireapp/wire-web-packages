@@ -85,12 +85,12 @@ export const buttonStyle: <T>(theme: Theme, props: ButtonProps<T>) => ObjectInte
   width: block ? '100%' : 'auto',
 });
 
-export const filterButtonProps = (props: ButtonProps) => {
-  return filterProps(filterTextProps(props) as ButtonProps, ['backgroundColor', 'noCapital']);
-};
-
 export const Button = ({showLoading, children, loadingColor = COLOR.WHITE, ...props}: ButtonProps) => (
   <button css={theme => buttonStyle(theme, props)} {...filterButtonProps(props)}>
     {showLoading ? <Loading size={30} color={loadingColor} style={{display: 'flex', margin: 'auto'}} /> : children}
   </button>
 );
+
+export const filterButtonProps = (props: ButtonProps) => {
+  return filterProps(filterTextProps(props) as ButtonProps, ['backgroundColor', 'noCapital']);
+};
