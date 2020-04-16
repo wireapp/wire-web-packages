@@ -40,8 +40,9 @@ export class CryptoboxSession {
     return this.session.decrypt(pk_store, envelope);
   }
 
-  public encrypt(plaintext: string | Uint8Array): Promise<ArrayBuffer> {
-    return this.session.encrypt(plaintext).then((ciphertext: ProteusMessage.Envelope) => ciphertext.serialise());
+  public async encrypt(plaintext: string | Uint8Array): Promise<ArrayBuffer> {
+    const ciphertext = await this.session.encrypt(plaintext);
+    return ciphertext.serialise();
   }
 
   public fingerprint_local(): string {
