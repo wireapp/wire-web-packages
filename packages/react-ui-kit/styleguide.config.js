@@ -25,6 +25,7 @@ module.exports = {
         'src/Form/InputSubmitCombo.tsx',
       ],
     },
+    {name: 'Modal', components: 'src/Modal/**/*.tsx', ignore: ['src/Modal/Overlay.tsx']},
     {name: 'Typography', components: 'src/Text/**/*.tsx'},
     {
       name: 'Icons',
@@ -34,8 +35,6 @@ module.exports = {
     // {name: 'Layout', components: 'src/Layout/**/*.tsx'},
     // {name: 'Menu', components: 'src/Menu/**/*.tsx'},
     // {name: 'Misc', components: 'src/Misc/**/*.tsx'},
-    // {name: 'Modal', components: 'src/Modal/**/*.tsx'},
-    // {name: 'Icon', components: 'src/Icon/**/*.tsx'},
   ],
   styleguideComponents: {
     Wrapper: resolve('styleguide/wrapper.js'),
