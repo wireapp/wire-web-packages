@@ -27,6 +27,7 @@ module.exports = {
     },
     {name: 'Menu', components: 'src/Menu/**/*.tsx', ignore: ['src/Menu/MenuModal.tsx']},
     {name: 'Modal', components: 'src/Modal/**/*.tsx', ignore: ['src/Modal/Overlay.tsx']},
+    {name: 'Misc', components: 'src/Misc/**/*.tsx', ignore: ['src/Misc/IsInViewport.tsx']},
     {name: 'Typography', components: 'src/Text/**/*.tsx'},
     {
       name: 'Icons',
@@ -34,7 +35,6 @@ module.exports = {
     },
     // {name: 'Identity', components: 'src/Identity/**/*.tsx'},
     // {name: 'Layout', components: 'src/Layout/**/*.tsx'},
-    // {name: 'Misc', components: 'src/Misc/**/*.tsx'},
   ],
   styleguideComponents: {
     Wrapper: resolve('styleguide/wrapper.js'),
