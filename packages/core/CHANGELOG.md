@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [16.5.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.4.0...@wireapp/core@16.5.0) (2020-04-16)
+
+
+### Features
+
+* **proteus:** Use constructor instead of ClassUtil (BREAKING) (WEBAPP-6789) ([#2938](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2938)) ([48e4c38](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/48e4c385cf819f42e3e7cefe566a2e49f32ba980))
+
+
+
+
+
+# [16.4.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.3.1...@wireapp/core@16.4.0) (2020-04-16)
+
+
+### Features
+
+* **api-client:** Provide cancellation token for asset upload ([#2955](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2955)) ([00783da](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/00783dab6f2e24f0d1e49f6bd0144675d71fe88b))
+
+
+
+
+
+## [16.3.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.3.0...@wireapp/core@16.3.1) (2020-04-15)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [16.3.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.2.0...@wireapp/core@16.3.0) (2020-04-15)
+
+
+### Features
+
+* **bot-api:** Return API client on start ([#2953](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2953)) ([f45c666](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/f45c666eddd57116c7657bf27a3489c8e8579f04))
+
+
+
+
+
+# [16.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.1.2...@wireapp/core@16.2.0) (2020-04-15)
+
+
+### Features
+
+* **core:** Make apiClient public ([#2951](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2951)) ([0167b87](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/0167b87192287bae830b5a7695c2c297c13105d5))
+
+
+
+
+
 ## [16.1.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.1.1...@wireapp/core@16.1.2) (2020-04-15)
 
 **Note:** Version bump only for package @wireapp/core

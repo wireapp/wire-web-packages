@@ -28,13 +28,13 @@ describe('PreKey', () => {
   describe('Generation', () => {
     it('generates a PreKey', async () => {
       const key_id = 0;
-      const pk = await Proteus.keys.PreKey.new(key_id);
-      expect(pk.key_id).toBe(key_id);
+      const preKey = await Proteus.keys.PreKey.new(key_id);
+      expect(preKey.key_id).toBe(key_id);
     });
 
     it('generates a PreKey of last resort', async () => {
-      const pk = await Proteus.keys.PreKey.last_resort();
-      expect(pk.key_id).toBe(Proteus.keys.PreKey.MAX_PREKEY_ID);
+      const preKey = await Proteus.keys.PreKey.last_resort();
+      expect(preKey.key_id).toBe(Proteus.keys.PreKey.MAX_PREKEY_ID);
     });
 
     it('rejects undefined IDs', async () => {
@@ -116,7 +116,7 @@ describe('PreKey', () => {
       expect(prekeys[9].key_id).toBe(3009);
     });
 
-    it('does not include the last resort pre key', async () => {
+    it('does not include the last resort PreKey', async () => {
       let prekeys = await Proteus.keys.PreKey.generate_prekeys(65530, 10);
       expect(prekeys.length).toBe(10);
       expect(prekeys[0].key_id).toBe(65530);

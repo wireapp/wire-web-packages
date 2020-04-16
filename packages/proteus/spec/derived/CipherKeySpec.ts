@@ -31,7 +31,7 @@ beforeAll(async () => {
 });
 
 describe('CipherKey sanity checks (IETF ChaCha20 test vectors)', () => {
-  const ietf_vectors: Vector[] = [
+  const ietfVectors: Vector[] = [
     {
       key: '0000000000000000000000000000000000000000000000000000000000000000',
       message:
@@ -65,39 +65,39 @@ describe('CipherKey sanity checks (IETF ChaCha20 test vectors)', () => {
   ];
 
   it('encrypts plaintext to ciphertext', () => {
-    const encrypt_plain_text = (vector: Vector) => {
+    const encryptPlainText = (vector: Vector) => {
       const plaintext = new Uint8Array(vector.message.length >> 1);
       const nonce = sodium.from_hex(vector.nonce);
 
-      const key = Proteus.derived.CipherKey.new(sodium.from_hex(vector.key));
-      const cipher_text = key.encrypt(plaintext, nonce);
+      const key = new Proteus.derived.CipherKey(sodium.from_hex(vector.key));
+      const cipherText = key.encrypt(plaintext, nonce);
 
-      return cipher_text;
+      return cipherText;
     };
 
-    ietf_vectors.forEach(vector => {
-      const cipher_text = encrypt_plain_text(vector);
-      expect(sodium.to_hex(cipher_text)).toBe(vector.message);
+    ietfVectors.forEach(vector => {
+      const cipherText = encryptPlainText(vector);
+      expect(sodium.to_hex(cipherText)).toBe(vector.message);
     });
   });
 
   it('decrypts ciphertext to plaintext', () => {
-    const decrypt_cipher_text = (vector: Vector) => {
+    const decryptCipherText = (vector: Vector) => {
       const plaintext = new Uint8Array(vector.message.length >> 1);
       const nonce = sodium.from_hex(vector.nonce);
-      const key = Proteus.derived.CipherKey.new(sodium.from_hex(vector.key));
+      const key = new Proteus.derived.CipherKey(sodium.from_hex(vector.key));
       const ciphertext = key.encrypt(plaintext, nonce);
 
       return {
-        ciphertext: ciphertext,
-        key: key,
-        nonce: nonce,
-        plaintext: plaintext,
+        ciphertext,
+        key,
+        nonce,
+        plaintext,
       };
     };
 
-    ietf_vectors.forEach(vector => {
-      const result = decrypt_cipher_text(vector);
+    ietfVectors.forEach(vector => {
+      const result = decryptCipherText(vector);
 
       expect(sodium.to_hex(result.ciphertext)).toBe(vector.message);
       expect(result.key.decrypt(result.ciphertext, result.nonce)).toEqual(result.plaintext);
