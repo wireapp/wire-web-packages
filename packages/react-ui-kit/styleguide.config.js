@@ -25,6 +25,7 @@ module.exports = {
         'src/Form/InputSubmitCombo.tsx',
       ],
     },
+    {name: 'Identity', components: 'src/Identity/**/*.tsx'},
     {name: 'Menu', components: 'src/Menu/**/*.tsx', ignore: ['src/Menu/MenuModal.tsx']},
     {name: 'Modal', components: 'src/Modal/**/*.tsx', ignore: ['src/Modal/Overlay.tsx']},
     {name: 'Misc', components: 'src/Misc/**/*.tsx', ignore: ['src/Misc/IsInViewport.tsx']},
@@ -33,7 +34,6 @@ module.exports = {
       name: 'Icons',
       components: 'src/Icon/SVGIcon.tsx',
     },
-    // {name: 'Identity', components: 'src/Identity/**/*.tsx'},
     // {name: 'Layout', components: 'src/Layout/**/*.tsx'},
   ],
   styleguideComponents: {
