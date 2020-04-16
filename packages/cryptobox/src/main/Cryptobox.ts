@@ -390,8 +390,8 @@ export class Cryptobox extends EventEmitter {
       try {
         session = await this.session_load(session_id);
         decryptedMessage = await session.decrypt(ciphertext, this.store);
-      } catch(error) {
-        if (error instanceof StoreEngineError.RecordNotFoundError)  {
+      } catch (error) {
+        if (error instanceof StoreEngineError.RecordNotFoundError) {
           [session, decryptedMessage] = await this.session_from_message(session_id, ciphertext);
           this.publish_session_id(session);
           await this.session_save(session);
