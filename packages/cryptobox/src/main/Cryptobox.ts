@@ -20,7 +20,7 @@
 import {LRUCache} from '@wireapp/lru-cache';
 import {PriorityQueue} from '@wireapp/priority-queue';
 import {keys as ProteusKeys, message as ProteusMessage, session as ProteusSession} from '@wireapp/proteus';
-import {CRUDEngine} from '@wireapp/store-engine';
+import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import {Decoder, Encoder} from 'bazinga64';
 import EventEmitter from 'events';
 import logdown from 'logdown';
@@ -305,7 +305,7 @@ export class Cryptobox extends EventEmitter {
   public async session_load(session_id: string): Promise<CryptoboxSession> {
     this.logger.log(`Trying to load Session with ID "${session_id}"...`);
 
-    const cachedSession: CryptoboxSession | undefined = this.load_session_from_cache(session_id);
+    const cachedSession = this.load_session_from_cache(session_id);
     if (cachedSession) {
       return cachedSession;
     }
@@ -378,7 +378,6 @@ export class Cryptobox extends EventEmitter {
   }
 
   public async decrypt(session_id: string, ciphertext: ArrayBuffer): Promise<Uint8Array> {
-    let is_new_session = false;
     let session: CryptoboxSession;
 
     if (ciphertext.byteLength === 0) {
@@ -386,24 +385,25 @@ export class Cryptobox extends EventEmitter {
     }
 
     return this.get_session_queue(session_id).add(async () => {
-      let decrypted_message: Uint8Array;
+      let decryptedMessage: Uint8Array;
 
       try {
         session = await this.session_load(session_id);
-        decrypted_message = await session.decrypt(ciphertext, this.store);
-      } catch {
-        [session, decrypted_message] = await this.session_from_message(session_id, ciphertext);
-        this.publish_session_id(session);
-        is_new_session = true;
-      }
-
-      if (is_new_session) {
-        await this.session_save(session);
+        decryptedMessage = await session.decrypt(ciphertext, this.store);
+      } catch(error) {
+        if (error instanceof StoreEngineError.RecordNotFoundError)  {
+          [session, decryptedMessage] = await this.session_from_message(session_id, ciphertext);
+          this.publish_session_id(session);
+          await this.session_save(session);
+        } else {
+          throw error;
+        }
       }
 
       await this.session_update(session);
       await this.refill_prekeys(true);
-      return decrypted_message;
+
+      return decryptedMessage;
     });
   }
 
