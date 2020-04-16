@@ -22,7 +22,7 @@ import * as sodium from 'libsodium-wrappers-sumo';
 
 import * as ClassUtil from '../util/ClassUtil';
 
-import {InputError} from '../errors/InputError';
+import {ConversionError} from '../errors/InputError';
 import * as ArrayUtil from '../util/ArrayUtil';
 import {PublicKey} from './PublicKey';
 
@@ -91,7 +91,7 @@ export class SecretKey {
       self.sec_curve = sec_curve;
       return self;
     } catch (error) {
-      throw new InputError.ConversionError('Could not convert secret key with libsodium.', 408);
+      throw new ConversionError('Could not convert secret key with libsodium.', ConversionError.CODE.CASE_408);
     }
   }
 }

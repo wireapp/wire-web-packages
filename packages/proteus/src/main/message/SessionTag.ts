@@ -20,7 +20,7 @@
 import * as CBOR from '@wireapp/cbor';
 import * as sodium from 'libsodium-wrappers-sumo';
 
-import {DecodeError} from '../errors/DecodeError';
+import {InvalidArrayLen} from '../errors/DecodeError';
 import * as ClassUtil from '../util/ClassUtil';
 import * as RandomUtil from '../util/RandomUtil';
 
@@ -52,9 +52,9 @@ export class SessionTag {
 
     const bytes = new Uint8Array(decoder.bytes());
     if (bytes.byteLength !== length) {
-      throw new DecodeError.InvalidArrayLen(
+      throw new InvalidArrayLen(
         `Session tag should be 16 bytes, not ${bytes.byteLength} bytes.`,
-        DecodeError.CODE.CASE_303,
+        InvalidArrayLen.CODE.CASE_303,
       );
     }
 

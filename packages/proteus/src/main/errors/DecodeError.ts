@@ -33,25 +33,23 @@ export class DecodeError extends ProteusError {
   }
 }
 
-export namespace DecodeError {
-  export class InvalidType extends DecodeError {
-    constructor(message = 'Invalid type', code: number) {
-      super(message, code);
-      Object.setPrototypeOf(this, new.target.prototype);
-    }
+export class InvalidType extends DecodeError {
+  constructor(message = 'Invalid type', code: number) {
+    super(message, code);
+    Object.setPrototypeOf(this, new.target.prototype);
   }
+}
 
-  export class InvalidArrayLen extends DecodeError {
-    constructor(message = 'Invalid array length', code: number) {
-      super(message, code);
-      Object.setPrototypeOf(this, new.target.prototype);
-    }
+export class InvalidArrayLen extends DecodeError {
+  constructor(message = 'Invalid array length', code: number) {
+    super(message, code);
+    Object.setPrototypeOf(this, new.target.prototype);
   }
+}
 
-  export class LocalIdentityChanged extends DecodeError {
-    constructor(message = 'Local identity changed', code: number) {
-      super(message, code);
-      Object.setPrototypeOf(this, new.target.prototype);
-    }
+export class LocalIdentityChanged extends DecodeError {
+  constructor(message = 'Local identity changed', code: number) {
+    super(message, code);
+    Object.setPrototypeOf(this, new.target.prototype);
   }
 }

@@ -20,9 +20,7 @@
 import * as CBOR from '@wireapp/cbor';
 
 import * as ClassUtil from '../util/ClassUtil';
-
-import {InputError} from '../errors/InputError';
-
+import {TypeError, RangeError} from '../errors/InputError';
 import {KeyPair} from './KeyPair';
 import {PublicKey} from './PublicKey';
 import {SecretKey} from './SecretKey';
@@ -56,20 +54,20 @@ export class PreKey {
 
   static validate_pre_key_id(pre_key_id: number): void {
     if (pre_key_id === undefined) {
-      throw new InputError.TypeError('PreKey ID is undefined.', InputError.CODE.CASE_404);
+      throw new TypeError('PreKey ID is undefined.', TypeError.CODE.CASE_404);
     }
 
     if (typeof pre_key_id === 'string') {
-      throw new InputError.TypeError(`PreKey ID "${pre_key_id}" is a string.`, InputError.CODE.CASE_403);
+      throw new TypeError(`PreKey ID "${pre_key_id}" is a string.`, TypeError.CODE.CASE_403);
     }
 
     if (pre_key_id % 1 !== 0) {
-      throw new InputError.TypeError(`PreKey ID "${pre_key_id}" is a floating-point number.`, InputError.CODE.CASE_403);
+      throw new TypeError(`PreKey ID "${pre_key_id}" is a floating-point number.`, TypeError.CODE.CASE_403);
     }
 
     if (pre_key_id < 0 || pre_key_id > PreKey.MAX_PREKEY_ID) {
       const message = `PreKey ID (${pre_key_id}) must be between or equal to 0 and ${PreKey.MAX_PREKEY_ID}.`;
-      throw new InputError.RangeError(message, InputError.CODE.CASE_400);
+      throw new RangeError(message, RangeError.CODE.CASE_400);
     }
   }
 

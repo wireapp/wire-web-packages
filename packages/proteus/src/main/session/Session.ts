@@ -22,8 +22,14 @@ import * as CBOR from '@wireapp/cbor';
 import * as ClassUtil from '../util/ClassUtil';
 import * as MemoryUtil from '../util/MemoryUtil';
 
-import {DecodeError} from '../errors/DecodeError';
-import {DecryptError} from '../errors/DecryptError';
+import {LocalIdentityChanged, InvalidType} from '../errors/DecodeError';
+import {
+  RemoteIdentityChanged,
+  InvalidSignature,
+  InvalidMessage,
+  PrekeyNotFound,
+  DecryptError,
+} from '../errors/DecryptError';
 import {ProteusError} from '../errors/ProteusError';
 import {SessionState} from './SessionState';
 
@@ -99,10 +105,7 @@ export class Session {
     const preKeyMessage = envelope.message;
 
     if (preKeyMessage instanceof CipherMessage) {
-      throw new DecryptError.InvalidMessage(
-        "Can't initialise a session from a CipherMessage.",
-        DecryptError.CODE.CASE_201,
-      );
+      throw new InvalidMessage(`Can't initialise a session from a CipherMessage.`, InvalidMessage.CODE.CASE_201);
     }
 
     if (preKeyMessage instanceof PreKeyMessage) {
@@ -124,19 +127,16 @@ export class Session {
         try {
           await prekey_store.delete_prekey(preKeyMessage.prekey_id);
         } catch (error) {
-          throw new DecryptError.PrekeyNotFound(
-            `Could not delete PreKey: ${error.message}`,
-            DecryptError.CODE.CASE_203,
-          );
+          throw new PrekeyNotFound(`Could not delete PreKey: ${error.message}`, PrekeyNotFound.CODE.CASE_203);
         }
       }
 
       return [session, plain];
     }
 
-    throw new DecryptError.InvalidMessage(
+    throw new InvalidMessage(
       'Unknown message format: The message is neither a "CipherMessage" nor a "PreKeyMessage".',
-      DecryptError.CODE.CASE_202,
+      InvalidMessage.CODE.CASE_202,
     );
   }
 
@@ -237,7 +237,7 @@ export class Session {
 
       if (actual_fingerprint !== expected_fingerprint) {
         const message = `Fingerprints do not match: We expected '${expected_fingerprint}', but received '${actual_fingerprint}'.`;
-        throw new DecryptError.RemoteIdentityChanged(message, DecryptError.CODE.CASE_204);
+        throw new RemoteIdentityChanged(message, RemoteIdentityChanged.CODE.CASE_204);
       }
 
       return this._decrypt_prekey_message(envelope, preKeyMessage, prekey_store);
@@ -255,7 +255,7 @@ export class Session {
       const plaintext = await this._decrypt_cipher_message(envelope, msg.message);
       return plaintext;
     } catch (error) {
-      if (error instanceof DecryptError.InvalidSignature || error instanceof DecryptError.InvalidMessage) {
+      if (error instanceof InvalidSignature || error instanceof InvalidMessage) {
         const state = await this._new_state(prekey_store, msg);
         const plaintext = await state.decrypt(envelope, msg.message);
 
@@ -277,9 +277,9 @@ export class Session {
   private async _decrypt_cipher_message(envelope: Envelope, msg: CipherMessage): Promise<Uint8Array> {
     const state = this.session_states[msg.session_tag.toString()];
     if (!state) {
-      throw new DecryptError.InvalidMessage(
+      throw new InvalidMessage(
         `Local session not found for message session tag '${msg.session_tag}'.`,
-        DecryptError.CODE.CASE_205,
+        InvalidMessage.CODE.CASE_205,
       );
     }
 
@@ -356,7 +356,7 @@ export class Session {
         case 2: {
           const identity_key = IdentityKey.decode(decoder);
           if (local_identity.public_key.fingerprint() !== identity_key.fingerprint()) {
-            throw new DecodeError.LocalIdentityChanged(undefined, DecodeError.CODE.CASE_300);
+            throw new LocalIdentityChanged(undefined, LocalIdentityChanged.CODE.CASE_300);
           }
           self.local_identity = local_identity;
           break;
@@ -384,7 +384,7 @@ export class Session {
               }
               break;
             default:
-              throw new DecodeError.InvalidType(undefined, DecodeError.CODE.CASE_301);
+              throw new InvalidType(undefined, InvalidType.CODE.CASE_301);
           }
           break;
         }

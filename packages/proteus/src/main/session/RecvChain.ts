@@ -22,7 +22,7 @@ import * as CBOR from '@wireapp/cbor';
 import {PublicKey} from '../keys/PublicKey';
 import * as ClassUtil from '../util/ClassUtil';
 
-import {DecryptError} from '../errors/DecryptError';
+import {OutdatedMessage, DuplicateMessage, InvalidSignature, TooDistantFuture} from '../errors/DecryptError';
 import {ProteusError} from '../errors/ProteusError';
 
 import {CipherMessage} from '../message/CipherMessage';
@@ -54,7 +54,7 @@ export class RecvChain {
   try_message_keys(envelope: Envelope, msg: CipherMessage): Uint8Array {
     if (this.message_keys[0]?.counter > msg.counter) {
       const message = `Message too old. Counter for oldest staged chain key is '${this.message_keys[0].counter}' while message counter is '${msg.counter}'.`;
-      throw new DecryptError.OutdatedMessage(message, DecryptError.CODE.CASE_208);
+      throw new OutdatedMessage(message, OutdatedMessage.CODE.CASE_208);
     }
 
     const idx = this.message_keys.findIndex(mk => {
@@ -62,12 +62,12 @@ export class RecvChain {
     });
 
     if (idx === -1) {
-      throw new DecryptError.DuplicateMessage(undefined, DecryptError.CODE.CASE_209);
+      throw new DuplicateMessage(undefined, OutdatedMessage.CODE.CASE_209);
     }
     const mk = this.message_keys.splice(idx, 1)[0];
     if (!envelope.verify(mk.mac_key)) {
       const message = `Envelope verification failed for message with counter behind. Message index is '${msg.counter}' while receive chain index is '${this.chain_key.idx}'.`;
-      throw new DecryptError.InvalidSignature(message, DecryptError.CODE.CASE_210);
+      throw new InvalidSignature(message, InvalidSignature.CODE.CASE_210);
     }
 
     return mk.decrypt(msg.cipher_text);
@@ -77,14 +77,14 @@ export class RecvChain {
     const num = msg.counter - this.chain_key.idx;
     if (num > RecvChain.MAX_COUNTER_GAP) {
       if (this.chain_key.idx === 0) {
-        throw new DecryptError.TooDistantFuture(
+        throw new TooDistantFuture(
           'Skipped too many messages at the beginning of a receive chain.',
-          DecryptError.CODE.CASE_211,
+          TooDistantFuture.CODE.CASE_211,
         );
       }
-      throw new DecryptError.TooDistantFuture(
+      throw new TooDistantFuture(
         `Skipped too many messages within a used receive chain. Receive chain counter is '${this.chain_key.idx}'`,
-        DecryptError.CODE.CASE_212,
+        TooDistantFuture.CODE.CASE_212,
       );
     }
 

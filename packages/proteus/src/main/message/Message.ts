@@ -18,7 +18,7 @@
  */
 
 import * as CBOR from '@wireapp/cbor';
-import {DecodeError} from '../errors/DecodeError';
+import {InvalidType} from '../errors/DecodeError';
 
 export class Message {
   constructor() {}
@@ -46,7 +46,7 @@ export class Message {
       case 2:
         return PreKeyMessage.decode(decoder);
       default:
-        throw new DecodeError.InvalidType('Unrecognised message type', DecodeError.CODE.CASE_302);
+        throw new InvalidType('Unrecognised message type', InvalidType.CODE.CASE_302);
     }
   }
 }

@@ -20,7 +20,7 @@
 import * as CBOR from '@wireapp/cbor';
 import * as _sodium from 'libsodium-wrappers-sumo';
 import {DecodeError} from '../errors';
-import {InputError} from '../errors/InputError';
+import {ConversionError} from '../errors/InputError';
 import {PublicKey} from './PublicKey';
 import {SecretKey} from './SecretKey';
 
@@ -56,7 +56,7 @@ export class KeyPair {
       const sk_curve25519 = _sodium.crypto_sign_ed25519_sk_to_curve25519(sk_ed25519);
       return SecretKey.new(sk_ed25519, sk_curve25519);
     } catch (error) {
-      throw new InputError.ConversionError('Could not convert secret key with libsodium.', 409);
+      throw new ConversionError('Could not convert secret key with libsodium.', ConversionError.CODE.CASE_409);
     }
   }
 
@@ -70,7 +70,7 @@ export class KeyPair {
       const pk_curve25519 = _sodium.crypto_sign_ed25519_pk_to_curve25519(pk_ed25519);
       return PublicKey.new(pk_ed25519, pk_curve25519);
     } catch (error) {
-      throw new InputError.ConversionError('Could not convert public key with libsodium.', 408);
+      throw new ConversionError('Could not convert public key with libsodium.', ConversionError.CODE.CASE_408);
     }
   }
 

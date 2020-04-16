@@ -247,7 +247,7 @@ describe('Session', () => {
             await alice.decrypt(alice_store, text);
             fail();
           } catch (error) {
-            expect(error instanceof Proteus.errors.DecryptError.DuplicateMessage).toBe(true);
+            expect(error instanceof Proteus.errors.DuplicateMessage).toBe(true);
             expect(error.code).toBe(Proteus.errors.DecryptError.CODE.CASE_209);
           }
         }),

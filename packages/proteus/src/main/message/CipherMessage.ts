@@ -19,7 +19,7 @@
 
 import * as CBOR from '@wireapp/cbor';
 
-import {InputError} from '../errors/InputError';
+import {TypeError} from '../errors/InputError';
 import {PublicKey} from '../keys/PublicKey';
 import * as ClassUtil from '../util/ClassUtil';
 import {Message} from './Message';
@@ -110,6 +110,6 @@ export class CipherMessage extends Message {
     if (session_tag && !isNaN(counter) && !isNaN(prev_counter) && ratchet_key && cipher_text) {
       return CipherMessage.new(session_tag, counter, prev_counter, ratchet_key, cipher_text);
     }
-    throw new InputError.TypeError(`Given CipherMessage doesn't match expected signature.`, InputError.CODE.CASE_405);
+    throw new TypeError(`Given CipherMessage doesn't match expected signature.`, TypeError.CODE.CASE_405);
   }
 }

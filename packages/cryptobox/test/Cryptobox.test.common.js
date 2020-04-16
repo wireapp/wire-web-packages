@@ -71,7 +71,7 @@ describe('cryptobox.Cryptobox', () => {
         await bob.decrypt('session-with-alice', ciphertext);
         fail();
       } catch (error) {
-        expect(error).toEqual(jasmine.any(Proteus.errors.DecryptError.DuplicateMessage));
+        expect(error).toEqual(jasmine.any(Proteus.errors.DuplicateMessage));
         expect(error.code).toBe(Proteus.errors.DecryptError.CODE.CASE_209);
       }
     });

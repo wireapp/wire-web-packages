@@ -42,8 +42,8 @@ describe('PreKey', () => {
         await (Proteus as any).keys.PreKey.new(undefined);
         fail();
       } catch (error) {
-        expect(error instanceof Proteus.errors.InputError.TypeError).toBe(true);
-        expect(error.code).toBe(Proteus.errors.InputError.CODE.CASE_404);
+        expect(error instanceof Proteus.errors.TypeError).toBe(true);
+        expect(error.code).toBe(Proteus.errors.TypeError.CODE.CASE_404);
       }
     });
 
@@ -52,8 +52,8 @@ describe('PreKey', () => {
         await (Proteus as any).keys.PreKey.new('foo');
         fail();
       } catch (error) {
-        expect(error instanceof Proteus.errors.InputError.TypeError).toBe(true);
-        expect(error.code).toBe(Proteus.errors.InputError.CODE.CASE_403);
+        expect(error instanceof Proteus.errors.TypeError).toBe(true);
+        expect(error.code).toBe(Proteus.errors.TypeError.CODE.CASE_403);
       }
     });
 
@@ -62,8 +62,8 @@ describe('PreKey', () => {
         await Proteus.keys.PreKey.new(-1);
         fail();
       } catch (error) {
-        expect(error instanceof Proteus.errors.InputError.RangeError).toBe(true);
-        expect(error.code).toBe(Proteus.errors.InputError.CODE.CASE_400);
+        expect(error instanceof Proteus.errors.RangeError).toBe(true);
+        expect(error.code).toBe(Proteus.errors.RangeError.CODE.CASE_400);
       }
     });
 
@@ -72,8 +72,8 @@ describe('PreKey', () => {
         await Proteus.keys.PreKey.new(65537);
         fail();
       } catch (error) {
-        expect(error instanceof Proteus.errors.InputError.RangeError).toBe(true);
-        expect(error.code).toBe(Proteus.errors.InputError.CODE.CASE_400);
+        expect(error instanceof Proteus.errors.RangeError).toBe(true);
+        expect(error.code).toBe(Proteus.errors.RangeError.CODE.CASE_400);
       }
     });
 
@@ -82,8 +82,8 @@ describe('PreKey', () => {
         await Proteus.keys.PreKey.new(4242.42);
         fail();
       } catch (error) {
-        expect(error instanceof Proteus.errors.InputError.TypeError).toBe(true);
-        expect(error.code).toBe(Proteus.errors.InputError.CODE.CASE_403);
+        expect(error instanceof Proteus.errors.TypeError).toBe(true);
+        expect(error.code).toBe(Proteus.errors.TypeError.CODE.CASE_403);
       }
     });
 
@@ -92,8 +92,8 @@ describe('PreKey', () => {
         await Proteus.keys.PreKey.new(Proteus.keys.PreKey.MAX_PREKEY_ID + 1);
         fail();
       } catch (error) {
-        expect(error instanceof Proteus.errors.InputError.RangeError).toBe(true);
-        expect(error.code).toBe(Proteus.errors.InputError.CODE.CASE_400);
+        expect(error instanceof Proteus.errors.RangeError).toBe(true);
+        expect(error.code).toBe(Proteus.errors.RangeError.CODE.CASE_400);
       }
     });
 

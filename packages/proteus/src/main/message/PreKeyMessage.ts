@@ -23,7 +23,7 @@ import {IdentityKey} from '../keys/IdentityKey';
 import {PublicKey} from '../keys/PublicKey';
 import * as ClassUtil from '../util/ClassUtil';
 
-import {InputError} from '../errors/InputError';
+import {TypeError} from '../errors/InputError';
 import {CipherMessage} from './CipherMessage';
 import {Message} from './Message';
 
@@ -96,6 +96,6 @@ export class PreKeyMessage extends Message {
     if (!isNaN(prekey_id) && base_key && identity_key && message) {
       return PreKeyMessage.new(prekey_id, base_key, identity_key, message);
     }
-    throw new InputError.TypeError(`Given PreKeyMessage doesn't match expected signature.`, InputError.CODE.CASE_406);
+    throw new TypeError(`Given PreKeyMessage doesn't match expected signature.`, TypeError.CODE.CASE_406);
   }
 }

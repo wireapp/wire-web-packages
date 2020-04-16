@@ -23,7 +23,7 @@ import * as ArrayUtil from '../util/ArrayUtil';
 import * as ClassUtil from '../util/ClassUtil';
 import * as MemoryUtil from '../util/MemoryUtil';
 
-import {DecryptError} from '../errors/DecryptError';
+import {InvalidSignature} from '../errors/DecryptError';
 
 import {DerivedSecrets} from '../derived/DerivedSecrets';
 
@@ -193,9 +193,9 @@ export class SessionState {
       const mks = rc.chain_key.message_keys();
 
       if (!envelope.verify(mks.mac_key)) {
-        throw new DecryptError.InvalidSignature(
+        throw new InvalidSignature(
           `Envelope verification failed for message with counters in sync at '${msg.counter}'. The received message was possibly encrypted for another client.`,
-          DecryptError.CODE.CASE_206,
+          InvalidSignature.CODE.CASE_206,
         );
       }
 
@@ -206,9 +206,9 @@ export class SessionState {
     const [chk, mk, mks] = rc.stage_message_keys(msg);
 
     if (!envelope.verify(mk.mac_key)) {
-      throw new DecryptError.InvalidSignature(
+      throw new InvalidSignature(
         `Envelope verification failed for message with counter ahead. Message index is '${msg.counter}' while receive chain index is '${rc.chain_key.idx}'.`,
-        DecryptError.CODE.CASE_207,
+        InvalidSignature.CODE.CASE_207,
       );
     }
 

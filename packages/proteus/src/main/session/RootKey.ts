@@ -21,7 +21,7 @@ import * as CBOR from '@wireapp/cbor';
 
 import {CipherKey} from '../derived/CipherKey';
 import {DerivedSecrets} from '../derived/DerivedSecrets';
-import {InputError} from '../errors/InputError';
+import {TypeError} from '../errors/InputError';
 import {KeyPair} from '../keys/KeyPair';
 import {PublicKey} from '../keys/PublicKey';
 import * as ClassUtil from '../util/ClassUtil';
@@ -77,6 +77,6 @@ export class RootKey {
     if (cipher_key) {
       return RootKey.from_cipher_key(cipher_key);
     }
-    throw new InputError.TypeError(`Given RootKey doesn't match expected signature.`, InputError.CODE.CASE_407);
+    throw new TypeError(`Given RootKey doesn't match expected signature.`, TypeError.CODE.CASE_407);
   }
 }
