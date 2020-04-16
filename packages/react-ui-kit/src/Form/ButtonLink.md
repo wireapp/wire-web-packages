@@ -1,7 +1,22 @@
 Demo:
 
 ```js
-import {ButtonLink} from '@wireapp/react-ui-kit';
+import {ButtonLink, Container, Columns, Column, COLOR} from '@wireapp/react-ui-kit';
 
-<ButtonLink>Button Link</ButtonLink>;
+<Container>
+  <Columns>
+    <Column>ButtonLink</Column>
+    <Column>
+      <ButtonLink backgroundColor={COLOR.GREEN}>ButtonLink</ButtonLink>
+    </Column>
+  </Columns>
+  <Columns>
+    <Column>Loading ButtonLink</Column>
+    <Column>
+      <ButtonLink showLoading backgroundColor={COLOR.GREEN}>
+        ButtonLink
+      </ButtonLink>
+    </Column>
+  </Columns>
+</Container>;
 ```
