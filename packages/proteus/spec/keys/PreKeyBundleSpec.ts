@@ -55,7 +55,7 @@ describe('PreKeyBundle', () => {
     expect(sodium.to_hex(new Uint8Array(pkb_bytes))).toBe(sodium.to_hex(new Uint8Array(pkb_copy.serialise())));
   });
 
-  it('should serialise and deserialise a signed bundle', async () => {
+  it('serialises and deserialises a signed bundle', async () => {
     const [id_pair, prekey] = await Promise.all([Proteus.keys.IdentityKeyPair.new(), Proteus.keys.PreKey.new(1)]);
     const bundle = Proteus.keys.PreKeyBundle.signed(id_pair, prekey);
     expect(bundle.verify()).toBe(Proteus.keys.PreKeyAuth.VALID);
@@ -73,7 +73,7 @@ describe('PreKeyBundle', () => {
     expect(sodium.to_hex(new Uint8Array(pkb_bytes))).toBe(sodium.to_hex(new Uint8Array(pkb_copy.serialise())));
   });
 
-  it('should generate a serialised JSON format', async () => {
+  it('generates a serialised JSON format', async () => {
     const pre_key_id = 72;
 
     const [identity_key_pair, pre_key] = await Promise.all([

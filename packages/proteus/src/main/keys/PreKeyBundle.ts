@@ -56,6 +56,7 @@ export class PreKeyBundle {
     versionOrNone: number = 1,
   ) {
     this.identity_key = publicIdentityKey;
+
     if (typeof preKeyIdOrPreKey === 'number') {
       this.prekey_id = preKeyIdOrPreKey;
       this.public_key = publicKeyOrSignature as PublicKey;
@@ -64,6 +65,7 @@ export class PreKeyBundle {
     } else {
       this.prekey_id = preKeyIdOrPreKey.key_id;
       this.public_key = preKeyIdOrPreKey.key_pair.public_key;
+      this.signature = null;
       this.version = 1;
     }
   }
