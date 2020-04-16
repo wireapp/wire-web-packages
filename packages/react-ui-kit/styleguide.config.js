@@ -10,8 +10,7 @@ function resolve(...paths) {
 
 module.exports = {
   title: `Wireapp React Ui Kit v${packageJson.version}`,
-  // components: 'src/**/*.tsx',
-  // ignore: ['src/**/*.test.tsx', 'src/Form/Form.tsx'],
+  skipComponentsWithoutExample: true,
   sections: [
     {
       name: 'Forms',
@@ -25,7 +24,19 @@ module.exports = {
         'src/Form/InputSubmitCombo.tsx',
       ],
     },
-    // {name: 'Layout', components: 'src/Layout/**/*.tsx'},
+    {
+      name: 'Layout',
+      components: 'src/Layout/**/*.tsx',
+      ignore: [
+        'src/Layout/headerMenu/HeaderSubMenu.tsx',
+        'src/Layout/headerMenu/MenuContent.tsx',
+        'src/Layout/headerMenu/MenuItems.tsx',
+        'src/Layout/headerMenu/MenuLink.tsx',
+        'src/Layout/headerMenu/MenuOpenButton.tsx',
+        'src/Layout/headerMenu/MenuScrollableItems.tsx',
+        'src/Layout/headerMenu/MenuSubLink.tsx',
+      ],
+    },
     {name: 'Identity', components: 'src/Identity/**/*.tsx'},
     {name: 'Menu', components: 'src/Menu/**/*.tsx', ignore: ['src/Menu/MenuModal.tsx']},
     {name: 'Modal', components: 'src/Modal/**/*.tsx', ignore: ['src/Modal/Overlay.tsx']},
