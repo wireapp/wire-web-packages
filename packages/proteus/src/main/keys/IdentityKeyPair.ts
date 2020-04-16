@@ -58,22 +58,28 @@ export class IdentityKeyPair {
   }
 
   encode(encoder: CBOR.Encoder): CBOR.Encoder {
-    // Prepare KeyPair
+    // Prepare KeyPair with three elements
     encoder.object(3);
+
+    // Add version at position 0
     encoder.u8(0);
     encoder.u8(this.version);
-    encoder.u8(1);
 
-    // Add SecretKey
+    // Add SecretKey at position 1
+    encoder.u8(1);
     encoder.object(1);
     encoder.u8(0);
     encoder.bytes(this.secret_key.sec_edward);
-    encoder.u8(2);
 
-    // Add IdentityKey
+    // Add IdentityKey at position 2
+    encoder.u8(2);
+    encoder.object(1);
+    // Add PublicKey at position 0 of IdentityKey
+    encoder.u8(0);
     encoder.object(1);
     encoder.u8(0);
-    this.public_key.encode(encoder);
+    encoder.bytes(this.public_key.public_key.pub_edward);
+
     return encoder;
   }
 
