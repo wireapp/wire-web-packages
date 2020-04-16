@@ -67,7 +67,7 @@ export class CryptoboxCRUDStore implements ProteusSession.PreKeyStore {
 
   /**
    * Loads the local identity.
-   * @returns  Resolves with the "key pair" from the local identity.
+   * @returns Resolves with the "key pair" from the local identity.
    */
   public async load_identity(): Promise<ProteusKeys.IdentityKeyPair | undefined> {
     try {
