@@ -88,7 +88,7 @@ export class CryptoboxCRUDStore implements ProteusSession.PreKeyStore {
 
   /**
    * Loads and deserializes a specified PreKey.
-   * @returns Resolves with the the specified "PreKey".
+   * @returns Resolves with the specified "PreKey".
    */
   public async load_prekey(prekey_id: number): Promise<ProteusKeys.PreKey | undefined> {
     try {
@@ -157,7 +157,7 @@ export class CryptoboxCRUDStore implements ProteusSession.PreKeyStore {
 
   /**
    * Loads a specified session.
-   * @returns Resolves with the the specified "session".
+   * @returns Resolves with the specified "session".
    */
   public async read_session(
     identity: ProteusKeys.IdentityKeyPair,
