@@ -18,7 +18,7 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {Self} from '@wireapp/api-client/dist/self/';
+import {Self, Consent} from '@wireapp/api-client/dist/self/';
 
 export class SelfService {
   constructor(private readonly apiClient: APIClient) {}
@@ -39,6 +39,11 @@ export class SelfService {
     return name;
   }
 
+  public async getConsents(): Promise<Consent[]> {
+    const {results} = await this.apiClient.self.api.getConsents();
+    return results;
+  }
+
   public getSelf(): Promise<Self> {
     return this.apiClient.self.api.getSelf();
   }
@@ -54,5 +59,21 @@ export class SelfService {
 
   public setUsername(username: string): Promise<void> {
     return this.apiClient.self.api.putHandle({handle: username});
+  }
+
+  public setConsent(consent: Consent): Promise<void> {
+    return this.apiClient.self.api.putConsent(consent);
+  }
+
+  public deletePhone(): Promise<void> {
+    return this.apiClient.self.api.deletePhone();
+  }
+
+  public deleteEmail(): Promise<void> {
+    return this.apiClient.self.api.deleteEmail();
+  }
+
+  public deleteSelf(password: string): Promise<void> {
+    return this.apiClient.self.api.deleteSelf({password});
   }
 }
