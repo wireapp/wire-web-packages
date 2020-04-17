@@ -10,6 +10,7 @@ function resolve(...paths) {
 
 module.exports = {
   title: `Wireapp React Ui Kit v${packageJson.version}`,
+  serverPort: 8080,
   skipComponentsWithoutExample: true,
   sections: [
     {
