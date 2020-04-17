@@ -55,6 +55,7 @@
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit",
   "scripts": {
     "build": "tsc && babel --config-file ./babel.config.js --extensions .ts,.tsx ./src -d ./dist --source-maps",
+    "build:styleguide": "styleguidist build",
     "clean": "rimraf dist",
     "dist": "yarn clean && yarn build",
     "start": "styleguidist server",
