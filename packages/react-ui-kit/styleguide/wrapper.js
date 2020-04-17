@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyledApp, THEME_ID} from '@wireapp/react-ui-kit';
 
-function Wrapper({children}) {
+const Wrapper = ({children}) => {
   return (
     <div>
       <StyledApp themeId={THEME_ID.LIGHT}>
@@ -9,6 +9,6 @@ function Wrapper({children}) {
       </StyledApp>
     </div>
   );
-}
+};
 
 export default Wrapper;
