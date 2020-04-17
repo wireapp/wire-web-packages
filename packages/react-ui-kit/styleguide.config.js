@@ -19,7 +19,6 @@ module.exports = {
         'src/Form/Input.tsx',
         'src/Form/ShakeBox.tsx',
         'src/Form/InputBlock.tsx',
-        'src/Form/InputBlock.tsx',
         'src/Form/RoundIconButton.tsx',
         'src/Form/InputSubmitCombo.tsx',
       ],
