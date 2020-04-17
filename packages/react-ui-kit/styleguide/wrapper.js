@@ -5,7 +5,7 @@ function Wrapper(props) {
   return (
     <div>
       <StyledApp themeId={THEME_ID.LIGHT}>
-        <div>{props.children}</div>
+        <div style={{padding: 16}}>{props.children}</div>
       </StyledApp>
     </div>
   );

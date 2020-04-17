@@ -57,7 +57,7 @@ module.exports = {
   styles: {
     Playground: {
       preview: {
-        backgroundColor: '#f7f8fa',
+        padding: 0,
       },
     },
   },
