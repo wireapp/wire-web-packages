@@ -72,7 +72,7 @@ describe('cryptobox.Cryptobox', () => {
         fail();
       } catch (error) {
         expect(error).toEqual(jasmine.any(Proteus.errors.DuplicateMessage));
-        expect(error.code).toBe(Proteus.errors.DecryptError.CODE.CASE_209);
+        expect(error.code).toBe(Proteus.errors.DuplicateMessage.CODE.CASE_209);
       }
     });
   });

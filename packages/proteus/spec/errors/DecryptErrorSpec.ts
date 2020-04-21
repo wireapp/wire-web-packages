@@ -24,10 +24,10 @@ describe('DecryptError', () => {
     it('constructs a default error code', () => {
       const correctErrorCode = 2;
 
-      let error = new Proteus.errors.DecryptError.InvalidMessage();
+      let error = new Proteus.errors.InvalidMessage();
       expect(error.code).toBe(correctErrorCode);
 
-      error = new Proteus.errors.DecryptError.InvalidMessage('Custom Text');
+      error = new Proteus.errors.InvalidMessage('Custom Text');
       expect(error.code).toBe(correctErrorCode);
     });
   });
@@ -37,13 +37,13 @@ describe('DecryptError', () => {
     const errorMessage = 'The received message was too big.';
 
     it('uses the generic error class as namespace', () => {
-      const error = new Proteus.errors.DecryptError.InvalidMessage(errorMessage, errorCode);
+      const error = new Proteus.errors.InvalidMessage(errorMessage, errorCode);
       expect(error.code).toBe(errorCode);
       expect(error.message).toBe(errorMessage);
     });
 
     it('assures that specializations are the same type as generics', () => {
-      const error = new Proteus.errors.DecryptError.InvalidMessage(errorMessage, errorCode);
+      const error = new Proteus.errors.InvalidMessage(errorMessage, errorCode);
       expect(error instanceof Proteus.errors.DecryptError).toBe(true);
       expect(error instanceof Proteus.errors.InvalidMessage).toBe(true);
     });

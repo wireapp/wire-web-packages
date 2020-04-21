@@ -248,7 +248,7 @@ describe('Session', () => {
             fail();
           } catch (error) {
             expect(error instanceof Proteus.errors.DuplicateMessage).toBe(true);
-            expect(error.code).toBe(Proteus.errors.DecryptError.CODE.CASE_209);
+            expect(error.code).toBe(Proteus.errors.DuplicateMessage.CODE.CASE_209);
           }
         }),
       );
