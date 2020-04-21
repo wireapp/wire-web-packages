@@ -3,6 +3,102 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [11.8.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.7.0...@wireapp/api-client@11.8.0) (2020-04-21)
+
+
+### Features
+
+* update TeamInvitation interface ([#2972](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2972)) ([056a8d2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/056a8d22f581ee7825a1ac5af9623c22c2ae7eee))
+
+
+
+
+
+# [11.7.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.6.0...@wireapp/api-client@11.7.0) (2020-04-21)
+
+
+### Features
+
+* **api-client:** Default to report missing behaviour ([#2971](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2971)) ([cdd042f](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/cdd042f70deac2b188f1073e693bb4222da42073))
+
+
+
+
+
+# [11.6.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.5.0...@wireapp/api-client@11.6.0) (2020-04-17)
+
+
+### Features
+
+* **api-client:** Expose expiring asset policies ([#2965](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2965)) ([44acef5](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/44acef5c318f6df6821cbcb9a4add1ec707b8f45))
+
+
+
+
+
+# [11.5.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.4.0...@wireapp/api-client@11.5.0) (2020-04-17)
+
+
+### Features
+
+* **api-client:** Report missing clients in message body ([#2963](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2963)) ([2496030](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/24960300c3eabf16a1af130230a4eac578dac8f5))
+
+
+
+
+
+# [11.4.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.3.2...@wireapp/api-client@11.4.0) (2020-04-17)
+
+
+### Features
+
+* **api-client:** Add backend config endpoint ([#2774](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2774)) ([5ee4128](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/5ee41283dd9094a58baa84287e731ef067ac8418))
+
+
+
+
+
+## [11.3.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.3.1...@wireapp/api-client@11.3.2) (2020-04-17)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.3.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.3.0...@wireapp/api-client@11.3.1) (2020-04-17)
+
+
+### Bug Fixes
+
+* **api-client,core,cryptobox:** Improve type compatibility with Node.js v13 ([#2960](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2960)) ([b442dfd](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/b442dfdd7d5adc496709992da692d71dc49bb754))
+
+
+
+
+
+# [11.3.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.2.0...@wireapp/api-client@11.3.0) (2020-04-16)
+
+
+### Features
+
+* **api-client:** Export asset util ([#2959](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2959)) ([3da7add](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/3da7add59a1feac18b6290968eac1fa4bb2f9183))
+
+
+
+
+
+# [11.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.1.0...@wireapp/api-client@11.2.0) (2020-04-16)
+
+
+### Features
+
+* **api-client,core:** Add progress callback for asset uploads ([#2958](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/2958)) ([f90f8f2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/f90f8f27bf091fc6fdf74bda7cf425b9c47ed7a0))
+
+
+
+
+
 # [11.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.0.7...@wireapp/api-client@11.1.0) (2020-04-16)
 
 

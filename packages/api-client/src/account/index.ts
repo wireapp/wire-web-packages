@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2020 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,29 +17,6 @@
  *
  */
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import {AppContainer} from 'react-hot-loader';
-
-import Demo from './Demo';
-
-function render(Component) {
-  ReactDOM.render(
-    <AppContainer>
-      <Component />
-    </AppContainer>,
-    document.getElementById('app'),
-  );
-}
-
-function runApp() {
-  render(Demo);
-  if (module.hot) {
-    module.hot.accept('./Demo', () => {
-      const NextApp = require('./Demo').default;
-      render(NextApp);
-    });
-  }
-}
-
-runApp();
+export * from './AccountAPI';
+export * from './BackendConfigData';
+export * from './CallConfigData';

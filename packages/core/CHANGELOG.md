@@ -3,6 +3,103 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [16.6.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.6.8...@wireapp/core@16.6.9) (2020-04-21)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.6.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.6.7...@wireapp/core@16.6.8) (2020-04-21)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.6.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.6.6...@wireapp/core@16.6.7) (2020-04-17)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.6.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.6.5...@wireapp/core@16.6.6) (2020-04-17)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.6.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.6.4...@wireapp/core@16.6.5) (2020-04-17)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.6.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.6.3...@wireapp/core@16.6.4) (2020-04-17)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.6.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.6.2...@wireapp/core@16.6.3) (2020-04-17)
+
+
+### Bug Fixes
+
+* **api-client,core,cryptobox:** Improve type compatibility with Node.js v13 ([#2960](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2960)) ([b442dfd](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/b442dfdd7d5adc496709992da692d71dc49bb754))
+
+
+
+
+
+## [16.6.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.6.1...@wireapp/core@16.6.2) (2020-04-17)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.6.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.6.0...@wireapp/core@16.6.1) (2020-04-16)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [16.6.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.5.0...@wireapp/core@16.6.0) (2020-04-16)
+
+
+### Features
+
+* **api-client,core:** Add progress callback for asset uploads ([#2958](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2958)) ([f90f8f2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/f90f8f27bf091fc6fdf74bda7cf425b9c47ed7a0))
+
+
+
+
+
+# [16.5.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.4.0...@wireapp/core@16.5.0) (2020-04-16)
+
+
+### Features
+
+* **proteus:** Use constructor instead of ClassUtil (BREAKING) (WEBAPP-6789) ([#2938](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/2938)) ([48e4c38](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/48e4c385cf819f42e3e7cefe566a2e49f32ba980))
+
+
+
+
+
 # [16.4.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.3.1...@wireapp/core@16.4.0) (2020-04-16)
 
 

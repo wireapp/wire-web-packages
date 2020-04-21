@@ -34,36 +34,30 @@ export class BroadcastAPI {
    * Broadcast an encrypted message to all team members and all contacts (accepts Protobuf).
    * @param clientId The sender's client ID
    * @param messageData The message content
+   * @param ignoreMissing Whether to report missing clients or not:
+   * `false`: Report about all missing clients
+   * `true`: Ignore all missing clients and force sending
+   * `undefined`: Default to setting of `report_missing` in `NewOTRMessage`
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/tab.html#!/postOtrBroadcast
    */
   public async postBroadcastMessage(
     clientId: string,
-    messageData?: NewOTRMessage,
-    params?: {
-      ignore_missing?: boolean;
-      report_missing?: string;
-    },
+    messageData: NewOTRMessage,
+    ignoreMissing?: boolean,
   ): Promise<ClientMismatch> {
     if (!clientId) {
       throw new ValidationError('Unable to send OTR message without client ID.');
     }
 
-    if (!messageData) {
-      messageData = {
-        recipients: {},
-        sender: clientId,
-      };
-    }
-
     const config: AxiosRequestConfig = {
       data: messageData,
       method: 'post',
-      params: {
-        ignore_missing: !!messageData.data,
-        ...params,
-      },
       url: BroadcastAPI.URL.BROADCAST,
     };
+
+    if (typeof ignoreMissing === 'boolean') {
+      config.params.ignore_missing = ignoreMissing;
+    }
 
     const response =
       typeof messageData.recipients === 'object'

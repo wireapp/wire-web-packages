@@ -3,6 +3,94 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.108](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.0.107...@wireapp/changelog-bot@4.0.108) (2020-04-21)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.0.107](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.0.106...@wireapp/changelog-bot@4.0.107) (2020-04-21)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.0.106](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.0.105...@wireapp/changelog-bot@4.0.106) (2020-04-17)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.0.105](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.0.104...@wireapp/changelog-bot@4.0.105) (2020-04-17)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.0.104](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.0.103...@wireapp/changelog-bot@4.0.104) (2020-04-17)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.0.103](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.0.102...@wireapp/changelog-bot@4.0.103) (2020-04-17)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.0.102](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.0.101...@wireapp/changelog-bot@4.0.102) (2020-04-17)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.0.101](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.0.100...@wireapp/changelog-bot@4.0.101) (2020-04-17)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.0.100](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.0.99...@wireapp/changelog-bot@4.0.100) (2020-04-16)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.0.99](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.0.98...@wireapp/changelog-bot@4.0.99) (2020-04-16)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.0.98](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.0.97...@wireapp/changelog-bot@4.0.98) (2020-04-16)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
 ## [4.0.97](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.0.96...@wireapp/changelog-bot@4.0.97) (2020-04-16)
 
 **Note:** Version bump only for package @wireapp/changelog-bot

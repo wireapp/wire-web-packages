@@ -17,23 +17,13 @@
  *
  */
 
-import {Container} from '@wireapp/react-ui-kit';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
+import {THEME_ID} from '../Layout';
+import {matchComponent} from '../test/testUtil';
+import {ButtonLink} from './ButtonLink';
 
-export const RenderHarness = ({children}) => {
-  const INTERVAL_MS = 1000;
-  const [time, setTime] = useState(new Date().getTime());
-  useEffect(() => {
-    const intervalId = window.setInterval(() => {
-      setTime(new Date().getTime());
-    }, INTERVAL_MS);
-    return () => window.clearInterval(intervalId);
-  }, []);
-
-  return (
-    <Container>
-      {new Date(time).toString()}
-      {children}
-    </Container>
-  );
-};
+describe('"ButtonLink"', () => {
+  it('renders', () => matchComponent(<ButtonLink>Submit</ButtonLink>));
+  it('renders (dark theme)', () => matchComponent(<ButtonLink>ButtonLink</ButtonLink>, THEME_ID.DARK));
+  it('renders in loading state', () => matchComponent(<ButtonLink showLoading>Submit</ButtonLink>));
+});

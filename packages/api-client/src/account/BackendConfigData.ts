@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2020 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,15 +17,14 @@
  *
  */
 
-export interface ParameterlessConstructor<T> {
-  new (): T;
-}
-
-export function new_instance<T>(proposedClass: ParameterlessConstructor<T>): T {
-  try {
-    const newClass = new proposedClass();
-    return newClass;
-  } catch (error) {
-    return error._instance;
-  }
+export interface BackendConfigData {
+  endpoints: {
+    backendURL: string;
+    backendWSURL: string;
+    blackListURL: string;
+    teamsURL: string;
+    accountsURL: string;
+    websiteURL: string;
+  };
+  title: string;
 }

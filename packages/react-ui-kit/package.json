@@ -28,12 +28,12 @@
     "react-dom": "16.13.1",
     "react-helmet": "5.2.1",
     "react-hot-loader": "4.12.20",
+    "react-styleguidist": "11.0.5",
     "react-test-renderer": "16.13.1",
     "rimraf": "3.0.0",
     "typescript": "3.8.3",
     "webpack": "4.42.1",
     "webpack-cli": "3.3.11",
-    "webpack-dev-server": "3.10.3",
     "webpack-env": "0.8.0"
   },
   "peerDependencies": {
@@ -55,14 +55,15 @@
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit",
   "scripts": {
     "build": "tsc && babel --config-file ./babel.config.js --extensions .ts,.tsx ./src -d ./dist --source-maps",
+    "build:styleguide": "styleguidist build",
     "clean": "rimraf dist",
     "dist": "yarn clean && yarn build",
-    "start": "webpack-dev-server",
+    "start": "styleguidist server",
     "test": "jest --config=./jest.config.js ",
     "test:coverage": "yarn test --coverage",
     "test:watch": "yarn test --watch",
     "test:update": "yarn test --updateSnapshot",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "7.26.20"
+  "version": "7.26.22"
 }
