@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2020 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ import {jsx} from '@emotion/core';
 import {SVGIcon, SVGIconProps} from './SVGIcon';
 
 export const ReloadIcon = (props: SVGIconProps) => (
-  <SVGIcon realWidth={14} realHeight={16} {...props}>
+  <SVGIcon realWidth={16} realHeight={16} {...props}>
     <path d="M13.7 2.3a8.3 8.3 0 00-11.4 0A8 8 0 1015.7 10h-2a6.1 6.1 0 01-2.2 2.9 6 6 0 11.8-9.1L9 7h7V0l-2.3 2.3z" />
   </SVGIcon>
 );
