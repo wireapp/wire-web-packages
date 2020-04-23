@@ -77,10 +77,7 @@ export class CryptoboxCRUDStore implements ProteusSession.PreKeyStore {
       const payload = this.from_store(record);
       return ProteusKeys.IdentityKeyPair.deserialise(payload);
     } catch (error) {
-      if (
-        error instanceof StoreEngineError.RecordNotFoundError ||
-        error.constructor.name === StoreEngineError.RecordNotFoundError.constructor.name
-      ) {
+      if (error instanceof StoreEngineError.RecordNotFoundError) {
         return undefined;
       }
       throw error;
@@ -97,10 +94,7 @@ export class CryptoboxCRUDStore implements ProteusSession.PreKeyStore {
       const payload = this.from_store(record);
       return ProteusKeys.PreKey.deserialise(payload);
     } catch (error) {
-      if (
-        error instanceof StoreEngineError.RecordNotFoundError ||
-        error.constructor.name === StoreEngineError.RecordNotFoundError.constructor.name
-      ) {
+      if (error instanceof StoreEngineError.RecordNotFoundError) {
         return undefined;
       }
       throw error;
