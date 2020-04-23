@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2019 Wire Swiss GmbH
+ * Copyright (C) 2020 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,23 +17,14 @@
  *
  */
 
-import {Container} from '@wireapp/react-ui-kit';
-import React, {useEffect, useState} from 'react';
-
-export const RenderHarness = ({children}) => {
-  const INTERVAL_MS = 1000;
-  const [time, setTime] = useState(new Date().getTime());
-  useEffect(() => {
-    const intervalId = window.setInterval(() => {
-      setTime(new Date().getTime());
-    }, INTERVAL_MS);
-    return () => window.clearInterval(intervalId);
-  }, []);
-
-  return (
-    <Container>
-      {new Date(time).toString()}
-      {children}
-    </Container>
-  );
-};
+export interface BackendConfigData {
+  endpoints: {
+    backendURL: string;
+    backendWSURL: string;
+    blackListURL: string;
+    teamsURL: string;
+    accountsURL: string;
+    websiteURL: string;
+  };
+  title: string;
+}
