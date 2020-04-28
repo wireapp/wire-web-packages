@@ -58,7 +58,7 @@ export enum BackendErrorLabel {
   NO_MANAGED_CONVERSATION = 'no-managed-team-conv',
   // @deprecated
   NO_OTHER_OWNER = 'no-other-owner',
-  // This error is thrown when an owner tries to delete hisself
+  // This error is thrown when an owner tries to delete themself
   NO_SELF_DELETE_FOR_TEAM_OWNER = 'no-self-delete-for-team-owner',
   NO_TEAM = 'no-team',
   NO_TEAM_MEMBER = 'no-team-member',
