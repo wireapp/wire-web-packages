@@ -80,7 +80,7 @@
     "sort-vars": "error",
     "strict": ["error", "global"],
     "typescript-sort-keys/interface": ["warn", "asc", {"caseSensitive": false}],
-    "typescript-sort-keys/string-enum": ["warn", "asc", {"caseSensitive": false}]
+    "typescript-sort-keys/string-enum": ["warn", "asc", {"caseSensitive": false}],
     "valid-jsdoc": [
       "error",
       {
