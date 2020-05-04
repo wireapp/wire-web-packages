@@ -35,7 +35,7 @@ export const HeaderMenu = ({children, logoElement = null, centerElement = null, 
 
   const toggleMenu = () => {
     if (typeof window !== 'undefined') {
-      window.scrollTo(0, 0);
+      // window.scrollTo(0, 0);
       setIsOpen(current => !current);
     }
   };
@@ -49,10 +49,15 @@ export const HeaderMenu = ({children, logoElement = null, centerElement = null, 
           {logoElement}
         </div>
         <div style={{alignSelf: 'center', display: 'flex'}}>{centerElement}</div>
+        <MenuOpenButton
+          onClick={toggleMenu}
+          open={isOpen}
+          style={{justifySelf: 'end', position: isOpen ? 'fixed' : undefined, top: '21px', right: '16px'}}
+          data-uie-name="do-toggle-header-menu"
+        />
         <MenuItems onClick={closeMenu} open={isOpen}>
           <MenuScrollableItems>{children}</MenuScrollableItems>
         </MenuItems>
-        <MenuOpenButton onClick={toggleMenu} open={isOpen} data-uie-name="do-toggle-header-menu" />
       </MenuContent>
     </div>
   );
