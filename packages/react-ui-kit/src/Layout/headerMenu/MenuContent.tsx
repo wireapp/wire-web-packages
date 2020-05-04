@@ -29,8 +29,10 @@ export interface MenuContentProps<T = HTMLDivElement> extends TextProps<T> {
 
 export const menuContentStyle: <T>(props: MenuContentProps<T>) => ObjectInterpolation<undefined> = props => ({
   ...contentStyle(props),
+  display: 'grid',
+  gridTemplateColumns: '1fr auto 1fr',
+  gridColumnGap: '8px',
   alignItems: 'center',
-  flexDirection: 'row',
   height: '64px',
   justifyContent: 'space-between',
   left: props.open ? 0 : undefined,
