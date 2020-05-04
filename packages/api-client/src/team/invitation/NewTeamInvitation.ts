@@ -23,7 +23,7 @@ export interface NewTeamInvitation {
   email: string;
   inviter_name: string;
   locale: string;
-  role: Role;
   name?: string;
   phone?: string;
+  role: Role;
 }
