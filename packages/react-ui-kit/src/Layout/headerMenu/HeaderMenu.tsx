@@ -58,10 +58,6 @@ export const HeaderMenu = ({children, logoElement = null, centerElement = null, 
         <MenuItems onClick={closeMenu} open={isOpen}>
           <MenuScrollableItems>{children}</MenuScrollableItems>
         </MenuItems>
-        data-uie-name="do-toggle-header-menu" />
-        <MenuItems onClick={closeMenu} open={isOpen}>
-          <MenuScrollableItems>{children}</MenuScrollableItems>
-        </MenuItems>
       </MenuContent>
     </div>
   );
