@@ -20,7 +20,7 @@
 const {DateUtil} = require('@wireapp/commons');
 
 describe('DateUtil', () => {
-  describe('"isoFormat"', () => {
+  describe('isoFormat', () => {
     it('formats a valid date into the expected format', () => {
       // May 4th 2020, 13:42:00
       const date = new Date(1588599720000);
