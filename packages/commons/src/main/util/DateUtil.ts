@@ -18,7 +18,7 @@
  */
 
 /**
- * Converts a date object into a date of format `YYYY-MM-DD` and `HH:mm:ss`.
+ * Converts a date object into two strings of format `YYYY-MM-DD` and `HH:mm:ss`.
  * @param date The date to format
  */
 export function isoFormat(date: Date): {date: string; time: string} {
