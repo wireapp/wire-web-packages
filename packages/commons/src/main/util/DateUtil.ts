@@ -25,6 +25,6 @@ export function isoFormat(date: Date): {date: string; time: string} {
   const isoString = date.toISOString();
 
   const dateAndTimeRegex = /(.+)T(.+)\./;
-  const [, formattedDate, formattedTime] = dateAndTimeRegex.exec(isoString) || [];
+  const [, formattedDate, formattedTime] = dateAndTimeRegex.exec(isoString)!;
   return {date: formattedDate, time: formattedTime};
 }
