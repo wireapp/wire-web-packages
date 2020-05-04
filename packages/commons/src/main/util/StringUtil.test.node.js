@@ -36,7 +36,7 @@ describe('StringUtil', () => {
     });
   });
 
-  describe('"pluralize"', () => {
+  describe('pluralize', () => {
     it('pluralizes the word "hour"', () => {
       const test = 'hour';
       const expected = 'hours';
