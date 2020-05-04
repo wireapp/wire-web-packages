@@ -26,8 +26,8 @@ import {MenuOpenButton} from './MenuOpenButton';
 import {MenuScrollableItems} from './MenuScrollableItems';
 
 export interface HeaderMenuProps<T = HTMLDivElement> extends React.HTMLProps<T> {
-  logoElement?: React.ReactNode;
   centerElement?: React.ReactNode;
+  logoElement?: React.ReactNode;
 }
 
 export const HeaderMenu = ({children, logoElement = null, centerElement = null, ...props}: HeaderMenuProps) => {
@@ -45,7 +45,7 @@ export const HeaderMenu = ({children, logoElement = null, centerElement = null, 
   return (
     <div style={{height: '64px'}} {...props} data-uie-name="element-header-menu">
       <MenuContent open={isOpen}>
-        <div style={{alignSelf: 'center', zIndex: 2, display: 'flex'}} onClick={closeMenu}>
+        <div style={{alignSelf: 'center', display: 'flex', zIndex: 2}} onClick={closeMenu}>
           {logoElement}
         </div>
         <div style={{alignSelf: 'center', display: 'flex'}}>{centerElement}</div>

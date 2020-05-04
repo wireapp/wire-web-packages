@@ -31,9 +31,9 @@ export const menuItemsStyle: <T>(theme: Theme, props: MenuItemsProps<T>) => Obje
   theme,
   props,
 ) => ({
-  justifySelf: 'end',
   alignSelf: 'center',
   display: 'flex',
+  justifySelf: 'end',
   [media[QueryKeys.TABLET_DOWN]]: {
     backgroundColor: theme.general.backgroundColor,
     bottom: 0,

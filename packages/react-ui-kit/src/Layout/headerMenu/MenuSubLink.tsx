@@ -51,7 +51,6 @@ export const menuSubLinkStyle: <T>(theme: Theme, props: MenuSubLinkProps<T>) => 
     fontSize: '11px',
     margin: '0 26px 0 10px',
     textTransform: 'uppercase',
-
   },
 
   [media[QueryKeys.TABLET_DOWN]]: {
