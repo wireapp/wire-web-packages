@@ -19,6 +19,7 @@
 
 export {NewTeamInvitation, TeamInvitation, TeamInvitationAPI, TeamInvitationChunk} from './invitation/';
 export {LegalHoldAPI} from './legalhold/';
+export {PropertyAPI, PropertyData, FeaturesData, PropertyError} from './property';
 export {MemberAPI, MemberData, Members, Permissions, PermissionsData, Role} from './member/';
 export {NewTeamData, TeamAPI, TeamChunkData, TeamData, TeamInfo, UpdateTeamData} from './team/';
 export {PaymentAPI, PaymentData} from './payment/';
