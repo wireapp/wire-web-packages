@@ -35,11 +35,10 @@ export class GiphyAPI {
   };
 
   /**
-   * Get a Giphy image by its ID.
-   * @param ids one or multiple image ID(s)
+   * Get multiple Giphy images by IDs.
    * @see https://developers.giphy.com/docs/api/endpoint#get-gifs-by-id
    */
-  public async getGiphyById(options: GiphyIdOptions): Promise<GiphyMultipleResult> {
+  public async getGiphyByIds(options: GiphyIdOptions): Promise<GiphyMultipleResult> {
     const allIds = Array<string>().concat(options.ids);
 
     delete options.ids;
@@ -55,8 +54,21 @@ export class GiphyAPI {
   }
 
   /**
+   * Get a Giphy image by its ID.
+   * @see https://developers.giphy.com/docs/api/endpoint#get-gif-by-id
+   */
+  public async getGiphyById(id: string): Promise<GiphyResult> {
+    const config: AxiosRequestConfig = {
+      method: 'get',
+      url: `${GiphyAPI.URL.PROXY}/${GiphyAPI.URL.GIPHY}/${id}`,
+    };
+
+    const response = await this.client.sendJSON<GiphyMultipleResult>(config);
+    return response.data;
+  }
+
+  /**
    * Get a random GIF from Giphy.
-   * @param tag Filter results by specified tag.
    * @see https://developers.giphy.com/docs/api/endpoint#random
    */
   public async getGiphyRandom(options?: GiphyRandomOptions | string): Promise<GiphyResult> {
@@ -72,7 +84,6 @@ export class GiphyAPI {
 
   /**
    * Get GIF search results from Giphy.
-   * @param options Search options
    * @see https://developers.giphy.com/docs/api/endpoint#search
    */
   public async getGiphySearch(options: GiphySearchOptions): Promise<GiphyMultipleResult> {
@@ -88,7 +99,6 @@ export class GiphyAPI {
 
   /**
    * Get GIF trending results from Giphy.
-   * @param options Search options
    * @see https://developers.giphy.com/docs/api/endpoint#trending
    */
   public async getGiphyTrending(options: GiphyTrendingOptions): Promise<GiphyMultipleResult> {
