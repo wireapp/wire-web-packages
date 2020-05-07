@@ -19,4 +19,3 @@
 
 export * from './PropertyAPI';
 export * from './PropertyData';
-export * from './PropertyError';

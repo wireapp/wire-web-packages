@@ -18,34 +18,24 @@
  */
 
 import {AxiosRequestConfig} from 'axios';
-
-import {HttpClient, StatusCode} from '../../http';
-import {PropertyData, FeaturesData} from './PropertyData';
-import {FeaturesDataNotFoundError} from './PropertyError';
+import {HttpClient} from '../../http';
+import {PropertyData} from './PropertyData';
 
 export class PropertyAPI {
   constructor(private readonly client: HttpClient) {}
 
   public static readonly URL = {
-    FEATURES: 'features',
     PROPERTIES: 'properties',
     SIGNATURES: '/signatures',
   };
 
-  public async getFeaturesData(teamId: string): Promise<FeaturesData> {
+  public async getPropertyData(teamId: string): Promise<PropertyData> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${PropertyAPI.URL.SIGNATURES}/${teamId}/${PropertyAPI.URL.PROPERTIES}/${PropertyAPI.URL.FEATURES}`,
+      url: `${PropertyAPI.URL.SIGNATURES}/${teamId}/${PropertyAPI.URL.PROPERTIES}`,
     };
 
-    try {
-      const response = await this.client.sendJSON<PropertyData>(config);
-      return response.data.properties.features;
-    } catch (error) {
-      if (error.status === StatusCode.NOT_FOUND) {
-        throw new FeaturesDataNotFoundError(error.message);
-      }
-      throw error;
-    }
+    const response = await this.client.sendJSON<PropertyData>(config);
+    return response.data;
   }
 }
