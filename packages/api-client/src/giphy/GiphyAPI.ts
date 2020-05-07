@@ -47,7 +47,7 @@ export class GiphyAPI {
     const config: AxiosRequestConfig = {
       method: 'get',
       params: options,
-      url: `${GiphyAPI.URL.PROXY}/${GiphyAPI.URL.GIPHY}/${allIds}`,
+      url: `${GiphyAPI.URL.PROXY}/${GiphyAPI.URL.GIPHY}/${allIds.join(',')}`,
     };
 
     const response = await this.client.sendJSON<GiphyMultipleResult>(config);
