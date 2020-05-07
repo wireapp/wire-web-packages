@@ -56,6 +56,6 @@ export interface GiphyRandomOptions extends GiphyBaseOptions {
 
 /** @see https://developers.giphy.com/docs/api/endpoint#get-gif-by-id */
 export interface GiphyIdOptions extends GiphyBaseOptions {
-  /** Filters results by specified GIF IDs, separated by commas. */
-  ids: string | string[];
+  /** Filters results by specified GIF IDs. */
+  ids: string[];
 }

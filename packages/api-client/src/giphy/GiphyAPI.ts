@@ -39,14 +39,14 @@ export class GiphyAPI {
    * @see https://developers.giphy.com/docs/api/endpoint#get-gifs-by-id
    */
   public async getGiphyByIds(options: GiphyIdOptions): Promise<GiphyMultipleResult> {
-    const allIds = Array<string>().concat(options.ids);
+    const allIds = options.ids.join(',');
 
     delete options.ids;
 
     const config: AxiosRequestConfig = {
       method: 'get',
       params: options,
-      url: `${GiphyAPI.URL.PROXY}/${GiphyAPI.URL.GIPHY}/${allIds.join(',')}`,
+      url: `${GiphyAPI.URL.PROXY}/${GiphyAPI.URL.GIPHY}/${allIds}`,
     };
 
     const response = await this.client.sendJSON<GiphyMultipleResult>(config);
