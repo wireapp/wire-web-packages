@@ -19,10 +19,10 @@
 
 /** @see https://developers.giphy.com/docs/optional-settings/#rating */
 export enum GIPHY_RATING {
-  G = 'g',
-  PG = 'pg',
-  PG_13 = 'pg-13',
-  R = 'r',
+  ALL_AGES_AND_PEOPLE = 'g',
+  MILD_SUBSTANCE = 'pg-13',
+  REQUIRE_PARENTAL_PREVIEW = 'pg',
+  STRONG_LANGUAGE = 'r',
 }
 
 export interface GiphyBaseOptions {
