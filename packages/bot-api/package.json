@@ -2,7 +2,7 @@
   "dependencies": {
     "@types/long": "4.0.1",
     "@types/node": "*",
-    "@wireapp/core": "16.8.0",
+    "@wireapp/core": "16.8.1",
     "pure-uuid": "1.6.0"
   },
   "devDependencies": {
@@ -22,16 +22,14 @@
   "name": "@wireapp/bot-api",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api",
   "scripts": {
-    "build": "yarn build:node && yarn build:browser",
-    "build:browser": "exit 0",
+    "build": "yarn build:node",
     "build:node": "tsc",
     "clean": "rimraf dist",
     "demo:admin": "ts-node src/demo/admin.ts",
     "dist": "yarn clean && yarn build",
-    "test": "yarn test:node && yarn test:browser",
-    "test:browser": "exit 0",
+    "test": "yarn test:node",
     "test:node": "jasmine --config=jasmine.json",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "7.9.30"
+  "version": "7.9.31"
 }
