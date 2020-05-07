@@ -7,7 +7,6 @@
 .tmp/
 .vscode/
 .yarnclean
-bower_components/
 coverage/
 dist/
 lerna-debug.log

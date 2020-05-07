@@ -30,7 +30,7 @@
     "utils"
   ],
   "license": "GPL-3.0",
-  "main": "./dist/commonjs/index.js",
+  "main": "dist/commonjs/index.js",
   "name": "@wireapp/commons",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/commons",
   "scripts": {
@@ -43,5 +43,5 @@
     "test:project": "yarn dist && yarn test",
     "test:node": "jasmine --config=jasmine.json"
   },
-  "version": "3.5.1"
+  "version": "3.5.2"
 }

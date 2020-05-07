@@ -7,8 +7,8 @@
     "@types/node": "~12",
     "@types/spark-md5": "3.0.2",
     "@types/tough-cookie": "4.0.0",
-    "@wireapp/commons": "3.5.1",
-    "@wireapp/priority-queue": "1.6.0",
+    "@wireapp/commons": "3.5.2",
+    "@wireapp/priority-queue": "1.6.1",
     "axios": "0.19.2",
     "logdown": "3.3.1",
     "reconnecting-websocket": "4.4.0",
@@ -19,7 +19,7 @@
   "devDependencies": {
     "@babel/core": "7.9.0",
     "@babel/plugin-proposal-class-properties": "7.8.3",
-    "@babel/plugin-proposal-object-rest-spread": "7.9.0",
+    "@babel/plugin-proposal-object-rest-spread": "7.9.6",
     "@babel/plugin-proposal-optional-chaining": "7.9.0",
     "@babel/preset-react": "7.8.3",
     "@babel/preset-typescript": "7.8.3",
@@ -28,9 +28,9 @@
     "@types/react": "16.9.19",
     "@types/react-dom": "16.9.7",
     "@types/ws": "7.2.3",
-    "@wireapp/react-ui-kit": "7.29.2",
-    "@wireapp/store-engine": "4.5.1",
-    "@wireapp/store-engine-fs": "2.2.2",
+    "@wireapp/react-ui-kit": "7.29.3",
+    "@wireapp/store-engine": "4.5.2",
+    "@wireapp/store-engine-fs": "2.2.3",
     "babel-loader": "8.0.6",
     "browser-sync": "2.26.7",
     "concurrently": "5.2.0",
@@ -66,7 +66,7 @@
     "src"
   ],
   "license": "GPL-3.0",
-  "main": "./dist/APIClient.js",
+  "main": "dist/APIClient.js",
   "name": "@wireapp/api-client",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client",
   "scripts": {
@@ -84,5 +84,5 @@
     "test:node": "cross-env NODE_DEBUG=@wireapp/api-client* nyc jasmine --config=jasmine.json",
     "watch": "webpack-dev-server --config webpack.browser.js"
   },
-  "version": "11.12.0"
+  "version": "11.13.0"
 }
