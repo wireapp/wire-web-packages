@@ -37,22 +37,18 @@ export class GiphyAPI {
   /**
    * Get a Giphy image by its ID.
    * @param ids one or multiple image ID(s)
-   * @see https://developers.giphy.com/docs/api/endpoint#get-gif-by-id
+   * @see https://developers.giphy.com/docs/api/endpoint#get-gifs-by-id
    */
-  public async getGiphyById(options: GiphyIdOptions): Promise<GiphyMultipleResult>;
-  public async getGiphyById(ids: string | string[]): Promise<GiphyMultipleResult>;
-  public async getGiphyById(optionsOrIds: string | string[] | GiphyIdOptions): Promise<GiphyMultipleResult> {
+  public async getGiphyById(options: GiphyIdOptions): Promise<GiphyMultipleResult> {
+    const allIds = Array<string>().concat(options.ids);
+
+    delete options.ids;
+
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${GiphyAPI.URL.PROXY}/${GiphyAPI.URL.GIPHY}`,
+      params: options,
+      url: `${GiphyAPI.URL.PROXY}/${GiphyAPI.URL.GIPHY}/${allIds}`,
     };
-
-    if (Array.isArray(optionsOrIds) || typeof optionsOrIds === 'string') {
-      const allIds = Array<string>().concat(optionsOrIds);
-      config.params = {ids: allIds.join()};
-    } else {
-      config.params = optionsOrIds;
-    }
 
     const response = await this.client.sendJSON<GiphyMultipleResult>(config);
     return response.data;
@@ -63,19 +59,12 @@ export class GiphyAPI {
    * @param tag Filter results by specified tag.
    * @see https://developers.giphy.com/docs/api/endpoint#random
    */
-  public async getGiphyRandom(tag?: string): Promise<GiphyResult>;
-  public async getGiphyRandom(options?: GiphyRandomOptions): Promise<GiphyResult>;
-  public async getGiphyRandom(optionsOrTag?: GiphyRandomOptions | string): Promise<GiphyResult> {
+  public async getGiphyRandom(options?: GiphyRandomOptions | string): Promise<GiphyResult> {
     const config: AxiosRequestConfig = {
       method: 'get',
+      params: options,
       url: `${GiphyAPI.URL.PROXY}/${GiphyAPI.URL.GIPHY}/${GiphyAPI.URL.RANDOM}`,
     };
-
-    if (typeof optionsOrTag === 'string') {
-      config.params = {tag: optionsOrTag};
-    } else if (typeof optionsOrTag !== 'undefined') {
-      config.params = optionsOrTag;
-    }
 
     const response = await this.client.sendJSON<GiphyResult>(config);
     return response.data;
