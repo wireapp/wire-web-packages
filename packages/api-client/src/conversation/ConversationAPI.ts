@@ -483,7 +483,7 @@ export class ConversationAPI {
   public async postForClients(clientId: string, conversationId: string): Promise<ClientMismatch> {
     try {
       await this.postOTRMessage(clientId, conversationId);
-      throw Error(`Expected backend to throw error.`);
+      throw new Error(`Expected backend to throw error.`);
     } catch (error) {
       return (error as AxiosError).response!.data;
     }
