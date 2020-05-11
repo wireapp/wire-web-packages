@@ -23,34 +23,34 @@ import {
   Conversation,
   ConversationCode,
   ConversationIds,
+  ConversationRolesList,
   Conversations,
   Invite,
   Member,
   NewConversation,
   NewOTRMessage,
-  ConversationRolesList,
 } from './';
 import {
+  ConversationAccessUpdateEvent,
+  ConversationCodeDeleteEvent,
+  ConversationCodeUpdateEvent,
   ConversationEvent,
   ConversationMemberJoinEvent,
   ConversationMemberLeaveEvent,
   ConversationMessageTimerUpdateEvent,
-  ConversationRenameEvent,
-  ConversationCodeUpdateEvent,
-  ConversationCodeDeleteEvent,
   ConversationReceiptModeUpdateEvent,
-  ConversationAccessUpdateEvent,
+  ConversationRenameEvent,
 } from '../event/';
 import {HttpClient} from '../http/';
 import {ValidationError} from '../validation/';
 import {
+  ConversationAccessUpdateData,
   ConversationMemberUpdateData,
   ConversationMessageTimerUpdateData,
   ConversationNameUpdateData,
+  ConversationOtherMemberUpdateData,
   ConversationReceiptModeUpdateData,
   ConversationTypingData,
-  ConversationOtherMemberUpdateData,
-  ConversationAccessUpdateData,
 } from './data';
 import {DefaultConversationRoleName} from './ConversationRole';
 
@@ -473,11 +473,15 @@ export class ConversationAPI {
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.OTR}/${ConversationAPI.URL.MESSAGES}`,
     };
 
-    const response =
-      typeof messageData.recipients === 'object'
-        ? await this.client.sendJSON<ClientMismatch>(config, true)
-        : await this.client.sendProtocolBuffer<ClientMismatch>(config, true);
-    return response.data;
+    try {
+      const response =
+        typeof messageData.recipients === 'object'
+          ? await this.client.sendJSON<ClientMismatch>(config, true)
+          : await this.client.sendProtocolBuffer<ClientMismatch>(config, true);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
   }
 
   /**
