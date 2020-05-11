@@ -56,7 +56,7 @@ async function createContext(storeEngine: CRUDEngine, apiClient: APIClient, logi
     logger.log('Logging in with EXISTING cookie...');
     return apiClient.init(loginData.clientType, cookie);
   } catch (error) {
-    logger.log(`Failed to find existing cookie: ${error.message}`, error);
+    logger.log(`Failed to find existing cookie.`, error);
     logger.log(`Logging in with NEW cookie...`);
     return apiClient.login(loginData);
   }

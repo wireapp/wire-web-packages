@@ -17,7 +17,7 @@
  *
  */
 
-import {AxiosRequestConfig} from 'axios';
+import {AxiosError, AxiosRequestConfig} from 'axios';
 import {
   ClientMismatch,
   Conversation,
@@ -481,6 +481,15 @@ export class ConversationAPI {
       return response.data;
     } catch (error) {
       throw error;
+    }
+  }
+
+  public async postForClients(clientId: string, conversationId: string): Promise<ClientMismatch> {
+    try {
+      await this.postOTRMessage(clientId, conversationId);
+      throw Error(`Expected backend to throw error.`);
+    } catch (error) {
+      return (error as AxiosError).response!.data;
     }
   }
 
