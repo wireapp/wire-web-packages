@@ -473,15 +473,11 @@ export class ConversationAPI {
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.OTR}/${ConversationAPI.URL.MESSAGES}`,
     };
 
-    try {
-      const response =
-        typeof messageData.recipients === 'object'
-          ? await this.client.sendJSON<ClientMismatch>(config, true)
-          : await this.client.sendProtocolBuffer<ClientMismatch>(config, true);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response =
+      typeof messageData.recipients === 'object'
+        ? await this.client.sendJSON<ClientMismatch>(config, true)
+        : await this.client.sendProtocolBuffer<ClientMismatch>(config, true);
+    return response.data;
   }
 
   public async postForClients(clientId: string, conversationId: string): Promise<ClientMismatch> {
