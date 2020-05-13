@@ -210,7 +210,7 @@ export class APIClient extends EventEmitter {
     try {
       await this.logout();
     } catch (error) {
-      // Catched to avoid uncaught promises / unhandled promise rejection warnings when you cannot logout because of an invalid cookie or access token.
+      // Catching to avoid uncaught promises / unhandled promise rejection warnings when you cannot logout because of an invalid cookie or access token.
       this.logger.warn(`Cannot logout: ${error.message}`, error);
     } finally {
       this.emit(APIClient.TOPIC.ON_LOGOUT);
