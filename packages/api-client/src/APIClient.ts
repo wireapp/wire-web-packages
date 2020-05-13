@@ -55,6 +55,7 @@ const {version}: {version: string} = require('../package.json');
 enum TOPIC {
   ACCESS_TOKEN_REFRESH = 'APIClient.TOPIC.ACCESS_TOKEN_REFRESH',
   COOKIE_REFRESH = 'APIClient.TOPIC.COOKIE_REFRESH',
+  /** Event being sent when logout is done. */
   ON_LOGOUT = 'APIClient.TOPIC.ON_LOGOUT',
 }
 
@@ -204,9 +205,15 @@ export class APIClient extends EventEmitter {
     };
   }
 
-  private async logoutOnAccessTokenRefreshError(error: Error) {
-    this.logger.warn(`Cannot renew access token: ${error.message}`, error);
-    await this.logout();
+  private async logoutOnAccessTokenRefreshError() {
+    this.logger.warn(`Cannot renew access token.`);
+    try {
+      await this.logout();
+    } catch (error) {
+      this.logger.warn(`Cannot logout: ${error.message}`, error);
+    } finally {
+      this.emit(APIClient.TOPIC.ON_LOGOUT);
+    }
   }
 
   public async init(clientType: ClientType = ClientType.NONE, cookie?: Cookie): Promise<Context> {
@@ -265,7 +272,6 @@ export class APIClient extends EventEmitter {
 
     await this.accessTokenStore.delete();
     delete this.context;
-    this.emit(APIClient.TOPIC.ON_LOGOUT);
   }
 
   public connect(onBeforeConnect?: () => Promise<void>): Promise<WebSocketClient> {
