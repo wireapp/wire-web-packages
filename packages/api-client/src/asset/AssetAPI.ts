@@ -59,13 +59,13 @@ export class AssetAPI {
     const config: AxiosRequestConfig = {
       cancelToken: cancelSource.token,
       method: 'get',
+      onDownloadProgress: handleProgressEvent(progressCallback),
+      onUploadProgress: handleProgressEvent(progressCallback),
       params: {
         conv_id: conversationId,
       },
       responseType: 'arraybuffer',
       url: `${AssetAPI.ASSET_V1_URL}/${assetId}`,
-      onDownloadProgress: handleProgressEvent(progressCallback),
-      onUploadProgress: handleProgressEvent(progressCallback),
     };
 
     if (forceCaching) {
@@ -109,11 +109,11 @@ export class AssetAPI {
     const config: AxiosRequestConfig = {
       cancelToken: cancelSource.token,
       method: 'get',
+      onDownloadProgress: handleProgressEvent(progressCallback),
+      onUploadProgress: handleProgressEvent(progressCallback),
       params: {},
       responseType: 'arraybuffer',
       url: `${AssetAPI.ASSET_V2_CONVERSATION_URL}/${conversationId}${AssetAPI.ASSET_V2_URL}/${assetId}`,
-      onDownloadProgress: handleProgressEvent(progressCallback),
-      onUploadProgress: handleProgressEvent(progressCallback),
     };
 
     if (forceCaching) {
@@ -156,11 +156,11 @@ export class AssetAPI {
     const config: AxiosRequestConfig = {
       cancelToken: cancelSource.token,
       method: 'get',
+      onDownloadProgress: handleProgressEvent(progressCallback),
+      onUploadProgress: handleProgressEvent(progressCallback),
       params: {},
       responseType: 'arraybuffer',
       url: `${AssetAPI.ASSET_V3_URL}/${assetId}`,
-      onDownloadProgress: handleProgressEvent(progressCallback),
-      onUploadProgress: handleProgressEvent(progressCallback),
     };
 
     if (token) {
