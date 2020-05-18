@@ -17,7 +17,7 @@
     "eslint-plugin-typescript-sort-keys": "0.8.0",
     "husky": "4.2.5",
     "lerna": "3.20.2",
-    "lint-staged": "10.0.8",
+    "lint-staged": "10.2.2",
     "prettier": "2.0.4"
   },
   "engines": {
