@@ -15513,10 +15513,10 @@ url-parse@^1.4.3, url-parse@^1.4.4:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
 
-url-search-params-polyfill@8.0.0:
-  version "8.0.0"
-  resolved "https://registry.npmjs.org/url-search-params-polyfill/-/url-search-params-polyfill-8.0.0.tgz#17415ca6815ff0661e07737b84bcc28e708a7875"
-  integrity sha512-X4BTaEq1UMz9bTbMKQ6r+CippkKBsFWHiP9wycQc7aHH2Ml/Iieuo44+GJDb77pfP71bONYA/nUd4iokYAxVRQ==
+url-search-params-polyfill@8.1.0:
+  version "8.1.0"
+  resolved "https://registry.npmjs.org/url-search-params-polyfill/-/url-search-params-polyfill-8.1.0.tgz#5c15b69687165bfd4f6c7d8a161d70d85385885b"
+  integrity sha512-MRG3vzXyG20BJ2fox50/9ZRoe+2h3RM7DIudVD2u/GY9MtayO1Dkrna76IUOak+uoUPVWbyR0pHCzxctP/eDYQ==
 
 url@^0.11.0:
   version "0.11.0"
