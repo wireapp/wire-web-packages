@@ -33,8 +33,8 @@ export interface AssetOptions {
 }
 
 export interface AssetResponse {
-  mimeType: string;
   buffer: ArrayBuffer;
+  mimeType: string;
 }
 
 export class AssetAPI {
@@ -81,8 +81,8 @@ export class AssetAPI {
       try {
         const response = await this.client.sendRequest<ArrayBuffer>(config, true);
         return {
-          mimeType: response.headers['content-type'],
           buffer: response.data,
+          mimeType: response.headers['content-type'],
         };
       } catch (error) {
         if (error.message === SyntheticErrorLabel.REQUEST_CANCELLED) {
@@ -132,8 +132,8 @@ export class AssetAPI {
       try {
         const response = await this.client.sendRequest<ArrayBuffer>(config, true);
         return {
-          mimeType: response.headers['content-type'],
           buffer: response.data,
+          mimeType: response.headers['content-type'],
         };
       } catch (error) {
         if (error.message === SyntheticErrorLabel.REQUEST_CANCELLED) {
@@ -185,8 +185,8 @@ export class AssetAPI {
       try {
         const response = await this.client.sendRequest<ArrayBuffer>(config, true);
         return {
-          mimeType: response.headers['content-type'],
           buffer: response.data,
+          mimeType: response.headers['content-type'],
         };
       } catch (error) {
         if (error.message === SyntheticErrorLabel.REQUEST_CANCELLED) {
