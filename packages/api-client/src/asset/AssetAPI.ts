@@ -25,7 +25,7 @@ import {unsafeAlphanumeric} from '../shims/node/random';
 import {RequestCancellationError} from '../user';
 import {AssetRetentionPolicy} from './AssetRetentionPolicy';
 import {AssetUploadData} from './AssetUploadData';
-import {isValidAssetId, isValidToken, isValidUUID} from './AssetUtil';
+import {isValidToken, isValidUUID} from './AssetUtil';
 
 export interface AssetOptions {
   public: boolean;
@@ -46,7 +46,7 @@ export class AssetAPI {
     forceCaching: boolean = false,
     progressCallback?: ProgressCallback,
   ): Promise<RequestCancelable<ArrayBuffer>> {
-    if (!isValidAssetId(assetId)) {
+    if (!isValidUUID(assetId)) {
       throw new TypeError(`Expected asset ID "${assetId}" to only contain alphanumeric values and dashes.`);
     }
     if (!isValidUUID(conversationId)) {
@@ -96,7 +96,7 @@ export class AssetAPI {
     forceCaching: boolean = false,
     progressCallback?: ProgressCallback,
   ): Promise<RequestCancelable<ArrayBuffer>> {
-    if (!isValidAssetId(assetId)) {
+    if (!isValidUUID(assetId)) {
       throw new TypeError(`Expected asset ID "${assetId}" to only contain alphanumeric values and dashes.`);
     }
     if (!isValidUUID(conversationId)) {
@@ -144,7 +144,7 @@ export class AssetAPI {
     forceCaching: boolean = false,
     progressCallback?: ProgressCallback,
   ): Promise<RequestCancelable<ArrayBuffer>> {
-    if (!isValidAssetId(assetId)) {
+    if (!isValidUUID(assetId)) {
       throw new TypeError(`Expected asset ID "${assetId}" to only contain alphanumeric values and dashes.`);
     }
 
