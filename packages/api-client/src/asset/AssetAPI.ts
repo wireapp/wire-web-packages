@@ -72,7 +72,7 @@ export class AssetAPI {
       config.params.forceCaching = forceCaching;
     }
 
-    const handleRequest = async () => {
+    const handleRequest = async (): Promise<ArrayBuffer> => {
       try {
         const response = await this.client.sendRequest<ArrayBuffer>(config, true);
         return response.data;
@@ -120,7 +120,7 @@ export class AssetAPI {
       config.params.forceCaching = forceCaching;
     }
 
-    const handleRequest = async () => {
+    const handleRequest = async (): Promise<ArrayBuffer> => {
       try {
         const response = await this.client.sendRequest<ArrayBuffer>(config, true);
         return response.data;
@@ -170,7 +170,7 @@ export class AssetAPI {
       config.params.forceCaching = forceCaching;
     }
 
-    const handleRequest = async () => {
+    const handleRequest = async (): Promise<ArrayBuffer> => {
       try {
         const response = await this.client.sendRequest<ArrayBuffer>(config, true);
         return response.data;
@@ -231,7 +231,7 @@ export class AssetAPI {
       url: AssetAPI.ASSET_V3_URL,
     };
 
-    const handleRequest = async () => {
+    const handleRequest = async (): Promise<AssetUploadData> => {
       try {
         const response = await this.client.sendRequest<AssetUploadData>(config);
         return response.data;
