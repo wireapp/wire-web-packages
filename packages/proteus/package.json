@@ -1,16 +1,16 @@
 {
   "dependencies": {
-    "@types/chai": "4.2.11",
-    "@types/ed2curve": "0.2.2",
-    "@types/libsodium-wrappers-sumo": "0.7.3",
-    "@types/node": "~12",
     "@wireapp/cbor": "4.6.4",
     "ed2curve": "0.3.0",
     "libsodium-wrappers-sumo": "0.7.6"
   },
   "description": "Axolotl protocol implementation for JavaScript.",
   "devDependencies": {
+    "@types/chai": "4.2.11",
+    "@types/ed2curve": "0.2.2",
     "@types/jasmine": "3.5.10",
+    "@types/libsodium-wrappers-sumo": "0.7.3",
+    "@types/node": "~12",
     "chai": "4.2.0",
     "jasmine": "3.5.0",
     "nyc": "15.0.1",

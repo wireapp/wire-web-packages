@@ -1,11 +1,11 @@
 {
   "dependencies": {
-    "@types/long": "4.0.1",
-    "@types/node": "*",
     "@wireapp/core": "16.9.8",
     "pure-uuid": "1.6.0"
   },
   "devDependencies": {
+    "@types/long": "4.0.1",
+    "@types/node": "~12",
     "cross-env": "7.0.0",
     "dotenv-defaults": "1.1.1",
     "jasmine": "3.5.0",

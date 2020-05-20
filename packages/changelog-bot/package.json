@@ -3,15 +3,15 @@
     "wire-changelog-bot": "dist/cli.js"
   },
   "dependencies": {
-    "@types/generate-changelog": "1.8.0",
-    "@types/long": "4.0.1",
-    "@types/node": "~12",
     "@wireapp/core": "16.9.8",
     "commander": "5.1.0",
     "generate-changelog": "1.8.0"
   },
   "description": "A changelog notification bot.",
   "devDependencies": {
+    "@types/generate-changelog": "1.8.0",
+    "@types/long": "4.0.1",
+    "@types/node": "~12",
     "logdown": "3.3.1",
     "rimraf": "3.0.2",
     "typescript": "3.8.3"
