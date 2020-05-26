@@ -131,6 +131,34 @@ export class AccountAPI {
   }
 
   /**
+   * Verify phone sms code
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/activate
+   */
+  public async postVerifyPhoneCode(phone: string, code: string): Promise<boolean> {
+    const config: AxiosRequestConfig = {
+      method: 'post',
+      params: {
+        code,
+        dryrun: true,
+        phone,
+      },
+      url: AccountAPI.URL.ACTIVATE,
+    };
+    try {
+      const response = await this.client.sendJSON(config);
+      if (response.status === 200) {
+        return true;
+      }
+      if (response.status === 404) {
+        return false;
+      }
+      return false;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
    * Verify service
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/provider/activate
    */
