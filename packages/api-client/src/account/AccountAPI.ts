@@ -131,7 +131,7 @@ export class AccountAPI {
   }
 
   /**
-   * Verify phone sms code
+   * Activate (i.e. confirm) a phone number
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/activate
    */
   public async postVerifyPhoneCode(phone: string, code: string): Promise<boolean> {
