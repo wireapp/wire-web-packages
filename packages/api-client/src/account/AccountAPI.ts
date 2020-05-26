@@ -144,12 +144,8 @@ export class AccountAPI {
       },
       url: AccountAPI.URL.ACTIVATE,
     };
-    try {
-      const response = await this.client.sendJSON(config);
-      return response.status === 200;
-    } catch (error) {
-      throw error;
-    }
+    const response = await this.client.sendJSON(config);
+    return response.status === 200;
   }
 
   /**
