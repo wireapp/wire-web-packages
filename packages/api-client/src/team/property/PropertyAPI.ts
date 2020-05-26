@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2020 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,22 +17,25 @@
  *
  */
 
-import {GiphyImage} from './GiphyImage';
+import {AxiosRequestConfig} from 'axios';
+import {HttpClient} from '../../http';
+import {PropertyData} from './PropertyData';
 
-export interface GiphyResult {
-  data: GiphyImage;
-  meta: {
-    msg: string;
-    response_id: string;
-    status: number;
+export class PropertyAPI {
+  constructor(private readonly client: HttpClient) {}
+
+  public static readonly URL = {
+    PROPERTIES: 'properties',
+    SIGNATURES: '/signatures',
   };
+
+  public async getPropertyData(teamId: string): Promise<PropertyData> {
+    const config: AxiosRequestConfig = {
+      method: 'get',
+      url: `${PropertyAPI.URL.SIGNATURES}/${teamId}/${PropertyAPI.URL.PROPERTIES}`,
+    };
+
+    const response = await this.client.sendJSON<PropertyData>(config);
+    return response.data;
+  }
 }
-
-export type GiphyMultipleResult = GiphyResult & {
-  data: GiphyImage[];
-  pagination: {
-    count: number;
-    offset: number;
-    total_count: number;
-  };
-};

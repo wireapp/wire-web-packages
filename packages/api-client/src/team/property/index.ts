@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2020 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,20 +17,5 @@
  *
  */
 
-import {ClientType, Location, PublicClient} from './';
-
-export interface AddedClient extends PublicClient {
-  /** The IP address from which the client was registered */
-  address?: string;
-  label?: string;
-  location?: Location;
-  model?: string;
-  /** An ISO 8601 Date string */
-  time: string;
-  type: ClientType.PERMANENT | ClientType.TEMPORARY;
-}
-
-export interface RegisteredClient extends AddedClient {
-  /** The cookie label */
-  cookie: string;
-}
+export * from './PropertyAPI';
+export * from './PropertyData';

@@ -3,6 +3,118 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.23](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.1.22...@wireapp/changelog-bot@4.1.23) (2020-05-25)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.1.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.1.21...@wireapp/changelog-bot@4.1.22) (2020-05-23)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.1.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.1.20...@wireapp/changelog-bot@4.1.21) (2020-05-19)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.1.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.1.19...@wireapp/changelog-bot@4.1.20) (2020-05-19)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.1.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.1.18...@wireapp/changelog-bot@4.1.19) (2020-05-19)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.1.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.1.17...@wireapp/changelog-bot@4.1.18) (2020-05-18)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.1.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.1.16...@wireapp/changelog-bot@4.1.17) (2020-05-13)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.1.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.1.15...@wireapp/changelog-bot@4.1.16) (2020-05-12)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.1.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.1.14...@wireapp/changelog-bot@4.1.15) (2020-05-11)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.1.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.1.13...@wireapp/changelog-bot@4.1.14) (2020-05-11)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.1.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.1.12...@wireapp/changelog-bot@4.1.13) (2020-05-07)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.1.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.1.11...@wireapp/changelog-bot@4.1.12) (2020-05-07)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.1.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.1.10...@wireapp/changelog-bot@4.1.11) (2020-05-07)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [4.1.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.1.9...@wireapp/changelog-bot@4.1.10) (2020-05-06)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
 ## [4.1.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/changelog-bot/compare/@wireapp/changelog-bot@4.1.8...@wireapp/changelog-bot@4.1.9) (2020-05-05)
 
 **Note:** Version bump only for package @wireapp/changelog-bot

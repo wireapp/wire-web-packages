@@ -1,15 +1,15 @@
 {
   "description": "Base64 encoding and decoding with ASCII string representation.",
   "devDependencies": {
-    "@types/jasmine": "3.5.9",
+    "@types/jasmine": "3.5.10",
     "@types/karma": "4.4.0",
     "@types/libsodium-wrappers-sumo": "0.7.3",
     "@types/node": "~12",
-    "cross-env": "7.0.0",
+    "cross-env": "7.0.2",
     "jasmine": "3.5.0",
     "karma": "4.4.1",
     "karma-chrome-launcher": "3.1.0",
-    "karma-coverage": "2.0.1",
+    "karma-coverage": "2.0.2",
     "karma-jasmine": "3.1.1",
     "karma-jasmine-diff-reporter": "2.0.0",
     "karma-sourcemap-loader": "0.3.7",
@@ -19,7 +19,7 @@
     "nyc": "15.0.1",
     "rimraf": "3.0.2",
     "ts-node": "8.6.2",
-    "typescript": "3.8.3",
+    "typescript": "3.9.2",
     "webpack": "4.43.0"
   },
   "files": [
@@ -53,5 +53,5 @@
     "test:browser": "karma start",
     "test:node": "nyc jasmine --config=jasmine.json"
   },
-  "version": "5.7.1"
+  "version": "5.7.5"
 }

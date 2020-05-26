@@ -3,6 +3,118 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.108](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@8.1.107...@wireapp/cli-client@8.1.108) (2020-05-25)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [8.1.107](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@8.1.106...@wireapp/cli-client@8.1.107) (2020-05-23)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [8.1.106](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@8.1.105...@wireapp/cli-client@8.1.106) (2020-05-19)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [8.1.105](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@8.1.104...@wireapp/cli-client@8.1.105) (2020-05-19)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [8.1.104](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@8.1.103...@wireapp/cli-client@8.1.104) (2020-05-19)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [8.1.103](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@8.1.102...@wireapp/cli-client@8.1.103) (2020-05-18)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [8.1.102](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@8.1.101...@wireapp/cli-client@8.1.102) (2020-05-13)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [8.1.101](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@8.1.100...@wireapp/cli-client@8.1.101) (2020-05-12)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [8.1.100](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@8.1.99...@wireapp/cli-client@8.1.100) (2020-05-11)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [8.1.99](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@8.1.98...@wireapp/cli-client@8.1.99) (2020-05-11)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [8.1.98](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@8.1.97...@wireapp/cli-client@8.1.98) (2020-05-07)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [8.1.97](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@8.1.96...@wireapp/cli-client@8.1.97) (2020-05-07)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [8.1.96](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@8.1.95...@wireapp/cli-client@8.1.96) (2020-05-07)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [8.1.95](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@8.1.94...@wireapp/cli-client@8.1.95) (2020-05-06)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
 ## [8.1.94](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@8.1.93...@wireapp/cli-client@8.1.94) (2020-05-05)
 
 **Note:** Version bump only for package @wireapp/cli-client

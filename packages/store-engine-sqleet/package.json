@@ -2,22 +2,22 @@
   "dependencies": {
     "@babel/core": "7.9.0",
     "@babel/plugin-proposal-class-properties": "7.8.3",
-    "@babel/plugin-proposal-object-rest-spread": "7.9.0",
+    "@babel/plugin-proposal-object-rest-spread": "7.9.6",
     "@babel/plugin-proposal-optional-chaining": "7.9.0",
-    "@babel/preset-typescript": "7.8.3",
-    "@wireapp/websql": "0.0.15",
+    "@babel/preset-typescript": "7.9.0",
+    "@wireapp/websql": "0.0.17",
     "uint32": "0.2.1"
   },
   "devDependencies": {
-    "@types/jasmine": "3.5.9",
+    "@types/jasmine": "3.5.10",
     "@types/karma": "4.4.0",
     "@types/karma-webpack": "2.0.7",
     "@types/node": "~12",
     "@types/uint32": "0.2.0",
     "@types/webpack": "4.41.8",
-    "@wireapp/store-engine": "4.5.1",
+    "@wireapp/store-engine": "4.5.4",
     "babel-loader": "8.0.6",
-    "bazinga64": "5.7.1",
+    "bazinga64": "5.7.5",
     "jasmine": "3.5.0",
     "karma": "4.4.1",
     "karma-chrome-launcher": "3.1.0",
@@ -25,7 +25,7 @@
     "karma-webpack": "4.0.2",
     "rimraf": "3.0.2",
     "ts-node": "8.6.2",
-    "typescript": "3.8.3",
+    "typescript": "3.9.2",
     "webpack": "4.43.0"
   },
   "description": "Store Engine implementation for SQLite 3 (WebAssembly) with encryption.",
@@ -33,7 +33,7 @@
     "dist"
   ],
   "license": "GPL-3.0",
-  "main": "./dist/index.js",
+  "main": "dist/index.js",
   "name": "@wireapp/store-engine-sqleet",
   "peerDependencies": {
     "@wireapp/store-engine": "4.x.x"
@@ -47,5 +47,5 @@
     "test": "karma start",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "1.3.2"
+  "version": "1.3.6"
 }

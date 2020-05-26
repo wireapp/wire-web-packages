@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.2.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.9...@wireapp/cryptobox@12.2.10) (2020-05-25)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [12.2.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.8...@wireapp/cryptobox@12.2.9) (2020-05-23)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [12.2.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.7...@wireapp/cryptobox@12.2.8) (2020-05-18)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [12.2.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.6...@wireapp/cryptobox@12.2.7) (2020-05-07)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [12.2.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.5...@wireapp/cryptobox@12.2.6) (2020-05-06)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
 ## [12.2.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.4...@wireapp/cryptobox@12.2.5) (2020-04-28)
 
 **Note:** Version bump only for package @wireapp/cryptobox

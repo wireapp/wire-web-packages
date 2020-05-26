@@ -3,6 +3,124 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [16.9.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.9.9...@wireapp/core@16.9.10) (2020-05-25)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.9.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.9.8...@wireapp/core@16.9.9) (2020-05-23)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.9.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.9.7...@wireapp/core@16.9.8) (2020-05-19)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.9.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.9.6...@wireapp/core@16.9.7) (2020-05-19)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.9.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.9.5...@wireapp/core@16.9.6) (2020-05-19)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.9.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.9.4...@wireapp/core@16.9.5) (2020-05-18)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.9.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.9.3...@wireapp/core@16.9.4) (2020-05-13)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.9.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.9.2...@wireapp/core@16.9.3) (2020-05-12)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.9.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.9.1...@wireapp/core@16.9.2) (2020-05-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.9.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.9.0...@wireapp/core@16.9.1) (2020-05-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [16.9.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.8.1...@wireapp/core@16.9.0) (2020-05-07)
+
+
+### Features
+
+* **api-client:** Add Giphy rating and fix API ([#3011](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/3011)) ([d360223](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/d36022328be9c3055f77635f2b88055abb8638f4))
+
+
+
+
+
+## [16.8.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.8.0...@wireapp/core@16.8.1) (2020-05-07)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [16.8.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.7.10...@wireapp/core@16.8.0) (2020-05-07)
+
+
+### Features
+
+* **api-client:** Update Giphy endpoints (BREAKING) ([#3010](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/3010)) ([e905cf8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/e905cf8c8d600091e66f3bab1e0fbb8d4fc76623))
+
+
+
+
+
+## [16.7.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.7.9...@wireapp/core@16.7.10) (2020-05-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
 ## [16.7.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.7.8...@wireapp/core@16.7.9) (2020-05-05)
 
 **Note:** Version bump only for package @wireapp/core

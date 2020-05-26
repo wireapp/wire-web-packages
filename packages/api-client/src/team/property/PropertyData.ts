@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2020 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,17 +17,11 @@
  *
  */
 
-export enum GiphySorting {
-  RECENT = 'recent',
-  RELEVANT = 'relevant',
-}
-
-/** @see: https://developers.giphy.com/docs/api/endpoint/#search */
-export interface GiphySearch {
-  lang?: string;
-  limit?: number;
-  offset?: number;
-  q: string;
-  rating?: string;
-  sort?: GiphySorting;
+export interface PropertyData {
+  properties: {
+    features?: {
+      digital_signature_enabled?: boolean;
+    };
+  };
+  version: number;
 }
