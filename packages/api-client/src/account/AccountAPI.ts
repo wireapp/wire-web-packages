@@ -146,13 +146,7 @@ export class AccountAPI {
     };
     try {
       const response = await this.client.sendJSON(config);
-      if (response.status === 200) {
-        return true;
-      }
-      if (response.status === 404) {
-        return false;
-      }
-      return false;
+      return response.status === 200;
     } catch (error) {
       throw error;
     }
