@@ -12,7 +12,7 @@ For licensing information, see the attached LICENSE file and the list of third-p
 
 ### Usage
 
-**Install (macOS, Linux)**:
+#### Install (macOS, Linux):
 
 ```bash
 yarn add --dev @wireapp/eslint-config \
@@ -30,7 +30,7 @@ yarn add --dev @wireapp/eslint-config \
                eslint
 ```
 
-**Install (Windows)**:
+#### Install (Windows):
 
 ```powershell
 yarn add --dev @wireapp/eslint-config ^
@@ -48,7 +48,7 @@ yarn add --dev @wireapp/eslint-config ^
                eslint
 ```
 
-**Edit `.eslintrc.json`**:
+#### Edit `.eslintrc.json`:
 
 ```jsonc
 {
