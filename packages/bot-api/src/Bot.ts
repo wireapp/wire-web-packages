@@ -29,6 +29,13 @@ import UUID from 'pure-uuid';
 import {BotConfig, BotCredentials} from './Interfaces';
 import {MessageHandler} from './MessageHandler';
 import {DefaultConversationRoleName} from '@wireapp/api-client/dist/conversation';
+import {
+  AccessTokenData,
+  AUTH_TABLE_NAME,
+  AUTH_ACCESS_TOKEN_KEY,
+  AUTH_COOKIE_KEY,
+  Cookie,
+} from '@wireapp/api-client/dist/auth';
 
 const defaultConfig: Required<BotConfig> = {
   backend: 'production',
@@ -43,6 +50,8 @@ export class Bot {
   private readonly config: Required<BotConfig>;
   private readonly handlers: Map<string, MessageHandler>;
   private readonly logger: logdown.Logger;
+  private storeEngine?: CRUDEngine;
+  private cookie?: Cookie;
 
   constructor(private readonly credentials: BotCredentials, config?: BotConfig) {
     this.config = {...defaultConfig, ...config};
@@ -96,6 +105,8 @@ export class Bot {
   }
 
   public async start(storeEngine?: CRUDEngine): Promise<APIClient> {
+    this.storeEngine = storeEngine;
+
     const login = {
       clientType: this.config.clientType,
       email: this.credentials.email,
@@ -107,18 +118,39 @@ export class Bot {
     });
 
     this.account = storeEngine ? new Account(apiClient, () => Promise.resolve(storeEngine)) : new Account(apiClient);
+    await this.getCookie();
 
     for (const payloadType of Object.values(PayloadBundleType)) {
       this.account.removeAllListeners(payloadType);
       this.account.on(payloadType as any, this.handlePayload.bind(this));
     }
 
-    await this.account.login(login);
+    if (!this.cookie) {
+      await apiClient.login(login);
+    }
+
+    await this.account.init(this.config.clientType, this.cookie);
     await this.account.listen();
 
     this.handlers.forEach(handler => (handler.account = this.account));
 
     return apiClient;
+  }
+
+  async getCookie(): Promise<Cookie | undefined> {
+    try {
+      if (!this.storeEngine) {
+        this.logger.info('No store engine provided to read a cookie from');
+        return undefined;
+      }
+      const {expiration, zuid} = await this.storeEngine.read(AUTH_TABLE_NAME, AUTH_COOKIE_KEY);
+      const cookie = new Cookie(zuid, expiration);
+      this.cookie = cookie;
+      return cookie;
+    } catch (error) {
+      this.logger.warn('An error happend on reading cookie', error);
+      return undefined;
+    }
   }
 
   private handlePayload(payload: PayloadBundle | ConversationEvent | UserEvent | TeamEvent): void {
