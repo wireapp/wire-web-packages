@@ -1,9 +1,11 @@
 {
   "dependencies": {
-    "@types/node": "~12",
+    "@types/node": "*",
     "@wireapp/bot-api": "*"
   },
   "devDependencies": {
+    "@types/node": "~12",
+    "@wireapp/bot-api": "7.9.47",
     "jasmine": "3.5.0",
     "rimraf": "3.0.2",
     "ts-node": "8.6.2",
