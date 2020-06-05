@@ -133,14 +133,9 @@ export class Bot {
   }
 
   async getCookie(storeEngine: CRUDEngine): Promise<Cookie | undefined> {
-    try {
-      const {expiration, zuid} = await storeEngine.read(AUTH_TABLE_NAME, AUTH_COOKIE_KEY);
-      const cookie = new Cookie(zuid, expiration);
-      return cookie;
-    } catch (error) {
-      this.logger.warn('An error happend on reading cookie', error);
-      return undefined;
-    }
+    const {expiration, zuid} = await storeEngine.read(AUTH_TABLE_NAME, AUTH_COOKIE_KEY);
+    const cookie = new Cookie(zuid, expiration);
+    return cookie;
   }
 
   private handlePayload(payload: PayloadBundle | ConversationEvent | UserEvent | TeamEvent): void {
