@@ -29,13 +29,7 @@ import UUID from 'pure-uuid';
 import {BotConfig, BotCredentials} from './Interfaces';
 import {MessageHandler} from './MessageHandler';
 import {DefaultConversationRoleName} from '@wireapp/api-client/dist/conversation';
-import {
-  AccessTokenData,
-  AUTH_TABLE_NAME,
-  AUTH_ACCESS_TOKEN_KEY,
-  AUTH_COOKIE_KEY,
-  Cookie,
-} from '@wireapp/api-client/dist/auth';
+import {AUTH_TABLE_NAME, AUTH_COOKIE_KEY, Cookie} from '@wireapp/api-client/dist/auth';
 
 const defaultConfig: Required<BotConfig> = {
   backend: 'production',
