@@ -2978,33 +2978,6 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
-"@wireapp/bot-api@7.9.47":
-  version "7.9.47"
-  resolved "https://registry.npmjs.org/@wireapp/bot-api/-/bot-api-7.9.47.tgz#9e6f493b1addd71da2cc8d571960eee1a53a4d25"
-  integrity sha512-+CStWdnaR8VvJbKUp8E1+/wWjhgqzBDyME+ZS4ksPPe5u43joV0HIztwr6CuzVRYuLNePYH5lxOdFZSjdT8jXw==
-  dependencies:
-    "@types/long" "4.0.1"
-    "@types/node" "*"
-    "@wireapp/core" "16.9.15"
-    pure-uuid "1.6.0"
-
-"@wireapp/core@16.9.15":
-  version "16.9.15"
-  resolved "https://registry.npmjs.org/@wireapp/core/-/core-16.9.15.tgz#5a2e28271bd89398884537b8092494102539df6e"
-  integrity sha512-jIkBgsPhvJV/gYQz1uJVytvzs0wx0K9eJjQ81JOtuJcqRifoocSkBcmo0x9PgPcBvkIcJ4laiZ/nH3Uoad08eg==
-  dependencies:
-    "@types/long" "4.0.1"
-    "@types/node" "~12"
-    "@wireapp/api-client" "11.20.0"
-    "@wireapp/cryptobox" "12.2.11"
-    "@wireapp/protocol-messaging" "1.25.4"
-    "@wireapp/store-engine" "4.5.5"
-    bazinga64 "5.7.5"
-    hash.js "1.1.7"
-    logdown "3.3.1"
-    protobufjs "6.8.9"
-    pure-uuid "1.6.0"
-
 "@wireapp/protocol-messaging@1.25.4":
   version "1.25.4"
   resolved "https://registry.npmjs.org/@wireapp/protocol-messaging/-/protocol-messaging-1.25.4.tgz#49a22683c19c628997f28e24f5eca909aab4e4b9"
