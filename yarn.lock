@@ -3000,6 +3000,45 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
+"@wireapp/api-client@11.19.1":
+  version "11.19.1"
+  resolved "https://registry.npmjs.org/@wireapp/api-client/-/api-client-11.19.1.tgz#d2d186aafbb0f711d44fd88b003e585b6d53ce5d"
+  integrity sha512-nsCQb93g6tka+bCQ6An//+VBhsYFg0evdSv9suFa0eT5Cxj9iKOApxXSbkfFVW0c9Te1fSzh1ABQ9GStrFc1iA==
+  dependencies:
+    "@types/node" "~12"
+    "@types/spark-md5" "3.0.2"
+    "@types/tough-cookie" "4.0.0"
+    "@wireapp/commons" "3.5.4"
+    "@wireapp/priority-queue" "1.6.3"
+    axios "0.19.2"
+    logdown "3.3.1"
+    reconnecting-websocket "4.4.0"
+    spark-md5 "3.0.1"
+    tough-cookie "4.0.0"
+    ws "7.2.5"
+
+"@wireapp/avs@6.0.28":
+  version "6.0.28"
+  resolved "https://registry.npmjs.org/@wireapp/avs/-/avs-6.0.28.tgz#81a1faa36e2a64c55c6cadcebcdb471c92e449a5"
+  integrity sha512-83PRWqQkhJquj74taWW3DTgtfmsZheivloMvDX4YIxSluIE5aHYUF9O/hmbnn3xkh6FHxLjTLef9acxnVjZ62Q==
+
+"@wireapp/core@16.9.12":
+  version "16.9.12"
+  resolved "https://registry.npmjs.org/@wireapp/core/-/core-16.9.12.tgz#eb8a520250d576d15bb7dcbd5d25e3d2d4d7ef89"
+  integrity sha512-nX8rtXhpSAvN6dXwnPr1M/SQgZ2PQcChhZfIG3FDONS11e1BGE9x1deitIfgaCvD97pGprDNwDEfbXcfuHMzRA==
+  dependencies:
+    "@types/long" "4.0.1"
+    "@types/node" "~12"
+    "@wireapp/api-client" "11.19.1"
+    "@wireapp/cryptobox" "12.2.11"
+    "@wireapp/protocol-messaging" "1.25.4"
+    "@wireapp/store-engine" "4.5.5"
+    bazinga64 "5.7.5"
+    hash.js "1.1.7"
+    logdown "3.3.1"
+    protobufjs "6.8.9"
+    pure-uuid "1.6.0"
+
 "@wireapp/protocol-messaging@1.25.4":
   version "1.25.4"
   resolved "https://registry.npmjs.org/@wireapp/protocol-messaging/-/protocol-messaging-1.25.4.tgz#49a22683c19c628997f28e24f5eca909aab4e4b9"
@@ -5934,6 +5973,13 @@ domain-browser@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmjs.org/domain-browser/-/domain-browser-4.0.0.tgz#45021cf8d2928f116b89a3308c3c30b746776909"
   integrity sha512-q9seD1JK98fzT69I0sAzp0cxb6gUS1grmCaq6cLxTbm9msb9eqYFXGJU94VOIOi2nKmYmKdUFkTnGvIViuX9qA==
+
+domexception@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/domexception/-/domexception-1.0.1.tgz#937442644ca6a31261ef36e3ec677fe805582c90"
+  integrity sha512-raigMkn7CJNNo6Ihro1fzG7wr3fHuYVytzquZKX5n0yizGsTcYgzdIUwj1X9pK0VvjeihV+XiclP+DjwbsSKug==
+  dependencies:
+    webidl-conversions "^4.0.2"
 
 domexception@^2.0.1:
   version "2.0.1"
@@ -11201,6 +11247,22 @@ node-pre-gyp@^0.12.0:
     semver "^5.3.0"
     tar "^4"
 
+node-pre-gyp@^0.13.0:
+  version "0.13.0"
+  resolved "https://registry.npmjs.org/node-pre-gyp/-/node-pre-gyp-0.13.0.tgz#df9ab7b68dd6498137717838e4f92a33fc9daa42"
+  integrity sha512-Md1D3xnEne8b/HGVQkZZwV27WUi1ZRuZBij24TNaZwUPU3ZAFtvT6xxJGaUVillfmMKnn5oD1HoGsp2Ftik7SQ==
+  dependencies:
+    detect-libc "^1.0.2"
+    mkdirp "^0.5.1"
+    needle "^2.2.1"
+    nopt "^4.0.1"
+    npm-packlist "^1.1.6"
+    npmlog "^4.0.2"
+    rc "^1.2.7"
+    rimraf "^2.6.1"
+    semver "^5.3.0"
+    tar "^4"
+
 node-preload@^0.2.1:
   version "0.2.1"
   resolved "https://registry.npmjs.org/node-preload/-/node-preload-0.2.1.tgz#c03043bb327f417a18fee7ab7ee57b408a144301"
@@ -16417,6 +16479,15 @@ write@1.0.3:
   integrity sha512-/lg70HAjtkUgWPVZhZcm+T4hkL8Zbtp1nFNOn3lRrxnlv50SRBv7cR7RqR+GMsd3hUXy9hWBo4CHTbFTcOYwig==
   dependencies:
     mkdirp "^0.5.1"
+
+wrtc@0.4.5:
+  version "0.4.5"
+  resolved "https://registry.npmjs.org/wrtc/-/wrtc-0.4.5.tgz#6839540904bf38f13e6e3fb27ee1448e8458bbb6"
+  integrity sha512-AEqbxwz8LX9bRrSI8UTn6bFiGj8/28nguYJ0RTk1905HZwM8Rx16D1oX0FfJHWmYHEg5XhODGcVa33d9ORHFyw==
+  dependencies:
+    node-pre-gyp "^0.13.0"
+  optionalDependencies:
+    domexception "^1.0.1"
 
 ws@7.2.5, ws@^7.2.3:
   version "7.2.5"
