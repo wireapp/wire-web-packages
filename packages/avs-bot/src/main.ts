@@ -315,6 +315,7 @@ class App {
   };
 
   private readonly callClosed = (reason: REASON, conversationId: string) => {
+    this.audioSource.stop();
     this.removeCall(conversationId);
   };
 
