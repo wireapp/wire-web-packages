@@ -30,11 +30,12 @@ import {OverlayBackgroundProps, OverlayWrapper, overlayBackgroundStyle} from './
 
 export interface ModalBodyProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   fullscreen?: boolean;
+  width?: number;
 }
 
 const modalBodyStyle: <T>(theme: Theme, props: ModalBodyProps<T>) => ObjectInterpolation<undefined> = (
   theme,
-  {fullscreen = false},
+  {fullscreen = false, width},
 ) => ({
   alignItems: 'center',
   backgroundColor: COLOR.tint(theme.general.backgroundColor, 0.16),
@@ -52,11 +53,11 @@ const modalBodyStyle: <T>(theme: Theme, props: ModalBodyProps<T>) => ObjectInter
   transform: 'translate3d(0, 0, 0)',
   zIndex: 9999,
   [media[QueryKeys.TABLET_DOWN]]: {
-    width: fullscreen ? 'initial' : '100%',
+    width: width || fullscreen ? 'initial' : '100%',
   },
 });
 
-const filterModalBodyProps = (props: ModalBodyProps) => filterProps(props, ['fullscreen']);
+const filterModalBodyProps = (props: ModalBodyProps) => filterProps(props, ['fullscreen', 'width']);
 
 const ModalBody = (props: ModalBodyProps) => (
   <div css={theme => modalBodyStyle(theme, props)} {...filterModalBodyProps(props)} />
@@ -79,12 +80,16 @@ const ModalClose = (props: SVGIconProps<SVGSVGElement>) => (
   />
 );
 
-const ModalContent = (props: React.HTMLProps<HTMLDivElement>) => (
+interface ModalContentProps {
+  padding: number;
+}
+
+const ModalContent: React.FC<ModalContentProps & React.HTMLProps<HTMLDivElement>> = ({padding, ...props}) => (
   <div
     css={{
       maxWidth: '100%',
       overflowY: 'auto',
-      padding: '40px',
+      padding,
     }}
     {...props}
   />
@@ -97,23 +102,74 @@ const modalBackgroundStyle: <T>(props: OverlayBackgroundProps<T>) => ObjectInter
 
 const ModalBackground = (props: OverlayBackgroundProps) => <div css={modalBackgroundStyle(props)} {...props} />;
 
+export interface ModalActionItem {
+  bold: boolean;
+  onClick: (event: React.MouseEvent<HTMLElement>) => void;
+  title: string;
+}
+
+interface ModalActions {
+  actions?: ModalActionItem[];
+}
+
+const modalActionsWrapperStyles: () => ObjectInterpolation<undefined> = () => ({
+  borderTop: '1px solid rgba(194, 194, 194, 0.2)',
+  bottom: 0,
+  display: 'flex',
+  div: {
+    borderRight: '1px solid rgba(194, 194, 194, 0.2)',
+  },
+  'div:last-child': {
+    borderRight: 0,
+  },
+  position: 'absolute',
+  width: '100%',
+});
+
+const modalActionStyles: ({bold}: {bold: boolean}) => ObjectInterpolation<undefined> = ({bold}) => ({
+  color: COLOR.BLUE,
+  cursor: 'pointer',
+  display: 'flex',
+  flex: 1,
+  fontWeight: bold ? 'bold' : 'normal',
+  justifyContent: 'center',
+  padding: '8px 0',
+});
+
+const ModalActions: React.FC<ModalActions> = ({actions}) => (
+  <div css={modalActionsWrapperStyles()}>
+    {actions.map(action => (
+      <div key={action.title} onClick={action.onClick} css={modalActionStyles({bold: action.bold})}>
+        {action.title}
+      </div>
+    ))}
+  </div>
+);
+
 interface ModalProps {
+  actions?: ModalActionItem[];
+  fixedWidth?: number;
   fullscreen?: boolean;
   onBackgroundClick?: () => void;
   onClose?: () => void;
+  padding?: number;
 }
 
 export const Modal: React.SFC<ModalProps & React.HTMLProps<HTMLDivElement>> = ({
+  actions = [],
   children,
+  fixedWidth,
   fullscreen,
   onClose,
+  padding = 40,
   onBackgroundClick,
   ...props
 }) => (
   <OverlayWrapper {...props} data-uie-name="modal">
-    <ModalBody fullscreen={fullscreen}>
-      <ModalContent>{children}</ModalContent>
+    <ModalBody fullscreen={fullscreen} width={fixedWidth}>
+      <ModalContent padding={padding}>{children}</ModalContent>
       {onClose !== noop && <ModalClose onClick={onClose} data-uie-name="do-close" />}
+      {actions.length > 0 && <ModalActions actions={actions} data-uie-name="modal-actions" />}
     </ModalBody>
     {!fullscreen && (
       <ModalBackground
@@ -125,6 +181,7 @@ export const Modal: React.SFC<ModalProps & React.HTMLProps<HTMLDivElement>> = ({
 );
 
 Modal.defaultProps = {
+  actions: [],
   fullscreen: false,
   onBackgroundClick: noop,
   onClose: noop,
