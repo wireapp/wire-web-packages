@@ -20,6 +20,7 @@
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
 import React from 'react';
+import Color from 'color';
 import {CloseIcon} from '../Icon';
 import {SVGIconProps} from '../Icon/SVGIcon';
 import {COLOR} from '../Identity';
@@ -65,16 +66,16 @@ const ModalBody = (props: ModalBodyProps) => (
 
 const ModalClose = (props: SVGIconProps<SVGSVGElement>) => (
   <CloseIcon
+    width={16}
+    height={16}
     css={{
       alignItems: 'center',
       cursor: 'pointer',
       display: 'flex',
       justifyContent: 'center',
-      marginRight: '10px',
-      marginTop: '10px',
       position: 'absolute',
-      right: '10px',
-      top: '10px',
+      right: 16,
+      top: 16,
     }}
     {...props}
   />
@@ -127,6 +128,9 @@ const modalActionsWrapperStyles: () => ObjectInterpolation<undefined> = () => ({
 });
 
 const modalActionStyles: ({bold}: {bold: boolean}) => ObjectInterpolation<undefined> = ({bold}) => ({
+  '&:hover': {
+    color: Color(COLOR.BLUE).mix(Color(COLOR.BLACK), 0.16).toString(),
+  },
   color: COLOR.BLUE,
   cursor: 'pointer',
   display: 'flex',
