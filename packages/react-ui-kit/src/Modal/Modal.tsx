@@ -118,9 +118,20 @@ const modalActionsWrapperStyles: () => ObjectInterpolation<undefined> = () => ({
   bottom: 0,
   display: 'flex',
   div: {
+    '&:hover': {
+      backgroundColor: COLOR.opaque(COLOR.GRAY_DARKEN_72, 0.04),
+    },
+    // eslint-disable-next-line sort-keys-fix/sort-keys-fix
+    '&:active': {
+      backgroundColor: COLOR.opaque(COLOR.GRAY_DARKEN_72, 0.08),
+    },
     borderRight: '1px solid rgba(194, 194, 194, 0.2)',
   },
+  'div:first-child': {
+    borderBottomLeftRadius: 8,
+  },
   'div:last-child': {
+    borderBottomRightRadius: 8,
     borderRight: 0,
   },
   position: 'absolute',
