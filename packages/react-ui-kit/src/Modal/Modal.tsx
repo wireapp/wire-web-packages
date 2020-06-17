@@ -81,16 +81,12 @@ const ModalClose = (props: SVGIconProps<SVGSVGElement>) => (
   />
 );
 
-interface ModalContentProps {
-  padding: number;
-}
-
-const ModalContent: React.FC<ModalContentProps & React.HTMLProps<HTMLDivElement>> = ({padding, ...props}) => (
+const ModalContent: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => (
   <div
     css={{
       maxWidth: '100%',
       overflowY: 'auto',
-      padding,
+      padding: '40px',
     }}
     {...props}
   />
@@ -167,7 +163,6 @@ interface ModalProps {
   fullscreen?: boolean;
   onBackgroundClick?: () => void;
   onClose?: () => void;
-  padding?: number;
 }
 
 export const Modal: React.SFC<ModalProps & React.HTMLProps<HTMLDivElement>> = ({
@@ -176,13 +171,12 @@ export const Modal: React.SFC<ModalProps & React.HTMLProps<HTMLDivElement>> = ({
   fixedWidth,
   fullscreen,
   onClose,
-  padding = 40,
   onBackgroundClick,
   ...props
 }) => (
   <OverlayWrapper {...props} data-uie-name="modal">
     <ModalBody fullscreen={fullscreen} width={fixedWidth}>
-      <ModalContent padding={padding}>{children}</ModalContent>
+      <ModalContent>{children}</ModalContent>
       {onClose !== noop && <ModalClose onClick={onClose} data-uie-name="do-close" />}
       {actions.length > 0 && <ModalActions actions={actions} data-uie-name="modal-actions" />}
     </ModalBody>
