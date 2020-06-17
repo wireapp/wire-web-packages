@@ -80,7 +80,7 @@ const ModalClose = (props: SVGIconProps<SVGSVGElement>) => (
   />
 );
 
-const ModalContent: React.FC<React.HTMLProps<HTMLDivElement>> = (props) => (
+const ModalContent: React.FC<React.HTMLProps<HTMLDivElement>> = props => (
   <div
     css={{
       maxWidth: '100%',
