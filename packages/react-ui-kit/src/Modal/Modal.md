@@ -37,7 +37,7 @@ const [isOverlayOpen, setIsOverlayOpen] = useState(false);
   {isModalWidthActionsOpen && (
     <Modal
       onClose={() => setIsModalWidthActionsOpen(false)}
-      fixedWidth={360}
+      bodyStyle={{width: 360}}
       actions={[
         {title: 'Cancel', onClick: () => {}, bold: false},
         {title: 'Send', onClick: () => {}, bold: true},
