@@ -109,7 +109,7 @@ interface ModalActions {
 }
 
 const modalActionsWrapperStyles: () => ObjectInterpolation<undefined> = () => ({
-  borderTop: '1px solid rgba(194, 194, 194, 0.2)',
+  borderTop: `1px solid ${COLOR.GRAY_LIGHTEN_72}`,
   bottom: 0,
   display: 'flex',
   div: {
@@ -120,7 +120,7 @@ const modalActionsWrapperStyles: () => ObjectInterpolation<undefined> = () => ({
     '&:active': {
       backgroundColor: COLOR.opaque(COLOR.GRAY_DARKEN_72, 0.08),
     },
-    borderRight: '1px solid rgba(194, 194, 194, 0.2)',
+    borderRight: `1px solid ${COLOR.GRAY_LIGHTEN_72}`,
   },
   'div:first-child': {
     borderBottomLeftRadius: 8,
