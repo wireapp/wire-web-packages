@@ -19,7 +19,7 @@
 
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
-import React from 'react';
+import React, {CSSProperties} from 'react';
 import Color from 'color';
 import {CloseIcon} from '../Icon';
 import {SVGIconProps} from '../Icon/SVGIcon';
@@ -31,12 +31,11 @@ import {OverlayBackgroundProps, OverlayWrapper, overlayBackgroundStyle} from './
 
 export interface ModalBodyProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   fullscreen?: boolean;
-  width?: number;
 }
 
 const modalBodyStyle: <T>(theme: Theme, props: ModalBodyProps<T>) => ObjectInterpolation<undefined> = (
   theme,
-  {fullscreen = false, width},
+  {fullscreen = false},
 ) => ({
   alignItems: 'center',
   backgroundColor: COLOR.tint(theme.general.backgroundColor, 0.16),
@@ -54,11 +53,11 @@ const modalBodyStyle: <T>(theme: Theme, props: ModalBodyProps<T>) => ObjectInter
   transform: 'translate3d(0, 0, 0)',
   zIndex: 9999,
   [media[QueryKeys.TABLET_DOWN]]: {
-    width: width || fullscreen ? 'initial' : '100%',
+    width: fullscreen ? 'initial' : '100%',
   },
 });
 
-const filterModalBodyProps = (props: ModalBodyProps) => filterProps(props, ['fullscreen', 'width']);
+const filterModalBodyProps = (props: ModalBodyProps) => filterProps(props, ['fullscreen']);
 
 const ModalBody = (props: ModalBodyProps) => (
   <div css={theme => modalBodyStyle(theme, props)} {...filterModalBodyProps(props)} />
@@ -159,7 +158,7 @@ const ModalActions: React.FC<ModalActions> = ({actions}) => (
 
 interface ModalProps {
   actions?: ModalActionItem[];
-  fixedWidth?: number;
+  bodyStyle: CSSProperties;
   fullscreen?: boolean;
   onBackgroundClick?: () => void;
   onClose?: () => void;
@@ -168,14 +167,14 @@ interface ModalProps {
 export const Modal: React.SFC<ModalProps & React.HTMLProps<HTMLDivElement>> = ({
   actions = [],
   children,
-  fixedWidth,
+  bodyStyle,
   fullscreen,
   onClose,
   onBackgroundClick,
   ...props
 }) => (
   <OverlayWrapper {...props} data-uie-name="modal">
-    <ModalBody fullscreen={fullscreen} width={fixedWidth}>
+    <ModalBody fullscreen={fullscreen} style={bodyStyle}>
       <ModalContent>{children}</ModalContent>
       {onClose !== noop && <ModalClose onClick={onClose} data-uie-name="do-close" />}
       {actions.length > 0 && <ModalActions actions={actions} data-uie-name="modal-actions" />}
