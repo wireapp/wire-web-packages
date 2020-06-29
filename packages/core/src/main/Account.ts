@@ -18,7 +18,7 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {RegisterData} from '@wireapp/api-client/dist/auth';
+import {RegisterData, AccessTokenData, AUTH_ACCESS_TOKEN_KEY} from '@wireapp/api-client/dist/auth';
 import {
   AUTH_COOKIE_KEY,
   AUTH_TABLE_NAME,
@@ -132,6 +132,10 @@ export class Account extends EventEmitter {
       };
     }
 
+    apiClient.on(APIClient.TOPIC.ACCESS_TOKEN_REFRESH, async (accessToken: AccessTokenData) => {
+      await this.storeEngine?.updateOrCreate(AUTH_TABLE_NAME, AUTH_ACCESS_TOKEN_KEY, accessToken);
+    });
+
     apiClient.on(APIClient.TOPIC.COOKIE_REFRESH, async (cookie?: Cookie) => {
       if (cookie && this.storeEngine) {
         try {
@@ -168,8 +172,8 @@ export class Account extends EventEmitter {
     return context;
   }
 
-  public async init(clientType: ClientType): Promise<Context> {
-    const context = await this.apiClient.init(clientType);
+  public async init(clientType: ClientType, cookie?: Cookie): Promise<Context> {
+    const context = await this.apiClient.init(clientType, cookie);
     const storeEngine = await this.initEngine(context);
     await this.initServices(storeEngine);
     return context;

@@ -3,6 +3,92 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [16.10.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.10.3...@wireapp/core@16.10.4) (2020-06-17)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.10.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.10.2...@wireapp/core@16.10.3) (2020-06-17)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.10.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.10.1...@wireapp/core@16.10.2) (2020-06-17)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.10.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.10.0...@wireapp/core@16.10.1) (2020-06-10)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [16.10.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.9.15...@wireapp/core@16.10.0) (2020-06-05)
+
+
+### Features
+
+* **bot-api:** Reuse cookie to login ([#3061](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/3061)) ([0ec66a1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/0ec66a1505719d36e19991a1d12076041c224dc6))
+
+
+
+
+
+## [16.9.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.9.14...@wireapp/core@16.9.15) (2020-06-03)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.9.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.9.13...@wireapp/core@16.9.14) (2020-06-03)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.9.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.9.12...@wireapp/core@16.9.13) (2020-06-02)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.9.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.9.11...@wireapp/core@16.9.12) (2020-05-29)
+
+
+### Bug Fixes
+
+* **core:** Add missing cookie in Account init method ([#3053](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/3053)) ([6abfec4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/6abfec472b41e4fdf1b3c0b2ffab6c5dc46707b0))
+
+
+
+
+
+## [16.9.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.9.10...@wireapp/core@16.9.11) (2020-05-26)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
 ## [16.9.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.9.9...@wireapp/core@16.9.10) (2020-05-25)
 
 **Note:** Version bump only for package @wireapp/core

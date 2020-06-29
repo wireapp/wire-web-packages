@@ -4,7 +4,7 @@
     "@types/jasmine": "3.5.10",
     "cross-env": "7.0.2",
     "jasmine": "3.5.0",
-    "nyc": "15.0.1",
+    "nyc": "15.1.0",
     "rimraf": "3.0.2",
     "ts-node": "8.6.2",
     "typescript": "3.9.2",
@@ -26,5 +26,5 @@
     "dist": "yarn clean && yarn build",
     "test": "nyc jasmine --config=jasmine.json"
   },
-  "version": "3.6.6"
+  "version": "3.6.7"
 }

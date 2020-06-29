@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.20.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.20.3...@wireapp/api-client@11.20.4) (2020-06-17)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.20.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.20.2...@wireapp/api-client@11.20.3) (2020-06-17)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.20.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.20.1...@wireapp/api-client@11.20.2) (2020-06-17)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.20.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.20.0...@wireapp/api-client@11.20.1) (2020-06-10)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+# [11.20.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.19.3...@wireapp/api-client@11.20.0) (2020-06-03)
+
+
+### Features
+
+* **api-client:** Expose VBR call setting ([#3060](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/3060)) ([42ec268](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/42ec26826f05c6fe6c27e84967ab74c3e5d4d72d))
+
+
+
+
+
+## [11.19.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.19.2...@wireapp/api-client@11.19.3) (2020-06-03)
+
+
+### Bug Fixes
+
+* **api-client:** Add next invitation chunk when batch fetching invitations ([#3059](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/3059)) ([763c407](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/763c40792ae55093254d126089934da05f2eda94))
+
+
+
+
+
+## [11.19.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.19.1...@wireapp/api-client@11.19.2) (2020-06-02)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.19.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.19.0...@wireapp/api-client@11.19.1) (2020-05-26)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
 # [11.19.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.18.1...@wireapp/api-client@11.19.0) (2020-05-25)
 
 
