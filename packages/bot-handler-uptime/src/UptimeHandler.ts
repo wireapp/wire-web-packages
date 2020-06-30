@@ -33,8 +33,8 @@ export class UptimeHandler extends MessageHandler {
       case PayloadBundleType.TEXT: {
         const content = payload.content as TextContent;
         if (content.text === '/uptime') {
-          const seconds: number = Math.floor(process.uptime());
-          const formatted: string = (moment.duration(seconds, 'seconds') as any).format({
+          const seconds = Math.floor(process.uptime());
+          const formatted = (moment.duration(seconds, 'seconds') as any).format({
             precision: 0,
             template: 'y [years], w [weeks], d [days], h [hours], m [minutes], s [seconds]',
           });
