@@ -24,6 +24,9 @@
   "peerDependencies": {
     "@wireapp/bot-api": "7.x.x"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-uptime",
   "scripts": {
     "build": "yarn build:node",
