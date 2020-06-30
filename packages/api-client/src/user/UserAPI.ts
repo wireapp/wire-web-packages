@@ -455,13 +455,13 @@ export class UserAPI {
     userClientMap: UserClients,
     limit: number = UserAPI.DEFAULT_USERS_PREKEY_BUNDLE_CHUNK_SIZE,
   ): Promise<UserPreKeyBundleMap> {
-    const idChunks = ArrayUtil.chunk(Object.keys(userClientMap), limit);
-    const resolvedTasks = await Promise.all(
-      idChunks.map(idChunk =>
+    const userIdChunks = ArrayUtil.chunk(Object.keys(userClientMap), limit);
+    const userPreKeyBundleMapChunks = await Promise.all(
+      userIdChunks.map(userIdChunk =>
         this._postMultiPreKeyBundles(
-          idChunk.reduce(
-            (acc, userId) => ({
-              ...acc,
+          userIdChunk.reduce(
+            (chunkedUserClientMap, userId) => ({
+              ...chunkedUserClientMap,
               [userId]: userClientMap[userId],
             }),
             {},
@@ -469,10 +469,10 @@ export class UserAPI {
         ),
       ),
     );
-    return resolvedTasks.reduce(
-      (acc, preKeyBundle) => ({
-        ...acc,
-        ...preKeyBundle,
+    return userPreKeyBundleMapChunks.reduce(
+      (userPreKeyBundleMap, userPreKeyBundleMapChunk) => ({
+        ...userPreKeyBundleMap,
+        ...userPreKeyBundleMapChunk,
       }),
       {},
     );
