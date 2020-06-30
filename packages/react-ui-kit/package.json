@@ -26,14 +26,14 @@
     "jest-emotion": "10.0.32",
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "react-helmet": "5.2.1",
+    "react-helmet": "6.1.0",
     "react-hot-loader": "4.12.21",
     "react-styleguidist": "11.0.8",
     "react-test-renderer": "16.13.1",
     "rimraf": "3.0.2",
     "typescript": "3.9.2",
     "webpack": "4.43.0",
-    "webpack-cli": "3.3.11",
+    "webpack-cli": "3.3.12",
     "webpack-env": "0.8.0"
   },
   "peerDependencies": {

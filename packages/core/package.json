@@ -5,15 +5,15 @@
   "dependencies": {
     "@types/long": "4.0.1",
     "@types/node": "~12",
-    "@wireapp/api-client": "11.20.4",
-    "@wireapp/cryptobox": "12.2.12",
+    "@wireapp/api-client": "11.20.5",
+    "@wireapp/cryptobox": "12.2.13",
     "@wireapp/protocol-messaging": "1.25.4",
     "@wireapp/store-engine": "4.5.6",
     "bazinga64": "5.7.6",
     "hash.js": "1.1.7",
     "logdown": "3.3.1",
     "protobufjs": "6.8.9",
-    "pure-uuid": "1.6.0"
+    "uuidjs": "4.2.5"
   },
   "devDependencies": {
     "@types/faker": "4.1.11",
@@ -40,7 +40,7 @@
     "ts-node": "8.6.2",
     "typescript": "3.9.2",
     "webpack": "4.43.0",
-    "webpack-cli": "3.3.11"
+    "webpack-cli": "3.3.12"
   },
   "description": "Wire for Web's communication core.",
   "files": [
@@ -66,5 +66,5 @@
     "test:project": "yarn dist && yarn test",
     "test:node": "nyc jasmine --config=jasmine.json"
   },
-  "version": "16.10.4"
+  "version": "16.10.5"
 }
