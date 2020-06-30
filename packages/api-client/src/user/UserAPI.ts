@@ -435,7 +435,7 @@ export class UserAPI {
     return response.data;
   }
 
-  private async _postMultiPreKeyBundles(userClientMap: UserClients): Promise<UserPreKeyBundleMap> {
+  private async _postMultiPreKeyBundlesChunk(userClientMap: UserClients): Promise<UserPreKeyBundleMap> {
     const config: AxiosRequestConfig = {
       data: userClientMap,
       method: 'post',
@@ -458,7 +458,7 @@ export class UserAPI {
     const userIdChunks = ArrayUtil.chunk(Object.keys(userClientMap), limit);
     const userPreKeyBundleMapChunks = await Promise.all(
       userIdChunks.map(userIdChunk =>
-        this._postMultiPreKeyBundles(
+        this._postMultiPreKeyBundlesChunk(
           userIdChunk.reduce(
             (chunkedUserClientMap, userId) => ({
               ...chunkedUserClientMap,
