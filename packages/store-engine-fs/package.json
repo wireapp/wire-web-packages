@@ -6,11 +6,10 @@
   "devDependencies": {
     "@types/jasmine": "3.5.10",
     "@types/node": "~12",
-    "@wireapp/store-engine": "4.5.5",
+    "@wireapp/store-engine": "4.5.7",
     "jasmine": "3.5.0",
-    "nyc": "15.0.1",
+    "nyc": "15.1.0",
     "rimraf": "3.0.2",
-    "ts-node": "8.6.2",
     "typescript": "3.8.3"
   },
   "description": "Store Engine implementation for Node.js' File System.",
@@ -32,5 +31,5 @@
     "test": "nyc jasmine --config=jasmine.json",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "2.2.6"
+  "version": "2.2.9"
 }

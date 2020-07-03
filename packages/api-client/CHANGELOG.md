@@ -3,6 +3,73 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.20.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.20.7...@wireapp/api-client@11.20.8) (2020-06-30)
+
+
+### Bug Fixes
+
+* **api-client:** Chunk `postMultiPreKeyBundles` requests to prevent `413 Request entity too large` ([#3092](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/3092)) ([db80a6a](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/db80a6a643af8f38a0e1499a76427b7342c789bb))
+
+
+
+
+
+## [11.20.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.20.6...@wireapp/api-client@11.20.7) (2020-06-30)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.20.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.20.5...@wireapp/api-client@11.20.6) (2020-06-30)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.20.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.20.4...@wireapp/api-client@11.20.5) (2020-06-29)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.20.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.20.3...@wireapp/api-client@11.20.4) (2020-06-17)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.20.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.20.2...@wireapp/api-client@11.20.3) (2020-06-17)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.20.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.20.1...@wireapp/api-client@11.20.2) (2020-06-17)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.20.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.20.0...@wireapp/api-client@11.20.1) (2020-06-10)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
 # [11.20.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.19.3...@wireapp/api-client@11.20.0) (2020-06-03)
 
 

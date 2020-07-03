@@ -24,11 +24,12 @@ import {Account} from '@wireapp/core';
 import {PayloadBundle, PayloadBundleType} from '@wireapp/core/dist/conversation/';
 import {CRUDEngine} from '@wireapp/store-engine';
 import logdown from 'logdown';
-import UUID from 'pure-uuid';
+import UUID from 'uuidjs';
 
 import {BotConfig, BotCredentials} from './Interfaces';
 import {MessageHandler} from './MessageHandler';
 import {DefaultConversationRoleName} from '@wireapp/api-client/dist/conversation';
+import {AUTH_TABLE_NAME, AUTH_COOKIE_KEY, Cookie} from '@wireapp/api-client/dist/auth';
 
 const defaultConfig: Required<BotConfig> = {
   backend: 'production',
@@ -55,7 +56,7 @@ export class Bot {
   }
 
   public addHandler(handler: MessageHandler): void {
-    this.handlers.set(new UUID(4).format(), handler);
+    this.handlers.set(UUID.genV4().toString(), handler);
   }
 
   public removeHandler(key: string): void {
@@ -113,12 +114,28 @@ export class Bot {
       this.account.on(payloadType as any, this.handlePayload.bind(this));
     }
 
-    await this.account.login(login);
+    try {
+      if (!storeEngine) {
+        throw new Error('Store engine not provided');
+      }
+      const cookie = await this.getCookie(storeEngine);
+      await this.account.init(this.config.clientType, cookie);
+    } catch (error) {
+      this.logger.info('Failed to init account from cookie', error);
+      await apiClient.login(login);
+    }
+
     await this.account.listen();
 
     this.handlers.forEach(handler => (handler.account = this.account));
 
     return apiClient;
+  }
+
+  async getCookie(storeEngine: CRUDEngine): Promise<Cookie | undefined> {
+    const {expiration, zuid} = await storeEngine.read(AUTH_TABLE_NAME, AUTH_COOKIE_KEY);
+    const cookie = new Cookie(zuid, expiration);
+    return cookie;
   }
 
   private handlePayload(payload: PayloadBundle | ConversationEvent | UserEvent | TeamEvent): void {

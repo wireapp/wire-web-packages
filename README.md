@@ -59,3 +59,21 @@ yarn && yarn boot
 ## Build all packages and test them
 yarn test:all
 ```
+
+### Release packages
+
+#### Release new package
+
+If a package gets published for the very first time, it must be released this way:
+
+```bash
+cd ./packages/new-package
+yarn dist
+npm publish --access public
+```
+
+**Info:** Start with version "0.0.0" in `package.json` when publishing with `lerna` or "0.1.0" when publishing with `npm`.
+
+#### Release an existing package
+
+This will be handled by our CI setup.

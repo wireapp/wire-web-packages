@@ -3,8 +3,8 @@
     "wire-cli": "dist/index.js"
   },
   "dependencies": {
-    "@wireapp/core": "16.9.15",
-    "@wireapp/store-engine-fs": "2.2.6",
+    "@wireapp/core": "16.10.8",
+    "@wireapp/store-engine-fs": "2.2.9",
     "commander": "5.1.0",
     "dotenv": "8.2.0",
     "fs-extra": "9.0.0"
@@ -13,7 +13,6 @@
     "@types/fs-extra": "8.1.0",
     "@types/long": "4.0.1",
     "rimraf": "3.0.2",
-    "ts-node": "8.6.2",
     "typescript": "3.8.3"
   },
   "description": "Command-line interface for Wire's secure messaging platform.",
@@ -29,10 +28,10 @@
     "build:node": "tsc",
     "clean": "rimraf dist",
     "dist": "yarn clean && yarn build",
-    "start": "ts-node src/index.ts",
+    "start": "ts-node -r tsconfig-paths/register src/index.ts",
     "test": "yarn test:node",
     "test:project": "yarn dist && yarn test",
     "test:node": "exit 0"
   },
-  "version": "8.1.113"
+  "version": "8.1.122"
 }

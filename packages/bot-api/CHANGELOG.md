@@ -3,6 +3,81 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.10.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.10.7...@wireapp/bot-api@7.10.8) (2020-06-30)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.10.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.10.6...@wireapp/bot-api@7.10.7) (2020-06-30)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.10.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.10.5...@wireapp/bot-api@7.10.6) (2020-06-30)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.10.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.10.4...@wireapp/bot-api@7.10.5) (2020-06-29)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.10.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.10.3...@wireapp/bot-api@7.10.4) (2020-06-17)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.10.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.10.2...@wireapp/bot-api@7.10.3) (2020-06-17)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.10.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.10.1...@wireapp/bot-api@7.10.2) (2020-06-17)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.10.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.10.0...@wireapp/bot-api@7.10.1) (2020-06-10)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+# [7.10.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.9.47...@wireapp/bot-api@7.10.0) (2020-06-05)
+
+
+### Features
+
+* **bot-api:** Reuse cookie to login ([#3061](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/issues/3061)) ([0ec66a1](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/commit/0ec66a1505719d36e19991a1d12076041c224dc6))
+
+
+
+
+
 ## [7.9.47](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.9.46...@wireapp/bot-api@7.9.47) (2020-06-03)
 
 **Note:** Version bump only for package @wireapp/bot-api

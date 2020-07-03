@@ -2,8 +2,8 @@
   "dependencies": {
     "@types/long": "4.0.1",
     "@types/node": "*",
-    "@wireapp/core": "16.9.15",
-    "pure-uuid": "1.6.0"
+    "@wireapp/core": "16.10.8",
+    "uuidjs": "4.2.5"
   },
   "devDependencies": {
     "cross-env": "7.0.2",
@@ -25,11 +25,11 @@
     "build": "yarn build:node",
     "build:node": "tsc",
     "clean": "rimraf dist",
-    "demo:admin": "ts-node src/demo/admin.ts",
+    "demo:admin": "ts-node -r tsconfig-paths/register src/demo/admin.ts",
     "dist": "yarn clean && yarn build",
     "test": "yarn test:node",
     "test:node": "jasmine --config=jasmine.json",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "7.9.47"
+  "version": "7.10.8"
 }
