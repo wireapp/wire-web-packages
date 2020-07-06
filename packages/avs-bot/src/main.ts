@@ -25,30 +25,30 @@ const wrtc = require('wrtc');
 declare global {
   namespace NodeJS {
     interface Global {
-      getUserMedia: any;
-      MediaStream: any;
-      MediaStreamTrack: any;
-      navigator: any;
+      getUserMedia: NavigatorGetUserMedia;
+      MediaStream: MediaStream;
+      MediaStreamTrack: MediaStreamTrack;
+      navigator: Navigator;
       nonstandard: {
-        i420ToRgba: any;
-        rgbaToI420: any;
-        RTCAudioSink: any;
-        RTCAudioSource: any;
-        RTCVideoSink: any;
-        RTCVideoSource: any;
+        i420ToRgba: unknown;
+        rgbaToI420: unknown;
+        RTCAudioSink: unknown;
+        RTCAudioSource: unknown;
+        RTCVideoSink: unknown;
+        RTCVideoSource: unknown;
       };
-      RTCDataChannel: any;
-      RTCDataChannelEvent: any;
-      RTCDtlsTransport: any;
-      RTCIceCandidate: any;
-      RTCIceTransport: any;
-      RTCPeerConnection: any;
-      RTCPeerConnectionIceEvent: any;
-      RTCRtpReceiver: any;
-      RTCRtpSender: any;
-      RTCRtpTransceiver: any;
-      RTCSctpTransport: any;
-      RTCSessionDescription: any;
+      RTCDataChannel: RTCDataChannel;
+      RTCDataChannelEvent: RTCDataChannelEvent;
+      RTCDtlsTransport: RTCDtlsTransport;
+      RTCIceCandidate: RTCIceCandidate;
+      RTCIceTransport: RTCIceTransport;
+      RTCPeerConnection: RTCPeerConnection;
+      RTCPeerConnectionIceEvent: RTCPeerConnectionIceEvent;
+      RTCRtpReceiver: RTCRtpReceiver;
+      RTCRtpSender: RTCRtpSender;
+      RTCRtpTransceiver: RTCRtpTransceiver;
+      RTCSctpTransport: RTCSctpTransport;
+      RTCSessionDescription: RTCSessionDescription;
     }
   }
 }
