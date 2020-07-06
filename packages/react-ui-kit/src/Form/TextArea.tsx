@@ -52,14 +52,14 @@ export const textAreaStyle: <T>(theme: Theme, props: TextAreaProps<T>) => Object
     '&::-webkit-input-placeholder': {
       ...placeholderStyle,
     },
+    '&:focus': {
+      boxShadow: `0 0 0 1px ${COLOR.BLUE}`,
+    },
     '&:invalid': !markInvalid
       ? {
           boxShadow: 'none',
         }
       : {},
-    '&:focus': {
-      boxShadow: `0 0 0 1px ${COLOR.BLUE}`,
-    },
     background: disabled ? theme.Input.backgroundColorDisabled : theme.Input.backgroundColor,
     border: 'none',
     borderRadius: '4px',
