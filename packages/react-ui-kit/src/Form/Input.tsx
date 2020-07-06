@@ -57,6 +57,9 @@ export const inputStyle: <T>(theme: Theme, props: InputProps<T>) => ObjectInterp
           boxShadow: 'none',
         }
       : {},
+    '&:focus': {
+      boxShadow: `0 0 0 1px ${COLOR.BLUE}`,
+    },
     background: disabled ? theme.Input.backgroundColorDisabled : theme.Input.backgroundColor,
     border: 'none',
     borderRadius: '4px',
