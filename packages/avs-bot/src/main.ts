@@ -285,10 +285,14 @@ class App {
     trans: number,
     arg: number,
   ): number => {
-    const callPayload = this.account!.service!.conversation.messageBuilder.createCall(conversationId, data);
-    this.account!.service!.conversation.send(callPayload).catch(error =>
-      console.error('onSendCallMessage error', error),
-    );
+    void (async () => {
+      try {
+        const callPayload = this.account!.service!.conversation.messageBuilder.createCall(conversationId, data);
+        await this.account!.service!.conversation.send(callPayload);
+      } catch (error) {
+        console.error('onSendCallMessage error', error);
+      }
+    })();
 
     return 0;
   };
