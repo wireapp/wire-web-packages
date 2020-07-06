@@ -6,11 +6,13 @@
   "dependencies": {
     "@wireapp/avs": "6.0.28",
     "@wireapp/core": "16.9.12",
-    "axios": "0.19.2",
     "dotenv": "8.2.0",
     "wrtc": "0.4.5"
   },
   "scripts": {
     "start": "cross-env NODE_DEBUG=@wireapp* ts-node src/main.ts"
+  },
+  "devDependencies": {
+    "@types/webrtc": "0.0.26"
   }
 }
