@@ -2,7 +2,7 @@
   "name": "avs-bot",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT",
+  "license": "GPL-3.0",
   "dependencies": {
     "@wireapp/avs": "6.0.28",
     "@wireapp/core": "16.9.12",
