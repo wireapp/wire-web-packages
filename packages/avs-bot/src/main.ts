@@ -177,7 +177,7 @@ class App {
 
   answerCall = (call: CallMessage) => {
     if (!this.wCall || !this.wUser) {
-      return;
+      throw new Error('wCall or wUser does not exist');
     }
     console.log('\n ANSWERING CALL \n');
     this.wCall.answer(this.wUser, call.conversation, CALL_TYPE.NORMAL, 0);
