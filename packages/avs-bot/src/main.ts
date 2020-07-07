@@ -16,52 +16,6 @@ import {CRUDEngine} from '@wireapp/store-engine';
 import {PayloadBundleType} from '@wireapp/core/dist/conversation';
 import {Avs} from './avs';
 
-const wrtc = require('wrtc');
-
-declare global {
-  namespace NodeJS {
-    interface Global {
-      getUserMedia: NavigatorGetUserMedia;
-      MediaStream: MediaStream;
-      MediaStreamTrack: MediaStreamTrack;
-      navigator: Navigator;
-      nonstandard: {
-        i420ToRgba: unknown;
-        rgbaToI420: unknown;
-        RTCAudioSink: unknown;
-        RTCAudioSource: unknown;
-        RTCVideoSink: unknown;
-        RTCVideoSource: unknown;
-      };
-      RTCDataChannel: RTCDataChannel;
-      RTCDataChannelEvent: RTCDataChannelEvent;
-      RTCDtlsTransport: RTCDtlsTransport;
-      RTCIceCandidate: RTCIceCandidate;
-      RTCIceTransport: RTCIceTransport;
-      RTCPeerConnection: RTCPeerConnection;
-      RTCPeerConnectionIceEvent: RTCPeerConnectionIceEvent;
-      RTCRtpReceiver: RTCRtpReceiver;
-      RTCRtpSender: RTCRtpSender;
-      RTCRtpTransceiver: RTCRtpTransceiver;
-      RTCSctpTransport: RTCSctpTransport;
-      RTCSessionDescription: RTCSessionDescription;
-    }
-  }
-}
-
-if (typeof RTCPeerConnection === 'undefined') {
-  global.RTCPeerConnection = wrtc.RTCPeerConnection;
-  global.MediaStream = wrtc.MediaStream;
-  global.MediaStreamTrack = wrtc.MediaStreamTrack;
-  global.navigator = {
-    ...global.navigator,
-    mediaDevices: {
-      ...(global.navigator || {}).mediaDevices,
-      getUserMedia: wrtc.getUserMedia,
-    },
-  };
-}
-
 require('dotenv').config();
 const {WIRE_EMAIL, WIRE_PASSWORD} = process.env;
 const CLIENT_TYPE = ClientType.TEMPORARY;
