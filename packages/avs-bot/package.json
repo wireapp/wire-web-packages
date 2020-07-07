@@ -4,8 +4,8 @@
   "main": "index.js",
   "license": "GPL-3.0",
   "dependencies": {
-    "@wireapp/avs": "6.0.28",
-    "@wireapp/core": "16.9.12",
+    "@wireapp/avs": "6.1.9",
+    "@wireapp/core": "16.10.9",
     "dotenv": "8.2.0",
     "wrtc": "0.4.5"
   },
