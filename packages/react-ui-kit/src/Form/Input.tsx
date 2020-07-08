@@ -84,19 +84,8 @@ const filterInputProps = (props: InputProps) =>
 export const Input: React.FC<InputProps<HTMLInputElement>> = React.forwardRef<
   HTMLInputElement,
   InputProps<HTMLInputElement>
->(({type, ...props}, ref) =>
-  props.label ? (
-    <Label bold={false} markInvalid={props.markInvalid}>
-      <span style={{margin: '16px'}}>{props.label}</span>
-      <input
-        className={INPUT_CLASSNAME}
-        css={theme => inputStyle(theme, props)}
-        ref={ref}
-        type={type}
-        {...filterInputProps(props)}
-      />
-    </Label>
-  ) : (
+>(({type, ...props}, ref) => {
+  const input = (
     <input
       className={INPUT_CLASSNAME}
       css={theme => inputStyle(theme, props)}
@@ -104,5 +93,13 @@ export const Input: React.FC<InputProps<HTMLInputElement>> = React.forwardRef<
       type={type}
       {...filterInputProps(props)}
     />
-  ),
-);
+  );
+  return props.label ? (
+    <Label bold={false} markInvalid={props.markInvalid}>
+      <span style={{margin: '16px'}}>{props.label}</span>
+      {input}
+    </Label>
+  ) : (
+    input
+  );
+});
