@@ -42,9 +42,10 @@ export const InputSubmitCombo = (props: InputSubmitComboProps) => (
         margin: '0 8px 0 0',
         padding: '0 0 0 16px',
       },
-      height: '57px', // needs a bit more space to not overlap with the `boxShadow` from `:focus`
+      // needs a bit more space to not overlap with the `boxShadow` from `:focus`
       alignItems: 'center',
       display: 'flex',
+      height: '57px',
       justifyContent: 'space-between',
       marginBottom: '4px',
       paddingLeft: 0,
