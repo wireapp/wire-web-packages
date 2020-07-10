@@ -3019,10 +3019,89 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
+"@wireapp/api-client@11.20.9":
+  version "11.20.9"
+  resolved "https://registry.npmjs.org/@wireapp/api-client/-/api-client-11.20.9.tgz#658f0f875419f7d0f01040b749ed9f885f6ee305"
+  integrity sha512-N1gDpA4945YZHGI2K4eCSC9plIxXm6o7S4ZiAyNCv6EhGS7uPvPWM19l3XzvN5aFO3sR0RKdiQAaOjbgm/VhbA==
+  dependencies:
+    "@types/node" "~12"
+    "@types/spark-md5" "3.0.2"
+    "@types/tough-cookie" "4.0.0"
+    "@wireapp/commons" "3.5.4"
+    "@wireapp/priority-queue" "1.6.5"
+    axios "0.19.2"
+    logdown "3.3.1"
+    reconnecting-websocket "4.4.0"
+    spark-md5 "3.0.1"
+    tough-cookie "4.0.0"
+    ws "7.2.5"
+
 "@wireapp/avs@6.1.9":
   version "6.1.9"
   resolved "https://registry.npmjs.org/@wireapp/avs/-/avs-6.1.9.tgz#38cb1ec0e17f98f745569977b702b99f706b55f9"
   integrity sha512-I+XfUGo+hUudWnBN7lJXLAZ+p4AxHEpNkaI/M1BU/MQ8S+et5BBGYkvBfhdUZ4ICLo23jjeyY72J3Rl26//yWA==
+
+"@wireapp/cbor@4.6.8":
+  version "4.6.8"
+  resolved "https://registry.npmjs.org/@wireapp/cbor/-/cbor-4.6.8.tgz#73d7ed0bc4044deb0794ef972763b2ae6917827e"
+  integrity sha512-1zJh2Hi8UGIv8Qo2hpuY/mCcMiRFfbssKOX9X2liwoUXL72Ue1dTEQfeCbFrzW3ncfPmpwOJNnpjl2DeXGJfAw==
+
+"@wireapp/commons@3.5.4":
+  version "3.5.4"
+  resolved "https://registry.npmjs.org/@wireapp/commons/-/commons-3.5.4.tgz#a3e399be61c61f02b7ea8373922109b4749a9e5b"
+  integrity sha512-GJjbcAQ2ZAgBgXhAkYumG7h2nYvfSSoemhro3kp64EAvo+tMf2TaXtdjWF7FmurdnqVWhMNRVJUkqYJ+/k3UEg==
+  dependencies:
+    "@types/fs-extra" "8.1.0"
+    "@types/node" "~12"
+    "@types/platform" "1.3.2"
+    ansi-regex "5.0.0"
+    fs-extra "9.0.0"
+    logdown "3.3.1"
+    platform "1.3.5"
+    url-search-params-polyfill "8.1.0"
+
+"@wireapp/core@16.10.9":
+  version "16.10.9"
+  resolved "https://registry.npmjs.org/@wireapp/core/-/core-16.10.9.tgz#bcb620ca01c14564c5e08590a66da41c893c761a"
+  integrity sha512-DY+5ByIk4Y8aU7Bi808dlLBfc06oSphZQRvlms2iI6d9IxQarije0Dtvjp0lWSFw37YhcM0T62pLe5rPZr0Keg==
+  dependencies:
+    "@types/long" "4.0.1"
+    "@types/node" "~12"
+    "@wireapp/api-client" "11.20.9"
+    "@wireapp/cryptobox" "12.2.15"
+    "@wireapp/protocol-messaging" "1.25.4"
+    "@wireapp/store-engine" "4.5.7"
+    bazinga64 "5.7.6"
+    hash.js "1.1.7"
+    logdown "3.3.1"
+    protobufjs "6.9.0"
+    uuidjs "4.2.5"
+
+"@wireapp/cryptobox@12.2.15":
+  version "12.2.15"
+  resolved "https://registry.npmjs.org/@wireapp/cryptobox/-/cryptobox-12.2.15.tgz#a5b44aa767ed9005298d684e5ffef05f9dccfbeb"
+  integrity sha512-EH+ClmTQD+KeqWS/RfE1bu2k/zBgG5GOMYcs22Q7ik0KykhL8EMXEZpyQ9Xitv+xQ6FkvGK9fvE+ALhXz/kiww==
+  dependencies:
+    "@types/node" "~12"
+    "@wireapp/lru-cache" "3.6.9"
+    "@wireapp/priority-queue" "1.6.5"
+    "@wireapp/proteus" "9.8.11"
+    "@wireapp/store-engine" "4.5.7"
+    bazinga64 "5.7.6"
+    logdown "3.3.1"
+
+"@wireapp/proteus@9.8.11":
+  version "9.8.11"
+  resolved "https://registry.npmjs.org/@wireapp/proteus/-/proteus-9.8.11.tgz#c4b992807cc5f5e6ca1fe094f8233b1316f5f1ad"
+  integrity sha512-BJW3+067GIJjKlqsd1is1wfCUijurlJmHGJq/6aDsD2PIEOkHOOnQrO8fSOQPEqCeVKEUHRDvEuYyLn5HoCy6A==
+  dependencies:
+    "@types/chai" "4.2.11"
+    "@types/ed2curve" "0.2.2"
+    "@types/libsodium-wrappers-sumo" "0.7.3"
+    "@types/node" "~12"
+    "@wireapp/cbor" "4.6.8"
+    ed2curve "0.3.0"
+    libsodium-wrappers-sumo "0.7.6"
 
 "@wireapp/protocol-messaging@1.25.4":
   version "1.25.4"
@@ -3896,6 +3975,11 @@ batch@0.6.1:
   version "0.6.1"
   resolved "https://registry.npmjs.org/batch/-/batch-0.6.1.tgz#dc34314f4e679318093fc760272525f94bf25c16"
   integrity sha1-3DQxT05nkxgJP8dgJyUl+UvyXBY=
+
+bazinga64@5.7.6:
+  version "5.7.6"
+  resolved "https://registry.npmjs.org/bazinga64/-/bazinga64-5.7.6.tgz#31d7ac8188c583bb26c4b3237259e5dc6e260e9b"
+  integrity sha512-HKUvoXgymXR2jgwtznRfPE1C4W5XRpL58JnPC2XlSh1iNGgW/oN1KWoOCV8XyIciyQrSYbJrHQP+LYYcqXLXZA==
 
 bcrypt-pbkdf@^1.0.0:
   version "1.0.2"

@@ -1,10 +1,10 @@
-/* eslint-disable no-console */
 import axios from 'axios';
 import {CallMessage} from '@wireapp/core/dist/conversation/message/OtrMessage';
 import {CallingContent} from '@wireapp/core/dist/conversation/content';
 import {ENV as AVS_ENV, getAvsInstance, Wcall, LOG_LEVEL, REASON, CALL_TYPE} from '@wireapp/avs';
 import type {Account} from '@wireapp/core';
 import {RTCAudioSourceWrapper} from './rtcAudioSource';
+import {getLogger} from './util/Logger';
 const wrtc = require('wrtc');
 
 declare global {
@@ -66,6 +66,7 @@ export class Avs {
   activeCalls: Record<string, Call> = {};
   mediaStream: MediaStream = new MediaStream();
   audioSource: RTCAudioSourceWrapper = new RTCAudioSourceWrapper();
+  logger = getLogger('Avs');
 
   constructor(private readonly account: Account) {}
 
@@ -98,7 +99,7 @@ export class Avs {
       }
       this.answerCall(callMessage);
     } catch (error) {
-      console.log(error);
+      this.logger.log(error);
     }
   };
 
@@ -106,13 +107,13 @@ export class Avs {
     if (!this.wCall || !this.wUser) {
       throw new Error('wCall or wUser does not exist');
     }
-    console.log('\n ANSWERING CALL \n');
+    this.logger.log('\n ANSWERING CALL \n');
     this.wCall.answer(this.wUser, call.conversation, CALL_TYPE.NORMAL, 0);
   };
 
   private configureCallingApi(wCall: Wcall): Wcall {
     wCall.setLogHandler((level: LOG_LEVEL, message: string) => {
-      console.log('\n AVS', level, message, '\n');
+      this.logger.log('\n AVS', level, message, '\n');
     });
 
     const avsEnv = AVS_ENV.DEFAULT;
@@ -167,7 +168,7 @@ export class Avs {
     dataLength: number,
     _: number,
   ): number => {
-    console.log('\n sendSFTRequest \n');
+    this.logger.log('\n sendSFTRequest \n');
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     (async () => {
       const response = await axios.post(url, data);
@@ -196,7 +197,7 @@ export class Avs {
         const callPayload = this.account!.service!.conversation.messageBuilder.createCall(conversationId, data);
         await this.account!.service!.conversation.send(callPayload);
       } catch (error) {
-        console.error('onSendCallMessage error', error);
+        this.logger.error('onSendCallMessage error', error);
       }
     })();
 
