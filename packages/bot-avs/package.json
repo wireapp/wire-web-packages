@@ -2,6 +2,7 @@
   "name": "@wireapp/bot-avs",
   "version": "1.0.0",
   "main": "index.js",
+  "description": "Wire bot for audio calls.",
   "license": "GPL-3.0",
   "dependencies": {
     "@wireapp/avs": "6.1.9",
