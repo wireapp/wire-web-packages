@@ -25,11 +25,13 @@ import {PayloadBundle, PayloadBundleType} from '@wireapp/core/dist/conversation/
 import {CRUDEngine} from '@wireapp/store-engine';
 import logdown from 'logdown';
 import UUID from 'uuidjs';
+import {CALL_TYPE, CONV_TYPE} from '@wireapp/avs';
 
 import {BotConfig, BotCredentials} from './Interfaces';
 import {MessageHandler} from './MessageHandler';
-import {DefaultConversationRoleName} from '@wireapp/api-client/dist/conversation';
+import {DefaultConversationRoleName, Conversation} from '@wireapp/api-client/dist/conversation';
 import {AUTH_TABLE_NAME, AUTH_COOKIE_KEY, Cookie} from '@wireapp/api-client/dist/auth';
+import {AudioVideoSignaling} from './avs';
 
 const defaultConfig: Required<BotConfig> = {
   backend: 'production',
@@ -40,7 +42,7 @@ const defaultConfig: Required<BotConfig> = {
 
 export class Bot {
   public account?: Account;
-
+  private avs?: AudioVideoSignaling;
   private readonly config: Required<BotConfig>;
   private readonly handlers: Map<string, MessageHandler>;
   private readonly logger: logdown.Logger;
@@ -114,22 +116,45 @@ export class Bot {
       this.account.on(payloadType as any, this.handlePayload.bind(this));
     }
 
+    let userId: string;
+    let clientId: string;
+
     try {
       if (!storeEngine) {
         throw new Error('Store engine not provided');
       }
       const cookie = await this.getCookie(storeEngine);
-      await this.account.init(this.config.clientType, cookie);
+      const context = await this.account.init(this.config.clientType, cookie);
+      userId = context.userId;
+      clientId = context.clientId || '';
     } catch (error) {
       this.logger.info('Failed to init account from cookie', error);
-      await apiClient.login(login);
+      const context = await this.account.login(login);
+      userId = context.userId;
+      clientId = context.clientId || '';
     }
 
+    this.logger.info({clientId, userId});
     await this.account.listen();
 
     this.handlers.forEach(handler => (handler.account = this.account));
 
+    this.avs = new AudioVideoSignaling(this.account);
+    await this.avs.init(userId, clientId);
+
     return apiClient;
+  }
+
+  startAudioCall = async (conversationId: string) => {
+    if (!this.avs) {
+      throw new Error('AVS is not initialized properly');
+    }
+    // const conversation = await this.getConversation(conversationId);
+    return this.avs.startCall(conversationId, CONV_TYPE.CONFERENCE, CALL_TYPE.NORMAL);
+  };
+
+  getConversation(conversationId: string): Promise<Conversation> {
+    return this.account!.service!.conversation.getConversations(conversationId);
   }
 
   async getCookie(storeEngine: CRUDEngine): Promise<Cookie | undefined> {
