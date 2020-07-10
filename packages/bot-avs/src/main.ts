@@ -101,8 +101,9 @@ class App {
   }
 }
 
-const instance = new Bot();
+const instance = new App();
 
-Bot.start()
+instance
+  .start()
   .then(console.log)
   .catch(error => console.log('Failed to start bot with error:', error));
