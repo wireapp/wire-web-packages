@@ -101,7 +101,7 @@ class App {
   }
 }
 
-const Bot = new App();
+const instance = new Bot();
 
 Bot.start()
   .then(console.log)
