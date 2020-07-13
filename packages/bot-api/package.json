@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "@types/webrtc": "0.0.26",
     "@types/long": "4.0.1",
     "@types/node": "*",
     "@wireapp/core": "16.10.14",
