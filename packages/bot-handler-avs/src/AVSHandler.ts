@@ -25,7 +25,6 @@ import {CALL_TYPE} from '@wireapp/avs/dist/avs_wcall';
 import axios from 'axios';
 import {CallMessage} from '@wireapp/core/dist/conversation/message/OtrMessage';
 import {CallingContent} from '@wireapp/core/dist/conversation/content';
-import {CallConfigData} from '@wireapp/api-client/dist/account';
 
 export class AVSHandler extends MessageHandler {
   private wCall?: Wcall;
