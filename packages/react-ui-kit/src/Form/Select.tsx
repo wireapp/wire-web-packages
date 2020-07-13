@@ -63,8 +63,8 @@ const filterSelectProps = (props: SelectProps) => filterProps(props, ['markInval
 
 export const Select = (props: SelectProps) =>
   props.label ? (
-    <Label bold={false} markInvalid={props.markInvalid} style={{width: '100%'}}>
-      <span style={{margin: '16px'}}>{props.label}</span>
+    <Label bold={false} markInvalid={props.markInvalid}>
+      <div style={{marginLeft: '16px'}}>{props.label}</div>
       <select css={theme => selectStyle(theme, props)} {...filterSelectProps(props)} />
     </Label>
   ) : (
