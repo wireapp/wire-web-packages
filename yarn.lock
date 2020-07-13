@@ -2846,6 +2846,11 @@
     "@types/webpack-sources" "*"
     source-map "^0.6.0"
 
+"@types/webrtc@0.0.26":
+  version "0.0.26"
+  resolved "https://registry.npmjs.org/@types/webrtc/-/webrtc-0.0.26.tgz#f1bae07215eb84577c35ca050866820e412a07e2"
+  integrity sha512-hTDoPKPYbgcogZA9eqhihPO+HnUs5BNPfnoOyc9bzcuq56eYV28zwJ+3tortPN0uXgmDvNs3f1JaT4oTbtWxqg==
+
 "@types/ws@7.2.4":
   version "7.2.4"
   resolved "https://registry.npmjs.org/@types/ws/-/ws-7.2.4.tgz#b3859f7b9c243b220efac9716ec42c716a72969d"
@@ -3106,6 +3111,11 @@
     "@webassemblyjs/ast" "1.9.0"
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
+
+"@wireapp/avs@6.0.46":
+  version "6.0.46"
+  resolved "https://registry.npmjs.org/@wireapp/avs/-/avs-6.0.46.tgz#1c8827e9f1b19c27580ec8415ace2763d4ac5afc"
+  integrity sha512-mokj5DVZWszeznmS9vTW0rUAg5qr8xSm61XwvB14hUCU1GEv2xV1OFhSnd8e3dEb3C3P512sjSDuz4pxN0dhLA==
 
 "@wireapp/protocol-messaging@1.25.4":
   version "1.25.4"
