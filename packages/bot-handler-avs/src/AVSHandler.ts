@@ -155,8 +155,8 @@ export class AVSHandler extends MessageHandler {
     conversationId: string,
     selfUserId: string,
     selfClientId: string,
-    userid_dest?: string,
-    clientid_dest?: string,
+    userid_dest: string | undefined,
+    clientid_dest: string | undefined,
     data: string,
   ): number => {
     void (async () => {
