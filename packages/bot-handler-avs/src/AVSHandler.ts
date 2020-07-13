@@ -17,7 +17,10 @@ export class AVSHandler extends MessageHandler {
   async handleEvent(payload: PayloadBundle): Promise<void> {}
 
   async init(): Promise<void> {
-    const {clientId, userId} = this.account!;
+    if (!this.account) {
+      throw new Error('No account found. Please login first.');
+    }
+    const {clientId, userId} = this.account;
     const callingInstance = await getAvsInstance();
     const wCall = this.configureCallingApi(callingInstance);
     const wUser = this.createWUser(wCall, userId, clientId);
