@@ -164,7 +164,7 @@ export class AVSHandler extends MessageHandler {
     this.storeCall(call);
   };
 
-  private readonly callClosed = (reason: REASON, conversationId: string) => {
+  private readonly callClosed = (reason: REASON, conversationId: string): void => {
     this.removeCall(conversationId);
   };
 
