@@ -100,7 +100,7 @@ export class AVSHandler extends MessageHandler {
 
   private callConfigRequestHandler(convid: string, metrics_json: string, arg: number) {
     this.account!.service!.account.getCallConfig()
-      .then((config: CallConfigData) => {
+      .then(config => {
         this.wCall!.configUpdate(this.wUser!, 0, JSON.stringify(config));
       })
       .catch(console.error);
