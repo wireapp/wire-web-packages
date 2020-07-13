@@ -2,7 +2,7 @@
   "dependencies": {
     "@emotion/core": "10.0.28",
     "@types/color": "3.0.1",
-    "bazinga64": "5.7.6",
+    "bazinga64": "5.7.7",
     "color": "3.1.2",
     "emotion-normalize": "10.1.0",
     "emotion-theming": "10.0.27",
@@ -13,13 +13,13 @@
     "@babel/core": "7.9.0",
     "@babel/plugin-proposal-class-properties": "7.10.1",
     "@babel/preset-env": "7.10.2",
-    "@babel/preset-react": "7.10.1",
+    "@babel/preset-react": "7.10.4",
     "@babel/preset-typescript": "7.10.1",
     "@hot-loader/react-dom": "16.12.0",
     "@types/react": "16.9.19",
     "@types/react-test-renderer": "16.9.2",
     "@types/webpack-env": "1.15.2",
-    "babel-jest": "26.0.1",
+    "babel-jest": "26.1.0",
     "babel-loader": "8.1.0",
     "babel-plugin-emotion": "10.0.29",
     "jest": "26.0.1",
@@ -65,5 +65,5 @@
     "test:update": "yarn test --updateSnapshot",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "7.30.3"
+  "version": "7.32.2"
 }

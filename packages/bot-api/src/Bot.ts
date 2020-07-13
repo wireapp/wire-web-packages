@@ -30,8 +30,14 @@ import {CALL_TYPE, CONV_TYPE} from '@wireapp/avs';
 import {BotConfig, BotCredentials} from './Interfaces';
 import {MessageHandler} from './MessageHandler';
 import {DefaultConversationRoleName, Conversation} from '@wireapp/api-client/dist/conversation';
-import {AUTH_TABLE_NAME, AUTH_COOKIE_KEY, Cookie} from '@wireapp/api-client/dist/auth';
 import {AudioVideoSignaling} from './avs';
+import {
+  AUTH_TABLE_NAME,
+  AUTH_COOKIE_KEY,
+  Cookie,
+  AccessTokenData,
+  AUTH_ACCESS_TOKEN_KEY,
+} from '@wireapp/api-client/dist/auth';
 
 const defaultConfig: Required<BotConfig> = {
   backend: 'production',
@@ -107,6 +113,10 @@ export class Bot {
 
     const apiClient = new APIClient({
       urls: this.config.backend === 'staging' ? APIClient.BACKEND.STAGING : APIClient.BACKEND.PRODUCTION,
+    });
+
+    apiClient.on(APIClient.TOPIC.ACCESS_TOKEN_REFRESH, async (accessToken: AccessTokenData) => {
+      await storeEngine?.updateOrCreate(AUTH_TABLE_NAME, AUTH_ACCESS_TOKEN_KEY, accessToken);
     });
 
     this.account = storeEngine ? new Account(apiClient, () => Promise.resolve(storeEngine)) : new Account(apiClient);
