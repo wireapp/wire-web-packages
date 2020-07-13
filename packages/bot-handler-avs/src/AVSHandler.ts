@@ -172,7 +172,7 @@ export class AVSHandler extends MessageHandler {
     this.activeCalls[call.conversationId] = call;
   };
 
-  private readonly removeCall = (conversationId: string) => {
+  private readonly removeCall = (conversationId: string): void => {
     delete this.activeCalls[conversationId];
   };
 }
