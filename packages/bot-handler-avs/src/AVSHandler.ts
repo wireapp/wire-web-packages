@@ -25,7 +25,7 @@ export class AVSHandler extends MessageHandler {
     this.wCall = wCall;
   }
 
-  public onIncomingCallMessage(callMessage: CallMessage) {
+  onIncomingCallMessage(callMessage: CallMessage): void {
     const callContent: CallingContent = callMessage.content;
 
     if (!callMessage.fromClientId) {
@@ -50,12 +50,13 @@ export class AVSHandler extends MessageHandler {
     this.answerCall(callMessage);
   }
 
-  private readonly answerCall = (call: CallMessage) => {
-    if (!this.wCall || !this.wUser) {
-      throw new Error('wCall or wUser does not exist');
-    }
-    this.wCall.answer(this.wUser, call.conversation, CALL_TYPE.NORMAL, 0);
-  };
+  startCall(conversationId: string, conversationType: CONV_TYPE, callType: CALL_TYPE): void {
+    this.wCall!.start(this.wUser!, conversationId, callType, conversationType, 0);
+  }
+
+  private answerCall(call: CallMessage) {
+    this.wCall!.answer(this.wUser!, call.conversation, CALL_TYPE.NORMAL, 0);
+  }
 
   private configureCallingApi(wCall: Wcall): Wcall {
     wCall.setLogHandler((level: LOG_LEVEL, message: string) => {
@@ -117,7 +118,6 @@ export class AVSHandler extends MessageHandler {
     void (async () => {
       try {
         const response = await axios.post(url, data);
-
         const {status, data: axiosData} = response;
         const jsonData = JSON.stringify(axiosData);
         this.wCall!.sftResp(this.wUser!, status, jsonData, jsonData.length, context);
@@ -175,12 +175,4 @@ export class AVSHandler extends MessageHandler {
   private readonly removeCall = (conversationId: string) => {
     delete this.activeCalls[conversationId];
   };
-
-  async startCall(conversationId: string, conversationType: CONV_TYPE, callType: CALL_TYPE): Promise<void> {
-    if (this.wCall && typeof this.wUser === 'number') {
-      this.wCall!.start(this.wUser!, conversationId, callType, conversationType, 0);
-      return;
-    }
-    throw new Error('unable to start a new call, this.wCall or this.wUser does not exist');
-  }
 }
