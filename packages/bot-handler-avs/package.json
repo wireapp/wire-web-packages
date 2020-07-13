@@ -1,7 +1,6 @@
 {
   "dependencies": {
     "@types/long": "4.0.1",
-    "@types/moment-duration-format": "2.2.2",
     "@types/webrtc": "0.0.26",
     "@wireapp/avs": "6.0.46"
   },
