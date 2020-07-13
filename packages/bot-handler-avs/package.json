@@ -3,9 +3,7 @@
     "@types/long": "4.0.1",
     "@types/moment-duration-format": "2.2.2",
     "@types/webrtc": "0.0.26",
-    "@wireapp/avs": "6.0.46",
-    "moment": "2.26.0",
-    "moment-duration-format": "2.3.2"
+    "@wireapp/avs": "6.0.46"
   },
   "description": "Adds audio/video/signaling (AVS) functionality for Wire bots.",
   "devDependencies": {
