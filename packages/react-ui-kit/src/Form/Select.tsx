@@ -48,13 +48,13 @@ export const selectStyle: <T>(theme: Theme, props: SelectProps<T>) => ObjectInte
   '&:disabled': {
     color: COLOR.GRAY,
   },
-  fontSize: '16px',
   appearance: 'none',
   background: disabled
     ? theme.Input.backgroundColorDisabled
     : `${theme.Input.backgroundColor} center right 16px no-repeat url("${inlineSVG(ArrowDown(theme))}")`,
   boxShadow: markInvalid ? `0 0 0 1px ${COLOR.RED}` : 'none',
   cursor: disabled ? 'normal' : 'pointer',
+  fontSize: '16px',
   fontWeight: 300,
   paddingRight: '30px',
 });
