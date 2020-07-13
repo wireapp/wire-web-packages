@@ -21,6 +21,7 @@ exports[`"Select" renders 1`] = `
   outline: none;
   padding: 0 16px;
   width: 100%;
+  font-size: 16px;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -101,6 +102,7 @@ exports[`"Select" renders as disabled 1`] = `
   outline: none;
   padding: 0 16px;
   width: 100%;
+  font-size: 16px;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -182,6 +184,7 @@ exports[`"Select" renders as invalid 1`] = `
   outline: none;
   padding: 0 16px;
   width: 100%;
+  font-size: 16px;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
