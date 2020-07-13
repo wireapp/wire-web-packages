@@ -130,13 +130,16 @@ export class AVSHandler extends MessageHandler {
     dataLength: number,
     _: number,
   ): number => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    (async () => {
-      const response = await axios.post(url, data);
+    void (async () => {
+      try {
+        const response = await axios.post(url, data);
 
-      const {status, data: axiosData} = response;
-      const jsonData = JSON.stringify(axiosData);
-      this.wCall!.sftResp(this.wUser!, status, jsonData, jsonData.length, context);
+        const {status, data: axiosData} = response;
+        const jsonData = JSON.stringify(axiosData);
+        this.wCall!.sftResp(this.wUser!, status, jsonData, jsonData.length, context);
+      } catch (error) {
+        console.info('Failed to send SFT request', error);
+      }
     })();
     return 0;
   };
