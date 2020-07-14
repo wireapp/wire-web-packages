@@ -1,8 +1,4 @@
 {
-  "dependencies": {
-    "@types/long": "4.0.1",
-    "@types/node": "*"
-  },
   "devDependencies": {
     "@types/node": "~12",
     "@wireapp/bot-api": "7.10.15",
