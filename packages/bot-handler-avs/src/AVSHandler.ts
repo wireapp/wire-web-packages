@@ -101,30 +101,32 @@ export class AVSHandler extends MessageHandler {
     const wUser = wCall.create(
       selfUserId,
       selfClientId,
-      () => {},
-      this.onSendCallMessage,
-      this.sendSFTRequest,
-      this.onIncomingCall,
-      () => {},
-      () => {},
-      () => {},
-      this.callClosed,
-      this.callConfigRequestHandler,
-      () => 0,
-      () => {},
-      () => {},
+      () => {}, // readyh
+      this.onSendCallMessage, // sendh
+      this.sendSFTRequest, // sfth
+      this.onIncomingCall, // incomingh
+      () => {}, // missedh
+      () => {}, // answerh
+      () => {}, // estabh
+      this.callClosed, // closeh
+      () => {}, // metricsh
+      this.callConfigRequestHandler, // cfg_reqh
+      () => {}, // acbrh
+      () => {}, // vstateh
     );
 
     wCall.setParticipantChangedHandler(wUser, () => {});
     return wUser;
   };
 
-  private callConfigRequestHandler(convid: string, metrics_json: string, arg: number) {
+  private callConfigRequestHandler(): number {
     this.account!.service!.account.getCallConfig()
       .then(config => {
         this.wCall!.configUpdate(this.wUser!, 0, JSON.stringify(config));
       })
-      .catch(console.error);
+      .catch(_ => {
+        this.wCall!.configUpdate(this.wUser!, 1, '');
+      });
 
     return 0;
   }
