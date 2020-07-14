@@ -4,7 +4,7 @@
     "@wireapp/bot-api": "7.10.15",
     "jasmine": "3.5.0",
     "rimraf": "3.0.2",
-    "typescript": "3.8.3"
+    "typescript": "3.9.2"
   },
   "files": [
     "dist",

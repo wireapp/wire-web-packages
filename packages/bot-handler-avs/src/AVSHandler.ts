@@ -17,7 +17,7 @@
  *
  */
 
-import {MessageHandler} from '@wireapp/bot-api';
+import {MessageHandler, Bot} from '@wireapp/bot-api';
 import {PayloadBundle} from '@wireapp/core/dist/conversation/';
 import {Call} from './Call';
 import {CONV_TYPE, ENV as AVS_ENV, getAvsInstance, LOG_LEVEL, REASON, Wcall} from '@wireapp/avs';
@@ -36,7 +36,11 @@ export class AVSHandler extends MessageHandler {
 
   async init(): Promise<void> {
     if (!this.account) {
-      throw new Error('No account found. Please login first.');
+      const bot = new Bot({
+        email: '',
+        password: '',
+      });
+      throw new Error(`No account found. Please login first. ${bot.account}`);
     }
     const {clientId, userId} = this.account;
     const callingInstance = await getAvsInstance();
