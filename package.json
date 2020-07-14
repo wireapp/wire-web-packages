@@ -55,6 +55,9 @@
     "packages": [
       "packages/*"
     ],
+    "hoist": [
+      "**/@types/long"
+    ],
     "nohoist": [
       "**/@jest/**/*",
       "**/@types/**/*",
