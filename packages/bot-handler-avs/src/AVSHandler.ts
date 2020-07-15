@@ -18,13 +18,11 @@
  */
 
 import {MessageHandler} from '@wireapp/bot-api';
-import {PayloadBundle} from '@wireapp/core/dist/conversation/';
-import {Call} from './Call';
-import {CONV_TYPE, ENV as AVS_ENV, getAvsInstance, LOG_LEVEL, REASON, Wcall} from '@wireapp/avs';
-import {CALL_TYPE} from '@wireapp/avs/dist/avs_wcall';
+import type {PayloadBundle} from '@wireapp/core/dist/conversation/';
+import type {Call} from './Call';
+import {CALL_TYPE, CONV_TYPE, ENV as AVS_ENV, getAvsInstance, LOG_LEVEL, REASON, Wcall} from '@wireapp/avs';
 import axios from 'axios';
-import {CallMessage} from '@wireapp/core/dist/conversation/message/OtrMessage';
-import {CallingContent} from '@wireapp/core/dist/conversation/content';
+import type {CallMessage} from '@wireapp/core/dist/conversation/message/OtrMessage';
 
 export class AVSHandler extends MessageHandler {
   private wCall?: Wcall;
@@ -47,7 +45,7 @@ export class AVSHandler extends MessageHandler {
   }
 
   onIncomingCallMessage(callMessage: CallMessage): void {
-    const callContent: CallingContent = callMessage.content;
+    const callContent = callMessage.content;
 
     if (!callMessage.fromClientId) {
       throw new Error('callMessage.fromClientId not found');

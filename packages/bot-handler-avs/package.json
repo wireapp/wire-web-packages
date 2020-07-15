@@ -31,7 +31,7 @@
     "clean": "rimraf dist",
     "dist": "yarn clean && yarn build",
     "test": "yarn test:node",
-    "test:node": "exit 0",
+    "test:node": "yarn build:node --noEmit",
     "test:project": "yarn dist && yarn test"
   },
   "version": "0.0.0"
