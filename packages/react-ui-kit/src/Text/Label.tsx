@@ -30,7 +30,7 @@ export interface LabelProps<T = HTMLSpanElement> extends TextProps<T> {
 
 const labelStyle: <T>(theme: Theme, props: LabelProps<T>) => ObjectInterpolation<undefined> = (
   theme,
-  {markInvalid, bold = true, color = theme.general.color, fontSize = '12px', ...props},
+  {markInvalid, bold = false, color = theme.general.color, fontSize = '12px', ...props},
 ) => ({
   ...textStyle(theme, {bold, color, fontSize, ...props}),
   '&:focus-within': {

@@ -20,26 +20,26 @@ import {
   <LabelLink block>LabelLink</LabelLink>
 
   <Line />
-  <Label bold={false}>
+  <Label>
     <div style={{marginLeft: '16px'}}>{"I'm a label!"}</div>
     <Input placeholder="Focus me!" />
   </Label>
-  <Label bold={false} markInvalid>
+  <Label markInvalid>
     <div style={{marginLeft: '16px'}}>{'Uh error!'}</div>
     <Input placeholder="Error" markInvalid />
   </Label>
 
-  <Label bold={false}>
+  <Label>
     <div style={{marginLeft: '16px'}}>{'TextArea!'}</div>
     <TextArea placeholder="Text" />
   </Label>
 
-  <Label bold={false} markInvalid>
+  <Label markInvalid>
     <div style={{marginLeft: '16px'}}>{'Uh error!'}</div>
     <TextArea placeholder="Text" markInvalid />
   </Label>
 
-  <Label bold={false}>
+  <Label>
     <div style={{marginLeft: '16px'}}>{'Select!'}</div>
     <Select>
       <option>a</option>
@@ -48,7 +48,7 @@ import {
     </Select>
   </Label>
 
-  <Label bold={false} markInvalid>
+  <Label markInvalid>
     <div style={{marginLeft: '16px'}}>{'Uh error!'}</div>
     <Select markInvalid>
       <option>a</option>
@@ -57,7 +57,7 @@ import {
     </Select>
   </Label>
 
-  <Label bold={false}>
+  <Label>
     <div style={{marginLeft: '16px'}}>{'SubmitCombo label'}</div>
     <InputSubmitCombo>
       <Input placeholder="Input submit Combo" name="password" />
@@ -67,7 +67,7 @@ import {
     </InputSubmitCombo>
   </Label>
 
-  <Label bold={false} markInvalid>
+  <Label markInvalid>
     <div style={{marginLeft: '16px'}}>{'SubmitCombo label'}</div>
     <InputSubmitCombo markInvalid>
       <Input placeholder="Input submit Combo" name="password" />
