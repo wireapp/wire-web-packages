@@ -41,7 +41,7 @@ const labelStyle: <T>(theme: Theme, props: LabelProps<T>) => ObjectInterpolation
 });
 
 export const Label = (props: LabelProps) => (
-  <span css={theme => labelStyle(theme, props)} {...filterTextProps(props)} />
+  <label css={theme => labelStyle(theme, props)} {...filterTextProps(props)} />
 );
 
 export type LabelLinkProps<T = HTMLAnchorElement> = LinkProps<T>;
