@@ -9,7 +9,7 @@
     "jasmine": "3.5.0",
     "rimraf": "3.0.2",
     "typescript": "3.9.2",
-    "@wireapp/bot-api": "7.10.17"
+    "@wireapp/bot-api": "7.10.18"
   },
   "files": [
     "dist",
