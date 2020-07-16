@@ -3112,54 +3112,10 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
-"@wireapp/api-client@11.20.14":
-  version "11.20.14"
-  resolved "https://registry.npmjs.org/@wireapp/api-client/-/api-client-11.20.14.tgz#f19fa9492a60f1d48a06afed287631af47465682"
-  integrity sha512-OyVs3aht2R37NytPbr6JpeZsoIeZ9t9FMt+VvfR9e9Fv7LXqCZkskKgXTtX6k4cKbzjqMWuSbf0NYGMITyG8Ew==
-  dependencies:
-    "@types/node" "~12"
-    "@types/spark-md5" "3.0.2"
-    "@types/tough-cookie" "4.0.0"
-    "@wireapp/commons" "3.6.0"
-    "@wireapp/priority-queue" "1.6.5"
-    axios "0.19.2"
-    logdown "3.3.1"
-    reconnecting-websocket "4.4.0"
-    spark-md5 "3.0.1"
-    tough-cookie "4.0.0"
-    ws "7.2.5"
-
 "@wireapp/avs@6.0.46":
   version "6.0.46"
   resolved "https://registry.npmjs.org/@wireapp/avs/-/avs-6.0.46.tgz#1c8827e9f1b19c27580ec8415ace2763d4ac5afc"
   integrity sha512-mokj5DVZWszeznmS9vTW0rUAg5qr8xSm61XwvB14hUCU1GEv2xV1OFhSnd8e3dEb3C3P512sjSDuz4pxN0dhLA==
-
-"@wireapp/bot-api@7.10.15":
-  version "7.10.15"
-  resolved "https://registry.npmjs.org/@wireapp/bot-api/-/bot-api-7.10.15.tgz#23dee47c7f8904d87a826a52e6d75e81b46cfd99"
-  integrity sha512-ceAObIs3OL/m4USFdM+TZztVYpVmY0SzE3xCmxMluTHCCAgPcAO6bNqwluz3LbITY8FhWmp2rmFA+WduFoiR8Q==
-  dependencies:
-    "@types/long" "4.0.1"
-    "@types/node" "*"
-    "@wireapp/core" "16.10.15"
-    uuidjs "4.2.5"
-
-"@wireapp/core@16.10.15":
-  version "16.10.15"
-  resolved "https://registry.npmjs.org/@wireapp/core/-/core-16.10.15.tgz#a382be2ae5eb9fa3d6c99f162f5d2b93da797144"
-  integrity sha512-dFaH3Sz0jB08+uJuYXNSqe01oQdOJzaW4I82nrrDx4JIydxHeMGK1+Nt7tVHCvtqPvSPeTv1m1PrZIi16fTVZA==
-  dependencies:
-    "@types/long" "4.0.1"
-    "@types/node" "~12"
-    "@wireapp/api-client" "11.20.14"
-    "@wireapp/cryptobox" "12.2.16"
-    "@wireapp/protocol-messaging" "1.25.4"
-    "@wireapp/store-engine" "4.5.7"
-    bazinga64 "5.7.7"
-    hash.js "1.1.7"
-    logdown "3.3.1"
-    protobufjs "6.9.0"
-    uuidjs "4.2.5"
 
 "@wireapp/protocol-messaging@1.25.4":
   version "1.25.4"

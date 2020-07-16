@@ -1,15 +1,15 @@
 {
   "dependencies": {
     "@types/webrtc": "0.0.26",
-    "@wireapp/avs": "6.0.46",
-    "@wireapp/bot-api": "7.10.15"
+    "@wireapp/avs": "6.0.46"
   },
   "description": "Adds audio/video/signaling (AVS) functionality for Wire bots.",
   "devDependencies": {
     "@types/node": "~12",
     "jasmine": "3.5.0",
     "rimraf": "3.0.2",
-    "typescript": "3.9.2"
+    "typescript": "3.9.2",
+    "@wireapp/bot-api": "7.10.17"
   },
   "files": [
     "dist",
