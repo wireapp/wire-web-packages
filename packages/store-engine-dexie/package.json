@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "dexie": "2.0.4"
+    "dexie": "3.0.1"
   },
   "devDependencies": {
     "@types/jasmine": "3.5.10",
