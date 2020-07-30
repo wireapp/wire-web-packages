@@ -17,7 +17,7 @@
  *
  */
 
-import moment from 'moment';
+import * as moment from 'moment';
 import 'moment-duration-format';
 import {PayloadBundle, PayloadBundleSource, PayloadBundleType} from '@wireapp/core/dist/conversation/';
 import {QuotableMessage} from '@wireapp/core/dist/conversation/message/OtrMessage';
