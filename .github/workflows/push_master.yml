@@ -1,0 +1,78 @@
+name: Push to master
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build_test_release:
+    name: Build, test and release
+    runs-on: ubuntu-latest
+    if: |
+      !contains(github.event.head_commit.message, '[ci skip]') &&
+      !contains(github.event.head_commit.message, '[skip ci]')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Setup SSH Keys and known_hosts
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          ssh-agent -a ${SSH_AUTH_SOCK} > /dev/null
+          ssh-add - <<< "${{ secrets.DEPLOY_KEY }}"
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Get yarn cache
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v1
+        with:
+          path: ${{steps.yarn-cache.outputs.dir}}
+          key: ${{runner.os}}-yarn-${{hashFiles('**/yarn.lock')}}
+          restore-keys: ${{runner.os}}-yarn-
+      - name: Install dependencies
+        run: |
+          yarn
+          yarn boot
+      - name: Setup environment variables
+        run: |
+          HAS_UPDATES_EXIT_CODE=$(npx lerna updated > /dev/null 2>&1; echo $?)
+          IS_BUMP_OR_TEST=$([[ "${{github.event.head_commit.message}}" =~ ^(chore|test).* ]] && echo "yes" || echo "no")
+          WILL_RELEASE=$([[ "${HAS_UPDATES_EXIT_CODE}" == "0" && "${IS_BUMP_OR_TEST}" == "no" ]] && echo "yes" || echo "no")
+          echo -e "HAS_UPDATES_EXIT_CODE = ${HAS_UPDATES_EXIT_CODE}\\nWILL_RELEASE = ${WILL_RELEASE}\\nIS_BUMP_OR_TEST = ${IS_BUMP_OR_TEST}"
+          echo "::set-env name=WILL_RELEASE::${WILL_RELEASE}"
+      - name: Test
+        run: yarn test
+      - name: Build
+        run: yarn dist
+      - name: Release
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+          SSH_URL: ${{github.event.repository.ssh_url}}
+        run: |
+          if [[ "${{env.WILL_RELEASE}}" == "yes" ]]; then
+            git config --global "user.email" "webapp+travis@wire.com"
+            git config --global "user.name" "Wire Travis CI"
+            git remote set-url origin "${SSH_URL}"
+            echo "//registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}}" >> "${HOME}/.npmrc"
+            git checkout master
+            git pull
+            yarn release
+            IS_RELEASE_SUCCESS=$?
+            if [[ ${IS_RELEASE_SUCCESS} -eq 0 ]]; then
+              NODE_DEBUG="@wireapp:*" node packages/core/src/demo/status-bot.js "4ae15efc-d061-4013-98f2-bcd81ab39b60"
+            fi
+          fi
+      - name: On failure
+        if: failure()
+        run: |
+          BRANCH_NAME="$(sed 's/refs\/heads\///g' <<< $GITHUB_REF)"
+          LAST_COMMITTER_NAME="$(git --no-pager show -s --format='%an' HEAD)"
+          GH_RUN_ID="${{github.run_id}}"
+          WORKFLOW_URL="https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GH_RUN_ID}"
+          NODE_DEBUG="@wireapp:*" node "packages/core/src/demo/status-bot.js" "4ae15efc-d061-4013-98f2-bcd81ab39b60,b2cc7120-4154-4be4-b0c0-45a8c361c4d1" "${LAST_COMMITTER_NAME} broke the \"${BRANCH_NAME}\" branch on \"${GITHUB_REPOSITORY}\" (Build #${GH_RUN_ID}). 🌵 → ${WORKFLOW_URL}"

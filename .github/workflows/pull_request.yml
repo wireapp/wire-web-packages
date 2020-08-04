@@ -1,0 +1,49 @@
+name: Pull Request
+
+on: pull_request
+
+jobs:
+  build_test:
+    name: Build and test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Get commit message
+        id: commit
+        run: |
+          MESSAGE=$(git log --format=%B -n 1 ${{github.event.after}})
+          echo "::set-output name=message::${MESSAGE}"
+      - name: Set up Node.js
+        if: |
+          !contains(steps.commit.outputs.message, '[ci skip]') &&
+          !contains(steps.commit.outputs.message, '[skip ci]')
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Get yarn cache
+        if: |
+          !contains(steps.commit.outputs.message, '[ci skip]') &&
+          !contains(steps.commit.outputs.message, '[skip ci]')
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v1
+        if: |
+          !contains(steps.commit.outputs.message, '[ci skip]') &&
+          !contains(steps.commit.outputs.message, '[skip ci]')
+        with:
+          path: ${{steps.yarn-cache.outputs.dir}}
+          key: ${{runner.os}}-yarn-${{hashFiles('**/yarn.lock')}}
+          restore-keys: ${{runner.os}}-yarn-
+      - name: Install dependencies
+        if: |
+          !contains(steps.commit.outputs.message, '[ci skip]') &&
+          !contains(steps.commit.outputs.message, '[skip ci]')
+        run: |
+          yarn
+          yarn boot
+      - name: Test
+        if: |
+          !contains(steps.commit.outputs.message, '[ci skip]') &&
+          !contains(steps.commit.outputs.message, '[skip ci]')
+        run: yarn test
