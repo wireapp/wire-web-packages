@@ -33,13 +33,7 @@ import {
 import axios from 'axios';
 import type {CallMessage} from '@wireapp/core/dist/conversation/message/OtrMessage';
 
-let wrtc;
-
-try {
-  wrtc = require('wrtc');
-} catch (error) {
-  throw new Error('wrtc was not installed. Please use Node.js <= 13.0');
-}
+const wrtc = require('wrtc');
 
 declare global {
   namespace NodeJS {
