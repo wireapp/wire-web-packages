@@ -56,6 +56,16 @@ describe('isValidEmail', () => {
   });
 });
 
+describe('isValidHandle', () => {
+  it('accepts lowercase handles', () => {
+    expect(ValidationUtil.isValidHandle('@benny')).toBe(true);
+  });
+
+  it('rejects handles which are not purely uppercase', () => {
+    expect(ValidationUtil.isValidHandle('@beNNy')).toBe(false);
+  });
+});
+
 describe('getNewPasswordPattern', () => {
   it('recognizes valid passwords', () => {
     const customPasswordLength = 4;
