@@ -61,7 +61,7 @@ describe('isValidHandle', () => {
     expect(ValidationUtil.isValidHandle('@benny')).toBe(true);
   });
 
-  it('rejects handles which are not purely uppercase', () => {
+  it('rejects handles which are not purely lowercase', () => {
     expect(ValidationUtil.isValidHandle('@beNNy')).toBe(false);
   });
 });
