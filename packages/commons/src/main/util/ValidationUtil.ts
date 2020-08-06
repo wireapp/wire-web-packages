@@ -35,7 +35,7 @@ export function isValidEmail(email: string): boolean {
 }
 
 export function isValidHandle(handle: string): boolean {
-  return /[a-z_0-9.-]{2,256}$/.test(handle);
+  return /^[a-z_0-9.-]{2,256}$/.test(handle);
 }
 
 export const DEFAULT_PASSWORD_MIN_LENGTH = 8;
