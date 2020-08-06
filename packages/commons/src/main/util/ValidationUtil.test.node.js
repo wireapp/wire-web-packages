@@ -57,12 +57,16 @@ describe('isValidEmail', () => {
 });
 
 describe('isValidHandle', () => {
+  it('does not accept handles starting with an @ because the backend API does not allow such values for login calls', () => {
+    expect(ValidationUtil.isValidHandle('@benny')).toBe(false);
+  });
+
   it('accepts lowercase handles', () => {
-    expect(ValidationUtil.isValidHandle('@benny')).toBe(true);
+    expect(ValidationUtil.isValidHandle('benny')).toBe(true);
   });
 
   it('rejects handles which are not purely lowercase', () => {
-    expect(ValidationUtil.isValidHandle('@beNNy')).toBe(false);
+    expect(ValidationUtil.isValidHandle('beNNy')).toBe(false);
   });
 });
 
