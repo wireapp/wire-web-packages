@@ -1,7 +1,8 @@
 {
   "dependencies": {
     "@types/webrtc": "0.0.26",
-    "@wireapp/avs": "6.0.46"
+    "@wireapp/avs": "6.0.46",
+    "wrtc": "0.4.6"
   },
   "description": "Adds audio/video/signaling (AVS) functionality for Wire bots.",
   "devDependencies": {
@@ -18,9 +19,6 @@
   "license": "GPL-3.0",
   "main": "dist/index.js",
   "name": "@wireapp/bot-handler-avs",
-  "optionalDependencies": {
-    "wrtc": "0.4.5"
-  },
   "peerDependencies": {
     "@wireapp/bot-api": "7.x.x"
   },
