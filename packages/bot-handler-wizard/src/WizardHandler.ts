@@ -16,6 +16,7 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
+
 import {MessageHandler} from '@wireapp/bot-api';
 import {PayloadBundle, PayloadBundleSource} from '@wireapp/core/dist/conversation/';
 import {Prompt, Wizardy} from 'wizardy';
