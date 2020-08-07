@@ -23,13 +23,15 @@ import {Prompt, Wizardy} from 'wizardy';
 import {QuotableMessage} from '@wireapp/core/dist/conversation/message/OtrMessage';
 import {TextContent} from '@wireapp/core/dist/conversation/content';
 
+export {Prompt};
+
 export class WizardHandler<P> extends MessageHandler {
   private wizards: {[id: string]: Wizardy} = {};
 
   constructor(
     private readonly startCommand: string,
     private readonly questionnaire: Prompt<any>[],
-    private readonly callback: (answers: P, conversationId: string, userId: string) => any,
+    private readonly onFinish: (answers: P, conversationId: string, userId: string) => any,
   ) {
     super();
   }
@@ -44,7 +46,11 @@ export class WizardHandler<P> extends MessageHandler {
       return this.wizards[id];
     }
     const wizard = new Wizardy();
-    wizard.on(Wizardy.TOPIC.END, (answers: P) => this.callback(answers, conversationId, userId));
+    wizard.on(Wizardy.TOPIC.END, (answers: P) => {
+      this.onFinish(answers, conversationId, userId);
+      const id = this.getId(conversationId, userId);
+      delete this.wizards[id];
+    });
     this.initWizard(wizard);
     this.wizards[id] = wizard;
     return this.wizards[id];
