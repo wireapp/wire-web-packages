@@ -1,6 +1,6 @@
 ## @wireapp/bot-handler-wizard
 
-Add a conversational UI (wizard) handler to a Wire bot instance.
+Add a conversational UI (wizard) to a Wire bot instance.
 
 **Demo**
 
