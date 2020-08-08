@@ -3023,10 +3023,53 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
+"@wireapp/api-client@11.21.6":
+  version "11.21.6"
+  resolved "https://registry.npmjs.org/@wireapp/api-client/-/api-client-11.21.6.tgz#7b4afa75afd043c26b61dc0763fe5a8a850e868a"
+  integrity sha512-PeBBWu1l8+TAnT43p6JoUEhT0WL4njumUuWKZoElv2OVxUvq+O6iPPqRPUie730eAH1TpggHGToD2r/jf5Ud4g==
+  dependencies:
+    "@types/node" "~12"
+    "@types/spark-md5" "3.0.2"
+    "@types/tough-cookie" "4.0.0"
+    "@wireapp/commons" "3.7.0"
+    "@wireapp/priority-queue" "1.6.6"
+    axios "0.19.2"
+    logdown "3.3.1"
+    reconnecting-websocket "4.4.0"
+    spark-md5 "3.0.1"
+    tough-cookie "4.0.0"
+    ws "7.3.1"
+
 "@wireapp/avs@6.0.46":
   version "6.0.46"
   resolved "https://registry.npmjs.org/@wireapp/avs/-/avs-6.0.46.tgz#1c8827e9f1b19c27580ec8415ace2763d4ac5afc"
   integrity sha512-mokj5DVZWszeznmS9vTW0rUAg5qr8xSm61XwvB14hUCU1GEv2xV1OFhSnd8e3dEb3C3P512sjSDuz4pxN0dhLA==
+
+"@wireapp/bot-api@7.10.27":
+  version "7.10.27"
+  resolved "https://registry.npmjs.org/@wireapp/bot-api/-/bot-api-7.10.27.tgz#71c223cc2d071b691082fb416e0b566dd93c7361"
+  integrity sha512-tz6Hd4r26hsDN2UcIrxCUqZVo18O7Eo2YhR5BUCkem8P+xBItcF7pQQyTrOLkp6Myh2UcZ+3gCXaOZhCyg0blw==
+  dependencies:
+    "@types/node" "*"
+    "@wireapp/core" "16.10.26"
+    uuidjs "4.2.5"
+
+"@wireapp/core@16.10.26":
+  version "16.10.26"
+  resolved "https://registry.npmjs.org/@wireapp/core/-/core-16.10.26.tgz#a7b5bc291b55822f68ee5e923c5931febc40ac7c"
+  integrity sha512-pzY9FKkukuZmsDIrPGTu6PD31nWcdSxVGc1zK+awjGK2WGA5CUprDdWPa5L7B7tMqNosRuGqsPruwPsqB/WKCw==
+  dependencies:
+    "@types/long" "4.0.1"
+    "@types/node" "~12"
+    "@wireapp/api-client" "11.21.6"
+    "@wireapp/cryptobox" "12.2.21"
+    "@wireapp/protocol-messaging" "1.25.4"
+    "@wireapp/store-engine" "4.5.8"
+    bazinga64 "5.7.9"
+    hash.js "1.1.7"
+    logdown "3.3.1"
+    protobufjs "6.9.0"
+    uuidjs "4.2.5"
 
 "@wireapp/protocol-messaging@1.25.4":
   version "1.25.4"
@@ -5305,16 +5348,16 @@ core-util-is@1.0.2, core-util-is@~1.0.0:
   resolved "https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
   integrity sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
 
-cosmiconfig@6.0.0, cosmiconfig@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.npmjs.org/cosmiconfig/-/cosmiconfig-6.0.0.tgz#da4fee853c52f6b1e6935f41c1a2fc50bd4a9982"
-  integrity sha512-xb3ZL6+L8b9JLLCx3ZdoZy4+2ECphCMo2PwqgP1tlfVq6M6YReyzBJtvWWtbDSpNr9hn96pkCiZqUcFEc+54Qg==
+cosmiconfig@7.0.0:
+  version "7.0.0"
+  resolved "https://registry.npmjs.org/cosmiconfig/-/cosmiconfig-7.0.0.tgz#ef9b44d773959cae63ddecd122de23853b60f8d3"
+  integrity sha512-pondGvTuVYDk++upghXJabWzL6Kxu6f26ljFw64Swq9v6sQPUL3EUlVDV56diOjpCayKihL6hVe8exIACU4XcA==
   dependencies:
     "@types/parse-json" "^4.0.0"
-    import-fresh "^3.1.0"
+    import-fresh "^3.2.1"
     parse-json "^5.0.0"
     path-type "^4.0.0"
-    yaml "^1.7.2"
+    yaml "^1.10.0"
 
 cosmiconfig@^5.1.0:
   version "5.2.1"
@@ -5325,6 +5368,17 @@ cosmiconfig@^5.1.0:
     is-directory "^0.3.1"
     js-yaml "^3.13.1"
     parse-json "^4.0.0"
+
+cosmiconfig@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.npmjs.org/cosmiconfig/-/cosmiconfig-6.0.0.tgz#da4fee853c52f6b1e6935f41c1a2fc50bd4a9982"
+  integrity sha512-xb3ZL6+L8b9JLLCx3ZdoZy4+2ECphCMo2PwqgP1tlfVq6M6YReyzBJtvWWtbDSpNr9hn96pkCiZqUcFEc+54Qg==
+  dependencies:
+    "@types/parse-json" "^4.0.0"
+    import-fresh "^3.1.0"
+    parse-json "^5.0.0"
+    path-type "^4.0.0"
+    yaml "^1.7.2"
 
 cpr@3.0.1:
   version "3.0.1"
@@ -5956,13 +6010,6 @@ dot-prop@^4.2.0:
   dependencies:
     is-obj "^1.0.0"
 
-dotenv-defaults@1.1.1:
-  version "1.1.1"
-  resolved "https://registry.npmjs.org/dotenv-defaults/-/dotenv-defaults-1.1.1.tgz#032c024f4b5906d9990eb06d722dc74cc60ec1bd"
-  integrity sha512-6fPRo9o/3MxKvmRZBD3oNFdxODdhJtIy1zcJeUSCs6HCy4tarUpd+G67UTU9tF6OWXeSPqsm4fPAB+2eY9Rt9Q==
-  dependencies:
-    dotenv "^6.2.0"
-
 dotenv-defaults@2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/dotenv-defaults/-/dotenv-defaults-2.0.0.tgz#f48577d885c7755d2a4ce1f7f3706552c0cb367e"
@@ -5974,11 +6021,6 @@ dotenv@8.2.0, dotenv@^8.2.0:
   version "8.2.0"
   resolved "https://registry.npmjs.org/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
   integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
-
-dotenv@^6.2.0:
-  version "6.2.0"
-  resolved "https://registry.npmjs.org/dotenv/-/dotenv-6.2.0.tgz#941c0410535d942c8becf28d3f357dbd9d476064"
-  integrity sha512-HygQCKUBSFl8wKQZBSemMywRWcEDNidvNbjGVyZu3nbZ8qq9ubiPoGLMdRDpfSrpkkm9BXYFkpKxxFX38o/76w==
 
 duplexer2@^0.1.4:
   version "0.1.4"
@@ -8172,7 +8214,7 @@ import-fresh@^2.0.0:
     caller-path "^2.0.0"
     resolve-from "^3.0.0"
 
-import-fresh@^3.0.0, import-fresh@^3.1.0:
+import-fresh@^3.0.0, import-fresh@^3.1.0, import-fresh@^3.2.1:
   version "3.2.1"
   resolved "https://registry.npmjs.org/import-fresh/-/import-fresh-3.2.1.tgz#633ff618506e793af5ac91bf48b72677e15cbe66"
   integrity sha512-6e1q1cnWP2RXD9/keSkxHScg508CdXqXWgWBaETNhyuBFz+kUZlKboh+ISK+bU++DmbHimVBrOz/zzPe0sZ3sQ==
@@ -16499,12 +16541,10 @@ yallist@^4.0.0:
   resolved "https://registry.npmjs.org/yallist/-/yallist-4.0.0.tgz#9bb92790d9c0effec63be73519e11a35019a3a72"
   integrity sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==
 
-yaml@^1.7.2:
-  version "1.7.2"
-  resolved "https://registry.npmjs.org/yaml/-/yaml-1.7.2.tgz#f26aabf738590ab61efaca502358e48dc9f348b2"
-  integrity sha512-qXROVp90sb83XtAoqE8bP9RwAkTTZbugRUTm5YeFCBfNRPEp2YzTeqWiz7m5OORHzEvrA/qcGS8hp/E+MMROYw==
-  dependencies:
-    "@babel/runtime" "^7.6.3"
+yaml@^1.10.0, yaml@^1.7.2:
+  version "1.10.0"
+  resolved "https://registry.npmjs.org/yaml/-/yaml-1.10.0.tgz#3b593add944876077d4d683fee01081bd9fff31e"
+  integrity sha512-yr2icI4glYaNG+KWONODapy2/jDdMSDnrONSjblABjD9B4Z5LgiircSt8m8sRZFNi08kG9Sm0uSHtEmP3zaEGg==
 
 yargs-parser@^10.0.0:
   version "10.1.0"

@@ -1,12 +1,12 @@
 {
   "dependencies": {
     "@types/node": "*",
-    "@wireapp/core": "16.10.26",
+    "@wireapp/core": "16.10.28",
     "uuidjs": "4.2.5"
   },
   "devDependencies": {
     "cross-env": "7.0.2",
-    "dotenv-defaults": "1.1.1",
+    "dotenv-defaults": "2.0.0",
     "jasmine": "3.5.0",
     "rimraf": "3.0.2",
     "ts-node": "8.6.2",
@@ -30,5 +30,5 @@
     "test:node": "jasmine --config=jasmine.json",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "7.10.27"
+  "version": "7.10.29"
 }
