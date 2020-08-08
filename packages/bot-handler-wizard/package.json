@@ -5,7 +5,7 @@
   "devDependencies": {
     "@types/jasmine": "3.5.10",
     "@types/node": "~12",
-    "@wireapp/bot-api": "7.10.27",
+    "@wireapp/bot-api": "7.10.29",
     "cross-env": "7.0.2",
     "dotenv-defaults": "2.0.0",
     "jasmine": "3.5.0",
