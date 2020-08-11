@@ -37,8 +37,9 @@ export class BroadcastAPI {
    * @param ignoreMissing Whether to report missing clients or not:
    * `false`: Report about all missing clients
    * `true`: Ignore all missing clients and force sending
-   * Array: List of user IDs specifying which user IDs are allowed to have
-   * missing clients.
+   * Array: User IDs specifying which user IDs are allowed to have
+   * missing clients
+   * `undefined`: Default to setting of `report_missing` in `NewOTRMessage`
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/tab.html#!/postOtrBroadcast
    */
   public async postBroadcastMessage(
