@@ -442,13 +442,18 @@ export class ConversationAPI {
    * @param clientId The sender's client ID
    * @param conversationId The conversation ID
    * @param messageData The message content
+   * @param ignoreMissing Whether to report missing clients or not:
+   * `false`: Report about all missing clients
+   * `true`: Ignore all missing clients and force sending.
+   * Array: List of user IDs specifying which user IDs are allowed to have
+   * missing clients.
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/postOtrMessage
    */
   public async postOTRMessage(
     clientId: string,
     conversationId: string,
     messageData?: NewOTRMessage,
-    ignoreMissing?: boolean,
+    ignoreMissing?: boolean | string[],
   ): Promise<ClientMismatch> {
     if (!clientId) {
       throw new ValidationError('Unable to send OTR message without client ID.');
@@ -463,11 +468,14 @@ export class ConversationAPI {
     const config: AxiosRequestConfig = {
       data: messageData,
       method: 'post',
-      params: {
-        ignore_missing: typeof ignoreMissing === 'boolean' ? ignoreMissing : !!messageData.data,
-      },
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.OTR}/${ConversationAPI.URL.MESSAGES}`,
     };
+
+    if (typeof ignoreMissing !== 'undefined') {
+      const ignore_missing = Array.isArray(ignoreMissing) ? ignoreMissing.join(',') : ignoreMissing;
+      config.params = {ignore_missing};
+      delete messageData.report_missing;
+    }
 
     const response =
       typeof messageData.recipients === 'object'

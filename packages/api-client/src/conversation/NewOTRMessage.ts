@@ -31,6 +31,7 @@ export interface NewOTRMessage {
   native_push?: boolean;
   /** Map with per-recipient data */
   recipients: OTRRecipients;
+  /** Specifies which userIDs are forbidden from having missing clients. */
   report_missing?: string[];
   /** The sender's client ID */
   sender: string;
