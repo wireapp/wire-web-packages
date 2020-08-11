@@ -6,9 +6,11 @@ on:
 
 jobs:
   label:
-    name: Label PR based on title
+    name: Label PR based on title or changed files
     runs-on: ubuntu-latest
     steps:
+      # The settings for this action are in `.github/labeler.yml`.
+      # See https://github.com/srvaroa/labeler.
       - uses: srvaroa/labeler@v0.3
         env:
           GITHUB_TOKEN: ${{secrets.GH_TOKEN}}
