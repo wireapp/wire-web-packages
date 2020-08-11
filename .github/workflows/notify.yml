@@ -20,14 +20,14 @@ jobs:
           ref: ${{github.event.after}}
       - name: Setup environment variables
         run: |
-          COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{github.event.after}})
           BRANCH_NAME="$(sed 's/refs\/heads\///g' <<< ${GITHUB_REF})"
+          COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{github.event.after}})
           LAST_COMMITTER_NAME="$(git --no-pager show -s --format='%an' HEAD)"
-          echo "::set-env name=COMMIT_MESSAGE::${COMMIT_MESSAGE}"
           echo "::set-env name=BRANCH_NAME::${BRANCH_NAME}"
-          echo "::set-env name=LAST_COMMITTER_NAME::${LAST_COMMITTER_NAME}"
+          echo "::set-env name=COMMIT_MESSAGE::${COMMIT_MESSAGE}"
           echo "::set-env name=GITHUB_REPOSITORY::${GITHUB_REPOSITORY}"
           echo "::set-env name=GITHUB_SHA::${GITHUB_SHA}"
+          echo "::set-env name=LAST_COMMITTER_NAME::${LAST_COMMITTER_NAME}"
       - name: Send message
         uses: wireapp/github-action-wire-messenger@v1.0.0
         with:
