@@ -28,6 +28,7 @@ import {
   LOG_LEVEL,
   REASON,
   Wcall,
+  WcallClient,
   WcallParticipantChangedHandler,
 } from '@wireapp/avs';
 import axios from 'axios';
@@ -79,6 +80,10 @@ global.navigator = {
 
 interface InitOptions {
   callParticipantChangedHandler?: WcallParticipantChangedHandler;
+}
+
+interface SendMessageTarget {
+  clients: WcallClient[];
 }
 
 export class AVSHandler extends MessageHandler {
@@ -219,17 +224,40 @@ export class AVSHandler extends MessageHandler {
   };
 
   private readonly onSendCallMessage = (
-    ctx: number,
+    context: number,
     conversationId: string,
-    selfUserId: string,
-    selfClientId: string,
-    userid_dest: string | undefined,
-    clientid_dest: string | undefined,
-    data: string,
+    userId: string,
+    clientId: string,
+    targets: string | null,
+    unused: string | null,
+    payload: string,
   ): number => {
+    console.info('BARDIA onSendCallMessage', {
+      clientId,
+      context,
+      conversationId,
+      payload,
+      targets,
+      unused,
+      userId,
+    });
+    const userIds: string[] = [];
+
+    if (typeof targets === 'string') {
+      const parsedTargets: SendMessageTarget = JSON.parse(targets);
+      for (const target of parsedTargets.clients) {
+        const {userid} = target;
+        userIds.push(userid);
+      }
+    }
+
     void (async () => {
-      const callPayload = this.account!.service!.conversation.messageBuilder.createCall(conversationId, data);
-      await this.account!.service!.conversation.send(callPayload);
+      try {
+        const callPayload = this.account!.service!.conversation.messageBuilder.createCall(conversationId, payload);
+        await this.account!.service!.conversation.send(callPayload, userIds);
+      } catch (error) {
+        console.error('Failed to send targeted message', error);
+      }
     })();
 
     return 0;
