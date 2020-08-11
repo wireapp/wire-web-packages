@@ -77,12 +77,14 @@ export class Bot {
     return this.config.owners.length === 0 ? true : this.config.owners.includes(userId);
   }
 
-  public async sendText(conversationId: string, message: string): Promise<void> {
+  public async sendText(
+    conversationId: string,
+    message: string,
+    userIds?: string[] | Record<string, string[]>,
+  ): Promise<void> {
     if (this.account?.service) {
-      const textPayload = await this.account.service.conversation.messageBuilder
-        .createText(conversationId, message)
-        .build();
-      await this.account.service.conversation.send(textPayload);
+      const textPayload = this.account.service.conversation.messageBuilder.createText(conversationId, message).build();
+      await this.account.service.conversation.send(textPayload, userIds);
     }
   }
 
