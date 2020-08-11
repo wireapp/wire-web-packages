@@ -448,10 +448,7 @@ export class ConversationAPI {
     clientId: string,
     conversationId: string,
     messageData?: NewOTRMessage,
-    params?: {
-      ignore_missing?: boolean;
-      report_missing?: string;
-    },
+    ignoreMissing?: boolean,
   ): Promise<ClientMismatch> {
     if (!clientId) {
       throw new ValidationError('Unable to send OTR message without client ID.');
@@ -467,8 +464,7 @@ export class ConversationAPI {
       data: messageData,
       method: 'post',
       params: {
-        ignore_missing: !!messageData.data,
-        ...params,
+        ignore_missing: typeof ignoreMissing === 'boolean' ? ignoreMissing : !!messageData.data,
       },
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.OTR}/${ConversationAPI.URL.MESSAGES}`,
     };

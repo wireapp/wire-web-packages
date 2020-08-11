@@ -29,6 +29,7 @@ export interface NewOTRMessage {
   native_priority?: 'low' | 'high';
   /** Whether to issue a native push to offline clients */
   native_push?: boolean;
+  /** Map with per-recipient data */
   recipients: OTRRecipients;
   report_missing?: string[];
   /** The sender's client ID */
