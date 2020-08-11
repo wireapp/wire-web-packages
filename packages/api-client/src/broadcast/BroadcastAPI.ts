@@ -60,6 +60,8 @@ export class BroadcastAPI {
     if (typeof ignoreMissing !== 'undefined') {
       const ignore_missing = Array.isArray(ignoreMissing) ? ignoreMissing.join(',') : ignoreMissing;
       config.params = {ignore_missing};
+      // `ignore_missing` takes precedence on the server so we can remove
+      // `report_missing` to save some bandwidth.
       delete messageData.report_missing;
     }
 
