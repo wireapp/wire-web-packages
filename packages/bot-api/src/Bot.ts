@@ -77,6 +77,9 @@ export class Bot {
     return this.config.owners.length === 0 ? true : this.config.owners.includes(userId);
   }
 
+  /**
+   * @param userIds Only send message to specified user IDs or to certain clients of specified user IDs
+   */
   public async sendText(
     conversationId: string,
     message: string,

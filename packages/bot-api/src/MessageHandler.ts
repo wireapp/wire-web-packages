@@ -96,6 +96,9 @@ export abstract class MessageHandler {
     }
   }
 
+  /**
+   * @param userIds Only send message to specified user IDs or to certain clients of specified user IDs
+   */
   async sendCall(
     conversationId: string,
     content: CallingContent,
@@ -107,6 +110,9 @@ export abstract class MessageHandler {
     }
   }
 
+  /**
+   * @param userIds Only send message to specified user IDs or to certain clients of specified user IDs
+   */
   async sendPoll(
     conversationId: string,
     text: string,
@@ -122,6 +128,9 @@ export abstract class MessageHandler {
     }
   }
 
+  /**
+   * @param userIds Only send message to specified user IDs or to certain clients of specified user IDs
+   */
   async sendConfirmation(
     conversationId: string,
     firstMessageId: string,
@@ -153,6 +162,9 @@ export abstract class MessageHandler {
     }
   }
 
+  /**
+   * @param userIds Only send message to specified user IDs or to certain clients of specified user IDs
+   */
   async sendEditedText(
     conversationId: string,
     originalMessageId: string,
@@ -184,6 +196,9 @@ export abstract class MessageHandler {
     }
   }
 
+  /**
+   * @param userIds Only send message to specified user IDs or to certain clients of specified user IDs
+   */
   async sendFile(
     conversationId: string,
     file: FileContent,
@@ -215,6 +230,9 @@ export abstract class MessageHandler {
     }
   }
 
+  /**
+   * @param userIds Only send message to specified user IDs or to certain clients of specified user IDs
+   */
   async sendImage(
     conversationId: string,
     image: ImageContent,
@@ -226,6 +244,9 @@ export abstract class MessageHandler {
     }
   }
 
+  /**
+   * @param userIds Only send message to specified user IDs or to certain clients of specified user IDs
+   */
   async sendLocation(
     conversationId: string,
     location: LocationContent,
@@ -237,6 +258,9 @@ export abstract class MessageHandler {
     }
   }
 
+  /**
+   * @param userIds Only send message to specified user IDs or to certain clients of specified user IDs
+   */
   async sendPing(conversationId: string, userIds?: string[] | Record<string, string[]>): Promise<void> {
     if (this.account?.service) {
       const pingPayload = this.account.service.conversation.messageBuilder.createPing(conversationId);
@@ -244,6 +268,9 @@ export abstract class MessageHandler {
     }
   }
 
+  /**
+   * @param userIds Only send message to specified user IDs or to certain clients of specified user IDs
+   */
   async sendReaction(
     conversationId: string,
     originalMessageId: string,
@@ -274,10 +301,21 @@ export abstract class MessageHandler {
     }
   }
 
-  sendReply(conversationId: string, quotedMessage: QuotableMessage, text: string): Promise<void> {
+  /**
+   * @param userIds Only send message to specified user IDs or to certain clients of specified user IDs
+   */
+  sendReply(
+    conversationId: string,
+    quotedMessage: QuotableMessage,
+    text: string,
+    userIds?: string[] | Record<string, string[]>,
+  ): Promise<void> {
     return this.sendQuote(conversationId, quotedMessage, text);
   }
 
+  /**
+   * @param userIds Only send message to specified user IDs or to certain clients of specified user IDs
+   */
   async sendText(
     conversationId: string,
     text: string,
