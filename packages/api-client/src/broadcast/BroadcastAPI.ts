@@ -63,6 +63,9 @@ export class BroadcastAPI {
       // `ignore_missing` takes precedence on the server so we can remove
       // `report_missing` to save some bandwidth.
       delete messageData.report_missing;
+    } else if (typeof messageData.report_missing === 'undefined') {
+      // both `ignore_missing` and `report_missing` are undefined
+      config.params = {ignore_missing: !!messageData.data};
     }
 
     const response =
