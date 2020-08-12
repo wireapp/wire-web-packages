@@ -20,7 +20,7 @@
     "rimraf": "3.0.2",
     "ts-node": "8.6.2",
     "typescript": "3.9.2",
-    "webpack": "4.43.0"
+    "webpack": "4.44.1"
   },
   "files": [
     "dist"
@@ -53,5 +53,5 @@
     "test:browser": "karma start",
     "test:node": "nyc jasmine --config=jasmine.json"
   },
-  "version": "5.7.9"
+  "version": "5.7.10"
 }
