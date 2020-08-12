@@ -245,8 +245,7 @@ export class AVSHandler extends MessageHandler {
 
     void (async () => {
       try {
-        const callPayload = this.account!.service!.conversation.messageBuilder.createCall(conversationId, payload);
-        await this.account!.service!.conversation.send(callPayload, userIds);
+        await this.sendCall(conversationId, payload, userIds);
       } catch (error) {
         console.error('Failed to send targeted message', error);
       }
