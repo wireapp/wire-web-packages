@@ -45,7 +45,6 @@ const logger = logdown('Demo', {
 logger.state.isEnabled = true;
 
 logger.log(`Using "process.env.WIRE_EMAIL": ${WIRE_EMAIL}`);
-logger.log(`Using "process.env.WIRE_PASSWORD": ${WIRE_PASSWORD}`);
 logger.log(`Using "process.env.WIRE_CONVERSATION_ID": ${WIRE_CONVERSATION_ID}`);
 
 async function createContext(storeEngine: CRUDEngine, apiClient: APIClient, loginData: LoginData): Promise<Context> {
@@ -53,11 +52,12 @@ async function createContext(storeEngine: CRUDEngine, apiClient: APIClient, logi
     const {expiration, zuid} = await storeEngine.read(AUTH_TABLE_NAME, AUTH_COOKIE_KEY);
     const cookie = new Cookie(zuid, expiration);
     logger.log(`Found cookie "${zuid}".`);
-    logger.log('Logging in with EXISTING cookie.');
-    return apiClient.init(loginData.clientType, cookie);
+    logger.log('Logging in with EXISTING cookie...');
+    const context = await apiClient.init(loginData.clientType, cookie);
+    return context;
   } catch (error) {
-    logger.log(`Failed to find existing cookie.`, error);
-    logger.log(`Logging in with NEW cookie: ${error.message}`);
+    logger.log(`Failed to use existing cookie.`, error);
+    logger.log(`Logging in with NEW cookie...`);
     return apiClient.login(loginData);
   }
 }
@@ -79,14 +79,14 @@ if (WIRE_EMAIL && WIRE_PASSWORD && WIRE_CONVERSATION_ID) {
 
     const config = {
       store: storeEngine,
-      urls: APIClient.BACKEND.STAGING,
+      urls: APIClient.BACKEND.PRODUCTION,
     };
 
     const apiClient = new APIClient(config);
 
     apiClient.on(APIClient.TOPIC.ACCESS_TOKEN_REFRESH, async (accessToken: AccessTokenData) => {
       await storeEngine.updateOrCreate(AUTH_TABLE_NAME, AUTH_ACCESS_TOKEN_KEY, accessToken);
-      logger.log(`Saved access token`, accessToken);
+      logger.log(`Saved access token`);
     });
 
     apiClient.on(APIClient.TOPIC.COOKIE_REFRESH, async (cookie?: Cookie) => {
@@ -104,7 +104,7 @@ if (WIRE_EMAIL && WIRE_PASSWORD && WIRE_CONVERSATION_ID) {
       const conversation = await apiClient.conversation.api.getConversation(WIRE_CONVERSATION_ID);
       const otherParticipant = conversation.members.others[0];
       const userData = await apiClient.user.api.getUser(otherParticipant.id);
-      logger.log(`Found user with name "${userData.name}" by handle "${userData.handle}".`);
+      logger.log(`Found participant with name "${userData.name}" by handle "${userData.handle}".`);
 
       const webSocketClient = await apiClient.connect();
 

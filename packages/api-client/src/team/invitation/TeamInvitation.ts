@@ -24,6 +24,8 @@ export interface TeamInvitation {
   created_by: string;
   email: string;
   id: string;
+  name?: string;
+  phone?: string;
   role: Role;
   team: string;
 }

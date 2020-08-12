@@ -3,6 +3,143 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.8.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@9.8.13...@wireapp/proteus@9.8.14) (2020-08-11)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [9.8.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@9.8.12...@wireapp/proteus@9.8.13) (2020-07-21)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [9.8.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@9.8.11...@wireapp/proteus@9.8.12) (2020-07-08)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [9.8.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@9.8.10...@wireapp/proteus@9.8.11) (2020-06-30)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [9.8.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@9.8.9...@wireapp/proteus@9.8.10) (2020-06-30)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [9.8.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@9.8.8...@wireapp/proteus@9.8.9) (2020-06-10)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [9.8.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@9.8.7...@wireapp/proteus@9.8.8) (2020-05-25)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [9.8.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@9.8.6...@wireapp/proteus@9.8.7) (2020-05-23)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [9.8.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@9.8.5...@wireapp/proteus@9.8.6) (2020-05-18)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [9.8.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@9.8.4...@wireapp/proteus@9.8.5) (2020-05-07)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [9.8.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@9.8.3...@wireapp/proteus@9.8.4) (2020-05-06)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [9.8.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@9.8.2...@wireapp/proteus@9.8.3) (2020-04-28)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [9.8.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@9.8.1...@wireapp/proteus@9.8.2) (2020-04-23)
+
+**Note:** Version bump only for package @wireapp/proteus
+
+
+
+
+
+## [9.8.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@9.8.0...@wireapp/proteus@9.8.1) (2020-04-17)
+
+
+### Bug Fixes
+
+* **proteus:** Publish types for libsodium-wrappers-sumo ([b8a7fc6](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/commit/b8a7fc6043225dcacd14d2c4e775d740ffd079c4))
+
+
+
+
+
+# [9.8.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@9.7.0...@wireapp/proteus@9.8.0) (2020-04-16)
+
+
+### Features
+
+* **proteus:** Use constructor instead of ClassUtil (BREAKING) (WEBAPP-6789) ([#2938](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/issues/2938)) ([48e4c38](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/commit/48e4c385cf819f42e3e7cefe566a2e49f32ba980))
+
+
+
+
+
+# [9.7.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@9.6.13...@wireapp/proteus@9.7.0) (2020-04-15)
+
+
+### Features
+
+* **proteus:** Use libsodium for key conversion (WEBAPP-6791) ([#2104](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/issues/2104)) ([c3fc637](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/commit/c3fc63764c850364ec4439d4767ca7ab415cf17a))
+
+
+
+
+
 ## [9.6.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus/compare/@wireapp/proteus@9.6.12...@wireapp/proteus@9.6.13) (2020-04-15)
 
 **Note:** Version bump only for package @wireapp/proteus

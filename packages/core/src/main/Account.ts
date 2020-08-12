@@ -33,7 +33,7 @@ import {StatusCode} from '@wireapp/api-client/dist/http/';
 import {WebSocketClient} from '@wireapp/api-client/dist/tcp/';
 import * as cryptobox from '@wireapp/cryptobox';
 import {CRUDEngine, MemoryEngine, error as StoreEngineError} from '@wireapp/store-engine';
-import EventEmitter from 'events';
+import {EventEmitter} from 'events';
 import logdown from 'logdown';
 import {LoginSanitizer} from './auth/';
 import {BroadcastService} from './broadcast/';
@@ -168,10 +168,20 @@ export class Account extends EventEmitter {
     return context;
   }
 
-  public async init(clientType: ClientType): Promise<Context> {
-    const context = await this.apiClient.init(clientType);
-    const storeEngine = await this.initEngine(context);
-    await this.initServices(storeEngine);
+  public async init(clientType: ClientType, cookie?: Cookie, initializedStoreEngine?: CRUDEngine): Promise<Context> {
+    const context = await this.apiClient.init(clientType, cookie);
+    if (initializedStoreEngine) {
+      this.storeEngine = initializedStoreEngine;
+      this.logger.log(`Initialized store with existing engine "${this.storeEngine.storeName}".`);
+    } else {
+      this.storeEngine = await this.initEngine(context);
+    }
+    await this.initServices(this.storeEngine);
+    if (initializedStoreEngine) {
+      await this.initClient({
+        clientType,
+      });
+    }
     return context;
   }
 
@@ -207,13 +217,23 @@ export class Account extends EventEmitter {
     };
   }
 
-  public async login(loginData: LoginData, initClient: boolean = true, clientInfo?: ClientInfo): Promise<Context> {
+  public async login(
+    loginData: LoginData,
+    initClient: boolean = true,
+    clientInfo?: ClientInfo,
+    initializedStoreEngine?: CRUDEngine,
+  ): Promise<Context> {
     this.resetContext();
     LoginSanitizer.removeNonPrintableCharacters(loginData);
 
     const context = await this.apiClient.login(loginData);
-    const storeEngine = await this.initEngine(context);
-    await this.initServices(storeEngine);
+    if (initializedStoreEngine) {
+      this.storeEngine = initializedStoreEngine;
+      this.logger.log(`Initialized store with existing engine "${this.storeEngine.storeName}".`);
+    } else {
+      this.storeEngine = await this.initEngine(context);
+    }
+    await this.initServices(this.storeEngine);
 
     if (initClient) {
       await this.initClient(loginData, clientInfo);
@@ -239,11 +259,11 @@ export class Account extends EventEmitter {
         error instanceof cryptobox.error.CryptoboxError ||
         error.constructor.name === 'CryptoboxError' ||
         error instanceof StoreEngineError.RecordNotFoundError ||
-        error.constructor.name === StoreEngineError.RecordNotFoundError.constructor.name;
+        error.constructor.name === StoreEngineError.RecordNotFoundError.name;
       const notFoundOnBackend = error.response?.status === StatusCode.NOT_FOUND;
 
       if (notFoundInDatabase) {
-        this.logger.log('Could not find valid client in database');
+        this.logger.log(`Could not find valid client in database "${this.storeEngine?.storeName}".`);
         return this.registerClient(loginData, clientInfo);
       }
 

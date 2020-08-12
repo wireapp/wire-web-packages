@@ -3,6 +3,207 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.2.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.21...@wireapp/cryptobox@12.2.22) (2020-08-11)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [12.2.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.20...@wireapp/cryptobox@12.2.21) (2020-08-03)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [12.2.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.19...@wireapp/cryptobox@12.2.20) (2020-07-30)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [12.2.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.18...@wireapp/cryptobox@12.2.19) (2020-07-21)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [12.2.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.17...@wireapp/cryptobox@12.2.18) (2020-07-17)
+
+
+### Bug Fixes
+
+* **core, cryptobox, store-engine-bro-fs, store-engine-sqleet, store-engine-web-storage:** Correctly handle RecordNotFoundError error ([#3121](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/issues/3121)) ([de85320](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/commit/de8532022c2bf0a7b7b03b3aa7ff6b92862f227a))
+
+
+
+
+
+## [12.2.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.16...@wireapp/cryptobox@12.2.17) (2020-07-16)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [12.2.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.15...@wireapp/cryptobox@12.2.16) (2020-07-08)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [12.2.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.14...@wireapp/cryptobox@12.2.15) (2020-06-30)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [12.2.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.13...@wireapp/cryptobox@12.2.14) (2020-06-30)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [12.2.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.12...@wireapp/cryptobox@12.2.13) (2020-06-29)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [12.2.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.11...@wireapp/cryptobox@12.2.12) (2020-06-10)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [12.2.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.10...@wireapp/cryptobox@12.2.11) (2020-05-26)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [12.2.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.9...@wireapp/cryptobox@12.2.10) (2020-05-25)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [12.2.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.8...@wireapp/cryptobox@12.2.9) (2020-05-23)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [12.2.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.7...@wireapp/cryptobox@12.2.8) (2020-05-18)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [12.2.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.6...@wireapp/cryptobox@12.2.7) (2020-05-07)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [12.2.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.5...@wireapp/cryptobox@12.2.6) (2020-05-06)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [12.2.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.4...@wireapp/cryptobox@12.2.5) (2020-04-28)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [12.2.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.3...@wireapp/cryptobox@12.2.4) (2020-04-28)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [12.2.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.2...@wireapp/cryptobox@12.2.3) (2020-04-23)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+## [12.2.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.1...@wireapp/cryptobox@12.2.2) (2020-04-17)
+
+
+### Bug Fixes
+
+* **api-client,core,cryptobox:** Improve type compatibility with Node.js v13 ([#2960](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/issues/2960)) ([b442dfd](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/commit/b442dfdd7d5adc496709992da692d71dc49bb754))
+
+
+
+
+
+## [12.2.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.2.0...@wireapp/cryptobox@12.2.1) (2020-04-17)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+# [12.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.1.19...@wireapp/cryptobox@12.2.0) (2020-04-16)
+
+
+### Features
+
+* **proteus:** Use constructor instead of ClassUtil (BREAKING) (WEBAPP-6789) ([#2938](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/issues/2938)) ([48e4c38](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/commit/48e4c385cf819f42e3e7cefe566a2e49f32ba980))
+
+
+
+
+
+## [12.1.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.1.18...@wireapp/cryptobox@12.1.19) (2020-04-15)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
 ## [12.1.18](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@12.1.17...@wireapp/cryptobox@12.1.18) (2020-04-15)
 
 **Note:** Version bump only for package @wireapp/cryptobox

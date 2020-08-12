@@ -27,7 +27,7 @@
     "ecmaVersion": 6,
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "jsdoc", "no-unsanitized", "prettier", "react", "react-hooks", "sort-keys-fix"],
+  "plugins": ["@typescript-eslint", "jsdoc", "no-unsanitized", "prettier", "react", "react-hooks", "sort-keys-fix", "typescript-sort-keys"],
   "rules": {
     "curly": "error",
     "id-length": "error",
@@ -48,6 +48,17 @@
       "error",
       {
         "ignore": [-1, 0, 1, 2]
+      }
+    ],
+    "no-restricted-globals": [
+      "warn",
+      {
+        "name": "fit",
+        "message": "Do not commit `fit`. Use `it` instead."
+      },
+      {
+        "name": "fdescribe",
+        "message": "Do not commit `fdescribe`. Use `describe` instead."
       }
     ],
     "no-return-await": "error",
@@ -79,6 +90,8 @@
     "sort-keys-fix/sort-keys-fix": "error",
     "sort-vars": "error",
     "strict": ["error", "global"],
+    "typescript-sort-keys/interface": ["warn", "asc", {"caseSensitive": false}],
+    "typescript-sort-keys/string-enum": ["warn", "asc", {"caseSensitive": false}],
     "valid-jsdoc": [
       "error",
       {

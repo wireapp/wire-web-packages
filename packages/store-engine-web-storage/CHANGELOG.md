@@ -3,6 +3,132 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@1.2.13...@wireapp/store-engine-web-storage@1.2.14) (2020-08-11)
+
+**Note:** Version bump only for package @wireapp/store-engine-web-storage
+
+
+
+
+
+## [1.2.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@1.2.12...@wireapp/store-engine-web-storage@1.2.13) (2020-07-21)
+
+**Note:** Version bump only for package @wireapp/store-engine-web-storage
+
+
+
+
+
+## [1.2.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@1.2.11...@wireapp/store-engine-web-storage@1.2.12) (2020-07-17)
+
+
+### Bug Fixes
+
+* **core, cryptobox, store-engine-bro-fs, store-engine-sqleet, store-engine-web-storage:** Correctly handle RecordNotFoundError error ([#3121](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/issues/3121)) ([de85320](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/commit/de8532022c2bf0a7b7b03b3aa7ff6b92862f227a))
+
+
+
+
+
+## [1.2.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@1.2.10...@wireapp/store-engine-web-storage@1.2.11) (2020-07-16)
+
+**Note:** Version bump only for package @wireapp/store-engine-web-storage
+
+
+
+
+
+## [1.2.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@1.2.9...@wireapp/store-engine-web-storage@1.2.10) (2020-07-08)
+
+**Note:** Version bump only for package @wireapp/store-engine-web-storage
+
+
+
+
+
+## [1.2.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@1.2.8...@wireapp/store-engine-web-storage@1.2.9) (2020-06-30)
+
+**Note:** Version bump only for package @wireapp/store-engine-web-storage
+
+
+
+
+
+## [1.2.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@1.2.7...@wireapp/store-engine-web-storage@1.2.8) (2020-06-30)
+
+**Note:** Version bump only for package @wireapp/store-engine-web-storage
+
+
+
+
+
+## [1.2.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@1.2.6...@wireapp/store-engine-web-storage@1.2.7) (2020-06-10)
+
+**Note:** Version bump only for package @wireapp/store-engine-web-storage
+
+
+
+
+
+## [1.2.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@1.2.5...@wireapp/store-engine-web-storage@1.2.6) (2020-05-26)
+
+**Note:** Version bump only for package @wireapp/store-engine-web-storage
+
+
+
+
+
+## [1.2.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@1.2.4...@wireapp/store-engine-web-storage@1.2.5) (2020-05-23)
+
+**Note:** Version bump only for package @wireapp/store-engine-web-storage
+
+
+
+
+
+## [1.2.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@1.2.3...@wireapp/store-engine-web-storage@1.2.4) (2020-05-18)
+
+**Note:** Version bump only for package @wireapp/store-engine-web-storage
+
+
+
+
+
+## [1.2.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@1.2.2...@wireapp/store-engine-web-storage@1.2.3) (2020-05-06)
+
+**Note:** Version bump only for package @wireapp/store-engine-web-storage
+
+
+
+
+
+## [1.2.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@1.2.1...@wireapp/store-engine-web-storage@1.2.2) (2020-04-28)
+
+**Note:** Version bump only for package @wireapp/store-engine-web-storage
+
+
+
+
+
+## [1.2.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@1.2.0...@wireapp/store-engine-web-storage@1.2.1) (2020-04-28)
+
+**Note:** Version bump only for package @wireapp/store-engine-web-storage
+
+
+
+
+
+# 1.2.0 (2020-04-23)
+
+
+### Features
+
+* **core,bot-api:** Add CompositeContentBuilder ([#2948](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/issues/2948)) ([d838a9b](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/commit/d838a9b4d111804c0bdc8f915c48719c6ce2c75e))
+
+
+
+
+
 ## [1.1.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@1.1.14...@wireapp/store-engine-web-storage@1.1.15) (2020-04-08)
 
 **Note:** Version bump only for package @wireapp/store-engine-web-storage

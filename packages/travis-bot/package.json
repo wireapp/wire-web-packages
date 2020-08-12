@@ -4,16 +4,15 @@
   },
   "dependencies": {
     "@types/generate-changelog": "1.8.0",
-    "@types/long": "4.0.1",
     "@types/node": "~12",
-    "@wireapp/core": "16.3.0",
+    "@wireapp/core": "16.11.0",
     "generate-changelog": "1.8.0"
   },
   "description": "A Travis deployment notification bot.",
   "devDependencies": {
     "logdown": "3.3.1",
-    "rimraf": "3.0.0",
-    "typescript": "3.8.3"
+    "rimraf": "3.0.2",
+    "typescript": "3.9.2"
   },
   "files": [
     "dist"
@@ -30,5 +29,5 @@
     "test": "exit 0",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "6.0.96"
+  "version": "6.0.175"
 }

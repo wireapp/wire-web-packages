@@ -17,6 +17,8 @@
  *
  */
 
+/* eslint-disable typescript-sort-keys/string-enum */
+
 /**
  * @note Backend error labels are defined by the backend team and their source code.
  * @see https://github.com/wireapp/wire-server/blob/master/services/galley/src/Galley/API/Error.hs
@@ -34,6 +36,7 @@ export enum BackendErrorLabel {
   OPERATION_DENIED = 'operation-denied',
   QUEUE_FULL = 'queue-full',
   UNAUTHORIZED = 'unauthorized',
+
   // Authentication errors
   BLACKLISTED_EMAIL = 'blacklisted-email',
   BLACKLISTED_PHONE = 'blacklisted-phone',
@@ -42,31 +45,32 @@ export enum BackendErrorLabel {
   INVALID_EMAIL = 'invalid-email',
   INVALID_INVITATION_CODE = 'invalid-invitation-code',
   INVALID_PHONE = 'invalid-phone',
+  PHONE_EXISTS = 'phone-exists',
   KEY_EXISTS = 'key-exists',
   MISSING_AUTH = 'missing-auth',
   PASSWORD_EXISTS = 'password-exists',
   PENDING_ACTIVATION = 'pending-activation',
   PENDING_LOGIN = 'pending-login',
   SUSPENDED_ACCOUNT = 'suspended',
+
   // Client errors
   TOO_MANY_CLIENTS = 'too-many-clients',
   UNKNOWN_CLIENT = 'unknown-client',
+
   // Conversation errors
   TOO_MANY_MEMBERS = 'too-many-members',
   NO_CONVERSATION = 'no-conversation',
   NO_CONVERSATION_CODE = 'no-conversation-code',
   NOT_CONNECTED = 'not-connected',
+
   // Handle errors
   HANDLE_EXISTS = 'handle-exists',
   INVALID_HANDLE = 'invalid-handle',
+
   // Team errors
-  /**
-   * @deprecated
-   */
+  /** @deprecated */
   NO_OTHER_OWNER = 'no-other-owner',
-  /**
-   * This error is thrown when an owner tries to delete hisself
-   */
+  /** This error is thrown when an owner tries to delete themself */
   NO_SELF_DELETE_FOR_TEAM_OWNER = 'no-self-delete-for-team-owner',
   NO_TEAM = 'no-team',
   NO_TEAM_MEMBER = 'no-team-member',
@@ -79,8 +83,10 @@ export enum BackendErrorLabel {
   INVALID_TEAM_STATUS_UPDATE = 'invalid-team-status-update',
   NO_MANAGED_CONVERSATION = 'no-managed-team-conv',
   NO_ADD_TO_MANAGED = 'no-add-to-managed',
+
   // Payment errors
   EXPIRED_CARD = 'expired_card',
+
   // Domain errors
   CUSTOM_BACKEND_NOT_FOUND = 'custom-backend-not-found',
 }

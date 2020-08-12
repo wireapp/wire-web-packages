@@ -4,17 +4,16 @@
   },
   "dependencies": {
     "@types/generate-changelog": "1.8.0",
-    "@types/long": "4.0.1",
     "@types/node": "~12",
-    "@wireapp/core": "16.3.0",
-    "commander": "4.1.1",
+    "@wireapp/core": "16.11.0",
+    "commander": "5.1.0",
     "generate-changelog": "1.8.0"
   },
   "description": "A changelog notification bot.",
   "devDependencies": {
     "logdown": "3.3.1",
-    "rimraf": "3.0.0",
-    "typescript": "3.8.3"
+    "rimraf": "3.0.2",
+    "typescript": "3.9.2"
   },
   "files": [
     "dist"
@@ -31,6 +30,5 @@
     "test": "exit 0",
     "test:project": "yarn dist && yarn test"
   },
-  "types": "dist/ChangelogBot.d.ts",
-  "version": "4.0.95"
+  "version": "4.1.60"
 }

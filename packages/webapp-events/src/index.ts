@@ -19,8 +19,9 @@
 
 export const WebAppEvents = {
   ANALYTICS: {
+    CLOSE_SESSION: 'wire.webapp.analytics.close_session',
     EVENT: 'wire.webapp.analytics.event',
-    SUPER_PROPERTY: 'wire.webapp.analytics.super_property',
+    START_SESSION: 'wire.webapp.analytics.start_session',
   },
   APP: {
     UPDATE_PROGRESS: 'wire.webapp.app.update_progress',
@@ -122,8 +123,8 @@ export const WebAppEvents = {
   },
   EXTENSIONS: {
     GIPHY: {
-      SEND: 'wire.webapp.extionsions.giphy.send',
-      SHOW: 'wire.webapp.extionsions.giphy.show',
+      SEND: 'wire.webapp.extensions.giphy.send',
+      SHOW: 'wire.webapp.extensions.giphy.show',
     },
   },
   INPUT: {
@@ -167,6 +168,10 @@ export const WebAppEvents = {
   },
   PROPERTIES: {
     UPDATE: {
+      CALL: {
+        ENABLE_SFT_CALLING: 'wire.webapp.properties.update.call.enable_sft_calling',
+        ENABLE_VBR_ENCODING: 'wire.webapp.properties.update.call.enable_vbr_encoding',
+      },
       CONTACTS: 'wire.webapp.properties.update.contacts',
       EMOJI: {
         REPLACE_INLINE: 'wire.webapp.properties.update.emoji.replace_inline',
@@ -174,6 +179,7 @@ export const WebAppEvents = {
       INTERFACE: {
         THEME: 'wire.webapp.properties.update.interface.theme',
         USE_DARK_MODE: 'wire.webapp.properties.update.interface.use_dark_mode',
+        VIEW_FOLDERS: 'wire.webapp.properties.update.interface.view_folders',
       },
       NOTIFICATIONS: 'wire.webapp.properties.update.notifications',
       PREVIEWS: {

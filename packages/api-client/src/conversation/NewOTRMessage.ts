@@ -20,10 +20,21 @@
 import {OTRRecipients} from './';
 
 export interface NewOTRMessage {
-  data?: any; // Defaults to Protocol Buffer. Use type 'string' for JSON.
+  /**
+   * Extra (symmetric) data (i.e. ciphertext) that is replicated for each recipient.
+   * Use `Uint8Array` for Protocol Buffer and `string` for JSON.
+   */
+  data?: Uint8Array | string;
+  /** The native push priority (default `high`) */
   native_priority?: 'low' | 'high';
+  /** Whether to issue a native push to offline clients */
   native_push?: boolean;
+  /** Map with per-recipient data */
   recipients: OTRRecipients;
+  /** Specifies which userIDs are forbidden from having missing clients. */
+  report_missing?: string[];
+  /** The sender's client ID */
   sender: string;
+  /** Whether to put this message into the notification queue */
   transient?: boolean;
 }

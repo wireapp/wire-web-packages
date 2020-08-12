@@ -41,23 +41,27 @@ exports[`"Checkbox" renders (dark theme) 1`] = `
 .emotion-0::-moz-placeholder {
   color: rgb(247,248,250);
   font-size: 11px;
-  text-transform: uppercase;
+  text-transform: none;
   opacity: 1;
 }
 
 .emotion-0::-ms-input-placeholder {
   color: rgb(247,248,250);
   font-size: 11px;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .emotion-0::-webkit-input-placeholder {
   color: rgb(247,248,250);
   font-size: 11px;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
-.emotion-0:invalid {
+.emotion-0:focus {
+  box-shadow: 0 0 0 1px #2391d3;
+}
+
+.emotion-0:invalid:not(:focus) {
   box-shadow: none;
 }
 
@@ -69,11 +73,11 @@ exports[`"Checkbox" renders (dark theme) 1`] = `
   opacity: 1;
 }
 
-input:checked + .emotion-1::before {
+.wireinput:checked + .emotion-1::before {
   background: #000 url('data:image/svg+xml; utf8, <svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 8 6"><path fill="white" d="M2.8 6L8 .7 7.3 0 2.8 4.6.7 2.4l-.7.7z"/></svg>') no-repeat center;
 }
 
-input:focus + .emotion-1::before {
+.wireinput:focus + .emotion-1::before {
   border-color: #2391d3;
 }
 
@@ -121,7 +125,7 @@ input:focus + .emotion-1::before {
     className="emotion-2"
   >
     <input
-      className="input emotion-0"
+      className="wireinput emotion-0"
       id="1"
       style={
         Object {
@@ -184,23 +188,27 @@ exports[`"Checkbox" renders 1`] = `
 .emotion-0::-moz-placeholder {
   color: rgb(141,152,159);
   font-size: 11px;
-  text-transform: uppercase;
+  text-transform: none;
   opacity: 1;
 }
 
 .emotion-0::-ms-input-placeholder {
   color: rgb(141,152,159);
   font-size: 11px;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .emotion-0::-webkit-input-placeholder {
   color: rgb(141,152,159);
   font-size: 11px;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
-.emotion-0:invalid {
+.emotion-0:focus {
+  box-shadow: 0 0 0 1px #2391d3;
+}
+
+.emotion-0:invalid:not(:focus) {
   box-shadow: none;
 }
 
@@ -212,11 +220,11 @@ exports[`"Checkbox" renders 1`] = `
   opacity: 1;
 }
 
-input:checked + .emotion-1::before {
+.wireinput:checked + .emotion-1::before {
   background: #000 url('data:image/svg+xml; utf8, <svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 8 6"><path fill="white" d="M2.8 6L8 .7 7.3 0 2.8 4.6.7 2.4l-.7.7z"/></svg>') no-repeat center;
 }
 
-input:focus + .emotion-1::before {
+.wireinput:focus + .emotion-1::before {
   border-color: #2391d3;
 }
 
@@ -264,7 +272,7 @@ input:focus + .emotion-1::before {
     className="emotion-2"
   >
     <input
-      className="input emotion-0"
+      className="wireinput emotion-0"
       id="1"
       style={
         Object {
@@ -327,23 +335,27 @@ exports[`"Checkbox" renders as invalid 1`] = `
 .emotion-0::-moz-placeholder {
   color: rgb(141,152,159);
   font-size: 11px;
-  text-transform: uppercase;
+  text-transform: none;
   opacity: 1;
 }
 
 .emotion-0::-ms-input-placeholder {
   color: rgb(141,152,159);
   font-size: 11px;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .emotion-0::-webkit-input-placeholder {
   color: rgb(141,152,159);
   font-size: 11px;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
-.emotion-0:invalid {
+.emotion-0:focus {
+  box-shadow: 0 0 0 1px #2391d3;
+}
+
+.emotion-0:invalid:not(:focus) {
   box-shadow: none;
 }
 
@@ -355,11 +367,11 @@ exports[`"Checkbox" renders as invalid 1`] = `
   opacity: 1;
 }
 
-input:checked + .emotion-1::before {
+.wireinput:checked + .emotion-1::before {
   background: #000 url('data:image/svg+xml; utf8, <svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 8 6"><path fill="white" d="M2.8 6L8 .7 7.3 0 2.8 4.6.7 2.4l-.7.7z"/></svg>') no-repeat center;
 }
 
-input:focus + .emotion-1::before {
+.wireinput:focus + .emotion-1::before {
   border-color: #2391d3;
 }
 
@@ -407,7 +419,7 @@ input:focus + .emotion-1::before {
     className="emotion-2"
   >
     <input
-      className="input emotion-0"
+      className="wireinput emotion-0"
       id="1"
       style={
         Object {
@@ -470,23 +482,27 @@ exports[`"Checkbox" renders disabled 1`] = `
 .emotion-0::-moz-placeholder {
   color: rgb(141,152,159);
   font-size: 11px;
-  text-transform: uppercase;
+  text-transform: none;
   opacity: 1;
 }
 
 .emotion-0::-ms-input-placeholder {
   color: rgb(141,152,159);
   font-size: 11px;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .emotion-0::-webkit-input-placeholder {
   color: rgb(141,152,159);
   font-size: 11px;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
-.emotion-0:invalid {
+.emotion-0:focus {
+  box-shadow: 0 0 0 1px #2391d3;
+}
+
+.emotion-0:invalid:not(:focus) {
   box-shadow: none;
 }
 
@@ -498,11 +514,11 @@ exports[`"Checkbox" renders disabled 1`] = `
   opacity: 0.56;
 }
 
-input:checked + .emotion-1::before {
+.wireinput:checked + .emotion-1::before {
   background: #000 url('data:image/svg+xml; utf8, <svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 8 6"><path fill="white" d="M2.8 6L8 .7 7.3 0 2.8 4.6.7 2.4l-.7.7z"/></svg>') no-repeat center;
 }
 
-input:focus + .emotion-1::before {
+.wireinput:focus + .emotion-1::before {
   border-color: #2391d3;
 }
 
@@ -550,7 +566,7 @@ input:focus + .emotion-1::before {
     className="emotion-2"
   >
     <input
-      className="input emotion-0"
+      className="wireinput emotion-0"
       disabled={true}
       id="1"
       style={

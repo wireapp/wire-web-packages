@@ -22,13 +22,13 @@ import {GiphyImage} from './GiphyImage';
 export interface GiphyResult {
   data: GiphyImage;
   meta: {
-    status: number;
     msg: string;
     response_id: string;
+    status: number;
   };
 }
 
-export type GiphySearchResult = GiphyResult & {
+export type GiphyMultipleResult = GiphyResult & {
   data: GiphyImage[];
   pagination: {
     count: number;

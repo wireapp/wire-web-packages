@@ -32,17 +32,18 @@ export enum NotificationPreference {
 
 export interface WebappProperties {
   [property_key: string]: any;
-  contact_import: {
-    google?: number;
-    macos?: number;
-  };
   enable_debugging: boolean;
   settings: {
+    call: {
+      enable_sft_calling: boolean;
+      enable_vbr_encoding: boolean;
+    };
     emoji: {
       replace_inline: boolean;
     };
     interface: {
       theme: 'dark' | 'default';
+      view_folders: boolean;
     };
     notifications: NotificationPreference;
     previews: {

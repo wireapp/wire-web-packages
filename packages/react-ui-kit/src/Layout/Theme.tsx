@@ -24,19 +24,19 @@ import {COLOR} from '../Identity/colors';
 import {filterProps} from '../util';
 
 export enum THEME_ID {
-  LIGHT = 'THEME_LIGHT',
   DARK = 'THEME_DARK',
+  LIGHT = 'THEME_LIGHT',
 }
 
 export interface Theme {
-  Input: {
-    placeholderColor: string;
-    backgroundColor: string;
-    backgroundColorDisabled: string;
-  };
   general: {
     backgroundColor: string;
     color: string;
+  };
+  Input: {
+    backgroundColor: string;
+    backgroundColorDisabled: string;
+    placeholderColor: string;
   };
 }
 

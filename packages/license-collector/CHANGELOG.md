@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/license-collector/compare/@wireapp/license-collector@0.8.2...@wireapp/license-collector@0.8.3) (2020-07-30)
+
+**Note:** Version bump only for package @wireapp/license-collector
+
+
+
+
+
+## [0.8.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/license-collector/compare/@wireapp/license-collector@0.8.1...@wireapp/license-collector@0.8.2) (2020-07-16)
+
+**Note:** Version bump only for package @wireapp/license-collector
+
+
+
+
+
+## [0.8.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/license-collector/compare/@wireapp/license-collector@0.8.0...@wireapp/license-collector@0.8.1) (2020-06-30)
+
+**Note:** Version bump only for package @wireapp/license-collector
+
+
+
+
+
+# 0.8.0 (2020-05-26)
+
+
+### Features
+
+* **eslint-config:** Warn when using fdescribe or fit ([#3027](https://github.com/wireapp/wire-web-packages/tree/master/packages/license-collector/issues/3027)) ([5045c96](https://github.com/wireapp/wire-web-packages/tree/master/packages/license-collector/commit/5045c968b49430d630faeb66976ab536ac15051c))
+
+
+
+
+
+## [0.7.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/license-collector/compare/@wireapp/license-collector@0.7.0...@wireapp/license-collector@0.7.1) (2020-05-06)
+
+**Note:** Version bump only for package @wireapp/license-collector
+
+
+
+
+
+# 0.7.0 (2020-04-28)
+
+
+### Features
+
+* **eslint-config:** Add eslint-plugin-typescript-sort-keys plugin (WEBAPP-6829) ([#2983](https://github.com/wireapp/wire-web-packages/tree/master/packages/license-collector/issues/2983)) ([0e177e6](https://github.com/wireapp/wire-web-packages/tree/master/packages/license-collector/commit/0e177e65b789e49d7187bcaffb6e375b8818d21b))
+
+
+
+
+
 ## [0.6.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/license-collector/compare/@wireapp/license-collector@0.6.0...@wireapp/license-collector@0.6.1) (2020-04-08)
 
 **Note:** Version bump only for package @wireapp/license-collector

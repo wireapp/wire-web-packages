@@ -24,11 +24,18 @@ import {Account} from '@wireapp/core';
 import {PayloadBundle, PayloadBundleType} from '@wireapp/core/dist/conversation/';
 import {CRUDEngine} from '@wireapp/store-engine';
 import logdown from 'logdown';
-import UUID from 'pure-uuid';
+import UUID from 'uuidjs';
 
 import {BotConfig, BotCredentials} from './Interfaces';
 import {MessageHandler} from './MessageHandler';
 import {DefaultConversationRoleName} from '@wireapp/api-client/dist/conversation';
+import {
+  AUTH_TABLE_NAME,
+  AUTH_COOKIE_KEY,
+  Cookie,
+  AccessTokenData,
+  AUTH_ACCESS_TOKEN_KEY,
+} from '@wireapp/api-client/dist/auth';
 
 const defaultConfig: Required<BotConfig> = {
   backend: 'production',
@@ -55,7 +62,7 @@ export class Bot {
   }
 
   public addHandler(handler: MessageHandler): void {
-    this.handlers.set(new UUID(4).format(), handler);
+    this.handlers.set(UUID.genV4().toString(), handler);
   }
 
   public removeHandler(key: string): void {
@@ -106,6 +113,10 @@ export class Bot {
       urls: this.config.backend === 'staging' ? APIClient.BACKEND.STAGING : APIClient.BACKEND.PRODUCTION,
     });
 
+    apiClient.on(APIClient.TOPIC.ACCESS_TOKEN_REFRESH, async (accessToken: AccessTokenData) => {
+      await storeEngine?.updateOrCreate(AUTH_TABLE_NAME, AUTH_ACCESS_TOKEN_KEY, accessToken);
+    });
+
     this.account = storeEngine ? new Account(apiClient, () => Promise.resolve(storeEngine)) : new Account(apiClient);
 
     for (const payloadType of Object.values(PayloadBundleType)) {
@@ -113,12 +124,28 @@ export class Bot {
       this.account.on(payloadType as any, this.handlePayload.bind(this));
     }
 
-    await this.account.login(login);
+    try {
+      if (!storeEngine) {
+        throw new Error('Store engine not provided');
+      }
+      const cookie = await this.getCookie(storeEngine);
+      await this.account.init(this.config.clientType, cookie, storeEngine);
+    } catch (error) {
+      this.logger.warn('Failed to init account from cookie', error);
+      await this.account.login(login, true, undefined, storeEngine);
+    }
+
     await this.account.listen();
 
     this.handlers.forEach(handler => (handler.account = this.account));
 
     return apiClient;
+  }
+
+  async getCookie(storeEngine: CRUDEngine): Promise<Cookie | undefined> {
+    const {expiration, zuid} = await storeEngine.read(AUTH_TABLE_NAME, AUTH_COOKIE_KEY);
+    const cookie = new Cookie(zuid, expiration);
+    return cookie;
   }
 
   private handlePayload(payload: PayloadBundle | ConversationEvent | UserEvent | TeamEvent): void {

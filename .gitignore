@@ -7,13 +7,12 @@
 .tmp/
 .vscode/
 .yarnclean
-bower_components/
 coverage/
 dist/
 lerna-debug.log
 node_modules/
 npm-debug.log*
 package-lock.json
-packages/react-ui-kit/demo/bundle*
+packages/react-ui-kit/styleguide
 temp/
 yarn-error.log

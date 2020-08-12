@@ -33,7 +33,7 @@ export interface TextAreaProps<T = HTMLTextAreaElement> extends TextProps<T> {
 
 export const textAreaStyle: <T>(theme: Theme, props: TextAreaProps<T>) => ObjectInterpolation<undefined> = (
   theme,
-  {markInvalid = false, placeholderTextTransform = 'uppercase', disabled = false},
+  {markInvalid = false, placeholderTextTransform = 'none', disabled = false},
 ) => {
   const placeholderStyle = {
     color: theme.Input.placeholderColor,
@@ -51,6 +51,9 @@ export const textAreaStyle: <T>(theme: Theme, props: TextAreaProps<T>) => Object
     },
     '&::-webkit-input-placeholder': {
       ...placeholderStyle,
+    },
+    '&:focus': {
+      boxShadow: `0 0 0 1px ${COLOR.BLUE}`,
     },
     '&:invalid': !markInvalid
       ? {

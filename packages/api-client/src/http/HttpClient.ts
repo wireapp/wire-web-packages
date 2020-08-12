@@ -20,7 +20,7 @@
 import {TimeUtil} from '@wireapp/commons';
 import {PriorityQueue} from '@wireapp/priority-queue';
 import axios, {AxiosError, AxiosRequestConfig, AxiosResponse} from 'axios';
-import EventEmitter from 'events';
+import {EventEmitter} from 'events';
 import logdown from 'logdown';
 import {AccessTokenData, AccessTokenStore, AuthAPI} from '../auth/';
 import {BackendErrorMapper, ConnectionState, ContentType, NetworkError, StatusCode} from '../http/';
@@ -205,7 +205,10 @@ export class HttpClient extends EventEmitter {
     config: AxiosRequestConfig,
     isSynchronousRequest: boolean = false,
   ): Promise<AxiosResponse<T>> {
-    config.headers['Content-Type'] = ContentType.APPLICATION_PROTOBUF;
+    config.headers = {
+      ...config.headers,
+      'Content-Type': ContentType.APPLICATION_PROTOBUF,
+    };
     return this.sendRequest<T>(config, isSynchronousRequest);
   }
 }

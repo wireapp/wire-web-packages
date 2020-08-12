@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.7.1 (2020-06-02)
+
+**Note:** Version bump only for package @wireapp/eslint-config
+
+
+
+
+
+# [1.7.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/eslint-config/compare/@wireapp/eslint-config@1.6.0...@wireapp/eslint-config@1.7.0) (2020-05-11)
+
+
+### Features
+
+* **eslint-config:** Warn when using fdescribe or fit ([#3027](https://github.com/wireapp/wire-web-packages/tree/master/packages/eslint-config/issues/3027)) ([5045c96](https://github.com/wireapp/wire-web-packages/tree/master/packages/eslint-config/commit/5045c968b49430d630faeb66976ab536ac15051c))
+
+
+
+
+
+# [1.6.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/eslint-config/compare/@wireapp/eslint-config@1.5.0...@wireapp/eslint-config@1.6.0) (2020-04-28)
+
+
+### Features
+
+* **eslint-config:** Don't prefer uppercase when sorting ([#2986](https://github.com/wireapp/wire-web-packages/tree/master/packages/eslint-config/issues/2986)) ([3d71f5d](https://github.com/wireapp/wire-web-packages/tree/master/packages/eslint-config/commit/3d71f5d7f65b5d79e18b75be7ea22092dbb40e3e))
+
+
+
+
+
+# 1.5.0 (2020-04-28)
+
+
+### Features
+
+* **eslint-config:** Add eslint-plugin-typescript-sort-keys plugin (WEBAPP-6829) ([#2983](https://github.com/wireapp/wire-web-packages/tree/master/packages/eslint-config/issues/2983)) ([0e177e6](https://github.com/wireapp/wire-web-packages/tree/master/packages/eslint-config/commit/0e177e65b789e49d7187bcaffb6e375b8818d21b))
+
+
+
+
+
 # 1.4.0 (2020-01-08)
 
 

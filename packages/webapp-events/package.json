@@ -1,8 +1,8 @@
 {
   "description": "Events shared between Wire's web app and desktop app.",
   "devDependencies": {
-    "rimraf": "3.0.0",
-    "typescript": "3.8.3"
+    "rimraf": "3.0.2",
+    "typescript": "3.9.2"
   },
   "files": [
     "dist"
@@ -18,5 +18,5 @@
     "dist": "yarn clean && yarn build",
     "test": "exit 0"
   },
-  "version": "0.1.1"
+  "version": "0.5.1"
 }

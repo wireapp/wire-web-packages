@@ -42,6 +42,7 @@ import {RequestCancellationError} from './UserError';
 
 export class UserAPI {
   public static readonly DEFAULT_USERS_CHUNK_SIZE = 50;
+  public static readonly DEFAULT_USERS_PREKEY_BUNDLE_CHUNK_SIZE = 128;
   public static readonly URL = {
     ACTIVATE: '/activate',
     CALLS: '/calls',
@@ -253,6 +254,7 @@ export class UserAPI {
 
   /**
    * Get a user by ID.
+   * @note If you want to get all properties (`sso_id`, `managed_by`, etc.) for your own user, use "/self". Otherwise you will get a user payload with a limited set of properties (what's publicly available).
    * @param userId The user ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/user
    */
@@ -289,7 +291,7 @@ export class UserAPI {
   public async getUsers(parameters: {ids: string[]}, limit?: number): Promise<User[]>;
   public async getUsers(parameters: {handles: string[]}, limit?: number): Promise<User[]>;
   public async getUsers(
-    parameters: {ids?: string[]; handles?: string[]},
+    parameters: {handles?: string[]; ids?: string[]},
     limit: number = UserAPI.DEFAULT_USERS_CHUNK_SIZE,
   ): Promise<User[]> {
     const {handles, ids} = parameters;
@@ -433,13 +435,7 @@ export class UserAPI {
     return response.data;
   }
 
-  /**
-   * Given a map of user IDs to client IDs return a prekey for each one.
-   * Note: The maximum map size is 128 entries.
-   * @param userClientMap A map of the user's clients
-   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getMultiPrekeyBundles
-   */
-  public async postMultiPreKeyBundles(userClientMap: UserClients): Promise<UserPreKeyBundleMap> {
+  private async _postMultiPreKeyBundlesChunk(userClientMap: UserClients): Promise<UserPreKeyBundleMap> {
     const config: AxiosRequestConfig = {
       data: userClientMap,
       method: 'post',
@@ -448,6 +444,38 @@ export class UserAPI {
 
     const response = await this.client.sendJSON<UserPreKeyBundleMap>(config, true);
     return response.data;
+  }
+
+  /**
+   * Given a map of user IDs to client IDs return a prekey for each one.
+   * @param userClientMap A map of the user's clients
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getMultiPrekeyBundles
+   */
+  public async postMultiPreKeyBundles(
+    userClientMap: UserClients,
+    limit: number = UserAPI.DEFAULT_USERS_PREKEY_BUNDLE_CHUNK_SIZE,
+  ): Promise<UserPreKeyBundleMap> {
+    const userIdChunks = ArrayUtil.chunk(Object.keys(userClientMap), limit);
+    const userPreKeyBundleMapChunks = await Promise.all(
+      userIdChunks.map(userIdChunk =>
+        this._postMultiPreKeyBundlesChunk(
+          userIdChunk.reduce(
+            (chunkedUserClientMap, userId) => ({
+              ...chunkedUserClientMap,
+              [userId]: userClientMap[userId],
+            }),
+            {},
+          ),
+        ),
+      ),
+    );
+    return userPreKeyBundleMapChunks.reduce(
+      (userPreKeyBundleMap, userPreKeyBundleMapChunk) => ({
+        ...userPreKeyBundleMap,
+        ...userPreKeyBundleMapChunk,
+      }),
+      {},
+    );
   }
 
   /**

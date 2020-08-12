@@ -3,6 +3,100 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.5.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@4.5.8...@wireapp/store-engine@4.5.9) (2020-08-11)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## 4.5.8 (2020-07-21)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [4.5.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@4.5.6...@wireapp/store-engine@4.5.7) (2020-06-30)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [4.5.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@4.5.5...@wireapp/store-engine@4.5.6) (2020-06-10)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [4.5.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@4.5.4...@wireapp/store-engine@4.5.5) (2020-05-26)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [4.5.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@4.5.3...@wireapp/store-engine@4.5.4) (2020-05-23)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [4.5.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@4.5.2...@wireapp/store-engine@4.5.3) (2020-05-18)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [4.5.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@4.5.1...@wireapp/store-engine@4.5.2) (2020-05-06)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [4.5.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@4.5.0...@wireapp/store-engine@4.5.1) (2020-04-28)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+# [4.5.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@4.4.0...@wireapp/store-engine@4.5.0) (2020-04-28)
+
+
+### Features
+
+* **eslint-config:** Add eslint-plugin-typescript-sort-keys plugin (WEBAPP-6829) ([#2983](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/2983)) ([0e177e6](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/0e177e65b789e49d7187bcaffb6e375b8818d21b))
+
+
+
+
+
+# 4.4.0 (2020-04-23)
+
+
+### Features
+
+* **core,bot-api:** Add CompositeContentBuilder ([#2948](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/2948)) ([d838a9b](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/d838a9b4d111804c0bdc8f915c48719c6ce2c75e))
+
+
+
+
+
 ## [4.3.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@4.3.11...@wireapp/store-engine@4.3.12) (2020-04-08)
 
 **Note:** Version bump only for package @wireapp/store-engine

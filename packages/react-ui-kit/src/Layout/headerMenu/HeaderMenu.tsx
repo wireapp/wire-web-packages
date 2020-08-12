@@ -26,10 +26,11 @@ import {MenuOpenButton} from './MenuOpenButton';
 import {MenuScrollableItems} from './MenuScrollableItems';
 
 export interface HeaderMenuProps<T = HTMLDivElement> extends React.HTMLProps<T> {
+  centerElement?: React.ReactNode;
   logoElement?: React.ReactNode;
 }
 
-export const HeaderMenu = ({children, logoElement = null, ...props}: HeaderMenuProps) => {
+export const HeaderMenu = ({children, logoElement = null, centerElement = null, ...props}: HeaderMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -44,13 +45,19 @@ export const HeaderMenu = ({children, logoElement = null, ...props}: HeaderMenuP
   return (
     <div style={{height: '64px'}} {...props} data-uie-name="element-header-menu">
       <MenuContent open={isOpen}>
-        <div style={{zIndex: 2}} onClick={closeMenu}>
+        <div style={{alignSelf: 'center', display: 'flex', zIndex: 2}} onClick={closeMenu}>
           {logoElement}
         </div>
+        <div style={{alignSelf: 'center', display: 'flex'}}>{centerElement}</div>
+        <MenuOpenButton
+          onClick={toggleMenu}
+          open={isOpen}
+          style={{justifySelf: 'end', position: isOpen ? 'fixed' : undefined, right: '16px', top: '21px'}}
+          data-uie-name="do-toggle-header-menu"
+        />
         <MenuItems onClick={closeMenu} open={isOpen}>
           <MenuScrollableItems>{children}</MenuScrollableItems>
         </MenuItems>
-        <MenuOpenButton onClick={toggleMenu} open={isOpen} data-uie-name="do-toggle-header-menu" />
       </MenuContent>
     </div>
   );

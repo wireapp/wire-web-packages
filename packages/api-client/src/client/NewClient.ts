@@ -18,19 +18,19 @@
  */
 
 import {PreKey} from '../auth/';
-import {ClientClassification, ClientType, Location} from '../client/';
+import {ClientClassification, ClientType, Location} from './';
 
 interface SharedClientModel {
+  label?: string;
   lastkey: PreKey;
   prekeys: PreKey[];
-  label?: string;
 }
 
 export interface NewClient extends SharedClientModel {
   class: ClientClassification.DESKTOP | ClientClassification.PHONE | ClientClassification.TABLET;
   cookie: string;
-  model?: string;
   location?: Location;
+  model?: string;
   password?: string;
   type: ClientType.PERMANENT | ClientType.TEMPORARY;
 }

@@ -17,7 +17,7 @@
  *
  */
 
-import EventEmitter from 'events';
+import {EventEmitter} from 'events';
 import logdown from 'logdown';
 
 import {AccountAPI} from './account/AccountAPI';
@@ -55,6 +55,7 @@ import {
   ServiceAPI,
   TeamAPI,
   TeamInvitationAPI,
+  PropertyAPI,
 } from './team/';
 import {UserAPI} from './user/';
 
@@ -63,6 +64,7 @@ const {version}: {version: string} = require('../package.json');
 enum TOPIC {
   ACCESS_TOKEN_REFRESH = 'APIClient.TOPIC.ACCESS_TOKEN_REFRESH',
   COOKIE_REFRESH = 'APIClient.TOPIC.COOKIE_REFRESH',
+  /** Event being sent when logout is done. */
   ON_LOGOUT = 'APIClient.TOPIC.ON_LOGOUT',
 }
 
@@ -98,6 +100,7 @@ export class APIClient extends EventEmitter {
     legalhold: {api: LegalHoldAPI};
     member: {api: MemberAPI};
     payment: {api: PaymentAPI};
+    property: {api: PropertyAPI};
     service: {api: ServiceAPI};
     team: {api: TeamAPI};
   };
@@ -198,6 +201,9 @@ export class APIClient extends EventEmitter {
       payment: {
         api: new PaymentAPI(this.transport.http),
       },
+      property: {
+        api: new PropertyAPI(this.transport.http),
+      },
       service: {
         api: new ServiceAPI(this.transport.http),
       },
@@ -256,7 +262,7 @@ export class APIClient extends EventEmitter {
       this.disconnect('Closed by client logout');
       await this.auth.api.postLogout();
     } catch (error) {
-      if (options.ignoreError) {
+      if (options.ignoreError === true) {
         this.logger.error(error);
       } else {
         throw error;

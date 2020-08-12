@@ -215,9 +215,7 @@ export class ConversationService {
      * missing clients. We have to ignore missing clients because there can be the case that there are clients that
      * don't provide PreKeys (clients from the Pre-E2EE era).
      */
-    await this.apiClient.conversation.api.postOTRMessage(sendingClientId, conversationId, message, {
-      ignore_missing: true,
-    });
+    await this.apiClient.conversation.api.postOTRMessage(sendingClientId, conversationId, message, true);
   }
 
   // TODO: Move this to a generic "message sending class" and make it private.
@@ -227,7 +225,7 @@ export class ConversationService {
     plainTextArray: Uint8Array,
   ): Promise<NewOTRMessage> {
     if (error.response?.status === StatusCode.PRECONDITION_FAILED) {
-      const {missing, deleted}: {missing: UserClients; deleted: UserClients} = error.response.data;
+      const {missing, deleted}: {deleted: UserClients; missing: UserClients} = error.response.data;
 
       const deletedUserIds = Object.keys(deleted);
       const missingUserIds = Object.keys(missing);
@@ -876,7 +874,8 @@ export class ConversationService {
   }
 
   public async getAsset({assetId, assetToken, otrKey, sha256}: RemoteData): Promise<Buffer> {
-    const encryptedBuffer = await this.apiClient.asset.api.getAsset(assetId, assetToken);
+    const request = await this.apiClient.asset.api.getAssetV3(assetId, assetToken);
+    const encryptedBuffer = (await request.response).buffer;
 
     return AssetCryptography.decryptAsset({
       cipherText: Buffer.from(encryptedBuffer),
@@ -886,7 +885,8 @@ export class ConversationService {
   }
 
   public async getUnencryptedAsset(assetId: string, assetToken?: string): Promise<ArrayBuffer> {
-    return this.apiClient.asset.api.getAsset(assetId, assetToken);
+    const request = await this.apiClient.asset.api.getAssetV3(assetId, assetToken);
+    return (await request.response).buffer;
   }
 
   public async addUser(conversationId: string, userId: string): Promise<string>;

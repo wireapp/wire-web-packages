@@ -3,6 +3,312 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.36.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.36.3...@wireapp/react-ui-kit@7.36.4) (2020-08-11)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.36.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.36.2...@wireapp/react-ui-kit@7.36.3) (2020-08-03)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.36.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.36.1...@wireapp/react-ui-kit@7.36.2) (2020-07-30)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.36.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.36.0...@wireapp/react-ui-kit@7.36.1) (2020-07-21)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+# [7.36.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.35.0...@wireapp/react-ui-kit@7.36.0) (2020-07-16)
+
+
+### Features
+
+* **react-ui-kit:** Hide/Show icon ([#3116](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/3116)) ([89932f1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/89932f1f3023af3d9ebb3207020c0ff3deb65593))
+
+
+
+
+
+# [7.35.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.34.0...@wireapp/react-ui-kit@7.35.0) (2020-07-15)
+
+
+### Features
+
+* **react-ui-kit:** External Label ([#3113](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/3113)) ([44c0767](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/44c076733ff64be12a583b937265eda6724506a5))
+
+
+
+
+
+# [7.34.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.33.0...@wireapp/react-ui-kit@7.34.0) (2020-07-13)
+
+
+### Features
+
+* **react-ui-kit:** Labeled Select component ([#3111](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/3111)) ([3c224a8](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/3c224a8c1d54cdc3633fd0697d4292c6d1538588))
+
+
+
+
+
+# [7.33.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.32.2...@wireapp/react-ui-kit@7.33.0) (2020-07-13)
+
+
+### Features
+
+* **react-ui-kit:** Non-Uppercase input placeholders ([#3104](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/3104)) ([3cb08f8](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/3cb08f8e208aba42ab01850cc05521037f3d3794))
+
+
+
+
+
+## [7.32.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.32.1...@wireapp/react-ui-kit@7.32.2) (2020-07-09)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Enforce margins in InputBlock ([#3102](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/3102)) ([c289b33](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/c289b33fb43e7fdf9aa1e423f8f2c6a0872f60c5))
+
+
+
+
+
+## [7.32.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.32.0...@wireapp/react-ui-kit@7.32.1) (2020-07-09)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Only apply input :invalid if not focused ([#3103](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/3103)) ([82bfbf5](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/82bfbf51547bc2f1c166caacde74deb1711cb0e8))
+
+
+
+
+
+# [7.32.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.31.1...@wireapp/react-ui-kit@7.32.0) (2020-07-08)
+
+
+### Features
+
+* **react-ui-kit:** Input label & InputSubmitCombo label ([#3100](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/3100)) ([6c79b05](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/6c79b053538685c79323a9702e50d098a8d1fc37))
+
+
+
+
+
+## [7.31.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.31.0...@wireapp/react-ui-kit@7.31.1) (2020-07-08)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Fix overlapping boxShadow issue ([#3101](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/3101)) ([b5eb9a3](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/b5eb9a3c2ea3f7fd99d22f98369e5e8ff2d5c631))
+
+
+
+
+
+# [7.31.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.30.3...@wireapp/react-ui-kit@7.31.0) (2020-07-06)
+
+
+### Features
+
+* **react-ui-kit:** Outline selected form elements ([#3098](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/3098)) ([bda99c1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/bda99c191929eb0ff73b1c5b5954fd3ddba46411))
+
+
+
+
+
+## [7.30.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.30.2...@wireapp/react-ui-kit@7.30.3) (2020-06-30)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.30.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.30.1...@wireapp/react-ui-kit@7.30.2) (2020-06-17)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.30.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.30.0...@wireapp/react-ui-kit@7.30.1) (2020-06-17)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+# [7.30.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.29.8...@wireapp/react-ui-kit@7.30.0) (2020-06-17)
+
+
+### Features
+
+* **react-ui-kit:** Add support for modal action buttons ([#3071](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/3071)) ([bef5713](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/bef571368273bd84534fa8dc80e15300e9498e84))
+
+
+
+
+
+## [7.29.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.29.7...@wireapp/react-ui-kit@7.29.8) (2020-06-10)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.29.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.29.6...@wireapp/react-ui-kit@7.29.7) (2020-06-02)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.29.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.29.5...@wireapp/react-ui-kit@7.29.6) (2020-05-25)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.29.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.29.4...@wireapp/react-ui-kit@7.29.5) (2020-05-23)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.29.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.29.3...@wireapp/react-ui-kit@7.29.4) (2020-05-18)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.29.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.29.2...@wireapp/react-ui-kit@7.29.3) (2020-05-06)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.29.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.29.1...@wireapp/react-ui-kit@7.29.2) (2020-05-04)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Adjust HeaderMenu open button position ([#3003](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/3003)) ([c87f29c](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/c87f29c18b3f0193167e2056e33d16e7dc86f7ae))
+
+
+
+
+
+## [7.29.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.29.0...@wireapp/react-ui-kit@7.29.1) (2020-05-04)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+# [7.29.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.28.2...@wireapp/react-ui-kit@7.29.0) (2020-05-04)
+
+
+### Features
+
+* **react-ui-kit:** Add centerElement to HeaderMenu component ([#2999](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2999)) ([cc54913](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/cc54913535210df456133eee4f7997fa0f9d2fd7))
+
+
+
+
+
+## [7.28.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.28.1...@wireapp/react-ui-kit@7.28.2) (2020-04-28)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.28.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.28.0...@wireapp/react-ui-kit@7.28.1) (2020-04-28)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+# [7.28.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.27.1...@wireapp/react-ui-kit@7.28.0) (2020-04-28)
+
+
+### Features
+
+* **eslint-config:** Add eslint-plugin-typescript-sort-keys plugin (WEBAPP-6829) ([#2983](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2983)) ([0e177e6](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/0e177e65b789e49d7187bcaffb6e375b8818d21b))
+
+
+
+
+
+## [7.27.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.27.0...@wireapp/react-ui-kit@7.27.1) (2020-04-23)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+# [7.27.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.26.22...@wireapp/react-ui-kit@7.27.0) (2020-04-22)
+
+
+### Features
+
+* **react-ui-kit:** Add ReloadIcon ([#2975](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/2975)) ([1cf5e09](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/1cf5e09fac7664629d591954642c9f0a0f441afd))
+
+
+
+
+
+## [7.26.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.26.21...@wireapp/react-ui-kit@7.26.22) (2020-04-17)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.26.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.26.20...@wireapp/react-ui-kit@7.26.21) (2020-04-17)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
 ## [7.26.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.26.19...@wireapp/react-ui-kit@7.26.20) (2020-04-14)
 
 **Note:** Version bump only for package @wireapp/react-ui-kit

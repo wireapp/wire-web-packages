@@ -3,6 +3,105 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.6.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.6.10...@wireapp/cbor@4.6.11) (2020-08-11)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+## [4.6.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.6.9...@wireapp/cbor@4.6.10) (2020-07-21)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+## [4.6.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.6.8...@wireapp/cbor@4.6.9) (2020-07-08)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+## [4.6.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.6.7...@wireapp/cbor@4.6.8) (2020-06-30)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+## [4.6.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.6.6...@wireapp/cbor@4.6.7) (2020-06-10)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+## [4.6.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.6.5...@wireapp/cbor@4.6.6) (2020-05-25)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+## [4.6.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.6.4...@wireapp/cbor@4.6.5) (2020-05-23)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+## [4.6.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.6.3...@wireapp/cbor@4.6.4) (2020-05-18)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+## [4.6.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.6.2...@wireapp/cbor@4.6.3) (2020-05-07)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+## [4.6.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.6.1...@wireapp/cbor@4.6.2) (2020-05-06)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+## [4.6.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.6.0...@wireapp/cbor@4.6.1) (2020-04-28)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+# 4.6.0 (2020-04-23)
+
+
+### Features
+
+* **core,bot-api:** Add CompositeContentBuilder ([#2948](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/issues/2948)) ([d838a9b](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/commit/d838a9b4d111804c0bdc8f915c48719c6ce2c75e))
+
+
+
+
+
 ## [4.5.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.5.9...@wireapp/cbor@4.5.10) (2020-04-08)
 
 **Note:** Version bump only for package @wireapp/cbor

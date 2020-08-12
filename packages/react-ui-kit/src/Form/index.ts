@@ -18,6 +18,7 @@
  */
 
 export * from './Button';
+export * from './ButtonLink';
 export * from './Checkbox';
 export * from './CodeInput';
 export * from './ErrorMessage';
