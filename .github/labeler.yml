@@ -103,9 +103,6 @@
 'comp: infrastructure':
   files:
     - 'bin/.*'
-    # All top-level files and folders starting with a dot
-    - '\..*'
-    # All top-level JSON files
-    - '^[^\/]+\.json$'
-    # All top-level YAML files
-    - '^[^\/]+\.yml$'
+    - '.github/.*'
+    - '.travis.yml'
+    - 'lerna.json'
