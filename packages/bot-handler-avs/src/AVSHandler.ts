@@ -70,6 +70,7 @@ declare global {
 global.RTCPeerConnection = wrtc.RTCPeerConnection;
 global.MediaStream = wrtc.MediaStream;
 global.MediaStreamTrack = wrtc.MediaStreamTrack;
+global.RTCRtpSender = wrtc.RTCRtpSender;
 global.navigator = {
   ...global.navigator,
   mediaDevices: {
@@ -232,15 +233,6 @@ export class AVSHandler extends MessageHandler {
     unused: string | null,
     payload: string,
   ): number => {
-    console.info('BARDIA onSendCallMessage', {
-      clientId,
-      context,
-      conversationId,
-      payload,
-      targets,
-      unused,
-      userId,
-    });
     const userIds: string[] = [];
 
     if (typeof targets === 'string') {
