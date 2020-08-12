@@ -238,8 +238,7 @@ export class AVSHandler extends MessageHandler {
     if (typeof targets === 'string') {
       const parsedTargets: SendMessageTarget = JSON.parse(targets);
       for (const target of parsedTargets.clients) {
-        const {userid} = target;
-        userIds.push(userid);
+        userIds.push(target.userid);
       }
     }
 
