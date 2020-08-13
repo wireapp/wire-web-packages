@@ -265,7 +265,7 @@ export class APIClient extends EventEmitter {
     return this.init(clientType, CookieStore.getCookie());
   }
 
-  public async logout(options = {skipLogoutRequest: false}): Promise<void> {
+  public async logout(options: {skipLogoutRequest: boolean} = {skipLogoutRequest: false}): Promise<void> {
     try {
       this.disconnect('Closed by client logout');
       if (!options.skipLogoutRequest) {
