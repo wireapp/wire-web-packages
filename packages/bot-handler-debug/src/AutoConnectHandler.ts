@@ -26,9 +26,11 @@ export class AutoConnectHandler extends MessageHandler {
     switch (payload.type) {
       case PayloadBundleType.CONNECTION_REQUEST:
         const content = payload.content as Connection;
-        await this.sendConnectionResponse(content.to, true).catch(error => {
+        try {
+          await this.sendConnectionResponse(content.to, true);
+        } catch(error) {
           console.warn(`Failed to accept connection request from "${payload.from}": ${error.message}`, error);
-        });
+        }
         break;
     }
   }
