@@ -28,7 +28,7 @@ export class AutoConnectHandler extends MessageHandler {
         const content = payload.content as Connection;
         try {
           await this.sendConnectionResponse(content.to, true);
-        } catch(error) {
+        } catch (error) {
           console.warn(`Failed to accept connection request from "${payload.from}": ${error.message}`, error);
         }
         break;
