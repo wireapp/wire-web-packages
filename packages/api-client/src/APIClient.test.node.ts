@@ -193,15 +193,14 @@ describe('APIClient', () => {
 
     it('skip request when told to', async () => {
       const client = new APIClient();
-      const testError = new Error('Test rejection');
 
-      spyOn(client.auth.api, 'postLogout').and.returnValue(Promise.reject(testError));
+      spyOn(client.auth.api, 'postLogout');
       spyOn(client, 'disconnect').and.returnValue();
       spyOn(client['accessTokenStore'], 'delete').and.returnValue(Promise.resolve(undefined));
       spyOn(client['logger'], 'error').and.returnValue();
 
       await client.logout({skipLogoutRequest: true});
-      expect(client['logger'].error).not.toHaveBeenCalledWith(testError);
+      expect(client['logger'].error).not.toHaveBeenCalled();
     });
   });
 
