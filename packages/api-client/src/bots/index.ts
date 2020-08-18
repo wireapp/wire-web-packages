@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2020 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,21 +17,4 @@
  *
  */
 
-import {ConversationOtherMemberUpdateData} from './data';
-import {ServiceRef} from './';
-
-export interface OtherMember extends Partial<ConversationOtherMemberUpdateData> {
-  /** The user ID. */
-  id: string;
-  /** The reference to the owning service, if the member is a bot. */
-  service?: ServiceRef;
-  /**
-   * The member status. Currently this is always 0, indicating a regular member.
-   * Other status values might be used in the future
-   */
-  status: SERVICE_MEMBER_STATUS;
-}
-
-export enum SERVICE_MEMBER_STATUS {
-  REGULAR_MEMBER = 0,
-}
+export * from './BotsAPI';
