@@ -29,12 +29,13 @@ import {
 } from '@wireapp/api-client/dist/auth/';
 import {ClientType, RegisteredClient} from '@wireapp/api-client/dist/client/';
 import * as Events from '@wireapp/api-client/dist/event';
-import {StatusCode} from '@wireapp/api-client/dist/http/';
+import {StatusCodes as HTTP_STATUS} from 'http-status-codes';
 import {WebSocketClient} from '@wireapp/api-client/dist/tcp/';
 import * as cryptobox from '@wireapp/cryptobox';
 import {CRUDEngine, MemoryEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import {EventEmitter} from 'events';
 import logdown from 'logdown';
+
 import {LoginSanitizer} from './auth/';
 import {BroadcastService} from './broadcast/';
 import {ClientInfo, ClientService} from './client/';
@@ -260,7 +261,7 @@ export class Account extends EventEmitter {
         error.constructor.name === 'CryptoboxError' ||
         error instanceof StoreEngineError.RecordNotFoundError ||
         error.constructor.name === StoreEngineError.RecordNotFoundError.name;
-      const notFoundOnBackend = error.response?.status === StatusCode.NOT_FOUND;
+      const notFoundOnBackend = error.response?.status === HTTP_STATUS.NOT_FOUND;
 
       if (notFoundInDatabase) {
         this.logger.log(`Could not find valid client in database "${this.storeEngine?.storeName}".`);

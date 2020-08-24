@@ -11,6 +11,7 @@
     "@wireapp/store-engine": "4.5.9",
     "bazinga64": "5.7.10",
     "hash.js": "1.1.7",
+    "http-status-codes": "2.1.1",
     "logdown": "3.3.1",
     "protobufjs": "6.9.0",
     "uuidjs": "4.2.5"

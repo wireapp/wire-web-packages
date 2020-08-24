@@ -30,7 +30,7 @@ import {
 } from '@wireapp/api-client/dist/conversation/';
 import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/dist/conversation/data/';
 import {ConversationMemberLeaveEvent} from '@wireapp/api-client/dist/event/';
-import {StatusCode} from '@wireapp/api-client/dist/http/';
+import {StatusCodes as HTTP_STATUS} from 'http-status-codes';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/user/';
 import {
   Asset,
@@ -245,8 +245,8 @@ export class ConversationService {
     message: NewOTRMessage,
     plainTextArray: Uint8Array,
   ): Promise<NewOTRMessage> {
-    if (error.response?.status === StatusCode.PRECONDITION_FAILED) {
-      const {missing, deleted}: {deleted: UserClients; missing: UserClients} = error.response.data;
+    if (error.response?.status === HTTP_STATUS.PRECONDITION_FAILED) {
+      const {missing, deleted}: {deleted: UserClients; missing: UserClients} = error.response?.data;
 
       const deletedUserIds = Object.keys(deleted);
       const missingUserIds = Object.keys(missing);
