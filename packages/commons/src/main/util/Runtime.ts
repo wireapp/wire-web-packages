@@ -43,17 +43,28 @@ export class Runtime {
   }
 
   public static getOSFamily(): OperatingSystem {
+    const OS = {
+      DESKTOP: {
+        LINUX: ['linux', 'ubuntu', 'fedora', 'gentoo', 'debian', 'suse', 'centos', 'red hat', 'freebsd', 'openbsd'],
+        MAC: ['os x', 'mac os'],
+        WINDOWS: ['windows', 'windows server 2008 r2 / 7', 'windows server 2008 / vista', 'windows xp'],
+      },
+      MOBILE: {
+        ANDROID: ['android'],
+        IOS: ['ios'],
+      },
+    };
     const family = Runtime.getOS().family?.toLowerCase();
-    if (family.includes('windows')) {
+    if (OS.DESKTOP.WINDOWS.includes(family)) {
       return OperatingSystem.WINDOWS;
     }
-    if (family.includes('android')) {
+    if (OS.MOBILE.ANDROID.includes(family)) {
       return OperatingSystem.ANDROID;
     }
-    if (family.includes('ios')) {
+    if (OS.MOBILE.IOS.includes(family)) {
       return OperatingSystem.IOS;
     }
-    if (['os x', 'mac os'].includes(family)) {
+    if (OS.DESKTOP.MAC.includes(family)) {
       return OperatingSystem.MAC;
     }
     return OperatingSystem.LINUX;
