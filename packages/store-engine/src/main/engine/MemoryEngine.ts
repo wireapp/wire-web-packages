@@ -83,7 +83,7 @@ export class MemoryEngine implements CRUDEngine {
 
   private assignDb<ObjectType = Object>(storeName: string, object: ObjectType): MemoryStore {
     this.storeName = storeName;
-    this.stores[this.storeName] = this.stores[this.storeName] || object;
+    this.stores[this.storeName] ||= object;
     return this.stores;
   }
 
