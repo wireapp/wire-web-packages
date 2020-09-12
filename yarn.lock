@@ -3019,10 +3019,10 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
-"@wireapp/avs@6.2.20":
-  version "6.2.20"
-  resolved "https://registry.npmjs.org/@wireapp/avs/-/avs-6.2.20.tgz#2b7facac5f8fafca97f3d4e14d458b56d63bf0bc"
-  integrity sha512-v5n1DbukuwH3sjoD1qkL77IX0mVoygpzPrlzF8Y1ZKvwo5AQ1Fjy+Jsgl3meAwxQ8KbzJEu1yAtoixFpzKMWgA==
+"@wireapp/avs@6.2.30":
+  version "6.2.30"
+  resolved "https://registry.npmjs.org/@wireapp/avs/-/avs-6.2.30.tgz#b775bd0f73f8803557767d2ef79ff4e564cd4096"
+  integrity sha512-+XM8aCSr6NCVfY1e+lecN8zZpT33v7X2YdBoRpSFHGuKrkeD/keSUSSBJsWcvLjojW2ZMQZ3TnaoCvWu3DA2ow==
 
 "@wireapp/protocol-messaging@1.25.4":
   version "1.25.4"
@@ -11179,9 +11179,9 @@ node-fetch-npm@^2.0.2:
     safe-buffer "^5.1.1"
 
 node-fetch@^2.3.0, node-fetch@^2.5.0:
-  version "2.6.0"
-  resolved "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
-  integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
+  integrity sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
 
 node-forge@0.9.0:
   version "0.9.0"
