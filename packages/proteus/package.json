@@ -4,13 +4,13 @@
     "@types/ed2curve": "0.2.2",
     "@types/libsodium-wrappers-sumo": "0.7.3",
     "@types/node": "~12",
-    "@wireapp/cbor": "4.6.11",
+    "@wireapp/cbor": "4.6.12",
     "ed2curve": "0.3.0",
     "libsodium-wrappers-sumo": "0.7.6"
   },
   "description": "Axolotl protocol implementation for JavaScript.",
   "devDependencies": {
-    "@types/jasmine": "3.5.10",
+    "@types/jasmine": "3.5.13",
     "chai": "4.2.0",
     "jasmine": "3.5.0",
     "nyc": "15.1.0",
@@ -38,5 +38,5 @@
     "test:project": "yarn dist && yarn test",
     "test:types": "tsc --noEmit"
   },
-  "version": "9.8.14"
+  "version": "9.8.15"
 }

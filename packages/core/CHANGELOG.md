@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [16.12.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.12.11...@wireapp/core@16.12.12) (2020-09-01)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.12.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.12.10...@wireapp/core@16.12.11) (2020-09-01)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.12.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.12.9...@wireapp/core@16.12.10) (2020-08-27)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.12.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.12.8...@wireapp/core@16.12.9) (2020-08-27)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.12.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.12.7...@wireapp/core@16.12.8) (2020-08-27)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
 ## [16.12.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.12.6...@wireapp/core@16.12.7) (2020-08-20)
 
 **Note:** Version bump only for package @wireapp/core

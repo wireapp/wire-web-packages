@@ -3,7 +3,7 @@
     "@types/node": "~12"
   },
   "devDependencies": {
-    "@types/jasmine": "3.5.10",
+    "@types/jasmine": "3.5.13",
     "@types/karma": "4.4.0",
     "jasmine": "3.5.0",
     "karma": "5.1.0",
@@ -43,5 +43,5 @@
     "test:project": "yarn dist && yarn test",
     "test:node": "nyc jasmine --config=jasmine.json"
   },
-  "version": "4.5.9"
+  "version": "4.5.10"
 }
