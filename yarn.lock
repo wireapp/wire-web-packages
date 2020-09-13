@@ -10021,17 +10021,17 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-libsodium-sumo@0.7.6:
-  version "0.7.6"
-  resolved "https://registry.npmjs.org/libsodium-sumo/-/libsodium-sumo-0.7.6.tgz#935a80f95165a2f7d33a77bc8f1cde62130d93dc"
-  integrity sha512-1XM2w00YkufeLVhFbw9aV+NTftzqECkEU1Amw2MxCbYuyy4L6MH5y8MWOg3shN6X/9R3e1pp6RCSXPnbFRTVCA==
+libsodium-sumo@^0.7.0:
+  version "0.7.8"
+  resolved "https://registry.npmjs.org/libsodium-sumo/-/libsodium-sumo-0.7.8.tgz#66789762e45c521a2373808eb7c8184120f61bab"
+  integrity sha512-5ev5rkfWQwrf77OI0R/qnrqtwF7gyq9mklid46o+sc9YfZBzjg1VgbU56/+nFv8B9tE37OdG6w0fyJuvyNElzg==
 
-libsodium-wrappers-sumo@0.7.6:
-  version "0.7.6"
-  resolved "https://registry.npmjs.org/libsodium-wrappers-sumo/-/libsodium-wrappers-sumo-0.7.6.tgz#0fc9f422470d192370c4213f3c46e41ebda35e77"
-  integrity sha512-pwYQ1ZR/UwXBMY4tFDcjYZrBFgexkhRykzcE9Jv0l/J41Tp7PqHYfHA17YpOxIXrAIRBPVSlPo2VxHoGZZKwXA==
+libsodium-wrappers-sumo@0.7.8:
+  version "0.7.8"
+  resolved "https://registry.npmjs.org/libsodium-wrappers-sumo/-/libsodium-wrappers-sumo-0.7.8.tgz#5212750e8012b33a48f4c01dd8d22683b2e1fc42"
+  integrity sha512-a36GRLb59E5Zx8br6Xvwk6QsnYWodkCJFvNQxnhrvL9t9i4v6v3V/cv3h0/pxehf35ljVCWqoi0CawMQ8C1JmA==
   dependencies:
-    libsodium-sumo "0.7.6"
+    libsodium-sumo "^0.7.0"
 
 "license-checker@git+https://github.com/mwittig/license-checker#d546e3f738e14c62e732346fa355162d46700893":
   version "1.0.0"
