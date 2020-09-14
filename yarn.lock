@@ -2332,11 +2332,6 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
-"@types/bluebird@*":
-  version "3.5.29"
-  resolved "https://registry.npmjs.org/@types/bluebird/-/bluebird-3.5.29.tgz#7cd933c902c4fc83046517a1bef973886d00bdb6"
-  integrity sha512-kmVtnxTuUuhCET669irqQmPAez4KFnFVKvpleVRyfC3g+SHD1hIkFZcWLim9BVcwUBLO59o8VZE4yGCmTif8Yw==
-
 "@types/bro-fs@0.4.2":
   version "0.4.2"
   resolved "https://registry.npmjs.org/@types/bro-fs/-/bro-fs-0.4.2.tgz#c8a84901cc2872130bd84cdb18554afe50934002"
@@ -2507,12 +2502,11 @@
     "@types/webpack" "*"
     "@types/webpack-dev-middleware" "*"
 
-"@types/karma@*", "@types/karma@4.4.0":
-  version "4.4.0"
-  resolved "https://registry.npmjs.org/@types/karma/-/karma-4.4.0.tgz#84c084cb394d64b9a28d1425fb4824cd10523221"
-  integrity sha512-+b5BsyqXBHRqw7UxzTjQNgj5hjJPAIfWQyLebTOsDrWQVJCghc5j5+U9hbRayc2qfrG07FqDi9m5s3aJ4XNRcA==
+"@types/karma@*", "@types/karma@5.0.0":
+  version "5.0.0"
+  resolved "https://registry.npmjs.org/@types/karma/-/karma-5.0.0.tgz#6750ffc633c0fbc63dfb725146f198e8c3afcd08"
+  integrity sha512-5quuLnxdJWkzJCEwFatOClM6O7EkeDWfXltGySb01LQnBVjtbLzIky9JLW0IKt+JfzurUjwj7b7Sb/Omsx4QYA==
   dependencies:
-    "@types/bluebird" "*"
     "@types/node" "*"
     log4js "^4.0.0"
 
