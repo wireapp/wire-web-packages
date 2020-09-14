@@ -37,8 +37,8 @@ export interface OS {
 }
 
 export class Runtime {
-  public static getPlatform(): Platform {
-    const unsetPlatform: Platform = ({} as unknown) as Platform;
+  public static getPlatform(): typeof platform {
+    const unsetPlatform = ({} as unknown) as typeof platform;
     return platform || unsetPlatform;
   }
 
@@ -60,7 +60,7 @@ export class Runtime {
   }
 
   public static getBrowserName(): string {
-    return (Runtime.getPlatform().name || UNKNOWN_PROPERTY).toLowerCase();
+    return Runtime.getPlatform().name || UNKNOWN_PROPERTY;
   }
 
   public static getBrowserVersion(): {major: number; minor: number} {
@@ -69,7 +69,7 @@ export class Runtime {
   }
 
   public static getUserAgent(): string {
-    return (Runtime.getPlatform().ua || UNKNOWN_PROPERTY).toLowerCase();
+    return Runtime.getPlatform().ua || UNKNOWN_PROPERTY;
   }
 
   public static isWebappSupportedBrowser(): boolean {
