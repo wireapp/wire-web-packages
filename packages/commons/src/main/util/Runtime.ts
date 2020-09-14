@@ -63,6 +63,10 @@ export class Runtime {
     return Runtime.getPlatform().name || UNKNOWN_PROPERTY;
   }
 
+  public static getBrowserNameLowerCase(): string {
+    return (Runtime.getPlatform().name || UNKNOWN_PROPERTY).toLowerCase();
+  }
+
   public static getBrowserVersion(): {major: number; minor: number} {
     const [majorVersion, minorVersion] = (Runtime.getPlatform().version || UNKNOWN_PROPERTY).split('.');
     return {major: parseInt(majorVersion, 10), minor: parseInt(minorVersion, 10)};
@@ -70,6 +74,10 @@ export class Runtime {
 
   public static getUserAgent(): string {
     return Runtime.getPlatform().ua || UNKNOWN_PROPERTY;
+  }
+
+  public static getUserAgentLowercase(): string {
+    return (Runtime.getPlatform().ua || UNKNOWN_PROPERTY).toLowerCase();
   }
 
   public static isWebappSupportedBrowser(): boolean {
