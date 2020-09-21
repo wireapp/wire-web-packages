@@ -1,8 +1,12 @@
 {
   "env": {
-    "jasmine": true
+    "jasmine": true,
+    "node": true
   },
   "extends": "./packages/eslint-config/eslintrc.json",
+  "globals": {
+    "NodeJS": "readonly"
+  },
   "overrides": [
     {
       "files": ["*.ts", "*.tsx"],

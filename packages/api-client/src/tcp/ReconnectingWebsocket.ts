@@ -56,7 +56,6 @@ export class ReconnectingWebsocket {
 
   private readonly logger: logdown.Logger;
   private socket?: RWS;
-  // eslint-disable-next-line no-undef
   private pingerId?: NodeJS.Timeout;
   private readonly PING_INTERVAL = TimeUtil.TimeInMillis.SECOND * 20;
   private hasUnansweredPing: boolean;
