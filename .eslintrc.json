@@ -1,7 +1,6 @@
 {
   "env": {
-    "jasmine": true,
-    "node": true
+    "jasmine": true
   },
   "extends": "./packages/eslint-config/eslintrc.json",
   "globals": {
