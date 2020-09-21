@@ -20,5 +20,6 @@
 export class TransientBundle {
   public expires: number = 0;
   public payload: any;
+  // eslint-disable-next-line no-undef
   public timeoutID?: number | NodeJS.Timer; // Note: Only cached values have a "timeoutID"
 }
