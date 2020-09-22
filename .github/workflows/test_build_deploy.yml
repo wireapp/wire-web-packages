@@ -71,7 +71,7 @@ jobs:
         if: env.BRANCH_NAME == 'master'
         run: |
           echo "::set-env name=HAS_UPDATES::$(yarn lerna updated > /dev/null 2>&1; echo "${?}")"
-          echo "//registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}" >> "${HOME}/.npmrc"
+          echo "//registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}}" >> "${HOME}/.npmrc"
           echo -e "HAS_UPDATES = ${HAS_UPDATES}"
 
       - name: Release
