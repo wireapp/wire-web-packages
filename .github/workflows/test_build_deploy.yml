@@ -38,6 +38,7 @@ jobs:
           echo -e "COMMITTER = ${COMMITTER}"
           echo -e "GITHUB_SHA = ${GITHUB_SHA}"
           echo -e "GITHUB_REF = ${GITHUB_REF}"
+          echo -e "HOME = ${HOME}"
           echo -e "GITHUB_CONTEXT = ${GITHUB_CONTEXT}"
 
       - name: Skip CI
@@ -70,6 +71,7 @@ jobs:
         if: env.BRANCH_NAME == 'master'
         run: |
           echo "::set-env name=HAS_UPDATES::$(yarn lerna updated > /dev/null 2>&1; echo "${?}")"
+          echo "//registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}" >> "${HOME}/.npmrc"
           echo -e "HAS_UPDATES = ${HAS_UPDATES}"
 
       - name: Release
