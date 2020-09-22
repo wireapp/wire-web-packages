@@ -10,10 +10,6 @@ jobs:
   test_build_deploy:
     runs-on: ubuntu-latest
 
-    env:
-      TEST_COVERAGE_FAIL_THRESHOLD: 45
-      TEST_COVERAGE_WARNING_THRESHOLD: 60
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
