@@ -65,8 +65,10 @@ jobs:
         if: env.BRANCH_NAME == 'master'
         run: |
           echo "::set-env name=HAS_UPDATES::$(yarn lerna updated > /dev/null 2>&1; echo "${?}")"
-          echo "//registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}}" >> "${HOME}/.npmrc"
           echo -e "HAS_UPDATES = ${HAS_UPDATES}"
+          echo "//registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}}" >> "${HOME}/.npmrc"
+          git config --global user.email webapp+travis@wire.com
+          git config --global user.name "Wire Travis CI"
 
       - name: Release
         if: env.BRANCH_NAME == 'master' && env.HAS_UPDATES == '0' && !startsWith(env.TITLE, 'chore') && !startsWith(env.TITLE, 'test')
