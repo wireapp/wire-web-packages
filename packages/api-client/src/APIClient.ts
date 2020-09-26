@@ -44,6 +44,7 @@ import {GiphyAPI} from './giphy/';
 import {HttpClient} from './http/';
 import {NotificationAPI} from './notification/';
 import {ObfuscationUtil} from './obfuscation/';
+import {ProviderAPI} from './provider/';
 import {SelfAPI} from './self/';
 import {WebSocketClient} from './tcp/';
 import {
@@ -94,6 +95,7 @@ export class APIClient extends EventEmitter {
   public conversation: {api: ConversationAPI};
   public giphy: {api: GiphyAPI};
   public notification: {api: NotificationAPI};
+  public provider: {api: ProviderAPI};
   public self: {api: SelfAPI};
   public teams: {
     conversation: {api: TeamConversationAPI};
@@ -183,10 +185,12 @@ export class APIClient extends EventEmitter {
     this.notification = {
       api: new NotificationAPI(this.transport.http),
     };
+    this.provider = {
+      api: new ProviderAPI(this.transport.http),
+    };
     this.self = {
       api: new SelfAPI(this.transport.http),
     };
-
     this.teams = {
       conversation: {
         api: new TeamConversationAPI(this.transport.http),
@@ -219,7 +223,6 @@ export class APIClient extends EventEmitter {
         api: new TeamAPI(this.transport.http),
       },
     };
-
     this.user = {
       api: new UserAPI(this.transport.http),
     };
