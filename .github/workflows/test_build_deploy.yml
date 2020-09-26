@@ -1,0 +1,84 @@
+name: Test, Build & Deploy
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  test_build_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set & print environment variables
+        env:
+          GITHUB_CONTEXT: ${{toJson(github)}}
+        run: |
+          echo "::set-env name=BRANCH_NAME::$(git branch --show-current)"
+          echo "::set-env name=TAG::$(git tag --points-at ${{github.sha}})"
+          echo "::set-env name=TITLE::$(echo '${{github.event.pull_request.title || github.event.head_commit.message}}' | head -n 1)"
+          echo "::set-env name=PR_LAST_COMMIT_MESSAGE::$(git log --format=%B -n 1 ${{github.event.after}})"
+          echo "::set-env name=COMMIT_URL::${{github.event.head_commit.url}}"
+          echo "::set-env name=COMMITTER::${{github.event.head_commit.committer.name}}"
+          echo -e "BRANCH_NAME = ${BRANCH_NAME}"
+          echo -e "TAG = ${TAG}"
+          echo -e "TITLE = ${TITLE}"
+          echo -e "PR_LAST_COMMIT_MESSAGE = ${PR_LAST_COMMIT_MESSAGE}"
+          echo -e "COMMIT_URL = ${COMMIT_URL}"
+          echo -e "COMMITTER = ${COMMITTER}"
+          echo -e "HOME = ${HOME}"
+          echo -e "GITHUB_CONTEXT = ${GITHUB_CONTEXT}"
+
+      - name: Skip CI
+        if: contains(env.TITLE || env.PR_LAST_COMMIT_MESSAGE, '[skip ci]') || contains(env.TITLE || env.PR_LAST_COMMIT_MESSAGE, '[ci skip]')
+        uses: andymckay/cancel-action@0.2
+
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.5.0
+        with:
+          access_token: ${{github.token}}
+
+      - name: Yarn cache
+        uses: c-hive/gha-yarn-cache@v1
+
+      - name: Authenticate git clone
+        env:
+          GH_TOKEN: ${{secrets.OTTO_THE_BOT_GH_TOKEN}}
+        run: echo -e "machine github.com\n  login ${GH_TOKEN}" > ~/.netrc
+
+      - name: Install JS dependencies
+        run: yarn --frozen-lockfile
+
+      - name: Boot Lerna
+        run: yarn boot
+
+      - name: Test
+        run: yarn test
+
+      - name: Set release environment variables
+        if: env.BRANCH_NAME == 'master'
+        run: |
+          echo "::set-env name=HAS_UPDATES::$(yarn lerna updated > /dev/null 2>&1; echo "${?}")"
+          echo -e "HAS_UPDATES = ${HAS_UPDATES}"
+          echo "//registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}}" >> "${HOME}/.npmrc"
+          git config --global user.email webapp+travis@wire.com
+          git config --global user.name "Wire Travis CI"
+
+      - name: Release
+        if: env.BRANCH_NAME == 'master' && env.HAS_UPDATES == '0' && !startsWith(env.TITLE, 'chore') && !startsWith(env.TITLE, 'test')
+        run: yarn release
+
+      - name: Notify CI error
+        if: failure() && github.event_name != 'pull_request'
+        uses: wireapp/github-action-wire-messenger@v1
+        with:
+          email: ${{secrets.WIRE_EMAIL}}
+          password: ${{secrets.WIRE_PASSWORD}}
+          conversation: 'b2cc7120-4154-4be4-b0c0-45a8c361c4d1'
+          text: '🌵 ${{env.COMMITTER}} broke the "${{env.BRANCH_NAME}}" branch on "${{github.repository}}" with [${{env.TITLE}}](${{env.COMMIT_URL}})'

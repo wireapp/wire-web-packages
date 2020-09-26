@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2020 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,18 +17,10 @@
  *
  */
 
-/** @jsx jsx */
 import React from 'react';
-import {ObjectInterpolation, jsx} from '@emotion/core';
-import {GUTTER} from './sizes';
+import {matchComponent} from '../test/testUtil';
+import {ErrorMessage} from './ErrorMessage';
 
-export type ContentProps<T = HTMLDivElement> = React.HTMLProps<T>;
-
-export const contentStyle: <T>(props: ContentProps<T>) => ObjectInterpolation<undefined> = props => ({
-  display: 'flex',
-  flexDirection: 'column',
-  flexGrow: 1,
-  padding: `0 ${GUTTER}px`,
+describe('"ErrorMessage"', () => {
+  it('renders', () => matchComponent(<ErrorMessage>ErrorMessage</ErrorMessage>));
 });
-
-export const Content = (props: ContentProps) => <div css={contentStyle(props)} {...props} />;

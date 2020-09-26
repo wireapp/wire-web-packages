@@ -14,5 +14,8 @@ node_modules/
 npm-debug.log*
 package-lock.json
 packages/react-ui-kit/styleguide
+**/src/**/*.d.ts
+**/src/**/*.js
+**/src/**/*.js.map
 temp/
 yarn-error.log

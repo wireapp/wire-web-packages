@@ -2,10 +2,10 @@
   "dependencies": {
     "@types/node": "~12",
     "logdown": "3.3.1",
-    "uuidjs": "4.2.5"
+    "uuidjs": "4.2.6"
   },
   "devDependencies": {
-    "@types/karma": "4.4.0",
+    "@types/karma": "5.0.0",
     "cross-env": "7.0.2",
     "jasmine": "3.5.0",
     "karma": "5.1.0",
@@ -15,7 +15,7 @@
     "karma-sourcemap-loader": "0.3.7",
     "karma-spec-reporter": "0.0.32",
     "rimraf": "3.0.2",
-    "typescript": "3.9.2",
+    "typescript": "4.0.3",
     "webpack": "4.44.1",
     "webpack-cli": "3.3.12"
   },
@@ -38,5 +38,5 @@
     "test:project": "yarn dist && yarn test",
     "test:node": "cross-env JASMINE_CONFIG_PATH=src/test/node/support/jasmine.json jasmine"
   },
-  "version": "1.6.7"
+  "version": "1.6.9"
 }

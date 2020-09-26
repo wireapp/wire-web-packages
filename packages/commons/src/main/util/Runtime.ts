@@ -37,13 +37,13 @@ export interface OS {
 }
 
 export class Runtime {
-  public static getPlatform(): Platform {
-    const unsetPlatform: Platform = ({} as unknown) as Platform;
+  public static getPlatform(): typeof platform {
+    const unsetPlatform = ({} as unknown) as typeof platform;
     return platform || unsetPlatform;
   }
 
   public static getOSFamily(): OperatingSystem {
-    const family = Runtime.getOS().family.toLowerCase();
+    const family = Runtime.getOS().family?.toLowerCase();
     if (family.includes('windows')) {
       return OperatingSystem.WINDOWS;
     }
@@ -59,6 +59,9 @@ export class Runtime {
     return OperatingSystem.LINUX;
   }
 
+  /**
+   * NOTE: This converts the browser name to lowercase.
+   */
   public static getBrowserName(): string {
     return (Runtime.getPlatform().name || UNKNOWN_PROPERTY).toLowerCase();
   }
@@ -68,6 +71,9 @@ export class Runtime {
     return {major: parseInt(majorVersion, 10), minor: parseInt(minorVersion, 10)};
   }
 
+  /**
+   * NOTE: This converts the User-Agent to lowercase.
+   */
   public static getUserAgent(): string {
     return (Runtime.getPlatform().ua || UNKNOWN_PROPERTY).toLowerCase();
   }
@@ -95,6 +101,89 @@ export class Runtime {
       ...platform.os,
     };
   }
+
+  public static isSupportingWebSockets = (): boolean => {
+    try {
+      return 'WebSocket' in window;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  public static isSupportingClipboard = (): boolean => {
+    return !!navigator.clipboard;
+  };
+
+  public static isSupportingIndexedDb = (): boolean => {
+    try {
+      return !!window.indexedDB;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  public static isSupportingLegacyCalling = (): boolean => {
+    if (
+      !Runtime.isSupportingRTCPeerConnection() ||
+      !Runtime.isSupportingRTCDataChannel() ||
+      !Runtime.isSupportingUserMedia() ||
+      !Runtime.isSupportingWebSockets()
+    ) {
+      return false;
+    }
+    return true;
+  };
+
+  public static isSupportingConferenceCalling = (): boolean => {
+    if (!Runtime.isSupportingLegacyCalling() || !Runtime.isSupportingRTCInjectableStreams()) {
+      return false;
+    }
+    return true;
+  };
+
+  public static isSupportingRTCPeerConnection = (): boolean => 'RTCPeerConnection' in window;
+
+  public static isSupportingRTCDataChannel = (): boolean => {
+    if (!Runtime.isSupportingRTCPeerConnection()) {
+      return false;
+    }
+
+    const peerConnection = new RTCPeerConnection(undefined);
+    return 'createDataChannel' in peerConnection;
+  };
+
+  public static isSupportingRTCInjectableStreams = (): boolean => {
+    const isSupportingEncodedStreams = RTCRtpSender.prototype.hasOwnProperty('createEncodedStreams');
+    const isSupportingEncodedVideoStreams = RTCRtpSender.prototype.hasOwnProperty('createEncodedVideoStreams');
+    return isSupportingEncodedStreams || isSupportingEncodedVideoStreams;
+  };
+
+  public static isSupportingUserMedia = (): boolean => {
+    return 'mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices;
+  };
+
+  public static isSupportingDisplayMedia = (): boolean => {
+    return 'mediaDevices' in navigator && 'getDisplayMedia' in navigator.mediaDevices;
+  };
+
+  public static isSupportingScreensharing = (): boolean => {
+    const hasScreenCaptureAPI =
+      !!((window as unknown) as any).desktopCapturer ||
+      (Runtime.isSupportingUserMedia() && Runtime.isSupportingDisplayMedia());
+    return hasScreenCaptureAPI || Runtime.isFirefox();
+  };
+
+  public static isSupportingPermissions = (): boolean => !!navigator.permissions;
+
+  public static isSupportingNotifications = (): boolean => {
+    const notificationNotSupported = window.Notification === undefined;
+    if (notificationNotSupported) {
+      return false;
+    }
+
+    const requestPermissionNotSupported = window.Notification.requestPermission === undefined;
+    return requestPermissionNotSupported ? false : document.visibilityState !== undefined;
+  };
 
   public static isChrome(): boolean {
     return Runtime.getBrowserName() === BROWSER.CHROME;

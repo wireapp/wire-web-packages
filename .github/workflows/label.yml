@@ -13,4 +13,4 @@ jobs:
       # See https://github.com/srvaroa/labeler.
       - uses: srvaroa/labeler@v0.3
         env:
-          GITHUB_TOKEN: ${{secrets.GH_TOKEN}}
+          GITHUB_TOKEN: ${{secrets.OTTO_THE_BOT_GH_TOKEN}}

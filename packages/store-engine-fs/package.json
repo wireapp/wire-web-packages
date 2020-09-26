@@ -4,13 +4,13 @@
     "fs-extra": "9.0.1"
   },
   "devDependencies": {
-    "@types/jasmine": "3.5.10",
+    "@types/jasmine": "3.5.13",
     "@types/node": "~12",
-    "@wireapp/store-engine": "4.5.9",
+    "@wireapp/store-engine": "4.5.11",
     "jasmine": "3.5.0",
     "nyc": "15.1.0",
     "rimraf": "3.0.2",
-    "typescript": "3.9.2"
+    "typescript": "4.0.3"
   },
   "description": "Store Engine implementation for Node.js' File System.",
   "files": [
@@ -31,5 +31,5 @@
     "test": "nyc jasmine --config=jasmine.json",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "2.2.13"
+  "version": "2.2.15"
 }
