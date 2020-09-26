@@ -17,8 +17,9 @@
  *
  */
 
-export * from './LoginProviderData';
-export * from './ProviderAPI';
-export * from './RegisteredProvider';
-export * from './NewProvider';
-export * from './UpdateProviderData';
+import {Provider} from '../team/service';
+
+export interface NewServiceProvider extends Pick<Provider, 'description' | 'email' | 'name' | 'url'> {
+  /** If none provided, a password is generated on the server. */
+  password?: string;
+}

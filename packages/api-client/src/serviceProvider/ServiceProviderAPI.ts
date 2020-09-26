@@ -21,12 +21,12 @@ import {AxiosRequestConfig} from 'axios';
 
 import {HttpClient} from '../http';
 import {CompletePasswordReset} from '../user';
-import {LoginProviderData} from './LoginProviderData';
-import {RegisteredProvider} from './RegisteredProvider';
-import {NewProvider} from './NewProvider';
-import {UpdateProviderData} from './UpdateProviderData';
+import {LoginServiceProviderData} from './LoginServiceProviderData';
+import {RegisteredServiceProvider} from './RegisteredServiceProvider';
+import {NewServiceProvider} from './NewServiceProvider';
+import {UpdateServiceProviderData} from './UpdateServiceProviderData';
 
-export class ProviderAPI {
+export class ServiceProviderAPI {
   constructor(private readonly client: HttpClient) {}
 
   public static readonly URL = {
@@ -37,34 +37,34 @@ export class ProviderAPI {
     REGISTER: 'register',
   };
 
-  async deleteProvider(data: {password: string}): Promise<void> {
+  async deleteServiceProvider(data: {password: string}): Promise<void> {
     const config: AxiosRequestConfig = {
       data,
       method: 'delete',
-      url: `${ProviderAPI.URL.PROVIDER}`,
+      url: `${ServiceProviderAPI.URL.PROVIDER}`,
     };
 
     await this.client.sendJSON(config);
   }
 
-  async getProvider(): Promise<RegisteredProvider> {
+  async getServiceProvider(): Promise<RegisteredServiceProvider> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${ProviderAPI.URL.PROVIDER}`,
+      url: `${ServiceProviderAPI.URL.PROVIDER}`,
     };
 
-    const response = await this.client.sendJSON<RegisteredProvider>(config);
+    const response = await this.client.sendJSON<RegisteredServiceProvider>(config);
     return response.data;
   }
 
-  async postLoginProvider(data: LoginProviderData): Promise<RegisteredProvider> {
+  async postLoginServiceProvider(data: LoginServiceProviderData): Promise<RegisteredServiceProvider> {
     const config: AxiosRequestConfig = {
       data,
       method: 'post',
-      url: `${ProviderAPI.URL.PROVIDER}/${ProviderAPI.URL.LOGIN}`,
+      url: `${ServiceProviderAPI.URL.PROVIDER}/${ServiceProviderAPI.URL.LOGIN}`,
     };
 
-    const response = await this.client.sendJSON<RegisteredProvider>(config);
+    const response = await this.client.sendJSON<RegisteredServiceProvider>(config);
     return response.data;
   }
 
@@ -72,7 +72,7 @@ export class ProviderAPI {
     const config: AxiosRequestConfig = {
       data,
       method: 'post',
-      url: `${ProviderAPI.URL.PROVIDER}/${ProviderAPI.URL.PASSWORD_RESET}`,
+      url: `${ServiceProviderAPI.URL.PROVIDER}/${ServiceProviderAPI.URL.PASSWORD_RESET}`,
     };
 
     await this.client.sendJSON(config);
@@ -82,28 +82,28 @@ export class ProviderAPI {
     const config: AxiosRequestConfig = {
       data,
       method: 'post',
-      url: `${ProviderAPI.URL.PROVIDER}/${ProviderAPI.URL.PASSWORD_RESET}/${ProviderAPI.URL.COMPLETE}`,
+      url: `${ServiceProviderAPI.URL.PROVIDER}/${ServiceProviderAPI.URL.PASSWORD_RESET}/${ServiceProviderAPI.URL.COMPLETE}`,
     };
 
     await this.client.sendJSON(config);
   }
 
-  async postRegisterProvider(data: NewProvider): Promise<RegisteredProvider> {
+  async postRegisterServiceProvider(data: NewServiceProvider): Promise<RegisteredServiceProvider> {
     const config: AxiosRequestConfig = {
       data,
       method: 'post',
-      url: `${ProviderAPI.URL.PROVIDER}/${ProviderAPI.URL.REGISTER}`,
+      url: `${ServiceProviderAPI.URL.PROVIDER}/${ServiceProviderAPI.URL.REGISTER}`,
     };
 
-    const response = await this.client.sendJSON<RegisteredProvider>(config);
+    const response = await this.client.sendJSON<RegisteredServiceProvider>(config);
     return response.data;
   }
 
-  async putProvider(data: UpdateProviderData): Promise<void> {
+  async putProvider(data: UpdateServiceProviderData): Promise<void> {
     const config: AxiosRequestConfig = {
       data,
       method: 'put',
-      url: `${ProviderAPI.URL.PROVIDER}`,
+      url: `${ServiceProviderAPI.URL.PROVIDER}`,
     };
 
     await this.client.sendJSON(config);

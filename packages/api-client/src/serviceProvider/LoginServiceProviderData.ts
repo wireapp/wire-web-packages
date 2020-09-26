@@ -17,9 +17,6 @@
  *
  */
 
-import {Provider} from '../team/service';
+import {NewServiceProvider} from './NewServiceProvider';
 
-export interface NewProvider extends Pick<Provider, 'description' | 'email' | 'name' | 'url'> {
-  /** If none provided, a password is generated on the server. */
-  password?: string;
-}
+export type LoginServiceProviderData = Required<Pick<NewServiceProvider, 'email' | 'password'>>;

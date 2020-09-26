@@ -17,6 +17,8 @@
  *
  */
 
-import {NewProvider} from './NewProvider';
-
-export type LoginProviderData = Required<Pick<NewProvider, 'email' | 'password'>>;
+export interface RegisteredServiceProvider {
+  id: string;
+  /** Only provided if it was generated on the server. */
+  password?: string;
+}

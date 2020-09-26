@@ -17,8 +17,6 @@
  *
  */
 
-export interface RegisteredProvider {
-  id: string;
-  /** Only provided if it was generated on the server. */
-  password?: string;
-}
+import {NewServiceProvider} from './NewServiceProvider';
+
+export type UpdateServiceProviderData = Partial<Omit<NewServiceProvider, 'email' | 'password'>>;

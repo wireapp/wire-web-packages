@@ -17,6 +17,8 @@
  *
  */
 
-import {NewProvider} from './NewProvider';
-
-export type UpdateProviderData = Partial<Omit<NewProvider, 'email' | 'password'>>;
+export * from './LoginServiceProviderData';
+export * from './ServiceProviderAPI';
+export * from './RegisteredServiceProvider';
+export * from './NewServiceProvider';
+export * from './UpdateServiceProviderData';
