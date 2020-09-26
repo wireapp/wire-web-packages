@@ -142,6 +142,9 @@ export class BotsAPI {
   public async getUsers(ids: string[]): Promise<UserSeenByBot[]> {
     const config: AxiosRequestConfig = {
       method: 'get',
+      params: {
+        ids,
+      },
       url: `${BotsAPI.URL.BOT}/${BotsAPI.URL.USERS}`,
     };
 
