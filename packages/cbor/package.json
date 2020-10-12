@@ -33,9 +33,9 @@
     "clean": "rimraf src/main/**/*{.js,.js.map,.d.ts} .nyc_output coverage",
     "coverage": "cross-env JASMINE_CONFIG_PATH=jasmine.json istanbul cover --report html ../../node_modules/jasmine/bin/jasmine.js",
     "dist": "yarn clean && yarn build",
-    "test": "yarn dist && yarn test:node && yarn test:browser",
-    "test:project": "yarn dist && yarn test",
-    "test:browser": "yarn dist && karma start",
+    "test": "yarn build && yarn test:node && yarn test:browser",
+    "test:project": "yarn build && yarn test",
+    "test:browser": "yarn build && karma start",
     "test:node": "yarn dist && nyc jasmine --config=jasmine.json"
   },
   "version": "4.6.14"
