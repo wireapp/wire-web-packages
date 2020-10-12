@@ -35,8 +35,8 @@
     "dist": "yarn clean && yarn build",
     "test": "yarn dist && yarn test:node && yarn test:browser",
     "test:project": "yarn dist && yarn test",
-    "test:browser": "karma start",
-    "test:node": "nyc jasmine --config=jasmine.json"
+    "test:browser": "yarn dist && karma start",
+    "test:node": "yarn dist && nyc jasmine --config=jasmine.json"
   },
   "version": "4.6.14"
 }
