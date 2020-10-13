@@ -94,17 +94,9 @@ export class WebSocketClient extends EventEmitter {
   };
 
   private readonly onReconnect = async () => {
-    try {
-      this.lock();
-      this.logger.info('Calling "onBeforeConnect"');
-      await this.onBeforeConnect();
-    } catch (error) {
-      this.logger.warn(`Error during execution of "beforeReconnect"`, error);
-      this.emit(WebSocketClient.TOPIC.ON_ERROR, error);
-    } finally {
-      this.unlock();
-    }
-    this.onStateChange(this.socket.getState());
+    // Note: Do NOT await `onBeforeConnect` otherwise the websocket will not connect during notification stream processing
+    this.lock();
+    void this.onBeforeConnect();
     return this.buildWebSocketUrl();
   };
 
@@ -130,7 +122,18 @@ export class WebSocketClient extends EventEmitter {
    */
   public async connect(clientId?: string, onBeforeConnect?: () => Promise<void>): Promise<WebSocketClient> {
     if (onBeforeConnect) {
-      this.onBeforeConnect = onBeforeConnect;
+      this.onBeforeConnect = async () => {
+        try {
+          this.logger.info('Calling "onBeforeConnect"');
+          await onBeforeConnect();
+        } catch (error) {
+          this.logger.warn(`Error during execution of "beforeReconnect"`, error);
+          this.emit(WebSocketClient.TOPIC.ON_ERROR, error);
+        } finally {
+          this.unlock();
+        }
+        this.onStateChange(this.socket.getState());
+      };
     }
     this.clientId = clientId;
 
