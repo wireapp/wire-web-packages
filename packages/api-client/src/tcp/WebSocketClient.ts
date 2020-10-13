@@ -50,7 +50,7 @@ export class WebSocketClient extends EventEmitter {
   public client: HttpClient;
   private isSocketLocked: boolean;
   private bufferedMessages: string[];
-  private onBeforeConnect: () => Promise<void> = () => Promise.resolve();
+  private onConnect: () => Promise<void> = () => Promise.resolve();
 
   public static readonly TOPIC = TOPIC;
 
@@ -94,9 +94,9 @@ export class WebSocketClient extends EventEmitter {
   };
 
   private readonly onReconnect = async () => {
-    // Note: Do NOT await `onBeforeConnect` otherwise the websocket will not connect during notification stream processing
+    // Note: Do NOT await `onConnect` otherwise the websocket will not connect during notification stream processing
     this.lock();
-    void this.onBeforeConnect();
+    void this.onConnect();
     return this.buildWebSocketUrl();
   };
 
@@ -115,17 +115,17 @@ export class WebSocketClient extends EventEmitter {
    * When provided the websocket will get messages specific to the client.
    * If omitted the websocket will receive global messages for the account.
    *
-   * @param onBeforeConnect
+   * @param onConnect
    * Handler that is executed before the websocket is fully connected.
    * Essentially the websocket will lock before execution of this function and
    * unlocks after the execution of the handler and pushes all buffered messages.
    */
-  public async connect(clientId?: string, onBeforeConnect?: () => Promise<void>): Promise<WebSocketClient> {
-    if (onBeforeConnect) {
-      this.onBeforeConnect = async () => {
+  public async connect(clientId?: string, onConnect?: () => Promise<void>): Promise<WebSocketClient> {
+    if (onConnect) {
+      this.onConnect = async () => {
         try {
-          this.logger.info('Calling "onBeforeConnect"');
-          await onBeforeConnect();
+          this.logger.info('Calling "onConnect"');
+          await onConnect();
         } catch (error) {
           this.logger.warn(`Error during execution of "beforeReconnect"`, error);
           this.emit(WebSocketClient.TOPIC.ON_ERROR, error);
