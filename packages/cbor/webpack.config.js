@@ -31,7 +31,7 @@ module.exports = {
   output: {
     filename: '[name].bundle.js',
     library: 'CBOR',
-    path: `${__dirname}/dist`,
+    path: `${__dirname}/src/main`,
   },
   plugins: [new webpack.BannerPlugin(`${pkg.name} v${pkg.version}`)],
 };
