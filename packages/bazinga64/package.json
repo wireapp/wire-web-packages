@@ -47,7 +47,7 @@
     "build": "yarn build:node",
     "build:node": "tsc",
     "clean": "rimraf src/**/*{.js,.js.map,.d.ts}",
-    "dist": "yarn clear && yarn build",
+    "dist": "yarn clean && yarn build",
     "test": "yarn test:node && yarn test:browser",
     "test:project": "yarn dist && yarn test",
     "test:browser": "yarn build && karma start",
