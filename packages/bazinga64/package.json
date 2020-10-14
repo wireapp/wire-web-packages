@@ -48,7 +48,7 @@
     "build:node": "tsc",
     "clean": "rimraf src/**/*{.js,.js.map,.d.ts}",
     "dist": "yarn clean && yarn build",
-    "test": "yarn test:node && yarn test:browser",
+    "test": "yarn test:browser && yarn test:node",
     "test:project": "yarn dist && yarn test",
     "test:browser": "yarn clean && karma start",
     "test:node": "yarn build && nyc jasmine --config=jasmine.json"
