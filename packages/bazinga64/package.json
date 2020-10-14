@@ -50,7 +50,7 @@
     "dist": "yarn clean && yarn build",
     "test": "yarn test:node && yarn test:browser",
     "test:project": "yarn dist && yarn test",
-    "test:browser": "yarn build && karma start",
+    "test:browser": "yarn clean && karma start",
     "test:node": "yarn build && nyc jasmine --config=jasmine.json"
   },
   "version": "5.7.14"
