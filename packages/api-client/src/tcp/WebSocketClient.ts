@@ -40,6 +40,18 @@ export interface WebSocketClient {
   on(event: TOPIC.ON_STATE_CHANGE, listener: (state: WEBSOCKET_STATE) => void): this;
 }
 
+export class AbortHandler {
+  private aborted = false;
+
+  abort = () => {
+    this.aborted = true;
+  };
+
+  isAborted = () => {
+    this.aborted;
+  };
+}
+
 export class WebSocketClient extends EventEmitter {
   private clientId?: string;
   private isRefreshingAccessToken: boolean;
@@ -51,7 +63,7 @@ export class WebSocketClient extends EventEmitter {
   private isSocketLocked: boolean;
   private bufferedMessages: string[];
   private onConnect: () => Promise<void> = () => Promise.resolve();
-  private abortController?: AbortController;
+  private abortHandler?: AbortHandler;
 
   public static readonly TOPIC = TOPIC;
 
@@ -105,7 +117,7 @@ export class WebSocketClient extends EventEmitter {
   };
 
   private readonly onClose = (event: CloseEvent) => {
-    this.abortController?.abort();
+    this.abortHandler?.abort();
     this.bufferedMessages = [];
     this.onStateChange(this.socket.getState());
   };
@@ -124,14 +136,14 @@ export class WebSocketClient extends EventEmitter {
    */
   public async connect(
     clientId?: string,
-    onConnect?: (abortController: AbortController) => Promise<void>,
+    onConnect?: (abortHandler: AbortHandler) => Promise<void>,
   ): Promise<WebSocketClient> {
     if (onConnect) {
       this.onConnect = async () => {
-        this.abortController = new AbortController();
+        this.abortHandler = new AbortHandler();
         try {
           this.logger.info('Calling "onConnect"');
-          await onConnect(this.abortController);
+          await onConnect(this.abortHandler);
         } catch (error) {
           this.logger.warn(`Error during execution of "onConnect"`, error);
           this.emit(WebSocketClient.TOPIC.ON_ERROR, error);
