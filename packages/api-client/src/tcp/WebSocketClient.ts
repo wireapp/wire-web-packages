@@ -51,6 +51,7 @@ export class WebSocketClient extends EventEmitter {
   private isSocketLocked: boolean;
   private bufferedMessages: string[];
   private onConnect: () => Promise<void> = () => Promise.resolve();
+  private abortController?: AbortController;
 
   public static readonly TOPIC = TOPIC;
 
@@ -95,7 +96,6 @@ export class WebSocketClient extends EventEmitter {
 
   private readonly onReconnect = async () => {
     // Note: Do NOT await `onConnect` otherwise the websocket will not connect during notification stream processing
-    this.lock();
     void this.onConnect();
     return this.buildWebSocketUrl();
   };
@@ -105,6 +105,8 @@ export class WebSocketClient extends EventEmitter {
   };
 
   private readonly onClose = (event: CloseEvent) => {
+    this.abortController?.abort();
+    this.bufferedMessages = [];
     this.onStateChange(this.socket.getState());
   };
 
@@ -120,17 +122,19 @@ export class WebSocketClient extends EventEmitter {
    * Essentially the websocket will lock before execution of this function and
    * unlocks after the execution of the handler and pushes all buffered messages.
    */
-  public async connect(clientId?: string, onConnect?: () => Promise<void>): Promise<WebSocketClient> {
+  public async connect(
+    clientId?: string,
+    onConnect?: (abortController: AbortController) => Promise<void>,
+  ): Promise<WebSocketClient> {
     if (onConnect) {
       this.onConnect = async () => {
+        this.abortController = new AbortController();
         try {
           this.logger.info('Calling "onConnect"');
-          await onConnect();
+          await onConnect(this.abortController);
         } catch (error) {
-          this.logger.warn(`Error during execution of "beforeReconnect"`, error);
+          this.logger.warn(`Error during execution of "onConnect"`, error);
           this.emit(WebSocketClient.TOPIC.ON_ERROR, error);
-        } finally {
-          this.unlock();
         }
         this.onStateChange(this.socket.getState());
       };
