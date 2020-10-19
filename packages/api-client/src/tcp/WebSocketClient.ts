@@ -47,9 +47,7 @@ export class AbortHandler {
     this.aborted = true;
   };
 
-  isAborted = () => {
-    this.aborted;
-  };
+  isAborted = () => this.aborted;
 }
 
 export class WebSocketClient extends EventEmitter {
