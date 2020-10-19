@@ -7,14 +7,14 @@
   "description": "Adds audio/video/signaling (AVS) functionality for Wire bots.",
   "devDependencies": {
     "@types/node": "~12",
-    "@wireapp/bot-api": "7.11.22",
+    "@wireapp/bot-api": "7.11.30",
     "jasmine": "3.5.0",
     "rimraf": "3.0.2",
     "typescript": "4.0.3"
   },
   "files": [
     "src",
-    "!src/**/*.ts"
+    "!src/**/!(*.d).ts"
   ],
   "license": "GPL-3.0",
   "main": "src/index",
@@ -35,5 +35,5 @@
     "test:node": "yarn build:node --noEmit",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "0.2.35"
+  "version": "0.2.43"
 }
