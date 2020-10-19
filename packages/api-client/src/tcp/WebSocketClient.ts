@@ -50,7 +50,7 @@ export class AbortHandler {
   isAborted = () => this.aborted;
 }
 
-export type OnConnect = (abortHandler: AbortHandler) => Promise<void>;
+export type OnConnect = (abortHandler?: AbortHandler) => Promise<void>;
 
 export class WebSocketClient extends EventEmitter {
   private clientId?: string;
