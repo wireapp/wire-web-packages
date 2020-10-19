@@ -41,9 +41,9 @@
     "clean": "del-cli \"src/**/*{.js,.js.map,.d.ts}\" \"!src/**/*{.test.node.js,.test.js}\" \"!src/test/**/*\"",
     "dist": "yarn clean && yarn build",
     "test": "yarn test:node && yarn test:browser",
-    "test:browser": "yarn dist && karma start",
-    "test:project": "yarn dist && yarn test",
-    "test:node": "yarn dist && jasmine --config=jasmine.json"
+    "test:browser": "yarn build && karma start",
+    "test:project": "yarn build && yarn test",
+    "test:node": "yarn build && jasmine --config=jasmine.json"
   },
   "version": "3.8.7"
 }
