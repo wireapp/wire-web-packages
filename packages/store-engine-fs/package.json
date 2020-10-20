@@ -30,8 +30,8 @@
     "build:node": "tsc",
     "clean": "del-cli \"src/**/*{.js,.js.map,.d.ts}\" \"!src/**/*{.test.node.js,.test.js}\" \"!src/test/**/*\"",
     "dist": "yarn clean && yarn build",
-    "test": "yarn clean && nyc jasmine --config=jasmine.json",
-    "test:project": "yarn dist && yarn test"
+    "test": "yarn build && nyc jasmine --config=jasmine.json",
+    "test:project": "yarn build && yarn test"
   },
   "version": "2.2.16"
 }
