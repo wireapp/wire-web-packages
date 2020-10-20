@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.45](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-avs/compare/@wireapp/bot-handler-avs@0.2.44...@wireapp/bot-handler-avs@0.2.45) (2020-10-19)
+
+**Note:** Version bump only for package @wireapp/bot-handler-avs
+
+
+
+
+
+## [0.2.44](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-avs/compare/@wireapp/bot-handler-avs@0.2.43...@wireapp/bot-handler-avs@0.2.44) (2020-10-19)
+
+**Note:** Version bump only for package @wireapp/bot-handler-avs
+
+
+
+
+
+## [0.2.43](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-avs/compare/@wireapp/bot-handler-avs@0.2.42...@wireapp/bot-handler-avs@0.2.43) (2020-10-19)
+
+**Note:** Version bump only for package @wireapp/bot-handler-avs
+
+
+
+
+
+## [0.2.42](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-avs/compare/@wireapp/bot-handler-avs@0.2.41...@wireapp/bot-handler-avs@0.2.42) (2020-10-19)
+
+**Note:** Version bump only for package @wireapp/bot-handler-avs
+
+
+
+
+
+## [0.2.41](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-avs/compare/@wireapp/bot-handler-avs@0.2.40...@wireapp/bot-handler-avs@0.2.41) (2020-10-15)
+
+**Note:** Version bump only for package @wireapp/bot-handler-avs
+
+
+
+
+
 ## [0.2.40](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-avs/compare/@wireapp/bot-handler-avs@0.2.39...@wireapp/bot-handler-avs@0.2.40) (2020-10-13)
 
 
