@@ -3,6 +3,121 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.11.34](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.11.33...@wireapp/bot-api@7.11.34) (2020-10-20)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.11.33](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.11.32...@wireapp/bot-api@7.11.33) (2020-10-20)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.11.32](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.11.31...@wireapp/bot-api@7.11.32) (2020-10-19)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.11.31](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.11.30...@wireapp/bot-api@7.11.31) (2020-10-19)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.11.30](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.11.29...@wireapp/bot-api@7.11.30) (2020-10-19)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.11.29](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.11.28...@wireapp/bot-api@7.11.29) (2020-10-19)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.11.28](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.11.27...@wireapp/bot-api@7.11.28) (2020-10-15)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.11.27](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.11.26...@wireapp/bot-api@7.11.27) (2020-10-13)
+
+
+### Bug Fixes
+
+* **bot-api,bot-handler-avs,bot-handler-debug,bot-handler-uptime,bot-handler-wizard,cbor,cli-client:** Upload type definitions to npm ([#3266](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/issues/3266)) ([1338830](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/commit/1338830008164267f084ee1508b6a6c0e679640a))
+
+
+
+
+
+## [7.11.26](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.11.25...@wireapp/bot-api@7.11.26) (2020-10-13)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.11.25](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.11.24...@wireapp/bot-api@7.11.25) (2020-10-13)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.11.24](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.11.23...@wireapp/bot-api@7.11.24) (2020-10-12)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.11.23](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.11.22...@wireapp/bot-api@7.11.23) (2020-10-12)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.11.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.11.21...@wireapp/bot-api@7.11.22) (2020-10-12)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [7.11.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.11.20...@wireapp/bot-api@7.11.21) (2020-10-08)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
 ## [7.11.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@7.11.19...@wireapp/bot-api@7.11.20) (2020-10-08)
 
 **Note:** Version bump only for package @wireapp/bot-api
