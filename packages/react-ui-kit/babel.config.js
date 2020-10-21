@@ -18,6 +18,7 @@
  */
 
 module.exports = {
+  ignore: ['src/**/*.test.ts', 'src/**/*.test.tsx', 'src/test/**/*'],
   plugins: ['babel-plugin-emotion', '@babel/plugin-proposal-class-properties'],
   presets: ['@babel/preset-react', '@babel/preset-typescript', '@babel/preset-env'],
 };
