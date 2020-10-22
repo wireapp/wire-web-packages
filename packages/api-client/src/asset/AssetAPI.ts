@@ -154,7 +154,7 @@ export class AssetAPI {
     token?: string | null,
     forceCaching: boolean = false,
     progressCallback?: ProgressCallback,
-    customUrl?: string,
+    customAssetUrl?: string,
   ): Promise<RequestCancelable<AssetResponse>> {
     if (!isValidUUID(assetId)) {
       throw new TypeError(`Expected asset ID "${assetId}" to only contain alphanumeric values and dashes.`);
@@ -172,7 +172,7 @@ export class AssetAPI {
       onUploadProgress: handleProgressEvent(progressCallback),
       params: {},
       responseType: 'arraybuffer',
-      url: customUrl || `${AssetAPI.ASSET_V3_URL}/${assetId}`,
+      url: `${customAssetUrl || AssetAPI.ASSET_V3_URL}/${assetId}`,
     };
 
     if (token) {
@@ -207,7 +207,7 @@ export class AssetAPI {
     asset: Uint8Array,
     options?: AssetOptions,
     progressCallback?: ProgressCallback,
-    customUrl?: string,
+    customAssetUrl?: string,
   ): Promise<RequestCancelable<AssetUploadData>> {
     const BOUNDARY = `Frontier${unsafeAlphanumeric()}`;
 
@@ -244,7 +244,7 @@ export class AssetAPI {
       method: 'post',
       onDownloadProgress: handleProgressEvent(progressCallback),
       onUploadProgress: handleProgressEvent(progressCallback),
-      url: customUrl || AssetAPI.ASSET_V3_URL,
+      url: customAssetUrl || AssetAPI.ASSET_V3_URL,
     };
 
     const handleRequest = async (): Promise<AssetUploadData> => {

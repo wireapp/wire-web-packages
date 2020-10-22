@@ -19,13 +19,25 @@
 
 import {AxiosRequestConfig} from 'axios';
 
-import {HttpClient, ProgressCallback, RequestCancelable} from '../http/';
-import {Client, Self, UserPreKeyList, UserPreKeyDataList, UserSeenByBot, ClientSeenByBot, BotMessage} from './Bot';
-import {PreKey} from '../auth/';
-import {AssetOptions, AssetAPI, AssetUploadData, AssetResponse} from '../asset/';
+import {HttpClient, ProgressCallback, RequestCancelable} from '../http';
+import {
+  Client,
+  Self,
+  UserPreKeyList,
+  UserPreKeyDataList,
+  UserSeenByService,
+  ClientSeenByService,
+  ServiceMessage,
+} from './Service';
+import {PreKey} from '../auth';
+import {AssetOptions, AssetAPI, AssetUploadData, AssetResponse} from '../asset';
 
-export class BotsAPI {
-  constructor(private readonly client: HttpClient) {}
+export class ServicesAPI {
+  private readonly assetAPI: AssetAPI;
+
+  constructor(private readonly client: HttpClient) {
+    this.assetAPI = new AssetAPI(this.client);
+  }
 
   public static readonly URL = {
     ASSETS: 'assets',
@@ -40,26 +52,26 @@ export class BotsAPI {
   };
 
   /**
-   * Delete the bot, thereby removing it from the conversation it is in.
+   * Delete the service, thereby removing it from the conversation it is in.
    *
-   * The bot will receive a final `conversation.member-leave` message.
+   * The service will receive a final `conversation.member-leave` message.
    */
   public async deleteSelf(): Promise<void> {
     const config: AxiosRequestConfig = {
       method: 'delete',
-      url: `${BotsAPI.URL.BOT}/${BotsAPI.URL.SELF}`,
+      url: `${ServicesAPI.URL.BOT}/${ServicesAPI.URL.SELF}`,
     };
 
     await this.client.sendJSON(config);
   }
 
   /**
-   * Fetch the bot's own client information
+   * Fetch the service's own client information
    */
   public async getClient(): Promise<Client> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${BotsAPI.URL.BOT}/${BotsAPI.URL.CLIENT}`,
+      url: `${ServicesAPI.URL.BOT}/${ServicesAPI.URL.CLIENT}`,
     };
 
     const response = await this.client.sendJSON<Client>(config);
@@ -67,12 +79,12 @@ export class BotsAPI {
   }
 
   /**
-   * List the bot's remaining prekey IDs.
+   * List the service's remaining prekey IDs.
    */
   public async getClientPreKeys(): Promise<number[]> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${BotsAPI.URL.BOT}/${BotsAPI.URL.CLIENT}/${BotsAPI.URL.PREKEYS}`,
+      url: `${ServicesAPI.URL.BOT}/${ServicesAPI.URL.CLIENT}/${ServicesAPI.URL.PREKEYS}`,
     };
 
     const response = await this.client.sendJSON<number[]>(config);
@@ -82,36 +94,36 @@ export class BotsAPI {
   /**
    * Fetch a user's list of clients.
    */
-  public async getClientsByUserId(userId: string): Promise<ClientSeenByBot[]> {
+  public async getClientsByUserId(userId: string): Promise<ClientSeenByService[]> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${BotsAPI.URL.BOT}/${BotsAPI.URL.USERS}/${userId}${BotsAPI.URL.CLIENTS}`,
+      url: `${ServicesAPI.URL.BOT}/${ServicesAPI.URL.USERS}/${userId}${ServicesAPI.URL.CLIENTS}`,
     };
 
-    const response = await this.client.sendJSON<ClientSeenByBot[]>(config);
+    const response = await this.client.sendJSON<ClientSeenByService[]>(config);
     return response.data;
   }
 
   /**
    * Fetch a user's list of clients.
    */
-  public async getConversation(userId: string): Promise<ClientSeenByBot[]> {
+  public async getConversation(userId: string): Promise<ClientSeenByService[]> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${BotsAPI.URL.BOT}/${BotsAPI.URL.USERS}/${userId}${BotsAPI.URL.CLIENTS}`,
+      url: `${ServicesAPI.URL.BOT}/${ServicesAPI.URL.USERS}/${userId}${ServicesAPI.URL.CLIENTS}`,
     };
 
-    const response = await this.client.sendJSON<ClientSeenByBot[]>(config);
+    const response = await this.client.sendJSON<ClientSeenByService[]>(config);
     return response.data;
   }
 
   /**
-   * Fetch the bot's own user profile information.
+   * Fetch the service's own user profile information.
    */
   public async getSelf(): Promise<Self> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${BotsAPI.URL.BOT}/${BotsAPI.URL.SELF}`,
+      url: `${ServicesAPI.URL.BOT}/${ServicesAPI.URL.SELF}`,
     };
 
     const response = await this.client.sendJSON<Self>(config);
@@ -129,7 +141,7 @@ export class BotsAPI {
     const config: AxiosRequestConfig = {
       data: userPreKeyList,
       method: 'post',
-      url: `${BotsAPI.URL.BOT}/${BotsAPI.URL.CLIENT}/${BotsAPI.URL.PREKEYS}`,
+      url: `${ServicesAPI.URL.BOT}/${ServicesAPI.URL.CLIENT}/${ServicesAPI.URL.PREKEYS}`,
     };
 
     const response = await this.client.sendJSON<UserPreKeyDataList>(config);
@@ -139,27 +151,27 @@ export class BotsAPI {
   /**
    * Fetch other user's profiles.
    */
-  public async getUsers(ids: string[]): Promise<UserSeenByBot[]> {
+  public async getUsers(ids: string[]): Promise<UserSeenByService[]> {
     const config: AxiosRequestConfig = {
       method: 'get',
       params: {
         ids,
       },
-      url: `${BotsAPI.URL.BOT}/${BotsAPI.URL.USERS}`,
+      url: `${ServicesAPI.URL.BOT}/${ServicesAPI.URL.USERS}`,
     };
 
-    const response = await this.client.sendJSON<UserSeenByBot[]>(config);
+    const response = await this.client.sendJSON<UserSeenByService[]>(config);
     return response.data;
   }
 
   /**
-   * List the bot's remaining prekey IDs.
+   * List the service's remaining prekey IDs.
    */
   public async postClientPreKeys(preKeys: PreKey[]): Promise<void> {
     const config: AxiosRequestConfig = {
       data: {prekeys: preKeys},
       method: 'post',
-      url: `${BotsAPI.URL.BOT}/${BotsAPI.URL.CLIENT}/${BotsAPI.URL.PREKEYS}`,
+      url: `${ServicesAPI.URL.BOT}/${ServicesAPI.URL.CLIENT}/${ServicesAPI.URL.PREKEYS}`,
     };
 
     await this.client.sendJSON(config);
@@ -167,15 +179,15 @@ export class BotsAPI {
 
   /**
    * Upload an asset.
-   * Note that resumable uploads are not currently supported for bots.
+   * Note that resumable uploads are not currently supported for services.
    */
   public postAsset(
     asset: Uint8Array,
     options?: AssetOptions,
     progressCallback?: ProgressCallback,
   ): Promise<RequestCancelable<AssetUploadData>> {
-    const customUrl = `${BotsAPI.URL.BOT}/${BotsAPI.URL.ASSETS}`;
-    return new AssetAPI(this.client).postAsset(asset, options, progressCallback, customUrl);
+    const customAssetUrl = `${ServicesAPI.URL.BOT}/${ServicesAPI.URL.ASSETS}`;
+    return this.assetAPI.postAsset(asset, options, progressCallback, customAssetUrl);
   }
 
   /**
@@ -187,8 +199,8 @@ export class BotsAPI {
     forceCaching: boolean = false,
     progressCallback?: ProgressCallback,
   ): Promise<RequestCancelable<AssetResponse>> {
-    const customUrl = `${BotsAPI.URL.BOT}/${BotsAPI.URL.ASSETS}/${assetId}`;
-    return new AssetAPI(this.client).getAssetV3(assetId, token, forceCaching, progressCallback, customUrl);
+    const customAssetUrl = `${ServicesAPI.URL.BOT}/${ServicesAPI.URL.ASSETS}`;
+    return this.assetAPI.getAssetV3(assetId, token, forceCaching, progressCallback, customAssetUrl);
   }
 
   /**
@@ -197,22 +209,22 @@ export class BotsAPI {
   public async deleteAsset(assetId: string): Promise<void> {
     const config: AxiosRequestConfig = {
       method: 'delete',
-      url: `${BotsAPI.URL.BOT}/${BotsAPI.URL.ASSETS}/${assetId}`,
+      url: `${ServicesAPI.URL.BOT}/${ServicesAPI.URL.ASSETS}/${assetId}`,
     };
 
     await this.client.sendJSON(config);
   }
 
   /**
-   * Post an end-to-end encrypted generic message to the conversation the bot is in.
+   * Post an end-to-end encrypted generic message to the conversation the service is in.
    */
-  public async postMessage(messageData: BotMessage): Promise<void> {
+  public async postMessage(messageData: ServiceMessage): Promise<void> {
     const config: AxiosRequestConfig = {
       data: messageData,
       method: 'post',
-      url: `${BotsAPI.URL.BOT}/${BotsAPI.URL.MESSAGES}`,
+      url: `${ServicesAPI.URL.BOT}/${ServicesAPI.URL.MESSAGES}`,
     };
 
-    await this.client.sendJSON<BotMessage>(config);
+    await this.client.sendJSON<ServiceMessage>(config);
   }
 }

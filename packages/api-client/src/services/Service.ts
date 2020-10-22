@@ -17,61 +17,61 @@
  *
  */
 
-import {OtherMember, NewOTRMessage} from '../conversation/';
+import {OtherMember, NewOTRMessage} from '../conversation';
 import {PublicClient} from '../client/PublicClient';
 import {PreKey} from '../auth/PreKey';
-import {UserAsset, User} from '../user/';
+import {UserAsset, User} from '../user';
 import {ClientType} from '../client';
 
-export interface NewBot {
-  /** The client ID for the bot. */
+export interface NewService {
+  /** The client ID for the service. */
   client: string;
   /**
-   * The conversation as seen by the bot and as returned from
+   * The conversation as seen by the service and as returned from
    * `GET /bot/conversation`.
    */
-  conversation: BotConversation;
-  /** The unique user ID for the bot. */
+  conversation: ServiceConversation;
+  /** The unique user ID for the service. */
   id: string;
   /**
-   * The preferred locale for the bot to use, in form of an
+   * The preferred locale for the service to use, in form of an
    * [IETF language tag](https://en.wikipedia.org/wiki/IETF_language_tag).
    */
   locale: string;
   /**
-   * The profile of the user who requested the bot, as it is returned from
-   * `GET /bot/users`.
+   * The profile of the user who requested the service, as it is returned from
+   * `GET /service/users`.
    */
   origin: object;
-  /** The bearer token that the bot must use on inbound requests. */
+  /** The bearer token that the service must use on inbound requests. */
   token: string;
 }
 
-export interface BotConversation {
+export interface ServiceConversation {
   /**  The ID of the conversation. */
   id: string;
-  /**  The list of members, not including the bot itself. */
+  /**  The list of members, not including the service itself. */
   members: OtherMember[];
   /**  The name of the conversation. */
   name?: string;
 }
 
-export interface RegisteredBot {
+export interface RegisteredService {
   /**
    * A number between 1 and 7 that identifies one of the standard Wire profile
-   * colours to use for the bot's user profile. By default, the bot is assigned
+   * colours to use for the service's user profile. By default, the service is assigned
    * the accent colour associated with the service profile.
    */
   accent_id?: number;
   /**
-   * A list of user profile assets to attach to the bot's user profile. By
-   * default, the bot is assigned the assets associated with the service profile.
+   * A list of user profile assets to attach to the service's user profile. By
+   * default, the service is assigned the assets associated with the service profile.
    */
   assets: UserAsset[];
   /** The last resort prekey. It must have the ID `65535`. */
   last_prekey: PreKey;
   /**
-   * The name to use for the bot's user profile. By default, the bot is
+   * The name to use for the service's user profile. By default, the service is
    * assigned the name of the associated service profile.
    */
   name?: string;
@@ -79,27 +79,27 @@ export interface RegisteredBot {
 }
 
 export interface Self {
-  /** The bot's accent colour. */
+  /** The service's accent colour. */
   accent_id: number;
-  /** The bot's public profile assets (e.g. images). */
+  /** The service's public profile assets (e.g. images). */
   assets: UserAsset[];
-  /** The bot's user ID. */
+  /** The service's user ID. */
   id: string;
-  /** The bot's name. */
+  /** The service's name. */
   name: string;
 }
 
 export interface Client {
-  /** The bot's client ID. */
+  /** The service's client ID. */
   id: string;
   /** The UTC timestamp when the client was created. */
   time: string;
-  /** The bot's client type. This is currently always permanent. */
+  /** The service's client type. This is currently always permanent. */
   type: ClientType.PERMANENT;
 }
 
 export type UserPreKeyList = Record<string, string[]>;
 export type UserPreKeyDataList = Record<string, Record<string, string>>;
-export type UserSeenByBot = Pick<User, 'id' | 'name' | 'accent_id'>;
-export type ClientSeenByBot = PublicClient;
-export type BotMessage = NewOTRMessage;
+export type UserSeenByService = Pick<User, 'id' | 'name' | 'accent_id'>;
+export type ClientSeenByService = PublicClient;
+export type ServiceMessage = NewOTRMessage;

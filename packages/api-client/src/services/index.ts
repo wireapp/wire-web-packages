@@ -17,4 +17,4 @@
  *
  */
 
-export * from './BotsAPI';
+export * from './ServicesAPI';

@@ -23,7 +23,7 @@ import {ServiceRef} from './';
 export interface OtherMember extends Partial<ConversationOtherMemberUpdateData> {
   /** The user ID. */
   id: string;
-  /** The reference to the owning service, if the member is a bot. */
+  /** The reference to the owning provider, if the member is a service. */
   service?: ServiceRef;
   /**
    * The member status. Currently this is always 0, indicating a regular member.

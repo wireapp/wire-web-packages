@@ -35,7 +35,7 @@ import {
 } from './auth/';
 import {CookieStore} from './auth/CookieStore';
 import {BroadcastAPI} from './broadcast/';
-import {BotsAPI} from './bots/';
+import {ServicesAPI} from './services';
 import {ClientAPI, ClientType} from './client/';
 import {Config} from './Config';
 import {ConnectionAPI} from './connection/';
@@ -89,7 +89,6 @@ export class APIClient extends EventEmitter {
   public account: {api: AccountAPI};
   public asset: {api: AssetAPI};
   public auth: {api: AuthAPI};
-  public bots: {api: BotsAPI};
   public broadcast: {api: BroadcastAPI};
   public client: {api: ClientAPI};
   public connection: {api: ConnectionAPI};
@@ -97,6 +96,7 @@ export class APIClient extends EventEmitter {
   public giphy: {api: GiphyAPI};
   public notification: {api: NotificationAPI};
   public self: {api: SelfAPI};
+  public services: {api: ServicesAPI};
   public teams: {
     conversation: {api: TeamConversationAPI};
     feature: {api: FeatureAPI};
@@ -167,8 +167,8 @@ export class APIClient extends EventEmitter {
     this.auth = {
       api: new AuthAPI(this.transport.http),
     };
-    this.bots = {
-      api: new BotsAPI(this.transport.http),
+    this.services = {
+      api: new ServicesAPI(this.transport.http),
     };
     this.broadcast = {
       api: new BroadcastAPI(this.transport.http),
