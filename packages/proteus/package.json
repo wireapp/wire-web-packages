@@ -4,13 +4,13 @@
     "@types/ed2curve": "0.2.2",
     "@types/libsodium-wrappers-sumo": "0.7.4",
     "@types/node": "~12",
-    "@wireapp/cbor": "4.6.13",
+    "@wireapp/cbor": "4.6.17",
     "ed2curve": "0.3.0",
     "libsodium-wrappers-sumo": "0.7.8"
   },
   "description": "Axolotl protocol implementation for JavaScript.",
   "devDependencies": {
-    "@types/jasmine": "3.5.13",
+    "@types/jasmine": "3.5.14",
     "chai": "4.2.0",
     "jasmine": "3.5.0",
     "nyc": "15.1.0",
@@ -21,10 +21,12 @@
     "webpack-cli": "3.3.12"
   },
   "files": [
-    "dist"
+    "src",
+    "!src/**/!(*.d).ts",
+    "!src/demo/**/*"
   ],
   "license": "GPL-3.0",
-  "main": "dist/index.js",
+  "main": "src/main/index",
   "name": "@wireapp/proteus",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/proteus",
   "scripts": {
@@ -32,11 +34,11 @@
     "build:node": "tsc",
     "clean": "rimraf dist",
     "dist": "yarn clean && yarn build:node",
-    "start": "node dist/index.js",
+    "start": "yarn build:node && node src/main/index.js",
     "test": "yarn test:types && yarn test:node",
     "test:node": "nyc jasmine --config=jasmine.json",
     "test:project": "yarn dist && yarn test",
     "test:types": "tsc --noEmit"
   },
-  "version": "9.8.17"
+  "version": "9.8.23"
 }

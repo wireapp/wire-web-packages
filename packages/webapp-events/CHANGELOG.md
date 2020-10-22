@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/webapp-events/compare/@wireapp/webapp-events@0.8.0...@wireapp/webapp-events@0.9.0) (2020-10-19)
+
+
+### Features
+
+* **webapp-events:** Add events to show preferences ([#3281](https://github.com/wireapp/wire-web-packages/tree/master/packages/webapp-events/issues/3281)) ([c28fe06](https://github.com/wireapp/wire-web-packages/tree/master/packages/webapp-events/commit/c28fe069f06a93e6345d6a59961628d3e44e6c09))
+
+
+
+
+
+# [0.8.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/webapp-events/compare/@wireapp/webapp-events@0.7.0...@wireapp/webapp-events@0.8.0) (2020-09-30)
+
+
+### Features
+
+* **api-client, webapp-events:** Remove SFT beta related stuff ([#3243](https://github.com/wireapp/wire-web-packages/tree/master/packages/webapp-events/issues/3243)) ([03bfcc8](https://github.com/wireapp/wire-web-packages/tree/master/packages/webapp-events/commit/03bfcc805e5cd07891c99dd36ac33a933116b3b4))
+
+
+
+
+
+# [0.7.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/webapp-events/compare/@wireapp/webapp-events@0.6.1...@wireapp/webapp-events@0.7.0) (2020-09-28)
+
+
+### Features
+
+* **webapp-events:** Add CONVERSATION.VERIFICATION_STATE_CHANGED (WEBAPP-7106) ([#3242](https://github.com/wireapp/wire-web-packages/tree/master/packages/webapp-events/issues/3242)) ([faad6ca](https://github.com/wireapp/wire-web-packages/tree/master/packages/webapp-events/commit/faad6ca36d4615621e138067c4d0d13bdbe9f9d9))
+
+
+
+
+
 ## [0.6.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/webapp-events/compare/@wireapp/webapp-events@0.6.0...@wireapp/webapp-events@0.6.1) (2020-09-21)
 
 **Note:** Version bump only for package @wireapp/webapp-events

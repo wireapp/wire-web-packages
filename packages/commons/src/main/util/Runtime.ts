@@ -43,7 +43,7 @@ export class Runtime {
   }
 
   public static getOSFamily(): OperatingSystem {
-    const family = Runtime.getOS().family?.toLowerCase();
+    const family = Runtime.getOS().family?.toLowerCase() || '';
     if (family.includes('windows')) {
       return OperatingSystem.WINDOWS;
     }
@@ -135,10 +135,11 @@ export class Runtime {
   };
 
   public static isSupportingConferenceCalling = (): boolean => {
-    if (!Runtime.isSupportingLegacyCalling() || !Runtime.isSupportingRTCInjectableStreams()) {
-      return false;
-    }
-    return true;
+    /** API 'createEncodedVideoStreams' is important for Chrome 83 but got deprecated in Chrome 86 in favor of 'createEncodedStreams'. The 'createEncodedVideoStreams' API will be completely removed in Chrome 88+. */
+    const isSupportingEncodedVideoStreams = RTCRtpSender.prototype.hasOwnProperty('createEncodedVideoStreams');
+    const isSupportingEncodedStreams = RTCRtpSender.prototype.hasOwnProperty('createEncodedStreams');
+    return isSupportingEncodedStreams || isSupportingEncodedVideoStreams;
+    return Runtime.isSupportingLegacyCalling() && isSupportingEncodedStreams;
   };
 
   public static isSupportingRTCPeerConnection = (): boolean => 'RTCPeerConnection' in window;
@@ -150,12 +151,6 @@ export class Runtime {
 
     const peerConnection = new RTCPeerConnection(undefined);
     return 'createDataChannel' in peerConnection;
-  };
-
-  public static isSupportingRTCInjectableStreams = (): boolean => {
-    const isSupportingEncodedStreams = RTCRtpSender.prototype.hasOwnProperty('createEncodedStreams');
-    const isSupportingEncodedVideoStreams = RTCRtpSender.prototype.hasOwnProperty('createEncodedVideoStreams');
-    return isSupportingEncodedStreams || isSupportingEncodedVideoStreams;
   };
 
   public static isSupportingUserMedia = (): boolean => {
