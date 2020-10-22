@@ -13,7 +13,7 @@
     "!src/**/!(*.d).ts"
   ],
   "license": "GPL-3.0",
-  "main": "src/main/LRUCache",
+  "main": "src/LRUCache",
   "name": "@wireapp/lru-cache",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache",
   "scripts": {
