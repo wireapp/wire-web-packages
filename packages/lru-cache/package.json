@@ -21,7 +21,7 @@
     "build:node": "tsc",
     "clean": "rimraf src/**/*{.js,.js.map,.d.ts} .nyc_output coverage",
     "dist": "yarn clean && yarn build",
-    "test": "nyc jasmine --config=jasmine.json"
+    "test": "yarn clean && nyc jasmine --config=jasmine.json && yarn build"
   },
   "version": "3.7.3"
 }
