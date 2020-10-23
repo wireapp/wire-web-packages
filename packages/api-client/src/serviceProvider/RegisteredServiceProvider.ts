@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2020 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,22 +17,8 @@
  *
  */
 
-export enum StatusCode {
-  ACCEPTED = 202,
-  BAD_GATEWAY = 502,
-  BAD_REQUEST = 400,
-  CONFLICT = 409,
-  CONNECTIVITY_PROBLEM = 0,
-  CREATED = 201,
-  FORBIDDEN = 403,
-  INTERNAL_SERVER_ERROR = 500,
-  NO_CONTENT = 204,
-  NOT_FOUND = 404,
-  OK = 200,
-  PRECONDITION_FAILED = 412,
-  REQUEST_TIMEOUT = 408,
-  REQUEST_TOO_LARGE = 413,
-  TOO_MANY_REQUESTS = 429,
-  UNAUTHORIZED = 401,
-  UNKNOWN = -1,
+export interface RegisteredServiceProvider {
+  id: string;
+  /** Only provided if it was generated on the server. */
+  password?: string;
 }

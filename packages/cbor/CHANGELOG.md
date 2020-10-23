@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.6.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.6.16...@wireapp/cbor@4.6.17) (2020-10-19)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+## [4.6.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.6.15...@wireapp/cbor@4.6.16) (2020-10-13)
+
+
+### Bug Fixes
+
+* **bot-api,bot-handler-avs,bot-handler-debug,bot-handler-uptime,bot-handler-wizard,cbor,cli-client:** Upload type definitions to npm ([#3266](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/issues/3266)) ([1338830](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/commit/1338830008164267f084ee1508b6a6c0e679640a))
+
+
+
+
+
+## [4.6.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.6.14...@wireapp/cbor@4.6.15) (2020-10-12)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+## [4.6.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.6.13...@wireapp/cbor@4.6.14) (2020-10-08)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+## [4.6.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.6.12...@wireapp/cbor@4.6.13) (2020-09-21)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
+## [4.6.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.6.11...@wireapp/cbor@4.6.12) (2020-08-27)
+
+**Note:** Version bump only for package @wireapp/cbor
+
+
+
+
+
 ## [4.6.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/cbor/compare/@wireapp/cbor@4.6.10...@wireapp/cbor@4.6.11) (2020-08-11)
 
 **Note:** Version bump only for package @wireapp/cbor

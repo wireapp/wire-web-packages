@@ -22,8 +22,17 @@ import {PriorityQueue} from '@wireapp/priority-queue';
 import axios, {AxiosError, AxiosRequestConfig, AxiosResponse} from 'axios';
 import {EventEmitter} from 'events';
 import logdown from 'logdown';
-import {AccessTokenData, AccessTokenStore, AuthAPI, InvalidTokenError, MissingCookieError} from '../auth/';
-import {BackendErrorMapper, ConnectionState, ContentType, NetworkError, StatusCode} from '../http/';
+import {StatusCodes as HTTP_STATUS} from 'http-status-codes';
+
+import {
+  AccessTokenData,
+  AccessTokenStore,
+  AuthAPI,
+  InvalidTokenError,
+  MissingCookieError,
+  TokenExpiredError,
+} from '../auth/';
+import {BackendErrorMapper, ConnectionState, ContentType, NetworkError} from '../http/';
 import {ObfuscationUtil} from '../obfuscation/';
 import {sendRequestWithCookie} from '../shims/node/cookie';
 
@@ -128,24 +137,29 @@ export class HttpClient extends EventEmitter {
       if (response) {
         const {data: errorData, status: errorStatus} = response;
         const isBackendError = errorData?.code && errorData?.label && errorData?.message;
-
         if (isBackendError) {
           error = BackendErrorMapper.map(errorData);
-          if (error instanceof InvalidTokenError || error instanceof MissingCookieError) {
-            // On invalid cookie the application is supposed to logout.
-            this.logger.warn(
-              `[HTTP Client] Cannot renew access token because cookie/token is invalid: ${error.message}`,
-              error,
-            );
-            this.emit(HttpClient.TOPIC.ON_INVALID_TOKEN, error);
-          }
-        } else {
-          const isUnauthorized = errorStatus === StatusCode.UNAUTHORIZED;
-          const hasAccessToken = !!this.accessTokenStore?.accessToken;
-          if (isUnauthorized && hasAccessToken && firstTry) {
-            await this.refreshAccessToken();
-            return this._sendRequest<T>(config, tokenAsParam, false);
-          }
+        }
+
+        const isExpiredTokenError = error instanceof TokenExpiredError;
+        const isUnauthorized = errorStatus === HTTP_STATUS.UNAUTHORIZED;
+        const hasAccessToken = !!this.accessTokenStore?.accessToken;
+
+        if ((isExpiredTokenError || isUnauthorized) && hasAccessToken && firstTry) {
+          this.logger.warn(
+            `Access token refresh triggered (isExpiredTokenError: ${isExpiredTokenError}, isUnauthorized: ${isUnauthorized}) for "${config.method}" request to "${config.url}".`,
+          );
+          await this.refreshAccessToken();
+          return this._sendRequest<T>(config, tokenAsParam, false);
+        }
+
+        if (error instanceof InvalidTokenError || error instanceof MissingCookieError) {
+          // On invalid cookie the application is supposed to logout.
+          this.logger.warn(
+            `Cannot renew access token for "${config.method}" request to "${config.url}" because cookie/token is invalid: ${error.message}`,
+            error,
+          );
+          this.emit(HttpClient.TOPIC.ON_INVALID_TOKEN, error);
         }
       }
 

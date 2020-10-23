@@ -35,6 +35,7 @@ import {
 } from './auth/';
 import {CookieStore} from './auth/CookieStore';
 import {BroadcastAPI} from './broadcast/';
+import {ServicesAPI} from './services';
 import {ClientAPI, ClientType} from './client/';
 import {Config} from './Config';
 import {ConnectionAPI} from './connection/';
@@ -44,8 +45,9 @@ import {GiphyAPI} from './giphy/';
 import {HttpClient} from './http/';
 import {NotificationAPI} from './notification/';
 import {ObfuscationUtil} from './obfuscation/';
+import {ServiceProviderAPI} from './serviceProvider';
 import {SelfAPI} from './self/';
-import {WebSocketClient} from './tcp/';
+import {OnConnect, WebSocketClient} from './tcp/';
 import {
   TeamConversationAPI,
   FeatureAPI,
@@ -95,6 +97,8 @@ export class APIClient extends EventEmitter {
   public giphy: {api: GiphyAPI};
   public notification: {api: NotificationAPI};
   public self: {api: SelfAPI};
+  public services: {api: ServicesAPI};
+  public serviceProvider: {api: ServiceProviderAPI};
   public teams: {
     conversation: {api: TeamConversationAPI};
     feature: {api: FeatureAPI};
@@ -155,7 +159,6 @@ export class APIClient extends EventEmitter {
       http: httpClient,
       ws: webSocket,
     };
-
     this.account = {
       api: new AccountAPI(this.transport.http),
     };
@@ -164,6 +167,9 @@ export class APIClient extends EventEmitter {
     };
     this.auth = {
       api: new AuthAPI(this.transport.http),
+    };
+    this.services = {
+      api: new ServicesAPI(this.transport.http),
     };
     this.broadcast = {
       api: new BroadcastAPI(this.transport.http),
@@ -186,7 +192,9 @@ export class APIClient extends EventEmitter {
     this.self = {
       api: new SelfAPI(this.transport.http),
     };
-
+    this.serviceProvider = {
+      api: new ServiceProviderAPI(this.transport.http),
+    };
     this.teams = {
       conversation: {
         api: new TeamConversationAPI(this.transport.http),
@@ -219,7 +227,6 @@ export class APIClient extends EventEmitter {
         api: new TeamAPI(this.transport.http),
       },
     };
-
     this.user = {
       api: new UserAPI(this.transport.http),
     };
@@ -260,7 +267,7 @@ export class APIClient extends EventEmitter {
 
     const user = await this.auth.api.postRegister(userAccount);
 
-    await this.createContext(user.id, clientType);
+    this.createContext(user.id, clientType);
 
     return this.init(clientType, CookieStore.getCookie());
   }
@@ -280,8 +287,8 @@ export class APIClient extends EventEmitter {
     delete this.context;
   }
 
-  public connect(onBeforeConnect?: () => Promise<void>): Promise<WebSocketClient> {
-    return this.transport.ws.connect(this.context?.clientId, onBeforeConnect);
+  public connect(onConnect?: OnConnect): Promise<WebSocketClient> {
+    return this.transport.ws.connect(this.context?.clientId, onConnect);
   }
 
   private createContext(userId: string, clientType: ClientType, clientId?: string): Context {

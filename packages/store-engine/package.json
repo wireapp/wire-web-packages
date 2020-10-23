@@ -3,8 +3,8 @@
     "@types/node": "~12"
   },
   "devDependencies": {
-    "@types/jasmine": "3.5.13",
-    "@types/karma": "4.4.0",
+    "@types/jasmine": "3.5.14",
+    "@types/karma": "5.0.0",
     "jasmine": "3.5.0",
     "karma": "5.1.0",
     "karma-chrome-launcher": "3.1.0",
@@ -13,13 +13,15 @@
     "nyc": "15.1.0",
     "rimraf": "3.0.2",
     "ts-node": "8.6.2",
-    "typescript": "3.9.2",
+    "typescript": "4.0.3",
     "webpack": "4.44.1",
     "webpack-cli": "3.3.12"
   },
   "description": "Provides a storage wrapper API to unify access to different storage technologies.",
   "files": [
-    "dist"
+    "src",
+    "!src/**/!(*.d).ts",
+    "!src/test/**/*"
   ],
   "keywords": [
     "generic",
@@ -29,19 +31,19 @@
     "wrapper"
   ],
   "license": "GPL-3.0",
-  "main": "dist/commonjs/index.js",
+  "main": "src/main/index",
   "name": "@wireapp/store-engine",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine",
   "scripts": {
     "build": "yarn build:node && yarn build:browser",
     "build:browser": "webpack --progress",
     "build:node": "tsc",
-    "clean": "rimraf dist",
+    "clean": "rimraf src/**/*{.js,.js.map,.d.ts}",
     "dist": "yarn clean && yarn build",
     "test": "yarn test:node && yarn test:browser",
     "test:browser": "karma start",
     "test:project": "yarn dist && yarn test",
-    "test:node": "nyc jasmine --config=jasmine.json"
+    "test:node": "yarn build && nyc jasmine --config=jasmine.json"
   },
-  "version": "4.5.9"
+  "version": "4.5.13"
 }
