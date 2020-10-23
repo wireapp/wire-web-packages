@@ -186,8 +186,7 @@ export class ServicesAPI {
     options?: AssetOptions,
     progressCallback?: ProgressCallback,
   ): Promise<RequestCancelable<AssetUploadData>> {
-    const customAssetUrl = `${ServicesAPI.URL.BOT}/${ServicesAPI.URL.ASSETS}`;
-    return this.assetAPI.postAsset(asset, options, progressCallback, customAssetUrl);
+    return this.assetAPI.postServiceAsset(asset, options, progressCallback);
   }
 
   /**
@@ -199,8 +198,7 @@ export class ServicesAPI {
     forceCaching: boolean = false,
     progressCallback?: ProgressCallback,
   ): Promise<RequestCancelable<AssetResponse>> {
-    const customAssetUrl = `${ServicesAPI.URL.BOT}/${ServicesAPI.URL.ASSETS}`;
-    return this.assetAPI.getAssetV3(assetId, token, forceCaching, progressCallback, customAssetUrl);
+    return this.assetAPI.getServiceAsset(assetId, token, forceCaching, progressCallback);
   }
 
   /**

@@ -93,6 +93,13 @@ export class ConversationAPI {
   }
 
   /**
+   * @deprecated Use `deleteService()` instead.
+   */
+  public deleteBot(conversationId: string, serviceId: string): Promise<void> {
+    return this.deleteService(conversationId, serviceId);
+  }
+
+  /**
    * Remove service from conversation.
    * @param conversationId The conversation ID to remove the service from
    * @param serviceId The ID of the service to be removed from the conversation
@@ -334,6 +341,13 @@ export class ConversationAPI {
 
     const response = await this.client.sendJSON<ConversationEvent>(config);
     return response.data;
+  }
+
+  /**
+   * @deprecated Use `postService()` instead.
+   */
+  public postBot(conversationId: string, providerId: string, serviceId: string): Promise<ConversationMemberJoinEvent> {
+    return this.postService(conversationId, providerId, serviceId);
   }
 
   /**
