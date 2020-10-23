@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2020 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,22 +17,6 @@
  *
  */
 
-const pkg = require('./package.json');
-const webpack = require('webpack');
+import {NewServiceProvider} from './NewServiceProvider';
 
-const projectName = pkg.name.replace('@wireapp/', '');
-
-module.exports = {
-  devtool: 'source-map',
-  entry: {
-    [projectName]: `${__dirname}/${pkg.main}`,
-  },
-  mode: 'production',
-  output: {
-    filename: '[name].bundle.js',
-    library: 'LRUCache',
-    path: `${__dirname}/dist`,
-  },
-  plugins: [new webpack.BannerPlugin(`${pkg.name} v${pkg.version}`)],
-  target: 'node',
-};
+export type LoginServiceProviderData = Required<Pick<NewServiceProvider, 'email' | 'password'>>;

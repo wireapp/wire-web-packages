@@ -3,6 +3,213 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.29.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.29.0...@wireapp/api-client@11.29.1) (2020-10-23)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+# [11.29.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.28.8...@wireapp/api-client@11.29.0) (2020-10-22)
+
+
+### Features
+
+* **api-client:** Add ServiceProvider API ([#3236](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/3236)) ([62ccb2d](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/62ccb2d4c9b08e0c7e7b005fba5a45493a6bd325))
+
+
+
+
+
+## [11.28.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.28.7...@wireapp/api-client@11.28.8) (2020-10-22)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.28.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.28.6...@wireapp/api-client@11.28.7) (2020-10-21)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.28.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.28.5...@wireapp/api-client@11.28.6) (2020-10-20)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.28.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.28.4...@wireapp/api-client@11.28.5) (2020-10-20)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.28.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.28.3...@wireapp/api-client@11.28.4) (2020-10-20)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.28.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.28.2...@wireapp/api-client@11.28.3) (2020-10-20)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.28.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.28.1...@wireapp/api-client@11.28.2) (2020-10-19)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.28.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.28.0...@wireapp/api-client@11.28.1) (2020-10-19)
+
+
+### Bug Fixes
+
+* **api-client:** APIClient connect onConnect param type ([#3279](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/3279)) ([ccfaf10](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/ccfaf10cd5fdc0308530064c3d57069d40b0d757))
+
+
+
+
+
+# [11.28.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.27.7...@wireapp/api-client@11.28.0) (2020-10-19)
+
+
+### Features
+
+* **api-client:** WebSocket onConnect AbortController ([#3278](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/3278)) ([72b000d](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/72b000d5b5e952f5260ea21d754d4809be2e8987))
+
+
+
+
+
+## [11.27.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.27.6...@wireapp/api-client@11.27.7) (2020-10-15)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.27.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.27.5...@wireapp/api-client@11.27.6) (2020-10-13)
+
+
+### Bug Fixes
+
+* **api-client:** Ensure websocket connection before executing `onConnect` ([#3263](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/3263)) ([947ff33](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/947ff33a87e950369c4426afa14a2c44669db2a5))
+
+
+
+
+
+## [11.27.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.27.4...@wireapp/api-client@11.27.5) (2020-10-13)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.27.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.27.3...@wireapp/api-client@11.27.4) (2020-10-12)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.27.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.27.2...@wireapp/api-client@11.27.3) (2020-10-08)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.27.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.27.1...@wireapp/api-client@11.27.2) (2020-10-08)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.27.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.27.0...@wireapp/api-client@11.27.1) (2020-10-05)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+# [11.27.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.26.6...@wireapp/api-client@11.27.0) (2020-09-30)
+
+
+### Features
+
+* **api-client, webapp-events:** Remove SFT beta related stuff ([#3243](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/3243)) ([03bfcc8](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/03bfcc805e5cd07891c99dd36ac33a933116b3b4))
+
+
+
+
+
+## [11.26.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.26.5...@wireapp/api-client@11.26.6) (2020-09-28)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.26.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.26.4...@wireapp/api-client@11.26.5) (2020-09-24)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.26.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.26.3...@wireapp/api-client@11.26.4) (2020-09-22)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.26.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.26.2...@wireapp/api-client@11.26.3) (2020-09-21)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [11.26.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.26.1...@wireapp/api-client@11.26.2) (2020-09-14)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
 ## [11.26.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@11.26.0...@wireapp/api-client@11.26.1) (2020-09-01)
 
 **Note:** Version bump only for package @wireapp/api-client

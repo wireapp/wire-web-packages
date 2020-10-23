@@ -114,6 +114,7 @@ export const WebAppEvents = {
     },
     PERSIST_STATE: 'wire.webapp.conversation.persist_state',
     SHOW: 'wire.webapp.conversation.show',
+    VERIFICATION_STATE_CHANGED: 'wire.webapp.conversation.verification_state_changed',
   },
   DEBUG: {
     UPDATE_LAST_CALL_STATUS: 'wire.webapp.debug.update_last_call_status',
@@ -159,6 +160,9 @@ export const WebAppEvents = {
     CHANGE_APP_LOCK_PASSPHRASE: 'wire.webapp.preferences.change_app_lock_passphrase',
     MANAGE_ACCOUNT: 'wire.webapp.preferences.manage_account',
     MANAGE_DEVICES: 'wire.webapp.preferences.manage_devices',
+    SHOW_ABOUT: 'wire.webapp.preferences.show_about',
+    SHOW_AV: 'wire.webapp.preferences.show_av',
+    SHOW_OPTIONS: 'wire.webapp.preferences.show_options',
     UPLOAD_PICTURE: 'wire.webapp.preferences.upload_picture',
   },
   PROFILE: {
@@ -169,7 +173,6 @@ export const WebAppEvents = {
   PROPERTIES: {
     UPDATE: {
       CALL: {
-        ENABLE_SFT_CALLING: 'wire.webapp.properties.update.call.enable_sft_calling',
         ENABLE_VBR_ENCODING: 'wire.webapp.properties.update.call.enable_vbr_encoding',
       },
       CONTACTS: 'wire.webapp.properties.update.contacts',

@@ -18,24 +18,24 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {ClientType} from '@wireapp/api-client/dist/client/';
-import {ConversationEvent, TeamEvent, UserEvent} from '@wireapp/api-client/dist/event';
+import {ClientType} from '@wireapp/api-client/src/client/';
+import {ConversationEvent, TeamEvent, UserEvent} from '@wireapp/api-client/src/event';
 import {Account} from '@wireapp/core';
-import {PayloadBundle, PayloadBundleType, UserClientsMap} from '@wireapp/core/dist/conversation/';
+import {PayloadBundle, PayloadBundleType, UserClientsMap} from '@wireapp/core/src/main/conversation/';
 import {CRUDEngine} from '@wireapp/store-engine';
 import logdown from 'logdown';
 import UUID from 'uuidjs';
 
 import {BotConfig, BotCredentials} from './Interfaces';
 import {MessageHandler} from './MessageHandler';
-import {DefaultConversationRoleName} from '@wireapp/api-client/dist/conversation';
+import {DefaultConversationRoleName} from '@wireapp/api-client/src/conversation';
 import {
   AUTH_TABLE_NAME,
   AUTH_COOKIE_KEY,
   Cookie,
   AccessTokenData,
   AUTH_ACCESS_TOKEN_KEY,
-} from '@wireapp/api-client/dist/auth';
+} from '@wireapp/api-client/src/auth';
 
 const defaultConfig: Required<BotConfig> = {
   backend: 'production',
@@ -144,7 +144,7 @@ export class Bot {
   }
 
   async getCookie(storeEngine: CRUDEngine): Promise<Cookie | undefined> {
-    const {expiration, zuid} = await storeEngine.read(AUTH_TABLE_NAME, AUTH_COOKIE_KEY);
+    const {expiration, zuid} = await storeEngine.read<Cookie>(AUTH_TABLE_NAME, AUTH_COOKIE_KEY);
     const cookie = new Cookie(zuid, expiration);
     return cookie;
   }
