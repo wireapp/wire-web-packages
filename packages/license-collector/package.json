@@ -21,7 +21,7 @@
     "!src/**/!(*.d).ts"
   ],
   "license": "GPL-3.0",
-  "main": "dist/index.js",
+  "main": "src/index",
   "name": "@wireapp/license-collector",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/license-collector",
   "scripts": {
