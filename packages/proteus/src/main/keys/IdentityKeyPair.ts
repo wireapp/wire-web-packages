@@ -69,6 +69,7 @@ export class IdentityKeyPair {
     // Add IdentityKey at position 2
     encoder.u8(2);
     encoder.object(1);
+
     // Add PublicKey at position 0 of IdentityKey
     encoder.u8(0);
     encoder.object(1);
