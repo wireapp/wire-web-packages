@@ -20,7 +20,7 @@
 const {MemoryEngine} = require('@wireapp/store-engine');
 const {MessageHandler} = require('@wireapp/bot-api');
 const {Account} = require('@wireapp/core');
-const {CONVERSATION_TYPING} = require('@wireapp/api-client/dist/conversation/data/');
+const {CONVERSATION_TYPING} = require('@wireapp/api-client/src/conversation/data/');
 const UUID = require('uuidjs');
 
 describe('MessageHandler', () => {
@@ -102,7 +102,7 @@ describe('MessageHandler', () => {
         metadataPayload.id,
       );
       expect(mainHandler.account.service.conversation.messageBuilder.createFileAbort).not.toHaveBeenCalled();
-      expect(mainHandler.account.service.conversation.send).toHaveBeenCalledWith(filePayload);
+      expect(mainHandler.account.service.conversation.send).toHaveBeenCalledWith(filePayload, undefined);
     });
 
     it('sends the correct data if uploading fails', async () => {
@@ -137,7 +137,7 @@ describe('MessageHandler', () => {
         file,
         metadataPayload.id,
       );
-      expect(mainHandler.account.service.conversation.send).toHaveBeenCalledWith(abortPayload);
+      expect(mainHandler.account.service.conversation.send).toHaveBeenCalledWith(abortPayload, undefined);
     });
   });
 

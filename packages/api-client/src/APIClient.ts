@@ -31,9 +31,11 @@ import {
   InvalidTokenError,
   LoginData,
   RegisterData,
+  MissingCookieError,
 } from './auth/';
 import {CookieStore} from './auth/CookieStore';
 import {BroadcastAPI} from './broadcast/';
+import {ServicesAPI} from './services';
 import {ClientAPI, ClientType} from './client/';
 import {Config} from './Config';
 import {ConnectionAPI} from './connection/';
@@ -43,8 +45,9 @@ import {GiphyAPI} from './giphy/';
 import {HttpClient} from './http/';
 import {NotificationAPI} from './notification/';
 import {ObfuscationUtil} from './obfuscation/';
+import {ServiceProviderAPI} from './serviceProvider';
 import {SelfAPI} from './self/';
-import {WebSocketClient} from './tcp/';
+import {OnConnect, WebSocketClient} from './tcp/';
 import {
   TeamConversationAPI,
   FeatureAPI,
@@ -74,7 +77,9 @@ const defaultConfig: Config = {
 
 export interface APIClient {
   on(event: TOPIC.ON_LOGOUT, listener: (error: InvalidTokenError) => void): this;
+
   on(event: TOPIC.COOKIE_REFRESH, listener: (cookie?: Cookie) => void): this;
+
   on(event: TOPIC.ACCESS_TOKEN_REFRESH, listener: (accessToken: AccessTokenData) => void): this;
 }
 
@@ -92,6 +97,8 @@ export class APIClient extends EventEmitter {
   public giphy: {api: GiphyAPI};
   public notification: {api: NotificationAPI};
   public self: {api: SelfAPI};
+  public services: {api: ServicesAPI};
+  public serviceProvider: {api: ServiceProviderAPI};
   public teams: {
     conversation: {api: TeamConversationAPI};
     feature: {api: FeatureAPI};
@@ -137,17 +144,21 @@ export class APIClient extends EventEmitter {
     const httpClient = new HttpClient(this.config.urls.rest, this.accessTokenStore);
     const webSocket = new WebSocketClient(this.config.urls.ws, httpClient);
 
-    webSocket.on(WebSocketClient.TOPIC.ON_INVALID_TOKEN, async error => {
-      this.logger.warn(`Cannot renew access token because cookie is invalid: ${error.message}`, error);
-      await this.logout();
-      this.emit(APIClient.TOPIC.ON_LOGOUT, error);
-    });
+    const onInvalidCredentials = async (error: InvalidTokenError | MissingCookieError) => {
+      try {
+        await this.logout({skipLogoutRequest: true});
+      } finally {
+        // Send a guaranteed logout event to the application so that the UI can respond
+        this.emit(APIClient.TOPIC.ON_LOGOUT, error);
+      }
+    };
+    webSocket.on(WebSocketClient.TOPIC.ON_INVALID_TOKEN, onInvalidCredentials);
+    httpClient.on(HttpClient.TOPIC.ON_INVALID_TOKEN, onInvalidCredentials);
 
     this.transport = {
       http: httpClient,
       ws: webSocket,
     };
-
     this.account = {
       api: new AccountAPI(this.transport.http),
     };
@@ -156,6 +167,9 @@ export class APIClient extends EventEmitter {
     };
     this.auth = {
       api: new AuthAPI(this.transport.http),
+    };
+    this.services = {
+      api: new ServicesAPI(this.transport.http),
     };
     this.broadcast = {
       api: new BroadcastAPI(this.transport.http),
@@ -178,7 +192,9 @@ export class APIClient extends EventEmitter {
     this.self = {
       api: new SelfAPI(this.transport.http),
     };
-
+    this.serviceProvider = {
+      api: new ServiceProviderAPI(this.transport.http),
+    };
     this.teams = {
       conversation: {
         api: new TeamConversationAPI(this.transport.http),
@@ -211,7 +227,6 @@ export class APIClient extends EventEmitter {
         api: new TeamAPI(this.transport.http),
       },
     };
-
     this.user = {
       api: new UserAPI(this.transport.http),
     };
@@ -230,7 +245,7 @@ export class APIClient extends EventEmitter {
 
   public async login(loginData: LoginData): Promise<Context> {
     if (this.context) {
-      await this.logout({ignoreError: true});
+      await this.logout();
     }
 
     const accessToken = await this.auth.api.postLogin(loginData);
@@ -247,36 +262,33 @@ export class APIClient extends EventEmitter {
 
   public async register(userAccount: RegisterData, clientType: ClientType = ClientType.PERMANENT): Promise<Context> {
     if (this.context) {
-      await this.logout({ignoreError: true});
+      await this.logout();
     }
 
     const user = await this.auth.api.postRegister(userAccount);
 
-    await this.createContext(user.id, clientType);
+    this.createContext(user.id, clientType);
 
     return this.init(clientType, CookieStore.getCookie());
   }
 
-  public async logout(options = {ignoreError: false}): Promise<void> {
+  public async logout(options: {skipLogoutRequest: boolean} = {skipLogoutRequest: false}): Promise<void> {
     try {
       this.disconnect('Closed by client logout');
-      await this.auth.api.postLogout();
-    } catch (error) {
-      if (options.ignoreError === true) {
-        this.logger.error(error);
-      } else {
-        throw error;
+      if (!options.skipLogoutRequest) {
+        await this.auth.api.postLogout();
       }
-    } finally {
-      CookieStore.deleteCookie();
+    } catch (error) {
+      this.logger.warn(error);
     }
 
+    CookieStore.deleteCookie();
     await this.accessTokenStore.delete();
     delete this.context;
   }
 
-  public connect(onBeforeConnect?: () => Promise<void>): Promise<WebSocketClient> {
-    return this.transport.ws.connect(this.context?.clientId, onBeforeConnect);
+  public connect(onConnect?: OnConnect): Promise<WebSocketClient> {
+    return this.transport.ws.connect(this.context?.clientId, onConnect);
   }
 
   private createContext(userId: string, clientType: ClientType, clientId?: string): Context {

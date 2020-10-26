@@ -18,7 +18,7 @@
  */
 
 import {MessageHandler} from '@wireapp/bot-api';
-import type {PayloadBundle} from '@wireapp/core/dist/conversation/';
+import type {PayloadBundle} from '@wireapp/core/src/main/conversation/';
 import type {Call} from './Call';
 import {
   CALL_TYPE,
@@ -28,17 +28,17 @@ import {
   LOG_LEVEL,
   REASON,
   Wcall,
+  WcallClient,
   WcallParticipantChangedHandler,
 } from '@wireapp/avs';
 import axios from 'axios';
-import type {CallMessage} from '@wireapp/core/dist/conversation/message/OtrMessage';
+import type {CallMessage} from '@wireapp/core/src/main/conversation/message/OtrMessage';
 
 const wrtc = require('wrtc');
 
 declare global {
   namespace NodeJS {
     interface Global {
-      getUserMedia: NavigatorGetUserMedia;
       MediaStream: MediaStream;
       MediaStreamTrack: MediaStreamTrack;
       navigator: Navigator;
@@ -69,6 +69,7 @@ declare global {
 global.RTCPeerConnection = wrtc.RTCPeerConnection;
 global.MediaStream = wrtc.MediaStream;
 global.MediaStreamTrack = wrtc.MediaStreamTrack;
+global.RTCRtpSender = wrtc.RTCRtpSender;
 global.navigator = {
   ...global.navigator,
   mediaDevices: {
@@ -79,6 +80,10 @@ global.navigator = {
 
 interface InitOptions {
   callParticipantChangedHandler?: WcallParticipantChangedHandler;
+}
+
+interface SendMessageTarget {
+  clients: WcallClient[];
 }
 
 export class AVSHandler extends MessageHandler {
@@ -219,17 +224,29 @@ export class AVSHandler extends MessageHandler {
   };
 
   private readonly onSendCallMessage = (
-    ctx: number,
+    context: number,
     conversationId: string,
-    selfUserId: string,
-    selfClientId: string,
-    userid_dest: string | undefined,
-    clientid_dest: string | undefined,
-    data: string,
+    userId: string,
+    clientId: string,
+    targets: string | null,
+    unused: string | null,
+    payload: string,
   ): number => {
+    const userIds: string[] = [];
+
+    if (typeof targets === 'string') {
+      const parsedTargets: SendMessageTarget = JSON.parse(targets);
+      for (const target of parsedTargets.clients) {
+        userIds.push(target.userid);
+      }
+    }
+
     void (async () => {
-      const callPayload = this.account!.service!.conversation.messageBuilder.createCall(conversationId, data);
-      await this.account!.service!.conversation.send(callPayload);
+      try {
+        await this.sendCall(conversationId, payload, userIds);
+      } catch (error) {
+        console.error('Failed to send targeted message', error);
+      }
     })();
 
     return 0;

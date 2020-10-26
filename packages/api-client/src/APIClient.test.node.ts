@@ -154,7 +154,7 @@ describe('APIClient', () => {
       const context = await client.login(loginData);
       expect(context.userId).toBe(accessTokenData.user);
       // Make access token invalid
-      delete client['accessTokenStore'].accessToken?.access_token;
+      delete (client['accessTokenStore'].accessToken as any)?.access_token;
       const response = await client.user.api.getUsers({handles: [queriedHandle]});
       expect(response[0].name).toBe(userData[0].name);
       expect(client['accessTokenStore'].accessToken?.access_token).toBeDefined();
@@ -178,33 +178,29 @@ describe('APIClient', () => {
       await client.logout();
     });
 
-    it('ignores errors when told to', async () => {
+    it('ignores errors', async () => {
       const client = new APIClient();
       const testError = new Error('Test rejection');
 
       spyOn(client.auth.api, 'postLogout').and.returnValue(Promise.reject(testError));
       spyOn(client, 'disconnect').and.returnValue();
       spyOn(client['accessTokenStore'], 'delete').and.returnValue(Promise.resolve(undefined));
-      spyOn(client['logger'], 'error').and.returnValue();
+      spyOn(client['logger'], 'warn').and.returnValue();
 
-      await client.logout({ignoreError: true});
-      expect(client['logger'].error).toHaveBeenCalledWith(testError);
+      await client.logout();
+      expect(client['logger'].warn).toHaveBeenCalledWith(testError);
     });
 
-    it('stops at errors when told to', async () => {
+    it('skips request when told to', async () => {
       const client = new APIClient();
-      const testError = new Error('Test rejection');
 
-      spyOn(client.auth.api, 'postLogout').and.returnValue(Promise.reject(testError));
-      spyOn(client['logger'], 'error').and.returnValue();
+      spyOn(client.auth.api, 'postLogout');
+      spyOn(client, 'disconnect').and.returnValue();
+      spyOn(client['accessTokenStore'], 'delete').and.returnValue(Promise.resolve(undefined));
+      spyOn(client['logger'], 'warn').and.returnValue();
 
-      try {
-        await client.logout();
-        fail('Did not throw error');
-      } catch (error) {
-        expect(error === testError);
-        expect(client['logger'].error).toHaveBeenCalledTimes(0);
-      }
+      await client.logout({skipLogoutRequest: true});
+      expect(client['logger'].warn).not.toHaveBeenCalled();
     });
   });
 

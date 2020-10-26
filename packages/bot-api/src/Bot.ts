@@ -18,24 +18,24 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {ClientType} from '@wireapp/api-client/dist/client/';
-import {ConversationEvent, TeamEvent, UserEvent} from '@wireapp/api-client/dist/event';
+import {ClientType} from '@wireapp/api-client/src/client/';
+import {ConversationEvent, TeamEvent, UserEvent} from '@wireapp/api-client/src/event';
 import {Account} from '@wireapp/core';
-import {PayloadBundle, PayloadBundleType} from '@wireapp/core/dist/conversation/';
+import {PayloadBundle, PayloadBundleType, UserClientsMap} from '@wireapp/core/src/main/conversation/';
 import {CRUDEngine} from '@wireapp/store-engine';
 import logdown from 'logdown';
 import UUID from 'uuidjs';
 
 import {BotConfig, BotCredentials} from './Interfaces';
 import {MessageHandler} from './MessageHandler';
-import {DefaultConversationRoleName} from '@wireapp/api-client/dist/conversation';
+import {DefaultConversationRoleName} from '@wireapp/api-client/src/conversation';
 import {
   AUTH_TABLE_NAME,
   AUTH_COOKIE_KEY,
   Cookie,
   AccessTokenData,
   AUTH_ACCESS_TOKEN_KEY,
-} from '@wireapp/api-client/dist/auth';
+} from '@wireapp/api-client/src/auth';
 
 const defaultConfig: Required<BotConfig> = {
   backend: 'production',
@@ -77,12 +77,13 @@ export class Bot {
     return this.config.owners.length === 0 ? true : this.config.owners.includes(userId);
   }
 
-  public async sendText(conversationId: string, message: string): Promise<void> {
+  /**
+   * @param userIds Only send message to specified user IDs or to certain clients of specified user IDs
+   */
+  public async sendText(conversationId: string, message: string, userIds?: string[] | UserClientsMap): Promise<void> {
     if (this.account?.service) {
-      const textPayload = await this.account.service.conversation.messageBuilder
-        .createText(conversationId, message)
-        .build();
-      await this.account.service.conversation.send(textPayload);
+      const textPayload = this.account.service.conversation.messageBuilder.createText(conversationId, message).build();
+      await this.account.service.conversation.send(textPayload, userIds);
     }
   }
 
@@ -143,7 +144,7 @@ export class Bot {
   }
 
   async getCookie(storeEngine: CRUDEngine): Promise<Cookie | undefined> {
-    const {expiration, zuid} = await storeEngine.read(AUTH_TABLE_NAME, AUTH_COOKIE_KEY);
+    const {expiration, zuid} = await storeEngine.read<Cookie>(AUTH_TABLE_NAME, AUTH_COOKIE_KEY);
     const cookie = new Cookie(zuid, expiration);
     return cookie;
   }

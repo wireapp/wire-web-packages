@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2020 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,21 +17,10 @@
  *
  */
 
-const pkg = require('./package.json');
-const webpack = require('webpack');
+import React from 'react';
+import {matchComponent} from '../test/testUtil';
+import {ErrorMessage} from './ErrorMessage';
 
-const projectName = pkg.name.replace('@wireapp/', '');
-
-module.exports = {
-  devtool: 'source-map',
-  entry: {
-    [projectName]: `${__dirname}/${pkg.main}`,
-  },
-  mode: 'production',
-  output: {
-    filename: '[name].bundle.js',
-    library: 'CBOR',
-    path: `${__dirname}/dist`,
-  },
-  plugins: [new webpack.BannerPlugin(`${pkg.name} v${pkg.version}`)],
-};
+describe('"ErrorMessage"', () => {
+  it('renders', () => matchComponent(<ErrorMessage>ErrorMessage</ErrorMessage>));
+});

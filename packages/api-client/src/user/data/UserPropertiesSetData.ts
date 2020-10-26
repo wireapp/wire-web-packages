@@ -35,7 +35,6 @@ export interface WebappProperties {
   enable_debugging: boolean;
   settings: {
     call: {
-      enable_sft_calling: boolean;
       enable_vbr_encoding: boolean;
     };
     emoji: {
@@ -52,6 +51,7 @@ export interface WebappProperties {
     privacy: {
       improve_wire?: boolean;
       report_errors?: boolean;
+      telemetry_sharing?: boolean;
     };
     sound: {
       alerts: AudioPreference;

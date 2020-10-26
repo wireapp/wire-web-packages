@@ -21,8 +21,8 @@ import {EventEmitter} from 'events';
 import logdown from 'logdown';
 import {CloseEvent, ErrorEvent, Event} from 'reconnecting-websocket';
 
-import {InvalidTokenError} from '../auth/';
-import {BackendErrorMapper, HttpClient, NetworkError} from '../http/';
+import {InvalidTokenError, MissingCookieError} from '../auth/';
+import {HttpClient, NetworkError} from '../http/';
 import {Notification} from '../notification/';
 import {ReconnectingWebsocket, WEBSOCKET_STATE} from './ReconnectingWebsocket';
 
@@ -35,10 +35,22 @@ enum TOPIC {
 
 export interface WebSocketClient {
   on(event: TOPIC.ON_ERROR, listener: (error: Error | ErrorEvent) => void): this;
-  on(event: TOPIC.ON_INVALID_TOKEN, listener: (error: InvalidTokenError) => void): this;
+  on(event: TOPIC.ON_INVALID_TOKEN, listener: (error: InvalidTokenError | MissingCookieError) => void): this;
   on(event: TOPIC.ON_MESSAGE, listener: (notification: Notification) => void): this;
   on(event: TOPIC.ON_STATE_CHANGE, listener: (state: WEBSOCKET_STATE) => void): this;
 }
+
+export class AbortHandler {
+  private aborted = false;
+
+  abort = () => {
+    this.aborted = true;
+  };
+
+  isAborted = () => this.aborted;
+}
+
+export type OnConnect = (abortHandler: AbortHandler) => Promise<void>;
 
 export class WebSocketClient extends EventEmitter {
   private clientId?: string;
@@ -50,7 +62,8 @@ export class WebSocketClient extends EventEmitter {
   public client: HttpClient;
   private isSocketLocked: boolean;
   private bufferedMessages: string[];
-  private onBeforeConnect: () => Promise<void> = () => Promise.resolve();
+  private onConnect: () => Promise<void> = () => Promise.resolve();
+  private abortHandler?: AbortHandler;
 
   public static readonly TOPIC = TOPIC;
 
@@ -94,17 +107,8 @@ export class WebSocketClient extends EventEmitter {
   };
 
   private readonly onReconnect = async () => {
-    try {
-      this.lock();
-      this.logger.info('Calling "onBeforeConnect"');
-      await this.onBeforeConnect();
-    } catch (error) {
-      this.logger.warn(`Error during execution of "beforeReconnect"`, error);
-      this.emit(WebSocketClient.TOPIC.ON_ERROR, error);
-    } finally {
-      this.unlock();
-    }
-    this.onStateChange(this.socket.getState());
+    // Note: Do NOT await `onConnect` otherwise the websocket will not connect during notification stream processing
+    void this.onConnect();
     return this.buildWebSocketUrl();
   };
 
@@ -113,6 +117,8 @@ export class WebSocketClient extends EventEmitter {
   };
 
   private readonly onClose = (event: CloseEvent) => {
+    this.abortHandler?.abort();
+    this.bufferedMessages = [];
     this.onStateChange(this.socket.getState());
   };
 
@@ -123,14 +129,24 @@ export class WebSocketClient extends EventEmitter {
    * When provided the websocket will get messages specific to the client.
    * If omitted the websocket will receive global messages for the account.
    *
-   * @param onBeforeConnect
+   * @param onConnect
    * Handler that is executed before the websocket is fully connected.
    * Essentially the websocket will lock before execution of this function and
    * unlocks after the execution of the handler and pushes all buffered messages.
    */
-  public async connect(clientId?: string, onBeforeConnect?: () => Promise<void>): Promise<WebSocketClient> {
-    if (onBeforeConnect) {
-      this.onBeforeConnect = onBeforeConnect;
+  public async connect(clientId?: string, onConnect?: OnConnect): Promise<WebSocketClient> {
+    if (onConnect) {
+      this.onConnect = async () => {
+        this.abortHandler = new AbortHandler();
+        try {
+          this.logger.info('Calling "onConnect"');
+          await onConnect(this.abortHandler);
+        } catch (error) {
+          this.logger.warn(`Error during execution of "onConnect"`, error);
+          this.emit(WebSocketClient.TOPIC.ON_ERROR, error);
+        }
+        this.onStateChange(this.socket.getState());
+      };
     }
     this.clientId = clientId;
 
@@ -154,13 +170,15 @@ export class WebSocketClient extends EventEmitter {
     } catch (error) {
       if (error instanceof NetworkError) {
         this.logger.warn(error);
-      } else {
-        const mappedError = BackendErrorMapper.map(error);
-        // On invalid token the WebSocket is supposed to get closed by the client
-        this.emit(
-          error instanceof InvalidTokenError ? WebSocketClient.TOPIC.ON_INVALID_TOKEN : WebSocketClient.TOPIC.ON_ERROR,
-          mappedError,
+      } else if (error instanceof InvalidTokenError || error instanceof MissingCookieError) {
+        // On invalid cookie the application is supposed to logout.
+        this.logger.warn(
+          `[WebSocket] Cannot renew access token because cookie/token is invalid: ${error.message}`,
+          error,
         );
+        this.emit(WebSocketClient.TOPIC.ON_INVALID_TOKEN, error);
+      } else {
+        this.emit(WebSocketClient.TOPIC.ON_ERROR, error);
       }
     } finally {
       this.isRefreshingAccessToken = false;
