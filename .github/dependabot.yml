@@ -12,7 +12,3 @@ updates:
         versions:
           - '>= 11.a'
           - '< 12'
-      - dependency-name: '@types/node'
-        versions:
-          - '>= 13.a'
-          - '< 14'
