@@ -20,10 +20,13 @@ jobs:
         run: |
           echo "BRANCH_NAME=$(git branch --show-current)" >> $GITHUB_ENV
           echo "TAG=$(git tag --points-at ${{github.sha}})" >> $GITHUB_ENV
-          echo "TITLE=${{github.event.pull_request.title || github.event.head_commit.message}}" | head -n 1 >> $GITHUB_ENV
-          echo "PR_LAST_COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{github.event.after}})" | head -n 1 >> $GITHUB_ENV
+          echo "COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{github.event.after}} | head -n 1)" >> $GITHUB_ENV
           echo "COMMIT_URL=${{github.event.head_commit.url}}" >> $GITHUB_ENV
           echo "COMMITTER=${{github.event.head_commit.committer.name}}" >> $GITHUB_ENV
+
+      - name: Set TITLE
+        run: |
+          echo "TITLE=${{github.event.pull_request.title || env.COMMIT_MESSAGE}}" >> $GITHUB_ENV
 
       - name: Print environment variables
         env:
@@ -32,14 +35,14 @@ jobs:
           echo -e "BRANCH_NAME = ${BRANCH_NAME}"
           echo -e "TAG = ${TAG}"
           echo -e "TITLE = ${TITLE}"
-          echo -e "PR_LAST_COMMIT_MESSAGE = ${PR_LAST_COMMIT_MESSAGE}"
+          echo -e "COMMIT_MESSAGE = ${COMMIT_MESSAGE}"
           echo -e "COMMIT_URL = ${COMMIT_URL}"
           echo -e "COMMITTER = ${COMMITTER}"
           echo -e "HOME = ${HOME}"
           echo -e "GITHUB_CONTEXT = ${GITHUB_CONTEXT}"
 
       - name: Skip CI
-        if: contains(env.TITLE || env.PR_LAST_COMMIT_MESSAGE, '[skip ci]') || contains(env.TITLE || env.PR_LAST_COMMIT_MESSAGE, '[ci skip]')
+        if: contains(env.TITLE || env.COMMIT_MESSAGE, '[skip ci]') || contains(env.TITLE || env.COMMIT_MESSAGE, '[ci skip]')
         uses: andymckay/cancel-action@0.2
 
       - name: Cancel Previous Runs
