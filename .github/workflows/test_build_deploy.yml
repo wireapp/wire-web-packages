@@ -89,7 +89,7 @@ jobs:
           conversation: 'b2cc7120-4154-4be4-b0c0-45a8c361c4d1'
           text: '🌵 ${{env.COMMITTER}} broke the "${{env.BRANCH_NAME}}" branch on "${{github.repository}}" with [${{env.TITLE}}](${{env.COMMIT_URL}})'
 
-      - name: Automerge dependency updates from Dependabot
+      - name: Merge dependency updates from Dependabot
         uses: ahmadnassri/action-dependabot-auto-merge@v2
         # Guarantee that commit comes from Dependabot (don't blindly trust external GitHub action checks)
         if: github.event_name == 'pull_request' && github.actor == 'dependabot[bot]'
