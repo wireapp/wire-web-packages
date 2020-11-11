@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2019 Wire Swiss GmbH
+ * Copyright (C) 2020 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +17,10 @@
  *
  */
 
-import {FeatureStatus} from './FeatureStatus';
+import {Feature, FeatureAppLock, FeatureConfig, FeatureWithoutConfig} from './Feature';
 
-export interface IdentityProviderStatus {
-  status: FeatureStatus;
-}
+export type FeatureList = {
+  [featureName: string]: Feature<FeatureConfig> | FeatureWithoutConfig,
+  'applock': FeatureAppLock,
+  'sso': FeatureWithoutConfig,
+};
