@@ -17,10 +17,13 @@
  *
  */
 
-import {Feature, FeatureAppLock, FeatureConfig, FeatureWithoutConfig} from './Feature';
+import {Feature, FeatureAppLock, FeatureConfig, FeatureDigitalSignature, FeatureWithoutConfig} from './Feature';
 
 export type FeatureList = {
-  [featureName: string]: Feature<FeatureConfig> | FeatureWithoutConfig,
-  'applock': FeatureAppLock,
-  'sso': FeatureWithoutConfig,
+  [featureName: string]: Feature<FeatureConfig> | FeatureWithoutConfig;
+  'app-lock': FeatureAppLock;
+  'sso': FeatureWithoutConfig;
+  'digital-signatures': FeatureDigitalSignature;
+  'search-visibility': FeatureWithoutConfig;
+  'validate-saml-emails': FeatureWithoutConfig;
 };

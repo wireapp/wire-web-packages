@@ -28,15 +28,14 @@ export interface FeatureWithoutConfig {
 
 export interface FeatureConfig {}
 export interface Feature<T extends FeatureConfig> {
+  config: T;
   status: FeatureStatus;
-  config: T,
 }
 export interface FeatureAppLockConfig extends FeatureConfig {
-  enforce_applock: boolean,
-  inactivity_timeout_secs: number,
+  enforce_applock: boolean;
+  inactivity_timeout_secs: number;
 }
 
 export type FeatureAppLock = Feature<FeatureAppLockConfig>;
 export type FeatureDigitalSignature = FeatureWithoutConfig;
 export type FeatureSSO = FeatureWithoutConfig;
-

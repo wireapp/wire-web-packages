@@ -28,9 +28,9 @@ export class FeatureAPI {
   constructor(private readonly client: HttpClient) {}
 
   public static readonly URL = {
-    FEATURES: 'features',
-    DIGITAL_SIGNATURES: 'digital-signatures',
     APPLOCK: 'applock',
+    DIGITAL_SIGNATURES: 'digital-signatures',
+    FEATURES: 'features',
     SSO: 'sso',
     TEAMS: '/teams',
   };
@@ -77,8 +77,8 @@ export class FeatureAPI {
 
   public async putAppLockFeature(teamId: string, appLockFeature: FeatureAppLock): Promise<FeatureAppLock> {
     const config: AxiosRequestConfig = {
-      method: 'put',
       data: appLockFeature,
+      method: 'put',
       url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.APPLOCK}`,
     };
 
