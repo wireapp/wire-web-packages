@@ -49,7 +49,7 @@ export const Switch = ({
   name,
 }: SwitchProps) => (
   <div
-    css={{
+    style={{
       display: 'inline-block',
       position: 'relative',
       textAlign: 'left',
@@ -70,7 +70,7 @@ export const Switch = ({
       />
       <label
         htmlFor={id}
-        css={{
+        style={{
           borderRadius: '20px',
           cursor: disabled || showLoading ? '' : 'pointer',
           display: 'block',
@@ -104,7 +104,6 @@ export const Switch = ({
               padding: 0,
               width: '50%',
             },
-
             display: 'block',
             marginLeft: checked ? 0 : '-100%',
             transition: 'margin 0.1s ease-in 0s',
@@ -123,7 +122,7 @@ export const Switch = ({
           />
         ) : (
           <span
-            css={{
+            style={{
               background: COLOR.WHITE,
               borderRadius: '100%',
               bottom: 0,
