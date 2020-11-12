@@ -19,6 +19,12 @@ const [checked, setChecked] = useState(false);
     </Column>
   </Columns>
   <Columns>
+    <Column>Switch checked</Column>
+    <Column style={{margin: '1px'}}>
+      <Switch checked={true} onToggle={() => {}} />
+    </Column>
+  </Columns>
+  <Columns>
     <Column>Disabled Switch</Column>
     <Column style={{margin: '1px'}}>
       <Switch disabled />
