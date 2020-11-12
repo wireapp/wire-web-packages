@@ -25,16 +25,16 @@ import {COLOR} from '../Identity';
 import {Loading} from '../Misc';
 
 export interface SwitchProps<T = HTMLInputElement> extends InputProps<T> {
-  id?: string;
-  checked: boolean;
-  name?: string;
-  disabled?: boolean;
   activatedColor?: string;
+  checked: boolean;
   deactivatedColor?: string;
+  disabled?: boolean;
   disabledColor?: string;
-  showLoading?: boolean;
+  id?: string;
   loadingColor?: string;
+  name?: string;
   onToggle: (isChecked: boolean) => void;
+  showLoading?: boolean;
 }
 
 export const Switch = ({
@@ -50,12 +50,12 @@ export const Switch = ({
 }: SwitchProps) => (
   <div
     css={{
-      position: 'relative',
-      width: '42px',
       display: 'inline-block',
-      verticalAlign: 'middle',
-      userSelect: 'none',
+      position: 'relative',
       textAlign: 'left',
+      userSelect: 'none',
+      verticalAlign: 'middle',
+      width: '42px',
     }}
   >
     <React.Fragment>
@@ -70,44 +70,44 @@ export const Switch = ({
       />
       <label
         htmlFor={id}
-        style={{
-          display: 'block',
-          overflow: 'hidden',
-          cursor: disabled || showLoading ? '' : 'pointer',
+        css={{
           borderRadius: '20px',
+          cursor: disabled || showLoading ? '' : 'pointer',
+          display: 'block',
           margin: 0,
+          overflow: 'hidden',
         }}
       >
         <span
           css={{
-            display: 'block',
-            width: '200%',
-            marginLeft: checked ? 0 : '-100%',
-            transition: 'margin 0.1s ease-in 0s',
-            '&:before, &:after': {
+            ['&:before, &:after']: {
               backgroundColor:
                 disabled || showLoading
                   ? COLOR.tint(checked ? activatedColor : deactivatedColor, 0.4)
                   : checked
                   ? activatedColor
                   : deactivatedColor,
+              boxSizing: 'border-box',
               display: 'block',
               float: 'left',
-              width: '50%',
               height: '25px',
-              padding: 0,
               lineHeight: '25px',
-              boxSizing: 'border-box',
+              padding: 0,
+              width: '50%',
             },
-            '&:before': {
+            ['&:before']: {
               content: '" "',
               paddingLeft: '10px',
             },
-            '&:after': {
+            ['&:after']: {
               content: '" "',
               paddingRight: '10px',
               textAlign: 'right',
             },
+            display: 'block',
+            marginLeft: checked ? 0 : '-100%',
+            transition: 'margin 0.1s ease-in 0s',
+            width: '200%',
           }}
         />
         {showLoading ? (
@@ -116,26 +116,26 @@ export const Switch = ({
             color={loadingColor}
             style={{
               display: 'block',
-              position: 'absolute',
               margin: '2px',
+              position: 'absolute',
             }}
           />
         ) : (
           <span
-            style={{
-              display: 'block',
+            css={{
+              background: COLOR.WHITE,
+              borderRadius: '100%',
+              bottom: 0,
               boxShadow: '0px 0px 2px -1px gray',
-              width: '23px',
+              display: 'block',
               height: '23px',
               margin: '1px',
-              background: COLOR.WHITE,
               opacity: disabled ? 0.7 : undefined,
               position: 'absolute',
-              top: 0,
-              bottom: 0,
-              borderRadius: '100%',
-              transition: 'all 0.15s ease-in 0s',
               right: checked ? '0px' : '17px',
+              top: 0,
+              transition: 'all 0.15s ease-in 0s',
+              width: '23px',
             }}
           />
         )}
