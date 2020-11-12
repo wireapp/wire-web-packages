@@ -23,8 +23,9 @@ import {matchComponent} from '../test/testUtil';
 import {Switch} from './Switch';
 
 describe('"Switch"', () => {
-  it('renders unchecked', () => matchComponent(<Switch id="1" onToggle={() => {}} />));
+  it('renders unchecked', () => matchComponent(<Switch id="1" checked={false} onToggle={() => {}} />));
   it('renders checked', () => matchComponent(<Switch id="2" checked onToggle={() => {}} />));
-  it('renders (dark theme)', () => matchComponent(<Switch id="3" onToggle={() => {}} />, THEME_ID.DARK));
-  it('renders disabled', () => matchComponent(<Switch id="4" onToggle={() => {}} disabled />));
+  it('renders (dark theme)', () =>
+    matchComponent(<Switch id="3" checked={false} onToggle={() => {}} />, THEME_ID.DARK));
+  it('renders disabled', () => matchComponent(<Switch id="4" checked={false} onToggle={() => {}} disabled />));
 });
