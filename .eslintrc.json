@@ -1,8 +1,9 @@
 {
   "env": {
-    "jasmine": true
+    "jasmine": true,
+    "jest/globals": true
   },
-  "extends": "./packages/eslint-config/eslintrc.json",
+  "extends": ["./packages/eslint-config/eslintrc.json", "plugin:jest/recommended"],
   "globals": {
     "NodeJS": "readonly"
   },
@@ -23,6 +24,11 @@
     "id-length": "off",
     "no-dupe-class-members": "off",
     "no-magic-numbers": "off",
-    "valid-jsdoc": "off"
+    "valid-jsdoc": "off",
+    "jest/no-jasmine-globals": "off",
+    "jest/no-identical-title": "warn",
+    "jest/no-done-callback": "warn",
+    "jest/no-disabled-tests": "warn",
+    "jest/no-conditional-expect": "warn"
   }
 }

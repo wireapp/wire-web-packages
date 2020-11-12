@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2020 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,18 +17,14 @@
  *
  */
 
-export * from './Button';
-export * from './ButtonLink';
-export * from './Checkbox';
-export * from './CodeInput';
-export * from './ErrorMessage';
-export * from './Form';
-export * from './Input';
-export * from './InputBlock';
-export * from './InputSubmitCombo';
-export * from './RoundIconButton';
-export * from './Select';
-export * from './ShakeBox';
-export * from './Switch';
-export * from './TextArea';
-export * from './Tooltip';
+import React from 'react';
+import {THEME_ID} from '../Layout';
+import {matchComponent} from '../test/testUtil';
+import {Switch} from './Switch';
+
+describe('"Switch"', () => {
+  it('renders unchecked', () => matchComponent(<Switch onToggle={() => {}} />));
+  it('renders checked', () => matchComponent(<Switch checked onToggle={() => {}} />));
+  it('renders (dark theme)', () => matchComponent(<Switch onToggle={() => {}} />, THEME_ID.DARK));
+  it('renders disabled', () => matchComponent(<Switch onToggle={() => {}} disabled />));
+});
