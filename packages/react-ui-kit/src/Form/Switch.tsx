@@ -19,7 +19,6 @@
 
 /** @jsx jsx */
 import {jsx} from '@emotion/core';
-import Color from 'color';
 import React from 'react';
 import {InputProps} from '../../dist';
 import {COLOR} from '../Identity';
@@ -27,6 +26,9 @@ import {Loading} from '../Misc';
 
 export interface SwitchProps<T = HTMLInputElement> extends InputProps<T> {
   id?: string;
+  checked: boolean;
+  name?: string;
+  disabled?: boolean;
   activatedColor?: string;
   deactivatedColor?: string;
   disabledColor?: string;
@@ -44,7 +46,6 @@ export const Switch = ({
   loadingColor = COLOR.BLUE,
   activatedColor = COLOR.BLUE,
   deactivatedColor = '#d2d2d2',
-  disabledColor = COLOR.DISABLED,
   name,
 }: SwitchProps) => (
   <div
