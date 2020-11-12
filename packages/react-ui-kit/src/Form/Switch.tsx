@@ -80,6 +80,15 @@ export const Switch = ({
       >
         <span
           css={{
+            ['&:after']: {
+              content: '" "',
+              paddingRight: '10px',
+              textAlign: 'right',
+            },
+            ['&:before']: {
+              content: '" "',
+              paddingLeft: '10px',
+            },
             ['&:before, &:after']: {
               backgroundColor:
                 disabled || showLoading
@@ -95,15 +104,7 @@ export const Switch = ({
               padding: 0,
               width: '50%',
             },
-            ['&:before']: {
-              content: '" "',
-              paddingLeft: '10px',
-            },
-            ['&:after']: {
-              content: '" "',
-              paddingRight: '10px',
-              textAlign: 'right',
-            },
+
             display: 'block',
             marginLeft: checked ? 0 : '-100%',
             transition: 'margin 0.1s ease-in 0s',
