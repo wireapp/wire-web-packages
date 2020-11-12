@@ -25,6 +25,12 @@ const [checked, setChecked] = useState(false);
     </Column>
   </Columns>
   <Columns>
+    <Column>Disabled and checked Switch</Column>
+    <Column style={{margin: '1px'}}>
+      <Switch checked disabled />
+    </Column>
+  </Columns>
+  <Columns>
     <Column>Loading Switch</Column>
     <Column style={{margin: '1px'}}>
       <Switch showLoading />

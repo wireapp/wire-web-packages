@@ -19,12 +19,14 @@
 
 /** @jsx jsx */
 import {jsx} from '@emotion/core';
+import Color from 'color';
 import React from 'react';
 import {InputProps} from '../../dist';
 import {COLOR} from '../Identity';
 import {Loading} from '../Misc';
 
 export interface SwitchProps<T = HTMLInputElement> extends InputProps<T> {
+  id?: string;
   activatedColor?: string;
   deactivatedColor?: string;
   disabledColor?: string;
@@ -82,13 +84,19 @@ export const Switch = ({
             marginLeft: checked ? 0 : '-100%',
             transition: 'margin 0.1s ease-in 0s',
             '&:before, &:after': {
-              backgroundColor: disabled || showLoading ? disabledColor : checked ? activatedColor : deactivatedColor,
+              backgroundColor:
+                disabled || showLoading
+                  ? COLOR.tint(checked ? activatedColor : deactivatedColor, 0.4)
+                  : checked
+                  ? activatedColor
+                  : deactivatedColor,
               display: 'block',
               float: 'left',
               width: '50%',
               height: '25px',
               padding: 0,
               lineHeight: '25px',
+              boxSizing: 'border-box',
             },
             '&:before': {
               content: '" "',
@@ -120,7 +128,7 @@ export const Switch = ({
               height: '23px',
               margin: '1px',
               background: COLOR.WHITE,
-              opacity: disabled ? 0.5 : undefined,
+              opacity: disabled ? 0.7 : undefined,
               position: 'absolute',
               top: 0,
               bottom: 0,
