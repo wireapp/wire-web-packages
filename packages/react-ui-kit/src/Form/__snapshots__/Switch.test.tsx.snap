@@ -30,11 +30,7 @@ exports[`"Switch" renders (dark theme) 1`] = `
   height: 25px;
   padding: 0;
   line-height: 25px;
-  font-size: 14px;
-  color: #fff;
-  font-weight: bold;
   box-sizing: border-box;
-  text-transform: uppercase;
 }
 
 .emotion-0:before {
@@ -61,7 +57,7 @@ exports[`"Switch" renders (dark theme) 1`] = `
     className="emotion-1"
   >
     <input
-      id="0.3577477369300319"
+      id="3"
       onChange={[Function]}
       style={
         Object {
@@ -71,7 +67,7 @@ exports[`"Switch" renders (dark theme) 1`] = `
       type="checkbox"
     />
     <label
-      htmlFor="0.3577477369300319"
+      htmlFor="3"
       style={
         Object {
           "borderRadius": "20px",
@@ -145,11 +141,7 @@ exports[`"Switch" renders checked 1`] = `
   height: 25px;
   padding: 0;
   line-height: 25px;
-  font-size: 14px;
-  color: #fff;
-  font-weight: bold;
   box-sizing: border-box;
-  text-transform: uppercase;
 }
 
 .emotion-0:before {
@@ -171,7 +163,7 @@ exports[`"Switch" renders checked 1`] = `
   >
     <input
       checked={true}
-      id="0.48370813635792964"
+      id="2"
       onChange={[Function]}
       style={
         Object {
@@ -181,7 +173,7 @@ exports[`"Switch" renders checked 1`] = `
       type="checkbox"
     />
     <label
-      htmlFor="0.48370813635792964"
+      htmlFor="2"
       style={
         Object {
           "borderRadius": "20px",
@@ -248,18 +240,14 @@ exports[`"Switch" renders disabled 1`] = `
 
 .emotion-0:before,
 .emotion-0:after {
-  background-color: rgba(127,136,142,0.16000000000000003);
+  background-color: rgb(228,228,228);
   display: block;
   float: left;
   width: 50%;
   height: 25px;
   padding: 0;
   line-height: 25px;
-  font-size: 14px;
-  color: #fff;
-  font-weight: bold;
   box-sizing: border-box;
-  text-transform: uppercase;
 }
 
 .emotion-0:before {
@@ -281,7 +269,7 @@ exports[`"Switch" renders disabled 1`] = `
   >
     <input
       disabled={true}
-      id="0.8464642730266487"
+      id="4"
       onChange={[Function]}
       style={
         Object {
@@ -291,7 +279,7 @@ exports[`"Switch" renders disabled 1`] = `
       type="checkbox"
     />
     <label
-      htmlFor="0.8464642730266487"
+      htmlFor="4"
       style={
         Object {
           "borderRadius": "20px",
@@ -315,7 +303,7 @@ exports[`"Switch" renders disabled 1`] = `
             "display": "block",
             "height": "23px",
             "margin": "1px",
-            "opacity": 0.5,
+            "opacity": 0.7,
             "position": "absolute",
             "right": "17px",
             "top": 0,
@@ -365,11 +353,7 @@ exports[`"Switch" renders unchecked 1`] = `
   height: 25px;
   padding: 0;
   line-height: 25px;
-  font-size: 14px;
-  color: #fff;
-  font-weight: bold;
   box-sizing: border-box;
-  text-transform: uppercase;
 }
 
 .emotion-0:before {
@@ -390,7 +374,7 @@ exports[`"Switch" renders unchecked 1`] = `
     className="emotion-1"
   >
     <input
-      id="0.10927485281868643"
+      id="1"
       onChange={[Function]}
       style={
         Object {
@@ -400,7 +384,7 @@ exports[`"Switch" renders unchecked 1`] = `
       type="checkbox"
     />
     <label
-      htmlFor="0.10927485281868643"
+      htmlFor="1"
       style={
         Object {
           "borderRadius": "20px",
