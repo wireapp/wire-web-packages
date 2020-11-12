@@ -62,7 +62,7 @@
     "clean": "rimraf src/**/*{.js,.js.map,.d.ts}",
     "dist": "yarn clean && yarn build",
     "start": "styleguidist server",
-    "test": "jest --config=./jest.config.js --no-cache",
+    "test": "jest --config=./jest.config.js",
     "test:coverage": "yarn test --coverage",
     "test:watch": "yarn test --watch",
     "test:update": "yarn test --updateSnapshot",
