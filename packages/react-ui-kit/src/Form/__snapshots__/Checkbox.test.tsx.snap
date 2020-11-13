@@ -33,6 +33,7 @@ exports[`"Checkbox" renders (dark theme) 1`] = `
 }
 
 .emotion-1::before {
+  background: #fff;
   border: 1px solid #bac8d1;
   border-radius: 4px;
   box-sizing: border-box;
@@ -42,7 +43,6 @@ exports[`"Checkbox" renders (dark theme) 1`] = `
   margin: 4px 8px 0 -16px;
   opacity: 1;
   width: 16px;
-  background: #fff;
 }
 
 .emotion-1 a {
@@ -230,6 +230,7 @@ exports[`"Checkbox" renders 1`] = `
 }
 
 .emotion-1::before {
+  background: #fff;
   border: 1px solid #bac8d1;
   border-radius: 4px;
   box-sizing: border-box;
@@ -239,7 +240,6 @@ exports[`"Checkbox" renders 1`] = `
   margin: 4px 8px 0 -16px;
   opacity: 1;
   width: 16px;
-  background: #fff;
 }
 
 .emotion-1 a {
@@ -378,6 +378,7 @@ exports[`"Checkbox" renders as invalid 1`] = `
 }
 
 .emotion-1::before {
+  background: #fff;
   border: 1px solid #e02020;
   border-radius: 4px;
   box-sizing: border-box;
@@ -387,7 +388,6 @@ exports[`"Checkbox" renders as invalid 1`] = `
   margin: 4px 8px 0 -16px;
   opacity: 1;
   width: 16px;
-  background: #fff;
 }
 
 .emotion-1 a {
@@ -526,6 +526,7 @@ exports[`"Checkbox" renders disabled 1`] = `
 }
 
 .emotion-1::before {
+  background: #fff;
   border: 1px solid #bac8d1;
   border-radius: 4px;
   box-sizing: border-box;
@@ -535,7 +536,6 @@ exports[`"Checkbox" renders disabled 1`] = `
   margin: 4px 8px 0 -16px;
   opacity: 0.56;
   width: 16px;
-  background: #fff;
 }
 
 .emotion-1 a {
