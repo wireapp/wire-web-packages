@@ -45,6 +45,7 @@ const StyledLabel = (props: StyledLabelProps) => {
           borderColor: COLOR.BLUE,
         },
         '&::before': {
+          background: COLOR.WHITE,
           border: props.markInvalid ? `1px solid ${COLOR.RED}` : `1px solid ${COLOR.GRAY}`,
           borderRadius: '4px',
           boxSizing: 'border-box',
@@ -54,7 +55,6 @@ const StyledLabel = (props: StyledLabelProps) => {
           margin: '4px 8px 0 -16px',
           opacity: props.disabled ? 0.56 : 1,
           width: '16px',
-          background: COLOR.WHITE,
         },
         a: {
           ...textLinkStyle(theme, {}),
