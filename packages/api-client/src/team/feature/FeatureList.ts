@@ -22,7 +22,7 @@ import {Feature, FeatureAppLock, FeatureConfig, FeatureDigitalSignature, Feature
 export type FeatureList = {
   [featureName: string]: Feature<FeatureConfig> | FeatureWithoutConfig;
   'app-lock': FeatureAppLock;
-  'sso': FeatureWithoutConfig;
+  sso: FeatureWithoutConfig;
   'digital-signatures': FeatureDigitalSignature;
   'search-visibility': FeatureWithoutConfig;
   'validate-saml-emails': FeatureWithoutConfig;
