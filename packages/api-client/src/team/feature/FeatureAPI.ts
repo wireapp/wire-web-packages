@@ -28,7 +28,7 @@ export class FeatureAPI {
   constructor(private readonly client: HttpClient) {}
 
   public static readonly URL = {
-    APPLOCK: 'app-lock',
+    APPLOCK: 'applock',
     DIGITAL_SIGNATURES: 'digital-signatures',
     FEATURES: 'features',
     SSO: 'sso',
@@ -83,9 +83,8 @@ export class FeatureAPI {
     };
 
     try {
-      await this.client.sendJSON<void>(config);
-      // Returns the given feature change on success for convinience because PUT doesn't responds with the updated value
-      return appLockFeature;
+      const response = await this.client.sendJSON<FeatureAppLock>(config);
+      return response.data;
     } catch (error) {
       switch (error.label) {
         case BackendErrorLabel.APP_LOCK_INVALID_TIMEOUT: {

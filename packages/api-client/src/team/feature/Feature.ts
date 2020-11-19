@@ -32,8 +32,8 @@ export interface Feature<T extends FeatureConfig> {
   status: FeatureStatus;
 }
 export interface FeatureAppLockConfig extends FeatureConfig {
-  enforce_applock: boolean;
-  inactivity_timeout_secs: number;
+  enforceAppLock: boolean;
+  inactivityTimeoutSecs: number;
 }
 
 export type FeatureAppLock = Feature<FeatureAppLockConfig>;
