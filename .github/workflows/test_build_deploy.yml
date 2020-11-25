@@ -79,7 +79,7 @@ jobs:
 
       - name: Release
         if: env.BRANCH_NAME == 'master' && env.HAS_UPDATES == '0' && !startsWith(env.TITLE, 'chore') && !startsWith(env.TITLE, 'test')
-        run: yarn dist && yarn release
+        run: yarn release
 
       - name: Notify CI error
         if: failure() && github.event_name != 'pull_request'
