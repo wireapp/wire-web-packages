@@ -39,8 +39,8 @@ export const RecordBoldIcon = ({color, ...props}: SVGIconProps) => (
       cy="10"
       r="4"
       css={theme => ({
-        stroke: theme.general.color || color,
         fill: theme.general.color || color,
+        stroke: theme.general.color || color,
       })}
       strokeWidth="2"
     />
