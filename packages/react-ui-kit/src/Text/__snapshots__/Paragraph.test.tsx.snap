@@ -19,7 +19,7 @@ exports[`"Lead" renders (dark theme) 1`] = `
   margin-top: 0;
 }
 
-@media (max-width:480px) {
+@media (max-width: 480px) {
   .emotion-0 {
     font-size: 20px;
   }
@@ -38,13 +38,13 @@ exports[`"Lead" renders (dark theme) 1`] = `
 
 exports[`"Lead" renders 1`] = `
 .emotion-1 {
-  background: rgb(247,248,250);
+  background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
 .emotion-0 {
-  color: rgb(52,56,59);
+  color: rgb(52, 56, 59);
   display: block;
   font-size: 24px;
   font-weight: 300;
@@ -55,7 +55,7 @@ exports[`"Lead" renders 1`] = `
   margin-top: 0;
 }
 
-@media (max-width:480px) {
+@media (max-width: 480px) {
   .emotion-0 {
     font-size: 20px;
   }
@@ -104,13 +104,13 @@ exports[`"Paragraph" renders (dark theme) 1`] = `
 
 exports[`"Paragraph" renders 1`] = `
 .emotion-1 {
-  background: rgb(247,248,250);
+  background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
 .emotion-0 {
-  color: rgb(52,56,59);
+  color: rgb(52, 56, 59);
   display: block;
   font-size: 16px;
   font-weight: 300;

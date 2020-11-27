@@ -2,7 +2,7 @@
 
 exports[`"Form" renders 1`] = `
 .emotion-1 {
-  background: rgb(247,248,250);
+  background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
@@ -17,7 +17,6 @@ exports[`"Form" renders 1`] = `
   flex-direction: column;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
   justify-content: space-between;
   margin-bottom: 0;
   width: 100%;

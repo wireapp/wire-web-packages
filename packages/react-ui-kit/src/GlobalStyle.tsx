@@ -18,7 +18,7 @@
  */
 
 /** @jsx jsx */
-import {css, jsx, CSSObject, Theme, Global, withTheme} from '@emotion/react';
+import {css, jsx, CSSObject, Theme, Global, useTheme} from '@emotion/react';
 import emotionNormalize from 'emotion-normalize';
 import {textLinkStyle} from './Text/TextLink';
 
@@ -59,6 +59,7 @@ const globalStyle = (theme: Theme) => css`
   ${globalStyles(theme)}
 `;
 
-export const GlobalStyle = withTheme(({theme}) => {
+export const GlobalStyle = () => {
+  const theme = useTheme();
   return <Global styles={globalStyle(theme)} />;
-});
+};

@@ -2,13 +2,13 @@
 
 exports[`"ErrorMessage" renders 1`] = `
 .emotion-1 {
-  background: rgb(247,248,250);
+  background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
 .emotion-0 {
-  color: rgb(52,56,59);
+  color: rgb(52, 56, 59);
   display: inline;
   font-size: 16px;
   font-weight: 300;
@@ -26,7 +26,7 @@ exports[`"ErrorMessage" renders 1`] = `
 }
 
 .emotion-0 a {
-  color: rgb(52,56,59);
+  color: rgb(52, 56, 59);
   display: inline;
   font-size: 11px;
   font-weight: 300;
@@ -41,13 +41,13 @@ exports[`"ErrorMessage" renders 1`] = `
 }
 
 .emotion-0 a:hover {
-  color: rgb(44,47,50);
+  color: rgb(44, 47, 50);
 }
 
 .emotion-0 a:visited,
 .emotion-0 a:link,
 .emotion-0 a:active {
-  color: rgb(52,56,59);
+  color: rgb(52, 56, 59);
 }
 
 <div

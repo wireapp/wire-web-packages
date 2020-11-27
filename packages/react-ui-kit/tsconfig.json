@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": "./",
     "emitDeclarationOnly": true,
     "esModuleInterop": true,
     "noImplicitAny": false,
@@ -7,7 +8,10 @@
     "noUnusedLocals": false,
     "outDir": "src",
     "rootDir": "src",
-    "strict": false
+    "strict": false,
+    "paths": {
+      "@emotion/core": ["node_modules/@emotion/react"],
+    }
   },
   "exclude": ["node_modules", "src/**/*.test.ts", "src/**/*.test.tsx", "src/test/**/*"],
   "extends": "../../tsconfig.json"

@@ -17,7 +17,7 @@ exports[`"TextLink" renders (dark theme) 1`] = `
 }
 
 .emotion-0:hover {
-  color: rgb(10,101,156);
+  color: rgb(10, 101, 156);
 }
 
 .emotion-0:visited,
@@ -45,7 +45,7 @@ exports[`"TextLink" renders (dark theme) 1`] = `
 
 exports[`"TextLink" renders 1`] = `
 .emotion-1 {
-  background: rgb(247,248,250);
+  background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
@@ -66,7 +66,7 @@ exports[`"TextLink" renders 1`] = `
 }
 
 .emotion-0:hover {
-  color: rgb(10,101,156);
+  color: rgb(10, 101, 156);
 }
 
 .emotion-0:visited,

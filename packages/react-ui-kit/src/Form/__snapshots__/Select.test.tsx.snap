@@ -2,7 +2,7 @@
 
 exports[`"Select" renders 1`] = `
 .emotion-1 {
-  background: rgb(247,248,250);
+  background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
@@ -13,7 +13,7 @@ exports[`"Select" renders 1`] = `
   border-radius: 4px;
   box-shadow: 0 0 0 1px #bac8d1;
   caret-color: #0c78ba;
-  color: rgb(52,56,59);
+  color: rgb(52, 56, 59);
   font-weight: 300;
   height: 56px;
   line-height: 24px;
@@ -23,6 +23,7 @@ exports[`"Select" renders 1`] = `
   width: 100%;
   -webkit-appearance: none;
   -moz-appearance: none;
+  -ms-appearance: none;
   appearance: none;
   cursor: pointer;
   font-size: 16px;
@@ -30,20 +31,20 @@ exports[`"Select" renders 1`] = `
 }
 
 .emotion-0::-moz-placeholder {
-  color: rgb(141,152,159);
+  color: rgb(141, 152, 159);
   font-size: 11px;
   text-transform: none;
   opacity: 1;
 }
 
 .emotion-0::-ms-input-placeholder {
-  color: rgb(141,152,159);
+  color: rgb(141, 152, 159);
   font-size: 11px;
   text-transform: none;
 }
 
 .emotion-0::-webkit-input-placeholder {
-  color: rgb(141,152,159);
+  color: rgb(141, 152, 159);
   font-size: 11px;
   text-transform: none;
 }
@@ -83,18 +84,18 @@ exports[`"Select" renders 1`] = `
 
 exports[`"Select" renders as disabled 1`] = `
 .emotion-1 {
-  background: rgb(247,248,250);
+  background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
 .emotion-0 {
-  background: rgba(127,136,142,0.16000000000000003);
+  background: rgba(127, 136, 142, 0.16000000000000003);
   border: none;
   border-radius: 4px;
   box-shadow: 0 0 0 1px #bac8d1;
   caret-color: #0c78ba;
-  color: rgb(52,56,59);
+  color: rgb(52, 56, 59);
   font-weight: 300;
   height: 56px;
   line-height: 24px;
@@ -104,6 +105,7 @@ exports[`"Select" renders as disabled 1`] = `
   width: 100%;
   -webkit-appearance: none;
   -moz-appearance: none;
+  -ms-appearance: none;
   appearance: none;
   cursor: normal;
   font-size: 16px;
@@ -111,20 +113,20 @@ exports[`"Select" renders as disabled 1`] = `
 }
 
 .emotion-0::-moz-placeholder {
-  color: rgb(141,152,159);
+  color: rgb(141, 152, 159);
   font-size: 11px;
   text-transform: none;
   opacity: 1;
 }
 
 .emotion-0::-ms-input-placeholder {
-  color: rgb(141,152,159);
+  color: rgb(141, 152, 159);
   font-size: 11px;
   text-transform: none;
 }
 
 .emotion-0::-webkit-input-placeholder {
-  color: rgb(141,152,159);
+  color: rgb(141, 152, 159);
   font-size: 11px;
   text-transform: none;
 }
@@ -165,7 +167,7 @@ exports[`"Select" renders as disabled 1`] = `
 
 exports[`"Select" renders as invalid 1`] = `
 .emotion-1 {
-  background: rgb(247,248,250);
+  background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
@@ -176,7 +178,7 @@ exports[`"Select" renders as invalid 1`] = `
   border-radius: 4px;
   box-shadow: 0 0 0 1px #e02020;
   caret-color: #0c78ba;
-  color: rgb(52,56,59);
+  color: rgb(52, 56, 59);
   font-weight: 300;
   height: 56px;
   line-height: 24px;
@@ -186,6 +188,7 @@ exports[`"Select" renders as invalid 1`] = `
   width: 100%;
   -webkit-appearance: none;
   -moz-appearance: none;
+  -ms-appearance: none;
   appearance: none;
   cursor: pointer;
   font-size: 16px;
@@ -193,20 +196,20 @@ exports[`"Select" renders as invalid 1`] = `
 }
 
 .emotion-0::-moz-placeholder {
-  color: rgb(141,152,159);
+  color: rgb(141, 152, 159);
   font-size: 11px;
   text-transform: none;
   opacity: 1;
 }
 
 .emotion-0::-ms-input-placeholder {
-  color: rgb(141,152,159);
+  color: rgb(141, 152, 159);
   font-size: 11px;
   text-transform: none;
 }
 
 .emotion-0::-webkit-input-placeholder {
-  color: rgb(141,152,159);
+  color: rgb(141, 152, 159);
   font-size: 11px;
   text-transform: none;
 }
