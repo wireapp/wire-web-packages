@@ -334,11 +334,11 @@ export class Session {
     }
 
     encoder.u8(5);
-    const sessionStatesIds = Object.keys(this.session_states);
-    encoder.object(sessionStatesIds.length);
+    const sessionStatesIndices = Object.keys(this.session_states);
+    encoder.object(sessionStatesIndices.length);
 
-    for (const index of sessionStatesIds) {
-      const state = this.session_states[index];
+    for (const sessionStatesIndex of sessionStatesIndices) {
+      const state = this.session_states[sessionStatesIndex];
       state.tag.encode(encoder);
       state.state.encode(encoder);
     }
