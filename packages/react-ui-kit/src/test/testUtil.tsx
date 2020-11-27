@@ -17,11 +17,11 @@
  *
  */
 
+import {EmotionJSX} from '@emotion/react/types/jsx-namespace';
 import React from 'react';
-import {jsx as JSX} from '@emotion/core';
 import renderer from 'react-test-renderer';
 import {StyledApp, THEME_ID} from '../Layout';
 
 /* eslint-disable no-unsanitized/method */
-export const matchComponent = (component: JSX.Element, themeId = THEME_ID.LIGHT) =>
+export const matchComponent = (component: EmotionJSX.Element, themeId = THEME_ID.LIGHT) =>
   (expect as any)(renderer.create(<StyledApp themeId={themeId}>{component}</StyledApp>).toJSON()).toMatchSnapshot();

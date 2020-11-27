@@ -18,10 +18,10 @@
  */
 
 /** @jsx jsx */
-import {ObjectInterpolation, jsx} from '@emotion/core';
+import {CSSObject, jsx, Theme} from '@emotion/react';
+
 import React from 'react';
 import {TextTransformProperty} from 'csstype';
-import {Theme} from '../Layout';
 import {filterProps} from '../util';
 
 export interface TextProps<T = HTMLSpanElement> extends React.HTMLProps<T> {
@@ -52,7 +52,7 @@ export const filterTextProps = (props: TextProps) => {
   ]);
 };
 
-export const textStyle: <T>(theme: Theme, props: TextProps<T>) => ObjectInterpolation<undefined> = (
+export const textStyle: <T>(theme: Theme, props: TextProps<T>) => CSSObject = (
   theme,
   {
     block = false,

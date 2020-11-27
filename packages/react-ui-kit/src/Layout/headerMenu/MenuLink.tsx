@@ -18,18 +18,18 @@
  */
 
 /** @jsx jsx */
-import {ObjectInterpolation, jsx} from '@emotion/core';
+import {CSSObject, jsx, Theme} from '@emotion/react';
+
 import {QueryKeys, media} from '../../mediaQueries';
 import {LinkProps, filterLinkProps, linkStyle} from '../../Text';
 import {filterProps} from '../../util';
-import {Theme} from '../Theme';
 import {DESKTOP_HEADER_SUB_MENU_CLASSNAME} from './HeaderSubMenu';
 
 export interface MenuLinkProps<T = HTMLAnchorElement> extends LinkProps<T> {
   button?: boolean;
 }
 
-export const menuLinkStyle: <T>(theme: Theme, props: MenuLinkProps<T>) => ObjectInterpolation<undefined> = (
+export const menuLinkStyle: <T>(theme: Theme, props: MenuLinkProps<T>) => CSSObject = (
   theme,
   {bold = true, color = theme.general.color, fontSize = '11px', textTransform = 'uppercase', button = false, ...props},
 ) => ({

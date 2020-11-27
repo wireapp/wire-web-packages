@@ -18,7 +18,8 @@
  */
 
 /** @jsx jsx */
-import {ObjectInterpolation, jsx} from '@emotion/core';
+import {CSSObject, jsx, Theme} from '@emotion/react';
+
 import {FlexWrapProperty} from 'csstype';
 import React from 'react';
 import {filterProps} from '../util';
@@ -30,7 +31,7 @@ export interface FlexBoxProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   justify?: string;
 }
 
-export const flexBoxStyle: <T>(props: FlexBoxProps<T>) => ObjectInterpolation<undefined> = ({
+export const flexBoxStyle: <T>(props: FlexBoxProps<T>) => CSSObject = ({
   align = 'flex-start',
   column = false,
   justify = 'flex-start',

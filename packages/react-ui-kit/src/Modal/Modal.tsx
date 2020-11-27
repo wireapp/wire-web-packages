@@ -18,13 +18,14 @@
  */
 
 /** @jsx jsx */
-import {ObjectInterpolation, jsx} from '@emotion/core';
+import {CSSObject, jsx, Theme} from '@emotion/react';
+
 import React, {CSSProperties} from 'react';
 import Color from 'color';
 import {CloseIcon} from '../Icon';
 import {SVGIconProps} from '../Icon/SVGIcon';
 import {COLOR} from '../Identity';
-import {Theme} from '../Layout';
+
 import {QueryKeys, media} from '../mediaQueries';
 import {filterProps, noop} from '../util';
 import {OverlayBackgroundProps, OverlayWrapper, overlayBackgroundStyle} from './Overlay';
@@ -33,10 +34,7 @@ export interface ModalBodyProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   fullscreen?: boolean;
 }
 
-const modalBodyStyle: <T>(theme: Theme, props: ModalBodyProps<T>) => ObjectInterpolation<undefined> = (
-  theme,
-  {fullscreen = false},
-) => ({
+const modalBodyStyle: <T>(theme: Theme, props: ModalBodyProps<T>) => CSSObject = (theme, {fullscreen = false}) => ({
   alignItems: 'center',
   backgroundColor: COLOR.tint(theme.general.backgroundColor, 0.16),
   borderRadius: fullscreen ? 0 : '8px',
@@ -91,7 +89,7 @@ const ModalContent: React.FC<React.HTMLProps<HTMLDivElement>> = props => (
   />
 );
 
-const modalBackgroundStyle: <T>(props: OverlayBackgroundProps<T>) => ObjectInterpolation<undefined> = props => ({
+const modalBackgroundStyle: <T>(props: OverlayBackgroundProps<T>) => CSSObject = props => ({
   ...overlayBackgroundStyle(props),
   backgroundColor: 'rgba(50, 54, 57, 0.4)',
 });
@@ -109,7 +107,7 @@ interface ModalActions {
   actions?: ModalActionItem[];
 }
 
-const modalActionsWrapperStyles: () => ObjectInterpolation<undefined> = () => ({
+const modalActionsWrapperStyles: () => CSSObject = () => ({
   borderTop: `1px solid ${COLOR.GRAY_LIGHTEN_72}`,
   bottom: 0,
   display: 'flex',
@@ -134,7 +132,7 @@ const modalActionsWrapperStyles: () => ObjectInterpolation<undefined> = () => ({
   width: '100%',
 });
 
-const modalActionStyles: ({bold}: {bold: boolean}) => ObjectInterpolation<undefined> = ({bold}) => ({
+const modalActionStyles: ({bold}: {bold: boolean}) => CSSObject = ({bold}) => ({
   '&:hover': {
     color: Color(COLOR.BLUE).mix(Color(COLOR.BLACK), 0.16).toString(),
   },
@@ -170,7 +168,7 @@ interface ModalProps {
   onClose?: () => void;
 }
 
-export const Modal: React.SFC<ModalProps & React.HTMLProps<HTMLDivElement>> = ({
+export const Modal: React.FC<ModalProps & React.HTMLProps<HTMLDivElement>> = ({
   actions = [],
   children,
   bodyStyle,

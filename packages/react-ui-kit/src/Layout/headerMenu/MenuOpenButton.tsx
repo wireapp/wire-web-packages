@@ -18,20 +18,17 @@
  */
 
 /** @jsx jsx */
-import {ObjectInterpolation, jsx} from '@emotion/core';
+import {CSSObject, jsx, Theme} from '@emotion/react';
+
 import React from 'react';
 import {QueryKeys, media} from '../../mediaQueries';
 import {filterProps} from '../../util';
-import {Theme} from '../Theme';
 
 export interface MenuOpenButtonProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   open?: boolean;
 }
 
-export const menuOpenButtonStyle: <T>(theme: Theme, props: MenuOpenButtonProps<T>) => ObjectInterpolation<undefined> = (
-  theme,
-  {open},
-) => ({
+export const menuOpenButtonStyle: <T>(theme: Theme, props: MenuOpenButtonProps<T>) => CSSObject = (theme, {open}) => ({
   display: 'block',
   div: {
     backgroundColor: theme.general.color,

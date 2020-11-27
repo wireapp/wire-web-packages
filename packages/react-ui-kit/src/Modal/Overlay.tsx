@@ -18,7 +18,8 @@
  */
 
 /** @jsx jsx */
-import {ObjectInterpolation, jsx} from '@emotion/core';
+import {CSSObject, jsx, Theme} from '@emotion/react';
+
 import React from 'react';
 import {COLOR} from '../Identity';
 import {ANIMATION, DURATION, EASE} from '../Identity/motions';
@@ -27,7 +28,7 @@ import {noop} from '../util';
 
 export type OverlayWrapperProps<T = HTMLDivElement> = React.HTMLProps<T>;
 
-export const overlayWrapperStyle: <T>(props: OverlayWrapperProps<T>) => ObjectInterpolation<undefined> = () => ({
+export const overlayWrapperStyle: <T>(props: OverlayWrapperProps<T>) => CSSObject = () => ({
   bottom: 0,
   display: 'flex',
   left: 0,
@@ -39,7 +40,7 @@ export const overlayWrapperStyle: <T>(props: OverlayWrapperProps<T>) => ObjectIn
   zIndex: 9997,
 });
 
-export const OverlayWrapper = (props: OverlayWrapperProps) => <div css={overlayWrapperStyle} {...props} />;
+export const OverlayWrapper = (props: OverlayWrapperProps) => <div css={() => overlayWrapperStyle(props)} {...props} />;
 
 export const OverlayContent = (props: React.HTMLProps<HTMLDivElement>) => (
   <div
@@ -67,7 +68,7 @@ export const OverlayContent = (props: React.HTMLProps<HTMLDivElement>) => (
 
 export type OverlayBackgroundProps<T = HTMLDivElement> = React.HTMLProps<T>;
 
-export const overlayBackgroundStyle: <T>(props: OverlayBackgroundProps<T>) => ObjectInterpolation<undefined> = () => ({
+export const overlayBackgroundStyle: <T>(props: OverlayBackgroundProps<T>) => CSSObject = () => ({
   animation: `${ANIMATION.fadeIn} ${DURATION.PROACTIVE_SLOW}ms ${EASE.QUART}`,
   background: 'rgba(0, 0, 0, 0.88)',
   height: '100vh',
@@ -78,7 +79,9 @@ export const overlayBackgroundStyle: <T>(props: OverlayBackgroundProps<T>) => Ob
   zIndex: 9998,
 });
 
-export const OverlayBackground = (props: OverlayBackgroundProps) => <div css={overlayBackgroundStyle} {...props} />;
+export const OverlayBackground = (props: OverlayBackgroundProps) => (
+  <div css={() => overlayBackgroundStyle(props)} {...props} />
+);
 
 export interface OverlayProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   onBackgroundClick?: () => void;

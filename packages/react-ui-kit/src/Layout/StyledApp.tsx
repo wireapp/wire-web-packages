@@ -18,21 +18,22 @@
  */
 
 /** @jsx jsx */
+import {CSSObject, jsx, Theme} from '@emotion/react';
+
 import React from 'react';
-import {ObjectInterpolation, jsx} from '@emotion/core';
 import {GlobalStyle} from '../GlobalStyle';
 import {filterProps} from '../util';
-import {THEME_ID, Theme, ThemeProvider} from './Theme';
+import {THEME_ID, ThemeProvider} from './Theme';
 
 export interface StyledAppContainerProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   backgroundColor?: string;
   themeId?: THEME_ID;
 }
 
-const styledAppContainerStyle: <T>(
-  theme: Theme,
-  props: StyledAppContainerProps<T>,
-) => ObjectInterpolation<undefined> = (theme, {backgroundColor = theme.general.backgroundColor}) => ({
+const styledAppContainerStyle: <T>(theme: Theme, props: StyledAppContainerProps<T>) => CSSObject = (
+  theme,
+  {backgroundColor = theme.general.backgroundColor},
+) => ({
   background: backgroundColor,
   transition: 'background 0.15s',
 });

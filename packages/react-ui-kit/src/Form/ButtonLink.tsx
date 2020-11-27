@@ -18,18 +18,15 @@
  */
 
 /** @jsx jsx */
-import {ObjectInterpolation, jsx} from '@emotion/core';
+import {jsx, CSSObject, Theme} from '@emotion/react';
+
 import {Loading} from '../Misc';
 import {COLOR} from '../Identity';
 import {filterProps} from '../util';
 import {filterTextProps} from '../Text';
 import {ButtonProps, buttonStyle} from './Button';
-import {Theme} from '../Layout';
 
-export const buttonLinkStyle: (
-  theme: Theme,
-  props: ButtonProps<HTMLAnchorElement>,
-) => ObjectInterpolation<undefined> = (theme, props) => ({
+export const buttonLinkStyle: (theme: Theme, props: ButtonProps<HTMLAnchorElement>) => CSSObject = (theme, props) => ({
   ...buttonStyle(theme, props),
   display: 'inline-flex !important',
 });

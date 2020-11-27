@@ -18,9 +18,9 @@
  */
 
 /** @jsx jsx */
-import {ObjectInterpolation, jsx} from '@emotion/core';
+import {CSSObject, jsx, Theme} from '@emotion/react';
+
 import React, {useEffect, useState} from 'react';
-import {Theme} from '../Layout';
 import {noop} from '../util';
 import {InputProps, inputStyle} from './Input';
 
@@ -36,10 +36,7 @@ const CodeInputWrapper = (props: React.HTMLProps<HTMLDivElement>) => (
 
 type DigitInputProps<T = HTMLInputElement> = InputProps<T>;
 
-const digitInputStyle: <T>(theme: Theme, props: DigitInputProps<T>) => ObjectInterpolation<undefined> = (
-  theme,
-  props,
-) => ({
+const digitInputStyle: <T>(theme: Theme, props: DigitInputProps<T>) => CSSObject = (theme, props) => ({
   ...inputStyle(theme, props),
   '& + &': {
     marginLeft: '19px',

@@ -18,7 +18,8 @@
  */
 
 /** @jsx jsx */
-import {ObjectInterpolation, jsx} from '@emotion/core';
+import {CSSObject, jsx} from '@emotion/react';
+
 import {TextProps} from '../../Text';
 import {filterProps} from '../../util';
 import {contentStyle} from '../Content';
@@ -27,7 +28,7 @@ export interface MenuContentProps<T = HTMLDivElement> extends TextProps<T> {
   open?: boolean;
 }
 
-export const menuContentStyle: <T>(props: MenuContentProps<T>) => ObjectInterpolation<undefined> = props => ({
+export const menuContentStyle: <T>(props: MenuContentProps<T>) => CSSObject = props => ({
   ...contentStyle(props),
   alignItems: 'center',
   display: 'grid',

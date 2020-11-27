@@ -18,9 +18,9 @@
  */
 
 /** @jsx jsx */
-import {ObjectInterpolation, jsx} from '@emotion/core';
+import {CSSObject, jsx, Theme} from '@emotion/react';
+
 import React from 'react';
-import {Theme} from '../Layout';
 
 export interface InternalSVGIconProps<T = SVGSVGElement> extends SVGIconProps<T> {
   realHeight: number;
@@ -35,7 +35,7 @@ export interface SVGIconProps<T = SVGSVGElement> extends React.SVGProps<T> {
   width?: number;
 }
 
-const svgIconStyle: <T>(theme: Theme, props: SVGIconProps<T>) => ObjectInterpolation<undefined> = (
+const svgIconStyle: <T>(theme: Theme, props: SVGIconProps<T>) => CSSObject = (
   theme,
   {color = theme.general.color},
 ) => ({

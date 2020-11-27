@@ -18,11 +18,11 @@
  */
 
 /** @jsx jsx */
-import {ObjectInterpolation, jsx} from '@emotion/core';
-import {TextTransformProperty} from 'csstype';
+import {CSSObject, jsx, Theme} from '@emotion/react';
+
 import React from 'react';
+import {TextTransformProperty} from 'csstype';
 import {COLOR} from '../Identity';
-import {Theme} from '../Layout';
 import {TextProps} from '../Text';
 import {filterProps} from '../util';
 
@@ -31,7 +31,7 @@ export interface TextAreaProps<T = HTMLTextAreaElement> extends TextProps<T> {
   placeholderTextTransform?: TextTransformProperty;
 }
 
-export const textAreaStyle: <T>(theme: Theme, props: TextAreaProps<T>) => ObjectInterpolation<undefined> = (
+export const textAreaStyle: <T>(theme: Theme, props: TextAreaProps<T>) => CSSObject = (
   theme,
   {markInvalid = false, placeholderTextTransform = 'none', disabled = false},
 ) => {
