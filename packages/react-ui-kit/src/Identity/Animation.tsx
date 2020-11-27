@@ -40,7 +40,7 @@ type MovementProps = TransitionProps & {
 
 type TransitionContainerProps = React.HTMLProps<any> & {
   appear?: boolean;
-  component?: keyof JSX.IntrinsicElements;
+  component?: keyof EmotionJSX.IntrinsicElements;
   enter?: boolean;
   exit?: boolean;
 };
