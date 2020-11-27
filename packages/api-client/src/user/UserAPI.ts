@@ -270,9 +270,7 @@ export class UserAPI {
   }
 
   public async getUserPreKeys(user: QualifiedUser): Promise<QualifiedPreKeyBundle>;
-
   public async getUserPreKeys(user: string): Promise<PreKeyBundle>;
-
   public async getUserPreKeys(user: QualifiedUser | string): Promise<PreKeyBundle | QualifiedPreKeyBundle> {
     const url =
       typeof user === 'string'
