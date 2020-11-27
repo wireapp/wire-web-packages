@@ -31,6 +31,7 @@ import {
   CompletePasswordReset,
   HandleInfo,
   NewPasswordReset,
+  QualifiedUser,
   SearchResult,
   SendActivationCode,
   User,
@@ -39,11 +40,6 @@ import {
 } from '../user/';
 import {RichInfo} from './RichInfo';
 import {RequestCancellationError} from './UserError';
-
-export type QualifiedUser = {
-  domain: string;
-  id: string;
-};
 
 export class UserAPI {
   public static readonly DEFAULT_USERS_CHUNK_SIZE = 50;
