@@ -194,7 +194,7 @@ export class Session {
 
   private _evict_oldest_session_state(): void {
     const oldest = Object.keys(this.session_states)
-      .filter(obj => obj.toString() !== this.session_tag_name)
+      .filter(sessionTagName => sessionTagName.toString() !== this.session_tag_name)
       .reduce((lowest, obj) => {
         return this.session_states[obj].idx < this.session_states[lowest].idx ? obj.toString() : lowest;
       });
