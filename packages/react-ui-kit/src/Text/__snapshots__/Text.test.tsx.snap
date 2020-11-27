@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`"Text" renders (dark theme) 1`] = `
-.emotion-1 {
+.emotion-0 {
   background: #000;
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
-.emotion-0 {
+.emotion-1 {
   color: #fff;
   display: inline;
   font-size: 16px;
@@ -18,10 +18,10 @@ exports[`"Text" renders (dark theme) 1`] = `
 }
 
 <div
-  className="emotion-1"
+  className="emotion-0"
 >
   <span
-    className="emotion-0"
+    className="emotion-1"
   >
     Text
   </span>
@@ -29,13 +29,13 @@ exports[`"Text" renders (dark theme) 1`] = `
 `;
 
 exports[`"Text" renders 1`] = `
-.emotion-1 {
+.emotion-0 {
   background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
-.emotion-0 {
+.emotion-1 {
   color: rgb(52, 56, 59);
   display: inline;
   font-size: 16px;
@@ -46,10 +46,10 @@ exports[`"Text" renders 1`] = `
 }
 
 <div
-  className="emotion-1"
+  className="emotion-0"
 >
   <span
-    className="emotion-0"
+    className="emotion-1"
   >
     Text
   </span>
@@ -57,13 +57,13 @@ exports[`"Text" renders 1`] = `
 `;
 
 exports[`"Text" renders as block 1`] = `
-.emotion-1 {
+.emotion-0 {
   background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
-.emotion-0 {
+.emotion-1 {
   color: rgb(52, 56, 59);
   display: block;
   font-size: 16px;
@@ -74,10 +74,10 @@ exports[`"Text" renders as block 1`] = `
 }
 
 <div
-  className="emotion-1"
+  className="emotion-0"
 >
   <span
-    className="emotion-0"
+    className="emotion-1"
   >
     Text
   </span>
@@ -85,13 +85,13 @@ exports[`"Text" renders as block 1`] = `
 `;
 
 exports[`"Text" renders bold 1`] = `
-.emotion-1 {
+.emotion-0 {
   background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
-.emotion-0 {
+.emotion-1 {
   color: rgb(52, 56, 59);
   display: inline;
   font-size: 16px;
@@ -102,10 +102,10 @@ exports[`"Text" renders bold 1`] = `
 }
 
 <div
-  className="emotion-1"
+  className="emotion-0"
 >
   <span
-    className="emotion-0"
+    className="emotion-1"
   >
     Text
   </span>
@@ -113,13 +113,13 @@ exports[`"Text" renders bold 1`] = `
 `;
 
 exports[`"Text" renders centered 1`] = `
-.emotion-1 {
+.emotion-0 {
   background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
-.emotion-0 {
+.emotion-1 {
   color: rgb(52, 56, 59);
   display: inline;
   font-size: 16px;
@@ -130,10 +130,10 @@ exports[`"Text" renders centered 1`] = `
 }
 
 <div
-  className="emotion-1"
+  className="emotion-0"
 >
   <span
-    className="emotion-0"
+    className="emotion-1"
   >
     Text
   </span>
@@ -141,13 +141,13 @@ exports[`"Text" renders centered 1`] = `
 `;
 
 exports[`"Text" renders light 1`] = `
-.emotion-1 {
+.emotion-0 {
   background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
-.emotion-0 {
+.emotion-1 {
   color: rgb(52, 56, 59);
   display: inline;
   font-size: 16px;
@@ -158,10 +158,10 @@ exports[`"Text" renders light 1`] = `
 }
 
 <div
-  className="emotion-1"
+  className="emotion-0"
 >
   <span
-    className="emotion-0"
+    className="emotion-1"
   >
     Text
   </span>
@@ -169,13 +169,13 @@ exports[`"Text" renders light 1`] = `
 `;
 
 exports[`"Text" renders muted 1`] = `
-.emotion-1 {
+.emotion-0 {
   background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
-.emotion-0 {
+.emotion-1 {
   color: rgb(52, 56, 59);
   display: inline;
   font-size: 16px;
@@ -186,10 +186,10 @@ exports[`"Text" renders muted 1`] = `
 }
 
 <div
-  className="emotion-1"
+  className="emotion-0"
 >
   <span
-    className="emotion-0"
+    className="emotion-1"
   >
     Text
   </span>
@@ -197,13 +197,13 @@ exports[`"Text" renders muted 1`] = `
 `;
 
 exports[`"Text" renders no wrap 1`] = `
-.emotion-1 {
+.emotion-0 {
   background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
-.emotion-0 {
+.emotion-1 {
   color: rgb(52, 56, 59);
   display: inline;
   font-size: 16px;
@@ -215,10 +215,10 @@ exports[`"Text" renders no wrap 1`] = `
 }
 
 <div
-  className="emotion-1"
+  className="emotion-0"
 >
   <span
-    className="emotion-0"
+    className="emotion-1"
   >
     Text
   </span>
@@ -226,13 +226,13 @@ exports[`"Text" renders no wrap 1`] = `
 `;
 
 exports[`"Text" renders with color 1`] = `
-.emotion-1 {
+.emotion-0 {
   background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
-.emotion-0 {
+.emotion-1 {
   color: #0c78ba;
   display: inline;
   font-size: 16px;
@@ -243,10 +243,10 @@ exports[`"Text" renders with color 1`] = `
 }
 
 <div
-  className="emotion-1"
+  className="emotion-0"
 >
   <span
-    className="emotion-0"
+    className="emotion-1"
   >
     Text
   </span>
@@ -254,13 +254,13 @@ exports[`"Text" renders with color 1`] = `
 `;
 
 exports[`"Text" renders with size 1`] = `
-.emotion-1 {
+.emotion-0 {
   background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
-.emotion-0 {
+.emotion-1 {
   color: rgb(52, 56, 59);
   display: inline;
   font-size: 2px;
@@ -271,10 +271,10 @@ exports[`"Text" renders with size 1`] = `
 }
 
 <div
-  className="emotion-1"
+  className="emotion-0"
 >
   <span
-    className="emotion-0"
+    className="emotion-1"
   >
     Text
   </span>
@@ -282,13 +282,13 @@ exports[`"Text" renders with size 1`] = `
 `;
 
 exports[`"Text" renders with textTransform 1`] = `
-.emotion-1 {
+.emotion-0 {
   background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
-.emotion-0 {
+.emotion-1 {
   color: rgb(52, 56, 59);
   display: inline;
   font-size: 16px;
@@ -299,10 +299,10 @@ exports[`"Text" renders with textTransform 1`] = `
 }
 
 <div
-  className="emotion-1"
+  className="emotion-0"
 >
   <span
-    className="emotion-0"
+    className="emotion-1"
   >
     Text
   </span>
@@ -310,13 +310,13 @@ exports[`"Text" renders with textTransform 1`] = `
 `;
 
 exports[`"Text" renders with truncation 1`] = `
-.emotion-1 {
+.emotion-0 {
   background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
-.emotion-0 {
+.emotion-1 {
   color: rgb(52, 56, 59);
   display: inline;
   font-size: 16px;
@@ -327,10 +327,10 @@ exports[`"Text" renders with truncation 1`] = `
 }
 
 <div
-  className="emotion-1"
+  className="emotion-0"
 >
   <span
-    className="emotion-0"
+    className="emotion-1"
   >
     aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
   </span>
@@ -338,13 +338,13 @@ exports[`"Text" renders with truncation 1`] = `
 `;
 
 exports[`Utility components renders Bold 1`] = `
-.emotion-1 {
+.emotion-0 {
   background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
-.emotion-0 {
+.emotion-1 {
   color: rgb(52, 56, 59);
   display: inline;
   font-size: 16px;
@@ -355,10 +355,10 @@ exports[`Utility components renders Bold 1`] = `
 }
 
 <div
-  className="emotion-1"
+  className="emotion-0"
 >
   <span
-    className="emotion-0"
+    className="emotion-1"
   >
     Bold
   </span>
@@ -366,13 +366,13 @@ exports[`Utility components renders Bold 1`] = `
 `;
 
 exports[`Utility components renders Large 1`] = `
-.emotion-1 {
+.emotion-0 {
   background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
-.emotion-0 {
+.emotion-1 {
   color: rgb(52, 56, 59);
   display: inline;
   font-size: 48px;
@@ -383,10 +383,10 @@ exports[`Utility components renders Large 1`] = `
 }
 
 <div
-  className="emotion-1"
+  className="emotion-0"
 >
   <span
-    className="emotion-0"
+    className="emotion-1"
   >
     Large
   </span>
@@ -394,13 +394,13 @@ exports[`Utility components renders Large 1`] = `
 `;
 
 exports[`Utility components renders Muted 1`] = `
-.emotion-1 {
+.emotion-0 {
   background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
-.emotion-0 {
+.emotion-1 {
   color: rgb(52, 56, 59);
   display: inline;
   font-size: 16px;
@@ -411,10 +411,10 @@ exports[`Utility components renders Muted 1`] = `
 }
 
 <div
-  className="emotion-1"
+  className="emotion-0"
 >
   <span
-    className="emotion-0"
+    className="emotion-1"
   >
     Muted
   </span>
@@ -422,13 +422,13 @@ exports[`Utility components renders Muted 1`] = `
 `;
 
 exports[`Utility components renders Small 1`] = `
-.emotion-1 {
+.emotion-0 {
   background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
-.emotion-0 {
+.emotion-1 {
   color: rgb(52, 56, 59);
   display: inline;
   font-size: 12px;
@@ -439,10 +439,10 @@ exports[`Utility components renders Small 1`] = `
 }
 
 <div
-  className="emotion-1"
+  className="emotion-0"
 >
   <span
-    className="emotion-0"
+    className="emotion-1"
   >
     Small
   </span>
@@ -450,13 +450,13 @@ exports[`Utility components renders Small 1`] = `
 `;
 
 exports[`Utility components renders Uppercase 1`] = `
-.emotion-1 {
+.emotion-0 {
   background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
-.emotion-0 {
+.emotion-1 {
   color: rgb(52, 56, 59);
   display: inline;
   font-size: 16px;
@@ -467,10 +467,10 @@ exports[`Utility components renders Uppercase 1`] = `
 }
 
 <div
-  className="emotion-1"
+  className="emotion-0"
 >
   <span
-    className="emotion-0"
+    className="emotion-1"
   >
     Uppercase
   </span>

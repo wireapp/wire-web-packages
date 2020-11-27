@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`"ErrorMessage" renders 1`] = `
-.emotion-1 {
+.emotion-0 {
   background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
-.emotion-0 {
+.emotion-1 {
   color: rgb(52, 56, 59);
   display: inline;
   font-size: 16px;
@@ -25,7 +25,7 @@ exports[`"ErrorMessage" renders 1`] = `
   margin-bottom: 12px;
 }
 
-.emotion-0 a {
+.emotion-1 a {
   color: rgb(52, 56, 59);
   display: inline;
   font-size: 11px;
@@ -40,21 +40,21 @@ exports[`"ErrorMessage" renders 1`] = `
   transition: all 0.24s;
 }
 
-.emotion-0 a:hover {
+.emotion-1 a:hover {
   color: rgb(44, 47, 50);
 }
 
-.emotion-0 a:visited,
-.emotion-0 a:link,
-.emotion-0 a:active {
+.emotion-1 a:visited,
+.emotion-1 a:link,
+.emotion-1 a:active {
   color: rgb(52, 56, 59);
 }
 
 <div
-  className="emotion-1"
+  className="emotion-0"
 >
   <span
-    className="emotion-0"
+    className="emotion-1"
   >
     ErrorMessage
   </span>

@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`"Form" renders 1`] = `
-.emotion-1 {
+.emotion-0 {
   background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
-.emotion-0 {
+.emotion-1 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -23,10 +23,10 @@ exports[`"Form" renders 1`] = `
 }
 
 <div
-  className="emotion-1"
+  className="emotion-0"
 >
   <form
-    className="emotion-0"
+    className="emotion-1"
   >
     Form
   </form>

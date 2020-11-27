@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`"Input" renders 1`] = `
-.emotion-1 {
+.emotion-0 {
   background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
-.emotion-0 {
+.emotion-1 {
   background: #fff;
   border: none;
   border-radius: 4px;
@@ -23,50 +23,50 @@ exports[`"Input" renders 1`] = `
   width: 100%;
 }
 
-.emotion-0::-moz-placeholder {
+.emotion-1::-moz-placeholder {
   color: rgb(141, 152, 159);
   font-size: 11px;
   text-transform: none;
   opacity: 1;
 }
 
-.emotion-0::-ms-input-placeholder {
+.emotion-1::-ms-input-placeholder {
   color: rgb(141, 152, 159);
   font-size: 11px;
   text-transform: none;
 }
 
-.emotion-0::-webkit-input-placeholder {
+.emotion-1::-webkit-input-placeholder {
   color: rgb(141, 152, 159);
   font-size: 11px;
   text-transform: none;
 }
 
-.emotion-0:focus {
+.emotion-1:focus {
   box-shadow: 0 0 0 1px #0c78ba;
 }
 
-.emotion-0:invalid:not(:focus) {
+.emotion-1:invalid:not(:focus) {
   box-shadow: 0 0 0 1px #bac8d1;
 }
 
 <div
-  className="emotion-1"
+  className="emotion-0"
 >
   <input
-    className="wireinput emotion-0"
+    className="wireinput emotion-1"
   />
 </div>
 `;
 
 exports[`"Input" renders as disabled 1`] = `
-.emotion-1 {
+.emotion-0 {
   background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
-.emotion-0 {
+.emotion-1 {
   background: rgba(127, 136, 142, 0.16000000000000003);
   border: none;
   border-radius: 4px;
@@ -82,51 +82,51 @@ exports[`"Input" renders as disabled 1`] = `
   width: 100%;
 }
 
-.emotion-0::-moz-placeholder {
+.emotion-1::-moz-placeholder {
   color: rgb(141, 152, 159);
   font-size: 11px;
   text-transform: none;
   opacity: 1;
 }
 
-.emotion-0::-ms-input-placeholder {
+.emotion-1::-ms-input-placeholder {
   color: rgb(141, 152, 159);
   font-size: 11px;
   text-transform: none;
 }
 
-.emotion-0::-webkit-input-placeholder {
+.emotion-1::-webkit-input-placeholder {
   color: rgb(141, 152, 159);
   font-size: 11px;
   text-transform: none;
 }
 
-.emotion-0:focus {
+.emotion-1:focus {
   box-shadow: 0 0 0 1px #0c78ba;
 }
 
-.emotion-0:invalid:not(:focus) {
+.emotion-1:invalid:not(:focus) {
   box-shadow: 0 0 0 1px #bac8d1;
 }
 
 <div
-  className="emotion-1"
+  className="emotion-0"
 >
   <input
-    className="wireinput emotion-0"
+    className="wireinput emotion-1"
     disabled={true}
   />
 </div>
 `;
 
 exports[`"Input" renders as invalid 1`] = `
-.emotion-1 {
+.emotion-0 {
   background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
-.emotion-0 {
+.emotion-1 {
   background: #fff;
   border: none;
   border-radius: 4px;
@@ -142,48 +142,46 @@ exports[`"Input" renders as invalid 1`] = `
   width: 100%;
 }
 
-.emotion-0::-moz-placeholder {
+.emotion-1::-moz-placeholder {
   color: rgb(141, 152, 159);
   font-size: 11px;
   text-transform: none;
   opacity: 1;
 }
 
-.emotion-0::-ms-input-placeholder {
+.emotion-1::-ms-input-placeholder {
   color: rgb(141, 152, 159);
   font-size: 11px;
   text-transform: none;
 }
 
-.emotion-0::-webkit-input-placeholder {
+.emotion-1::-webkit-input-placeholder {
   color: rgb(141, 152, 159);
   font-size: 11px;
   text-transform: none;
 }
 
-.emotion-0:focus {
+.emotion-1:focus {
   box-shadow: 0 0 0 1px #0c78ba;
 }
 
-
-
 <div
-  className="emotion-1"
+  className="emotion-0"
 >
   <input
-    className="wireinput emotion-0"
+    className="wireinput emotion-1"
   />
 </div>
 `;
 
 exports[`"Input" renders with placeholderTextTransform 1`] = `
-.emotion-1 {
+.emotion-0 {
   background: rgb(247, 248, 250);
   -webkit-transition: background 0.15s;
   transition: background 0.15s;
 }
 
-.emotion-0 {
+.emotion-1 {
   background: #fff;
   border: none;
   border-radius: 4px;
@@ -199,38 +197,38 @@ exports[`"Input" renders with placeholderTextTransform 1`] = `
   width: 100%;
 }
 
-.emotion-0::-moz-placeholder {
+.emotion-1::-moz-placeholder {
   color: rgb(141, 152, 159);
   font-size: 11px;
   text-transform: uppercase;
   opacity: 1;
 }
 
-.emotion-0::-ms-input-placeholder {
+.emotion-1::-ms-input-placeholder {
   color: rgb(141, 152, 159);
   font-size: 11px;
   text-transform: uppercase;
 }
 
-.emotion-0::-webkit-input-placeholder {
+.emotion-1::-webkit-input-placeholder {
   color: rgb(141, 152, 159);
   font-size: 11px;
   text-transform: uppercase;
 }
 
-.emotion-0:focus {
+.emotion-1:focus {
   box-shadow: 0 0 0 1px #0c78ba;
 }
 
-.emotion-0:invalid:not(:focus) {
+.emotion-1:invalid:not(:focus) {
   box-shadow: 0 0 0 1px #bac8d1;
 }
 
 <div
-  className="emotion-1"
+  className="emotion-0"
 >
   <input
-    className="wireinput emotion-0"
+    className="wireinput emotion-1"
     placeholder="Input"
   />
 </div>
