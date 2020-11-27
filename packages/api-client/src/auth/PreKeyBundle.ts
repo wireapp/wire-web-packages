@@ -18,10 +18,18 @@
  */
 
 import {ClientPreKey} from '../auth/';
+import {QualifiedUser} from '../user';
 
 export interface PreKeyBundle {
   /** PreKeys of all clients */
   clients: ClientPreKey[];
   /** The user ID */
   user: string;
+}
+
+export interface QualifiedPreKeyBundle {
+  /** PreKeys of all clients */
+  clients: ClientPreKey[];
+  /** The qualified user */
+  user: QualifiedUser;
 }

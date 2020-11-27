@@ -20,7 +20,7 @@
 import Axios, {AxiosRequestConfig} from 'axios';
 
 import {ArrayUtil} from '@wireapp/commons';
-import {ClientPreKey, PreKeyBundle} from '../auth/';
+import {ClientPreKey, PreKeyBundle, QualifiedPreKeyBundle} from '../auth/';
 import {PublicClient} from '../client/';
 import {UserClients} from '../conversation/UserClients';
 import {HttpClient, RequestCancelable, SyntheticErrorLabel} from '../http/';
@@ -39,6 +39,11 @@ import {
 } from '../user/';
 import {RichInfo} from './RichInfo';
 import {RequestCancellationError} from './UserError';
+
+export type QualifiedUser = {
+  domain: string;
+  id: string;
+};
 
 export class UserAPI {
   public static readonly DEFAULT_USERS_CHUNK_SIZE = 50;
@@ -268,17 +273,22 @@ export class UserAPI {
     return response.data;
   }
 
-  /**
-   * Get a prekey for each client of a user.
-   * @param userId
-   */
-  public async getUserPreKeys(userId: string): Promise<PreKeyBundle> {
+  public async getUserPreKeys(user: QualifiedUser): Promise<QualifiedPreKeyBundle>;
+
+  public async getUserPreKeys(user: string): Promise<PreKeyBundle>;
+
+  public async getUserPreKeys(user: QualifiedUser | string): Promise<PreKeyBundle | QualifiedPreKeyBundle> {
+    const url =
+      typeof user === 'string'
+        ? `${UserAPI.URL.USERS}/${user}/${UserAPI.URL.PRE_KEYS}`
+        : `${UserAPI.URL.USERS}/${user.domain}/${user}/${UserAPI.URL.PRE_KEYS}`;
+
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${UserAPI.URL.USERS}/${userId}/${UserAPI.URL.PRE_KEYS}`,
+      url,
     };
 
-    const response = await this.client.sendJSON<PreKeyBundle>(config, true);
+    const response = await this.client.sendJSON<PreKeyBundle | QualifiedPreKeyBundle>(config, true);
     return response.data;
   }
 
