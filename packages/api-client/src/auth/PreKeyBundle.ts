@@ -20,16 +20,17 @@
 import {ClientPreKey} from '../auth/';
 import {QualifiedUser} from '../user';
 
-export interface PreKeyBundle {
+type PreKeyBundleBase = {
   /** PreKeys of all clients */
   clients: ClientPreKey[];
+};
+
+export type PreKeyBundle = PreKeyBundleBase & {
   /** The user ID */
   user: string;
-}
+};
 
-export interface QualifiedPreKeyBundle {
-  /** PreKeys of all clients */
-  clients: ClientPreKey[];
+export type QualifiedPreKeyBundle = PreKeyBundleBase & {
   /** The qualified user */
   user: QualifiedUser;
-}
+};
