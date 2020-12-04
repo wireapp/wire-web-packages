@@ -52,6 +52,10 @@ import {
 } from '@wireapp/protocol-messaging';
 import {AxiosError} from 'axios';
 import {Encoder} from 'bazinga64';
+import {IUserEntry, IClientEntry, NewOtrMessage} from '@wireapp/protocol-messaging/web/otr';
+import Long from 'long';
+import {uuidToBytes} from '@wireapp/commons/src/main/util/StringUtil';
+
 import {
   AssetService,
   AssetTransferState,
@@ -61,9 +65,7 @@ import {
   PayloadBundleState,
   PayloadBundleType,
 } from '../conversation/';
-
 import {AssetContent, ClearedContent, DeletedContent, HiddenContent, RemoteData} from '../conversation/content/';
-
 import {CryptographyService, EncryptedAsset} from '../cryptography/';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
 import {MessageBuilder} from './message/MessageBuilder';
@@ -172,6 +174,7 @@ export class ConversationService {
     conversationId: string,
     asset: EncryptedAsset,
     preKeyBundles: UserPreKeyBundleMap,
+    sendAsProtobuf?: boolean,
   ): Promise<void> {
     const {cipherText, keyBytes, sha256} = asset;
     const messageId = MessageBuilder.createId();
@@ -191,7 +194,9 @@ export class ConversationService {
     const plainTextArray = GenericMessage.encode(genericMessage).finish();
     const recipients = await this.cryptographyService.encrypt(plainTextArray, preKeyBundles);
 
-    return this.sendOTRMessage(sendingClientId, conversationId, recipients, base64CipherText);
+    return sendAsProtobuf
+      ? this.sendOTRProtobufMessage(sendingClientId, conversationId, recipients, cipherText)
+      : this.sendOTRMessage(sendingClientId, conversationId, recipients, base64CipherText);
   }
 
   private async sendGenericMessage(
@@ -199,6 +204,7 @@ export class ConversationService {
     conversationId: string,
     genericMessage: GenericMessage,
     userIds?: string[] | UserClientsMap,
+    sendAsProtobuf?: boolean,
   ): Promise<void> {
     const plainTextArray = GenericMessage.encode(genericMessage).finish();
     const preKeyBundles = await this.getPreKeyBundle(conversationId, userIds);
@@ -210,24 +216,27 @@ export class ConversationService {
         conversationId,
         encryptedAsset,
         preKeyBundles,
+        sendAsProtobuf,
       );
     }
 
     const recipients = await this.cryptographyService.encrypt(plainTextArray, preKeyBundles);
 
-    return this.sendOTRMessage(sendingClientId, conversationId, recipients);
+    return sendAsProtobuf
+      ? this.sendOTRProtobufMessage(sendingClientId, conversationId, recipients)
+      : this.sendOTRMessage(sendingClientId, conversationId, recipients);
   }
 
   // TODO: Move this to a generic "message sending class".
   private async sendOTRMessage(
     sendingClientId: string,
     conversationId: string,
-    recipients: OTRRecipients,
+    recipients: OTRRecipients<Uint8Array>,
     data?: any,
   ): Promise<void> {
-    const message: NewOTRMessage = {
+    const message: NewOTRMessage<string> = {
       data,
-      recipients,
+      recipients: CryptographyService.convertArrayRecipientsToBase64(recipients),
       sender: sendingClientId,
     };
 
@@ -239,12 +248,56 @@ export class ConversationService {
     await this.apiClient.conversation.api.postOTRMessage(sendingClientId, conversationId, message, true);
   }
 
+  // TODO: Move this to a generic "message sending class".
+  private async sendOTRProtobufMessage(
+    sendingClientId: string,
+    conversationId: string,
+    recipients: OTRRecipients<Uint8Array>,
+    assetData?: Uint8Array,
+  ): Promise<void> {
+    const userEntries: IUserEntry[] = Object.entries(recipients).map(([userId, otrClientMap]) => {
+      const clients: IClientEntry[] = Object.entries(otrClientMap).map(([clientId, payload]) => {
+        return {
+          client: {
+            client: Long.fromString(clientId, 16),
+          },
+          text: payload,
+        };
+      });
+
+      return {
+        clients,
+        user: {
+          uuid: uuidToBytes(userId),
+        },
+      };
+    });
+
+    const protoMessage = NewOtrMessage.create({
+      recipients: userEntries,
+      sender: {
+        client: Long.fromString(sendingClientId, 16),
+      },
+    });
+
+    if (assetData) {
+      protoMessage.blob = assetData;
+    }
+
+    /**
+     * When creating the PreKey bundles we already found out to which users we want to send a message, so we can ignore
+     * missing clients. We have to ignore missing clients because there can be the case that there are clients that
+     * don't provide PreKeys (clients from the Pre-E2EE era).
+     */
+    await this.apiClient.conversation.api.postOTRProtobufMessage(sendingClientId, conversationId, protoMessage, true);
+  }
+
   // TODO: Move this to a generic "message sending class" and make it private.
   public async onClientMismatch(
     error: AxiosError,
-    message: NewOTRMessage,
+    message: NewOTRMessage<Uint8Array>,
     plainTextArray: Uint8Array,
-  ): Promise<NewOTRMessage> {
+  ): Promise<NewOTRMessage<Uint8Array>> {
     if (error.response?.status === HTTP_STATUS.PRECONDITION_FAILED) {
       const {missing, deleted}: {deleted: UserClients; missing: UserClients} = error.response?.data;
 
@@ -271,6 +324,7 @@ export class ConversationService {
             if (!missingUser) {
               message.recipients[missingUserId] = {};
             }
+
             message.recipients[missingUserId][missingClientId] = reEncryptedPayloads[missingUserId][missingClientId];
           }
         }
@@ -284,6 +338,7 @@ export class ConversationService {
   private async sendButtonAction(
     payloadBundle: ButtonActionMessage,
     userIds?: string[] | UserClientsMap,
+    sendAsProtobuf?: boolean,
   ): Promise<ButtonActionMessage> {
     const genericMessage = GenericMessage.create({
       [GenericMessageType.BUTTON_ACTION]: ButtonAction.create(payloadBundle.content),
@@ -295,6 +350,7 @@ export class ConversationService {
       payloadBundle.conversation,
       genericMessage,
       userIds,
+      sendAsProtobuf,
     );
 
     return {
@@ -307,6 +363,7 @@ export class ConversationService {
   private async sendButtonActionConfirmation(
     payloadBundle: ButtonActionConfirmationMessage,
     userIds?: string[] | UserClientsMap,
+    sendAsProtobuf?: boolean,
   ): Promise<ButtonActionConfirmationMessage> {
     const genericMessage = GenericMessage.create({
       [GenericMessageType.BUTTON_ACTION_CONFIRMATION]: ButtonActionConfirmation.create(payloadBundle.content),
@@ -318,6 +375,7 @@ export class ConversationService {
       payloadBundle.conversation,
       genericMessage,
       userIds,
+      sendAsProtobuf,
     );
 
     return {
@@ -330,6 +388,7 @@ export class ConversationService {
   private async sendComposite(
     payloadBundle: CompositeMessage,
     userIds?: string[] | UserClientsMap,
+    sendAsProtobuf?: boolean,
   ): Promise<CompositeMessage> {
     const genericMessage = GenericMessage.create({
       [GenericMessageType.COMPOSITE]: Composite.create(payloadBundle.content),
@@ -341,6 +400,7 @@ export class ConversationService {
       payloadBundle.conversation,
       genericMessage,
       userIds,
+      sendAsProtobuf,
     );
 
     return {
@@ -353,6 +413,7 @@ export class ConversationService {
   private async sendConfirmation(
     payloadBundle: ConfirmationMessage,
     userIds?: string[] | UserClientsMap,
+    sendAsProtobuf?: boolean,
   ): Promise<ConfirmationMessage> {
     const content = Confirmation.create(payloadBundle.content);
 
@@ -366,6 +427,7 @@ export class ConversationService {
       payloadBundle.conversation,
       genericMessage,
       userIds,
+      sendAsProtobuf,
     );
 
     return {
@@ -378,6 +440,7 @@ export class ConversationService {
   private async sendEditedText(
     payloadBundle: EditedTextMessage,
     userIds?: string[] | UserClientsMap,
+    sendAsProtobuf?: boolean,
   ): Promise<EditedTextMessage> {
     const editedMessage = MessageEdit.create({
       replacingMessageId: payloadBundle.content.originalMessageId,
@@ -394,6 +457,7 @@ export class ConversationService {
       payloadBundle.conversation,
       genericMessage,
       userIds,
+      sendAsProtobuf,
     );
 
     return {
@@ -406,6 +470,7 @@ export class ConversationService {
   private async sendFileData(
     payloadBundle: FileAssetMessage,
     userIds?: string[] | UserClientsMap,
+    sendAsProtobuf?: boolean,
   ): Promise<FileAssetMessage> {
     if (!payloadBundle.content) {
       throw new Error('No content for sendFileData provided.');
@@ -443,6 +508,7 @@ export class ConversationService {
       payloadBundle.conversation,
       genericMessage,
       userIds,
+      sendAsProtobuf,
     );
 
     return {
@@ -455,6 +521,7 @@ export class ConversationService {
   private async sendFileMetaData(
     payloadBundle: FileAssetMetaDataMessage,
     userIds?: string[] | UserClientsMap,
+    sendAsProtobuf?: boolean,
   ): Promise<FileAssetMetaDataMessage> {
     if (!payloadBundle.content) {
       throw new Error('No content for sendFileMetaData provided.');
@@ -491,6 +558,7 @@ export class ConversationService {
       payloadBundle.conversation,
       genericMessage,
       userIds,
+      sendAsProtobuf,
     );
 
     return {
@@ -503,6 +571,7 @@ export class ConversationService {
   private async sendFileAbort(
     payloadBundle: FileAssetAbortMessage,
     userIds?: string[] | UserClientsMap,
+    sendAsProtobuf?: boolean,
   ): Promise<FileAssetAbortMessage> {
     if (!payloadBundle.content) {
       throw new Error('No content for sendFileAbort provided.');
@@ -533,6 +602,7 @@ export class ConversationService {
       payloadBundle.conversation,
       genericMessage,
       userIds,
+      sendAsProtobuf,
     );
 
     return {
@@ -545,6 +615,7 @@ export class ConversationService {
   private async sendImage(
     payloadBundle: ImageAssetMessageOutgoing,
     userIds?: string[] | UserClientsMap,
+    sendAsProtobuf?: boolean,
   ): Promise<ImageAssetMessage> {
     if (!payloadBundle.content) {
       throw new Error('No content for sendImage provided.');
@@ -595,6 +666,7 @@ export class ConversationService {
       payloadBundle.conversation,
       genericMessage,
       userIds,
+      sendAsProtobuf,
     );
 
     return {
@@ -608,6 +680,7 @@ export class ConversationService {
   private async sendLocation(
     payloadBundle: LocationMessage,
     userIds?: string[] | UserClientsMap,
+    sendAsProtobuf?: boolean,
   ): Promise<LocationMessage> {
     const {expectsReadConfirmation, latitude, legalHoldStatus, longitude, name, zoom} = payloadBundle.content;
 
@@ -635,6 +708,7 @@ export class ConversationService {
       payloadBundle.conversation,
       genericMessage,
       userIds,
+      sendAsProtobuf,
     );
 
     return {
@@ -644,7 +718,11 @@ export class ConversationService {
     };
   }
 
-  private async sendKnock(payloadBundle: PingMessage, userIds?: string[] | UserClientsMap): Promise<PingMessage> {
+  private async sendKnock(
+    payloadBundle: PingMessage,
+    userIds?: string[] | UserClientsMap,
+    sendAsProtobuf?: boolean,
+  ): Promise<PingMessage> {
     const content = Knock.create(payloadBundle.content);
 
     let genericMessage = GenericMessage.create({
@@ -662,6 +740,7 @@ export class ConversationService {
       payloadBundle.conversation,
       genericMessage,
       userIds,
+      sendAsProtobuf,
     );
 
     return {
@@ -675,6 +754,7 @@ export class ConversationService {
   private async sendReaction(
     payloadBundle: ReactionMessage,
     userIds?: string[] | UserClientsMap,
+    sendAsProtobuf?: boolean,
   ): Promise<ReactionMessage> {
     const {legalHoldStatus, originalMessageId, type} = payloadBundle.content;
 
@@ -694,6 +774,7 @@ export class ConversationService {
       payloadBundle.conversation,
       genericMessage,
       userIds,
+      sendAsProtobuf,
     );
 
     return {
@@ -706,13 +787,20 @@ export class ConversationService {
   private async sendSessionReset(
     payloadBundle: ResetSessionMessage,
     userIds?: string[] | UserClientsMap,
+    sendAsProtobuf?: boolean,
   ): Promise<ResetSessionMessage> {
     const sessionReset = GenericMessage.create({
       [GenericMessageType.CLIENT_ACTION]: ClientAction.RESET_SESSION,
       messageId: payloadBundle.id,
     });
 
-    await this.sendGenericMessage(this.apiClient.validatedClientId, payloadBundle.conversation, sessionReset, userIds);
+    await this.sendGenericMessage(
+      this.apiClient.validatedClientId,
+      payloadBundle.conversation,
+      sessionReset,
+      userIds,
+      sendAsProtobuf,
+    );
 
     return {
       ...payloadBundle,
@@ -721,7 +809,11 @@ export class ConversationService {
     };
   }
 
-  private async sendCall(payloadBundle: CallMessage, userIds?: string[] | UserClientsMap): Promise<CallMessage> {
+  private async sendCall(
+    payloadBundle: CallMessage,
+    userIds?: string[] | UserClientsMap,
+    sendAsProtobuf?: boolean,
+  ): Promise<CallMessage> {
     const callMessage = Calling.create({
       content: payloadBundle.content,
     });
@@ -736,6 +828,7 @@ export class ConversationService {
       payloadBundle.conversation,
       genericMessage,
       userIds,
+      sendAsProtobuf,
     );
 
     return {
@@ -745,7 +838,11 @@ export class ConversationService {
     };
   }
 
-  private async sendText(payloadBundle: TextMessage, userIds?: string[] | UserClientsMap): Promise<TextMessage> {
+  private async sendText(
+    payloadBundle: TextMessage,
+    userIds?: string[] | UserClientsMap,
+    sendAsProtobuf?: boolean,
+  ): Promise<TextMessage> {
     let genericMessage = GenericMessage.create({
       messageId: payloadBundle.id,
       [GenericMessageType.TEXT]: MessageToProtoMapper.mapText(payloadBundle),
@@ -761,6 +858,7 @@ export class ConversationService {
       payloadBundle.conversation,
       genericMessage,
       userIds,
+      sendAsProtobuf,
     );
 
     return {
@@ -774,6 +872,7 @@ export class ConversationService {
     conversationId: string,
     timestamp: number | Date = new Date(),
     messageId: string = MessageBuilder.createId(),
+    sendAsProtobuf?: boolean,
   ): Promise<ClearConversationMessage> {
     if (timestamp instanceof Date) {
       timestamp = timestamp.getTime();
@@ -793,7 +892,13 @@ export class ConversationService {
 
     const {id: selfConversationId} = await this.getSelfConversation();
 
-    await this.sendGenericMessage(this.apiClient.validatedClientId, selfConversationId, genericMessage);
+    await this.sendGenericMessage(
+      this.apiClient.validatedClientId,
+      selfConversationId,
+      genericMessage,
+      undefined,
+      sendAsProtobuf,
+    );
 
     return {
       content,
@@ -808,7 +913,11 @@ export class ConversationService {
     };
   }
 
-  public async deleteMessageLocal(conversationId: string, messageIdToHide: string): Promise<HideMessage> {
+  public async deleteMessageLocal(
+    conversationId: string,
+    messageIdToHide: string,
+    sendAsProtobuf?: boolean,
+  ): Promise<HideMessage> {
     const messageId = MessageBuilder.createId();
 
     const content: HiddenContent = MessageHide.create({
@@ -823,7 +932,13 @@ export class ConversationService {
 
     const {id: selfConversationId} = await this.getSelfConversation();
 
-    await this.sendGenericMessage(this.apiClient.validatedClientId, selfConversationId, genericMessage);
+    await this.sendGenericMessage(
+      this.apiClient.validatedClientId,
+      selfConversationId,
+      genericMessage,
+      undefined,
+      sendAsProtobuf,
+    );
 
     return {
       content,
@@ -842,6 +957,7 @@ export class ConversationService {
     conversationId: string,
     messageIdToDelete: string,
     userIds?: string[] | UserClientsMap,
+    sendAsProtobuf?: boolean,
   ): Promise<DeleteMessage> {
     const messageId = MessageBuilder.createId();
 
@@ -854,7 +970,13 @@ export class ConversationService {
       messageId,
     });
 
-    await this.sendGenericMessage(this.apiClient.validatedClientId, conversationId, genericMessage, userIds);
+    await this.sendGenericMessage(
+      this.apiClient.validatedClientId,
+      conversationId,
+      genericMessage,
+      userIds,
+      sendAsProtobuf,
+    );
 
     return {
       content,
@@ -955,44 +1077,44 @@ export class ConversationService {
    * @param userIds Only send message to specified user IDs or to certain clients of specified user IDs
    * @returns Sent message
    */
-  public async send(payloadBundle: OtrMessage, userIds?: string[] | UserClientsMap) {
+  public async send(payloadBundle: OtrMessage, userIds?: string[] | UserClientsMap, sendAsProtobuf?: boolean) {
     switch (payloadBundle.type) {
       case PayloadBundleType.ASSET:
-        return this.sendFileData(payloadBundle, userIds);
+        return this.sendFileData(payloadBundle, userIds, sendAsProtobuf);
       case PayloadBundleType.ASSET_ABORT:
-        return this.sendFileAbort(payloadBundle, userIds);
+        return this.sendFileAbort(payloadBundle, userIds, sendAsProtobuf);
       case PayloadBundleType.ASSET_META:
-        return this.sendFileMetaData(payloadBundle, userIds);
+        return this.sendFileMetaData(payloadBundle, userIds, sendAsProtobuf);
       case PayloadBundleType.ASSET_IMAGE:
-        return this.sendImage(payloadBundle as ImageAssetMessageOutgoing, userIds);
+        return this.sendImage(payloadBundle as ImageAssetMessageOutgoing, userIds, sendAsProtobuf);
       case PayloadBundleType.BUTTON_ACTION:
-        return this.sendButtonAction(payloadBundle, userIds);
+        return this.sendButtonAction(payloadBundle, userIds, sendAsProtobuf);
       case PayloadBundleType.BUTTON_ACTION_CONFIRMATION:
-        return this.sendButtonActionConfirmation(payloadBundle, userIds);
+        return this.sendButtonActionConfirmation(payloadBundle, userIds, sendAsProtobuf);
       case PayloadBundleType.CALL:
-        return this.sendCall(payloadBundle, userIds);
+        return this.sendCall(payloadBundle, userIds, sendAsProtobuf);
       case PayloadBundleType.CLIENT_ACTION: {
         if (payloadBundle.content.clientAction === ClientAction.RESET_SESSION) {
-          return this.sendSessionReset(payloadBundle, userIds);
+          return this.sendSessionReset(payloadBundle, userIds, sendAsProtobuf);
         }
         throw new Error(
           `No send method implemented for "${payloadBundle.type}" and ClientAction "${payloadBundle.content}".`,
         );
       }
       case PayloadBundleType.COMPOSITE:
-        return this.sendComposite(payloadBundle, userIds);
+        return this.sendComposite(payloadBundle, userIds, sendAsProtobuf);
       case PayloadBundleType.CONFIRMATION:
-        return this.sendConfirmation(payloadBundle, userIds);
+        return this.sendConfirmation(payloadBundle, userIds, sendAsProtobuf);
       case PayloadBundleType.LOCATION:
-        return this.sendLocation(payloadBundle, userIds);
+        return this.sendLocation(payloadBundle, userIds, sendAsProtobuf);
       case PayloadBundleType.MESSAGE_EDIT:
-        return this.sendEditedText(payloadBundle, userIds);
+        return this.sendEditedText(payloadBundle, userIds, sendAsProtobuf);
       case PayloadBundleType.PING:
-        return this.sendKnock(payloadBundle, userIds);
+        return this.sendKnock(payloadBundle, userIds, sendAsProtobuf);
       case PayloadBundleType.REACTION:
-        return this.sendReaction(payloadBundle, userIds);
+        return this.sendReaction(payloadBundle, userIds, sendAsProtobuf);
       case PayloadBundleType.TEXT:
-        return this.sendText(payloadBundle, userIds);
+        return this.sendText(payloadBundle, userIds, sendAsProtobuf);
       default:
         throw new Error(`No send method implemented for "${payloadBundle['type']}".`);
     }

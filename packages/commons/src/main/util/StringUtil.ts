@@ -25,3 +25,9 @@ export function pluralize(text: string, times: number, options?: {postfix: strin
   const postfix = options?.postfix || 's';
   return `${text}${times === 1 ? '' : postfix}`;
 }
+
+export function uuidToBytes(uuid: string): Buffer {
+  const bytes = Buffer.alloc(16);
+  bytes.write(uuid.split('-').join(''), 'hex');
+  return bytes;
+}

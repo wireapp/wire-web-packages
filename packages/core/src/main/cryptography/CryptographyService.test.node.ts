@@ -171,7 +171,7 @@ describe('CryptographyService', () => {
       );
       const encryptedPayloads = otrBundles.map(bundle => bundle[userId][clientId]);
       const messageCounters = encryptedPayloads.map(encodedCiphertext => {
-        const messageBytes = bazinga64.Decoder.fromBase64(encodedCiphertext).asBytes;
+        const messageBytes = encodedCiphertext;
         const messageEnvelope = Proteus.message.Envelope.deserialise(messageBytes.buffer);
         const preKeyMessage = messageEnvelope.message as Proteus.message.PreKeyMessage;
         const cipherMessage = preKeyMessage.message;
@@ -206,7 +206,7 @@ describe('CryptographyService', () => {
         text,
         encodedPreKey,
       );
-      expect(encryptedPayload).not.toBe('💣');
+      expect(encryptedPayload.toString()).not.toBe('💣');
       expect(sessionId).toBe(sessionWithBobId);
     });
 
@@ -219,7 +219,7 @@ describe('CryptographyService', () => {
         undefined as any,
         encodedPreKey,
       );
-      expect(encryptedPayload).toBe('💣');
+      expect(encryptedPayload.toString()).toBe('💣');
       expect(sessionId).toBe(sessionWithBobId);
     });
   });
