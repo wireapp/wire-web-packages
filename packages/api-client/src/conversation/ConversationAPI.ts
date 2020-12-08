@@ -506,7 +506,7 @@ export class ConversationAPI {
 
   /**
    * Post an encrypted message to a conversation.
-   * @param clientId The sender's client ID
+   * @param sendingClientId The sender's client ID
    * @param conversationId The conversation ID
    * @param messageData The message content
    * @param ignoreMissing Whether to report missing clients or not:
@@ -518,12 +518,12 @@ export class ConversationAPI {
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/postOtrMessage
    */
   public async postOTRProtobufMessage(
-    clientId: string,
+    sendingClientId: string,
     conversationId: string,
     messageData: ProtobufOTRMessage,
     ignoreMissing?: boolean | string[],
   ): Promise<ClientMismatch> {
-    if (!clientId) {
+    if (!sendingClientId) {
       throw new ValidationError('Unable to send OTR message without client ID.');
     }
 

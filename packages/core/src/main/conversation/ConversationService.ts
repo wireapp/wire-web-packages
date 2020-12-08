@@ -17,7 +17,6 @@
  *
  */
 
-import {StatusCodes as HTTP_STATUS} from 'http-status-codes';
 import {APIClient} from '@wireapp/api-client';
 import {
   Conversation,
@@ -25,9 +24,6 @@ import {
   DefaultConversationRoleName,
   MutedStatus,
   NewConversation,
-  NewOTRMessage,
-  OTRRecipients,
-  UserClients,
 } from '@wireapp/api-client/src/conversation/';
 import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/src/conversation/data/';
 import {ConversationMemberLeaveEvent} from '@wireapp/api-client/src/event/';
@@ -50,11 +46,7 @@ import {
   MessageHide,
   Reaction,
 } from '@wireapp/protocol-messaging';
-import {AxiosError} from 'axios';
 import {Encoder} from 'bazinga64';
-import {IUserEntry, IClientEntry, NewOtrMessage} from '@wireapp/protocol-messaging/web/otr';
-import Long from 'long';
-import {uuidToBytes} from '@wireapp/commons/src/main/util/StringUtil';
 
 import {
   AssetService,
@@ -69,6 +61,7 @@ import {AssetContent, ClearedContent, DeletedContent, HiddenContent, RemoteData}
 import {CryptographyService, EncryptedAsset} from '../cryptography/';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
 import {MessageBuilder} from './message/MessageBuilder';
+import {MessageService} from './message/MessageService';
 import {MessageToProtoMapper} from './message/MessageToProtoMapper';
 import {
   ButtonActionConfirmationMessage,
@@ -99,6 +92,7 @@ export type UserClientsMap = Record<string, string[]>;
 export class ConversationService {
   public readonly messageTimer: MessageTimer;
   public readonly messageBuilder: MessageBuilder;
+  private readonly messageService: MessageService;
 
   constructor(
     private readonly apiClient: APIClient,
@@ -107,6 +101,7 @@ export class ConversationService {
   ) {
     this.messageTimer = new MessageTimer();
     this.messageBuilder = new MessageBuilder(this.apiClient, this.assetService);
+    this.messageService = new MessageService(this.apiClient, this.cryptographyService);
   }
 
   private createEphemeral(originalGenericMessage: GenericMessage, expireAfterMillis: number): GenericMessage {
@@ -195,8 +190,8 @@ export class ConversationService {
     const recipients = await this.cryptographyService.encrypt(plainTextArray, preKeyBundles);
 
     return sendAsProtobuf
-      ? this.sendOTRProtobufMessage(sendingClientId, conversationId, recipients, cipherText)
-      : this.sendOTRMessage(sendingClientId, conversationId, recipients, base64CipherText);
+      ? this.messageService.sendOTRProtobufMessage(sendingClientId, recipients, conversationId, cipherText)
+      : this.messageService.sendOTRMessage(sendingClientId, recipients, conversationId, base64CipherText);
   }
 
   private async sendGenericMessage(
@@ -223,116 +218,8 @@ export class ConversationService {
     const recipients = await this.cryptographyService.encrypt(plainTextArray, preKeyBundles);
 
     return sendAsProtobuf
-      ? this.sendOTRProtobufMessage(sendingClientId, conversationId, recipients)
-      : this.sendOTRMessage(sendingClientId, conversationId, recipients);
-  }
-
-  // TODO: Move this to a generic "message sending class".
-  private async sendOTRMessage(
-    sendingClientId: string,
-    conversationId: string,
-    recipients: OTRRecipients<Uint8Array>,
-    data?: any,
-  ): Promise<void> {
-    const message: NewOTRMessage<string> = {
-      data,
-      recipients: CryptographyService.convertArrayRecipientsToBase64(recipients),
-      sender: sendingClientId,
-    };
-
-    /**
-     * When creating the PreKey bundles we already found out to which users we want to send a message, so we can ignore
-     * missing clients. We have to ignore missing clients because there can be the case that there are clients that
-     * don't provide PreKeys (clients from the Pre-E2EE era).
-     */
-    await this.apiClient.conversation.api.postOTRMessage(sendingClientId, conversationId, message, true);
-  }
-
-  // TODO: Move this to a generic "message sending class".
-  private async sendOTRProtobufMessage(
-    sendingClientId: string,
-    conversationId: string,
-    recipients: OTRRecipients<Uint8Array>,
-    assetData?: Uint8Array,
-  ): Promise<void> {
-    const userEntries: IUserEntry[] = Object.entries(recipients).map(([userId, otrClientMap]) => {
-      const clients: IClientEntry[] = Object.entries(otrClientMap).map(([clientId, payload]) => {
-        return {
-          client: {
-            client: Long.fromString(clientId, 16),
-          },
-          text: payload,
-        };
-      });
-
-      return {
-        clients,
-        user: {
-          uuid: uuidToBytes(userId),
-        },
-      };
-    });
-
-    const protoMessage = NewOtrMessage.create({
-      recipients: userEntries,
-      sender: {
-        client: Long.fromString(sendingClientId, 16),
-      },
-    });
-
-    if (assetData) {
-      protoMessage.blob = assetData;
-    }
-
-    /**
-     * When creating the PreKey bundles we already found out to which users we want to send a message, so we can ignore
-     * missing clients. We have to ignore missing clients because there can be the case that there are clients that
-     * don't provide PreKeys (clients from the Pre-E2EE era).
-     */
-    await this.apiClient.conversation.api.postOTRProtobufMessage(sendingClientId, conversationId, protoMessage, true);
-  }
-
-  // TODO: Move this to a generic "message sending class" and make it private.
-  public async onClientMismatch(
-    error: AxiosError,
-    message: NewOTRMessage<Uint8Array>,
-    plainTextArray: Uint8Array,
-  ): Promise<NewOTRMessage<Uint8Array>> {
-    if (error.response?.status === HTTP_STATUS.PRECONDITION_FAILED) {
-      const {missing, deleted}: {deleted: UserClients; missing: UserClients} = error.response?.data;
-
-      const deletedUserIds = Object.keys(deleted);
-      const missingUserIds = Object.keys(missing);
-
-      if (deletedUserIds.length) {
-        for (const deletedUserId of deletedUserIds) {
-          for (const deletedClientId of deleted[deletedUserId]) {
-            const deletedUser = message.recipients[deletedUserId];
-            if (deletedUser) {
-              delete deletedUser[deletedClientId];
-            }
-          }
-        }
-      }
-
-      if (missingUserIds.length) {
-        const missingPreKeyBundles = await this.apiClient.user.api.postMultiPreKeyBundles(missing);
-        const reEncryptedPayloads = await this.cryptographyService.encrypt(plainTextArray, missingPreKeyBundles);
-        for (const missingUserId of missingUserIds) {
-          for (const missingClientId in reEncryptedPayloads[missingUserId]) {
-            const missingUser = message.recipients[missingUserId];
-            if (!missingUser) {
-              message.recipients[missingUserId] = {};
-            }
-
-            message.recipients[missingUserId][missingClientId] = reEncryptedPayloads[missingUserId][missingClientId];
-          }
-        }
-      }
-
-      return message;
-    }
-    throw error;
+      ? this.messageService.sendOTRProtobufMessage(sendingClientId, recipients, conversationId)
+      : this.messageService.sendOTRMessage(sendingClientId, recipients, conversationId);
   }
 
   private async sendButtonAction(
