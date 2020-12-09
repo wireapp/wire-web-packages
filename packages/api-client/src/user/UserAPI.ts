@@ -40,6 +40,9 @@ import {
 } from '../user/';
 import {RichInfo} from './RichInfo';
 import {RequestCancellationError} from './UserError';
+import {Contact} from './Contact';
+import {SearchOrder} from './SearchOrder';
+import {Role} from '../team';
 
 export class UserAPI {
   public static readonly DEFAULT_USERS_CHUNK_SIZE = 50;
@@ -217,23 +220,35 @@ export class UserAPI {
   /**
    * Search for users.
    * @param query The search query
-   * @param limit Number of results to return
+   * @param options Search options (sort, order, filter, etc.)
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/search
    */
-  public async getSearchContacts(query: string, limit?: number): Promise<RequestCancelable<SearchResult>> {
+  public async getSearchContacts(
+    query: string,
+    options: {
+      /** Filter results by member role */
+      frole?: Role[];
+      /** Sort order (asc | desc | undefined) */
+      order?: SearchOrder;
+      /** Max number of search results. Defaults to 15 results. Min 1, Max 500. */
+      size?: number;
+      /** Sort results */
+      sortby?: keyof Pick<Contact, 'email' | 'name' | 'handle' | 'created_at' | 'role' | 'managed_by' | 'saml_idp'>;
+      /** Filter results by team ID */
+      team?: string;
+    } = {},
+  ): Promise<RequestCancelable<SearchResult>> {
     const cancelSource = Axios.CancelToken.source();
     const config: AxiosRequestConfig = {
       cancelToken: cancelSource.token,
       method: 'get',
       params: {
         q: query,
+        ...options,
+        frole: options.frole?.join(','),
       },
       url: `${UserAPI.URL.SEARCH}/${UserAPI.URL.CONTACTS}`,
     };
-
-    if (limit) {
-      config.params.size = limit;
-    }
 
     const handleRequest = async () => {
       try {

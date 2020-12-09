@@ -17,6 +17,15 @@
  *
  */
 
+import {Role} from '../team';
+import {ManagedSource} from './ManagedSource';
 import {User} from './User';
 
-export type Contact = Pick<User, 'accent_id' | 'handle' | 'id' | 'name' | 'team'>;
+export type Contact = Pick<User, 'id' | 'email' | 'accent_id' | 'handle' | 'name' | 'team'> & {
+  /** Timestamp of invitation creation. */
+  created_at?: string;
+  managed_by?: ManagedSource;
+  role?: Role;
+  /** URL of the SAML identity provider. */
+  saml_idp?: string;
+};
