@@ -256,13 +256,18 @@ export class UserAPI {
   /**
    * Get a user by ID.
    * @note If you want to get all properties (`sso_id`, `managed_by`, etc.) for your own user, use "/self". Otherwise you will get a user payload with a limited set of properties (what's publicly available).
-   * @param userId The user ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/user
    */
-  public async getUser(userId: string): Promise<User> {
+  public async getUser(user: QualifiedUser): Promise<User>;
+  /** @deprecated */
+  public async getUser(user: string): Promise<User>;
+  public async getUser(user: string | QualifiedUser): Promise<User> {
+    const url =
+      typeof user === 'string' ? `${UserAPI.URL.USERS}/${user}` : `${UserAPI.URL.USERS}/${user.domain}/${user}`;
+
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${UserAPI.URL.USERS}/${userId}`,
+      url,
     };
 
     const response = await this.client.sendJSON<User>(config);
@@ -270,6 +275,7 @@ export class UserAPI {
   }
 
   public async getUserPreKeys(user: QualifiedUser): Promise<QualifiedPreKeyBundle>;
+  /** @deprecated */
   public async getUserPreKeys(user: string): Promise<PreKeyBundle>;
   public async getUserPreKeys(user: QualifiedUser | string): Promise<PreKeyBundle | QualifiedPreKeyBundle> {
     const url =
@@ -345,6 +351,24 @@ export class UserAPI {
   public async getUsersByIds(userIds: string[]): Promise<User[]> {
     const maxChunkSize = 100;
     return this.getUsers({ids: userIds}, maxChunkSize);
+  }
+
+  /**
+   * Check if a user ID exists.
+   */
+  public async headUsers(user: QualifiedUser): Promise<void>;
+  /** @deprecated */
+  public async headUsers(user: string): Promise<void>;
+  public async headUsers(user: string | QualifiedUser): Promise<void> {
+    const url =
+      typeof user === 'string' ? `${UserAPI.URL.USERS}/${user}` : `${UserAPI.URL.USERS}/${user.domain}/${user}`;
+
+    const config: AxiosRequestConfig = {
+      method: 'head',
+      url,
+    };
+
+    await this.client.sendJSON(config);
   }
 
   /**
