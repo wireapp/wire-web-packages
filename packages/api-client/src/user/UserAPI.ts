@@ -40,9 +40,7 @@ import {
 } from '../user/';
 import {RichInfo} from './RichInfo';
 import {RequestCancellationError} from './UserError';
-import {Contact} from './Contact';
-import {SearchOrder} from './SearchOrder';
-import {Role} from '../team';
+import {SearchOptions} from './SearchOptions';
 
 export class UserAPI {
   public static readonly DEFAULT_USERS_CHUNK_SIZE = 50;
@@ -223,21 +221,7 @@ export class UserAPI {
    * @param options Search options (sort, order, filter, etc.)
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/search
    */
-  public async getSearchContacts(
-    query: string,
-    options: {
-      /** Filter results by member role */
-      frole?: Role[];
-      /** Sort order (asc | desc | undefined) */
-      order?: SearchOrder;
-      /** Max number of search results. Defaults to 15 results. Min 1, Max 500. */
-      size?: number;
-      /** Sort results */
-      sortby?: keyof Pick<Contact, 'email' | 'name' | 'handle' | 'created_at' | 'role' | 'managed_by' | 'saml_idp'>;
-      /** Filter results by team ID */
-      team?: string;
-    } = {},
-  ): Promise<RequestCancelable<SearchResult>> {
+  public async getSearchContacts(query: string, options: SearchOptions = {}): Promise<RequestCancelable<SearchResult>> {
     const cancelSource = Axios.CancelToken.source();
     const config: AxiosRequestConfig = {
       cancelToken: cancelSource.token,

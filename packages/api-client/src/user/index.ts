@@ -35,4 +35,4 @@ export * from './UserError';
 export * from './UserPreKeyBundleMap';
 export * from './UserUpdate';
 export * from './VerifyDelete';
-export * from './SearchOrder';
+export * from './SearchOptions';
