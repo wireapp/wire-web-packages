@@ -18,7 +18,7 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx, Theme} from '@emotion/react';
+import {CSSObject, jsx} from '@emotion/react';
 
 import React from 'react';
 import {COLOR} from '../Identity/';

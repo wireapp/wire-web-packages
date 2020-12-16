@@ -19,7 +19,7 @@
 
 /** @jsx jsx */
 import React from 'react';
-import {CSSObject, jsx, Theme} from '@emotion/react';
+import {CSSObject, jsx} from '@emotion/react';
 
 import {COLOR} from '../Identity';
 import {INPUT_CLASSNAME} from './Input';

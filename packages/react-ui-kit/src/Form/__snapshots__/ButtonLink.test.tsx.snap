@@ -19,7 +19,7 @@ exports[`"ButtonLink" renders (dark theme) 1`] = `
   overflow: hidden;
   text-align: center;
   text-overflow: ellipsis;
-  text-transform: uppercase;
+  text-transform: none;
   white-space: nowrap;
   background-color: #0c78ba;
   border: 0;
@@ -77,7 +77,7 @@ exports[`"ButtonLink" renders 1`] = `
   overflow: hidden;
   text-align: center;
   text-overflow: ellipsis;
-  text-transform: uppercase;
+  text-transform: none;
   white-space: nowrap;
   background-color: #0c78ba;
   border: 0;
@@ -161,7 +161,7 @@ exports[`"ButtonLink" renders in loading state 1`] = `
   overflow: hidden;
   text-align: center;
   text-overflow: ellipsis;
-  text-transform: uppercase;
+  text-transform: none;
   white-space: nowrap;
   background-color: #0c78ba;
   border: 0;
