@@ -10,7 +10,7 @@
     "rootDir": "src",
     "strict": false,
     "paths": {
-      "@emotion/core": ["node_modules/@emotion/react"],
+      "@emotion/core": ["node_modules/@emotion/react"]
     }
   },
   "exclude": ["node_modules", "src/**/*.test.ts", "src/**/*.test.tsx", "src/test/**/*"],
