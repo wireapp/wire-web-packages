@@ -26,7 +26,7 @@
     "@babel/preset-typescript": "7.10.4",
     "@types/jasmine": "3.6.0",
     "@types/karma": "5.0.0",
-    "@types/react": "16.9.19",
+    "@types/react": "17.0.0",
     "@types/react-dom": "16.9.8",
     "@types/ws": "7.2.6",
     "@wireapp/react-ui-kit": "7.44.2",
