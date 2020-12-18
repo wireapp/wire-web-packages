@@ -17,7 +17,7 @@
  *
  */
 
-import {FeatureAppLock, FeatureDigitalSignature, FeatureWithoutConfig} from './Feature';
+import type {FeatureAppLock, FeatureDigitalSignature, FeatureWithoutConfig} from './Feature';
 
 export type FeatureList = {
   appLock?: FeatureAppLock;

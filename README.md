@@ -14,7 +14,6 @@ Collection of npm modules created by Wire's web team:
 
 - [@wireapp/bot-api](https://npmjs.com/package/@wireapp/bot-api)
 - [@wireapp/changelog-bot](https://npmjs.com/package/@wireapp/changelog-bot)
-- [@wireapp/travis-bot](https://npmjs.com/package/@wireapp/travis-bot)
 
 **Common utilities**
 
