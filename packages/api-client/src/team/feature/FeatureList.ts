@@ -21,9 +21,9 @@ import {FeatureAppLock, FeatureDigitalSignature, FeatureWithoutConfig} from './F
 
 export type FeatureList = {
   appLock?: FeatureAppLock;
-  sso?: FeatureWithoutConfig;
-  legalhold?: FeatureWithoutConfig;
   digitalSignatures?: FeatureDigitalSignature;
+  legalhold?: FeatureWithoutConfig;
   searchVisibility?: FeatureWithoutConfig;
+  sso?: FeatureWithoutConfig;
   validateSAMLemails?: FeatureWithoutConfig;
 };
