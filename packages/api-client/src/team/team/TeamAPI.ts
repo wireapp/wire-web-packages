@@ -17,10 +17,12 @@
  *
  */
 
-import {AxiosRequestConfig} from 'axios';
+import Axios, {AxiosRequestConfig} from 'axios';
 
 import {NewTeamData, TeamChunkData, TeamData} from '../';
-import {HttpClient} from '../../http/';
+import {HttpClient, RequestCancelable, SyntheticErrorLabel} from '../../http/';
+import {RequestCancellationError} from '../../user';
+import {TeamSizeData} from './TeamSizeData';
 import {UpdateTeamData} from './UpdateTeamData';
 
 export class TeamAPI {
@@ -81,5 +83,31 @@ export class TeamAPI {
     };
 
     await this.client.sendJSON(config);
+  }
+
+  public async getTeamSize(teamId: string): Promise<RequestCancelable<TeamSizeData>> {
+    const cancelSource = Axios.CancelToken.source();
+    const config: AxiosRequestConfig = {
+      cancelToken: cancelSource.token,
+      method: 'get',
+      url: `${TeamAPI.URL.TEAMS}/${teamId}/size`, // TODO: Use const
+    };
+
+    const handleRequest = async () => {
+      try {
+        const response = await this.client.sendJSON<TeamSizeData>(config);
+        return response.data;
+      } catch (error) {
+        if (error.message === SyntheticErrorLabel.REQUEST_CANCELLED) {
+          throw new RequestCancellationError('Team size request got cancelled');
+        }
+        throw error;
+      }
+    };
+
+    return {
+      cancel: () => cancelSource.cancel(SyntheticErrorLabel.REQUEST_CANCELLED),
+      response: handleRequest(),
+    };
   }
 }
