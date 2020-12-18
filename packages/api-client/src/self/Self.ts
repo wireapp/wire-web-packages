@@ -17,8 +17,8 @@
  *
  */
 
-import {Picture, SSOSignature} from '../self/';
-import {QualifiedId, User} from '../user/';
+import type {Picture, SSOSignature} from '../self/';
+import type {QualifiedId, User} from '../user/';
 
 export enum ManagedSource {
   SCIM = 'scim',
