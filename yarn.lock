@@ -10474,10 +10474,10 @@ karma-chrome-launcher@3.1.0:
   dependencies:
     which "^1.2.1"
 
-karma-jasmine-diff-reporter@2.0.0:
-  version "2.0.0"
-  resolved "https://registry.npmjs.org/karma-jasmine-diff-reporter/-/karma-jasmine-diff-reporter-2.0.0.tgz#43bbba19b7a8cb25f5f8b0308fb2357077fc5ddd"
-  integrity sha512-J4iyQunPWwMOzR/YKDQzAzwyPPTQ0QBT+NDdCArleIGw+g/IEk1/6hw8GqDzm3oL+hSkbW09YGFiN3nigP5Cgw==
+karma-jasmine-diff-reporter@2.0.1:
+  version "2.0.1"
+  resolved "https://registry.npmjs.org/karma-jasmine-diff-reporter/-/karma-jasmine-diff-reporter-2.0.1.tgz#8e6969c06daa213a6126177f6c980a0d0754dc7d"
+  integrity sha512-GKrziQMsiZ2c2oPjWwY3mBrp2aWc9gSkegvZ5brstAn1wvwuYidbXv+ilbYi7qM1x6gHKxv0KUbRwzwDKRgQlg==
   dependencies:
     chalk "^2.4.1"
     diff "^3.5.0"
