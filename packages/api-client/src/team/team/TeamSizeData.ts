@@ -18,5 +18,5 @@
  */
 
 export interface TeamSizeData {
-  size: number;
+  teamSize: number;
 }

@@ -30,6 +30,7 @@ export class TeamAPI {
 
   public static readonly URL = {
     TEAMS: '/teams',
+    SIZE: '/size',
   };
 
   public async postTeam(team: NewTeamData): Promise<void> {
@@ -90,7 +91,7 @@ export class TeamAPI {
     const config: AxiosRequestConfig = {
       cancelToken: cancelSource.token,
       method: 'get',
-      url: `${TeamAPI.URL.TEAMS}/${teamId}/size`, // TODO: Use const
+      url: `${TeamAPI.URL.TEAMS}/${teamId}${TeamAPI.URL.SIZE}`,
     };
 
     const handleRequest = async () => {
