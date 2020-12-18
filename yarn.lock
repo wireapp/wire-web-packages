@@ -2718,7 +2718,7 @@
   resolved "https://registry.npmjs.org/@types/libsodium-wrappers/-/libsodium-wrappers-0.7.8.tgz#34575d7692fdbb7a7fdb63afcde381db86ec0de2"
   integrity sha512-vkDSj6enD3K0+Ep83wnoGUk+f7sqsO4alsqxxEZ8BcTJhFmcY4UehYH3rTf4M3JGHXNhdpGFDdMbWFMgyvw/fA==
 
-"@types/long@4.0.1", "@types/long@^4.0.0", "@types/long@^4.0.1":
+"@types/long@4.0.1", "@types/long@^4.0.1":
   version "4.0.1"
   resolved "https://registry.npmjs.org/@types/long/-/long-4.0.1.tgz#459c65fa1867dafe6a8f322c4c51695663cc55e9"
   integrity sha512-5tXH6Bx/kNGd3MgffdmP4dy2Z+G4eaXw0SE81Tq3BNadtnMR5/ySMzX4SLEzHJzSmPNn4HIdpQsBvXMUykr58w==
@@ -2756,11 +2756,6 @@
   version "13.13.4"
   resolved "https://registry.npmjs.org/@types/node/-/node-13.13.4.tgz#1581d6c16e3d4803eb079c87d4ac893ee7501c2c"
   integrity sha512-x26ur3dSXgv5AwKS0lNfbjpCakGIduWU1DU91Zz58ONRWrIKGunmZBNv4P7N+e27sJkiGDsw/3fT4AtsqQBrBA==
-
-"@types/node@^10.1.0":
-  version "10.17.5"
-  resolved "https://registry.npmjs.org/@types/node/-/node-10.17.5.tgz#c1920150f7b90708a7d0f3add12a06bc9123c055"
-  integrity sha512-RElZIr/7JreF1eY6oD5RF3kpmdcreuQPjg5ri4oQ5g9sq7YWU8HkfB3eH8GwAwxf5OaCh0VPi7r4N/yoTGelrA==
 
 "@types/node@~12":
   version "12.12.34"
@@ -3255,12 +3250,12 @@
   resolved "https://registry.npmjs.org/@wireapp/avs/-/avs-6.4.14.tgz#2c4b450cf769e4cc31afea5257d749a58926936c"
   integrity sha512-YEWhH8LM46vNWrxGoQsC6sR2qPAmiy6CgA6ZDgEfE0f0pVlVC/Bw/0Zpss6He3ddq5heHHgQtHkBpARv+YqUyg==
 
-"@wireapp/protocol-messaging@1.25.4":
-  version "1.25.4"
-  resolved "https://registry.npmjs.org/@wireapp/protocol-messaging/-/protocol-messaging-1.25.4.tgz#49a22683c19c628997f28e24f5eca909aab4e4b9"
-  integrity sha512-Z53Cw+u2rJhE/tlEAo1onYcD4FyuDEMjW2PQV9GTuGNA9iEv+rKnmha6YDI+m5NQxrlPc7Dsebqf+u04X7fB7g==
+"@wireapp/protocol-messaging@1.28.0":
+  version "1.28.0"
+  resolved "https://registry.npmjs.org/@wireapp/protocol-messaging/-/protocol-messaging-1.28.0.tgz#24c1d78ddc1d29d72d3e5a288af7d9467274354f"
+  integrity sha512-IFo7NLrMWdOtjtce2hbI0oofCzDiXfLxufUZ+mChFH5tCVnPlhk/9jYhyojrpJug57NMEWvPEc0YuaVrP//iVg==
   dependencies:
-    protobufjs "6.8.8"
+    protobufjs "6.10.2"
 
 "@wireapp/websql@0.0.17":
   version "0.0.17"
@@ -13110,10 +13105,10 @@ protobufjs@6.10.1:
     "@types/node" "^13.7.0"
     long "^4.0.0"
 
-protobufjs@6.8.8:
-  version "6.8.8"
-  resolved "https://registry.npmjs.org/protobufjs/-/protobufjs-6.8.8.tgz#c8b4f1282fd7a90e6f5b109ed11c84af82908e7c"
-  integrity sha512-AAmHtD5pXgZfi7GMpllpO3q1Xw1OYldr+dMUlAnffGTAhqkg72WdmSY71uKBF/JuyiKs8psYbtKrhi0ASCD8qw==
+protobufjs@6.10.2:
+  version "6.10.2"
+  resolved "https://registry.npmjs.org/protobufjs/-/protobufjs-6.10.2.tgz#b9cb6bd8ec8f87514592ba3fdfd28e93f33a469b"
+  integrity sha512-27yj+04uF6ya9l+qfpH187aqEzfCF4+Uit0I9ZBQVqK09hk/SQzKa2MUqUpXaVa7LOFRg1TSSr3lVxGOk6c0SQ==
   dependencies:
     "@protobufjs/aspromise" "^1.1.2"
     "@protobufjs/base64" "^1.1.2"
@@ -13125,8 +13120,8 @@ protobufjs@6.8.8:
     "@protobufjs/path" "^1.1.2"
     "@protobufjs/pool" "^1.1.0"
     "@protobufjs/utf8" "^1.1.0"
-    "@types/long" "^4.0.0"
-    "@types/node" "^10.1.0"
+    "@types/long" "^4.0.1"
+    "@types/node" "^13.7.0"
     long "^4.0.0"
 
 protocols@^1.1.0, protocols@^1.4.0:
