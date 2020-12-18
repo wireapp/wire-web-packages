@@ -22,7 +22,7 @@ import {AccentColor} from '@wireapp/commons';
 import {ServiceRef} from '../conversation/';
 import {UserAsset} from '../user/';
 
-export interface QualifiedUser {
+export interface QualifiedId {
   domain: string;
   id: string;
 }
@@ -38,4 +38,8 @@ export interface User {
   name: string;
   service?: ServiceRef;
   team?: string;
+}
+
+export interface QualifiedUser extends User {
+  qualified_id: QualifiedId;
 }

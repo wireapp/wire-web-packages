@@ -31,6 +31,9 @@ import {
   CompletePasswordReset,
   HandleInfo,
   NewPasswordReset,
+  QualifiedHandle,
+  QualifiedHandleInfo,
+  QualifiedId,
   QualifiedUser,
   SearchResult,
   SendActivationCode,
@@ -175,13 +178,21 @@ export class UserAPI {
    * @param handle The user's handle
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getUserHandleInfo
    */
-  public async getHandle(handle: string): Promise<HandleInfo> {
+  public async getHandle(handle: QualifiedHandle): Promise<QualifiedHandleInfo>;
+  /** @deprecated */
+  public async getHandle(handle: string): Promise<HandleInfo>;
+  public async getHandle(handle: string | QualifiedHandle): Promise<HandleInfo | QualifiedHandleInfo> {
+    const url =
+      typeof handle === 'string'
+        ? `${UserAPI.URL.HANDLES}/${handle}`
+        : `${UserAPI.URL.USERS}/${handle.domain}/${handle.handle}`;
+
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${UserAPI.URL.USERS}/${UserAPI.URL.HANDLES}/${handle}`,
+      url,
     };
 
-    const response = await this.client.sendJSON<HandleInfo>(config);
+    const response = await this.client.sendJSON<HandleInfo | QualifiedHandleInfo>(config);
     return response.data;
   }
 
@@ -258,12 +269,14 @@ export class UserAPI {
    * @note If you want to get all properties (`sso_id`, `managed_by`, etc.) for your own user, use "/self". Otherwise you will get a user payload with a limited set of properties (what's publicly available).
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/user
    */
-  public async getUser(user: QualifiedUser): Promise<User>;
+  public async getUser(userId: QualifiedId): Promise<QualifiedUser>;
   /** @deprecated */
-  public async getUser(user: string): Promise<User>;
-  public async getUser(user: string | QualifiedUser): Promise<User> {
+  public async getUser(userId: string): Promise<User>;
+  public async getUser(userId: string | QualifiedId): Promise<User | QualifiedUser> {
     const url =
-      typeof user === 'string' ? `${UserAPI.URL.USERS}/${user}` : `${UserAPI.URL.USERS}/${user.domain}/${user}`;
+      typeof userId === 'string'
+        ? `${UserAPI.URL.USERS}/${userId}`
+        : `${UserAPI.URL.USERS}/${userId.domain}/${userId.id}`;
 
     const config: AxiosRequestConfig = {
       method: 'get',
@@ -274,14 +287,14 @@ export class UserAPI {
     return response.data;
   }
 
-  public async getUserPreKeys(user: QualifiedUser): Promise<QualifiedPreKeyBundle>;
+  public async getUserPreKeys(userId: QualifiedId): Promise<QualifiedPreKeyBundle>;
   /** @deprecated */
-  public async getUserPreKeys(user: string): Promise<PreKeyBundle>;
-  public async getUserPreKeys(user: QualifiedUser | string): Promise<PreKeyBundle | QualifiedPreKeyBundle> {
+  public async getUserPreKeys(userId: string): Promise<PreKeyBundle>;
+  public async getUserPreKeys(userId: QualifiedId | string): Promise<PreKeyBundle | QualifiedPreKeyBundle> {
     const url =
-      typeof user === 'string'
-        ? `${UserAPI.URL.USERS}/${user}/${UserAPI.URL.PRE_KEYS}`
-        : `${UserAPI.URL.USERS}/${user.domain}/${user}/${UserAPI.URL.PRE_KEYS}`;
+      typeof userId === 'string'
+        ? `${UserAPI.URL.USERS}/${userId}/${UserAPI.URL.PRE_KEYS}`
+        : `${UserAPI.URL.USERS}/${userId.domain}/${userId.id}/${UserAPI.URL.PRE_KEYS}`;
 
     const config: AxiosRequestConfig = {
       method: 'get',
@@ -354,12 +367,14 @@ export class UserAPI {
   /**
    * Check if a user ID exists.
    */
-  public async headUsers(user: QualifiedUser): Promise<void>;
+  public async headUsers(userId: QualifiedId): Promise<void>;
   /** @deprecated */
-  public async headUsers(user: string): Promise<void>;
-  public async headUsers(user: string | QualifiedUser): Promise<void> {
+  public async headUsers(userId: string): Promise<void>;
+  public async headUsers(userId: string | QualifiedId): Promise<void> {
     const url =
-      typeof user === 'string' ? `${UserAPI.URL.USERS}/${user}` : `${UserAPI.URL.USERS}/${user.domain}/${user}`;
+      typeof userId === 'string'
+        ? `${UserAPI.URL.USERS}/${userId}`
+        : `${UserAPI.URL.USERS}/${userId.domain}/${userId.id}`;
 
     const config: AxiosRequestConfig = {
       method: 'head',

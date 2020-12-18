@@ -18,7 +18,7 @@
  */
 
 import {Picture, SSOSignature} from '../self/';
-import {User} from '../user/';
+import {QualifiedId, User} from '../user/';
 
 export enum ManagedSource {
   SCIM = 'scim',
@@ -36,3 +36,5 @@ export interface Self extends User {
   picture?: Picture[];
   sso_id?: SSOSignature;
 }
+
+export type QualifiedSelf = Self & QualifiedId;

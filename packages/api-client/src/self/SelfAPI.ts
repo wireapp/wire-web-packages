@@ -20,7 +20,7 @@
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
 
 import {HttpClient, TraceState} from '../http/';
-import {ChangePassword, Delete, Self} from '../self/';
+import {ChangePassword, Delete, QualifiedSelf, Self} from '../self/';
 import {UserUpdate} from '../user/';
 import {Consent} from './Consent';
 
@@ -124,7 +124,7 @@ export class SelfAPI {
    * Get your profile
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/self
    */
-  public async getSelf(traceStates: TraceState[] = []): Promise<Self> {
+  public async getSelf(traceStates: TraceState[] = []): Promise<Self | QualifiedSelf> {
     traceStates.push({position: 'SelfAPI.getSelf', vendor: 'api-client'});
     const config: AxiosRequestConfig = {
       headers: {
@@ -133,7 +133,7 @@ export class SelfAPI {
       method: 'get',
       url: SelfAPI.URL.SELF,
     };
-    const response = await this.client.sendJSON<Self>(config);
+    const response = await this.client.sendJSON<Self | QualifiedSelf>(config);
     return response.data;
   }
 
