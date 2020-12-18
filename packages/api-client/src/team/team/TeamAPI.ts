@@ -29,8 +29,8 @@ export class TeamAPI {
   constructor(private readonly client: HttpClient) {}
 
   public static readonly URL = {
-    TEAMS: '/teams',
     SIZE: '/size',
+    TEAMS: '/teams',
   };
 
   public async postTeam(team: NewTeamData): Promise<void> {
