@@ -18,17 +18,18 @@
  */
 
 /** @jsx jsx */
-import {ObjectInterpolation, jsx} from '@emotion/core';
+import {CSSObject, jsx} from '@emotion/core';
+
 import {SVGIcon, SVGIconProps} from '../Icon/SVGIcon';
 import {defaultTransition} from '../Identity/motions';
-import {Theme} from '../Layout';
+import type {Theme} from '../Layout';
 import {COLOR} from './colors';
 
 export interface LogoProps<T = SVGSVGElement> extends SVGIconProps<T> {
   hover?: boolean;
 }
 
-const logoStyle: <T>(theme: Theme, props: LogoProps<T>) => ObjectInterpolation<undefined> = (
+const logoStyle: <T>(theme: Theme, props: LogoProps<T>) => CSSObject = (
   theme,
   {hover, color = theme.general.color},
 ) => ({

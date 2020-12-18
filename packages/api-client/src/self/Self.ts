@@ -17,9 +17,9 @@
  *
  */
 
-import {Picture, SSOSignature} from '../self/';
-import {User} from '../user/';
-import {ManagedSource} from '../user/ManagedSource';
+import type {Picture, SSOSignature} from '../self/';
+import type {User} from '../user/';
+import type {ManagedSource} from '../user/ManagedSource';
 
 export interface Self extends User {
   locale: string;
