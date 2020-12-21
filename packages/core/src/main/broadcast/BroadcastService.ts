@@ -17,12 +17,12 @@
  *
  */
 
-import {APIClient} from '@wireapp/api-client';
-import {UserPreKeyBundleMap} from '@wireapp/api-client/src/user/';
+import type {APIClient} from '@wireapp/api-client';
+import type {UserPreKeyBundleMap} from '@wireapp/api-client/src/user/';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 
 import {MessageService} from '../conversation/message/MessageService';
-import {CryptographyService} from '../cryptography/';
+import type {CryptographyService} from '../cryptography/';
 
 export class BroadcastService {
   private readonly messageService: MessageService;

@@ -1,4 +1,4 @@
-name: Test, Build & Deploy
+name: Test, Build & Release
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [master]
 
 jobs:
-  test_build_deploy:
+  test_build_release:
     runs-on: ubuntu-latest
 
     steps:

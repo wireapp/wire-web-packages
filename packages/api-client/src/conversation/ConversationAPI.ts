@@ -17,10 +17,12 @@
  *
  */
 
-import {AxiosError, AxiosRequestConfig} from 'axios';
 import {NewOtrMessage as ProtobufOTRMessage} from '@wireapp/protocol-messaging/web/otr';
+import type {AxiosError, AxiosRequestConfig} from 'axios';
 
-import {
+import {ValidationError} from '../validation/';
+import {DefaultConversationRoleName} from './ConversationRole';
+import type {
   ClientMismatch,
   Conversation,
   ConversationCode,
@@ -32,7 +34,7 @@ import {
   NewConversation,
   NewOTRMessage,
 } from './';
-import {
+import type {
   ConversationAccessUpdateEvent,
   ConversationCodeDeleteEvent,
   ConversationCodeUpdateEvent,
@@ -43,9 +45,8 @@ import {
   ConversationReceiptModeUpdateEvent,
   ConversationRenameEvent,
 } from '../event/';
-import {HttpClient} from '../http/';
-import {ValidationError} from '../validation/';
-import {
+import type {HttpClient} from '../http/';
+import type {
   ConversationAccessUpdateData,
   ConversationMemberUpdateData,
   ConversationMessageTimerUpdateData,
@@ -54,7 +55,6 @@ import {
   ConversationReceiptModeUpdateData,
   ConversationTypingData,
 } from './data';
-import {DefaultConversationRoleName} from './ConversationRole';
 
 export class ConversationAPI {
   public static readonly MAX_CHUNK_SIZE = 500;

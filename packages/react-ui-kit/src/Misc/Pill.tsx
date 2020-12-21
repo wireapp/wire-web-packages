@@ -18,11 +18,12 @@
  */
 
 /** @jsx jsx */
-import {ObjectInterpolation, jsx, keyframes} from '@emotion/core';
+import {CSSObject, jsx, keyframes} from '@emotion/core';
 import React from 'react';
+
 import {COLOR} from '../Identity';
 import {DURATION, EASE} from '../Identity/motions';
-import {Theme} from '../Layout';
+import type {Theme} from '../Layout';
 import {filterProps} from '../util';
 
 export interface PillProps<T = HTMLSpanElement> extends React.HTMLProps<T> {
@@ -36,7 +37,7 @@ export enum PILL_TYPE {
   warning = 'WARNING',
 }
 
-export const pillStyle: <T>(theme: Theme, props: PillProps<T>) => ObjectInterpolation<undefined> = (
+export const pillStyle: <T>(theme: Theme, props: PillProps<T>) => CSSObject = (
   theme,
   {active = false, type = null},
 ) => {

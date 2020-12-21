@@ -18,8 +18,9 @@
  */
 
 /** @jsx jsx */
-import {ObjectInterpolation, jsx} from '@emotion/core';
+import {CSSObject, jsx} from '@emotion/core';
 import {useEffect, useState} from 'react';
+
 import {IsInViewport, IsInViewportProps} from '../Misc/';
 import {filterProps} from '../util';
 import {COLOR} from './colors';
@@ -38,7 +39,7 @@ export interface AvatarProps<T = HTMLDivElement> extends IsInViewportProps<T> {
   size?: number;
 }
 
-const avatarStyle: <T>(props: AvatarProps<T>) => ObjectInterpolation<undefined> = ({
+const avatarStyle: <T>(props: AvatarProps<T>) => CSSObject = ({
   color = COLOR.WHITE,
   base64Image,
   borderColor,

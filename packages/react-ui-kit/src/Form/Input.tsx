@@ -18,20 +18,21 @@
  */
 
 /** @jsx jsx */
-import {ObjectInterpolation, jsx} from '@emotion/core';
-import {TextTransformProperty} from 'csstype';
+import {CSSObject, jsx} from '@emotion/core';
+import type {Property} from 'csstype';
 import React from 'react';
+
 import {COLOR} from '../Identity';
-import {Theme} from '../Layout';
-import {TextProps} from '../Text';
+import type {Theme} from '../Layout';
+import type {TextProps} from '../Text';
 import {filterProps} from '../util';
 
 export interface InputProps<T = HTMLInputElement> extends TextProps<T> {
   markInvalid?: boolean;
-  placeholderTextTransform?: TextTransformProperty;
+  placeholderTextTransform?: Property.TextTransform;
 }
 
-export const inputStyle: <T>(theme: Theme, props: InputProps<T>) => ObjectInterpolation<undefined> = (
+export const inputStyle: <T>(theme: Theme, props: InputProps<T>) => CSSObject = (
   theme,
   {markInvalid = false, placeholderTextTransform = 'none', disabled = false},
 ) => {

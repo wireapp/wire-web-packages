@@ -32,7 +32,7 @@ export interface ShakeBoxRef {
   shake: () => void;
 }
 
-export const ShakeBox: React.RefForwardingComponent<ShakeBoxProps> = React.forwardRef<ShakeBoxRef, ShakeBoxProps>(
+export const ShakeBox = React.forwardRef<ShakeBoxRef, ShakeBoxProps>(
   ({children, amplitude = 8, damping = 0.75, speed = 4, threshold = 1}: ShakeBoxProps, ref) => {
     const [offset, setOffset] = useState(0);
     let requestAnimationId = 0;
@@ -63,6 +63,6 @@ export const ShakeBox: React.RefForwardingComponent<ShakeBoxProps> = React.forwa
 
     useEffect(() => () => cancelAnimationFrame(requestAnimationId), []);
 
-    return <div style={{transform: `translateX(${offset}px)`}}>{children}</div>;
+    return <div css={{transform: `translateX(${offset}px)`}}>{children}</div>;
   },
 );

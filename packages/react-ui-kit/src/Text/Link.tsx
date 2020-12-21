@@ -18,17 +18,18 @@
  */
 
 /** @jsx jsx */
-import {ObjectInterpolation, jsx} from '@emotion/core';
+import {CSSObject, jsx} from '@emotion/core';
 import Color from 'color';
+
 import {COLOR} from '../Identity/colors';
 import {defaultTransition} from '../Identity/motions';
-import {Theme} from '../Layout';
+import type {Theme} from '../Layout';
 import {filterProps} from '../util';
 import {TextProps, filterTextProps, textStyle} from './Text';
 
 export interface LinkProps<T = HTMLAnchorElement> extends TextProps<T> {}
 
-export const linkStyle: <T>(theme: Theme, props: LinkProps<T>) => ObjectInterpolation<undefined> = (
+export const linkStyle: <T>(theme: Theme, props: LinkProps<T>) => CSSObject = (
   theme,
   {bold = true, color = theme.general.color, fontSize = '11px', textTransform = 'uppercase', ...props},
 ) => {
