@@ -3,7 +3,7 @@
     "copy-config": "src/main/cli.js"
   },
   "dependencies": {
-    "axios": "0.21.0",
+    "axios": "0.21.1",
     "copy": "0.3.2",
     "cosmiconfig": "7.0.0",
     "fs-extra": "9.0.1",
@@ -14,7 +14,7 @@
   "description": "Wire's internal configuration copy tool",
   "devDependencies": {
     "@types/copy": "0.3.1",
-    "@types/fs-extra": "8.1.0",
+    "@types/fs-extra": "9.0.6",
     "@types/rimraf": "3.0.0",
     "del-cli": "3.0.1",
     "jasmine": "3.5.0",
@@ -37,5 +37,5 @@
     "test": "yarn test:node",
     "test:node": "yarn build && jasmine --config=jasmine.json"
   },
-  "version": "1.1.10"
+  "version": "1.1.11"
 }
