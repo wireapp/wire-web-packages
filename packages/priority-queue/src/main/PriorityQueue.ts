@@ -17,18 +17,11 @@
  *
  */
 
-import logdown from 'logdown';
-
 import {Item} from './Item';
 import {Priority} from './Priority';
 import type {Config} from './Config';
 
 export class PriorityQueue {
-  private readonly logger: logdown.Logger = logdown('@wireapp/priority-queue/PriorityQueue', {
-    logger: console,
-    markdown: false,
-  });
-
   private readonly config: Config = {
     comparator: (a: Item, b: Item): Priority => {
       if (a.priority === b.priority) {
@@ -95,28 +88,24 @@ export class PriorityQueue {
   }
 
   private async processList(): Promise<void> {
-    const queueObject = this.queue.shift();
-    // console.log({queueObject})
+    const item = this.queue.shift();
 
-    if (!queueObject) {
+    if (!item) {
       this.isRunning = false;
       return;
     }
 
     try {
-      queueObject.resolve(await queueObject.fn());
-      // this.queue.shift();
+      item.resolve(await item.fn());
       void this.processList();
     } catch (error) {
-      if (queueObject.retry >= this.config.maxRetries) {
-        // this.queue.shift();
-        queueObject.reject(error);
+      if (item.retry >= this.config.maxRetries) {
+        item.reject(error);
         void this.processList();
       } else {
-        this.logger.log(`Retrying item "${queueObject}"`);
-        this.queue.push(queueObject);
-        setTimeout(() => this.processList(), this.getGrowingDelay(queueObject.retry));
-        queueObject.retry++;
+        this.queue.push(item);
+        setTimeout(() => this.processList(), this.getGrowingDelay(item.retry));
+        item.retry++;
       }
     }
   }

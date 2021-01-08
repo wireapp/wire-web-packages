@@ -191,15 +191,18 @@ describe('PriorityQueue', () => {
     });
 
     it('executes a high priority element prior to other running elements', done => {
-      const queue = new PriorityQueue({maxRetries: 10});
+      const queue = new PriorityQueue({maxRetries: Infinity});
+
+      let shouldReject = true;
 
       const promise1 = () => Promise.resolve('one');
-      const promise2 = () => Promise.reject(new Error('high priority element two'));
-      const promise3 = () =>
-        Promise.resolve('three').then(item => {
-          expect(item).toBe('three');
-          done();
-        });
+      const promise2 = () => {
+        return shouldReject ? Promise.reject(new Error()) : Promise.resolve('two');
+      };
+      const promise3 = () => {
+        shouldReject = false;
+        done();
+      };
 
       queue.add(promise1);
       queue.add(promise2);
@@ -280,7 +283,7 @@ describe('PriorityQueue', () => {
           return 'one';
         });
 
-      const promise2 = () => Promise.reject(new Error('maximum amount two'));
+      const promise2 = () => Promise.reject(new Error('two'));
 
       const promise3 = () =>
         Promise.resolve('three').then(item => {
@@ -289,9 +292,8 @@ describe('PriorityQueue', () => {
         });
 
       queue.add(promise1);
-      queue.add(promise2);
-
-      setTimeout(() => queue.add(promise3), 1000);
+      queue.add(promise2).catch(() => {});
+      queue.add(promise3);
     });
   });
 });

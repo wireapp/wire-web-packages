@@ -1,8 +1,6 @@
 {
   "dependencies": {
-    "@types/node": "~14",
-    "logdown": "3.3.1",
-    "uuidjs": "4.2.6"
+    "@types/node": "~14"
   },
   "devDependencies": {
     "@types/karma": "5.0.1",
@@ -37,7 +35,7 @@
     "clean": "del-cli \"src/**/*{.js,.js.map,.d.ts}\" \"!src/**/*{.test.node.js,.test.js}\" \"!src/test/**/*\"",
     "dist": "yarn clean && yarn build",
     "test": "yarn build && yarn test:node && yarn test:browser",
-    "test:browser": "yarn dist && webpack && karma start",
+    "test:browser": "webpack && karma start",
     "test:project": "yarn dist && yarn test",
     "test:node": "cross-env JASMINE_CONFIG_PATH=src/test/node/support/jasmine.json jasmine"
   },
