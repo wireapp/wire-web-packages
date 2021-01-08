@@ -194,7 +194,7 @@ describe('PriorityQueue', () => {
       const queue = new PriorityQueue({maxRetries: 10});
 
       const promise1 = () => Promise.resolve('one');
-      const promise2 = () => Promise.reject(new Error('two'));
+      const promise2 = () => Promise.reject(new Error('high priority element two'));
       const promise3 = () =>
         Promise.resolve('three').then(item => {
           expect(item).toBe('three');
@@ -280,7 +280,7 @@ describe('PriorityQueue', () => {
           return 'one';
         });
 
-      const promise2 = () => Promise.reject(new Error('two'));
+      const promise2 = () => Promise.reject(new Error('maximum amount two'));
 
       const promise3 = () =>
         Promise.resolve('three').then(item => {
