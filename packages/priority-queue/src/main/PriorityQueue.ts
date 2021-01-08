@@ -51,21 +51,21 @@ export class PriorityQueue {
 
   public add<T>(thunkedPromise: () => T, priority: Priority = Priority.MEDIUM, label?: string): Promise<T> {
     return new Promise((resolve, reject) => {
-      const queueObject = new Item();
-      queueObject.fn = thunkedPromise;
-      queueObject.label = label;
-      queueObject.priority = priority;
-      queueObject.reject = reject;
-      queueObject.resolve = resolve;
-      queueObject.retry = 0;
-      queueObject.timestamp = Date.now() + this.size;
-      this.queue.push(queueObject);
+      const item = new Item();
+      item.fn = thunkedPromise;
+      item.label = label;
+      item.priority = priority;
+      item.reject = reject;
+      item.resolve = resolve;
+      item.retry = 0;
+      item.timestamp = Date.now() + this.size;
+
+      this.queue.push(item);
       this.queue.sort(this.config.comparator);
 
       if (!this.isRunning) {
         this.isRunning = true;
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        this.processList();
+        void this.processList();
       }
     });
   }
@@ -95,7 +95,9 @@ export class PriorityQueue {
   }
 
   private async processList(): Promise<void> {
-    const queueObject = this.first;
+    const queueObject = this.queue.shift();
+    // console.log({queueObject})
+
     if (!queueObject) {
       this.isRunning = false;
       return;
@@ -103,17 +105,16 @@ export class PriorityQueue {
 
     try {
       queueObject.resolve(await queueObject.fn());
-      this.queue.shift();
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      this.processList();
+      // this.queue.shift();
+      void this.processList();
     } catch (error) {
       if (queueObject.retry >= this.config.maxRetries) {
-        this.queue.shift();
+        // this.queue.shift();
         queueObject.reject(error);
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        this.processList();
+        void this.processList();
       } else {
         this.logger.log(`Retrying item "${queueObject}"`);
+        this.queue.push(queueObject);
         setTimeout(() => this.processList(), this.getGrowingDelay(queueObject.retry));
         queueObject.retry++;
       }

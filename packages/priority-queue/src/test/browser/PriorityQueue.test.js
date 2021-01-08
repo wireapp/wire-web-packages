@@ -67,7 +67,7 @@ describe('PriorityQueue', () => {
       queue.add(() => 'dog');
       queue.add(() => 'zebra');
 
-      expect(queue.size).toBe(4);
+      expect(queue.size).withContext('When adding four items, three are in the queue and one is in progress.').toBe(3);
     });
 
     it('adds objects with priorities', async () => {
@@ -190,10 +190,10 @@ describe('PriorityQueue', () => {
       queue.add(promise3, Priority.LOW);
     });
 
-    it('executes a high priority element prior to other running elements ', done => {
-      const queue = new PriorityQueue();
+    it('executes a high priority element prior to other running elements', done => {
+      const queue = new PriorityQueue({maxRetries: 10});
 
-      const promise1 = () => Promise.resolve('one').then(item => expect(item).toBe('one'));
+      const promise1 = () => Promise.resolve('one');
       const promise2 = () => Promise.reject(new Error('two'));
       const promise3 = () =>
         Promise.resolve('three').then(item => {
@@ -203,8 +203,7 @@ describe('PriorityQueue', () => {
 
       queue.add(promise1);
       queue.add(promise2);
-
-      setTimeout(() => queue.add(promise3, Priority.HIGH), 1000);
+      queue.add(promise3, Priority.HIGH);
     });
   });
 
@@ -281,11 +280,7 @@ describe('PriorityQueue', () => {
           return 'one';
         });
 
-      const promise2 = () =>
-        Promise.reject(new Error('two')).then(item => {
-          expect(item).toBe('two');
-          return 'two';
-        });
+      const promise2 = () => Promise.reject(new Error('two'));
 
       const promise3 = () =>
         Promise.resolve('three').then(item => {
