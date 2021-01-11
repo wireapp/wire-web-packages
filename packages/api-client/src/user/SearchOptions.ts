@@ -32,7 +32,7 @@ export interface SearchOptions {
   fteam?: string;
   /** Sort order (asc | desc | undefined) */
   order?: SearchOrder;
-  /** Max number of search results. Defaults to 15 results. Min 1, Max 500. */
+  /** Max number of search results. Defaults to 15 results. Min 1, max 500. */
   size?: number;
   /** Sort results */
   sortby?: keyof Pick<Contact, 'email' | 'name' | 'handle' | 'created_at' | 'role' | 'managed_by' | 'saml_idp'>;
