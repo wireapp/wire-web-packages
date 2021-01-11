@@ -91,7 +91,7 @@ export class TeamAPI {
     const config: AxiosRequestConfig = {
       cancelToken: cancelSource.token,
       method: 'get',
-      url: `${TeamAPI.URL.TEAMS}/${teamId}${TeamAPI.URL.SIZE}`,
+      url: `${TeamAPI.URL.TEAMS}/${teamId}/${TeamAPI.URL.SIZE}`,
     };
 
     const handleRequest = async () => {
