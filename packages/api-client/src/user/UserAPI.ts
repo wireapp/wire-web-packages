@@ -262,7 +262,7 @@ export class UserAPI {
    * @param options Search options (sort, order, filter, etc.)
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/search
    */
-  public async getSearchMembers(query: string, teamId: string, options: SearchOptions = {}): Promise<RequestCancelable<SearchResult>> {
+  public async getSearchMembers(teamId: string, query: string, options: SearchOptions = {}): Promise<RequestCancelable<SearchResult>> {
     const cancelSource = Axios.CancelToken.source();
     const config: AxiosRequestConfig = {
       cancelToken: cancelSource.token,
