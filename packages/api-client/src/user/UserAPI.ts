@@ -57,6 +57,7 @@ export class UserAPI {
     PROPERTIES: '/properties',
     RICH_INFO: 'rich-info',
     SEARCH: '/search',
+    BROWSE_TEAM: 'browse-team',
     SEND: 'send',
     USERS: '/users',
   };
@@ -218,10 +219,50 @@ export class UserAPI {
   /**
    * Search for users.
    * @param query The search query
+   * @param limit Number of results to return
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/search
+   */
+  public async getSearchContacts(query: string, limit?: number): Promise<RequestCancelable<SearchResult>> {
+    const cancelSource = Axios.CancelToken.source();
+    const config: AxiosRequestConfig = {
+      cancelToken: cancelSource.token,
+      method: 'get',
+      params: {
+        q: query,
+      },
+      url: `${UserAPI.URL.SEARCH}/${UserAPI.URL.CONTACTS}`,
+    };
+
+    if (limit) {
+      config.params.size = limit;
+    }
+
+    const handleRequest = async () => {
+      try {
+        const response = await this.client.sendJSON<SearchResult>(config);
+        return response.data;
+      } catch (error) {
+        if (error.message === SyntheticErrorLabel.REQUEST_CANCELLED) {
+          throw new RequestCancellationError('Search request got cancelled');
+        }
+        throw error;
+      }
+    };
+
+    return {
+      cancel: () => cancelSource.cancel(SyntheticErrorLabel.REQUEST_CANCELLED),
+      response: handleRequest(),
+    };
+  }
+
+
+  /**
+   * Search for team members.
+   * @param query The search query
    * @param options Search options (sort, order, filter, etc.)
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/search
    */
-  public async getSearchContacts(query: string, options: SearchOptions = {}): Promise<RequestCancelable<SearchResult>> {
+  public async getSearchMembers(query: string, teamId: string, options: SearchOptions = {}): Promise<RequestCancelable<SearchResult>> {
     const cancelSource = Axios.CancelToken.source();
     const config: AxiosRequestConfig = {
       cancelToken: cancelSource.token,
@@ -231,7 +272,7 @@ export class UserAPI {
         ...options,
         frole: options.frole?.join(','),
       },
-      url: `${UserAPI.URL.SEARCH}/${UserAPI.URL.CONTACTS}`,
+      url: `/${UserAPI.URL.CONTACTS}/${UserAPI.URL.BROWSE_TEAM}/${teamId}`,
     };
 
     const handleRequest = async () => {

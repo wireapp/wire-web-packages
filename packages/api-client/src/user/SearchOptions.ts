@@ -28,8 +28,6 @@ export enum SearchOrder {
 export interface SearchOptions {
   /** Filter results by member role */
   frole?: Role[];
-  /** Filter results by team ID */
-  fteam?: string;
   /** Sort order (asc | desc | undefined) */
   order?: SearchOrder;
   /** Max number of search results. Defaults to 15 results. Min 1, max 500. */
