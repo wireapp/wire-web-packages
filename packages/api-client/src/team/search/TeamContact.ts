@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2021 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,21 +17,15 @@
  *
  */
 
-export * from './Activate';
-export * from './ActivationResponse';
-export * from './CheckHandles';
-export * from './CompletePasswordReset';
-export * from './Contact';
-export * from './HandleInfo';
-export * from './NewPasswordReset';
-export * from './RTCIceServer';
-export * from './SearchResult';
-export * from './SendActivationCode';
-export * from './User';
-export * from './RichInfo';
-export * from './UserAPI';
-export * from './UserAsset';
-export * from './UserError';
-export * from './UserPreKeyBundleMap';
-export * from './UserUpdate';
-export * from './VerifyDelete';
+import type {Role} from '..';
+import type {ManagedSource} from '../../user/ManagedSource';
+import type {User} from '../../user/User';
+
+export type TeamContact = Pick<User, 'id' | 'email' | 'accent_id' | 'handle' | 'name' | 'team'> & {
+  /** Timestamp of invitation creation. */
+  created_at?: string;
+  managed_by?: ManagedSource;
+  role?: Role;
+  /** URL of the SAML identity provider. */
+  saml_idp?: string;
+};

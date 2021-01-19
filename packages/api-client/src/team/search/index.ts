@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2020 Wire Swiss GmbH
+ * Copyright (C) 2021 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,21 +17,7 @@
  *
  */
 
-import {Contact} from '.';
-import {Role} from '../team';
-
-export enum SearchOrder {
-  ASCENDING = 'asc',
-  DESCENDING = 'desc',
-}
-
-export interface SearchOptions {
-  /** Filter results by member role */
-  frole?: Role[];
-  /** Sort order (asc | desc | undefined) */
-  order?: SearchOrder;
-  /** Max number of search results. Defaults to 15 results. Min 1, max 500. */
-  size?: number;
-  /** Sort results */
-  sortby?: keyof Pick<Contact, 'email' | 'name' | 'handle' | 'created_at' | 'role' | 'managed_by' | 'saml_idp'>;
-}
+export * from './TeamContact';
+export * from './TeamSearchAPI';
+export * from './TeamSearchOptions';
+export * from './TeamSearchResult';

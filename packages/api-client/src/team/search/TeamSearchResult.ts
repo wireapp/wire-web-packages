@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2021 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,21 +17,11 @@
  *
  */
 
-export * from './Activate';
-export * from './ActivationResponse';
-export * from './CheckHandles';
-export * from './CompletePasswordReset';
-export * from './Contact';
-export * from './HandleInfo';
-export * from './NewPasswordReset';
-export * from './RTCIceServer';
-export * from './SearchResult';
-export * from './SendActivationCode';
-export * from './User';
-export * from './RichInfo';
-export * from './UserAPI';
-export * from './UserAsset';
-export * from './UserError';
-export * from './UserPreKeyBundleMap';
-export * from './UserUpdate';
-export * from './VerifyDelete';
+import type {TeamContact} from './TeamContact';
+
+export interface TeamSearchResult {
+  documents: TeamContact[];
+  found: number;
+  returned: number;
+  took: number;
+}

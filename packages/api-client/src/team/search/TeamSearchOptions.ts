@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2021 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,21 +17,21 @@
  *
  */
 
-export * from './Activate';
-export * from './ActivationResponse';
-export * from './CheckHandles';
-export * from './CompletePasswordReset';
-export * from './Contact';
-export * from './HandleInfo';
-export * from './NewPasswordReset';
-export * from './RTCIceServer';
-export * from './SearchResult';
-export * from './SendActivationCode';
-export * from './User';
-export * from './RichInfo';
-export * from './UserAPI';
-export * from './UserAsset';
-export * from './UserError';
-export * from './UserPreKeyBundleMap';
-export * from './UserUpdate';
-export * from './VerifyDelete';
+import {Role} from '..';
+import type {TeamContact} from './TeamContact';
+
+export enum SearchOrder {
+  ASCENDING = 'asc',
+  DESCENDING = 'desc',
+}
+
+export interface TeamSearchOptions {
+  /** Filter results by member role */
+  frole?: Role[];
+  /** Sort order (asc | desc | undefined) */
+  order?: SearchOrder;
+  /** Max number of search results. Defaults to 15 results. Min 1, max 500. */
+  size?: number;
+  /** Sort results */
+  sortby?: keyof Pick<TeamContact, 'email' | 'name' | 'handle' | 'created_at' | 'role' | 'managed_by' | 'saml_idp'>;
+}
