@@ -24,9 +24,9 @@ import {SVGIcon, SVGIconProps} from './SVGIcon';
 
 export const ErrorIcon = (props: SVGIconProps) => (
   <SVGIcon realWidth={13} realHeight={12} {...props}>
-    <g transform="translate(.5 .333)" fill="none" fill-rule="evenodd">
+    <g transform="translate(.5 .333)" fill="none" fillRule="evenodd">
       <circle fill="#E02020" cx="6" cy="6" r="6" />
-      <text font-family="SFProText-Heavy, SF Pro Text" font-size="9" font-weight="600" fill="#FFF">
+      <text fontFamily="SFProText-Heavy, SF Pro Text" fontSize="9" fontWeight="600" fill="#FFF">
         <tspan x="4.291" y="9">
           !
         </tspan>

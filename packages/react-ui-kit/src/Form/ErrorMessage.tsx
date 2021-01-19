@@ -41,7 +41,7 @@ export const errorMessageStyle: <T>(theme: Theme, props: ErrorMessageProps<T>) =
 
 export const ErrorMessage = ({center = true, ...props}: ErrorMessageProps) => (
   <FlexBox align="center" justify={center ? 'center' : undefined}>
-    <ErrorIcon style={{marginRight: '8px', marginBottom: '12px'}} />
+    <ErrorIcon style={{marginBottom: '12px', marginRight: '8px'}} />
     <Text css={theme => errorMessageStyle(theme, props)} {...props} />
   </FlexBox>
 );
