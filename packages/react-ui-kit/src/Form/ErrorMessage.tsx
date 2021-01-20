@@ -32,9 +32,9 @@ export const errorMessageStyle: <T>(theme: Theme, props: ErrorMessageProps<T>) =
   theme,
   {justify = 'center', align = 'center', ...props},
 ) => ({
-  ...flexBoxStyle({justify, align, ...props}),
+  ...flexBoxStyle({align, justify, ...props}),
   a: {
-    ...linkStyle(theme, {bold: false, textTransform: 'none', fontSize: '11px', ...props}),
+    ...linkStyle(theme, {bold: false, fontSize: '11px', textTransform: 'none', ...props}),
   },
   marginBottom: '12px',
 });
