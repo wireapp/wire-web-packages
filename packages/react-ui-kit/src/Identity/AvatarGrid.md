@@ -10,8 +10,8 @@ const avatarBase64 =
 const base64ToArray = base64 => {
   return new Uint8Array(atob(base64).split('').map(charCodeAt));
 };
-const imageData = base64ToArray(avatarBase64);
-const imageBlob = new Blob([imageData], {type: 'image/png'});
+const imageArray = base64ToArray(avatarBase64);
+const imageBlob = new Blob([imageArray], {type: 'image/png'});
 const imageUrl = window.URL.createObjectURL(imageBlob);
 const FETCH_IMAGE_TIMEOUT_MS = 2000;
 const [imageData, setImageData] = useState(null);
