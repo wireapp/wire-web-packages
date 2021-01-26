@@ -36,7 +36,11 @@ export class TeamSearchAPI {
    * @param query The search query
    * @param options Search options (sort, order, filter, etc.)
    */
-  public async getSearchMembers(teamId: string, query: string, options: TeamSearchOptions = {}): Promise<RequestCancelable<TeamSearchResult>> {
+  public async getSearchMembers(
+    teamId: string,
+    query: string,
+    options: TeamSearchOptions = {},
+  ): Promise<RequestCancelable<TeamSearchResult>> {
     const cancelSource = Axios.CancelToken.source();
     const config: AxiosRequestConfig = {
       cancelToken: cancelSource.token,
