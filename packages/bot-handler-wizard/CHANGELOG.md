@@ -3,6 +3,97 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.94](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-wizard/compare/@wireapp/bot-handler-wizard@0.2.93...@wireapp/bot-handler-wizard@0.2.94) (2021-01-26)
+
+**Note:** Version bump only for package @wireapp/bot-handler-wizard
+
+
+
+
+
+## [0.2.93](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-wizard/compare/@wireapp/bot-handler-wizard@0.2.92...@wireapp/bot-handler-wizard@0.2.93) (2021-01-26)
+
+**Note:** Version bump only for package @wireapp/bot-handler-wizard
+
+
+
+
+
+## [0.2.92](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-wizard/compare/@wireapp/bot-handler-wizard@0.2.91...@wireapp/bot-handler-wizard@0.2.92) (2021-01-26)
+
+**Note:** Version bump only for package @wireapp/bot-handler-wizard
+
+
+
+
+
+## [0.2.91](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-wizard/compare/@wireapp/bot-handler-wizard@0.2.90...@wireapp/bot-handler-wizard@0.2.91) (2021-01-21)
+
+**Note:** Version bump only for package @wireapp/bot-handler-wizard
+
+
+
+
+
+## [0.2.90](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-wizard/compare/@wireapp/bot-handler-wizard@0.2.89...@wireapp/bot-handler-wizard@0.2.90) (2021-01-20)
+
+**Note:** Version bump only for package @wireapp/bot-handler-wizard
+
+
+
+
+
+## [0.2.89](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-wizard/compare/@wireapp/bot-handler-wizard@0.2.88...@wireapp/bot-handler-wizard@0.2.89) (2021-01-20)
+
+**Note:** Version bump only for package @wireapp/bot-handler-wizard
+
+
+
+
+
+## [0.2.88](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-wizard/compare/@wireapp/bot-handler-wizard@0.2.87...@wireapp/bot-handler-wizard@0.2.88) (2021-01-20)
+
+**Note:** Version bump only for package @wireapp/bot-handler-wizard
+
+
+
+
+
+## [0.2.87](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-wizard/compare/@wireapp/bot-handler-wizard@0.2.86...@wireapp/bot-handler-wizard@0.2.87) (2021-01-12)
+
+**Note:** Version bump only for package @wireapp/bot-handler-wizard
+
+
+
+
+
+## [0.2.86](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-wizard/compare/@wireapp/bot-handler-wizard@0.2.85...@wireapp/bot-handler-wizard@0.2.86) (2021-01-12)
+
+
+### Bug Fixes
+
+* **priority-queue:** Run tests with Jasmine 3.6 ([#3441](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-wizard/issues/3441)) ([cd92afe](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-wizard/commit/cd92afe589816a78005cf81d90722a83fc1c52ac))
+
+
+
+
+
+## [0.2.85](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-wizard/compare/@wireapp/bot-handler-wizard@0.2.84...@wireapp/bot-handler-wizard@0.2.85) (2021-01-07)
+
+**Note:** Version bump only for package @wireapp/bot-handler-wizard
+
+
+
+
+
+## [0.2.84](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-wizard/compare/@wireapp/bot-handler-wizard@0.2.83...@wireapp/bot-handler-wizard@0.2.84) (2021-01-04)
+
+**Note:** Version bump only for package @wireapp/bot-handler-wizard
+
+
+
+
+
 ## [0.2.83](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-wizard/compare/@wireapp/bot-handler-wizard@0.2.82...@wireapp/bot-handler-wizard@0.2.83) (2020-12-18)
 
 **Note:** Version bump only for package @wireapp/bot-handler-wizard

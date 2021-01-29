@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2021 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,20 @@
  *
  */
 
-export interface SessionPayloadBundle {
-  encryptedPayload: Uint8Array;
-  sessionId: string;
-}
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
+
+import {SVGIcon, SVGIconProps} from './SVGIcon';
+
+export const ErrorIcon = (props: SVGIconProps) => (
+  <SVGIcon realWidth={13} realHeight={12} {...props}>
+    <g transform="translate(.5 .333)" fill="none" fillRule="evenodd">
+      <circle fill="#E02020" cx="6" cy="6" r="6" />
+      <text fontFamily="SFProText-Heavy, SF Pro Text" fontSize="9" fontWeight="600" fill="#FFF">
+        <tspan x="4.291" y="9">
+          !
+        </tspan>
+      </text>
+    </g>
+  </SVGIcon>
+);

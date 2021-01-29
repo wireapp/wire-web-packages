@@ -1,26 +1,26 @@
 {
   "dependencies": {
     "@babel/core": "7.12.10",
-    "@babel/plugin-proposal-class-properties": "7.10.4",
+    "@babel/plugin-proposal-class-properties": "7.12.1",
     "@babel/plugin-proposal-object-rest-spread": "7.12.1",
-    "@babel/plugin-proposal-optional-chaining": "7.12.1",
-    "@babel/preset-typescript": "7.10.4",
+    "@babel/plugin-proposal-optional-chaining": "7.12.7",
+    "@babel/preset-typescript": "7.12.7",
     "@wireapp/websql": "0.0.17",
     "uint32": "0.2.1"
   },
   "devDependencies": {
-    "@types/jasmine": "3.6.0",
-    "@types/karma": "5.0.0",
+    "@types/jasmine": "3.6.2",
+    "@types/karma": "5.0.1",
     "@types/karma-webpack": "2.0.7",
-    "@types/node": "~12",
+    "@types/node": "~14",
     "@types/uint32": "0.2.0",
-    "@types/webpack": "4.41.24",
-    "@wireapp/store-engine": "4.5.20",
-    "babel-loader": "8.1.0",
-    "bazinga64": "5.7.22",
+    "@types/webpack": "4.41.25",
+    "@wireapp/store-engine": "4.5.23",
+    "babel-loader": "8.2.2",
+    "bazinga64": "5.7.25",
     "del-cli": "3.0.1",
-    "jasmine": "3.5.0",
-    "karma": "5.1.0",
+    "jasmine": "3.6.3",
+    "karma": "5.2.3",
     "karma-chrome-launcher": "3.1.0",
     "karma-jasmine": "3.1.1",
     "karma-webpack": "4.0.2",
@@ -49,5 +49,5 @@
     "test": "yarn build && karma start",
     "test:project": "yarn build && yarn test"
   },
-  "version": "1.3.35"
+  "version": "1.3.38"
 }

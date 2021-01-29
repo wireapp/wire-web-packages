@@ -19,11 +19,7 @@
 
 import type {Picture, SSOSignature} from '../self/';
 import type {QualifiedId, User} from '../user/';
-
-export enum ManagedSource {
-  SCIM = 'scim',
-  WIRE = 'wire',
-}
+import type {ManagedSource} from '../user/ManagedSource';
 
 export interface Self extends User {
   locale: string;

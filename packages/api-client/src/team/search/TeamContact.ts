@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2021 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,15 @@
  *
  */
 
-export interface SessionPayloadBundle {
-  encryptedPayload: Uint8Array;
-  sessionId: string;
-}
+import type {Role} from '..';
+import type {ManagedSource} from '../../user/ManagedSource';
+import type {User} from '../../user/User';
+
+export type TeamContact = Pick<User, 'id' | 'email' | 'accent_id' | 'handle' | 'name' | 'team'> & {
+  /** Timestamp of invitation creation. */
+  created_at?: string;
+  managed_by?: ManagedSource;
+  role?: Role;
+  /** URL of the SAML identity provider. */
+  saml_idp?: string;
+};

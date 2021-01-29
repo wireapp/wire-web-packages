@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2021 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,21 @@
  *
  */
 
-export interface SessionPayloadBundle {
-  encryptedPayload: Uint8Array;
-  sessionId: string;
+import {Role} from '..';
+import type {TeamContact} from './TeamContact';
+
+export enum SearchOrder {
+  ASCENDING = 'asc',
+  DESCENDING = 'desc',
+}
+
+export interface TeamSearchOptions {
+  /** Filter results by member role */
+  frole?: Role[];
+  /** Sort order (asc | desc | undefined) */
+  order?: SearchOrder;
+  /** Max number of search results. Defaults to 15 results. Min 1, max 500. */
+  size?: number;
+  /** Sort results */
+  sortby?: keyof Pick<TeamContact, 'email' | 'name' | 'handle' | 'created_at' | 'role' | 'managed_by' | 'saml_idp'>;
 }

@@ -3,6 +3,97 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.119](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-uptime/compare/@wireapp/bot-handler-uptime@0.1.118...@wireapp/bot-handler-uptime@0.1.119) (2021-01-26)
+
+**Note:** Version bump only for package @wireapp/bot-handler-uptime
+
+
+
+
+
+## [0.1.118](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-uptime/compare/@wireapp/bot-handler-uptime@0.1.117...@wireapp/bot-handler-uptime@0.1.118) (2021-01-26)
+
+**Note:** Version bump only for package @wireapp/bot-handler-uptime
+
+
+
+
+
+## [0.1.117](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-uptime/compare/@wireapp/bot-handler-uptime@0.1.116...@wireapp/bot-handler-uptime@0.1.117) (2021-01-26)
+
+**Note:** Version bump only for package @wireapp/bot-handler-uptime
+
+
+
+
+
+## [0.1.116](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-uptime/compare/@wireapp/bot-handler-uptime@0.1.115...@wireapp/bot-handler-uptime@0.1.116) (2021-01-21)
+
+**Note:** Version bump only for package @wireapp/bot-handler-uptime
+
+
+
+
+
+## [0.1.115](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-uptime/compare/@wireapp/bot-handler-uptime@0.1.114...@wireapp/bot-handler-uptime@0.1.115) (2021-01-20)
+
+**Note:** Version bump only for package @wireapp/bot-handler-uptime
+
+
+
+
+
+## [0.1.114](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-uptime/compare/@wireapp/bot-handler-uptime@0.1.113...@wireapp/bot-handler-uptime@0.1.114) (2021-01-20)
+
+**Note:** Version bump only for package @wireapp/bot-handler-uptime
+
+
+
+
+
+## [0.1.113](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-uptime/compare/@wireapp/bot-handler-uptime@0.1.112...@wireapp/bot-handler-uptime@0.1.113) (2021-01-20)
+
+**Note:** Version bump only for package @wireapp/bot-handler-uptime
+
+
+
+
+
+## [0.1.112](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-uptime/compare/@wireapp/bot-handler-uptime@0.1.111...@wireapp/bot-handler-uptime@0.1.112) (2021-01-12)
+
+**Note:** Version bump only for package @wireapp/bot-handler-uptime
+
+
+
+
+
+## [0.1.111](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-uptime/compare/@wireapp/bot-handler-uptime@0.1.110...@wireapp/bot-handler-uptime@0.1.111) (2021-01-12)
+
+
+### Bug Fixes
+
+* **priority-queue:** Run tests with Jasmine 3.6 ([#3441](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-uptime/issues/3441)) ([cd92afe](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-uptime/commit/cd92afe589816a78005cf81d90722a83fc1c52ac))
+
+
+
+
+
+## [0.1.110](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-uptime/compare/@wireapp/bot-handler-uptime@0.1.109...@wireapp/bot-handler-uptime@0.1.110) (2021-01-07)
+
+**Note:** Version bump only for package @wireapp/bot-handler-uptime
+
+
+
+
+
+## [0.1.109](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-uptime/compare/@wireapp/bot-handler-uptime@0.1.108...@wireapp/bot-handler-uptime@0.1.109) (2021-01-04)
+
+**Note:** Version bump only for package @wireapp/bot-handler-uptime
+
+
+
+
+
 ## [0.1.108](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-handler-uptime/compare/@wireapp/bot-handler-uptime@0.1.107...@wireapp/bot-handler-uptime@0.1.108) (2020-12-18)
 
 **Note:** Version bump only for package @wireapp/bot-handler-uptime
