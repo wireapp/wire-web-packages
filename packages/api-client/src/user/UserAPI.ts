@@ -266,7 +266,8 @@ export class UserAPI {
 
   /**
    * Get a user by ID.
-   * @note If you want to get all properties (`sso_id`, `managed_by`, etc.) for your own user, use "/self". Otherwise you will get a user payload with a limited set of properties (what's publicly available).
+   * @note If you want to get all properties (`sso_id`, `managed_by`, etc.) for your own user, use "/self".
+   *       Otherwise you will get a user payload with a limited set of properties (what's publicly available).
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/user
    */
   public async getUser(userId: QualifiedId): Promise<QualifiedUser>;
@@ -312,11 +313,11 @@ export class UserAPI {
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/users
    */
   public async getUsers(
-    parameters: {handles: string[]; ids?: string[]} | {handles?: string[]; ids: string[]},
+    parameters: {ids: string[]} | {handles: string[]} | {qualifiedIds: QualifiedId[]},
     limit: number = UserAPI.DEFAULT_USERS_CHUNK_SIZE,
   ): Promise<User[]> {
     const fetchUsers = async (
-      params: {handles: string[]; ids?: string[]} | {handles?: string[]; ids: string[]},
+      params: {ids: string[]} | {handles: string[]} | {qualifiedIds: QualifiedId[]},
     ): Promise<User[]> => {
       const config: AxiosRequestConfig = {
         method: 'get',
@@ -324,27 +325,36 @@ export class UserAPI {
         url: UserAPI.URL.USERS,
       };
 
-      if (params.handles) {
+      if ('handles' in params) {
         config.params.handles = params.handles.join(',');
-      } else if (params.ids) {
+      } else if ('ids' in params) {
         config.params.ids = params.ids.join(',');
+      } else if ('qualifiedIds' in params) {
+        config.params.ids = params.qualifiedIds.map(qualifiedId => qualifiedId.id).join(',');
       }
 
       const response = await this.client.sendJSON<User[]>(config);
       return response.data;
     };
 
-    if (parameters.handles?.length) {
+    if ('handles' in parameters && parameters.handles.length) {
       const uniqueHandles = ArrayUtil.removeDuplicates(parameters.handles);
       const handleChunks = ArrayUtil.chunk(uniqueHandles, limit);
       const resolvedTasks = await Promise.all(handleChunks.map(handleChunk => fetchUsers({handles: handleChunk})));
       return ArrayUtil.flatten(resolvedTasks);
     }
 
-    if (parameters.ids?.length) {
+    if ('ids' in parameters && parameters.ids.length) {
       const uniqueIds = ArrayUtil.removeDuplicates(parameters.ids);
       const idChunks = ArrayUtil.chunk(uniqueIds, limit);
       const resolvedTasks = await Promise.all(idChunks.map(idChunk => fetchUsers({ids: idChunk})));
+      return ArrayUtil.flatten(resolvedTasks);
+    }
+
+    if ('qualifiedIds' in parameters && parameters.qualifiedIds.length) {
+      const uniqueIds = ArrayUtil.removeDuplicates(parameters.qualifiedIds);
+      const idChunks = ArrayUtil.chunk(uniqueIds, limit);
+      const resolvedTasks = await Promise.all(idChunks.map(idChunk => fetchUsers({qualifiedIds: idChunk})));
       return ArrayUtil.flatten(resolvedTasks);
     }
 
