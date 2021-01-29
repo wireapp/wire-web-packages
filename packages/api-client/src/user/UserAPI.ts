@@ -39,7 +39,7 @@ import type {
   VerifyDelete,
 } from '../user/';
 import {RequestCancellationError} from './UserError';
-import type {ClientPreKey, PreKeyBundle, QualifiedPreKeyBundle} from '../auth/';
+import type {ClientPreKey, QualifiedPreKeyBundle} from '../auth/';
 import type {PublicClient} from '../client/';
 import type {RichInfo} from './RichInfo';
 import type {UserClients} from '../conversation/UserClients';
@@ -180,8 +180,8 @@ export class UserAPI {
    */
   public async getHandle(handle: QualifiedHandle): Promise<QualifiedHandleInfo>;
   /** @deprecated */
-  public async getHandle(handle: string): Promise<HandleInfo>;
-  public async getHandle(handle: string | QualifiedHandle): Promise<HandleInfo | QualifiedHandleInfo> {
+  public async getHandle(handle: string): Promise<QualifiedHandleInfo>;
+  public async getHandle(handle: string | QualifiedHandle): Promise<QualifiedHandleInfo> {
     const url =
       typeof handle === 'string'
         ? `${UserAPI.URL.HANDLES}/${handle}`
@@ -192,7 +192,7 @@ export class UserAPI {
       url,
     };
 
-    const response = await this.client.sendJSON<HandleInfo | QualifiedHandleInfo>(config);
+    const response = await this.client.sendJSON<QualifiedHandleInfo>(config);
     return response.data;
   }
 
@@ -271,8 +271,8 @@ export class UserAPI {
    */
   public async getUser(userId: QualifiedId): Promise<QualifiedUser>;
   /** @deprecated */
-  public async getUser(userId: string): Promise<User>;
-  public async getUser(userId: string | QualifiedId): Promise<User | QualifiedUser> {
+  public async getUser(userId: string): Promise<QualifiedUser>;
+  public async getUser(userId: string | QualifiedId): Promise<QualifiedUser> {
     const url =
       typeof userId === 'string'
         ? `${UserAPI.URL.USERS}/${userId}`
@@ -283,14 +283,14 @@ export class UserAPI {
       url,
     };
 
-    const response = await this.client.sendJSON<User>(config);
+    const response = await this.client.sendJSON<QualifiedUser>(config);
     return response.data;
   }
 
   public async getUserPreKeys(userId: QualifiedId): Promise<QualifiedPreKeyBundle>;
   /** @deprecated */
-  public async getUserPreKeys(userId: string): Promise<PreKeyBundle>;
-  public async getUserPreKeys(userId: QualifiedId | string): Promise<PreKeyBundle | QualifiedPreKeyBundle> {
+  public async getUserPreKeys(userId: string): Promise<QualifiedPreKeyBundle>;
+  public async getUserPreKeys(userId: QualifiedId | string): Promise<QualifiedPreKeyBundle> {
     const url =
       typeof userId === 'string'
         ? `${UserAPI.URL.USERS}/${userId}/${UserAPI.URL.PRE_KEYS}`
@@ -301,7 +301,7 @@ export class UserAPI {
       url,
     };
 
-    const response = await this.client.sendJSON<PreKeyBundle | QualifiedPreKeyBundle>(config, true);
+    const response = await this.client.sendJSON<QualifiedPreKeyBundle>(config, true);
     return response.data;
   }
 
@@ -315,42 +315,40 @@ export class UserAPI {
     parameters: {handles: string[]; ids?: string[]} | {handles?: string[]; ids: string[]},
     limit: number = UserAPI.DEFAULT_USERS_CHUNK_SIZE,
   ): Promise<User[]> {
-    const {handles, ids} = parameters;
+    const fetchUsers = async (
+      params: {handles: string[]; ids?: string[]} | {handles?: string[]; ids: string[]},
+    ): Promise<User[]> => {
+      const config: AxiosRequestConfig = {
+        method: 'get',
+        params: {},
+        url: UserAPI.URL.USERS,
+      };
 
-    if (handles?.length) {
-      const uniqueHandles = ArrayUtil.removeDuplicates(handles);
+      if (params.handles) {
+        config.params.handles = params.handles.join(',');
+      } else if (params.ids) {
+        config.params.ids = params.ids.join(',');
+      }
+
+      const response = await this.client.sendJSON<User[]>(config);
+      return response.data;
+    };
+
+    if (parameters.handles?.length) {
+      const uniqueHandles = ArrayUtil.removeDuplicates(parameters.handles);
       const handleChunks = ArrayUtil.chunk(uniqueHandles, limit);
-      const resolvedTasks = await Promise.all(handleChunks.map(handleChunk => this._getUsers({handles: handleChunk})));
+      const resolvedTasks = await Promise.all(handleChunks.map(handleChunk => fetchUsers({handles: handleChunk})));
       return ArrayUtil.flatten(resolvedTasks);
     }
 
-    if (ids?.length) {
-      const uniqueIds = ArrayUtil.removeDuplicates(ids);
+    if (parameters.ids?.length) {
+      const uniqueIds = ArrayUtil.removeDuplicates(parameters.ids);
       const idChunks = ArrayUtil.chunk(uniqueIds, limit);
-      const resolvedTasks = await Promise.all(idChunks.map(idChunk => this._getUsers({ids: idChunk})));
+      const resolvedTasks = await Promise.all(idChunks.map(idChunk => fetchUsers({ids: idChunk})));
       return ArrayUtil.flatten(resolvedTasks);
     }
 
     return [];
-  }
-
-  private async _getUsers(
-    parameters: {handles: string[]; ids?: string[]} | {handles?: string[]; ids: string[]},
-  ): Promise<User[]> {
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      params: {},
-      url: UserAPI.URL.USERS,
-    };
-
-    if (parameters.handles) {
-      config.params.handles = parameters.handles.join(',');
-    } else if (parameters.ids) {
-      config.params.ids = parameters.ids.join(',');
-    }
-
-    const response = await this.client.sendJSON<User[]>(config);
-    return response.data;
   }
 
   /**
