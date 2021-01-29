@@ -143,17 +143,17 @@ export class ConversationService {
 
     if (userIds && !Array.isArray(userIds)) {
       preKeys = preKeys.map(preKey => {
-        if (preKey.user in userIds) {
-          preKey.clients = preKey.clients.filter(client => userIds[preKey.user].includes(client.client));
+        if (preKey.user.id in userIds) {
+          preKey.clients = preKey.clients.filter(client => userIds[preKey.user.id].includes(client.client));
         }
         return preKey;
       });
     }
 
     return preKeys.reduce((bundleMap: UserPreKeyBundleMap, bundle) => {
-      bundleMap[bundle.user] = {};
+      bundleMap[bundle.user.id] = {};
       for (const client of bundle.clients) {
-        bundleMap[bundle.user][client.client] = client.prekey;
+        bundleMap[bundle.user.id][client.client] = client.prekey;
       }
       return bundleMap;
     }, {});
