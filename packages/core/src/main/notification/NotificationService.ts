@@ -28,7 +28,7 @@ import {PayloadBundle, PayloadBundleSource, PayloadBundleType} from '../conversa
 import type {AssetContent} from '../conversation/content';
 import {ConversationMapper} from '../conversation/ConversationMapper';
 import * as OtrMessage from '../conversation/message/OtrMessage';
-import * as UserMessage from './conversation/message/UserMessage';
+import * as UserMessage from '../conversation/message/UserMessage';
 import {CoreError, NotificationError} from '../CoreError';
 import type {CryptographyService} from '../cryptography';
 import {UserMapper} from '../user/UserMapper';
