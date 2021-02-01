@@ -2643,14 +2643,14 @@
   resolved "https://registry.npmjs.org/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
 
-"@types/karma-webpack@2.0.7":
-  version "2.0.7"
-  resolved "https://registry.npmjs.org/@types/karma-webpack/-/karma-webpack-2.0.7.tgz#967e7971d8bc3d8da31110f44556842eca3aed85"
-  integrity sha512-8v5+OVjFO+j8YUdbv3cIYIfZJHH2VvUSNqJXDaxnr5sFgv4neMI7D812GFclU2dcjdzicX/qEzfk69ha21453A==
+"@types/karma-webpack@2.0.8":
+  version "2.0.8"
+  resolved "https://registry.npmjs.org/@types/karma-webpack/-/karma-webpack-2.0.8.tgz#0c6e23d40b83e063b6c94525efc8c47af58cfe0f"
+  integrity sha512-BT09qIvUZR5FNO2W1DsxrpJogZp9+3/LCBB3jjumJg0E1gV6mpcAZu9cTivHfz24l4VQJCVh/jMZioS/leg+Pw==
   dependencies:
     "@types/karma" "*"
     "@types/webpack" "*"
-    "@types/webpack-dev-middleware" "*"
+    "@types/webpack-dev-middleware" "^3"
 
 "@types/karma@*", "@types/karma@5.0.1":
   version "5.0.1"
@@ -2824,10 +2824,10 @@
     "@types/expect" "^1.20.4"
     "@types/node" "*"
 
-"@types/webpack-dev-middleware@*":
-  version "2.0.3"
-  resolved "https://registry.npmjs.org/@types/webpack-dev-middleware/-/webpack-dev-middleware-2.0.3.tgz#aefb145281b3326a052325d583d2339debbf1be3"
-  integrity sha512-DzNJJ6ah/6t1n8sfAgQyEbZ/OMmFcF9j9P3aesnm7G6/iBFR/qiGin8K89J0RmaWIBzhTMdDg3I5PmKmSv7N9w==
+"@types/webpack-dev-middleware@^3":
+  version "3.7.3"
+  resolved "https://registry.npmjs.org/@types/webpack-dev-middleware/-/webpack-dev-middleware-3.7.3.tgz#2b0aa70b19f30ead7e6ff8c2789d6930e2298c7b"
+  integrity sha512-g6Q1Gom9kGZv8Sme2gNCrxKdxDi68FX3jW4u2Abntx/5ejX1g2tpI95+3ObdXkTHm8XEFpVcmZbmhlcZbVqEeg==
   dependencies:
     "@types/connect" "*"
     "@types/memory-fs" "*"
