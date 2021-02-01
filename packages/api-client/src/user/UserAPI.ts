@@ -54,6 +54,7 @@ export class UserAPI {
     CONTACTS: 'contacts',
     DELETE: '/delete',
     HANDLES: 'handles',
+    LIST_USERS: '/list-users',
     PASSWORDRESET: '/password-reset',
     PRE_KEYS: 'prekeys',
     PROPERTIES: '/properties',
@@ -311,6 +312,7 @@ export class UserAPI {
    * Note: The 'ids' and 'handles' parameters are mutually exclusive.
    * @param parameters Multiple user's handles or IDs
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/users
+   * @deprecated Use `postListUsers()` instead
    */
   public async getUsers(
     parameters: {ids: string[]} | {handles: string[]} | {qualifiedIds: QualifiedId[]},
@@ -329,8 +331,6 @@ export class UserAPI {
         config.params.handles = params.handles.join(',');
       } else if ('ids' in params) {
         config.params.ids = params.ids.join(',');
-      } else if ('qualifiedIds' in params) {
-        config.params.ids = params.qualifiedIds.map(qualifiedId => qualifiedId.id).join(',');
       }
 
       const response = await this.client.sendJSON<User[]>(config);
@@ -351,21 +351,14 @@ export class UserAPI {
       return ArrayUtil.flatten(resolvedTasks);
     }
 
-    if ('qualifiedIds' in parameters && parameters.qualifiedIds.length) {
-      const uniqueIds = ArrayUtil.removeDuplicates(parameters.qualifiedIds);
-      const idChunks = ArrayUtil.chunk(uniqueIds, limit);
-      const resolvedTasks = await Promise.all(idChunks.map(idChunk => fetchUsers({qualifiedIds: idChunk})));
-      return ArrayUtil.flatten(resolvedTasks);
-    }
-
     return [];
   }
 
   /**
-   * DEPRECATED: List users.
-   * @deprecated
+   * List users.
    * @param userIds Multiple user's IDs
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/users
+   * @deprecated Use `postListUsers()` instead
    */
   public async getUsersByIds(userIds: string[]): Promise<User[]> {
     const maxChunkSize = 100;
@@ -496,6 +489,21 @@ export class UserAPI {
   }
 
   /**
+   * List users.
+   * @param handles The user ids to check.
+   */
+  public async postListUsers(userIds: QualifiedId[]): Promise<QualifiedUser[]> {
+    const config: AxiosRequestConfig = {
+      data: userIds,
+      method: 'post',
+      url: UserAPI.URL.LIST_USERS,
+    };
+
+    const response = await this.client.sendJSON<QualifiedUser[]>(config);
+    return response.data;
+  }
+
+  /**
    * Given a map of user IDs to client IDs return a prekey for each one.
    * @param userClientMap A map of the user's clients
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getMultiPrekeyBundles
@@ -505,26 +513,21 @@ export class UserAPI {
     limit: number = UserAPI.DEFAULT_USERS_PREKEY_BUNDLE_CHUNK_SIZE,
   ): Promise<UserPreKeyBundleMap> {
     const userIdChunks = ArrayUtil.chunk(Object.keys(userClientMap), limit);
-    const userPreKeyBundleMapChunks = await Promise.all(
-      userIdChunks.map(userIdChunk =>
-        this._postMultiPreKeyBundlesChunk(
-          userIdChunk.reduce(
-            (chunkedUserClientMap, userId) => ({
-              ...chunkedUserClientMap,
-              [userId]: userClientMap[userId],
-            }),
-            {},
-          ),
-        ),
+    const chunksPromises = userIdChunks.map(userIdChunk =>
+      this._postMultiPreKeyBundlesChunk(
+        userIdChunk.reduce<UserClients>((chunkedUserClientMap, userId) => {
+          chunkedUserClientMap[userId] = userClientMap[userId];
+          return chunkedUserClientMap;
+        }, {}),
       ),
     );
-    return userPreKeyBundleMapChunks.reduce(
-      (userPreKeyBundleMap, userPreKeyBundleMapChunk) => ({
+    const userPreKeyBundleMapChunks = await Promise.all(chunksPromises);
+    return userPreKeyBundleMapChunks.reduce((userPreKeyBundleMap, userPreKeyBundleMapChunk) => {
+      return {
         ...userPreKeyBundleMap,
         ...userPreKeyBundleMapChunk,
-      }),
-      {},
-    );
+      };
+    }, {});
   }
 
   /**
