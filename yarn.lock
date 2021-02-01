@@ -3177,10 +3177,10 @@
   resolved "https://registry.npmjs.org/@webpack-cli/serve/-/serve-1.2.1.tgz#7513d7a769e3f97958de799b5b49874425ae3396"
   integrity sha512-Zj1z6AyS+vqV6Hfi7ngCjFGdHV5EwZNIHo6QfFTNe9PyW+zBU1zJ9BiOW1pmUEq950RC4+Dym6flyA/61/vhyw==
 
-"@wireapp/avs@6.4.14":
-  version "6.4.14"
-  resolved "https://registry.npmjs.org/@wireapp/avs/-/avs-6.4.14.tgz#2c4b450cf769e4cc31afea5257d749a58926936c"
-  integrity sha512-YEWhH8LM46vNWrxGoQsC6sR2qPAmiy6CgA6ZDgEfE0f0pVlVC/Bw/0Zpss6He3ddq5heHHgQtHkBpARv+YqUyg==
+"@wireapp/avs@6.7.3":
+  version "6.7.3"
+  resolved "https://registry.npmjs.org/@wireapp/avs/-/avs-6.7.3.tgz#69ab8f1390dd012779f55f5b95372eebd7424dc4"
+  integrity sha512-kLbIfSIEur2wC0gmM9ege2EFVbOQokGV3DhhMQM2FWJkGJEj97kdG0D8iBFcvD6CaMqhiq55FisxjTbYo34kpw==
 
 "@wireapp/protocol-messaging@1.28.0":
   version "1.28.0"
