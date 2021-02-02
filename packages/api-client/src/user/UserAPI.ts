@@ -493,7 +493,7 @@ export class UserAPI {
    * @param handles The user ids to check.
    */
   public async postListUsers(
-    users: {qualified_ids: QualifiedId[]} | {qualified_handles: string[]},
+    users: {qualified_ids: QualifiedId[]} | {qualified_handles: QualifiedHandle[]},
   ): Promise<QualifiedUser[]> {
     const config: AxiosRequestConfig = {
       data: users,
