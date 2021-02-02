@@ -54,6 +54,7 @@ export class UserAPI {
     CONTACTS: 'contacts',
     DELETE: '/delete',
     HANDLES: 'handles',
+    LIST_CLIENTS: '/list-clients',
     LIST_USERS: '/list-users',
     PASSWORDRESET: '/password-reset',
     PRE_KEYS: 'prekeys',
@@ -315,12 +316,10 @@ export class UserAPI {
    * @deprecated Use `postListUsers()` instead
    */
   public async getUsers(
-    parameters: {ids: string[]} | {handles: string[]} | {qualifiedIds: QualifiedId[]},
+    parameters: {ids: string[]} | {handles: string[]},
     limit: number = UserAPI.DEFAULT_USERS_CHUNK_SIZE,
   ): Promise<User[]> {
-    const fetchUsers = async (
-      params: {ids: string[]} | {handles: string[]} | {qualifiedIds: QualifiedId[]},
-    ): Promise<User[]> => {
+    const fetchUsers = async (params: {ids: string[]} | {handles: string[]}): Promise<User[]> => {
       const config: AxiosRequestConfig = {
         method: 'get',
         params: {},
@@ -490,13 +489,31 @@ export class UserAPI {
 
   /**
    * List users.
+   * Note: The 'qualified_ids' and 'qualified_handles' parameters are mutually exclusive.
    * @param handles The user ids to check.
    */
-  public async postListUsers(userIds: QualifiedId[]): Promise<QualifiedUser[]> {
+  public async postListUsers(
+    users: {qualified_ids: QualifiedId[]} | {qualified_handles: string[]},
+  ): Promise<QualifiedUser[]> {
+    const config: AxiosRequestConfig = {
+      data: users,
+      method: 'post',
+      url: UserAPI.URL.LIST_USERS,
+    };
+
+    const response = await this.client.sendJSON<QualifiedUser[]>(config);
+    return response.data;
+  }
+
+  /**
+   * List users.
+   * @param handles The user ids to check.
+   */
+  public async postListClients(userIds: QualifiedId[]): Promise<QualifiedUser[]> {
     const config: AxiosRequestConfig = {
       data: userIds,
       method: 'post',
-      url: UserAPI.URL.LIST_USERS,
+      url: `${UserAPI.URL.USERS}/${UserAPI.URL.LIST_CLIENTS}`,
     };
 
     const response = await this.client.sendJSON<QualifiedUser[]>(config);
