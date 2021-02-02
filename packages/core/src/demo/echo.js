@@ -19,13 +19,6 @@
 
 //@ts-check
 
-process.on('uncaughtException', (/** @type {Error & {code: number}} */ error) =>
-  logger.error(`Uncaught exception "${error.constructor.name}" (${error.code}): ${error.message}`, error),
-);
-process.on('unhandledRejection', (reason, promise) =>
-  logger.error('Unhandled Rejection at:', promise, 'reason:', reason),
-);
-
 const path = require('path');
 const logdown = require('logdown');
 
@@ -44,6 +37,13 @@ const logger = logdown('@wireapp/core/demo/echo.js', {
   markdown: false,
 });
 logger.state.isEnabled = true;
+
+process.on('uncaughtException', (/** @type {Error & {code: number}} */ error) =>
+  logger.error(`Uncaught exception "${error.constructor.name}" (${error.code}): ${error.message}`, error),
+);
+process.on('unhandledRejection', (reason, promise) =>
+  logger.error('Unhandled Rejection at:', promise, 'reason:', reason),
+);
 
 dotenv.config({path: path.join(__dirname, 'echo.env')});
 
@@ -460,8 +460,8 @@ void (async () => {
 
     account.on(PayloadBundleType.CONNECTION_REQUEST, async data => {
       await handleIncomingMessage(data);
-      if (data.content.status === ConnectionStatus.PENDING) {
-        await account.service.connection.acceptConnection(data.content.to);
+      if (data.content.connection.status === ConnectionStatus.PENDING) {
+        await account.service.connection.acceptConnection(data.content.connection.to);
       }
     });
 

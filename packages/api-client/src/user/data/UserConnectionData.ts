@@ -21,7 +21,7 @@ import type {Connection} from '../../connection';
 
 export interface UserConnectionData {
   connection: Connection;
-  user: {
+  user?: {
     name: string;
   };
 }
