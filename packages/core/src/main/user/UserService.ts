@@ -40,13 +40,13 @@ export class UserService {
     return this.apiClient.user.api.getUser(userId as QualifiedId);
   }
 
-  public async getUsers(userIds: string[] | QualifiedId[]): Promise<User[]> {
+  public async getUsers(userIds: string[] | QualifiedId[]): Promise<QualifiedUser[]> {
     if (!userIds.length) {
       return [];
     }
-    return this.apiClient.user.api.getUsers(
-      typeof userIds[0] === 'string' ? {ids: userIds as string[]} : {qualifiedIds: userIds as QualifiedId[]},
-    );
+    return typeof userIds[0] === 'string'
+      ? this.apiClient.user.api.getUsers({ids: userIds as string[]})
+      : this.apiClient.user.api.postListUsers({qualified_ids: userIds as QualifiedId[]});
   }
 
   public setAvailability(teamId: string, type: AvailabilityType, sendAsProtobuf?: boolean): Promise<void> {

@@ -34,7 +34,6 @@ import type {
   QualifiedUser,
   SearchResult,
   SendActivationCode,
-  User,
   UserPreKeyBundleMap,
   VerifyDelete,
 } from '../user/';
@@ -318,8 +317,8 @@ export class UserAPI {
   public async getUsers(
     parameters: {ids: string[]} | {handles: string[]},
     limit: number = UserAPI.DEFAULT_USERS_CHUNK_SIZE,
-  ): Promise<User[]> {
-    const fetchUsers = async (params: {ids: string[]} | {handles: string[]}): Promise<User[]> => {
+  ): Promise<QualifiedUser[]> {
+    const fetchUsers = async (params: {ids: string[]} | {handles: string[]}): Promise<QualifiedUser[]> => {
       const config: AxiosRequestConfig = {
         method: 'get',
         params: {},
@@ -332,7 +331,7 @@ export class UserAPI {
         config.params.ids = params.ids.join(',');
       }
 
-      const response = await this.client.sendJSON<User[]>(config);
+      const response = await this.client.sendJSON<QualifiedUser[]>(config);
       return response.data;
     };
 
@@ -359,7 +358,7 @@ export class UserAPI {
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/users
    * @deprecated Use `postListUsers()` instead
    */
-  public async getUsersByIds(userIds: string[]): Promise<User[]> {
+  public async getUsersByIds(userIds: string[]): Promise<QualifiedUser[]> {
     const maxChunkSize = 100;
     return this.getUsers({ids: userIds}, maxChunkSize);
   }
