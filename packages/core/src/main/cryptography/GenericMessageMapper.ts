@@ -18,28 +18,38 @@
  */
 
 import type {ConversationOtrMessageAddEvent} from '@wireapp/api-client/src/event/';
-import type {GenericMessage} from '@wireapp/protocol-messaging';
+import type {Ephemeral, GenericMessage} from '@wireapp/protocol-messaging';
 import logdown from 'logdown';
+
 import {
+  BasePayloadBundle,
   GenericMessageType,
   PayloadBundle,
+  PayloadBundleContent,
   PayloadBundleSource,
   PayloadBundleState,
   PayloadBundleType,
+  ReactionType,
 } from '../conversation';
 import type {
   AssetContent,
+  ButtonActionContent,
   ClearedContent,
   ConfirmationContent,
   DeletedContent,
   EditedTextContent,
   HiddenContent,
   KnockContent,
+  LinkPreviewContent,
   LocationContent,
   ReactionContent,
   TextContent,
 } from '../conversation/content';
 import type {ButtonActionMessage} from '../conversation/message/OtrMessage';
+
+export type GenericEphemeralMessageWithMessageId = Ephemeral & {
+  messageId: string;
+};
 
 export class GenericMessageMapper {
   private static readonly logger = logdown('@wireapp/core/cryptography/GenericMessageMapper', {
@@ -67,13 +77,11 @@ export class GenericMessageMapper {
     };
   }
 
-  // TODO: Turn "any" into a specific type (or collection of types) and make the return type more specific based on the
-  // "genericMessage" input parameter.
   public static mapGenericMessage(
-    genericMessage: any,
+    genericMessage: GenericMessage | GenericEphemeralMessageWithMessageId,
     event: ConversationOtrMessageAddEvent,
     source: PayloadBundleSource,
-  ): PayloadBundle {
+  ): BasePayloadBundle<PayloadBundleContent> {
     switch (genericMessage.content) {
       case GenericMessageType.TEXT: {
         const {
@@ -83,12 +91,16 @@ export class GenericMessageMapper {
           linkPreview: linkPreviews,
           mentions,
           quote,
-        } = genericMessage[GenericMessageType.TEXT];
+        } = genericMessage[GenericMessageType.TEXT]!;
 
-        const content: TextContent = {expectsReadConfirmation, legalHoldStatus, text};
+        const content: TextContent = {
+          expectsReadConfirmation: expectsReadConfirmation ?? undefined,
+          legalHoldStatus: legalHoldStatus ?? undefined,
+          text,
+        };
 
         if (linkPreviews?.length) {
-          content.linkPreviews = linkPreviews;
+          content.linkPreviews = linkPreviews as LinkPreviewContent[];
         }
 
         if (mentions?.length) {
@@ -99,7 +111,7 @@ export class GenericMessageMapper {
           content.quote = quote;
         }
 
-        if (typeof legalHoldStatus !== 'undefined') {
+        if (legalHoldStatus) {
           content.legalHoldStatus = legalHoldStatus;
         }
 
@@ -114,14 +126,18 @@ export class GenericMessageMapper {
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
           type: PayloadBundleType.TEXT,
-        };
+        } as PayloadBundle<TextContent>;
       }
       case GenericMessageType.BUTTON_ACTION: {
-        return GenericMessageMapper.mapButtonActionMessage(genericMessage, event, source);
+        return GenericMessageMapper.mapButtonActionMessage(
+          genericMessage,
+          event,
+          source,
+        ) as PayloadBundle<ButtonActionContent>;
       }
       case GenericMessageType.CALLING: {
         return {
-          content: genericMessage.calling.content,
+          content: genericMessage[GenericMessageType.CALLING]!.content,
           conversation: event.conversation,
           from: event.from,
           fromClientId: event.data.sender,
@@ -131,10 +147,10 @@ export class GenericMessageMapper {
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
           type: PayloadBundleType.CALL,
-        };
+        } as PayloadBundle<string>;
       }
       case GenericMessageType.CONFIRMATION: {
-        const {firstMessageId, moreMessageIds, type} = genericMessage[GenericMessageType.CONFIRMATION];
+        const {firstMessageId, moreMessageIds, type} = genericMessage[GenericMessageType.CONFIRMATION]!;
 
         const content: ConfirmationContent = {firstMessageId, moreMessageIds, type};
 
@@ -149,10 +165,10 @@ export class GenericMessageMapper {
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
           type: PayloadBundleType.CONFIRMATION,
-        };
+        } as PayloadBundle<ConfirmationContent>;
       }
       case GenericMessageType.CLEARED: {
-        const content: ClearedContent = genericMessage[GenericMessageType.CLEARED];
+        const content: ClearedContent = genericMessage[GenericMessageType.CLEARED]!;
 
         return {
           content,
@@ -165,10 +181,10 @@ export class GenericMessageMapper {
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
           type: PayloadBundleType.CONVERSATION_CLEAR,
-        };
+        } as PayloadBundle<ClearedContent>;
       }
       case GenericMessageType.DELETED: {
-        const originalMessageId = genericMessage[GenericMessageType.DELETED].messageId;
+        const originalMessageId = genericMessage[GenericMessageType.DELETED]!.messageId;
 
         const content: DeletedContent = {messageId: originalMessageId};
 
@@ -183,30 +199,29 @@ export class GenericMessageMapper {
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
           type: PayloadBundleType.MESSAGE_DELETE,
-        };
+        } as PayloadBundle<DeletedContent>;
       }
       case GenericMessageType.EDITED: {
+        const {text, replacingMessageId} = genericMessage[GenericMessageType.EDITED]!;
+
         const {
           expectsReadConfirmation,
-          text: {
-            content: editedText,
-            legalHoldStatus,
-            linkPreview: editedLinkPreviews,
-            mentions: editedMentions,
-            quote: editedQuote,
-          },
-          replacingMessageId,
-        } = genericMessage[GenericMessageType.EDITED];
+          content: editedText,
+          legalHoldStatus,
+          linkPreview: editedLinkPreviews,
+          mentions: editedMentions,
+          quote: editedQuote,
+        } = text!;
 
         const content: EditedTextContent = {
-          expectsReadConfirmation,
-          legalHoldStatus,
+          expectsReadConfirmation: expectsReadConfirmation ?? undefined,
+          legalHoldStatus: legalHoldStatus ?? undefined,
           originalMessageId: replacingMessageId,
           text: editedText,
         };
 
         if (editedLinkPreviews?.length) {
-          content.linkPreviews = editedLinkPreviews;
+          content.linkPreviews = editedLinkPreviews as LinkPreviewContent[];
         }
 
         if (editedMentions?.length) {
@@ -228,10 +243,10 @@ export class GenericMessageMapper {
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
           type: PayloadBundleType.MESSAGE_EDIT,
-        };
+        } as PayloadBundle<EditedTextContent>;
       }
       case GenericMessageType.HIDDEN: {
-        const {conversationId, messageId} = genericMessage[GenericMessageType.HIDDEN];
+        const {conversationId, messageId} = genericMessage[GenericMessageType.HIDDEN]!;
 
         const content: HiddenContent = {
           conversationId,
@@ -249,10 +264,11 @@ export class GenericMessageMapper {
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
           type: PayloadBundleType.MESSAGE_HIDE,
-        };
+        } as PayloadBundle<HiddenContent>;
       }
+
       case GenericMessageType.KNOCK: {
-        const {expectsReadConfirmation, legalHoldStatus} = genericMessage[GenericMessageType.KNOCK];
+        const {expectsReadConfirmation, legalHoldStatus} = genericMessage[GenericMessageType.KNOCK]!;
         const content: KnockContent = {expectsReadConfirmation, hotKnock: false, legalHoldStatus};
 
         return {
@@ -266,20 +282,21 @@ export class GenericMessageMapper {
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
           type: PayloadBundleType.PING,
-        };
+        } as PayloadBundle<KnockContent>;
       }
+
       case GenericMessageType.LOCATION: {
         const {expectsReadConfirmation, latitude, legalHoldStatus, longitude, name, zoom} = genericMessage[
           GenericMessageType.LOCATION
-        ];
+        ]!;
 
         const content: LocationContent = {
-          expectsReadConfirmation,
+          expectsReadConfirmation: expectsReadConfirmation ?? undefined,
           latitude,
-          legalHoldStatus,
+          legalHoldStatus: legalHoldStatus ?? undefined,
           longitude,
-          name,
-          zoom,
+          name: name ?? undefined,
+          zoom: zoom ?? undefined,
         };
 
         return {
@@ -293,28 +310,28 @@ export class GenericMessageMapper {
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
           type: PayloadBundleType.LOCATION,
-        };
+        } as PayloadBundle<LocationContent>;
       }
+
       case GenericMessageType.ASSET: {
-        const {
-          expectsReadConfirmation,
-          legalHoldStatus,
-          notUploaded,
-          original,
-          preview,
-          status,
-          uploaded,
-        } = genericMessage[GenericMessageType.ASSET];
+        const {expectsReadConfirmation, legalHoldStatus, notUploaded, original, preview, uploaded} = genericMessage[
+          GenericMessageType.ASSET
+        ]!;
         const isImage = !!uploaded?.assetId && !!original?.image;
 
         const content: AssetContent = {
-          abortReason: notUploaded,
-          expectsReadConfirmation,
-          legalHoldStatus,
-          original,
-          preview,
-          status,
-          uploaded,
+          abortReason: notUploaded ?? undefined,
+          expectsReadConfirmation: expectsReadConfirmation ?? undefined,
+          legalHoldStatus: legalHoldStatus ?? undefined,
+          original: original ?? undefined,
+          preview: preview ?? undefined,
+          uploaded: {
+            assetId: uploaded?.assetId || '',
+            assetToken: uploaded?.assetToken,
+            encryption: uploaded?.encryption,
+            otrKey: uploaded?.otrKey || new Uint8Array(),
+            sha256: uploaded?.sha256 || new Uint8Array(),
+          },
         };
 
         return {
@@ -328,15 +345,16 @@ export class GenericMessageMapper {
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
           type: isImage ? PayloadBundleType.ASSET_IMAGE : PayloadBundleType.ASSET,
-        };
+        } as PayloadBundle<AssetContent>;
       }
+
       case GenericMessageType.REACTION: {
-        const {emoji, legalHoldStatus, messageId} = genericMessage[GenericMessageType.REACTION];
+        const {emoji, legalHoldStatus, messageId} = genericMessage[GenericMessageType.REACTION]!;
 
         const content: ReactionContent = {
-          legalHoldStatus,
+          legalHoldStatus: legalHoldStatus ?? undefined,
           originalMessageId: messageId,
-          type: emoji,
+          type: emoji as ReactionType,
         };
 
         return {
@@ -350,12 +368,13 @@ export class GenericMessageMapper {
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
           type: PayloadBundleType.REACTION,
-        };
+        } as PayloadBundle<ReactionContent>;
       }
+
       default: {
         this.logger.warn(`Unhandled event type "${genericMessage.content}": ${JSON.stringify(genericMessage)}`);
         return {
-          content: genericMessage.content,
+          content: genericMessage.content as any,
           conversation: event.conversation,
           from: event.from,
           fromClientId: event.data.sender,
@@ -365,7 +384,7 @@ export class GenericMessageMapper {
           state: PayloadBundleState.INCOMING,
           timestamp: new Date(event.time).getTime(),
           type: PayloadBundleType.UNKNOWN,
-        };
+        } as PayloadBundle;
       }
     }
   }

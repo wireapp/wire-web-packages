@@ -30,10 +30,10 @@ import type {CRUDEngine} from '@wireapp/store-engine';
 import {Decoder, Encoder} from 'bazinga64';
 import logdown from 'logdown';
 
-import {GenericMessageType, PayloadBundle, PayloadBundleSource} from '../conversation';
+import {BasePayloadBundle, GenericMessageType, PayloadBundleContent, PayloadBundleSource} from '../conversation';
 import type {SessionPayloadBundle} from '../cryptography/';
 import {CryptographyDatabaseRepository} from './CryptographyDatabaseRepository';
-import {GenericMessageMapper} from './GenericMessageMapper';
+import {GenericEphemeralMessageWithMessageId, GenericMessageMapper} from './GenericMessageMapper';
 
 export interface MetaClient extends RegisteredClient {
   meta: {
@@ -174,7 +174,7 @@ export class CryptographyService {
   public async decodeGenericMessage(
     otrMessage: ConversationOtrMessageAddEvent,
     source: PayloadBundleSource,
-  ): Promise<PayloadBundle> {
+  ): Promise<BasePayloadBundle<PayloadBundleContent>> {
     const {
       from,
       data: {sender, text: cipherText},
@@ -185,13 +185,14 @@ export class CryptographyService {
     const genericMessage = GenericMessage.decode(decryptedMessage);
 
     if (genericMessage.content === GenericMessageType.EPHEMERAL) {
-      const unwrappedMessage = GenericMessageMapper.mapGenericMessage(genericMessage.ephemeral, otrMessage, source);
-      unwrappedMessage.id = genericMessage.messageId;
-      if (genericMessage.ephemeral) {
-        const expireAfterMillis = genericMessage.ephemeral.expireAfterMillis;
-        unwrappedMessage.messageTimer =
-          typeof expireAfterMillis === 'number' ? expireAfterMillis : expireAfterMillis.toNumber();
-      }
+      const unwrappedMessage = GenericMessageMapper.mapGenericMessage(
+        {...genericMessage.ephemeral, messageId: genericMessage.messageId} as GenericEphemeralMessageWithMessageId,
+        otrMessage,
+        source,
+      );
+      const expireAfterMillis = genericMessage.ephemeral!.expireAfterMillis;
+      unwrappedMessage.messageTimer =
+        typeof expireAfterMillis === 'number' ? expireAfterMillis : expireAfterMillis.toNumber();
       return unwrappedMessage;
     }
     return GenericMessageMapper.mapGenericMessage(genericMessage, otrMessage, source);

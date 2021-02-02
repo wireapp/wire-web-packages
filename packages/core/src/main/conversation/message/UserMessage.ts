@@ -32,53 +32,43 @@ import type {
 
 import type {BasePayloadBundle, PayloadBundleType} from './PayloadBundle';
 
-export interface UserActivateMessage extends BasePayloadBundle {
-  content: UserActivateData;
+export interface UserActivateMessage extends BasePayloadBundle<UserActivateData> {
   type: PayloadBundleType.USER_ACTIVATE;
 }
 
-export interface UserClientAddMessage extends BasePayloadBundle {
-  content: UserClientAddData;
+export interface UserClientAddMessage extends BasePayloadBundle<UserClientAddData> {
   type: PayloadBundleType.USER_CLIENT_ADD;
 }
 
-export interface UserLegalHoldRequestMessage extends BasePayloadBundle {
-  content: UserLegalHoldRequestData;
+export interface UserLegalHoldRequestMessage extends BasePayloadBundle<UserLegalHoldRequestData> {
   type: PayloadBundleType.USER_LEGAL_HOLD_REQUEST;
 }
 
-export interface UserLegalHoldEnableMessage extends BasePayloadBundle {
-  content: UserLegalHoldEnableData;
+export interface UserLegalHoldEnableMessage extends BasePayloadBundle<UserLegalHoldEnableData> {
   type: PayloadBundleType.USER_LEGAL_HOLD_ENABLE;
 }
 
-export interface UserLegalHoldDisableMessage extends BasePayloadBundle {
-  content: UserLegalHoldDisableData;
+export interface UserLegalHoldDisableMessage extends BasePayloadBundle<UserLegalHoldDisableData> {
   type: PayloadBundleType.USER_LEGAL_HOLD_DISABLE;
 }
 
-export interface UserClientRemoveMessage extends BasePayloadBundle {
-  content: UserClientRemoveData;
+export interface UserClientRemoveMessage extends BasePayloadBundle<UserClientRemoveData> {
   type: PayloadBundleType.USER_CLIENT_REMOVE;
 }
 
-export interface UserConnectionMessage extends BasePayloadBundle {
-  content: UserConnectionData;
+export interface UserConnectionMessage extends BasePayloadBundle<UserConnectionData> {
   type: PayloadBundleType.USER_CONNECTION;
 }
 
-export interface UserDeleteMessage extends BasePayloadBundle {
-  content: UserDeleteData;
+export interface UserDeleteMessage extends BasePayloadBundle<UserDeleteData> {
   type: PayloadBundleType.USER_DELETE;
 }
 
-export interface UserPropertiesSetEvent extends BasePayloadBundle {
-  content: UserPropertiesSetData;
+export interface UserPropertiesSetEvent extends BasePayloadBundle<UserPropertiesSetData> {
   type: PayloadBundleType.USER_PROPERTIES_SET;
 }
 
-export interface UserUpdateMessage extends BasePayloadBundle {
-  content: UserUpdateData;
+export interface UserUpdateMessage extends BasePayloadBundle<UserUpdateData> {
   type: PayloadBundleType.USER_UPDATE;
 }
 

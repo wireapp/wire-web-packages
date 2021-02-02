@@ -36,8 +36,8 @@ export enum PayloadBundleState {
   OUTGOING_UNSENT = 'PayloadBundleState.OUTGOING_UNSENT',
 }
 
-export interface BasePayloadBundle {
-  content: PayloadBundleContent;
+export interface BasePayloadBundle<T = PayloadBundleContent> {
+  content: T;
   conversation: string;
   from: string;
   fromClientId?: string;
@@ -49,7 +49,7 @@ export interface BasePayloadBundle {
   type: PayloadBundleType;
 }
 
-export type PayloadBundle = Message | BasePayloadBundle;
+export type PayloadBundle<T = PayloadBundleContent> = Message | BasePayloadBundle<T>;
 
 export enum PayloadBundleType {
   ASSET = 'PayloadBundleType.ASSET',
