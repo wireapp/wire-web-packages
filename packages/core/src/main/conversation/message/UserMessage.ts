@@ -17,11 +17,11 @@
  *
  */
 
-import {Connection} from '@wireapp/api-client/src/connection';
 import type {
   UserActivateData,
   UserClientAddData,
   UserClientRemoveData,
+  UserConnectionData,
   UserDeleteData,
   UserLegalHoldDisableData,
   UserLegalHoldEnableData,
@@ -63,7 +63,7 @@ export interface UserClientRemoveMessage extends BasePayloadBundle {
 }
 
 export interface UserConnectionMessage extends BasePayloadBundle {
-  content: Connection;
+  content: UserConnectionData;
   type: PayloadBundleType.USER_CONNECTION;
 }
 
