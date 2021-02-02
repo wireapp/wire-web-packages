@@ -18,7 +18,7 @@
  */
 
 import type {APIClient} from '@wireapp/api-client';
-import type {QualifiedId, QualifiedUser, User} from '@wireapp/api-client/src/user/';
+import type {QualifiedId, QualifiedUser} from '@wireapp/api-client/src/user/';
 import {Availability, GenericMessage} from '@wireapp/protocol-messaging';
 import UUID from 'uuidjs';
 
