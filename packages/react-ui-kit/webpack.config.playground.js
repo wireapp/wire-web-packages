@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2021 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,26 +17,33 @@
  *
  */
 
+const commonConfig = require('./webpack.config');
 const path = require('path');
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+const src = 'src/playground/';
 
 module.exports = {
+  ...commonConfig,
+  devServer: {
+    hot: true,
+    hotOnly: true,
+    open: true,
+    overlay: true,
+  },
   devtool: 'source-map',
+  entry: {...commonConfig.entry, script: ['react-hot-loader/patch', path.resolve(__dirname, src, 'main.tsx')]},
   mode: 'development',
-  module: {
-    rules: [
-      {
-        exclude: /node_modules/,
-        loader: 'babel-loader',
-        test: /\.(js|ts)x?$/,
+  plugins: [
+    ...commonConfig.plugins,
+    new HtmlWebpackPlugin({
+      title: 'PassGen',
+      meta: {
+        viewport: 'width=device-width, initial-scale=1.0, user-scalable=no',
+        description: 'Playground',
       },
-    ],
-  },
-  plugins: [new webpack.HotModuleReplacementPlugin()],
-  resolve: {
-    alias: {
-      '@wireapp/react-ui-kit': path.resolve(__dirname, 'src'),
-    },
-    extensions: ['.ts', '.tsx', '.js', '.jsx'],
-  },
+    }),
+  ],
+  resolve: {...commonConfig.resolve, alias: {...commonConfig.resolve.alias, 'react-dom': '@hot-loader/react-dom'}},
 };

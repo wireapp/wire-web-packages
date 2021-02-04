@@ -26,7 +26,7 @@ import {filterProps} from '../util';
 import {GUTTER} from './sizes';
 
 export interface ColumnsProps<T = HTMLDivElement> extends React.HTMLProps<T> {
-  query?: keyof QueryKeys;
+  query?: QueryKeys;
 }
 
 export const filterColumnsProps = (props: ColumnsProps) => {
@@ -35,7 +35,7 @@ export const filterColumnsProps = (props: ColumnsProps) => {
 
 const columnsStyle: <T>(props: ColumnsProps<T>) => CSSObject = ({query = QueryKeys.MOBILE}) => ({
   display: 'flex',
-  marginLeft: `-${GUTTER}px`,
+  gap: `${GUTTER}px`,
   [media[query]]: {flexDirection: 'column'},
 });
 
@@ -48,7 +48,6 @@ const columnStyle: <T>(props: ColumnProps<T>) => CSSObject = props => ({
   flexBasis: '0',
   flexGrow: 1,
   flexShrink: 1,
-  marginLeft: `${GUTTER}px`,
 });
 
 export const Column = (props: ColumnProps) => <div css={columnStyle(props)} {...props} />;

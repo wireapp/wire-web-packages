@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2021 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,26 +17,25 @@
  *
  */
 
-const path = require('path');
-const webpack = require('webpack');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Root from './Root';
 
-module.exports = {
-  devtool: 'source-map',
-  mode: 'development',
-  module: {
-    rules: [
-      {
-        exclude: /node_modules/,
-        loader: 'babel-loader',
-        test: /\.(js|ts)x?$/,
-      },
-    ],
-  },
-  plugins: [new webpack.HotModuleReplacementPlugin()],
-  resolve: {
-    alias: {
-      '@wireapp/react-ui-kit': path.resolve(__dirname, 'src'),
-    },
-    extensions: ['.ts', '.tsx', '.js', '.jsx'],
-  },
+const main = document.createElement('div');
+main.id = 'main';
+document.body.appendChild(main);
+
+const render = (Component: any) => {
+  ReactDOM.render(<Component />, document.getElementById('main'));
 };
+
+runApp();
+function runApp() {
+  render(Root);
+  if (module.hot) {
+    module.hot.accept('./Root', () => {
+      const NextApp = require('./Root').default;
+      render(NextApp);
+    });
+  }
+}
