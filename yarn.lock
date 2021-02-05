@@ -2660,10 +2660,10 @@
     "@types/node" "*"
     log4js "^4.0.0"
 
-"@types/libsodium-wrappers-sumo@0.7.4":
-  version "0.7.4"
-  resolved "https://registry.npmjs.org/@types/libsodium-wrappers-sumo/-/libsodium-wrappers-sumo-0.7.4.tgz#4a0a05c867fc855726b4b01d740f271c1fa6d655"
-  integrity sha512-dkRYar5fZciknc3GzeflHDeUx3eKJmCIDxI30GiX75w0I3r/udqbVHb4/LZNBKsgjb9rodiULiv/YhtzpEA6WA==
+"@types/libsodium-wrappers-sumo@0.7.5":
+  version "0.7.5"
+  resolved "https://registry.npmjs.org/@types/libsodium-wrappers-sumo/-/libsodium-wrappers-sumo-0.7.5.tgz#c5191fc28d44edd39583552bd1855f6b7b77ca88"
+  integrity sha512-CL7rmLxw28H/FpFUnMu5BzzRsE+ICxHBpRoaY8ks+3HMsCJdA/Vp809sj+qNhw64Ht0OEnfoN3BC1sHwagoVaw==
   dependencies:
     "@types/libsodium-wrappers" "*"
 
