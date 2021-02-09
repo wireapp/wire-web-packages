@@ -17,7 +17,8 @@
  *
  */
 
-import {AxiosRequestConfig, CancelToken} from 'axios';
+import Axios from 'axios';
+import type {AxiosRequestConfig} from 'axios';
 import type {NewTeamData, TeamChunkData, TeamData} from '../';
 import {HttpClient, RequestCancelable, SyntheticErrorLabel} from '../../http/';
 import {RequestCancellationError} from '../../user';
@@ -86,7 +87,7 @@ export class TeamAPI {
   }
 
   public async getTeamSize(teamId: string): Promise<RequestCancelable<TeamSizeData>> {
-    const cancelSource = CancelToken.source();
+    const cancelSource = Axios.CancelToken.source();
     const config: AxiosRequestConfig = {
       cancelToken: cancelSource.token,
       method: 'get',
