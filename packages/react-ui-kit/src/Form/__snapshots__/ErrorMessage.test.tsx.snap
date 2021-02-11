@@ -8,20 +8,44 @@ exports[`"ErrorMessage" renders 1`] = `
 }
 
 .emotion-1 {
-  color: rgb(52, 56, 59);
-  display: inline;
-  font-size: 16px;
-  font-weight: 300;
-  opacity: 1;
-  text-align: left;
-  text-transform: none;
-  color: #e02020;
-  display: block;
-  font-size: 11px;
-  font-weight: 300;
-  opacity: 1;
-  text-align: center;
-  text-transform: none;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
   margin-bottom: 12px;
 }
 
@@ -50,12 +74,12 @@ exports[`"ErrorMessage" renders 1`] = `
   color: rgb(52, 56, 59);
 }
 
-.emotion-0 {
-  fill: rgb(52,56,59);
+.emotion-2 {
+  fill: rgb(52, 56, 59);
   overflow: visible;
 }
 
-.emotion-1 {
+.emotion-3 {
   color: #e02020;
   display: inline;
   font-size: 11px;
@@ -68,11 +92,11 @@ exports[`"ErrorMessage" renders 1`] = `
 <div
   className="emotion-0"
 >
-  <span
+  <div
     className="emotion-1"
   >
     <svg
-      className="emotion-0"
+      className="emotion-2"
       height={12}
       style={
         Object {
@@ -111,7 +135,7 @@ exports[`"ErrorMessage" renders 1`] = `
       </g>
     </svg>
     <span
-      className="emotion-1"
+      className="emotion-3"
     >
       ErrorMessage
     </span>

@@ -19,9 +19,9 @@
 
 /** @jsx jsx */
 import {CSSObject, jsx, Theme} from '@emotion/react';
-import {ErrorIcon} from 'src/Icon';
-import {filterFlexBoxProps, FlexBox, FlexBoxProps, flexBoxStyle} from 'src/Layout';
-import {filterProps} from 'src/util';
+import {ErrorIcon} from '../Icon';
+import {filterFlexBoxProps, FlexBox, FlexBoxProps, flexBoxStyle} from '../Layout';
+import {filterProps} from '../util';
 
 import {COLOR} from '../Identity';
 import {Text, linkStyle} from '../Text';
