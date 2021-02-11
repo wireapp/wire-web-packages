@@ -87,7 +87,7 @@ import type {
 } from './message/OtrMessage';
 
 /** A map of the format `{ UserId: [clientId, ...] }` */
-export type UserClientsMap = Record<string, string[]>;
+export type UserClientsMap = {[userId: string]: string[]};
 
 export class ConversationService {
   public readonly messageTimer: MessageTimer;
@@ -143,8 +143,11 @@ export class ConversationService {
 
     if (userIds && !Array.isArray(userIds)) {
       preKeys = preKeys.map(preKey => {
-        if (preKey.user.id in userIds) {
-          preKey.clients = preKey.clients.filter(client => userIds[preKey.user.id].includes(client.client));
+        const userId = typeof preKey.user == 'string' ? preKey.user : preKey.user.id;
+        if (userId in userIds) {
+          preKey.clients = preKey.clients.filter(client => {
+            userIds[userId].includes(client.client);
+          });
         }
         return preKey;
       });

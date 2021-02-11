@@ -18,7 +18,7 @@
  */
 
 import type {APIClient} from '@wireapp/api-client';
-import type {QualifiedId, QualifiedUser} from '@wireapp/api-client/src/user/';
+import type {QualifiedId, QualifiedUser, User} from '@wireapp/api-client/src/user/';
 import {Availability, GenericMessage} from '@wireapp/protocol-messaging';
 import UUID from 'uuidjs';
 
@@ -33,14 +33,15 @@ export class UserService {
     this.broadcastService = broadcastService;
   }
 
-  public getUser(userId: QualifiedId): Promise<QualifiedUser>;
-  /** @deprecated */
   public getUser(userId: string): Promise<QualifiedUser>;
-  public getUser(userId: string | QualifiedId): Promise<QualifiedUser> {
+  public getUser(userId: QualifiedId): Promise<User>;
+  public getUser(userId: string | QualifiedId): Promise<User | QualifiedUser> {
     return this.apiClient.user.api.getUser(userId as QualifiedId);
   }
 
-  public async getUsers(userIds: string[] | QualifiedId[]): Promise<QualifiedUser[]> {
+  public async getUsers(userIds: string[]): Promise<User[]>;
+  public async getUsers(userIds: QualifiedId[]): Promise<QualifiedUser[]>;
+  public async getUsers(userIds: string[] | QualifiedId[]): Promise<User[] | QualifiedUser[]> {
     if (!userIds.length) {
       return [];
     }

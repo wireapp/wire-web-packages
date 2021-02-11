@@ -34,11 +34,12 @@ import type {
   QualifiedUser,
   SearchResult,
   SendActivationCode,
+  User,
   UserPreKeyBundleMap,
   VerifyDelete,
 } from '../user/';
 import {RequestCancellationError} from './UserError';
-import type {ClientPreKey, QualifiedPreKeyBundle} from '../auth/';
+import type {ClientPreKey, PreKeyBundle, QualifiedPreKeyBundle} from '../auth/';
 import type {PublicClient} from '../client/';
 import type {RichInfo} from './RichInfo';
 import type {UserClients} from '../conversation/UserClients';
@@ -180,9 +181,8 @@ export class UserAPI {
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getUserHandleInfo
    */
   public async getHandle(handle: QualifiedHandle): Promise<QualifiedHandleInfo>;
-  /** @deprecated */
-  public async getHandle(handle: string): Promise<QualifiedHandleInfo>;
-  public async getHandle(handle: string | QualifiedHandle): Promise<QualifiedHandleInfo> {
+  public async getHandle(handle: string): Promise<HandleInfo>;
+  public async getHandle(handle: string | QualifiedHandle): Promise<HandleInfo | QualifiedHandleInfo> {
     const url =
       typeof handle === 'string'
         ? `${UserAPI.URL.HANDLES}/${handle}`
@@ -193,7 +193,7 @@ export class UserAPI {
       url,
     };
 
-    const response = await this.client.sendJSON<QualifiedHandleInfo>(config);
+    const response = await this.client.sendJSON<HandleInfo | QualifiedHandleInfo>(config);
     return response.data;
   }
 
@@ -271,10 +271,9 @@ export class UserAPI {
    *       Otherwise you will get a user payload with a limited set of properties (what's publicly available).
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/user
    */
+  public async getUser(userId: string): Promise<User>;
   public async getUser(userId: QualifiedId): Promise<QualifiedUser>;
-  /** @deprecated */
-  public async getUser(userId: string): Promise<QualifiedUser>;
-  public async getUser(userId: string | QualifiedId): Promise<QualifiedUser> {
+  public async getUser(userId: string | QualifiedId): Promise<User | QualifiedUser> {
     const url =
       typeof userId === 'string'
         ? `${UserAPI.URL.USERS}/${userId}`
@@ -285,14 +284,13 @@ export class UserAPI {
       url,
     };
 
-    const response = await this.client.sendJSON<QualifiedUser>(config);
+    const response = await this.client.sendJSON<User | QualifiedUser>(config);
     return response.data;
   }
 
-  public async getUserPreKeys(userId: QualifiedId): Promise<QualifiedPreKeyBundle>;
-  /** @deprecated */
   public async getUserPreKeys(userId: string): Promise<QualifiedPreKeyBundle>;
-  public async getUserPreKeys(userId: QualifiedId | string): Promise<QualifiedPreKeyBundle> {
+  public async getUserPreKeys(userId: QualifiedId): Promise<PreKeyBundle>;
+  public async getUserPreKeys(userId: QualifiedId | string): Promise<PreKeyBundle | QualifiedPreKeyBundle> {
     const url =
       typeof userId === 'string'
         ? `${UserAPI.URL.USERS}/${userId}/${UserAPI.URL.PRE_KEYS}`
@@ -303,7 +301,7 @@ export class UserAPI {
       url,
     };
 
-    const response = await this.client.sendJSON<QualifiedPreKeyBundle>(config, true);
+    const response = await this.client.sendJSON<PreKeyBundle | QualifiedPreKeyBundle>(config, true);
     return response.data;
   }
 
@@ -312,13 +310,12 @@ export class UserAPI {
    * Note: The 'ids' and 'handles' parameters are mutually exclusive.
    * @param parameters Multiple user's handles or IDs
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/users
-   * @deprecated Use `postListUsers()` instead
    */
   public async getUsers(
     parameters: {ids: string[]} | {handles: string[]},
     limit: number = UserAPI.DEFAULT_USERS_CHUNK_SIZE,
-  ): Promise<QualifiedUser[]> {
-    const fetchUsers = async (params: {ids: string[]} | {handles: string[]}): Promise<QualifiedUser[]> => {
+  ): Promise<User[] | QualifiedUser[]> {
+    const fetchUsers = async (params: {ids: string[]} | {handles: string[]}): Promise<User[] | QualifiedUser[]> => {
       const config: AxiosRequestConfig = {
         method: 'get',
         params: {},
@@ -331,7 +328,7 @@ export class UserAPI {
         config.params.ids = params.ids.join(',');
       }
 
-      const response = await this.client.sendJSON<QualifiedUser[]>(config);
+      const response = await this.client.sendJSON<User[] | QualifiedUser[]>(config);
       return response.data;
     };
 
@@ -356,9 +353,8 @@ export class UserAPI {
    * List users.
    * @param userIds Multiple user's IDs
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/users
-   * @deprecated Use `postListUsers()` instead
    */
-  public async getUsersByIds(userIds: string[]): Promise<QualifiedUser[]> {
+  public async getUsersByIds(userIds: string[]): Promise<User[] | QualifiedUser[]> {
     const maxChunkSize = 100;
     return this.getUsers({ids: userIds}, maxChunkSize);
   }
@@ -366,9 +362,6 @@ export class UserAPI {
   /**
    * Check if a user ID exists.
    */
-  public async headUsers(userId: QualifiedId): Promise<void>;
-  /** @deprecated */
-  public async headUsers(userId: string): Promise<void>;
   public async headUsers(userId: string | QualifiedId): Promise<void> {
     const url =
       typeof userId === 'string'
