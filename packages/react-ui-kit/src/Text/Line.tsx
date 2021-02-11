@@ -21,6 +21,7 @@
 import {CSSObject, jsx} from '@emotion/react';
 
 import React from 'react';
+
 import {COLOR} from '../Identity';
 import {GUTTER} from '../Layout/sizes';
 

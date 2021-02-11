@@ -17,11 +17,12 @@
  *
  */
 
-import {Connection} from '../../connection';
+import type {Connection} from '../../connection';
 
 export interface UserConnectionData {
   connection: Connection;
-  user: {
+  /** For some statuses (in `connection.status`) no user field is provided. */
+  user?: {
     name: string;
   };
 }

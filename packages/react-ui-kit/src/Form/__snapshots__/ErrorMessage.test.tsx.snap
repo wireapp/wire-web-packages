@@ -50,13 +50,71 @@ exports[`"ErrorMessage" renders 1`] = `
   color: rgb(52, 56, 59);
 }
 
+.emotion-0 {
+  fill: rgb(52,56,59);
+  overflow: visible;
+}
+
+.emotion-1 {
+  color: #e02020;
+  display: inline;
+  font-size: 11px;
+  font-weight: 300;
+  opacity: 1;
+  text-align: left;
+  text-transform: none;
+}
+
 <div
   className="emotion-0"
 >
   <span
     className="emotion-1"
   >
-    ErrorMessage
-  </span>
+    <svg
+      className="emotion-0"
+      height={12}
+      style={
+        Object {
+          "marginRight": "8px",
+        }
+      }
+      viewBox="0 0 13 12"
+      width={13}
+    >
+      <g>
+        <g
+          fill="none"
+          fillRule="evenodd"
+          transform="translate(.5 .333)"
+        >
+          <circle
+            cx="6"
+            cy="6"
+            fill="#E02020"
+            r="6"
+          />
+          <text
+            fill="#FFF"
+            fontFamily="SFProText-Heavy, SF Pro Text"
+            fontSize="9"
+            fontWeight="600"
+          >
+            <tspan
+              x="4.291"
+              y="9"
+            >
+              !
+            </tspan>
+          </text>
+        </g>
+      </g>
+    </svg>
+    <span
+      className="emotion-1"
+    >
+      ErrorMessage
+    </span>
+  </div>
 </div>
 `;

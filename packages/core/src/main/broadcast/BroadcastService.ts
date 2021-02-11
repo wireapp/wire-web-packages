@@ -17,19 +17,19 @@
  *
  */
 
-import {APIClient} from '@wireapp/api-client';
-import {NewOTRMessage, OTRRecipients} from '@wireapp/api-client/src/conversation/';
-import {UserPreKeyBundleMap} from '@wireapp/api-client/src/user/';
+import type {APIClient} from '@wireapp/api-client';
+import type {UserPreKeyBundleMap} from '@wireapp/api-client/src/user/';
 import {GenericMessage} from '@wireapp/protocol-messaging';
-import {ConversationService} from '../conversation/';
-import {CryptographyService} from '../cryptography/';
+
+import {MessageService} from '../conversation/message/MessageService';
+import type {CryptographyService} from '../cryptography/';
 
 export class BroadcastService {
-  constructor(
-    private readonly apiClient: APIClient,
-    private readonly conversationService: ConversationService,
-    private readonly cryptographyService: CryptographyService,
-  ) {}
+  private readonly messageService: MessageService;
+
+  constructor(private readonly apiClient: APIClient, private readonly cryptographyService: CryptographyService) {
+    this.messageService = new MessageService(this.apiClient, this.cryptographyService);
+  }
 
   private async getPreKeyBundle(teamId: string, skipOwnClients = false): Promise<UserPreKeyBundleMap> {
     const {members: teamMembers} = await this.apiClient.teams.member.api.getAllMembers(teamId);
@@ -44,38 +44,26 @@ export class BroadcastService {
     const preKeys = await Promise.all(members.map(member => this.apiClient.user.api.getUserPreKeys(member.id)));
 
     return preKeys.reduce((bundleMap: UserPreKeyBundleMap, bundle) => {
-      bundleMap[bundle.user] = {};
+      const userId = typeof bundle.user == 'string' ? bundle.user : bundle.user.id;
+      bundleMap[userId] = {};
       for (const client of bundle.clients) {
-        bundleMap[bundle.user][client.client] = client.prekey;
+        bundleMap[userId][client.client] = client.prekey;
       }
       return bundleMap;
     }, {});
   }
 
-  public async broadcastGenericMessage(teamId: string, genericMessage: GenericMessage): Promise<void> {
+  public async broadcastGenericMessage(
+    teamId: string,
+    genericMessage: GenericMessage,
+    sendAsProtobuf?: boolean,
+  ): Promise<void> {
     const plainTextArray = GenericMessage.encode(genericMessage).finish();
     const preKeyBundle = await this.getPreKeyBundle(teamId);
     const recipients = await this.cryptographyService.encrypt(plainTextArray, preKeyBundle);
-    return this.sendOTRBroadcastMessage(this.apiClient.validatedClientId, recipients, plainTextArray);
-  }
 
-  private async sendOTRBroadcastMessage(
-    sendingClientId: string,
-    recipients: OTRRecipients,
-    plainTextArray: Uint8Array,
-    data?: Uint8Array | string,
-  ): Promise<void> {
-    const message: NewOTRMessage = {
-      data,
-      recipients,
-      report_missing: Object.keys(recipients),
-      sender: sendingClientId,
-    };
-    try {
-      await this.apiClient.broadcast.api.postBroadcastMessage(sendingClientId, message);
-    } catch (error) {
-      const reEncryptedMessage = await this.conversationService.onClientMismatch(error, message, plainTextArray);
-      await this.apiClient.broadcast.api.postBroadcastMessage(sendingClientId, reEncryptedMessage);
-    }
+    return sendAsProtobuf
+      ? this.messageService.sendOTRProtobufMessage(this.apiClient.validatedClientId, recipients, null, plainTextArray)
+      : this.messageService.sendOTRMessage(this.apiClient.validatedClientId, recipients, null, plainTextArray);
   }
 }

@@ -21,6 +21,7 @@
 import {CSSObject, jsx} from '@emotion/react';
 
 import React from 'react';
+
 import {COLOR} from '../Identity';
 
 export type BoxProps<T = HTMLDivElement> = React.HTMLProps<T>;

@@ -17,10 +17,10 @@
  *
  */
 
-import {CRUDEngine} from '@wireapp/store-engine';
 import {FileEngine} from '@wireapp/store-engine-fs';
 import logdown from 'logdown';
 import path from 'path';
+import type {CRUDEngine} from '@wireapp/store-engine';
 
 import {APIClient} from './src/APIClient';
 import {
@@ -33,12 +33,12 @@ import {
   LoginData,
 } from './src/auth';
 import {ClientType} from './src/client';
-import {Config} from './src/Config';
 import {WebSocketClient} from './src/tcp';
+import type {Config} from './src/Config';
 
 require('dotenv').config();
 
-const {WIRE_EMAIL, WIRE_PASSWORD, WIRE_CONVERSATION_ID} = process.env;
+const {WIRE_BACKEND, WIRE_EMAIL, WIRE_PASSWORD, WIRE_CONVERSATION_ID} = process.env;
 
 const logger = logdown('Demo', {
   markdown: false,
@@ -47,6 +47,7 @@ logger.state.isEnabled = true;
 
 logger.log(`Using "process.env.WIRE_EMAIL": ${WIRE_EMAIL}`);
 logger.log(`Using "process.env.WIRE_CONVERSATION_ID": ${WIRE_CONVERSATION_ID}`);
+logger.log(`Using "process.env.WIRE_BACKEND": ${WIRE_BACKEND}`);
 
 async function createContext(storeEngine: CRUDEngine, apiClient: APIClient, loginData: LoginData): Promise<Context> {
   try {
@@ -64,7 +65,7 @@ async function createContext(storeEngine: CRUDEngine, apiClient: APIClient, logi
 }
 
 if (WIRE_EMAIL && WIRE_PASSWORD && WIRE_CONVERSATION_ID) {
-  const login: LoginData = {
+  const login = {
     clientType: ClientType.PERMANENT,
     email: WIRE_EMAIL,
     password: WIRE_PASSWORD,
@@ -79,7 +80,7 @@ if (WIRE_EMAIL && WIRE_PASSWORD && WIRE_CONVERSATION_ID) {
     await storeEngine.init(storagePath, storeOptions);
 
     const apiConfig: Config = {
-      urls: APIClient.BACKEND.PRODUCTION,
+      urls: WIRE_BACKEND === 'staging' ? APIClient.BACKEND.STAGING : APIClient.BACKEND.PRODUCTION,
     };
 
     const apiClient = new APIClient(apiConfig);

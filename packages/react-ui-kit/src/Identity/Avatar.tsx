@@ -21,6 +21,7 @@
 import {CSSObject, jsx, Theme} from '@emotion/react';
 
 import {useEffect, useState} from 'react';
+
 import {IsInViewport, IsInViewportProps} from '../Misc/';
 import {filterProps} from '../util';
 import {COLOR} from './colors';
@@ -30,7 +31,7 @@ export const DEFAULT_AVATAR_SIZE = 28;
 
 export interface AvatarProps<T = HTMLDivElement> extends IsInViewportProps<T> {
   backgroundColor?: string;
-  base64Image?: string;
+  url?: string;
   borderColor?: string;
   fetchImage?: () => void;
   forceInitials?: boolean;
@@ -41,7 +42,7 @@ export interface AvatarProps<T = HTMLDivElement> extends IsInViewportProps<T> {
 
 const avatarStyle: <T>(props: AvatarProps<T>) => CSSObject = ({
   color = COLOR.WHITE,
-  base64Image,
+  url,
   borderColor,
   backgroundColor = COLOR.GRAY,
   size = DEFAULT_AVATAR_SIZE,
@@ -49,7 +50,7 @@ const avatarStyle: <T>(props: AvatarProps<T>) => CSSObject = ({
 }) => {
   const BORDER_SIZE_LIMIT = 32;
   const borderSize = size > BORDER_SIZE_LIMIT ? 2 : 1;
-  const borderWidth = base64Image ? 0 : borderSize;
+  const borderWidth = url ? 0 : borderSize;
   const fontSize = `${Math.ceil(size / 2.2)}px`;
 
   return {
@@ -75,7 +76,7 @@ const filteredAvatarProps = (props: AvatarProps) =>
     'size',
     'forceInitials',
     'name',
-    'base64Image',
+    'url',
     'borderColor',
     'backgroundColor',
     'fetchImage',
@@ -83,13 +84,13 @@ const filteredAvatarProps = (props: AvatarProps) =>
   ]);
 
 export const Avatar = (props: AvatarProps) => {
-  const {base64Image, forceInitials, name, fetchImage, isAvatarGridItem} = props;
+  const {url, forceInitials, name, fetchImage, isAvatarGridItem} = props;
   const [scale, setScale] = useState(0);
   useEffect(() => {
-    if (base64Image) {
+    if (url) {
       requestAnimationFrame(() => setScale(1));
     }
-  }, [base64Image]);
+  }, [url]);
   const getInitials = (name: string = '') =>
     name
       .split(' ')
@@ -101,17 +102,17 @@ export const Avatar = (props: AvatarProps) => {
     <IsInViewport
       checkViewportOnce
       onEnterViewport={fetchImage}
-      disabled={!!base64Image}
+      disabled={!!url}
       css={avatarStyle(props)}
-      data-uie-name={!forceInitials && base64Image ? 'element-avatar-image' : 'element-avatar-initials'}
+      data-uie-name={!forceInitials && url ? 'element-avatar-image' : 'element-avatar-initials'}
       {...filteredAvatarProps(props)}
     >
-      {forceInitials || !base64Image ? (
+      {forceInitials || !url ? (
         getInitials(name)
       ) : (
         <div
           css={{
-            backgroundImage: base64Image && `url(data:image/png;base64,${base64Image})`,
+            backgroundImage: url && `url(${url})`,
             backgroundPosition: 'center',
             backgroundSize: 'cover',
             borderRadius: isAvatarGridItem ? '0' : '50%',

@@ -21,7 +21,8 @@
 import {CSSObject, jsx, Theme} from '@emotion/react';
 
 import React from 'react';
-import {SVGIconProps} from '../Icon/SVGIcon';
+
+import type {SVGIconProps} from '../Icon/SVGIcon';
 import {COLOR} from '../Identity';
 import {childrenWithDefaultProps} from '../Misc/';
 import {ButtonProps, buttonStyle, filterButtonProps} from './Button';

@@ -21,14 +21,14 @@
 import {CSSObject, jsx, Theme} from '@emotion/react';
 
 import React from 'react';
-import {TextTransformProperty} from 'csstype';
+import {Property} from 'csstype';
 import {COLOR} from '../Identity';
 import {TextProps} from '../Text';
 import {filterProps} from '../util';
 
 export interface TextAreaProps<T = HTMLTextAreaElement> extends TextProps<T> {
   markInvalid?: boolean;
-  placeholderTextTransform?: TextTransformProperty;
+  placeholderTextTransform?: Property.TextTransform;
 }
 
 export const textAreaStyle: <T>(theme: Theme, props: TextAreaProps<T>) => CSSObject = (

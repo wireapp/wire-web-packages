@@ -3,6 +3,65 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.31](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@1.2.30...@wireapp/store-engine-web-storage@1.2.31) (2021-02-09)
+
+**Note:** Version bump only for package @wireapp/store-engine-web-storage
+
+
+
+
+
+## [1.2.30](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@1.2.29...@wireapp/store-engine-web-storage@1.2.30) (2021-02-05)
+
+**Note:** Version bump only for package @wireapp/store-engine-web-storage
+
+
+
+
+
+## [1.2.29](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@1.2.28...@wireapp/store-engine-web-storage@1.2.29) (2021-02-02)
+
+**Note:** Version bump only for package @wireapp/store-engine-web-storage
+
+
+
+
+
+## [1.2.28](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@1.2.27...@wireapp/store-engine-web-storage@1.2.28) (2021-01-12)
+
+**Note:** Version bump only for package @wireapp/store-engine-web-storage
+
+
+
+
+
+## [1.2.27](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@1.2.26...@wireapp/store-engine-web-storage@1.2.27) (2021-01-12)
+
+
+### Bug Fixes
+
+* **priority-queue:** Run tests with Jasmine 3.6 ([#3441](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/issues/3441)) ([cd92afe](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/commit/cd92afe589816a78005cf81d90722a83fc1c52ac))
+
+
+
+
+
+## [1.2.26](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@1.2.25...@wireapp/store-engine-web-storage@1.2.26) (2021-01-04)
+
+**Note:** Version bump only for package @wireapp/store-engine-web-storage
+
+
+
+
+
+## [1.2.25](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@1.2.24...@wireapp/store-engine-web-storage@1.2.25) (2020-12-18)
+
+**Note:** Version bump only for package @wireapp/store-engine-web-storage
+
+
+
+
+
 ## [1.2.24](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-web-storage/compare/@wireapp/store-engine-web-storage@1.2.23...@wireapp/store-engine-web-storage@1.2.24) (2020-11-25)
 
 **Note:** Version bump only for package @wireapp/store-engine-web-storage

@@ -3,6 +3,73 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.31](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.3.30...@wireapp/store-engine-dexie@1.3.31) (2021-02-09)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+## [1.3.30](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.3.29...@wireapp/store-engine-dexie@1.3.30) (2021-02-05)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+## [1.3.29](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.3.28...@wireapp/store-engine-dexie@1.3.29) (2021-02-02)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+## [1.3.28](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.3.27...@wireapp/store-engine-dexie@1.3.28) (2021-01-20)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+## [1.3.27](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.3.26...@wireapp/store-engine-dexie@1.3.27) (2021-01-12)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+## [1.3.26](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.3.25...@wireapp/store-engine-dexie@1.3.26) (2021-01-12)
+
+
+### Bug Fixes
+
+* **priority-queue:** Run tests with Jasmine 3.6 ([#3441](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/issues/3441)) ([cd92afe](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/commit/cd92afe589816a78005cf81d90722a83fc1c52ac))
+
+
+
+
+
+## [1.3.25](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.3.24...@wireapp/store-engine-dexie@1.3.25) (2021-01-04)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
+## [1.3.24](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.3.23...@wireapp/store-engine-dexie@1.3.24) (2020-12-18)
+
+**Note:** Version bump only for package @wireapp/store-engine-dexie
+
+
+
+
+
 ## [1.3.23](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine-dexie/compare/@wireapp/store-engine-dexie@1.3.22...@wireapp/store-engine-dexie@1.3.23) (2020-11-25)
 
 **Note:** Version bump only for package @wireapp/store-engine-dexie

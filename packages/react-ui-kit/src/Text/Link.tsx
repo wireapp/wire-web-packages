@@ -21,9 +21,9 @@
 import {CSSObject, jsx, Theme} from '@emotion/react';
 
 import Color from 'color';
+
 import {COLOR} from '../Identity/colors';
 import {defaultTransition} from '../Identity/motions';
-
 import {filterProps} from '../util';
 import {TextProps, filterTextProps, textStyle} from './Text';
 

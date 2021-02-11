@@ -20,14 +20,15 @@
 /** @jsx jsx */
 import {CSSObject, jsx, Theme} from '@emotion/react';
 
-import {FlexWrapProperty} from 'csstype';
+import {Property} from 'csstype';
 import React from 'react';
+
 import {filterProps} from '../util';
 
 export interface FlexBoxProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   align?: string;
   column?: boolean;
-  flexWrap?: FlexWrapProperty;
+  flexWrap?: Property.FlexWrap;
   justify?: string;
 }
 
@@ -44,7 +45,8 @@ export const flexBoxStyle: <T>(props: FlexBoxProps<T>) => CSSObject = ({
   justifyContent: justify,
 });
 
-const filterFlexBoxProps = (props: FlexBoxProps) => filterProps(props, ['align', 'column', 'justify', 'flexWrap']);
+export const filterFlexBoxProps = (props: FlexBoxProps) =>
+  filterProps(props, ['align', 'column', 'justify', 'flexWrap']);
 
 export const FlexBox: React.FC<FlexBoxProps> = React.forwardRef<HTMLDivElement, FlexBoxProps>((props, ref) => (
   <div ref={ref} css={flexBoxStyle(props)} {...filterFlexBoxProps(props)} />

@@ -3,6 +3,65 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.7.28](https://github.com/wireapp/wire-web-packages/tree/master/packages/bazinga64/compare/bazinga64@5.7.27...bazinga64@5.7.28) (2021-02-11)
+
+**Note:** Version bump only for package bazinga64
+
+
+
+
+
+## [5.7.27](https://github.com/wireapp/wire-web-packages/tree/master/packages/bazinga64/compare/bazinga64@5.7.26...bazinga64@5.7.27) (2021-02-09)
+
+**Note:** Version bump only for package bazinga64
+
+
+
+
+
+## [5.7.26](https://github.com/wireapp/wire-web-packages/tree/master/packages/bazinga64/compare/bazinga64@5.7.25...bazinga64@5.7.26) (2021-02-05)
+
+**Note:** Version bump only for package bazinga64
+
+
+
+
+
+## [5.7.25](https://github.com/wireapp/wire-web-packages/tree/master/packages/bazinga64/compare/bazinga64@5.7.24...bazinga64@5.7.25) (2021-01-12)
+
+**Note:** Version bump only for package bazinga64
+
+
+
+
+
+## [5.7.24](https://github.com/wireapp/wire-web-packages/tree/master/packages/bazinga64/compare/bazinga64@5.7.23...bazinga64@5.7.24) (2021-01-12)
+
+
+### Bug Fixes
+
+* **priority-queue:** Run tests with Jasmine 3.6 ([#3441](https://github.com/wireapp/wire-web-packages/tree/master/packages/bazinga64/issues/3441)) ([cd92afe](https://github.com/wireapp/wire-web-packages/tree/master/packages/bazinga64/commit/cd92afe589816a78005cf81d90722a83fc1c52ac))
+
+
+
+
+
+## [5.7.23](https://github.com/wireapp/wire-web-packages/tree/master/packages/bazinga64/compare/bazinga64@5.7.22...bazinga64@5.7.23) (2021-01-04)
+
+**Note:** Version bump only for package bazinga64
+
+
+
+
+
+## [5.7.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/bazinga64/compare/bazinga64@5.7.21...bazinga64@5.7.22) (2020-12-18)
+
+**Note:** Version bump only for package bazinga64
+
+
+
+
+
 ## [5.7.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/bazinga64/compare/bazinga64@5.7.20...bazinga64@5.7.21) (2020-11-25)
 
 **Note:** Version bump only for package bazinga64

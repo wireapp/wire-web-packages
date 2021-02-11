@@ -3,6 +3,116 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.45.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.45.5...@wireapp/react-ui-kit@7.45.6) (2021-02-11)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.45.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.45.4...@wireapp/react-ui-kit@7.45.5) (2021-02-09)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.45.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.45.3...@wireapp/react-ui-kit@7.45.4) (2021-02-05)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.45.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.45.2...@wireapp/react-ui-kit@7.45.3) (2021-02-02)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.45.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.45.1...@wireapp/react-ui-kit@7.45.2) (2021-01-21)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.45.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.45.0...@wireapp/react-ui-kit@7.45.1) (2021-01-20)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** Adjust ErrorMessage props chaining ([#3461](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/3461)) ([70abc35](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/70abc35ffc7a1beebc78e53d85c4864944b9791f))
+
+
+
+
+
+# [7.45.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.44.7...@wireapp/react-ui-kit@7.45.0) (2021-01-20)
+
+
+### Features
+
+* **react-ui-kit:** ErrorMessage icon ([#3460](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/issues/3460)) ([7438a12](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/commit/7438a12e2a907d40ac979d835c3bc3831afe091f))
+
+
+
+
+
+## [7.44.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.44.6...@wireapp/react-ui-kit@7.44.7) (2021-01-12)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.44.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.44.5...@wireapp/react-ui-kit@7.44.6) (2021-01-12)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.44.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.44.4...@wireapp/react-ui-kit@7.44.5) (2021-01-04)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.44.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.44.3...@wireapp/react-ui-kit@7.44.4) (2020-12-18)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.44.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.44.2...@wireapp/react-ui-kit@7.44.3) (2020-12-17)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [7.44.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.44.1...@wireapp/react-ui-kit@7.44.2) (2020-12-16)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
 ## [7.44.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.44.0...@wireapp/react-ui-kit@7.44.1) (2020-12-16)
 
 **Note:** Version bump only for package @wireapp/react-ui-kit

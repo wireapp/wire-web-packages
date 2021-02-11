@@ -21,8 +21,8 @@
 import {CSSObject, jsx, Theme} from '@emotion/react';
 
 import React from 'react';
-import {COLOR} from '../Identity';
 
+import {COLOR} from '../Identity';
 import {TextProps, textStyle} from '../Text';
 import {filterProps} from '../util';
 

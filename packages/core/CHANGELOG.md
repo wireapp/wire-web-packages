@@ -3,6 +3,208 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [17.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.17...@wireapp/core@17.1.0) (2021-02-11)
+
+
+### Features
+
+* **api-client,core:** Add new backend endpoints (SQCORE-289) ([#3360](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/3360)) ([3f8098d](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/3f8098d29a7940c6d29a3df27f1fa3ba71e7cde7))
+
+
+
+
+
+## [17.0.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.16...@wireapp/core@17.0.17) (2021-02-10)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [17.0.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.15...@wireapp/core@17.0.16) (2021-02-10)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [17.0.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.14...@wireapp/core@17.0.15) (2021-02-09)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [17.0.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.13...@wireapp/core@17.0.14) (2021-02-09)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [17.0.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.12...@wireapp/core@17.0.13) (2021-02-05)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [17.0.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.11...@wireapp/core@17.0.12) (2021-02-03)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [17.0.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.10...@wireapp/core@17.0.11) (2021-02-02)
+
+
+### Bug Fixes
+
+* **core,api-client:** Fix demos and events ([#3494](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/3494)) ([2206ef9](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/2206ef9b4f7c4e98016d91dd430b3dafcf049241))
+
+
+
+
+
+## [17.0.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.9...@wireapp/core@17.0.10) (2021-02-01)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [17.0.9](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.8...@wireapp/core@17.0.9) (2021-01-26)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [17.0.8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.7...@wireapp/core@17.0.8) (2021-01-26)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [17.0.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.6...@wireapp/core@17.0.7) (2021-01-26)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [17.0.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.5...@wireapp/core@17.0.6) (2021-01-21)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [17.0.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.4...@wireapp/core@17.0.5) (2021-01-20)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [17.0.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.3...@wireapp/core@17.0.4) (2021-01-20)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [17.0.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.2...@wireapp/core@17.0.3) (2021-01-20)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [17.0.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.1...@wireapp/core@17.0.2) (2021-01-12)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [17.0.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.0...@wireapp/core@17.0.1) (2021-01-12)
+
+
+### Bug Fixes
+
+* **priority-queue:** Run tests with Jasmine 3.6 ([#3441](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/3441)) ([cd92afe](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/cd92afe589816a78005cf81d90722a83fc1c52ac))
+
+
+
+
+
+# [17.0.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.12.78...@wireapp/core@17.0.0) (2021-01-07)
+
+
+### Features
+
+* **api-client,core:** Send messages as protobuf (SQCORE-252) (BREAKING) ([#3356](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/3356)) ([8ebdd33](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/8ebdd33be1c9fb03c2d5d7bb031cc874e7454aec))
+
+
+### BREAKING CHANGES
+
+* **api-client,core:** - cryptographyService.encrypt() now returns a Uint8Array
+- new MessageService class for crucial parts of sending messages
+
+
+
+
+
+## [16.12.78](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.12.77...@wireapp/core@16.12.78) (2021-01-04)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.12.77](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.12.76...@wireapp/core@16.12.77) (2020-12-18)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.12.76](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.12.75...@wireapp/core@16.12.76) (2020-12-17)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [16.12.75](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.12.74...@wireapp/core@16.12.75) (2020-12-16)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
 ## [16.12.74](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@16.12.73...@wireapp/core@16.12.74) (2020-12-16)
 
 **Note:** Version bump only for package @wireapp/core

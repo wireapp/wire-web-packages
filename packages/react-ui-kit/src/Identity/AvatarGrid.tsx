@@ -21,7 +21,8 @@
 import {CSSObject, jsx} from '@emotion/react';
 
 import React from 'react';
-import {AvatarProps} from '../Identity/';
+
+import type {AvatarProps} from '../Identity/';
 import {IsInViewport} from '../Misc/';
 import {filterProps} from '../util';
 import {Avatar, DEFAULT_AVATAR_SIZE} from './Avatar';
@@ -81,7 +82,7 @@ export const AvatarGrid = ({borderWidth = 1, size = DEFAULT_AVATAR_SIZE, items, 
           <Avatar
             key={Math.random().toString()}
             backgroundColor={item.backgroundColor || COLOR.GRAY_DARKEN_80}
-            base64Image={item.base64Image}
+            url={item.url}
             color={item.color}
             forceInitials={item.forceInitials}
             isAvatarGridItem
@@ -91,6 +92,7 @@ export const AvatarGrid = ({borderWidth = 1, size = DEFAULT_AVATAR_SIZE, items, 
           />
         ) : (
           <div
+            key={Math.random().toString()}
             css={{
               backgroundColor: COLOR.GRAY_DARKEN_80,
               height: '100%',

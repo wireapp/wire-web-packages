@@ -21,6 +21,7 @@
 import {CSSObject, jsx, Theme} from '@emotion/react';
 
 import React from 'react';
+
 import {COLOR, Opacity, Slide, YAxisMovement} from '../../Identity';
 import {DURATION} from '../../Identity/motions';
 import {QUERY} from '../../mediaQueries';

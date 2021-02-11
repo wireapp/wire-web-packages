@@ -17,10 +17,10 @@
  *
  */
 
-import {User} from '../User';
+import type {User} from '../User';
 
 export interface UserUpdateData {
-  user: {
+  user: Partial<User> & {
     id: string;
-  } & Partial<User>;
+  };
 }

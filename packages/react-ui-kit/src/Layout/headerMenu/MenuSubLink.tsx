@@ -21,6 +21,7 @@
 import {CSSObject, jsx, Theme} from '@emotion/react';
 
 import Color from 'color';
+
 import {COLOR} from '../../Identity';
 import {defaultTransition} from '../../Identity/motions';
 import {QueryKeys, media} from '../../mediaQueries';

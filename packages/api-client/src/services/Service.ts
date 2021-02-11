@@ -17,11 +17,11 @@
  *
  */
 
-import {OtherMember, NewOTRMessage} from '../conversation';
-import {PublicClient} from '../client/PublicClient';
-import {PreKey} from '../auth/PreKey';
-import {UserAsset, User} from '../user';
-import {ClientType} from '../client';
+import type {OtherMember, NewOTRMessage} from '../conversation';
+import type {PublicClient} from '../client/PublicClient';
+import type {PreKey} from '../auth/PreKey';
+import type {UserAsset, User} from '../user';
+import type {ClientType} from '../client';
 
 export interface NewService {
   /** The client ID for the service. */
@@ -102,4 +102,4 @@ export type UserPreKeyList = Record<string, string[]>;
 export type UserPreKeyDataList = Record<string, Record<string, string>>;
 export type UserSeenByService = Pick<User, 'id' | 'name' | 'accent_id'>;
 export type ClientSeenByService = PublicClient;
-export type ServiceMessage = NewOTRMessage;
+export type ServiceMessage = NewOTRMessage<Uint8Array>;

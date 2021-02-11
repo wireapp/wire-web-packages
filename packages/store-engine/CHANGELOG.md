@@ -3,6 +3,65 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.5.26](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@4.5.25...@wireapp/store-engine@4.5.26) (2021-02-09)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [4.5.25](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@4.5.24...@wireapp/store-engine@4.5.25) (2021-02-05)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [4.5.24](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@4.5.23...@wireapp/store-engine@4.5.24) (2021-02-02)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [4.5.23](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@4.5.22...@wireapp/store-engine@4.5.23) (2021-01-12)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [4.5.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@4.5.21...@wireapp/store-engine@4.5.22) (2021-01-12)
+
+
+### Bug Fixes
+
+* **priority-queue:** Run tests with Jasmine 3.6 ([#3441](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/3441)) ([cd92afe](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/cd92afe589816a78005cf81d90722a83fc1c52ac))
+
+
+
+
+
+## [4.5.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@4.5.20...@wireapp/store-engine@4.5.21) (2021-01-04)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+## [4.5.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@4.5.19...@wireapp/store-engine@4.5.20) (2020-12-18)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
 ## [4.5.19](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@4.5.18...@wireapp/store-engine@4.5.19) (2020-11-25)
 
 **Note:** Version bump only for package @wireapp/store-engine

@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2021 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +17,11 @@
  *
  */
 
-export {BaseError} from './BaseError';
-export {DecodeError} from './DecodeError';
-export {Decoder} from './Decoder';
-export {Encoder} from './Encoder';
-export {Type} from './Type';
+import type {TeamContact} from './TeamContact';
+
+export interface TeamSearchResult {
+  documents: TeamContact[];
+  found: number;
+  returned: number;
+  took: number;
+}

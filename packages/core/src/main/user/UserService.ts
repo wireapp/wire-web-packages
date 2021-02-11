@@ -17,12 +17,12 @@
  *
  */
 
-import {APIClient} from '@wireapp/api-client';
-import {User} from '@wireapp/api-client/src/user/';
+import type {APIClient} from '@wireapp/api-client';
+import type {QualifiedId, QualifiedUser, User} from '@wireapp/api-client/src/user/';
 import {Availability, GenericMessage} from '@wireapp/protocol-messaging';
 import UUID from 'uuidjs';
 
-import {AvailabilityType, BroadcastService} from '../broadcast/';
+import type {AvailabilityType, BroadcastService} from '../broadcast/';
 
 export class UserService {
   private readonly apiClient: APIClient;
@@ -33,21 +33,29 @@ export class UserService {
     this.broadcastService = broadcastService;
   }
 
-  public async getUser(userId: string): Promise<User> {
-    const users = await this.getUsers([userId]);
-    return users[0];
+  public getUser(userId: string): Promise<QualifiedUser>;
+  public getUser(userId: QualifiedId): Promise<User>;
+  public getUser(userId: string | QualifiedId): Promise<User | QualifiedUser> {
+    return this.apiClient.user.api.getUser(userId as QualifiedId);
   }
 
-  public async getUsers(userIds: string[]): Promise<User[]> {
-    return this.apiClient.user.api.getUsers({ids: userIds});
+  public async getUsers(userIds: string[]): Promise<User[]>;
+  public async getUsers(userIds: QualifiedId[]): Promise<QualifiedUser[]>;
+  public async getUsers(userIds: string[] | QualifiedId[]): Promise<User[] | QualifiedUser[]> {
+    if (!userIds.length) {
+      return [];
+    }
+    return typeof userIds[0] === 'string'
+      ? this.apiClient.user.api.getUsers({ids: userIds as string[]})
+      : this.apiClient.user.api.postListUsers({qualified_ids: userIds as QualifiedId[]});
   }
 
-  public setAvailability(teamId: string, type: AvailabilityType): Promise<void> {
+  public setAvailability(teamId: string, type: AvailabilityType, sendAsProtobuf?: boolean): Promise<void> {
     const genericMessage = GenericMessage.create({
       availability: new Availability({type}),
       messageId: UUID.genV4().toString(),
     });
 
-    return this.broadcastService.broadcastGenericMessage(teamId, genericMessage);
+    return this.broadcastService.broadcastGenericMessage(teamId, genericMessage, sendAsProtobuf);
   }
 }

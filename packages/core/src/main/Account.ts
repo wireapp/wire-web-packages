@@ -19,7 +19,7 @@
 
 import {StatusCodes as HTTP_STATUS} from 'http-status-codes';
 import {APIClient} from '@wireapp/api-client';
-import {RegisterData} from '@wireapp/api-client/src/auth';
+import type {RegisterData} from '@wireapp/api-client/src/auth';
 import {AUTH_COOKIE_KEY, AUTH_TABLE_NAME, Context, Cookie, CookieStore, LoginData} from '@wireapp/api-client/src/auth/';
 import {ClientType, RegisteredClient} from '@wireapp/api-client/src/client/';
 import * as Events from '@wireapp/api-client/src/event';
@@ -41,7 +41,8 @@ import {
   PayloadBundleType,
 } from './conversation/';
 import * as OtrMessage from './conversation/message/OtrMessage';
-import {CoreError, NotificationError} from './CoreError';
+import * as UserMessage from './conversation/message/UserMessage';
+import type {CoreError, NotificationError} from './CoreError';
 import {CryptographyService} from './cryptography/';
 import {GiphyService} from './giphy/';
 import {NotificationHandler, NotificationService} from './notification/';
@@ -55,18 +56,21 @@ enum TOPIC {
 }
 
 export interface Account {
-  on(event: PayloadBundleType.ASSET, listener: (payload: OtrMessage.FileAssetMessage) => void): this;
+  on(
+    event: PayloadBundleType.ASSET,
+    listener: (payload: OtrMessage.FileAssetMessage | OtrMessage.ImageAssetMessage) => void,
+  ): this;
   on(event: PayloadBundleType.BUTTON_ACTION, listener: (payload: OtrMessage.ButtonActionMessage) => void): this;
   on(event: PayloadBundleType.ASSET_ABORT, listener: (payload: OtrMessage.FileAssetAbortMessage) => void): this;
   on(event: PayloadBundleType.ASSET_IMAGE, listener: (payload: OtrMessage.ImageAssetMessage) => void): this;
   on(event: PayloadBundleType.ASSET_META, listener: (payload: OtrMessage.FileAssetMetaDataMessage) => void): this;
   on(event: PayloadBundleType.CALL, listener: (payload: OtrMessage.CallMessage) => void): this;
   on(event: PayloadBundleType.CLIENT_ACTION, listener: (payload: OtrMessage.ResetSessionMessage) => void): this;
-  on(event: PayloadBundleType.CLIENT_ADD, listener: (payload: Events.UserClientAddEvent) => void): this;
-  on(event: PayloadBundleType.CLIENT_REMOVE, listener: (payload: Events.UserClientRemoveEvent) => void): this;
+  on(event: PayloadBundleType.CLIENT_ADD, listener: (payload: UserMessage.UserClientAddMessage) => void): this;
+  on(event: PayloadBundleType.CLIENT_REMOVE, listener: (payload: UserMessage.UserClientRemoveMessage) => void): this;
   on(event: PayloadBundleType.CONFIRMATION, listener: (payload: OtrMessage.ConfirmationMessage) => void): this;
-  on(event: PayloadBundleType.CONNECTION_REQUEST, listener: (payload: Events.UserConnectionEvent) => void): this;
-  on(event: PayloadBundleType.USER_UPDATE, listener: (payload: Events.UserUpdateEvent) => void): this;
+  on(event: PayloadBundleType.CONNECTION_REQUEST, listener: (payload: UserMessage.UserConnectionMessage) => void): this;
+  on(event: PayloadBundleType.USER_UPDATE, listener: (payload: UserMessage.UserUpdateMessage) => void): this;
   on(
     event: PayloadBundleType.CONVERSATION_CLEAR,
     listener: (payload: OtrMessage.ClearConversationMessage) => void,
@@ -192,7 +196,7 @@ export class Account extends EventEmitter {
     const selfService = new SelfService(this.apiClient);
     const teamService = new TeamService(this.apiClient);
 
-    const broadcastService = new BroadcastService(this.apiClient, conversationService, cryptographyService);
+    const broadcastService = new BroadcastService(this.apiClient, cryptographyService);
     const userService = new UserService(this.apiClient, broadcastService);
 
     this.service = {

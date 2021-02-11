@@ -23,3 +23,4 @@ export * from './TeamChunkData';
 export * from './TeamData';
 export * from './TeamInfo';
 export * from './UpdateTeamData';
+export * from './TeamSizeData';

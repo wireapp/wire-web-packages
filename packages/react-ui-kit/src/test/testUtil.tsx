@@ -20,6 +20,7 @@
 import {EmotionJSX} from '@emotion/react/types/jsx-namespace';
 import React from 'react';
 import renderer from 'react-test-renderer';
+
 import {StyledApp, THEME_ID} from '../Layout';
 
 /* eslint-disable no-unsanitized/method */
