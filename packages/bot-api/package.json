@@ -1,11 +1,11 @@
 {
   "dependencies": {
     "@types/node": "*",
-    "@wireapp/core": "17.0.10",
+    "@wireapp/core": "17.0.17",
     "uuidjs": "4.2.7"
   },
   "devDependencies": {
-    "@types/jasmine": "3.6.2",
+    "@types/jasmine": "3.6.3",
     "cross-env": "7.0.3",
     "del-cli": "3.0.1",
     "dotenv-defaults": "2.0.1",
@@ -34,5 +34,5 @@
     "test:node": "nyc jasmine --config=jasmine.json",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "7.11.91"
+  "version": "7.11.98"
 }

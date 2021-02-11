@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2020 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,18 +17,6 @@
  *
  */
 
-import {BaseError, Type} from './';
-
-export class DecodeError extends BaseError {
-  static readonly INT_OVERFLOW = 'Integer overflow';
-  static readonly INVALID_TYPE = 'Invalid type';
-  static readonly TOO_LONG = 'Field too long';
-  static readonly TOO_NESTED = 'Object nested too deep';
-  static readonly UNEXPECTED_EOF = 'Unexpected end-of-buffer';
-  static readonly UNEXPECTED_TYPE = 'Unexpected type';
-
-  constructor(public message: string, public extra?: Type[]) {
-    super(message);
-    Object.setPrototypeOf(this, new.target.prototype);
-  }
+export interface TeamSizeData {
+  teamSize: number;
 }

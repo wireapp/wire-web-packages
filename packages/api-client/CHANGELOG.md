@@ -3,6 +3,69 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.2.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@12.2.2...@wireapp/api-client@12.2.3) (2021-02-10)
+
+
+### Bug Fixes
+
+* **api-client:** Allow sending text files up to 100 MB ([#3520](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/3520)) ([a7aee40](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/a7aee4034a9595df0bd5abc4a367fd62581b7ee9))
+
+
+
+
+
+## [12.2.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@12.2.1...@wireapp/api-client@12.2.2) (2021-02-10)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [12.2.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@12.2.0...@wireapp/api-client@12.2.1) (2021-02-09)
+
+
+### Bug Fixes
+
+* **api-client:** Remove duplicated slash ([#3517](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/3517)) ([32695f6](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/32695f67a7e0bb09ae991bc9f2e04038691886b4))
+
+
+
+
+
+# [12.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@12.1.5...@wireapp/api-client@12.2.0) (2021-02-09)
+
+
+### Features
+
+* **api-client:** Dedicated team size endpoint ([#3401](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/3401)) ([67ba1f7](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/67ba1f70cbafc9c3d53bae2870a7ac0f4adc8130))
+
+
+
+
+
+## [12.1.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@12.1.4...@wireapp/api-client@12.1.5) (2021-02-05)
+
+
+### Bug Fixes
+
+* **api-client:** Adjust team search order param ([#3512](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/3512)) ([01deee3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/01deee3ec1dee1ef5381d4bed77c6d62025e262e))
+
+
+
+
+
+## [12.1.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@12.1.3...@wireapp/api-client@12.1.4) (2021-02-02)
+
+
+### Bug Fixes
+
+* **core,api-client:** Fix demos and events ([#3494](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/3494)) ([2206ef9](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/2206ef9b4f7c4e98016d91dd430b3dafcf049241))
+
+
+
+
+
 ## [12.1.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@12.1.2...@wireapp/api-client@12.1.3) (2021-02-01)
 
 **Note:** Version bump only for package @wireapp/api-client

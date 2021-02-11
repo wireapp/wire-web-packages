@@ -3,6 +3,65 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [17.0.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.16...@wireapp/core@17.0.17) (2021-02-10)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [17.0.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.15...@wireapp/core@17.0.16) (2021-02-10)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [17.0.15](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.14...@wireapp/core@17.0.15) (2021-02-09)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [17.0.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.13...@wireapp/core@17.0.14) (2021-02-09)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [17.0.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.12...@wireapp/core@17.0.13) (2021-02-05)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [17.0.12](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.11...@wireapp/core@17.0.12) (2021-02-03)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [17.0.11](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.10...@wireapp/core@17.0.11) (2021-02-02)
+
+
+### Bug Fixes
+
+* **core,api-client:** Fix demos and events ([#3494](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/3494)) ([2206ef9](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/2206ef9b4f7c4e98016d91dd430b3dafcf049241))
+
+
+
+
+
 ## [17.0.10](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@17.0.9...@wireapp/core@17.0.10) (2021-02-01)
 
 **Note:** Version bump only for package @wireapp/core

@@ -5,9 +5,9 @@
     "moment-duration-format": "2.3.2"
   },
   "devDependencies": {
-    "@types/jasmine": "3.6.2",
+    "@types/jasmine": "3.6.3",
     "@types/node": "~14",
-    "@wireapp/bot-api": "7.11.91",
+    "@wireapp/bot-api": "7.11.98",
     "jasmine": "3.6.3",
     "rimraf": "3.0.2",
     "ts-node": "9.1.1",
@@ -36,5 +36,5 @@
     "test:node": "nyc jasmine --config=jasmine.json",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "0.1.120"
+  "version": "0.1.127"
 }

@@ -19,7 +19,6 @@
 
 import {EventEmitter} from 'events';
 import {PriorityQueue} from '@wireapp/priority-queue';
-import {StatusCodes as HTTP_STATUS} from 'http-status-codes';
 import {TimeUtil} from '@wireapp/commons';
 import axios, {AxiosError, AxiosRequestConfig, AxiosResponse} from 'axios';
 import logdown from 'logdown';
@@ -32,7 +31,7 @@ import {
   MissingCookieError,
   TokenExpiredError,
 } from '../auth/';
-import {BackendErrorMapper, ConnectionState, ContentType, NetworkError} from '../http/';
+import {BackendErrorMapper, ConnectionState, ContentType, NetworkError, StatusCode} from '../http/';
 import {ObfuscationUtil} from '../obfuscation/';
 import {sendRequestWithCookie} from '../shims/node/cookie';
 
@@ -45,6 +44,8 @@ export interface HttpClient {
   on(event: TOPIC.ON_CONNECTION_STATE_CHANGE, listener: (state: ConnectionState) => void): this;
   on(event: TOPIC.ON_INVALID_TOKEN, listener: (error: InvalidTokenError | MissingCookieError) => void): this;
 }
+
+const FILE_SIZE_100_MB = 104857600;
 
 export class HttpClient extends EventEmitter {
   private readonly logger: logdown.Logger;
@@ -118,7 +119,8 @@ export class HttpClient extends EventEmitter {
     try {
       const response = await axios.request<T>({
         ...config,
-        maxContentLength: 104857600, // 100 Megabytes
+        maxBodyLength: FILE_SIZE_100_MB,
+        maxContentLength: FILE_SIZE_100_MB,
       });
 
       this.updateConnectionState(ConnectionState.CONNECTED);
@@ -142,7 +144,7 @@ export class HttpClient extends EventEmitter {
         }
 
         const isExpiredTokenError = error instanceof TokenExpiredError;
-        const isUnauthorized = errorStatus === HTTP_STATUS.UNAUTHORIZED;
+        const isUnauthorized = errorStatus === StatusCode.UNAUTHORIZED;
         const hasAccessToken = !!this.accessTokenStore?.accessToken;
 
         if ((isExpiredTokenError || isUnauthorized) && hasAccessToken && firstTry) {
