@@ -3203,10 +3203,10 @@
   resolved "https://registry.npmjs.org/@wireapp/cbor/-/cbor-4.6.27.tgz#4cedcb77cdcea53f101406704a197cf364217f4b"
   integrity sha512-pv2BmmYOuZPNaDr+4Jk/dr4kJPWIjK2ZB9r1lbcdZA9GaMc299TThwP33Pom5BRVPe79WlunMnnEuAHOk5mZ/Q==
 
-"@wireapp/protocol-messaging@1.28.0":
-  version "1.28.0"
-  resolved "https://registry.npmjs.org/@wireapp/protocol-messaging/-/protocol-messaging-1.28.0.tgz#24c1d78ddc1d29d72d3e5a288af7d9467274354f"
-  integrity sha512-IFo7NLrMWdOtjtce2hbI0oofCzDiXfLxufUZ+mChFH5tCVnPlhk/9jYhyojrpJug57NMEWvPEc0YuaVrP//iVg==
+"@wireapp/protocol-messaging@1.29.0":
+  version "1.29.0"
+  resolved "https://registry.npmjs.org/@wireapp/protocol-messaging/-/protocol-messaging-1.29.0.tgz#271e9fb5a14b67c250ada9adc79e8d907f606cba"
+  integrity sha512-mej3JlFKRLgaMFqVlKhSqXdoPchd7XAwEpu9kTbvUB5MPF6cPK/Thmxfs4CVb4gPmG3wGW6sK3cTNfTYMpIwYw==
   dependencies:
     protobufjs "6.10.2"
 
