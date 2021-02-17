@@ -18,13 +18,13 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/core';
+import {CSSObject, jsx, Theme} from '@emotion/react';
 import {ErrorIcon} from '../Icon';
+import {filterFlexBoxProps, FlexBox, FlexBoxProps, flexBoxStyle} from '../Layout';
+import {filterProps} from '../util';
 
 import {COLOR} from '../Identity';
-import {FlexBox, FlexBoxProps, flexBoxStyle, filterFlexBoxProps, Theme} from '../Layout';
 import {Text, linkStyle} from '../Text';
-import {filterProps} from '../util';
 
 type ErrorMessageProps<T = HTMLDivElement> = FlexBoxProps<T>;
 

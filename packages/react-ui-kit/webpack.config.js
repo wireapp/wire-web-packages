@@ -35,6 +35,11 @@ module.exports = {
   plugins: [new webpack.HotModuleReplacementPlugin(), new webpack.NamedModulesPlugin()],
   resolve: {
     alias: {
+      // Needed until libs have support for emotion v11
+// https://github.com/infinum/emotion-normalize/pull/12
+'@emotion/core': '@emotion/react',
+
+
       '@wireapp/react-ui-kit': path.resolve(__dirname, 'src'),
     },
     extensions: ['.ts', '.tsx', '.js', '.jsx'],

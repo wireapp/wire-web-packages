@@ -18,14 +18,14 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/core';
+import {CSSObject, jsx, Theme} from '@emotion/react';
+
 import React, {CSSProperties} from 'react';
 import Color from 'color';
 
 import {CloseIcon} from '../Icon';
 import type {SVGIconProps} from '../Icon/SVGIcon';
 import {COLOR} from '../Identity';
-import type {Theme} from '../Layout';
 import {QueryKeys, media} from '../mediaQueries';
 import {filterProps, noop} from '../util';
 import {OverlayBackgroundProps, OverlayWrapper, overlayBackgroundStyle} from './Overlay';
@@ -168,7 +168,7 @@ interface ModalProps {
   onClose?: () => void;
 }
 
-export const Modal: React.SFC<ModalProps & React.HTMLProps<HTMLDivElement>> = ({
+export const Modal: React.FC<ModalProps & React.HTMLProps<HTMLDivElement>> = ({
   actions = [],
   children,
   bodyStyle,

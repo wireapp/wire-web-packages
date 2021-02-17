@@ -18,10 +18,9 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/core';
+import {CSSObject, jsx, Theme} from '@emotion/react';
 
 import {COLOR} from '../Identity';
-import {Theme} from '../Layout';
 import {TextProps, filterTextProps, textStyle} from './Text';
 
 export type TitleProps<T = HTMLDivElement> = TextProps<T>;

@@ -18,9 +18,9 @@
  */
 
 /** @jsx jsx */
-import React from 'react';
-import {CSSObject, jsx} from '@emotion/core';
+import {CSSObject, jsx} from '@emotion/react';
 
+import React from 'react';
 import {QueryKeys, media} from '../mediaQueries';
 import {filterProps} from '../util';
 import {GUTTER} from './sizes';

@@ -18,8 +18,9 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/core';
-import type {Property} from 'csstype';
+import {CSSObject, jsx, Theme} from '@emotion/react';
+
+import {Property} from 'csstype';
 import React from 'react';
 
 import {filterProps} from '../util';

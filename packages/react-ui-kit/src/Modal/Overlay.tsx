@@ -18,7 +18,8 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/core';
+import {CSSObject, jsx} from '@emotion/react';
+
 import React from 'react';
 
 import {COLOR} from '../Identity';
@@ -40,7 +41,7 @@ export const overlayWrapperStyle: <T>(props: OverlayWrapperProps<T>) => CSSObjec
   zIndex: 9997,
 });
 
-export const OverlayWrapper = (props: OverlayWrapperProps) => <div css={overlayWrapperStyle} {...props} />;
+export const OverlayWrapper = (props: OverlayWrapperProps) => <div css={() => overlayWrapperStyle(props)} {...props} />;
 
 export const OverlayContent = (props: React.HTMLProps<HTMLDivElement>) => (
   <div
@@ -79,7 +80,9 @@ export const overlayBackgroundStyle: <T>(props: OverlayBackgroundProps<T>) => CS
   zIndex: 9998,
 });
 
-export const OverlayBackground = (props: OverlayBackgroundProps) => <div css={overlayBackgroundStyle} {...props} />;
+export const OverlayBackground = (props: OverlayBackgroundProps) => (
+  <div css={() => overlayBackgroundStyle(props)} {...props} />
+);
 
 export interface OverlayProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   onBackgroundClick?: () => void;

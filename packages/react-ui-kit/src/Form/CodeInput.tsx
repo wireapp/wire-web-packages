@@ -18,10 +18,9 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/core';
-import React, {useEffect, useState} from 'react';
+import {CSSObject, jsx, Theme} from '@emotion/react';
 
-import type {Theme} from '../Layout';
+import React, {useEffect, useState} from 'react';
 import {noop} from '../util';
 import {InputProps, inputStyle} from './Input';
 

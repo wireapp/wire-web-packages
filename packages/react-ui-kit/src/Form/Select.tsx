@@ -18,10 +18,9 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/core';
+import {CSSObject, jsx, Theme} from '@emotion/react';
 
 import {COLOR} from '../Identity';
-import type {Theme} from '../Layout';
 import {filterProps, inlineSVG} from '../util';
 import {InputProps, inputStyle} from './Input';
 

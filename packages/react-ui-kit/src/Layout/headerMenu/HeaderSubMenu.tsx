@@ -18,13 +18,13 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/core';
+import {CSSObject, jsx, Theme} from '@emotion/react';
+
 import React from 'react';
 
 import {COLOR, Opacity, Slide, YAxisMovement} from '../../Identity';
 import {DURATION} from '../../Identity/motions';
 import {QUERY} from '../../mediaQueries';
-import type {Theme} from '../Theme';
 import {MenuSubLink} from './MenuSubLink';
 import {MENU_LINK_CLASSNAME} from './MenuLink';
 
@@ -97,7 +97,7 @@ export interface HeaderSubMenuProps<T = HTMLParagraphElement> extends React.HTML
   isOpen: boolean;
 }
 
-export const HeaderSubMenu: React.SFC<HeaderSubMenuProps> = ({caption, isOpen, children, ...props}) => {
+export const HeaderSubMenu: React.FC<HeaderSubMenuProps> = ({caption, isOpen, children, ...props}) => {
   const isDesktop = typeof window !== 'undefined' && window.matchMedia(`(${QUERY.desktop})`).matches;
   return (
     <MenuSubLink

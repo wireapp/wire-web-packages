@@ -18,12 +18,12 @@
  */
 
 /** @jsx jsx */
-import React from 'react';
-import {CSSObject, jsx} from '@emotion/core';
+import {CSSObject, jsx, Theme} from '@emotion/react';
 
+import React from 'react';
 import {GlobalStyle} from '../GlobalStyle';
 import {filterProps} from '../util';
-import {THEME_ID, Theme, ThemeProvider} from './Theme';
+import {THEME_ID, ThemeProvider} from './Theme';
 
 export interface StyledAppContainerProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   backgroundColor?: string;

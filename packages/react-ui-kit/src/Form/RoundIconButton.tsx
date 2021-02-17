@@ -18,12 +18,12 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/core';
+import {CSSObject, jsx, Theme} from '@emotion/react';
+
 import React from 'react';
 
 import type {SVGIconProps} from '../Icon/SVGIcon';
 import {COLOR} from '../Identity';
-import type {Theme} from '../Layout';
 import {childrenWithDefaultProps} from '../Misc/';
 import {ButtonProps, buttonStyle, filterButtonProps} from './Button';
 
@@ -43,7 +43,7 @@ export const roundIconButtonStyle: <T>(theme: Theme, props: RoundIconButtonProps
   width: `${props.size}px`,
 });
 
-export const RoundIconButton: React.SFC<RoundIconButtonProps> = ({children, ...props}) => (
+export const RoundIconButton: React.FC<RoundIconButtonProps> = ({children, ...props}) => (
   <button css={theme => roundIconButtonStyle(theme, props)} {...filterButtonProps(props)}>
     {childrenWithDefaultProps<SVGSVGElement, SVGIconProps>({children, defaultProps: {color: COLOR.WHITE}})}
   </button>

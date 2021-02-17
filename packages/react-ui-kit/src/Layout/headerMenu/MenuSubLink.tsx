@@ -18,14 +18,14 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/core';
+import {CSSObject, jsx, Theme} from '@emotion/react';
+
 import Color from 'color';
 
 import {COLOR} from '../../Identity';
 import {defaultTransition} from '../../Identity/motions';
 import {QueryKeys, media} from '../../mediaQueries';
 import {TextProps, textStyle} from '../../Text';
-import type {Theme} from '../Theme';
 
 type MenuSubLinkProps<T = HTMLDivElement> = TextProps<T>;
 

@@ -18,13 +18,12 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/core';
-import type {Property} from 'csstype';
-import React from 'react';
+import {CSSObject, jsx, Theme} from '@emotion/react';
 
+import React from 'react';
+import {Property} from 'csstype';
 import {COLOR} from '../Identity';
-import type {Theme} from '../Layout';
-import type {TextProps} from '../Text';
+import {TextProps} from '../Text';
 import {filterProps} from '../util';
 
 export interface TextAreaProps<T = HTMLTextAreaElement> extends TextProps<T> {

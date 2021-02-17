@@ -18,11 +18,10 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/core';
+import {CSSObject, jsx, Theme} from '@emotion/react';
 
 import {SVGIcon, SVGIconProps} from '../Icon/SVGIcon';
 import {defaultTransition} from '../Identity/motions';
-import type {Theme} from '../Layout';
 import {COLOR} from './colors';
 
 export interface LogoProps<T = SVGSVGElement> extends SVGIconProps<T> {

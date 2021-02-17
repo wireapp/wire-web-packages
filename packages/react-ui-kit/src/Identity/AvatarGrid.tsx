@@ -18,7 +18,8 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/core';
+import {CSSObject, jsx} from '@emotion/react';
+
 import React from 'react';
 
 import type {AvatarProps} from '../Identity/';

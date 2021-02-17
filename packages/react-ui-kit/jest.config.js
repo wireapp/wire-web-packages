@@ -18,8 +18,11 @@
  */
 
 module.exports = {
+  moduleNameMapper: {
+    '@emotion/core': '@emotion/react',
+  },
   setupFilesAfterEnv: [],
-  snapshotSerializers: ['jest-emotion'],
+  snapshotSerializers: ['@emotion/jest/serializer'],
   testPathIgnorePatterns: ['[a-z]+.test.js', 'node_modules'],
   verbose: true,
 };

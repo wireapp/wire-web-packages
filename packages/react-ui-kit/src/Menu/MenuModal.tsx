@@ -18,7 +18,8 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/core';
+import {CSSObject, jsx} from '@emotion/react';
+
 import React from 'react';
 
 import {COLOR} from '../Identity/';
@@ -36,7 +37,7 @@ const menuModalWrapperStyle: <T>(props: OverlayWrapperProps<T>) => CSSObject = p
   padding: 0,
 });
 
-const MenuModalWrapper = (props: OverlayWrapperProps) => <div css={menuModalWrapperStyle} {...props} />;
+const MenuModalWrapper = (props: OverlayWrapperProps) => <div css={() => menuModalWrapperStyle(props)} {...props} />;
 
 const MenuModalBody = (props: React.HTMLProps<HTMLDivElement>) => (
   <div
@@ -84,7 +85,9 @@ const modalBackgroundStyle: <T>(props: OverlayBackgroundProps<T>) => CSSObject =
   background: 'rgba(50, 54, 57, 0.4)',
 });
 
-const MenuModalBackground = (props: OverlayBackgroundProps) => <div css={modalBackgroundStyle} {...props} />;
+const MenuModalBackground = (props: OverlayBackgroundProps) => (
+  <div css={() => modalBackgroundStyle(props)} {...props} />
+);
 
 interface MenuModalProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   onBackgroundClick?: () => void;
