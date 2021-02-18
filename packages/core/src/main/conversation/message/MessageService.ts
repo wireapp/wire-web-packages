@@ -26,6 +26,7 @@ import {APIClient} from '@wireapp/api-client';
 import {NewOTRMessage, OTRRecipients, UserClients} from '@wireapp/api-client/src/conversation';
 
 import {CryptographyService} from '../../cryptography';
+import {Decoder, Encoder} from 'bazinga64';
 
 export class MessageService {
   constructor(private readonly apiClient: APIClient, private readonly cryptographyService: CryptographyService) {}
@@ -34,7 +35,8 @@ export class MessageService {
     sendingClientId: string,
     recipients: OTRRecipients<Uint8Array>,
     conversationId: string | null,
-    data?: any,
+    plainTextArray: Uint8Array,
+    data?: string,
   ): Promise<void> {
     const message: NewOTRMessage<string> = {
       data,
@@ -42,15 +44,28 @@ export class MessageService {
       sender: sendingClientId,
     };
 
-    if (conversationId === null) {
-      await this.apiClient.broadcast.api.postBroadcastMessage(sendingClientId, message, true);
-    } else {
-      /**
-       * When creating the PreKey bundles we already found out to which users we want to send a message, so we can ignore
-       * missing clients. We have to ignore missing clients because there can be the case that there are clients that
-       * don't provide PreKeys (clients from the Pre-E2EE era).
-       */
-      await this.apiClient.conversation.api.postOTRMessage(sendingClientId, conversationId, message, true);
+    try {
+      if (conversationId === null) {
+        await this.apiClient.broadcast.api.postBroadcastMessage(sendingClientId, message, true);
+      } else {
+        /**
+         * When creating the PreKey bundles we already found out to which users we want to send a message, so we can ignore
+         * missing clients. We have to ignore missing clients because there can be the case that there are clients that
+         * don't provide PreKeys (clients from the Pre-E2EE era).
+         */
+        await this.apiClient.conversation.api.postOTRMessage(sendingClientId, conversationId, message, true);
+      }
+    } catch (error) {
+      const reEncryptedMessage = await this.onClientMismatch(
+        error,
+        {data: data ? Decoder.fromBase64(data).asBytes : undefined, recipients, sender: sendingClientId},
+        plainTextArray,
+      );
+      await this.apiClient.broadcast.api.postBroadcastMessage(sendingClientId, {
+        data: reEncryptedMessage.data ? Encoder.toBase64(reEncryptedMessage.data).asString : undefined,
+        recipients: CryptographyService.convertArrayRecipientsToBase64(reEncryptedMessage.recipients),
+        sender: reEncryptedMessage.sender,
+      });
     }
   }
 
@@ -58,6 +73,7 @@ export class MessageService {
     sendingClientId: string,
     recipients: OTRRecipients<Uint8Array>,
     conversationId: string | null,
+    plainTextArray: Uint8Array,
     assetData?: Uint8Array,
   ): Promise<void> {
     const userEntries: IUserEntry[] = Object.entries(recipients).map(([userId, otrClientMap]) => {
@@ -89,20 +105,30 @@ export class MessageService {
       protoMessage.blob = assetData;
     }
 
-    if (conversationId === null) {
-      await this.apiClient.broadcast.api.postBroadcastProtobufMessage(sendingClientId, protoMessage, true);
-    } else {
-      /**
-       * When creating the PreKey bundles we already found out to which users we want to send a message, so we can ignore
-       * missing clients. We have to ignore missing clients because there can be the case that there are clients that
-       * don't provide PreKeys (clients from the Pre-E2EE era).
-       */
-      await this.apiClient.conversation.api.postOTRProtobufMessage(sendingClientId, conversationId, protoMessage, true);
+    try {
+      if (conversationId === null) {
+        await this.apiClient.broadcast.api.postBroadcastProtobufMessage(sendingClientId, protoMessage, true);
+      } else {
+        /**
+         * When creating the PreKey bundles we already found out to which users we want to send a message, so we can ignore
+         * missing clients. We have to ignore missing clients because there can be the case that there are clients that
+         * don't provide PreKeys (clients from the Pre-E2EE era).
+         */
+        await this.apiClient.conversation.api.postOTRProtobufMessage(
+          sendingClientId,
+          conversationId,
+          protoMessage,
+          true,
+        );
+      }
+    } catch (error) {
+      // TODO: Add onClientMismatch for protobuf sending
+      plainTextArray = plainTextArray;
+      throw error;
     }
   }
 
-  // TODO: Move this to a generic "message sending class" and make it private.
-  public async onClientMismatch(
+  private async onClientMismatch(
     error: AxiosError,
     message: NewOTRMessage<Uint8Array>,
     plainTextArray: Uint8Array,

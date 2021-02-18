@@ -28,7 +28,7 @@ process.on('unhandledRejection', (reason, promise) =>
   console.error('Unhandled Rejection at:', promise, 'reason:', reason),
 );
 
-const program = require('commander');
+const commander = require('commander');
 const logdown = require('logdown');
 const fs = require('fs');
 const path = require('path');
@@ -36,7 +36,7 @@ const {TimeUtil} = require('@wireapp/commons');
 const {promisify} = require('util');
 const readFileAsync = promisify(fs.readFile);
 
-program.option('-c, --conversationId <conversationId>').parse(process.argv);
+commander.option('-c, --conversationId <conversationId>').parse(process.argv);
 
 require('dotenv').config({path: path.join(__dirname, 'sender.env')});
 
@@ -53,8 +53,9 @@ const {FileEngine} = require('@wireapp/store-engine-fs');
 
 void (async () => {
   try {
-    const CONVERSATION_ID = program.conversationId || process.env.WIRE_CONVERSATION_ID;
+    const CONVERSATION_ID = commander.opts().conversationId || process.env.WIRE_CONVERSATION_ID;
     const MESSAGE_TIMER = TimeUtil.TimeInMillis.SECOND * 5;
+    const WIRE_TEAM_ID = process.env.WIRE_TEAM_ID;
 
     const login = {
       clientType: ClientType.TEMPORARY,
@@ -188,6 +189,10 @@ void (async () => {
         .build();
 
       await account.service.conversation.send(payload, undefined, true);
+    }
+
+    async function setAvailability() {
+      await account.service.user.setAvailability(WIRE_TEAM_ID, 2);
     }
 
     async function sendQuote() {
