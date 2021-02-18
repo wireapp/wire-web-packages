@@ -34,6 +34,7 @@ const fs = require('fs');
 const path = require('path');
 const {TimeUtil} = require('@wireapp/commons');
 const {promisify} = require('util');
+const {Availability} = require('@wireapp/protocol-messaging');
 const readFileAsync = promisify(fs.readFile);
 
 commander.option('-c, --conversationId <conversationId>').parse(process.argv);
@@ -56,6 +57,7 @@ void (async () => {
     const CONVERSATION_ID = commander.opts().conversationId || process.env.WIRE_CONVERSATION_ID;
     const MESSAGE_TIMER = TimeUtil.TimeInMillis.SECOND * 5;
     const WIRE_TEAM_ID = process.env.WIRE_TEAM_ID;
+    const useProtobuf = true;
 
     const login = {
       clientType: ClientType.TEMPORARY,
@@ -84,7 +86,7 @@ void (async () => {
       const deleteTextPayload = account.service.conversation.messageBuilder
         .createText(CONVERSATION_ID, 'Delete me!')
         .build();
-      const {id: messageId} = await account.service.conversation.send(deleteTextPayload, undefined, true);
+      const {id: messageId} = await account.service.conversation.send(deleteTextPayload, undefined, useProtobuf);
 
       const fiveSecondsInMillis = TimeUtil.TimeInMillis.SECOND * 5;
       setTimeout(async () => {
@@ -103,30 +105,30 @@ void (async () => {
       const payload = account.service.conversation.messageBuilder
         .createText(CONVERSATION_ID, `Expires after ${expiry}ms ...`)
         .build();
-      await account.service.conversation.send(payload, undefined, true);
+      await account.service.conversation.send(payload, undefined, useProtobuf);
       account.service.conversation.messageTimer.setMessageLevelTimer(CONVERSATION_ID, 0);
     }
 
     async function sendPing(expiry = MESSAGE_TIMER) {
       account.service.conversation.messageTimer.setMessageLevelTimer(CONVERSATION_ID, expiry);
       const payload = account.service.conversation.messageBuilder.createPing(CONVERSATION_ID);
-      await account.service.conversation.send(payload, undefined, true);
+      await account.service.conversation.send(payload, undefined, useProtobuf);
       account.service.conversation.messageTimer.setMessageLevelTimer(CONVERSATION_ID, 0);
     }
 
     async function sendText() {
       const payload = account.service.conversation.messageBuilder.createText(CONVERSATION_ID, 'Hello, World!').build();
-      await account.service.conversation.send(payload, undefined, true);
+      await account.service.conversation.send(payload, undefined, useProtobuf);
     }
 
     async function sendAndEdit() {
       const payload = account.service.conversation.messageBuilder.createText(CONVERSATION_ID, 'Hello, Wolrd!').build();
-      const {id: originalMessageId} = await account.service.conversation.send(payload, undefined, true);
+      const {id: originalMessageId} = await account.service.conversation.send(payload, undefined, useProtobuf);
       setInterval(async () => {
         const editedPayload = account.service.conversation.messageBuilder
           .createEditedText(CONVERSATION_ID, 'Hello, World!', originalMessageId)
           .build();
-        await account.service.conversation.send(editedPayload, undefined, true);
+        await account.service.conversation.send(editedPayload, undefined, useProtobuf);
       }, TimeUtil.TimeInMillis.SECOND * 2);
     }
 
@@ -139,7 +141,7 @@ void (async () => {
         width: 500,
       };
       const imagePayload = await account.service.conversation.messageBuilder.createImage(CONVERSATION_ID, image);
-      await account.service.conversation.send(imagePayload, undefined, true);
+      await account.service.conversation.send(imagePayload, undefined, useProtobuf);
     }
 
     async function sendFile() {
@@ -150,14 +152,14 @@ void (async () => {
         name: filename,
         type: 'image/png',
       });
-      await account.service.conversation.send(metadataPayload, undefined, true);
+      await account.service.conversation.send(metadataPayload, undefined, useProtobuf);
 
       const filePayload = await account.service.conversation.messageBuilder.createFileData(
         CONVERSATION_ID,
         {data},
         metadataPayload.id,
       );
-      await account.service.conversation.send(filePayload, undefined, true);
+      await account.service.conversation.send(filePayload, undefined, useProtobuf);
     }
 
     async function clearConversation() {
@@ -188,11 +190,11 @@ void (async () => {
         .withMentions(mentions)
         .build();
 
-      await account.service.conversation.send(payload, undefined, true);
+      await account.service.conversation.send(payload, undefined, useProtobuf);
     }
 
     async function setAvailability() {
-      await account.service.user.setAvailability(WIRE_TEAM_ID, 2);
+      await account.service.user.setAvailability(WIRE_TEAM_ID, Availability.Type.BUSY);
     }
 
     async function sendQuote() {
@@ -200,7 +202,7 @@ void (async () => {
 
       const textPayload = account.service.conversation.messageBuilder.createText(CONVERSATION_ID, text).build();
 
-      const {id: messageId} = await account.service.conversation.send(textPayload, undefined, true);
+      const {id: messageId} = await account.service.conversation.send(textPayload, undefined, useProtobuf);
 
       const quoteText = 'Hello again';
 
@@ -214,7 +216,7 @@ void (async () => {
         .withQuote(quote)
         .build();
 
-      await account.service.conversation.send(quotePayload, undefined, true);
+      await account.service.conversation.send(quotePayload, undefined, useProtobuf);
     }
 
     const methods = [
