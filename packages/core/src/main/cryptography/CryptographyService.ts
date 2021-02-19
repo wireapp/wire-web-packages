@@ -148,7 +148,7 @@ export class CryptographyService {
 
     try {
       const decodedPreKeyBundle = Decoder.fromBase64(base64EncodedPreKey).asBytes;
-      const payloadAsBuffer = await this.cryptobox.encrypt(sessionId, plainText, decodedPreKeyBundle.buffer);
+      const payloadAsBuffer = await this.cryptobox.encrypt(sessionId, plainText, decodedPreKeyBundle);
       encryptedPayload = new Uint8Array(payloadAsBuffer);
     } catch (error) {
       this.logger.error(`Could not encrypt payload: ${error.message}`);
