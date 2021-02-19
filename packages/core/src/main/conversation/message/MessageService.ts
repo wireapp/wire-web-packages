@@ -137,7 +137,7 @@ export class MessageService {
     plainTextArray: Uint8Array,
   ): Promise<NewOTRMessage<Uint8Array>> {
     if (error.response?.status === HTTP_STATUS.PRECONDITION_FAILED) {
-      const {missing, deleted}: {deleted: UserClients; missing: UserClients} = error.response?.data;
+      const {missing, deleted} = (error as AxiosError<{deleted: UserClients; missing: UserClients}>).response?.data!;
 
       const deletedUserIds = Object.keys(deleted);
       const missingUserIds = Object.keys(missing);
@@ -170,6 +170,7 @@ export class MessageService {
 
       return message;
     }
+
     throw error;
   }
 
@@ -179,7 +180,7 @@ export class MessageService {
     plainTextArray: Uint8Array,
   ): Promise<NewOtrMessage> {
     if (error.response?.status === HTTP_STATUS.PRECONDITION_FAILED) {
-      const {missing, deleted}: {deleted: UserClients; missing: UserClients} = error.response?.data;
+      const {missing, deleted} = (error as AxiosError<{deleted: UserClients; missing: UserClients}>).response?.data!;
 
       const deletedUserIds = Object.keys(deleted);
       const missingUserIds = Object.keys(missing);
@@ -189,9 +190,9 @@ export class MessageService {
           for (const deletedClientId of deleted[deletedUserId]) {
             const deletedUserIndex = message.recipients.findIndex(({user}) => bytesToUUID(user.uuid) === deletedUserId);
             if (deletedUserIndex > -1) {
-              const deletedClientIndex = message.recipients[deletedUserIndex].clients?.findIndex(
-                ({client}) => client.client.toString(16) === deletedClientId,
-              );
+              const deletedClientIndex = message.recipients[deletedUserIndex].clients?.findIndex(({client}) => {
+                return client.client.toString(16) === deletedClientId;
+              });
               if (typeof deletedClientIndex !== 'undefined' && deletedClientIndex > -1) {
                 delete message.recipients[deletedUserIndex].clients?.[deletedClientIndex!];
               }
