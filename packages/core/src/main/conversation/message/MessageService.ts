@@ -21,7 +21,7 @@ import {StatusCodes as HTTP_STATUS} from 'http-status-codes';
 import {AxiosError} from 'axios';
 import {IUserEntry, IClientEntry, NewOtrMessage} from '@wireapp/protocol-messaging/web/otr';
 import Long from 'long';
-import {uuidToBytes} from '@wireapp/commons/src/main/util/StringUtil';
+import {bytesToUUID, uuidToBytes} from '@wireapp/commons/src/main/util/StringUtil';
 import {APIClient} from '@wireapp/api-client';
 import {NewOTRMessage, OTRRecipients, UserClients} from '@wireapp/api-client/src/conversation';
 
@@ -122,9 +122,8 @@ export class MessageService {
         );
       }
     } catch (error) {
-      // TODO: Add onClientMismatch for protobuf sending
-      plainTextArray = plainTextArray;
-      throw error;
+      const reEncryptedMessage = await this.onClientProtobufMismatch(error, protoMessage, plainTextArray);
+      await this.apiClient.broadcast.api.postBroadcastProtobufMessage(sendingClientId, reEncryptedMessage);
     }
   }
 
@@ -167,6 +166,64 @@ export class MessageService {
 
       return message;
     }
+    throw error;
+  }
+
+  private async onClientProtobufMismatch(
+    error: AxiosError,
+    message: NewOtrMessage,
+    plainTextArray: Uint8Array,
+  ): Promise<NewOtrMessage> {
+    if (error.response?.status === HTTP_STATUS.PRECONDITION_FAILED) {
+      const {missing, deleted}: {deleted: UserClients; missing: UserClients} = error.response?.data;
+
+      const deletedUserIds = Object.keys(deleted);
+      const missingUserIds = Object.keys(missing);
+
+      if (deletedUserIds.length) {
+        for (const deletedUserId of deletedUserIds) {
+          for (const deletedClientId of deleted[deletedUserId]) {
+            const deletedUserIndex = message.recipients.findIndex(({user}) => bytesToUUID(user.uuid) === deletedUserId);
+            if (deletedUserIndex > -1) {
+              const deletedClientIndex = message.recipients[deletedUserIndex].clients?.findIndex(
+                ({client}) => client.client.toString(16) === deletedClientId,
+              );
+              if (typeof deletedClientIndex !== 'undefined' && deletedClientIndex > -1) {
+                delete message.recipients[deletedUserIndex].clients?.[deletedClientIndex!];
+              }
+            }
+          }
+        }
+      }
+
+      if (missingUserIds.length) {
+        const missingPreKeyBundles = await this.apiClient.user.api.postMultiPreKeyBundles(missing);
+        const reEncryptedPayloads = await this.cryptographyService.encrypt(plainTextArray, missingPreKeyBundles);
+        for (const missingUserId of missingUserIds) {
+          for (const missingClientId in reEncryptedPayloads[missingUserId]) {
+            const missingUserIndex = message.recipients.findIndex(({user}) => bytesToUUID(user.uuid) === missingUserId);
+            if (missingUserIndex === -1) {
+              message.recipients.push({
+                clients: [
+                  {
+                    client: {
+                      client: Long.fromString(missingClientId, 16),
+                    },
+                    text: reEncryptedPayloads[missingUserId][missingClientId],
+                  },
+                ],
+                user: {
+                  uuid: uuidToBytes(missingUserId),
+                },
+              });
+            }
+          }
+        }
+      }
+
+      return message;
+    }
+
     throw error;
   }
 }
