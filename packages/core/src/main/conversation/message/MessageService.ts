@@ -36,29 +36,31 @@ export class MessageService {
     recipients: OTRRecipients<Uint8Array>,
     conversationId: string | null,
     plainTextArray: Uint8Array,
-    data?: string,
+    base64CipherText?: string,
   ): Promise<void> {
     const message: NewOTRMessage<string> = {
-      data,
+      data: base64CipherText,
       recipients: CryptographyService.convertArrayRecipientsToBase64(recipients),
       sender: sendingClientId,
     };
 
+    /*
+     * When creating the PreKey bundles we already found out to which users we want to send a message, so we can ignore
+     * missing clients. We have to ignore missing clients because there can be the case that there are clients that
+     * don't provide PreKeys (clients from the Pre-E2EE era).
+     */
+    const ignoreMissing = true;
+
     try {
       if (conversationId === null) {
-        await this.apiClient.broadcast.api.postBroadcastMessage(sendingClientId, message, true);
+        await this.apiClient.broadcast.api.postBroadcastMessage(sendingClientId, message, ignoreMissing);
       } else {
-        /**
-         * When creating the PreKey bundles we already found out to which users we want to send a message, so we can ignore
-         * missing clients. We have to ignore missing clients because there can be the case that there are clients that
-         * don't provide PreKeys (clients from the Pre-E2EE era).
-         */
-        await this.apiClient.conversation.api.postOTRMessage(sendingClientId, conversationId, message, true);
+        await this.apiClient.conversation.api.postOTRMessage(sendingClientId, conversationId, message, ignoreMissing);
       }
     } catch (error) {
       const reEncryptedMessage = await this.onClientMismatch(
         error,
-        {data: data ? Decoder.fromBase64(data).asBytes : undefined, recipients, sender: sendingClientId},
+        {...message, data: base64CipherText ? Decoder.fromBase64(base64CipherText).asBytes : undefined, recipients},
         plainTextArray,
       );
       await this.apiClient.broadcast.api.postBroadcastMessage(sendingClientId, {
@@ -105,20 +107,22 @@ export class MessageService {
       protoMessage.blob = assetData;
     }
 
+    /*
+     * When creating the PreKey bundles we already found out to which users we want to send a message, so we can ignore
+     * missing clients. We have to ignore missing clients because there can be the case that there are clients that
+     * don't provide PreKeys (clients from the Pre-E2EE era).
+     */
+    const ignoreMissing = true;
+
     try {
       if (conversationId === null) {
-        await this.apiClient.broadcast.api.postBroadcastProtobufMessage(sendingClientId, protoMessage, true);
+        await this.apiClient.broadcast.api.postBroadcastProtobufMessage(sendingClientId, protoMessage, ignoreMissing);
       } else {
-        /**
-         * When creating the PreKey bundles we already found out to which users we want to send a message, so we can ignore
-         * missing clients. We have to ignore missing clients because there can be the case that there are clients that
-         * don't provide PreKeys (clients from the Pre-E2EE era).
-         */
         await this.apiClient.conversation.api.postOTRProtobufMessage(
           sendingClientId,
           conversationId,
           protoMessage,
-          true,
+          ignoreMissing,
         );
       }
     } catch (error) {

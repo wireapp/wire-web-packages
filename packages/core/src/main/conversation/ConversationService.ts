@@ -692,7 +692,7 @@ export class ConversationService {
     userIds?: string[] | UserClientsMap,
     sendAsProtobuf?: boolean,
   ): Promise<ResetSessionMessage> {
-    const sessionReset = GenericMessage.create({
+    const genericMessage = GenericMessage.create({
       [GenericMessageType.CLIENT_ACTION]: ClientAction.RESET_SESSION,
       messageId: payloadBundle.id,
     });
@@ -700,7 +700,7 @@ export class ConversationService {
     await this.sendGenericMessage(
       this.apiClient.validatedClientId,
       payloadBundle.conversation,
-      sessionReset,
+      genericMessage,
       userIds,
       sendAsProtobuf,
     );
