@@ -52,6 +52,7 @@ export class UserAPI {
     CONTACTS: 'contacts',
     DELETE: '/delete',
     HANDLES: 'handles',
+    BY_HANDLE: 'by-handle',
     LIST_CLIENTS: '/list-clients',
     LIST_USERS: '/list-users',
     PASSWORDRESET: '/password-reset',
@@ -182,7 +183,7 @@ export class UserAPI {
     const url =
       typeof handle === 'string'
         ? `${UserAPI.URL.USERS}/${UserAPI.URL.HANDLES}/${handle}`
-        : `${UserAPI.URL.USERS}/${UserAPI.URL.HANDLES}/${handle.domain}/${handle.handle}`;
+        : `${UserAPI.URL.USERS}/${UserAPI.URL.BY_HANDLE}/${handle.domain}/${handle.handle}`;
 
     const config: AxiosRequestConfig = {
       method: 'get',
