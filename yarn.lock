@@ -16871,10 +16871,10 @@ windows-release@^3.1.0:
   dependencies:
     execa "^1.0.0"
 
-wizardy@0.3.0:
-  version "0.3.0"
-  resolved "https://registry.npmjs.org/wizardy/-/wizardy-0.3.0.tgz#2f02075e822370998cc04a343ef8f4a58ce4aea9"
-  integrity sha512-0FXcg97YBVdte4WhEdY9siRngEc9WbPsG59/fBqXsiANE4CDECmoqzMzJH/ia+iYHf1NBkXDNzVbu+pFHmXrXA==
+wizardy@0.4.0:
+  version "0.4.0"
+  resolved "https://registry.npmjs.org/wizardy/-/wizardy-0.4.0.tgz#533d40754cf3869f8b2d2d5f31dda1927069b14d"
+  integrity sha512-ida5/5KEH8SAqANI2TtSltemgwXEof90Zwlw8a+J6nD4sj9ctnVNdl8T+heEoCC4iLOW61rCtDKYXUiYTGCkHA==
 
 word-wrap@^1.2.3, word-wrap@~1.2.3:
   version "1.2.3"
