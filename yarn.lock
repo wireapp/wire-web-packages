@@ -10495,10 +10495,10 @@ karma-spec-reporter@0.0.32:
   dependencies:
     colors "^1.1.2"
 
-karma-typescript@5.4.0:
-  version "5.4.0"
-  resolved "https://registry.npmjs.org/karma-typescript/-/karma-typescript-5.4.0.tgz#b1bc1b65513acadac4c6fc2e32a0b03eaef73c69"
-  integrity sha512-ZaxlLzuo88uRbi3MYK/dC8ZDfvQyKzjS8SNDvFYYUontv9sPH38TOqsYB/OWCkjsbKpuGD1/iQkQ5r4uhIBv8Q==
+karma-typescript@5.5.0:
+  version "5.5.0"
+  resolved "https://registry.npmjs.org/karma-typescript/-/karma-typescript-5.5.0.tgz#e6812a0cd8e80b3329638fdbd3b6f0c6c0f5c53e"
+  integrity sha512-ZbRcDo6ERl8os+aVFintWOW9lngm6VEsQ3VumJBmHXcZOw24K6eEW4qDxLGAcy55bFMxCmdvR0p3Rhen7m8p9A==
   dependencies:
     acorn "^8.0.1"
     acorn-walk "^8.0.0"
