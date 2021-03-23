@@ -2587,10 +2587,10 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
-"@types/bro-fs@0.4.2":
-  version "0.4.2"
-  resolved "https://registry.npmjs.org/@types/bro-fs/-/bro-fs-0.4.2.tgz#c8a84901cc2872130bd84cdb18554afe50934002"
-  integrity sha512-JATRI4WgTL3yOOkG8Kmw45FKwZGFque+3kn6dzTQl6zmW5WhsNo3+40WlyhjoU2Vapt+bG7PT29RosB7DmnK7A==
+"@types/bro-fs@0.6.0":
+  version "0.6.0"
+  resolved "https://registry.npmjs.org/@types/bro-fs/-/bro-fs-0.6.0.tgz#843b739c5bd54cc714a63bfad923f187e7d624f4"
+  integrity sha512-tFuVl/ZWPy5TUtmJ6gLjyeUsEy+wXALPcXrxJPb7hUfimP0GykDGhz15D5J7W+QMlpIVQ4LYzCW44ab/4BlXow==
   dependencies:
     "@types/filesystem" "*"
 
