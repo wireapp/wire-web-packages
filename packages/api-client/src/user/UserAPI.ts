@@ -47,12 +47,12 @@ export class UserAPI {
   public static readonly DEFAULT_USERS_PREKEY_BUNDLE_CHUNK_SIZE = 128;
   public static readonly URL = {
     ACTIVATE: '/activate',
+    BY_HANDLE: 'by-handle',
     CALLS: '/calls',
     CLIENTS: 'clients',
     CONTACTS: 'contacts',
     DELETE: '/delete',
     HANDLES: 'handles',
-    BY_HANDLE: 'by-handle',
     LIST_CLIENTS: '/list-clients',
     LIST_USERS: '/list-users',
     PASSWORDRESET: '/password-reset',
