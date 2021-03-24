@@ -10547,10 +10547,10 @@ karma-webpack@4.0.2:
     source-map "^0.7.3"
     webpack-dev-middleware "^3.7.0"
 
-karma@6.1.1, karma@>=0.9:
-  version "6.1.1"
-  resolved "https://registry.npmjs.org/karma/-/karma-6.1.1.tgz#a7539618cca0f2cbb26d5497120ec31fe340c2a1"
-  integrity sha512-vVDFxFGAsclgmFjZA/qGw5xqWdZIWxVD7xLyCukYUYd5xs/uGzYbXGOT5zOruVBQleKEmXIr4H2hzGCTn+M9Cg==
+karma@6.3.0, karma@>=0.9:
+  version "6.3.0"
+  resolved "https://registry.npmjs.org/karma/-/karma-6.3.0.tgz#8291d1ba329a1f57c160b0bd256fb42ae16bfd8b"
+  integrity sha512-Or+x8T4/TWe7ChBaAkdQARjETSbvxsipp5Y+0UMSu4z0YYzy06OA2UdHAmMIx5gLs4a76X916pY1bzGgYuN7BQ==
   dependencies:
     body-parser "^1.19.0"
     braces "^3.0.2"
