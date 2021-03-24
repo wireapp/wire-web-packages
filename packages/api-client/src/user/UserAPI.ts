@@ -40,8 +40,7 @@ import {RequestCancellationError} from './UserError';
 import type {ClientPreKey, PreKeyBundle, QualifiedPreKeyBundle} from '../auth/';
 import type {PublicClient} from '../client/';
 import type {RichInfo} from './RichInfo';
-import type {UserClients} from '../conversation/UserClients';
-import {QualifiedUserClients} from '../conversation';
+import type {UserClients, QualifiedUserClients} from '../conversation/';
 
 export class UserAPI {
   public static readonly DEFAULT_USERS_CHUNK_SIZE = 50;
@@ -535,6 +534,10 @@ export class UserAPI {
     userClientMap: UserClients | QualifiedUserClients,
     limit: number = UserAPI.DEFAULT_USERS_PREKEY_BUNDLE_CHUNK_SIZE,
   ): Promise<UserPreKeyBundleMap> {
+    function isUserClients(obj: any): obj is UserClients {
+      return Array.isArray(Object.keys(obj)[0]);
+    }
+
     const domainOrUserIdChunks = ArrayUtil.chunk(Object.keys(userClientMap), limit);
     const chunksPromises = domainOrUserIdChunks.map(userIdChunk => {
       const rebuiltMap = userIdChunk.reduce<UserClients | QualifiedUserClients>(
@@ -545,13 +548,9 @@ export class UserAPI {
         {},
       );
 
-      if (Array.isArray(Object.keys(userClientMap)[0])) {
-        // `userClientMap` is of type `UserClients`
-        return this.postMultiPreKeyBundlesChunk(rebuiltMap as UserClients);
-      }
-
-      // `userClientMap` is of type `QualifiedUserClients`
-      return this.postMultiQualifiedPreKeyBundlesChunk(rebuiltMap as QualifiedUserClients);
+      return isUserClients(userClientMap)
+        ? this.postMultiPreKeyBundlesChunk(rebuiltMap as UserClients)
+        : this.postMultiQualifiedPreKeyBundlesChunk(rebuiltMap as QualifiedUserClients);
     });
 
     const userPreKeyBundleMapChunks = await Promise.all(chunksPromises);
