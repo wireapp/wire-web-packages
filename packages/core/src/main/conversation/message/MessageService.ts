@@ -23,14 +23,14 @@ import {IUserEntry, IClientEntry, NewOtrMessage} from '@wireapp/protocol-messagi
 import Long from 'long';
 import {bytesToUUID, uuidToBytes} from '@wireapp/commons/src/main/util/StringUtil';
 import {APIClient} from '@wireapp/api-client';
-import {NewOTRMessage, OTRRecipients, QualifiedUserClients, UserClients} from '@wireapp/api-client/src/conversation';
+import {NewOTRMessage, OTRRecipients, UserClients} from '@wireapp/api-client/src/conversation';
 import {Decoder, Encoder} from 'bazinga64';
 
 import {CryptographyService} from '../../cryptography';
 
 type ClientMismatchError = AxiosError<{
   deleted: UserClients;
-  missing: UserClients | QualifiedUserClients;
+  missing: UserClients;
 }>;
 
 export class MessageService {
