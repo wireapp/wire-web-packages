@@ -452,15 +452,10 @@ export class UserAPI {
    * Get a user by (fully qualified) handle.
    * @param handle The handle of a user to search for
    */
-  public async getUserByHandle(handle: string | QualifiedHandle): Promise<User> {
-    const url =
-      typeof handle === 'string'
-        ? `${UserAPI.URL.USERS}/${UserAPI.URL.HANDLES}/${handle}`
-        : `${UserAPI.URL.USERS}/${UserAPI.URL.BY_HANDLE}/${handle.domain}/${handle.handle}`;
-
+  public async getUserByHandle(handle: QualifiedHandle): Promise<User> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url,
+      url: `${UserAPI.URL.USERS}/${UserAPI.URL.BY_HANDLE}/${handle.domain}/${handle.handle}`,
     };
 
     const response = await this.client.sendJSON<User>(config);
