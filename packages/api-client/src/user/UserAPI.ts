@@ -449,7 +449,7 @@ export class UserAPI {
   }
 
   /**
-   * Get a user by (fully qualified) handle.
+   * Get a user by fully qualified handle.
    * @param handle The handle of a user to search for
    */
   public async getUserByHandle(handle: QualifiedHandle): Promise<User> {
