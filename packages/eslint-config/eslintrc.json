@@ -63,7 +63,7 @@
         "name": "fdescribe"
       }
     ],
-    "no-return-await": "error",
+    "no-return-await": "off",
     "no-sequences": "error",
     "no-sparse-arrays": "error",
     "no-trailing-spaces": "error",
