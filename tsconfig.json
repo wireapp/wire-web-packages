@@ -13,6 +13,6 @@
     "removeComments": false,
     "sourceMap": true,
     "strict": true,
-    "target": "es6"
+    "target": "es2017"
   }
 }
