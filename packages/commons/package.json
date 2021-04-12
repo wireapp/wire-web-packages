@@ -34,9 +34,9 @@
   "scripts": {
     "build": "yarn build:node",
     "build:node": "tsc",
-    "clean": "del-cli \"src/**/*{.js,.js.map,.d.ts}\" \"!src/**/*{.test.node.js,.test.js}\" \"!src/test/**/*\"",
+    "clean": "rimraf \"src/!(test)/**/*.{js,js.map,d.ts}\"",
     "dist": "yarn clean && yarn build",
-    "test": "yarn jest",
+    "test": "jest",
     "test:coverage": "yarn test --coverage",
     "test:watch": "yarn test --watch"
   },
