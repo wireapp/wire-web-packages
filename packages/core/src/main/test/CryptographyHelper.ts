@@ -19,7 +19,6 @@
 
 import {Cryptobox} from '@wireapp/cryptobox';
 import * as Proteus from '@wireapp/proteus';
-import type {PreKey} from '@wireapp/proteus/src/main/keys';
 import * as bazinga64 from 'bazinga64';
 
 import type {CryptographyService} from '../cryptography';
@@ -28,7 +27,7 @@ const StoreHelper = require('./StoreHelper');
 
 export async function createEncodedCipherText(
   receiver: Proteus.keys.IdentityKeyPair,
-  preKey: PreKey,
+  preKey: Proteus.PreKey,
   text: string,
 ): Promise<string> {
   const senderEngine = await StoreHelper.createMemoryEngine();
