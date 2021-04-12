@@ -3196,6 +3196,21 @@
   resolved "https://registry.npmjs.org/@wireapp/cbor/-/cbor-4.6.27.tgz#4cedcb77cdcea53f101406704a197cf364217f4b"
   integrity sha512-pv2BmmYOuZPNaDr+4Jk/dr4kJPWIjK2ZB9r1lbcdZA9GaMc299TThwP33Pom5BRVPe79WlunMnnEuAHOk5mZ/Q==
 
+"@wireapp/cbor@4.7.0":
+  version "4.7.0"
+  resolved "https://registry.npmjs.org/@wireapp/cbor/-/cbor-4.7.0.tgz#4793a438e41b902f16b2f655d54418b73d7147b1"
+  integrity sha512-TuCp4UKgRLbmajReC2LX808Przqc4OGzTXwVABfeBxKQselv4lMsJN1dxG97UqfopCytJVzOHEvbRh/GVTqjeA==
+
+"@wireapp/proteus@9.10.1":
+  version "9.10.1"
+  resolved "https://registry.npmjs.org/@wireapp/proteus/-/proteus-9.10.1.tgz#f55100c1067de024149883a6d3001dfd76ed33ac"
+  integrity sha512-mnLPjGtHA/5WABT5cyV1+00ANjw1wAYTeJGyEoD/gtitVIRTZ6SjIm/6Bi07Yn2zJPh/FEVXpQ764InxO39tMg==
+  dependencies:
+    "@types/libsodium-wrappers-sumo" "0.7.5"
+    "@types/node" "~14"
+    "@wireapp/cbor" "4.7.0"
+    libsodium-wrappers-sumo "0.7.9"
+
 "@wireapp/protocol-messaging@1.29.0":
   version "1.29.0"
   resolved "https://registry.npmjs.org/@wireapp/protocol-messaging/-/protocol-messaging-1.29.0.tgz#271e9fb5a14b67c250ada9adc79e8d907f606cba"
