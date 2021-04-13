@@ -3,7 +3,7 @@
     "@types/node": "~14",
     "@wireapp/lru-cache": "3.7.16",
     "@wireapp/priority-queue": "1.6.29",
-    "@wireapp/proteus": "9.10.1",
+    "@wireapp/proteus": "9.10.2",
     "@wireapp/store-engine": "4.5.33",
     "bazinga64": "5.7.32",
     "logdown": "3.3.1"

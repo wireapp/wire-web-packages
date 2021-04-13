@@ -3184,10 +3184,10 @@
   resolved "https://registry.npmjs.org/@wireapp/cbor/-/cbor-4.7.0.tgz#4793a438e41b902f16b2f655d54418b73d7147b1"
   integrity sha512-TuCp4UKgRLbmajReC2LX808Przqc4OGzTXwVABfeBxKQselv4lMsJN1dxG97UqfopCytJVzOHEvbRh/GVTqjeA==
 
-"@wireapp/proteus@9.10.1":
-  version "9.10.1"
-  resolved "https://registry.npmjs.org/@wireapp/proteus/-/proteus-9.10.1.tgz#f55100c1067de024149883a6d3001dfd76ed33ac"
-  integrity sha512-mnLPjGtHA/5WABT5cyV1+00ANjw1wAYTeJGyEoD/gtitVIRTZ6SjIm/6Bi07Yn2zJPh/FEVXpQ764InxO39tMg==
+"@wireapp/proteus@9.10.2":
+  version "9.10.2"
+  resolved "https://registry.npmjs.org/@wireapp/proteus/-/proteus-9.10.2.tgz#613eeed765eae33a72546bd276769f5be00a9f72"
+  integrity sha512-SuPPtYAOgkTUpmFgAukeRJO3o2USmHNdfqSMmBKcMj8YICpo9Dll/7e7H6DVOMITjCyUreg+QMNH6OL/nfM/PQ==
   dependencies:
     "@types/libsodium-wrappers-sumo" "0.7.5"
     "@types/node" "~14"
