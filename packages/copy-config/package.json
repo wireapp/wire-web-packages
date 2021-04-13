@@ -31,7 +31,7 @@
   "scripts": {
     "build": "yarn build:node",
     "build:node": "tsc",
-    "clean": "del-cli \"src/**/{!(*.test.).js?(.map),*.d.ts}\"",
+    "clean": "rimraf \"src/**/{!(*.test).js,*.js.map,*.d.ts}\"",
     "dist": "yarn clean && yarn build",
     "test": "yarn test:node",
     "test:node": "yarn build && jasmine --config=jasmine.json"
