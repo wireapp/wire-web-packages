@@ -71,7 +71,7 @@ describe('cryptobox.store.IndexedDB', () => {
       const bobPreKeyBundle = new Proteus.keys.PreKeyBundle(bob.public_key, preKey);
 
       const sessionId = 'session_with_bob';
-      const proteusSession = await Proteus.session.Session.init_from_prekey(alice, bobPreKeyBundle);
+      const proteusSession = Proteus.session.Session.init_from_prekey(alice, bobPreKeyBundle);
       await store.create_session(sessionId, proteusSession);
 
       const tableName = CryptoboxStore.CryptoboxCRUDStore.STORES.SESSIONS;
@@ -94,7 +94,7 @@ describe('cryptobox.store.IndexedDB', () => {
       const bobPreKeyBundle = new Proteus.keys.PreKeyBundle(bobIdentity.public_key, bobLastResortPreKey);
       const sessionId = 'my_session_with_bob';
 
-      let proteusSession = await Proteus.session.Session.init_from_prekey(aliceIdentity, bobPreKeyBundle);
+      let proteusSession = Proteus.session.Session.init_from_prekey(aliceIdentity, bobPreKeyBundle);
       await store.create_session(sessionId, proteusSession);
 
       expect(proteusSession.local_identity.public_key.fingerprint()).toBe(aliceIdentity.public_key.fingerprint());

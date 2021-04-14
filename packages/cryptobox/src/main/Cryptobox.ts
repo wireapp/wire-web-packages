@@ -275,7 +275,7 @@ export class Cryptobox extends EventEmitter {
       }
 
       if (this.identity) {
-        const session = await ProteusSession.Session.init_from_prekey(this.identity, bundle);
+        const session = ProteusSession.Session.init_from_prekey(this.identity, bundle);
         const cryptobox_session = new CryptoboxSession(sessionId, session);
         return this.session_save(cryptobox_session);
       }

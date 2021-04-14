@@ -199,7 +199,7 @@ describe('cryptobox.Cryptobox', () => {
 
       bob.bundle = new Proteus.keys.PreKeyBundle(bob.identity.public_key, bob.prekey);
 
-      const session = await Proteus.session.Session.init_from_prekey(box.identity, bob.bundle);
+      const session = Proteus.session.Session.init_from_prekey(box.identity, bob.bundle);
       const cryptoBoxSession = new cryptobox.CryptoboxSession(sessionIdUnique, session);
       await box.session_save(cryptoBoxSession);
     });

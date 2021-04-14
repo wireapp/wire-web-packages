@@ -46,7 +46,7 @@ describe('cryptobox.store.CryptoboxCRUDStore', () => {
 
   describe('"delete_all"', () => {
     it('deletes everything from the storage', async () => {
-      const alicePreKeys = await Proteus.keys.PreKey.generate_prekeys(0, 10);
+      const alicePreKeys = Proteus.keys.PreKey.generate_prekeys(0, 10);
 
       const aliceIdentity = new Proteus.keys.IdentityKeyPair();
       const bobIdentity = new Proteus.keys.IdentityKeyPair();
@@ -54,7 +54,7 @@ describe('cryptobox.store.CryptoboxCRUDStore', () => {
       const bobPreKeyBundle = new Proteus.keys.PreKeyBundle(bobIdentity.public_key, bobLastResortPreKey);
       const sessionId = 'my_session_with_bob';
 
-      const sessionWithBob = await Proteus.session.Session.init_from_prekey(aliceIdentity, bobPreKeyBundle);
+      const sessionWithBob = Proteus.session.Session.init_from_prekey(aliceIdentity, bobPreKeyBundle);
       await Promise.all([
         fileStore.save_identity(aliceIdentity),
         fileStore.save_prekeys(alicePreKeys),
@@ -129,7 +129,7 @@ describe('cryptobox.store.CryptoboxCRUDStore', () => {
       const bobPreKeyBundle = new Proteus.keys.PreKeyBundle(bobIdentity.public_key, bobLastResortPreKey);
       const sessionId = 'my_session_with_bob';
 
-      let proteusSession = await Proteus.session.Session.init_from_prekey(aliceIdentity, bobPreKeyBundle);
+      let proteusSession = Proteus.session.Session.init_from_prekey(aliceIdentity, bobPreKeyBundle);
       proteusSession = await fileStore.create_session(sessionId, proteusSession);
       expect(proteusSession.local_identity.public_key.fingerprint()).toBe(aliceIdentity.public_key.fingerprint());
       expect(proteusSession.remote_identity.public_key.fingerprint()).toBe(bobIdentity.public_key.fingerprint());
