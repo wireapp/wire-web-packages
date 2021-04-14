@@ -48,9 +48,9 @@ describe('cryptobox.store.CryptoboxCRUDStore', () => {
     it('deletes everything from the storage', async () => {
       const alicePreKeys = await Proteus.keys.PreKey.generate_prekeys(0, 10);
 
-      const aliceIdentity = await new Proteus.keys.IdentityKeyPair();
-      const bobIdentity = await new Proteus.keys.IdentityKeyPair();
-      const bobLastResortPreKey = await new Proteus.keys.PreKey(Proteus.keys.PreKey.MAX_PREKEY_ID);
+      const aliceIdentity = new Proteus.keys.IdentityKeyPair();
+      const bobIdentity = new Proteus.keys.IdentityKeyPair();
+      const bobLastResortPreKey = new Proteus.keys.PreKey(Proteus.keys.PreKey.MAX_PREKEY_ID);
       const bobPreKeyBundle = new Proteus.keys.PreKeyBundle(bobIdentity.public_key, bobLastResortPreKey);
       const sessionId = 'my_session_with_bob';
 
@@ -68,7 +68,7 @@ describe('cryptobox.store.CryptoboxCRUDStore', () => {
   describe('"delete_prekey"', () => {
     it('deletes a PreKey', async () => {
       const preKeyId = 0;
-      const preKey = await new Proteus.keys.PreKey(preKeyId);
+      const preKey = new Proteus.keys.PreKey(preKeyId);
 
       const savedPreKey = await fileStore.save_prekey(preKey);
       expect(savedPreKey.key_id).toBe(preKeyId);
@@ -80,7 +80,7 @@ describe('cryptobox.store.CryptoboxCRUDStore', () => {
   describe('"load_prekey"', () => {
     it('saves and loads a single PreKey', async () => {
       const preKeyId = 0;
-      const preKey = await new Proteus.keys.PreKey(preKeyId);
+      const preKey = new Proteus.keys.PreKey(preKeyId);
 
       const savedPreKey = await fileStore.save_prekey(preKey);
       expect(savedPreKey.key_id).toBe(preKeyId);
@@ -92,9 +92,9 @@ describe('cryptobox.store.CryptoboxCRUDStore', () => {
   describe('"load_prekeys"', () => {
     it('loads multiple PreKeys', async () => {
       await Promise.all([
-        fileStore.save_prekey(await new Proteus.keys.PreKey(1)),
-        fileStore.save_prekey(await new Proteus.keys.PreKey(2)),
-        fileStore.save_prekey(await new Proteus.keys.PreKey(3)),
+        fileStore.save_prekey(new Proteus.keys.PreKey(1)),
+        fileStore.save_prekey(new Proteus.keys.PreKey(2)),
+        fileStore.save_prekey(new Proteus.keys.PreKey(3)),
       ]);
       const preKeys = await fileStore.load_prekeys();
       expect(preKeys).toBeDefined();
@@ -103,7 +103,7 @@ describe('cryptobox.store.CryptoboxCRUDStore', () => {
 
   describe('"save_identity"', () => {
     it('saves the local identity', async () => {
-      const ikp = await new Proteus.keys.IdentityKeyPair();
+      const ikp = new Proteus.keys.IdentityKeyPair();
       const identity = await fileStore.save_identity(ikp);
       expect(identity.public_key.fingerprint()).toEqual(ikp.public_key.fingerprint());
     });
@@ -123,9 +123,9 @@ describe('cryptobox.store.CryptoboxCRUDStore', () => {
 
   describe('"update_session"', () => {
     it('updates an already persisted session', async () => {
-      const aliceIdentity = await new Proteus.keys.IdentityKeyPair();
-      const bobIdentity = await new Proteus.keys.IdentityKeyPair();
-      const bobLastResortPreKey = await new Proteus.keys.PreKey(Proteus.keys.PreKey.MAX_PREKEY_ID);
+      const aliceIdentity = new Proteus.keys.IdentityKeyPair();
+      const bobIdentity = new Proteus.keys.IdentityKeyPair();
+      const bobLastResortPreKey = new Proteus.keys.PreKey(Proteus.keys.PreKey.MAX_PREKEY_ID);
       const bobPreKeyBundle = new Proteus.keys.PreKeyBundle(bobIdentity.public_key, bobLastResortPreKey);
       const sessionId = 'my_session_with_bob';
 
@@ -148,8 +148,8 @@ describe('cryptobox.store.CryptoboxCRUDStore', () => {
       const alice = new Cryptobox(engine, 1);
       const sessionId = 'session_with_bob';
 
-      const bob = await new Proteus.keys.IdentityKeyPair();
-      const preKey = await new Proteus.keys.PreKey(Proteus.keys.PreKey.MAX_PREKEY_ID);
+      const bob = new Proteus.keys.IdentityKeyPair();
+      const preKey = new Proteus.keys.PreKey(Proteus.keys.PreKey.MAX_PREKEY_ID);
       const bobPreKeyBundle = new Proteus.keys.PreKeyBundle(bob.public_key, preKey);
 
       const allPreKeys = await alice.create();
@@ -167,8 +167,8 @@ describe('cryptobox.store.CryptoboxCRUDStore', () => {
       const alice = new Cryptobox(engine, 1);
       const sessionId = 'session_with_bob';
 
-      const bob = await new Proteus.keys.IdentityKeyPair();
-      const preKey = await new Proteus.keys.PreKey(Proteus.keys.PreKey.MAX_PREKEY_ID);
+      const bob = new Proteus.keys.IdentityKeyPair();
+      const preKey = new Proteus.keys.PreKey(Proteus.keys.PreKey.MAX_PREKEY_ID);
       const bobPreKeyBundle = new Proteus.keys.PreKeyBundle(bob.public_key, preKey);
 
       const allPreKeys = await alice.create();
