@@ -173,9 +173,9 @@ describe('cryptobox.Cryptobox', () => {
     describe('"serialize_prekey"', () => {
       it('generates a JSON format', async () => {
         const box = new cryptobox.Cryptobox(engine, 10);
-        box.identity = await Proteus.keys.IdentityKeyPair.new();
+        box.identity = await new Proteus.keys.IdentityKeyPair();
         const preKeyId = 72;
-        const preKey = await Proteus.keys.PreKey.new(preKeyId);
+        const preKey = await new Proteus.keys.PreKey(preKeyId);
         const json = box.serialize_prekey(preKey);
         expect(json.id).toBe(preKeyId);
         const decodedPreKeyBundleBuffer = sodium.from_base64(json.key, sodium.base64_variants.ORIGINAL).buffer;
@@ -193,8 +193,8 @@ describe('cryptobox.Cryptobox', () => {
       await box.create();
 
       const bob = {
-        identity: await Proteus.keys.IdentityKeyPair.new(),
-        prekey: await Proteus.keys.PreKey.new(Proteus.keys.PreKey.MAX_PREKEY_ID),
+        identity: await new Proteus.keys.IdentityKeyPair(),
+        prekey: await new Proteus.keys.PreKey(Proteus.keys.PreKey.MAX_PREKEY_ID),
       };
 
       bob.bundle = new Proteus.keys.PreKeyBundle(bob.identity.public_key, bob.prekey);

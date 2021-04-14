@@ -65,9 +65,9 @@ describe('cryptobox.store.IndexedDB', () => {
     it('saves a session with meta data', async () => {
       const store = await createStore();
 
-      const alice = await Proteus.keys.IdentityKeyPair.new();
-      const bob = await Proteus.keys.IdentityKeyPair.new();
-      const preKey = await Proteus.keys.PreKey.new(Proteus.keys.PreKey.MAX_PREKEY_ID);
+      const alice = await new Proteus.keys.IdentityKeyPair();
+      const bob = await new Proteus.keys.IdentityKeyPair();
+      const preKey = await new Proteus.keys.PreKey(Proteus.keys.PreKey.MAX_PREKEY_ID);
       const bobPreKeyBundle = new Proteus.keys.PreKeyBundle(bob.public_key, preKey);
 
       const sessionId = 'session_with_bob';
@@ -88,9 +88,9 @@ describe('cryptobox.store.IndexedDB', () => {
     it('updates an already persisted session', async () => {
       const store = await createStore();
 
-      const aliceIdentity = await Proteus.keys.IdentityKeyPair.new();
-      const bobIdentity = await Proteus.keys.IdentityKeyPair.new();
-      const bobLastResortPreKey = await Proteus.keys.PreKey.new(Proteus.keys.PreKey.MAX_PREKEY_ID);
+      const aliceIdentity = await new Proteus.keys.IdentityKeyPair();
+      const bobIdentity = await new Proteus.keys.IdentityKeyPair();
+      const bobLastResortPreKey = await new Proteus.keys.PreKey(Proteus.keys.PreKey.MAX_PREKEY_ID);
       const bobPreKeyBundle = new Proteus.keys.PreKeyBundle(bobIdentity.public_key, bobLastResortPreKey);
       const sessionId = 'my_session_with_bob';
 
@@ -117,8 +117,8 @@ describe('cryptobox.store.IndexedDB', () => {
       const alice = new Cryptobox(store.engine, 1);
       const sessionId = 'session_with_bob';
 
-      const bob = await Proteus.keys.IdentityKeyPair.new();
-      const preKey = await Proteus.keys.PreKey.new(Proteus.keys.PreKey.MAX_PREKEY_ID);
+      const bob = await new Proteus.keys.IdentityKeyPair();
+      const preKey = await new Proteus.keys.PreKey(Proteus.keys.PreKey.MAX_PREKEY_ID);
       const bobPreKeyBundle = new Proteus.keys.PreKeyBundle(bob.public_key, preKey);
 
       const allPreKeys = await alice.create();
@@ -140,8 +140,8 @@ describe('cryptobox.store.IndexedDB', () => {
       const alice = new Cryptobox(store.engine, 1);
       const sessionId = 'session_with_bob';
 
-      const bob = await Proteus.keys.IdentityKeyPair.new();
-      const preKey = await Proteus.keys.PreKey.new(Proteus.keys.PreKey.MAX_PREKEY_ID);
+      const bob = await new Proteus.keys.IdentityKeyPair();
+      const preKey = await new Proteus.keys.PreKey(Proteus.keys.PreKey.MAX_PREKEY_ID);
       const bobPreKeyBundle = new Proteus.keys.PreKeyBundle(bob.public_key, preKey);
 
       const allPreKeys = await alice.create();
