@@ -260,6 +260,37 @@ export class APIClient extends EventEmitter {
     return this.createContext(accessToken.user, loginData.clientType);
   }
 
+  public async loginWithToken(accessToken: string) {
+    const [token, version, _keyIndex, expirationDateInSeconds, _type, _tag, userId, _clientId] = accessToken.split('.');
+
+    const tokenVersion = version.split('=')[1];
+
+    const expirationDateInMillis = Number(expirationDateInSeconds.split('=')[1]) * 1000;
+
+    const expiresInMillis = expirationDateInMillis - Date.now();
+
+    const expiresInSeconds = Math.max(1000, expiresInMillis) / 1000;
+
+    if (tokenVersion !== '1') {
+      throw new Error(`Unsupported access token version "${tokenVersion}".`);
+    }
+
+    const accessTokenData: AccessTokenData = {
+      access_token: token,
+      expires_in: expiresInSeconds,
+      token_type: 'Bearer',
+      user: userId.split('=')[1],
+    };
+
+    console.info('accessTokenData', accessTokenData);
+
+    // 1. Parse Access Token: ABC==.v=1.k=1.d=1618838628.t=a.l=.u=39b7f597-dfd1-4dff-86f5-fe1b79cb70a0.c=4720693440453917158
+    // 1. Create expiration... Date * 1000, check with current date, max expiration is 0
+    // 1. Create Access Token prop
+    // 1. Fetch client data
+    // 1. Create context
+  }
+
   public async register(userAccount: RegisterData, clientType: ClientType = ClientType.PERMANENT): Promise<Context> {
     if (this.context) {
       await this.logout();
