@@ -17,10 +17,8 @@
  *
  */
 
-import {UserClients} from './UserClients';
-
-export interface QualifiedUserClients {
-  [domain: string]: UserClients;
-  /** users without federated domain */
-  none: UserClients;
+export interface QualifiedId {
+  /** users without federated domain will have 'none' as domain */
+  domain: string;
+  id: string;
 }

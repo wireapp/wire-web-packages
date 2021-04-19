@@ -23,4 +23,8 @@ export interface QualifiedPublicClients {
   [domain: string]: {
     [userId: string]: PublicClient[];
   };
+  /** users without federated domain */
+  none: {
+    [userId: string]: PublicClient[];
+  };
 }
