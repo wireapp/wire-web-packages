@@ -19,12 +19,13 @@
 
 import {PublicClient} from './PublicClient';
 
-export interface QualifiedPublicClients {
+export type QualifiedPublicClients = {
   [domain: string]: {
     [userId: string]: PublicClient[];
   };
+} & {
   /** users without federated domain */
-  none: {
+  none?: {
     [userId: string]: PublicClient[];
   };
-}
+};
