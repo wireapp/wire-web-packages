@@ -61,6 +61,7 @@ import {
 import {UserAPI} from './user/';
 import type {Config} from './Config';
 import {TeamSearchAPI} from './team/search';
+import {parseAccessToken} from './auth/parseAccessToken';
 
 const {version}: {version: string} = require('../package.json');
 
@@ -260,35 +261,21 @@ export class APIClient extends EventEmitter {
     return this.createContext(accessToken.user, loginData.clientType);
   }
 
-  public async loginWithToken(accessToken: string) {
-    const [token, version, _keyIndex, expirationDateInSeconds, _type, _tag, userId, _clientId] = accessToken.split('.');
-
-    const tokenVersion = version.split('=')[1];
-
-    const expirationDateInMillis = Number(expirationDateInSeconds.split('=')[1]) * 1000;
-
-    const expiresInMillis = expirationDateInMillis - Date.now();
-
-    const expiresInSeconds = Math.max(1000, expiresInMillis) / 1000;
-
-    if (tokenVersion !== '1') {
-      throw new Error(`Unsupported access token version "${tokenVersion}".`);
-    }
+  public async loginWithToken(accessTokenString: string) {
+    const {userId, clientId} = parseAccessToken(accessTokenString);
 
     const accessTokenData: AccessTokenData = {
-      access_token: token,
-      expires_in: expiresInSeconds,
+      access_token: accessTokenString,
+      expires_in: 1,
       token_type: 'Bearer',
-      user: userId.split('=')[1],
+      user: userId,
     };
 
-    console.info('accessTokenData', accessTokenData);
+    await this.accessTokenStore.updateToken(accessTokenData);
 
-    // 1. Parse Access Token: ABC==.v=1.k=1.d=1618838628.t=a.l=.u=39b7f597-dfd1-4dff-86f5-fe1b79cb70a0.c=4720693440453917158
-    // 1. Create expiration... Date * 1000, check with current date, max expiration is 0
-    // 1. Create Access Token prop
-    // 1. Fetch client data
-    // 1. Create context
+    const {type} = await this.client.api.getClient(clientId);
+
+    return this.createContext(userId, type);
   }
 
   public async register(userAccount: RegisterData, clientType: ClientType = ClientType.PERMANENT): Promise<Context> {
