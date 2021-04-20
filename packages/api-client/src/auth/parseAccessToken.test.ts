@@ -27,7 +27,7 @@ describe('parseAccessToken', () => {
     expect(parsedAccessToken.tag).toBe('');
     expect(parsedAccessToken.token).toBe('ABC==');
     expect(parsedAccessToken.type).toBe(AccessTokenType.ACCESS_DATA);
-    expect(parsedAccessToken.userData).toBeUndefined();
+    expect(parsedAccessToken.userData).toBe('');
     expect(parsedAccessToken.userId).toBe('39b7f597-dfd1-4dff-86f5-fe1b79cb70a0');
     expect(parsedAccessToken.version).toBe(1);
   });
