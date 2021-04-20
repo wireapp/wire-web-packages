@@ -32,7 +32,7 @@ describe('parseAccessToken', () => {
     expect(parsedAccessToken.version).toBe(1);
   });
 
-  it('parses cookie information', () => {
+  it('parses token information from a cookie', () => {
     const zuid = 'XYZ==.v=1.k=1.d=1621428214.t=u.l=.u=8a88604a-430a-42ed-966e-19a35c3d292a.r=1019f4ca';
     const parsedCookie = parseAccessToken(zuid);
     expect(parsedCookie.type).toBe(AccessTokenType.USER_DATA);
