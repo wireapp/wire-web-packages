@@ -29,7 +29,7 @@ export interface AccessTokenInfo {
   tag: string;
   token: string;
   type: AccessTokenType;
-  /** User data only exists in fields from cookies (i.e. "zuid"). */
+  /** User data only exists in fields from cookies (e.g. "zuid") */
   userData?: string;
   userId: string;
   version: number;
