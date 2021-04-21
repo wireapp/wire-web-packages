@@ -21,7 +21,7 @@
 
 import {APIClient} from './APIClient';
 import {ClientType} from './client';
-import {AccessTokenData} from './auth';
+import type {AccessTokenData} from './auth';
 
 describe('Client', () => {
   describe('connect', () => {
