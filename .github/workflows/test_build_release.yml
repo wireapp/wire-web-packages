@@ -76,7 +76,7 @@ jobs:
           echo "HAS_UPDATES=$(npx lerna updated > /dev/null 2>&1; echo "${?}")" >> $GITHUB_ENV
           echo -e "HAS_UPDATES = ${HAS_UPDATES}"
           echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> "${HOME}/.npmrc"
-          git config --global user.email webapp+travis@wire.com
+          git config --global user.email webapp+otto@wire.com
           git config --global user.name "Otto the Bot"
 
       - name: Release
