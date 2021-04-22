@@ -31,7 +31,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "eslint --fix"
+      "eslint --fix --quiet"
     ],
     "*.{json,md,scss,yml}": [
       "prettier --write"
@@ -44,7 +44,7 @@
     "clean": "lerna run --parallel clean",
     "dist": "yarn clean && lerna run dist",
     "fix": "yarn fix:other && yarn fix:code",
-    "fix:code": "yarn lint:code --fix",
+    "fix:code": "yarn lint:code --fix --quiet",
     "fix:other": "yarn prettier --write",
     "lint": "yarn lint:code && yarn lint:other",
     "lint:code": "eslint --ignore-path .gitignore --ext .js,.jsx,.ts,.tsx .",
