@@ -73,7 +73,8 @@ jobs:
       - name: Set release environment variables
         if: env.BRANCH_NAME == 'master'
         run: |
-          echo "HAS_UPDATES=$(npx lerna updated > /dev/null 2>&1; echo "${?}")" >> $GITHUB_ENV
+          HAS_UPDATES=$(npx lerna updated > /dev/null 2>&1; echo "${?}")"
+          echo "HAS_UPDATES=${HAS_UPDATES}" >> $GITHUB_ENV
           echo -e "HAS_UPDATES = ${HAS_UPDATES}"
           echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> "${HOME}/.npmrc"
           git config --global user.email webapp+otto@wire.com
