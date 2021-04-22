@@ -43,7 +43,9 @@ jobs:
           echo -e "GITHUB_CONTEXT = ${GITHUB_CONTEXT}"
 
       - name: Skip CI
-        if: contains(env.TITLE || env.COMMIT_MESSAGE, '[skip ci]') || contains(env.TITLE || env.COMMIT_MESSAGE, '[ci skip]')
+        if: |
+          contains(env.TITLE || env.COMMIT_MESSAGE, '[skip ci]') ||
+          contains(env.TITLE || env.COMMIT_MESSAGE, '[ci skip]')
         uses: andymckay/cancel-action@0.2
 
       - name: Cancel Previous Runs
@@ -71,14 +73,20 @@ jobs:
       - name: Set release environment variables
         if: env.BRANCH_NAME == 'master'
         run: |
-          echo "HAS_UPDATES=$(yarn lerna updated > /dev/null 2>&1; echo "${?}")" >> $GITHUB_ENV
+          echo "HAS_UPDATES=$(npx lerna updated > /dev/null 2>&1; echo "${?}")" >> $GITHUB_ENV
           echo -e "HAS_UPDATES = ${HAS_UPDATES}"
-          echo "//registry.npmjs.org/:_authToken=${{secrets.NPM_PUBLISH_TOKEN}}" >> "${HOME}/.npmrc"
+          echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> "${HOME}/.npmrc"
           git config --global user.email webapp+travis@wire.com
-          git config --global user.name "Wire Travis CI"
+          git config --global user.name "Otto the Bot"
 
       - name: Release
-        if: env.BRANCH_NAME == 'master' && env.HAS_UPDATES == '0' && !startsWith(env.TITLE, 'chore') && !startsWith(env.TITLE, 'test')
+        env:
+          NPM_TOKEN: ${{secrets.NPM_PUBLISH_TOKEN}}
+        if: |
+          env.BRANCH_NAME == 'master' &&
+          env.HAS_UPDATES == '0' &&
+          !startsWith(env.TITLE, 'chore') &&
+          !startsWith(env.TITLE, 'test')
         run: yarn release
 
       - name: Notify CI error
