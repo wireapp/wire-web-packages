@@ -50,7 +50,7 @@
     "lint:code": "eslint --ignore-path .gitignore --ext .js,.jsx,.ts,.tsx .",
     "lint:other": "yarn prettier --list-different",
     "prettier": "prettier \"**/*.{json,md,scss,yml}\"",
-    "release": "lerna publish && (lerna publish from-package || true)",
+    "release": "lerna publish --no-verify-access && (lerna publish --no-verify-access from-package || true)",
     "test": "yarn && node bin/testUpdated.js",
     "test:all": "yarn && yarn dist && lerna run --no-sort --concurrency 8 test"
   },
