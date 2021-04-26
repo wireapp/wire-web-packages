@@ -24,11 +24,7 @@ import {TeamAPI} from '../team/TeamAPI';
 import {handleProgressEvent, HttpClient, ProgressCallback, RequestCancelable, SyntheticErrorLabel} from '../../http/';
 import type {MemberData, Members} from '../member/';
 import {RequestCancellationError} from '../../user';
-
-export interface MemberCSVResponse {
-  buffer: ArrayBuffer;
-  mimeType: string;
-}
+import {MemberCSVResponse} from './MemberCSVResponse';
 
 export class MemberAPI {
   // Maximum 1600 due to "413 Request Entity Too Large" response
