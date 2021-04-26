@@ -143,7 +143,6 @@ export class MemberAPI {
       cancelToken: cancelSource.token,
       method: 'get',
       onDownloadProgress: handleProgressEvent(progressCallback),
-      params: {},
       responseType: 'arraybuffer',
       url: `${TeamAPI.URL.TEAMS}/${teamId}/${MemberAPI.URL.MEMBERS}/${MemberAPI.URL.CSV}`,
     };
