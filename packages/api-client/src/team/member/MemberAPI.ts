@@ -17,7 +17,7 @@
  *
  */
 
-import {AxiosRequestConfig, CancelToken} from 'axios';
+import axios, {AxiosRequestConfig} from 'axios';
 import {ArrayUtil} from '@wireapp/commons';
 
 import {TeamAPI} from '../team/TeamAPI';
@@ -138,7 +138,7 @@ export class MemberAPI {
     teamId: string,
     progressCallback?: ProgressCallback,
   ): Promise<RequestCancelable<MemberCSVResponse>> {
-    const cancelSource = CancelToken.source();
+    const cancelSource = axios.CancelToken.source();
     const config: AxiosRequestConfig = {
       cancelToken: cancelSource.token,
       method: 'get',
