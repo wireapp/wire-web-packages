@@ -82,7 +82,7 @@ jobs:
 
       - name: Release
         env:
-          NPM_TOKEN: ${{secrets.NPM_PUBLISH_TOKEN}}
+          NPM_TOKEN: ${{secrets.WEBTEAM_NPM_TOKEN}}
         if: |
           env.BRANCH_NAME == 'master' &&
           env.HAS_UPDATES == '0' &&
