@@ -220,6 +220,9 @@ export class APIClient extends EventEmitter {
       payment: {
         api: new PaymentAPI(this.transport.http),
       },
+      scim: {
+        api: new ScimAPI(this.transport.http),
+      },
       search: {
         api: new TeamSearchAPI(this.transport.http),
       },
