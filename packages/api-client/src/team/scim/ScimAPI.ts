@@ -58,7 +58,7 @@ export class ScimAPI {
       url: `${ScimAPI.URL.SCIM}/${ScimAPI.URL.AUTH_TOKENS}`,
     };
 
-    const response = await this.client.sendXML<NewScimToken>(config);
+    const response = await this.client.sendJSON<NewScimToken>(config);
     return response.data;
   }
 }
