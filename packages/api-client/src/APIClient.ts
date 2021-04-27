@@ -62,7 +62,7 @@ import {UserAPI} from './user/';
 import type {Config} from './Config';
 import {TeamSearchAPI} from './team/search';
 import {parseAccessToken} from './auth/parseAccessToken';
-import {ScimAPI} from './team/scim/SCIMAPI';
+import {ScimAPI} from './team/scim/ScimAPI';
 
 const {version}: {version: string} = require('../package.json');
 
