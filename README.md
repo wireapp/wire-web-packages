@@ -15,10 +15,9 @@ Collection of npm modules created by Wire's web team:
 - [@wireapp/bot-api](https://npmjs.com/package/@wireapp/bot-api)
 - [@wireapp/changelog-bot](https://npmjs.com/package/@wireapp/changelog-bot)
 
-**Common utilities**
+**Commons**
 
 - [@wireapp/commons](https://npmjs.com/package/@wireapp/commons)
-- [@wireapp/lru-cache](https://npmjs.com/package/@wireapp/lru-cache)
 - [@wireapp/priority-queue](https://npmjs.com/package/@wireapp/priority-queue)
 - [@wireapp/store-engine](https://npmjs.com/package/@wireapp/store-engine)
 
@@ -33,12 +32,9 @@ Collection of npm modules created by Wire's web team:
 - [@wireapp/cli-client](https://npmjs.com/package/@wireapp/cli-client)
 - [@wireapp/core](https://npmjs.com/package/@wireapp/core)
 
-**Cryptography**
+**Encoding**
 
 - [bazinga64](https://npmjs.com/package/bazinga64)
-- [@wireapp/cbor](https://npmjs.com/package/@wireapp/cbor)
-- [@wireapp/cryptobox](https://npmjs.com/package/@wireapp/cryptobox)
-- [@wireapp/proteus](https://npmjs.com/package/@wireapp/proteus)
 
 **Internal tools**
 
