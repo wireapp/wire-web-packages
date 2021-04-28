@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@types/node": "~14"
+    "@types/node": "~15"
   },
   "devDependencies": {
     "@types/karma": "6.3.0",

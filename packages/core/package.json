@@ -4,7 +4,7 @@
   },
   "dependencies": {
     "@types/long": "4.0.1",
-    "@types/node": "~14",
+    "@types/node": "~15",
     "@wireapp/api-client": "12.9.0",
     "@wireapp/cryptobox": "12.3.0",
     "bazinga64": "5.7.34",
