@@ -3185,10 +3185,10 @@
   resolved "https://registry.npmjs.org/@wireapp/cbor/-/cbor-4.7.1.tgz#83d5d4cfc1f3924b7c491e6a03416fad313c4f0c"
   integrity sha512-AgSMtgHmKwjJ31mCPFGoXvHbM+v4ODIJpBBU3J4GM5u827St7YmlnI+u+OZwA9PgRAwKliQbyumtShGVn0cKMw==
 
-"@wireapp/cryptobox@12.5.0":
-  version "12.5.0"
-  resolved "https://registry.npmjs.org/@wireapp/cryptobox/-/cryptobox-12.5.0.tgz#d6da95ef22ce05c8e68a712548545e7584021c87"
-  integrity sha512-KDpNdWiaqQfZ3qf73fpnmOCnX6CmEsaZag/90f3pYBIn9rDIGYsXQBOlif+5b7vPxg/8Hvdgtjt7xpTHy7J2/w==
+"@wireapp/cryptobox@12.5.1":
+  version "12.5.1"
+  resolved "https://registry.npmjs.org/@wireapp/cryptobox/-/cryptobox-12.5.1.tgz#a25830b43267aed7f64dbb135b3eddbc1f83c832"
+  integrity sha512-fjo0ths0CISXnt4Pt00Bpg9WqLSt/OBFA1tqv5xSRsVY9t2h+uDv5t6BmUdRTNCWOlEVTlDkxHkqDopj/00vbw==
   dependencies:
     "@types/karma" "6.3.0"
     "@wireapp/lru-cache" "3.8.0"
