@@ -34,6 +34,7 @@ import {
 import {BackendErrorMapper, ConnectionState, ContentType, NetworkError, StatusCode} from '../http/';
 import {ObfuscationUtil} from '../obfuscation/';
 import {sendRequestWithCookie} from '../shims/node/cookie';
+import {Config} from '../Config';
 
 enum TOPIC {
   ON_CONNECTION_STATE_CHANGE = 'HttpClient.TOPIC.ON_CONNECTION_STATE_CHANGE',
@@ -53,7 +54,11 @@ export class HttpClient extends EventEmitter {
   private readonly requestQueue: PriorityQueue;
   public static readonly TOPIC = TOPIC;
 
-  constructor(private readonly baseUrl: string, public accessTokenStore: AccessTokenStore) {
+  constructor(
+    private readonly baseUrl: string,
+    public accessTokenStore: AccessTokenStore,
+    private readonly config: Config,
+  ) {
     super();
 
     this.connectionState = ConnectionState.UNDEFINED;
@@ -99,6 +104,11 @@ export class HttpClient extends EventEmitter {
     firstTry = true,
   ): Promise<AxiosResponse<T>> {
     config.baseURL = this.baseUrl;
+    config.headers = {
+      ...config.headers,
+      'X-Client-Platform': this.config.platform,
+      'X-Client-Version': this.config.version,
+    };
 
     if (this.accessTokenStore.accessToken) {
       const {token_type, access_token} = this.accessTokenStore.accessToken;
