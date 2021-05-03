@@ -3185,10 +3185,10 @@
   resolved "https://registry.npmjs.org/@wireapp/cbor/-/cbor-4.7.1.tgz#83d5d4cfc1f3924b7c491e6a03416fad313c4f0c"
   integrity sha512-AgSMtgHmKwjJ31mCPFGoXvHbM+v4ODIJpBBU3J4GM5u827St7YmlnI+u+OZwA9PgRAwKliQbyumtShGVn0cKMw==
 
-"@wireapp/cryptobox@12.5.1":
-  version "12.5.1"
-  resolved "https://registry.npmjs.org/@wireapp/cryptobox/-/cryptobox-12.5.1.tgz#a25830b43267aed7f64dbb135b3eddbc1f83c832"
-  integrity sha512-fjo0ths0CISXnt4Pt00Bpg9WqLSt/OBFA1tqv5xSRsVY9t2h+uDv5t6BmUdRTNCWOlEVTlDkxHkqDopj/00vbw==
+"@wireapp/cryptobox@12.5.3":
+  version "12.5.3"
+  resolved "https://registry.npmjs.org/@wireapp/cryptobox/-/cryptobox-12.5.3.tgz#ef4a56dedf59148177102d894301ccc26df62b90"
+  integrity sha512-bBZZrxsfiWBguPndegct0Xyi8spjZbKFJVuGEhUWwxC2Wh0TQSLGJAwNURKNJ3TmSQ8UewB0kaOOkZpOUtEAqA==
   dependencies:
     "@types/karma" "6.3.0"
     "@wireapp/lru-cache" "3.8.0"
@@ -3196,7 +3196,6 @@
     "@wireapp/proteus" "9.11.0"
     "@wireapp/store-engine" "4.6.0"
     bazinga64 "5.7.33"
-    logdown "3.3.1"
 
 "@wireapp/lru-cache@3.8.0":
   version "3.8.0"
