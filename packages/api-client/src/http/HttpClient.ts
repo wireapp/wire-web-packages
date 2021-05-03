@@ -49,18 +49,16 @@ export interface HttpClient {
 const FILE_SIZE_100_MB = 104857600;
 
 export class HttpClient extends EventEmitter {
+  private readonly baseUrl: string;
   private readonly logger: logdown.Logger;
   private connectionState: ConnectionState;
   private readonly requestQueue: PriorityQueue;
   public static readonly TOPIC = TOPIC;
 
-  constructor(
-    private readonly baseUrl: string,
-    public accessTokenStore: AccessTokenStore,
-    private readonly config: Config,
-  ) {
+  constructor(private readonly config: Config, public accessTokenStore: AccessTokenStore) {
     super();
 
+    this.baseUrl = config.urls.rest;
     this.connectionState = ConnectionState.UNDEFINED;
 
     this.logger = logdown('@wireapp/api-client/http/HttpClient', {
