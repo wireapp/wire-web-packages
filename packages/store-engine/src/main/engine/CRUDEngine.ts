@@ -79,8 +79,6 @@ export interface CRUDEngineBaseCollection extends CRUDEngineBase {
 
   /**
    * Returns all primary keys of records that are stored in a table.
-   * @param tableName Table name
-   * @returns Returns an array of primary keys.
    */
   readAllPrimaryKeys(tableName: string): Promise<string[]>;
 
