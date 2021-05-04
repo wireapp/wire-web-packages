@@ -3276,6 +3276,13 @@
   dependencies:
     protobufjs "6.10.2"
 
+"@wireapp/store-engine@4.6.0":
+  version "4.6.0"
+  resolved "https://registry.npmjs.org/@wireapp/store-engine/-/store-engine-4.6.0.tgz#cc0a12efc663c163d47f8e6b4cdd1bfaadf49601"
+  integrity sha512-0ZRXF3CK+0KLW+sjnvK3Q8kq1YUVXE3Xk29HRzJmu52HTo5mFc3iH1/sdC1k5IrKbB3/cyQ4jKAbg51S46DSaQ==
+  dependencies:
+    "@types/node" "~14"
+
 "@wireapp/websql@0.0.17":
   version "0.0.17"
   resolved "https://registry.npmjs.org/@wireapp/websql/-/websql-0.0.17.tgz#f563e43deb2b9e510cdf4b8fb9c53b4520888e93"
