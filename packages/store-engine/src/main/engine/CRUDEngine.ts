@@ -72,8 +72,6 @@ export interface CRUDEngineBase {
 export interface CRUDEngineBaseCollection extends CRUDEngineBase {
   /**
    * Reads all records from a table.
-   * @param tableName Table name
-   * @returns Resolves with an array of records from a table.
    */
   readAll<EntityType>(tableName: string): Promise<EntityType[]>;
 
