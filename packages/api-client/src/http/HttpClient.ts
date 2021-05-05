@@ -104,11 +104,13 @@ export class HttpClient extends EventEmitter {
     tokenAsParam = false,
     firstTry = true,
   ): Promise<AxiosResponse<T>> {
-    config.headers = {
-      ...config.headers,
-      'X-Client-Platform': this.config.platform,
-      'X-Client-Version': this.config.version,
-    };
+    if (this.config.platform) {
+      config.headers['X-Client-Platform'] = this.config.platform;
+    }
+
+    if (this.config.version) {
+      config.headers['X-Client-Version'] = this.config.version;
+    }
 
     if (this.accessTokenStore.accessToken) {
       const {token_type, access_token} = this.accessTokenStore.accessToken;

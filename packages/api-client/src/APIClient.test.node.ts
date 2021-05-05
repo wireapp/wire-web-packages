@@ -40,19 +40,19 @@ describe('APIClient', () => {
   describe('constructor', () => {
     it('constructs a client with production backend and StoreEngine by default', () => {
       const client = new APIClient();
-      expect(client.transport.http['baseUrl']).toBe(APIClient.BACKEND.PRODUCTION.rest);
+      expect(client.transport.http['config'].urls.rest).toBe(APIClient.BACKEND.PRODUCTION.rest);
       expect(client.transport.ws['baseUrl']).toBe(APIClient.BACKEND.PRODUCTION.ws);
     });
 
     it('constructs StoreEngine when only the URLs is provided', () => {
       const client = new APIClient({urls: APIClient.BACKEND.PRODUCTION});
-      expect(client.transport.http['baseUrl']).toBe(APIClient.BACKEND.PRODUCTION.rest);
+      expect(client.transport.http['config'].urls.rest).toBe(APIClient.BACKEND.PRODUCTION.rest);
       expect(client.transport.ws['baseUrl']).toBe(APIClient.BACKEND.PRODUCTION.ws);
     });
 
     it('constructs URLs when only the StoreEngine is provided', () => {
       const client = new APIClient();
-      expect(client.transport.http['baseUrl']).toBe(APIClient.BACKEND.PRODUCTION.rest);
+      expect(client.transport.http['config'].urls.rest).toBe(APIClient.BACKEND.PRODUCTION.rest);
       expect(client.transport.ws['baseUrl']).toBe(APIClient.BACKEND.PRODUCTION.ws);
     });
   });
