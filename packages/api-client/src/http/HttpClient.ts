@@ -35,7 +35,7 @@ import {BackendErrorMapper, ConnectionState, ContentType, NetworkError, StatusCo
 import {ObfuscationUtil} from '../obfuscation/';
 import {sendRequestWithCookie} from '../shims/node/cookie';
 import {Config} from '../Config';
-import axiosRetry, {isNetworkOrIdempotentRequestError} from "axios-retry";
+import axiosRetry, {isNetworkOrIdempotentRequestError} from 'axios-retry';
 
 enum TOPIC {
   ON_CONNECTION_STATE_CHANGE = 'HttpClient.TOPIC.ON_CONNECTION_STATE_CHANGE',
@@ -50,7 +50,7 @@ export interface HttpClient {
 const FILE_SIZE_100_MB = 104857600;
 
 export class HttpClient extends EventEmitter {
-  private client: AxiosInstance;
+  private readonly client: AxiosInstance;
   private readonly logger: logdown.Logger;
   private connectionState: ConnectionState;
   private readonly requestQueue: PriorityQueue;
@@ -69,7 +69,7 @@ export class HttpClient extends EventEmitter {
         // Map Axios errors
         const isNetworkError = !response && request && !Object.keys(request).length;
         if (isNetworkError) {
-
+          this.logger.warn('Disconnected from backend');
           this.updateConnectionState(ConnectionState.DISCONNECTED);
           return false;
         }
@@ -78,7 +78,6 @@ export class HttpClient extends EventEmitter {
       },
       shouldResetTimeout: true,
     });
-
 
     this.connectionState = ConnectionState.UNDEFINED;
 

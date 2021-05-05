@@ -32,7 +32,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {promisify} from 'util';
 import {TimeUtil} from '@wireapp/commons';
-// import {Availability} from '@wireapp/protocol-messaging';
 import {Account} from '@wireapp/core';
 import {APIClient} from '@wireapp/api-client';
 import {ClientType} from '@wireapp/api-client/src/client/';
@@ -91,7 +90,7 @@ const {
   logger.log('User ID', account['apiClient'].context!.userId);
   logger.log('Client ID', account['apiClient'].context!.clientId);
 
-  async function sendAndDeleteMessage() {
+  async function sendAndDeleteMessage(): Promise<void> {
     const deleteTextPayload = account
       .service!.conversation.messageBuilder.createText(WIRE_CONVERSATION_ID, 'Delete me!')
       .build();
@@ -103,13 +102,13 @@ const {
     }, fiveSecondsInMillis);
   }
 
-  // async function sendConversationLevelTimer(timeInMillis = TimeUtil.TimeInMillis.YEAR) {
-  //   await account['apiClient'].conversation.api.putConversationMessageTimer(CONVERSATION_ID, {
-  //     message_timer: timeInMillis,
-  //   });
-  // }
+  async function sendConversationLevelTimer(timeInMillis = TimeUtil.TimeInMillis.YEAR): Promise<void> {
+    await account['apiClient'].conversation.api.putConversationMessageTimer(WIRE_CONVERSATION_ID, {
+      message_timer: timeInMillis,
+    });
+  }
 
-  async function sendEphemeralText(expiry = MESSAGE_TIMER) {
+  async function sendEphemeralText(expiry = MESSAGE_TIMER): Promise<void> {
     account.service!.conversation.messageTimer.setMessageLevelTimer(WIRE_CONVERSATION_ID, expiry);
     const payload = account
       .service!.conversation.messageBuilder.createText(WIRE_CONVERSATION_ID, `Expires after ${expiry}ms ...`)
@@ -118,21 +117,21 @@ const {
     account.service!.conversation.messageTimer.setMessageLevelTimer(WIRE_CONVERSATION_ID, 0);
   }
 
-  async function sendPing(expiry = MESSAGE_TIMER) {
+  async function sendPing(expiry = MESSAGE_TIMER): Promise<void> {
     account.service!.conversation.messageTimer.setMessageLevelTimer(WIRE_CONVERSATION_ID, expiry);
     const payload = account.service!.conversation.messageBuilder.createPing(WIRE_CONVERSATION_ID);
     await account.service!.conversation.send(payload, undefined, useProtobuf);
     account.service!.conversation.messageTimer.setMessageLevelTimer(WIRE_CONVERSATION_ID, 0);
   }
 
-  async function sendText() {
+  async function sendText(): Promise<void> {
     const payload = account
       .service!.conversation.messageBuilder.createText(WIRE_CONVERSATION_ID, 'Hello, World!')
       .build();
     await account.service!.conversation.send(payload, undefined, useProtobuf);
   }
 
-  async function sendAndEdit() {
+  async function sendAndEdit(): Promise<void> {
     const payload = account
       .service!.conversation.messageBuilder.createText(WIRE_CONVERSATION_ID, 'Hello, Wolrd!')
       .build();
@@ -145,7 +144,7 @@ const {
     }, TimeUtil.TimeInMillis.SECOND * 2);
   }
 
-  async function sendImage() {
+  async function sendImage(): Promise<void> {
     const data = await readFileAsync(path.join(__dirname, 'wire_logo.png'));
     const image = {
       data,
@@ -157,7 +156,7 @@ const {
     await account.service!.conversation.send(imagePayload, undefined, useProtobuf);
   }
 
-  async function sendFile() {
+  async function sendFile(): Promise<void> {
     const filename = 'wire_logo.png';
     const data = await readFileAsync(path.join(__dirname, filename));
     const metadataPayload = account.service!.conversation.messageBuilder.createFileMetadata(WIRE_CONVERSATION_ID, {
@@ -175,11 +174,11 @@ const {
     await account.service!.conversation.send(filePayload, undefined, useProtobuf);
   }
 
-  // async function clearConversation() {
-  //   await account.service!.conversation.clearConversation(CONVERSATION_ID);
-  // }
+  async function clearConversation(): Promise<void> {
+    await account.service!.conversation.clearConversation(WIRE_CONVERSATION_ID);
+  }
 
-  async function sendMentions() {
+  async function sendMentions(): Promise<void> {
     const conversation = await account.service!.conversation.getConversations(WIRE_CONVERSATION_ID);
     const userIds = conversation.members.others.map(participant => participant.id);
     const users = await account.service!.user.getUsers(userIds);
@@ -206,11 +205,7 @@ const {
     await account.service!.conversation.send(payload, undefined, useProtobuf);
   }
 
-  // async function setAvailability() {
-  //   await account.service!.user.setAvailability(WIRE_TEAM_ID, Availability.Type.BUSY);
-  // }
-
-  async function sendQuote() {
+  async function sendQuote(): Promise<void> {
     const text = 'Hello';
 
     const textPayload = account.service!.conversation.messageBuilder.createText(WIRE_CONVERSATION_ID, text).build();
@@ -244,9 +239,9 @@ const {
     sendText,
   ];
 
-  const timeoutInMillis = TimeUtil.TimeInMillis.SECOND * 2;
+  const twoSeconds = TimeUtil.TimeInMillis.SECOND * 2;
   setInterval(async () => {
     const randomMethod = methods[Math.floor(Math.random() * methods.length)];
     await randomMethod();
-  }, timeoutInMillis);
+  }, twoSeconds);
 })().catch(error => console.error(error));
