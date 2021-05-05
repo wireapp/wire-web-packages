@@ -20,7 +20,7 @@
 import {EventEmitter} from 'events';
 import {PriorityQueue} from '@wireapp/priority-queue';
 import {TimeUtil} from '@wireapp/commons';
-import axios, {AxiosError, AxiosRequestConfig, AxiosResponse} from 'axios';
+import axios, {AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios';
 import logdown from 'logdown';
 
 import {
@@ -35,6 +35,7 @@ import {BackendErrorMapper, ConnectionState, ContentType, NetworkError, StatusCo
 import {ObfuscationUtil} from '../obfuscation/';
 import {sendRequestWithCookie} from '../shims/node/cookie';
 import {Config} from '../Config';
+import axiosRetry, {isNetworkOrIdempotentRequestError} from "axios-retry";
 
 enum TOPIC {
   ON_CONNECTION_STATE_CHANGE = 'HttpClient.TOPIC.ON_CONNECTION_STATE_CHANGE',
@@ -49,7 +50,7 @@ export interface HttpClient {
 const FILE_SIZE_100_MB = 104857600;
 
 export class HttpClient extends EventEmitter {
-  private readonly baseUrl: string;
+  private client: AxiosInstance;
   private readonly logger: logdown.Logger;
   private connectionState: ConnectionState;
   private readonly requestQueue: PriorityQueue;
@@ -58,7 +59,27 @@ export class HttpClient extends EventEmitter {
   constructor(private readonly config: Config, public accessTokenStore: AccessTokenStore) {
     super();
 
-    this.baseUrl = config.urls.rest;
+    this.client = axios.create({
+      baseURL: config.urls.rest,
+    });
+    axiosRetry(this.client, {
+      retries: Infinity,
+      retryCondition: (error: AxiosError) => {
+        const {response, request} = error;
+        // Map Axios errors
+        const isNetworkError = !response && request && !Object.keys(request).length;
+        if (isNetworkError) {
+
+          this.updateConnectionState(ConnectionState.DISCONNECTED);
+          return false;
+        }
+
+        return isNetworkOrIdempotentRequestError(error);
+      },
+      shouldResetTimeout: true,
+    });
+
+
     this.connectionState = ConnectionState.UNDEFINED;
 
     this.logger = logdown('@wireapp/api-client/http/HttpClient', {
@@ -69,23 +90,6 @@ export class HttpClient extends EventEmitter {
     this.requestQueue = new PriorityQueue({
       maxRetries: 0,
       retryDelay: TimeUtil.TimeInMillis.SECOND,
-    });
-
-    // Log all failing HTTP requests
-    axios.interceptors.response.use(undefined, (error: AxiosError) => {
-      let backendResponse = '';
-
-      if (error.response) {
-        try {
-          backendResponse = JSON.stringify(error.response.data);
-        } finally {
-          this.logger.error(
-            `HTTP Error (${error.response.status}) on '${error.response.config.url}': ${error.message} (${backendResponse})`,
-          );
-        }
-      }
-
-      return Promise.reject(error);
     });
   }
 
@@ -101,7 +105,6 @@ export class HttpClient extends EventEmitter {
     tokenAsParam = false,
     firstTry = true,
   ): Promise<AxiosResponse<T>> {
-    config.baseURL = this.baseUrl;
     config.headers = {
       ...config.headers,
       'X-Client-Platform': this.config.platform,
@@ -125,7 +128,7 @@ export class HttpClient extends EventEmitter {
     }
 
     try {
-      const response = await axios.request<T>({
+      const response = await this.client.request<T>({
         ...config,
         maxBodyLength: FILE_SIZE_100_MB,
         maxContentLength: FILE_SIZE_100_MB,
@@ -139,9 +142,7 @@ export class HttpClient extends EventEmitter {
       const isNetworkError = !response && request && !Object.keys(request).length;
       if (isNetworkError) {
         const message = `Cannot do "${error.config.method}" request to "${error.config.url}".`;
-        const networkError = new NetworkError(message);
-        this.updateConnectionState(ConnectionState.DISCONNECTED);
-        throw networkError;
+        throw new NetworkError(message);
       }
 
       if (response) {
@@ -227,12 +228,12 @@ export class HttpClient extends EventEmitter {
     return this.sendRequest<T>(config, false, isSynchronousRequest);
   }
 
-  public sendXML<T>(config: AxiosRequestConfig, isSynchronousRequest: boolean = false): Promise<AxiosResponse<T>> {
+  public sendXML<T>(config: AxiosRequestConfig): Promise<AxiosResponse<T>> {
     config.headers = {
       ...config.headers,
       'Content-Type': ContentType.APPLICATION_XML,
     };
-    return this.sendRequest<T>(config, false, isSynchronousRequest);
+    return this.sendRequest<T>(config, false, false);
   }
 
   public sendProtocolBuffer<T>(
