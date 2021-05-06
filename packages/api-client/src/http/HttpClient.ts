@@ -153,6 +153,9 @@ export class HttpClient extends EventEmitter {
             `Access token refresh triggered (isExpiredTokenError: ${isExpiredTokenError}) for "${config.method}" request to "${config.url}".`,
           );
           await this.refreshAccessToken();
+          config['axios-retry'] = {
+            retries: 0,
+          };
           return this._sendRequest<T>(config, tokenAsParam, false);
         }
 
