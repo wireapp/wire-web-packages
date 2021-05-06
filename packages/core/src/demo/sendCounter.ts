@@ -26,8 +26,8 @@ process.on('unhandledRejection', (reason, promise) =>
   console.error('Unhandled Rejection at:', promise, 'reason:', reason),
 );
 
-import * as commander from 'commander';
-import * as logdown from 'logdown';
+import commander from 'commander';
+import logdown from 'logdown';
 import * as path from 'path';
 import {TimeUtil} from '@wireapp/commons';
 import {Account} from '@wireapp/core';
@@ -85,15 +85,14 @@ const {
   logger.log('User ID', account['apiClient'].context!.userId);
   logger.log('Client ID', account['apiClient'].context!.clientId);
 
-  async function sendText(message: string | number): Promise<void> {
-    const payload = account.service!.conversation.messageBuilder.createText(WIRE_CONVERSATION_ID, `${message}`).build();
+  async function sendText(message: string): Promise<void> {
+    const payload = account.service!.conversation.messageBuilder.createText(WIRE_CONVERSATION_ID, message).build();
     await account.service!.conversation.send(payload, undefined, useProtobuf);
   }
 
   const twoSeconds = TimeUtil.TimeInMillis.SECOND * 2;
   let counter = 1;
   setInterval(async () => {
-    await sendText(counter);
-    counter++;
+    await sendText(`${counter++}`);
   }, twoSeconds);
 })().catch(error => console.error(error));
