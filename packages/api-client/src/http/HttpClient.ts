@@ -31,7 +31,7 @@ import {
   MissingCookieError,
   TokenExpiredError,
 } from '../auth/';
-import {BackendErrorMapper, ConnectionState, ContentType, NetworkError, StatusCode} from '../http/';
+import {BackendError, BackendErrorMapper, ConnectionState, ContentType, NetworkError, StatusCode} from '../http/';
 import {ObfuscationUtil} from '../obfuscation/';
 import {sendRequestWithCookie} from '../shims/node/cookie';
 import {Config} from '../Config';
@@ -44,6 +44,7 @@ enum TOPIC {
 
 export interface HttpClient {
   on(event: TOPIC.ON_CONNECTION_STATE_CHANGE, listener: (state: ConnectionState) => void): this;
+
   on(event: TOPIC.ON_INVALID_TOKEN, listener: (error: InvalidTokenError | MissingCookieError) => void): this;
 }
 
@@ -71,7 +72,7 @@ export class HttpClient extends EventEmitter {
         if (isNetworkError) {
           this.logger.warn('Disconnected from backend');
           this.updateConnectionState(ConnectionState.DISCONNECTED);
-          return false;
+          return true;
         }
 
         return isNetworkOrIdempotentRequestError(error);
@@ -138,23 +139,11 @@ export class HttpClient extends EventEmitter {
       this.updateConnectionState(ConnectionState.CONNECTED);
       return response;
     } catch (error) {
-      const {response, request} = error;
-      // Map Axios errors
-      const isNetworkError = !response && request && !Object.keys(request).length;
-      if (isNetworkError) {
-        const message = `Cannot do "${error.config.method}" request to "${error.config.url}".`;
-        throw new NetworkError(message);
-      }
+      if (HttpClient.isBackendError(error)) {
+        const mappedError = BackendErrorMapper.map(error);
 
-      if (response) {
-        const {data: errorData, status: errorStatus} = response;
-        const isBackendError = errorData?.code && errorData?.label && errorData?.message;
-        if (isBackendError) {
-          error = BackendErrorMapper.map(errorData);
-        }
-
-        const isExpiredTokenError = error instanceof TokenExpiredError;
-        const isUnauthorized = errorStatus === StatusCode.UNAUTHORIZED;
+        const isExpiredTokenError = mappedError instanceof TokenExpiredError;
+        const isUnauthorized = mappedError.code === StatusCode.UNAUTHORIZED;
         const hasAccessToken = !!this.accessTokenStore?.accessToken;
 
         if ((isExpiredTokenError || isUnauthorized) && hasAccessToken && firstTry) {
@@ -165,18 +154,30 @@ export class HttpClient extends EventEmitter {
           return this._sendRequest<T>(config, tokenAsParam, false);
         }
 
-        if (error instanceof InvalidTokenError || error instanceof MissingCookieError) {
+        if (mappedError instanceof InvalidTokenError || mappedError instanceof MissingCookieError) {
           // On invalid cookie the application is supposed to logout.
           this.logger.warn(
-            `Cannot renew access token for "${config.method}" request to "${config.url}" because cookie/token is invalid: ${error.message}`,
-            error,
+            `Cannot renew access token for "${config.method}" request to "${config.url}" because cookie/token is invalid: ${mappedError.message}`,
+            mappedError,
           );
-          this.emit(HttpClient.TOPIC.ON_INVALID_TOKEN, error);
+          this.emit(HttpClient.TOPIC.ON_INVALID_TOKEN, mappedError);
         }
       }
 
       throw error;
     }
+  }
+
+  static isAxiosError(errorCandidate: any): errorCandidate is AxiosError {
+    return errorCandidate.isAxiosError === true;
+  }
+
+  static isBackendError(errorCandidate: any): errorCandidate is BackendError {
+    if (errorCandidate.response) {
+      const {data} = errorCandidate.response;
+      return data?.code && data?.label && data?.message;
+    }
+    return false;
   }
 
   public async refreshAccessToken(): Promise<AccessTokenData> {
