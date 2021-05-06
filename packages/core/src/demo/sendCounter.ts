@@ -26,8 +26,8 @@ process.on('unhandledRejection', (reason, promise) =>
   console.error('Unhandled Rejection at:', promise, 'reason:', reason),
 );
 
-import commander from 'commander';
-import logdown from 'logdown';
+import * as commander from 'commander';
+import * as logdown from 'logdown';
 import * as path from 'path';
 import {TimeUtil} from '@wireapp/commons';
 import {Account} from '@wireapp/core';
