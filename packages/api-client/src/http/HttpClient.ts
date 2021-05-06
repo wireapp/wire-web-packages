@@ -31,7 +31,7 @@ import {
   MissingCookieError,
   TokenExpiredError,
 } from '../auth/';
-import {BackendError, BackendErrorMapper, ConnectionState, ContentType, StatusCode} from '../http/';
+import {BackendError, BackendErrorMapper, ConnectionState, ContentType} from '../http/';
 import {ObfuscationUtil} from '../obfuscation/';
 import {sendRequestWithCookie} from '../shims/node/cookie';
 import {Config} from '../Config';
@@ -137,6 +137,7 @@ export class HttpClient extends EventEmitter {
       });
 
       this.updateConnectionState(ConnectionState.CONNECTED);
+
       return response;
     } catch (error) {
       if (HttpClient.isBackendError(error)) {
@@ -145,12 +146,11 @@ export class HttpClient extends EventEmitter {
         );
 
         const isExpiredTokenError = mappedError instanceof TokenExpiredError;
-        const isUnauthorized = mappedError.code === StatusCode.UNAUTHORIZED;
         const hasAccessToken = !!this.accessTokenStore?.accessToken;
 
-        if ((isExpiredTokenError || isUnauthorized) && hasAccessToken && firstTry) {
+        if (isExpiredTokenError && hasAccessToken && firstTry) {
           this.logger.warn(
-            `Access token refresh triggered (isExpiredTokenError: ${isExpiredTokenError}, isUnauthorized: ${isUnauthorized}) for "${config.method}" request to "${config.url}".`,
+            `Access token refresh triggered (isExpiredTokenError: ${isExpiredTokenError}) for "${config.method}" request to "${config.url}".`,
           );
           await this.refreshAccessToken();
           return this._sendRequest<T>(config, tokenAsParam, false);
