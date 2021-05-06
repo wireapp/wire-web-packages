@@ -24,6 +24,7 @@ import nock from 'nock';
 import {APIClient} from './APIClient';
 import {AuthAPI} from './auth/AuthAPI';
 import {ClientType} from './client';
+import {BackendErrorLabel, StatusCode} from './http';
 import {UserAPI} from './user/UserAPI';
 
 describe('APIClient', () => {
@@ -123,9 +124,9 @@ describe('APIClient', () => {
           password: loginData.password,
         })
         .query({persist: loginData.clientType === 'permanent'})
-        .reply(200, accessTokenData);
+        .reply(StatusCode.OK, accessTokenData);
 
-      nock(baseUrl).post(`${AuthAPI.URL.ACCESS}/${AuthAPI.URL.LOGOUT}`).reply(200, undefined);
+      nock(baseUrl).post(`${AuthAPI.URL.ACCESS}/${AuthAPI.URL.LOGOUT}`).reply(StatusCode.OK, undefined);
     });
 
     it('creates a context from a successful login', async () => {
@@ -144,11 +145,15 @@ describe('APIClient', () => {
     it('refreshes an access token when it becomes invalid', async () => {
       const queriedHandle = 'webappbot';
 
-      nock(baseUrl).get(UserAPI.URL.USERS).query({handles: queriedHandle}).once().reply(401);
+      nock(baseUrl).get(UserAPI.URL.USERS).query({handles: queriedHandle}).once().reply(StatusCode.FORBIDDEN, {
+        code: StatusCode.FORBIDDEN,
+        label: BackendErrorLabel.INVALID_CREDENTIALS,
+        message: 'Token expired',
+      });
 
-      nock(baseUrl).get(UserAPI.URL.USERS).query({handles: queriedHandle}).twice().reply(200, userData);
+      nock(baseUrl).get(UserAPI.URL.USERS).query({handles: queriedHandle}).twice().reply(StatusCode.OK, userData);
 
-      nock(baseUrl).post(AuthAPI.URL.ACCESS).reply(200, accessTokenData);
+      nock(baseUrl).post(AuthAPI.URL.ACCESS).reply(StatusCode.OK, accessTokenData);
 
       const client = new APIClient();
       const context = await client.login(loginData);
@@ -163,7 +168,7 @@ describe('APIClient', () => {
 
   describe('logout', () => {
     beforeEach(() => {
-      nock(baseUrl).post(`${AuthAPI.URL.ACCESS}/${AuthAPI.URL.LOGOUT}`).reply(200);
+      nock(baseUrl).post(`${AuthAPI.URL.ACCESS}/${AuthAPI.URL.LOGOUT}`).reply(StatusCode.OK);
     });
 
     it('can logout a user', async () => {
@@ -216,9 +221,9 @@ describe('APIClient', () => {
     };
 
     beforeEach(() => {
-      nock(baseUrl).post(AuthAPI.URL.REGISTER, registerData).reply(200, registerData);
+      nock(baseUrl).post(AuthAPI.URL.REGISTER, registerData).reply(StatusCode.OK, registerData);
 
-      nock(baseUrl).post(AuthAPI.URL.ACCESS).reply(200, accessTokenData);
+      nock(baseUrl).post(AuthAPI.URL.ACCESS).reply(StatusCode.OK, accessTokenData);
     });
 
     it('automatically gets an access token after registration', async () => {

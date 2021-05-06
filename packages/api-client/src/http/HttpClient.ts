@@ -140,7 +140,9 @@ export class HttpClient extends EventEmitter {
       return response;
     } catch (error) {
       if (HttpClient.isBackendError(error)) {
-        const mappedError = BackendErrorMapper.map(error);
+        const mappedError = BackendErrorMapper.map(
+          new BackendError(error.response.data.message, error.response.data.label, error.response.data.code),
+        );
 
         const isExpiredTokenError = mappedError instanceof TokenExpiredError;
         const isUnauthorized = mappedError.code === StatusCode.UNAUTHORIZED;
@@ -162,6 +164,8 @@ export class HttpClient extends EventEmitter {
           );
           this.emit(HttpClient.TOPIC.ON_INVALID_TOKEN, mappedError);
         }
+
+        throw mappedError;
       }
 
       throw error;
@@ -172,10 +176,10 @@ export class HttpClient extends EventEmitter {
     return errorCandidate.isAxiosError === true;
   }
 
-  static isBackendError(errorCandidate: any): errorCandidate is BackendError {
+  static isBackendError(errorCandidate: any): errorCandidate is AxiosError<BackendError> & {response: BackendError} {
     if (errorCandidate.response) {
       const {data} = errorCandidate.response;
-      return data?.code && data?.label && data?.message;
+      return !!data?.code && !!data?.label && !!data?.message;
     }
     return false;
   }
