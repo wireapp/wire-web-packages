@@ -67,7 +67,7 @@ export class HttpClient extends EventEmitter {
       retries: Infinity,
       retryCondition: (error: AxiosError) => {
         const {response, request} = error;
-        // Map Axios errors
+
         const isNetworkError = !response && request && !Object.keys(request).length;
         if (isNetworkError) {
           this.logger.warn('Disconnected from backend');
