@@ -2679,10 +2679,10 @@
   dependencies:
     "@types/istanbul-lib-report" "*"
 
-"@types/jasmine@3.6.10":
-  version "3.6.10"
-  resolved "https://registry.npmjs.org/@types/jasmine/-/jasmine-3.6.10.tgz#c49d5660bda6e935782e5c83deb1d3b6efb3fac6"
-  integrity sha512-yfCl7JGtIc5LjScFpeIGBBNhJFkJdAAcsAnAd9ZRHwzh+sR2zkt257BKkTCF5VpJ8wMPnzzZ8QatRdXM8tqpKA==
+"@types/jasmine@3.7.0":
+  version "3.7.0"
+  resolved "https://registry.npmjs.org/@types/jasmine/-/jasmine-3.7.0.tgz#0bec645334621c1cd32648d02865ff36d201bf07"
+  integrity sha512-a/RDj4aOSY1BGlrmj2rtXJeLk5kS/k39xWZlHKfwDUqYeGpxV6f4WG59vCn3T3FXnlhMGBrAAtx0xg/+J8mR0g==
 
 "@types/jest@26.0.23":
   version "26.0.23"
