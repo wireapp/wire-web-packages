@@ -3241,15 +3241,15 @@
   resolved "https://registry.npmjs.org/@wireapp/cbor/-/cbor-4.7.1.tgz#83d5d4cfc1f3924b7c491e6a03416fad313c4f0c"
   integrity sha512-AgSMtgHmKwjJ31mCPFGoXvHbM+v4ODIJpBBU3J4GM5u827St7YmlnI+u+OZwA9PgRAwKliQbyumtShGVn0cKMw==
 
-"@wireapp/cryptobox@12.5.6":
-  version "12.5.6"
-  resolved "https://registry.npmjs.org/@wireapp/cryptobox/-/cryptobox-12.5.6.tgz#96b57d6c906e1c12343ca2f1f244131e8436e7f2"
-  integrity sha512-TYGYXc9PJFqL5pfFdqAS0j0s7x5dnqxviBCp6tcz6yfQ4r4h8jjoRZZ4YEO87NU+EVttGbDzTIP4SXlqhQXRxA==
+"@wireapp/cryptobox@12.5.7":
+  version "12.5.7"
+  resolved "https://registry.npmjs.org/@wireapp/cryptobox/-/cryptobox-12.5.7.tgz#415da026b00ed6f477cd90e7ed5b6350cd33ea61"
+  integrity sha512-t/ZzSXYh5H6LS054GCrBM07ndxXOnScWUXSJH5L1lhqJGmhVxzUI1jaTkdD+2nN5DjYN6ajFmNJ7+H9UVZXo+Q==
   dependencies:
     "@wireapp/lru-cache" "3.8.0"
     "@wireapp/priority-queue" "1.6.31"
     "@wireapp/proteus" "9.11.0"
-    "@wireapp/store-engine" "4.6.0"
+    "@wireapp/store-engine" "4.7.0"
     bazinga64 "5.7.33"
 
 "@wireapp/lru-cache@3.8.0":
@@ -3273,13 +3273,6 @@
   integrity sha512-mej3JlFKRLgaMFqVlKhSqXdoPchd7XAwEpu9kTbvUB5MPF6cPK/Thmxfs4CVb4gPmG3wGW6sK3cTNfTYMpIwYw==
   dependencies:
     protobufjs "6.10.2"
-
-"@wireapp/store-engine@4.6.0":
-  version "4.6.0"
-  resolved "https://registry.npmjs.org/@wireapp/store-engine/-/store-engine-4.6.0.tgz#cc0a12efc663c163d47f8e6b4cdd1bfaadf49601"
-  integrity sha512-0ZRXF3CK+0KLW+sjnvK3Q8kq1YUVXE3Xk29HRzJmu52HTo5mFc3iH1/sdC1k5IrKbB3/cyQ4jKAbg51S46DSaQ==
-  dependencies:
-    "@types/node" "~14"
 
 "@wireapp/websql@0.0.17":
   version "0.0.17"
