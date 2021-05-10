@@ -21,6 +21,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import {buildCert, getFingerprint, hostnameShouldBePinned, verifyPinning, WILDCARD_CERT_FINGERPRINT} from './';
+import {ElectronCertificate} from './CertUtil';
 
 describe('hostnameShouldBePinned', () => {
   it('pins app.wire.com', () => {
@@ -52,7 +53,7 @@ describe('verifyPinning', () => {
     const certFile = fs.readFileSync(certificatePath);
     const issuerCertFile = fs.readFileSync(issuerCertPath);
 
-    const certData = {
+    const certData: ElectronCertificate = {
       data: buildCert(certFile),
       issuerCert: {
         data: buildCert(issuerCertFile),
@@ -63,5 +64,59 @@ describe('verifyPinning', () => {
 
     expect(pinningResult.verifiedPublicKeyInfo).toBe(true);
     expect(pinningResult.errorMessage).toBeUndefined();
+  });
+
+  it('checks for the correct root certificate', () => {
+    const wrongCertificatePath = path.join(
+      __dirname,
+      '../spec/helpers/VeriSign-Class-3-Public-Primary-Certification-Authority-G5.pem',
+    );
+    const wrongCertFile = fs.readFileSync(wrongCertificatePath, 'utf-8');
+
+    const certData: ElectronCertificate = {
+      data: wrongCertFile,
+      issuerCert: {data: wrongCertFile},
+    };
+
+    const pinningResult = verifyPinning('58gewxuxp0gp84o4zi8vppxz8.cloudfront.net', certData);
+
+    expect(pinningResult.verifiedIssuerRootCerts).toBe(true);
+    expect(pinningResult.errorMessage).toBeUndefined();
+  });
+
+  it('checks for wrong root certificates', () => {
+    const wrongCertificatePath = path.join(
+      __dirname,
+      '../spec/helpers/VeriSign-Class-3-Public-Primary-Certification-Authority-G4.pem',
+    );
+    const wrongCertFile = fs.readFileSync(wrongCertificatePath, 'utf-8');
+
+    const certData: ElectronCertificate = {
+      data: wrongCertFile,
+      issuerCert: {data: wrongCertFile},
+    };
+
+    const pinningResult = verifyPinning('58gewxuxp0gp84o4zi8vppxz8.cloudfront.net', certData);
+
+    expect(pinningResult.verifiedIssuerRootCerts).toBe(false);
+    expect(pinningResult.errorMessage).toMatch(/none of .* could be verified/);
+  });
+
+  it('checks for broken root certificates', () => {
+    const wrongCertificatePath = path.join(
+      __dirname,
+      '../spec/helpers/VeriSign-Class-3-Public-Primary-Certification-Authority-G5-BROKEN.pem',
+    );
+    const wrongCertFile = fs.readFileSync(wrongCertificatePath, 'utf-8');
+
+    const certData: ElectronCertificate = {
+      data: wrongCertFile,
+      issuerCert: {data: wrongCertFile},
+    };
+
+    const pinningResult = verifyPinning('58gewxuxp0gp84o4zi8vppxz8.cloudfront.net', certData);
+
+    expect(pinningResult.verifiedIssuerRootCerts).toBe(false);
+    expect(pinningResult.errorMessage).toMatch(/none of .* could be verified/);
   });
 });

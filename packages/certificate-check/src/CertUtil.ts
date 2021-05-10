@@ -29,7 +29,7 @@ export interface PinningResult {
   decoding?: boolean;
   errorMessage?: string;
   fingerprintCheck?: boolean;
-  verifiedIssuerRootPubkeys?: boolean;
+  verifiedIssuerRootCerts?: boolean;
   verifiedPublicKeyInfo?: boolean;
 }
 
@@ -125,17 +125,14 @@ export function verifyPinning(hostname: string, certificate?: ElectronCertificat
   const result: PinningResult = {};
 
   for (const pin of PINS) {
-    const {url, publicKeyInfo = [], issuerRootPubkeys = []} = pin;
+    const {url, publicKeyInfo = [], issuerRootCerts = []} = pin;
 
     if (url.test(hostname.toLowerCase().trim())) {
-      if (issuerRootPubkeys.length > 0) {
-        const x509 = new rs.X509();
-        result.verifiedIssuerRootPubkeys =
-          x509.verifySignature(issuerCertHex) &&
-          issuerRootPubkeys.some(pubkey => x509.verifySignature(rs.KEYUTIL.getKey(pubkey)));
-        if (!result.verifiedIssuerRootPubkeys) {
-          const pubkeysCombined = issuerRootPubkeys.join(', ');
-          const errorMessage = `Issuer root public key signatures: none of "${pubkeysCombined}" could be verified.`;
+      if (issuerRootCerts.length > 0) {
+        result.verifiedIssuerRootCerts = issuerRootCerts.some(issuerCert => issuerCertHex === rs.pemtohex(issuerCert));
+        if (!result.verifiedIssuerRootCerts) {
+          const certsCombined = issuerRootCerts.map(cert => cert.replace(/[\r\n ]/g, '')).join(', ');
+          const errorMessage = `Issuer root certificates: none of "${certsCombined}" could be verified.`;
           errorMessages.push(errorMessage);
         }
       }
