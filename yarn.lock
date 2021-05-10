@@ -10145,10 +10145,10 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
-jsrsasign@8.0.20:
-  version "8.0.20"
-  resolved "https://registry.npmjs.org/jsrsasign/-/jsrsasign-8.0.20.tgz#37d8029c9d8f794d8ac8d8998bce319921491f11"
-  integrity sha512-JTXt9+nqdynIB8wFsS6e8ffHhIjilhywXwdaEVHSj9OVmwldG2H0EoCqkQ+KXkm2tVqREfH/HEmklY4k1/6Rcg==
+jsrsasign@10.0.2:
+  version "10.0.2"
+  resolved "https://registry.npmjs.org/jsrsasign/-/jsrsasign-10.0.2.tgz#b8fc32efea167760fdec7e51dae5f5938a6d7b53"
+  integrity sha512-CnZf/1yS82M1G2HR9DyjfA6MgiBysPJDuxvvxEVzTp22jyqz46B5/yqXJOtjTtAzBopzsUSKFxHj1FiLcH9+Vw==
 
 jss-plugin-camel-case@^10.0.0:
   version "10.1.1"
