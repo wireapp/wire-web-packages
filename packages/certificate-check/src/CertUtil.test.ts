@@ -67,15 +67,15 @@ describe('verifyPinning', () => {
   });
 
   it('checks for the correct root certificate', () => {
-    const wrongCertificatePath = path.join(
+    const certificatePath = path.join(
       __dirname,
       '../spec/helpers/VeriSign-Class-3-Public-Primary-Certification-Authority-G5.pem',
     );
-    const wrongCertFile = fs.readFileSync(wrongCertificatePath, 'utf-8');
+    const certFile = fs.readFileSync(certificatePath, 'utf-8');
 
     const certData: ElectronCertificate = {
-      data: wrongCertFile,
-      issuerCert: {data: wrongCertFile},
+      data: certFile,
+      issuerCert: {data: certFile},
     };
 
     const pinningResult = verifyPinning('58gewxuxp0gp84o4zi8vppxz8.cloudfront.net', certData);
@@ -103,15 +103,15 @@ describe('verifyPinning', () => {
   });
 
   it('checks for broken root certificates', () => {
-    const wrongCertificatePath = path.join(
+    const brokenCertificatePath = path.join(
       __dirname,
       '../spec/helpers/VeriSign-Class-3-Public-Primary-Certification-Authority-G5-BROKEN.pem',
     );
-    const wrongCertFile = fs.readFileSync(wrongCertificatePath, 'utf-8');
+    const brokenCertFile = fs.readFileSync(brokenCertificatePath, 'utf-8');
 
     const certData: ElectronCertificate = {
-      data: wrongCertFile,
-      issuerCert: {data: wrongCertFile},
+      data: brokenCertFile,
+      issuerCert: {data: brokenCertFile},
     };
 
     const pinningResult = verifyPinning('58gewxuxp0gp84o4zi8vppxz8.cloudfront.net', certData);
