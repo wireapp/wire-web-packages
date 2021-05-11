@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.15.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@12.14.2...@wireapp/api-client@12.15.0) (2021-05-10)
+
+
+### Features
+
+* **api-client:** Add exponential back-off retry delay ([#3826](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/3826)) ([3fa4b28](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/3fa4b2800885503b0b366dd7284cce577da47eb2))
+
+
+
+
+
+## [12.14.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@12.14.1...@wireapp/api-client@12.14.2) (2021-05-10)
+
+
+### Bug Fixes
+
+* **api-client:** Set config.headers if it is missing ([b3d7b89](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/b3d7b896acac8abef0c1e1084558d62e8acf8ff6))
+
+
+
+
+
 ## [12.14.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@12.14.0...@wireapp/api-client@12.14.1) (2021-05-07)
 
 **Note:** Version bump only for package @wireapp/api-client
