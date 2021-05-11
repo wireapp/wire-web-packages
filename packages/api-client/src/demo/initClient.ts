@@ -14,6 +14,7 @@ export async function initClient(): Promise<APIClient> {
 
   const apiConfig: Config = {
     urls: {
+      name: 'default',
       rest: process.env.WIRE_BACKEND_REST!,
       ws: process.env.WIRE_BACKEND_WS!
     }
