@@ -2,9 +2,9 @@ name: Test, Build & Release
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-    branches: [master]
+    branches: [main]
 
 jobs:
   test_build_release:
@@ -71,7 +71,7 @@ jobs:
         run: yarn test
 
       - name: Set release environment variables
-        if: env.BRANCH_NAME == 'master'
+        if: env.BRANCH_NAME == 'main'
         run: |
           HAS_UPDATES="$(npx lerna updated > /dev/null 2>&1; echo "${?}")"
           echo "HAS_UPDATES=${HAS_UPDATES}" >> $GITHUB_ENV
@@ -84,7 +84,7 @@ jobs:
         env:
           NPM_TOKEN: ${{secrets.WEBTEAM_NPM_TOKEN}}
         if: |
-          env.BRANCH_NAME == 'master' &&
+          env.BRANCH_NAME == 'main' &&
           env.HAS_UPDATES == '0' &&
           !startsWith(env.TITLE, 'chore') &&
           !startsWith(env.TITLE, 'test')
