@@ -119,8 +119,10 @@ export function verifyPinning(hostname: string, certificate?: ElectronCertificat
           knownRootCert => remoteIssuerCertHex === rs.pemtohex(knownRootCert),
         );
         if (!result.verifiedIssuerRootCerts) {
-          const certsCombined = knownIssuerRootCerts.join(', ');
-          const errorMessage = `Issuer root certificates: none of "${certsCombined}" could be verified.`;
+          const knownCertsCombined = knownIssuerRootCerts.join(', ').replace(/[\r\n]/g, '');
+          const errorMessage = `Issuer root certificates: none of "${knownCertsCombined}" could be verified against "${
+            getRemoteIssuerCertData().data
+          }.`;
           errorMessages.push(errorMessage);
         }
       }
