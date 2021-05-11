@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.12.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-api/compare/@wireapp/bot-api@7.11.142...@wireapp/bot-api@7.12.0) (2021-05-11)
+
+
+### Features
+
+* **api-client:** Bump @types/jasmine from 3.6.10 to 3.7.2 ([#3835](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-api/issues/3835)) ([308ab5d](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-api/commit/308ab5d359824ef3b6e4c032e918ff8f8f324b99))
+
+
+
+
+
 ## [7.11.142](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-api/compare/@wireapp/bot-api@7.11.141...@wireapp/bot-api@7.11.142) (2021-05-11)
 
 **Note:** Version bump only for package @wireapp/bot-api

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.17.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@12.16.1...@wireapp/api-client@12.17.0) (2021-05-11)
+
+
+### Features
+
+* **api-client:** Bump @types/jasmine from 3.6.10 to 3.7.2 ([#3835](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/3835)) ([308ab5d](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/308ab5d359824ef3b6e4c032e918ff8f8f324b99))
+
+
+
+
+
 ## [12.16.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@12.16.0...@wireapp/api-client@12.16.1) (2021-05-11)
 
 **Note:** Version bump only for package @wireapp/api-client
