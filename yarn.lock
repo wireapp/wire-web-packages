@@ -2721,6 +2721,11 @@
   resolved "https://registry.npmjs.org/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
 
+"@types/jsrsasign@8.0.12":
+  version "8.0.12"
+  resolved "https://registry.npmjs.org/@types/jsrsasign/-/jsrsasign-8.0.12.tgz#6bfebbbde57e72748d801642bba9b431d049b952"
+  integrity sha512-FLXKbwbB+4fsJECYOpIiYX2GSqSHYnkO/UnrFqlZn6crpyyOtk4LRab+G1HC7dTbT1NB7spkHecZRQGXoCWiJQ==
+
 "@types/karma-webpack@2.0.9":
   version "2.0.9"
   resolved "https://registry.npmjs.org/@types/karma-webpack/-/karma-webpack-2.0.9.tgz#878aad10e52305be9a608aed3286ee4b97d043a3"
@@ -10139,6 +10144,11 @@ jsprim@^1.2.2:
     extsprintf "1.3.0"
     json-schema "0.2.3"
     verror "1.10.0"
+
+jsrsasign@10.0.2:
+  version "10.0.2"
+  resolved "https://registry.npmjs.org/jsrsasign/-/jsrsasign-10.0.2.tgz#b8fc32efea167760fdec7e51dae5f5938a6d7b53"
+  integrity sha512-CnZf/1yS82M1G2HR9DyjfA6MgiBysPJDuxvvxEVzTp22jyqz46B5/yqXJOtjTtAzBopzsUSKFxHj1FiLcH9+Vw==
 
 jss-plugin-camel-case@^10.0.0:
   version "10.1.1"
