@@ -3250,15 +3250,15 @@
   resolved "https://registry.npmjs.org/@wireapp/cbor/-/cbor-4.7.1.tgz#83d5d4cfc1f3924b7c491e6a03416fad313c4f0c"
   integrity sha512-AgSMtgHmKwjJ31mCPFGoXvHbM+v4ODIJpBBU3J4GM5u827St7YmlnI+u+OZwA9PgRAwKliQbyumtShGVn0cKMw==
 
-"@wireapp/cryptobox@12.5.6":
-  version "12.5.6"
-  resolved "https://registry.npmjs.org/@wireapp/cryptobox/-/cryptobox-12.5.6.tgz#96b57d6c906e1c12343ca2f1f244131e8436e7f2"
-  integrity sha512-TYGYXc9PJFqL5pfFdqAS0j0s7x5dnqxviBCp6tcz6yfQ4r4h8jjoRZZ4YEO87NU+EVttGbDzTIP4SXlqhQXRxA==
+"@wireapp/cryptobox@12.5.9":
+  version "12.5.9"
+  resolved "https://registry.npmjs.org/@wireapp/cryptobox/-/cryptobox-12.5.9.tgz#69b9e00f7090e083fe0412a638216e4cd73957e1"
+  integrity sha512-nYWreU/0q0lx5mq3v7v6gm2zFUNbVGdOE3Cayv5zb9aH5pvzDT3C2aDuQ0tuc0TuGd60//115KoerKlQ2Hb1tQ==
   dependencies:
     "@wireapp/lru-cache" "3.8.0"
     "@wireapp/priority-queue" "1.6.31"
-    "@wireapp/proteus" "9.11.0"
-    "@wireapp/store-engine" "4.6.0"
+    "@wireapp/proteus" "9.12.0"
+    "@wireapp/store-engine" "4.7.0"
     bazinga64 "5.7.33"
 
 "@wireapp/lru-cache@3.8.0":
@@ -3266,10 +3266,17 @@
   resolved "https://registry.npmjs.org/@wireapp/lru-cache/-/lru-cache-3.8.0.tgz#63e32a85abd4bd32a80a7c41615fc12c42cd2eec"
   integrity sha512-XVcvbhIdgD8uNDW91Iueyd1dgsWh8alz1sU5MtID18r2d2nuM3BNryffAyONcmyjbTj7PqB04iLk+kHNQ5m4/Q==
 
-"@wireapp/proteus@9.11.0":
-  version "9.11.0"
-  resolved "https://registry.npmjs.org/@wireapp/proteus/-/proteus-9.11.0.tgz#f703175c28d4167a5b70ddcfcd3c384b316f6d81"
-  integrity sha512-3Y4f6kQC5191NvAwvPSgGjUzyUNCHOCT9BxbkGtAw0aVgiEhkWG4o7cAk7CsrLyqPCcaluVe3epfGtVpEHyBxg==
+"@wireapp/priority-queue@1.6.31":
+  version "1.6.31"
+  resolved "https://registry.npmjs.org/@wireapp/priority-queue/-/priority-queue-1.6.31.tgz#fc177e14faf649ac4e17df0f259a0ca869a08a98"
+  integrity sha512-VC6V7GRkKl3TZDeQ5D0+U6bbD6WUAz15hCalixWS8pQYhP08lvbIUIzSOuAAQDdzc6wh/+aFBEgfs53d8JM/VA==
+  dependencies:
+    "@types/node" "~14"
+
+"@wireapp/proteus@9.12.0":
+  version "9.12.0"
+  resolved "https://registry.npmjs.org/@wireapp/proteus/-/proteus-9.12.0.tgz#b47a25bd8d453d3fd7d043f6aa03c0f035b8499b"
+  integrity sha512-nayzbNdJZic+TLK8SzsONL+aVujqQ/ftdkfLRrT0EJCSh87DELHlaaq7JzgR8uLQIs5Pm2hi6PTBDMFsDLx8iw==
   dependencies:
     "@types/libsodium-wrappers-sumo" "0.7.5"
     "@types/node" "~14"
@@ -3283,10 +3290,10 @@
   dependencies:
     protobufjs "6.10.2"
 
-"@wireapp/store-engine@4.6.0":
-  version "4.6.0"
-  resolved "https://registry.npmjs.org/@wireapp/store-engine/-/store-engine-4.6.0.tgz#cc0a12efc663c163d47f8e6b4cdd1bfaadf49601"
-  integrity sha512-0ZRXF3CK+0KLW+sjnvK3Q8kq1YUVXE3Xk29HRzJmu52HTo5mFc3iH1/sdC1k5IrKbB3/cyQ4jKAbg51S46DSaQ==
+"@wireapp/store-engine@4.7.0":
+  version "4.7.0"
+  resolved "https://registry.npmjs.org/@wireapp/store-engine/-/store-engine-4.7.0.tgz#1184b0783d17d7fa2b26c2e61478e9208316b276"
+  integrity sha512-Z82TkBLS2C0iZwvFC2pTNVKE7ddXMIBZGr6wvpCOP3Ibpw0TC5TGQ9H2U1+LLizIphCISILUJwqPI+jbleZ/PQ==
   dependencies:
     "@types/node" "~14"
 
