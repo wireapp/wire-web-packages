@@ -18,7 +18,7 @@
  */
 
 export interface BackendData {
-  name: string;
+  name?: string;
   rest: string;
   ws: string;
 }
