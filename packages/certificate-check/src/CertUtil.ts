@@ -18,11 +18,9 @@
  */
 
 import * as crypto from 'crypto';
-import * as https from 'https';
-import {TLSSocket} from 'tls';
 import rs from 'jsrsasign';
 
-import {PINS} from './pinningData';
+import {KNOWN_PINS} from './pinningData';
 
 export interface PinningResult {
   certificate?: ElectronCertificate;
@@ -59,19 +57,6 @@ export function buildCert(buffer: Buffer): string {
   return `-----BEGIN CERTIFICATE-----\n${buffer.toString('base64')}\n-----END CERTIFICATE-----`;
 }
 
-export function getDERFormattedCertificate(url: string): Promise<Buffer> {
-  return new Promise((resolve, reject) => {
-    try {
-      const request = https.get(url, () => {
-        const certificate = (request.socket as TLSSocket).getPeerCertificate(true);
-        resolve(certificate.raw);
-      });
-    } catch (error) {
-      reject(error);
-    }
-  });
-}
-
 export function getFingerprint(derCert: Buffer): string {
   const derBinary = derCert.toString('binary');
   const hexDerFileContents = rs.rstrtohex(derBinary);
@@ -82,7 +67,7 @@ export function getFingerprint(derCert: Buffer): string {
 }
 
 export function hostnameShouldBePinned(hostname: string): boolean {
-  return PINS.some(pin => pin.url.test(hostname.toLowerCase().trim()));
+  return KNOWN_PINS.some(pin => pin.url.test(hostname.toLowerCase().trim()));
 }
 
 export function verifyPinning(hostname: string, certificate?: ElectronCertificate): PinningResult {
@@ -98,23 +83,24 @@ export function verifyPinning(hostname: string, certificate?: ElectronCertificat
     };
   }
 
-  const {
-    data: certData,
-    issuerCert: {data: issuerCertData},
-  } = certificate;
+  const {data: certData, issuerCert} = certificate;
 
-  let issuerCertHex: string;
-  let publicKey: rs.PublicKeyInfoPropOfCertPEMResult;
-  let publicKeyBytes: string;
-  let publicKeyFingerprint: string;
+  function getRemoteIssuerCertData(certificate: ElectronCertificate = issuerCert): ElectronCertificate {
+    return certificate.issuerCert ? getRemoteIssuerCertData(certificate.issuerCert) : certificate;
+  }
+
+  let remoteIssuerCertHex: string;
+  let remotePublicKey: rs.PublicKeyInfoPropOfCertPEMResult;
+  let remotePublicKeyBytes: string;
+  let remotePublicKeyFingerprint: string;
 
   const errorMessages: string[] = [];
 
   try {
-    issuerCertHex = rs.pemtohex(issuerCertData);
-    publicKey = rs.X509.getPublicKeyInfoPropOfCertPEM(certData);
-    publicKeyBytes = Buffer.from(publicKey.keyhex, 'hex').toString('binary');
-    publicKeyFingerprint = crypto.createHash('sha256').update(publicKeyBytes).digest('base64');
+    remoteIssuerCertHex = rs.pemtohex(getRemoteIssuerCertData().data);
+    remotePublicKey = rs.X509.getPublicKeyInfoPropOfCertPEM(certData);
+    remotePublicKeyBytes = Buffer.from(remotePublicKey.keyhex, 'hex').toString('binary');
+    remotePublicKeyFingerprint = crypto.createHash('sha256').update(remotePublicKeyBytes).digest('base64');
   } catch (error) {
     return {
       decoding: false,
@@ -124,14 +110,16 @@ export function verifyPinning(hostname: string, certificate?: ElectronCertificat
 
   const result: PinningResult = {};
 
-  for (const pin of PINS) {
-    const {url, publicKeyInfo = [], issuerRootCerts = []} = pin;
+  for (const knownPin of KNOWN_PINS) {
+    const {url, publicKeyInfo = [], issuerRootCerts: knownIssuerRootCerts = []} = knownPin;
 
     if (url.test(hostname.toLowerCase().trim())) {
-      if (issuerRootCerts.length > 0) {
-        result.verifiedIssuerRootCerts = issuerRootCerts.some(issuerCert => issuerCertHex === rs.pemtohex(issuerCert));
+      if (knownIssuerRootCerts.length > 0) {
+        result.verifiedIssuerRootCerts = knownIssuerRootCerts.some(
+          knownRootCert => remoteIssuerCertHex === rs.pemtohex(knownRootCert),
+        );
         if (!result.verifiedIssuerRootCerts) {
-          const certsCombined = issuerRootCerts.map(cert => cert.replace(/[\r\n ]/g, '')).join(', ');
+          const certsCombined = knownIssuerRootCerts.join(', ');
           const errorMessage = `Issuer root certificates: none of "${certsCombined}" could be verified.`;
           errorMessages.push(errorMessage);
         }
@@ -147,24 +135,24 @@ export function verifyPinning(hostname: string, certificate?: ElectronCertificat
 
           const fingerprintCheck =
             knownFingerprints.length > 0 &&
-            knownFingerprints.some(knownFingerprint => knownFingerprint === publicKeyFingerprint);
-          const algorithmIDCheck = knownAlgorithmID === publicKey.algoid;
-          const algorithmParamCheck = knownAlgorithmParam === publicKey.algparam;
+            knownFingerprints.some(knownFingerprint => knownFingerprint === remotePublicKeyFingerprint);
+          const algorithmIDCheck = knownAlgorithmID === remotePublicKey.algoid;
+          const algorithmParamCheck = knownAlgorithmParam === remotePublicKey.algparam;
 
           if (!fingerprintCheck) {
             const fingerprintsCombined = knownFingerprints.join(', ');
-            const errorMessage = `Public key fingerprints: "${publicKeyFingerprint}" could not be verified with any of the known fingerprints "${fingerprintsCombined}".`;
+            const errorMessage = `Public key fingerprints: "${remotePublicKeyFingerprint}" could not be verified with any of the known fingerprints "${fingerprintsCombined}".`;
             errorMessages.push(errorMessage);
           }
 
           if (!algorithmIDCheck) {
-            const algorithmID = publicKey.algoid;
+            const algorithmID = remotePublicKey.algoid;
             const errorMessage = `Algorithm ID: "${algorithmID}" could not be verified with the known ID "${knownAlgorithmID}".`;
             errorMessages.push(errorMessage);
           }
 
           if (!algorithmParamCheck) {
-            const algorithmParam = publicKey.algparam;
+            const algorithmParam = remotePublicKey.algparam;
             const errorMessage = `Algorithm parameter: "${algorithmParam}" could not be verified with the known parameter "${knownAlgorithmParam}".`;
             errorMessages.push(errorMessage);
           }
