@@ -3276,10 +3276,10 @@
     "@wireapp/cbor" "4.7.1"
     libsodium-wrappers-sumo "0.7.9"
 
-"@wireapp/protocol-messaging@1.29.0":
-  version "1.29.0"
-  resolved "https://registry.npmjs.org/@wireapp/protocol-messaging/-/protocol-messaging-1.29.0.tgz#271e9fb5a14b67c250ada9adc79e8d907f606cba"
-  integrity sha512-mej3JlFKRLgaMFqVlKhSqXdoPchd7XAwEpu9kTbvUB5MPF6cPK/Thmxfs4CVb4gPmG3wGW6sK3cTNfTYMpIwYw==
+"@wireapp/protocol-messaging@1.34.0":
+  version "1.34.0"
+  resolved "https://registry.npmjs.org/@wireapp/protocol-messaging/-/protocol-messaging-1.34.0.tgz#8f85920461d4500582b92162f90f250dd90404a0"
+  integrity sha512-X+rvHzI8QDaziW0Tx+Ps0z+fvE78hiOzO5+a8ewP9673/f/mNkWgdxPlar4SMUkIZ9MC4m7QsivBCevVCz207w==
   dependencies:
     protobufjs "6.10.2"
 
