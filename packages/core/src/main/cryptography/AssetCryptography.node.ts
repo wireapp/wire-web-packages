@@ -17,6 +17,7 @@
  *
  */
 
+import type {DebugOptions} from '@wireapp/api-client/src/asset';
 import * as crypto from 'crypto';
 
 import type {EncryptedAsset} from '../cryptography/';
@@ -54,12 +55,12 @@ export const decryptAsset = async ({
 
 export const encryptAsset = async (
   plainText: Buffer | Uint8Array,
-  __debugOptions?: {customHash?: Buffer; customCipher?: string},
+  debugOptions?: DebugOptions,
 ): Promise<EncryptedAsset> => {
   const initializationVector = crypto.randomBytes(16);
   const keyBytes = crypto.randomBytes(32);
 
-  const cipher = crypto.createCipheriv(__debugOptions?.customCipher || 'AES-256-CBC', keyBytes, initializationVector);
+  const cipher = crypto.createCipheriv(debugOptions?.customCipher || 'AES-256-CBC', keyBytes, initializationVector);
   const cipherUpdated = cipher.update(plainText);
   const cipherFinal = cipher.final();
 
@@ -70,7 +71,7 @@ export const encryptAsset = async (
   ivCipherText.set(cipherText, initializationVector.byteLength);
 
   const computedSha256 =
-    __debugOptions?.customHash || crypto.createHash('SHA256').update(Buffer.from(ivCipherText.buffer)).digest();
+    debugOptions?.customHash || crypto.createHash('SHA256').update(Buffer.from(ivCipherText.buffer)).digest();
 
   return {
     cipherText: Buffer.from(ivCipherText.buffer),

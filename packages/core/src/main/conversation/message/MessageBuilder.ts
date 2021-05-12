@@ -18,6 +18,7 @@
  */
 
 import type {APIClient} from '@wireapp/api-client';
+import type {DebugOptions} from '@wireapp/api-client/src/asset';
 import {ClientAction, Confirmation} from '@wireapp/protocol-messaging';
 import UUID from 'uuidjs';
 
@@ -106,7 +107,7 @@ export class MessageBuilder {
     originalMessageId: string,
     expectsReadConfirmation?: boolean,
     legalHoldStatus?: LegalHoldStatus,
-    debugOptions?: {customHash?: Buffer; customCipher?: string},
+    debugOptions?: DebugOptions,
   ): Promise<FileAssetMessage> {
     const imageAsset = await this.assetService.uploadFileAsset(file, {debug: debugOptions});
 
@@ -185,7 +186,7 @@ export class MessageBuilder {
     messageId = MessageBuilder.createId(),
     expectsReadConfirmation?: boolean,
     legalHoldStatus?: LegalHoldStatus,
-    debugOptions?: {customHash?: Buffer; customCipher?: string},
+    debugOptions?: DebugOptions,
   ): Promise<ImageAssetMessageOutgoing> {
     const imageAsset = await this.assetService.uploadImageAsset(image, {debug: debugOptions});
 
