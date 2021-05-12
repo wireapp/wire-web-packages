@@ -73,19 +73,19 @@ interface BaseOptions {
 }
 
 interface CreateImageOptions extends BaseOptions {
-  image: ImageContent;
-  expectsReadConfirmation?: boolean;
-  legalHoldStatus?: LegalHoldStatus;
   debugOptions?: DebugOptions;
+  expectsReadConfirmation?: boolean;
+  image: ImageContent;
+  legalHoldStatus?: LegalHoldStatus;
 }
 
 interface CreateFileOptions {
   conversationId: string;
-  file: FileContent;
-  originalMessageId: string;
-  expectsReadConfirmation?: boolean;
-  legalHoldStatus?: LegalHoldStatus;
   debugOptions?: DebugOptions;
+  expectsReadConfirmation?: boolean;
+  file: FileContent;
+  legalHoldStatus?: LegalHoldStatus;
+  originalMessageId: string;
 }
 
 interface CreateEditedTextOptions extends BaseOptions {
@@ -94,17 +94,17 @@ interface CreateEditedTextOptions extends BaseOptions {
 }
 
 interface CreateFileMetadataOptions extends BaseOptions {
-  metaData: FileMetaDataContent;
   expectsReadConfirmation?: boolean;
   legalHoldStatus?: LegalHoldStatus;
+  metaData: FileMetaDataContent;
 }
 
 interface CreateFileAbortOptions {
   conversationId: string;
-  reason: AbortReason;
-  originalMessageId: string;
   expectsReadConfirmation?: boolean;
   legalHoldStatus?: LegalHoldStatus;
+  originalMessageId: string;
+  reason: AbortReason;
 }
 
 interface CreateLocationOptions extends BaseOptions {
@@ -125,8 +125,8 @@ interface CreateTextOptions extends BaseOptions {
 
 interface CreateConfirmationOptions extends BaseOptions {
   firstMessageId: string;
-  type: Confirmation.Type;
   moreMessageIds?: string[];
+  type: Confirmation.Type;
 }
 
 interface CreatePingOptions extends BaseOptions {
@@ -152,9 +152,9 @@ export class MessageBuilder {
 
   public createEditedText({
     conversationId,
+    messageId = MessageBuilder.createId(),
     newMessageText,
     originalMessageId,
-    messageId = MessageBuilder.createId(),
   }: CreateEditedTextOptions): TextContentBuilder {
     const content: EditedTextContent = {
       originalMessageId,
@@ -177,11 +177,11 @@ export class MessageBuilder {
 
   public async createFileData({
     conversationId,
-    file,
-    originalMessageId,
-    expectsReadConfirmation,
-    legalHoldStatus,
     debugOptions,
+    expectsReadConfirmation,
+    file,
+    legalHoldStatus,
+    originalMessageId,
   }: CreateFileOptions): Promise<FileAssetMessage> {
     const imageAsset = await this.assetService.uploadFileAsset(file, {debug: debugOptions});
 
@@ -206,10 +206,10 @@ export class MessageBuilder {
 
   public createFileMetadata({
     conversationId,
-    metaData,
-    messageId = MessageBuilder.createId(),
     expectsReadConfirmation,
     legalHoldStatus,
+    messageId = MessageBuilder.createId(),
+    metaData,
   }: CreateFileMetadataOptions): FileAssetMetaDataMessage {
     const content: FileAssetMetaDataContent = {
       expectsReadConfirmation,
@@ -231,10 +231,10 @@ export class MessageBuilder {
 
   public async createFileAbort({
     conversationId,
-    reason,
-    originalMessageId,
     expectsReadConfirmation,
     legalHoldStatus,
+    originalMessageId,
+    reason,
   }: CreateFileAbortOptions): Promise<FileAssetAbortMessage> {
     const content: FileAssetAbortContent = {
       expectsReadConfirmation,
@@ -256,11 +256,11 @@ export class MessageBuilder {
 
   public async createImage({
     conversationId,
-    image,
-    messageId = MessageBuilder.createId(),
-    expectsReadConfirmation,
-    legalHoldStatus,
     debugOptions,
+    expectsReadConfirmation,
+    image,
+    legalHoldStatus,
+    messageId = MessageBuilder.createId(),
   }: CreateImageOptions): Promise<ImageAssetMessageOutgoing> {
     const imageAsset = await this.assetService.uploadImageAsset(image, {debug: debugOptions});
 
@@ -300,7 +300,7 @@ export class MessageBuilder {
     };
   }
 
-  public createCall({conversationId, content, messageId = MessageBuilder.createId()}: CreateCallOptions): CallMessage {
+  public createCall({content, conversationId, messageId = MessageBuilder.createId()}: CreateCallOptions): CallMessage {
     return {
       content,
       conversation: conversationId,
@@ -315,8 +315,8 @@ export class MessageBuilder {
 
   public createReaction({
     conversationId,
-    reaction,
     messageId = MessageBuilder.createId(),
+    reaction,
   }: CreateReactionOptions): ReactionMessage {
     return {
       content: reaction,
@@ -332,8 +332,8 @@ export class MessageBuilder {
 
   public createText({
     conversationId,
-    text,
     messageId = MessageBuilder.createId(),
+    text,
   }: CreateTextOptions): TextContentBuilder {
     const content: TextContent = {text};
 
@@ -354,9 +354,9 @@ export class MessageBuilder {
   public createConfirmation({
     conversationId,
     firstMessageId,
-    type,
     messageId = MessageBuilder.createId(),
     moreMessageIds,
+    type,
   }: CreateConfirmationOptions): ConfirmationMessage {
     const content: ConfirmationContent = {firstMessageId, moreMessageIds, type};
     return {
@@ -372,8 +372,8 @@ export class MessageBuilder {
   }
 
   createButtonActionMessage({
-    conversationId,
     content,
+    conversationId,
     messageId = MessageBuilder.createId(),
   }: CreateActionMessageOptions): ButtonActionMessage {
     return {
@@ -389,8 +389,8 @@ export class MessageBuilder {
   }
 
   createButtonActionConfirmationMessage({
-    conversationId,
     content,
+    conversationId,
     messageId = MessageBuilder.createId(),
   }: CreateConfirmationOptions): ButtonActionConfirmationMessage {
     return {
@@ -423,10 +423,10 @@ export class MessageBuilder {
 
   public createPing({
     conversationId,
+    messageId = MessageBuilder.createId(),
     ping = {
       hotKnock: false,
     },
-    messageId = MessageBuilder.createId(),
   }: CreatePingOptions): PingMessage {
     return {
       content: ping,
