@@ -22,6 +22,11 @@ import * as crypto from 'crypto';
 
 import type {EncryptedAsset} from '../cryptography/';
 
+interface EncryptOptions {
+  plainText: Buffer | Uint8Array;
+  debug?: DebugOptions;
+}
+
 const isEqual = (a: Buffer, b: Buffer): boolean => {
   const arrayA = new Uint32Array(a);
   const arrayB = new Uint32Array(b);
@@ -53,14 +58,11 @@ export const decryptAsset = async ({
   return Buffer.concat([decipherUpdated, decipherFinal]);
 };
 
-export const encryptAsset = async (
-  plainText: Buffer | Uint8Array,
-  debugOptions?: DebugOptions,
-): Promise<EncryptedAsset> => {
+export const encryptAsset = async ({plainText, debug}: EncryptOptions): Promise<EncryptedAsset> => {
   const initializationVector = crypto.randomBytes(16);
   const keyBytes = crypto.randomBytes(32);
 
-  const cipher = crypto.createCipheriv(debugOptions?.customCipher || 'AES-256-CBC', keyBytes, initializationVector);
+  const cipher = crypto.createCipheriv(debug?.customCipher || 'AES-256-CBC', keyBytes, initializationVector);
   const cipherUpdated = cipher.update(plainText);
   const cipherFinal = cipher.final();
 
@@ -71,7 +73,7 @@ export const encryptAsset = async (
   ivCipherText.set(cipherText, initializationVector.byteLength);
 
   const computedSha256 =
-    debugOptions?.customHash || crypto.createHash('SHA256').update(Buffer.from(ivCipherText.buffer)).digest();
+    debug?.customHash || crypto.createHash('SHA256').update(Buffer.from(ivCipherText.buffer)).digest();
 
   return {
     cipherText: Buffer.from(ivCipherText.buffer),

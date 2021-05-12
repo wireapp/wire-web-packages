@@ -33,7 +33,7 @@ export class AssetService {
     options?: AssetOptions,
     progressCallback?: ProgressCallback,
   ): Promise<EncryptedAssetUploaded> {
-    const {cipherText, keyBytes, sha256} = await AssetCryptography.encryptAsset(plainText, options?.debug);
+    const {cipherText, keyBytes, sha256} = await AssetCryptography.encryptAsset({plainText, debug: options?.debug});
     const request = await this.apiClient.asset.api.postAsset(new Uint8Array(cipherText), options, progressCallback);
     const {key, token} = await request.response;
 
