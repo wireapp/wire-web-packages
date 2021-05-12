@@ -26,14 +26,19 @@ import type {EncryptedAssetUploaded} from '../cryptography/';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
 
 export class AssetService {
+  readonly debug = {
+    postAsset: this.postAsset,
+  };
+
   constructor(private readonly apiClient: APIClient) {}
 
   private async postAsset(
-    buffer: Buffer,
+    plainText: Buffer | Uint8Array,
     options?: AssetOptions,
     progressCallback?: ProgressCallback,
+    debugOptions?: {customHash?: Buffer; customCipher?: string},
   ): Promise<EncryptedAssetUploaded> {
-    const {cipherText, keyBytes, sha256} = await AssetCryptography.encryptAsset(buffer);
+    const {cipherText, keyBytes, sha256} = await AssetCryptography.encryptAsset(plainText, debugOptions);
     const request = await this.apiClient.asset.api.postAsset(new Uint8Array(cipherText), options, progressCallback);
     const {key, token} = await request.response;
 
