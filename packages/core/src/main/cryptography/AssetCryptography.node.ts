@@ -17,14 +17,13 @@
  *
  */
 
-import type {DebugOptions} from '@wireapp/api-client/src/asset';
+import type {CipherOptions} from '@wireapp/api-client/src/asset';
 import * as crypto from 'crypto';
 
 import type {EncryptedAsset} from '../cryptography/';
 
-interface EncryptOptions {
+interface EncryptOptions extends CipherOptions {
   plainText: Buffer | Uint8Array;
-  debug?: DebugOptions;
 }
 
 const isEqual = (a: Buffer, b: Buffer): boolean => {
@@ -58,11 +57,15 @@ export const decryptAsset = async ({
   return Buffer.concat([decipherUpdated, decipherFinal]);
 };
 
-export const encryptAsset = async ({plainText, debug}: EncryptOptions): Promise<EncryptedAsset> => {
+export const encryptAsset = async ({
+  plainText,
+  customAlgorithm,
+  customHash,
+}: EncryptOptions): Promise<EncryptedAsset> => {
   const initializationVector = crypto.randomBytes(16);
   const keyBytes = crypto.randomBytes(32);
 
-  const cipher = crypto.createCipheriv(debug?.customCipher || 'AES-256-CBC', keyBytes, initializationVector);
+  const cipher = crypto.createCipheriv(customAlgorithm || 'AES-256-CBC', keyBytes, initializationVector);
   const cipherUpdated = cipher.update(plainText);
   const cipherFinal = cipher.final();
 
@@ -72,12 +75,11 @@ export const encryptAsset = async ({plainText, debug}: EncryptOptions): Promise<
   ivCipherText.set(initializationVector, 0);
   ivCipherText.set(cipherText, initializationVector.byteLength);
 
-  const computedSha256 =
-    debug?.customHash || crypto.createHash('SHA256').update(Buffer.from(ivCipherText.buffer)).digest();
+  const computedHash = customHash || crypto.createHash('SHA256').update(Buffer.from(ivCipherText.buffer)).digest();
 
   return {
     cipherText: Buffer.from(ivCipherText.buffer),
     keyBytes,
-    sha256: computedSha256,
+    sha256: computedHash,
   };
 };

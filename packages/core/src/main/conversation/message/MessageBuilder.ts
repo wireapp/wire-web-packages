@@ -18,7 +18,7 @@
  */
 
 import type {APIClient} from '@wireapp/api-client';
-import type {DebugOptions} from '@wireapp/api-client/src/asset';
+import type {CipherOptions} from '@wireapp/api-client/src/asset';
 import {ClientAction, Confirmation} from '@wireapp/protocol-messaging';
 import UUID from 'uuidjs';
 
@@ -73,15 +73,15 @@ interface BaseOptions {
 }
 
 interface CreateImageOptions extends BaseOptions {
-  debugOptions?: DebugOptions;
+  cipherOptions?: CipherOptions;
   expectsReadConfirmation?: boolean;
   image: ImageContent;
   legalHoldStatus?: LegalHoldStatus;
 }
 
 interface CreateFileOptions {
+  cipherOptions?: CipherOptions;
   conversationId: string;
-  debugOptions?: DebugOptions;
   expectsReadConfirmation?: boolean;
   file: FileContent;
   legalHoldStatus?: LegalHoldStatus;
@@ -177,13 +177,13 @@ export class MessageBuilder {
 
   public async createFileData({
     conversationId,
-    debugOptions,
+    cipherOptions,
     expectsReadConfirmation,
     file,
     legalHoldStatus,
     originalMessageId,
   }: CreateFileOptions): Promise<FileAssetMessage> {
-    const imageAsset = await this.assetService.uploadFileAsset(file, {debug: debugOptions});
+    const imageAsset = await this.assetService.uploadFileAsset(file, {...cipherOptions});
 
     const content: FileAssetContent = {
       asset: imageAsset,
@@ -256,13 +256,13 @@ export class MessageBuilder {
 
   public async createImage({
     conversationId,
-    debugOptions,
+    cipherOptions,
     expectsReadConfirmation,
     image,
     legalHoldStatus,
     messageId = MessageBuilder.createId(),
   }: CreateImageOptions): Promise<ImageAssetMessageOutgoing> {
-    const imageAsset = await this.assetService.uploadImageAsset(image, {debug: debugOptions});
+    const imageAsset = await this.assetService.uploadImageAsset(image, {...cipherOptions});
 
     const content: ImageAssetContent = {
       asset: imageAsset,
