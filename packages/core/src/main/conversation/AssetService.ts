@@ -26,19 +26,15 @@ import type {EncryptedAssetUploaded} from '../cryptography/';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
 
 export class AssetService {
-  readonly __debug = {
-    postAsset: this.postAsset,
-  };
-
   constructor(private readonly apiClient: APIClient) {}
 
   private async postAsset(
     plainText: Buffer | Uint8Array,
     options?: AssetOptions,
     progressCallback?: ProgressCallback,
-    debugOptions?: {customHash?: Buffer; customCipher?: string},
+    __debugOptions?: {customHash?: Buffer; customCipher?: string},
   ): Promise<EncryptedAssetUploaded> {
-    const {cipherText, keyBytes, sha256} = await AssetCryptography.encryptAsset(plainText, debugOptions);
+    const {cipherText, keyBytes, sha256} = await AssetCryptography.encryptAsset(plainText, __debugOptions);
     const request = await this.apiClient.asset.api.postAsset(new Uint8Array(cipherText), options, progressCallback);
     const {key, token} = await request.response;
 
@@ -51,11 +47,19 @@ export class AssetService {
     };
   }
 
-  public uploadImageAsset(image: ImageContent, options?: AssetOptions): Promise<EncryptedAssetUploaded> {
-    return this.postAsset(image.data, options);
+  public uploadImageAsset(
+    image: ImageContent,
+    options?: AssetOptions,
+    __debugOptions?: {customHash?: Buffer; customCipher?: string},
+  ): Promise<EncryptedAssetUploaded> {
+    return this.postAsset(image.data, options, undefined, __debugOptions);
   }
 
-  public uploadFileAsset(file: FileContent, options?: AssetOptions): Promise<EncryptedAssetUploaded> {
-    return this.postAsset(file.data, options);
+  public uploadFileAsset(
+    file: FileContent,
+    options?: AssetOptions,
+    __debugOptions?: {customHash?: Buffer; customCipher?: string},
+  ): Promise<EncryptedAssetUploaded> {
+    return this.postAsset(file.data, options, undefined, __debugOptions);
   }
 }
