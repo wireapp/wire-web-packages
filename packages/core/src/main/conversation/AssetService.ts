@@ -26,7 +26,7 @@ import type {EncryptedAssetUploaded} from '../cryptography/';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
 
 export class AssetService {
-  readonly debug = {
+  readonly __debug = {
     postAsset: this.postAsset,
   };
 
