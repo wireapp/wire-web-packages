@@ -106,9 +106,9 @@ export class MessageBuilder {
     originalMessageId: string,
     expectsReadConfirmation?: boolean,
     legalHoldStatus?: LegalHoldStatus,
-    __debugOptions?: {customHash?: Buffer; customCipher?: string},
+    debugOptions?: {customHash?: Buffer; customCipher?: string},
   ): Promise<FileAssetMessage> {
-    const imageAsset = await this.assetService.uploadFileAsset(file, undefined, __debugOptions);
+    const imageAsset = await this.assetService.uploadFileAsset(file, {debug: debugOptions});
 
     const content: FileAssetContent = {
       asset: imageAsset,
@@ -185,9 +185,9 @@ export class MessageBuilder {
     messageId = MessageBuilder.createId(),
     expectsReadConfirmation?: boolean,
     legalHoldStatus?: LegalHoldStatus,
-    __debugOptions?: {customHash?: Buffer; customCipher?: string},
+    debugOptions?: {customHash?: Buffer; customCipher?: string},
   ): Promise<ImageAssetMessageOutgoing> {
-    const imageAsset = await this.assetService.uploadImageAsset(image, undefined, __debugOptions);
+    const imageAsset = await this.assetService.uploadImageAsset(image, {debug: debugOptions});
 
     const content: ImageAssetContent = {
       asset: imageAsset,

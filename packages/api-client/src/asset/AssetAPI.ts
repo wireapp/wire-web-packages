@@ -27,9 +27,15 @@ import {RequestCancellationError} from '../user';
 import {unsafeAlphanumeric} from '../shims/node/random';
 import type {AssetUploadData} from './AssetUploadData';
 
+export interface DebugOptions {
+  customHash?: Buffer;
+  customCipher?: string;
+}
+
 export interface AssetOptions {
-  public: boolean;
-  retention: AssetRetentionPolicy;
+  debug?: DebugOptions;
+  public?: boolean;
+  retention?: AssetRetentionPolicy;
 }
 
 export interface AssetResponse {
@@ -101,7 +107,6 @@ export class AssetAPI {
     asset: Uint8Array,
     options?: AssetOptions,
     progressCallback?: ProgressCallback,
-    customAssetUrl?: string,
   ): Promise<RequestCancelable<AssetUploadData>> {
     const BOUNDARY = `Frontier${unsafeAlphanumeric()}`;
 
