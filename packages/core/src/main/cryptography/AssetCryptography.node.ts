@@ -59,13 +59,13 @@ export const decryptAsset = async ({
 
 export const encryptAsset = async ({
   plainText,
-  customAlgorithm,
-  customHash,
+  algorithm = 'AES-256-CBC',
+  hash,
 }: EncryptOptions): Promise<EncryptedAsset> => {
   const initializationVector = crypto.randomBytes(16);
   const keyBytes = crypto.randomBytes(32);
 
-  const cipher = crypto.createCipheriv(customAlgorithm || 'AES-256-CBC', keyBytes, initializationVector);
+  const cipher = crypto.createCipheriv(algorithm, keyBytes, initializationVector);
   const cipherUpdated = cipher.update(plainText);
   const cipherFinal = cipher.final();
 
@@ -75,7 +75,7 @@ export const encryptAsset = async ({
   ivCipherText.set(initializationVector, 0);
   ivCipherText.set(cipherText, initializationVector.byteLength);
 
-  const computedHash = customHash || crypto.createHash('SHA256').update(Buffer.from(ivCipherText.buffer)).digest();
+  const computedHash = hash || crypto.createHash('SHA256').update(Buffer.from(ivCipherText.buffer)).digest();
 
   return {
     cipherText: Buffer.from(ivCipherText.buffer),

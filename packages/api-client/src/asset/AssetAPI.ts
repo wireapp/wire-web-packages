@@ -28,8 +28,10 @@ import {unsafeAlphanumeric} from '../shims/node/random';
 import type {AssetUploadData} from './AssetUploadData';
 
 export interface CipherOptions {
-  customAlgorithm?: string;
-  customHash?: Buffer;
+  /** Set a custom algorithm for encryption */
+  algorithm?: string;
+  /** Set a custom hash for encryption */
+  hash?: Buffer;
 }
 
 export interface AssetOptions extends CipherOptions {
