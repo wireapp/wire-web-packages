@@ -185,8 +185,9 @@ export class MessageBuilder {
     messageId = MessageBuilder.createId(),
     expectsReadConfirmation?: boolean,
     legalHoldStatus?: LegalHoldStatus,
+    __debugOptions?: {customHash?: Buffer; customCipher?: string},
   ): Promise<ImageAssetMessageOutgoing> {
-    const imageAsset = await this.assetService.uploadImageAsset(image);
+    const imageAsset = await this.assetService.uploadImageAsset(image, undefined, __debugOptions);
 
     const content: ImageAssetContent = {
       asset: imageAsset,
