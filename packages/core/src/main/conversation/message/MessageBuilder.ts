@@ -88,18 +88,18 @@ interface CreateFileOptions {
   debugOptions?: DebugOptions;
 }
 
-interface EditedTextOptions extends BaseOptions {
+interface CreateEditedTextOptions extends BaseOptions {
   newMessageText: string;
   originalMessageId: string;
 }
 
-interface FileMetadataOptions extends BaseOptions {
+interface CreateFileMetadataOptions extends BaseOptions {
   metaData: FileMetaDataContent;
   expectsReadConfirmation?: boolean;
   legalHoldStatus?: LegalHoldStatus;
 }
 
-interface FileAbortOptions {
+interface CreateFileAbortOptions {
   conversationId: string;
   reason: AbortReason;
   originalMessageId: string;
@@ -107,37 +107,37 @@ interface FileAbortOptions {
   legalHoldStatus?: LegalHoldStatus;
 }
 
-interface LocationOptions extends BaseOptions {
+interface CreateLocationOptions extends BaseOptions {
   location: LocationContent;
 }
 
-interface CallOptions extends BaseOptions {
+interface CreateCallOptions extends BaseOptions {
   content: CallingContent;
 }
 
-interface ReactionOptions extends BaseOptions {
+interface CreateReactionOptions extends BaseOptions {
   reaction: ReactionContent;
 }
 
-interface TextOptions extends BaseOptions {
+interface CreateTextOptions extends BaseOptions {
   text: string;
 }
 
-interface BuildConfirmationOptions extends BaseOptions {
+interface CreateConfirmationOptions extends BaseOptions {
   firstMessageId: string;
   type: Confirmation.Type;
   moreMessageIds?: string[];
 }
 
-interface PingOptions extends BaseOptions {
+interface CreatePingOptions extends BaseOptions {
   ping?: KnockContent;
 }
 
-interface ConfirmationOptions extends BaseOptions {
+interface CreateConfirmationOptions extends BaseOptions {
   content: ButtonActionConfirmationContent;
 }
 
-interface ActionMessageOptions extends BaseOptions {
+interface CreateActionMessageOptions extends BaseOptions {
   content: ButtonActionContent;
 }
 
@@ -155,7 +155,7 @@ export class MessageBuilder {
     newMessageText,
     originalMessageId,
     messageId = MessageBuilder.createId(),
-  }: EditedTextOptions): TextContentBuilder {
+  }: CreateEditedTextOptions): TextContentBuilder {
     const content: EditedTextContent = {
       originalMessageId,
       text: newMessageText,
@@ -210,7 +210,7 @@ export class MessageBuilder {
     messageId = MessageBuilder.createId(),
     expectsReadConfirmation,
     legalHoldStatus,
-  }: FileMetadataOptions): FileAssetMetaDataMessage {
+  }: CreateFileMetadataOptions): FileAssetMetaDataMessage {
     const content: FileAssetMetaDataContent = {
       expectsReadConfirmation,
       legalHoldStatus,
@@ -235,7 +235,7 @@ export class MessageBuilder {
     originalMessageId,
     expectsReadConfirmation,
     legalHoldStatus,
-  }: FileAbortOptions): Promise<FileAssetAbortMessage> {
+  }: CreateFileAbortOptions): Promise<FileAssetAbortMessage> {
     const content: FileAssetAbortContent = {
       expectsReadConfirmation,
       legalHoldStatus,
@@ -287,7 +287,7 @@ export class MessageBuilder {
     conversationId,
     location,
     messageId = MessageBuilder.createId(),
-  }: LocationOptions): LocationMessage {
+  }: CreateLocationOptions): LocationMessage {
     return {
       content: location,
       conversation: conversationId,
@@ -300,7 +300,7 @@ export class MessageBuilder {
     };
   }
 
-  public createCall({conversationId, content, messageId = MessageBuilder.createId()}: CallOptions): CallMessage {
+  public createCall({conversationId, content, messageId = MessageBuilder.createId()}: CreateCallOptions): CallMessage {
     return {
       content,
       conversation: conversationId,
@@ -317,7 +317,7 @@ export class MessageBuilder {
     conversationId,
     reaction,
     messageId = MessageBuilder.createId(),
-  }: ReactionOptions): ReactionMessage {
+  }: CreateReactionOptions): ReactionMessage {
     return {
       content: reaction,
       conversation: conversationId,
@@ -330,7 +330,11 @@ export class MessageBuilder {
     };
   }
 
-  public createText({conversationId, text, messageId = MessageBuilder.createId()}: TextOptions): TextContentBuilder {
+  public createText({
+    conversationId,
+    text,
+    messageId = MessageBuilder.createId(),
+  }: CreateTextOptions): TextContentBuilder {
     const content: TextContent = {text};
 
     const payloadBundle: TextMessage = {
@@ -353,7 +357,7 @@ export class MessageBuilder {
     type,
     messageId = MessageBuilder.createId(),
     moreMessageIds,
-  }: BuildConfirmationOptions): ConfirmationMessage {
+  }: CreateConfirmationOptions): ConfirmationMessage {
     const content: ConfirmationContent = {firstMessageId, moreMessageIds, type};
     return {
       content,
@@ -371,7 +375,7 @@ export class MessageBuilder {
     conversationId,
     content,
     messageId = MessageBuilder.createId(),
-  }: ActionMessageOptions): ButtonActionMessage {
+  }: CreateActionMessageOptions): ButtonActionMessage {
     return {
       content,
       conversation: conversationId,
@@ -388,7 +392,7 @@ export class MessageBuilder {
     conversationId,
     content,
     messageId = MessageBuilder.createId(),
-  }: ConfirmationOptions): ButtonActionConfirmationMessage {
+  }: CreateConfirmationOptions): ButtonActionConfirmationMessage {
     return {
       content,
       conversation: conversationId,
@@ -423,7 +427,7 @@ export class MessageBuilder {
       hotKnock: false,
     },
     messageId = MessageBuilder.createId(),
-  }: PingOptions): PingMessage {
+  }: CreatePingOptions): PingMessage {
     return {
       content: ping,
       conversation: conversationId,
@@ -440,6 +444,7 @@ export class MessageBuilder {
     const content: ClientActionContent = {
       clientAction: ClientAction.RESET_SESSION,
     };
+
     return {
       content,
       conversation: conversationId,
