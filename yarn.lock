@@ -3274,10 +3274,10 @@
   resolved "https://registry.npmjs.org/@webpack-cli/serve/-/serve-1.4.0.tgz#f84fd07bcacefe56ce762925798871092f0f228e"
   integrity sha512-xgT/HqJ+uLWGX+Mzufusl3cgjAcnqYYskaB7o0vRcwOEfuu6hMzSILQpnIzFMGsTaeaX4Nnekl+6fadLbl1/Vg==
 
-"@wireapp/avs@6.4.14":
-  version "6.4.14"
-  resolved "https://registry.npmjs.org/@wireapp/avs/-/avs-6.4.14.tgz#2c4b450cf769e4cc31afea5257d749a58926936c"
-  integrity sha512-YEWhH8LM46vNWrxGoQsC6sR2qPAmiy6CgA6ZDgEfE0f0pVlVC/Bw/0Zpss6He3ddq5heHHgQtHkBpARv+YqUyg==
+"@wireapp/avs@7.2.1":
+  version "7.2.1"
+  resolved "https://registry.npmjs.org/@wireapp/avs/-/avs-7.2.1.tgz#7b6b2fc6b68b815d144a77bf10b147aaa9e19399"
+  integrity sha512-rMQh7b/Llv+fLOuazKk66PsZeb4E3GQBE0P81BMtT7UMsn4AcZ43QHIPAl0XOZeIeYaQUyTMp3Jg+IznXPnzPA==
 
 "@wireapp/cbor@4.7.1":
   version "4.7.1"
