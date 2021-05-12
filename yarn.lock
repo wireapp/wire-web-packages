@@ -2959,10 +2959,10 @@
   resolved "https://registry.npmjs.org/@types/webrtc/-/webrtc-0.0.27.tgz#cf9118fa0ac54e530f0ee16c45b8e34df70ef47d"
   integrity sha512-uouyrXLZQJlysndIatP+O1aC8Ls/OP+zBeVnEBnnWCwH/RV8IWdmAIpoZBGfTcCbm8jWRKjijO2RXUcvMBz2TA==
 
-"@types/ws@7.4.2":
-  version "7.4.2"
-  resolved "https://registry.npmjs.org/@types/ws/-/ws-7.4.2.tgz#bfe739b5f8b3a39742605fbe415ae7e88ee614c8"
-  integrity sha512-PbeN0Eydl7LQl4OIav29YmkO2LxbVuz3nZD/kb19lOS+wLgIkRbWMNmU/QQR7ABpOJ7D7xDOU8co7iohObewrw==
+"@types/ws@7.4.4":
+  version "7.4.4"
+  resolved "https://registry.npmjs.org/@types/ws/-/ws-7.4.4.tgz#93e1e00824c1de2608c30e6de4303ab3b4c0c9bc"
+  integrity sha512-d/7W23JAXPodQNbOZNXvl2K+bqAQrCMwlh/nuQsPSQk6Fq0opHoPrUw43aHsvSbIiQPr8Of2hkFbnz1XBFVyZQ==
   dependencies:
     "@types/node" "*"
 
