@@ -28,8 +28,8 @@ import {unsafeAlphanumeric} from '../shims/node/random';
 import type {AssetUploadData} from './AssetUploadData';
 
 export interface DebugOptions {
-  customHash?: Buffer;
   customCipher?: string;
+  customHash?: Buffer;
 }
 
 export interface AssetOptions {
