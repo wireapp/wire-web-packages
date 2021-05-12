@@ -133,7 +133,7 @@ interface CreatePingOptions extends BaseOptions {
   ping?: KnockContent;
 }
 
-interface CreateConfirmationOptions extends BaseOptions {
+interface CreateButtonActionConfirmationOptions extends BaseOptions {
   content: ButtonActionConfirmationContent;
 }
 
@@ -392,7 +392,7 @@ export class MessageBuilder {
     content,
     conversationId,
     messageId = MessageBuilder.createId(),
-  }: CreateConfirmationOptions): ButtonActionConfirmationMessage {
+  }: CreateButtonActionConfirmationOptions): ButtonActionConfirmationMessage {
     return {
       content,
       conversation: conversationId,
