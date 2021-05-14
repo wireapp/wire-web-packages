@@ -6583,10 +6583,10 @@ eslint-plugin-jest@24.3.6:
   dependencies:
     "@typescript-eslint/experimental-utils" "^4.0.1"
 
-eslint-plugin-jsdoc@34.0.2:
-  version "34.0.2"
-  resolved "https://registry.npmjs.org/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-34.0.2.tgz#9e7ec1a9dedd4ea4b04b7a0fa785f3f3cad9d4e1"
-  integrity sha512-QquvZgL/p8eIoMjOQ/G3xuEEfq+GJZn71D+1N8cM4VxZBJcjTN0J3MM+lQDN7zaiuYtLKwt1jeJbEt2C2HhXkg==
+eslint-plugin-jsdoc@34.1.0:
+  version "34.1.0"
+  resolved "https://registry.npmjs.org/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-34.1.0.tgz#b153670a679fb5ce39286f770446f0a2e02ecbf6"
+  integrity sha512-7uk6vD92LCGBLwl7imvf7YzZrMbLmHZVSULBJClZpYTNdTpPXOtuPNKDi8nLcXYtZf3UopNs5qR7coapBSaUtw==
   dependencies:
     "@es-joy/jsdoccomment" "^0.4.4"
     comment-parser "1.1.5"
