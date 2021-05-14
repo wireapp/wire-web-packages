@@ -1,7 +1,7 @@
 name: 'Merge Dependencies'
 
 # https://github.com/ahmadnassri/action-dependabot-auto-merge/issues/60#issuecomment-806027389
-on: [ pull_request_target ]
+on: [pull_request_target]
 
 jobs:
   auto-merge:
