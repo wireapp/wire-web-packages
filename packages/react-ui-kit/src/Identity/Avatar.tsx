@@ -95,7 +95,7 @@ export const Avatar = (props: AvatarProps) => {
     name
       .split(' ')
       .filter(ArrayUtil.filterFalsy)
-      .map(([initial]) => initial?.toUpperCase())
+      .map(([initial]) => initial.toUpperCase())
       .join('')
       .substring(0, isAvatarGridItem ? 1 : 2);
 
