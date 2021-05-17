@@ -140,7 +140,7 @@ describe('ArrayUtil', () => {
 
   describe('"filterFalsy"', () => {
     it('returns a filtered array', () => {
-      const array = [0, 1, 2, '', undefined, null, 3];
+      const array = [0, 1, 2, '', undefined, null, 3, NaN];
       expect(array.filter(ArrayUtil.filterFalsy)).toEqual([1, 2, 3]);
     });
   });
