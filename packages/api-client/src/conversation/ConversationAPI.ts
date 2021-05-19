@@ -699,8 +699,20 @@ export class ConversationAPI {
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.MEMBERS}`,
     };
 
-    const response = await this.client.sendJSON<ConversationMemberJoinEvent>(config);
-    return response.data;
+    try {
+      const response = await this.client.sendJSON<ConversationMemberJoinEvent>(config);
+      return response.data;
+    } catch (error) {
+      switch (error.label) {
+        case BackendErrorLabel.LEGAL_HOLD_CONVERSATION_NEEDS_CONSENT: {
+          throw new ConversationLegalholdConsentNeededError(error.message);
+        }
+        case BackendErrorLabel.LEGAL_HOLD_USER_NEEDS_CONSENT: {
+          throw new ConversationLegalHoldUserConsentNeededError(error.message);
+        }
+      }
+      throw error;
+    }
   }
 
   /**
