@@ -26,7 +26,7 @@ import type {Theme} from '../Layout';
 import {filterProps} from '../util';
 import {COLOR} from '../Identity';
 
-export interface TextProps<T = HTMLSpanElement> extends React.HTMLAttributes<T> {
+export interface TextProps<T = HTMLSpanElement> extends React.PropsWithRef<React.HTMLProps<T>> {
   block?: boolean;
   bold?: boolean;
   center?: boolean;
