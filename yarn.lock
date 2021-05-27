@@ -11545,10 +11545,10 @@ nice-try@^1.0.4:
   resolved "https://registry.npmjs.org/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
   integrity sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
 
-nise@^5.0.4:
-  version "5.0.4"
-  resolved "https://registry.npmjs.org/nise/-/nise-5.0.4.tgz#aafddeec51d8bcb9842a51be8d82d0b9f289b002"
-  integrity sha512-ZcFPFu5a7xiaoR/ieYXMx6B/QLJej9upgxcpD9uB2Oz4JbZUtAc9+Z000W6910tZuVvaHozEoxq0KvVE9Bj2TQ==
+nise@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.npmjs.org/nise/-/nise-5.1.0.tgz#713ef3ed138252daef20ec035ab62b7a28be645c"
+  integrity sha512-W5WlHu+wvo3PaKLsJJkgPup2LrsXCcm7AWwyNZkUnn5rwPkuPBi3Iwk5SQtN0mv+K65k7nKKjwNQ30wg3wLAQQ==
   dependencies:
     "@sinonjs/commons" "^1.7.0"
     "@sinonjs/fake-timers" "^7.0.4"
@@ -14466,17 +14466,17 @@ sinon-har-server@0.3.0:
   resolved "https://registry.npmjs.org/sinon-har-server/-/sinon-har-server-0.3.0.tgz#d767b51a2f6f34856ecd9867ff98f97bacfbde6b"
   integrity sha1-12e1Gi9vNIVuzZhn/5j5e6z73ms=
 
-sinon@11.0.0:
-  version "11.0.0"
-  resolved "https://registry.npmjs.org/sinon/-/sinon-11.0.0.tgz#e45bae910425d3e52f7eebcb34b47ad42cc7eb57"
-  integrity sha512-iLdNOhEDVHf1GJwWIqiFQe7QqYsqKDSYUUmmb180WCu3l0Cz+CKBxsiSa8P5fTJvTp1lwE77uK/aHzUuJKr1cA==
+sinon@11.1.1:
+  version "11.1.1"
+  resolved "https://registry.npmjs.org/sinon/-/sinon-11.1.1.tgz#99a295a8b6f0fadbbb7e004076f3ae54fc6eab91"
+  integrity sha512-ZSSmlkSyhUWbkF01Z9tEbxZLF/5tRC9eojCdFh33gtQaP7ITQVaMWQHGuFM7Cuf/KEfihuh1tTl3/ABju3AQMg==
   dependencies:
     "@sinonjs/commons" "^1.8.3"
     "@sinonjs/fake-timers" "^7.1.0"
     "@sinonjs/samsam" "^6.0.2"
     diff "^5.0.0"
-    nise "^5.0.4"
-    supports-color "^8.1.1"
+    nise "^5.1.0"
+    supports-color "^7.2.0"
 
 sisteransi@^1.0.5:
   version "1.0.5"
@@ -15304,14 +15304,14 @@ supports-color@^6.1.0:
   dependencies:
     has-flag "^3.0.0"
 
-supports-color@^7.0.0, supports-color@^7.1.0:
-  version "7.1.0"
-  resolved "https://registry.npmjs.org/supports-color/-/supports-color-7.1.0.tgz#68e32591df73e25ad1c4b49108a2ec507962bfd1"
-  integrity sha512-oRSIpR8pxT1Wr2FquTNnGet79b3BWljqOuoW/h4oBhxJ/HUbX5nX6JSruTkvXDCFMwDPvsaTTbvMLKZWSy0R5g==
+supports-color@^7.0.0, supports-color@^7.1.0, supports-color@^7.2.0:
+  version "7.2.0"
+  resolved "https://registry.npmjs.org/supports-color/-/supports-color-7.2.0.tgz#1b7dcdcb32b8138801b3e478ba6a51caa89648da"
+  integrity sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==
   dependencies:
     has-flag "^4.0.0"
 
-supports-color@^8.1.0, supports-color@^8.1.1:
+supports-color@^8.1.0:
   version "8.1.1"
   resolved "https://registry.npmjs.org/supports-color/-/supports-color-8.1.1.tgz#cd6fc17e28500cff56c1b86c0a7fd4a54a73005c"
   integrity sha512-MpUEN2OodtUzxvKQl72cUF7RQ5EiHsGvSsVG0ia9c5RbWGL2CI4C7EpPS8UTBIplnlzZiNuV56w+FuNxy3ty2Q==
