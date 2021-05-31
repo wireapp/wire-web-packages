@@ -19,4 +19,4 @@
 
 import {MemberData} from './MemberData';
 
-export interface UpdatedMemberData extends Omit<MemberData, 'legalhold_status'> {}
+export type UpdatedMemberData = Omit<MemberData, 'legalhold_status'>;
