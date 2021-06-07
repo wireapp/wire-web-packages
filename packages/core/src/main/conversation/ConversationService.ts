@@ -966,7 +966,7 @@ export class ConversationService {
     conversationId: string,
     userIds: T,
   ): Promise<T> {
-    const ids = !Array.isArray(userIds) ? [userIds] : userIds;
+    const ids = Array.isArray(userIds) ? userIds : [userIds];
     if (typeof ids[0] === 'string') {
       await this.apiClient.conversation.api.postMembers(conversationId, ids as string[]);
     } else {
