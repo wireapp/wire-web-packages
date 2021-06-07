@@ -27,7 +27,7 @@ import {
 } from '@wireapp/api-client/src/conversation/';
 import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/src/conversation/data/';
 import type {ConversationMemberLeaveEvent} from '@wireapp/api-client/src/event/';
-import type {UserPreKeyBundleMap} from '@wireapp/api-client/src/user/';
+import type {QualifiedId, UserPreKeyBundleMap} from '@wireapp/api-client/src/user/';
 import {
   Asset,
   ButtonAction,
@@ -962,11 +962,17 @@ export class ConversationService {
     return (await request.response).buffer;
   }
 
-  public async addUser(conversationId: string, userId: string): Promise<string>;
-  public async addUser(conversationId: string, userIds: string[]): Promise<string[]>;
-  public async addUser(conversationId: string, userIds: string | string[]): Promise<string | string[]> {
-    const ids = typeof userIds === 'string' ? [userIds] : userIds;
-    await this.apiClient.conversation.api.postMembers(conversationId, ids);
+  public async addUser<T extends string | QualifiedId | string[] | QualifiedId[]>(
+    conversationId: string,
+    userIds: T,
+  ): Promise<T> {
+    const ids = !Array.isArray(userIds) ? [userIds] : userIds;
+    if (typeof ids[0] === 'string') {
+      await this.apiClient.conversation.api.postMembers(conversationId, ids as string[]);
+    } else {
+      await this.apiClient.conversation.api.postMembersV2(conversationId, ids as QualifiedId[]);
+    }
+
     return userIds;
   }
 
