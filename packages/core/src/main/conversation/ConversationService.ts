@@ -60,6 +60,7 @@ import {
 import type {AssetContent, ClearedContent, DeletedContent, HiddenContent, RemoteData} from '../conversation/content/';
 import type {CryptographyService, EncryptedAsset} from '../cryptography/';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
+import {isStringArray, isQualifiedIdArray} from '../util/TypePredicateUtil';
 import {MessageBuilder} from './message/MessageBuilder';
 import {MessageService} from './message/MessageService';
 import {MessageToProtoMapper} from './message/MessageToProtoMapper';
@@ -962,15 +963,15 @@ export class ConversationService {
     return (await request.response).buffer;
   }
 
-  public async addUser<T extends string | QualifiedId | string[] | QualifiedId[]>(
+  public async addUser<T extends string | string[] | QualifiedId | QualifiedId[]>(
     conversationId: string,
     userIds: T,
   ): Promise<T> {
     const ids = Array.isArray(userIds) ? userIds : [userIds];
-    if (typeof ids[0] === 'string') {
-      await this.apiClient.conversation.api.postMembers(conversationId, ids as string[]);
-    } else {
-      await this.apiClient.conversation.api.postMembersV2(conversationId, ids as QualifiedId[]);
+    if (isStringArray(ids)) {
+      await this.apiClient.conversation.api.postMembers(conversationId, ids);
+    } else if (isQualifiedIdArray(ids)) {
+      await this.apiClient.conversation.api.postMembersV2(conversationId, ids);
     }
 
     return userIds;
