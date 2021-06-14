@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2021 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,18 +17,4 @@
  *
  */
 
-import type {Account} from './Account';
-import * as auth from './auth/';
-import * as conversation from './conversation/';
-import type {CoreError} from './CoreError';
-import * as cryptography from './cryptography/';
-import * as util from './util';
-
-export = {
-  Account,
-  CoreError,
-  auth,
-  conversation,
-  cryptography,
-  util,
-};
+export * from './TypePredicateUtil';
