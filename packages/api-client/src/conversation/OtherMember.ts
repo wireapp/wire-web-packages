@@ -24,6 +24,7 @@ import type {QualifiedId} from '../user/QualifiedId';
 export interface OtherMember extends Partial<ConversationOtherMemberUpdateData> {
   /** The user ID. */
   id: string;
+  qualified_id?: QualifiedId;
   /** The reference to the owning provider, if the member is a service. */
   service?: ServiceRef;
   /**
@@ -31,7 +32,6 @@ export interface OtherMember extends Partial<ConversationOtherMemberUpdateData> 
    * Other status values might be used in the future
    */
   status: SERVICE_MEMBER_STATUS;
-  qualified_id?: QualifiedId;
 }
 
 export enum SERVICE_MEMBER_STATUS {
