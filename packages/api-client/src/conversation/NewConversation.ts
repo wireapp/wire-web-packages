@@ -23,10 +23,11 @@ import type {Conversation} from './Conversation';
 import type {DefaultConversationRoleName} from './ConversationRole';
 import type {RECEIPT_MODE} from './data/ConversationReceiptModeUpdateData';
 
-export type NewConversation = Partial<Pick<Conversation, 'access' | 'access_role' | 'message_timer' | 'name'>> & {
+export interface NewConversation
+  extends Partial<Pick<Conversation, 'access' | 'access_role' | 'message_timer' | 'name'>> {
   conversation_role?: DefaultConversationRoleName;
   qualified_users?: QualifiedId[];
   receipt_mode?: RECEIPT_MODE;
   team?: TeamInfo;
   users: string[];
-};
+}
