@@ -19,7 +19,7 @@
 
 import {StatusCodes as HTTP_STATUS} from 'http-status-codes';
 import {AxiosError} from 'axios';
-import {IUserEntry, IClientEntry, NewOtrMessage} from '@wireapp/protocol-messaging/web/otr';
+import {proteus as protobufOTR} from '@wireapp/protocol-messaging/web/otr';
 import Long from 'long';
 import {bytesToUUID, uuidToBytes} from '@wireapp/commons/src/main/util/StringUtil';
 import {APIClient} from '@wireapp/api-client';
@@ -83,8 +83,8 @@ export class MessageService {
     plainTextArray: Uint8Array,
     assetData?: Uint8Array,
   ): Promise<void> {
-    const userEntries: IUserEntry[] = Object.entries(recipients).map(([userId, otrClientMap]) => {
-      const clients: IClientEntry[] = Object.entries(otrClientMap).map(([clientId, payload]) => {
+    const userEntries: protobufOTR.IUserEntry[] = Object.entries(recipients).map(([userId, otrClientMap]) => {
+      const clients: protobufOTR.IClientEntry[] = Object.entries(otrClientMap).map(([clientId, payload]) => {
         return {
           client: {
             client: Long.fromString(clientId, 16),
@@ -101,7 +101,7 @@ export class MessageService {
       };
     });
 
-    const protoMessage = NewOtrMessage.create({
+    const protoMessage = protobufOTR.NewOtrMessage.create({
       recipients: userEntries,
       sender: {
         client: Long.fromString(sendingClientId, 16),
@@ -181,9 +181,9 @@ export class MessageService {
 
   private async onClientProtobufMismatch(
     error: AxiosError,
-    message: NewOtrMessage,
+    message: protobufOTR.NewOtrMessage,
     plainTextArray: Uint8Array,
-  ): Promise<NewOtrMessage> {
+  ): Promise<protobufOTR.NewOtrMessage> {
     if (error.response?.status === HTTP_STATUS.PRECONDITION_FAILED) {
       const {missing, deleted} = (error as ClientMismatchError).response?.data!;
 
