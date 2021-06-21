@@ -23,7 +23,7 @@ import React, {ReactFragment, useEffect, useState} from 'react';
 
 import {QUERY, QueryKeys} from '../mediaQueries';
 
-type Query = string | keyof QueryKeys;
+type Query = string | QueryKeys;
 
 export interface MatchMediaProps extends React.HTMLProps<ReactFragment> {
   not?: boolean;
@@ -31,7 +31,7 @@ export interface MatchMediaProps extends React.HTMLProps<ReactFragment> {
 }
 
 export const useMatchMedia = (query: Query) => {
-  const matchMedia = window.matchMedia(`(${query.toString()})`);
+  const matchMedia = window.matchMedia(`(${query})`);
 
   const [isMatching, setIsMatching] = useState(matchMedia.matches);
 
