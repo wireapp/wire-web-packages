@@ -332,7 +332,7 @@ export class MessageService {
   ): Promise<ProtobufOTR.QualifiedNewOtrMessage> {
     for (const [deletedUserDomain, deletedUserIdClients] of Object.entries(messageSendingStatus.deleted)) {
       if (!messageData.recipients.find(recipient => recipient.domain === deletedUserDomain)) {
-        // todo: domain not in message at all?
+        // todo: domain not in original message - was the message never intended to be sent to this domain?
         continue;
       }
       for (const [deletedUserId] of Object.entries(deletedUserIdClients)) {
@@ -351,7 +351,7 @@ export class MessageService {
 
     for (const [missingUserDomain, missingUserIdClients] of Object.entries(messageSendingStatus.missing)) {
       if (!messageData.recipients.find(recipient => recipient.domain === missingUserDomain)) {
-        // todo: domain not in message at all?
+        // todo: domain not in original message - was the message never intended to be sent to this domain?
         continue;
       }
 
