@@ -141,6 +141,7 @@ export class MessageService {
     conversationId: string,
     domain: string,
     messageData: ProtobufOTR.QualifiedNewOtrMessage,
+    plainTextArray: Uint8Array,
   ): Promise<void> {
     const messageSendingStatus = await this.apiClient.conversation.api.postOTRMessageV2(
       conversationId,
@@ -151,7 +152,11 @@ export class MessageService {
     const federatedClientsMismatch = this.checkFederatedClientsMismatch(messageData, messageSendingStatus);
 
     if (federatedClientsMismatch) {
-      const reEncryptedMessage = await this.onFederatedClientMismatch(messageData, federatedClientsMismatch);
+      const reEncryptedMessage = await this.onFederatedClientMismatch(
+        messageData,
+        federatedClientsMismatch,
+        plainTextArray,
+      );
       await this.apiClient.conversation.api.postOTRMessageV2(conversationId, domain, reEncryptedMessage);
     }
   }
@@ -329,6 +334,7 @@ export class MessageService {
   private async onFederatedClientMismatch(
     messageData: ProtobufOTR.QualifiedNewOtrMessage,
     messageSendingStatus: MessageSendingStatus,
+    plainTextArray: Uint8Array,
   ): Promise<ProtobufOTR.QualifiedNewOtrMessage> {
     for (const [deletedUserDomain, deletedUserIdClients] of Object.entries(messageSendingStatus.deleted)) {
       if (!messageData.recipients.find(recipient => recipient.domain === deletedUserDomain)) {
@@ -349,45 +355,59 @@ export class MessageService {
       }
     }
 
-    for (const [missingUserDomain, missingUserIdClients] of Object.entries(messageSendingStatus.missing)) {
-      if (!messageData.recipients.find(recipient => recipient.domain === missingUserDomain)) {
-        // todo: domain not in original message - was the message never intended to be sent to this domain?
-        continue;
+    const missingUserIds = Object.entries(messageSendingStatus.missing);
+    if (missingUserIds.length) {
+      const federatedUsers = {...messageSendingStatus.missing};
+      delete federatedUsers.none;
+
+      const missingPreKeyBundlesFed = await this.apiClient.user.api.postMultiPreKeyBundles(federatedUsers);
+      let reEncryptedPayloads = await this.cryptographyService.encrypt(plainTextArray, missingPreKeyBundlesFed);
+
+      if (messageSendingStatus.missing.none) {
+        const missingPreKeyBundles = await this.apiClient.user.api.postMultiPreKeyBundles(
+          messageSendingStatus.missing.none,
+        );
+        reEncryptedPayloads = {
+          ...reEncryptedPayloads,
+          ...(await this.cryptographyService.encrypt(plainTextArray, missingPreKeyBundles)),
+        };
       }
 
-      const originalText = messageData.recipients[0].entries?.[0].clients?.[0].text;
+      for (const [missingUserDomain, missingUserIdClients] of missingUserIds) {
+        if (!messageData.recipients.find(recipient => recipient.domain === missingUserDomain)) {
+          // todo: domain not in original message - was the message never intended to be sent to this domain?
+          continue;
+        }
 
-      if (!originalText) {
-        throw new Error('No original text found to re-encrypt');
-      }
+        for (const [missingUserId, missingClientIds] of Object.entries(missingUserIdClients)) {
+          for (const recipientIndex in messageData.recipients) {
+            if (messageData.recipients[recipientIndex].domain === missingUserDomain) {
+              let userIndex = messageData.recipients[recipientIndex].entries?.findIndex(
+                ({user}) => bytesToUUID(user.uuid) === missingUserId,
+              );
 
-      for (const [missingUserId, missingClientIds] of Object.entries(missingUserIdClients)) {
-        for (const recipientIndex in messageData.recipients) {
-          if (messageData.recipients[recipientIndex].domain === missingUserDomain) {
-            let userIndex = messageData.recipients[recipientIndex].entries?.findIndex(
-              ({user}) => bytesToUUID(user.uuid) === missingUserId,
-            );
-
-            if (userIndex === -1) {
-              userIndex = messageData.recipients[recipientIndex].entries!.push({
-                user: {
-                  uuid: uuidToBytes(missingUserId),
-                },
-              });
-            }
-
-            const uuid = messageData.recipients[recipientIndex].entries![userIndex!].user?.uuid;
-            if (!!uuid && bytesToUUID(uuid) === missingUserId) {
-              for (const missingClientId of missingClientIds) {
-                if (!messageData.recipients[recipientIndex].entries![userIndex!].clients) {
-                  messageData.recipients[recipientIndex].entries![userIndex!].clients = [];
-                }
-                messageData.recipients[recipientIndex].entries![userIndex!].clients?.push({
-                  client: {
-                    client: Long.fromString(missingClientId, 16),
+              if (userIndex === -1) {
+                userIndex = messageData.recipients[recipientIndex].entries!.push({
+                  user: {
+                    uuid: uuidToBytes(missingUserId),
                   },
-                  text: originalText,
                 });
+              }
+
+              const uuid = messageData.recipients[recipientIndex].entries![userIndex!].user?.uuid;
+              if (!!uuid && bytesToUUID(uuid) === missingUserId) {
+                for (const missingClientId of missingClientIds) {
+                  if (!messageData.recipients[recipientIndex].entries![userIndex!].clients) {
+                    messageData.recipients[recipientIndex].entries![userIndex!].clients = [];
+                  }
+                  messageData.recipients[recipientIndex].entries![userIndex!].clients?.push({
+                    client: {
+                      client: Long.fromString(missingClientId, 16),
+                    },
+                    // todo: use fully qualified re-encrypted payload
+                    text: reEncryptedPayloads[missingUserId][missingClientId],
+                  });
+                }
               }
             }
           }
