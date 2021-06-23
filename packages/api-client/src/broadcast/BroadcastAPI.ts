@@ -17,7 +17,7 @@
  *
  */
 
-import type {proteus as protobufOTR} from '@wireapp/protocol-messaging/web/otr';
+import type {proteus as ProtobufOTR} from '@wireapp/protocol-messaging/web/otr';
 import type {AxiosRequestConfig} from 'axios';
 
 import {ValidationError} from '../validation/';
@@ -87,7 +87,7 @@ export class BroadcastAPI {
    */
   public async postBroadcastProtobufMessage(
     sendingClientId: string,
-    messageData: protobufOTR.NewOtrMessage,
+    messageData: ProtobufOTR.NewOtrMessage,
     ignoreMissing?: boolean | string[],
   ): Promise<ClientMismatch> {
     if (!sendingClientId) {
