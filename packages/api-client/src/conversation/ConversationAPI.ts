@@ -31,6 +31,7 @@ import type {
   Conversations,
   Invite,
   Member,
+  MessageSendingStatus,
   NewConversation,
   NewOTRMessage,
 } from './';
@@ -572,6 +573,41 @@ export class ConversationAPI {
     }
 
     const response = await this.client.sendJSON<ClientMismatch>(config, true);
+    return response.data;
+  }
+
+  /**
+   * This endpoint ensures that the list of clients is correct and only sends the message if the list is correct.
+   * To override this, the endpoint accepts `client_mismatch_strategy` in the body. It can have these values:
+   *
+   * - `report_all`: When set, the message is not sent if any clients are missing. The missing clients are reported
+   * in the response.
+   * - `ignore_all`: When set, no checks about missing clients are carried out.
+   * - `report_only`: Takes a list of qualified UserIDs. If any clients of the listed users are missing, the message is
+   * not sent. The missing clients are reported in the response.
+   * - `ignore_only`: Takes a list of qualified UserIDs. If any clients of the non-listed users are missing, the message
+   * is not sent. The missing clients are reported in the response.
+   *
+   * The sending of messages in a federated conversation could theorectically fail partially. To make this case
+   * unlikely, the backend first gets a list of clients from all the involved backends and then tries to send a message.
+   * So, if any backend is down, the message is not propagated to anyone. But the actual message fan out to multiple
+   * backends could still fail partially. This type of failure is reported as a 201, the clients for which the message
+   * sending failed are part of the response body.
+   *
+   * This endpoint can lead to OtrMessageAdd event being sent to the recipients.
+   */
+  public async postOTRMessageV2(
+    conversationId: string,
+    domain: string,
+    messageData: ProtobufOTR.QualifiedNewOtrMessage,
+  ): Promise<MessageSendingStatus> {
+    const config: AxiosRequestConfig = {
+      data: messageData,
+      method: 'post',
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${domain}/${conversationId}/${ConversationAPI.URL.OTR}/${ConversationAPI.URL.MESSAGES}`,
+    };
+
+    const response = await this.client.sendProtocolBuffer<MessageSendingStatus>(config, true);
     return response.data;
   }
 

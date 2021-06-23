@@ -23,7 +23,13 @@ import {proteus as ProtobufOTR} from '@wireapp/protocol-messaging/web/otr';
 import Long from 'long';
 import {bytesToUUID, uuidToBytes} from '@wireapp/commons/src/main/util/StringUtil';
 import {APIClient} from '@wireapp/api-client';
-import {NewOTRMessage, OTRRecipients, UserClients} from '@wireapp/api-client/src/conversation';
+import {
+  MessageSendingStatus,
+  NewOTRMessage,
+  OTRRecipients,
+  QualifiedUserClients,
+  UserClients,
+} from '@wireapp/api-client/src/conversation';
 import {Decoder, Encoder} from 'bazinga64';
 
 import {CryptographyService} from '../../cryptography';
@@ -73,6 +79,80 @@ export class MessageService {
         recipients: CryptographyService.convertArrayRecipientsToBase64(reEncryptedMessage.recipients),
         sender: reEncryptedMessage.sender,
       });
+    }
+  }
+
+  private checkFederatedClientsMismatch(
+    messageData: ProtobufOTR.QualifiedNewOtrMessage,
+    messageSendingStatus: MessageSendingStatus,
+  ): MessageSendingStatus | null {
+    const updatedMessageSendingStatus = {...messageSendingStatus};
+    const sendingStatusKeys: (keyof Omit<typeof updatedMessageSendingStatus, 'time'>)[] = [
+      'deleted',
+      'failed_to_send',
+      'missing',
+      'redundant',
+    ];
+
+    if (messageData.ignoreOnly?.userIds?.length) {
+      const allFailed: QualifiedUserClients = {
+        ...messageSendingStatus.deleted,
+        ...messageSendingStatus.failed_to_send,
+        ...messageSendingStatus.missing,
+        ...messageSendingStatus.redundant,
+      };
+
+      for (const [domainFailed, userClientsFailed] of Object.entries(allFailed) || {}) {
+        for (const userIdMissing of Object.keys(userClientsFailed)) {
+          const userIsIgnored = messageData.ignoreOnly.userIds.find(({domain: domainIgnore, id: userIdIgnore}) => {
+            return userIdIgnore === userIdMissing && domainIgnore === domainFailed;
+          });
+          if (userIsIgnored) {
+            for (const sendingStatusKey of sendingStatusKeys) {
+              delete updatedMessageSendingStatus[sendingStatusKey][domainFailed][userIdMissing];
+            }
+          }
+        }
+      }
+    } else if (messageData.reportOnly?.userIds?.length) {
+      for (const [reportDomain, reportUserId] of Object.entries(messageData.reportOnly.userIds)) {
+        for (const sendingStatusKey of sendingStatusKeys) {
+          for (const [domainDeleted, userClientsDeleted] of Object.entries(
+            updatedMessageSendingStatus[sendingStatusKey],
+          )) {
+            for (const userIdDeleted of Object.keys(userClientsDeleted)) {
+              if (userIdDeleted !== reportUserId.id && domainDeleted !== reportDomain) {
+                delete updatedMessageSendingStatus[sendingStatusKey][domainDeleted][userIdDeleted];
+              }
+            }
+          }
+        }
+      }
+    } else if (!!messageData.ignoreAll) {
+      return null;
+    } else if (!!messageData.reportAll) {
+      // do nothing
+    }
+
+    return updatedMessageSendingStatus;
+  }
+
+  public async sendFederatedOTRMessage(
+    conversationId: string,
+    domain: string,
+    messageData: ProtobufOTR.QualifiedNewOtrMessage,
+  ): Promise<void> {
+    const messageSendingStatus = await this.apiClient.conversation.api.postOTRMessageV2(
+      conversationId,
+      domain,
+      messageData,
+    );
+
+    const federatedClientsMismatch = this.checkFederatedClientsMismatch(messageData, messageSendingStatus);
+
+    if (federatedClientsMismatch) {
+      const reEncryptedMessage = await this.onFederatedClientMismatch(messageData, federatedClientsMismatch);
+      await this.apiClient.conversation.api.postOTRMessageV2(conversationId, domain, reEncryptedMessage);
     }
   }
 
@@ -132,7 +212,16 @@ export class MessageService {
       }
     } catch (error) {
       const reEncryptedMessage = await this.onClientProtobufMismatch(error, protoMessage, plainTextArray);
-      await this.apiClient.broadcast.api.postBroadcastProtobufMessage(sendingClientId, reEncryptedMessage);
+      if (conversationId === null) {
+        await this.apiClient.broadcast.api.postBroadcastProtobufMessage(sendingClientId, reEncryptedMessage);
+      } else {
+        await this.apiClient.conversation.api.postOTRProtobufMessage(
+          sendingClientId,
+          conversationId,
+          reEncryptedMessage,
+          ignoreMissing,
+        );
+      }
     }
   }
 
@@ -235,5 +324,91 @@ export class MessageService {
     }
 
     throw error;
+  }
+
+  private async onFederatedClientMismatch(
+    messageData: ProtobufOTR.QualifiedNewOtrMessage,
+    messageSendingStatus: MessageSendingStatus,
+  ): Promise<ProtobufOTR.QualifiedNewOtrMessage> {
+    for (const [deletedUserDomain, deletedUserIdClients] of Object.entries(messageSendingStatus.deleted)) {
+      if (!messageData.recipients.find(recipient => recipient.domain === deletedUserDomain)) {
+        // todo: domain not in message at all?
+        continue;
+      }
+      for (const [deletedUserId] of Object.entries(deletedUserIdClients)) {
+        for (const recipientIndex in messageData.recipients) {
+          if (messageData.recipients[recipientIndex].domain === deletedUserDomain) {
+            for (const entriesIndex in messageData.recipients[recipientIndex].entries || []) {
+              const uuid = messageData.recipients[recipientIndex].entries![entriesIndex].user?.uuid;
+              if (!!uuid && bytesToUUID(uuid) === deletedUserId) {
+                delete messageData.recipients[recipientIndex].entries![entriesIndex];
+              }
+            }
+          }
+        }
+      }
+    }
+
+    for (const [missingUserDomain, missingUserIdClients] of Object.entries(messageSendingStatus.missing)) {
+      if (!messageData.recipients.find(recipient => recipient.domain === missingUserDomain)) {
+        // todo: domain not in message at all?
+        continue;
+      }
+
+      const originalText = messageData.recipients[0].entries?.[0].clients?.[0].text;
+
+      if (!originalText) {
+        throw new Error('No original text found to re-encrypt');
+      }
+
+      for (const [missingUserId, missingClientIds] of Object.entries(missingUserIdClients)) {
+        for (const recipientIndex in messageData.recipients) {
+          if (messageData.recipients[recipientIndex].domain === missingUserDomain) {
+            let foundUser = false;
+
+            for (const entriesIndex in messageData.recipients[recipientIndex].entries || []) {
+              const uuid = messageData.recipients[recipientIndex].entries![entriesIndex].user?.uuid;
+              if (!!uuid && bytesToUUID(uuid) === missingUserId) {
+                foundUser = true;
+                for (const missingClientId of missingClientIds) {
+                  if (!messageData.recipients[recipientIndex].entries![entriesIndex].clients) {
+                    messageData.recipients[recipientIndex].entries![entriesIndex].clients = [];
+                  }
+                  messageData.recipients[recipientIndex].entries![entriesIndex].clients?.push({
+                    client: {
+                      client: Long.fromString(missingClientId, 16),
+                    },
+                    text: originalText,
+                  });
+                }
+              }
+            }
+
+            if (!foundUser) {
+              if (!messageData.recipients[recipientIndex].entries) {
+                messageData.recipients[recipientIndex].entries = [];
+              }
+              for (const missingClientId of missingClientIds) {
+                messageData.recipients[recipientIndex].entries!.push({
+                  clients: [
+                    {
+                      client: {
+                        client: Long.fromString(missingClientId, 16),
+                      },
+                      text: originalText,
+                    },
+                  ],
+                  user: {
+                    uuid: uuidToBytes(missingUserId),
+                  },
+                });
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return messageData;
   }
 }
