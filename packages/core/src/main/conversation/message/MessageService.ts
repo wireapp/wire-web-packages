@@ -364,43 +364,29 @@ export class MessageService {
       for (const [missingUserId, missingClientIds] of Object.entries(missingUserIdClients)) {
         for (const recipientIndex in messageData.recipients) {
           if (messageData.recipients[recipientIndex].domain === missingUserDomain) {
-            let foundUser = false;
+            let userIndex = messageData.recipients[recipientIndex].entries?.findIndex(
+              ({user}) => bytesToUUID(user.uuid) === missingUserId,
+            );
 
-            for (const entriesIndex in messageData.recipients[recipientIndex].entries || []) {
-              const uuid = messageData.recipients[recipientIndex].entries![entriesIndex].user?.uuid;
-              if (!!uuid && bytesToUUID(uuid) === missingUserId) {
-                foundUser = true;
-                for (const missingClientId of missingClientIds) {
-                  if (!messageData.recipients[recipientIndex].entries![entriesIndex].clients) {
-                    messageData.recipients[recipientIndex].entries![entriesIndex].clients = [];
-                  }
-                  messageData.recipients[recipientIndex].entries![entriesIndex].clients?.push({
-                    client: {
-                      client: Long.fromString(missingClientId, 16),
-                    },
-                    text: originalText,
-                  });
-                }
-              }
+            if (userIndex === -1) {
+              userIndex = messageData.recipients[recipientIndex].entries!.push({
+                user: {
+                  uuid: uuidToBytes(missingUserId),
+                },
+              });
             }
 
-            if (!foundUser) {
-              if (!messageData.recipients[recipientIndex].entries) {
-                messageData.recipients[recipientIndex].entries = [];
-              }
+            const uuid = messageData.recipients[recipientIndex].entries![userIndex!].user?.uuid;
+            if (!!uuid && bytesToUUID(uuid) === missingUserId) {
               for (const missingClientId of missingClientIds) {
-                messageData.recipients[recipientIndex].entries!.push({
-                  clients: [
-                    {
-                      client: {
-                        client: Long.fromString(missingClientId, 16),
-                      },
-                      text: originalText,
-                    },
-                  ],
-                  user: {
-                    uuid: uuidToBytes(missingUserId),
+                if (!messageData.recipients[recipientIndex].entries![userIndex!].clients) {
+                  messageData.recipients[recipientIndex].entries![userIndex!].clients = [];
+                }
+                messageData.recipients[recipientIndex].entries![userIndex!].clients?.push({
+                  client: {
+                    client: Long.fromString(missingClientId, 16),
                   },
+                  text: originalText,
                 });
               }
             }
