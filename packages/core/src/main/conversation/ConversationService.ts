@@ -124,8 +124,9 @@ export class ConversationService {
   private async getPreKeyBundle(
     conversationId: string,
     userIds?: string[] | UserClientsMap | QualifiedUserClients,
+    domain?: string,
   ): Promise<QualifiedUserPreKeyBundleMap> {
-    const conversation = await this.apiClient.conversation.api.getConversation(conversationId);
+    const conversation = await this.apiClient.conversation.api.getConversation(conversationId, domain);
 
     let members: QualifiedId[];
 
@@ -142,9 +143,8 @@ export class ConversationService {
        * other clients.
        */
       members = conversation.members.others
-        .map(member => member.id)
-        .concat(conversation.members.self.id)
-        .map(userId => ({domain: 'none', id: userId}));
+        .map(member => member.qualified_id || {domain: 'none', id: member.id})
+        .concat(conversation.members.self.qualified_id || {domain: 'none', id: conversation.members.self.id});
     }
 
     const preKeys = await Promise.all(
