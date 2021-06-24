@@ -79,6 +79,7 @@ export class ConversationAPI {
     MESSAGE_TIMER: 'message-timer',
     NAME: 'name',
     OTR: 'otr',
+    PROTEUS: 'proteus',
     RECEIPT_MODE: 'receipt-mode',
     ROLES: 'roles',
     SELF: 'self',
@@ -604,7 +605,7 @@ export class ConversationAPI {
     const config: AxiosRequestConfig = {
       data: messageData,
       method: 'post',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${domain}/${conversationId}/${ConversationAPI.URL.OTR}/${ConversationAPI.URL.MESSAGES}`,
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${domain}/${conversationId}/${ConversationAPI.URL.PROTEUS}/${ConversationAPI.URL.MESSAGES}`,
     };
 
     const response = await this.client.sendProtocolBuffer<MessageSendingStatus>(config, true);
