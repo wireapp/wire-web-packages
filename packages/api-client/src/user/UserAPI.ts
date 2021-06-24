@@ -286,7 +286,7 @@ export class UserAPI {
     return response.data;
   }
 
-  public async getUserPreKeys(userId: string): Promise<PreKeyBundle | QualifiedPreKeyBundle>;
+  public async getUserPreKeys(userId: string): Promise<PreKeyBundle>;
   public async getUserPreKeys(userId: QualifiedId): Promise<QualifiedPreKeyBundle>;
   public async getUserPreKeys(userId: string | QualifiedId): Promise<PreKeyBundle | QualifiedPreKeyBundle> {
     const url =

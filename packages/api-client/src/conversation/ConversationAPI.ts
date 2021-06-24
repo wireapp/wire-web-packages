@@ -549,12 +549,10 @@ export class ConversationAPI {
       throw new ValidationError('Unable to send OTR message without client ID.');
     }
 
-    if (!messageData) {
-      messageData = {
-        recipients: {},
-        sender: sendingClientId,
-      };
-    }
+    messageData ||= {
+      recipients: {},
+      sender: sendingClientId,
+    };
 
     const config: AxiosRequestConfig = {
       data: messageData,

@@ -27,6 +27,7 @@ import {
   MessageSendingStatus,
   NewOTRMessage,
   OTRRecipients,
+  QualifiedOTRRecipients,
   QualifiedUserClients,
   UserClients,
 } from '@wireapp/api-client/src/conversation';
@@ -139,26 +140,70 @@ export class MessageService {
   }
 
   public async sendFederatedOTRMessage(
+    sendingClientId: string,
     conversationId: string,
-    domain: string,
-    messageData: ProtobufOTR.QualifiedNewOtrMessage,
+    conversationDomain: string,
+    recipients: QualifiedOTRRecipients,
     plainTextArray: Uint8Array,
+    assetData?: Uint8Array,
   ): Promise<void> {
-    const messageSendingStatus = await this.apiClient.conversation.api.postOTRMessageV2(
-      conversationId,
-      domain,
-      messageData,
+    const qualifiedUserEntries: ProtobufOTR.IQualifiedUserEntry[] = Object.entries(recipients).map(
+      ([domain, otrRecipients]) => {
+        const userEntries: ProtobufOTR.IUserEntry[] = Object.entries(otrRecipients).map(([userId, otrClientMap]) => {
+          const clientEntries: ProtobufOTR.IClientEntry[] = Object.entries(otrClientMap).map(([clientId, payload]) => {
+            return {
+              client: {
+                client: Long.fromString(clientId, 16),
+              },
+              text: payload,
+            };
+          });
+
+          return {
+            user: {
+              uuid: uuidToBytes(userId),
+            },
+            clients: clientEntries,
+          };
+        });
+
+        return {domain, entries: userEntries};
+      },
     );
 
-    const federatedClientsMismatch = this.checkFederatedClientsMismatch(messageData, messageSendingStatus);
+    const protoMessage = ProtobufOTR.QualifiedNewOtrMessage.create({
+      recipients: qualifiedUserEntries,
+      sender: {
+        client: Long.fromString(sendingClientId, 16),
+      },
+    });
+
+    if (assetData) {
+      protoMessage.blob = assetData;
+    }
+
+    /*
+     * When creating the PreKey bundles we already found out to which users we want to send a message, so we can ignore
+     * missing clients. We have to ignore missing clients because there can be the case that there are clients that
+     * don't provide PreKeys (clients from the Pre-E2EE era).
+     */
+    protoMessage.ignoreAll = {};
+
+    const messageSendingStatus = await this.apiClient.conversation.api.postOTRMessageV2(
+      conversationId,
+      conversationDomain,
+      protoMessage,
+    );
+
+    const federatedClientsMismatch = this.checkFederatedClientsMismatch(protoMessage, messageSendingStatus);
 
     if (federatedClientsMismatch) {
       const reEncryptedMessage = await this.onFederatedClientMismatch(
-        messageData,
+        protoMessage,
         federatedClientsMismatch,
         plainTextArray,
       );
-      await this.apiClient.conversation.api.postOTRMessageV2(conversationId, domain, reEncryptedMessage);
+      await this.apiClient.conversation.api.postOTRMessageV2(conversationId, conversationDomain, reEncryptedMessage);
     }
   }
 
@@ -400,9 +445,7 @@ export class MessageService {
 
               if (bytesToUUID(missingUserUUID) === missingUserId) {
                 for (const missingClientId of missingClientIds) {
-                  if (!messageData.recipients[recipientIndex].entries![userIndex!].clients) {
-                    messageData.recipients[recipientIndex].entries![userIndex!].clients = [];
-                  }
+                  messageData.recipients[recipientIndex].entries![userIndex!].clients ||= [];
                   messageData.recipients[recipientIndex].entries![userIndex!].clients?.push({
                     client: {
                       client: Long.fromString(missingClientId, 16),
