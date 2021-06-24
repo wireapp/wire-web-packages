@@ -19,16 +19,11 @@
 
 import {PublicClient} from './PublicClient';
 
-export type QualifiedUserMap = {
+export interface QualifiedUserMap {
   [domain: string]: {
     [userId: string]: PublicClient[];
   };
-} & {
-  /** users without federated domain */
-  none?: {
-    [userId: string]: PublicClient[];
-  };
-};
+}
 
 export interface QualifiedPublicClients {
   qualified_user_map: QualifiedUserMap;

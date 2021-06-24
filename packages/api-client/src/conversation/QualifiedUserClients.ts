@@ -19,11 +19,6 @@
 
 import {UserClients} from './UserClients';
 
-export interface QualifiedUserClientsOnlyFederated {
+export interface QualifiedUserClients {
   [domain: string]: UserClients;
 }
-
-export type QualifiedUserClients = QualifiedUserClientsOnlyFederated & {
-  /** users without federated domain */
-  none?: UserClients;
-};
