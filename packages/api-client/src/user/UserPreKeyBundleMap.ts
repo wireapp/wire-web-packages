@@ -24,3 +24,7 @@ export interface UserPreKeyBundleMap {
     [clientId: string]: PreKey;
   };
 }
+
+export interface QualifiedUserPreKeyBundleMap {
+  [domain: string]: UserPreKeyBundleMap;
+}

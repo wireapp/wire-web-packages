@@ -360,8 +360,11 @@ export class MessageService {
       const federatedUsers = {...messageSendingStatus.missing};
       delete federatedUsers.none;
 
-      const missingPreKeyBundlesFed = await this.apiClient.user.api.postMultiPreKeyBundles(federatedUsers);
-      let reEncryptedPayloads = await this.cryptographyService.encrypt(plainTextArray, missingPreKeyBundlesFed);
+      const missingPreKeyBundlesFed = await this.apiClient.user.api.postQualifiedMultiPreKeyBundles(federatedUsers);
+      let reEncryptedPayloads = await this.cryptographyService.encryptQualified(
+        plainTextArray,
+        missingPreKeyBundlesFed,
+      );
 
       if (messageSendingStatus.missing.none) {
         const missingPreKeyBundles = await this.apiClient.user.api.postMultiPreKeyBundles(
@@ -369,13 +372,13 @@ export class MessageService {
         );
         reEncryptedPayloads = {
           ...reEncryptedPayloads,
-          ...(await this.cryptographyService.encrypt(plainTextArray, missingPreKeyBundles)),
+          none: await this.cryptographyService.encrypt(plainTextArray, missingPreKeyBundles),
         };
       }
 
       for (const [missingUserDomain, missingUserIdClients] of missingUserIds) {
         if (!messageData.recipients.find(recipient => recipient.domain === missingUserDomain)) {
-          // todo: domain not in original message - was the message never intended to be sent to this domain?
+          // domain not in original message - was the message never intended to be sent to this domain?
           continue;
         }
 
@@ -404,8 +407,7 @@ export class MessageService {
                     client: {
                       client: Long.fromString(missingClientId, 16),
                     },
-                    // todo: use fully qualified re-encrypted payload
-                    text: reEncryptedPayloads[missingUserId][missingClientId],
+                    text: reEncryptedPayloads[missingUserDomain][missingUserId][missingClientId],
                   });
                 }
               }
