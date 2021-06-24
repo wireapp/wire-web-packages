@@ -17,12 +17,12 @@
  *
  */
 
-import {QualifiedUserClients} from './QualifiedUserClients';
+import {QualifiedUserClientsOnlyFederated} from './QualifiedUserClients';
 
 export interface MessageSendingStatus {
-  deleted: QualifiedUserClients;
-  failed_to_send: QualifiedUserClients;
-  missing: QualifiedUserClients;
-  redundant: QualifiedUserClients;
+  deleted: QualifiedUserClientsOnlyFederated;
+  failed_to_send: QualifiedUserClientsOnlyFederated;
+  missing: QualifiedUserClientsOnlyFederated;
+  redundant: QualifiedUserClientsOnlyFederated;
   time: string;
 }

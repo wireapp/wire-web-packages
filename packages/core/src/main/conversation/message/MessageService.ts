@@ -129,9 +129,10 @@ export class MessageService {
         }
       }
     } else if (!!messageData.ignoreAll) {
+      // report nothing
       return null;
     } else if (!!messageData.reportAll) {
-      // do nothing
+      // report everything
     }
 
     return updatedMessageSendingStatus;
@@ -336,17 +337,23 @@ export class MessageService {
     messageSendingStatus: MessageSendingStatus,
     plainTextArray: Uint8Array,
   ): Promise<ProtobufOTR.QualifiedNewOtrMessage> {
+    // walk through deleted domain/user map
     for (const [deletedUserDomain, deletedUserIdClients] of Object.entries(messageSendingStatus.deleted)) {
       if (!messageData.recipients.find(recipient => recipient.domain === deletedUserDomain)) {
-        // todo: domain not in original message - was the message never intended to be sent to this domain?
+        // no user from this domain was deleted
         continue;
       }
+      // walk through deleted user ids
       for (const [deletedUserId] of Object.entries(deletedUserIdClients)) {
+        // walk through message recipients
         for (const recipientIndex in messageData.recipients) {
+          // check if message recipients' domain is the same as the deleted user's domain
           if (messageData.recipients[recipientIndex].domain === deletedUserDomain) {
+            // check if message recipients' id is the same as the deleted user's id
             for (const entriesIndex in messageData.recipients[recipientIndex].entries || []) {
               const uuid = messageData.recipients[recipientIndex].entries![entriesIndex].user?.uuid;
               if (!!uuid && bytesToUUID(uuid) === deletedUserId) {
+                // delete this user from the message recipients
                 delete messageData.recipients[recipientIndex].entries![entriesIndex];
               }
             }
@@ -357,39 +364,31 @@ export class MessageService {
 
     const missingUserIds = Object.entries(messageSendingStatus.missing);
     if (missingUserIds.length) {
-      const federatedUsers = {...messageSendingStatus.missing};
-      delete federatedUsers.none;
-
-      const missingPreKeyBundlesFed = await this.apiClient.user.api.postQualifiedMultiPreKeyBundles(federatedUsers);
-      let reEncryptedPayloads = await this.cryptographyService.encryptQualified(
-        plainTextArray,
-        missingPreKeyBundlesFed,
+      const missingPreKeyBundles = await this.apiClient.user.api.postQualifiedMultiPreKeyBundles(
+        messageSendingStatus.missing,
       );
+      const reEncryptedPayloads = await this.cryptographyService.encryptQualified(plainTextArray, missingPreKeyBundles);
 
-      if (messageSendingStatus.missing.none) {
-        const missingPreKeyBundles = await this.apiClient.user.api.postMultiPreKeyBundles(
-          messageSendingStatus.missing.none,
-        );
-        reEncryptedPayloads = {
-          ...reEncryptedPayloads,
-          none: await this.cryptographyService.encrypt(plainTextArray, missingPreKeyBundles),
-        };
-      }
-
+      // walk through missing domain/user map
       for (const [missingUserDomain, missingUserIdClients] of missingUserIds) {
         if (!messageData.recipients.find(recipient => recipient.domain === missingUserDomain)) {
-          // domain not in original message - was the message never intended to be sent to this domain?
+          // no user from this domain is missing
           continue;
         }
 
+        // walk through missing user ids
         for (const [missingUserId, missingClientIds] of Object.entries(missingUserIdClients)) {
+          // walk through message recipients
           for (const recipientIndex in messageData.recipients) {
+            // check if message recipients' domain is the same as the missing user's domain
             if (messageData.recipients[recipientIndex].domain === missingUserDomain) {
+              // check if there is a recipient with same user id as the missing user's id
               let userIndex = messageData.recipients[recipientIndex].entries?.findIndex(
                 ({user}) => bytesToUUID(user.uuid) === missingUserId,
               );
 
               if (userIndex === -1) {
+                // no recipient found, let's create it
                 userIndex = messageData.recipients[recipientIndex].entries!.push({
                   user: {
                     uuid: uuidToBytes(missingUserId),
@@ -397,8 +396,9 @@ export class MessageService {
                 });
               }
 
-              const uuid = messageData.recipients[recipientIndex].entries![userIndex!].user?.uuid;
-              if (!!uuid && bytesToUUID(uuid) === missingUserId) {
+              const missingUserUUID = messageData.recipients[recipientIndex].entries![userIndex!].user.uuid;
+
+              if (bytesToUUID(missingUserUUID) === missingUserId) {
                 for (const missingClientId of missingClientIds) {
                   if (!messageData.recipients[recipientIndex].entries![userIndex!].clients) {
                     messageData.recipients[recipientIndex].entries![userIndex!].clients = [];
