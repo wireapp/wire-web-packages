@@ -228,9 +228,13 @@ export class ConversationService {
     sendingClientId: string,
     conversationId: string,
     genericMessage: GenericMessage,
-    userIds: QualifiedUserClients,
-    conversationDomain: string,
+    userIds?: QualifiedUserClients,
+    conversationDomain?: string,
   ): Promise<void> {
+    if (!conversationDomain) {
+      throw new Error('No conversation domain specified');
+    }
+
     const plainTextArray = GenericMessage.encode(genericMessage).finish();
     const preKeyBundles = await this.getPreKeyBundle(conversationId, userIds);
 
@@ -252,15 +256,12 @@ export class ConversationService {
     sendAsProtobuf?: boolean,
     conversationDomain?: string,
   ): Promise<void> {
-    if (isQualifiedUserClients(userIds)) {
-      if (!conversationDomain) {
-        throw new Error('No conversation domain specified');
-      }
+    if (isQualifiedUserClients(userIds) || conversationDomain) {
       return this.sendFederatedGenericMessage(
         this.apiClient.validatedClientId,
         conversationId,
         genericMessage,
-        userIds,
+        isQualifiedUserClients(userIds) ? userIds : undefined,
         conversationDomain,
       );
     }
