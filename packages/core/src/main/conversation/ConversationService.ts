@@ -124,9 +124,9 @@ export class ConversationService {
   private async getPreKeyBundle(
     conversationId: string,
     userIds?: string[] | UserClientsMap | QualifiedUserClients,
-    domain?: string,
+    conversationDomain?: string,
   ): Promise<QualifiedUserPreKeyBundleMap> {
-    const conversation = await this.apiClient.conversation.api.getConversation(conversationId, domain);
+    const conversation = await this.apiClient.conversation.api.getConversation(conversationId, conversationDomain);
 
     let members: QualifiedId[];
 
@@ -144,9 +144,8 @@ export class ConversationService {
        */
       members = conversation.members.others
         .map(member => member.qualified_id || {domain: 'none', id: member.id})
-        .concat(conversation.members.self.qualified_id || {domain: 'none', id: conversation.members.self.id});
+        .concat({domain: conversationDomain || 'none', id: conversation.members.self.id});
     }
-
     const preKeys = await Promise.all(
       members.map(qualifiedUserId => {
         if (qualifiedUserId.domain === 'none') {
@@ -236,7 +235,7 @@ export class ConversationService {
     }
 
     const plainTextArray = GenericMessage.encode(genericMessage).finish();
-    const preKeyBundles = await this.getPreKeyBundle(conversationId, userIds);
+    const preKeyBundles = await this.getPreKeyBundle(conversationId, userIds, conversationDomain);
 
     const recipients = await this.cryptographyService.encryptQualified(plainTextArray, preKeyBundles);
     await this.messageService.sendFederatedOTRMessage(

@@ -300,6 +300,9 @@ export class UserAPI {
     };
 
     const response = await this.client.sendJSON<PreKeyBundle | QualifiedPreKeyBundle>(config, true);
+    if (typeof userId !== 'string') {
+      return {user: userId, clients: response.data.clients};
+    }
     return response.data;
   }
 
