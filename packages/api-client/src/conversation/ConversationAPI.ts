@@ -17,7 +17,7 @@
  *
  */
 
-import type {proteus as ProtobufOTR} from '@wireapp/protocol-messaging/web/otr';
+import {proteus as ProtobufOTR} from '@wireapp/protocol-messaging/web/otr';
 import type {AxiosError, AxiosRequestConfig} from 'axios';
 
 import {ValidationError} from '../validation/';
@@ -605,7 +605,7 @@ export class ConversationAPI {
     messageData: ProtobufOTR.QualifiedNewOtrMessage,
   ): Promise<MessageSendingStatus> {
     const config: AxiosRequestConfig = {
-      data: messageData,
+      data: ProtobufOTR.QualifiedNewOtrMessage.encode(messageData).finish(),
       method: 'post',
       url: `${ConversationAPI.URL.CONVERSATIONS}/${domain}/${conversationId}/${ConversationAPI.URL.PROTEUS}/${ConversationAPI.URL.MESSAGES}`,
     };
@@ -638,7 +638,7 @@ export class ConversationAPI {
     }
 
     const config: AxiosRequestConfig = {
-      data: messageData,
+      data: ProtobufOTR.NewOtrMessage.encode(messageData).finish(),
       method: 'post',
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.OTR}/${ConversationAPI.URL.MESSAGES}`,
     };
