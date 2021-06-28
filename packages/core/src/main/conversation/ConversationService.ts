@@ -1065,12 +1065,17 @@ export class ConversationService {
    * @param userIds Only send message to specified user IDs or to certain clients of specified user IDs
    * @returns Sent message
    */
-  public async send(
-    payloadBundle: OtrMessage,
-    userIds?: string[] | UserClientsMap | QualifiedUserClients,
-    sendAsProtobuf?: boolean,
-    conversationDomain?: string,
-  ) {
+  public async send({
+    payloadBundle,
+    userIds,
+    sendAsProtobuf,
+    conversationDomain,
+  }: {
+    payloadBundle: OtrMessage;
+    userIds?: string[] | UserClientsMap | QualifiedUserClients;
+    sendAsProtobuf?: boolean;
+    conversationDomain?: string;
+  }) {
     switch (payloadBundle.type) {
       case PayloadBundleType.ASSET:
         return this.sendFileData(payloadBundle, userIds, sendAsProtobuf, conversationDomain);
