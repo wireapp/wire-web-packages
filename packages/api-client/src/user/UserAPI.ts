@@ -38,7 +38,7 @@ import type {
   VerifyDelete,
 } from '../user/';
 import {RequestCancellationError} from './UserError';
-import type {ClientPreKey, PreKeyBundle, QualifiedPreKeyBundle} from '../auth/';
+import type {ClientPreKey, PreKeyBundle} from '../auth/';
 import type {PublicClient, QualifiedPublicClients} from '../client/';
 import type {RichInfo} from './RichInfo';
 import type {UserClients, QualifiedUserClients} from '../conversation/';
@@ -286,9 +286,7 @@ export class UserAPI {
     return response.data;
   }
 
-  public async getUserPreKeys(userId: string): Promise<PreKeyBundle>;
-  public async getUserPreKeys(userId: QualifiedId): Promise<QualifiedPreKeyBundle>;
-  public async getUserPreKeys(userId: string | QualifiedId): Promise<PreKeyBundle | QualifiedPreKeyBundle> {
+  public async getUserPreKeys(userId: string | QualifiedId): Promise<PreKeyBundle> {
     const url =
       typeof userId === 'string'
         ? `${UserAPI.URL.USERS}/${userId}/${UserAPI.URL.PRE_KEYS}`
@@ -299,10 +297,7 @@ export class UserAPI {
       url,
     };
 
-    const response = await this.client.sendJSON<PreKeyBundle | QualifiedPreKeyBundle>(config, true);
-    if (typeof userId !== 'string') {
-      return {user: userId, clients: response.data.clients};
-    }
+    const response = await this.client.sendJSON<PreKeyBundle>(config, true);
     return response.data;
   }
 

@@ -147,14 +147,11 @@ export class ConversationService {
         .concat({domain: conversationDomain || 'none', id: conversation.members.self.id});
     }
     const preKeys = await Promise.all(
-      members.map(qualifiedUserId => {
-        if (qualifiedUserId.domain === 'none') {
-          return this.apiClient.user.api
-            .getUserPreKeys(qualifiedUserId.id)
-            .then(prekeyBundle => ({user: qualifiedUserId, clients: prekeyBundle.clients}));
-        }
-
-        return this.apiClient.user.api.getUserPreKeys(qualifiedUserId);
+      members.map(async qualifiedUserId => {
+        const prekeyBundle = await this.apiClient.user.api.getUserPreKeys(
+          qualifiedUserId.domain === 'none' ? qualifiedUserId.id : qualifiedUserId,
+        );
+        return {user: qualifiedUserId, clients: prekeyBundle.clients};
       }),
     );
 
@@ -227,17 +224,14 @@ export class ConversationService {
     sendingClientId: string,
     conversationId: string,
     genericMessage: GenericMessage,
+    conversationDomain: string,
     userIds?: QualifiedUserClients,
-    conversationDomain?: string,
   ): Promise<void> {
-    if (!conversationDomain) {
-      throw new Error('No conversation domain specified');
-    }
-
     const plainTextArray = GenericMessage.encode(genericMessage).finish();
     const preKeyBundles = await this.getPreKeyBundle(conversationId, userIds, conversationDomain);
 
     const recipients = await this.cryptographyService.encryptQualified(plainTextArray, preKeyBundles);
+
     await this.messageService.sendFederatedOTRMessage(
       sendingClientId,
       conversationId,
@@ -255,13 +249,13 @@ export class ConversationService {
     sendAsProtobuf?: boolean,
     conversationDomain?: string,
   ): Promise<void> {
-    if (isQualifiedUserClients(userIds) || conversationDomain) {
+    if (conversationDomain) {
       return this.sendFederatedGenericMessage(
         this.apiClient.validatedClientId,
         conversationId,
         genericMessage,
-        isQualifiedUserClients(userIds) ? userIds : undefined,
         conversationDomain,
+        isQualifiedUserClients(userIds) ? userIds : undefined,
       );
     }
 

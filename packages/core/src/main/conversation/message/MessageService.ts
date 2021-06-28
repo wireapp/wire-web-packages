@@ -147,10 +147,10 @@ export class MessageService {
     plainTextArray: Uint8Array,
     assetData?: Uint8Array,
   ): Promise<void> {
-    const qualifiedUserEntries: ProtobufOTR.IQualifiedUserEntry[] = Object.entries(recipients).map(
+    const qualifiedUserEntries = Object.entries(recipients).map<ProtobufOTR.IQualifiedUserEntry>(
       ([domain, otrRecipients]) => {
-        const userEntries: ProtobufOTR.IUserEntry[] = Object.entries(otrRecipients).map(([userId, otrClientMap]) => {
-          const clientEntries: ProtobufOTR.IClientEntry[] = Object.entries(otrClientMap).map(([clientId, payload]) => {
+        const userEntries = Object.entries(otrRecipients).map<ProtobufOTR.IUserEntry>(([userId, otrClientMap]) => {
+          const clientEntries = Object.entries(otrClientMap).map<ProtobufOTR.IClientEntry>(([clientId, payload]) => {
             return {
               client: {
                 client: Long.fromString(clientId, 16),
