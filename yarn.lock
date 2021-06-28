@@ -3318,42 +3318,37 @@
   resolved "https://registry.npmjs.org/@wireapp/avs/-/avs-6.4.14.tgz#2c4b450cf769e4cc31afea5257d749a58926936c"
   integrity sha512-YEWhH8LM46vNWrxGoQsC6sR2qPAmiy6CgA6ZDgEfE0f0pVlVC/Bw/0Zpss6He3ddq5heHHgQtHkBpARv+YqUyg==
 
-"@wireapp/cbor@4.7.1":
-  version "4.7.1"
-  resolved "https://registry.npmjs.org/@wireapp/cbor/-/cbor-4.7.1.tgz#83d5d4cfc1f3924b7c491e6a03416fad313c4f0c"
-  integrity sha512-AgSMtgHmKwjJ31mCPFGoXvHbM+v4ODIJpBBU3J4GM5u827St7YmlnI+u+OZwA9PgRAwKliQbyumtShGVn0cKMw==
+"@wireapp/cbor@4.7.2":
+  version "4.7.2"
+  resolved "https://registry.npmjs.org/@wireapp/cbor/-/cbor-4.7.2.tgz#cf890cbd1af6f684fd06c704e96b3186bd0672f3"
+  integrity sha512-SfWI1pfwPLpYDC2gkQIOtVFA51x1LFbWoZ5qPp9wit5l3x1CWIpmGK3g1F06XXJn/HeRHJawwp28pzzH58h2iQ==
 
-"@wireapp/cryptobox@12.5.9":
-  version "12.5.9"
-  resolved "https://registry.npmjs.org/@wireapp/cryptobox/-/cryptobox-12.5.9.tgz#69b9e00f7090e083fe0412a638216e4cd73957e1"
-  integrity sha512-nYWreU/0q0lx5mq3v7v6gm2zFUNbVGdOE3Cayv5zb9aH5pvzDT3C2aDuQ0tuc0TuGd60//115KoerKlQ2Hb1tQ==
+"@wireapp/cryptobox@12.6.0":
+  version "12.6.0"
+  resolved "https://registry.npmjs.org/@wireapp/cryptobox/-/cryptobox-12.6.0.tgz#897f4d4ad71c4a07f0c0468b96997634f8653778"
+  integrity sha512-zGc0pEgoCRx3jV2o62Kpq/6YbQ4mWHGIR0JMbIVRGCL4k4uvm/1mlumZjEzX21t3x4y5DTJVaZz1L4T/f7uEdQ==
   dependencies:
     "@wireapp/lru-cache" "3.8.0"
-    "@wireapp/priority-queue" "1.6.31"
-    "@wireapp/proteus" "9.12.0"
-    "@wireapp/store-engine" "4.7.0"
-    bazinga64 "5.7.33"
+    "@wireapp/priority-queue" "1.6.34"
+    "@wireapp/proteus" "9.12.1"
+    "@wireapp/store-engine" "4.9.2"
+    bazinga64 "5.9.2"
+    buffer "6.0.3"
+    comlink "4.3.1"
 
 "@wireapp/lru-cache@3.8.0":
   version "3.8.0"
   resolved "https://registry.npmjs.org/@wireapp/lru-cache/-/lru-cache-3.8.0.tgz#63e32a85abd4bd32a80a7c41615fc12c42cd2eec"
   integrity sha512-XVcvbhIdgD8uNDW91Iueyd1dgsWh8alz1sU5MtID18r2d2nuM3BNryffAyONcmyjbTj7PqB04iLk+kHNQ5m4/Q==
 
-"@wireapp/priority-queue@1.6.31":
-  version "1.6.31"
-  resolved "https://registry.npmjs.org/@wireapp/priority-queue/-/priority-queue-1.6.31.tgz#fc177e14faf649ac4e17df0f259a0ca869a08a98"
-  integrity sha512-VC6V7GRkKl3TZDeQ5D0+U6bbD6WUAz15hCalixWS8pQYhP08lvbIUIzSOuAAQDdzc6wh/+aFBEgfs53d8JM/VA==
-  dependencies:
-    "@types/node" "~14"
-
-"@wireapp/proteus@9.12.0":
-  version "9.12.0"
-  resolved "https://registry.npmjs.org/@wireapp/proteus/-/proteus-9.12.0.tgz#b47a25bd8d453d3fd7d043f6aa03c0f035b8499b"
-  integrity sha512-nayzbNdJZic+TLK8SzsONL+aVujqQ/ftdkfLRrT0EJCSh87DELHlaaq7JzgR8uLQIs5Pm2hi6PTBDMFsDLx8iw==
+"@wireapp/proteus@9.12.1":
+  version "9.12.1"
+  resolved "https://registry.npmjs.org/@wireapp/proteus/-/proteus-9.12.1.tgz#10ceda01c2c6cf622df86b6b01e172bf227049a9"
+  integrity sha512-lDHwy2B2CKXluLjGpHlGD7UYdUapTGL0/l0/+9uMvKCK6qK5lkUXTGlHds/9HntFvEtcBNOgFHob+gjfUFBeuw==
   dependencies:
     "@types/libsodium-wrappers-sumo" "0.7.5"
     "@types/node" "~14"
-    "@wireapp/cbor" "4.7.1"
+    "@wireapp/cbor" "4.7.2"
     libsodium-wrappers-sumo "0.7.9"
 
 "@wireapp/protocol-messaging@1.35.0":
@@ -3362,13 +3357,6 @@
   integrity sha512-RsgREb74npIOMKac2Q5oUgLT6noqKY7Tze+TdWJ3dX/gxp5Oid4mOcaCm5jKJb94K7MxhBo/E+jE6FzZiWWYQg==
   dependencies:
     protobufjs "6.10.2"
-
-"@wireapp/store-engine@4.7.0":
-  version "4.7.0"
-  resolved "https://registry.npmjs.org/@wireapp/store-engine/-/store-engine-4.7.0.tgz#1184b0783d17d7fa2b26c2e61478e9208316b276"
-  integrity sha512-Z82TkBLS2C0iZwvFC2pTNVKE7ddXMIBZGr6wvpCOP3Ibpw0TC5TGQ9H2U1+LLizIphCISILUJwqPI+jbleZ/PQ==
-  dependencies:
-    "@types/node" "~14"
 
 "@wireapp/websql@0.0.17":
   version "0.0.17"
@@ -4236,6 +4224,11 @@ base64-js@^1.0.2:
   resolved "https://registry.npmjs.org/base64-js/-/base64-js-1.3.1.tgz#58ece8cb75dd07e71ed08c736abc5fac4dbf8df1"
   integrity sha512-mLQ4i2QO1ytvGWFWmcngKO//JXAQueZvwEKtjgQFM4jIK0kU+ytMfplL8j+n5mspOfjHwoAg+9yhb7BwAHm36g==
 
+base64-js@^1.3.1:
+  version "1.5.1"
+  resolved "https://registry.npmjs.org/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
+  integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
+
 base64id@2.0.0, base64id@~2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/base64id/-/base64id-2.0.0.tgz#2770ac6bc47d312af97a8bf9a634342e0cd25cb6"
@@ -4258,11 +4251,6 @@ batch@0.6.1:
   version "0.6.1"
   resolved "https://registry.npmjs.org/batch/-/batch-0.6.1.tgz#dc34314f4e679318093fc760272525f94bf25c16"
   integrity sha1-3DQxT05nkxgJP8dgJyUl+UvyXBY=
-
-bazinga64@5.7.33:
-  version "5.7.33"
-  resolved "https://registry.npmjs.org/bazinga64/-/bazinga64-5.7.33.tgz#09f17c5cdf9c38fbbac931f0d1b3d2359071d84b"
-  integrity sha512-lJVZgVUvGcZoUBBnK+aUBCKhWbOOX8UmaZgV3UZSTFFncjDtduuJp7XFgqsxnyqgw7Jn7cG4n0C1X8xjHUyvXw==
 
 bcrypt-pbkdf@^1.0.0:
   version "1.0.2"
@@ -4599,6 +4587,14 @@ buffer-xor@^1.0.3:
   version "1.0.3"
   resolved "https://registry.npmjs.org/buffer-xor/-/buffer-xor-1.0.3.tgz#26e61ed1422fb70dd42e6e36729ed51d855fe8d9"
   integrity sha1-JuYe0UIvtw3ULm42cp7VHYVf6Nk=
+
+buffer@6.0.3:
+  version "6.0.3"
+  resolved "https://registry.npmjs.org/buffer/-/buffer-6.0.3.tgz#2ace578459cc8fbe2a70aaa8f52ee63b6a74c6c6"
+  integrity sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==
+  dependencies:
+    base64-js "^1.3.1"
+    ieee754 "^1.2.1"
 
 buffer@^4.3.0:
   version "4.9.2"
@@ -5166,6 +5162,11 @@ combined-stream@^1.0.6, combined-stream@~1.0.6:
   integrity sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==
   dependencies:
     delayed-stream "~1.0.0"
+
+comlink@4.3.1:
+  version "4.3.1"
+  resolved "https://registry.npmjs.org/comlink/-/comlink-4.3.1.tgz#0c6b9d69bcd293715c907c33fe8fc45aecad13c5"
+  integrity sha512-+YbhUdNrpBZggBAHWcgQMLPLH1KDF3wJpeqrCKieWQ8RL7atmgsgTQko1XEBK6PsecfopWNntopJ+ByYG1lRaA==
 
 commander@8.0.0:
   version "8.0.0"
