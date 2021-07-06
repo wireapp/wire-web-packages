@@ -3252,10 +3252,10 @@
   resolved "https://registry.npmjs.org/@wireapp/cbor/-/cbor-4.7.2.tgz#cf890cbd1af6f684fd06c704e96b3186bd0672f3"
   integrity sha512-SfWI1pfwPLpYDC2gkQIOtVFA51x1LFbWoZ5qPp9wit5l3x1CWIpmGK3g1F06XXJn/HeRHJawwp28pzzH58h2iQ==
 
-"@wireapp/cryptobox@12.6.0":
-  version "12.6.0"
-  resolved "https://registry.npmjs.org/@wireapp/cryptobox/-/cryptobox-12.6.0.tgz#897f4d4ad71c4a07f0c0468b96997634f8653778"
-  integrity sha512-zGc0pEgoCRx3jV2o62Kpq/6YbQ4mWHGIR0JMbIVRGCL4k4uvm/1mlumZjEzX21t3x4y5DTJVaZz1L4T/f7uEdQ==
+"@wireapp/cryptobox@12.7.1":
+  version "12.7.1"
+  resolved "https://registry.npmjs.org/@wireapp/cryptobox/-/cryptobox-12.7.1.tgz#b004870f530e1fa6fe14bf0f7376879278b070e0"
+  integrity sha512-6uRYhJpSoQcb7D2NiCoujCxmhKL/6qtqk4mZyp8B86Gsl5i4vTDgepJUaEaxgR39LMZv0nXcC0F9nPJkQ2UYrQ==
   dependencies:
     "@wireapp/lru-cache" "3.8.0"
     "@wireapp/priority-queue" "1.6.34"
@@ -3263,12 +3263,18 @@
     "@wireapp/store-engine" "4.9.2"
     bazinga64 "5.9.2"
     buffer "6.0.3"
-    comlink "4.3.1"
 
 "@wireapp/lru-cache@3.8.0":
   version "3.8.0"
   resolved "https://registry.npmjs.org/@wireapp/lru-cache/-/lru-cache-3.8.0.tgz#63e32a85abd4bd32a80a7c41615fc12c42cd2eec"
   integrity sha512-XVcvbhIdgD8uNDW91Iueyd1dgsWh8alz1sU5MtID18r2d2nuM3BNryffAyONcmyjbTj7PqB04iLk+kHNQ5m4/Q==
+
+"@wireapp/priority-queue@1.6.34":
+  version "1.6.34"
+  resolved "https://registry.npmjs.org/@wireapp/priority-queue/-/priority-queue-1.6.34.tgz#bde94c4e8f9141a528ac9cebcba81d3215a51444"
+  integrity sha512-ndD0sjRbV9/tnF/Z/rd+JJKW9mVlOguJx6LLWSL+7PjTqN6KDLt5TcWnTz90h7tXDXZA/iDmDDk/IeWEfqTc8A==
+  dependencies:
+    "@types/node" "~14"
 
 "@wireapp/proteus@9.12.1":
   version "9.12.1"
@@ -3286,6 +3292,13 @@
   integrity sha512-RsgREb74npIOMKac2Q5oUgLT6noqKY7Tze+TdWJ3dX/gxp5Oid4mOcaCm5jKJb94K7MxhBo/E+jE6FzZiWWYQg==
   dependencies:
     protobufjs "6.10.2"
+
+"@wireapp/store-engine@4.9.2":
+  version "4.9.2"
+  resolved "https://registry.npmjs.org/@wireapp/store-engine/-/store-engine-4.9.2.tgz#569b322ef1c03c9041876d56c918c4bdd43de883"
+  integrity sha512-y72/GAhckNI+Yf2sNkTrjzOGQm9Y4eJgzFARqyuevfloUL0c3yya7PDXxK8G7Zl/IqvAtj6Xu/4SbLdOvDyjzA==
+  dependencies:
+    "@types/node" "~14"
 
 "@wireapp/websql@0.0.17":
   version "0.0.17"
@@ -4181,6 +4194,11 @@ batch@0.6.1:
   resolved "https://registry.npmjs.org/batch/-/batch-0.6.1.tgz#dc34314f4e679318093fc760272525f94bf25c16"
   integrity sha1-3DQxT05nkxgJP8dgJyUl+UvyXBY=
 
+bazinga64@5.9.2:
+  version "5.9.2"
+  resolved "https://registry.npmjs.org/bazinga64/-/bazinga64-5.9.2.tgz#536d260f4d5e2298141350c4f3dfc28a263d18bd"
+  integrity sha512-cWGu1Giklh8+ewb1CaTHGFErtSWX4X5vJleYiYmInfKmbyP4Oz0P/IMK3X86LJRMFiNZsK4kJN5m55oCa/U8GQ==
+
 bcrypt-pbkdf@^1.0.0:
   version "1.0.2"
   resolved "https://registry.npmjs.org/bcrypt-pbkdf/-/bcrypt-pbkdf-1.0.2.tgz#a4301d389b6a43f9b67ff3ca11a3f6637e360e9e"
@@ -5066,11 +5084,6 @@ combined-stream@^1.0.6, combined-stream@~1.0.6:
   integrity sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==
   dependencies:
     delayed-stream "~1.0.0"
-
-comlink@4.3.1:
-  version "4.3.1"
-  resolved "https://registry.npmjs.org/comlink/-/comlink-4.3.1.tgz#0c6b9d69bcd293715c907c33fe8fc45aecad13c5"
-  integrity sha512-+YbhUdNrpBZggBAHWcgQMLPLH1KDF3wJpeqrCKieWQ8RL7atmgsgTQko1XEBK6PsecfopWNntopJ+ByYG1lRaA==
 
 commander@8.0.0:
   version "8.0.0"
