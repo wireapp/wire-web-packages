@@ -132,8 +132,6 @@ export class MessageService {
     } else if (!!messageData.ignoreAll) {
       // report nothing
       return null;
-    } else if (!!messageData.reportAll) {
-      // report everything
     }
 
     return updatedMessageSendingStatus;
