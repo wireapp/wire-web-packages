@@ -2945,10 +2945,10 @@
     "@types/webpack-sources" "*"
     source-map "^0.6.0"
 
-"@types/webrtc@0.0.28":
-  version "0.0.28"
-  resolved "https://registry.npmjs.org/@types/webrtc/-/webrtc-0.0.28.tgz#c70b1048427d210964ae3b52409053acc4b323b0"
-  integrity sha512-K+o4wCHmHKirOFCbhOdPetm2ccVYNww6pvfvoiEcyPbLK5AT82Ys3kFJlfFcS+Zppk4fTieA3nMIH7leRiiiAw==
+"@types/webrtc@0.0.29":
+  version "0.0.29"
+  resolved "https://registry.npmjs.org/@types/webrtc/-/webrtc-0.0.29.tgz#b1b1858f21c4f8e4ee529c91e4b7b7633bf90898"
+  integrity sha512-xrSlKRdEmlSJVLiVsTuvCEqJ76OzSxMqd5ME1MNixmUFGnw9jzjuKXUcF0aEtHKrBF9eLDRjHZzb4JYG+OcHlQ==
 
 "@types/ws@7.4.5":
   version "7.4.5"
