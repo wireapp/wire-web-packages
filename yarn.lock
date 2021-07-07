@@ -2704,11 +2704,6 @@
   resolved "https://registry.npmjs.org/@types/json-schema/-/json-schema-7.0.7.tgz#98a993516c859eb0d5c4c8f098317a9ea68db9ad"
   integrity sha512-cxWFQVseBm6O9Gbw1IWb8r6OS4OhSt3hPZLkFApLjM8TEXROBuQGLAH2i2gZpcXdLBIrpXuTDhH7Vbm1iXmNGA==
 
-"@types/json5@^0.0.29":
-  version "0.0.29"
-  resolved "https://registry.npmjs.org/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
-  integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
-
 "@types/jsrsasign@8.0.12":
   version "8.0.12"
   resolved "https://registry.npmjs.org/@types/jsrsasign/-/jsrsasign-8.0.12.tgz#6bfebbbde57e72748d801642bba9b431d049b952"
@@ -3270,6 +3265,13 @@
   resolved "https://registry.npmjs.org/@wireapp/lru-cache/-/lru-cache-3.8.0.tgz#63e32a85abd4bd32a80a7c41615fc12c42cd2eec"
   integrity sha512-XVcvbhIdgD8uNDW91Iueyd1dgsWh8alz1sU5MtID18r2d2nuM3BNryffAyONcmyjbTj7PqB04iLk+kHNQ5m4/Q==
 
+"@wireapp/priority-queue@1.6.34":
+  version "1.6.34"
+  resolved "https://registry.npmjs.org/@wireapp/priority-queue/-/priority-queue-1.6.34.tgz#bde94c4e8f9141a528ac9cebcba81d3215a51444"
+  integrity sha512-ndD0sjRbV9/tnF/Z/rd+JJKW9mVlOguJx6LLWSL+7PjTqN6KDLt5TcWnTz90h7tXDXZA/iDmDDk/IeWEfqTc8A==
+  dependencies:
+    "@types/node" "~14"
+
 "@wireapp/proteus@9.12.1":
   version "9.12.1"
   resolved "https://registry.npmjs.org/@wireapp/proteus/-/proteus-9.12.1.tgz#10ceda01c2c6cf622df86b6b01e172bf227049a9"
@@ -3286,6 +3288,13 @@
   integrity sha512-RsgREb74npIOMKac2Q5oUgLT6noqKY7Tze+TdWJ3dX/gxp5Oid4mOcaCm5jKJb94K7MxhBo/E+jE6FzZiWWYQg==
   dependencies:
     protobufjs "6.10.2"
+
+"@wireapp/store-engine@4.9.2":
+  version "4.9.2"
+  resolved "https://registry.npmjs.org/@wireapp/store-engine/-/store-engine-4.9.2.tgz#569b322ef1c03c9041876d56c918c4bdd43de883"
+  integrity sha512-y72/GAhckNI+Yf2sNkTrjzOGQm9Y4eJgzFARqyuevfloUL0c3yya7PDXxK8G7Zl/IqvAtj6Xu/4SbLdOvDyjzA==
+  dependencies:
+    "@types/node" "~14"
 
 "@wireapp/websql@0.0.17":
   version "0.0.17"
@@ -4180,6 +4189,11 @@ batch@0.6.1:
   version "0.6.1"
   resolved "https://registry.npmjs.org/batch/-/batch-0.6.1.tgz#dc34314f4e679318093fc760272525f94bf25c16"
   integrity sha1-3DQxT05nkxgJP8dgJyUl+UvyXBY=
+
+bazinga64@5.9.2:
+  version "5.9.2"
+  resolved "https://registry.npmjs.org/bazinga64/-/bazinga64-5.9.2.tgz#536d260f4d5e2298141350c4f3dfc28a263d18bd"
+  integrity sha512-cWGu1Giklh8+ewb1CaTHGFErtSWX4X5vJleYiYmInfKmbyP4Oz0P/IMK3X86LJRMFiNZsK4kJN5m55oCa/U8GQ==
 
 bcrypt-pbkdf@^1.0.0:
   version "1.0.2"
@@ -10210,7 +10224,7 @@ json3@^3.3.3:
   resolved "https://registry.npmjs.org/json3/-/json3-3.3.3.tgz#7fc10e375fc5ae42c4705a5cc0aa6f62be305b81"
   integrity sha512-c7/8mbUsKigAbLkD5B010BK4D9LZm7A1pNItkEwiUZRpIN66exu/e7YQWysGun+TRKaJp8MhemM+VkfWv42aCA==
 
-json5@2.x, json5@^2.1.2:
+json5@2.x, json5@^2.1.2, json5@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/json5/-/json5-2.2.0.tgz#2dfefe720c6ba525d9ebd909950f0515316c89a3"
   integrity sha512-f+8cldu7X/y7RAJurMEJmdoKXGB/X550w2Nr3tTbezL6RwEE/iMcm+tZnXeoZtKuOq6ft8+CqzEkrIgx1fPoQA==
@@ -15791,13 +15805,12 @@ ts-node@9.1.1:
     source-map-support "^0.5.17"
     yn "3.1.1"
 
-tsconfig-paths@3.9.0, tsconfig-paths@^3.9.0:
-  version "3.9.0"
-  resolved "https://registry.npmjs.org/tsconfig-paths/-/tsconfig-paths-3.9.0.tgz#098547a6c4448807e8fcb8eae081064ee9a3c90b"
-  integrity sha512-dRcuzokWhajtZWkQsDVKbWyY+jgcLC5sqJhg2PSgf4ZkH2aHPvaOY8YWGhmjb68b5qqTfasSsDO9k7RUiEmZAw==
+tsconfig-paths@3.10.1, tsconfig-paths@^3.9.0:
+  version "3.10.1"
+  resolved "https://registry.npmjs.org/tsconfig-paths/-/tsconfig-paths-3.10.1.tgz#79ae67a68c15289fdf5c51cb74f397522d795ed7"
+  integrity sha512-rETidPDgCpltxF7MjBZlAFPUHv5aHH2MymyPvh+vEyWAED4Eb/WeMbsnD/JDr4OKPOA1TssDHgIcpTN5Kh0p6Q==
   dependencies:
-    "@types/json5" "^0.0.29"
-    json5 "^1.0.1"
+    json5 "^2.2.0"
     minimist "^1.2.0"
     strip-bom "^3.0.0"
 
