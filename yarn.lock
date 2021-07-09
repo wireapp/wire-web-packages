@@ -2818,10 +2818,10 @@
   resolved "https://registry.npmjs.org/@types/normalize-package-data/-/normalize-package-data-2.4.0.tgz#e486d0d97396d79beedd0a6e33f4534ff6b4973e"
   integrity sha512-f5j5b/Gf71L+dbqxIpQ4Z2WlmI/mPJ0fOkGGmFgtb6sAu97EPczzbS3/tJKxmcYDj55OX6ssqwDAWOHIYDRDGA==
 
-"@types/npm-registry-package-info@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/@types/npm-registry-package-info/-/npm-registry-package-info-1.0.0.tgz#3c0782b4f29643d5db2e686ba597c4c58d4a4517"
-  integrity sha512-qolm3RiBjUHd5MCc+apIZ5HbHr2ZysSNBMk2d+G9leYxk0OkWnhIfYF4NyP9OtK9ookAIp9onMWRzDrKnfmZFQ==
+"@types/npm-registry-package-info@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/@types/npm-registry-package-info/-/npm-registry-package-info-1.0.1.tgz#37f56a100a1523c0ab8e80e030fdbe7f33fc0b50"
+  integrity sha512-ib3yXxzqP14OmHGYUtyuiTt9Wgxdh50o+y+h7GXcQsIUzFGJgbcL88kL0IxggwtVIX6mcg2z22oxaUVHIdadnA==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
