@@ -2584,10 +2584,10 @@
   resolved "https://registry.npmjs.org/@types/cookie/-/cookie-0.4.0.tgz#14f854c0f93d326e39da6e3b6f34f7d37513d108"
   integrity sha512-y7mImlc/rNkvCRmg8gC3/lj87S7pTUIJ6QGjwHR9WQJcFs+ZMTOaoPrkdFA/YdbuqVEmEbb5RdhVxMkAcgOnpg==
 
-"@types/copy@0.3.1":
-  version "0.3.1"
-  resolved "https://registry.npmjs.org/@types/copy/-/copy-0.3.1.tgz#9e48b8074d5045e84f862c817a7b1d409fbd5504"
-  integrity sha512-pPGzQ6C+9R7MViAJXl4VoqFrf6WK3UjpDLbqKiotr4DCY8AMzfIi2Kiy41pd+yPxb4cihjmtoO53Fonzctz+Aw==
+"@types/copy@0.3.2":
+  version "0.3.2"
+  resolved "https://registry.npmjs.org/@types/copy/-/copy-0.3.2.tgz#aa17d0890bfeeb6ede15d736e69a418200af79ee"
+  integrity sha512-mvoL7JK2ldr0oXJlOcp9VYlSwWsjPkIMDf4dQzhRJKE74IcFB2bljgf5xNk6yguHU9BSXRBsAyxGWlSL1ANg0Q==
   dependencies:
     "@types/vinyl" "*"
 
