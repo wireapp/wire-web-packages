@@ -3,7 +3,7 @@
     "@types/node": "*"
   },
   "devDependencies": {
-    "@types/node": "~14",
+    "@types/node": "~16",
     "@wireapp/bot-api": "7.15.26",
     "jasmine": "3.8.0",
     "rimraf": "3.0.2",
