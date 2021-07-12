@@ -2723,10 +2723,10 @@
   resolved "https://registry.npmjs.org/@types/jsrsasign/-/jsrsasign-8.0.12.tgz#6bfebbbde57e72748d801642bba9b431d049b952"
   integrity sha512-FLXKbwbB+4fsJECYOpIiYX2GSqSHYnkO/UnrFqlZn6crpyyOtk4LRab+G1HC7dTbT1NB7spkHecZRQGXoCWiJQ==
 
-"@types/karma-webpack@2.0.9":
-  version "2.0.9"
-  resolved "https://registry.npmjs.org/@types/karma-webpack/-/karma-webpack-2.0.9.tgz#878aad10e52305be9a608aed3286ee4b97d043a3"
-  integrity sha512-a3UPTVeUV7aSGuE6KGz36GZ0Cj0uutgpgfup3xmHQJfGMGgDa9UFp6s5BC21IFiEhkWIZ27exo+2h83HzZ4yxQ==
+"@types/karma-webpack@2.0.10":
+  version "2.0.10"
+  resolved "https://registry.npmjs.org/@types/karma-webpack/-/karma-webpack-2.0.10.tgz#b2c816b2ac7ca25b7af43df61a8b5565a370fa57"
+  integrity sha512-qWEsvjRzycJ8rbs6pdISzapT5xLlBpNnPA0TfPSXVBPsEpJu9uHgrTmkSH5vIZxH5G89T3LYgARmpmnyKAzJIw==
   dependencies:
     "@types/karma" "*"
     "@types/webpack" "^4"
