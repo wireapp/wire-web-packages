@@ -31,6 +31,7 @@ export enum FEATURE_KEY {
   DIGITAL_SIGNATURES = 'digitalSignatures',
   CONFERENCE_CALLING = 'conferenceCalling',
   VIDEO_CALLING = 'videoCalling',
+  FILE_SHARING = 'fileSharing',
   LEGALHOLD = 'legalhold',
   SEARCH_VISIBILITY = 'searchVisibility',
   SSO = 'sso',
@@ -42,6 +43,7 @@ export type FeatureList = {
   [FEATURE_KEY.DIGITAL_SIGNATURES]?: FeatureDigitalSignature;
   [FEATURE_KEY.CONFERENCE_CALLING]?: FeatureConferenceCalling;
   [FEATURE_KEY.VIDEO_CALLING]?: FeatureVideoCalling;
+  [FEATURE_KEY.FILE_SHARING]?: FeatureVideoCalling;
   [FEATURE_KEY.LEGALHOLD]?: FeatureLegalhold;
   [FEATURE_KEY.SEARCH_VISIBILITY]?: FeatureWithoutConfig;
   [FEATURE_KEY.SSO]?: FeatureWithoutConfig;
