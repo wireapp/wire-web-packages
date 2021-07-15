@@ -1119,7 +1119,7 @@ export class ConversationService {
     conversationDomain,
   }: {
     payloadBundle: OtrMessage;
-    userIds?: string[] | QualifiedId[] | UserClients;
+    userIds?: string[] | QualifiedId[] | UserClients | QualifiedUserClients;
     sendAsProtobuf?: boolean;
     conversationDomain?: string;
   }) {
