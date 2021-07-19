@@ -49,9 +49,23 @@ export class FeatureAPI {
     FEATURES: 'features',
     SSO: 'sso',
     TEAMS: '/teams',
+    FEATURE_CONFIG: '/feature-configs',
   };
 
-  public async getAllFeatures(teamId: string): Promise<FeatureList> {
+  public async getAllFeatures(): Promise<FeatureList> {
+    const config: AxiosRequestConfig = {
+      method: 'get',
+      url: `${FeatureAPI.URL.FEATURE_CONFIG}`,
+    };
+
+    const response = await this.client.sendJSON<FeatureList>(config);
+    return response.data;
+  }
+
+  /**
+   * @deprecated
+   */
+  public async getAllTeamFeatures(teamId: string): Promise<FeatureList> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}`,
