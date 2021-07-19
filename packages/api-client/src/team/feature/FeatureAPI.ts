@@ -49,13 +49,13 @@ export class FeatureAPI {
     FEATURES: 'features',
     SSO: 'sso',
     TEAMS: '/teams',
-    FEATURE_CONFIG: '/feature-configs',
+    FEATURE_CONFIGS: '/feature-configs',
   };
 
   public async getAllFeatures(): Promise<FeatureList> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${FeatureAPI.URL.FEATURE_CONFIG}`,
+      url: FeatureAPI.URL.FEATURE_CONFIGS,
     };
 
     const response = await this.client.sendJSON<FeatureList>(config);
