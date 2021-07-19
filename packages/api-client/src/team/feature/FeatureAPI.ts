@@ -39,17 +39,17 @@ export class FeatureAPI {
 
   public static readonly URL = {
     APPLOCK: 'appLock',
-    DIGITAL_SIGNATURES: 'digitalSignatures',
+    AUDIO_MESSAGE: 'audioMessage',
     CALLING_CONFERENCE: 'conferenceCalling',
     CALLING_VIDEO: 'videoCalling',
-    VIDEO_MESSAGE: 'videoMessage',
-    AUDIO_MESSAGE: 'audioMessage',
+    DIGITAL_SIGNATURES: 'digitalSignatures',
+    FEATURE_CONFIGS: '/feature-configs',
+    FEATURES: 'features',
     FILE_SHARING: 'fileSharing',
     LEGAL_HOLD: 'legalhold',
-    FEATURES: 'features',
     SSO: 'sso',
     TEAMS: '/teams',
-    FEATURE_CONFIGS: '/feature-configs',
+    VIDEO_MESSAGE: 'videoMessage',
   };
 
   public async getAllFeatures(): Promise<FeatureList> {
@@ -63,7 +63,7 @@ export class FeatureAPI {
   }
 
   /**
-   * @deprecated
+   * @deprecated Use `getAllFeatures()` instead.
    */
   public async getAllTeamFeatures(teamId: string): Promise<FeatureList> {
     const config: AxiosRequestConfig = {
