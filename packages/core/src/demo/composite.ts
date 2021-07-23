@@ -48,8 +48,6 @@ const login: LoginData = {
   const apiClient = new APIClient({urls: backend});
   const account = new Account(apiClient);
 
-  console.log('BBB', process.env.WIRE_BACKEND);
-
   // Login account
   const {clientId, userId} = await account.login(login);
   console.info(`Hello user "${userId}" with client "${clientId}" ...`);
