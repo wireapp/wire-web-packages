@@ -67,14 +67,13 @@ export class UserService {
     // Get pre-key bundles for all of your other 1:1 connections
     const connections = await this.connectionService.getConnections();
     const acceptedConnections = connections.filter(connection => connection.status === ConnectionStatus.ACCEPTED);
-    const preKeyBundlePromises = acceptedConnections
-      .map(connection => {
-        const mappedConnection = {
-          userId: connection.to,
-          conversationId: connection.conversation,
-        };
-        return this.conversationService.getPreKeyBundleMap(mappedConnection.conversationId, [mappedConnection.userId]);
-      });
+    const preKeyBundlePromises = acceptedConnections.map(connection => {
+      const mappedConnection = {
+        userId: connection.to,
+        conversationId: connection.conversation,
+      };
+      return this.conversationService.getPreKeyBundleMap(mappedConnection.conversationId, [mappedConnection.userId]);
+    });
     const preKeyBundlesFromConnections = await Promise.all(preKeyBundlePromises);
 
     // Merge pre-key bundles
