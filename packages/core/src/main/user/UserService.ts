@@ -68,11 +68,11 @@ export class UserService {
     const connections = await this.connectionService.getConnections();
     const acceptedConnections = connections.filter(connection => connection.status === ConnectionStatus.ACCEPTED);
     const preKeyBundlePromises = acceptedConnections
-      .map(connection => ({
-        userId: connection.to,
-        conversationId: connection.conversation,
-      }))
-      .map(mappedConnection => {
+      .map(connection => {
+        const mappedConnection = {
+          userId: connection.to,
+          conversationId: connection.conversation,
+        };
         return this.conversationService.getPreKeyBundleMap(mappedConnection.conversationId, [mappedConnection.userId]);
       });
     const preKeyBundlesFromConnections = await Promise.all(preKeyBundlePromises);
