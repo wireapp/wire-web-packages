@@ -26,7 +26,7 @@ import {Account} from '../main/Account';
 import {PayloadBundleType} from '../main/conversation';
 import type {ButtonActionContent, ButtonActionConfirmationContent} from '../main/conversation/content';
 
-require('dotenv').config();
+import 'dotenv-defaults/config';
 
 const args = process.argv.slice(2);
 const conversationId = args[0] || process.env.WIRE_CONVERSATION;
@@ -47,6 +47,8 @@ const login: LoginData = {
   const backend = process.env.WIRE_BACKEND === 'staging' ? APIClient.BACKEND.STAGING : APIClient.BACKEND.PRODUCTION;
   const apiClient = new APIClient({urls: backend});
   const account = new Account(apiClient);
+
+  console.log('BBB', process.env.WIRE_BACKEND);
 
   // Login account
   const {clientId, userId} = await account.login(login);
