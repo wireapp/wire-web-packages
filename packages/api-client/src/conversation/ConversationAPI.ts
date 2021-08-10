@@ -34,6 +34,7 @@ import type {
   MessageSendingStatus,
   NewConversation,
   NewOTRMessage,
+  RemoteConversations,
 } from './';
 import type {
   ConversationAccessUpdateEvent,
@@ -242,13 +243,12 @@ export class ConversationAPI {
    */
   public async getRemoteConversations(ownDomain: string): Promise<Conversation[]> {
     const config: AxiosRequestConfig = {
-      data: {},
       method: 'post',
       url: ConversationAPI.URL.LIST_CONVERSATIONS,
     };
 
-    const {data} = await this.client.sendJSON<Conversations>(config);
-    return data.conversations.filter(conversation => conversation.qualified_id?.domain !== ownDomain);
+    const {data} = await this.client.sendJSON<RemoteConversations>(config);
+    return data.found?.filter(conversation => conversation.qualified_id?.domain !== ownDomain) || [];
   }
 
   /**
