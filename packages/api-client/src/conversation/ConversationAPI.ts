@@ -208,6 +208,7 @@ export class ConversationAPI {
    * @param limit Max. number of IDs to return
    * @param conversationId Conversation ID to start from (exclusive)
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversationIds
+   * @deprecated Use `getListConversations()` instead.
    */
   public async getConversationIds(limit: number, conversationId?: string): Promise<ConversationIds> {
     const config: AxiosRequestConfig = {
@@ -238,16 +239,24 @@ export class ConversationAPI {
   }
 
   /**
-   * Get all remote conversations from a federated backend.
+   * Get all conversations from a federated backend.
    * @see https://staging-nginz-https.zinfra.io/api/swagger-ui/#/default/post_list_conversations
    */
-  public async getRemoteConversations(ownDomain: string): Promise<Conversation[]> {
+  public async getListConversations(): Promise<RemoteConversations> {
     const config: AxiosRequestConfig = {
       method: 'post',
       url: ConversationAPI.URL.LIST_CONVERSATIONS,
     };
 
     const {data} = await this.client.sendJSON<RemoteConversations>(config);
+    return data;
+  }
+
+  /**
+   * Get all remote conversations from a federated backend.
+   */
+  public async getRemoteConversations(ownDomain: string): Promise<Conversation[]> {
+    const data = await this.getListConversations();
     return data.found?.filter(conversation => conversation.qualified_id?.domain !== ownDomain) || [];
   }
 
