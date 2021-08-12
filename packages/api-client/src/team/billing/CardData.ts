@@ -17,25 +17,9 @@
  *
  */
 
-import {
-  FeatureAppLock,
-  FeatureDigitalSignature,
-  FeatureConferenceCalling,
-  FeatureVideoCalling,
-  FeatureLegalhold,
-  FeatureFileSharing,
-  FeatureSSO,
-  FeatureSearchVisibility,
-  FeatureValidateSAMLEmails,
-} from '../feature';
-
-export type TeamFeatureConfigurationUpdateEventData =
-  | FeatureAppLock
-  | FeatureDigitalSignature
-  | FeatureConferenceCalling
-  | FeatureVideoCalling
-  | FeatureFileSharing
-  | FeatureLegalhold
-  | FeatureSSO
-  | FeatureSearchVisibility
-  | FeatureValidateSAMLEmails;
+export interface CardData {
+  brand: string;
+  digits: string;
+  expMonth: number;
+  expYear: number;
+}

@@ -17,25 +17,19 @@
  *
  */
 
-import {
-  FeatureAppLock,
-  FeatureDigitalSignature,
-  FeatureConferenceCalling,
-  FeatureVideoCalling,
-  FeatureLegalhold,
-  FeatureFileSharing,
-  FeatureSSO,
-  FeatureSearchVisibility,
-  FeatureValidateSAMLEmails,
-} from '../feature';
+import {SupportedCurrency} from './SupportedCurrency';
 
-export type TeamFeatureConfigurationUpdateEventData =
-  | FeatureAppLock
-  | FeatureDigitalSignature
-  | FeatureConferenceCalling
-  | FeatureVideoCalling
-  | FeatureFileSharing
-  | FeatureLegalhold
-  | FeatureSSO
-  | FeatureSearchVisibility
-  | FeatureValidateSAMLEmails;
+export enum PlanInterval {
+  MONTH = 'month',
+  YEAR = 'year',
+}
+
+export interface PlanData {
+  amount: number;
+  custom: boolean;
+  id: string;
+  interval: PlanInterval;
+  currency: SupportedCurrency;
+  calculatedPriceEstimate: number;
+  name: string;
+}

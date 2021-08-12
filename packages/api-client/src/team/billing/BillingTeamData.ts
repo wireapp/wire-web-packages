@@ -17,25 +17,27 @@
  *
  */
 
-import {
-  FeatureAppLock,
-  FeatureDigitalSignature,
-  FeatureConferenceCalling,
-  FeatureVideoCalling,
-  FeatureLegalhold,
-  FeatureFileSharing,
-  FeatureSSO,
-  FeatureSearchVisibility,
-  FeatureValidateSAMLEmails,
-} from '../feature';
+export enum BillingStatus {
+  ACTIVE = 'active',
+  CANCELED = 'canceled',
+  PAST_DUE = 'past_due',
+  TRIALING = 'trialing',
+  UNPAID = 'unpaid',
+}
 
-export type TeamFeatureConfigurationUpdateEventData =
-  | FeatureAppLock
-  | FeatureDigitalSignature
-  | FeatureConferenceCalling
-  | FeatureVideoCalling
-  | FeatureFileSharing
-  | FeatureLegalhold
-  | FeatureSSO
-  | FeatureSearchVisibility
-  | FeatureValidateSAMLEmails;
+export interface BillingSuspension {
+  created: number;
+  graceEnding: number;
+  invoice: string;
+}
+
+export interface BillingTeamData {
+  id: string;
+  customerId: string;
+  created: number;
+  bankTransfer: boolean;
+  seats: number;
+  status: BillingStatus;
+  grace?: BillingSuspension;
+  trialEndsAt: number;
+}

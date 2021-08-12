@@ -17,25 +17,26 @@
  *
  */
 
-import {
-  FeatureAppLock,
-  FeatureDigitalSignature,
-  FeatureConferenceCalling,
-  FeatureVideoCalling,
-  FeatureLegalhold,
-  FeatureFileSharing,
-  FeatureSSO,
-  FeatureSearchVisibility,
-  FeatureValidateSAMLEmails,
-} from '../feature';
+import type {SupportedCurrency} from './SupportedCurrency';
 
-export type TeamFeatureConfigurationUpdateEventData =
-  | FeatureAppLock
-  | FeatureDigitalSignature
-  | FeatureConferenceCalling
-  | FeatureVideoCalling
-  | FeatureFileSharing
-  | FeatureLegalhold
-  | FeatureSSO
-  | FeatureSearchVisibility
-  | FeatureValidateSAMLEmails;
+export interface Coupon {
+  amountOff: number;
+  name: string;
+  percentOff: number;
+}
+
+export interface InvoiceUpcomingData {
+  number: string;
+  status: string;
+  amount: number;
+  balance: number;
+  endingBalance: number;
+  coupon: Coupon;
+  currency: SupportedCurrency;
+  date: number;
+  discount: number;
+  subtotal: number;
+  tax: number;
+  taxPercent: number;
+  total: number;
+}

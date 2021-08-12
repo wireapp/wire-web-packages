@@ -17,25 +17,10 @@
  *
  */
 
-import {
-  FeatureAppLock,
-  FeatureDigitalSignature,
-  FeatureConferenceCalling,
-  FeatureVideoCalling,
-  FeatureLegalhold,
-  FeatureFileSharing,
-  FeatureSSO,
-  FeatureSearchVisibility,
-  FeatureValidateSAMLEmails,
-} from '../feature';
+import {InvoiceData} from '../payment';
 
-export type TeamFeatureConfigurationUpdateEventData =
-  | FeatureAppLock
-  | FeatureDigitalSignature
-  | FeatureConferenceCalling
-  | FeatureVideoCalling
-  | FeatureFileSharing
-  | FeatureLegalhold
-  | FeatureSSO
-  | FeatureSearchVisibility
-  | FeatureValidateSAMLEmails;
+// https://stripe.com/docs/api#invoice_object
+export interface InvoiceListData {
+  has_more: boolean;
+  invoices: InvoiceData[];
+}

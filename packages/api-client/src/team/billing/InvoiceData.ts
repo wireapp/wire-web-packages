@@ -17,25 +17,16 @@
  *
  */
 
-import {
-  FeatureAppLock,
-  FeatureDigitalSignature,
-  FeatureConferenceCalling,
-  FeatureVideoCalling,
-  FeatureLegalhold,
-  FeatureFileSharing,
-  FeatureSSO,
-  FeatureSearchVisibility,
-  FeatureValidateSAMLEmails,
-} from '../feature';
+import type {SupportedCurrency} from './SupportedCurrency';
 
-export type TeamFeatureConfigurationUpdateEventData =
-  | FeatureAppLock
-  | FeatureDigitalSignature
-  | FeatureConferenceCalling
-  | FeatureVideoCalling
-  | FeatureFileSharing
-  | FeatureLegalhold
-  | FeatureSSO
-  | FeatureSearchVisibility
-  | FeatureValidateSAMLEmails;
+// https://stripe.com/docs/api#invoice_object
+export interface InvoiceData {
+  closed: boolean;
+  currency: SupportedCurrency;
+  date: number;
+  id: string;
+  number: string;
+  paid: boolean;
+  total: number;
+  url: string;
+}
