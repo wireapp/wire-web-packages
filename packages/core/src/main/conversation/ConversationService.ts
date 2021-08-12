@@ -128,7 +128,7 @@ export class ConversationService {
     if (userIds) {
       if (isQualifiedIdArray(userIds)) {
         members = userIds;
-      } else if (isQualifiedUserClients(userIds)) {
+      } else {
         members = Object.entries(userIds).reduce<QualifiedId[]>((accumulator, [domain, userClients]) => {
           accumulator.push(...Object.keys(userClients).map(userId => ({domain, id: userId})));
           return accumulator;
