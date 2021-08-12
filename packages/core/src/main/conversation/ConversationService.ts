@@ -120,17 +120,14 @@ export class ConversationService {
 
   private async getQualifiedPreKeyBundle(
     conversationId: string,
+    conversationDomain: string,
     userIds?: QualifiedId[] | QualifiedUserClients,
-    conversationDomain?: string,
   ): Promise<QualifiedUserPreKeyBundleMap> {
     let members: QualifiedId[] = [];
 
     if (userIds) {
       if (isQualifiedIdArray(userIds)) {
-        // userIds is of type `QualifiedId[]`
         members = userIds;
-      } else if (isUserClients(userIds)) {
-        members = Object.keys(userIds).map(userId => ({domain: 'none', id: userId}));
       } else if (isQualifiedUserClients(userIds)) {
         members = Object.entries(userIds).reduce<QualifiedId[]>((accumulator, [domain, userClients]) => {
           accumulator.push(...Object.keys(userClients).map(userId => ({domain, id: userId})));
@@ -147,15 +144,14 @@ export class ConversationService {
        * other clients.
        */
       members = conversation.members.others
-        .map(member => member.qualified_id || {domain: 'none', id: member.id})
-        .concat({domain: conversationDomain || 'none', id: conversation.members.self.id});
+        .filter(member => !!member.qualified_id)
+        .map(member => member.qualified_id!)
+        .concat({domain: this.apiClient.context!.domain!, id: conversation.members.self.id});
     }
 
     const preKeys = await Promise.all(
       members.map(async qualifiedUserId => {
-        const prekeyBundle = await this.apiClient.user.api.getUserPreKeys(
-          qualifiedUserId.domain === 'none' ? qualifiedUserId.id : qualifiedUserId,
-        );
+        const prekeyBundle = await this.apiClient.user.api.getUserPreKeys(qualifiedUserId);
         return {user: qualifiedUserId, clients: prekeyBundle.clients};
       }),
     );
@@ -259,12 +255,12 @@ export class ConversationService {
   private async sendFederatedGenericMessage(
     sendingClientId: string,
     conversationId: string,
-    genericMessage: GenericMessage,
     conversationDomain: string,
+    genericMessage: GenericMessage,
     userIds?: QualifiedId[] | QualifiedUserClients,
   ): Promise<void> {
     const plainTextArray = GenericMessage.encode(genericMessage).finish();
-    const preKeyBundles = await this.getQualifiedPreKeyBundle(conversationId, userIds, conversationDomain);
+    const preKeyBundles = await this.getQualifiedPreKeyBundle(conversationId, conversationDomain, userIds);
 
     const recipients = await this.cryptographyService.encryptQualified(plainTextArray, preKeyBundles);
 
@@ -293,8 +289,8 @@ export class ConversationService {
       return this.sendFederatedGenericMessage(
         this.apiClient.validatedClientId,
         conversationId,
-        genericMessage,
         conversationDomain,
+        genericMessage,
         userIds,
       );
     }
