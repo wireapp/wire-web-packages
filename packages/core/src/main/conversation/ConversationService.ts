@@ -146,6 +146,7 @@ export class ConversationService {
       members = conversation.members.others
         .filter(member => !!member.qualified_id)
         .map(member => member.qualified_id!)
+        // TODO(Federation): Use 'domain' from 'conversation.members.self' when backend has it implemented
         .concat({domain: this.apiClient.context!.domain!, id: conversation.members.self.id});
     }
 
