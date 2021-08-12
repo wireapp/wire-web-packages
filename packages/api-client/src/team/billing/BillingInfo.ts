@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2021 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,13 @@
  *
  */
 
-import type {User} from '../user/';
-
-export type UserUpdate = Partial<Pick<User, 'name'> & Pick<User, 'assets' | 'accent_id'>>;
+export interface BillingData {
+  city: string;
+  company: string;
+  country: string;
+  firstname: string;
+  lastname: string;
+  state?: string;
+  street: string;
+  zip: string;
+}

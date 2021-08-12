@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2021 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,27 @@
  *
  */
 
-import type {User} from '../user/';
+export enum BillingStatus {
+  ACTIVE = 'active',
+  CANCELED = 'canceled',
+  PAST_DUE = 'past_due',
+  TRIALING = 'trialing',
+  UNPAID = 'unpaid',
+}
 
-export type UserUpdate = Partial<Pick<User, 'name'> & Pick<User, 'assets' | 'accent_id'>>;
+export interface BillingSuspension {
+  created: number;
+  graceEnding: number;
+  invoice: string;
+}
+
+export interface BillingTeamData {
+  id: string;
+  customerId: string;
+  created: number;
+  bankTransfer: boolean;
+  seats: number;
+  status: BillingStatus;
+  grace?: BillingSuspension;
+  trialEndsAt: number;
+}

@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2021 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,10 @@
  *
  */
 
-import type {User} from '../user/';
+import {InvoiceData} from '../payment';
 
-export type UserUpdate = Partial<Pick<User, 'name'> & Pick<User, 'assets' | 'accent_id'>>;
+// https://stripe.com/docs/api#invoice_object
+export interface InvoiceListData {
+  has_more: boolean;
+  invoices: InvoiceData[];
+}

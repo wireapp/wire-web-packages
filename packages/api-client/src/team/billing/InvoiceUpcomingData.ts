@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2021 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,26 @@
  *
  */
 
-import type {User} from '../user/';
+import type {SupportedCurrency} from './SupportedCurrency';
 
-export type UserUpdate = Partial<Pick<User, 'name'> & Pick<User, 'assets' | 'accent_id'>>;
+export interface Coupon {
+  amountOff: number;
+  name: string;
+  percentOff: number;
+}
+
+export interface InvoiceUpcomingData {
+  number: string;
+  status: string;
+  amount: number;
+  balance: number;
+  endingBalance: number;
+  coupon: Coupon;
+  currency: SupportedCurrency;
+  date: number;
+  discount: number;
+  subtotal: number;
+  tax: number;
+  taxPercent: number;
+  total: number;
+}

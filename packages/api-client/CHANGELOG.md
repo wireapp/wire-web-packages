@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.37.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@12.37.0...@wireapp/api-client@12.37.1) (2021-08-11)
+
+
+### Bug Fixes
+
+* **api-client:** Remove currency from BillingInfo type ([#4116](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4116)) ([0c6bf59](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/0c6bf5963546afb4a646bad4c0152ecbb46ec52f))
+
+
+
+
+
+# [12.37.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@12.36.0...@wireapp/api-client@12.37.0) (2021-08-09)
+
+
+### Features
+
+* **api-client:** Billing coupon endpoints ([#4112](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4112)) ([f54b1ac](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/f54b1acc4c34a1cb972dbcaabe9e2added3e0559))
+
+
+
+
+
+# [12.36.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@12.35.2...@wireapp/api-client@12.36.0) (2021-08-06)
+
+
+### Features
+
+* **api-client:** Restructured BillingAPI ([#4111](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4111)) ([45b8bca](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/45b8bca6076eea5c34f781c6bc6d3a3e840ec65a))
+
+
+
+
+
+## [12.35.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@12.35.1...@wireapp/api-client@12.35.2) (2021-08-04)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [12.35.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@12.35.0...@wireapp/api-client@12.35.1) (2021-08-03)
+
+
+### Bug Fixes
+
+* **api-client:** Name in UserUpdate is optional ([#4107](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4107)) ([da1f4c8](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/da1f4c8b800e5e30323ce20d5956f540eae4a9d3))
+
+
+
+
+
 # [12.35.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@12.34.0...@wireapp/api-client@12.35.0) (2021-07-27)
 
 

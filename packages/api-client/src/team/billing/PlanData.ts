@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2021 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,19 @@
  *
  */
 
-import type {User} from '../user/';
+import {SupportedCurrency} from './SupportedCurrency';
 
-export type UserUpdate = Partial<Pick<User, 'name'> & Pick<User, 'assets' | 'accent_id'>>;
+export enum PlanInterval {
+  MONTH = 'month',
+  YEAR = 'year',
+}
+
+export interface PlanData {
+  amount: number;
+  custom: boolean;
+  id: string;
+  interval: PlanInterval;
+  currency: SupportedCurrency;
+  calculatedPriceEstimate: number;
+  name: string;
+}
