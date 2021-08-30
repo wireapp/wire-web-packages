@@ -2634,9 +2634,9 @@
   integrity sha512-ejzb61Q5zQTtS0ZIafgQ7ahO5ACzmGhG5PfX2hxWyth3k0/aysb4ZOxKQB8DbzwSPppA5jmFBwqnBxjv5hqI5Q==
 
 "@types/filesystem@*":
-  version "0.0.29"
-  resolved "https://registry.npmjs.org/@types/filesystem/-/filesystem-0.0.29.tgz#ee3748eb5be140dcf980c3bd35f11aec5f7a3748"
-  integrity sha512-85/1KfRedmfPGsbK8YzeaQUyV1FQAvMPMTuWFQ5EkLd2w7szhNO96bk3Rh/SKmOfd9co2rCLf0Voy4o7ECBOvw==
+  version "0.0.32"
+  resolved "https://registry.npmjs.org/@types/filesystem/-/filesystem-0.0.32.tgz#307df7cc084a2293c3c1a31151b178063e0a8edf"
+  integrity sha512-Yuf4jR5YYMR2DVgwuCiP11s0xuVRyPKmz8vo6HBY3CGdeMj8af93CFZX+T82+VD1+UqHOxTq31lO7MI7lepBtQ==
   dependencies:
     "@types/filewriter" "*"
 
@@ -2971,10 +2971,10 @@
     "@types/webpack-sources" "*"
     source-map "^0.6.0"
 
-"@types/webrtc@0.0.29":
-  version "0.0.29"
-  resolved "https://registry.npmjs.org/@types/webrtc/-/webrtc-0.0.29.tgz#b1b1858f21c4f8e4ee529c91e4b7b7633bf90898"
-  integrity sha512-xrSlKRdEmlSJVLiVsTuvCEqJ76OzSxMqd5ME1MNixmUFGnw9jzjuKXUcF0aEtHKrBF9eLDRjHZzb4JYG+OcHlQ==
+"@types/webrtc@0.0.30":
+  version "0.0.30"
+  resolved "https://registry.npmjs.org/@types/webrtc/-/webrtc-0.0.30.tgz#5631d10ef5870f22344d1949bf8e5e63e44ba695"
+  integrity sha512-6RtNrygZrRP8dPMzYejjfRQHiNOGqb6T9dbXaDXorm9opA2N8t6VfFKtHPoJUHErjsSBX/XhDDEf+r+ptmLZJw==
 
 "@types/ws@7.4.7":
   version "7.4.7"
@@ -15947,10 +15947,10 @@ typedarray@^0.0.6:
   resolved "https://registry.npmjs.org/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@4.3.5:
-  version "4.3.5"
-  resolved "https://registry.npmjs.org/typescript/-/typescript-4.3.5.tgz#4d1c37cc16e893973c45a06886b7113234f119f4"
-  integrity sha512-DqQgihaQ9cUrskJo9kIyW/+g0Vxsk8cDtZ52a3NGh0YNTfpUSArXSohyUGnvbPazEPLu398C0UxmKSOrPumUzA==
+typescript@4.4.2:
+  version "4.4.2"
+  resolved "https://registry.npmjs.org/typescript/-/typescript-4.4.2.tgz#6d618640d430e3569a1dfb44f7d7e600ced3ee86"
+  integrity sha512-gzP+t5W4hdy4c+68bfcv0t400HVJMMd2+H9B7gae1nQlBzCqvrXX+6GL/b3GAgyTH966pzrZ70/fRjwAtZksSQ==
 
 ua-parser-js@^0.7.28:
   version "0.7.28"
