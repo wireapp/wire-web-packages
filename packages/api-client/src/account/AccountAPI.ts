@@ -173,9 +173,10 @@ export class AccountAPI {
       const response = await this.client.sendJSON<DomainData>(config);
       return response.data;
     } catch (error) {
-      switch ((error as BackendError).label) {
+      const backendError = error as BackendError;
+      switch (backendError.label) {
         case BackendErrorLabel.CUSTOM_BACKEND_NOT_FOUND: {
-          throw new CustomBackendNotFoundError((error as BackendError).message);
+          throw new CustomBackendNotFoundError(backendError.message);
         }
       }
       throw error;
