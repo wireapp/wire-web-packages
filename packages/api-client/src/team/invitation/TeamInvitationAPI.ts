@@ -20,7 +20,7 @@
 import type {AxiosRequestConfig} from 'axios';
 
 import {TeamAPI} from '../team/';
-import {HttpClient, BackendErrorLabel} from '../../http/';
+import {HttpClient, BackendErrorLabel, BackendError} from '../../http/';
 import type {NewTeamInvitation, TeamInvitation, TeamInvitationChunk} from '../invitation/';
 import {
   InvitationInvalidPhoneError,
@@ -102,18 +102,18 @@ export class TeamInvitationAPI {
       const response = await this.client.sendJSON<TeamInvitation>(config);
       return response.data;
     } catch (error) {
-      switch (error.label) {
+      switch ((error as BackendError).label) {
         case BackendErrorLabel.INVITE_EMAIL_EXISTS: {
-          throw new InvitationEmailExistsError(error.message);
+          throw new InvitationEmailExistsError((error as BackendError).message);
         }
         case BackendErrorLabel.BAD_REQUEST: {
-          throw new InvitationInvalidPhoneError(error.message);
+          throw new InvitationInvalidPhoneError((error as BackendError).message);
         }
         case BackendErrorLabel.INVALID_EMAIL: {
-          throw new InvitationInvalidEmailError(error.message);
+          throw new InvitationInvalidEmailError((error as BackendError).message);
         }
         case BackendErrorLabel.PHONE_EXISTS: {
-          throw new InvitationPhoneExistsError(error.message);
+          throw new InvitationPhoneExistsError((error as BackendError).message);
         }
       }
       throw error;

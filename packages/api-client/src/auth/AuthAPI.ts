@@ -19,7 +19,7 @@
 
 import type {AxiosRequestConfig, AxiosResponse} from 'axios';
 
-import {BackendErrorLabel, HttpClient} from '../http/';
+import {BackendError, BackendErrorLabel, HttpClient} from '../http/';
 import {ClientType} from '../client/';
 import {ForbiddenPhoneNumberError, InvalidPhoneNumberError, PasswordExistsError} from './AuthenticationError';
 import {retrieveCookie, sendRequestWithCookie} from '../shims/node/cookie';
@@ -115,16 +115,16 @@ export class AuthAPI {
       const response = await this.client.sendJSON<LoginCodeResponse>(config);
       return response.data;
     } catch (error) {
-      switch (error.label) {
+      switch ((error as BackendError).label) {
         case BackendErrorLabel.BAD_REQUEST: {
-          throw new InvalidPhoneNumberError(error.message);
+          throw new InvalidPhoneNumberError((error as BackendError).message);
         }
         case BackendErrorLabel.INVALID_PHONE:
         case BackendErrorLabel.UNAUTHORIZED: {
-          throw new ForbiddenPhoneNumberError(error.message);
+          throw new ForbiddenPhoneNumberError((error as BackendError).message);
         }
         case BackendErrorLabel.PASSWORD_EXISTS: {
-          throw new PasswordExistsError(error.message);
+          throw new PasswordExistsError((error as BackendError).message);
         }
       }
       throw error;

@@ -22,7 +22,7 @@ import {APIClient} from '@wireapp/api-client';
 import {AuthAPI, Context} from '@wireapp/api-client/src/auth';
 import {ClientAPI, ClientType} from '@wireapp/api-client/src/client';
 import {ConversationAPI} from '@wireapp/api-client/src/conversation';
-import {BackendErrorLabel} from '@wireapp/api-client/src/http';
+import {BackendError, BackendErrorLabel} from '@wireapp/api-client/src/http';
 import {Notification, NotificationAPI} from '@wireapp/api-client/src/notification';
 import {ValidationUtil} from '@wireapp/commons';
 import {GenericMessage, Text} from '@wireapp/protocol-messaging';
@@ -180,8 +180,8 @@ describe('Account', () => {
 
         fail('Should not be logged in');
       } catch (error) {
-        expect(error.code).toBe(HTTP_STATUS.FORBIDDEN);
-        expect(error.label).toBe(BackendErrorLabel.INVALID_CREDENTIALS);
+        expect((error as BackendError).code).toBe(HTTP_STATUS.FORBIDDEN);
+        expect((error as BackendError).label).toBe(BackendErrorLabel.INVALID_CREDENTIALS);
       }
     });
   });

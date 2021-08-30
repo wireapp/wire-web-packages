@@ -46,7 +46,7 @@ import type {
   ConversationReceiptModeUpdateEvent,
   ConversationRenameEvent,
 } from '../event/';
-import {BackendErrorLabel, HttpClient} from '../http/';
+import {BackendError, BackendErrorLabel, HttpClient} from '../http/';
 import type {
   ConversationAccessUpdateData,
   ConversationJoinData,
@@ -375,9 +375,9 @@ export class ConversationAPI {
       const response = await this.client.sendJSON<ConversationEvent>(config);
       return response.data;
     } catch (error) {
-      switch (error.label) {
+      switch ((error as BackendError).label) {
         case BackendErrorLabel.LEGAL_HOLD_MISSING_CONSENT: {
-          throw new ConversationLegalholdMissingConsentError(error.message);
+          throw new ConversationLegalholdMissingConsentError((error as BackendError).message);
         }
       }
       throw error;
@@ -430,9 +430,9 @@ export class ConversationAPI {
       const response = await this.client.sendJSON<Conversation>(config);
       return response.data;
     } catch (error) {
-      switch (error.label) {
+      switch ((error as BackendError).label) {
         case BackendErrorLabel.LEGAL_HOLD_MISSING_CONSENT: {
-          throw new ConversationLegalholdMissingConsentError(error.message);
+          throw new ConversationLegalholdMissingConsentError((error as BackendError).message);
         }
       }
       throw error;
@@ -469,9 +469,9 @@ export class ConversationAPI {
     try {
       await this.client.sendJSON(config);
     } catch (error) {
-      switch (error.label) {
+      switch ((error as BackendError).label) {
         case BackendErrorLabel.NO_CONVERSATION_CODE: {
-          throw new ConversationCodeNotFoundError(error.message);
+          throw new ConversationCodeNotFoundError((error as BackendError).message);
         }
       }
       throw error;
@@ -494,12 +494,12 @@ export class ConversationAPI {
       const response = await this.client.sendJSON<ConversationMemberJoinEvent>(config);
       return response.data;
     } catch (error) {
-      switch (error.label) {
+      switch ((error as BackendError).label) {
         case BackendErrorLabel.NO_CONVERSATION_CODE: {
-          throw new ConversationCodeNotFoundError(error.message);
+          throw new ConversationCodeNotFoundError((error as BackendError).message);
         }
         case BackendErrorLabel.TOO_MANY_MEMBERS: {
-          throw new ConversationFullError(error.message);
+          throw new ConversationFullError((error as BackendError).message);
         }
       }
       throw error;
@@ -522,9 +522,9 @@ export class ConversationAPI {
       const response = await this.client.sendJSON<ConversationJoinData>(config);
       return response.data;
     } catch (error) {
-      switch (error.label) {
+      switch ((error as BackendError).label) {
         case BackendErrorLabel.NO_CONVERSATION_CODE: {
-          throw new ConversationCodeNotFoundError(error.message);
+          throw new ConversationCodeNotFoundError((error as BackendError).message);
         }
       }
       throw error;
@@ -813,9 +813,9 @@ export class ConversationAPI {
       const response = await this.client.sendJSON<ConversationMemberJoinEvent>(config);
       return response.data;
     } catch (error) {
-      switch (error.label) {
+      switch ((error as BackendError).label) {
         case BackendErrorLabel.LEGAL_HOLD_MISSING_CONSENT: {
-          throw new ConversationLegalholdMissingConsentError(error.message);
+          throw new ConversationLegalholdMissingConsentError((error as BackendError).message);
         }
       }
       throw error;
@@ -841,9 +841,9 @@ export class ConversationAPI {
       const response = await this.client.sendJSON<ConversationMemberJoinEvent>(config);
       return response.data;
     } catch (error) {
-      switch (error.label) {
+      switch ((error as BackendError).label) {
         case BackendErrorLabel.LEGAL_HOLD_MISSING_CONSENT: {
-          throw new ConversationLegalholdMissingConsentError(error.message);
+          throw new ConversationLegalholdMissingConsentError((error as BackendError).message);
         }
       }
       throw error;
