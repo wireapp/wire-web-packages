@@ -180,8 +180,9 @@ describe('Account', () => {
 
         fail('Should not be logged in');
       } catch (error) {
-        expect((error as BackendError).code).toBe(HTTP_STATUS.FORBIDDEN);
-        expect((error as BackendError).label).toBe(BackendErrorLabel.INVALID_CREDENTIALS);
+        const backendError = error as BackendError;
+        expect(backendError.code).toBe(HTTP_STATUS.FORBIDDEN);
+        expect(backendError.label).toBe(BackendErrorLabel.INVALID_CREDENTIALS);
       }
     });
   });

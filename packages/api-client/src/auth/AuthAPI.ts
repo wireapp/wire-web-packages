@@ -115,16 +115,17 @@ export class AuthAPI {
       const response = await this.client.sendJSON<LoginCodeResponse>(config);
       return response.data;
     } catch (error) {
-      switch ((error as BackendError).label) {
+      const backendError = error as BackendError;
+      switch (backendError.label) {
         case BackendErrorLabel.BAD_REQUEST: {
-          throw new InvalidPhoneNumberError((error as BackendError).message);
+          throw new InvalidPhoneNumberError(backendError.message);
         }
         case BackendErrorLabel.INVALID_PHONE:
         case BackendErrorLabel.UNAUTHORIZED: {
-          throw new ForbiddenPhoneNumberError((error as BackendError).message);
+          throw new ForbiddenPhoneNumberError(backendError.message);
         }
         case BackendErrorLabel.PASSWORD_EXISTS: {
-          throw new PasswordExistsError((error as BackendError).message);
+          throw new PasswordExistsError(backendError.message);
         }
       }
       throw error;

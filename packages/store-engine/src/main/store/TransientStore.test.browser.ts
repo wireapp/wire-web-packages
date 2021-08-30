@@ -63,7 +63,7 @@ describe('store.TransientStore', () => {
         await store.set(primaryKey, {access_token: 'ABC'}, ttl);
         fail();
       } catch (error) {
-        expect(error as RecordAlreadyExistsError).toEqual(jasmine.any(RecordAlreadyExistsError));
+        expect(error).toEqual(jasmine.any(RecordAlreadyExistsError));
         expect((error as RecordAlreadyExistsError).code).toBe(1);
       }
     });

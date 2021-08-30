@@ -102,18 +102,19 @@ export class TeamInvitationAPI {
       const response = await this.client.sendJSON<TeamInvitation>(config);
       return response.data;
     } catch (error) {
-      switch ((error as BackendError).label) {
+      const backendError = error as BackendError;
+      switch (backendError.label) {
         case BackendErrorLabel.INVITE_EMAIL_EXISTS: {
-          throw new InvitationEmailExistsError((error as BackendError).message);
+          throw new InvitationEmailExistsError(backendError.message);
         }
         case BackendErrorLabel.BAD_REQUEST: {
-          throw new InvitationInvalidPhoneError((error as BackendError).message);
+          throw new InvitationInvalidPhoneError(backendError.message);
         }
         case BackendErrorLabel.INVALID_EMAIL: {
-          throw new InvitationInvalidEmailError((error as BackendError).message);
+          throw new InvitationInvalidEmailError(backendError.message);
         }
         case BackendErrorLabel.PHONE_EXISTS: {
-          throw new InvitationPhoneExistsError((error as BackendError).message);
+          throw new InvitationPhoneExistsError(backendError.message);
         }
       }
       throw error;
