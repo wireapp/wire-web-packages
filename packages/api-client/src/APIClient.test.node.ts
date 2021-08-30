@@ -178,7 +178,7 @@ describe('APIClient', () => {
     it('can logout a user', async () => {
       const client = new APIClient();
 
-      client.context = client['createContext']('3721e5d3-558d-45ac-b476-b4a64a8f74c1', ClientType.TEMPORARY);
+      client.context = await client['createContext']('3721e5d3-558d-45ac-b476-b4a64a8f74c1', ClientType.TEMPORARY);
 
       await client.logout();
     });
