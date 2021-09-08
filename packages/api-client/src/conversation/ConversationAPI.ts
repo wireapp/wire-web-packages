@@ -74,8 +74,9 @@ export class ConversationAPI {
     CODE: 'code',
     CODE_CHECK: '/code-check',
     CONVERSATIONS: '/conversations',
+    IDS: 'ids',
     JOIN: '/join',
-    LIST_CONVERSATIONS: '/list-conversations',
+    LIST: 'list',
     MEMBERS: 'members',
     MESSAGE_TIMER: 'message-timer',
     MESSAGES: 'messages',
@@ -217,7 +218,7 @@ export class ConversationAPI {
         size: limit,
         start: conversationId,
       },
-      url: `${ConversationAPI.URL.CONVERSATIONS}/ids`,
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${ConversationAPI.URL.IDS}`,
     };
 
     const response = await this.client.sendJSON<ConversationIds>(config);
@@ -239,13 +240,13 @@ export class ConversationAPI {
   }
 
   /**
-   * Get all conversations from a federated backend.
-   * @see https://staging-nginz-https.zinfra.io/api/swagger-ui/#/default/post_list_conversations
+   * Get conversation metadata for a list of conversation ids
+   * @see https://staging-nginz-https.zinfra.io/api/swagger-ui/#/default/post_conversations_list_v2
    */
   public async getListConversations(): Promise<RemoteConversations> {
     const config: AxiosRequestConfig = {
       method: 'post',
-      url: ConversationAPI.URL.LIST_CONVERSATIONS,
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${ConversationAPI.URL.LIST}/${ConversationAPI.URL.V2}`,
     };
 
     const {data} = await this.client.sendJSON<RemoteConversations>(config);
