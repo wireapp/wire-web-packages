@@ -3,6 +3,90 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [17.14.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@17.13.0...@wireapp/core@17.14.0) (2021-09-07)
+
+
+### Features
+
+* **core:** Add domain to clients ([#4124](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/issues/4124)) ([e769f80](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/e769f80257626dffdb44a07a6dc4b12e775ae41b))
+
+
+
+
+
+# [17.13.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@17.12.5...@wireapp/core@17.13.0) (2021-08-30)
+
+
+### Features
+
+* **api-client:** Get self domain when creating context ([#4121](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/issues/4121)) ([16d0a8c](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/16d0a8c75c6cefd03ba520542dd7da18d6541540))
+
+
+
+
+
+## [17.12.5](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@17.12.4...@wireapp/core@17.12.5) (2021-08-25)
+
+
+### Bug Fixes
+
+* **api-client:** Fix receipt mode typing for new conversations ([fcf3e25](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/fcf3e2556a427f04e7588fdd09c558cbf27152f4))
+
+
+
+
+
+## [17.12.4](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@17.12.3...@wireapp/core@17.12.4) (2021-08-25)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [17.12.3](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@17.12.2...@wireapp/core@17.12.3) (2021-08-24)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [17.12.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@17.12.1...@wireapp/core@17.12.2) (2021-08-18)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [17.12.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@17.12.0...@wireapp/core@17.12.1) (2021-08-13)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [17.12.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@17.11.7...@wireapp/core@17.12.0) (2021-08-12)
+
+
+### Features
+
+* **core:** Add domain to context ([#4117](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/issues/4117)) ([106190f](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/106190f6ac45274b3bf286299f4df48eff458d93))
+
+
+
+
+
+## [17.11.7](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@17.11.6...@wireapp/core@17.11.7) (2021-08-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
 ## [17.11.6](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@17.11.5...@wireapp/core@17.11.6) (2021-08-09)
 
 **Note:** Version bump only for package @wireapp/core

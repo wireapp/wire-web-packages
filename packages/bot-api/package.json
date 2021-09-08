@@ -1,18 +1,18 @@
 {
   "dependencies": {
     "@types/node": "*",
-    "@wireapp/core": "17.11.6",
+    "@wireapp/core": "17.14.0",
     "file-type": "16.5.2",
     "uuidjs": "4.2.8"
   },
   "devDependencies": {
-    "@types/jasmine": "3.8.1",
+    "@types/jasmine": "3.8.2",
     "cross-env": "7.0.3",
     "dotenv-defaults": "2.0.2",
     "jasmine": "3.8.0",
     "rimraf": "3.0.2",
     "ts-node": "9.1.1",
-    "typescript": "4.3.5"
+    "typescript": "4.4.2"
   },
   "files": [
     "src",
@@ -34,5 +34,5 @@
     "test:node": "nyc jasmine --config=jasmine.json",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "7.16.19"
+  "version": "7.17.1"
 }

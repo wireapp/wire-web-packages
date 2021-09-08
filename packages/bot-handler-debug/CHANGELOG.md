@@ -3,6 +3,78 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.75](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-debug/compare/@wireapp/bot-handler-debug@0.4.74...@wireapp/bot-handler-debug@0.4.75) (2021-09-07)
+
+**Note:** Version bump only for package @wireapp/bot-handler-debug
+
+
+
+
+
+## [0.4.74](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-debug/compare/@wireapp/bot-handler-debug@0.4.73...@wireapp/bot-handler-debug@0.4.74) (2021-08-30)
+
+**Note:** Version bump only for package @wireapp/bot-handler-debug
+
+
+
+
+
+## [0.4.73](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-debug/compare/@wireapp/bot-handler-debug@0.4.72...@wireapp/bot-handler-debug@0.4.73) (2021-08-25)
+
+**Note:** Version bump only for package @wireapp/bot-handler-debug
+
+
+
+
+
+## [0.4.72](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-debug/compare/@wireapp/bot-handler-debug@0.4.71...@wireapp/bot-handler-debug@0.4.72) (2021-08-25)
+
+**Note:** Version bump only for package @wireapp/bot-handler-debug
+
+
+
+
+
+## [0.4.71](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-debug/compare/@wireapp/bot-handler-debug@0.4.70...@wireapp/bot-handler-debug@0.4.71) (2021-08-24)
+
+**Note:** Version bump only for package @wireapp/bot-handler-debug
+
+
+
+
+
+## [0.4.70](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-debug/compare/@wireapp/bot-handler-debug@0.4.69...@wireapp/bot-handler-debug@0.4.70) (2021-08-18)
+
+**Note:** Version bump only for package @wireapp/bot-handler-debug
+
+
+
+
+
+## [0.4.69](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-debug/compare/@wireapp/bot-handler-debug@0.4.68...@wireapp/bot-handler-debug@0.4.69) (2021-08-13)
+
+**Note:** Version bump only for package @wireapp/bot-handler-debug
+
+
+
+
+
+## [0.4.68](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-debug/compare/@wireapp/bot-handler-debug@0.4.67...@wireapp/bot-handler-debug@0.4.68) (2021-08-12)
+
+**Note:** Version bump only for package @wireapp/bot-handler-debug
+
+
+
+
+
+## [0.4.67](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-debug/compare/@wireapp/bot-handler-debug@0.4.66...@wireapp/bot-handler-debug@0.4.67) (2021-08-11)
+
+**Note:** Version bump only for package @wireapp/bot-handler-debug
+
+
+
+
+
 ## [0.4.66](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-debug/compare/@wireapp/bot-handler-debug@0.4.65...@wireapp/bot-handler-debug@0.4.66) (2021-08-09)
 
 **Note:** Version bump only for package @wireapp/bot-handler-debug

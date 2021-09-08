@@ -47,7 +47,7 @@ import type {
   ConversationReceiptModeUpdateEvent,
   ConversationRenameEvent,
 } from '../event/';
-import {BackendErrorLabel, HttpClient} from '../http/';
+import {BackendError, BackendErrorLabel, HttpClient} from '../http/';
 import type {
   ConversationAccessUpdateData,
   ConversationJoinData,
@@ -384,9 +384,10 @@ export class ConversationAPI {
       const response = await this.client.sendJSON<ConversationEvent>(config);
       return response.data;
     } catch (error) {
-      switch (error.label) {
+      const backendError = error as BackendError;
+      switch (backendError.label) {
         case BackendErrorLabel.LEGAL_HOLD_MISSING_CONSENT: {
-          throw new ConversationLegalholdMissingConsentError(error.message);
+          throw new ConversationLegalholdMissingConsentError(backendError.message);
         }
       }
       throw error;
@@ -439,9 +440,10 @@ export class ConversationAPI {
       const response = await this.client.sendJSON<Conversation>(config);
       return response.data;
     } catch (error) {
-      switch (error.label) {
+      const backendError = error as BackendError;
+      switch (backendError.label) {
         case BackendErrorLabel.LEGAL_HOLD_MISSING_CONSENT: {
-          throw new ConversationLegalholdMissingConsentError(error.message);
+          throw new ConversationLegalholdMissingConsentError(backendError.message);
         }
       }
       throw error;
@@ -478,9 +480,10 @@ export class ConversationAPI {
     try {
       await this.client.sendJSON(config);
     } catch (error) {
-      switch (error.label) {
+      const backendError = error as BackendError;
+      switch (backendError.label) {
         case BackendErrorLabel.NO_CONVERSATION_CODE: {
-          throw new ConversationCodeNotFoundError(error.message);
+          throw new ConversationCodeNotFoundError(backendError.message);
         }
       }
       throw error;
@@ -503,12 +506,13 @@ export class ConversationAPI {
       const response = await this.client.sendJSON<ConversationMemberJoinEvent>(config);
       return response.data;
     } catch (error) {
-      switch (error.label) {
+      const backendError = error as BackendError;
+      switch (backendError.label) {
         case BackendErrorLabel.NO_CONVERSATION_CODE: {
-          throw new ConversationCodeNotFoundError(error.message);
+          throw new ConversationCodeNotFoundError(backendError.message);
         }
         case BackendErrorLabel.TOO_MANY_MEMBERS: {
-          throw new ConversationFullError(error.message);
+          throw new ConversationFullError(backendError.message);
         }
       }
       throw error;
@@ -531,9 +535,10 @@ export class ConversationAPI {
       const response = await this.client.sendJSON<ConversationJoinData>(config);
       return response.data;
     } catch (error) {
-      switch (error.label) {
+      const backendError = error as BackendError;
+      switch (backendError.label) {
         case BackendErrorLabel.NO_CONVERSATION_CODE: {
-          throw new ConversationCodeNotFoundError(error.message);
+          throw new ConversationCodeNotFoundError(backendError.message);
         }
       }
       throw error;
@@ -822,9 +827,10 @@ export class ConversationAPI {
       const response = await this.client.sendJSON<ConversationMemberJoinEvent>(config);
       return response.data;
     } catch (error) {
-      switch (error.label) {
+      const backendError = error as BackendError;
+      switch (backendError.label) {
         case BackendErrorLabel.LEGAL_HOLD_MISSING_CONSENT: {
-          throw new ConversationLegalholdMissingConsentError(error.message);
+          throw new ConversationLegalholdMissingConsentError(backendError.message);
         }
       }
       throw error;
@@ -850,9 +856,10 @@ export class ConversationAPI {
       const response = await this.client.sendJSON<ConversationMemberJoinEvent>(config);
       return response.data;
     } catch (error) {
-      switch (error.label) {
+      const backendError = error as BackendError;
+      switch (backendError.label) {
         case BackendErrorLabel.LEGAL_HOLD_MISSING_CONSENT: {
-          throw new ConversationLegalholdMissingConsentError(error.message);
+          throw new ConversationLegalholdMissingConsentError(backendError.message);
         }
       }
       throw error;

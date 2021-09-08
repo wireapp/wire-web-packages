@@ -3,6 +3,115 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [13.4.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@13.4.0...@wireapp/api-client@13.4.1) (2021-09-07)
+
+
+### Bug Fixes
+
+* **api-client:** Rename QualifiedUserMap to QualifiedUserClientMap ([d710335](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/d710335c129dbca09d6f782a925a10b528158d1b))
+
+
+
+
+
+# [13.4.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@13.3.1...@wireapp/api-client@13.4.0) (2021-08-30)
+
+
+### Bug Fixes
+
+* **api-client:** Add missing typing ([7b40578](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/7b40578ec76e840e678c5ea504c395dc3d2a59f9))
+
+
+### Features
+
+* **api-client:** Get self domain when creating context ([#4121](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4121)) ([16d0a8c](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/16d0a8c75c6cefd03ba520542dd7da18d6541540))
+
+
+
+
+
+## [13.3.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@13.3.0...@wireapp/api-client@13.3.1) (2021-08-25)
+
+
+### Bug Fixes
+
+* **api-client:** Fix receipt mode typing for new conversations ([79e9c2c](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/79e9c2c530c421378b11b10d02393598cc56cc6f))
+
+
+
+
+
+# [13.3.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@13.2.0...@wireapp/api-client@13.3.0) (2021-08-25)
+
+
+### Features
+
+* **api-client:** Expose receipt mode from conversation ([#4120](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4120)) ([72c105e](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/72c105e748f289b7573737bc53df8ebf33d6f004))
+
+
+
+
+
+# [13.2.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@13.1.0...@wireapp/api-client@13.2.0) (2021-08-24)
+
+
+### Features
+
+* **api-client:** Add federated users to ConversationMemberJoinData ([38326e5](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/38326e5dc05ec4b5cae9f67ff0b777c1909907a7))
+
+
+
+
+
+# [13.1.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@13.0.0...@wireapp/api-client@13.1.0) (2021-08-18)
+
+
+### Features
+
+* **api-client:** Add classified domains to feature config ([#4119](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4119)) ([3b73c52](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/3b73c524ff511fc86cf1f66007214f0c86e0bba0))
+
+
+
+
+
+# [13.0.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@12.38.0...@wireapp/api-client@13.0.0) (2021-08-13)
+
+
+### Bug Fixes
+
+* **api-client:** Remove legacy resource to change email addresses ([#4118](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4118)) ([7487287](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/7487287b536a4bf77da4edceeb036b380480c444))
+
+
+### BREAKING CHANGES
+
+* **api-client:** Removed `self.api.putEmail`, use `auth.api.putEmail` instead
+
+
+
+
+
+# [12.38.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@12.37.1...@wireapp/api-client@12.38.0) (2021-08-12)
+
+
+### Features
+
+* **core:** Add domain to context ([#4117](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4117)) ([106190f](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/106190f6ac45274b3bf286299f4df48eff458d93))
+
+
+
+
+
+## [12.37.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@12.37.0...@wireapp/api-client@12.37.1) (2021-08-11)
+
+
+### Bug Fixes
+
+* **api-client:** Remove currency from BillingInfo type ([#4116](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4116)) ([0c6bf59](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/0c6bf5963546afb4a646bad4c0152ecbb46ec52f))
+
+
+
+
+
 # [12.37.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@12.36.0...@wireapp/api-client@12.37.0) (2021-08-09)
 
 
