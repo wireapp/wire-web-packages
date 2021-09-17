@@ -86,7 +86,7 @@ describe('ConversationService', () => {
   });
 
   describe('"send"', () => {
-    it('calls callbacks when federated message sending is starting and succesful', async () => {
+    it('calls callbacks when federated message sending is starting and successful', async () => {
       account['apiClient'].context = {
         clientType: ClientType.NONE,
         userId: PayloadHelper.getUUID(),
@@ -111,9 +111,8 @@ describe('ConversationService', () => {
 
       expect(callbacks.onStart).toHaveBeenCalled();
       expect(callbacks.onSuccess).not.toHaveBeenCalled();
-      return promise.then(() => {
-        expect(callbacks.onSuccess).toHaveBeenCalled();
-      });
+      await promise;
+      expect(callbacks.onSuccess).toHaveBeenCalled();
     });
   });
 

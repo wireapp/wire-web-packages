@@ -90,8 +90,8 @@ import type {
 } from './message/OtrMessage';
 
 interface MessageSendingCallbacks {
-  onStart: (message: GenericMessage) => void;
-  onSuccess: (message: GenericMessage) => void;
+  onStart?: (message: GenericMessage) => void;
+  onSuccess?: (message: GenericMessage) => void;
 }
 
 export class ConversationService {
@@ -873,7 +873,7 @@ export class ConversationService {
     if (expireAfterMillis > 0) {
       genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
     }
-    callbacks?.onStart(genericMessage);
+    callbacks?.onStart?.(genericMessage);
 
     await this.sendGenericMessage(
       this.apiClient.validatedClientId,
@@ -883,7 +883,7 @@ export class ConversationService {
       sendAsProtobuf,
       conversationDomain,
     );
-    callbacks?.onSuccess(genericMessage);
+    callbacks?.onSuccess?.(genericMessage);
 
     return {
       ...payloadBundle,
@@ -1112,7 +1112,7 @@ export class ConversationService {
   /**
    * @param payloadBundle Outgoing message
    * @param userIds Only send message to specified user IDs or to certain clients of specified user IDs
-   * @param callbacks? Optional callbacks that will be called when the message starts being sent and when it has been succesfully sent
+   * @param [callbacks] Optional callbacks that will be called when the message starts being sent and when it has been succesfully sent
    * @returns Sent message
    */
   public async send({
