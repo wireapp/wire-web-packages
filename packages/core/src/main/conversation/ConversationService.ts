@@ -89,7 +89,7 @@ import type {
   TextMessage,
 } from './message/OtrMessage';
 
-interface MessageSendingCallbacks {
+export interface MessageSendingCallbacks {
   onStart?: (message: GenericMessage) => void;
   onSuccess?: (message: GenericMessage) => void;
 }
@@ -1112,7 +1112,7 @@ export class ConversationService {
   /**
    * @param payloadBundle Outgoing message
    * @param userIds Only send message to specified user IDs or to certain clients of specified user IDs
-   * @param [callbacks] Optional callbacks that will be called when the message starts being sent and when it has been succesfully sent
+   * @param [callbacks] Optional callbacks that will be called when the message starts being sent and when it has been succesfully sent. Currently only used for `sendText`.
    * @returns Sent message
    */
   public async send({
