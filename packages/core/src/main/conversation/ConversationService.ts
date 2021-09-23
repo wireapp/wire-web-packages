@@ -885,7 +885,7 @@ export class ConversationService {
       sendAsProtobuf,
       conversationDomain,
     );
-    callbacks?.onSuccess?.(genericMessage, response?.time);
+    callbacks?.onSuccess?.(genericMessage, response && response.time);
 
     return {
       ...payloadBundle,
