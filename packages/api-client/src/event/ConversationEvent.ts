@@ -93,70 +93,70 @@ export interface BaseConversationEvent {
 
 export interface ConversationAccessUpdateEvent extends BaseConversationEvent {
   data: ConversationAccessUpdateData;
-  type: typeof CONVERSATION_EVENT.ACCESS_UPDATE;
+  type: CONVERSATION_EVENT.ACCESS_UPDATE;
 }
 
 export interface ConversationCodeDeleteEvent extends BaseConversationEvent {
   data: null;
-  type: typeof CONVERSATION_EVENT.CODE_DELETE;
+  type: CONVERSATION_EVENT.CODE_DELETE;
 }
 
 export interface ConversationCodeUpdateEvent extends BaseConversationEvent {
   data: ConversationCodeUpdateData;
-  type: typeof CONVERSATION_EVENT.CODE_UPDATE;
+  type: CONVERSATION_EVENT.CODE_UPDATE;
 }
 
 export interface ConversationConnectRequestEvent extends BaseConversationEvent {
   data: ConversationConnectRequestData;
-  type: typeof CONVERSATION_EVENT.CONNECT_REQUEST;
+  type: CONVERSATION_EVENT.CONNECT_REQUEST;
 }
 
 export interface ConversationCreateEvent extends BaseConversationEvent {
   data: ConversationCreateData;
-  type: typeof CONVERSATION_EVENT.CREATE;
+  type: CONVERSATION_EVENT.CREATE;
 }
 
 export interface ConversationDeleteEvent extends BaseConversationEvent {
   data: null;
-  type: typeof CONVERSATION_EVENT.DELETE;
+  type: CONVERSATION_EVENT.DELETE;
 }
 
 export interface ConversationMemberJoinEvent extends BaseConversationEvent {
   data: ConversationMemberJoinData;
-  type: typeof CONVERSATION_EVENT.MEMBER_JOIN;
+  type: CONVERSATION_EVENT.MEMBER_JOIN;
 }
 
 export interface ConversationMemberLeaveEvent extends BaseConversationEvent {
   data: ConversationMemberLeaveData;
-  type: typeof CONVERSATION_EVENT.MEMBER_LEAVE;
+  type: CONVERSATION_EVENT.MEMBER_LEAVE;
 }
 
 export interface ConversationMemberUpdateEvent extends BaseConversationEvent {
   data: ConversationMemberUpdateData;
-  type: typeof CONVERSATION_EVENT.MEMBER_UPDATE;
+  type: CONVERSATION_EVENT.MEMBER_UPDATE;
 }
 
 export interface ConversationMessageTimerUpdateEvent extends BaseConversationEvent {
   data: ConversationMessageTimerUpdateData;
-  type: typeof CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE;
+  type: CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE;
 }
 
 export interface ConversationOtrMessageAddEvent extends BaseConversationEvent {
   data: ConversationOtrMessageAddData;
-  type: typeof CONVERSATION_EVENT.OTR_MESSAGE_ADD;
+  type: CONVERSATION_EVENT.OTR_MESSAGE_ADD;
 }
 
 export interface ConversationReceiptModeUpdateEvent extends BaseConversationEvent {
   data: ConversationReceiptModeUpdateData;
-  type: typeof CONVERSATION_EVENT.RECEIPT_MODE_UPDATE;
+  type: CONVERSATION_EVENT.RECEIPT_MODE_UPDATE;
 }
 
 export interface ConversationRenameEvent extends BaseConversationEvent {
   data: ConversationRenameData;
-  type: typeof CONVERSATION_EVENT.RENAME;
+  type: CONVERSATION_EVENT.RENAME;
 }
 
 export interface ConversationTypingEvent extends BaseConversationEvent {
   data: ConversationTypingData;
-  type: typeof CONVERSATION_EVENT.TYPING;
+  type: CONVERSATION_EVENT.TYPING;
 }
