@@ -20,7 +20,7 @@
 export enum BillingStatus {
   ACTIVE = 'active',
   CANCELED = 'canceled',
-  INCOMPLETE = "incomplete",
+  INCOMPLETE = 'incomplete',
   PAST_DUE = 'past_due',
   TRIALING = 'trialing',
   UNPAID = 'unpaid',
