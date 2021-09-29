@@ -48,7 +48,8 @@ type UUID = string;
  */
 export interface Conversation {
   qualified_id: QualifiedId;
-  id?: UUID;
+  /** @deprecated Use qualified_id instead */
+  id: UUID;
   type: CONVERSATION_TYPE;
   creator: UUID;
   access: CONVERSATION_ACCESS[];
