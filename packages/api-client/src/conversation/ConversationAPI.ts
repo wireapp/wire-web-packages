@@ -312,7 +312,7 @@ export class ConversationAPI {
   }
 
   /**
-   * Get all remote conversations from a federated backend.
+   * Get all local & remote conversations from a federated backend.
    * @param ownDomain - the domain identifier on which the client is running against
    */
   public async getConversationList(ownDomain: string): Promise<Conversation[]> {
