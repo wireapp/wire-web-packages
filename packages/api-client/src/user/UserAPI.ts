@@ -154,10 +154,11 @@ export class UserAPI {
    * @param clientId The client ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getPrekey
    */
-  public async getClientPreKey(userId: string, clientId: string, domain?: string): Promise<ClientPreKey> {
+  public async getClientPreKey(userId: QualifiedId, clientId: string): Promise<ClientPreKey> {
+    const {id, domain} = userId;
     const url = domain
-      ? `${UserAPI.URL.USERS}/${domain}/${userId}/${UserAPI.URL.PRE_KEYS}/${clientId}`
-      : `${UserAPI.URL.USERS}/${userId}/${UserAPI.URL.PRE_KEYS}/${clientId}`;
+      ? `${UserAPI.URL.USERS}/${domain}/${id}/${UserAPI.URL.PRE_KEYS}/${clientId}`
+      : `${UserAPI.URL.USERS}/${id}/${UserAPI.URL.PRE_KEYS}/${clientId}`;
 
     const config: AxiosRequestConfig = {
       method: 'get',

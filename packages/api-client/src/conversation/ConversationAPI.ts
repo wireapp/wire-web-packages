@@ -211,10 +211,11 @@ export class ConversationAPI {
    * @param conversationId The conversation ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversation
    */
-  public async getConversation(conversationId: string, domain?: string): Promise<Conversation> {
+  public async getConversation(conversationId: QualifiedId): Promise<Conversation> {
+    const {id, domain} = conversationId;
     const url = domain
-      ? `${ConversationAPI.URL.CONVERSATIONS}/${domain}/${conversationId}`
-      : `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}`;
+      ? `${ConversationAPI.URL.CONVERSATIONS}/${domain}/${id}`
+      : `${ConversationAPI.URL.CONVERSATIONS}/${id}`;
 
     const config: AxiosRequestConfig = {
       method: 'get',
@@ -882,11 +883,11 @@ export class ConversationAPI {
    * @param userIds List of user IDs to add to a conversation
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/addMembers
    */
-  public async postMembers(conversationId: string, userIds: string[]): Promise<ConversationMemberJoinEvent> {
+  public async postMembers(conversationId: string, userIds: QualifiedId[]): Promise<ConversationMemberJoinEvent> {
     const config: AxiosRequestConfig = {
       data: {
         conversation_role: DefaultConversationRoleName.WIRE_MEMBER,
-        users: userIds,
+        users: userIds.map(({id}) => id),
       },
       method: 'post',
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.MEMBERS}`,
