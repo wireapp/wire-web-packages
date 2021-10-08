@@ -220,7 +220,7 @@ export class ConversationAPI {
    * @param conversationId The conversation ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversation
    */
-  public async getConversation_v1(conversationId: string): Promise<Conversation> {
+  async getConversation_v1(conversationId: string): Promise<Conversation> {
     const url = `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}`;
     const config: AxiosRequestConfig = {
       method: 'get',
@@ -231,7 +231,7 @@ export class ConversationAPI {
     return response.data;
   }
 
-  public async getConversation_v2(conversationId: QualifiedId): Promise<Conversation> {
+  async getConversation_v2(conversationId: QualifiedId): Promise<Conversation> {
     const {id, domain} = conversationId;
     const url = `${ConversationAPI.URL.CONVERSATIONS}/${domain}/${id}`;
     const config: AxiosRequestConfig = {
