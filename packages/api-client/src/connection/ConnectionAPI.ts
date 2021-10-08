@@ -93,6 +93,15 @@ export class ConnectionAPI {
     return getConnectionChunks();
   }
 
+  public async postConnection(data: ConnectionRequest, useFederation: false): Promise<Connection>;
+  public async postConnection(data: QualifiedId, useFederation: true): Promise<Connection>;
+  public async postConnection(data: ConnectionRequest | QualifiedId, useFederation: boolean): Promise<Connection> {
+    if (useFederation) {
+      return this.postConnection_v2(data as QualifiedId);
+    }
+    return this.postConnection_v1(data as ConnectionRequest);
+  }
+
   /**
    * Create a connection to another user.
    * Note: You can have no more than 1000 connections in accepted or sent state.
@@ -100,7 +109,7 @@ export class ConnectionAPI {
    * @param connectionRequestData: The connection request
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/createConnection
    */
-  public async postConnection(connectionRequestData: ConnectionRequest): Promise<Connection> {
+  async postConnection_v1(connectionRequestData: ConnectionRequest): Promise<Connection> {
     const config: AxiosRequestConfig = {
       data: connectionRequestData,
       method: 'post',
@@ -126,7 +135,7 @@ export class ConnectionAPI {
    * @param qualifiedUserId: The qualified id of the user we want to connect to
    * @see https://nginz-https.anta.wire.link/api/swagger-ui/#/default/post_connections__uid_domain___uid
    */
-  public async createConnection({id, domain}: QualifiedId): Promise<Connection> {
+  async postConnection_v2({id, domain}: QualifiedId): Promise<Connection> {
     const config: AxiosRequestConfig = {
       method: 'post',
       url: `${ConnectionAPI.URL.CONNECTIONS}/${domain}/${id}`,

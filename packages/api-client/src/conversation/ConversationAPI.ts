@@ -206,17 +206,34 @@ export class ConversationAPI {
     return response.data;
   }
 
+  public async getConversation(conversationId: string, useFederation: false): Promise<Conversation>;
+  public async getConversation(conversationId: QualifiedId, useFederation: true): Promise<Conversation>;
+  public async getConversation(conversationId: string | QualifiedId, useFederation: boolean): Promise<Conversation> {
+    if (useFederation) {
+      return this.getConversation_v1(conversationId as string);
+    }
+    return this.getConversation_v2(conversationId as QualifiedId);
+  }
+
   /**
    * Get a conversation by ID.
    * @param conversationId The conversation ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversation
    */
-  public async getConversation(conversationId: QualifiedId): Promise<Conversation> {
-    const {id, domain} = conversationId;
-    const url = domain
-      ? `${ConversationAPI.URL.CONVERSATIONS}/${domain}/${id}`
-      : `${ConversationAPI.URL.CONVERSATIONS}/${id}`;
+  public async getConversation_v1(conversationId: string): Promise<Conversation> {
+    const url = `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}`;
+    const config: AxiosRequestConfig = {
+      method: 'get',
+      url,
+    };
 
+    const response = await this.client.sendJSON<Conversation>(config);
+    return response.data;
+  }
+
+  public async getConversation_v2(conversationId: QualifiedId): Promise<Conversation> {
+    const {id, domain} = conversationId;
+    const url = `${ConversationAPI.URL.CONVERSATIONS}/${domain}/${id}`;
     const config: AxiosRequestConfig = {
       method: 'get',
       url,
@@ -883,11 +900,11 @@ export class ConversationAPI {
    * @param userIds List of user IDs to add to a conversation
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/addMembers
    */
-  public async postMembers(conversationId: string, userIds: QualifiedId[]): Promise<ConversationMemberJoinEvent> {
+  public async postMembers(conversationId: string, userIds: string[]): Promise<ConversationMemberJoinEvent> {
     const config: AxiosRequestConfig = {
       data: {
         conversation_role: DefaultConversationRoleName.WIRE_MEMBER,
-        users: userIds.map(({id}) => id),
+        users: userIds,
       },
       method: 'post',
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.MEMBERS}`,
