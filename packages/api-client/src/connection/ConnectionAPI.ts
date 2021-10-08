@@ -93,9 +93,9 @@ export class ConnectionAPI {
     return getConnectionChunks();
   }
 
-  public async postConnection(data: ConnectionRequest, useFederation: false): Promise<Connection>;
+  public async postConnection(data: ConnectionRequest, useFederation?: false): Promise<Connection>;
   public async postConnection(data: QualifiedId, useFederation: true): Promise<Connection>;
-  public async postConnection(data: ConnectionRequest | QualifiedId, useFederation: boolean): Promise<Connection> {
+  public async postConnection(data: ConnectionRequest | QualifiedId, useFederation?: boolean): Promise<Connection> {
     if (useFederation) {
       return this.postConnection_v2(data as QualifiedId);
     }

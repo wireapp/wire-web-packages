@@ -148,12 +148,12 @@ export class UserAPI {
     return response.data;
   }
 
-  public async getClientPreKey(userId: string, clientId: string, useFederation: false): Promise<ClientPreKey>;
+  public async getClientPreKey(userId: string, clientId: string, useFederation?: false): Promise<ClientPreKey>;
   public async getClientPreKey(userId: QualifiedId, clientId: string, useFederation: true): Promise<ClientPreKey>;
   public async getClientPreKey(
     userId: string | QualifiedId,
     clientId: string,
-    useFederation: boolean,
+    useFederation?: boolean,
   ): Promise<ClientPreKey> {
     if (useFederation) {
       return this.getClientPreKey_v2(userId as QualifiedId, clientId);
