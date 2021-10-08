@@ -144,7 +144,10 @@ export class ConversationService {
     }
 
     if (!members.length) {
-      const conversation = await this.apiClient.conversation.api.getConversation(conversationId, conversationDomain);
+      const conversation = await this.apiClient.conversation.api.getConversation(
+        {id: conversationId, domain: conversationDomain},
+        true,
+      );
       /*
        * If you are sending a message to a conversation, you have to include
        * yourself in the list of users if you want to sync a message also to your
@@ -186,7 +189,7 @@ export class ConversationService {
     }
 
     if (!members.length) {
-      const conversation = await this.apiClient.conversation.api.getConversation(conversationId);
+      const conversation = await this.apiClient.conversation.api.getConversation(conversationId, false);
       /*
        * If you are sending a message to a conversation, you have to include
        * yourself in the list of users if you want to sync a message also to your
@@ -209,7 +212,7 @@ export class ConversationService {
 
   private getSelfConversation(): Promise<Conversation> {
     const {userId} = this.apiClient.context!;
-    return this.apiClient.conversation.api.getConversation(userId);
+    return this.apiClient.conversation.api.getConversation(userId, false);
   }
 
   private async sendExternalGenericMessage(
@@ -1072,7 +1075,7 @@ export class ConversationService {
       return this.apiClient.conversation.api.getAllConversations();
     }
     if (typeof conversationIds === 'string') {
-      return this.apiClient.conversation.api.getConversation(conversationIds);
+      return this.apiClient.conversation.api.getConversation(conversationIds, false);
     }
     return this.apiClient.conversation.api.getConversationsByIds(conversationIds);
   }
