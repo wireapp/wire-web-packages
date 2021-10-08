@@ -208,7 +208,10 @@ export class ConversationAPI {
 
   public async getConversation(conversationId: string, useFederation?: false): Promise<Conversation>;
   public async getConversation(conversationId: QualifiedId, useFederation: true): Promise<Conversation>;
-  public async getConversation(conversationId: string | QualifiedId, useFederation?: boolean): Promise<Conversation> {
+  public async getConversation(
+    conversationId: string | QualifiedId,
+    useFederation: boolean = false,
+  ): Promise<Conversation> {
     if (useFederation) {
       return this.getConversation_v1(conversationId as string);
     }

@@ -153,7 +153,7 @@ export class UserAPI {
   public async getClientPreKey(
     userId: string | QualifiedId,
     clientId: string,
-    useFederation?: boolean,
+    useFederation: boolean = false,
   ): Promise<ClientPreKey> {
     if (useFederation) {
       return this.getClientPreKey_v2(userId as QualifiedId, clientId);

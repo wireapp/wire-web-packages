@@ -95,7 +95,10 @@ export class ConnectionAPI {
 
   public async postConnection(data: ConnectionRequest, useFederation?: false): Promise<Connection>;
   public async postConnection(data: QualifiedId, useFederation: true): Promise<Connection>;
-  public async postConnection(data: ConnectionRequest | QualifiedId, useFederation?: boolean): Promise<Connection> {
+  public async postConnection(
+    data: ConnectionRequest | QualifiedId,
+    useFederation: boolean = false,
+  ): Promise<Connection> {
     if (useFederation) {
       return this.postConnection_v2(data as QualifiedId);
     }
