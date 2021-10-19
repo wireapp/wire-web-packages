@@ -61,7 +61,7 @@ import {
   PayloadBundleState,
   PayloadBundleType,
 } from '../conversation/';
-import type {ClearedContent, DeletedContent, HiddenContent, RemoteData} from '../conversation/content/';
+import type {AssetContent, ClearedContent, DeletedContent, HiddenContent, RemoteData} from '../conversation/content/';
 import type {CryptographyService, EncryptedAsset} from '../cryptography/';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
 import {isStringArray, isQualifiedIdArray, isQualifiedUserClients, isUserClients} from '../util/TypePredicateUtil';
@@ -460,7 +460,10 @@ export class ConversationService {
     return expireAfterMillis > 0 ? this.createEphemeral(genericMessage, expireAfterMillis) : genericMessage;
   }
 
-  private generateImageGenericMessage(payloadBundle: ImageAssetMessageOutgoing): GenericMessage {
+  private generateImageGenericMessage(payloadBundle: ImageAssetMessageOutgoing): {
+    content: AssetContent;
+    genericMessage: GenericMessage;
+  } {
     if (!payloadBundle.content) {
       throw new Error('No content for sendImage provided.');
     }
@@ -495,13 +498,16 @@ export class ConversationService {
 
     assetMessage.status = AssetTransferState.UPLOADED;
 
-    const genericMessage = GenericMessage.create({
+    let genericMessage = GenericMessage.create({
       [GenericMessageType.ASSET]: assetMessage,
       messageId: payloadBundle.id,
     });
 
     const expireAfterMillis = this.messageTimer.getMessageTimer(payloadBundle.conversation);
-    return expireAfterMillis > 0 ? this.createEphemeral(genericMessage, expireAfterMillis) : genericMessage;
+    if (expireAfterMillis) {
+      genericMessage = this.createEphemeral(genericMessage, expireAfterMillis);
+    }
+    return {content: assetMessage as AssetContent, genericMessage};
   }
 
   private generateLocationGenericMessage(payloadBundle: LocationMessage): GenericMessage {
@@ -822,6 +828,7 @@ export class ConversationService {
   }): Promise<T> {
     let genericMessage: GenericMessage;
     let hasMessageTimer: boolean = true;
+    let processedContent: AssetContent;
 
     switch (payloadBundle.type) {
       case PayloadBundleType.ASSET:
@@ -834,7 +841,9 @@ export class ConversationService {
         genericMessage = this.generateFileMetaDataGenericMessage(payloadBundle);
         break;
       case PayloadBundleType.ASSET_IMAGE:
-        genericMessage = this.generateImageGenericMessage(payloadBundle as ImageAssetMessageOutgoing);
+        const res = this.generateImageGenericMessage(payloadBundle as ImageAssetMessageOutgoing);
+        genericMessage = res.genericMessage;
+        processedContent = res.content;
         break;
       case PayloadBundleType.BUTTON_ACTION:
         genericMessage = this.generateButtonActionGenericMessage(payloadBundle);
@@ -899,6 +908,7 @@ export class ConversationService {
 
     return {
       ...payloadBundle,
+      content: processedContent || payloadBundle.content,
       messageTimer: hasMessageTimer ? this.messageTimer.getMessageTimer(payloadBundle.conversation) : 0,
       state: PayloadBundleState.OUTGOING_SENT,
     };
