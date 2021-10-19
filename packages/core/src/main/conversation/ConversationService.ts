@@ -428,7 +428,7 @@ export class ConversationService {
     });
     callbacks?.onStart?.(genericMessage);
 
-    await this.sendGenericMessage(
+    const response = await this.sendGenericMessage(
       this.apiClient.validatedClientId,
       payloadBundle.conversation,
       genericMessage,
@@ -436,7 +436,7 @@ export class ConversationService {
       sendAsProtobuf,
       conversationDomain,
     );
-    callbacks?.onSuccess?.(genericMessage);
+    callbacks?.onSuccess?.(genericMessage, response?.time);
 
     return {
       ...payloadBundle,
