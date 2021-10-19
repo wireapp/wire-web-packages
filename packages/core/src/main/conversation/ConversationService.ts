@@ -807,19 +807,19 @@ export class ConversationService {
    * @param [callbacks] Optional callbacks that will be called when the message starts being sent and when it has been succesfully sent. Currently only used for `sendText`.
    * @returns Sent message
    */
-  public async send({
+  public async send<T extends OtrMessage = OtrMessage>({
     payloadBundle,
     userIds,
     sendAsProtobuf,
     conversationDomain,
     callbacks,
   }: {
-    payloadBundle: OtrMessage;
+    payloadBundle: T;
     userIds?: string[] | QualifiedId[] | UserClients | QualifiedUserClients;
     sendAsProtobuf?: boolean;
     conversationDomain?: string;
     callbacks?: MessageSendingCallbacks;
-  }) {
+  }): Promise<T> {
     let genericMessage: GenericMessage;
 
     switch (payloadBundle.type) {
