@@ -845,12 +845,13 @@ export class ConversationService {
         genericMessage = this.generateCallGenericMessage(payloadBundle);
         break;
       case PayloadBundleType.CLIENT_ACTION: {
-        if (payloadBundle.content.clientAction === ClientAction.RESET_SESSION) {
-          genericMessage = this.generateSessionResetGenericMessage(payloadBundle);
+        if (payloadBundle.content.clientAction !== ClientAction.RESET_SESSION) {
+          throw new Error(
+            `No send method implemented for "${payloadBundle.type}" and ClientAction "${payloadBundle.content}".`,
+          );
         }
-        throw new Error(
-          `No send method implemented for "${payloadBundle.type}" and ClientAction "${payloadBundle.content}".`,
-        );
+        genericMessage = this.generateSessionResetGenericMessage(payloadBundle);
+        break;
       }
       case PayloadBundleType.COMPOSITE:
         genericMessage = this.generateCompositeGenericMessage(payloadBundle);
