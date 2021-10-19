@@ -827,8 +827,7 @@ export class ConversationService {
     callbacks?: MessageSendingCallbacks;
   }): Promise<T> {
     let genericMessage: GenericMessage;
-    let hasMessageTimer: boolean = true;
-    let processedContent: AssetContent;
+    let processedContent: AssetContent | undefined = undefined;
 
     switch (payloadBundle.type) {
       case PayloadBundleType.ASSET:
@@ -847,15 +846,12 @@ export class ConversationService {
         break;
       case PayloadBundleType.BUTTON_ACTION:
         genericMessage = this.generateButtonActionGenericMessage(payloadBundle);
-        hasMessageTimer = false;
         break;
       case PayloadBundleType.BUTTON_ACTION_CONFIRMATION:
         genericMessage = this.generateButtonActionConfirmationGenericMessage(payloadBundle);
-        hasMessageTimer = false;
         break;
       case PayloadBundleType.CALL:
         genericMessage = this.generateCallGenericMessage(payloadBundle);
-        hasMessageTimer = false;
         break;
       case PayloadBundleType.CLIENT_ACTION: {
         if (payloadBundle.content.clientAction !== ClientAction.RESET_SESSION) {
@@ -868,25 +864,21 @@ export class ConversationService {
       }
       case PayloadBundleType.COMPOSITE:
         genericMessage = this.generateCompositeGenericMessage(payloadBundle);
-        hasMessageTimer = false;
         break;
       case PayloadBundleType.CONFIRMATION:
         genericMessage = this.generateConfirmationGenericMessage(payloadBundle);
-        hasMessageTimer = false;
         break;
       case PayloadBundleType.LOCATION:
         genericMessage = this.generateLocationGenericMessage(payloadBundle);
         break;
       case PayloadBundleType.MESSAGE_EDIT:
         genericMessage = this.generateEditedTextGenericMessage(payloadBundle);
-        hasMessageTimer = false;
         break;
       case PayloadBundleType.PING:
         genericMessage = this.generatePingGenericMessage(payloadBundle);
         break;
       case PayloadBundleType.REACTION:
         genericMessage = this.generateReactionGenericMessage(payloadBundle);
-        hasMessageTimer = false;
         break;
       case PayloadBundleType.TEXT:
         genericMessage = this.generateTextGenericMessage(payloadBundle);
@@ -909,7 +901,7 @@ export class ConversationService {
     return {
       ...payloadBundle,
       content: processedContent || payloadBundle.content,
-      messageTimer: hasMessageTimer ? this.messageTimer.getMessageTimer(payloadBundle.conversation) : 0,
+      messageTimer: genericMessage.ephemeral?.expireAfterMillis || 0,
       state: PayloadBundleState.OUTGOING_SENT,
     };
   }
