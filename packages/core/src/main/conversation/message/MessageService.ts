@@ -149,6 +149,7 @@ export class MessageService {
     recipients: QualifiedOTRRecipients,
     plainTextArray: Uint8Array,
     assetData?: Uint8Array,
+    reportMissing?: boolean,
   ): Promise<MessageSendingStatus> {
     const qualifiedUserEntries = Object.entries(recipients).map<ProtobufOTR.IQualifiedUserEntry>(
       ([domain, otrRecipients]) => {
@@ -196,6 +197,7 @@ export class MessageService {
       conversationId,
       conversationDomain,
       protoMessage,
+      reportMissing,
     );
 
     const federatedClientsMismatch = this.checkFederatedClientsMismatch(protoMessage, messageSendingStatus);
