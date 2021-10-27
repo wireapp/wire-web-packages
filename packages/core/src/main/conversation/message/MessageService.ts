@@ -191,23 +191,22 @@ export class MessageService {
      * missing clients. We have to ignore missing clients because there can be the case that there are clients that
      * don't provide PreKeys (clients from the Pre-E2EE era).
      */
-    protoMessage.ignoreAll = {};
+    if (reportMissing) {
+      protoMessage.reportAll = {};
+    } else {
+      protoMessage.ignoreAll = {};
+    }
 
     const messageSendingStatus = await this.apiClient.conversation.api.postOTRMessageV2(
       conversationId,
       conversationDomain,
       protoMessage,
-      reportMissing,
     );
 
-    const federatedClientsMismatch = this.checkFederatedClientsMismatch(protoMessage, messageSendingStatus);
+    const mismatch = this.checkFederatedClientsMismatch(protoMessage, messageSendingStatus);
 
-    if (federatedClientsMismatch) {
-      const reEncryptedMessage = await this.onFederatedClientMismatch(
-        protoMessage,
-        federatedClientsMismatch,
-        plainTextArray,
-      );
+    if (mismatch) {
+      const reEncryptedMessage = await this.onFederatedClientMismatch(protoMessage, mismatch, plainTextArray);
       await this.apiClient.conversation.api.postOTRMessageV2(conversationId, conversationDomain, reEncryptedMessage);
     }
     return messageSendingStatus;

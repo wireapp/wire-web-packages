@@ -709,12 +709,13 @@ export class ConversationAPI {
    * sending failed are part of the response body.
    *
    * This endpoint can lead to OtrMessageAdd event being sent to the recipients.
+   * 
+   * @see https://nginz-https.anta.wire.link/api/swagger-ui/#/default/post_conversations__cnv_domain___cnv__proteus_messages
    */
   public async postOTRMessageV2(
     conversationId: string,
     domain: string,
     messageData: ProtobufOTR.QualifiedNewOtrMessage,
-    reportMissing?: boolean,
   ): Promise<MessageSendingStatus> {
     const config: AxiosRequestConfig = {
       /*
@@ -725,9 +726,6 @@ export class ConversationAPI {
       method: 'post',
       url: `${ConversationAPI.URL.CONVERSATIONS}/${domain}/${conversationId}/${ConversationAPI.URL.PROTEUS}/${ConversationAPI.URL.MESSAGES}`,
     };
-    if (reportMissing) {
-      config.params.ignore_missing = false;
-    }
 
     const response = await this.client.sendProtocolBuffer<MessageSendingStatus>(config, true);
     return response.data;
