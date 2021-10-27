@@ -88,7 +88,7 @@ export class MessageService {
     }
   }
 
-  private isClientMismatchError(error: AxiosError): error is ClientMismatchError {
+  private isClientMismatchError(error: any): error is ClientMismatchError {
     return error.response?.status === HTTP_STATUS.PRECONDITION_FAILED;
   }
 
@@ -209,11 +209,10 @@ export class MessageService {
         protoMessage,
       );
     } catch (error) {
-      if (!this.isClientMismatchError(error as AxiosError<any>)) {
+      if (!this.isClientMismatchError(error)) {
         throw error;
       }
-      // TODO call consumer's onClientMismatch
-      sendingStatus = error.response!.data!;
+      sendingStatus = error.response!.data! as unknown as MessageSendingStatus;
     }
 
     const mismatch = this.checkFederatedClientsMismatch(protoMessage, sendingStatus);
