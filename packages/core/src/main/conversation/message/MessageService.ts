@@ -88,6 +88,10 @@ export class MessageService {
     }
   }
 
+  private isClientMismatchError(error: AxiosError): error is ClientMismatchError {
+    return error.response?.status === HTTP_STATUS.PRECONDITION_FAILED;
+  }
+
   private checkFederatedClientsMismatch(
     messageData: ProtobufOTR.QualifiedNewOtrMessage,
     messageSendingStatus: MessageSendingStatus,
@@ -197,19 +201,28 @@ export class MessageService {
       protoMessage.ignoreAll = {};
     }
 
-    const messageSendingStatus = await this.apiClient.conversation.api.postOTRMessageV2(
-      conversationId,
-      conversationDomain,
-      protoMessage,
-    );
+    let sendingStatus: MessageSendingStatus;
+    try {
+      sendingStatus = await this.apiClient.conversation.api.postOTRMessageV2(
+        conversationId,
+        conversationDomain,
+        protoMessage,
+      );
+    } catch (error) {
+      if (!this.isClientMismatchError(error as AxiosError<any>)) {
+        throw error;
+      }
+      // TODO call consumer's onClientMismatch
+      sendingStatus = error.response!.data!;
+    }
 
-    const mismatch = this.checkFederatedClientsMismatch(protoMessage, messageSendingStatus);
+    const mismatch = this.checkFederatedClientsMismatch(protoMessage, sendingStatus);
 
     if (mismatch) {
       const reEncryptedMessage = await this.onFederatedClientMismatch(protoMessage, mismatch, plainTextArray);
       await this.apiClient.conversation.api.postOTRMessageV2(conversationId, conversationDomain, reEncryptedMessage);
     }
-    return messageSendingStatus;
+    return sendingStatus;
   }
 
   public async sendOTRProtobufMessage(
