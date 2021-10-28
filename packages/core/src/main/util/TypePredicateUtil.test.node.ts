@@ -31,7 +31,12 @@ describe('TypePredicatUtil', () => {
     });
 
     it('rejects non QualifiedUserClients', () => {
-      const invalidUserClients = [{domain1: {user1: ''}}, {domain1: {user1: {}}}, {domain1: []}, {domain1: {user1: [{}]}}];
+      const invalidUserClients = [
+        {domain1: {user1: ''}},
+        {domain1: {user1: {}}},
+        {domain1: []},
+        {domain1: {user1: [{}]}},
+      ];
 
       invalidUserClients.forEach(payload => expect(isQualifiedUserClients(payload)).toBeFalse());
     });
