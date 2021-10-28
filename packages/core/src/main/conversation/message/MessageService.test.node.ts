@@ -20,7 +20,7 @@
 import UUID from 'uuidjs';
 import {StatusCodes} from 'http-status-codes';
 import {APIClient} from '@wireapp/api-client';
-import {MessageSendingStatus, QualifiedOTRRecipients, QualifiedUserClients} from '@wireapp/api-client/src/conversation';
+import {MessageSendingStatus, QualifiedUserClients} from '@wireapp/api-client/src/conversation';
 import {CryptographyService} from '../../cryptography';
 import {MessageService} from './MessageService';
 
@@ -52,7 +52,7 @@ describe('MessageService', () => {
   describe('sendFederatedMessage', () => {
     it('sends a message', async () => {
       spyOn(apiClient.conversation.api, 'postOTRMessageV2').and.returnValue(Promise.resolve(baseMessageSendingStatus));
-      const recipients: QualifiedUserClients = generateQualifiedRecipients([user1, user2]);
+      const recipients = generateQualifiedRecipients([user1, user2]);
 
       await messageService.sendFederatedOTRMessage(
         'senderclientid',
@@ -63,36 +63,101 @@ describe('MessageService', () => {
       expect(apiClient.conversation.api.postOTRMessageV2).toHaveBeenCalled();
     });
 
-    it('handles mismatch errors internally if reportMissing is true', async () => {
-      let spyCounter = 0;
-      spyOn(apiClient.conversation.api, 'postOTRMessageV2').and.callFake(() => {
-        spyCounter++;
-        if (spyCounter === 1) {
+    describe('client mismatch', () => {
+      it('handles client mismatch internally if no onClientMismatch is given', async () => {
+        let spyCounter = 0;
+        const clientMismatch = {...baseMessageSendingStatus, missing: {'2.wire.test': {[user2.id]: ['client22']}}};
+        spyOn(apiClient.conversation.api, 'postOTRMessageV2').and.callFake(() => {
+          spyCounter++;
+          if (spyCounter === 1) {
+            const error = new Error();
+            (error as any).response = {
+              status: StatusCodes.PRECONDITION_FAILED,
+              data: clientMismatch,
+            };
+            return Promise.reject(error);
+          }
+          return Promise.resolve(baseMessageSendingStatus);
+        });
+        spyOn(apiClient.user.api, 'postQualifiedMultiPreKeyBundles').and.returnValue(Promise.resolve({}));
+        spyOn(cryptographyService, 'encryptQualified').and.returnValue(
+          Promise.resolve({'2.wire.test': {[user2.id]: {client22: new Uint8Array()}}}),
+        );
+
+        const recipients = generateQualifiedRecipients([user1, user2]);
+
+        await messageService.sendFederatedOTRMessage(
+          'senderclientid',
+          {id: 'convid', domain: ''},
+          recipients,
+          new Uint8Array(),
+          {reportMissing: true},
+        );
+        expect(apiClient.conversation.api.postOTRMessageV2).toHaveBeenCalledTimes(2);
+      });
+
+      it('continues message sending if onClientMismatch returns true', async () => {
+        const onClientMismatch = jasmine.createSpy().and.returnValue(Promise.resolve(true));
+        const clientMismatch = {...baseMessageSendingStatus, missing: {'2.wire.test': {[user2.id]: ['client22']}}};
+        let spyCounter = 0;
+        spyOn(apiClient.conversation.api, 'postOTRMessageV2').and.callFake(() => {
+          spyCounter++;
+          if (spyCounter === 1) {
+            const error = new Error();
+            (error as any).response = {
+              status: StatusCodes.PRECONDITION_FAILED,
+              data: clientMismatch,
+            };
+            return Promise.reject(error);
+          }
+          return Promise.resolve(baseMessageSendingStatus);
+        });
+        spyOn(apiClient.user.api, 'postQualifiedMultiPreKeyBundles').and.returnValue(Promise.resolve({}));
+        spyOn(cryptographyService, 'encryptQualified').and.returnValue(
+          Promise.resolve({'2.wire.test': {[user2.id]: {client22: new Uint8Array()}}}),
+        );
+
+        const recipients = generateQualifiedRecipients([user1, user2]);
+
+        await messageService.sendFederatedOTRMessage(
+          'senderclientid',
+          {id: 'convid', domain: ''},
+          recipients,
+          new Uint8Array(),
+          {reportMissing: true, onClientMismatch},
+        );
+        expect(apiClient.conversation.api.postOTRMessageV2).toHaveBeenCalledTimes(2);
+        expect(onClientMismatch).toHaveBeenCalledWith(clientMismatch);
+      });
+
+      it('stops message sending if onClientMismatch returns false', async () => {
+        const onClientMismatch = jasmine.createSpy().and.returnValue(Promise.resolve(false));
+        const clientMismatch = {...baseMessageSendingStatus, missing: {'2.wire.test': {[user2.id]: ['client22']}}};
+        spyOn(apiClient.conversation.api, 'postOTRMessageV2').and.callFake(() => {
           const error = new Error();
           (error as any).response = {
             status: StatusCodes.PRECONDITION_FAILED,
-            data: {...baseMessageSendingStatus, missing: {'2.wire.test': {[user2.id]: ['client22']}}},
+            data: clientMismatch,
           };
           return Promise.reject(error);
-        }
-        return Promise.resolve(baseMessageSendingStatus);
+        });
+        spyOn(apiClient.user.api, 'postQualifiedMultiPreKeyBundles').and.returnValue(Promise.resolve({}));
+        spyOn(cryptographyService, 'encryptQualified').and.returnValue(
+          Promise.resolve({'2.wire.test': {[user2.id]: {client22: new Uint8Array()}}}),
+        );
+
+        const recipients = generateQualifiedRecipients([user1, user2]);
+
+        await messageService.sendFederatedOTRMessage(
+          'senderclientid',
+          {id: 'convid', domain: ''},
+          recipients,
+          new Uint8Array(),
+          {reportMissing: true, onClientMismatch},
+        );
+        expect(apiClient.conversation.api.postOTRMessageV2).toHaveBeenCalledTimes(1);
+        expect(onClientMismatch).toHaveBeenCalledWith(clientMismatch);
       });
-      spyOn(apiClient.user.api, 'postQualifiedMultiPreKeyBundles').and.returnValue(Promise.resolve({}));
-      spyOn(cryptographyService, 'encryptQualified').and.returnValue(
-        Promise.resolve({'2.wire.test': {[user2.id]: {client22: new Uint8Array()}}}),
-      );
-
-      const recipients: QualifiedOTRRecipients = generateQualifiedRecipients([user1, user2]);
-
-      await messageService.sendFederatedOTRMessage(
-        'senderclientid',
-        {id: 'convid', domain: ''},
-        recipients,
-        new Uint8Array(),
-        undefined,
-        {reportMissing: true},
-      );
-      expect(apiClient.conversation.api.postOTRMessageV2).toHaveBeenCalledTimes(2);
     });
   });
 });

@@ -358,7 +358,7 @@ export class ConversationService {
         conversationId,
         encryptedAsset,
         preKeyBundles,
-        sendAsProtobuf,
+        options.sendAsProtobuf,
       );
     }
 

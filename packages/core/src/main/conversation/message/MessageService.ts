@@ -36,7 +36,6 @@ import {Decoder, Encoder} from 'bazinga64';
 
 import {CryptographyService} from '../../cryptography';
 import {QualifiedId, QualifiedUserPreKeyBundleMap} from '@wireapp/api-client/src/user';
-import {MessageSendingCallbacks} from '..';
 
 type ClientMismatchError = AxiosError<ClientMismatch>;
 
