@@ -20,7 +20,7 @@
 import UUID from 'uuidjs';
 import {StatusCodes} from 'http-status-codes';
 import {APIClient} from '@wireapp/api-client';
-import {MessageSendingStatus, QualifiedOTRRecipients} from '@wireapp/api-client/src/conversation';
+import {MessageSendingStatus, QualifiedOTRRecipients, QualifiedUserClients} from '@wireapp/api-client/src/conversation';
 import {CryptographyService} from '../../cryptography';
 import {MessageService} from './MessageService';
 
@@ -36,12 +36,11 @@ type TestUser = {id: string; domain: string; clients: string[]};
 const user1: TestUser = {id: UUID.genV4().toString(), domain: '1.wire.test', clients: ['client1.1', 'client1.2']};
 const user2: TestUser = {id: UUID.genV4().toString(), domain: '2.wire.test', clients: ['client2.1', 'client2.2']};
 
-function generatePayload(users: TestUser[]): QualifiedOTRRecipients {
-  const payload: QualifiedOTRRecipients = {};
+function generateQualifiedRecipients(users: TestUser[]): QualifiedUserClients {
+  const payload: QualifiedUserClients = {};
   users.forEach(({id, domain, clients}) => {
     payload[domain] ||= {};
-    payload[domain][id] = {};
-    clients.forEach(client => (payload[domain][id][client] = new Uint8Array()));
+    payload[domain][id] = clients;
   });
   return payload;
 }
@@ -53,9 +52,14 @@ describe('MessageService', () => {
   describe('sendFederatedMessage', () => {
     it('sends a message', async () => {
       spyOn(apiClient.conversation.api, 'postOTRMessageV2').and.returnValue(Promise.resolve(baseMessageSendingStatus));
-      const recipients: QualifiedOTRRecipients = generatePayload([user1, user2]);
+      const recipients: QualifiedUserClients = generateQualifiedRecipients([user1, user2]);
 
-      await messageService.sendFederatedOTRMessage('senderclientid', 'convid', '', recipients, new Uint8Array());
+      await messageService.sendFederatedOTRMessage(
+        'senderclientid',
+        {id: 'convid', domain: ''},
+        recipients,
+        new Uint8Array(),
+      );
       expect(apiClient.conversation.api.postOTRMessageV2).toHaveBeenCalled();
     });
 
@@ -78,16 +82,15 @@ describe('MessageService', () => {
         Promise.resolve({'2.wire.test': {[user2.id]: {client22: new Uint8Array()}}}),
       );
 
-      const recipients: QualifiedOTRRecipients = generatePayload([user1, user2]);
+      const recipients: QualifiedOTRRecipients = generateQualifiedRecipients([user1, user2]);
 
       await messageService.sendFederatedOTRMessage(
         'senderclientid',
-        'convid',
-        '',
+        {id: 'convid', domain: ''},
         recipients,
         new Uint8Array(),
         undefined,
-        true,
+        {reportMissing: true},
       );
       expect(apiClient.conversation.api.postOTRMessageV2).toHaveBeenCalledTimes(2);
     });

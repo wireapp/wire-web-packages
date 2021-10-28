@@ -28,18 +28,15 @@ import {
   MessageSendingStatus,
   NewOTRMessage,
   OTRRecipients,
-  QualifiedOTRRecipients,
   QualifiedUserClients,
   UserClients,
 } from '@wireapp/api-client/src/conversation';
 import {Decoder, Encoder} from 'bazinga64';
 
 import {CryptographyService} from '../../cryptography';
+import {QualifiedId, QualifiedUserPreKeyBundleMap} from '@wireapp/api-client/src/user';
 
-type ClientMismatchError = AxiosError<{
-  deleted: UserClients;
-  missing: UserClients;
-}>;
+type ClientMismatchError = AxiosError<ClientMismatch>;
 
 export class MessageService {
   constructor(private readonly apiClient: APIClient, private readonly cryptographyService: CryptographyService) {}
@@ -75,8 +72,11 @@ export class MessageService {
         ignoreMissing,
       );
     } catch (error) {
+      if (!this.isClientMismatchError(error)) {
+        throw error;
+      }
       const reEncryptedMessage = await this.onClientMismatch(
-        error as AxiosError,
+        error.response!.data,
         {...message, data: base64CipherText ? Decoder.fromBase64(base64CipherText).asBytes : undefined, recipients},
         plainTextArray,
       );
@@ -148,14 +148,18 @@ export class MessageService {
 
   public async sendFederatedOTRMessage(
     sendingClientId: string,
-    conversationId: string,
-    conversationDomain: string,
-    recipients: QualifiedOTRRecipients,
+    {id: conversationId, domain}: QualifiedId,
+    recipients: QualifiedUserClients | QualifiedUserPreKeyBundleMap,
     plainTextArray: Uint8Array,
     assetData?: Uint8Array,
-    reportMissing?: boolean,
+    options: {
+      reportMissing?: boolean;
+      onClientMismatch?: (mismatch: MessageSendingStatus) => Promise<boolean | undefined>;
+    } = {},
   ): Promise<MessageSendingStatus> {
-    const qualifiedUserEntries = Object.entries(recipients).map<ProtobufOTR.IQualifiedUserEntry>(
+    const otrRecipients = await this.cryptographyService.encryptQualified(plainTextArray, recipients);
+
+    const qualifiedUserEntries = Object.entries(otrRecipients).map<ProtobufOTR.IQualifiedUserEntry>(
       ([domain, otrRecipients]) => {
         const userEntries = Object.entries(otrRecipients).map<ProtobufOTR.IUserEntry>(([userId, otrClientMap]) => {
           const clientEntries = Object.entries(otrClientMap).map<ProtobufOTR.IClientEntry>(([clientId, payload]) => {
@@ -195,7 +199,7 @@ export class MessageService {
      * missing clients. We have to ignore missing clients because there can be the case that there are clients that
      * don't provide PreKeys (clients from the Pre-E2EE era).
      */
-    if (reportMissing) {
+    if (options.reportMissing) {
       protoMessage.reportAll = {};
     } else {
       protoMessage.ignoreAll = {};
@@ -203,11 +207,7 @@ export class MessageService {
 
     let sendingStatus: MessageSendingStatus;
     try {
-      sendingStatus = await this.apiClient.conversation.api.postOTRMessageV2(
-        conversationId,
-        conversationDomain,
-        protoMessage,
-      );
+      sendingStatus = await this.apiClient.conversation.api.postOTRMessageV2(conversationId, domain, protoMessage);
     } catch (error) {
       if (!this.isClientMismatchError(error)) {
         throw error;
@@ -219,7 +219,7 @@ export class MessageService {
 
     if (mismatch) {
       const reEncryptedMessage = await this.encryptForMissingClients(protoMessage, mismatch, plainTextArray);
-      await this.apiClient.conversation.api.postOTRMessageV2(conversationId, conversationDomain, reEncryptedMessage);
+      await this.apiClient.conversation.api.postOTRMessageV2(conversationId, domain, reEncryptedMessage);
     }
     return sendingStatus;
   }
@@ -282,7 +282,11 @@ export class MessageService {
         ignoreMissing,
       );
     } catch (error) {
-      const reEncryptedMessage = await this.onClientProtobufMismatch(error as AxiosError, protoMessage, plainTextArray);
+      if (!this.isClientMismatchError(error)) {
+        throw error;
+      }
+      const mismatch = error.response!.data;
+      const reEncryptedMessage = await this.onClientProtobufMismatch(mismatch, protoMessage, plainTextArray);
       if (conversationId === null) {
         return await this.apiClient.broadcast.api.postBroadcastProtobufMessage(sendingClientId, reEncryptedMessage);
       }
@@ -296,104 +300,96 @@ export class MessageService {
   }
 
   private async onClientMismatch(
-    error: AxiosError,
+    clientMismatch: ClientMismatch,
     message: NewOTRMessage<Uint8Array>,
     plainTextArray: Uint8Array,
   ): Promise<NewOTRMessage<Uint8Array>> {
-    if (error.response?.status === HTTP_STATUS.PRECONDITION_FAILED) {
-      const {missing, deleted} = (error as ClientMismatchError).response?.data!;
+    const {missing, deleted} = clientMismatch;
 
-      const deletedUserIds = Object.keys(deleted);
-      const missingUserIds = Object.keys(missing);
+    const deletedUserIds = Object.keys(deleted);
+    const missingUserIds = Object.keys(missing);
 
-      if (deletedUserIds.length) {
-        for (const deletedUserId of deletedUserIds) {
-          for (const deletedClientId of deleted[deletedUserId]) {
-            const deletedUser = message.recipients[deletedUserId];
-            if (deletedUser) {
-              delete deletedUser[deletedClientId];
-            }
+    if (deletedUserIds.length) {
+      for (const deletedUserId of deletedUserIds) {
+        for (const deletedClientId of deleted[deletedUserId]) {
+          const deletedUser = message.recipients[deletedUserId];
+          if (deletedUser) {
+            delete deletedUser[deletedClientId];
           }
         }
       }
-
-      if (missingUserIds.length) {
-        const missingPreKeyBundles = await this.apiClient.user.api.postMultiPreKeyBundles(missing);
-        const reEncryptedPayloads = await this.cryptographyService.encrypt(plainTextArray, missingPreKeyBundles);
-        for (const missingUserId of missingUserIds) {
-          for (const missingClientId in reEncryptedPayloads[missingUserId]) {
-            const missingUser = message.recipients[missingUserId];
-            if (!missingUser) {
-              message.recipients[missingUserId] = {};
-            }
-
-            message.recipients[missingUserId][missingClientId] = reEncryptedPayloads[missingUserId][missingClientId];
-          }
-        }
-      }
-
-      return message;
     }
 
-    throw error;
+    if (missingUserIds.length) {
+      const missingPreKeyBundles = await this.apiClient.user.api.postMultiPreKeyBundles(missing);
+      const reEncryptedPayloads = await this.cryptographyService.encrypt(plainTextArray, missingPreKeyBundles);
+      for (const missingUserId of missingUserIds) {
+        for (const missingClientId in reEncryptedPayloads[missingUserId]) {
+          const missingUser = message.recipients[missingUserId];
+          if (!missingUser) {
+            message.recipients[missingUserId] = {};
+          }
+
+          message.recipients[missingUserId][missingClientId] = reEncryptedPayloads[missingUserId][missingClientId];
+        }
+      }
+    }
+
+    return message;
   }
 
   private async onClientProtobufMismatch(
-    error: AxiosError,
+    clientMismatch: {missing: UserClients; deleted: UserClients},
     message: ProtobufOTR.NewOtrMessage,
     plainTextArray: Uint8Array,
   ): Promise<ProtobufOTR.NewOtrMessage> {
-    if (error.response?.status === HTTP_STATUS.PRECONDITION_FAILED) {
-      const {missing, deleted} = (error as ClientMismatchError).response?.data!;
+    const {missing, deleted} = clientMismatch;
 
-      const deletedUserIds = Object.keys(deleted);
-      const missingUserIds = Object.keys(missing);
+    const deletedUserIds = Object.keys(deleted);
+    const missingUserIds = Object.keys(missing);
 
-      if (deletedUserIds.length) {
-        for (const deletedUserId of deletedUserIds) {
-          for (const deletedClientId of deleted[deletedUserId]) {
-            const deletedUserIndex = message.recipients.findIndex(({user}) => bytesToUUID(user.uuid) === deletedUserId);
-            if (deletedUserIndex > -1) {
-              const deletedClientIndex = message.recipients[deletedUserIndex].clients?.findIndex(({client}) => {
-                return client.client.toString(16) === deletedClientId;
-              });
-              if (typeof deletedClientIndex !== 'undefined' && deletedClientIndex > -1) {
-                delete message.recipients[deletedUserIndex].clients?.[deletedClientIndex!];
-              }
+    if (deletedUserIds.length) {
+      for (const deletedUserId of deletedUserIds) {
+        for (const deletedClientId of deleted[deletedUserId]) {
+          const deletedUserIndex = message.recipients.findIndex(({user}) => bytesToUUID(user.uuid) === deletedUserId);
+          if (deletedUserIndex > -1) {
+            const deletedClientIndex = message.recipients[deletedUserIndex].clients?.findIndex(({client}) => {
+              return client.client.toString(16) === deletedClientId;
+            });
+            if (typeof deletedClientIndex !== 'undefined' && deletedClientIndex > -1) {
+              delete message.recipients[deletedUserIndex].clients?.[deletedClientIndex!];
             }
           }
         }
       }
-
-      if (missingUserIds.length) {
-        const missingPreKeyBundles = await this.apiClient.user.api.postMultiPreKeyBundles(missing);
-        const reEncryptedPayloads = await this.cryptographyService.encrypt(plainTextArray, missingPreKeyBundles);
-        for (const missingUserId of missingUserIds) {
-          for (const missingClientId in reEncryptedPayloads[missingUserId]) {
-            const missingUserIndex = message.recipients.findIndex(({user}) => bytesToUUID(user.uuid) === missingUserId);
-            if (missingUserIndex === -1) {
-              message.recipients.push({
-                clients: [
-                  {
-                    client: {
-                      client: Long.fromString(missingClientId, 16),
-                    },
-                    text: reEncryptedPayloads[missingUserId][missingClientId],
-                  },
-                ],
-                user: {
-                  uuid: uuidToBytes(missingUserId),
-                },
-              });
-            }
-          }
-        }
-      }
-
-      return message;
     }
 
-    throw error;
+    if (missingUserIds.length) {
+      const missingPreKeyBundles = await this.apiClient.user.api.postMultiPreKeyBundles(missing);
+      const reEncryptedPayloads = await this.cryptographyService.encrypt(plainTextArray, missingPreKeyBundles);
+      for (const missingUserId of missingUserIds) {
+        for (const missingClientId in reEncryptedPayloads[missingUserId]) {
+          const missingUserIndex = message.recipients.findIndex(({user}) => bytesToUUID(user.uuid) === missingUserId);
+          if (missingUserIndex === -1) {
+            message.recipients.push({
+              clients: [
+                {
+                  client: {
+                    client: Long.fromString(missingClientId, 16),
+                  },
+                  text: reEncryptedPayloads[missingUserId][missingClientId],
+                },
+              ],
+              user: {
+                uuid: uuidToBytes(missingUserId),
+              },
+            });
+          }
+        }
+      }
+    }
+
+    return message;
   }
 
   /**

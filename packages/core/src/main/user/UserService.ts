@@ -72,7 +72,7 @@ export class UserService {
         userId: connection.to,
         conversationId: connection.conversation,
       };
-      return this.conversationService.getPreKeyBundleMap(mappedConnection.conversationId, [mappedConnection.userId]);
+      return this.conversationService.getPreKeyBundleMap([mappedConnection.userId]);
     });
     const preKeyBundlesFromConnections = await Promise.all(preKeyBundlePromises);
 
