@@ -28,6 +28,7 @@ import {
   MessageSendingStatus,
   NewOTRMessage,
   OTRRecipients,
+  QualifiedOTRRecipients,
   QualifiedUserClients,
   UserClients,
 } from '@wireapp/api-client/src/conversation';
@@ -35,6 +36,7 @@ import {Decoder, Encoder} from 'bazinga64';
 
 import {CryptographyService} from '../../cryptography';
 import {QualifiedId, QualifiedUserPreKeyBundleMap} from '@wireapp/api-client/src/user';
+import {MessageSendingCallbacks} from '..';
 
 type ClientMismatchError = AxiosError<ClientMismatch>;
 
@@ -151,8 +153,8 @@ export class MessageService {
     {id: conversationId, domain}: QualifiedId,
     recipients: QualifiedUserClients | QualifiedUserPreKeyBundleMap,
     plainTextArray: Uint8Array,
-    assetData?: Uint8Array,
     options: {
+      assetData?: Uint8Array;
       reportMissing?: boolean;
       onClientMismatch?: (mismatch: MessageSendingStatus) => Promise<boolean | undefined>;
     } = {},
@@ -190,8 +192,8 @@ export class MessageService {
       },
     });
 
-    if (assetData) {
-      protoMessage.blob = assetData;
+    if (options.assetData) {
+      protoMessage.blob = options.assetData;
     }
 
     /*
@@ -218,7 +220,11 @@ export class MessageService {
     const mismatch = this.checkFederatedClientsMismatch(protoMessage, sendingStatus);
 
     if (mismatch) {
-      const reEncryptedMessage = await this.encryptForMissingClients(protoMessage, mismatch, plainTextArray);
+      const shouldStopSending = options.onClientMismatch && !(await options.onClientMismatch(mismatch));
+      if (shouldStopSending) {
+        return sendingStatus;
+      }
+      const reEncryptedMessage = await this.onFederatedMismatch(protoMessage, mismatch, plainTextArray);
       await this.apiClient.conversation.api.postOTRMessageV2(conversationId, domain, reEncryptedMessage);
     }
     return sendingStatus;
@@ -392,89 +398,95 @@ export class MessageService {
     return message;
   }
 
-  /**
-   * Will re-encrypt a message when there were some missing clients in the initial send (typically when the server replies with a client mismatch error)
-   *
-   * @param {ProtobufOTR.QualifiedNewOtrMessage} messageData The initial message that was sent
-   * @param {MessageSendingStatus} messageSendingStatus Info about the missing/deleted clients
-   * @param {Uint8Array} plainTextArray The text that should be encrypted for the missing clients
-   * @return resolves with a new message payload that can be sent
-   */
-  private async encryptForMissingClients(
-    messageData: ProtobufOTR.QualifiedNewOtrMessage,
-    messageSendingStatus: MessageSendingStatus,
-    plainTextArray: Uint8Array,
-  ): Promise<ProtobufOTR.QualifiedNewOtrMessage> {
+  private deleteExtraQualifiedClients(
+    message: ProtobufOTR.QualifiedNewOtrMessage,
+    deletedClients: MessageSendingStatus['deleted'],
+  ): ProtobufOTR.QualifiedNewOtrMessage {
     // walk through deleted domain/user map
-    for (const [deletedUserDomain, deletedUserIdClients] of Object.entries(messageSendingStatus.deleted)) {
-      if (!messageData.recipients.find(recipient => recipient.domain === deletedUserDomain)) {
+    for (const [deletedUserDomain, deletedUserIdClients] of Object.entries(deletedClients)) {
+      if (!message.recipients.find(recipient => recipient.domain === deletedUserDomain)) {
         // no user from this domain was deleted
         continue;
       }
       // walk through deleted user ids
       for (const [deletedUserId] of Object.entries(deletedUserIdClients)) {
         // walk through message recipients
-        for (const recipientIndex in messageData.recipients) {
+        for (const recipientIndex in message.recipients) {
           // check if message recipients' domain is the same as the deleted user's domain
-          if (messageData.recipients[recipientIndex].domain === deletedUserDomain) {
+          if (message.recipients[recipientIndex].domain === deletedUserDomain) {
             // check if message recipients' id is the same as the deleted user's id
-            for (const entriesIndex in messageData.recipients[recipientIndex].entries || []) {
-              const uuid = messageData.recipients[recipientIndex].entries![entriesIndex].user?.uuid;
+            for (const entriesIndex in message.recipients[recipientIndex].entries || []) {
+              const uuid = message.recipients[recipientIndex].entries![entriesIndex].user?.uuid;
               if (!!uuid && bytesToUUID(uuid) === deletedUserId) {
                 // delete this user from the message recipients
-                delete messageData.recipients[recipientIndex].entries![entriesIndex];
+                delete message.recipients[recipientIndex].entries![entriesIndex];
               }
             }
           }
         }
       }
     }
+    return message;
+  }
 
-    const missingUserIds = Object.entries(messageSendingStatus.missing);
-    if (missingUserIds.length) {
-      const missingPreKeyBundles = await this.apiClient.user.api.postQualifiedMultiPreKeyBundles(
-        messageSendingStatus.missing,
-      );
-      const reEncryptedPayloads = await this.cryptographyService.encryptQualified(plainTextArray, missingPreKeyBundles);
+  /**
+   * Will re-encrypt a message when there were some missing clients in the initial send (typically when the server replies with a client mismatch error)
+   *
+   * @param {ProtobufOTR.QualifiedNewOtrMessage} messageData The initial message that was sent
+   * @param {MessageSendingStatus} messageSendingStatus Info about the missing/deleted clients
+   * @param {Uint8Array} plainText The text that should be encrypted for the missing clients
+   * @return resolves with a new message payload that can be sent
+   */
+  private async onFederatedMismatch(
+    message: ProtobufOTR.QualifiedNewOtrMessage,
+    {deleted, missing}: MessageSendingStatus,
+    plainText: Uint8Array,
+  ): Promise<ProtobufOTR.QualifiedNewOtrMessage> {
+    message = this.deleteExtraQualifiedClients(message, deleted);
+    if (Object.keys(missing).length) {
+      const missingPreKeyBundles = await this.apiClient.user.api.postQualifiedMultiPreKeyBundles(missing);
+      const reEncryptedPayloads = await this.cryptographyService.encryptQualified(plainText, missingPreKeyBundles);
+      message = this.addMissingQualifiedClients(message, reEncryptedPayloads);
+    }
+    return message;
+  }
 
-      // walk through missing domain/user map
-      for (const [missingUserDomain, missingUserIdClients] of missingUserIds) {
-        if (!messageData.recipients.find(recipient => recipient.domain === missingUserDomain)) {
-          // no user from this domain is missing
-          continue;
-        }
+  private addMissingQualifiedClients(
+    messageData: ProtobufOTR.QualifiedNewOtrMessage,
+    reEncryptedPayloads: QualifiedOTRRecipients,
+  ): ProtobufOTR.QualifiedNewOtrMessage {
+    // walk through missing domain/user map
+    for (const [missingDomain, userClients] of Object.entries(reEncryptedPayloads)) {
+      // walk through missing user ids
+      for (const [missingUserId, missingClientIds] of Object.entries(userClients)) {
+        // walk through message recipients
+        for (const domain of messageData.recipients) {
+          // check if message recipients' domain is the same as the missing user's domain
+          if (domain.domain === missingDomain) {
+            // check if there is a recipient with same user id as the missing user's id
+            let userIndex = domain.entries?.findIndex(({user}) => bytesToUUID(user.uuid) === missingUserId);
 
-        // walk through missing user ids
-        for (const [missingUserId, missingClientIds] of Object.entries(missingUserIdClients)) {
-          // walk through message recipients
-          for (const domain of messageData.recipients) {
-            // check if message recipients' domain is the same as the missing user's domain
-            if (domain.domain === missingUserDomain) {
-              // check if there is a recipient with same user id as the missing user's id
-              let userIndex = domain.entries?.findIndex(({user}) => bytesToUUID(user.uuid) === missingUserId);
+            if (userIndex === -1) {
+              // no recipient found, let's create it
+              userIndex =
+                domain.entries!.push({
+                  user: {
+                    uuid: uuidToBytes(missingUserId),
+                  },
+                }) - 1;
+            }
 
-              if (userIndex === -1) {
-                // no recipient found, let's create it
-                userIndex =
-                  domain.entries!.push({
-                    user: {
-                      uuid: uuidToBytes(missingUserId),
-                    },
-                  }) - 1;
-              }
+            const missingUserUUID = domain.entries![userIndex!].user.uuid;
 
-              const missingUserUUID = domain.entries![userIndex!].user.uuid;
-
-              if (bytesToUUID(missingUserUUID) === missingUserId) {
-                for (const missingClientId of missingClientIds) {
-                  domain.entries![userIndex!].clients ||= [];
-                  domain.entries![userIndex!].clients?.push({
-                    client: {
-                      client: Long.fromString(missingClientId, 16),
-                    },
-                    text: reEncryptedPayloads[missingUserDomain][missingUserId][missingClientId],
-                  });
-                }
+            if (bytesToUUID(missingUserUUID) === missingUserId) {
+              for (const [missingClientId, missingClientPayload] of Object.entries(missingClientIds)) {
+                domain.entries![userIndex!].clients ||= [];
+                domain.entries![userIndex!].clients?.push({
+                  client: {
+                    client: Long.fromString(missingClientId, 16),
+                  },
+                  text: missingClientPayload,
+                });
               }
             }
           }

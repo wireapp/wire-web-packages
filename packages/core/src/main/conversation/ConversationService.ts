@@ -290,13 +290,15 @@ export class ConversationService {
   /**
    * Sends a message to a federated environment.
    *
-   * @param sendingClientId - The clientId from which the message is sent
-   * @param conversationId - The conversation in which to send the message
-   * @param conversationDomain - The domain where the conversation lives
-   * @param genericMessage - The payload of the message to send
-   * @param userIds? - can be either a QualifiedId[] or QualfiedUserClients. The type has some effect on the behavior of the method.
+   * @param sendingClientId The clientId from which the message is sent
+   * @param conversationId The conversation in which to send the message
+   * @param conversationDomain The domain where the conversation lives
+   * @param genericMessage The payload of the message to send
+   * @param options.userIds? can be either a QualifiedId[] or QualfiedUserClients or undefined. The type has some effect on the behavior of the method.
+   *    When given undefined the method will fetch both the members of the conversations and their devices. No ClientMismatch can happen in that case
    *    When given a QualifiedId[] the method will fetch the freshest list of devices for those users (since they are not given by the consumer). As a consequence no ClientMismatch error will trigger and we will ignore missing clients when sending
    *    When given a QualifiedUserClients the method will only send to the clients listed in the userIds. This could lead to ClientMismatch (since the given list of devices might not be the freshest one and new clients could have been created)
+   * @param options.onClientMismatch? Will be called whenever there is a clientmismatch returned from the server. Needs to be combined with a userIds of type QualifiedUserClients
    * @return Resolves with the message sending status from backend
    */
   private async sendFederatedGenericMessage(
@@ -311,15 +313,10 @@ export class ConversationService {
     const plainTextArray = GenericMessage.encode(genericMessage).finish();
     const recipients = await this.getQualifiedRecipientsForConversation(conversationId, options.userIds);
 
-    return this.messageService.sendFederatedOTRMessage(
-      sendingClientId,
-      conversationId,
-      recipients,
-      plainTextArray,
-      undefined,
-      isQualifiedUserClients(options.userIds), // we want to check mismatch in case the consumer gave an exact list of users/devices
-      options.onClientMismatch,
-    );
+    return this.messageService.sendFederatedOTRMessage(sendingClientId, conversationId, recipients, plainTextArray, {
+      reportMissing: isQualifiedUserClients(options.userIds), // we want to check mismatch in case the consumer gave an exact list of users/devices
+      onClientMismatch: options.onClientMismatch,
+    });
   }
 
   private async sendGenericMessage(
