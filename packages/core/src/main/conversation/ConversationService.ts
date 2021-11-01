@@ -364,7 +364,7 @@ export class ConversationService {
 
     const recipients = await this.cryptographyService.encrypt(plainTextArray, preKeyBundles);
 
-    return options?.sendAsProtobuf
+    return options.sendAsProtobuf
       ? this.messageService.sendOTRProtobufMessage(sendingClientId, recipients, conversationId, plainTextArray)
       : this.messageService.sendOTRMessage(sendingClientId, recipients, conversationId, plainTextArray);
   }
