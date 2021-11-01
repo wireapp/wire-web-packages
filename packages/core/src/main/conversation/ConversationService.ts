@@ -284,7 +284,7 @@ export class ConversationService {
       return userIds;
     }
     const recipientIds = userIds || (await this.getConversationQualifiedMembers(conversationId));
-    return await this.getQualifiedPreKeyBundle(recipientIds);
+    return this.getQualifiedPreKeyBundle(recipientIds);
   }
 
   /**
