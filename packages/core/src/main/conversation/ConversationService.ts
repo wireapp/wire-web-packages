@@ -248,12 +248,13 @@ export class ConversationService {
   }
 
   /**
-   * Sends a message to a federated environment.
+   * Sends a message to a conversation
    *
    * @param sendingClientId The clientId from which the message is sent
    * @param conversationId The conversation in which to send the message
-   * @param conversationDomain The domain where the conversation lives
    * @param genericMessage The payload of the message to send
+   * @param options.domain? The federated domain the server runs on. Should only be set for federation enabled envs
+   * @param options.sendAsProtobuf? Will send the message as a protobuf payload
    * @param options.userIds? can be either a QualifiedId[] or QualfiedUserClients or undefined. The type has some effect on the behavior of the method.
    *    When given undefined the method will fetch both the members of the conversations and their devices. No ClientMismatch can happen in that case
    *    When given a QualifiedId[] the method will fetch the freshest list of devices for those users (since they are not given by the consumer). As a consequence no ClientMismatch error will trigger and we will ignore missing clients when sending
