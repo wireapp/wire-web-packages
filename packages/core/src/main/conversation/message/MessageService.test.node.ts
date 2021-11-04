@@ -21,13 +21,17 @@ import UUID from 'uuidjs';
 import {StatusCodes} from 'http-status-codes';
 import {APIClient} from '@wireapp/api-client';
 import {
+  ClientMismatch,
   MessageSendingStatus,
   OTRRecipients,
   QualifiedOTRRecipients,
   QualifiedUserClients,
+  UserClients,
 } from '@wireapp/api-client/src/conversation';
+import {GenericMessage, Text} from '@wireapp/protocol-messaging';
 import {CryptographyService} from '../../cryptography';
 import {MessageService} from './MessageService';
+import {getUUID} from '../../test/PayloadHelper';
 
 const baseMessageSendingStatus: MessageSendingStatus = {
   deleted: {},
@@ -38,8 +42,21 @@ const baseMessageSendingStatus: MessageSendingStatus = {
 };
 
 type TestUser = {id: string; domain: string; clients: string[]};
-const user1: TestUser = {id: UUID.genV4().toString(), domain: '1.wire.test', clients: ['client1.1', 'client1.2']};
-const user2: TestUser = {id: UUID.genV4().toString(), domain: '2.wire.test', clients: ['client2.1', 'client2.2']};
+const user1: TestUser = {
+  id: UUID.genV4().toString(),
+  domain: '1.wire.test',
+  clients: ['client1.1', 'client1.2', 'client1.3', 'client1.4'],
+};
+const user2: TestUser = {
+  id: UUID.genV4().toString(),
+  domain: '2.wire.test',
+  clients: ['client2.1', 'client2.2', 'client2.3', 'client2.4'],
+};
+const user3: TestUser = {
+  id: UUID.genV4().toString(),
+  domain: '2.wire.test',
+  clients: ['client3.1', 'client3.3', 'client3.3', 'client3.4'],
+};
 
 function generateQualifiedRecipients(users: TestUser[]): QualifiedUserClients {
   const payload: QualifiedUserClients = {};
@@ -48,6 +65,13 @@ function generateQualifiedRecipients(users: TestUser[]): QualifiedUserClients {
     payload[domain][id] = clients;
   });
   return payload;
+}
+
+function generateRecipients(users: TestUser[]): UserClients {
+  return users.reduce((acc, {id, clients}) => {
+    acc[id] = clients;
+    return acc;
+  }, {} as UserClients);
 }
 
 function fakeEncrypt(_: unknown, recipients: QualifiedUserClients): Promise<QualifiedOTRRecipients> {
@@ -64,7 +88,7 @@ function fakeEncrypt(_: unknown, recipients: QualifiedUserClients): Promise<Qual
   return Promise.resolve(encryptedPayload);
 }
 
-describe('MessageService', () => {
+fdescribe('MessageService', () => {
   const apiClient = new APIClient();
   const cryptographyService = new CryptographyService(apiClient, {} as any);
   const messageService = new MessageService(apiClient, cryptographyService);
@@ -78,12 +102,9 @@ describe('MessageService', () => {
       spyOn(apiClient.conversation.api, 'postOTRMessageV2').and.returnValue(Promise.resolve(baseMessageSendingStatus));
       const recipients = generateQualifiedRecipients([user1, user2]);
 
-      await messageService.sendFederatedOTRMessage(
-        'senderclientid',
-        {id: 'convid', domain: ''},
-        recipients,
-        new Uint8Array(),
-      );
+      await messageService.sendFederatedMessage('senderclientid', recipients, new Uint8Array(), {
+        conversationId: {id: 'convid', domain: ''},
+      });
       expect(apiClient.conversation.api.postOTRMessageV2).toHaveBeenCalled();
     });
 
@@ -111,13 +132,10 @@ describe('MessageService', () => {
 
         const recipients = generateQualifiedRecipients([user1, user2]);
 
-        await messageService.sendFederatedOTRMessage(
-          'senderclientid',
-          {id: 'convid', domain: ''},
-          recipients,
-          new Uint8Array(),
-          {reportMissing: true},
-        );
+        await messageService.sendFederatedMessage('senderclientid', recipients, new Uint8Array(), {
+          reportMissing: true,
+          conversationId: {id: 'convid', domain: ''},
+        });
         expect(apiClient.conversation.api.postOTRMessageV2).toHaveBeenCalledTimes(2);
       });
 
@@ -141,13 +159,11 @@ describe('MessageService', () => {
 
         const recipients = generateQualifiedRecipients([user1, user2]);
 
-        await messageService.sendFederatedOTRMessage(
-          'senderclientid',
-          {id: 'convid', domain: ''},
-          recipients,
-          new Uint8Array(),
-          {reportMissing: true, onClientMismatch},
-        );
+        await messageService.sendFederatedMessage('senderclientid', recipients, new Uint8Array(), {
+          reportMissing: true,
+          onClientMismatch,
+          conversationId: {id: 'convid', domain: ''},
+        });
         expect(apiClient.conversation.api.postOTRMessageV2).toHaveBeenCalledTimes(2);
         expect(onClientMismatch).toHaveBeenCalledWith(clientMismatch);
       });
@@ -167,16 +183,45 @@ describe('MessageService', () => {
 
         const recipients = generateQualifiedRecipients([user1, user2]);
 
-        await messageService.sendFederatedOTRMessage(
-          'senderclientid',
-          {id: 'convid', domain: ''},
-          recipients,
-          new Uint8Array(),
-          {reportMissing: true, onClientMismatch},
-        );
+        await messageService.sendFederatedMessage('senderclientid', recipients, new Uint8Array(), {
+          reportMissing: true,
+          onClientMismatch,
+          conversationId: {id: 'convid', domain: ''},
+        });
         expect(apiClient.conversation.api.postOTRMessageV2).toHaveBeenCalledTimes(1);
         expect(onClientMismatch).toHaveBeenCalledWith(clientMismatch);
       });
+    });
+  });
+
+  fdescribe('sendMessage', () => {
+    const clientId = 'sendingClient';
+    const conversationId = 'conv1';
+    const createMessage = (content: string) => {
+      const customTextMessage = GenericMessage.create({
+        messageId: getUUID(),
+        text: Text.create({content}),
+      });
+
+      return GenericMessage.encode(customTextMessage).finish();
+    };
+
+    it('should send as protobuf', () => {});
+    it('should broadcast if no conversationId is given', () => {});
+
+    it('should send as external if text is too long', async () => {
+      const longMessage =
+        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem';
+      spyOn(apiClient.conversation.api, 'postOTRMessage').and.returnValue(Promise.resolve({} as ClientMismatch));
+
+      await messageService.sendMessage(clientId, generateRecipients([user1, user2, user3]), createMessage(longMessage), {
+        conversationId,
+      });
+      expect(apiClient.conversation.api.postOTRMessage).toHaveBeenCalledWith(
+        clientId,
+        conversationId,
+        jasmine.objectContaining({data: jasmine.any(String)}),
+      );
     });
   });
 });
