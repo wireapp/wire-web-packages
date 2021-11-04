@@ -286,6 +286,7 @@ export class ConversationService {
         onClientMismatch: options.onClientMismatch,
       });
     }
+
     if (!isStringArray(userIds) && !isUserClients(userIds)) {
       throw new Error('Invalid userIds option for sending');
     }

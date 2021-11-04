@@ -49,11 +49,15 @@ export class MessageService {
 
   /**
    * Sends a message to a non-federated backend.
-   * @param {string} sendingClientId
-   * @param {UserClients|UserPreKeyBundleMap} recipients
-   * @param {Uint8Array} plainText
-   * @param {any} options:{conversationId?:string;reportMissing?:boolean;sendAsProtobuf?:boolean;onClientMismatch?:(mismatch:ClientMismatch
-   * @returns {any}
+   *
+   * @param sendingClientId The clientId of the current user
+   * @param recipients The list of recipients to send the message to
+   * @param plainText The plainText data to send
+   * @param options.conversationId? the conversation to send the message to. Will broadcast if not set
+   * @param options.reportMissing? trigger a mismatch error when there are missing recipients in the payload
+   * @param options.sendAsProtobuf?
+   * @param options.onClientMismatch? Called when a mismatch happens on the server
+   * @return the ClientMismatch status returned by the backend
    */
   public async sendMessage(
     sendingClientId: string,
@@ -65,7 +69,7 @@ export class MessageService {
       sendAsProtobuf?: boolean;
       onClientMismatch?: (mismatch: ClientMismatch) => Promise<boolean | undefined>;
     } = {},
-  ) {
+  ): Promise<ClientMismatch> {
     let plainTextPayload = plainText;
     let cipherText: Uint8Array;
     if (this.shouldSendAsExternal(plainText, recipients)) {
@@ -92,6 +96,18 @@ export class MessageService {
     }
   }
 
+  /**
+   * Sends a message to a federated backend.
+   *
+   * @param sendingClientId The clientId of the current user
+   * @param recipients The list of recipients to send the message to
+   * @param plainText The plainText data to send
+   * @param options.conversationId? the conversation to send the message to. Will broadcast if not set
+   * @param options.reportMissing? trigger a mismatch error when there are missing recipients in the payload
+   * @param options.sendAsProtobuf?
+   * @param options.onClientMismatch? Called when a mismatch happens on the server
+   * @return the MessageSendingStatus returned by the backend
+   */
   public async sendFederatedMessage(
     sendingClientId: string,
     recipients: QualifiedUserClients | QualifiedUserPreKeyBundleMap,
@@ -187,7 +203,7 @@ export class MessageService {
   private async sendOTRMessage(
     sendingClientId: string,
     recipients: OTRRecipients<Uint8Array>,
-    options: {conversationId?: string; assetData?: Uint8Array; ignoreMissing?: boolean},
+    options: {conversationId?: string; assetData?: Uint8Array; reportMissing?: boolean},
   ): Promise<ClientMismatch> {
     const message: NewOTRMessage<string> = {
       data: options.assetData ? Encoder.toBase64(options.assetData).asString : undefined,
@@ -196,12 +212,12 @@ export class MessageService {
     };
 
     return !options.conversationId
-      ? this.apiClient.broadcast.api.postBroadcastMessage(sendingClientId, message, options.ignoreMissing)
+      ? this.apiClient.broadcast.api.postBroadcastMessage(sendingClientId, message, !options.reportMissing)
       : this.apiClient.conversation.api.postOTRMessage(
           sendingClientId,
           options.conversationId,
           message,
-          options.ignoreMissing,
+          !options.reportMissing,
         );
   }
 
@@ -294,7 +310,7 @@ export class MessageService {
   private async sendOTRProtobufMessage(
     sendingClientId: string,
     recipients: OTRRecipients<Uint8Array>,
-    options: {conversationId?: string; assetData?: Uint8Array; ignoreMissing?: boolean},
+    options: {conversationId?: string; assetData?: Uint8Array; reportMissing?: boolean},
   ): Promise<ClientMismatch> {
     const userEntries: ProtobufOTR.IUserEntry[] = Object.entries(recipients).map(([userId, otrClientMap]) => {
       const clients: ProtobufOTR.IClientEntry[] = Object.entries(otrClientMap).map(([clientId, payload]) => {
@@ -326,12 +342,12 @@ export class MessageService {
     }
 
     return !options.conversationId
-      ? this.apiClient.broadcast.api.postBroadcastProtobufMessage(sendingClientId, protoMessage, options.ignoreMissing)
+      ? this.apiClient.broadcast.api.postBroadcastProtobufMessage(sendingClientId, protoMessage, !options.reportMissing)
       : this.apiClient.conversation.api.postOTRProtobufMessage(
           sendingClientId,
           options.conversationId,
           protoMessage,
-          options.ignoreMissing,
+          !options.reportMissing,
         );
   }
 }
