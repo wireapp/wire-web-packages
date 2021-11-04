@@ -209,14 +209,73 @@ describe('MessageService', () => {
       return GenericMessage.encode(customTextMessage).finish();
     };
 
-    it('should send as protobuf', () => {});
-    it('should broadcast if no conversationId is given', () => {});
-
-    it('should not send as external if payload small', async () => {
-      const longMessage = 'Lorem ipsum dolor sit amet';
+    it('should send regular to conversation', async () => {
+      const message = 'Lorem ipsum dolor sit amet';
       spyOn(apiClient.conversation.api, 'postOTRMessage').and.returnValue(Promise.resolve({} as ClientMismatch));
 
-      await messageService.sendMessage(clientId, generateRecipients(generateUsers(3, 3)), createMessage(longMessage), {
+      await messageService.sendMessage(clientId, generateRecipients(generateUsers(3, 3)), createMessage(message), {
+        conversationId,
+      });
+      expect(apiClient.conversation.api.postOTRMessage).toHaveBeenCalledWith(
+        clientId,
+        conversationId,
+        jasmine.any(Object),
+        undefined,
+      );
+    });
+
+    it('should send protobuf message to conversation', async () => {
+      const message = 'Lorem ipsum dolor sit amet';
+      spyOn(apiClient.conversation.api, 'postOTRProtobufMessage').and.returnValue(
+        Promise.resolve({} as ClientMismatch),
+      );
+
+      await messageService.sendMessage(clientId, generateRecipients(generateUsers(3, 3)), createMessage(message), {
+        conversationId,
+        sendAsProtobuf: true,
+      });
+      expect(apiClient.conversation.api.postOTRProtobufMessage).toHaveBeenCalledWith(
+        clientId,
+        conversationId,
+        jasmine.any(Object),
+        undefined,
+      );
+    });
+
+    it('should broadcast regular message if no conversationId is given', async () => {
+      const message = 'Lorem ipsum dolor sit amet';
+      spyOn(apiClient.broadcast.api, 'postBroadcastMessage').and.returnValue(Promise.resolve({} as ClientMismatch));
+
+      await messageService.sendMessage(clientId, generateRecipients(generateUsers(3, 3)), createMessage(message));
+      expect(apiClient.broadcast.api.postBroadcastMessage).toHaveBeenCalledWith(
+        clientId,
+        jasmine.any(Object),
+        undefined,
+      );
+    });
+
+    it('should broadcast protobuf message if no conversationId is given', async () => {
+      const message = 'Lorem ipsum dolor sit amet';
+      spyOn(apiClient.broadcast.api, 'postBroadcastProtobufMessage').and.returnValue(
+        Promise.resolve({} as ClientMismatch),
+      );
+
+      await messageService.sendMessage(clientId, generateRecipients(generateUsers(3, 3)), createMessage(message), {
+        sendAsProtobuf: true,
+      });
+
+      expect(apiClient.broadcast.api.postBroadcastProtobufMessage).toHaveBeenCalledWith(
+        clientId,
+        jasmine.any(Object),
+        undefined,
+      );
+    });
+
+    it('should not send as external if payload small', async () => {
+      const message = 'Lorem ipsum dolor sit amet';
+      spyOn(apiClient.conversation.api, 'postOTRMessage').and.returnValue(Promise.resolve({} as ClientMismatch));
+
+      await messageService.sendMessage(clientId, generateRecipients(generateUsers(3, 3)), createMessage(message), {
         conversationId,
       });
       expect(apiClient.conversation.api.postOTRMessage).toHaveBeenCalledWith(
