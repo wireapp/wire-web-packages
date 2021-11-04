@@ -52,11 +52,6 @@ const user2: TestUser = {
   domain: '2.wire.test',
   clients: ['client2.1', 'client2.2', 'client2.3', 'client2.4'],
 };
-const user3: TestUser = {
-  id: UUID.genV4().toString(),
-  domain: '2.wire.test',
-  clients: ['client3.1', 'client3.3', 'client3.3', 'client3.4'],
-};
 
 function generateQualifiedRecipients(users: TestUser[]): QualifiedUserClients {
   const payload: QualifiedUserClients = {};
@@ -88,7 +83,7 @@ function fakeEncrypt(_: unknown, recipients: QualifiedUserClients): Promise<Qual
   return Promise.resolve(encryptedPayload);
 }
 
-fdescribe('MessageService', () => {
+describe('MessageService', () => {
   const apiClient = new APIClient();
   const cryptographyService = new CryptographyService(apiClient, {} as any);
   const messageService = new MessageService(apiClient, cryptographyService);
@@ -194,7 +189,15 @@ fdescribe('MessageService', () => {
     });
   });
 
-  fdescribe('sendMessage', () => {
+  describe('sendMessage', () => {
+    const generateUsers = (userCount: number, clientsPerUser: number): TestUser[] => {
+      return Array.from(Array(userCount)).map<TestUser>((_, i) => ({
+        id: `user${i}`,
+        domain: `${i}.domain`,
+        clients: Array.from(Array(clientsPerUser)).map((_, j) => `client${i}${j}`),
+      }));
+    };
+
     const clientId = 'sendingClient';
     const conversationId = 'conv1';
     const createMessage = (content: string) => {
@@ -209,18 +212,45 @@ fdescribe('MessageService', () => {
     it('should send as protobuf', () => {});
     it('should broadcast if no conversationId is given', () => {});
 
-    it('should send as external if text is too long', async () => {
+    it('should not send as external if payload small', async () => {
+      const longMessage =
+        'Lorem ipsum dolor sit amet';
+      spyOn(apiClient.conversation.api, 'postOTRMessage').and.returnValue(Promise.resolve({} as ClientMismatch));
+
+      await messageService.sendMessage(
+        clientId,
+        generateRecipients(generateUsers(3, 3)),
+        createMessage(longMessage),
+        {
+          conversationId,
+        },
+      );
+      expect(apiClient.conversation.api.postOTRMessage).toHaveBeenCalledWith(
+        clientId,
+        conversationId,
+        jasmine.objectContaining({data: undefined}),
+        undefined
+      );
+    });
+
+    it('should send as external if payload is big', async () => {
       const longMessage =
         'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem';
       spyOn(apiClient.conversation.api, 'postOTRMessage').and.returnValue(Promise.resolve({} as ClientMismatch));
 
-      await messageService.sendMessage(clientId, generateRecipients([user1, user2, user3]), createMessage(longMessage), {
-        conversationId,
-      });
+      await messageService.sendMessage(
+        clientId,
+        generateRecipients(generateUsers(30, 10)),
+        createMessage(longMessage),
+        {
+          conversationId,
+        },
+      );
       expect(apiClient.conversation.api.postOTRMessage).toHaveBeenCalledWith(
         clientId,
         conversationId,
         jasmine.objectContaining({data: jasmine.any(String)}),
+        undefined
       );
     });
   });

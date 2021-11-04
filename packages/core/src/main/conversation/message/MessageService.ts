@@ -230,7 +230,6 @@ export class MessageService {
     const messageInBytes = new Uint8Array(plainText).length;
     const estimatedPayloadInBytes = clientCount * messageInBytes;
 
-    console.log(estimatedPayloadInBytes, EXTERNAL_MESSAGE_THRESHOLD_BYTES);
     return estimatedPayloadInBytes > EXTERNAL_MESSAGE_THRESHOLD_BYTES;
   }
 
