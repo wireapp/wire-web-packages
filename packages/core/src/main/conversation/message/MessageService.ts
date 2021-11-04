@@ -181,7 +181,7 @@ export class MessageService {
 
     const {id, domain} = options.conversationId;
 
-    return await this.apiClient.conversation.api.postOTRMessageV2(id, domain, protoMessage);
+    return this.apiClient.conversation.api.postOTRMessageV2(id, domain, protoMessage);
   }
 
   private async sendOTRMessage(
@@ -196,8 +196,8 @@ export class MessageService {
     };
 
     return !options.conversationId
-      ? await this.apiClient.broadcast.api.postBroadcastMessage(sendingClientId, message, options.ignoreMissing)
-      : await this.apiClient.conversation.api.postOTRMessage(
+      ? this.apiClient.broadcast.api.postBroadcastMessage(sendingClientId, message, options.ignoreMissing)
+      : this.apiClient.conversation.api.postOTRMessage(
           sendingClientId,
           options.conversationId,
           message,
@@ -326,12 +326,8 @@ export class MessageService {
     }
 
     return !options.conversationId
-      ? await this.apiClient.broadcast.api.postBroadcastProtobufMessage(
-          sendingClientId,
-          protoMessage,
-          options.ignoreMissing,
-        )
-      : await this.apiClient.conversation.api.postOTRProtobufMessage(
+      ? this.apiClient.broadcast.api.postBroadcastProtobufMessage(sendingClientId, protoMessage, options.ignoreMissing)
+      : this.apiClient.conversation.api.postOTRProtobufMessage(
           sendingClientId,
           options.conversationId,
           protoMessage,

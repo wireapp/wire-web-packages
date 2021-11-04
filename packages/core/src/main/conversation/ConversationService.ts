@@ -285,18 +285,17 @@ export class ConversationService {
         reportMissing: isQualifiedUserClients(options.userIds), // we want to check mismatch in case the consumer gave an exact list of users/devices
         onClientMismatch: options.onClientMismatch,
       });
-    } else {
-      if (!isStringArray(userIds) && !isUserClients(userIds)) {
-        throw new Error('Invalid userIds option for sending');
-      }
-      const recipients = await this.getRecipientsForConversation(conversationId, userIds);
-      return this.messageService.sendMessage(sendingClientId, recipients, plainText, {
-        conversationId,
-        sendAsProtobuf: options.sendAsProtobuf,
-        reportMissing: isUserClients(options.userIds), // we want to check mismatch in case the consumer gave an exact list of users/devices
-        onClientMismatch: options.onClientMismatch,
-      });
     }
+    if (!isStringArray(userIds) && !isUserClients(userIds)) {
+      throw new Error('Invalid userIds option for sending');
+    }
+    const recipients = await this.getRecipientsForConversation(conversationId, userIds);
+    return this.messageService.sendMessage(sendingClientId, recipients, plainText, {
+      conversationId,
+      sendAsProtobuf: options.sendAsProtobuf,
+      reportMissing: isUserClients(options.userIds), // we want to check mismatch in case the consumer gave an exact list of users/devices
+      onClientMismatch: options.onClientMismatch,
+    });
   }
 
   private generateButtonActionGenericMessage(payloadBundle: ButtonActionMessage): GenericMessage {

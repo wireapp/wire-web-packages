@@ -213,23 +213,17 @@ describe('MessageService', () => {
     it('should broadcast if no conversationId is given', () => {});
 
     it('should not send as external if payload small', async () => {
-      const longMessage =
-        'Lorem ipsum dolor sit amet';
+      const longMessage = 'Lorem ipsum dolor sit amet';
       spyOn(apiClient.conversation.api, 'postOTRMessage').and.returnValue(Promise.resolve({} as ClientMismatch));
 
-      await messageService.sendMessage(
-        clientId,
-        generateRecipients(generateUsers(3, 3)),
-        createMessage(longMessage),
-        {
-          conversationId,
-        },
-      );
+      await messageService.sendMessage(clientId, generateRecipients(generateUsers(3, 3)), createMessage(longMessage), {
+        conversationId,
+      });
       expect(apiClient.conversation.api.postOTRMessage).toHaveBeenCalledWith(
         clientId,
         conversationId,
         jasmine.objectContaining({data: undefined}),
-        undefined
+        undefined,
       );
     });
 
@@ -250,7 +244,7 @@ describe('MessageService', () => {
         clientId,
         conversationId,
         jasmine.objectContaining({data: jasmine.any(String)}),
-        undefined
+        undefined,
       );
     });
   });
