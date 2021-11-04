@@ -27,7 +27,6 @@ import {
   ClientMismatch,
   MessageSendingStatus,
   NewOTRMessage,
-  OTRRecipients,
   QualifiedOTRRecipients,
   QualifiedUserClients,
   UserClients,
@@ -35,7 +34,7 @@ import {
 import {Decoder, Encoder} from 'bazinga64';
 
 import {CryptographyService} from '../../cryptography';
-import {QualifiedId, QualifiedUserPreKeyBundleMap} from '@wireapp/api-client/src/user';
+import {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/src/user';
 
 type ClientMismatchError = AxiosError<ClientMismatch>;
 
@@ -44,14 +43,15 @@ export class MessageService {
 
   public async sendOTRMessage(
     sendingClientId: string,
-    recipients: OTRRecipients<Uint8Array>,
+    recipients: UserClients | UserPreKeyBundleMap,
     conversationId: string | null,
     plainTextArray: Uint8Array,
     base64CipherText?: string,
   ): Promise<ClientMismatch> {
+    const encryptedPayload = await this.cryptographyService.encrypt(plainTextArray, recipients);
     const message: NewOTRMessage<string> = {
       data: base64CipherText,
-      recipients: CryptographyService.convertArrayRecipientsToBase64(recipients),
+      recipients: CryptographyService.convertArrayRecipientsToBase64(encryptedPayload),
       sender: sendingClientId,
     };
 
@@ -76,9 +76,14 @@ export class MessageService {
       if (!this.isClientMismatchError(error)) {
         throw error;
       }
+      const mismatch = error.response!.data;
       const reEncryptedMessage = await this.onClientMismatch(
-        error.response!.data,
-        {...message, data: base64CipherText ? Decoder.fromBase64(base64CipherText).asBytes : undefined, recipients},
+        mismatch,
+        {
+          ...message,
+          data: base64CipherText ? Decoder.fromBase64(base64CipherText).asBytes : undefined,
+          recipients: encryptedPayload,
+        },
         plainTextArray,
       );
       return await this.apiClient.broadcast.api.postBroadcastMessage(sendingClientId, {
@@ -237,12 +242,14 @@ export class MessageService {
 
   public async sendOTRProtobufMessage(
     sendingClientId: string,
-    recipients: OTRRecipients<Uint8Array>,
+    recipients: UserClients | UserPreKeyBundleMap,
     conversationId: string | null,
     plainTextArray: Uint8Array,
     assetData?: Uint8Array,
   ): Promise<ClientMismatch> {
-    const userEntries: ProtobufOTR.IUserEntry[] = Object.entries(recipients).map(([userId, otrClientMap]) => {
+    const encryptedPayload = await this.cryptographyService.encrypt(plainTextArray, recipients);
+
+    const userEntries: ProtobufOTR.IUserEntry[] = Object.entries(encryptedPayload).map(([userId, otrClientMap]) => {
       const clients: ProtobufOTR.IClientEntry[] = Object.entries(otrClientMap).map(([clientId, payload]) => {
         return {
           client: {

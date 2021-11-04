@@ -103,12 +103,12 @@ export class ConversationService {
 
   constructor(
     private readonly apiClient: APIClient,
-    private readonly cryptographyService: CryptographyService,
+    cryptographyService: CryptographyService,
     private readonly assetService: AssetService,
   ) {
     this.messageTimer = new MessageTimer();
     this.messageBuilder = new MessageBuilder(this.apiClient, this.assetService);
-    this.messageService = new MessageService(this.apiClient, this.cryptographyService);
+    this.messageService = new MessageService(this.apiClient, cryptographyService);
   }
 
   private createEphemeral(originalGenericMessage: GenericMessage, expireAfterMillis: number): GenericMessage {
@@ -231,10 +231,10 @@ export class ConversationService {
     sendingClientId: string,
     conversationId: string,
     asset: EncryptedAsset,
-    preKeyBundles: UserPreKeyBundleMap,
+    recipients: UserClients | UserPreKeyBundleMap,
     sendAsProtobuf?: boolean,
   ): Promise<ClientMismatch | undefined> {
-    if (preKeyBundles.none) {
+    if (recipients.none) {
       const {cipherText, keyBytes, sha256} = asset;
       const messageId = MessageBuilder.createId();
 
@@ -251,8 +251,6 @@ export class ConversationService {
       });
 
       const plainTextArray = GenericMessage.encode(genericMessage).finish();
-
-      const recipients = await this.cryptographyService.encrypt(plainTextArray, preKeyBundles);
 
       if (sendAsProtobuf) {
         return this.messageService.sendOTRProtobufMessage(
@@ -285,6 +283,16 @@ export class ConversationService {
     }
     const recipientIds = userIds || (await this.getConversationQualifiedMembers(conversationId));
     return this.getQualifiedPreKeyBundle(recipientIds);
+  }
+
+  private async getRecipientsForConversation(
+    conversationId: string,
+    userIds?: string[] | UserClients,
+  ): Promise<UserClients | UserPreKeyBundleMap> {
+    if (isUserClients(userIds)) {
+      return userIds;
+    }
+    return this.getPreKeyBundleMap(conversationId, userIds);
   }
 
   /**
@@ -349,20 +357,18 @@ export class ConversationService {
     }
 
     const plainTextArray = GenericMessage.encode(genericMessage).finish();
-    const preKeyBundles = await this.getPreKeyBundleMap(conversationId, userIds);
+    const recipients = await this.getRecipientsForConversation(conversationId, userIds);
 
-    if (this.shouldSendAsExternal(plainTextArray, preKeyBundles)) {
+    if (this.shouldSendAsExternal(plainTextArray, recipients)) {
       const encryptedAsset = await AssetCryptography.encryptAsset({plainText: plainTextArray});
       return this.sendExternalGenericMessage(
         this.apiClient.validatedClientId,
         conversationId,
         encryptedAsset,
-        preKeyBundles,
+        recipients,
         options.sendAsProtobuf,
       );
     }
-
-    const recipients = await this.cryptographyService.encrypt(plainTextArray, preKeyBundles);
 
     return options.sendAsProtobuf
       ? this.messageService.sendOTRProtobufMessage(sendingClientId, recipients, conversationId, plainTextArray)
@@ -746,7 +752,7 @@ export class ConversationService {
     };
   }
 
-  private shouldSendAsExternal(plainText: Uint8Array, preKeyBundles: UserPreKeyBundleMap): boolean {
+  private shouldSendAsExternal(plainText: Uint8Array, preKeyBundles: UserPreKeyBundleMap | UserClients): boolean {
     const EXTERNAL_MESSAGE_THRESHOLD_BYTES = 200 * 1024;
 
     let clientCount = 0;
