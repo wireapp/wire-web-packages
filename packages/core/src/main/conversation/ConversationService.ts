@@ -272,7 +272,7 @@ export class ConversationService {
       sendAsProtobuf?: boolean;
       onClientMismatch?: (mistmatch: ClientMismatch | MessageSendingStatus) => Promise<boolean | undefined>;
     } = {},
-  ): Promise<ClientMismatch | MessageSendingStatus | undefined> {
+  ): Promise<ClientMismatch | MessageSendingStatus> {
     const {domain, userIds} = options;
     const plainText = GenericMessage.encode(genericMessage).finish();
     if (domain) {
@@ -851,7 +851,8 @@ export class ConversationService {
       genericMessage,
       {userIds, sendAsProtobuf, domain: conversationDomain, onClientMismatch: callbacks?.onClientMismatch},
     );
-    callbacks?.onSuccess?.(genericMessage, response?.time);
+    callbacks?.onClientMismatch?.(response);
+    callbacks?.onSuccess?.(genericMessage, response.time);
 
     return {
       ...payloadBundle,

@@ -91,6 +91,10 @@ export class MessageService {
         throw error;
       }
       const mismatch = error.response!.data as ClientMismatch;
+      const shouldStopSending = options.onClientMismatch && !(await options.onClientMismatch(mismatch));
+      if (shouldStopSending) {
+        return mismatch;
+      }
       const reEncryptedMessage = await this.reencryptAfterMismatch(mismatch, encryptedPayload, plainText);
       return send(reEncryptedMessage);
     }
@@ -142,12 +146,7 @@ export class MessageService {
   private async sendFederatedOtrMessage(
     sendingClientId: string,
     recipients: QualifiedOTRRecipients,
-    options: {
-      assetData?: Uint8Array;
-      conversationId?: QualifiedId;
-      reportMissing?: boolean;
-      onClientMismatch?: (mismatch: MessageSendingStatus) => Promise<boolean | undefined>;
-    },
+    options: {assetData?: Uint8Array; conversationId?: QualifiedId; reportMissing?: boolean},
   ): Promise<MessageSendingStatus> {
     const qualifiedUserEntries = Object.entries(recipients).map<ProtobufOTR.IQualifiedUserEntry>(
       ([domain, otrRecipients]) => {
