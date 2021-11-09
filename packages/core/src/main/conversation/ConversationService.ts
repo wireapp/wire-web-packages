@@ -933,9 +933,9 @@ export class ConversationService {
   }
 
   private isClearFromMismatch(mismatch: ClientMismatch | MessageSendingStatus): boolean {
-    const hasMissing = Object.keys(mismatch.missing).length > 0;
-    const hasDeleted = Object.keys(mismatch.deleted).length > 0;
-    const hasRedundant = Object.keys(mismatch.redundant).length > 0;
+    const hasMissing = Object.keys(mismatch.missing || {}).length > 0;
+    const hasDeleted = Object.keys(mismatch.deleted || {}).length > 0;
+    const hasRedundant = Object.keys(mismatch.redundant || {}).length > 0;
     const hasFailed = Object.keys((mismatch as MessageSendingStatus).failed_to_send || {}).length > 0;
     return !hasMissing && !hasDeleted && !hasRedundant && !hasFailed;
   }
