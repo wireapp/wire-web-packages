@@ -91,7 +91,7 @@ export class MessageService {
         throw error;
       }
       const mismatch = error.response!.data as ClientMismatch;
-      const shouldStopSending = options.onClientMismatch && !(await options.onClientMismatch(mismatch));
+      const shouldStopSending = options.onClientMismatch && (await options.onClientMismatch(mismatch)) === false;
       if (shouldStopSending) {
         return mismatch;
       }
@@ -134,7 +134,7 @@ export class MessageService {
         throw error;
       }
       const mismatch = error.response!.data as MessageSendingStatus;
-      const shouldStopSending = options.onClientMismatch && !(await options.onClientMismatch(mismatch));
+      const shouldStopSending = options.onClientMismatch && (await options.onClientMismatch(mismatch)) === false;
       if (shouldStopSending) {
         return mismatch;
       }
