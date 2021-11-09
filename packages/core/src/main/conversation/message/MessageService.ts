@@ -67,7 +67,7 @@ export class MessageService {
       conversationId?: string;
       reportMissing?: boolean;
       sendAsProtobuf?: boolean;
-      onClientMismatch?: (mismatch: ClientMismatch) => Promise<boolean | undefined>;
+      onClientMismatch?: (mismatch: ClientMismatch) => undefined | Promise<boolean | undefined>;
     } = {},
   ): Promise<ClientMismatch> {
     let plainTextPayload = plainText;
@@ -120,7 +120,7 @@ export class MessageService {
       assetData?: Uint8Array;
       conversationId?: QualifiedId;
       reportMissing?: boolean;
-      onClientMismatch?: (mismatch: MessageSendingStatus) => Promise<boolean | undefined>;
+      onClientMismatch?: (mismatch: MessageSendingStatus) => undefined | Promise<boolean | undefined>;
     },
   ): Promise<MessageSendingStatus> {
     const send = (payload: QualifiedOTRRecipients) => {
