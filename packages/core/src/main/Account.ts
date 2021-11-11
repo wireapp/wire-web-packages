@@ -98,7 +98,7 @@ export interface Account {
 export type StoreEngineProvider = (storeName: string) => Promise<CRUDEngine>;
 
 type AccountConfig = {
-  federationDomain?: string;
+  legacyBackend?: boolean;
 };
 
 export class Account extends EventEmitter {
@@ -127,7 +127,7 @@ export class Account extends EventEmitter {
   /**
    * @param apiClient The apiClient instance to use in the core (will create a new new one if undefined)
    * @param storeEngineProvider Used to store info in the database (will create a inMemory engine if undefined)
-   * @param config.federationDomain If using a federated backend this will set the default domain for qualified ids. Do not set if using a regular backend
+   * @param config.legacyBackend Set to true if the current backend you are connecting to doesn't support qualifiedIds. Decryption issues can happen if the flag is not in sync with the backend's config
    */
   constructor(
     apiClient: APIClient = new APIClient(),
@@ -202,7 +202,7 @@ export class Account extends EventEmitter {
   public async initServices(storeEngine: CRUDEngine): Promise<void> {
     const accountService = new AccountService(this.apiClient);
     const assetService = new AssetService(this.apiClient);
-    const cryptographyService = new CryptographyService(this.apiClient, storeEngine, this.config);
+    const cryptographyService = new CryptographyService(this.apiClient, storeEngine, !this.config?.legacyBackend);
 
     const clientService = new ClientService(this.apiClient, storeEngine, cryptographyService);
     const connectionService = new ConnectionService(this.apiClient);
