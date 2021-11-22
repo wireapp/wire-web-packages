@@ -21,7 +21,7 @@ import {APIClient} from '@wireapp/api-client';
 import {ClientType} from '@wireapp/api-client/src/client';
 import {LegalHoldStatus} from '@wireapp/protocol-messaging';
 import {MemoryEngine} from '@wireapp/store-engine';
-import {PayloadBundleSource, PayloadBundleState, PayloadBundleType} from '.';
+import {MessageTargetMode, PayloadBundleSource, PayloadBundleState, PayloadBundleType} from '.';
 
 import {Account} from '../Account';
 import * as PayloadHelper from '../test/PayloadHelper';
@@ -88,7 +88,7 @@ describe('ConversationService', () => {
         conversationService
           .send({
             payloadBundle: message,
-            targettedMessage: true,
+            targetMode: MessageTargetMode.USERS,
           })
           .catch(error => {
             expect(error.message).toContain('no userIds are given');
@@ -103,7 +103,7 @@ describe('ConversationService', () => {
           spyOn(conversationService['messageService'], 'sendMessage').and.returnValue(Promise.resolve({} as any));
           await conversationService.send({
             payloadBundle: message,
-            targettedMessage: true,
+            targetMode: MessageTargetMode.USERS,
             userIds: recipients,
           });
 
@@ -135,7 +135,7 @@ describe('ConversationService', () => {
           await conversationService.send({
             conversationDomain: 'domain1',
             payloadBundle: message,
-            targettedMessage: true,
+            targetMode: MessageTargetMode.USERS,
             userIds: recipients,
           });
 
@@ -149,6 +149,60 @@ describe('ConversationService', () => {
                 {id: 'user2', domain: 'domain1'},
                 {id: 'user3', domain: 'domain2'},
               ],
+            }),
+          );
+        });
+      });
+
+      [{user1: ['client1'], user2: ['client11', 'client12']}, ['user1', 'user2']].forEach(recipients => {
+        it(`ignores all missing user/client pair if targetMode is USER_CLIENTS`, async () => {
+          const conversationService = account.service!.conversation;
+          spyOn<any>(conversationService, 'getRecipientsForConversation').and.returnValue(Promise.resolve({} as any));
+          spyOn(conversationService['messageService'], 'sendMessage').and.returnValue(Promise.resolve({} as any));
+          await conversationService.send({
+            payloadBundle: message,
+            targetMode: MessageTargetMode.USERS_CLIENTS,
+            userIds: recipients,
+          });
+
+          expect(conversationService['messageService'].sendMessage).toHaveBeenCalledWith(
+            jasmine.any(String),
+            jasmine.any(Object),
+            jasmine.any(Uint8Array),
+            jasmine.objectContaining({reportMissing: false}),
+          );
+        });
+      });
+
+      [
+        {domain1: {user1: ['client1'], user2: ['client11', 'client12']}, domain2: {user3: ['client1']}},
+        [
+          {id: 'user1', domain: 'domain1'},
+          {id: 'user2', domain: 'domain1'},
+          {id: 'user3', domain: 'domain2'},
+        ],
+      ].forEach(recipients => {
+        it(`ignores all missing user/client pair if targetMode is USER_CLIENTS on federated env`, async () => {
+          const conversationService = account.service!.conversation;
+          spyOn<any>(conversationService, 'getQualifiedRecipientsForConversation').and.returnValue(
+            Promise.resolve({} as any),
+          );
+          spyOn(conversationService['messageService'], 'sendFederatedMessage').and.returnValue(
+            Promise.resolve({} as any),
+          );
+          await conversationService.send({
+            conversationDomain: 'domain1',
+            payloadBundle: message,
+            targetMode: MessageTargetMode.USERS_CLIENTS,
+            userIds: recipients,
+          });
+
+          expect(conversationService['messageService'].sendFederatedMessage).toHaveBeenCalledWith(
+            jasmine.any(String),
+            jasmine.any(Object),
+            jasmine.any(Uint8Array),
+            jasmine.objectContaining({
+              reportMissing: false,
             }),
           );
         });

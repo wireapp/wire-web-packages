@@ -89,6 +89,46 @@ import type {
   TextMessage,
 } from './message/OtrMessage';
 
+export enum MessageTargetMode {
+  NONE,
+  USERS,
+  USERS_CLIENTS,
+}
+
+interface MessageSendingOptions {
+  /**
+   * The federated domain the server runs on. Should only be set for federation enabled envs
+   */
+  conversationDomain?: string;
+
+  /**
+   * can be either a QualifiedId[] or QualfiedUserClients or undefined. The type has some effect on the behavior of the method.
+   *    When given undefined the method will fetch both the members of the conversations and their devices. No ClientMismatch can happen in that case
+   *    When given a QualifiedId[] the method will fetch the freshest list of devices for those users (since they are not given by the consumer). As a consequence no ClientMismatch error will trigger and we will ignore missing clients when sending
+   *    When given a QualifiedUserClients the method will only send to the clients listed in the userIds. This could lead to ClientMismatch (since the given list of devices might not be the freshest one and new clients could have been created)
+   */
+  userIds?: string[] | QualifiedId[] | UserClients | QualifiedUserClients;
+
+  /**
+   * Will send the message as a protobuf payload
+   */
+  sendAsProtobuf?: boolean;
+  nativePush?: boolean;
+
+  /**
+   * @param options.onClientMismatch? Will be called whenever there is a clientmismatch returned from the server. Needs to be combined with a userIds of type QualifiedUserClients
+   */
+  onClientMismatch?: MessageSendingCallbacks['onClientMismatch'];
+
+  /**
+   * Defines the behavior to use when a mismatch happens on backend side:
+   *     - NONE -> Not a targetted message, we want to send to all the users/clients in the conversation. Will report all missing users and clients (default mode)
+   *     - USERS -> A message targetted to all the clients of the given users (according to params.userIds). Will ignore missing users and only report missing clients for the given params.userIds
+   *     - USERS_CLIENTS -> A message targetted at some specific clients of specific users (according to params.userIds). Will force sending the message even if users or clients are missing
+   */
+  targetMode?: MessageTargetMode;
+}
+
 export interface MessageSendingCallbacks {
   onStart?: (message: GenericMessage) => void | boolean | Promise<boolean>;
   onSuccess?: (message: GenericMessage, sentTime?: string) => void;
@@ -263,46 +303,47 @@ export class ConversationService {
    * @param sendingClientId The clientId from which the message is sent
    * @param conversationId The conversation in which to send the message
    * @param genericMessage The payload of the message to send
-   * @param options.domain? The federated domain the server runs on. Should only be set for federation enabled envs
-   * @param options.sendAsProtobuf? Will send the message as a protobuf payload
-   * @param options.userIds? can be either a QualifiedId[] or QualfiedUserClients or undefined. The type has some effect on the behavior of the method.
-   *    When given undefined the method will fetch both the members of the conversations and their devices. No ClientMismatch can happen in that case
-   *    When given a QualifiedId[] the method will fetch the freshest list of devices for those users (since they are not given by the consumer). As a consequence no ClientMismatch error will trigger and we will ignore missing clients when sending
-   *    When given a QualifiedUserClients the method will only send to the clients listed in the userIds. This could lead to ClientMismatch (since the given list of devices might not be the freshest one and new clients could have been created)
-   * @param options.onClientMismatch? Will be called whenever there is a clientmismatch returned from the server. Needs to be combined with a userIds of type QualifiedUserClients
    * @return Resolves with the message sending status from backend
    */
   private async sendGenericMessage(
     sendingClientId: string,
     conversationId: string,
     genericMessage: GenericMessage,
-    options: {
-      domain?: string;
-      userIds?: string[] | QualifiedId[] | UserClients | QualifiedUserClients;
-      sendAsProtobuf?: boolean;
-      nativePush?: boolean;
-      onClientMismatch?: MessageSendingCallbacks['onClientMismatch'];
-      targettedMessage?: boolean;
-    } = {},
+    {
+      conversationDomain,
+      userIds,
+      nativePush,
+      sendAsProtobuf,
+      onClientMismatch,
+      targetMode = MessageTargetMode.NONE,
+    }: MessageSendingOptions = {},
   ) {
-    const {domain, userIds} = options;
     const plainText = GenericMessage.encode(genericMessage).finish();
-    if (options.targettedMessage && !userIds) {
+    if (targetMode !== MessageTargetMode.NONE && !userIds) {
       throw new Error('Cannot send targetted message when no userIds are given');
     }
-    if (domain) {
+    if (conversationDomain) {
       if (isStringArray(userIds) || isUserClients(userIds)) {
         throw new Error('Invalid userIds option for sending to federated backend');
       }
-      const recipients = await this.getQualifiedRecipientsForConversation({id: conversationId, domain}, userIds);
-      const reportMissing = options.targettedMessage
-        ? this.extractQualifiedUserIds(userIds)
-        : isQualifiedUserClients(options.userIds); // we want to check mismatch in case the consumer gave an exact list of users/devices
+      const recipients = await this.getQualifiedRecipientsForConversation(
+        {id: conversationId, domain: conversationDomain},
+        userIds,
+      );
+      let reportMissing;
+      if (targetMode === MessageTargetMode.NONE) {
+        reportMissing = isQualifiedUserClients(userIds); // we want to check mismatch in case the consumer gave an exact list of users/devices
+      } else if (targetMode === MessageTargetMode.USERS) {
+        reportMissing = this.extractQualifiedUserIds(userIds);
+      } else {
+        // in case the message is fully targetted at user/client pairs, we do not want to report the missing clients or users at all
+        reportMissing = false;
+      }
       return this.messageService.sendFederatedMessage(sendingClientId, recipients, plainText, {
-        conversationId: {id: conversationId, domain},
-        nativePush: options.nativePush,
+        conversationId: {id: conversationId, domain: conversationDomain},
+        nativePush,
         reportMissing,
-        onClientMismatch: mismatch => options.onClientMismatch?.(mismatch, false),
+        onClientMismatch: mismatch => onClientMismatch?.(mismatch, false),
       });
     }
 
@@ -310,13 +351,21 @@ export class ConversationService {
       throw new Error('Invalid userIds option for sending');
     }
     const recipients = await this.getRecipientsForConversation(conversationId, userIds);
-    const reportMissing = options.targettedMessage ? this.extractUserIds(userIds) : isUserClients(options.userIds); // we want to check mismatch in case the consumer gave an exact list of users/devices
+    let reportMissing;
+    if (targetMode === MessageTargetMode.NONE) {
+      reportMissing = isQualifiedUserClients(userIds); // we want to check mismatch in case the consumer gave an exact list of users/devices
+    } else if (targetMode === MessageTargetMode.USERS) {
+      reportMissing = this.extractUserIds(userIds);
+    } else {
+      // in case the message is fully targetted at user/client pairs, we do not want to report the missing clients or users at all
+      reportMissing = false;
+    }
     return this.messageService.sendMessage(sendingClientId, recipients, plainText, {
       conversationId,
-      sendAsProtobuf: options.sendAsProtobuf,
-      nativePush: options.nativePush,
+      sendAsProtobuf,
+      nativePush,
       reportMissing,
-      onClientMismatch: mistmatch => options.onClientMismatch?.(mistmatch, false),
+      onClientMismatch: mistmatch => onClientMismatch?.(mistmatch, false),
     });
   }
 
@@ -619,7 +668,7 @@ export class ConversationService {
     const {id: selfConversationId} = await this.getSelfConversation();
 
     await this.sendGenericMessage(this.apiClient.validatedClientId, selfConversationId, genericMessage, {
-      domain: conversationDomain,
+      conversationDomain,
       sendAsProtobuf,
     });
 
@@ -658,7 +707,7 @@ export class ConversationService {
 
     await this.sendGenericMessage(this.apiClient.validatedClientId, selfConversationId, genericMessage, {
       sendAsProtobuf,
-      domain: conversationDomain,
+      conversationDomain,
     });
 
     return {
@@ -697,7 +746,7 @@ export class ConversationService {
     const response = await this.sendGenericMessage(this.apiClient.validatedClientId, conversationId, genericMessage, {
       userIds,
       sendAsProtobuf,
-      domain: conversationDomain,
+      conversationDomain,
     });
     callbacks?.onSuccess?.(genericMessage, response?.time);
 
@@ -797,10 +846,6 @@ export class ConversationService {
    *    When given a QualifiedUserClients or UserClients the method will only send to the clients listed in the userIds. This could lead to ClientMismatch (since the given list of devices might not be the freshest one and new clients could have been created)
    *    When given a QualifiedId[] or QualifiedUserClients the method will send the message through the federated API endpoint
    *    When given a string[] or UserClients the method will send the message through the old API endpoint
-   * @param params.sendAsProtobuf?
-   * @param params.conversationDomain? The domain the conversation lives on (if given with QualifiedId[] or QualfiedUserClients in the userIds params, will send the message to the federated endpoint)
-   * @param params.callbacks? Optional callbacks that will be called when the message starts being sent and when it has been succesfully sent.
-   * @param params.targettedMessage? Only send the message to the given userIds and ignore other users in the conversation (will not trigger an error if users from the conversation are missing)
    * @param callbacks.onStart Will be called before a message is actually sent. Returning 'false' will prevent the message from being sent
    * @param callbacks.onClientMismatch? Will be called when a mismatch happens. Returning `false` from the callback will stop the sending attempt
    * @return resolves with the sent message
@@ -811,17 +856,13 @@ export class ConversationService {
     sendAsProtobuf,
     conversationDomain,
     nativePush,
-    targettedMessage,
+    targetMode,
     callbacks,
   }: {
     payloadBundle: T;
     userIds?: string[] | QualifiedId[] | UserClients | QualifiedUserClients;
-    sendAsProtobuf?: boolean;
-    conversationDomain?: string;
-    nativePush?: boolean;
-    targettedMessage?: boolean;
     callbacks?: MessageSendingCallbacks;
-  }): Promise<T> {
+  } & MessageSendingOptions): Promise<T> {
     let genericMessage: GenericMessage;
     let processedContent: AssetContent | undefined = undefined;
 
@@ -895,9 +936,9 @@ export class ConversationService {
       {
         userIds,
         sendAsProtobuf,
-        domain: conversationDomain,
+        conversationDomain,
         nativePush,
-        targettedMessage,
+        targetMode,
         onClientMismatch: callbacks?.onClientMismatch,
       },
     );
