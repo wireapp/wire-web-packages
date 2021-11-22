@@ -117,16 +117,21 @@ describe('ConversationService', () => {
       });
 
       [
-        {domain1: {user1: ['client1'], user2: ['client11', 'client12']}},
+        {domain1: {user1: ['client1'], user2: ['client11', 'client12']}, domain2: {user3: ['client1']}},
         [
           {id: 'user1', domain: 'domain1'},
           {id: 'user2', domain: 'domain1'},
+          {id: 'user3', domain: 'domain2'},
         ],
       ].forEach(recipients => {
         it(`forwards the list of users to report for federated message (${JSON.stringify(recipients)})`, async () => {
           const conversationService = account.service!.conversation;
-          spyOn<any>(conversationService, 'getQualifiedRecipientsForConversation').and.returnValue(Promise.resolve({} as any));
-          spyOn(conversationService['messageService'], 'sendFederatedMessage').and.returnValue(Promise.resolve({} as any));
+          spyOn<any>(conversationService, 'getQualifiedRecipientsForConversation').and.returnValue(
+            Promise.resolve({} as any),
+          );
+          spyOn(conversationService['messageService'], 'sendFederatedMessage').and.returnValue(
+            Promise.resolve({} as any),
+          );
           await conversationService.send({
             conversationDomain: 'domain1',
             payloadBundle: message,
@@ -138,7 +143,13 @@ describe('ConversationService', () => {
             jasmine.any(String),
             jasmine.any(Object),
             jasmine.any(Uint8Array),
-            jasmine.objectContaining({reportMissing: ['user1', 'user2']}),
+            jasmine.objectContaining({
+              reportMissing: [
+                {id: 'user1', domain: 'domain1'},
+                {id: 'user2', domain: 'domain1'},
+                {id: 'user3', domain: 'domain2'},
+              ],
+            }),
           );
         });
       });

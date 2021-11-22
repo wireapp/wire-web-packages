@@ -327,17 +327,14 @@ export class ConversationService {
     return Object.keys(userIds);
   }
 
-  private extractQualifiedUserIds(userIds?: QualifiedId[] | QualifiedUserClients): string[] | undefined {
-    if (!userIds) {
+  private extractQualifiedUserIds(userIds?: QualifiedId[] | QualifiedUserClients): QualifiedId[] | undefined {
+    if (!userIds || isQualifiedIdArray(userIds)) {
       return userIds;
     }
-    if (isQualifiedIdArray(userIds)) {
-      return userIds.map(({id}) => id);
-    }
 
-    return Object.entries(userIds).reduce((ids, [domain, userClients]) => {
-      return ids.concat(this.extractUserIds(userClients) as string[]);
-    }, [] as string[]);
+    return Object.entries(userIds).reduce<QualifiedId[]>((ids, [domain, userClients]) => {
+      return ids.concat(Object.keys(userClients).map(userId => ({domain, id: userId})));
+    }, []);
   }
 
   private generateButtonActionGenericMessage(payloadBundle: ButtonActionMessage): GenericMessage {
