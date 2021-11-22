@@ -116,7 +116,7 @@ interface MessageSendingOptions {
   nativePush?: boolean;
 
   /**
-   * @param options.onClientMismatch? Will be called whenever there is a clientmismatch returned from the server. Needs to be combined with a userIds of type QualifiedUserClients
+   * Will be called whenever there is a clientmismatch returned from the server. Needs to be combined with a userIds of type QualifiedUserClients
    */
   onClientMismatch?: MessageSendingCallbacks['onClientMismatch'];
 
@@ -353,7 +353,7 @@ export class ConversationService {
     const recipients = await this.getRecipientsForConversation(conversationId, userIds);
     let reportMissing;
     if (targetMode === MessageTargetMode.NONE) {
-      reportMissing = isQualifiedUserClients(userIds); // we want to check mismatch in case the consumer gave an exact list of users/devices
+      reportMissing = isUserClients(userIds); // we want to check mismatch in case the consumer gave an exact list of users/devices
     } else if (targetMode === MessageTargetMode.USERS) {
       reportMissing = this.extractUserIds(userIds);
     } else {
