@@ -280,19 +280,28 @@ export class ConversationService {
       domain?: string;
       userIds?: string[] | QualifiedId[] | UserClients | QualifiedUserClients;
       sendAsProtobuf?: boolean;
+      nativePush?: boolean;
       onClientMismatch?: MessageSendingCallbacks['onClientMismatch'];
+      targettedMessage?: boolean;
     } = {},
   ) {
     const {domain, userIds} = options;
     const plainText = GenericMessage.encode(genericMessage).finish();
+    if (options.targettedMessage && !userIds) {
+      throw new Error('Cannot send targetted message when no userIds are given');
+    }
     if (domain) {
       if (isStringArray(userIds) || isUserClients(userIds)) {
         throw new Error('Invalid userIds option for sending to federated backend');
       }
       const recipients = await this.getQualifiedRecipientsForConversation({id: conversationId, domain}, userIds);
+      const reportMissing = options.targettedMessage
+        ? this.extractQualifiedUserIds(userIds)
+        : isQualifiedUserClients(options.userIds); // we want to check mismatch in case the consumer gave an exact list of users/devices
       return this.messageService.sendFederatedMessage(sendingClientId, recipients, plainText, {
         conversationId: {id: conversationId, domain},
-        reportMissing: isQualifiedUserClients(options.userIds), // we want to check mismatch in case the consumer gave an exact list of users/devices
+        nativePush: options.nativePush,
+        reportMissing,
         onClientMismatch: mismatch => options.onClientMismatch?.(mismatch, false),
       });
     }
@@ -301,12 +310,34 @@ export class ConversationService {
       throw new Error('Invalid userIds option for sending');
     }
     const recipients = await this.getRecipientsForConversation(conversationId, userIds);
+    const reportMissing = options.targettedMessage ? this.extractUserIds(userIds) : isUserClients(options.userIds); // we want to check mismatch in case the consumer gave an exact list of users/devices
     return this.messageService.sendMessage(sendingClientId, recipients, plainText, {
       conversationId,
       sendAsProtobuf: options.sendAsProtobuf,
-      reportMissing: isUserClients(options.userIds), // we want to check mismatch in case the consumer gave an exact list of users/devices
+      nativePush: options.nativePush,
+      reportMissing,
       onClientMismatch: mistmatch => options.onClientMismatch?.(mistmatch, false),
     });
+  }
+
+  private extractUserIds(userIds?: string[] | UserClients): string[] | undefined {
+    if (!userIds || isStringArray(userIds)) {
+      return userIds;
+    }
+    return Object.keys(userIds);
+  }
+
+  private extractQualifiedUserIds(userIds?: QualifiedId[] | QualifiedUserClients): string[] | undefined {
+    if (!userIds) {
+      return userIds;
+    }
+    if (isQualifiedIdArray(userIds)) {
+      return userIds.map(({id}) => id);
+    }
+
+    return Object.entries(userIds).reduce((ids, [domain, userClients]) => {
+      return ids.concat(this.extractUserIds(userClients) as string[]);
+    }, [] as string[]);
   }
 
   private generateButtonActionGenericMessage(payloadBundle: ButtonActionMessage): GenericMessage {
@@ -772,6 +803,7 @@ export class ConversationService {
    * @param params.sendAsProtobuf?
    * @param params.conversationDomain? The domain the conversation lives on (if given with QualifiedId[] or QualfiedUserClients in the userIds params, will send the message to the federated endpoint)
    * @param params.callbacks? Optional callbacks that will be called when the message starts being sent and when it has been succesfully sent.
+   * @param params.targettedMessage? Only send the message to the given userIds and ignore other users in the conversation (will not trigger an error if users from the conversation are missing)
    * @param callbacks.onStart Will be called before a message is actually sent. Returning 'false' will prevent the message from being sent
    * @param callbacks.onClientMismatch? Will be called when a mismatch happens. Returning `false` from the callback will stop the sending attempt
    * @return resolves with the sent message
@@ -781,12 +813,16 @@ export class ConversationService {
     userIds,
     sendAsProtobuf,
     conversationDomain,
+    nativePush,
+    targettedMessage,
     callbacks,
   }: {
     payloadBundle: T;
     userIds?: string[] | QualifiedId[] | UserClients | QualifiedUserClients;
     sendAsProtobuf?: boolean;
     conversationDomain?: string;
+    nativePush?: boolean;
+    targettedMessage?: boolean;
     callbacks?: MessageSendingCallbacks;
   }): Promise<T> {
     let genericMessage: GenericMessage;
@@ -863,6 +899,8 @@ export class ConversationService {
         userIds,
         sendAsProtobuf,
         domain: conversationDomain,
+        nativePush,
+        targettedMessage,
         onClientMismatch: callbacks?.onClientMismatch,
       },
     );
