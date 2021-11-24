@@ -954,7 +954,7 @@ export class ConversationService {
       ...payloadBundle,
       content: processedContent || payloadBundle.content,
       messageTimer: genericMessage.ephemeral?.expireAfterMillis || 0,
-      state: PayloadBundleState.OUTGOING_SENT,
+      state: response.errored ? PayloadBundleState.CANCELLED : PayloadBundleState.OUTGOING_SENT,
     };
   }
 
