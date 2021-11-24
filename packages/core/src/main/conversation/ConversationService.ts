@@ -925,7 +925,7 @@ export class ConversationService {
 
     if ((await callbacks?.onStart?.(genericMessage)) === false) {
       // If the onStart call returns false, it means the consumer wants to cancel the message sending
-      return payloadBundle;
+      return {...payloadBundle, state: PayloadBundleState.CANCELLED};
     }
 
     const response = await this.sendGenericMessage(
