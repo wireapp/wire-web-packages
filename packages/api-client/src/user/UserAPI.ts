@@ -673,4 +673,14 @@ export class UserAPI {
     const response = await this.client.sendJSON<RichInfo>(config);
     return response.data;
   }
+
+  public async putUpdateUserEmail(userId: string, email: string, email_unvalidated: string): Promise<void> {
+    const config: AxiosRequestConfig = {
+      data: {email_unvalidated},
+      method: 'put',
+      url: `${UserAPI.URL.USERS}/${userId}`,
+    };
+
+    await this.client.sendJSON(config);
+  }
 }
