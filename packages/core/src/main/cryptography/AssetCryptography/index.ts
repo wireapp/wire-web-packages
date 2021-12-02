@@ -18,7 +18,7 @@
  */
 
 import {CipherOptions} from '@wireapp/api-client/src/asset';
-import type {EncryptedAsset} from '..';
+import type {EncryptedAsset} from './EncryptedAsset';
 import {crypto} from './crypto.node';
 
 const isEqual = (a: Buffer, b: Buffer): boolean => {

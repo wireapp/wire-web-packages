@@ -18,6 +18,6 @@
  */
 
 export * from './CryptographyService';
-export * from './EncryptedAsset';
+export * from './AssetCryptography/EncryptedAsset';
 export * from './SessionPayloadBundle';
 export * from './MessageHashService';
