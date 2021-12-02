@@ -17,7 +17,7 @@
  *
  */
 
-import {Crypto} from './types';
+import {Crypto} from './interfaces';
 import * as cryptoLib from 'crypto';
 
 export const crypto: Crypto = {

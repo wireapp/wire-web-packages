@@ -17,7 +17,7 @@
  *
  */
 
-import {Crypto} from './types';
+import {Crypto} from './interfaces';
 
 const cryptoLib = window.crypto;
 
