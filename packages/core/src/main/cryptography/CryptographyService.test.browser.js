@@ -131,7 +131,7 @@ describe('CryptographyService', () => {
       window.crypto.getRandomValues(bytes);
       const byteBuffer = Buffer.from(bytes.buffer);
 
-      const encryptedAsset = await encryptAsset({plaintext: byteBuffer});
+      const encryptedAsset = await encryptAsset({plainText: byteBuffer});
       const decryptedBuffer = await decryptAsset(encryptedAsset);
 
       expect(decryptedBuffer).toEqual(byteBuffer);
@@ -142,7 +142,7 @@ describe('CryptographyService', () => {
       window.crypto.getRandomValues(bytes);
       const byteBuffer = Buffer.from(bytes.buffer);
 
-      const {cipherText, keyBytes} = await encryptAsset({plaintext: byteBuffer});
+      const {cipherText, keyBytes} = await encryptAsset({plainText: byteBuffer});
 
       try {
         await decryptAsset(cipherText, keyBytes, null);
@@ -155,7 +155,7 @@ describe('CryptographyService', () => {
       window.crypto.getRandomValues(bytes);
       const byteBuffer = Buffer.from(bytes.buffer);
 
-      const {cipherText, keyBytes} = await encryptAsset({plaintext: byteBuffer});
+      const {cipherText, keyBytes} = await encryptAsset({plainText: byteBuffer});
 
       try {
         await decryptAsset(cipherText, keyBytes, new Uint8Array([]));

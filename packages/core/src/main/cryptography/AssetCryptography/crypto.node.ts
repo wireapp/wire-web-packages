@@ -22,7 +22,7 @@ import * as cryptoLib from 'crypto';
 
 export const crypto: Crypto = {
   async digest(cipherText: Buffer | Uint8Array): Promise<Buffer> {
-    return cryptoLib.createHash("SHA256").update(cipherText).digest();
+    return cryptoLib.createHash('SHA256').update(cipherText).digest();
   },
 
   async decrypt(cipherText: Buffer | Uint8Array, keyBytes: Buffer): Promise<Buffer> {
@@ -34,16 +34,6 @@ export const crypto: Crypto = {
     const decipherFinal = decipher.final();
 
     return Buffer.concat([decipherUpdated, decipherFinal]);
-
-    /*
-    const key = await cryptoLib.subtle.importKey('raw', keyBytes, 'AES-CBC', false, ['decrypt']);
-
-    const initializationVector = cipherText.slice(0, 16);
-    const assetCipherText = cipherText.slice(16);
-    const decipher = await cryptoLib.subtle.decrypt({iv: initializationVector, name: 'AES-CBC'}, key, assetCipherText);
-
-    return Buffer.from(decipher);
-    */
   },
 
   getRandomValues(size: number): Buffer {

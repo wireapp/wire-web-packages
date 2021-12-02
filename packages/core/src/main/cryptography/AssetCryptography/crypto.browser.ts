@@ -23,9 +23,8 @@ const cryptoLib = window.crypto;
 
 export const crypto: Crypto = {
   async digest(cipherText: Buffer | Uint8Array): Promise<Buffer> {
-    const checksum = await cryptoLib.subtle.digest("SHA-256", cipherText);
+    const checksum = await cryptoLib.subtle.digest('SHA-256', cipherText);
     return Buffer.from(checksum);
-    //const computedSha256 = crypto.createHash('SHA256').update(cipherText).digest();
   },
 
   async decrypt(cipherText: Buffer | Uint8Array, keyBytes: Buffer): Promise<Buffer> {
