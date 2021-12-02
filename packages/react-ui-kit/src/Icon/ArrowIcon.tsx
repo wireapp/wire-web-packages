@@ -33,14 +33,12 @@ export interface ArrowProps extends SVGIconProps {
   direction?: keyof Rotation;
 }
 
-/* eslint-disable sort-keys-fix/sort-keys-fix */
 export const rotation: Rotation = {
   right: 0,
   down: 90,
   left: 180,
   up: 270,
 };
-/* eslint-enable sort-keys-fix/sort-keys-fix */
 
 export const ArrowIcon = ({direction = 'right', ...props}: ArrowProps) => (
   <SVGIcon realWidth={16} realHeight={16} {...props}>
