@@ -21,8 +21,8 @@ import {Crypto} from './interfaces';
 import * as cryptoLib from 'crypto';
 
 export const crypto: Crypto = {
-  async digest(algo: string, cipherText: Buffer | Uint8Array): Promise<Buffer> {
-    return cryptoLib.createHash(algo).update(cipherText).digest();
+  async digest(cipherText: Buffer | Uint8Array): Promise<Buffer> {
+    return cryptoLib.createHash("SHA256").update(cipherText).digest();
   },
 
   async decrypt(cipherText: Buffer | Uint8Array, keyBytes: Buffer): Promise<Buffer> {

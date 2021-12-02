@@ -40,7 +40,7 @@ export const decryptAsset = async ({
   keyBytes,
   sha256: referenceSha256,
 }: EncryptedAsset): Promise<Buffer> => {
-  const computedSha256 = await crypto.digest('SHA-256', cipherText);
+  const computedSha256 = await crypto.digest(cipherText);
 
   if (!isEqual(computedSha256, referenceSha256)) {
     throw new Error('Encrypted asset does not match its SHA-256 hash');
@@ -59,7 +59,7 @@ export const encryptAsset = async ({plainText, algorithm = 'AES-256-CBC'}: Encry
   ivCipherText.set(initializationVector, 0);
   ivCipherText.set(new Uint8Array(cipher), initializationVector.byteLength);
 
-  const sha256 = await crypto.digest('SHA-256', ivCipherText);
+  const sha256 = await crypto.digest(ivCipherText);
 
   return {
     cipherText: Buffer.from(ivCipherText.buffer),

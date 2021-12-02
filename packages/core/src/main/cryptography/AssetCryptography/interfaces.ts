@@ -18,7 +18,7 @@
  */
 
 export interface Crypto {
-  digest(algo: string, cipherText: Buffer | Uint8Array): Promise<Buffer>;
+  digest(cipherText: Buffer | Uint8Array): Promise<Buffer>;
 
   decrypt(cipherText: Buffer | Uint8Array, keyBytes: Buffer): Promise<Buffer>;
 
