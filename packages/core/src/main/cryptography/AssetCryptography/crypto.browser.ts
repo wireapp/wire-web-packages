@@ -46,12 +46,11 @@ export const crypto: Crypto = {
     plainText: Buffer | Uint8Array,
     keyBytes: Buffer,
     initializationVector: Buffer,
-    algorithm: string,
   ): Promise<{key: Buffer; cipher: Buffer}> {
-    const key = await cryptoLib.subtle.importKey('raw', keyBytes, algorithm, true, ['encrypt']);
+    const key = await cryptoLib.subtle.importKey('raw', keyBytes, 'AES-CBC', true, ['encrypt']);
     return {
       key: Buffer.from(await cryptoLib.subtle.exportKey('raw', key)),
-      cipher: await cryptoLib.subtle.encrypt({iv: initializationVector, name: algorithm}, key, plainText),
+      cipher: await cryptoLib.subtle.encrypt({iv: initializationVector, name: 'AES-CBC'}, key, plainText),
     };
   },
 };
