@@ -23,7 +23,7 @@ const Proteus = require('@wireapp/proteus');
 const {Cryptobox} = require('@wireapp/cryptobox');
 const {CryptographyService} = require('@wireapp/core/src/main/cryptography/');
 const {MemoryEngine} = require('@wireapp/store-engine');
-const {decryptAsset, encryptAsset} = require('@wireapp/core/src/main/cryptography/AssetCryptography.browser');
+const {decryptAsset, encryptAsset} = require('@wireapp/core/src/main/cryptography/AssetCryptography');
 
 async function createEngine(storeName) {
   const engine = new MemoryEngine();
