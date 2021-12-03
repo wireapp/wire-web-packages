@@ -297,6 +297,9 @@ export class FeatureAPI {
         case BackendErrorLabel.APP_LOCK_INVALID_TIMEOUT: {
           throw new InvalidAppLockTimeoutError((error as BackendError).message);
         }
+        case BackendErrorLabel.FEATURE_LOCKED: {
+          throw new FeatureLockedError((error as BackendError).message);
+        }
       }
       throw error;
     }
