@@ -32,7 +32,7 @@ import type {
   FeatureSelfDeletingMessages,
 } from './Feature';
 import type {FeatureList} from './FeatureList';
-import {FeatureConversationGuestLink} from '.';
+import {FeatureConversationGuestLink, FeatureLockedError} from '.';
 
 export class FeatureAPI {
   constructor(private readonly client: HttpClient) {}
@@ -104,8 +104,17 @@ export class FeatureAPI {
       url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.CONVERSATION_GUEST_LINKS}`,
     };
 
-    const response = await this.client.sendJSON<FeatureConversationGuestLink>(config);
-    return response.data;
+    try {
+      const response = await this.client.sendJSON<FeatureConversationGuestLink>(config);
+      return response.data;
+    } catch (error) {
+      switch ((error as BackendError).label) {
+        case BackendErrorLabel.FEATURE_LOCKED: {
+          throw new FeatureLockedError((error as BackendError).message);
+        }
+      }
+      throw error;
+    }
   }
 
   public async getConferenceCallingFeature(): Promise<FeatureConferenceCalling> {
@@ -128,8 +137,17 @@ export class FeatureAPI {
       url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.CALLING_CONFERENCE}`,
     };
 
-    const response = await this.client.sendJSON<FeatureConferenceCalling>(config);
-    return response.data;
+    try {
+      const response = await this.client.sendJSON<FeatureConferenceCalling>(config);
+      return response.data;
+    } catch (error) {
+      switch ((error as BackendError).label) {
+        case BackendErrorLabel.FEATURE_LOCKED: {
+          throw new FeatureLockedError((error as BackendError).message);
+        }
+      }
+      throw error;
+    }
   }
 
   public async getVideoCallingFeature(): Promise<FeatureVideoCalling> {
@@ -152,8 +170,17 @@ export class FeatureAPI {
       url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.CALLING_VIDEO}`,
     };
 
-    const response = await this.client.sendJSON<FeatureVideoCalling>(config);
-    return response.data;
+    try {
+      const response = await this.client.sendJSON<FeatureVideoCalling>(config);
+      return response.data;
+    } catch (error) {
+      switch ((error as BackendError).label) {
+        case BackendErrorLabel.FEATURE_LOCKED: {
+          throw new FeatureLockedError((error as BackendError).message);
+        }
+      }
+      throw error;
+    }
   }
 
   public async getSelfDeletingMessagesFeature(): Promise<FeatureSelfDeletingMessages> {
@@ -176,8 +203,17 @@ export class FeatureAPI {
       url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.SELF_DELETING_MESSAGES}`,
     };
 
-    const response = await this.client.sendJSON<FeatureSelfDeletingMessages>(config);
-    return response.data;
+    try {
+      const response = await this.client.sendJSON<FeatureSelfDeletingMessages>(config);
+      return response.data;
+    } catch (error) {
+      switch ((error as BackendError).label) {
+        case BackendErrorLabel.FEATURE_LOCKED: {
+          throw new FeatureLockedError((error as BackendError).message);
+        }
+      }
+      throw error;
+    }
   }
 
   public async getFileSharingFeature(): Promise<FeatureFileSharing> {
@@ -200,8 +236,17 @@ export class FeatureAPI {
       url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.FILE_SHARING}`,
     };
 
-    const response = await this.client.sendJSON<FeatureFileSharing>(config);
-    return response.data;
+    try {
+      const response = await this.client.sendJSON<FeatureFileSharing>(config);
+      return response.data;
+    } catch (error) {
+      switch ((error as BackendError).label) {
+        case BackendErrorLabel.FEATURE_LOCKED: {
+          throw new FeatureLockedError((error as BackendError).message);
+        }
+      }
+      throw error;
+    }
   }
 
   public async getSSOFeature(): Promise<FeatureSSO> {
@@ -234,7 +279,10 @@ export class FeatureAPI {
     return response.data;
   }
 
-  public async putAppLockFeature(teamId: string, appLockFeature: Omit<FeatureAppLock, 'lockStatus'>): Promise<FeatureAppLock> {
+  public async putAppLockFeature(
+    teamId: string,
+    appLockFeature: Omit<FeatureAppLock, 'lockStatus'>,
+  ): Promise<FeatureAppLock> {
     const config: AxiosRequestConfig = {
       data: appLockFeature,
       method: 'put',
