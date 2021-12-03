@@ -96,7 +96,7 @@ export class FeatureAPI {
 
   public async putConversationGuestLinkFeature(
     teamId: string,
-    conversationGuestLinkFeature: FeatureConversationGuestLink,
+    conversationGuestLinkFeature: Omit<FeatureConversationGuestLink, 'lockStatus'>,
   ): Promise<FeatureConversationGuestLink> {
     const config: AxiosRequestConfig = {
       data: conversationGuestLinkFeature,
@@ -120,7 +120,7 @@ export class FeatureAPI {
 
   public async putConferenceCallingFeature(
     teamId: string,
-    conferenceCallingFeature: FeatureConferenceCalling,
+    conferenceCallingFeature: Omit<FeatureConferenceCalling, 'lockStatus'>,
   ): Promise<FeatureConferenceCalling> {
     const config: AxiosRequestConfig = {
       data: conferenceCallingFeature,
@@ -144,7 +144,7 @@ export class FeatureAPI {
 
   public async putVideoCallingFeature(
     teamId: string,
-    videoCallingFeature: FeatureVideoCalling,
+    videoCallingFeature: Omit<FeatureVideoCalling, 'lockStatus'>,
   ): Promise<FeatureVideoCalling> {
     const config: AxiosRequestConfig = {
       data: videoCallingFeature,
@@ -168,7 +168,7 @@ export class FeatureAPI {
 
   public async putSelfDeletingMessagesFeature(
     teamId: string,
-    selfDeleteingMessagesFeature: FeatureSelfDeletingMessages,
+    selfDeleteingMessagesFeature: Omit<FeatureSelfDeletingMessages, 'lockStatus'>,
   ): Promise<FeatureSelfDeletingMessages> {
     const config: AxiosRequestConfig = {
       data: selfDeleteingMessagesFeature,
@@ -192,7 +192,7 @@ export class FeatureAPI {
 
   public async putFileSharingFeature(
     teamId: string,
-    fileSharingFeature: FeatureFileSharing,
+    fileSharingFeature: Omit<FeatureFileSharing, 'lockStatus'>,
   ): Promise<FeatureFileSharing> {
     const config: AxiosRequestConfig = {
       data: fileSharingFeature,
@@ -234,7 +234,7 @@ export class FeatureAPI {
     return response.data;
   }
 
-  public async putAppLockFeature(teamId: string, appLockFeature: FeatureAppLock): Promise<FeatureAppLock> {
+  public async putAppLockFeature(teamId: string, appLockFeature: Omit<FeatureAppLock, 'lockStatus'>): Promise<FeatureAppLock> {
     const config: AxiosRequestConfig = {
       data: appLockFeature,
       method: 'put',
