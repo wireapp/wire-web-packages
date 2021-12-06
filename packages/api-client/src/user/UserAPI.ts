@@ -67,7 +67,7 @@ export class UserAPI {
     SEND: 'send',
     V2: 'v2',
     USERS: '/users',
-    EMAIL: '/email',
+    EMAIL: 'email',
   };
 
   constructor(private readonly client: HttpClient) {}
