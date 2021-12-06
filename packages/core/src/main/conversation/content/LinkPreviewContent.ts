@@ -18,12 +18,14 @@
  */
 
 import type {ILinkPreview} from '@wireapp/protocol-messaging';
+import { EncryptedAssetUploaded } from '../../cryptography';
 
 import type {ImageAssetContent, ImageContent, LegalHoldStatus} from '../content/';
 
 export interface LinkPreviewContent extends Omit<ILinkPreview, 'image'> {
   expectsReadConfirmation?: boolean;
   image?: ImageContent;
+  imageAsset?: EncryptedAssetUploaded,
   legalHoldStatus?: LegalHoldStatus;
 }
 
