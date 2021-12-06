@@ -674,13 +674,17 @@ export class UserAPI {
     return response.data;
   }
 
-  public async putUpdateUserEmail(userId: string, email: string): Promise<void> {
-    const config: AxiosRequestConfig = {
-      data: {email},
-      method: 'put',
-      url: `${UserAPI.URL.USERS}/${userId}/${email}`,
-    };
+  /**
+   * Resend email address validation
+   * @param userId The user ID
+   * @see https://staging-nginz-https.zinfra.io/api/swagger-ui/#/default/put_users__uid__email
+   */
 
+  public async putUpdateUserEmail(userId: string): Promise<void> {
+    const config: AxiosRequestConfig = {
+      method: 'put',
+      url: `${UserAPI.URL.USERS}/${userId}`,
+    };
     await this.client.sendJSON(config);
   }
 }
