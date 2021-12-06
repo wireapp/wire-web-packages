@@ -699,16 +699,16 @@ export class ConversationService {
    * @param {string} conversationId
    * @param {string} conversationDomain? - If given will send the message to the new qualified endpoint
    */
-  public async getAllParticipantsClients(
+  public getAllParticipantsClients(
     conversationId: string,
     conversationDomain?: string,
   ): Promise<UserClients | QualifiedUserClients> {
     const sendingClientId = this.apiClient.validatedClientId;
     const recipients = {};
     const text = new Uint8Array();
-    return new Promise(resolve => {
+    return new Promise(async resolve => {
       if (conversationDomain) {
-        this.messageService.sendFederatedMessage(sendingClientId, recipients, text, {
+        await this.messageService.sendFederatedMessage(sendingClientId, recipients, text, {
           conversationId: {id: conversationId, domain: conversationDomain},
           // When the mismatch happens, we ask the messageService to cancel the sending
           onClientMismatch: mismatch => {
@@ -717,7 +717,7 @@ export class ConversationService {
           },
         });
       } else {
-        this.messageService.sendMessage(sendingClientId, recipients, text, {
+        await this.messageService.sendMessage(sendingClientId, recipients, text, {
           conversationId,
           // When the mismatch happens, we ask the messageService to cancel the sending
           onClientMismatch: mismatch => {
