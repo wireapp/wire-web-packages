@@ -715,6 +715,7 @@ export class ConversationService {
             resolve(mismatch.missing);
             return false;
           },
+          reportMissing: true,
         });
       } else {
         await this.messageService.sendMessage(sendingClientId, recipients, text, {
