@@ -681,7 +681,7 @@ export class UserAPI {
    * @see https://staging-nginz-https.zinfra.io/api/swagger-ui/#/default/put_users__uid__email
    */
 
-  public async putUpdateUserEmail(userId: string): Promise<void> {
+  public async putRevalidateEmail(userId: string): Promise<void> {
     const config: AxiosRequestConfig = {
       method: 'put',
       url: `${UserAPI.URL.USERS}/${userId}/${UserAPI.URL.EMAIL}`,
