@@ -674,11 +674,11 @@ export class UserAPI {
     return response.data;
   }
 
-  public async putUpdateUserEmail(userId: string, email: string, email_unvalidated: string): Promise<void> {
+  public async putUpdateUserEmail(userId: string, email: string): Promise<void> {
     const config: AxiosRequestConfig = {
-      data: {email_unvalidated},
+      data: {email},
       method: 'put',
-      url: `${UserAPI.URL.USERS}/${userId}`,
+      url: `${UserAPI.URL.USERS}/${userId}/${email}`,
     };
 
     await this.client.sendJSON(config);
