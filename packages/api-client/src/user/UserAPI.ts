@@ -55,6 +55,7 @@ export class UserAPI {
     CONFIG: 'config',
     CONTACTS: 'contacts',
     DELETE: '/delete',
+    EMAIL: 'email',
     HANDLES: 'handles',
     LIST_CLIENTS: 'list-clients',
     LIST_PREKEYS: 'list-prekeys',
@@ -65,9 +66,8 @@ export class UserAPI {
     RICH_INFO: 'rich-info',
     SEARCH: '/search',
     SEND: 'send',
-    V2: 'v2',
     USERS: '/users',
-    EMAIL: 'email',
+    V2: 'v2',
   };
 
   constructor(private readonly client: HttpClient) {}
@@ -680,9 +680,9 @@ export class UserAPI {
    * @param userId The user ID
    * @see https://staging-nginz-https.zinfra.io/api/swagger-ui/#/default/put_users__uid__email
    */
-
-  public async putRevalidateEmail(userId: string): Promise<void> {
+  public async putRevalidateEmail(userId: string, email: string): Promise<void> {
     const config: AxiosRequestConfig = {
+      data: {email},
       method: 'put',
       url: `${UserAPI.URL.USERS}/${userId}/${UserAPI.URL.EMAIL}`,
     };
