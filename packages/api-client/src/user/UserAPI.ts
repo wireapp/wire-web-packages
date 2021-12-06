@@ -67,6 +67,7 @@ export class UserAPI {
     SEND: 'send',
     V2: 'v2',
     USERS: '/users',
+    EMAIL: '/email',
   };
 
   constructor(private readonly client: HttpClient) {}
@@ -683,7 +684,7 @@ export class UserAPI {
   public async putUpdateUserEmail(userId: string): Promise<void> {
     const config: AxiosRequestConfig = {
       method: 'put',
-      url: `${UserAPI.URL.USERS}/${userId}`,
+      url: `${UserAPI.URL.USERS}/${userId}/${UserAPI.URL.EMAIL}`,
     };
     await this.client.sendJSON(config);
   }
