@@ -163,7 +163,7 @@ export class MessageBuilder {
     });
   }
 
-  public createFileData(payload: CreateFileOptions): FileAssetMessage {
+  public static createFileData(payload: CreateFileOptions): FileAssetMessage {
     const {asset, expectsReadConfirmation, file, legalHoldStatus, originalMessageId} = payload;
 
     return {
@@ -193,7 +193,7 @@ export class MessageBuilder {
     };
   }
 
-  public async createFileAbort(payload: CreateFileAbortOptions): Promise<FileAssetAbortMessage> {
+  public static createFileAbort(payload: CreateFileAbortOptions): FileAssetAbortMessage {
     const {expectsReadConfirmation, legalHoldStatus, reason} = payload;
 
     return {
