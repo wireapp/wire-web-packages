@@ -258,17 +258,20 @@ const {WIRE_EMAIL, WIRE_PASSWORD, WIRE_BACKEND = 'staging'} = process.env;
     await sendMessageResponse(data, fileMetaDataPayload);
 
     try {
-      const filePayload = await MessageBuilder.createFileData({
+      const file = {data: fileBuffer};
+      const asset = await account.service!.asset.uploadFileAsset(file);
+      const filePayload = MessageBuilder.createFileData({
         conversationId,
         from: account.clientId,
-        file: {data: fileBuffer},
+        asset,
+        file,
         originalMessageId: fileMetaDataPayload.id,
       });
       messageIdCache[messageId] = filePayload.id;
       await sendMessageResponse(data, filePayload);
     } catch (error) {
       logger.warn(`Error while sending asset: "${error.stack}"`);
-      const fileAbortPayload = await MessageBuilder.createFileAbort({
+      const fileAbortPayload = MessageBuilder.createFileAbort({
         conversationId,
         from: account.clientId,
         reason: 0,
@@ -300,7 +303,7 @@ const {WIRE_EMAIL, WIRE_PASSWORD, WIRE_BACKEND = 'staging'} = process.env;
       return;
     }
 
-    const fileMetaDataPayload = await MessageBuilder.createFileMetadata({
+    const fileMetaDataPayload = MessageBuilder.createFileMetadata({
       conversationId,
       from: account.clientId,
       metaData: {
@@ -313,7 +316,7 @@ const {WIRE_EMAIL, WIRE_PASSWORD, WIRE_BACKEND = 'staging'} = process.env;
     await handleIncomingMessage(data);
     await sendMessageResponse(data, fileMetaDataPayload);
 
-    const fileAbortPayload = await MessageBuilder.createFileAbort({
+    const fileAbortPayload = MessageBuilder.createFileAbort({
       conversationId,
       from: account.clientId,
       reason: 0,
@@ -334,15 +337,18 @@ const {WIRE_EMAIL, WIRE_PASSWORD, WIRE_BACKEND = 'staging'} = process.env;
 
     const imageBuffer = await account.service.conversation.getAsset(uploaded);
 
-    const imagePayload = await MessageBuilder.createImage({
+    const image = {
+      data: imageBuffer,
+      height: original.image.height,
+      type: original.mimeType,
+      width: original.image.width,
+    };
+    const imageAsset = await account.service!.asset.uploadImageAsset(image);
+    const imagePayload = MessageBuilder.createImage({
       conversationId,
       from: account.clientId,
-      image: {
-        data: imageBuffer,
-        height: original.image.height,
-        type: original.mimeType,
-        width: original.image.width,
-      },
+      image,
+      imageAsset,
     });
 
     messageIdCache[messageId] = imagePayload.id;
