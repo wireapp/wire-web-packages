@@ -206,7 +206,6 @@ export abstract class MessageHandler {
       const editedMessage = await this.account.service.conversation.send({payloadBundle: editedPayload, userIds});
 
       if (newLinkPreview) {
-        const linkPreviewPayload = await MessageBuilder.createLinkPreview(newLinkPreview);
         const editedWithPreviewPayload = MessageBuilder.createEditedText({
           from: this.account.clientId,
           conversationId,
@@ -214,7 +213,7 @@ export abstract class MessageHandler {
           originalMessageId,
           messageId: editedMessage.id,
         })
-          .withLinkPreviews([linkPreviewPayload])
+          .withLinkPreviews([await this.account.service.linkPreview.uploadLinkPreviewImage(newLinkPreview)])
           .withMentions(newMentions)
           .build();
 
@@ -263,6 +262,7 @@ export abstract class MessageHandler {
           conversationId,
           from: this.account.clientId,
           file,
+          asset: await this.account.service!.asset.uploadFileAsset(file),
           originalMessageId: metadataPayload.id,
         });
         await this.account.service.conversation.send({payloadBundle: filePayload, userIds});
@@ -283,7 +283,12 @@ export abstract class MessageHandler {
    */
   async sendImage(conversationId: string, image: ImageContent, userIds?: string[] | UserClients): Promise<void> {
     if (this.account?.service) {
-      const imagePayload = MessageBuilder.createImage({conversationId, from: this.account.clientId, image});
+      const imagePayload = MessageBuilder.createImage({
+        conversationId,
+        from: this.account.clientId,
+        image,
+        imageAsset: await this.account.service!.asset.uploadImageAsset(image),
+      });
       await this.account.service.conversation.send({payloadBundle: imagePayload, userIds});
     }
   }
@@ -381,14 +386,13 @@ export abstract class MessageHandler {
       const sentMessage = await this.account.service.conversation.send({payloadBundle: payload, userIds});
 
       if (linkPreview) {
-        const linkPreviewPayload = await MessageBuilder.createLinkPreview(linkPreview);
         const editedWithPreviewPayload = MessageBuilder.createText({
           conversationId,
           text,
           from: this.account.clientId,
           messageId: sentMessage.id,
         })
-          .withLinkPreviews([linkPreviewPayload])
+          .withLinkPreviews([await this.account.service!.linkPreview.uploadLinkPreviewImage(linkPreview)])
           .withMentions(mentions)
           .build();
 
