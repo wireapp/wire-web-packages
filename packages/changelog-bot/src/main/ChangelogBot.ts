@@ -79,7 +79,7 @@ export class ChangelogBot {
         logger.log(`Sending message to conversation "${conversationId}" ...`);
         const textPayload = MessageBuilder.createText({
           conversationId,
-          from: account.clientId,
+          from: account.userId,
           text: this.message,
         }).build();
         await account.service.conversation.send({payloadBundle: textPayload});

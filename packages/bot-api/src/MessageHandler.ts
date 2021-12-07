@@ -111,7 +111,7 @@ export abstract class MessageHandler {
 
       const buttonActionConfirmationMessage = MessageBuilder.createButtonActionConfirmationMessage({
         conversationId,
-        from: this.account.clientId,
+        from: this.account.userId,
         content: buttonActionConfirmationContent,
       });
 
@@ -124,7 +124,7 @@ export abstract class MessageHandler {
    */
   async sendCall(conversationId: string, content: CallingContent, userIds?: string[] | UserClients): Promise<void> {
     if (this.account?.service) {
-      const callPayload = MessageBuilder.createCall({conversationId, from: this.account.clientId, content});
+      const callPayload = MessageBuilder.createCall({conversationId, from: this.account.userId, content});
       await this.account.service.conversation.send({payloadBundle: callPayload, userIds});
     }
   }
@@ -139,7 +139,7 @@ export abstract class MessageHandler {
     userIds?: string[] | UserClients,
   ): Promise<void> {
     if (this.account?.service) {
-      const message = MessageBuilder.createComposite({conversationId, from: this.account.clientId}).addText(
+      const message = MessageBuilder.createComposite({conversationId, from: this.account.userId}).addText(
         Text.create({content: text}),
       );
       buttons.forEach(button => message.addButton(button));
@@ -158,7 +158,7 @@ export abstract class MessageHandler {
     if (this.account?.service) {
       const confirmationPayload = MessageBuilder.createConfirmation({
         conversationId,
-        from: this.account.clientId,
+        from: this.account.userId,
         firstMessageId,
         type: Confirmation.Type.DELIVERED,
       });
@@ -196,7 +196,7 @@ export abstract class MessageHandler {
     if (this.account?.service) {
       const editedPayload = MessageBuilder.createEditedText({
         conversationId,
-        from: this.account.clientId,
+        from: this.account.userId,
         newMessageText,
         originalMessageId,
       })
@@ -207,7 +207,7 @@ export abstract class MessageHandler {
 
       if (newLinkPreview) {
         const editedWithPreviewPayload = MessageBuilder.createEditedText({
-          from: this.account.clientId,
+          from: this.account.userId,
           conversationId,
           newMessageText,
           originalMessageId,
@@ -253,14 +253,14 @@ export abstract class MessageHandler {
       const metadataPayload = MessageBuilder.createFileMetadata({
         conversationId,
         metaData: metadata,
-        from: this.account.clientId,
+        from: this.account.userId,
       });
       await this.account.service.conversation.send({payloadBundle: metadataPayload, userIds});
 
       try {
         const filePayload = MessageBuilder.createFileData({
           conversationId,
-          from: this.account.clientId,
+          from: this.account.userId,
           file,
           asset: await this.account.service!.asset.uploadFileAsset(file),
           originalMessageId: metadataPayload.id,
@@ -269,7 +269,7 @@ export abstract class MessageHandler {
       } catch (error) {
         const abortPayload = await MessageBuilder.createFileAbort({
           conversationId,
-          from: this.account.clientId,
+          from: this.account.userId,
           reason: Asset.NotUploaded.FAILED,
           originalMessageId: metadataPayload.id,
         });
@@ -285,7 +285,7 @@ export abstract class MessageHandler {
     if (this.account?.service) {
       const imagePayload = MessageBuilder.createImage({
         conversationId,
-        from: this.account.clientId,
+        from: this.account.userId,
         image,
         imageAsset: await this.account.service!.asset.uploadImageAsset(image),
       });
@@ -304,7 +304,7 @@ export abstract class MessageHandler {
     if (this.account?.service) {
       const locationPayload = MessageBuilder.createLocation({
         conversationId,
-        from: this.account.clientId,
+        from: this.account.userId,
         location,
       });
       await this.account.service.conversation.send({payloadBundle: locationPayload, userIds});
@@ -316,7 +316,7 @@ export abstract class MessageHandler {
    */
   async sendPing(conversationId: string, userIds?: string[] | UserClients): Promise<void> {
     if (this.account?.service) {
-      const pingPayload = MessageBuilder.createPing({conversationId, from: this.account.clientId});
+      const pingPayload = MessageBuilder.createPing({conversationId, from: this.account.userId});
       await this.account.service.conversation.send({payloadBundle: pingPayload, userIds});
     }
   }
@@ -333,7 +333,7 @@ export abstract class MessageHandler {
     if (this.account?.service) {
       const reactionPayload = MessageBuilder.createReaction({
         conversationId,
-        from: this.account.clientId,
+        from: this.account.userId,
         reaction: {
           originalMessageId,
           type,
@@ -350,7 +350,7 @@ export abstract class MessageHandler {
     userIds?: string[] | UserClients,
   ): Promise<void> {
     if (this.account?.service) {
-      const replyPayload = MessageBuilder.createText({conversationId, text, from: this.account.clientId})
+      const replyPayload = MessageBuilder.createText({conversationId, text, from: this.account.userId})
         .withQuote(quotedMessage)
         .build();
       await this.account.service.conversation.send({payloadBundle: replyPayload, userIds});
@@ -380,7 +380,7 @@ export abstract class MessageHandler {
     userIds?: string[] | UserClients,
   ): Promise<void> {
     if (this.account?.service) {
-      const payload = MessageBuilder.createText({conversationId, text, from: this.account.clientId})
+      const payload = MessageBuilder.createText({conversationId, text, from: this.account.userId})
         .withMentions(mentions)
         .build();
       const sentMessage = await this.account.service.conversation.send({payloadBundle: payload, userIds});
@@ -389,7 +389,7 @@ export abstract class MessageHandler {
         const editedWithPreviewPayload = MessageBuilder.createText({
           conversationId,
           text,
-          from: this.account.clientId,
+          from: this.account.userId,
           messageId: sentMessage.id,
         })
           .withLinkPreviews([await this.account.service!.linkPreview.uploadLinkPreviewImage(linkPreview)])

@@ -112,7 +112,7 @@ account.on(PayloadBundleType.TEXT, textMessage => {
   stdin.addListener('data', async data => {
     const message = data.toString().trim();
     if (account.service) {
-      const payload = MessageBuilder.createText({conversationId, text: message}).build();
+      const payload = MessageBuilder.createText({conversationId, from: userId, text: message}).build();
       await account.service.conversation.send({payloadBundle: payload});
     }
   });
