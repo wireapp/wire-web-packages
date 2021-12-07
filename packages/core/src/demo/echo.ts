@@ -29,6 +29,7 @@ import {CONVERSATION_TYPING} from '@wireapp/api-client/src/conversation/data/';
 import {LegalHoldStatus, Confirmation} from '@wireapp/protocol-messaging';
 import {AssetContent} from '../main/conversation/content/AssetContent';
 import {MessageBuilder} from '../main/conversation/message/MessageBuilder';
+import {LinkPreviewUploadedContent} from '../main/conversation/content';
 
 const logger = logdown('@wireapp/core/demo/echo.js', {
   logger: console,
@@ -155,7 +156,7 @@ const {WIRE_EMAIL, WIRE_PASSWORD, WIRE_BACKEND = 'staging'} = process.env;
   };
 
   const buildLinkPreviews = async originalLinkPreviews => {
-    const newLinkPreviews = [];
+    const newLinkPreviews: LinkPreviewUploadedContent[] = [];
     for (const originalLinkPreview of originalLinkPreviews) {
       const originalLinkPreviewImage =
         originalLinkPreview.article && originalLinkPreview.article.image
@@ -172,14 +173,10 @@ const {WIRE_EMAIL, WIRE_PASSWORD, WIRE_BACKEND = 'staging'} = process.env;
           type: originalLinkPreviewImage.original.mimeType,
           width: originalLinkPreviewImage.original.image.width,
         };
+        linkPreviewImage = await account.service.asset.uploadImageAsset(linkPreviewImage);
       }
 
-      const newLinkPreview = await MessageBuilder.createLinkPreview({
-        ...originalLinkPreview,
-        image: linkPreviewImage,
-      });
-
-      newLinkPreviews.push(newLinkPreview);
+      newLinkPreviews.push({...originalLinkPreview, imageUploaded: linkPreviewImage});
     }
     return newLinkPreviews;
   };
