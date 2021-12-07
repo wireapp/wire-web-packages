@@ -32,8 +32,6 @@ import type {
   ImageContent,
   KnockContent,
   LegalHoldStatus,
-  LinkPreviewContent,
-  LinkPreviewUploadedContent,
   LocationContent,
   ReactionContent,
 } from '../content';
@@ -266,7 +264,7 @@ export class MessageBuilder {
     };
   }
 
-  createButtonActionMessage(payload: CreateActionMessageOptions): ButtonActionMessage {
+  public static createButtonActionMessage(payload: CreateActionMessageOptions): ButtonActionMessage {
     return {
       ...createCommonProperties(payload),
       content: payload.content,
@@ -274,7 +272,7 @@ export class MessageBuilder {
     };
   }
 
-  createButtonActionConfirmationMessage(
+  public static createButtonActionConfirmationMessage(
     payload: CreateButtonActionConfirmationOptions,
   ): ButtonActionConfirmationMessage {
     return {
@@ -284,7 +282,7 @@ export class MessageBuilder {
     };
   }
 
-  createComposite(payload: BaseOptions): CompositeContentBuilder {
+  public static createComposite(payload: BaseOptions): CompositeContentBuilder {
     return new CompositeContentBuilder({
       ...createCommonProperties(payload),
       content: {},
@@ -308,20 +306,6 @@ export class MessageBuilder {
       },
       type: PayloadBundleType.CLIENT_ACTION,
     };
-  }
-
-  public static createLinkPreview(linkPreview: LinkPreviewContent): LinkPreviewUploadedContent {
-    if (linkPreview.image && linkPreview.imageAsset) {
-      return {
-        ...linkPreview,
-        imageUploaded: {
-          asset: linkPreview.imageAsset,
-          image: linkPreview.image,
-        },
-      };
-    }
-
-    return linkPreview;
   }
 
   public static createId(): string {

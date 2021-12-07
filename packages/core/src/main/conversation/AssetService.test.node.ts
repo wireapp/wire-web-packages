@@ -18,21 +18,15 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {MemoryEngine} from '@wireapp/store-engine';
 import UUID from 'uuidjs';
-import {Account} from '../Account';
+import {AssetService} from './AssetService';
 
 describe('AssetService', () => {
-  let account: Account;
-
-  beforeAll(async () => {
-    const client = new APIClient({urls: APIClient.BACKEND.STAGING});
-    account = new Account(client);
-    await account.initServices(new MemoryEngine());
-  });
-
   describe('"uploadImageAsset"', () => {
     it('builds an encrypted asset payload', async () => {
+      const apiClient = new APIClient();
+      const assetService = new AssetService(apiClient);
+
       const assetServerData = {
         key: `3-2-${UUID.genV4().toString()}`,
         keyBytes: Buffer.from(UUID.genV4().toString()),
@@ -40,7 +34,6 @@ describe('AssetService', () => {
         token: UUID.genV4().toString(),
       };
 
-      const assetService = account.service!.conversation['assetService'];
       const image = {
         data: Buffer.from([1, 2, 3]),
         height: 600,
@@ -48,7 +41,7 @@ describe('AssetService', () => {
         width: 600,
       };
 
-      spyOn<any>(assetService, 'postAsset').and.returnValue(Promise.resolve(assetServerData));
+      spyOn<any>(apiClient.asset.api, 'postAsset').and.returnValue(Promise.resolve(assetServerData));
 
       const asset = await assetService.uploadImageAsset(image);
 

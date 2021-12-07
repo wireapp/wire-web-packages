@@ -26,6 +26,7 @@ import {MessageTargetMode, PayloadBundleSource, PayloadBundleState, PayloadBundl
 import {Account} from '../Account';
 import * as PayloadHelper from '../test/PayloadHelper';
 import {MentionContent, QuoteContent} from './content';
+import {MessageBuilder} from './message/MessageBuilder';
 import {OtrMessage} from './message/OtrMessage';
 
 describe('ConversationService', () => {
@@ -290,16 +291,15 @@ describe('ConversationService', () => {
       };
       const urlOffset = 0;
 
-      const linkPreview = await account.service!.conversation.messageBuilder.createLinkPreview({
+      const linkPreview = {
         permanentUrl,
         summary,
         title,
         tweet,
         url,
         urlOffset,
-      });
-      const textMessage = account
-        .service!.conversation.messageBuilder.createText({conversationId: '', text})
+      };
+      const textMessage = MessageBuilder.createText({conversationId: '', from: '', text})
         .withLinkPreviews([linkPreview])
         .build();
 
@@ -321,7 +321,7 @@ describe('ConversationService', () => {
 
     it('does not add link previews', () => {
       const text = 'Hello, world!';
-      const textMessage = account.service!.conversation.messageBuilder.createText({conversationId: '', text}).build();
+      const textMessage = MessageBuilder.createText({conversationId: '', from: '', text}).build();
 
       expect(textMessage.content.linkPreviews).toBeUndefined();
     });
@@ -347,9 +347,8 @@ describe('ConversationService', () => {
       const text = url;
       const urlOffset = 0;
 
-      const linkPreview = await account.service!.conversation.messageBuilder.createLinkPreview({image, url, urlOffset});
-      const textMessage = account
-        .service!.conversation.messageBuilder.createText({conversationId: '', text})
+      const linkPreview = {image, url, urlOffset};
+      const textMessage = MessageBuilder.createText({conversationId: '', from: '', text})
         .withLinkPreviews([linkPreview])
         .build();
 
@@ -375,8 +374,7 @@ describe('ConversationService', () => {
         userId: PayloadHelper.getUUID(),
       };
 
-      const textMessage = account
-        .service!.conversation.messageBuilder.createText({conversationId: '', text})
+      const textMessage = MessageBuilder.createText({conversationId: '', from: '', text})
         .withMentions([mention])
         .build();
 
@@ -389,7 +387,7 @@ describe('ConversationService', () => {
 
     it('does not add mentions', () => {
       const text = 'Hello, world!';
-      const textMessage = account.service!.conversation.messageBuilder.createText({conversationId: '', text}).build();
+      const textMessage = MessageBuilder.createText({conversationId: '', from: '', text}).build();
 
       expect(textMessage.content.mentions).toBeUndefined();
     });
@@ -402,10 +400,7 @@ describe('ConversationService', () => {
         quotedMessageId: quoteId,
       };
 
-      const replyMessage = account
-        .service!.conversation.messageBuilder.createText({conversationId: '', text})
-        .withQuote(quote)
-        .build();
+      const replyMessage = MessageBuilder.createText({conversationId: '', from: '', text}).withQuote(quote).build();
 
       expect(replyMessage.content.text).toEqual(text);
       expect(replyMessage.content.quote).toEqual(jasmine.objectContaining({quotedMessageId: quoteId}));
@@ -414,7 +409,7 @@ describe('ConversationService', () => {
 
     it('does not add a quote', () => {
       const text = 'Hello, world!';
-      const textMessage = account.service!.conversation.messageBuilder.createText({conversationId: '', text}).build();
+      const textMessage = MessageBuilder.createText({conversationId: '', from: '', text}).build();
 
       expect(textMessage.content.quote).toBeUndefined();
     });
@@ -422,8 +417,7 @@ describe('ConversationService', () => {
     it('adds a read confirmation request correctly', () => {
       const text = 'Please read me';
 
-      const replyMessage = account
-        .service!.conversation.messageBuilder.createText({conversationId: '', text})
+      const replyMessage = MessageBuilder.createText({conversationId: '', from: '', text})
         .withReadConfirmation(true)
         .build();
 
@@ -434,15 +428,13 @@ describe('ConversationService', () => {
     it('adds a legal hold status', () => {
       const text = 'Please read me';
 
-      const firstMessage = account
-        .service!.conversation.messageBuilder.createText({conversationId: '', text})
+      const firstMessage = MessageBuilder.createText({conversationId: '', from: '', text})
         .withLegalHoldStatus()
         .build();
 
       expect(firstMessage.content.legalHoldStatus).toEqual(LegalHoldStatus.UNKNOWN);
 
-      const replyMessage = account
-        .service!.conversation.messageBuilder.createText({conversationId: '', text})
+      const replyMessage = MessageBuilder.createText({conversationId: '', from: '', text})
         .withLegalHoldStatus(LegalHoldStatus.ENABLED)
         .build();
 
