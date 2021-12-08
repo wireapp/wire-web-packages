@@ -38,7 +38,7 @@ describe('AssetService', () => {
         response: Promise.resolve(assetServerData),
       });
 
-      const asset = await assetService.uploadAsset(Buffer.from([1, 2, 3]));
+      const asset = await (await assetService.uploadAsset(Buffer.from([1, 2, 3]))).response;
 
       expect(asset).toEqual(
         jasmine.objectContaining({
@@ -63,7 +63,7 @@ describe('AssetService', () => {
 
       const asset = await assetService.uploadAsset(Buffer.from([1, 2, 3]));
       asset.cancel();
-      expect(apiUpload.cancel()).toHaveBeenCalled();
+      expect(apiUpload.cancel).toHaveBeenCalled();
     });
 
     it('exposes upload progress', async () => {
