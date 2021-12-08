@@ -99,7 +99,7 @@ describe('MessageHandler', () => {
 
       expect(MessageBuilder.createText).toHaveBeenCalledWith({
         conversationId,
-        from: '',
+        from: 'user-id',
         text: messageText,
       });
       expect(mainHandler.account!.service!.conversation.send).toHaveBeenCalledWith(
@@ -121,7 +121,7 @@ describe('MessageHandler', () => {
 
       expect(MessageBuilder.createText).toHaveBeenCalledWith({
         conversationId,
-        from: '',
+        from: 'user-id',
         text: message,
       });
       expect(mainHandler.account!.service!.conversation.send).toHaveBeenCalledWith(
@@ -143,7 +143,7 @@ describe('MessageHandler', () => {
       expect(MessageBuilder.createText).toHaveBeenCalledWith({
         conversationId,
         text: message,
-        from: 'sender',
+        from: 'user-id',
       });
       expect(mainHandler.account!.service!.conversation.send).toHaveBeenCalledWith(
         jasmine.objectContaining({

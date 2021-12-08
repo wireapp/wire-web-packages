@@ -25,7 +25,7 @@ import {MessageTargetMode, PayloadBundleSource, PayloadBundleState, PayloadBundl
 
 import {Account} from '../Account';
 import * as PayloadHelper from '../test/PayloadHelper';
-import {MentionContent, QuoteContent} from './content';
+import {LinkPreviewUploadedContent, MentionContent, QuoteContent} from './content';
 import {MessageBuilder} from './message/MessageBuilder';
 import {OtrMessage} from './message/OtrMessage';
 
@@ -327,16 +327,6 @@ describe('ConversationService', () => {
     });
 
     it('uploads link previews', async () => {
-      spyOn(account.service!.asset, 'uploadImageAsset').and.returnValue(
-        Promise.resolve({
-          cipherText: Buffer.from([]),
-          key: '',
-          keyBytes: Buffer.from([]),
-          sha256: Buffer.from([]),
-          token: '',
-        }),
-      );
-
       const url = 'http://example.com';
       const image = {
         data: Buffer.from([]),
@@ -347,12 +337,23 @@ describe('ConversationService', () => {
       const text = url;
       const urlOffset = 0;
 
-      const linkPreview = {image, url, urlOffset};
+      const linkPreview: LinkPreviewUploadedContent = {
+        url,
+        urlOffset,
+        imageUploaded: {
+          image,
+          asset: {
+            cipherText: Buffer.from([]),
+            key: '',
+            keyBytes: Buffer.from([]),
+            sha256: Buffer.from([]),
+            token: '',
+          },
+        },
+      };
       const textMessage = MessageBuilder.createText({conversationId: '', from: '', text})
         .withLinkPreviews([linkPreview])
         .build();
-
-      expect(account.service!.asset.uploadImageAsset).toHaveBeenCalledTimes(1);
 
       expect(textMessage.content.linkPreviews).toEqual(jasmine.any(Array));
       expect(textMessage.content.linkPreviews!.length).toBe(1);

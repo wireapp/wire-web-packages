@@ -29,9 +29,8 @@ describe('AssetService', () => {
 
       const assetServerData = {
         key: `3-2-${UUID.genV4().toString()}`,
-        keyBytes: Buffer.from(UUID.genV4().toString()),
-        sha256: UUID.genV4().toString(),
         token: UUID.genV4().toString(),
+        expires: '',
       };
 
       const image = {
@@ -41,15 +40,20 @@ describe('AssetService', () => {
         width: 600,
       };
 
-      spyOn<any>(apiClient.asset.api, 'postAsset').and.returnValue(Promise.resolve(assetServerData));
+      spyOn(apiClient.asset.api, 'postAsset').and.returnValue(
+        Promise.resolve({
+          cancel: () => {},
+          response: Promise.resolve(assetServerData),
+        }),
+      );
 
       const asset = await assetService.uploadImageAsset(image);
 
       expect(asset).toEqual(
         jasmine.objectContaining({
           key: assetServerData.key,
-          keyBytes: assetServerData.keyBytes,
-          sha256: assetServerData.sha256,
+          keyBytes: jasmine.any(Buffer),
+          sha256: jasmine.any(Buffer),
           token: assetServerData.token,
         }),
       );

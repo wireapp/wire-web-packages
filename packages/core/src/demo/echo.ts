@@ -19,7 +19,7 @@
 
 import * as path from 'path';
 import * as logdown from 'logdown';
-import {Account, MessageBuilder} from '@wireapp/core';
+import {Account} from '@wireapp/core';
 import {PayloadBundleType} from '@wireapp/core/src/main/conversation/';
 import {APIClient} from '@wireapp/api-client';
 import {WebSocketClient} from '@wireapp/api-client/src/tcp/';
@@ -29,6 +29,7 @@ import {CONVERSATION_TYPING} from '@wireapp/api-client/src/conversation/data/';
 import {LegalHoldStatus, Confirmation} from '@wireapp/protocol-messaging';
 import {AssetContent} from '../main/conversation/content/AssetContent';
 import {LinkPreviewUploadedContent} from '../main/conversation/content';
+import {MessageBuilder} from '../main/conversation/message/MessageBuilder';
 
 const logger = logdown('@wireapp/core/demo/echo.js', {
   logger: console,
