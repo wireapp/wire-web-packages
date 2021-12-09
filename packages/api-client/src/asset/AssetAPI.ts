@@ -312,7 +312,7 @@ export class AssetAPI {
    * @param domain? If given, will upload to the new federated asset endpoint
    */
   postAsset(asset: Uint8Array, options?: AssetOptions, progressCallback?: ProgressCallback) {
-    const assetBaseUrl = options?.domain ? AssetAPI.ASSET_V3_URL : `${AssetAPI.ASSET_V4_URL}/${options?.domain}`;
+    const assetBaseUrl = options?.domain ? `${AssetAPI.ASSET_V4_URL}/${options.domain}` : AssetAPI.ASSET_V3_URL;
     return this.postAssetShared(assetBaseUrl, asset, options, progressCallback);
   }
 
