@@ -58,7 +58,7 @@ export class AssetService {
       hash: options?.hash,
     });
 
-    const request = this.uploadRawAsset(plainText, options, progressCallback);
+    const request = this.uploadRawAsset(cipherText, options, progressCallback);
 
     return {
       ...request,
