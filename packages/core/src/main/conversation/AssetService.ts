@@ -57,6 +57,14 @@ export type AssetUrlData = AssetDataV1 | AssetDataV2 | AssetDataV3 | AssetDataV4
 export class AssetService {
   constructor(private readonly apiClient: APIClient) {}
 
+  /**
+   * Will download an asset on the server.
+   * Will route the request to the right endpoint depending on the asset version
+   *
+   * @param assetData The versioned asset data
+   * @param progressCallback?
+   * @return Resolves when the asset has been uploaded
+   */
   public downloadAsset(assetData: AssetUrlData, progressCallback?: ProgressCallback) {
     const {forceCaching} = assetData;
 
