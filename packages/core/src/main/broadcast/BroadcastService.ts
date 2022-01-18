@@ -50,7 +50,7 @@ export class BroadcastService {
           .flat()
       : (await this.apiClient.teams.member.api.getAllMembers(teamId)).members.map(({user}) => user);
 
-    let members = teamMembers.map(member => ({id: member}));
+    let members = Array.from(new Set(teamMembers)).map(member => ({id: member}));
 
     if (skipOwnClients) {
       const selfUser = await this.apiClient.self.api.getSelf();
