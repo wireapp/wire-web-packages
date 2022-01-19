@@ -42,7 +42,7 @@ export const crypto: Crypto = {
   },
 
   async encrypt(
-    plainText: Buffer | Uint8Array,
+    plainText: Uint8Array,
     keyBytes: Uint8Array,
     initializationVector: Uint8Array,
   ): Promise<{key: Uint8Array; cipher: Uint8Array}> {
