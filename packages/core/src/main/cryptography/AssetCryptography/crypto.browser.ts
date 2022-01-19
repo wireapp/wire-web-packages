@@ -38,7 +38,7 @@ export const crypto: Crypto = {
   },
 
   getRandomValues(size: number): Uint8Array {
-    return new Uint8Array(cryptoLib.getRandomValues(new Uint8Array(size)));
+    return cryptoLib.getRandomValues(new Uint8Array(size));
   },
 
   async encrypt(
