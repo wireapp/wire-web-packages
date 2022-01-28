@@ -17,9 +17,11 @@
  *
  */
 
+import {ACCESS_ROLE_V2} from '..';
 import type {CONVERSATION_ACCESS, CONVERSATION_ACCESS_ROLE} from '../Conversation';
 
 export interface ConversationAccessUpdateData {
   access: CONVERSATION_ACCESS[];
-  access_role: CONVERSATION_ACCESS_ROLE;
+  access_role?: CONVERSATION_ACCESS_ROLE;
+  access_role_v2?: ACCESS_ROLE_V2[];
 }
