@@ -58,7 +58,7 @@ export class CryptographyService {
   constructor(
     readonly apiClient: APIClient,
     private readonly storeEngine: CRUDEngine,
-    private readonly useQualifiedIds?: boolean,
+    private readonly config: {useQualifiedIds?: boolean} = {},
   ) {
     this.cryptobox = new Cryptobox(this.storeEngine);
     this.database = new CryptographyDatabaseRepository(this.storeEngine);
@@ -216,7 +216,7 @@ export class CryptographyService {
       data: {sender, text: cipherText},
     } = otrMessage;
 
-    const domain = this.useQualifiedIds ? qualified_from!.domain : null;
+    const domain = this.config.useQualifiedIds ? qualified_from!.domain : null;
     const sessionId = CryptographyService.constructSessionId(from, sender, domain);
     const decryptedMessage = await this.decrypt(sessionId, cipherText);
     const genericMessage = GenericMessage.decode(decryptedMessage);

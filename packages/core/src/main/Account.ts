@@ -98,7 +98,8 @@ export interface Account {
 export type StoreEngineProvider = (storeName: string) => Promise<CRUDEngine>;
 
 type AccountConfig = {
-  legacyBackend?: boolean;
+  /** If set to true (default), will use fully qualified ids and federated endpoints */
+  useQualifiedIds?: boolean;
 };
 
 export class Account extends EventEmitter {
@@ -127,12 +128,11 @@ export class Account extends EventEmitter {
   /**
    * @param apiClient The apiClient instance to use in the core (will create a new new one if undefined)
    * @param storeEngineProvider Used to store info in the database (will create a inMemory engine if undefined)
-   * @param config.legacyBackend Set to true if the current backend you are connecting to doesn't support qualifiedIds. Decryption issues can happen if the flag is not in sync with the backend's config
    */
   constructor(
     apiClient: APIClient = new APIClient(),
     storeEngineProvider?: StoreEngineProvider,
-    private readonly config?: AccountConfig,
+    private readonly config: AccountConfig = {useQualifiedIds: true},
   ) {
     super();
     this.apiClient = apiClient;
@@ -202,13 +202,13 @@ export class Account extends EventEmitter {
   public async initServices(storeEngine: CRUDEngine): Promise<void> {
     const accountService = new AccountService(this.apiClient);
     const assetService = new AssetService(this.apiClient);
-    const cryptographyService = new CryptographyService(this.apiClient, storeEngine, !this.config?.legacyBackend);
+    const cryptographyService = new CryptographyService(this.apiClient, storeEngine, this.config);
 
     const clientService = new ClientService(this.apiClient, storeEngine, cryptographyService);
     const connectionService = new ConnectionService(this.apiClient);
     const giphyService = new GiphyService(this.apiClient);
     const linkPreviewService = new LinkPreviewService(assetService);
-    const conversationService = new ConversationService(this.apiClient, cryptographyService);
+    const conversationService = new ConversationService(this.apiClient, cryptographyService, this.config);
     const notificationService = new NotificationService(this.apiClient, cryptographyService, storeEngine);
     const selfService = new SelfService(this.apiClient);
     const teamService = new TeamService(this.apiClient);
