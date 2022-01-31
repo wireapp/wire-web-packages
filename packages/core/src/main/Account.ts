@@ -98,7 +98,7 @@ export interface Account {
 export type StoreEngineProvider = (storeName: string) => Promise<CRUDEngine>;
 
 type AccountConfig = {
-  /** If set to true (default), will use fully qualified ids and federated endpoints */
+  /** If set to true, will use fully qualified ids and federated endpoints */
   useQualifiedIds?: boolean;
 };
 
@@ -132,7 +132,7 @@ export class Account extends EventEmitter {
   constructor(
     apiClient: APIClient = new APIClient(),
     storeEngineProvider?: StoreEngineProvider,
-    private readonly config: AccountConfig = {useQualifiedIds: true},
+    private readonly config: AccountConfig = {},
   ) {
     super();
     this.apiClient = apiClient;
