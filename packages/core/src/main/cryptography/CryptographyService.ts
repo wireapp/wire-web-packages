@@ -147,12 +147,12 @@ export class CryptographyService {
     const missing: UserClients = {};
 
     for (const userId in users) {
-      const clientIds = isUserClients(users) ? users[userId] : Object.keys(users[userId]);
+      const clientIds = isUserClients(users)
+        ? users[userId]
+        : Object.keys(users[userId])
+            // We filter out clients that have `null` prekey
+            .filter(clientId => !!users[userId][clientId]);
       for (const clientId of clientIds) {
-        if (!isUserClients(users) && !users[userId][clientId]) {
-          // In case we are dealing with a PreKeyBundle and there is no prekey for this client, we can just skip the encryption part
-          break;
-        }
         const base64PreKey = isUserClients(users) ? undefined : users[userId][clientId]?.key;
         const sessionId = CryptographyService.constructSessionId(userId, clientId, domain || null);
         const result = await this.encryptPayloadForSession(sessionId, plainText, base64PreKey);
