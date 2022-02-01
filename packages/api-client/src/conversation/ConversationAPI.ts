@@ -66,7 +66,6 @@ import {
   ConversationLegalholdMissingConsentError,
 } from './ConversationError';
 import {QualifiedId} from '../user';
-import {ACCESS_ROLE_V2, CONVERSATION_ACCESS_ROLE} from './Conversation';
 
 export class ConversationAPI {
   public static readonly MAX_CHUNK_SIZE = 500;
@@ -825,60 +824,13 @@ export class ConversationAPI {
    * @param conversationId The conversation ID to update the access mode of
    * @param accessData The new access data
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/updateConversationAccess
-   * @deprecated please use putAccessV2, which should also handle accessData from v1
    */
   public async putAccess(
     conversationId: string,
-    accessData: ConversationAccessUpdateData,
+    accessData: ConversationAccessUpdateData | ConversationAccessV2UpdateData,
   ): Promise<ConversationAccessUpdateEvent> {
     const config: AxiosRequestConfig = {
       data: accessData,
-      method: 'put',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.ACCESS}`,
-    };
-
-    const response = await this.client.sendJSON<ConversationAccessUpdateEvent>(config);
-    return response.data;
-  }
-
-  /**
-   * Update access modes for a conversation.
-   * @param conversationId The conversation ID to update the access mode of
-   * @param accessData The new access data
-   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/updateConversationAccess
-   */
-  public async putAccessV2(
-    conversationId: string,
-    accessData: ConversationAccessV2UpdateData,
-  ): Promise<ConversationAccessUpdateEvent> {
-    const {access_role, access_role_v2, access} = accessData;
-    let updatedAccessData: ACCESS_ROLE_V2[];
-
-    switch (access_role) {
-      case CONVERSATION_ACCESS_ROLE.TEAM:
-        updatedAccessData = [ACCESS_ROLE_V2.TEAM_MEMBER];
-        break;
-      case CONVERSATION_ACCESS_ROLE.ACTIVATED:
-        updatedAccessData = [ACCESS_ROLE_V2.TEAM_MEMBER, ACCESS_ROLE_V2.NON_TEAM_MEMBER, ACCESS_ROLE_V2.GUEST];
-        break;
-      case CONVERSATION_ACCESS_ROLE.NON_ACTIVATED:
-        updatedAccessData = [
-          ACCESS_ROLE_V2.TEAM_MEMBER,
-          ACCESS_ROLE_V2.NON_TEAM_MEMBER,
-          ACCESS_ROLE_V2.GUEST,
-          ACCESS_ROLE_V2.SERVICE,
-        ];
-        break;
-      case CONVERSATION_ACCESS_ROLE.PRIVATE:
-        updatedAccessData = [];
-        break;
-      case undefined:
-        updatedAccessData = access_role_v2 ?? [];
-        break;
-    }
-
-    const config: AxiosRequestConfig = {
-      data: {access, updatedAccessData},
       method: 'put',
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.ACCESS}`,
     };
