@@ -29,8 +29,6 @@ export class ScimAPI {
   public static readonly URL = {
     AUTH_TOKENS: 'auth-tokens',
     SCIM: '/scim',
-    VERIFICATION: '/verification-code',
-    SEND: 'send',
   };
 
   public async getTokens(): Promise<ScimTokenInfoList> {
@@ -62,14 +60,5 @@ export class ScimAPI {
 
     const response = await this.client.sendJSON<NewScimToken>(config);
     return response.data;
-  }
-
-  public async sendVerificationCode(email: string): Promise<void> {
-    const config: AxiosRequestConfig = {
-      data: {email},
-      method: 'post',
-      url: `${ScimAPI.URL.VERIFICATION}/${ScimAPI.URL.SEND}`,
-    };
-    await this.client.sendJSON(config);
   }
 }
