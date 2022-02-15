@@ -28,7 +28,6 @@ import type {CookieList} from './CookieList';
 import type {LoginCodeResponse} from './LoginCodeResponse';
 import type {RegisterData} from './RegisterData';
 import type {User} from '../user/';
-import {VerificationActionType} from './VerificationActionType';
 
 export class AuthAPI {
   constructor(private readonly client: HttpClient) {}
@@ -46,7 +45,6 @@ export class AuthAPI {
     SELF: 'self',
     SEND: 'send',
     SSO: '/sso',
-    VERIFICATION: '/verification-code',
   };
 
   public getCookies(labels?: string[]): Promise<AxiosResponse<CookieList>> {
@@ -99,20 +97,6 @@ export class AuthAPI {
 
     const response = await this.client.sendJSON<AccessTokenData>(config);
     return retrieveCookie(response);
-  }
-
-  /**
-   * Generates a verification code to be sent to the email address provided
-   * @param email users email address
-   * @param action whether the action is for a SCIM code generation or a user login
-   */
-  public async postVerificationCode(email: string, action: VerificationActionType): Promise<void> {
-    const config: AxiosRequestConfig = {
-      data: {email, action},
-      method: 'post',
-      url: `${AuthAPI.URL.VERIFICATION}/${AuthAPI.URL.SEND}`,
-    };
-    await this.client.sendJSON(config);
   }
 
   /**
