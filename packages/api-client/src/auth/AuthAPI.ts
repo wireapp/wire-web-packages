@@ -80,7 +80,7 @@ export class AuthAPI {
     const {verificationCode, ...rest} = loginData;
     const login = {
       ...rest,
-      verification_code: verificationCode,
+      ...(verificationCode && {verification_code: verificationCode}),
       clientType: undefined as any,
       password: loginData.password ? String(loginData.password) : undefined,
     };

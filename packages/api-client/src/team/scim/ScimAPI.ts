@@ -53,7 +53,7 @@ export class ScimAPI {
 
   public async postToken(description: string, password?: string, verificationCode?: string): Promise<NewScimToken> {
     const config: AxiosRequestConfig = {
-      data: {description, password, verification_code: verificationCode},
+      data: {description, password, ...(verificationCode && {verification_code: verificationCode})},
       method: 'post',
       url: `${ScimAPI.URL.SCIM}/${ScimAPI.URL.AUTH_TOKENS}`,
     };
