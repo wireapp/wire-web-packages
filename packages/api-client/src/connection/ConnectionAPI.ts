@@ -25,7 +25,10 @@ import {QualifiedId} from '../user';
 import {ConnectionLegalholdMissingConsentError} from './ConnectionError';
 
 export class ConnectionAPI {
-  constructor(private readonly client: HttpClient) {}
+  private readonly supportsFederation: boolean;
+  constructor(private readonly client: HttpClient, backendVersion: number) {
+    this.supportsFederation = backendVersion > 0;
+  }
 
   public static readonly URL = {
     CONNECTIONS: '/connections',
@@ -36,11 +39,9 @@ export class ConnectionAPI {
    * @param userId The ID of the other user
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/connection
    */
-  public async getConnection(userId: QualifiedId, useFederation: true): Promise<Connection>;
-  public async getConnection(userId: string, useFederation?: false): Promise<Connection>;
-  public async getConnection(userId: string | QualifiedId, useFederation: boolean = false): Promise<Connection> {
+  public async getConnection(userId: string | QualifiedId): Promise<Connection> {
     const url =
-      typeof userId !== 'string' && useFederation
+      typeof userId !== 'string' && this.supportsFederation
         ? `${ConnectionAPI.URL.CONNECTIONS}/${userId.domain}/${userId}`
         : `${ConnectionAPI.URL.CONNECTIONS}/${userId}`;
     const config: AxiosRequestConfig = {
@@ -141,13 +142,8 @@ export class ConnectionAPI {
     return getConnectionChunks();
   }
 
-  public async postConnection(data: ConnectionRequest, useFederation?: false): Promise<Connection>;
-  public async postConnection(data: QualifiedId, useFederation: true): Promise<Connection>;
-  public async postConnection(
-    data: ConnectionRequest | QualifiedId,
-    useFederation: boolean = false,
-  ): Promise<Connection> {
-    if (useFederation) {
+  public async postConnection(data: ConnectionRequest | QualifiedId): Promise<Connection> {
+    if (this.supportsFederation) {
       return this.postConnection_v2(data as QualifiedId);
     }
     return this.postConnection_v1(data as ConnectionRequest);
@@ -210,22 +206,11 @@ export class ConnectionAPI {
    * Note: You can have no more than 1000 connections in accepted or sent state.
    * @param userId The ID of the other user (qualified or not)
    * @param updatedConnection: The updated connection
-   * @param useFederation: whether the backend supports federation or not (in which case a QualifiedId must be provided)
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/updateConnection
    */
-  public async putConnection(userId: string, updatedConnection: ConnectionUpdate): Promise<Connection>;
-  public async putConnection(
-    userId: QualifiedId,
-    updatedConnection: ConnectionUpdate,
-    useFederation: true,
-  ): Promise<Connection>;
-  public async putConnection(
-    userId: string | QualifiedId,
-    updatedConnection: ConnectionUpdate,
-    useFederation: boolean = false,
-  ): Promise<Connection> {
+  public async putConnection(userId: string | QualifiedId, updatedConnection: ConnectionUpdate): Promise<Connection> {
     const url =
-      useFederation && typeof userId !== 'string'
+      this.supportsFederation && typeof userId !== 'string'
         ? `${ConnectionAPI.URL.CONNECTIONS}/${userId.domain}/${userId.id}`
         : `${ConnectionAPI.URL.CONNECTIONS}/${userId}`;
 

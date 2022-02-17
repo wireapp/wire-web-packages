@@ -71,8 +71,11 @@ export class UserAPI {
     V2: 'v2',
     VERIFICATION: '/verification-code',
   };
+  private readonly supportsFederation: boolean;
 
-  constructor(private readonly client: HttpClient) {}
+  constructor(private readonly client: HttpClient, backendVersion: number) {
+    this.supportsFederation = backendVersion > 0;
+  }
 
   /**
    * Clear all properties.
@@ -141,15 +144,9 @@ export class UserAPI {
    * @param clientId The client ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getUserClient
    */
-  public async getClient(userId: string, clientId: string, useFederation?: false): Promise<PublicClient>;
-  public async getClient(userId: QualifiedId, clientId: string, useFederation: true): Promise<PublicClient>;
-  public async getClient(
-    userId: string | QualifiedId,
-    clientId: string,
-    useFederation: boolean = false,
-  ): Promise<PublicClient> {
+  public async getClient(userId: string | QualifiedId, clientId: string): Promise<PublicClient> {
     const url =
-      useFederation && typeof userId !== 'string'
+      this.supportsFederation && typeof userId !== 'string'
         ? `${UserAPI.URL.USERS}/${userId.domain}/${userId.id}/${UserAPI.URL.CLIENTS}/${clientId}`
         : `${UserAPI.URL.USERS}/${userId}/${UserAPI.URL.CLIENTS}/${clientId}`;
 
@@ -166,17 +163,10 @@ export class UserAPI {
    * Get a prekey for a specific client of a user.
    * @param userId The user ID
    * @param clientId The client ID
-   * @param useFederation Whether the backend supports federation (in which case userId must be a QualifiedId)
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getPrekey
    */
-  public async getClientPreKey(userId: string, clientId: string, useFederation?: false): Promise<ClientPreKey>;
-  public async getClientPreKey(userId: QualifiedId, clientId: string, useFederation: true): Promise<ClientPreKey>;
-  public async getClientPreKey(
-    userId: string | QualifiedId,
-    clientId: string,
-    useFederation: boolean = false,
-  ): Promise<ClientPreKey> {
-    if (useFederation && typeof userId !== 'string') {
+  public async getClientPreKey(userId: string | QualifiedId, clientId: string): Promise<ClientPreKey> {
+    if (this.supportsFederation && typeof userId !== 'string') {
       return this.getClientPreKey_v2(userId, clientId);
     }
     return this.getClientPreKey_v1(userId as string, clientId);
@@ -210,11 +200,9 @@ export class UserAPI {
    * @param userId The user ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getUserClients
    */
-  public async getClients(userId: string, useFederation?: false): Promise<PublicClient[]>;
-  public async getClients(userId: QualifiedId, useFederation: true): Promise<PublicClient[]>;
-  public async getClients(userId: string | QualifiedId, useFederation: boolean = false): Promise<PublicClient[]> {
+  public async getClients(userId: string | QualifiedId): Promise<PublicClient[]> {
     const url =
-      useFederation && typeof userId !== 'string'
+      this.supportsFederation && typeof userId !== 'string'
         ? `${UserAPI.URL.USERS}/${userId.domain}/${userId.id}/${UserAPI.URL.CLIENTS}`
         : `${UserAPI.URL.USERS}/${userId}/${UserAPI.URL.CLIENTS}`;
 
