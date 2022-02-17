@@ -116,6 +116,11 @@ type Apis = {
   user: UserAPI;
 };
 
+/** map of all the features that the backend supports (depending on the backend api version number) */
+export type BackendFeatures = {
+  federation: boolean;
+};
+
 export class APIClient extends EventEmitter {
   private readonly logger: logdown.Logger;
 
@@ -127,6 +132,7 @@ export class APIClient extends EventEmitter {
   public context?: Context;
   public transport: {http: HttpClient; ws: WebSocketClient};
   public config: Config;
+  public backendFeatures: BackendFeatures;
 
   public static BACKEND = Backend;
 
@@ -168,10 +174,11 @@ export class APIClient extends EventEmitter {
       http: httpClient,
       ws: webSocket,
     };
-    this.api = this.configureApis(0);
+    this.backendFeatures = this.computeBackendFeatures(0);
+    this.api = this.configureApis(this.backendFeatures);
   }
 
-  private configureApis(backendVersion: number): Apis {
+  private configureApis(backendFeatures: BackendFeatures): Apis {
     return {
       account: new AccountAPI(this.transport.http),
       asset: new AssetAPI(this.transport.http),
@@ -179,8 +186,8 @@ export class APIClient extends EventEmitter {
       services: new ServicesAPI(this.transport.http),
       broadcast: new BroadcastAPI(this.transport.http),
       client: new ClientAPI(this.transport.http),
-      connection: new ConnectionAPI(this.transport.http, backendVersion),
-      conversation: new ConversationAPI(this.transport.http, backendVersion),
+      connection: new ConnectionAPI(this.transport.http, backendFeatures),
+      conversation: new ConversationAPI(this.transport.http, backendFeatures),
       giphy: new GiphyAPI(this.transport.http),
       notification: new NotificationAPI(this.transport.http),
       self: new SelfAPI(this.transport.http),
@@ -199,10 +206,15 @@ export class APIClient extends EventEmitter {
         service: new ServiceAPI(this.transport.http),
         team: new TeamAPI(this.transport.http),
       },
-      user: new UserAPI(this.transport.http, backendVersion),
+      user: new UserAPI(this.transport.http, backendFeatures),
     };
   }
 
+  private computeBackendFeatures(backendVersion: number): BackendFeatures {
+    return {
+      federation: backendVersion > 0,
+    };
+  }
   async useVersion(acceptedVersions: number[]): Promise<number> {
     if (acceptedVersions.length === 1 && acceptedVersions[0] === 0) {
       // Nothing to do since version 0 is the default one

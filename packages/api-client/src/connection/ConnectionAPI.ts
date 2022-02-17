@@ -18,6 +18,7 @@
  */
 
 import type {AxiosRequestConfig} from 'axios';
+import {BackendFeatures} from '../APIClient';
 
 import type {Connection, ConnectionRequest, ConnectionUpdate, UserConnectionList} from '../connection/';
 import {BackendError, BackendErrorLabel, HttpClient} from '../http/';
@@ -25,10 +26,7 @@ import {QualifiedId} from '../user';
 import {ConnectionLegalholdMissingConsentError} from './ConnectionError';
 
 export class ConnectionAPI {
-  private readonly supportsFederation: boolean;
-  constructor(private readonly client: HttpClient, backendVersion: number) {
-    this.supportsFederation = backendVersion > 0;
-  }
+  constructor(private readonly client: HttpClient, private readonly backendFeatures: BackendFeatures) {}
 
   public static readonly URL = {
     CONNECTIONS: '/connections',
@@ -41,7 +39,7 @@ export class ConnectionAPI {
    */
   public async getConnection(userId: string | QualifiedId): Promise<Connection> {
     const url =
-      typeof userId !== 'string' && this.supportsFederation
+      typeof userId !== 'string' && this.backendFeatures.federation
         ? `${ConnectionAPI.URL.CONNECTIONS}/${userId.domain}/${userId}`
         : `${ConnectionAPI.URL.CONNECTIONS}/${userId}`;
     const config: AxiosRequestConfig = {
@@ -79,6 +77,9 @@ export class ConnectionAPI {
    * @see https://nginz-https.anta.wire.link/api/swagger-ui/#/default/post_list_connections
    */
   public getConnectionList(): Promise<Connection[]> {
+    if (!this.backendFeatures.federation) {
+      return this.getAllConnections();
+    }
     let allConnections: Connection[] = [];
 
     const getConnectionChunks = async (pagingState?: string): Promise<Connection[]> => {
@@ -143,7 +144,7 @@ export class ConnectionAPI {
   }
 
   public async postConnection(userId: QualifiedId, name?: string): Promise<Connection> {
-    if (this.supportsFederation) {
+    if (this.backendFeatures.federation) {
       return this.postConnection_v2(userId as QualifiedId);
     }
     return this.postConnection_v1({user: userId.id, name} as ConnectionRequest);
@@ -210,7 +211,7 @@ export class ConnectionAPI {
    */
   public async putConnection(userId: string | QualifiedId, updatedConnection: ConnectionUpdate): Promise<Connection> {
     const url =
-      this.supportsFederation && typeof userId !== 'string'
+      this.backendFeatures.federation && typeof userId !== 'string'
         ? `${ConnectionAPI.URL.CONNECTIONS}/${userId.domain}/${userId.id}`
         : `${ConnectionAPI.URL.CONNECTIONS}/${userId}`;
 

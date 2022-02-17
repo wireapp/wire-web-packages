@@ -44,6 +44,7 @@ import type {RichInfo} from './RichInfo';
 import type {UserClients, QualifiedUserClients} from '../conversation/';
 import type {QualifiedUserPreKeyBundleMap} from './UserPreKeyBundleMap';
 import {VerificationActionType} from '../auth/VerificationActionType';
+import {BackendFeatures} from '../APIClient';
 
 export class UserAPI {
   public static readonly DEFAULT_USERS_CHUNK_SIZE = 50;
@@ -71,11 +72,8 @@ export class UserAPI {
     V2: 'v2',
     VERIFICATION: '/verification-code',
   };
-  private readonly supportsFederation: boolean;
 
-  constructor(private readonly client: HttpClient, backendVersion: number) {
-    this.supportsFederation = backendVersion > 0;
-  }
+  constructor(private readonly client: HttpClient, private readonly backendFeatures: BackendFeatures) {}
 
   /**
    * Clear all properties.
@@ -146,7 +144,7 @@ export class UserAPI {
    */
   public async getClient(userId: string | QualifiedId, clientId: string): Promise<PublicClient> {
     const url =
-      this.supportsFederation && typeof userId !== 'string'
+      this.backendFeatures.federation && typeof userId !== 'string'
         ? `${UserAPI.URL.USERS}/${userId.domain}/${userId.id}/${UserAPI.URL.CLIENTS}/${clientId}`
         : `${UserAPI.URL.USERS}/${userId}/${UserAPI.URL.CLIENTS}/${clientId}`;
 
@@ -166,7 +164,7 @@ export class UserAPI {
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getPrekey
    */
   public async getClientPreKey(userId: string | QualifiedId, clientId: string): Promise<ClientPreKey> {
-    if (this.supportsFederation && typeof userId !== 'string') {
+    if (this.backendFeatures.federation && typeof userId !== 'string') {
       return this.getClientPreKey_v2(userId, clientId);
     }
     return this.getClientPreKey_v1(userId as string, clientId);
@@ -202,7 +200,7 @@ export class UserAPI {
    */
   public async getClients(userId: string | QualifiedId): Promise<PublicClient[]> {
     const url =
-      this.supportsFederation && typeof userId !== 'string'
+      this.backendFeatures.federation && typeof userId !== 'string'
         ? `${UserAPI.URL.USERS}/${userId.domain}/${userId.id}/${UserAPI.URL.CLIENTS}`
         : `${UserAPI.URL.USERS}/${userId}/${UserAPI.URL.CLIENTS}`;
 

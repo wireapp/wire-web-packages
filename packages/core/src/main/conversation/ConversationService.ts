@@ -333,7 +333,7 @@ export class ConversationService {
     if (targetMode !== MessageTargetMode.NONE && !userIds) {
       throw new Error('Cannot send targetted message when no userIds are given');
     }
-    if (conversationDomain) {
+    if (conversationDomain && this.config.useQualifiedIds) {
       if (isStringArray(userIds) || isUserClients(userIds)) {
         throw new Error('Invalid userIds option for sending to federated backend');
       }
@@ -774,7 +774,7 @@ export class ConversationService {
         return false;
       };
 
-      if (conversationDomain) {
+      if (conversationDomain && this.config.useQualifiedIds) {
         await this.messageService.sendFederatedMessage(sendingClientId, recipients, text, {
           conversationId: {id: conversationId, domain: conversationDomain},
           onClientMismatch,

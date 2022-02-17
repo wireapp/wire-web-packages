@@ -66,6 +66,7 @@ import {
   ConversationLegalholdMissingConsentError,
 } from './ConversationError';
 import {QualifiedId} from '../user';
+import {BackendFeatures} from '../APIClient';
 
 export class ConversationAPI {
   public static readonly MAX_CHUNK_SIZE = 500;
@@ -93,11 +94,7 @@ export class ConversationAPI {
     V2: 'v2',
   };
 
-  private readonly supportsFederation: boolean;
-
-  constructor(private readonly client: HttpClient, backendVersion: number) {
-    this.supportsFederation = backendVersion > 0;
-  }
+  constructor(private readonly client: HttpClient, private readonly backendFeatures: BackendFeatures) {}
 
   /**
    * Delete a conversation code.
@@ -141,31 +138,23 @@ export class ConversationAPI {
    * @param userId The user to remove
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/removeMember
    */
-  public async deleteMember(conversationId: string, userId: string): Promise<ConversationMemberLeaveEvent> {
-    const config: AxiosRequestConfig = {
-      method: 'delete',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.MEMBERS}/${userId}`,
-    };
-
-    const response = await this.client.sendJSON<ConversationMemberLeaveEvent>(config);
-    return response.data;
-  }
-
-  /**
-   * Remove a qualified member from a qualified conversation.
-   * @param conversation The conversation to remove the user from
-   * @param user The user to remove
-   */
-  public async deleteQualifiedMember(
-    conversation: QualifiedId,
-    user: QualifiedId,
+  public async deleteMember(
+    conversationId: string | QualifiedId,
+    userId: string | QualifiedId,
   ): Promise<ConversationMemberLeaveEvent> {
-    const config: AxiosRequestConfig = {
-      method: 'delete',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversation.domain}/${conversation.id}/${ConversationAPI.URL.MEMBERS}/${user.domain}/${user.id}`,
-    };
+    const convId = typeof conversationId === 'string' ? {id: conversationId, domain: ''} : conversationId;
+    const uId = typeof userId === 'string' ? {id: userId, domain: ''} : userId;
 
-    const response = await this.client.sendJSON<ConversationMemberLeaveEvent>(config);
+    const isFederated = this.backendFeatures.federation && convId.domain && uId.domain;
+
+    const url = isFederated
+      ? `${ConversationAPI.URL.CONVERSATIONS}/${convId.id}/${ConversationAPI.URL.MEMBERS}/${uId.id}`
+      : `${ConversationAPI.URL.CONVERSATIONS}/${convId.domain}/${convId.id}/${ConversationAPI.URL.MEMBERS}/${uId.domain}/${uId.id}`;
+
+    const response = await this.client.sendJSON<ConversationMemberLeaveEvent>({
+      method: 'delete',
+      url,
+    });
     return response.data;
   }
 
@@ -212,7 +201,7 @@ export class ConversationAPI {
   }
 
   public async getConversation(conversationId: string | QualifiedId): Promise<Conversation> {
-    return this.supportsFederation && typeof conversationId !== 'string'
+    return this.backendFeatures.federation && typeof conversationId !== 'string'
       ? this.getConversation_v2(conversationId)
       : this.getConversation_v1(typeof conversationId === 'string' ? conversationId : conversationId.id);
   }
@@ -335,7 +324,7 @@ export class ConversationAPI {
    * Get all local & remote conversations from a federated backend.
    */
   public async getConversationList(): Promise<Conversation[]> {
-    if (!this.supportsFederation) {
+    if (!this.backendFeatures.federation) {
       return this.getAllConversations();
     }
     const allConversationIds = await this.getQualifiedConversationIds();
@@ -936,7 +925,7 @@ export class ConversationAPI {
    * @param users List of users to add to a conversation
    */
   public async postMembers(conversationId: string, users: QualifiedId[]): Promise<ConversationMemberJoinEvent> {
-    if (!this.supportsFederation) {
+    if (!this.backendFeatures.federation) {
       return this.postMembersV0(
         conversationId,
         users.map(user => user.id),
