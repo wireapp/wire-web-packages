@@ -212,13 +212,9 @@ export class ConversationAPI {
   }
 
   public async getConversation(conversationId: string | QualifiedId): Promise<Conversation> {
-    if (typeof conversationId === 'string') {
-      return this.getConversation_v1(conversationId);
-    }
-    if (!this.supportsFederation) {
-      return this.getConversation_v1(conversationId.id);
-    }
-    return this.getConversation_v2(conversationId);
+    return this.supportsFederation && typeof conversationId !== 'string'
+      ? this.getConversation_v2(conversationId)
+      : this.getConversation_v1(typeof conversationId === 'string' ? conversationId : conversationId.id);
   }
 
   /**
