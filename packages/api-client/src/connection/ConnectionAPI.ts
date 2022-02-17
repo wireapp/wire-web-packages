@@ -142,11 +142,11 @@ export class ConnectionAPI {
     return getConnectionChunks();
   }
 
-  public async postConnection(data: ConnectionRequest | QualifiedId): Promise<Connection> {
+  public async postConnection(userId: QualifiedId, name?: string): Promise<Connection> {
     if (this.supportsFederation) {
-      return this.postConnection_v2(data as QualifiedId);
+      return this.postConnection_v2(userId as QualifiedId);
     }
-    return this.postConnection_v1(data as ConnectionRequest);
+    return this.postConnection_v1({user: userId.id, name} as ConnectionRequest);
   }
 
   /**

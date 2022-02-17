@@ -81,7 +81,7 @@ describe('APIClient', () => {
     });
   });
 
-  fdescribe('useVersion', () => {
+  describe('useVersion', () => {
     it('fails if backend versions and accepted version have no common version', async () => {
       nock(baseUrl)
         .get('/api-version')
