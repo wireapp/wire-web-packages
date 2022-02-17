@@ -203,6 +203,30 @@ export class APIClient extends EventEmitter {
     };
   }
 
+  public async useVersion(acceptedVersions: number[]): Promise<number> {
+    let backendVersions = [];
+    try {
+      backendVersions = await (
+        await this.transport.http.sendRequest<{supported: number[]}>({url: '/api-version'})
+      ).data.supported;
+    } catch (error) {
+      backendVersions = [0];
+    }
+    const highestCommonVersion = backendVersions
+      .sort()
+      .reverse()
+      .find(version => acceptedVersions.includes(version));
+
+    if (highestCommonVersion === undefined) {
+      throw new Error(
+        `Backend does not support requested versions [${acceptedVersions.join(
+          ',',
+        )}] (supported versions ${backendVersions.join(',')})`,
+      );
+    }
+    return highestCommonVersion;
+  }
+
   public async init(clientType: ClientType = ClientType.NONE, cookie?: Cookie): Promise<Context> {
     CookieStore.setCookie(cookie);
 
