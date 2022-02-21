@@ -171,7 +171,7 @@ export class APIClient extends EventEmitter {
     this.api = this.configureApis(0);
   }
 
-  private configureApis(backendVersion: number): Apis {
+  private configureApis(_: number): Apis {
     return {
       account: new AccountAPI(this.transport.http),
       asset: new AssetAPI(this.transport.http),
@@ -179,8 +179,8 @@ export class APIClient extends EventEmitter {
       services: new ServicesAPI(this.transport.http),
       broadcast: new BroadcastAPI(this.transport.http),
       client: new ClientAPI(this.transport.http),
-      connection: new ConnectionAPI(this.transport.http, backendVersion),
-      conversation: new ConversationAPI(this.transport.http, backendVersion),
+      connection: new ConnectionAPI(this.transport.http),
+      conversation: new ConversationAPI(this.transport.http),
       giphy: new GiphyAPI(this.transport.http),
       notification: new NotificationAPI(this.transport.http),
       self: new SelfAPI(this.transport.http),
@@ -199,7 +199,7 @@ export class APIClient extends EventEmitter {
         service: new ServiceAPI(this.transport.http),
         team: new TeamAPI(this.transport.http),
       },
-      user: new UserAPI(this.transport.http, backendVersion),
+      user: new UserAPI(this.transport.http),
     };
   }
 

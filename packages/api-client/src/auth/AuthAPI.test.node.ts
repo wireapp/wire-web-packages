@@ -41,7 +41,7 @@ describe('AuthAPI', () => {
       }),
     );
 
-    await this.apiClient.api.auth.postLogin(data);
+    await apiClient.api.auth.postLogin(data);
 
     expect(apiClient.transport.http.sendJSON).toHaveBeenCalledWith(
       jasmine.objectContaining({
@@ -74,7 +74,7 @@ describe('AuthAPI', () => {
       }),
     );
 
-    await this.apiClient.api.auth.postLogin(data);
+    await apiClient.api.auth.postLogin(data);
 
     expect(apiClient.transport.http.sendJSON).toHaveBeenCalledWith(
       jasmine.objectContaining({

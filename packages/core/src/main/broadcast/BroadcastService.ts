@@ -48,7 +48,7 @@ export class BroadcastService {
       ? (await this.apiClient.api.conversation.getConversations()).conversations
           .map(({members}) => members.others.map(user => user.id).concat(members.self.id))
           .flat()
-      : (await this.apiClient.teams.member.api.getAllMembers(teamId)).members.map(({user}) => user);
+      : (await this.apiClient.api.teams.member.getAllMembers(teamId)).members.map(({user}) => user);
 
     let members = Array.from(new Set(teamMembers)).map(member => ({id: member}));
 
