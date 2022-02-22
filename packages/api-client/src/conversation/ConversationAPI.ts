@@ -145,7 +145,7 @@ export class ConversationAPI {
     const convId = typeof conversationId === 'string' ? {id: conversationId, domain: ''} : conversationId;
     const uId = typeof userId === 'string' ? {id: userId, domain: ''} : userId;
 
-    const isFederated = this.backendFeatures.federation && convId.domain && uId.domain;
+    const isFederated = this.backendFeatures.federationEndpoints && convId.domain && uId.domain;
 
     const url = isFederated
       ? `${ConversationAPI.URL.CONVERSATIONS}/${convId.id}/${ConversationAPI.URL.MEMBERS}/${uId.id}`
@@ -201,7 +201,7 @@ export class ConversationAPI {
   }
 
   public async getConversation(conversationId: string | QualifiedId): Promise<Conversation> {
-    return this.backendFeatures.federation && typeof conversationId !== 'string'
+    return this.backendFeatures.federationEndpoints && typeof conversationId !== 'string'
       ? this.getConversation_v2(conversationId)
       : this.getConversation_v1(typeof conversationId === 'string' ? conversationId : conversationId.id);
   }
@@ -324,7 +324,7 @@ export class ConversationAPI {
    * Get all local & remote conversations from a federated backend.
    */
   public async getConversationList(): Promise<Conversation[]> {
-    if (!this.backendFeatures.federation) {
+    if (!this.backendFeatures.federationEndpoints) {
       return this.getAllConversations();
     }
     const allConversationIds = await this.getQualifiedConversationIds();
@@ -925,7 +925,7 @@ export class ConversationAPI {
    * @param users List of users to add to a conversation
    */
   public async postMembers(conversationId: string, users: QualifiedId[]): Promise<ConversationMemberJoinEvent> {
-    if (!this.backendFeatures.federation) {
+    if (!this.backendFeatures.federationEndpoints) {
       return this.postMembersV0(
         conversationId,
         users.map(user => user.id),

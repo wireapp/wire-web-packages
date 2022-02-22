@@ -119,7 +119,7 @@ type Apis = {
 /** map of all the features that the backend supports (depending on the backend api version number) */
 export type BackendFeatures = {
   /** Does the backend API support federated endpoints */
-  federation: boolean;
+  federationEndpoints: boolean;
   /** Is the backend actually talking to other federated domains */
   isFederated: boolean;
 };
@@ -221,7 +221,7 @@ export class APIClient extends EventEmitter {
    */
   private computeBackendFeatures(backendVersion: number, responsePayload?: BackendVersionResponse): BackendFeatures {
     return {
-      federation: backendVersion > 0,
+      federationEndpoints: backendVersion > 0,
       isFederated: responsePayload?.federated || false,
     };
   }

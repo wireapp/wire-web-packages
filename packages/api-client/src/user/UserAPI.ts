@@ -144,7 +144,7 @@ export class UserAPI {
    */
   public async getClient(userId: string | QualifiedId, clientId: string): Promise<PublicClient> {
     const url =
-      this.backendFeatures.federation && typeof userId !== 'string'
+      this.backendFeatures.federationEndpoints && typeof userId !== 'string'
         ? `${UserAPI.URL.USERS}/${userId.domain}/${userId.id}/${UserAPI.URL.CLIENTS}/${clientId}`
         : `${UserAPI.URL.USERS}/${userId}/${UserAPI.URL.CLIENTS}/${clientId}`;
 
@@ -164,7 +164,7 @@ export class UserAPI {
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getPrekey
    */
   public async getClientPreKey(userId: string | QualifiedId, clientId: string): Promise<ClientPreKey> {
-    if (this.backendFeatures.federation && typeof userId !== 'string') {
+    if (this.backendFeatures.federationEndpoints && typeof userId !== 'string') {
       return this.getClientPreKey_v2(userId, clientId);
     }
     return this.getClientPreKey_v1(userId as string, clientId);
@@ -200,7 +200,7 @@ export class UserAPI {
    */
   public async getClients(userId: string | QualifiedId): Promise<PublicClient[]> {
     const url =
-      this.backendFeatures.federation && typeof userId !== 'string'
+      this.backendFeatures.federationEndpoints && typeof userId !== 'string'
         ? `${UserAPI.URL.USERS}/${userId.domain}/${userId.id}/${UserAPI.URL.CLIENTS}`
         : `${UserAPI.URL.USERS}/${userId}/${UserAPI.URL.CLIENTS}`;
 

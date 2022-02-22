@@ -39,7 +39,7 @@ export class ConnectionAPI {
    */
   public async getConnection(userId: string | QualifiedId): Promise<Connection> {
     const url =
-      typeof userId !== 'string' && this.backendFeatures.federation
+      typeof userId !== 'string' && this.backendFeatures.federationEndpoints
         ? `${ConnectionAPI.URL.CONNECTIONS}/${userId.domain}/${userId}`
         : `${ConnectionAPI.URL.CONNECTIONS}/${userId}`;
     const config: AxiosRequestConfig = {
@@ -77,7 +77,7 @@ export class ConnectionAPI {
    * @see https://nginz-https.anta.wire.link/api/swagger-ui/#/default/post_list_connections
    */
   public getConnectionList(): Promise<Connection[]> {
-    if (!this.backendFeatures.federation) {
+    if (!this.backendFeatures.federationEndpoints) {
       return this.getAllConnections();
     }
     let allConnections: Connection[] = [];
@@ -144,7 +144,7 @@ export class ConnectionAPI {
   }
 
   public async postConnection(userId: QualifiedId, name?: string): Promise<Connection> {
-    if (this.backendFeatures.federation) {
+    if (this.backendFeatures.federationEndpoints) {
       return this.postConnection_v2(userId as QualifiedId);
     }
     return this.postConnection_v1({user: userId.id, name} as ConnectionRequest);
@@ -211,7 +211,7 @@ export class ConnectionAPI {
    */
   public async putConnection(userId: string | QualifiedId, updatedConnection: ConnectionUpdate): Promise<Connection> {
     const url =
-      this.backendFeatures.federation && typeof userId !== 'string'
+      this.backendFeatures.federationEndpoints && typeof userId !== 'string'
         ? `${ConnectionAPI.URL.CONNECTIONS}/${userId.domain}/${userId.id}`
         : `${ConnectionAPI.URL.CONNECTIONS}/${userId}`;
 

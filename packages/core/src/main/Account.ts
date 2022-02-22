@@ -193,7 +193,7 @@ export class Account extends EventEmitter {
   }
 
   public async initServices(storeEngine: CRUDEngine): Promise<void> {
-    const config = {useQualifiedIds: this.apiClient.backendFeatures.federation};
+    const config = {useQualifiedIds: this.apiClient.backendFeatures.federationEndpoints};
     const accountService = new AccountService(this.apiClient);
     const assetService = new AssetService(this.apiClient);
     const cryptographyService = new CryptographyService(this.apiClient, storeEngine, config);
