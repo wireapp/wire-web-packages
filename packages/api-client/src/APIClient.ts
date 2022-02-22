@@ -251,8 +251,8 @@ export class APIClient extends EventEmitter {
     if (highestCommonVersion === undefined) {
       throw new Error(
         `Backend does not support requested versions [${acceptedVersions.join(
-          ',',
-        )}] (supported versions ${backendVersions.supported.join(',')})`,
+          ', ',
+        )}] (supported versions ${backendVersions.supported.join(', ')})`,
       );
     }
     this.backendFeatures = this.computeBackendFeatures(0, backendVersions);
