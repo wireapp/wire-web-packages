@@ -77,6 +77,18 @@ describe('CryptographyService', () => {
       expect(actual).toContain(userId);
       expect(actual).toContain('test.wire.link');
     });
+
+    it('constructs a qualified Session ID by a given qualified User ID and Client ID.', async () => {
+      const cryptographyService = new CryptographyService(new APIClient(), await createEngine('wire'), {
+        useQualifiedIds: true,
+      });
+      const clientId = '1ceb9063fced26d3';
+      const userId = 'afbb5d60-1187-4385-9c29-7361dea79647';
+      const actual = cryptographyService.constructSessionId({id: userId, domain: 'test.wire.link'}, clientId);
+      expect(actual).toContain(clientId);
+      expect(actual).toContain(userId);
+      expect(actual).toContain('test.wire.link');
+    });
   });
 
   describe('"decrypt"', () => {
