@@ -118,9 +118,13 @@ type Apis = {
 
 /** map of all the features that the backend supports (depending on the backend api version number) */
 export type BackendFeatures = {
+  /** Does the backend API support federated endpoints */
   federation: boolean;
+  /** Is the backend actually talking to other federated domains */
+  isFederated: boolean;
 };
 
+type BackendVersionResponse = {supported: number[]; federated?: boolean};
 export class APIClient extends EventEmitter {
   private readonly logger: logdown.Logger;
 
@@ -210,25 +214,36 @@ export class APIClient extends EventEmitter {
     };
   }
 
-  private computeBackendFeatures(backendVersion: number): BackendFeatures {
+  /**
+   * Will compute all the capabilities of the backend API according to the selected version and the version response payload
+   * @param backendVersion The agreed used version between the client and the backend
+   * @param responsePayload? The response from the server
+   */
+  private computeBackendFeatures(backendVersion: number, responsePayload?: BackendVersionResponse): BackendFeatures {
     return {
       federation: backendVersion > 0,
+      isFederated: responsePayload?.federated || false,
     };
   }
+
+  /**
+   * Will set the APIClient to use a specific version of the API (by default uses version 0)
+   * It will fetch the API Config and use the highest possible version
+   * @param acceptedVersions Which version the consumer supports
+   * @return The highest version that is both supported by client and backend
+   */
   async useVersion(acceptedVersions: number[]): Promise<number> {
     if (acceptedVersions.length === 1 && acceptedVersions[0] === 0) {
       // Nothing to do since version 0 is the default one
       return 0;
     }
-    let backendVersions = [];
+    let backendVersions: BackendVersionResponse = {supported: [0]};
     try {
       backendVersions = await (
-        await this.transport.http.sendRequest<{supported: number[]}>({url: '/api-version'})
-      ).data.supported;
-    } catch (error) {
-      backendVersions = [0];
-    }
-    const highestCommonVersion = backendVersions
+        await this.transport.http.sendRequest<BackendVersionResponse>({url: '/api-version'})
+      ).data;
+    } catch (error) {}
+    const highestCommonVersion = backendVersions.supported
       .sort()
       .reverse()
       .find(version => acceptedVersions.includes(version));
@@ -237,10 +252,10 @@ export class APIClient extends EventEmitter {
       throw new Error(
         `Backend does not support requested versions [${acceptedVersions.join(
           ',',
-        )}] (supported versions ${backendVersions.join(',')})`,
+        )}] (supported versions ${backendVersions.supported.join(',')})`,
       );
     }
-    this.backendFeatures = this.computeBackendFeatures(0);
+    this.backendFeatures = this.computeBackendFeatures(0, backendVersions);
     this.api = this.configureApis(this.backendFeatures);
     return highestCommonVersion;
   }
