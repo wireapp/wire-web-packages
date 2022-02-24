@@ -111,6 +111,15 @@ describe('APIClient', () => {
       expect(isFederated).toBe(false);
       expect(federationEndpoints).toBe(true);
     });
+
+    it('returns the backend federation state', async () => {
+      nock(baseUrl)
+        .get('/api-version')
+        .reply(200, {supported: [0, 1], federated: true});
+      const client = new APIClient();
+      const {isFederated} = await client.useVersion([0, 1, 2]);
+      expect(isFederated).toBe(true);
+    });
   });
 
   describe('login', () => {
