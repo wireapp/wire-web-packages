@@ -121,9 +121,9 @@ export type BackendFeatures = {
   /** The actual version used to communicate with backend */
   version: number;
   /** Does the backend API support federated endpoints */
-  federationEndpoints?: boolean;
+  federationEndpoints: boolean;
   /** Is the backend actually talking to other federated domains */
-  isFederated?: boolean;
+  isFederated: boolean;
 };
 
 type BackendVersionResponse = {supported: number[]; federated?: boolean};
@@ -238,7 +238,7 @@ export class APIClient extends EventEmitter {
   async useVersion(acceptedVersions: number[]): Promise<BackendFeatures> {
     if (acceptedVersions.length === 1 && acceptedVersions[0] === 0) {
       // Nothing to do since version 0 is the default one
-      return {version: 0};
+      return this.computeBackendFeatures(0);
     }
     let backendVersions: BackendVersionResponse = {supported: [0]};
     try {
