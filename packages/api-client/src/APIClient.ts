@@ -255,7 +255,7 @@ export class APIClient extends EventEmitter {
         )}] (supported versions ${backendVersions.supported.join(', ')})`,
       );
     }
-    this.backendFeatures = this.computeBackendFeatures(0, backendVersions);
+    this.backendFeatures = this.computeBackendFeatures(highestCommonVersion, backendVersions);
     this.api = this.configureApis(this.backendFeatures);
     return highestCommonVersion;
   }
