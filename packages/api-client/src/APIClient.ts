@@ -118,10 +118,12 @@ type Apis = {
 
 /** map of all the features that the backend supports (depending on the backend api version number) */
 export type BackendFeatures = {
+  /** The actual version used to communicate with backend */
+  version: number;
   /** Does the backend API support federated endpoints */
-  federationEndpoints: boolean;
+  federationEndpoints?: boolean;
   /** Is the backend actually talking to other federated domains */
-  isFederated: boolean;
+  isFederated?: boolean;
 };
 
 type BackendVersionResponse = {supported: number[]; federated?: boolean};
@@ -221,6 +223,7 @@ export class APIClient extends EventEmitter {
    */
   private computeBackendFeatures(backendVersion: number, responsePayload?: BackendVersionResponse): BackendFeatures {
     return {
+      version: backendVersion,
       federationEndpoints: backendVersion > 0,
       isFederated: responsePayload?.federated || false,
     };
@@ -232,10 +235,10 @@ export class APIClient extends EventEmitter {
    * @param acceptedVersions Which version the consumer supports
    * @return The highest version that is both supported by client and backend
    */
-  async useVersion(acceptedVersions: number[]): Promise<number> {
+  async useVersion(acceptedVersions: number[]): Promise<BackendFeatures> {
     if (acceptedVersions.length === 1 && acceptedVersions[0] === 0) {
       // Nothing to do since version 0 is the default one
-      return 0;
+      return {version: 0};
     }
     let backendVersions: BackendVersionResponse = {supported: [0]};
     try {
@@ -257,7 +260,7 @@ export class APIClient extends EventEmitter {
     }
     this.backendFeatures = this.computeBackendFeatures(highestCommonVersion, backendVersions);
     this.api = this.configureApis(this.backendFeatures);
-    return highestCommonVersion;
+    return this.backendFeatures;
   }
 
   public async init(clientType: ClientType = ClientType.NONE, cookie?: Cookie): Promise<Context> {

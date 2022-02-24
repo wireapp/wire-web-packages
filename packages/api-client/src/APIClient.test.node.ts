@@ -97,7 +97,7 @@ describe('APIClient', () => {
     it("uses version 0 if backend doesn't support /api-version endpoint", async () => {
       nock(baseUrl).get('/api-version').reply(404);
       const client = new APIClient();
-      const version = await client.useVersion([0, 1, 2, 3]);
+      const {version} = await client.useVersion([0, 1, 2, 3]);
       expect(version).toBe(0);
     });
 
@@ -106,8 +106,10 @@ describe('APIClient', () => {
         .get('/api-version')
         .reply(200, {supported: [0, 1]});
       const client = new APIClient();
-      const version = await client.useVersion([0, 1, 2]);
+      const {version, isFederated, federationEndpoints} = await client.useVersion([0, 1, 2]);
       expect(version).toBe(1);
+      expect(isFederated).toBe(false);
+      expect(federationEndpoints).toBe(true);
     });
   });
 
