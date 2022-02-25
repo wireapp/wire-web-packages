@@ -179,6 +179,8 @@ export const WebAppEvents = {
     UPDATE: {
       CALL: {
         ENABLE_VBR_ENCODING: 'wire.webapp.properties.update.call.enable_vbr_encoding',
+        ENABLE_VBR_ENCODINGENABLE_SOUNDLESS_INCOMING_CALLS:
+          'wire.webapp.properties.update.call.enable_vbr_encodingenable_soundless_incoming_calls',
       },
       CONTACTS: 'wire.webapp.properties.update.contacts',
       EMOJI: {
