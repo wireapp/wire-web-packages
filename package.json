@@ -63,5 +63,9 @@
     "packages": [
       "packages/*"
     ]
+  },
+  "dependencies": {
+    "@wireapp/cryptobox": "file:.yalc/@wireapp/cryptobox",
+    "@wireapp/proteus": "file:.yalc/@wireapp/proteus"
   }
 }
