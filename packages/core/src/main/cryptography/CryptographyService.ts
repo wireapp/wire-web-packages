@@ -100,8 +100,8 @@ export class CryptographyService {
     );
   }
 
-  public async createCryptobox(entropy_data?: Uint8Array): Promise<SerializedPreKey[]> {
-    const initialPreKeys = await this.cryptobox.create(entropy_data);
+  public async createCryptobox(entropyData?: Uint8Array): Promise<SerializedPreKey[]> {
+    const initialPreKeys = await this.cryptobox.create(entropyData);
 
     return initialPreKeys
       .map(preKey => {
