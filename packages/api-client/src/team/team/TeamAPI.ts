@@ -82,7 +82,7 @@ export class TeamAPI {
     const config: AxiosRequestConfig = {
       data: {
         password,
-        verificationCode,
+        ...(verificationCode && {verification_code: verificationCode}),
       },
       method: 'delete',
       url: `${TeamAPI.URL.TEAMS}/${teamId}`,
