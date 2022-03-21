@@ -104,6 +104,7 @@ export class ClientService {
       location: clientInfo.location,
       model: clientInfo.model,
       password: loginData.password ? String(loginData.password) : undefined,
+      verification_code: loginData.verificationCode,
       prekeys: serializedPreKeys,
       type: loginData.clientType,
     };

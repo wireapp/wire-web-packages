@@ -3,6 +3,83 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [18.5.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@18.5.0...@wireapp/api-client@18.5.1) (2022-03-21)
+
+
+### Bug Fixes
+
+* **services:** Change verification code data payload according to backend spec ([#4247](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4247)) ([5f5937b](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/5f5937b5e35d83c2c3cbfea81e3644fc5b0beeb3))
+
+
+
+
+
+# [18.5.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@18.4.0...@wireapp/api-client@18.5.0) (2022-03-18)
+
+
+### Features
+
+* **core, api-client:** Add support for two factor authentication ([#4245](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4245)) ([4f27bbf](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/4f27bbf00a34f265a534c93bce9004ddb757f1fc))
+
+
+
+
+
+# [18.4.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@18.3.4...@wireapp/api-client@18.4.0) (2022-03-17)
+
+
+### Features
+
+* **api-client:** add new error label ([#4244](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4244)) ([35b2453](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/35b24537789e281ff6a7b53357ec3937f2f5095e))
+
+
+
+
+
+## [18.3.4](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@18.3.3...@wireapp/api-client@18.3.4) (2022-03-14)
+
+
+### Bug Fixes
+
+* **api-client:** Chunk user prekeys requests ([#4243](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4243)) ([f6fae6a](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/f6fae6a3fe5c341555f2b47f721f4dd47313df49))
+
+
+
+
+
+## [18.3.3](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@18.3.2...@wireapp/api-client@18.3.3) (2022-03-14)
+
+
+### Bug Fixes
+
+* update verification actions enum ([#4242](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4242)) ([fdd680d](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/fdd680da31a65194839339b03bcaba3358fe9085))
+
+
+
+
+
+## [18.3.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@18.3.1...@wireapp/api-client@18.3.2) (2022-03-11)
+
+
+### Bug Fixes
+
+* **api-client:** Use correct key from api-version api ([#4239](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4239)) ([ec54014](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/ec54014d6dea98b3a7ad9077ce0c8385e52ad755))
+
+
+
+
+
+## [18.3.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@18.3.0...@wireapp/api-client@18.3.1) (2022-03-10)
+
+
+### Bug Fixes
+
+* **api-client:** Chunk request to get conversations by qualified ids ([#4238](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4238)) ([5a963da](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/5a963da6cbe80d04a0686e1c0c7c4dcb1f491f0b))
+
+
+
+
+
 # [18.3.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@18.2.0...@wireapp/api-client@18.3.0) (2022-03-07)
 
 

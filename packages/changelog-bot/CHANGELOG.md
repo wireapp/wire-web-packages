@@ -3,6 +3,62 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.14](https://github.com/wireapp/wire-web-packages/tree/main/packages/changelog-bot/compare/@wireapp/changelog-bot@6.0.13...@wireapp/changelog-bot@6.0.14) (2022-03-21)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [6.0.13](https://github.com/wireapp/wire-web-packages/tree/main/packages/changelog-bot/compare/@wireapp/changelog-bot@6.0.12...@wireapp/changelog-bot@6.0.13) (2022-03-18)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [6.0.12](https://github.com/wireapp/wire-web-packages/tree/main/packages/changelog-bot/compare/@wireapp/changelog-bot@6.0.11...@wireapp/changelog-bot@6.0.12) (2022-03-17)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [6.0.11](https://github.com/wireapp/wire-web-packages/tree/main/packages/changelog-bot/compare/@wireapp/changelog-bot@6.0.10...@wireapp/changelog-bot@6.0.11) (2022-03-14)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [6.0.10](https://github.com/wireapp/wire-web-packages/tree/main/packages/changelog-bot/compare/@wireapp/changelog-bot@6.0.9...@wireapp/changelog-bot@6.0.10) (2022-03-14)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [6.0.9](https://github.com/wireapp/wire-web-packages/tree/main/packages/changelog-bot/compare/@wireapp/changelog-bot@6.0.8...@wireapp/changelog-bot@6.0.9) (2022-03-11)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
+## [6.0.8](https://github.com/wireapp/wire-web-packages/tree/main/packages/changelog-bot/compare/@wireapp/changelog-bot@6.0.7...@wireapp/changelog-bot@6.0.8) (2022-03-10)
+
+**Note:** Version bump only for package @wireapp/changelog-bot
+
+
+
+
+
 ## [6.0.7](https://github.com/wireapp/wire-web-packages/tree/main/packages/changelog-bot/compare/@wireapp/changelog-bot@6.0.6...@wireapp/changelog-bot@6.0.7) (2022-03-07)
 
 **Note:** Version bump only for package @wireapp/changelog-bot

@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [24.3.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@24.3.0...@wireapp/core@24.3.1) (2022-03-21)
+
+
+### Bug Fixes
+
+* **services:** Change verification code data payload according to backend spec ([#4247](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/issues/4247)) ([5f5937b](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/5f5937b5e35d83c2c3cbfea81e3644fc5b0beeb3))
+
+
+
+
+
+# [24.3.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@24.2.5...@wireapp/core@24.3.0) (2022-03-18)
+
+
+### Features
+
+* **core, api-client:** Add support for two factor authentication ([#4245](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/issues/4245)) ([4f27bbf](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/4f27bbf00a34f265a534c93bce9004ddb757f1fc))
+
+
+
+
+
+## [24.2.5](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@24.2.4...@wireapp/core@24.2.5) (2022-03-17)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [24.2.4](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@24.2.3...@wireapp/core@24.2.4) (2022-03-14)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [24.2.3](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@24.2.2...@wireapp/core@24.2.3) (2022-03-14)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [24.2.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@24.2.1...@wireapp/core@24.2.2) (2022-03-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [24.2.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@24.2.0...@wireapp/core@24.2.1) (2022-03-10)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
 # [24.2.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@24.1.1...@wireapp/core@24.2.0) (2022-03-07)
 
 
