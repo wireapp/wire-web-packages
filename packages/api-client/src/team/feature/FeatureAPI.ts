@@ -30,7 +30,7 @@ import type {
   FeatureSSO,
   FeatureFileSharing,
   FeatureSelfDeletingMessages,
-  FeatureSndFactor,
+  FeatureSndFactorPassword,
 } from './Feature';
 import type {FeatureList} from './FeatureList';
 import {FeatureConversationGuestLink, FeatureLockedError} from '.';
@@ -49,7 +49,7 @@ export class FeatureAPI {
     FEATURES: 'features',
     FILE_SHARING: 'fileSharing',
     LEGAL_HOLD: 'legalhold',
-    SND_FACTOR: 'sndFactorPasswordChallenge',
+    SND_FACTOR_PASSWORD: 'sndFactorPasswordChallenge',
     SSO: 'sso',
     TEAMS: '/teams',
   };
@@ -251,13 +251,13 @@ export class FeatureAPI {
     }
   }
 
-  public async getSndFactorPasswordFeature(): Promise<FeatureSndFactor> {
+  public async getSndFactorPasswordFeature(): Promise<FeatureSndFactorPassword> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${FeatureAPI.URL.FEATURE_CONFIGS}/${FeatureAPI.URL.SND_FACTOR}`,
+      url: `${FeatureAPI.URL.FEATURE_CONFIGS}/${FeatureAPI.URL.SND_FACTOR_PASSWORD}`,
     };
 
-    const response = await this.client.sendJSON<FeatureSndFactor>(config);
+    const response = await this.client.sendJSON<FeatureSndFactorPassword>(config);
     return response.data;
   }
 
