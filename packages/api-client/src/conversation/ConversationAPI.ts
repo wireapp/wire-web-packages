@@ -201,6 +201,16 @@ export class ConversationAPI {
     return response.data;
   }
 
+  public async getConversationGuestLinkFeature(conversationId: string): Promise<{status: 'enabled' | 'disabled'}> {
+    const config: AxiosRequestConfig = {
+      method: 'get',
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/features/conversationGuestLinks`,
+    };
+
+    const response = await this.client.sendJSON<{status: 'enabled' | 'disabled'}>(config);
+    return response.data;
+  }
+
   public async getConversation(conversationId: string | QualifiedId): Promise<Conversation> {
     return this.backendFeatures.federationEndpoints && typeof conversationId !== 'string'
       ? this.getConversation_v2(conversationId)
