@@ -18,7 +18,7 @@
  */
 
 /** @jsx jsx */
-import {jsx, jsx as JSX} from '@emotion/react';
+import {jsx} from '@emotion/react';
 import React from 'react';
 
 export interface SpacerProps<T = HTMLDivElement> extends React.HTMLProps<T> {
