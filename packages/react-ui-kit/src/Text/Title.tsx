@@ -34,4 +34,6 @@ const titleStyle: <T>(theme: Theme, props: TitleProps<T>) => CSSObject = (
   marginBottom: '8px',
 });
 
-export const Title = (props: TitleProps) => <div css={(theme: Theme) => titleStyle(theme, props)} {...filterTextProps(props)} />;
+export const Title = (props: TitleProps) => (
+  <div css={(theme: Theme) => titleStyle(theme, props)} {...filterTextProps(props)} />
+);

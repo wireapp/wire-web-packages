@@ -9458,11 +9458,6 @@ jest-each@^26.6.2:
     jest-util "^26.6.2"
     pretty-format "^26.6.2"
 
-jest-emotion@11.0.0:
-  version "11.0.0"
-  resolved "https://registry.npmjs.org/jest-emotion/-/jest-emotion-11.0.0.tgz#0131e60f5067c65c73981cd0565f777672cafb28"
-  integrity sha512-nw+iYPcHM+H5huUIsDh53uEIp6SrN5v+MOxa7qyXReae9foCTACDkFuF/1Hfkik/R8mDMir7q5QEiVMRJ0/f2Q==
-
 jest-environment-jsdom@^26.6.1:
   version "26.6.1"
   resolved "https://registry.npmjs.org/jest-environment-jsdom/-/jest-environment-jsdom-26.6.1.tgz#63093bf89daee6139616568a43633b84cf7aac21"

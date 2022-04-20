@@ -53,4 +53,6 @@ export const leadStyle: <T>(theme: Theme, props: LeadProps<T>) => CSSObject = (
   },
 });
 
-export const Lead = (props: LeadProps) => <p css={(theme: Theme) => leadStyle(theme, props)} {...filterTextProps(props)} />;
+export const Lead = (props: LeadProps) => (
+  <p css={(theme: Theme) => leadStyle(theme, props)} {...filterTextProps(props)} />
+);
