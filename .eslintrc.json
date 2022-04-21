@@ -3,7 +3,7 @@
     "jasmine": true,
     "jest/globals": true
   },
-  "extends": ["./packages/eslint-config/eslintrc.json", "plugin:jest/recommended"],
+  "extends": ["./packages/eslint-config/eslintrc.js", "plugin:jest/recommended"],
   "globals": {
     "NodeJS": "readonly"
   },
