@@ -4,6 +4,7 @@
     "jest/globals": true
   },
   "extends": ["./packages/eslint-config/eslintrc.js", "plugin:jest/recommended"],
+  "ignorePatterns": ["*config.js", "demo/", "bin/", "eslint*", "webpack*"],
   "globals": {
     "NodeJS": "readonly"
   },
