@@ -127,7 +127,7 @@ export class Account extends EventEmitter {
    */
   constructor(
     apiClient: APIClient = new APIClient(),
-    {createStore = () => undefined, enableMls}: {createStore?: CreateStoreFn; enableMls?: boolean} = {},
+    {createStore = () => undefined}: {createStore?: CreateStoreFn} = {},
   ) {
     super();
     this.apiClient = apiClient;
