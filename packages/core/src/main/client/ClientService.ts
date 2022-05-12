@@ -54,6 +54,11 @@ export class ClientService {
     return this.backend.getClients();
   }
 
+  public async deleteClient(clientId: string, password: string): Promise<void> {
+    await this.backend.deleteClient(clientId, password);
+    await this.deleteLocalClient();
+  }
+
   public getLocalClient(): Promise<MetaClient> {
     return this.database.getLocalClient();
   }
