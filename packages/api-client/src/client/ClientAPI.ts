@@ -76,6 +76,11 @@ export class ClientAPI {
     return response.data;
   }
 
+  /**
+   * Deletes a client on the backend
+   * @param clientId
+   * @param password? password can be omitted if the client is a temporary client
+   */
   public async deleteClient(clientId: string, password?: string): Promise<void> {
     const config: AxiosRequestConfig = {
       data: {
