@@ -20,6 +20,7 @@
 import type {APIClient} from '@wireapp/api-client';
 import type {LoginData, PreKey} from '@wireapp/api-client/src/auth/';
 import {ClientClassification, ClientType, CreateClientPayload, RegisteredClient} from '@wireapp/api-client/src/client/';
+import {QualifiedId} from '@wireapp/api-client/src/user';
 import type {CRUDEngine} from '@wireapp/store-engine';
 
 import type {CryptographyService} from '../cryptography/';
