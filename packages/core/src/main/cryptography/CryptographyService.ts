@@ -58,7 +58,7 @@ export class CryptographyService {
   constructor(
     readonly apiClient: APIClient,
     private readonly storeEngine: CRUDEngine,
-    private readonly config: {useQualifiedIds?: boolean; nbPrekeys?: number} = {nbPrekeys: 2},
+    private readonly config: {useQualifiedIds: boolean; nbPrekeys: number},
   ) {
     this.cryptobox = new Cryptobox(this.storeEngine, config.nbPrekeys);
     this.database = new CryptographyDatabaseRepository(this.storeEngine);

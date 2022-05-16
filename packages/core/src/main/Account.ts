@@ -135,7 +135,7 @@ export class Account extends EventEmitter {
    */
   constructor(
     apiClient: APIClient = new APIClient(),
-    {createStore = () => undefined, nbPrekeys}: AccountOptions = {nbPrekeys: 100},
+    {createStore = () => undefined, nbPrekeys}: AccountOptions = {nbPrekeys: 2},
   ) {
     super();
     this.apiClient = apiClient;
