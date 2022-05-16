@@ -100,7 +100,16 @@ export type CreateStoreFn = (storeName: string, context: Context) => undefined |
 interface AccountOptions {
   /** Used to store info in the database (will create a inMemory engine if returns undefined) */
   createStore?: CreateStoreFn;
-  /** Number of prekeys to generate when creating a new device (defaults to 100) */
+
+  /** Number of prekeys to generate when creating a new device (defaults to 100)
+   * Prekeys are a way to create unique secured sessions between two devices.
+   * Having a high value will:
+   *    - make creating a new device consuming more CPU resources
+   *    - make it possible that the user creates multiple session with multiple users without needing to create new prekeys (or be connected)
+   * Having a low value will:
+   *    - make creating a new device fast
+   *    - make it likely that the user runs out of prekeys and the last resort prekey is needed to create new session
+   */
   nbPrekeys?: number;
 }
 
@@ -109,7 +118,7 @@ export class Account extends EventEmitter {
   private readonly logger: logdown.Logger;
   private readonly createStore: CreateStoreFn;
   private storeEngine?: CRUDEngine;
-  private readonly nbPrekeys?: number;
+  private readonly nbPrekeys: number;
 
   public static readonly TOPIC = TOPIC;
   public service?: {
@@ -135,7 +144,7 @@ export class Account extends EventEmitter {
    */
   constructor(
     apiClient: APIClient = new APIClient(),
-    {createStore = () => undefined, nbPrekeys}: AccountOptions = {nbPrekeys: 2},
+    {createStore = () => undefined, nbPrekeys = 2}: AccountOptions = {},
   ) {
     super();
     this.apiClient = apiClient;
