@@ -101,7 +101,7 @@ interface AccountOptions {
   /** Used to store info in the database (will create a inMemory engine if returns undefined) */
   createStore?: CreateStoreFn;
 
-  /** Number of prekeys to generate when creating a new device (defaults to 100)
+  /** Number of prekeys to generate when creating a new device (defaults to 2)
    * Prekeys are Diffie-Hellmann public keys which allow offline initiation of a secure Proteus session between two devices.
    * Having a high value will:
    *    - make creating a new device consuming more CPU resources
