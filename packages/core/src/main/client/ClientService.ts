@@ -54,9 +54,19 @@ export class ClientService {
     return this.backend.getClients();
   }
 
-  public async deleteClient(clientId: string, password: string): Promise<void> {
+  /**
+   * Will delete the given client from backend and will also delete it from the local database
+   * @param clientId The id of the client to delete
+   * @param password Password of the owning user
+   * @param isLocalClient Is the client also the client currently used by the app (as opposed to a client the user owns but not currenly in use)
+   * @returns Promise
+   */
+  public async deleteClient(clientId: string, password: string, isLocalClient: boolean = false): Promise<unknown> {
+    const userId: QualifiedId = {id: this.apiClient.userId as string, domain: this.apiClient.domain || ''};
     await this.backend.deleteClient(clientId, password);
-    await this.deleteLocalClient();
+    return isLocalClient
+      ? this.database.deleteLocalClient()
+      : this.database.deleteClient(this.cryptographyService.constructSessionId(userId, clientId));
   }
 
   public getLocalClient(): Promise<MetaClient> {
