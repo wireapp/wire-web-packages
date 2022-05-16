@@ -2483,6 +2483,11 @@
   dependencies:
     "@octokit/openapi-types" "^6.0.0"
 
+"@otak/core-crypto@0.2.0-beta-3":
+  version "0.2.0-beta-3"
+  resolved "https://registry.npmjs.org/@otak/core-crypto/-/core-crypto-0.2.0-beta-3.tgz#1863e9b4152e7db4c96e245cffdfef0ddade670a"
+  integrity sha512-KWh9a1Zi+NRgMnouquQVkmuONq630LP9YUcNtuhM39kIfSg6XRFUhIyPhidCb9QGb2zPylls1pHjxrsjHOUcvg==
+
 "@popperjs/core@^2.4.4":
   version "2.6.0"
   resolved "https://registry.npmjs.org/@popperjs/core/-/core-2.6.0.tgz#f022195afdfc942e088ee2101285a1d31c7d727f"
