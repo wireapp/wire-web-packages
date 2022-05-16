@@ -102,13 +102,13 @@ interface AccountOptions {
   createStore?: CreateStoreFn;
 
   /** Number of prekeys to generate when creating a new device (defaults to 100)
-   * Prekeys are a way to create unique secured sessions between two devices.
+   * Prekeys are Diffie-Hellmann public keys which allow offline initiation of a secure Proteus session between two devices.
    * Having a high value will:
    *    - make creating a new device consuming more CPU resources
-   *    - make it possible that the user creates multiple session with multiple users without needing to create new prekeys (or be connected)
+   *    - make it less likely that all prekeys get consumed while the device is offline and the last resort prekey will not be used to create new session
    * Having a low value will:
    *    - make creating a new device fast
-   *    - make it likely that the user runs out of prekeys and the last resort prekey is needed to create new session
+   *    - make it likely that all prekeys get consumed while the device is offline and the last resort prekey will be used to create new session
    */
   nbPrekeys?: number;
 }
