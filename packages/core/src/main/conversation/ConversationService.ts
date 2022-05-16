@@ -703,16 +703,10 @@ export class ConversationService {
    *
    * @param conversationId The conversation which has been read
    * @param lastReadTimestamp The timestamp at which the conversation was read
-   * @param userIds? recipients to send the message to (if not given will fetch all users from backend)
-   * @param sendAsProtobuf?
+   * @param sendingOptions?
    * @return Resolves when the message has been sent
    */
-  public async sendLastRead(
-    conversationId: string,
-    lastReadTimestamp: number,
-    userIds?: QualifiedId[] | QualifiedUserClients,
-    sendAsProtobuf?: boolean,
-  ) {
+  public async sendLastRead(conversationId: string, lastReadTimestamp: number, sendingOptions?: MessageSendingOptions) {
     const lastRead = new LastRead({
       conversationId,
       lastReadTimestamp,
@@ -727,8 +721,7 @@ export class ConversationService {
 
     return this.sendGenericMessage(this.apiClient.validatedClientId, selfConversationId, genericMessage, {
       conversationDomain: selfConversationDomain,
-      sendAsProtobuf,
-      userIds,
+      ...sendingOptions,
     });
   }
 
@@ -736,15 +729,10 @@ export class ConversationService {
    * Syncs all self user's devices with the countly id
    *
    * @param countlyId The countly id of the current device
-   * @param userIds? recipients to send the message to (if not given will fetch all users from backend)
-   * @param sendAsProtobuf?
+   * @param sendingOptions?
    * @return Resolves when the message has been sent
    */
-  public async sendCountlySync(
-    countlyId: string,
-    userIds: QualifiedId[] | QualifiedUserClients,
-    sendAsProtobuf?: boolean,
-  ) {
+  public async sendCountlySync(countlyId: string, sendingOptions: MessageSendingOptions) {
     const {id: selfConversationId, domain: selfConversationDomain} = await this.getSelfConversationId();
 
     const dataTransfer = new DataTransfer({
@@ -759,8 +747,7 @@ export class ConversationService {
 
     return this.sendGenericMessage(this.apiClient.validatedClientId, selfConversationId, genericMessage, {
       conversationDomain: selfConversationDomain,
-      sendAsProtobuf,
-      userIds,
+      ...sendingOptions,
     });
   }
 
