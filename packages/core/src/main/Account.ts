@@ -113,6 +113,12 @@ interface AccountOptions {
   nbPrekeys?: number;
 }
 
+const coreDefaultClient: ClientInfo = {
+  classification: ClientClassification.DESKTOP,
+  cookieLabel: 'default',
+  model: '@wireapp/core',
+};
+
 export class Account extends EventEmitter {
   private readonly apiClient: APIClient;
   private readonly logger: logdown.Logger;
@@ -220,11 +226,7 @@ export class Account extends EventEmitter {
   public async login(
     loginData: LoginData,
     initClient: boolean = true,
-    clientInfo: ClientInfo = {
-      classification: ClientClassification.DESKTOP,
-      cookieLabel: 'default',
-      model: '@wireapp/core',
-    },
+    clientInfo: ClientInfo = coreDefaultClient,
   ): Promise<Context> {
     this.resetContext();
     LoginSanitizer.removeNonPrintableCharacters(loginData);
@@ -358,7 +360,7 @@ export class Account extends EventEmitter {
 
   private async registerClient(
     loginData: LoginData,
-    clientInfo?: ClientInfo,
+    clientInfo: ClientInfo = coreDefaultClient,
     entropyData?: Uint8Array,
   ): Promise<{isNewClient: boolean; localClient: RegisteredClient}> {
     if (!this.service) {
