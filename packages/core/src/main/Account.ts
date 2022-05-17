@@ -22,7 +22,7 @@ import {StatusCodes as HTTP_STATUS} from 'http-status-codes';
 import {APIClient, BackendFeatures} from '@wireapp/api-client';
 import type {RegisterData} from '@wireapp/api-client/src/auth';
 import {AUTH_COOKIE_KEY, AUTH_TABLE_NAME, Context, Cookie, CookieStore, LoginData} from '@wireapp/api-client/src/auth/';
-import {ClientType, RegisteredClient} from '@wireapp/api-client/src/client/';
+import {ClientClassification, ClientType, RegisteredClient} from '@wireapp/api-client/src/client/';
 import * as Events from '@wireapp/api-client/src/event';
 import {WebSocketClient} from '@wireapp/api-client/src/tcp/';
 import * as cryptobox from '@wireapp/cryptobox';
@@ -217,7 +217,15 @@ export class Account extends EventEmitter {
    * @param initClient Should the call also create the local client
    * @param clientInfo Info about the client to create (name, type...)
    */
-  public async login(loginData: LoginData, initClient: boolean = true, clientInfo?: ClientInfo): Promise<Context> {
+  public async login(
+    loginData: LoginData,
+    initClient: boolean = true,
+    clientInfo: ClientInfo = {
+      classification: ClientClassification.DESKTOP,
+      cookieLabel: 'default',
+      model: '@wireapp/core',
+    },
+  ): Promise<Context> {
     this.resetContext();
     LoginSanitizer.removeNonPrintableCharacters(loginData);
 
