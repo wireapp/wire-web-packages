@@ -29,6 +29,7 @@ const colorElementStyle = props => ({
     opacity: 1,
     transform: 'scale(1)',
   },
+  cursor: 'pointer',
   backgroundColor: props.backgroundColor,
   border: '1px solid black',
   borderRadius: '40px',
@@ -39,15 +40,11 @@ const colorElementStyle = props => ({
 });
 
 const ColorElement = ({name, backgroundColor}) => {
-  const color = Color(backgroundColor);
-  const value = color.hex().toString();
-  const digits = 2;
-  const alpha = color.alpha() < 1 ? color.alpha().toFixed(digits) : 0;
   return (
     <div
-      onClick={() => navigator.clipboard.writeText(alpha ? color.toString() : value)}
+      onClick={() => navigator.clipboard.writeText(backgroundColor)}
       css={colorElementStyle({backgroundColor})}
-      data-text={`${name}\n${value}${alpha ? `\nα: ${alpha}` : ''}`}
+      data-text={`${name}\n${backgroundColor}`}
     />
   );
 };
