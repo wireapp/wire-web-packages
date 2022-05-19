@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2022 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,21 +18,21 @@
  */
 
 export const BASE_LIGHT_COLOR: Record<string, string> = {
-  BLUE: '#0667C8',
-  GREEN: '#1D7833',
-  PETROL: '#01718E',
-  PURPLE: '#8944AB',
-  RED: '#C20013',
-  AMBER: '#A25915',
+  BLUE: '#0667c8',
+  GREEN: '#1d7833',
+  PETROL: '#01718e',
+  PURPLE: '#8944ab',
+  RED: '#c20013',
+  AMBER: '#a25915',
 };
 
 export const BASE_DARK_COLOR: Record<string, string> = {
-  BLUE: '#54A6FF',
-  GREEN: '#30DB5B',
-  PETROL: '#5DE6FF',
-  PURPLE: '#DA8FFF',
-  RED: '#FF7770',
-  AMBER: '#FFD426',
+  BLUE: '#54a6ff',
+  GREEN: '#30db5b',
+  PETROL: '#5de6ff',
+  PURPLE: '#da8fff',
+  RED: '#ff7770',
+  AMBER: '#ffd426',
 };
 
 const LIGHT_BLUE: Record<string, string> = {
@@ -45,20 +45,20 @@ const LIGHT_BLUE: Record<string, string> = {
   BLUE_LIGHT_600: '#0552a0',
   BLUE_LIGHT_700: '#043e78',
   BLUE_LIGHT_800: '#022950',
-  BLUE_LIGHT_900: '#19324D',
+  BLUE_LIGHT_900: '#19324d',
 };
 
 const DARK_BLUE: Record<string, string> = {
-  BLUE_DARK_50: '#EEF7FF',
-  BLUE_DARK_100: '#DDEDFF',
-  BLUE_DARK_200: '#BBDBFF',
-  BLUE_DARK_300: '#98CAFF',
-  BLUE_DARK_400: '#76B8FF',
+  BLUE_DARK_50: '#eef7ff',
+  BLUE_DARK_100: '#ddedff',
+  BLUE_DARK_200: '#bbdbff',
+  BLUE_DARK_300: '#98caff',
+  BLUE_DARK_400: '#76b8ff',
   BLUE_DARK_500: BASE_DARK_COLOR.BLUE,
-  BLUE_DARK_600: '#4385CC',
+  BLUE_DARK_600: '#4385cc',
   BLUE_DARK_700: '#326499',
   BLUE_DARK_800: '#224266',
-  BLUE_DARK_900: '#19324D',
+  BLUE_DARK_900: '#19324d',
 };
 
 const LIGHT_GREEN: Record<string, string> = {
@@ -71,20 +71,20 @@ const LIGHT_GREEN: Record<string, string> = {
   GREEN_LIGHT_600: '#176029',
   GREEN_LIGHT_700: '#11481f',
   GREEN_LIGHT_800: '#0c3014',
-  GREEN_LIGHT_900: '#0E421B',
+  GREEN_LIGHT_900: '#0e421b',
 };
 
 const DARK_GREEN: Record<string, string> = {
-  GREEN_DARK_50: '#EBFCEF',
-  GREEN_DARK_100: '#D6F8DE',
-  GREEN_DARK_200: '#ACF1BD',
-  GREEN_DARK_300: '#83E99D',
-  GREEN_DARK_400: '#59E27C',
+  GREEN_DARK_50: '#ebfcef',
+  GREEN_DARK_100: '#d6f8de',
+  GREEN_DARK_200: '#acf1bd',
+  GREEN_DARK_300: '#83e99d',
+  GREEN_DARK_400: '#59e27c',
   GREEN_DARK_500: BASE_DARK_COLOR.GREEN,
-  GREEN_DARK_600: '#26AF49',
-  GREEN_DARK_700: '#1D8337',
+  GREEN_DARK_600: '#26af49',
+  GREEN_DARK_700: '#1d8337',
   GREEN_DARK_800: '#135824',
-  GREEN_DARK_900: '#0E421B',
+  GREEN_DARK_900: '#0e421b',
 };
 
 const LIGHT_PETROL: Record<string, string> = {
@@ -97,20 +97,20 @@ const LIGHT_PETROL: Record<string, string> = {
   PETROL_LIGHT_600: '#015a6e',
   PETROL_LIGHT_700: '#014352',
   PETROL_LIGHT_800: '#002d37',
-  PETROL_LIGHT_900: '#1C454D',
+  PETROL_LIGHT_900: '#1c454d',
 };
 
 const DARK_PETROL: Record<string, string> = {
-  PETROL_DARK_50: '#EFFDFF',
-  PETROL_DARK_100: '#DFFAFF',
-  PETROL_DARK_200: '#BEF5FF',
-  PETROL_DARK_300: '#9EF0FF',
-  PETROL_DARK_400: '#7DEBFF',
+  PETROL_DARK_50: '#effdff',
+  PETROL_DARK_100: '#dffaff',
+  PETROL_DARK_200: '#bef5ff',
+  PETROL_DARK_300: '#9ef0ff',
+  PETROL_DARK_400: '#7debff',
   PETROL_DARK_500: BASE_DARK_COLOR.PETROL,
-  PETROL_DARK_600: '#4AB8CC',
-  PETROL_DARK_700: '#388A99',
-  PETROL_DARK_800: '#255C66',
-  PETROL_DARK_900: '#1C454D',
+  PETROL_DARK_600: '#4Ab8cc',
+  PETROL_DARK_700: '#388a99',
+  PETROL_DARK_800: '#255c66',
+  PETROL_DARK_900: '#1c454d',
 };
 
 const LIGHT_PURPLE: Record<string, string> = {
@@ -123,20 +123,20 @@ const LIGHT_PURPLE: Record<string, string> = {
   PURPLE_LIGHT_600: '#6e3689',
   PURPLE_LIGHT_700: '#522967',
   PURPLE_LIGHT_800: '#371b44',
-  PURPLE_LIGHT_900: '#412B4D',
+  PURPLE_LIGHT_900: '#412b4d',
 };
 
 const DARK_PURPLE: Record<string, string> = {
-  PURPLE_DARK_50: '#FCF4FF',
-  PURPLE_DARK_100: '#F8E9FF',
-  PURPLE_DARK_200: '#F0D2FF',
-  PURPLE_DARK_300: '#E9BCFF',
-  PURPLE_DARK_400: '#E1A5FF',
+  PURPLE_DARK_50: '#fcf4ff',
+  PURPLE_DARK_100: '#f8e9ff',
+  PURPLE_DARK_200: '#f0d2ff',
+  PURPLE_DARK_300: '#e9bcff',
+  PURPLE_DARK_400: '#e1a5ff',
   PURPLE_DARK_500: BASE_DARK_COLOR.PURPLE,
-  PURPLE_DARK_600: '#AE72CC',
+  PURPLE_DARK_600: '#ae72cc',
   PURPLE_DARK_700: '#835699',
   PURPLE_DARK_800: '#573966',
-  PURPLE_DARK_900: '#412B4D',
+  PURPLE_DARK_900: '#412b4d',
 };
 
 const LIGHT_RED: Record<string, string> = {
@@ -149,31 +149,31 @@ const LIGHT_RED: Record<string, string> = {
   RED_LIGHT_600: '#9b000f',
   RED_LIGHT_700: '#74000b',
   RED_LIGHT_800: '#4e0008',
-  RED_LIGHT_900: '#4D2422',
+  RED_LIGHT_900: '#4d2422',
 };
 
 const DARK_RED: Record<string, string> = {
-  RED_DARK_50: '#FFF2F1',
-  RED_DARK_100: '#FFE4E2',
-  RED_DARK_200: '#FFC9C6',
-  RED_DARK_300: '#FFADA9',
-  RED_DARK_400: '#FF928D',
+  RED_DARK_50: '#fff2f1',
+  RED_DARK_100: '#ffe4e2',
+  RED_DARK_200: '#ffc9c6',
+  RED_DARK_300: '#ffada9',
+  RED_DARK_400: '#ff928d',
   RED_DARK_500: BASE_DARK_COLOR.RED,
-  RED_DARK_600: '#CC5F5A',
+  RED_DARK_600: '#cc5f5a',
   RED_DARK_700: '#994743',
-  RED_DARK_800: '#66302D',
-  RED_DARK_900: '#4D2422',
+  RED_DARK_800: '#66302d',
+  RED_DARK_900: '#4d2422',
 };
 
 const LIGHT_AMBER: Record<string, string> = {
-  AMBER_LIGHT_50: '#F6EEE8',
-  AMBER_LIGHT_100: '#ECDED0',
-  AMBER_LIGHT_200: '#DABDA1',
-  AMBER_LIGHT_300: '#C79B73',
-  AMBER_LIGHT_400: '#B57A44',
+  AMBER_LIGHT_50: '#f6eee8',
+  AMBER_LIGHT_100: '#ecded0',
+  AMBER_LIGHT_200: '#dabda1',
+  AMBER_LIGHT_300: '#c79b73',
+  AMBER_LIGHT_400: '#b57A44',
   AMBER_LIGHT_500: BASE_LIGHT_COLOR.AMBER,
   AMBER_LIGHT_600: '#824711',
-  AMBER_LIGHT_700: '#61350D',
+  AMBER_LIGHT_700: '#61350d',
   AMBER_LIGHT_800: '#412408',
   AMBER_LIGHT_900: '#201204',
 };
@@ -188,7 +188,7 @@ const DARK_AMBER: Record<string, string> = {
   AMBER_DARK_600: '#ccaa1e',
   AMBER_DARK_700: '#997f17',
   AMBER_DARK_800: '#66550f',
-  AMBER_DARK_900: '#4D400B',
+  AMBER_DARK_900: '#4d400b',
 };
 
 const DARK: Record<string, string> = {
