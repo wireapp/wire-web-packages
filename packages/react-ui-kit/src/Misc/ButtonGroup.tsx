@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2022 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -74,7 +74,7 @@ const buttonStyle: <T>(theme: Theme, props: IconButtonProps<T>) => CSSObject = (
   }),
 });
 
-export interface ButtonProps<T = HTMLButtonElement> {
+interface GroupButtonProps<T = HTMLButtonElement> {
   children?: ReactElement | string;
   icon?: ReactElement;
 }
@@ -85,7 +85,7 @@ const ButtonGroup = ({children}) => (
   </div>
 );
 
-const Button = ({children, icon, ...props}: ButtonProps) => {
+const Button = ({children, icon, ...props}: GroupButtonProps) => {
   return (
     <button css={(theme: Theme) => buttonStyle(theme, props)} {...props}>
       {icon}
