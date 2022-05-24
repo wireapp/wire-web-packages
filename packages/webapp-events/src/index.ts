@@ -141,6 +141,7 @@ export const WebAppEvents = {
     ASK_TO_CLEAR_DATA: 'wire.webapp.lifecycle.ask_to_clear_data',
     CHANGE_ENVIRONMENT: 'wire.webapp.lifecycle.change_environment',
     LOADED: 'wire.webapp.lifecycle.loaded',
+    READY_TO_RECEIVE_DEEPLINKS: 'wire.webapp.lifecycle.ready_to_receive_deeplinks',
     REFRESH: 'wire.webapp.lifecycle.refresh',
     RESTART: 'wire.webapp.lifecycle.restart',
     SIGN_OUT: 'wire.webapp.lifecycle.sign_out',
