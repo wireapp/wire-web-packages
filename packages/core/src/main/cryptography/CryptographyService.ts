@@ -211,10 +211,7 @@ export class CryptographyService {
     this.logger.log(`Deleted session ID "${sessionId}".`);
   }
 
-  public async decodeGenericMessage(
-    otrMessage: ConversationOtrMessageAddEvent,
-    source: PayloadBundleSource,
-  ): Promise<PayloadBundle> {
+  public async decryptMessage(otrMessage: ConversationOtrMessageAddEvent): Promise<GenericMessage> {
     const {
       from,
       qualified_from,
@@ -223,8 +220,14 @@ export class CryptographyService {
 
     const sessionId = this.constructSessionId(from, sender, qualified_from?.domain);
     const decryptedMessage = await this.decrypt(sessionId, cipherText);
-    const genericMessage = GenericMessage.decode(decryptedMessage);
+    return GenericMessage.decode(decryptedMessage);
+  }
 
+  public mapGenericMessage(
+    otrMessage: ConversationOtrMessageAddEvent,
+    genericMessage: GenericMessage,
+    source: PayloadBundleSource,
+  ): PayloadBundle {
     if (genericMessage.content === GenericMessageType.EPHEMERAL) {
       const unwrappedMessage = GenericMessageMapper.mapGenericMessage(genericMessage.ephemeral, otrMessage, source);
       unwrappedMessage.id = genericMessage.messageId;

@@ -21,9 +21,11 @@ import type {AxiosError} from 'axios';
 import {StatusCodes as HTTP_STATUS} from 'http-status-codes';
 import {APIClient, BackendFeatures} from '@wireapp/api-client';
 import type {RegisterData} from '@wireapp/api-client/src/auth';
+import type {Notification} from '@wireapp/api-client/src/notification/';
 import {AUTH_COOKIE_KEY, AUTH_TABLE_NAME, Context, Cookie, CookieStore, LoginData} from '@wireapp/api-client/src/auth/';
 import {ClientClassification, ClientType, RegisteredClient} from '@wireapp/api-client/src/client/';
 import * as Events from '@wireapp/api-client/src/event';
+import {GenericMessage} from '@wireapp/protocol-messaging';
 import {WebSocketClient} from '@wireapp/api-client/src/tcp/';
 import * as cryptobox from '@wireapp/cryptobox';
 import {CRUDEngine, MemoryEngine, error as StoreEngineError} from '@wireapp/store-engine';
@@ -43,15 +45,16 @@ import {
 } from './conversation/';
 import * as OtrMessage from './conversation/message/OtrMessage';
 import * as UserMessage from './conversation/message/UserMessage';
-import type {CoreError, NotificationError} from './CoreError';
+import type {CoreError} from './CoreError';
 import {CryptographyService} from './cryptography/';
 import {GiphyService} from './giphy/';
-import {NotificationHandler, NotificationService} from './notification/';
+import {NotificationService} from './notification/';
 import {SelfService} from './self/';
 import {TeamService} from './team/';
 import {UserService} from './user/';
 import {AccountService} from './account/';
 import {LinkPreviewService} from './linkPreview';
+import {WEBSOCKET_STATE} from '@wireapp/api-client/src/tcp/ReconnectingWebsocket';
 
 enum TOPIC {
   ERROR = 'Account.TOPIC.ERROR',
@@ -385,52 +388,96 @@ export class Account extends EventEmitter {
     await this.apiClient.logout();
     this.resetContext();
   }
+  /**
+   * Will download and handle the notification stream since last stored notification id.
+   * Once the notification stream has been handled from backend, will then connect to the websocket and start listening to incoming events
+   *
+   * @param callbacks callbacks that will be called to handle different events
+   * @returns close a function that will disconnect from the websocket
+   */
+  public async listen({
+    onEvent = () => {},
+    onConnected = () => {},
+    onConnectionStateChanged = () => {},
+    onNotificationStreamProgress = () => {},
+  }: {
+    /**
+     * Called when a new message arrives from backend
+     * @param message the payload of the message
+     * @param source where the message comes from (either websocket or notification stream)
+     */
+    onEvent?: (
+      payload: {event: Events.BackendEvent; decryptedData?: GenericMessage},
+      source: PayloadBundleSource,
+    ) => void;
 
-  public async listen(
-    notificationHandler: NotificationHandler = this.service!.notification.handleNotification,
-  ): Promise<Account> {
+    onNotificationStreamProgress?: ({done, total}: {done: number; total: number}) => void;
+
+    /**
+     * called when the connection to the websocket is established and the notification stream has been processed
+     */
+    onConnected?: () => void;
+
+    /**
+     * called when the connection stateh with the backend has changed
+     */
+    onConnectionStateChanged?: (state: WEBSOCKET_STATE) => void;
+  } = {}): Promise<() => void> {
     if (!this.apiClient.context) {
       throw new Error('Context is not set - please login first');
     }
 
-    this.apiClient.transport.ws.removeAllListeners(WebSocketClient.TOPIC.ON_MESSAGE);
-    this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, notification => {
-      notificationHandler(notification, PayloadBundleSource.WEBSOCKET).catch(error => {
-        this.logger.error(`Failed to handle notification ID "${notification.id}": ${error.message}`, error);
-      });
-    });
-
-    this.service!.notification.removeAllListeners(NotificationService.TOPIC.NOTIFICATION_ERROR);
-    this.service!.notification.on(NotificationService.TOPIC.NOTIFICATION_ERROR, this.handleError);
-
-    for (const payloadType of Object.values(PayloadBundleType)) {
-      this.service!.notification.removeAllListeners(payloadType);
-      this.service!.notification.on(payloadType as any, this.handlePayload);
-    }
-
-    const onBeforeConnect = async () => this.service!.notification.handleNotificationStream(notificationHandler);
-    await this.apiClient.connect(onBeforeConnect);
-    return this;
-  }
-
-  private readonly handlePayload = async (payload: PayloadBundle): Promise<void> => {
-    switch (payload.type) {
-      case PayloadBundleType.TIMER_UPDATE: {
-        const {
-          data: {message_timer},
-          conversation,
-        } = payload as unknown as Events.ConversationMessageTimerUpdateEvent;
-        const expireAfterMillis = Number(message_timer);
-        this.service!.conversation.messageTimer.setConversationLevelTimer(conversation, expireAfterMillis);
-        break;
+    const handleEvent = async (
+      payload: {event: PayloadBundle | undefined; rawEvent: Events.BackendEvent; decryptedData?: GenericMessage},
+      source: PayloadBundleSource,
+    ) => {
+      switch (payload.event?.type) {
+        case PayloadBundleType.TIMER_UPDATE: {
+          const {
+            data: {message_timer},
+            conversation,
+          } = payload as unknown as Events.ConversationMessageTimerUpdateEvent;
+          const expireAfterMillis = Number(message_timer);
+          this.service!.conversation.messageTimer.setConversationLevelTimer(conversation, expireAfterMillis);
+          break;
+        }
       }
-    }
-    this.emit(payload.type, payload);
-  };
+      onEvent({event: payload.rawEvent, decryptedData: payload.decryptedData}, source);
+      if (payload.event) {
+        this.emit(payload.event.type, payload.event);
+      }
+    };
 
-  private readonly handleError = (accountError: NotificationError): void => {
-    this.emit(Account.TOPIC.ERROR, accountError);
-  };
+    const handleNotification = async (notification: Notification, source: PayloadBundleSource): Promise<void> => {
+      try {
+        const messages = this.service!.notification.handleNotification(notification, PayloadBundleSource.WEBSOCKET);
+        for await (const message of messages) {
+          await handleEvent(message, source);
+        }
+      } catch (error) {
+        this.logger.error(`Failed to handle notification ID "${notification.id}": ${(error as any).message}`, error);
+      }
+    };
+
+    this.apiClient.transport.ws.removeAllListeners(WebSocketClient.TOPIC.ON_MESSAGE);
+    this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, notification =>
+      handleNotification(notification, PayloadBundleSource.WEBSOCKET),
+    );
+    this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_STATE_CHANGE, onConnectionStateChanged);
+
+    const onBeforeConnect = async () => {
+      await this.service!.notification.handleNotificationStream(async (notification, source, progress) => {
+        await handleNotification(notification, source);
+        onNotificationStreamProgress(progress);
+      });
+      onConnected();
+    };
+    await this.apiClient.connect(onBeforeConnect);
+
+    return () => {
+      this.apiClient.disconnect();
+    };
+  }
 
   private async initEngine(context: Context): Promise<CRUDEngine> {
     const clientType = context.clientType === ClientType.NONE ? '' : `@${context.clientType}`;
