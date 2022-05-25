@@ -402,8 +402,8 @@ export class Account extends EventEmitter {
     onNotificationStreamProgress = () => {},
   }: {
     /**
-     * Called when a new message arrives from backend
-     * @param message the payload of the message
+     * Called when a new event arrives from backend
+     * @param payload the payload of the event. Contains the raw event received and the decrypted data (if event was encrypted)
      * @param source where the message comes from (either websocket or notification stream)
      */
     onEvent?: (
@@ -411,6 +411,9 @@ export class Account extends EventEmitter {
       source: PayloadBundleSource,
     ) => void;
 
+    /**
+     * During the notification stream processing, this function will be called whenever a new notification has been processed
+     */
     onNotificationStreamProgress?: ({done, total}: {done: number; total: number}) => void;
 
     /**
