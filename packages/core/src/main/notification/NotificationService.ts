@@ -27,12 +27,18 @@ import {PayloadBundle, PayloadBundleSource, PayloadBundleType} from '../conversa
 import type {AssetContent} from '../conversation/content';
 import {ConversationMapper} from '../conversation/ConversationMapper';
 import {CoreError, NotificationError} from '../CoreError';
-import type {CryptographyService} from '../cryptography';
+import type {CryptographyService, DecryptionError} from '../cryptography';
 import {UserMapper} from '../user/UserMapper';
 import {NotificationBackendRepository} from './NotificationBackendRepository';
 import {NotificationDatabaseRepository} from './NotificationDatabaseRepository';
 import {GenericMessage} from '@wireapp/protocol-messaging';
-import {BackendEvent} from '@wireapp/api-client/src/event';
+
+export type HandledEventPayload = {
+  event: Events.BackendEvent;
+  mappedEvent?: PayloadBundle;
+  decryptedData?: GenericMessage;
+  decryptionError?: {code: number; message: string};
+};
 
 enum TOPIC {
   NOTIFICATION_ERROR = 'NotificationService.TOPIC.NOTIFICATION_ERROR',
@@ -129,7 +135,7 @@ export class NotificationService extends EventEmitter {
   public async *handleNotification(
     notification: Notification,
     source: PayloadBundleSource,
-  ): AsyncGenerator<{event: BackendEvent; mappedEvent?: PayloadBundle; decryptedData?: GenericMessage}> {
+  ): AsyncGenerator<HandledEventPayload> {
     for (const event of notification.payload) {
       this.logger.log(`Handling event of type "${event.type}" for notification with ID "${notification.id}"`, event);
       try {
@@ -180,19 +186,20 @@ export class NotificationService extends EventEmitter {
     }
   }
 
-  private async handleEvent(
-    event: Events.BackendEvent,
-    source: PayloadBundleSource,
-  ): Promise<{mappedEvent?: PayloadBundle; event: Events.BackendEvent; decryptedData?: GenericMessage}> {
+  private async handleEvent(event: Events.BackendEvent, source: PayloadBundleSource): Promise<HandledEventPayload> {
     switch (event.type) {
       // Encrypted events
       case Events.CONVERSATION_EVENT.OTR_MESSAGE_ADD: {
-        const decryptedMessage = await this.cryptographyService.decryptMessage(event);
-        return {
-          mappedEvent: this.cryptographyService.mapGenericMessage(event, decryptedMessage, source),
-          event,
-          decryptedData: decryptedMessage,
-        };
+        try {
+          const decryptedData = await this.cryptographyService.decryptMessage(event);
+          return {
+            mappedEvent: this.cryptographyService.mapGenericMessage(event, decryptedData, source),
+            event,
+            decryptedData,
+          };
+        } catch (error) {
+          return {event, decryptionError: error as DecryptionError};
+        }
       }
       // Meta events
       case Events.CONVERSATION_EVENT.MEMBER_JOIN:

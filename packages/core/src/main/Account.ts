@@ -25,7 +25,6 @@ import type {Notification} from '@wireapp/api-client/src/notification/';
 import {AUTH_COOKIE_KEY, AUTH_TABLE_NAME, Context, Cookie, CookieStore, LoginData} from '@wireapp/api-client/src/auth/';
 import {ClientClassification, ClientType, RegisteredClient} from '@wireapp/api-client/src/client/';
 import * as Events from '@wireapp/api-client/src/event';
-import {GenericMessage} from '@wireapp/protocol-messaging';
 import {WebSocketClient} from '@wireapp/api-client/src/tcp/';
 import * as cryptobox from '@wireapp/cryptobox';
 import {CRUDEngine, MemoryEngine, error as StoreEngineError} from '@wireapp/store-engine';
@@ -36,25 +35,21 @@ import {LoginSanitizer} from './auth/';
 import {BroadcastService} from './broadcast/';
 import {ClientInfo, ClientService} from './client/';
 import {ConnectionService} from './connection/';
-import {
-  AssetService,
-  ConversationService,
-  PayloadBundle,
-  PayloadBundleSource,
-  PayloadBundleType,
-} from './conversation/';
+import {AssetService, ConversationService, PayloadBundleSource, PayloadBundleType} from './conversation/';
 import * as OtrMessage from './conversation/message/OtrMessage';
 import * as UserMessage from './conversation/message/UserMessage';
 import type {CoreError} from './CoreError';
 import {CryptographyService} from './cryptography/';
 import {GiphyService} from './giphy/';
-import {NotificationService} from './notification/';
+import {HandledEventPayload, NotificationService} from './notification/';
 import {SelfService} from './self/';
 import {TeamService} from './team/';
 import {UserService} from './user/';
 import {AccountService} from './account/';
 import {LinkPreviewService} from './linkPreview';
 import {WEBSOCKET_STATE} from '@wireapp/api-client/src/tcp/ReconnectingWebsocket';
+
+export type ProcessedEventPayload = HandledEventPayload;
 
 enum TOPIC {
   ERROR = 'Account.TOPIC.ERROR',
@@ -406,10 +401,7 @@ export class Account extends EventEmitter {
      * @param payload the payload of the event. Contains the raw event received and the decrypted data (if event was encrypted)
      * @param source where the message comes from (either websocket or notification stream)
      */
-    onEvent?: (
-      payload: {event: Events.BackendEvent; mappedEvent?: PayloadBundle; decryptedData?: GenericMessage},
-      source: PayloadBundleSource,
-    ) => void;
+    onEvent?: (payload: HandledEventPayload, source: PayloadBundleSource) => void;
 
     /**
      * During the notification stream processing, this function will be called whenever a new notification has been processed
@@ -430,10 +422,7 @@ export class Account extends EventEmitter {
       throw new Error('Context is not set - please login first');
     }
 
-    const handleEvent = async (
-      payload: {mappedEvent?: PayloadBundle; event: Events.BackendEvent; decryptedData?: GenericMessage},
-      source: PayloadBundleSource,
-    ) => {
+    const handleEvent = async (payload: HandledEventPayload, source: PayloadBundleSource) => {
       const {mappedEvent} = payload;
       switch (mappedEvent?.type) {
         case PayloadBundleType.TIMER_UPDATE: {
