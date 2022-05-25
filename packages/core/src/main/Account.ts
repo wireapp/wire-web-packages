@@ -407,7 +407,7 @@ export class Account extends EventEmitter {
      * @param source where the message comes from (either websocket or notification stream)
      */
     onEvent?: (
-      payload: {event: Events.BackendEvent; decryptedData?: GenericMessage},
+      payload: {event: Events.BackendEvent; mappedEvent?: PayloadBundle; decryptedData?: GenericMessage},
       source: PayloadBundleSource,
     ) => void;
 
@@ -431,10 +431,11 @@ export class Account extends EventEmitter {
     }
 
     const handleEvent = async (
-      payload: {event: PayloadBundle | undefined; rawEvent: Events.BackendEvent; decryptedData?: GenericMessage},
+      payload: {mappedEvent?: PayloadBundle; event: Events.BackendEvent; decryptedData?: GenericMessage},
       source: PayloadBundleSource,
     ) => {
-      switch (payload.event?.type) {
+      const {mappedEvent} = payload;
+      switch (mappedEvent?.type) {
         case PayloadBundleType.TIMER_UPDATE: {
           const {
             data: {message_timer},
@@ -445,9 +446,9 @@ export class Account extends EventEmitter {
           break;
         }
       }
-      onEvent({event: payload.rawEvent, decryptedData: payload.decryptedData}, source);
-      if (payload.event) {
-        this.emit(payload.event.type, payload.event);
+      onEvent(payload, source);
+      if (mappedEvent) {
+        this.emit(mappedEvent.type, payload.mappedEvent);
       }
     };
 
