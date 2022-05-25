@@ -163,6 +163,10 @@ export class NotificationService extends EventEmitter {
       this.logger.log(`Handling event of type "${event.type}" for notification with ID "${notification.id}"`, event);
       try {
         const data = await this.handleEvent(event, source);
+        if (!notification.transient) {
+          // keep track of the last handled notification for next time we fetch the notification stream
+          await this.setLastNotificationId(notification);
+        }
         yield {
           ...data,
           event: data.event ? this.cleanupPayloadBundle(data.event) : undefined,

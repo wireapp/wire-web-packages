@@ -53,7 +53,11 @@ describe('NotificationService', () => {
         payload: [{}],
       } as unknown as Notification;
 
-      await notificationService.handleNotification(notification, PayloadBundleSource.NOTIFICATION_STREAM);
+      const handledNotifications = notificationService.handleNotification(
+        notification,
+        PayloadBundleSource.NOTIFICATION_STREAM,
+      );
+      await handledNotifications.next;
     });
   });
 
@@ -73,7 +77,11 @@ describe('NotificationService', () => {
         transient: false,
       } as unknown as Notification;
 
-      await notificationService.handleNotification(notification, PayloadBundleSource.NOTIFICATION_STREAM);
+      const handledNotifications = notificationService.handleNotification(
+        notification,
+        PayloadBundleSource.NOTIFICATION_STREAM,
+      );
+      await handledNotifications.next;
 
       expect(spySetLastNotificationId.calls.count()).toBe(1);
     });
@@ -93,7 +101,11 @@ describe('NotificationService', () => {
         transient: true,
       } as unknown as Notification;
 
-      await notificationService.handleNotification(notification, PayloadBundleSource.NOTIFICATION_STREAM);
+      const handledNotifications = notificationService.handleNotification(
+        notification,
+        PayloadBundleSource.NOTIFICATION_STREAM,
+      );
+      await handledNotifications.next;
 
       expect(spySetLastNotificationId.calls.count()).toBe(0);
     });
@@ -118,7 +130,11 @@ describe('NotificationService', () => {
         transient: true,
       } as unknown as Notification;
 
-      await notificationService.handleNotification(notification, PayloadBundleSource.NOTIFICATION_STREAM);
+      const handledNotifications = notificationService.handleNotification(
+        notification,
+        PayloadBundleSource.NOTIFICATION_STREAM,
+      );
+      await handledNotifications.next;
     });
   });
 });
