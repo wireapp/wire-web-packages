@@ -220,7 +220,9 @@ describe('Account', () => {
 
     await account.listen();
 
-    spyOn<any>(account.service!.notification, 'handleEvent').and.returnValue({event: {type: PayloadBundleType.TEXT}});
+    spyOn<any>(account.service!.notification, 'handleEvent').and.returnValue({
+      mappedEvent: {type: PayloadBundleType.TEXT},
+    });
     account.on(PayloadBundleType.TEXT, message => {
       expect(message.type).toBe(PayloadBundleType.TEXT);
       done();
