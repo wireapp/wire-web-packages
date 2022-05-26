@@ -140,7 +140,9 @@ export const Input: React.FC<InputProps<HTMLInputElement>> = React.forwardRef<
           {...filterInputProps(props)}
         />
 
-        {hasError && <ErrorIcon css={centerInputAction} width={16} height={16} aria-hidden="true" />}
+        {hasError && !isPasswordInput && (
+          <ErrorIcon css={centerInputAction} width={16} height={16} aria-hidden="true" />
+        )}
 
         {isPasswordInput && (
           <button
