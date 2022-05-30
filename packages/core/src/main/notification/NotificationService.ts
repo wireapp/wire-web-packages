@@ -171,7 +171,7 @@ export class NotificationService extends EventEmitter {
     switch (payload.type) {
       case PayloadBundleType.ASSET: {
         const assetContent = payload.content as AssetContent;
-        const isMetaData = !!assetContent && !!assetContent.original && !assetContent.uploaded;
+        const isMetaData = !!assetContent?.original && !assetContent?.uploaded;
         const isAbort = !!assetContent.abortReason || (!assetContent.original && !assetContent.uploaded);
 
         if (isMetaData) {
