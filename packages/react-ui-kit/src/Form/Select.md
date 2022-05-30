@@ -9,12 +9,12 @@ import {Columns, Column, ErrorMessage, Select} from '@wireapp/react-ui-kit';
     <Column>Select</Column>
 
     <Column>
-      <Select label="Select" id="firstSelect">
-        <option>a</option>
-        <option>b</option>
-        <option>c</option>
-        <option>d</option>
-      </Select>
+      <Select
+        label="Select"
+        id="firstSelect"
+        options={['Test 1', 'Test 2', 'Test3']}
+        onChange={selectedOption => console.log('Selected option', selectedOption)}
+      />
     </Column>
   </Columns>
 
@@ -22,9 +22,13 @@ import {Columns, Column, ErrorMessage, Select} from '@wireapp/react-ui-kit';
     <Column>Disabled Select</Column>
 
     <Column>
-      <Select disabled label="Disabled select" id="disabledSelect">
-        <option>a</option>
-      </Select>
+      <Select
+        disabled
+        label="Disabled select"
+        id="disabledSelect"
+        options={['Test 1', 'Test 2', 'Test3']}
+        onChange={selectedOption => console.log('Selected option', selectedOption)}
+      />
     </Column>
   </Columns>
 
@@ -32,9 +36,13 @@ import {Columns, Column, ErrorMessage, Select} from '@wireapp/react-ui-kit';
     <Column>Required Select</Column>
 
     <Column>
-      <Select label="Required select" required id="requiredSelect">
-        <option>a</option>
-      </Select>
+      <Select
+        label="Required select"
+        required
+        id="requiredSelect"
+        options={['Test 1', 'Test 2', 'Test3']}
+        onChange={selectedOption => console.log('Selected option', selectedOption)}
+      />
     </Column>
   </Columns>
 
@@ -48,9 +56,9 @@ import {Columns, Column, ErrorMessage, Select} from '@wireapp/react-ui-kit';
         id="invalidSelect"
         required
         error={<ErrorMessage>Error message</ErrorMessage>}
-      >
-        <option>a</option>
-      </Select>
+        options={['Test 1', 'Test 2', 'Test3']}
+        onChange={selectedOption => console.log('Selected option', selectedOption)}
+      />
     </Column>
   </Columns>
 </Fragment>;
