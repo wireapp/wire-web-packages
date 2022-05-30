@@ -21,6 +21,7 @@ const options = [
         options={options}
         value={options[0]}
         onChange={selectedOption => console.log('Selected option', selectedOption)}
+        dataUieName="select"
       />
     </Column>
   </Columns>
@@ -35,6 +36,7 @@ const options = [
         id="disabledSelect"
         options={options}
         onChange={selectedOption => console.log('Selected option', selectedOption)}
+        dataUieName="disabled-select"
       />
     </Column>
   </Columns>
@@ -49,6 +51,7 @@ const options = [
         id="requiredSelect"
         options={options}
         onChange={selectedOption => console.log('Selected option', selectedOption)}
+        dataUieName="required-select"
       />
     </Column>
   </Columns>
@@ -65,6 +68,7 @@ const options = [
         error={<ErrorMessage>Error message</ErrorMessage>}
         options={options}
         onChange={selectedOption => console.log('Selected option', selectedOption)}
+        dataUieName="invalid-select"
       />
     </Column>
   </Columns>

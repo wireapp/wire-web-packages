@@ -35,7 +35,8 @@ type Option = {
 export interface SelectProps {
   id: string;
   onChange: (selectedOption: string | number) => void;
-  options?: Option[];
+  dataUieName: string;
+  options: Option[];
   value?: Option | null;
   helperText?: string;
   label?: string;
@@ -142,6 +143,7 @@ export const Select = ({
   onChange,
   required,
   markInvalid,
+  dataUieName,
   ...props
 }: SelectProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -207,6 +209,8 @@ export const Select = ({
 
   const hasError = !!error;
 
+  const hasSelectedOption = options && !!options[selectedOption];
+
   return (
     <div
       css={{
@@ -215,6 +219,7 @@ export const Select = ({
           color: COLOR_V2.BLUE,
         },
       }}
+      data-uie-name={dataUieName}
     >
       {label && (
         <InputLabel htmlFor={id} isRequired={required} markInvalid={markInvalid}>
@@ -225,7 +230,7 @@ export const Select = ({
       <div css={{position: 'relative'}}>
         <button
           type="button"
-          aria-activedescendant={options[selectedOption]?.label}
+          aria-activedescendant={hasSelectedOption ? options[selectedOption].label : ''}
           aria-expanded={isDropdownOpen}
           aria-haspopup="listbox"
           aria-labelledby={id}
@@ -234,8 +239,9 @@ export const Select = ({
           onKeyDown={handleListKeyDown}
           css={(theme: Theme) => selectStyle(theme, props, hasError)}
           {...filterSelectProps(props)}
+          data-uie-name={dataUieName}
         >
-          {options[selectedOption]?.label ?? placeholderText}
+          {hasSelectedOption ? options[selectedOption].label : placeholderText}
         </button>
 
         <ul
@@ -244,6 +250,7 @@ export const Select = ({
           tabIndex={-1}
           onKeyDown={handleListKeyDown}
           css={(theme: Theme) => dropdownStyles(theme, isDropdownOpen)}
+          data-uie-name={`dropdown-${dataUieName}`}
         >
           {options.map((option, index) => {
             const isSelected = selectedOption == option.value;
@@ -258,6 +265,8 @@ export const Select = ({
                 onKeyDown={handleKeyDown(option.value)}
                 onClick={() => onOptionChange(index)}
                 css={(theme: Theme) => dropdownOptionStyles(theme, isSelected)}
+                data-uie-name={`option-${dataUieName}`}
+                data-uie-value={option.label}
               >
                 {option.label}
               </li>

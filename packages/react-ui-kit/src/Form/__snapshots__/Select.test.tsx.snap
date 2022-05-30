@@ -112,6 +112,7 @@ exports[`"Select" renders 1`] = `
       className="emotion-2"
     >
       <button
+        aria-activedescendant=""
         aria-expanded={false}
         aria-haspopup="listbox"
         className="emotion-3"
@@ -123,6 +124,7 @@ exports[`"Select" renders 1`] = `
       </button>
       <ul
         className="emotion-4"
+        data-uie-name="dropdown-undefined"
         onKeyDown={[Function]}
         role="listbox"
         tabIndex={-1}
@@ -235,6 +237,7 @@ exports[`"Select" renders as disabled 1`] = `
       className="emotion-2"
     >
       <button
+        aria-activedescendant=""
         aria-expanded={false}
         aria-haspopup="listbox"
         className="emotion-3"
@@ -247,6 +250,7 @@ exports[`"Select" renders as disabled 1`] = `
       </button>
       <ul
         className="emotion-4"
+        data-uie-name="dropdown-undefined"
         onKeyDown={[Function]}
         role="listbox"
         tabIndex={-1}
@@ -368,6 +372,7 @@ exports[`"Select" renders as invalid 1`] = `
       className="emotion-2"
     >
       <button
+        aria-activedescendant=""
         aria-expanded={false}
         aria-haspopup="listbox"
         className="emotion-3"
@@ -379,6 +384,7 @@ exports[`"Select" renders as invalid 1`] = `
       </button>
       <ul
         className="emotion-4"
+        data-uie-name="dropdown-undefined"
         onKeyDown={[Function]}
         role="listbox"
         tabIndex={-1}
