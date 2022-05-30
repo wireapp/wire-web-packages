@@ -42,7 +42,13 @@ import {Columns, Column, ErrorMessage, Select} from '@wireapp/react-ui-kit';
     <Column>Invalid Select</Column>
 
     <Column>
-      <Select markInvalid label="Label" id="invalidSelect" required error={<ErrorMessage>Error message</ErrorMessage>}>
+      <Select
+        markInvalid
+        label="InputLabel"
+        id="invalidSelect"
+        required
+        error={<ErrorMessage>Error message</ErrorMessage>}
+      >
         <option>a</option>
       </Select>
     </Column>

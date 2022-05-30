@@ -25,7 +25,7 @@ import type {Theme} from '../Layout';
 import {filterProps, inlineSVG} from '../util';
 import {InputProps, inputStyle} from './Input';
 import React, {ReactElement} from 'react';
-import Label from './Label';
+import InputLabel from './InputLabel';
 
 export interface SelectProps<T = HTMLSelectElement> extends InputProps<T> {
   helperText?: string;
@@ -91,9 +91,9 @@ export const Select = ({label, children, error, helperText, ...props}: SelectPro
       }}
     >
       {label && (
-        <Label htmlFor={props.id} isRequired={props.required} markInvalid={props.markInvalid}>
+        <InputLabel htmlFor={props.id} isRequired={props.required} markInvalid={props.markInvalid}>
           {label}
-        </Label>
+        </InputLabel>
       )}
 
       <select css={(theme: Theme) => selectStyle(theme, props, hasError)} {...filterSelectProps(props)}>

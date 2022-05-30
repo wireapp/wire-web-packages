@@ -27,7 +27,7 @@ import type {Theme} from '../Layout';
 import type {TextProps} from '../Text';
 import {filterProps} from '../util';
 import {ErrorIcon, HideIcon, ShowIcon} from '../Icon';
-import Label from './Label';
+import InputLabel from './InputLabel';
 
 export interface InputProps<T = HTMLInputElement> extends TextProps<T> {
   label?: string;
@@ -116,9 +116,9 @@ export const Input: React.FC<InputProps<HTMLInputElement>> = React.forwardRef<
       }}
     >
       {label && (
-        <Label htmlFor={props.id} isRequired={props.required} markInvalid={props.markInvalid}>
+        <InputLabel htmlFor={props.id} isRequired={props.required} markInvalid={props.markInvalid}>
           {label}
-        </Label>
+        </InputLabel>
       )}
 
       <div css={{marginBottom: hasError && '8px', position: 'relative'}}>

@@ -22,14 +22,14 @@ import {jsx} from '@emotion/react';
 import {COLOR_V2} from '../Identity';
 import React, {FC, ReactNode} from 'react';
 
-export interface LabelProps {
+export interface InputLabelProps {
   children: ReactNode | string;
   htmlFor?: string;
   markInvalid?: boolean;
   isRequired?: boolean;
 }
 
-const Label: FC<LabelProps> = ({htmlFor, markInvalid, isRequired, children, ...props}) => (
+const InputLabel: FC<InputLabelProps> = ({htmlFor, markInvalid, isRequired, children, ...props}) => (
   <label
     htmlFor={htmlFor}
     css={{
@@ -46,4 +46,4 @@ const Label: FC<LabelProps> = ({htmlFor, markInvalid, isRequired, children, ...p
   </label>
 );
 
-export default Label;
+export default InputLabel;
