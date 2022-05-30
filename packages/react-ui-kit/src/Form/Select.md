@@ -4,6 +4,12 @@ Demo:
 import {Fragment} from 'react';
 import {Columns, Column, ErrorMessage, Select} from '@wireapp/react-ui-kit';
 
+const options = [
+  {value: '1', label: 'Option 1'},
+  {value: '2', label: 'Option 2'},
+  {value: '3', label: 'Option 3'},
+];
+
 <Fragment>
   <Columns>
     <Column>Select</Column>
@@ -12,7 +18,8 @@ import {Columns, Column, ErrorMessage, Select} from '@wireapp/react-ui-kit';
       <Select
         label="Select"
         id="firstSelect"
-        options={['Test 1', 'Test 2', 'Test3']}
+        options={options}
+        value={options[0]}
         onChange={selectedOption => console.log('Selected option', selectedOption)}
       />
     </Column>
@@ -26,7 +33,7 @@ import {Columns, Column, ErrorMessage, Select} from '@wireapp/react-ui-kit';
         disabled
         label="Disabled select"
         id="disabledSelect"
-        options={['Test 1', 'Test 2', 'Test3']}
+        options={options}
         onChange={selectedOption => console.log('Selected option', selectedOption)}
       />
     </Column>
@@ -40,7 +47,7 @@ import {Columns, Column, ErrorMessage, Select} from '@wireapp/react-ui-kit';
         label="Required select"
         required
         id="requiredSelect"
-        options={['Test 1', 'Test 2', 'Test3']}
+        options={options}
         onChange={selectedOption => console.log('Selected option', selectedOption)}
       />
     </Column>
@@ -56,7 +63,7 @@ import {Columns, Column, ErrorMessage, Select} from '@wireapp/react-ui-kit';
         id="invalidSelect"
         required
         error={<ErrorMessage>Error message</ErrorMessage>}
-        options={['Test 1', 'Test 2', 'Test3']}
+        options={options}
         onChange={selectedOption => console.log('Selected option', selectedOption)}
       />
     </Column>

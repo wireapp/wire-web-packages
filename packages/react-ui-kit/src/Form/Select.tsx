@@ -27,10 +27,16 @@ import {inputStyle} from './Input';
 import React, {ReactElement, useState} from 'react';
 import InputLabel from './InputLabel';
 
+type Option = {
+  value: string | number;
+  label: string;
+};
+
 export interface SelectProps {
   id: string;
-  onChange: (selectedOption: string) => void;
-  options?: string[];
+  onChange: (selectedOption: string | number) => void;
+  options?: Option[];
+  value?: Option | null;
   helperText?: string;
   label?: string;
   disabled?: boolean;
@@ -132,19 +138,20 @@ export const Select = ({
   error,
   helperText,
   options = [],
+  value = null,
   onChange,
   required,
   markInvalid,
   ...props
 }: SelectProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState<number | null>(() => (value ? options.indexOf(value) : null));
 
   const onToggleDropdown = () => setIsDropdownOpen(prevState => !prevState);
 
   const onOptionSelect = (idx: number) => {
     setSelectedOption(idx);
-    onChange(options[idx]);
+    onChange(options[idx].value);
   };
 
   const onOptionChange = (idx: number) => {
@@ -218,6 +225,7 @@ export const Select = ({
       <div css={{position: 'relative'}}>
         <button
           type="button"
+          aria-activedescendant={options[selectedOption]?.label}
           aria-expanded={isDropdownOpen}
           aria-haspopup="listbox"
           aria-labelledby={id}
@@ -227,32 +235,31 @@ export const Select = ({
           css={(theme: Theme) => selectStyle(theme, props, hasError)}
           {...filterSelectProps(props)}
         >
-          {options[selectedOption] ?? placeholderText}
+          {options[selectedOption]?.label ?? placeholderText}
         </button>
 
         <ul
           role="listbox"
-          aria-activedescendant={options[selectedOption]}
           aria-labelledby={id}
           tabIndex={-1}
           onKeyDown={handleListKeyDown}
           css={(theme: Theme) => dropdownStyles(theme, isDropdownOpen)}
         >
           {options.map((option, index) => {
-            const isSelected = selectedOption == index;
+            const isSelected = selectedOption == option.value;
 
             return (
               <li
-                key={option}
-                id={option}
+                key={option.value}
+                id={option.value.toString()}
                 role="option"
                 aria-selected={isSelected}
                 tabIndex={0}
-                onKeyDown={handleKeyDown(index)}
+                onKeyDown={handleKeyDown(option.value)}
                 onClick={() => onOptionChange(index)}
                 css={(theme: Theme) => dropdownOptionStyles(theme, isSelected)}
               >
-                {option}
+                {option.label}
               </li>
             );
           })}
