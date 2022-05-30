@@ -81,16 +81,30 @@ export class NotificationAPI {
    * @param lastNotificationId Only return notifications more recent than this
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/push/fetchNotifications
    */
-  public async getAllNotifications(clientId?: string, lastNotificationId?: string): Promise<Notification[]> {
+  public async getAllNotifications(
+    clientId?: string,
+    lastNotificationId?: string,
+  ): Promise<{notifications: Notification[]; missedNotification?: string}> {
     let notificationList: Notification[] = [];
 
-    const getNotificationChunks = async (clientId?: string, lastNotificationId?: string): Promise<Notification[]> => {
-      const {notifications, has_more} = await this.getNotifications(
-        clientId,
-        NOTIFICATION_SIZE_MAXIMUM,
-        lastNotificationId,
-      );
+    const getNotificationChunks = async (
+      clientId?: string,
+      lastNotificationId?: string,
+    ): Promise<{notifications: Notification[]; missedNotification?: string}> => {
+      let payload: NotificationList = {notifications: [], time: '0', has_more: false};
+      let hasMissedNotifications = false;
+      try {
+        payload = await this.getNotifications(clientId, NOTIFICATION_SIZE_MAXIMUM, lastNotificationId);
+      } catch (error) {
+        if ((error as any).response.data) {
+          payload = (error as any).response.data as NotificationList;
+          hasMissedNotifications = true;
+        } else {
+          throw error;
+        }
+      }
 
+      const {notifications, has_more} = payload;
       if (notifications.length) {
         notificationList = notificationList.concat(notifications);
       }
@@ -102,7 +116,10 @@ export class NotificationAPI {
         }
       }
 
-      return notificationList;
+      return {
+        notifications: notificationList,
+        missedNotification: hasMissedNotifications ? lastNotificationId : undefined,
+      };
     };
 
     return getNotificationChunks(clientId, lastNotificationId);
