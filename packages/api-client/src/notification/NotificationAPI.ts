@@ -24,7 +24,11 @@ import type {Notification, NotificationList} from './';
 
 export const NOTIFICATION_SIZE_MAXIMUM = 10000;
 
-type NotificationsReponse = {notifications: Notification[]; missedNotification?: string};
+type NotificationsReponse = {
+  notifications: Notification[]; 
+  missedNotification?: string
+};
+
 export class NotificationAPI {
   constructor(private readonly client: HttpClient) {}
 
@@ -89,7 +93,11 @@ export class NotificationAPI {
       currentClientId?: string,
       currentNotificationId?: string,
     ): Promise<NotificationsReponse> => {
-      let payload: NotificationList = {notifications: [], time: '0', has_more: false};
+      let payload: NotificationList = {
+        notifications: [], 
+        time: '0', 
+        has_more: false
+      };
       let hasMissedNotifications = false;
       try {
         payload = await this.getNotifications(currentClientId, NOTIFICATION_SIZE_MAXIMUM, currentNotificationId);
