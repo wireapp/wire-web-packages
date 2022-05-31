@@ -155,9 +155,22 @@ export const Select = ({
 
   const onToggleDropdown = () => setIsDropdownOpen(prevState => !prevState);
 
+  const scrollToCurrentOption = (idx: number) => {
+    if (listRef.current) {
+      const listSelectedOption = listRef.current.children[idx] as HTMLLIElement;
+      const getYPosition = listSelectedOption && listSelectedOption.offsetTop;
+
+      listRef.current.scroll({
+        top: getYPosition ?? 0,
+        behavior: 'smooth',
+      });
+    }
+  };
+
   const onOptionSelect = (idx: number) => {
     setSelectedOption(idx);
     onChange(options[idx].value);
+    scrollToCurrentOption(idx);
   };
 
   const onOptionChange = (idx: number) => {
@@ -228,19 +241,6 @@ export const Select = ({
       window.removeEventListener('click', handleOutsideClick);
     };
   }, []);
-
-  // Scroll to current option
-  useEffect(() => {
-    if (isDropdownOpen && listRef.current) {
-      const listSelectedOption = listRef.current.children[selectedOption] as HTMLLIElement;
-      const getYPosition = listSelectedOption && listSelectedOption.offsetTop;
-
-      listRef.current.scroll({
-        top: getYPosition ?? 0,
-        behavior: 'smooth',
-      });
-    }
-  }, [isDropdownOpen, selectedOption, listRef]);
 
   return (
     <div
