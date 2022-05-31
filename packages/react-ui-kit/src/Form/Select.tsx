@@ -24,7 +24,7 @@ import {COLOR_V2} from '../Identity';
 import type {Theme} from '../Layout';
 import {filterProps, inlineSVG} from '../util';
 import {inputStyle} from './Input';
-import React, {ReactElement, useState} from 'react';
+import React, {ReactElement, useEffect, useRef, useState} from 'react';
 import InputLabel from './InputLabel';
 
 type Option = {
@@ -146,6 +146,7 @@ export const Select = ({
   dataUieName,
   ...props
 }: SelectProps) => {
+  const selectContainerRef = useRef<HTMLDivElement>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<number | null>(() => (value ? options.indexOf(value) : null));
 
@@ -211,6 +212,20 @@ export const Select = ({
 
   const hasSelectedOption = options && !!options[selectedOption];
 
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (selectContainerRef.current && !selectContainerRef.current.contains(event.target as Node)) {
+      setIsDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('click', handleOutsideClick);
+
+    return () => {
+      window.removeEventListener('click', handleOutsideClick);
+    };
+  }, []);
+
   return (
     <div
       css={{
@@ -220,6 +235,7 @@ export const Select = ({
         },
       }}
       data-uie-name={dataUieName}
+      ref={selectContainerRef}
     >
       {label && (
         <InputLabel htmlFor={id} isRequired={required} markInvalid={markInvalid}>
@@ -250,10 +266,12 @@ export const Select = ({
           tabIndex={-1}
           onKeyDown={handleListKeyDown}
           css={(theme: Theme) => dropdownStyles(theme, isDropdownOpen)}
-          data-uie-name={`dropdown-${dataUieName}`}
+          {...(dataUieName && {
+            'data-uie-name': `dropdown-${dataUieName}`,
+          })}
         >
           {options.map((option, index) => {
-            const isSelected = selectedOption == option.value;
+            const isSelected = selectedOption == index;
 
             return (
               <li
@@ -262,11 +280,13 @@ export const Select = ({
                 role="option"
                 aria-selected={isSelected}
                 tabIndex={0}
-                onKeyDown={handleKeyDown(option.value)}
+                onKeyDown={handleKeyDown(index)}
                 onClick={() => onOptionChange(index)}
                 css={(theme: Theme) => dropdownOptionStyles(theme, isSelected)}
-                data-uie-name={`option-${dataUieName}`}
-                data-uie-value={option.label}
+                {...(dataUieName && {
+                  'data-uie-name': `option-${dataUieName}`,
+                  'data-uie-value': option.label,
+                })}
               >
                 {option.label}
               </li>
