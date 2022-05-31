@@ -100,6 +100,8 @@ const dropdownStyles = (theme: Theme, isDropdownOpen: boolean): CSSObject => ({
   top: '100%',
   left: 0,
   width: '100%',
+  maxHeight: '240px',
+  overflowY: 'auto',
   zIndex: 9,
 });
 
@@ -147,6 +149,7 @@ export const Select = ({
   ...props
 }: SelectProps) => {
   const selectContainerRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<number | null>(() => (value ? options.indexOf(value) : null));
 
@@ -226,6 +229,19 @@ export const Select = ({
     };
   }, []);
 
+  // Scroll to current option
+  useEffect(() => {
+    if (isDropdownOpen && listRef.current) {
+      const listSelectedOption = listRef.current.children[selectedOption] as HTMLLIElement;
+      const getYPosition = listSelectedOption && listSelectedOption.offsetTop;
+
+      listRef.current.scroll({
+        top: getYPosition ?? 0,
+        behavior: 'smooth',
+      });
+    }
+  }, [isDropdownOpen, selectedOption, listRef]);
+
   return (
     <div
       css={{
@@ -261,6 +277,7 @@ export const Select = ({
         </button>
 
         <ul
+          ref={listRef}
           role="listbox"
           aria-labelledby={id}
           tabIndex={-1}
