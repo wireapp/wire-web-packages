@@ -242,9 +242,12 @@ export class ConversationAPI {
       method: 'get',
       url,
     };
-
-    const response = await this.client.sendJSON<Conversation>(config);
-    return response.data;
+    try {
+      const response = await this.client.sendJSON<Conversation>(config);
+      return response.data;
+    } catch (e) {
+      return {qualified_id: conversationId} as Conversation;
+    }
   }
 
   /**
