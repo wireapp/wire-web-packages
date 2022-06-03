@@ -18,7 +18,7 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/core';
+import {CSSObject, jsx} from '@emotion/react';
 import Color from 'color';
 
 import {COLOR} from '../../Identity';
@@ -40,7 +40,7 @@ export const menuSubLinkStyle: <T>(theme: Theme, props: MenuSubLinkProps<T>) => 
   textDecoration: 'none',
   transition: defaultTransition,
   [media[QueryKeys.DESKTOP]]: {
-    '&:first-child': {
+    '&:first-of-type': {
       marginLeft: 0,
     },
     '&:last-child': {
@@ -62,5 +62,5 @@ export const menuSubLinkStyle: <T>(theme: Theme, props: MenuSubLinkProps<T>) => 
 });
 
 export const MenuSubLink = (props: MenuSubLinkProps) => (
-  <div css={theme => menuSubLinkStyle(theme, props)} {...props} />
+  <div css={(theme: Theme) => menuSubLinkStyle(theme, props)} {...props} />
 );

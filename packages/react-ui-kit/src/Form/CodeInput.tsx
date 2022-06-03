@@ -18,12 +18,13 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/core';
+import {CSSObject, jsx} from '@emotion/react';
 import React, {useEffect, useState} from 'react';
 
 import type {Theme} from '../Layout';
 import {noop} from '../util';
 import {InputProps, inputStyle} from './Input';
+import {COLOR_V2} from '../Identity';
 
 const CodeInputWrapper = (props: React.HTMLProps<HTMLDivElement>) => (
   <div
@@ -42,17 +43,22 @@ const digitInputStyle: <T>(theme: Theme, props: DigitInputProps<T>) => CSSObject
   '& + &': {
     marginLeft: '19px',
   },
-  fontSize: '32px',
-  lineHeight: '56px',
+  '&:hover': {
+    boxShadow: `0 0 0 1px ${COLOR_V2.GRAY_60}`,
+  },
+  fontSize: '24px',
+  lineHeight: '28px',
+  borderRadius: '12px',
   padding: 0,
   textAlign: 'center',
   width: '48px',
+  height: '56px',
 });
 
 const DigitInput: React.FC<DigitInputProps<HTMLInputElement>> = React.forwardRef<
   HTMLInputElement,
   DigitInputProps<HTMLInputElement>
->((props, ref) => <input ref={ref} css={theme => digitInputStyle(theme, props)} {...props} type="tel" />);
+>((props, ref) => <input ref={ref} css={(theme: Theme) => digitInputStyle(theme, props)} {...props} type="tel" />);
 
 export interface CodeInputProps<T = HTMLInputElement> extends InputProps<T> {
   autoFocus?: boolean;

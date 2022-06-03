@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.12.4](https://github.com/wireapp/wire-web-packages/tree/main/packages/eslint-config/compare/@wireapp/eslint-config@1.12.3...@wireapp/eslint-config@1.12.4) (2022-04-21)
+
+
+### Bug Fixes
+
+* **eslint-config:** Reference to main file ([8978754](https://github.com/wireapp/wire-web-packages/tree/main/packages/eslint-config/commit/8978754f280e9eb9961c0fdbcb07b3ade6fd689a))
+
+
+
+
+
+## [1.12.3](https://github.com/wireapp/wire-web-packages/tree/main/packages/eslint-config/compare/@wireapp/eslint-config@1.12.2...@wireapp/eslint-config@1.12.3) (2022-04-21)
+
+
+### Bug Fixes
+
+* **estlint-config:** fix file format ([5b94ef5](https://github.com/wireapp/wire-web-packages/tree/main/packages/eslint-config/commit/5b94ef5011fbbe08ba3d27d7bb8f8e63d09b8bad))
+
+
+
+
+
+## [1.12.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/eslint-config/compare/@wireapp/eslint-config@1.12.1...@wireapp/eslint-config@1.12.2) (2022-04-21)
+
+
+### Bug Fixes
+
+* **eslint-config:** Automatically add date to header ([2dcbd2d](https://github.com/wireapp/wire-web-packages/tree/main/packages/eslint-config/commit/2dcbd2d2193fdadc38c47af811af7592ddb8546f))
+
+
+
+
+
+## [1.12.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/eslint-config/compare/@wireapp/eslint-config@1.12.0...@wireapp/eslint-config@1.12.1) (2022-04-21)
+
+
+### Bug Fixes
+
+* upgrade eslint config ([aee7821](https://github.com/wireapp/wire-web-packages/tree/main/packages/eslint-config/commit/aee78219d07847dc5ab8dd6dfbc1b03a8beabe86))
+
+
+
+
+
 # [1.12.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/eslint-config/compare/@wireapp/eslint-config@1.11.2...@wireapp/eslint-config@1.12.0) (2021-12-02)
 
 

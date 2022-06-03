@@ -24,15 +24,15 @@ import {ClientAPI, ClientType, RegisteredClient} from '@wireapp/api-client/src/c
 import {Self, SelfAPI} from '@wireapp/api-client/src/self';
 import {ConversationAPI} from '@wireapp/api-client/src/conversation';
 import {BackendError, BackendErrorLabel} from '@wireapp/api-client/src/http';
-import {Notification, NotificationAPI} from '@wireapp/api-client/src/notification';
+import {NotificationAPI} from '@wireapp/api-client/src/notification';
 import {AccentColor, ValidationUtil} from '@wireapp/commons';
 import {GenericMessage, Text} from '@wireapp/protocol-messaging';
 import * as Proteus from '@wireapp/proteus';
-import {MemoryEngine} from '@wireapp/store-engine';
 import nock = require('nock');
 import {Account} from './Account';
-import {PayloadBundleSource, PayloadBundleType} from './conversation';
+import {PayloadBundleType} from './conversation';
 import {MessageBuilder} from './conversation/message/MessageBuilder';
+import {WebSocketClient} from '@wireapp/api-client/src/tcp';
 
 const BASE_URL = 'mock-backend.wire.com';
 const MOCK_BACKEND = {
@@ -44,7 +44,10 @@ const MOCK_BACKEND = {
 async function createAccount(storageName = `test-${Date.now()}`): Promise<Account> {
   const apiClient = new APIClient({urls: MOCK_BACKEND});
   const account = new Account(apiClient);
-  await account.initServices(new MemoryEngine());
+  await account.initServices({
+    clientType: ClientType.TEMPORARY,
+    userId: '',
+  });
   return account;
 }
 
@@ -153,7 +156,7 @@ describe('Account', () => {
     it('initializes the Protocol buffers', async () => {
       const account = new Account();
 
-      await account.initServices(new MemoryEngine());
+      await account.initServices({clientType: ClientType.TEMPORARY, userId: ''});
 
       expect(account.service!.conversation).toBeDefined();
       expect(account.service!.cryptography).toBeDefined();
@@ -172,7 +175,7 @@ describe('Account', () => {
       const apiClient = new APIClient({urls: MOCK_BACKEND});
       const account = new Account(apiClient);
 
-      await account.initServices(new MemoryEngine());
+      await account.initServices({clientType: ClientType.TEMPORARY, userId: ''});
       const {clientId, clientType, userId} = await account.login({
         clientType: ClientType.TEMPORARY,
         email: 'hello@example.com',
@@ -188,7 +191,7 @@ describe('Account', () => {
       const apiClient = new APIClient({urls: MOCK_BACKEND});
       const account = new Account(apiClient);
 
-      await account.initServices(new MemoryEngine());
+      await account.initServices({clientType: ClientType.TEMPORARY, userId: ''});
 
       try {
         await account.login({
@@ -217,21 +220,14 @@ describe('Account', () => {
 
     await account.listen();
 
-    spyOn<any>(account.service!.notification, 'handleEvent').and.returnValue({type: PayloadBundleType.TEXT});
-    account.service!.notification.on(PayloadBundleType.TEXT, message => {
-      expect(message.type).toBe(PayloadBundleType.TEXT);
+    spyOn<any>(account.service!.notification, 'handleEvent').and.returnValue({
+      mappedEvent: {type: PayloadBundleType.TEXT},
     });
     account.on(PayloadBundleType.TEXT, message => {
       expect(message.type).toBe(PayloadBundleType.TEXT);
       done();
     });
 
-    await account.service!.notification.handleNotification(
-      {
-        payload: [{}],
-        transient: true,
-      } as unknown as Notification,
-      PayloadBundleSource.WEBSOCKET,
-    );
+    account.service!.notification['apiClient'].transport.ws.emit(WebSocketClient.TOPIC.ON_MESSAGE, {payload: [{}]});
   });
 });

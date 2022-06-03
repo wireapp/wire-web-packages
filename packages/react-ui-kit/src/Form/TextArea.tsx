@@ -18,7 +18,7 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/core';
+import {CSSObject, jsx} from '@emotion/react';
 import type {Property} from 'csstype';
 import React from 'react';
 
@@ -38,7 +38,7 @@ export const textAreaStyle: <T>(theme: Theme, props: TextAreaProps<T>) => CSSObj
 ) => {
   const placeholderStyle = {
     color: theme.Input.placeholderColor,
-    fontSize: '11px',
+    fontSize: '16px',
     textTransform: placeholderTextTransform,
   };
 
@@ -86,7 +86,7 @@ export const TextArea: React.FC<TextAreaProps<HTMLTextAreaElement>> = React.forw
 >((props, ref) => (
   <textarea
     className={TEXTAREA_CLASSNAME}
-    css={theme => textAreaStyle(theme, props)}
+    css={(theme: Theme) => textAreaStyle(theme, props)}
     ref={ref}
     {...filterTextAreaProps(props)}
   />

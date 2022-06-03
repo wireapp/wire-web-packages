@@ -3,6 +3,276 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [27.3.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.2.4...@wireapp/core@27.3.0) (2022-06-03)
+
+
+### Features
+
+* Add listen dryrun option ([#4282](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/issues/4282)) ([a10bbe1](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/a10bbe14f1967a85d38444ed3e745f57c6504e9e))
+
+
+
+
+
+## [27.2.4](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.2.3...@wireapp/core@27.2.4) (2022-06-01)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [27.2.3](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.2.2...@wireapp/core@27.2.3) (2022-05-31)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [27.2.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.2.1...@wireapp/core@27.2.2) (2022-05-31)
+
+
+### Bug Fixes
+
+* Ensure websocket messages are not handled while handling notification stream ([#4277](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/issues/4277)) ([e858923](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/e858923b13d47accf95c31881aeae4c370c73dbb))
+
+
+
+
+
+## [27.2.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.2.0...@wireapp/core@27.2.1) (2022-05-31)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [27.2.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.1.0...@wireapp/core@27.2.0) (2022-05-30)
+
+
+### Features
+
+* Add missed notifications hook ([#4275](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/issues/4275)) ([f81217b](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/f81217bad53fed2e4fb163c6ae871b39ca16cf58))
+
+
+
+
+
+# [27.1.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.0.5...@wireapp/core@27.1.0) (2022-05-30)
+
+
+### Features
+
+* Improve websocket connection API ([#4268](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/issues/4268)) ([a6eb884](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/a6eb884ddf42915157c8d6c846b0a8a989c3fc04))
+
+
+
+
+
+## [27.0.5](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.0.4...@wireapp/core@27.0.5) (2022-05-30)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [27.0.4](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.0.3...@wireapp/core@27.0.4) (2022-05-27)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [27.0.3](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.0.2...@wireapp/core@27.0.3) (2022-05-24)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [27.0.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.0.1...@wireapp/core@27.0.2) (2022-05-19)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [27.0.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.0.0...@wireapp/core@27.0.1) (2022-05-18)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [27.0.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@26.1.0...@wireapp/core@27.0.0) (2022-05-17)
+
+
+### Bug Fixes
+
+* Avoid silently creating client when initializing core ([#4264](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/issues/4264)) ([65a843a](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/65a843a2052dad2543e6cf046aca55ce85cc7c5e))
+
+
+### BREAKING CHANGES
+
+* if you were relying on account.init() to also create a new client, this behavior now change and will throw an error instead. If you also want to create a device (if it doesn't exist already), you should use the account.login() or account.initClient() methods instead
+
+
+
+
+
+# [26.1.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@26.0.0...@wireapp/core@26.1.0) (2022-05-16)
+
+
+### Features
+
+* Allow consumer to set number of prekeys generated ([#4263](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/issues/4263)) ([648ecda](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/648ecdad260488e1d07965a84a28c346d6f015c3))
+
+
+
+
+
+# [26.0.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@25.3.1...@wireapp/core@26.0.0) (2022-05-16)
+
+
+### Bug Fixes
+
+* Allow sending targeted lastRead and Countly messages ([#4262](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/issues/4262)) ([69c7d98](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/69c7d98272dc9beea6e5d9a99d6392177f0be361))
+
+
+### BREAKING CHANGES
+
+* To send `lastRead` and `countly` as protobuf message, you now need to provide a `MessageSendingOptions` object as last parameter. 
+
+```js
+core.service.conversation.sendLastRead(conversation, timestamp, true);
+
+// Becomes
+
+core.service.converstaion.sendLastRead(conversation, timestamp, {sendAsProtobuf: true});
+```
+
+
+
+
+
+## [25.3.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@25.3.0...@wireapp/core@25.3.1) (2022-05-16)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [25.3.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@25.2.1...@wireapp/core@25.3.0) (2022-05-16)
+
+
+### Features
+
+* **api-client:** Add MLS clients endpoints ([#4260](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/issues/4260)) ([d7bf7c1](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/d7bf7c12dfe215e79f57cf99ad91cb7d05b36a12))
+
+
+
+
+
+## [25.2.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@25.2.0...@wireapp/core@25.2.1) (2022-05-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [25.2.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@25.1.0...@wireapp/core@25.2.0) (2022-05-11)
+
+
+### Features
+
+* Add MLS device creation types ([#4259](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/issues/4259)) ([c88ed7c](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/c88ed7cf3804828b4fe8e56d842a6207abea4c2d))
+
+
+
+
+
+# [25.1.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@25.0.0...@wireapp/core@25.1.0) (2022-05-04)
+
+
+### Features
+
+* Allow complete payload to crete conversations ([#4258](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/issues/4258)) ([a6d53e2](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/a6d53e219e6ed96309ab02469b803ac461d38603))
+
+
+
+
+
+# [25.0.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@24.4.7...@wireapp/core@25.0.0) (2022-05-02)
+
+
+### Code Refactoring
+
+* Cleanup storage initialization ([#4257](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/issues/4257)) ([cf952c5](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/cf952c5522ccebe2c4e97d7dbb27de447a532032))
+
+
+### BREAKING CHANGES
+
+* The way custom database are given to the `Account` has changed.
+- The constructor signature now changes.
+If you were doing
+
+```js
+const account = new Account(apiClient, createStoreEngine);
+```
+
+Now you need to do 
+
+```js
+const account = new Account(apiClient, {createStore: createStoreEngine});
+```
+
+- The `login` and `init` function do not take a storage engine parameter anymore. You now need to give a `createStore` function to the constructor in order to give a custom storage engine to the core. 
+
+BEFORE
+
+```js
+const account = new Accoun(apiClient);
+
+account.login(data, initClient, clientInfo, database);
+```
+
+AFTER
+
+```js
+const account = new Accoun(apiClient, {createStore: () => database});
+
+account.login(data, initClient, clientInfo);
+```
+
+
+
+
+
+## [24.4.7](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@24.4.6...@wireapp/core@24.4.7) (2022-04-21)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [24.4.6](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@24.4.5...@wireapp/core@24.4.6) (2022-04-20)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
 ## [24.4.5](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@24.4.4...@wireapp/core@24.4.5) (2022-04-06)
 
 **Note:** Version bump only for package @wireapp/core

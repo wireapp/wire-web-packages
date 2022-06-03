@@ -3,6 +3,228 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.0.20](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.19...@wireapp/cli-client@11.0.20) (2022-06-03)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.19](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.18...@wireapp/cli-client@11.0.19) (2022-06-01)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.18](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.17...@wireapp/cli-client@11.0.18) (2022-05-31)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.17](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.16...@wireapp/cli-client@11.0.17) (2022-05-31)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.16](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.15...@wireapp/cli-client@11.0.16) (2022-05-31)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.15](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.14...@wireapp/cli-client@11.0.15) (2022-05-30)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.14](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.13...@wireapp/cli-client@11.0.14) (2022-05-30)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.13](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.12...@wireapp/cli-client@11.0.13) (2022-05-30)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.12](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.11...@wireapp/cli-client@11.0.12) (2022-05-27)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.11](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.10...@wireapp/cli-client@11.0.11) (2022-05-24)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.10](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.9...@wireapp/cli-client@11.0.10) (2022-05-19)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.9](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.8...@wireapp/cli-client@11.0.9) (2022-05-18)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.8](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.7...@wireapp/cli-client@11.0.8) (2022-05-17)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.7](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.6...@wireapp/cli-client@11.0.7) (2022-05-16)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.6](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.5...@wireapp/cli-client@11.0.6) (2022-05-16)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.5](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.4...@wireapp/cli-client@11.0.5) (2022-05-16)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.4](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.3...@wireapp/cli-client@11.0.4) (2022-05-16)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.3](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.2...@wireapp/cli-client@11.0.3) (2022-05-11)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.1...@wireapp/cli-client@11.0.2) (2022-05-11)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.0...@wireapp/cli-client@11.0.1) (2022-05-04)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+# [11.0.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@10.0.22...@wireapp/cli-client@11.0.0) (2022-05-02)
+
+
+### Code Refactoring
+
+* Cleanup storage initialization ([#4257](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/issues/4257)) ([cf952c5](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/commit/cf952c5522ccebe2c4e97d7dbb27de447a532032))
+
+
+### BREAKING CHANGES
+
+* The way custom database are given to the `Account` has changed.
+- The constructor signature now changes.
+If you were doing
+
+```js
+const account = new Account(apiClient, createStoreEngine);
+```
+
+Now you need to do 
+
+```js
+const account = new Account(apiClient, {createStore: createStoreEngine});
+```
+
+- The `login` and `init` function do not take a storage engine parameter anymore. You now need to give a `createStore` function to the constructor in order to give a custom storage engine to the core. 
+
+BEFORE
+
+```js
+const account = new Accoun(apiClient);
+
+account.login(data, initClient, clientInfo, database);
+```
+
+AFTER
+
+```js
+const account = new Accoun(apiClient, {createStore: () => database});
+
+account.login(data, initClient, clientInfo);
+```
+
+
+
+
+
+## [10.0.22](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@10.0.21...@wireapp/cli-client@10.0.22) (2022-04-21)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [10.0.21](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@10.0.20...@wireapp/cli-client@10.0.21) (2022-04-20)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
 ## [10.0.20](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@10.0.19...@wireapp/cli-client@10.0.20) (2022-04-06)
 
 **Note:** Version bump only for package @wireapp/cli-client

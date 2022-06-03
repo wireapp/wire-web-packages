@@ -3,6 +3,141 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [19.3.3](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.3.2...@wireapp/api-client@19.3.3) (2022-06-01)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [19.3.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.3.1...@wireapp/api-client@19.3.2) (2022-05-31)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [19.3.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.3.0...@wireapp/api-client@19.3.1) (2022-05-31)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+# [19.3.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.2.5...@wireapp/api-client@19.3.0) (2022-05-30)
+
+
+### Features
+
+* Add missed notifications hook ([#4275](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4275)) ([f81217b](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/f81217bad53fed2e4fb163c6ae871b39ca16cf58))
+
+
+
+
+
+## [19.2.5](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.2.4...@wireapp/api-client@19.2.5) (2022-05-30)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [19.2.4](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.2.3...@wireapp/api-client@19.2.4) (2022-05-27)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [19.2.3](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.2.2...@wireapp/api-client@19.2.3) (2022-05-24)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [19.2.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.2.1...@wireapp/api-client@19.2.2) (2022-05-19)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [19.2.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.2.0...@wireapp/api-client@19.2.1) (2022-05-18)
+
+
+### Bug Fixes
+
+* **api-client,react-ui-kit:** Correct migration to react 18 ([#4265](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4265)) ([f6afcca](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/f6afccaf1e08c32a97cd6226cf0f681014cf0245))
+
+
+
+
+
+# [19.2.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.1.1...@wireapp/api-client@19.2.0) (2022-05-16)
+
+
+### Features
+
+* **api-client:** Add MLS clients endpoints ([#4260](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4260)) ([d7bf7c1](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/d7bf7c12dfe215e79f57cf99ad91cb7d05b36a12))
+
+
+
+
+
+## [19.1.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.1.0...@wireapp/api-client@19.1.1) (2022-05-11)
+
+
+### Bug Fixes
+
+* mls key package types ([5d2c02c](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/5d2c02cae30ff1e8bf9fc738d66788e1ebe52baa))
+
+
+
+
+
+# [19.1.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.0.0...@wireapp/api-client@19.1.0) (2022-05-11)
+
+
+### Features
+
+* Add MLS device creation types ([#4259](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4259)) ([c88ed7c](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/c88ed7cf3804828b4fe8e56d842a6207abea4c2d))
+
+
+
+
+
+# [19.0.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@18.8.3...@wireapp/api-client@19.0.0) (2022-04-21)
+
+
+### Bug Fixes
+
+* **services:** Add identity provider id for identities update endpoint ([#4256](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4256)) ([2d01d0c](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/2d01d0cf29e9760b7970748befcb6a9aef3efa20))
+
+
+### BREAKING CHANGES
+
+* **services:** This version changes order of parameters in putIdentityProvider
+
+
+
+
+
+## [18.8.3](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@18.8.2...@wireapp/api-client@18.8.3) (2022-04-20)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
 ## [18.8.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@18.8.1...@wireapp/api-client@18.8.2) (2022-04-06)
 
 **Note:** Version bump only for package @wireapp/api-client

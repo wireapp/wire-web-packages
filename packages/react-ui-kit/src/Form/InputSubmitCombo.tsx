@@ -18,10 +18,11 @@
  */
 
 /** @jsx jsx */
-import {jsx} from '@emotion/core';
+import {jsx} from '@emotion/react';
 
-import {INPUT_CLASSNAME, InputProps, inputStyle} from './Input';
-import {COLOR} from '../Identity';
+import {INPUT_CLASSNAME, INPUT_GROUP, InputProps, inputStyle} from './Input';
+import {COLOR_V2} from '../Identity';
+import {Theme} from '../Layout';
 
 export type InputSubmitComboProps<T = HTMLDivElement> = InputProps<T>;
 
@@ -30,23 +31,25 @@ export const INPUT_SUBMIT_COMBO_CLASSNAME = 'inputSubmitCombo';
 export const InputSubmitCombo = ({children, ...props}: InputSubmitComboProps) => (
   <div
     className={INPUT_SUBMIT_COMBO_CLASSNAME}
-    css={theme => ({
+    css={(theme: Theme) => ({
       ...inputStyle(theme, props),
       '&:focus-within': {
-        boxShadow: `0 0 0 1px ${COLOR.BLUE}`,
+        boxShadow: `0 0 0 1px ${COLOR_V2.BLUE}`,
+      },
+      [`.${INPUT_GROUP}`]: {
+        flexGrow: 1,
       },
       [`.${INPUT_CLASSNAME}`]: {
         '&:focus, &:invalid:not(:focus)': {
           boxShadow: 'none',
         },
         boxShadow: 'none',
-        flexGrow: 1,
         margin: '0 8px 0 0',
         padding: '0 0 0 16px',
       },
       alignItems: 'center',
       display: 'flex',
-      height: '57px', // needs a bit more space to not overlap with the `boxShadow` from `:focus`
+      height: '49px', // needs a bit more space to not overlap with the `boxShadow` from `:focus`
       justifyContent: 'space-between',
       marginBottom: '4px',
       paddingLeft: 0,

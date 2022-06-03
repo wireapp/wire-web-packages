@@ -18,7 +18,7 @@
  */
 
 import type {APIClient} from '@wireapp/api-client';
-import type {NewClient, RegisteredClient} from '@wireapp/api-client/src/client/';
+import type {CreateClientPayload, RegisteredClient, UpdateClientPayload} from '@wireapp/api-client/src/client/';
 
 export class ClientBackendRepository {
   constructor(private readonly apiClient: APIClient) {}
@@ -27,7 +27,19 @@ export class ClientBackendRepository {
     return this.apiClient.api.client.getClients();
   }
 
-  public postClient(client: NewClient): Promise<RegisteredClient> {
+  public postClient(client: CreateClientPayload): Promise<RegisteredClient> {
     return this.apiClient.api.client.postClient(client);
+  }
+
+  public putClient(clientId: string, updates: UpdateClientPayload): Promise<void> {
+    return this.apiClient.api.client.putClient(clientId, updates);
+  }
+
+  public deleteClient(clientId: string, password?: string): Promise<void> {
+    return this.apiClient.api.client.deleteClient(clientId, password);
+  }
+
+  public uploadMLSKeyPackages(clientId: string, keyPackages: string[]): Promise<void> {
+    return this.apiClient.api.client.uploadMLSKeyPackages(clientId, keyPackages);
   }
 }

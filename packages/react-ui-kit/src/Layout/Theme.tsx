@@ -18,11 +18,11 @@
  */
 
 /** @jsx jsx */
-import {jsx} from '@emotion/core';
+import {jsx, ThemeProvider as EmotionThemeProvider} from '@emotion/react';
 import React from 'react';
-import {ThemeProvider as EmotionThemeProvider} from 'emotion-theming';
 
 import {COLOR} from '../Identity/colors';
+import {COLOR_V2} from '../Identity/colors-v2';
 import {filterProps} from '../util';
 
 export enum THEME_ID {
@@ -46,7 +46,7 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
   [THEME_ID.LIGHT]: {
     Input: {
       backgroundColor: COLOR.WHITE,
-      backgroundColorDisabled: COLOR.DISABLED,
+      backgroundColorDisabled: COLOR_V2.GRAY_20,
       placeholderColor: COLOR.GRAY_DARKEN_24,
     },
     general: {

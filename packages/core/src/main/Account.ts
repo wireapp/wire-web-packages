@@ -21,8 +21,9 @@ import type {AxiosError} from 'axios';
 import {StatusCodes as HTTP_STATUS} from 'http-status-codes';
 import {APIClient, BackendFeatures} from '@wireapp/api-client';
 import type {RegisterData} from '@wireapp/api-client/src/auth';
+import type {Notification} from '@wireapp/api-client/src/notification/';
 import {AUTH_COOKIE_KEY, AUTH_TABLE_NAME, Context, Cookie, CookieStore, LoginData} from '@wireapp/api-client/src/auth/';
-import {ClientType, RegisteredClient} from '@wireapp/api-client/src/client/';
+import {ClientClassification, ClientType, RegisteredClient} from '@wireapp/api-client/src/client/';
 import * as Events from '@wireapp/api-client/src/event';
 import {WebSocketClient} from '@wireapp/api-client/src/tcp/';
 import * as cryptobox from '@wireapp/cryptobox';
@@ -34,24 +35,21 @@ import {LoginSanitizer} from './auth/';
 import {BroadcastService} from './broadcast/';
 import {ClientInfo, ClientService} from './client/';
 import {ConnectionService} from './connection/';
-import {
-  AssetService,
-  ConversationService,
-  PayloadBundle,
-  PayloadBundleSource,
-  PayloadBundleType,
-} from './conversation/';
+import {AssetService, ConversationService, PayloadBundleSource, PayloadBundleType} from './conversation/';
 import * as OtrMessage from './conversation/message/OtrMessage';
 import * as UserMessage from './conversation/message/UserMessage';
-import type {CoreError, NotificationError} from './CoreError';
+import type {CoreError} from './CoreError';
 import {CryptographyService} from './cryptography/';
 import {GiphyService} from './giphy/';
-import {NotificationHandler, NotificationService} from './notification/';
+import {HandledEventPayload, NotificationService} from './notification/';
 import {SelfService} from './self/';
 import {TeamService} from './team/';
 import {UserService} from './user/';
 import {AccountService} from './account/';
 import {LinkPreviewService} from './linkPreview';
+import {WEBSOCKET_STATE} from '@wireapp/api-client/src/tcp/ReconnectingWebsocket';
+
+export type ProcessedEventPayload = HandledEventPayload;
 
 enum TOPIC {
   ERROR = 'Account.TOPIC.ERROR',
@@ -95,13 +93,36 @@ export interface Account {
   on(event: TOPIC.ERROR, listener: (payload: CoreError) => void): this;
 }
 
-export type StoreEngineProvider = (storeName: string) => Promise<CRUDEngine>;
+export type CreateStoreFn = (storeName: string, context: Context) => undefined | Promise<CRUDEngine | undefined>;
+
+interface AccountOptions {
+  /** Used to store info in the database (will create a inMemory engine if returns undefined) */
+  createStore?: CreateStoreFn;
+
+  /** Number of prekeys to generate when creating a new device (defaults to 2)
+   * Prekeys are Diffie-Hellmann public keys which allow offline initiation of a secure Proteus session between two devices.
+   * Having a high value will:
+   *    - make creating a new device consuming more CPU resources
+   *    - make it less likely that all prekeys get consumed while the device is offline and the last resort prekey will not be used to create new session
+   * Having a low value will:
+   *    - make creating a new device fast
+   *    - make it likely that all prekeys get consumed while the device is offline and the last resort prekey will be used to create new session
+   */
+  nbPrekeys?: number;
+}
+
+const coreDefaultClient: ClientInfo = {
+  classification: ClientClassification.DESKTOP,
+  cookieLabel: 'default',
+  model: '@wireapp/core',
+};
 
 export class Account extends EventEmitter {
   private readonly apiClient: APIClient;
   private readonly logger: logdown.Logger;
-  private readonly storeEngineProvider: StoreEngineProvider;
+  private readonly createStore: CreateStoreFn;
   private storeEngine?: CRUDEngine;
+  private readonly nbPrekeys: number;
 
   public static readonly TOPIC = TOPIC;
   public service?: {
@@ -123,21 +144,17 @@ export class Account extends EventEmitter {
 
   /**
    * @param apiClient The apiClient instance to use in the core (will create a new new one if undefined)
-   * @param storeEngineProvider Used to store info in the database (will create a inMemory engine if undefined)
+   * @param storeEngineProvider
    */
-  constructor(apiClient: APIClient = new APIClient(), storeEngineProvider?: StoreEngineProvider) {
+  constructor(
+    apiClient: APIClient = new APIClient(),
+    {createStore = () => undefined, nbPrekeys = 2}: AccountOptions = {},
+  ) {
     super();
     this.apiClient = apiClient;
     this.backendFeatures = this.apiClient.backendFeatures;
-    if (storeEngineProvider) {
-      this.storeEngineProvider = storeEngineProvider;
-    } else {
-      this.storeEngineProvider = async (storeName: string) => {
-        const engine = new MemoryEngine();
-        await engine.init(storeName);
-        return engine;
-      };
-    }
+    this.nbPrekeys = nbPrekeys;
+    this.createStore = createStore;
 
     apiClient.on(APIClient.TOPIC.COOKIE_REFRESH, async (cookie?: Cookie) => {
       if (cookie && this.storeEngine) {
@@ -168,87 +185,52 @@ export class Account extends EventEmitter {
     return this.apiClient.validatedUserId;
   }
 
+  /**
+   * Will register a new user to the backend
+   *
+   * @param registration The user's data
+   * @param clientType Type of client to create (temporary or permanent)
+   */
   public async register(registration: RegisterData, clientType: ClientType): Promise<Context> {
     const context = await this.apiClient.register(registration, clientType);
-    const storeEngine = await this.initEngine(context);
-    await this.initServices(storeEngine);
+    await this.initServices(context);
     return context;
   }
 
-  public async init(clientType: ClientType, cookie?: Cookie, initializedStoreEngine?: CRUDEngine): Promise<Context> {
+  /**
+   * Will init the core with an aleady existing client (both on backend and local)
+   * Will fail if local client cannot be found
+   *
+   * @param clientType The type of client the user is using (temporary or permanent)
+   * @param cookie The cookie to identify the user against backend (will use the browser's one if not given)
+   */
+  public async init(clientType: ClientType, cookie?: Cookie, initClient: boolean = true): Promise<Context> {
     const context = await this.apiClient.init(clientType, cookie);
-    if (initializedStoreEngine) {
-      this.storeEngine = initializedStoreEngine;
-      this.logger.log(`Initialized store with existing engine "${this.storeEngine.storeName}".`);
-    } else {
-      this.storeEngine = await this.initEngine(context);
-    }
-    await this.initServices(this.storeEngine);
-    if (initializedStoreEngine) {
-      await this.initClient({
-        clientType,
-      });
+    await this.initServices(context);
+    if (initClient) {
+      await this.initClient({clientType});
     }
     return context;
   }
 
-  public async initServices(storeEngine: CRUDEngine): Promise<void> {
-    const accountService = new AccountService(this.apiClient);
-    const assetService = new AssetService(this.apiClient);
-    const cryptographyService = new CryptographyService(this.apiClient, storeEngine, {
-      // We want to encrypt with fully qualified session ids, only if the backend is federated with other backends
-      useQualifiedIds: this.backendFeatures.isFederated,
-    });
-
-    const clientService = new ClientService(this.apiClient, storeEngine, cryptographyService);
-    const connectionService = new ConnectionService(this.apiClient);
-    const giphyService = new GiphyService(this.apiClient);
-    const linkPreviewService = new LinkPreviewService(assetService);
-    const conversationService = new ConversationService(this.apiClient, cryptographyService, {
-      // We can use qualified ids to send messages as long as the backend supports federated endpoints
-      useQualifiedIds: this.backendFeatures.federationEndpoints,
-    });
-    const notificationService = new NotificationService(this.apiClient, cryptographyService, storeEngine);
-    const selfService = new SelfService(this.apiClient);
-    const teamService = new TeamService(this.apiClient);
-
-    const broadcastService = new BroadcastService(this.apiClient, cryptographyService);
-    const userService = new UserService(this.apiClient, broadcastService, conversationService, connectionService);
-
-    this.service = {
-      account: accountService,
-      asset: assetService,
-      broadcast: broadcastService,
-      client: clientService,
-      connection: connectionService,
-      conversation: conversationService,
-      cryptography: cryptographyService,
-      giphy: giphyService,
-      linkPreview: linkPreviewService,
-      notification: notificationService,
-      self: selfService,
-      team: teamService,
-      user: userService,
-    };
-  }
-
+  /**
+   * Will log the user in with the given credential.
+   * Will also create the local client and store it in DB
+   *
+   * @param loginData The credentials of the user
+   * @param initClient Should the call also create the local client
+   * @param clientInfo Info about the client to create (name, type...)
+   */
   public async login(
     loginData: LoginData,
     initClient: boolean = true,
-    clientInfo?: ClientInfo,
-    initializedStoreEngine?: CRUDEngine,
+    clientInfo: ClientInfo = coreDefaultClient,
   ): Promise<Context> {
     this.resetContext();
     LoginSanitizer.removeNonPrintableCharacters(loginData);
 
     const context = await this.apiClient.login(loginData);
-    if (initializedStoreEngine) {
-      this.storeEngine = initializedStoreEngine;
-      this.logger.log(`Initialized store with existing engine "${this.storeEngine.storeName}".`);
-    } else {
-      this.storeEngine = await this.initEngine(context);
-    }
-    await this.initServices(this.storeEngine);
+    await this.initServices(context);
 
     if (initClient) {
       await this.initClient(loginData, clientInfo);
@@ -257,6 +239,16 @@ export class Account extends EventEmitter {
     return context;
   }
 
+  /**
+   * Will try to get the load the local client from local DB.
+   * If clientInfo are provided, will also create the client on backend and DB
+   * If clientInfo are not provideo, the method will fail if local client cannot be found
+   *
+   * @param loginData User's credentials
+   * @param clientInfo Will allow creating the client if the local client cannot be found (else will fail if local client is not found)
+   * @param entropyData Additional entropy data
+   * @returns The local existing client or newly created client
+   */
   public async initClient(
     loginData: LoginData,
     clientInfo?: ClientInfo,
@@ -270,6 +262,10 @@ export class Account extends EventEmitter {
       const localClient = await this.loadAndValidateLocalClient();
       return {isNewClient: false, localClient};
     } catch (error) {
+      if (!clientInfo) {
+        // If no client info provided, the client should not be created
+        throw error;
+      }
       // There was no client so we need to "create" and "register" a client
       const notFoundInDatabase =
         error instanceof cryptobox.error.CryptoboxError ||
@@ -308,6 +304,48 @@ export class Account extends EventEmitter {
     }
   }
 
+  public async initServices(context: Context): Promise<void> {
+    this.storeEngine = await this.initEngine(context);
+    const accountService = new AccountService(this.apiClient);
+    const assetService = new AssetService(this.apiClient);
+    const cryptographyService = new CryptographyService(this.apiClient, this.storeEngine, {
+      // We want to encrypt with fully qualified session ids, only if the backend is federated with other backends
+      useQualifiedIds: this.backendFeatures.isFederated,
+      nbPrekeys: this.nbPrekeys,
+    });
+
+    const clientService = new ClientService(this.apiClient, this.storeEngine, cryptographyService);
+    const connectionService = new ConnectionService(this.apiClient);
+    const giphyService = new GiphyService(this.apiClient);
+    const linkPreviewService = new LinkPreviewService(assetService);
+    const conversationService = new ConversationService(this.apiClient, cryptographyService, {
+      // We can use qualified ids to send messages as long as the backend supports federated endpoints
+      useQualifiedIds: this.backendFeatures.federationEndpoints,
+    });
+    const notificationService = new NotificationService(this.apiClient, cryptographyService, this.storeEngine);
+    const selfService = new SelfService(this.apiClient);
+    const teamService = new TeamService(this.apiClient);
+
+    const broadcastService = new BroadcastService(this.apiClient, cryptographyService);
+    const userService = new UserService(this.apiClient, broadcastService, conversationService, connectionService);
+
+    this.service = {
+      account: accountService,
+      asset: assetService,
+      broadcast: broadcastService,
+      client: clientService,
+      connection: connectionService,
+      conversation: conversationService,
+      cryptography: cryptographyService,
+      giphy: giphyService,
+      linkPreview: linkPreviewService,
+      notification: notificationService,
+      self: selfService,
+      team: teamService,
+      user: userService,
+    };
+  }
+
   public async loadAndValidateLocalClient(): Promise<RegisteredClient> {
     await this.service!.cryptography.initCryptobox();
 
@@ -320,7 +358,7 @@ export class Account extends EventEmitter {
 
   private async registerClient(
     loginData: LoginData,
-    clientInfo?: ClientInfo,
+    clientInfo: ClientInfo = coreDefaultClient,
     entropyData?: Uint8Array,
   ): Promise<{isNewClient: boolean; localClient: RegisteredClient}> {
     if (!this.service) {
@@ -346,61 +384,139 @@ export class Account extends EventEmitter {
     this.resetContext();
   }
 
-  public async listen(
-    notificationHandler: NotificationHandler = this.service!.notification.handleNotification,
-  ): Promise<Account> {
+  /**
+   * Will download and handle the notification stream since last stored notification id.
+   * Once the notification stream has been handled from backend, will then connect to the websocket and start listening to incoming events
+   *
+   * @param callbacks callbacks that will be called to handle different events
+   * @returns close a function that will disconnect from the websocket
+   */
+  public async listen({
+    onEvent = () => {},
+    onConnected = () => {},
+    onConnectionStateChanged = () => {},
+    onNotificationStreamProgress = () => {},
+    onMissedNotifications = () => {},
+    dryRun = false,
+  }: {
+    /**
+     * Called when a new event arrives from backend
+     * @param payload the payload of the event. Contains the raw event received and the decrypted data (if event was encrypted)
+     * @param source where the message comes from (either websocket or notification stream)
+     */
+    onEvent?: (payload: HandledEventPayload, source: PayloadBundleSource) => void;
+
+    /**
+     * During the notification stream processing, this function will be called whenever a new notification has been processed
+     */
+    onNotificationStreamProgress?: ({done, total}: {done: number; total: number}) => void;
+
+    /**
+     * called when the connection to the websocket is established and the notification stream has been processed
+     */
+    onConnected?: () => void;
+
+    /**
+     * called when the connection stateh with the backend has changed
+     */
+    onConnectionStateChanged?: (state: WEBSOCKET_STATE) => void;
+
+    /**
+     * called when we detect lost notification from backend.
+     * When a client doesn't log in for a while (28 days, as of now) notifications that are older than 28 days will be deleted from backend.
+     * If the client query the backend for the notifications since a particular notification ID and this ID doesn't exist anymore on the backend, we deduce that some messages were not sync before they were removed from backend.
+     * We can then detect that something was wrong and warn the consumer that there might be some missing old messages
+     * @param  {string} notificationId
+     */
+    onMissedNotifications?: (notificationId: string) => void;
+
+    /**
+     * When set will not decrypt and not store the last notification ID. This is useful if you only want to subscribe to unencrypted backend events
+     */
+    dryRun?: boolean;
+  } = {}): Promise<() => void> {
     if (!this.apiClient.context) {
       throw new Error('Context is not set - please login first');
     }
 
-    this.apiClient.transport.ws.removeAllListeners(WebSocketClient.TOPIC.ON_MESSAGE);
-    this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, notification => {
-      notificationHandler(notification, PayloadBundleSource.WEBSOCKET).catch(error => {
-        this.logger.error(`Failed to handle notification ID "${notification.id}": ${error.message}`, error);
-      });
-    });
-
-    this.service!.notification.removeAllListeners(NotificationService.TOPIC.NOTIFICATION_ERROR);
-    this.service!.notification.on(NotificationService.TOPIC.NOTIFICATION_ERROR, this.handleError);
-
-    for (const payloadType of Object.values(PayloadBundleType)) {
-      this.service!.notification.removeAllListeners(payloadType);
-      this.service!.notification.on(payloadType as any, this.handlePayload);
-    }
-
-    const onBeforeConnect = async () => this.service!.notification.handleNotificationStream(notificationHandler);
-    await this.apiClient.connect(onBeforeConnect);
-    return this;
-  }
-
-  private readonly handlePayload = async (payload: PayloadBundle): Promise<void> => {
-    switch (payload.type) {
-      case PayloadBundleType.TIMER_UPDATE: {
-        const {
-          data: {message_timer},
-          conversation,
-        } = payload as unknown as Events.ConversationMessageTimerUpdateEvent;
-        const expireAfterMillis = Number(message_timer);
-        this.service!.conversation.messageTimer.setConversationLevelTimer(conversation, expireAfterMillis);
-        break;
+    const handleEvent = async (payload: HandledEventPayload, source: PayloadBundleSource) => {
+      const {mappedEvent} = payload;
+      switch (mappedEvent?.type) {
+        case PayloadBundleType.TIMER_UPDATE: {
+          const {
+            data: {message_timer},
+            conversation,
+          } = payload.event as Events.ConversationMessageTimerUpdateEvent;
+          const expireAfterMillis = Number(message_timer);
+          this.service!.conversation.messageTimer.setConversationLevelTimer(conversation, expireAfterMillis);
+          break;
+        }
       }
-    }
-    this.emit(payload.type, payload);
-  };
+      onEvent(payload, source);
+      if (mappedEvent) {
+        this.emit(mappedEvent.type, payload.mappedEvent);
+      }
+    };
 
-  private readonly handleError = (accountError: NotificationError): void => {
-    this.emit(Account.TOPIC.ERROR, accountError);
-  };
+    const handleNotification = async (notification: Notification, source: PayloadBundleSource): Promise<void> => {
+      try {
+        const messages = this.service!.notification.handleNotification(
+          notification,
+          PayloadBundleSource.WEBSOCKET,
+          dryRun,
+        );
+        for await (const message of messages) {
+          await handleEvent(message, source);
+        }
+      } catch (error) {
+        this.logger.error(`Failed to handle notification ID "${notification.id}": ${(error as any).message}`, error);
+      }
+    };
+
+    this.apiClient.transport.ws.removeAllListeners(WebSocketClient.TOPIC.ON_MESSAGE);
+    this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, notification =>
+      handleNotification(notification, PayloadBundleSource.WEBSOCKET),
+    );
+    this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_STATE_CHANGE, onConnectionStateChanged);
+
+    const onBeforeConnect = async () => {
+      // Lock websocket in order to buffer any message that arrives while we handle the notification stream
+      this.apiClient.transport.ws.lock();
+      await this.service!.notification.handleNotificationStream(async (notification, source, progress) => {
+        await handleNotification(notification, source);
+        onNotificationStreamProgress(progress);
+      }, onMissedNotifications);
+      // We can now unlock the websocket and let the new messages being handled and decrypted
+      this.apiClient.transport.ws.unlock();
+      onConnected();
+    };
+    await this.apiClient.connect(onBeforeConnect);
+
+    return () => {
+      this.apiClient.disconnect();
+    };
+  }
 
   private async initEngine(context: Context): Promise<CRUDEngine> {
     const clientType = context.clientType === ClientType.NONE ? '' : `@${context.clientType}`;
     const dbName = `wire@${this.apiClient.config.urls.name}@${context.userId}${clientType}`;
     this.logger.log(`Initialising store with name "${dbName}"...`);
-    this.storeEngine = await this.storeEngineProvider(dbName);
+    const openDb = async () => {
+      const initializedDb = await this.createStore(dbName, context);
+      if (initializedDb) {
+        this.logger.log(`Initialized store with existing engine "${dbName}".`);
+        return initializedDb;
+      }
+      this.logger.log(`Initialized store with new memory engine "${dbName}".`);
+      const memoryEngine = new MemoryEngine();
+      await memoryEngine.init(dbName);
+      return memoryEngine;
+    };
+    const storeEngine = await openDb();
     const cookie = CookieStore.getCookie();
     if (cookie) {
-      await this.persistCookie(this.storeEngine, cookie);
+      await this.persistCookie(storeEngine, cookie);
     }
-    return this.storeEngine;
+    return storeEngine;
   }
 }

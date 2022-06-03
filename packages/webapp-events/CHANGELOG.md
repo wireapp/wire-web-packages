@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/webapp-events/compare/@wireapp/webapp-events@0.13.1...@wireapp/webapp-events@0.13.2) (2022-05-24)
+
+
+### Reverts
+
+* Revert "fix(webapp-events): Add new event for catching deeplinks (SQSERVICES-1415) (#4270)" (#4271) ([f806f78](https://github.com/wireapp/wire-web-packages/tree/main/packages/webapp-events/commit/f806f78adfbe2dc33479c47c14d69dd09644f2af)), closes [#4270](https://github.com/wireapp/wire-web-packages/tree/main/packages/webapp-events/issues/4270) [#4271](https://github.com/wireapp/wire-web-packages/tree/main/packages/webapp-events/issues/4271)
+
+
+
+
+
+## [0.13.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/webapp-events/compare/@wireapp/webapp-events@0.13.0...@wireapp/webapp-events@0.13.1) (2022-05-24)
+
+
+### Bug Fixes
+
+* **webapp-events:** Add new event for catching deeplinks (SQSERVICES-1415) ([#4270](https://github.com/wireapp/wire-web-packages/tree/main/packages/webapp-events/issues/4270)) ([5eefbf5](https://github.com/wireapp/wire-web-packages/tree/main/packages/webapp-events/commit/5eefbf5963e698ade37146364c1b1950b181494f))
+
+
+
+
+
 # [0.13.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/webapp-events/compare/@wireapp/webapp-events@0.12.0...@wireapp/webapp-events@0.13.0) (2022-02-25)
 
 

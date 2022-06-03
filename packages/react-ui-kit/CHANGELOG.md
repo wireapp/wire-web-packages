@@ -3,6 +3,110 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.5.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@8.5.1...@wireapp/react-ui-kit@8.5.2) (2022-06-01)
+
+
+### Bug Fixes
+
+* Select default value ([#4279](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/issues/4279)) ([2241ecb](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/commit/2241ecbc752bf0fa898f046efe94f84c510d8904))
+
+
+
+
+
+## [8.5.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@8.5.0...@wireapp/react-ui-kit@8.5.1) (2022-05-31)
+
+
+### Bug Fixes
+
+* add max-height-for-select-dropdown ([#4276](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/issues/4276)) ([084acd7](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/commit/084acd704b870af962a01282652c2dd0925052ee))
+
+
+
+
+
+# [8.5.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@8.4.0...@wireapp/react-ui-kit@8.5.0) (2022-05-31)
+
+
+### Features
+
+* Prepare new select component ([#4274](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/issues/4274)) ([8084830](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/commit/8084830220b924eae55fcac13bc3cea11c53f709))
+
+
+
+
+
+# [8.4.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@8.3.0...@wireapp/react-ui-kit@8.4.0) (2022-05-30)
+
+
+### Features
+
+* Prepare new form elements ([#4273](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/issues/4273)) ([a80de23](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/commit/a80de238d2a9b396e7495f89d757f531f8f9abd3))
+
+
+
+
+
+# [8.3.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@8.2.0...@wireapp/react-ui-kit@8.3.0) (2022-05-27)
+
+
+### Features
+
+* Prepare Input component ([#4272](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/issues/4272)) ([2b695b2](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/commit/2b695b25b22433da0851567677786aceec2f2ff2))
+
+
+
+
+
+# [8.2.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@8.1.0...@wireapp/react-ui-kit@8.2.0) (2022-05-24)
+
+
+### Features
+
+* prepare new components ui (ACC-82) ([#4269](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/issues/4269)) ([8b0cbce](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/commit/8b0cbcebec48b14d6df6efece68e98c03731f8db))
+
+
+
+
+
+# [8.1.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@8.0.1...@wireapp/react-ui-kit@8.1.0) (2022-05-19)
+
+
+### Features
+
+* **react-ui-kit:** Add new colours ([#4266](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/issues/4266)) ([2771089](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/commit/2771089411dd54be4dc883857a5bbb4b309f7466))
+
+
+
+
+
+## [8.0.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@8.0.0...@wireapp/react-ui-kit@8.0.1) (2022-05-18)
+
+
+### Bug Fixes
+
+* **api-client,react-ui-kit:** Correct migration to react 18 ([#4265](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/issues/4265)) ([f6afcca](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/commit/f6afccaf1e08c32a97cd6226cf0f681014cf0245))
+
+
+
+
+
+# [8.0.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.55.2...@wireapp/react-ui-kit@8.0.0) (2022-04-20)
+
+
+### Features
+
+* upgrade to react 18 ([#4254](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/issues/4254)) ([724e5a0](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/commit/724e5a0d27578b07757c17662403a550c2817cc5))
+
+
+### BREAKING CHANGES
+
+* needs react 18
+
+
+
+
+
 ## [7.55.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@7.55.1...@wireapp/react-ui-kit@7.55.2) (2022-04-06)
 
 
@@ -832,7 +936,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
-* **react-ui-kit:** External Label ([#3113](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/issues/3113)) ([44c0767](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/commit/44c076733ff64be12a583b937265eda6724506a5))
+* **react-ui-kit:** External InputLabel ([#3113](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/issues/3113)) ([44c0767](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/commit/44c076733ff64be12a583b937265eda6724506a5))
 
 
 
@@ -4167,7 +4271,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### BREAKING CHANGES
 
-* **react-ui-kit:** H1: 
+* **react-ui-kit:** H1:
 - font size 40px -> 48px
 - line-height: 56px
 - margin-bottom: 64px
@@ -4175,7 +4279,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - font-size 24px -> 40px
 - line-height: 32px -> 48px
 
-H2: 
+H2:
 - font-weight: 300 -> 700
 - line-height: 32px;
 - margin-bottom: 24px;

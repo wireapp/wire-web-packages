@@ -20,7 +20,7 @@
 import type {AxiosRequestConfig} from 'axios';
 
 import type {PreKeyBundle} from '../auth/';
-import type {NewClient, RegisteredClient, UpdatedClient} from '../client/';
+import type {CreateClientPayload, RegisteredClient, UpdateClientPayload} from '../client/';
 import {ClientCapabilityRemovedError} from './ClientError';
 import {BackendError, BackendErrorLabel, HttpClient} from '../http/';
 import {ClientCapabilityData} from './ClientCapabilityData';
@@ -30,11 +30,13 @@ export class ClientAPI {
 
   public static readonly URL = {
     CLIENTS: '/clients',
+    MLS_CLIENTS: 'mls',
+    MLS_KEY_PACKAGES: 'key-packages',
     CAPABILITIES: 'capabilities',
     PREKEYS: 'prekeys',
   };
 
-  public async postClient(newClient: NewClient): Promise<RegisteredClient> {
+  public async postClient(newClient: CreateClientPayload): Promise<RegisteredClient> {
     const config: AxiosRequestConfig = {
       data: newClient,
       method: 'post',
@@ -45,7 +47,7 @@ export class ClientAPI {
     return response.data;
   }
 
-  public async putClient(clientId: string, updatedClient: UpdatedClient): Promise<void> {
+  public async putClient(clientId: string, updatedClient: UpdateClientPayload): Promise<void> {
     const config: AxiosRequestConfig = {
       data: updatedClient,
       method: 'put',
@@ -74,6 +76,11 @@ export class ClientAPI {
     return response.data;
   }
 
+  /**
+   * Deletes a client on the backend
+   * @param clientId
+   * @param password? password can be omitted if the client is a temporary client
+   */
   public async deleteClient(clientId: string, password?: string): Promise<void> {
     const config: AxiosRequestConfig = {
       data: {
@@ -114,5 +121,20 @@ export class ClientAPI {
 
     const response = await this.client.sendJSON<PreKeyBundle>(config, true);
     return response.data;
+  }
+
+  /**
+   * Will upload keypackages for an MLS capable client
+   * see https://staging-nginz-https.zinfra.io/api/swagger-ui/#/default/post_mls_key_packages_self__client_
+   * @param  {string} clientId
+   */
+  public async uploadMLSKeyPackages(clientId: string, keyPackages: string[]) {
+    const config: AxiosRequestConfig = {
+      data: {key_packages: keyPackages},
+      method: 'POST',
+      url: `/${ClientAPI.URL.MLS_CLIENTS}/${ClientAPI.URL.MLS_KEY_PACKAGES}/self/${clientId}`,
+    };
+
+    await this.client.sendJSON<PreKeyBundle>(config, true);
   }
 }

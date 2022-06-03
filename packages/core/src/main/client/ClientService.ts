@@ -19,7 +19,8 @@
 
 import type {APIClient} from '@wireapp/api-client';
 import type {LoginData, PreKey} from '@wireapp/api-client/src/auth/';
-import {ClientClassification, ClientType, NewClient, RegisteredClient} from '@wireapp/api-client/src/client/';
+import {ClientType, CreateClientPayload, RegisteredClient} from '@wireapp/api-client/src/client/';
+import {QualifiedId} from '@wireapp/api-client/src/user';
 import type {CRUDEngine} from '@wireapp/store-engine';
 
 import type {CryptographyService} from '../cryptography/';
@@ -46,12 +47,35 @@ export class ClientService {
     this.backend = new ClientBackendRepository(this.apiClient);
   }
 
-  public deleteLocalClient(): Promise<string> {
-    return this.database.deleteLocalClient();
-  }
-
   public getClients(): Promise<RegisteredClient[]> {
     return this.backend.getClients();
+  }
+
+  /**
+   * Will delete the given client from backend and will also delete it from the local database
+   *
+   * note: use deleteLocalClient if you wish to delete the client currently used by the user
+   *
+   * @param clientId The id of the client to delete
+   * @param password? Password of the owning user. Can be omitted for temporary devices
+   */
+  public async deleteClient(clientId: string, password?: string): Promise<unknown> {
+    const userId: QualifiedId = {id: this.apiClient.userId as string, domain: this.apiClient.domain || ''};
+    await this.backend.deleteClient(clientId, password);
+    return this.database.deleteClient(this.cryptographyService.constructSessionId(userId, clientId));
+  }
+
+  /**
+   * Will delete the local client (client currently in use by the user) from backend and will also delete it from the local database
+   * @param password? Password of the owning user. Can be omitted for temporary devices
+   */
+  public async deleteLocalClient(password?: string): Promise<string> {
+    const localClientId = this.apiClient.context?.clientId;
+    if (!localClientId) {
+      throw new Error('Trying to delete local client, but local client has not been set');
+    }
+    await this.backend.deleteClient(localClientId, password);
+    return this.database.deleteLocalClient();
   }
 
   public getLocalClient(): Promise<MetaClient> {
@@ -75,11 +99,7 @@ export class ClientService {
   // TODO: Split functionality into "create" and "register" client
   public async register(
     loginData: LoginData,
-    clientInfo: ClientInfo = {
-      classification: ClientClassification.DESKTOP,
-      cookieLabel: 'default',
-      model: '@wireapp/core',
-    },
+    clientInfo: ClientInfo,
     entropyData?: Uint8Array,
   ): Promise<RegisteredClient> {
     if (!this.apiClient.context) {
@@ -96,7 +116,7 @@ export class ClientService {
       throw new Error('Cryptobox got initialized without a last resort PreKey.');
     }
 
-    const newClient: NewClient = {
+    const newClient: CreateClientPayload = {
       class: clientInfo.classification,
       cookie: clientInfo.cookieLabel,
       label: clientInfo.label,
