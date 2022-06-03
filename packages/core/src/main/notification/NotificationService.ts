@@ -142,7 +142,7 @@ export class NotificationService extends EventEmitter {
   public async *handleNotification(
     notification: Notification,
     source: PayloadBundleSource,
-    dryRun?: boolean,
+    dryRun: boolean = false,
   ): AsyncGenerator<HandledEventPayload> {
     for (const event of notification.payload) {
       this.logger.log(`Handling event of type "${event.type}" for notification with ID "${notification.id}"`, event);
@@ -193,7 +193,7 @@ export class NotificationService extends EventEmitter {
   private async handleEvent(
     event: Events.BackendEvent,
     source: PayloadBundleSource,
-    dryRun?: boolean,
+    dryRun: boolean = false,
   ): Promise<HandledEventPayload> {
     switch (event.type) {
       // Encrypted events

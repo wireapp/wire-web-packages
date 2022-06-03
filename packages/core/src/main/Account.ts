@@ -397,7 +397,7 @@ export class Account extends EventEmitter {
     onConnectionStateChanged = () => {},
     onNotificationStreamProgress = () => {},
     onMissedNotifications = () => {},
-    dryRun,
+    dryRun = false,
   }: {
     /**
      * Called when a new event arrives from backend
