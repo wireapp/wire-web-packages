@@ -555,18 +555,9 @@ export class UserAPI {
       method: 'post',
       url: UserAPI.URL.LIST_USERS,
     };
-    try {
-      const response = await this.client.sendJSON<User[]>(config);
 
-      return response.data;
-    } catch (e) {
-      if ('qualified_handles' in users) {
-        return users?.qualified_handles?.map(
-          (user: QualifiedHandle) => ({qualified_id: {domain: user.domain}, handle: user.handle} as User),
-        );
-      }
-      return users?.qualified_ids?.map((user: QualifiedId) => ({qualified_id: user} as User));
-    }
+    const response = await this.client.sendJSON<User[]>(config);
+    return response.data;
   }
 
   /**
