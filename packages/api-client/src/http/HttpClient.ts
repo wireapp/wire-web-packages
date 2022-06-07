@@ -68,11 +68,15 @@ export class HttpClient extends EventEmitter {
       retries: Infinity,
       retryDelay: axiosRetry.exponentialDelay,
       retryCondition: (error: AxiosError) => {
-        const {response} = error;
-        // const isNetworkError = !response && request && !Object.keys(request).length;
+        const {response, request} = error;
+        const isNetworkError = !response && request && !Object.keys(request).length;
+        if (isNetworkError) {
+          this.logger.warn('Disconnected from backend');
+          this.updateConnectionState(ConnectionState.DISCONNECTED);
+          return true;
+        }
         if (response?.status !== 401 && response?.status !== 403) {
-          // this.logger.warn('Disconnected from backend');
-          // this.updateConnectionState(ConnectionState.DISCONNECTED);
+          // we only want to retry auth failures (access token will automatically be regenerated)
           return false;
         }
 
