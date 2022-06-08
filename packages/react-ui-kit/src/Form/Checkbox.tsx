@@ -19,7 +19,7 @@
 
 /** @jsx jsx */
 import {jsx} from '@emotion/react';
-import React, {useId} from 'react';
+import React from 'react';
 
 import {COLOR, COLOR_V2} from '../Identity';
 import {Theme} from '../Layout';
@@ -96,7 +96,7 @@ const filterCheckboxProps = (props: CheckboxProps) => filterProps(props, ['markI
 export const Checkbox: React.FC<CheckboxProps<HTMLInputElement>> = React.forwardRef<
   HTMLInputElement,
   CheckboxProps<HTMLInputElement>
->(({id = useId(), children, style, disabled, ...props}, ref) => (
+>(({id = Math.random().toString(), children, style, disabled, ...props}, ref) => (
   <div
     css={{
       alignItems: 'center',
@@ -105,8 +105,8 @@ export const Checkbox: React.FC<CheckboxProps<HTMLInputElement>> = React.forward
     }}
     style={style}
   >
-    <Input
-      type={'checkbox'}
+    <input
+      type="checkbox"
       id={id}
       style={{
         height: '22px',
@@ -116,8 +116,10 @@ export const Checkbox: React.FC<CheckboxProps<HTMLInputElement>> = React.forward
       }}
       disabled={disabled}
       ref={ref}
+      className={INPUT_CLASSNAME}
       {...filterCheckboxProps(props)}
     />
+
     <StyledLabel htmlFor={id} disabled={disabled} markInvalid={props.markInvalid}>
       {children}
     </StyledLabel>

@@ -27,23 +27,25 @@ import {inputStyle} from './Input';
 import React, {ReactElement, useEffect, useRef, useState} from 'react';
 import InputLabel from './InputLabel';
 
-type Option = {
+export type SelectOption = {
   value: string | number;
   label: string;
+  description?: string;
 };
 
-export interface SelectProps {
+export interface SelectProps<T extends SelectOption> {
   id: string;
-  onChange: (selectedOption: string | number) => void;
+  onChange: (selectedOption: T['value']) => void;
   dataUieName: string;
-  options: Option[];
-  value?: Option | null;
+  options: T[];
+  value?: T | null;
   helperText?: string;
   label?: string;
   disabled?: boolean;
   required?: boolean;
   markInvalid?: boolean;
   error?: ReactElement;
+  wrapperCSS?: CSSObject;
 }
 
 const ArrowDown = (theme: Theme) => `
@@ -135,7 +137,7 @@ const filterSelectProps = props => filterProps(props, ['markInvalid']);
 
 const placeholderText = '- Please select -';
 
-export const Select = ({
+export const Select = <T extends SelectOption>({
   id,
   label,
   error,
@@ -146,8 +148,9 @@ export const Select = ({
   required,
   markInvalid,
   dataUieName,
+  wrapperCSS = {},
   ...props
-}: SelectProps) => {
+}: SelectProps<T>) => {
   const selectContainerRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -255,9 +258,11 @@ export const Select = ({
     <div
       css={{
         marginBottom: markInvalid ? '2px' : '20px',
+        width: '100%',
         '&:focus-within label': {
           color: COLOR_V2.BLUE,
         },
+        ...wrapperCSS,
       }}
       data-uie-name={dataUieName}
       ref={selectContainerRef}
@@ -315,6 +320,18 @@ export const Select = ({
                 })}
               >
                 {option.label}
+
+                {option.description && (
+                  <p
+                    css={{
+                      marginBottom: 0,
+                      fontSize: '14px',
+                      color: isSelected ? COLOR_V2.WHITE : COLOR_V2.GRAY_80
+                    }}
+                  >
+                    {option.description}
+                  </p>
+                )}
               </li>
             );
           })}
