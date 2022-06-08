@@ -23,9 +23,10 @@ import type {Conversation} from './Conversation';
 import type {DefaultConversationRoleName} from './ConversationRole';
 import type {RECEIPT_MODE} from './data/ConversationReceiptModeUpdateData';
 
-type ProteusProtocol = 'proteus';
-type MlsProtocol = 'mls';
-type ConversationProtocol = ProteusProtocol | MlsProtocol;
+export enum ConversationProtocol {
+  MLS = 'mls',
+  PROTEUS = 'proteus',
+}
 
 export interface NewConversation
   extends Partial<Pick<Conversation, 'access' | 'access_role' | 'access_role_v2' | 'message_timer' | 'name'>> {
