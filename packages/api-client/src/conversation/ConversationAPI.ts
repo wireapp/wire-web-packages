@@ -451,7 +451,7 @@ export class ConversationAPI {
    * @param conversationData The new conversation
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/createOne2OneConversation
    */
-  public async post1to1(conversationData: NewConversation): Promise<void> {
+  public async post1to1(conversationData: Omit<NewConversation, 'protocol'>): Promise<void> {
     const config: AxiosRequestConfig = {
       data: conversationData,
       method: 'post',
