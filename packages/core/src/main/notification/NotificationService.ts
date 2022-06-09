@@ -174,7 +174,10 @@ export class NotificationService extends EventEmitter {
   ): AsyncGenerator<HandledEventPayload> {
     for (const event of notification.payload) {
       this.logger.log(`Handling event of type "${event.type}" for notification with ID "${notification.id}"`, event);
-      const lastEventDate = await this.database.getLastEventDate();
+      let lastEventDate: Date | undefined = undefined;
+      try {
+        lastEventDate = await this.database.getLastEventDate();
+      } catch {}
       if ('time' in event && this.isOutdatedEvent(event, source, lastEventDate)) {
         this.logger.info(`Ignored outdated event type: '${event.type}'`);
         continue;
