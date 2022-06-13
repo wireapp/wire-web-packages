@@ -151,12 +151,15 @@ export const Select = <T extends SelectOption = SelectOption>({
   wrapperCSS = {},
   ...props
 }: SelectProps<T>) => {
+  const currentOption = options.findIndex(option => option.value === value?.value);
+
   const selectContainerRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<number | null>(() =>
-    value ? options.findIndex(option => option.value === value.value) : null,
-  );
+  const [selectedOption, setSelectedOption] = useState<number | null>(currentOption === -1 ? null : currentOption);
+
+  const hasSelectedOption = selectedOption !== null;
+  const hasError = !!error;
 
   const onToggleDropdown = () => setIsDropdownOpen(prevState => !prevState);
 
@@ -229,10 +232,6 @@ export const Select = <T extends SelectOption = SelectOption>({
     }
   };
 
-  const hasError = !!error;
-
-  const hasSelectedOption = options && !!options[selectedOption];
-
   const handleOutsideClick = (event: MouseEvent) => {
     if (selectContainerRef.current && !selectContainerRef.current.contains(event.target as Node)) {
       setIsDropdownOpen(false);
@@ -246,13 +245,6 @@ export const Select = <T extends SelectOption = SelectOption>({
       window.removeEventListener('click', handleOutsideClick);
     };
   }, []);
-
-  useEffect(() => {
-    if (value) {
-      const valueIdx = options.findIndex(option => option.value === value.value);
-      setSelectedOption(valueIdx);
-    }
-  }, [options, value]);
 
   return (
     <div
@@ -276,7 +268,7 @@ export const Select = <T extends SelectOption = SelectOption>({
       <div css={{position: 'relative'}}>
         <button
           type="button"
-          aria-activedescendant={hasSelectedOption ? options[selectedOption].label : ''}
+          aria-activedescendant={hasSelectedOption ? value.label : ''}
           aria-expanded={isDropdownOpen}
           aria-haspopup="listbox"
           aria-labelledby={id}
@@ -287,7 +279,7 @@ export const Select = <T extends SelectOption = SelectOption>({
           {...filterSelectProps(props)}
           data-uie-name={dataUieName}
         >
-          {hasSelectedOption ? options[selectedOption].label : placeholderText}
+          {hasSelectedOption ? value.label : placeholderText}
         </button>
 
         <ul
