@@ -326,7 +326,7 @@ export const Select = <T extends SelectOption = SelectOption>({
                     css={{
                       marginBottom: 0,
                       fontSize: '14px',
-                      color: isSelected ? COLOR_V2.WHITE : COLOR_V2.GRAY_80
+                      color: isSelected ? COLOR_V2.WHITE : COLOR_V2.GRAY_80,
                     }}
                   >
                     {option.description}
