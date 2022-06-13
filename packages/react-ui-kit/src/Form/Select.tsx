@@ -161,8 +161,6 @@ export const Select = <T extends SelectOption = SelectOption>({
   const hasSelectedOption = selectedOption !== null;
   const hasError = !!error;
 
-  const onToggleDropdown = () => setIsDropdownOpen(prevState => !prevState);
-
   const scrollToCurrentOption = (idx: number) => {
     if (listRef.current) {
       const listSelectedOption = listRef.current.children[idx] as HTMLLIElement;
@@ -174,6 +172,14 @@ export const Select = <T extends SelectOption = SelectOption>({
       });
     }
   };
+
+  const onToggleDropdown = () => {
+    setIsDropdownOpen(prevState => !prevState);
+
+    if (!isDropdownOpen) {
+      scrollToCurrentOption(null)
+    }
+  }
 
   const onOptionSelect = (idx: number) => {
     setSelectedOption(idx);
@@ -294,7 +300,7 @@ export const Select = <T extends SelectOption = SelectOption>({
           })}
         >
           {options.map((option, index) => {
-            const isSelected = selectedOption == index;
+            const isSelected = currentOption == index;
 
             return (
               <li
