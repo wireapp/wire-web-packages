@@ -25,7 +25,7 @@ import type {Notification} from '@wireapp/api-client/src/notification/';
 import {AUTH_COOKIE_KEY, AUTH_TABLE_NAME, Context, Cookie, CookieStore, LoginData} from '@wireapp/api-client/src/auth/';
 import {ClientClassification, ClientType, RegisteredClient} from '@wireapp/api-client/src/client/';
 import * as Events from '@wireapp/api-client/src/event';
-import {WebSocketClient} from '@wireapp/api-client/src/tcp/';
+import {AbortHandler, WebSocketClient} from '@wireapp/api-client/src/tcp/';
 import * as cryptobox from '@wireapp/cryptobox';
 import {CRUDEngine, MemoryEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import {EventEmitter} from 'events';
@@ -397,6 +397,7 @@ export class Account extends EventEmitter {
     onConnectionStateChanged = () => {},
     onNotificationStreamProgress = () => {},
     onMissedNotifications = () => {},
+    dryRun = false,
   }: {
     /**
      * Called when a new event arrives from backend
@@ -428,6 +429,11 @@ export class Account extends EventEmitter {
      * @param  {string} notificationId
      */
     onMissedNotifications?: (notificationId: string) => void;
+
+    /**
+     * When set will not decrypt and not store the last notification ID. This is useful if you only want to subscribe to unencrypted backend events
+     */
+    dryRun?: boolean;
   } = {}): Promise<() => void> {
     if (!this.apiClient.context) {
       throw new Error('Context is not set - please login first');
@@ -454,7 +460,7 @@ export class Account extends EventEmitter {
 
     const handleNotification = async (notification: Notification, source: PayloadBundleSource): Promise<void> => {
       try {
-        const messages = this.service!.notification.handleNotification(notification, PayloadBundleSource.WEBSOCKET);
+        const messages = this.service!.notification.handleNotification(notification, source, dryRun);
         for await (const message of messages) {
           await handleEvent(message, source);
         }
@@ -469,13 +475,17 @@ export class Account extends EventEmitter {
     );
     this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_STATE_CHANGE, onConnectionStateChanged);
 
-    const onBeforeConnect = async () => {
+    const onBeforeConnect = async (abortHandler: AbortHandler) => {
       // Lock websocket in order to buffer any message that arrives while we handle the notification stream
       this.apiClient.transport.ws.lock();
-      await this.service!.notification.handleNotificationStream(async (notification, source, progress) => {
-        await handleNotification(notification, source);
-        onNotificationStreamProgress(progress);
-      }, onMissedNotifications);
+      await this.service!.notification.handleNotificationStream(
+        async (notification, source, progress) => {
+          await handleNotification(notification, source);
+          onNotificationStreamProgress(progress);
+        },
+        onMissedNotifications,
+        abortHandler,
+      );
       // We can now unlock the websocket and let the new messages being handled and decrypted
       this.apiClient.transport.ws.unlock();
       onConnected();
@@ -484,6 +494,8 @@ export class Account extends EventEmitter {
 
     return () => {
       this.apiClient.disconnect();
+      this.apiClient.transport.ws.removeAllListeners(WebSocketClient.TOPIC.ON_MESSAGE);
+      this.apiClient.transport.ws.removeListener(WebSocketClient.TOPIC.ON_STATE_CHANGE, onConnectionStateChanged);
     };
   }
 

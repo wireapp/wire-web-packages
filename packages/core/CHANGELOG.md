@@ -3,6 +3,79 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [27.3.6](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.3.5...@wireapp/core@27.3.6) (2022-06-10)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [27.3.5](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.3.4...@wireapp/core@27.3.5) (2022-06-09)
+
+
+### Bug Fixes
+
+* Do not process outdated events ([#4289](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/issues/4289)) ([e817f8f](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/e817f8f3351d8b9c016bf94a2668278d9dc14514))
+
+
+
+
+
+## [27.3.4](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.3.3...@wireapp/core@27.3.4) (2022-06-08)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [27.3.3](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.3.2...@wireapp/core@27.3.3) (2022-06-08)
+
+
+### Bug Fixes
+
+* **core:** Abort notification stream handling when websocket is disconnected ([#4285](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/issues/4285)) ([e674a38](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/e674a3827f4e107f9d6ef39e26fa8d94c58986d7))
+
+
+
+
+
+## [27.3.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.3.1...@wireapp/core@27.3.2) (2022-06-07)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [27.3.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.3.0...@wireapp/core@27.3.1) (2022-06-03)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [27.3.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.2.4...@wireapp/core@27.3.0) (2022-06-03)
+
+
+### Features
+
+* Add listen dryrun option ([#4282](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/issues/4282)) ([a10bbe1](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/a10bbe14f1967a85d38444ed3e745f57c6504e9e))
+
+
+
+
+
+## [27.2.4](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.2.3...@wireapp/core@27.2.4) (2022-06-01)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
 ## [27.2.3](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.2.2...@wireapp/core@27.2.3) (2022-05-31)
 
 **Note:** Version bump only for package @wireapp/core

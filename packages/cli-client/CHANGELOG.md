@@ -3,6 +3,70 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.0.26](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.25...@wireapp/cli-client@11.0.26) (2022-06-10)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.25](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.24...@wireapp/cli-client@11.0.25) (2022-06-09)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.24](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.23...@wireapp/cli-client@11.0.24) (2022-06-08)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.23](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.22...@wireapp/cli-client@11.0.23) (2022-06-08)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.22](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.21...@wireapp/cli-client@11.0.22) (2022-06-07)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.21](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.20...@wireapp/cli-client@11.0.21) (2022-06-03)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.20](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.19...@wireapp/cli-client@11.0.20) (2022-06-03)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [11.0.19](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.18...@wireapp/cli-client@11.0.19) (2022-06-01)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
 ## [11.0.18](https://github.com/wireapp/wire-web-packages/tree/main/packages/cli-client/compare/@wireapp/cli-client@11.0.17...@wireapp/cli-client@11.0.18) (2022-05-31)
 
 **Note:** Version bump only for package @wireapp/cli-client

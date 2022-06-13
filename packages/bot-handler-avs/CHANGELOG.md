@@ -3,6 +3,70 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.361](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-avs/compare/@wireapp/bot-handler-avs@0.2.360...@wireapp/bot-handler-avs@0.2.361) (2022-06-10)
+
+**Note:** Version bump only for package @wireapp/bot-handler-avs
+
+
+
+
+
+## [0.2.360](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-avs/compare/@wireapp/bot-handler-avs@0.2.359...@wireapp/bot-handler-avs@0.2.360) (2022-06-09)
+
+**Note:** Version bump only for package @wireapp/bot-handler-avs
+
+
+
+
+
+## [0.2.359](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-avs/compare/@wireapp/bot-handler-avs@0.2.358...@wireapp/bot-handler-avs@0.2.359) (2022-06-08)
+
+**Note:** Version bump only for package @wireapp/bot-handler-avs
+
+
+
+
+
+## [0.2.358](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-avs/compare/@wireapp/bot-handler-avs@0.2.357...@wireapp/bot-handler-avs@0.2.358) (2022-06-08)
+
+**Note:** Version bump only for package @wireapp/bot-handler-avs
+
+
+
+
+
+## [0.2.357](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-avs/compare/@wireapp/bot-handler-avs@0.2.356...@wireapp/bot-handler-avs@0.2.357) (2022-06-07)
+
+**Note:** Version bump only for package @wireapp/bot-handler-avs
+
+
+
+
+
+## [0.2.356](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-avs/compare/@wireapp/bot-handler-avs@0.2.355...@wireapp/bot-handler-avs@0.2.356) (2022-06-03)
+
+**Note:** Version bump only for package @wireapp/bot-handler-avs
+
+
+
+
+
+## [0.2.355](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-avs/compare/@wireapp/bot-handler-avs@0.2.354...@wireapp/bot-handler-avs@0.2.355) (2022-06-03)
+
+**Note:** Version bump only for package @wireapp/bot-handler-avs
+
+
+
+
+
+## [0.2.354](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-avs/compare/@wireapp/bot-handler-avs@0.2.353...@wireapp/bot-handler-avs@0.2.354) (2022-06-01)
+
+**Note:** Version bump only for package @wireapp/bot-handler-avs
+
+
+
+
+
 ## [0.2.353](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-avs/compare/@wireapp/bot-handler-avs@0.2.352...@wireapp/bot-handler-avs@0.2.353) (2022-05-31)
 
 **Note:** Version bump only for package @wireapp/bot-handler-avs

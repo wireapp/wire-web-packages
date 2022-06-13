@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [19.6.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.6.0...@wireapp/api-client@19.6.1) (2022-06-10)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+# [19.6.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.5.0...@wireapp/api-client@19.6.0) (2022-06-08)
+
+
+### Features
+
+* **api-client:** Add support for creating mls based conversations (FS-554) ([#4288](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4288)) ([42664b0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/42664b0dc3286c205f60190453a3aa37e1bf29e0))
+
+
+
+
+
+# [19.5.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.4.0...@wireapp/api-client@19.5.0) (2022-06-07)
+
+
+### Features
+
+* **api:** Improve federated unavailable error handling ([#4280](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4280)) ([15a0900](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/15a0900e04c02e3193c9c8dbce98ec83d0fff0ae))
+
+
+
+
+
+# [19.4.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.3.3...@wireapp/api-client@19.4.0) (2022-06-03)
+
+
+### Features
+
+* **core, api-client:** Add MLS team feature config (fs-653) ([#4283](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4283)) ([59dc2ce](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/59dc2ce3a298ee7e8fc67da9f2a90ed79db50f24))
+
+
+
+
+
+## [19.3.3](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.3.2...@wireapp/api-client@19.3.3) (2022-06-01)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
 ## [19.3.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.3.1...@wireapp/api-client@19.3.2) (2022-05-31)
 
 **Note:** Version bump only for package @wireapp/api-client

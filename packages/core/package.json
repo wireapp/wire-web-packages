@@ -5,14 +5,14 @@
   "dependencies": {
     "@types/long": "4.0.1",
     "@types/node": "~14",
-    "@wireapp/api-client": "19.3.2",
+    "@wireapp/api-client": "19.6.1",
     "@wireapp/cryptobox": "12.8.0",
     "bazinga64": "5.10.0",
     "hash.js": "1.1.7",
     "http-status-codes": "2.1.4",
     "logdown": "3.3.1",
     "long": "4.0.0",
-    "protobufjs": "6.11.2",
+    "protobufjs": "6.11.3",
     "uuidjs": "4.2.8"
   },
   "devDependencies": {
@@ -69,5 +69,5 @@
     "test:project": "yarn dist && yarn test",
     "test:node": "nyc jasmine --config=jasmine.json"
   },
-  "version": "27.2.3"
+  "version": "27.3.6"
 }

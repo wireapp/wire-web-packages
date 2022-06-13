@@ -32,6 +32,7 @@ import {UserMapper} from '../user/UserMapper';
 import {NotificationBackendRepository} from './NotificationBackendRepository';
 import {NotificationDatabaseRepository} from './NotificationDatabaseRepository';
 import {GenericMessage} from '@wireapp/protocol-messaging';
+import {AbortHandler} from '@wireapp/api-client/src/tcp';
 
 export type HandledEventPayload = {
   event: Events.BackendEvent;
@@ -125,6 +126,7 @@ export class NotificationService extends EventEmitter {
   public async handleNotificationStream(
     notificationHandler: NotificationHandler,
     onMissedNotifications: (notificationId: string) => void,
+    abortHandler: AbortHandler,
   ): Promise<void> {
     const {notifications, missedNotification} = await this.getAllNotifications();
     if (missedNotification) {
@@ -132,6 +134,12 @@ export class NotificationService extends EventEmitter {
     }
 
     for (const [index, notification] of notifications.entries()) {
+      if (abortHandler.isAborted()) {
+        /* Stop handling notifications if the websocket has been disconnected.
+         * Upon reconnecting we are going to restart handling the notification stream for where we left of
+         */
+        return;
+      }
       await notificationHandler(notification, PayloadBundleSource.NOTIFICATION_STREAM, {
         done: index + 1,
         total: notifications.length,
@@ -139,18 +147,43 @@ export class NotificationService extends EventEmitter {
     }
   }
 
+  /**
+   * Checks if an event should be ignored.
+   * An event that has a date prior to that last event that we have parsed should be ignored
+   *
+   * @param event
+   * @param source
+   * @param lastEventDate?
+   */
+  private isOutdatedEvent(event: {time: string}, source: PayloadBundleSource, lastEventDate?: Date) {
+    const isFromNotificationStream = source === PayloadBundleSource.NOTIFICATION_STREAM;
+    const shouldCheckEventDate = !!event.time && isFromNotificationStream && lastEventDate;
+
+    if (shouldCheckEventDate) {
+      /** This check prevents duplicated "You joined" system messages. */
+      const isOutdated = lastEventDate.getTime() >= new Date(event.time).getTime();
+      return isOutdated;
+    }
+    return false;
+  }
+
   public async *handleNotification(
     notification: Notification,
     source: PayloadBundleSource,
+    dryRun: boolean = false,
   ): AsyncGenerator<HandledEventPayload> {
     for (const event of notification.payload) {
       this.logger.log(`Handling event of type "${event.type}" for notification with ID "${notification.id}"`, event);
+      let lastEventDate: Date | undefined = undefined;
       try {
-        const data = await this.handleEvent(event, source);
-        if (!notification.transient) {
-          // keep track of the last handled notification for next time we fetch the notification stream
-          await this.setLastNotificationId(notification);
-        }
+        lastEventDate = await this.database.getLastEventDate();
+      } catch {}
+      if ('time' in event && this.isOutdatedEvent(event, source, lastEventDate)) {
+        this.logger.info(`Ignored outdated event type: '${event.type}'`);
+        continue;
+      }
+      try {
+        const data = await this.handleEvent(event, source, dryRun);
         yield {
           ...data,
           mappedEvent: data.mappedEvent ? this.cleanupPayloadBundle(data.mappedEvent) : undefined,
@@ -168,7 +201,7 @@ export class NotificationService extends EventEmitter {
         this.emit(NotificationService.TOPIC.NOTIFICATION_ERROR, notificationError);
       }
     }
-    if (!notification.transient) {
+    if (!dryRun && !notification.transient) {
       // keep track of the last handled notification for next time we fetch the notification stream
       await this.setLastNotificationId(notification);
     }
@@ -193,10 +226,19 @@ export class NotificationService extends EventEmitter {
     }
   }
 
-  private async handleEvent(event: Events.BackendEvent, source: PayloadBundleSource): Promise<HandledEventPayload> {
+  private async handleEvent(
+    event: Events.BackendEvent,
+    source: PayloadBundleSource,
+    dryRun: boolean = false,
+  ): Promise<HandledEventPayload> {
     switch (event.type) {
       // Encrypted events
       case Events.CONVERSATION_EVENT.OTR_MESSAGE_ADD: {
+        if (dryRun) {
+          // In case of a dry run, we do not want to decrypt messages
+          // We just return the raw event to the caller
+          return {event};
+        }
         try {
           const decryptedData = await this.cryptographyService.decryptMessage(event);
           return {

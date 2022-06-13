@@ -173,13 +173,7 @@ export const Select = <T extends SelectOption = SelectOption>({
     }
   };
 
-  const onToggleDropdown = () => {
-    setIsDropdownOpen(prevState => !prevState);
-
-    if (!isDropdownOpen) {
-      scrollToCurrentOption(null)
-    }
-  }
+  const onToggleDropdown = () => setIsDropdownOpen(prevState => !prevState);
 
   const onOptionSelect = (idx: number) => {
     setSelectedOption(idx);
