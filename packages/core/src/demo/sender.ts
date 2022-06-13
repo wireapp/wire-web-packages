@@ -35,8 +35,9 @@ import {TimeUtil} from '@wireapp/commons';
 import {Account} from '@wireapp/core';
 import {APIClient} from '@wireapp/api-client';
 import {ClientType} from '@wireapp/api-client/src/client/';
-import {FileEngine} from '@wireapp/store-engine-fs';
+//import {FileEngine} from '@wireapp/store-engine-fs';
 import {MessageBuilder} from '../main/conversation/message/MessageBuilder';
+require('dotenv').config();
 
 const readFileAsync = promisify(fs.readFile);
 
@@ -55,7 +56,7 @@ logger.state.isEnabled = true;
 const {
   WIRE_EMAIL,
   WIRE_PASSWORD,
-  WIRE_CONVERSATION_ID = commander.opts().conversationId,
+  WIRE_CONVERSATION = commander.opts().conversationId,
   WIRE_BACKEND = 'staging',
 } = process.env;
 
@@ -63,7 +64,7 @@ const {
   const MESSAGE_TIMER = TimeUtil.TimeInMillis.SECOND * 5;
   const useProtobuf = false;
 
-  ['WIRE_EMAIL', 'WIRE_PASSWORD', 'WIRE_CONVERSATION_ID', 'WIRE_BACKEND'].forEach((envVar, _, array) => {
+  ['WIRE_EMAIL', 'WIRE_PASSWORD', 'WIRE_CONVERSATION', 'WIRE_BACKEND'].forEach((envVar, _, array) => {
     if (!process.env[envVar]) {
       logger.error(`Error: Environment variable "${envVar}" is not set. Required variables: ${array.join(', ')}.`);
       process.exit(1);
@@ -77,11 +78,11 @@ const {
   };
 
   const backend = WIRE_BACKEND === 'staging' ? APIClient.BACKEND.STAGING : APIClient.BACKEND.PRODUCTION;
-  const engine = new FileEngine(path.join(__dirname, '.tmp/sender'));
-  await engine.init('sender', {fileExtension: '.json'});
+  //const engine = new FileEngine(path.join(__dirname, '.tmp/sender'));
+  //await engine.init('sender', {fileExtension: '.json'});
 
   const apiClient = new APIClient({urls: backend});
-  const account = new Account(apiClient, {createStore: () => Promise.resolve(engine)});
+  const account = new Account(apiClient, {enableMLS: true});
   await account.login(login);
   await account.listen();
 
@@ -95,7 +96,7 @@ const {
 
   async function sendAndDeleteMessage(): Promise<void> {
     const deleteTextPayload = MessageBuilder.createText({
-      conversationId: WIRE_CONVERSATION_ID,
+      conversationId: WIRE_CONVERSATION,
       from: account.userId,
       text: 'Delete me!',
     }).build();
@@ -106,37 +107,31 @@ const {
 
     const fiveSecondsInMillis = TimeUtil.TimeInMillis.SECOND * 5;
     setTimeout(async () => {
-      await account.service!.conversation.deleteMessageEveryone(WIRE_CONVERSATION_ID, messageId);
+      await account.service!.conversation.deleteMessageEveryone(WIRE_CONVERSATION, messageId);
     }, fiveSecondsInMillis);
   }
 
-  async function sendConversationLevelTimer(timeInMillis = TimeUtil.TimeInMillis.YEAR): Promise<void> {
-    await account['apiClient'].conversation.api.putConversationMessageTimer(WIRE_CONVERSATION_ID, {
-      message_timer: timeInMillis,
-    });
-  }
-
   async function sendEphemeralText(expiry = MESSAGE_TIMER): Promise<void> {
-    account.service!.conversation.messageTimer.setMessageLevelTimer(WIRE_CONVERSATION_ID, expiry);
+    account.service!.conversation.messageTimer.setMessageLevelTimer(WIRE_CONVERSATION, expiry);
     const payload = MessageBuilder.createText({
-      conversationId: WIRE_CONVERSATION_ID,
+      conversationId: WIRE_CONVERSATION,
       from: account.userId,
       text: `Expires after ${expiry}ms ...`,
     }).build();
     await account.service!.conversation.send({payloadBundle: payload, sendAsProtobuf: useProtobuf});
-    account.service!.conversation.messageTimer.setMessageLevelTimer(WIRE_CONVERSATION_ID, 0);
+    account.service!.conversation.messageTimer.setMessageLevelTimer(WIRE_CONVERSATION, 0);
   }
 
   async function sendPing(expiry = MESSAGE_TIMER): Promise<void> {
-    account.service!.conversation.messageTimer.setMessageLevelTimer(WIRE_CONVERSATION_ID, expiry);
-    const payload = MessageBuilder.createPing(WIRE_CONVERSATION_ID);
+    account.service!.conversation.messageTimer.setMessageLevelTimer(WIRE_CONVERSATION, expiry);
+    const payload = MessageBuilder.createPing(WIRE_CONVERSATION);
     await account.service!.conversation.send({payloadBundle: payload, sendAsProtobuf: useProtobuf});
-    account.service!.conversation.messageTimer.setMessageLevelTimer(WIRE_CONVERSATION_ID, 0);
+    account.service!.conversation.messageTimer.setMessageLevelTimer(WIRE_CONVERSATION, 0);
   }
 
   async function sendText(): Promise<void> {
     const payload = MessageBuilder.createText({
-      conversationId: WIRE_CONVERSATION_ID,
+      conversationId: WIRE_CONVERSATION,
       from: account.userId,
       text: 'Hello, World!',
     }).build();
@@ -145,7 +140,7 @@ const {
 
   async function sendAndEdit(): Promise<void> {
     const payload = MessageBuilder.createText({
-      conversationId: WIRE_CONVERSATION_ID,
+      conversationId: WIRE_CONVERSATION,
       from: account.userId,
       text: 'Hello, Wolrd!',
     }).build();
@@ -155,7 +150,7 @@ const {
     });
     setInterval(async () => {
       const editedPayload = MessageBuilder.createEditedText({
-        conversationId: WIRE_CONVERSATION_ID,
+        conversationId: WIRE_CONVERSATION,
         from: account.userId,
         newMessageText: 'Hello, World!',
         originalMessageId,
@@ -173,7 +168,7 @@ const {
       width: 500,
     };
     const imagePayload = MessageBuilder.createImage({
-      conversationId: WIRE_CONVERSATION_ID,
+      conversationId: WIRE_CONVERSATION,
       from: account.userId,
       image,
       asset: await (await account.service!.asset.uploadAsset(image.data)).response,
@@ -185,7 +180,7 @@ const {
     const filename = 'wire_logo.png';
     const data = await readFileAsync(path.join(__dirname, filename));
     const metadataPayload = MessageBuilder.createFileMetadata({
-      conversationId: WIRE_CONVERSATION_ID,
+      conversationId: WIRE_CONVERSATION,
       from: account.userId,
       metaData: {
         length: data.length,
@@ -198,20 +193,16 @@ const {
     const file = {data};
     const filePayload = await MessageBuilder.createFileData({
       from: account.userId,
-      conversationId: WIRE_CONVERSATION_ID,
+      conversationId: WIRE_CONVERSATION,
       file,
-      asset: await (await account.service.asset.uploadAsset(file.data)).response,
+      asset: await (await account.service!.asset.uploadAsset(file.data)).response,
       originalMessageId: metadataPayload.id,
     });
     await account.service!.conversation.send({payloadBundle: filePayload, sendAsProtobuf: useProtobuf});
   }
 
-  async function clearConversation(): Promise<void> {
-    await account.service!.conversation.clearConversation(WIRE_CONVERSATION_ID);
-  }
-
   async function sendMentions(): Promise<void> {
-    const conversation = await account.service!.conversation.getConversations(WIRE_CONVERSATION_ID);
+    const conversation = await account.service!.conversation.getConversations(WIRE_CONVERSATION);
     const userIds = conversation.members.others.map(participant => participant.id);
     const users = await account.service!.user.getUsers(userIds);
 
@@ -229,7 +220,7 @@ const {
       return mention;
     });
 
-    const payload = MessageBuilder.createText({conversationId: WIRE_CONVERSATION_ID, from: account.userId, text})
+    const payload = MessageBuilder.createText({conversationId: WIRE_CONVERSATION, from: account.userId, text})
       .withMentions(mentions)
       .build();
 
@@ -240,7 +231,7 @@ const {
     const text = 'Hello';
 
     const textPayload = MessageBuilder.createText({
-      conversationId: WIRE_CONVERSATION_ID,
+      conversationId: WIRE_CONVERSATION,
       from: account.userId,
       text,
     }).build();
@@ -258,7 +249,7 @@ const {
     };
 
     const quotePayload = MessageBuilder.createText({
-      conversationId: WIRE_CONVERSATION_ID,
+      conversationId: WIRE_CONVERSATION,
       from: account.userId,
       text: quoteText,
     })
