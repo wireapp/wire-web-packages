@@ -19,7 +19,7 @@
 
 /** @jsx jsx */
 import {jsx} from '@emotion/react';
-import React from 'react';
+import React, {useId} from 'react';
 
 import {COLOR, COLOR_V2} from '../Identity';
 import {Theme} from '../Layout';
@@ -96,7 +96,7 @@ const filterCheckboxProps = (props: CheckboxProps) => filterProps(props, ['markI
 export const Checkbox: React.FC<CheckboxProps<HTMLInputElement>> = React.forwardRef<
   HTMLInputElement,
   CheckboxProps<HTMLInputElement>
->(({id = Math.random().toString(), children, style, disabled, ...props}, ref) => (
+>(({id = useId(), children, style, disabled, ...props}, ref) => (
   <div
     css={{
       alignItems: 'center',

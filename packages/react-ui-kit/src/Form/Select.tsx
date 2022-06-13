@@ -33,7 +33,7 @@ export type SelectOption = {
   description?: string;
 };
 
-export interface SelectProps<T extends SelectOption> {
+export interface SelectProps<T extends SelectOption = SelectOption> {
   id: string;
   onChange: (selectedOption: T['value']) => void;
   dataUieName: string;
@@ -137,7 +137,7 @@ const filterSelectProps = props => filterProps(props, ['markInvalid']);
 
 const placeholderText = '- Please select -';
 
-export const Select = <T extends SelectOption>({
+export const Select = <T extends SelectOption = SelectOption>({
   id,
   label,
   error,
