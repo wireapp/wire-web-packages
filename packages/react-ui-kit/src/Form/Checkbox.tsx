@@ -25,7 +25,7 @@ import {COLOR, COLOR_V2} from '../Identity';
 import {Theme} from '../Layout';
 import {Text, TextProps, textStyle, textLinkStyle} from '../Text';
 import {filterProps} from '../util';
-import {INPUT_CLASSNAME, Input, InputProps} from './Input';
+import {INPUT_CLASSNAME, InputProps} from './Input';
 
 export interface StyledLabelProps<T = HTMLLabelElement> extends React.HTMLProps<T> {
   disabled?: boolean;
