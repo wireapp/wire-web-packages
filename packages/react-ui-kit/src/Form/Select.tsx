@@ -279,7 +279,7 @@ export const Select = <T extends SelectOption = SelectOption>({
           {...filterSelectProps(props)}
           data-uie-name={dataUieName}
           {...(hasSelectedOption && {
-            'data-value': value.value
+            'data-value': value.value,
           })}
         >
           {hasSelectedOption ? value.label : placeholderText}
