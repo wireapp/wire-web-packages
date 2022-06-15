@@ -30,11 +30,19 @@ export interface AccessTokenStore {
   on(event: TOPIC.ACCESS_TOKEN_REFRESH, listener: (accessToken: AccessTokenData) => void): this;
 }
 
+type AccessTokenWithExpirationDate = AccessTokenData & {
+  /**
+   * The date at which the token will be invalid. This value should be use with a grain of salt as there might be some time shift between browser and server time
+   * It is suggested to add an error margin
+   */
+  expireAt: number;
+};
+
 export class AccessTokenStore extends EventEmitter {
   private readonly logger: logdown.Logger;
 
   public static readonly TOPIC = TOPIC;
-  public accessToken?: AccessTokenData;
+  public accessToken?: AccessTokenWithExpirationDate;
 
   constructor() {
     super();
@@ -50,10 +58,11 @@ export class AccessTokenStore extends EventEmitter {
     this.accessToken = undefined;
   }
 
-  public async updateToken(accessToken: AccessTokenData): Promise<AccessTokenData> {
+  public async updateToken(accessToken: AccessTokenData): Promise<AccessTokenWithExpirationDate> {
     if (this.accessToken !== accessToken) {
       this.logger.log('Saving local access token');
-      this.accessToken = accessToken;
+      const expireAt = Date.now() + accessToken.expires_in * 1000;
+      this.accessToken = {...accessToken, expireAt};
       this.emit(AccessTokenStore.TOPIC.ACCESS_TOKEN_REFRESH, this.accessToken);
     }
     return this.accessToken;

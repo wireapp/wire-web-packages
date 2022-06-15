@@ -41,7 +41,7 @@ describe('Client', () => {
         clientType: ClientType.TEMPORARY,
         userId: 'userId',
       };
-      apiClient['accessTokenStore'].accessToken = accessTokenData;
+      apiClient['accessTokenStore'].accessToken = {...accessTokenData, expireAt: 10000};
 
       const promise = apiClient.connect();
       apiClient.transport.ws['socket']['internalOnMessage'](message);

@@ -33,6 +33,7 @@ describe('HttpClient', () => {
         'DPOBfBP-uz_b0gAKBQ==.v=1.k=1.d=1498600993.t=a.l=.u=aaf9a833-ef30-4c2' +
         '2-86a0-9adc8a15b3b4.c=15037015562284012115',
       expires_in: 900,
+      expireAt: 10000,
       token_type: 'Bearer',
       user: 'aaf9a833-ef30-4c22-86a0-9adc8a15b3b4',
     },

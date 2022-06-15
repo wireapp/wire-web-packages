@@ -197,6 +197,19 @@ export class HttpClient extends EventEmitter {
     }
     return false;
   }
+  /**
+   * Will return true if the stored access token is still valid (not expired)
+   *
+   * @param  {number} errorMargin - Since the expiration date is subject to time shift between client and server, an error margin can be used. Defaults to 10s
+   */
+  public accessTokenIsValid(errorMargin: number = 10000): boolean {
+    if (this.accessTokenStore.accessToken) {
+      const now = Date.now();
+      const expirationDate = this.accessTokenStore.accessToken.expireAt;
+      return expirationDate - errorMargin < now;
+    }
+    return false;
+  }
 
   public async refreshAccessToken(): Promise<AccessTokenData> {
     let expiredAccessToken: AccessTokenData | undefined;
