@@ -278,9 +278,9 @@ export const Select = <T extends SelectOption = SelectOption>({
           css={(theme: Theme) => selectStyle(theme, props, hasError)}
           {...filterSelectProps(props)}
           data-uie-name={dataUieName}
-          {...hasSelectedOption && {
+          {...(hasSelectedOption && {
             'data-value': value.value
-          }}
+          })}
         >
           {hasSelectedOption ? value.label : placeholderText}
         </button>
