@@ -206,7 +206,7 @@ export class HttpClient extends EventEmitter {
     if (this.accessTokenStore.accessToken) {
       const now = Date.now();
       const expirationDate = this.accessTokenStore.accessToken.expireAt;
-      return expirationDate - errorMargin < now;
+      return expirationDate - errorMargin >= now;
     }
     return false;
   }

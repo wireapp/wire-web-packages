@@ -98,4 +98,20 @@ describe('HttpClient', () => {
       expect((error as BackendError).message).toBe('Authentication failed because the cookie is missing.');
     }
   });
+
+  describe('accessTokenIsValid', () => {
+    (
+      [
+        [{expireAt: Date.now() - 100_000}, false],
+        [{expireAt: Date.now() + 100_000}, true],
+      ] as const
+    ).forEach(([tokenData, expected]) => {
+      const client = new HttpClient(testConfig, mockedAccessTokenStore as AccessTokenStore);
+
+      it(`returns the validation state (${JSON.stringify(tokenData)})`, () => {
+        mockedAccessTokenStore.accessToken!.expireAt = tokenData.expireAt;
+        expect(client.accessTokenIsValid()).toBe(expected);
+      });
+    });
+  });
 });
