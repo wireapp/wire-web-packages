@@ -107,7 +107,7 @@ export class WebSocketClient extends EventEmitter {
   };
 
   private readonly onReconnect = async () => {
-    if (!this.client.accessTokenIsValid()) {
+    if (!this.client.hasValidAccessToken()) {
       // before we try any connection, we first refresh the access token to make sure we will avoid concurrent accessToken refreshes
       await this.refreshAccessToken();
     }

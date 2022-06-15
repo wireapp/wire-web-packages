@@ -202,7 +202,7 @@ export class HttpClient extends EventEmitter {
    *
    * @param  {number} errorMargin - Since the expiration date is subject to time shift between client and server, an error margin can be used. Defaults to 10s
    */
-  public accessTokenIsValid(errorMargin: number = 10000): boolean {
+  public hasValidAccessToken(errorMargin: number = 10000): boolean {
     if (this.accessTokenStore.accessToken) {
       const now = Date.now();
       const expirationDate = this.accessTokenStore.accessToken.expireAt;

@@ -99,7 +99,7 @@ describe('HttpClient', () => {
     }
   });
 
-  describe('accessTokenIsValid', () => {
+  describe('hasValidAccessToken', () => {
     (
       [
         [{expireAt: Date.now() - 100_000}, false],
@@ -110,7 +110,7 @@ describe('HttpClient', () => {
 
       it(`returns the validation state (${JSON.stringify(tokenData)})`, () => {
         mockedAccessTokenStore.accessToken!.expireAt = tokenData.expireAt;
-        expect(client.accessTokenIsValid()).toBe(expected);
+        expect(client.hasValidAccessToken()).toBe(expected);
       });
     });
   });
