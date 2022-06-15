@@ -33,7 +33,6 @@ describe('HttpClient', () => {
         'DPOBfBP-uz_b0gAKBQ==.v=1.k=1.d=1498600993.t=a.l=.u=aaf9a833-ef30-4c2' +
         '2-86a0-9adc8a15b3b4.c=15037015562284012115',
       expires_in: 900,
-      expireAt: 10000,
       token_type: 'Bearer',
       user: 'aaf9a833-ef30-4c22-86a0-9adc8a15b3b4',
     },
@@ -102,14 +101,14 @@ describe('HttpClient', () => {
   describe('hasValidAccessToken', () => {
     (
       [
-        [{expireAt: Date.now() - 100_000}, false],
-        [{expireAt: Date.now() + 100_000}, true],
+        [Date.now() - 100_000, false],
+        [Date.now() + 100_000, true],
       ] as const
-    ).forEach(([tokenData, expected]) => {
+    ).forEach(([expirationDate, expected]) => {
       const client = new HttpClient(testConfig, mockedAccessTokenStore as AccessTokenStore);
 
-      it(`returns the validation state (${JSON.stringify(tokenData)})`, () => {
-        mockedAccessTokenStore.accessToken!.expireAt = tokenData.expireAt;
+      it(`returns the validation state (${JSON.stringify(expirationDate)})`, () => {
+        mockedAccessTokenStore.tokenExpirationDate = expirationDate;
         expect(client.hasValidAccessToken()).toBe(expected);
       });
     });
