@@ -358,13 +358,13 @@ export class Account extends EventEmitter {
     await this.apiClient.api.client.getClient(loadedClient.id);
     this.apiClient.context!.clientId = loadedClient.id;
     if (this.enableMLS) {
-      this.coreCryptoClient = await this.createCoreCryptoClient(loadedClient);
+      this.coreCryptoClient = await this.createMLSClient(loadedClient);
     }
 
     return loadedClient;
   }
 
-  private async createCoreCryptoClient(client: RegisteredClient): Promise<CoreCrypto> {
+  private async createMLSClient(client: RegisteredClient): Promise<CoreCrypto> {
     const {CoreCrypto} = await import('@otak/core-crypto');
     return CoreCrypto.init({
       path: 'path/to/database',
@@ -384,7 +384,7 @@ export class Account extends EventEmitter {
     this.logger.info(`Creating new client {mls: ${!!this.enableMLS}}`);
     const registeredClient = await this.service.client.register(loginData, clientInfo, entropyData);
     if (this.enableMLS) {
-      this.coreCryptoClient = await this.createCoreCryptoClient(registeredClient);
+      this.coreCryptoClient = await this.createMLSClient(registeredClient);
       await this.service.client.uploadMLSPublicKeys(this.coreCryptoClient.clientPublicKey(), registeredClient.id);
     }
     this.apiClient.context!.clientId = registeredClient.id;
