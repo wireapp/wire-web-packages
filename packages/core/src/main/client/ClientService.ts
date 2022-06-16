@@ -148,11 +148,4 @@ export class ClientService {
       mls_public_keys: {ed25519: btoa(Converter.arrayBufferViewToBaselineString(publicKey))},
     });
   }
-
-  public async uploadMLSKeyPackages(keypackages: Uint8Array[], clientId: string) {
-    return this.backend.uploadMLSKeyPackages(
-      clientId,
-      keypackages.map(keypackage => btoa(Converter.arrayBufferViewToBaselineString(keypackage))),
-    );
-  }
 }

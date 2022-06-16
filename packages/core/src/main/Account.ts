@@ -384,18 +384,8 @@ export class Account extends EventEmitter {
     this.logger.info(`Creating new client {mls: ${!!this.enableMLS}}`);
     const registeredClient = await this.service.client.register(loginData, clientInfo, entropyData);
     if (this.enableMLS) {
-      try {
-        this.coreCryptoClient = await this.createCoreCryptoClient(registeredClient);
-        await this.service.client.uploadMLSPublicKeys(this.coreCryptoClient.clientPublicKey(), registeredClient.id);
-        await this.service.client.uploadMLSKeyPackages(
-          this.coreCryptoClient.clientKeypackages(this.nbPrekeys),
-          registeredClient.id,
-        );
-      } catch (e) {
-        console.error(e);
-      }
-      await this.service.client.deleteClient(registeredClient.id, '123456789Dev!');
-      throw new Error('ok');
+      this.coreCryptoClient = await this.createCoreCryptoClient(registeredClient);
+      await this.service.client.uploadMLSPublicKeys(this.coreCryptoClient.clientPublicKey(), registeredClient.id);
     }
     this.apiClient.context!.clientId = registeredClient.id;
     this.logger.info('Client is created');
