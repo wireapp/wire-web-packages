@@ -68,6 +68,7 @@ import {
 import {QualifiedId} from '../user';
 import {BackendFeatures} from '../APIClient';
 import {chunk} from '@wireapp/commons/src/main/util/ArrayUtil';
+import {MlsEvent} from './data/MlsEventData';
 
 type ConversationGuestLinkStatus = {status: 'enabled' | 'disabled'};
 
@@ -80,6 +81,7 @@ export class ConversationAPI {
     CODE: 'code',
     CODE_CHECK: '/code-check',
     CONVERSATIONS: '/conversations',
+    MLS: '/mls',
     IDS: 'ids',
     JOIN: '/join',
     LIST: 'list',
@@ -789,6 +791,25 @@ export class ConversationAPI {
     }
 
     const response = await this.client.sendProtocolBuffer<ClientMismatch>(config, true);
+    return response.data;
+  }
+  /**
+   * Post an encrypted message to a conversation.
+   * @param messageData Mls message payload in TLS format. Please refer to the MLS specification for details.
+   * @see https://messaginglayersecurity.rocks/mls-protocol/draft-ietf-mls-protocol.html#name-message-framing
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/postOtrMessage
+   */
+  public async postMlsMessage(messageData: Uint8Array): Promise<MlsEvent> {
+    const config: AxiosRequestConfig = {
+      data: {
+        // TODO: use core crypto here to encrypt the message data
+        description: messageData,
+      },
+      method: 'post',
+      url: `${ConversationAPI.URL.MLS}/${ConversationAPI.URL.MESSAGES}`,
+    };
+
+    const response = await this.client.sendProtocolMls<MlsEvent>(config, true);
     return response.data;
   }
 
