@@ -32,10 +32,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {promisify} from 'util';
 import {TimeUtil} from '@wireapp/commons';
-import {Account} from '@wireapp/core';
 import {APIClient} from '@wireapp/api-client';
 import {ClientType} from '@wireapp/api-client/src/client/';
-import {FileEngine} from '@wireapp/store-engine-fs';
+//import {FileEngine} from '@wireapp/store-engine-fs';
+import {Account} from '../main/Account';
 import {MessageBuilder} from '../main/conversation/message/MessageBuilder';
 
 const readFileAsync = promisify(fs.readFile);
@@ -77,21 +77,19 @@ const {
   };
 
   const backend = WIRE_BACKEND === 'staging' ? APIClient.BACKEND.STAGING : APIClient.BACKEND.PRODUCTION;
-  const engine = new FileEngine(path.join(__dirname, '.tmp/sender'));
-  await engine.init('sender', {fileExtension: '.json'});
+  //const engine = new FileEngine(path.join(__dirname, '.tmp/sender'));
+  //await engine.init('sender', {fileExtension: '.json'});
 
   const apiClient = new APIClient({urls: backend});
-  const account = new Account(apiClient, {createStore: () => Promise.resolve(engine)});
-  await account.login(login);
+  const account = new Account(apiClient);
+  const context = await account.login(login);
   await account.listen();
 
   account.on(Account.TOPIC.ERROR, error => logger.error(error));
 
-  const name = await account.service!.self.getName();
+  const name = await account.service!.self.getSelf();
 
-  logger.log('Name', name);
-  logger.log('User ID', account['apiClient'].context!.userId);
-  logger.log('Client ID', account['apiClient'].context!.clientId);
+  logger.log({name: name.name, ...context});
 
   async function sendAndDeleteMessage(): Promise<void> {
     const deleteTextPayload = MessageBuilder.createText({
@@ -108,12 +106,6 @@ const {
     setTimeout(async () => {
       await account.service!.conversation.deleteMessageEveryone(WIRE_CONVERSATION_ID, messageId);
     }, fiveSecondsInMillis);
-  }
-
-  async function sendConversationLevelTimer(timeInMillis = TimeUtil.TimeInMillis.YEAR): Promise<void> {
-    await account['apiClient'].conversation.api.putConversationMessageTimer(WIRE_CONVERSATION_ID, {
-      message_timer: timeInMillis,
-    });
   }
 
   async function sendEphemeralText(expiry = MESSAGE_TIMER): Promise<void> {
@@ -200,14 +192,10 @@ const {
       from: account.userId,
       conversationId: WIRE_CONVERSATION_ID,
       file,
-      asset: await (await account.service.asset.uploadAsset(file.data)).response,
+      asset: await (await account.service!.asset.uploadAsset(file.data)).response,
       originalMessageId: metadataPayload.id,
     });
     await account.service!.conversation.send({payloadBundle: filePayload, sendAsProtobuf: useProtobuf});
-  }
-
-  async function clearConversation(): Promise<void> {
-    await account.service!.conversation.clearConversation(WIRE_CONVERSATION_ID);
   }
 
   async function sendMentions(): Promise<void> {
