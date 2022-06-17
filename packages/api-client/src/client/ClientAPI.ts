@@ -158,9 +158,10 @@ export class ClientAPI {
    */
   public async claimMLSKeyPackages(userId: string, userDomain: string, skipOwn: string): Promise<ClaimedKeyPackages> {
     const config: AxiosRequestConfig = {
-      data: {skip_own: skipOwn},
       method: 'POST',
-      url: `/${ClientAPI.URL.MLS_CLIENTS}/${ClientAPI.URL.MLS_KEY_PACKAGES}/claim/${userDomain}/${userId}`,
+      url: `/${ClientAPI.URL.MLS_CLIENTS}/${ClientAPI.URL.MLS_KEY_PACKAGES}/claim/${userDomain}/${userId}${
+        skipOwn ? `?skip_own=${skipOwn}` : ''
+      }`,
     };
     const response = await this.client.sendJSON<ClaimedKeyPackages>(config, true);
     return response.data;
