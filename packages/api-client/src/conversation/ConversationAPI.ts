@@ -793,6 +793,7 @@ export class ConversationAPI {
     const response = await this.client.sendProtocolBuffer<ClientMismatch>(config, true);
     return response.data;
   }
+
   /**
    * Post an encrypted message to a conversation.
    * @param messageData Mls message payload in TLS format. Please refer to the MLS specification for details.
@@ -802,7 +803,6 @@ export class ConversationAPI {
   public async postMlsMessage(messageData: Uint8Array): Promise<MlsEvent> {
     const config: AxiosRequestConfig = {
       data: {
-        // TODO: use core crypto here to encrypt the message data
         description: messageData,
       },
       method: 'post',
@@ -811,6 +811,24 @@ export class ConversationAPI {
 
     const response = await this.client.sendProtocolMls<MlsEvent>(config, true);
     return response.data;
+  }
+
+  /**
+   * Post the welcome encrypted message to a conversation.
+   * @param messageData Mls welocome message payload in TLS format. Please refer to the MLS specification for details.
+   * @see https://messaginglayersecurity.rocks/mls-protocol/draft-ietf-mls-protocol.html#name-message-framing
+   * @see https://staging-nginz-https.zinfra.io/api/swagger-ui/#/default/post_mls_welcome
+   */
+  public async postMlsWelcomeMessage(messageData: Uint8Array): Promise<void> {
+    const config: AxiosRequestConfig = {
+      data: {
+        description: messageData,
+      },
+      method: 'post',
+      url: `${ConversationAPI.URL.MLS}/welcome`,
+    };
+
+    await this.client.sendProtocolMls<void>(config, true);
   }
 
   public async postForClients(clientId: string, conversationId: string): Promise<ClientMismatch> {
