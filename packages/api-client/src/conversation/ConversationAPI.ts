@@ -802,9 +802,7 @@ export class ConversationAPI {
    */
   public async postMlsMessage(messageData: Uint8Array): Promise<MlsEvent> {
     const config: AxiosRequestConfig = {
-      data: {
-        description: messageData,
-      },
+      data: messageData,
       method: 'post',
       url: `${ConversationAPI.URL.MLS}/${ConversationAPI.URL.MESSAGES}`,
     };
@@ -821,9 +819,7 @@ export class ConversationAPI {
    */
   public async postMlsWelcomeMessage(messageData: Uint8Array): Promise<void> {
     const config: AxiosRequestConfig = {
-      data: {
-        description: messageData,
-      },
+      data: messageData,
       method: 'post',
       url: `${ConversationAPI.URL.MLS}/welcome`,
     };
