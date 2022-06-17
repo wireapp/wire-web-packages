@@ -2483,6 +2483,11 @@
   dependencies:
     "@octokit/openapi-types" "^6.0.0"
 
+"@open-wc/webpack-import-meta-loader@0.4.7":
+  version "0.4.7"
+  resolved "https://registry.npmjs.org/@open-wc/webpack-import-meta-loader/-/webpack-import-meta-loader-0.4.7.tgz#d8212640a386a66bf06a2a4c101936467839b5a1"
+  integrity sha512-F3d1EHRckk2+ZpgEEAgVITp8BU9DYLBhKOhNMREeQ1BwILRIhrt+V1bebpnd0Mz595jzd7Yh1wSibLsXibkCpg==
+
 "@otak/core-crypto@0.2.0-beta-3":
   version "0.2.0-beta-3"
   resolved "https://registry.npmjs.org/@otak/core-crypto/-/core-crypto-0.2.0-beta-3.tgz#1863e9b4152e7db4c96e245cffdfef0ddade670a"

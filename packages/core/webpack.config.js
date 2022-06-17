@@ -31,6 +31,14 @@ module.exports = {
   externals: {
     'fs-extra': '{}',
   },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        loader: require.resolve('@open-wc/webpack-import-meta-loader'),
+      },
+    ],
+  },
   mode: 'production',
   node: {
     fs: 'empty',
