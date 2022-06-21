@@ -136,8 +136,8 @@ export class ClientAPI {
   /**
    * Will upload keypackages for an MLS capable client
    * @see https://staging-nginz-https.zinfra.io/api/swagger-ui/#/default/post_mls_key_packages_self__client_
-   * @param  {string} clientId The client to upload the key packages for
-   * @param  {Array.<string>} keyPackages The key packages to upload
+   * @param {string} clientId The client to upload the key packages for
+   * @param {string[]} keyPackages The key packages to upload
    */
   public async uploadMLSKeyPackages(clientId: string, keyPackages: string[]) {
     const config: AxiosRequestConfig = {
