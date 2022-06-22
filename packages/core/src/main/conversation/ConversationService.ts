@@ -915,6 +915,16 @@ export class ConversationService {
     } else {
       payload = conversationData;
     }
+    const backendConversation = this.apiClient.api.conversation.postConversation(payload);
+    if (conversationData.protocol === 'mls') {
+      const keyPackages = payload.users.map(user => this.apiClient.api.user.downloadAllKeyPackages(user));
+      const {welcome, commit} = coreCrypto.createConversation(keypackages);
+      this.apiClient.api.conversation.sendMLSWelcomeMessage(welcome);
+      this.apiClient.api.conversation.sendMLSMessage(commit);
+      // send the welcome and handshake messages
+    }
+
+    return backendConversation;
 
     return this.apiClient.api.conversation.postConversation(payload);
   }
