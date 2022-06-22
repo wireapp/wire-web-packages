@@ -23,11 +23,12 @@ import {CSSObject, jsx} from '@emotion/react';
 
 import {GlobalStyle} from '../GlobalStyle';
 import {filterProps} from '../util';
-import {THEME_ID, Theme, ThemeProvider} from './Theme';
+import {THEME_ID, Theme, ThemeProvider, themes} from './Theme';
 
 export interface StyledAppContainerProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   backgroundColor?: string;
   themeId?: THEME_ID;
+  theme?: Theme;
 }
 
 const styledAppContainerStyle: <T>(theme: Theme, props: StyledAppContainerProps<T>) => CSSObject = (
@@ -46,7 +47,7 @@ const StyledAppContainer = (props: StyledAppContainerProps) => (
 );
 
 export const StyledApp = ({themeId = THEME_ID.LIGHT, children, ...props}) => (
-  <ThemeProvider themeId={themeId}>
+  <ThemeProvider theme={props.theme ? props.theme : themes[themeId]}>
     <StyledAppContainer {...props}>
       <GlobalStyle />
       {children}
