@@ -34,7 +34,9 @@ export interface Theme {
   general: {
     backgroundColor: string;
     color: string;
-    themeColor?: string;
+    primaryColor?: string;
+    disabledColor?: string;
+    contrastTextColor?: string;
   };
   Input: {
     backgroundColor: string;
@@ -53,6 +55,9 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
     general: {
       backgroundColor: COLOR.GRAY_LIGHTEN_88,
       color: COLOR.TEXT,
+      primaryColor: COLOR_V2.BLUE,
+      disabledColor: COLOR_V2.GRAY,
+      contrastTextColor: COLOR.WHITE,
     },
   },
   [THEME_ID.DARK]: {
@@ -64,6 +69,9 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
     general: {
       backgroundColor: COLOR.BLACK,
       color: COLOR.WHITE,
+      primaryColor: COLOR_V2.BLUE,
+      disabledColor: COLOR_V2.GRAY,
+      contrastTextColor: COLOR.BLACK,
     },
   },
 };
