@@ -34,6 +34,7 @@ export interface Theme {
   general: {
     backgroundColor: string;
     color: string;
+    themeColor?: string;
   };
   Input: {
     backgroundColor: string;
@@ -68,11 +69,12 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
 };
 
 export interface ThemeProps<T = HTMLDivElement> extends React.HTMLProps<T> {
-  themeId: THEME_ID;
+  themeId?: THEME_ID;
+  theme?: Theme;
 }
 
 const filterThemeProps = (props: ThemeProps) => filterProps(props, ['themeId']);
 
 export const ThemeProvider = (props: ThemeProps) => (
-  <EmotionThemeProvider theme={themes[props.themeId]} {...filterThemeProps(props)} />
+  <EmotionThemeProvider theme={props.theme} {...filterThemeProps(props)} />
 );
