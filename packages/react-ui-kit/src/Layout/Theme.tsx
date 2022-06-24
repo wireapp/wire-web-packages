@@ -69,11 +69,10 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
 };
 
 export interface ThemeProps<T = HTMLDivElement> extends React.HTMLProps<T> {
-  themeId?: THEME_ID;
   theme?: Theme;
 }
 
-const filterThemeProps = (props: ThemeProps) => filterProps(props, ['themeId']);
+const filterThemeProps = (props: ThemeProps) => filterProps(props, ['theme']);
 
 export const ThemeProvider = (props: ThemeProps) => (
   <EmotionThemeProvider theme={props.theme} {...filterThemeProps(props)} />
