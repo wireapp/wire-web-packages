@@ -83,10 +83,10 @@ export const selectStyle: <T>(theme: Theme, props, error?: boolean) => CSSObject
   },
   ...(!disabled && {
     '&:hover': {
-      boxShadow: `0 0 0 1px ${COLOR_V2.GRAY_60}`,
+      boxShadow: `0 0 0 1px ${theme.general.disabledColor}`,
     },
     '&:focus, &:active': {
-      boxShadow: `0 0 0 1px ${COLOR_V2.BLUE}`,
+      boxShadow: `0 0 0 1px ${theme.general.primaryColor}`,
     },
   }),
 });
@@ -97,7 +97,7 @@ const dropdownStyles = (theme: Theme, isDropdownOpen: boolean): CSSObject => ({
   margin: '3px 0 0',
   padding: 0,
   borderRadius: '10px',
-  border: `1px solid ${COLOR_V2.BLUE}`,
+  border: `1px solid ${theme.general.primaryColor}`,
   position: 'absolute',
   top: '100%',
   left: 0,
@@ -108,7 +108,7 @@ const dropdownStyles = (theme: Theme, isDropdownOpen: boolean): CSSObject => ({
 });
 
 const dropdownOptionStyles = (theme: Theme, isSelected: boolean): CSSObject => ({
-  background: isSelected ? COLOR_V2.BLUE : COLOR_V2.WHITE,
+  background: isSelected ? theme.general.primaryColor : theme.general.backgroundColor,
   listStyle: 'none',
   padding: '10px 20px 14px',
   cursor: 'pointer',
@@ -116,7 +116,7 @@ const dropdownOptionStyles = (theme: Theme, isSelected: boolean): CSSObject => (
   fontWeight: 300,
   lineHeight: '24px',
   letterSpacing: '0.05px',
-  color: isSelected ? COLOR_V2.WHITE : COLOR_V2.BLACK,
+  color: isSelected ? theme.general.contrastTextColor : theme.general.color,
   '&:first-of-type': {
     borderRadius: '10px 10px 0 0',
   },
@@ -127,9 +127,9 @@ const dropdownOptionStyles = (theme: Theme, isSelected: boolean): CSSObject => (
     borderBottom: `1px solid ${COLOR_V2.GRAY_40}`,
   },
   '&:hover, &:active, &:focus': {
-    background: COLOR_V2.BLUE,
-    borderColor: COLOR_V2.BLUE,
-    color: COLOR_V2.WHITE,
+    background: theme.general.primaryColor,
+    borderColor: theme.general.primaryColor,
+    color: theme.general.contrastTextColor,
   },
 });
 
