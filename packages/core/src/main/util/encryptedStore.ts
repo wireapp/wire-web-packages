@@ -26,10 +26,13 @@ export interface IEncryptedStore {
 }
 
 interface EncryptedDB extends DBSchema {
+  key: {
+    key: string;
+    value: CryptoKey;
+  };
   secrets: {
     key: string;
     value: {
-      key: CryptoKey;
       iv: Uint8Array;
       encrypted: Uint8Array;
     };
@@ -37,13 +40,15 @@ interface EncryptedDB extends DBSchema {
 }
 
 class EncryptedStore implements IEncryptedStore {
-  constructor(private readonly db: IDBPDatabase<EncryptedDB>) {}
+  readonly #key: CryptoKey;
+  constructor(key: CryptoKey, private readonly db: IDBPDatabase<EncryptedDB>) {
+    this.#key = key;
+  }
 
   async saveSecretValue(primaryKey: string, value: Uint8Array) {
-    const key = await this.#generateKey();
-    const iv = await window.crypto.getRandomValues(new Uint8Array(96));
-    const encrypted = await this.#encrypt(value, iv, key);
-    await this.db.put('secrets', {key, iv, encrypted}, primaryKey);
+    const iv = await window.crypto.getRandomValues(new Uint8Array(12));
+    const encrypted = await this.#encrypt(value, iv, this.#key);
+    await this.db.put('secrets', {iv, encrypted}, primaryKey);
   }
 
   async getsecretValue(primaryKey: string) {
@@ -51,8 +56,8 @@ class EncryptedStore implements IEncryptedStore {
     if (!result) {
       return undefined;
     }
-    const {key, iv, encrypted} = result;
-    return this.#decrypt(encrypted, iv, key);
+    const {iv, encrypted} = result;
+    return this.#decrypt(encrypted, iv, this.#key);
   }
 
   async #decrypt(data: Uint8Array, iv: Uint8Array, key: CryptoKey) {
@@ -63,21 +68,29 @@ class EncryptedStore implements IEncryptedStore {
   async #encrypt(data: Uint8Array, iv: Uint8Array, key: CryptoKey) {
     return window.crypto.subtle.encrypt({name: 'AES-GCM', iv}, key, data);
   }
+}
 
-  async #generateKey() {
-    return window.crypto.subtle.generateKey(
-      {name: 'AES-GCM', length: 256},
-      false, //whether the key is extractable (i.e. can be used in exportKey)
-      ['encrypt', 'decrypt'],
-    );
-  }
+async function generateKey() {
+  return window.crypto.subtle.generateKey(
+    {name: 'AES-GCM', length: 256},
+    false, //whether the key is extractable (i.e. can be used in exportKey)
+    ['encrypt', 'decrypt'],
+  );
 }
 
 export async function createEncryptedStore(dbName: string) {
   const db = await openDB<EncryptedDB>(dbName, 1, {
-    upgrade: database => {
+    upgrade: async (database, oldVersion, newVersion, transaction) => {
+      database.createObjectStore('key');
       database.createObjectStore('secrets');
     },
   });
-  return new EncryptedStore(db);
+
+  const keyPrimaryKey = 'dbKey';
+  let key = await db.get('key', keyPrimaryKey);
+  if (!key) {
+    key = await generateKey();
+    await db.put('key', key, keyPrimaryKey);
+  }
+  return new EncryptedStore(key, db);
 }

@@ -376,13 +376,14 @@ export class Account extends EventEmitter {
   }
 
   private async createMLSClient(client: RegisteredClient, context: Context): Promise<CoreCrypto> {
+    const coreCryptoKeyId = 'corecrypto-key';
     const {CoreCrypto} = await import('@otak/core-crypto');
     const dbName = `secrets-${this.generateDbName(context)}`;
     const secret = await this.createSecretStore(dbName);
-    let key = await secret.getsecretValue('key');
+    let key = await secret.getsecretValue(coreCryptoKeyId);
     if (!key) {
       key = window.crypto.getRandomValues(new Uint8Array(16));
-      await secret.saveSecretValue('key', key);
+      await secret.saveSecretValue(coreCryptoKeyId, key);
     }
     const {userId, domain} = this.apiClient.context!;
     return CoreCrypto.init({
