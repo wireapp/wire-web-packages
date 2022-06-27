@@ -46,7 +46,7 @@ class EncryptedStore implements IEncryptedStore {
   }
 
   async saveSecretValue(primaryKey: string, value: Uint8Array) {
-    const iv = await window.crypto.getRandomValues(new Uint8Array(12));
+    const iv = await crypto.getRandomValues(new Uint8Array(12));
     const encrypted = await this.#encrypt(value, iv, this.#key);
     await this.db.put('secrets', {iv, encrypted}, primaryKey);
   }
@@ -61,17 +61,17 @@ class EncryptedStore implements IEncryptedStore {
   }
 
   async #decrypt(data: Uint8Array, iv: Uint8Array, key: CryptoKey) {
-    const decrypted = await window.crypto.subtle.decrypt({name: 'AES-GCM', iv}, key, data);
+    const decrypted = await crypto.subtle.decrypt({name: 'AES-GCM', iv}, key, data);
     return new Uint8Array(decrypted);
   }
 
   async #encrypt(data: Uint8Array, iv: Uint8Array, key: CryptoKey) {
-    return window.crypto.subtle.encrypt({name: 'AES-GCM', iv}, key, data);
+    return crypto.subtle.encrypt({name: 'AES-GCM', iv}, key, data);
   }
 }
 
 async function generateKey() {
-  return window.crypto.subtle.generateKey(
+  return crypto.subtle.generateKey(
     {name: 'AES-GCM', length: 256},
     false, //whether the key is extractable (i.e. can be used in exportKey)
     ['encrypt', 'decrypt'],
