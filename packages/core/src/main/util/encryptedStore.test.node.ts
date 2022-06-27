@@ -16,6 +16,7 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
+
 require('fake-indexeddb/auto');
 import nodeCrypto from 'crypto';
 import {createEncryptedStore} from './encryptedStore';
@@ -26,7 +27,7 @@ global.window = {
   crypto: nodeCrypto.webcrypto,
 };
 
-fdescribe('encryptedStore', () => {
+describe('encryptedStore', () => {
   describe('Store and restore secret values', () => {
     it('Stores secret values', async () => {
       const store = await createEncryptedStore('test');
