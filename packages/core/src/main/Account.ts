@@ -102,6 +102,7 @@ interface AccountOptions {
   /** Used to store info in the database (will create a inMemory engine if returns undefined) */
   createStore?: CreateStoreFn;
 
+  /** Storage used to store sensitive secret values. If not provided, will use an encrypted indexeddb database */
   createSecretStore?: CreateSecretStoreFn;
 
   /** Number of prekeys to generate when creating a new device (defaults to 2)
