@@ -31,22 +31,27 @@ export enum THEME_ID {
 }
 
 export interface Theme {
+  darkMode?: boolean;
   general: {
     backgroundColor: string;
     color: string;
     primaryColor?: string;
-    disabledColor?: string;
-    contrastTextColor?: string;
   };
   Input: {
     backgroundColor: string;
     backgroundColorDisabled: string;
     placeholderColor: string;
   };
+  select: {
+    disabledColor?: string;
+    contrastTextColor?: string;
+    fillColor?: string;
+  };
 }
 
 export const themes: {[themeId in THEME_ID]: Theme} = {
   [THEME_ID.LIGHT]: {
+    darkMode: false,
     Input: {
       backgroundColor: COLOR.WHITE,
       backgroundColorDisabled: COLOR_V2.GRAY_20,
@@ -56,11 +61,14 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
       backgroundColor: COLOR.GRAY_LIGHTEN_88,
       color: COLOR.TEXT,
       primaryColor: COLOR_V2.BLUE,
+    },
+    select: {
       disabledColor: COLOR_V2.GRAY,
       contrastTextColor: COLOR.WHITE,
     },
   },
   [THEME_ID.DARK]: {
+    darkMode: true,
     Input: {
       backgroundColor: COLOR.BLACK_LIGHTEN_24,
       backgroundColorDisabled: COLOR.DISABLED,
@@ -70,6 +78,8 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
       backgroundColor: COLOR.BLACK,
       color: COLOR.WHITE,
       primaryColor: COLOR_V2.BLUE,
+    },
+    select: {
       disabledColor: COLOR_V2.GRAY,
       contrastTextColor: COLOR.BLACK,
     },

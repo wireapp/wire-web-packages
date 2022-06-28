@@ -50,7 +50,9 @@ export interface SelectProps<T extends SelectOption = SelectOption> {
 
 const ArrowDown = (theme: Theme) => `
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-        <path fill="${theme.general.color}" fill-rule="evenodd" clip-rule="evenodd" d="M7.99963 12.5711L15.6565 4.91421L14.2423 3.5L7.99963 9.74264L1.75699 3.5L0.342773 4.91421L7.99963 12.5711Z"/>
+        <path fill="${
+          theme.darkMode ? 'white' : 'black'
+        }" fill-rule="evenodd" clip-rule="evenodd" d="M7.99963 12.5711L15.6565 4.91421L14.2423 3.5L7.99963 9.74264L1.75699 3.5L0.342773 4.91421L7.99963 12.5711Z"/>
     </svg>
 `;
 
@@ -65,13 +67,13 @@ export const selectStyle: <T>(theme: Theme, props, error?: boolean) => CSSObject
     textShadow: '0 0 0 #000',
   },
   '&:disabled': {
-    color: COLOR_V2.GRAY,
+    color: theme.select.disabledColor,
   },
   appearance: 'none',
   background: disabled
     ? `${theme.Input.backgroundColorDisabled} center right 16px no-repeat url("${inlineSVG(ArrowDown(theme))}")`
     : `${theme.Input.backgroundColor} center right 16px no-repeat url("${inlineSVG(ArrowDown(theme))}")`,
-  boxShadow: markInvalid ? `0 0 0 1px ${COLOR_V2.RED}` : `0 0 0 1px ${COLOR_V2.GRAY_40}`,
+  boxShadow: markInvalid ? `0 0 0 1px ${COLOR_V2.RED}` : `0 0 0 1px ${theme.select.disabledColor}`,
   cursor: disabled ? 'normal' : 'pointer',
   fontSize: '16px',
   fontWeight: 300,
@@ -83,7 +85,7 @@ export const selectStyle: <T>(theme: Theme, props, error?: boolean) => CSSObject
   },
   ...(!disabled && {
     '&:hover': {
-      boxShadow: `0 0 0 1px ${theme.general.disabledColor}`,
+      boxShadow: `0 0 0 1px ${theme.select.disabledColor}`,
     },
     '&:focus, &:active': {
       boxShadow: `0 0 0 1px ${theme.general.primaryColor}`,
@@ -116,7 +118,7 @@ const dropdownOptionStyles = (theme: Theme, isSelected: boolean): CSSObject => (
   fontWeight: 300,
   lineHeight: '24px',
   letterSpacing: '0.05px',
-  color: isSelected ? theme.general.contrastTextColor : theme.general.color,
+  color: isSelected ? theme.select.contrastTextColor : theme.general.color,
   '&:first-of-type': {
     borderRadius: '10px 10px 0 0',
   },
@@ -129,7 +131,7 @@ const dropdownOptionStyles = (theme: Theme, isSelected: boolean): CSSObject => (
   '&:hover, &:active, &:focus': {
     background: theme.general.primaryColor,
     borderColor: theme.general.primaryColor,
-    color: theme.general.contrastTextColor,
+    color: theme.select.contrastTextColor,
   },
 });
 

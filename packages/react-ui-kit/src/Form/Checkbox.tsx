@@ -34,8 +34,10 @@ export interface StyledLabelProps<T = HTMLLabelElement> extends React.HTMLProps<
 
 const filterStyledLabelProps = (props: StyledLabelProps) => filterProps(props, ['markInvalid']);
 
-const checkSvg =
-  '<svg width="15" height="13" viewBox="0 0 16 13" xmlns="http://www.w3.org/2000/svg"><path d="M5.65685 12.0711L15.9842 1.62738L14.57 0.213167L5.65685 9.24264L1.41421 5L0 6.41421L5.65685 12.0711Z" fill="white"/></svg>';
+const checkSvg = (theme: Theme) =>
+  `<svg width="15" height="13" viewBox="0 0 16 13" xmlns="http://www.w3.org/2000/svg"><path d="M5.65685 12.0711L15.9842 1.62738L14.57 0.213167L5.65685 9.24264L1.41421 5L0 6.41421L5.65685 12.0711Z" fill="${
+    theme.darkMode ? 'black' : 'white'
+  }"/></svg>`;
 
 const StyledLabel = (props: StyledLabelProps) => {
   const {disabled, markInvalid} = props;
@@ -45,8 +47,8 @@ const StyledLabel = (props: StyledLabelProps) => {
       css={(theme: Theme) => ({
         [`.${INPUT_CLASSNAME}:checked + &::before`]: {
           background: `${
-            disabled ? COLOR_V2.GRAY_60 : COLOR_V2.BLUE
-          } url('data:image/svg+xml; utf8, ${checkSvg}') no-repeat center`,
+            disabled ? COLOR_V2.GRAY_60 : theme.general.primaryColor
+          } url('data:image/svg+xml; utf8, ${checkSvg(theme)}') no-repeat center`,
           borderColor: COLOR_V2.BLUE,
         },
         ...(!disabled && {
