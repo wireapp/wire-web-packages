@@ -41,11 +41,13 @@ export interface Theme {
     backgroundColor: string;
     backgroundColorDisabled: string;
     placeholderColor: string;
+    labelColor: string;
   };
   select: {
     disabledColor?: string;
     contrastTextColor?: string;
     fillColor?: string;
+    borderColor?: string;
   };
 }
 
@@ -56,6 +58,7 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
       backgroundColor: COLOR.WHITE,
       backgroundColorDisabled: COLOR_V2.GRAY_20,
       placeholderColor: COLOR.GRAY_DARKEN_24,
+      labelColor: COLOR_V2.GRAY_80,
     },
     general: {
       backgroundColor: COLOR.GRAY_LIGHTEN_88,
@@ -63,16 +66,18 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
       primaryColor: COLOR_V2.BLUE,
     },
     select: {
-      disabledColor: COLOR_V2.GRAY,
+      disabledColor: COLOR_V2.GRAY_70,
       contrastTextColor: COLOR.WHITE,
+      borderColor: COLOR_V2.GRAY_40,
     },
   },
   [THEME_ID.DARK]: {
     darkMode: true,
     Input: {
       backgroundColor: COLOR.BLACK_LIGHTEN_24,
-      backgroundColorDisabled: COLOR.DISABLED,
+      backgroundColorDisabled: COLOR.GRAY_100,
       placeholderColor: COLOR.GRAY_LIGHTEN_88,
+      labelColor: COLOR_V2.GRAY_40,
     },
     general: {
       backgroundColor: COLOR.BLACK,
@@ -80,8 +85,9 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
       primaryColor: COLOR_V2.BLUE,
     },
     select: {
-      disabledColor: COLOR_V2.GRAY,
+      disabledColor: COLOR_V2.GRAY_60,
       contrastTextColor: COLOR.BLACK,
+      borderColor: COLOR_V2.GRAY_90,
     },
   },
 };
