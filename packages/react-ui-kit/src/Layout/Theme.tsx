@@ -22,7 +22,7 @@ import {jsx, ThemeProvider as EmotionThemeProvider} from '@emotion/react';
 import React from 'react';
 
 import {COLOR} from '../Identity/colors';
-import {COLOR_V2} from '../Identity/colors-v2';
+import {COLOR_V2, BASE_DARK_COLOR, BASE_LIGHT_COLOR} from '../Identity/colors-v2';
 import {filterProps} from '../util';
 
 export enum THEME_ID {
@@ -47,6 +47,15 @@ export interface Theme {
     contrastTextColor?: string;
     fillColor?: string;
   };
+  checkbox: {
+    background?: string;
+    border?: string;
+    borderFocused?: string;
+    disableBgColor?: string;
+    disableBorderColor?: string;
+    disablecheckedBgColor?: string;
+    invalidBorderColor?: string;
+  };
 }
 
 export const themes: {[themeId in THEME_ID]: Theme} = {
@@ -66,6 +75,15 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
       disabledColor: COLOR_V2.GRAY,
       contrastTextColor: COLOR.WHITE,
     },
+    checkbox: {
+      background: COLOR_V2.GRAY_20,
+      border: COLOR_V2.GRAY_20,
+      borderFocused: BASE_LIGHT_COLOR.BLUE,
+      disableBgColor: COLOR_V2.GRAY_20,
+      disableBorderColor: COLOR_V2.GRAY_60,
+      disablecheckedBgColor: COLOR_V2.GRAY_20,
+      invalidBorderColor: BASE_LIGHT_COLOR.RED,
+    },
   },
   [THEME_ID.DARK]: {
     darkMode: true,
@@ -82,6 +100,15 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
     select: {
       disabledColor: COLOR_V2.GRAY,
       contrastTextColor: COLOR.BLACK,
+    },
+    checkbox: {
+      background: COLOR_V2.GRAY_20,
+      border: COLOR_V2.GRAY_80,
+      borderFocused: BASE_DARK_COLOR.BLUE,
+      disableBgColor: COLOR_V2.GRAY_10,
+      disableBorderColor: COLOR_V2.GRAY_70,
+      disablecheckedBgColor: COLOR_V2.GRAY_60,
+      invalidBorderColor: BASE_DARK_COLOR.RED,
     },
   },
 };

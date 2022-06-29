@@ -21,7 +21,7 @@
 import {jsx} from '@emotion/react';
 import React from 'react';
 
-import {COLOR, COLOR_V2} from '../Identity';
+import {COLOR} from '../Identity';
 import {Theme} from '../Layout';
 import {Text, TextProps, textStyle, textLinkStyle} from '../Text';
 import {filterProps} from '../util';
@@ -47,40 +47,43 @@ const StyledLabel = (props: StyledLabelProps) => {
       css={(theme: Theme) => ({
         [`.${INPUT_CLASSNAME}:checked + &::before`]: {
           background: `${
-            disabled ? COLOR_V2.GRAY_60 : theme.general.primaryColor
+            disabled ? theme.checkbox.disablecheckedBgColor : theme.general.primaryColor
           } url('data:image/svg+xml; utf8, ${checkSvg(theme)}') no-repeat center`,
-          borderColor: COLOR_V2.BLUE,
+          borderColor: theme.general.primaryColor,
         },
         ...(!disabled && {
           [`.${INPUT_CLASSNAME}:focus + &::before`]: {
-            borderColor: COLOR_V2.BLUE,
+            border: `1.5px solid ${theme.checkbox.borderFocused}`,
           },
           [`.${INPUT_CLASSNAME}:hover + &::before`]: {
-            borderColor: COLOR_V2.BLUE,
+            borderColor: theme.general.primaryColor,
           },
         }),
-        '&::before': {
-          background: disabled ? COLOR_V2.GRAY_10 : COLOR_V2.GRAY_20,
+        [`.${INPUT_CLASSNAME} + &::before`]: {
+          background: disabled ? theme.checkbox.disableBgColor : theme.checkbox.background,
           ...(!disabled
             ? {
-                border: markInvalid ? `1.5px solid ${COLOR_V2.RED}` : `1.5px solid ${COLOR_V2.GRAY_80}`,
+                border: markInvalid
+                  ? `1.5px solid ${theme.checkbox.invalidBorderColor}`
+                  : `1.5px solid ${theme.checkbox.border}`,
               }
             : {
-                border: `1.5px solid ${COLOR_V2.GRAY_60}`,
+                border: `1.5px solid ${theme.checkbox.disableBorderColor}`,
               }),
           borderRadius: '3px',
           boxSizing: 'border-box',
           content: '""',
           display: 'inline-block',
           height: '22px',
-          lineHeight: '22px',
+          lineHeight: 1.5,
           margin: '0 8px 0 -16px',
           width: '22px',
+          color: theme.general.color,
         },
         a: {
           ...textLinkStyle(theme, {}),
         },
-        lineHeight: '22px',
+        lineHeight: 1.5,
         display: 'flex',
         opacity: disabled ? 0.56 : 1,
       })}
