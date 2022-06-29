@@ -19,7 +19,7 @@
 
 require('fake-indexeddb/auto');
 import nodeCrypto from 'crypto';
-import {createEncryptedStore} from './encryptedStore';
+import {createCustomEncryptedStore, createEncryptedStore} from './encryptedStore';
 
 describe('encryptedStore', () => {
   beforeEach(() => {
@@ -27,9 +27,22 @@ describe('encryptedStore', () => {
     global.crypto = nodeCrypto.webcrypto;
   });
 
-  describe('Store and restore secret values', () => {
+  describe('Store and restore secret values with default encryption', () => {
     it('Stores secret values', async () => {
       const store = await createEncryptedStore('test');
+      const value = Uint8Array.from([1, 2, 3]);
+      await store.saveSecretValue('test', value);
+      const result = await store.getsecretValue('test');
+      expect(result).toEqual(value);
+    });
+  });
+
+  describe('Store and restore secret values with custom encryption', () => {
+    it('Stores secret values', async () => {
+      const store = await createCustomEncryptedStore('test', {
+        encrypt: (value: Uint8Array) => Promise.resolve(value),
+        decrypt: (value: Uint8Array) => Promise.resolve(value),
+      });
       const value = Uint8Array.from([1, 2, 3]);
       await store.saveSecretValue('test', value);
       const result = await store.getsecretValue('test');

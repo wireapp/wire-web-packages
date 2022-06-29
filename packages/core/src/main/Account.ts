@@ -49,7 +49,7 @@ import {AccountService} from './account/';
 import {LinkPreviewService} from './linkPreview';
 import type {CoreCrypto} from '@otak/core-crypto';
 import {WEBSOCKET_STATE} from '@wireapp/api-client/src/tcp/ReconnectingWebsocket';
-import {createEncryptedStore, IEncryptedStore} from './util/encryptedStore';
+import {createCustomEncryptedStore, createEncryptedStore} from './util/encryptedStore';
 
 export type ProcessedEventPayload = HandledEventPayload;
 
@@ -96,14 +96,19 @@ export interface Account {
 }
 
 export type CreateStoreFn = (storeName: string, context: Context) => undefined | Promise<CRUDEngine | undefined>;
-type CreateSecretStoreFn = (dbName: string) => IEncryptedStore | Promise<IEncryptedStore>;
+type SecretCrypto<T> = {
+  encrypt: (value: Uint8Array) => Promise<T>;
+  decrypt: (payload: T) => Promise<Uint8Array>;
+};
 
-interface AccountOptions {
+interface AccountOptions<T> {
   /** Used to store info in the database (will create a inMemory engine if returns undefined) */
   createStore?: CreateStoreFn;
 
-  /** Storage used to store sensitive secret values. If not provided, will use an encrypted indexeddb database */
-  createSecretStore?: CreateSecretStoreFn;
+  /** encrypt/decrypt function pair that will be called before storing/fetching secrets in the secrets database.
+   * If not provided will use the built in encryption mechanism
+   */
+  secretsCrypto?: SecretCrypto<T>;
 
   /** Number of prekeys to generate when creating a new device (defaults to 2)
    * Prekeys are Diffie-Hellmann public keys which allow offline initiation of a secure Proteus session between two devices.
@@ -124,12 +129,12 @@ const coreDefaultClient: ClientInfo = {
   model: '@wireapp/core',
 };
 
-export class Account extends EventEmitter {
+export class Account<T = unknown> extends EventEmitter {
   private readonly apiClient: APIClient;
   private readonly logger: logdown.Logger;
   private readonly createStore: CreateStoreFn;
-  private readonly createSecretStore: CreateSecretStoreFn;
   private storeEngine?: CRUDEngine;
+  private readonly secretsCrypto?: SecretCrypto<T>;
   private readonly nbPrekeys: number;
   private readonly enableMLS: boolean;
   private coreCryptoClient?: CoreCrypto;
@@ -158,19 +163,14 @@ export class Account extends EventEmitter {
    */
   constructor(
     apiClient: APIClient = new APIClient(),
-    {
-      createStore = () => undefined,
-      createSecretStore = createEncryptedStore,
-      nbPrekeys = 2,
-      enableMLS = false,
-    }: AccountOptions = {},
+    {createStore = () => undefined, nbPrekeys = 2, secretsCrypto, enableMLS = false}: AccountOptions<T> = {},
   ) {
     super();
     this.apiClient = apiClient;
     this.backendFeatures = this.apiClient.backendFeatures;
+    this.secretsCrypto = secretsCrypto;
     this.nbPrekeys = nbPrekeys;
     this.createStore = createStore;
-    this.createSecretStore = createSecretStore;
     this.enableMLS = enableMLS;
 
     apiClient.on(APIClient.TOPIC.COOKIE_REFRESH, async (cookie?: Cookie) => {
@@ -380,11 +380,15 @@ export class Account extends EventEmitter {
     const coreCryptoKeyId = 'corecrypto-key';
     const {CoreCrypto} = await import('@otak/core-crypto');
     const dbName = `secrets-${this.generateDbName(context)}`;
-    const secret = await this.createSecretStore(dbName);
-    let key = await secret.getsecretValue(coreCryptoKeyId);
+
+    const secretStore = this.secretsCrypto
+      ? await createCustomEncryptedStore(dbName, this.secretsCrypto)
+      : await createEncryptedStore(dbName);
+
+    let key = await secretStore.getsecretValue(coreCryptoKeyId);
     if (!key) {
       key = window.crypto.getRandomValues(new Uint8Array(16));
-      await secret.saveSecretValue(coreCryptoKeyId, key);
+      await secretStore.saveSecretValue(coreCryptoKeyId, key);
     }
     const {userId, domain} = this.apiClient.context!;
     return CoreCrypto.init({

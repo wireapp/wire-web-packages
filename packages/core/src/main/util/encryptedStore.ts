@@ -19,36 +19,43 @@
 
 import {DBSchema, IDBPDatabase, openDB} from 'idb';
 
-export interface IEncryptedStore {
-  saveSecretValue(primaryKey: string, value: Uint8Array): Promise<void>;
-
-  getsecretValue(primaryKey: string): Promise<Uint8Array | undefined>;
+interface DefaultEncryptedPayload {
+  iv: Uint8Array;
+  value: Uint8Array;
 }
-
-interface EncryptedDB extends DBSchema {
+interface EncryptedDB<EncryptedPayload> extends DBSchema {
   key: {
     key: string;
     value: CryptoKey;
   };
   secrets: {
     key: string;
-    value: {
-      iv: Uint8Array;
-      encrypted: Uint8Array;
-    };
+    value: EncryptedPayload;
   };
 }
 
-class EncryptedStore implements IEncryptedStore {
-  readonly #key: CryptoKey;
-  constructor(key: CryptoKey, private readonly db: IDBPDatabase<EncryptedDB>) {
-    this.#key = key;
+type DecryptFn<EncryptedPayload> = (payload: EncryptedPayload) => Promise<Uint8Array>;
+type EncryptFn<EncryptedPayload> = (value: Uint8Array) => Promise<EncryptedPayload>;
+
+type EncryptedStoreConfig<EncryptedPayload> = {
+  encrypt: EncryptFn<EncryptedPayload>;
+  decrypt: DecryptFn<EncryptedPayload>;
+};
+
+class EncryptedStore<EncryptedPayload> {
+  readonly #decrypt: DecryptFn<EncryptedPayload>;
+  readonly #encrypt: EncryptFn<EncryptedPayload>;
+  constructor(
+    private readonly db: IDBPDatabase<EncryptedDB<EncryptedPayload>>,
+    {encrypt, decrypt}: EncryptedStoreConfig<EncryptedPayload>,
+  ) {
+    this.#encrypt = encrypt;
+    this.#decrypt = decrypt;
   }
 
   async saveSecretValue(primaryKey: string, value: Uint8Array) {
-    const iv = await crypto.getRandomValues(new Uint8Array(12));
-    const encrypted = await this.#encrypt(value, iv, this.#key);
-    await this.db.put('secrets', {iv, encrypted}, primaryKey);
+    const encrypted = await this.#encrypt(value);
+    await this.db.put('secrets', encrypted, primaryKey);
   }
 
   async getsecretValue(primaryKey: string) {
@@ -56,17 +63,7 @@ class EncryptedStore implements IEncryptedStore {
     if (!result) {
       return undefined;
     }
-    const {iv, encrypted} = result;
-    return this.#decrypt(encrypted, iv, this.#key);
-  }
-
-  async #decrypt(data: Uint8Array, iv: Uint8Array, key: CryptoKey) {
-    const decrypted = await crypto.subtle.decrypt({name: 'AES-GCM', iv}, key, data);
-    return new Uint8Array(decrypted);
-  }
-
-  async #encrypt(data: Uint8Array, iv: Uint8Array, key: CryptoKey) {
-    return crypto.subtle.encrypt({name: 'AES-GCM', iv}, key, data);
+    return this.#decrypt(result);
   }
 }
 
@@ -78,9 +75,28 @@ async function generateKey() {
   );
 }
 
-export async function createEncryptedStore(dbName: string) {
-  const db = await openDB<EncryptedDB>(dbName, 1, {
-    upgrade: async (database, oldVersion, newVersion, transaction) => {
+async function defaultDecrypt({value, iv}: DefaultEncryptedPayload, key: CryptoKey): Promise<Uint8Array> {
+  const decrypted = await crypto.subtle.decrypt({name: 'AES-GCM', iv}, key, value);
+  return new Uint8Array(decrypted);
+}
+
+async function defaultEncrypt(data: Uint8Array, key: CryptoKey): Promise<DefaultEncryptedPayload> {
+  const iv = await crypto.getRandomValues(new Uint8Array(12));
+  return {
+    iv,
+    value: await crypto.subtle.encrypt({name: 'AES-GCM', iv}, key, data),
+  };
+}
+
+/**
+ * Will create a database that uses the built in encryption/decryption functions.
+ * The master key will be created and stored inside the database
+ *
+ * @param dbName the name of the database to create
+ */
+export async function createEncryptedStore(dbName: string): Promise<EncryptedStore<DefaultEncryptedPayload>> {
+  const db = await openDB<EncryptedDB<DefaultEncryptedPayload>>(dbName, 1, {
+    upgrade: async database => {
       database.createObjectStore('key');
       database.createObjectStore('secrets');
     },
@@ -92,5 +108,28 @@ export async function createEncryptedStore(dbName: string) {
     key = await generateKey();
     await db.put('key', key, keyPrimaryKey);
   }
-  return new EncryptedStore(key, db);
+  return new EncryptedStore(db, {
+    encrypt: value => defaultEncrypt(value, key as CryptoKey),
+    decrypt: payload => defaultDecrypt(payload, key as CryptoKey),
+  });
+}
+
+/**
+ * Will create a database that uses a custom encryption method. It needs the encrypt and decrypt function to be able to process the values stored.
+ * It's the responsability of the consumer to store the encryption key
+ *
+ * @param dbName the name of the database to create
+ * @param config contains the encrypt and decrypt methods
+ */
+export async function createCustomEncryptedStore<EncryptedPayload>(
+  dbName: string,
+  config: EncryptedStoreConfig<EncryptedPayload>,
+): Promise<EncryptedStore<EncryptedPayload>> {
+  const db = await openDB<EncryptedDB<EncryptedPayload>>(dbName, 1, {
+    upgrade: async database => {
+      database.createObjectStore('secrets');
+    },
+  });
+
+  return new EncryptedStore(db, config);
 }
