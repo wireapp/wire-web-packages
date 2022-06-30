@@ -4239,6 +4239,11 @@ balanced-match@^1.0.0:
   resolved "https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
 
+base64-arraybuffer-es6@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.npmjs.org/base64-arraybuffer-es6/-/base64-arraybuffer-es6-0.7.0.tgz#dbe1e6c87b1bf1ca2875904461a7de40f21abc86"
+  integrity sha512-ESyU/U1CFZDJUdr+neHRhNozeCv72Y7Vm0m1DCbjX3KBjT6eYocvAJlSk6+8+HkVwXlT1FNxhGW6q3UKAlCvvw==
+
 base64-arraybuffer@0.1.5:
   version "0.1.5"
   resolved "https://registry.npmjs.org/base64-arraybuffer/-/base64-arraybuffer-0.1.5.tgz#73926771923b5a19747ad666aa5cd4bf9c6e9ce8"
@@ -5614,6 +5619,11 @@ core-js@^2.4.0:
   version "2.6.10"
   resolved "https://registry.npmjs.org/core-js/-/core-js-2.6.10.tgz#8a5b8391f8cc7013da703411ce5b585706300d7f"
   integrity sha512-I39t74+4t+zau64EN1fE5v2W31Adtc/REhzWN+gWRRXg6WH5qAsZm62DHpQ1+Yhe4047T55jvzz7MUqF/dBBlA==
+
+core-js@^3.4:
+  version "3.23.3"
+  resolved "https://registry.npmjs.org/core-js/-/core-js-3.23.3.tgz#3b977612b15da6da0c9cc4aec487e8d24f371112"
+  integrity sha512-oAKwkj9xcWNBAvGbT//WiCdOMpb9XQG92/Fe3ABFM/R16BsHgePG00mFOgKf7IsCtfj8tA1kHtf/VwErhriz5Q==
 
 core-js@^3.6.4:
   version "3.6.5"
@@ -7220,6 +7230,13 @@ extsprintf@^1.2.0:
   resolved "https://registry.npmjs.org/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
   integrity sha1-4mifjzVvrWLMplo6kcXfX5VRaS8=
 
+fake-indexeddb@3.1.8:
+  version "3.1.8"
+  resolved "https://registry.npmjs.org/fake-indexeddb/-/fake-indexeddb-3.1.8.tgz#229e3cff6fa7355aebb3f147b908d2efa4605d70"
+  integrity sha512-7umIgcdnDfNcjw0ZaoD6yR2BflngKmPsyzZC+sV2fdttwz5bH6B6CCaNzzD+MURfRg8pvr/aL0trfNx65FLiDg==
+  dependencies:
+    realistic-structured-clone "^2.0.1"
+
 faker@5.5.3:
   version "5.5.3"
   resolved "https://registry.npmjs.org/faker/-/faker-5.5.3.tgz#c57974ee484431b25205c2c8dc09fda861e51e0e"
@@ -8527,6 +8544,11 @@ iconv-lite@^0.6.2:
   integrity sha512-2y91h5OpQlolefMPmUlivelittSWy0rP+oYVpn6A7GwVHNE8AWzoYOBNmlwks3LobaJxgHCYZAnyNo2GgpNRNQ==
   dependencies:
     safer-buffer ">= 2.1.2 < 3.0.0"
+
+idb@7.0.2:
+  version "7.0.2"
+  resolved "https://registry.npmjs.org/idb/-/idb-7.0.2.tgz#7a067e20dd16539938e456814b7d714ba8db3892"
+  integrity sha512-jjKrT1EnyZewQ/gCBb/eyiYrhGzws2FeY92Yx8qT9S9GeQAmo4JFVIiWRIfKW/6Ob9A+UDAOW9j9jn58fy2HIg==
 
 ieee754@^1.1.4:
   version "1.1.13"
@@ -13888,6 +13910,16 @@ readdirp@~3.6.0:
   dependencies:
     picomatch "^2.2.1"
 
+realistic-structured-clone@^2.0.1:
+  version "2.0.4"
+  resolved "https://registry.npmjs.org/realistic-structured-clone/-/realistic-structured-clone-2.0.4.tgz#7eb4c2319fc3cb72f4c8d3c9e888b11647894b50"
+  integrity sha512-lItAdBIFHUSe6fgztHPtmmWqKUgs+qhcYLi3wTRUl4OTB3Vb8aBVSjGfQZUvkmJCKoX3K9Wf7kyLp/F/208+7A==
+  dependencies:
+    core-js "^3.4"
+    domexception "^1.0.1"
+    typeson "^6.1.0"
+    typeson-registry "^1.0.0-alpha.20"
+
 recast@~0.18.5:
   version "0.18.10"
   resolved "https://registry.npmjs.org/recast/-/recast-0.18.10.tgz#605ebbe621511eb89b6356a7e224bff66ed91478"
@@ -16147,6 +16179,20 @@ typescript@4.4.2:
   version "4.4.2"
   resolved "https://registry.npmjs.org/typescript/-/typescript-4.4.2.tgz#6d618640d430e3569a1dfb44f7d7e600ced3ee86"
   integrity sha512-gzP+t5W4hdy4c+68bfcv0t400HVJMMd2+H9B7gae1nQlBzCqvrXX+6GL/b3GAgyTH966pzrZ70/fRjwAtZksSQ==
+
+typeson-registry@^1.0.0-alpha.20:
+  version "1.0.0-alpha.39"
+  resolved "https://registry.npmjs.org/typeson-registry/-/typeson-registry-1.0.0-alpha.39.tgz#9e0f5aabd5eebfcffd65a796487541196f4b1211"
+  integrity sha512-NeGDEquhw+yfwNhguLPcZ9Oj0fzbADiX4R0WxvoY8nGhy98IbzQy1sezjoEFWOywOboj/DWehI+/aUlRVrJnnw==
+  dependencies:
+    base64-arraybuffer-es6 "^0.7.0"
+    typeson "^6.0.0"
+    whatwg-url "^8.4.0"
+
+typeson@^6.0.0, typeson@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.npmjs.org/typeson/-/typeson-6.1.0.tgz#5b2a53705a5f58ff4d6f82f965917cabd0d7448b"
+  integrity sha512-6FTtyGr8ldU0pfbvW/eOZrEtEkczHRUtduBnA90Jh9kMPCiFNnXIon3vF41N0S4tV1HHQt4Hk1j4srpESziCaA==
 
 ua-parser-js@^0.7.28, ua-parser-js@^0.7.30:
   version "0.7.31"
