@@ -114,7 +114,7 @@ interface MLSConfig<T = any> {
    * This file will be downloaded lazily when corecrypto is needed.
    * It, thus, needs to know where, on the server, the file can be found
    */
-  coreCrypoWasmFile: string;
+  coreCrypoWasmFilePath: string;
 }
 
 interface AccountOptions<T> {
