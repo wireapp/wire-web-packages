@@ -976,19 +976,19 @@ export class ConversationService {
       'bardia final key packages to pass to core crypto',
       keyPackages.filter(keyPackage => keyPackage.key_packages.length > 0),
     );
-    const coreCryptoKeyPackagesPayload = keyPackages.reduce((previousValue, currentValue) => {
+    const coreCryptoKeyPackagesPayload = keyPackages.reduce<Invitee[]>((previousValue, currentValue) => {
       // skip users that have not uploaded their MLS key packages
       if (currentValue.key_packages.length > 0) {
         return [
           ...previousValue,
           ...currentValue.key_packages.map(keyPackage => ({
-            id: Decoder.fromBase64(keyPackage.client).asBytes,
+            id: new TextEncoder().encode(keyPackage.client),
             kp: Decoder.fromBase64(keyPackage.key_package).asBytes,
           })),
         ];
       }
       return previousValue;
-    }, [] as Invitee[]);
+    }, []);
 
     console.info('bardia coreCryptoKeyPackagesPayload', coreCryptoKeyPackagesPayload);
     await coreCryptoClient.createConversation(groupIdDecodedFromBase64);

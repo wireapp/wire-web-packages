@@ -555,8 +555,7 @@ export class ConversationAPI {
     const config: AxiosRequestConfig = {
       data: conversationData,
       method: 'post',
-      url: `${ConversationAPI.URL.V2}${ConversationAPI.URL.CONVERSATIONS}`,
-      // url: `${ConversationAPI.URL.CONVERSATIONS}`,
+      url: `${ConversationAPI.URL.CONVERSATIONS}`,
     };
     try {
       const response = await this.client.sendJSON<Conversation>(config);
@@ -831,7 +830,6 @@ export class ConversationAPI {
       data: messageData,
       method: 'post',
       url: `${ConversationAPI.URL.MLS}/${ConversationAPI.URL.MESSAGES}`,
-      // withCredentials: true,
     };
 
     const response = await this.client.sendProtocolMls<MlsEvent>(config, true);
@@ -849,7 +847,6 @@ export class ConversationAPI {
       data: messageData,
       method: 'post',
       url: `${ConversationAPI.URL.MLS}/welcome`,
-      // withCredentials: true,
     };
 
     await this.client.sendProtocolMls<void>(config, true);
