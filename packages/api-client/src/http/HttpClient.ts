@@ -131,10 +131,21 @@ export class HttpClient extends EventEmitter {
     }
 
     try {
+      console.info('bardia sending request to url', config.withCredentials, {
+        url:
+          config.withCredentials || config.url?.startsWith('v2/') ? config.url : `${this.versionPrefix}${config.url}`,
+      });
       const response = await this.client.request<T>({
         ...config,
         // We want to prefix all urls, except the ones with cookies which are attached to unprefixed urls
-        url: config.withCredentials ? config.url : `${this.versionPrefix}${config.url}`,
+        url:
+          config.withCredentials || config.url?.startsWith('v2/') ? config.url : `${this.versionPrefix}${config.url}`,
+        // url: `v2${config.url}`,
+        // url: config.withCredentials
+        //   ? config.url
+        //   : config.url?.endsWith('/access')
+        //   ? `v1${config.url}`
+        //   : `v2${config.url}`,
         maxBodyLength: FILE_SIZE_100_MB,
         maxContentLength: FILE_SIZE_100_MB,
       });

@@ -524,13 +524,39 @@ export class ConversationAPI {
   /**
    * Create a new conversation
    * @param conversationData The new conversation
-   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/createGroupConversation
+   * @see https://staging-nginz-https.zinfra.io/api/swagger-ui/#/default/post_conversations
    */
   public async postConversation(conversationData: NewConversation): Promise<Conversation> {
     const config: AxiosRequestConfig = {
       data: conversationData,
       method: 'post',
       url: ConversationAPI.URL.CONVERSATIONS,
+    };
+    try {
+      const response = await this.client.sendJSON<Conversation>(config);
+      return response.data;
+    } catch (error) {
+      const backendError = error as BackendError;
+      switch (backendError.label) {
+        case BackendErrorLabel.LEGAL_HOLD_MISSING_CONSENT: {
+          throw new ConversationLegalholdMissingConsentError(backendError.message);
+        }
+      }
+      throw error;
+    }
+  }
+
+  /**
+   * Create a new conversation
+   * @param conversationData The new conversation
+   * @see https://staging-nginz-https.zinfra.io/api/swagger-ui/#/default/post_conversations
+   */
+  public async postConversationV2(conversationData: NewConversation): Promise<Conversation> {
+    const config: AxiosRequestConfig = {
+      data: conversationData,
+      method: 'post',
+      url: `${ConversationAPI.URL.V2}${ConversationAPI.URL.CONVERSATIONS}`,
+      // url: `${ConversationAPI.URL.CONVERSATIONS}`,
     };
     try {
       const response = await this.client.sendJSON<Conversation>(config);
@@ -805,6 +831,7 @@ export class ConversationAPI {
       data: messageData,
       method: 'post',
       url: `${ConversationAPI.URL.MLS}/${ConversationAPI.URL.MESSAGES}`,
+      // withCredentials: true,
     };
 
     const response = await this.client.sendProtocolMls<MlsEvent>(config, true);
@@ -822,6 +849,7 @@ export class ConversationAPI {
       data: messageData,
       method: 'post',
       url: `${ConversationAPI.URL.MLS}/welcome`,
+      // withCredentials: true,
     };
 
     await this.client.sendProtocolMls<void>(config, true);

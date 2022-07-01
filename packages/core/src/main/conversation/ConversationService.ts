@@ -17,6 +17,8 @@
  *
  */
 
+import type {CoreCrypto, Invitee} from '@otak/core-crypto';
+import {Decoder} from 'bazinga64';
 import type {APIClient} from '@wireapp/api-client';
 import {
   MessageSendingStatus,
@@ -28,6 +30,7 @@ import {
   QualifiedUserClients,
   UserClients,
   ClientMismatch,
+  ConversationProtocol,
 } from '@wireapp/api-client/src/conversation';
 import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/src/conversation/data';
 import type {ConversationMemberLeaveEvent} from '@wireapp/api-client/src/event';
@@ -96,6 +99,8 @@ export enum MessageTargetMode {
   USERS_CLIENTS,
 }
 
+console.info('BARDIA YALK YALK');
+
 interface MessageSendingOptions {
   /**
    * The federated domain the server runs on. Should only be set for federation enabled envs
@@ -161,6 +166,7 @@ export class ConversationService {
     private readonly apiClient: APIClient,
     cryptographyService: CryptographyService,
     private readonly config: {useQualifiedIds?: boolean},
+    private readonly coreCryptoClientProvider: () => CoreCrypto,
   ) {
     this.messageTimer = new MessageTimer();
     this.messageService = new MessageService(this.apiClient, cryptographyService);
@@ -915,18 +921,90 @@ export class ConversationService {
     } else {
       payload = conversationData;
     }
-    const backendConversation = this.apiClient.api.conversation.postConversation(payload);
-    if (conversationData.protocol === 'mls') {
-      const keyPackages = payload.users.map(user => this.apiClient.api.user.downloadAllKeyPackages(user));
-      const {welcome, commit} = coreCrypto.createConversation(keypackages);
-      this.apiClient.api.conversation.sendMLSWelcomeMessage(welcome);
-      this.apiClient.api.conversation.sendMLSMessage(commit);
-      // send the welcome and handshake messages
+
+    if (typeof conversationData !== 'string' && conversationData.protocol === ConversationProtocol.MLS) {
+      return this.createMLSConversation(conversationData);
     }
 
-    return backendConversation;
-
     return this.apiClient.api.conversation.postConversation(payload);
+  }
+
+  private async createMLSConversation(conversationData: NewConversation): Promise<Conversation> {
+    /**
+     * @note For creating MLS conversations the users & qualified_users
+     * field must be empty as backend is not aware which users
+     * are in a MLS conversation because of the MLS architecture.
+     */
+    const newConversation = await this.apiClient.api.conversation.postConversationV2({
+      ...conversationData,
+      users: undefined,
+      qualified_users: undefined,
+    });
+    console.info('bardia response', newConversation);
+    const {group_id: groupId} = newConversation;
+    console.info('bardia groupId', groupId);
+    const groupIdDecodedFromBase64 = Decoder.fromBase64(groupId!).asBytes;
+    console.info('bardia decode', groupIdDecodedFromBase64);
+    const {qualified_users: qualifiedUsers = [], selfUserId} = conversationData;
+    if (!selfUserId) {
+      throw new Error('You need to pass self user qualified id in order to create an MLS conversation');
+    }
+
+    /**
+     * @note We need to fetch key packages for all the users
+     * we want to add to the new MLS conversations,
+     * includes self user too.
+     */
+    const keyPackages = await Promise.all([
+      this.apiClient.api.client.claimMLSKeyPackages(
+        selfUserId.id,
+        selfUserId.domain,
+        /**
+         * we should skip fetching key packages for current self client,
+         * it's already added by the backend on the group creation time
+         */
+        conversationData.creator_client,
+      ),
+      ...qualifiedUsers.map(qualifiedId =>
+        this.apiClient.api.client.claimMLSKeyPackages(qualifiedId.id, qualifiedId.domain),
+      ),
+    ]);
+    const coreCryptoClient = this.coreCryptoClientProvider();
+    console.info('bardia this.coreCryptoClient', coreCryptoClient);
+    console.info('bardia keyPackages', keyPackages);
+    console.info(
+      'bardia final key packages to pass to core crypto',
+      keyPackages.filter(keyPackage => keyPackage.key_packages.length > 0),
+    );
+    const coreCryptoKeyPackagesPayload = keyPackages.reduce((previousValue, currentValue) => {
+      // skip users that have not uploaded their MLS key packages
+      if (currentValue.key_packages.length > 0) {
+        return [
+          ...previousValue,
+          ...currentValue.key_packages.map(keyPackage => ({
+            id: Decoder.fromBase64(keyPackage.client).asBytes,
+            kp: Decoder.fromBase64(keyPackage.key_package).asBytes,
+          })),
+        ];
+      }
+      return previousValue;
+    }, [] as Invitee[]);
+
+    console.info('bardia coreCryptoKeyPackagesPayload', coreCryptoKeyPackagesPayload);
+    await coreCryptoClient.createConversation(groupIdDecodedFromBase64);
+    const memberAddedMessages = await coreCryptoClient.addClientsToConversation(
+      groupIdDecodedFromBase64,
+      coreCryptoKeyPackagesPayload,
+    );
+    console.info('bardia memberAddedMessages', memberAddedMessages);
+    if (memberAddedMessages?.message) {
+      const response = await this.apiClient.api.conversation.postMlsMessage(memberAddedMessages.message);
+      console.info('bardia response postMlsMessage', response);
+    }
+    if (memberAddedMessages?.welcome) {
+      await this.apiClient.api.conversation.postMlsWelcomeMessage(memberAddedMessages.welcome);
+    }
+    return newConversation;
   }
 
   public async getConversations(conversationId: string): Promise<Conversation>;

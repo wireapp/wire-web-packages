@@ -323,10 +323,15 @@ export class Account extends EventEmitter {
     const connectionService = new ConnectionService(this.apiClient);
     const giphyService = new GiphyService(this.apiClient);
     const linkPreviewService = new LinkPreviewService(assetService);
-    const conversationService = new ConversationService(this.apiClient, cryptographyService, {
-      // We can use qualified ids to send messages as long as the backend supports federated endpoints
-      useQualifiedIds: this.backendFeatures.federationEndpoints,
-    });
+    const conversationService = new ConversationService(
+      this.apiClient,
+      cryptographyService,
+      {
+        // We can use qualified ids to send messages as long as the backend supports federated endpoints
+        useQualifiedIds: this.backendFeatures.federationEndpoints,
+      },
+      () => this.coreCryptoClient!,
+    );
     const notificationService = new NotificationService(this.apiClient, cryptographyService, this.storeEngine);
     const selfService = new SelfService(this.apiClient);
     const teamService = new TeamService(this.apiClient);
@@ -368,7 +373,8 @@ export class Account extends EventEmitter {
     const {CoreCrypto} = await import('@otak/core-crypto');
     const {userId, domain} = this.apiClient.context!;
     return CoreCrypto.init({
-      path: 'path/to/database',
+      databaseName: userId, // @todo: we should update this, maybe put client or id?
+      wasmFilePath: '/assets/core_crypto_ffi-4da6d76e.wasm',
       key: 'a root identity key (i.e. enclaved encryption key for this device)',
       clientId: `${userId}:${client.id}@${domain}`,
     });
@@ -388,7 +394,7 @@ export class Account extends EventEmitter {
       this.coreCryptoClient = await this.createMLSClient(registeredClient);
       await this.service.client.uploadMLSPublicKeys(this.coreCryptoClient.clientPublicKey(), registeredClient.id);
       await this.service.client.uploadMLSKeyPackages(
-        this.coreCryptoClient.clientKeypackages(this.nbPrekeys),
+        await this.coreCryptoClient.clientKeypackages(this.nbPrekeys),
         registeredClient.id,
       );
     }
