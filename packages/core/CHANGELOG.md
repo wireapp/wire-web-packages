@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [28.0.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.6.0...@wireapp/core@28.0.0) (2022-07-01)
+
+
+### Features
+
+* Use mls config object ([#4307](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/issues/4307)) ([3d510d0](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/3d510d0e041a3d049282e6a312ffa880d9bafd89))
+
+
+### BREAKING CHANGES
+
+* the enableMLS flag has been removed in favor of a config object. If the config object is set, then MLS will be activated
+
+
+
+
+
+# [27.6.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.5.0...@wireapp/core@27.6.0) (2022-06-30)
+
+
+### Features
+
+* Give proper database name to corecrypto db ([#4306](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/issues/4306)) ([50c7a7a](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/50c7a7a6ca97a0e848a0bb7d9a781e5410909368))
+
+
+
+
+
+# [27.5.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.4.2...@wireapp/core@27.5.0) (2022-06-30)
+
+
+### Features
+
+* Add encrypted storage for coreCrypto database key [FS-565] ([#4302](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/issues/4302)) ([5c16877](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/5c16877eae4a85eedfd876160446994d98bbcd85))
+
+
+
+
+
+## [27.4.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.4.1...@wireapp/core@27.4.2) (2022-06-27)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
 ## [27.4.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@27.4.0...@wireapp/core@27.4.1) (2022-06-21)
 
 **Note:** Version bump only for package @wireapp/core
