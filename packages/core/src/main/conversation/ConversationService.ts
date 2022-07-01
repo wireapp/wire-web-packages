@@ -99,8 +99,6 @@ export enum MessageTargetMode {
   USERS_CLIENTS,
 }
 
-console.info('BARDIA YALK YALK');
-
 interface MessageSendingOptions {
   /**
    * The federated domain the server runs on. Should only be set for federation enabled envs
@@ -940,11 +938,8 @@ export class ConversationService {
       users: undefined,
       qualified_users: undefined,
     });
-    console.info('bardia response', newConversation);
     const {group_id: groupId} = newConversation;
-    console.info('bardia groupId', groupId);
     const groupIdDecodedFromBase64 = Decoder.fromBase64(groupId!).asBytes;
-    console.info('bardia decode', groupIdDecodedFromBase64);
     const {qualified_users: qualifiedUsers = [], selfUserId} = conversationData;
     if (!selfUserId) {
       throw new Error('You need to pass self user qualified id in order to create an MLS conversation');
