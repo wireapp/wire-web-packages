@@ -34,26 +34,27 @@ export interface StyledLabelProps<T = HTMLLabelElement> extends React.HTMLProps<
 
 const filterStyledLabelProps = (props: StyledLabelProps) => filterProps(props, ['markInvalid']);
 
-const checkSvg = (theme: Theme) =>
-  `<svg width="15" height="13" viewBox="0 0 16 13" xmlns="http://www.w3.org/2000/svg"><path d="M5.65685 12.0711L15.9842 1.62738L14.57 0.213167L5.65685 9.24264L1.41421 5L0 6.41421L5.65685 12.0711Z" fill="${
-    theme.darkMode ? 'black' : 'white'
-  }"/></svg>`;
-
 const StyledLabel = (props: StyledLabelProps) => {
   const {disabled, markInvalid} = props;
-
   return (
     <label
       css={(theme: Theme) => ({
         [`.${INPUT_CLASSNAME}:checked + &::before`]: {
-          background: `${
-            disabled ? theme.checkbox.disablecheckedBgColor : theme.general.primaryColor
-          } url('data:image/svg+xml; utf8, ${checkSvg(theme)}') no-repeat center`,
+          background: `${disabled ? theme.checkbox.disablecheckedBgColor : theme.general.primaryColor}`,
           borderColor: theme.general.primaryColor,
         },
+        [`.${INPUT_CLASSNAME}:checked + & > svg`]: {
+          fill: theme.general.backgroundColor,
+        },
+        [`.${INPUT_CLASSNAME} + & > svg`]: {
+          fill: 'none',
+          position: 'absolute',
+          left: '-0.75rem',
+          top: '0.25rem',
+        },
         ...(!disabled && {
-          [`.${INPUT_CLASSNAME}:focus + &::before`]: {
-            border: `1.5px solid ${theme.checkbox.borderFocused}`,
+          [`.${INPUT_CLASSNAME}:focus-visible + &::before`]: {
+            borderColor: theme.general.primaryColor,
           },
           [`.${INPUT_CLASSNAME}:hover + &::before`]: {
             borderColor: theme.general.primaryColor,
@@ -75,7 +76,7 @@ const StyledLabel = (props: StyledLabelProps) => {
           content: '""',
           display: 'inline-block',
           height: '22px',
-          lineHeight: 1.5,
+          lineHeight: 1.4,
           margin: '0 8px 0 -16px',
           width: '22px',
           color: theme.general.color,
@@ -83,12 +84,19 @@ const StyledLabel = (props: StyledLabelProps) => {
         a: {
           ...textLinkStyle(theme, {}),
         },
-        lineHeight: 1.5,
+        position: 'relative',
+        lineHeight: 1.4,
         display: 'flex',
         opacity: disabled ? 0.56 : 1,
+        cursor: disabled ? 'not-allowed' : 'pointer',
       })}
       {...filterStyledLabelProps(props)}
-    />
+    >
+      {props.children}
+      <svg width="15" height="13" viewBox="0 0 16 13" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5.65685 12.0711L15.9842 1.62738L14.57 0.213167L5.65685 9.24264L1.41421 5L0 6.41421L5.65685 12.0711Z" />
+      </svg>
+    </label>
   );
 };
 
@@ -119,6 +127,7 @@ export const Checkbox: React.FC<CheckboxProps<HTMLInputElement>> = React.forward
         marginBottom: '0',
         opacity: 0,
         width: '22px',
+        cursor: disabled ? 'not-allowed' : 'pointer',
       }}
       disabled={disabled}
       ref={ref}
