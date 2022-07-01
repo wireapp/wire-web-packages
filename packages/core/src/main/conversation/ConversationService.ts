@@ -970,12 +970,6 @@ export class ConversationService {
       ),
     ]);
     const coreCryptoClient = this.coreCryptoClientProvider();
-    console.info('bardia this.coreCryptoClient', coreCryptoClient);
-    console.info('bardia keyPackages', keyPackages);
-    console.info(
-      'bardia final key packages to pass to core crypto',
-      keyPackages.filter(keyPackage => keyPackage.key_packages.length > 0),
-    );
     const coreCryptoKeyPackagesPayload = keyPackages.reduce<Invitee[]>((previousValue, currentValue) => {
       // skip users that have not uploaded their MLS key packages
       if (currentValue.key_packages.length > 0) {
@@ -990,20 +984,23 @@ export class ConversationService {
       return previousValue;
     }, []);
 
-    console.info('bardia coreCryptoKeyPackagesPayload', coreCryptoKeyPackagesPayload);
     await coreCryptoClient.createConversation(groupIdDecodedFromBase64);
     const memberAddedMessages = await coreCryptoClient.addClientsToConversation(
       groupIdDecodedFromBase64,
       coreCryptoKeyPackagesPayload,
     );
-    console.info('bardia memberAddedMessages', memberAddedMessages);
-    if (memberAddedMessages?.message) {
-      const response = await this.apiClient.api.conversation.postMlsMessage(memberAddedMessages.message);
-      console.info('bardia response postMlsMessage', response);
-    }
+    const sendingPromises: Promise<unknown>[] = [];
     if (memberAddedMessages?.welcome) {
-      await this.apiClient.api.conversation.postMlsWelcomeMessage(memberAddedMessages.welcome);
+      sendingPromises.push(
+        this.apiClient.api.conversation.postMlsWelcomeMessage(Uint8Array.from(memberAddedMessages.welcome)),
+      );
     }
+    if (memberAddedMessages?.message) {
+      sendingPromises.push(
+        this.apiClient.api.conversation.postMlsMessage(Uint8Array.from(memberAddedMessages.message)),
+      );
+    }
+    await Promise.all(sendingPromises);
     return newConversation;
   }
 
