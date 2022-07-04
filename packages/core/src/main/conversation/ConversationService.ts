@@ -933,7 +933,7 @@ export class ConversationService {
      * field must be empty as backend is not aware which users
      * are in a MLS conversation because of the MLS architecture.
      */
-    const newConversation = await this.apiClient.api.conversation.postConversationV2({
+    const newConversation = await this.apiClient.api.conversation.postConversation({
       ...conversationData,
       users: undefined,
       qualified_users: undefined,

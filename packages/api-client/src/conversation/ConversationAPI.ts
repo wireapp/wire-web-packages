@@ -547,31 +547,6 @@ export class ConversationAPI {
   }
 
   /**
-   * Create a new conversation
-   * @param conversationData The new conversation
-   * @see https://staging-nginz-https.zinfra.io/api/swagger-ui/#/default/post_conversations
-   */
-  public async postConversationV2(conversationData: NewConversation): Promise<Conversation> {
-    const config: AxiosRequestConfig = {
-      data: conversationData,
-      method: 'post',
-      url: `${ConversationAPI.URL.CONVERSATIONS}`,
-    };
-    try {
-      const response = await this.client.sendJSON<Conversation>(config);
-      return response.data;
-    } catch (error) {
-      const backendError = error as BackendError;
-      switch (backendError.label) {
-        case BackendErrorLabel.LEGAL_HOLD_MISSING_CONSENT: {
-          throw new ConversationLegalholdMissingConsentError(backendError.message);
-        }
-      }
-      throw error;
-    }
-  }
-
-  /**
    * Create or recreate a conversation code.
    * @param conversationId ID of conversation to request the code for
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/createConversationCode
