@@ -116,6 +116,8 @@ export const Checkbox: React.FC<CheckboxProps<HTMLInputElement>> = React.forward
       alignItems: 'center',
       display: 'flex',
       justifyContent: 'flex-start',
+      position: 'relative',
+      left: '-0.3rem',
     }}
     style={style}
   >
