@@ -70,8 +70,6 @@ import {BackendFeatures} from '../APIClient';
 import {chunk} from '@wireapp/commons/src/main/util/ArrayUtil';
 import {MlsEvent} from './data/MlsEventData';
 
-type ConversationGuestLinkStatus = {status: 'enabled' | 'disabled'};
-
 export class ConversationAPI {
   public static readonly MAX_CHUNK_SIZE = 500;
   public static readonly URL = {
