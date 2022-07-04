@@ -34,6 +34,7 @@ export interface Theme {
   general: {
     backgroundColor: string;
     color: string;
+    dangerColor?: string;
     primaryColor?: string;
   };
   Input: {
@@ -70,6 +71,7 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
       backgroundColor: COLOR.GRAY_LIGHTEN_88,
       color: COLOR.TEXT,
       primaryColor: COLOR_V2.BLUE,
+      dangerColor: COLOR_V2.RED,
     },
     select: {
       disabledColor: COLOR_V2.GRAY_70,
@@ -97,6 +99,7 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
       backgroundColor: COLOR.BLACK,
       color: COLOR.WHITE,
       primaryColor: COLOR_V2.BLUE,
+      dangerColor: COLOR_V2.RED,
     },
     select: {
       disabledColor: COLOR_V2.GRAY_60,

@@ -20,7 +20,6 @@
 /** @jsx jsx */
 import {CSSObject, jsx} from '@emotion/react';
 
-import {COLOR_V2} from '../Identity';
 import type {Theme} from '../Layout';
 import {filterProps} from '../util';
 import {inputStyle} from './Input';
@@ -71,7 +70,7 @@ export const selectStyle: <T>(theme: Theme, props, error?: boolean) => CSSObject
     color: theme.select.disabledColor,
   },
   appearance: 'none',
-  boxShadow: markInvalid ? `0 0 0 1px ${COLOR_V2.RED}` : `0 0 0 1px ${theme.select.borderColor}`,
+  boxShadow: markInvalid ? `0 0 0 1px ${theme.general.dangerColor}` : `0 0 0 1px ${theme.select.borderColor}`,
   cursor: disabled ? 'normal' : 'pointer',
   fontSize: '16px',
   fontWeight: 300,
@@ -82,7 +81,7 @@ export const selectStyle: <T>(theme: Theme, props, error?: boolean) => CSSObject
   whiteSpace: 'nowrap',
   marginBottom: error && '8px',
   '&:invalid, option:first-of-type': {
-    color: COLOR_V2.RED,
+    color: theme.general.dangerColor,
   },
   ...(!disabled && {
     '&:hover': {
