@@ -20,6 +20,8 @@ exports[`"Checkbox" renders (dark theme) 1`] = `
   -ms-flex-pack: start;
   -webkit-justify-content: flex-start;
   justify-content: flex-start;
+  position: relative;
+  left: -0.3rem;
 }
 
 .emotion-2 {
@@ -155,6 +157,8 @@ exports[`"Checkbox" renders 1`] = `
   -ms-flex-pack: start;
   -webkit-justify-content: flex-start;
   justify-content: flex-start;
+  position: relative;
+  left: -0.3rem;
 }
 
 .emotion-2 {
@@ -290,6 +294,8 @@ exports[`"Checkbox" renders as invalid 1`] = `
   -ms-flex-pack: start;
   -webkit-justify-content: flex-start;
   justify-content: flex-start;
+  position: relative;
+  left: -0.3rem;
 }
 
 .emotion-2 {
@@ -425,6 +431,8 @@ exports[`"Checkbox" renders disabled 1`] = `
   -ms-flex-pack: start;
   -webkit-justify-content: flex-start;
   justify-content: flex-start;
+  position: relative;
+  left: -0.3rem;
 }
 
 .emotion-2 {
