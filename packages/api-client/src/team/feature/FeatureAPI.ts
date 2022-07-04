@@ -152,6 +152,9 @@ export class FeatureAPI {
     }
   }
 
+  /**
+   * Unimplemented endpoint, may exist in a future release
+   */
   public async getVideoCallingFeature(teamId: string): Promise<FeatureVideoCalling> {
     const config: AxiosRequestConfig = {
       method: 'get',
@@ -162,6 +165,9 @@ export class FeatureAPI {
     return response.data;
   }
 
+  /**
+   * Unimplemented endpoint, may exist in a future release
+   */
   public async putVideoCallingFeature(
     teamId: string,
     videoCallingFeature: Omit<FeatureVideoCalling, 'lockStatus'>,

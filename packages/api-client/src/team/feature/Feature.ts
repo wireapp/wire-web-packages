@@ -63,7 +63,7 @@ export interface FeatureMLSConfig extends FeatureConfig {
   config: {
     allowedCipherSuites: number[];
     defaultCipherSuite: number;
-    defaultProtocol: 'proteus ' | 'mls';
+    defaultProtocol: 'proteus' | 'mls';
     protocolToggleUsers: string[];
   };
 }
