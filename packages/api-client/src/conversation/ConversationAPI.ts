@@ -205,6 +205,10 @@ export class ConversationAPI {
     return response.data;
   }
 
+  /**
+   * @param conversationId
+   * @deprecated use feature.getAllFeatures instead
+   */
   public async getConversationGuestLinkFeature(conversationId: string): Promise<ConversationGuestLinkStatus> {
     const config: AxiosRequestConfig = {
       method: 'get',
