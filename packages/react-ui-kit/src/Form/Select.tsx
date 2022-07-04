@@ -22,7 +22,7 @@ import {CSSObject, jsx} from '@emotion/react';
 
 import {COLOR_V2} from '../Identity';
 import type {Theme} from '../Layout';
-import {filterProps, inlineSVG} from '../util';
+import {filterProps} from '../util';
 import {inputStyle} from './Input';
 import React, {ReactElement, useEffect, useRef, useState} from 'react';
 import InputLabel from './InputLabel';
@@ -48,13 +48,14 @@ export interface SelectProps<T extends SelectOption = SelectOption> {
   wrapperCSS?: CSSObject;
 }
 
-const ArrowDown = (theme: Theme, disabled: boolean) => `
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-        <path fill="${
-          disabled ? (theme.darkMode ? '#9fa1a7' : '#676b71') : theme.darkMode ? 'white' : 'black'
-        }" fill-rule="evenodd" clip-rule="evenodd" d="M7.99963 12.5711L15.6565 4.91421L14.2423 3.5L7.99963 9.74264L1.75699 3.5L0.342773 4.91421L7.99963 12.5711Z"/>
-    </svg>
-`;
+const ArrowDown = (
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+    <path
+      fill="${black}"
+      d="M7.99963 12.5711L15.6565 4.91421L14.2423 3.5L7.99963 9.74264L1.75699 3.5L0.342773 4.91421L7.99963 12.5711Z"
+    />
+  </svg>
+);
 
 export const selectStyle: <T>(theme: Theme, props, error?: boolean) => CSSObject = (
   theme,
@@ -70,11 +71,6 @@ export const selectStyle: <T>(theme: Theme, props, error?: boolean) => CSSObject
     color: theme.select.disabledColor,
   },
   appearance: 'none',
-  background: disabled
-    ? `${theme.Input.backgroundColorDisabled} center right 16px no-repeat url("${inlineSVG(
-        ArrowDown(theme, disabled),
-      )}")`
-    : `${theme.Input.backgroundColor} center right 16px no-repeat url("${inlineSVG(ArrowDown(theme, disabled))}")`,
   boxShadow: markInvalid ? `0 0 0 1px ${COLOR_V2.RED}` : `0 0 0 1px ${theme.select.borderColor}`,
   cursor: disabled ? 'normal' : 'pointer',
   fontSize: '16px',
@@ -96,6 +92,12 @@ export const selectStyle: <T>(theme: Theme, props, error?: boolean) => CSSObject
       boxShadow: `0 0 0 1px ${theme.general.primaryColor}`,
     },
   }),
+  '& > svg': {
+    fill: disabled ? theme.Input.placeholderColor : theme.general.color,
+    position: 'absolute',
+    top: '1rem',
+    right: '1rem',
+  },
 });
 
 const dropdownStyles = (theme: Theme, isDropdownOpen: boolean): CSSObject => ({
@@ -293,6 +295,7 @@ export const Select = <T extends SelectOption = SelectOption>({
           })}
         >
           {hasSelectedOption ? value.label : placeholderText}
+          {ArrowDown}
         </button>
 
         <ul
