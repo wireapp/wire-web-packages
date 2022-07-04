@@ -319,7 +319,10 @@ export class ConversationAPI {
       const config: AxiosRequestConfig = {
         data: {qualified_ids: chunk},
         method: 'post',
-        url: `${ConversationAPI.URL.CONVERSATIONS}/${ConversationAPI.URL.LIST}/${ConversationAPI.URL.V2}`,
+        url:
+          this.backendFeatures.version >= 2
+            ? `${ConversationAPI.URL.CONVERSATIONS}/${ConversationAPI.URL.LIST}`
+            : `${ConversationAPI.URL.CONVERSATIONS}/${ConversationAPI.URL.LIST}/${ConversationAPI.URL.V2}`,
       };
 
       const {data} = await this.client.sendJSON<RemoteConversations>(config);
@@ -983,7 +986,10 @@ export class ConversationAPI {
         qualified_users: users,
       },
       method: 'post',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.MEMBERS}/${ConversationAPI.URL.V2}`,
+      url:
+        this.backendFeatures.version >= 2
+          ? `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.MEMBERS}`
+          : `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.MEMBERS}/${ConversationAPI.URL.V2}`,
     };
 
     try {
