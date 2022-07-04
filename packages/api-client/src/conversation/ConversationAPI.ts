@@ -205,16 +205,6 @@ export class ConversationAPI {
     return response.data;
   }
 
-  public async getConversationGuestLinkFeature(conversationId: string): Promise<ConversationGuestLinkStatus> {
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/features/conversationGuestLinks`,
-    };
-
-    const response = await this.client.sendJSON<ConversationGuestLinkStatus>(config);
-    return response.data;
-  }
-
   public async getConversation(conversationId: string | QualifiedId): Promise<Conversation> {
     return this.backendFeatures.federationEndpoints && typeof conversationId !== 'string'
       ? this.getConversation_v2(conversationId)

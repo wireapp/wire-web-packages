@@ -25,13 +25,8 @@ import type {
   FeatureAppLock,
   FeatureVideoCalling,
   FeatureConferenceCalling,
-  FeatureDigitalSignature,
-  FeatureLegalhold,
-  FeatureSSO,
   FeatureFileSharing,
   FeatureSelfDeletingMessages,
-  FeatureSndFactorPassword,
-  FeatureMLS,
 } from './Feature';
 import type {FeatureList} from './FeatureList';
 import {FeatureConversationGuestLink, FeatureLockedError} from '.';
@@ -79,25 +74,6 @@ export class FeatureAPI {
     return response.data;
   }
 
-  public async getLegalholdFeature(): Promise<FeatureLegalhold> {
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      url: `${FeatureAPI.URL.FEATURE_CONFIGS}/${FeatureAPI.URL.LEGAL_HOLD}`,
-    };
-
-    const response = await this.client.sendJSON<FeatureLegalhold>(config);
-    return response.data;
-  }
-  public async getConversationGuestLinkFeature(): Promise<FeatureConversationGuestLink> {
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      url: `${FeatureAPI.URL.FEATURE_CONFIGS}/${FeatureAPI.URL.CONVERSATION_GUEST_LINKS}`,
-    };
-
-    const response = await this.client.sendJSON<FeatureConversationGuestLink>(config);
-    return response.data;
-  }
-
   public async putConversationGuestLinkFeature(
     teamId: string,
     conversationGuestLinkFeature: Omit<FeatureConversationGuestLink, 'lockStatus'>,
@@ -119,16 +95,6 @@ export class FeatureAPI {
       }
       throw error;
     }
-  }
-
-  public async getConferenceCallingFeature(): Promise<FeatureConferenceCalling> {
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      url: `${FeatureAPI.URL.FEATURE_CONFIGS}/${FeatureAPI.URL.CALLING_CONFERENCE}`,
-    };
-
-    const response = await this.client.sendJSON<FeatureConferenceCalling>(config);
-    return response.data;
   }
 
   public async putConferenceCallingFeature(
@@ -154,16 +120,6 @@ export class FeatureAPI {
     }
   }
 
-  public async getVideoCallingFeature(): Promise<FeatureVideoCalling> {
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      url: `${FeatureAPI.URL.FEATURE_CONFIGS}/${FeatureAPI.URL.CALLING_VIDEO}`,
-    };
-
-    const response = await this.client.sendJSON<FeatureConferenceCalling>(config);
-    return response.data;
-  }
-
   public async putVideoCallingFeature(
     teamId: string,
     videoCallingFeature: Omit<FeatureVideoCalling, 'lockStatus'>,
@@ -185,16 +141,6 @@ export class FeatureAPI {
       }
       throw error;
     }
-  }
-
-  public async getSelfDeletingMessagesFeature(): Promise<FeatureSelfDeletingMessages> {
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      url: `${FeatureAPI.URL.FEATURE_CONFIGS}/${FeatureAPI.URL.SELF_DELETING_MESSAGES}`,
-    };
-
-    const response = await this.client.sendJSON<FeatureSelfDeletingMessages>(config);
-    return response.data;
   }
 
   public async putSelfDeletingMessagesFeature(
@@ -220,16 +166,6 @@ export class FeatureAPI {
     }
   }
 
-  public async getFileSharingFeature(): Promise<FeatureFileSharing> {
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      url: `${FeatureAPI.URL.FEATURE_CONFIGS}/${FeatureAPI.URL.FILE_SHARING}`,
-    };
-
-    const response = await this.client.sendJSON<FeatureFileSharing>(config);
-    return response.data;
-  }
-
   public async putFileSharingFeature(
     teamId: string,
     fileSharingFeature: Omit<FeatureFileSharing, 'lockStatus'>,
@@ -251,56 +187,6 @@ export class FeatureAPI {
       }
       throw error;
     }
-  }
-
-  public async getSndFactorPasswordFeature(): Promise<FeatureSndFactorPassword> {
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      url: `${FeatureAPI.URL.FEATURE_CONFIGS}/${FeatureAPI.URL.SND_FACTOR_PASSWORD}`,
-    };
-
-    const response = await this.client.sendJSON<FeatureSndFactorPassword>(config);
-    return response.data;
-  }
-
-  public async getSSOFeature(): Promise<FeatureSSO> {
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      url: `${FeatureAPI.URL.FEATURE_CONFIGS}/${FeatureAPI.URL.SSO}`,
-    };
-
-    const response = await this.client.sendJSON<FeatureSSO>(config);
-    return response.data;
-  }
-
-  public async getMLSFeature(): Promise<FeatureMLS> {
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      url: `${FeatureAPI.URL.FEATURE_CONFIGS}/${FeatureAPI.URL.MLS}`,
-    };
-
-    const response = await this.client.sendJSON<FeatureMLS>(config);
-    return response.data;
-  }
-
-  public async getDigitalSignatureFeature(teamId: string): Promise<FeatureDigitalSignature> {
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.DIGITAL_SIGNATURES}`,
-    };
-
-    const response = await this.client.sendJSON<FeatureDigitalSignature>(config);
-    return response.data;
-  }
-
-  public async getAppLockFeature(): Promise<FeatureAppLock> {
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      url: `${FeatureAPI.URL.FEATURE_CONFIGS}/${FeatureAPI.URL.APPLOCK}`,
-    };
-
-    const response = await this.client.sendJSON<FeatureAppLock>(config);
-    return response.data;
   }
 
   public async putAppLockFeature(
