@@ -31,7 +31,6 @@ export enum THEME_ID {
 }
 
 export interface Theme {
-  darkMode?: boolean;
   general: {
     backgroundColor: string;
     color: string;
@@ -46,7 +45,6 @@ export interface Theme {
   select: {
     disabledColor?: string;
     contrastTextColor?: string;
-    fillColor?: string;
     borderColor?: string;
   };
   checkbox: {
@@ -62,7 +60,6 @@ export interface Theme {
 
 export const themes: {[themeId in THEME_ID]: Theme} = {
   [THEME_ID.LIGHT]: {
-    darkMode: false,
     Input: {
       backgroundColor: COLOR.WHITE,
       backgroundColorDisabled: COLOR_V2.GRAY_20,
@@ -90,7 +87,6 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
     },
   },
   [THEME_ID.DARK]: {
-    darkMode: true,
     Input: {
       backgroundColor: COLOR.BLACK_LIGHTEN_24,
       backgroundColorDisabled: COLOR.GRAY_100,
