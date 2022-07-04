@@ -66,6 +66,9 @@ export class FeatureAPI {
     return response.data;
   }
 
+  /**
+   * @deprecated Use `getAllFeatures()` instead. It is teamId agnostic.
+   */
   public async getAllTeamFeatures(teamId: string): Promise<FeatureList> {
     const config: AxiosRequestConfig = {
       method: 'get',
