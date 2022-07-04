@@ -996,7 +996,8 @@ export class ConversationService {
       );
     }
     await Promise.all(sendingPromises);
-    return newConversation;
+
+    return this.getConversations(newConversation.id);
   }
 
   public async getConversations(conversationId: string): Promise<Conversation>;
