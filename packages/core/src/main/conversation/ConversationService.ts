@@ -1045,6 +1045,12 @@ export class ConversationService {
     return userId;
   }
 
+  public async sendMLSMessage(groupId: string, payload: Uint8Array) {
+    const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
+    const encrypted = await this.coreCryptoClientProvider().encryptMessage(groupIdBytes, payload);
+    await this.apiClient.api.conversation.postMlsMessage(encrypted);
+  }
+
   /**
    * Sends a message to a conversation
    *
