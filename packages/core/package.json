@@ -71,7 +71,8 @@
     "test": "yarn test:node && yarn test:browser",
     "test:browser": "webpack --mode=development && karma start",
     "test:project": "yarn dist && yarn test",
-    "test:node": "nyc jasmine --config=jasmine.json"
+    "test:node": "nyc jasmine --config=jasmine.json",
+    "yalc": "npx tsc && npx yalc push"
   },
   "version": "28.2.1"
 }

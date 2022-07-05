@@ -1045,9 +1045,14 @@ export class ConversationService {
     return userId;
   }
 
-  public async sendMLSMessage(groupId: string, payload: Uint8Array) {
+  public async sendMLSMessage(groupId: string, payload: OtrMessage) {
+    const genericMessage: GenericMessage = this.generateGenericMessage(payload);
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
-    const encrypted = await this.coreCryptoClientProvider().encryptMessage(groupIdBytes, payload);
+
+    const encrypted = await this.coreCryptoClientProvider().encryptMessage(
+      groupIdBytes,
+      GenericMessage.encode(genericMessage).finish(),
+    );
     await this.apiClient.api.conversation.postMlsMessage(encrypted);
   }
 
@@ -1075,66 +1080,8 @@ export class ConversationService {
     userIds?: string[] | QualifiedId[] | UserClients | QualifiedUserClients;
     callbacks?: MessageSendingCallbacks;
   } & MessageSendingOptions): Promise<T> {
-    let genericMessage: GenericMessage;
-    let processedContent: AssetContent | undefined = undefined;
-
-    switch (payloadBundle.type) {
-      case PayloadBundleType.ASSET:
-        genericMessage = this.generateFileDataGenericMessage(payloadBundle);
-        break;
-      case PayloadBundleType.ASSET_ABORT:
-        genericMessage = this.generateFileAbortGenericMessage(payloadBundle);
-        break;
-      case PayloadBundleType.ASSET_META:
-        genericMessage = this.generateFileMetaDataGenericMessage(payloadBundle);
-        break;
-      case PayloadBundleType.ASSET_IMAGE:
-        const res = this.generateImageGenericMessage(payloadBundle as ImageAssetMessageOutgoing);
-        genericMessage = res.genericMessage;
-        processedContent = res.content;
-        break;
-      case PayloadBundleType.BUTTON_ACTION:
-        genericMessage = this.generateButtonActionGenericMessage(payloadBundle);
-        break;
-      case PayloadBundleType.BUTTON_ACTION_CONFIRMATION:
-        genericMessage = this.generateButtonActionConfirmationGenericMessage(payloadBundle);
-        break;
-      case PayloadBundleType.CALL:
-        genericMessage = this.generateCallGenericMessage(payloadBundle);
-        break;
-      case PayloadBundleType.CLIENT_ACTION: {
-        if (payloadBundle.content.clientAction !== ClientAction.RESET_SESSION) {
-          throw new Error(
-            `No send method implemented for "${payloadBundle.type}" and ClientAction "${payloadBundle.content}".`,
-          );
-        }
-        genericMessage = this.generateSessionResetGenericMessage(payloadBundle);
-        break;
-      }
-      case PayloadBundleType.COMPOSITE:
-        genericMessage = this.generateCompositeGenericMessage(payloadBundle);
-        break;
-      case PayloadBundleType.CONFIRMATION:
-        genericMessage = this.generateConfirmationGenericMessage(payloadBundle);
-        break;
-      case PayloadBundleType.LOCATION:
-        genericMessage = this.generateLocationGenericMessage(payloadBundle);
-        break;
-      case PayloadBundleType.MESSAGE_EDIT:
-        genericMessage = this.generateEditedTextGenericMessage(payloadBundle);
-        break;
-      case PayloadBundleType.PING:
-        genericMessage = this.generatePingGenericMessage(payloadBundle);
-        break;
-      case PayloadBundleType.REACTION:
-        genericMessage = this.generateReactionGenericMessage(payloadBundle);
-        break;
-      case PayloadBundleType.TEXT:
-        genericMessage = this.generateTextGenericMessage(payloadBundle);
-        break;
-      default:
-        throw new Error(`No send method implemented for "${payloadBundle['type']}".`);
-    }
+    const genericMessage: GenericMessage = this.generateGenericMessage(payloadBundle);
+    const processedContent: AssetContent | undefined = undefined;
 
     if ((await callbacks?.onStart?.(genericMessage)) === false) {
       // If the onStart call returns false, it means the consumer wants to cancel the message sending
@@ -1229,5 +1176,46 @@ export class ConversationService {
     const hasRedundant = Object.keys(mismatch.redundant || {}).length > 0;
     const hasFailed = Object.keys((mismatch as MessageSendingStatus).failed_to_send || {}).length > 0;
     return !hasMissing && !hasDeleted && !hasRedundant && !hasFailed;
+  }
+
+  private generateGenericMessage(payload: OtrMessage): GenericMessage {
+    switch (payload.type) {
+      case PayloadBundleType.ASSET:
+        return this.generateFileDataGenericMessage(payload);
+      case PayloadBundleType.ASSET_ABORT:
+        return this.generateFileAbortGenericMessage(payload);
+      case PayloadBundleType.ASSET_META:
+        return this.generateFileMetaDataGenericMessage(payload);
+      case PayloadBundleType.ASSET_IMAGE:
+        return this.generateImageGenericMessage(payload as ImageAssetMessageOutgoing);
+      case PayloadBundleType.BUTTON_ACTION:
+        return this.generateButtonActionGenericMessage(payload);
+      case PayloadBundleType.BUTTON_ACTION_CONFIRMATION:
+        return this.generateButtonActionConfirmationGenericMessage(payload);
+      case PayloadBundleType.CALL:
+        return this.generateCallGenericMessage(payload);
+      case PayloadBundleType.CLIENT_ACTION: {
+        if (payload.content.clientAction !== ClientAction.RESET_SESSION) {
+          throw new Error(`No send method implemented for "${payload.type}" and ClientAction "${payload.content}".`);
+        }
+        return this.generateSessionResetGenericMessage(payload);
+      }
+      case PayloadBundleType.COMPOSITE:
+        return this.generateCompositeGenericMessage(payload);
+      case PayloadBundleType.CONFIRMATION:
+        return this.generateConfirmationGenericMessage(payload);
+      case PayloadBundleType.LOCATION:
+        return this.generateLocationGenericMessage(payload);
+      case PayloadBundleType.MESSAGE_EDIT:
+        return this.generateEditedTextGenericMessage(payload);
+      case PayloadBundleType.PING:
+        return this.generatePingGenericMessage(payload);
+      case PayloadBundleType.REACTION:
+        return this.generateReactionGenericMessage(payload);
+      case PayloadBundleType.TEXT:
+        return this.generateTextGenericMessage(payload);
+      default:
+        throw new Error(`No send method implemented for "${payload['type']}".`);
+    }
   }
 }
