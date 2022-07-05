@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.7.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@8.7.0...@wireapp/react-ui-kit@8.7.1) (2022-07-05)
+
+
+### Bug Fixes
+
+* restore missing data-uie on input ([#4311](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/issues/4311)) ([4dcf500](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/commit/4dcf500745efd4721b8ae10f987500f6594bb183))
+
+
+
+
+
+# [8.7.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@8.6.0...@wireapp/react-ui-kit@8.7.0) (2022-07-04)
+
+
+### Features
+
+* add custom theming to UI kit ([#4299](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/issues/4299)) ([9a3e8ee](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/commit/9a3e8ee450d0db1648302b7c7eb0ec7f490c79e2)), closes [#4298](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/issues/4298)
+
+
+
+
+
 # [8.6.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@8.5.4...@wireapp/react-ui-kit@8.6.0) (2022-06-15)
 
 

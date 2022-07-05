@@ -4,14 +4,15 @@
   },
   "dependencies": {
     "@open-wc/webpack-import-meta-loader": "0.4.7",
-    "@otak/core-crypto": "0.2.0-beta-3",
+    "@otak/core-crypto": "0.3.0-beta-1",
     "@types/long": "4.0.1",
     "@types/node": "~14",
-    "@wireapp/api-client": "19.7.0",
+    "@wireapp/api-client": "19.11.0",
     "@wireapp/cryptobox": "12.8.0",
     "bazinga64": "5.10.0",
     "hash.js": "1.1.7",
     "http-status-codes": "2.1.4",
+    "idb": "7.0.2",
     "logdown": "3.3.1",
     "long": "4.0.0",
     "protobufjs": "6.11.3",
@@ -26,6 +27,7 @@
     "commander": "8.0.0",
     "cross-env": "7.0.3",
     "dotenv-defaults": "2.0.2",
+    "fake-indexeddb": "3.1.8",
     "faker": "5.5.3",
     "istanbul": "1.1.0-alpha.1",
     "jasmine": "3.8.0",
@@ -71,5 +73,5 @@
     "test:project": "yarn dist && yarn test",
     "test:node": "nyc jasmine --config=jasmine.json"
   },
-  "version": "27.4.1"
+  "version": "28.3.0"
 }

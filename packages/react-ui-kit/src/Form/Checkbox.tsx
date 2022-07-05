@@ -116,7 +116,7 @@ export const Checkbox: React.FC<CheckboxProps<HTMLInputElement>> = React.forward
       position: 'relative',
       left: '-0.3rem',
 
-      ':focus-within': {
+      ':focus-visible': {
         border: `1px solid ${theme.general.primaryColor}`,
       },
     })}

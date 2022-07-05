@@ -3,6 +3,85 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [19.11.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.10.1...@wireapp/api-client@19.11.0) (2022-07-05)
+
+
+### Features
+
+* Upgrade conversation member endpoint to v2 ([#4312](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4312)) ([f68e812](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/f68e812e6c4d7601d4d4c194e4f853a76bff39e5))
+
+
+
+
+
+## [19.10.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.10.0...@wireapp/api-client@19.10.1) (2022-07-05)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+# [19.10.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.9.1...@wireapp/api-client@19.10.0) (2022-07-04)
+
+
+### Features
+
+* update feature api ([#4310](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4310)) ([1957a52](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/1957a523083d29b647223c30640a5787c2c12f29))
+
+
+
+
+
+## [19.9.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.9.0...@wireapp/api-client@19.9.1) (2022-07-04)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+# [19.9.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.8.0...@wireapp/api-client@19.9.0) (2022-07-04)
+
+
+### Features
+
+* **core, api-client:** Add MLS group creation ([#4295](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4295)) ([9755e03](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/9755e03bee6a01860b932c4da5f713809551241f))
+
+
+
+
+
+# [19.8.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.7.2...@wireapp/api-client@19.8.0) (2022-07-04)
+
+
+### Features
+
+* **api-client:** Adapt to api version 2 ([#4308](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4308)) ([2ac928d](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/2ac928d0b812080faa81e2cd9de12c959eb59276))
+
+
+
+
+
+## [19.7.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.7.1...@wireapp/api-client@19.7.2) (2022-06-30)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [19.7.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.7.0...@wireapp/api-client@19.7.1) (2022-06-27)
+
+
+### Bug Fixes
+
+* incorrect param for delete idp (SQSERVICES-1387) ([#4303](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4303)) ([542960c](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/542960c3e50923efdd6291ae54003e5f0bf4ac58))
+
+
+
+
+
 # [19.7.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.6.4...@wireapp/api-client@19.7.0) (2022-06-21)
 
 

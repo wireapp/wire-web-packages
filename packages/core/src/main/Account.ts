@@ -49,6 +49,8 @@ import {AccountService} from './account/';
 import {LinkPreviewService} from './linkPreview';
 import type {CoreCrypto} from '@otak/core-crypto';
 import {WEBSOCKET_STATE} from '@wireapp/api-client/src/tcp/ReconnectingWebsocket';
+import {createCustomEncryptedStore, createEncryptedStore} from './util/encryptedStore';
+import {Encoder} from 'bazinga64';
 
 export type ProcessedEventPayload = HandledEventPayload;
 
@@ -95,8 +97,27 @@ export interface Account {
 }
 
 export type CreateStoreFn = (storeName: string, context: Context) => undefined | Promise<CRUDEngine | undefined>;
+type SecretCrypto<T> = {
+  encrypt: (value: Uint8Array) => Promise<T>;
+  decrypt: (payload: T) => Promise<Uint8Array>;
+};
 
-interface AccountOptions {
+interface MLSConfig<T = any> {
+  /**
+   * encrypt/decrypt function pair that will be called before storing/fetching secrets in the secrets database.
+   * If not provided will use the built in encryption mechanism
+   */
+  secretsCrypto?: SecretCrypto<T>;
+
+  /**
+   * path on the public server to the core crypto wasm file.
+   * This file will be downloaded lazily when corecrypto is needed.
+   * It, thus, needs to know where, on the server, the file can be found
+   */
+  coreCrypoWasmFilePath: string;
+}
+
+interface AccountOptions<T> {
   /** Used to store info in the database (will create a inMemory engine if returns undefined) */
   createStore?: CreateStoreFn;
 
@@ -110,7 +131,11 @@ interface AccountOptions {
    *    - make it likely that all prekeys get consumed while the device is offline and the last resort prekey will be used to create new session
    */
   nbPrekeys?: number;
-  enableMLS?: boolean;
+
+  /**
+   * Config for MLS devices. Will not load corecrypt or create MLS devices if undefined
+   */
+  mlsConfig?: MLSConfig<T>;
 }
 
 const coreDefaultClient: ClientInfo = {
@@ -119,13 +144,13 @@ const coreDefaultClient: ClientInfo = {
   model: '@wireapp/core',
 };
 
-export class Account extends EventEmitter {
+export class Account<T = any> extends EventEmitter {
   private readonly apiClient: APIClient;
   private readonly logger: logdown.Logger;
   private readonly createStore: CreateStoreFn;
   private storeEngine?: CRUDEngine;
   private readonly nbPrekeys: number;
-  private readonly enableMLS: boolean;
+  private readonly mlsConfig?: MLSConfig<T>;
   private coreCryptoClient?: CoreCrypto;
 
   public static readonly TOPIC = TOPIC;
@@ -148,18 +173,18 @@ export class Account extends EventEmitter {
 
   /**
    * @param apiClient The apiClient instance to use in the core (will create a new new one if undefined)
-   * @param storeEngineProvider
+   * @param accountOptions
    */
   constructor(
     apiClient: APIClient = new APIClient(),
-    {createStore = () => undefined, nbPrekeys = 2, enableMLS = false}: AccountOptions = {},
+    {createStore = () => undefined, nbPrekeys = 2, mlsConfig}: AccountOptions<T> = {},
   ) {
     super();
     this.apiClient = apiClient;
     this.backendFeatures = this.apiClient.backendFeatures;
+    this.mlsConfig = mlsConfig;
     this.nbPrekeys = nbPrekeys;
     this.createStore = createStore;
-    this.enableMLS = enableMLS;
 
     apiClient.on(APIClient.TOPIC.COOKIE_REFRESH, async (cookie?: Cookie) => {
       if (cookie && this.storeEngine) {
@@ -323,10 +348,15 @@ export class Account extends EventEmitter {
     const connectionService = new ConnectionService(this.apiClient);
     const giphyService = new GiphyService(this.apiClient);
     const linkPreviewService = new LinkPreviewService(assetService);
-    const conversationService = new ConversationService(this.apiClient, cryptographyService, {
-      // We can use qualified ids to send messages as long as the backend supports federated endpoints
-      useQualifiedIds: this.backendFeatures.federationEndpoints,
-    });
+    const conversationService = new ConversationService(
+      this.apiClient,
+      cryptographyService,
+      {
+        // We can use qualified ids to send messages as long as the backend supports federated endpoints
+        useQualifiedIds: this.backendFeatures.federationEndpoints,
+      },
+      () => this.coreCryptoClient!,
+    );
     const notificationService = new NotificationService(this.apiClient, cryptographyService, this.storeEngine);
     const selfService = new SelfService(this.apiClient);
     const teamService = new TeamService(this.apiClient);
@@ -357,20 +387,33 @@ export class Account extends EventEmitter {
     const loadedClient = await this.service!.client.getLocalClient();
     await this.apiClient.api.client.getClient(loadedClient.id);
     this.apiClient.context!.clientId = loadedClient.id;
-    if (this.enableMLS) {
-      this.coreCryptoClient = await this.createMLSClient(loadedClient);
+    if (this.mlsConfig) {
+      this.coreCryptoClient = await this.createMLSClient(loadedClient, this.apiClient.context!, this.mlsConfig);
     }
 
     return loadedClient;
   }
 
-  private async createMLSClient(client: RegisteredClient): Promise<CoreCrypto> {
+  private async createMLSClient(client: RegisteredClient, context: Context, mlsConfig: MLSConfig): Promise<CoreCrypto> {
+    const coreCryptoKeyId = 'corecrypto-key';
     const {CoreCrypto} = await import('@otak/core-crypto');
+    const dbName = `secrets-${this.generateDbName(context)}`;
+
+    const secretStore = mlsConfig.secretsCrypto
+      ? await createCustomEncryptedStore(dbName, mlsConfig.secretsCrypto)
+      : await createEncryptedStore(dbName);
+
+    let key = await secretStore.getsecretValue(coreCryptoKeyId);
+    if (!key) {
+      key = window.crypto.getRandomValues(new Uint8Array(16));
+      await secretStore.saveSecretValue(coreCryptoKeyId, key);
+    }
     const {userId, domain} = this.apiClient.context!;
     return CoreCrypto.init({
-      path: 'path/to/database',
-      key: 'a root identity key (i.e. enclaved encryption key for this device)',
+      databaseName: `corecrypto-${this.generateDbName(context)}`,
+      key: Encoder.toBase64(key).asString,
       clientId: `${userId}:${client.id}@${domain}`,
+      wasmFilePath: mlsConfig.coreCrypoWasmFilePath,
     });
   }
 
@@ -382,13 +425,13 @@ export class Account extends EventEmitter {
     if (!this.service) {
       throw new Error('Services are not set.');
     }
-    this.logger.info(`Creating new client {mls: ${!!this.enableMLS}}`);
+    this.logger.info(`Creating new client {mls: ${!!this.mlsConfig}}`);
     const registeredClient = await this.service.client.register(loginData, clientInfo, entropyData);
-    if (this.enableMLS) {
-      this.coreCryptoClient = await this.createMLSClient(registeredClient);
+    if (this.mlsConfig) {
+      this.coreCryptoClient = await this.createMLSClient(registeredClient, this.apiClient.context!, this.mlsConfig);
       await this.service.client.uploadMLSPublicKeys(this.coreCryptoClient.clientPublicKey(), registeredClient.id);
       await this.service.client.uploadMLSKeyPackages(
-        this.coreCryptoClient.clientKeypackages(this.nbPrekeys),
+        await this.coreCryptoClient.clientKeypackages(this.nbPrekeys),
         registeredClient.id,
       );
     }
@@ -526,9 +569,13 @@ export class Account extends EventEmitter {
     };
   }
 
-  private async initEngine(context: Context): Promise<CRUDEngine> {
+  private generateDbName(context: Context) {
     const clientType = context.clientType === ClientType.NONE ? '' : `@${context.clientType}`;
-    const dbName = `wire@${this.apiClient.config.urls.name}@${context.userId}${clientType}`;
+    return `wire@${this.apiClient.config.urls.name}@${context.userId}${clientType}`;
+  }
+
+  private async initEngine(context: Context): Promise<CRUDEngine> {
+    const dbName = this.generateDbName(context);
     this.logger.log(`Initialising store with name "${dbName}"...`);
     const openDb = async () => {
       const initializedDb = await this.createStore(dbName, context);

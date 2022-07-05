@@ -49,10 +49,7 @@ export interface SelectProps<T extends SelectOption = SelectOption> {
 
 const ArrowDown = (
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-    <path
-      fill="${black}"
-      d="M7.99963 12.5711L15.6565 4.91421L14.2423 3.5L7.99963 9.74264L1.75699 3.5L0.342773 4.91421L7.99963 12.5711Z"
-    />
+    <path d="M7.99963 12.5711L15.6565 4.91421L14.2423 3.5L7.99963 9.74264L1.75699 3.5L0.342773 4.91421L7.99963 12.5711Z" />
   </svg>
 );
 

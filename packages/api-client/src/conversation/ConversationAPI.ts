@@ -205,6 +205,10 @@ export class ConversationAPI {
     return response.data;
   }
 
+  /**
+   * @param conversationId
+   * @deprecated use feature.getAllFeatures instead
+   */
   public async getConversationGuestLinkFeature(conversationId: string): Promise<ConversationGuestLinkStatus> {
     const config: AxiosRequestConfig = {
       method: 'get',
@@ -331,7 +335,10 @@ export class ConversationAPI {
       const config: AxiosRequestConfig = {
         data: {qualified_ids: chunk},
         method: 'post',
-        url: `${ConversationAPI.URL.CONVERSATIONS}/${ConversationAPI.URL.LIST}/${ConversationAPI.URL.V2}`,
+        url:
+          this.backendFeatures.version >= 2
+            ? `${ConversationAPI.URL.CONVERSATIONS}/${ConversationAPI.URL.LIST}`
+            : `${ConversationAPI.URL.CONVERSATIONS}/${ConversationAPI.URL.LIST}/${ConversationAPI.URL.V2}`,
       };
 
       const {data} = await this.client.sendJSON<RemoteConversations>(config);
@@ -524,7 +531,7 @@ export class ConversationAPI {
   /**
    * Create a new conversation
    * @param conversationData The new conversation
-   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/createGroupConversation
+   * @see https://staging-nginz-https.zinfra.io/api/swagger-ui/#/default/post_conversations
    */
   public async postConversation(conversationData: NewConversation): Promise<Conversation> {
     const config: AxiosRequestConfig = {
@@ -981,10 +988,10 @@ export class ConversationAPI {
    * @param conversationId The conversation ID to add the users to
    * @param users List of users to add to a conversation
    */
-  public async postMembers(conversationId: string, users: QualifiedId[]): Promise<ConversationMemberJoinEvent> {
+  public async postMembers(conversationId: QualifiedId, users: QualifiedId[]): Promise<ConversationMemberJoinEvent> {
     if (!this.backendFeatures.federationEndpoints) {
       return this.postMembersV0(
-        conversationId,
+        conversationId.id,
         users.map(user => user.id),
       );
     }
@@ -995,7 +1002,10 @@ export class ConversationAPI {
         qualified_users: users,
       },
       method: 'post',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.MEMBERS}/${ConversationAPI.URL.V2}`,
+      url:
+        this.backendFeatures.version >= 2
+          ? `${ConversationAPI.URL.CONVERSATIONS}/${conversationId.domain}/${conversationId.id}/${ConversationAPI.URL.MEMBERS}`
+          : `${ConversationAPI.URL.CONVERSATIONS}/${conversationId.id}/${ConversationAPI.URL.MEMBERS}/${ConversationAPI.URL.V2}`,
     };
 
     try {
