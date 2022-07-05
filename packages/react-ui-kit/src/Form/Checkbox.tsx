@@ -53,9 +53,6 @@ const StyledLabel = (props: StyledLabelProps) => {
           top: '0.25rem',
         },
         ...(!disabled && {
-          [`.${INPUT_CLASSNAME}:focus-visible + &::before`]: {
-            borderColor: theme.general.primaryColor,
-          },
           [`.${INPUT_CLASSNAME}:hover + &::before`]: {
             borderColor: theme.general.primaryColor,
           },
@@ -112,13 +109,17 @@ export const Checkbox: React.FC<CheckboxProps<HTMLInputElement>> = React.forward
   CheckboxProps<HTMLInputElement>
 >(({id = Math.random().toString(), children, style, disabled, ...props}, ref) => (
   <div
-    css={{
+    css={(theme: Theme) => ({
       alignItems: 'center',
       display: 'flex',
       justifyContent: 'flex-start',
       position: 'relative',
       left: '-0.3rem',
-    }}
+
+      ':focus-within': {
+        border: `1px solid ${theme.general.primaryColor}`,
+      },
+    })}
     style={style}
   >
     <input
