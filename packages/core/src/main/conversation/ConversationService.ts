@@ -1052,15 +1052,45 @@ export class ConversationService {
     return userId;
   }
 
-  public async sendMLSMessage(groupId: string, payload: OtrMessage) {
-    const {genericMessage} = this.generateGenericMessage(payload);
+  public async sendMLSMessage({
+    groupId,
+    payload,
+    onStart,
+    onSuccess,
+  }: {
+    groupId: string;
+    payload: OtrMessage;
+    onStart?: (message: GenericMessage) => void | boolean | Promise<boolean>;
+    onSuccess?: (message: GenericMessage, sentTime?: string) => void;
+  }) {
+    const {genericMessage, content} = this.generateGenericMessage(payload);
+    if ((await onStart?.(genericMessage)) === false) {
+      // If the onStart call returns false, it means the consumer wants to cancel the message sending
+      return {...payload, state: PayloadBundleState.CANCELLED};
+    }
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
 
     const encrypted = await this.coreCryptoClientProvider().encryptMessage(
       groupIdBytes,
       GenericMessage.encode(genericMessage).finish(),
     );
-    await this.apiClient.api.conversation.postMlsMessage(encrypted);
+    try {
+      await this.apiClient.api.conversation.postMlsMessage(encrypted);
+      onSuccess?.(genericMessage, new Date().toISOString());
+      return {
+        ...payload,
+        content,
+        messageTimer: genericMessage.ephemeral?.expireAfterMillis || 0,
+        state: PayloadBundleState.OUTGOING_SENT,
+      };
+    } catch (error) {
+      return {
+        ...payload,
+        content,
+        messageTimer: genericMessage.ephemeral?.expireAfterMillis || 0,
+        state: PayloadBundleState.CANCELLED,
+      };
+    }
   }
 
   /**
