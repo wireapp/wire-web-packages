@@ -80,7 +80,7 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
     },
     checkbox: {
       background: COLOR_V2.GRAY_20,
-      border: COLOR_V2.GRAY_20,
+      border: COLOR_V2.GRAY_80,
       borderFocused: BASE_LIGHT_COLOR.BLUE,
       disableBgColor: COLOR_V2.GRAY_20,
       disableBorderColor: COLOR_V2.GRAY_60,
@@ -108,7 +108,7 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
     },
     checkbox: {
       background: COLOR_V2.GRAY_20,
-      border: COLOR_V2.GRAY_80,
+      border: COLOR_V2.GRAY_60,
       borderFocused: BASE_DARK_COLOR.BLUE,
       disableBgColor: COLOR_V2.GRAY_10,
       disableBorderColor: COLOR_V2.GRAY_70,
