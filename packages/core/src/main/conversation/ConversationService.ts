@@ -92,12 +92,37 @@ import type {
   ResetSessionMessage,
   TextMessage,
 } from './message/OtrMessage';
+import {XOR} from '@wireapp/commons/src/main/util/TypeUtil';
 
 export enum MessageTargetMode {
   NONE,
   USERS,
   USERS_CLIENTS,
 }
+
+interface SendCommonParams<T> {
+  protocol: ConversationProtocol;
+  payload: T;
+  onStart?: (message: GenericMessage) => void | boolean | Promise<boolean>;
+  onSuccess?: (message: GenericMessage, sentTime?: string) => void;
+  onClientMismatch?: (
+    status: ClientMismatch | MessageSendingStatus,
+    wasSent: boolean,
+  ) => void | boolean | Promise<boolean>;
+}
+
+function isMLS<T>(params: SendProteusMessageParams<T> | SendMlsMessageParams<T>): params is SendMlsMessageParams<T> {
+  return params.protocol === ConversationProtocol.MLS;
+}
+
+type SendProteusMessageParams<T> = SendCommonParams<T> &
+  MessageSendingOptions & {
+    userIds?: string[] | QualifiedId[] | UserClients | QualifiedUserClients;
+  };
+
+type SendMlsMessageParams<T> = SendCommonParams<T> & {
+  groupId: string;
+};
 
 interface MessageSendingOptions {
   /**
@@ -1052,22 +1077,12 @@ export class ConversationService {
     return userId;
   }
 
-  public async sendMLSMessage({
-    groupId,
-    payload,
-    onStart,
-    onSuccess,
-  }: {
-    groupId: string;
-    payload: OtrMessage;
-    onStart?: (message: GenericMessage) => void | boolean | Promise<boolean>;
-    onSuccess?: (message: GenericMessage, sentTime?: string) => void;
-  }) {
-    const {genericMessage, content} = this.generateGenericMessage(payload);
-    if ((await onStart?.(genericMessage)) === false) {
-      // If the onStart call returns false, it means the consumer wants to cancel the message sending
-      return {...payload, state: PayloadBundleState.CANCELLED};
-    }
+  private async sendMlsMessage<T extends OtrMessage>(
+    params: SendMlsMessageParams<T>,
+    genericMessage: GenericMessage,
+    content: T['content'],
+  ): Promise<T> {
+    const {groupId, onSuccess, payload} = params;
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
 
     const encrypted = await this.coreCryptoClientProvider().encryptMessage(
@@ -1093,40 +1108,16 @@ export class ConversationService {
     }
   }
 
-  /**
-   * Sends a message to a conversation
-   *
-   * @param params.payloadBundle The message to send to the conversation
-   * @param params.userIds? Can be either a QualifiedId[], string[], UserClients or QualfiedUserClients. The type has some effect on the behavior of the method.
-   *    When given a QualifiedId[] or string[] the method will fetch the freshest list of devices for those users (since they are not given by the consumer). As a consequence no ClientMismatch error will trigger and we will ignore missing clients when sending
-   *    When given a QualifiedUserClients or UserClients the method will only send to the clients listed in the userIds. This could lead to ClientMismatch (since the given list of devices might not be the freshest one and new clients could have been created)
-   *    When given a QualifiedId[] or QualifiedUserClients the method will send the message through the federated API endpoint
-   *    When given a string[] or UserClients the method will send the message through the old API endpoint
-   * @return resolves with the sent message
-   */
-  public async send<T extends OtrMessage = OtrMessage>({
-    payloadBundle,
-    userIds,
-    sendAsProtobuf,
-    conversationDomain,
-    nativePush,
-    targetMode,
-    callbacks,
-  }: {
-    payloadBundle: T;
-    userIds?: string[] | QualifiedId[] | UserClients | QualifiedUserClients;
-    callbacks?: MessageSendingCallbacks;
-  } & MessageSendingOptions): Promise<T> {
-    const {genericMessage, content} = this.generateGenericMessage(payloadBundle);
-
-    if ((await callbacks?.onStart?.(genericMessage)) === false) {
-      // If the onStart call returns false, it means the consumer wants to cancel the message sending
-      return {...payloadBundle, state: PayloadBundleState.CANCELLED};
-    }
-
+  private async sendProteusMessage<T extends OtrMessage>(
+    params: SendProteusMessageParams<T>,
+    genericMessage: GenericMessage,
+    content: T['content'],
+  ): Promise<T> {
+    const {userIds, sendAsProtobuf, conversationDomain, nativePush, targetMode, payload, onClientMismatch, onSuccess} =
+      params;
     const response = await this.sendGenericMessage(
       this.apiClient.validatedClientId,
-      payloadBundle.conversation,
+      payload.conversation,
       genericMessage,
       {
         userIds,
@@ -1134,24 +1125,39 @@ export class ConversationService {
         conversationDomain,
         nativePush,
         targetMode,
-        onClientMismatch: callbacks?.onClientMismatch,
+        onClientMismatch,
       },
     );
 
     if (!response.errored) {
       if (!this.isClearFromMismatch(response)) {
         // We warn the consumer that there is a mismatch that did not prevent message sending
-        await callbacks?.onClientMismatch?.(response, true);
+        await onClientMismatch?.(response, true);
       }
-      callbacks?.onSuccess?.(genericMessage, response.time);
+      onSuccess?.(genericMessage, response.time);
     }
 
     return {
-      ...payloadBundle,
+      ...payload,
       content,
       messageTimer: genericMessage.ephemeral?.expireAfterMillis || 0,
       state: response.errored ? PayloadBundleState.CANCELLED : PayloadBundleState.OUTGOING_SENT,
     };
+  }
+
+  public async send<T extends OtrMessage>(
+    params: XOR<SendMlsMessageParams<T>, SendProteusMessageParams<T>>,
+  ): Promise<T> {
+    const {payload, onStart} = params;
+    const {genericMessage, content} = this.generateGenericMessage(payload);
+    if ((await onStart?.(genericMessage)) === false) {
+      // If the onStart call returns false, it means the consumer wants to cancel the message sending
+      return {...payload, state: PayloadBundleState.CANCELLED};
+    }
+
+    return isMLS(params)
+      ? this.sendMlsMessage(params, genericMessage, content)
+      : this.sendProteusMessage(params, genericMessage, content);
   }
 
   public sendTypingStart(conversationId: string): Promise<void> {
@@ -1271,6 +1277,9 @@ export class ConversationService {
       case PayloadBundleType.TEXT:
         genericMessage = this.generateTextGenericMessage(payload);
         return {genericMessage, content};
+      /**
+       * ToDo: Create Generic implementation for everything else
+       */
       default:
         throw new Error(`No send method implemented for "${payload['type']}".`);
     }

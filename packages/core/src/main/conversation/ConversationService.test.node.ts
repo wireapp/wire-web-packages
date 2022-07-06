@@ -20,6 +20,7 @@
 import type {CoreCrypto} from '@otak/core-crypto';
 import {APIClient} from '@wireapp/api-client';
 import {ClientType} from '@wireapp/api-client/src/client';
+import {ConversationProtocol} from '@wireapp/api-client/src/conversation';
 import {LegalHoldStatus} from '@wireapp/protocol-messaging';
 import {MemoryEngine} from '@wireapp/store-engine';
 import {ConversationService, MessageTargetMode, PayloadBundleSource, PayloadBundleState, PayloadBundleType} from '.';
@@ -70,17 +71,21 @@ describe('ConversationService', () => {
       it(`calls callbacks when sending '${payloadBundle.type}' message is starting and successful`, async () => {
         const conversationService = buildConversationService();
         const sentTime = new Date().toISOString();
+        const onStart = jasmine.createSpy();
+        const onSuccess = jasmine.createSpy();
         spyOn<any>(conversationService, 'sendGenericMessage').and.returnValue(Promise.resolve({time: sentTime}));
-        const callbacks = {onStart: jasmine.createSpy(), onSuccess: jasmine.createSpy()};
+
         const promise = conversationService.send({
-          callbacks,
-          payloadBundle,
+          protocol: ConversationProtocol.PROTEUS,
+          onStart,
+          onSuccess,
+          payload: payloadBundle,
         });
 
-        expect(callbacks.onStart).toHaveBeenCalled();
-        expect(callbacks.onSuccess).not.toHaveBeenCalled();
+        expect(onStart).toHaveBeenCalled();
+        expect(onSuccess).not.toHaveBeenCalled();
         await promise;
-        expect(callbacks.onSuccess).toHaveBeenCalledWith(jasmine.any(Object), sentTime);
+        expect(onSuccess).toHaveBeenCalledWith(jasmine.any(Object), sentTime);
       });
     });
 
@@ -90,7 +95,8 @@ describe('ConversationService', () => {
         const conversationService = buildConversationService();
         conversationService
           .send({
-            payloadBundle: message,
+            protocol: ConversationProtocol.PROTEUS,
+            payload: message,
             targetMode: MessageTargetMode.USERS,
           })
           .catch(error => {
@@ -105,7 +111,8 @@ describe('ConversationService', () => {
           spyOn<any>(conversationService, 'getRecipientsForConversation').and.returnValue(Promise.resolve({} as any));
           spyOn(conversationService['messageService'], 'sendMessage').and.returnValue(Promise.resolve({} as any));
           await conversationService.send({
-            payloadBundle: message,
+            protocol: ConversationProtocol.PROTEUS,
+            payload: message,
             targetMode: MessageTargetMode.USERS,
             userIds: recipients,
           });
@@ -136,8 +143,9 @@ describe('ConversationService', () => {
             Promise.resolve({} as any),
           );
           await conversationService.send({
+            protocol: ConversationProtocol.PROTEUS,
             conversationDomain: 'domain1',
-            payloadBundle: message,
+            payload: message,
             targetMode: MessageTargetMode.USERS,
             userIds: recipients,
           });
@@ -163,7 +171,8 @@ describe('ConversationService', () => {
           spyOn<any>(conversationService, 'getRecipientsForConversation').and.returnValue(Promise.resolve({} as any));
           spyOn(conversationService['messageService'], 'sendMessage').and.returnValue(Promise.resolve({} as any));
           await conversationService.send({
-            payloadBundle: message,
+            protocol: ConversationProtocol.PROTEUS,
+            payload: message,
             targetMode: MessageTargetMode.USERS_CLIENTS,
             userIds: recipients,
           });
@@ -194,8 +203,9 @@ describe('ConversationService', () => {
             Promise.resolve({} as any),
           );
           await conversationService.send({
+            protocol: ConversationProtocol.PROTEUS,
             conversationDomain: 'domain1',
-            payloadBundle: message,
+            payload: message,
             targetMode: MessageTargetMode.USERS_CLIENTS,
             userIds: recipients,
           });
@@ -216,13 +226,16 @@ describe('ConversationService', () => {
       const conversationService = buildConversationService();
       spyOn<any>(conversationService, 'sendGenericMessage');
       const message: OtrMessage = {...baseMessage, type: PayloadBundleType.TEXT, content: {text: 'test'}};
-      const callbacks = {onStart: () => Promise.resolve(false), onSuccess: jasmine.createSpy()};
+      const onStart = () => Promise.resolve(false);
+      const onSuccess = () => jasmine.createSpy();
       const payloadBundle = await conversationService.send({
-        callbacks,
-        payloadBundle: message,
+        onStart,
+        onSuccess,
+        protocol: ConversationProtocol.PROTEUS,
+        payload: message,
       });
 
-      expect(callbacks.onSuccess).not.toHaveBeenCalled();
+      expect(onSuccess).not.toHaveBeenCalled();
       expect(conversationService['sendGenericMessage']).not.toHaveBeenCalled();
       expect(payloadBundle.state).toBe(PayloadBundleState.CANCELLED);
     });
@@ -231,13 +244,14 @@ describe('ConversationService', () => {
       const conversationService = buildConversationService();
       spyOn<any>(conversationService, 'sendGenericMessage').and.returnValue(Promise.resolve({time: '', errored: true}));
       const message: OtrMessage = {...baseMessage, type: PayloadBundleType.TEXT, content: {text: 'test'}};
-      const callbacks = {onSuccess: jasmine.createSpy()};
+      const onSuccess = jasmine.createSpy();
       const payloadBundle = await conversationService.send({
-        callbacks,
-        payloadBundle: message,
+        onSuccess,
+        payload: message,
+        protocol: ConversationProtocol.PROTEUS,
       });
 
-      expect(callbacks.onSuccess).not.toHaveBeenCalled();
+      expect(onSuccess).not.toHaveBeenCalled();
       expect(payloadBundle.state).toBe(PayloadBundleState.CANCELLED);
     });
   });
