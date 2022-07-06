@@ -357,7 +357,12 @@ export class Account<T = any> extends EventEmitter {
       },
       () => this.coreCryptoClient!,
     );
-    const notificationService = new NotificationService(this.apiClient, cryptographyService, this.storeEngine);
+    const notificationService = new NotificationService(
+      this.apiClient,
+      cryptographyService,
+      this.storeEngine,
+      () => this.coreCryptoClient,
+    );
     const selfService = new SelfService(this.apiClient);
     const teamService = new TeamService(this.apiClient);
 

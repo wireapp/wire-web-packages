@@ -33,6 +33,10 @@ import {NotificationBackendRepository} from './NotificationBackendRepository';
 import {NotificationDatabaseRepository} from './NotificationDatabaseRepository';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 import {AbortHandler} from '@wireapp/api-client/src/tcp';
+import type {CoreCrypto} from '@otak/core-crypto/platforms/web/corecrypto';
+import {Decoder, Encoder} from 'bazinga64';
+import {QualifiedId} from '@wireapp/api-client/src/user';
+import {GenericMessageMapper} from '../cryptography/GenericMessageMapper';
 
 export type HandledEventPayload = {
   event: Events.BackendEvent;
@@ -66,7 +70,12 @@ export class NotificationService extends EventEmitter {
   });
   public static readonly TOPIC = TOPIC;
 
-  constructor(apiClient: APIClient, cryptographyService: CryptographyService, storeEngine: CRUDEngine) {
+  constructor(
+    apiClient: APIClient,
+    cryptographyService: CryptographyService,
+    storeEngine: CRUDEngine,
+    private readonly coreCryptoClientProvider: () => CoreCrypto | undefined,
+  ) {
     super();
     this.apiClient = apiClient;
     this.cryptographyService = cryptographyService;
@@ -231,8 +240,53 @@ export class NotificationService extends EventEmitter {
     source: PayloadBundleSource,
     dryRun: boolean = false,
   ): Promise<HandledEventPayload> {
+    const coreCryptoClient = this.coreCryptoClientProvider();
+
     switch (event.type) {
-      // Encrypted events
+      case Events.CONVERSATION_EVENT.MLS_WELCOME_MESSAGE:
+        if (!coreCryptoClient) {
+          // TODO throw proper error
+          throw new Error('TODO');
+        }
+        const data = Decoder.fromBase64(event.data).asBytes;
+        // We extract the groupId from the welcome message and let coreCrypto store this group
+        const newGroupId = await coreCryptoClient.processWelcomeMessage(data);
+        const groupIdStr = Encoder.toBase64(newGroupId).asString;
+        // The groupId can then be sent back to the consumer
+        const conversationId = localStorage.getItem(groupIdStr);
+        if (conversationId) {
+          localStorage.removeItem(groupIdStr);
+          localStorage.setItem(conversationId, groupIdStr);
+        }
+        return {
+          event,
+          mappedEvent: ConversationMapper.mapConversationEvent({...event, data: groupIdStr}, source),
+        };
+
+      case Events.CONVERSATION_EVENT.MLS_MESSAGE_ADD:
+        if (!coreCryptoClient) {
+          // TODO throw proper error
+          throw new Error('TODO');
+        }
+        const encryptedData = Decoder.fromBase64(event.data).asBytes;
+        const findGroupId = (conversationId: QualifiedId) => {
+          // TODO fetch the groupId in DB from the conversatioId
+          const base64groupId = localStorage.getItem(`${conversationId.id}@${conversationId.domain}`);
+          if (!base64groupId) {
+            throw new Error('group was not save in DB');
+          }
+          return Decoder.fromBase64(base64groupId).asBytes;
+        };
+        const groupId = findGroupId(event.qualified_conversation || {id: event.conversation, domain: ''});
+        const rawData = await coreCryptoClient.decryptMessage(groupId, encryptedData);
+        if (!rawData) {
+          // TODO
+          throw new Error('empty message');
+        }
+        const decryptedData = GenericMessage.decode(rawData);
+        return {event, decryptedData};
+
+      // Encrypted Proteus events
       case Events.CONVERSATION_EVENT.OTR_MESSAGE_ADD: {
         if (dryRun) {
           // In case of a dry run, we do not want to decrypt messages
@@ -252,6 +306,24 @@ export class NotificationService extends EventEmitter {
       }
       // Meta events
       case Events.CONVERSATION_EVENT.MEMBER_JOIN:
+        const conversation = await this.apiClient.api.conversation.getConversation(
+          event.qualified_conversation ?? {id: event.conversation, domain: ''},
+        );
+        if (!conversation) {
+          throw new Error('no conv');
+        }
+        if (conversation.group_id) {
+          const conversationId = localStorage.getItem(conversation.group_id);
+          if (conversationId) {
+            localStorage.removeItem(conversation.group_id);
+            localStorage.setItem(conversationId, conversation.group_id);
+          } else {
+            localStorage.setItem(
+              `${conversation.qualified_id.id}@${conversation.qualified_id.domain}`,
+              conversation.group_id,
+            );
+          }
+        }
       case Events.CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE:
       case Events.CONVERSATION_EVENT.RENAME:
       case Events.CONVERSATION_EVENT.TYPING: {
