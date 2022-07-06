@@ -68,7 +68,7 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
       labelColor: COLOR_V2.GRAY_80,
     },
     general: {
-      backgroundColor: COLOR.GRAY_LIGHTEN_88,
+      backgroundColor: COLOR_V2.GRAY_20,
       color: COLOR.TEXT,
       primaryColor: COLOR_V2.BLUE,
       dangerColor: COLOR_V2.RED,
