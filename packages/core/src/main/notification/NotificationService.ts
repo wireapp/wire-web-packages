@@ -36,7 +36,6 @@ import {AbortHandler} from '@wireapp/api-client/src/tcp';
 import type {CoreCrypto} from '@otak/core-crypto/platforms/web/corecrypto';
 import {Decoder, Encoder} from 'bazinga64';
 import {QualifiedId} from '@wireapp/api-client/src/user';
-import {GenericMessageMapper} from '../cryptography/GenericMessageMapper';
 
 export type HandledEventPayload = {
   event: Events.BackendEvent;
@@ -253,11 +252,6 @@ export class NotificationService extends EventEmitter {
         const newGroupId = await coreCryptoClient.processWelcomeMessage(data);
         const groupIdStr = Encoder.toBase64(newGroupId).asString;
         // The groupId can then be sent back to the consumer
-        const conversationId = localStorage.getItem(groupIdStr);
-        if (conversationId) {
-          localStorage.removeItem(groupIdStr);
-          localStorage.setItem(conversationId, groupIdStr);
-        }
         return {
           event,
           mappedEvent: ConversationMapper.mapConversationEvent({...event, data: groupIdStr}, source),
@@ -270,13 +264,13 @@ export class NotificationService extends EventEmitter {
         }
         const encryptedData = Decoder.fromBase64(event.data).asBytes;
         const findGroupId = (conversationId: QualifiedId) => {
-          // TODO fetch the groupId in DB from the conversatioId
           const base64groupId = localStorage.getItem(`${conversationId.id}@${conversationId.domain}`);
           if (!base64groupId) {
             throw new Error('group was not save in DB');
           }
           return Decoder.fromBase64(base64groupId).asBytes;
         };
+
         const groupId = findGroupId(event.qualified_conversation || {id: event.conversation, domain: ''});
         const rawData = await coreCryptoClient.decryptMessage(groupId, encryptedData);
         if (!rawData) {
@@ -306,6 +300,8 @@ export class NotificationService extends EventEmitter {
       }
       // Meta events
       case Events.CONVERSATION_EVENT.MEMBER_JOIN:
+        // As of today (07/07/2022) the backend sends `WELCOME` message to the user's own conversation (not the actual conversation that the welcome should be part of)
+        // So in order to map conversation Ids and groupId together, we need to first fetch the conversation and get the groupId linked to it.
         const conversation = await this.apiClient.api.conversation.getConversation(
           event.qualified_conversation ?? {id: event.conversation, domain: ''},
         );
@@ -313,16 +309,12 @@ export class NotificationService extends EventEmitter {
           throw new Error('no conv');
         }
         if (conversation.group_id) {
-          const conversationId = localStorage.getItem(conversation.group_id);
-          if (conversationId) {
-            localStorage.removeItem(conversation.group_id);
-            localStorage.setItem(conversationId, conversation.group_id);
-          } else {
-            localStorage.setItem(
-              `${conversation.qualified_id.id}@${conversation.qualified_id.domain}`,
-              conversation.group_id,
-            );
-          }
+          // If there is a groupId in the conversation, we need to store the conversationId => groupId pair in order to find the groupId when decrypting messages
+          // This is a bit hacky but since mls messages do not embed the groupId we need to keep a mapping of those
+          localStorage.setItem(
+            `${conversation.qualified_id.id}@${conversation.qualified_id.domain}`,
+            conversation.group_id,
+          );
         }
       case Events.CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE:
       case Events.CONVERSATION_EVENT.RENAME:
