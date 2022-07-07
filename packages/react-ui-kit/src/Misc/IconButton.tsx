@@ -58,7 +58,7 @@ export const iconButtonStyle: <T>(theme: Theme, props: IconButtonProps<T>) => CS
   },
   ...(variant === IconButtonVariant.PRIMARY && {
     backgroundColor: disabled
-      ? theme.IconButton.hoverPrimaryBgColor
+      ? theme.IconButton.primaryDisabledBgColor
       : backgroundColor || theme.IconButton.primaryBgColor,
     border: disabled
       ? `1px solid ${theme.IconButton.primaryDisabledBorderColor}`

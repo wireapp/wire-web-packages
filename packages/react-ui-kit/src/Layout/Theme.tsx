@@ -39,6 +39,7 @@ export interface Theme {
     primaryActiveFillColor?: string;
     primaryBgColor?: string;
     primaryBorderColor?: string;
+    primaryDisabledBgColor?: string;
     primaryDisabledBorderColor?: string;
     primaryHoverBorderColor?: string;
     secondaryActiveBorderColor?: string;
@@ -80,6 +81,7 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
       primaryActiveFillColor: COLOR_V2.BLUE,
       primaryBgColor: COLOR_V2.WHITE,
       primaryBorderColor: COLOR_V2.GRAY_40,
+      primaryDisabledBgColor: COLOR_V2.GRAY_20,
       primaryDisabledBorderColor: COLOR_V2.GRAY_40,
       primaryHoverBorderColor: COLOR_V2.GRAY_50,
       secondaryActiveBorderColor: 'none',
@@ -119,7 +121,8 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
       primaryActiveFillColor: COLOR.WHITE,
       primaryBgColor: COLOR_V2.GRAY_90,
       primaryBorderColor: COLOR_V2.GRAY_100,
-      primaryDisabledBorderColor: COLOR_V2.GRAY_85,
+      primaryDisabledBgColor: COLOR_V2.GRAY_95,
+      primaryDisabledBorderColor: COLOR_V2.GRAY_90,
       primaryHoverBorderColor: COLOR_V2.GRAY_70,
       secondaryActiveBorderColor: COLOR_V2.BLUE_DARK_800,
     },
