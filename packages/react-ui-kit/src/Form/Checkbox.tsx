@@ -40,7 +40,7 @@ const StyledLabel = (props: StyledLabelProps) => {
     <label
       css={(theme: Theme) => ({
         [`.${INPUT_CLASSNAME}:checked + &::before`]: {
-          background: `${disabled ? theme.checkbox.disablecheckedBgColor : theme.general.primaryColor}`,
+          background: `${disabled ? theme.Checkbox.disablecheckedBgColor : theme.general.primaryColor}`,
           borderColor: theme.general.primaryColor,
         },
         [`.${INPUT_CLASSNAME}:checked + & > svg`]: {
@@ -49,42 +49,41 @@ const StyledLabel = (props: StyledLabelProps) => {
         [`.${INPUT_CLASSNAME} + & > svg`]: {
           fill: 'none',
           position: 'absolute',
-          left: '-0.75rem',
+          left: '0.25rem',
           top: '0.25rem',
         },
         ...(!disabled && {
-          [`.${INPUT_CLASSNAME}:focus-visible + &::before`]: {
-            borderColor: theme.general.primaryColor,
-          },
           [`.${INPUT_CLASSNAME}:hover + &::before`]: {
             borderColor: theme.general.primaryColor,
           },
         }),
         [`.${INPUT_CLASSNAME} + &::before`]: {
-          background: disabled ? theme.checkbox.disableBgColor : theme.checkbox.background,
+          background: disabled ? theme.Checkbox.disableBgColor : theme.Checkbox.background,
           ...(!disabled
             ? {
                 border: markInvalid
-                  ? `1.5px solid ${theme.checkbox.invalidBorderColor}`
-                  : `1.5px solid ${theme.checkbox.border}`,
+                  ? `1.5px solid ${theme.Checkbox.invalidBorderColor}`
+                  : `1.5px solid ${theme.Checkbox.border}`,
               }
             : {
-                border: `1.5px solid ${theme.checkbox.disableBorderColor}`,
+                border: `1.5px solid ${theme.Checkbox.disableBorderColor}`,
               }),
           borderRadius: '3px',
           boxSizing: 'border-box',
           content: '""',
           display: 'inline-block',
+          width: '22px',
           height: '22px',
           lineHeight: 1.4,
-          margin: '0 8px 0 -16px',
-          width: '22px',
+          margin: '0 8px 0 0px',
           color: theme.general.color,
         },
         a: {
           ...textLinkStyle(theme, {}),
         },
         position: 'relative',
+        margin: '0 0 0 -16px',
+        width: '100%',
         lineHeight: 1.4,
         display: 'flex',
         opacity: disabled ? 0.56 : 1,
@@ -112,13 +111,17 @@ export const Checkbox: React.FC<CheckboxProps<HTMLInputElement>> = React.forward
   CheckboxProps<HTMLInputElement>
 >(({id = Math.random().toString(), children, style, disabled, ...props}, ref) => (
   <div
-    css={{
+    css={(theme: Theme) => ({
       alignItems: 'center',
       display: 'flex',
       justifyContent: 'flex-start',
       position: 'relative',
       left: '-0.3rem',
-    }}
+      [`.${INPUT_CLASSNAME}:focus-visible + label`]: {
+        outline: `1px solid ${theme.general.primaryColor}`,
+        outlineOffset: '0.4rem',
+      },
+    })}
     style={style}
   >
     <input

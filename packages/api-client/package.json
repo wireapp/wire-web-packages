@@ -29,7 +29,7 @@
     "@types/jasmine": "3.8.2",
     "@types/karma": "6.3.1",
     "@types/ws": "7.4.7",
-    "@wireapp/react-ui-kit": "8.7.2",
+    "@wireapp/react-ui-kit": "8.8.0",
     "@wireapp/store-engine": "4.9.9",
     "@wireapp/store-engine-fs": "2.4.9",
     "babel-loader": "8.2.2",
@@ -91,5 +91,5 @@
     "watch": "webpack serve --config webpack.browser.js",
     "yalc": "npx tsc && npx yalc push"
   },
-  "version": "19.11.2"
+  "version": "19.12.2"
 }
