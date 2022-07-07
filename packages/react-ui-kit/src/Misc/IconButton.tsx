@@ -20,7 +20,6 @@
 /** @jsx jsx */
 import {CSSObject, jsx} from '@emotion/react';
 
-import {COLOR_V2} from '../Identity';
 import {defaultTransition} from '../Identity/motions';
 import type {Theme} from '../Layout';
 import {TextProps, filterTextProps} from '../Text';
@@ -61,23 +60,25 @@ export const iconButtonStyle: <T>(theme: Theme, props: IconButtonProps<T>) => CS
     backgroundColor: disabled
       ? theme.IconButton.hoverPrimaryBgColor
       : backgroundColor || theme.IconButton.primaryBgColor,
-    border: `1px solid ${theme.Input.labelColor}`,
+    border: disabled
+      ? `1px solid ${theme.IconButton.primaryDisabledBorderColor}`
+      : `1px solid ${theme.IconButton.primaryBorderColor}`,
     svg: {
-      fill: disabled ? theme.Input.backgroundColorDisabled : theme.general.color,
+      fill: disabled ? theme.Input.placeholderColor : theme.general.color,
     },
     ...(!disabled && {
       '&:hover, &:focus': {
         backgroundColor: theme.IconButton.hoverPrimaryBgColor,
       },
       '&:hover': {
-        borderColor: theme.Select.borderColor,
+        borderColor: theme.IconButton.primaryHoverBorderColor,
       },
       '&:focus': {
-        borderColor: theme.IconButton.activePrimaryBorderColor,
+        borderColor: theme.IconButton.focusBorderColor,
       },
       '&:active': {
         backgroundColor: theme.IconButton.activePrimaryBgColor,
-        borderColor: theme.IconButton.activePrimaryBorderColor,
+        borderColor: theme.IconButton.focusBorderColor,
         svg: {
           fill: theme.general.primaryColor,
         },
@@ -96,10 +97,11 @@ export const iconButtonStyle: <T>(theme: Theme, props: IconButtonProps<T>) => CS
         },
       },
       '&:focus': {
-        border: `1px solid ${COLOR_V2.BLUE_LIGHT_300}`,
+        border: `1px solid ${theme.IconButton.focusBorderColor}`,
       },
       '&:active': {
-        backgroundColor: theme.general.backgroundColor,
+        border: `1px solid ${theme.IconButton.secondaryActiveBorderColor}`,
+        backgroundColor: theme.Input.backgroundColor,
       },
     }),
   }),

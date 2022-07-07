@@ -34,8 +34,14 @@ export interface Theme {
   IconButton: {
     activePrimaryBgColor?: string;
     activePrimaryBorderColor?: string;
+    focusBorderColor?: string;
     hoverPrimaryBgColor?: string;
+    primaryActiveFillColor?: string;
     primaryBgColor?: string;
+    primaryBorderColor?: string;
+    primaryDisabledBorderColor?: string;
+    primaryHoverBorderColor?: string;
+    secondaryActiveBorderColor?: string;
   };
   Checkbox: {
     background?: string;
@@ -69,9 +75,14 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
   [THEME_ID.LIGHT]: {
     IconButton: {
       activePrimaryBgColor: COLOR_V2.BLUE_LIGHT_50,
-      activePrimaryBorderColor: COLOR_V2.BLUE_LIGHT_300,
+      focusBorderColor: COLOR_V2.BLUE_LIGHT_500,
       hoverPrimaryBgColor: COLOR_V2.GRAY_20,
+      primaryActiveFillColor: COLOR_V2.BLUE,
       primaryBgColor: COLOR_V2.WHITE,
+      primaryBorderColor: COLOR_V2.GRAY_40,
+      primaryDisabledBorderColor: COLOR_V2.GRAY_40,
+      primaryHoverBorderColor: COLOR_V2.GRAY_50,
+      secondaryActiveBorderColor: 'none',
     },
     Input: {
       backgroundColor: COLOR.WHITE,
@@ -103,9 +114,14 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
   [THEME_ID.DARK]: {
     IconButton: {
       activePrimaryBgColor: COLOR_V2.BLUE_DARK_800,
-      activePrimaryBorderColor: COLOR_V2.BLUE_DARK_600,
-      hoverPrimaryBgColor: COLOR_V2.GRAY_90,
-      primaryBgColor: COLOR_V2.GRAY_80,
+      focusBorderColor: COLOR_V2.BLUE_DARK_600,
+      hoverPrimaryBgColor: COLOR_V2.GRAY_80,
+      primaryActiveFillColor: COLOR.WHITE,
+      primaryBgColor: COLOR_V2.GRAY_90,
+      primaryBorderColor: COLOR_V2.GRAY_100,
+      primaryDisabledBorderColor: COLOR_V2.GRAY_85,
+      primaryHoverBorderColor: COLOR_V2.GRAY_70,
+      secondaryActiveBorderColor: COLOR_V2.BLUE_DARK_800,
     },
     Input: {
       backgroundColor: COLOR.BLACK_LIGHTEN_24,
