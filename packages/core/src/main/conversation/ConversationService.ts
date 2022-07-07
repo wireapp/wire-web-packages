@@ -105,10 +105,6 @@ interface SendCommonParams<T> {
   payload: T;
   onStart?: (message: GenericMessage) => void | boolean | Promise<boolean>;
   onSuccess?: (message: GenericMessage, sentTime?: string) => void;
-  onClientMismatch?: (
-    status: ClientMismatch | MessageSendingStatus,
-    wasSent: boolean,
-  ) => void | boolean | Promise<boolean>;
 }
 
 function isMLS<T>(params: SendProteusMessageParams<T> | SendMlsMessageParams<T>): params is SendMlsMessageParams<T> {
@@ -118,6 +114,10 @@ function isMLS<T>(params: SendProteusMessageParams<T> | SendMlsMessageParams<T>)
 type SendProteusMessageParams<T> = SendCommonParams<T> &
   MessageSendingOptions & {
     userIds?: string[] | QualifiedId[] | UserClients | QualifiedUserClients;
+    onClientMismatch?: (
+      status: ClientMismatch | MessageSendingStatus,
+      wasSent: boolean,
+    ) => void | boolean | Promise<boolean>;
   };
 
 type SendMlsMessageParams<T> = SendCommonParams<T> & {
