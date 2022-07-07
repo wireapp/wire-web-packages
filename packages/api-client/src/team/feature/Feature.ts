@@ -17,6 +17,8 @@
  *
  */
 
+import {ConversationProtocol} from '../../conversation';
+
 export enum FeatureStatus {
   DISABLED = 'disabled',
   ENABLED = 'enabled',
@@ -25,11 +27,6 @@ export enum FeatureStatus {
 export enum FeatureLockStatus {
   LOCKED = 'locked',
   UNLOCKED = 'unlocked',
-}
-
-export enum ProtocolOption {
-  MLS = 'mls',
-  PROTEUS = 'proteus',
 }
 
 export interface FeatureWithoutConfig {
@@ -67,7 +64,7 @@ export interface FeatureClassifiedDomainsConfig extends FeatureConfig {
 export interface FeatureMLSConfig extends FeatureConfig {
   allowedCipherSuites: number[];
   defaultCipherSuite: number;
-  defaultProtocol: ProtocolOption;
+  defaultProtocol: ConversationProtocol;
   protocolToggleUsers: string[];
 }
 
