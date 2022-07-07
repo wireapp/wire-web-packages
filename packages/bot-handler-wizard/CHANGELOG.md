@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.223](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-wizard/compare/@wireapp/bot-handler-wizard@0.4.222...@wireapp/bot-handler-wizard@0.4.223) (2022-07-07)
+
+**Note:** Version bump only for package @wireapp/bot-handler-wizard
+
+
+
+
+
+## [0.4.222](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-wizard/compare/@wireapp/bot-handler-wizard@0.4.221...@wireapp/bot-handler-wizard@0.4.222) (2022-07-06)
+
+**Note:** Version bump only for package @wireapp/bot-handler-wizard
+
+
+
+
+
+## [0.4.221](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-wizard/compare/@wireapp/bot-handler-wizard@0.4.220...@wireapp/bot-handler-wizard@0.4.221) (2022-07-06)
+
+**Note:** Version bump only for package @wireapp/bot-handler-wizard
+
+
+
+
+
+## [0.4.220](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-wizard/compare/@wireapp/bot-handler-wizard@0.4.219...@wireapp/bot-handler-wizard@0.4.220) (2022-07-06)
+
+**Note:** Version bump only for package @wireapp/bot-handler-wizard
+
+
+
+
+
+## [0.4.219](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-wizard/compare/@wireapp/bot-handler-wizard@0.4.218...@wireapp/bot-handler-wizard@0.4.219) (2022-07-05)
+
+**Note:** Version bump only for package @wireapp/bot-handler-wizard
+
+
+
+
+
+## [0.4.218](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-wizard/compare/@wireapp/bot-handler-wizard@0.4.217...@wireapp/bot-handler-wizard@0.4.218) (2022-07-05)
+
+**Note:** Version bump only for package @wireapp/bot-handler-wizard
+
+
+
+
+
 ## [0.4.217](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-wizard/compare/@wireapp/bot-handler-wizard@0.4.216...@wireapp/bot-handler-wizard@0.4.217) (2022-07-04)
 
 **Note:** Version bump only for package @wireapp/bot-handler-wizard

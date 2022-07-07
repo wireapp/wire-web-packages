@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.7.3](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@8.7.2...@wireapp/react-ui-kit@8.7.3) (2022-07-07)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [8.7.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@8.7.1...@wireapp/react-ui-kit@8.7.2) (2022-07-06)
+
+
+### Bug Fixes
+
+* toggle password input data-uie-name ([#4316](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/issues/4316)) ([55fa2e7](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/commit/55fa2e73bf7957816282112083597b10aee9b432))
+
+
+
+
+
+## [8.7.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@8.7.0...@wireapp/react-ui-kit@8.7.1) (2022-07-05)
+
+
+### Bug Fixes
+
+* restore missing data-uie on input ([#4311](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/issues/4311)) ([4dcf500](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/commit/4dcf500745efd4721b8ae10f987500f6594bb183))
+
+
+
+
+
 # [8.7.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@8.6.0...@wireapp/react-ui-kit@8.7.0) (2022-07-04)
 
 
