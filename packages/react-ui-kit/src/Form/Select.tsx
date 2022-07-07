@@ -40,6 +40,7 @@ export interface SelectProps<T extends SelectOption = SelectOption> {
   value?: T | null;
   helperText?: string;
   label?: string;
+  name?: string;
   disabled?: boolean;
   required?: boolean;
   markInvalid?: boolean;
@@ -154,6 +155,7 @@ export const Select = <T extends SelectOption = SelectOption>({
   value = null,
   onChange,
   required,
+  name,
   markInvalid,
   dataUieName,
   wrapperCSS = {},
@@ -280,6 +282,7 @@ export const Select = <T extends SelectOption = SelectOption>({
           aria-expanded={isDropdownOpen}
           aria-haspopup="listbox"
           aria-labelledby={id}
+          name={name}
           id={id}
           onClick={onToggleDropdown}
           onKeyDown={handleListKeyDown}
