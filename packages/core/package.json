@@ -41,6 +41,7 @@
     "karma-spec-reporter": "0.0.32",
     "mock-socket": "9.0.3",
     "nock": "13.1.1",
+    "nodemon": "2.0.19",
     "nyc": "15.1.0",
     "rimraf": "3.0.2",
     "typescript": "4.4.2",
@@ -62,6 +63,7 @@
     "build": "yarn build:node && yarn build:browser",
     "build:browser": "webpack --progress",
     "build:node": "tsc",
+    "ToDo:": "change clean script to clean all subfolders and test.node.js files",
     "clean": "rimraf .tmp \"src/main/{!(*.test*).js,*.js.map,*.d.ts}\" \"src/main/test/{*.js.map,*.d.ts}\" \"src/main/!(test)/{!(*.test*).js,*.js.map,*.d.ts}\"",
     "coverage": "cross-env JASMINE_CONFIG_PATH=src/test/node/support/jasmine.json istanbul cover --report html ../../node_modules/jasmine/bin/jasmine.js",
     "demo:composite": "cross-env NODE_DEBUG=@wireapp* ts-node src/demo/composite.ts",
@@ -74,6 +76,8 @@
     "test:browser": "webpack --mode=development && karma start",
     "test:project": "yarn dist && yarn test",
     "test:node": "nyc jasmine --config=jasmine.json",
+    "watch": "tsc ---watch",
+    "test:watch": "nodemon --ext ts --exec 'yarn test:node'",
     "yalc": "npx tsc && npx yalc push"
   },
   "version": "28.3.2"

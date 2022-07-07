@@ -1085,10 +1085,12 @@ export class ConversationService {
     const {groupId, onSuccess, payload} = params;
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
 
-    const encrypted = await this.coreCryptoClientProvider().encryptMessage(
+    const coreCryptoClient = this.coreCryptoClientProvider();
+    const encrypted = await coreCryptoClient.encryptMessage(
       groupIdBytes,
       GenericMessage.encode(genericMessage).finish(),
     );
+
     try {
       await this.apiClient.api.conversation.postMlsMessage(encrypted);
       onSuccess?.(genericMessage, new Date().toISOString());
