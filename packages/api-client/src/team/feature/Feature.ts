@@ -27,6 +27,11 @@ export enum FeatureLockStatus {
   UNLOCKED = 'unlocked',
 }
 
+export enum ProtocolOption {
+  MLS = 'mls',
+  PROTEUS = 'proteus',
+}
+
 export interface FeatureWithoutConfig {
   status: FeatureStatus;
   lockStatus?: FeatureLockStatus;
@@ -60,12 +65,10 @@ export interface FeatureClassifiedDomainsConfig extends FeatureConfig {
   domains: string[];
 }
 export interface FeatureMLSConfig extends FeatureConfig {
-  config: {
-    allowedCipherSuites: number[];
-    defaultCipherSuite: number;
-    defaultProtocol: 'proteus' | 'mls';
-    protocolToggleUsers: string[];
-  };
+  allowedCipherSuites: number[];
+  defaultCipherSuite: number;
+  defaultProtocol: ProtocolOption;
+  protocolToggleUsers: string[];
 }
 
 export type FeatureAppLock = Feature<FeatureAppLockConfig>;
