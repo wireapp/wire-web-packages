@@ -105,10 +105,6 @@ interface SendCommonParams<T> {
   payload: T;
   onStart?: (message: GenericMessage) => void | boolean | Promise<boolean>;
   onSuccess?: (message: GenericMessage, sentTime?: string) => void;
-  onClientMismatch?: (
-    status: ClientMismatch | MessageSendingStatus,
-    wasSent: boolean,
-  ) => void | boolean | Promise<boolean>;
 }
 
 function isMLS<T>(params: SendProteusMessageParams<T> | SendMlsMessageParams<T>): params is SendMlsMessageParams<T> {
@@ -118,6 +114,10 @@ function isMLS<T>(params: SendProteusMessageParams<T> | SendMlsMessageParams<T>)
 type SendProteusMessageParams<T> = SendCommonParams<T> &
   MessageSendingOptions & {
     userIds?: string[] | QualifiedId[] | UserClients | QualifiedUserClients;
+    onClientMismatch?: (
+      status: ClientMismatch | MessageSendingStatus,
+      wasSent: boolean,
+    ) => void | boolean | Promise<boolean>;
   };
 
 type SendMlsMessageParams<T> = SendCommonParams<T> & {
@@ -1077,6 +1077,14 @@ export class ConversationService {
     return userId;
   }
 
+  /**
+   * Sends a mls message to a conversation
+   *
+   * @param params.payload The message to send to the conversation
+   * @param params.protocol The protocol to use to send the message (MLS or Proteus)
+   * @param params.groupId? The groupId of the conversation to send the message to (Needed only for MLS)
+   * @return resolves with the sent message
+   */
   private async sendMlsMessage<T extends OtrMessage>(
     params: SendMlsMessageParams<T>,
     genericMessage: GenericMessage,
@@ -1085,10 +1093,12 @@ export class ConversationService {
     const {groupId, onSuccess, payload} = params;
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
 
-    const encrypted = await this.coreCryptoClientProvider().encryptMessage(
+    const coreCryptoClient = this.coreCryptoClientProvider();
+    const encrypted = await coreCryptoClient.encryptMessage(
       groupIdBytes,
       GenericMessage.encode(genericMessage).finish(),
     );
+
     try {
       await this.apiClient.api.conversation.postMlsMessage(encrypted);
       onSuccess?.(genericMessage, new Date().toISOString());
@@ -1098,7 +1108,7 @@ export class ConversationService {
         messageTimer: genericMessage.ephemeral?.expireAfterMillis || 0,
         state: PayloadBundleState.OUTGOING_SENT,
       };
-    } catch (error) {
+    } catch {
       return {
         ...payload,
         content,
@@ -1108,6 +1118,15 @@ export class ConversationService {
     }
   }
 
+  /**
+   * Sends a proteus message to a conversation
+   * @param params.userIds? Can be either a QualifiedId[], string[], UserClients or QualfiedUserClients. The type has some effect on the behavior of the method. (Needed only for Proteus)
+   *    When given a QualifiedId[] or string[] the method will fetch the freshest list of devices for those users (since they are not given by the consumer). As a consequence no ClientMismatch error will trigger and we will ignore missing clients when sending
+   *    When given a QualifiedUserClients or UserClients the method will only send to the clients listed in the userIds. This could lead to ClientMismatch (since the given list of devices might not be the freshest one and new clients could have been created)
+   *    When given a QualifiedId[] or QualifiedUserClients the method will send the message through the federated API endpoint
+   *    When given a string[] or UserClients the method will send the message through the old API endpoint
+   * @return resolves with the sent message
+   */
   private async sendProteusMessage<T extends OtrMessage>(
     params: SendProteusMessageParams<T>,
     genericMessage: GenericMessage,
@@ -1145,6 +1164,10 @@ export class ConversationService {
     };
   }
 
+  /**
+   * Sends a message to a conversation
+   * @return resolves with the sent message
+   */
   public async send<T extends OtrMessage>(
     params: XOR<SendMlsMessageParams<T>, SendProteusMessageParams<T>>,
   ): Promise<T> {

@@ -3,6 +3,63 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [19.13.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.13.1...@wireapp/api-client@19.13.2) (2022-07-08)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [19.13.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.13.0...@wireapp/api-client@19.13.1) (2022-07-08)
+
+
+### Bug Fixes
+
+* issue with mls typing ([#4322](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4322)) ([a5dad86](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/a5dad86e728ed986c4e068d7b8842bd5278734ba))
+
+
+
+
+
+# [19.13.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.12.2...@wireapp/api-client@19.13.0) (2022-07-08)
+
+
+### Features
+
+* **api-client:** add IDP_ISSUER_IN_USE error label ([#4323](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4323)) ([b426569](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/b42656966efad732dc36b22b05011c76da4aae22))
+
+
+
+
+
+## [19.12.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.12.1...@wireapp/api-client@19.12.2) (2022-07-07)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [19.12.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.12.0...@wireapp/api-client@19.12.1) (2022-07-07)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+# [19.12.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.11.2...@wireapp/api-client@19.12.0) (2022-07-06)
+
+
+### Features
+
+* add new error label ([#4318](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4318)) ([f090903](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/f090903c8db2cb36f0f58b1b471b235cc082ae4d))
+
+
+
+
+
 ## [19.11.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.11.1...@wireapp/api-client@19.11.2) (2022-07-06)
 
 **Note:** Version bump only for package @wireapp/api-client
