@@ -1108,7 +1108,7 @@ export class ConversationService {
         messageTimer: genericMessage.ephemeral?.expireAfterMillis || 0,
         state: PayloadBundleState.OUTGOING_SENT,
       };
-    } catch (error) {
+    } catch {
       return {
         ...payload,
         content,
