@@ -77,8 +77,7 @@
     "test:project": "yarn dist && yarn test",
     "test:node": "nyc jasmine --config=jasmine.json",
     "watch": "tsc ---watch",
-    "test:watch": "nodemon --ext ts --exec 'yarn test:node'",
-    "yalc": "npx tsc && npx yalc push"
+    "test:watch": "nodemon --ext ts --exec 'yarn test:node'"
   },
   "version": "28.3.5"
 }
