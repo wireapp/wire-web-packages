@@ -64,7 +64,6 @@
     "build": "yarn build:node && yarn build:browser",
     "build:browser": "webpack --progress",
     "build:node": "tsc",
-    "ToDo:": "change clean script to clean all subfolders and test.node.js files",
     "clean": "rimraf .tmp \"src/main/{!(*.test*).js,*.js.map,*.d.ts}\" \"src/main/test/{*.js.map,*.d.ts}\" \"src/main/!(test)/{!(*.test*).js,*.js.map,*.d.ts}\"",
     "coverage": "cross-env JASMINE_CONFIG_PATH=src/test/node/support/jasmine.json istanbul cover --report html ../../node_modules/jasmine/bin/jasmine.js",
     "demo:composite": "cross-env NODE_DEBUG=@wireapp* ts-node src/demo/composite.ts",

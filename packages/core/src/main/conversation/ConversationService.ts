@@ -1147,6 +1147,19 @@ export class ConversationService {
     };
   }
 
+  /**
+   * Sends a message to a conversation
+   *
+   * @param params.payload The message to send to the conversation
+   * @param params.protocol The protocol to use to send the message (MLS or Proteus)
+   * @param params.groupId? The groupId of the conversation to send the message to (Needed only for MLS)
+   * @param params.userIds? Can be either a QualifiedId[], string[], UserClients or QualfiedUserClients. The type has some effect on the behavior of the method. (Needed only for Proteus)
+   *    When given a QualifiedId[] or string[] the method will fetch the freshest list of devices for those users (since they are not given by the consumer). As a consequence no ClientMismatch error will trigger and we will ignore missing clients when sending
+   *    When given a QualifiedUserClients or UserClients the method will only send to the clients listed in the userIds. This could lead to ClientMismatch (since the given list of devices might not be the freshest one and new clients could have been created)
+   *    When given a QualifiedId[] or QualifiedUserClients the method will send the message through the federated API endpoint
+   *    When given a string[] or UserClients the method will send the message through the old API endpoint
+   * @return resolves with the sent message
+   */
   public async send<T extends OtrMessage>(
     params: XOR<SendMlsMessageParams<T>, SendProteusMessageParams<T>>,
   ): Promise<T> {
