@@ -33,6 +33,13 @@ import {MessageBuilder} from './message/MessageBuilder';
 import {OtrMessage} from './message/OtrMessage';
 
 describe('ConversationService', () => {
+  beforeAll(() => {
+    jasmine.clock().install();
+  });
+  afterAll(() => {
+    jasmine.clock().uninstall();
+  });
+
   function buildConversationService(federated?: boolean) {
     const client = new APIClient({urls: APIClient.BACKEND.STAGING});
     spyOn(client.api.conversation, 'postMlsMessage').and.returnValue(Promise.resolve([] as unknown as MlsEvent));
