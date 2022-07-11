@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.248](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-debug/compare/@wireapp/bot-handler-debug@0.4.247...@wireapp/bot-handler-debug@0.4.248) (2022-07-08)
+
+**Note:** Version bump only for package @wireapp/bot-handler-debug
+
+
+
+
+
+## [0.4.247](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-debug/compare/@wireapp/bot-handler-debug@0.4.246...@wireapp/bot-handler-debug@0.4.247) (2022-07-08)
+
+**Note:** Version bump only for package @wireapp/bot-handler-debug
+
+
+
+
+
+## [0.4.246](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-debug/compare/@wireapp/bot-handler-debug@0.4.245...@wireapp/bot-handler-debug@0.4.246) (2022-07-08)
+
+**Note:** Version bump only for package @wireapp/bot-handler-debug
+
+
+
+
+
+## [0.4.245](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-debug/compare/@wireapp/bot-handler-debug@0.4.244...@wireapp/bot-handler-debug@0.4.245) (2022-07-08)
+
+**Note:** Version bump only for package @wireapp/bot-handler-debug
+
+
+
+
+
+## [0.4.244](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-debug/compare/@wireapp/bot-handler-debug@0.4.243...@wireapp/bot-handler-debug@0.4.244) (2022-07-08)
+
+**Note:** Version bump only for package @wireapp/bot-handler-debug
+
+
+
+
+
+## [0.4.243](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-debug/compare/@wireapp/bot-handler-debug@0.4.242...@wireapp/bot-handler-debug@0.4.243) (2022-07-08)
+
+**Note:** Version bump only for package @wireapp/bot-handler-debug
+
+
+
+
+
 ## [0.4.242](https://github.com/wireapp/wire-web-packages/tree/main/packages/bot-handler-debug/compare/@wireapp/bot-handler-debug@0.4.241...@wireapp/bot-handler-debug@0.4.242) (2022-07-07)
 
 **Note:** Version bump only for package @wireapp/bot-handler-debug

@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [19.13.4](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.13.3...@wireapp/api-client@19.13.4) (2022-07-08)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [19.13.3](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.13.2...@wireapp/api-client@19.13.3) (2022-07-08)
+
+
+### Bug Fixes
+
+* broken mls endpoint ([#4325](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4325)) ([d46149a](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/d46149a74eb02850970ad1210cf3ff1f3ce786d1))
+
+
+
+
+
+## [19.13.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.13.1...@wireapp/api-client@19.13.2) (2022-07-08)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [19.13.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.13.0...@wireapp/api-client@19.13.1) (2022-07-08)
+
+
+### Bug Fixes
+
+* issue with mls typing ([#4322](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4322)) ([a5dad86](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/a5dad86e728ed986c4e068d7b8842bd5278734ba))
+
+
+
+
+
+# [19.13.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.12.2...@wireapp/api-client@19.13.0) (2022-07-08)
+
+
+### Features
+
+* **api-client:** add IDP_ISSUER_IN_USE error label ([#4323](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/issues/4323)) ([b426569](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/commit/b42656966efad732dc36b22b05011c76da4aae22))
+
+
+
+
+
 ## [19.12.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@19.12.1...@wireapp/api-client@19.12.2) (2022-07-07)
 
 **Note:** Version bump only for package @wireapp/api-client
