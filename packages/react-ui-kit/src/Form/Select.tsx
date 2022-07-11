@@ -32,12 +32,11 @@ export type SelectOption = {
   description?: string;
 };
 
-export interface SelectProps<T extends SelectOption = SelectOption> {
+interface CommonSelectProps<T extends SelectOption = SelectOption> {
   id: string;
-  onChange: (selectedOption: T['value']) => void;
   dataUieName: string;
   options: T[];
-  value?: T | null;
+  isMultiSelect?: boolean;
   helperText?: string;
   label?: string;
   disabled?: boolean;
@@ -46,6 +45,20 @@ export interface SelectProps<T extends SelectOption = SelectOption> {
   error?: ReactElement;
   wrapperCSS?: CSSObject;
 }
+
+interface SingleSelectProps<T extends SelectOption = SelectOption> extends CommonSelectProps<T> {
+  onChange: (selectedOption: T) => void;
+  value?: T | null;
+}
+
+interface MultipleSelectProps<T extends SelectOption = SelectOption> extends CommonSelectProps<T> {
+  onChange: (selectedOption: T[]) => void;
+  value?: T[] | null;
+}
+
+// export type SelectProps<T extends SelectOption = SelectOption, Multiple = boolean> = Multiple extends true ?
+//   MultipleSelectProps<T> :
+//   SingleSelectProps<T>
 
 const ArrowDown = (
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
@@ -71,11 +84,11 @@ export const selectStyle: <T>(theme: Theme, props, error?: boolean) => CSSObject
   cursor: disabled ? 'normal' : 'pointer',
   fontSize: '16px',
   fontWeight: 300,
-  paddingRight: '30px',
+  height: 'auto',
+  minHeight: '48px',
+  padding: 0,
+  paddingRight: '40px',
   textAlign: 'left',
-  textOverflow: 'ellipsis',
-  overflow: 'hidden',
-  whiteSpace: 'nowrap',
   marginBottom: error && '8px',
   '&:invalid, option:first-of-type': {
     color: theme.general.dangerColor,
@@ -91,7 +104,8 @@ export const selectStyle: <T>(theme: Theme, props, error?: boolean) => CSSObject
   '& > svg': {
     fill: disabled ? theme.Input.placeholderColor : theme.general.color,
     position: 'absolute',
-    top: '1rem',
+    top: '50%',
+    transform: 'translateY(-50%)',
     right: '1rem',
   },
 });
@@ -112,8 +126,12 @@ const dropdownStyles = (theme: Theme, isDropdownOpen: boolean): CSSObject => ({
   zIndex: 9,
 });
 
-const dropdownOptionStyles = (theme: Theme, isSelected: boolean): CSSObject => ({
-  background: isSelected ? theme.general.primaryColor : theme.general.backgroundColor,
+const dropdownOptionStyles = (theme: Theme, isSelected = false, isHoveredOption = false): CSSObject => ({
+  background: isSelected
+    ? theme.general.primaryColor
+    : isHoveredOption
+    ? theme.Select.contrastTextColor
+    : theme.general.backgroundColor,
   listStyle: 'none',
   padding: '10px 20px 14px',
   cursor: 'pointer',
@@ -145,28 +163,37 @@ const filterSelectProps = props => filterProps(props, ['markInvalid']);
 
 const placeholderText = '- Please select -';
 
-export const Select = <T extends SelectOption = SelectOption>({
-  id,
-  label,
-  error,
-  helperText,
-  options = [],
-  value = null,
-  onChange,
-  required,
-  markInvalid,
-  dataUieName,
-  wrapperCSS = {},
-  ...props
-}: SelectProps<T>) => {
-  const currentOption = options.findIndex(option => option.value === value?.value);
+const isSingle = (
+  props: SingleSelectProps<SelectOption> | MultipleSelectProps<SelectOption>,
+): props is SingleSelectProps<SelectOption> => !(props as SingleSelectProps).isMultiSelect;
+
+const isMultiple = (
+  props: SingleSelectProps<SelectOption> | MultipleSelectProps<SelectOption>,
+): props is MultipleSelectProps<SelectOption> => (props as MultipleSelectProps).isMultiSelect;
+
+export const Select = <T extends SelectOption = SelectOption>(props: SingleSelectProps<T> | MultipleSelectProps<T>) => {
+  const {
+    id,
+    label,
+    error,
+    helperText,
+    options = [],
+    isMultiSelect = false,
+    value = null,
+    onChange,
+    required,
+    markInvalid,
+    dataUieName,
+    wrapperCSS = {},
+    ...rest
+  } = props;
 
   const selectContainerRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<number | null>(currentOption === -1 ? null : currentOption);
 
-  const hasSelectedOption = selectedOption !== null;
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
+
   const hasError = !!error;
 
   const scrollToCurrentOption = (idx: number) => {
@@ -183,19 +210,48 @@ export const Select = <T extends SelectOption = SelectOption>({
 
   const onToggleDropdown = () => setIsDropdownOpen(prevState => !prevState);
 
-  const onOptionSelect = (idx: number) => {
+  const onOptionSelect = (idx: number | null) => {
     setSelectedOption(idx);
-    onChange(options[idx].value);
-    scrollToCurrentOption(idx);
+
+    if (idx !== null) {
+      scrollToCurrentOption(idx);
+    }
   };
 
   const onOptionChange = (idx: number) => {
-    onOptionSelect(idx);
+    scrollToCurrentOption(idx);
+
+    if (isMultiple(props)) {
+      const {value: multipleValue, onChange: onMultipleValueChange} = props;
+
+      if (multipleValue.some(val => val.value === options[idx].value)) {
+        const filteredValues = multipleValue.filter(val => val.value !== options[idx].value);
+
+        onMultipleValueChange(filteredValues);
+      } else {
+        const optionsBefore = [...multipleValue.slice(0, idx)];
+        const optionsAfter = [...multipleValue.slice(idx)];
+
+        onMultipleValueChange([...optionsBefore, options[idx], ...optionsAfter]);
+      }
+    }
+
+    if (isSingle(props)) {
+      props.onChange(options[idx]);
+    }
+
     setIsDropdownOpen(false);
   };
 
   const handleListKeyDown = e => {
     switch (e.key) {
+      case ' ':
+      case 'SpaceBar':
+      case 'Enter':
+        e.preventDefault();
+        onOptionChange(selectedOption);
+        break;
+
       case 'Escape':
         e.preventDefault();
         setIsDropdownOpen(false);
@@ -227,19 +283,6 @@ export const Select = <T extends SelectOption = SelectOption>({
     }
   };
 
-  const handleKeyDown = index => e => {
-    switch (e.key) {
-      case ' ':
-      case 'SpaceBar':
-      case 'Enter':
-        e.preventDefault();
-        onOptionChange(index);
-        break;
-      default:
-        break;
-    }
-  };
-
   const handleOutsideClick = (event: MouseEvent) => {
     if (selectContainerRef.current && !selectContainerRef.current.contains(event.target as Node)) {
       setIsDropdownOpen(false);
@@ -253,6 +296,11 @@ export const Select = <T extends SelectOption = SelectOption>({
       window.removeEventListener('click', handleOutsideClick);
     };
   }, []);
+
+  const mapCurrentValue = (currentValues, attr = 'label') => currentValues.map(option => option[attr]).join(', ');
+
+  const selectedLabel = isMultiple(props) ? mapCurrentValue(props.value) : props.value ? props.value.label : null;
+  const selectedValue = isMultiple(props) ? mapCurrentValue(value, 'value') : props.value ? props.value.value : null;
 
   return (
     <div
@@ -273,24 +321,27 @@ export const Select = <T extends SelectOption = SelectOption>({
         </InputLabel>
       )}
 
-      <div css={{position: 'relative'}}>
+      <div css={{position: 'relative', width: '100%'}}>
         <button
           type="button"
-          aria-activedescendant={hasSelectedOption ? value.label : ''}
           aria-expanded={isDropdownOpen}
           aria-haspopup="listbox"
           aria-labelledby={id}
           id={id}
           onClick={onToggleDropdown}
           onKeyDown={handleListKeyDown}
-          css={(theme: Theme) => selectStyle(theme, props, hasError)}
-          {...filterSelectProps(props)}
+          css={(theme: Theme) => selectStyle(theme, rest, hasError)}
           data-uie-name={dataUieName}
-          {...(hasSelectedOption && {
-            'data-value': value.value,
+          {...(selectedLabel && {
+            'aria-activedescendant': selectedLabel,
           })}
+          {...(selectedValue && {
+            'data-value': selectedValue,
+          })}
+          {...filterSelectProps(rest)}
         >
-          {hasSelectedOption ? value.label : placeholderText}
+          <span css={{display: 'block', padding: '8px 16px'}}>{selectedLabel ?? placeholderText}</span>
+
           {ArrowDown}
         </button>
 
@@ -306,18 +357,20 @@ export const Select = <T extends SelectOption = SelectOption>({
           })}
         >
           {options.map((option, index) => {
-            const isSelected = currentOption == index;
+            const isSelected = isMultiple(props)
+              ? props.value.some(val => val.value === option.value)
+              : props.value && props.value.value === option.value;
+            const isHoveredOption = selectedOption === index;
 
             return (
               <li
                 key={option.value}
                 id={option.value.toString()}
                 role="option"
-                aria-selected={isSelected}
-                tabIndex={0}
-                onKeyDown={handleKeyDown(index)}
+                aria-selected={isHoveredOption || isSelected}
+                tabIndex={-1}
                 onClick={() => onOptionChange(index)}
-                css={(theme: Theme) => dropdownOptionStyles(theme, isSelected)}
+                css={(theme: Theme) => dropdownOptionStyles(theme, isSelected, isHoveredOption)}
                 {...(dataUieName && {
                   'data-uie-name': `option-${dataUieName}`,
                   'data-uie-value': option.value,
