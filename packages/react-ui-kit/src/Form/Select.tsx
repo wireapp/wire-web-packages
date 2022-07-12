@@ -154,10 +154,10 @@ const dropdownOptionStyles = (
         },
       }),
   '&:first-of-type': {
-    borderRadius: '10px 10px 0 0',
+    borderRadius: '12px 12px 0 0',
   },
   '&:last-of-type': {
-    borderRadius: '0 0 10px 10px',
+    borderRadius: '0 0 12px 12px',
   },
   '&:not(:last-of-type)': {
     borderBottom: `1px solid ${theme.Select.borderColor}`,
@@ -198,7 +198,7 @@ export const Select = <T extends SelectOption = SelectOption>(props: SingleSelec
   const listRef = useRef<HTMLUListElement>(null);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [hoveredOptionIdx, setHoveredOptionIdx] = useState(null);
 
   const hasError = !!error;
 
@@ -217,7 +217,7 @@ export const Select = <T extends SelectOption = SelectOption>(props: SingleSelec
   const onToggleDropdown = () => setIsDropdownOpen(prevState => !prevState);
 
   const onOptionSelect = (idx: number | null) => {
-    setSelectedOption(idx);
+    setHoveredOptionIdx(idx);
 
     if (idx !== null) {
       scrollToCurrentOption(idx);
@@ -263,7 +263,7 @@ export const Select = <T extends SelectOption = SelectOption>(props: SingleSelec
       case 'SpaceBar':
       case 'Enter':
         e.preventDefault();
-        onOptionChange(selectedOption, isMultiSelect);
+        onOptionChange(hoveredOptionIdx, isMultiSelect);
         break;
 
       case 'Escape':
@@ -277,7 +277,7 @@ export const Select = <T extends SelectOption = SelectOption>(props: SingleSelec
         }
 
         e.preventDefault();
-        onOptionSelect(selectedOption - 1 >= 0 ? selectedOption - 1 : options.length - 1);
+        onOptionSelect(hoveredOptionIdx - 1 >= 0 ? hoveredOptionIdx - 1 : options.length - 1);
         break;
       case 'ArrowDown':
       case 'ArrowRight':
@@ -286,10 +286,10 @@ export const Select = <T extends SelectOption = SelectOption>(props: SingleSelec
         }
 
         e.preventDefault();
-        if (selectedOption === null) {
+        if (hoveredOptionIdx === null) {
           onOptionSelect(0);
         } else {
-          onOptionSelect(selectedOption === options.length - 1 ? 0 : selectedOption + 1);
+          onOptionSelect(hoveredOptionIdx === options.length - 1 ? 0 : hoveredOptionIdx + 1);
         }
         break;
       default:
@@ -379,7 +379,7 @@ export const Select = <T extends SelectOption = SelectOption>(props: SingleSelec
             const isSelected = isMultiple(props)
               ? props.value.some(val => val.value === option.value)
               : props.value && props.value.value === option.value;
-            const isHoveredOption = selectedOption === index;
+            const isHoveredOption = hoveredOptionIdx === index;
 
             return (
               <li
