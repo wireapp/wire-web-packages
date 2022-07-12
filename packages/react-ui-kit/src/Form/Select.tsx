@@ -31,6 +31,7 @@ export type SelectOption = {
   value: string | number;
   label: string;
   description?: string;
+  isDisabled?: boolean;
 };
 
 interface CommonSelectProps<T extends SelectOption = SelectOption> {
@@ -123,11 +124,16 @@ const dropdownStyles = (theme: Theme, isDropdownOpen: boolean): CSSObject => ({
   zIndex: 9,
 });
 
-const dropdownOptionStyles = (theme: Theme, isSelected = false, isMultiSelect = false): CSSObject => ({
+const dropdownOptionStyles = (
+  theme: Theme,
+  isSelected = false,
+  isMultiSelect = false,
+  isDisabled = false,
+): CSSObject => ({
   background: isSelected ? theme.general.primaryColor : theme.general.backgroundColor,
   listStyle: 'none',
   padding: '10px 20px 14px',
-  cursor: 'pointer',
+  cursor: isDisabled ? 'not-allowed' : 'pointer',
   fontSize: '16px',
   fontWeight: 300,
   lineHeight: '24px',
@@ -218,32 +224,38 @@ export const Select = <T extends SelectOption = SelectOption>(props: SingleSelec
     }
   };
 
-  const onOptionChange = (idx: number, onCheckboxClick = false) => {
-    scrollToCurrentOption(idx);
+  const onOptionChange =
+    (idx: number, onCheckboxClick = false) =>
+    ev => {
+      scrollToCurrentOption(idx);
 
-    if (isMultiple(props)) {
-      const {value: multipleValue, onChange: onMultipleValueChange} = props;
+      if (isMultiple(props)) {
+        if (onCheckboxClick) {
+          ev.stopPropagation();
+        }
 
-      if (multipleValue.some(val => val.value === options[idx].value)) {
-        const filteredValues = multipleValue.filter(val => val.value !== options[idx].value);
+        const {value: multipleValue, onChange: onMultipleValueChange} = props;
 
-        onMultipleValueChange(filteredValues);
-      } else {
-        const optionsBefore = [...multipleValue.slice(0, idx)];
-        const optionsAfter = [...multipleValue.slice(idx)];
+        if (multipleValue.some(val => val.value === options[idx].value)) {
+          const filteredValues = multipleValue.filter(val => val.value !== options[idx].value);
 
-        onMultipleValueChange([...optionsBefore, options[idx], ...optionsAfter]);
+          onMultipleValueChange(filteredValues);
+        } else {
+          const optionsBefore = [...multipleValue.slice(0, idx)];
+          const optionsAfter = [...multipleValue.slice(idx)];
+
+          onMultipleValueChange([...optionsBefore, options[idx], ...optionsAfter]);
+        }
       }
-    }
 
-    if (isSingle(props)) {
-      props.onChange(options[idx]);
-    }
+      if (isSingle(props)) {
+        props.onChange(options[idx]);
+      }
 
-    if (!onCheckboxClick) {
-      setIsDropdownOpen(false);
-    }
-  };
+      if (!onCheckboxClick) {
+        setIsDropdownOpen(false);
+      }
+    };
 
   const handleListKeyDown = e => {
     switch (e.key) {
@@ -376,9 +388,18 @@ export const Select = <T extends SelectOption = SelectOption>(props: SingleSelec
                 role="option"
                 aria-selected={isHoveredOption || isSelected}
                 tabIndex={-1}
-                onClick={() => onOptionChange(index)}
+                onClick={ev => {
+                  if (!option.isDisabled) {
+                    onOptionChange(index)(ev);
+                  }
+                }}
                 css={(theme: Theme) =>
-                  dropdownOptionStyles(theme, !isMultiSelect && (isSelected || isHoveredOption), isMultiSelect)
+                  dropdownOptionStyles(
+                    theme,
+                    !isMultiSelect && (isSelected || isHoveredOption),
+                    isMultiSelect,
+                    option.isDisabled,
+                  )
                 }
                 {...(dataUieName && {
                   'data-uie-name': `option-${dataUieName}`,
@@ -389,9 +410,10 @@ export const Select = <T extends SelectOption = SelectOption>(props: SingleSelec
                   <Checkbox
                     id={`${option.value.toString()}-checkbox`}
                     checked={isSelected}
-                    onChange={() => onOptionChange(index, true)}
+                    onChange={onOptionChange(index, true)}
                     wrapperCSS={{gridArea: 'checkbox'}}
                     checkboxClassName={isHoveredOption && 'hover'}
+                    disabled={option.isDisabled}
                   />
                 )}
 

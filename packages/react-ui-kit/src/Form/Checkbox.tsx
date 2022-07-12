@@ -133,6 +133,7 @@ export const Checkbox: React.FC<CheckboxProps<HTMLInputElement>> = React.forward
         ...wrapperCSS,
       })}
       style={style}
+      onClick={event => event.stopPropagation()}
     >
       <input
         type="checkbox"
