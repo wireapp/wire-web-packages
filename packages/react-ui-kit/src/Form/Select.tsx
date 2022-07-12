@@ -25,6 +25,7 @@ import {filterProps} from '../util';
 import {inputStyle} from './Input';
 import React, {ReactElement, useEffect, useRef, useState} from 'react';
 import InputLabel from './InputLabel';
+import {Checkbox} from './Checkbox';
 
 export type SelectOption = {
   value: string | number;
@@ -55,10 +56,6 @@ interface MultipleSelectProps<T extends SelectOption = SelectOption> extends Com
   onChange: (selectedOption: T[]) => void;
   value?: T[] | null;
 }
-
-// export type SelectProps<T extends SelectOption = SelectOption, Multiple = boolean> = Multiple extends true ?
-//   MultipleSelectProps<T> :
-//   SingleSelectProps<T>
 
 const ArrowDown = (
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
@@ -126,12 +123,8 @@ const dropdownStyles = (theme: Theme, isDropdownOpen: boolean): CSSObject => ({
   zIndex: 9,
 });
 
-const dropdownOptionStyles = (theme: Theme, isSelected = false, isHoveredOption = false): CSSObject => ({
-  background: isSelected
-    ? theme.general.primaryColor
-    : isHoveredOption
-    ? theme.Select.contrastTextColor
-    : theme.general.backgroundColor,
+const dropdownOptionStyles = (theme: Theme, isSelected = false, isMultiSelect = false): CSSObject => ({
+  background: isSelected ? theme.general.primaryColor : theme.general.backgroundColor,
   listStyle: 'none',
   padding: '10px 20px 14px',
   cursor: 'pointer',
@@ -140,6 +133,20 @@ const dropdownOptionStyles = (theme: Theme, isSelected = false, isHoveredOption 
   lineHeight: '24px',
   letterSpacing: '0.05px',
   color: isSelected ? theme.Select.contrastTextColor : theme.general.color,
+  ...(isMultiSelect
+    ? {
+        display: 'grid',
+        gridTemplateAreas: `"checkbox label"
+      ". description"`,
+        gridTemplateColumns: '30px 1fr',
+      }
+    : {
+        '&:hover, &:active, &:focus': {
+          background: theme.general.primaryColor,
+          borderColor: theme.general.primaryColor,
+          color: theme.Select.contrastTextColor,
+        },
+      }),
   '&:first-of-type': {
     borderRadius: '10px 10px 0 0',
   },
@@ -152,24 +159,17 @@ const dropdownOptionStyles = (theme: Theme, isSelected = false, isHoveredOption 
   '&:not(:first-of-type)': {
     borderTop: `1px solid ${theme.Select.borderColor}`,
   },
-  '&:hover, &:active, &:focus': {
-    background: theme.general.primaryColor,
-    borderColor: theme.general.primaryColor,
-    color: theme.Select.contrastTextColor,
-  },
 });
 
 const filterSelectProps = props => filterProps(props, ['markInvalid']);
 
 const placeholderText = '- Please select -';
 
-const isSingle = (
-  props: SingleSelectProps<SelectOption> | MultipleSelectProps<SelectOption>,
-): props is SingleSelectProps<SelectOption> => !(props as SingleSelectProps).isMultiSelect;
+const isSingle = (props: SingleSelectProps | MultipleSelectProps): props is SingleSelectProps =>
+  !(props as SingleSelectProps).isMultiSelect;
 
-const isMultiple = (
-  props: SingleSelectProps<SelectOption> | MultipleSelectProps<SelectOption>,
-): props is MultipleSelectProps<SelectOption> => (props as MultipleSelectProps).isMultiSelect;
+const isMultiple = (props: SingleSelectProps | MultipleSelectProps): props is MultipleSelectProps =>
+  (props as MultipleSelectProps).isMultiSelect;
 
 export const Select = <T extends SelectOption = SelectOption>(props: SingleSelectProps<T> | MultipleSelectProps<T>) => {
   const {
@@ -218,7 +218,7 @@ export const Select = <T extends SelectOption = SelectOption>(props: SingleSelec
     }
   };
 
-  const onOptionChange = (idx: number) => {
+  const onOptionChange = (idx: number, onCheckboxClick = false) => {
     scrollToCurrentOption(idx);
 
     if (isMultiple(props)) {
@@ -240,7 +240,9 @@ export const Select = <T extends SelectOption = SelectOption>(props: SingleSelec
       props.onChange(options[idx]);
     }
 
-    setIsDropdownOpen(false);
+    if (!onCheckboxClick) {
+      setIsDropdownOpen(false);
+    }
   };
 
   const handleListKeyDown = e => {
@@ -249,7 +251,7 @@ export const Select = <T extends SelectOption = SelectOption>(props: SingleSelec
       case 'SpaceBar':
       case 'Enter':
         e.preventDefault();
-        onOptionChange(selectedOption);
+        onOptionChange(selectedOption, isMultiSelect);
         break;
 
       case 'Escape':
@@ -297,10 +299,15 @@ export const Select = <T extends SelectOption = SelectOption>(props: SingleSelec
     };
   }, []);
 
-  const mapCurrentValue = (currentValues, attr = 'label') => currentValues.map(option => option[attr]).join(', ');
+  const mapCurrentValue = (currentValues = [], attr = 'label') =>
+    currentValues.length > 0 ? currentValues.map(option => option[attr]).join(', ') : null;
 
   const selectedLabel = isMultiple(props) ? mapCurrentValue(props.value) : props.value ? props.value.label : null;
-  const selectedValue = isMultiple(props) ? mapCurrentValue(value, 'value') : props.value ? props.value.value : null;
+  const selectedValue = isMultiple(props)
+    ? mapCurrentValue(props.value, 'value')
+    : props.value
+    ? props.value.value
+    : null;
 
   return (
     <div
@@ -370,13 +377,25 @@ export const Select = <T extends SelectOption = SelectOption>(props: SingleSelec
                 aria-selected={isHoveredOption || isSelected}
                 tabIndex={-1}
                 onClick={() => onOptionChange(index)}
-                css={(theme: Theme) => dropdownOptionStyles(theme, isSelected, isHoveredOption)}
+                css={(theme: Theme) =>
+                  dropdownOptionStyles(theme, !isMultiSelect && (isSelected || isHoveredOption), isMultiSelect)
+                }
                 {...(dataUieName && {
                   'data-uie-name': `option-${dataUieName}`,
                   'data-uie-value': option.value,
                 })}
               >
-                {option.label}
+                {isMultiSelect && (
+                  <Checkbox
+                    id={`${option.value.toString()}-checkbox`}
+                    checked={isSelected}
+                    onChange={() => onOptionChange(index, true)}
+                    wrapperCSS={{gridArea: 'checkbox'}}
+                    checkboxClassName={isHoveredOption && 'hover'}
+                  />
+                )}
+
+                <span css={{gridArea: 'label'}}>{option.label}</span>
 
                 {option.description && (
                   <p
@@ -384,6 +403,7 @@ export const Select = <T extends SelectOption = SelectOption>(props: SingleSelec
                       marginBottom: 0,
                       fontSize: '14px',
                       color: isSelected ? theme.general.color : theme.Input.labelColor,
+                      gridArea: 'description',
                     })}
                   >
                     {option.description}
