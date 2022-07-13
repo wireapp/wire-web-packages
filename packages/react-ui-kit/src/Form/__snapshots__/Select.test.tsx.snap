@@ -112,6 +112,11 @@ exports[`"Select" renders 1`] = `
 }
 
 .emotion-5 {
+  fill: rgb(29, 30, 31);
+  overflow: visible;
+}
+
+.emotion-6 {
   height: 0;
   visibility: hidden;
   margin: 3px 0 0;
@@ -150,18 +155,20 @@ exports[`"Select" renders 1`] = `
           - Please select -
         </span>
         <svg
-          height="16"
+          className="emotion-5"
+          height={16}
           viewBox="0 0 16 16"
-          width="16"
-          xmlns="http://www.w3.org/2000/svg"
+          width={16}
         >
-          <path
-            d="M7.99963 12.5711L15.6565 4.91421L14.2423 3.5L7.99963 9.74264L1.75699 3.5L0.342773 4.91421L7.99963 12.5711Z"
-          />
+          <g>
+            <path
+              d="M7.99963 12.5711L15.6565 4.91421L14.2423 3.5L7.99963 9.74264L1.75699 3.5L0.342773 4.91421L7.99963 12.5711Z"
+            />
+          </g>
         </svg>
       </button>
       <ul
-        className="emotion-5"
+        className="emotion-6"
         onKeyDown={[Function]}
         role="listbox"
         tabIndex={-1}
@@ -274,6 +281,11 @@ exports[`"Select" renders as disabled 1`] = `
 }
 
 .emotion-5 {
+  fill: rgb(29, 30, 31);
+  overflow: visible;
+}
+
+.emotion-6 {
   height: 0;
   visibility: hidden;
   margin: 3px 0 0;
@@ -313,18 +325,20 @@ exports[`"Select" renders as disabled 1`] = `
           - Please select -
         </span>
         <svg
-          height="16"
+          className="emotion-5"
+          height={16}
           viewBox="0 0 16 16"
-          width="16"
-          xmlns="http://www.w3.org/2000/svg"
+          width={16}
         >
-          <path
-            d="M7.99963 12.5711L15.6565 4.91421L14.2423 3.5L7.99963 9.74264L1.75699 3.5L0.342773 4.91421L7.99963 12.5711Z"
-          />
+          <g>
+            <path
+              d="M7.99963 12.5711L15.6565 4.91421L14.2423 3.5L7.99963 9.74264L1.75699 3.5L0.342773 4.91421L7.99963 12.5711Z"
+            />
+          </g>
         </svg>
       </button>
       <ul
-        className="emotion-5"
+        className="emotion-6"
         onKeyDown={[Function]}
         role="listbox"
         tabIndex={-1}
@@ -446,6 +460,11 @@ exports[`"Select" renders as invalid 1`] = `
 }
 
 .emotion-5 {
+  fill: rgb(29, 30, 31);
+  overflow: visible;
+}
+
+.emotion-6 {
   height: 0;
   visibility: hidden;
   margin: 3px 0 0;
@@ -484,18 +503,20 @@ exports[`"Select" renders as invalid 1`] = `
           - Please select -
         </span>
         <svg
-          height="16"
+          className="emotion-5"
+          height={16}
           viewBox="0 0 16 16"
-          width="16"
-          xmlns="http://www.w3.org/2000/svg"
+          width={16}
         >
-          <path
-            d="M7.99963 12.5711L15.6565 4.91421L14.2423 3.5L7.99963 9.74264L1.75699 3.5L0.342773 4.91421L7.99963 12.5711Z"
-          />
+          <g>
+            <path
+              d="M7.99963 12.5711L15.6565 4.91421L14.2423 3.5L7.99963 9.74264L1.75699 3.5L0.342773 4.91421L7.99963 12.5711Z"
+            />
+          </g>
         </svg>
       </button>
       <ul
-        className="emotion-5"
+        className="emotion-6"
         onKeyDown={[Function]}
         role="listbox"
         tabIndex={-1}
