@@ -14,7 +14,6 @@ const options = [
 ];
 
 const [firstSelectOption, setFirstSelectOption] = useState(options[0]);
-const [multiSelectOptions, setMultiSelectOptions] = useState([options[0], options[1], options[2]]);
 const [secondSelectOption, setSecondSelectOption] = useState(null);
 const [thirdSelectOption, setThirdSelectOption] = useState(null);
 
@@ -29,22 +28,6 @@ const [thirdSelectOption, setThirdSelectOption] = useState(null);
         options={options}
         value={firstSelectOption}
         onChange={setFirstSelectOption}
-        dataUieName="select"
-      />
-    </Column>
-  </Columns>
-
-  <Columns>
-    <Column>Multi Select</Column>
-
-    <Column>
-      <Select
-        isMultiSelect
-        label="Multi Select"
-        id="multiSelect"
-        options={options}
-        value={multiSelectOptions}
-        onChange={setMultiSelectOptions}
         dataUieName="select"
       />
     </Column>
