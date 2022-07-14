@@ -3,6 +3,105 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [28.4.5](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@28.4.4...@wireapp/core@28.4.5) (2022-07-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [28.4.4](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@28.4.3...@wireapp/core@28.4.4) (2022-07-08)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [28.4.3](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@28.4.2...@wireapp/core@28.4.3) (2022-07-08)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [28.4.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@28.4.1...@wireapp/core@28.4.2) (2022-07-08)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [28.4.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@28.4.0...@wireapp/core@28.4.1) (2022-07-08)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [28.4.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@28.3.6...@wireapp/core@28.4.0) (2022-07-08)
+
+
+### Features
+
+* **core:** Send MLS messages (FS-560) ([#4314](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/issues/4314)) ([2f29052](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/2f2905233b29c31294ec64e97c1e84998e28821f))
+
+
+
+
+
+## [28.3.6](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@28.3.5...@wireapp/core@28.3.6) (2022-07-08)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [28.3.5](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@28.3.4...@wireapp/core@28.3.5) (2022-07-07)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [28.3.4](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@28.3.3...@wireapp/core@28.3.4) (2022-07-07)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [28.3.3](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@28.3.2...@wireapp/core@28.3.3) (2022-07-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [28.3.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@28.3.1...@wireapp/core@28.3.2) (2022-07-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [28.3.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@28.3.0...@wireapp/core@28.3.1) (2022-07-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
 # [28.3.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@28.2.3...@wireapp/core@28.3.0) (2022-07-05)
 
 

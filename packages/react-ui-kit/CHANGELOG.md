@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.8.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@8.8.0...@wireapp/react-ui-kit@8.8.1) (2022-07-08)
+
+
+### Bug Fixes
+
+* **react-ui-kit:** fix select component current value empty ([#4324](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/issues/4324)) ([6bbe8e2](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/commit/6bbe8e27e2a02586a294ce751a8ecd7ee0d8b57a))
+
+
+
+
+
+# [8.8.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@8.7.3...@wireapp/react-ui-kit@8.8.0) (2022-07-07)
+
+
+### Features
+
+* update icon button to use new theming ([#4321](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/issues/4321)) ([9776175](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/commit/97761751b89d4fa214e4c5468357a6826570ea18))
+
+
+
+
+
+## [8.7.3](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@8.7.2...@wireapp/react-ui-kit@8.7.3) (2022-07-07)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+
+
+
+
+## [8.7.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@8.7.1...@wireapp/react-ui-kit@8.7.2) (2022-07-06)
+
+
+### Bug Fixes
+
+* toggle password input data-uie-name ([#4316](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/issues/4316)) ([55fa2e7](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/commit/55fa2e73bf7957816282112083597b10aee9b432))
+
+
+
+
+
 ## [8.7.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@8.7.0...@wireapp/react-ui-kit@8.7.1) (2022-07-05)
 
 
