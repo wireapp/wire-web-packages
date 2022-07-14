@@ -1047,7 +1047,7 @@ export class ConversationService {
     }
     await Promise.all(sendingPromises);
 
-    await this.notificationService.saveConversationCompoundGroupId(newConversation);
+    await this.notificationService.saveConversationGroupId(newConversation);
     // We fetch the fresh version of the conversation created on backend with the newly added users
     return this.getConversations(newConversation.id);
   }
