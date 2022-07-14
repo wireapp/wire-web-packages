@@ -304,7 +304,7 @@ export class NotificationService extends EventEmitter {
         if (!conversation) {
           throw new Error('no conv');
         }
-        this.saveConversationCompoundGroupId(conversation);
+        await this.saveConversationGroupId(conversation);
 
       case Events.CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE:
       case Events.CONVERSATION_EVENT.RENAME:
@@ -331,7 +331,7 @@ export class NotificationService extends EventEmitter {
    *
    * @param conversation conversation with group_id
    */
-  public async saveConversationCompoundGroupId(conversation: Conversation) {
+  public async saveConversationGroupId(conversation: Conversation) {
     if (conversation.group_id) {
       const {
         group_id: groupId,
