@@ -93,6 +93,7 @@ import type {
   TextMessage,
 } from './message/OtrMessage';
 import {XOR} from '@wireapp/commons/src/main/util/TypeUtil';
+import type {NotificationService} from '../notification';
 
 export enum MessageTargetMode {
   NONE,
@@ -206,6 +207,7 @@ export class ConversationService {
     cryptographyService: CryptographyService,
     private readonly config: {useQualifiedIds?: boolean},
     private readonly coreCryptoClientProvider: () => CoreCrypto,
+    private readonly notificationService: NotificationService,
   ) {
     this.messageTimer = new MessageTimer();
     this.messageService = new MessageService(this.apiClient, cryptographyService);
@@ -1045,6 +1047,7 @@ export class ConversationService {
     }
     await Promise.all(sendingPromises);
 
+    await this.notificationService.saveConversationCompoundGroupId(newConversation);
     // We fetch the fresh version of the conversation created on backend with the newly added users
     return this.getConversations(newConversation.id);
   }

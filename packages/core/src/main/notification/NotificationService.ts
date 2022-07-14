@@ -36,6 +36,7 @@ import {AbortHandler} from '@wireapp/api-client/src/tcp';
 import type {CoreCrypto} from '@otak/core-crypto/platforms/web/corecrypto';
 import {Decoder, Encoder} from 'bazinga64';
 import {QualifiedId} from '@wireapp/api-client/src/user';
+import {Conversation} from '@wireapp/api-client/src/conversation';
 
 export type HandledEventPayload = {
   event: Events.BackendEvent;
@@ -263,15 +264,10 @@ export class NotificationService extends EventEmitter {
           throw new Error('TODO');
         }
         const encryptedData = Decoder.fromBase64(event.data).asBytes;
-        const findGroupId = (conversationId: QualifiedId) => {
-          const base64groupId = localStorage.getItem(`${conversationId.id}@${conversationId.domain}`);
-          if (!base64groupId) {
-            throw new Error('group was not save in DB');
-          }
-          return Decoder.fromBase64(base64groupId).asBytes;
-        };
 
-        const groupId = findGroupId(event.qualified_conversation || {id: event.conversation, domain: ''});
+        const groupId = await this.getUint8ArrayFromConversationGroupId(
+          event.qualified_conversation || {id: event.conversation, domain: ''},
+        );
         const rawData = await coreCryptoClient.decryptMessage(groupId, encryptedData);
         if (!rawData) {
           // TODO
@@ -308,14 +304,8 @@ export class NotificationService extends EventEmitter {
         if (!conversation) {
           throw new Error('no conv');
         }
-        if (conversation.group_id) {
-          // If there is a groupId in the conversation, we need to store the conversationId => groupId pair in order to find the groupId when decrypting messages
-          // This is a bit hacky but since mls messages do not embed the groupId we need to keep a mapping of those
-          localStorage.setItem(
-            `${conversation.qualified_id.id}@${conversation.qualified_id.domain}`,
-            conversation.group_id,
-          );
-        }
+        this.saveConversationCompoundGroupId(conversation);
+
       case Events.CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE:
       case Events.CONVERSATION_EVENT.RENAME:
       case Events.CONVERSATION_EVENT.TYPING: {
@@ -332,5 +322,41 @@ export class NotificationService extends EventEmitter {
       }
     }
     return {event};
+  }
+
+  /**
+   * If there is a groupId in the conversation, we need to store the conversationId => groupId pair
+   * in order to find the groupId when decrypting messages
+   * This is a bit hacky but since mls messages do not embed the groupId we need to keep a mapping of those
+   *
+   * @param conversation conversation with group_id
+   */
+  public async saveConversationCompoundGroupId(conversation: Conversation) {
+    if (conversation.group_id) {
+      const {
+        group_id: groupId,
+        qualified_id: {id: conversationId, domain: conversationDomain},
+      } = conversation;
+      this.database.addCompoundGroupId({conversationDomain, conversationId, groupId});
+    }
+  }
+
+  /**
+   * If there is a matching conversationId => groupId pair in the database,
+   * we can find the groupId and return it as a Uint8Array
+   *
+   * @param conversationQualifiedId
+   */
+  public async getUint8ArrayFromConversationGroupId(conversationQualifiedId: QualifiedId) {
+    const {id: conversationId, domain: conversationDomain} = conversationQualifiedId;
+    const groupId = await this.database.getCompoundGroupId({
+      conversationId,
+      conversationDomain,
+    });
+
+    if (!groupId) {
+      throw new Error(`Could not find a group_id for conversation ${conversationId}@${conversationDomain}`);
+    }
+    return Decoder.fromBase64(groupId).asBytes;
   }
 }
