@@ -1,6 +1,7 @@
 Demo:
 
 ```js
+import {Fragment} from 'react';
 import {Columns, Column, ErrorMessage, Select} from '@wireapp/react-ui-kit';
 
 const options = [
@@ -12,7 +13,7 @@ const options = [
   {value: '6', label: 'Option 6'},
 ];
 
-<>
+<Fragment>
   <Columns>
     <Column>Select</Column>
 
