@@ -337,7 +337,7 @@ export class NotificationService extends EventEmitter {
         group_id: groupId,
         qualified_id: {id: conversationId, domain: conversationDomain},
       } = conversation;
-      this.database.addCompoundGroupId({conversationDomain, conversationId, groupId});
+      await this.database.addCompoundGroupId({conversationDomain, conversationId, groupId});
     }
   }
 
