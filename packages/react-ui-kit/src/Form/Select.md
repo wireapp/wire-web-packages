@@ -1,23 +1,18 @@
 Demo:
 
 ```js
-import {Fragment, useState} from 'react';
 import {Columns, Column, ErrorMessage, Select} from '@wireapp/react-ui-kit';
 
 const options = [
   {value: '1', label: 'Option 1 long long long long name'},
   {value: '2', label: 'Option 2 longest name'},
-  {value: '3', label: 'Option 3'},
+  {value: '3', label: 'Option 3', description: 'Custom description for select option'},
   {value: '4', label: 'Option 4', isDisabled: true},
   {value: '5', label: 'Option 5'},
   {value: '6', label: 'Option 6'},
 ];
 
-const [firstSelectOption, setFirstSelectOption] = useState(options[0]);
-const [secondSelectOption, setSecondSelectOption] = useState(null);
-const [thirdSelectOption, setThirdSelectOption] = useState(null);
-
-<Fragment>
+<>
   <Columns>
     <Column>Select</Column>
 
@@ -26,9 +21,22 @@ const [thirdSelectOption, setThirdSelectOption] = useState(null);
         label="Select"
         id="firstSelect"
         options={options}
-        value={firstSelectOption}
-        onChange={setFirstSelectOption}
         dataUieName="select"
+      />
+    </Column>
+  </Columns>
+
+  <Columns>
+    <Column>MultiSelect</Column>
+
+    <Column>
+      <Select
+        label="Select"
+        id="firstMultiSelect"
+        options={options}
+        defaultValue={options[0]}
+        dataUieName="firstMultipleSelect"
+        isMulti
       />
     </Column>
   </Columns>
@@ -38,7 +46,7 @@ const [thirdSelectOption, setThirdSelectOption] = useState(null);
 
     <Column>
       <Select
-        disabled
+        isDisabled
         label="Disabled select"
         id="disabledSelect"
         options={options}
@@ -57,8 +65,6 @@ const [thirdSelectOption, setThirdSelectOption] = useState(null);
         required
         id="requiredSelect"
         options={options}
-        value={secondSelectOption}
-        onChange={setSecondSelectOption}
         dataUieName="required-select"
       />
     </Column>
@@ -75,11 +81,9 @@ const [thirdSelectOption, setThirdSelectOption] = useState(null);
         required
         error={<ErrorMessage>Error message</ErrorMessage>}
         options={options}
-        value={thirdSelectOption ? options.find(option => option.value === thirdSelectOption) : null}
-        onChange={setThirdSelectOption}
         dataUieName="invalid-select"
       />
     </Column>
   </Columns>
-</Fragment>;
+</>;
 ```

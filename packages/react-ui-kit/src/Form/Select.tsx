@@ -18,38 +18,231 @@
  */
 
 /** @jsx jsx */
-import {jsx} from '@emotion/react';
+import {CSSObject, jsx} from '@emotion/react';
+import {useTheme} from '@emotion/react';
+import React, {FC, ReactElement} from 'react';
+import ReactSelect, {components, OptionProps} from 'react-select';
 
-import {CommonSelectProps, SelectContainer, SelectOption} from './SelectContainer';
+import {inputStyle} from './Input';
+import type {Theme} from '../Layout';
+import {ArrowDown} from '../Icon/ArrowDown';
+import InputLabel from './InputLabel';
+import {StylesConfig} from 'react-select/dist/declarations/src/styles';
+import {MenuProps} from 'react-select/dist/declarations/src/components/Menu';
 
-interface SingleSelectProps<T extends SelectOption = SelectOption> extends CommonSelectProps<T> {
-  value?: T | null;
-  onChange?: (selectedOption: T) => void;
-}
+const customStyles = (theme: Theme, markInvalid = false) => ({
+  indicatorSeparator: () => ({
+    display: 'none',
+  }),
+  indicatorsContainer: provided => ({
+    ...provided,
+  }),
+  container: (provided, {isDisabled, selectProps}) => {
+    const {menuIsOpen} = selectProps;
 
-export const Select = <T extends SelectOption = SelectOption>({
-  options = [],
-  value = null,
-  onChange,
-  ...rest
-}: SingleSelectProps<T>) => {
-  const onOptionChange = (idx: number) => {
-    onChange(options[idx]);
-  };
+    return {
+      ...inputStyle(theme, {disabled: isDisabled, markInvalid}),
+      padding: 0,
+      height: 'auto',
+      minHeight: '48px',
+      '&:-moz-focusring': {
+        color: 'transparent',
+        textShadow: '0 0 0 #000',
+      },
+      position: 'relative',
+      ...(isDisabled && {
+        backgroundColor: theme.Input.backgroundColorDisabled,
+        color: theme.Select.disabledColor,
+        cursor: 'default',
+      }),
+      ...(markInvalid && {
+        boxShadow: `0 0 0 1px ${theme.general.dangerColor}`,
+      }),
+      ...(menuIsOpen && {
+        boxShadow: `0 0 0 1px ${theme.general.primaryColor}`,
+      }),
+      ...(!menuIsOpen && {
+        '&:hover': {
+          boxShadow: `0 0 0 1px ${theme.Select.borderColor}`,
+        },
+        '&:focus, &:active': {
+          boxShadow: `0 0 0 1px ${theme.general.primaryColor}`,
+        },
+      }),
+      cursor: 'pointer',
+    };
+  },
+  control: (provided, {isDisabled}) => ({
+    display: 'flex',
+    alignItems: 'center',
+    appearance: 'none',
+    padding: '0 8px 0 16px',
+    height: 'auto',
+    minHeight: '48px',
+  }),
+  menu: provided => ({
+    ...provided,
+    boxShadow: `0 0 0 1px ${theme.general.primaryColor}, 0 4px 11px hsl(0deg 0% 0% / 10%)`,
+    borderRadius: 12,
+    marginBottom: 0,
+    marginTop: 4,
+  }),
+  menuList: provided => ({
+    ...provided,
+    paddingBottom: 0,
+    paddingTop: 0,
+  }),
+  option: (provided, {isDisabled, isFocused}) => ({
+    ...provided,
+    padding: '10px 20px',
+    cursor: isDisabled ? 'not-allowed' : 'pointer',
+    fontSize: '16px',
+    fontWeight: 300,
+    lineHeight: '24px',
+    ...(isFocused && {
+      background: theme.general.primaryColor,
+      borderColor: theme.general.primaryColor,
+      color: theme.Select.contrastTextColor,
+    }),
+    '&:hover, &:active, &:focus': {
+      background: theme.general.primaryColor,
+      borderColor: theme.general.primaryColor,
+      color: theme.Select.contrastTextColor,
+    },
+    '&:not(:last-of-type)': {
+      borderBottom: `1px solid ${theme.Select.borderColor}`,
+    },
+    '&:first-of-type': {
+      borderRadius: '12px 12px 0 0',
+    },
+    '&:last-of-type': {
+      borderRadius: '0 0 12px 12px',
+    },
+  }),
+  valueContainer: provided => ({
+    ...provided,
+    padding: 0,
+  }),
+});
 
-  const selectedLabel = value ? value.label : null;
-  const selectedValue = value ? value.value.toString() : null;
+const DropdownIndicator = props => (
+  <components.DropdownIndicator {...props}>
+    <ArrowDown />
+  </components.DropdownIndicator>
+);
 
-  const checkIsSelected = optionValue => value && value.value === optionValue;
+type Option = {
+  value: string | number;
+  label: string;
+  description?: string;
+  isDisabled?: boolean;
+};
+
+// eslint-disable-next-line react/display-name
+const CustomOption = (dataUieName: string) => (props: OptionProps<Option>) => {
+  const {children, data, isFocused} = props;
 
   return (
-    <SelectContainer
-      {...rest}
-      options={options}
-      onOptionChange={onOptionChange}
-      selectedLabel={selectedLabel}
-      selectedValue={selectedValue}
-      checkIsSelected={checkIsSelected}
-    />
+    <components.Option {...props}>
+      <div
+        {...(dataUieName && {
+          'data-uie-name': `option-${dataUieName}`,
+          'data-uie-value': children,
+        })}
+      >
+        <span>{children}</span>
+
+        {data?.description && (
+          <p
+            css={(theme: Theme) => ({
+              marginBottom: 0,
+              fontSize: '14px',
+              color: isFocused ? theme.Select.descriptionColor : theme.Input.labelColor,
+              gridArea: 'description',
+            })}
+          >
+            {data.description}
+          </p>
+        )}
+      </div>
+    </components.Option>
+  );
+};
+
+// eslint-disable-next-line react/display-name
+const Menu = (dataUieName: string) => (props: MenuProps) => {
+  const {children} = props;
+
+  return (
+    <components.Menu {...props}>
+      <div
+        {...(dataUieName && {
+          'data-uie-name': `dropdown-${dataUieName}`,
+        })}
+      >
+        {children}
+      </div>
+    </components.Menu>
+  );
+};
+
+interface CustomSelectProps {
+  id: string;
+  dataUieName: string;
+  wrapperCSS?: CSSObject;
+  label?: string;
+  helperText?: string;
+  error?: ReactElement;
+  required?: boolean;
+  markInvalid?: boolean;
+}
+
+export const Select: FC<CustomSelectProps> = ({
+  id,
+  label,
+  error,
+  helperText,
+  dataUieName,
+  wrapperCSS = {},
+  markInvalid = false,
+  required = false,
+  ...props
+}) => {
+  const theme = useTheme();
+  const hasError = !!error;
+
+  return (
+    <div
+      css={(theme: Theme) => ({
+        marginBottom: markInvalid ? '2px' : '20px',
+        width: '100%',
+        '&:focus-within label': {
+          color: theme.general.primaryColor,
+        },
+        ...wrapperCSS,
+      })}
+      data-uie-name={dataUieName}
+    >
+      {label && (
+        <InputLabel htmlFor={id} markInvalid={markInvalid} isRequired={required}>
+          {label}
+        </InputLabel>
+      )}
+
+      <ReactSelect
+        id={id}
+        styles={customStyles(theme as Theme, markInvalid) as StylesConfig}
+        components={{DropdownIndicator, Option: CustomOption(dataUieName), Menu: Menu(dataUieName)}}
+        {...props}
+      />
+
+      {!hasError && helperText && (
+        <p css={(theme: Theme) => ({fontSize: '12px', fontWeight: 400, color: theme.Input.labelColor, marginTop: 8})}>
+          {helperText}
+        </p>
+      )}
+
+      {error}
+    </div>
   );
 };
