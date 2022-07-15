@@ -31,12 +31,14 @@ import {INPUT_CLASSNAME, InputProps} from './Input';
 export interface StyledLabelProps<T = HTMLLabelElement> extends React.HTMLProps<T> {
   disabled?: boolean;
   markInvalid?: boolean;
+  alignCenter?: boolean;
 }
 
 const filterStyledLabelProps = (props: StyledLabelProps) => filterProps(props, ['markInvalid']);
 
 const StyledLabel = (props: StyledLabelProps) => {
-  const {disabled, markInvalid} = props;
+  const {disabled, markInvalid, alignCenter = false} = props;
+
   return (
     <label
       css={(theme: Theme) => ({
@@ -87,7 +89,7 @@ const StyledLabel = (props: StyledLabelProps) => {
         },
         position: 'relative',
         margin: '0 0 0 -16px',
-        width: '100%',
+        width: alignCenter ? 'auto' : '100%',
         lineHeight: 1.4,
         display: 'flex',
         opacity: disabled ? 0.56 : 1,
@@ -105,6 +107,7 @@ const StyledLabel = (props: StyledLabelProps) => {
 
 interface CheckboxProps<T = HTMLInputElement> extends InputProps<T> {
   id?: string;
+  alignCenter?: boolean;
   checkboxClassName?: string;
 }
 
@@ -151,7 +154,7 @@ export const Checkbox: React.FC<CheckboxProps<HTMLInputElement>> = React.forward
         {...filterCheckboxProps(props)}
       />
 
-      <StyledLabel htmlFor={id} disabled={disabled} markInvalid={props.markInvalid}>
+      <StyledLabel htmlFor={id} disabled={disabled} markInvalid={props.markInvalid} alignCenter={props.alignCenter}>
         {children}
       </StyledLabel>
     </div>
