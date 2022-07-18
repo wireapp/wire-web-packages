@@ -172,9 +172,7 @@ export const DropFileInput: React.FC<DropFileInputProps<HTMLInputElement>> = Rea
         <FlexBox align="center" justify="center" css={{position: 'relative'}}>
           <UploadIcon css={{position: 'absolute', left: '15px'}} />
           <div css={{maxWidth: '160px'}}>
-            <span css={dropFileZoneHeadingStyle} className="title">
-              {headingText}
-            </span>
+            <span css={dropFileZoneHeadingStyle}>{headingText}</span>
             <label
               aria-label={`${headingText} ${labelText} (${description})`}
               css={(theme: Theme) => dropFileZoneLabelStyle(theme)}
