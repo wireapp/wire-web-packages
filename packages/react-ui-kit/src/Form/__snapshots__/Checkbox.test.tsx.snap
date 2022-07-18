@@ -62,10 +62,6 @@ exports[`"Checkbox" renders (dark theme) 1`] = `
   border-color: #0667c8;
 }
 
-.wireinput.hover+.emotion-2::before {
-  border-color: #0667c8;
-}
-
 .wireinput+.emotion-2::before {
   background: #edeff0;
   border: 1.5px solid #9fa1a7;
@@ -207,10 +203,6 @@ exports[`"Checkbox" renders 1`] = `
   border-color: #0667c8;
 }
 
-.wireinput.hover+.emotion-2::before {
-  border-color: #0667c8;
-}
-
 .wireinput+.emotion-2::before {
   background: #edeff0;
   border: 1.5px solid #54585f;
@@ -349,10 +341,6 @@ exports[`"Checkbox" renders as invalid 1`] = `
 }
 
 .wireinput:hover+.emotion-2::before {
-  border-color: #0667c8;
-}
-
-.wireinput.hover+.emotion-2::before {
   border-color: #0667c8;
 }
 

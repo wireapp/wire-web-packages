@@ -73,7 +73,7 @@ const customStyles = (theme: Theme, markInvalid = false) => ({
       cursor: 'pointer',
     };
   },
-  control: (provided, {isDisabled}) => ({
+  control: () => ({
     display: 'flex',
     alignItems: 'center',
     appearance: 'none',
