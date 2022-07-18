@@ -1,10 +1,9 @@
 Demo:
 
 ```js
-import {Fragment} from 'react';
-import {Columns, Column, ErrorMessage, Select} from '@wireapp/react-ui-kit';
+import {Container, Columns, Column, ErrorMessage, Select} from '@wireapp/react-ui-kit';
 
-const options = [
+const selectOptions = [
   {value: '1', label: 'Option 1 long long long long name'},
   {value: '2', label: 'Option 2 longest name'},
   {value: '3', label: 'Option 3', description: 'Custom description for select option'},
@@ -13,17 +12,12 @@ const options = [
   {value: '6', label: 'Option 6'},
 ];
 
-<Fragment>
+<Container>
   <Columns>
     <Column>Select</Column>
 
     <Column>
-      <Select
-        label="Select"
-        id="firstSelect"
-        options={options}
-        dataUieName="select"
-      />
+      <Select label="Select" id="firstSelect" options={selectOptions} dataUieName="select" />
     </Column>
   </Columns>
 
@@ -34,8 +28,8 @@ const options = [
       <Select
         label="Select"
         id="firstMultiSelect"
-        options={options}
-        defaultValue={options[0]}
+        options={selectOptions}
+        defaultValue={selectOptions[0]}
         dataUieName="firstMultipleSelect"
         isMulti
       />
@@ -50,7 +44,7 @@ const options = [
         isDisabled
         label="Disabled select"
         id="disabledSelect"
-        options={options}
+        options={selectOptions}
         onChange={selectedOption => console.log('Selected option', selectedOption)}
         dataUieName="disabled-select"
       />
@@ -65,7 +59,7 @@ const options = [
         label="Required select"
         required
         id="requiredSelect"
-        options={options}
+        options={selectOptions}
         dataUieName="required-select"
       />
     </Column>
@@ -81,10 +75,10 @@ const options = [
         id="invalidSelect"
         required
         error={<ErrorMessage>Error message</ErrorMessage>}
-        options={options}
+        options={selectOptions}
         dataUieName="invalid-select"
       />
     </Column>
   </Columns>
-</Fragment>;
+</Container>;
 ```
