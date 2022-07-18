@@ -70,7 +70,7 @@ import {BackendFeatures} from '../APIClient';
 import {chunk} from '@wireapp/commons/src/main/util/ArrayUtil';
 import {MlsEvent} from './data/MlsEventData';
 
-type PostMlsMessageResponse = {
+export type PostMlsMessageResponse = {
   events: MlsEvent[];
   time: string;
 };
