@@ -21,7 +21,7 @@
 import {CSSObject, jsx} from '@emotion/react';
 import {useTheme} from '@emotion/react';
 import React, {FC, ReactElement} from 'react';
-import ReactSelect, {components, OptionProps} from 'react-select';
+import ReactSelect, {components, OptionProps, ValueContainerProps} from 'react-select';
 
 import {inputStyle} from './Input';
 import type {Theme} from '../Layout';
@@ -29,6 +29,7 @@ import {ArrowDown} from '../Icon/ArrowDown';
 import InputLabel from './InputLabel';
 import {StylesConfig} from 'react-select/dist/declarations/src/styles';
 import {MenuProps} from 'react-select/dist/declarations/src/components/Menu';
+import {StateManagerProps} from 'react-select/dist/declarations/src/useStateManager';
 
 const customStyles = (theme: Theme, markInvalid = false) => ({
   indicatorSeparator: () => ({
@@ -140,19 +141,36 @@ type Option = {
 
 // eslint-disable-next-line react/display-name
 const CustomOption = (dataUieName: string) => (props: OptionProps<Option>) => {
-  const {children, data, isFocused} = props;
+  const {children, data, isFocused, isMulti, isSelected} = props;
 
   return (
     <components.Option {...props}>
       <div
+        css={{
+          ...(isMulti && {
+            display: 'grid',
+            gridTemplateAreas: `"checkbox label"
+                                ". description"`,
+            gridTemplateColumns: '30px 1fr',
+          }),
+        }}
         {...(dataUieName && {
           'data-uie-name': `option-${dataUieName}`,
           'data-uie-value': children,
         })}
       >
-        <span>{children}</span>
+        {isMulti && (
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={() => null}
+            css={{gridArea: 'checkbox', width: 24, cursor: 'pointer'}}
+          />
+        )}
 
-        {data?.description && (
+        <span css={{gridArea: 'label'}}>{children}</span>
+
+        {data && data.description && (
           <p
             css={(theme: Theme) => ({
               marginBottom: 0,
@@ -186,7 +204,28 @@ const Menu = (dataUieName: string) => (props: MenuProps) => {
   );
 };
 
-interface CustomSelectProps {
+const renderValue = value => {
+  if (Array.isArray(value)) {
+    const currentValue = (i: number) => value[i].props.children;
+
+    if (value.length > 1) {
+      return `${currentValue(0)} + ${value.length - 1}`;
+    }
+
+    return currentValue(0);
+  }
+
+  return value;
+};
+
+const ValueContainer = ({children, ...restProps}: ValueContainerProps<Option>) => (
+  <components.ValueContainer {...restProps}>
+    {renderValue(children[0])}
+    {children[1]}
+  </components.ValueContainer>
+);
+
+interface CustomSelectProps extends StateManagerProps {
   id: string;
   dataUieName: string;
   wrapperCSS?: CSSObject;
@@ -206,6 +245,7 @@ export const Select: FC<CustomSelectProps> = ({
   wrapperCSS = {},
   markInvalid = false,
   required = false,
+  isMulti = false,
   ...props
 }) => {
   const theme = useTheme();
@@ -232,7 +272,10 @@ export const Select: FC<CustomSelectProps> = ({
       <ReactSelect
         id={id}
         styles={customStyles(theme as Theme, markInvalid) as StylesConfig}
-        components={{DropdownIndicator, Option: CustomOption(dataUieName), Menu: Menu(dataUieName)}}
+        components={{DropdownIndicator, Option: CustomOption(dataUieName), Menu: Menu(dataUieName), ValueContainer}}
+        hideSelectedOptions={false}
+        closeMenuOnSelect={!isMulti}
+        isMulti={isMulti}
         {...props}
       />
 

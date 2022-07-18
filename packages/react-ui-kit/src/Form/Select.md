@@ -86,5 +86,5 @@ const options = [
       />
     </Column>
   </Columns>
-</>;
+</Fragment>;
 ```
