@@ -33,6 +33,7 @@ export interface DropFileInputProps<T = HTMLInputElement> extends TextProps<T> {
   labelText: string;
   headingText: string;
   description?: string;
+  dropFileZoneWrapperCSS?: CSSObject;
 }
 
 const visuallyHiddenStyles: CSSObject = {
@@ -75,6 +76,9 @@ export const dropFileZoneLabelStyle: <T>(theme: Theme) => CSSObject = theme => {
     ':focus-within': {
       outline: `1px solid ${theme.general.primaryColor}`,
     },
+    ':hover': {
+      textDecoration: 'underline',
+    },
   };
 };
 
@@ -99,6 +103,7 @@ export const DropFileInput: React.FC<DropFileInputProps<HTMLInputElement>> = Rea
   const {
     onFilesUploaded,
     onInvalidFilesDropError,
+    dropFileZoneWrapperCSS,
     labelText,
     headingText,
     description,
@@ -159,7 +164,7 @@ export const DropFileInput: React.FC<DropFileInputProps<HTMLInputElement>> = Rea
   return (
     <div css={dropFileWrapperStyle}>
       <div
-        css={(theme: Theme) => dropFileZoneWrapperStyle(theme, isDraggedOver)}
+        css={{...(theme: Theme) => dropFileZoneWrapperStyle(theme, isDraggedOver), ...dropFileZoneWrapperCSS}}
         onDragOver={handleDragOver}
         onDragLeave={() => setIsDraggedOver(false)}
         onDrop={handleDrop}
