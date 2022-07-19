@@ -55,7 +55,7 @@ export const dropFileZoneWrapperStyle: <T>(theme: Theme, isDraggedOver: boolean)
   isDraggedOver,
 ) => ({
   width: '100%',
-  padding: '28px',
+  padding: '28px 12px',
   border: `1px dashed ${theme.general.primaryColor}`,
   borderBottomWidth: '2px',
   borderRadius: '6px',
@@ -175,9 +175,9 @@ export const DropFileInput: FC<DropFileInputProps<HTMLInputElement>> = forwardRe
           onDragLeave={resetDraggedOver}
           onDrop={handleDrop}
         >
-          <FlexBox align="center" justify="center" css={{position: 'relative'}}>
-            <UploadIcon css={{position: 'absolute', left: '15px'}} />
-            <div css={{maxWidth: '160px'}}>
+          <FlexBox align="center" justify="center" flexWrap="wrap" css={{maxWidth: '280px', margin: '0 auto'}}>
+            <UploadIcon css={{margin: '12px 0'}} />
+            <div css={{maxWidth: '160px', margin: '0 25px'}}>
               <span css={dropFileZoneHeadingStyle}>{headingText}</span>
               <label
                 aria-label={`${headingText} ${labelText} (${description})`}
