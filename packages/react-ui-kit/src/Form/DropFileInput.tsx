@@ -19,7 +19,7 @@
 
 /** @jsx jsx */
 import {CSSObject, jsx} from '@emotion/react';
-import React, {useState} from 'react';
+import React, {useState, FC, forwardRef, DragEvent} from 'react';
 
 import {COLOR} from '../Identity';
 import type {Theme} from '../Layout';
@@ -53,34 +53,30 @@ export const dropFileWrapperStyle: CSSObject = {
 export const dropFileZoneWrapperStyle: <T>(theme: Theme, isDraggedOver: boolean) => CSSObject = (
   theme,
   isDraggedOver,
-) => {
-  return {
-    width: '100%',
-    padding: '28px',
-    border: `1px dashed ${theme.general.primaryColor}`,
-    borderBottomWidth: '2px',
-    borderRadius: '6px',
-    textAlign: 'center',
-    backgroundColor: isDraggedOver ? theme.general.backgroundColor : COLOR.WHITE,
-    fontWeight: 400,
-    fontSize: '12px',
-    lineHeight: '13px',
-    color: COLOR.GRAY,
-  };
-};
+) => ({
+  width: '100%',
+  padding: '28px',
+  border: `1px dashed ${theme.general.primaryColor}`,
+  borderBottomWidth: '2px',
+  borderRadius: '6px',
+  textAlign: 'center',
+  backgroundColor: isDraggedOver ? theme.general.backgroundColor : COLOR.WHITE,
+  fontWeight: 400,
+  fontSize: '12px',
+  lineHeight: '13px',
+  color: COLOR.GRAY,
+});
 
-export const dropFileZoneLabelStyle: <T>(theme: Theme) => CSSObject = theme => {
-  return {
-    color: theme.general.primaryColor,
-    cursor: 'pointer',
-    ':focus-within': {
-      outline: `1px solid ${theme.general.primaryColor}`,
-    },
-    ':hover': {
-      textDecoration: 'underline',
-    },
-  };
-};
+export const dropFileZoneLabelStyle: <T>(theme: Theme) => CSSObject = theme => ({
+  color: theme.general.primaryColor,
+  cursor: 'pointer',
+  ':focus-within': {
+    outline: `1px solid ${theme.general.primaryColor}`,
+  },
+  ':hover': {
+    textDecoration: 'underline',
+  },
+});
 
 export const dropFileZoneHeadingStyle: CSSObject = {
   display: 'block',
@@ -96,105 +92,113 @@ export const dropFileZonDescriptionStyle: CSSObject = {
   whiteSpace: 'pre-line',
 };
 
-export const DropFileInput: React.FC<DropFileInputProps<HTMLInputElement>> = React.forwardRef<
+export const DropFileInput: FC<DropFileInputProps<HTMLInputElement>> = forwardRef<
   HTMLInputElement,
   DropFileInputProps<HTMLInputElement>
->((props, ref) => {
-  const {
-    onFilesUploaded,
-    onInvalidFilesDropError,
-    dropFileZoneWrapperCSS,
-    labelText,
-    headingText,
-    description,
-    accept,
-    multiple,
-    ...inputProps
-  } = props;
+>(
+  (
+    {
+      onFilesUploaded,
+      onInvalidFilesDropError,
+      dropFileZoneWrapperCSS,
+      labelText,
+      headingText,
+      description,
+      accept,
+      multiple,
+      ...inputProps
+    },
+    ref,
+  ) => {
+    const [isDraggedOver, setIsDraggedOver] = useState(false);
 
-  const [isDraggedOver, setIsDraggedOver] = useState(false);
+    const resetDraggedOver = () => setIsDraggedOver(false);
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    e.dataTransfer.dropEffect = 'copy';
+    const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
+      event.preventDefault();
+      event.stopPropagation();
+      event.dataTransfer.dropEffect = 'copy';
 
-    if (e.dataTransfer.items.length > 0) {
-      setIsDraggedOver(true);
-    }
-  };
+      if (event.dataTransfer.items.length > 0) {
+        setIsDraggedOver(true);
+      }
+    };
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDraggedOver(false);
+    const handleDrop = (event: DragEvent<HTMLDivElement>) => {
+      event.preventDefault();
+      event.stopPropagation();
 
-    const {files} = e.dataTransfer;
-    if (files.length < 1) {
-      return;
-    }
+      resetDraggedOver();
 
-    const filesArr = multiple ? Array.from(files) : [files[0]];
+      const {files} = event.dataTransfer;
+      if (files.length < 1) {
+        return;
+      }
 
-    const areFilesValid = !!accept
-      ? filesArr.every(file =>
-          accept
-            .split(',')
-            .map(v => v.trim())
-            .includes(file.type),
-        )
-      : true;
+      const filesArr = multiple ? Array.from(files) : [files[0]];
 
-    if (!areFilesValid) {
-      onInvalidFilesDropError();
-      return;
-    }
+      const areFilesValid = !!accept
+        ? filesArr.every(file =>
+            accept
+              .split(',')
+              .map(v => v.trim())
+              .includes(file.type),
+          )
+        : true;
 
-    onFilesUploaded(filesArr);
-  };
+      if (!areFilesValid) {
+        onInvalidFilesDropError();
+        return;
+      }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {files} = e.target;
-    if (files.length < 1) {
-      return;
-    }
-    onFilesUploaded(Array.from(files));
-  };
+      onFilesUploaded(filesArr);
+    };
 
-  return (
-    <div css={dropFileWrapperStyle}>
-      <div
-        css={(theme: Theme) => ({
-          ...dropFileZoneWrapperStyle(theme, isDraggedOver),
-          ...dropFileZoneWrapperCSS,
-        })}
-        onDragOver={handleDragOver}
-        onDragLeave={() => setIsDraggedOver(false)}
-        onDrop={handleDrop}
-      >
-        <FlexBox align="center" justify="center" css={{position: 'relative'}}>
-          <UploadIcon css={{position: 'absolute', left: '15px'}} />
-          <div css={{maxWidth: '160px'}}>
-            <span css={dropFileZoneHeadingStyle}>{headingText}</span>
-            <label
-              aria-label={`${headingText} ${labelText} (${description})`}
-              css={(theme: Theme) => dropFileZoneLabelStyle(theme)}
-            >
-              <span>{labelText}</span>
-              <input
-                ref={ref}
-                accept={accept}
-                multiple={multiple}
-                css={visuallyHiddenStyles}
-                onChange={handleChange}
-                type="file"
-                {...inputProps}
-              />
-            </label>
-          </div>
-        </FlexBox>
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const {files} = event.target;
+
+      if (files.length < 1) {
+        return;
+      }
+
+      onFilesUploaded(Array.from(files));
+    };
+
+    return (
+      <div css={dropFileWrapperStyle}>
+        <div
+          css={(theme: Theme) => ({
+            ...dropFileZoneWrapperStyle(theme, isDraggedOver),
+            ...dropFileZoneWrapperCSS,
+          })}
+          onDragOver={handleDragOver}
+          onDragLeave={resetDraggedOver}
+          onDrop={handleDrop}
+        >
+          <FlexBox align="center" justify="center" css={{position: 'relative'}}>
+            <UploadIcon css={{position: 'absolute', left: '15px'}} />
+            <div css={{maxWidth: '160px'}}>
+              <span css={dropFileZoneHeadingStyle}>{headingText}</span>
+              <label
+                aria-label={`${headingText} ${labelText} (${description})`}
+                css={(theme: Theme) => dropFileZoneLabelStyle(theme)}
+              >
+                <span>{labelText}</span>
+                <input
+                  ref={ref}
+                  accept={accept}
+                  multiple={multiple}
+                  css={visuallyHiddenStyles}
+                  onChange={handleChange}
+                  type="file"
+                  {...inputProps}
+                />
+              </label>
+            </div>
+          </FlexBox>
+        </div>
+        {description && <p css={dropFileZonDescriptionStyle}>{description}</p>}
       </div>
-      {description && <p css={dropFileZonDescriptionStyle}>{description}</p>}
-    </div>
-  );
-});
+    );
+  },
+);
