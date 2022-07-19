@@ -171,6 +171,7 @@ export const DropFileInput: FC<DropFileInputProps<HTMLInputElement>> = forwardRe
             ...dropFileZoneWrapperStyle(theme, isDraggedOver),
             ...dropFileZoneWrapperCSS,
           })}
+          data-testid="dropzone"
           onDragOver={handleDragOver}
           onDragLeave={resetDraggedOver}
           onDrop={handleDrop}
@@ -185,6 +186,7 @@ export const DropFileInput: FC<DropFileInputProps<HTMLInputElement>> = forwardRe
               >
                 <span>{labelText}</span>
                 <input
+                  data-testid="file-input"
                   ref={ref}
                   accept={accept}
                   multiple={multiple}
