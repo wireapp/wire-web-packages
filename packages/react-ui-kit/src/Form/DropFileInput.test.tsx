@@ -26,12 +26,15 @@ import {StyledApp, THEME_ID} from '../Layout';
 //note: we don't have to test file type validation using native file upload,
 // it won't allow to pick different type thant expected
 
-const getDefaultProps = () => ({
+const getDefaultProps = (
+  {accept, multiple}: {accept?: string; multiple?: boolean} = {accept: undefined, multiple: undefined},
+) => ({
+  accept,
+  multiple,
   onInvalidFilesDropError: jest.fn(),
   onFilesUploaded: jest.fn(),
   headingText: 'Drag & Drop an image \nor',
   labelText: 'select one from your device',
-  accept: 'image/png, image/jpeg',
   description: 'Image (JPG/PNG) size up to 1 MB, minimum 200 x 600 px',
 });
 
@@ -41,51 +44,44 @@ const ThemedDropFileInput = (props: DropFileInputProps) => (
   </StyledApp>
 );
 
+const pngFile = new File(['(⌐□_□)'], 'chucknorris.png', {type: 'image/png'});
+const jpegFile = new File(['(⌐□_□)'], 'chucknorris.jpg', {type: 'image/jpeg'});
+const xlsxFile = new File(['(⌐□_□)'], 'chucknorris.xlsx', {type: '.xlsx'});
+
 describe('"DropFileInput"', () => {
-  it('matches snapshot', () => matchComponent(<ThemedDropFileInput {...getDefaultProps()} />));
+  it('matches snapshot', () =>
+    matchComponent(<ThemedDropFileInput {...getDefaultProps({accept: 'image/png, image/jpeg'})} />));
 
   it('returns file on native file upload', () => {
-    const file = new File(['(⌐□_□)'], 'chucknorris.png', {type: 'image/png'});
-
-    const props = {
-      ...getDefaultProps(),
-      accept: undefined,
-    };
+    const props = getDefaultProps();
 
     const {getByTestId} = render(<ThemedDropFileInput {...props} />);
-
     const fileInput = getByTestId('file-input');
 
     // i have to do this because `input.files =[file]` is not allowed
     Object.defineProperty(fileInput, 'files', {
-      value: [file],
+      value: [pngFile],
     });
     fireEvent.change(fileInput);
 
-    expect(props.onFilesUploaded).toHaveBeenCalledWith([file]);
+    expect(props.onFilesUploaded).toHaveBeenCalledWith([pngFile]);
   });
 
   it('allows to upload different types of files when "accept" attribute not specified', () => {
-    const file = new File(['(⌐□_□)'], 'chucknorris.png', {type: 'image/png'});
-    const file2 = new File(['(⌐□_□)'], 'chucknorris.xlsx', {type: '.xlsx'});
-
-    const props = {
-      ...getDefaultProps(),
-      accept: undefined,
-    };
+    const props = getDefaultProps();
 
     const {getByTestId} = render(<ThemedDropFileInput {...props} />);
-
     const dropZone = getByTestId('dropzone');
+
     fireEvent.drop(dropZone, {
       dataTransfer: {
-        files: [file],
+        files: [pngFile],
       },
     });
 
     fireEvent.drop(dropZone, {
       dataTransfer: {
-        files: [file2],
+        files: [xlsxFile],
       },
     });
 
@@ -93,28 +89,20 @@ describe('"DropFileInput"', () => {
   });
 
   it('allows to upload only file types specified in "accept" attribute', () => {
-    const file = new File(['(⌐□_□)'], 'chucknorris.png', {type: 'image/png'});
-    const file2 = new File(['(⌐□_□)'], 'chucknorris.jpg', {type: 'image/jpeg'});
-
-    const props = {
-      ...getDefaultProps(),
-      accept: 'image/png',
-      onInvalidFilesDropError: jest.fn(),
-      onFilesUploaded: jest.fn(),
-    };
+    const props = getDefaultProps({accept: 'image/png'});
 
     const {getByTestId} = render(<ThemedDropFileInput {...props} />);
-
     const dropZone = getByTestId('dropzone');
+
     fireEvent.drop(dropZone, {
       dataTransfer: {
-        files: [file],
+        files: [pngFile],
       },
     });
 
     fireEvent.drop(dropZone, {
       dataTransfer: {
-        files: [file2],
+        files: [jpegFile],
       },
     });
 
@@ -123,55 +111,37 @@ describe('"DropFileInput"', () => {
   });
 
   it('returns first file when "multiple" attribute not specified', () => {
-    const file = new File(['(⌐□_□)'], 'chucknorris.png', {type: 'image/png'});
-    const file2 = new File(['(⌐□_□)'], 'chucknorris.png', {type: 'image/png'});
-
-    const props = {
-      ...getDefaultProps(),
-      accept: 'image/png',
-      onInvalidFilesDropError: jest.fn(),
-      onFilesUploaded: jest.fn(),
-    };
+    const props = getDefaultProps({
+      accept: 'image/png, image/jpeg',
+    });
 
     const {getByTestId} = render(<ThemedDropFileInput {...props} />);
-
     const dropZone = getByTestId('dropzone');
-    fireEvent.drop(dropZone, {
-      dataTransfer: {
-        files: [file, file2],
-      },
-    });
 
     fireEvent.drop(dropZone, {
       dataTransfer: {
-        files: [file2],
+        files: [pngFile, jpegFile],
       },
     });
 
-    expect(props.onFilesUploaded).toHaveBeenCalledWith([file]);
+    expect(props.onFilesUploaded).toHaveBeenCalledWith([pngFile]);
   });
 
   it('returns all files when "multiple" attribute specified', () => {
-    const file = new File(['(⌐□_□)'], 'chucknorris.png', {type: 'image/png'});
-    const file2 = new File(['(⌐□_□)'], 'chucknorris.png', {type: 'image/png'});
-
-    const props = {
-      ...getDefaultProps(),
-      accept: 'image/png',
-      onInvalidFilesDropError: jest.fn(),
-      onFilesUploaded: jest.fn(),
+    const props = getDefaultProps({
+      accept: 'image/png, image/jpeg',
       multiple: true,
-    };
+    });
 
     const {getByTestId} = render(<ThemedDropFileInput {...props} />);
-
     const dropZone = getByTestId('dropzone');
+
     fireEvent.drop(dropZone, {
       dataTransfer: {
-        files: [file, file2],
+        files: [pngFile, jpegFile],
       },
     });
 
-    expect(props.onFilesUploaded).toHaveBeenCalledWith([file, file2]);
+    expect(props.onFilesUploaded).toHaveBeenCalledWith([pngFile, jpegFile]);
   });
 });
