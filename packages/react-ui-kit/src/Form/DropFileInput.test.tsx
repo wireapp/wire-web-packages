@@ -25,10 +25,12 @@ import {StyledApp, THEME_ID} from '../Layout';
 
 //note: we don't have to test file type validation using native file upload,
 // it won't allow to pick different type thant expected
+interface GetDefaultPropsType {
+  accept?: string;
+  multiple?: boolean;
+}
 
-const getDefaultProps = (
-  {accept, multiple}: {accept?: string; multiple?: boolean} = {accept: undefined, multiple: undefined},
-) => ({
+const getDefaultProps = ({accept, multiple}: GetDefaultPropsType) => ({
   accept,
   multiple,
   onInvalidFilesDropError: jest.fn(),
@@ -53,7 +55,7 @@ describe('"DropFileInput"', () => {
     matchComponent(<ThemedDropFileInput {...getDefaultProps({accept: 'image/png, image/jpeg'})} />));
 
   it('returns file on native file upload', () => {
-    const props = getDefaultProps();
+    const props = getDefaultProps({});
 
     const {getByTestId} = render(<ThemedDropFileInput {...props} />);
     const fileInput = getByTestId('file-input');
@@ -68,7 +70,7 @@ describe('"DropFileInput"', () => {
   });
 
   it('allows to upload different types of files when "accept" attribute not specified', () => {
-    const props = getDefaultProps();
+    const props = getDefaultProps({});
 
     const {getByTestId} = render(<ThemedDropFileInput {...props} />);
     const dropZone = getByTestId('dropzone');
