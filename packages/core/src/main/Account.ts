@@ -348,6 +348,12 @@ export class Account<T = any> extends EventEmitter {
     const connectionService = new ConnectionService(this.apiClient);
     const giphyService = new GiphyService(this.apiClient);
     const linkPreviewService = new LinkPreviewService(assetService);
+    const notificationService = new NotificationService(
+      this.apiClient,
+      cryptographyService,
+      this.storeEngine,
+      () => this.coreCryptoClient,
+    );
     const conversationService = new ConversationService(
       this.apiClient,
       cryptographyService,
@@ -356,8 +362,9 @@ export class Account<T = any> extends EventEmitter {
         useQualifiedIds: this.backendFeatures.federationEndpoints,
       },
       () => this.coreCryptoClient!,
+      notificationService,
     );
-    const notificationService = new NotificationService(this.apiClient, cryptographyService, this.storeEngine);
+
     const selfService = new SelfService(this.apiClient);
     const teamService = new TeamService(this.apiClient);
 
@@ -571,7 +578,7 @@ export class Account<T = any> extends EventEmitter {
 
   private generateDbName(context: Context) {
     const clientType = context.clientType === ClientType.NONE ? '' : `@${context.clientType}`;
-    return `wire@${this.apiClient.config.urls.name}@${context.userId}${clientType}`;
+    return `wire@${this.apiClient.config.urls.name}@${context.userId}@${context.clientId}${clientType}`;
   }
 
   private async initEngine(context: Context): Promise<CRUDEngine> {

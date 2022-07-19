@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [28.6.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@28.6.0...@wireapp/core@28.6.1) (2022-07-18)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [28.6.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@28.5.2...@wireapp/core@28.6.0) (2022-07-18)
+
+
+### Features
+
+* **core, api-client:** Use backend timestamp for mls messages ([#4332](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/issues/4332)) ([10f7a13](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/10f7a13e05eebd546beaeb394a2b3eeb54047ad5))
+
+
+
+
+
+## [28.5.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@28.5.1...@wireapp/core@28.5.2) (2022-07-18)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [28.5.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@28.5.0...@wireapp/core@28.5.1) (2022-07-15)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [28.5.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@28.4.7...@wireapp/core@28.5.0) (2022-07-15)
+
+
+### Features
+
+* Decrypt incoming MLS messages ([#4315](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/issues/4315)) ([c93b0ae](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/commit/c93b0aea0a43f5eef204d5a20ca047215d6998d6))
+
+
+
+
+
 ## [28.4.7](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@28.4.6...@wireapp/core@28.4.7) (2022-07-15)
 
 **Note:** Version bump only for package @wireapp/core
