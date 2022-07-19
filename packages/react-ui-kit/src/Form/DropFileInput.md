@@ -1,7 +1,6 @@
 Demo:
 
 ```js
-import {Fragment} from 'react';
 import {Columns, Column, DropFileInput} from '@wireapp/react-ui-kit';
 
 <>

@@ -164,7 +164,10 @@ export const DropFileInput: React.FC<DropFileInputProps<HTMLInputElement>> = Rea
   return (
     <div css={dropFileWrapperStyle}>
       <div
-        css={{...(theme: Theme) => dropFileZoneWrapperStyle(theme, isDraggedOver), ...dropFileZoneWrapperCSS}}
+        css={(theme: Theme) => ({
+          ...dropFileZoneWrapperStyle(theme, isDraggedOver),
+          ...dropFileZoneWrapperCSS,
+        })}
         onDragOver={handleDragOver}
         onDragLeave={() => setIsDraggedOver(false)}
         onDrop={handleDrop}
