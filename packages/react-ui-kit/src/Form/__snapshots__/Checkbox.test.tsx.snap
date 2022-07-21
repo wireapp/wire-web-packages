@@ -105,7 +105,6 @@ exports[`"Checkbox" renders (dark theme) 1`] = `
 >
   <div
     className="emotion-1"
-    onClick={[Function]}
   >
     <input
       className="wireinput"
@@ -246,7 +245,6 @@ exports[`"Checkbox" renders 1`] = `
 >
   <div
     className="emotion-1"
-    onClick={[Function]}
   >
     <input
       className="wireinput"
@@ -387,7 +385,6 @@ exports[`"Checkbox" renders as invalid 1`] = `
 >
   <div
     className="emotion-1"
-    onClick={[Function]}
   >
     <input
       className="wireinput"
@@ -524,7 +521,6 @@ exports[`"Checkbox" renders disabled 1`] = `
 >
   <div
     className="emotion-1"
-    onClick={[Function]}
   >
     <input
       className="wireinput"
