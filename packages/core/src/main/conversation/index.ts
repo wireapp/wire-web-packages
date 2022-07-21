@@ -18,7 +18,7 @@
  */
 
 export * from './AbortReason';
-export * from './AssetService/AssetService';
+export * from './AssetService';
 export * from './AssetTransferState';
 export * from './ClientActionType';
 export * from './ConversationService';
