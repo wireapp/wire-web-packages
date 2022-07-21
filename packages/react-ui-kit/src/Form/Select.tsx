@@ -22,14 +22,15 @@ import {CSSObject, jsx} from '@emotion/react';
 import {useTheme} from '@emotion/react';
 import React, {FC, ReactElement} from 'react';
 import ReactSelect, {components, OptionProps, ValueContainerProps} from 'react-select';
+import {StylesConfig} from 'react-select/dist/declarations/src/styles';
+import {MenuProps} from 'react-select/dist/declarations/src/components/Menu';
+import {StateManagerProps} from 'react-select/dist/declarations/src/useStateManager';
+import {IndicatorsContainerProps} from 'react-select/dist/declarations/src/components/containers';
 
 import {inputStyle} from './Input';
 import type {Theme} from '../Layout';
 import {ArrowDown} from '../Icon/ArrowDown';
 import InputLabel from './InputLabel';
-import {StylesConfig} from 'react-select/dist/declarations/src/styles';
-import {MenuProps} from 'react-select/dist/declarations/src/components/Menu';
-import {StateManagerProps} from 'react-select/dist/declarations/src/useStateManager';
 
 const customStyles = (theme: Theme, markInvalid = false) => ({
   indicatorSeparator: () => ({
@@ -95,7 +96,7 @@ const customStyles = (theme: Theme, markInvalid = false) => ({
   }),
   option: (provided, {isDisabled, isFocused}) => ({
     ...provided,
-    padding: '10px 20px',
+    padding: '10px 18px',
     cursor: isDisabled ? 'not-allowed' : 'pointer',
     fontSize: '16px',
     fontWeight: 300,
@@ -123,14 +124,21 @@ const customStyles = (theme: Theme, markInvalid = false) => ({
   valueContainer: provided => ({
     ...provided,
     padding: 0,
+    width: '100%',
+    display: 'grid',
   }),
 });
 
-const DropdownIndicator = props => (
-  <components.DropdownIndicator {...props}>
-    <ArrowDown />
-  </components.DropdownIndicator>
-);
+const DropdownIndicator = props => {
+  const {menuIsOpen} = props.selectProps;
+
+  return (
+    <components.DropdownIndicator {...props}>
+      {/* MarginTop for center arrow */}
+      <ArrowDown css={{...(menuIsOpen ? {transform: 'rotateX(180deg)', marginTop: 2} : {marginTop: 4})}} />
+    </components.DropdownIndicator>
+  );
+};
 
 type Option = {
   value: string | number;
@@ -151,7 +159,8 @@ const CustomOption = (dataUieName: string) => (props: OptionProps<Option>) => {
             display: 'grid',
             gridTemplateAreas: `"checkbox label"
                                 ". description"`,
-            gridTemplateColumns: '30px 1fr',
+            gridTemplateColumns: '22px 1fr',
+            columnGap: '10px',
           }),
         }}
         {...(dataUieName && {
@@ -164,7 +173,7 @@ const CustomOption = (dataUieName: string) => (props: OptionProps<Option>) => {
             type="checkbox"
             checked={isSelected}
             onChange={() => null}
-            css={{gridArea: 'checkbox', width: 24, cursor: 'pointer'}}
+            css={{gridArea: 'checkbox', width: 22, height: 22, cursor: 'pointer', placeSelf: 'center'}}
           />
         )}
 
@@ -208,11 +217,20 @@ const renderValue = value => {
   if (Array.isArray(value)) {
     const currentValue = (i: number) => value[i].props.children;
 
-    if (value.length > 1) {
-      return `${currentValue(0)} + ${value.length - 1}`;
-    }
-
-    return currentValue(0);
+    return (
+      <div
+        css={{
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          minWidth: 0,
+          paddingRight: 14,
+          gridArea: '1/1/2/3',
+        }}
+      >
+        {currentValue(0)}
+      </div>
+    );
   }
 
   return value;
@@ -220,10 +238,22 @@ const renderValue = value => {
 
 const ValueContainer = ({children, ...restProps}: ValueContainerProps<Option>) => (
   <components.ValueContainer {...restProps}>
-    {renderValue(children[0])}
-    {children[1]}
+    {renderValue(children[0])} {children[1]}
   </components.ValueContainer>
 );
+
+const IndicatorsContainer = ({children, ...restProps}: IndicatorsContainerProps<Option>) => {
+  const value = restProps.getValue();
+  const displaySelectedOptionsCount = Array.isArray(value) && value.length > 1;
+
+  return (
+    <components.IndicatorsContainer {...restProps}>
+      {displaySelectedOptionsCount && <div css={{fontWeight: 600}}>(+{value.length - 1})</div>}
+
+      {children}
+    </components.IndicatorsContainer>
+  );
+};
 
 interface CustomSelectProps extends StateManagerProps {
   id: string;
@@ -272,8 +302,16 @@ export const Select: FC<CustomSelectProps> = ({
       <ReactSelect
         id={id}
         styles={customStyles(theme as Theme, markInvalid) as StylesConfig}
-        components={{DropdownIndicator, Option: CustomOption(dataUieName), Menu: Menu(dataUieName), ValueContainer}}
+        components={{
+          DropdownIndicator,
+          Option: CustomOption(dataUieName),
+          Menu: Menu(dataUieName),
+          ValueContainer,
+          IndicatorsContainer,
+        }}
         hideSelectedOptions={false}
+        isSearchable={false}
+        isClearable={false}
         closeMenuOnSelect={!isMulti}
         isMulti={isMulti}
         {...props}

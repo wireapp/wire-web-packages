@@ -123,6 +123,7 @@ exports[`"Select" renders 1`] = `
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
+  width: 100%;
 }
 
 .emotion-7 {
@@ -134,31 +135,22 @@ exports[`"Select" renders 1`] = `
 }
 
 .emotion-8 {
-  margin: 2px;
-  padding-bottom: 2px;
-  padding-top: 2px;
-  visibility: visible;
-  color: hsl(0, 0%, 20%);
-  -webkit-flex: 1 1 auto;
-  -ms-flex: 1 1 auto;
-  flex: 1 1 auto;
-  display: inline-grid;
-  grid-area: 1/1/2/3;
-  grid-template-columns: 0 min-content;
-  box-sizing: border-box;
-}
-
-.emotion-8:after {
-  content: attr(data-value) " ";
-  visibility: hidden;
-  white-space: pre;
-  grid-area: 1/2;
-  font: inherit;
-  min-width: 2px;
+  background: 0;
   border: 0;
-  margin: 0;
+  caret-color: transparent;
+  font-size: inherit;
+  grid-area: 1/1/2/3;
   outline: 0;
   padding: 0;
+  width: 1px;
+  color: transparent;
+  left: -100px;
+  opacity: 0;
+  position: relative;
+  -webkit-transform: scale(.01);
+  -moz-transform: scale(.01);
+  -ms-transform: scale(.01);
+  transform: scale(.01);
 }
 
 .emotion-9 {
@@ -202,6 +194,7 @@ exports[`"Select" renders 1`] = `
 .emotion-12 {
   fill: rgb(29, 30, 31);
   overflow: visible;
+  margin-top: 4px;
 }
 
 <div
@@ -238,46 +231,24 @@ exports[`"Select" renders 1`] = `
           >
             Select...
           </div>
-          <div
-            className=" emotion-8"
-            data-value=""
-          >
-            <input
-              aria-autocomplete="list"
-              aria-describedby="react-select-2-placeholder"
-              aria-expanded={false}
-              aria-haspopup={true}
-              autoCapitalize="none"
-              autoComplete="off"
-              autoCorrect="off"
-              disabled={false}
-              id="react-select-2-input"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              role="combobox"
-              spellCheck="false"
-              style={
-                Object {
-                  "background": 0,
-                  "border": 0,
-                  "color": "inherit",
-                  "font": "inherit",
-                  "gridArea": "1 / 2",
-                  "label": "input",
-                  "margin": 0,
-                  "minWidth": "2px",
-                  "opacity": 1,
-                  "outline": 0,
-                  "padding": 0,
-                  "width": "100%",
-                }
-              }
-              tabIndex={0}
-              type="text"
-              value=""
-            />
-          </div>
+           
+          <input
+            aria-autocomplete="list"
+            aria-describedby="react-select-2-placeholder"
+            aria-expanded={false}
+            aria-haspopup={true}
+            aria-readonly={true}
+            className="emotion-8"
+            disabled={false}
+            id="react-select-2-input"
+            inputMode="none"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            role="combobox"
+            tabIndex={0}
+            value=""
+          />
         </div>
         <div
           className=" emotion-9"
@@ -434,6 +405,7 @@ exports[`"Select" renders as disabled 1`] = `
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
+  width: 100%;
 }
 
 .emotion-7 {
@@ -445,31 +417,22 @@ exports[`"Select" renders as disabled 1`] = `
 }
 
 .emotion-8 {
-  margin: 2px;
-  padding-bottom: 2px;
-  padding-top: 2px;
-  visibility: visible;
-  color: hsl(0, 0%, 20%);
-  -webkit-flex: 1 1 auto;
-  -ms-flex: 1 1 auto;
-  flex: 1 1 auto;
-  display: inline-grid;
-  grid-area: 1/1/2/3;
-  grid-template-columns: 0 min-content;
-  box-sizing: border-box;
-}
-
-.emotion-8:after {
-  content: attr(data-value) " ";
-  visibility: hidden;
-  white-space: pre;
-  grid-area: 1/2;
-  font: inherit;
-  min-width: 2px;
+  background: 0;
   border: 0;
-  margin: 0;
+  caret-color: transparent;
+  font-size: inherit;
+  grid-area: 1/1/2/3;
   outline: 0;
   padding: 0;
+  width: 1px;
+  color: transparent;
+  left: -100px;
+  opacity: 0;
+  position: relative;
+  -webkit-transform: scale(.01);
+  -moz-transform: scale(.01);
+  -ms-transform: scale(.01);
+  transform: scale(.01);
 }
 
 .emotion-9 {
@@ -513,6 +476,7 @@ exports[`"Select" renders as disabled 1`] = `
 .emotion-12 {
   fill: rgb(29, 30, 31);
   overflow: visible;
+  margin-top: 4px;
 }
 
 <div
@@ -549,46 +513,24 @@ exports[`"Select" renders as disabled 1`] = `
           >
             Select...
           </div>
-          <div
-            className=" emotion-8"
-            data-value=""
-          >
-            <input
-              aria-autocomplete="list"
-              aria-describedby="react-select-3-placeholder"
-              aria-expanded={false}
-              aria-haspopup={true}
-              autoCapitalize="none"
-              autoComplete="off"
-              autoCorrect="off"
-              disabled={false}
-              id="react-select-3-input"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              role="combobox"
-              spellCheck="false"
-              style={
-                Object {
-                  "background": 0,
-                  "border": 0,
-                  "color": "inherit",
-                  "font": "inherit",
-                  "gridArea": "1 / 2",
-                  "label": "input",
-                  "margin": 0,
-                  "minWidth": "2px",
-                  "opacity": 1,
-                  "outline": 0,
-                  "padding": 0,
-                  "width": "100%",
-                }
-              }
-              tabIndex={0}
-              type="text"
-              value=""
-            />
-          </div>
+           
+          <input
+            aria-autocomplete="list"
+            aria-describedby="react-select-3-placeholder"
+            aria-expanded={false}
+            aria-haspopup={true}
+            aria-readonly={true}
+            className="emotion-8"
+            disabled={false}
+            id="react-select-3-input"
+            inputMode="none"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            role="combobox"
+            tabIndex={0}
+            value=""
+          />
         </div>
         <div
           className=" emotion-9"
@@ -741,6 +683,7 @@ exports[`"Select" renders as invalid 1`] = `
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
+  width: 100%;
 }
 
 .emotion-7 {
@@ -752,31 +695,22 @@ exports[`"Select" renders as invalid 1`] = `
 }
 
 .emotion-8 {
-  margin: 2px;
-  padding-bottom: 2px;
-  padding-top: 2px;
-  visibility: visible;
-  color: hsl(0, 0%, 20%);
-  -webkit-flex: 1 1 auto;
-  -ms-flex: 1 1 auto;
-  flex: 1 1 auto;
-  display: inline-grid;
-  grid-area: 1/1/2/3;
-  grid-template-columns: 0 min-content;
-  box-sizing: border-box;
-}
-
-.emotion-8:after {
-  content: attr(data-value) " ";
-  visibility: hidden;
-  white-space: pre;
-  grid-area: 1/2;
-  font: inherit;
-  min-width: 2px;
+  background: 0;
   border: 0;
-  margin: 0;
+  caret-color: transparent;
+  font-size: inherit;
+  grid-area: 1/1/2/3;
   outline: 0;
   padding: 0;
+  width: 1px;
+  color: transparent;
+  left: -100px;
+  opacity: 0;
+  position: relative;
+  -webkit-transform: scale(.01);
+  -moz-transform: scale(.01);
+  -ms-transform: scale(.01);
+  transform: scale(.01);
 }
 
 .emotion-9 {
@@ -820,6 +754,7 @@ exports[`"Select" renders as invalid 1`] = `
 .emotion-12 {
   fill: rgb(29, 30, 31);
   overflow: visible;
+  margin-top: 4px;
 }
 
 <div
@@ -856,46 +791,24 @@ exports[`"Select" renders as invalid 1`] = `
           >
             Select...
           </div>
-          <div
-            className=" emotion-8"
-            data-value=""
-          >
-            <input
-              aria-autocomplete="list"
-              aria-describedby="react-select-4-placeholder"
-              aria-expanded={false}
-              aria-haspopup={true}
-              autoCapitalize="none"
-              autoComplete="off"
-              autoCorrect="off"
-              disabled={false}
-              id="react-select-4-input"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              role="combobox"
-              spellCheck="false"
-              style={
-                Object {
-                  "background": 0,
-                  "border": 0,
-                  "color": "inherit",
-                  "font": "inherit",
-                  "gridArea": "1 / 2",
-                  "label": "input",
-                  "margin": 0,
-                  "minWidth": "2px",
-                  "opacity": 1,
-                  "outline": 0,
-                  "padding": 0,
-                  "width": "100%",
-                }
-              }
-              tabIndex={0}
-              type="text"
-              value=""
-            />
-          </div>
+           
+          <input
+            aria-autocomplete="list"
+            aria-describedby="react-select-4-placeholder"
+            aria-expanded={false}
+            aria-haspopup={true}
+            aria-readonly={true}
+            className="emotion-8"
+            disabled={false}
+            id="react-select-4-input"
+            inputMode="none"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            role="combobox"
+            tabIndex={0}
+            value=""
+          />
         </div>
         <div
           className=" emotion-9"
