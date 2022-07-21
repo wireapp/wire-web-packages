@@ -1080,15 +1080,10 @@ export class ConversationService {
     return (await request.response).buffer;
   }
 
-  public async addUser(
-    conversationId: QualifiedId,
-    userIds: string | string[] | QualifiedId | QualifiedId[],
-  ): Promise<QualifiedId[]> {
-    const ids = Array.isArray(userIds) ? userIds : [userIds];
-    const qualifiedIds = isStringArray(ids) ? ids.map(id => ({id, domain: ''} as QualifiedId)) : (ids as QualifiedId[]);
-    await this.apiClient.api.conversation.postMembers(conversationId, qualifiedIds);
+  public async addUsers(conversationId: QualifiedId, userIds: QualifiedId[]) {
+    const response = await this.apiClient.api.conversation.postMembers(conversationId, userIds);
 
-    return qualifiedIds;
+    return response;
   }
 
   public async removeUser(conversationId: string, userId: string): Promise<string> {
