@@ -125,16 +125,3 @@ export type SendProteusMessageParams<T> = SendCommonParams<T> &
       wasSent: boolean,
     ) => void | boolean | Promise<boolean>;
   };
-
-export type SendMlsMessageParams<T> = SendCommonParams<T> & {
-  /**
-   * The groupId of the conversation to send the message to (Needed only for MLS)
-   */
-  groupId: string;
-};
-
-export type AddUsersParams = {
-  conversationId: QualifiedId;
-  userIds: QualifiedId[];
-  groupId?: string;
-};
