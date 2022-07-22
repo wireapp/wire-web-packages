@@ -37,23 +37,26 @@ export type Option = {
   isDisabled?: boolean;
 };
 
-interface CustomSelectProps extends StateManagerProps {
+interface SelectProps extends StateManagerProps<Option> {
   id: string;
   dataUieName: string;
+  options: Option[];
   wrapperCSS?: CSSObject;
   label?: string;
   helperText?: string;
   error?: ReactElement;
-  required?: boolean;
   markInvalid?: boolean;
+  required?: boolean;
+  isMulti?: boolean;
 }
 
-export const Select: FC<CustomSelectProps> = ({
+export const Select: FC<SelectProps> = ({
   id,
   label,
   error,
   helperText,
   dataUieName,
+  options,
   wrapperCSS = {},
   markInvalid = false,
   required = false,
@@ -96,6 +99,7 @@ export const Select: FC<CustomSelectProps> = ({
         isClearable={false}
         closeMenuOnSelect={!isMulti}
         isMulti={isMulti}
+        options={options}
         {...props}
       />
 

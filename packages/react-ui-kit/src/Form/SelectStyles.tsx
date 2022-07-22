@@ -82,13 +82,17 @@ export const customStyles = (theme: Theme, markInvalid = false) => ({
     paddingBottom: 0,
     paddingTop: 0,
   }),
-  option: (provided, {isDisabled, isFocused}) => ({
+  option: (provided, {isDisabled, isFocused, isSelected}) => ({
     ...provided,
     padding: '10px 18px',
     cursor: isDisabled ? 'not-allowed' : 'pointer',
     fontSize: '16px',
     fontWeight: 300,
     lineHeight: '24px',
+    ...(isSelected && {
+      backgroundColor: 'inherit',
+      color: 'inherit',
+    }),
     ...(isFocused && {
       background: theme.general.primaryColor,
       borderColor: theme.general.primaryColor,

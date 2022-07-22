@@ -25,6 +25,7 @@ import type {Theme} from '../Layout';
 import {noop} from '../util';
 import {InputProps, inputStyle} from './Input';
 import {COLOR_V2} from '../Identity';
+import { Select } from './Select';
 
 const CodeInputWrapper = (props: React.HTMLProps<HTMLDivElement>) => (
   <div
