@@ -133,7 +133,8 @@ export type SendMlsMessageParams<T> = SendCommonParams<T> & {
   groupId: string;
 };
 
-export type AddUsersParams = ProtocolParam & {
+export type AddUsersParams = {
   conversationId: QualifiedId;
   userIds: QualifiedId[];
+  groupId?: string;
 };
