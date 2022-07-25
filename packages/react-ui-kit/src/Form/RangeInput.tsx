@@ -19,7 +19,7 @@
 
 /** @jsx jsx */
 import {CSSObject, jsx} from '@emotion/react';
-import React, {FC, forwardRef, Fragment} from 'react';
+import React, {FC, forwardRef} from 'react';
 import {TextProps} from '../Text';
 import {COLOR_V2} from '../Identity';
 import {manySelectors} from '../util';
@@ -82,6 +82,7 @@ export interface RangeInputProps<T = HTMLInputElement> extends TextProps<T> {
   label?: string;
   minValueLabel?: string;
   maxValueLabel?: string;
+  wrapperCSS?: CSSObject;
 }
 
 export const RangeInput: FC<RangeInputProps> = forwardRef<HTMLInputElement, RangeInputProps<HTMLInputElement>>(
@@ -95,12 +96,13 @@ export const RangeInput: FC<RangeInputProps> = forwardRef<HTMLInputElement, Rang
     max = '100',
     value = '0',
     onChange,
+    wrapperCSS,
     ...inputProps
   }) => {
     const backgroundSize = `${((Number(value) - Number(min)) * 100) / (Number(max) - Number(min))}% 100%` as const;
 
     return (
-      <Fragment>
+      <div css={wrapperCSS}>
         {label && <InputLabel htmlFor={id}>{label}</InputLabel>}
         <div css={rangeInputWrapperStyles}>
           {minValueLabel && <span css={getValueLabelStyles(ValueLabelPosition.LEFT)}>{minValueLabel}</span>}
@@ -118,7 +120,7 @@ export const RangeInput: FC<RangeInputProps> = forwardRef<HTMLInputElement, Rang
             {...inputProps}
           />
         </div>
-      </Fragment>
+      </div>
     );
   },
 );

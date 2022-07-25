@@ -7,25 +7,16 @@ exports[`"RangeInput" matches snapshot 1`] = `
   transition: background 0.15s;
 }
 
-.emotion-2 {
+.emotion-3 {
   font-size: 14px;
   font-weight: 400;
   line-height: 16px;
   color: #54585f;
 }
 
-.emotion-3 {
+.emotion-4 {
   position: relative;
   margin-top: 19px;
-}
-
-.emotion-4 {
-  pointer-events: none;
-  bottom: 100%;
-  font-size: 16px;
-  font-weight: 300;
-  position: absolute;
-  left: 4px;
 }
 
 .emotion-5 {
@@ -34,10 +25,19 @@ exports[`"RangeInput" matches snapshot 1`] = `
   font-size: 16px;
   font-weight: 300;
   position: absolute;
-  right: 4px;
+  left: 4px;
 }
 
 .emotion-6 {
+  pointer-events: none;
+  bottom: 100%;
+  font-size: 16px;
+  font-weight: 300;
+  position: absolute;
+  right: 4px;
+}
+
+.emotion-7 {
   display: block;
   -webkit-appearance: none;
   width: 100%;
@@ -50,7 +50,7 @@ exports[`"RangeInput" matches snapshot 1`] = `
   background-repeat: no-repeat;
 }
 
-.emotion-6::-webkit-slider-thumb {
+.emotion-7::-webkit-slider-thumb {
   -webkit-appearance: none;
   height: 18px;
   width: 18px;
@@ -61,7 +61,7 @@ exports[`"RangeInput" matches snapshot 1`] = `
   box-shadow: none;
 }
 
-.emotion-6::-moz-range-thumb {
+.emotion-7::-moz-range-thumb {
   -webkit-appearance: none;
   height: 18px;
   width: 18px;
@@ -72,7 +72,7 @@ exports[`"RangeInput" matches snapshot 1`] = `
   box-shadow: none;
 }
 
-.emotion-6::-ms-thumb {
+.emotion-7::-ms-thumb {
   -webkit-appearance: none;
   height: 18px;
   width: 18px;
@@ -83,21 +83,21 @@ exports[`"RangeInput" matches snapshot 1`] = `
   box-shadow: none;
 }
 
-.emotion-6::-webkit-slider-runnable-track {
+.emotion-7::-webkit-slider-runnable-track {
   -webkit-appearance: none;
   box-shadow: none;
   border: none;
   background: transparent;
 }
 
-.emotion-6::-moz-range-track {
+.emotion-7::-moz-range-track {
   -webkit-appearance: none;
   box-shadow: none;
   border: none;
   background: transparent;
 }
 
-.emotion-6::-ms-track {
+.emotion-7::-ms-track {
   -webkit-appearance: none;
   box-shadow: none;
   border: none;
@@ -110,36 +110,40 @@ exports[`"RangeInput" matches snapshot 1`] = `
   <div
     className="emotion-0"
   >
-    <label
-      className="emotion-2"
-      htmlFor="zoom-input"
-    >
-      Zoom
-    </label>
     <div
-      className="emotion-3"
+      className="emotion-2"
     >
-      <span
+      <label
+        className="emotion-3"
+        htmlFor="zoom-input"
+      >
+        Zoom
+      </label>
+      <div
         className="emotion-4"
       >
-        -
-      </span>
-      <span
-        className="emotion-5"
-      >
-        +
-      </span>
-      <input
-        className="emotion-6"
-        id="zoom-input"
-        max={3}
-        min={1}
-        name="zoom-input"
-        onChange={[MockFunction]}
-        step={0.1}
-        type="range"
-        value={0}
-      />
+        <span
+          className="emotion-5"
+        >
+          -
+        </span>
+        <span
+          className="emotion-6"
+        >
+          +
+        </span>
+        <input
+          className="emotion-7"
+          id="zoom-input"
+          max={3}
+          min={1}
+          name="zoom-input"
+          onChange={[MockFunction]}
+          step={0.1}
+          type="range"
+          value={0}
+        />
+      </div>
     </div>
   </div>
 </div>
