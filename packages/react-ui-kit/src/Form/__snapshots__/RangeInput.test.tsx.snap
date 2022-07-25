@@ -1,0 +1,146 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`"RangeInput" matches snapshot 1`] = `
+.emotion-0 {
+  background: #edeff0;
+  -webkit-transition: background 0.15s;
+  transition: background 0.15s;
+}
+
+.emotion-2 {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16px;
+  color: #54585f;
+}
+
+.emotion-3 {
+  position: relative;
+  margin-top: 19px;
+}
+
+.emotion-4 {
+  pointer-events: none;
+  bottom: 100%;
+  font-size: 16px;
+  font-weight: 300;
+  position: absolute;
+  left: 4px;
+}
+
+.emotion-5 {
+  pointer-events: none;
+  bottom: 100%;
+  font-size: 16px;
+  font-weight: 300;
+  position: absolute;
+  right: 4px;
+}
+
+.emotion-6 {
+  display: block;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 8px;
+  background: #9fa1a7;
+  border-radius: 4px;
+  background-image: linear-gradient(#0667c8, #0667c8);
+  -webkit-background-size: -50% 100%;
+  background-size: -50% 100%;
+  background-repeat: no-repeat;
+}
+
+.emotion-6::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  background: #54585f;
+  cursor: pointer;
+  border: none;
+  box-shadow: none;
+}
+
+.emotion-6::-moz-range-thumb {
+  -webkit-appearance: none;
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  background: #54585f;
+  cursor: pointer;
+  border: none;
+  box-shadow: none;
+}
+
+.emotion-6::-ms-thumb {
+  -webkit-appearance: none;
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  background: #54585f;
+  cursor: pointer;
+  border: none;
+  box-shadow: none;
+}
+
+.emotion-6::-webkit-slider-runnable-track {
+  -webkit-appearance: none;
+  box-shadow: none;
+  border: none;
+  background: transparent;
+}
+
+.emotion-6::-moz-range-track {
+  -webkit-appearance: none;
+  box-shadow: none;
+  border: none;
+  background: transparent;
+}
+
+.emotion-6::-ms-track {
+  -webkit-appearance: none;
+  box-shadow: none;
+  border: none;
+  background: transparent;
+}
+
+<div
+  className="emotion-0"
+>
+  <div
+    className="emotion-0"
+  >
+    <label
+      className="emotion-2"
+      htmlFor="zoom-input"
+    >
+      Zoom
+    </label>
+    <div
+      className="emotion-3"
+    >
+      <span
+        className="emotion-4"
+      >
+        -
+      </span>
+      <span
+        className="emotion-5"
+      >
+        +
+      </span>
+      <input
+        className="emotion-6"
+        id="zoom-input"
+        max={3}
+        min={1}
+        name="zoom-input"
+        onChange={[MockFunction]}
+        step={0.1}
+        type="range"
+        value={0}
+      />
+    </div>
+  </div>
+</div>
+`;
