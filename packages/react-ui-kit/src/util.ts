@@ -33,7 +33,8 @@ export const filterProps: <T extends Record<string, any>>(props: T, propsToFilte
   );
 };
 
-export const manySelectors = (selectors: string[], css: CSSObject) => selectors.reduce((acc, selector) => {
+export const manySelectors = (selectors: string[], css: CSSObject) =>
+  selectors.reduce((acc, selector) => {
     acc[selector] = css;
     return acc;
   }, {});
