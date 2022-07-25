@@ -49,11 +49,7 @@ export abstract class MessageHandler {
 
   async addUser(conversationId: QualifiedId, userId: string) {
     if (this.account?.service) {
-      await this.account.service.conversation.addUsers({
-        conversationId,
-        userIds: [{domain: '', id: userId}],
-        protocol: ConversationProtocol.PROTEUS,
-      });
+      await this.account.service.conversation.addUsers(conversationId, [{domain: '', id: userId}]);
     }
   }
 
