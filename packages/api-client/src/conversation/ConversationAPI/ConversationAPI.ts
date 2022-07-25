@@ -21,13 +21,14 @@ import {proteus as ProtobufOTR} from '@wireapp/protocol-messaging/web/otr';
 import type {AxiosError, AxiosRequestConfig} from 'axios';
 
 import {ValidationError} from '../../validation';
-import type {
+import {
   ClientMismatch,
   Conversation,
   ConversationCode,
   ConversationIds,
   ConversationRolesList,
   Conversations,
+  DefaultConversationRoleName,
   Invite,
   Member,
   MessageSendingStatus,
@@ -68,7 +69,6 @@ import {QualifiedId} from '../../user';
 import {BackendFeatures} from '../../APIClient';
 import {chunk} from '@wireapp/commons/src/main/util/ArrayUtil';
 import {MlsEvent} from '../data/MlsEventData';
-import {addMLSUsers, addProteusUsers, postMembersV0} from './AddUsers';
 
 export type PostMlsMessageResponse = {
   events: MlsEvent[];
@@ -963,21 +963,68 @@ export class ConversationAPI {
    * @param conversationId The conversation ID to add the users to
    * @param users List of users to add to a conversation
    */
-  public postMembersV0 = postMembersV0.bind(this);
+  public async postMembersV0(conversationId: string, userIds: string[]) {
+    const config: AxiosRequestConfig = {
+      data: {
+        conversation_role: DefaultConversationRoleName.WIRE_MEMBER,
+        users: userIds,
+      },
+      method: 'post',
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.MEMBERS}`,
+    };
+
+    try {
+      const response = await this.client.sendJSON<ConversationMemberJoinEvent>(config);
+      return response.data;
+    } catch (error) {
+      const backendError = error as BackendError;
+      switch (backendError.label) {
+        case BackendErrorLabel.LEGAL_HOLD_MISSING_CONSENT: {
+          throw new ConversationLegalholdMissingConsentError(backendError.message);
+        }
+      }
+      throw error;
+    }
+  }
 
   /**
    * Add qualified members to an existing Proteus conversation.
    * @param conversationId The conversation ID to add the users to
    * @param users List of users to add to a conversation
    */
-  public postMembers = addProteusUsers.bind(this);
+  public async postMembers(conversationId: QualifiedId, users: QualifiedId[]) {
+    if (!this.backendFeatures.federationEndpoints) {
+      return this.postMembersV0(
+        conversationId.id,
+        users.map(user => user.id),
+      );
+    }
 
-  /**
-   * Add qualified members to an existing MLS conversation.
-   * @param conversationId The conversation ID to add the users to
-   * @param users List of users to add to a conversation
-   */
-  public postMLSMembers = addMLSUsers.bind(this);
+    const config: AxiosRequestConfig = {
+      data: {
+        conversation_role: DefaultConversationRoleName.WIRE_MEMBER,
+        qualified_users: users,
+      },
+      method: 'post',
+      url:
+        this.backendFeatures.version >= 2
+          ? `${ConversationAPI.URL.CONVERSATIONS}/${conversationId.domain}/${conversationId.id}/${ConversationAPI.URL.MEMBERS}`
+          : `${ConversationAPI.URL.CONVERSATIONS}/${conversationId.id}/${ConversationAPI.URL.MEMBERS}/${ConversationAPI.URL.V2}`,
+    };
+
+    try {
+      const response = await this.client.sendJSON<ConversationMemberJoinEvent>(config);
+      return response.data;
+    } catch (error) {
+      const backendError = error as BackendError;
+      switch (backendError.label) {
+        case BackendErrorLabel.LEGAL_HOLD_MISSING_CONSENT: {
+          throw new ConversationLegalholdMissingConsentError(backendError.message);
+        }
+      }
+      throw error;
+    }
+  }
 
   /**
    * Update membership of the specified user in a certain conversation
