@@ -3,6 +3,51 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.11.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@8.11.1...@wireapp/react-ui-kit@8.11.2) (2022-07-26)
+
+
+### Bug Fixes
+
+* **ui-kit:** issue with Select data-uie-name ([#4348](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/issues/4348)) ([25e3608](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/commit/25e3608927e7276b1229b37e1f927473e8005ce7))
+
+
+
+
+
+## [8.11.1](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@8.11.0...@wireapp/react-ui-kit@8.11.1) (2022-07-26)
+
+
+### Bug Fixes
+
+* **ui-kit:** revert small select change ([#4347](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/issues/4347)) ([b0c1105](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/commit/b0c11057b29e23c6588da02acc420659ba65a99d))
+
+
+
+
+
+# [8.11.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@8.10.0...@wireapp/react-ui-kit@8.11.0) (2022-07-25)
+
+
+### Features
+
+* **ui-kit:** slight style changes for select ([#4346](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/issues/4346)) ([1d700df](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/commit/1d700df0a52ffe6a20143cb242cf61999b94de0c))
+
+
+
+
+
+# [8.10.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@8.9.0...@wireapp/react-ui-kit@8.10.0) (2022-07-25)
+
+
+### Features
+
+* **react-ui-kit:** add custom RangeInput component (#SQSERVICES-758) ([#4342](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/issues/4342)) ([ff81011](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/commit/ff810113075b131f49a5362a0e270541aeb21973)), closes [#SQSERVICES-758](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/issues/SQSERVICES-758)
+* **react-ui-kit:** add multiselect option to Select component ([#4326](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/issues/4326)) ([b08e8c6](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/commit/b08e8c6a7c25318217705a843a36825d34d48015))
+
+
+
+
+
 # [8.9.0](https://github.com/wireapp/wire-web-packages/tree/main/packages/react-ui-kit/compare/@wireapp/react-ui-kit@8.8.4...@wireapp/react-ui-kit@8.9.0) (2022-07-19)
 
 
