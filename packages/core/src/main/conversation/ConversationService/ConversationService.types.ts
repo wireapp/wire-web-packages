@@ -24,8 +24,10 @@ import {
   ConversationProtocol,
   MessageSendingStatus,
   UserClients,
+  Conversation,
 } from '@wireapp/api-client/src/conversation';
 import {QualifiedId} from '@wireapp/api-client/src/user';
+import {MlsEvent} from '@wireapp/api-client/src/conversation/data/MlsEventData';
 
 export enum MessageTargetMode {
   NONE,
@@ -140,3 +142,5 @@ export type AddUsersParams = {
   qualifiedUserIds: QualifiedId[];
   groupId?: string;
 };
+
+export type MLSReturnType = Promise<{events: MlsEvent[]; conversation: Conversation}>;

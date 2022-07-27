@@ -32,7 +32,7 @@ import {
   ConversationProtocol,
 } from '@wireapp/api-client/src/conversation';
 import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/src/conversation/data';
-import type {ConversationMemberJoinEvent, ConversationMemberLeaveEvent} from '@wireapp/api-client/src/event';
+import type {ConversationMemberLeaveEvent} from '@wireapp/api-client/src/event';
 import type {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/src/user';
 import {
   Asset,
@@ -98,6 +98,7 @@ import {
   MessageSendingCallbacks,
   MessageSendingOptions,
   MessageTargetMode,
+  MLSReturnType,
   QualifiedUsers,
   SendMlsMessageParams,
   SendProteusMessageParams,
@@ -849,7 +850,7 @@ export class ConversationService {
    * @deprecated
    * @returns Promise
    */
-  public createConversation(name: string, otherUserIds: string | string[]): Promise<Conversation>;
+  public createProteusConversation(name: string, otherUserIds: string | string[]): Promise<Conversation>;
   /**
    * Create a group conversation.
    *
@@ -859,8 +860,8 @@ export class ConversationService {
    * @param conversationData Payload object for group creation
    * @returns Resolves when the conversation was created
    */
-  public createConversation(conversationData: NewConversation): Promise<Conversation>;
-  public createConversation(
+  public createProteusConversation(conversationData: NewConversation): Promise<Conversation>;
+  public createProteusConversation(
     conversationData: NewConversation | string,
     otherUserIds?: string | string[],
   ): Promise<Conversation> {
@@ -875,10 +876,6 @@ export class ConversationService {
       };
     } else {
       payload = conversationData;
-    }
-
-    if (typeof conversationData !== 'string' && conversationData.protocol === ConversationProtocol.MLS) {
-      return this.creatMLSConversation(conversationData);
     }
 
     return this.apiClient.api.conversation.postConversation(payload);
@@ -912,30 +909,10 @@ export class ConversationService {
     return (await request.response).buffer;
   }
 
-  private async addUsersToProteusConversation({conversationId, qualifiedUserIds}: Omit<AddUsersParams, 'groupId'>) {
+  public async addUsersToProteusConversation({conversationId, qualifiedUserIds}: Omit<AddUsersParams, 'groupId'>) {
     const response = await this.apiClient.api.conversation.postMembers(conversationId, qualifiedUserIds);
 
     return response;
-  }
-
-  public async addUsers(
-    conversationId: QualifiedId,
-    qualifiedUserIds: QualifiedId[],
-  ): Promise<ConversationMemberJoinEvent>;
-  public async addUsers(
-    conversationId: QualifiedId,
-    qualifiedUserIds: QualifiedId[],
-    groupId: string,
-  ): Promise<Conversation>;
-  public async addUsers(
-    conversationId: QualifiedId,
-    qualifiedUserIds: QualifiedId[],
-    groupId?: string,
-  ): Promise<ConversationMemberJoinEvent | Conversation> {
-    console.info('Adding users to conversation', conversationId, qualifiedUserIds, groupId);
-    return typeof groupId === 'string'
-      ? this.addUsersToMLSConversation({conversationId, qualifiedUserIds, groupId})
-      : this.addUsersToProteusConversation({conversationId, qualifiedUserIds});
   }
 
   public async removeUser(conversationId: string, userId: string): Promise<string> {
@@ -1166,21 +1143,17 @@ export class ConversationService {
   private async addUsersToExistingMLSConversation(groupIdDecodedFromBase64: Uint8Array, invitee: Invitee[]) {
     const coreCryptoClient = this.coreCryptoClientProvider();
     const memberAddedMessages = await coreCryptoClient.addClientsToConversation(groupIdDecodedFromBase64, invitee);
-    const sendingPromises: Promise<unknown>[] = [];
+
     if (memberAddedMessages?.welcome) {
-      sendingPromises.push(
-        this.apiClient.api.conversation.postMlsWelcomeMessage(Uint8Array.from(memberAddedMessages.welcome)),
-      );
+      await this.apiClient.api.conversation.postMlsWelcomeMessage(Uint8Array.from(memberAddedMessages.welcome));
     }
     if (memberAddedMessages?.message) {
-      sendingPromises.push(
-        this.apiClient.api.conversation.postMlsMessage(Uint8Array.from(memberAddedMessages.message)),
-      );
+      return this.apiClient.api.conversation.postMlsMessage(Uint8Array.from(memberAddedMessages.message));
     }
-    await Promise.all(sendingPromises);
+    return null;
   }
 
-  private async creatMLSConversation(conversationData: NewConversation): Promise<Conversation> {
+  public async createMLSConversation(conversationData: NewConversation): MLSReturnType {
     /**
      * @note For creating MLS conversations the users & qualified_users
      * field must be empty as backend is not aware which users
@@ -1214,12 +1187,20 @@ export class ConversationService {
       ...qualifiedUsers,
     ]);
 
-    await this.addUsersToExistingMLSConversation(groupIdDecodedFromBase64, coreCryptoKeyPackagesPayload);
+    const response = await this.addUsersToExistingMLSConversation(
+      groupIdDecodedFromBase64,
+      coreCryptoKeyPackagesPayload,
+    );
 
     await this.notificationService.saveConversationGroupId(newConversation);
     // We fetch the fresh version of the conversation created on backend with the newly added users
 
-    return this.getConversations(qualifiedId.id);
+    const conversation = await this.getConversations(qualifiedId.id);
+
+    return {
+      events: response?.events || [],
+      conversation,
+    };
   }
 
   private async sendMLSMessage<T extends OtrMessage>(
@@ -1255,12 +1236,24 @@ export class ConversationService {
     }
   }
 
-  private async addUsersToMLSConversation({qualifiedUserIds, groupId, conversationId}: Required<AddUsersParams>) {
+  public async addUsersToMLSConversation({
+    qualifiedUserIds,
+    groupId,
+    conversationId,
+  }: Required<AddUsersParams>): MLSReturnType {
     const groupIdDecodedFromBase64 = Decoder.fromBase64(groupId!).asBytes;
     const coreCryptoKeyPackagesPayload = await this.getCoreCryptoKeyPackagesPayload([...qualifiedUserIds]);
-    await this.addUsersToExistingMLSConversation(groupIdDecodedFromBase64, coreCryptoKeyPackagesPayload);
-    console.info('addUsersToMLSGroup', conversationId, qualifiedUserIds, groupIdDecodedFromBase64);
+    const response = await this.addUsersToExistingMLSConversation(
+      groupIdDecodedFromBase64,
+      coreCryptoKeyPackagesPayload,
+    );
+    console.info('addUsersToMLSGroup', conversationId, qualifiedUserIds, groupIdDecodedFromBase64, response);
 
-    return this.getConversations(conversationId.id);
+    const conversation = await this.getConversations(conversationId.id);
+
+    return {
+      events: response?.events || [],
+      conversation,
+    };
   }
 }
