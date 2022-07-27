@@ -51,7 +51,7 @@ export const useMatchMedia = (query: Query) => {
 export const MatchMedia: React.FC<MatchMediaProps> = ({query, children, not}) => {
   const matchQuery = useMatchMedia(QUERY[query] || query);
   const isMatching = not ? !matchQuery : matchQuery;
-  return <>{isMatching ? children : null}</>;
+  return isMatching ? <>{children}</> : null;
 };
 
 export type NamedMatchMediaProps = Omit<MatchMediaProps, 'query'>;
