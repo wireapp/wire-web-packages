@@ -143,4 +143,4 @@ export type AddUsersParams = {
   groupId?: string;
 };
 
-export type MLSReturnType = Promise<{events: MlsEvent[]; conversation: Conversation}>;
+export type MLSReturnType = {events: MlsEvent[]; conversation: Conversation};
