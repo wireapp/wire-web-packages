@@ -959,11 +959,11 @@ export class ConversationAPI {
   }
 
   /**
-   * Add qualified members to an existing conversation.
+   * Add users to an existing conversation.
    * @param conversationId The conversation ID to add the users to
    * @param users List of users to add to a conversation
    */
-  public async postMembersV0(conversationId: string, userIds: string[]) {
+  private async postMembersV0(conversationId: string, userIds: string[]) {
     const config: AxiosRequestConfig = {
       data: {
         conversation_role: DefaultConversationRoleName.WIRE_MEMBER,
