@@ -1153,7 +1153,7 @@ export class ConversationService {
     return null;
   }
 
-  public async createMLSConversation(conversationData: NewConversation): MLSReturnType {
+  public async createMLSConversation(conversationData: NewConversation): Promise<MLSReturnType> {
     /**
      * @note For creating MLS conversations the users & qualified_users
      * field must be empty as backend is not aware which users
@@ -1240,7 +1240,7 @@ export class ConversationService {
     qualifiedUserIds,
     groupId,
     conversationId,
-  }: Required<AddUsersParams>): MLSReturnType {
+  }: Required<AddUsersParams>): Promise<MLSReturnType> {
     const groupIdDecodedFromBase64 = Decoder.fromBase64(groupId!).asBytes;
     const coreCryptoKeyPackagesPayload = await this.getCoreCryptoKeyPackagesPayload([...qualifiedUserIds]);
     const response = await this.addUsersToExistingMLSConversation(
