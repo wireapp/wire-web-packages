@@ -25,7 +25,8 @@ import {
   FeatureLegalhold,
   FeatureFileSharing,
   FeatureSSO,
-  FeatureSearchVisibility,
+  FeatureSearchVisibilityOutbound,
+  FeatureSearchVisibilityInbound,
   FeatureValidateSAMLEmails,
   FeatureSelfDeletingMessages,
   FeatureConversationGuestLink,
@@ -41,5 +42,6 @@ export type TeamFeatureConfigurationUpdateEventData =
   | FeatureLegalhold
   | FeatureSSO
   | FeatureSelfDeletingMessages
-  | FeatureSearchVisibility
+  | FeatureSearchVisibilityOutbound
+  | FeatureSearchVisibilityInbound
   | FeatureValidateSAMLEmails;

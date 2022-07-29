@@ -32,6 +32,8 @@ import type {
   FeatureSelfDeletingMessages,
   FeatureSndFactorPassword,
   FeatureMLS,
+  FeatureSearchVisibilityOutbound,
+  FeatureSearchVisibilityInbound,
 } from './Feature';
 import type {FeatureList} from './FeatureList';
 import {FeatureConversationGuestLink, FeatureLockedError} from '.';
@@ -50,6 +52,8 @@ export class FeatureAPI {
     FEATURES: 'features',
     FILE_SHARING: 'fileSharing',
     LEGAL_HOLD: 'legalhold',
+    SEARCH_VISIBILITY_OUTBOUND: 'searchVisibilityOutbound',
+    SEARCH_VISIBILITY_INBOUND: 'searchVisibilityInbound',
     SND_FACTOR_PASSWORD: 'sndFactorPasswordChallenge',
     SSO: 'sso',
     MLS: 'mls',
@@ -345,5 +349,53 @@ export class FeatureAPI {
       }
       throw error;
     }
+  }
+
+  public async getSearchVisibilityOutboundFeature(teamId: string): Promise<FeatureSearchVisibilityOutbound> {
+    const config: AxiosRequestConfig = {
+      method: 'get',
+      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.SEARCH_VISIBILITY_OUTBOUND}`,
+    };
+
+    const response = await this.client.sendJSON<FeatureSearchVisibilityOutbound>(config);
+    return response.data;
+  }
+
+  public async putSearchVisibilityOutboundFeature(
+    teamId: string,
+    searchVisibilityOutboundFeature: Omit<FeatureSearchVisibilityOutbound, 'lockStatus'>,
+  ): Promise<FeatureSearchVisibilityOutbound> {
+    const config: AxiosRequestConfig = {
+      data: searchVisibilityOutboundFeature,
+      method: 'put',
+      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.SEARCH_VISIBILITY_OUTBOUND}`,
+    };
+
+    const response = await this.client.sendJSON<FeatureSearchVisibilityOutbound>(config);
+    return response.data;
+  }
+
+  public async getSearchVisibilityInboundFeature(teamId: string): Promise<FeatureSearchVisibilityInbound> {
+    const config: AxiosRequestConfig = {
+      method: 'get',
+      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.SEARCH_VISIBILITY_INBOUND}`,
+    };
+
+    const response = await this.client.sendJSON<FeatureSearchVisibilityInbound>(config);
+    return response.data;
+  }
+
+  public async putSearchVisibilityInboundFeature(
+    teamId: string,
+    searchVisibilityInboundFeature: Omit<FeatureSearchVisibilityInbound, 'lockStatus'>,
+  ): Promise<FeatureSearchVisibilityInbound> {
+    const config: AxiosRequestConfig = {
+      data: searchVisibilityInboundFeature,
+      method: 'put',
+      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.SEARCH_VISIBILITY_INBOUND}`,
+    };
+
+    const response = await this.client.sendJSON<FeatureSearchVisibilityInbound>(config);
+    return response.data;
   }
 }

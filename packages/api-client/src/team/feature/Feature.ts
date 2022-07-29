@@ -68,6 +68,8 @@ export interface FeatureMLSConfig extends FeatureConfig {
   protocolToggleUsers: string[];
 }
 
+export type FeatureSearchVisibilityConfig = 'standard' | 'no-name-outside-team';
+
 export type FeatureAppLock = Feature<FeatureAppLockConfig>;
 export type FeatureClassifiedDomains = Feature<FeatureClassifiedDomainsConfig>;
 export type FeatureConferenceCalling = FeatureWithoutConfig;
@@ -75,7 +77,8 @@ export type FeatureDigitalSignature = FeatureWithoutConfig;
 export type FeatureConversationGuestLink = FeatureWithoutConfig;
 export type FeatureFileSharing = FeatureWithoutConfig;
 export type FeatureLegalhold = FeatureWithoutConfig;
-export type FeatureSearchVisibility = FeatureWithoutConfig;
+export type FeatureSearchVisibilityOutbound = Feature<FeatureSearchVisibilityConfig>;
+export type FeatureSearchVisibilityInbound = Feature<FeatureSearchVisibilityConfig>;
 export type FeatureSelfDeletingMessages = Feature<FeatureSelfDeletingMessagesConfig>;
 export type FeatureMLS = Feature<FeatureMLSConfig>;
 export type FeatureSSO = FeatureWithoutConfig;
