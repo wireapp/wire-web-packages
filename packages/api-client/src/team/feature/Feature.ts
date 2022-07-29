@@ -68,7 +68,10 @@ export interface FeatureMLSConfig extends FeatureConfig {
   protocolToggleUsers: string[];
 }
 
-export type FeatureSearchVisibilityConfig = 'standard' | 'no-name-outside-team';
+export enum FeatureSearchVisibilityConfig {
+  STANDARD = 'standard',
+  NO_NAME_OUTSIDE_TEAM = 'no-name-outside-team',
+}
 
 export type FeatureAppLock = Feature<FeatureAppLockConfig>;
 export type FeatureClassifiedDomains = Feature<FeatureClassifiedDomainsConfig>;
