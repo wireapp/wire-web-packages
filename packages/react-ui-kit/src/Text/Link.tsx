@@ -47,12 +47,12 @@ export const linkStyle: <T>(theme: Theme, props: LinkProps<T>) => CSSObject = (
     color: color,
     cursor: 'pointer',
     textDecoration: 'none',
+    '&:visited, &:link, &:active': {
+      color: color,
+    },
     ...(variant === LinkVariant.PRIMARY && {
       '&:hover, &:visited:hover': {
         color: theme.general.primaryColor,
-      },
-      '&:visited': {
-        color: color,
       },
       textDecoration: 'underline',
       textUnderlineOffset: '2px',
@@ -64,9 +64,6 @@ export const linkStyle: <T>(theme: Theme, props: LinkProps<T>) => CSSObject = (
       transition: defaultTransition,
       '&:hover': {
         color: hoverColor,
-      },
-      '&:visited, &:link, &:active': {
-        color: color,
       },
     }),
   };
