@@ -22,7 +22,6 @@ import {CSSObject, jsx, useTheme} from '@emotion/react';
 import type {Property} from 'csstype';
 import React, {ReactElement, useState} from 'react';
 
-import {COLOR_V2} from '../Identity';
 import type {Theme} from '../Layout';
 import type {TextProps} from '../Text';
 import {filterProps} from '../util';
@@ -60,19 +59,17 @@ export const inputStyle: <T>(theme: Theme, props: InputProps<T>, hasError?: bool
       ...placeholderStyle,
     },
     '&:focus': {
-      boxShadow: `inset 0 0 0 1px ${theme.general.primaryColor}`,
+      boxShadow: `0 0 0 1px ${theme.general.primaryColor}`,
     },
     '&:invalid:not(:focus)': !markInvalid
       ? {
-          boxShadow: `inset 0 0 0 1px ${theme.Select.borderColor}`,
+          boxShadow: `0 0 0 1px ${theme.Select.borderColor}`,
         }
       : {},
     background: disabled ? theme.Input.backgroundColorDisabled : theme.Input.backgroundColor,
     border: 'none',
     borderRadius: '12px',
-    boxShadow: markInvalid
-      ? `inset 0 0 0 1px ${theme.general.dangerColor}`
-      : `inset 0 0 0 1px ${theme.Select.borderColor}`,
+    boxShadow: markInvalid ? `0 0 0 1px ${theme.general.dangerColor}` : `0 0 0 1px ${theme.Select.borderColor}`,
     caretColor: theme.general.primaryColor,
     color: theme.general.color,
     fontWeight: 300,
