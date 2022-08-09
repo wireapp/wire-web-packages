@@ -18,7 +18,7 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/react';
+import {CSSObject, jsx, useTheme} from '@emotion/react';
 import type {Property} from 'csstype';
 import React, {ReactElement, useState} from 'react';
 
@@ -60,18 +60,20 @@ export const inputStyle: <T>(theme: Theme, props: InputProps<T>, hasError?: bool
       ...placeholderStyle,
     },
     '&:focus': {
-      boxShadow: `0 0 0 1px ${COLOR_V2.BLUE}`,
+      boxShadow: `inset 0 0 0 1px ${theme.general.primaryColor}`,
     },
     '&:invalid:not(:focus)': !markInvalid
       ? {
-          boxShadow: `0 0 0 1px ${COLOR_V2.GRAY}`,
+          boxShadow: `inset 0 0 0 1px ${theme.Select.borderColor}`,
         }
       : {},
     background: disabled ? theme.Input.backgroundColorDisabled : theme.Input.backgroundColor,
     border: 'none',
-    borderRadius: '4px',
-    boxShadow: markInvalid ? `0 0 0 1px ${COLOR_V2.RED}` : `0 0 0 1px ${COLOR_V2.GRAY_40}`,
-    caretColor: COLOR_V2.BLUE,
+    borderRadius: '12px',
+    boxShadow: markInvalid
+      ? `inset 0 0 0 1px ${theme.general.dangerColor}`
+      : `inset 0 0 0 1px ${theme.Select.borderColor}`,
+    caretColor: theme.general.primaryColor,
     color: theme.general.color,
     fontWeight: 300,
     height: '48px',
@@ -106,17 +108,19 @@ export const Input: React.FC<InputProps<HTMLInputElement>> = React.forwardRef<
 
   const toggleSetPassword = () => setTogglePassword(prevState => !prevState);
 
+  const theme = useTheme();
+
   return (
     <div
       className={INPUT_GROUP}
-      css={{
+      css={(theme: Theme) => ({
         marginBottom: hasError ? '2px' : '20px',
         width: '100%',
         '&:focus-within label': {
-          color: COLOR_V2.BLUE,
+          color: theme.general.primaryColor,
         },
         ...wrapperCSS,
-      }}
+      })}
     >
       {label && (
         <InputLabel htmlFor={props.id} isRequired={props.required} markInvalid={props.markInvalid}>
@@ -148,13 +152,22 @@ export const Input: React.FC<InputProps<HTMLInputElement>> = React.forwardRef<
             aria-controls={props.id}
             aria-expanded={togglePassword}
           >
-            {togglePassword ? <HideIcon color={COLOR_V2.BLACK} /> : <ShowIcon color={COLOR_V2.BLACK} />}
+            {togglePassword ? <HideIcon /> : <ShowIcon />}
           </button>
         )}
       </div>
 
       {!hasError && helperText && (
-        <p css={{fontSize: '12px', fontWeight: 400, color: COLOR_V2.GRAY_80, marginTop: 8}}>{helperText}</p>
+        <p
+          css={(theme: Theme) => ({
+            fontSize: '12px',
+            fontWeight: 400,
+            color: theme.Input.placeholderColor,
+            marginTop: 8,
+          })}
+        >
+          {helperText}
+        </p>
       )}
 
       {error}

@@ -76,33 +76,46 @@ export const customStyles = (theme: Theme, markInvalid = false) => ({
     borderRadius: 12,
     marginBottom: 0,
     marginTop: 4,
+    overflowY: 'overlay',
   }),
   menuList: provided => ({
     ...provided,
+    borderRadius: 12,
     paddingBottom: 0,
     paddingTop: 0,
   }),
   option: (provided, {isDisabled, isFocused, isSelected}) => ({
     ...provided,
+    backgroundColor: theme.Input.backgroundColor,
+    color: theme.general.color,
     padding: '10px 18px',
     cursor: isDisabled ? 'not-allowed' : 'pointer',
     fontSize: '16px',
     fontWeight: 300,
     lineHeight: '24px',
-    ...(isSelected && {
-      backgroundColor: 'inherit',
-      color: 'inherit',
-    }),
-    ...(isFocused && {
-      background: theme.general.primaryColor,
-      borderColor: theme.general.primaryColor,
-      color: theme.Select.contrastTextColor,
-    }),
+    ...(isFocused &&
+      !isDisabled && {
+        background: theme.general.primaryColor,
+        borderColor: theme.general.primaryColor,
+        color: theme.Select.contrastTextColor,
+      }),
     '&:hover, &:active, &:focus': {
       background: theme.general.primaryColor,
       borderColor: theme.general.primaryColor,
       color: theme.Select.contrastTextColor,
     },
+    ...(isDisabled && {
+      backgroundColor: theme.Input.backgroundColorDisabled,
+      color: theme.Select.disabledColor,
+      '&:hover, &:active, &:focus': {
+        backgroundColor: theme.Select.borderColor,
+        color: theme.Select.disabledColor,
+      },
+      ...(isFocused && {
+        backgroundColor: theme.Select.borderColor,
+        color: theme.Select.disabledColor,
+      }),
+    }),
     '&:not(:last-of-type)': {
       borderBottom: `1px solid ${theme.Select.borderColor}`,
     },
@@ -118,5 +131,9 @@ export const customStyles = (theme: Theme, markInvalid = false) => ({
     padding: 0,
     width: '100%',
     display: 'grid',
+  }),
+  singleValue: provided => ({
+    ...provided,
+    color: theme.general.color,
   }),
 });
