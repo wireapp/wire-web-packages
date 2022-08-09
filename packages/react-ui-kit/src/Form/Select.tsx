@@ -31,16 +31,17 @@ import type {Theme} from '../Layout';
 import InputLabel from './InputLabel';
 
 export type Option = {
-  value: string | number;
+  value: string;
   label: string;
   description?: string;
   isDisabled?: boolean;
 };
 
-interface SelectProps<IsMulti extends boolean> extends StateManagerProps<Option, IsMulti> {
+interface SelectProps<IsMulti extends boolean> extends Omit<StateManagerProps<Option, IsMulti>, 'onChange'> {
   id: string;
   dataUieName: string;
   options: Option[];
+  onChange: (value: Option) => void;
   wrapperCSS?: CSSObject;
   label?: string;
   helperText?: string;
@@ -58,6 +59,7 @@ export const Select = <IsMulti extends boolean = false>({
   dataUieName,
   options,
   isMulti,
+  onChange,
   wrapperCSS = {},
   markInvalid = false,
   required = false,
@@ -94,6 +96,7 @@ export const Select = <IsMulti extends boolean = false>({
           ValueContainer,
           IndicatorsContainer,
         }}
+        onChange={onChange}
         hideSelectedOptions={false}
         isSearchable={false}
         isClearable={false}
