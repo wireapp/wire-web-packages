@@ -41,6 +41,7 @@ const light: <T>() => CSSObject = () => ({
   '--text-input-label': COLOR_V2.GRAY_80,
   '--danger-color': COLOR_V2.RED_LIGHT_500,
   '--app-bg': COLOR_V2.GRAY_10,
+  '--main-color': COLOR.BLACK,
 });
 
 const dark: <T>() => CSSObject = () => ({
@@ -63,6 +64,7 @@ const dark: <T>() => CSSObject = () => ({
   '--text-input-label': COLOR_V2.GRAY_40,
   '--danger-color': COLOR_V2.RED_DARK_500,
   '--app-bg': COLOR_V2.GRAY_95,
+  '--main-color': COLOR.WHITE,
 });
 
 const accentColors: <T>() => CSSObject = () => ({
