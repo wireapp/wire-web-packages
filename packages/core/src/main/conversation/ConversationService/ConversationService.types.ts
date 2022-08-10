@@ -143,4 +143,9 @@ export type AddUsersParams = {
   groupId?: string;
 };
 
+export type RemoveUsersParams = {
+  qualifiedUserIds: QualifiedId[];
+  groupId: string;
+};
+
 export type MLSReturnType = {events: MlsEvent[]; conversation: Conversation};

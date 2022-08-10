@@ -18,6 +18,7 @@
  */
 
 import {PublicClient} from './PublicClient';
+import {Decoder} from 'bazinga64';
 
 export interface QualifiedUserClientMap {
   [domain: string]: {
@@ -27,4 +28,11 @@ export interface QualifiedUserClientMap {
 
 export interface QualifiedPublicClients {
   qualified_user_map: QualifiedUserClientMap;
+}
+
+export function qualifiedUserMapToClientIds(qualified_user_map: QualifiedUserClientMap) {
+  return Object.values(qualified_user_map)
+    .flatMap(domain => Object.values(domain))
+    .flat()
+    .map(({id}) => Decoder.fromBase64(id).asBytes);
 }
