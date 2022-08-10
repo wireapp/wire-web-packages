@@ -22,46 +22,60 @@ import {CSSObject} from '@emotion/react';
 import {COLOR, COLOR_V2} from './Identity';
 
 const light: <T>() => CSSObject = () => ({
+  // Checkbox
   '--checkbox-background': COLOR_V2.GRAY_20,
   '--checkbox-background-disabled': COLOR_V2.GRAY_10,
   '--checkbox-background-disabled-selected': COLOR_V2.GRAY_60,
   '--checkbox-border': COLOR_V2.GRAY_80,
   '--checkbox-border-disabled': COLOR_V2.GRAY_70,
+
+  // Icon Button
   '--icon-button-primary-enabled-bg': COLOR.WHITE,
   '--icon-button-primary-hover-bg': COLOR_V2.GRAY_20,
   '--icon-button-primary-border': COLOR_V2.GRAY_40,
   '--icon-button-primary-disabled-bg': COLOR_V2.GRAY_20,
   '--icon-button-primary-disabled-border': COLOR_V2.GRAY_40,
   '--icon-button-primary-hover-border': COLOR_V2.GRAY_50,
+
+  // Inputs
   '--text-input-background': COLOR.WHITE,
   '--text-input-border': COLOR_V2.GRAY_40,
   '--text-input-border-hover': COLOR_V2.GRAY_60,
   '--text-input-placeholder': COLOR_V2.GRAY_70,
   '--text-input-disabled': COLOR_V2.GRAY_20,
   '--text-input-label': COLOR_V2.GRAY_80,
+
+  // General
   '--danger-color': COLOR_V2.RED_LIGHT_500,
   '--app-bg': COLOR_V2.GRAY_10,
   '--main-color': COLOR.BLACK,
 });
 
 const dark: <T>() => CSSObject = () => ({
+  // Checkbox
   '--checkbox-background': COLOR_V2.GRAY_90,
   '--checkbox-background-disabled': COLOR_V2.GRAY_90,
   '--checkbox-background-disabled-selected': COLOR_V2.GRAY_80,
   '--checkbox-border': COLOR_V2.GRAY_60,
   '--checkbox-border-disabled': COLOR_V2.GRAY_60,
+
+  // Icon Button
   '--icon-button-primary-enabled-bg': COLOR_V2.GRAY_90,
   '--icon-button-primary-hover-bg': COLOR_V2.GRAY_80,
   '--icon-button-primary-border': COLOR_V2.GRAY_100,
   '--icon-button-primary-disabled-bg': COLOR_V2.GRAY_95,
   '--icon-button-primary-disabled-border': COLOR_V2.GRAY_90,
   '--icon-button-primary-hover-border': COLOR_V2.GRAY_70,
+
+  // Inputs
   '--text-input-background': COLOR.BLACK,
   '--text-input-border': COLOR_V2.GRAY_80,
   '--text-input-border-hover': COLOR_V2.GRAY_40,
   '--text-input-placeholder': COLOR_V2.GRAY_60,
   '--text-input-disabled': COLOR_V2.GRAY_100,
   '--text-input-label': COLOR_V2.GRAY_40,
+
+  // General
   '--danger-color': COLOR_V2.RED_DARK_500,
   '--app-bg': COLOR_V2.GRAY_95,
   '--main-color': COLOR.WHITE,
