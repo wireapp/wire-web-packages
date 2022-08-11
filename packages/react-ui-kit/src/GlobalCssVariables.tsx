@@ -21,7 +21,7 @@
 import {CSSObject} from '@emotion/react';
 import {COLOR, COLOR_V2} from './Identity';
 
-const light: <T>() => CSSObject = () => ({
+const light: () => CSSObject = () => ({
   // Checkbox
   '--checkbox-background': COLOR_V2.GRAY_20,
   '--checkbox-background-disabled': COLOR_V2.GRAY_10,
@@ -51,7 +51,7 @@ const light: <T>() => CSSObject = () => ({
   '--main-color': COLOR.BLACK,
 });
 
-const dark: <T>() => CSSObject = () => ({
+const dark: () => CSSObject = () => ({
   // Checkbox
   '--checkbox-background': COLOR_V2.GRAY_90,
   '--checkbox-background-disabled': COLOR_V2.GRAY_90,
@@ -81,7 +81,7 @@ const dark: <T>() => CSSObject = () => ({
   '--main-color': COLOR.WHITE,
 });
 
-const accentColors: <T>() => CSSObject = () => ({
+const accentColors: () => CSSObject = () => ({
   '--accent-color': COLOR_V2.BLUE_LIGHT_500,
   '--accent-color-highlight': COLOR_V2.BLUE_LIGHT_50,
   '--accent-color-highlight-inversed': COLOR_V2.BLUE_LIGHT_800,
