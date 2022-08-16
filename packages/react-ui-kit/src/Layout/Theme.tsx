@@ -139,13 +139,13 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
   },
   [THEME_ID.LIGHT]: {
     Button: {
-      primaryBg: COLOR_V2.BLUE_LIGHT_500,
-      primaryHoverBg: COLOR_V2.BLUE_LIGHT_600,
-      primaryActiveBg: COLOR_V2.BLUE_LIGHT_700,
-      primaryActiveBorder: COLOR_V2.BLUE_LIGHT_700,
-      primaryFocusBorder: COLOR_V2.BLUE_LIGHT_700,
-      primaryDisabledBg: COLOR_V2.GRAY_50,
-      primaryDisabledText: COLOR_V2.GRAY_80,
+      primaryBg: 'var(--accent-color)',
+      primaryHoverBg: 'var(--button-primary-hover)',
+      primaryActiveBg: 'var(--button-primary-active)',
+      primaryActiveBorder: 'var(--button-primary-active-border)',
+      primaryFocusBorder: 'var(--button-primary-focus-border)',
+      primaryDisabledBg: 'var(--button-primary-disabled-bg)',
+      primaryDisabledText: 'var(--button-primary-disabled-text)',
     },
     IconButton: {
       activePrimaryBgColor: COLOR_V2.BLUE_LIGHT_50,
@@ -188,6 +188,15 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
     },
   },
   [THEME_ID.DARK]: {
+    Button: {
+      primaryBg: 'var(--accent-color)',
+      primaryHoverBg: 'var(--button-primary-hover)',
+      primaryActiveBg: 'var(--button-primary-active)',
+      primaryActiveBorder: 'var(--button-primary-active-border)',
+      primaryFocusBorder: 'var(--button-primary-focus-border)',
+      primaryDisabledBg: 'var(--button-primary-disabled-bg)',
+      primaryDisabledText: 'var(--button-primary-disabled-text)',
+    },
     IconButton: {
       activePrimaryBgColor: COLOR_V2.BLUE_DARK_800,
       focusBorderColor: COLOR_V2.BLUE_DARK_600,
