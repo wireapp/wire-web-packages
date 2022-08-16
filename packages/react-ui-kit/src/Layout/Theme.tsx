@@ -32,6 +32,15 @@ export enum THEME_ID {
 }
 
 export interface Theme {
+  Button?: {
+    primaryBg?: String;
+    primaryHoverBg?: String;
+    primaryActiveBg?: String;
+    primaryActiveBorder?: String;
+    primaryFocusBorder?: String;
+    primaryDisabledBg?: String;
+    primaryDisabledText?: String;
+  };
   IconButton: {
     activePrimaryBgColor?: string;
     activePrimaryBorderColor?: string;
@@ -57,7 +66,9 @@ export interface Theme {
   general: {
     backgroundColor: string;
     color: string;
+    contrastColor?: String;
     dangerColor?: string;
+    focusColor?: String;
     primaryColor?: string;
   };
   Input: {
@@ -76,6 +87,15 @@ export interface Theme {
 
 export const themes: {[themeId in THEME_ID]: Theme} = {
   [THEME_ID.DEFAULT]: {
+    Button: {
+      primaryBg: 'var(--accent-color)',
+      primaryHoverBg: 'var(--button-primary-hover)',
+      primaryActiveBg: 'var(--button-primary-active)',
+      primaryActiveBorder: 'var(--button-primary-active-border)',
+      primaryFocusBorder: 'var(--button-primary-focus-border)',
+      primaryDisabledBg: 'var(--button-primary-disabled-bg)',
+      primaryDisabledText: 'var(--button-primary-disabled-text)',
+    },
     Checkbox: {
       background: 'var(--checkbox-background)',
       border: 'var(--checkbox-border)',
@@ -113,6 +133,8 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
       color: 'var(--main-color)',
       dangerColor: 'var(--danger-color)',
       primaryColor: 'var(--accent-color)',
+      contrastColor: 'var(--text-input-background)',
+      focusColor: 'var(--accent-color-focus)',
     },
   },
   [THEME_ID.LIGHT]: {

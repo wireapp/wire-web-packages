@@ -37,6 +37,10 @@ const light: () => CSSObject = () => ({
   '--icon-button-primary-disabled-border': COLOR_V2.GRAY_40,
   '--icon-button-primary-hover-border': COLOR_V2.GRAY_50,
 
+  // Button
+  '--button-primary-disabled-bg': COLOR_V2.GRAY_50,
+  '--button-primary-disabled-text': COLOR_V2.GRAY_80,
+
   // Inputs
   '--text-input-background': COLOR.WHITE,
   '--text-input-border': COLOR_V2.GRAY_40,
@@ -67,6 +71,10 @@ const dark: () => CSSObject = () => ({
   '--icon-button-primary-disabled-border': COLOR_V2.GRAY_90,
   '--icon-button-primary-hover-border': COLOR_V2.GRAY_70,
 
+  // Button
+  '--button-primary-disabled-bg': COLOR_V2.GRAY_70,
+  '--button-primary-disabled-text': COLOR.BLACK,
+
   // Inputs
   '--text-input-background': COLOR.BLACK,
   '--text-input-border': COLOR_V2.GRAY_80,
@@ -89,6 +97,10 @@ const accentColors: () => CSSObject = () => ({
   '--accent-color-focus': COLOR_V2.BLUE_LIGHT_400,
   '--icon-primary-active-fill': COLOR_V2.BLUE_LIGHT_500,
   '--icon-secondary-active-border': 'transparent',
+  '--button-primary-hover': COLOR_V2.BLUE_LIGHT_600,
+  '--button-primary-active': COLOR_V2.BLUE_LIGHT_700,
+  '--button-primary-active-border': COLOR_V2.BLUE_LIGHT_700,
+  '--button-primary-focus-border': COLOR_V2.BLUE_LIGHT_700,
 });
 
 export const GlobalCssVariables = {

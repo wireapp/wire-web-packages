@@ -98,17 +98,19 @@ export const buttonStyle: <T>(theme: Theme, props: ButtonProps<T>) => CSSObject 
     }),
   }),
   ...(variant === ButtonVariant.PRIMARY && {
-    backgroundColor: backgroundColor || (disabled ? COLOR_V2.GRAY_50 : COLOR_V2.BLUE),
-    color: disabled ? COLOR_V2.GRAY_80 : COLOR_V2.WHITE,
+    backgroundColor: backgroundColor || (disabled ? theme.Button.primaryDisabledBg : theme.Button.primaryBg),
+    color: disabled ? theme.Button.primaryDisabledText : theme.general.contrastColor,
     ...(!disabled && {
       '&:hover, &:focus': {
-        backgroundColor: COLOR_V2.BLUE_LIGHT_600,
+        backgroundColor: theme.Button.primaryHoverBg,
       },
       '&:focus': {
-        border: `1px solid ${COLOR_V2.BLUE_LIGHT_700}`,
+        border: `1px solid ${theme.Button.primaryFocusBorder}`,
       },
       '&:active': {
-        backgroundColor: COLOR_V2.BLUE_LIGHT_700,
+        backgroundColor: theme.Button.primaryActiveBg,
+        border: `1px solid ${theme.Button.primaryActiveBorder}`,
+        color: COLOR.WHITE,
       },
     }),
   }),
