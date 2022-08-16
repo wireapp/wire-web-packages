@@ -2431,10 +2431,10 @@
   resolved "https://registry.npmjs.org/@open-wc/webpack-import-meta-loader/-/webpack-import-meta-loader-0.4.7.tgz#d8212640a386a66bf06a2a4c101936467839b5a1"
   integrity sha512-F3d1EHRckk2+ZpgEEAgVITp8BU9DYLBhKOhNMREeQ1BwILRIhrt+V1bebpnd0Mz595jzd7Yh1wSibLsXibkCpg==
 
-"@otak/core-crypto@0.3.0-beta-2":
-  version "0.3.0-beta-2"
-  resolved "https://registry.npmjs.org/@otak/core-crypto/-/core-crypto-0.3.0-beta-2.tgz#095bc80678ef1f2cc6c6245a9a233307cb2aa9f5"
-  integrity sha512-P0D4ru5a+EhsdpxERwAsJt+dUGXpUak2oKCNRUqNifCkrFFS08I5x+U22oh6lKLXF0iGHbfLJq67Q93KExRUCw==
+"@otak/core-crypto@0.3.0-es2017":
+  version "0.3.0-es2017"
+  resolved "https://registry.npmjs.org/@otak/core-crypto/-/core-crypto-0.3.0-es2017.tgz#a221ab983cde8903af191844be94a98cdec152b1"
+  integrity sha512-tz4HNaghngCR1aBY+pFOxsmMP3ZLiWZLV3UIreuBRGUKV7JX4w9AcCUkMxmbTEitHuWstSnZCboJ67lNgkREFQ==
 
 "@popperjs/core@^2.4.4":
   version "2.6.0"
