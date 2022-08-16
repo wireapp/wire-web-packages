@@ -138,6 +138,15 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
     },
   },
   [THEME_ID.LIGHT]: {
+    Button: {
+      primaryBg: COLOR_V2.BLUE_LIGHT_500,
+      primaryHoverBg: COLOR_V2.BLUE_LIGHT_600,
+      primaryActiveBg: COLOR_V2.BLUE_LIGHT_700,
+      primaryActiveBorder: COLOR_V2.BLUE_LIGHT_700,
+      primaryFocusBorder: COLOR_V2.BLUE_LIGHT_700,
+      primaryDisabledBg: COLOR_V2.GRAY_50,
+      primaryDisabledText: COLOR_V2.GRAY_80,
+    },
     IconButton: {
       activePrimaryBgColor: COLOR_V2.BLUE_LIGHT_50,
       focusBorderColor: COLOR_V2.BLUE_LIGHT_500,
@@ -148,7 +157,7 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
       primaryDisabledBgColor: COLOR_V2.GRAY_20,
       primaryDisabledBorderColor: COLOR_V2.GRAY_40,
       primaryHoverBorderColor: COLOR_V2.GRAY_50,
-      secondaryActiveBorderColor: 'none',
+      secondaryActiveBorderColor: 'transparent',
     },
     Input: {
       backgroundColor: COLOR.WHITE,
