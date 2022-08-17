@@ -41,6 +41,13 @@ const light: () => CSSObject = () => ({
   '--button-primary-disabled-bg': COLOR_V2.GRAY_50,
   '--button-primary-disabled-text': COLOR_V2.GRAY_80,
 
+  '--button-tertiary-bg': COLOR_V2.GRAY_10,
+  '--button-tertiary-border': COLOR_V2.GRAY_40,
+  '--button-tertiary-hover-bg': COLOR_V2.GRAY_20,
+  '--button-tertiary-hover-border': COLOR_V2.GRAY_50,
+  '--button-tertiary-disabled-bg': COLOR_V2.GRAY_20,
+  '--button-tertiary-disabled-border': 'transparent',
+
   // Inputs
   '--text-input-background': COLOR.WHITE,
   '--text-input-border': COLOR_V2.GRAY_40,
@@ -74,6 +81,13 @@ const dark: () => CSSObject = () => ({
   // Button
   '--button-primary-disabled-bg': COLOR_V2.GRAY_70,
   '--button-primary-disabled-text': COLOR.BLACK,
+
+  '--button-tertiary-bg': COLOR_V2.GRAY_90,
+  '--button-tertiary-border': COLOR_V2.GRAY_100,
+  '--button-tertiary-hover-bg': COLOR_V2.GRAY_80,
+  '--button-tertiary-hover-border': COLOR_V2.GRAY_80,
+  '--button-tertiary-disabled-bg': COLOR_V2.GRAY_95,
+  '--button-tertiary-disabled-border': 'transparent',
 
   // Inputs
   '--text-input-background': COLOR.BLACK,

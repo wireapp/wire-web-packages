@@ -40,6 +40,13 @@ export interface Theme {
     primaryFocusBorder?: String;
     primaryDisabledBg?: String;
     primaryDisabledText?: String;
+    tertiaryBg?: String;
+    tertiaryBorder?: String;
+    tertiaryHoverBg?: String;
+    tertiaryHoverBorder?: String;
+    tertiarydisabledBg?: String;
+    tertiaryDisabledBorder?: String;
+    tertiaryActiveBg?: String;
   };
   IconButton: {
     activePrimaryBgColor?: string;
@@ -95,6 +102,13 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
       primaryFocusBorder: 'var(--button-primary-focus-border)',
       primaryDisabledBg: 'var(--button-primary-disabled-bg)',
       primaryDisabledText: 'var(--button-primary-disabled-text)',
+      tertiaryBg: 'var(--button-tertiary-bg)',
+      tertiaryBorder: 'var(--button-tertiary-border)',
+      tertiaryHoverBg: 'var(--button-tertiary-hover-bg)',
+      tertiaryHoverBorder: 'var(--button-tertiary-hover-border)',
+      tertiarydisabledBg: 'var(--button-tertiary-disabled-bg)',
+      tertiaryDisabledBorder: 'var(--button-tertiary-disabled-border)',
+      tertiaryActiveBg: 'var(--accent-color-highlight)',
     },
     Checkbox: {
       background: 'var(--checkbox-background)',
@@ -146,6 +160,7 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
       primaryFocusBorder: 'var(--button-primary-focus-border)',
       primaryDisabledBg: 'var(--button-primary-disabled-bg)',
       primaryDisabledText: 'var(--button-primary-disabled-text)',
+      tertiaryActiveBg: 'var(--accent-color-highlight)',
     },
     IconButton: {
       activePrimaryBgColor: COLOR_V2.BLUE_LIGHT_50,
@@ -196,6 +211,7 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
       primaryFocusBorder: 'var(--button-primary-focus-border)',
       primaryDisabledBg: 'var(--button-primary-disabled-bg)',
       primaryDisabledText: 'var(--button-primary-disabled-text)',
+      tertiaryActiveBg: 'var(--accent-color-highlight)',
     },
     IconButton: {
       activePrimaryBgColor: COLOR_V2.BLUE_DARK_800,
