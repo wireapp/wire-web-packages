@@ -63,13 +63,13 @@ import {
   PayloadBundleState,
   PayloadBundleType,
 } from '../../conversation/';
-import type {ClearedContent, DeletedContent, HiddenContent, RemoteData} from '../../conversation/content/';
+import type {ClearedContent, DeletedContent, HiddenContent, RemoteData} from '../Content';
 import type {CryptographyService} from '../../cryptography/';
 import {decryptAsset} from '../../cryptography/AssetCryptography';
 import {isStringArray, isQualifiedIdArray, isQualifiedUserClients, isUserClients} from '../../util/TypePredicateUtil';
-import {MessageBuilder} from '../message/MessageBuilder';
-import {MessageService} from '../message/MessageService';
-import {MessageToProtoMapper} from '../message/MessageToProtoMapper';
+import {MessageBuilder} from '../Message/MessageBuilder';
+import {MessageService} from '../Message/MessageService';
+import {MessageToProtoMapper} from '../Message/MessageToProtoMapper';
 import type {
   ButtonActionConfirmationMessage,
   ButtonActionMessage,
@@ -90,7 +90,7 @@ import type {
   ReactionMessage,
   ResetSessionMessage,
   TextMessage,
-} from '../message/OtrMessage';
+} from '../Message/OtrMessage';
 import {XOR} from '@wireapp/commons/src/main/util/TypeUtil';
 import type {NotificationService} from '../../notification';
 import {
@@ -1139,6 +1139,10 @@ export class ConversationService {
 
     return coreCryptoKeyPackagesPayload;
   }
+
+  // private async getPendingProposals(groupIdDecodedFromBase64: Uint8Array) {
+  //   const coreCryptoClient = this.coreCryptoClientProvider();
+  // }
 
   private async addUsersToExistingMLSConversation(groupIdDecodedFromBase64: Uint8Array, invitee: Invitee[]) {
     const coreCryptoClient = this.coreCryptoClientProvider();

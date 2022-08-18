@@ -19,7 +19,7 @@
 
 import {Button, Composite, Text} from '@wireapp/protocol-messaging';
 
-import {CompositeContent, LegalHoldStatus} from '../content';
+import {CompositeContent, LegalHoldStatus} from '../Content';
 import type {CompositeMessage} from './OtrMessage';
 import {MessageBuilder} from './MessageBuilder';
 

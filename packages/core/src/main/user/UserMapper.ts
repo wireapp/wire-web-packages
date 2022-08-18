@@ -27,7 +27,7 @@ import {
 } from '@wireapp/api-client/src/event';
 
 import {PayloadBundle, PayloadBundleSource, PayloadBundleState, PayloadBundleType} from '../conversation';
-import {MessageBuilder} from '../conversation/message/MessageBuilder';
+import {MessageBuilder} from '../conversation/Message/MessageBuilder';
 
 export class UserMapper {
   public static mapUserEvent(

@@ -36,8 +36,8 @@ import {BroadcastService} from './broadcast/';
 import {ClientInfo, ClientService} from './client/';
 import {ConnectionService} from './connection/';
 import {AssetService, ConversationService, PayloadBundleSource, PayloadBundleType} from './conversation/';
-import * as OtrMessage from './conversation/message/OtrMessage';
-import * as UserMessage from './conversation/message/UserMessage';
+import * as OtrMessage from './conversation/Message/OtrMessage';
+import * as UserMessage from './conversation/Message/UserMessage';
 import type {CoreError} from './CoreError';
 import {CryptographyService} from './cryptography/';
 import {GiphyService} from './giphy/';
@@ -555,6 +555,7 @@ export class Account<T = any> extends EventEmitter {
     const handleNotification = async (notification: Notification, source: PayloadBundleSource): Promise<void> => {
       try {
         const messages = this.service!.notification.handleNotification(notification, source, dryRun);
+        console.info('adrian', 'handleNotification', messages, notification);
         for await (const message of messages) {
           await handleEvent(message, source);
         }

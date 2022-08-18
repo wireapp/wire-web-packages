@@ -18,7 +18,7 @@
  */
 
 import {AssetService} from '../conversation';
-import {LinkPreviewContent, LinkPreviewUploadedContent} from '../conversation/content';
+import {LinkPreviewContent, LinkPreviewUploadedContent} from '../conversation/Content';
 
 export class LinkPreviewService {
   constructor(private readonly assetService: AssetService) {}

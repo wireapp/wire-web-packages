@@ -28,10 +28,10 @@ import {ConversationService, PayloadBundleSource, PayloadBundleState, PayloadBun
 import {CryptographyService} from '../../cryptography';
 import {NotificationService} from '../../notification';
 import * as PayloadHelper from '../../test/PayloadHelper';
-import {LinkPreviewUploadedContent, MentionContent, QuoteContent} from '../content';
+import {LinkPreviewUploadedContent, MentionContent, QuoteContent} from '../Content';
 import {MessageTargetMode} from './ConversationService.types';
-import {MessageBuilder} from '../message/MessageBuilder';
-import {OtrMessage} from '../message/OtrMessage';
+import {MessageBuilder} from '../Message/MessageBuilder';
+import {OtrMessage} from '../Message/OtrMessage';
 
 describe('ConversationService', () => {
   beforeAll(() => {

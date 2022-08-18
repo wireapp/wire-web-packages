@@ -20,7 +20,7 @@
 import type {ConversationEventData, TeamEventData, UserEventData} from '@wireapp/api-client/src/event/';
 import {QualifiedId} from '@wireapp/api-client/src/user';
 
-import type {ConversationContent} from '../content';
+import type {ConversationContent} from '../Content';
 import type {Message} from './Message';
 
 export type PayloadBundleContent = ConversationContent | ConversationEventData | TeamEventData | UserEventData;

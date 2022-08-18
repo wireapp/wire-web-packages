@@ -37,7 +37,7 @@ import type {
   LocationContent,
   ReactionContent,
   TextContent,
-} from '../conversation/content';
+} from '../conversation/Content';
 
 export class GenericMessageMapper {
   private static readonly logger = logdown('@wireapp/core/cryptography/GenericMessageMapper', {

@@ -22,7 +22,7 @@ import {USER_EVENT, UserConnectionEvent} from '@wireapp/api-client/src/event';
 import {UserConnectionData} from '@wireapp/api-client/src/user/data';
 
 import {PayloadBundleSource, PayloadBundleState, PayloadBundleType} from '../conversation';
-import {UserConnectionMessage} from '../conversation/message/UserMessage';
+import {UserConnectionMessage} from '../conversation/Message/UserMessage';
 import {UserMapper} from './UserMapper';
 
 describe('UserMapper', () => {

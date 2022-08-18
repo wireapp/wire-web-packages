@@ -24,7 +24,7 @@ import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import {EventEmitter} from 'events';
 import logdown from 'logdown';
 import {PayloadBundle, PayloadBundleSource, PayloadBundleType} from '../conversation';
-import type {AssetContent} from '../conversation/content';
+import type {AssetContent} from '../conversation/Content';
 import {ConversationMapper} from '../conversation/ConversationMapper';
 import {CoreError, NotificationError} from '../CoreError';
 import type {CryptographyService, DecryptionError} from '../cryptography';
@@ -37,6 +37,7 @@ import type {CoreCrypto} from '@otak/core-crypto/platforms/web/corecrypto';
 import {Decoder, Encoder} from 'bazinga64';
 import {QualifiedId} from '@wireapp/api-client/src/user';
 import {Conversation} from '@wireapp/api-client/src/conversation';
+import {CommonMLS, HandlePendingProposalsParams} from './types';
 
 export type HandledEventPayload = {
   event: Events.BackendEvent;
@@ -241,6 +242,7 @@ export class NotificationService extends EventEmitter {
     dryRun: boolean = false,
   ): Promise<HandledEventPayload> {
     const coreCryptoClient = this.coreCryptoClientProvider();
+    console.info('adrian', 'handleEvent', event, source, dryRun);
     if (!coreCryptoClient) {
       throw new Error('Unable to access core crypto client');
     }
@@ -260,13 +262,26 @@ export class NotificationService extends EventEmitter {
         const encryptedData = Decoder.fromBase64(event.data).asBytes;
 
         const groupId = await this.getUint8ArrayFromConversationGroupId(
-          event.qualified_conversation || {id: event.conversation, domain: ''},
+          event.qualified_conversation ?? {id: event.conversation, domain: ''},
         );
-        const rawData = await coreCryptoClient.decryptMessage(groupId, encryptedData);
-        if (!rawData.message) {
+        const {proposals, commitDelay, message} = await coreCryptoClient.decryptMessage(groupId, encryptedData);
+        console.info('adrian', proposals, commitDelay, message);
+
+        // ToDo: remove simulated variables
+        const simProposals = !proposals.length ? [new Uint8Array(), new Uint8Array()] : proposals;
+        const simCommitDelay = commitDelay ?? Math.floor(Math.random() * 10000);
+
+        if (simProposals.length > 0) {
+          await this.handlePendingProposals({
+            groupId,
+            delayInMs: simCommitDelay,
+            eventTime: event.time,
+          });
+        }
+        if (!message) {
           throw new Error(`MLS message received from ${source} was empty`);
         }
-        const decryptedData = GenericMessage.decode(rawData.message);
+        const decryptedData = GenericMessage.decode(message);
         /**
          * @todo Find a proper solution to add mappedEvent to this return
          * otherwise event.data will be base64 raw data of the received event
@@ -355,5 +370,41 @@ export class NotificationService extends EventEmitter {
       throw new Error(`Could not find a group_id for conversation ${conversationId}@${conversationDomain}`);
     }
     return Decoder.fromBase64(groupId).asBytes;
+  }
+
+  /**
+   * If there are pending proposals, we need to either process them,
+   * or save them in the database for later processing
+   *
+   * @param groupId groupId of the conversation
+   * @param proposals proposals to process
+   * @param delayInMs delay in ms before processing proposals
+   * @param eventTime time of the event that had the proposals
+   */
+  private async handlePendingProposals({delayInMs, groupId, eventTime}: HandlePendingProposalsParams) {
+    if (delayInMs > 0) {
+      const eventDate = new Date(eventTime);
+      await this.database.addPendingProposals({
+        groupId,
+        firingDate: eventDate.setTime(eventDate.getTime() + delayInMs),
+      });
+      // ToDo: start cronjob to process stored proposals
+    } else {
+      await this.commitPendingProposals({groupId});
+    }
+  }
+
+  /**
+   * If there are pending proposals, we need to either process them,
+   * or save them in the database for later processing
+   *
+   * @param groupId groupId of the conversation
+   * @param proposals proposals to process
+   * @param delayInMs delay in ms before processing proposals
+   * @param eventTime time of the event that had the proposals
+   */
+  private async commitPendingProposals({groupId}: CommonMLS) {
+    const coreCryptoClient = this.coreCryptoClientProvider();
+    await coreCryptoClient?.commitPendingProposals(groupId);
   }
 }

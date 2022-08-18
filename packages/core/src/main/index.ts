@@ -23,7 +23,7 @@ import * as conversation from './conversation/';
 import {CoreError} from './CoreError';
 import * as cryptography from './cryptography/';
 import * as util from './util';
-import {MessageBuilder} from './conversation/message/MessageBuilder';
+import {MessageBuilder} from './conversation/Message/MessageBuilder';
 
 export = {
   Account,
