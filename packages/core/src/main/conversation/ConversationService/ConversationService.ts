@@ -1215,7 +1215,11 @@ export class ConversationService {
     const {groupId, onSuccess, payload} = params;
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
 
+    // immediately execute pending commits before sending the message
+    await this.notificationService.commitPendingProposals({groupId: groupIdBytes});
+
     const coreCryptoClient = this.coreCryptoClientProvider();
+
     const encrypted = await coreCryptoClient.encryptMessage(
       groupIdBytes,
       GenericMessage.encode(genericMessage).finish(),

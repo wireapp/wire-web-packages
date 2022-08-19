@@ -38,7 +38,7 @@ import {Decoder, Encoder} from 'bazinga64';
 import {QualifiedId} from '@wireapp/api-client/src/user';
 import {Conversation} from '@wireapp/api-client/src/conversation';
 import {CommitPendingProposalsParams, HandlePendingProposalsParams} from './types';
-import {scheduleTask} from '../util/ScheduleTask/ScheduleTask';
+import {TaskScheduler} from '../util/TaskScheduler/TaskScheduler';
 
 export type HandledEventPayload = {
   event: Events.BackendEvent;
@@ -388,9 +388,10 @@ export class NotificationService extends EventEmitter {
         groupId,
         firingDate,
       });
-      scheduleTask({
+      TaskScheduler.addTask({
         task: () => this.commitPendingProposals({groupId}),
         firingDate,
+        key: `${groupId}`,
       });
     } else {
       await this.commitPendingProposals({groupId, skipDelete: true});
@@ -404,12 +405,14 @@ export class NotificationService extends EventEmitter {
    * @param groupId groupId of the conversation
    * @param skipDelete if true, do not delete the pending proposals from the database
    */
-  private async commitPendingProposals({groupId, skipDelete = false}: CommitPendingProposalsParams) {
+  public async commitPendingProposals({groupId, skipDelete = false}: CommitPendingProposalsParams) {
     const coreCryptoClient = this.coreCryptoClientProvider();
     if (coreCryptoClient) {
       try {
         await coreCryptoClient.commitPendingProposals(groupId);
+
         if (!skipDelete) {
+          TaskScheduler.cancelTask(`${groupId}`);
           await this.database.deletePendingProposal({groupId});
         }
       } catch (error) {
@@ -430,9 +433,10 @@ export class NotificationService extends EventEmitter {
       pendingProposals.forEach(({groupId, firingDate}) => {
         // We can go ahead and schedule all tasks at once.
         // If the firingDate lies in the past, the task will be executed immediately
-        scheduleTask({
+        TaskScheduler.addTask({
           task: () => this.commitPendingProposals({groupId}),
           firingDate,
+          key: `${groupId}`,
         });
       });
     }

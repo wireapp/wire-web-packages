@@ -20,18 +20,53 @@
 type ScheduleTaskParams = {
   task: () => Promise<void>;
   firingDate: number;
+  key: string;
 };
+
+const activeTimeouts: Record<string, NodeJS.Timeout> = {};
 
 /**
  * Execute a task at a given time.
  *
  * @param task function to be executed
  * @param firingDate execution date
+ * @param key unique key for the task
  */
-export const scheduleTask = ({task, firingDate}: ScheduleTaskParams) => {
+const addTask = ({task, firingDate, key}: ScheduleTaskParams) => {
   const now = new Date();
   const execute = new Date(firingDate);
   const delay = execute.getTime() - now.getTime();
 
-  setTimeout(task, delay > 0 ? delay : 0);
+  if (activeTimeouts[key]) {
+    cancelTask(key);
+  }
+
+  const timeout = setTimeout(
+    async () => {
+      await task();
+      delete activeTimeouts[key];
+    },
+    delay > 0 ? delay : 0,
+  );
+
+  // add the task to the list of active tasks
+  activeTimeouts[key] = timeout;
+};
+
+/**
+ * Cancel a scheduled task early
+ *
+ * @param key unique key for the task
+ */
+const cancelTask = (key: string) => {
+  const timeout = activeTimeouts[key];
+  if (timeout) {
+    clearTimeout(timeout);
+    delete activeTimeouts[key];
+  }
+};
+
+export const TaskScheduler = {
+  addTask,
+  cancelTask,
 };
