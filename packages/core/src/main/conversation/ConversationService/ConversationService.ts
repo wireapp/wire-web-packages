@@ -1140,10 +1140,6 @@ export class ConversationService {
     return coreCryptoKeyPackagesPayload;
   }
 
-  // private async getPendingProposals(groupIdDecodedFromBase64: Uint8Array) {
-  //   const coreCryptoClient = this.coreCryptoClientProvider();
-  // }
-
   private async addUsersToExistingMLSConversation(groupIdDecodedFromBase64: Uint8Array, invitee: Invitee[]) {
     const coreCryptoClient = this.coreCryptoClientProvider();
     const memberAddedMessages = await coreCryptoClient.addClientsToConversation(groupIdDecodedFromBase64, invitee);
