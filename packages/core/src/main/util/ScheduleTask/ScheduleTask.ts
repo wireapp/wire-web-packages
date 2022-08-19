@@ -17,24 +17,21 @@
  *
  */
 
-export type CommonMLS = {
-  groupId: Uint8Array;
+type ScheduleTaskParams = {
+  task: () => Promise<void>;
+  firingDate: number;
 };
 
-export type CompoundGroupIdParams = {
-  conversationId: string;
-  conversationDomain: string;
-} & CommonMLS;
+/**
+ * Execute a task at a given time.
+ *
+ * @param task function to be executed
+ * @param firingDate execution date
+ */
+export const scheduleTask = ({task, firingDate}: ScheduleTaskParams) => {
+  const now = new Date();
+  const execute = new Date(firingDate);
+  const delay = execute.getTime() - now.getTime();
 
-export type HandlePendingProposalsParams = {
-  delayInMs: number;
-  eventTime: string;
-} & CommonMLS;
-
-export type CommitPendingProposalsParams = {
-  skipDelete?: boolean;
-} & CommonMLS;
-
-export type StorePendingProposalsParams = {
-  firingDate: number;
-} & CommonMLS;
+  setTimeout(task, delay > 0 ? delay : 0);
+};

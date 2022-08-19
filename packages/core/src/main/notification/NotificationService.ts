@@ -37,7 +37,8 @@ import type {CoreCrypto} from '@otak/core-crypto/platforms/web/corecrypto';
 import {Decoder, Encoder} from 'bazinga64';
 import {QualifiedId} from '@wireapp/api-client/src/user';
 import {Conversation} from '@wireapp/api-client/src/conversation';
-import {CommonMLS, HandlePendingProposalsParams} from './types';
+import {CommitPendingProposalsParams, HandlePendingProposalsParams} from './types';
+import {scheduleTask} from '../util/ScheduleTask/index.';
 
 export type HandledEventPayload = {
   event: Events.BackendEvent;
@@ -261,6 +262,8 @@ export class NotificationService extends EventEmitter {
       case Events.CONVERSATION_EVENT.MLS_MESSAGE_ADD:
         const encryptedData = Decoder.fromBase64(event.data).asBytes;
 
+        await this.checkExistingPendingProposals();
+
         const groupId = await this.getUint8ArrayFromConversationGroupId(
           event.qualified_conversation ?? {id: event.conversation, domain: ''},
         );
@@ -337,6 +340,7 @@ export class NotificationService extends EventEmitter {
   }
 
   /**
+   * ## MLS only ##
    * If there is a groupId in the conversation, we need to store the conversationId => groupId pair
    * in order to find the groupId when decrypting messages
    * This is a bit hacky but since mls messages do not embed the groupId we need to keep a mapping of those
@@ -354,6 +358,7 @@ export class NotificationService extends EventEmitter {
   }
 
   /**
+   * ## MLS only ##
    * If there is a matching conversationId => groupId pair in the database,
    * we can find the groupId and return it as a Uint8Array
    *
@@ -373,38 +378,65 @@ export class NotificationService extends EventEmitter {
   }
 
   /**
+   * ## MLS only ##
    * If there are pending proposals, we need to either process them,
    * or save them in the database for later processing
    *
-   * @param groupId groupId of the conversation
-   * @param proposals proposals to process
+   * @param groupId groupId of the mls conversation
    * @param delayInMs delay in ms before processing proposals
    * @param eventTime time of the event that had the proposals
    */
   private async handlePendingProposals({delayInMs, groupId, eventTime}: HandlePendingProposalsParams) {
+    const eventDate = new Date(eventTime);
+    const firingDate = eventDate.setTime(eventDate.getTime() + delayInMs);
     if (delayInMs > 0) {
-      const eventDate = new Date(eventTime);
-      await this.database.addPendingProposals({
+      await this.database.storePendingProposal({
         groupId,
-        firingDate: eventDate.setTime(eventDate.getTime() + delayInMs),
+        firingDate,
       });
-      // ToDo: start cronjob to process stored proposals
+      scheduleTask({
+        task: () => this.commitPendingProposals({groupId}),
+        firingDate,
+      });
     } else {
-      await this.commitPendingProposals({groupId});
+      await this.commitPendingProposals({groupId, skipDelete: true});
     }
   }
 
   /**
-   * If there are pending proposals, we need to either process them,
-   * or save them in the database for later processing
+   * ## MLS only ##
+   * Commit all pending proposals for a given groupId
    *
    * @param groupId groupId of the conversation
-   * @param proposals proposals to process
-   * @param delayInMs delay in ms before processing proposals
-   * @param eventTime time of the event that had the proposals
+   * @param skipDelete if true, do not delete the pending proposals from the database
    */
-  private async commitPendingProposals({groupId}: CommonMLS) {
+  private async commitPendingProposals({groupId, skipDelete = false}: CommitPendingProposalsParams) {
     const coreCryptoClient = this.coreCryptoClientProvider();
-    await coreCryptoClient?.commitPendingProposals(groupId);
+    if (coreCryptoClient) {
+      await coreCryptoClient.commitPendingProposals(groupId);
+      if (!skipDelete) {
+        await this.database.deletePendingProposal({groupId});
+      }
+    }
+  }
+
+  /**
+   * ## MLS only ##
+   * Get all pending proposals from the database and schedule them
+   * Function must only be called once, after application start
+   *
+   */
+  public async checkExistingPendingProposals() {
+    const pendingProposals = await this.database.getStoredPendingProposals();
+    if (pendingProposals.length > 0) {
+      pendingProposals.forEach(({groupId, firingDate}) => {
+        // We can go ahead and schedule all tasks at once.
+        // If the firingDate lies in the past, the task will be executed immediately
+        scheduleTask({
+          task: () => this.commitPendingProposals({groupId}),
+          firingDate,
+        });
+      });
+    }
   }
 }

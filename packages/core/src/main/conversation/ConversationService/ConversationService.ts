@@ -1173,7 +1173,7 @@ export class ConversationService {
       qualified_users: undefined,
     });
     const {group_id: groupId, qualified_id: qualifiedId} = newConversation;
-    const groupIdDecodedFromBase64 = Decoder.fromBase64(groupId!).asBytes;
+    const groupIdDecodedFromBase64 = Decoder.fromBase64(`${groupId}`).asBytes;
     const {qualified_users: qualifiedUsers = [], selfUserId} = conversationData;
     if (!selfUserId) {
       throw new Error('You need to pass self user qualified id in order to create an MLS conversation');
