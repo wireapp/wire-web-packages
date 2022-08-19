@@ -381,9 +381,9 @@ export class NotificationService extends EventEmitter {
    * @param eventTime time of the event that had the proposals
    */
   private async handlePendingProposals({delayInMs, groupId, eventTime}: HandlePendingProposalsParams) {
-    const eventDate = new Date(eventTime);
-    const firingDate = eventDate.setTime(eventDate.getTime() + delayInMs);
     if (delayInMs > 0) {
+      const eventDate = new Date(eventTime);
+      const firingDate = eventDate.setTime(eventDate.getTime() + delayInMs);
       await this.database.storePendingProposal({
         groupId,
         firingDate,
@@ -430,15 +430,13 @@ export class NotificationService extends EventEmitter {
   public async checkExistingPendingProposals() {
     const pendingProposals = await this.database.getStoredPendingProposals();
     if (pendingProposals.length > 0) {
-      pendingProposals.forEach(({groupId, firingDate}) => {
-        // We can go ahead and schedule all tasks at once.
-        // If the firingDate lies in the past, the task will be executed immediately
+      pendingProposals.forEach(({groupId, firingDate}) =>
         TaskScheduler.addTask({
           task: () => this.commitPendingProposals({groupId}),
           firingDate,
           key: `${groupId}`,
-        });
-      });
+        }),
+      );
     }
   }
 }

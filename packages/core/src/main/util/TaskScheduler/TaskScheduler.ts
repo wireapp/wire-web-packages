@@ -51,6 +51,8 @@ const addTask = ({task, firingDate, key}: ScheduleTaskParams) => {
 
   // add the task to the list of active tasks
   activeTimeouts[key] = timeout;
+
+  console.info('New scheduled task', key, 'to be executed at', execute);
 };
 
 /**
