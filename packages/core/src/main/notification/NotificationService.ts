@@ -261,24 +261,20 @@ export class NotificationService extends EventEmitter {
       case Events.CONVERSATION_EVENT.MLS_MESSAGE_ADD:
         const encryptedData = Decoder.fromBase64(event.data).asBytes;
 
-        await this.checkExistingPendingProposals();
-
         const groupId = await this.getUint8ArrayFromConversationGroupId(
           event.qualified_conversation ?? {id: event.conversation, domain: ''},
         );
+
+        // Check if the message includes proposals
         const {proposals, commitDelay, message} = await coreCryptoClient.decryptMessage(groupId, encryptedData);
-
-        // ToDo: remove simulated variables
-        const simProposals = !proposals.length ? [new Uint8Array(), new Uint8Array()] : proposals;
-        const simCommitDelay = commitDelay ?? Math.floor(Math.random() * 10000);
-
-        if (simProposals.length > 0) {
+        if (proposals.length > 0) {
           await this.handlePendingProposals({
             groupId,
-            delayInMs: simCommitDelay,
+            delayInMs: commitDelay ?? 0,
             eventTime: event.time,
           });
         }
+
         if (!message) {
           throw new Error(`MLS message received from ${source} was empty`);
         }
