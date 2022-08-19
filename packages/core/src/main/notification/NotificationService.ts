@@ -384,15 +384,21 @@ export class NotificationService extends EventEmitter {
     if (delayInMs > 0) {
       const eventDate = new Date(eventTime);
       const firingDate = eventDate.setTime(eventDate.getTime() + delayInMs);
-      await this.database.storePendingProposal({
-        groupId,
-        firingDate,
-      });
-      TaskScheduler.addTask({
-        task: () => this.commitPendingProposals({groupId}),
-        firingDate,
-        key: `${groupId}`,
-      });
+      try {
+        await this.database.storePendingProposal({
+          groupId,
+          firingDate,
+        });
+      } catch (error) {
+        this.logger.error('Could not store pending proposal', error);
+      }
+      {
+        TaskScheduler.addTask({
+          task: () => this.commitPendingProposals({groupId}),
+          firingDate,
+          key: `${groupId}`,
+        });
+      }
     } else {
       await this.commitPendingProposals({groupId, skipDelete: true});
     }
@@ -416,7 +422,7 @@ export class NotificationService extends EventEmitter {
           await this.database.deletePendingProposal({groupId});
         }
       } catch (error) {
-        this.logger.error(`Could not commit pending proposals for groupId ${groupId}`, error);
+        this.logger.error(`Error while committing pending proposals for groupId ${groupId}`, error);
       }
     }
   }
@@ -428,15 +434,19 @@ export class NotificationService extends EventEmitter {
    *
    */
   public async checkExistingPendingProposals() {
-    const pendingProposals = await this.database.getStoredPendingProposals();
-    if (pendingProposals.length > 0) {
-      pendingProposals.forEach(({groupId, firingDate}) =>
-        TaskScheduler.addTask({
-          task: () => this.commitPendingProposals({groupId}),
-          firingDate,
-          key: `${groupId}`,
-        }),
-      );
+    try {
+      const pendingProposals = await this.database.getStoredPendingProposals();
+      if (pendingProposals.length > 0) {
+        pendingProposals.forEach(({groupId, firingDate}) =>
+          TaskScheduler.addTask({
+            task: () => this.commitPendingProposals({groupId}),
+            firingDate,
+            key: `${groupId}`,
+          }),
+        );
+      }
+    } catch (error) {
+      this.logger.error('Could not get pending proposals', error);
     }
   }
 }
