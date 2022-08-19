@@ -1255,8 +1255,6 @@ export class ConversationService {
       groupIdDecodedFromBase64,
       coreCryptoKeyPackagesPayload,
     );
-    console.info('addUsersToMLSGroup', conversationId, qualifiedUserIds, groupIdDecodedFromBase64, response);
-
     const conversation = await this.getConversations(conversationId.id);
 
     return {

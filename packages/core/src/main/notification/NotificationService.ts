@@ -243,7 +243,6 @@ export class NotificationService extends EventEmitter {
     dryRun: boolean = false,
   ): Promise<HandledEventPayload> {
     const coreCryptoClient = this.coreCryptoClientProvider();
-    console.info('adrian', 'handleEvent', event, source, dryRun);
     if (!coreCryptoClient) {
       throw new Error('Unable to access core crypto client');
     }
@@ -268,7 +267,6 @@ export class NotificationService extends EventEmitter {
           event.qualified_conversation ?? {id: event.conversation, domain: ''},
         );
         const {proposals, commitDelay, message} = await coreCryptoClient.decryptMessage(groupId, encryptedData);
-        console.info('adrian', proposals, commitDelay, message);
 
         // ToDo: remove simulated variables
         const simProposals = !proposals.length ? [new Uint8Array(), new Uint8Array()] : proposals;

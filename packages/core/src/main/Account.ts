@@ -559,7 +559,6 @@ export class Account<T = any> extends EventEmitter {
     const handleNotification = async (notification: Notification, source: PayloadBundleSource): Promise<void> => {
       try {
         const messages = this.service!.notification.handleNotification(notification, source, dryRun);
-        console.info('adrian', 'handleNotification', messages, notification);
         for await (const message of messages) {
           await handleEvent(message, source);
         }
