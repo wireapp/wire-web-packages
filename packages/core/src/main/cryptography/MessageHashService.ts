@@ -20,7 +20,7 @@
 import * as hash from 'hash.js';
 import Long from 'long';
 
-import {AssetContent, ContentType, ConversationContent, LocationContent, TextContent} from '../conversation/Content';
+import {AssetContent, ContentType, ConversationContent, LocationContent, TextContent} from '../conversation/content';
 
 export type AvailableMessageContent = AssetContent | LocationContent | TextContent;
 

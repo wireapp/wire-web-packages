@@ -63,13 +63,13 @@ import {
   PayloadBundleState,
   PayloadBundleType,
 } from '../../conversation/';
-import type {ClearedContent, DeletedContent, HiddenContent, RemoteData} from '../Content';
+import type {ClearedContent, DeletedContent, HiddenContent, RemoteData} from '../content';
 import type {CryptographyService} from '../../cryptography/';
 import {decryptAsset} from '../../cryptography/AssetCryptography';
 import {isStringArray, isQualifiedIdArray, isQualifiedUserClients, isUserClients} from '../../util/TypePredicateUtil';
-import {MessageBuilder} from '../Message/MessageBuilder';
-import {MessageService} from '../Message/MessageService';
-import {MessageToProtoMapper} from '../Message/MessageToProtoMapper';
+import {MessageBuilder} from '../message/MessageBuilder';
+import {MessageService} from '../message/MessageService';
+import {MessageToProtoMapper} from '../message/MessageToProtoMapper';
 import type {
   ButtonActionConfirmationMessage,
   ButtonActionMessage,
@@ -90,7 +90,7 @@ import type {
   ReactionMessage,
   ResetSessionMessage,
   TextMessage,
-} from '../Message/OtrMessage';
+} from '../message/OtrMessage';
 import {XOR} from '@wireapp/commons/src/main/util/TypeUtil';
 import type {NotificationService} from '../../notification';
 import {

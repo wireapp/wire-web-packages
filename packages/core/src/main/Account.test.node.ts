@@ -31,7 +31,7 @@ import * as Proteus from '@wireapp/proteus';
 import nock = require('nock');
 import {Account} from './Account';
 import {PayloadBundleType} from './conversation';
-import {MessageBuilder} from './conversation/Message/MessageBuilder';
+import {MessageBuilder} from './conversation/message/MessageBuilder';
 import {WebSocketClient} from '@wireapp/api-client/src/tcp';
 
 const BASE_URL = 'mock-backend.wire.com';

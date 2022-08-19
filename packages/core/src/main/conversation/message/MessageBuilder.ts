@@ -33,7 +33,7 @@ import type {
   LegalHoldStatus,
   LocationContent,
   ReactionContent,
-} from '../Content';
+} from '../content';
 import {CompositeContentBuilder} from './CompositeContentBuilder';
 import type {
   ButtonActionConfirmationMessage,

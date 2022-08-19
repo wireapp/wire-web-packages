@@ -19,7 +19,7 @@
 
 import {Article, Asset, LinkPreview, Mention, Quote, Text, Tweet} from '@wireapp/protocol-messaging';
 
-import type {LinkPreviewUploadedContent} from '../Content';
+import type {LinkPreviewUploadedContent} from '../content';
 import {GenericMessageType} from '../GenericMessageType';
 import type {EditedTextMessage, TextMessage} from './OtrMessage';
 

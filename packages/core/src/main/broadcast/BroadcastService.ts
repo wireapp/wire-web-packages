@@ -27,8 +27,8 @@ import {
 import type {UserPreKeyBundleMap} from '@wireapp/api-client/src/user/';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 
-import {MessageService} from '../conversation/Message/MessageService';
-import {flattenQualifiedUserClients} from '../conversation/Message/UserClientsUtil';
+import {MessageService} from '../conversation/message/MessageService';
+import {flattenQualifiedUserClients} from '../conversation/message/UserClientsUtil';
 import type {CryptographyService} from '../cryptography/';
 import {isQualifiedUserClients} from '../util';
 

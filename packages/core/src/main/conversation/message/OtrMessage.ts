@@ -37,7 +37,7 @@ import type {
   LocationContent,
   ReactionContent,
   TextContent,
-} from '../Content';
+} from '../content';
 import type {BasePayloadBundle, PayloadBundleType} from './PayloadBundle';
 
 export interface TextMessage extends BasePayloadBundle {

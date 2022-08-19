@@ -18,7 +18,7 @@
  */
 
 import {MessageHashService} from '../../cryptography';
-import {LegalHoldStatus, LinkPreviewUploadedContent, MentionContent, QuoteContent, TextContent} from '../Content';
+import {LegalHoldStatus, LinkPreviewUploadedContent, MentionContent, QuoteContent, TextContent} from '../content';
 import type {EditedTextMessage, TextMessage, QuotableMessage} from './OtrMessage';
 
 export class TextContentBuilder {

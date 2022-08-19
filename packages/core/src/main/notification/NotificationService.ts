@@ -24,7 +24,7 @@ import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import {EventEmitter} from 'events';
 import logdown from 'logdown';
 import {PayloadBundle, PayloadBundleSource, PayloadBundleType} from '../conversation';
-import type {AssetContent} from '../conversation/Content';
+import type {AssetContent} from '../conversation/content';
 import {ConversationMapper} from '../conversation/ConversationMapper';
 import {CoreError, NotificationError} from '../CoreError';
 import type {CryptographyService, DecryptionError} from '../cryptography';
@@ -38,7 +38,7 @@ import {Decoder, Encoder} from 'bazinga64';
 import {QualifiedId} from '@wireapp/api-client/src/user';
 import {Conversation} from '@wireapp/api-client/src/conversation';
 import {CommitPendingProposalsParams, HandlePendingProposalsParams} from './types';
-import {scheduleTask} from '../util/ScheduleTask/index.';
+import {scheduleTask} from '../util/ScheduleTask/ScheduleTask';
 
 export type HandledEventPayload = {
   event: Events.BackendEvent;
