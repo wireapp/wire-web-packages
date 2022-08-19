@@ -407,9 +407,13 @@ export class NotificationService extends EventEmitter {
   private async commitPendingProposals({groupId, skipDelete = false}: CommitPendingProposalsParams) {
     const coreCryptoClient = this.coreCryptoClientProvider();
     if (coreCryptoClient) {
-      await coreCryptoClient.commitPendingProposals(groupId);
-      if (!skipDelete) {
-        await this.database.deletePendingProposal({groupId});
+      try {
+        await coreCryptoClient.commitPendingProposals(groupId);
+        if (!skipDelete) {
+          await this.database.deletePendingProposal({groupId});
+        }
+      } catch (error) {
+        this.logger.error(`Could not commit pending proposals for groupId ${groupId}`, error);
       }
     }
   }
