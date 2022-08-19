@@ -391,8 +391,7 @@ export class NotificationService extends EventEmitter {
         });
       } catch (error) {
         this.logger.error('Could not store pending proposal', error);
-      }
-      {
+      } finally {
         TaskScheduler.addTask({
           task: () => this.commitPendingProposals({groupId}),
           firingDate,
