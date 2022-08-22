@@ -17,6 +17,13 @@
  *
  */
 
+import logdown from 'logdown';
+
+const logger = logdown('@wireapp/core/util/TaskScheduler/TaskScheduler', {
+  logger: console,
+  markdown: false,
+});
+
 type ScheduleTaskParams = {
   task: () => Promise<void>;
   firingDate: number;
@@ -52,7 +59,7 @@ const addTask = ({task, firingDate, key}: ScheduleTaskParams) => {
   // add the task to the list of active tasks
   activeTimeouts[key] = timeout;
 
-  console.info('New scheduled task', key, 'to be executed at', execute);
+  logger.info(`New scheduled task to be executed at "${execute}" with key "${key}"`);
 };
 
 /**
@@ -65,6 +72,7 @@ const cancelTask = (key: string) => {
   if (timeout) {
     clearTimeout(timeout);
     delete activeTimeouts[key];
+    logger.info(`Scheduled task with key "${key}" prematurely cleared`);
   }
 };
 

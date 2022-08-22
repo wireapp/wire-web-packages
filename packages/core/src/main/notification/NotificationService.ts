@@ -269,7 +269,7 @@ export class NotificationService extends EventEmitter {
         const {proposals, commitDelay, message} = await coreCryptoClient.decryptMessage(groupId, encryptedData);
         if (proposals.length > 0) {
           await this.handlePendingProposals({
-            groupId,
+            groupId: groupId.toString(),
             delayInMs: commitDelay ?? 0,
             eventTime: event.time,
           });
@@ -395,7 +395,7 @@ export class NotificationService extends EventEmitter {
         TaskScheduler.addTask({
           task: () => this.commitPendingProposals({groupId}),
           firingDate,
-          key: `${groupId}`,
+          key: groupId,
         });
       }
     } else {
@@ -412,17 +412,18 @@ export class NotificationService extends EventEmitter {
    */
   public async commitPendingProposals({groupId, skipDelete = false}: CommitPendingProposalsParams) {
     const coreCryptoClient = this.coreCryptoClientProvider();
-    if (coreCryptoClient) {
-      try {
-        await coreCryptoClient.commitPendingProposals(groupId);
+    if (!coreCryptoClient) {
+      throw new Error('Could not get coreCryptoClient');
+    }
+    try {
+      await coreCryptoClient.commitPendingProposals(Decoder.fromBase64(groupId).asBytes);
 
-        if (!skipDelete) {
-          TaskScheduler.cancelTask(`${groupId}`);
-          await this.database.deletePendingProposal({groupId});
-        }
-      } catch (error) {
-        this.logger.error(`Error while committing pending proposals for groupId ${groupId}`, error);
+      if (!skipDelete) {
+        TaskScheduler.cancelTask(groupId);
+        await this.database.deletePendingProposal({groupId});
       }
+    } catch (error) {
+      this.logger.error(`Error while committing pending proposals for groupId ${groupId}`, error);
     }
   }
 
@@ -440,7 +441,7 @@ export class NotificationService extends EventEmitter {
           TaskScheduler.addTask({
             task: () => this.commitPendingProposals({groupId}),
             firingDate,
-            key: `${groupId}`,
+            key: groupId,
           }),
         );
       }

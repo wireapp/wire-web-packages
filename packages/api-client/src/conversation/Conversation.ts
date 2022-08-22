@@ -90,7 +90,7 @@ export interface Conversation {
   members: ConversationMembers;
 
   /** MLS conversations only */
-  group_id?: Uint8Array;
+  group_id?: string;
 
   protocol: ConversationProtocol;
 }

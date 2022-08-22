@@ -18,7 +18,7 @@
  */
 
 export type CommonMLS = {
-  groupId: Uint8Array;
+  groupId: string;
 };
 
 export type CompoundGroupIdParams = {
