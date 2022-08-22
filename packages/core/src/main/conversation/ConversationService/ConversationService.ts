@@ -1169,15 +1169,18 @@ export class ConversationService {
       qualified_users: undefined,
     });
     const {group_id: groupId, qualified_id: qualifiedId} = newConversation;
-    const groupIdDecodedFromBase64 = Decoder.fromBase64(`${groupId}`).asBytes;
+    if (!groupId) {
+      throw new Error('No group_id found in response which is required for creating MLS conversations.');
+    }
+
+    const groupIdDecodedFromBase64 = Decoder.fromBase64(groupId).asBytes;
     const {qualified_users: qualifiedUsers = [], selfUserId} = conversationData;
     if (!selfUserId) {
       throw new Error('You need to pass self user qualified id in order to create an MLS conversation');
     }
+
     const coreCryptoClient = this.coreCryptoClientProvider();
-
     await coreCryptoClient.createConversation(groupIdDecodedFromBase64);
-
     const coreCryptoKeyPackagesPayload = await this.getCoreCryptoKeyPackagesPayload([
       {
         id: selfUserId.id,
@@ -1198,7 +1201,6 @@ export class ConversationService {
 
     await this.notificationService.saveConversationGroupId(newConversation);
     // We fetch the fresh version of the conversation created on backend with the newly added users
-
     const conversation = await this.getConversations(qualifiedId.id);
 
     return {
