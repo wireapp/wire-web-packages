@@ -18,7 +18,7 @@
  */
 
 import {PublicClient} from './PublicClient';
-import {Decoder} from 'bazinga64';
+import {Encoder} from 'bazinga64';
 
 export interface QualifiedUserClientMap {
   [domain: string]: {
@@ -30,9 +30,19 @@ export interface QualifiedPublicClients {
   qualified_user_map: QualifiedUserClientMap;
 }
 
-export function qualifiedUserMapToClientIds(qualified_user_map: QualifiedUserClientMap) {
-  return Object.values(qualified_user_map)
-    .flatMap(domain => Object.values(domain))
-    .flat()
-    .map(({id}) => Decoder.fromBase64(id).asBytes);
-}
+type UserId = string;
+type ClientId = string;
+type Domain = string;
+export type ClientIdStringType = `${UserId}:${ClientId}@${Domain}`;
+
+export const constructClientId = (userId: string, clientId: string, domain: string): ClientIdStringType =>
+  `${userId}:${clientId}@${domain}`;
+
+export const qualifiedUserMapToClientIds = (qualified_user_map: QualifiedUserClientMap) => {
+  return Object.entries(qualified_user_map).flatMap(([domain, users]) => {
+    const clients = Object.entries(users);
+    return clients.flatMap(([userId, clients]) =>
+      clients.map(client => Encoder.toBase64(constructClientId(userId, client.id, domain)).asBytes),
+    );
+  });
+};
