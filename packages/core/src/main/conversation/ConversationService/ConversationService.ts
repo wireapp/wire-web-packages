@@ -1270,19 +1270,13 @@ export class ConversationService {
 
     const clients = await this.apiClient.api.user.postListClients({qualified_users: qualifiedUserIds});
 
-    //this is not enough, we need to pass key-packages also
     const clientIds = qualifiedUserMapToClientIds(clients.qualified_user_map);
-
-    //this may be useful
-    // const coreCryptoKeyPackagesPayload = await this.getCoreCryptoKeyPackagesPayload([...qualifiedUserIds]);
 
     const conversationIdDecodedFromBase64 = Decoder.fromBase64(groupId).asBytes;
 
     //step 2 - calling func + committing a message, (?)return events
     const response = await coreCryptoClient.removeClientsFromConversation(conversationIdDecodedFromBase64, clientIds);
 
-    // console.log('----------LOG-START----------');
     // console.log(response);
-    // console.log('----------LOG-END------------');
   }
 }
