@@ -24,15 +24,15 @@ type ClientId = string;
 type Domain = string;
 export type ClientIdStringType = `${UserId}:${ClientId}@${Domain}`;
 
-export const constructClientId = (userId: string, clientId: string, domain: string): ClientIdStringType =>
+export const constructFullyQualifiedClientId = (userId: string, clientId: string, domain: string): ClientIdStringType =>
   `${userId}:${clientId}@${domain}`;
 
-export const mapQualifiedUserClientIdsToFullyQualifiedClientId = (qualified_user_map: QualifiedUserClientMap) => {
+export const mapQualifiedUserClientIdsToFullyQualifiedClientIds = (qualified_user_map: QualifiedUserClientMap) => {
   const encoder = new TextEncoder();
   return Object.entries(qualified_user_map).flatMap(([domain, users]) => {
     const clients = Object.entries(users);
     return clients.flatMap(([userId, clients]) =>
-      clients.map(client => encoder.encode(constructClientId(userId, client.id, domain))),
+      clients.map(client => encoder.encode(constructFullyQualifiedClientId(userId, client.id, domain))),
     );
   });
 };

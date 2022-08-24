@@ -105,7 +105,7 @@ import {
   SendProteusMessageParams,
 } from './ConversationService.types';
 import {Encoder, Decoder} from 'bazinga64';
-import {mapQualifiedUserClientIdsToFullyQualifiedClientId} from '../../util/mapQualifiedUserClientIdsToFullyQualifiedClientId';
+import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/mapQualifiedUserClientIdsToFullyQualifiedClientIds';
 import {CommitBundle} from '@otak/core-crypto/platforms/web/corecrypto';
 
 export class ConversationService {
@@ -1291,7 +1291,7 @@ export class ConversationService {
 
     const clientsToRemove = await this.apiClient.api.user.postListClients({qualified_users: qualifiedUserIds});
 
-    const fullyQualifiedClientIds = mapQualifiedUserClientIdsToFullyQualifiedClientId(
+    const fullyQualifiedClientIds = mapQualifiedUserClientIdsToFullyQualifiedClientIds(
       clientsToRemove.qualified_user_map,
     );
 
