@@ -918,7 +918,10 @@ export class ConversationService {
     return response;
   }
 
-  public async removeUser(conversationId: string, userId: string): Promise<ConversationMemberLeaveEvent> {
+  public async removeUserFromProteusConversation(
+    conversationId: string,
+    userId: string,
+  ): Promise<ConversationMemberLeaveEvent> {
     const response = await this.apiClient.api.conversation.deleteMember(conversationId, userId);
 
     return response;
