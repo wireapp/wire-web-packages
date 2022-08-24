@@ -106,6 +106,7 @@ import {
 } from './ConversationService.types';
 import {Encoder, Decoder} from 'bazinga64';
 import {mapQualifiedUserClientIdsToFullyQualifiedClientId} from '../../util/mapQualifiedUserClientIdsToFullyQualifiedClientId';
+import {CommitBundle} from '@otak/core-crypto/platforms/web/corecrypto';
 
 export class ConversationService {
   public readonly messageTimer: MessageTimer;
@@ -1263,20 +1264,48 @@ export class ConversationService {
     };
   }
 
-  public async removeUsersFromMLSConversation({groupId, qualifiedUserIds}: RemoveUsersParams) {
+  private async sendCommitBundleRemovalMessages(groupIdDecodedFromBase64: Uint8Array, commitBundle?: CommitBundle) {
     const coreCryptoClient = this.coreCryptoClientProvider();
 
-    const clients = await this.apiClient.api.user.postListClients({qualified_users: qualifiedUserIds});
+    if (commitBundle?.welcome) {
+      await this.apiClient.api.conversation.postMlsWelcomeMessage(Uint8Array.from(commitBundle.welcome));
+    }
+    if (commitBundle?.commit) {
+      const messageResponse = await this.apiClient.api.conversation.postMlsMessage(
+        Uint8Array.from(commitBundle.commit),
+      );
+      await coreCryptoClient.commitAccepted(groupIdDecodedFromBase64);
+      return messageResponse;
+    }
+    return null;
+  }
 
-    const fullyQualifiedclientIds = mapQualifiedUserClientIdsToFullyQualifiedClientId(clients.qualified_user_map);
+  public async removeUsersFromMLSConversation({
+    groupId,
+    conversationId,
+    qualifiedUserIds,
+  }: RemoveUsersParams): Promise<MLSReturnType> {
+    const coreCryptoClient = this.coreCryptoClientProvider();
+    const groupIdDecodedFromBase64 = Decoder.fromBase64(groupId).asBytes;
 
-    const conversationIdDecodedFromBase64 = Decoder.fromBase64(groupId).asBytes;
+    const clientsToRemove = await this.apiClient.api.user.postListClients({qualified_users: qualifiedUserIds});
 
-    const response = await coreCryptoClient.removeClientsFromConversation(
-      conversationIdDecodedFromBase64,
-      fullyQualifiedclientIds,
+    const fullyQualifiedClientIds = mapQualifiedUserClientIdsToFullyQualifiedClientId(
+      clientsToRemove.qualified_user_map,
     );
 
-    console.log(response);
+    const commitBundle = await coreCryptoClient.removeClientsFromConversation(
+      groupIdDecodedFromBase64,
+      fullyQualifiedClientIds,
+    );
+
+    const messageResponse = await this.sendCommitBundleRemovalMessages(groupIdDecodedFromBase64, commitBundle);
+
+    const conversation = await this.getConversations(conversationId.id);
+
+    return {
+      events: messageResponse?.events || [],
+      conversation,
+    };
   }
 }

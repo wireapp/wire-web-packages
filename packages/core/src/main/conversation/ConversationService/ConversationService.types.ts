@@ -144,6 +144,7 @@ export type AddUsersParams = {
 };
 
 export type RemoveUsersParams = {
+  conversationId: QualifiedId;
   qualifiedUserIds: QualifiedId[];
   groupId: string;
 };
