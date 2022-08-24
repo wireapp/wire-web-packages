@@ -913,18 +913,14 @@ export class ConversationService {
   }
 
   public async addUsersToProteusConversation({conversationId, qualifiedUserIds}: Omit<AddUsersParams, 'groupId'>) {
-    const response = await this.apiClient.api.conversation.postMembers(conversationId, qualifiedUserIds);
-
-    return response;
+    return this.apiClient.api.conversation.postMembers(conversationId, qualifiedUserIds);
   }
 
   public async removeUserFromProteusConversation(
     conversationId: string,
     userId: string,
   ): Promise<ConversationMemberLeaveEvent> {
-    const response = await this.apiClient.api.conversation.deleteMember(conversationId, userId);
-
-    return response;
+    return this.apiClient.api.conversation.deleteMember(conversationId, userId);
   }
 
   private async sendProteusMessage<T extends OtrMessage>(
