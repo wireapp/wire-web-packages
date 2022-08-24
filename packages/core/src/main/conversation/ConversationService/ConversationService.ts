@@ -1148,10 +1148,12 @@ export class ConversationService {
     const memberAddedMessages = await coreCryptoClient.addClientsToConversation(groupIdDecodedFromBase64, invitee);
 
     if (memberAddedMessages?.welcome) {
-      await this.apiClient.api.conversation.postMlsWelcomeMessage(memberAddedMessages.welcome);
+      await this.apiClient.api.conversation.postMlsWelcomeMessage(Uint8Array.from(memberAddedMessages.welcome));
     }
     if (memberAddedMessages?.commit) {
-      const messageResponse = await this.apiClient.api.conversation.postMlsMessage(memberAddedMessages.commit);
+      const messageResponse = await this.apiClient.api.conversation.postMlsMessage(
+        Uint8Array.from(memberAddedMessages.commit),
+      );
       await coreCryptoClient.commitAccepted(groupIdDecodedFromBase64);
       return messageResponse;
     }
@@ -1266,10 +1268,12 @@ export class ConversationService {
     const coreCryptoClient = this.coreCryptoClientProvider();
 
     if (commitBundle?.welcome) {
-      await this.apiClient.api.conversation.postMlsWelcomeMessage(commitBundle.welcome);
+      await this.apiClient.api.conversation.postMlsWelcomeMessage(Uint8Array.from(commitBundle.welcome));
     }
     if (commitBundle?.commit) {
-      const messageResponse = await this.apiClient.api.conversation.postMlsMessage(commitBundle.commit);
+      const messageResponse = await this.apiClient.api.conversation.postMlsMessage(
+        Uint8Array.from(commitBundle.commit),
+      );
       await coreCryptoClient.commitAccepted(groupIdDecodedFromBase64);
       return messageResponse;
     }
