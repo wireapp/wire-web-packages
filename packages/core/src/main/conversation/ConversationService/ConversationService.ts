@@ -105,7 +105,7 @@ import {
   SendProteusMessageParams,
 } from './ConversationService.types';
 import {Encoder, Decoder} from 'bazinga64';
-import {qualifiedUserMapToClientIds} from '@wireapp/api-client/src/client';
+import {mapQualifiedUserClientIdsToFullyQualifiedClientId} from '../../util/mapQualifiedUserClientIdsToFullyQualifiedClientId';
 
 export class ConversationService {
   public readonly messageTimer: MessageTimer;
@@ -1263,20 +1263,20 @@ export class ConversationService {
     };
   }
 
-  //todo
   public async removeUsersFromMLSConversation({groupId, qualifiedUserIds}: RemoveUsersParams) {
-    //step 1 - get client ids
     const coreCryptoClient = this.coreCryptoClientProvider();
 
     const clients = await this.apiClient.api.user.postListClients({qualified_users: qualifiedUserIds});
 
-    const clientIds = qualifiedUserMapToClientIds(clients.qualified_user_map);
+    const fullyQualifiedclientIds = mapQualifiedUserClientIdsToFullyQualifiedClientId(clients.qualified_user_map);
 
     const conversationIdDecodedFromBase64 = Decoder.fromBase64(groupId).asBytes;
 
-    //step 2 - calling func + committing a message, (?)return events
-    const response = await coreCryptoClient.removeClientsFromConversation(conversationIdDecodedFromBase64, clientIds);
+    const response = await coreCryptoClient.removeClientsFromConversation(
+      conversationIdDecodedFromBase64,
+      fullyQualifiedclientIds,
+    );
 
-    // console.log(response);
+    console.log(response);
   }
 }
