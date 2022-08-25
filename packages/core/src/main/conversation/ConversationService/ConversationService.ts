@@ -844,7 +844,6 @@ export class ConversationService {
 
   public leaveMLSConversation(conversationId: QualifiedId): Promise<ConversationMemberLeaveEvent> {
     const apiResult = this.leaveConversation(conversationId);
-    console.info('adrian leaveMLSConversation', apiResult);
     return apiResult;
   }
 
