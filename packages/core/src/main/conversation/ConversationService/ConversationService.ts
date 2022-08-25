@@ -108,6 +108,12 @@ import {Encoder, Decoder} from 'bazinga64';
 import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/mapQualifiedUserClientIdsToFullyQualifiedClientIds';
 import {CommitBundle} from '@otak/core-crypto/platforms/web/corecrypto';
 
+//@todo: this function is temporary, we wait for the update from core-crypto side
+//they are returning regular array instead of Uint8Array for commit and welcome messages
+const optionalToUint8Array = (array: Uint8Array | []): Uint8Array => {
+  return Array.isArray(array) ? Uint8Array.from(array) : array;
+};
+
 export class ConversationService {
   public readonly messageTimer: MessageTimer;
   private readonly messageService: MessageService;
@@ -1165,11 +1171,13 @@ export class ConversationService {
     const memberAddedMessages = await coreCryptoClient.addClientsToConversation(groupIdDecodedFromBase64, invitee);
 
     if (memberAddedMessages?.welcome) {
-      await this.apiClient.api.conversation.postMlsWelcomeMessage(Uint8Array.from(memberAddedMessages.welcome));
+      //@todo: it's temporary - we wait for core-crypto fix to return the actual Uint8Array instead of regular array
+      await this.apiClient.api.conversation.postMlsWelcomeMessage(optionalToUint8Array(memberAddedMessages.welcome));
     }
     if (memberAddedMessages?.commit) {
       const messageResponse = await this.apiClient.api.conversation.postMlsMessage(
-        Uint8Array.from(memberAddedMessages.commit),
+        //@todo: it's temporary - we wait for core-crypto fix to return the actual Uint8Array instead of regular array
+        optionalToUint8Array(memberAddedMessages.commit),
       );
       await coreCryptoClient.commitAccepted(groupIdDecodedFromBase64);
       return messageResponse;
@@ -1289,11 +1297,13 @@ export class ConversationService {
     const coreCryptoClient = this.coreCryptoClientProvider();
 
     if (commitBundle?.welcome) {
-      await this.apiClient.api.conversation.postMlsWelcomeMessage(Uint8Array.from(commitBundle.welcome));
+      //@todo: it's temporary - we wait for core-crypto fix to return the actual Uint8Array instead of regular array
+      await this.apiClient.api.conversation.postMlsWelcomeMessage(optionalToUint8Array(commitBundle.welcome));
     }
     if (commitBundle?.commit) {
       const messageResponse = await this.apiClient.api.conversation.postMlsMessage(
-        Uint8Array.from(commitBundle.commit),
+        //@todo: it's temporary - we wait for core-crypto fix to return the actual Uint8Array instead of regular array
+        optionalToUint8Array(commitBundle.commit),
       );
       await coreCryptoClient.commitAccepted(groupIdDecodedFromBase64);
       return messageResponse;
