@@ -843,8 +843,7 @@ export class ConversationService {
   }
 
   public leaveMLSConversation(conversationId: QualifiedId): Promise<ConversationMemberLeaveEvent> {
-    const apiResult = this.leaveConversation(conversationId);
-    return apiResult;
+    return this.leaveConversation(conversationId);
   }
 
   /**
