@@ -49,7 +49,7 @@ describe('MessageHandler', () => {
 
   describe('sendConnectionResponse', () => {
     it('sends the correct data when accepting the connection', async () => {
-      const userId = UUID.genV4().toString();
+      const userId = {id: UUID.genV4().toString(), domain: 'my-test-domain'};
       const acceptConnection = true;
 
       spyOn(mainHandler.account!.service!.connection, 'acceptConnection').and.returnValue(
@@ -65,7 +65,7 @@ describe('MessageHandler', () => {
     });
 
     it('sends the correct data when ignoring the connection', async () => {
-      const userId = UUID.genV4().toString();
+      const userId = {id: UUID.genV4().toString(), domain: 'my-test-domain'};
       const acceptConnection = false;
 
       spyOn(mainHandler.account!.service!.connection, 'acceptConnection').and.returnValue(
