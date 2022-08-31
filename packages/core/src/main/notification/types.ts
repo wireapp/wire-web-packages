@@ -38,3 +38,7 @@ export type CommitPendingProposalsParams = {
 export type StorePendingProposalsParams = {
   firingDate: number;
 } & CommonMLS;
+
+export type LastKeyMaterialUpdateParams = {
+  previousUpdateDate: number;
+} & CommonMLS;
