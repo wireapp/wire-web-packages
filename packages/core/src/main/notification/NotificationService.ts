@@ -37,8 +37,9 @@ import type {CoreCrypto} from '@otak/core-crypto/platforms/web/corecrypto';
 import {Decoder, Encoder} from 'bazinga64';
 import {QualifiedId} from '@wireapp/api-client/src/user';
 import {Conversation} from '@wireapp/api-client/src/conversation';
-import {CommitPendingProposalsParams, HandlePendingProposalsParams} from './types';
+import {CommitPendingProposalsParams, HandlePendingProposalsParams, LastKeyMaterialUpdateParams} from './types';
 import {TaskScheduler} from '../util/TaskScheduler/TaskScheduler';
+import {MLSService} from '../mls/MLSService/MLSService';
 
 export type HandledEventPayload = {
   event: Events.BackendEvent;
@@ -50,6 +51,8 @@ export type HandledEventPayload = {
 enum TOPIC {
   NOTIFICATION_ERROR = 'NotificationService.TOPIC.NOTIFICATION_ERROR',
 }
+
+const KEYING_MATERIAL_UPDATE_THRESHOLD = 1000 * 60 * 60 * 24 * 90; //90 days
 
 export type NotificationHandler = (
   notification: Notification,
@@ -75,6 +78,7 @@ export class NotificationService extends EventEmitter {
   constructor(
     apiClient: APIClient,
     cryptographyService: CryptographyService,
+    private readonly mlsService: MLSService,
     storeEngine: CRUDEngine,
     private readonly coreCryptoClientProvider: () => CoreCrypto | undefined,
   ) {
@@ -449,6 +453,73 @@ export class NotificationService extends EventEmitter {
           }),
         );
       }
+    } catch (error) {
+      this.logger.error('Could not get pending proposals', error);
+    }
+  }
+
+  /**
+   * ## MLS only ##
+   * Store groupIds with last key material update dates.
+   *
+   * @param {groupId} params.groupId - groupId of the mls conversation
+   * @param {previousUpdateDate} params.previousUpdateDate - date of the previous key material update
+   */
+  public async storeLastKeyMaterialUpdateDate(params: LastKeyMaterialUpdateParams) {
+    await this.database.storeLastKeyMaterialUpdateDate(params);
+    this.scheduleTaskToRenewKeyMaterial(params);
+  }
+
+  /**
+   * ## MLS only ##
+   * Renew key material for a given groupId
+   *
+   * @param groupId groupId of the conversation
+   */
+  private async renewKeyMaterial({groupId}: Omit<LastKeyMaterialUpdateParams, 'previousUpdateDate'>) {
+    const coreCryptoClient = this.coreCryptoClientProvider();
+    if (!coreCryptoClient) {
+      throw new Error('Could not get coreCryptoClient');
+    }
+
+    try {
+      const commitBundle = await coreCryptoClient.updateKeyingMaterial(Decoder.fromBase64(groupId).asBytes);
+      await this.mlsService.uploadCoreCryptoCommitBundle(Decoder.fromBase64(groupId).asBytes, commitBundle);
+
+      const keyMaterialUpdateDate = {groupId, previousUpdateDate: new Date().getTime()};
+      await this.database.storeLastKeyMaterialUpdateDate(keyMaterialUpdateDate);
+      this.scheduleTaskToRenewKeyMaterial(keyMaterialUpdateDate);
+    } catch (error) {
+      this.logger.error(`Error while renewing key material for groupId ${groupId}`, error);
+    }
+  }
+
+  private createKeyMaterialUpdateTaskSchedulerId(groupId: string) {
+    return `renew_key_material-${groupId}`;
+  }
+
+  private scheduleTaskToRenewKeyMaterial({groupId, previousUpdateDate}: LastKeyMaterialUpdateParams) {
+    //90 days after last update date renew key material
+    const firingDate = previousUpdateDate + KEYING_MATERIAL_UPDATE_THRESHOLD;
+    const key = this.createKeyMaterialUpdateTaskSchedulerId(groupId);
+
+    TaskScheduler.addTask({
+      task: () => this.renewKeyMaterial({groupId}),
+      firingDate,
+      key,
+    });
+  }
+
+  /**
+   * ## MLS only ##
+   * Get all pending proposals from the database and schedule them
+   * Function must only be called once, after application start
+   *
+   */
+  public async checkForKeyMaterialsUpdate() {
+    try {
+      const keyMaterialUpdateDates = await this.database.getStoredLastKeyMaterialUpdateDates();
+      keyMaterialUpdateDates.forEach(this.scheduleTaskToRenewKeyMaterial);
     } catch (error) {
       this.logger.error('Could not get pending proposals', error);
     }

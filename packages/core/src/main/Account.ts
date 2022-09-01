@@ -51,6 +51,7 @@ import type {CoreCrypto} from '@otak/core-crypto';
 import {WEBSOCKET_STATE} from '@wireapp/api-client/src/tcp/ReconnectingWebsocket';
 import {createCustomEncryptedStore, createEncryptedStore} from './util/encryptedStore';
 import {Encoder} from 'bazinga64';
+import {MLSService} from './mls/MLSService/MLSService';
 
 export type ProcessedEventPayload = HandledEventPayload;
 
@@ -243,6 +244,9 @@ export class Account<T = any> extends EventEmitter {
       await this.initClient({clientType});
       // initialize schedulers for pending mls proposals once client is initialized
       await this.service?.notification.checkExistingPendingProposals();
+
+      // initialize schedulers for renewing key materials
+      await this.service?.notification.checkForKeyMaterialsUpdate();
     }
     return context;
   }
@@ -349,12 +353,14 @@ export class Account<T = any> extends EventEmitter {
     });
 
     const clientService = new ClientService(this.apiClient, this.storeEngine, cryptographyService);
+    const mlsService = new MLSService(this.apiClient, () => this.coreCryptoClient!);
     const connectionService = new ConnectionService(this.apiClient);
     const giphyService = new GiphyService(this.apiClient);
     const linkPreviewService = new LinkPreviewService(assetService);
     const notificationService = new NotificationService(
       this.apiClient,
       cryptographyService,
+      mlsService,
       this.storeEngine,
       () => this.coreCryptoClient,
     );
@@ -365,8 +371,9 @@ export class Account<T = any> extends EventEmitter {
         // We can use qualified ids to send messages as long as the backend supports federated endpoints
         useQualifiedIds: this.backendFeatures.federationEndpoints,
       },
-      () => this.coreCryptoClient!,
       notificationService,
+      mlsService,
+      () => this.coreCryptoClient!,
     );
 
     const selfService = new SelfService(this.apiClient);

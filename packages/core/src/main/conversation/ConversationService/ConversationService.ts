@@ -17,7 +17,7 @@
  *
  */
 
-import type {CoreCrypto, Invitee} from '@otak/core-crypto';
+import type {CoreCrypto} from '@otak/core-crypto';
 import type {APIClient} from '@wireapp/api-client';
 import {
   MessageSendingStatus,
@@ -100,19 +100,12 @@ import {
   MessageSendingOptions,
   MessageTargetMode,
   MLSReturnType,
-  QualifiedUsers,
   SendMlsMessageParams,
   SendProteusMessageParams,
 } from './ConversationService.types';
-import {Encoder, Decoder} from 'bazinga64';
+import {Decoder} from 'bazinga64';
 import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/mapQualifiedUserClientIdsToFullyQualifiedClientIds';
-import {CommitBundle} from '@otak/core-crypto/platforms/web/corecrypto';
-
-//@todo: this function is temporary, we wait for the update from core-crypto side
-//they are returning regular array instead of Uint8Array for commit and welcome messages
-const optionalToUint8Array = (array: Uint8Array | []): Uint8Array => {
-  return Array.isArray(array) ? Uint8Array.from(array) : array;
-};
+import {MLSService} from '../../mls/MLSService/MLSService';
 
 export class ConversationService {
   public readonly messageTimer: MessageTimer;
@@ -123,8 +116,9 @@ export class ConversationService {
     private readonly apiClient: APIClient,
     cryptographyService: CryptographyService,
     private readonly config: {useQualifiedIds?: boolean},
-    private readonly coreCryptoClientProvider: () => CoreCrypto,
     private readonly notificationService: NotificationService,
+    private readonly mlsService: MLSService,
+    private readonly coreCryptoClientProvider: () => CoreCrypto,
   ) {
     this.messageTimer = new MessageTimer();
     this.messageService = new MessageService(this.apiClient, cryptographyService);
@@ -1137,54 +1131,6 @@ export class ConversationService {
    *   ###############################################
    */
 
-  private async getCoreCryptoKeyPackagesPayload(qualifiedUsers: QualifiedUsers[]) {
-    /**
-     * @note We need to fetch key packages for all the users
-     * we want to add to the new MLS conversations,
-     * includes self user too.
-     */
-    const keyPackages = await Promise.all([
-      ...qualifiedUsers.map(({id, domain, skipOwn}) =>
-        this.apiClient.api.client.claimMLSKeyPackages(id, domain, skipOwn),
-      ),
-    ]);
-
-    const coreCryptoKeyPackagesPayload = keyPackages.reduce<Invitee[]>((previousValue, currentValue) => {
-      // skip users that have not uploaded their MLS key packages
-      if (currentValue.key_packages.length > 0) {
-        return [
-          ...previousValue,
-          ...currentValue.key_packages.map(keyPackage => ({
-            id: Encoder.toBase64(keyPackage.client).asBytes,
-            kp: Decoder.fromBase64(keyPackage.key_package).asBytes,
-          })),
-        ];
-      }
-      return previousValue;
-    }, []);
-
-    return coreCryptoKeyPackagesPayload;
-  }
-
-  private async addUsersToExistingMLSConversation(groupIdDecodedFromBase64: Uint8Array, invitee: Invitee[]) {
-    const coreCryptoClient = this.coreCryptoClientProvider();
-    const memberAddedMessages = await coreCryptoClient.addClientsToConversation(groupIdDecodedFromBase64, invitee);
-
-    if (memberAddedMessages?.welcome) {
-      //@todo: it's temporary - we wait for core-crypto fix to return the actual Uint8Array instead of regular array
-      await this.apiClient.api.conversation.postMlsWelcomeMessage(optionalToUint8Array(memberAddedMessages.welcome));
-    }
-    if (memberAddedMessages?.commit) {
-      const messageResponse = await this.apiClient.api.conversation.postMlsMessage(
-        //@todo: it's temporary - we wait for core-crypto fix to return the actual Uint8Array instead of regular array
-        optionalToUint8Array(memberAddedMessages.commit),
-      );
-      await coreCryptoClient.commitAccepted(groupIdDecodedFromBase64);
-      return messageResponse;
-    }
-    return null;
-  }
-
   public async createMLSConversation(conversationData: NewConversation): Promise<MLSReturnType> {
     /**
      * @note For creating MLS conversations the users & qualified_users
@@ -1209,7 +1155,7 @@ export class ConversationService {
 
     const coreCryptoClient = this.coreCryptoClientProvider();
     await coreCryptoClient.createConversation(groupIdDecodedFromBase64);
-    const coreCryptoKeyPackagesPayload = await this.getCoreCryptoKeyPackagesPayload([
+    const coreCryptoKeyPackagesPayload = await this.mlsService.getCoreCryptoKeyPackagesPayload([
       {
         id: selfUserId.id,
         domain: selfUserId.domain,
@@ -1222,12 +1168,20 @@ export class ConversationService {
       ...qualifiedUsers,
     ]);
 
-    const response = await this.addUsersToExistingMLSConversation(
+    const response = await this.mlsService.addUsersToExistingMLSConversation(
       groupIdDecodedFromBase64,
       coreCryptoKeyPackagesPayload,
     );
 
     await this.notificationService.saveConversationGroupId(newConversation);
+
+    //We store the info when conversation (along with key material) was created, so we will know when to renew it
+    const groupCreationTimeStamp = new Date().getTime();
+    await this.notificationService.storeLastKeyMaterialUpdateDate({
+      previousUpdateDate: groupCreationTimeStamp,
+      groupId,
+    });
+
     // We fetch the fresh version of the conversation created on backend with the newly added users
     const conversation = await this.getConversations(qualifiedId.id);
 
@@ -1280,8 +1234,8 @@ export class ConversationService {
     conversationId,
   }: Required<AddUsersParams>): Promise<MLSReturnType> {
     const groupIdDecodedFromBase64 = Decoder.fromBase64(groupId!).asBytes;
-    const coreCryptoKeyPackagesPayload = await this.getCoreCryptoKeyPackagesPayload([...qualifiedUserIds]);
-    const response = await this.addUsersToExistingMLSConversation(
+    const coreCryptoKeyPackagesPayload = await this.mlsService.getCoreCryptoKeyPackagesPayload([...qualifiedUserIds]);
+    const response = await this.mlsService.addUsersToExistingMLSConversation(
       groupIdDecodedFromBase64,
       coreCryptoKeyPackagesPayload,
     );
@@ -1291,24 +1245,6 @@ export class ConversationService {
       events: response?.events || [],
       conversation,
     };
-  }
-
-  private async sendCommitBundleRemovalMessages(groupIdDecodedFromBase64: Uint8Array, commitBundle?: CommitBundle) {
-    const coreCryptoClient = this.coreCryptoClientProvider();
-
-    if (commitBundle?.welcome) {
-      //@todo: it's temporary - we wait for core-crypto fix to return the actual Uint8Array instead of regular array
-      await this.apiClient.api.conversation.postMlsWelcomeMessage(optionalToUint8Array(commitBundle.welcome));
-    }
-    if (commitBundle?.commit) {
-      const messageResponse = await this.apiClient.api.conversation.postMlsMessage(
-        //@todo: it's temporary - we wait for core-crypto fix to return the actual Uint8Array instead of regular array
-        optionalToUint8Array(commitBundle.commit),
-      );
-      await coreCryptoClient.commitAccepted(groupIdDecodedFromBase64);
-      return messageResponse;
-    }
-    return null;
   }
 
   public async removeUsersFromMLSConversation({
@@ -1330,7 +1266,7 @@ export class ConversationService {
       fullyQualifiedClientIds,
     );
 
-    const messageResponse = await this.sendCommitBundleRemovalMessages(groupIdDecodedFromBase64, commitBundle);
+    const messageResponse = await this.mlsService.uploadCoreCryptoCommitBundle(groupIdDecodedFromBase64, commitBundle);
 
     const conversation = await this.getConversations(conversationId.id);
 

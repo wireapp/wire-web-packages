@@ -32,6 +32,9 @@ import {MessageTargetMode} from './ConversationService.types';
 import {MessageBuilder} from '../message/MessageBuilder';
 import {OtrMessage} from '../message/OtrMessage';
 import {NotificationService} from '../../notification/NotificationService';
+import {MLSService} from '../../mls/MLSService/MLSService';
+
+const mockedMLSService = {} as unknown as MLSService;
 
 describe('ConversationService', () => {
   beforeAll(() => {
@@ -62,13 +65,14 @@ describe('ConversationService', () => {
       {
         useQualifiedIds: federated,
       },
+      {
+        commitPendingProposals: () => Promise.resolve(),
+      } as unknown as NotificationService,
+      mockedMLSService,
       () =>
         ({
           encryptMessage: async () => Uint8Array.from([1, 2, 3]),
         } as unknown as CoreCrypto),
-      {
-        commitPendingProposals: () => Promise.resolve(),
-      } as unknown as NotificationService,
     );
   }
 
