@@ -17,7 +17,6 @@
  *
  */
 
-import type {CoreCrypto} from '@otak/core-crypto';
 import type {APIClient} from '@wireapp/api-client';
 import {
   MessageSendingStatus,
@@ -118,7 +117,6 @@ export class ConversationService {
     private readonly config: {useQualifiedIds?: boolean},
     private readonly notificationService: NotificationService,
     private readonly mlsService: MLSService,
-    private readonly coreCryptoClientProvider: () => CoreCrypto,
   ) {
     this.messageTimer = new MessageTimer();
     this.messageService = new MessageService(this.apiClient, cryptographyService);
@@ -1153,8 +1151,7 @@ export class ConversationService {
       throw new Error('You need to pass self user qualified id in order to create an MLS conversation');
     }
 
-    const coreCryptoClient = this.coreCryptoClientProvider();
-    await coreCryptoClient.createConversation(groupIdDecodedFromBase64);
+    await this.mlsService.createConversation(groupIdDecodedFromBase64);
     const coreCryptoKeyPackagesPayload = await this.mlsService.getCoreCryptoKeyPackagesPayload([
       {
         id: selfUserId.id,
@@ -1202,9 +1199,7 @@ export class ConversationService {
     // immediately execute pending commits before sending the message
     await this.notificationService.commitPendingProposals({groupId});
 
-    const coreCryptoClient = this.coreCryptoClientProvider();
-
-    const encrypted = await coreCryptoClient.encryptMessage(
+    const encrypted = await this.mlsService.encryptMessage(
       groupIdBytes,
       GenericMessage.encode(genericMessage).finish(),
     );
@@ -1252,7 +1247,6 @@ export class ConversationService {
     conversationId,
     qualifiedUserIds,
   }: RemoveUsersParams): Promise<MLSReturnType> {
-    const coreCryptoClient = this.coreCryptoClientProvider();
     const groupIdDecodedFromBase64 = Decoder.fromBase64(groupId).asBytes;
 
     const clientsToRemove = await this.apiClient.api.user.postListClients({qualified_users: qualifiedUserIds});
@@ -1261,7 +1255,7 @@ export class ConversationService {
       clientsToRemove.qualified_user_map,
     );
 
-    const commitBundle = await coreCryptoClient.removeClientsFromConversation(
+    const commitBundle = await this.mlsService.removeClientsFromConversation(
       groupIdDecodedFromBase64,
       fullyQualifiedClientIds,
     );

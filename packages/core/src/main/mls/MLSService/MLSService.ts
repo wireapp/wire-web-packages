@@ -17,7 +17,14 @@
  *
  */
 
-import {CommitBundle, CoreCrypto, Invitee} from '@otak/core-crypto/platforms/web/corecrypto';
+import {
+  CommitBundle,
+  ConversationConfiguration,
+  ConversationId,
+  CoreCrypto,
+  DecryptedMessage,
+  Invitee,
+} from '@otak/core-crypto/platforms/web/corecrypto';
 import {APIClient} from '@wireapp/api-client';
 import {QualifiedUsers} from '../../conversation';
 import {Decoder, Encoder} from 'bazinga64';
@@ -106,5 +113,39 @@ export class MLSService {
     }, []);
 
     return coreCryptoKeyPackagesPayload;
+  }
+
+  public async processWelcomeMessage(welcomeMessage: Uint8Array): Promise<ConversationId> {
+    return this.getCoreCryptoClient().processWelcomeMessage(welcomeMessage);
+  }
+
+  public async decryptMessage(conversationId: ConversationId, payload: Uint8Array): Promise<DecryptedMessage> {
+    return this.getCoreCryptoClient().decryptMessage(conversationId, payload);
+  }
+
+  public async updateKeyingMaterial(conversationId: ConversationId): Promise<CommitBundle> {
+    return this.getCoreCryptoClient().updateKeyingMaterial(conversationId);
+  }
+
+  public async createConversation(
+    conversationId: ConversationId,
+    configuration?: ConversationConfiguration,
+  ): Promise<any> {
+    return this.getCoreCryptoClient().createConversation(conversationId, configuration);
+  }
+
+  public async encryptMessage(conversationId: ConversationId, message: Uint8Array): Promise<Uint8Array> {
+    return this.getCoreCryptoClient().encryptMessage(conversationId, message);
+  }
+
+  public async removeClientsFromConversation(
+    conversationId: ConversationId,
+    clientIds: Uint8Array[],
+  ): Promise<CommitBundle> {
+    return this.getCoreCryptoClient().removeClientsFromConversation(conversationId, clientIds);
+  }
+
+  public async commitPendingProposals(conversationId: ConversationId): Promise<CommitBundle> {
+    return this.getCoreCryptoClient().commitPendingProposals(conversationId);
   }
 }

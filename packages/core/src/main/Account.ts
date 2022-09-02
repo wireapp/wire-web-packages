@@ -362,7 +362,6 @@ export class Account<T = any> extends EventEmitter {
       cryptographyService,
       mlsService,
       this.storeEngine,
-      () => this.coreCryptoClient,
     );
     const conversationService = new ConversationService(
       this.apiClient,
@@ -373,7 +372,6 @@ export class Account<T = any> extends EventEmitter {
       },
       notificationService,
       mlsService,
-      () => this.coreCryptoClient!,
     );
 
     const selfService = new SelfService(this.apiClient);

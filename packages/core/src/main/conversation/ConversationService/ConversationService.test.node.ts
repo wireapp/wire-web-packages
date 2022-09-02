@@ -17,7 +17,6 @@
  *
  */
 
-import {CoreCrypto} from '@otak/core-crypto/platforms/web/corecrypto';
 import {APIClient} from '@wireapp/api-client';
 import {ClientType} from '@wireapp/api-client/src/client';
 import {ConversationProtocol} from '@wireapp/api-client/src/conversation';
@@ -69,10 +68,6 @@ describe('ConversationService', () => {
         commitPendingProposals: () => Promise.resolve(),
       } as unknown as NotificationService,
       mockedMLSService,
-      () =>
-        ({
-          encryptMessage: async () => Uint8Array.from([1, 2, 3]),
-        } as unknown as CoreCrypto),
     );
   }
 

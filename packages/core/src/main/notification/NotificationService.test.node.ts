@@ -48,7 +48,6 @@ describe('NotificationService', () => {
         mockedCryptographyService,
         mockedMLSService,
         storeEngine,
-        () => undefined,
       );
 
       spyOn<any>(notificationService, 'handleEvent').and.throwError('Test error');
@@ -85,7 +84,6 @@ describe('NotificationService', () => {
         mockedCryptographyService,
         mockedMLSService,
         storeEngine,
-        () => undefined,
       );
 
       spyOn<any>(notificationService, 'handleEvent').and.returnValue({});
@@ -117,7 +115,6 @@ describe('NotificationService', () => {
         {} as unknown as CryptographyService,
         mockedMLSService,
         storeEngine,
-        () => undefined,
       );
 
       spyOn<any>(notificationService, 'handleEvent').and.returnValue({});
@@ -147,7 +144,6 @@ describe('NotificationService', () => {
         mockedCryptographyService,
         mockedMLSService,
         storeEngine,
-        () => undefined,
       );
       notificationService.on(NotificationService.TOPIC.NOTIFICATION_ERROR, notificationError => {
         expect(notificationError.error.message).toBe('Test error');
