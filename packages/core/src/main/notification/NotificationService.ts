@@ -521,7 +521,7 @@ export class NotificationService extends EventEmitter {
       const keyMaterialUpdateDates = await this.database.getStoredLastKeyMaterialUpdateDates();
       keyMaterialUpdateDates.forEach(this.scheduleTaskToRenewKeyMaterial);
     } catch (error) {
-      this.logger.error('Could not get pending proposals', error);
+      this.logger.error('Could not get last key material update dates', error);
     }
   }
 }
