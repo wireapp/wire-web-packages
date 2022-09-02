@@ -34,10 +34,6 @@ export class MLSService {
   public async uploadCoreCryptoCommitBundle(groupIdDecodedFromBase64: Uint8Array, commitBundle: CommitBundle) {
     const coreCryptoClient = this.coreCryptoClientProvider();
 
-    if (!coreCryptoClient) {
-      throw new Error('Could not get coreCryptoClient');
-    }
-
     if (commitBundle.welcome) {
       //@todo: it's temporary - we wait for core-crypto fix to return the actual Uint8Array instead of regular array
       await this.apiClient.api.conversation.postMlsWelcomeMessage(optionalToUint8Array(commitBundle.welcome));
