@@ -29,10 +29,21 @@ export const optionalToUint8Array = (array: Uint8Array | []): Uint8Array => {
 };
 
 export class MLSService {
-  constructor(private readonly apiClient: APIClient, private readonly coreCryptoClientProvider: () => CoreCrypto) {}
+  constructor(
+    private readonly apiClient: APIClient,
+    private readonly coreCryptoClientProvider: () => CoreCrypto | undefined,
+  ) {}
+
+  private getCoreCryptoClient() {
+    const client = this.coreCryptoClientProvider();
+    if (!client) {
+      throw new Error('Could not get coreCryptoClient');
+    }
+    return client;
+  }
 
   public async uploadCoreCryptoCommitBundle(groupIdDecodedFromBase64: Uint8Array, commitBundle: CommitBundle) {
-    const coreCryptoClient = this.coreCryptoClientProvider();
+    const coreCryptoClient = this.getCoreCryptoClient();
 
     if (commitBundle.welcome) {
       //@todo: it's temporary - we wait for core-crypto fix to return the actual Uint8Array instead of regular array
@@ -50,7 +61,7 @@ export class MLSService {
   }
 
   public async addUsersToExistingMLSConversation(groupIdDecodedFromBase64: Uint8Array, invitee: Invitee[]) {
-    const coreCryptoClient = this.coreCryptoClientProvider();
+    const coreCryptoClient = this.getCoreCryptoClient();
     const memberAddedMessages = await coreCryptoClient.addClientsToConversation(groupIdDecodedFromBase64, invitee);
 
     if (memberAddedMessages?.welcome) {

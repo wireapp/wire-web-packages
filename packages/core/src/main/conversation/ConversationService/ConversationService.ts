@@ -66,6 +66,8 @@ import {
 } from '../../conversation/';
 import type {ClearedContent, DeletedContent, HiddenContent, RemoteData} from '../content';
 import type {CryptographyService} from '../../cryptography/';
+import type {MLSService} from '../../mls/MLSService/MLSService';
+import type {NotificationService} from '../../notification';
 import {decryptAsset} from '../../cryptography/AssetCryptography';
 import {isStringArray, isQualifiedIdArray, isQualifiedUserClients, isUserClients} from '../../util/TypePredicateUtil';
 import {MessageBuilder} from '../message/MessageBuilder';
@@ -93,7 +95,6 @@ import type {
   TextMessage,
 } from '../message/OtrMessage';
 import {XOR} from '@wireapp/commons/src/main/util/TypeUtil';
-import type {NotificationService} from '../../notification';
 import {
   AddUsersParams,
   MessageSendingCallbacks,
@@ -105,7 +106,6 @@ import {
 } from './ConversationService.types';
 import {Decoder} from 'bazinga64';
 import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/mapQualifiedUserClientIdsToFullyQualifiedClientIds';
-import {MLSService} from '../../mls/MLSService/MLSService';
 
 export class ConversationService {
   public readonly messageTimer: MessageTimer;

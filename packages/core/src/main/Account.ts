@@ -353,7 +353,7 @@ export class Account<T = any> extends EventEmitter {
     });
 
     const clientService = new ClientService(this.apiClient, this.storeEngine, cryptographyService);
-    const mlsService = new MLSService(this.apiClient, () => this.coreCryptoClient!);
+    const mlsService = new MLSService(this.apiClient, () => this.coreCryptoClient);
     const connectionService = new ConnectionService(this.apiClient);
     const giphyService = new GiphyService(this.apiClient);
     const linkPreviewService = new LinkPreviewService(assetService);
