@@ -33,7 +33,9 @@ import {OtrMessage} from '../message/OtrMessage';
 import {NotificationService} from '../../notification/NotificationService';
 import {MLSService} from '../../mls/MLSService/MLSService';
 
-const mockedMLSService = {} as unknown as MLSService;
+const mockedMLSService = {
+  encryptMessage: () => {},
+} as unknown as MLSService;
 
 describe('ConversationService', () => {
   beforeAll(() => {

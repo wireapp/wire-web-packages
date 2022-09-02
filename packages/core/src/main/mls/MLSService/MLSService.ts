@@ -123,6 +123,10 @@ export class MLSService {
     return this.getCoreCryptoClient().decryptMessage(conversationId, payload);
   }
 
+  public async encryptMessage(conversationId: ConversationId, message: Uint8Array): Promise<Uint8Array> {
+    return this.getCoreCryptoClient().encryptMessage(conversationId, message);
+  }
+
   public async updateKeyingMaterial(conversationId: ConversationId): Promise<CommitBundle> {
     return this.getCoreCryptoClient().updateKeyingMaterial(conversationId);
   }
@@ -132,10 +136,6 @@ export class MLSService {
     configuration?: ConversationConfiguration,
   ): Promise<any> {
     return this.getCoreCryptoClient().createConversation(conversationId, configuration);
-  }
-
-  public async encryptMessage(conversationId: ConversationId, message: Uint8Array): Promise<Uint8Array> {
-    return this.getCoreCryptoClient().encryptMessage(conversationId, message);
   }
 
   public async removeClientsFromConversation(
