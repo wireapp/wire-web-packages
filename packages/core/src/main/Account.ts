@@ -51,7 +51,7 @@ import type {CoreCrypto} from '@otak/core-crypto';
 import {WEBSOCKET_STATE} from '@wireapp/api-client/src/tcp/ReconnectingWebsocket';
 import {createCustomEncryptedStore, createEncryptedStore} from './util/encryptedStore';
 import {Encoder} from 'bazinga64';
-import type {MLSService} from './mls';
+import {MLSService} from './mls';
 import type {MLSConfig} from './mls/types';
 
 export type ProcessedEventPayload = HandledEventPayload;
