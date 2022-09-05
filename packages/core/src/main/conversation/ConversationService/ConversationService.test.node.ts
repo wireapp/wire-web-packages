@@ -31,7 +31,7 @@ import {MessageTargetMode} from './ConversationService.types';
 import {MessageBuilder} from '../message/MessageBuilder';
 import {OtrMessage} from '../message/OtrMessage';
 import {NotificationService} from '../../notification/NotificationService';
-import {MLSService} from '../../mls/MLSService/MLSService';
+import type {MLSService} from '../../mls';
 
 const mockedMLSService = {
   encryptMessage: () => {},

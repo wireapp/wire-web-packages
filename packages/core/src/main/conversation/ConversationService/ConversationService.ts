@@ -65,7 +65,7 @@ import {
 } from '../../conversation/';
 import type {ClearedContent, DeletedContent, HiddenContent, RemoteData} from '../content';
 import type {CryptographyService} from '../../cryptography/';
-import type {MLSService} from '../../mls/MLSService/MLSService';
+import type {MLSService} from '../../mls';
 import type {NotificationService} from '../../notification';
 import {decryptAsset} from '../../cryptography/AssetCryptography';
 import {isStringArray, isQualifiedIdArray, isQualifiedUserClients, isUserClients} from '../../util/TypePredicateUtil';

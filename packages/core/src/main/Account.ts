@@ -51,7 +51,8 @@ import type {CoreCrypto} from '@otak/core-crypto';
 import {WEBSOCKET_STATE} from '@wireapp/api-client/src/tcp/ReconnectingWebsocket';
 import {createCustomEncryptedStore, createEncryptedStore} from './util/encryptedStore';
 import {Encoder} from 'bazinga64';
-import {MLSService} from './mls/MLSService/MLSService';
+import type {MLSService} from './mls';
+import type {MLSConfig} from './mls/types';
 
 export type ProcessedEventPayload = HandledEventPayload;
 
@@ -98,30 +99,6 @@ export interface Account {
 }
 
 export type CreateStoreFn = (storeName: string, context: Context) => undefined | Promise<CRUDEngine | undefined>;
-type SecretCrypto<T> = {
-  encrypt: (value: Uint8Array) => Promise<T>;
-  decrypt: (payload: T) => Promise<Uint8Array>;
-};
-
-export interface MLSConfig<T = any> {
-  /**
-   * encrypt/decrypt function pair that will be called before storing/fetching secrets in the secrets database.
-   * If not provided will use the built in encryption mechanism
-   */
-  secretsCrypto?: SecretCrypto<T>;
-
-  /**
-   * path on the public server to the core crypto wasm file.
-   * This file will be downloaded lazily when corecrypto is needed.
-   * It, thus, needs to know where, on the server, the file can be found
-   */
-  coreCrypoWasmFilePath: string;
-
-  /**
-   * (milliseconds) period of time between automatic updates of the keying material (30 days by default)
-   */
-  keyingMaterialUpdateThreshold?: number;
-}
 
 interface AccountOptions<T> {
   /** Used to store info in the database (will create a inMemory engine if returns undefined) */

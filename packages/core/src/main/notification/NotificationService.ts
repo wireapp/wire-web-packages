@@ -38,7 +38,7 @@ import {QualifiedId} from '@wireapp/api-client/src/user';
 import {Conversation} from '@wireapp/api-client/src/conversation';
 import {CommitPendingProposalsParams, HandlePendingProposalsParams, LastKeyMaterialUpdateParams} from './types';
 import {TaskScheduler} from '../util/TaskScheduler/TaskScheduler';
-import {MLSService} from '../mls/MLSService/MLSService';
+import type {MLSService} from '../mls';
 
 export type HandledEventPayload = {
   event: Events.BackendEvent;
