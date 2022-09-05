@@ -467,7 +467,8 @@ export class NotificationService extends EventEmitter {
       const commitBundle = await this.mlsService.updateKeyingMaterial(Decoder.fromBase64(groupId).asBytes);
       await this.mlsService.uploadCoreCryptoCommitBundle(Decoder.fromBase64(groupId).asBytes, commitBundle);
 
-      const keyMaterialUpdateDate = {groupId, previousUpdateDate: new Date().getTime()};
+      const keyRenewalTime = new Date().getTime();
+      const keyMaterialUpdateDate = {groupId, previousUpdateDate: keyRenewalTime};
       await this.database.storeLastKeyMaterialUpdateDate(keyMaterialUpdateDate);
       this.scheduleTaskToRenewKeyMaterial(keyMaterialUpdateDate);
     } catch (error) {

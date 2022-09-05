@@ -1262,6 +1262,10 @@ export class ConversationService {
 
     const messageResponse = await this.mlsService.uploadCoreCryptoCommitBundle(groupIdDecodedFromBase64, commitBundle);
 
+    //key material gets updated after removing a user from the group, so we can reset last key update time value in the store
+    const userRemovalTime = new Date().getTime();
+    await this.notificationService.storeLastKeyMaterialUpdateDate({groupId, previousUpdateDate: userRemovalTime});
+
     const conversation = await this.getConversations(conversationId.id);
 
     return {
