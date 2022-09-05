@@ -120,7 +120,7 @@ export interface MLSConfig<T = any> {
   /**
    * (milliseconds) period of time between automatic updates of the keying material (30 days by default)
    */
-  keyingMaterialUpdateThreshold: number;
+  keyingMaterialUpdateThreshold?: number;
 }
 
 interface AccountOptions<T> {
