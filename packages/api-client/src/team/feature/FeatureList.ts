@@ -17,7 +17,6 @@
  *
  */
 
-import {FeatureConversationGuestLink} from '.';
 import type {
   FeatureAppLock,
   FeatureClassifiedDomains,
@@ -30,6 +29,9 @@ import type {
   FeatureSndFactorPassword,
   FeatureVideoCalling,
   FeatureWithoutConfig,
+  FeatureConversationGuestLink,
+  FeatureSearchVisibilityInbound,
+  FeatureSearchVisibilityOutbound,
 } from './Feature';
 
 export enum FEATURE_KEY {
@@ -41,7 +43,8 @@ export enum FEATURE_KEY {
   FILE_SHARING = 'fileSharing',
   LEGALHOLD = 'legalhold',
   MLS = 'mls',
-  SEARCH_VISIBILITY = 'searchVisibility',
+  SEARCH_VISIBILITY_OUTBOUND = 'searchVisibilityOutbound',
+  SEARCH_VISIBILITY_INBOUND = 'searchVisibilityInbound',
   SELF_DELETING_MESSAGES = 'selfDeletingMessages',
   SND_FACTOR_PASSWORD = 'sndFactorPasswordChallenge',
   SSO = 'sso',
@@ -57,7 +60,8 @@ export type FeatureList = {
   [FEATURE_KEY.CONVERSATION_GUEST_LINKS]?: FeatureConversationGuestLink;
   [FEATURE_KEY.FILE_SHARING]?: FeatureFileSharing;
   [FEATURE_KEY.LEGALHOLD]?: FeatureLegalhold;
-  [FEATURE_KEY.SEARCH_VISIBILITY]?: FeatureWithoutConfig;
+  [FEATURE_KEY.SEARCH_VISIBILITY_OUTBOUND]?: FeatureSearchVisibilityOutbound;
+  [FEATURE_KEY.SEARCH_VISIBILITY_INBOUND]?: FeatureSearchVisibilityInbound;
   [FEATURE_KEY.SELF_DELETING_MESSAGES]?: FeatureSelfDeletingMessages;
   [FEATURE_KEY.SND_FACTOR_PASSWORD]?: FeatureSndFactorPassword;
   [FEATURE_KEY.SSO]?: FeatureWithoutConfig;
