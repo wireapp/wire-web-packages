@@ -103,7 +103,7 @@ type SecretCrypto<T> = {
   decrypt: (payload: T) => Promise<Uint8Array>;
 };
 
-interface MLSConfig<T = any> {
+export interface MLSConfig<T = any> {
   /**
    * encrypt/decrypt function pair that will be called before storing/fetching secrets in the secrets database.
    * If not provided will use the built in encryption mechanism
@@ -116,6 +116,11 @@ interface MLSConfig<T = any> {
    * It, thus, needs to know where, on the server, the file can be found
    */
   coreCrypoWasmFilePath: string;
+
+  /**
+   * (milliseconds) period of time between automatic updates of the keying material (30 days by default)
+   */
+  keyingMaterialUpdateThreshold: number;
 }
 
 interface AccountOptions<T> {
@@ -353,7 +358,7 @@ export class Account<T = any> extends EventEmitter {
     });
 
     const clientService = new ClientService(this.apiClient, this.storeEngine, cryptographyService);
-    const mlsService = new MLSService(this.apiClient, () => this.coreCryptoClient);
+    const mlsService = new MLSService(this.mlsConfig, this.apiClient, () => this.coreCryptoClient);
     const connectionService = new ConnectionService(this.apiClient);
     const giphyService = new GiphyService(this.apiClient);
     const linkPreviewService = new LinkPreviewService(assetService);

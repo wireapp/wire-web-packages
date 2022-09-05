@@ -51,7 +51,7 @@ enum TOPIC {
   NOTIFICATION_ERROR = 'NotificationService.TOPIC.NOTIFICATION_ERROR',
 }
 
-const KEYING_MATERIAL_UPDATE_THRESHOLD = 1000 * 60 * 60 * 24 * 90; //90 days
+const DEFAULT_KEYING_MATERIAL_UPDATE_THRESHOLD = 1000 * 60 * 60 * 24 * 30; //30 days
 
 export type NotificationHandler = (
   notification: Notification,
@@ -480,8 +480,12 @@ export class NotificationService extends EventEmitter {
   }
 
   private scheduleTaskToRenewKeyMaterial({groupId, previousUpdateDate}: LastKeyMaterialUpdateParams) {
-    //90 days after last update date renew key material
-    const firingDate = previousUpdateDate + KEYING_MATERIAL_UPDATE_THRESHOLD;
+    //given period of time (30 days by default) after last update date renew key material
+    const keyingMaterialUpdateThreshold =
+      this.mlsService.config?.keyingMaterialUpdateThreshold || DEFAULT_KEYING_MATERIAL_UPDATE_THRESHOLD;
+
+    const firingDate = previousUpdateDate + keyingMaterialUpdateThreshold;
+
     const key = this.createKeyMaterialUpdateTaskSchedulerId(groupId);
 
     TaskScheduler.addTask({

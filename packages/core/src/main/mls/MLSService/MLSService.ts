@@ -28,6 +28,7 @@ import {
 import {APIClient} from '@wireapp/api-client';
 import {QualifiedUsers} from '../../conversation';
 import {Decoder, Encoder} from 'bazinga64';
+import {MLSConfig} from '../../Account';
 
 //@todo: this function is temporary, we wait for the update from core-crypto side
 //they are returning regular array instead of Uint8Array for commit and welcome messages
@@ -37,6 +38,7 @@ export const optionalToUint8Array = (array: Uint8Array | []): Uint8Array => {
 
 export class MLSService {
   constructor(
+    public readonly config: MLSConfig | undefined,
     private readonly apiClient: APIClient,
     private readonly coreCryptoClientProvider: () => CoreCrypto | undefined,
   ) {}
