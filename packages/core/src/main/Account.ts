@@ -416,6 +416,9 @@ export class Account<T = any> extends EventEmitter {
     mlsConfig: MLSConfig,
     entropyData?: Uint8Array,
   ) {
+    if (!this.service) {
+      throw new Error('Services are not set.');
+    }
     const coreCryptoKeyId = 'corecrypto-key';
     const {CoreCrypto} = await import('@otak/core-crypto');
     const dbName = this.generateSecretsDbName(context);
@@ -425,18 +428,30 @@ export class Account<T = any> extends EventEmitter {
       : await createEncryptedStore(dbName);
 
     let key = await secretStore.getsecretValue(coreCryptoKeyId);
+    let shouldUploadKeyPackages = false;
     if (!key) {
       key = window.crypto.getRandomValues(new Uint8Array(16));
       await secretStore.saveSecretValue(coreCryptoKeyId, key);
+      // Since we didn't have a key for this device, it means it's the first time it's initiate with MLS capabilities
+      // We will need to upload its key packages and public key later on
+      shouldUploadKeyPackages = true;
     }
+
     const {userId, domain} = this.apiClient.context!;
-    return CoreCrypto.init({
+    const mlsClient = await CoreCrypto.init({
       databaseName: `corecrypto-${this.generateDbName(context)}`,
       key: Encoder.toBase64(key).asString,
       clientId: `${userId}:${client.id}@${domain}`,
       wasmFilePath: mlsConfig.coreCrypoWasmFilePath,
       entropySeed: entropyData,
     });
+
+    if (shouldUploadKeyPackages) {
+      await this.service.client.uploadMLSPublicKeys(await mlsClient.clientPublicKey(), client.id);
+      await this.service.client.uploadMLSKeyPackages(await mlsClient.clientKeypackages(this.nbPrekeys), client.id);
+    }
+
+    return mlsClient;
   }
 
   private async registerClient(
@@ -455,11 +470,6 @@ export class Account<T = any> extends EventEmitter {
         this.apiClient.context!,
         this.mlsConfig,
         entropyData,
-      );
-      await this.service.client.uploadMLSPublicKeys(await this.coreCryptoClient.clientPublicKey(), registeredClient.id);
-      await this.service.client.uploadMLSKeyPackages(
-        await this.coreCryptoClient.clientKeypackages(this.nbPrekeys),
-        registeredClient.id,
       );
     }
     this.apiClient.context!.clientId = registeredClient.id;
