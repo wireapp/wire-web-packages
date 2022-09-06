@@ -17,7 +17,7 @@
  *
  */
 
-import type {CoreCrypto, Invitee} from '@otak/core-crypto';
+import {CoreCrypto, ExternalProposalType, Invitee} from '@otak/core-crypto';
 import type {APIClient} from '@wireapp/api-client';
 import {
   MessageSendingStatus,
@@ -1338,5 +1338,24 @@ export class ConversationService {
       events: messageResponse?.events || [],
       conversation,
     };
+  }
+
+  public async sendExternalJoinProposalsForPendingToJoinConversation(conversationGroupId: string, epoch: number) {
+    const coreCryptoClient = this.coreCryptoClientProvider();
+    const groupIdDecodedFromBase64 = Decoder.fromBase64(conversationGroupId!).asBytes;
+    const externalProposal = await coreCryptoClient.newExternalProposal(ExternalProposalType.Add, {
+      epoch,
+      conversationId: groupIdDecodedFromBase64,
+    });
+    await this.apiClient.api.conversation.postMlsMessage(
+      //@todo: it's temporary - we wait for core-crypto fix to return the actual Uint8Array instead of regular array
+      optionalToUint8Array(externalProposal),
+    );
+  }
+
+  public async conversationExists(conversationGroupId: string) {
+    const coreCryptoClient = this.coreCryptoClientProvider();
+    const groupIdDecodedFromBase64 = Decoder.fromBase64(conversationGroupId!).asBytes;
+    return coreCryptoClient.conversationExists(groupIdDecodedFromBase64);
   }
 }
