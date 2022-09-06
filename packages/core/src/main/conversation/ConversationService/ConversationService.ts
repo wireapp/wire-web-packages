@@ -1340,7 +1340,13 @@ export class ConversationService {
     };
   }
 
-  public async sendExternalJoinProposalsForPendingToJoinConversation(conversationGroupId: string, epoch: number) {
+  /**
+   * Will send an external proposal for the current device to join a specific conversation.
+   * In order for the external proposal to be sent correctly, the underlying mls conversation needs to be in a non-established state
+   * @param conversationGroupId The conversation to join
+   * @param epoch The current epoch of the local conversation
+   */
+  public async sendExternalJoinProposal(conversationGroupId: string, epoch: number) {
     const coreCryptoClient = this.coreCryptoClientProvider();
     const groupIdDecodedFromBase64 = Decoder.fromBase64(conversationGroupId!).asBytes;
     const externalProposal = await coreCryptoClient.newExternalProposal(ExternalProposalType.Add, {
