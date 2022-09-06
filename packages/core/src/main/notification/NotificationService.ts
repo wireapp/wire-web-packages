@@ -464,13 +464,13 @@ export class NotificationService extends EventEmitter {
    */
   private async renewKeyMaterial({groupId}: Omit<LastKeyMaterialUpdateParams, 'previousUpdateDate'>) {
     try {
-      const commitBundle = await this.mlsService.updateKeyingMaterial(Decoder.fromBase64(groupId).asBytes);
-      await this.mlsService.uploadCoreCryptoCommitBundle(Decoder.fromBase64(groupId).asBytes, commitBundle);
+      const groupIdDecodedFromBase64 = Decoder.fromBase64(groupId).asBytes;
+      const commitBundle = await this.mlsService.updateKeyingMaterial(groupIdDecodedFromBase64);
+      await this.mlsService.uploadCoreCryptoCommitBundle(groupIdDecodedFromBase64, commitBundle);
 
       const keyRenewalTime = new Date().getTime();
       const keyMaterialUpdateDate = {groupId, previousUpdateDate: keyRenewalTime};
-      await this.database.storeLastKeyMaterialUpdateDate(keyMaterialUpdateDate);
-      this.scheduleTaskToRenewKeyMaterial(keyMaterialUpdateDate);
+      await this.storeLastKeyMaterialUpdateDate(keyMaterialUpdateDate);
     } catch (error) {
       this.logger.error(`Error while renewing key material for groupId ${groupId}`, error);
     }
@@ -505,7 +505,7 @@ export class NotificationService extends EventEmitter {
   public async checkForKeyMaterialsUpdate() {
     try {
       const keyMaterialUpdateDates = await this.database.getStoredLastKeyMaterialUpdateDates();
-      keyMaterialUpdateDates.forEach(this.scheduleTaskToRenewKeyMaterial);
+      keyMaterialUpdateDates.forEach(date => this.scheduleTaskToRenewKeyMaterial(date));
     } catch (error) {
       this.logger.error('Could not get last key material update dates', error);
     }
