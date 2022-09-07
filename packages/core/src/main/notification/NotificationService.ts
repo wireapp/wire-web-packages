@@ -453,7 +453,7 @@ export class NotificationService extends EventEmitter {
    */
   public async storeLastKeyMaterialUpdateDate(params: LastKeyMaterialUpdateParams) {
     await this.database.storeLastKeyMaterialUpdateDate(params);
-    this.scheduleTaskToRenewKeyMaterial(params);
+    await this.scheduleTaskToRenewKeyMaterial(params);
   }
 
   /**
@@ -480,7 +480,14 @@ export class NotificationService extends EventEmitter {
     return `renew_key_material-${groupId}`;
   }
 
-  private scheduleTaskToRenewKeyMaterial({groupId, previousUpdateDate}: LastKeyMaterialUpdateParams) {
+  private async scheduleTaskToRenewKeyMaterial({groupId, previousUpdateDate}: LastKeyMaterialUpdateParams) {
+    const groupConversationExists = await this.mlsService.conversationExists(Decoder.fromBase64(groupId).asBytes);
+
+    if (!groupConversationExists) {
+      await this.database.deleteLastKeyMaterialUpdateDate({groupId});
+      return;
+    }
+
     //given period of time (30 days by default) after last update date renew key material
     const keyingMaterialUpdateThreshold =
       this.mlsService.config?.keyingMaterialUpdateThreshold || DEFAULT_KEYING_MATERIAL_UPDATE_THRESHOLD;

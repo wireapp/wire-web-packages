@@ -150,4 +150,8 @@ export class MLSService {
   public async commitPendingProposals(conversationId: ConversationId): Promise<CommitBundle> {
     return this.getCoreCryptoClient().commitPendingProposals(conversationId);
   }
+
+  public async conversationExists(conversationId: ConversationId): Promise<boolean> {
+    return this.getCoreCryptoClient().conversationExists(conversationId);
+  }
 }
