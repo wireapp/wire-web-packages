@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "@types/node": "~14"
+    "@types/node": "~14",
+    "logdown": "3.3.1"
   },
   "devDependencies": {
     "@types/karma": "6.3.1",
@@ -17,7 +18,7 @@
     "webpack": "4.46.0",
     "webpack-cli": "4.7.2"
   },
-  "description": "A Promise-based dynamic priority queue runner.",
+  "description": "A Promise-based dynamic queue runner.",
   "files": [
     "src",
     "!src/**/!(*.d).ts",
@@ -25,8 +26,8 @@
   ],
   "license": "GPL-3.0",
   "main": "src/main/index",
-  "name": "@wireapp/priority-queue",
-  "repository": "https://github.com/wireapp/wire-web-packages/tree/main/packages/priority-queue",
+  "name": "@wireapp/promise-queue",
+  "repository": "https://github.com/wireapp/wire-web-packages/tree/main/packages/promise-queue",
   "scripts": {
     "build": "yarn build:node && yarn build:browser",
     "build:browser": "webpack --progress",
@@ -38,5 +39,5 @@
     "test:project": "yarn dist && yarn test",
     "test:node": "cross-env JASMINE_CONFIG_PATH=src/test/node/support/jasmine.json jasmine"
   },
-  "version": "1.6.39"
+  "version": "1.0.0"
 }
