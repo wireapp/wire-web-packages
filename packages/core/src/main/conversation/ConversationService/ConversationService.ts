@@ -1292,6 +1292,13 @@ export class ConversationService {
       //@todo: it's temporary - we wait for core-crypto fix to return the actual Uint8Array instead of regular array
       optionalToUint8Array(externalProposal),
     );
+
+    //We store the info when user was added (and key material was created), so we will know when to renew it
+    const userAddedTimeStamp = new Date().getTime();
+    await this.notificationService.storeLastKeyMaterialUpdateDate({
+      previousUpdateDate: userAddedTimeStamp,
+      groupId: conversationGroupId,
+    });
   }
 
   public async isMLSConversationEstablished(conversationGroupId: string) {
