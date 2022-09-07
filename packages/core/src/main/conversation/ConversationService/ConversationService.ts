@@ -1359,7 +1359,7 @@ export class ConversationService {
     );
   }
 
-  public async conversationExists(conversationGroupId: string) {
+  public async isMLSConversationEstablished(conversationGroupId: string) {
     const coreCryptoClient = this.coreCryptoClientProvider();
     const groupIdDecodedFromBase64 = Decoder.fromBase64(conversationGroupId!).asBytes;
     return coreCryptoClient.conversationExists(groupIdDecodedFromBase64);
