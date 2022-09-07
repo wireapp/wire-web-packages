@@ -428,13 +428,12 @@ export class Account<T = any> extends EventEmitter {
       : await createEncryptedStore(dbName);
 
     let key = await secretStore.getsecretValue(coreCryptoKeyId);
-    let shouldUploadKeyPackages = false;
+    let isNewMLSDevice = false;
     if (!key) {
       key = window.crypto.getRandomValues(new Uint8Array(16));
       await secretStore.saveSecretValue(coreCryptoKeyId, key);
-      // Since we didn't have a key for this device, it means it's the first time it's initiate with MLS capabilities
-      // We will need to upload its key packages and public key later on
-      shouldUploadKeyPackages = true;
+      // Keeping track that this device is a new MLS device (but can be an old proteus device)
+      isNewMLSDevice = true;
     }
 
     const {userId, domain} = this.apiClient.context!;
@@ -446,7 +445,8 @@ export class Account<T = any> extends EventEmitter {
       entropySeed: entropyData,
     });
 
-    if (shouldUploadKeyPackages) {
+    if (isNewMLSDevice) {
+      // If the device is new, we need to upload keypackages and public key to the backend
       await this.service.client.uploadMLSPublicKeys(await mlsClient.clientPublicKey(), client.id);
       await this.service.client.uploadMLSKeyPackages(await mlsClient.clientKeypackages(this.nbPrekeys), client.id);
     }
