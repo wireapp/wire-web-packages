@@ -1154,7 +1154,7 @@ export class ConversationService {
     }
 
     await this.mlsService.createConversation(groupIdDecodedFromBase64);
-    const coreCryptoKeyPackagesPayload = await this.mlsService.getCoreCryptoKeyPackagesPayload([
+    const coreCryptoKeyPackagesPayload = await this.mlsService.getKeyPackagesPayload([
       {
         id: selfUserId.id,
         domain: selfUserId.domain,
@@ -1167,7 +1167,7 @@ export class ConversationService {
       ...qualifiedUsers,
     ]);
 
-    const response = await this.mlsService.addUsersToExistingMLSConversation(
+    const response = await this.mlsService.addUsersToExistingConversation(
       groupIdDecodedFromBase64,
       coreCryptoKeyPackagesPayload,
     );
@@ -1231,8 +1231,8 @@ export class ConversationService {
     conversationId,
   }: Required<AddUsersParams>): Promise<MLSReturnType> {
     const groupIdDecodedFromBase64 = Decoder.fromBase64(groupId!).asBytes;
-    const coreCryptoKeyPackagesPayload = await this.mlsService.getCoreCryptoKeyPackagesPayload([...qualifiedUserIds]);
-    const response = await this.mlsService.addUsersToExistingMLSConversation(
+    const coreCryptoKeyPackagesPayload = await this.mlsService.getKeyPackagesPayload([...qualifiedUserIds]);
+    const response = await this.mlsService.addUsersToExistingConversation(
       groupIdDecodedFromBase64,
       coreCryptoKeyPackagesPayload,
     );
@@ -1242,6 +1242,11 @@ export class ConversationService {
       events: response?.events || [],
       conversation,
     };
+  }
+
+  private async storeLastKeyMaterialUpdateDateWithCurrentTime(groupId: string) {
+    const currentTime = new Date().getTime();
+    await this.notificationService.storeLastKeyMaterialUpdateDate({groupId, previousUpdateDate: currentTime});
   }
 
   public async removeUsersFromMLSConversation({
@@ -1257,16 +1262,13 @@ export class ConversationService {
       clientsToRemove.qualified_user_map,
     );
 
-    const commitBundle = await this.mlsService.removeClientsFromConversation(
+    const messageResponse = await this.mlsService.removeClientsFromConversation(
       groupIdDecodedFromBase64,
       fullyQualifiedClientIds,
     );
 
-    const messageResponse = await this.mlsService.uploadCoreCryptoCommitBundle(groupIdDecodedFromBase64, commitBundle);
-
     //key material gets updated after removing a user from the group, so we can reset last key update time value in the store
-    const userRemovalTime = new Date().getTime();
-    await this.notificationService.storeLastKeyMaterialUpdateDate({groupId, previousUpdateDate: userRemovalTime});
+    await this.storeLastKeyMaterialUpdateDateWithCurrentTime(groupId);
 
     const conversation = await this.getConversations(conversationId.id);
 
@@ -1294,11 +1296,7 @@ export class ConversationService {
     );
 
     //We store the info when user was added (and key material was created), so we will know when to renew it
-    const userAddedTimeStamp = new Date().getTime();
-    await this.notificationService.storeLastKeyMaterialUpdateDate({
-      previousUpdateDate: userAddedTimeStamp,
-      groupId: conversationGroupId,
-    });
+    await this.storeLastKeyMaterialUpdateDateWithCurrentTime(conversationGroupId);
   }
 
   public async isMLSConversationEstablished(conversationGroupId: string) {

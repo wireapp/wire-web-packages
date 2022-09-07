@@ -465,8 +465,7 @@ export class NotificationService extends EventEmitter {
   private async renewKeyMaterial({groupId}: Omit<LastKeyMaterialUpdateParams, 'previousUpdateDate'>) {
     try {
       const groupIdDecodedFromBase64 = Decoder.fromBase64(groupId).asBytes;
-      const commitBundle = await this.mlsService.updateKeyingMaterial(groupIdDecodedFromBase64);
-      await this.mlsService.uploadCoreCryptoCommitBundle(groupIdDecodedFromBase64, commitBundle);
+      await this.mlsService.updateKeyingMaterial(groupIdDecodedFromBase64);
 
       const keyRenewalTime = new Date().getTime();
       const keyMaterialUpdateDate = {groupId, previousUpdateDate: keyRenewalTime};
