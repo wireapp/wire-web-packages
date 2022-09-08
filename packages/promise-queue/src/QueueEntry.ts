@@ -17,12 +17,12 @@
  *
  */
 
-export type PromiseFn<T> = (...args: any[]) => Promise<T>;
+export type Task<T> = (...args: any[]) => Promise<T>;
 export type PromiseResolveFn = (value?: any) => void;
 export type PromiseRejectFn = (reason?: any) => void;
 
 export interface QueueEntry<T> {
-  fn: PromiseFn<T>;
+  fn: Task<T>;
   rejectFn: PromiseRejectFn;
   resolveFn: PromiseResolveFn;
 }

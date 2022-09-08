@@ -19,7 +19,7 @@
 
 import {TimeUtil} from '@wireapp/commons';
 import {PromiseQueueOptions} from './PromiseQueueOptions';
-import {QueueEntry, PromiseFn} from './QueueEntry';
+import {QueueEntry, Task} from './QueueEntry';
 
 export class PromiseQueue {
   private blocked: boolean;
@@ -122,7 +122,7 @@ export class PromiseQueue {
    * @param fn Function to be executed in queue order
    * @returns Resolves when function was executed
    */
-  push<T>(fn: PromiseFn<T>): Promise<T> {
+  push<T>(fn: Task<T>): Promise<T> {
     return new Promise((resolve, reject) => {
       const queueEntry: QueueEntry<T> = {
         fn,
@@ -149,7 +149,7 @@ export class PromiseQueue {
    * @param fn Function to be executed in queue order
    * @returns Resolves when function was executed
    */
-  unshift<T>(fn: PromiseFn<T>): Promise<T> {
+  unshift<T>(fn: Task<T>): Promise<T> {
     return new Promise((resolve, reject) => {
       const queueEntry = {
         fn: fn,
