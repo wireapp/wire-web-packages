@@ -18,3 +18,4 @@
  */
 
 export * from './PromiseQueue';
+export {Task} from './QueueEntry';

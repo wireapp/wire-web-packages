@@ -17,7 +17,7 @@
  *
  */
 
-import {PromiseFn, PromiseQueue} from '@wireapp/promise-queue';
+import {Task, PromiseQueue} from '@wireapp/promise-queue';
 
 export class MessageSender {
   private readonly sendingQueue: PromiseQueue;
@@ -30,7 +30,7 @@ export class MessageSender {
     return this.sendingQueue.getLength();
   }
 
-  queueMessage<T>(sendingFunction: PromiseFn<T>): Promise<T> {
+  queueMessage<T>(sendingFunction: Task<T>): Promise<T> {
     return this.sendingQueue.push(sendingFunction);
   }
 

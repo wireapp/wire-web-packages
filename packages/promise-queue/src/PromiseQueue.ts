@@ -17,9 +17,14 @@
  *
  */
 
-import {TimeUtil} from '@wireapp/commons';
 import {PromiseQueueOptions} from './PromiseQueueOptions';
 import {QueueEntry, Task} from './QueueEntry';
+
+const defaultOptions = {
+  timeout: 1000 * 60, // 1 minute
+  concurrent: 1,
+  paused: false,
+};
 
 export class PromiseQueue {
   private blocked: boolean;
@@ -31,20 +36,14 @@ export class PromiseQueue {
   private readonly queue: QueueEntry<any>[];
   private readonly timeout: number;
 
-  static get CONFIG() {
-    return {
-      UNBLOCK_INTERVAL: TimeUtil.TimeInMillis.MINUTE,
-    };
-  }
-
   constructor(options?: PromiseQueueOptions) {
     this.blocked = false;
-    this.concurrent = options!.concurrent ?? 1;
+    this.concurrent = options?.concurrent ?? defaultOptions.concurrent;
     this.runningTasks = 0;
     this.interval = undefined;
-    this.paused = options!.paused ?? false;
+    this.paused = options?.paused ?? defaultOptions.paused;
     this.queue = [];
-    this.timeout = options!.timeout ?? PromiseQueue.CONFIG.UNBLOCK_INTERVAL;
+    this.timeout = options?.timeout ?? defaultOptions.timeout;
   }
 
   /**
