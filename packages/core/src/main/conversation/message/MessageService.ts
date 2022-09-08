@@ -220,7 +220,7 @@ export class MessageService {
 
     const {id, domain} = options.conversationId;
 
-    return this.apiClient.api.conversation.postOTRMessageV2(id, domain, protoMessage);
+    return this.apiClient.api.conversation.postOTRMessage(id, domain, protoMessage);
   }
 
   private async generateExternalPayload(plainText: Uint8Array): Promise<{text: Uint8Array; cipherText: Uint8Array}> {
