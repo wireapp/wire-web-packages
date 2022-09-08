@@ -35,6 +35,11 @@ interface CancelLowPrecisionTaskParams {
 const intervals: Record<number, {timeoutId: NodeJS.Timeout; tasks: IntervalTask[]}> = {};
 
 const addTask = ({key, firingDate, task, intervalDelay}: ScheduleLowPrecisionTaskParams) => {
+  const existingIntervalId = intervals[intervalDelay]?.timeoutId;
+  if (existingIntervalId) {
+    clearInterval(existingIntervalId);
+  }
+
   const tasks = intervals[intervalDelay]?.tasks || [];
   tasks.push({key, firingDate, task});
 
@@ -71,6 +76,7 @@ const cancelTask = ({intervalDelay, key}: CancelLowPrecisionTaskParams) => {
     const tasks = intervals[intervalDelay].tasks || [];
     const newTasks = tasks.filter(task => task.key !== key);
     intervals[intervalDelay].tasks = newTasks;
+
     if (newTasks.length === 0) {
       clearInterval(intervals[intervalDelay].timeoutId);
       delete intervals[intervalDelay];

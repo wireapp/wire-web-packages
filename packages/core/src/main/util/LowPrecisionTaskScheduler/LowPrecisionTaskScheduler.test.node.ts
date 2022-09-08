@@ -63,7 +63,7 @@ describe('LowPrecisionTaskScheduler', () => {
     expect(mockedTask).toHaveBeenCalled();
   });
 
-  it('adds multiple tasks to schedule and runs it after given delay', async done => {
+  it('adds multiple tasks to schedule and runs it after given delay', async () => {
     const mockedTask1 = jasmine.createSpy('mockedTask1').and.returnValue(Promise.resolve('hello task 1'));
     const mockedTask2 = jasmine.createSpy('mockedTask2').and.returnValue(Promise.resolve('hello task 2'));
 
@@ -83,15 +83,13 @@ describe('LowPrecisionTaskScheduler', () => {
       task: mockedTask2,
     });
 
-    jasmine.clock().tick(4001);
+    jasmine.clock().tick(5001);
 
     await Promise.resolve();
     await Promise.resolve();
 
     expect(mockedTask1).toHaveBeenCalled();
     expect(mockedTask2).toHaveBeenCalled();
-
-    done();
   });
 
   it('cancels tasks', async () => {
@@ -116,15 +114,15 @@ describe('LowPrecisionTaskScheduler', () => {
 
     LowPrecisionTaskScheduler.cancelTask({
       intervalDelay: 4000,
-      key: 'test4-key',
+      key: 'test3-key',
     });
 
-    jasmine.clock().tick(3001);
+    jasmine.clock().tick(4001);
 
     await Promise.resolve();
     await Promise.resolve();
 
-    expect(mockedTask3).toHaveBeenCalled();
-    expect(mockedTask4).not.toHaveBeenCalled();
+    expect(mockedTask3).not.toHaveBeenCalled();
+    expect(mockedTask4).toHaveBeenCalled();
   });
 });
