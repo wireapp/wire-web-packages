@@ -49,7 +49,7 @@ export class PromiseQueue {
   /**
    * Executes first function in the queue.
    */
-  execute(): void {
+  private execute(): void {
     if (this.paused || this.blocked) {
       return;
     }
@@ -141,24 +141,6 @@ export class PromiseQueue {
     this.clearInterval();
     this.blocked = false;
     this.pause(false);
-  }
-
-  /**
-   * Queued function is executed.
-   * @param fn Function to be executed in queue order
-   * @returns Resolves when function was executed
-   */
-  unshift<T>(fn: Task<T>): Promise<T> {
-    return new Promise((resolve, reject) => {
-      const queueEntry = {
-        fn: fn,
-        rejectFn: reject,
-        resolveFn: resolve,
-      };
-
-      this.queue.unshift(queueEntry);
-      this.execute();
-    });
   }
 
   private clearInterval(): void {
