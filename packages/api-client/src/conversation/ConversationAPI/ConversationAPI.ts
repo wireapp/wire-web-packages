@@ -671,7 +671,7 @@ export class ConversationAPI {
    */
   public async postOTRMessage(
     sendingClientId: string,
-    conversationId: string,
+    conversationId: string | QualifiedId,
     messageData: ProtobufOTR.NewOtrMessage,
     ignoreMissing?: boolean | string[],
   ): Promise<ClientMismatch> {
@@ -686,7 +686,10 @@ export class ConversationAPI {
        */
       data: ProtobufOTR.NewOtrMessage.encode(messageData).finish().slice(),
       method: 'post',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.OTR}/${ConversationAPI.URL.MESSAGES}`,
+      url:
+        typeof conversationId === 'string'
+          ? `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.OTR}/${ConversationAPI.URL.MESSAGES}`
+          : `${ConversationAPI.URL.CONVERSATIONS}/${conversationId.domain}/${conversationId.id}/${ConversationAPI.URL.PROTEUS}/${ConversationAPI.URL.MESSAGES}`,
     };
 
     if (typeof ignoreMissing !== 'undefined') {

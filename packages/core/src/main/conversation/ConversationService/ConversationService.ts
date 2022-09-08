@@ -114,6 +114,48 @@ const optionalToUint8Array = (array: Uint8Array | []): Uint8Array => {
   return Array.isArray(array) ? Uint8Array.from(array) : array;
 };
 
+const extractUserIds = (userIds: string[] | UserClients): string[] => {
+  if (isUserClients(userIds)) {
+    return Object.keys(userIds);
+  }
+  return userIds;
+};
+const extractQualifiedUserIds = (userIds: QualifiedId[] | QualifiedUserClients): QualifiedId[] => {
+  if (isQualifiedUserClients(userIds)) {
+    return Object.entries(userIds).reduce<QualifiedId[]>((ids, [domain, userClients]) => {
+      return ids.concat(Object.keys(userClients).map(userId => ({domain, id: userId})));
+    }, []);
+  }
+  return userIds;
+};
+
+function shouldReportMissing(targetMode: MessageTargetMode, users?: string[] | UserClients): boolean | string[];
+function shouldReportMissing(
+  targetMode: MessageTargetMode,
+  users?: QualifiedId[] | QualifiedUserClients,
+): boolean | QualifiedId[];
+function shouldReportMissing(
+  targetMode: MessageTargetMode,
+  users?: string[] | QualifiedId[] | QualifiedUserClients | UserClients,
+): boolean | string[] | QualifiedId[] {
+  if (!users) {
+    return false;
+  }
+  switch (targetMode) {
+    case MessageTargetMode.NONE:
+      // we want to check mismatch in case the consumer gave an exact list of users/devices
+      return isQualifiedUserClients(users) || isUserClients(users);
+    case MessageTargetMode.USERS:
+      return isQualifiedUserClients(users) || isQualifiedIdArray(users)
+        ? extractQualifiedUserIds(users)
+        : extractUserIds(users);
+
+    default:
+      // in case the message is fully targetted at user/client pairs, we do not want to report the missing clients or users at all
+      return false;
+  }
+}
+
 export class ConversationService {
   public readonly messageTimer: MessageTimer;
   private readonly messageService: MessageService;
@@ -301,19 +343,10 @@ export class ConversationService {
         {id: conversationId, domain: conversationDomain},
         userIds,
       );
-      let reportMissing;
-      if (targetMode === MessageTargetMode.NONE) {
-        reportMissing = isQualifiedUserClients(userIds); // we want to check mismatch in case the consumer gave an exact list of users/devices
-      } else if (targetMode === MessageTargetMode.USERS) {
-        reportMissing = this.extractQualifiedUserIds(userIds);
-      } else {
-        // in case the message is fully targetted at user/client pairs, we do not want to report the missing clients or users at all
-        reportMissing = false;
-      }
       return this.messageService.sendFederatedMessage(sendingClientId, recipients, plainText, {
         conversationId: {id: conversationId, domain: conversationDomain},
         nativePush,
-        reportMissing,
+        reportMissing: shouldReportMissing(targetMode, userIds),
         onClientMismatch: mismatch => onClientMismatch?.(mismatch, false),
       });
     }
@@ -322,37 +355,12 @@ export class ConversationService {
       throw new Error('Invalid userIds option for sending');
     }
     const recipients = await this.getRecipientsForConversation(conversationId, userIds);
-    let reportMissing;
-    if (targetMode === MessageTargetMode.NONE) {
-      reportMissing = isUserClients(userIds); // we want to check mismatch in case the consumer gave an exact list of users/devices
-    } else if (targetMode === MessageTargetMode.USERS) {
-      reportMissing = this.extractUserIds(userIds);
-    } else {
-      // in case the message is fully targetted at user/client pairs, we do not want to report the missing clients or users at all
-      reportMissing = false;
-    }
     return this.messageService.sendMessage(sendingClientId, recipients, plainText, {
       conversationId,
       nativePush,
-      reportMissing,
+      reportMissing: shouldReportMissing(targetMode, userIds),
       onClientMismatch: mistmatch => onClientMismatch?.(mistmatch, false),
     });
-  }
-
-  private extractUserIds(userIds?: string[] | UserClients): string[] | undefined {
-    if (isUserClients(userIds)) {
-      return Object.keys(userIds);
-    }
-    return userIds;
-  }
-
-  private extractQualifiedUserIds(userIds?: QualifiedId[] | QualifiedUserClients): QualifiedId[] | undefined {
-    if (isQualifiedUserClients(userIds)) {
-      return Object.entries(userIds).reduce<QualifiedId[]>((ids, [domain, userClients]) => {
-        return ids.concat(Object.keys(userClients).map(userId => ({domain, id: userId})));
-      }, []);
-    }
-    return userIds;
   }
 
   private generateButtonActionGenericMessage(payloadBundle: ButtonActionMessage): GenericMessage {
