@@ -285,7 +285,6 @@ export class ConversationService {
       conversationDomain,
       userIds,
       nativePush,
-      sendAsProtobuf,
       onClientMismatch,
       targetMode = MessageTargetMode.NONE,
     }: MessageSendingOptions = {},
@@ -334,7 +333,6 @@ export class ConversationService {
     }
     return this.messageService.sendMessage(sendingClientId, recipients, plainText, {
       conversationId,
-      sendAsProtobuf,
       nativePush,
       reportMissing,
       onClientMismatch: mistmatch => onClientMismatch?.(mistmatch, false),
@@ -627,7 +625,6 @@ export class ConversationService {
     conversationId: string,
     timestamp: number | Date = new Date(),
     messageId: string = MessageBuilder.createId(),
-    sendAsProtobuf?: boolean,
   ): Promise<ClearConversationMessage> {
     if (timestamp instanceof Date) {
       timestamp = timestamp.getTime();
@@ -649,7 +646,6 @@ export class ConversationService {
 
     await this.sendGenericMessage(this.apiClient.validatedClientId, selfConversationId, genericMessage, {
       conversationDomain: domain,
-      sendAsProtobuf,
     });
 
     return {
@@ -747,7 +743,6 @@ export class ConversationService {
   public async deleteMessageLocal(
     conversationId: string,
     messageIdToHide: string,
-    sendAsProtobuf?: boolean,
     conversationDomain?: string,
   ): Promise<HideMessage> {
     const messageId = MessageBuilder.createId();
@@ -765,7 +760,6 @@ export class ConversationService {
     const {id: selfConversationId} = await this.getSelfConversationId();
 
     await this.sendGenericMessage(this.apiClient.validatedClientId, selfConversationId, genericMessage, {
-      sendAsProtobuf,
       conversationDomain,
     });
 
@@ -786,7 +780,6 @@ export class ConversationService {
     conversationId: string,
     messageIdToDelete: string,
     userIds?: string[] | QualifiedId[] | UserClients | QualifiedUserClients,
-    sendAsProtobuf?: boolean,
     conversationDomain?: string,
     callbacks?: MessageSendingCallbacks,
   ): Promise<DeleteMessage> {
@@ -804,7 +797,6 @@ export class ConversationService {
 
     const response = await this.sendGenericMessage(this.apiClient.validatedClientId, conversationId, genericMessage, {
       userIds,
-      sendAsProtobuf,
       conversationDomain,
     });
     callbacks?.onSuccess?.(genericMessage, response?.time);
@@ -935,15 +927,13 @@ export class ConversationService {
     genericMessage: GenericMessage,
     content: T['content'],
   ): Promise<T> {
-    const {userIds, sendAsProtobuf, conversationDomain, nativePush, targetMode, payload, onClientMismatch, onSuccess} =
-      params;
+    const {userIds, conversationDomain, nativePush, targetMode, payload, onClientMismatch, onSuccess} = params;
     const response = await this.sendGenericMessage(
       this.apiClient.validatedClientId,
       payload.conversation,
       genericMessage,
       {
         userIds,
-        sendAsProtobuf,
         conversationDomain,
         nativePush,
         targetMode,
@@ -1150,20 +1140,22 @@ export class ConversationService {
     return coreCryptoKeyPackagesPayload;
   }
 
-  private async addUsersToExistingMLSConversation(groupIdDecodedFromBase64: Uint8Array, invitee: Invitee[]) {
+  private async addUsersToExistingMLSConversation(groupId: Uint8Array, invitee: Invitee[]) {
     const coreCryptoClient = this.coreCryptoClientProvider();
-    const memberAddedMessages = await coreCryptoClient.addClientsToConversation(groupIdDecodedFromBase64, invitee);
+    const memberAddedMessages = await coreCryptoClient.addClientsToConversation(groupId, invitee);
 
     if (memberAddedMessages?.welcome) {
       //@todo: it's temporary - we wait for core-crypto fix to return the actual Uint8Array instead of regular array
-      await this.apiClient.api.conversation.postMlsWelcomeMessage(optionalToUint8Array(memberAddedMessages.welcome));
+      await this.messageService.sendMLSWelcomeMessage(optionalToUint8Array(memberAddedMessages.welcome));
     }
     if (memberAddedMessages?.commit) {
-      const messageResponse = await this.apiClient.api.conversation.postMlsMessage(
+      const messageResponse = await this.messageService.sendMLSMessage(
         //@todo: it's temporary - we wait for core-crypto fix to return the actual Uint8Array instead of regular array
+        groupId,
         optionalToUint8Array(memberAddedMessages.commit),
+        coreCryptoClient,
       );
-      await coreCryptoClient.commitAccepted(groupIdDecodedFromBase64);
+      await coreCryptoClient.commitAccepted(groupId);
       return messageResponse;
     }
     return null;
@@ -1234,13 +1226,12 @@ export class ConversationService {
 
     const coreCryptoClient = this.coreCryptoClientProvider();
 
-    const encrypted = await coreCryptoClient.encryptMessage(
-      groupIdBytes,
-      GenericMessage.encode(genericMessage).finish(),
-    );
-
     try {
-      const {time = ''} = await this.apiClient.api.conversation.postMlsMessage(encrypted);
+      const {time = ''} = await this.messageService.sendMLSMessage(
+        groupIdBytes,
+        GenericMessage.encode(genericMessage).finish(),
+        coreCryptoClient,
+      );
       onSuccess?.(genericMessage, time?.length > 0 ? time : new Date().toISOString());
       return {
         ...payload,

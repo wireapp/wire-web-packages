@@ -65,13 +65,8 @@ export class UserService {
    * @param teamId
    * @param type
    * @param options.sendAll=false will broadcast the message to all the members of the team (instead of just direct connections). Should be avoided in a big team
-   * @param options.sendAsProtobuf=false
    */
-  public async setAvailability(
-    teamId: string,
-    type: AvailabilityType,
-    {sendAll = false, sendAsProtobuf = false} = {},
-  ): Promise<void> {
+  public async setAvailability(teamId: string, type: AvailabilityType, {sendAll = false} = {}): Promise<void> {
     // Get pre-key bundles for members of your own team
     const preKeyBundlesFromTeam = await this.broadcastService.getPreKeyBundlesFromTeam(teamId, false, !sendAll);
 
@@ -104,6 +99,6 @@ export class UserService {
     });
 
     // Broadcast availability status to your team members & external 1:1 connections
-    await this.broadcastService.broadcastGenericMessage(genericMessage, allPreKeyBundles, sendAsProtobuf);
+    await this.broadcastService.broadcastGenericMessage(genericMessage, allPreKeyBundles);
   }
 }

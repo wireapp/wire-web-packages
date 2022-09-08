@@ -235,7 +235,6 @@ describe('MessageService', () => {
 
       await messageService.sendMessage(clientId, generateRecipients(generateUsers(3, 3)), createMessage(message), {
         conversationId,
-        sendAsProtobuf: true,
       });
       expect(apiClient.api.conversation.postOTRProtobufMessage).toHaveBeenCalledWith(
         clientId,
@@ -259,9 +258,7 @@ describe('MessageService', () => {
         Promise.resolve({} as ClientMismatch),
       );
 
-      await messageService.sendMessage(clientId, generateRecipients(generateUsers(3, 3)), createMessage(message), {
-        sendAsProtobuf: true,
-      });
+      await messageService.sendMessage(clientId, generateRecipients(generateUsers(3, 3)), createMessage(message), {});
 
       expect(apiClient.api.broadcast.postBroadcastProtobufMessage).toHaveBeenCalledWith(
         clientId,

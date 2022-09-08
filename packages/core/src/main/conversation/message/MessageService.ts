@@ -26,13 +26,11 @@ import {APIClient} from '@wireapp/api-client';
 import {
   ClientMismatch,
   MessageSendingStatus,
-  NewOTRMessage,
   OTRRecipients,
   QualifiedOTRRecipients,
   QualifiedUserClients,
   UserClients,
 } from '@wireapp/api-client/src/conversation';
-import {Encoder} from 'bazinga64';
 
 import {encryptAsset} from '../../cryptography/AssetCryptography';
 import {CryptographyService} from '../../cryptography';
@@ -42,6 +40,7 @@ import {GenericMessage} from '@wireapp/protocol-messaging';
 import {GenericMessageType} from '..';
 import {flattenUserClients, flattenQualifiedUserClients} from './UserClientsUtil';
 import {isQualifiedIdArray, isStringArray} from '../../util';
+import {CoreCrypto} from '@otak/core-crypto/platforms/web/corecrypto';
 
 type ClientMismatchError = AxiosError<ClientMismatch | MessageSendingStatus>;
 
@@ -56,7 +55,6 @@ export class MessageService {
    * @param plainText The plainText data to send
    * @param options.conversationId? the conversation to send the message to. Will broadcast if not set
    * @param options.reportMissing? trigger a mismatch error when there are missing recipients in the payload
-   * @param options.sendAsProtobuf?
    * @param options.onClientMismatch? Called when a mismatch happens on the server
    * @return the ClientMismatch status returned by the backend
    */
@@ -67,7 +65,6 @@ export class MessageService {
     options: {
       conversationId?: string;
       reportMissing?: boolean | string[];
-      sendAsProtobuf?: boolean;
       nativePush?: boolean;
       onClientMismatch?: (mismatch: ClientMismatch) => void | boolean | Promise<boolean>;
     } = {},
@@ -86,9 +83,7 @@ export class MessageService {
       : encrypted;
 
     const send = (payload: OTRRecipients<Uint8Array>) => {
-      return options.sendAsProtobuf
-        ? this.sendOTRProtobufMessage(sendingClientId, payload, {...options, assetData: cipherText})
-        : this.sendOTRMessage(sendingClientId, payload, {...options, assetData: cipherText});
+      return this.sendOTRProtobufMessage(sendingClientId, payload, {...options, assetData: cipherText});
     };
     try {
       return await send(encryptedPayload);
@@ -114,7 +109,6 @@ export class MessageService {
    * @param plainText The plainText data to send
    * @param options.conversationId? the conversation to send the message to. Will broadcast if not set
    * @param options.reportMissing? trigger a mismatch error when there are missing recipients in the payload
-   * @param options.sendAsProtobuf?
    * @param options.onClientMismatch? Called when a mismatch happens on the server
    * @return the MessageSendingStatus returned by the backend
    */
@@ -152,6 +146,16 @@ export class MessageService {
       const reEncryptedPayload = await this.reencryptAfterFederatedMismatch(mismatch, encryptedPayload, plainText);
       return send(reEncryptedPayload);
     }
+  }
+
+  public async sendMLSMessage(groupId: Uint8Array, plainTextPayload: Uint8Array, coreCryptoClient: CoreCrypto) {
+    const encryptedPayload = await coreCryptoClient.encryptMessage(groupId, plainTextPayload);
+
+    return this.apiClient.api.conversation.postMlsMessage(encryptedPayload);
+  }
+
+  public async sendMLSWelcomeMessage(payload: Uint8Array) {
+    return this.apiClient.api.conversation.postMlsWelcomeMessage(payload);
   }
 
   private async sendFederatedOtrMessage(
@@ -217,36 +221,6 @@ export class MessageService {
     const {id, domain} = options.conversationId;
 
     return this.apiClient.api.conversation.postOTRMessageV2(id, domain, protoMessage);
-  }
-
-  private async sendOTRMessage(
-    sendingClientId: string,
-    recipients: OTRRecipients<Uint8Array>,
-    options: {
-      conversationId?: string;
-      assetData?: Uint8Array;
-      reportMissing?: boolean | string[];
-      nativePush?: boolean;
-    },
-  ): Promise<ClientMismatch> {
-    const message: NewOTRMessage<string> = {
-      data: options.assetData ? Encoder.toBase64(options.assetData).asString : undefined,
-      recipients: CryptographyService.convertArrayRecipientsToBase64(recipients),
-      sender: sendingClientId,
-      native_push: options.nativePush,
-    };
-
-    let ignoreMissing;
-    if (isStringArray(options.reportMissing)) {
-      message.report_missing = options.reportMissing;
-    } else {
-      // By default we want ignore missing to be false (and have mismatch errors in case some clients are missing)
-      ignoreMissing = typeof options.reportMissing === 'boolean' ? !options.reportMissing : false;
-    }
-
-    return !options.conversationId
-      ? this.apiClient.api.broadcast.postBroadcastMessage(sendingClientId, message, ignoreMissing)
-      : this.apiClient.api.conversation.postOTRMessage(sendingClientId, options.conversationId, message, ignoreMissing);
   }
 
   private async generateExternalPayload(plainText: Uint8Array): Promise<{text: Uint8Array; cipherText: Uint8Array}> {
@@ -338,7 +312,12 @@ export class MessageService {
   private async sendOTRProtobufMessage(
     sendingClientId: string,
     recipients: OTRRecipients<Uint8Array>,
-    options: {conversationId?: string; assetData?: Uint8Array; reportMissing?: boolean | string[]},
+    options: {
+      conversationId?: string;
+      assetData?: Uint8Array;
+      reportMissing?: boolean | string[];
+      nativePush?: boolean;
+    },
   ): Promise<ClientMismatch> {
     const userEntries: ProtobufOTR.IUserEntry[] = Object.entries(recipients).map(([userId, otrClientMap]) => {
       const clients: ProtobufOTR.IClientEntry[] = Object.entries(otrClientMap).map(([clientId, payload]) => {
@@ -363,6 +342,7 @@ export class MessageService {
       sender: {
         client: Long.fromString(sendingClientId, 16),
       },
+      nativePush: options.nativePush,
     });
 
     let ignoreMissing;

@@ -61,7 +61,6 @@ const {
 
 (async () => {
   const MESSAGE_TIMER = TimeUtil.TimeInMillis.SECOND * 5;
-  const useProtobuf = false;
 
   ['WIRE_EMAIL', 'WIRE_PASSWORD', 'WIRE_CONVERSATION_ID', 'WIRE_BACKEND'].forEach((envVar, _, array) => {
     if (!process.env[envVar]) {
@@ -101,7 +100,6 @@ const {
     }).build();
     const {id: messageId} = await account.service!.conversation.send({
       payloadBundle: deleteTextPayload,
-      sendAsProtobuf: useProtobuf,
     });
 
     const fiveSecondsInMillis = TimeUtil.TimeInMillis.SECOND * 5;
@@ -123,14 +121,14 @@ const {
       from: account.userId,
       text: `Expires after ${expiry}ms ...`,
     }).build();
-    await account.service!.conversation.send({payloadBundle: payload, sendAsProtobuf: useProtobuf});
+    await account.service!.conversation.send({payloadBundle: payload});
     account.service!.conversation.messageTimer.setMessageLevelTimer(WIRE_CONVERSATION_ID, 0);
   }
 
   async function sendPing(expiry = MESSAGE_TIMER): Promise<void> {
     account.service!.conversation.messageTimer.setMessageLevelTimer(WIRE_CONVERSATION_ID, expiry);
     const payload = MessageBuilder.createPing(WIRE_CONVERSATION_ID);
-    await account.service!.conversation.send({payloadBundle: payload, sendAsProtobuf: useProtobuf});
+    await account.service!.conversation.send({payloadBundle: payload});
     account.service!.conversation.messageTimer.setMessageLevelTimer(WIRE_CONVERSATION_ID, 0);
   }
 
@@ -140,7 +138,7 @@ const {
       from: account.userId,
       text: 'Hello, World!',
     }).build();
-    await account.service!.conversation.send({payloadBundle: payload, sendAsProtobuf: useProtobuf});
+    await account.service!.conversation.send({payloadBundle: payload});
   }
 
   async function sendAndEdit(): Promise<void> {
@@ -151,7 +149,6 @@ const {
     }).build();
     const {id: originalMessageId} = await account.service!.conversation.send({
       payloadBundle: payload,
-      sendAsProtobuf: useProtobuf,
     });
     setInterval(async () => {
       const editedPayload = MessageBuilder.createEditedText({
@@ -160,7 +157,7 @@ const {
         newMessageText: 'Hello, World!',
         originalMessageId,
       }).build();
-      await account.service!.conversation.send({payloadBundle: editedPayload, sendAsProtobuf: useProtobuf});
+      await account.service!.conversation.send({payloadBundle: editedPayload});
     }, TimeUtil.TimeInMillis.SECOND * 2);
   }
 
@@ -178,7 +175,7 @@ const {
       image,
       asset: await (await account.service!.asset.uploadAsset(image.data)).response,
     });
-    await account.service!.conversation.send({payloadBundle: imagePayload, sendAsProtobuf: useProtobuf});
+    await account.service!.conversation.send({payloadBundle: imagePayload});
   }
 
   async function sendFile(): Promise<void> {
@@ -193,7 +190,7 @@ const {
         type: 'image/png',
       },
     });
-    await account.service!.conversation.send({payloadBundle: metadataPayload, sendAsProtobuf: useProtobuf});
+    await account.service!.conversation.send({payloadBundle: metadataPayload});
 
     const file = {data};
     const filePayload = await MessageBuilder.createFileData({
@@ -203,7 +200,7 @@ const {
       asset: await (await account.service.asset.uploadAsset(file.data)).response,
       originalMessageId: metadataPayload.id,
     });
-    await account.service!.conversation.send({payloadBundle: filePayload, sendAsProtobuf: useProtobuf});
+    await account.service!.conversation.send({payloadBundle: filePayload});
   }
 
   async function clearConversation(): Promise<void> {
@@ -233,7 +230,7 @@ const {
       .withMentions(mentions)
       .build();
 
-    await account.service!.conversation.send({payloadBundle: payload, sendAsProtobuf: useProtobuf});
+    await account.service!.conversation.send({payloadBundle: payload});
   }
 
   async function sendQuote(): Promise<void> {
@@ -247,7 +244,6 @@ const {
 
     const {id: messageId} = await account.service!.conversation.send({
       payloadBundle: textPayload,
-      sendAsProtobuf: useProtobuf,
     });
 
     const quoteText = 'Hello again';
@@ -265,7 +261,7 @@ const {
       .withQuote(quote)
       .build();
 
-    await account.service!.conversation.send({payloadBundle: quotePayload, sendAsProtobuf: useProtobuf});
+    await account.service!.conversation.send({payloadBundle: quotePayload});
   }
 
   const methods = [

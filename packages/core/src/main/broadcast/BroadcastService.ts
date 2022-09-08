@@ -78,7 +78,6 @@ export class BroadcastService {
   public async broadcastGenericMessage(
     genericMessage: GenericMessage,
     recipients: UserPreKeyBundleMap | UserClients | QualifiedUserClients,
-    sendAsProtobuf?: boolean,
     onClientMismatch?: (mismatch: ClientMismatch | MessageSendingStatus) => void | boolean | Promise<boolean>,
   ) {
     const plainTextArray = GenericMessage.encode(genericMessage).finish();
@@ -88,7 +87,6 @@ export class BroadcastService {
           onClientMismatch,
         })
       : this.messageService.sendMessage(this.apiClient.validatedClientId, recipients, plainTextArray, {
-          sendAsProtobuf,
           reportMissing: Object.keys(recipients),
           onClientMismatch,
         });
