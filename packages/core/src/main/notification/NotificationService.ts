@@ -485,8 +485,8 @@ export class NotificationService extends EventEmitter {
     const keyingMaterialUpdateThreshold =
       this.mlsService.config?.keyingMaterialUpdateThreshold || DEFAULT_KEYING_MATERIAL_UPDATE_THRESHOLD;
 
-    try {
-      setInterval(async () => {
+    setInterval(async () => {
+      try {
         const keyMaterialUpdateDates = await this.database.getStoredLastKeyMaterialUpdateDates();
 
         const keyMaterialUpdateDatesPromises = await keyMaterialUpdateDates.reduce(
@@ -516,9 +516,9 @@ export class NotificationService extends EventEmitter {
         );
 
         await Promise.all(keyMaterialUpdateDatesPromises);
-      }, TimeUtil.TimeInMillis.MINUTE);
-    } catch (error) {
-      this.logger.error('Could not get last key material update dates', error);
-    }
+      } catch (error) {
+        this.logger.error('Could not get last key material update dates', error);
+      }
+    }, TimeUtil.TimeInMillis.MINUTE);
   }
 }
