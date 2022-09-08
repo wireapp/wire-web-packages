@@ -24,7 +24,7 @@ import {QueueEntry, PromiseFn} from './QueueEntry';
 
 export class PromiseQueue {
   private blocked: boolean;
-  private current: number;
+  private runningTasks: number;
   private interval?: number;
   private paused: boolean;
   private readonly concurrent: number;
@@ -47,7 +47,7 @@ export class PromiseQueue {
 
     this.blocked = false;
     this.concurrent = options!.concurrent ?? 1;
-    this.current = 0;
+    this.runningTasks = 0;
     this.interval = undefined;
     this.paused = options!.paused ?? false;
     this.queue = [];
@@ -63,44 +63,44 @@ export class PromiseQueue {
     }
 
     const queueEntry = this.queue.shift();
-    if (queueEntry) {
-      this.clearInterval();
-
-      this.current++;
-
-      if (this.current >= this.concurrent) {
-        this.blocked = true;
-      }
-
-      this.interval = window.setInterval(() => {
-        if (!this.paused) {
-          const logObject = {pendingEntry: queueEntry, queueState: this.queue};
-          this.logger.warn(`Promise queue timed-out after ${this.timeout}ms, unblocking queue`, logObject);
-          this.resume();
-        }
-      }, this.timeout);
-
-      queueEntry
-        .fn()
-        .then(response => {
-          queueEntry.resolveFn(response);
-        })
-        .catch(error => {
-          queueEntry.resolveFn = () => {};
-          queueEntry.rejectFn(error);
-        })
-        .finally(() => {
-          this.clearInterval();
-
-          this.current--;
-
-          if (this.current < this.concurrent) {
-            this.blocked = false;
-          }
-
-          this.execute();
-        });
+    if (!queueEntry) {
+      return;
     }
+
+    this.runningTasks++;
+
+    if (this.runningTasks >= this.concurrent) {
+      this.blocked = true;
+    }
+
+    this.interval = window.setInterval(() => {
+      if (!this.paused) {
+        const logObject = {pendingEntry: queueEntry, queueState: this.queue};
+        this.logger.warn(`Promise queue timed-out after ${this.timeout}ms, unblocking queue`, logObject);
+        this.resume();
+      }
+    }, this.timeout);
+
+    queueEntry
+      .fn()
+      .then(response => {
+        queueEntry.resolveFn(response);
+      })
+      .catch(error => {
+        queueEntry.resolveFn = () => {};
+        queueEntry.rejectFn(error);
+      })
+      .finally(() => {
+        this.clearInterval();
+
+        this.runningTasks--;
+
+        if (this.runningTasks < this.concurrent) {
+          this.blocked = false;
+        }
+
+        this.execute();
+      });
   }
 
   /**
