@@ -18,6 +18,7 @@
  */
 
 import type {APIClient} from '@wireapp/api-client';
+import {TimeUtil} from '@wireapp/commons';
 import * as Events from '@wireapp/api-client/src/event';
 import type {Notification} from '@wireapp/api-client/src/notification/';
 import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
@@ -453,7 +454,6 @@ export class NotificationService extends EventEmitter {
    */
   public async storeLastKeyMaterialUpdateDate(params: LastKeyMaterialUpdateParams) {
     await this.database.storeLastKeyMaterialUpdateDate(params);
-    await this.scheduleTaskToRenewKeyMaterial(params);
   }
 
   /**
@@ -469,37 +469,10 @@ export class NotificationService extends EventEmitter {
 
       const keyRenewalTime = new Date().getTime();
       const keyMaterialUpdateDate = {groupId, previousUpdateDate: keyRenewalTime};
-      await this.storeLastKeyMaterialUpdateDate(keyMaterialUpdateDate);
+      await this.database.storeLastKeyMaterialUpdateDate(keyMaterialUpdateDate);
     } catch (error) {
       this.logger.error(`Error while renewing key material for groupId ${groupId}`, error);
     }
-  }
-
-  private createKeyMaterialUpdateTaskSchedulerId(groupId: string) {
-    return `renew_key_material-${groupId}`;
-  }
-
-  private async scheduleTaskToRenewKeyMaterial({groupId, previousUpdateDate}: LastKeyMaterialUpdateParams) {
-    const groupConversationExists = await this.mlsService.conversationExists(Decoder.fromBase64(groupId).asBytes);
-
-    if (!groupConversationExists) {
-      await this.database.deleteLastKeyMaterialUpdateDate({groupId});
-      return;
-    }
-
-    //given period of time (30 days by default) after last update date renew key material
-    const keyingMaterialUpdateThreshold =
-      this.mlsService.config?.keyingMaterialUpdateThreshold || DEFAULT_KEYING_MATERIAL_UPDATE_THRESHOLD;
-
-    const firingDate = previousUpdateDate + keyingMaterialUpdateThreshold;
-
-    const key = this.createKeyMaterialUpdateTaskSchedulerId(groupId);
-
-    TaskScheduler.addTask({
-      task: () => this.renewKeyMaterial({groupId}),
-      firingDate,
-      key,
-    });
   }
 
   /**
@@ -509,9 +482,41 @@ export class NotificationService extends EventEmitter {
    *
    */
   public async checkForKeyMaterialsUpdate() {
+    const keyingMaterialUpdateThreshold =
+      this.mlsService.config?.keyingMaterialUpdateThreshold || DEFAULT_KEYING_MATERIAL_UPDATE_THRESHOLD;
+
     try {
-      const keyMaterialUpdateDates = await this.database.getStoredLastKeyMaterialUpdateDates();
-      keyMaterialUpdateDates.forEach(date => this.scheduleTaskToRenewKeyMaterial(date));
+      setInterval(async () => {
+        const keyMaterialUpdateDates = await this.database.getStoredLastKeyMaterialUpdateDates();
+
+        const keyMaterialUpdateDatesPromises = await keyMaterialUpdateDates.reduce(
+          async (accPromise, {groupId, previousUpdateDate}) => {
+            const acc = await accPromise;
+            const groupConversationExists = await this.mlsService.conversationExists(
+              Decoder.fromBase64(groupId).asBytes,
+            );
+
+            if (!groupConversationExists) {
+              await this.database.deleteLastKeyMaterialUpdateDate({groupId});
+              return acc;
+            }
+
+            //given period of time (30 days by default) after last update date renew key material
+            const firingDate = previousUpdateDate + keyingMaterialUpdateThreshold;
+
+            const currentTime = new Date().getTime();
+
+            if (currentTime >= firingDate) {
+              acc.push(this.renewKeyMaterial({groupId}));
+            }
+
+            return acc;
+          },
+          Promise.resolve([] as Promise<void>[]),
+        );
+
+        await Promise.all(keyMaterialUpdateDatesPromises);
+      }, TimeUtil.TimeInMillis.MINUTE);
     } catch (error) {
       this.logger.error('Could not get last key material update dates', error);
     }

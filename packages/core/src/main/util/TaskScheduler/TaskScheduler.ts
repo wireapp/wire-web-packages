@@ -17,7 +17,6 @@
  *
  */
 
-import {TimeUtil} from '@wireapp/commons';
 import logdown from 'logdown';
 
 const logger = logdown('@wireapp/core/util/TaskScheduler/TaskScheduler', {
@@ -30,8 +29,6 @@ type ScheduleTaskParams = {
   firingDate: number;
   key: string;
 };
-
-const MAX_TIMEOUT_DELAY_VALUE = 0x7fffffff; //maximum setTimeout delay value
 
 const activeTimeouts: Record<string, NodeJS.Timeout> = {};
 
@@ -51,26 +48,13 @@ const addTask = ({task, firingDate, key}: ScheduleTaskParams) => {
     cancelTask(key);
   }
 
-  let timeout: ReturnType<typeof setTimeout>;
-
-  if (delay <= MAX_TIMEOUT_DELAY_VALUE) {
-    timeout = setTimeout(
-      async () => {
-        await task();
-        delete activeTimeouts[key];
-      },
-      delay > 0 ? delay : 0,
-    );
-  } else {
-    timeout = setInterval(async () => {
-      const shouldRun = new Date().getTime() >= execute.getTime();
-      if (shouldRun) {
-        await task();
-        clearTimeout(timeout);
-        delete activeTimeouts[key];
-      }
-    }, TimeUtil.TimeInMillis.MINUTE);
-  }
+  const timeout = setTimeout(
+    async () => {
+      await task();
+      delete activeTimeouts[key];
+    },
+    delay > 0 ? delay : 0,
+  );
 
   // add the task to the list of active tasks
   activeTimeouts[key] = timeout;
