@@ -227,23 +227,6 @@ describe('MessageService', () => {
       );
     });
 
-    it('should send protobuf message to conversation', async () => {
-      const message = 'Lorem ipsum dolor sit amet';
-      spyOn(apiClient.api.conversation, 'postOTRProtobufMessage').and.returnValue(
-        Promise.resolve({} as ClientMismatch),
-      );
-
-      await messageService.sendMessage(clientId, generateRecipients(generateUsers(3, 3)), createMessage(message), {
-        conversationId,
-      });
-      expect(apiClient.api.conversation.postOTRProtobufMessage).toHaveBeenCalledWith(
-        clientId,
-        conversationId,
-        jasmine.any(Object),
-        false,
-      );
-    });
-
     it('should broadcast regular message if no conversationId is given', async () => {
       const message = 'Lorem ipsum dolor sit amet';
       spyOn(apiClient.api.broadcast, 'postBroadcastMessage').and.returnValue(Promise.resolve({} as ClientMismatch));
@@ -254,17 +237,11 @@ describe('MessageService', () => {
 
     it('should broadcast protobuf message if no conversationId is given', async () => {
       const message = 'Lorem ipsum dolor sit amet';
-      spyOn(apiClient.api.broadcast, 'postBroadcastProtobufMessage').and.returnValue(
-        Promise.resolve({} as ClientMismatch),
-      );
+      spyOn(apiClient.api.broadcast, 'postBroadcastMessage').and.returnValue(Promise.resolve({} as ClientMismatch));
 
-      await messageService.sendMessage(clientId, generateRecipients(generateUsers(3, 3)), createMessage(message), {});
+      await messageService.sendMessage(clientId, generateRecipients(generateUsers(3, 3)), createMessage(message));
 
-      expect(apiClient.api.broadcast.postBroadcastProtobufMessage).toHaveBeenCalledWith(
-        clientId,
-        jasmine.any(Object),
-        false,
-      );
+      expect(apiClient.api.broadcast.postBroadcastMessage).toHaveBeenCalledWith(clientId, jasmine.any(Object), false);
     });
 
     it('should not send as external if payload small', async () => {

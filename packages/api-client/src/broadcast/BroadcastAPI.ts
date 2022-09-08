@@ -21,7 +21,7 @@ import {proteus as ProtobufOTR} from '@wireapp/protocol-messaging/web/otr';
 import type {AxiosRequestConfig} from 'axios';
 
 import {ValidationError} from '../validation/';
-import type {ClientMismatch, MessageSendingStatus, NewOTRMessage} from '../conversation/';
+import type {ClientMismatch, MessageSendingStatus} from '../conversation/';
 import type {HttpClient} from '../http/';
 
 export class BroadcastAPI {
@@ -45,48 +45,6 @@ export class BroadcastAPI {
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/tab.html#!/postOtrBroadcast
    */
   public async postBroadcastMessage(
-    sendingClientId: string,
-    messageData: NewOTRMessage<string>,
-    ignoreMissing?: boolean | string[],
-  ): Promise<ClientMismatch> {
-    if (!sendingClientId) {
-      throw new ValidationError('Unable to send OTR message without client ID.');
-    }
-
-    const config: AxiosRequestConfig = {
-      data: messageData,
-      method: 'post',
-      url: BroadcastAPI.URL.BROADCAST,
-    };
-
-    if (typeof ignoreMissing !== 'undefined') {
-      const ignore_missing = Array.isArray(ignoreMissing) ? ignoreMissing.join(',') : ignoreMissing;
-      config.params = {ignore_missing};
-      // `ignore_missing` takes precedence on the server so we can remove
-      // `report_missing` to save some bandwidth.
-      delete messageData.report_missing;
-    } else if (typeof messageData.report_missing === 'undefined') {
-      // both `ignore_missing` and `report_missing` are undefined
-      config.params = {ignore_missing: !!messageData.data};
-    }
-
-    const response = await this.client.sendJSON<ClientMismatch>(config);
-    return response.data;
-  }
-
-  /**
-   * Broadcast an encrypted message to all team members and all contacts (accepts Protobuf).
-   * @param sendingClientId The sender's client ID
-   * @param messageData The message content
-   * @param ignoreMissing Whether to report missing clients or not:
-   * `false`: Report about all missing clients
-   * `true`: Ignore all missing clients and force sending
-   * Array: User IDs specifying which user IDs are allowed to have
-   * missing clients
-   * `undefined`: Default to setting of `report_missing` in `NewOTRMessage`
-   * @see https://staging-nginz-https.zinfra.io/swagger-ui/tab.html#!/postOtrBroadcast
-   */
-  public async postBroadcastProtobufMessage(
     sendingClientId: string,
     messageData: ProtobufOTR.NewOtrMessage,
     ignoreMissing?: boolean | string[],

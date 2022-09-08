@@ -359,8 +359,8 @@ export class MessageService {
     }
 
     return !options.conversationId
-      ? this.apiClient.api.broadcast.postBroadcastProtobufMessage(sendingClientId, protoMessage, ignoreMissing)
-      : this.apiClient.api.conversation.postOTRProtobufMessage(
+      ? this.apiClient.api.broadcast.postBroadcastMessage(sendingClientId, protoMessage, ignoreMissing)
+      : this.apiClient.api.conversation.postOTRMessage(
           sendingClientId,
           options.conversationId,
           protoMessage,

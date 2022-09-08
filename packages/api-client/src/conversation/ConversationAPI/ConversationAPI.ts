@@ -31,9 +31,7 @@ import {
   DefaultConversationRoleName,
   Invite,
   Member,
-  MessageSendingStatus,
   NewConversation,
-  NewOTRMessage,
   QualifiedConversationIds,
   RemoteConversations,
 } from '..';
@@ -672,96 +670,6 @@ export class ConversationAPI {
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/postOtrMessage
    */
   public async postOTRMessage(
-    sendingClientId: string,
-    conversationId: string,
-    messageData?: NewOTRMessage<string>,
-    ignoreMissing?: boolean | string[],
-  ): Promise<ClientMismatch> {
-    if (!sendingClientId) {
-      throw new ValidationError('Unable to send OTR message without client ID.');
-    }
-
-    messageData ||= {
-      recipients: {},
-      sender: sendingClientId,
-    };
-
-    const config: AxiosRequestConfig = {
-      data: messageData,
-      method: 'post',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.OTR}/${ConversationAPI.URL.MESSAGES}`,
-    };
-
-    if (typeof ignoreMissing !== 'undefined') {
-      const ignore_missing = Array.isArray(ignoreMissing) ? ignoreMissing.join(',') : ignoreMissing;
-      config.params = {ignore_missing};
-      // `ignore_missing` takes precedence on the server so we can remove
-      // `report_missing` to save some bandwidth.
-      delete messageData.report_missing;
-    } else if (typeof messageData.report_missing === 'undefined' || !messageData.report_missing.length) {
-      // both `ignore_missing` and `report_missing` are undefined
-      config.params = {ignore_missing: !!messageData.data};
-    }
-
-    const response = await this.client.sendJSON<ClientMismatch>(config, true);
-    return response.data;
-  }
-
-  /**
-   * This endpoint ensures that the list of clients is correct and only sends the message if the list is correct.
-   * To override this, the endpoint accepts `client_mismatch_strategy` in the body. It can have these values:
-   *
-   * - `report_all`: When set, the message is not sent if any clients are missing. The missing clients are reported
-   * in the response.
-   * - `ignore_all`: When set, no checks about missing clients are carried out.
-   * - `report_only`: Takes a list of qualified UserIDs. If any clients of the listed users are missing, the message is
-   * not sent. The missing clients are reported in the response.
-   * - `ignore_only`: Takes a list of qualified UserIDs. If any clients of the non-listed users are missing, the message
-   * is not sent. The missing clients are reported in the response.
-   *
-   * The sending of messages in a federated conversation could theorectically fail partially. To make this case
-   * unlikely, the backend first gets a list of clients from all the involved backends and then tries to send a message.
-   * So, if any backend is down, the message is not propagated to anyone. But the actual message fan out to multiple
-   * backends could still fail partially. This type of failure is reported as a 201, the clients for which the message
-   * sending failed are part of the response body.
-   *
-   * This endpoint can lead to OtrMessageAdd event being sent to the recipients.
-   *
-   * @see https://nginz-https.anta.wire.link/api/swagger-ui/#/default/post_conversations__cnv_domain___cnv__proteus_messages
-   */
-  public async postOTRMessageV2(
-    conversationId: string,
-    domain: string,
-    messageData: ProtobufOTR.QualifiedNewOtrMessage,
-  ): Promise<MessageSendingStatus> {
-    const config: AxiosRequestConfig = {
-      /*
-       * We need to slice the content of what protobuf has generated in order for Axios to send the correct data (see https://github.com/axios/axios/issues/4068)
-       * FIXME: The `slice` can be removed as soon as Axios publishes a version with the dataview issue fixed.
-       */
-      data: ProtobufOTR.QualifiedNewOtrMessage.encode(messageData).finish().slice(),
-      method: 'post',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${domain}/${conversationId}/${ConversationAPI.URL.PROTEUS}/${ConversationAPI.URL.MESSAGES}`,
-    };
-
-    const response = await this.client.sendProtocolBuffer<MessageSendingStatus>(config, true);
-    return response.data;
-  }
-
-  /**
-   * Post an encrypted message to a conversation.
-   * @param sendingClientId The sender's client ID
-   * @param conversationId The conversation ID
-   * @param messageData The message content
-   * @param ignoreMissing Whether to report missing clients or not:
-   * `false`: Report about all missing clients
-   * `true`: Ignore all missing clients and force sending.
-   * Array: User IDs specifying which user IDs are allowed to have
-   * missing clients
-   * `undefined`: Default to setting of `report_missing` in `NewOTRMessage`
-   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/postOtrMessage
-   */
-  public async postOTRProtobufMessage(
     sendingClientId: string,
     conversationId: string,
     messageData: ProtobufOTR.NewOtrMessage,
