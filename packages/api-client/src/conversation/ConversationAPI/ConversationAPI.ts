@@ -31,6 +31,7 @@ import {
   DefaultConversationRoleName,
   Invite,
   Member,
+  MessageSendingStatus,
   NewConversation,
   QualifiedConversationIds,
   RemoteConversations,
@@ -669,12 +670,12 @@ export class ConversationAPI {
    * `undefined`: Default to setting of `report_missing` in `NewOTRMessage`
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/postOtrMessage
    */
-  public async postOTRMessage(
+  public async postOTRMessage<T extends string | QualifiedId>(
     sendingClientId: string,
-    conversationId: string | QualifiedId,
+    conversationId: T,
     messageData: ProtobufOTR.NewOtrMessage,
     ignoreMissing?: boolean | string[],
-  ): Promise<ClientMismatch> {
+  ): Promise<T extends string ? ClientMismatch : MessageSendingStatus> {
     if (!sendingClientId) {
       throw new ValidationError('Unable to send OTR message without client ID.');
     }
@@ -703,7 +704,10 @@ export class ConversationAPI {
       config.params = {ignore_missing: !!messageData.blob};
     }
 
-    const response = await this.client.sendProtocolBuffer<ClientMismatch>(config, true);
+    const response = await this.client.sendProtocolBuffer<T extends string ? ClientMismatch : MessageSendingStatus>(
+      config,
+      true,
+    );
     return response.data;
   }
 
