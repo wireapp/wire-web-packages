@@ -20,7 +20,6 @@
 import {proteus as ProtobufOTR} from '@wireapp/protocol-messaging/web/otr';
 import type {AxiosRequestConfig} from 'axios';
 
-import {ValidationError} from '../../validation';
 import {
   ClientMismatch,
   Conversation,
@@ -671,21 +670,21 @@ export class ConversationAPI {
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/postOtrMessage
    */
   public async postOTRMessage<T extends string | QualifiedId>(
-    sendingClientId: string,
     conversationId: T,
-    messageData: ProtobufOTR.NewOtrMessage,
+    messageData: T extends string ? ProtobufOTR.NewOtrMessage : ProtobufOTR.QualifiedNewOtrMessage,
     ignoreMissing?: boolean | string[],
   ): Promise<T extends string ? ClientMismatch : MessageSendingStatus> {
-    if (!sendingClientId) {
-      throw new ValidationError('Unable to send OTR message without client ID.');
-    }
+    const data =
+      messageData instanceof ProtobufOTR.NewOtrMessage
+        ? ProtobufOTR.NewOtrMessage.encode(messageData)
+        : ProtobufOTR.QualifiedNewOtrMessage.encode(messageData);
 
     const config: AxiosRequestConfig = {
       /*
        * We need to slice the content of what protobuf has generated in order for Axios to send the correct buffer (see https://github.com/axios/axios/issues/4068)
        * FIXME: The `slice` can be removed as soon as Axios publishes a version with the dataview issue fixed.
        */
-      data: ProtobufOTR.NewOtrMessage.encode(messageData).finish().slice(),
+      data: data.finish().slice(),
       method: 'post',
       url:
         typeof conversationId === 'string'
@@ -693,15 +692,17 @@ export class ConversationAPI {
           : `${ConversationAPI.URL.CONVERSATIONS}/${conversationId.domain}/${conversationId.id}/${ConversationAPI.URL.PROTEUS}/${ConversationAPI.URL.MESSAGES}`,
     };
 
-    if (typeof ignoreMissing !== 'undefined') {
-      const ignore_missing = Array.isArray(ignoreMissing) ? ignoreMissing.join(',') : ignoreMissing;
-      config.params = {ignore_missing};
-      // `ignore_missing` takes precedence on the server so we can remove
-      // `report_missing` to save some bandwidth.
-      messageData.reportMissing = [];
-    } else if (typeof messageData.reportMissing === 'undefined' || !messageData.reportMissing.length) {
-      // both `ignore_missing` and `report_missing` are undefined
-      config.params = {ignore_missing: !!messageData.blob};
+    if (messageData instanceof ProtobufOTR.NewOtrMessage) {
+      if (typeof ignoreMissing !== 'undefined') {
+        const ignore_missing = Array.isArray(ignoreMissing) ? ignoreMissing.join(',') : ignoreMissing;
+        config.params = {ignore_missing};
+        // `ignore_missing` takes precedence on the server so we can remove
+        // `report_missing` to save some bandwidth.
+        messageData.reportMissing = [];
+      } else if (typeof messageData.reportMissing === 'undefined' || !messageData.reportMissing.length) {
+        // both `ignore_missing` and `report_missing` are undefined
+        config.params = {ignore_missing: !!messageData.blob};
+      }
     }
 
     const response = await this.client.sendProtocolBuffer<T extends string ? ClientMismatch : MessageSendingStatus>(

@@ -114,7 +114,7 @@ describe('MessageService', () => {
           deleted: {[user1.domain]: {[user1.id]: [user1.clients[0]]}},
           missing: {'2.wire.test': {[user2.id]: ['client22']}},
         };
-        spyOn(apiClient.api.conversation, 'postOTRMessage').and.callFake(() => {
+        spyOn(apiClient.api.conversation, 'postOTRMessage').and.callFake((): any => {
           spyCounter++;
           if (spyCounter === 1) {
             const error = new Error();
@@ -141,7 +141,7 @@ describe('MessageService', () => {
         const onClientMismatch = jasmine.createSpy('onClientMismatch').and.returnValue(true);
         const clientMismatch = {...baseMessageSendingStatus, missing: {'2.wire.test': {[user2.id]: ['client22']}}};
         let spyCounter = 0;
-        spyOn(apiClient.api.conversation, 'postOTRMessage').and.callFake(() => {
+        spyOn(apiClient.api.conversation, 'postOTRMessage').and.callFake((): any => {
           spyCounter++;
           if (spyCounter === 1) {
             const error = new Error();
@@ -220,7 +220,6 @@ describe('MessageService', () => {
         conversationId,
       });
       expect(apiClient.api.conversation.postOTRMessage).toHaveBeenCalledWith(
-        clientId,
         conversationId,
         jasmine.any(Object),
         false,
@@ -252,9 +251,8 @@ describe('MessageService', () => {
         conversationId,
       });
       expect(apiClient.api.conversation.postOTRMessage).toHaveBeenCalledWith(
-        clientId,
         conversationId,
-        jasmine.objectContaining({data: undefined}),
+        jasmine.objectContaining({blob: jasmine.objectContaining({length: 0})}),
         false,
       );
     });
@@ -273,9 +271,8 @@ describe('MessageService', () => {
         },
       );
       expect(apiClient.api.conversation.postOTRMessage).toHaveBeenCalledWith(
-        clientId,
         conversationId,
-        jasmine.objectContaining({data: jasmine.any(String)}),
+        jasmine.objectContaining({blob: jasmine.any(Uint8Array)}),
         false,
       );
     });
@@ -295,7 +292,7 @@ describe('MessageService', () => {
           deleted: {[user1.id]: [user1.clients[0]]},
           missing: {[user2.id]: ['client22']},
         };
-        spyOn(apiClient.api.conversation, 'postOTRMessage').and.callFake(() => {
+        spyOn(apiClient.api.conversation, 'postOTRMessage').and.callFake((): any => {
           spyCounter++;
           if (spyCounter === 1) {
             const error = new Error();
@@ -322,7 +319,7 @@ describe('MessageService', () => {
         const onClientMismatch = jasmine.createSpy().and.returnValue(Promise.resolve(true));
         const clientMismatch = {...baseClientMismatch, missing: {[user2.id]: ['client22']}};
         let spyCounter = 0;
-        spyOn(apiClient.api.conversation, 'postOTRMessage').and.callFake(() => {
+        spyOn(apiClient.api.conversation, 'postOTRMessage').and.callFake((): any => {
           spyCounter++;
           if (spyCounter === 1) {
             const error = new Error();
