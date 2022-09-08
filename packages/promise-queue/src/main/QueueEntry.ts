@@ -18,7 +18,7 @@
  */
 
 export type PromiseFn<T> = (...args: any[]) => Promise<T>;
-export type PromiseResolveFn = (value?: unknown) => void;
+export type PromiseResolveFn = (value?: any) => void;
 export type PromiseRejectFn = (reason?: any) => void;
 
 export interface QueueEntry<T> {

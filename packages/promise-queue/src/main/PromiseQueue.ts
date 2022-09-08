@@ -46,12 +46,12 @@ export class PromiseQueue {
     });
 
     this.blocked = false;
-    this.concurrent = options.concurrent ?? 1;
+    this.concurrent = options!.concurrent ?? 1;
     this.current = 0;
     this.interval = undefined;
-    this.paused = options.paused ?? false;
+    this.paused = options!.paused ?? false;
     this.queue = [];
-    this.timeout = options.timeout ?? PromiseQueue.CONFIG.UNBLOCK_INTERVAL;
+    this.timeout = options!.timeout ?? PromiseQueue.CONFIG.UNBLOCK_INTERVAL;
   }
 
   /**

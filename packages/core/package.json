@@ -10,6 +10,7 @@
     "@wireapp/api-client": "20.0.4",
     "@wireapp/commons": "4.3.0",
     "@wireapp/cryptobox": "12.8.0",
+    "@wireapp/promise-queue": "file:.yalc/@wireapp/promise-queue",
     "@wireapp/store-engine-dexie": "1.6.10",
     "bazinga64": "5.10.0",
     "hash.js": "1.1.7",
