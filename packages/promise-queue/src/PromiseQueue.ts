@@ -83,10 +83,13 @@ export class PromiseQueue {
       queueEntry
         .fn()
         .then(response => {
-          if (queueEntry.resolveFn) {
-            queueEntry.resolveFn(response);
-          }
-
+          queueEntry.resolveFn(response);
+        })
+        .catch(error => {
+          queueEntry.resolveFn = () => {};
+          queueEntry.rejectFn(error);
+        })
+        .finally(() => {
           this.clearInterval();
 
           this.current--;
@@ -95,11 +98,7 @@ export class PromiseQueue {
             this.blocked = false;
           }
 
-          window.setTimeout(() => this.execute(), 0);
-        })
-        .catch(error => {
-          queueEntry.resolveFn = undefined;
-          queueEntry.rejectFn(error);
+          this.execute();
         });
     }
   }

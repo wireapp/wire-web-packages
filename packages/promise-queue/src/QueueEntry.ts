@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2022 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,12 @@
  *
  */
 
-export * from './PromiseQueue';
-export * from './PromiseQueueOptions';
-export * from './QueueEntry';
+export type PromiseFn<T> = (...args: any[]) => Promise<T>;
+export type PromiseResolveFn = (value?: any) => void;
+export type PromiseRejectFn = (reason?: any) => void;
+
+export interface QueueEntry<T> {
+  fn: PromiseFn<T>;
+  rejectFn: PromiseRejectFn;
+  resolveFn: PromiseResolveFn;
+}
