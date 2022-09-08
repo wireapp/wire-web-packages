@@ -17,7 +17,6 @@
  *
  */
 
-import logdown from 'logdown';
 import {TimeUtil} from '@wireapp/commons';
 import {PromiseQueueOptions} from './PromiseQueueOptions';
 import {QueueEntry, PromiseFn} from './QueueEntry';
@@ -28,7 +27,7 @@ export class PromiseQueue {
   private interval?: number;
   private paused: boolean;
   private readonly concurrent: number;
-  private readonly logger: logdown.Logger;
+  private readonly logger?: {warn: (...args: any[]) => void};
   private readonly queue: QueueEntry<any>[];
   private readonly timeout: number;
 
@@ -39,12 +38,6 @@ export class PromiseQueue {
   }
 
   constructor(options?: PromiseQueueOptions) {
-    const loggerName = `PromiseQueue`;
-    this.logger = logdown(loggerName, {
-      logger: console,
-      markdown: false,
-    });
-
     this.blocked = false;
     this.concurrent = options!.concurrent ?? 1;
     this.runningTasks = 0;
@@ -76,7 +69,7 @@ export class PromiseQueue {
     this.interval = window.setInterval(() => {
       if (!this.paused) {
         const logObject = {pendingEntry: queueEntry, queueState: this.queue};
-        this.logger.warn(`Promise queue timed-out after ${this.timeout}ms, unblocking queue`, logObject);
+        this.logger?.warn(`Promise queue timed-out after ${this.timeout}ms, unblocking queue`, logObject);
         this.resume();
       }
     }, this.timeout);

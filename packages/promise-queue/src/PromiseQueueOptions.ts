@@ -26,4 +26,6 @@ export interface PromiseQueueOptions {
   paused?: boolean;
   /** Timeout in ms. Default is 1000 (1 minute). */
   timeout?: number;
+  /** logger used to log errors */
+  logger?: {warn: (...args: any[]) => void};
 }
