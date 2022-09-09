@@ -455,6 +455,7 @@ export class NotificationService extends EventEmitter {
    */
   public async storeLastKeyMaterialUpdateDate(params: LastKeyMaterialUpdateParams) {
     await this.database.storeLastKeyMaterialUpdateDate(params);
+    await this.scheduleTaskToRenewKeyMaterial(params);
   }
 
   /**
