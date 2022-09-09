@@ -478,7 +478,7 @@ export class NotificationService extends EventEmitter {
 
       const keyRenewalTime = new Date().getTime();
       const keyMaterialUpdateDate = {groupId, previousUpdateDate: keyRenewalTime};
-      await this.database.storeLastKeyMaterialUpdateDate(keyMaterialUpdateDate);
+      await this.storeLastKeyMaterialUpdateDate(keyMaterialUpdateDate);
     } catch (error) {
       this.logger.error(`Error while renewing key material for groupId ${groupId}`, error);
     }
