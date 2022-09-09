@@ -22,7 +22,13 @@ import type {Notification} from '@wireapp/api-client/src/notification/';
 import type {CRUDEngine} from '@wireapp/store-engine';
 
 import {CryptographyDatabaseRepository} from '../cryptography/CryptographyDatabaseRepository';
-import {CommonMLS, CompoundGroupIdParams, LastKeyMaterialUpdateParams, StorePendingProposalsParams} from './types';
+import {
+  CommonMLS,
+  CompoundGroupIdParams,
+  LastKeyMaterialUpdateParams,
+  LastKeyPackageQueryParams,
+  StorePendingProposalsParams,
+} from './types';
 
 export enum DatabaseStores {
   EVENTS = 'events',
@@ -140,6 +146,17 @@ export class NotificationDatabaseRepository {
    */
   public async storeLastKeyMaterialUpdateDate(params: LastKeyMaterialUpdateParams) {
     await this.storeEngine.updateOrCreate(STORES.LAST_KEY_MATERIAL_UPDATE_DATES, `${params.groupId}`, params);
+    return true;
+  }
+
+  /**
+   * ## MLS only ##
+   * Store date of last key package query
+   *
+   * @param {lastQueryDate} params.previousUpdateDate - date of the last key packages query
+   */
+  public async storeLastKeyPackageQueryDate(params: LastKeyPackageQueryParams) {
+    await this.storeEngine.updateOrCreate(STORES.LAST_KEY_PACKAGE_QUERY_DATE, 'last_query_date', params);
     return true;
   }
 

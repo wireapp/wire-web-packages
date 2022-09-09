@@ -42,3 +42,7 @@ export type StorePendingProposalsParams = {
 export type LastKeyMaterialUpdateParams = {
   previousUpdateDate: number;
 } & CommonMLS;
+
+export type LastKeyPackageQueryParams = {
+  lastQueryDate: number;
+};
