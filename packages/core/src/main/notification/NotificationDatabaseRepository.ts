@@ -151,17 +151,6 @@ export class NotificationDatabaseRepository {
 
   /**
    * ## MLS only ##
-   * Store date of last key package query
-   *
-   * @param {lastQueryDate} params.previousUpdateDate - date of the last key packages query
-   */
-  public async storeLastKeyPackageQueryDate(params: LastKeyPackageQueryParams) {
-    await this.storeEngine.updateOrCreate(STORES.LAST_KEY_PACKAGE_QUERY_DATE, 'last_query_date', params);
-    return true;
-  }
-
-  /**
-   * ## MLS only ##
    * Delete stored entries for last key materials update dates.
    *
    * @param {groupId} groupId - of the mls conversation
@@ -178,5 +167,25 @@ export class NotificationDatabaseRepository {
    */
   public async getStoredLastKeyMaterialUpdateDates() {
     return this.storeEngine.readAll<LastKeyMaterialUpdateParams>(STORES.LAST_KEY_MATERIAL_UPDATE_DATES);
+  }
+
+  /**
+   * ## MLS only ##
+   * Store date of last key package query
+   *
+   * @param {lastQueryDate} params.previousUpdateDate - date of the last key packages query
+   */
+  public async storeLastKeyPackageQueryDate(params: LastKeyPackageQueryParams) {
+    await this.storeEngine.updateOrCreate(STORES.LAST_KEY_PACKAGE_QUERY_DATE, 'last_query_date', params);
+    return true;
+  }
+
+  /**
+   * ## MLS only ##
+   * Get last key packages query date.
+   *
+   */
+  public async getStoredLastKeyPackagesQueryDate() {
+    return this.storeEngine.readAll<LastKeyPackageQueryParams>(STORES.LAST_KEY_PACKAGE_QUERY_DATE);
   }
 }

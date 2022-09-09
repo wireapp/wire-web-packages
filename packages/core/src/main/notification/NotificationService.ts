@@ -55,6 +55,8 @@ enum TOPIC {
 
 const DEFAULT_KEYING_MATERIAL_UPDATE_THRESHOLD = 1000 * 60 * 60 * 24 * 30; //30 days
 
+const INITIAL_NUMBER_OF_KEY_PACKAGES = 100;
+
 export type NotificationHandler = (
   notification: Notification,
   source: PayloadBundleSource,
@@ -507,7 +509,7 @@ export class NotificationService extends EventEmitter {
 
   /**
    * ## MLS only ##
-   * Get all pending proposals from the database and schedule them
+   * Get all keying material last update dates and schedule tasks for renewal
    * Function must only be called once, after application start
    *
    */
@@ -517,6 +519,64 @@ export class NotificationService extends EventEmitter {
       keyMaterialUpdateDates.forEach(date => this.scheduleTaskToRenewKeyMaterial(date));
     } catch (error) {
       this.logger.error('Could not get last key material update dates', error);
+    }
+  }
+
+  private scheduleTaskToQueryKeyPackagesCountAndSyncWithBackend(firingDate: number) {
+    TaskScheduler.addTask({
+      firingDate,
+      key: 'try-key-packages-backend-sync',
+      task: () => this.queryKeyPackagesCountAndSyncWithBackend(),
+    });
+  }
+
+  private async queryKeyPackagesCountAndSyncWithBackend() {
+    const validKeyPackagesCount = await this.mlsService.clientValidKeypackagesCount();
+
+    const lastQueryDate = new Date().getTime();
+
+    await this.database.storeLastKeyPackageQueryDate({lastQueryDate});
+
+    const minAllowedNumberOfKeyPackages = INITIAL_NUMBER_OF_KEY_PACKAGES / 2;
+
+    if (validKeyPackagesCount <= minAllowedNumberOfKeyPackages) {
+      const clientId = this.apiClient.validatedClientId;
+
+      //check numbers of keys on backend
+      const backendKeyPackagesCount = await this.apiClient.api.client.getMLSKeyPackageCount(clientId);
+
+      if (backendKeyPackagesCount <= minAllowedNumberOfKeyPackages) {
+        //upload new keys
+        const newKeyPackages = await this.mlsService.clientKeypackages(INITIAL_NUMBER_OF_KEY_PACKAGES);
+
+        await this.mlsService.uploadMLSKeyPackages(newKeyPackages, clientId);
+      }
+    }
+
+    //schedule new task after next 24h
+    const nextKeyPackagesQueryDate = lastQueryDate + TimeUtil.TimeInMillis.DAY;
+    this.scheduleTaskToQueryKeyPackagesCountAndSyncWithBackend(nextKeyPackagesQueryDate);
+  }
+
+  /**
+   * ## MLS only ##
+   * Get date of last key packages count query and schedule a task to sync it with backend
+   * Function must only be called once, after application start
+   *
+   */
+  public async checkForKeyPackagesBackendSync() {
+    try {
+      const lastQueryDateEntry = (await this.database.getStoredLastKeyPackagesQueryDate())[0];
+
+      //if client did not query before, default last date to 0, so it will query the database immediately
+      const lastKeyPackagesQueryDate = lastQueryDateEntry?.lastQueryDate || 0;
+
+      const nextKeyPackagesQueryDate = lastKeyPackagesQueryDate + TimeUtil.TimeInMillis.DAY;
+
+      this.scheduleTaskToQueryKeyPackagesCountAndSyncWithBackend(nextKeyPackagesQueryDate);
+      //schedule a task lastKeyPackagesQueryDate + 24H
+    } catch (error) {
+      this.logger.error('Could not get last key packages query date', error);
     }
   }
 }
