@@ -571,10 +571,10 @@ export class NotificationService extends EventEmitter {
       //if client did not query before, default last date to 0, so it will query the database immediately
       const lastKeyPackagesQueryDate = lastQueryDateEntry?.lastQueryDate || 0;
 
+      //schedule a task lastKeyPackagesQueryDate + 24H
       const nextKeyPackagesQueryDate = lastKeyPackagesQueryDate + TimeUtil.TimeInMillis.DAY;
 
       this.scheduleTaskToQueryKeyPackagesCountAndSyncWithBackend(nextKeyPackagesQueryDate);
-      //schedule a task lastKeyPackagesQueryDate + 24H
     } catch (error) {
       this.logger.error('Could not get last key packages query date', error);
     }
