@@ -17,7 +17,7 @@
  *
  */
 
-import {ExternalProposalType} from '@otak/core-crypto';
+import {ConversationConfiguration, ExternalProposalType} from '@otak/core-crypto';
 import type {APIClient} from '@wireapp/api-client';
 import {
   MessageSendingStatus,
@@ -1137,7 +1137,12 @@ export class ConversationService {
       throw new Error('You need to pass self user qualified id in order to create an MLS conversation');
     }
 
-    await this.mlsService.createConversation(groupIdDecodedFromBase64);
+    const mlsKeys = (await this.apiClient.api.client.getPublicKeys()).removal;
+    const mlsKeyBytes = Object.values(mlsKeys).map((key: string) => Decoder.fromBase64(key).asBytes);
+    const config: ConversationConfiguration = {
+      externalSenders: mlsKeyBytes,
+    };
+    await this.mlsService.createConversation(groupIdDecodedFromBase64, config);
     const coreCryptoKeyPackagesPayload = await this.mlsService.getKeyPackagesPayload([
       {
         id: selfUserId.id,
