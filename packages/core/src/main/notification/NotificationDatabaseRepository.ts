@@ -37,6 +37,7 @@ export enum DatabaseStores {
 export enum DatabaseKeys {
   PRIMARY_KEY_LAST_EVENT = 'z.storage.StorageKey.EVENT.LAST_DATE',
   PRIMARY_KEY_LAST_NOTIFICATION = 'z.storage.StorageKey.NOTIFICATION.LAST_ID',
+  LAST_KEY_MATERIAL_QUERY_DATE = 'last_query_date',
 }
 
 const STORES = {
@@ -176,7 +177,11 @@ export class NotificationDatabaseRepository {
    * @param {lastQueryDate} params.previousUpdateDate - date of the last key packages query
    */
   public async storeLastKeyPackageQueryDate(params: LastKeyPackageQueryParams) {
-    await this.storeEngine.updateOrCreate(STORES.LAST_KEY_PACKAGE_QUERY_DATE, 'last_query_date', params);
+    await this.storeEngine.updateOrCreate(
+      STORES.LAST_KEY_PACKAGE_QUERY_DATE,
+      DatabaseKeys.LAST_KEY_MATERIAL_QUERY_DATE,
+      params,
+    );
     return true;
   }
 
@@ -186,6 +191,9 @@ export class NotificationDatabaseRepository {
    *
    */
   public async getStoredLastKeyPackagesQueryDate() {
-    return this.storeEngine.readAll<LastKeyPackageQueryParams>(STORES.LAST_KEY_PACKAGE_QUERY_DATE);
+    return this.storeEngine.read<LastKeyPackageQueryParams>(
+      STORES.LAST_KEY_PACKAGE_QUERY_DATE,
+      DatabaseKeys.LAST_KEY_MATERIAL_QUERY_DATE,
+    );
   }
 }

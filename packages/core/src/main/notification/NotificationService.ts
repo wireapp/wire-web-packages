@@ -566,7 +566,7 @@ export class NotificationService extends EventEmitter {
    */
   public async checkForKeyPackagesBackendSync() {
     try {
-      const lastQueryDateEntry = (await this.database.getStoredLastKeyPackagesQueryDate())[0];
+      const lastQueryDateEntry = await this.database.getStoredLastKeyPackagesQueryDate();
 
       //if client did not query before, default last date to 0, so it will query the database immediately
       const lastKeyPackagesQueryDate = lastQueryDateEntry?.lastQueryDate || 0;
