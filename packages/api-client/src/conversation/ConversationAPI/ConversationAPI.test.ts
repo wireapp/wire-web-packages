@@ -19,8 +19,9 @@
 
 import {HttpClient} from '../../http';
 import {ConversationAPI} from './ConversationAPI';
+import {proteus} from '@wireapp/protocol-messaging/web/otr';
 
-const httpClientMock = jasmine.createSpyObj('httpClient', {sendJSON: () => ({data: ''})});
+const httpClientMock = jasmine.createSpyObj('httpClient', {sendProtocolBuffer: () => ({data: ''})});
 
 describe('ConversationAPI', () => {
   const conversationApi = new ConversationAPI(httpClientMock as HttpClient, {
@@ -30,22 +31,26 @@ describe('ConversationAPI', () => {
   });
   describe('postORTMessage', () => {
     it('add ignore_missing and report_missing parameters', async () => {
-      await conversationApi.postOTRMessage('client-id', 'conv-id', undefined, false);
-      expect(httpClientMock.sendJSON).toHaveBeenCalledWith(
+      const message = new proteus.NewOtrMessage({sender: {client: 1e6}});
+      await conversationApi.postOTRMessage('conv-id', message, false);
+      expect(httpClientMock.sendProtocolBuffer).toHaveBeenCalledWith(
         jasmine.objectContaining({
           params: {ignore_missing: false},
         }),
         true,
       );
 
-      await conversationApi.postOTRMessage('client-id', 'conv-id', undefined, true);
-      expect(httpClientMock.sendJSON).toHaveBeenCalledWith(
+      await conversationApi.postOTRMessage('conv-id', new proteus.NewOtrMessage({sender: {client: 1e6}}), true);
+      expect(httpClientMock.sendProtocolBuffer).toHaveBeenCalledWith(
         jasmine.objectContaining({params: {ignore_missing: true}}),
         true,
       );
 
-      await conversationApi.postOTRMessage('client-id', 'conv-id', undefined, ['user1', 'user2']);
-      expect(httpClientMock.sendJSON).toHaveBeenCalledWith(
+      await conversationApi.postOTRMessage('conv-id', new proteus.NewOtrMessage({sender: {client: 1e6}}), [
+        'user1',
+        'user2',
+      ]);
+      expect(httpClientMock.sendProtocolBuffer).toHaveBeenCalledWith(
         jasmine.objectContaining({
           params: {ignore_missing: 'user1,user2'},
         }),
