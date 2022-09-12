@@ -37,9 +37,7 @@ export class CryptographyDatabaseRepository {
 
   public deleteStores(): Promise<boolean[]> {
     return Promise.all(
-      (
-        Object.keys(CryptographyDatabaseRepository.STORES) as (keyof typeof CryptographyDatabaseRepository.STORES)[]
-      ).map(store => this.storeEngine.deleteAll(store)),
+      Object.values(CryptographyDatabaseRepository.STORES).map(store => this.storeEngine.deleteAll(store)),
     );
   }
 }
