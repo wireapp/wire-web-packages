@@ -31,7 +31,6 @@ export enum DatabaseStores {
 export enum DatabaseKeys {
   PRIMARY_KEY_LAST_EVENT = 'z.storage.StorageKey.EVENT.LAST_DATE',
   PRIMARY_KEY_LAST_NOTIFICATION = 'z.storage.StorageKey.NOTIFICATION.LAST_ID',
-  LAST_KEY_MATERIAL_QUERY_DATE = 'last_query_date',
 }
 
 const STORES = {

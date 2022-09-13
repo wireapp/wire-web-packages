@@ -28,7 +28,6 @@ export enum DatabaseStores {
   GROUP_IDS = 'group_ids',
   PENDING_PROPOSALS = 'pending_proposals',
   LAST_KEY_MATERIAL_UPDATE_DATES = 'last_key_material_update_dates',
-  LAST_KEY_PACKAGE_QUERY_DATE = 'last_key_package_query_date',
 }
 
 export class CryptographyDatabaseRepository {
