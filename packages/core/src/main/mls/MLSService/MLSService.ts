@@ -31,7 +31,7 @@ import {
   ProposalArgs,
   ProposalType,
   RemoveProposalArgs,
-} from '@otak/core-crypto/platforms/web/corecrypto';
+} from '@wireapp/core-crypto/platforms/web/corecrypto';
 import {APIClient} from '@wireapp/api-client';
 import {QualifiedUsers} from '../../conversation';
 import {Decoder, Encoder} from 'bazinga64';
