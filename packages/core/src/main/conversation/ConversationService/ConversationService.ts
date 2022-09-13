@@ -17,7 +17,7 @@
  *
  */
 
-import {ConversationConfiguration, ExternalProposalType} from '@otak/core-crypto';
+import {Ciphersuite, ConversationConfiguration, ExternalProposalType} from '@otak/core-crypto';
 import type {APIClient} from '@wireapp/api-client';
 import {
   MessageSendingStatus,
@@ -1141,8 +1141,11 @@ export class ConversationService {
     const mlsKeyBytes = Object.values(mlsKeys).map((key: string) => Decoder.fromBase64(key).asBytes);
     const config: ConversationConfiguration = {
       externalSenders: mlsKeyBytes,
+      ciphersuite: Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
     };
+
     await this.mlsService.createConversation(groupIdDecodedFromBase64, config);
+
     const coreCryptoKeyPackagesPayload = await this.mlsService.getKeyPackagesPayload([
       {
         id: selfUserId.id,
