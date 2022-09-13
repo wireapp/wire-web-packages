@@ -125,16 +125,14 @@ export class MLSService {
     return coreCryptoKeyPackagesPayload;
   }
 
-  public async newProposal(
-    proposalType: ProposalType,
-    args: ProposalArgs | AddProposalArgs | RemoveProposalArgs,
-  ): Promise<Uint8Array> {
+  public async newProposal(proposalType: ProposalType, args: ProposalArgs | AddProposalArgs | RemoveProposalArgs) {
     return this.getCoreCryptoClient().newProposal(proposalType, args);
   }
+
   public async newExternalProposal(
     externalProposalType: ExternalProposalType,
     args: ExternalProposalArgs | ExternalRemoveProposalArgs,
-  ): Promise<Uint8Array> {
+  ) {
     return this.getCoreCryptoClient().newExternalProposal(externalProposalType, args);
   }
 
