@@ -191,9 +191,10 @@ export class NotificationDatabaseRepository {
    *
    */
   public async getStoredLastKeyPackagesQueryDate() {
-    return this.storeEngine.read<LastKeyPackageQueryParams>(
+    const {lastQueryDate} = await this.storeEngine.read<LastKeyPackageQueryParams>(
       STORES.LAST_KEY_PACKAGE_QUERY_DATE,
       DatabaseKeys.LAST_KEY_MATERIAL_QUERY_DATE,
     );
+    return lastQueryDate;
   }
 }

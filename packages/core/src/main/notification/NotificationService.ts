@@ -565,18 +565,16 @@ export class NotificationService extends EventEmitter {
    *
    */
   public async checkForKeyPackagesBackendSync() {
+    //if client did not query before, default last date to 0, so it will query the database immediately
+    let lastQueryDate = 0;
     try {
-      const lastQueryDateEntry = await this.database.getStoredLastKeyPackagesQueryDate();
-
-      //if client did not query before, default last date to 0, so it will query the database immediately
-      const lastKeyPackagesQueryDate = lastQueryDateEntry?.lastQueryDate || 0;
-
-      //schedule a task lastKeyPackagesQueryDate + 24H
-      const nextKeyPackagesQueryDate = lastKeyPackagesQueryDate + TimeUtil.TimeInMillis.DAY;
-
-      this.scheduleTaskToQueryKeyPackagesCountAndSyncWithBackend(nextKeyPackagesQueryDate);
+      lastQueryDate = await this.database.getStoredLastKeyPackagesQueryDate();
     } catch (error) {
-      this.logger.error('Could not get last key packages query date', error);
+      this.logger.error('Could not get last key packages query date, using 0 as default value', error);
     }
+
+    //schedule a task lastKeyPackagesQueryDate + 24H
+    const nextKeyPackagesQueryDate = lastQueryDate + TimeUtil.TimeInMillis.DAY;
+    this.scheduleTaskToQueryKeyPackagesCountAndSyncWithBackend(nextKeyPackagesQueryDate);
   }
 }
