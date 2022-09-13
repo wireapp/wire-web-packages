@@ -522,15 +522,15 @@ export class NotificationService extends EventEmitter {
     }
   }
 
-  private scheduleTaskToQueryKeyPackagesCountAndSyncWithBackend(firingDate: number) {
+  private scheduleKeyPackagesSync(firingDate: number) {
     TaskScheduler.addTask({
       firingDate,
       key: 'try-key-packages-backend-sync',
-      task: () => this.queryKeyPackagesCountAndSyncWithBackend(),
+      task: () => this.syncKeyPackages(),
     });
   }
 
-  private async queryKeyPackagesCountAndSyncWithBackend() {
+  private async syncKeyPackages() {
     const validKeyPackagesCount = await this.mlsService.clientValidKeypackagesCount();
 
     const lastQueryDate = new Date().getTime();
@@ -555,7 +555,7 @@ export class NotificationService extends EventEmitter {
 
     //schedule new task after next 24h
     const nextKeyPackagesQueryDate = lastQueryDate + TimeUtil.TimeInMillis.DAY;
-    this.scheduleTaskToQueryKeyPackagesCountAndSyncWithBackend(nextKeyPackagesQueryDate);
+    this.scheduleKeyPackagesSync(nextKeyPackagesQueryDate);
   }
 
   /**
@@ -575,6 +575,6 @@ export class NotificationService extends EventEmitter {
 
     //schedule a task lastKeyPackagesQueryDate + 24H
     const nextKeyPackagesQueryDate = lastQueryDate + TimeUtil.TimeInMillis.DAY;
-    this.scheduleTaskToQueryKeyPackagesCountAndSyncWithBackend(nextKeyPackagesQueryDate);
+    this.scheduleKeyPackagesSync(nextKeyPackagesQueryDate);
   }
 }
