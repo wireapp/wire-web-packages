@@ -41,7 +41,7 @@ import {CommitPendingProposalsParams, HandlePendingProposalsParams, LastKeyMater
 import {TaskScheduler} from '../util/TaskScheduler/TaskScheduler';
 import type {MLSService} from '../mls';
 import {LowPrecisionTaskScheduler} from '../util/LowPrecisionTaskScheduler/LowPrecisionTaskScheduler';
-import {NotificationStorageRepository} from './NotificationStorageRepository';
+import {keyPackagesStatusStore} from '../mls/keyPackagesStatusStore/keyPackagesStatusStore';
 
 export type HandledEventPayload = {
   event: Events.BackendEvent;
@@ -73,7 +73,6 @@ export class NotificationService extends EventEmitter {
   private readonly backend: NotificationBackendRepository;
   private readonly cryptographyService: CryptographyService;
   private readonly database: NotificationDatabaseRepository;
-  private readonly storage: NotificationStorageRepository;
   private readonly logger = logdown('@wireapp/core/notification/NotificationService', {
     logger: console,
     markdown: false,
@@ -91,7 +90,6 @@ export class NotificationService extends EventEmitter {
     this.cryptographyService = cryptographyService;
     this.backend = new NotificationBackendRepository(this.apiClient);
     this.database = new NotificationDatabaseRepository(storeEngine);
-    this.storage = new NotificationStorageRepository();
   }
 
   private async getAllNotifications() {
@@ -538,7 +536,7 @@ export class NotificationService extends EventEmitter {
 
     const lastQueryDate = new Date().getTime();
 
-    await this.storage.storeLastKeyPackageQueryDate({lastQueryDate});
+    await keyPackagesStatusStore.saveState({lastQueryDate});
 
     const minAllowedNumberOfKeyPackages = INITIAL_NUMBER_OF_KEY_PACKAGES / 2;
 
@@ -568,13 +566,7 @@ export class NotificationService extends EventEmitter {
    *
    */
   public async checkForKeyPackagesBackendSync() {
-    //if client did not query before, default last date to 0, so it will query the database immediately
-    let lastQueryDate = 0;
-    try {
-      lastQueryDate = await this.storage.getStoredLastKeyPackagesQueryDate();
-    } catch (error) {
-      this.logger.error('Could not get last key packages query date, using 0 as default value', error);
-    }
+    const {lastQueryDate} = keyPackagesStatusStore.getState();
 
     //schedule a task lastKeyPackagesQueryDate + 24H
     const nextKeyPackagesQueryDate = lastQueryDate + TimeUtil.TimeInMillis.DAY;

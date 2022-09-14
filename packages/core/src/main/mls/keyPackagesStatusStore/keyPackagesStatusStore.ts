@@ -17,28 +17,30 @@
  *
  */
 
-export type CommonMLS = {
-  groupId: string;
+export interface KeyPackagesStatusStore {
+  lastQueryDate: number;
+}
+
+const storageKey = 'keyPackagesStatus';
+
+const getState = (): KeyPackagesStatusStore => {
+  const storedState = localStorage.getItem(storageKey);
+  if (!storedState) {
+    return {
+      lastQueryDate: 0,
+    };
+  }
+  const parsedState = JSON.parse(storedState);
+  return {
+    lastQueryDate: Number(parsedState.lastQueryDate),
+  };
 };
 
-export type CompoundGroupIdParams = {
-  conversationId: string;
-  conversationDomain: string;
-} & CommonMLS;
+const saveState = ({lastQueryDate}: KeyPackagesStatusStore) => {
+  localStorage.setItem(storageKey, JSON.stringify({lastQueryDate}));
+};
 
-export type HandlePendingProposalsParams = {
-  delayInMs: number;
-  eventTime: string;
-} & CommonMLS;
-
-export type CommitPendingProposalsParams = {
-  skipDelete?: boolean;
-} & CommonMLS;
-
-export type StorePendingProposalsParams = {
-  firingDate: number;
-} & CommonMLS;
-
-export type LastKeyMaterialUpdateParams = {
-  previousUpdateDate: number;
-} & CommonMLS;
+export const keyPackagesStatusStore = {
+  getState,
+  saveState,
+};
