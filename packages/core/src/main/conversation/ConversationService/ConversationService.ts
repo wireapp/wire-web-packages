@@ -17,7 +17,7 @@
  *
  */
 
-import {Ciphersuite, ConversationConfiguration, ExternalProposalType} from '@otak/core-crypto';
+import {Ciphersuite, ConversationConfiguration, ExternalProposalType} from '@wireapp/core-crypto';
 import type {APIClient} from '@wireapp/api-client';
 import {
   MessageSendingStatus,
