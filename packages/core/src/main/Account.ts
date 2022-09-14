@@ -401,6 +401,7 @@ export class Account<T = any> extends EventEmitter {
         this.mlsConfig,
         entropyData,
       );
+      this.coreCryptoClient.registerCallbacks({authorize: () => true, clientIdBelongsToOneOf: () => true});
     }
 
     return loadedClient;

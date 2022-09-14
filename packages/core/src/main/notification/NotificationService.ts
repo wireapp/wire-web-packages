@@ -265,18 +265,23 @@ export class NotificationService extends EventEmitter {
       case Events.CONVERSATION_EVENT.MLS_MESSAGE_ADD:
         const encryptedData = Decoder.fromBase64(event.data).asBytes;
 
-        const groupId = await this.getUint8ArrayFromConversationGroupId(
+        const groupId = await this.getGroupIdFromConversationId(
           event.qualified_conversation ?? {id: event.conversation, domain: ''},
         );
+        const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
 
         // Check if the message includes proposals
-        const {proposals, commitDelay, message} = await this.mlsService.decryptMessage(groupId, encryptedData);
-        if (proposals.length > 0) {
+        const res = await this.mlsService.decryptMessage(groupIdBytes, encryptedData);
+        const {proposals, commitDelay, message} = res;
+        if (typeof commitDelay === 'number' || proposals.length > 0) {
+          // we are dealing with a proposal, add a task to process this proposal later on
           await this.handlePendingProposals({
-            groupId: groupId.toString(),
+            groupId: groupId,
             delayInMs: commitDelay ?? 0,
             eventTime: event.time,
           });
+          // This is not a text message, there is nothing more to do
+          return {event};
         }
 
         if (!message) {
@@ -358,11 +363,11 @@ export class NotificationService extends EventEmitter {
   /**
    * ## MLS only ##
    * If there is a matching conversationId => groupId pair in the database,
-   * we can find the groupId and return it as a Uint8Array
+   * we can find the groupId and return it as a string
    *
    * @param conversationQualifiedId
    */
-  public async getUint8ArrayFromConversationGroupId(conversationQualifiedId: QualifiedId) {
+  private async getGroupIdFromConversationId(conversationQualifiedId: QualifiedId): Promise<string> {
     const {id: conversationId, domain: conversationDomain} = conversationQualifiedId;
     const groupId = await this.database.getCompoundGroupId({
       conversationId,
@@ -372,7 +377,7 @@ export class NotificationService extends EventEmitter {
     if (!groupId) {
       throw new Error(`Could not find a group_id for conversation ${conversationId}@${conversationDomain}`);
     }
-    return Decoder.fromBase64(groupId).asBytes;
+    return groupId;
   }
 
   /**
