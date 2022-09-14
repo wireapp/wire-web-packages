@@ -17,7 +17,7 @@
  *
  */
 
-import {Ciphersuite, ConversationConfiguration, ExternalProposalType} from '@wireapp/core-crypto';
+import {ConversationConfiguration, ExternalProposalType} from '@wireapp/core-crypto';
 import type {APIClient} from '@wireapp/api-client';
 import {
   MessageSendingStatus,
@@ -1181,7 +1181,7 @@ export class ConversationService {
     const mlsKeyBytes = Object.values(mlsKeys).map((key: string) => Decoder.fromBase64(key).asBytes);
     const config: ConversationConfiguration = {
       externalSenders: mlsKeyBytes,
-      ciphersuite: Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
+      ciphersuite: 1,
     };
 
     await this.mlsService.createConversation(groupIdDecodedFromBase64, config);
