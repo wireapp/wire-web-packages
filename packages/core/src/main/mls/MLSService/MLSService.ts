@@ -67,12 +67,17 @@ export class MLSService {
       await this.apiClient.api.conversation.postMlsWelcomeMessage(optionalToUint8Array(commitBundle.welcome));
     }
     if (commitBundle.commit) {
-      const messageResponse = await this.apiClient.api.conversation.postMlsMessage(
-        //@todo: it's temporary - we wait for core-crypto fix to return the actual Uint8Array instead of regular array
-        optionalToUint8Array(commitBundle.commit),
-      );
-      await coreCryptoClient.commitAccepted(groupId);
-      return messageResponse;
+      try {
+        const messageResponse = await this.apiClient.api.conversation.postMlsMessage(
+          //@todo: it's temporary - we wait for core-crypto fix to return the actual Uint8Array instead of regular array
+          optionalToUint8Array(commitBundle.commit),
+        );
+        await coreCryptoClient.commitAccepted(groupId);
+        return messageResponse;
+      } catch (error) {
+        await coreCryptoClient.clear_pending_commit(groupId);
+        return null;
+      }
     }
     return null;
   }
