@@ -63,10 +63,6 @@ export class MLSService {
   private async uploadCommitBundle(groupId: Uint8Array, {commit, welcome}: CommitBundle) {
     const coreCryptoClient = this.getCoreCryptoClient();
 
-    if (welcome) {
-      //@todo: it's temporary - we wait for core-crypto fix to return the actual Uint8Array instead of regular array
-      await this.apiClient.api.conversation.postMlsWelcomeMessage(optionalToUint8Array(welcome));
-    }
     if (commit) {
       try {
         const messageResponse = await this.apiClient.api.conversation.postMlsMessage(
@@ -74,6 +70,11 @@ export class MLSService {
           optionalToUint8Array(commit),
         );
         await coreCryptoClient.commitAccepted(groupId);
+        if (welcome) {
+          // If the commit went well, we can send the Welcome
+          //@todo: it's temporary - we wait for core-crypto fix to return the actual Uint8Array instead of regular array
+          await this.apiClient.api.conversation.postMlsWelcomeMessage(optionalToUint8Array(welcome));
+        }
         return messageResponse;
       } catch (error) {
         await coreCryptoClient.clearPendingCommit(groupId);
