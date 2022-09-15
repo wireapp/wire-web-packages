@@ -92,7 +92,7 @@ describe('MessageService', () => {
   const messageService = new MessageService(apiClient, cryptographyService);
 
   beforeEach(() => {
-    jest.spyOn(cryptographyService, 'encryptQualified').mockImplementation(fakeEncrypt);
+    jest.spyOn(cryptographyService, 'encryptQualified').mockImplementation(fakeEncrypt as any);
   });
 
   describe('sendFederatedMessage', () => {

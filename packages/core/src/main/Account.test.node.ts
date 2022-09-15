@@ -27,7 +27,6 @@ import {BackendError, BackendErrorLabel} from '@wireapp/api-client/src/http';
 import {NotificationAPI} from '@wireapp/api-client/src/notification';
 import {AccentColor, ValidationUtil} from '@wireapp/commons';
 import {GenericMessage, Text} from '@wireapp/protocol-messaging';
-import * as Proteus from '@wireapp/proteus';
 import nock from 'nock';
 import {Account} from './Account';
 import {PayloadBundleType} from './conversation';
@@ -207,25 +206,28 @@ describe('Account', () => {
     });
   });
 
-  it('emits text messages', async done => {
-    const account = await createAccount();
+  it('emits text messages', async () => {
+    return new Promise<void>(async resolve => {
+      const account = await createAccount();
 
-    await account.login({
-      clientType: ClientType.TEMPORARY,
-      email: 'hello@example.com',
-      password: 'my-secret',
+      await account.login({
+        clientType: ClientType.TEMPORARY,
+        email: 'hello@example.com',
+        password: 'my-secret',
+      });
+
+      await account.listen();
+
+      spyOn<any>(account.service!.notification, 'handleEvent').and.returnValue({
+        mappedEvent: {type: PayloadBundleType.TEXT},
+      });
+      // new Promise
+      account.on(PayloadBundleType.TEXT, message => {
+        expect(message.type).toBe(PayloadBundleType.TEXT);
+        resolve();
+      });
+
+      account.service!.notification['apiClient'].transport.ws.emit(WebSocketClient.TOPIC.ON_MESSAGE, {payload: [{}]});
     });
-
-    await account.listen();
-
-    spyOn<any>(account.service!.notification, 'handleEvent').and.returnValue({
-      mappedEvent: {type: PayloadBundleType.TEXT},
-    });
-    account.on(PayloadBundleType.TEXT, message => {
-      expect(message.type).toBe(PayloadBundleType.TEXT);
-      done();
-    });
-
-    account.service!.notification['apiClient'].transport.ws.emit(WebSocketClient.TOPIC.ON_MESSAGE, {payload: [{}]});
   });
 });

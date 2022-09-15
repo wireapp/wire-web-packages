@@ -110,7 +110,7 @@ describe('ConversationService', () => {
         const onStart = jest.fn().mockReturnValue(Promise.resolve(true));
         const onSuccess = jest.fn();
 
-        jest.spyOn<any>(conversationService, 'sendGenericMessage').mockReturnValue(Promise.resolve({time: sentTime}));
+        jest.spyOn(conversationService as any, 'sendGenericMessage').mockReturnValue(Promise.resolve({time: sentTime}));
         // const onReconnect = jest.fn().mockReturnValue(getServerAddress());
 
         const promise = conversationService.send({
@@ -147,7 +147,7 @@ describe('ConversationService', () => {
         it(`forwards the list of users to report (${JSON.stringify(recipients)})`, async () => {
           const conversationService = buildConversationService();
           jest
-            .spyOn<any>(conversationService, 'getRecipientsForConversation')
+            .spyOn(conversationService as any, 'getRecipientsForConversation')
             .mockReturnValue(Promise.resolve({} as any));
           jest.spyOn(conversationService['messageService'], 'sendMessage').mockReturnValue(Promise.resolve({} as any));
           await conversationService.send({
@@ -177,7 +177,7 @@ describe('ConversationService', () => {
         it(`forwards the list of users to report for federated message (${JSON.stringify(recipients)})`, async () => {
           const conversationService = buildConversationService(true);
           jest
-            .spyOn<any>(conversationService, 'getQualifiedRecipientsForConversation')
+            .spyOn(conversationService as any, 'getQualifiedRecipientsForConversation')
             .mockReturnValue(Promise.resolve({} as any));
           jest
             .spyOn(conversationService['messageService'], 'sendFederatedMessage')
@@ -209,7 +209,7 @@ describe('ConversationService', () => {
         it(`ignores all missing user/client pair if targetMode is USER_CLIENTS`, async () => {
           const conversationService = buildConversationService(true);
           jest
-            .spyOn<any>(conversationService, 'getRecipientsForConversation')
+            .spyOn(conversationService as any, 'getRecipientsForConversation')
             .mockReturnValue(Promise.resolve({} as any));
           jest.spyOn(conversationService['messageService'], 'sendMessage').mockReturnValue(Promise.resolve({} as any));
           await conversationService.send({
@@ -239,7 +239,7 @@ describe('ConversationService', () => {
         it(`ignores all missing user/client pair if targetMode is USER_CLIENTS on federated env`, async () => {
           const conversationService = buildConversationService(true);
           jest
-            .spyOn<any>(conversationService, 'getQualifiedRecipientsForConversation')
+            .spyOn(conversationService as any, 'getQualifiedRecipientsForConversation')
             .mockReturnValue(Promise.resolve({} as any));
           jest
             .spyOn(conversationService['messageService'], 'sendFederatedMessage')
@@ -266,7 +266,7 @@ describe('ConversationService', () => {
 
     it(`cancels message sending if onStart returns false`, async () => {
       const conversationService = buildConversationService();
-      jest.spyOn<any>(conversationService, 'sendGenericMessage');
+      jest.spyOn(conversationService as any, 'sendGenericMessage');
       const message: OtrMessage = {...baseMessage, type: PayloadBundleType.TEXT, content: {text: 'test'}};
       const onStart = jest.fn().mockReturnValue(Promise.resolve(false));
       const onSuccess = jest.fn();
@@ -285,7 +285,7 @@ describe('ConversationService', () => {
     it(`does not call onSuccess when message was canceled`, async () => {
       const conversationService = buildConversationService();
       jest
-        .spyOn<any>(conversationService, 'sendGenericMessage')
+        .spyOn(conversationService as any, 'sendGenericMessage')
         .mockReturnValue(Promise.resolve({time: '', errored: true}));
       const message: OtrMessage = {...baseMessage, type: PayloadBundleType.TEXT, content: {text: 'test'}};
       const onSuccess = jest.fn();
