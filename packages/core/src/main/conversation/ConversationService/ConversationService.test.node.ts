@@ -138,7 +138,7 @@ describe('ConversationService', () => {
             targetMode: MessageTargetMode.USERS,
           })
           .catch(error => {
-            expect(error.message).toContainEqual('no userIds are given');
+            expect(error.message).toContain('no userIds are given');
             done();
           });
       });

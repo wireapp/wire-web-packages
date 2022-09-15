@@ -1,6 +1,20 @@
 /*
- * For a detailed explanation regarding each configuration property and type check, visit:
- * https://jestjs.io/docs/configuration
+ * Wire
+ * Copyright (C) 2022 Wire Swiss GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see http://www.gnu.org/licenses/.
+ *
  */
 
 export default {
@@ -11,7 +25,7 @@ export default {
   // The directory where Jest should store its cached dependency information
   // cacheDirectory: "/private/var/folders/p6/ps5n6kn950q94jpj_5hc9ds80000gn/T/jest_dx",
   // Automatically clear mock calls, instances, contexts and results before every test
-  // clearMocks: false,
+  clearMocks: true,
   // Indicates whether the coverage information should be collected while executing the test
   // collectCoverage: false,
   // An array of glob patterns indicating a set of files for which coverage information should be collected
@@ -111,9 +125,7 @@ export default {
   // Adds a location field to test results
   // testLocationInResults: false,
   // The glob patterns Jest uses to detect test files
-  testMatch: [
-    "**/?(*.)+(spec|test).node.[tj]s?(x)"
-  ],
+  testMatch: ['**/?(*.)+(spec|test).node.[tj]s?(x)'],
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
   // testPathIgnorePatterns: [
   //   "/node_modules/"
@@ -123,7 +135,7 @@ export default {
   // This option allows the use of a custom results processor
   // testResultsProcessor: undefined,
   // This option allows use of a custom test runner
-  testRunner: "jest-jasmine2",
+  testRunner: 'jest-jasmine2',
   // A map from regular expressions to paths to transformers
   // transform: undefined,
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
