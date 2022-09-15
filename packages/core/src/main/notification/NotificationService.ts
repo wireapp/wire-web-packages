@@ -275,6 +275,7 @@ export class NotificationService extends EventEmitter {
         const {proposals, commitDelay, message} = res;
         if (typeof commitDelay === 'number' || proposals.length > 0) {
           // we are dealing with a proposal, add a task to process this proposal later on
+          // Those proposals are stored inside of coreCrypto and will be handled after a timeout
           await this.handlePendingProposals({
             groupId: groupId,
             delayInMs: commitDelay ?? 0,
