@@ -258,7 +258,7 @@ export class NotificationService extends EventEmitter {
         const groupIdStr = Encoder.toBase64(newGroupId).asString;
         // The groupId can then be sent back to the consumer
         return {
-          event,
+          event: {...event, data: groupIdStr},
           mappedEvent: ConversationMapper.mapConversationEvent({...event, data: groupIdStr}, source),
         };
 
