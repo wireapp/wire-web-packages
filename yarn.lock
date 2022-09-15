@@ -3903,10 +3903,10 @@
   resolved "https://registry.npmjs.org/@wireapp/cbor/-/cbor-4.7.3.tgz#b6ea9a487a7834fbdb9ba3941fee6c7aaf9a9d51"
   integrity sha512-RmD+k3EkiOqovqRX1mXplyfHS5/YKb20Wc4ucfKPvzHyfDhCmCPH1bV7jaZp87WrYWyGu0xBTfG+3USw60d0Kg==
 
-"@wireapp/core-crypto@0.4.0":
-  version "0.4.0"
-  resolved "https://registry.npmjs.org/@wireapp/core-crypto/-/core-crypto-0.4.0.tgz#62ae0b4976753a454d478b141cd4f08e5a8be95a"
-  integrity sha512-GIrzcbTdZ66dVXh+T56mhsoepTov6H5aQst40WFTGT20EnjubI5bV+w/PE8kegTRQcmDnZL2WQUQExDEwGK5aw==
+"@wireapp/core-crypto@0.5.0":
+  version "0.5.0"
+  resolved "https://registry.npmjs.org/@wireapp/core-crypto/-/core-crypto-0.5.0.tgz#f3b2afc406179ece79c97084619b546fd9b03f8b"
+  integrity sha512-aK6JvrryMxRzpW7QyGTZEc79QVzST1QNeXOYR7Mp/rU8goaBErTThDEQ1kYzg+8VQjokglWrcvqy3OClUia8sw==
 
 "@wireapp/cryptobox@12.8.0":
   version "12.8.0"
