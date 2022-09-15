@@ -76,7 +76,7 @@ export class MLSService {
         await coreCryptoClient.commitAccepted(groupId);
         return messageResponse;
       } catch (error) {
-        await coreCryptoClient.clear_pending_commit(groupId);
+        await coreCryptoClient.clearPendingCommit(groupId);
         return null;
       }
     }
