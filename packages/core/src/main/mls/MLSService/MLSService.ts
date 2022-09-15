@@ -168,7 +168,7 @@ export class MLSService {
     });
   }
 
-  public async commitPendingProposals(conversationId: ConversationId): Promise<CommitBundle> {
+  public async commitPendingProposals(conversationId: ConversationId): Promise<CommitBundle | undefined> {
     return this.getCoreCryptoClient().commitPendingProposals(conversationId);
   }
 
