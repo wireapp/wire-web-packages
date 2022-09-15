@@ -33,7 +33,6 @@ import {Account} from './Account';
 import {PayloadBundleType} from './conversation';
 import {MessageBuilder} from './conversation/message/MessageBuilder';
 import {WebSocketClient} from '@wireapp/api-client/src/tcp';
-import jestConfig from '../../jest.config';
 
 const BASE_URL = 'mock-backend.wire.com';
 const MOCK_BACKEND = {
@@ -62,10 +61,6 @@ describe('Account', () => {
     token_type: 'Bearer',
     user: 'aaf9a833-ef30-4c22-86a0-9adc8a15b3b4',
   };
-
-  beforeAll(async () => {
-    await Proteus.init();
-  });
 
   beforeEach(() => {
     nock(MOCK_BACKEND.rest)
@@ -136,7 +131,6 @@ describe('Account', () => {
 
   describe('"createText"', () => {
     it('creates a text payload', async () => {
-
       const account = await createAccount();
 
       await account.login({
@@ -148,7 +142,8 @@ describe('Account', () => {
       expect(account['apiClient'].context!.userId).toBeDefined();
 
       const text = 'FIFA World Cup';
-      const date = new Date();
+      const date = new Date(0);
+      jest.spyOn(Date, 'now').mockImplementation(() => date.getTime());
       const payload = MessageBuilder.createText({conversationId: '', from: '', text}).build();
 
       expect(payload.timestamp).toEqual(date.getTime());
