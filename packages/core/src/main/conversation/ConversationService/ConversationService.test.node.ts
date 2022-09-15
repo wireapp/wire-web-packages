@@ -354,7 +354,7 @@ describe('ConversationService', () => {
         },
       };
       const conversationService = buildConversationService(true);
-      jest.spyOn<any>(conversationService, 'getConversationQualifiedMembers').mockReturnValue([
+      jest.spyOn(conversationService as any, 'getConversationQualifiedMembers').mockReturnValue([
         {domain: 'test-domain', id: 'test-id-1'},
         {domain: 'test-domain', id: 'test-id-2'},
       ]);

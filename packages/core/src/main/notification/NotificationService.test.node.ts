@@ -88,9 +88,9 @@ describe('NotificationService', () => {
         storeEngine,
       );
 
-      jest.spyOn<any>(notificationService, 'handleEvent').mockReturnValue({});
+      jest.spyOn(notificationService as any, 'handleEvent').mockReturnValue({});
       const spySetLastNotificationId = jest
-        .spyOn<any>(notificationService, 'setLastNotificationId')
+        .spyOn(notificationService as any, 'setLastNotificationId')
         .mockReturnValue({});
 
       const notification = {
@@ -121,9 +121,9 @@ describe('NotificationService', () => {
         storeEngine,
       );
 
-      jest.spyOn<any>(notificationService, 'handleEvent').mockReturnValue({});
+      jest.spyOn(notificationService as any, 'handleEvent').mockReturnValue({});
       const spySetLastNotificationId = jest
-        .spyOn<any>(notificationService, 'setLastNotificationId')
+        .spyOn(notificationService as any, 'setLastNotificationId')
         .mockReturnValue({});
 
       const notification = {
