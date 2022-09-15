@@ -50,7 +50,9 @@ describe('NotificationService', () => {
         storeEngine,
       );
 
-      spyOn<any>(notificationService, 'handleEvent').and.throwError('Test error');
+      jest.spyOn(notificationService, 'handleEvent').mockImplementation(() => {
+        throw 'Test error';
+      });
 
       const promise = new Promise<void>(resolve => {
         notificationService.on(NotificationService.TOPIC.NOTIFICATION_ERROR, notificationError => {
@@ -86,8 +88,10 @@ describe('NotificationService', () => {
         storeEngine,
       );
 
-      spyOn<any>(notificationService, 'handleEvent').and.returnValue({});
-      const spySetLastNotificationId = spyOn<any>(notificationService, 'setLastNotificationId').and.returnValue({});
+      jest.spyOn<any>(notificationService, 'handleEvent').mockReturnValue({});
+      const spySetLastNotificationId = jest
+        .spyOn<any>(notificationService, 'setLastNotificationId')
+        .mockReturnValue({});
 
       const notification = {
         payload: [{}],
@@ -117,8 +121,10 @@ describe('NotificationService', () => {
         storeEngine,
       );
 
-      spyOn<any>(notificationService, 'handleEvent').and.returnValue({});
-      const spySetLastNotificationId = spyOn<any>(notificationService, 'setLastNotificationId').and.returnValue({});
+      jest.spyOn<any>(notificationService, 'handleEvent').mockReturnValue({});
+      const spySetLastNotificationId = jest
+        .spyOn<any>(notificationService, 'setLastNotificationId')
+        .mockReturnValue({});
 
       const notification = {
         payload: [{}],
@@ -151,8 +157,8 @@ describe('NotificationService', () => {
         done();
       });
 
-      spyOn<any>(notificationService, 'handleEvent').and.throwError('Test error');
-      const spySetLastNotificationId = spyOn<any>(notificationService, 'setLastNotificationId').and.returnValue({});
+      jest.spyOn(notificationService, 'handleEvent').and.throwError('Test error');
+      const spySetLastNotificationId = jest.spyOn(notificationService, 'setLastNotificationId').mockReturnValue({});
 
       const notification = {
         payload: [{}],

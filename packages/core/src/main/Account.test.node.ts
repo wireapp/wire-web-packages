@@ -28,11 +28,12 @@ import {NotificationAPI} from '@wireapp/api-client/src/notification';
 import {AccentColor, ValidationUtil} from '@wireapp/commons';
 import {GenericMessage, Text} from '@wireapp/protocol-messaging';
 import * as Proteus from '@wireapp/proteus';
-import nock = require('nock');
+import nock from 'nock';
 import {Account} from './Account';
 import {PayloadBundleType} from './conversation';
 import {MessageBuilder} from './conversation/message/MessageBuilder';
 import {WebSocketClient} from '@wireapp/api-client/src/tcp';
+import jestConfig from '../../jest.config';
 
 const BASE_URL = 'mock-backend.wire.com';
 const MOCK_BACKEND = {
@@ -63,11 +64,7 @@ describe('Account', () => {
   };
 
   beforeAll(async () => {
-    jasmine.clock().install();
     await Proteus.init();
-  });
-  afterAll(() => {
-    jasmine.clock().uninstall();
   });
 
   beforeEach(() => {
@@ -139,8 +136,6 @@ describe('Account', () => {
 
   describe('"createText"', () => {
     it('creates a text payload', async () => {
-      const date = new Date(Date.UTC(2017, 0, 1, 0, 0, 0));
-      jasmine.clock().mockDate(date);
 
       const account = await createAccount();
 
@@ -153,6 +148,7 @@ describe('Account', () => {
       expect(account['apiClient'].context!.userId).toBeDefined();
 
       const text = 'FIFA World Cup';
+      const date = new Date();
       const payload = MessageBuilder.createText({conversationId: '', from: '', text}).build();
 
       expect(payload.timestamp).toEqual(date.getTime());
