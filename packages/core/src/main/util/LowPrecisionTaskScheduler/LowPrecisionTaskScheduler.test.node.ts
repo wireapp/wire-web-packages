@@ -48,7 +48,7 @@ describe('LowPrecisionTaskScheduler', () => {
   });
 
   it('adds single task to schedule and runs it after given delay', async () => {
-    const mockedTask = jest.fn('mockedTask', () => Promise.resolve('hello task'));
+    const mockedTask = jest.fn(() => Promise.resolve('hello task'));
 
     LowPrecisionTaskScheduler.addTask({
       key: 'test-key',
@@ -64,8 +64,8 @@ describe('LowPrecisionTaskScheduler', () => {
   });
 
   it('adds multiple tasks to schedule and runs it after given delay', async () => {
-    const mockedTask1 = jest.fn('mockedTask1').mockReturnValue(Promise.resolve('hello task 1'));
-    const mockedTask2 = jest.fn('mockedTask2').mockReturnValue(Promise.resolve('hello task 2'));
+    const mockedTask1 = jest.fn().mockReturnValue(Promise.resolve('hello task 1'));
+    const mockedTask2 = jest.fn().mockReturnValue(Promise.resolve('hello task 2'));
 
     LowPrecisionTaskScheduler.addTask({
       key: 'test1-key',
@@ -93,8 +93,8 @@ describe('LowPrecisionTaskScheduler', () => {
   });
 
   it('cancels tasks', async () => {
-    const mockedTask3 = jest.fn('mockedTask3').mockReturnValue(Promise.resolve('hello task 3'));
-    const mockedTask4 = jest.fn('mockedTask4').mockReturnValue(Promise.resolve('hello task 4'));
+    const mockedTask3 = jest.fn().mockReturnValue(Promise.resolve('hello task 3'));
+    const mockedTask4 = jest.fn().mockReturnValue(Promise.resolve('hello task 4'));
 
     LowPrecisionTaskScheduler.addTask({
       key: 'test3-key',

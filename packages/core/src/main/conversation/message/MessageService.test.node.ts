@@ -97,7 +97,7 @@ describe('MessageService', () => {
 
   describe('sendFederatedMessage', () => {
     it('sends a message', async () => {
-      jest.spyOn(apiClient.api.conversation, 'postOTRMessageV2').mockReturnValue(Promise.resolve(baseMessageSendingStatus));
+      jest.spyOn(apiClient.api.conversation, 'postOTRMessageV2').mockResolvedValue(baseMessageSendingStatus);
       const recipients = generateQualifiedRecipients([user1, user2]);
 
       await messageService.sendFederatedMessage('senderclientid', recipients, new Uint8Array(), {
@@ -138,7 +138,7 @@ describe('MessageService', () => {
       });
 
       it('continues message sending if onClientMismatch returns true', async () => {
-        const onClientMismatch = jest.fn('onClientMismatch').mockReturnValue(true);
+        const onClientMismatch = jest.fn().mockReturnValue(true);
         const clientMismatch = {...baseMessageSendingStatus, missing: {'2.wire.test': {[user2.id]: ['client22']}}};
         let spyCounter = 0;
         jest.spyOn(apiClient.api.conversation, 'postOTRMessageV2').mockImplementation(() => {
@@ -167,7 +167,7 @@ describe('MessageService', () => {
       });
 
       it('stops message sending if onClientMismatch returns false', async () => {
-        const onClientMismatch = jest.fn('onClientMismatch').mockReturnValue(false);
+        const onClientMismatch = jest.fn().mockReturnValue(false);
         const clientMismatch = {...baseMessageSendingStatus, missing: {'2.wire.test': {[user2.id]: ['client22']}}};
         jest.spyOn(apiClient.api.conversation, 'postOTRMessageV2').mockImplementation(() => {
           const error = new Error();
@@ -222,16 +222,16 @@ describe('MessageService', () => {
       expect(apiClient.api.conversation.postOTRMessage).toHaveBeenCalledWith(
         clientId,
         conversationId,
-        jasmine.any(Object),
+        expect.any(Object),
         false,
       );
     });
 
     it('should send protobuf message to conversation', async () => {
       const message = 'Lorem ipsum dolor sit amet';
-      jest.spyOn(apiClient.api.conversation, 'postOTRProtobufMessage').mockReturnValue(
-        Promise.resolve({} as ClientMismatch),
-      );
+      jest
+        .spyOn(apiClient.api.conversation, 'postOTRProtobufMessage')
+        .mockReturnValue(Promise.resolve({} as ClientMismatch));
 
       await messageService.sendMessage(clientId, generateRecipients(generateUsers(3, 3)), createMessage(message), {
         conversationId,
@@ -240,24 +240,26 @@ describe('MessageService', () => {
       expect(apiClient.api.conversation.postOTRProtobufMessage).toHaveBeenCalledWith(
         clientId,
         conversationId,
-        jasmine.any(Object),
+        expect.any(Object),
         false,
       );
     });
 
     it('should broadcast regular message if no conversationId is given', async () => {
       const message = 'Lorem ipsum dolor sit amet';
-      jest.spyOn(apiClient.api.broadcast, 'postBroadcastMessage').mockReturnValue(Promise.resolve({} as ClientMismatch));
+      jest
+        .spyOn(apiClient.api.broadcast, 'postBroadcastMessage')
+        .mockReturnValue(Promise.resolve({} as ClientMismatch));
 
       await messageService.sendMessage(clientId, generateRecipients(generateUsers(3, 3)), createMessage(message));
-      expect(apiClient.api.broadcast.postBroadcastMessage).toHaveBeenCalledWith(clientId, jasmine.any(Object), false);
+      expect(apiClient.api.broadcast.postBroadcastMessage).toHaveBeenCalledWith(clientId, expect.any(Object), false);
     });
 
     it('should broadcast protobuf message if no conversationId is given', async () => {
       const message = 'Lorem ipsum dolor sit amet';
-      jest.spyOn(apiClient.api.broadcast, 'postBroadcastProtobufMessage').mockReturnValue(
-        Promise.resolve({} as ClientMismatch),
-      );
+      jest
+        .spyOn(apiClient.api.broadcast, 'postBroadcastProtobufMessage')
+        .mockReturnValue(Promise.resolve({} as ClientMismatch));
 
       await messageService.sendMessage(clientId, generateRecipients(generateUsers(3, 3)), createMessage(message), {
         sendAsProtobuf: true,
@@ -265,7 +267,7 @@ describe('MessageService', () => {
 
       expect(apiClient.api.broadcast.postBroadcastProtobufMessage).toHaveBeenCalledWith(
         clientId,
-        jasmine.any(Object),
+        expect.any(Object),
         false,
       );
     });
@@ -280,7 +282,7 @@ describe('MessageService', () => {
       expect(apiClient.api.conversation.postOTRMessage).toHaveBeenCalledWith(
         clientId,
         conversationId,
-        jasmine.objectContaining({data: undefined}),
+        expect.objectContaining({data: undefined}),
         false,
       );
     });
@@ -301,7 +303,7 @@ describe('MessageService', () => {
       expect(apiClient.api.conversation.postOTRMessage).toHaveBeenCalledWith(
         clientId,
         conversationId,
-        jasmine.objectContaining({data: jasmine.any(String)}),
+        expect.objectContaining({data: expect.any(String)}),
         false,
       );
     });
