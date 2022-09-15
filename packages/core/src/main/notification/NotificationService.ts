@@ -271,8 +271,7 @@ export class NotificationService extends EventEmitter {
         const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
 
         // Check if the message includes proposals
-        const res = await this.mlsService.decryptMessage(groupIdBytes, encryptedData);
-        const {proposals, commitDelay, message} = res;
+        const {proposals, commitDelay, message} = await this.mlsService.decryptMessage(groupIdBytes, encryptedData);
         if (typeof commitDelay === 'number' || proposals.length > 0) {
           // we are dealing with a proposal, add a task to process this proposal later on
           // Those proposals are stored inside of coreCrypto and will be handled after a timeout
