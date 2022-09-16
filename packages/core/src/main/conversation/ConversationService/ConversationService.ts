@@ -888,6 +888,11 @@ export class ConversationService {
       ),
     );
   }
+
+  public async wipeMLSConversation(conversationId: string): Promise<void> {
+    const groupIdDecodedFromBase64 = Decoder.fromBase64(conversationId).asBytes;
+    return this.mlsService.wipeConversation(groupIdDecodedFromBase64);
+  }
   /**
    * Create a group conversation.
    * @param  {string} name
