@@ -17,4 +17,6 @@
  *
  */
 
-module.exports = {};
+module.exports = {
+  mock: 'mock',
+};
