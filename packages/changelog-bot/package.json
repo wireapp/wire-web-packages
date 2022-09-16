@@ -28,7 +28,7 @@
     "build:node": "tsc",
     "clean": "rimraf \"src/**/*.{js?(.map),d.ts}\"",
     "dist": "yarn clean && yarn build",
-    "test": "exit 0",
+    "test": "echo test",
     "test:project": "yarn dist && yarn test"
   },
   "version": "7.1.59",
