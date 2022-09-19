@@ -223,7 +223,7 @@ describe('Account', () => {
 
       const kill = await account.listen({
         onEvent: ({mappedEvent}) => {
-          expect(mappedEvent.type).toBe(PayloadBundleType.TEXT);
+          expect(mappedEvent?.type).toBe(PayloadBundleType.TEXT);
           resolve();
         },
       });
