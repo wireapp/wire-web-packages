@@ -19,6 +19,6 @@
 
 module.exports = {
   clearMocks: true,
-  testMatch: ['**/?(*.)+(spec|test).node.[tj]s?(x)'],
+  testMatch: ['**/?(*.)+(spec|test).node.[t]s?(x)'],
   testRunner: 'jest-jasmine2',
 };
