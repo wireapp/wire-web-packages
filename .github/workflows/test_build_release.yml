@@ -68,7 +68,7 @@ jobs:
         run: yarn boot
 
       - name: Test
-        run: yarn test
+        run: yarn test:all
 
       - name: Set release environment variables
         if: env.BRANCH_NAME == 'main'
