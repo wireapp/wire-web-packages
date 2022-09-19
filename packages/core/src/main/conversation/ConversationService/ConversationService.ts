@@ -1329,9 +1329,4 @@ export class ConversationService {
     const groupIdDecodedFromBase64 = Decoder.fromBase64(conversationGroupId!).asBytes;
     return this.mlsService.conversationExists(groupIdDecodedFromBase64);
   }
-
-  public async wipeMLSConversation(conversationId: string): Promise<void> {
-    const groupIdDecodedFromBase64 = Decoder.fromBase64(conversationId).asBytes;
-    return this.mlsService.wipeConversation(groupIdDecodedFromBase64);
-  }
 }
