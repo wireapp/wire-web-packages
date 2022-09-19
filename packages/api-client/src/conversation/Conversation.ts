@@ -17,7 +17,7 @@
  *
  */
 
-import {ConversationMembers, ConversationProtocol} from './';
+import type {ConversationMembers, ConversationProtocol} from './';
 import type {QualifiedId} from '../user';
 import type {RECEIPT_MODE} from './data';
 
