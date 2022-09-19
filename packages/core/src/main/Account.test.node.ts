@@ -40,14 +40,14 @@ const MOCK_BACKEND = {
   ws: `wss://${BASE_URL}`,
 };
 
-async function createAccount(storageName = `test-${Date.now()}`): Promise<Account> {
+async function createAccount(storageName = `test-${Date.now()}`): Promise<{account: Account; apiClient: APIClient}> {
   const apiClient = new APIClient({urls: MOCK_BACKEND});
   const account = new Account(apiClient);
   await account.initServices({
     clientType: ClientType.TEMPORARY,
     userId: '',
   });
-  return account;
+  return {account, apiClient};
 }
 
 describe('Account', () => {
@@ -130,7 +130,7 @@ describe('Account', () => {
 
   describe('"createText"', () => {
     it('creates a text payload', async () => {
-      const account = await createAccount();
+      const {account} = await createAccount();
 
       await account.login({
         clientType: ClientType.TEMPORARY,
@@ -206,9 +206,9 @@ describe('Account', () => {
     });
   });
 
-  it('emits text messages', async () => {
+  it('emits text messages', () => {
     return new Promise<void>(async resolve => {
-      const account = await createAccount();
+      const {account, apiClient} = await createAccount();
 
       await account.login({
         clientType: ClientType.TEMPORARY,
@@ -216,18 +216,20 @@ describe('Account', () => {
         password: 'my-secret',
       });
 
-      await account.listen();
-
-      spyOn<any>(account.service!.notification, 'handleEvent').and.returnValue({
+      jest.spyOn(apiClient, 'connect').mockImplementation();
+      jest.spyOn(account.service!.notification as any, 'handleEvent').mockReturnValue({
         mappedEvent: {type: PayloadBundleType.TEXT},
       });
-      // new Promise
-      account.on(PayloadBundleType.TEXT, message => {
-        expect(message.type).toBe(PayloadBundleType.TEXT);
-        resolve();
+
+      const kill = await account.listen({
+        onEvent: ({mappedEvent}) => {
+          expect(mappedEvent.type).toBe(PayloadBundleType.TEXT);
+          resolve();
+        },
       });
 
-      account.service!.notification['apiClient'].transport.ws.emit(WebSocketClient.TOPIC.ON_MESSAGE, {payload: [{}]});
+      apiClient.transport.ws.emit(WebSocketClient.TOPIC.ON_MESSAGE, {payload: [{}]});
+      kill();
     });
   });
 });
