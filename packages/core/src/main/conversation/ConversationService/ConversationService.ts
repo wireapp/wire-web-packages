@@ -1196,8 +1196,6 @@ export class ConversationService {
       coreCryptoKeyPackagesPayload,
     );
 
-    await this.notificationService.saveConversationGroupId(newConversation);
-
     //We store the info when conversation (along with key material) was created, so we will know when to renew it
     const groupCreationTimeStamp = new Date().getTime();
     await this.notificationService.storeLastKeyMaterialUpdateDate({

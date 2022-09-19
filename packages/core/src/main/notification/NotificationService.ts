@@ -36,7 +36,6 @@ import {GenericMessage} from '@wireapp/protocol-messaging';
 import {AbortHandler} from '@wireapp/api-client/src/tcp';
 import {Decoder, Encoder} from 'bazinga64';
 import {QualifiedId} from '@wireapp/api-client/src/user';
-import {Conversation} from '@wireapp/api-client/src/conversation';
 import {CommitPendingProposalsParams, HandlePendingProposalsParams, LastKeyMaterialUpdateParams} from './types';
 import {TaskScheduler} from '../util/TaskScheduler/TaskScheduler';
 import type {MLSService} from '../mls';
@@ -276,7 +275,7 @@ export class NotificationService extends EventEmitter {
           // we are dealing with a proposal, add a task to process this proposal later on
           // Those proposals are stored inside of coreCrypto and will be handled after a timeout
           await this.handlePendingProposals({
-            groupId: groupId,
+            groupId,
             delayInMs: commitDelay ?? 0,
             eventTime: event.time,
           });
@@ -322,7 +321,6 @@ export class NotificationService extends EventEmitter {
         if (!conversation) {
           throw new Error('no conv');
         }
-        await this.saveConversationGroupId(conversation);
 
       case Events.CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE:
       case Events.CONVERSATION_EVENT.RENAME:
@@ -344,24 +342,6 @@ export class NotificationService extends EventEmitter {
 
   /**
    * ## MLS only ##
-   * If there is a groupId in the conversation, we need to store the conversationId => groupId pair
-   * in order to find the groupId when decrypting messages
-   * This is a bit hacky but since mls messages do not embed the groupId we need to keep a mapping of those
-   *
-   * @param conversation conversation with group_id
-   */
-  public async saveConversationGroupId(conversation: Conversation) {
-    if (conversation.group_id) {
-      const {
-        group_id: groupId,
-        qualified_id: {id: conversationId, domain: conversationDomain},
-      } = conversation;
-      await this.database.addCompoundGroupId({conversationDomain, conversationId, groupId});
-    }
-  }
-
-  /**
-   * ## MLS only ##
    * If there is a matching conversationId => groupId pair in the database,
    * we can find the groupId and return it as a string
    *
@@ -369,10 +349,7 @@ export class NotificationService extends EventEmitter {
    */
   private async getGroupIdFromConversationId(conversationQualifiedId: QualifiedId): Promise<string> {
     const {id: conversationId, domain: conversationDomain} = conversationQualifiedId;
-    const groupId = await this.database.getCompoundGroupId({
-      conversationId,
-      conversationDomain,
-    });
+    const groupId = await this.mlsService.groupIdFromConversationId?.(conversationQualifiedId);
 
     if (!groupId) {
       throw new Error(`Could not find a group_id for conversation ${conversationId}@${conversationDomain}`);

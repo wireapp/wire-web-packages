@@ -52,7 +52,7 @@ import {WEBSOCKET_STATE} from '@wireapp/api-client/src/tcp/ReconnectingWebsocket
 import {createCustomEncryptedStore, createEncryptedStore, deleteEncryptedStore} from './util/encryptedStore';
 import {Encoder} from 'bazinga64';
 import {MLSService} from './mls';
-import type {MLSConfig} from './mls/types';
+import type {MLSCallbacks, MLSConfig} from './mls/types';
 import {resumeMessageSending} from './conversation/message/messageSender';
 
 export type ProcessedEventPayload = HandledEventPayload;
@@ -332,6 +332,10 @@ export class Account<T = any> extends EventEmitter {
     }
   }
 
+  configureMLSCallbacks(mlsCallbacks: MLSCallbacks) {
+    this.service?.mls.configureMLSCallbacks(mlsCallbacks);
+  }
+
   public async initServices(context: Context): Promise<void> {
     this.storeEngine = await this.initEngine(context);
     const accountService = new AccountService(this.apiClient);
@@ -401,7 +405,6 @@ export class Account<T = any> extends EventEmitter {
         this.mlsConfig,
         entropyData,
       );
-      this.coreCryptoClient.registerCallbacks({authorize: () => true, clientIdBelongsToOneOf: () => true});
     }
 
     return loadedClient;

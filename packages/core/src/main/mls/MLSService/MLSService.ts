@@ -35,7 +35,7 @@ import {
 import {APIClient} from '@wireapp/api-client';
 import {QualifiedUsers} from '../../conversation';
 import {Converter, Decoder, Encoder} from 'bazinga64';
-import type {MLSConfig} from '../types';
+import type {MLSCallbacks, MLSConfig} from '../types';
 import {PostMlsMessageResponse} from '@wireapp/api-client/src/conversation';
 import {sendMessage} from '../../conversation/message/messageSender';
 
@@ -46,6 +46,8 @@ export const optionalToUint8Array = (array: Uint8Array | []): Uint8Array => {
 };
 
 export class MLSService {
+  groupIdFromConversationId?: MLSCallbacks['groupIdFromConversationId'];
+
   constructor(
     public readonly config: MLSConfig | undefined,
     private readonly apiClient: APIClient,
@@ -90,6 +92,11 @@ export class MLSService {
 
       return this.uploadCommitBundle(groupId, memberAddedMessages);
     });
+  }
+
+  public configureMLSCallbacks({groupIdFromConversationId, ...coreCryptoCallbacks}: MLSCallbacks): void {
+    this.getCoreCryptoClient().registerCallbacks(coreCryptoCallbacks);
+    this.groupIdFromConversationId = groupIdFromConversationId;
   }
 
   public async getKeyPackagesPayload(qualifiedUsers: QualifiedUsers[]) {
