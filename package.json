@@ -50,7 +50,7 @@
     "prettier": "prettier \"**/*.{json,md,scss,yml}\"",
     "release": "lerna publish --no-verify-access && (lerna publish from-package --no-verify-access || true)",
     "test": "yarn && node bin/testUpdated.js",
-    "test:all": "yarn && yarn dist && lerna run --no-sort --concurrency 8 test"
+    "test:all": "yarn && yarn dist && lerna run --no-sort --concurrency 1 test"
   },
   "workspaces": {
     "nohoist": [
