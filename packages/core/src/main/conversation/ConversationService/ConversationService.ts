@@ -1329,4 +1329,9 @@ export class ConversationService {
     const groupIdDecodedFromBase64 = Decoder.fromBase64(conversationGroupId!).asBytes;
     return this.mlsService.conversationExists(groupIdDecodedFromBase64);
   }
+
+  public async wipeMLSConversation(conversationId: QualifiedId): Promise<void> {
+    const conversationGroupId = await this.notificationService.getUint8ArrayFromConversationGroupId(conversationId);
+    await this.mlsService.wipeConversation(conversationGroupId);
+  }
 }
