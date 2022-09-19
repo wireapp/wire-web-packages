@@ -1199,10 +1199,13 @@ export class ConversationService {
       ...qualifiedUsers,
     ]);
 
-    const response = await this.mlsService.addUsersToExistingConversation(
-      groupIdDecodedFromBase64,
-      coreCryptoKeyPackagesPayload,
-    );
+    let response;
+    if (coreCryptoKeyPackagesPayload.length !== 0) {
+      response = await this.mlsService.addUsersToExistingConversation(
+        groupIdDecodedFromBase64,
+        coreCryptoKeyPackagesPayload,
+      );
+    }
 
     await this.notificationService.saveConversationGroupId(newConversation);
 
