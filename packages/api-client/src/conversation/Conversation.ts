@@ -17,7 +17,7 @@
  *
  */
 
-import type {ConversationMembers, ConversationProtocol} from './';
+import {ConversationMembers, ConversationProtocol} from './';
 import type {QualifiedId} from '../user';
 import type {RECEIPT_MODE} from './data';
 
@@ -91,7 +91,7 @@ export interface Conversation {
 
   /** MLS conversations only */
   group_id?: string;
-  epoch?: number;
+  cipher_suite?: number;
 
   protocol: ConversationProtocol;
 }
