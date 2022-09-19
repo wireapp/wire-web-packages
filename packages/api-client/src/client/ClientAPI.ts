@@ -37,7 +37,7 @@ type ClaimedKeyPackages = {
 
 type PublicKeys = {
   removal: {
-    [cipherSuite: string]: string;
+    [algorithm: string]: string;
   };
 };
 
