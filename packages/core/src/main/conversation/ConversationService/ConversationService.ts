@@ -1330,8 +1330,7 @@ export class ConversationService {
     return this.mlsService.conversationExists(groupIdDecodedFromBase64);
   }
 
-  public async wipeMLSConversation(conversationId: QualifiedId): Promise<void> {
-    const conversationGroupId = await this.notificationService.getUint8ArrayFromConversationGroupId(conversationId);
-    await this.mlsService.wipeConversation(conversationGroupId);
+  public async wipeMLSConversation(conversationId: Uint8Array): Promise<void> {
+    return this.mlsService.wipeConversation(conversationId);
   }
 }
