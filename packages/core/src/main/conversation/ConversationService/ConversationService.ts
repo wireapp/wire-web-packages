@@ -22,7 +22,6 @@ import type {APIClient} from '@wireapp/api-client';
 import {
   MessageSendingStatus,
   Conversation,
-  CONVERSATION_TYPE,
   DefaultConversationRoleName,
   MutedStatus,
   NewConversation,
@@ -855,31 +854,6 @@ export class ConversationService {
       timestamp: Date.now(),
       type: PayloadBundleType.MESSAGE_DELETE,
     };
-  }
-  /**
-   * @depricated seems not to be used and is outdated. use removeUserFromConversation instead
-   */
-  public async leaveConversations(conversationIds?: string[]): Promise<ConversationMemberLeaveEvent[]> {
-    const userId = this.apiClient.context?.userId;
-    const domain = this.apiClient.context?.domain;
-
-    const selfUserId = userId && domain ? {id: userId, domain} : undefined;
-    if (!selfUserId) {
-      throw new Error('Cannot leave conversations without a userId and domain');
-    }
-
-    if (!conversationIds) {
-      const conversation = await this.getConversations();
-      conversationIds = conversation
-        .filter(conversation => conversation.type === CONVERSATION_TYPE.REGULAR)
-        .map(conversation => conversation.id);
-    }
-
-    return Promise.all(
-      conversationIds.map(conversationId =>
-        this.removeUserFromConversation({id: conversationId, domain: this.apiClient.context?.domain ?? ''}, selfUserId),
-      ),
-    );
   }
 
   /**
