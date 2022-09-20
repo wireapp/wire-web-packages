@@ -858,7 +858,7 @@ export class ConversationService {
   }
 
   /**
-   * @depricated seems not to be used and is outdated. use leaveConversation instead
+   * @depricated seems not to be used and is outdated. use removeUserFromConversation instead
    */
   public async leaveConversations(conversationIds?: string[]): Promise<ConversationMemberLeaveEvent[]> {
     const userId = this.apiClient.context?.userId;
