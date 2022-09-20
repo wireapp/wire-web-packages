@@ -105,7 +105,7 @@ import {
   SendProteusMessageParams,
 } from './ConversationService.types';
 import {Decoder} from 'bazinga64';
-import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/mapQualifiedUserClientIdsToFullyQualifiedClientIds';
+import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/fullyQualifiedClientIdUtils';
 import {optionalToUint8Array} from '../../mls';
 import {sendMessage} from '../message/messageSender';
 

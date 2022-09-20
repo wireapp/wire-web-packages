@@ -25,7 +25,7 @@ type SecretCrypto<T> = {
   decrypt: (payload: T) => Promise<Uint8Array>;
 };
 
-export interface MLSCallbacks extends CoreCryptoCallbacks {
+export interface MLSCallbacks extends Pick<CoreCryptoCallbacks, 'authorize'> {
   /**
    * Should return a groupId corresponding to the conversation ID given
    * Used for the core to know what core-crypto conversation we are dealing with when receiving events

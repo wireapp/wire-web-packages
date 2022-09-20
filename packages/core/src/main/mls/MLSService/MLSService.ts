@@ -38,7 +38,7 @@ import {Converter, Decoder, Encoder} from 'bazinga64';
 import type {MLSCallbacks, MLSConfig} from '../types';
 import {PostMlsMessageResponse} from '@wireapp/api-client/src/conversation';
 import {sendMessage} from '../../conversation/message/messageSender';
-
+import {parseFullQualifiedClientId} from '../../util/fullyQualifiedClientIdUtils';
 //@todo: this function is temporary, we wait for the update from core-crypto side
 //they are returning regular array instead of Uint8Array for commit and welcome messages
 export const optionalToUint8Array = (array: Uint8Array | []): Uint8Array => {
@@ -95,7 +95,17 @@ export class MLSService {
   }
 
   public configureMLSCallbacks({groupIdFromConversationId, ...coreCryptoCallbacks}: MLSCallbacks): void {
-    this.getCoreCryptoClient().registerCallbacks(coreCryptoCallbacks);
+    this.getCoreCryptoClient().registerCallbacks({
+      ...coreCryptoCallbacks,
+      clientIdBelongsToOneOf: (client, otherClients) => {
+        const decoder = new TextDecoder();
+        const {user} = parseFullQualifiedClientId(decoder.decode(client));
+        return otherClients.some(client => {
+          const {user: otherUser} = parseFullQualifiedClientId(decoder.decode(client));
+          return otherUser === user;
+        });
+      },
+    });
     this.groupIdFromConversationId = groupIdFromConversationId;
   }
 
