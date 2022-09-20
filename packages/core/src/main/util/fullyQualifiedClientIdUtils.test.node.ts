@@ -17,12 +17,12 @@
  *
  */
 
+import {ClientClassification, QualifiedUserClientMap} from '@wireapp/api-client/src/client';
 import {
   mapQualifiedUserClientIdsToFullyQualifiedClientIds,
   constructFullyQualifiedClientId,
-} from './mapQualifiedUserClientIdsToFullyQualifiedClientIds';
-import {ClientClassification, QualifiedUserClientMap} from '@wireapp/api-client/src/client';
-import {parseFullQualifiedClientId} from './fullyQualifiedClientIdUtils';
+  parseFullQualifiedClientId,
+} from './fullyQualifiedClientIdUtils';
 
 enum MOCKED_DOMAINS {
   DOMAIN1 = 'domain1.example.com',
