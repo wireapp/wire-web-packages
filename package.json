@@ -1,6 +1,7 @@
 {
   "devDependencies": {
     "@babel/eslint-parser": "7.17.0",
+    "@types/rimraf": "^3.0.2",
     "@typescript-eslint/eslint-plugin": "4.29.0",
     "@typescript-eslint/parser": "4.29.0",
     "eslint": "7.32.0",
@@ -17,15 +18,15 @@
     "eslint-plugin-simple-import-sort": "7.0.0",
     "eslint-plugin-unused-imports": "1.1.2",
     "husky": "4.3.8",
-    "lerna": "4.0.0",
+    "jest": "^29.0.3",
+    "lerna": "5.5.1",
     "lint-staged": "11.1.1",
     "prettier": "2.3.2",
-    "ts-node": "9.1.1",
     "tsconfig-paths": "3.10.1"
   },
   "engines": {
-    "node": ">= 10.9",
-    "yarn": ">= 1"
+    "node": ">= 14",
+    "yarn": ">= 3"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -49,19 +50,13 @@
     "lint:other": "yarn prettier --list-different",
     "prettier": "prettier \"**/*.{json,md,scss,yml}\"",
     "release": "lerna publish --no-verify-access && (lerna publish from-package --no-verify-access || true)",
-    "test": "yarn && node bin/testUpdated.js",
-    "test:all": "yarn && yarn dist && lerna run --no-sort --concurrency 1 test"
+    "test": "node bin/testUpdated.js",
+    "test:all": "yarn dist && lerna run --no-sort --concurrency 8 test"
   },
   "workspaces": {
-    "nohoist": [
-      "**/@jest/**/*",
-      "**/@types/!(long)**/*",
-      "**/emotion-normalize",
-      "**/jest-emotion",
-      "**/react"
-    ],
     "packages": [
       "packages/*"
     ]
-  }
+  },
+  "packageManager": "yarn@3.2.3"
 }
