@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@wireapp/bot-api": "workspace:packages/bot-api",
+    "@wireapp/bot-api": "workspace:^",
     "@wireapp/core": "workspace:^",
     "wizardy": "0.4.0"
   },

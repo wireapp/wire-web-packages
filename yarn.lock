@@ -6124,7 +6124,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wireapp/api-client@20.4.1, @wireapp/api-client@workspace:^, @wireapp/api-client@workspace:packages/api-client":
+"@wireapp/api-client@workspace:^, @wireapp/api-client@workspace:packages/api-client":
   version: 0.0.0-use.local
   resolution: "@wireapp/api-client@workspace:packages/api-client"
   dependencies:
@@ -6140,12 +6140,12 @@ __metadata:
     "@types/spark-md5": 3.0.2
     "@types/tough-cookie": 4.0.1
     "@types/ws": 7.4.7
-    "@wireapp/commons": 4.3.1
-    "@wireapp/priority-queue": 1.7.0
+    "@wireapp/commons": "workspace:^"
+    "@wireapp/priority-queue": "workspace:^"
     "@wireapp/protocol-messaging": 1.38.0
-    "@wireapp/react-ui-kit": 8.13.9
-    "@wireapp/store-engine": 4.9.9
-    "@wireapp/store-engine-fs": 2.4.9
+    "@wireapp/react-ui-kit": "workspace:^"
+    "@wireapp/store-engine": "workspace:^"
+    "@wireapp/store-engine-fs": "workspace:^"
     axios: 0.21.4
     axios-retry: 3.1.9
     babel-loader: 8.2.2
@@ -6191,7 +6191,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wireapp/bot-api@workspace:packages/bot-api":
+"@wireapp/bot-api@workspace:^, @wireapp/bot-api@workspace:packages/bot-api":
   version: 0.0.0-use.local
   resolution: "@wireapp/bot-api@workspace:packages/bot-api"
   dependencies:
@@ -6199,8 +6199,8 @@ __metadata:
     "@types/node": ^14.18.29
     "@types/readable-stream": 2.3.9
     "@wireapp/api-client": "workspace:^"
-    "@wireapp/core": "workspace:packages/core"
-    "@wireapp/protocol-messaging": ^1.38.0
+    "@wireapp/core": "workspace:^"
+    "@wireapp/protocol-messaging": 1.38.0
     "@wireapp/store-engine": "workspace:^"
     cross-env: 7.0.3
     dotenv-defaults: 2.0.2
@@ -6222,7 +6222,7 @@ __metadata:
     "@types/node": ^14.18.29
     "@types/webrtc": 0.0.30
     "@wireapp/avs": 6.7.19
-    "@wireapp/bot-api": "workspace:packages/bot-api"
+    "@wireapp/bot-api": "workspace:^"
     "@wireapp/core": "workspace:^"
     axios: ^0.27.2
     jasmine: 3.8.0
@@ -6239,7 +6239,7 @@ __metadata:
   dependencies:
     "@types/node": ^14.18.29
     "@wireapp/api-client": "workspace:^"
-    "@wireapp/bot-api": "workspace:packages/bot-api"
+    "@wireapp/bot-api": "workspace:^"
     "@wireapp/core": "workspace:^"
     jasmine: 3.8.0
     rimraf: 3.0.2
@@ -6256,7 +6256,7 @@ __metadata:
     "@types/jasmine": 3.8.2
     "@types/moment-duration-format": 2.2.3
     "@types/node": ^14.18.29
-    "@wireapp/bot-api": "workspace:packages/bot-api"
+    "@wireapp/bot-api": "workspace:^"
     "@wireapp/core": "workspace:^"
     jasmine: 3.8.0
     moment: 2.29.4
@@ -6275,7 +6275,7 @@ __metadata:
   dependencies:
     "@types/jasmine": 3.8.2
     "@types/node": ^14.18.29
-    "@wireapp/bot-api": "workspace:packages/bot-api"
+    "@wireapp/bot-api": "workspace:^"
     "@wireapp/core": "workspace:^"
     cross-env: 7.0.3
     dotenv-defaults: 2.0.2
@@ -6319,7 +6319,7 @@ __metadata:
     "@types/generate-changelog": 1.8.1
     "@types/node": ^14.18.29
     "@wireapp/api-client": "workspace:^"
-    "@wireapp/core": "workspace:packages/core"
+    "@wireapp/core": "workspace:^"
     "@wireapp/store-engine": "workspace:^"
     commander: 8.0.0
     generate-changelog: 1.8.0
@@ -6337,8 +6337,8 @@ __metadata:
   dependencies:
     "@types/fs-extra": 9.0.12
     "@wireapp/api-client": "workspace:^"
-    "@wireapp/core": "workspace:packages/core"
-    "@wireapp/store-engine-fs": 2.4.9
+    "@wireapp/core": "workspace:^"
+    "@wireapp/store-engine-fs": "workspace:^"
     axios: ^0.27.2
     commander: 8.0.0
     dotenv: 10.0.0
@@ -6350,7 +6350,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/commons@4.3.1, @wireapp/commons@workspace:packages/commons":
+"@wireapp/commons@workspace:^, @wireapp/commons@workspace:packages/commons":
   version: 0.0.0-use.local
   resolution: "@wireapp/commons@workspace:packages/commons"
   dependencies:
@@ -6416,13 +6416,13 @@ __metadata:
     "@types/long": 4.0.1
     "@types/node": ^14.18.29
     "@types/tough-cookie": 4.0.2
-    "@wireapp/api-client": 20.4.1
-    "@wireapp/commons": 4.3.1
+    "@wireapp/api-client": "workspace:^"
+    "@wireapp/commons": "workspace:^"
     "@wireapp/core-crypto": 0.5.0
     "@wireapp/cryptobox": 12.8.0
-    "@wireapp/promise-queue": 1.1.2
-    "@wireapp/protocol-messaging": ^1.38.0
-    "@wireapp/store-engine-dexie": 1.6.10
+    "@wireapp/promise-queue": "workspace:^"
+    "@wireapp/protocol-messaging": 1.38.0
+    "@wireapp/store-engine-dexie": "workspace:^"
     axios: ^0.27.2
     bazinga64: 5.10.0
     commander: 8.0.0
@@ -6522,7 +6522,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/priority-queue@1.7.0, @wireapp/priority-queue@workspace:packages/priority-queue":
+"@wireapp/priority-queue@npm:1.6.38":
+  version: 1.6.38
+  resolution: "@wireapp/priority-queue@npm:1.6.38"
+  dependencies:
+    "@types/node": ~14
+  checksum: cefa5c99a3b5640fb2b0a77392e13e8cbc816f05e1c9c859f96a4d1c93bbcc29ae56afeed94a09f5dce664b7c0243eb8a1d6075ef1fb6329ee4775515e843628
+  languageName: node
+  linkType: hard
+
+"@wireapp/priority-queue@workspace:^, @wireapp/priority-queue@workspace:packages/priority-queue":
   version: 0.0.0-use.local
   resolution: "@wireapp/priority-queue@workspace:packages/priority-queue"
   dependencies:
@@ -6544,16 +6553,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/priority-queue@npm:1.6.38":
-  version: 1.6.38
-  resolution: "@wireapp/priority-queue@npm:1.6.38"
-  dependencies:
-    "@types/node": ~14
-  checksum: cefa5c99a3b5640fb2b0a77392e13e8cbc816f05e1c9c859f96a4d1c93bbcc29ae56afeed94a09f5dce664b7c0243eb8a1d6075ef1fb6329ee4775515e843628
-  languageName: node
-  linkType: hard
-
-"@wireapp/promise-queue@1.1.2, @wireapp/promise-queue@workspace:packages/promise-queue":
+"@wireapp/promise-queue@workspace:^, @wireapp/promise-queue@workspace:packages/promise-queue":
   version: 0.0.0-use.local
   resolution: "@wireapp/promise-queue@workspace:packages/promise-queue"
   dependencies:
@@ -6581,7 +6581,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wireapp/protocol-messaging@npm:1.38.0, @wireapp/protocol-messaging@npm:^1.38.0":
+"@wireapp/protocol-messaging@npm:1.38.0":
   version: 1.38.0
   resolution: "@wireapp/protocol-messaging@npm:1.38.0"
   dependencies:
@@ -6590,7 +6590,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wireapp/react-ui-kit@8.13.9, @wireapp/react-ui-kit@workspace:packages/react-ui-kit":
+"@wireapp/react-ui-kit@workspace:^, @wireapp/react-ui-kit@workspace:packages/react-ui-kit":
   version: 0.0.0-use.local
   resolution: "@wireapp/react-ui-kit@workspace:packages/react-ui-kit"
   dependencies:
@@ -6647,7 +6647,7 @@ __metadata:
     "@types/jasmine": 3.8.2
     "@types/karma": 6.3.3
     "@types/node": ^14.18.29
-    "@wireapp/store-engine": 4.9.9
+    "@wireapp/store-engine": "workspace:^"
     bro-fs: 0.6.0
     jasmine: 3.8.0
     karma: 6.4.1
@@ -6662,14 +6662,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/store-engine-dexie@1.6.10, @wireapp/store-engine-dexie@workspace:packages/store-engine-dexie":
+"@wireapp/store-engine-dexie@workspace:^, @wireapp/store-engine-dexie@workspace:packages/store-engine-dexie":
   version: 0.0.0-use.local
   resolution: "@wireapp/store-engine-dexie@workspace:packages/store-engine-dexie"
   dependencies:
     "@types/jasmine": 3.8.2
     "@types/karma": 6.3.3
     "@types/node": ^14.18.29
-    "@wireapp/store-engine": 4.9.9
+    "@wireapp/store-engine": "workspace:^"
     dexie: 3.2.2
     jasmine: 3.8.0
     karma: 6.4.1
@@ -6686,14 +6686,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/store-engine-fs@2.4.9, @wireapp/store-engine-fs@workspace:packages/store-engine-fs":
+"@wireapp/store-engine-fs@workspace:^, @wireapp/store-engine-fs@workspace:packages/store-engine-fs":
   version: 0.0.0-use.local
   resolution: "@wireapp/store-engine-fs@workspace:packages/store-engine-fs"
   dependencies:
     "@types/fs-extra": 9.0.12
     "@types/jasmine": 3.8.2
     "@types/node": ^14.18.29
-    "@wireapp/store-engine": 4.9.9
+    "@wireapp/store-engine": "workspace:^"
     fs-extra: 10.0.0
     jasmine: 3.8.0
     nyc: 15.1.0
@@ -6720,7 +6720,7 @@ __metadata:
     "@types/node": ^14.18.29
     "@types/uint32": 0.2.0
     "@types/webpack": 4.41.27
-    "@wireapp/store-engine": 4.9.9
+    "@wireapp/store-engine": "workspace:^"
     "@wireapp/websql": 0.0.17
     babel-loader: 8.2.2
     bazinga64: 5.10.0
@@ -6746,7 +6746,7 @@ __metadata:
     "@types/jasmine": 3.8.2
     "@types/karma": 6.3.3
     "@types/node": ^14.18.29
-    "@wireapp/store-engine": 4.9.9
+    "@wireapp/store-engine": "workspace:^"
     jasmine: 3.8.0
     karma: 6.4.1
     karma-chrome-launcher: 3.1.1
@@ -6760,7 +6760,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/store-engine@4.9.9, @wireapp/store-engine@workspace:^, @wireapp/store-engine@workspace:packages/store-engine":
+"@wireapp/store-engine@npm:4.9.8":
+  version: 4.9.8
+  resolution: "@wireapp/store-engine@npm:4.9.8"
+  dependencies:
+    "@types/node": ~14
+  checksum: bfe5e4522127eb0edcceabdc5c8e2dafc33a8dfa2a984364e1057e5a4784ea1a0e43c1ad760f9d49f40ab9e72db33b2fa24a073e76c53417b14f291c69f0906e
+  languageName: node
+  linkType: hard
+
+"@wireapp/store-engine@workspace:^, @wireapp/store-engine@workspace:packages/store-engine":
   version: 0.0.0-use.local
   resolution: "@wireapp/store-engine@workspace:packages/store-engine"
   dependencies:
@@ -6781,15 +6790,6 @@ __metadata:
     webpack-cli: 4.7.2
   languageName: unknown
   linkType: soft
-
-"@wireapp/store-engine@npm:4.9.8":
-  version: 4.9.8
-  resolution: "@wireapp/store-engine@npm:4.9.8"
-  dependencies:
-    "@types/node": ~14
-  checksum: bfe5e4522127eb0edcceabdc5c8e2dafc33a8dfa2a984364e1057e5a4784ea1a0e43c1ad760f9d49f40ab9e72db33b2fa24a073e76c53417b14f291c69f0906e
-  languageName: node
-  linkType: hard
 
 "@wireapp/webapp-events@workspace:packages/webapp-events":
   version: 0.0.0-use.local

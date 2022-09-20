@@ -4,8 +4,8 @@
     "./src/shims/node/cookie": "./src/shims/browser/cookie.js"
   },
   "dependencies": {
-    "@wireapp/commons": "4.3.1",
-    "@wireapp/priority-queue": "1.7.0",
+    "@wireapp/commons": "workspace:^",
+    "@wireapp/priority-queue": "workspace:^",
     "@wireapp/protocol-messaging": "1.38.0",
     "axios": "0.21.4",
     "axios-retry": "3.1.9",
@@ -29,9 +29,9 @@
     "@types/spark-md5": "3.0.2",
     "@types/tough-cookie": "4.0.1",
     "@types/ws": "7.4.7",
-    "@wireapp/react-ui-kit": "8.13.9",
-    "@wireapp/store-engine": "4.9.9",
-    "@wireapp/store-engine-fs": "2.4.9",
+    "@wireapp/react-ui-kit": "workspace:^",
+    "@wireapp/store-engine": "workspace:^",
+    "@wireapp/store-engine-fs": "workspace:^",
     "babel-loader": "8.2.2",
     "browser-sync": "2.27.5",
     "concurrently": "6.2.0",

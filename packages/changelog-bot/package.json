@@ -4,7 +4,7 @@
   },
   "dependencies": {
     "@wireapp/api-client": "workspace:^",
-    "@wireapp/core": "workspace:packages/core",
+    "@wireapp/core": "workspace:^",
     "@wireapp/store-engine": "workspace:^",
     "commander": "8.0.0"
   },

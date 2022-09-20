@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@wireapp/store-engine": "4.9.9"
+    "@wireapp/store-engine": "workspace:^"
   },
   "devDependencies": {
     "@types/jasmine": "3.8.2",
