@@ -1,5 +1,7 @@
 {
-  "bin": "src/main/cli.js",
+  "bin": {
+    "copy-config": "src/main/cli.js"
+  },
   "dependencies": {
     "axios": "0.21.4",
     "copy": "0.3.2",
