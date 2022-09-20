@@ -23,6 +23,7 @@ import {
   CallMessage,
   CompositeMessage,
   ConfirmationMessage,
+  DeleteMessage,
   EditedTextMessage,
   FileAssetAbortMessage,
   FileAssetMessage,
@@ -47,6 +48,7 @@ import {
   GenericMessage,
   Knock,
   Location,
+  MessageDelete,
   MessageEdit,
   Reaction,
 } from '@wireapp/protocol-messaging';
@@ -97,6 +99,9 @@ export function generateGenericMessage<T extends OtrMessage>(
       return {genericMessage: generateReactionGenericMessage(payload), content};
     case PayloadBundleType.TEXT:
       return {genericMessage: generateTextGenericMessage(payload, messageTimer), content};
+
+    case PayloadBundleType.MESSAGE_DELETE:
+      return {genericMessage: generateDeleteMessage(payload), content};
 
     /**
      * ToDo: Create Generic implementation for everything else
@@ -327,6 +332,17 @@ function generateCallGenericMessage(payloadBundle: CallMessage): GenericMessage 
   return GenericMessage.create({
     [GenericMessageType.CALLING]: callMessage,
     messageId: payloadBundle.id,
+  });
+}
+
+function generateDeleteMessage(payload: DeleteMessage): GenericMessage {
+  const content = MessageDelete.create({
+    messageId: payload.content.messageId,
+  });
+
+  return GenericMessage.create({
+    [GenericMessageType.DELETED]: content,
+    messageId: payload.id,
   });
 }
 

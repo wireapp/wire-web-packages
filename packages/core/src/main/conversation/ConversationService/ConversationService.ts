@@ -33,7 +33,7 @@ import {
 import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/src/conversation/data';
 import {ConversationMemberLeaveEvent} from '@wireapp/api-client/src/event';
 import {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/src/user';
-import {Cleared, DataTransfer, GenericMessage, LastRead, MessageDelete, MessageHide} from '@wireapp/protocol-messaging';
+import {Cleared, DataTransfer, GenericMessage, LastRead, MessageHide} from '@wireapp/protocol-messaging';
 
 import {
   GenericMessageType,
@@ -43,7 +43,7 @@ import {
   PayloadBundleType,
   RemoveUsersParams,
 } from '../../conversation/';
-import {ClearedContent, DeletedContent, HiddenContent, RemoteData} from '../content';
+import {ClearedContent, HiddenContent, RemoteData} from '../content';
 import {CryptographyService} from '../../cryptography/';
 import {MLSService} from '../../mls';
 import {NotificationService} from '../../notification';
@@ -51,11 +51,10 @@ import {decryptAsset} from '../../cryptography/AssetCryptography';
 import {isStringArray, isQualifiedIdArray, isQualifiedUserClients, isUserClients} from '../../util/TypePredicateUtil';
 import {MessageBuilder} from '../message/MessageBuilder';
 import {MessageService} from '../message/MessageService';
-import {ClearConversationMessage, DeleteMessage, HideMessage, OtrMessage} from '../message/OtrMessage';
+import {ClearConversationMessage, HideMessage, OtrMessage} from '../message/OtrMessage';
 import {XOR} from '@wireapp/commons/src/main/util/TypeUtil';
 import {
   AddUsersParams,
-  MessageSendingCallbacks,
   MessageSendingOptions,
   MessageTargetMode,
   MLSReturnType,
@@ -493,46 +492,6 @@ export class ConversationService {
       state: PayloadBundleState.OUTGOING_SENT,
       timestamp: Date.now(),
       type: PayloadBundleType.MESSAGE_HIDE,
-    };
-  }
-
-  public async deleteMessageEveryone(
-    conversationId: string,
-    messageIdToDelete: string,
-    userIds?: string[] | QualifiedId[] | UserClients | QualifiedUserClients,
-    sendAsProtobuf?: boolean,
-    conversationDomain?: string,
-    callbacks?: MessageSendingCallbacks,
-  ): Promise<DeleteMessage> {
-    const messageId = MessageBuilder.createId();
-
-    const content: DeletedContent = MessageDelete.create({
-      messageId: messageIdToDelete,
-    });
-
-    const genericMessage = GenericMessage.create({
-      [GenericMessageType.DELETED]: content,
-      messageId,
-    });
-    callbacks?.onStart?.(genericMessage);
-
-    const response = await this.sendGenericMessage(this.apiClient.validatedClientId, conversationId, genericMessage, {
-      userIds,
-      sendAsProtobuf,
-      conversationDomain,
-    });
-    callbacks?.onSuccess?.(genericMessage, response?.time);
-
-    return {
-      content,
-      conversation: conversationId,
-      from: this.apiClient.context!.userId,
-      id: messageId,
-      messageTimer: this.messageTimer.getMessageTimer(conversationId),
-      source: PayloadBundleSource.LOCAL,
-      state: PayloadBundleState.OUTGOING_SENT,
-      timestamp: Date.now(),
-      type: PayloadBundleType.MESSAGE_DELETE,
     };
   }
 
