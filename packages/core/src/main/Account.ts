@@ -332,6 +332,13 @@ export class Account<T = any> extends EventEmitter {
     }
   }
 
+  /**
+   * In order to be able to send MLS messages, the core needs a few information from the consumer.
+   * Namely:
+   * - is the current user allowed to administrate a specific conversation
+   * - what is the groupId of a conversation
+   * @param mlsCallbacks
+   */
   configureMLSCallbacks(mlsCallbacks: MLSCallbacks) {
     this.service?.mls.configureMLSCallbacks(mlsCallbacks);
   }
