@@ -6191,7 +6191,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wireapp/bot-api@14.0.24, @wireapp/bot-api@workspace:packages/bot-api":
+"@wireapp/bot-api@workspace:packages/bot-api":
   version: 0.0.0-use.local
   resolution: "@wireapp/bot-api@workspace:packages/bot-api"
   dependencies:
@@ -6199,7 +6199,7 @@ __metadata:
     "@types/node": ^14.18.29
     "@types/readable-stream": 2.3.9
     "@wireapp/api-client": "workspace:^"
-    "@wireapp/core": 30.11.2
+    "@wireapp/core": "workspace:packages/core"
     "@wireapp/protocol-messaging": ^1.38.0
     "@wireapp/store-engine": "workspace:^"
     cross-env: 7.0.3
@@ -6222,7 +6222,7 @@ __metadata:
     "@types/node": ^14.18.29
     "@types/webrtc": 0.0.30
     "@wireapp/avs": 6.7.19
-    "@wireapp/bot-api": 14.0.24
+    "@wireapp/bot-api": "workspace:packages/bot-api"
     "@wireapp/core": "workspace:^"
     axios: ^0.27.2
     jasmine: 3.8.0
@@ -6239,7 +6239,7 @@ __metadata:
   dependencies:
     "@types/node": ^14.18.29
     "@wireapp/api-client": "workspace:^"
-    "@wireapp/bot-api": 14.0.24
+    "@wireapp/bot-api": "workspace:packages/bot-api"
     "@wireapp/core": "workspace:^"
     jasmine: 3.8.0
     rimraf: 3.0.2
@@ -6256,7 +6256,7 @@ __metadata:
     "@types/jasmine": 3.8.2
     "@types/moment-duration-format": 2.2.3
     "@types/node": ^14.18.29
-    "@wireapp/bot-api": 14.0.24
+    "@wireapp/bot-api": "workspace:packages/bot-api"
     "@wireapp/core": "workspace:^"
     jasmine: 3.8.0
     moment: 2.29.4
@@ -6275,7 +6275,7 @@ __metadata:
   dependencies:
     "@types/jasmine": 3.8.2
     "@types/node": ^14.18.29
-    "@wireapp/bot-api": 14.0.24
+    "@wireapp/bot-api": "workspace:packages/bot-api"
     "@wireapp/core": "workspace:^"
     cross-env: 7.0.3
     dotenv-defaults: 2.0.2
@@ -6319,7 +6319,7 @@ __metadata:
     "@types/generate-changelog": 1.8.1
     "@types/node": ^14.18.29
     "@wireapp/api-client": "workspace:^"
-    "@wireapp/core": 30.11.2
+    "@wireapp/core": "workspace:packages/core"
     "@wireapp/store-engine": "workspace:^"
     commander: 8.0.0
     generate-changelog: 1.8.0
@@ -6337,7 +6337,7 @@ __metadata:
   dependencies:
     "@types/fs-extra": 9.0.12
     "@wireapp/api-client": "workspace:^"
-    "@wireapp/core": 30.11.2
+    "@wireapp/core": "workspace:packages/core"
     "@wireapp/store-engine-fs": 2.4.9
     axios: ^0.27.2
     commander: 8.0.0
@@ -6401,7 +6401,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wireapp/core@30.11.2, @wireapp/core@workspace:^, @wireapp/core@workspace:packages/core":
+"@wireapp/core@workspace:^, @wireapp/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@wireapp/core@workspace:packages/core"
   dependencies:
