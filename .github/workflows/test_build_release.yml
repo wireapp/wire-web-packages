@@ -64,9 +64,6 @@ jobs:
       - name: Install JS dependencies
         run: yarn --frozen-lockfile
 
-      - name: Boot Lerna
-        run: yarn boot
-
       - name: Test
         run: yarn test
 

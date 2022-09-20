@@ -39,7 +39,6 @@
   "prettier": "./packages/prettier-config",
   "private": true,
   "scripts": {
-    "boot": "yarn",
     "clean": "lerna run --parallel clean",
     "dist": "yarn clean && lerna run dist",
     "fix": "yarn fix:other && yarn fix:code",
