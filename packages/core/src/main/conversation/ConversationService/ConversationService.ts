@@ -856,7 +856,6 @@ export class ConversationService {
       type: PayloadBundleType.MESSAGE_DELETE,
     };
   }
-
   /**
    * @depricated seems not to be used and is outdated. use removeUserFromConversation instead
    */
