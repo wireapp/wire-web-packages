@@ -54,7 +54,7 @@ jobs:
           access_token: ${{github.token}}
 
       - name: Yarn cache
-        uses: c-hive/gha-yarn-cache@v1
+        uses: c-hive/gha-yarn-cache@v2
 
       - name: Authenticate git clone
         env:
@@ -63,9 +63,6 @@ jobs:
 
       - name: Install JS dependencies
         run: yarn --frozen-lockfile
-
-      - name: Boot Lerna
-        run: yarn boot
 
       - name: Test
         run: yarn test

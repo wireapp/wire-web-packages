@@ -49,7 +49,7 @@ Collection of npm modules created by Wire's web team:
 
 ```bash
 ## Download dependencies and link packages
-yarn && yarn boot
+yarn
 
 ## Build all packages and test them
 yarn test:all
