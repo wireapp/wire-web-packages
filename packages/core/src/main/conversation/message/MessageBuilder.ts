@@ -65,7 +65,7 @@ interface CreateMessageDeleteOption extends BaseOptions {
 
 interface CreateMessageHideOption extends BaseOptions {
   messageIdToDelete: string;
-  conversationId: string;
+  targetConversation: string;
 }
 
 interface CreateImageOptions extends BaseOptions {
@@ -196,7 +196,7 @@ export class MessageBuilder {
   public static createMessageHide(payload: CreateMessageHideOption): HideMessage {
     return {
       ...createCommonProperties(payload),
-      content: {messageId: payload.messageIdToDelete, conversationId: payload.conversationId},
+      content: {messageId: payload.messageIdToDelete, conversationId: payload.targetConversation},
       type: PayloadBundleType.MESSAGE_HIDE,
     };
   }

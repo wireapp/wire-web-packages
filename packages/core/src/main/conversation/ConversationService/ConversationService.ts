@@ -33,7 +33,7 @@ import {
 import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/src/conversation/data';
 import {ConversationMemberLeaveEvent} from '@wireapp/api-client/src/event';
 import {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/src/user';
-import {Cleared, DataTransfer, GenericMessage, LastRead, MessageHide} from '@wireapp/protocol-messaging';
+import {Cleared, DataTransfer, GenericMessage, LastRead} from '@wireapp/protocol-messaging';
 
 import {
   GenericMessageType,
@@ -43,7 +43,7 @@ import {
   PayloadBundleType,
   RemoveUsersParams,
 } from '../../conversation/';
-import {ClearedContent, HiddenContent, RemoteData} from '../content';
+import {ClearedContent, RemoteData} from '../content';
 import {CryptographyService} from '../../cryptography/';
 import {MLSService} from '../../mls';
 import {NotificationService} from '../../notification';
@@ -51,7 +51,7 @@ import {decryptAsset} from '../../cryptography/AssetCryptography';
 import {isStringArray, isQualifiedIdArray, isQualifiedUserClients, isUserClients} from '../../util/TypePredicateUtil';
 import {MessageBuilder} from '../message/MessageBuilder';
 import {MessageService} from '../message/MessageService';
-import {ClearConversationMessage, HideMessage, OtrMessage} from '../message/OtrMessage';
+import {ClearConversationMessage, OtrMessage} from '../message/OtrMessage';
 import {XOR} from '@wireapp/commons/src/main/util/TypeUtil';
 import {
   AddUsersParams,
