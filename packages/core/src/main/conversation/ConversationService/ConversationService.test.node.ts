@@ -20,7 +20,7 @@
 import {APIClient} from '@wireapp/api-client';
 import {ClientClassification, ClientType} from '@wireapp/api-client/src/client';
 import {ConversationProtocol} from '@wireapp/api-client/src/conversation';
-import {LegalHoldStatus} from '@wireapp/protocol-messaging';
+import {GenericMessage, LegalHoldStatus} from '@wireapp/protocol-messaging';
 import {MemoryEngine} from '@wireapp/store-engine';
 import {ConversationService, PayloadBundleSource, PayloadBundleState, PayloadBundleType} from '../';
 
@@ -28,11 +28,12 @@ import {CryptographyService} from '../../cryptography';
 import * as PayloadHelper from '../../test/PayloadHelper';
 import {LinkPreviewUploadedContent, MentionContent, QuoteContent} from '../content';
 import {MessageTargetMode} from './ConversationService.types';
-import {MessageBuilder} from '../message/MessageBuilder';
+import * as MessageBuilder from '../message/MessageBuilder';
 import {OtrMessage} from '../message/OtrMessage';
 import {NotificationService} from '../../notification/NotificationService';
 import {MLSService} from '../../mls';
 import * as messageSender from '../message/messageSender';
+import {TextContentBuilder} from '../message/TextContentBuilder';
 
 const mockedMLSService = {
   encryptMessage: () => {},
@@ -94,20 +95,18 @@ describe('ConversationService', () => {
       source: PayloadBundleSource.LOCAL,
       state: PayloadBundleState.OUTGOING_UNSENT,
     };
-    const messages: OtrMessage[] = [
-      {...baseMessage, type: PayloadBundleType.TEXT, content: {text: 'test'}},
+    const messages: {type: string; message: GenericMessage}[] = [
+      {type: 'text', message: MessageBuilder.buildTextMessage({text: 'test'})},
       {
-        ...baseMessage,
-        type: PayloadBundleType.CONFIRMATION,
-        content: {type: 1, firstMessageId: PayloadHelper.getUUID()},
+        type: 'confirmation',
+        message: MessageBuilder.buildConfirmationMessage({type: 1, firstMessageId: PayloadHelper.getUUID()}),
       },
-      {...baseMessage, type: PayloadBundleType.PING, content: {hotKnock: false}},
+      {type: 'ping', message: MessageBuilder.buildPingMessage({hotKnock: false})},
     ];
-    messages.forEach(payloadBundle => {
-      it(`calls callbacks when sending '${payloadBundle.type}' message is starting and successful`, async () => {
+    messages.forEach(({type, message}) => {
+      it(`calls callbacks when sending '${type}' message is starting and successful`, async () => {
         const conversationService = buildConversationService();
         const sentTime = new Date().toISOString();
-        const onStart = jest.fn().mockReturnValue(Promise.resolve(true));
         const onSuccess = jest.fn();
 
         jest.spyOn(conversationService as any, 'sendGenericMessage').mockReturnValue(Promise.resolve({time: sentTime}));
@@ -115,12 +114,10 @@ describe('ConversationService', () => {
 
         const promise = conversationService.send({
           protocol: ConversationProtocol.PROTEUS,
-          onStart,
           onSuccess,
-          payload: payloadBundle,
+          payload: message,
         });
 
-        expect(onStart).toHaveBeenCalled();
         expect(onSuccess).not.toHaveBeenCalled();
         await promise;
         expect(onSuccess).toHaveBeenCalledWith(jasmine.any(Object), sentTime);
@@ -423,9 +420,8 @@ describe('ConversationService', () => {
         url,
         urlOffset,
       };
-      const textMessage = MessageBuilder.createText({conversationId: '', from: '', text})
-        .withLinkPreviews([linkPreview])
-        .build();
+      const content = new TextContentBuilder({text}).withLinkPreviews([linkPreview]).build();
+      const textMessage = MessageBuilder.buildTextMessage(content);
 
       expect(textMessage.content.text).toEqual(text);
       expect(textMessage.content.linkPreviews).toEqual(jasmine.any(Array));

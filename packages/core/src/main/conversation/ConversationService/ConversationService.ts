@@ -49,9 +49,9 @@ import {MLSService} from '../../mls';
 import {NotificationService} from '../../notification';
 import {decryptAsset} from '../../cryptography/AssetCryptography';
 import {isStringArray, isQualifiedIdArray, isQualifiedUserClients, isUserClients} from '../../util/TypePredicateUtil';
-import {MessageBuilder} from '../message/MessageBuilder';
+import {createId} from '../message/MessageBuilder';
 import {MessageService} from '../message/MessageService';
-import {ClearConversationMessage, OtrMessage} from '../message/OtrMessage';
+import {ClearConversationMessage} from '../message/OtrMessage';
 import {XOR} from '@wireapp/commons/src/main/util/TypeUtil';
 import {
   AddUsersParams,
@@ -65,8 +65,13 @@ import {Decoder} from 'bazinga64';
 import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/fullyQualifiedClientIdUtils';
 import {optionalToUint8Array} from '../../mls';
 import {sendMessage} from '../message/messageSender';
-import {generateGenericMessage} from './messageGenerator';
 
+type SendResult = {
+  /** The id of the message sent */
+  id: string;
+  /** The sending state of the payload (has the payload been succesfully sent or canceled) */
+  state: PayloadBundleState;
+};
 export class ConversationService {
   public readonly messageTimer: MessageTimer;
   private readonly messageService: MessageService;
@@ -144,7 +149,10 @@ export class ConversationService {
     }, {});
   }
 
-  async getPreKeyBundleMap(conversationId: string, userIds?: string[] | UserClients): Promise<UserPreKeyBundleMap> {
+  async getPreKeyBundleMap(
+    conversationId: QualifiedId,
+    userIds?: string[] | UserClients,
+  ): Promise<UserPreKeyBundleMap> {
     let members: string[] = [];
 
     if (userIds) {
@@ -199,7 +207,7 @@ export class ConversationService {
   }
 
   private async getRecipientsForConversation(
-    conversationId: string,
+    conversationId: QualifiedId,
     userIds?: string[] | UserClients,
   ): Promise<UserClients | UserPreKeyBundleMap> {
     if (isUserClients(userIds)) {
@@ -217,11 +225,10 @@ export class ConversationService {
    * @return Resolves with the message sending status from backend
    */
   private async sendGenericMessage(
+    conversationId: QualifiedId,
     sendingClientId: string,
-    conversationId: string,
     genericMessage: GenericMessage,
     {
-      conversationDomain,
       userIds,
       nativePush,
       sendAsProtobuf,
@@ -233,14 +240,11 @@ export class ConversationService {
     if (targetMode !== MessageTargetMode.NONE && !userIds) {
       throw new Error('Cannot send targetted message when no userIds are given');
     }
-    if (conversationDomain && this.config.useQualifiedIds) {
+    if (conversationId.domain && this.config.useQualifiedIds) {
       if (isStringArray(userIds) || isUserClients(userIds)) {
         throw new Error('Invalid userIds option for sending to federated backend');
       }
-      const recipients = await this.getQualifiedRecipientsForConversation(
-        {id: conversationId, domain: conversationDomain},
-        userIds,
-      );
+      const recipients = await this.getQualifiedRecipientsForConversation(conversationId, userIds);
       let reportMissing;
       if (targetMode === MessageTargetMode.NONE) {
         reportMissing = isQualifiedUserClients(userIds); // we want to check mismatch in case the consumer gave an exact list of users/devices
@@ -251,7 +255,7 @@ export class ConversationService {
         reportMissing = false;
       }
       return this.messageService.sendFederatedMessage(sendingClientId, recipients, plainText, {
-        conversationId: {id: conversationId, domain: conversationDomain},
+        conversationId,
         nativePush,
         reportMissing,
         onClientMismatch: mismatch => onClientMismatch?.(mismatch, false),
@@ -299,7 +303,7 @@ export class ConversationService {
   public async clearConversation(
     conversationId: string,
     timestamp: number | Date = new Date(),
-    messageId: string = MessageBuilder.createId(),
+    messageId: string = createId(),
     sendAsProtobuf?: boolean,
   ): Promise<ClearConversationMessage> {
     if (timestamp instanceof Date) {
@@ -318,10 +322,9 @@ export class ConversationService {
       messageId,
     });
 
-    const {id: selfConversationId, domain} = await this.getSelfConversationId();
+    const selfConversationId = await this.getSelfConversationId();
 
-    await this.sendGenericMessage(this.apiClient.validatedClientId, selfConversationId, genericMessage, {
-      conversationDomain: domain,
+    await this.sendGenericMessage(selfConversationId, this.apiClient.validatedClientId, genericMessage, {
       sendAsProtobuf,
     });
 
@@ -347,21 +350,24 @@ export class ConversationService {
    * @param sendingOptions?
    * @return Resolves when the message has been sent
    */
-  public async sendLastRead(conversationId: string, lastReadTimestamp: number, sendingOptions?: MessageSendingOptions) {
+  public async sendLastRead(
+    conversationId: QualifiedId,
+    lastReadTimestamp: number,
+    sendingOptions?: MessageSendingOptions,
+  ) {
     const lastRead = new LastRead({
-      conversationId,
+      conversationId: conversationId.id,
       lastReadTimestamp,
     });
 
     const genericMessage = GenericMessage.create({
       [GenericMessageType.LAST_READ]: lastRead,
-      messageId: MessageBuilder.createId(),
+      messageId: createId(),
     });
 
-    const {id: selfConversationId, domain: selfConversationDomain} = await this.getSelfConversationId();
+    const selfConversationId = await this.getSelfConversationId();
 
-    return this.sendGenericMessage(this.apiClient.validatedClientId, selfConversationId, genericMessage, {
-      conversationDomain: selfConversationDomain,
+    return this.sendGenericMessage(selfConversationId, this.apiClient.validatedClientId, genericMessage, {
       ...sendingOptions,
     });
   }
@@ -374,8 +380,6 @@ export class ConversationService {
    * @return Resolves when the message has been sent
    */
   public async sendCountlySync(countlyId: string, sendingOptions: MessageSendingOptions) {
-    const {id: selfConversationId, domain: selfConversationDomain} = await this.getSelfConversationId();
-
     const dataTransfer = new DataTransfer({
       trackingIdentifier: {
         identifier: countlyId,
@@ -383,11 +387,11 @@ export class ConversationService {
     });
     const genericMessage = new GenericMessage({
       [GenericMessageType.DATA_TRANSFER]: dataTransfer,
-      messageId: MessageBuilder.createId(),
+      messageId: createId(),
     });
 
-    return this.sendGenericMessage(this.apiClient.validatedClientId, selfConversationId, genericMessage, {
-      conversationDomain: selfConversationDomain,
+    const selfConversationId = await this.getSelfConversationId();
+    return this.sendGenericMessage(selfConversationId, this.apiClient.validatedClientId, genericMessage, {
       ...sendingOptions,
     });
   }
@@ -402,10 +406,7 @@ export class ConversationService {
    * @param {string} conversationId
    * @param {string} conversationDomain? - If given will send the message to the new qualified endpoint
    */
-  public getAllParticipantsClients(
-    conversationId: string,
-    conversationDomain?: string,
-  ): Promise<UserClients | QualifiedUserClients> {
+  public getAllParticipantsClients(conversationId: QualifiedId): Promise<UserClients | QualifiedUserClients> {
     const sendingClientId = this.apiClient.validatedClientId;
     const recipients = {};
     const text = new Uint8Array();
@@ -416,9 +417,9 @@ export class ConversationService {
         return false;
       };
 
-      if (conversationDomain && this.config.useQualifiedIds) {
+      if (conversationId.domain && this.config.useQualifiedIds) {
         await this.messageService.sendFederatedMessage(sendingClientId, recipients, text, {
-          conversationId: {id: conversationId, domain: conversationDomain},
+          conversationId,
           onClientMismatch,
           reportMissing: true,
         });
@@ -534,66 +535,46 @@ export class ConversationService {
     return this.apiClient.api.conversation.deleteMember(conversationId, userId);
   }
 
-  private async sendProteusMessage<T extends OtrMessage>(
-    params: SendProteusMessageParams<T>,
-    genericMessage: GenericMessage,
-    content: T['content'],
-  ): Promise<T> {
-    const {userIds, sendAsProtobuf, conversationDomain, nativePush, targetMode, payload, onClientMismatch, onSuccess} =
-      params;
-    const response = await this.sendGenericMessage(
-      this.apiClient.validatedClientId,
-      payload.conversation,
-      genericMessage,
-      {
-        userIds,
-        sendAsProtobuf,
-        conversationDomain,
-        nativePush,
-        targetMode,
-        onClientMismatch,
-      },
-    );
+  private async sendProteusMessage({
+    userIds,
+    sendAsProtobuf,
+    conversationId,
+    nativePush,
+    targetMode,
+    payload,
+    onClientMismatch,
+    onSuccess,
+  }: SendProteusMessageParams): Promise<SendResult> {
+    const response = await this.sendGenericMessage(conversationId, this.apiClient.validatedClientId, payload, {
+      userIds,
+      sendAsProtobuf,
+      nativePush,
+      targetMode,
+      onClientMismatch,
+    });
 
     if (!response.errored) {
       if (!this.isClearFromMismatch(response)) {
         // We warn the consumer that there is a mismatch that did not prevent message sending
         await onClientMismatch?.(response, true);
       }
-      onSuccess?.(genericMessage, response.time);
+      onSuccess?.(payload, response.time);
     }
 
-    return {
-      ...payload,
-      content,
-      messageTimer: genericMessage.ephemeral?.expireAfterMillis || 0,
-      state: response.errored ? PayloadBundleState.CANCELLED : PayloadBundleState.OUTGOING_SENT,
-    };
+    return response.errored
+      ? {id: payload.messageId, state: PayloadBundleState.CANCELLED}
+      : {id: payload.messageId, state: PayloadBundleState.OUTGOING_SENT};
   }
 
   /**
    * Sends a message to a conversation
-   * @return resolves with the sent message
+   * @return resolves with the sending status
    */
-  public async send<T extends OtrMessage>(params: XOR<SendMlsMessageParams<T>, SendProteusMessageParams<T>>) {
-    function isMLS<T>(
-      params: SendProteusMessageParams<T> | SendMlsMessageParams<T>,
-    ): params is SendMlsMessageParams<T> {
+  public async send(params: XOR<SendMlsMessageParams, SendProteusMessageParams>): Promise<SendResult> {
+    function isMLS(params: SendProteusMessageParams | SendMlsMessageParams): params is SendMlsMessageParams {
       return params.protocol === ConversationProtocol.MLS;
     }
-
-    const {payload, onStart} = params;
-    const {genericMessage, content} = generateGenericMessage(payload, this.messageTimer);
-    if ((await onStart?.(genericMessage)) === false) {
-      // If the onStart call returns false, it means the consumer wants to cancel the message sending
-      return {...payload, state: PayloadBundleState.CANCELLED};
-    }
-
-    return sendMessage(() =>
-      isMLS(params)
-        ? this.sendMLSMessage(params, genericMessage, content)
-        : this.sendProteusMessage(params, genericMessage, content),
-    );
+    return sendMessage(() => (isMLS(params) ? this.sendMLSMessage(params) : this.sendProteusMessage(params)));
   }
 
   public sendTypingStart(conversationId: string): Promise<void> {
@@ -730,38 +711,20 @@ export class ConversationService {
     };
   }
 
-  private async sendMLSMessage<T extends OtrMessage>(
-    params: SendMlsMessageParams<T>,
-    genericMessage: GenericMessage,
-    content: T['content'],
-  ): Promise<T> {
-    const {groupId, onSuccess, payload} = params;
+  private async sendMLSMessage({payload, groupId, onSuccess}: SendMlsMessageParams): Promise<SendResult> {
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
 
     // immediately execute pending commits before sending the message
     await this.notificationService.commitPendingProposals({groupId});
 
-    const encrypted = await this.mlsService.encryptMessage(
-      groupIdBytes,
-      GenericMessage.encode(genericMessage).finish(),
-    );
+    const encrypted = await this.mlsService.encryptMessage(groupIdBytes, GenericMessage.encode(payload).finish());
 
     try {
       const {time = ''} = await this.apiClient.api.conversation.postMlsMessage(encrypted);
-      onSuccess?.(genericMessage, time?.length > 0 ? time : new Date().toISOString());
-      return {
-        ...payload,
-        content,
-        messageTimer: genericMessage.ephemeral?.expireAfterMillis || 0,
-        state: PayloadBundleState.OUTGOING_SENT,
-      };
+      onSuccess?.(payload, time?.length > 0 ? time : new Date().toISOString());
+      return {id: payload.messageId, state: PayloadBundleState.OUTGOING_SENT};
     } catch {
-      return {
-        ...payload,
-        content,
-        messageTimer: genericMessage.ephemeral?.expireAfterMillis || 0,
-        state: PayloadBundleState.CANCELLED,
-      };
+      return {id: payload.messageId, state: PayloadBundleState.CANCELLED};
     }
   }
 
