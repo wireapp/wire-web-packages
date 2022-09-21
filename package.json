@@ -51,7 +51,9 @@
     "lint:code": "eslint --ignore-path .gitignore --ext .js,.jsx,.ts,.tsx .",
     "lint:other": "yarn prettier --list-different",
     "prettier": "prettier \"**/*.{json,md,scss,yml}\"",
-    "release": "lerna publish --no-verify-access && (lerna publish from-package --no-verify-access || true)",
+    "new-version": "lerna version --sync-workspace-lock",
+    "new-publish": "lerna publish from-package",
+    "release": "yarn new-version && yarn new-publish",
     "test": "node bin/testUpdated.js",
     "test:all": "yarn dist && lerna run --no-sort --concurrency 8 test"
   },
