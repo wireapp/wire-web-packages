@@ -72,7 +72,7 @@ jobs:
       - name: Release
         env:
           NPM_TOKEN: ${{secrets.WEBTEAM_NPM_TOKEN}}
-        run: yarn release:force
+        run: yarn new-version --force-publish && yarn new-publish --force-publish
 
       - name: Notify CI error
         if: failure() && github.event_name != 'pull_request'
