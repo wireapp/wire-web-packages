@@ -457,44 +457,6 @@ export class ConversationService {
     return qualifiedUserClients;
   }
 
-  public async deleteMessageLocal(
-    conversationId: string,
-    messageIdToHide: string,
-    sendAsProtobuf?: boolean,
-    conversationDomain?: string,
-  ): Promise<HideMessage> {
-    const messageId = MessageBuilder.createId();
-
-    const content: HiddenContent = MessageHide.create({
-      conversationId,
-      messageId: messageIdToHide,
-    });
-
-    const genericMessage = GenericMessage.create({
-      [GenericMessageType.HIDDEN]: content,
-      messageId,
-    });
-
-    const {id: selfConversationId} = await this.getSelfConversationId();
-
-    await this.sendGenericMessage(this.apiClient.validatedClientId, selfConversationId, genericMessage, {
-      sendAsProtobuf,
-      conversationDomain,
-    });
-
-    return {
-      content,
-      conversation: conversationId,
-      from: this.apiClient.context!.userId,
-      id: messageId,
-      messageTimer: this.messageTimer.getMessageTimer(conversationId),
-      source: PayloadBundleSource.LOCAL,
-      state: PayloadBundleState.OUTGOING_SENT,
-      timestamp: Date.now(),
-      type: PayloadBundleType.MESSAGE_HIDE,
-    };
-  }
-
   /**
    * Create a group conversation.
    * @param  {string} name
