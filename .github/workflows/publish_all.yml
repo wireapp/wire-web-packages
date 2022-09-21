@@ -64,7 +64,6 @@ jobs:
         run: yarn test
 
       - name: Set release environment variables
-        if: env.BRANCH_NAME == 'main'
         run: |
           echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> "${HOME}/.npmrc"
           git config --global user.email webapp+otto@wire.com
@@ -73,8 +72,7 @@ jobs:
       - name: Release
         env:
           NPM_TOKEN: ${{secrets.WEBTEAM_NPM_TOKEN}}
-        if: env.BRANCH_NAME == 'main'
-        run: yarn release
+        run: yarn release:force
 
       - name: Notify CI error
         if: failure() && github.event_name != 'pull_request'
