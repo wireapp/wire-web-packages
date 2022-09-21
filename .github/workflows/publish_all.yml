@@ -1,11 +1,16 @@
-name: Force releasing all packages
+name: Bump & Release all packages
 
 on:
   workflow_dispatch:
-    description: 'Will bump and force a release of all the packages'
+    inputs:
+      test:
+        description: 'Run all the unit tests'
+        required: false
+        default: true
+        type: boolean
 
 jobs:
-  test_build_release:
+  publish_all:
     runs-on: ubuntu-latest
 
     steps:
@@ -61,7 +66,8 @@ jobs:
         run: yarn --immutable
 
       - name: Test
-        run: yarn test
+        if: ${{ inputs.test }}
+        run: yarn test:all
 
       - name: Set release environment variables
         run: |

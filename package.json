@@ -55,7 +55,7 @@
     "new-publish": "lerna publish from-package",
     "release": "yarn new-version && yarn new-publish",
     "test": "node bin/testUpdated.js",
-    "test:all": "yarn dist && lerna run --no-sort --concurrency 8 test"
+    "test:all": "lerna run --no-sort --concurrency 8 test"
   },
   "workspaces": {
     "packages": [
