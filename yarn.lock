@@ -5464,6 +5464,7 @@ __metadata:
     http-status-codes: 2.1.4
     istanbul: 1.1.0-alpha.1
     jasmine: 3.8.0
+    jest: ^29.0.3
     karma: 6.4.1
     karma-chrome-launcher: 3.1.1
     karma-jasmine: 4.0.2
