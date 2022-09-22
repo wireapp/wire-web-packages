@@ -32,7 +32,7 @@ describe('ConversationAPI', () => {
     it('add ignore_missing and report_missing parameters', async () => {
       await conversationApi.postOTRMessage('client-id', 'conv-id', undefined, false);
       expect(httpClientMock.sendJSON).toHaveBeenCalledWith(
-        jasmine.objectContaining({
+        expect.objectContaining({
           params: {ignore_missing: false},
         }),
         true,
@@ -40,13 +40,13 @@ describe('ConversationAPI', () => {
 
       await conversationApi.postOTRMessage('client-id', 'conv-id', undefined, true);
       expect(httpClientMock.sendJSON).toHaveBeenCalledWith(
-        jasmine.objectContaining({params: {ignore_missing: true}}),
+        expect.objectContaining({params: {ignore_missing: true}}),
         true,
       );
 
       await conversationApi.postOTRMessage('client-id', 'conv-id', undefined, ['user1', 'user2']);
       expect(httpClientMock.sendJSON).toHaveBeenCalledWith(
-        jasmine.objectContaining({
+        expect.objectContaining({
           params: {ignore_missing: 'user1,user2'},
         }),
         true,

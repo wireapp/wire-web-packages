@@ -59,68 +59,68 @@ describe('WebSocketClient', () => {
   describe('handler', () => {
     it('calls "onOpen" when WebSocket opens', async () => {
       const websocketClient = new WebSocketClient('url', fakeHttpClient);
-      const onOpenSpy = spyOn<any>(websocketClient, 'onOpen').and.callThrough();
+      const onOpenSpy = jest.spyOn(websocketClient as any, 'onOpen');
       const socket = websocketClient['socket'];
-      spyOn<any>(socket, 'getReconnectingWebsocket').and.returnValue(fakeSocket);
+      jest.spyOn(socket as any, 'getReconnectingWebsocket').mockReturnValue(fakeSocket);
 
       await websocketClient.connect();
       fakeSocket.onopen();
 
-      expect(onOpenSpy.calls.count()).toBe(1);
+      expect(onOpenSpy).toHaveBeenCalledTimes(1);
     });
 
     it('calls "onClose" when WebSocket closes', async () => {
       const websocketClient = new WebSocketClient('url', fakeHttpClient);
-      const onCloseSpy = spyOn<any>(websocketClient, 'onClose').and.callThrough();
+      const onCloseSpy = jest.spyOn(websocketClient as any, 'onClose');
       const socket = websocketClient['socket'];
-      spyOn<any>(socket, 'getReconnectingWebsocket').and.returnValue(fakeSocket);
+      jest.spyOn(socket as any, 'getReconnectingWebsocket').mockReturnValue(fakeSocket);
 
       await websocketClient.connect();
       fakeSocket.onclose();
 
-      expect(onCloseSpy.calls.count()).toBe(1);
+      expect(onCloseSpy).toHaveBeenCalledTimes(1);
     });
 
     it('calls "onError" when WebSocket received error', async () => {
       const websocketClient = new WebSocketClient('url', fakeHttpClient);
-      const onErrorSpy = spyOn<any>(websocketClient, 'onError').and.callThrough();
-      const refreshTokenSpy = spyOn<any>(websocketClient, 'refreshAccessToken').and.callThrough();
+      const onErrorSpy = jest.spyOn(websocketClient as any, 'onError');
+      const refreshTokenSpy = jest.spyOn(websocketClient as any, 'refreshAccessToken');
       const socket = websocketClient['socket'];
-      spyOn<any>(socket, 'getReconnectingWebsocket').and.returnValue(fakeSocket);
+      jest.spyOn(socket as any, 'getReconnectingWebsocket').mockReturnValue(fakeSocket);
 
       await websocketClient.connect();
       fakeSocket.onerror(new Error('error'));
 
-      expect(onErrorSpy.calls.count()).toBe(1);
-      expect(refreshTokenSpy.calls.count()).toBe(1);
+      expect(onErrorSpy).toHaveBeenCalledTimes(1);
+      expect(refreshTokenSpy).toHaveBeenCalledTimes(1);
     });
 
     it('calls "onMessage" when WebSocket received message', async () => {
       const message = 'hello';
       const websocketClient = new WebSocketClient('url', fakeHttpClient);
-      const onMessageSpy = spyOn<any>(websocketClient, 'onMessage').and.callThrough();
+      const onMessageSpy = jest.spyOn(websocketClient as any, 'onMessage');
       const socket = websocketClient['socket'];
-      spyOn<any>(socket, 'getReconnectingWebsocket').and.returnValue(fakeSocket);
+      jest.spyOn(socket as any, 'getReconnectingWebsocket').mockReturnValue(fakeSocket);
 
       await websocketClient.connect();
       fakeSocket.onmessage({data: Buffer.from(JSON.stringify({message}), 'utf-8')});
 
-      expect(onMessageSpy.calls.count()).toBe(1);
+      expect(onMessageSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('calls "onConnect" when websocket is connected or re-connected', async () => {
-      const onConnectResult = jasmine.createSpy().and.returnValue(Promise.resolve());
+    it('calls "onConnect" when "onReconnect" is called', async () => {
+      const onConnectResult = jest.fn().mockReturnValue(Promise.resolve());
       const onConnect = () => {
         return onConnectResult();
       };
       const websocketClient = new WebSocketClient('url', fakeHttpClient);
       const socket = websocketClient['socket'];
-      spyOn<any>(socket, 'getReconnectingWebsocket').and.returnValue(fakeSocket);
+      jest.spyOn(socket as any, 'getReconnectingWebsocket').mockReturnValue(fakeSocket);
 
       await websocketClient.connect(undefined, onConnect);
       fakeSocket.onopen();
       await websocketClient['onReconnect']();
-      expect(onConnectResult.calls.count()).toBe(1);
+      expect(onConnectResult).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -128,7 +128,7 @@ describe('WebSocketClient', () => {
     it('emits the correct message for invalid tokens', async done => {
       const websocketClient = new WebSocketClient('url', invalidTokenHttpClient);
       const socket = websocketClient['socket'];
-      spyOn<any>(socket, 'getReconnectingWebsocket').and.returnValue(fakeSocket);
+      jest.spyOn(socket as any, 'getReconnectingWebsocket').mockReturnValue(fakeSocket);
 
       await websocketClient.connect();
 
@@ -155,15 +155,15 @@ describe('WebSocketClient', () => {
 
     it('does not lock websocket by default', async done => {
       const websocketClient = new WebSocketClient('url', fakeHttpClient);
-      const onMessageSpy = spyOn<any>(websocketClient, 'onMessage').and.callThrough();
+      const onMessageSpy = jest.spyOn(websocketClient as any, 'onMessage');
       const socket = websocketClient['socket'];
-      spyOn<any>(socket, 'getReconnectingWebsocket').and.returnValue(fakeSocket);
+      jest.spyOn(socket as any, 'getReconnectingWebsocket').mockReturnValue(fakeSocket);
 
       await websocketClient.connect();
       expect(websocketClient.isLocked()).toBe(false);
 
       websocketClient.on(WebSocketClient.TOPIC.ON_MESSAGE, notification => {
-        expect(onMessageSpy.calls.count()).toBe(1);
+        expect(onMessageSpy).toHaveBeenCalledTimes(1);
         expect(websocketClient['bufferedMessages'].length).toBe(0);
         expect(notification).toEqual(fakeNotification);
         done();
@@ -173,21 +173,21 @@ describe('WebSocketClient', () => {
 
     it('emits buffered messages when unlocked', async done => {
       const websocketClient = new WebSocketClient('url', fakeHttpClient);
-      const onMessageSpy = spyOn<any>(websocketClient, 'onMessage').and.callThrough();
+      const onMessageSpy = jest.spyOn(websocketClient as any, 'onMessage');
       const socket = websocketClient['socket'];
-      spyOn<any>(socket, 'getReconnectingWebsocket').and.returnValue(fakeSocket);
+      jest.spyOn(socket as any, 'getReconnectingWebsocket').mockReturnValue(fakeSocket);
 
       websocketClient.lock();
       await websocketClient.connect();
       expect(websocketClient.isLocked()).toBe(true);
 
       fakeSocket.onmessage({data: Buffer.from(JSON.stringify(fakeNotification), 'utf-8')});
-      expect(onMessageSpy.calls.count()).toBe(1);
+      expect(onMessageSpy).toHaveBeenCalledTimes(1);
       expect(websocketClient['bufferedMessages'].length).toBe(1);
 
       websocketClient.on(WebSocketClient.TOPIC.ON_MESSAGE, notification => {
         expect(notification).toEqual(notification);
-        expect(onMessageSpy.calls.count()).toBe(2);
+        expect(onMessageSpy).toHaveBeenCalledTimes(2);
         done();
       });
 

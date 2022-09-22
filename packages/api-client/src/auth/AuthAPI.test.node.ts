@@ -31,7 +31,7 @@ describe('AuthAPI', () => {
       password: 'email@example.com',
     };
 
-    spyOn(apiClient.transport.http, 'sendJSON').and.returnValue(
+    jest.spyOn(apiClient.transport.http, 'sendJSON').mockReturnValue(
       Promise.resolve({
         config: {},
         data: '',
@@ -44,7 +44,7 @@ describe('AuthAPI', () => {
     await apiClient.api.auth.postLogin(data);
 
     expect(apiClient.transport.http.sendJSON).toHaveBeenCalledWith(
-      jasmine.objectContaining({
+      expect.objectContaining({
         data: {
           clientType: undefined,
           email: data.email,
@@ -64,7 +64,7 @@ describe('AuthAPI', () => {
       password: 'email@example.com',
     };
 
-    spyOn(apiClient.transport.http, 'sendJSON').and.returnValue(
+    jest.spyOn(apiClient.transport.http, 'sendJSON').mockReturnValue(
       Promise.resolve({
         config: {},
         data: '',
@@ -77,7 +77,7 @@ describe('AuthAPI', () => {
     await apiClient.api.auth.postLogin(data);
 
     expect(apiClient.transport.http.sendJSON).toHaveBeenCalledWith(
-      jasmine.objectContaining({
+      expect.objectContaining({
         data: {
           clientType: undefined,
           email: data.email,

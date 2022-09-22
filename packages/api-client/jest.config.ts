@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2021 Wire Swiss GmbH
+ * Copyright (C) 2022 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,9 @@
  *
  */
 
-module.exports = {
-  presets: [['@babel/preset-env', {targets: {node: 'current'}}], '@babel/preset-typescript'],
+
+export default {
+  clearMocks: true,
+  testMatch: ['**/?(*.)+(spec|test).node.[t]s?(x)'],
+  coverageDirectory: 'coverage',
 };

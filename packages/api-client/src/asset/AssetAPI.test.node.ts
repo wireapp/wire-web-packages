@@ -24,7 +24,7 @@ describe('"AssetAPI"', () => {
   const apiClient = new APIClient();
 
   it('adds token parameters', async () => {
-    spyOn(apiClient.transport.http, 'sendRequest').and.returnValue(
+    jest.spyOn(apiClient.transport.http, 'sendRequest').mockReturnValue(
       Promise.resolve({
         config: {},
         data: '',
@@ -39,18 +39,18 @@ describe('"AssetAPI"', () => {
     await apiClient.api.asset.getAssetV3(assetId, assetToken);
 
     expect(apiClient.transport.http.sendRequest).toHaveBeenCalledWith(
-      jasmine.objectContaining({
+      expect.objectContaining({
         params: {
           asset_token: assetToken,
         },
-        url: jasmine.stringMatching(new RegExp(assetId)),
+        url: expect.stringMatching(new RegExp(assetId)),
       }),
       true,
     );
   });
 
   it('removes token parameters', async () => {
-    spyOn(apiClient.transport.http, 'sendRequest').and.returnValue(
+    jest.spyOn(apiClient.transport.http, 'sendRequest').mockReturnValue(
       Promise.resolve({
         config: {},
         data: '',
@@ -64,9 +64,9 @@ describe('"AssetAPI"', () => {
     await apiClient.api.asset.getAssetV3(assetId);
 
     expect(apiClient.transport.http.sendRequest).toHaveBeenCalledWith(
-      jasmine.objectContaining({
+      expect.objectContaining({
         params: {},
-        url: jasmine.stringMatching(new RegExp(assetId)),
+        url: expect.stringMatching(new RegExp(assetId)),
       }),
       true,
     );
