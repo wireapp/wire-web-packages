@@ -86,7 +86,7 @@ export class MLSService {
   }
 
   public addUsersToExistingConversation(groupId: Uint8Array, invitee: Invitee[]) {
-    return sendMessage<PostMlsMessageResponse>(async () => {
+    return sendMessage(async () => {
       const coreCryptoClient = this.getCoreCryptoClient();
       const memberAddedMessages = await coreCryptoClient.addClientsToConversation(groupId, invitee);
 
