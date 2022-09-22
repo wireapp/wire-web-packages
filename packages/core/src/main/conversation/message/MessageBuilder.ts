@@ -22,7 +22,7 @@ import UUID from 'uuidjs';
 
 import {AbortReason, PayloadBundleSource, PayloadBundleState, PayloadBundleType} from '..';
 import {EncryptedAssetUploaded} from '../../cryptography';
-import type {
+import {
   ButtonActionConfirmationContent,
   ButtonActionContent,
   CallingContent,
@@ -35,14 +35,16 @@ import type {
   ReactionContent,
 } from '../content';
 import {CompositeContentBuilder} from './CompositeContentBuilder';
-import type {
+import {
   ButtonActionConfirmationMessage,
   ButtonActionMessage,
   CallMessage,
   ConfirmationMessage,
+  DeleteMessage,
   FileAssetAbortMessage,
   FileAssetMessage,
   FileAssetMetaDataMessage,
+  HideMessage,
   ImageAssetMessageOutgoing,
   LocationMessage,
   PingMessage,
@@ -55,6 +57,15 @@ interface BaseOptions {
   conversationId: string;
   from: string;
   messageId?: string;
+}
+
+interface CreateMessageDeleteOption extends BaseOptions {
+  messageIdToDelete: string;
+}
+
+interface CreateMessageHideOption extends BaseOptions {
+  messageIdToDelete: string;
+  targetConversation: string;
 }
 
 interface CreateImageOptions extends BaseOptions {
@@ -171,6 +182,22 @@ export class MessageBuilder {
       },
       id: originalMessageId,
       type: PayloadBundleType.ASSET,
+    };
+  }
+
+  public static createMessageDelete(payload: CreateMessageDeleteOption): DeleteMessage {
+    return {
+      ...createCommonProperties(payload),
+      content: {messageId: payload.messageIdToDelete},
+      type: PayloadBundleType.MESSAGE_DELETE,
+    };
+  }
+
+  public static createMessageHide(payload: CreateMessageHideOption): HideMessage {
+    return {
+      ...createCommonProperties(payload),
+      content: {messageId: payload.messageIdToDelete, conversationId: payload.targetConversation},
+      type: PayloadBundleType.MESSAGE_HIDE,
     };
   }
 

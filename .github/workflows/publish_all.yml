@@ -1,0 +1,90 @@
+name: Bump & Release all packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      test:
+        description: 'Run all the unit tests'
+        required: false
+        default: true
+        type: boolean
+
+jobs:
+  publish_all:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set environment variables
+        run: |
+          echo "BRANCH_NAME=$(git branch --show-current)" >> $GITHUB_ENV
+          echo "TAG=$(git tag --points-at ${{github.sha}})" >> $GITHUB_ENV
+          echo "COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{github.event.after}} | head -n 1)" >> $GITHUB_ENV
+          echo "COMMIT_URL=${{github.event.head_commit.url}}" >> $GITHUB_ENV
+          echo "COMMITTER=${{github.event.head_commit.committer.name}}" >> $GITHUB_ENV
+
+      - name: Set TITLE
+        env:
+          PR_TITLE: ${{github.event.pull_request.title || env.COMMIT_MESSAGE}}
+        run: echo "TITLE=$PR_TITLE" >> $GITHUB_ENV
+
+      - name: Print environment variables
+        env:
+          GITHUB_CONTEXT: ${{toJson(github)}}
+        run: |
+          echo -e "BRANCH_NAME = ${BRANCH_NAME}"
+          echo -e "TAG = ${TAG}"
+          echo -e "TITLE = ${TITLE}"
+          echo -e "COMMIT_MESSAGE = ${COMMIT_MESSAGE}"
+          echo -e "COMMIT_URL = ${COMMIT_URL}"
+          echo -e "COMMITTER = ${COMMITTER}"
+          echo -e "HOME = ${HOME}"
+          echo -e "GITHUB_CONTEXT = ${GITHUB_CONTEXT}"
+
+      - name: Skip CI
+        if: env.BRANCH_NAME != 'main'
+        uses: andymckay/cancel-action@0.2
+
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.5.0
+        with:
+          access_token: ${{github.token}}
+
+      - name: Yarn cache
+        uses: c-hive/gha-yarn-cache@v2
+
+      - name: Authenticate git clone
+        env:
+          GH_TOKEN: ${{secrets.OTTO_THE_BOT_GH_TOKEN}}
+        run: echo -e "machine github.com\n  login ${GH_TOKEN}" > ~/.netrc
+
+      - name: Install JS dependencies
+        run: yarn --immutable
+
+      - name: Test
+        if: ${{ inputs.test }}
+        run: yarn test:all
+
+      - name: Set release environment variables
+        run: |
+          echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> "${HOME}/.npmrc"
+          git config --global user.email webapp+otto@wire.com
+          git config --global user.name "Otto the Bot"
+
+      - name: Release
+        env:
+          NPM_TOKEN: ${{secrets.WEBTEAM_NPM_TOKEN}}
+        run: yarn new-version --force-publish && yarn new-publish --force-publish
+
+      - name: Notify CI error
+        if: failure() && github.event_name != 'pull_request'
+        uses: wireapp/github-action-wire-messenger@v1
+        with:
+          email: ${{secrets.WIRE_EMAIL}}
+          password: ${{secrets.WIRE_PASSWORD}}
+          conversation: 'b2cc7120-4154-4be4-b0c0-45a8c361c4d1'
+          text: '🌵 ${{env.COMMITTER}} broke the "${{env.BRANCH_NAME}}" branch on "${{github.repository}}" with [${{env.TITLE}}](${{env.COMMIT_URL}})'

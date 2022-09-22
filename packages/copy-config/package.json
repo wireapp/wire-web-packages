@@ -1,7 +1,5 @@
 {
-  "bin": {
-    "copy-config": "src/main/cli.js"
-  },
+  "bin": "src/main/cli.js",
   "dependencies": {
     "axios": "0.21.4",
     "copy": "0.3.2",
@@ -15,9 +13,8 @@
   "devDependencies": {
     "@types/copy": "0.3.2",
     "@types/fs-extra": "9.0.13",
-    "@types/rimraf": "3.0.1",
     "jasmine": "3.8.0",
-    "typescript": "4.4.2"
+    "typescript": "4.8.3"
   },
   "files": [
     "src",
@@ -36,5 +33,5 @@
     "test": "yarn test:node",
     "test:node": "yarn build && jasmine --config=jasmine.json"
   },
-  "version": "1.2.10"
+  "version": "1.3.6"
 }
