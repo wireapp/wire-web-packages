@@ -29,9 +29,13 @@ try {
   process.exit(0);
 }
 
+
 const changedPackages = JSON.parse(output.toString());
 const packageNames = changedPackages.map(project => project.name);
-
 const scopes = packageNames.map(packageName => `--scope ${packageName}`).join(' ');
+
+console.info(`Building packages "${scopes}"`);
+execSync(`npx lerna run dist --include-dependencies ${scopes}`, {stdio: [0, 1]});
+
 console.info(`Running tests for packages "${packageNames}"...`);
-execSync(`npx lerna run test --no-sort --concurrency 1 ${scopes}`, {stdio: [0, 1]});
+execSync(`npx lerna run test ${scopes}`, {stdio: [0, 1]});
