@@ -88,6 +88,7 @@ export class MLSService {
   public addUsersToExistingConversation(groupId: Uint8Array, invitee: Invitee[]) {
     return sendMessage(async () => {
       const coreCryptoClient = this.getCoreCryptoClient();
+      await this.commitPendingProposals(groupId);
       const memberAddedMessages = await coreCryptoClient.addClientsToConversation(groupId, invitee);
 
       return this.uploadCommitBundle(groupId, memberAddedMessages);
@@ -163,6 +164,7 @@ export class MLSService {
 
   public updateKeyingMaterial(conversationId: ConversationId): Promise<PostMlsMessageResponse | null> {
     return sendMessage(async () => {
+      await this.commitPendingProposals(conversationId);
       const commitBundle = await this.getCoreCryptoClient().updateKeyingMaterial(conversationId);
       return this.uploadCommitBundle(conversationId, commitBundle);
     });
@@ -180,6 +182,7 @@ export class MLSService {
     clientIds: Uint8Array[],
   ): Promise<PostMlsMessageResponse | null> {
     return sendMessage(async () => {
+      await this.commitPendingProposals(conversationId);
       const commitBundle = await this.getCoreCryptoClient().removeClientsFromConversation(conversationId, clientIds);
       return this.uploadCommitBundle(conversationId, commitBundle);
     });
