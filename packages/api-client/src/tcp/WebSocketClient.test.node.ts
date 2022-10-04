@@ -125,16 +125,18 @@ describe('WebSocketClient', () => {
   });
 
   describe('refreshAccessToken', () => {
-    it('emits the correct message for invalid tokens', async done => {
+    it('emits the correct message for invalid tokens', async () => {
       const websocketClient = new WebSocketClient('url', invalidTokenHttpClient);
       const socket = websocketClient['socket'];
       jest.spyOn(socket as any, 'getReconnectingWebsocket').mockReturnValue(fakeSocket);
 
       await websocketClient.connect();
 
-      websocketClient.on(WebSocketClient.TOPIC.ON_INVALID_TOKEN, () => done());
+      return new Promise<void>(resolve => {
+        websocketClient.on(WebSocketClient.TOPIC.ON_INVALID_TOKEN, () => resolve());
 
-      fakeSocket.onerror(new Error('error'));
+        fakeSocket.onerror(new Error('error'));
+      });
     });
   });
 
@@ -153,7 +155,7 @@ describe('WebSocketClient', () => {
       ],
     };
 
-    it('does not lock websocket by default', async done => {
+    it('does not lock websocket by default', async () => {
       const websocketClient = new WebSocketClient('url', fakeHttpClient);
       const onMessageSpy = jest.spyOn(websocketClient as any, 'onMessage');
       const socket = websocketClient['socket'];
@@ -162,16 +164,18 @@ describe('WebSocketClient', () => {
       await websocketClient.connect();
       expect(websocketClient.isLocked()).toBe(false);
 
-      websocketClient.on(WebSocketClient.TOPIC.ON_MESSAGE, notification => {
-        expect(onMessageSpy).toHaveBeenCalledTimes(1);
-        expect(websocketClient['bufferedMessages'].length).toBe(0);
-        expect(notification).toEqual(fakeNotification);
-        done();
+      return new Promise<void>(resolve => {
+        websocketClient.on(WebSocketClient.TOPIC.ON_MESSAGE, notification => {
+          expect(onMessageSpy).toHaveBeenCalledTimes(1);
+          expect(websocketClient['bufferedMessages'].length).toBe(0);
+          expect(notification).toEqual(fakeNotification);
+          resolve();
+        });
+        fakeSocket.onmessage({data: Buffer.from(JSON.stringify(fakeNotification), 'utf-8')});
       });
-      fakeSocket.onmessage({data: Buffer.from(JSON.stringify(fakeNotification), 'utf-8')});
     });
 
-    it('emits buffered messages when unlocked', async done => {
+    it('emits buffered messages when unlocked', async () => {
       const websocketClient = new WebSocketClient('url', fakeHttpClient);
       const onMessageSpy = jest.spyOn(websocketClient as any, 'onMessage');
       const socket = websocketClient['socket'];
@@ -185,13 +189,14 @@ describe('WebSocketClient', () => {
       expect(onMessageSpy).toHaveBeenCalledTimes(1);
       expect(websocketClient['bufferedMessages'].length).toBe(1);
 
-      websocketClient.on(WebSocketClient.TOPIC.ON_MESSAGE, notification => {
-        expect(notification).toEqual(notification);
-        expect(onMessageSpy).toHaveBeenCalledTimes(2);
-        done();
+      return new Promise<void>(resolve => {
+        websocketClient.on(WebSocketClient.TOPIC.ON_MESSAGE, notification => {
+          expect(notification).toEqual(notification);
+          expect(onMessageSpy).toHaveBeenCalledTimes(2);
+          resolve();
+        });
+        websocketClient.unlock();
       });
-
-      websocketClient.unlock();
     });
   });
 });
