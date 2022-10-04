@@ -20,9 +20,11 @@
 import {HttpClient} from '../../http';
 import {ConversationAPI} from './ConversationAPI';
 
-const httpClientMock = jasmine.createSpyObj('httpClient', {sendJSON: () => ({data: ''})});
-
 describe('ConversationAPI', () => {
+  const httpClientMock = new HttpClient({urls: {name: '', rest: '', ws: ''}}, {} as any);
+  jest
+    .spyOn(httpClientMock, 'sendJSON')
+    .mockResolvedValue({status: 200, statusText: 'ok', headers: {}, config: {}, data: ''});
   const conversationApi = new ConversationAPI(httpClientMock as HttpClient, {
     version: 0,
     federationEndpoints: false,

@@ -19,6 +19,6 @@
 
 export default {
   clearMocks: true,
-  testMatch: ['**/?(*.)+(spec|test).node.[t]s?(x)'],
+  testMatch: ['**/?(*.)test.[t]s?(x)'],
   coverageDirectory: 'coverage',
 };
