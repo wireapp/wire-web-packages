@@ -23,7 +23,6 @@ import React from 'react';
 
 import {COLOR} from '../Identity/colors';
 import {COLOR_V2, BASE_DARK_COLOR, BASE_LIGHT_COLOR} from '../Identity/colors-v2';
-import {filterProps} from '../util';
 
 export enum THEME_ID {
   DARK = 'THEME_DARK',
@@ -285,13 +284,7 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
 
 export interface ThemeProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   theme?: Theme;
-  children?: React.ReactNode;
+  children: React.ReactNode;
 }
 
-const filterThemeProps = (props: ThemeProps) => filterProps(props, ['theme']);
-
-export const ThemeProvider = (props: ThemeProps) => (
-  <EmotionThemeProvider theme={props.theme} {...filterThemeProps(props)}>
-    {props.children}
-  </EmotionThemeProvider>
-);
+export const ThemeProvider = (props: ThemeProps) => <EmotionThemeProvider {...props} theme={props.theme} />;
