@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
-    "outDir": "lib",
+    "outDir": "src",
     "rootDir": "src"
   },
-  "exclude": ["lib", "jest.config.ts", "node_modules", "demo.ts"],
+  "exclude": ["jest.config.ts", "node_modules", "demo.ts"],
   "extends": "../../tsconfig.json"
 }

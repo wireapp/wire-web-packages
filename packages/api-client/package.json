@@ -54,10 +54,13 @@
   },
   "description": "Wire API Client to send and receive data.",
   "files": [
-    "!src"
+    "src",
+    "!src/demo",
+    "!src/**/*.test.*",
+    "!src/**/!(*.d).ts"
   ],
   "license": "GPL-3.0",
-  "main": "lib/APIClient",
+  "main": "src/APIClient",
   "name": "@wireapp/api-client",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client",
   "scripts": {
