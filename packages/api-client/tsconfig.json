@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
-    "outDir": "src",
+    "outDir": "lib",
     "rootDir": "src"
   },
-  "exclude": ["karma.conf.ts", "node_modules", "demo.ts"],
+  "exclude": ["lib", "jest.config.ts", "node_modules", "demo.ts"],
   "extends": "../../tsconfig.json"
 }

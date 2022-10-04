@@ -17,7 +17,6 @@
  *
  */
 
-
 export default {
   clearMocks: true,
   testMatch: ['**/?(*.)+(spec|test).node.[t]s?(x)'],
