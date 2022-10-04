@@ -103,21 +103,6 @@ describe('ReconnectingWebsocket', () => {
     RWS.connect();
   });
 
-  it('closes the connection without reconnecting when server terminates the connection', done => {
-    const onReconnect = jest.fn().mockReturnValue(getServerAddress());
-    const RWS = new ReconnectingWebsocket(onReconnect);
-    RWS.setOnOpen(() => {
-      expect(onReconnect).toHaveBeenCalledTimes(1);
-      RWS.send('terminate');
-    });
-    RWS.setOnClose(event => {
-      expect(event.wasClean).toBe(true);
-      expect(onReconnect).toHaveBeenCalledTimes(1);
-      done();
-    });
-    RWS.connect();
-  });
-
   /**
    * Note that on a real interruption of the connection the ReconnectingWebsocket will not call "onClose" and "onOpen" again
    * but it will call "onReconnect" again. So this test checks at least the second call of "onReconnect".

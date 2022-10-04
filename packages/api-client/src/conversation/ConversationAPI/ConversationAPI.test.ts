@@ -21,7 +21,7 @@ import {HttpClient} from '../../http';
 import {ConversationAPI} from './ConversationAPI';
 
 describe('ConversationAPI', () => {
-  const httpClientMock = new HttpClient({urls: {name: '', rest: '', ws: ''}}, {} as any);
+  const httpClientMock = new HttpClient({urls: {name: 'test', rest: 'https://test', ws: 'sw://test'}}, {} as any);
   jest
     .spyOn(httpClientMock, 'sendJSON')
     .mockResolvedValue({status: 200, statusText: 'ok', headers: {}, config: {}, data: ''});
