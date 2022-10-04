@@ -5484,7 +5484,6 @@ __metadata:
     karma-jasmine-diff-reporter: 2.0.1
     karma-sourcemap-loader: 0.3.8
     karma-spec-reporter: 0.0.34
-    karma-webpack: 4.0.2
     logdown: 3.3.1
     nock: 13.1.1
     nyc: 15.1.0
@@ -5499,9 +5498,6 @@ __metadata:
     tough-cookie: 4.0.0
     ts-node: ^10.9.1
     typescript: 4.8.3
-    webpack: 4.46.0
-    webpack-cli: 4.7.2
-    webpack-dev-server: 3.11.2
     ws: 7.5.3
   languageName: unknown
   linkType: soft
@@ -6426,15 +6422,6 @@ __metadata:
   bin:
     ansi-html: bin/ansi-html
   checksum: 04c568e8348a636963f915e48eaa3e01218322e1169acafdd79c384f22e5558c003f79bbc480c1563865497482817c7eed025f0653ebc17642fededa5cb42089
-  languageName: node
-  linkType: hard
-
-"ansi-html@npm:0.0.7":
-  version: 0.0.7
-  resolution: "ansi-html@npm:0.0.7"
-  bin:
-    ansi-html: ./bin/ansi-html
-  checksum: 9b839ce99650b4c2d83621d67d68622d27e7948b54f7a4386f2218a3997ee4e684e5a6e8d290880c3f3260e8d90c2613c59c7028f04992ad5c8d99d3a0fcc02c
   languageName: node
   linkType: hard
 
@@ -23556,54 +23543,6 @@ __metadata:
   peerDependencies:
     webpack: ^4.0.0
   checksum: d7320d7a8c65fa1af702c5b723ffb4e55219f340025ced17871e3d2e8f3a7cde3ad505cfd1572d31955d7d972bf3d29e7007577e28bad8d469dc3d5c64d30b74
-  languageName: node
-  linkType: hard
-
-"webpack-dev-server@npm:3.11.2":
-  version: 3.11.2
-  resolution: "webpack-dev-server@npm:3.11.2"
-  dependencies:
-    ansi-html: 0.0.7
-    bonjour: ^3.5.0
-    chokidar: ^2.1.8
-    compression: ^1.7.4
-    connect-history-api-fallback: ^1.6.0
-    debug: ^4.1.1
-    del: ^4.1.1
-    express: ^4.17.1
-    html-entities: ^1.3.1
-    http-proxy-middleware: 0.19.1
-    import-local: ^2.0.0
-    internal-ip: ^4.3.0
-    ip: ^1.1.5
-    is-absolute-url: ^3.0.3
-    killable: ^1.0.1
-    loglevel: ^1.6.8
-    opn: ^5.5.0
-    p-retry: ^3.0.1
-    portfinder: ^1.0.26
-    schema-utils: ^1.0.0
-    selfsigned: ^1.10.8
-    semver: ^6.3.0
-    serve-index: ^1.9.1
-    sockjs: ^0.3.21
-    sockjs-client: ^1.5.0
-    spdy: ^4.0.2
-    strip-ansi: ^3.0.1
-    supports-color: ^6.1.0
-    url: ^0.11.0
-    webpack-dev-middleware: ^3.7.2
-    webpack-log: ^2.0.0
-    ws: ^6.2.1
-    yargs: ^13.3.2
-  peerDependencies:
-    webpack: ^4.0.0 || ^5.0.0
-  peerDependenciesMeta:
-    webpack-cli:
-      optional: true
-  bin:
-    webpack-dev-server: bin/webpack-dev-server.js
-  checksum: d2bfa2e9a33f96dc5af8f771e9978956e59c3efcad3deaca246ea7ff219c5587ebcf20ea0f0b6af251dec5e8111c0e473aa43a57bc9a88fb3ad8573f4a321805
   languageName: node
   linkType: hard
 
