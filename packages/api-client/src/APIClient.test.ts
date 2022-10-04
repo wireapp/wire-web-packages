@@ -28,7 +28,6 @@ import {ClientType} from './client';
 import {BackendErrorLabel, StatusCode} from './http';
 import {Self, SelfAPI} from './self';
 import {UserAPI} from './user/UserAPI';
-import {AccessTokenData} from './auth';
 
 describe('APIClient', () => {
   const baseUrl = APIClient.BACKEND.PRODUCTION.rest;
@@ -60,34 +59,6 @@ describe('APIClient', () => {
 
   beforeEach(() => {
     nock(baseUrl).get(SelfAPI.URL.SELF).reply(StatusCode.OK, selfExample);
-  });
-
-  describe('connect', () => {
-    it('processes WebSocket messages when executed in a web browser.', async () => {
-      const apiClient = new APIClient({urls: APIClient.BACKEND.STAGING});
-      const accessTokenData: AccessTokenData = {
-        access_token:
-          'iJCRCjc8oROO-dkrkqCXOade997oa8Jhbz6awMUQPBQo80VenWqp_oNvfY6AnU5BxEsdDPOBfBP-uz_b0gAKBQ==.v=1.k=1.d=1498600993.t=a.l=.u=aaf9a833-ef30-4c22-86a0-9adc8a15b3b4.c=15037015562284012115',
-        expires_in: 900,
-        token_type: 'Bearer',
-        user: 'aaf9a833-ef30-4c22-86a0-9adc8a15b3b4',
-      };
-      const dataBuffer = new TextEncoder().encode('{}').buffer;
-      const message = new MessageEvent('message', {data: dataBuffer});
-      apiClient.context = {
-        clientId: undefined,
-        clientType: ClientType.TEMPORARY,
-        userId: 'userId',
-      };
-      apiClient['accessTokenStore'].accessToken = accessTokenData;
-
-      const promise = apiClient.connect();
-      apiClient.transport.ws['socket']['internalOnMessage'](message);
-      const socket = await promise;
-
-      expect(socket).toBeDefined();
-      apiClient.transport.ws['socket']['internalOnMessage'](message);
-    });
   });
 
   describe('constructor', () => {
