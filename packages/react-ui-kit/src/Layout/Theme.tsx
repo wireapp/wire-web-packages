@@ -18,7 +18,7 @@
  */
 
 /** @jsx jsx */
-import {jsx, ThemeProvider as EmotionThemeProvider} from '@emotion/react';
+import {jsx, ThemeProvider as EmotionThemeProvider, Theme as ETheme} from '@emotion/react';
 import React from 'react';
 
 import {COLOR} from '../Identity/colors';
@@ -30,7 +30,7 @@ export enum THEME_ID {
   DEFAULT = 'THEME_DEFAULT',
 }
 
-export interface Theme {
+export interface Theme extends ETheme {
   Button?: {
     primaryBg: String;
     primaryHoverBg: String;
