@@ -5551,7 +5551,6 @@ __metadata:
     "@wireapp/commons": "workspace:^"
     "@wireapp/priority-queue": "workspace:^"
     "@wireapp/protocol-messaging": 1.38.0
-    "@wireapp/react-ui-kit": "workspace:^"
     "@wireapp/store-engine": "workspace:^"
     "@wireapp/store-engine-fs": "workspace:^"
     axios: 0.21.4
@@ -5989,7 +5988,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wireapp/react-ui-kit@workspace:^, @wireapp/react-ui-kit@workspace:packages/react-ui-kit":
+"@wireapp/react-ui-kit@workspace:packages/react-ui-kit":
   version: 0.0.0-use.local
   resolution: "@wireapp/react-ui-kit@workspace:packages/react-ui-kit"
   dependencies:
