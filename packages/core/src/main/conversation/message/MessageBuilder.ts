@@ -295,7 +295,7 @@ export function buildTextMessage(
   return genericMessage;
 }
 
-export function buildAsset(payloadBundle: ImageAssetMessageOutgoing['content']): Asset {
+function buildAsset(payloadBundle: ImageAssetMessageOutgoing['content']): Asset {
   const {asset, expectsReadConfirmation, image, legalHoldStatus} = payloadBundle;
 
   const imageMetadata = Asset.ImageMetaData.create({
