@@ -280,9 +280,12 @@ export function buildHideMessage(payload: HideMessage['content']): GenericMessag
   });
 }
 
-export function buildTextMessage(payloadBundle: TextMessage['content']): GenericMessage {
+export function buildTextMessage(
+  payloadBundle: TextMessage['content'],
+  messageId: string = createId(),
+): GenericMessage {
   const genericMessage = GenericMessage.create({
-    messageId: createId(),
+    messageId,
     [GenericMessageType.TEXT]: MessageToProtoMapper.mapText(payloadBundle),
   });
 
