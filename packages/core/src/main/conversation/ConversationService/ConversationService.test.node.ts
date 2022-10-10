@@ -254,23 +254,6 @@ describe('ConversationService', () => {
       });
     });
 
-    it(`cancels message sending if onStart returns false`, async () => {
-      const conversationService = buildConversationService();
-      jest.spyOn(conversationService as any, 'sendGenericMessage');
-      const message = MessageBuilder.buildTextMessage({text: 'test'});
-      const onSuccess = jest.fn();
-      const payloadBundle = await conversationService.send({
-        onSuccess,
-        protocol: ConversationProtocol.PROTEUS,
-        payload: message,
-        conversationId: {id: 'conv1', domain: ''},
-      });
-
-      expect(onSuccess).not.toHaveBeenCalled();
-      expect(conversationService['sendGenericMessage']).not.toHaveBeenCalled();
-      expect(payloadBundle.state).toBe(PayloadBundleState.CANCELLED);
-    });
-
     it(`does not call onSuccess when message was canceled`, async () => {
       const conversationService = buildConversationService();
       jest
