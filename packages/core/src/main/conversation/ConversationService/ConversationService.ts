@@ -240,6 +240,7 @@ export class ConversationService {
     if (targetMode !== MessageTargetMode.NONE && !userIds) {
       throw new Error('Cannot send targetted message when no userIds are given');
     }
+
     if (conversationId.domain && this.config.useQualifiedIds) {
       if (isStringArray(userIds) || isUserClients(userIds)) {
         throw new Error('Invalid userIds option for sending to federated backend');

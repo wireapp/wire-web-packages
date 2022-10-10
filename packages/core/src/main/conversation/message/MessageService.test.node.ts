@@ -221,7 +221,7 @@ describe('MessageService', () => {
       });
       expect(apiClient.api.conversation.postOTRMessage).toHaveBeenCalledWith(
         clientId,
-        conversationId,
+        conversationId.id,
         expect.any(Object),
         false,
       );
@@ -239,7 +239,7 @@ describe('MessageService', () => {
       });
       expect(apiClient.api.conversation.postOTRProtobufMessage).toHaveBeenCalledWith(
         clientId,
-        conversationId,
+        conversationId.id,
         expect.any(Object),
         false,
       );
@@ -281,7 +281,7 @@ describe('MessageService', () => {
       });
       expect(apiClient.api.conversation.postOTRMessage).toHaveBeenCalledWith(
         clientId,
-        conversationId,
+        conversationId.id,
         expect.objectContaining({data: undefined}),
         false,
       );
@@ -302,7 +302,7 @@ describe('MessageService', () => {
       );
       expect(apiClient.api.conversation.postOTRMessage).toHaveBeenCalledWith(
         clientId,
-        conversationId,
+        conversationId.id,
         expect.objectContaining({data: expect.any(String)}),
         false,
       );
