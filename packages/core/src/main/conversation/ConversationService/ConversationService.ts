@@ -562,9 +562,10 @@ export class ConversationService {
       onSuccess?.(payload, response.time);
     }
 
-    return response.errored
-      ? {id: payload.messageId, state: PayloadBundleState.CANCELLED}
-      : {id: payload.messageId, state: PayloadBundleState.OUTGOING_SENT};
+    return {
+      id: payload.messageId,
+      state: response.errored ? PayloadBundleState.CANCELLED : PayloadBundleState.OUTGOING_SENT,
+    };
   }
 
   /**
@@ -720,13 +721,14 @@ export class ConversationService {
 
     const encrypted = await this.mlsService.encryptMessage(groupIdBytes, GenericMessage.encode(payload).finish());
 
+    let hasErrored = false;
     try {
       const {time = ''} = await this.apiClient.api.conversation.postMlsMessage(encrypted);
       onSuccess?.(payload, time?.length > 0 ? time : new Date().toISOString());
-      return {id: payload.messageId, state: PayloadBundleState.OUTGOING_SENT};
     } catch {
-      return {id: payload.messageId, state: PayloadBundleState.CANCELLED};
+      hasErrored = true;
     }
+    return {id: payload.messageId, state: hasErrored ? PayloadBundleState.CANCELLED : PayloadBundleState.OUTGOING_SENT};
   }
 
   public async addUsersToMLSConversation({
