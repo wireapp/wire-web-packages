@@ -24,7 +24,7 @@ import UUID from 'uuidjs';
 import {ClientType} from '@wireapp/api-client/src/client';
 import {TextMessage} from '@wireapp/core/src/main/conversation/message/OtrMessage';
 import {Connection} from '@wireapp/api-client/src/connection';
-import {MessageBuilder} from '@wireapp/core/src/main/conversation/message/MessageBuilder';
+import {MessageBuilder} from '@wireapp/core';
 import {ConversationProtocol} from '@wireapp/api-client/src/conversation';
 
 describe('MessageHandler', () => {
@@ -93,13 +93,11 @@ describe('MessageHandler', () => {
         },
       ];
 
-      spyOn(MessageBuilder, 'createText').and.callThrough();
+      spyOn(MessageBuilder, 'buildTextMessage').and.callThrough();
 
       await mainHandler.sendText(conversationId, messageText, mentionData);
 
-      expect(MessageBuilder.createText).toHaveBeenCalledWith({
-        conversationId,
-        from: 'user-id',
+      expect(MessageBuilder.buildTextMessage).toHaveBeenCalledWith({
         text: messageText,
       });
       expect(mainHandler.account!.service!.conversation.send).toHaveBeenCalledWith(
@@ -116,13 +114,11 @@ describe('MessageHandler', () => {
       const conversationId = UUID.genV4().toString();
       const message = UUID.genV4().toString();
 
-      spyOn(MessageBuilder, 'createText').and.callThrough();
+      spyOn(MessageBuilder, 'buildTextMessage').and.callThrough();
 
       await mainHandler.sendText(conversationId, message);
 
-      expect(MessageBuilder.createText).toHaveBeenCalledWith({
-        conversationId,
-        from: 'user-id',
+      expect(MessageBuilder.buildTextMessage).toHaveBeenCalledWith({
         text: message,
       });
       expect(mainHandler.account!.service!.conversation.send).toHaveBeenCalledWith(
@@ -138,14 +134,12 @@ describe('MessageHandler', () => {
       const message = UUID.genV4().toString();
       const userIds = [UUID.genV4().toString(), UUID.genV4().toString()];
 
-      spyOn(MessageBuilder, 'createText').and.callThrough();
+      spyOn(MessageBuilder, 'buildTextMessage').and.callThrough();
 
       await mainHandler.sendText(conversationId, message, undefined, undefined, userIds);
 
-      expect(MessageBuilder.createText).toHaveBeenCalledWith({
-        conversationId,
+      expect(MessageBuilder.buildTextMessage).toHaveBeenCalledWith({
         text: message,
-        from: 'user-id',
       });
       expect(mainHandler.account!.service!.conversation.send).toHaveBeenCalledWith(
         jasmine.objectContaining({
