@@ -166,7 +166,10 @@ export function buildFileMetaDataMessage(payloadBundle: FileAssetMetaDataMessage
   return genericMessage;
 }
 
-export function buildFileAbortMessage(payloadBundle: FileAssetAbortMessage['content']): GenericMessage {
+export function buildFileAbortMessage(
+  payloadBundle: FileAssetAbortMessage['content'],
+  messageId: string = createId(),
+): GenericMessage {
   const {expectsReadConfirmation, legalHoldStatus, reason} = payloadBundle;
 
   const assetMessage = Asset.create({
@@ -179,7 +182,7 @@ export function buildFileAbortMessage(payloadBundle: FileAssetAbortMessage['cont
 
   const genericMessage = GenericMessage.create({
     [GenericMessageType.ASSET]: assetMessage,
-    messageId: createId(),
+    messageId,
   });
 
   return genericMessage;
