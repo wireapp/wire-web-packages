@@ -93,24 +93,20 @@ describe('ConversationService', () => {
       {type: 'ping', message: MessageBuilder.buildPingMessage({hotKnock: false})},
     ];
     messages.forEach(({type, message}) => {
-      it(`calls callbacks when sending '${type}' message is starting and successful`, async () => {
+      it(`calls callbacks when sending '${type}' message is successful`, async () => {
         const conversationService = buildConversationService();
         const sentTime = new Date().toISOString();
-        const onSuccess = jest.fn();
 
         jest.spyOn(conversationService as any, 'sendGenericMessage').mockReturnValue(Promise.resolve({time: sentTime}));
-        // const onReconnect = jest.fn().mockReturnValue(getServerAddress());
 
         const promise = conversationService.send({
           protocol: ConversationProtocol.PROTEUS,
           conversationId: {id: 'conv1', domain: ''},
-          onSuccess,
           payload: message,
         });
 
-        expect(onSuccess).not.toHaveBeenCalled();
-        await promise;
-        expect(onSuccess).toHaveBeenCalledWith(jasmine.any(Object), sentTime);
+        const result = await promise;
+        expect(result.sentAt).toBe(sentTime);
       });
     });
 
@@ -254,21 +250,18 @@ describe('ConversationService', () => {
       });
     });
 
-    it(`does not call onSuccess when message was canceled`, async () => {
+    it(`indicates when sending was canceled`, async () => {
       const conversationService = buildConversationService();
       jest
         .spyOn(conversationService as any, 'sendGenericMessage')
         .mockReturnValue(Promise.resolve({time: '', errored: true}));
       const message = MessageBuilder.buildTextMessage({text: 'test'});
-      const onSuccess = jest.fn();
       const payloadBundle = await conversationService.send({
-        onSuccess,
         payload: message,
         conversationId: {id: 'conv1', domain: ''},
         protocol: ConversationProtocol.PROTEUS,
       });
 
-      expect(onSuccess).not.toHaveBeenCalled();
       expect(payloadBundle.state).toBe(PayloadBundleState.CANCELLED);
     });
   });
@@ -287,17 +280,14 @@ describe('ConversationService', () => {
     messages.forEach(({type, message}) => {
       it(`calls callbacks when sending '${type}' message is starting and successful`, async () => {
         const conversationService = buildConversationService();
-        const onSuccess = jest.fn();
         const promise = conversationService.send({
           protocol: ConversationProtocol.MLS,
           groupId,
-          onSuccess,
           payload: message,
         });
 
-        expect(onSuccess).not.toHaveBeenCalled();
-        await promise;
-        expect(onSuccess).toHaveBeenCalledWith(jasmine.any(Object), new Date(0).toISOString());
+        const result = await promise;
+        expect(result.state).toBe(PayloadBundleState.OUTGOING_SENT);
       });
     });
   });

@@ -66,14 +66,6 @@ export interface MessageSendingOptions {
 
 export interface MessageSendingCallbacks {
   /**
-   * Will be called before a message is actually sent. Returning 'false' will prevent the message from being sent
-   * @param message The message being sent
-   * @return true or undefined if the message should be sent, false if the message sending should be cancelled
-   */
-  onStart?: (message: GenericMessage) => void | boolean | Promise<boolean>;
-
-  onSuccess?: (message: GenericMessage, sentTime?: string) => void;
-  /**
    * Called whenever there is a clientmismatch returned from the server. Will also indicate the sending status of the message (if it was already sent or not)
    *
    * @param status The mismatch info
@@ -104,7 +96,6 @@ export type ProtocolParam = {
  */
 export type SendCommonParams = ProtocolParam & {
   payload: GenericMessage;
-  onSuccess?: (message: GenericMessage, sentTime?: string) => void;
 };
 export type SendProteusMessageParams = SendCommonParams &
   MessageSendingOptions & {

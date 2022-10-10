@@ -69,6 +69,8 @@ import {sendMessage} from '../message/messageSender';
 type SendResult = {
   /** The id of the message sent */
   id: string;
+  /** the ISO formatted date at which the message was received by the backend */
+  sentAt: string;
   /** The sending state of the payload (has the payload been succesfully sent or canceled) */
   state: PayloadBundleState;
 };
@@ -544,7 +546,6 @@ export class ConversationService {
     targetMode,
     payload,
     onClientMismatch,
-    onSuccess,
   }: SendProteusMessageParams): Promise<SendResult> {
     const response = await this.sendGenericMessage(conversationId, this.apiClient.validatedClientId, payload, {
       userIds,
@@ -559,11 +560,11 @@ export class ConversationService {
         // We warn the consumer that there is a mismatch that did not prevent message sending
         await onClientMismatch?.(response, true);
       }
-      onSuccess?.(payload, response.time);
     }
 
     return {
       id: payload.messageId,
+      sentAt: response.time,
       state: response.errored ? PayloadBundleState.CANCELLED : PayloadBundleState.OUTGOING_SENT,
     };
   }
@@ -713,7 +714,7 @@ export class ConversationService {
     };
   }
 
-  private async sendMLSMessage({payload, groupId, onSuccess}: SendMlsMessageParams): Promise<SendResult> {
+  private async sendMLSMessage({payload, groupId}: SendMlsMessageParams): Promise<SendResult> {
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
 
     // immediately execute pending commits before sending the message
@@ -721,14 +722,17 @@ export class ConversationService {
 
     const encrypted = await this.mlsService.encryptMessage(groupIdBytes, GenericMessage.encode(payload).finish());
 
-    let hasErrored = false;
+    let sentAt: string = '';
     try {
       const {time = ''} = await this.apiClient.api.conversation.postMlsMessage(encrypted);
-      onSuccess?.(payload, time?.length > 0 ? time : new Date().toISOString());
-    } catch {
-      hasErrored = true;
-    }
-    return {id: payload.messageId, state: hasErrored ? PayloadBundleState.CANCELLED : PayloadBundleState.OUTGOING_SENT};
+      sentAt = time?.length > 0 ? time : new Date().toISOString();
+    } catch {}
+
+    return {
+      id: payload.messageId,
+      sentAt,
+      state: sentAt ? PayloadBundleState.OUTGOING_SENT : PayloadBundleState.CANCELLED,
+    };
   }
 
   public async addUsersToMLSConversation({
