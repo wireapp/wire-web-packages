@@ -59,7 +59,8 @@
   },
   "workspaces": {
     "packages": [
-      "packages/*"
+      "packages/*",
+      "!packages/archive"
     ]
   },
   "packageManager": "yarn@3.2.3"
