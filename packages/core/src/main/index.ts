@@ -17,7 +17,7 @@
  *
  */
 
-export {Account} from './Account';
+export {Account, ConnectionState, ProcessedEventPayload} from './Account';
 export * as auth from './auth/';
 export * as conversation from './conversation/';
 export {CoreError} from './CoreError';
