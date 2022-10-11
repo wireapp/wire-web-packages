@@ -22,10 +22,11 @@ import {Account} from '@wireapp/core';
 import {CONVERSATION_TYPING} from '@wireapp/api-client/src/conversation/data/';
 import UUID from 'uuidjs';
 import {ClientType} from '@wireapp/api-client/src/client';
-import {TextMessage} from '@wireapp/core/src/main/conversation/message/OtrMessage';
 import {Connection} from '@wireapp/api-client/src/connection';
 import {MessageBuilder} from '@wireapp/core';
 import {ConversationProtocol} from '@wireapp/api-client/src/conversation';
+import {PayloadBundleState} from '@wireapp/core/src/main/conversation';
+import {createId} from '@wireapp/core/src/main/conversation/message/MessageBuilder';
 
 describe('MessageHandler', () => {
   let mainHandler: MessageHandler;
@@ -44,7 +45,9 @@ describe('MessageHandler', () => {
     await mainHandler.account!.initServices({userId: 'user-id', clientType: ClientType.NONE});
     await mainHandler.account!['apiClient']['createContext']('user-id', ClientType.NONE);
 
-    spyOn(mainHandler.account!.service!.conversation, 'send').and.returnValue(Promise.resolve({} as TextMessage));
+    spyOn(mainHandler.account!.service!.conversation, 'send').and.returnValue(
+      Promise.resolve({state: PayloadBundleState.OUTGOING_SENT, sentAt: new Date().toISOString(), id: createId()}),
+    );
   });
 
   describe('sendConnectionResponse', () => {
