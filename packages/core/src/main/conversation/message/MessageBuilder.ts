@@ -192,7 +192,7 @@ export function buildFileAbortMessage(
   return genericMessage;
 }
 
-export function buildLastRead(conversationId: QualifiedId, lastReadTimestamp: number) {
+export function buildLastReadMessage(conversationId: QualifiedId, lastReadTimestamp: number) {
   const lastRead = new LastRead({
     conversationId: conversationId.id,
     lastReadTimestamp,
@@ -204,7 +204,7 @@ export function buildLastRead(conversationId: QualifiedId, lastReadTimestamp: nu
   });
 }
 
-export function buildDataTransfer(identifier: string) {
+export function buildDataTransferMessage(identifier: string) {
   const dataTransfer = new DataTransfer({
     trackingIdentifier: {
       identifier,

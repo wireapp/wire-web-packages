@@ -68,7 +68,6 @@ type SendResult = {
 export class ConversationService {
   public readonly messageTimer: MessageTimer;
   private readonly messageService: MessageService;
-  private selfConversationId?: QualifiedId;
 
   constructor(
     private readonly apiClient: APIClient,
@@ -176,16 +175,6 @@ export class ConversationService {
       }
       return bundleMap;
     }, {});
-  }
-
-  private async getSelfConversationId(): Promise<QualifiedId> {
-    if (!this.selfConversationId) {
-      const {userId} = this.apiClient.context!;
-      const {qualified_id, id} = await this.apiClient.api.conversation.getConversation(userId);
-      const domain = this.config.useQualifiedIds ? qualified_id.domain : '';
-      this.selfConversationId = {id, domain};
-    }
-    return this.selfConversationId;
   }
 
   private async getQualifiedRecipientsForConversation(
