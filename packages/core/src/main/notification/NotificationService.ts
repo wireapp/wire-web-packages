@@ -154,7 +154,7 @@ export class NotificationService extends EventEmitter {
     const results = {total: notifications.length, error: 0, success: 0};
     const logMessage =
       notifications.length > 0
-        ? `Start processing ${notifications.length} notification since notification id ${lastNotificationId}`
+        ? `Start processing ${notifications.length} notifications since notification id ${lastNotificationId}`
         : `No notification to process from the stream`;
     this.logger.log(logMessage);
     for (const [index, notification] of notifications.entries()) {
