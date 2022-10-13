@@ -3245,6 +3245,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jest/schemas@npm:^28.1.3":
+  version: 28.1.3
+  resolution: "@jest/schemas@npm:28.1.3"
+  dependencies:
+    "@sinclair/typebox": ^0.24.1
+  checksum: 3cf1d4b66c9c4ffda58b246de1ddcba8e6ad085af63dccdf07922511f13b68c0cc480a7bc620cb4f3099a6f134801c747e1df7bfc7a4ef4dceefbdea3e31e1de
+  languageName: node
+  linkType: hard
+
 "@jest/schemas@npm:^29.0.0":
   version: 29.0.0
   resolution: "@jest/schemas@npm:29.0.0"
@@ -5635,6 +5644,7 @@ __metadata:
     jest: 29.0.3
     jest-babel: 1.0.1
     jest-jasmine2: 29.0.3
+    jest-websocket-mock: 2.4.0
     karma: 6.4.1
     karma-chrome-launcher: 3.1.1
     karma-jasmine: 4.0.2
@@ -5643,7 +5653,7 @@ __metadata:
     karma-spec-reporter: 0.0.34
     logdown: 3.3.1
     long: 4.0.0
-    mock-socket: 9.0.3
+    mock-socket: 9.1.5
     nock: 13.1.1
     nyc: 15.1.0
     protobufjs: 6.11.3
@@ -14262,6 +14272,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jest-diff@npm:^28.0.2":
+  version: 28.1.3
+  resolution: "jest-diff@npm:28.1.3"
+  dependencies:
+    chalk: ^4.0.0
+    diff-sequences: ^28.1.1
+    jest-get-type: ^28.0.2
+    pretty-format: ^28.1.3
+  checksum: fa8583e0ccbe775714ce850b009be1b0f6b17a4b6759f33ff47adef27942ebc610dbbcc8a5f7cfb7f12b3b3b05afc9fb41d5f766674616025032ff1e4f9866e0
+  languageName: node
+  linkType: hard
+
 "jest-diff@npm:^28.1.1":
   version: 28.1.1
   resolution: "jest-diff@npm:28.1.1"
@@ -14694,6 +14716,16 @@ __metadata:
     jest-util: ^29.0.3
     string-length: ^4.0.1
   checksum: d585b9dda467d08946357c8ed1f971f15a302f958ccd3f6e2e59df5da245edca91cd4a72329d0126de8ac5793567965e4be1e555c4e40ecadb4f8f14306441bb
+  languageName: node
+  linkType: hard
+
+"jest-websocket-mock@npm:2.4.0":
+  version: 2.4.0
+  resolution: "jest-websocket-mock@npm:2.4.0"
+  dependencies:
+    jest-diff: ^28.0.2
+    mock-socket: ^9.1.0
+  checksum: 03c0707b70bbdbcdf4c2f5579d3423b41317bdecb38ede593061c7894421d24d903bf9dc53062f7a3f2fc3302374d35436cb36d6db6ac84058b63862438d6d27
   languageName: node
   linkType: hard
 
@@ -16505,12 +16537,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mock-socket@npm:9.0.3":
-  version: 9.0.3
-  resolution: "mock-socket@npm:9.0.3"
-  dependencies:
-    url-parse: ^1.4.4
-  checksum: 97fddbc34fddef43a3232c208b120b716ab3f21a1f290be6d5fbbb185d5046773e20e3da8664b529fff7ff20f70ee00e3e8089ff9e28bdac947387ab1b108ebc
+"mock-socket@npm:9.1.5, mock-socket@npm:^9.1.0":
+  version: 9.1.5
+  resolution: "mock-socket@npm:9.1.5"
+  checksum: a01586bc2850eb5809eda6de0c7ab19255c1e0eb217a805f86ba662bb4aab00b919032d67e7c826c6c12bcfb2fbe19cecbacf0ab6184936487edc4ba37d3ba53
   languageName: node
   linkType: hard
 
@@ -18331,6 +18361,18 @@ __metadata:
     ansi-styles: ^5.0.0
     react-is: ^18.0.0
   checksum: 7fde4e2d6fd57cef8cf2fa9d5560cc62126de481f09c65dccfe89a3e6158a04355cff278853ace07fdf7f2f48c3d77877c00c47d7d3c1c028dcff5c322300d79
+  languageName: node
+  linkType: hard
+
+"pretty-format@npm:^28.1.3":
+  version: 28.1.3
+  resolution: "pretty-format@npm:28.1.3"
+  dependencies:
+    "@jest/schemas": ^28.1.3
+    ansi-regex: ^5.0.1
+    ansi-styles: ^5.0.0
+    react-is: ^18.0.0
+  checksum: e69f857358a3e03d271252d7524bec758c35e44680287f36c1cb905187fbc82da9981a6eb07edfd8a03bc3cbeebfa6f5234c13a3d5b59f2bbdf9b4c4053e0a7f
   languageName: node
   linkType: hard
 
@@ -22626,7 +22668,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"url-parse@npm:^1.4.3, url-parse@npm:^1.4.4, url-parse@npm:^1.4.7":
+"url-parse@npm:^1.4.3, url-parse@npm:^1.4.7":
   version: 1.5.10
   resolution: "url-parse@npm:1.5.10"
   dependencies:
