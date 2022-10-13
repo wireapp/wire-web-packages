@@ -34,6 +34,7 @@ import * as MessageBuilder from './conversation/message/MessageBuilder';
 import {WebSocketClient} from '@wireapp/api-client/src/tcp';
 import WS from 'jest-websocket-mock';
 import {ReconnectingWebsocket} from '@wireapp/api-client/src/tcp/ReconnectingWebsocket';
+import {BackendEvent} from '@wireapp/api-client/src/event';
 
 const BASE_URL = 'mock-backend.wire.com';
 const MOCK_BACKEND = {
@@ -258,7 +259,10 @@ describe('Account', () => {
     let dependencies: {account: Account; apiClient: APIClient};
 
     const mockNotifications = (size: number) => {
-      const notifications = Array.from(new Array(size)).map(i => ({id: MessageBuilder.createId(), payload: [{}]}));
+      const notifications = Array.from(new Array(size)).map(i => ({
+        id: MessageBuilder.createId(),
+        payload: [{}] as BackendEvent[],
+      }));
       jest.spyOn(dependencies.apiClient.api.notification, 'getAllNotifications').mockResolvedValue({notifications});
     };
 
@@ -289,7 +293,9 @@ describe('Account', () => {
         email: 'hello@example.com',
         password: 'my-secret',
       });
-      jest.spyOn(dependencies.account.service!.notification, 'handleNotification').mockImplementation(notif => [{}]);
+      jest
+        .spyOn(dependencies.account.service!.notification, 'handleNotification')
+        .mockImplementation(notif => notif.payload as any);
     });
 
     afterEach(() => {
@@ -411,7 +417,7 @@ describe('Account', () => {
 
         const onEvent = jest.fn();
         mockNotifications(nbNotifications);
-        return new Promise<void>(async resolve => {
+        return new Promise<void>(async (resolve, reject) => {
           dependencies.account.listen({
             onConnectionStateChanged: async state => {
               switch (state) {
@@ -421,13 +427,17 @@ describe('Account', () => {
                   server.send(JSON.stringify({id: MessageBuilder.createId(), payload: [{}]}));
                   break;
                 case ConnectionState.LIVE:
+                  reject(new Error());
                   fail('should not go to `live` state');
                   break;
                 case ConnectionState.CLOSED:
                   expect(onNotificationStreamProgress).toHaveBeenCalledTimes(2);
                   expect(onEvent).toHaveBeenCalledTimes(2);
                   expect(onEvent).toHaveBeenCalledWith(expect.any(Object), PayloadBundleSource.NOTIFICATION_STREAM);
-                  expect(onEvent).not.toHaveBeenCalledWith(expect.any(Object), PayloadBundleSource.WEBSOCKET);
+                  expect(dependencies.account.service!.notification.handleNotification).not.toHaveBeenCalledWith(
+                    expect.any(Object),
+                    PayloadBundleSource.WEBSOCKET,
+                  );
 
                   resolve();
               }

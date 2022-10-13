@@ -629,13 +629,13 @@ export class Account<T = any> extends EventEmitter {
         this.logger.warn('Ending connection process as websocket was closed');
         return;
       }
+      onConnectionStateChanged(ConnectionState.LIVE);
       // We can now unlock the websocket and let the new messages being handled and decrypted
       this.apiClient.transport.ws.unlock();
       // We need to wait for the notification stream to be fully handled before releasing the message sending queue.
       // This is due to the nature of how message are encrypted, any change in mls epoch needs to happen before we start encrypting any kind of messages
       this.logger.info(`Resuming message sending. ${getQueueLength()} messages to be sent`);
       resumeMessageSending();
-      onConnectionStateChanged(ConnectionState.LIVE);
     };
     this.apiClient.connect(processNotificationStream);
 
