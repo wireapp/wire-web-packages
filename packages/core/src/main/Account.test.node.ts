@@ -53,14 +53,14 @@ async function createAccount(storageName = `test-${Date.now()}`): Promise<{accou
   return {account, apiClient};
 }
 
-const waitFor = (assetion: () => void) => {
+const waitFor = (assertion: () => void) => {
   const maxAttempts = 500;
   let attempts = 0;
   return new Promise<void>(resolve => {
     const attempt = () => {
       attempts++;
       try {
-        assetion();
+        assertion();
         resolve();
       } catch (e) {
         if (attempts > maxAttempts) {
