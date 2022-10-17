@@ -91,26 +91,20 @@ export class MLSService {
     return client;
   }
 
-  private async uploadCommitBundle(groupId: Uint8Array, {commit, welcome}: CommitBundle) {
-    if (commit) {
-      try {
-        const messageResponse = await this.apiClient.api.conversation.postMlsMessage(
-          //@todo: it's temporary - we wait for core-crypto fix to return the actual Uint8Array instead of regular array
-          optionalToUint8Array(commit),
-        );
-        await this.coreCryptoClient.commitAccepted(groupId);
-        const newEpoch = await this.getEpoch(groupId);
-        const groupIdStr = Encoder.toBase64(groupId).asString;
-        this.logger.log(`Commit have been accepted for group "${groupIdStr}". New epoch is "${newEpoch}"`);
-        if (welcome) {
-          // If the commit went well, we can send the Welcome
-          //@todo: it's temporary - we wait for core-crypto fix to return the actual Uint8Array instead of regular array
-          await this.apiClient.api.conversation.postMlsWelcomeMessage(optionalToUint8Array(welcome));
-        }
-        return messageResponse;
-      } catch (error) {
-        await this.coreCryptoClient.clearPendingCommit(groupId);
-      }
+  private async uploadCommitBundle(groupId: Uint8Array, {commit, welcome, publicGroupState}: CommitBundle) {
+    const coreCryptoClient = this.getCoreCryptoClient();
+
+    const payload = new mls.CommitBundle({commit, welcome, groupInfoBundle: publicGroupState});
+
+    try {
+      const response = await this.apiClient.api.conversation.postMlsCommitBundle(payload);
+      await coreCryptoClient.commitAccepted(groupId);
+      const newEpoch = await this.getEpoch(groupId);
+      const groupIdStr = Encoder.toBase64(groupId).asString;
+      this.logger.log(`Commit have been accepted for group "${groupIdStr}". New epoch is "${newEpoch}"`);
+      return response;
+    } catch (error) {
+      await coreCryptoClient.clearPendingCommit(groupId);
     }
     return null;
   }
