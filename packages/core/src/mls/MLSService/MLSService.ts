@@ -91,13 +91,14 @@ export class MLSService {
     return client;
   }
 
-  private async uploadCommitBundle(groupId: Uint8Array, {commit, welcome, publicGroupState}: CommitBundle) {
+  private async uploadCommitBundle(groupId: Uint8Array, commitBundle: CommitBundle) {
     const coreCryptoClient = this.getCoreCryptoClient();
-
-    const payload = new mls.CommitBundle({commit, welcome, groupInfoBundle: publicGroupState});
+    const payload = mls.CommitBundle.create(commitBundle);
 
     try {
-      const response = await this.apiClient.api.conversation.postMlsCommitBundle(payload);
+      const response = await this.apiClient.api.conversation.postMlsCommitBundle(
+        mls.CommitBundle.encode(payload).finish(),
+      );
       await coreCryptoClient.commitAccepted(groupId);
       const newEpoch = await this.getEpoch(groupId);
       const groupIdStr = Encoder.toBase64(groupId).asString;
