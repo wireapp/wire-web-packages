@@ -6164,7 +6164,7 @@ __metadata:
     bazinga64: 5.11.7
     commander: 8.0.0
     cross-env: 7.0.3
-    dotenv-defaults: 2.0.2
+    dotenv-defaults: 5.0.2
     fake-indexeddb: 4.0.0
     faker: 5.5.3
     hash.js: 1.1.7
@@ -10484,12 +10484,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv-defaults@npm:2.0.2":
-  version: 2.0.2
-  resolution: "dotenv-defaults@npm:2.0.2"
+"dotenv-defaults@npm:5.0.2":
+  version: 5.0.2
+  resolution: "dotenv-defaults@npm:5.0.2"
   dependencies:
-    dotenv: ^8.2.0
-  checksum: c005960bd048e2189c4799e729c41f362e415e6e0b54313d3f31e853a84b049bf770b25cb21c112c2805bb13a8376edc9de451fb514abf8546392d327c27f6e5
+    dotenv: ^14.0.0
+  checksum: a45b1c56d037f1606ce0bbc9097f42c044a22c76acf10b94c2e2506bf7cac8ab633b5b1c654217040e172f87acd1620054258b9df48120258ccb7f8352cfbbce
   languageName: node
   linkType: hard
 
@@ -10500,10 +10500,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:^8.2.0":
-  version: 8.2.0
-  resolution: "dotenv@npm:8.2.0"
-  checksum: ad4c8e0df3e24b4811c8e93377d048a10a9b213dcd9f062483b4a2d3168f08f10ec9c618c23f5639060d230ccdb174c08761479e9baa29610aa978e1ee66df76
+"dotenv@npm:^14.0.0":
+  version: 14.3.2
+  resolution: "dotenv@npm:14.3.2"
+  checksum: 86c06758915d6facc35275f4a7fafc16705b6f3b44befaa8abca91367991efc8ff8db5437d3cc14778231d19fb97610fe82d60f8a53ba723cdb69fe4171439aa
   languageName: node
   linkType: hard
 
