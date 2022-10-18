@@ -7,11 +7,11 @@ updates:
       day: sunday
       time: '16:00'
       timezone: 'Europe/Berlin'
-    open-pull-requests-limit: 99
+    open-pull-requests-limit: 10
 
   # Github actions
   - package-ecosystem: 'github-actions'
     directory: '/'
-    open-pull-requests-limit: 99
+    open-pull-requests-limit: 10
     schedule:
       interval: 'daily'
