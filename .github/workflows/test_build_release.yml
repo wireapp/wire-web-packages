@@ -89,7 +89,7 @@ jobs:
 
       - name: Notify CI error
         if: failure() && github.event_name != 'pull_request'
-        uses: wireapp/github-action-wire-messenger@v1
+        uses: wireapp/github-action-wire-messenger@v2.0.0
         with:
           email: ${{secrets.WIRE_EMAIL}}
           password: ${{secrets.WIRE_PASSWORD}}
