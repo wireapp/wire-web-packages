@@ -5998,7 +5998,7 @@ __metadata:
     concurrently: 7.4.0
     cross-env: 7.0.3
     dotenv: 16.0.3
-    http-status-codes: 2.1.4
+    http-status-codes: 2.2.0
     istanbul: 1.1.0-alpha.1
     jest: ^29.0.3
     logdown: 3.3.1
@@ -6141,7 +6141,7 @@ __metadata:
     fake-indexeddb: 4.0.0
     faker: 5.5.3
     hash.js: 1.1.7
-    http-status-codes: 2.1.4
+    http-status-codes: 2.2.0
     idb: 7.0.2
     istanbul: 1.1.0-alpha.1
     jest: 29.0.3
@@ -13338,10 +13338,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"http-status-codes@npm:2.1.4":
-  version: 2.1.4
-  resolution: "http-status-codes@npm:2.1.4"
-  checksum: 44fedd7b2cfe8672e647fd03a1baf6662a62e7bf1669a866404830e98853dc0239b5cd054938e562cdd7b8228a9a7bc0e27b0eacc6a07814b1639a9c518a7220
+"http-status-codes@npm:2.2.0":
+  version: 2.2.0
+  resolution: "http-status-codes@npm:2.2.0"
+  checksum: 31e1d730856210445da0907d9b484629e69e4fe92ac032478a7aa4d89e5b215e2b4e75d7ebce40d0537b6850bd281b2f65c7cc36cc2677e5de056d6cea1045ce
   languageName: node
   linkType: hard
 
