@@ -870,19 +870,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-proposal-class-properties@npm:7.14.5, @babel/plugin-proposal-class-properties@npm:^7.14.5":
-  version: 7.14.5
-  resolution: "@babel/plugin-proposal-class-properties@npm:7.14.5"
-  dependencies:
-    "@babel/helper-create-class-features-plugin": ^7.14.5
-    "@babel/helper-plugin-utils": ^7.14.5
-  peerDependencies:
-    "@babel/core": ^7.0.0-0
-  checksum: fe2aa0a44f8ea121e10c856d6fb4fca418dc42451258ef6ed29321ca740080fba420ebd3d6700d0456c34c2ab2044f9ce4308498321f52a93184ff5adb015aae
-  languageName: node
-  linkType: hard
-
-"@babel/plugin-proposal-class-properties@npm:^7.18.6":
+"@babel/plugin-proposal-class-properties@npm:7.18.6, @babel/plugin-proposal-class-properties@npm:^7.18.6":
   version: 7.18.6
   resolution: "@babel/plugin-proposal-class-properties@npm:7.18.6"
   dependencies:
@@ -891,6 +879,18 @@ __metadata:
   peerDependencies:
     "@babel/core": ^7.0.0-0
   checksum: 49a78a2773ec0db56e915d9797e44fd079ab8a9b2e1716e0df07c92532f2c65d76aeda9543883916b8e0ff13606afeffa67c5b93d05b607bc87653ad18a91422
+  languageName: node
+  linkType: hard
+
+"@babel/plugin-proposal-class-properties@npm:^7.14.5":
+  version: 7.14.5
+  resolution: "@babel/plugin-proposal-class-properties@npm:7.14.5"
+  dependencies:
+    "@babel/helper-create-class-features-plugin": ^7.14.5
+    "@babel/helper-plugin-utils": ^7.14.5
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+  checksum: fe2aa0a44f8ea121e10c856d6fb4fca418dc42451258ef6ed29321ca740080fba420ebd3d6700d0456c34c2ab2044f9ce4308498321f52a93184ff5adb015aae
   languageName: node
   linkType: hard
 
@@ -5968,7 +5968,7 @@ __metadata:
   resolution: "@wireapp/api-client@workspace:packages/api-client"
   dependencies:
     "@babel/core": 7.14.8
-    "@babel/plugin-proposal-class-properties": 7.14.5
+    "@babel/plugin-proposal-class-properties": 7.18.6
     "@babel/plugin-proposal-object-rest-spread": 7.14.7
     "@babel/plugin-proposal-optional-chaining": 7.14.5
     "@babel/preset-env": ^7.19.1
@@ -6303,7 +6303,7 @@ __metadata:
   dependencies:
     "@babel/cli": 7.14.8
     "@babel/core": 7.14.8
-    "@babel/plugin-proposal-class-properties": 7.14.5
+    "@babel/plugin-proposal-class-properties": 7.18.6
     "@babel/plugin-transform-runtime": 7.19.1
     "@babel/preset-env": 7.14.9
     "@babel/preset-react": 7.18.6
@@ -6418,7 +6418,7 @@ __metadata:
   resolution: "@wireapp/store-engine-sqleet@workspace:packages/store-engine-sqleet"
   dependencies:
     "@babel/core": 7.14.8
-    "@babel/plugin-proposal-class-properties": 7.14.5
+    "@babel/plugin-proposal-class-properties": 7.18.6
     "@babel/plugin-proposal-object-rest-spread": 7.14.7
     "@babel/plugin-proposal-optional-chaining": 7.14.5
     "@babel/preset-typescript": 7.14.5
