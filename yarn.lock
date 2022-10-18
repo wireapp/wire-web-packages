@@ -11263,12 +11263,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-unused-imports@npm:1.1.2":
-  version: 1.1.2
-  resolution: "eslint-plugin-unused-imports@npm:1.1.2"
+"eslint-plugin-unused-imports@npm:2.0.0":
+  version: 2.0.0
+  resolution: "eslint-plugin-unused-imports@npm:2.0.0"
   dependencies:
     eslint-rule-composer: ^0.3.0
-  checksum: 7e899ec79e043f9b2a3d634b405f787c65353c25c37f2dd8561e7919518c5450c34a2ff7ff43bb2ecd296a79f5bc9c7ec0010dc026ea6ba983b8a9e538f68fdb
+  peerDependencies:
+    "@typescript-eslint/eslint-plugin": ^5.0.0
+    eslint: ^8.0.0
+  peerDependenciesMeta:
+    "@typescript-eslint/eslint-plugin":
+      optional: true
+  checksum: 8aa1e03e75da2a62a354065e0cb8fe370118c6f8d9720a32fe8c1da937de6adb81a4fed7d0d391d115ac9453b49029fb19f970d180a2cf3dba451fd4c20f0dc4
   languageName: node
   linkType: hard
 
@@ -21298,7 +21304,7 @@ __metadata:
     eslint-plugin-react: 7.24.0
     eslint-plugin-react-hooks: 4.6.0
     eslint-plugin-simple-import-sort: 8.0.0
-    eslint-plugin-unused-imports: 1.1.2
+    eslint-plugin-unused-imports: 2.0.0
     husky: 4.3.8
     jest: ^29.0.3
     lint-staged: 13.0.3
