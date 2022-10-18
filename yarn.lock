@@ -3661,13 +3661,13 @@ __metadata:
   linkType: hard
 
 "@lerna-lite/changed@npm:^1.11.3":
-  version: 1.11.3
-  resolution: "@lerna-lite/changed@npm:1.11.3"
+  version: 1.12.0
+  resolution: "@lerna-lite/changed@npm:1.12.0"
   dependencies:
-    "@lerna-lite/core": 1.11.3
-    "@lerna-lite/list": 1.11.3
-    "@lerna-lite/listable": 1.11.3
-  checksum: 7f801a625e0fe716ecc84979200d68fa0f9be56856a8dbc2c89a4c283fda9896e5f9eea6666cba03e966c330561555ce78e0cf5c29384d72f2d564a677484d53
+    "@lerna-lite/core": 1.12.0
+    "@lerna-lite/list": 1.12.0
+    "@lerna-lite/listable": 1.12.0
+  checksum: 5ef448b69956a9f03da2444eecc7526dec4884417da0d64bc347095e426c6aa2fddbe4027cc4f7e5a149471d401a0888a8a15f720afbab242768a7518b1f359a
   languageName: node
   linkType: hard
 
@@ -3691,68 +3691,6 @@ __metadata:
   bin:
     lerna: dist/cli.js
   checksum: 1aac867f3af47f26b793c3cf89e58b28e581b4a0b526973bcc03d11560c2ca93dcb5fc1068d5589117e3e1c7b2558f6b62f9e95527029dd613a4259245a91c2a
-  languageName: node
-  linkType: hard
-
-"@lerna-lite/core@npm:1.11.3":
-  version: 1.11.3
-  resolution: "@lerna-lite/core@npm:1.11.3"
-  dependencies:
-    "@npmcli/run-script": ^4.2.1
-    "@octokit/plugin-enterprise-rest": ^6.0.1
-    "@octokit/rest": ^19.0.4
-    async: ^3.2.4
-    chalk: ^4.1.2
-    clone-deep: ^4.0.1
-    config-chain: ^1.1.13
-    conventional-changelog-angular: ^5.0.13
-    conventional-changelog-core: ^4.2.4
-    conventional-changelog-writer: ^5.0.1
-    conventional-commits-parser: ^3.2.4
-    conventional-recommended-bump: ^6.1.0
-    cosmiconfig: ^7.0.1
-    dedent: ^0.7.0
-    execa: ^5.1.1
-    fs-extra: ^10.1.0
-    get-stream: ^6.0.1
-    git-url-parse: ^13.1.0
-    glob-parent: ^6.0.2
-    globby: ^11.1.0
-    graceful-fs: ^4.2.10
-    inquirer: ^8.2.4
-    is-ci: ^3.0.1
-    is-stream: ^2.0.1
-    libnpmaccess: ^6.0.4
-    libnpmpublish: ^6.0.5
-    load-json-file: ^6.2.0
-    make-dir: ^3.1.0
-    minimatch: ^5.1.0
-    node-fetch: ^2.6.7
-    npm-package-arg: ^9.1.0
-    npm-packlist: ^5.1.3
-    npm-registry-fetch: ^13.3.1
-    npmlog: ^6.0.2
-    os: ^0.1.2
-    p-map: ^4.0.0
-    p-pipe: ^3.1.0
-    p-queue: ^6.6.2
-    p-reduce: ^2.1.0
-    pacote: ^13.6.2
-    path: ^0.12.7
-    pify: ^5.0.0
-    resolve-from: ^5.0.0
-    semver: ^7.3.7
-    slash: ^3.0.0
-    ssri: ^9.0.1
-    strong-log-transformer: ^2.1.0
-    tar: ^6.1.11
-    temp-dir: ^1.0.0
-    uuid: ^9.0.0
-    write-file-atomic: ^4.0.2
-    write-json-file: ^4.3.0
-    write-pkg: ^4.0.0
-    yargs: ^17.5.1
-  checksum: 33ec8f1f8ed0ce5ccefb61326f198323025dc75a9c6e928481fa2a2d2648e49c59df382a0d3a4edd4e7ae58a7c01262b639ff46ace83d1eddad0eaf2ae4b45f6
   languageName: node
   linkType: hard
 
@@ -3829,25 +3767,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/list@npm:1.11.3":
-  version: 1.11.3
-  resolution: "@lerna-lite/list@npm:1.11.3"
+"@lerna-lite/list@npm:1.12.0":
+  version: 1.12.0
+  resolution: "@lerna-lite/list@npm:1.12.0"
   dependencies:
-    "@lerna-lite/core": 1.11.3
-    "@lerna-lite/listable": 1.11.3
-    "@lerna-lite/optional-cmd-common": 1.11.3
-  checksum: f9d0b0fba6f244b5cb328dafe816d512398048f87f555e37df24f60d5ff50055791e249ef47e0a10a0708be79cfbd662ae6c0c3c955062c6f9db584357e5fdcf
-  languageName: node
-  linkType: hard
-
-"@lerna-lite/listable@npm:1.11.3":
-  version: 1.11.3
-  resolution: "@lerna-lite/listable@npm:1.11.3"
-  dependencies:
-    "@lerna-lite/core": 1.11.3
-    chalk: ^4.1.2
-    columnify: ^1.6.0
-  checksum: a198d8c9873d2f2774cd92ee6f6383843913d98c51f66a3fc1c3bdd666dfefe2f7cdfcee2ee145cc955c2885932efd22ac04f03cf968f57e0d698f7bfa2ba405
+    "@lerna-lite/core": 1.12.0
+    "@lerna-lite/listable": 1.12.0
+    "@lerna-lite/optional-cmd-common": 1.12.0
+  checksum: b234cc0aa8d93137955376af9386b901298893254d712d8ecc1a08fbf95f7cf8617b39bfcd2da8604e793e1ada46c64a111f2a97377de265a5d782d92876369f
   languageName: node
   linkType: hard
 
@@ -3859,21 +3786,6 @@ __metadata:
     chalk: ^4.1.2
     columnify: ^1.6.0
   checksum: fd011ad2e2a4caaabd1b10fdf4a8f4dc74cfd35812450cf6f3d602d5564869a9d80fcbb9e6d4a83f22420d0ea4d337afe2e0eb47cf86da33fcea57e9fd61b5cb
-  languageName: node
-  linkType: hard
-
-"@lerna-lite/optional-cmd-common@npm:1.11.3":
-  version: 1.11.3
-  resolution: "@lerna-lite/optional-cmd-common@npm:1.11.3"
-  dependencies:
-    "@lerna-lite/core": 1.11.3
-    fs-extra: ^10.1.0
-    multimatch: ^5.0.0
-    npmlog: ^6.0.2
-    p-map: ^4.0.0
-    upath: ^2.0.1
-    yargs: ^17.5.1
-  checksum: d283f0778629232ba2085cb4b3d584a39a19f5e54c1fb8320bea5f45059b95651c9a3018a765ad73d1571d4b72b74510bf741ccbc7cde691823aa69b51b945d8
   languageName: node
   linkType: hard
 
@@ -4238,7 +4150,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@npmcli/run-script@npm:^4.1.0, @npmcli/run-script@npm:^4.1.3, @npmcli/run-script@npm:^4.2.1":
+"@npmcli/run-script@npm:^4.1.0, @npmcli/run-script@npm:^4.1.3":
   version: 4.2.1
   resolution: "@npmcli/run-script@npm:4.2.1"
   dependencies:
@@ -4270,21 +4182,6 @@ __metadata:
   dependencies:
     "@octokit/types": ^7.0.0
   checksum: e94ba5abc2f86cf49e8dc0b86225f2fdda6af451328b13a43d68972117d4e3dccba5cb375fa0c5970a43c9392665bf4e4f0ef1332522f76d4fa4b16c5ad6cc1d
-  languageName: node
-  linkType: hard
-
-"@octokit/core@npm:^4.0.0":
-  version: 4.0.5
-  resolution: "@octokit/core@npm:4.0.5"
-  dependencies:
-    "@octokit/auth-token": ^3.0.0
-    "@octokit/graphql": ^5.0.0
-    "@octokit/request": ^6.0.0
-    "@octokit/request-error": ^3.0.0
-    "@octokit/types": ^7.0.0
-    before-after-hook: ^2.2.0
-    universal-user-agent: ^6.0.0
-  checksum: 6e4a2161d22b9cb24cd1cf702e6d18200fc48a29dc66db08c37809d65243d29429123652072126d9f161e45aef6a57e72a5d56d7e975829c190e8c3c46b3f1b9
   languageName: node
   linkType: hard
 
@@ -4346,17 +4243,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/plugin-paginate-rest@npm:^4.0.0":
-  version: 4.3.1
-  resolution: "@octokit/plugin-paginate-rest@npm:4.3.1"
-  dependencies:
-    "@octokit/types": ^7.5.0
-  peerDependencies:
-    "@octokit/core": ">=4"
-  checksum: 96d420fc9944cd3cb67c41d47781ee00d406e34622ed6a6cc1995ee9602e1ab23b51e30f5a5d3b80d4b62879234e0c21fe6c654b267ccb9550379f2e0051e681
-  languageName: node
-  linkType: hard
-
 "@octokit/plugin-paginate-rest@npm:^5.0.0":
   version: 5.0.1
   resolution: "@octokit/plugin-paginate-rest@npm:5.0.1"
@@ -4374,18 +4260,6 @@ __metadata:
   peerDependencies:
     "@octokit/core": ">=3"
   checksum: 2086db00056aee0f8ebd79797b5b57149ae1014e757ea08985b71eec8c3d85dbb54533f4fd34b6b9ecaa760904ae6a7536be27d71e50a3782ab47809094bfc0c
-  languageName: node
-  linkType: hard
-
-"@octokit/plugin-rest-endpoint-methods@npm:^6.0.0":
-  version: 6.6.2
-  resolution: "@octokit/plugin-rest-endpoint-methods@npm:6.6.2"
-  dependencies:
-    "@octokit/types": ^7.5.0
-    deprecation: ^2.3.1
-  peerDependencies:
-    "@octokit/core": ">=3"
-  checksum: 3c3fe12e6f0463aeb77b6a7ea6da0b1928ed179b27745c778c32ead3796fe4352322dc103095d141d548aa6b0d91bb0196e4a2d5d60cd71fc820c3774e23c1f4
   languageName: node
   linkType: hard
 
@@ -4426,18 +4300,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/rest@npm:^19.0.4":
-  version: 19.0.4
-  resolution: "@octokit/rest@npm:19.0.4"
-  dependencies:
-    "@octokit/core": ^4.0.0
-    "@octokit/plugin-paginate-rest": ^4.0.0
-    "@octokit/plugin-request-log": ^1.0.4
-    "@octokit/plugin-rest-endpoint-methods": ^6.0.0
-  checksum: 7eba9148b707c713705ba8d75c25fbb22488f30abef7967ce92884a51e411e709b90ff56b0e6fa5521b261f343a7fd33b8ad5d0b87cab4bc2e178002b2566cf2
-  languageName: node
-  linkType: hard
-
 "@octokit/rest@npm:^19.0.5":
   version: 19.0.5
   resolution: "@octokit/rest@npm:19.0.5"
@@ -4450,7 +4312,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/types@npm:^7.0.0, @octokit/types@npm:^7.5.0":
+"@octokit/types@npm:^7.0.0":
   version: 7.5.0
   resolution: "@octokit/types@npm:7.5.0"
   dependencies:
@@ -7489,13 +7351,6 @@ __metadata:
   version: 3.1.0
   resolution: "async@npm:3.1.0"
   checksum: 2602938fbd317c7311807934ab49e3f26ef88d71d2c19f7bbd84bcaadd4c98f564c57caa6b4a4563527ffc6929b0be8142cca7240def8bf4e946bce376d2cade
-  languageName: node
-  linkType: hard
-
-"async@npm:^3.2.4":
-  version: 3.2.4
-  resolution: "async@npm:3.2.4"
-  checksum: 43d07459a4e1d09b84a20772414aa684ff4de085cbcaec6eea3c7a8f8150e8c62aa6cd4e699fe8ee93c3a5b324e777d34642531875a0817a35697522c1b02e89
   languageName: node
   linkType: hard
 
@@ -18419,7 +18274,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"npm-packlist@npm:^5.1.0, npm-packlist@npm:^5.1.3":
+"npm-packlist@npm:^5.1.0":
   version: 5.1.3
   resolution: "npm-packlist@npm:5.1.3"
   dependencies:
@@ -18466,7 +18321,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"npm-registry-fetch@npm:^13.0.0, npm-registry-fetch@npm:^13.0.1, npm-registry-fetch@npm:^13.3.1":
+"npm-registry-fetch@npm:^13.0.0, npm-registry-fetch@npm:^13.0.1":
   version: 13.3.1
   resolution: "npm-registry-fetch@npm:13.3.1"
   dependencies:
@@ -18968,13 +18823,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"os@npm:^0.1.2":
-  version: 0.1.2
-  resolution: "os@npm:0.1.2"
-  checksum: dc2d99759eef13f5dc47ddb12c67b9760a7196fd83a35a7aec2d75b82f91163ca1d4e8872238f8c2a35f4cddd5adf5ce6638a234c0563c748d3cd1d69a9f7153
-  languageName: node
-  linkType: hard
-
 "osenv@npm:^0.1.0, osenv@npm:^0.1.4":
   version: 0.1.5
   resolution: "osenv@npm:0.1.5"
@@ -19161,7 +19009,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pacote@npm:^13.0.3, pacote@npm:^13.6.1, pacote@npm:^13.6.2":
+"pacote@npm:^13.0.3, pacote@npm:^13.6.1":
   version: 13.6.2
   resolution: "pacote@npm:13.6.2"
   dependencies:
@@ -22526,7 +22374,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ssri@npm:^9.0.0, ssri@npm:^9.0.1":
+"ssri@npm:^9.0.0":
   version: 9.0.1
   resolution: "ssri@npm:9.0.1"
   dependencies:
@@ -25215,7 +25063,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"write-file-atomic@npm:^4.0.0, write-file-atomic@npm:^4.0.1, write-file-atomic@npm:^4.0.2":
+"write-file-atomic@npm:^4.0.0, write-file-atomic@npm:^4.0.1":
   version: 4.0.2
   resolution: "write-file-atomic@npm:4.0.2"
   dependencies:
@@ -25486,7 +25334,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yargs@npm:^17.3.1, yargs@npm:^17.5.1":
+"yargs@npm:^17.3.1":
   version: 17.5.1
   resolution: "yargs@npm:17.5.1"
   dependencies:
