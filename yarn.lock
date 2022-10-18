@@ -6247,7 +6247,7 @@ __metadata:
     karma: 6.4.1
     karma-chrome-launcher: 3.1.1
     karma-jasmine: 4.0.2
-    karma-jasmine-diff-reporter: 2.0.1
+    karma-jasmine-diff-reporter: 3.0.0
     karma-sourcemap-loader: 0.3.8
     karma-spec-reporter: 0.0.34
     rimraf: 3.0.2
@@ -16076,14 +16076,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"karma-jasmine-diff-reporter@npm:2.0.1":
-  version: 2.0.1
-  resolution: "karma-jasmine-diff-reporter@npm:2.0.1"
+"karma-jasmine-diff-reporter@npm:3.0.0":
+  version: 3.0.0
+  resolution: "karma-jasmine-diff-reporter@npm:3.0.0"
   dependencies:
     chalk: ^2.4.1
     diff: ^3.5.0
     karma: ">=0.9"
-  checksum: 78eee07d2f157adb7b596ac5b14cf691fa7d973ba2f9bbaccf10b177a852ff11f2b19229f03afd6c497ac089d3553433cc5154cdf376c117fd10baabeb347969
+  checksum: 52fcf35a26dd6bae3329ced4d8749b78683ec30e91bf1c6520c64c35f6e9b100f474ad92f7da6a333762c1f750e06329bd0d8dba049e25317b9ca9d4c50ec3a1
   languageName: node
   linkType: hard
 
