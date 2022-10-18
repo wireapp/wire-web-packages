@@ -5208,14 +5208,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:18.0.9":
-  version: 18.0.9
-  resolution: "@types/react@npm:18.0.9"
+"@types/react@npm:18.0.21":
+  version: 18.0.21
+  resolution: "@types/react@npm:18.0.21"
   dependencies:
     "@types/prop-types": "*"
     "@types/scheduler": "*"
     csstype: ^3.0.2
-  checksum: 162364dad716d9017ee34aabf2ea37499709ebbdef70392ae1b39225985971e1a46f121efb9c5c7da92144ee1d96d4525df806a7c1c03a5db7fd31dd034ddc7a
+  checksum: 36c1a7c9d507e81e2e629c1ad3db51d7b84d8b010c2d5008da411874286c6a5ccc711ae1d4c470efc0bdc77153cc8804a40e927e929e5164c669ca41b84b846d
   languageName: node
   linkType: hard
 
@@ -6004,7 +6004,7 @@ __metadata:
     logdown: 3.3.1
     nock: 13.2.9
     nyc: 15.1.0
-    react: 18.1.0
+    react: 18.2.0
     react-dom: 18.1.0
     react-hot-loader: 4.13.0
     reconnecting-websocket: 4.4.0
@@ -6315,7 +6315,7 @@ __metadata:
     "@testing-library/react": 13.3.0
     "@types/color": 3.0.2
     "@types/jest": ^29.1.1
-    "@types/react": 18.0.9
+    "@types/react": 18.0.21
     "@types/webpack-env": 1.18.0
     babel-jest: 27.0.6
     babel-loader: 8.2.2
@@ -6324,7 +6324,7 @@ __metadata:
     emotion-normalize: 11.0.1
     jest: 29.0.3
     jest-environment-jsdom: 29.2.0
-    react: 18.1.0
+    react: 18.2.0
     react-dom: 18.1.0
     react-helmet: 6.1.0
     react-hot-loader: 4.13.0
@@ -20286,12 +20286,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:18.1.0":
-  version: 18.1.0
-  resolution: "react@npm:18.1.0"
+"react@npm:18.2.0":
+  version: 18.2.0
+  resolution: "react@npm:18.2.0"
   dependencies:
     loose-envify: ^1.1.0
-  checksum: 5bb296b561b43ef2220395da4faac86c14a087c8c80e1a7598a5740f01ee605c11eaf249985c1e2000971c4cd32ccb46d40f00479bbd9fb6b1c7cf857393b7d4
+  checksum: 88e38092da8839b830cda6feef2e8505dec8ace60579e46aa5490fc3dc9bba0bd50336507dc166f43e3afc1c42939c09fe33b25fae889d6f402721dcd78fca1b
   languageName: node
   linkType: hard
 
