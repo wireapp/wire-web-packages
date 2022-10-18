@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "@babel/eslint-parser": "7.17.0",
+    "@babel/eslint-parser": "7.19.1",
     "@lerna-lite/changed": "^1.11.3",
     "@lerna-lite/cli": "^1.11.3",
     "@lerna-lite/run": "^1.11.3",
