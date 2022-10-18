@@ -11076,10 +11076,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jasmine@npm:4.1.2":
-  version: 4.1.2
-  resolution: "eslint-plugin-jasmine@npm:4.1.2"
-  checksum: 0ce260d2ed15548a2e1f1be65cd5ee6aeb572ce7e3f0223dbac1a006a0c8a96863efd8cfd1ff69ef88c701d14d678bd8689e8120519452cc14a1ff7c2d37d791
+"eslint-plugin-jasmine@npm:4.1.3":
+  version: 4.1.3
+  resolution: "eslint-plugin-jasmine@npm:4.1.3"
+  checksum: 845f25626934bb372b0d013216e1d5cbf8c4069404cf042b7325ee78e60033641d6ca397b341d7ba29ae9f01a5c22718a438bbaa4b90914240cde4b86ea112c8
   languageName: node
   linkType: hard
 
@@ -20933,7 +20933,7 @@ __metadata:
     eslint-config-prettier: 8.3.0
     eslint-plugin-header: 3.1.1
     eslint-plugin-import: 2.26.0
-    eslint-plugin-jasmine: 4.1.2
+    eslint-plugin-jasmine: 4.1.3
     eslint-plugin-jest: 24.4.0
     eslint-plugin-jsdoc: 36.0.6
     eslint-plugin-no-unsanitized: 4.0.1
