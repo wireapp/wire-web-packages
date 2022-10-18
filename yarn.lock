@@ -4818,10 +4818,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jasmine@npm:3.8.2":
-  version: 3.8.2
-  resolution: "@types/jasmine@npm:3.8.2"
-  checksum: f4a91ba3c508ad503790e299dadccbc5f4e6496408757c43a5f378e144f338cacf946cc36ca15d51d89e9faaf1fe49e61288ea4c19d4deedf92cc16035c203b7
+"@types/jasmine@npm:4.3.0":
+  version: 4.3.0
+  resolution: "@types/jasmine@npm:4.3.0"
+  checksum: 8a4c8716d80ee6fd9e8976ce5d929fde9d34daa012ecd57e598149ecebf3e8acf42b4ebaf746e13b40a0564f9f3ca7a10a9c8eb2c95a047412ae3f37168bac01
   languageName: node
   linkType: hard
 
@@ -5842,10 +5842,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wireapp/certificate-check@workspace:packages/certificate-check"
   dependencies:
-    "@types/jasmine": 3.8.2
+    "@types/jasmine": 4.3.0
     "@types/jsrsasign": 8.0.13
     "@types/node": ^14.18.29
-    jasmine: 3.8.0
+    jasmine: 4.4.0
     jsrsasign: 10.5.25
     nyc: 15.1.0
     rimraf: 3.0.2
@@ -5907,7 +5907,7 @@ __metadata:
     copy: 0.3.2
     cosmiconfig: 7.0.0
     fs-extra: 10.1.0
-    jasmine: 3.8.0
+    jasmine: 4.4.0
     jszip: 3.7.0
     logdown: 3.3.1
     rimraf: 3.0.2
@@ -6062,7 +6062,7 @@ __metadata:
     "@types/karma": 6.3.3
     "@types/node": ^14.18.29
     cross-env: 7.0.3
-    jasmine: 3.8.0
+    jasmine: 4.4.0
     karma: 6.4.1
     karma-chrome-launcher: 3.1.1
     karma-jasmine: 4.0.2
@@ -6170,12 +6170,12 @@ __metadata:
   resolution: "@wireapp/store-engine-bro-fs@workspace:packages/store-engine-bro-fs"
   dependencies:
     "@types/bro-fs": 0.6.1
-    "@types/jasmine": 3.8.2
+    "@types/jasmine": 4.3.0
     "@types/karma": 6.3.3
     "@types/node": ^14.18.29
     "@wireapp/store-engine": "workspace:^"
     bro-fs: 0.6.0
-    jasmine: 3.8.0
+    jasmine: 4.4.0
     karma: 6.4.1
     karma-chrome-launcher: 3.1.1
     karma-jasmine: 4.0.2
@@ -6192,12 +6192,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wireapp/store-engine-dexie@workspace:packages/store-engine-dexie"
   dependencies:
-    "@types/jasmine": 3.8.2
+    "@types/jasmine": 4.3.0
     "@types/karma": 6.3.3
     "@types/node": ^14.18.29
     "@wireapp/store-engine": "workspace:^"
     dexie: 3.2.2
-    jasmine: 3.8.0
+    jasmine: 4.4.0
     karma: 6.4.1
     karma-chrome-launcher: 3.1.1
     karma-jasmine: 4.0.2
@@ -6217,11 +6217,11 @@ __metadata:
   resolution: "@wireapp/store-engine-fs@workspace:packages/store-engine-fs"
   dependencies:
     "@types/fs-extra": 9.0.12
-    "@types/jasmine": 3.8.2
+    "@types/jasmine": 4.3.0
     "@types/node": ^14.18.29
     "@wireapp/store-engine": "workspace:^"
     fs-extra: 10.0.0
-    jasmine: 3.8.0
+    jasmine: 4.4.0
     nyc: 15.1.0
     rimraf: 3.0.2
     ts-node: ^10.9.1
@@ -6240,7 +6240,7 @@ __metadata:
     "@babel/plugin-proposal-object-rest-spread": 7.14.7
     "@babel/plugin-proposal-optional-chaining": 7.14.5
     "@babel/preset-typescript": 7.14.5
-    "@types/jasmine": 3.8.2
+    "@types/jasmine": 4.3.0
     "@types/karma": 6.3.3
     "@types/karma-webpack": 2.0.11
     "@types/node": ^14.18.29
@@ -6250,7 +6250,7 @@ __metadata:
     "@wireapp/websql": 0.0.17
     babel-loader: 8.2.2
     bazinga64: 5.11.6
-    jasmine: 3.8.0
+    jasmine: 4.4.0
     karma: 6.4.1
     karma-chrome-launcher: 3.1.1
     karma-jasmine: 4.0.2
@@ -6269,11 +6269,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wireapp/store-engine-web-storage@workspace:packages/store-engine-web-storage"
   dependencies:
-    "@types/jasmine": 3.8.2
+    "@types/jasmine": 4.3.0
     "@types/karma": 6.3.3
     "@types/node": ^14.18.29
     "@wireapp/store-engine": "workspace:^"
-    jasmine: 3.8.0
+    jasmine: 4.4.0
     karma: 6.4.1
     karma-chrome-launcher: 3.1.1
     karma-jasmine: 4.0.2
@@ -6299,10 +6299,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wireapp/store-engine@workspace:packages/store-engine"
   dependencies:
-    "@types/jasmine": 3.8.2
+    "@types/jasmine": 4.3.0
     "@types/karma": 6.3.3
     "@types/node": ^14.18.29
-    jasmine: 3.8.0
+    jasmine: 4.4.0
     karma: 6.4.1
     karma-chrome-launcher: 3.1.1
     karma-jasmine: 4.0.2
@@ -7635,11 +7635,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "bazinga64@workspace:packages/bazinga64"
   dependencies:
-    "@types/jasmine": 3.8.2
+    "@types/jasmine": 4.3.0
     "@types/libsodium-wrappers-sumo": 0.7.5
     "@types/node": ^14.18.29
     cross-env: 7.0.3
-    jasmine: 3.8.0
+    jasmine: 4.4.0
     libsodium-wrappers-sumo: 0.7.9
     nyc: 15.1.0
     rimraf: 3.0.2
@@ -14778,22 +14778,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jasmine-core@npm:^3.6.0, jasmine-core@npm:~3.8.0":
+"jasmine-core@npm:^3.6.0":
   version: 3.8.0
   resolution: "jasmine-core@npm:3.8.0"
   checksum: 6490373bd96d4d2a3c74214d307f8c37394370b1e892b9f203d4c5eda56941d53f84aabee0e65538b6921a190710618f1e73af44bd1d93e6c6e6c3f5c4bbfab6
   languageName: node
   linkType: hard
 
-"jasmine@npm:3.8.0":
-  version: 3.8.0
-  resolution: "jasmine@npm:3.8.0"
+"jasmine-core@npm:^4.4.0":
+  version: 4.4.0
+  resolution: "jasmine-core@npm:4.4.0"
+  checksum: b52e2f17080dd33628dee73c8b6eb9fbe793126a5e4ceb77ecf164f15fc44f6b29baa1e034992630a866522f470d62dc2f3c364b234af3487a9507c9d1ae0d94
+  languageName: node
+  linkType: hard
+
+"jasmine@npm:4.4.0":
+  version: 4.4.0
+  resolution: "jasmine@npm:4.4.0"
   dependencies:
     glob: ^7.1.6
-    jasmine-core: ~3.8.0
+    jasmine-core: ^4.4.0
   bin:
     jasmine: bin/jasmine.js
-  checksum: 2527ec4b72fe72575bbe13a89e75d4b41d073ecd54622d714e1046b9ec0fa31a43b6ae286d5b499b2785b2df90fe2da116d24d9207984bf5c734e502ccc3dc42
+  checksum: 4b0b1a35b4e0e719b1193afda12b2f0d798aee4b1d495beffa67fdb4258a54abfe12389470fce0751b11f53014e2c511f1860e81c9aedde691ddb76b9adad7c4
   languageName: node
   linkType: hard
 
