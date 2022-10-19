@@ -5749,7 +5749,7 @@ __metadata:
     fake-indexeddb: 4.0.0
     hash.js: 1.1.7
     http-status-codes: 2.2.0
-    idb: 7.0.2
+    idb: 7.1.0
     istanbul: 1.1.0-alpha.1
     jest: 29.2.1
     jest-babel: 1.0.1
@@ -13065,10 +13065,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"idb@npm:7.0.2":
-  version: 7.0.2
-  resolution: "idb@npm:7.0.2"
-  checksum: 60ebe6d5c25d9d82d400fa90e769045a9a3f44dfbc3094b105f8666f025d84f2a779e5416211572fc51f6057f8e130cb1bbfaa06cfd6f196701a8fca9f0eda17
+"idb@npm:7.1.0":
+  version: 7.1.0
+  resolution: "idb@npm:7.1.0"
+  checksum: 1ae62bcf9f0545390b39ce82a5162720ffeb4cf461a6e64e8bb595df6a4fe94a7f73bba8412ac683e291e5614bab1c6659d961dd4175cb1fa3ee29c1c8631549
   languageName: node
   linkType: hard
 
