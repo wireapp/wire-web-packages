@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@wireapp/websql": "0.0.17",
-    "bazinga64": "5.11.8",
+    "bazinga64": "5.11.9",
     "uint32": "0.2.1"
   },
   "devDependencies": {
@@ -13,7 +13,7 @@
     "@types/jasmine": "4.3.0",
     "@types/karma": "6.3.3",
     "@types/karma-webpack": "2.0.11",
-    "@types/node": "^14.18.29",
+    "@types/node": "^18.11.2",
     "@types/uint32": "0.2.0",
     "@types/webpack": "4.41.27",
     "@wireapp/store-engine": "workspace:^",
@@ -49,5 +49,5 @@
     "test": "yarn build && karma start",
     "test:project": "yarn build && yarn test"
   },
-  "version": "1.8.8"
+  "version": "1.8.9"
 }

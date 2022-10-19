@@ -4,7 +4,7 @@
     "jest/globals": true
   },
   "extends": ["./packages/eslint-config/eslintrc.js", "plugin:jest/recommended"],
-  "ignorePatterns": ["*config.js", "demo/", "bin/", "eslint*", "webpack*"],
+  "ignorePatterns": ["*config.js", "demo/", "bin/", "eslint*", "webpack*", "*.js"],
   "globals": {
     "NodeJS": "readonly"
   },
@@ -31,9 +31,7 @@
     "jest/no-done-callback": "warn",
     "jest/no-disabled-tests": "warn",
     "jest/no-conditional-expect": "warn",
-    "jest/valid-expect": "warn",
-    "jest/no-try-expect": "warn",
-    "jest/valid-title": "warn",
-    "jest/valid-describe": "warn"
+    "jest/valid-describe-callback": "warn",
+    "jest/valid-title": "warn"
   }
 }
