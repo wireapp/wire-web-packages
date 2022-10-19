@@ -128,9 +128,9 @@ interface AccountOptions<T> {
   nbPrekeys?: number;
 
   /**
-   * Config for MLS devices. Will not load corecrypt or create MLS devices if undefined
+   * Config for MLS devices.
    */
-  mlsConfig?: MLSConfig<T>;
+  mlsConfig: MLSConfig<T>;
 }
 
 const coreDefaultClient: ClientInfo = {
@@ -145,7 +145,7 @@ export class Account<T = any> extends EventEmitter {
   private readonly createStore: CreateStoreFn;
   private storeEngine?: CRUDEngine;
   private readonly nbPrekeys: number;
-  private readonly mlsConfig?: MLSConfig<T>;
+  private readonly mlsConfig: MLSConfig<T>;
   private coreCryptoClient?: CoreCrypto;
 
   public static readonly TOPIC = TOPIC;
@@ -173,7 +173,7 @@ export class Account<T = any> extends EventEmitter {
    */
   constructor(
     apiClient: APIClient = new APIClient(),
-    {createStore = () => undefined, nbPrekeys = 2, mlsConfig}: AccountOptions<T> = {},
+    {createStore = () => undefined, nbPrekeys = 2, mlsConfig}: AccountOptions<T>,
   ) {
     super();
     this.apiClient = apiClient;
@@ -238,16 +238,14 @@ export class Account<T = any> extends EventEmitter {
     if (initClient) {
       await this.initClient({clientType});
 
-      if (this.mlsConfig) {
-        // initialize schedulers for pending mls proposals once client is initialized
-        await this.service?.notification.checkExistingPendingProposals();
+      // initialize schedulers for pending mls proposals once client is initialized
+      await this.service?.notification.checkExistingPendingProposals();
 
-        // initialize schedulers for renewing key materials
-        await this.service?.notification.checkForKeyMaterialsUpdate();
+      // initialize schedulers for renewing key materials
+      await this.service?.notification.checkForKeyMaterialsUpdate();
 
-        // initialize scheduler for syncing key packages with backend
-        await this.service?.notification.checkForKeyPackagesBackendSync();
-      }
+      // initialize scheduler for syncing key packages with backend
+      await this.service?.notification.checkForKeyPackagesBackendSync();
     }
     return context;
   }
@@ -416,14 +414,12 @@ export class Account<T = any> extends EventEmitter {
     const loadedClient = await this.service!.client.getLocalClient();
     await this.apiClient.api.client.getClient(loadedClient.id);
     this.apiClient.context!.clientId = loadedClient.id;
-    if (this.mlsConfig) {
-      this.coreCryptoClient = await this.createMLSClient(
-        loadedClient,
-        this.apiClient.context!,
-        this.mlsConfig,
-        entropyData,
-      );
-    }
+    this.coreCryptoClient = await this.createMLSClient(
+      loadedClient,
+      this.apiClient.context!,
+      this.mlsConfig,
+      entropyData,
+    );
 
     return loadedClient;
   }
@@ -480,16 +476,14 @@ export class Account<T = any> extends EventEmitter {
     if (!this.service) {
       throw new Error('Services are not set.');
     }
-    this.logger.info(`Creating new client {mls: ${!!this.mlsConfig}}`);
+    this.logger.info(`Creating new client {mls: ${this.mlsConfig}}`);
     const registeredClient = await this.service.client.register(loginData, clientInfo, entropyData);
-    if (this.mlsConfig) {
-      this.coreCryptoClient = await this.createMLSClient(
-        registeredClient,
-        this.apiClient.context!,
-        this.mlsConfig,
-        entropyData,
-      );
-    }
+    this.coreCryptoClient = await this.createMLSClient(
+      registeredClient,
+      this.apiClient.context!,
+      this.mlsConfig,
+      entropyData,
+    );
     this.apiClient.context!.clientId = registeredClient.id;
     this.logger.info('Client is created');
 
