@@ -586,5 +586,3 @@ export class NotificationService extends EventEmitter {
     this.scheduleKeyPackagesSync(nextKeyPackagesQueryDate);
   }
 }
-
-console.info('BARDIA YALC');
