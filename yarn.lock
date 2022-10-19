@@ -4459,10 +4459,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jsrsasign@npm:8.0.13":
-  version: 8.0.13
-  resolution: "@types/jsrsasign@npm:8.0.13"
-  checksum: 53b67f7f49a35c04abd9e33a35b1b8beb653e414cfc7e046052eedf0d4ab39d785888c56fadf8206e82a8d5f2ef9daecb2286548e867096bbafce7e02a004599
+"@types/jsrsasign@npm:10.5.4":
+  version: 10.5.4
+  resolution: "@types/jsrsasign@npm:10.5.4"
+  checksum: e0ec7dcd534fe9a672a9b306f951f24eef1019b4d879d57e29a154eeb38cfb47f59239c2af1d202da211357feb452b96c45b8229ef3c440cf6d96606f4e5cff1
   languageName: node
   linkType: hard
 
@@ -5545,10 +5545,10 @@ __metadata:
   resolution: "@wireapp/certificate-check@workspace:packages/certificate-check"
   dependencies:
     "@types/jasmine": 4.3.0
-    "@types/jsrsasign": 8.0.13
+    "@types/jsrsasign": 10.5.4
     "@types/node": ^14.18.29
     jasmine: 4.4.0
-    jsrsasign: 10.5.25
+    jsrsasign: 10.5.27
     nyc: 15.1.0
     rimraf: 3.0.2
     ts-node: ^10.9.1
@@ -15521,10 +15521,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsrsasign@npm:10.5.25":
-  version: 10.5.25
-  resolution: "jsrsasign@npm:10.5.25"
-  checksum: e789cd6d5e6e236edebe91936279cdef886aafaab8d4ebc7d40b8ba0c7b7cd0d6d3c53fba26ea96eb33cc77a05368b369ef31fc9182662bce2344143ad50ea0f
+"jsrsasign@npm:10.5.27":
+  version: 10.5.27
+  resolution: "jsrsasign@npm:10.5.27"
+  checksum: 77ebac65d39399e7702002ed75a39f6af9bfe0f839f19c65a878e6f2d5a96fb19433628509c344e25531794d84c913dbd7b1c522188883c5258fd531fb992e17
   languageName: node
   linkType: hard
 
