@@ -247,7 +247,7 @@ describe('toArrayBufferView', () => {
       bazinga64.Converter.toArrayBufferView(new Error() as any);
     };
 
-    expect(test).toThrowError(bazinga64.UnsupportedInputError);
+    expect(test).toThrow(bazinga64.UnsupportedInputError);
   });
 });
 
@@ -283,7 +283,7 @@ describe('toString', () => {
       bazinga64.Converter.toArrayBufferView(new Error() as any);
     };
 
-    expect(test).toThrowError(bazinga64.UnsupportedInputError);
+    expect(test).toThrow(bazinga64.UnsupportedInputError);
   });
 });
 
