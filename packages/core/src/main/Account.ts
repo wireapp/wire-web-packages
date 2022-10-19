@@ -141,10 +141,10 @@ type InitOptions = {
   initClient?: boolean;
 
   /**
-   * callback triggered when a new session between 2 devices is created.
-   * This happens when receiving a message from a device that doesn't already have an established session
+   * callback triggered when a message from an unknown client is received.
+   * An unknown client is a client we don't yet have a session with
    */
-  onNewSession?: (sessionId: SessionId) => void;
+  onNewClient?: (sessionId: SessionId) => void;
 };
 
 const coreDefaultClient: ClientInfo = {
@@ -245,7 +245,7 @@ export class Account<T = any> extends EventEmitter {
    */
   public async init(
     clientType: ClientType,
-    {cookie, initClient = true, onNewSession}: InitOptions = {},
+    {cookie, initClient = true, onNewClient}: InitOptions = {},
   ): Promise<Context> {
     const context = await this.apiClient.init(clientType, cookie);
     await this.initServices(context);
@@ -258,7 +258,7 @@ export class Account<T = any> extends EventEmitter {
         this.logger.debug(`Successfully uploaded '${prekeys.length}' PreKeys.`);
       },
 
-      onNewSession,
+      onNewSession: onNewClient,
     });
 
     // Assumption: client gets only initialized once
