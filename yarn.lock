@@ -16430,7 +16430,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json5@npm:^2.1.2, json5@npm:^2.2.0":
+"json5@npm:^2.1.2":
   version: 2.2.0
   resolution: "json5@npm:2.2.0"
   dependencies:
@@ -21715,7 +21715,7 @@ __metadata:
     jest: ^29.0.3
     lint-staged: 13.0.3
     prettier: 2.7.1
-    tsconfig-paths: 3.10.1
+    tsconfig-paths: 4.1.0
     typescript: ^4.8.3
   languageName: unknown
   linkType: soft
@@ -23840,14 +23840,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsconfig-paths@npm:3.10.1":
-  version: 3.10.1
-  resolution: "tsconfig-paths@npm:3.10.1"
+"tsconfig-paths@npm:4.1.0":
+  version: 4.1.0
+  resolution: "tsconfig-paths@npm:4.1.0"
   dependencies:
-    json5: ^2.2.0
-    minimist: ^1.2.0
+    json5: ^2.2.1
+    minimist: ^1.2.6
     strip-bom: ^3.0.0
-  checksum: 014ec869276114031d3bd6d2d9ce07c32c96ca6912f32285f46eeb4ca5270bd4c5e4de1353b838c66282157f089dedc8c3377c4e72e2f3d910e706c7b9ac5e6d
+  checksum: e4b101f81b2abd95499d8145e0aa73144e857c2c359191058486cef101b7accae22a69114e5d5814a13d5ab3b0bae70dd0c85bcdb7e829bbe1bfda5c9067c9b1
   languageName: node
   linkType: hard
 
