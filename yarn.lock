@@ -5518,7 +5518,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/webpack@npm:4.41.27, @types/webpack@npm:^4":
+"@types/webpack@npm:5.28.0":
+  version: 5.28.0
+  resolution: "@types/webpack@npm:5.28.0"
+  dependencies:
+    "@types/node": "*"
+    tapable: ^2.2.0
+    webpack: ^5
+  checksum: a038d7e12dd109c6a8d2eb744fd32070ef94f1655e730fb1443b370db98864c3a0e408638b02d12ba08269b9c012b3be8b801117ced2d1102e7676203fd663ed
+  languageName: node
+  linkType: hard
+
+"@types/webpack@npm:^4":
   version: 4.41.27
   resolution: "@types/webpack@npm:4.41.27"
   dependencies:
@@ -6585,7 +6596,7 @@ __metadata:
     "@types/karma-webpack": 2.0.11
     "@types/node": ^14.18.29
     "@types/uint32": 0.2.0
-    "@types/webpack": 4.41.27
+    "@types/webpack": 5.28.0
     "@wireapp/store-engine": "workspace:^"
     "@wireapp/websql": 0.0.17
     babel-loader: 8.2.2
@@ -25093,7 +25104,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack@npm:^5.74.0":
+"webpack@npm:^5, webpack@npm:^5.74.0":
   version: 5.74.0
   resolution: "webpack@npm:5.74.0"
   dependencies:
