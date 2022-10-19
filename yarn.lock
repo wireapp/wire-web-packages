@@ -819,7 +819,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-proposal-class-properties@npm:7.18.6, @babel/plugin-proposal-class-properties@npm:^7.18.6":
+"@babel/plugin-proposal-class-properties@npm:^7.18.6":
   version: 7.18.6
   resolution: "@babel/plugin-proposal-class-properties@npm:7.18.6"
   dependencies:
@@ -916,7 +916,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-proposal-object-rest-spread@npm:7.19.4, @babel/plugin-proposal-object-rest-spread@npm:^7.19.4":
+"@babel/plugin-proposal-object-rest-spread@npm:^7.19.4":
   version: 7.19.4
   resolution: "@babel/plugin-proposal-object-rest-spread@npm:7.19.4"
   dependencies:
@@ -943,7 +943,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-proposal-optional-chaining@npm:7.18.9, @babel/plugin-proposal-optional-chaining@npm:^7.18.9":
+"@babel/plugin-proposal-optional-chaining@npm:^7.18.9":
   version: 7.18.9
   resolution: "@babel/plugin-proposal-optional-chaining@npm:7.18.9"
   dependencies:
@@ -3691,13 +3691,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/anymatch@npm:*":
-  version: 1.3.1
-  resolution: "@types/anymatch@npm:1.3.1"
-  checksum: 1eeb16286102a98eda415e1ade6fb980ff0a001fc21e777af8932001ebbd324d0d2fbbd5ef51c828346ff71847ba00af3f73d1dfea434efb9b72467b8cf0343a
-  languageName: node
-  linkType: hard
-
 "@types/aria-query@npm:^4.2.0":
   version: 4.2.2
   resolution: "@types/aria-query@npm:4.2.2"
@@ -3865,13 +3858,6 @@ __metadata:
   version: 2.8.12
   resolution: "@types/cors@npm:2.8.12"
   checksum: 8c45f112c7d1d2d831b4b266f2e6ed33a1887a35dcbfe2a18b28370751fababb7cd045e745ef84a523c33a25932678097bf79afaa367c6cb3fa0daa7a6438257
-  languageName: node
-  linkType: hard
-
-"@types/emscripten@npm:1.39.3":
-  version: 1.39.3
-  resolution: "@types/emscripten@npm:1.39.3"
-  checksum: 9d049dc2cf296e60696f23775eadd1c6a3375d30ed4bb378d9ce740bf685445444463f87b69559e3f4dfdf45391c96d5a5431316876476c0f4f47bb21e325136
   languageName: node
   linkType: hard
 
@@ -4111,27 +4097,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/karma-webpack@npm:2.0.11":
-  version: 2.0.11
-  resolution: "@types/karma-webpack@npm:2.0.11"
-  dependencies:
-    "@types/karma": "*"
-    "@types/webpack": ^4
-    "@types/webpack-dev-middleware": 3
-  checksum: 9f25971126f8bf26d2419080d499b5a82be83cc91d193471890f0dd333a0e108ac89821301cc71118b768b5588bab27fafd4ab8985a36ab36beb6df1f83b937b
-  languageName: node
-  linkType: hard
-
-"@types/karma@npm:*":
-  version: 6.3.1
-  resolution: "@types/karma@npm:6.3.1"
-  dependencies:
-    "@types/node": "*"
-    log4js: ^6.2.1
-  checksum: b0dd4b2b04ec1f87145de046d8108ab4e95ce43480a6f0c03a828b53d4cf821ef232bacac9e42de8b739f4c646d971ea7a06065d5e3d6a089099c25431534995
-  languageName: node
-  linkType: hard
-
 "@types/karma@npm:6.3.3":
   version: 6.3.3
   resolution: "@types/karma@npm:6.3.3"
@@ -4183,15 +4148,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/memory-fs@npm:*":
-  version: 0.3.2
-  resolution: "@types/memory-fs@npm:0.3.2"
-  dependencies:
-    "@types/node": "*"
-  checksum: 49beb432bd4b201a59c34df90a198d5cf6b58348a26aa1b133ad6dd0d83ecf7b38b1c487659ea306592c8d80337e79a437131a34182d290a9c354bc2efc142c0
-  languageName: node
-  linkType: hard
-
 "@types/mime@npm:*":
   version: 3.0.1
   resolution: "@types/mime@npm:3.0.1"
@@ -4224,13 +4180,6 @@ __metadata:
   version: 18.7.18
   resolution: "@types/node@npm:18.7.18"
   checksum: 8aec61f0f96e2a69ce51f1f40f949ca578bbb4fe05d7c0b8ce3aeeb848e90f755837f17f6ac132ca404d974fe9b2974150ad3b4984fc9dc7c3ceddb10bae0167
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:13.13.4":
-  version: 13.13.4
-  resolution: "@types/node@npm:13.13.4"
-  checksum: 07b869f5e9e477ef116eec4183cb9cbb1cdec1f6390fba925471235a668032e897bb1bff446d9df8bd17d0d81a4dbfe4e69458baaad0a05b6a64b0b4c59df5aa
   languageName: node
   linkType: hard
 
@@ -4419,13 +4368,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/source-list-map@npm:*":
-  version: 0.1.2
-  resolution: "@types/source-list-map@npm:0.1.2"
-  checksum: fda8f37537aca9d3ed860d559289ab1dddb6897e642e6f53e909bbd18a7ac3129a8faa2a7d093847c91346cf09c86ef36e350c715406fba1f2271759b449adf6
-  languageName: node
-  linkType: hard
-
 "@types/spark-md5@npm:3.0.2":
   version: 3.0.2
   resolution: "@types/spark-md5@npm:3.0.2"
@@ -4437,13 +4379,6 @@ __metadata:
   version: 2.0.0
   resolution: "@types/stack-utils@npm:2.0.0"
   checksum: b3fbae25b073116977ecb5c67d22f14567b51a7792403b0bf46e5de8f29bde3bd4ec1626afb22065495ca7f1c699c8bd66720050c94b8f8f9bcefbee79d161fd
-  languageName: node
-  linkType: hard
-
-"@types/tapable@npm:^1":
-  version: 1.0.7
-  resolution: "@types/tapable@npm:1.0.7"
-  checksum: efae5c6cd184cbd768f98c0777c829e30045d57664731f36fcc7e32a372fd01c0f50283375e8cd6e325d321d7962906d2bdb82ee4595f7b9f53cefd3011bfa82
   languageName: node
   linkType: hard
 
@@ -4470,22 +4405,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/uglify-js@npm:*":
-  version: 3.0.4
-  resolution: "@types/uglify-js@npm:3.0.4"
-  dependencies:
-    source-map: ^0.6.1
-  checksum: 048330d2c102653cdecd848c541fe5fa87ec0f7c35ce2eb86d2b9c0e3c8cafc74dff4b5dcab36c35d71000177ad367e69302ad3f6f548a78cf07c5c26c73c898
-  languageName: node
-  linkType: hard
-
-"@types/uint32@npm:0.2.0":
-  version: 0.2.0
-  resolution: "@types/uint32@npm:0.2.0"
-  checksum: 10e31438f0be48629742ff148f2ae0030008b63d232472bc836dd19c34cdf219ccdfac1d7ff5d89e116c405e4b43e485268375f3343d00a84d1b3f32e3e24691
-  languageName: node
-  linkType: hard
-
 "@types/unist@npm:*, @types/unist@npm:^2.0.0, @types/unist@npm:^2.0.2":
   version: 2.0.3
   resolution: "@types/unist@npm:2.0.3"
@@ -4503,47 +4422,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/webpack-dev-middleware@npm:3":
-  version: 3.7.5
-  resolution: "@types/webpack-dev-middleware@npm:3.7.5"
-  dependencies:
-    "@types/connect": "*"
-    "@types/memory-fs": "*"
-    "@types/webpack": ^4
-    loglevel: ^1.6.2
-  checksum: 0b15ce8d80a34928d26c634c184cf72ea1a9c8ebd076a28b96f462c3b7373ab8af730a12d29e5248d2c772c0c7714e2a55436d2aeeca94c529df646f9d40ae05
-  languageName: node
-  linkType: hard
-
 "@types/webpack-env@npm:1.18.0":
   version: 1.18.0
   resolution: "@types/webpack-env@npm:1.18.0"
   checksum: ecf4daa31cb37d474ac0ce058d83a3cadeb9881ca8107ae93c2299eaa9954943aae09b43e143c62ccbe4288a14db00c918c9debd707afe17c3998f873eaabc59
-  languageName: node
-  linkType: hard
-
-"@types/webpack-sources@npm:*":
-  version: 0.1.5
-  resolution: "@types/webpack-sources@npm:0.1.5"
-  dependencies:
-    "@types/node": "*"
-    "@types/source-list-map": "*"
-    source-map: ^0.6.1
-  checksum: 0cdf1916ba13f34747bd9f813ed73a071fadb1ab93e423e5e0a396303649adbcb5648280dabc9f33e48b6cebb37f4a498dea65d9fa816adbab41069493970a0b
-  languageName: node
-  linkType: hard
-
-"@types/webpack@npm:4.41.27, @types/webpack@npm:^4":
-  version: 4.41.27
-  resolution: "@types/webpack@npm:4.41.27"
-  dependencies:
-    "@types/anymatch": "*"
-    "@types/node": "*"
-    "@types/tapable": ^1
-    "@types/uglify-js": "*"
-    "@types/webpack-sources": "*"
-    source-map: ^0.6.0
-  checksum: e502f308846bae6d2e94df083022be1bf151f7e6be73738854d6c7cf7fb581218712114717190b91f6d16a827f6d977bf9c04deda2e8a81203ad2a712cc9121f
   languageName: node
   linkType: hard
 
@@ -5475,38 +5357,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/store-engine-sqleet@workspace:packages/store-engine-sqleet":
-  version: 0.0.0-use.local
-  resolution: "@wireapp/store-engine-sqleet@workspace:packages/store-engine-sqleet"
-  dependencies:
-    "@babel/core": 7.19.3
-    "@babel/plugin-proposal-class-properties": 7.18.6
-    "@babel/plugin-proposal-object-rest-spread": 7.19.4
-    "@babel/plugin-proposal-optional-chaining": 7.18.9
-    "@babel/preset-typescript": 7.18.6
-    "@types/jasmine": 4.3.0
-    "@types/karma": 6.3.3
-    "@types/karma-webpack": 2.0.11
-    "@types/node": ^18.11.2
-    "@types/uint32": 0.2.0
-    "@types/webpack": 4.41.27
-    "@wireapp/store-engine": "workspace:^"
-    "@wireapp/websql": 0.0.17
-    babel-loader: 8.2.5
-    bazinga64: 5.11.9
-    jasmine: 4.4.0
-    karma: 6.4.1
-    karma-chrome-launcher: 3.1.1
-    karma-jasmine: 4.0.2
-    karma-webpack: 5.0.0
-    ts-node: ^10.9.1
-    uint32: 0.2.1
-    webpack: 4.46.0
-  peerDependencies:
-    "@wireapp/store-engine": 4.x.x
-  languageName: unknown
-  linkType: soft
-
 "@wireapp/store-engine-web-storage@workspace:packages/store-engine-web-storage":
   version: 0.0.0-use.local
   resolution: "@wireapp/store-engine-web-storage@workspace:packages/store-engine-web-storage"
@@ -5562,18 +5412,6 @@ __metadata:
     typescript: 4.8.4
   languageName: unknown
   linkType: soft
-
-"@wireapp/websql@npm:0.0.17":
-  version: 0.0.17
-  resolution: "@wireapp/websql@npm:0.0.17"
-  dependencies:
-    "@types/emscripten": 1.39.3
-    "@types/node": 13.13.4
-    cpr: 3.0.1
-    pseudo-worker: 1.3.0
-  checksum: f9946a6eedb70aaf62a37761909c85bb0ee773af547e8bd79ce0a42021151509098b04339285c45120a0958953d8e9c5526486690c2bd3be8bc9a8fa2e47ba95
-  languageName: node
-  linkType: hard
 
 "@xtuc/ieee754@npm:^1.2.0":
   version: 1.2.0
@@ -8595,20 +8433,6 @@ __metadata:
     path-type: ^4.0.0
     yaml: ^1.10.0
   checksum: 6801feaa0249e9b9fdde5b3d70dc33b4f9c69095bec94d67e3fe08b66eac24dc7e2099f053597cfbc94b743de269aa5d2cfa7da3fde765433423b06bd122941a
-  languageName: node
-  linkType: hard
-
-"cpr@npm:3.0.1":
-  version: 3.0.1
-  resolution: "cpr@npm:3.0.1"
-  dependencies:
-    graceful-fs: ^4.1.5
-    minimist: ^1.2.0
-    mkdirp: ~0.5.1
-    rimraf: ^2.5.4
-  bin:
-    cpr: ./bin/cpr
-  checksum: cd598eaed9241b7282e0d531dbf4b900ce19616fb01309738a8731dc5f268c188a7bcf52e6451faa8d937d41398519a4dee6f70ee013132fcf6087de8af98922
   languageName: node
   linkType: hard
 
@@ -11774,7 +11598,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graceful-fs@npm:^4.1.11, graceful-fs@npm:^4.1.15, graceful-fs@npm:^4.1.2, graceful-fs@npm:^4.1.4, graceful-fs@npm:^4.1.5, graceful-fs@npm:^4.1.6, graceful-fs@npm:^4.2.0, graceful-fs@npm:^4.2.4, graceful-fs@npm:^4.2.6":
+"graceful-fs@npm:^4.1.11, graceful-fs@npm:^4.1.15, graceful-fs@npm:^4.1.2, graceful-fs@npm:^4.1.4, graceful-fs@npm:^4.1.6, graceful-fs@npm:^4.2.0, graceful-fs@npm:^4.2.4, graceful-fs@npm:^4.2.6":
   version: 4.2.9
   resolution: "graceful-fs@npm:4.2.9"
   checksum: 68ea4e07ff2c041ada184f9278b830375f8e0b75154e3f080af6b70f66172fabb4108d19b3863a96b53fc068a310b9b6493d86d1291acc5f3861eb4b79d26ad6
@@ -14811,19 +14635,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"karma-webpack@npm:5.0.0":
-  version: 5.0.0
-  resolution: "karma-webpack@npm:5.0.0"
-  dependencies:
-    glob: ^7.1.3
-    minimatch: ^3.0.4
-    webpack-merge: ^4.1.5
-  peerDependencies:
-    webpack: ^5.0.0
-  checksum: 869b835f91b99036d12c1b4342126b75093f7f524e2b245d557e720a402faf8bc90050f99962b0f12af98535812f46fa6325d1a7ed8569aed6dc5ead40c63ec4
-  languageName: node
-  linkType: hard
-
 "karma@npm:6.4.1":
   version: 6.4.1
   resolution: "karma@npm:6.4.1"
@@ -15348,7 +15159,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"log4js@npm:^6.2.1, log4js@npm:^6.3.0, log4js@npm:^6.4.1":
+"log4js@npm:^6.3.0, log4js@npm:^6.4.1":
   version: 6.4.1
   resolution: "log4js@npm:6.4.1"
   dependencies:
@@ -15367,13 +15178,6 @@ __metadata:
   dependencies:
     chalk: ^2.3.0
   checksum: 381e7be208f168fd6664ddfe6980ed4ff16ef73e1b9828795df22154e18b47f16737fec1c38f035dd12d10af947a9aded2d753f1b0ade190800e3a28e868a619
-  languageName: node
-  linkType: hard
-
-"loglevel@npm:^1.6.2":
-  version: 1.6.8
-  resolution: "loglevel@npm:1.6.8"
-  checksum: 0c4c9ffb1b9dcde5b2b6a23d5222b2c8be43e13e4c9dac190616ac1047141dc2f50c9d73a4444a1e0df99289857ed276e0458af7cd66a7665903e96382ee0228
   languageName: node
   linkType: hard
 
@@ -16143,7 +15947,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mkdirp@npm:0.5.x, mkdirp@npm:^0.5.0, mkdirp@npm:^0.5.1, mkdirp@npm:^0.5.3, mkdirp@npm:^0.5.5, mkdirp@npm:~0.5.1":
+"mkdirp@npm:0.5.x, mkdirp@npm:^0.5.0, mkdirp@npm:^0.5.1, mkdirp@npm:^0.5.3, mkdirp@npm:^0.5.5":
   version: 0.5.5
   resolution: "mkdirp@npm:0.5.5"
   dependencies:
@@ -18310,13 +18114,6 @@ __metadata:
   version: 1.0.1
   resolution: "prr@npm:1.0.1"
   checksum: 3bca2db0479fd38f8c4c9439139b0c42dcaadcc2fbb7bb8e0e6afaa1383457f1d19aea9e5f961d5b080f1cfc05bfa1fe9e45c97a1d3fd6d421950a73d3108381
-  languageName: node
-  linkType: hard
-
-"pseudo-worker@npm:1.3.0":
-  version: 1.3.0
-  resolution: "pseudo-worker@npm:1.3.0"
-  checksum: d06d7d945e98c11fdab1cccbb4c89c18f2a042c04a039492bd9dc6406920f287b5a1a143486881ac9cfbe9ebadb2fd89f166d58bf6d17dd7902a8750bf6214ab
   languageName: node
   linkType: hard
 
@@ -22043,13 +21840,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uint32@npm:0.2.1":
-  version: 0.2.1
-  resolution: "uint32@npm:0.2.1"
-  checksum: 9a0f16453e00e877adc49976d333096395ff805548234458dc8e34bd158d1e7e3b6e5aeca7b0aec39227f8f79c6d8c91e8f6855bae3b3ac8e8459fcd878a5bd4
-  languageName: node
-  linkType: hard
-
 "unbox-primitive@npm:^1.0.0":
   version: 1.0.0
   resolution: "unbox-primitive@npm:1.0.0"
@@ -23012,7 +22802,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack-merge@npm:^4.1.5, webpack-merge@npm:^4.2.2":
+"webpack-merge@npm:^4.2.2":
   version: 4.2.2
   resolution: "webpack-merge@npm:4.2.2"
   dependencies:
