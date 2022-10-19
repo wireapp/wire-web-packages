@@ -3771,15 +3771,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/bro-fs@npm:0.6.1":
-  version: 0.6.1
-  resolution: "@types/bro-fs@npm:0.6.1"
-  dependencies:
-    "@types/filesystem": "*"
-  checksum: dbb9ba0e1863c1b587985479c21bf6dc71c59b9b51f30b87874c213c602ef3d9beb51630083a3a4f396fbd436ece9642e34965748cfb99b5b5492b937de5b078
-  languageName: node
-  linkType: hard
-
 "@types/color-convert@npm:*":
   version: 1.9.0
   resolution: "@types/color-convert@npm:1.9.0"
@@ -3922,22 +3913,6 @@ __metadata:
     "@types/qs": "*"
     "@types/serve-static": "*"
   checksum: 15c1af46d02de834e4a225eccaa9d85c0370fdbb3ed4e1bc2d323d24872309961542b993ae236335aeb3e278630224a6ea002078d39e651d78a3b0356b1eaa79
-  languageName: node
-  linkType: hard
-
-"@types/filesystem@npm:*":
-  version: 0.0.32
-  resolution: "@types/filesystem@npm:0.0.32"
-  dependencies:
-    "@types/filewriter": "*"
-  checksum: 4b9079d200a3b241722b90e1c5806c4b32c4dac87d42a1c7ef76a2c0dafdbe7d5f1a379b873ad5de73622b44de6599e1522908f67b938d54e785bd1c36e302a0
-  languageName: node
-  linkType: hard
-
-"@types/filewriter@npm:*":
-  version: 0.0.28
-  resolution: "@types/filewriter@npm:0.0.28"
-  checksum: e558fd6aed0444e5512037f51ae21d43628012c20a2149b9d9aa4cef029a4a36c7d46cbce430ecac3beedf9a55ac0f9751acd83cec67236c22bbe988d7c46d04
   languageName: node
   linkType: hard
 
@@ -4974,7 +4949,6 @@ __metadata:
     nyc: 15.1.0
     react: 18.2.0
     react-dom: 18.2.0
-    react-hot-loader: 4.13.0
     reconnecting-websocket: 4.4.0
     sinon: 14.0.1
     sinon-har-server: 0.3.0
@@ -5284,27 +5258,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/store-engine-bro-fs@workspace:packages/store-engine-bro-fs":
-  version: 0.0.0-use.local
-  resolution: "@wireapp/store-engine-bro-fs@workspace:packages/store-engine-bro-fs"
-  dependencies:
-    "@types/bro-fs": 0.6.1
-    "@types/jasmine": 4.3.0
-    "@types/karma": 6.3.3
-    "@types/node": ^18.11.2
-    "@wireapp/store-engine": "workspace:^"
-    bro-fs: 0.6.0
-    jasmine: 4.4.0
-    karma: 6.4.1
-    karma-chrome-launcher: 3.1.1
-    karma-jasmine: 4.0.2
-    karma-typescript: 5.5.3
-    ts-node: ^10.9.1
-  peerDependencies:
-    "@wireapp/store-engine": 4.x.x
-  languageName: unknown
-  linkType: soft
-
 "@wireapp/store-engine-dexie@workspace:^, @wireapp/store-engine-dexie@workspace:packages/store-engine-dexie":
   version: 0.0.0-use.local
   resolution: "@wireapp/store-engine-dexie@workspace:packages/store-engine-dexie"
@@ -5321,6 +5274,7 @@ __metadata:
     karma-typescript: 5.5.3
     logdown: 3.3.1
     ts-node: ^10.9.1
+    typescript: 4.8.4
     uuidjs: 4.2.12
   peerDependencies:
     "@wireapp/store-engine": 4.x.x
@@ -5338,26 +5292,8 @@ __metadata:
     fs-extra: 10.1.0
     jasmine: 4.4.0
     nyc: 15.1.0
-    ts-node: ^10.9.1
-  peerDependencies:
-    "@wireapp/store-engine": 4.x.x
-  languageName: unknown
-  linkType: soft
-
-"@wireapp/store-engine-web-storage@workspace:packages/store-engine-web-storage":
-  version: 0.0.0-use.local
-  resolution: "@wireapp/store-engine-web-storage@workspace:packages/store-engine-web-storage"
-  dependencies:
-    "@types/jasmine": 4.3.0
-    "@types/karma": 6.3.3
-    "@types/node": ^18.11.2
-    "@wireapp/store-engine": "workspace:^"
-    jasmine: 4.4.0
-    karma: 6.4.1
-    karma-chrome-launcher: 3.1.1
-    karma-jasmine: 4.0.2
-    karma-typescript: 5.5.3
-    ts-node: ^10.9.1
+    ts-node: 10.9.1
+    typescript: 4.8.4
   peerDependencies:
     "@wireapp/store-engine": 4.x.x
   languageName: unknown
@@ -5387,6 +5323,7 @@ __metadata:
     karma-typescript: ^5.5.3
     nyc: 15.1.0
     ts-node: 10.9.1
+    typescript: 4.8.4
     webpack: 4.46.0
     webpack-cli: 4.10.0
   languageName: unknown
@@ -6810,13 +6747,6 @@ __metadata:
   dependencies:
     fill-range: ^7.0.1
   checksum: e2a8e769a863f3d4ee887b5fe21f63193a891c68b612ddb4b68d82d1b5f3ff9073af066c343e9867a393fe4c2555dcb33e89b937195feb9c1613d259edfcd459
-  languageName: node
-  linkType: hard
-
-"bro-fs@npm:0.6.0":
-  version: 0.6.0
-  resolution: "bro-fs@npm:0.6.0"
-  checksum: 3cd78b75a1894bc0b962e01e1f9a1fd7bb58876581cf75baeb8f63ad13eec2451d006482eb7864a0789773783c7349cf630300c50af98a076c217a2a18b83bca
   languageName: node
   linkType: hard
 
