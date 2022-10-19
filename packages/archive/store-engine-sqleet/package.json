@@ -1,7 +1,6 @@
 {
   "dependencies": {
     "@wireapp/websql": "0.0.17",
-    "bazinga64": "5.11.9",
     "uint32": "0.2.1"
   },
   "devDependencies": {
