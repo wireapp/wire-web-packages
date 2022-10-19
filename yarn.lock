@@ -19758,6 +19758,7 @@ __metadata:
     prettier: 2.7.1
     rimraf: 3.0.2
     tsconfig-paths: 4.1.0
+    typescript: 4.8.4
   languageName: unknown
   linkType: soft
 
