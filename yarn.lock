@@ -97,7 +97,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:7.19.3":
+"@babel/core@npm:7.19.3, @babel/core@npm:^7.19.1":
   version: 7.19.3
   resolution: "@babel/core@npm:7.19.3"
   dependencies:
@@ -5177,7 +5177,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wireapp/commons@workspace:packages/commons"
   dependencies:
-    "@babel/core": 7.19.3
+    "@babel/core": ^7.19.1
     "@babel/preset-env": ^7.19.1
     "@babel/preset-typescript": ^7.18.6
     "@types/babel__core": ^7
@@ -5228,7 +5228,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wireapp/core@workspace:packages/core"
   dependencies:
-    "@babel/core": 7.19.3
+    "@babel/core": ^7.19.1
     "@babel/preset-env": ^7.19.1
     "@babel/preset-typescript": ^7.18.6
     "@faker-js/faker": ^7.6.0
@@ -5372,7 +5372,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wireapp/promise-queue@workspace:packages/promise-queue"
   dependencies:
-    "@babel/core": 7.19.3
+    "@babel/core": ^7.19.1
     "@babel/preset-env": ^7.19.1
     "@babel/preset-typescript": 7.18.6
     "@types/babel__preset-env": ^7
