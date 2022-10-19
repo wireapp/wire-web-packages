@@ -6234,7 +6234,7 @@ __metadata:
     "@types/ws": 7.4.7
     "@wireapp/commons": "workspace:^"
     "@wireapp/priority-queue": "workspace:^"
-    "@wireapp/protocol-messaging": 1.38.0
+    "@wireapp/protocol-messaging": 1.39.0
     "@wireapp/store-engine": "workspace:^"
     "@wireapp/store-engine-fs": "workspace:^"
     axios: 0.21.4
@@ -6377,7 +6377,7 @@ __metadata:
     "@wireapp/core-crypto": 0.5.2
     "@wireapp/cryptobox": 12.8.0
     "@wireapp/promise-queue": "workspace:^"
-    "@wireapp/protocol-messaging": 1.38.0
+    "@wireapp/protocol-messaging": 1.39.0
     "@wireapp/store-engine-dexie": "workspace:^"
     axios: ^0.27.2
     bazinga64: 5.11.8
@@ -6531,12 +6531,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wireapp/protocol-messaging@npm:1.38.0":
-  version: 1.38.0
-  resolution: "@wireapp/protocol-messaging@npm:1.38.0"
+"@wireapp/protocol-messaging@npm:1.39.0":
+  version: 1.39.0
+  resolution: "@wireapp/protocol-messaging@npm:1.39.0"
   dependencies:
     protobufjs: 6.11.3
-  checksum: ce9957ec0f97e92719accaf394f7a3cdb56f64dfe3950b631122b6fd4e3e89500ed6472b2e34dc6cc0c4ef4a16db2922e5d040e879477ffe3a913ab217332b9e
+  checksum: 2f905ff7c55905bdb467927e969d1ea6e22264e10c2262a51d2dcfe7bead0e1792a94c769f3de4f5c253c356440efa632173f6670d31db0834b2054d191940f4
   languageName: node
   linkType: hard
 
