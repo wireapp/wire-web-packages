@@ -5619,7 +5619,7 @@ __metadata:
     rimraf: 3.0.2
     sinon: 14.0.1
     sinon-har-server: 0.3.0
-    spark-md5: 3.0.1
+    spark-md5: 3.0.2
     tough-cookie: 4.1.2
     ts-node: ^10.9.1
     typescript: 4.8.4
@@ -21885,10 +21885,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"spark-md5@npm:3.0.1":
-  version: 3.0.1
-  resolution: "spark-md5@npm:3.0.1"
-  checksum: 613a7f4e20929b832406ef2ed925d696d4d004455360b07ba1a829975fc12a005d745db370cb261ecc827c3dedf3b431a9337f4bab1f1954df776f41a05aaabe
+"spark-md5@npm:3.0.2":
+  version: 3.0.2
+  resolution: "spark-md5@npm:3.0.2"
+  checksum: 5feebff0bfabcecf56ba03af3e38fdb068272ed41fbf0a94ff9ef65b9bb9cb1dd69be3684db6542e62497b1eac3ae324c07ac4dcb606465dc36ca048177077bf
   languageName: node
   linkType: hard
 
