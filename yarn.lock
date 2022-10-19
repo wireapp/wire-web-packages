@@ -4884,16 +4884,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ws@npm:7.4.7":
-  version: 7.4.7
-  resolution: "@types/ws@npm:7.4.7"
-  dependencies:
-    "@types/node": "*"
-  checksum: b4c9b8ad209620c9b21e78314ce4ff07515c0cadab9af101c1651e7bfb992d7fd933bd8b9c99d110738fd6db523ed15f82f29f50b45510288da72e964dedb1a3
-  languageName: node
-  linkType: hard
-
-"@types/ws@npm:^8.5.1":
+"@types/ws@npm:8.5.3, @types/ws@npm:^8.5.1":
   version: 8.5.3
   resolution: "@types/ws@npm:8.5.3"
   dependencies:
@@ -5427,7 +5418,7 @@ __metadata:
     "@types/node": ^18.11.2
     "@types/spark-md5": 3.0.2
     "@types/tough-cookie": 4.0.1
-    "@types/ws": 7.4.7
+    "@types/ws": 8.5.3
     "@wireapp/commons": "workspace:^"
     "@wireapp/priority-queue": "workspace:^"
     "@wireapp/protocol-messaging": 1.39.0
@@ -5457,7 +5448,7 @@ __metadata:
     tough-cookie: 4.1.2
     ts-node: ^10.9.1
     typescript: 4.8.4
-    ws: 7.5.3
+    ws: 8.9.0
   languageName: unknown
   linkType: soft
 
@@ -24332,22 +24323,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:7.5.3":
-  version: 7.5.3
-  resolution: "ws@npm:7.5.3"
-  peerDependencies:
-    bufferutil: ^4.0.1
-    utf-8-validate: ^5.0.2
-  peerDependenciesMeta:
-    bufferutil:
-      optional: true
-    utf-8-validate:
-      optional: true
-  checksum: 423dc0d859fa74020f5555140905b862470a60ea1567bb9ad55a087263d7718b9c94f69678be1cee9868925c570f1e6fc79d09f90c39057bc63fa2edbb2c547b
-  languageName: node
-  linkType: hard
-
-"ws@npm:^8.4.2":
+"ws@npm:8.9.0, ws@npm:^8.4.2":
   version: 8.9.0
   resolution: "ws@npm:8.9.0"
   peerDependencies:
