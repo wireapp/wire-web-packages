@@ -250,6 +250,12 @@ export class Account<T = any> extends EventEmitter {
     const context = await this.apiClient.init(clientType, cookie);
     await this.initServices(context);
 
+    /** @fixme
+     * When we will start migrating to CoreCrypto encryption/decryption, those hooks won't be available anymore
+     * We will need to implement
+     *   - the mechanism to handle messages from an unknown sender
+     *   - the mechanism to generate new prekeys when we reach a certain threshold of prekeys
+     */
     this.service!.cryptography.setCryptoboxHooks({
       onNewPrekeys: async prekeys => {
         this.logger.debug(`Received '${prekeys.length}' new PreKeys.`);
@@ -264,6 +270,7 @@ export class Account<T = any> extends EventEmitter {
     // Assumption: client gets only initialized once
     if (initClient) {
       await this.initClient({clientType});
+
       if (this.mlsConfig) {
         // initialize schedulers for pending mls proposals once client is initialized
         await this.service?.notification.checkExistingPendingProposals();
