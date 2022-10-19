@@ -3446,13 +3446,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@open-wc/webpack-import-meta-loader@npm:0.4.7":
-  version: 0.4.7
-  resolution: "@open-wc/webpack-import-meta-loader@npm:0.4.7"
-  checksum: 25ba5a12eb191d11e4a21db26dabf4956aa50cc7fe42c5308eda75b2d8211937d97b5de490994108b56afca49110c53802fb008bd3efcd462c0c12bbe3b1c0dc
-  languageName: node
-  linkType: hard
-
 "@popperjs/core@npm:^2.4.4":
   version: 2.6.0
   resolution: "@popperjs/core@npm:2.6.0"
@@ -5085,7 +5078,6 @@ __metadata:
     "@babel/preset-env": ^7.19.1
     "@babel/preset-typescript": ^7.18.6
     "@faker-js/faker": ^7.6.0
-    "@open-wc/webpack-import-meta-loader": 0.4.7
     "@types/babel__core": ^7
     "@types/jest": 29.2.0
     "@types/long": 4.0.1
@@ -5107,19 +5099,14 @@ __metadata:
     hash.js: 1.1.7
     http-status-codes: 2.2.0
     idb: 7.1.0
-    istanbul: 1.1.0-alpha.1
     jest: 29.2.1
-    jest-babel: 1.0.1
     jest-jasmine2: 29.2.1
     jest-websocket-mock: 2.4.0
     logdown: 3.3.1
     long: 4.0.0
     mock-socket: 9.1.5
     nock: 13.2.9
-    nyc: 15.1.0
     uuidjs: 4.2.12
-    webpack: 4.46.0
-    webpack-cli: 4.10.0
   languageName: unknown
   linkType: soft
 
@@ -13518,15 +13505,6 @@ __metadata:
   version: 2.0.1
   resolution: "javascript-stringify@npm:2.0.1"
   checksum: d63773a13b3149953cb9e5249c7734c310217ac23f658a551bcd3af87e208669cbfac8f3a10a13620dc437c67aa583615512ff2a73b869d242a7cb46d1468af9
-  languageName: node
-  linkType: hard
-
-"jest-babel@npm:1.0.1":
-  version: 1.0.1
-  resolution: "jest-babel@npm:1.0.1"
-  peerDependencies:
-    babel-core: ">= 5.5.0 < 6"
-  checksum: c63a6b7b04cf0be486d396a31709742918f03ac9179affc3b02a9aa9073482cb7c608807c596724bc03d03566ec773ef5bece3de9b8748049ebe4b730597c385
   languageName: node
   linkType: hard
 
