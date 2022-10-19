@@ -120,7 +120,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:^7.11.6, @babel/core@npm:^7.12.3, @babel/core@npm:^7.19.1":
+"@babel/core@npm:^7.11.6, @babel/core@npm:^7.12.3":
   version: 7.19.1
   resolution: "@babel/core@npm:7.19.1"
   dependencies:
@@ -1697,7 +1697,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-env@npm:7.19.4":
+"@babel/preset-env@npm:7.19.4, @babel/preset-env@npm:^7.19.1":
   version: 7.19.4
   resolution: "@babel/preset-env@npm:7.19.4"
   dependencies:
@@ -5089,7 +5089,7 @@ __metadata:
     "@babel/plugin-proposal-class-properties": 7.18.6
     "@babel/plugin-proposal-object-rest-spread": 7.19.4
     "@babel/plugin-proposal-optional-chaining": 7.18.9
-    "@babel/preset-env": 7.19.4
+    "@babel/preset-env": ^7.19.1
     "@babel/preset-react": 7.18.6
     "@babel/preset-typescript": 7.18.6
     "@types/babel__preset-env": ^7
@@ -5177,8 +5177,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wireapp/commons@workspace:packages/commons"
   dependencies:
-    "@babel/core": ^7.19.1
-    "@babel/preset-env": 7.19.4
+    "@babel/core": 7.19.3
+    "@babel/preset-env": ^7.19.1
     "@babel/preset-typescript": ^7.18.6
     "@types/babel__core": ^7
     "@types/babel__preset-env": ^7
@@ -5228,8 +5228,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wireapp/core@workspace:packages/core"
   dependencies:
-    "@babel/core": ^7.19.1
-    "@babel/preset-env": 7.19.4
+    "@babel/core": 7.19.3
+    "@babel/preset-env": ^7.19.1
     "@babel/preset-typescript": ^7.18.6
     "@faker-js/faker": ^7.6.0
     "@open-wc/webpack-import-meta-loader": 0.4.7
@@ -5372,8 +5372,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wireapp/promise-queue@workspace:packages/promise-queue"
   dependencies:
-    "@babel/core": ^7.19.1
-    "@babel/preset-env": 7.19.4
+    "@babel/core": 7.19.3
+    "@babel/preset-env": ^7.19.1
     "@babel/preset-typescript": 7.18.6
     "@types/babel__preset-env": ^7
     "@types/jest": 29.2.0
