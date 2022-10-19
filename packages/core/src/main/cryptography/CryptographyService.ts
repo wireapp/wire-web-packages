@@ -44,6 +44,11 @@ import {GenericMessageMapper} from './GenericMessageMapper';
 
 export type DecryptionError = {code: number; message: string};
 
+export type SessionId = {
+  userId: string;
+  clientId: string;
+  domain?: string;
+};
 export interface MetaClient extends RegisteredClient {
   meta: {
     is_verified?: boolean;
@@ -76,6 +81,17 @@ export class CryptographyService {
     return baseDomain && this.config.useQualifiedIds ? `${baseDomain}@${baseId}` : baseId;
   }
 
+  /**
+   * Splits a sessionId into userId, clientId & domain (if any).
+   */
+  public parseSessionId(sessionId: string): SessionId {
+    // see https://regex101.com/r/c8FtCw/1
+    const regex = /((?<domain>.+)@)?(?<userId>.+)@(?<clientId>.+)$/g;
+    const match = regex.exec(sessionId);
+    const {domain, userId, clientId} = match?.groups || {};
+    return {clientId, domain, userId};
+  }
+
   public static convertArrayRecipientsToBase64(recipients: OTRRecipients<Uint8Array>): OTRRecipients<string> {
     return Object.fromEntries(
       Object.entries(recipients).map(([userId, otrClientMap]) => {
@@ -87,6 +103,24 @@ export class CryptographyService {
         return [userId, otrClientMapWithBase64];
       }),
     );
+  }
+
+  public setCryptoboxHooks({
+    onNewPrekeys,
+    onNewSession,
+  }: {
+    onNewPrekeys?: (prekeys: {id: number; key: string}[]) => void;
+    onNewSession?: (sessionId: SessionId) => void;
+  }) {
+    if (onNewPrekeys) {
+      this.cryptobox.on(Cryptobox.TOPIC.NEW_PREKEYS, prekeys => {
+        const serializedPreKeys = prekeys.map(prekey => this.cryptobox.serialize_prekey(prekey));
+        onNewPrekeys(serializedPreKeys);
+      });
+    }
+    if (onNewSession) {
+      this.cryptobox.on(Cryptobox.TOPIC.NEW_SESSION, sessionId => onNewSession(this.parseSessionId(sessionId)));
+    }
   }
 
   public static convertBase64RecipientsToArray(recipients: OTRRecipients<string>): OTRRecipients<Uint8Array> {
