@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [32.1.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@32.1.2...@wireapp/core@32.1.3) (2022-10-19)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [32.1.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@32.1.1...@wireapp/core@32.1.2) (2022-10-18)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [32.1.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@32.1.0...@wireapp/core@32.1.1) (2022-10-18)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [32.1.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@32.0.8...@wireapp/core@32.1.0) (2022-10-18)
+
+### Features
+
+* Gracefully handle mls protocol messages ([#4430](https://github.com/wireapp/wire-web-packages/issues/4430)) ([69429c5](https://github.com/wireapp/wire-web-packages/commit/69429c5ea354090c47189c15c7d05765c53d3274))
+
 ## [32.0.8](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@32.0.7...@wireapp/core@32.0.8) (2022-10-13)
 
 ### Bug Fixes
