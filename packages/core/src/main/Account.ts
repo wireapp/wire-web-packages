@@ -134,7 +134,7 @@ interface AccountOptions<T> {
 }
 
 type InitOptions = {
-  /** cookie  */
+  /** cookie used to identify the current user. Will use the browser cookie if not defined */
   cookie?: Cookie;
 
   /** fully initiate the client and register periodic checks */
