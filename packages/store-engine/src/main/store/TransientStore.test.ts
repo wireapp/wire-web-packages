@@ -58,6 +58,7 @@ describe('store.TransientStore', () => {
     });
 
     it("doesn't overwrite an existing record.", async () => {
+      expect.assertions(2);
       try {
         await store.set(primaryKey, entity, ttl);
         await store.set(primaryKey, {access_token: 'ABC'}, ttl);

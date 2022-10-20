@@ -37,7 +37,7 @@
     "build:node": "tsc",
     "clean": "rimraf \"src/**/*.{js?(.map),d.ts}\"",
     "dist": "yarn clean && yarn build",
-    "test": "yarn dist && jest"
+    "test": "yarn dist && jest --coverage"
   },
   "version": "4.10.10"
 }
