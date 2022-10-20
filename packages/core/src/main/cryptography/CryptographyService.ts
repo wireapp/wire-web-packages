@@ -81,6 +81,10 @@ export class CryptographyService {
     return baseDomain && this.config.useQualifiedIds ? `${baseDomain}@${baseId}` : baseId;
   }
 
+  private isSessionId(object: any): object is SessionId {
+    return object.userId && object.clientId;
+  }
+
   /**
    * Splits a sessionId into userId, clientId & domain (if any).
    */
@@ -88,10 +92,10 @@ export class CryptographyService {
     // see https://regex101.com/r/c8FtCw/1
     const regex = /((?<domain>.+)@)?(?<userId>.+)@(?<clientId>.+)$/g;
     const match = regex.exec(sessionId);
-    if (!match) {
+    if (!match || !this.isSessionId(match.groups)) {
       throw new Error(`given session id "${sessionId}" has wrong format`);
     }
-    return match.groups as SessionId;
+    return match.groups;
   }
 
   public static convertArrayRecipientsToBase64(recipients: OTRRecipients<Uint8Array>): OTRRecipients<string> {
