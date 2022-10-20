@@ -195,7 +195,7 @@ describe('CryptographyService', () => {
         },
       };
       const text = new Uint8Array(Buffer.from('Hello', 'utf8'));
-      const {encrypted} = await cryptographyService.encrypt(text, preKeyBundleMap);
+      const encrypted = await cryptographyService.encrypt(text, preKeyBundleMap);
       expect(Object.keys(encrypted).length).toBe(2);
       expect(Object.keys(encrypted[firstUserID]).length).toBe(3);
       expect(Object.keys(encrypted[secondUserID]).length).toBe(2);
@@ -219,7 +219,7 @@ describe('CryptographyService', () => {
       const otrBundles = await Promise.all(
         Array.from(Array(encryptionRuns).keys()).map(() => cryptographyService.encrypt(text, preKeyBundleMap)),
       );
-      const encryptedPayloads = otrBundles.map(({encrypted}) => encrypted[userId][clientId]);
+      const encryptedPayloads = otrBundles.map(encrypted => encrypted[userId][clientId]);
       const messageCounters = encryptedPayloads.map(encodedCiphertext => {
         const messageBytes = encodedCiphertext;
         const messageEnvelope = Proteus.message.Envelope.deserialise(messageBytes.buffer);

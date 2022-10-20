@@ -184,6 +184,7 @@ export class CryptographyService {
   ): Promise<OTRRecipients<Uint8Array>> {
     const encrypted: OTRRecipients<Uint8Array> = {};
     const missing: UserClients = {};
+    const startedAt = Date.now();
 
     for (const userId in users) {
       const clientIds = isUserClients(users)
@@ -203,9 +204,14 @@ export class CryptographyService {
           missing[userId].push(clientId);
         }
       }
+      const measuredTime = Date.now() - startedAt;
+      this.logger.info(`Encrypted payload for ${Object.keys(encrypted).length} recipients in ${measuredTime}ms`);
     }
 
-    if (missing) {
+    if (Object.keys(missing).length > 0) {
+      this.logger.info(
+        `${Object.keys(missing).length} sessions where not found during encryption. Reencrypting for those`,
+      );
       // If there are some clients that do not already have a session created with the local device, we create those session and re-encrypt the payload
       const missingPrekeys = await this.getPrekeyBundles(missing, domain);
       const missingEncrypted = await this.encrypt(plainText, missingPrekeys, domain);
@@ -249,8 +255,6 @@ export class CryptographyService {
     plainText: Uint8Array,
     base64EncodedPreKey?: string,
   ): Promise<SessionPayloadBundle | undefined> {
-    this.logger.log(`Encrypting payload for session ID "${sessionId}"`);
-
     let encryptedPayload: Uint8Array;
 
     try {

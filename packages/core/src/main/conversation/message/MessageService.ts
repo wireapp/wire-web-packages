@@ -80,7 +80,7 @@ export class MessageService {
       cipherText = externalPayload.cipherText;
     }
 
-    const encrypted = await this.cryptographyService.encrypt(plainTextPayload, recipients);
+    const encryptedPayload = await this.cryptographyService.encrypt(plainTextPayload, recipients);
 
     const send = (payload: OTRRecipients<Uint8Array>) => {
       return options.sendAsProtobuf
@@ -88,7 +88,7 @@ export class MessageService {
         : this.sendOTRMessage(sendingClientId, payload, {...options, assetData: cipherText});
     };
     try {
-      return await send(encrypted);
+      return await send(encryptedPayload);
     } catch (error) {
       if (!this.isClientMismatchError(error)) {
         throw error;
@@ -98,7 +98,7 @@ export class MessageService {
       if (shouldStopSending) {
         return {...mismatch, errored: true};
       }
-      const reEncryptedMessage = await this.reencryptAfterMismatch(mismatch, encrypted, plainText);
+      const reEncryptedMessage = await this.reencryptAfterMismatch(mismatch, encryptedPayload, plainText);
       return send(reEncryptedMessage);
     }
   }
@@ -289,18 +289,18 @@ export class MessageService {
    */
   private async reencryptAfterMismatch(
     mismatch: {missing: UserClients; deleted: UserClients},
-    initialEncrypted: OTRRecipients<Uint8Array>,
+    initialPayload: OTRRecipients<Uint8Array>,
     plainText: Uint8Array,
   ): Promise<OTRRecipients<Uint8Array>> {
     const deleted = flattenUserClients(mismatch.deleted);
     const missing = flattenUserClients(mismatch.missing);
     // remove deleted clients to the recipients
-    deleted.forEach(({userId, data}) => data.forEach(clientId => delete initialEncrypted[userId.id][clientId]));
+    deleted.forEach(({userId, data}) => data.forEach(clientId => delete initialPayload[userId.id][clientId]));
     if (missing.length) {
       const encrypted = await this.cryptographyService.encrypt(plainText, mismatch.missing);
-      return this.cryptographyService.mergeEncryptedPayloads(initialEncrypted, encrypted);
+      return this.cryptographyService.mergeEncryptedPayloads(initialPayload, encrypted);
     }
-    return initialEncrypted;
+    return initialPayload;
   }
 
   /**
@@ -308,21 +308,21 @@ export class MessageService {
    */
   private async reencryptAfterFederatedMismatch(
     mismatch: {missing: QualifiedUserClients; deleted: QualifiedUserClients},
-    initialEncrypted: QualifiedOTRRecipients,
+    initialPayload: QualifiedOTRRecipients,
     plainText: Uint8Array,
   ): Promise<QualifiedOTRRecipients> {
     const deleted = flattenQualifiedUserClients(mismatch.deleted);
     const missing = flattenQualifiedUserClients(mismatch.missing);
     // remove deleted clients to the recipients
     deleted.forEach(({userId, data}) =>
-      data.forEach(clientId => delete initialEncrypted[userId.domain][userId.id][clientId]),
+      data.forEach(clientId => delete initialPayload[userId.domain][userId.id][clientId]),
     );
 
     if (Object.keys(missing).length) {
       const encrypted = await this.cryptographyService.encryptQualified(plainText, mismatch.missing);
-      return this.cryptographyService.mergeEncryptedQualifiedPayloads(initialEncrypted, encrypted);
+      return this.cryptographyService.mergeEncryptedQualifiedPayloads(initialPayload, encrypted);
     }
-    return initialEncrypted;
+    return initialPayload;
   }
 
   private async sendOTRProtobufMessage(
