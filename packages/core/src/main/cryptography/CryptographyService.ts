@@ -244,6 +244,13 @@ export class CryptographyService {
     await this.cryptobox.load();
   }
 
+  /**
+   * Get the fingerprint of the local client.
+   */
+  public getLocalFingerprint(): string {
+    return this.cryptobox.getIdentity().public_key.fingerprint();
+  }
+
   public deleteCryptographyStores(): Promise<boolean[]> {
     return this.database.deleteStores();
   }
