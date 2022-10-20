@@ -834,7 +834,7 @@ export class ConversationAPI {
       await this.postOTRMessage(clientId, conversationId);
       throw new Error(`Expected backend to throw error.`);
     } catch (error) {
-      return (error as AxiosError).response!.data;
+      return (error as AxiosError<ClientMismatch>).response!.data;
     }
   }
 

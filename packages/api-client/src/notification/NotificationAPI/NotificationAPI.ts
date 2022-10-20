@@ -17,7 +17,7 @@
  *
  */
 
-import {AxiosRequestConfig} from 'axios';
+import {AxiosError, AxiosRequestConfig} from 'axios';
 
 import {HttpClient} from '../../http';
 import {Notification, NotificationList} from '..';
@@ -104,9 +104,9 @@ export class NotificationAPI {
         payload = await this.getNotifications(currentClientId, NOTIFICATION_SIZE_MAXIMUM, currentNotificationId);
       } catch (error) {
         if (HttpClient.isAxiosError(error)) {
-          if (error.response?.data?.notifications) {
+          if ((error as AxiosError<NotificationList>).response?.data?.notifications) {
             hasMissedNotifications = true;
-            payload = {...defaultPayload, ...error.response?.data};
+            payload = {...defaultPayload, ...(error as AxiosError<NotificationList>).response?.data};
           }
         } else {
           throw error;

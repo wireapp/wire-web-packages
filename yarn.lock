@@ -3843,6 +3843,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/axios@npm:^0.14.0":
+  version: 0.14.0
+  resolution: "@types/axios@npm:0.14.0"
+  dependencies:
+    axios: "*"
+  checksum: 12a230b9404055d81804cb57fe4739b2317111b28a39e2477b2513250e8b85725e6f6ce509fc2a9494a6da60facb8d80df875fcd747f62f6c3abebc7db60ae66
+  languageName: node
+  linkType: hard
+
 "@types/babel__core@npm:^7":
   version: 7.1.19
   resolution: "@types/babel__core@npm:7.1.19"
@@ -5214,6 +5223,7 @@ __metadata:
     "@babel/preset-env": ^7.19.1
     "@babel/preset-react": 7.18.6
     "@babel/preset-typescript": 7.18.6
+    "@types/axios": ^0.14.0
     "@types/babel__preset-env": ^7
     "@types/jest": ^29.0.3
     "@types/node": ^18.11.2
@@ -5225,7 +5235,7 @@ __metadata:
     "@wireapp/protocol-messaging": 1.39.0
     "@wireapp/store-engine": "workspace:^"
     "@wireapp/store-engine-fs": "workspace:^"
-    axios: 1.1.3
+    axios: ^1.1.3
     axios-retry: 3.3.1
     babel-loader: 8.2.5
     browser-sync: 2.27.10
@@ -6618,16 +6628,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:0.21.1":
-  version: 0.21.1
-  resolution: "axios@npm:0.21.1"
-  dependencies:
-    follow-redirects: ^1.10.0
-  checksum: c87915fa0b18c15c63350112b6b3563a3e2ae524d7707de0a73d2e065e0d30c5d3da8563037bc29d4cc1b7424b5a350cb7274fa52525c6c04a615fe561c6ab11
-  languageName: node
-  linkType: hard
-
-"axios@npm:1.1.3, axios@npm:^1.1.3":
+"axios@npm:*, axios@npm:1.1.3, axios@npm:^1.1.3":
   version: 1.1.3
   resolution: "axios@npm:1.1.3"
   dependencies:
@@ -6635,6 +6636,15 @@ __metadata:
     form-data: ^4.0.0
     proxy-from-env: ^1.1.0
   checksum: cab3b17bf6092c9387f7023d699db093cfa23650b56c4422cd474d124b78b2e3b5a520f932c330664a58ab85b867b1c25a95cace475ef72d236888c852b84e6d
+  languageName: node
+  linkType: hard
+
+"axios@npm:0.21.1":
+  version: 0.21.1
+  resolution: "axios@npm:0.21.1"
+  dependencies:
+    follow-redirects: ^1.10.0
+  checksum: c87915fa0b18c15c63350112b6b3563a3e2ae524d7707de0a73d2e065e0d30c5d3da8563037bc29d4cc1b7424b5a350cb7274fa52525c6c04a615fe561c6ab11
   languageName: node
   linkType: hard
 
