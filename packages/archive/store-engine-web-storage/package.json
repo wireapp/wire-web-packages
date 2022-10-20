@@ -1,23 +1,20 @@
 {
   "dependencies": {
-    "bro-fs": "0.6.0"
+    "@wireapp/store-engine": "workspace:^"
   },
   "devDependencies": {
-    "@types/bro-fs": "0.6.1",
     "@types/jasmine": "4.3.0",
     "@types/karma": "6.3.3",
     "@types/node": "^18.11.2",
-    "@wireapp/store-engine": "workspace:^",
     "jasmine": "4.4.0",
     "karma": "6.4.1",
     "karma-chrome-launcher": "3.1.1",
     "karma-jasmine": "5.1.0",
     "karma-typescript": "5.5.3",
-    "rimraf": "3.0.2",
-    "ts-node": "^10.9.1",
-    "typescript": "^4.8.3"
+    "ts-node": "10.9.1",
+    "typescript": "4.8.4"
   },
-  "description": "Store Engine implementation for the browser's File and Directory Entries API.",
+  "description": "Store Engine wrapper for the browser's Web Storage API.",
   "files": [
     "src",
     "!src/**/*.test.*",
@@ -25,11 +22,11 @@
   ],
   "license": "GPL-3.0",
   "main": "src/index",
-  "name": "@wireapp/store-engine-bro-fs",
+  "name": "@wireapp/store-engine-web-storage",
   "peerDependencies": {
     "@wireapp/store-engine": "4.x.x"
   },
-  "repository": "https://github.com/wireapp/wire-web-packages/tree/main/packages/store-engine-bro-fs",
+  "repository": "https://github.com/wireapp/wire-web-packages/tree/main/packages/store-engine-web-storage",
   "scripts": {
     "build": "yarn build:node",
     "build:node": "tsc",
@@ -38,5 +35,5 @@
     "test": "yarn build && karma start",
     "test:project": "yarn build && yarn test"
   },
-  "version": "1.7.9"
+  "version": "1.6.9"
 }
