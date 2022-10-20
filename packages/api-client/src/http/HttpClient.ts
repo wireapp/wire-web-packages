@@ -154,7 +154,7 @@ export class HttpClient extends EventEmitter {
 
       const hasAccessToken = !!this.accessTokenStore?.accessToken;
 
-      if (HttpClient.isAxiosError(error) && error.response?.status === StatusCode.UNAUTHORIZED) {
+      if (axios.isAxiosError(error) && error.response?.status === StatusCode.UNAUTHORIZED) {
         return retryWithTokenRefresh();
       }
 
