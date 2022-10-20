@@ -91,8 +91,7 @@ export class CryptographyService {
     if (!match) {
       throw new Error(`given session id "${sessionId}" has wrong format`);
     }
-    const {domain, userId, clientId} = match.groups;
-    return {clientId, domain, userId};
+    return match.groups as SessionId;
   }
 
   public static convertArrayRecipientsToBase64(recipients: OTRRecipients<Uint8Array>): OTRRecipients<string> {
