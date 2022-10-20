@@ -5166,7 +5166,7 @@ __metadata:
     jasmine: 4.4.0
     karma: 6.4.1
     karma-chrome-launcher: 3.1.1
-    karma-jasmine: 4.0.2
+    karma-jasmine: 5.1.0
     karma-jasmine-diff-reporter: 3.0.0
     karma-sourcemap-loader: 0.3.8
     karma-spec-reporter: 0.0.34
@@ -5269,7 +5269,7 @@ __metadata:
     jasmine: 4.4.0
     karma: 6.4.1
     karma-chrome-launcher: 3.1.1
-    karma-jasmine: 4.0.2
+    karma-jasmine: 5.1.0
     karma-typescript: 5.5.3
     logdown: 3.3.1
     ts-node: ^10.9.1
@@ -5317,7 +5317,7 @@ __metadata:
     jasmine: 4.4.0
     karma: 6.4.1
     karma-chrome-launcher: 3.1.1
-    karma-jasmine: 4.0.2
+    karma-jasmine: 5.1.0
     karma-sourcemap-loader: 0.3.8
     karma-typescript: ^5.5.3
     nyc: 15.1.0
@@ -13404,14 +13404,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jasmine-core@npm:^3.6.0":
-  version: 3.8.0
-  resolution: "jasmine-core@npm:3.8.0"
-  checksum: 6490373bd96d4d2a3c74214d307f8c37394370b1e892b9f203d4c5eda56941d53f84aabee0e65538b6921a190710618f1e73af44bd1d93e6c6e6c3f5c4bbfab6
-  languageName: node
-  linkType: hard
-
-"jasmine-core@npm:^4.4.0":
+"jasmine-core@npm:^4.1.0, jasmine-core@npm:^4.4.0":
   version: 4.4.0
   resolution: "jasmine-core@npm:4.4.0"
   checksum: b52e2f17080dd33628dee73c8b6eb9fbe793126a5e4ceb77ecf164f15fc44f6b29baa1e034992630a866522f470d62dc2f3c364b234af3487a9507c9d1ae0d94
@@ -14457,14 +14450,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"karma-jasmine@npm:4.0.2":
-  version: 4.0.2
-  resolution: "karma-jasmine@npm:4.0.2"
+"karma-jasmine@npm:5.1.0":
+  version: 5.1.0
+  resolution: "karma-jasmine@npm:5.1.0"
   dependencies:
-    jasmine-core: ^3.6.0
+    jasmine-core: ^4.1.0
   peerDependencies:
-    karma: "*"
-  checksum: bf884704af1fd19816d9f4e96b25e286ff1a57adcabe1f15e3d2b3e9c1da873c1c843b9eab4274c27e63a99f1c3dea864f1f5eca1a10dc065e6e9d5796c207b4
+    karma: ^6.0.0
+  checksum: ebefd1094e7c2b4c854027621d854908166c79cccaabb5a6ba0ace42cd785a9da0a9aad1aa41937956bd4848287eac04886eebfd7c851b927d2132d3563b7739
   languageName: node
   linkType: hard
 
