@@ -120,6 +120,12 @@ describe('CryptographyService', () => {
         domain,
       });
     });
+
+    it('fails to parse wrongly formatted session Id', () => {
+      expect(() => {
+        cryptographyService.parseSessionId('jfkdsmqfd');
+      }).toThrow(Error);
+    });
   });
 
   describe('"decrypt"', () => {

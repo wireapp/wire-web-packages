@@ -88,6 +88,9 @@ export class CryptographyService {
     // see https://regex101.com/r/c8FtCw/1
     const regex = /((?<domain>.+)@)?(?<userId>.+)@(?<clientId>.+)$/g;
     const match = regex.exec(sessionId);
+    if (!match) {
+      throw new Error(`given session id "${sessionId}" has wrong format`);
+    }
     const {domain, userId, clientId} = match?.groups || {};
     return {clientId, domain, userId};
   }
