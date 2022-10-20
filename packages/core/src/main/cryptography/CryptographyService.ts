@@ -91,7 +91,7 @@ export class CryptographyService {
     if (!match) {
       throw new Error(`given session id "${sessionId}" has wrong format`);
     }
-    const {domain, userId, clientId} = match?.groups || {};
+    const {domain, userId, clientId} = match.groups;
     return {clientId, domain, userId};
   }
 
