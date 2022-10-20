@@ -255,6 +255,8 @@ export class CryptographyService {
    * Get the fingerprint of a remote client
    * @param userId ID of user
    * @param clientId ID of client
+   * @param prekey A prekey can be given to create a session if it doesn't already exist.
+   *   If not provided and the session doesn't exists it will fetch a new prekey from the backend
    */
   public async getRemoteFingerprint(userId: QualifiedId, clientId: string, prekey?: PreKey): Promise<string> {
     const session = await this.getOrCreateSession(userId, clientId, prekey);
