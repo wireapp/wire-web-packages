@@ -80,10 +80,7 @@ export class MessageService {
       cipherText = externalPayload.cipherText;
     }
 
-    const {encrypted, missing} = await this.cryptographyService.encrypt(plainTextPayload, recipients);
-    const encryptedPayload = Object.keys(missing).length
-      ? await this.reencryptAfterMismatch({missing, deleted: {}}, encrypted, plainText)
-      : encrypted;
+    const encrypted = await this.cryptographyService.encrypt(plainTextPayload, recipients);
 
     const send = (payload: OTRRecipients<Uint8Array>) => {
       return options.sendAsProtobuf
@@ -91,7 +88,7 @@ export class MessageService {
         : this.sendOTRMessage(sendingClientId, payload, {...options, assetData: cipherText});
     };
     try {
-      return await send(encryptedPayload);
+      return await send(encrypted);
     } catch (error) {
       if (!this.isClientMismatchError(error)) {
         throw error;
@@ -101,7 +98,7 @@ export class MessageService {
       if (shouldStopSending) {
         return {...mismatch, errored: true};
       }
-      const reEncryptedMessage = await this.reencryptAfterMismatch(mismatch, encryptedPayload, plainText);
+      const reEncryptedMessage = await this.reencryptAfterMismatch(mismatch, encrypted, plainText);
       return send(reEncryptedMessage);
     }
   }
@@ -133,13 +130,10 @@ export class MessageService {
     const send = (payload: QualifiedOTRRecipients) => {
       return this.sendFederatedOtrMessage(sendingClientId, payload, options);
     };
-    const {encrypted, missing} = await this.cryptographyService.encryptQualified(plainText, recipients);
-    const encryptedPayload = Object.keys(missing).length
-      ? await this.reencryptAfterFederatedMismatch({missing, deleted: {}}, encrypted, plainText)
-      : encrypted;
+    const encrypted = await this.cryptographyService.encryptQualified(plainText, recipients);
 
     try {
-      return await send(encryptedPayload);
+      return await send(encrypted);
     } catch (error) {
       if (!this.isClientMismatchError(error)) {
         throw error;
@@ -149,7 +143,7 @@ export class MessageService {
       if (shouldStopSending) {
         return {...mismatch, errored: true};
       }
-      const reEncryptedPayload = await this.reencryptAfterFederatedMismatch(mismatch, encryptedPayload, plainText);
+      const reEncryptedPayload = await this.reencryptAfterFederatedMismatch(mismatch, encrypted, plainText);
       return send(reEncryptedPayload);
     }
   }
@@ -290,54 +284,45 @@ export class MessageService {
     return error.response?.status === HTTP_STATUS.PRECONDITION_FAILED;
   }
 
+  /**
+   * Will re-encrypt a message when there were some missing clients in the initial send (typically when the server replies with a client mismatch error)
+   */
   private async reencryptAfterMismatch(
     mismatch: {missing: UserClients; deleted: UserClients},
-    recipients: OTRRecipients<Uint8Array>,
+    initialEncrypted: OTRRecipients<Uint8Array>,
     plainText: Uint8Array,
   ): Promise<OTRRecipients<Uint8Array>> {
     const deleted = flattenUserClients(mismatch.deleted);
     const missing = flattenUserClients(mismatch.missing);
     // remove deleted clients to the recipients
-    deleted.forEach(({userId, data}) => data.forEach(clientId => delete recipients[userId.id][clientId]));
+    deleted.forEach(({userId, data}) => data.forEach(clientId => delete initialEncrypted[userId.id][clientId]));
     if (missing.length) {
-      const missingPreKeyBundles = await this.apiClient.api.user.postMultiPreKeyBundles(mismatch.missing);
-      const {encrypted} = await this.cryptographyService.encrypt(plainText, missingPreKeyBundles);
-      const reEncryptedPayloads = flattenUserClients<{[client: string]: Uint8Array}>(encrypted);
-      // add missing clients to the recipients
-      reEncryptedPayloads.forEach(({data, userId}) => (recipients[userId.id] = {...recipients[userId.id], ...data}));
+      const encrypted = await this.cryptographyService.encrypt(plainText, mismatch.missing);
+      return this.cryptographyService.mergeEncryptedPayloads(initialEncrypted, encrypted);
     }
-    return recipients;
+    return initialEncrypted;
   }
 
   /**
    * Will re-encrypt a message when there were some missing clients in the initial send (typically when the server replies with a client mismatch error)
-   *
-   * @param {ProtobufOTR.QualifiedNewOtrMessage} messageData The initial message that was sent
-   * @param {MessageSendingStatus} messageSendingStatus Info about the missing/deleted clients
-   * @param {Uint8Array} plainText The text that should be encrypted for the missing clients
-   * @return resolves with a new message payload that can be sent
    */
   private async reencryptAfterFederatedMismatch(
     mismatch: {missing: QualifiedUserClients; deleted: QualifiedUserClients},
-    recipients: QualifiedOTRRecipients,
+    initialEncrypted: QualifiedOTRRecipients,
     plainText: Uint8Array,
   ): Promise<QualifiedOTRRecipients> {
     const deleted = flattenQualifiedUserClients(mismatch.deleted);
     const missing = flattenQualifiedUserClients(mismatch.missing);
     // remove deleted clients to the recipients
     deleted.forEach(({userId, data}) =>
-      data.forEach(clientId => delete recipients[userId.domain][userId.id][clientId]),
+      data.forEach(clientId => delete initialEncrypted[userId.domain][userId.id][clientId]),
     );
 
     if (Object.keys(missing).length) {
-      const missingPreKeyBundles = await this.apiClient.api.user.postQualifiedMultiPreKeyBundles(mismatch.missing);
-      const {encrypted} = await this.cryptographyService.encryptQualified(plainText, missingPreKeyBundles);
-      const reEncryptedPayloads = flattenQualifiedUserClients<{[client: string]: Uint8Array}>(encrypted);
-      reEncryptedPayloads.forEach(
-        ({data, userId}) => (recipients[userId.domain][userId.id] = {...recipients[userId.domain][userId.id], ...data}),
-      );
+      const encrypted = await this.cryptographyService.encryptQualified(plainText, mismatch.missing);
+      return this.cryptographyService.mergeEncryptedQualifiedPayloads(initialEncrypted, encrypted);
     }
-    return recipients;
+    return initialEncrypted;
   }
 
   private async sendOTRProtobufMessage(

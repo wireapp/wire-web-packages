@@ -37,6 +37,7 @@ import {Decoder, Encoder} from 'bazinga64';
 import logdown from 'logdown';
 
 import {GenericMessageType, PayloadBundle, PayloadBundleSource} from '../conversation';
+import {flattenQualifiedUserClients, flattenUserClients} from '../conversation/message/UserClientsUtil';
 import {SessionPayloadBundle} from '../cryptography/';
 import {isUserClients} from '../util';
 import {CryptographyDatabaseRepository} from './CryptographyDatabaseRepository';
@@ -165,27 +166,22 @@ export class CryptographyService {
   public async encryptQualified(
     plainText: Uint8Array,
     preKeyBundles: QualifiedUserPreKeyBundleMap | QualifiedUserClients,
-  ): Promise<{missing: QualifiedUserClients; encrypted: QualifiedOTRRecipients}> {
+  ): Promise<QualifiedOTRRecipients> {
     const qualifiedOTRRecipients: QualifiedOTRRecipients = {};
-    const missing: QualifiedUserClients = {};
 
     for (const [domain, preKeyBundleMap] of Object.entries(preKeyBundles)) {
-      const result = await this.encrypt(plainText, preKeyBundleMap, domain);
-      qualifiedOTRRecipients[domain] = result.encrypted;
-      missing[domain] = result.missing;
+      const encrypted = await this.encrypt(plainText, preKeyBundleMap, domain);
+      qualifiedOTRRecipients[domain] = encrypted;
     }
 
-    return {
-      encrypted: qualifiedOTRRecipients,
-      missing,
-    };
+    return qualifiedOTRRecipients;
   }
 
   public async encrypt(
     plainText: Uint8Array,
     users: UserPreKeyBundleMap | UserClients,
     domain?: string,
-  ): Promise<{missing: UserClients; encrypted: OTRRecipients<Uint8Array>}> {
+  ): Promise<OTRRecipients<Uint8Array>> {
     const encrypted: OTRRecipients<Uint8Array> = {};
     const missing: UserClients = {};
 
@@ -209,7 +205,43 @@ export class CryptographyService {
       }
     }
 
-    return {encrypted, missing};
+    if (missing) {
+      // If there are some clients that do not already have a session created with the local device, we create those session and re-encrypt the payload
+      const missingPrekeys = await this.getPrekeyBundles(missing, domain);
+      const missingEncrypted = await this.encrypt(plainText, missingPrekeys, domain);
+      this.mergeEncryptedPayloads(encrypted, missingEncrypted);
+    }
+
+    return encrypted;
+  }
+
+  public mergeEncryptedPayloads(
+    source: OTRRecipients<Uint8Array>,
+    extra: OTRRecipients<Uint8Array>,
+  ): OTRRecipients<Uint8Array> {
+    const flattenExtra = flattenUserClients<{[client: string]: Uint8Array}>(extra);
+    flattenExtra.forEach(({data, userId}) => (source[userId.id] = {...source[userId.id], ...data}));
+    return source;
+  }
+
+  public mergeEncryptedQualifiedPayloads(
+    source: QualifiedOTRRecipients,
+    extra: QualifiedOTRRecipients,
+  ): QualifiedOTRRecipients {
+    const flattenExtra = flattenQualifiedUserClients<{[client: string]: Uint8Array}>(extra);
+    flattenExtra.forEach(
+      ({data, userId}) => (source[userId.domain][userId.id] = {...source[userId.domain][userId.id], ...data}),
+    );
+    return source;
+  }
+
+  private async getPrekeyBundles(users: UserClients, domain?: string): Promise<UserPreKeyBundleMap> {
+    if (domain) {
+      const prekeys = await this.apiClient.api.user.postQualifiedMultiPreKeyBundles({[domain]: users});
+      return prekeys[domain];
+    }
+    const prekeyBundles = await this.apiClient.api.user.postMultiPreKeyBundles(users);
+    return prekeyBundles;
   }
 
   private async encryptPayloadForSession(
