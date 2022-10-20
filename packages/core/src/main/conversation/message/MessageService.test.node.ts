@@ -45,12 +45,12 @@ type TestUser = {id: string; domain: string; clients: string[]};
 const user1: TestUser = {
   id: UUID.genV4().toString(),
   domain: '1.wire.test',
-  clients: ['client1.1', 'client1.2', 'client1.3', 'client1.4'],
+  clients: ['ad5ab2f5439402b2', 'e059de5875ddc36f', 'ed8131af9535b10d', 'a5c4a2556640216a'],
 };
 const user2: TestUser = {
   id: UUID.genV4().toString(),
   domain: '2.wire.test',
-  clients: ['client2.1', 'client2.2', 'client2.3', 'client2.4'],
+  clients: ['c7aa19bca47845d2', '15c4a2556640216a', '3044dc9a15bee659', 'dedd4398e2eb6e12'],
 };
 
 function generateQualifiedRecipients(users: TestUser[]): QualifiedUserClients {
@@ -69,10 +69,7 @@ function generateRecipients(users: TestUser[]): UserClients {
   }, {} as UserClients);
 }
 
-function fakeEncrypt(
-  _: unknown,
-  recipients: QualifiedUserClients,
-): Promise<{missing: any; encrypted: QualifiedOTRRecipients}> {
+function fakeEncrypt(_: unknown, recipients: QualifiedUserClients): Promise<QualifiedOTRRecipients> {
   const encryptedPayload = Object.entries(recipients).reduce((acc, [domain, users]) => {
     acc[domain] = Object.entries(users).reduce((userClients, [userId, clients]) => {
       userClients[userId] = clients.reduce((payloads, client) => {
@@ -83,7 +80,7 @@ function fakeEncrypt(
     }, {} as OTRRecipients<Uint8Array>);
     return acc;
   }, {} as QualifiedOTRRecipients);
-  return Promise.resolve({encrypted: encryptedPayload, missing: {}});
+  return Promise.resolve(encryptedPayload);
 }
 
 describe('MessageService', () => {
@@ -126,7 +123,6 @@ describe('MessageService', () => {
           }
           return Promise.resolve(baseMessageSendingStatus);
         });
-        jest.spyOn(apiClient.api.user, 'postQualifiedMultiPreKeyBundles').mockReturnValue(Promise.resolve({}));
 
         const recipients = generateQualifiedRecipients([user1, user2]);
 
@@ -153,7 +149,6 @@ describe('MessageService', () => {
           }
           return Promise.resolve(baseMessageSendingStatus);
         });
-        jest.spyOn(apiClient.api.user, 'postQualifiedMultiPreKeyBundles').mockReturnValue(Promise.resolve({}));
 
         const recipients = generateQualifiedRecipients([user1, user2]);
 
@@ -177,7 +172,6 @@ describe('MessageService', () => {
           };
           return Promise.reject(error);
         });
-        jest.spyOn(apiClient.api.user, 'postQualifiedMultiPreKeyBundles').mockReturnValue(Promise.resolve({}));
 
         const recipients = generateQualifiedRecipients([user1, user2]);
 
