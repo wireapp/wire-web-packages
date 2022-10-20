@@ -130,10 +130,10 @@ export class MessageService {
     const send = (payload: QualifiedOTRRecipients) => {
       return this.sendFederatedOtrMessage(sendingClientId, payload, options);
     };
-    const encrypted = await this.cryptographyService.encryptQualified(plainText, recipients);
+    const encryptedPayload = await this.cryptographyService.encryptQualified(plainText, recipients);
 
     try {
-      return await send(encrypted);
+      return await send(encryptedPayload);
     } catch (error) {
       if (!this.isClientMismatchError(error)) {
         throw error;
@@ -143,7 +143,7 @@ export class MessageService {
       if (shouldStopSending) {
         return {...mismatch, errored: true};
       }
-      const reEncryptedPayload = await this.reencryptAfterFederatedMismatch(mismatch, encrypted, plainText);
+      const reEncryptedPayload = await this.reencryptAfterFederatedMismatch(mismatch, encryptedPayload, plainText);
       return send(reEncryptedPayload);
     }
   }

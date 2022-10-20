@@ -205,7 +205,9 @@ export class CryptographyService {
         }
       }
       const measuredTime = Date.now() - startedAt;
-      this.logger.info(`Encrypted payload for ${Object.keys(encrypted).length} recipients in ${measuredTime}ms`);
+      this.logger.info(
+        `Encrypted payload for ${Object.keys(encrypted).length} recipients in ${measuredTime}ms (domain: ${domain})`,
+      );
     }
 
     if (Object.keys(missing).length > 0) {
