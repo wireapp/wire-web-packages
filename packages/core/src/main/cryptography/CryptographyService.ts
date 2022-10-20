@@ -185,6 +185,8 @@ export class CryptographyService {
     const encrypted: OTRRecipients<Uint8Array> = {};
     const missing: UserClients = {};
     const startedAt = Date.now();
+    let nbEncrypted = 0;
+    let nbMissing = 0;
 
     for (const userId in users) {
       const clientIds = isUserClients(users)
@@ -197,23 +199,23 @@ export class CryptographyService {
         const sessionId = this.constructSessionId(userId, clientId, domain);
         const result = await this.encryptPayloadForSession(sessionId, plainText, base64PreKey);
         if (result) {
+          nbEncrypted++;
           encrypted[userId] ||= {};
           encrypted[userId][clientId] = result.encryptedPayload;
         } else {
+          nbMissing++;
           missing[userId] ||= [];
           missing[userId].push(clientId);
         }
       }
       const measuredTime = Date.now() - startedAt;
+      const missingLog = nbMissing > 0 ? ` (missing: ${nbMissing})` : '';
       this.logger.info(
-        `Encrypted payload for ${Object.keys(encrypted).length} recipients in ${measuredTime}ms (domain: ${domain})`,
+        `Encrypted payload for ${nbEncrypted}${missingLog} clients in ${measuredTime}ms (domain: ${domain})`,
       );
     }
 
     if (Object.keys(missing).length > 0) {
-      this.logger.info(
-        `${Object.keys(missing).length} sessions where not found during encryption. Reencrypting for those`,
-      );
       // If there are some clients that do not already have a session created with the local device, we create those session and re-encrypt the payload
       const missingPrekeys = await this.getPrekeyBundles(missing, domain);
       const missingEncrypted = await this.encrypt(plainText, missingPrekeys, domain);
