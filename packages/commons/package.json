@@ -41,7 +41,7 @@
     "clean": "rimraf \"src/!(test)/**/*.{js?(.map),d.ts}\"",
     "dist": "yarn clean && yarn build",
     "test": "jest",
-    "test:coverage": "yarn test --coverage",
+    "test:coverage": "yarn test",
     "test:watch": "yarn test --watch"
   },
   "version": "4.4.10"
