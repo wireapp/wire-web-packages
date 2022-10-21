@@ -12,6 +12,8 @@
     "fs-extra": "10.1.0"
   },
   "devDependencies": {
+    "@swc/core": "^1.3.10",
+    "@swc/jest": "^0.2.23",
     "@types/fs-extra": "9.0.13"
   },
   "description": "Command-line interface for Wire's secure messaging platform.",

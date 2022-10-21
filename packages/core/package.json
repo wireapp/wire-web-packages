@@ -24,6 +24,8 @@
     "@babel/preset-env": "^7.19.1",
     "@babel/preset-typescript": "^7.18.6",
     "@faker-js/faker": "^7.6.0",
+    "@swc/core": "^1.3.10",
+    "@swc/jest": "^0.2.23",
     "@types/babel__core": "^7",
     "@types/jest": "^29.2.0",
     "@types/long": "4.0.1",
@@ -38,8 +40,7 @@
     "jest-environment-jsdom": "^29.2.1",
     "jest-websocket-mock": "2.4.0",
     "mock-socket": "9.1.5",
-    "nock": "13.2.9",
-    "ts-jest": "^29.0.3"
+    "nock": "13.2.9"
   },
   "description": "Wire for Web's communication core.",
   "files": [
@@ -61,7 +62,7 @@
     "start": "yarn dist && node index.js",
     "start:echo": "cross-env NODE_DEBUG='@wireapp/core*' node src/demo/echo.js",
     "start:sender": "cross-env NODE_DEBUG='@wireapp/core*' node src/demo/sender.js",
-    "test": "jest --coverage",
+    "test": "jest",
     "watch": "tsc --watch"
   },
   "version": "34.1.0",

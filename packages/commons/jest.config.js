@@ -22,7 +22,7 @@ module.exports = {
   testEnvironment: 'jsdom',
   testMatch: ["**/?(*.)+(spec|test).+(ts|tsx)", "test/**/*.+(ts|tsx)",],
   transform: {
-    "^.+\\.(ts|tsx)$": "ts-jest"
+    "^.+\\.(ts|tsx)$": "@swc/jest"
   },
 
 };
