@@ -17,7 +17,7 @@
  *
  */
 
-const {execSync} = require('child_process');
+const { execSync } = require('child_process');
 
 let output;
 console.info('Checking for changed packages...');
@@ -35,7 +35,9 @@ const packageNames = changedPackages.map(project => project.name);
 const scopes = packageNames.map(packageName => `--scope ${packageName}`).join(' ');
 
 console.info(`Building packages "${scopes}"`);
-execSync(`npx lerna run dist --include-dependencies ${scopes}`, {stdio: [0, 1]});
+execSync(`npx lerna run dist --include-dependencies ${scopes}`, { stdio: [0, 1] });
 
 console.info(`Running tests for packages "${packageNames}"...`);
-execSync(`npx lerna run test ${scopes}`, {stdio: [0, 1]});
+execSync(`npx lerna run test ${scopes}`, { stdio: [0, 1] });
+
+

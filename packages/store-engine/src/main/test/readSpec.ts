@@ -43,7 +43,7 @@ export const readSpec = {
 
     try {
       await engine.read(TABLE_NAME, PRIMARY_KEY);
-      fail(new Error('Method is supposed to throw an error.'));
+      throw new Error('Method is supposed to throw an error.');
     } catch (error) {
       expect(error).toEqual(expect.any(RecordNotFoundError));
     }

@@ -18,9 +18,10 @@
  */
 
 module.exports = {
-  setupFilesAfterEnv: [],
-  snapshotSerializers: ['@emotion/jest/serializer'],
-  testPathIgnorePatterns: ['[a-z]+.test.js', 'node_modules'],
-  verbose: true,
-    testEnvironment: 'jest-environment-jsdom',
+  clearMocks: true,
+  testMatch: ["**/?(*.)+(spec|test).+(ts|tsx)", "test/**/*.+(ts|tsx)",],
+  transform: {
+    "^.+\\.(ts|tsx)$": "ts-jest"
+  },
+  testEnvironment: "jsdom"
 };

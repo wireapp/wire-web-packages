@@ -31,6 +31,7 @@
     "react-hot-loader": "4.13.0",
     "react-styleguidist": "13.0.0",
     "react-test-renderer": "18.2.0",
+    "ts-jest": "^29.0.3",
     "webpack": "^5.74.0"
   },
   "homepage": "https://wire-react-ui-kit.netlify.app/",
@@ -62,11 +63,10 @@
     "clean": "rimraf \"src/**/*{.js,.js.map,.d.ts}\"",
     "dist": "yarn clean && yarn build",
     "start": "styleguidist server",
-    "test": "jest --config=./jest.config.js",
-    "test:coverage": "yarn test --coverage",
+    "test": "jest --coverage",
     "test:watch": "yarn test --watch",
     "test:update": "yarn test --updateSnapshot",
-    "test:project": "yarn dist && yarn test"
+    "test:project": "yarn test"
   },
   "version": "8.17.4"
 }

@@ -18,9 +18,11 @@
  */
 
 module.exports = {
-  setupFilesAfterEnv: [],
+  clearMocks: true,
   testEnvironment: 'jsdom',
-  testPathIgnorePatterns: ['node_modules'],
-  testRegex: '.*.test(.browser|.node).[t]s$',
-  verbose: true,
+  testMatch: ["**/?(*.)+(spec|test).+(ts|tsx)", "test/**/*.+(ts|tsx)",],
+  transform: {
+    "^.+\\.(ts|tsx)$": "ts-jest"
+  },
+
 };

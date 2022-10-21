@@ -21,7 +21,7 @@ const { TextDecoder, TextEncoder } = require('util')
 
 module.exports = {
   clearMocks: true,
-  testMatch: ["**/?(*.)+(spec|test).+(ts|tsx|js)", "test/**/*.+(ts|tsx|js)",],
+  testMatch: ["**/?(*.)+(spec|test).+(ts|tsx)", "test/**/*.+(ts|tsx)",],
   transform: {
     "^.+\\.(ts|tsx)$": "ts-jest"
   },

@@ -62,7 +62,6 @@ describe('store.TransientStore', () => {
       try {
         await store.set(primaryKey, entity, ttl);
         await store.set(primaryKey, {access_token: 'ABC'}, ttl);
-        fail();
       } catch (error) {
         expect(error).toEqual(expect.any(RecordAlreadyExistsError));
         expect((error as RecordAlreadyExistsError).code).toBe(1);
@@ -85,7 +84,7 @@ describe('store.TransientStore', () => {
       if (bundle) {
         expect(bundle.payload).toEqual(entity);
       } else {
-        fail();
+        throw new Error('Bundle is not defined.');
       }
     });
 
@@ -98,7 +97,7 @@ describe('store.TransientStore', () => {
       if (bundle) {
         expect(bundle.payload).toEqual(entity);
       } else {
-        fail();
+        throw new Error('Bundle is not defined.');
       }
     });
 

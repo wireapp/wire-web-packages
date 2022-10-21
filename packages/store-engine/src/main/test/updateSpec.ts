@@ -45,7 +45,6 @@ export const updateSpec = {
 
     try {
       await engine.update(TABLE_NAME, PRIMARY_KEY, updates);
-      fail();
     } catch (error) {
       expect(error).toEqual(expect.any(RecordNotFoundError));
     }

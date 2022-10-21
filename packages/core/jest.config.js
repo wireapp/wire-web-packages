@@ -17,8 +17,17 @@
  *
  */
 
+const { TextDecoder, TextEncoder } = require('util')
+
 module.exports = {
   clearMocks: true,
-  testMatch: ['**/?(*.)+(spec|test).node.[t]s?(x)'],
-  testRunner: 'jest-jasmine2',
+  testMatch: ["**/?(*.)+(spec|test).+(ts|tsx)", "test/**/*.+(ts|tsx)",],
+  transform: {
+    "^.+\\.(ts|tsx)$": "ts-jest"
+  },
+  testEnvironment: "node",
+  globals: {
+    TextDecoder,
+    TextEncoder,
+  }
 };

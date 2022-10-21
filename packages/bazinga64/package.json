@@ -1,13 +1,13 @@
 {
   "description": "Base64 encoding and decoding with ASCII string representation.",
   "devDependencies": {
-    "@types/jasmine": "4.3.0",
+    "@types/jest": "^29.2.0",
     "@types/libsodium-wrappers-sumo": "0.7.5",
-    "@types/node": "^18.11.2",
     "cross-env": "7.0.3",
-    "jasmine": "4.4.0",
+    "jest": "^29.2.1",
+    "jest-environment-jsdom": "^29.2.1",
     "libsodium-wrappers-sumo": "0.7.10",
-    "nyc": "15.1.0",
+    "ts-jest": "^29.0.3",
     "ts-node": "10.9.1"
   },
   "files": [
@@ -34,11 +34,11 @@
   "name": "bazinga64",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/main/packages/bazinga64",
   "scripts": {
-    "build": "yarn build:node",
+    "build": "tsc",
     "build:node": "tsc",
     "clean": "rimraf \"src/**/*.{js?(.map),d.ts}\"",
     "dist": "yarn clean && yarn build",
-    "test": "nyc --nycrc-path=../../nyc.config.js jasmine --config=jasmine.json"
+    "test": "jest --coverage"
   },
   "version": "5.11.10"
 }

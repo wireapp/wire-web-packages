@@ -1,13 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`"GlobalStyle" renders 1`] = `
-.emotion-0 {
-  background: #edeff0;
-  -webkit-transition: background 0.15s;
-  transition: background 0.15s;
-}
-
 <div
-  className="emotion-0"
+  className="css-7uml9n-StyledAppContainer"
 />
 `;

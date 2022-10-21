@@ -6,11 +6,9 @@ exports[`"Select" renders 1`] = `
 >
   <div
     className="css-2ocyf0-Select"
-    data-uie-name="test"
   >
     <div
       className=" css-dkntwv-SelectContainer"
-      id="test"
       onKeyDown={[Function]}
     >
       <div
@@ -98,11 +96,9 @@ exports[`"Select" renders as disabled 1`] = `
 >
   <div
     className="css-2ocyf0-Select"
-    data-uie-name="test"
   >
     <div
       className=" css-19vi2h5-SelectContainer"
-      id="test"
       onKeyDown={[Function]}
     >
       <div
@@ -190,11 +186,9 @@ exports[`"Select" renders as invalid 1`] = `
 >
   <div
     className="css-yrzhnj-Select"
-    data-uie-name="test"
   >
     <div
       className=" css-g607jh-SelectContainer"
-      id="test"
       onKeyDown={[Function]}
     >
       <div

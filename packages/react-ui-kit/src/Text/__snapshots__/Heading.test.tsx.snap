@@ -1,37 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`"Heading" renders H! (dark theme) 1`] = `
-.emotion-0 {
-  background: #000;
-  -webkit-transition: background 0.15s;
-  transition: background 0.15s;
-}
-
-.emotion-1 {
-  color: #fff;
-  display: block;
-  font-size: 48px;
-  font-weight: 300;
-  text-align: left;
-  text-transform: none;
-  line-height: 56px;
-  margin-bottom: 64px;
-  margin-top: 0;
-  min-height: 48px;
-}
-
-@media (max-width: 639px) {
-  .emotion-1 {
-    font-size: 40px;
-    line-height: 48px;
-  }
-}
-
 <div
-  className="emotion-0"
+  className="css-1mc7zwm-StyledAppContainer"
 >
   <h1
-    className="emotion-1"
+    className="css-l5qfww-H1"
   >
     H1
   </h1>
@@ -39,37 +13,11 @@ exports[`"Heading" renders H! (dark theme) 1`] = `
 `;
 
 exports[`"Heading" renders H1 1`] = `
-.emotion-0 {
-  background: #edeff0;
-  -webkit-transition: background 0.15s;
-  transition: background 0.15s;
-}
-
-.emotion-1 {
-  color: rgb(29, 30, 31);
-  display: block;
-  font-size: 48px;
-  font-weight: 300;
-  text-align: left;
-  text-transform: none;
-  line-height: 56px;
-  margin-bottom: 64px;
-  margin-top: 0;
-  min-height: 48px;
-}
-
-@media (max-width: 639px) {
-  .emotion-1 {
-    font-size: 40px;
-    line-height: 48px;
-  }
-}
-
 <div
-  className="emotion-0"
+  className="css-7uml9n-StyledAppContainer"
 >
   <h1
-    className="emotion-1"
+    className="css-1mxde5b-H1"
   >
     H1
   </h1>
@@ -77,37 +25,11 @@ exports[`"Heading" renders H1 1`] = `
 `;
 
 exports[`"Heading" renders H1 2`] = `
-.emotion-0 {
-  background: #edeff0;
-  -webkit-transition: background 0.15s;
-  transition: background 0.15s;
-}
-
-.emotion-1 {
-  color: rgb(29, 30, 31);
-  display: block;
-  font-size: 48px;
-  font-weight: 300;
-  text-align: left;
-  text-transform: none;
-  line-height: 56px;
-  margin-bottom: 64px;
-  margin-top: 0;
-  min-height: 48px;
-}
-
-@media (max-width: 639px) {
-  .emotion-1 {
-    font-size: 40px;
-    line-height: 48px;
-  }
-}
-
 <div
-  className="emotion-0"
+  className="css-7uml9n-StyledAppContainer"
 >
   <h1
-    className="emotion-1"
+    className="css-1mxde5b-H1"
   >
     H1
   </h1>
@@ -115,38 +37,11 @@ exports[`"Heading" renders H1 2`] = `
 `;
 
 exports[`"Heading" renders H2 1`] = `
-.emotion-0 {
-  background: #edeff0;
-  -webkit-transition: background 0.15s;
-  transition: background 0.15s;
-}
-
-.emotion-1 {
-  color: rgb(29, 30, 31);
-  display: block;
-  font-size: 20px;
-  font-weight: 700;
-  text-align: left;
-  text-transform: none;
-  line-height: 28px;
-  margin-bottom: 24px;
-  margin-top: 32px;
-}
-
-@media (max-width: 639px) {
-  .emotion-1 {
-    font-size: 18px;
-    line-height: 26px;
-    margin-bottom: 20px;
-    margin-top: 26px;
-  }
-}
-
 <div
-  className="emotion-0"
+  className="css-7uml9n-StyledAppContainer"
 >
   <h2
-    className="emotion-1"
+    className="css-7ld864-H2"
   >
     H2
   </h2>
@@ -154,27 +49,11 @@ exports[`"Heading" renders H2 1`] = `
 `;
 
 exports[`"Heading" renders H3 1`] = `
-.emotion-0 {
-  background: #edeff0;
-  -webkit-transition: background 0.15s;
-  transition: background 0.15s;
-}
-
-.emotion-1 {
-  color: rgb(29, 30, 31);
-  display: block;
-  font-size: 16px;
-  font-weight: 600;
-  text-align: left;
-  text-transform: none;
-  margin-bottom: 16px;
-}
-
 <div
-  className="emotion-0"
+  className="css-7uml9n-StyledAppContainer"
 >
   <h3
-    className="emotion-1"
+    className="css-1i6ms6d-H3"
   >
     H3
   </h3>
@@ -182,28 +61,11 @@ exports[`"Heading" renders H3 1`] = `
 `;
 
 exports[`"Heading" renders H4 1`] = `
-.emotion-0 {
-  background: #edeff0;
-  -webkit-transition: background 0.15s;
-  transition: background 0.15s;
-}
-
-.emotion-1 {
-  color: rgb(29, 30, 31);
-  display: block;
-  font-size: 11px;
-  font-weight: 300;
-  text-align: left;
-  text-transform: none;
-  margin-bottom: 5px;
-  margin-top: 20px;
-}
-
 <div
-  className="emotion-0"
+  className="css-7uml9n-StyledAppContainer"
 >
   <h3
-    className="emotion-1"
+    className="css-1gksb4j-H4"
   >
     H4
   </h3>
