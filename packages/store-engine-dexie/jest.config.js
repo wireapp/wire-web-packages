@@ -19,13 +19,18 @@
 
 const { TextDecoder, TextEncoder } = require('util')
 
+const baseConfig = require('../../jest.config.base');
+
+const packageName = require('./package.json').name.split('@wireapp/').pop();
+
 module.exports = {
-  clearMocks: true,
-  testMatch: ["**/?(*.)+(spec|test).+(ts|tsx)", "test/**/*.+(ts|tsx)",],
-  transform: {
-    "^.+\\.(ts|tsx)$": "@swc/jest"
-  },
-  testEnvironment: "jsdom",
+  ...baseConfig,
+  roots: [`<rootDir>/packages/${packageName}`],
+  collectCoverageFrom: ['src/**/*.{ts,tsx}'],
+  moduleDirectories: ['node_modules'],
+  modulePaths: [`<rootDir>/packages/${packageName}/src/`],
+  displayName: packageName,
+  rootDir: '../..',
   moduleNameMapper: {
     '^dexie$': require.resolve('dexie'),
   },
@@ -37,3 +42,4 @@ module.exports = {
     TextEncoder,
   }
 };
+

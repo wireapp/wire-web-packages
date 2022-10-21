@@ -148,6 +148,7 @@ describe('SQLeetEngine', () => {
       try {
         const entity = {'name\'"`': 'Otto'};
         await engine.create('users', '1', entity);
+        throw new Error('Method is supposed to throw an error.');
       } catch (error) {
         expect(error.message).toBe(
           'Entity is empty for table "users". Are you sure you set the right scheme / column names?',
@@ -330,6 +331,7 @@ describe('SQLeetEngine', () => {
 
       try {
         await engine.updateOrCreate('ffff', '1', {name: 'Otto'});
+        throw new Error('Method is supposed to throw an error.');
       } catch (error) {
         expect(error.message).toBe('Table "ffff" does not exist.');
       }
@@ -380,6 +382,7 @@ describe('SQLeetEngine', () => {
 
       try {
         await engine.export();
+        throw new Error('Method is supposed to throw an error.');
       } catch (error) {
         expect(error.message).toBe('Database closed');
       }

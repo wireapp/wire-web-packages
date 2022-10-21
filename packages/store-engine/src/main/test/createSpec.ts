@@ -94,6 +94,7 @@ export const createSpec = {
     try {
       await engine.create(TABLE_NAME, PRIMARY_KEY, firstEntity);
       await engine.create(TABLE_NAME, PRIMARY_KEY, secondEntity);
+      throw new Error('Method is supposed to throw an error.');
     } catch (error) {
       expect(error).toEqual(expect.any(RecordAlreadyExistsError));
     }
