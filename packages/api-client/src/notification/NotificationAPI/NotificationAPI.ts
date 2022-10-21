@@ -103,9 +103,11 @@ export class NotificationAPI {
       try {
         payload = await this.getNotifications(currentClientId, NOTIFICATION_SIZE_MAXIMUM, currentNotificationId);
       } catch (error) {
-        if (axios.isAxiosError(error) && error.response?.data?.notifications) {
-          hasMissedNotifications = true;
-          payload = {...defaultPayload, ...error.response?.data};
+        if (axios.isAxiosError(error)) {
+          if (error.response?.data?.notifications) {
+            hasMissedNotifications = true;
+            payload = {...defaultPayload, ...error.response?.data};
+          }
         } else {
           throw error;
         }

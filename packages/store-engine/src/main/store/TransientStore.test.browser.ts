@@ -132,11 +132,10 @@ describe('store.TransientStore', () => {
     afterEach(() => jasmine.clock().uninstall());
 
     // eslint-disable-next-line jest/no-done-callback
-    it('publishes an event when an entity expires.', async done => {
+    it('publishes an event when an entity expires.', async () => {
       store.on(TransientStore.TOPIC.EXPIRED, expiredBundle => {
         expect(expiredBundle.payload).toBe(entity);
         expect(expiredBundle.primaryKey).toBe(primaryKey);
-        done();
       });
 
       await store.set(primaryKey, entity, minuteInMillis);
