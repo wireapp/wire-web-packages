@@ -37,5 +37,5 @@
     "test": "yarn test:node",
     "test:node": "jest"
   },
-  "version": "1.3.9"
+  "version": "1.3.10"
 }

@@ -35,5 +35,5 @@
     "test": "jest",
     "test:project": "yarn build && yarn test"
   },
-  "version": "2.5.10"
+  "version": "2.5.11"
 }
