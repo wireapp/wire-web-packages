@@ -3,7 +3,7 @@
     "jest/globals": true
   },
   "extends": ["./packages/eslint-config/eslintrc.js", "plugin:jest/recommended"],
-  "ignorePatterns": ["*config.js", "demo/", "bin/", "eslint*", "webpack*", "*.js"],
+  "ignorePatterns": ["*config.js", "demo/", "bin/", "eslint*", "webpack*", "*.js", "*.d.ts"],
   "globals": {
     "NodeJS": "readonly"
   },
