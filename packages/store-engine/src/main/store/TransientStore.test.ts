@@ -131,6 +131,7 @@ describe('store.TransientStore', () => {
 
     afterEach(() => jest.useRealTimers());
 
+    // eslint-disable-next-line jest/no-done-callback
     it('publishes an event when an entity expires.', async () => {
       expect.assertions(2);
       store.on(TransientStore.TOPIC.EXPIRED, expiredBundle => {
