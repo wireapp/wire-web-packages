@@ -70,6 +70,7 @@ describe('HttpClient', () => {
 
       try {
         await client._sendRequest({method: 'GET', baseURL: testConfig.urls.rest, url: AuthAPI.URL.ACCESS});
+        throw new Error('Should not resolve');
       } catch (error) {
         expect((error as BackendError).message).toBe('Authentication failed because the token is invalid.');
       }
@@ -91,6 +92,7 @@ describe('HttpClient', () => {
 
     try {
       await client._sendRequest({method: 'GET', baseURL: testConfig.urls.rest, url: AuthAPI.URL.ACCESS});
+      throw new Error('Should not resolve');
     } catch (error) {
       expect((error as BackendError).message).toBe('Authentication failed because the cookie is missing.');
     }
