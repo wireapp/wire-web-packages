@@ -59,7 +59,7 @@
     "clean": "rimraf \"src/**/*{.js,.js.map,.d.ts}\"",
     "dist": "yarn clean && yarn build",
     "start": "styleguidist server",
-"test": "yarn g:jest",
+    "test": "yarn g:jest",
     "test:watch": "yarn g:jest --watch",
     "test:update": "yarn g:jest --updateSnapshot",
     "test:project": "yarn test"

@@ -19,7 +19,7 @@
     "build": "tsc",
     "clean": "rimraf \"src/*.{js?(.map),d.ts}\"",
     "dist": "yarn clean && yarn build",
-"test": "yarn g:jest"
+    "test": "yarn g:jest"
   },
   "version": "0.5.9"
 }

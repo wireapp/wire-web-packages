@@ -35,7 +35,7 @@
     "build:node": "tsc",
     "clean": "rimraf \"src/!(test)/**/*.{js?(.map),d.ts}\"",
     "dist": "yarn clean && yarn build",
-"test": "yarn g:jest",
+    "test": "yarn g:jest",
     "test:coverage": "yarn test",
     "test:watch": "yarn g:jest --watch"
   },

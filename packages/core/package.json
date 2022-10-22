@@ -56,7 +56,7 @@
     "start": "yarn dist && node index.js",
     "start:echo": "cross-env NODE_DEBUG='@wireapp/core*' node src/demo/echo.js",
     "start:sender": "cross-env NODE_DEBUG='@wireapp/core*' node src/demo/sender.js",
-"test": "yarn g:jest",
+    "test": "yarn g:jest",
     "watch": "tsc --watch"
   },
   "version": "34.1.1",

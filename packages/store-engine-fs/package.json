@@ -27,7 +27,7 @@
     "build:node": "tsc",
     "clean": "rimraf \"src/**/{!(test*).js,*.js.map,*.d.ts}\"",
     "dist": "yarn clean && yarn build",
-"test": "yarn g:jest"
+    "test": "yarn g:jest"
   },
   "version": "2.5.11"
 }

@@ -18,7 +18,7 @@
     "build": "tsc",
     "clean": "rimraf lib",
     "dist": "yarn clean && yarn build",
-"test": "yarn g:jest"
+    "test": "yarn g:jest"
   },
   "version": "1.3.4"
 }
