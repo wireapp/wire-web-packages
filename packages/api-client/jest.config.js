@@ -25,7 +25,7 @@ module.exports = {
   ...baseConfig,
   roots: [`<rootDir>/packages/${packageName}`],
   collectCoverageFrom: ['src/**/*.{ts,tsx}'],
-  moduleDirectories: ['node_modules'],
+  moduleDirectories: ['node_modules', `<rootDir>/packages/${packageName}/node_modules`],
   modulePaths: [`<rootDir>/packages/${packageName}/src/`],
   displayName: packageName,
   rootDir: '../..',

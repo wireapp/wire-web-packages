@@ -63,7 +63,8 @@
     "release": "yarn new-version && yarn new-publish",
     "test": "node bin/testUpdated.js",
     "test:all": "lerna run build && lerna run test",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "g:jest": "cd $INIT_CWD && jest"
   },
   "workspaces": {
     "packages": [
