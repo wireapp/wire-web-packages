@@ -20,7 +20,10 @@ module.exports = {
     clearMocks: true,
     testMatch: ["**/?(*.)+(spec|test).+(ts|tsx)", "test/**/*.+(ts|tsx)",],
     transform: {
-        "^.+\\.(ts|tsx)$": "@swc/jest"
+        "^.+\\.(ts|tsx|jsx)$": "@swc/jest",
     },
+    transformIgnorePatterns: [
+        "!node_modules/"
+    ],
     testEnvironment: "jsdom",
 }
