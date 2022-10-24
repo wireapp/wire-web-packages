@@ -95,7 +95,7 @@ export class MLSService {
         const {user} = parseFullQualifiedClientId(decoder.decode(client));
         return otherClients.some(client => {
           const {user: otherUser} = parseFullQualifiedClientId(decoder.decode(client));
-          return otherUser === user;
+          return otherUser.toLowerCase() === user.toLowerCase();
         });
       },
     });
