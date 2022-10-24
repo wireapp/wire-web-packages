@@ -1,11 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`"Title" renders (dark theme) 1`] = `
+.emotion-0 {
+  background: #000;
+  -webkit-transition: background 0.15s;
+  transition: background 0.15s;
+}
+
+.emotion-1 {
+  color: #696c6e;
+  display: block;
+  font-size: 32px;
+  font-weight: 600;
+  text-align: center;
+  text-transform: none;
+  margin-bottom: 8px;
+}
+
 <div
-  className="css-1mc7zwm-StyledAppContainer"
+  className="emotion-0"
 >
   <div
-    className="css-16j78gg-Title"
+    className="emotion-1"
   >
     Title
   </div>
@@ -13,11 +29,27 @@ exports[`"Title" renders (dark theme) 1`] = `
 `;
 
 exports[`"Title" renders 1`] = `
+.emotion-0 {
+  background: #edeff0;
+  -webkit-transition: background 0.15s;
+  transition: background 0.15s;
+}
+
+.emotion-1 {
+  color: #696c6e;
+  display: block;
+  font-size: 32px;
+  font-weight: 600;
+  text-align: center;
+  text-transform: none;
+  margin-bottom: 8px;
+}
+
 <div
-  className="css-7uml9n-StyledAppContainer"
+  className="emotion-0"
 >
   <div
-    className="css-16j78gg-Title"
+    className="emotion-1"
   >
     Title
   </div>

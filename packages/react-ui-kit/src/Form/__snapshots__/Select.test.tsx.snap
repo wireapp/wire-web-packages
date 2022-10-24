@@ -1,15 +1,213 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`"Select" renders 1`] = `
+.emotion-0 {
+  background: #edeff0;
+  -webkit-transition: background 0.15s;
+  transition: background 0.15s;
+}
+
+.emotion-1 {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.emotion-1:focus-within label {
+  color: #0667c8;
+}
+
+.emotion-2>div {
+  background: #fff;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 0 0 1px #dce0e3;
+  caret-color: #0667c8;
+  color: rgb(29, 30, 31);
+  font-weight: 300;
+  height: auto;
+  line-height: 24px;
+  outline: none;
+  padding: 0;
+  width: 100%;
+  min-height: 48px;
+  position: relative;
+  cursor: pointer;
+}
+
+.emotion-2>div::-moz-placeholder {
+  color: rgb(80, 82, 84);
+  font-size: 16px;
+  text-transform: none;
+  opacity: 1;
+}
+
+.emotion-2>div::-ms-input-placeholder {
+  color: rgb(80, 82, 84);
+  font-size: 16px;
+  text-transform: none;
+}
+
+.emotion-2>div::-webkit-input-placeholder {
+  color: rgb(80, 82, 84);
+  font-size: 16px;
+  text-transform: none;
+}
+
+.emotion-2>div:hover {
+  box-shadow: 0 0 0 1px var(--text-input-border-hover);
+}
+
+.emotion-2>div:focus-visible,
+.emotion-2>div:focus,
+.emotion-2>div:active {
+  box-shadow: 0 0 0 1px #0667c8;
+}
+
+.emotion-2>div:invalid:not(:focus, :hover) {
+  box-shadow: 0 0 0 1px #dce0e3;
+}
+
+.emotion-2>div:-moz-focusring {
+  color: transparent;
+  text-shadow: 0 0 0 #000;
+}
+
+.emotion-2>div:focus:visible,
+.emotion-2>div active {
+  box-shadow: 0 0 0 1px #0667c8;
+}
+
+.emotion-3 {
+  z-index: 9999;
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  width: 1px;
+  position: absolute;
+  overflow: hidden;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.emotion-5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  padding: 0 8px 0 16px;
+  height: auto;
+  min-height: 48px;
+}
+
+.emotion-6 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: grid;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  padding: 0;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.emotion-7 {
+  color: hsl(0, 0%, 50%);
+  grid-area: 1/1/2/3;
+  margin-left: 2px;
+  margin-right: 2px;
+  box-sizing: border-box;
+}
+
+.emotion-8 {
+  background: 0;
+  border: 0;
+  caret-color: transparent;
+  font-size: inherit;
+  grid-area: 1/1/2/3;
+  outline: 0;
+  padding: 0;
+  width: 1px;
+  color: transparent;
+  left: -100px;
+  opacity: 0;
+  position: relative;
+  -webkit-transform: scale(.01);
+  -moz-transform: scale(.01);
+  -ms-transform: scale(.01);
+  transform: scale(.01);
+}
+
+.emotion-9 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-align-self: stretch;
+  -ms-flex-item-align: stretch;
+  align-self: stretch;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.emotion-10 {
+  display: none;
+}
+
+.emotion-11 {
+  color: hsl(0, 0%, 80%);
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 8px;
+  -webkit-transition: color 150ms;
+  transition: color 150ms;
+  box-sizing: border-box;
+}
+
+.emotion-11:hover {
+  color: hsl(0, 0%, 60%);
+}
+
+.emotion-12 {
+  fill: rgb(29, 30, 31);
+  overflow: visible;
+  margin-top: 4px;
+}
+
 <div
-  className="css-7uml9n-StyledAppContainer"
+  className="emotion-0"
 >
   <div
-    className="css-2ocyf0-Select"
+    className="emotion-1"
     data-uie-name="test"
   >
     <div
-      className=" css-dkntwv-SelectContainer"
+      className=" emotion-2"
       id="test"
       onKeyDown={[Function]}
     >
@@ -17,25 +215,25 @@ exports[`"Select" renders 1`] = `
         tabIndex={0}
       >
         <span
-          className="css-1f43avz-a11yText-A11yText"
+          className="emotion-3"
           id="react-select-2-live-region"
         />
         <span
           aria-atomic="false"
           aria-live="polite"
           aria-relevant="additions text"
-          className="css-1f43avz-a11yText-A11yText"
+          className="emotion-3"
         />
         <div
-          className=" css-6smaub-Control"
+          className=" emotion-5"
           onMouseDown={[Function]}
           onTouchEnd={[Function]}
         >
           <div
-            className=" css-16ieua5-ValueContainer"
+            className=" emotion-6"
           >
             <div
-              className=" css-14el2xx-placeholder"
+              className=" emotion-7"
               id="react-select-2-placeholder"
             >
               Select...
@@ -47,7 +245,7 @@ exports[`"Select" renders 1`] = `
               aria-expanded={false}
               aria-haspopup={true}
               aria-readonly={true}
-              className="css-mohuvp-dummyInput-DummyInput"
+              className="emotion-8"
               disabled={false}
               id="react-select-2-input"
               inputMode="none"
@@ -60,19 +258,19 @@ exports[`"Select" renders 1`] = `
             />
           </div>
           <div
-            className=" css-1hb7zxy-IndicatorsContainer"
+            className=" emotion-9"
           >
             <span
-              className=" css-1xjgjl1-IndicatorSeparator"
+              className=" emotion-10"
             />
             <div
               aria-hidden="true"
-              className=" css-1186e7r-indicatorContainer"
+              className=" emotion-11"
               onMouseDown={[Function]}
               onTouchEnd={[Function]}
             >
               <svg
-                className="css-1tuya7p-DropdownIndicator"
+                className="emotion-12"
                 height={16}
                 viewBox="0 0 16 16"
                 width={16}
@@ -93,15 +291,208 @@ exports[`"Select" renders 1`] = `
 `;
 
 exports[`"Select" renders as disabled 1`] = `
+.emotion-0 {
+  background: #edeff0;
+  -webkit-transition: background 0.15s;
+  transition: background 0.15s;
+}
+
+.emotion-1 {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.emotion-1:focus-within label {
+  color: #0667c8;
+}
+
+.emotion-2>div {
+  background: #edeff0;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 0 0 1px #dce0e3;
+  caret-color: #0667c8;
+  color: #676b71;
+  font-weight: 300;
+  height: auto;
+  line-height: 24px;
+  outline: none;
+  padding: 0;
+  width: 100%;
+  min-height: 48px;
+  position: relative;
+  background-color: #edeff0;
+}
+
+.emotion-2>div::-moz-placeholder {
+  color: rgb(80, 82, 84);
+  font-size: 16px;
+  text-transform: none;
+  opacity: 1;
+}
+
+.emotion-2>div::-ms-input-placeholder {
+  color: rgb(80, 82, 84);
+  font-size: 16px;
+  text-transform: none;
+}
+
+.emotion-2>div::-webkit-input-placeholder {
+  color: rgb(80, 82, 84);
+  font-size: 16px;
+  text-transform: none;
+}
+
+.emotion-2>div:focus-visible,
+.emotion-2>div:focus,
+.emotion-2>div:active {
+  box-shadow: 0 0 0 1px #0667c8;
+}
+
+.emotion-2>div:invalid:not(:focus, :hover) {
+  box-shadow: 0 0 0 1px #dce0e3;
+}
+
+.emotion-2>div:-moz-focusring {
+  color: transparent;
+  text-shadow: 0 0 0 #000;
+}
+
+.emotion-3 {
+  z-index: 9999;
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  width: 1px;
+  position: absolute;
+  overflow: hidden;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.emotion-5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  padding: 0 8px 0 16px;
+  height: auto;
+  min-height: 48px;
+}
+
+.emotion-6 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: grid;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  padding: 0;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.emotion-7 {
+  color: hsl(0, 0%, 50%);
+  grid-area: 1/1/2/3;
+  margin-left: 2px;
+  margin-right: 2px;
+  box-sizing: border-box;
+}
+
+.emotion-8 {
+  background: 0;
+  border: 0;
+  caret-color: transparent;
+  font-size: inherit;
+  grid-area: 1/1/2/3;
+  outline: 0;
+  padding: 0;
+  width: 1px;
+  color: transparent;
+  left: -100px;
+  opacity: 0;
+  position: relative;
+  -webkit-transform: scale(.01);
+  -moz-transform: scale(.01);
+  -ms-transform: scale(.01);
+  transform: scale(.01);
+}
+
+.emotion-9 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-align-self: stretch;
+  -ms-flex-item-align: stretch;
+  align-self: stretch;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.emotion-10 {
+  display: none;
+}
+
+.emotion-11 {
+  color: hsl(0, 0%, 80%);
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 8px;
+  -webkit-transition: color 150ms;
+  transition: color 150ms;
+  box-sizing: border-box;
+}
+
+.emotion-11:hover {
+  color: hsl(0, 0%, 60%);
+}
+
+.emotion-11>svg {
+  fill: rgb(80, 82, 84);
+}
+
+.emotion-12 {
+  fill: rgb(29, 30, 31);
+  overflow: visible;
+  margin-top: 4px;
+}
+
 <div
-  className="css-7uml9n-StyledAppContainer"
+  className="emotion-0"
 >
   <div
-    className="css-2ocyf0-Select"
+    className="emotion-1"
     data-uie-name="test"
   >
     <div
-      className=" css-19vi2h5-SelectContainer"
+      className=" emotion-2"
       id="test"
       onKeyDown={[Function]}
     >
@@ -109,25 +500,25 @@ exports[`"Select" renders as disabled 1`] = `
         tabIndex={0}
       >
         <span
-          className="css-1f43avz-a11yText-A11yText"
+          className="emotion-3"
           id="react-select-3-live-region"
         />
         <span
           aria-atomic="false"
           aria-live="polite"
           aria-relevant="additions text"
-          className="css-1f43avz-a11yText-A11yText"
+          className="emotion-3"
         />
         <div
-          className=" css-6smaub-Control"
+          className=" emotion-5"
           onMouseDown={[Function]}
           onTouchEnd={[Function]}
         >
           <div
-            className=" css-16ieua5-ValueContainer"
+            className=" emotion-6"
           >
             <div
-              className=" css-14el2xx-placeholder"
+              className=" emotion-7"
               id="react-select-3-placeholder"
             >
               Select...
@@ -139,7 +530,7 @@ exports[`"Select" renders as disabled 1`] = `
               aria-expanded={false}
               aria-haspopup={true}
               aria-readonly={true}
-              className="css-mohuvp-dummyInput-DummyInput"
+              className="emotion-8"
               disabled={true}
               id="react-select-3-input"
               inputMode="none"
@@ -152,19 +543,19 @@ exports[`"Select" renders as disabled 1`] = `
             />
           </div>
           <div
-            className=" css-1hb7zxy-IndicatorsContainer"
+            className=" emotion-9"
           >
             <span
-              className=" css-1xjgjl1-IndicatorSeparator"
+              className=" emotion-10"
             />
             <div
               aria-hidden="true"
-              className=" css-zbce0a-indicatorContainer"
+              className=" emotion-11"
               onMouseDown={[Function]}
               onTouchEnd={[Function]}
             >
               <svg
-                className="css-1tuya7p-DropdownIndicator"
+                className="emotion-12"
                 height={16}
                 viewBox="0 0 16 16"
                 width={16}
@@ -185,15 +576,209 @@ exports[`"Select" renders as disabled 1`] = `
 `;
 
 exports[`"Select" renders as invalid 1`] = `
+.emotion-0 {
+  background: #edeff0;
+  -webkit-transition: background 0.15s;
+  transition: background 0.15s;
+}
+
+.emotion-1 {
+  margin-bottom: 2px;
+  width: 100%;
+}
+
+.emotion-1:focus-within label {
+  color: #0667c8;
+}
+
+.emotion-2>div {
+  background: #fff;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 0 0 1px #c20013;
+  caret-color: #0667c8;
+  color: rgb(29, 30, 31);
+  font-weight: 300;
+  height: auto;
+  line-height: 24px;
+  outline: none;
+  padding: 0;
+  width: 100%;
+  min-height: 48px;
+  position: relative;
+  cursor: pointer;
+}
+
+.emotion-2>div::-moz-placeholder {
+  color: rgb(80, 82, 84);
+  font-size: 16px;
+  text-transform: none;
+  opacity: 1;
+}
+
+.emotion-2>div::-ms-input-placeholder {
+  color: rgb(80, 82, 84);
+  font-size: 16px;
+  text-transform: none;
+}
+
+.emotion-2>div::-webkit-input-placeholder {
+  color: rgb(80, 82, 84);
+  font-size: 16px;
+  text-transform: none;
+}
+
+.emotion-2>div:hover {
+  box-shadow: 0 0 0 1px var(--text-input-border-hover);
+}
+
+.emotion-2>div:focus-visible,
+.emotion-2>div:focus,
+.emotion-2>div:active {
+  box-shadow: 0 0 0 1px #0667c8;
+}
+
+.emotion-2>div:-moz-focusring {
+  color: transparent;
+  text-shadow: 0 0 0 #000;
+}
+
+.emotion-2>div:focus:visible,
+.emotion-2>div active {
+  box-shadow: 0 0 0 1px #0667c8;
+}
+
+.emotion-3 {
+  z-index: 9999;
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  width: 1px;
+  position: absolute;
+  overflow: hidden;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.emotion-5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  padding: 0 8px 0 16px;
+  height: auto;
+  min-height: 48px;
+}
+
+.emotion-6 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: grid;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  padding: 0;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.emotion-7 {
+  color: hsl(0, 0%, 50%);
+  grid-area: 1/1/2/3;
+  margin-left: 2px;
+  margin-right: 2px;
+  box-sizing: border-box;
+}
+
+.emotion-8 {
+  background: 0;
+  border: 0;
+  caret-color: transparent;
+  font-size: inherit;
+  grid-area: 1/1/2/3;
+  outline: 0;
+  padding: 0;
+  width: 1px;
+  color: transparent;
+  left: -100px;
+  opacity: 0;
+  position: relative;
+  -webkit-transform: scale(.01);
+  -moz-transform: scale(.01);
+  -ms-transform: scale(.01);
+  transform: scale(.01);
+}
+
+.emotion-9 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-align-self: stretch;
+  -ms-flex-item-align: stretch;
+  align-self: stretch;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.emotion-10 {
+  display: none;
+}
+
+.emotion-11 {
+  color: hsl(0, 0%, 80%);
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 8px;
+  -webkit-transition: color 150ms;
+  transition: color 150ms;
+  box-sizing: border-box;
+}
+
+.emotion-11:hover {
+  color: hsl(0, 0%, 60%);
+}
+
+.emotion-12 {
+  fill: rgb(29, 30, 31);
+  overflow: visible;
+  margin-top: 4px;
+}
+
 <div
-  className="css-7uml9n-StyledAppContainer"
+  className="emotion-0"
 >
   <div
-    className="css-yrzhnj-Select"
+    className="emotion-1"
     data-uie-name="test"
   >
     <div
-      className=" css-g607jh-SelectContainer"
+      className=" emotion-2"
       id="test"
       onKeyDown={[Function]}
     >
@@ -201,25 +786,25 @@ exports[`"Select" renders as invalid 1`] = `
         tabIndex={0}
       >
         <span
-          className="css-1f43avz-a11yText-A11yText"
+          className="emotion-3"
           id="react-select-4-live-region"
         />
         <span
           aria-atomic="false"
           aria-live="polite"
           aria-relevant="additions text"
-          className="css-1f43avz-a11yText-A11yText"
+          className="emotion-3"
         />
         <div
-          className=" css-6smaub-Control"
+          className=" emotion-5"
           onMouseDown={[Function]}
           onTouchEnd={[Function]}
         >
           <div
-            className=" css-16ieua5-ValueContainer"
+            className=" emotion-6"
           >
             <div
-              className=" css-14el2xx-placeholder"
+              className=" emotion-7"
               id="react-select-4-placeholder"
             >
               Select...
@@ -231,7 +816,7 @@ exports[`"Select" renders as invalid 1`] = `
               aria-expanded={false}
               aria-haspopup={true}
               aria-readonly={true}
-              className="css-mohuvp-dummyInput-DummyInput"
+              className="emotion-8"
               disabled={false}
               id="react-select-4-input"
               inputMode="none"
@@ -244,19 +829,19 @@ exports[`"Select" renders as invalid 1`] = `
             />
           </div>
           <div
-            className=" css-1hb7zxy-IndicatorsContainer"
+            className=" emotion-9"
           >
             <span
-              className=" css-1xjgjl1-IndicatorSeparator"
+              className=" emotion-10"
             />
             <div
               aria-hidden="true"
-              className=" css-1186e7r-indicatorContainer"
+              className=" emotion-11"
               onMouseDown={[Function]}
               onTouchEnd={[Function]}
             >
               <svg
-                className="css-1tuya7p-DropdownIndicator"
+                className="emotion-12"
                 height={16}
                 viewBox="0 0 16 16"
                 width={16}

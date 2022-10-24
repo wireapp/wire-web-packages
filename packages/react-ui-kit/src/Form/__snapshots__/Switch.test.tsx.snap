@@ -1,28 +1,105 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`"Switch" renders (dark theme) 1`] = `
+.emotion-0 {
+  background: #000;
+  -webkit-transition: background 0.15s;
+  transition: background 0.15s;
+}
+
+.emotion-1 {
+  display: inline-block;
+  position: relative;
+  text-align: left;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  width: 42px;
+}
+
+.emotion-2 {
+  display: none;
+}
+
+.emotion-3 {
+  border-radius: 20px;
+  cursor: pointer;
+  display: block;
+  margin: 0;
+  overflow: hidden;
+}
+
+.emotion-4 {
+  display: block;
+  margin-left: -100%;
+  -webkit-transition: margin 0.1s ease-in 0s;
+  transition: margin 0.1s ease-in 0s;
+  width: 200%;
+}
+
+.emotion-4:after {
+  content: " ";
+  padding-right: 10px;
+  text-align: right;
+}
+
+.emotion-4:before {
+  content: " ";
+  padding-left: 10px;
+}
+
+.emotion-4:before,
+.emotion-4:after {
+  background-color: #d2d2d2;
+  box-sizing: border-box;
+  display: block;
+  float: left;
+  height: 25px;
+  line-height: 25px;
+  padding: 0;
+  width: 50%;
+}
+
+.emotion-5 {
+  background: #fff;
+  border-radius: 100%;
+  bottom: 0;
+  box-shadow: 0px 0px 2px -1px gray;
+  display: block;
+  height: 23px;
+  margin: 1px;
+  position: absolute;
+  right: 17px;
+  top: 0;
+  -webkit-transition: all 0.15s ease-in 0s;
+  transition: all 0.15s ease-in 0s;
+  width: 23px;
+}
+
 <div
-  className="css-1mc7zwm-StyledAppContainer"
+  className="emotion-0"
 >
   <div
-    className="css-vlapzy-Switch"
+    className="emotion-1"
   >
     <input
       checked={false}
-      className="css-1mmu7i4-Switch"
+      className="emotion-2"
       id="3"
       onChange={[Function]}
       type="checkbox"
     />
     <label
-      className="css-m9in6d-Switch"
+      className="emotion-3"
       htmlFor="3"
     >
       <span
-        className="css-edcbmt-Switch"
+        className="emotion-4"
       />
       <span
-        className="css-dm4yw9-Switch"
+        className="emotion-5"
       />
     </label>
   </div>
@@ -30,28 +107,105 @@ exports[`"Switch" renders (dark theme) 1`] = `
 `;
 
 exports[`"Switch" renders checked 1`] = `
+.emotion-0 {
+  background: #edeff0;
+  -webkit-transition: background 0.15s;
+  transition: background 0.15s;
+}
+
+.emotion-1 {
+  display: inline-block;
+  position: relative;
+  text-align: left;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  width: 42px;
+}
+
+.emotion-2 {
+  display: none;
+}
+
+.emotion-3 {
+  border-radius: 20px;
+  cursor: pointer;
+  display: block;
+  margin: 0;
+  overflow: hidden;
+}
+
+.emotion-4 {
+  display: block;
+  margin-left: 0;
+  -webkit-transition: margin 0.1s ease-in 0s;
+  transition: margin 0.1s ease-in 0s;
+  width: 200%;
+}
+
+.emotion-4:after {
+  content: " ";
+  padding-right: 10px;
+  text-align: right;
+}
+
+.emotion-4:before {
+  content: " ";
+  padding-left: 10px;
+}
+
+.emotion-4:before,
+.emotion-4:after {
+  background-color: #0772de;
+  box-sizing: border-box;
+  display: block;
+  float: left;
+  height: 25px;
+  line-height: 25px;
+  padding: 0;
+  width: 50%;
+}
+
+.emotion-5 {
+  background: #fff;
+  border-radius: 100%;
+  bottom: 0;
+  box-shadow: 0px 0px 2px -1px gray;
+  display: block;
+  height: 23px;
+  margin: 1px;
+  position: absolute;
+  right: 0px;
+  top: 0;
+  -webkit-transition: all 0.15s ease-in 0s;
+  transition: all 0.15s ease-in 0s;
+  width: 23px;
+}
+
 <div
-  className="css-7uml9n-StyledAppContainer"
+  className="emotion-0"
 >
   <div
-    className="css-vlapzy-Switch"
+    className="emotion-1"
   >
     <input
       checked={true}
-      className="css-1mmu7i4-Switch"
+      className="emotion-2"
       id="2"
       onChange={[Function]}
       type="checkbox"
     />
     <label
-      className="css-m9in6d-Switch"
+      className="emotion-3"
       htmlFor="2"
     >
       <span
-        className="css-1cbbamx-Switch"
+        className="emotion-4"
       />
       <span
-        className="css-xjd1wz-Switch"
+        className="emotion-5"
       />
     </label>
   </div>
@@ -59,29 +213,106 @@ exports[`"Switch" renders checked 1`] = `
 `;
 
 exports[`"Switch" renders disabled 1`] = `
+.emotion-0 {
+  background: #edeff0;
+  -webkit-transition: background 0.15s;
+  transition: background 0.15s;
+}
+
+.emotion-1 {
+  display: inline-block;
+  position: relative;
+  text-align: left;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  width: 42px;
+}
+
+.emotion-2 {
+  display: none;
+}
+
+.emotion-3 {
+  border-radius: 20px;
+  display: block;
+  margin: 0;
+  overflow: hidden;
+}
+
+.emotion-4 {
+  display: block;
+  margin-left: -100%;
+  -webkit-transition: margin 0.1s ease-in 0s;
+  transition: margin 0.1s ease-in 0s;
+  width: 200%;
+}
+
+.emotion-4:after {
+  content: " ";
+  padding-right: 10px;
+  text-align: right;
+}
+
+.emotion-4:before {
+  content: " ";
+  padding-left: 10px;
+}
+
+.emotion-4:before,
+.emotion-4:after {
+  background-color: rgb(228, 228, 228);
+  box-sizing: border-box;
+  display: block;
+  float: left;
+  height: 25px;
+  line-height: 25px;
+  padding: 0;
+  width: 50%;
+}
+
+.emotion-5 {
+  background: #fff;
+  border-radius: 100%;
+  bottom: 0;
+  box-shadow: 0px 0px 2px -1px gray;
+  display: block;
+  height: 23px;
+  margin: 1px;
+  opacity: 0.7;
+  position: absolute;
+  right: 17px;
+  top: 0;
+  -webkit-transition: all 0.15s ease-in 0s;
+  transition: all 0.15s ease-in 0s;
+  width: 23px;
+}
+
 <div
-  className="css-7uml9n-StyledAppContainer"
+  className="emotion-0"
 >
   <div
-    className="css-vlapzy-Switch"
+    className="emotion-1"
   >
     <input
       checked={false}
-      className="css-1mmu7i4-Switch"
+      className="emotion-2"
       disabled={true}
       id="4"
       onChange={[Function]}
       type="checkbox"
     />
     <label
-      className="css-vjtkxv-Switch"
+      className="emotion-3"
       htmlFor="4"
     >
       <span
-        className="css-ryu7iu-Switch"
+        className="emotion-4"
       />
       <span
-        className="css-1ywitsw-Switch"
+        className="emotion-5"
       />
     </label>
   </div>
@@ -89,28 +320,105 @@ exports[`"Switch" renders disabled 1`] = `
 `;
 
 exports[`"Switch" renders unchecked 1`] = `
+.emotion-0 {
+  background: #edeff0;
+  -webkit-transition: background 0.15s;
+  transition: background 0.15s;
+}
+
+.emotion-1 {
+  display: inline-block;
+  position: relative;
+  text-align: left;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  width: 42px;
+}
+
+.emotion-2 {
+  display: none;
+}
+
+.emotion-3 {
+  border-radius: 20px;
+  cursor: pointer;
+  display: block;
+  margin: 0;
+  overflow: hidden;
+}
+
+.emotion-4 {
+  display: block;
+  margin-left: -100%;
+  -webkit-transition: margin 0.1s ease-in 0s;
+  transition: margin 0.1s ease-in 0s;
+  width: 200%;
+}
+
+.emotion-4:after {
+  content: " ";
+  padding-right: 10px;
+  text-align: right;
+}
+
+.emotion-4:before {
+  content: " ";
+  padding-left: 10px;
+}
+
+.emotion-4:before,
+.emotion-4:after {
+  background-color: #d2d2d2;
+  box-sizing: border-box;
+  display: block;
+  float: left;
+  height: 25px;
+  line-height: 25px;
+  padding: 0;
+  width: 50%;
+}
+
+.emotion-5 {
+  background: #fff;
+  border-radius: 100%;
+  bottom: 0;
+  box-shadow: 0px 0px 2px -1px gray;
+  display: block;
+  height: 23px;
+  margin: 1px;
+  position: absolute;
+  right: 17px;
+  top: 0;
+  -webkit-transition: all 0.15s ease-in 0s;
+  transition: all 0.15s ease-in 0s;
+  width: 23px;
+}
+
 <div
-  className="css-7uml9n-StyledAppContainer"
+  className="emotion-0"
 >
   <div
-    className="css-vlapzy-Switch"
+    className="emotion-1"
   >
     <input
       checked={false}
-      className="css-1mmu7i4-Switch"
+      className="emotion-2"
       id="1"
       onChange={[Function]}
       type="checkbox"
     />
     <label
-      className="css-m9in6d-Switch"
+      className="emotion-3"
       htmlFor="1"
     >
       <span
-        className="css-edcbmt-Switch"
+        className="emotion-4"
       />
       <span
-        className="css-dm4yw9-Switch"
+        className="emotion-5"
       />
     </label>
   </div>
