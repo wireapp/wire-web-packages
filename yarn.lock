@@ -5145,7 +5145,7 @@ __metadata:
     "@wireapp/protocol-messaging": ^1.39.0
     "@wireapp/store-engine-dexie": "workspace:^"
     axios: 1.1.2
-    bazinga64: 5.11.10
+    bazinga64: 5.11.11
     commander: 9.4.1
     cross-env: 7.0.3
     dotenv-defaults: 5.0.2
@@ -6308,7 +6308,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bazinga64@5.11.10, bazinga64@workspace:packages/bazinga64":
+"bazinga64@5.11.11, bazinga64@workspace:packages/bazinga64":
   version: 0.0.0-use.local
   resolution: "bazinga64@workspace:packages/bazinga64"
   dependencies:
