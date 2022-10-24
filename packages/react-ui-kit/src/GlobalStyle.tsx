@@ -39,7 +39,7 @@ const globalStyles: (theme: Theme) => CSSObject = (theme: Theme) => ({
     color: theme.general.color,
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif',
+    fontFamily: 'emoji, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif',
     fontWeight: 300,
     lineHeight: 1.5,
     minHeight: '100vh',
