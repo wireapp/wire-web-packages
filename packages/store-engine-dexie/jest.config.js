@@ -17,20 +17,13 @@
  *
  */
 
-const { TextDecoder, TextEncoder } = require('util')
-
 const baseConfig = require('../../jest.config.base');
 
-const packageName = require('./package.json').name.split('@wireapp/').pop();
+const { TextDecoder, TextEncoder } = require('util')
+
 
 module.exports = {
   ...baseConfig,
-  roots: [`<rootDir>/packages/${packageName}`],
-  collectCoverageFrom: ['src/**/*.{ts,tsx}'],
-  moduleDirectories: ['node_modules'],
-  modulePaths: [`<rootDir>/packages/${packageName}/src/`],
-  displayName: packageName,
-  rootDir: '../..',
   moduleNameMapper: {
     '^dexie$': require.resolve('dexie'),
   },

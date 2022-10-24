@@ -17,14 +17,11 @@
  *
  */
 
+const baseConfig = require('../../jest.config.base');
 const { TextDecoder, TextEncoder } = require('util')
 
 module.exports = {
-  clearMocks: true,
-  testMatch: ["**/?(*.)+(spec|test).+(ts|tsx)", "test/**/*.+(ts|tsx)",],
-  transform: {
-    "^.+\\.(ts|tsx)$": "@swc/jest"
-  },
+  ...baseConfig,
   testEnvironment: "node",
   globals: {
     TextDecoder,

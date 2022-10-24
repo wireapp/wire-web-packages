@@ -26,8 +26,5 @@ module.exports = {
   collectCoverageFrom: [
     '<rootDir>/packages/*/src/**/*.{ts,tsx}',
   ],
-  moduleDirectories: [
-    'node_modules',
-  ],
 };
 
