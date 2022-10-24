@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2021 Wire Swiss GmbH
+ * Copyright (C) 2022 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,15 +17,22 @@
  *
  */
 
+const baseConfig = require('../../jest.config.base');
+
+const { TextDecoder, TextEncoder } = require('util')
+
+
 module.exports = {
-  all: true,
-  'check-coverage': true,
-  exclude: ['**/*.d.ts', '**/*.test*.ts', '**/index.ts', '**/src/test/**/*'],
-  extension: ['.ts'],
-  include: ['src/**/*.ts'],
-  lines: 0,
-  'per-file': false,
-  reporter: ['text-summary'],
-  reporter: ['html'],
-  require: ['ts-node/register'],
+  ...baseConfig,
+  moduleNameMapper: {
+    '^dexie$': require.resolve('dexie'),
+  },
+  setupFiles: [
+    "fake-indexeddb/auto"
+  ],
+  globals: {
+    TextDecoder,
+    TextEncoder,
+  }
 };
+

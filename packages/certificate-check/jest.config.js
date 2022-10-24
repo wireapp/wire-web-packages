@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2021 Wire Swiss GmbH
+ * Copyright (C) 2022 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,11 +17,8 @@
  *
  */
 
+const baseConfig = require('../../jest.config.base');
+
 module.exports = {
-  plugins: [
-    '@babel/plugin-proposal-class-properties',
-    '@babel/plugin-proposal-object-rest-spread',
-    '@babel/plugin-proposal-optional-chaining',
-  ],
-  presets: ['@babel/preset-typescript'],
+  ...baseConfig,
 };
