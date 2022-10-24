@@ -23,7 +23,7 @@ module.exports = {
         "^.+\\.(ts|tsx|jsx)$": "@swc/jest",
     },
     transformIgnorePatterns: [
-        "!node_modules/"
+        "node_modules/"
     ],
     testEnvironment: "jsdom",
 }
