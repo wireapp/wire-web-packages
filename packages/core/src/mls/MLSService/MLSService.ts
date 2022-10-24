@@ -95,7 +95,8 @@ export class MLSService {
   public configureMLSCallbacks({groupIdFromConversationId, ...coreCryptoCallbacks}: MLSCallbacks): void {
     this.coreCryptoClient.registerCallbacks({
       ...coreCryptoCallbacks,
-      clientIdBelongsToOneOf: (client, otherClients) => {
+      userAuthorize: () => true,
+      clientIsExistingGroupUser: (client, otherClients) => {
         const decoder = new TextDecoder();
         const {user} = parseFullQualifiedClientId(decoder.decode(client));
         return otherClients.some(client => {

@@ -157,6 +157,7 @@ export class Account<T = any> extends EventEmitter {
   private readonly apiClient: APIClient;
   private readonly logger: logdown.Logger;
   private readonly createStore: CreateStoreFn;
+  private client?: CoreCrypto;
   private storeEngine?: CRUDEngine;
   private readonly nbPrekeys: number;
   private readonly mlsConfig?: MLSConfig<T>;
@@ -269,6 +270,21 @@ export class Account<T = any> extends EventEmitter {
 
     // Assumption: client gets only initialized once
     if (initClient) {
+      this.client = await CoreCrypto.init({
+        databaseName: `corecrypto-${this.generateDbName(context)}`,
+        key: 'TODOkey', //Encoder.toBase64(key).asString,
+        clientId: `${context.userId}:${context.clientId}@${context.domain}`,
+        wasmFilePath: this.mlsConfig!.coreCrypoWasmFilePath,
+        //entropySeed: entropyData,
+      });
+      try {
+        await this.client.proteusInit();
+      } catch (e) {
+        console.error(e);
+      }
+      console.log('ok', this.client);
+      /*
+      this.client = CoreCrypto.int;
       await this.initClient({clientType});
 
       if (this.mlsConfig && this.backendFeatures.supportsMLS) {
@@ -281,6 +297,7 @@ export class Account<T = any> extends EventEmitter {
         // initialize scheduler for syncing key packages with backend
         await this.service?.notification.checkForKeyPackagesBackendSync();
       }
+      */
     }
     return context;
   }
