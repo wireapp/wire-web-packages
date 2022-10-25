@@ -14,12 +14,10 @@
     "axios": "1.1.2",
     "commander": "9.4.1",
     "dotenv": "16.0.3",
-    "fs-extra": "10.1.0",
-    "long": "^4.0.0"
+    "fs-extra": "10.1.0"
   },
   "devDependencies": {
     "@types/fs-extra": "9.0.13",
-    "@types/long": "^4.0.0",
     "@types/rimraf": "^3.0.2",
     "rimraf": "^3.0.2"
   },
