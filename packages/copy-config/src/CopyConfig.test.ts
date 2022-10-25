@@ -24,7 +24,12 @@ import fs from 'fs-extra';
 
 import {CopyConfig} from '.';
 import * as utils from './utils';
-const TEMP_DIR = path.resolve(__dirname, '..', '..', '.temp');
+const TEMP_DIR = path.resolve(__dirname, '..', '.temp');
+
+jest.mock('./utils', () => ({
+  ...jest.requireActual('./utils'),
+  downloadFileAsync: jest.fn().mockReturnValue(Promise.resolve()),
+}));
 
 describe('CopyConfig', () => {
   afterEach(() => fs.remove(TEMP_DIR));
@@ -152,7 +157,6 @@ describe('CopyConfig', () => {
         repositoryUrl: HTTPS_URL,
       });
 
-      jest.spyOn(utils, 'downloadFileAsync').mockReturnValue(Promise.resolve());
       jest.spyOn(copyConfig, 'copyDirOrFile').mockReturnValue(Promise.resolve([]));
 
       await copyConfig.copy();

@@ -5010,7 +5010,7 @@ __metadata:
     logdown: 3.3.1
     rimraf: ^3.0.2
   bin:
-    copy-config: src/main/cli.js
+    copy-config: lib/cli.js
   languageName: unknown
   linkType: soft
 
