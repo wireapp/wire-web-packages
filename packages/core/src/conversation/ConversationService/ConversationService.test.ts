@@ -30,7 +30,11 @@ import {MessageTargetMode} from './ConversationService.types';
 import * as MessageBuilder from '../message/MessageBuilder';
 import {NotificationService} from '../../notification/NotificationService';
 import {MLSService} from '../../mls';
-import * as messageSender from '../message/messageSender';
+
+jest.mock('../message/messageSender', () => ({
+  ...jest.requireActual('../message/messageSender'),
+  sendMessage: jest.fn().mockImplementation(fn => fn()),
+}));
 
 const mockedMLSService = {
   encryptMessage: () => {},
@@ -38,7 +42,6 @@ const mockedMLSService = {
 
 describe('ConversationService', () => {
   beforeAll(() => {
-    jest.spyOn(messageSender, 'sendMessage').mockImplementation(fn => fn());
     jest.useFakeTimers();
     jest.setSystemTime(new Date(0));
   });
