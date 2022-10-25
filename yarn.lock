@@ -4542,6 +4542,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wireapp/webapp-events@workspace:packages/webapp-events"
   dependencies:
+    "@types/rimraf": ^3.0.2
+    rimraf: ^3.0.2
     typescript: 4.8.4
   languageName: unknown
   linkType: soft
