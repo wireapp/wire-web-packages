@@ -18,8 +18,8 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {ClientClassification, ClientType} from '@wireapp/api-client/src/client';
-import {ConversationProtocol} from '@wireapp/api-client/src/conversation';
+import {ClientClassification, ClientType} from '@wireapp/api-client/lib/client';
+import {ConversationProtocol} from '@wireapp/api-client/lib/conversation';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 import {MemoryEngine} from '@wireapp/store-engine';
 import {ConversationService, PayloadBundleState} from '..';

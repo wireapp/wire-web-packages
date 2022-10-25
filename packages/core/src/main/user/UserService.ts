@@ -18,16 +18,16 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {QualifiedId, User} from '@wireapp/api-client/src/user/';
+import {QualifiedId, User} from '@wireapp/api-client/lib/user/';
 import {Availability, GenericMessage} from '@wireapp/protocol-messaging';
 import UUID from 'uuidjs';
 
 import {AvailabilityType, BroadcastService} from '../broadcast/';
 import {isQualifiedIdArray} from '../util/TypePredicateUtil';
 import {ConnectionService} from '../connection';
-import {ConnectionStatus} from '@wireapp/api-client/src/connection';
+import {ConnectionStatus} from '@wireapp/api-client/lib/connection';
 import {ConversationService} from '../conversation';
-import {UserPreKeyBundleMap} from '@wireapp/api-client/src/user/';
+import {UserPreKeyBundleMap} from '@wireapp/api-client/lib/user/';
 
 export class UserService {
   private readonly apiClient: APIClient;

@@ -17,7 +17,7 @@
  *
  */
 
-import {QualifiedId} from '@wireapp/api-client/src/user';
+import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {CoreCryptoCallbacks} from '@wireapp/core-crypto';
 
 type SecretCrypto<T> = {

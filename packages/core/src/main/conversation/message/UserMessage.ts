@@ -28,7 +28,7 @@ import {
   UserLegalHoldRequestData,
   UserPropertiesSetData,
   UserUpdateData,
-} from '@wireapp/api-client/src/user/data';
+} from '@wireapp/api-client/lib/user/data';
 
 import {BasePayloadBundle, PayloadBundleType} from './PayloadBundle';
 

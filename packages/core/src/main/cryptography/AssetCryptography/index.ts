@@ -17,7 +17,7 @@
  *
  */
 
-import {CipherOptions} from '@wireapp/api-client/src/asset';
+import {CipherOptions} from '@wireapp/api-client/lib/asset';
 import {EncryptedAsset} from './EncryptedAsset';
 import {crypto} from './crypto.node';
 

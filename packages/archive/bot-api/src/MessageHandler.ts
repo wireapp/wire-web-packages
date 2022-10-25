@@ -17,10 +17,10 @@
  *
  */
 
-import {Conversation, ConversationProtocol, UserClients} from '@wireapp/api-client/src/conversation';
-import {CONVERSATION_TYPING} from '@wireapp/api-client/src/conversation/data';
-import {ConversationEvent, TeamEvent, UserEvent} from '@wireapp/api-client/src/event';
-import {QualifiedId, User} from '@wireapp/api-client/src/user/';
+import {Conversation, ConversationProtocol, UserClients} from '@wireapp/api-client/lib/conversation';
+import {CONVERSATION_TYPING} from '@wireapp/api-client/lib/conversation/data';
+import {ConversationEvent, TeamEvent, UserEvent} from '@wireapp/api-client/lib/event';
+import {QualifiedId, User} from '@wireapp/api-client/lib/user/';
 import {Account} from '@wireapp/core';
 import {PayloadBundle, ReactionType} from '@wireapp/core/src/main/conversation/';
 import {
@@ -39,7 +39,7 @@ import {promisify} from 'util';
 import fs from 'fs';
 import path from 'path';
 import FileType = require('file-type');
-import {DefaultConversationRoleName} from '@wireapp/api-client/src/conversation';
+import {DefaultConversationRoleName} from '@wireapp/api-client/lib/conversation';
 import {MessageBuilder} from '@wireapp/core';
 
 export abstract class MessageHandler {

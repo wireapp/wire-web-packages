@@ -24,7 +24,7 @@ import {
   UserConnectionEvent,
   UserEvent,
   UserUpdateEvent,
-} from '@wireapp/api-client/src/event';
+} from '@wireapp/api-client/lib/event';
 
 import {PayloadBundle, PayloadBundleSource, PayloadBundleState, PayloadBundleType} from '../conversation';
 import {createId} from '../conversation/message/MessageBuilder';

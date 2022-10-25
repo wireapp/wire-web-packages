@@ -18,7 +18,7 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {Notification} from '@wireapp/api-client/src/notification';
+import {Notification} from '@wireapp/api-client/lib/notification';
 import {MemoryEngine} from '@wireapp/store-engine';
 import {PayloadBundleSource} from '../conversation';
 import {CryptographyService} from '../cryptography';

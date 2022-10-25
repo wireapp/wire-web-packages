@@ -18,8 +18,8 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {Connection, ConnectionStatus} from '@wireapp/api-client/src/connection/';
-import {QualifiedId} from '@wireapp/api-client/src/user';
+import {Connection, ConnectionStatus} from '@wireapp/api-client/lib/connection/';
+import {QualifiedId} from '@wireapp/api-client/lib/user';
 
 export class ConnectionService {
   constructor(private readonly apiClient: APIClient) {}

@@ -17,8 +17,8 @@
  *
  */
 
-import {LoginData} from '@wireapp/api-client/src/auth/';
-import {ClientType} from '@wireapp/api-client/src/client';
+import {LoginData} from '@wireapp/api-client/lib/auth/';
+import {ClientType} from '@wireapp/api-client/lib/client';
 
 import {LoginSanitizer} from './LoginSanitizer';
 

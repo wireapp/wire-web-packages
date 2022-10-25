@@ -27,7 +27,7 @@ import logdown from 'logdown';
 
 import {ChangelogData, LoginDataBackend} from './Interfaces';
 import {buildTextMessage} from '@wireapp/core/src/main/conversation/message/MessageBuilder';
-import {ConversationProtocol} from '@wireapp/api-client/src/conversation';
+import {ConversationProtocol} from '@wireapp/api-client/lib/conversation';
 
 const logger = logdown('@wireapp/changelog-bot/ChangelogBot', {
   logger: console,

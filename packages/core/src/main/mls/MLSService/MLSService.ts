@@ -38,7 +38,7 @@ import {Converter, Decoder, Encoder} from 'bazinga64';
 import {MLSCallbacks, MLSConfig} from '../types';
 import {sendMessage} from '../../conversation/message/messageSender';
 import {parseFullQualifiedClientId} from '../../util/fullyQualifiedClientIdUtils';
-import {PostMlsMessageResponse} from '@wireapp/api-client/src/conversation';
+import {PostMlsMessageResponse} from '@wireapp/api-client/lib/conversation';
 import logdown from 'logdown';
 //@todo: this function is temporary, we wait for the update from core-crypto side
 //they are returning regular array instead of Uint8Array for commit and welcome messages

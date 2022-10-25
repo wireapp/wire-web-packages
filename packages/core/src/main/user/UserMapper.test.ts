@@ -17,9 +17,9 @@
  *
  */
 
-import {ConnectionStatus} from '@wireapp/api-client/src/connection';
-import {USER_EVENT, UserConnectionEvent} from '@wireapp/api-client/src/event';
-import {UserConnectionData} from '@wireapp/api-client/src/user/data';
+import {ConnectionStatus} from '@wireapp/api-client/lib/connection';
+import {USER_EVENT, UserConnectionEvent} from '@wireapp/api-client/lib/event';
+import {UserConnectionData} from '@wireapp/api-client/lib/user/data';
 
 import {PayloadBundleSource, PayloadBundleState, PayloadBundleType} from '../conversation';
 import {UserConnectionMessage} from '../conversation/message/UserMessage';

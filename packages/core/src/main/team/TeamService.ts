@@ -18,7 +18,7 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {MemberData, Members, NewTeamData, TeamChunkData, TeamData, UpdateTeamData} from '@wireapp/api-client/src/team/';
+import {MemberData, Members, NewTeamData, TeamChunkData, TeamData, UpdateTeamData} from '@wireapp/api-client/lib/team/';
 
 export class TeamService {
   constructor(private readonly apiClient: APIClient) {}

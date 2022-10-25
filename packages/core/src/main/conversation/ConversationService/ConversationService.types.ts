@@ -25,9 +25,9 @@ import {
   MessageSendingStatus,
   UserClients,
   Conversation,
-} from '@wireapp/api-client/src/conversation';
-import {QualifiedId} from '@wireapp/api-client/src/user';
-import {MlsEvent} from '@wireapp/api-client/src/conversation/data/MlsEventData';
+} from '@wireapp/api-client/lib/conversation';
+import {QualifiedId} from '@wireapp/api-client/lib/user';
+import {MlsEvent} from '@wireapp/api-client/lib/conversation/data/MlsEventData';
 
 export enum MessageTargetMode {
   NONE,

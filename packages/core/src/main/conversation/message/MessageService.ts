@@ -31,12 +31,12 @@ import {
   QualifiedOTRRecipients,
   QualifiedUserClients,
   UserClients,
-} from '@wireapp/api-client/src/conversation';
+} from '@wireapp/api-client/lib/conversation';
 import {Encoder} from 'bazinga64';
 
 import {encryptAsset} from '../../cryptography/AssetCryptography';
 import {CryptographyService} from '../../cryptography';
-import {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/src/user';
+import {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 import {createId} from './MessageBuilder';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 import {GenericMessageType} from '..';

@@ -23,8 +23,8 @@ import {
   MessageSendingStatus,
   QualifiedUserClients,
   UserClients,
-} from '@wireapp/api-client/src/conversation';
-import {UserPreKeyBundleMap} from '@wireapp/api-client/src/user/';
+} from '@wireapp/api-client/lib/conversation';
+import {UserPreKeyBundleMap} from '@wireapp/api-client/lib/user/';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 
 import {MessageService} from '../conversation/message/MessageService';

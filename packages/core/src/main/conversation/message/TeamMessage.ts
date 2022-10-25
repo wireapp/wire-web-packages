@@ -23,7 +23,7 @@ import {
   TeamMemberJoinData,
   TeamMemberLeaveData,
   TeamUpdateData,
-} from '@wireapp/api-client/src/team/data';
+} from '@wireapp/api-client/lib/team/data';
 
 import {BasePayloadBundle, PayloadBundleType} from './PayloadBundle';
 

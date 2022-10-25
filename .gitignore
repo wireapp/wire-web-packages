@@ -19,6 +19,7 @@ packages/react-ui-kit/styleguide
 **/src/**/*.js.map
 temp/
 yarn-error.log
+**/lib/**
 
 # yarn 2 - not using zero-installs
 .pnp.*

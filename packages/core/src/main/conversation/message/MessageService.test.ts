@@ -27,7 +27,7 @@ import {
   QualifiedOTRRecipients,
   QualifiedUserClients,
   UserClients,
-} from '@wireapp/api-client/src/conversation';
+} from '@wireapp/api-client/lib/conversation';
 import {GenericMessage, Text} from '@wireapp/protocol-messaging';
 import {CryptographyService} from '../../cryptography';
 import {MessageService} from './MessageService';

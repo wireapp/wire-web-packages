@@ -61,7 +61,7 @@ import {
 import {MessageToProtoMapper} from '../message/MessageToProtoMapper';
 import {GenericMessageType} from '../GenericMessageType';
 import {AssetTransferState} from '../AssetTransferState';
-import {QualifiedId} from '@wireapp/api-client/src/user';
+import {QualifiedId} from '@wireapp/api-client/lib/user';
 
 export function createId() {
   return UUID.genV4().toString();

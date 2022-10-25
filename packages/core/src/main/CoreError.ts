@@ -17,7 +17,7 @@
  *
  */
 
-import {Notification} from '@wireapp/api-client/src/notification';
+import {Notification} from '@wireapp/api-client/lib/notification';
 
 export enum CoreError {
   NOTIFICATION_ERROR = 'CoreError.NOTIFICATION_ERROR',

@@ -29,10 +29,10 @@ import {
   UserClients,
   ClientMismatch,
   ConversationProtocol,
-} from '@wireapp/api-client/src/conversation';
-import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/src/conversation/data';
-import {ConversationMemberLeaveEvent} from '@wireapp/api-client/src/event';
-import {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/src/user';
+} from '@wireapp/api-client/lib/conversation';
+import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/lib/conversation/data';
+import {ConversationMemberLeaveEvent} from '@wireapp/api-client/lib/event';
+import {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 
 import {MessageTimer, PayloadBundleState, RemoveUsersParams} from '../../conversation/';

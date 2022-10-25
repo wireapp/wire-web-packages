@@ -19,8 +19,8 @@
 
 import {APIClient} from '@wireapp/api-client';
 import {TimeUtil} from '@wireapp/commons';
-import * as Events from '@wireapp/api-client/src/event';
-import {Notification} from '@wireapp/api-client/src/notification/';
+import * as Events from '@wireapp/api-client/lib/event';
+import {Notification} from '@wireapp/api-client/lib/notification/';
 import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import {EventEmitter} from 'events';
 import logdown from 'logdown';
@@ -33,9 +33,9 @@ import {UserMapper} from '../user/UserMapper';
 import {NotificationBackendRepository} from './NotificationBackendRepository';
 import {NotificationDatabaseRepository} from './NotificationDatabaseRepository';
 import {GenericMessage} from '@wireapp/protocol-messaging';
-import {AbortHandler} from '@wireapp/api-client/src/tcp';
+import {AbortHandler} from '@wireapp/api-client/lib/tcp';
 import {Decoder, Encoder} from 'bazinga64';
-import {QualifiedId} from '@wireapp/api-client/src/user';
+import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {CommitPendingProposalsParams, HandlePendingProposalsParams, LastKeyMaterialUpdateParams} from './types';
 import {TaskScheduler} from '../util/TaskScheduler/TaskScheduler';
 import {MLSService, optionalToUint8Array} from '../mls';

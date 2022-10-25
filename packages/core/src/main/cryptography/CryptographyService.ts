@@ -18,17 +18,17 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {PreKey} from '@wireapp/api-client/src/auth/';
-import {RegisteredClient} from '@wireapp/api-client/src/client/';
+import {PreKey} from '@wireapp/api-client/lib/auth/';
+import {RegisteredClient} from '@wireapp/api-client/lib/client/';
 import {
   OTRClientMap,
   OTRRecipients,
   QualifiedOTRRecipients,
   QualifiedUserClients,
   UserClients,
-} from '@wireapp/api-client/src/conversation/';
-import {ConversationOtrMessageAddEvent} from '@wireapp/api-client/src/event';
-import {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/src/user/';
+} from '@wireapp/api-client/lib/conversation/';
+import {ConversationOtrMessageAddEvent} from '@wireapp/api-client/lib/event';
+import {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user/';
 import {Cryptobox, CryptoboxSession} from '@wireapp/cryptobox';
 import {errors as ProteusErrors, keys as ProteusKeys} from '@wireapp/proteus';
 import {GenericMessage} from '@wireapp/protocol-messaging';

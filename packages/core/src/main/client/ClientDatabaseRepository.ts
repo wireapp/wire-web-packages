@@ -17,7 +17,7 @@
  *
  */
 
-import {RegisteredClient} from '@wireapp/api-client/src/client/';
+import {RegisteredClient} from '@wireapp/api-client/lib/client/';
 import {CRUDEngine} from '@wireapp/store-engine';
 
 import {CryptographyService} from '../cryptography/';

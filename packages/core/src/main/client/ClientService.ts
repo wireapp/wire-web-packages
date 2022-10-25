@@ -18,9 +18,9 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {LoginData, PreKey} from '@wireapp/api-client/src/auth/';
-import {ClientType, CreateClientPayload, RegisteredClient} from '@wireapp/api-client/src/client/';
-import {QualifiedId} from '@wireapp/api-client/src/user';
+import {LoginData, PreKey} from '@wireapp/api-client/lib/auth/';
+import {ClientType, CreateClientPayload, RegisteredClient} from '@wireapp/api-client/lib/client/';
+import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {CRUDEngine} from '@wireapp/store-engine';
 
 import {CryptographyService} from '../cryptography/';
