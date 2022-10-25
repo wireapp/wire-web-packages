@@ -43,7 +43,7 @@ import {NotificationService} from '../../notification';
 import {decryptAsset} from '../../cryptography/AssetCryptography';
 import {isStringArray, isQualifiedIdArray, isQualifiedUserClients, isUserClients} from '../../util/TypePredicateUtil';
 import {MessageService} from '../message/MessageService';
-import {XOR} from '@wireapp/commons/src/main/util/TypeUtil';
+import {XOR} from '@wireapp/commons/lib/util/TypeUtil';
 import {
   AddUsersParams,
   MessageSendingOptions,

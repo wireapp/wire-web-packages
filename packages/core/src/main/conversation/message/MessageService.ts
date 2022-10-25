@@ -21,7 +21,7 @@ import {StatusCodes as HTTP_STATUS} from 'http-status-codes';
 import {AxiosError} from 'axios';
 import {proteus as ProtobufOTR} from '@wireapp/protocol-messaging/web/otr';
 import Long from 'long';
-import {uuidToBytes} from '@wireapp/commons/src/main/util/StringUtil';
+import {uuidToBytes} from '@wireapp/commons/lib/util/StringUtil';
 import {APIClient} from '@wireapp/api-client';
 import {
   ClientMismatch,
