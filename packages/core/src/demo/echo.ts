@@ -20,7 +20,7 @@
 import * as path from 'path';
 import * as logdown from 'logdown';
 import {Account} from '@wireapp/core';
-import {PayloadBundleType} from '@wireapp/core/src/main/conversation/';
+import {PayloadBundleType} from '@wireapp/core/lib/conversation/';
 import {APIClient} from '@wireapp/api-client';
 import {WebSocketClient} from '@wireapp/api-client/lib/tcp/';
 import {ClientType} from '@wireapp/api-client/lib/client/ClientType';

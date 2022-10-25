@@ -18,7 +18,7 @@
  */
 
 import {MessageHandler} from '@wireapp/bot-api';
-import {PayloadBundle, PayloadBundleType} from '@wireapp/core/src/main/conversation/';
+import {PayloadBundle, PayloadBundleType} from '@wireapp/core/lib/conversation/';
 import {Connection} from '@wireapp/api-client/lib/connection';
 
 export class AutoConnectHandler extends MessageHandler {
