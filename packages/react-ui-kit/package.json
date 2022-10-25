@@ -57,10 +57,10 @@
         }
     },
     "scripts": {
-        "build": "tsc && babel --config-file ./babel.config.js --extensions .ts,.tsx ./src -d ./src --source-maps",
+        "build": "yarn clean && tsc",
         "build:styleguide": "styleguidist build",
         "clean": "rimraf lib",
-        "dist": "yarn clean && yarn build",
+        "dist": "yarn build",
         "start": "styleguidist server",
         "test": "jest",
         "test:coverage": "jest --coverage",

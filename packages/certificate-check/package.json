@@ -2,10 +2,11 @@
     "name": "@wireapp/certificate-check",
     "license": "GPL-3.0",
     "description": "Utilities to check that Wire's domains use the expected certificate.",
+        "repository": "https://github.com/wireapp/wire-web-packages/tree/main/packages/certificate-check",
     "files": [
         "lib"
     ],
-    "repository": "https://github.com/wireapp/wire-web-packages/tree/main/packages/certificate-check",
+
     "main": "lib/CertUtil",
     "dependencies": {
         "jsrsasign": "10.5.27"

@@ -8,9 +8,9 @@
     ],
     "main": "lib/APIClient",
     "browser": {
-        "./src/shims/node/buffer": "./src/shims/browser/buffer.js",
-        "./src/shims/node/cookie": "./src/shims/browser/cookie.js",
-        "./src/shims/node/websocket": "./src/shims/browser/websocket.js"
+        "./lib/shims/node/buffer": "./lib/shims/browser/buffer.js",
+        "./lib/shims/node/cookie": "./lib/shims/browser/cookie.js",
+        "./lib/shims/node/websocket": "./lib/shims/browser/websocket.js"
     },
     "dependencies": {
         "@wireapp/commons": "workspace:^",

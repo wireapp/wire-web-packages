@@ -20,7 +20,7 @@
 const StoreHelper = require('./StoreHelper');
 const {Account} = require('@wireapp/core');
 const {APIClient} = require('@wireapp/api-client');
-const {ClientType} = require('@wireapp/api-client/src/client/');
+const {ClientType} = require('@wireapp/api-client/lib/client/');
 
 module.exports = {
   getAccount: async function (email, password) {
