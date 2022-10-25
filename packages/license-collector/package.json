@@ -4,10 +4,9 @@
     "description": "Wire's internal license collection tool",
     "repository": "https://github.com/wireapp/wire-web-packages/tree/main/packages/license-collector",
     "files": [
-        "src",
-        "!src/**/!(*.d).ts"
+        "lib"
     ],
-    "main": "src/index",
+    "main": "lib/index",
     "bin": {
         "collect-licenses": "src/cli.js"
     },
