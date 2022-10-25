@@ -39,9 +39,6 @@ const globalStyles: (theme: Theme) => CSSObject = (theme: Theme) => ({
     color: theme.general.color,
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: 'emoji, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif',
-    fontWeight: 300,
-    lineHeight: 1.5,
     minHeight: '100vh',
     transition: 'background 0.15s',
   },
@@ -60,9 +57,19 @@ const globalStyles: (theme: Theme) => CSSObject = (theme: Theme) => ({
   },
 });
 
+const GlobalFontStyle = (): CSSObject => ({
+  body: {
+    fontFamily:
+      '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";',
+    fontWeight: navigator.platform === 'Win32' ? 400 : 300,
+    lineHeight: 1.5,
+  },
+});
+
 const globalStyle = (theme: Theme) => css`
   ${emotionNormalize}
   ${globalStyles(theme)}
+  ${GlobalFontStyle()}
 `;
 
 export const GlobalStyle = withTheme(({theme}: {theme: Theme}) => {
