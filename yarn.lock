@@ -5044,6 +5044,7 @@ __metadata:
     jest: ^29.2.1
     jest-websocket-mock: 2.4.0
     logdown: 3.3.1
+    long: 4.0.0
     mock-socket: 9.1.5
     nock: 13.2.9
     uuidjs: 4.2.12
@@ -12991,7 +12992,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"long@npm:^4.0.0":
+"long@npm:4.0.0, long@npm:^4.0.0":
   version: 4.0.0
   resolution: "long@npm:4.0.0"
   checksum: 16afbe8f749c7c849db1f4de4e2e6a31ac6e617cead3bdc4f9605cb703cd20e1e9fc1a7baba674ffcca57d660a6e5b53a9e236d7b25a295d3855cca79cc06744
