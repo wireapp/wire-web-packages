@@ -4447,6 +4447,7 @@ __metadata:
     "@types/color": 3.0.3
     "@types/jest": ^29.2.0
     "@types/react": 18.0.21
+    "@types/rimraf": ^3.0.2
     "@types/webpack-env": 1.18.0
     babel-jest: 29.2.1
     babel-loader: 8.2.5
@@ -4461,6 +4462,7 @@ __metadata:
     react-styleguidist: 13.0.0
     react-test-renderer: 18.2.0
     react-transition-group: 4.4.5
+    rimraf: ^3.0.2
     webpack: ^5.74.0
   peerDependencies:
     "@emotion/react": 11.10.4
