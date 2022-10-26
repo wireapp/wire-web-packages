@@ -145,6 +145,10 @@ type InitOptions = {
    * An unknown client is a client we don't yet have a session with
    */
   onNewClient?: (sessionId: SessionId) => void;
+  /**
+   * Used if an alternate source of entropy is required.
+   */
+  entropyData?: Uint8Array;
 };
 
 const coreDefaultClient: ClientInfo = {
@@ -246,7 +250,7 @@ export class Account<T = any> extends EventEmitter {
    */
   public async init(
     clientType: ClientType,
-    {cookie, initClient = true, onNewClient}: InitOptions = {},
+    {cookie, initClient = true, onNewClient, entropyData}: InitOptions = {},
   ): Promise<Context> {
     const context = await this.apiClient.init(clientType, cookie);
     await this.initServices(context);
@@ -268,14 +272,30 @@ export class Account<T = any> extends EventEmitter {
       onNewSession: onNewClient,
     });
 
+    const coreCryptoKeyId = 'corecrypto-key';
+    const dbName = this.generateSecretsDbName(context);
+
+    const secretStore = this.mlsConfig?.systemCrypto
+      ? await createCustomEncryptedStore(dbName, this.mlsConfig?.systemCrypto)
+      : await createEncryptedStore(dbName);
+
+    let key = await secretStore.getsecretValue(coreCryptoKeyId);
+    let isNewMLSDevice = false;
+    if (!key) {
+      key = window.crypto.getRandomValues(new Uint8Array(16));
+      await secretStore.saveSecretValue(coreCryptoKeyId, key);
+      // Keeping track that this device is a new MLS device (but can be an old proteus device)
+      isNewMLSDevice = true;
+    }
+
     // Assumption: client gets only initialized once
     if (initClient) {
       this.client = await CoreCrypto.init({
         databaseName: `corecrypto-${this.generateDbName(context)}`,
-        key: 'TODOkey', //Encoder.toBase64(key).asString,
+        key: Encoder.toBase64(key).asString,
         clientId: `${context.userId}:${context.clientId}@${context.domain}`,
         wasmFilePath: this.mlsConfig!.coreCrypoWasmFilePath,
-        //entropySeed: entropyData,
+        ...(entropyData && {entropySeed: entropyData}),
       });
       try {
         await this.client.proteusInit();
@@ -283,8 +303,7 @@ export class Account<T = any> extends EventEmitter {
         console.error(e);
       }
       console.log('ok', this.client);
-      /*
-      this.client = CoreCrypto.int;
+
       await this.initClient({clientType});
 
       if (this.mlsConfig && this.backendFeatures.supportsMLS) {
@@ -297,7 +316,15 @@ export class Account<T = any> extends EventEmitter {
         // initialize scheduler for syncing key packages with backend
         await this.service?.notification.checkForKeyPackagesBackendSync();
       }
-      */
+
+      if (isNewMLSDevice && context.clientId) {
+        // If the device is new, we need to upload keypackages and public key to the backend
+        await this.service?.mls.uploadMLSPublicKeys(await this.client.clientPublicKey(), context.clientId);
+        await this.service?.mls.uploadMLSKeyPackages(
+          await this.client.clientKeypackages(this.nbPrekeys),
+          context.clientId,
+        );
+      }
     }
     return context;
   }
@@ -464,61 +491,60 @@ export class Account<T = any> extends EventEmitter {
     const loadedClient = await this.service!.client.getLocalClient();
     await this.apiClient.api.client.getClient(loadedClient.id);
     this.apiClient.context!.clientId = loadedClient.id;
-    await this.service!.cryptography.initCryptobox();
-    if (this.mlsConfig && this.backendFeatures.supportsMLS) {
-      this.coreCryptoClient = await this.createMLSClient(
-        loadedClient,
-        this.apiClient.context!,
-        this.mlsConfig,
-        entropyData,
-      );
-    }
+    // if (this.mlsConfig && this.backendFeatures.supportsMLS) {
+    //   this.coreCryptoClient = await this.createMLSClient(
+    //     loadedClient,
+    //     this.apiClient.context!,
+    //     this.mlsConfig,
+    //     entropyData,
+    //   );
+    // }
 
     return loadedClient;
   }
 
-  private async createMLSClient(
-    client: RegisteredClient,
-    context: Context,
-    mlsConfig: MLSConfig,
-    entropyData?: Uint8Array,
-  ) {
-    if (!this.service) {
-      throw new Error('Services are not set.');
-    }
-    const coreCryptoKeyId = 'corecrypto-key';
-    const dbName = this.generateSecretsDbName(context);
+  // private async createMLSClient(
+  //   client: RegisteredClient,
+  //   context: Context,
+  //   mlsConfig: MLSConfig,
+  //   entropyData?: Uint8Array,
+  // ) {
+  //   if (!this.service) {
+  //     throw new Error('Services are not set.');
+  //   }
+  //   const coreCryptoKeyId = 'corecrypto-key';
+  //   const dbName = this.generateSecretsDbName(context);
 
-    const secretStore = mlsConfig.systemCrypto
-      ? await createCustomEncryptedStore(dbName, mlsConfig.systemCrypto)
-      : await createEncryptedStore(dbName);
+  //   const secretStore = mlsConfig.systemCrypto
+  //     ? await createCustomEncryptedStore(dbName, mlsConfig.systemCrypto)
+  //     : await createEncryptedStore(dbName);
 
-    let key = await secretStore.getsecretValue(coreCryptoKeyId);
-    let isNewMLSDevice = false;
-    if (!key) {
-      key = window.crypto.getRandomValues(new Uint8Array(16));
-      await secretStore.saveSecretValue(coreCryptoKeyId, key);
-      // Keeping track that this device is a new MLS device (but can be an old proteus device)
-      isNewMLSDevice = true;
-    }
+  //   let key = await secretStore.getsecretValue(coreCryptoKeyId);
+  //   let isNewMLSDevice = false;
+  //   if (!key) {
+  //     key = window.crypto.getRandomValues(new Uint8Array(16));
+  //     await secretStore.saveSecretValue(coreCryptoKeyId, key);
+  //     // Keeping track that this device is a new MLS device (but can be an old proteus device)
+  //     isNewMLSDevice = true;
+  //   }
 
-    const {userId, domain} = this.apiClient.context!;
-    const mlsClient = await CoreCrypto.init({
-      databaseName: `corecrypto-${this.generateDbName(context)}`,
-      key: Encoder.toBase64(key).asString,
-      clientId: `${userId}:${client.id}@${domain}`,
-      wasmFilePath: mlsConfig.coreCrypoWasmFilePath,
-      entropySeed: entropyData,
-    });
+  //   const {userId, domain} = this.apiClient.context!;
+  //   const mlsClient = await CoreCrypto.init({
+  //     databaseName: `corecrypto-${this.generateDbName(context)}`,
+  //     key: Encoder.toBase64(key).asString,
+  //     clientId: `${userId}:${client.id}@${domain}`,
+  //     wasmFilePath: mlsConfig.coreCrypoWasmFilePath,
+  //     entropySeed: entropyData,
+  //   });
 
-    if (isNewMLSDevice) {
-      // If the device is new, we need to upload keypackages and public key to the backend
-      await this.service.mls.uploadMLSPublicKeys(await mlsClient.clientPublicKey(), client.id);
-      await this.service.mls.uploadMLSKeyPackages(await mlsClient.clientKeypackages(this.nbPrekeys), client.id);
-    }
+  //   if (isNewMLSDevice) {
+  //     // If the device is new, we need to upload keypackages and public key to the backend
+  //     await this.service.mls.uploadMLSPublicKeys(await mlsClient.clientPublicKey(), client.id);
+  //     await this.service.mls.uploadMLSKeyPackages(await mlsClient.clientKeypackages(this.nbPrekeys), client.id);
+  //   }
 
-    return mlsClient;
-  }
+  //   return mlsClient;
+  // }
 
   private async registerClient(
     loginData: LoginData,
@@ -530,14 +556,14 @@ export class Account<T = any> extends EventEmitter {
     }
     this.logger.info(`Creating new client {mls: ${!!this.mlsConfig}}`);
     const registeredClient = await this.service.client.register(loginData, clientInfo, entropyData);
-    if (this.mlsConfig && this.backendFeatures.supportsMLS) {
-      this.coreCryptoClient = await this.createMLSClient(
-        registeredClient,
-        this.apiClient.context!,
-        this.mlsConfig,
-        entropyData,
-      );
-    }
+    // if (this.mlsConfig && this.backendFeatures.supportsMLS) {
+    //   this.coreCryptoClient = await this.createMLSClient(
+    //     registeredClient,
+    //     this.apiClient.context!,
+    //     this.mlsConfig,
+    //     entropyData,
+    //   );
+    // }
     this.apiClient.context!.clientId = registeredClient.id;
     this.logger.info('Client is created');
 
