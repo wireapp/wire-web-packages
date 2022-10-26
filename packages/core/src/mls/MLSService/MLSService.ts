@@ -32,6 +32,8 @@ import {
   Invitee,
   ProposalArgs,
   ProposalType,
+  PublicGroupStateEncryptionType,
+  RatchetTreeType,
   RemoveProposalArgs,
 } from '@wireapp/core-crypto';
 import {Converter, Decoder, Encoder} from 'bazinga64';
@@ -92,11 +94,20 @@ export class MLSService {
   }
 
   private async uploadCommitBundle(groupId: Uint8Array, {commit, welcome, publicGroupState}: CommitBundle) {
+    const ratchetTreeMapping: Record<RatchetTreeType, mls.RatchetTreeType> = {
+      [RatchetTreeType.Full]: mls.RatchetTreeType.FULL,
+      [RatchetTreeType.ByRef]: mls.RatchetTreeType.REFERENCE,
+      [RatchetTreeType.Delta]: mls.RatchetTreeType.DELTA,
+    };
+    const groupInfoType: Record<PublicGroupStateEncryptionType, mls.GroupInfoType> = {
+      [PublicGroupStateEncryptionType.Plaintext]: mls.GroupInfoType.PUBLIC_GROUP_STATE,
+      [PublicGroupStateEncryptionType.JweEncrypted]: mls.GroupInfoType.GROUP_INFO_JWE,
+    };
     const payload = mls.CommitBundle.create({
       groupInfoBundle: {
-        ratchetTreeType: publicGroupState.ratchetTreeType,
+        ratchetTreeType: ratchetTreeMapping[publicGroupState.ratchetTreeType],
         groupInfo: publicGroupState.payload,
-        groupInfoType: publicGroupState.encryptionType,
+        groupInfoType: groupInfoType[publicGroupState.encryptionType],
       },
       commit,
       welcome,
