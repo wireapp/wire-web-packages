@@ -49,7 +49,7 @@
   "prettier": "./packages/prettier-config",
   "private": true,
   "scripts": {
-    "clean": "lerna run --parallel clean",
+    "clean": "lerna run clean --parallel",
     "dist": "yarn clean && lerna run dist",
     "fix": "yarn fix:other && yarn fix:code",
     "fix:code": "yarn lint:code --fix --quiet",
@@ -61,7 +61,7 @@
     "new-version": "lerna version --sync-workspace-lock",
     "new-publish": "lerna publish from-package",
     "release": "yarn new-version && yarn new-publish",
-    "test": "lerna run build --include-dependencies --since && lerna run test --since",
+    "test": "lerna run build --include-dependencies --since && lerna run test --since --parallel",
     "test:all": "lerna run build && lerna run test",
     "test:coverage": "lerna run test:coverage",
     "prepare": "husky install"
