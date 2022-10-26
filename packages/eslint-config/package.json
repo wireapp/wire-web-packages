@@ -19,5 +19,8 @@
         "eslint-plugin-unused-imports": ">=1.1",
         "prettier": ">=2"
     },
-    "version": "1.12.12"
+    "version": "1.12.12",
+    "devDependencies": {
+        "typescript": "^4.8.4"
+    }
 }
