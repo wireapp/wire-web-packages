@@ -91,8 +91,16 @@ export class MLSService {
     return client;
   }
 
-  private async uploadCommitBundle(groupId: Uint8Array, commitBundle: CommitBundle) {
-    const payload = mls.CommitBundle.create(commitBundle);
+  private async uploadCommitBundle(groupId: Uint8Array, {commit, welcome, publicGroupState}: CommitBundle) {
+    const payload = mls.CommitBundle.create({
+      groupInfoBundle: {
+        ratchetTreeType: publicGroupState.ratchetTreeType,
+        groupInfo: publicGroupState.payload,
+        groupInfoType: publicGroupState.encryptionType,
+      },
+      commit,
+      welcome,
+    });
 
     try {
       const response = await this.apiClient.api.conversation.postMlsCommitBundle(
@@ -124,6 +132,7 @@ export class MLSService {
           return otherUser.toLowerCase() === user.toLowerCase();
         });
       },
+      userAuthorize: () => true, // TODO
     });
     this.groupIdFromConversationId = groupIdFromConversationId;
   }
