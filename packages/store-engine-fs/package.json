@@ -1,37 +1,37 @@
 {
-    "name": "@wireapp/store-engine-fs",
-    "license": "GPL-3.0",
-    "description": "Store Engine implementation for Node.js' File System.",
-    "repository": "https://github.com/wireapp/wire-web-packages/tree/main/packages/store-engine-fs",
-    "files": [
-        "lib"
-    ],
-    "main": "lib/index",
-    "peerDependencies": {
-        "@wireapp/store-engine": "4.x.x"
-    },
-    "dependencies": {
-        "fs-extra": "10.1.0"
-    },
-    "devDependencies": {
-        "@swc/core": "^1.3.10",
-        "@swc/jest": "^0.2.23",
-        "@types/fs-extra": "9.0.13",
-        "@types/jest": "^29.2.0",
-        "@types/node": "^18.11.5",
-        "@types/rimraf": "^3.0.2",
-        "@wireapp/store-engine": "workspace:^",
-        "jest": "^29.2.1",
-        "rimraf": "^3.0.2",
-        "ts-node": "10.9.1",
-        "typescript": "^4.8.4"
-    },
-    "scripts": {
-        "build": "yarn clean && tsc",
-        "clean": "rimraf lib",
-        "dist": "yarn build",
-        "test": "jest",
-        "test:coverage": "jest --coverage"
-    },
-    "version": "2.5.12"
+  "name": "@wireapp/store-engine-fs",
+  "license": "GPL-3.0",
+  "description": "Store Engine implementation for Node.js' File System.",
+  "repository": "https://github.com/wireapp/wire-web-packages/tree/main/packages/store-engine-fs",
+  "files": [
+    "lib"
+  ],
+  "main": "lib/index",
+  "peerDependencies": {
+    "@wireapp/store-engine": "4.x.x"
+  },
+  "dependencies": {
+    "fs-extra": "10.1.0"
+  },
+  "devDependencies": {
+    "@swc/core": "^1.3.10",
+    "@swc/jest": "^0.2.23",
+    "@types/fs-extra": "9.0.13",
+    "@types/jest": "^29.2.0",
+    "@types/node": "^18.11.5",
+    "@types/rimraf": "^3.0.2",
+    "@wireapp/store-engine": "workspace:^",
+    "jest": "^29.2.1",
+    "rimraf": "^3.0.2",
+    "ts-node": "10.9.1",
+    "typescript": "^4.8.4"
+  },
+  "scripts": {
+    "build": "yarn clean && tsc",
+    "clean": "rimraf lib",
+    "dist": "yarn build",
+    "test": "jest",
+    "test:coverage": "jest --coverage"
+  },
+  "version": "2.5.12"
 }

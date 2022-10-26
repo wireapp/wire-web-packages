@@ -1,33 +1,33 @@
 {
-    "name": "@wireapp/license-collector",
-    "license": "GPL-3.0",
-    "description": "Wire's internal license collection tool",
-    "repository": "https://github.com/wireapp/wire-web-packages/tree/main/packages/license-collector",
-    "files": [
-        "lib"
-    ],
-    "main": "lib/index",
-    "bin": {
-        "collect-licenses": "src/cli.js"
-    },
-    "dependencies": {
-        "fs-extra": "10.1.0",
-        "logdown": "3.3.1",
-        "npm-license-crawler": "0.2.1",
-        "npm-registry-package-info": "1.0.5"
-    },
-    "devDependencies": {
-        "@types/fs-extra": "9.0.13",
-        "@types/npm-registry-package-info": "1.0.1",
-        "@types/rimraf": "^3.0.2",
-        "rimraf": "^3.0.2",
-        "typescript": "^4.8.4"
-    },
-    "scripts": {
-        "build": "yarn clean && tsc",
-        "clean": "rimraf lib",
-        "dist": "yarn build",
-        "start": "ts-node -r tsconfig-paths/register ./src/cli.ts"
-    },
-    "version": "0.10.11"
+  "name": "@wireapp/license-collector",
+  "license": "GPL-3.0",
+  "description": "Wire's internal license collection tool",
+  "repository": "https://github.com/wireapp/wire-web-packages/tree/main/packages/license-collector",
+  "files": [
+    "lib"
+  ],
+  "main": "lib/index",
+  "bin": {
+    "collect-licenses": "src/cli.js"
+  },
+  "dependencies": {
+    "fs-extra": "10.1.0",
+    "logdown": "3.3.1",
+    "npm-license-crawler": "0.2.1",
+    "npm-registry-package-info": "1.0.5"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "9.0.13",
+    "@types/npm-registry-package-info": "1.0.1",
+    "@types/rimraf": "^3.0.2",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.8.4"
+  },
+  "scripts": {
+    "build": "yarn clean && tsc",
+    "clean": "rimraf lib",
+    "dist": "yarn build",
+    "start": "ts-node -r tsconfig-paths/register ./src/cli.ts"
+  },
+  "version": "0.10.11"
 }
