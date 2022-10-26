@@ -17,9 +17,6 @@ packages/react-ui-kit/styleguide
 temp/
 yarn-error.log
 **/lib/**
-**/src/**/*.d.ts
-**/src/**/*.js
-**/src/**/*.js.map
 
 # yarn 2 - not using zero-installs
 .pnp.*
