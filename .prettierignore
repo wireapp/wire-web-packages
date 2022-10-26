@@ -8,5 +8,4 @@
 **/temp/**
 CHANGELOG.md
 node_modules
-package.json
 packages/react-ui-kit/*.js

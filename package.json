@@ -9,7 +9,7 @@
     "@swc/jest": "^0.2.23",
     "@types/babel__core": "^7",
     "@types/jest": "^29.2.0",
-    "@types/node": "^18.11.4",
+    "@types/node": "^18.11.5",
     "@types/rimraf": "3.0.2",
     "@typescript-eslint/eslint-plugin": "5.40.1",
     "@typescript-eslint/parser": "5.40.1",
@@ -32,7 +32,7 @@
     "prettier": "2.7.1",
     "rimraf": "3.0.2",
     "tsconfig-paths": "4.1.0",
-    "typescript": "4.8.4"
+    "typescript": "^4.8.4"
   },
   "engines": {
     "node": ">= 14",
@@ -49,7 +49,7 @@
   "prettier": "./packages/prettier-config",
   "private": true,
   "scripts": {
-    "clean": "lerna run --parallel clean",
+    "clean": "lerna run clean --parallel",
     "dist": "yarn clean && lerna run dist",
     "fix": "yarn fix:other && yarn fix:code",
     "fix:code": "yarn lint:code --fix --quiet",
@@ -61,7 +61,7 @@
     "new-version": "lerna version --sync-workspace-lock",
     "new-publish": "lerna publish from-package",
     "release": "yarn new-version && yarn new-publish",
-    "test": "lerna run build --include-dependencies --since && lerna run test --since",
+    "test": "lerna run build --include-dependencies --since && lerna run test --since --parallel",
     "test:all": "lerna run build && lerna run test",
     "test:coverage": "lerna run test:coverage",
     "prepare": "husky install"

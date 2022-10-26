@@ -1739,8 +1739,8 @@ __metadata:
   resolution: "@jest/console@npm:29.2.1"
   dependencies:
     "@jest/types": ^29.2.1
-    "@types/node": "*"
     chalk: ^4.0.0
+    gi: "*"
     jest-message-util: ^29.2.1
     jest-util: ^29.2.1
     slash: ^3.0.0
@@ -3535,7 +3535,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:>=10.0.0, @types/node@npm:>=13.7.0, @types/node@npm:^18.11.4, @types/node@npm:^18.11.5":
+"@types/node@npm:*, @types/node@npm:>=10.0.0, @types/node@npm:>=13.7.0, @types/node@npm:^18.11.5":
   version: 18.11.5
   resolution: "@types/node@npm:18.11.5"
   checksum: ac54e9287dd4549ea3dc8aabc0cf7bfa04c52f02925d7fd68414789617ec770f034c8ae2e111e8bd00d446a46fcac42587b5a316a1303e2f6ea094854248c9ff
@@ -4201,8 +4201,10 @@ __metadata:
     "@types/jest": ^29.2.0
     "@types/jsrsasign": 10.5.4
     "@types/node": ^18.11.5
+    "@types/rimraf": ^3.0.2
     jest: ^29.2.1
     jsrsasign: 10.5.27
+    rimraf: ^3.0.2
     ts-node: ^10.9.1
     typescript: ^4.8.4
   languageName: unknown
@@ -4222,6 +4224,7 @@ __metadata:
     dotenv: 16.0.3
     fs-extra: 10.1.0
     rimraf: ^3.0.2
+    typescript: ^4.8.4
   bin:
     wire-cli: dist/index.js
   languageName: unknown
@@ -4243,6 +4246,7 @@ __metadata:
     logdown: 3.3.1
     platform: 1.3.6
     rimraf: ^3.0.2
+    typescript: ^4.8.4
   languageName: unknown
   linkType: soft
 
@@ -4265,8 +4269,9 @@ __metadata:
     jszip: 3.10.1
     logdown: 3.3.1
     rimraf: ^3.0.2
+    typescript: ^4.8.4
   bin:
-    copy-config: src/main/cli.js
+    copy-config: lib/cli.js
   languageName: unknown
   linkType: soft
 
@@ -4286,6 +4291,7 @@ __metadata:
     "@swc/jest": ^0.2.23
     "@types/jest": ^29.2.0
     "@types/long": ^5.0.0
+    "@types/rimraf": ^3.0.2
     "@types/tough-cookie": 4.0.2
     "@wireapp/api-client": "workspace:^"
     "@wireapp/commons": "workspace:^"
@@ -4295,7 +4301,7 @@ __metadata:
     "@wireapp/protocol-messaging": 1.42.0
     "@wireapp/store-engine-dexie": "workspace:^"
     axios: 1.1.2
-    bazinga64: 5.11.12
+    bazinga64: 5.11.11
     commander: 9.4.1
     cross-env: 7.0.3
     dotenv-defaults: 5.0.2
@@ -4308,6 +4314,8 @@ __metadata:
     long: ^5.2.0
     mock-socket: 9.1.5
     nock: 13.2.9
+    rimraf: ^3.0.2
+    typescript: ^4.8.4
     uuidjs: 4.2.12
   languageName: unknown
   linkType: soft
@@ -4329,6 +4337,8 @@ __metadata:
 "@wireapp/eslint-config@workspace:packages/eslint-config":
   version: 0.0.0-use.local
   resolution: "@wireapp/eslint-config@workspace:packages/eslint-config"
+  dependencies:
+    typescript: ^4.8.4
   peerDependencies:
     "@babel/eslint-parser": ">=7"
     "@typescript-eslint/eslint-plugin": ">=3"
@@ -4352,10 +4362,13 @@ __metadata:
   dependencies:
     "@types/fs-extra": 9.0.13
     "@types/npm-registry-package-info": 1.0.1
+    "@types/rimraf": ^3.0.2
     fs-extra: 10.1.0
     logdown: 3.3.1
     npm-license-crawler: 0.2.1
     npm-registry-package-info: 1.0.5
+    rimraf: ^3.0.2
+    typescript: ^4.8.4
   bin:
     collect-licenses: src/cli.js
   languageName: unknown
@@ -4371,6 +4384,8 @@ __metadata:
 "@wireapp/prettier-config@workspace:packages/prettier-config":
   version: 0.0.0-use.local
   resolution: "@wireapp/prettier-config@workspace:packages/prettier-config"
+  dependencies:
+    typescript: ^4.8.4
   languageName: unknown
   linkType: soft
 
@@ -4391,7 +4406,9 @@ __metadata:
     "@swc/jest": ^0.2.23
     "@types/jest": ^29.2.0
     "@types/node": ^18.11.5
+    "@types/rimraf": ^3.0.2
     jest: ^29.2.1
+    rimraf: ^3.0.2
     ts-node: ^10.9.1
     typescript: ^4.8.4
   languageName: unknown
@@ -4404,8 +4421,11 @@ __metadata:
     "@swc/core": ^1.3.10
     "@swc/jest": ^0.2.23
     "@types/jest": ^29.2.0
+    "@types/rimraf": ^3.0.2
     "@wireapp/commons": "workspace:^"
     jest: ^29.2.1
+    rimraf: ^3.0.2
+    typescript: ^4.8.4
   languageName: unknown
   linkType: soft
 
@@ -4454,6 +4474,7 @@ __metadata:
     "@types/jest": ^29.2.0
     "@types/node": ^18.11.5
     "@types/react": 18.0.21
+    "@types/rimraf": ^3.0.2
     "@types/webpack-env": 1.18.0
     babel-jest: 29.2.1
     babel-loader: 8.2.5
@@ -4468,6 +4489,8 @@ __metadata:
     react-styleguidist: 13.0.0
     react-test-renderer: 18.2.0
     react-transition-group: 4.4.5
+    rimraf: ^3.0.2
+    typescript: ^4.8.4
     webpack: ^5.74.0
   peerDependencies:
     "@emotion/react": 11.10.4
@@ -4488,13 +4511,15 @@ __metadata:
     "@swc/jest": ^0.2.23
     "@types/jest": ^29.2.0
     "@types/node": ^18.11.5
+    "@types/rimraf": ^3.0.2
     "@wireapp/store-engine": "workspace:^"
     dexie: 3.2.2
     fake-indexeddb: ^4.0.0
     jest: ^29.2.1
     logdown: 3.3.1
+    rimraf: ^3.0.2
     ts-node: ^10.9.1
-    typescript: 4.8.4
+    typescript: ^4.8.4
     uuidjs: 4.2.12
   peerDependencies:
     "@wireapp/store-engine": 4.x.x
@@ -4510,11 +4535,13 @@ __metadata:
     "@types/fs-extra": 9.0.13
     "@types/jest": ^29.2.0
     "@types/node": ^18.11.5
+    "@types/rimraf": ^3.0.2
     "@wireapp/store-engine": "workspace:^"
     fs-extra: 10.1.0
     jest: ^29.2.1
+    rimraf: ^3.0.2
     ts-node: 10.9.1
-    typescript: 4.8.4
+    typescript: ^4.8.4
   peerDependencies:
     "@wireapp/store-engine": 4.x.x
   languageName: unknown
@@ -4541,7 +4568,7 @@ __metadata:
     jest: ^29.2.1
     rimraf: ^3.0.2
     ts-node: 10.9.1
-    typescript: 4.8.4
+    typescript: ^4.8.4
   languageName: unknown
   linkType: soft
 
@@ -4549,7 +4576,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wireapp/webapp-events@workspace:packages/webapp-events"
   dependencies:
-    typescript: 4.8.4
+    "@types/rimraf": ^3.0.2
+    rimraf: ^3.0.2
+    typescript: ^4.8.4
   languageName: unknown
   linkType: soft
 
@@ -5398,7 +5427,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bazinga64@5.11.12, bazinga64@workspace:packages/bazinga64":
+"bazinga64@5.11.11, bazinga64@workspace:packages/bazinga64":
   version: 0.0.0-use.local
   resolution: "bazinga64@workspace:packages/bazinga64"
   dependencies:
@@ -5406,10 +5435,11 @@ __metadata:
     "@swc/jest": ^0.2.23
     "@types/jest": ^29.2.0
     "@types/libsodium-wrappers-sumo": 0.7.5
-    "@types/node": ^18.11.5
+    "@types/rimraf": ^3.0.2
     cross-env: 7.0.3
     jest: ^29.2.1
     libsodium-wrappers-sumo: 0.7.10
+    rimraf: ^3.0.2
     ts-node: 10.9.1
     typescript: ^4.8.4
   languageName: unknown
@@ -6275,6 +6305,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"commander@npm:~2.2.0":
+  version: 2.2.0
+  resolution: "commander@npm:2.2.0"
+  checksum: ba1207be6c072506772b423ff132da69dc31181084ba5d33eb38ccc819bfb4364a055727029a6534d3d8d7d5ac97f461a1e14af9f854e7b5eb78d7180acca443
+  languageName: node
+  linkType: hard
+
 "comment-parser@npm:1.3.1":
   version: 1.3.1
   resolution: "comment-parser@npm:1.3.1"
@@ -6609,6 +6646,18 @@ __metadata:
   version: 0.4.2
   resolution: "cookie@npm:0.4.2"
   checksum: a00833c998bedf8e787b4c342defe5fa419abd96b32f4464f718b91022586b8f1bafbddd499288e75c037642493c83083da426c6a9080d309e3bd90fd11baa9b
+  languageName: node
+  linkType: hard
+
+"copy-paste@npm:~0.1.0":
+  version: 0.1.0
+  resolution: "copy-paste@npm:0.1.0"
+  dependencies:
+    execSync: ~1.0.0
+  dependenciesMeta:
+    execSync:
+      optional: true
+  checksum: bc055edd948c7481a6f156d6e4feffb9a2471ae4f0bb4f3a4af535d8cf597bc6953fbac79337c548c88597f3df60543916f5b2d7e912c9ee36c51648419cc7b5
   languageName: node
   linkType: hard
 
@@ -8058,6 +8107,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"execSync@npm:~1.0.0":
+  version: 1.0.2
+  resolution: "execSync@npm:1.0.2"
+  dependencies:
+    temp: ~0.5.1
+  checksum: eddc1255bb52122152b50618f144efb7104549145a02b1aa2ff41ecb549b963f0c9f0b66b17077caa36409f13bd05f10e989a75c3500f433c1f5978a02396b27
+  languageName: node
+  linkType: hard
+
 "execa@npm:^5.0.0, execa@npm:^5.1.1":
   version: 5.1.1
   resolution: "execa@npm:5.1.1"
@@ -8795,6 +8853,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"gi@npm:*":
+  version: 1.0.0
+  resolution: "gi@npm:1.0.0"
+  dependencies:
+    commander: ~2.2.0
+    copy-paste: ~0.1.0
+  bin:
+    gi: main.js
+  checksum: 522ec54d8809043564e00d71fc491ed2f084c81b33f3939bf9877ad57d9fd85b4c7cf63cbf8d66788b8b4238e21f44501466879f68335b7c945a486ff32c8e64
+  languageName: node
+  linkType: hard
+
 "git-raw-commits@npm:^2.0.8":
   version: 2.0.11
   resolution: "git-raw-commits@npm:2.0.11"
@@ -9108,6 +9178,13 @@ __metadata:
   version: 4.2.10
   resolution: "graceful-fs@npm:4.2.10"
   checksum: 3f109d70ae123951905d85032ebeae3c2a5a7a997430df00ea30df0e3a6c60cf6689b109654d6fdacd28810a053348c4d14642da1d075049e6be1ba5216218da
+  languageName: node
+  linkType: hard
+
+"graceful-fs@npm:~1":
+  version: 1.2.3
+  resolution: "graceful-fs@npm:1.2.3"
+  checksum: e40637fe703134214b9eb0c77d6eed336842d47259cb9c6b3fe8e9f864363d8cc7a062309899be4a0ba12e75d1a264adad3c43376c42d251a8dc0c4442ec8232
   languageName: node
   linkType: hard
 
@@ -15162,6 +15239,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"rimraf@npm:~2.1.4":
+  version: 2.1.4
+  resolution: "rimraf@npm:2.1.4"
+  dependencies:
+    graceful-fs: ~1
+  dependenciesMeta:
+    graceful-fs:
+      optional: true
+  checksum: 483878610be19570c570c053c267c515e735be14fb9d11a44e29942ce68ee5636c312960f46a67593258088bb94ba9b1cd96d55fcebc487f660108403be09062
+  languageName: node
+  linkType: hard
+
 "root-workspace-0b6124@workspace:.":
   version: 0.0.0-use.local
   resolution: "root-workspace-0b6124@workspace:."
@@ -15175,7 +15264,7 @@ __metadata:
     "@swc/jest": ^0.2.23
     "@types/babel__core": ^7
     "@types/jest": ^29.2.0
-    "@types/node": ^18.11.4
+    "@types/node": ^18.11.5
     "@types/rimraf": 3.0.2
     "@typescript-eslint/eslint-plugin": 5.40.1
     "@typescript-eslint/parser": 5.40.1
@@ -15198,7 +15287,7 @@ __metadata:
     prettier: 2.7.1
     rimraf: 3.0.2
     tsconfig-paths: 4.1.0
-    typescript: 4.8.4
+    typescript: ^4.8.4
   languageName: unknown
   linkType: soft
 
@@ -16397,6 +16486,15 @@ __metadata:
   version: 1.0.0
   resolution: "temp-dir@npm:1.0.0"
   checksum: cb2b58ddfb12efa83e939091386ad73b425c9a8487ea0095fe4653192a40d49184a771a1beba99045fbd011e389fd563122d79f54f82be86a55620667e08a6b2
+  languageName: node
+  linkType: hard
+
+"temp@npm:~0.5.1":
+  version: 0.5.1
+  resolution: "temp@npm:0.5.1"
+  dependencies:
+    rimraf: ~2.1.4
+  checksum: c98a66f933673b86cfa90bda27ab04fa0340180425cf439c177389b5ff238a742f3f5870817f5effb595da21ea497e9b9e35144fc2a45cf085769674c0a19005
   languageName: node
   linkType: hard
 
