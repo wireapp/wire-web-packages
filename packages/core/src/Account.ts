@@ -147,6 +147,8 @@ type InitOptions = {
   onNewClient?: (sessionId: SessionId) => void;
 };
 
+type DBMigrationConfig = {storeName: string};
+
 const coreDefaultClient: ClientInfo = {
   classification: ClientClassification.DESKTOP,
   cookieLabel: 'default',
@@ -161,6 +163,7 @@ export class Account<T = any> extends EventEmitter {
   private readonly nbPrekeys: number;
   private readonly cryptoProtocolConfig?: CryptoProtocolConfig<T>;
   private coreCryptoClient?: CoreCrypto;
+  private dbMigrationConfig?: DBMigrationConfig;
 
   public static readonly TOPIC = TOPIC;
   public service?: {
@@ -272,6 +275,14 @@ export class Account<T = any> extends EventEmitter {
       await this.initClient({clientType});
 
       if (this.cryptoProtocolConfig?.mls && this.backendFeatures.supportsMLS) {
+        if (this.dbMigrationConfig) {
+          try {
+            await this.service?.mls.proteusCryptoboxMigrate(this.dbMigrationConfig.storeName);
+          } catch (error) {
+            this.logger.error('Client was not able to perform DB migration:', error);
+          }
+        }
+
         // initialize schedulers for pending mls proposals once client is initialized
         await this.service?.notification.checkExistingPendingProposals();
 
@@ -283,6 +294,15 @@ export class Account<T = any> extends EventEmitter {
       }
     }
     return context;
+  }
+
+  /**
+   * Will schedule db migration task that will be executed right after the client is initialised.
+   *
+   * @param migrationConfig migration config object containing storeName (required to trigger migration).
+   */
+  public async scheduleDBMigration(migrationConfig: DBMigrationConfig) {
+    this.dbMigrationConfig = migrationConfig;
   }
 
   /**

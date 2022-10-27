@@ -237,4 +237,8 @@ export class MLSService {
   public async wipeConversation(conversationId: ConversationId): Promise<void> {
     return this.coreCryptoClient.wipeConversation(conversationId);
   }
+
+  public async proteusCryptoboxMigrate(storeName: string) {
+    return this.coreCryptoClient.proteusCryptoboxMigrate(storeName);
+  }
 }
