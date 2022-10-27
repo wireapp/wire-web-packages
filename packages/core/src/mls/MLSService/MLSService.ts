@@ -115,7 +115,7 @@ export class MLSService {
 
     try {
       const response = await this.apiClient.api.conversation.postMlsCommitBundle(
-        mls.CommitBundle.encode(payload).finish(),
+        mls.CommitBundle.encode(payload).finish().slice(),
       );
       await this.coreCryptoClient.commitAccepted(groupId);
       const newEpoch = await this.getEpoch(groupId);
