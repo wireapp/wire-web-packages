@@ -145,9 +145,16 @@ type InitOptions = {
    * An unknown client is a client we don't yet have a session with
    */
   onNewClient?: (sessionId: SessionId) => void;
-};
 
-type DBMigrationConfig = {storeName: string};
+  /**
+   * Database migration config object storing a name of the db and onSuccess callback function.
+   * When provided, the client will trigger migration script after initialisation.
+   */
+  dbMigrationConfig?: {
+    storeName: string;
+    onSuccess: () => void;
+  };
+};
 
 const coreDefaultClient: ClientInfo = {
   classification: ClientClassification.DESKTOP,
@@ -163,7 +170,6 @@ export class Account<T = any> extends EventEmitter {
   private readonly nbPrekeys: number;
   private readonly cryptoProtocolConfig?: CryptoProtocolConfig<T>;
   private coreCryptoClient?: CoreCrypto;
-  private dbMigrationConfig?: DBMigrationConfig;
 
   public static readonly TOPIC = TOPIC;
   public service?: {
@@ -248,7 +254,7 @@ export class Account<T = any> extends EventEmitter {
    */
   public async init(
     clientType: ClientType,
-    {cookie, initClient = true, onNewClient}: InitOptions = {},
+    {cookie, initClient = true, onNewClient, dbMigrationConfig}: InitOptions = {},
   ): Promise<Context> {
     const context = await this.apiClient.init(clientType, cookie);
     await this.initServices(context);
@@ -275,14 +281,6 @@ export class Account<T = any> extends EventEmitter {
       await this.initClient({clientType});
 
       if (this.cryptoProtocolConfig?.mls && this.backendFeatures.supportsMLS) {
-        if (this.dbMigrationConfig) {
-          try {
-            await this.service?.mls.proteusCryptoboxMigrate(this.dbMigrationConfig.storeName);
-          } catch (error) {
-            this.logger.error('Client was not able to perform DB migration:', error);
-          }
-        }
-
         // initialize schedulers for pending mls proposals once client is initialized
         await this.service?.notification.checkExistingPendingProposals();
 
@@ -294,15 +292,6 @@ export class Account<T = any> extends EventEmitter {
       }
     }
     return context;
-  }
-
-  /**
-   * Will schedule db migration task that will be executed right after the client is initialised.
-   *
-   * @param migrationConfig migration config object containing storeName (required to trigger migration).
-   */
-  public async scheduleDBMigration(migrationConfig: DBMigrationConfig) {
-    this.dbMigrationConfig = migrationConfig;
   }
 
   /**
