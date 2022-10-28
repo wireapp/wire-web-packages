@@ -92,18 +92,21 @@ export class MLSService {
     return this.processCommitAction(groupId, () => this.coreCryptoClient.addClientsToConversation(groupId, invitee));
   }
 
+  private clientIsExistingGroupUser(client: Uint8Array, otherClients: Uint8Array[]) {
+    const decoder = new TextDecoder();
+    const {user} = parseFullQualifiedClientId(decoder.decode(client));
+    return otherClients.some(client => {
+      const {user: otherUser} = parseFullQualifiedClientId(decoder.decode(client));
+      return otherUser.toLowerCase() === user.toLowerCase();
+    });
+  }
+
   public configureMLSCallbacks({groupIdFromConversationId, ...coreCryptoCallbacks}: MLSCallbacks): void {
     this.coreCryptoClient.registerCallbacks({
       ...coreCryptoCallbacks,
-      userAuthorize: () => true,
-      clientIsExistingGroupUser: (client, otherClients) => {
-        const decoder = new TextDecoder();
-        const {user} = parseFullQualifiedClientId(decoder.decode(client));
-        return otherClients.some(client => {
-          const {user: otherUser} = parseFullQualifiedClientId(decoder.decode(client));
-          return otherUser.toLowerCase() === user.toLowerCase();
-        });
-      },
+      userAuthorize: (groupId, client, otherClients) =>
+        coreCryptoCallbacks.authorize(groupId, client) && this.clientIsExistingGroupUser(client, otherClients),
+      clientIsExistingGroupUser: this.clientIsExistingGroupUser,
     });
     this.groupIdFromConversationId = groupIdFromConversationId;
   }

@@ -289,7 +289,8 @@ export class Account<T = any> extends EventEmitter {
     }
 
     // Assumption: client gets only initialized once
-    if (initClient) {
+    // mls needs to be enabled/ coreCrypto turned on for enabling MLS at this level
+    if (initClient && this.mlsConfig) {
       this.client = await CoreCrypto.init({
         databaseName: `corecrypto-${this.generateDbName(context)}`,
         key: Encoder.toBase64(key).asString,
@@ -303,7 +304,7 @@ export class Account<T = any> extends EventEmitter {
         console.error(e);
       }
       console.log('ok', this.client);
-
+      // TODO: what to do when desktop app doesnt support MLS?
       await this.initClient({clientType});
 
       if (this.mlsConfig && this.backendFeatures.supportsMLS) {
@@ -325,6 +326,8 @@ export class Account<T = any> extends EventEmitter {
           context.clientId,
         );
       }
+    } else {
+      await this.initClient({clientType});
     }
     return context;
   }
