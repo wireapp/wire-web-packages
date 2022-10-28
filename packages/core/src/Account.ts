@@ -165,7 +165,7 @@ export class Account<T = any> extends EventEmitter {
   private storeEngine?: CRUDEngine;
   private readonly nbPrekeys: number;
   private readonly mlsConfig?: MLSConfig<T>;
-  private coreCryptoClient?: CoreCrypto;
+  // private coreCryptoClient?: CoreCrypto;
 
   public static readonly TOPIC = TOPIC;
   public service?: {
@@ -253,24 +253,6 @@ export class Account<T = any> extends EventEmitter {
     {cookie, initClient = true, onNewClient, entropyData}: InitOptions = {},
   ): Promise<Context> {
     const context = await this.apiClient.init(clientType, cookie);
-    await this.initServices(context);
-
-    /** @fixme
-     * When we will start migrating to CoreCrypto encryption/decryption, those hooks won't be available anymore
-     * We will need to implement
-     *   - the mechanism to handle messages from an unknown sender
-     *   - the mechanism to generate new prekeys when we reach a certain threshold of prekeys
-     */
-    this.service!.cryptography.setCryptoboxHooks({
-      onNewPrekeys: async prekeys => {
-        this.logger.debug(`Received '${prekeys.length}' new PreKeys.`);
-
-        await this.apiClient.api.client.putClient(context.clientId!, {prekeys});
-        this.logger.debug(`Successfully uploaded '${prekeys.length}' PreKeys.`);
-      },
-
-      onNewSession: onNewClient,
-    });
 
     const coreCryptoKeyId = 'corecrypto-key';
     const dbName = this.generateSecretsDbName(context);
@@ -298,6 +280,7 @@ export class Account<T = any> extends EventEmitter {
         wasmFilePath: this.mlsConfig!.coreCrypoWasmFilePath,
         ...(entropyData && {entropySeed: entropyData}),
       });
+      await this.initServices(context);
       try {
         await this.client.proteusInit();
       } catch (e) {
@@ -305,6 +288,23 @@ export class Account<T = any> extends EventEmitter {
       }
       console.log('ok', this.client);
       // TODO: what to do when desktop app doesnt support MLS?
+      
+      /** @fixme
+       * When we will start migrating to CoreCrypto encryption/decryption, those hooks won't be available anymore
+       * We will need to implement
+       *   - the mechanism to handle messages from an unknown sender
+       *   - the mechanism to generate new prekeys when we reach a certain threshold of prekeys
+       */
+      this.service!.cryptography.setCryptoboxHooks({
+        onNewPrekeys: async prekeys => {
+          this.logger.debug(`Received '${prekeys.length}' new PreKeys.`);
+
+          await this.apiClient.api.client.putClient(context.clientId!, {prekeys});
+          this.logger.debug(`Successfully uploaded '${prekeys.length}' PreKeys.`);
+        },
+
+        onNewSession: onNewClient,
+      });
       await this.initClient({clientType});
 
       if (this.mlsConfig && this.backendFeatures.supportsMLS) {
@@ -445,7 +445,7 @@ export class Account<T = any> extends EventEmitter {
     });
 
     const clientService = new ClientService(this.apiClient, this.storeEngine, cryptographyService);
-    const mlsService = new MLSService(this.mlsConfig, this.apiClient, () => this.coreCryptoClient);
+    const mlsService = new MLSService(this.mlsConfig, this.apiClient, () => this.client);
     const connectionService = new ConnectionService(this.apiClient);
     const giphyService = new GiphyService(this.apiClient);
     const linkPreviewService = new LinkPreviewService(assetService);
@@ -587,8 +587,8 @@ export class Account<T = any> extends EventEmitter {
    * @param clearData if set to `true` will completely wipe any database that was created by the Account
    */
   public async logout(clearData: boolean = false): Promise<void> {
-    if (clearData && this.coreCryptoClient) {
-      await this.coreCryptoClient.wipe();
+    if (clearData && this.client) {
+      await this.client.wipe();
       await deleteEncryptedStore(this.generateSecretsDbName(this.apiClient.context!));
     }
     await this.apiClient.logout();
