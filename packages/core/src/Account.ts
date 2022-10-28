@@ -145,15 +145,6 @@ type InitOptions = {
    * An unknown client is a client we don't yet have a session with
    */
   onNewClient?: (sessionId: SessionId) => void;
-
-  /**
-   * Database migration config object storing a name of the db and onSuccess callback function.
-   * When provided, the client will trigger migration script after initialisation.
-   */
-  dbMigrationConfig?: {
-    storeName: string;
-    onSuccess: () => void;
-  };
 };
 
 const coreDefaultClient: ClientInfo = {
@@ -254,7 +245,7 @@ export class Account<T = any> extends EventEmitter {
    */
   public async init(
     clientType: ClientType,
-    {cookie, initClient = true, onNewClient, dbMigrationConfig}: InitOptions = {},
+    {cookie, initClient = true, onNewClient}: InitOptions = {},
   ): Promise<Context> {
     const context = await this.apiClient.init(clientType, cookie);
     await this.initServices(context);
