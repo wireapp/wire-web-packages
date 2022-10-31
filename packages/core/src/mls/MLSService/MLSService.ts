@@ -171,6 +171,11 @@ export class MLSService {
     return this.coreCryptoClient.newProposal(proposalType, args);
   }
 
+  public async joinByExternalCommit(groupInfo: Uint8Array) {
+    const {conversationId, ...commitBundle} = await this.coreCryptoClient.joinByExternalCommit(groupInfo);
+    return this.uploadCommitBundle(conversationId, commitBundle, true);
+  }
+
   public async newExternalProposal(
     externalProposalType: ExternalProposalType,
     args: ExternalProposalArgs | ExternalRemoveProposalArgs,

@@ -663,6 +663,11 @@ export class ConversationService {
     };
   }
 
+  public async joinByExternalCommit(conversationId: QualifiedId) {
+    const groupInfo = await this.apiClient.api.conversation.getGroupInfo(conversationId);
+    return this.mlsService.joinByExternalCommit(groupInfo);
+  }
+
   /**
    * Will send an external proposal for the current device to join a specific conversation.
    * In order for the external proposal to be sent correctly, the underlying mls conversation needs to be in a non-established state
