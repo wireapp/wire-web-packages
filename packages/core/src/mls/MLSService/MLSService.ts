@@ -35,7 +35,7 @@ import {
 import {APIClient} from '@wireapp/api-client';
 import {QualifiedUsers} from '../../conversation';
 import {Converter, Decoder, Encoder} from 'bazinga64';
-import {MLSCallbacks} from '../types';
+import {CryptoProtocolConfig, MLSCallbacks} from '../types';
 import {sendMessage} from '../../conversation/message/messageSender';
 import {parseFullQualifiedClientId} from '../../util/fullyQualifiedClientIdUtils';
 import {PostMlsMessageResponse} from '@wireapp/api-client/lib/conversation';
@@ -53,6 +53,7 @@ export class MLSService {
   constructor(
     private readonly apiClient: APIClient,
     private readonly coreCryptoClientProvider: () => CoreCrypto | undefined,
+    public readonly config: CryptoProtocolConfig['mls'],
   ) {}
 
   private get coreCryptoClient() {

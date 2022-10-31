@@ -276,9 +276,7 @@ export class Account<T = any> extends EventEmitter {
         await this.service?.notification.checkExistingPendingProposals();
 
         // initialize schedulers for renewing key materials
-        await this.service?.notification.checkForKeyMaterialsUpdate(
-          this.cryptoProtocolConfig.mls.keyingMaterialUpdateThreshold,
-        );
+        await this.service?.notification.checkForKeyMaterialsUpdate();
 
         // initialize scheduler for syncing key packages with backend
         await this.service?.notification.checkForKeyPackagesBackendSync();
@@ -400,7 +398,11 @@ export class Account<T = any> extends EventEmitter {
     });
 
     const clientService = new ClientService(this.apiClient, this.storeEngine, cryptographyService);
-    const mlsService = new MLSService(this.apiClient, () => this.coreCryptoClient);
+    const mlsService = new MLSService(
+      this.apiClient,
+      () => this.coreCryptoClient,
+      this.cryptoProtocolConfig?.mls ?? {},
+    );
     const connectionService = new ConnectionService(this.apiClient);
     const giphyService = new GiphyService(this.apiClient);
     const linkPreviewService = new LinkPreviewService(assetService);

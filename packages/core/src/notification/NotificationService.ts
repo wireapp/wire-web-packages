@@ -515,10 +515,10 @@ export class NotificationService extends EventEmitter {
     return `renew-key-material-update-${groupId}`;
   }
 
-  private async scheduleTaskToRenewKeyMaterial(
-    {groupId, previousUpdateDate}: LastKeyMaterialUpdateParams,
-    keyingMaterialUpdateThreshold: number,
-  ) {
+  private async scheduleTaskToRenewKeyMaterial({groupId, previousUpdateDate}: LastKeyMaterialUpdateParams) {
+    //given period of time (30 days by default) after last update date renew key material
+    const keyingMaterialUpdateThreshold =
+      this.mlsService.config?.keyingMaterialUpdateThreshold || DEFAULT_KEYING_MATERIAL_UPDATE_THRESHOLD;
     const firingDate = previousUpdateDate + keyingMaterialUpdateThreshold;
 
     const key = this.createKeyMaterialUpdateTaskSchedulerId(groupId);
@@ -537,10 +537,10 @@ export class NotificationService extends EventEmitter {
    * Function must only be called once, after application start
    *
    */
-  public async checkForKeyMaterialsUpdate(keyingMaterialUpdateThreshold = DEFAULT_KEYING_MATERIAL_UPDATE_THRESHOLD) {
+  public async checkForKeyMaterialsUpdate() {
     try {
       const keyMaterialUpdateDates = keyMaterialUpdatesStore.getAllUpdateDates();
-      keyMaterialUpdateDates.forEach(date => this.scheduleTaskToRenewKeyMaterial(date, keyingMaterialUpdateThreshold));
+      keyMaterialUpdateDates.forEach(date => this.scheduleTaskToRenewKeyMaterial(date));
     } catch (error) {
       this.logger.error('Could not get last key material update dates', error);
     }
