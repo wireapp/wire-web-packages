@@ -277,47 +277,41 @@ export class Account<T = any> extends EventEmitter {
         wasmFilePath: this.cryptoProtocolConfig!.coreCrypoWasmFilePath,
         ...(entropyData && {entropySeed: entropyData}),
       });
-      try {
-        if (this.cryptoProtocolConfig.proteus) {
-          await this.proteusClient.proteusInit();
-        } else {
-          /** @fixme
-           * When we will start migrating to CoreCrypto encryption/decryption, those hooks won't be available anymore
-           * We will need to implement
-           *   - the mechanism to handle messages from an unknown sender
-           *   - the mechanism to generate new prekeys when we reach a certain threshold of prekeys
-           */
-          this.service!.cryptography.setCryptoboxHooks({
-            onNewPrekeys: async prekeys => {
-              this.logger.debug(`Received '${prekeys.length}' new PreKeys.`);
 
-              await this.apiClient.api.client.putClient(context.clientId!, {prekeys});
-              this.logger.debug(`Successfully uploaded '${prekeys.length}' PreKeys.`);
-            },
-
-            onNewSession: onNewClient,
-          });
-        }
-      } catch (e) {
-        console.error(e);
-      }
-      console.log('ok', this.proteusClient);
-
-      await this.initClient({clientType});
-
-      if (this.cryptoProtocolConfig?.mls && this.backendFeatures.supportsMLS) {
-        // initialize schedulers for pending mls proposals once client is initialized
-        await this.service?.notification.checkExistingPendingProposals();
-
-        // initialize schedulers for renewing key materials
-        await this.service?.notification.checkForKeyMaterialsUpdate();
-
-        // initialize scheduler for syncing key packages with backend
-        await this.service?.notification.checkForKeyPackagesBackendSync();
-      }
+      await this.proteusClient.proteusInit();
+      
     } else {
-      await this.initClient({clientType});
+      /** @fixme
+       * When we will start migrating to CoreCrypto encryption/decryption, those hooks won't be available anymore
+       * We will need to implement
+       *   - the mechanism to handle messages from an unknown sender
+       *   - the mechanism to generate new prekeys when we reach a certain threshold of prekeys
+       */
+      this.service!.cryptography.setCryptoboxHooks({
+        onNewPrekeys: async prekeys => {
+          this.logger.debug(`Received '${prekeys.length}' new PreKeys.`);
+
+          await this.apiClient.api.client.putClient(context.clientId!, {prekeys});
+          this.logger.debug(`Successfully uploaded '${prekeys.length}' PreKeys.`);
+        },
+
+        onNewSession: onNewClient,
+      });
     }
+
+    await this.initClient({clientType});
+
+    if (this.cryptoProtocolConfig?.mls && this.backendFeatures.supportsMLS) {
+      // initialize schedulers for pending mls proposals once client is initialized
+      await this.service?.notification.checkExistingPendingProposals();
+
+      // initialize schedulers for renewing key materials
+      await this.service?.notification.checkForKeyMaterialsUpdate();
+
+      // initialize scheduler for syncing key packages with backend
+      await this.service?.notification.checkForKeyPackagesBackendSync();
+    }
+
     return context;
   }
 
