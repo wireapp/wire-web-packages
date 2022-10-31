@@ -452,7 +452,7 @@ export class Account<T = any> extends EventEmitter {
     await this.apiClient.api.client.getClient(loadedClient.id);
     this.apiClient.context!.clientId = loadedClient.id;
     await this.service!.cryptography.initCryptobox();
-    if (this.cryptoProtocolConfig && this.backendFeatures.supportsMLS) {
+    if (this.cryptoProtocolConfig?.mls && this.backendFeatures.supportsMLS) {
       this.coreCryptoClient = await this.createMLSClient(
         loadedClient,
         this.apiClient.context!,
