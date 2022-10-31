@@ -279,7 +279,6 @@ export class Account<T = any> extends EventEmitter {
       });
 
       await this.proteusClient.proteusInit();
-      
     } else {
       /** @fixme
        * When we will start migrating to CoreCrypto encryption/decryption, those hooks won't be available anymore
@@ -399,7 +398,7 @@ export class Account<T = any> extends EventEmitter {
 
         this.logger.log('Last client was permanent - Deleting cryptography stores');
         if (this.cryptoProtocolConfig?.proteus) {
-          this.logout(true);
+          await this.logout(true);
         } else {
           await this.service!.cryptography.deleteCryptographyStores();
         }
