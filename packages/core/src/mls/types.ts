@@ -49,7 +49,8 @@ export interface CryptoProtocolConfig<T = any> {
    */
   coreCrypoWasmFilePath: string;
 
-  mls: {
+  /** If set will create an MLS capable device from the current device */
+  mls?: {
     /**
      * (milliseconds) period of time between automatic updates of the keying material (30 days by default)
      */
