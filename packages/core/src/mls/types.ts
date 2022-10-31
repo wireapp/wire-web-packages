@@ -55,5 +55,7 @@ export interface CryptoProtocolConfig<T = any> {
      */
     keyingMaterialUpdateThreshold?: number;
   };
-  proteus: boolean;
+
+  /** if set to true, will use experimental proteus encryption/decryption library (core-crypto). If not set will fallback to the legacy proteus library (cryptobox) */
+  proteus?: boolean;
 }
