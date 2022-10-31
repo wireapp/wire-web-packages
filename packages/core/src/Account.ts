@@ -161,11 +161,11 @@ export class Account<T = any> extends EventEmitter {
   private readonly apiClient: APIClient;
   private readonly logger: logdown.Logger;
   private readonly createStore: CreateStoreFn;
-  private client?: CoreCrypto;
+  private proteusClient?: CoreCrypto;
   private storeEngine?: CRUDEngine;
   private readonly nbPrekeys: number;
   private readonly cryptoProtocolConfig?: CryptoProtocolConfig<T>;
-  // private coreCryptoClient?: CoreCrypto;
+  private mlsClient?: CoreCrypto;
 
   public static readonly TOPIC = TOPIC;
   public service?: {
@@ -253,60 +253,56 @@ export class Account<T = any> extends EventEmitter {
     {cookie, initClient = true, onNewClient, entropyData}: InitOptions = {},
   ): Promise<Context> {
     const context = await this.apiClient.init(clientType, cookie);
+    await this.initServices(context);
 
-    const coreCryptoKeyId = 'corecrypto-key';
-    const dbName = this.generateSecretsDbName(context);
+    if (initClient && this.cryptoProtocolConfig?.proteus) {
+      const coreCryptoKeyId = 'corecrypto-key-proteus';
+      const dbName = `${this.generateSecretsDbName(context)}-proteus`;
+      const secretStore = this.cryptoProtocolConfig?.systemCrypto
+        ? await createCustomEncryptedStore(dbName, this.cryptoProtocolConfig?.systemCrypto)
+        : await createEncryptedStore(dbName);
 
-    const secretStore = this.cryptoProtocolConfig?.systemCrypto
-      ? await createCustomEncryptedStore(dbName, this.cryptoProtocolConfig?.systemCrypto)
-      : await createEncryptedStore(dbName);
+      let key = await secretStore.getsecretValue(coreCryptoKeyId);
 
-    let key = await secretStore.getsecretValue(coreCryptoKeyId);
-    let isNewMLSDevice = false;
-    if (!key) {
-      key = window.crypto.getRandomValues(new Uint8Array(16));
-      await secretStore.saveSecretValue(coreCryptoKeyId, key);
-      // Keeping track that this device is a new MLS device (but can be an old proteus device)
-      isNewMLSDevice = true;
-    }
+      if (!key) {
+        key = window.crypto.getRandomValues(new Uint8Array(16));
+        await secretStore.saveSecretValue(coreCryptoKeyId, key);
+      }
 
-    // Assumption: client gets only initialized once
-    // mls needs to be enabled/ coreCrypto turned on for enabling MLS at this level
-    if (initClient && this.cryptoProtocolConfig) {
-      this.client = await CoreCrypto.init({
-        databaseName: `corecrypto-${this.generateDbName(context)}`,
+      // client gets initialized twice: once for proteus/ once for mls
+      this.proteusClient = await CoreCrypto.init({
+        databaseName: `corecrypto-${this.generateDbName(context)}-proteus`,
         key: Encoder.toBase64(key).asString,
-        clientId: `${context.userId}:${context.clientId}@${context.domain}`,
+        clientId: `PROTEUS_${context.clientId}`,
         wasmFilePath: this.cryptoProtocolConfig!.coreCrypoWasmFilePath,
         ...(entropyData && {entropySeed: entropyData}),
       });
-      await this.initServices(context);
       try {
         if (this.cryptoProtocolConfig.proteus) {
-          await this.client.proteusInit();
+          await this.proteusClient.proteusInit();
+        } else {
+          /** @fixme
+           * When we will start migrating to CoreCrypto encryption/decryption, those hooks won't be available anymore
+           * We will need to implement
+           *   - the mechanism to handle messages from an unknown sender
+           *   - the mechanism to generate new prekeys when we reach a certain threshold of prekeys
+           */
+          this.service!.cryptography.setCryptoboxHooks({
+            onNewPrekeys: async prekeys => {
+              this.logger.debug(`Received '${prekeys.length}' new PreKeys.`);
+
+              await this.apiClient.api.client.putClient(context.clientId!, {prekeys});
+              this.logger.debug(`Successfully uploaded '${prekeys.length}' PreKeys.`);
+            },
+
+            onNewSession: onNewClient,
+          });
         }
       } catch (e) {
         console.error(e);
       }
-      console.log('ok', this.client);
-      // TODO: what to do when desktop app doesnt support MLS?
+      console.log('ok', this.proteusClient);
 
-      /** @fixme
-       * When we will start migrating to CoreCrypto encryption/decryption, those hooks won't be available anymore
-       * We will need to implement
-       *   - the mechanism to handle messages from an unknown sender
-       *   - the mechanism to generate new prekeys when we reach a certain threshold of prekeys
-       */
-      this.service!.cryptography.setCryptoboxHooks({
-        onNewPrekeys: async prekeys => {
-          this.logger.debug(`Received '${prekeys.length}' new PreKeys.`);
-
-          await this.apiClient.api.client.putClient(context.clientId!, {prekeys});
-          this.logger.debug(`Successfully uploaded '${prekeys.length}' PreKeys.`);
-        },
-
-        onNewSession: onNewClient,
-      });
       await this.initClient({clientType});
 
       if (this.cryptoProtocolConfig?.mls && this.backendFeatures.supportsMLS) {
@@ -318,15 +314,6 @@ export class Account<T = any> extends EventEmitter {
 
         // initialize scheduler for syncing key packages with backend
         await this.service?.notification.checkForKeyPackagesBackendSync();
-      }
-
-      if (isNewMLSDevice && context.clientId) {
-        // If the device is new, we need to upload keypackages and public key to the backend
-        await this.service?.mls.uploadMLSPublicKeys(await this.client.clientPublicKey(), context.clientId);
-        await this.service?.mls.uploadMLSKeyPackages(
-          await this.client.clientKeypackages(this.nbPrekeys),
-          context.clientId,
-        );
       }
     } else {
       await this.initClient({clientType});
@@ -417,7 +404,11 @@ export class Account<T = any> extends EventEmitter {
         }
 
         this.logger.log('Last client was permanent - Deleting cryptography stores');
-        await this.service!.cryptography.deleteCryptographyStores();
+        if (this.cryptoProtocolConfig?.proteus) {
+          this.logout(true);
+        } else {
+          await this.service!.cryptography.deleteCryptographyStores();
+        }
         return this.registerClient(loginData, clientInfo, entropyData);
       }
 
@@ -447,7 +438,7 @@ export class Account<T = any> extends EventEmitter {
     });
 
     const clientService = new ClientService(this.apiClient, this.storeEngine, cryptographyService);
-    const mlsService = new MLSService(this.apiClient, () => this.client, this.cryptoProtocolConfig?.mls ?? {});
+    const mlsService = new MLSService(this.apiClient, () => this.mlsClient, this.cryptoProtocolConfig?.mls ?? {});
     const connectionService = new ConnectionService(this.apiClient);
     const giphyService = new GiphyService(this.apiClient);
     const linkPreviewService = new LinkPreviewService(assetService);
@@ -496,61 +487,63 @@ export class Account<T = any> extends EventEmitter {
     const loadedClient = await this.service!.client.getLocalClient();
     await this.apiClient.api.client.getClient(loadedClient.id);
     this.apiClient.context!.clientId = loadedClient.id;
-    await this.service!.cryptography.initCryptobox();
-    // if (this.cryptoProtocolConfig?.mls && this.backendFeatures.supportsMLS) {
-    //   this.client = await this.createMLSClient(
-    //     loadedClient,
-    //     this.apiClient.context!,
-    //     this.cryptoProtocolConfig,
-    //     entropyData,
-    //   );
-    // }
+    if (!this.cryptoProtocolConfig?.proteus && !this.cryptoProtocolConfig?.mls) {
+      await this.service!.cryptography.initCryptobox();
+    }
+    if (this.cryptoProtocolConfig?.mls && this.backendFeatures.supportsMLS) {
+      this.mlsClient = await this.createMLSClient(
+        loadedClient,
+        this.apiClient.context!,
+        this.cryptoProtocolConfig,
+        entropyData,
+      );
+    }
 
     return loadedClient;
   }
 
-  // private async createMLSClient(
-  //   client: RegisteredClient,
-  //   context: Context,
-  //   cryptoProtocolConfig: CryptoProtocolConfig,
-  //   entropyData?: Uint8Array,
-  // ) {
-  //   if (!this.service) {
-  //     throw new Error('Services are not set.');
-  //   }
-  //   const coreCryptoKeyId = 'corecrypto-key';
-  //   const dbName = this.generateSecretsDbName(context);
+  private async createMLSClient(
+    client: RegisteredClient,
+    context: Context,
+    cryptoProtocolConfig: CryptoProtocolConfig,
+    entropyData?: Uint8Array,
+  ) {
+    if (!this.service) {
+      throw new Error('Services are not set.');
+    }
+    const coreCryptoKeyId = 'corecrypto-key';
+    const dbName = this.generateSecretsDbName(context);
 
-  //   const secretStore = cryptoProtocolConfig.systemCrypto
-  //     ? await createCustomEncryptedStore(dbName, cryptoProtocolConfig.systemCrypto)
-  //     : await createEncryptedStore(dbName);
+    const secretStore = cryptoProtocolConfig.systemCrypto
+      ? await createCustomEncryptedStore(dbName, cryptoProtocolConfig.systemCrypto)
+      : await createEncryptedStore(dbName);
 
-  //   let key = await secretStore.getsecretValue(coreCryptoKeyId);
-  //   let isNewMLSDevice = false;
-  //   if (!key) {
-  //     key = window.crypto.getRandomValues(new Uint8Array(16));
-  //     await secretStore.saveSecretValue(coreCryptoKeyId, key);
-  //     // Keeping track that this device is a new MLS device (but can be an old proteus device)
-  //     isNewMLSDevice = true;
-  //   }
+    let key = await secretStore.getsecretValue(coreCryptoKeyId);
+    let isNewMLSDevice = false;
+    if (!key) {
+      key = window.crypto.getRandomValues(new Uint8Array(16));
+      await secretStore.saveSecretValue(coreCryptoKeyId, key);
+      // Keeping track that this device is a new MLS device (but can be an old proteus device)
+      isNewMLSDevice = true;
+    }
 
-  //   const {userId, domain} = this.apiClient.context!;
-  //   const mlsClient = await CoreCrypto.init({
-  //     databaseName: `corecrypto-${this.generateDbName(context)}`,
-  //     key: Encoder.toBase64(key).asString,
-  //     clientId: `${userId}:${client.id}@${domain}`,
-  //     wasmFilePath: cryptoProtocolConfig.coreCrypoWasmFilePath,
-  //     entropySeed: entropyData,
-  //   });
+    const {userId, domain} = this.apiClient.context!;
+    const mlsClient = await CoreCrypto.init({
+      databaseName: `corecrypto-${this.generateDbName(context)}`,
+      key: Encoder.toBase64(key).asString,
+      clientId: `${userId}:${client.id}@${domain}`,
+      wasmFilePath: cryptoProtocolConfig.coreCrypoWasmFilePath,
+      entropySeed: entropyData,
+    });
 
-  //   if (isNewMLSDevice) {
-  //     // If the device is new, we need to upload keypackages and public key to the backend
-  //     await this.service.mls.uploadMLSPublicKeys(await mlsClient.clientPublicKey(), client.id);
-  //     await this.service.mls.uploadMLSKeyPackages(await mlsClient.clientKeypackages(this.nbPrekeys), client.id);
-  //   }
+    if (isNewMLSDevice) {
+      // If the device is new, we need to upload keypackages and public key to the backend
+      await this.service.mls.uploadMLSPublicKeys(await mlsClient.clientPublicKey(), client.id);
+      await this.service.mls.uploadMLSKeyPackages(await mlsClient.clientKeypackages(this.nbPrekeys), client.id);
+    }
 
-  //   return mlsClient;
-  // }
+    return mlsClient;
+  }
 
   private async registerClient(
     loginData: LoginData,
@@ -562,21 +555,22 @@ export class Account<T = any> extends EventEmitter {
     }
     this.logger.info(`Creating new client {mls: ${!!this.cryptoProtocolConfig}}`);
     const registeredClient = await this.service.client.register(loginData, clientInfo, entropyData);
-    // if (this.cryptoProtocolConfig && this.backendFeatures.supportsMLS) {
-    //   this.coreCryptoClient = await this.createMLSClient(
-    //     registeredClient,
-    //     this.apiClient.context!,
-    //     this.cryptoProtocolConfig,
-    //     entropyData,
-    //   );
-    // }
+    if (this.cryptoProtocolConfig && this.backendFeatures.supportsMLS) {
+      this.mlsClient = await this.createMLSClient(
+        registeredClient,
+        this.apiClient.context!,
+        this.cryptoProtocolConfig,
+        entropyData,
+      );
+    }
     this.apiClient.context!.clientId = registeredClient.id;
     this.logger.info('Client is created');
 
     await this.service!.notification.initializeNotificationStream();
     await this.service!.client.synchronizeClients();
-    await this.service!.cryptography.initCryptobox();
-
+    if (!this.cryptoProtocolConfig?.proteus) {
+      await this.service!.cryptography.initCryptobox();
+    }
     return {isNewClient: true, localClient: registeredClient};
   }
 
@@ -590,9 +584,13 @@ export class Account<T = any> extends EventEmitter {
    * @param clearData if set to `true` will completely wipe any database that was created by the Account
    */
   public async logout(clearData: boolean = false): Promise<void> {
-    if (clearData && this.client) {
-      await this.client.wipe();
+    if (clearData && this.mlsClient) {
+      await this.mlsClient.wipe();
       await deleteEncryptedStore(this.generateSecretsDbName(this.apiClient.context!));
+    }
+    if (clearData && this.proteusClient) {
+      await this.proteusClient.wipe();
+      await deleteEncryptedStore(`${this.generateSecretsDbName(this.apiClient.context!)}-proteus`);
     }
     await this.apiClient.logout();
     this.resetContext();
