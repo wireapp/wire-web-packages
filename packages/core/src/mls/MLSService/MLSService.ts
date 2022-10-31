@@ -143,7 +143,6 @@ export class MLSService {
           return otherUser.toLowerCase() === user.toLowerCase();
         });
       },
-      userAuthorize: () => true, // TODO
     });
     this.groupIdFromConversationId = groupIdFromConversationId;
   }
