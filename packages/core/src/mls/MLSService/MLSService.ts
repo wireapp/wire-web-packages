@@ -35,7 +35,7 @@ import {
 import {APIClient} from '@wireapp/api-client';
 import {QualifiedUsers} from '../../conversation';
 import {Converter, Decoder, Encoder} from 'bazinga64';
-import {MLSCallbacks, MLSConfig} from '../types';
+import {MLSCallbacks} from '../types';
 import {sendMessage} from '../../conversation/message/messageSender';
 import {parseFullQualifiedClientId} from '../../util/fullyQualifiedClientIdUtils';
 import {PostMlsMessageResponse} from '@wireapp/api-client/lib/conversation';
@@ -51,7 +51,6 @@ export class MLSService {
   groupIdFromConversationId?: MLSCallbacks['groupIdFromConversationId'];
 
   constructor(
-    public readonly config: MLSConfig | undefined,
     private readonly apiClient: APIClient,
     private readonly coreCryptoClientProvider: () => CoreCrypto | undefined,
   ) {}

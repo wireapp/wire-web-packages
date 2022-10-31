@@ -35,7 +35,7 @@ export interface MLSCallbacks extends Pick<CoreCryptoCallbacks, 'authorize' | 'u
   groupIdFromConversationId: (conversationId: QualifiedId) => Promise<string | undefined>;
 }
 
-export interface MLSConfig<T = any> {
+export interface CryptoProtocolConfig<T = any> {
   /**
    * encrypt/decrypt function pair that will be called before storing/fetching secrets in the secrets database.
    * If not provided will use the built in encryption mechanism
@@ -49,8 +49,11 @@ export interface MLSConfig<T = any> {
    */
   coreCrypoWasmFilePath: string;
 
-  /**
-   * (milliseconds) period of time between automatic updates of the keying material (30 days by default)
-   */
-  keyingMaterialUpdateThreshold?: number;
+  mls: {
+    /**
+     * (milliseconds) period of time between automatic updates of the keying material (30 days by default)
+     */
+    keyingMaterialUpdateThreshold?: number;
+  };
+  proteus: boolean;
 }
