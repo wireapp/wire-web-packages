@@ -36,11 +36,12 @@ const groupInfoType: Record<PublicGroupStateEncryptionType, mls.GroupInfoType> =
  * @returns
  */
 export function toProtobufCommitBundle({commit, welcome, publicGroupState}: CommitBundle): Uint8Array {
+  const {ratchetTreeType, encryptionType} = publicGroupState;
   return mls.CommitBundle.encode({
     groupInfoBundle: {
-      ratchetTreeType: ratchetTreeMapping[publicGroupState.ratchetTreeType],
+      ratchetTreeType: ratchetTreeMapping[ratchetTreeType],
       groupInfo: publicGroupState.payload,
-      groupInfoType: groupInfoType[publicGroupState.encryptionType],
+      groupInfoType: groupInfoType[encryptionType],
     },
     commit,
     welcome,
