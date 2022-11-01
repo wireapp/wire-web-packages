@@ -224,7 +224,7 @@ export class MLSService {
    */
   public async checkForKeyPackagesBackendSync() {
     registerRecurringTask({
-      every: TimeUtil.TimeInMillis.SECOND * 10,
+      every: TimeUtil.TimeInMillis.DAY,
       key: 'try-key-packages-backend-sync',
       task: () => this.syncKeyPackages(),
     });
