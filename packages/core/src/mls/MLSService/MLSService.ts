@@ -32,8 +32,6 @@ import {
   Invitee,
   ProposalArgs,
   ProposalType,
-  PublicGroupStateEncryptionType,
-  RatchetTreeType,
   RemoveProposalArgs,
 } from '@wireapp/core-crypto';
 import {Converter, Decoder, Encoder} from 'bazinga64';
@@ -41,7 +39,8 @@ import logdown from 'logdown';
 import {QualifiedUsers} from '../../conversation';
 import {sendMessage} from '../../conversation/message/messageSender';
 import {parseFullQualifiedClientId} from '../../util/fullyQualifiedClientIdUtils';
-import {CommitPendingProposalsParams, HandlePendingProposalsParams, MLSCallbacks} from '../types';
+import {MLSCallbacks} from '../types';
+import {toProtobufCommitBundle} from './commitBundleUtil';
 
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {TimeUtil} from '@wireapp/commons';
@@ -93,31 +92,15 @@ export class MLSService {
     return client;
   }
 
-  private async uploadCommitBundle(groupId: Uint8Array, {commit, welcome, publicGroupState}: CommitBundle) {
-    const ratchetTreeMapping: Record<RatchetTreeType, mls.RatchetTreeType> = {
-      [RatchetTreeType.Full]: mls.RatchetTreeType.FULL,
-      [RatchetTreeType.ByRef]: mls.RatchetTreeType.REFERENCE,
-      [RatchetTreeType.Delta]: mls.RatchetTreeType.DELTA,
-    };
-    const groupInfoType: Record<PublicGroupStateEncryptionType, mls.GroupInfoType> = {
-      [PublicGroupStateEncryptionType.Plaintext]: mls.GroupInfoType.PUBLIC_GROUP_STATE,
-      [PublicGroupStateEncryptionType.JweEncrypted]: mls.GroupInfoType.GROUP_INFO_JWE,
-    };
-    const payload = mls.CommitBundle.create({
-      groupInfoBundle: {
-        ratchetTreeType: ratchetTreeMapping[publicGroupState.ratchetTreeType],
-        groupInfo: publicGroupState.payload,
-        groupInfoType: groupInfoType[publicGroupState.encryptionType],
-      },
-      commit,
-      welcome,
-    });
-
+  private async uploadCommitBundle(groupId: Uint8Array, commitBundle: CommitBundle, isExternalCommit?: boolean) {
+    const bundlePayload = toProtobufCommitBundle(commitBundle);
     try {
-      const response = await this.apiClient.api.conversation.postMlsCommitBundle(
-        mls.CommitBundle.encode(payload).finish().slice(),
-      );
-      await this.coreCryptoClient.commitAccepted(groupId);
+      const response = await this.apiClient.api.conversation.postMlsCommitBundle(bundlePayload.slice());
+      if (isExternalCommit) {
+        await this.coreCryptoClient.mergePendingGroupFromExternalCommit(groupId, {});
+      } else {
+        await this.coreCryptoClient.commitAccepted(groupId);
+      }
       const newEpoch = await this.getEpoch(groupId);
       const groupIdStr = Encoder.toBase64(groupId).asString;
       this.logger.log(`Commit have been accepted for group "${groupIdStr}". New epoch is "${newEpoch}"`);
