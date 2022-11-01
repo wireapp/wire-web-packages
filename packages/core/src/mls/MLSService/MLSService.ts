@@ -40,6 +40,9 @@ import {sendMessage} from '../../conversation/message/messageSender';
 import {parseFullQualifiedClientId} from '../../util/fullyQualifiedClientIdUtils';
 import {PostMlsMessageResponse} from '@wireapp/api-client/lib/conversation';
 import logdown from 'logdown';
+
+import {BackendEvent, EventHandlerResult, handleBackendEvent, PayloadBundleSource} from '../EventHandler';
+
 //@todo: this function is temporary, we wait for the update from core-crypto side
 //they are returning regular array instead of Uint8Array for commit and welcome messages
 export const optionalToUint8Array = (array: Uint8Array | []): Uint8Array => {
@@ -236,5 +239,13 @@ export class MLSService {
 
   public async wipeConversation(conversationId: ConversationId): Promise<void> {
     return this.coreCryptoClient.wipeConversation(conversationId);
+  }
+
+  public async handleMLSEvent(
+    event: BackendEvent,
+    source: PayloadBundleSource,
+    dryRun: boolean = false,
+  ): EventHandlerResult {
+    return handleBackendEvent({event, source, dryRun, mlsService: this});
   }
 }
