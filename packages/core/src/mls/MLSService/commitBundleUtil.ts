@@ -17,11 +17,7 @@
  *
  */
 
-import {
-  CommitBundle,
-  PublicGroupStateEncryptionType,
-  RatchetTreeType,
-} from '@wireapp/core-crypto/platforms/web/corecrypto';
+import {CommitBundle, PublicGroupStateEncryptionType, RatchetTreeType} from '@wireapp/core-crypto';
 import {mls} from '@wireapp/protocol-messaging/web/mls';
 
 const ratchetTreeMapping: Record<RatchetTreeType, mls.RatchetTreeType> = {
