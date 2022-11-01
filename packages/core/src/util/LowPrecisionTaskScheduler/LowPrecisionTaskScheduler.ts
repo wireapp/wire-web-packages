@@ -20,7 +20,7 @@
 interface IntervalTask {
   key: string;
   firingDate: number;
-  task: () => Promise<any>;
+  task: () => void;
 }
 
 interface ScheduleLowPrecisionTaskParams extends IntervalTask {
