@@ -77,10 +77,10 @@ const cancelTask = ({intervalDelay, key}: CancelLowPrecisionTaskParams) => {
     const newTasks = tasks.filter(task => task.key !== key);
     intervals[intervalDelay].tasks = newTasks;
 
+    logger.info(`Scheduled task with key "${key}" prematurely cleared`);
     if (newTasks.length === 0) {
       clearInterval(intervals[intervalDelay].timeoutId);
       delete intervals[intervalDelay];
-      logger.info(`Scheduled task with key "${key}" prematurely cleared`);
     }
   }
 };
