@@ -17,6 +17,8 @@
  *
  */
 
+import {APIClient} from '@wireapp/api-client';
+import {PostMlsMessageResponse} from '@wireapp/api-client/lib/conversation';
 import {
   AddProposalArgs,
   CommitBundle,
@@ -32,15 +34,15 @@ import {
   ProposalType,
   RemoveProposalArgs,
 } from '@wireapp/core-crypto';
-import {APIClient} from '@wireapp/api-client';
-import {QualifiedUsers} from '../../conversation';
 import {Converter, Decoder, Encoder} from 'bazinga64';
-import {CryptoProtocolConfig, MLSCallbacks} from '../types';
+import logdown from 'logdown';
+import {QualifiedUsers} from '../../conversation';
 import {sendMessage} from '../../conversation/message/messageSender';
 import {parseFullQualifiedClientId} from '../../util/fullyQualifiedClientIdUtils';
-import {PostMlsMessageResponse} from '@wireapp/api-client/lib/conversation';
-import logdown from 'logdown';
+import {CryptoProtocolConfig, MLSCallbacks} from '../types';
 
+import {TimeUtil} from '@wireapp/commons';
+import {registerRecurringTask} from '../../util/RecurringTaskScheduler';
 import {BackendEvent, EventHandlerResult, handleBackendEvent, PayloadBundleSource} from '../EventHandler';
 
 //@todo: this function is temporary, we wait for the update from core-crypto side
@@ -56,7 +58,7 @@ export class MLSService {
   constructor(
     private readonly apiClient: APIClient,
     private readonly coreCryptoClientProvider: () => CoreCrypto | undefined,
-    public readonly config: CryptoProtocolConfig['mls'],
+    public readonly config: CryptoProtocolConfig['mls'] & {nbKeyPackages: number},
   ) {}
 
   private get coreCryptoClient() {
@@ -216,6 +218,37 @@ export class MLSService {
 
   public async clientKeypackages(amountRequested: number): Promise<Uint8Array[]> {
     return this.coreCryptoClient.clientKeypackages(amountRequested);
+  }
+
+  /**
+   * Get date of last key packages count query and schedule a task to sync it with backend
+   * Function must only be called once, after application start
+   */
+  public async checkForKeyPackagesBackendSync() {
+    registerRecurringTask({
+      every: TimeUtil.TimeInMillis.DAY,
+      key: 'try-key-packages-backend-sync',
+      task: () => this.syncKeyPackages(),
+    });
+  }
+
+  private async syncKeyPackages() {
+    const validKeyPackagesCount = await this.clientValidKeypackagesCount();
+    const minAllowedNumberOfKeyPackages = this.config.nbKeyPackages / 2;
+
+    if (validKeyPackagesCount <= minAllowedNumberOfKeyPackages) {
+      const clientId = this.apiClient.validatedClientId;
+
+      //check numbers of keys on backend
+      const backendKeyPackagesCount = await this.apiClient.api.client.getMLSKeyPackageCount(clientId);
+
+      if (backendKeyPackagesCount <= minAllowedNumberOfKeyPackages) {
+        //upload new keys
+        const newKeyPackages = await this.clientKeypackages(this.config.nbKeyPackages);
+
+        await this.uploadMLSKeyPackages(newKeyPackages, clientId);
+      }
+    }
   }
 
   /**
