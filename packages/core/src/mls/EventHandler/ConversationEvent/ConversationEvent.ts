@@ -20,17 +20,16 @@
 import {BackendEvent, ConversationMLSWelcomeEvent, CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
 import {Decoder, Encoder} from 'bazinga64';
 import {EventHandlerParams, EventHandlerResult} from '..';
-import {ConversationMapper} from '../../../conversation/ConversationMapper';
 
 // extract typeguards to separate file once we have more than one
 const isWelcomeMessage = (event: BackendEvent): event is ConversationMLSWelcomeEvent =>
   event.type === CONVERSATION_EVENT.MLS_WELCOME_MESSAGE;
 
 // extract handlers to separate file once we have more than one
-interface HandlWelcomeMessageParams extends EventHandlerParams {
+interface HandleWelcomeMessageParams extends EventHandlerParams {
   event: ConversationMLSWelcomeEvent;
 }
-const handleWelcomeMessage = async ({mlsService, event, source}: HandlWelcomeMessageParams): EventHandlerResult => {
+const handleWelcomeMessage = async ({mlsService, event, source}: HandleWelcomeMessageParams): EventHandlerResult => {
   const data = Decoder.fromBase64(event.data).asBytes;
   // We extract the groupId from the welcome message and let coreCrypto store this group
   const newGroupId = await mlsService.processWelcomeMessage(data);
@@ -38,7 +37,6 @@ const handleWelcomeMessage = async ({mlsService, event, source}: HandlWelcomeMes
   // The groupId can then be sent back to the consumer
   return {
     event: {...event, data: groupIdStr},
-    mappedEvent: ConversationMapper.mapConversationEvent({...event, data: groupIdStr}, source),
   };
 };
 
@@ -47,7 +45,7 @@ const handleConversationEvent = async (params: EventHandlerParams): EventHandler
   if (isWelcomeMessage(event)) {
     return handleWelcomeMessage({...params, event});
   }
-  return Promise.resolve(undefined);
+  return undefined;
 };
 
 export {handleConversationEvent};
