@@ -583,7 +583,7 @@ export class ConversationService {
     }
 
     // We schedule a key material renewal
-    await this.mlsService.scheduleKeyMaterialRenewal(groupId);
+    this.mlsService.scheduleKeyMaterialRenewal(groupId);
 
     // We fetch the fresh version of the conversation created on backend with the newly added users
     const conversation = await this.getConversations(qualifiedId.id);

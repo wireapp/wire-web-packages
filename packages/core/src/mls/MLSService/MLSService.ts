@@ -67,11 +67,14 @@ export class MLSService {
   constructor(
     private readonly apiClient: APIClient,
     private readonly coreCryptoClientProvider: () => CoreCrypto | undefined,
-    config: Partial<MLSServiceConfig>,
+    {
+      keyingMaterialUpdateThreshold = defaultConfig.keyingMaterialUpdateThreshold,
+      nbKeyPackages = defaultConfig.nbKeyPackages,
+    }: Partial<MLSServiceConfig>,
   ) {
     this.config = {
-      ...defaultConfig,
-      ...config,
+      keyingMaterialUpdateThreshold,
+      nbKeyPackages,
     };
   }
 
@@ -286,7 +289,7 @@ export class MLSService {
    * Get all keying material last update dates and schedule tasks for renewal
    * Function must only be called once, after application start
    */
-  public async checkForKeyMaterialsUpdate() {
+  public checkForKeyMaterialsUpdate() {
     try {
       const keyMaterialUpdateDates = keyMaterialUpdatesStore.getAllUpdateDates();
       keyMaterialUpdateDates.forEach(({groupId}) => this.scheduleKeyMaterialRenewal(groupId));
@@ -299,7 +302,7 @@ export class MLSService {
    * Get date of last key packages count query and schedule a task to sync it with backend
    * Function must only be called once, after application start
    */
-  public async checkForKeyPackagesBackendSync() {
+  public checkForKeyPackagesBackendSync() {
     registerRecurringTask({
       every: TimeUtil.TimeInMillis.DAY,
       key: 'try-key-packages-backend-sync',
