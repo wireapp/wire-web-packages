@@ -68,9 +68,10 @@ describe('RecurringTaskScheduler', () => {
 
   it('cancel a task before it is run', () => {
     const task = jest.fn();
+    const testKey = 'test-task-1';
 
     registerRecurringTask({
-      key: 'test-task-1',
+      key: testKey,
       every: TimeUtil.TimeInMillis.MINUTE,
       task,
     });
@@ -78,7 +79,7 @@ describe('RecurringTaskScheduler', () => {
     jest.advanceTimersByTime(TimeUtil.TimeInMillis.MINUTE - 1);
     expect(task).not.toHaveBeenCalled();
 
-    cancelRecurringTask('test-key-1');
+    cancelRecurringTask(testKey);
     jest.advanceTimersByTime(TimeUtil.TimeInMillis.MINUTE);
     expect(task).not.toHaveBeenCalled();
   });
