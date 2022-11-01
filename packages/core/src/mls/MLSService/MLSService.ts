@@ -55,8 +55,8 @@ interface MLSServiceConfig {
   nbKeyPackages: number;
 }
 const defaultConfig: MLSServiceConfig = {
-  nbKeyPackages: 100,
   keyingMaterialUpdateThreshold: 1000 * 60 * 60 * 24 * 30, //30 days
+  nbKeyPackages: 100,
 };
 
 export class MLSService {
