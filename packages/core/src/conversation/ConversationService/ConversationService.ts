@@ -628,6 +628,8 @@ export class ConversationService {
     );
     const conversation = await this.getConversations(conversationId.id);
 
+    //We store the info when user was added (and key material was created), so we will know when to renew it
+    this.mlsService.resetKeyMaterialRenewal(groupId);
     return {
       events: response?.events || [],
       conversation,
