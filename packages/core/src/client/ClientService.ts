@@ -100,6 +100,8 @@ export class ClientService {
   public async register(
     loginData: LoginData,
     clientInfo: ClientInfo,
+    preKeys: PreKey[],
+    lastResortPreKey: PreKey,
     entropyData?: Uint8Array,
   ): Promise<RegisteredClient> {
     if (!this.apiClient.context) {
@@ -110,22 +112,16 @@ export class ClientService {
       throw new Error(`Can't register client of type "${ClientType.NONE}"`);
     }
 
-    const serializedPreKeys: PreKey[] = await this.cryptographyService.createCryptobox(entropyData);
-
-    if (!this.cryptographyService.cryptobox.lastResortPreKey) {
-      throw new Error('Cryptobox got initialized without a last resort PreKey.');
-    }
-
     const newClient: CreateClientPayload = {
       class: clientInfo.classification,
       cookie: clientInfo.cookieLabel,
       label: clientInfo.label,
-      lastkey: this.cryptographyService.cryptobox.serialize_prekey(this.cryptographyService.cryptobox.lastResortPreKey),
+      lastkey: lastResortPreKey,
       location: clientInfo.location,
       model: clientInfo.model,
       password: loginData.password ? String(loginData.password) : undefined,
       verification_code: loginData.verificationCode,
-      prekeys: serializedPreKeys,
+      prekeys: preKeys,
       type: loginData.clientType,
     };
 
