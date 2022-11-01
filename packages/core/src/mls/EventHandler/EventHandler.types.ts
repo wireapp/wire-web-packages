@@ -23,7 +23,7 @@ import {PayloadBundleSource} from '../../conversation';
 import {MLSService} from '../MLSService/MLSService';
 
 export {BackendEvent, PayloadBundleSource};
-export type EventHandlerResult = Promise<HandledEventPayload | undefined>;
+export type EventHandlerResult = Promise<HandledEventPayload | void>;
 export type EventHandlerParams = {
   mlsService: MLSService;
   event: BackendEvent;

@@ -26,7 +26,6 @@ const handleBackendEvent = async (params: EventHandlerParams): EventHandlerResul
   if (event.type in CONVERSATION_EVENT) {
     return handleConversationEvent(params);
   }
-  return undefined;
 };
 
 export {handleBackendEvent};

@@ -45,7 +45,6 @@ const handleConversationEvent = async (params: EventHandlerParams): EventHandler
   if (isWelcomeMessage(event)) {
     return handleWelcomeMessage({...params, event});
   }
-  return undefined;
 };
 
 export {handleConversationEvent};
