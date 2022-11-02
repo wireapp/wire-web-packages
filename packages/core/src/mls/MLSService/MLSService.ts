@@ -39,7 +39,7 @@ import logdown from 'logdown';
 import {QualifiedUsers} from '../../conversation';
 import {sendMessage} from '../../conversation/message/messageSender';
 import {parseFullQualifiedClientId} from '../../util/fullyQualifiedClientIdUtils';
-import {MLSCallbacks} from '../types';
+import {CommitPendingProposalsParams, HandlePendingProposalsParams, MLSCallbacks} from '../types';
 import {toProtobufCommitBundle} from './commitBundleUtil';
 
 import {QualifiedId} from '@wireapp/api-client/lib/user';
@@ -106,7 +106,11 @@ export class MLSService {
       this.logger.log(`Commit have been accepted for group "${groupIdStr}". New epoch is "${newEpoch}"`);
       return response;
     } catch (error) {
-      await this.coreCryptoClient.clearPendingCommit(groupId);
+      if (isExternalCommit) {
+        await this.coreCryptoClient.clearPendingGroupFromExternalCommit(groupId);
+      } else {
+        await this.coreCryptoClient.clearPendingCommit(groupId);
+      }
     }
     return null;
   }
