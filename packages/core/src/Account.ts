@@ -256,11 +256,12 @@ export class Account<T = any> extends EventEmitter {
     await this.initServices(context);
 
     if (initClient && this.cryptoProtocolConfig?.proteus) {
+      // TODO: is this init correct? this seems like we will init the client 
       this.proteusClient = await this.createCryptographicClient(
         '',
         this.apiClient.context!,
         this.cryptoProtocolConfig,
-        {mls: true},
+        'mls',
         entropyData,
       );
     } else {
@@ -469,10 +470,10 @@ export class Account<T = any> extends EventEmitter {
     }
     if (this.cryptoProtocolConfig?.mls && this.backendFeatures.supportsMLS) {
       this.mlsClient = await this.createCryptographicClient(
-        loadedClient,
+        loadedClient.id,
         this.apiClient.context!,
         this.cryptoProtocolConfig,
-        {mls: true},
+        'mls',
         entropyData,
       );
     }
@@ -484,7 +485,7 @@ export class Account<T = any> extends EventEmitter {
     clientId: string,
     context: Context,
     cryptoProtocolConfig: CryptoProtocolConfig,
-    protocol: {proteus?: boolean; mls?: boolean},
+    protocol: 'proteus' | 'mls',
     entropyData?: Uint8Array,
   ) {
     let cryptoClient: CoreCrypto;
@@ -508,7 +509,7 @@ export class Account<T = any> extends EventEmitter {
     }
 
     const {userId, domain} = this.apiClient.context!;
-    if (protocol.proteus) {
+    if (protocol === 'proteus') {
       cryptoClient = await CoreCrypto.init({
         databaseName: `corecrypto-${this.generateDbName(context)}-proteus`,
         key: Encoder.toBase64(key).asString,
@@ -518,8 +519,7 @@ export class Account<T = any> extends EventEmitter {
       });
       cryptoClient.proteusInit();
       return cryptoClient;
-    }
-    if (protocol.mls) {
+    } else {
       cryptoClient = await CoreCrypto.init({
         databaseName: `corecrypto-${this.generateDbName(context)}`,
         key: Encoder.toBase64(key).asString,
@@ -552,7 +552,7 @@ export class Account<T = any> extends EventEmitter {
         '',
         this.apiClient.context!,
         this.cryptoProtocolConfig,
-        {proteus: true},
+        'proteus',
         entropyData,
       );
       preKeys = [{id: 0000000, key: Encoder.toBase64(await this.proteusClient?.proteusNewPrekey()!).asString}]; // FIXME coreCrypto should generate the prekey ids (else we would have to store the ids locally and they are supposed to be the one with a database)
