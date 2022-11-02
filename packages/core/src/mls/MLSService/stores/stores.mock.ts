@@ -17,16 +17,27 @@
  *
  */
 
-import {HandledEventPayload} from '../../notification';
-import {BackendEvent} from '@wireapp/api-client/lib/event';
-import {PayloadBundleSource} from '../../conversation';
-import {MLSService} from '../MLSService/MLSService';
+function storageMock() {
+  const storage: any = {};
 
-export {BackendEvent, PayloadBundleSource};
-export type EventHandlerResult = Promise<HandledEventPayload | void>;
-export type EventHandlerParams = {
-  mlsService: MLSService;
-  event: BackendEvent;
-  source: PayloadBundleSource;
-  dryRun?: boolean;
-};
+  return {
+    setItem: function (key: any, value: any) {
+      storage[key] = value || '';
+    },
+    getItem: function (key: any) {
+      return key in storage ? storage[key] : null;
+    },
+    removeItem: function (key: any) {
+      delete storage[key];
+    },
+    get length() {
+      return Object.keys(storage).length;
+    },
+    key: function (i: any) {
+      const keys = Object.keys(storage);
+      return keys[i] || null;
+    },
+  };
+}
+
+export {storageMock};
