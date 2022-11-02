@@ -18,7 +18,7 @@
  */
 
 import {PendingProposalsParams, pendingProposalsStore} from './pendingProposalsStore';
-import {storageMock} from '../Stores.mock';
+import {storageMock} from '../stores.mock';
 
 const mockEntries: PendingProposalsParams[] = [
   {groupId: 'group0', firingDate: 1},
