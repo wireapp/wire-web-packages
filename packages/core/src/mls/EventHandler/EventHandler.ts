@@ -23,7 +23,7 @@ import {handleConversationEvent} from './ConversationEvent';
 
 const handleBackendEvent = async (params: EventHandlerParams): EventHandlerResult => {
   const event = params.event;
-  if (event.type in CONVERSATION_EVENT) {
+  if (Object.values<string>(CONVERSATION_EVENT).includes(event.type)) {
     return handleConversationEvent(params);
   }
 };
