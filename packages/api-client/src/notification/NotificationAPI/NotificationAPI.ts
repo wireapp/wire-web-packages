@@ -19,7 +19,7 @@
 
 import axios, {AxiosRequestConfig} from 'axios';
 
-import {HttpClient} from '../../http';
+import {BackendError, BackendErrorLabel, HttpClient} from '../../http';
 import {Notification, NotificationList} from '..';
 
 export const NOTIFICATION_SIZE_MAXIMUM = 10000;
@@ -108,6 +108,10 @@ export class NotificationAPI {
             hasMissedNotifications = true;
             payload = {...defaultPayload, ...error.response?.data};
           }
+        } else if (error instanceof BackendError && error.label === BackendErrorLabel.NOT_FOUND) {
+          //notification was not found in the database,
+          //we need to load all the notifications from the beginning (without 'since' param)
+          return getNotificationChunks(currentClientId);
         } else {
           throw error;
         }
