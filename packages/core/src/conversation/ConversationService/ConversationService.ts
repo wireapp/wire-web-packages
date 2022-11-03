@@ -655,8 +655,7 @@ export class ConversationService {
   }
 
   public async joinByExternalCommit(conversationId: QualifiedId) {
-    const groupInfo = await this.apiClient.api.conversation.getGroupInfo(conversationId);
-    return this.mlsService.joinByExternalCommit(groupInfo);
+    return this.mlsService.joinByExternalCommit(() => this.apiClient.api.conversation.getGroupInfo(conversationId));
   }
 
   /**
