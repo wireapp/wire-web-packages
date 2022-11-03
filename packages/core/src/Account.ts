@@ -161,6 +161,7 @@ export class Account<T = any> extends EventEmitter {
   private readonly apiClient: APIClient;
   private readonly logger: logdown.Logger;
   private readonly createStore: CreateStoreFn;
+  private cryptoClient?: CoreCrypto;
   private proteusClient?: CoreCrypto;
   private storeEngine?: CRUDEngine;
   private readonly nbPrekeys: number;
@@ -255,13 +256,14 @@ export class Account<T = any> extends EventEmitter {
     const context = await this.apiClient.init(clientType, cookie);
     await this.initServices(context);
 
+    this.cryptoClient = await CoreCrypto.init();
     if (initClient && this.cryptoProtocolConfig?.proteus) {
-      // TODO: is this init correct? this seems like we will init the client 
+      // TODO: is this init correct? this seems like we will init the client
       this.proteusClient = await this.createCryptographicClient(
-        '',
+        context.clientId ?? '',
         this.apiClient.context!,
         this.cryptoProtocolConfig,
-        'mls',
+        {proteus: true},
         entropyData,
       );
     } else {
@@ -473,7 +475,7 @@ export class Account<T = any> extends EventEmitter {
         loadedClient.id,
         this.apiClient.context!,
         this.cryptoProtocolConfig,
-        'mls',
+        {mls: true},
         entropyData,
       );
     }
@@ -485,10 +487,9 @@ export class Account<T = any> extends EventEmitter {
     clientId: string,
     context: Context,
     cryptoProtocolConfig: CryptoProtocolConfig,
-    protocol: 'proteus' | 'mls',
+    protocol: {proteus?: boolean; mls?: boolean},
     entropyData?: Uint8Array,
   ) {
-    let cryptoClient: CoreCrypto;
     if (!this.service) {
       throw new Error('Services are not set.');
     }
@@ -509,18 +510,17 @@ export class Account<T = any> extends EventEmitter {
     }
 
     const {userId, domain} = this.apiClient.context!;
-    if (protocol === 'proteus') {
-      cryptoClient = await CoreCrypto.init({
+    if (protocol.proteus) {
+      await this.cryptoClient.proteusInit({
         databaseName: `corecrypto-${this.generateDbName(context)}-proteus`,
         key: Encoder.toBase64(key).asString,
         clientId: `PROTEUS_${context.clientId}`,
         wasmFilePath: this.cryptoProtocolConfig!.coreCrypoWasmFilePath,
         entropySeed: entropyData,
       });
-      cryptoClient.proteusInit();
-      return cryptoClient;
-    } else {
-      cryptoClient = await CoreCrypto.init({
+    }
+    if (protocol.mls) {
+      await this.cryptoClient.mlsInit({
         databaseName: `corecrypto-${this.generateDbName(context)}`,
         key: Encoder.toBase64(key).asString,
         clientId: `${userId}:${clientId}@${domain}`,
@@ -529,10 +529,12 @@ export class Account<T = any> extends EventEmitter {
       });
       if (isNewMLSDevice) {
         // If the device is new, we need to upload keypackages and public key to the backend
-        await this.service.mls.uploadMLSPublicKeys(await cryptoClient.clientPublicKey(), clientId);
-        await this.service.mls.uploadMLSKeyPackages(await cryptoClient.clientKeypackages(this.nbPrekeys), clientId);
+        await this.service.mls.uploadMLSPublicKeys(await this.cryptoClient.clientPublicKey(), clientId);
+        await this.service.mls.uploadMLSKeyPackages(
+          await this.cryptoClient.clientKeypackages(this.nbPrekeys),
+          clientId,
+        );
       }
-      return cryptoClient;
     }
   }
 
@@ -552,7 +554,7 @@ export class Account<T = any> extends EventEmitter {
         '',
         this.apiClient.context!,
         this.cryptoProtocolConfig,
-        'proteus',
+        {proteus: true},
         entropyData,
       );
       preKeys = [{id: 0000000, key: Encoder.toBase64(await this.proteusClient?.proteusNewPrekey()!).asString}]; // FIXME coreCrypto should generate the prekey ids (else we would have to store the ids locally and they are supposed to be the one with a database)
