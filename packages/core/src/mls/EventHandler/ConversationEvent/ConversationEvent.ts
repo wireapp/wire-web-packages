@@ -29,8 +29,8 @@ const handleConversationEvent = async (params: EventHandlerParams): EventHandler
     return handleWelcomeMessage({...params, event});
   }
   if (isMLSMessageAddEvent(event)) {
-    return handleMLSMessageAdd({...params, event});
+    return handleMLSMessageAdd({...params, event, logger});
   }
 };
 
-export {handleConversationEvent, logger};
+export {handleConversationEvent};

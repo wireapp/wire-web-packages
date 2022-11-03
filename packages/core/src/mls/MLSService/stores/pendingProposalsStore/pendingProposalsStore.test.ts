@@ -47,14 +47,4 @@ describe('pendingProposalsStore', () => {
 
     expect(pendingProposalsStore.getAllItems()).not.toContainEqual(mockEntries[0]);
   });
-
-  it('receives a specific items from dates store', () => {
-    for (const item in mockEntries) {
-      pendingProposalsStore.storeItem(mockEntries[item]);
-    }
-
-    const item = mockEntries[1];
-    expect(item).toBeDefined();
-    expect(pendingProposalsStore.getItem({groupId: item.groupId})).toEqual(item);
-  });
 });

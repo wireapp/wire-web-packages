@@ -17,7 +17,8 @@
  *
  */
 
-import {CONVERSATION_EVENT, BackendEvent} from '@wireapp/api-client/lib/event';
+import {CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
+import {BackendEvent} from '../../../EventHandler.types';
 import {isMLSMessageAddEvent} from './messageAdd';
 
 describe('MLS messageAdd eventHandler', () => {
@@ -36,6 +37,4 @@ describe('MLS messageAdd eventHandler', () => {
       expect(isMLSMessageAddEvent(event)).toBe(false);
     });
   });
-
-  describe('handleMLSMessageAdd', () => {});
 });

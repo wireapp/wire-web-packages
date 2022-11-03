@@ -362,7 +362,6 @@ export class MLSService {
   }
 
   /**
-   * ## MLS only ##
    * If there is a matching conversationId => groupId pair in the database,
    * we can find the groupId and return it as a string
    *
@@ -379,7 +378,6 @@ export class MLSService {
   }
 
   /**
-   * ## MLS only ##
    * If there are pending proposals, we need to either process them,
    * or save them in the database for later processing
    *
@@ -408,7 +406,6 @@ export class MLSService {
   }
 
   /**
-   * ## MLS only ##
    * Commit all pending proposals for a given groupId
    *
    * @param groupId groupId of the conversation
@@ -428,7 +425,6 @@ export class MLSService {
   }
 
   /**
-   * ## MLS only ##
    * Get all pending proposals from the database and schedule them
    * Function must only be called once, after application start
    *

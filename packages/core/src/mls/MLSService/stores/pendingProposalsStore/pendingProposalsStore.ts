@@ -29,7 +29,7 @@ interface PendingProposalsStore {
 
 const storageKey = 'pendingProposals';
 
-const getUpdateDatesMap = (): PendingProposalsStore => {
+const getAllItemsMap = (): PendingProposalsStore => {
   const storedState = localStorage.getItem(storageKey);
   if (!storedState) {
     return {};
@@ -38,23 +38,18 @@ const getUpdateDatesMap = (): PendingProposalsStore => {
 };
 
 const getAllItems = (): PendingProposalsParams[] => {
-  const storedStateMap = getUpdateDatesMap();
+  const storedStateMap = getAllItemsMap();
   return Object.values(storedStateMap);
 };
 
-const getItem = ({groupId}: CommonMLS): PendingProposalsParams | undefined => {
-  const storedState = getUpdateDatesMap();
-  return storedState[groupId];
-};
-
 const storeItem = ({groupId, firingDate}: PendingProposalsParams) => {
-  const storedState = getUpdateDatesMap();
+  const storedState = getAllItemsMap();
   const newStoredState = {...storedState, [groupId]: {groupId, firingDate}};
   localStorage.setItem(storageKey, JSON.stringify(newStoredState));
 };
 
 const deleteItem = ({groupId}: CommonMLS) => {
-  const storedState = getUpdateDatesMap();
+  const storedState = getAllItemsMap();
   if (storedState[groupId]) {
     delete storedState[groupId];
   }
@@ -62,7 +57,6 @@ const deleteItem = ({groupId}: CommonMLS) => {
 };
 
 export const pendingProposalsStore = {
-  getItem,
   getAllItems,
   storeItem,
   deleteItem,
