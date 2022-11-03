@@ -111,7 +111,10 @@ export class NotificationAPI {
         } else if (error instanceof BackendError && error.label === BackendErrorLabel.NOT_FOUND) {
           //notification was not found in the database,
           //we need to load all the notifications from the beginning (without 'since' param)
-          return getNotificationChunks(currentClientId);
+          const payload = await getNotificationChunks(currentClientId);
+
+          //we have to manually add missedNotification value since it won't be included when called without 'since' param
+          return {...payload, missedNotification: currentNotificationId};
         } else {
           throw error;
         }
