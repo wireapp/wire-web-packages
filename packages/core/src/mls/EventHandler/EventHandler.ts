@@ -18,14 +18,8 @@
  */
 
 import {EventHandlerResult, EventHandlerParams} from './EventHandler.types';
-import {CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
 import {handleConversationEvent} from './ConversationEvent';
 
-const handleBackendEvent = async (params: EventHandlerParams): EventHandlerResult => {
-  const event = params.event;
-  if (Object.values<string>(CONVERSATION_EVENT).includes(event.type)) {
-    return handleConversationEvent(params);
-  }
-};
+const handleBackendEvent = async (params: EventHandlerParams): EventHandlerResult => handleConversationEvent(params);
 
 export {handleBackendEvent};
