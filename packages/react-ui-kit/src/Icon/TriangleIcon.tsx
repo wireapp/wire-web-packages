@@ -17,8 +17,6 @@
  *
  */
 
-/** @jsx jsx */
-
 import {Rotation} from './ArrowIcon';
 import {SVGIcon, SVGIconProps} from './SVGIcon';
 

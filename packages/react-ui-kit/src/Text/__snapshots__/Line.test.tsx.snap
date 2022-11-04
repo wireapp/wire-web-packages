@@ -1,24 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`"Line" renders (dark theme) 1`] = `
-.emotion-0 {
-  background: #000;
-  -webkit-transition: background 0.15s;
-  transition: background 0.15s;
-}
-
-.emotion-1 {
-  border: none;
-  border-bottom: 1px solid rgb(213, 214, 214);
-  margin-bottom: 16px;
-  margin-top: 16px;
-}
-
 <div
-  className="emotion-0"
+  css={[Function]}
 >
   <hr
-    className="emotion-1"
+    css={
+      {
+        "border": "none",
+        "borderBottom": "1px solid rgb(213, 214, 214)",
+        "marginBottom": "16px",
+        "marginTop": "16px",
+      }
+    }
   >
     Line
   </hr>
@@ -26,24 +20,18 @@ exports[`"Line" renders (dark theme) 1`] = `
 `;
 
 exports[`"Line" renders 1`] = `
-.emotion-0 {
-  background: #edeff0;
-  -webkit-transition: background 0.15s;
-  transition: background 0.15s;
-}
-
-.emotion-1 {
-  border: none;
-  border-bottom: 1px solid rgb(213, 214, 214);
-  margin-bottom: 16px;
-  margin-top: 16px;
-}
-
 <div
-  className="emotion-0"
+  css={[Function]}
 >
   <hr
-    className="emotion-1"
+    css={
+      {
+        "border": "none",
+        "borderBottom": "1px solid rgb(213, 214, 214)",
+        "marginBottom": "16px",
+        "marginTop": "16px",
+      }
+    }
   >
     Line
   </hr>
@@ -51,25 +39,19 @@ exports[`"Line" renders 1`] = `
 `;
 
 exports[`"Line" renders with color 1`] = `
-.emotion-0 {
-  background: #edeff0;
-  -webkit-transition: background 0.15s;
-  transition: background 0.15s;
-}
-
-.emotion-1 {
-  border: none;
-  border-bottom: 1px solid #e02020;
-  margin-bottom: 16px;
-  margin-top: 16px;
-}
-
 <div
-  className="emotion-0"
+  css={[Function]}
 >
   <hr
-    className="emotion-1"
     color="#e02020"
+    css={
+      {
+        "border": "none",
+        "borderBottom": "1px solid #e02020",
+        "marginBottom": "16px",
+        "marginTop": "16px",
+      }
+    }
   >
     Line
   </hr>

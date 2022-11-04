@@ -17,8 +17,6 @@
  *
  */
 
-/** @jsx jsx */
-/* @jsxFrag React.Fragment */
 import {ReactFragment, useEffect, useMemo, useState} from 'react';
 import * as React from 'react';
 

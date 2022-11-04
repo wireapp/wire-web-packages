@@ -33,11 +33,14 @@ module.exports = {
             decorators: false,
             dynamicImport: false,
           },
-
+          transform: {
+            react: {
+              runtime: 'automatic',
+            },
+          },
         },
       },
     ],
   },
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   snapshotSerializers: ['@emotion/jest/serializer'],
 };

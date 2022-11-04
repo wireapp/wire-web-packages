@@ -17,8 +17,8 @@
  *
  */
 
-/** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/react';
+/** @jsxImportSource @emotion/react */
+import {CSSObject} from '@emotion/react';
 
 import {COLOR_V2} from '../Identity';
 import {FlexBox, FlexBoxProps, flexBoxStyle, filterFlexBoxProps, Theme} from '../Layout';

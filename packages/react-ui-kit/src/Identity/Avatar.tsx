@@ -17,10 +17,10 @@
  *
  */
 
-/** @jsx jsx */
+/** @jsxImportSource @emotion/react */
 import {useEffect, useState} from 'react';
 
-import {CSSObject, jsx} from '@emotion/react';
+import {CSSObject} from '@emotion/react';
 
 import {COLOR} from './colors';
 import {DURATION, EASE} from './motions';

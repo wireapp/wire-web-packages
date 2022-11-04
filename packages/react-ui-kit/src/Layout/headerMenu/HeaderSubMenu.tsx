@@ -17,10 +17,10 @@
  *
  */
 
-/** @jsx jsx */
+/** @jsxImportSource @emotion/react */
 import * as React from 'react';
 
-import {CSSObject, jsx} from '@emotion/react';
+import {CSSObject} from '@emotion/react';
 
 import {MENU_LINK_CLASSNAME} from './MenuLink';
 import {MenuSubLink} from './MenuSubLink';

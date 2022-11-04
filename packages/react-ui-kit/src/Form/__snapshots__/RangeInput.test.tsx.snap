@@ -1,25 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`"RangeInput" matches snapshot 1`] = `
-.emotion-0 {
-  background: #edeff0;
-  -webkit-transition: background 0.15s;
-  transition: background 0.15s;
-}
-
-.emotion-3 {
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 16px;
-  color: #54585f;
-}
-
-.emotion-4 {
+.emotion-1 {
   position: relative;
   margin-top: 19px;
 }
 
-.emotion-5 {
+.emotion-2 {
   pointer-events: none;
   bottom: 100%;
   font-size: 16px;
@@ -28,7 +15,7 @@ exports[`"RangeInput" matches snapshot 1`] = `
   left: 4px;
 }
 
-.emotion-6 {
+.emotion-3 {
   pointer-events: none;
   bottom: 100%;
   font-size: 16px;
@@ -37,7 +24,7 @@ exports[`"RangeInput" matches snapshot 1`] = `
   right: 4px;
 }
 
-.emotion-7 {
+.emotion-4 {
   display: block;
   -webkit-appearance: none;
   width: 100%;
@@ -50,7 +37,7 @@ exports[`"RangeInput" matches snapshot 1`] = `
   background-repeat: no-repeat;
 }
 
-.emotion-7::-webkit-slider-thumb {
+.emotion-4::-webkit-slider-thumb {
   -webkit-appearance: none;
   height: 18px;
   width: 18px;
@@ -61,7 +48,7 @@ exports[`"RangeInput" matches snapshot 1`] = `
   box-shadow: none;
 }
 
-.emotion-7::-moz-range-thumb {
+.emotion-4::-moz-range-thumb {
   -webkit-appearance: none;
   height: 18px;
   width: 18px;
@@ -72,7 +59,7 @@ exports[`"RangeInput" matches snapshot 1`] = `
   box-shadow: none;
 }
 
-.emotion-7::-ms-thumb {
+.emotion-4::-ms-thumb {
   -webkit-appearance: none;
   height: 18px;
   width: 18px;
@@ -83,21 +70,21 @@ exports[`"RangeInput" matches snapshot 1`] = `
   box-shadow: none;
 }
 
-.emotion-7::-webkit-slider-runnable-track {
+.emotion-4::-webkit-slider-runnable-track {
   -webkit-appearance: none;
   box-shadow: none;
   border: none;
   background: transparent;
 }
 
-.emotion-7::-moz-range-track {
+.emotion-4::-moz-range-track {
   -webkit-appearance: none;
   box-shadow: none;
   border: none;
   background: transparent;
 }
 
-.emotion-7::-ms-track {
+.emotion-4::-ms-track {
   -webkit-appearance: none;
   box-shadow: none;
   border: none;
@@ -105,35 +92,35 @@ exports[`"RangeInput" matches snapshot 1`] = `
 }
 
 <div
-  className="emotion-0"
+  css={[Function]}
 >
   <div
-    className="emotion-0"
+    css={[Function]}
   >
     <div
-      className="emotion-2"
+      className="emotion-0"
     >
       <label
-        className="emotion-3"
+        css={[Function]}
         htmlFor="zoom-input"
       >
         Zoom
       </label>
       <div
-        className="emotion-4"
+        className="emotion-1"
       >
         <span
-          className="emotion-5"
+          className="emotion-2"
         >
           -
         </span>
         <span
-          className="emotion-6"
+          className="emotion-3"
         >
           +
         </span>
         <input
-          className="emotion-7"
+          className="emotion-4"
           id="zoom-input"
           max={3}
           min={1}

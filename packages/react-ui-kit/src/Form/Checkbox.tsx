@@ -17,11 +17,9 @@
  *
  */
 
-/** @jsx jsx */
+/** @jsxImportSource @emotion/react */
 import {useId} from 'react';
 import * as React from 'react';
-
-import {jsx} from '@emotion/react';
 
 import {INPUT_CLASSNAME, InputProps} from './Input';
 

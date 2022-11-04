@@ -17,10 +17,10 @@
  *
  */
 
-/** @jsx jsx */
+/** @jsxImportSource @emotion/react */
 import * as React from 'react';
 
-import {CSSObject, jsx} from '@emotion/react';
+import {CSSObject} from '@emotion/react';
 
 import {Avatar, DEFAULT_AVATAR_SIZE} from './Avatar';
 import {COLOR} from './colors';

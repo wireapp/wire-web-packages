@@ -17,11 +17,11 @@
  *
  */
 
-/** @jsx jsx */
+/** @jsxImportSource @emotion/react */
 import {useEffect, useState} from 'react';
 import * as React from 'react';
 
-import {CSSObject, jsx} from '@emotion/react';
+import {CSSObject} from '@emotion/react';
 
 import {InputProps, inputStyle} from './Input';
 

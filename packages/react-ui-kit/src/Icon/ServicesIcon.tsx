@@ -17,8 +17,6 @@
  *
  */
 
-/** @jsx jsx */
-
 import {SVGIcon, SVGIconProps} from './SVGIcon';
 
 export const ServicesIcon = (props: SVGIconProps) => (

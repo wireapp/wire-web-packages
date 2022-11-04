@@ -17,10 +17,10 @@
  *
  */
 
-/** @jsx jsx */
+/** @jsxImportSource @emotion/react */
 import * as React from 'react';
 
-import {CSSObject, jsx} from '@emotion/react';
+import {CSSObject} from '@emotion/react';
 import type {Property} from 'csstype';
 
 import {filterProps} from '../util';

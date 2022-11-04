@@ -17,7 +17,6 @@
  *
  */
 
-/** @jsx jsx */
 import * as React from 'react';
 
 type FooterProps = React.HTMLProps<HTMLElement>;

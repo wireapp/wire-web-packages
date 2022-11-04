@@ -17,6 +17,7 @@
  *
  */
 
+/** @jsxImportSource @emotion/react */
 import {CSSObject} from '@emotion/react';
 
 export const noop = () => {};

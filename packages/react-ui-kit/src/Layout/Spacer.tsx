@@ -17,7 +17,6 @@
  *
  */
 
-/** @jsx jsx */
 import * as React from 'react';
 
 export interface SpacerProps<T = HTMLDivElement> extends React.HTMLProps<T> {

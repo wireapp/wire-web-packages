@@ -17,7 +17,6 @@
  *
  */
 
-/** @jsx jsx */
 import * as React from 'react';
 
 import {ThemeProvider as EmotionThemeProvider, Theme as ETheme} from '@emotion/react';

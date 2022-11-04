@@ -17,10 +17,10 @@
  *
  */
 
-/** @jsx jsx */
+/** @jsxImportSource @emotion/react */
 import {FC, forwardRef} from 'react';
 
-import {CSSObject, jsx} from '@emotion/react';
+import {CSSObject} from '@emotion/react';
 
 import {InputLabel} from './InputLabel';
 import {
@@ -40,6 +40,7 @@ export interface RangeInputProps<T = HTMLInputElement> extends TextProps<T> {
   wrapperCSS?: CSSObject;
 }
 
+// eslint-disable-next-line react/display-name
 export const RangeInput: FC<RangeInputProps> = forwardRef<HTMLInputElement, RangeInputProps<HTMLInputElement>>(
   (
     {
@@ -70,7 +71,10 @@ export const RangeInput: FC<RangeInputProps> = forwardRef<HTMLInputElement, Rang
           {maxValueLabel && <span css={getValueLabelStyles(ValueLabelPosition.RIGHT)}>{maxValueLabel}</span>}
           <input
             ref={ref}
-            css={(theme: Theme) => getImageCropZoomInputStyles(theme, backgroundSize)}
+            css={(theme: Theme) => {
+              console.info('hallo', theme, backgroundSize);
+              return getImageCropZoomInputStyles(theme, backgroundSize);
+            }}
             id={id}
             name={id}
             min={min}

@@ -17,10 +17,10 @@
  *
  */
 
-/** @jsx jsx */
+/** @jsxImportSource @emotion/react */
 import {ReactElement} from 'react';
 
-import {CSSObject, useTheme, jsx} from '@emotion/react';
+import {CSSObject, useTheme} from '@emotion/react';
 import ReactSelect, {StylesConfig} from 'react-select';
 import type {StateManagerProps} from 'react-select/dist/declarations/src/stateManager';
 

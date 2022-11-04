@@ -17,7 +17,6 @@
  *
  */
 
-/** @jsx jsx */
 import {Global, CSSObject, css, withTheme} from '@emotion/react';
 import emotionNormalize from 'emotion-normalize';
 

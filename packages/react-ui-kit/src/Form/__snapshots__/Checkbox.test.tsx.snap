@@ -1,95 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`"Checkbox" renders (dark theme) 1`] = `
-.emotion-0 {
-  background: #000;
-  -webkit-transition: background 0.15s;
-  transition: background 0.15s;
-}
-
-.emotion-1 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -webkit-justify-content: flex-start;
-  justify-content: flex-start;
-  position: relative;
-  left: -0.3rem;
-}
-
-.emotion-1 .wireinput:focus-visible+label {
-  outline: 1px solid #0667c8;
-  outline-offset: 0.4rem;
-}
-
-.emotion-2 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  margin: 0 0 0 -16px;
-  width: 100%;
-  line-height: 1.4;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  opacity: 1;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.wireinput:checked+.emotion-2::before {
-  background: #0667c8;
-  border-color: #0667c8;
-}
-
-.wireinput:checked+.emotion-2>svg {
-  fill: #000;
-}
-
-.wireinput+.emotion-2>svg {
-  fill: none;
-  position: absolute;
-  top: 50%;
-  -webkit-transform: translateY(-50%);
-  -moz-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-  left: 0.25rem;
-}
-
-.wireinput:hover+.emotion-2::before {
-  border-color: #0667c8;
-}
-
-.wireinput+.emotion-2::before {
-  background: #edeff0;
-  border: 2px solid #9fa1a7;
-  border-radius: 3px;
-  box-sizing: border-box;
-  content: "";
-  display: inline-block;
-  width: 22px;
-  height: 22px;
-  line-height: 1.4;
-  margin: 0 8px 0 0px;
-  color: #fff;
-}
-
 <div
-  className="emotion-0"
+  css={[Function]}
 >
   <div
-    className="emotion-1"
+    css={[Function]}
   >
     <input
       className="wireinput"
@@ -106,7 +22,7 @@ exports[`"Checkbox" renders (dark theme) 1`] = `
       type="checkbox"
     />
     <label
-      className="emotion-2"
+      css={[Function]}
       htmlFor="1"
     >
       Checkbox
@@ -126,95 +42,11 @@ exports[`"Checkbox" renders (dark theme) 1`] = `
 `;
 
 exports[`"Checkbox" renders 1`] = `
-.emotion-0 {
-  background: #edeff0;
-  -webkit-transition: background 0.15s;
-  transition: background 0.15s;
-}
-
-.emotion-1 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -webkit-justify-content: flex-start;
-  justify-content: flex-start;
-  position: relative;
-  left: -0.3rem;
-}
-
-.emotion-1 .wireinput:focus-visible+label {
-  outline: 1px solid #0667c8;
-  outline-offset: 0.4rem;
-}
-
-.emotion-2 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  margin: 0 0 0 -16px;
-  width: 100%;
-  line-height: 1.4;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  opacity: 1;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.wireinput:checked+.emotion-2::before {
-  background: #0667c8;
-  border-color: #0667c8;
-}
-
-.wireinput:checked+.emotion-2>svg {
-  fill: #edeff0;
-}
-
-.wireinput+.emotion-2>svg {
-  fill: none;
-  position: absolute;
-  top: 50%;
-  -webkit-transform: translateY(-50%);
-  -moz-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-  left: 0.25rem;
-}
-
-.wireinput:hover+.emotion-2::before {
-  border-color: #0667c8;
-}
-
-.wireinput+.emotion-2::before {
-  background: #edeff0;
-  border: 2px solid #54585f;
-  border-radius: 3px;
-  box-sizing: border-box;
-  content: "";
-  display: inline-block;
-  width: 22px;
-  height: 22px;
-  line-height: 1.4;
-  margin: 0 8px 0 0px;
-  color: rgb(29, 30, 31);
-}
-
 <div
-  className="emotion-0"
+  css={[Function]}
 >
   <div
-    className="emotion-1"
+    css={[Function]}
   >
     <input
       className="wireinput"
@@ -231,7 +63,7 @@ exports[`"Checkbox" renders 1`] = `
       type="checkbox"
     />
     <label
-      className="emotion-2"
+      css={[Function]}
       htmlFor="1"
     >
       Check
@@ -251,95 +83,11 @@ exports[`"Checkbox" renders 1`] = `
 `;
 
 exports[`"Checkbox" renders as invalid 1`] = `
-.emotion-0 {
-  background: #edeff0;
-  -webkit-transition: background 0.15s;
-  transition: background 0.15s;
-}
-
-.emotion-1 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -webkit-justify-content: flex-start;
-  justify-content: flex-start;
-  position: relative;
-  left: -0.3rem;
-}
-
-.emotion-1 .wireinput:focus-visible+label {
-  outline: 1px solid #0667c8;
-  outline-offset: 0.4rem;
-}
-
-.emotion-2 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  margin: 0 0 0 -16px;
-  width: 100%;
-  line-height: 1.4;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  opacity: 1;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.wireinput:checked+.emotion-2::before {
-  background: #0667c8;
-  border-color: #0667c8;
-}
-
-.wireinput:checked+.emotion-2>svg {
-  fill: #edeff0;
-}
-
-.wireinput+.emotion-2>svg {
-  fill: none;
-  position: absolute;
-  top: 50%;
-  -webkit-transform: translateY(-50%);
-  -moz-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-  left: 0.25rem;
-}
-
-.wireinput:hover+.emotion-2::before {
-  border-color: #0667c8;
-}
-
-.wireinput+.emotion-2::before {
-  background: #edeff0;
-  border: 2px solid #c20013;
-  border-radius: 3px;
-  box-sizing: border-box;
-  content: "";
-  display: inline-block;
-  width: 22px;
-  height: 22px;
-  line-height: 1.4;
-  margin: 0 8px 0 0px;
-  color: rgb(29, 30, 31);
-}
-
 <div
-  className="emotion-0"
+  css={[Function]}
 >
   <div
-    className="emotion-1"
+    css={[Function]}
   >
     <input
       className="wireinput"
@@ -356,7 +104,7 @@ exports[`"Checkbox" renders as invalid 1`] = `
       type="checkbox"
     />
     <label
-      className="emotion-2"
+      css={[Function]}
       htmlFor="1"
     >
       Check
@@ -376,91 +124,11 @@ exports[`"Checkbox" renders as invalid 1`] = `
 `;
 
 exports[`"Checkbox" renders disabled 1`] = `
-.emotion-0 {
-  background: #edeff0;
-  -webkit-transition: background 0.15s;
-  transition: background 0.15s;
-}
-
-.emotion-1 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -webkit-justify-content: flex-start;
-  justify-content: flex-start;
-  position: relative;
-  left: -0.3rem;
-}
-
-.emotion-1 .wireinput:focus-visible+label {
-  outline: 1px solid #0667c8;
-  outline-offset: 0.4rem;
-}
-
-.emotion-2 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  margin: 0 0 0 -16px;
-  width: 100%;
-  line-height: 1.4;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  opacity: 0.56;
-  cursor: not-allowed;
-  border-radius: 4px;
-}
-
-.wireinput:checked+.emotion-2::before {
-  background: #edeff0;
-  border-color: #0667c8;
-}
-
-.wireinput:checked+.emotion-2>svg {
-  fill: #edeff0;
-}
-
-.wireinput+.emotion-2>svg {
-  fill: none;
-  position: absolute;
-  top: 50%;
-  -webkit-transform: translateY(-50%);
-  -moz-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-  left: 0.25rem;
-}
-
-.wireinput+.emotion-2::before {
-  background: #edeff0;
-  border: 2px solid #9fa1a7;
-  border-radius: 3px;
-  box-sizing: border-box;
-  content: "";
-  display: inline-block;
-  width: 22px;
-  height: 22px;
-  line-height: 1.4;
-  margin: 0 8px 0 0px;
-  color: rgb(29, 30, 31);
-}
-
 <div
-  className="emotion-0"
+  css={[Function]}
 >
   <div
-    className="emotion-1"
+    css={[Function]}
   >
     <input
       className="wireinput"
@@ -478,7 +146,7 @@ exports[`"Checkbox" renders disabled 1`] = `
       type="checkbox"
     />
     <label
-      className="emotion-2"
+      css={[Function]}
       htmlFor="1"
     >
       Check
@@ -498,32 +166,11 @@ exports[`"Checkbox" renders disabled 1`] = `
 `;
 
 exports[`"CheckboxLabel" renders 1`] = `
-.emotion-0 {
-  background: #edeff0;
-  -webkit-transition: background 0.15s;
-  transition: background 0.15s;
-}
-
-.emotion-1 {
-  color: rgb(29, 30, 31);
-  display: inline;
-  font-size: 16px;
-  font-weight: 300;
-  text-align: left;
-  text-transform: none;
-  color: rgb(29, 30, 31);
-  display: inline;
-  font-size: 16px;
-  font-weight: 300;
-  text-align: left;
-  text-transform: none;
-}
-
 <div
-  className="emotion-0"
+  css={[Function]}
 >
   <span
-    className="emotion-1"
+    css={[Function]}
   >
     Label
   </span>
