@@ -92,3 +92,4 @@ export const TextArea: React.FC<TextAreaProps<HTMLTextAreaElement>> = React.forw
     {...filterTextAreaProps(props)}
   />
 ));
+TextArea.displayName = 'TextArea';

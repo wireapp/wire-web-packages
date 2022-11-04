@@ -1,11 +1,42 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`"TextLink" renders (dark theme) 1`] = `
+.emotion-0 {
+  background: #000;
+  -webkit-transition: background 0.15s;
+  transition: background 0.15s;
+}
+
+.emotion-1 {
+  color: #0667c8;
+  display: inline;
+  font-size: 16px;
+  font-weight: 300;
+  text-align: left;
+  text-transform: none;
+  cursor: pointer;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  -webkit-transition: all 0.24s;
+  transition: all 0.24s;
+}
+
+.emotion-1:visited,
+.emotion-1:link,
+.emotion-1:active {
+  color: #0667c8;
+}
+
+.emotion-1:hover {
+  -webkit-filter: brightness(70%);
+  filter: brightness(70%);
+}
+
 <div
-  css={[Function]}
+  className="emotion-0"
 >
   <a
-    css={[Function]}
+    className="emotion-1"
     rel="noopener noreferrer"
   >
     TextLink
@@ -14,11 +45,42 @@ exports[`"TextLink" renders (dark theme) 1`] = `
 `;
 
 exports[`"TextLink" renders 1`] = `
+.emotion-0 {
+  background: #edeff0;
+  -webkit-transition: background 0.15s;
+  transition: background 0.15s;
+}
+
+.emotion-1 {
+  color: #0667c8;
+  display: inline;
+  font-size: 16px;
+  font-weight: 300;
+  text-align: left;
+  text-transform: none;
+  cursor: pointer;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  -webkit-transition: all 0.24s;
+  transition: all 0.24s;
+}
+
+.emotion-1:visited,
+.emotion-1:link,
+.emotion-1:active {
+  color: #0667c8;
+}
+
+.emotion-1:hover {
+  -webkit-filter: brightness(70%);
+  filter: brightness(70%);
+}
+
 <div
-  css={[Function]}
+  className="emotion-0"
 >
   <a
-    css={[Function]}
+    className="emotion-1"
     rel="noopener noreferrer"
   >
     TextLink

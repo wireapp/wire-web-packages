@@ -72,21 +72,31 @@ const filterContainerProps = (props: ContainerProps) => filterProps(props, ['cen
 export const Container: React.FC<ContainerProps> = React.forwardRef<HTMLDivElement, ContainerProps>((props, ref) => (
   <div ref={ref} css={containerStyle(props)} {...filterContainerProps(props)} />
 ));
+Container.displayName = 'Container';
 
 export type LevelContainerProps = Omit<ContainerProps, 'level'>;
 
 export const ContainerLG = React.forwardRef<HTMLDivElement, LevelContainerProps>((props, ref) => (
   <Container ref={ref} level={'lg'} {...props} />
 ));
+ContainerLG.displayName = 'ContainerLG';
+
 export const ContainerMD = React.forwardRef<HTMLDivElement, LevelContainerProps>((props, ref) => (
   <Container ref={ref} level={'md'} {...props} />
 ));
+ContainerMD.displayName = 'ContainerMD';
+
 export const ContainerSM = React.forwardRef<HTMLDivElement, LevelContainerProps>((props, ref) => (
   <Container ref={ref} level={'sm'} {...props} />
 ));
+ContainerSM.displayName = 'ContainerSM';
+
 export const ContainerXS = React.forwardRef<HTMLDivElement, LevelContainerProps>((props, ref) => (
   <Container ref={ref} level={'xs'} {...props} />
 ));
+ContainerXS.displayName = 'ContainerXS';
+
 export const ContainerXXS = React.forwardRef<HTMLDivElement, LevelContainerProps>((props, ref) => (
   <Container ref={ref} level={'xxs'} {...props} />
 ));
+ContainerXXS.displayName = 'ContainerXXS';

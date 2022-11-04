@@ -206,3 +206,4 @@ export const DropFileInput: FC<DropFileInputProps<HTMLInputElement>> = forwardRe
     );
   },
 );
+DropFileInput.displayName = 'DropFileInput';

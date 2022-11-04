@@ -40,7 +40,6 @@ export interface RangeInputProps<T = HTMLInputElement> extends TextProps<T> {
   wrapperCSS?: CSSObject;
 }
 
-// eslint-disable-next-line react/display-name
 export const RangeInput: FC<RangeInputProps> = forwardRef<HTMLInputElement, RangeInputProps<HTMLInputElement>>(
   (
     {
@@ -89,3 +88,4 @@ export const RangeInput: FC<RangeInputProps> = forwardRef<HTMLInputElement, Rang
     );
   },
 );
+RangeInput.displayName = 'RangeInput';

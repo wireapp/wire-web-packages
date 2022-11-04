@@ -84,19 +84,29 @@ export const textStyle: <T>(theme: Theme, props: TextProps<T>) => CSSObject = (
 export const Text = React.forwardRef<HTMLSpanElement, TextProps<HTMLSpanElement>>((props, ref) => (
   <span ref={ref} css={(theme: Theme) => textStyle(theme, props)} {...filterTextProps(props)} />
 ));
+Text.displayName = 'Text';
 
 export const Bold = React.forwardRef<HTMLSpanElement, TextProps<HTMLSpanElement>>((props, ref) => (
   <Text ref={ref} bold {...props} />
 ));
+Bold.displayName = 'Bold';
+
 export const Small = React.forwardRef<HTMLSpanElement, TextProps<HTMLSpanElement>>((props, ref) => (
   <Text ref={ref} fontSize={'12px'} {...props} />
 ));
+Small.displayName = 'Small';
+
 export const Muted = React.forwardRef<HTMLSpanElement, TextProps<HTMLSpanElement>>((props, ref) => (
   <Text ref={ref} muted {...props} />
 ));
+Muted.displayName = 'Muted';
+
 export const Uppercase = React.forwardRef<HTMLSpanElement, TextProps<HTMLSpanElement>>((props, ref) => (
   <Text ref={ref} textTransform={'uppercase'} {...props} />
 ));
+Uppercase.displayName = 'Uppercase';
+
 export const Large = React.forwardRef<HTMLSpanElement, TextProps<HTMLSpanElement>>((props, ref) => (
   <Text ref={ref} fontSize={'48px'} light {...props} />
 ));
+Large.displayName = 'Large';

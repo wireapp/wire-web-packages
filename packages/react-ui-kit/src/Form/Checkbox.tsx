@@ -183,6 +183,7 @@ export const Checkbox: React.FC<CheckboxProps> = React.forwardRef<HTMLInputEleme
     );
   },
 );
+Checkbox.displayName = 'Checkbox';
 
 export type CheckboxLabelProps<T = HTMLSpanElement> = TextProps<T>;
 

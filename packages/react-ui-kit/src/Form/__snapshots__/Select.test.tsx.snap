@@ -1,7 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`"Select" renders 1`] = `
-.emotion-0>div {
+.emotion-0 {
+  background: #edeff0;
+  -webkit-transition: background 0.15s;
+  transition: background 0.15s;
+}
+
+.emotion-1 {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.emotion-1:focus-within label {
+  color: #0667c8;
+}
+
+.emotion-2>div {
   background: #fff;
   border: none;
   border-radius: 12px;
@@ -19,50 +34,50 @@ exports[`"Select" renders 1`] = `
   cursor: pointer;
 }
 
-.emotion-0>div::-moz-placeholder {
+.emotion-2>div::-moz-placeholder {
   color: rgb(80, 82, 84);
   font-size: 16px;
   text-transform: none;
   opacity: 1;
 }
 
-.emotion-0>div::-ms-input-placeholder {
+.emotion-2>div::-ms-input-placeholder {
   color: rgb(80, 82, 84);
   font-size: 16px;
   text-transform: none;
 }
 
-.emotion-0>div::-webkit-input-placeholder {
+.emotion-2>div::-webkit-input-placeholder {
   color: rgb(80, 82, 84);
   font-size: 16px;
   text-transform: none;
 }
 
-.emotion-0>div:hover {
+.emotion-2>div:hover {
   box-shadow: 0 0 0 1px var(--text-input-border-hover);
 }
 
-.emotion-0>div:focus-visible,
-.emotion-0>div:focus,
-.emotion-0>div:active {
+.emotion-2>div:focus-visible,
+.emotion-2>div:focus,
+.emotion-2>div:active {
   box-shadow: 0 0 0 1px #0667c8;
 }
 
-.emotion-0>div:invalid:not(:focus, :hover) {
+.emotion-2>div:invalid:not(:focus, :hover) {
   box-shadow: 0 0 0 1px #dce0e3;
 }
 
-.emotion-0>div:-moz-focusring {
+.emotion-2>div:-moz-focusring {
   color: transparent;
   text-shadow: 0 0 0 #000;
 }
 
-.emotion-0>div:focus:visible,
-.emotion-0>div active {
+.emotion-2>div:focus:visible,
+.emotion-2>div active {
   box-shadow: 0 0 0 1px #0667c8;
 }
 
-.emotion-1 {
+.emotion-3 {
   z-index: 9999;
   border: 0;
   clip: rect(1px, 1px, 1px, 1px);
@@ -74,7 +89,7 @@ exports[`"Select" renders 1`] = `
   white-space: nowrap;
 }
 
-.emotion-3 {
+.emotion-5 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -92,7 +107,7 @@ exports[`"Select" renders 1`] = `
   min-height: 48px;
 }
 
-.emotion-4 {
+.emotion-6 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -113,7 +128,7 @@ exports[`"Select" renders 1`] = `
   width: 100%;
 }
 
-.emotion-5 {
+.emotion-7 {
   color: hsl(0, 0%, 50%);
   grid-area: 1/1/2/3;
   margin-left: 2px;
@@ -121,7 +136,7 @@ exports[`"Select" renders 1`] = `
   box-sizing: border-box;
 }
 
-.emotion-6 {
+.emotion-8 {
   background: 0;
   border: 0;
   caret-color: transparent;
@@ -140,7 +155,7 @@ exports[`"Select" renders 1`] = `
   transform: scale(.01);
 }
 
-.emotion-7 {
+.emotion-9 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -158,11 +173,11 @@ exports[`"Select" renders 1`] = `
   box-sizing: border-box;
 }
 
-.emotion-8 {
+.emotion-10 {
   display: none;
 }
 
-.emotion-9 {
+.emotion-11 {
   color: hsl(0, 0%, 80%);
   display: -webkit-box;
   display: -webkit-flex;
@@ -174,19 +189,25 @@ exports[`"Select" renders 1`] = `
   box-sizing: border-box;
 }
 
-.emotion-9:hover {
+.emotion-11:hover {
   color: hsl(0, 0%, 60%);
 }
 
+.emotion-12 {
+  fill: rgb(29, 30, 31);
+  overflow: visible;
+  margin-top: 4px;
+}
+
 <div
-  css={[Function]}
+  className="emotion-0"
 >
   <div
-    css={[Function]}
+    className="emotion-1"
     data-uie-name="test"
   >
     <div
-      className=" emotion-0"
+      className=" emotion-2"
       id="test"
       onKeyDown={[Function]}
     >
@@ -194,25 +215,25 @@ exports[`"Select" renders 1`] = `
         tabIndex={0}
       >
         <span
-          className="emotion-1"
+          className="emotion-3"
           id="react-select-2-live-region"
         />
         <span
           aria-atomic="false"
           aria-live="polite"
           aria-relevant="additions text"
-          className="emotion-1"
+          className="emotion-3"
         />
         <div
-          className=" emotion-3"
+          className=" emotion-5"
           onMouseDown={[Function]}
           onTouchEnd={[Function]}
         >
           <div
-            className=" emotion-4"
+            className=" emotion-6"
           >
             <div
-              className=" emotion-5"
+              className=" emotion-7"
               id="react-select-2-placeholder"
             >
               Select...
@@ -224,7 +245,7 @@ exports[`"Select" renders 1`] = `
               aria-expanded={false}
               aria-haspopup={true}
               aria-readonly={true}
-              className="emotion-6"
+              className="emotion-8"
               disabled={false}
               id="react-select-2-input"
               inputMode="none"
@@ -237,23 +258,19 @@ exports[`"Select" renders 1`] = `
             />
           </div>
           <div
-            className=" emotion-7"
+            className=" emotion-9"
           >
             <span
-              className=" emotion-8"
+              className=" emotion-10"
             />
             <div
               aria-hidden="true"
-              className=" emotion-9"
+              className=" emotion-11"
               onMouseDown={[Function]}
               onTouchEnd={[Function]}
             >
               <svg
-                css={
-                  {
-                    "marginTop": 4,
-                  }
-                }
+                className="emotion-12"
                 height={16}
                 viewBox="0 0 16 16"
                 width={16}
@@ -274,7 +291,22 @@ exports[`"Select" renders 1`] = `
 `;
 
 exports[`"Select" renders as disabled 1`] = `
-.emotion-0>div {
+.emotion-0 {
+  background: #edeff0;
+  -webkit-transition: background 0.15s;
+  transition: background 0.15s;
+}
+
+.emotion-1 {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.emotion-1:focus-within label {
+  color: #0667c8;
+}
+
+.emotion-2>div {
   background: #edeff0;
   border: none;
   border-radius: 12px;
@@ -292,41 +324,41 @@ exports[`"Select" renders as disabled 1`] = `
   background-color: #edeff0;
 }
 
-.emotion-0>div::-moz-placeholder {
+.emotion-2>div::-moz-placeholder {
   color: rgb(80, 82, 84);
   font-size: 16px;
   text-transform: none;
   opacity: 1;
 }
 
-.emotion-0>div::-ms-input-placeholder {
+.emotion-2>div::-ms-input-placeholder {
   color: rgb(80, 82, 84);
   font-size: 16px;
   text-transform: none;
 }
 
-.emotion-0>div::-webkit-input-placeholder {
+.emotion-2>div::-webkit-input-placeholder {
   color: rgb(80, 82, 84);
   font-size: 16px;
   text-transform: none;
 }
 
-.emotion-0>div:focus-visible,
-.emotion-0>div:focus,
-.emotion-0>div:active {
+.emotion-2>div:focus-visible,
+.emotion-2>div:focus,
+.emotion-2>div:active {
   box-shadow: 0 0 0 1px #0667c8;
 }
 
-.emotion-0>div:invalid:not(:focus, :hover) {
+.emotion-2>div:invalid:not(:focus, :hover) {
   box-shadow: 0 0 0 1px #dce0e3;
 }
 
-.emotion-0>div:-moz-focusring {
+.emotion-2>div:-moz-focusring {
   color: transparent;
   text-shadow: 0 0 0 #000;
 }
 
-.emotion-1 {
+.emotion-3 {
   z-index: 9999;
   border: 0;
   clip: rect(1px, 1px, 1px, 1px);
@@ -338,7 +370,7 @@ exports[`"Select" renders as disabled 1`] = `
   white-space: nowrap;
 }
 
-.emotion-3 {
+.emotion-5 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -356,7 +388,7 @@ exports[`"Select" renders as disabled 1`] = `
   min-height: 48px;
 }
 
-.emotion-4 {
+.emotion-6 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -377,7 +409,7 @@ exports[`"Select" renders as disabled 1`] = `
   width: 100%;
 }
 
-.emotion-5 {
+.emotion-7 {
   color: hsl(0, 0%, 50%);
   grid-area: 1/1/2/3;
   margin-left: 2px;
@@ -385,7 +417,7 @@ exports[`"Select" renders as disabled 1`] = `
   box-sizing: border-box;
 }
 
-.emotion-6 {
+.emotion-8 {
   background: 0;
   border: 0;
   caret-color: transparent;
@@ -404,7 +436,7 @@ exports[`"Select" renders as disabled 1`] = `
   transform: scale(.01);
 }
 
-.emotion-7 {
+.emotion-9 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -422,11 +454,11 @@ exports[`"Select" renders as disabled 1`] = `
   box-sizing: border-box;
 }
 
-.emotion-8 {
+.emotion-10 {
   display: none;
 }
 
-.emotion-9 {
+.emotion-11 {
   color: hsl(0, 0%, 80%);
   display: -webkit-box;
   display: -webkit-flex;
@@ -438,23 +470,29 @@ exports[`"Select" renders as disabled 1`] = `
   box-sizing: border-box;
 }
 
-.emotion-9:hover {
+.emotion-11:hover {
   color: hsl(0, 0%, 60%);
 }
 
-.emotion-9>svg {
+.emotion-11>svg {
   fill: rgb(80, 82, 84);
 }
 
+.emotion-12 {
+  fill: rgb(29, 30, 31);
+  overflow: visible;
+  margin-top: 4px;
+}
+
 <div
-  css={[Function]}
+  className="emotion-0"
 >
   <div
-    css={[Function]}
+    className="emotion-1"
     data-uie-name="test"
   >
     <div
-      className=" emotion-0"
+      className=" emotion-2"
       id="test"
       onKeyDown={[Function]}
     >
@@ -462,25 +500,25 @@ exports[`"Select" renders as disabled 1`] = `
         tabIndex={0}
       >
         <span
-          className="emotion-1"
+          className="emotion-3"
           id="react-select-3-live-region"
         />
         <span
           aria-atomic="false"
           aria-live="polite"
           aria-relevant="additions text"
-          className="emotion-1"
+          className="emotion-3"
         />
         <div
-          className=" emotion-3"
+          className=" emotion-5"
           onMouseDown={[Function]}
           onTouchEnd={[Function]}
         >
           <div
-            className=" emotion-4"
+            className=" emotion-6"
           >
             <div
-              className=" emotion-5"
+              className=" emotion-7"
               id="react-select-3-placeholder"
             >
               Select...
@@ -492,7 +530,7 @@ exports[`"Select" renders as disabled 1`] = `
               aria-expanded={false}
               aria-haspopup={true}
               aria-readonly={true}
-              className="emotion-6"
+              className="emotion-8"
               disabled={true}
               id="react-select-3-input"
               inputMode="none"
@@ -505,23 +543,19 @@ exports[`"Select" renders as disabled 1`] = `
             />
           </div>
           <div
-            className=" emotion-7"
+            className=" emotion-9"
           >
             <span
-              className=" emotion-8"
+              className=" emotion-10"
             />
             <div
               aria-hidden="true"
-              className=" emotion-9"
+              className=" emotion-11"
               onMouseDown={[Function]}
               onTouchEnd={[Function]}
             >
               <svg
-                css={
-                  {
-                    "marginTop": 4,
-                  }
-                }
+                className="emotion-12"
                 height={16}
                 viewBox="0 0 16 16"
                 width={16}
@@ -542,7 +576,22 @@ exports[`"Select" renders as disabled 1`] = `
 `;
 
 exports[`"Select" renders as invalid 1`] = `
-.emotion-0>div {
+.emotion-0 {
+  background: #edeff0;
+  -webkit-transition: background 0.15s;
+  transition: background 0.15s;
+}
+
+.emotion-1 {
+  margin-bottom: 2px;
+  width: 100%;
+}
+
+.emotion-1:focus-within label {
+  color: #0667c8;
+}
+
+.emotion-2>div {
   background: #fff;
   border: none;
   border-radius: 12px;
@@ -560,46 +609,46 @@ exports[`"Select" renders as invalid 1`] = `
   cursor: pointer;
 }
 
-.emotion-0>div::-moz-placeholder {
+.emotion-2>div::-moz-placeholder {
   color: rgb(80, 82, 84);
   font-size: 16px;
   text-transform: none;
   opacity: 1;
 }
 
-.emotion-0>div::-ms-input-placeholder {
+.emotion-2>div::-ms-input-placeholder {
   color: rgb(80, 82, 84);
   font-size: 16px;
   text-transform: none;
 }
 
-.emotion-0>div::-webkit-input-placeholder {
+.emotion-2>div::-webkit-input-placeholder {
   color: rgb(80, 82, 84);
   font-size: 16px;
   text-transform: none;
 }
 
-.emotion-0>div:hover {
+.emotion-2>div:hover {
   box-shadow: 0 0 0 1px var(--text-input-border-hover);
 }
 
-.emotion-0>div:focus-visible,
-.emotion-0>div:focus,
-.emotion-0>div:active {
+.emotion-2>div:focus-visible,
+.emotion-2>div:focus,
+.emotion-2>div:active {
   box-shadow: 0 0 0 1px #0667c8;
 }
 
-.emotion-0>div:-moz-focusring {
+.emotion-2>div:-moz-focusring {
   color: transparent;
   text-shadow: 0 0 0 #000;
 }
 
-.emotion-0>div:focus:visible,
-.emotion-0>div active {
+.emotion-2>div:focus:visible,
+.emotion-2>div active {
   box-shadow: 0 0 0 1px #0667c8;
 }
 
-.emotion-1 {
+.emotion-3 {
   z-index: 9999;
   border: 0;
   clip: rect(1px, 1px, 1px, 1px);
@@ -611,7 +660,7 @@ exports[`"Select" renders as invalid 1`] = `
   white-space: nowrap;
 }
 
-.emotion-3 {
+.emotion-5 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -629,7 +678,7 @@ exports[`"Select" renders as invalid 1`] = `
   min-height: 48px;
 }
 
-.emotion-4 {
+.emotion-6 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -650,7 +699,7 @@ exports[`"Select" renders as invalid 1`] = `
   width: 100%;
 }
 
-.emotion-5 {
+.emotion-7 {
   color: hsl(0, 0%, 50%);
   grid-area: 1/1/2/3;
   margin-left: 2px;
@@ -658,7 +707,7 @@ exports[`"Select" renders as invalid 1`] = `
   box-sizing: border-box;
 }
 
-.emotion-6 {
+.emotion-8 {
   background: 0;
   border: 0;
   caret-color: transparent;
@@ -677,7 +726,7 @@ exports[`"Select" renders as invalid 1`] = `
   transform: scale(.01);
 }
 
-.emotion-7 {
+.emotion-9 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -695,11 +744,11 @@ exports[`"Select" renders as invalid 1`] = `
   box-sizing: border-box;
 }
 
-.emotion-8 {
+.emotion-10 {
   display: none;
 }
 
-.emotion-9 {
+.emotion-11 {
   color: hsl(0, 0%, 80%);
   display: -webkit-box;
   display: -webkit-flex;
@@ -711,19 +760,25 @@ exports[`"Select" renders as invalid 1`] = `
   box-sizing: border-box;
 }
 
-.emotion-9:hover {
+.emotion-11:hover {
   color: hsl(0, 0%, 60%);
 }
 
+.emotion-12 {
+  fill: rgb(29, 30, 31);
+  overflow: visible;
+  margin-top: 4px;
+}
+
 <div
-  css={[Function]}
+  className="emotion-0"
 >
   <div
-    css={[Function]}
+    className="emotion-1"
     data-uie-name="test"
   >
     <div
-      className=" emotion-0"
+      className=" emotion-2"
       id="test"
       onKeyDown={[Function]}
     >
@@ -731,25 +786,25 @@ exports[`"Select" renders as invalid 1`] = `
         tabIndex={0}
       >
         <span
-          className="emotion-1"
+          className="emotion-3"
           id="react-select-4-live-region"
         />
         <span
           aria-atomic="false"
           aria-live="polite"
           aria-relevant="additions text"
-          className="emotion-1"
+          className="emotion-3"
         />
         <div
-          className=" emotion-3"
+          className=" emotion-5"
           onMouseDown={[Function]}
           onTouchEnd={[Function]}
         >
           <div
-            className=" emotion-4"
+            className=" emotion-6"
           >
             <div
-              className=" emotion-5"
+              className=" emotion-7"
               id="react-select-4-placeholder"
             >
               Select...
@@ -761,7 +816,7 @@ exports[`"Select" renders as invalid 1`] = `
               aria-expanded={false}
               aria-haspopup={true}
               aria-readonly={true}
-              className="emotion-6"
+              className="emotion-8"
               disabled={false}
               id="react-select-4-input"
               inputMode="none"
@@ -774,23 +829,19 @@ exports[`"Select" renders as invalid 1`] = `
             />
           </div>
           <div
-            className=" emotion-7"
+            className=" emotion-9"
           >
             <span
-              className=" emotion-8"
+              className=" emotion-10"
             />
             <div
               aria-hidden="true"
-              className=" emotion-9"
+              className=" emotion-11"
               onMouseDown={[Function]}
               onTouchEnd={[Function]}
             >
               <svg
-                css={
-                  {
-                    "marginTop": 4,
-                  }
-                }
+                className="emotion-12"
                 height={16}
                 viewBox="0 0 16 16"
                 width={16}

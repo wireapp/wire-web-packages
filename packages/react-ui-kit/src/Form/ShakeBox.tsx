@@ -66,3 +66,4 @@ export const ShakeBox = React.forwardRef<ShakeBoxRef, ShakeBoxProps>(
     return <div css={{transform: `translateX(${offset}px)`}}>{children}</div>;
   },
 );
+ShakeBox.displayName = 'ShakeBox';

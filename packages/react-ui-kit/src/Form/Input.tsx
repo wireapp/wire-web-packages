@@ -99,7 +99,6 @@ const centerInputAction: CSSObject = {
   transform: 'translateY(-50%)',
 };
 
-// eslint-disable-next-line react/display-name
 export const Input: React.FC<InputProps<HTMLInputElement>> = React.forwardRef<
   HTMLInputElement,
   InputProps<HTMLInputElement>
@@ -176,3 +175,4 @@ export const Input: React.FC<InputProps<HTMLInputElement>> = React.forwardRef<
     </div>
   );
 });
+Input.displayName = 'Input';

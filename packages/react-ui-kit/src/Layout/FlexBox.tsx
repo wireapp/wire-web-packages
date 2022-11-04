@@ -51,3 +51,4 @@ export const filterFlexBoxProps = (props: FlexBoxProps) =>
 export const FlexBox: React.FC<FlexBoxProps> = React.forwardRef<HTMLDivElement, FlexBoxProps>((props, ref) => (
   <div ref={ref} css={flexBoxStyle(props)} {...filterFlexBoxProps(props)} />
 ));
+FlexBox.displayName = 'FlexBox';
