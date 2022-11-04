@@ -47,6 +47,8 @@ const ThemedRangeInput = (props: RangeInputProps) => (
   </StyledApp>
 );
 
+/* eslint-disable jest/expect-expect */
+
 describe('"RangeInput"', () => {
   it('matches snapshot', () => matchComponent(<ThemedRangeInput {...getDefaultProps()} />));
 

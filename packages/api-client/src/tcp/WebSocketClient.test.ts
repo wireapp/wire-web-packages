@@ -126,6 +126,7 @@ describe('WebSocketClient', () => {
   });
 
   describe('refreshAccessToken', () => {
+    // eslint-disable-next-line jest/expect-expect
     it('emits the correct message for invalid tokens', async () => {
       const websocketClient = new WebSocketClient('ws://url', invalidTokenHttpClient);
       const socket = websocketClient['socket'];

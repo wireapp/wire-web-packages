@@ -19,8 +19,7 @@
 
 import {APIClient} from '@wireapp/api-client';
 import {ConnectionStatus} from '@wireapp/api-client/lib/connection';
-import {QualifiedId, User} from '@wireapp/api-client/lib/user/';
-import {UserPreKeyBundleMap} from '@wireapp/api-client/lib/user/';
+import {QualifiedId, User, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user/';
 import {Availability, GenericMessage} from '@wireapp/protocol-messaging';
 import UUID from 'uuidjs';
 

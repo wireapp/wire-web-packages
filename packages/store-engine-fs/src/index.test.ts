@@ -33,6 +33,8 @@ import path from 'path';
 
 import {FileEngine} from './index';
 
+/* eslint-disable jest/expect-expect, jest/valid-title */
+
 describe('FileEngine', () => {
   const BASE_DIRECTORY = path.join(process.cwd(), '.tmp');
   const STORE_NAME = 'the-simpsons';
@@ -130,11 +132,14 @@ describe('FileEngine', () => {
       ];
 
       for (const operation of functionNames) {
+        let errorMessage;
         try {
           await engine[operation]('../etc', 'primary-key', {});
           throw new Error('Expected error to be thrown.');
         } catch (error) {
-          expect(error instanceof expectedError).toBe(true);
+          errorMessage = error;
+        } finally {
+          expect(errorMessage instanceof expectedError).toBe(true);
         }
       }
     });

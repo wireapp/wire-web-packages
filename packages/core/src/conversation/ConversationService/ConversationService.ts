@@ -49,8 +49,7 @@ import {
 import {MessageTimer, PayloadBundleState, RemoveUsersParams} from '../../conversation/';
 import {CryptographyService} from '../../cryptography/';
 import {decryptAsset} from '../../cryptography/AssetCryptography';
-import {MLSService} from '../../mls';
-import {optionalToUint8Array} from '../../mls';
+import {MLSService, optionalToUint8Array} from '../../mls';
 import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/fullyQualifiedClientIdUtils';
 import {isStringArray, isQualifiedIdArray, isQualifiedUserClients, isUserClients} from '../../util/TypePredicateUtil';
 import {RemoteData} from '../content';

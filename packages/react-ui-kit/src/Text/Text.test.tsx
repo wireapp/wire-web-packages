@@ -25,6 +25,8 @@ import {COLOR} from '../Identity';
 import {THEME_ID} from '../Layout';
 import {matchComponent} from '../test/testUtil';
 
+/* eslint-disable jest/expect-expect */
+
 describe('"Text"', () => {
   it('renders', () => matchComponent(<Text>Text</Text>));
   it('renders (dark theme)', () => matchComponent(<Text>Text</Text>, THEME_ID.DARK));

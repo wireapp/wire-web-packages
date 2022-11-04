@@ -118,12 +118,14 @@ describe('CopyConfig', () => {
         },
         repositoryUrl: '',
       });
-
+      let errorMessage;
       try {
         await copyConfig.copy();
         throw new Error('Should throw');
       } catch (error) {
-        expect((error as {code: string}).code).toBe('ENOENT');
+        errorMessage = error;
+      } finally {
+        expect((errorMessage as {code: string}).code).toBe('ENOENT');
       }
     });
 

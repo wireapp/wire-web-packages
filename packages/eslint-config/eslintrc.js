@@ -58,7 +58,6 @@ module.exports = {
     "react-hooks",
     "eslint-plugin-testing-library",
     "@typescript-eslint",
-    "sort-keys-fix",
     'unused-imports'
   ],
   rules: {
@@ -149,7 +148,6 @@ module.exports = {
     "jest/no-done-callback": "warn",
     "jest/no-disabled-tests": "warn",
     "jest/no-conditional-expect": "warn",
-    "sort-keys-fix/sort-keys-fix": "warn",
     "jsx-a11y/media-has-caption": "warn",
     "jsx-a11y/no-noninteractive-tabindex": "warn",
     'react/jsx-uses-vars': 'error',

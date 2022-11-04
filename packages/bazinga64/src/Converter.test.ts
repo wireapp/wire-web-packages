@@ -208,14 +208,6 @@ describe('stringToArrayBufferViewUTF16', () => {
   });
 });
 
-describe('stringToArrayBufferViewUTF16', () => {
-  it('handles UTF-16 conversions', () => {
-    const cyrillicCapitalLetterDje = '\u0402';
-    const encoded = bazinga64.Converter.stringToArrayBufferViewUTF16(cyrillicCapitalLetterDje);
-    expect(encoded.length).toBe(1);
-  });
-});
-
 describe('toArrayBufferView', () => {
   it('handles arrays', () => {
     const data = new Uint8Array(helloDecodedArray);

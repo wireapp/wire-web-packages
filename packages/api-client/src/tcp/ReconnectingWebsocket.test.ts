@@ -67,6 +67,8 @@ function startEchoServer(): WebSocketServer {
   return server;
 }
 
+/* eslint-disable jest/no-done-callback */
+
 describe('ReconnectingWebsocket', () => {
   let server: WebSocketServer | undefined;
   const getServerAddress = () => {

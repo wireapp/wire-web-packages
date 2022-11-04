@@ -18,8 +18,8 @@
  */
 
 /** @jsx jsx */
-import React from 'react';
-import {useState} from 'react';
+
+import React, {useState} from 'react';
 
 import {jsx} from '@emotion/react';
 

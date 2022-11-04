@@ -113,8 +113,10 @@ describe('ConversationService', () => {
 
     describe('targetted messages', () => {
       const message = MessageBuilder.buildTextMessage({text: 'test'});
+      // eslint-disable-next-line jest/no-done-callback
       it('fails if no userIds are given', done => {
         const conversationService = buildConversationService();
+        let errorMessage;
         conversationService
           .send({
             protocol: ConversationProtocol.PROTEUS,
@@ -123,7 +125,10 @@ describe('ConversationService', () => {
             conversationId: {id: 'conv1', domain: ''},
           })
           .catch(error => {
-            expect(error.message).toContain('no userIds are given');
+            errorMessage = error.message;
+          })
+          .finally(() => {
+            expect(errorMessage).toContain('no userIds are given');
             done();
           });
       });
@@ -331,7 +336,7 @@ describe('ConversationService', () => {
       expect(fetchedMembers).toEqual(members);
     });
 
-    it('gives the members and clients of a federated conversation', async () => {
+    it('gives the members and clients of a federated conversation 2', async () => {
       const members = {
         domain1: {user1: ['client1', 'client2']},
         domain2: {user2: ['client1', 'client2'], user3: ['client1', 'client2']},

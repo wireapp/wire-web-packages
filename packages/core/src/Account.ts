@@ -18,8 +18,15 @@
  */
 
 import {APIClient, BackendFeatures} from '@wireapp/api-client';
-import {RegisterData} from '@wireapp/api-client/lib/auth';
-import {AUTH_COOKIE_KEY, AUTH_TABLE_NAME, Context, Cookie, CookieStore, LoginData} from '@wireapp/api-client/lib/auth/';
+import {
+  RegisterData,
+  AUTH_COOKIE_KEY,
+  AUTH_TABLE_NAME,
+  Context,
+  Cookie,
+  CookieStore,
+  LoginData,
+} from '@wireapp/api-client/lib/auth';
 import {ClientClassification, ClientType, RegisteredClient} from '@wireapp/api-client/lib/client/';
 import * as Events from '@wireapp/api-client/lib/event';
 import {Notification} from '@wireapp/api-client/lib/notification/';

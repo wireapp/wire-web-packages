@@ -23,6 +23,8 @@ import {ErrorMessage} from './ErrorMessage';
 
 import {matchComponent} from '../test/testUtil';
 
+/* eslint-disable jest/expect-expect */
+
 describe('"ErrorMessage"', () => {
   it('renders', () => matchComponent(<ErrorMessage>ErrorMessage</ErrorMessage>));
 });

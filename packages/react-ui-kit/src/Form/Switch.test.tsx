@@ -24,6 +24,8 @@ import {Switch} from './Switch';
 import {THEME_ID} from '../Layout';
 import {matchComponent} from '../test/testUtil';
 
+/* eslint-disable jest/expect-expect */
+
 describe('"Switch"', () => {
   it('renders unchecked', () => matchComponent(<Switch id="1" checked={false} onToggle={() => {}} />));
   it('renders checked', () => matchComponent(<Switch id="2" checked onToggle={() => {}} />));

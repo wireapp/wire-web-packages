@@ -20,8 +20,15 @@
 /** @jsx jsx */
 
 import {jsx} from '@emotion/react';
-import {components, ContainerProps, DropdownIndicatorProps, OptionProps, ValueContainerProps} from 'react-select';
-import {IndicatorsContainerProps, MenuProps} from 'react-select';
+import {
+  components,
+  ContainerProps,
+  DropdownIndicatorProps,
+  OptionProps,
+  ValueContainerProps,
+  IndicatorsContainerProps,
+  MenuProps,
+} from 'react-select';
 
 import {Option} from './Select';
 

@@ -20,7 +20,7 @@
 import {TimeUtil} from '@wireapp/commons';
 import {PriorityQueue} from '@wireapp/priority-queue';
 import axios, {AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios';
-import axiosRetry, {isNetworkOrIdempotentRequestError} from 'axios-retry';
+import axiosRetry, {isNetworkOrIdempotentRequestError, exponentialDelay} from 'axios-retry';
 import logdown from 'logdown';
 
 import {EventEmitter} from 'events';
@@ -67,7 +67,7 @@ export class HttpClient extends EventEmitter {
     });
     axiosRetry(this.client, {
       retries: Infinity,
-      retryDelay: axiosRetry.exponentialDelay,
+      retryDelay: exponentialDelay,
       retryCondition: (error: AxiosError) => {
         const {response, request} = error;
         const isNetworkError = !response && request && !Object.keys(request).length;

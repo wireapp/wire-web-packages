@@ -24,8 +24,7 @@ import {CSSObject, jsx} from '@emotion/react';
 
 import {UploadIcon} from '../Icon';
 import {COLOR} from '../Identity';
-import {Theme} from '../Layout';
-import {FlexBox} from '../Layout';
+import {Theme, FlexBox} from '../Layout';
 import {TextProps} from '../Text';
 
 export interface DropFileInputProps<T = HTMLInputElement> extends TextProps<T> {

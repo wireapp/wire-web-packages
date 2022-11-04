@@ -23,6 +23,8 @@ import {THEME_ID} from '../Layout';
 import {matchComponent} from '../test/testUtil';
 import {TextLink} from '../Text';
 
+/* eslint-disable jest/expect-expect */
+
 describe('"TextLink"', () => {
   it('renders', () => matchComponent(<TextLink>TextLink</TextLink>));
   it('renders (dark theme)', () => matchComponent(<TextLink>TextLink</TextLink>, THEME_ID.DARK));

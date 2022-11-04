@@ -17,8 +17,7 @@
  *
  */
 
-import Axios from 'axios';
-import {AxiosRequestConfig} from 'axios';
+import Axios, {AxiosRequestConfig} from 'axios';
 
 import {LeadData} from './LeadData';
 import {TeamSizeData} from './TeamSizeData';

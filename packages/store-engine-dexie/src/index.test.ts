@@ -31,6 +31,8 @@ import UUID from 'uuidjs';
 
 import {IndexedDBEngine} from './index';
 
+/* eslint-disable jest/expect-expect, jest/valid-title */
+
 describe('IndexedDBEngine', () => {
   let engine: IndexedDBEngine;
 

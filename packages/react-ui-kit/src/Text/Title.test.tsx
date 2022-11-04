@@ -24,6 +24,8 @@ import {Title} from './Title';
 import {THEME_ID} from '../Layout';
 import {matchComponent} from '../test/testUtil';
 
+/* eslint-disable jest/expect-expect */
+
 describe('"Title"', () => {
   it('renders', () => matchComponent(<Title>Title</Title>));
   it('renders (dark theme)', () => matchComponent(<Title>Title</Title>, THEME_ID.DARK));

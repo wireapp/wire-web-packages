@@ -28,6 +28,8 @@ import {StyledApp} from '../../src/Layout/StyledApp';
 import {THEME_ID} from '../Layout';
 import {matchComponent} from '../test/testUtil';
 
+/* eslint-disable jest/expect-expect */
+
 describe('"Checkbox"', () => {
   it('renders', () => matchComponent(<Checkbox id="1">Check</Checkbox>));
   it('renders (dark theme)', () => matchComponent(<Checkbox id="1">Checkbox</Checkbox>, THEME_ID.DARK));

@@ -23,6 +23,8 @@ import {THEME_ID} from '../Layout';
 import {matchComponent} from '../test/testUtil';
 import {Lead, Paragraph} from '../Text';
 
+/* eslint-disable jest/expect-expect */
+
 describe('"Paragraph"', () => {
   it('renders', () => matchComponent(<Paragraph>Paragraph</Paragraph>));
   it('renders (dark theme)', () => matchComponent(<Paragraph>Paragraph</Paragraph>, THEME_ID.DARK));
