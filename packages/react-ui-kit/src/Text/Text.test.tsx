@@ -17,8 +17,6 @@
  *
  */
 
-import * as React from 'react';
-
 import {Bold, Large, Muted, Small, Text, Uppercase} from './Text';
 
 import {COLOR} from '../Identity';

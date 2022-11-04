@@ -19,7 +19,7 @@
 
 /* eslint-disable jest/expect-expect */
 
-import React from 'react';
+import * as React from 'react';
 
 import {Select} from './Select';
 

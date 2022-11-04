@@ -17,8 +17,6 @@
  *
  */
 
-import React from 'react';
-
 import {ButtonLink} from './ButtonLink';
 
 import {THEME_ID} from '../Layout';

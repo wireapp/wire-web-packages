@@ -31,7 +31,7 @@ import {AccentColor, ValidationUtil} from '@wireapp/commons';
 import {GenericMessage, Text} from '@wireapp/protocol-messaging';
 import {StatusCodes as HTTP_STATUS} from 'http-status-codes';
 import {WS} from 'jest-websocket-mock';
-import nock from 'nock';
+import nock, {cleanAll} from 'nock';
 
 import {Account, ConnectionState} from './Account';
 import {PayloadBundleSource, PayloadBundleType} from './conversation';
@@ -155,7 +155,7 @@ describe('Account', () => {
   });
 
   afterEach(() => {
-    nock.cleanAll();
+    cleanAll();
   });
 
   describe('"createText"', () => {

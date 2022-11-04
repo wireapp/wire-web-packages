@@ -18,7 +18,6 @@
  */
 
 /** @jsx jsx */
-import {jsx} from '@emotion/react';
 
 import {Rotation} from './ArrowIcon';
 import {SVGIcon, SVGIconProps} from './SVGIcon';

@@ -18,9 +18,9 @@
  */
 
 /** @jsx jsx */
-import React from 'react';
+import * as React from 'react';
 
-import {CSSObject, jsx} from '@emotion/react';
+import {CSSObject} from '@emotion/react';
 
 import {COLOR} from '../Identity';
 import {filterProps} from '../util';

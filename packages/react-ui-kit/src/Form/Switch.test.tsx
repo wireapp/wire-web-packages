@@ -17,8 +17,6 @@
  *
  */
 
-import React from 'react';
-
 import {Switch} from './Switch';
 
 import {THEME_ID} from '../Layout';

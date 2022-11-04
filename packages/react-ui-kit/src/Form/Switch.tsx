@@ -18,9 +18,7 @@
  */
 
 /** @jsx jsx */
-import React from 'react';
-
-import {jsx} from '@emotion/react';
+import {Fragment} from 'react';
 
 import {InputProps} from './Input';
 
@@ -63,7 +61,7 @@ export const Switch = ({
       width: '42px',
     }}
   >
-    <React.Fragment>
+    <Fragment>
       <input
         id={id}
         checked={checked}
@@ -146,6 +144,6 @@ export const Switch = ({
           />
         )}
       </label>
-    </React.Fragment>
+    </Fragment>
   </div>
 );

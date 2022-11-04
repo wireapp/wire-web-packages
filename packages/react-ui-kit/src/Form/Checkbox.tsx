@@ -18,9 +18,8 @@
  */
 
 /** @jsx jsx */
-import React, {useId} from 'react';
-
-import {jsx} from '@emotion/react';
+import {useId} from 'react';
+import * as React from 'react';
 
 import {INPUT_CLASSNAME, InputProps} from './Input';
 

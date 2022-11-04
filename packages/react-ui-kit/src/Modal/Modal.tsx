@@ -18,9 +18,10 @@
  */
 
 /** @jsx jsx */
-import React, {CSSProperties} from 'react';
+import {CSSProperties} from 'react';
+import * as React from 'react';
 
-import {CSSObject, jsx} from '@emotion/react';
+import {CSSObject} from '@emotion/react';
 import Color from 'color';
 
 import {OverlayBackgroundProps, OverlayWrapper, overlayBackgroundStyle} from './Overlay';

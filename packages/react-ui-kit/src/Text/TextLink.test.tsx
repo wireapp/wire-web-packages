@@ -17,8 +17,6 @@
  *
  */
 
-import React from 'react';
-
 import {THEME_ID} from '../Layout';
 import {matchComponent} from '../test/testUtil';
 import {TextLink} from '../Text';

@@ -18,9 +18,9 @@
  */
 
 /** @jsx jsx */
-import React from 'react';
+import * as React from 'react';
 
-import {CSSObject, jsx} from '@emotion/react';
+import {CSSObject} from '@emotion/react';
 
 import {ButtonProps, buttonStyle, filterButtonProps} from './Button';
 

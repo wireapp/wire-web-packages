@@ -18,9 +18,7 @@
  */
 
 /** @jsx jsx */
-import React from 'react';
-
-import {jsx} from '@emotion/react';
+import * as React from 'react';
 
 type FooterProps = React.HTMLProps<HTMLElement>;
 

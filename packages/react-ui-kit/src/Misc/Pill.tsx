@@ -18,9 +18,9 @@
  */
 
 /** @jsx jsx */
-import React from 'react';
+import * as React from 'react';
 
-import {CSSObject, jsx, keyframes} from '@emotion/react';
+import {CSSObject, keyframes} from '@emotion/react';
 
 import {COLOR} from '../Identity';
 import {DURATION, EASE} from '../Identity/motions';

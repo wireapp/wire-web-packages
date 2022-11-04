@@ -28,7 +28,7 @@ import {
 } from '@wireapp/api-client/lib/conversation';
 import {GenericMessage, Text} from '@wireapp/protocol-messaging';
 import {StatusCodes} from 'http-status-codes';
-import UUID from 'uuidjs';
+import {genV4} from 'uuidjs';
 
 import {MessageService} from './MessageService';
 
@@ -45,12 +45,12 @@ const baseMessageSendingStatus: MessageSendingStatus = {
 
 type TestUser = {id: string; domain: string; clients: string[]};
 const user1: TestUser = {
-  id: UUID.genV4().toString(),
+  id: genV4().toString(),
   domain: '1.wire.test',
   clients: ['client1.1', 'client1.2', 'client1.3', 'client1.4'],
 };
 const user2: TestUser = {
-  id: UUID.genV4().toString(),
+  id: genV4().toString(),
   domain: '2.wire.test',
   clients: ['client2.1', 'client2.2', 'client2.3', 'client2.4'],
 };

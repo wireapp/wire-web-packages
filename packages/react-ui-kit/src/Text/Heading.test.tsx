@@ -17,8 +17,6 @@
  *
  */
 
-import React from 'react';
-
 import {Heading} from './Heading';
 
 import {THEME_ID} from '../Layout';

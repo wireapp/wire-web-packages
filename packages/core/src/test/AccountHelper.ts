@@ -19,6 +19,7 @@
 
 const {APIClient} = require('@wireapp/api-client');
 const {ClientType} = require('@wireapp/api-client/lib/client/');
+
 const {Account} = require('@wireapp/core');
 
 const StoreHelper = require('./StoreHelper');

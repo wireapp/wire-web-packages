@@ -18,9 +18,10 @@
  */
 
 /** @jsx jsx */
-import React, {ReactElement, useState} from 'react';
+import {ReactElement, useState} from 'react';
+import * as React from 'react';
 
-import {CSSObject, jsx} from '@emotion/react';
+import {CSSObject} from '@emotion/react';
 import type {Property} from 'csstype';
 
 import {InputLabel} from './InputLabel';

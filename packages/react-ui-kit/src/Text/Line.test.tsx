@@ -17,8 +17,6 @@
  *
  */
 
-import React from 'react';
-
 import {Line} from './Line';
 
 import {COLOR} from '../Identity';

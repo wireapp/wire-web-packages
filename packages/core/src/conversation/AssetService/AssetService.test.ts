@@ -18,7 +18,7 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import UUID from 'uuidjs';
+import {genV4} from 'uuidjs';
 
 import {AssetService} from './AssetService';
 
@@ -29,8 +29,8 @@ describe('AssetService', () => {
       const assetService = new AssetService(apiClient);
 
       const assetServerData = {
-        key: `3-2-${UUID.genV4().toString()}`,
-        token: UUID.genV4().toString(),
+        key: `3-2-${genV4().toString()}`,
+        token: genV4().toString(),
         expires: '',
       };
 

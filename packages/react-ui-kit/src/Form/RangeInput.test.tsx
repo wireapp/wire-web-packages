@@ -17,8 +17,6 @@
  *
  */
 
-import React from 'react';
-
 import {matchers} from '@emotion/jest';
 import {fireEvent, render} from '@testing-library/react';
 

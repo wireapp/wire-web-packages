@@ -18,7 +18,7 @@
  */
 
 /** @jsx jsx */
-import {Global, CSSObject, css, jsx, withTheme} from '@emotion/react';
+import {Global, CSSObject, css, withTheme} from '@emotion/react';
 import emotionNormalize from 'emotion-normalize';
 
 import {GlobalCssVariables} from './GlobalCssVariables';

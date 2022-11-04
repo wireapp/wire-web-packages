@@ -18,9 +18,8 @@
  */
 
 /** @jsx jsx */
-import React, {useEffect, useRef} from 'react';
-
-import {jsx} from '@emotion/react';
+import {useEffect, useRef} from 'react';
+import * as React from 'react';
 
 export interface IsInViewportProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   checkViewportOnce?: boolean;

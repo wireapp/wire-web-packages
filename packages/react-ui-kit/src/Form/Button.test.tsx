@@ -17,8 +17,6 @@
  *
  */
 
-import React from 'react';
-
 import {Button} from './Button';
 
 import {THEME_ID} from '../Layout';

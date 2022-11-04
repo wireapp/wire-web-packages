@@ -39,7 +39,7 @@ import {
   LastRead,
   Cleared,
 } from '@wireapp/protocol-messaging';
-import UUID from 'uuidjs';
+import {genV4} from 'uuidjs';
 
 import {
   ButtonActionConfirmationMessage,
@@ -64,7 +64,7 @@ import {GenericMessageType} from '../GenericMessageType';
 import {MessageToProtoMapper} from '../message/MessageToProtoMapper';
 
 export function createId() {
-  return UUID.genV4().toString();
+  return genV4().toString();
 }
 
 export function buildButtonActionMessage(payloadBundle: ButtonActionMessage['content']): GenericMessage {

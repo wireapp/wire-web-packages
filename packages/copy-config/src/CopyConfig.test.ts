@@ -19,7 +19,7 @@
 
 //@ts-check
 
-import * as fs from 'fs-extra';
+import {ensureDir, readdirSync, remove, writeFile} from 'fs-extra';
 
 import path from 'path';
 
@@ -34,7 +34,7 @@ jest.mock('./utils', () => ({
 }));
 
 describe('CopyConfig', () => {
-  afterEach(() => fs.remove(TEMP_DIR));
+  afterEach(() => remove(TEMP_DIR));
 
   describe('constructor', () => {
     it('can be configured using environment variables', async () => {
@@ -73,7 +73,7 @@ describe('CopyConfig', () => {
 
       expect(copiedResult.length).toBe(1);
 
-      const copiedFiles = fs.readdirSync(TEMP_DIR);
+      const copiedFiles = readdirSync(TEMP_DIR);
       expect(copiedFiles.includes('test1.txt')).toBe(true);
     });
 
@@ -104,7 +104,7 @@ describe('CopyConfig', () => {
 
       expect(copiedResult.length).toBe(1 + 1);
 
-      const copiedFiles = fs.readdirSync(TEMP_DIR);
+      const copiedFiles = readdirSync(TEMP_DIR);
 
       expect(copiedFiles.includes('test1.txt')).toBe(true);
       expect(copiedFiles.includes('test2.txt')).toBe(true);
@@ -130,8 +130,8 @@ describe('CopyConfig', () => {
     });
 
     it('overwrites destination files', async () => {
-      await fs.ensureDir(TEMP_DIR);
-      await fs.writeFile(path.join(TEMP_DIR, 'test1.txt'), '');
+      await ensureDir(TEMP_DIR);
+      await writeFile(path.join(TEMP_DIR, 'test1.txt'), '');
 
       const copyConfig = new CopyConfig({
         externalDir: '.',
@@ -147,8 +147,8 @@ describe('CopyConfig', () => {
     });
 
     it('downloads zip archives from an https url', async () => {
-      await fs.ensureDir(TEMP_DIR);
-      await fs.writeFile(path.join(TEMP_DIR, 'test1.txt'), '');
+      await ensureDir(TEMP_DIR);
+      await writeFile(path.join(TEMP_DIR, 'test1.txt'), '');
 
       const HTTPS_URL = 'https://github.com/wireapp/wire-web-config-default#master';
       const ZIP_URL = 'https://github.com/wireapp/wire-web-config-default/archive/master.zip';
@@ -170,8 +170,8 @@ describe('CopyConfig', () => {
   });
 
   it('downloads zip archives from a git url', async () => {
-    await fs.ensureDir(TEMP_DIR);
-    await fs.writeFile(path.join(TEMP_DIR, 'test1.txt'), '');
+    await ensureDir(TEMP_DIR);
+    await writeFile(path.join(TEMP_DIR, 'test1.txt'), '');
 
     const GIT_URL = 'git@github.com:wireapp/wire-web-config-default#master';
     const ZIP_URL = 'https://github.com/wireapp/wire-web-config-default/archive/master.zip';

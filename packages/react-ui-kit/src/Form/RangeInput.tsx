@@ -18,9 +18,9 @@
  */
 
 /** @jsx jsx */
-import React, {FC, forwardRef} from 'react';
+import {FC, forwardRef} from 'react';
 
-import {CSSObject, jsx} from '@emotion/react';
+import {CSSObject} from '@emotion/react';
 
 import {InputLabel} from './InputLabel';
 import {

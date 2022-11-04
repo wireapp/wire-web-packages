@@ -17,11 +17,12 @@
  *
  */
 
-import {LogFactory} from '@wireapp/commons';
 import * as fs from 'fs-extra';
 
 import os from 'os';
 import path from 'path';
+
+import {LogFactory} from '@wireapp/commons';
 
 describe('LogFactory', () => {
   describe('createLoggerName', () => {

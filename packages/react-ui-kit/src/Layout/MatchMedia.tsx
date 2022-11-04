@@ -19,9 +19,8 @@
 
 /** @jsx jsx */
 /* @jsxFrag React.Fragment */
-import React, {ReactFragment, useEffect, useMemo, useState} from 'react';
-
-import {jsx} from '@emotion/react';
+import {ReactFragment, useEffect, useMemo, useState} from 'react';
+import * as React from 'react';
 
 import {QUERY, QueryKeys} from '../mediaQueries';
 

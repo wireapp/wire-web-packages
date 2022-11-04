@@ -17,8 +17,6 @@
  *
  */
 
-import React from 'react';
-
 import {ErrorMessage} from './ErrorMessage';
 
 import {matchComponent} from '../test/testUtil';

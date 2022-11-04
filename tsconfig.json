@@ -2,7 +2,7 @@
   "compilerOptions": {
     "forceConsistentCasingInFileNames": true,
     "lib": ["dom", "esnext"],
-    "jsx": "react",
+    "jsx": "react-jsx",
     "module": "commonjs",
     "moduleResolution": "node",
     "noEmitOnError": false,

@@ -18,7 +18,7 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/react';
+import {CSSObject} from '@emotion/react';
 
 import {defaultTransition} from '../Identity/motions';
 import {Theme} from '../Layout';

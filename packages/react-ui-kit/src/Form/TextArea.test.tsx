@@ -17,8 +17,6 @@
  *
  */
 
-import React from 'react';
-
 import {TextArea} from './TextArea';
 
 import {matchComponent} from '../test/testUtil';

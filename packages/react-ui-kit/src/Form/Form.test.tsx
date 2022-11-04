@@ -17,8 +17,6 @@
  *
  */
 
-import React from 'react';
-
 import {Form} from './Form';
 
 import {matchComponent} from '../test/testUtil';

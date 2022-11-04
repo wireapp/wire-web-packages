@@ -18,7 +18,7 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/react';
+import {CSSObject} from '@emotion/react';
 
 import {TextProps} from '../../Text';
 import {filterProps} from '../../util';

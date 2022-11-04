@@ -17,8 +17,6 @@
  *
  */
 
-import React from 'react';
-
 import {Input} from './Input';
 
 import {matchComponent} from '../test/testUtil';
