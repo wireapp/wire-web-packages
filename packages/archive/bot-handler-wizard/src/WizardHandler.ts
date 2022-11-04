@@ -19,9 +19,9 @@
 
 import {MessageHandler} from '@wireapp/bot-api';
 import {PayloadBundle, PayloadBundleSource, PayloadBundleType} from '@wireapp/core/lib/conversation/';
-import {Prompt, Wizardy} from 'wizardy';
-import {QuotableMessage} from '@wireapp/core/lib/conversation/message/OtrMessage';
 import {TextContent} from '@wireapp/core/lib/conversation/content';
+import {QuotableMessage} from '@wireapp/core/lib/conversation/message/OtrMessage';
+import {Prompt, Wizardy} from 'wizardy';
 
 export {Prompt};
 

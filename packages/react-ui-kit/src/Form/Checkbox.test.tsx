@@ -18,10 +18,14 @@
  */
 
 import React from 'react';
-import {THEME_ID} from '../Layout';
-import {Checkbox, CheckboxLabel} from './Checkbox';
-import {StyledApp} from '../../src/Layout/StyledApp';
+
 import {render, fireEvent} from '@testing-library/react';
+
+import {Checkbox, CheckboxLabel} from './Checkbox';
+
+import {StyledApp} from '../../src/Layout/StyledApp';
+import {THEME_ID} from '../Layout';
+
 import '@testing-library/jest-dom/extend-expect';
 import {matchComponent} from '../test/testUtil';
 

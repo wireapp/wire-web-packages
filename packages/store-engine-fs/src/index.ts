@@ -19,6 +19,7 @@
 
 import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import fs from 'fs-extra';
+
 import path from 'path';
 
 type FSError = Error & {code: string};

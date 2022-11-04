@@ -19,6 +19,7 @@
 
 import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import * as websql from '@wireapp/websql';
+
 import fs from 'fs';
 
 import {

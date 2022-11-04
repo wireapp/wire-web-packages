@@ -18,13 +18,15 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/react';
 import {useEffect, useState} from 'react';
+
+import {CSSObject, jsx} from '@emotion/react';
+
+import {COLOR} from './colors';
+import {DURATION, EASE} from './motions';
 
 import {IsInViewport, IsInViewportProps} from '../Misc/';
 import {filterProps} from '../util';
-import {COLOR} from './colors';
-import {DURATION, EASE} from './motions';
 
 export const DEFAULT_AVATAR_SIZE = 28;
 

@@ -19,10 +19,12 @@
 
 import nock from 'nock';
 
-import {HttpClient} from './HttpClient';
 import {BackendErrorLabel} from './BackendErrorLabel';
-import {BackendError, StatusCode} from '.';
+import {HttpClient} from './HttpClient';
+
 import {AccessTokenStore, AuthAPI} from '../auth';
+
+import {BackendError, StatusCode} from '.';
 
 describe('HttpClient', () => {
   const testConfig = {urls: {rest: 'https://test.zinfra.io', ws: '', name: 'test'}};

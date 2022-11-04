@@ -18,6 +18,7 @@
  */
 
 import * as platform from 'platform';
+
 import {OS, Runtime} from './Runtime';
 
 describe('isAndroid', () => {

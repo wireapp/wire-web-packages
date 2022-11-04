@@ -19,6 +19,8 @@
 
 import {APIClient} from '@wireapp/api-client';
 import {PostMlsMessageResponse} from '@wireapp/api-client/lib/conversation';
+import {QualifiedId} from '@wireapp/api-client/lib/user';
+import {TimeUtil} from '@wireapp/commons';
 import {
   AddProposalArgs,
   CommitBundle,
@@ -36,18 +38,17 @@ import {
 } from '@wireapp/core-crypto';
 import {Converter, Decoder, Encoder} from 'bazinga64';
 import logdown from 'logdown';
+
+import {keyMaterialUpdatesStore} from './stores/keyMaterialUpdatesStore';
+import {pendingProposalsStore} from './stores/pendingProposalsStore';
+
 import {QualifiedUsers} from '../../conversation';
 import {sendMessage} from '../../conversation/message/messageSender';
 import {parseFullQualifiedClientId} from '../../util/fullyQualifiedClientIdUtils';
-import {CommitPendingProposalsParams, HandlePendingProposalsParams, MLSCallbacks} from '../types';
-
-import {QualifiedId} from '@wireapp/api-client/lib/user';
-import {TimeUtil} from '@wireapp/commons';
 import {cancelRecurringTask, registerRecurringTask} from '../../util/RecurringTaskScheduler';
 import {TaskScheduler} from '../../util/TaskScheduler';
 import {EventHandlerParams, EventHandlerResult, handleBackendEvent} from '../EventHandler';
-import {keyMaterialUpdatesStore} from './stores/keyMaterialUpdatesStore';
-import {pendingProposalsStore} from './stores/pendingProposalsStore';
+import {CommitPendingProposalsParams, HandlePendingProposalsParams, MLSCallbacks} from '../types';
 
 //@todo: this function is temporary, we wait for the update from core-crypto side
 //they are returning regular array instead of Uint8Array for commit and welcome messages

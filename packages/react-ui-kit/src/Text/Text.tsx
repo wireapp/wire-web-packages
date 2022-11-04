@@ -18,13 +18,14 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/react';
 import React from 'react';
+
+import {CSSObject, jsx} from '@emotion/react';
 import {Property} from 'csstype';
 
+import {COLOR} from '../Identity';
 import {Theme} from '../Layout';
 import {filterProps} from '../util';
-import {COLOR} from '../Identity';
 
 export interface TextProps<T = HTMLSpanElement> extends React.PropsWithRef<React.HTMLProps<T>> {
   block?: boolean;

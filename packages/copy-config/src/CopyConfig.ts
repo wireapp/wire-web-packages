@@ -19,6 +19,7 @@
 
 import fs from 'fs-extra';
 import logdown from 'logdown';
+
 import path from 'path';
 
 import {CopyConfigOptions} from './CopyConfigOptions';

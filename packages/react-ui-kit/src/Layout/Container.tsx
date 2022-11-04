@@ -18,12 +18,14 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/react';
 import React from 'react';
+
+import {CSSObject, jsx} from '@emotion/react';
+
+import {GUTTER, WIDTH} from './sizes';
 
 import {QueryKeys, media} from '../mediaQueries';
 import {filterProps} from '../util';
-import {GUTTER, WIDTH} from './sizes';
 
 export interface ContainerProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   centerText?: boolean;

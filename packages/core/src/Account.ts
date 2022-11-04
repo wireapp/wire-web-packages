@@ -24,16 +24,17 @@ import {ClientClassification, ClientType, RegisteredClient} from '@wireapp/api-c
 import * as Events from '@wireapp/api-client/lib/event';
 import {Notification} from '@wireapp/api-client/lib/notification/';
 import {AbortHandler, WebSocketClient} from '@wireapp/api-client/lib/tcp/';
+import {WEBSOCKET_STATE} from '@wireapp/api-client/lib/tcp/ReconnectingWebsocket';
+import {CoreCrypto} from '@wireapp/core-crypto';
 import * as cryptobox from '@wireapp/cryptobox';
 import {CRUDEngine, error as StoreEngineError, MemoryEngine} from '@wireapp/store-engine';
-import {EventEmitter} from 'events';
+import axios from 'axios';
+import {Encoder} from 'bazinga64';
 import {StatusCodes as HTTP_STATUS} from 'http-status-codes';
 import logdown from 'logdown';
 
-import {WEBSOCKET_STATE} from '@wireapp/api-client/lib/tcp/ReconnectingWebsocket';
-import {CoreCrypto} from '@wireapp/core-crypto';
-import axios from 'axios';
-import {Encoder} from 'bazinga64';
+import {EventEmitter} from 'events';
+
 import {AccountService} from './account/';
 import {LoginSanitizer} from './auth/';
 import {BroadcastService} from './broadcast/';

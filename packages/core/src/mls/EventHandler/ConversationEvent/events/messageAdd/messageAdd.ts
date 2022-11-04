@@ -21,6 +21,7 @@ import {BackendEvent, ConversationMLSMessageAddEvent, CONVERSATION_EVENT} from '
 import {GenericMessage} from '@wireapp/protocol-messaging';
 import {Decoder} from 'bazinga64';
 import logdown from 'logdown';
+
 import {optionalToUint8Array} from '../../../../MLSService/MLSService';
 import {EventHandlerParams, EventHandlerResult} from '../../../EventHandler.types';
 

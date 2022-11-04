@@ -18,15 +18,17 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/react';
 import React from 'react';
+
+import {CSSObject, jsx} from '@emotion/react';
+
+import {MENU_LINK_CLASSNAME} from './MenuLink';
+import {MenuSubLink} from './MenuSubLink';
 
 import {COLOR, Opacity, Slide, YAxisMovement} from '../../Identity';
 import {DURATION} from '../../Identity/motions';
 import {QUERY} from '../../mediaQueries';
 import {Theme} from '../Theme';
-import {MenuSubLink} from './MenuSubLink';
-import {MENU_LINK_CLASSNAME} from './MenuLink';
 
 export type DesktopStyledHeaderSubMenuProps<T = HTMLDivElement> = React.HTMLProps<T>;
 

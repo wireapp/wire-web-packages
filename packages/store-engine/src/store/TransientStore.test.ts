@@ -17,9 +17,10 @@
  *
  */
 
+import {TransientStore} from './TransientStore';
+
 import {CRUDEngine, MemoryEngine} from '../engine';
 import {RecordAlreadyExistsError} from '../engine/error';
-import {TransientStore} from './TransientStore';
 
 describe('store.TransientStore', () => {
   const STORE_NAME = 'database-name';

@@ -20,9 +20,11 @@
 import {APIClient} from '@wireapp/api-client';
 import {Notification} from '@wireapp/api-client/lib/notification';
 import {MemoryEngine} from '@wireapp/store-engine';
+
+import {NotificationService} from './NotificationService';
+
 import {PayloadBundleSource} from '../conversation';
 import {CryptographyService} from '../cryptography';
-import {NotificationService} from './NotificationService';
 import {MLSService} from '../mls';
 
 const BASE_URL = 'mock-backend.wire.com';

@@ -17,17 +17,18 @@
  *
  */
 
-import {exec} from 'child_process';
-import {promisify} from 'util';
 import {APIClient} from '@wireapp/api-client';
+import {ConversationProtocol} from '@wireapp/api-client/lib/conversation';
 import {Account} from '@wireapp/core';
+import {buildTextMessage} from '@wireapp/core/lib/conversation/message/MessageBuilder';
 import {MemoryEngine} from '@wireapp/store-engine';
 import * as Changelog from 'generate-changelog';
 import logdown from 'logdown';
 
+import {exec} from 'child_process';
+import {promisify} from 'util';
+
 import {ChangelogData, LoginDataBackend} from './Interfaces';
-import {buildTextMessage} from '@wireapp/core/lib/conversation/message/MessageBuilder';
-import {ConversationProtocol} from '@wireapp/api-client/lib/conversation';
 
 const logger = logdown('@wireapp/changelog-bot/ChangelogBot', {
   logger: console,

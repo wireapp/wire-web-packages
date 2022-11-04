@@ -17,8 +17,6 @@
  *
  */
 
-import UUID from 'uuidjs';
-import {StatusCodes} from 'http-status-codes';
 import {APIClient} from '@wireapp/api-client';
 import {
   ClientMismatch,
@@ -29,8 +27,12 @@ import {
   UserClients,
 } from '@wireapp/api-client/lib/conversation';
 import {GenericMessage, Text} from '@wireapp/protocol-messaging';
-import {CryptographyService} from '../../cryptography';
+import {StatusCodes} from 'http-status-codes';
+import UUID from 'uuidjs';
+
 import {MessageService} from './MessageService';
+
+import {CryptographyService} from '../../cryptography';
 import {getUUID} from '../../test/PayloadHelper';
 
 const baseMessageSendingStatus: MessageSendingStatus = {

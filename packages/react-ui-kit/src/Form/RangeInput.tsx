@@ -18,10 +18,10 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/react';
 import React, {FC, forwardRef} from 'react';
-import {TextProps} from '../Text';
-import {Theme} from '../Layout';
+
+import {CSSObject, jsx} from '@emotion/react';
+
 import InputLabel from './InputLabel';
 import {
   getImageCropZoomInputStyles,
@@ -29,6 +29,9 @@ import {
   rangeInputWrapperStyles,
   ValueLabelPosition,
 } from './RangeInput.styles';
+
+import {Theme} from '../Layout';
+import {TextProps} from '../Text';
 
 export interface RangeInputProps<T = HTMLInputElement> extends TextProps<T> {
   label?: string;

@@ -18,9 +18,10 @@
  */
 
 /** @jsx jsx */
-import {jsx} from '@emotion/react';
 import React from 'react';
 import {useState} from 'react';
+
+import {jsx} from '@emotion/react';
 
 import {MenuContent} from './MenuContent';
 import {MenuItems} from './MenuItems';

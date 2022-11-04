@@ -18,8 +18,10 @@
  */
 
 import React from 'react';
-import {matchComponent} from '../test/testUtil';
+
 import {Form} from './Form';
+
+import {matchComponent} from '../test/testUtil';
 
 describe('"Form"', () => {
   it('renders', () => matchComponent(<Form>Form</Form>));

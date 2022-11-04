@@ -22,13 +22,14 @@ import {ClientClassification, ClientType} from '@wireapp/api-client/lib/client';
 import {ConversationProtocol} from '@wireapp/api-client/lib/conversation';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 import {MemoryEngine} from '@wireapp/store-engine';
-import {ConversationService, PayloadBundleState} from '..';
 
-import {CryptographyService} from '../../cryptography';
-import * as PayloadHelper from '../../test/PayloadHelper';
 import {MessageTargetMode} from './ConversationService.types';
-import * as MessageBuilder from '../message/MessageBuilder';
+
+import {ConversationService, PayloadBundleState} from '..';
+import {CryptographyService} from '../../cryptography';
 import {MLSService} from '../../mls';
+import * as PayloadHelper from '../../test/PayloadHelper';
+import * as MessageBuilder from '../message/MessageBuilder';
 
 jest.mock('../message/messageSender', () => ({
   ...jest.requireActual('../message/messageSender'),

@@ -19,6 +19,7 @@
 
 import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import * as fs from 'bro-fs';
+
 import * as path from 'path';
 
 export interface FileSystemEngineOptions {

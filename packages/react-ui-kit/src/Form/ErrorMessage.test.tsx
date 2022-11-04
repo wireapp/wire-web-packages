@@ -18,8 +18,10 @@
  */
 
 import React from 'react';
-import {matchComponent} from '../test/testUtil';
+
 import {ErrorMessage} from './ErrorMessage';
+
+import {matchComponent} from '../test/testUtil';
 
 describe('"ErrorMessage"', () => {
   it('renders', () => matchComponent(<ErrorMessage>ErrorMessage</ErrorMessage>));

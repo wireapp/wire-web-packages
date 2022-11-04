@@ -26,6 +26,7 @@ import {readAllSpec} from '@wireapp/store-engine/lib/test/readAllSpec';
 import {readSpec} from '@wireapp/store-engine/lib/test/readSpec';
 import {updateOrCreateSpec} from '@wireapp/store-engine/lib/test/updateOrCreateSpec';
 import {updateSpec} from '@wireapp/store-engine/lib/test/updateSpec';
+
 import {SQLeetEngine, SQLiteType} from './index';
 
 interface DBRecord {

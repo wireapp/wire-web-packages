@@ -24,6 +24,7 @@ import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {CRUDEngine} from '@wireapp/store-engine';
 
 import {CryptographyService} from '../cryptography/';
+
 import {ClientInfo, ClientBackendRepository, ClientDatabaseRepository} from './';
 
 export interface MetaClient extends RegisteredClient {

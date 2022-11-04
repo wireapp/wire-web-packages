@@ -18,9 +18,11 @@
  */
 
 import React from 'react';
+
+import {Switch} from './Switch';
+
 import {THEME_ID} from '../Layout';
 import {matchComponent} from '../test/testUtil';
-import {Switch} from './Switch';
 
 describe('"Switch"', () => {
   it('renders unchecked', () => matchComponent(<Switch id="1" checked={false} onToggle={() => {}} />));

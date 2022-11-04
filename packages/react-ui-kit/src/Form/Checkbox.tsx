@@ -18,12 +18,14 @@
  */
 
 /** @jsx jsx */
-import {jsx} from '@emotion/react';
 import React, {useId} from 'react';
+
+import {jsx} from '@emotion/react';
+
+import {INPUT_CLASSNAME, InputProps} from './Input';
 
 import {Theme} from '../Layout';
 import {Text, TextProps, textStyle} from '../Text';
-import {INPUT_CLASSNAME, InputProps} from './Input';
 
 export interface StyledLabelProps<T = HTMLLabelElement> extends React.HTMLProps<T> {
   disabled?: boolean;

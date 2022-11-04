@@ -20,8 +20,10 @@
 /* eslint-disable jest/expect-expect */
 
 import React from 'react';
-import {matchComponent} from '../test/testUtil';
+
 import {Select} from './Select';
+
+import {matchComponent} from '../test/testUtil';
 
 const props: React.ComponentProps<typeof Select> = {
   options: [],

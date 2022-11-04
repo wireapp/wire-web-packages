@@ -18,9 +18,11 @@
  */
 
 import React from 'react';
+
+import {Title} from './Title';
+
 import {THEME_ID} from '../Layout';
 import {matchComponent} from '../test/testUtil';
-import {Title} from './Title';
 
 describe('"Title"', () => {
   it('renders', () => matchComponent(<Title>Title</Title>));

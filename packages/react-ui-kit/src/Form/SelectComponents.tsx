@@ -18,15 +18,17 @@
  */
 
 /** @jsx jsx */
-import {jsx} from '@emotion/react';
 import React from 'react';
-import {components, OptionProps, ValueContainerProps} from 'react-select';
-import {MenuProps} from 'react-select/dist/declarations/src/components/Menu';
-import {IndicatorsContainerProps} from 'react-select/dist/declarations/src/components/containers';
 
-import {Theme} from '../Layout';
+import {jsx} from '@emotion/react';
+import {components, OptionProps, ValueContainerProps} from 'react-select';
+import {IndicatorsContainerProps} from 'react-select/dist/declarations/src/components/containers';
+import {MenuProps} from 'react-select/dist/declarations/src/components/Menu';
+
 import {Option} from './Select';
+
 import {ArrowDown} from '../Icon/ArrowDown';
+import {Theme} from '../Layout';
 // SelectContainer
 export const SelectContainer = props => {
   return (

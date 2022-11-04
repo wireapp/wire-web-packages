@@ -18,6 +18,7 @@
  */
 
 import React from 'react';
+
 import {GlobalStyle} from './GlobalStyle';
 import {matchComponent} from './test/testUtil';
 

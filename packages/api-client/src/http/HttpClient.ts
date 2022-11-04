@@ -17,11 +17,13 @@
  *
  */
 
-import {EventEmitter} from 'events';
-import {PriorityQueue} from '@wireapp/priority-queue';
 import {TimeUtil} from '@wireapp/commons';
+import {PriorityQueue} from '@wireapp/priority-queue';
 import axios, {AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios';
+import axiosRetry, {isNetworkOrIdempotentRequestError} from 'axios-retry';
 import logdown from 'logdown';
+
+import {EventEmitter} from 'events';
 
 import {
   AccessTokenData,
@@ -31,11 +33,10 @@ import {
   MissingCookieError,
   TokenExpiredError,
 } from '../auth/';
+import {Config} from '../Config';
 import {BackendError, BackendErrorMapper, ConnectionState, ContentType, StatusCode} from '../http/';
 import {ObfuscationUtil} from '../obfuscation/';
 import {sendRequestWithCookie} from '../shims/node/cookie';
-import {Config} from '../Config';
-import axiosRetry, {isNetworkOrIdempotentRequestError} from 'axios-retry';
 
 enum TOPIC {
   ON_CONNECTION_STATE_CHANGE = 'HttpClient.TOPIC.ON_CONNECTION_STATE_CHANGE',

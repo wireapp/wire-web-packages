@@ -17,26 +17,7 @@
  *
  */
 
-import UUID from 'uuidjs';
-
-import {
-  ButtonActionConfirmationMessage,
-  ButtonActionMessage,
-  CallMessage,
-  ConfirmationMessage,
-  DeleteMessage,
-  EditedTextMessage,
-  FileAssetAbortMessage,
-  FileAssetMessage,
-  FileAssetMetaDataMessage,
-  HideMessage,
-  ImageAssetMessageOutgoing,
-  LocationMessage,
-  PingMessage,
-  ReactionMessage,
-  TextMessage,
-} from './OtrMessage';
-
+import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {
   IComposite,
   Asset,
@@ -58,10 +39,29 @@ import {
   LastRead,
   Cleared,
 } from '@wireapp/protocol-messaging';
-import {MessageToProtoMapper} from '../message/MessageToProtoMapper';
-import {GenericMessageType} from '../GenericMessageType';
+import UUID from 'uuidjs';
+
+import {
+  ButtonActionConfirmationMessage,
+  ButtonActionMessage,
+  CallMessage,
+  ConfirmationMessage,
+  DeleteMessage,
+  EditedTextMessage,
+  FileAssetAbortMessage,
+  FileAssetMessage,
+  FileAssetMetaDataMessage,
+  HideMessage,
+  ImageAssetMessageOutgoing,
+  LocationMessage,
+  PingMessage,
+  ReactionMessage,
+  TextMessage,
+} from './OtrMessage';
+
 import {AssetTransferState} from '../AssetTransferState';
-import {QualifiedId} from '@wireapp/api-client/lib/user';
+import {GenericMessageType} from '../GenericMessageType';
+import {MessageToProtoMapper} from '../message/MessageToProtoMapper';
 
 export function createId() {
   return UUID.genV4().toString();

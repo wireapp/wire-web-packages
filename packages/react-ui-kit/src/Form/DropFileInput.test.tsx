@@ -18,10 +18,13 @@
  */
 
 import React from 'react';
-import {matchComponent} from '../test/testUtil';
-import {DropFileInput, DropFileInputProps} from './DropFileInput';
+
 import {fireEvent, render} from '@testing-library/react';
+
+import {DropFileInput, DropFileInputProps} from './DropFileInput';
+
 import {StyledApp, THEME_ID} from '../Layout';
+import {matchComponent} from '../test/testUtil';
 
 //note: we don't have to test file type validation using native file upload,
 // it won't allow to pick different type thant expected

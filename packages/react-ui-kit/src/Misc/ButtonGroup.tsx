@@ -18,12 +18,14 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/react';
 import {ReactElement} from 'react';
+
+import {CSSObject, jsx} from '@emotion/react';
+
+import {IconButtonProps} from './IconButton';
 
 import {COLOR_V2} from '../Identity';
 import {Theme} from '../Layout';
-import {IconButtonProps} from './IconButton';
 
 const buttonGroupStyle: <T>(theme: Theme) => CSSObject = () => ({
   display: 'flex',

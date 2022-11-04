@@ -19,8 +19,8 @@
 
 import axios, {AxiosRequestConfig} from 'axios';
 
-import {HttpClient} from '../../http';
 import {Notification, NotificationList} from '..';
+import {HttpClient} from '../../http';
 
 export const NOTIFICATION_SIZE_MAXIMUM = 10000;
 

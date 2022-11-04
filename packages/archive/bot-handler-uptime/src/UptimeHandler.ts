@@ -17,13 +17,12 @@
  *
  */
 
+import {MessageHandler} from '@wireapp/bot-api';
+import {PayloadBundle, PayloadBundleSource, PayloadBundleType} from '@wireapp/core/lib/conversation/';
+import {TextContent} from '@wireapp/core/lib/conversation/content';
+import {QuotableMessage} from '@wireapp/core/lib/conversation/message/OtrMessage';
 import * as moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
-
-import {PayloadBundle, PayloadBundleSource, PayloadBundleType} from '@wireapp/core/lib/conversation/';
-import {QuotableMessage} from '@wireapp/core/lib/conversation/message/OtrMessage';
-import {MessageHandler} from '@wireapp/bot-api';
-import {TextContent} from '@wireapp/core/lib/conversation/content';
 
 momentDurationFormatSetup(moment as any);
 

@@ -18,9 +18,11 @@
  */
 
 import React from 'react';
+
+import {Label, LabelLink} from './Label';
+
 import {THEME_ID} from '../Layout';
 import {matchComponent} from '../test/testUtil';
-import {Label, LabelLink} from './Label';
 
 describe('"InputLabel"', () => {
   it('renders', () => matchComponent(<Label>Label</Label>));

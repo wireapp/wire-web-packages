@@ -20,9 +20,10 @@
 /** @jsx jsx */
 import {CSSObject, jsx} from '@emotion/react';
 
+import {TextProps, filterTextProps, textStyle} from './Text';
+
 import {COLOR} from '../Identity';
 import {Theme} from '../Layout';
-import {TextProps, filterTextProps, textStyle} from './Text';
 
 export type TitleProps<T = HTMLDivElement> = TextProps<T>;
 

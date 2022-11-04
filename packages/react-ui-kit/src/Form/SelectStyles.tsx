@@ -17,8 +17,9 @@
  *
  */
 
-import {Theme} from '../Layout';
 import {inputStyle} from './Input';
+
+import {Theme} from '../Layout';
 
 export const customStyles = (theme: Theme, markInvalid = false) => ({
   indicatorSeparator: () => ({

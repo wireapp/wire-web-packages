@@ -17,7 +17,6 @@
  *
  */
 
-import * as bazinga64 from './index';
 import {
   helloDecodedArray,
   helloDecodedString,
@@ -26,6 +25,8 @@ import {
   numberDecoded,
   numberString,
 } from './test/TestValues';
+
+import * as bazinga64 from './index';
 
 describe('arrayBufferViewToStringUTF8', () => {
   it('handles UTF-8 conversions', () => {

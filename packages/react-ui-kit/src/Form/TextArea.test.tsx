@@ -18,8 +18,10 @@
  */
 
 import React from 'react';
-import {matchComponent} from '../test/testUtil';
+
 import {TextArea} from './TextArea';
+
+import {matchComponent} from '../test/testUtil';
 
 describe('"TextArea"', () => {
   it('renders', () => matchComponent(<TextArea>TextArea</TextArea>));

@@ -18,11 +18,15 @@
  */
 
 import React from 'react';
-import {matchComponent} from '../test/testUtil';
-import {RangeInput, RangeInputProps} from './RangeInput';
-import {fireEvent, render} from '@testing-library/react';
-import {StyledApp, THEME_ID} from '../Layout';
+
 import {matchers} from '@emotion/jest';
+import {fireEvent, render} from '@testing-library/react';
+
+import {RangeInput, RangeInputProps} from './RangeInput';
+
+import {StyledApp, THEME_ID} from '../Layout';
+import {matchComponent} from '../test/testUtil';
+
 expect.extend(matchers);
 
 const getDefaultProps = () => ({

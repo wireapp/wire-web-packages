@@ -17,16 +17,16 @@
  *
  */
 
-import {MessageHandler} from '@wireapp/bot-api';
-import {Account} from '@wireapp/core';
-import {CONVERSATION_TYPING} from '@wireapp/api-client/lib/conversation/data/';
-import UUID from 'uuidjs';
 import {ClientType} from '@wireapp/api-client/lib/client';
 import {Connection} from '@wireapp/api-client/lib/connection';
-import {MessageBuilder} from '@wireapp/core';
 import {ConversationProtocol} from '@wireapp/api-client/lib/conversation';
+import {CONVERSATION_TYPING} from '@wireapp/api-client/lib/conversation/data/';
+import {MessageHandler} from '@wireapp/bot-api';
+import {MessageBuilder} from '@wireapp/core';
+import {Account} from '@wireapp/core';
 import {PayloadBundleState} from '@wireapp/core/lib/conversation';
 import {createId} from '@wireapp/core/lib/conversation/message/MessageBuilder';
+import UUID from 'uuidjs';
 
 describe('MessageHandler', () => {
   let mainHandler: MessageHandler;

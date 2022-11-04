@@ -18,9 +18,12 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/react';
 import React, {CSSProperties} from 'react';
+
+import {CSSObject, jsx} from '@emotion/react';
 import Color from 'color';
+
+import {OverlayBackgroundProps, OverlayWrapper, overlayBackgroundStyle} from './Overlay';
 
 import {CloseIcon} from '../Icon';
 import {SVGIconProps} from '../Icon/SVGIcon';
@@ -28,7 +31,6 @@ import {COLOR} from '../Identity';
 import {Theme} from '../Layout';
 import {QueryKeys, media} from '../mediaQueries';
 import {filterProps, noop} from '../util';
-import {OverlayBackgroundProps, OverlayWrapper, overlayBackgroundStyle} from './Overlay';
 
 export interface ModalBodyProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   fullscreen?: boolean;

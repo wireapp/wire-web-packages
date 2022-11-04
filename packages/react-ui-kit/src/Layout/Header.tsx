@@ -18,8 +18,9 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/react';
 import React from 'react';
+
+import {CSSObject, jsx} from '@emotion/react';
 
 export type HeaderProps<T = HTMLHeadingElement> = React.HTMLProps<T>;
 

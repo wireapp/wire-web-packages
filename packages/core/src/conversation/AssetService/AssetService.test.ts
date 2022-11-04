@@ -19,6 +19,7 @@
 
 import {APIClient} from '@wireapp/api-client';
 import UUID from 'uuidjs';
+
 import {AssetService} from './AssetService';
 
 describe('AssetService', () => {

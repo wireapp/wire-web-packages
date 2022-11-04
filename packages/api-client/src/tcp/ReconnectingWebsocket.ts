@@ -20,9 +20,9 @@
 import {TimeUtil} from '@wireapp/commons';
 import logdown from 'logdown';
 import RWS, {CloseEvent, ErrorEvent, Event, Options} from 'reconnecting-websocket';
-import WebSocketClass from '../shims/node/websocket';
 
 import * as buffer from '../shims/node/buffer';
+import WebSocketClass from '../shims/node/websocket';
 
 export enum CloseEventCode {
   NORMAL_CLOSURE = 1000,

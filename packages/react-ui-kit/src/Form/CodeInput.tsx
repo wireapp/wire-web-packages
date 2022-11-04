@@ -18,13 +18,15 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/react';
 import React, {useEffect, useState} from 'react';
 
+import {CSSObject, jsx} from '@emotion/react';
+
+import {InputProps, inputStyle} from './Input';
+
+import {COLOR_V2} from '../Identity';
 import {Theme} from '../Layout';
 import {noop} from '../util';
-import {InputProps, inputStyle} from './Input';
-import {COLOR_V2} from '../Identity';
 
 const CodeInputWrapper = (props: React.HTMLProps<HTMLDivElement>) => (
   <div

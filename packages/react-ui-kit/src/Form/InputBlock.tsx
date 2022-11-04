@@ -19,11 +19,13 @@
 
 /** @jsx jsx */
 import React from 'react';
+
 import {CSSObject, jsx} from '@emotion/react';
 
-import {COLOR} from '../Identity';
 import {INPUT_CLASSNAME, INPUT_GROUP} from './Input';
 import {INPUT_SUBMIT_COMBO_CLASSNAME} from './InputSubmitCombo';
+
+import {COLOR} from '../Identity';
 
 export type InputBlockProps<T = HTMLDivElement> = React.HTMLProps<T>;
 

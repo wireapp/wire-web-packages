@@ -19,8 +19,8 @@
 
 /* eslint-disable no-magic-numbers, dot-notation */
 
-import nock from 'nock';
 import {AccentColor} from '@wireapp/commons/lib';
+import nock from 'nock';
 
 import {APIClient, BackendVersionResponse} from './APIClient';
 import {AuthAPI} from './auth/AuthAPI';

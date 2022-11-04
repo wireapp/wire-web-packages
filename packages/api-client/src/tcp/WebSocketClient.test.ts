@@ -19,10 +19,11 @@
 
 /* eslint-disable dot-notation */
 
+import {WebSocketClient} from './WebSocketClient';
+
 import {InvalidTokenError} from '../auth/AuthenticationError';
 import {TEAM_EVENT} from '../event/';
 import {Notification} from '../notification';
-import {WebSocketClient} from './WebSocketClient';
 
 const accessTokenPayload = {
   access_token:

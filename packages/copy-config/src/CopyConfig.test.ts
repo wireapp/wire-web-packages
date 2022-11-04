@@ -19,11 +19,13 @@
 
 //@ts-check
 
-import path from 'path';
 import fs from 'fs-extra';
 
-import {CopyConfig} from '.';
+import path from 'path';
+
 import * as utils from './utils';
+
+import {CopyConfig} from '.';
 const TEMP_DIR = path.resolve(__dirname, '..', '.temp');
 
 jest.mock('./utils', () => ({

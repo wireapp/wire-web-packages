@@ -18,14 +18,15 @@
  */
 
 /** @jsx jsx */
+import React, {ReactElement} from 'react';
+
 import {CSSObject, jsx} from '@emotion/react';
 import {useTheme} from '@emotion/react';
-import React, {ReactElement} from 'react';
 import ReactSelect from 'react-select';
 import {StylesConfig} from 'react-select/dist/declarations/src/styles';
 import {StateManagerProps} from 'react-select/dist/declarations/src/useStateManager';
 
-import {customStyles} from './SelectStyles';
+import InputLabel from './InputLabel';
 import {
   CustomOption,
   DropdownIndicator,
@@ -34,8 +35,9 @@ import {
   SelectContainer,
   ValueContainer,
 } from './SelectComponents';
+import {customStyles} from './SelectStyles';
+
 import {Theme} from '../Layout';
-import InputLabel from './InputLabel';
 
 export type Option = {
   value: string | number;

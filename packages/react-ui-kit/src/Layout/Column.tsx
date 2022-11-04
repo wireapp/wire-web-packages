@@ -19,11 +19,13 @@
 
 /** @jsx jsx */
 import React from 'react';
+
 import {CSSObject, jsx} from '@emotion/react';
+
+import {GUTTER} from './sizes';
 
 import {QueryKeys, media} from '../mediaQueries';
 import {filterProps} from '../util';
-import {GUTTER} from './sizes';
 
 export interface ColumnsProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   query?: QueryKeys;

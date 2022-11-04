@@ -20,9 +20,10 @@
 /** @jsx jsx */
 import {CSSObject, jsx} from '@emotion/react';
 
+import {LinkProps, filterLinkProps, linkStyle} from './Link';
+
 import {COLOR_V2} from '../Identity/colors-v2';
 import {Theme} from '../Layout';
-import {LinkProps, filterLinkProps, linkStyle} from './Link';
 
 export type TextLinkProps<T = HTMLAnchorElement> = LinkProps<T>;
 

@@ -36,11 +36,12 @@ import {CRUDEngine} from '@wireapp/store-engine';
 import {Decoder, Encoder} from 'bazinga64';
 import logdown from 'logdown';
 
+import {CryptographyDatabaseRepository} from './CryptographyDatabaseRepository';
+import {GenericMessageMapper} from './GenericMessageMapper';
+
 import {GenericMessageType, PayloadBundle, PayloadBundleSource} from '../conversation';
 import {SessionPayloadBundle} from '../cryptography/';
 import {isUserClients} from '../util';
-import {CryptographyDatabaseRepository} from './CryptographyDatabaseRepository';
-import {GenericMessageMapper} from './GenericMessageMapper';
 
 export type DecryptionError = {code: number; message: string};
 

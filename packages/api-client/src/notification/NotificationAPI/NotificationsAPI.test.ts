@@ -18,6 +18,7 @@
  */
 
 import {AxiosError, AxiosResponse} from 'axios';
+
 import {
   notificationAPI,
   client,

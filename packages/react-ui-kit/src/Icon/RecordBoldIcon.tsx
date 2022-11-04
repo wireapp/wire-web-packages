@@ -19,9 +19,10 @@
 
 /** @jsx jsx */
 import {jsx} from '@emotion/react';
-import {COLOR} from '../Identity';
 
 import {SVGIcon, SVGIconProps} from './SVGIcon';
+
+import {COLOR} from '../Identity';
 
 export const RecordBoldIcon = ({color = COLOR.TEXT, ...props}: SVGIconProps) => (
   <SVGIcon realWidth={20} realHeight={16} color={color} {...props}>

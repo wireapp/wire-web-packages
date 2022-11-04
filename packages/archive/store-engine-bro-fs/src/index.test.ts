@@ -27,6 +27,7 @@ import {readSpec} from '@wireapp/store-engine/lib/test/readSpec';
 import {updateOrCreateSpec} from '@wireapp/store-engine/lib/test/updateOrCreateSpec';
 import {updateSpec} from '@wireapp/store-engine/lib/test/updateSpec';
 import * as fs from 'bro-fs';
+
 import {FileSystemEngine} from './index';
 
 describe('FileSystemEngine', () => {

@@ -18,14 +18,15 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx} from '@emotion/react';
 import React, {useState, FC, forwardRef, DragEvent} from 'react';
 
+import {CSSObject, jsx} from '@emotion/react';
+
+import {UploadIcon} from '../Icon';
 import {COLOR} from '../Identity';
 import {Theme} from '../Layout';
-import {TextProps} from '../Text';
-import {UploadIcon} from '../Icon';
 import {FlexBox} from '../Layout';
+import {TextProps} from '../Text';
 
 export interface DropFileInputProps<T = HTMLInputElement> extends TextProps<T> {
   onFilesUploaded: (files: File[]) => void;

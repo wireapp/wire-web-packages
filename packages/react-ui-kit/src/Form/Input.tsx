@@ -18,15 +18,17 @@
  */
 
 /** @jsx jsx */
-import {CSSObject, jsx, useTheme} from '@emotion/react';
-import {Property} from 'csstype';
 import React, {ReactElement, useState} from 'react';
 
+import {CSSObject, jsx, useTheme} from '@emotion/react';
+import {Property} from 'csstype';
+
+import InputLabel from './InputLabel';
+
+import {ErrorIcon, HideIcon, ShowIcon} from '../Icon';
 import {Theme} from '../Layout';
 import {TextProps} from '../Text';
 import {filterProps} from '../util';
-import {ErrorIcon, HideIcon, ShowIcon} from '../Icon';
-import InputLabel from './InputLabel';
 
 export interface InputProps<T = HTMLInputElement> extends TextProps<T> {
   label?: string;

@@ -18,9 +18,11 @@
  */
 
 import React from 'react';
+
+import {Heading} from './Heading';
+
 import {THEME_ID} from '../Layout';
 import {matchComponent} from '../test/testUtil';
-import {Heading} from './Heading';
 
 describe('"Heading"', () => {
   it('renders H1', () => matchComponent(<Heading>H1</Heading>));

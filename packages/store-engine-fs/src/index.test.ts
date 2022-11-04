@@ -17,9 +17,6 @@
  *
  */
 
-import fs from 'fs-extra';
-import path from 'path';
-
 import {error as StoreEngineError} from '@wireapp/store-engine';
 import {createSpec} from '@wireapp/store-engine/lib/test/createSpec';
 import {deleteAllSpec} from '@wireapp/store-engine/lib/test/deleteAllSpec';
@@ -30,6 +27,9 @@ import {readAllSpec} from '@wireapp/store-engine/lib/test/readAllSpec';
 import {readSpec} from '@wireapp/store-engine/lib/test/readSpec';
 import {updateOrCreateSpec} from '@wireapp/store-engine/lib/test/updateOrCreateSpec';
 import {updateSpec} from '@wireapp/store-engine/lib/test/updateSpec';
+import fs from 'fs-extra';
+
+import path from 'path';
 
 import {FileEngine} from './index';
 
