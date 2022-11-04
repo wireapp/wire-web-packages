@@ -2,26 +2,11 @@
   "env": {
     "jest/globals": true
   },
-  "extends": ["./packages/eslint-config/eslintrc.js", "plugin:jest/recommended"],
-  "ignorePatterns": ["*config.js", "demo/", "bin/", "eslint*", "webpack*", "*.js", "*.d.ts"],
+  "extends": ["./packages/eslint-config/eslintrc.js"],
+  "ignorePatterns": ["*config.js", "demo/", "bin/", "eslint*", "webpack*"],
   "globals": {
     "NodeJS": "readonly"
   },
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
-  },
-  "overrides": [
-    {
-      "files": ["*.ts", "*.tsx"],
-      "rules": {
-        "@typescript-eslint/typedef": "off",
-        "no-unused-vars": "off",
-        "react/no-unknown-property": ["error", {"ignore": ["css"]}]
-      }
-    }
-  ],
   "parserOptions": {
     "project": "./tsconfig.json"
   },
@@ -37,5 +22,10 @@
     "jest/no-conditional-expect": "warn",
     "jest/valid-describe-callback": "warn",
     "jest/valid-title": "warn"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }

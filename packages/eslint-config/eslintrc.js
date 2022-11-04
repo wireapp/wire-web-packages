@@ -5,9 +5,24 @@ module.exports = {
     browser: true,
     es6: true,
     node: true,
+    jest: true
   },
-
-  extends: ['prettier', 'plugin:react/recommended', 'plugin:no-unsanitized/DOM'],
+  extends: [
+    "plugin:jest/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "prettier",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+    'plugin:react/recommended',
+    'plugin:no-unsanitized/DOM'
+  ],
+  ignorePatterns: [
+    ".git/",
+    "docs/",
+    "bin/",
+    "**/node_modules/",
+  ],
   overrides: [
     {
       files: ['*.ts', '*.tsx'],
@@ -33,14 +48,18 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: [
-    '@typescript-eslint',
     'jsdoc',
     'no-unsanitized',
     'prettier',
     'react',
     'react-hooks',
-    'unused-imports',
     'header',
+    "import",
+    "react-hooks",
+    "eslint-plugin-testing-library",
+    "@typescript-eslint",
+    "sort-keys-fix",
+    'unused-imports'
   ],
   rules: {
     'constructor-super': 'error',
@@ -73,7 +92,6 @@ module.exports = {
       ],
       2,
     ],
-    'id-length': 'error',
     'no-cond-assign': 'error',
     'no-console': [
       'error',
@@ -104,7 +122,6 @@ module.exports = {
         name: 'fdescribe',
       },
     ],
-    'no-return-await': 'off',
     'no-sequences': 'error',
     'no-sparse-arrays': 'error',
     'no-trailing-spaces': 'error',
@@ -127,12 +144,44 @@ module.exports = {
     'prefer-spread': 'error',
     'prefer-template': 'error',
     'prettier/prettier': 'error',
+    "jest/no-jasmine-globals": "error",
+    "jest/no-identical-title": "warn",
+    "jest/no-done-callback": "warn",
+    "jest/no-disabled-tests": "warn",
+    "jest/no-conditional-expect": "warn",
+    "sort-keys-fix/sort-keys-fix": "warn",
+    "jsx-a11y/media-has-caption": "warn",
+    "jsx-a11y/no-noninteractive-tabindex": "warn",
     'react/jsx-uses-vars': 'error',
     'react/prefer-stateless-function': 'error',
-    'react/prop-types': 'off',
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "react/no-unknown-property": ["error", { "ignore": ["css"] }],
     'sort-vars': 'error',
     strict: ['error', 'global'],
-    'unused-imports/no-unused-imports': 'error',
+    "unused-imports/no-unused-imports": "error",
+    "import/no-unresolved": "error",
+    "import/no-default-export": "error",
+    "import/order": [
+      "error",
+      {
+        "groups": ["external", "builtin", "internal", "sibling", "parent", "index"],
+        "pathGroups": [
+          {
+            "pattern": "react",
+            "group": "external",
+            "position": "before"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["react"],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        },
+        "warnOnUnassignedImports": false
+      }
+    ],
     'valid-jsdoc': [
       'error',
       {
@@ -153,7 +202,7 @@ module.exports = {
   },
   settings: {
     react: {
-      version: 'latest',
+      version: "detect"
     },
   },
-};
+}
