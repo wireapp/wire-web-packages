@@ -18,7 +18,7 @@
  */
 
 import {LogFactory} from '@wireapp/commons';
-import fs from 'fs-extra';
+import * as fs from 'fs-extra';
 
 import os from 'os';
 import path from 'path';

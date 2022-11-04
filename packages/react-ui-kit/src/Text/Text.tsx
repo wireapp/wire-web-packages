@@ -18,10 +18,10 @@
  */
 
 /** @jsx jsx */
-import React from 'react';
+import * as React from 'react';
 
 import {CSSObject, jsx} from '@emotion/react';
-import {Property} from 'csstype';
+import type {Property} from 'csstype';
 
 import {COLOR} from '../Identity';
 import {Theme} from '../Layout';

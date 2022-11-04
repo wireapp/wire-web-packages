@@ -18,7 +18,7 @@
  */
 
 /** @jsx jsx */
-import {ReactElement} from 'react';
+import {ReactNode} from 'react';
 
 import {CSSObject, jsx} from '@emotion/react';
 
@@ -27,12 +27,12 @@ import {IconButtonProps} from './IconButton';
 import {COLOR_V2} from '../Identity';
 import {Theme} from '../Layout';
 
-const buttonGroupStyle: <T>(theme: Theme) => CSSObject = () => ({
+const buttonGroupStyle: (theme: Theme) => CSSObject = () => ({
   display: 'flex',
   alignItems: 'center',
 });
 
-const buttonStyle: <T>(theme: Theme, props: IconButtonProps<T>) => CSSObject = (theme, {disabled = false}) => ({
+const buttonStyle: <T>(theme: Theme, props: IconButtonProps<T>) => CSSObject = (_, {disabled = false}) => ({
   height: '32px',
   borderRadius: '12px',
   padding: '0 12px',
@@ -76,12 +76,15 @@ const buttonStyle: <T>(theme: Theme, props: IconButtonProps<T>) => CSSObject = (
   }),
 });
 
-interface GroupButtonProps<T = HTMLButtonElement> {
-  children?: ReactElement | string;
-  icon?: ReactElement;
+interface GroupButtonProps {
+  children?: ReactNode;
+  icon?: ReactNode;
 }
 
-const ButtonGroup = ({children}) => (
+interface ButtonGroupProps {
+  children: ReactNode;
+}
+const ButtonGroup = ({children}: ButtonGroupProps) => (
   <div css={(theme: Theme) => buttonGroupStyle(theme)} role="group" aria-label="Button Group">
     {children}
   </div>

@@ -45,7 +45,7 @@ export const Columns = (props: ColumnsProps) => <div css={columnsStyle(props)} {
 
 export type ColumnProps<T = HTMLDivElement> = React.HTMLProps<T>;
 
-const columnStyle: <T>(props: ColumnProps<T>) => CSSObject = props => ({
+const columnStyle: <T>(props: ColumnProps<T>) => CSSObject = _ => ({
   display: 'block',
   flexBasis: '0',
   flexGrow: 1,

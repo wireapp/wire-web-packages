@@ -26,7 +26,7 @@ import {GUTTER} from './sizes';
 
 export type ContentProps<T = HTMLDivElement> = React.HTMLProps<T>;
 
-export const contentStyle: <T>(props: ContentProps<T>) => CSSObject = props => ({
+export const contentStyle: <T>(props: ContentProps<T>) => CSSObject = _ => ({
   display: 'flex',
   flexDirection: 'column',
   flexGrow: 1,

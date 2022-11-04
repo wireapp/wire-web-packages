@@ -199,10 +199,5 @@ module.exports = {
         requireReturnDescription: true,
       },
     ],
-  },
-  settings: {
-    react: {
-      version: "detect"
-    },
-  },
+  }
 }

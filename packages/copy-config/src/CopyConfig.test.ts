@@ -19,7 +19,7 @@
 
 //@ts-check
 
-import fs from 'fs-extra';
+import * as fs from 'fs-extra';
 
 import path from 'path';
 

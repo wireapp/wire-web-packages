@@ -159,6 +159,7 @@ export const CodeInput = ({
     <CodeInputWrapper style={style}>
       {Array.from({length: digits}, (_, index) => (
         <DigitInput
+          // eslint-disable-next-line jsx-a11y/no-autofocus
           autoFocus={index === 0 && autoFocus}
           key={index}
           onPaste={event => handlePaste(index, event)}

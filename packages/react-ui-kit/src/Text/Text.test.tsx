@@ -17,7 +17,7 @@
  *
  */
 
-import React from 'react';
+import * as React from 'react';
 
 import {Bold, Large, Muted, Small, Text, Uppercase} from './Text';
 

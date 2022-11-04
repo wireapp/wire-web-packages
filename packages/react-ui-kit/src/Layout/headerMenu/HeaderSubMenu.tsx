@@ -32,10 +32,7 @@ import {Theme} from '../Theme';
 
 export type DesktopStyledHeaderSubMenuProps<T = HTMLDivElement> = React.HTMLProps<T>;
 
-const desktopStyledHeaderSubMenuStyle: (theme: Theme, props: DesktopStyledHeaderSubMenuProps) => CSSObject = (
-  theme,
-  props,
-) => ({
+const desktopStyledHeaderSubMenuStyle: (theme: Theme, props: DesktopStyledHeaderSubMenuProps) => CSSObject = theme => ({
   alignItems: 'left',
   backgroundColor: COLOR.tint(theme.general.backgroundColor, 0.16),
   borderRadius: '8px',
@@ -77,7 +74,7 @@ export interface MobileStyledHeaderSubMenuProps<T = HTMLSpanElement> extends Rea
   open?: boolean;
 }
 
-const mobileStyledHeaderSubMenuStyle: (props: MobileStyledHeaderSubMenuProps) => CSSObject = props => ({
+const mobileStyledHeaderSubMenuStyle: (props: MobileStyledHeaderSubMenuProps) => CSSObject = _ => ({
   '*': {
     fontWeight: 200,
   },

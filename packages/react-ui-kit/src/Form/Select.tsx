@@ -18,15 +18,14 @@
  */
 
 /** @jsx jsx */
-import React, {ReactElement} from 'react';
+import {ReactElement} from 'react';
 
 import {CSSObject, jsx} from '@emotion/react';
 import {useTheme} from '@emotion/react';
-import ReactSelect from 'react-select';
-import {StylesConfig} from 'react-select/dist/declarations/src/styles';
-import {StateManagerProps} from 'react-select/dist/declarations/src/useStateManager';
+import ReactSelect, {StylesConfig} from 'react-select';
+import type {StateManagerProps} from 'react-select/dist/declarations/src/stateManager';
 
-import InputLabel from './InputLabel';
+import {InputLabel} from './InputLabel';
 import {
   CustomOption,
   DropdownIndicator,

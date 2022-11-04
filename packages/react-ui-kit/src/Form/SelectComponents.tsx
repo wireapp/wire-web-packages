@@ -18,19 +18,17 @@
  */
 
 /** @jsx jsx */
-import React from 'react';
 
 import {jsx} from '@emotion/react';
-import {components, OptionProps, ValueContainerProps} from 'react-select';
-import {IndicatorsContainerProps} from 'react-select/dist/declarations/src/components/containers';
-import {MenuProps} from 'react-select/dist/declarations/src/components/Menu';
+import {components, ContainerProps, DropdownIndicatorProps, OptionProps, ValueContainerProps} from 'react-select';
+import {IndicatorsContainerProps, MenuProps} from 'react-select';
 
 import {Option} from './Select';
 
 import {ArrowDown} from '../Icon/ArrowDown';
 import {Theme} from '../Layout';
 // SelectContainer
-export const SelectContainer = props => {
+export const SelectContainer = (props: ContainerProps) => {
   return (
     <components.SelectContainer {...props}>
       <div tabIndex={0}>{props.children}</div>
@@ -38,7 +36,7 @@ export const SelectContainer = props => {
   );
 };
 
-export const DropdownIndicator = props => {
+export const DropdownIndicator = (props: DropdownIndicatorProps) => {
   const {menuIsOpen} = props.selectProps;
 
   return (
@@ -51,7 +49,7 @@ export const DropdownIndicator = props => {
 
 // eslint-disable-next-line react/display-name
 export const CustomOption = (dataUieName: string) => (props: OptionProps<Option>) => {
-  const {children, data, isFocused, isMulti, isSelected, options} = props;
+  const {children, data, isMulti, isSelected, options} = props;
 
   return (
     <components.Option {...props}>

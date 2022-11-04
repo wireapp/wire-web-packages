@@ -28,7 +28,7 @@ import {FileEngine} from '@wireapp/store-engine-fs';
 import axios from 'axios';
 import {program as commander} from 'commander';
 import dotenv from 'dotenv';
-import fs from 'fs-extra';
+import * as fs from 'fs-extra';
 
 import os from 'os';
 import path from 'path';

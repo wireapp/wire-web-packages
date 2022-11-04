@@ -18,7 +18,7 @@
  */
 
 import logdown from 'logdown';
-import {CloseEvent, ErrorEvent} from 'reconnecting-websocket';
+import {ErrorEvent} from 'reconnecting-websocket';
 
 import {EventEmitter} from 'events';
 
@@ -119,7 +119,7 @@ export class WebSocketClient extends EventEmitter {
     this.onStateChange(this.socket.getState());
   };
 
-  private readonly onClose = (event: CloseEvent) => {
+  private readonly onClose = () => {
     this.abortHandler?.abort();
     this.bufferedMessages = [];
     this.onStateChange(this.socket.getState());

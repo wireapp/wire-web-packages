@@ -3,7 +3,7 @@
     "jest/globals": true
   },
   "extends": ["./packages/eslint-config/eslintrc.js"],
-  "ignorePatterns": ["*config.js", "demo/", "bin/", "eslint*", "webpack*"],
+  "ignorePatterns": ["*config.js", "demo/", "bin/", "archive/", "eslint*", "webpack*"],
   "globals": {
     "NodeJS": "readonly"
   },
@@ -22,6 +22,17 @@
     "jest/no-conditional-expect": "warn",
     "jest/valid-describe-callback": "warn",
     "jest/valid-title": "warn"
+  },
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true,
+        "project": "./tsconfig.json"
+      }
+    }
   },
   "settings": {
     "react": {

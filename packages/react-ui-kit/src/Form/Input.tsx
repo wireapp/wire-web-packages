@@ -20,10 +20,10 @@
 /** @jsx jsx */
 import React, {ReactElement, useState} from 'react';
 
-import {CSSObject, jsx, useTheme} from '@emotion/react';
-import {Property} from 'csstype';
+import {CSSObject, jsx} from '@emotion/react';
+import type {Property} from 'csstype';
 
-import InputLabel from './InputLabel';
+import {InputLabel} from './InputLabel';
 
 import {ErrorIcon, HideIcon, ShowIcon} from '../Icon';
 import {Theme} from '../Layout';
@@ -109,8 +109,6 @@ export const Input: React.FC<InputProps<HTMLInputElement>> = React.forwardRef<
   const toggledPasswordType = togglePassword ? 'text' : 'password';
 
   const toggleSetPassword = () => setTogglePassword(prevState => !prevState);
-
-  const theme = useTheme();
 
   return (
     <div

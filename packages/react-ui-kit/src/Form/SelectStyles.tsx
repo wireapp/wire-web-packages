@@ -28,7 +28,7 @@ export const customStyles = (theme: Theme, markInvalid = false) => ({
   indicatorsContainer: provided => ({
     ...provided,
   }),
-  container: (provided, {isDisabled, selectProps}) => {
+  container: (_, {isDisabled, selectProps}) => {
     const {menuIsOpen} = selectProps;
     const isSelectDisabled = selectProps.isDisabled;
 

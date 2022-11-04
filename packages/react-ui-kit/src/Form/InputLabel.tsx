@@ -49,4 +49,4 @@ const InputLabel: FC<InputLabelProps> = ({htmlFor, markInvalid, isRequired, chil
   </label>
 );
 
-export default InputLabel;
+export {InputLabel};

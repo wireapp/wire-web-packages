@@ -2,7 +2,10 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "esModuleInterop": true,
-    "outDir": "lib"
+    "outDir": "lib",
+    "paths": {
+      "@wireapp/store-engine": ["../store-engine"]
+    }
   },
   "exclude": ["node_modules", "src/**/*.test.ts"],
   "include": ["src"]

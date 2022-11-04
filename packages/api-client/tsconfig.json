@@ -2,7 +2,13 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "esModuleInterop": true,
-    "outDir": "lib"
+    "outDir": "lib",
+    "paths": {
+      "@wireapp/commons": ["../commons"],
+      "@wireapp/priority-queue": ["../priority-queue"],
+      "@wireapp/store-engine": ["../store-engine"],
+      "@wireapp/store-engine-fs": ["../store-engine-fs"]
+    }
   },
   "exclude": ["node_modules", "./demo.ts", "**/*.test.ts"],
   "include": ["src/**/*.ts"]

@@ -29,7 +29,7 @@ import {COLOR} from '../Identity';
 
 export type InputBlockProps<T = HTMLDivElement> = React.HTMLProps<T>;
 
-const inputBlockStyle: (props: InputBlockProps) => CSSObject = props => ({
+const inputBlockStyle: (props: InputBlockProps) => CSSObject = _ => ({
   backgroundColor: COLOR.GRAY_LIGHTEN_88,
   borderRadius: '4px',
   boxShadow: `inset 16px 16px 0 ${COLOR.WHITE}, inset -16px -16px 0 ${COLOR.WHITE}`,

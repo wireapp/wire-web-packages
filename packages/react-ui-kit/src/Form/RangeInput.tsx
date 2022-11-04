@@ -22,7 +22,7 @@ import React, {FC, forwardRef} from 'react';
 
 import {CSSObject, jsx} from '@emotion/react';
 
-import InputLabel from './InputLabel';
+import {InputLabel} from './InputLabel';
 import {
   getImageCropZoomInputStyles,
   getValueLabelStyles,

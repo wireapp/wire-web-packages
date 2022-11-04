@@ -76,7 +76,7 @@ export const Pagination: React.FC<PaginationProps> = ({
     const beforeCount = normalizedCurrent - spanLength - endLength;
     const afterCount = lastPageIndex - endLength - normalizedCurrent - spanLength;
 
-    const pages = Array.from(Array(numberOfPages), (nothing, index) => renderPageNumber(index));
+    const pages = Array.from(Array(numberOfPages), (_, index) => renderPageNumber(index));
     if (afterCount > skipLength) {
       pages.splice(normalizedCurrent + spanLength + 1, afterCount, dots('dots-end'));
     }

@@ -21,7 +21,7 @@
 import React from 'react';
 
 import {CSSObject, jsx} from '@emotion/react';
-import {Property} from 'csstype';
+import type {Property} from 'csstype';
 
 import {filterProps} from '../util';
 

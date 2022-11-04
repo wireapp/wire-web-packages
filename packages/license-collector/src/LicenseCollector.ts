@@ -17,7 +17,7 @@
  *
  */
 
-import fs from 'fs-extra';
+import * as fs from 'fs-extra';
 import logdown from 'logdown';
 import pkginfo from 'npm-registry-package-info';
 

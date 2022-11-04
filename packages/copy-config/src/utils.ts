@@ -19,7 +19,7 @@
 
 import axios from 'axios';
 import copy from 'copy';
-import fs from 'fs-extra';
+import * as fs from 'fs-extra';
 import JSZip from 'jszip';
 import rimraf from 'rimraf';
 import File from 'vinyl';

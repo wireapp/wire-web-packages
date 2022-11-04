@@ -51,7 +51,7 @@ export const dropFileWrapperStyle: CSSObject = {
   maxWidth: '330px',
 };
 
-export const dropFileZoneWrapperStyle: <T>(theme: Theme, isDraggedOver: boolean) => CSSObject = (
+export const dropFileZoneWrapperStyle: (theme: Theme, isDraggedOver: boolean) => CSSObject = (
   theme,
   isDraggedOver,
 ) => ({
@@ -68,7 +68,7 @@ export const dropFileZoneWrapperStyle: <T>(theme: Theme, isDraggedOver: boolean)
   color: COLOR.GRAY,
 });
 
-export const dropFileZoneLabelStyle: <T>(theme: Theme) => CSSObject = theme => ({
+export const dropFileZoneLabelStyle: (theme: Theme) => CSSObject = theme => ({
   color: theme.general.primaryColor,
   cursor: 'pointer',
   ':focus-within': {
