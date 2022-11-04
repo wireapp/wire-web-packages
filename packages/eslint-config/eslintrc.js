@@ -128,7 +128,7 @@ module.exports = {
     'no-undef': 'error',
     'no-unneeded-ternary': 'error',
     'no-unused-expressions': 'error',
-    'no-unused-vars': [
+    '@typescript-eslint/no-unused-vars': [
       'error',
       {
         args: 'none',
