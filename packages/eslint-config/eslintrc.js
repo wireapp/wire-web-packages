@@ -15,7 +15,8 @@ module.exports = {
     "plugin:import/recommended",
     "plugin:import/typescript",
     'plugin:react/recommended',
-    'plugin:no-unsanitized/DOM'
+    'plugin:no-unsanitized/DOM',
+    'plugin:react/jsx-runtime',
   ],
   ignorePatterns: [
     ".git/",
@@ -23,29 +24,11 @@ module.exports = {
     "bin/",
     "**/node_modules/",
   ],
-  overrides: [
-    {
-      files: ['*.ts', '*.tsx'],
-      parser: '@typescript-eslint/parser',
-      rules: {
-        '@typescript-eslint/array-type': 'error',
-        '@typescript-eslint/consistent-type-assertions': 'error',
-        '@typescript-eslint/no-floating-promises': 'error',
-        '@typescript-eslint/no-this-alias': 'error',
-        '@typescript-eslint/prefer-readonly': 'error',
-        '@typescript-eslint/return-await': ['error', 'in-try-catch'],
-        '@typescript-eslint/typedef': 'error',
-      },
-    },
-  ],
-  parser: '@babel/eslint-parser',
+  parser: "@typescript-eslint/parser",
   parserOptions: {
-    requireConfigFile: false,
-    ecmaFeatures: {
-      jsx: true,
-    },
-    ecmaVersion: 6,
-    sourceType: 'module',
+    tsconfigRootDir: ".",
+    sourceType: "module",
+    project: ["./tsconfig.json"]
   },
   plugins: [
     'jsdoc',
@@ -58,7 +41,9 @@ module.exports = {
     "react-hooks",
     "eslint-plugin-testing-library",
     "@typescript-eslint",
-    'unused-imports'
+    'unused-imports',
+    "eslint-plugin-jest-dom",
+    "better-styled-components"
   ],
   rules: {
     'constructor-super': 'error',
@@ -180,6 +165,7 @@ module.exports = {
         "warnOnUnassignedImports": false
       }
     ],
+    "better-styled-components/sort-declarations-alphabetically": 2,
     'valid-jsdoc': [
       'error',
       {
@@ -197,5 +183,20 @@ module.exports = {
         requireReturnDescription: true,
       },
     ],
-  }
+  },
+  settings: {
+    react: {
+      version: "detect"
+    },
+    "import/parsers": {
+      "@typescript-eslint/parser": [".js", ".jsx", ".ts", ".tsx"]
+    },
+    "import/resolver": {
+      typescript: {
+        alwaysTryTypes: true,
+        // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
+        paths: "./tsconfig.json"
+      }
+    }
+  },
 }

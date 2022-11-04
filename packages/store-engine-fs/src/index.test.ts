@@ -27,7 +27,7 @@ import {readAllSpec} from '@wireapp/store-engine/lib/test/readAllSpec';
 import {readSpec} from '@wireapp/store-engine/lib/test/readSpec';
 import {updateOrCreateSpec} from '@wireapp/store-engine/lib/test/updateOrCreateSpec';
 import {updateSpec} from '@wireapp/store-engine/lib/test/updateSpec';
-import * as fs from 'fs-extra';
+import {statSync, remove} from 'fs-extra';
 
 import path from 'path';
 
@@ -53,7 +53,7 @@ describe('FileEngine', () => {
     engine = await initEngine();
   });
 
-  afterEach(async () => fs.remove(TEST_DIRECTORY));
+  afterEach(async () => remove(TEST_DIRECTORY));
 
   describe('enforcePathRestrictions', () => {
     const enforcePathRestrictions = (givenTrustedRoot: string, givenPath: string) => () =>
@@ -152,7 +152,7 @@ describe('FileEngine', () => {
       };
       engine = new FileEngine(BASE_DIRECTORY);
       const directory = await engine.init(STORE_NAME, options);
-      const fileStatus = fs.statSync(directory);
+      const fileStatus = statSync(directory);
       expect(fileStatus.isDirectory()).toBe(true);
     });
   });

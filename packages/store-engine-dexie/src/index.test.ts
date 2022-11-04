@@ -27,7 +27,7 @@ import {readSpec} from '@wireapp/store-engine/lib/test/readSpec';
 import {updateOrCreateSpec} from '@wireapp/store-engine/lib/test/updateOrCreateSpec';
 import {updateSpec} from '@wireapp/store-engine/lib/test/updateSpec';
 import Dexie from 'dexie';
-import UUID from 'uuidjs';
+import {genV4} from 'uuidjs';
 
 import {IndexedDBEngine} from './index';
 
@@ -42,7 +42,7 @@ describe('IndexedDBEngine', () => {
   ): Promise<IndexedDBEngine> {
     const storeEngine = shouldCreateNewEngine ? new IndexedDBEngine() : engine;
 
-    const db: Dexie = await storeEngine.init(`database-${UUID.genV4().toString()}`);
+    const db: Dexie = await storeEngine.init(`database-${genV4().toString()}`);
     let schema = {
       'the-simpsons': ', firstName, lastName',
     };
@@ -67,7 +67,7 @@ describe('IndexedDBEngine', () => {
   describe('init', () => {
     it('resolves with the database instance to which the records will be saved.', async () => {
       const engine = new IndexedDBEngine();
-      const instance = await engine.init(`database-${UUID.genV4().toString()}`);
+      const instance = await engine.init(`database-${genV4().toString()}`);
       expect(instance instanceof Dexie).toBe(true);
       await Dexie.delete(instance.name);
     });

@@ -7,9 +7,6 @@
   "globals": {
     "NodeJS": "readonly"
   },
-  "parserOptions": {
-    "project": "./tsconfig.json"
-  },
   "rules": {
     "id-length": "off",
     "no-dupe-class-members": "off",
@@ -22,21 +19,5 @@
     "jest/no-conditional-expect": "warn",
     "jest/valid-describe-callback": "warn",
     "jest/valid-title": "warn"
-  },
-  "settings": {
-    "import/parsers": {
-      "@typescript-eslint/parser": [".ts", ".tsx"]
-    },
-    "import/resolver": {
-      "typescript": {
-        "alwaysTryTypes": true,
-        "project": "./tsconfig.json"
-      }
-    }
-  },
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
   }
 }

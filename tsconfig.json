@@ -14,6 +14,24 @@
     "strict": true,
     "target": "es2017",
     "declaration": true,
-    "declarationMap": true
+    "declarationMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@wireapp/api-client": ["./packages/api-client"],
+      "bazinga64": ["./packages/bazinga64"],
+      "@wireapp/certificate-check": ["./packages/certificate-check"],
+      "@wireapp/cli-client": ["./packages/cli-client"],
+      "@wireapp/commons": ["./packages/commons"],
+      "@wireapp/copy-config": ["./packages/copy-config"],
+      "@wireapp/core": ["./packages/core"],
+      "@wireapp/license-collector": ["./packages/license-collector"],
+      "@wireapp/priority-queue": ["./packages/priority-queue"],
+      "@wireapp/promise-queue": ["./packages/promise-queue"],
+      "@wireapp/react-ui-kit": ["./packages/react-ui-kit"],
+      "@wireapp/store-engine": ["./packages/store-engine"],
+      "@wireapp/store-engine-dexie": ["./packages/store-engine-dexie"],
+      "@wireapp/store-engine-fs": ["./packages/store-engine-fs"],
+      "@wireapp/webapp-events": ["./packages/webapp-events"]
+    }
   }
 }
