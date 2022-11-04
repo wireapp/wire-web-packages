@@ -135,6 +135,7 @@ module.exports = {
     "jest/no-conditional-expect": "warn",
     "jsx-a11y/media-has-caption": "warn",
     "jsx-a11y/no-noninteractive-tabindex": "warn",
+    'react/jsx-uses-react': 'error',
     'react/jsx-uses-vars': 'error',
     'react/prefer-stateless-function': 'error',
     "react-hooks/rules-of-hooks": "error",

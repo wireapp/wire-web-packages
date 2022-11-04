@@ -7,7 +7,12 @@
   "globals": {
     "NodeJS": "readonly"
   },
+  "plugins": ["@emotion"],
   "rules": {
+    "@emotion/pkg-renaming": "error",
+    "@emotion/no-vanilla": "error",
+    "@emotion/import-from-emotion": "error",
+    "@emotion/styled-import": "error",
     "id-length": "off",
     "no-dupe-class-members": "off",
     "no-magic-numbers": "off",

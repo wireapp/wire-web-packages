@@ -1536,6 +1536,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@emotion/eslint-plugin@npm:^11.10.0":
+  version: 11.10.0
+  resolution: "@emotion/eslint-plugin@npm:11.10.0"
+  peerDependencies:
+    eslint: 6 || 7 || 8
+  checksum: b848600bbd047a5100e541369ab56ee84f7a4fae59f811b3835ba686c5b35d0c564953f946c9912d98df0e70fa5533b574f629aa10791e02bcd268263ff7adf1
+  languageName: node
+  linkType: hard
+
 "@emotion/hash@npm:^0.9.0":
   version: 0.9.0
   resolution: "@emotion/hash@npm:0.9.0"
@@ -15575,6 +15584,7 @@ __metadata:
   dependencies:
     "@babel/core": ^7.19.6
     "@babel/eslint-parser": ^7.19.1
+    "@emotion/eslint-plugin": ^11.10.0
     "@lerna-lite/changed": ^1.12.0
     "@lerna-lite/cli": ^1.12.0
     "@lerna-lite/run": ^1.12.0
