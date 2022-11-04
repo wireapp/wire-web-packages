@@ -20,6 +20,8 @@
 /** @jsx jsx */
 import {Fragment} from 'react';
 
+import {jsx} from '@emotion/react';
+
 import {InputProps} from './Input';
 
 import {COLOR} from '../Identity';

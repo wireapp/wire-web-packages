@@ -17,7 +17,6 @@
  *
  */
 
-/** @jsx jsx */
 import {CSSProperties} from 'react';
 import * as React from 'react';
 

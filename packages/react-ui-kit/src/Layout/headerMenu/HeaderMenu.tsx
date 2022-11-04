@@ -22,6 +22,8 @@
 import {useState} from 'react';
 import * as React from 'react';
 
+import {jsx} from '@emotion/react';
+
 import {MenuContent} from './MenuContent';
 import {MenuItems} from './MenuItems';
 import {MenuOpenButton} from './MenuOpenButton';

@@ -20,7 +20,7 @@
 /** @jsx jsx */
 import * as React from 'react';
 
-import {CSSObject} from '@emotion/react';
+import {CSSObject, jsx} from '@emotion/react';
 
 import {MENU_LINK_CLASSNAME} from './MenuLink';
 import {MenuSubLink} from './MenuSubLink';

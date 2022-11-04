@@ -21,6 +21,8 @@
 import {useEffect, useImperativeHandle, useState} from 'react';
 import * as React from 'react';
 
+import {jsx} from '@emotion/react';
+
 export interface ShakeBoxProps extends React.HTMLProps<HTMLDivElement> {
   amplitude?: number;
   damping?: number;

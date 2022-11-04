@@ -20,6 +20,8 @@
 /** @jsx jsx */
 import * as React from 'react';
 
+import {jsx} from '@emotion/react';
+
 import {COLOR} from '../Identity';
 import {FlexBox} from '../Layout';
 import {Bold, Link} from '../Text';

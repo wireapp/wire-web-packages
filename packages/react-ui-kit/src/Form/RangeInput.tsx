@@ -20,7 +20,7 @@
 /** @jsx jsx */
 import {FC, forwardRef} from 'react';
 
-import {CSSObject} from '@emotion/react';
+import {CSSObject, jsx} from '@emotion/react';
 
 import {InputLabel} from './InputLabel';
 import {

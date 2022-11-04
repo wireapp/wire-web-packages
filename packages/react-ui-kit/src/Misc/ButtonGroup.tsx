@@ -20,7 +20,7 @@
 /** @jsx jsx */
 import {ReactNode} from 'react';
 
-import {CSSObject} from '@emotion/react';
+import {CSSObject, jsx} from '@emotion/react';
 
 import {IconButtonProps} from './IconButton';
 

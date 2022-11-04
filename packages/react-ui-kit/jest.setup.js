@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2019 Wire Swiss GmbH
+ * Copyright (C) 2022 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,27 +17,3 @@
  *
  */
 
-const baseConfig = require('../../jest.config.base');
-
-module.exports = {
-  ...baseConfig,
-  transform: {
-    '^.+\\.(ts|tsx)$': [
-      '@swc/jest',
-      {
-        sourceMaps: true,
-        jsc: {
-          parser: {
-            syntax: 'typescript',
-            tsx: true,
-            decorators: false,
-            dynamicImport: false,
-          },
-
-        },
-      },
-    ],
-  },
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  snapshotSerializers: ['@emotion/jest/serializer'],
-};

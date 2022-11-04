@@ -20,7 +20,7 @@
 /** @jsx jsx */
 import * as React from 'react';
 
-import {CSSObject, keyframes} from '@emotion/react';
+import {CSSObject, keyframes, jsx} from '@emotion/react';
 
 import {COLOR} from '../Identity';
 import {DURATION, EASE} from '../Identity/motions';

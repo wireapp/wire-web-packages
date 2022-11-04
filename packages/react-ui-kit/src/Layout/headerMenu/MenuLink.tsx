@@ -18,7 +18,7 @@
  */
 
 /** @jsx jsx */
-import {CSSObject} from '@emotion/react';
+import {CSSObject, jsx} from '@emotion/react';
 
 import {DESKTOP_HEADER_SUB_MENU_CLASSNAME} from './HeaderSubMenu';
 
