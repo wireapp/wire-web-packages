@@ -19,12 +19,13 @@
 
 import {AxiosError, AxiosResponse} from 'axios';
 import {
-  notificationAPI,
   client,
-  mockedResultData,
-  mockedNotificationId,
   getAllNotificationsResult,
+  mockedNotificationId,
+  mockedResultData,
+  notificationAPI,
 } from './NotificationsAPI.mocks';
+import {BackendError, BackendErrorLabel} from '../../http';
 
 describe('NotificationAPI', () => {
   describe('constructor', () => {
@@ -47,6 +48,7 @@ describe('NotificationAPI', () => {
       expect(result.notifications.length).toBe(mockedResultData.notifications.length);
       expect(result.missedNotification).not.toBe(mockedNotificationId);
     });
+
     it('should not return notifications with status code != 200 and empty response', async () => {
       const ErrorResponse: AxiosError = {
         isAxiosError: true,
@@ -61,6 +63,7 @@ describe('NotificationAPI', () => {
       expect(result.notifications.length).toBe(0);
       expect(result.missedNotification).not.toBe(mockedNotificationId);
     });
+
     it('should return missed notifications for status code != 200 and notifications response', async () => {
       const ErrorResponse: AxiosError = {
         isAxiosError: true,
@@ -71,6 +74,29 @@ describe('NotificationAPI', () => {
       } as AxiosError;
       jest.spyOn(client, 'sendJSON').mockImplementationOnce(() => Promise.reject<AxiosResponse>(ErrorResponse));
       const result = await getAllNotificationsResult();
+      expect(result).toBeDefined();
+      expect(result.notifications.length).toBe(mockedResultData.notifications.length);
+      expect(result.missedNotification).toBe(mockedNotificationId);
+    });
+
+    it('should return all the notifications from the beginning for status code 404', async () => {
+      const ErrorResponse = new BackendError('Some notifications not found', BackendErrorLabel.NOT_FOUND, 404);
+
+      //first call returns not found backend error
+      //function gets called again without 'since' param under the hood
+      //second call returns all the notifications with id of missed notification
+      jest
+        .spyOn(client, 'sendJSON')
+        .mockImplementationOnce(() => Promise.reject(ErrorResponse))
+        .mockImplementationOnce(() =>
+          Promise.resolve<AxiosResponse>({
+            status: 200,
+            data: {...mockedResultData},
+          } as AxiosResponse),
+        );
+
+      const result = await getAllNotificationsResult();
+
       expect(result).toBeDefined();
       expect(result.notifications.length).toBe(mockedResultData.notifications.length);
       expect(result.missedNotification).toBe(mockedNotificationId);
