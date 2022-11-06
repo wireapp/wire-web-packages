@@ -4509,7 +4509,7 @@ __metadata:
     react-dom: 18.2.0
     react-helmet: 6.1.0
     react-hot-loader: 4.13.0
-    react-select: 5.5.4
+    react-select: 5.6.0
     react-styleguidist: 13.0.0
     react-test-renderer: 18.2.0
     react-transition-group: 4.4.5
@@ -14445,9 +14445,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-select@npm:5.5.4":
-  version: 5.5.4
-  resolution: "react-select@npm:5.5.4"
+"react-select@npm:5.6.0":
+  version: 5.6.0
+  resolution: "react-select@npm:5.6.0"
   dependencies:
     "@babel/runtime": ^7.12.0
     "@emotion/cache": ^11.4.0
@@ -14461,7 +14461,7 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: 3870bef752f8242dd9fed6d3445da525623d2a022801e40999af597f36d416e5deb7db1ba690b4d5aff70d8a00b17ae9200c6001bfc7c6812c0e7b0f4de79454
+  checksum: d0a51e618168f3f275fbf96e23eb88ac6066006bcca136e293327f6eddd0b419ef02aaa847bf1670c5f07c8e9d9fc4b975fcae833085e11fc41e29e2b802a75b
   languageName: node
   linkType: hard
 
