@@ -134,5 +134,31 @@ describe('NotificationAPI', () => {
       expect(result.notifications.length).toBe(notificationsLength);
       expect(result.missedNotification).toBe(mockedNotificationId);
     });
+
+    it('should return all the notifications from the beginning for status code 400 - parsing error', async () => {
+      const ErrorResponse: AxiosError = {
+        isAxiosError: true,
+        response: {
+          status: 400,
+          data: 'Parsing error message',
+        } as AxiosResponse,
+      } as AxiosError;
+
+      jest
+        .spyOn(client, 'sendJSON')
+        .mockImplementationOnce(() => Promise.reject(ErrorResponse))
+        .mockImplementationOnce(() =>
+          Promise.resolve<AxiosResponse>({
+            status: 200,
+            data: {...mockedResultData},
+          } as AxiosResponse),
+        );
+
+      const result = await getAllNotificationsResult();
+
+      expect(result).toBeDefined();
+      expect(result.notifications.length).toBe(mockedResultData.notifications.length);
+      expect(result.missedNotification).toBe(mockedNotificationId);
+    });
   });
 });
