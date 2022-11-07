@@ -87,8 +87,8 @@ export class NotificationAPI {
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/push/fetchNotifications
    */
   public async getAllNotifications(clientId?: string, lastNotificationId?: string): Promise<NotificationsReponse> {
-    let notificationList: Notification[] = [];
     const getNotificationChunks = async (
+      notificationList: Notification[],
       currentClientId?: string,
       currentNotificationId?: string,
     ): Promise<NotificationsReponse> => {
@@ -111,7 +111,7 @@ export class NotificationAPI {
         } else if (error instanceof BackendError && error.label === BackendErrorLabel.NOT_FOUND) {
           //notification was not found in the database,
           //we need to load all the notifications from the beginning (without 'since' param)
-          const payload = await getNotificationChunks(currentClientId);
+          const payload = await getNotificationChunks(notificationList, currentClientId);
 
           //we have to manually add missedNotification value since it won't be included when called without 'since' param
           return {...payload, missedNotification: currentNotificationId};
@@ -129,7 +129,7 @@ export class NotificationAPI {
       if (has_more) {
         const lastNotification = notifications[notifications.length - 1];
         if (lastNotification) {
-          return getNotificationChunks(currentClientId, lastNotification.id);
+          return getNotificationChunks(notificationList, currentClientId, lastNotification.id);
         }
       }
 
@@ -139,7 +139,7 @@ export class NotificationAPI {
       };
     };
 
-    return getNotificationChunks(clientId, lastNotificationId);
+    return getNotificationChunks([], clientId, lastNotificationId);
   }
 
   /**
