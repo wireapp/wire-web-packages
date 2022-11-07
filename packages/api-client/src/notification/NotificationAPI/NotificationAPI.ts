@@ -115,7 +115,10 @@ export class NotificationAPI {
         const isNotFoundError = error instanceof BackendError && error.label === BackendErrorLabel.NOT_FOUND;
 
         if (isBadRequestError || isNotFoundError) {
+          //we need to load all the notifications from the beginning (without 'since' param)
           const payload = await getNotificationChunks(notificationList, currentClientId);
+
+          //we have to manually add missedNotification value since it won't be included when called without 'since' param
           return {...payload, missedNotification: currentNotificationId};
         }
 
