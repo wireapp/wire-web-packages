@@ -124,7 +124,7 @@ export class NotificationAPI {
           payload = {...defaultPayload, ...error.response?.data};
         }
 
-        //throw error for other BackendError's
+        //throw error for other BackendError type errors
         if (!isAxiosError) {
           throw Error;
         }
