@@ -57,6 +57,18 @@ export const optionalToUint8Array = (array: Uint8Array | []): Uint8Array => {
   return Array.isArray(array) ? Uint8Array.from(array) : array;
 };
 
+interface UploadCommitOptions {
+  /**
+   * If uploading the commit fails and we endup in a scenario where a retrial is possible, then this callback will be called to re-generate a new commit bundle
+   */
+  regenerateCommitBundle?: () => Promise<CommitBundle>;
+
+  /**
+   * Is the current commitBundle an external commit.
+   */
+  isExternalCommit?: boolean;
+}
+
 interface MLSServiceConfig {
   keyingMaterialUpdateThreshold: number;
   nbKeyPackages: number;
@@ -96,10 +108,7 @@ export class MLSService {
   private async uploadCommitBundle(
     groupId: Uint8Array,
     commitBundle: CommitBundle,
-    {
-      regenerateCommitBundle,
-      isExternalCommit,
-    }: {regenerateCommitBundle?: () => Promise<CommitBundle>; isExternalCommit?: boolean} = {},
+    {regenerateCommitBundle, isExternalCommit}: UploadCommitOptions = {},
   ): Promise<PostMlsMessageResponse | null> {
     const bundlePayload = toProtobufCommitBundle(commitBundle);
     try {
