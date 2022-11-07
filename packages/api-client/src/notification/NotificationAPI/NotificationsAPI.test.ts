@@ -101,5 +101,38 @@ describe('NotificationAPI', () => {
       expect(result.notifications.length).toBe(mockedResultData.notifications.length);
       expect(result.missedNotification).toBe(mockedNotificationId);
     });
+
+    it('should include missingNotification value when called with multiple pages (has_more)', async () => {
+      const ErrorResponse = new BackendError('Some notifications not found', BackendErrorLabel.NOT_FOUND, 404);
+
+      //first call returns not found backend error
+      //function gets called again without 'since' param under the hood
+      //second call returns the first page of notifications with has_more
+      //third call returns next page of notifications
+      jest
+        .spyOn(client, 'sendJSON')
+        .mockImplementationOnce(() => Promise.reject(ErrorResponse))
+        .mockImplementationOnce(() =>
+          Promise.resolve<AxiosResponse>({
+            status: 200,
+            data: {...mockedResultData, has_more: true},
+          } as AxiosResponse),
+        )
+        .mockImplementationOnce(() =>
+          Promise.resolve<AxiosResponse>({
+            status: 200,
+            data: {...mockedResultData},
+          } as AxiosResponse),
+        );
+
+      const result = await getAllNotificationsResult();
+
+      expect(result).toBeDefined();
+
+      //its * 2 because we did fetch it twice because of 'has_more' value
+      const notificationsLength = mockedResultData.notifications.length * 2;
+      expect(result.notifications.length).toBe(notificationsLength);
+      expect(result.missedNotification).toBe(mockedNotificationId);
+    });
   });
 });
