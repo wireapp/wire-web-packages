@@ -19,7 +19,7 @@
 
 import axios, {AxiosRequestConfig} from 'axios';
 
-import {BackendError, BackendErrorLabel, HttpClient} from '../../http';
+import {BackendError, BackendErrorLabel, HttpClient, StatusCode} from '../../http';
 import {Notification, NotificationList} from '..';
 
 export const NOTIFICATION_SIZE_MAXIMUM = 10000;
@@ -103,20 +103,30 @@ export class NotificationAPI {
       try {
         payload = await this.getNotifications(currentClientId, NOTIFICATION_SIZE_MAXIMUM, currentNotificationId);
       } catch (error) {
-        if (axios.isAxiosError(error)) {
-          if (error.response?.data?.notifications) {
-            hasMissedNotifications = true;
-            payload = {...defaultPayload, ...error.response?.data};
-          }
-        } else if (error instanceof BackendError && error.label === BackendErrorLabel.NOT_FOUND) {
-          //notification was not found in the database,
-          //we need to load all the notifications from the beginning (without 'since' param)
-          const payload = await getNotificationChunks(notificationList, currentClientId);
+        const isAxiosError = axios.isAxiosError(error);
 
-          //we have to manually add missedNotification value since it won't be included when called without 'since' param
+        //error with response body (before v3 API)
+        const isErrorWithNotifications = isAxiosError && error.response?.data?.notifications;
+
+        //uuid parsing error
+        const isBadRequestError = isAxiosError && error.response?.status === StatusCode.BAD_REQUEST;
+
+        //notification was not found in the database,
+        const isNotFoundError = error instanceof BackendError && error.label === BackendErrorLabel.NOT_FOUND;
+
+        if (isBadRequestError || isNotFoundError) {
+          const payload = await getNotificationChunks(notificationList, currentClientId);
           return {...payload, missedNotification: currentNotificationId};
-        } else {
-          throw error;
+        }
+
+        if (isErrorWithNotifications) {
+          hasMissedNotifications = true;
+          payload = {...defaultPayload, ...error.response?.data};
+        }
+
+        //throw error for other BackendError's
+        if (!isAxiosError) {
+          throw Error;
         }
       }
 
