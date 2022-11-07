@@ -615,7 +615,7 @@ export class ConversationService {
     groupId,
     conversationId,
   }: Required<AddUsersParams>): Promise<MLSReturnType> {
-    const groupIdBytes = Decoder.fromBase64(groupId!).asBytes;
+    const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
     const coreCryptoKeyPackagesPayload = await this.mlsService.getKeyPackagesPayload([...qualifiedUserIds]);
     const response = await this.mlsService.addUsersToExistingConversation(groupIdBytes, coreCryptoKeyPackagesPayload);
     const conversation = await this.getConversations(conversationId.id);
@@ -666,7 +666,7 @@ export class ConversationService {
    */
   public async sendExternalJoinProposal(groupId: string, epoch: number) {
     return sendMessage(async () => {
-      const groupIdBytes = Decoder.fromBase64(groupId!).asBytes;
+      const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
       const externalProposal = await this.mlsService.newExternalProposal(ExternalProposalType.Add, {
         epoch,
         conversationId: groupIdBytes,
@@ -682,7 +682,7 @@ export class ConversationService {
   }
 
   public async isMLSConversationEstablished(groupId: string) {
-    const groupIdBytes = Decoder.fromBase64(groupId!).asBytes;
+    const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
     return this.mlsService.conversationExists(groupIdBytes);
   }
 
