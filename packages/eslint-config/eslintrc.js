@@ -89,12 +89,12 @@ module.exports = {
     'no-else-return': 'error',
     'no-inner-declarations': 'error',
     'no-lonely-if': 'error',
-    'no-magic-numbers': [
-      'error',
-      {
-        ignore: [-1, 0, 1, 2],
-      },
-    ],
+    "no-magic-numbers": ["warn", {
+      "ignore": [-1, 0, 1],
+      "ignoreArrayIndexes": true,
+      "detectObjects": true,
+      "ignoreDefaultValues": true
+    }],
     'no-restricted-globals': [
       'warn',
       {
