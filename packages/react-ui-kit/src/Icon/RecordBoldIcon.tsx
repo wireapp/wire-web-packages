@@ -17,7 +17,6 @@
  *
  */
 
-/** @jsxImportSource @emotion/react */
 import {SVGIcon, SVGIconProps} from './SVGIcon';
 
 import {COLOR} from '../Identity';

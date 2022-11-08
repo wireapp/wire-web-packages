@@ -17,7 +17,6 @@
  *
  */
 
-/** @jsxImportSource @emotion/react */
 import {CSSObject} from '@emotion/react';
 
 import {COLOR, COLOR_V2} from '../Identity';

@@ -17,7 +17,6 @@
  *
  */
 
-/** @jsxImportSource @emotion/react */
 import * as React from 'react';
 
 export const Form = (props: React.HTMLProps<HTMLFormElement>) => (

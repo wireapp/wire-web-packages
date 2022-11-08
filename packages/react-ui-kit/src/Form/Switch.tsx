@@ -17,7 +17,6 @@
  *
  */
 
-/** @jsxImportSource @emotion/react */
 import {Fragment} from 'react';
 
 import {InputProps} from './Input';

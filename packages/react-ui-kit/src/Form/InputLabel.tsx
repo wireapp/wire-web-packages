@@ -17,7 +17,6 @@
  *
  */
 
-/** @jsxImportSource @emotion/react */
 import {FC, ReactNode} from 'react';
 
 import {COLOR_V2} from '../Identity';

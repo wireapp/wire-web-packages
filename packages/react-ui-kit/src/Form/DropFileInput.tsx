@@ -17,8 +17,6 @@
  *
  */
 
-/** @jsxImportSource @emotion/react */
-
 import {useState, FC, forwardRef, DragEvent} from 'react';
 import * as React from 'react';
 

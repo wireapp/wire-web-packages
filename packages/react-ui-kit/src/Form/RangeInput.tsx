@@ -17,7 +17,6 @@
  *
  */
 
-/** @jsxImportSource @emotion/react */
 import {FC, forwardRef} from 'react';
 
 import {CSSObject} from '@emotion/react';

@@ -17,7 +17,6 @@
  *
  */
 
-/** @jsxImportSource @emotion/react */
 import {useEffect, useImperativeHandle, useState} from 'react';
 import * as React from 'react';
 

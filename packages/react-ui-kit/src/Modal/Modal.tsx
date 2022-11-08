@@ -17,7 +17,6 @@
  *
  */
 
-/** @jsxImportSource @emotion/react */
 import {CSSProperties} from 'react';
 import * as React from 'react';
 
