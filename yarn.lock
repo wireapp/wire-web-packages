@@ -3457,6 +3457,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/eslint@npm:^8":
+  version: 8.4.10
+  resolution: "@types/eslint@npm:8.4.10"
+  dependencies:
+    "@types/estree": "*"
+    "@types/json-schema": "*"
+  checksum: 21e009ed9ed9bc8920fdafc6e11ff321c4538b4cc18a56fdd59dc5184ea7bbf363c71638c9bdb59fc1254dddcdd567485136ed68b0ee4750948d4e32cb79c689
+  languageName: node
+  linkType: hard
+
 "@types/estree@npm:*":
   version: 1.0.0
   resolution: "@types/estree@npm:1.0.0"
@@ -3769,7 +3779,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/prettier@npm:^2.1.5":
+"@types/prettier@npm:^2, @types/prettier@npm:^2.1.5":
   version: 2.7.1
   resolution: "@types/prettier@npm:2.7.1"
   checksum: 5e3f58e229d6c73b5f5cae2e8f96c1c4a5b5805f83459e17a045ba8e96152b1d38e86b63e3172fb159dac923388699660862b75b2d37e54220805f0e691e26f1
@@ -4002,7 +4012,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:5.42.1":
+"@typescript-eslint/eslint-plugin@npm:5.42.1, @typescript-eslint/eslint-plugin@npm:^5.42.1":
   version: 5.42.1
   resolution: "@typescript-eslint/eslint-plugin@npm:5.42.1"
   dependencies:
@@ -4025,7 +4035,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:5.42.1":
+"@typescript-eslint/parser@npm:5.42.1, @typescript-eslint/parser@npm:^5.42.1":
   version: 5.42.1
   resolution: "@typescript-eslint/parser@npm:5.42.1"
   dependencies:
@@ -4602,22 +4612,56 @@ __metadata:
 "@wireapp/eslint-config@workspace:^, @wireapp/eslint-config@workspace:packages/eslint-config":
   version: 0.0.0-use.local
   resolution: "@wireapp/eslint-config@workspace:packages/eslint-config"
+  dependencies:
+    "@types/eslint": ^8
+    "@types/prettier": ^2
+    "@typescript-eslint/eslint-plugin": ^5.42.1
+    "@typescript-eslint/parser": ^5.42.1
+    eslint: ^8.27.0
+    eslint-config-prettier: ^8.5.0
+    eslint-import-resolver-alias: ^1.1.2
+    eslint-import-resolver-typescript: ^3.5.2
+    eslint-plugin-better-styled-components: ^1.1.2
+    eslint-plugin-header: ^3.1.1
+    eslint-plugin-import: ^2.26.0
+    eslint-plugin-jest: ^27.1.4
+    eslint-plugin-jest-dom: ^4.0.2
+    eslint-plugin-jsdoc: ^39.6.2
+    eslint-plugin-jsx-a11y: ^6.6.1
+    eslint-plugin-no-unsanitized: ^4.0.1
+    eslint-plugin-prettier: ^4.2.1
+    eslint-plugin-react: ^7.31.10
+    eslint-plugin-react-hooks: ^4.6.0
+    eslint-plugin-simple-import-sort: ^8.0.0
+    eslint-plugin-testing-library: ^5.9.1
+    eslint-plugin-unused-imports: ^2.0.0
+    prettier: ^2.7.1
+    typescript: ^4.8.4
   peerDependencies:
-    "@babel/eslint-parser": ">=7"
-    "@typescript-eslint/eslint-plugin": ">=5"
-    "@typescript-eslint/parser": ">=5"
-    eslint: ">=8"
-    eslint-config-prettier: ">=8"
-    eslint-plugin-header: ">=3"
-    eslint-plugin-jsdoc: ">=39"
-    eslint-plugin-jsx-a11y: ">=6"
-    eslint-plugin-no-unsanitized: ">=4"
-    eslint-plugin-prettier: ">=4"
-    eslint-plugin-react: ">=7"
-    eslint-plugin-react-hooks: ">=4"
-    eslint-plugin-unused-imports: ">=2"
-    prettier: ">=2"
-    typescript: ">=4"
+    "@types/eslint": ^8
+    "@types/prettier": ^2
+    "@typescript-eslint/eslint-plugin": ^5.42.1
+    "@typescript-eslint/parser": ^5.42.1
+    eslint: ^8.27.0
+    eslint-config-prettier: ^8.5.0
+    eslint-import-resolver-alias: ^1.1.2
+    eslint-import-resolver-typescript: ^3.5.2
+    eslint-plugin-better-styled-components: ^1.1.2
+    eslint-plugin-header: ^3.1.1
+    eslint-plugin-import: ^2.26.0
+    eslint-plugin-jest: ^27.1.4
+    eslint-plugin-jest-dom: ^4.0.2
+    eslint-plugin-jsdoc: ^39.6.2
+    eslint-plugin-jsx-a11y: ^6.6.1
+    eslint-plugin-no-unsanitized: ^4.0.1
+    eslint-plugin-prettier: ^4.2.1
+    eslint-plugin-react: ^7.31.10
+    eslint-plugin-react-hooks: ^4.6.0
+    eslint-plugin-simple-import-sort: ^8.0.0
+    eslint-plugin-testing-library: ^5.9.1
+    eslint-plugin-unused-imports: ^2.0.0
+    prettier: ^2.7.1
+    typescript: ^4.8.4
   languageName: unknown
   linkType: soft
 
@@ -8005,7 +8049,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-prettier@npm:8.5.0":
+"eslint-config-prettier@npm:8.5.0, eslint-config-prettier@npm:^8.5.0":
   version: 8.5.0
   resolution: "eslint-config-prettier@npm:8.5.0"
   peerDependencies:
@@ -8075,7 +8119,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-header@npm:3.1.1":
+"eslint-plugin-header@npm:3.1.1, eslint-plugin-header@npm:^3.1.1":
   version: 3.1.1
   resolution: "eslint-plugin-header@npm:3.1.1"
   peerDependencies:
@@ -8084,7 +8128,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-import@npm:2.26.0":
+"eslint-plugin-import@npm:2.26.0, eslint-plugin-import@npm:^2.26.0":
   version: 2.26.0
   resolution: "eslint-plugin-import@npm:2.26.0"
   dependencies:
@@ -8120,7 +8164,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jest@npm:27.1.4":
+"eslint-plugin-jest@npm:27.1.4, eslint-plugin-jest@npm:^27.1.4":
   version: 27.1.4
   resolution: "eslint-plugin-jest@npm:27.1.4"
   dependencies:
@@ -8137,7 +8181,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jsdoc@npm:39.6.2":
+"eslint-plugin-jsdoc@npm:39.6.2, eslint-plugin-jsdoc@npm:^39.6.2":
   version: 39.6.2
   resolution: "eslint-plugin-jsdoc@npm:39.6.2"
   dependencies:
@@ -8177,7 +8221,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-no-unsanitized@npm:4.0.1":
+"eslint-plugin-no-unsanitized@npm:4.0.1, eslint-plugin-no-unsanitized@npm:^4.0.1":
   version: 4.0.1
   resolution: "eslint-plugin-no-unsanitized@npm:4.0.1"
   peerDependencies:
@@ -8186,7 +8230,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-prettier@npm:4.2.1":
+"eslint-plugin-prettier@npm:4.2.1, eslint-plugin-prettier@npm:^4.2.1":
   version: 4.2.1
   resolution: "eslint-plugin-prettier@npm:4.2.1"
   dependencies:
@@ -8201,7 +8245,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-hooks@npm:4.6.0":
+"eslint-plugin-react-hooks@npm:4.6.0, eslint-plugin-react-hooks@npm:^4.6.0":
   version: 4.6.0
   resolution: "eslint-plugin-react-hooks@npm:4.6.0"
   peerDependencies:
@@ -8210,7 +8254,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react@npm:7.31.10":
+"eslint-plugin-react@npm:7.31.10, eslint-plugin-react@npm:^7.31.10":
   version: 7.31.10
   resolution: "eslint-plugin-react@npm:7.31.10"
   dependencies:
@@ -8234,7 +8278,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-simple-import-sort@npm:8.0.0":
+"eslint-plugin-simple-import-sort@npm:8.0.0, eslint-plugin-simple-import-sort@npm:^8.0.0":
   version: 8.0.0
   resolution: "eslint-plugin-simple-import-sort@npm:8.0.0"
   peerDependencies:
@@ -8321,7 +8365,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:8.27.0":
+"eslint@npm:8.27.0, eslint@npm:^8.27.0":
   version: 8.27.0
   resolution: "eslint@npm:8.27.0"
   dependencies:
@@ -14373,7 +14417,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:2.7.1":
+"prettier@npm:2.7.1, prettier@npm:^2.7.1":
   version: 2.7.1
   resolution: "prettier@npm:2.7.1"
   bin:
