@@ -23,6 +23,11 @@
     "jest/no-disabled-tests": "warn",
     "jest/no-conditional-expect": "warn",
     "jest/valid-describe-callback": "warn",
-    "jest/valid-title": "warn"
+    "jest/valid-title": "warn",
+    "jsx-a11y/click-events-have-key-events": "warn",
+    "jsx-a11y/no-static-element-interactions": "warn",
+    "jsx-a11y/anchor-has-content": "warn",
+    "jsx-a11y/label-has-associated-control": "warn",
+    "jsx-a11y/heading-has-content": "warn"
   }
 }
