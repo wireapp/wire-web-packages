@@ -16,14 +16,13 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
+
 module.exports = {
-    clearMocks: true,
-    testMatch: ["**/?(*.)+(spec|test).+(ts|tsx)", "test/**/*.+(ts|tsx)",],
-    transform: {
-        "^.+\\.(ts|tsx|jsx)$": "@swc/jest",
-    },
-    transformIgnorePatterns: [
-        "node_modules/"
-    ],
-    testEnvironment: "jsdom",
-}
+  clearMocks: true,
+  testMatch: ['**/?(*.)+(spec|test).+(ts|tsx)', 'test/**/*.+(ts|tsx)'],
+  transform: {
+    '^.+\\.(ts|tsx|jsx)$': '@swc/jest',
+  },
+  transformIgnorePatterns: ['node_modules/'],
+  testEnvironment: 'jsdom',
+};

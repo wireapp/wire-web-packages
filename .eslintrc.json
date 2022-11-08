@@ -2,40 +2,33 @@
   "env": {
     "jest/globals": true
   },
-  "extends": ["./packages/eslint-config/eslintrc.js", "plugin:jest/recommended"],
-  "ignorePatterns": ["*config.js", "demo/", "bin/", "eslint*", "webpack*", "*.js", "*.d.ts"],
+  "extends": ["@wireapp/eslint-config"],
+  "ignorePatterns": ["*config.js", "demo/", "bin/", "archive/", "eslint*", "webpack*"],
   "globals": {
     "NodeJS": "readonly"
   },
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
-  },
-  "overrides": [
-    {
-      "files": ["*.ts", "*.tsx"],
-      "rules": {
-        "@typescript-eslint/typedef": "off",
-        "no-unused-vars": "off",
-        "react/no-unknown-property": ["error", {"ignore": ["css"]}]
-      }
-    }
-  ],
-  "parserOptions": {
-    "project": "./tsconfig.json"
-  },
+  "plugins": ["@emotion"],
   "rules": {
+    "@emotion/pkg-renaming": "error",
+    "@emotion/no-vanilla": "error",
+    "@emotion/import-from-emotion": "error",
+    "@emotion/styled-import": "error",
     "id-length": "off",
     "no-dupe-class-members": "off",
     "no-magic-numbers": "off",
     "valid-jsdoc": "off",
+    "import/no-unresolved": "off",
     "jest/no-jasmine-globals": "error",
     "jest/no-identical-title": "warn",
     "jest/no-done-callback": "warn",
     "jest/no-disabled-tests": "warn",
     "jest/no-conditional-expect": "warn",
     "jest/valid-describe-callback": "warn",
-    "jest/valid-title": "warn"
+    "jest/valid-title": "warn",
+    "jsx-a11y/click-events-have-key-events": "warn",
+    "jsx-a11y/no-static-element-interactions": "warn",
+    "jsx-a11y/anchor-has-content": "warn",
+    "jsx-a11y/label-has-associated-control": "warn",
+    "jsx-a11y/heading-has-content": "warn"
   }
 }
