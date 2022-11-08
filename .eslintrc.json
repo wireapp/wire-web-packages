@@ -17,6 +17,7 @@
     "no-dupe-class-members": "off",
     "no-magic-numbers": "off",
     "valid-jsdoc": "off",
+    "import/no-unresolved": "off",
     "jest/no-jasmine-globals": "error",
     "jest/no-identical-title": "warn",
     "jest/no-done-callback": "warn",
