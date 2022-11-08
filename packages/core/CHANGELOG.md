@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [36.4.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@36.3.1...@wireapp/core@36.4.0) (2022-11-08)
+
+### Features
+
+* Configure apiVersion from the core ([#4602](https://github.com/wireapp/wire-web-packages/issues/4602)) ([8c34931](https://github.com/wireapp/wire-web-packages/commit/8c3493113776a35c127e6398c88e6f0168a14009))
+
+## [36.3.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@36.3.0...@wireapp/core@36.3.1) (2022-11-07)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [36.3.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@36.2.0...@wireapp/core@36.3.0) (2022-11-07)
+
+### Features
+
+* External commits support ([#4601](https://github.com/wireapp/wire-web-packages/issues/4601)) ([ba93a1d](https://github.com/wireapp/wire-web-packages/commit/ba93a1d720b97e5d18910804386cc3f9f024ca0b))
+
+# [36.2.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@36.1.1...@wireapp/core@36.2.0) (2022-11-07)
+
+### Features
+
+* Upload commitBundle to backend ([#4566](https://github.com/wireapp/wire-web-packages/issues/4566)) ([6771e93](https://github.com/wireapp/wire-web-packages/commit/6771e9322704c5ef5614b8e6c72e634059b35810))
+
 ## [36.1.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@36.1.0...@wireapp/core@36.1.1) (2022-11-03)
 
 **Note:** Version bump only for package @wireapp/core

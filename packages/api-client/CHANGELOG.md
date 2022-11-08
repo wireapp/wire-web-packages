@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [22.3.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@22.2.0...@wireapp/api-client@22.3.0) (2022-11-07)
+
+### Features
+
+* **api-client:** fetch all notifications when 404 without body returned [FS-1139] ([#4580](https://github.com/wireapp/wire-web-packages/issues/4580)) ([cacd850](https://github.com/wireapp/wire-web-packages/commit/cacd850f07f6c108df2ea16ea9792e17f356817c))
+
+# [22.2.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@22.1.0...@wireapp/api-client@22.2.0) (2022-11-07)
+
+### Features
+
+* External commits support ([#4601](https://github.com/wireapp/wire-web-packages/issues/4601)) ([ba93a1d](https://github.com/wireapp/wire-web-packages/commit/ba93a1d720b97e5d18910804386cc3f9f024ca0b))
+
+# [22.1.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@22.0.1...@wireapp/api-client@22.1.0) (2022-11-07)
+
+### Features
+
+* Upload commitBundle to backend ([#4566](https://github.com/wireapp/wire-web-packages/issues/4566)) ([6771e93](https://github.com/wireapp/wire-web-packages/commit/6771e9322704c5ef5614b8e6c72e634059b35810))
+
 ## [22.0.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@22.0.0...@wireapp/api-client@22.0.1) (2022-10-31)
 
 **Note:** Version bump only for package @wireapp/api-client
