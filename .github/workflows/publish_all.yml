@@ -22,7 +22,6 @@ jobs:
       - name: Set environment variables
         run: |
           echo "BRANCH_NAME=$(git branch --show-current)" >> $GITHUB_ENV
-          echo "TAG=$(git tag --points-at ${{github.sha}})" >> $GITHUB_ENV
           echo "COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{github.event.after}} | head -n 1)" >> $GITHUB_ENV
           echo "COMMIT_URL=${{github.event.head_commit.url}}" >> $GITHUB_ENV
           echo "COMMITTER=${{github.event.head_commit.committer.name}}" >> $GITHUB_ENV
@@ -37,7 +36,6 @@ jobs:
           GITHUB_CONTEXT: ${{toJson(github)}}
         run: |
           echo -e "BRANCH_NAME = ${BRANCH_NAME}"
-          echo -e "TAG = ${TAG}"
           echo -e "TITLE = ${TITLE}"
           echo -e "COMMIT_MESSAGE = ${COMMIT_MESSAGE}"
           echo -e "COMMIT_URL = ${COMMIT_URL}"
