@@ -2,7 +2,7 @@
   "env": {
     "jest/globals": true
   },
-  "extends": ["@wireapp/eslint-config/eslintrc.js"],
+  "extends": ["@wireapp/eslint-config"],
   "ignorePatterns": ["*config.js", "demo/", "bin/", "archive/", "eslint*", "webpack*"],
   "globals": {
     "NodeJS": "readonly"

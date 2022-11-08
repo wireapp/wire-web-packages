@@ -2,12 +2,7 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "outDir": "src",
-    "rootDir": "src",
-    "paths": {
-      "@wireapp/api-client": ["../api-client"],
-      "@wireapp/store-engine": ["../store-engine"],
-      "@wireapp/protocol-messaging": ["../protocol-messaging"]
-    }
+    "rootDir": "src"
   },
   "exclude": ["node_modules"],
   "extends": "../../tsconfig.json"
