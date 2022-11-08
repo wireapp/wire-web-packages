@@ -17,8 +17,9 @@
  *
  */
 
-import {ArrayUtil} from '@wireapp/commons';
 import Axios, {AxiosRequestConfig} from 'axios';
+
+import {ArrayUtil} from '@wireapp/commons';
 
 import {RichInfo} from './RichInfo';
 import {RequestCancellationError} from './UserError';

@@ -76,8 +76,7 @@
   },
   "workspaces": {
     "packages": [
-      "packages/*",
-      "!packages/archive"
+      "packages/*"
     ]
   },
   "packageManager": "yarn@3.2.4"

@@ -17,15 +17,16 @@
  *
  */
 
-import {APIClient} from '@wireapp/api-client';
 import * as Events from '@wireapp/api-client/lib/event';
 import {Notification} from '@wireapp/api-client/lib/notification/';
 import {AbortHandler} from '@wireapp/api-client/lib/tcp';
-import {GenericMessage} from '@wireapp/protocol-messaging';
-import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import logdown from 'logdown';
 
 import {EventEmitter} from 'events';
+
+import {APIClient} from '@wireapp/api-client';
+import {GenericMessage} from '@wireapp/protocol-messaging';
+import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 
 import {NotificationBackendRepository} from './NotificationBackendRepository';
 import {NotificationDatabaseRepository} from './NotificationDatabaseRepository';

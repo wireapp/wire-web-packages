@@ -17,8 +17,9 @@
  *
  */
 
-import {APIClient} from '@wireapp/api-client';
 import {genV4} from 'uuidjs';
+
+import {APIClient} from '@wireapp/api-client';
 
 import {AssetService} from './AssetService';
 

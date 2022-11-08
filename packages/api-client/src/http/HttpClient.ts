@@ -17,13 +17,14 @@
  *
  */
 
-import {TimeUtil} from '@wireapp/commons';
-import {PriorityQueue} from '@wireapp/priority-queue';
 import axios, {AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios';
 import axiosRetry, {isNetworkOrIdempotentRequestError, exponentialDelay} from 'axios-retry';
 import logdown from 'logdown';
 
 import {EventEmitter} from 'events';
+
+import {TimeUtil} from '@wireapp/commons';
+import {PriorityQueue} from '@wireapp/priority-queue';
 
 import {
   AccessTokenData,

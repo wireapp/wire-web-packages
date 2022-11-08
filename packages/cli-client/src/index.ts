@@ -17,14 +17,11 @@
  *
  */
 
-import {APIClient} from '@wireapp/api-client';
 import {ClientType, RegisteredClient} from '@wireapp/api-client/lib/client/';
 import {ConversationProtocol} from '@wireapp/api-client/lib/conversation';
 import {BackendErrorLabel} from '@wireapp/api-client/lib/http/';
-import {Account} from '@wireapp/core';
 import {PayloadBundleType} from '@wireapp/core/lib/conversation/';
 import {buildTextMessage} from '@wireapp/core/lib/conversation/message/MessageBuilder';
-import {FileEngine} from '@wireapp/store-engine-fs';
 import axios from 'axios';
 import {program as commander} from 'commander';
 import dotenv from 'dotenv';
@@ -32,6 +29,10 @@ import * as fs from 'fs-extra';
 
 import os from 'os';
 import path from 'path';
+
+import {APIClient} from '@wireapp/api-client';
+import {Account} from '@wireapp/core';
+import {FileEngine} from '@wireapp/store-engine-fs';
 
 dotenv.config();
 

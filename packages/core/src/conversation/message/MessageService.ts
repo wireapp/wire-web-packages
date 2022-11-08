@@ -17,7 +17,6 @@
  *
  */
 
-import {APIClient} from '@wireapp/api-client';
 import {
   ClientMismatch,
   MessageSendingStatus,
@@ -29,12 +28,14 @@ import {
 } from '@wireapp/api-client/lib/conversation';
 import {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 import {uuidToBytes} from '@wireapp/commons/lib/util/StringUtil';
-import {GenericMessage} from '@wireapp/protocol-messaging';
 import {proteus as ProtobufOTR} from '@wireapp/protocol-messaging/web/otr';
 import {AxiosError} from 'axios';
 import {Encoder} from 'bazinga64';
 import {StatusCodes as HTTP_STATUS} from 'http-status-codes';
 import Long from 'long';
+
+import {APIClient} from '@wireapp/api-client';
+import {GenericMessage} from '@wireapp/protocol-messaging';
 
 import {createId} from './MessageBuilder';
 import {flattenUserClients, flattenQualifiedUserClients} from './UserClientsUtil';

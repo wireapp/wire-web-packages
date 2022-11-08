@@ -17,9 +17,13 @@
  *
  */
 
-import {APIClient} from '@wireapp/api-client';
 import {PostMlsMessageResponse} from '@wireapp/api-client/lib/conversation';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
+import axios from 'axios';
+import {Converter, Decoder, Encoder} from 'bazinga64';
+import logdown from 'logdown';
+
+import {APIClient} from '@wireapp/api-client';
 import {TimeUtil} from '@wireapp/commons';
 import {
   AddProposalArgs,
@@ -36,9 +40,6 @@ import {
   ProposalType,
   RemoveProposalArgs,
 } from '@wireapp/core-crypto';
-import axios from 'axios';
-import {Converter, Decoder, Encoder} from 'bazinga64';
-import logdown from 'logdown';
 
 import {toProtobufCommitBundle} from './commitBundleUtil';
 import {keyMaterialUpdatesStore} from './stores/keyMaterialUpdatesStore';

@@ -19,10 +19,11 @@
 
 /* eslint-disable no-magic-numbers */
 
-import {TimeUtil} from '@wireapp/commons';
 import {Server as WebSocketServer} from 'ws';
 
 import {AddressInfo} from 'net';
+
+import {TimeUtil} from '@wireapp/commons';
 
 import {ReconnectingWebsocket} from './ReconnectingWebsocket';
 

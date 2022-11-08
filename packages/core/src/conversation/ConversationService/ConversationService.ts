@@ -17,7 +17,6 @@
  *
  */
 
-import {APIClient} from '@wireapp/api-client';
 import {
   MessageSendingStatus,
   Conversation,
@@ -33,9 +32,11 @@ import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-cl
 import {ConversationMemberLeaveEvent} from '@wireapp/api-client/lib/event';
 import {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 import {XOR} from '@wireapp/commons/lib/util/TypeUtil';
+import {Decoder} from 'bazinga64';
+
+import {APIClient} from '@wireapp/api-client';
 import {ConversationConfiguration, ExternalProposalType} from '@wireapp/core-crypto';
 import {GenericMessage} from '@wireapp/protocol-messaging';
-import {Decoder} from 'bazinga64';
 
 import {
   AddUsersParams,

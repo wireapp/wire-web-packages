@@ -155,15 +155,20 @@ module.exports = {
             "pattern": "react",
             "group": "external",
             "position": "before"
+          },
+          {
+            "pattern": "@wireapp/*",
+            "group": "internal",
+            "position": "before"
           }
         ],
-        "pathGroupsExcludedImportTypes": ["react"],
+        "pathGroupsExcludedImportTypes": ["react", "@wireapp/*"],
         "newlines-between": "always",
         "alphabetize": {
           "order": "asc",
           "caseInsensitive": true
         },
-        "warnOnUnassignedImports": false
+        "warnOnUnassignedImports": true
       }
     ],
     "better-styled-components/sort-declarations-alphabetically": 2,

@@ -17,7 +17,6 @@
  *
  */
 
-import {APIClient, BackendFeatures} from '@wireapp/api-client';
 import {
   RegisterData,
   AUTH_COOKIE_KEY,
@@ -32,15 +31,17 @@ import * as Events from '@wireapp/api-client/lib/event';
 import {Notification} from '@wireapp/api-client/lib/notification/';
 import {AbortHandler, WebSocketClient} from '@wireapp/api-client/lib/tcp/';
 import {WEBSOCKET_STATE} from '@wireapp/api-client/lib/tcp/ReconnectingWebsocket';
-import {CoreCrypto} from '@wireapp/core-crypto';
-import * as cryptobox from '@wireapp/cryptobox';
-import {CRUDEngine, error as StoreEngineError, MemoryEngine} from '@wireapp/store-engine';
 import axios from 'axios';
 import {Encoder} from 'bazinga64';
 import {StatusCodes as HTTP_STATUS} from 'http-status-codes';
 import logdown from 'logdown';
 
 import {EventEmitter} from 'events';
+
+import {APIClient, BackendFeatures} from '@wireapp/api-client';
+import {CoreCrypto} from '@wireapp/core-crypto';
+import * as cryptobox from '@wireapp/cryptobox';
+import {CRUDEngine, error as StoreEngineError, MemoryEngine} from '@wireapp/store-engine';
 
 import {AccountService} from './account/';
 import {LoginSanitizer} from './auth/';

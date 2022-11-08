@@ -17,9 +17,10 @@
  *
  */
 
-import {TimeUtil} from '@wireapp/commons';
 import logdown from 'logdown';
 import RWS, {CloseEvent, ErrorEvent, Event, Options} from 'reconnecting-websocket';
+
+import {TimeUtil} from '@wireapp/commons';
 
 import * as buffer from '../shims/node/buffer';
 import {WebSocketNode} from '../shims/node/websocket';

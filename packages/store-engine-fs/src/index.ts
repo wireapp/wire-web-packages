@@ -17,10 +17,11 @@
  *
  */
 
-import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import * as fs from 'fs-extra';
 
 import path from 'path';
+
+import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
 
 type FSError = Error & {code: string};
 

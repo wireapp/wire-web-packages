@@ -17,7 +17,6 @@
  *
  */
 
-import {APIClient} from '@wireapp/api-client';
 import {
   ClientMismatch,
   MessageSendingStatus,
@@ -26,9 +25,11 @@ import {
   QualifiedUserClients,
   UserClients,
 } from '@wireapp/api-client/lib/conversation';
-import {GenericMessage, Text} from '@wireapp/protocol-messaging';
 import {StatusCodes} from 'http-status-codes';
 import {genV4} from 'uuidjs';
+
+import {APIClient} from '@wireapp/api-client';
+import {GenericMessage, Text} from '@wireapp/protocol-messaging';
 
 import {MessageService} from './MessageService';
 

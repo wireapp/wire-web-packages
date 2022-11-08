@@ -18,6 +18,8 @@
  */
 
 import {QualifiedId} from '@wireapp/api-client/lib/user';
+import {genV4} from 'uuidjs';
+
 import {
   IComposite,
   Asset,
@@ -39,7 +41,6 @@ import {
   LastRead,
   Cleared,
 } from '@wireapp/protocol-messaging';
-import {genV4} from 'uuidjs';
 
 import {
   ButtonActionConfirmationMessage,

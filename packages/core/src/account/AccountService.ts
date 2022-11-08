@@ -17,8 +17,9 @@
  *
  */
 
-import {APIClient} from '@wireapp/api-client';
 import {CallConfigData} from '@wireapp/api-client/lib/account/CallConfigData';
+
+import {APIClient} from '@wireapp/api-client';
 import {Runtime} from '@wireapp/commons';
 
 export class AccountService {

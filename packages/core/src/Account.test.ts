@@ -17,7 +17,6 @@
  *
  */
 
-import {APIClient} from '@wireapp/api-client';
 import {AuthAPI} from '@wireapp/api-client/lib/auth';
 import {ClientAPI, ClientType, RegisteredClient} from '@wireapp/api-client/lib/client';
 import {ConversationAPI} from '@wireapp/api-client/lib/conversation';
@@ -27,11 +26,13 @@ import {NotificationAPI} from '@wireapp/api-client/lib/notification';
 import {Self, SelfAPI} from '@wireapp/api-client/lib/self';
 import {WebSocketClient} from '@wireapp/api-client/lib/tcp';
 import {ReconnectingWebsocket} from '@wireapp/api-client/lib/tcp/ReconnectingWebsocket';
-import {AccentColor, ValidationUtil} from '@wireapp/commons';
-import {GenericMessage, Text} from '@wireapp/protocol-messaging';
 import {StatusCodes as HTTP_STATUS} from 'http-status-codes';
 import {WS} from 'jest-websocket-mock';
 import nock, {cleanAll} from 'nock';
+
+import {APIClient} from '@wireapp/api-client';
+import {AccentColor, ValidationUtil} from '@wireapp/commons';
+import {GenericMessage, Text} from '@wireapp/protocol-messaging';
 
 import {Account, ConnectionState} from './Account';
 import {PayloadBundleSource, PayloadBundleType} from './conversation';

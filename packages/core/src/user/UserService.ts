@@ -17,11 +17,12 @@
  *
  */
 
-import {APIClient} from '@wireapp/api-client';
 import {ConnectionStatus} from '@wireapp/api-client/lib/connection';
 import {QualifiedId, User, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user/';
-import {Availability, GenericMessage} from '@wireapp/protocol-messaging';
 import {genV4} from 'uuidjs';
+
+import {APIClient} from '@wireapp/api-client';
+import {Availability, GenericMessage} from '@wireapp/protocol-messaging';
 
 import {AvailabilityType, BroadcastService} from '../broadcast/';
 import {ConnectionService} from '../connection';

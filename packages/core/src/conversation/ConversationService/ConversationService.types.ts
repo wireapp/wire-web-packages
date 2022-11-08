@@ -27,6 +27,7 @@ import {
 } from '@wireapp/api-client/lib/conversation';
 import {MlsEvent} from '@wireapp/api-client/lib/conversation/data/MlsEventData';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
+
 import {GenericMessage} from '@wireapp/protocol-messaging';
 
 export enum MessageTargetMode {

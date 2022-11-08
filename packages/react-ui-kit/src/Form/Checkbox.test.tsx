@@ -18,7 +18,6 @@
  */
 
 import '@testing-library/jest-dom/extend-expect';
-
 import {fireEvent, render} from '@testing-library/react';
 
 import {Checkbox, CheckboxLabel} from './Checkbox';
