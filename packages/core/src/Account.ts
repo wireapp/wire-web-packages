@@ -550,7 +550,7 @@ export class Account<T = any> extends EventEmitter {
     await this.service!.client.synchronizeClients();
     await this.service!.cryptography.initCryptobox();
 
-    //call /access endpoint with client_id after client initialisation
+    //call /access endpoint with client_id after new client registration
     await this.apiClient.transport.http.associateClientWithSession(clientId);
 
     return {isNewClient: true, localClient: registeredClient};
