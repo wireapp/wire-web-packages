@@ -30,7 +30,7 @@ import {
 } from '@wireapp/api-client/lib/conversation';
 import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/lib/conversation/data';
 import {ConversationMemberLeaveEvent} from '@wireapp/api-client/lib/event';
-import {QualifiedId, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
+import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {XOR} from '@wireapp/commons/lib/util/TypeUtil';
 import {Decoder} from 'bazinga64';
 
@@ -43,9 +43,14 @@ import {AddUsersParams, MLSReturnType, SendMlsMessageParams, SendResult} from '.
 import {MessageTimer, PayloadBundleState, RemoveUsersParams} from '../../conversation/';
 import {CryptographyService} from '../../cryptography/';
 import {decryptAsset} from '../../cryptography/AssetCryptography';
-import {MLSService, optionalToUint8Array, ProteusService, SendProteusMessageParams} from '../../messagingProtocols';
+import {
+  getConversationQualifiedMembers,
+  MLSService,
+  optionalToUint8Array,
+  ProteusService,
+  SendProteusMessageParams,
+} from '../../messagingProtocols';
 import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/fullyQualifiedClientIdUtils';
-import {isStringArray, isUserClients} from '../../util/TypePredicateUtil';
 import {RemoteData} from '../content';
 import {sendMessage} from '../message/messageSender';
 import {MessageService} from '../message/MessageService';
@@ -63,55 +68,6 @@ export class ConversationService {
   ) {
     this.messageTimer = new MessageTimer();
     this.messageService = new MessageService(this.apiClient, cryptographyService);
-  }
-
-  private async getConversationQualifiedMembers(conversationId: string | QualifiedId): Promise<QualifiedId[]> {
-    const conversation = await this.apiClient.api.conversation.getConversation(conversationId);
-    /*
-     * If you are sending a message to a conversation, you have to include
-     * yourself in the list of users if you want to sync a message also to your
-     * other clients.
-     */
-    return conversation.members.others
-      .filter(member => !!member.qualified_id)
-      .map(member => member.qualified_id!)
-      .concat(conversation.members.self.qualified_id!);
-  }
-
-  async getPreKeyBundleMap(
-    conversationId: QualifiedId,
-    userIds?: string[] | UserClients,
-  ): Promise<UserPreKeyBundleMap> {
-    let members: string[] = [];
-
-    if (userIds) {
-      if (isStringArray(userIds)) {
-        members = userIds;
-      } else if (isUserClients(userIds)) {
-        members = Object.keys(userIds);
-      }
-    }
-
-    if (!members.length) {
-      const conversation = await this.apiClient.api.conversation.getConversation(conversationId);
-      /*
-       * If you are sending a message to a conversation, you have to include
-       * yourself in the list of users if you want to sync a message also to your
-       * other clients.
-       */
-      members = conversation.members.others.map(member => member.id).concat(conversation.members.self.id);
-    }
-
-    const preKeys = await Promise.all(members.map(member => this.apiClient.api.user.getUserPreKeys(member)));
-
-    return preKeys.reduce((bundleMap: UserPreKeyBundleMap, bundle) => {
-      const userId = bundle.user;
-      bundleMap[userId] ||= {};
-      for (const client of bundle.clients) {
-        bundleMap[userId][client.client] = client.prekey;
-      }
-      return bundleMap;
-    }, {});
   }
 
   /**
@@ -160,9 +116,10 @@ export class ConversationService {
     conversationId: string,
     conversationDomain?: string,
   ): Promise<UserClients | QualifiedUserClients> {
-    const qualifiedMembers = await this.getConversationQualifiedMembers(
-      conversationDomain ? {id: conversationId, domain: conversationDomain} : conversationId,
-    );
+    const qualifiedMembers = await getConversationQualifiedMembers({
+      apiClient: this.apiClient,
+      conversationId: conversationDomain ? {id: conversationId, domain: conversationDomain} : conversationId,
+    });
     const allClients = await this.apiClient.api.user.postListClients({qualified_users: qualifiedMembers});
     const qualifiedUserClients: QualifiedUserClients = {};
 

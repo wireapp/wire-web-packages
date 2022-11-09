@@ -460,7 +460,7 @@ export class Account<T = any> extends EventEmitter {
     const teamService = new TeamService(this.apiClient);
 
     const broadcastService = new BroadcastService(this.apiClient, cryptographyService);
-    const userService = new UserService(this.apiClient, broadcastService, conversationService, connectionService);
+    const userService = new UserService(this.apiClient, broadcastService, connectionService);
 
     this.service = {
       mls: mlsService,

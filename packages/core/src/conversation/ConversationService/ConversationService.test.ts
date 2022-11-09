@@ -34,6 +34,7 @@ jest.mock('../../messagingProtocols', () => ({
   ...jest.requireActual('../../messagingProtocols'),
   getGenericMessageParams: jest.fn(),
   getRecipientsForConversation: jest.fn(),
+  getConversationQualifiedMembers: jest.fn(),
 }));
 const MockedMessagingProtocols = MessagingProtocols as jest.Mocked<typeof MessagingProtocols>;
 
@@ -161,7 +162,7 @@ describe('ConversationService', () => {
         },
       };
       const conversationService = buildConversationService(true);
-      jest.spyOn(conversationService as any, 'getConversationQualifiedMembers').mockReturnValue([
+      MockedMessagingProtocols.getConversationQualifiedMembers.mockResolvedValue([
         {domain: 'test-domain', id: 'test-id-1'},
         {domain: 'test-domain', id: 'test-id-2'},
       ]);
