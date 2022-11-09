@@ -24,7 +24,7 @@ import {InputProps} from './Input';
 import {COLOR} from '../Identity';
 import {Loading} from '../Misc';
 
-export interface SwitchProps<T = HTMLInputElement> extends InputProps<T> {
+export interface SwitchProps extends InputProps {
   activatedColor?: string;
   checked: boolean;
   deactivatedColor?: string;

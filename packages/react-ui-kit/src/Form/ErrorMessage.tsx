@@ -24,9 +24,9 @@ import {FlexBox, FlexBoxProps, flexBoxStyle, filterFlexBoxProps, Theme} from '..
 import {Text, linkStyle} from '../Text';
 import {filterProps} from '../util';
 
-type ErrorMessageProps<T = HTMLDivElement> = FlexBoxProps<T>;
+type ErrorMessageProps = FlexBoxProps;
 
-export const errorMessageStyle: <T>(theme: Theme, props: ErrorMessageProps<T>) => CSSObject = (
+export const errorMessageStyle: (theme: Theme, props: ErrorMessageProps) => CSSObject = (
   theme,
   {justify = 'flex-start', align = 'center', ...props},
 ) => ({

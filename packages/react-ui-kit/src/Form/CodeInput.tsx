@@ -38,9 +38,9 @@ const CodeInputWrapper = (props: React.HTMLProps<HTMLDivElement>) => (
   />
 );
 
-type DigitInputProps<T = HTMLInputElement> = InputProps<T>;
+type DigitInputProps = InputProps;
 
-const digitInputStyle: <T>(theme: Theme, props: DigitInputProps<T>) => CSSObject = (theme, props) => ({
+const digitInputStyle: (theme: Theme, props: DigitInputProps) => CSSObject = (theme, props) => ({
   ...inputStyle(theme, props),
   '& + &': {
     marginLeft: 'min(19px, 2vw)',
@@ -57,19 +57,20 @@ const digitInputStyle: <T>(theme: Theme, props: DigitInputProps<T>) => CSSObject
   height: '56px',
 });
 
-const DigitInput: React.FC<DigitInputProps<HTMLInputElement>> = React.forwardRef<
-  HTMLInputElement,
-  DigitInputProps<HTMLInputElement>
->((props, ref) => <input ref={ref} css={(theme: Theme) => digitInputStyle(theme, props)} {...props} type="tel" />);
-DigitInput.displayName = 'DigitInput';
-export interface CodeInputProps<T = HTMLInputElement> extends InputProps<T> {
+const DigitInputInner: React.FC<DigitInputProps> = (
+  props: CodeInputProps,
+  ref: React.ForwardedRef<HTMLInputElement>,
+) => <input ref={ref} css={(theme: Theme) => digitInputStyle(theme, props)} {...props} type="tel" />;
+const DigitInput = React.forwardRef(DigitInputInner);
+
+export interface CodeInputProps extends InputProps {
   autoFocus?: boolean;
   digits?: number;
   markInvalid?: boolean;
   onCodeComplete?: (completeCode?: string) => void;
 }
 
-export const CodeInput = ({
+const CodeInput = ({
   style,
   digits = 6,
   autoFocus = false,
@@ -178,3 +179,5 @@ export const CodeInput = ({
     </CodeInputWrapper>
   );
 };
+
+export {DigitInput, CodeInput};

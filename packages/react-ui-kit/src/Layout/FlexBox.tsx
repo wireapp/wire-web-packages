@@ -17,21 +17,22 @@
  *
  */
 
-import * as React from 'react';
+import {ForwardedRef, forwardRef, HTMLProps} from 'react';
 
 import {CSSObject} from '@emotion/react';
 import type {Property} from 'csstype';
 
 import {filterProps} from '../util';
 
-export interface FlexBoxProps<T = HTMLDivElement> extends React.PropsWithRef<React.HTMLProps<T>> {
+export interface FlexBoxProps extends HTMLProps<HTMLDivElement> {
   align?: string;
   column?: boolean;
   flexWrap?: Property.FlexWrap;
   justify?: string;
+  ref?: ForwardedRef<HTMLDivElement>;
 }
 
-export const flexBoxStyle: <T>(props: FlexBoxProps<T>) => CSSObject = ({
+export const flexBoxStyle: (props: FlexBoxProps) => CSSObject = ({
   align = 'flex-start',
   column = false,
   justify = 'flex-start',
@@ -47,7 +48,7 @@ export const flexBoxStyle: <T>(props: FlexBoxProps<T>) => CSSObject = ({
 export const filterFlexBoxProps = (props: FlexBoxProps) =>
   filterProps(props, ['align', 'column', 'justify', 'flexWrap']);
 
-export const FlexBox: React.FC<FlexBoxProps> = React.forwardRef<HTMLDivElement, FlexBoxProps>((props, ref) => (
+const FlexBoxComponent = (props: FlexBoxProps, ref: ForwardedRef<HTMLDivElement>) => (
   <div ref={ref} css={flexBoxStyle(props)} {...filterFlexBoxProps(props)} />
-));
-FlexBox.displayName = 'FlexBox';
+);
+export const FlexBox = forwardRef(FlexBoxComponent);

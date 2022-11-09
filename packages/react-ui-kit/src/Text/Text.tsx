@@ -17,7 +17,7 @@
  *
  */
 
-import * as React from 'react';
+import {ForwardedRef, forwardRef, HTMLAttributes} from 'react';
 
 import {CSSObject} from '@emotion/react';
 import type {Property} from 'csstype';
@@ -26,7 +26,7 @@ import {COLOR} from '../Identity';
 import {Theme} from '../Layout';
 import {filterProps} from '../util';
 
-export interface TextProps<T = HTMLSpanElement> extends React.PropsWithRef<React.HTMLProps<T>> {
+export interface TextProps<T = HTMLSpanElement> extends HTMLAttributes<T> {
   block?: boolean;
   bold?: boolean;
   center?: boolean;
@@ -37,7 +37,10 @@ export interface TextProps<T = HTMLSpanElement> extends React.PropsWithRef<React
   noWrap?: boolean;
   textTransform?: Property.TextTransform;
   truncate?: boolean;
+  disabled?: boolean;
+  ref?: ForwardedRef<T>;
 }
+export type Ref = HTMLSpanElement;
 
 export const filterTextProps = (props: TextProps) => {
   return filterProps(props, [
@@ -80,32 +83,27 @@ export const textStyle: <T>(theme: Theme, props: TextProps<T>) => CSSObject = (
   whiteSpace: noWrap ? 'nowrap' : undefined,
 });
 
-export const Text = React.forwardRef<HTMLSpanElement, TextProps<HTMLSpanElement>>((props, ref) => (
+const TextInner = (props: TextProps, ref: ForwardedRef<HTMLSpanElement>) => (
   <span ref={ref} css={(theme: Theme) => textStyle(theme, props)} {...filterTextProps(props)} />
-));
-Text.displayName = 'Text';
+);
+const BoldInner = (props: TextProps, ref: ForwardedRef<HTMLSpanElement>) => <Text {...props} ref={ref} bold />;
+const SmallInner = (props: TextProps, ref: ForwardedRef<HTMLSpanElement>) => (
+  <Text {...props} ref={ref} fontSize={'12px'} />
+);
+const MutedInner = (props: TextProps, ref: ForwardedRef<HTMLSpanElement>) => <Text {...props} ref={ref} muted />;
+const UppercaseInner = (props: TextProps, ref: ForwardedRef<HTMLSpanElement>) => (
+  <Text {...props} ref={ref} textTransform={'uppercase'} />
+);
+const LargeInner = (props: TextProps, ref: ForwardedRef<HTMLSpanElement>) => (
+  <Text {...props} ref={ref} fontSize={'48px'} light />
+);
 
-export const Bold = React.forwardRef<HTMLSpanElement, TextProps<HTMLSpanElement>>((props, ref) => (
-  <Text ref={ref} bold {...props} />
-));
-Bold.displayName = 'Bold';
+// use forwardRef to pass the ref to the underlying DOM element
+const Text = forwardRef<HTMLSpanElement, TextProps>(TextInner);
+const Bold = forwardRef<HTMLSpanElement, TextProps>(BoldInner);
+const Small = forwardRef<HTMLSpanElement, TextProps>(SmallInner);
+const Muted = forwardRef<HTMLSpanElement, TextProps>(MutedInner);
+const Uppercase = forwardRef<HTMLSpanElement, TextProps>(UppercaseInner);
+const Large = forwardRef<HTMLSpanElement, TextProps>(LargeInner);
 
-export const Small = React.forwardRef<HTMLSpanElement, TextProps<HTMLSpanElement>>((props, ref) => (
-  <Text ref={ref} fontSize={'12px'} {...props} />
-));
-Small.displayName = 'Small';
-
-export const Muted = React.forwardRef<HTMLSpanElement, TextProps<HTMLSpanElement>>((props, ref) => (
-  <Text ref={ref} muted {...props} />
-));
-Muted.displayName = 'Muted';
-
-export const Uppercase = React.forwardRef<HTMLSpanElement, TextProps<HTMLSpanElement>>((props, ref) => (
-  <Text ref={ref} textTransform={'uppercase'} {...props} />
-));
-Uppercase.displayName = 'Uppercase';
-
-export const Large = React.forwardRef<HTMLSpanElement, TextProps<HTMLSpanElement>>((props, ref) => (
-  <Text ref={ref} fontSize={'48px'} light {...props} />
-));
-Large.displayName = 'Large';
+export {Text, Bold, Small, Muted, Uppercase, Large};

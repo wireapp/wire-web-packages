@@ -17,13 +17,15 @@
  *
  */
 
+import {ButtonHTMLAttributes} from 'react';
+
 import {CSSObject} from '@emotion/react';
 
 import {COLOR, COLOR_V2} from '../Identity';
 import {defaultTransition} from '../Identity/motions';
 import {Theme} from '../Layout';
 import {Loading} from '../Misc';
-import {TextProps, filterTextProps, textStyle} from '../Text';
+import {filterTextProps, TextProps, textStyle} from '../Text';
 import {filterProps} from '../util';
 
 export enum ButtonVariant {
@@ -34,13 +36,14 @@ export enum ButtonVariant {
   SEND = 'send',
 }
 
-export interface ButtonProps<T = HTMLButtonElement> extends TextProps<T> {
-  variant?: ButtonVariant;
-  backgroundColor?: string;
-  loadingColor?: string;
-  noCapital?: boolean;
-  showLoading?: boolean;
-}
+export type ButtonProps<T = HTMLButtonElement> = ButtonHTMLAttributes<T> &
+  TextProps<T> & {
+    variant?: ButtonVariant;
+    backgroundColor?: string;
+    loadingColor?: string;
+    noCapital?: boolean;
+    showLoading?: boolean;
+  };
 
 export const buttonStyle: <T>(theme: Theme, props: ButtonProps<T>) => CSSObject = (
   theme,

@@ -22,7 +22,7 @@ import {INPUT_CLASSNAME, INPUT_GROUP, InputProps, inputStyle} from './Input';
 import {COLOR_V2} from '../Identity';
 import {Theme} from '../Layout';
 
-export type InputSubmitComboProps<T = HTMLDivElement> = InputProps<T>;
+export type InputSubmitComboProps = InputProps;
 
 export const INPUT_SUBMIT_COMBO_CLASSNAME = 'inputSubmitCombo';
 

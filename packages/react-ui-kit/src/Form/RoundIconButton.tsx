@@ -28,7 +28,9 @@ import {COLOR} from '../Identity';
 import {Theme} from '../Layout';
 import {childrenWithDefaultProps} from '../Misc/';
 
-export interface RoundIconButtonProps<T = HTMLButtonElement> extends ButtonProps<T> {}
+export interface RoundIconButtonProps<T = HTMLButtonElement> extends ButtonProps<T> {
+  size?: number;
+}
 
 export const roundIconButtonStyle: <T>(theme: Theme, props: RoundIconButtonProps<T>) => CSSObject = (theme, props) => ({
   ...buttonStyle(theme, props),

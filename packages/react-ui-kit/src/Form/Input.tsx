@@ -17,8 +17,7 @@
  *
  */
 
-import {ReactElement, useState} from 'react';
-import * as React from 'react';
+import {FC, ForwardedRef, forwardRef, InputHTMLAttributes, ReactElement, useState} from 'react';
 
 import {CSSObject} from '@emotion/react';
 import type {Property} from 'csstype';
@@ -27,19 +26,19 @@ import {InputLabel} from './InputLabel';
 
 import {ErrorIcon, HideIcon, ShowIcon} from '../Icon';
 import {Theme} from '../Layout';
-import {TextProps} from '../Text';
 import {filterProps} from '../util';
 
-export interface InputProps<T = HTMLInputElement> extends TextProps<T> {
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: ReactElement;
   markInvalid?: boolean;
   helperText?: string;
   placeholderTextTransform?: Property.TextTransform;
   wrapperCSS?: CSSObject;
+  disabled?: boolean;
 }
 
-export const inputStyle: <T>(theme: Theme, props: InputProps<T>, hasError?: boolean) => CSSObject = (
+export const inputStyle: (theme: Theme, props: InputProps, hasError?: boolean) => CSSObject = (
   theme,
   {markInvalid = false, placeholderTextTransform = 'none', disabled = false},
 ) => {
@@ -98,10 +97,10 @@ const centerInputAction: CSSObject = {
   transform: 'translateY(-50%)',
 };
 
-export const Input: React.FC<InputProps<HTMLInputElement>> = React.forwardRef<
-  HTMLInputElement,
-  InputProps<HTMLInputElement>
->(({type, label, error, helperText, wrapperCSS = {}, className = '', ...props}, ref) => {
+const InputInner: FC<InputProps> = (
+  {type, label, error, helperText, wrapperCSS = {}, className = '', ...props}: InputProps,
+  ref: ForwardedRef<HTMLInputElement>,
+) => {
   const [togglePassword, setTogglePassword] = useState<boolean>(false);
 
   const hasError = !!error;
@@ -173,5 +172,8 @@ export const Input: React.FC<InputProps<HTMLInputElement>> = React.forwardRef<
       {error}
     </div>
   );
-});
-Input.displayName = 'Input';
+};
+
+const Input = forwardRef(InputInner);
+
+export {Input};

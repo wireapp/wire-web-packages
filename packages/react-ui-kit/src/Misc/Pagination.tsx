@@ -17,21 +17,22 @@
  *
  */
 
-import * as React from 'react';
+import {FC, ForwardedRef, HTMLAttributes} from 'react';
 
 import {COLOR} from '../Identity';
 import {FlexBox} from '../Layout';
 import {Bold, Link} from '../Text';
 
-interface PaginationProps<T = HTMLDivElement> extends React.PropsWithRef<React.HTMLProps<T>> {
+interface PaginationProps<T = HTMLDivElement> extends HTMLAttributes<T> {
   currentPage?: number;
   goPage?: (page: number) => void;
   nextPageComponent?: any;
   numberOfPages?: number;
   previousPageComponent?: any;
+  ref: ForwardedRef<T>;
 }
 
-export const Pagination: React.FC<PaginationProps> = ({
+export const Pagination: FC<PaginationProps> = ({
   currentPage = 0,
   numberOfPages = 1,
   goPage,

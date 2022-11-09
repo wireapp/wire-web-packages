@@ -37,54 +37,58 @@ export interface RangeInputProps<T = HTMLInputElement> extends TextProps<T> {
   minValueLabel?: string;
   maxValueLabel?: string;
   wrapperCSS?: CSSObject;
+  min?: number;
+  max?: number;
+  value?: number;
 }
 
-export const RangeInput: FC<RangeInputProps> = forwardRef<HTMLInputElement, RangeInputProps<HTMLInputElement>>(
-  (
-    {
-      id = Math.random().toString(),
-      label,
-      minValueLabel,
-      maxValueLabel,
-      min = '0',
-      max = '100',
-      value = '0',
-      onChange,
-      wrapperCSS,
-      ...inputProps
-    },
-    ref,
-  ) => {
-    const minNum = Number(min);
-    const maxNum = Number(max);
-    const valueNum = Number(value);
-
-    const backgroundSize = `${((valueNum - minNum) * 100) / (maxNum - minNum)}% 100%` as const;
-
-    return (
-      <div css={wrapperCSS}>
-        {label && <InputLabel htmlFor={id}>{label}</InputLabel>}
-        <div css={rangeInputWrapperStyles}>
-          {minValueLabel && <span css={getValueLabelStyles(ValueLabelPosition.LEFT)}>{minValueLabel}</span>}
-          {maxValueLabel && <span css={getValueLabelStyles(ValueLabelPosition.RIGHT)}>{maxValueLabel}</span>}
-          <input
-            ref={ref}
-            css={(theme: Theme) => {
-              console.info('hallo', theme, backgroundSize);
-              return getImageCropZoomInputStyles(theme, backgroundSize);
-            }}
-            id={id}
-            name={id}
-            min={min}
-            max={max}
-            value={value}
-            onChange={onChange}
-            type="range"
-            {...inputProps}
-          />
-        </div>
-      </div>
-    );
+export const RangeInputInner: FC<RangeInputProps> = (
+  {
+    id = Math.random().toString(),
+    label,
+    minValueLabel,
+    maxValueLabel,
+    min = '0',
+    max = '100',
+    value = '0',
+    onChange,
+    wrapperCSS,
+    ...inputProps
   },
-);
-RangeInput.displayName = 'RangeInput';
+  ref,
+) => {
+  const minNum = Number(min);
+  const maxNum = Number(max);
+  const valueNum = Number(value);
+
+  const backgroundSize = `${((valueNum - minNum) * 100) / (maxNum - minNum)}% 100%` as const;
+
+  return (
+    <div css={wrapperCSS}>
+      {label && <InputLabel htmlFor={id}>{label}</InputLabel>}
+      <div css={rangeInputWrapperStyles}>
+        {minValueLabel && <span css={getValueLabelStyles(ValueLabelPosition.LEFT)}>{minValueLabel}</span>}
+        {maxValueLabel && <span css={getValueLabelStyles(ValueLabelPosition.RIGHT)}>{maxValueLabel}</span>}
+        <input
+          ref={ref}
+          css={(theme: Theme) => {
+            console.info('hallo', theme, backgroundSize);
+            return getImageCropZoomInputStyles(theme, backgroundSize);
+          }}
+          id={id}
+          name={id}
+          min={min}
+          max={max}
+          value={value}
+          onChange={onChange}
+          type="range"
+          {...inputProps}
+        />
+      </div>
+    </div>
+  );
+};
+
+const RangeInput = forwardRef(RangeInputInner);
+
+export {RangeInput};
