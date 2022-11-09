@@ -17,19 +17,5 @@
  *
  */
 
-const baseConfig = require('../../jest.config.base');
-
-const { TextDecoder, TextEncoder } = require('util')
-
-module.exports = {
-  ...baseConfig,
-  testEnvironment: "node",
-  globals: {
-    TextDecoder,
-    TextEncoder,
-  },
-  moduleNameMapper: {
-    'Src/(.*)': '<rootDir>/src/$1',
-    'Mocks/(.*)': '<rootDir>/__mocks__/i18n/$1',
-  },
-};
+export * from './mls';
+export * from './proteus';

@@ -17,19 +17,21 @@
  *
  */
 
-const baseConfig = require('../../jest.config.base');
+import {CommitBundle} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
-const { TextDecoder, TextEncoder } = require('util')
+export interface UploadCommitOptions {
+  /**
+   * If uploading the commit fails and we endup in a scenario where a retrial is possible, then this callback will be called to re-generate a new commit bundle
+   */
+  regenerateCommitBundle?: () => Promise<CommitBundle>;
 
-module.exports = {
-  ...baseConfig,
-  testEnvironment: "node",
-  globals: {
-    TextDecoder,
-    TextEncoder,
-  },
-  moduleNameMapper: {
-    'Src/(.*)': '<rootDir>/src/$1',
-    'Mocks/(.*)': '<rootDir>/__mocks__/i18n/$1',
-  },
-};
+  /**
+   * Is the current commitBundle an external commit.
+   */
+  isExternalCommit?: boolean;
+}
+
+export interface MLSServiceConfig {
+  keyingMaterialUpdateThreshold: number;
+  nbKeyPackages: number;
+}
