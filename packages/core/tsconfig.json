@@ -3,11 +3,7 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "outDir": "lib",
-    "baseUrl": ".",
-    "paths": {
-      "Src/*": ["./src/*"],
-      "Mocks/*": ["./__mocks__/*"]
-    }
+    "baseUrl": "."
   },
   "exclude": ["node_modules", "src/test", "src/**/*.test.ts", "src/demo"],
   "include": ["src"]

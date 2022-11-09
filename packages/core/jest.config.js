@@ -28,8 +28,4 @@ module.exports = {
     TextDecoder,
     TextEncoder,
   },
-  moduleNameMapper: {
-    'Src/(.*)': '<rootDir>/src/$1',
-    'Mocks/(.*)': '<rootDir>/__mocks__/i18n/$1',
-  },
 };
