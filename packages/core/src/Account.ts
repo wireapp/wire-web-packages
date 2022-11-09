@@ -286,10 +286,7 @@ export class Account<T = any> extends EventEmitter {
 
     // Assumption: client gets only initialized once
     if (initClient) {
-      const {localClient} = await this.initClient({clientType});
-
-      //call /access endpoint with client_id after client initialisation
-      await this.apiClient.transport.http.associateClientWithSession(localClient.id);
+      await this.initClient({clientType});
 
       if (this.cryptoProtocolConfig?.mls && this.backendFeatures.supportsMLS) {
         // initialize schedulers for pending mls proposals once client is initialized
@@ -543,12 +540,18 @@ export class Account<T = any> extends EventEmitter {
         entropyData,
       );
     }
-    this.apiClient.context!.clientId = registeredClient.id;
+
+    const clientId = registeredClient.id;
+
+    this.apiClient.context!.clientId = clientId;
     this.logger.info('Client is created');
 
     await this.service!.notification.initializeNotificationStream();
     await this.service!.client.synchronizeClients();
     await this.service!.cryptography.initCryptobox();
+
+    //call /access endpoint with client_id after client initialisation
+    await this.apiClient.transport.http.associateClientWithSession(clientId);
 
     return {isNewClient: true, localClient: registeredClient};
   }
