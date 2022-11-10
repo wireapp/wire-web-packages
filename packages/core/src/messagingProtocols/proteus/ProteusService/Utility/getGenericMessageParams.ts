@@ -61,14 +61,14 @@ const getGenericMessageParams = async ({
   sendingClientId,
   conversationId,
   genericMessage,
-  options: {targetMode, userIds, nativePush},
+  options: {targetMode = MessageTargetMode.NONE, userIds, nativePush},
   useQualifiedIds,
   apiClient,
 }: GetGenericMessageParamsParams): GetGenericMessageParamsReturnType => {
+  const plainText = GenericMessage.encode(genericMessage).finish();
   if (targetMode !== MessageTargetMode.NONE && !userIds) {
     throw new Error('Cannot send targetted message when no userIds are given');
   }
-  const plainText = GenericMessage.encode(genericMessage).finish();
 
   if (conversationId.domain && useQualifiedIds) {
     if (isStringArray(userIds) || isUserClients(userIds)) {

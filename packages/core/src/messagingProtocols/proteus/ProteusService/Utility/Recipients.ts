@@ -40,6 +40,7 @@ const getQualifiedRecipientsForConversation = async ({
   if (isQualifiedUserClients(userIds)) {
     return userIds;
   }
+
   const recipientIds = userIds || (await getConversationQualifiedMembers({apiClient: apiClient, conversationId}));
   return getQualifiedPreKeyBundle({apiClient, userIds: recipientIds});
 };

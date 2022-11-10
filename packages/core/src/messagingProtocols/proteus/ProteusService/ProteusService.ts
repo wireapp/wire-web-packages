@@ -80,6 +80,7 @@ export class ProteusService {
         })
       : await this.messageService.sendMessage(sendingClientId, recipients, plainText, {
           ...options,
+          sendAsProtobuf,
           onClientMismatch: mismatch => onClientMismatch?.(mismatch, false),
         });
 
