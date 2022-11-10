@@ -43,13 +43,9 @@ import {AddUsersParams, MLSReturnType, SendMlsMessageParams, SendResult} from '.
 import {MessageTimer, PayloadBundleState, RemoveUsersParams} from '../../conversation/';
 import {CryptographyService} from '../../cryptography/';
 import {decryptAsset} from '../../cryptography/AssetCryptography';
-import {
-  getConversationQualifiedMembers,
-  MLSService,
-  optionalToUint8Array,
-  ProteusService,
-  SendProteusMessageParams,
-} from '../../messagingProtocols';
+import {MLSService, optionalToUint8Array} from '../../messagingProtocols/mls';
+import {getConversationQualifiedMembers, ProteusService} from '../../messagingProtocols/proteus';
+import {SendProteusMessageParams} from '../../messagingProtocols/proteus/ProteusService/ProteusService.types';
 import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/fullyQualifiedClientIdUtils';
 import {RemoteData} from '../content';
 import {sendMessage} from '../message/messageSender';

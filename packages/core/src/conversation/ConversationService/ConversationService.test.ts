@@ -26,12 +26,13 @@ import {MemoryEngine} from '@wireapp/store-engine';
 
 import {ConversationService, PayloadBundleState} from '..';
 import {CryptographyService} from '../../cryptography';
-import * as MessagingProtocols from '../../messagingProtocols';
+import {MLSService} from '../../messagingProtocols/mls';
+import * as MessagingProtocols from '../../messagingProtocols/proteus';
 import * as PayloadHelper from '../../test/PayloadHelper';
 import * as MessageBuilder from '../message/MessageBuilder';
 
-jest.mock('../../messagingProtocols', () => ({
-  ...jest.requireActual('../../messagingProtocols'),
+jest.mock('../../messagingProtocols/proteus', () => ({
+  ...jest.requireActual('../../messagingProtocols/proteus'),
   getGenericMessageParams: jest.fn(),
   getRecipientsForConversation: jest.fn(),
   getConversationQualifiedMembers: jest.fn(),
@@ -46,7 +47,7 @@ jest.mock('../message/messageSender', () => ({
 const mockedMLSService = {
   encryptMessage: () => {},
   commitPendingProposals: () => Promise.resolve(),
-} as unknown as MessagingProtocols.MLSService;
+} as unknown as MLSService;
 
 const mockedProteusService = {
   encryptGenericMessage: () => Promise.resolve(),

@@ -18,6 +18,5 @@
  */
 
 export * from './ProteusService';
-export * from './ProteusService.types';
 export * from './Helper';
 export * from './Helper/getGenericMessageParams';
