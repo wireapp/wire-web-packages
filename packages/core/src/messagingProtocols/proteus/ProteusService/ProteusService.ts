@@ -19,6 +19,7 @@
 
 import {APIClient} from '@wireapp/api-client/lib/APIClient';
 import {ClientMismatch, MessageSendingStatus} from '@wireapp/api-client/lib/conversation';
+import logdown from 'logdown';
 
 import {ProteusServiceConfig, SendProteusMessageParams} from './ProteusService.types';
 import {getGenericMessageParams} from './Utility/getGenericMessageParams';
@@ -29,6 +30,7 @@ import {CryptographyService} from '../../../cryptography';
 
 export class ProteusService {
   private readonly messageService: MessageService;
+  private readonly logger = logdown('@wireapp/core/ProteusService');
 
   constructor(
     private readonly apiClient: APIClient,
@@ -86,6 +88,7 @@ export class ProteusService {
         // We warn the consumer that there is a mismatch that did not prevent message sending
         await onClientMismatch?.(response, true);
       }
+      this.logger.log(`Successfully sent Proteus message to conversation '${conversationId.id}'`);
     }
 
     return {
