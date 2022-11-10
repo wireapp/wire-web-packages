@@ -278,7 +278,7 @@ export class ConversationService {
       throw new Error('No group_id found in response which is required for creating MLS conversations.');
     }
 
-    const response = await this.mlsService.createConversation(groupId, qualifiedUsers.concat(selfUserId), {
+    const response = await this.mlsService.registerConversation(groupId, qualifiedUsers.concat(selfUserId), {
       user: selfUserId,
       client: conversationData.creator_client,
     });

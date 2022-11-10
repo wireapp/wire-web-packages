@@ -41,7 +41,7 @@ describe('MLSService', () => {
     createConversation: jest.fn(),
   } as unknown as CoreCrypto;
 
-  describe('createConversation', () => {
+  describe('registerConversation', () => {
     let mlsService: MLSService;
 
     beforeEach(() => {
@@ -60,7 +60,7 @@ describe('MLSService', () => {
       const creator = {user: selfUser, client: 'client-1'};
       const users = [createUserId(), createUserId()];
 
-      await mlsService.createConversation(groupId, [...users, selfUser], creator);
+      await mlsService.registerConversation(groupId, [...users, selfUser], creator);
 
       expect(apiClient.api.client.claimMLSKeyPackages).toHaveBeenCalledTimes(3);
       expect(apiClient.api.client.claimMLSKeyPackages).toHaveBeenCalledWith(
@@ -74,7 +74,7 @@ describe('MLSService', () => {
     it('creates a new mls conversation without any creator', async () => {
       const groupId = 'mXOagqRIX/RFd7QyXJA8/Ed8X+hvQgLXIiwYHm4OQFc=';
 
-      await mlsService.createConversation(groupId, [createUserId(), createUserId()]);
+      await mlsService.registerConversation(groupId, [createUserId(), createUserId()]);
 
       expect(mlsService.scheduleKeyMaterialRenewal).toHaveBeenCalledWith(groupId);
     });

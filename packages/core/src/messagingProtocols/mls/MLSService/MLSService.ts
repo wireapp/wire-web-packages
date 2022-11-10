@@ -245,7 +245,7 @@ export class MLSService {
    * @param users the list of users that will be members of the conversation (including the self user)
    * @param creator the creator of the list. Most of the time will be the self user (or empty if the conversation was created by backend first)
    */
-  public async createConversation(
+  public async registerConversation(
     groupId: string,
     users: QualifiedId[],
     creator?: {user: QualifiedId; client?: string},
