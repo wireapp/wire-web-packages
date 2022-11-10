@@ -257,6 +257,10 @@ export class ConversationService {
    *   ###############################################
    */
 
+  /**
+   * Will create a conversation on backend and register it to CoreCrypto once created
+   * @param conversationData
+   */
   public async createMLSConversation(conversationData: NewConversation): Promise<MLSReturnType> {
     const {selfUserId, qualified_users: qualifiedUsers = []} = conversationData;
     if (!selfUserId) {
