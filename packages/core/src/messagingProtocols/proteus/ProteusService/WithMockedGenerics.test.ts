@@ -18,7 +18,7 @@
  */
 
 /* eslint-disable import/order */
-import * as GenericMessageParams from './Helper/getGenericMessageParams';
+import * as GenericMessageParams from './Utility/getGenericMessageParams';
 
 import {ClientClassification, ClientType} from '@wireapp/api-client/lib/client';
 import {ConversationProtocol} from '@wireapp/api-client/lib/conversation';
@@ -33,7 +33,7 @@ import {buildTextMessage} from '../../../conversation/message/MessageBuilder';
 import {CryptographyService} from '../../../cryptography';
 import {getUUID} from '../../../test/PayloadHelper';
 
-jest.mock('./Helper/getGenericMessageParams', () => {
+jest.mock('./Utility/getGenericMessageParams', () => {
   return {
     getGenericMessageParams: jest.fn(),
   };

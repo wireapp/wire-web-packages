@@ -20,8 +20,8 @@
 import {APIClient} from '@wireapp/api-client/lib/APIClient';
 import {ClientMismatch, MessageSendingStatus} from '@wireapp/api-client/lib/conversation';
 
-import {getGenericMessageParams} from './Helper/getGenericMessageParams';
 import {ProteusServiceConfig, SendProteusMessageParams} from './ProteusService.types';
+import {getGenericMessageParams} from './Utility/getGenericMessageParams';
 
 import {PayloadBundleState, SendResult} from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
