@@ -45,7 +45,10 @@ import {CryptographyService} from '../../cryptography/';
 import {decryptAsset} from '../../cryptography/AssetCryptography';
 import {MLSService, optionalToUint8Array} from '../../messagingProtocols/mls';
 import {getConversationQualifiedMembers, ProteusService} from '../../messagingProtocols/proteus';
-import {SendProteusMessageParams} from '../../messagingProtocols/proteus/ProteusService/ProteusService.types';
+import {
+  AddUsersToProteusConversationParams,
+  SendProteusMessageParams,
+} from '../../messagingProtocols/proteus/ProteusService/ProteusService.types';
 import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/fullyQualifiedClientIdUtils';
 import {RemoteData} from '../content';
 import {sendMessage} from '../message/messageSender';
@@ -182,8 +185,8 @@ export class ConversationService {
     return (await request.response).buffer;
   }
 
-  public async addUsersToProteusConversation({conversationId, qualifiedUserIds}: Omit<AddUsersParams, 'groupId'>) {
-    return this.apiClient.api.conversation.postMembers(conversationId, qualifiedUserIds);
+  public async addUsersToProteusConversation(params: AddUsersToProteusConversationParams) {
+    return this.proteusService.addUsersToConversation(params);
   }
 
   public async removeUserFromConversation(

@@ -26,7 +26,12 @@ import {
 } from '@wireapp/api-client/lib/conversation';
 import logdown from 'logdown';
 
-import {CreateProteusConversationParams, ProteusServiceConfig, SendProteusMessageParams} from './ProteusService.types';
+import {
+  AddUsersToProteusConversationParams,
+  CreateProteusConversationParams,
+  ProteusServiceConfig,
+  SendProteusMessageParams,
+} from './ProteusService.types';
 import {getGenericMessageParams} from './Utility/getGenericMessageParams';
 
 import {PayloadBundleState, SendResult} from '../../../conversation';
@@ -75,6 +80,10 @@ export class ProteusService {
     }
 
     return this.apiClient.api.conversation.postConversation(payload);
+  }
+
+  public async addUsersToConversation({conversationId, qualifiedUserIds}: AddUsersToProteusConversationParams) {
+    return this.apiClient.api.conversation.postMembers(conversationId, qualifiedUserIds);
   }
 
   public async sendMessage({

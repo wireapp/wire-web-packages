@@ -27,7 +27,7 @@ import {
 } from '@wireapp/api-client/lib/conversation';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 
-import {MessageSendingOptions, SendCommonParams} from '../../../conversation';
+import {AddUsersParams, MessageSendingOptions, SendCommonParams} from '../../../conversation';
 
 export type ProteusServiceConfig = {
   useQualifiedIds: boolean;
@@ -57,3 +57,5 @@ export type CreateProteusConversationParams = {
   otherUserIds?: string | string[];
   name?: string;
 };
+
+export type AddUsersToProteusConversationParams = Omit<AddUsersParams, 'groupId'>;
