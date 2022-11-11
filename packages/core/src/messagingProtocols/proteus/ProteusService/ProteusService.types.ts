@@ -55,7 +55,6 @@ export type SendProteusMessageParams = SendCommonParams &
 export type CreateProteusConversationParams = {
   conversationData?: NewConversation | string;
   otherUserIds?: string | string[];
-  name?: string;
 };
 
 export type AddUsersToProteusConversationParams = Omit<AddUsersParams, 'groupId'>;

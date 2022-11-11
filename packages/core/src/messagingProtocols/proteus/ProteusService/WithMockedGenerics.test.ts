@@ -118,14 +118,5 @@ describe('createConversation', () => {
 
       expect(returnData).toStrictEqual(createConversationResult);
     });
-
-    it('when a name string and userIds are given', async () => {
-      const proteusService = buildProteusService();
-      const otherUserIds = ['user1', 'user2'];
-      const name = 'test';
-      const returnData = await proteusService.createConversation({name, otherUserIds});
-
-      expect(returnData).toStrictEqual(createConversationResult);
-    });
   });
 });

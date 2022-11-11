@@ -134,14 +134,6 @@ export class ConversationService {
 
   /**
    * Create a group conversation.
-   * @param  {string} name
-   * @param  {string|string[]} otherUserIds
-   * @deprecated
-   * @returns Promise
-   */
-  public async createProteusConversation(name: string, otherUserIds: string | string[]): Promise<Conversation>;
-  /**
-   * Create a group conversation.
    *
    * @note Do not include yourself as the requestor
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/createGroupConversation
@@ -154,7 +146,7 @@ export class ConversationService {
     conversationData: NewConversation | string,
     otherUserIds?: string | string[],
   ): Promise<Conversation> {
-    return this.proteusService.createConversation({conversationData, otherUserIds, name});
+    return this.proteusService.createConversation({conversationData, otherUserIds});
   }
 
   public async getConversations(conversationId: string): Promise<Conversation>;

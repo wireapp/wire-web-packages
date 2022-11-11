@@ -61,7 +61,6 @@ export class ProteusService {
   public async createConversation({
     conversationData,
     otherUserIds,
-    name,
   }: CreateProteusConversationParams): Promise<Conversation> {
     const isNewConversation = (conversationData: any): conversationData is NewConversation =>
       conversationData && conversationData?.name && conversationData?.users;
@@ -71,7 +70,7 @@ export class ProteusService {
       payload = {...conversationData};
     } else {
       const users: string[] = otherUserIds ? (Array.isArray(otherUserIds) ? otherUserIds : [otherUserIds]) : [];
-      const payloadName = conversationData && typeof conversationData === 'string' ? conversationData : name;
+      const payloadName = conversationData && typeof conversationData === 'string' ? conversationData : undefined;
       payload = {
         name: payloadName,
         receipt_mode: null,
