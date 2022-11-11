@@ -23,6 +23,7 @@ import {
   ClientMismatch,
   MessageSendingStatus,
   ConversationProtocol,
+  NewConversation,
 } from '@wireapp/api-client/lib/conversation';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 
@@ -50,3 +51,9 @@ export type SendProteusMessageParams = SendCommonParams &
     ) => void | boolean | Promise<boolean>;
     protocol: ConversationProtocol.PROTEUS;
   };
+
+export type CreateProteusConversationParams = {
+  conversationData?: NewConversation | string;
+  otherUserIds?: string | string[];
+  name?: string;
+};
