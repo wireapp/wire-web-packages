@@ -25,7 +25,6 @@ import {
   Cookie,
   CookieStore,
   LoginData,
-  PreKey,
 } from '@wireapp/api-client/lib/auth';
 import {ClientClassification, ClientType, RegisteredClient} from '@wireapp/api-client/lib/client/';
 import * as Events from '@wireapp/api-client/lib/event';
@@ -429,6 +428,7 @@ export class Account<T = any> extends EventEmitter {
       entropyData,
       this.cryptoProtocolConfig?.coreCrypoWasmFilePath,
     );
+    return this.coreCryptoClient;
   }
 
   /**
@@ -512,6 +512,7 @@ export class Account<T = any> extends EventEmitter {
     return loadedClient;
   }
 
+  /*
   private async createMLSClient(
     client: RegisteredClient,
     context: Context,
@@ -554,6 +555,7 @@ export class Account<T = any> extends EventEmitter {
 
     return mlsClient;
   }
+  */
 
   private async registerClient(
     loginData: LoginData,
@@ -564,10 +566,16 @@ export class Account<T = any> extends EventEmitter {
       throw new Error('Services are not set or context not initialized.');
     }
     this.logger.info(`Creating new client {mls: ${!!this.cryptoProtocolConfig}}`);
-    const registeredClient = await this.service.client.register(loginData, clientInfo, entropyData);
-
-    await this.initCoreCrypto(this.apiClient.context, entropyData);
+    const coreCryptoClient = await this.initCoreCrypto(this.apiClient.context, entropyData);
     await this.coreCryptoClient?.proteusInit();
+
+    const registeredClient = await this.service.client.register(
+      loginData,
+      clientInfo,
+      coreCryptoClient,
+      this.nbPrekeys,
+    );
+
     if (this.cryptoProtocolConfig && this.backendFeatures.supportsMLS) {
       /**
       this.coreCryptoClient = await this.createMLSClient(
