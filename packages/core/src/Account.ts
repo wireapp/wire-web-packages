@@ -577,14 +577,7 @@ export class Account<T = any> extends EventEmitter {
     );
 
     if (this.cryptoProtocolConfig && this.backendFeatures.supportsMLS) {
-      /**
-      this.coreCryptoClient = await this.createMLSClient(
-        registeredClient,
-        this.apiClient.context,
-        this.cryptoProtocolConfig,
-        entropyData,
-      );
-      */
+      await coreCryptoClient.mlsInit(registeredClient.id);
     }
     this.apiClient.context.clientId = registeredClient.id;
     this.logger.info('Client is created');
