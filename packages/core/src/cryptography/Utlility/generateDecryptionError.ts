@@ -18,10 +18,11 @@
  */
 
 import {ConversationOtrMessageAddEvent} from '@wireapp/api-client/lib/event';
-import {DecryptionError} from '@wireapp/cryptobox/src/error';
 import logdown from 'logdown';
 
 import {errors as ProteusErrors} from '@wireapp/proteus';
+
+import {DecryptionError} from '../../errors/DecryptionError';
 
 type ErrorWithCode = Error & {code?: number};
 const hasErrorCode = (error: any): ErrorWithCode => error && error.code;
