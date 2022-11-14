@@ -25,6 +25,7 @@ import {
   Cookie,
   CookieStore,
   LoginData,
+  PreKey,
 } from '@wireapp/api-client/lib/auth';
 import {ClientClassification, ClientType, RegisteredClient} from '@wireapp/api-client/lib/client/';
 import * as Events from '@wireapp/api-client/lib/event';
@@ -356,12 +357,13 @@ export class Account<T = any> extends EventEmitter {
     clientInfo?: ClientInfo,
     entropyData?: Uint8Array,
   ): Promise<{isNewClient: boolean; localClient: RegisteredClient}> {
-    if (!this.service) {
+    if (!this.service || !this.apiClient.context) {
       throw new Error('Services are not set.');
     }
 
     try {
-      const localClient = await this.loadAndValidateLocalClient(entropyData);
+      const localClient = await this.loadAndValidateLocalClient();
+      await this.initCoreCrypto(this.apiClient.context, entropyData);
       return {isNewClient: false, localClient};
     } catch (error) {
       if (!clientInfo) {
@@ -404,6 +406,29 @@ export class Account<T = any> extends EventEmitter {
 
       throw error;
     }
+  }
+
+  private async initCoreCrypto(context: Context, entropyData?: Uint8Array) {
+    const coreCryptoKeyId = 'corecrypto-key';
+    const dbName = this.generateSecretsDbName(context);
+
+    const systemCrypto = this.cryptoProtocolConfig?.systemCrypto;
+    const secretStore = systemCrypto
+      ? await createCustomEncryptedStore(dbName, systemCrypto)
+      : await createEncryptedStore(dbName);
+
+    let key = await secretStore.getsecretValue(coreCryptoKeyId);
+    if (!key) {
+      key = window.crypto.getRandomValues(new Uint8Array(16));
+      await secretStore.saveSecretValue(coreCryptoKeyId, key);
+    }
+
+    this.coreCryptoClient = await CoreCrypto.deferredInit(
+      `corecrypto-${this.generateDbName(context)}`,
+      Encoder.toBase64(key).asString,
+      entropyData,
+      this.cryptoProtocolConfig?.coreCrypoWasmFilePath,
+    );
   }
 
   /**
@@ -480,20 +505,10 @@ export class Account<T = any> extends EventEmitter {
     };
   }
 
-  public async loadAndValidateLocalClient(entropyData?: Uint8Array): Promise<RegisteredClient> {
+  public async loadAndValidateLocalClient(): Promise<RegisteredClient> {
     const loadedClient = await this.service!.client.getLocalClient();
     await this.apiClient.api.client.getClient(loadedClient.id);
     this.apiClient.context!.clientId = loadedClient.id;
-    await this.service!.cryptography.initCryptobox();
-    if (this.cryptoProtocolConfig?.mls && this.backendFeatures.supportsMLS) {
-      this.coreCryptoClient = await this.createMLSClient(
-        loadedClient,
-        this.apiClient.context!,
-        this.cryptoProtocolConfig,
-        entropyData,
-      );
-    }
-
     return loadedClient;
   }
 
@@ -545,20 +560,25 @@ export class Account<T = any> extends EventEmitter {
     clientInfo: ClientInfo = coreDefaultClient,
     entropyData?: Uint8Array,
   ): Promise<{isNewClient: boolean; localClient: RegisteredClient}> {
-    if (!this.service) {
-      throw new Error('Services are not set.');
+    if (!this.service || !this.apiClient.context) {
+      throw new Error('Services are not set or context not initialized.');
     }
     this.logger.info(`Creating new client {mls: ${!!this.cryptoProtocolConfig}}`);
     const registeredClient = await this.service.client.register(loginData, clientInfo, entropyData);
+
+    await this.initCoreCrypto(this.apiClient.context, entropyData);
+    await this.coreCryptoClient?.proteusInit();
     if (this.cryptoProtocolConfig && this.backendFeatures.supportsMLS) {
+      /**
       this.coreCryptoClient = await this.createMLSClient(
         registeredClient,
-        this.apiClient.context!,
+        this.apiClient.context,
         this.cryptoProtocolConfig,
         entropyData,
       );
+      */
     }
-    this.apiClient.context!.clientId = registeredClient.id;
+    this.apiClient.context.clientId = registeredClient.id;
     this.logger.info('Client is created');
 
     await this.service!.notification.initializeNotificationStream();

@@ -103,6 +103,7 @@ export class ClientService {
     loginData: LoginData,
     clientInfo: ClientInfo,
     entropyData?: Uint8Array,
+    nbPrekeys?: number = 100,
   ): Promise<RegisteredClient> {
     if (!this.apiClient.context) {
       throw new Error('Context is not set.');
@@ -112,7 +113,19 @@ export class ClientService {
       throw new Error(`Can't register client of type "${ClientType.NONE}"`);
     }
 
-    const serializedPreKeys: PreKey[] = await this.cryptographyService.createCryptobox(entropyData);
+    //const serializedPreKeys: PreKey[] = await this.cryptographyService.createCryptobox(entropyData);
+    // TODO generate and upload prekeys to backend
+    // question: How do we know which ID to use to generate prekeys ? since we don't handle the state of the prekeys already generated we cannot really know which ID to use
+    const prekeys: PreKey[] = [];
+    for (let i = 0; i < nbPrekeys; i++) {
+      const id = i;
+      const key = await this.coreCryptoClient?.proteusNewPrekey();
+      if (!key) {
+        throw new Error('???');
+      }
+      prekeys.push({id, key});
+    }
+    await this.apiClient.api.client.putClient(registeredClient.id, {prekeys});
 
     if (!this.cryptographyService.cryptobox.lastResortPreKey) {
       throw new Error('Cryptobox got initialized without a last resort PreKey.');
