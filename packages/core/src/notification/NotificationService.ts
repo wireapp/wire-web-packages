@@ -20,6 +20,7 @@
 import * as Events from '@wireapp/api-client/lib/event';
 import {Notification} from '@wireapp/api-client/lib/notification/';
 import {AbortHandler} from '@wireapp/api-client/lib/tcp';
+import {DecryptionError} from '@wireapp/cryptobox/src/error';
 import logdown from 'logdown';
 
 import {EventEmitter} from 'events';
