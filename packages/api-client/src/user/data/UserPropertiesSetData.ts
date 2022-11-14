@@ -23,6 +23,18 @@ export enum AudioPreference {
   SOME = 'some',
 }
 
+export enum FontSizePreference {
+  XXS = '10px',
+  XS = '12px',
+  S = '14px',
+  M = '16px',
+  L = '18px',
+  XL = '20px',
+  XXL = '24px',
+  XXXL = '30px',
+  XXXXL = '36px',
+}
+
 export enum NotificationPreference {
   NONE = 'none',
   OBFUSCATE = 'obfuscate',
@@ -42,6 +54,7 @@ export interface WebappProperties {
       replace_inline: boolean;
     };
     interface: {
+      fontSize: FontSizePreference;
       theme: 'dark' | 'default';
       view_folders: boolean;
     };
