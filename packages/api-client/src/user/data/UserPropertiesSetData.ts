@@ -42,7 +42,7 @@ export interface WebappProperties {
       replace_inline: boolean;
     };
     interface: {
-      fontSize: string;
+      font_size: string;
       theme: 'dark' | 'default';
       view_folders: boolean;
     };
