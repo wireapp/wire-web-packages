@@ -362,7 +362,14 @@ export class Account<T = any> extends EventEmitter {
 
     try {
       const localClient = await this.loadAndValidateLocalClient();
-      await this.initCoreCrypto(this.apiClient.context, entropyData);
+      const coreCryptoClient = await this.initCoreCrypto(this.apiClient.context, entropyData);
+
+      await coreCryptoClient.proteusInit();
+
+      if (this.backendFeatures.supportsMLS) {
+        await coreCryptoClient.mlsInit(localClient.id);
+      }
+
       return {isNewClient: false, localClient};
     } catch (error) {
       if (!clientInfo) {
