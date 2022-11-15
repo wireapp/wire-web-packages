@@ -86,7 +86,7 @@ export class ClientService {
     return this.database.getLocalClient();
   }
 
-  public createLocalClient(client: RegisteredClient, domain?: string): Promise<MetaClient> {
+  private createLocalClient(client: RegisteredClient, domain?: string): Promise<MetaClient> {
     return this.database.createLocalClient(client, domain);
   }
 

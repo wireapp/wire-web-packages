@@ -242,10 +242,6 @@ export class CryptographyService {
     return {encryptedPayload, sessionId};
   }
 
-  public async initCryptobox(): Promise<void> {
-    await this.cryptobox.load();
-  }
-
   /**
    * Get the fingerprint of the local client.
    */

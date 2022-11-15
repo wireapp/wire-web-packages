@@ -565,7 +565,8 @@ export class Account<T = any> extends EventEmitter {
     if (!this.service || !this.apiClient.context) {
       throw new Error('Services are not set or context not initialized.');
     }
-    this.logger.info(`Creating new client {mls: ${!!this.cryptoProtocolConfig}}`);
+    const createMlsClient = !!this.cryptoProtocolConfig?.mls;
+    this.logger.info(`Creating new client {mls: ${createMlsClient}}`);
     const coreCryptoClient = await this.initCoreCrypto(this.apiClient.context, entropyData);
     await this.coreCryptoClient?.proteusInit();
 
@@ -576,7 +577,7 @@ export class Account<T = any> extends EventEmitter {
       this.nbPrekeys,
     );
 
-    if (this.cryptoProtocolConfig && this.backendFeatures.supportsMLS) {
+    if (createMlsClient && this.backendFeatures.supportsMLS) {
       await coreCryptoClient.mlsInit(registeredClient.id);
     }
     this.apiClient.context.clientId = registeredClient.id;
@@ -584,7 +585,6 @@ export class Account<T = any> extends EventEmitter {
 
     await this.service!.notification.initializeNotificationStream();
     await this.service!.client.synchronizeClients();
-    await this.service!.cryptography.initCryptobox();
 
     return {isNewClient: true, localClient: registeredClient};
   }
