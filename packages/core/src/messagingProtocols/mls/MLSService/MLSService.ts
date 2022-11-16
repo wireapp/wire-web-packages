@@ -73,7 +73,7 @@ export class MLSService {
 
   constructor(
     private readonly apiClient: APIClient,
-    private readonly coreCryptoClientProvider: () => CoreCrypto | undefined,
+    private readonly coreCryptoClient: CoreCrypto,
     {
       keyingMaterialUpdateThreshold = defaultConfig.keyingMaterialUpdateThreshold,
       nbKeyPackages = defaultConfig.nbKeyPackages,
@@ -83,14 +83,6 @@ export class MLSService {
       keyingMaterialUpdateThreshold,
       nbKeyPackages,
     };
-  }
-
-  private get coreCryptoClient() {
-    const client = this.coreCryptoClientProvider();
-    if (!client) {
-      throw new Error('Could not get coreCryptoClient');
-    }
-    return client;
   }
 
   private async uploadCommitBundle(
