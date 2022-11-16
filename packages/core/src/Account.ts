@@ -356,12 +356,20 @@ export class Account<T = any> extends EventEmitter {
     clientInfo?: ClientInfo,
     entropyData?: Uint8Array,
   ): Promise<{isNewClient: boolean; localClient: RegisteredClient}> {
-    if (!this.service) {
+    if (!this.service || !this.apiClient.context) {
       throw new Error('Services are not set.');
     }
 
     try {
-      const localClient = await this.loadAndValidateLocalClient(entropyData);
+      const localClient = await this.loadAndValidateLocalClient();
+      const coreCryptoClient = await this.initCoreCrypto(this.apiClient.context, entropyData);
+
+      await coreCryptoClient.proteusInit();
+
+      if (this.backendFeatures.supportsMLS) {
+        await coreCryptoClient.mlsInit(localClient.id);
+      }
+
       return {isNewClient: false, localClient};
     } catch (error) {
       if (!clientInfo) {
@@ -404,6 +412,30 @@ export class Account<T = any> extends EventEmitter {
 
       throw error;
     }
+  }
+
+  private async initCoreCrypto(context: Context, entropyData?: Uint8Array) {
+    const coreCryptoKeyId = 'corecrypto-key';
+    const dbName = this.generateSecretsDbName(context);
+
+    const systemCrypto = this.cryptoProtocolConfig?.systemCrypto;
+    const secretStore = systemCrypto
+      ? await createCustomEncryptedStore(dbName, systemCrypto)
+      : await createEncryptedStore(dbName);
+
+    let key = await secretStore.getsecretValue(coreCryptoKeyId);
+    if (!key) {
+      key = window.crypto.getRandomValues(new Uint8Array(16));
+      await secretStore.saveSecretValue(coreCryptoKeyId, key);
+    }
+
+    this.coreCryptoClient = await CoreCrypto.deferredInit(
+      `corecrypto-${this.generateDbName(context)}`,
+      Encoder.toBase64(key).asString,
+      entropyData,
+      this.cryptoProtocolConfig?.coreCrypoWasmFilePath,
+    );
+    return this.coreCryptoClient;
   }
 
   /**
@@ -475,64 +507,11 @@ export class Account<T = any> extends EventEmitter {
     };
   }
 
-  public async loadAndValidateLocalClient(entropyData?: Uint8Array): Promise<RegisteredClient> {
+  public async loadAndValidateLocalClient(): Promise<RegisteredClient> {
     const loadedClient = await this.service!.client.getLocalClient();
     await this.apiClient.api.client.getClient(loadedClient.id);
     this.apiClient.context!.clientId = loadedClient.id;
-    await this.service!.cryptography.initCryptobox();
-    if (this.cryptoProtocolConfig?.mls && this.backendFeatures.supportsMLS) {
-      this.coreCryptoClient = await this.createMLSClient(
-        loadedClient,
-        this.apiClient.context!,
-        this.cryptoProtocolConfig,
-        entropyData,
-      );
-    }
-
     return loadedClient;
-  }
-
-  private async createMLSClient(
-    client: RegisteredClient,
-    context: Context,
-    cryptoProtocolConfig: CryptoProtocolConfig,
-    entropyData?: Uint8Array,
-  ) {
-    if (!this.service) {
-      throw new Error('Services are not set.');
-    }
-    const coreCryptoKeyId = 'corecrypto-key';
-    const dbName = this.generateSecretsDbName(context);
-
-    const secretStore = cryptoProtocolConfig.systemCrypto
-      ? await createCustomEncryptedStore(dbName, cryptoProtocolConfig.systemCrypto)
-      : await createEncryptedStore(dbName);
-
-    let key = await secretStore.getsecretValue(coreCryptoKeyId);
-    let isNewMLSDevice = false;
-    if (!key) {
-      key = window.crypto.getRandomValues(new Uint8Array(16));
-      await secretStore.saveSecretValue(coreCryptoKeyId, key);
-      // Keeping track that this device is a new MLS device (but can be an old proteus device)
-      isNewMLSDevice = true;
-    }
-
-    const {userId, domain} = this.apiClient.context!;
-    const mlsClient = await CoreCrypto.init({
-      databaseName: `corecrypto-${this.generateDbName(context)}`,
-      key: Encoder.toBase64(key).asString,
-      clientId: `${userId}:${client.id}@${domain}`,
-      wasmFilePath: cryptoProtocolConfig.coreCrypoWasmFilePath,
-      entropySeed: entropyData,
-    });
-
-    if (isNewMLSDevice) {
-      // If the device is new, we need to upload keypackages and public key to the backend
-      await this.service.mls.uploadMLSPublicKeys(await mlsClient.clientPublicKey(), client.id);
-      await this.service.mls.uploadMLSKeyPackages(await mlsClient.clientKeypackages(this.nbPrekeys), client.id);
-    }
-
-    return mlsClient;
   }
 
   private async registerClient(
@@ -540,25 +519,29 @@ export class Account<T = any> extends EventEmitter {
     clientInfo: ClientInfo = coreDefaultClient,
     entropyData?: Uint8Array,
   ): Promise<{isNewClient: boolean; localClient: RegisteredClient}> {
-    if (!this.service) {
-      throw new Error('Services are not set.');
+    if (!this.service || !this.apiClient.context) {
+      throw new Error('Services are not set or context not initialized.');
     }
-    this.logger.info(`Creating new client {mls: ${!!this.cryptoProtocolConfig}}`);
-    const registeredClient = await this.service.client.register(loginData, clientInfo, entropyData);
-    if (this.cryptoProtocolConfig && this.backendFeatures.supportsMLS) {
-      this.coreCryptoClient = await this.createMLSClient(
-        registeredClient,
-        this.apiClient.context!,
-        this.cryptoProtocolConfig,
-        entropyData,
-      );
+    const createMlsClient = !!this.cryptoProtocolConfig?.mls;
+    this.logger.info(`Creating new client {mls: ${createMlsClient}}`);
+    const coreCryptoClient = await this.initCoreCrypto(this.apiClient.context, entropyData);
+    await this.coreCryptoClient?.proteusInit();
+
+    const registeredClient = await this.service.client.register(
+      loginData,
+      clientInfo,
+      coreCryptoClient,
+      this.nbPrekeys,
+    );
+
+    if (createMlsClient && this.backendFeatures.supportsMLS) {
+      await coreCryptoClient.mlsInit(registeredClient.id);
     }
-    this.apiClient.context!.clientId = registeredClient.id;
+    this.apiClient.context.clientId = registeredClient.id;
     this.logger.info('Client is created');
 
     await this.service!.notification.initializeNotificationStream();
     await this.service!.client.synchronizeClients();
-    await this.service!.cryptography.initCryptobox();
 
     return {isNewClient: true, localClient: registeredClient};
   }

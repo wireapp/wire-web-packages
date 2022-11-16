@@ -20,6 +20,9 @@
 import {LoginData, PreKey} from '@wireapp/api-client/lib/auth/';
 import {ClientType, CreateClientPayload, RegisteredClient} from '@wireapp/api-client/lib/client/';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
+import {keys as ProteusKeys} from '@wireapp/proteus';
+import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
+import {Encoder} from 'bazinga64';
 
 import {APIClient} from '@wireapp/api-client';
 import {CRUDEngine} from '@wireapp/store-engine';
@@ -84,7 +87,7 @@ export class ClientService {
     return this.database.getLocalClient();
   }
 
-  public createLocalClient(client: RegisteredClient, domain?: string): Promise<MetaClient> {
+  private createLocalClient(client: RegisteredClient, domain?: string): Promise<MetaClient> {
     return this.database.createLocalClient(client, domain);
   }
 
@@ -102,7 +105,8 @@ export class ClientService {
   public async register(
     loginData: LoginData,
     clientInfo: ClientInfo,
-    entropyData?: Uint8Array,
+    coreCryptoClient: CoreCrypto,
+    nbPrekeys: number = 100,
   ): Promise<RegisteredClient> {
     if (!this.apiClient.context) {
       throw new Error('Context is not set.');
@@ -112,22 +116,28 @@ export class ClientService {
       throw new Error(`Can't register client of type "${ClientType.NONE}"`);
     }
 
-    const serializedPreKeys: PreKey[] = await this.cryptographyService.createCryptobox(entropyData);
+    const prekeys: PreKey[] = [];
 
-    if (!this.cryptographyService.cryptobox.lastResortPreKey) {
-      throw new Error('Cryptobox got initialized without a last resort PreKey.');
+    for (let i = 0; i < nbPrekeys; i++) {
+      const id = i;
+      const key = await coreCryptoClient.proteusNewPrekey(i);
+      prekeys.push({id, key: Encoder.toBase64(key).asString});
     }
+
+    const lastPrekeyId = ProteusKeys.PreKey.MAX_PREKEY_ID;
+    const lastPrekeyBytes = await coreCryptoClient.proteusNewPrekey(lastPrekeyId);
+    const lastPrekey = {id: lastPrekeyId, key: Encoder.toBase64(lastPrekeyBytes).asString};
 
     const newClient: CreateClientPayload = {
       class: clientInfo.classification,
       cookie: clientInfo.cookieLabel,
       label: clientInfo.label,
-      lastkey: this.cryptographyService.cryptobox.serialize_prekey(this.cryptographyService.cryptobox.lastResortPreKey),
+      lastkey: lastPrekey,
       location: clientInfo.location,
       model: clientInfo.model,
       password: loginData.password ? String(loginData.password) : undefined,
       verification_code: loginData.verificationCode,
-      prekeys: serializedPreKeys,
+      prekeys: prekeys,
       type: loginData.clientType,
     };
 
