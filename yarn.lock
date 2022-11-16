@@ -1114,7 +1114,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-react-jsx@npm:^7.18.6":
+"@babel/plugin-transform-react-jsx@npm:^7.17.12, @babel/plugin-transform-react-jsx@npm:^7.18.6":
   version: 7.19.0
   resolution: "@babel/plugin-transform-react-jsx@npm:7.19.0"
   dependencies:
@@ -1460,7 +1460,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/babel-plugin@npm:11.10.5, @emotion/babel-plugin@npm:^11.10.0":
+"@emotion/babel-plugin-jsx-pragmatic@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "@emotion/babel-plugin-jsx-pragmatic@npm:0.2.0"
+  dependencies:
+    "@babel/plugin-syntax-jsx": ^7.17.12
+  peerDependencies:
+    "@babel/core": ^7.0.0
+  checksum: fb7a386ff1335ba09f8db5617c14b87ed844beda181fa9eaf5516328a39ec2f1cfc9d332d53b4378682a869f375f63eaeedfcb18490cd2fd19b70433ffe9487b
+  languageName: node
+  linkType: hard
+
+"@emotion/babel-plugin@npm:^11.10.0":
   version: 11.10.5
   resolution: "@emotion/babel-plugin@npm:11.10.5"
   dependencies:
@@ -1479,6 +1490,20 @@ __metadata:
   peerDependencies:
     "@babel/core": ^7.0.0
   checksum: e3353499c76c4422d6e900c0dfab73607056d9da86161a3f27c3459c193c4908050c5d252c68fcde231e13f02a9d8e0dc07d260317ae0e5206841e331cc4caae
+  languageName: node
+  linkType: hard
+
+"@emotion/babel-preset-css-prop@npm:^11.10.0":
+  version: 11.10.0
+  resolution: "@emotion/babel-preset-css-prop@npm:11.10.0"
+  dependencies:
+    "@babel/plugin-transform-react-jsx": ^7.17.12
+    "@babel/runtime": ^7.18.3
+    "@emotion/babel-plugin": ^11.10.0
+    "@emotion/babel-plugin-jsx-pragmatic": ^0.2.0
+  peerDependencies:
+    "@babel/core": ^7.0.0
+  checksum: 09d91e89ec5edf105ddcdfcbac5aa45c2c0c19213ee6fcf95fd570ca395b965022fe03a5483802e00eea2436983609cef2b2fcc88169b0a923a8e2c92411ec89
   languageName: node
   linkType: hard
 
@@ -4400,7 +4425,7 @@ __metadata:
     "@babel/preset-env": 7.20.2
     "@babel/preset-react": 7.18.6
     "@babel/preset-typescript": 7.18.6
-    "@emotion/babel-plugin": 11.10.5
+    "@emotion/babel-preset-css-prop": ^11.10.0
     "@emotion/jest": 11.10.5
     "@emotion/react": ^11.10.4
     "@hot-loader/react-dom": 17.0.2
