@@ -430,7 +430,7 @@ export class Account<T = any> extends EventEmitter {
     return CoreCrypto.deferredInit(
       `corecrypto-${this.generateDbName(context)}`,
       Encoder.toBase64(key).asString,
-      undefined,
+      undefined, // We pass a placeholder entropy data. It will be set later on by calling `reseedRng`
       this.cryptoProtocolConfig?.coreCrypoWasmFilePath,
     );
   }
