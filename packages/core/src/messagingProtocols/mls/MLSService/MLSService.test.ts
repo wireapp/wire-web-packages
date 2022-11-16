@@ -21,10 +21,10 @@ import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
 import {randomUUID} from 'crypto';
 
+import {APIClient} from '@wireapp/api-client';
+
 import {MLSService} from './MLSService';
 import {storageMock} from './stores/stores.mock';
-
-import {APIClient} from '../../../../api-client/lib/APIClient';
 
 jest.createMockFromModule('@wireapp/api-client');
 
