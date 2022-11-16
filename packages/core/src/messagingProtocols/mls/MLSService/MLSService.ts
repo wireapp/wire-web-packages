@@ -42,15 +42,17 @@ import {
 } from '@wireapp/core-crypto';
 
 import {toProtobufCommitBundle} from './commitBundleUtil';
+import {MLSServiceConfig, UploadCommitOptions} from './MLSService.types';
 import {keyMaterialUpdatesStore} from './stores/keyMaterialUpdatesStore';
 import {pendingProposalsStore} from './stores/pendingProposalsStore';
 
-import {QualifiedUsers} from '../../conversation';
-import {sendMessage} from '../../conversation/message/messageSender';
-import {parseFullQualifiedClientId} from '../../util/fullyQualifiedClientIdUtils';
-import {cancelRecurringTask, registerRecurringTask} from '../../util/RecurringTaskScheduler';
-import {TaskScheduler} from '../../util/TaskScheduler';
-import {EventHandlerParams, EventHandlerResult, handleBackendEvent} from '../EventHandler';
+import {QualifiedUsers} from '../../../conversation';
+import {sendMessage} from '../../../conversation/message/messageSender';
+import {parseFullQualifiedClientId} from '../../../util/fullyQualifiedClientIdUtils';
+import {cancelRecurringTask, registerRecurringTask} from '../../../util/RecurringTaskScheduler';
+import {TaskScheduler} from '../../../util/TaskScheduler';
+import {EventHandlerResult} from '../../common.types';
+import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
 import {CommitPendingProposalsParams, HandlePendingProposalsParams, MLSCallbacks} from '../types';
 
 //@todo: this function is temporary, we wait for the update from core-crypto side
@@ -59,22 +61,6 @@ export const optionalToUint8Array = (array: Uint8Array | []): Uint8Array => {
   return Array.isArray(array) ? Uint8Array.from(array) : array;
 };
 
-interface UploadCommitOptions {
-  /**
-   * If uploading the commit fails and we endup in a scenario where a retrial is possible, then this callback will be called to re-generate a new commit bundle
-   */
-  regenerateCommitBundle?: () => Promise<CommitBundle>;
-
-  /**
-   * Is the current commitBundle an external commit.
-   */
-  isExternalCommit?: boolean;
-}
-
-interface MLSServiceConfig {
-  keyingMaterialUpdateThreshold: number;
-  nbKeyPackages: number;
-}
 const defaultConfig: MLSServiceConfig = {
   keyingMaterialUpdateThreshold: 1000 * 60 * 60 * 24 * 30, //30 days
   nbKeyPackages: 100,
@@ -253,11 +239,50 @@ export class MLSService {
     return this.processCommitAction(conversationId, () => this.coreCryptoClient.updateKeyingMaterial(conversationId));
   }
 
-  public async createConversation(
-    conversationId: ConversationId,
-    configuration?: ConversationConfiguration,
-  ): Promise<any> {
-    return this.coreCryptoClient.createConversation(conversationId, configuration);
+  /**
+   * Will create a conversation inside of coreCrypto.
+   * @param groupId the id of the group to create inside of coreCrypto
+   * @param users the list of users that will be members of the conversation (including the self user)
+   * @param creator the creator of the list. Most of the time will be the self user (or empty if the conversation was created by backend first)
+   */
+  public async registerConversation(
+    groupId: string,
+    users: QualifiedId[],
+    creator?: {user: QualifiedId; client?: string},
+  ): Promise<PostMlsMessageResponse | null | undefined> {
+    const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
+
+    const mlsKeys = (await this.apiClient.api.client.getPublicKeys()).removal;
+    const mlsKeyBytes = Object.values(mlsKeys).map((key: string) => Decoder.fromBase64(key).asBytes);
+    const configuration: ConversationConfiguration = {
+      externalSenders: mlsKeyBytes,
+      ciphersuite: 1, // TODO: Use the correct ciphersuite enum.
+    };
+
+    this.coreCryptoClient.createConversation(groupIdBytes, configuration);
+
+    const coreCryptoKeyPackagesPayload = await this.getKeyPackagesPayload(
+      users.map(user => {
+        if (user.id === creator?.user.id) {
+          /**
+           * we should skip fetching key packages for current self client,
+           * it's already added by the backend on the group creation time
+           */
+          return {...creator.user, skipOwn: creator.client};
+        }
+        return user;
+      }),
+    );
+
+    let response;
+    if (coreCryptoKeyPackagesPayload.length !== 0) {
+      response = await this.addUsersToExistingConversation(groupIdBytes, coreCryptoKeyPackagesPayload);
+    }
+
+    // We schedule a key material renewal
+    this.scheduleKeyMaterialRenewal(groupId);
+
+    return response;
   }
 
   public removeClientsFromConversation(conversationId: ConversationId, clientIds: Uint8Array[]) {
@@ -398,7 +423,7 @@ export class MLSService {
     return this.coreCryptoClient.wipeConversation(conversationId);
   }
 
-  public async handleMLSEvent(params: Omit<EventHandlerParams, 'mlsService'>): EventHandlerResult {
+  public async handleEvent(params: Omit<EventHandlerParams, 'mlsService'>): EventHandlerResult {
     return handleBackendEvent({...params, mlsService: this});
   }
 

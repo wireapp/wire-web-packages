@@ -27,5 +27,5 @@ module.exports = {
   globals: {
     TextDecoder,
     TextEncoder,
-  }
+  },
 };

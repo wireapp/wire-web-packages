@@ -19,10 +19,13 @@
 
 module.exports = {
   clearMocks: true,
-  testMatch: ['**/?(*.)+(spec|test).+(ts|tsx)', 'test/**/*.+(ts|tsx)'],
   transform: {
     '^.+\\.(ts|tsx|jsx)$': '@swc/jest',
   },
   transformIgnorePatterns: ['node_modules/'],
   testEnvironment: 'jsdom',
+  testPathIgnorePatterns: ['archive/'],
+  coveragePathIgnorePatterns: ['archive/'],
+  modulePathIgnorePatterns: ['archive/'],
+  moduleFileExtensions: ['js', 'json', 'ts', 'tsx'],
 };

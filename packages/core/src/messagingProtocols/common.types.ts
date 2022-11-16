@@ -17,4 +17,6 @@
  *
  */
 
-export * from './MLSService';
+import {HandledEventPayload} from '../notification';
+
+export type EventHandlerResult = Promise<HandledEventPayload | void>;

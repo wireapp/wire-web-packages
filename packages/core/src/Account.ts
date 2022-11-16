@@ -56,8 +56,9 @@ import {CoreError} from './CoreError';
 import {CryptographyService, SessionId} from './cryptography/';
 import {GiphyService} from './giphy/';
 import {LinkPreviewService} from './linkPreview';
-import {MLSService} from './mls';
-import {MLSCallbacks, CryptoProtocolConfig} from './mls/types';
+import {MLSService} from './messagingProtocols/mls';
+import {MLSCallbacks, CryptoProtocolConfig} from './messagingProtocols/mls/types';
+import {ProteusService} from './messagingProtocols/proteus';
 import {HandledEventPayload, NotificationService} from './notification/';
 import {SelfService} from './self/';
 import {TeamService} from './team/';
@@ -264,7 +265,7 @@ export class Account<T = any> extends EventEmitter {
   }
 
   /**
-   * Will init the core with an aleady existing client (both on backend and local)
+   * Will init the core with an already existing client (both on backend and local)
    * Will fail if local client cannot be found
    *
    * @param clientType The type of client the user is using (temporary or permanent)
@@ -295,7 +296,10 @@ export class Account<T = any> extends EventEmitter {
 
     // Assumption: client gets only initialized once
     if (initClient) {
-      await this.initClient({clientType});
+      const {localClient} = await this.initClient({clientType});
+
+      //call /access endpoint with client_id after client initialisation
+      await this.apiClient.transport.http.associateClientWithSession(localClient.id);
 
       if (this.cryptoProtocolConfig?.mls && this.backendFeatures.supportsMLS) {
         // initialize schedulers for pending mls proposals once client is initialized
@@ -340,7 +344,7 @@ export class Account<T = any> extends EventEmitter {
   /**
    * Will try to get the load the local client from local DB.
    * If clientInfo are provided, will also create the client on backend and DB
-   * If clientInfo are not provideo, the method will fail if local client cannot be found
+   * If clientInfo are not provided, the method will fail if local client cannot be found
    *
    * @param loginData User's credentials
    * @param clientInfo Will allow creating the client if the local client cannot be found (else will fail if local client is not found)
@@ -428,15 +432,14 @@ export class Account<T = any> extends EventEmitter {
       ...this.cryptoProtocolConfig?.mls,
       nbKeyPackages: this.nbPrekeys,
     });
+    const proteusService = new ProteusService(this.apiClient, cryptographyService, {
+      // We can use qualified ids to send messages as long as the backend supports federated endpoints
+      useQualifiedIds: this.backendFeatures.federationEndpoints,
+    });
     const connectionService = new ConnectionService(this.apiClient);
     const giphyService = new GiphyService(this.apiClient);
     const linkPreviewService = new LinkPreviewService(assetService);
-    const notificationService = new NotificationService(
-      this.apiClient,
-      cryptographyService,
-      mlsService,
-      this.storeEngine,
-    );
+    const notificationService = new NotificationService(this.apiClient, mlsService, proteusService, this.storeEngine);
     const conversationService = new ConversationService(
       this.apiClient,
       cryptographyService,
@@ -445,13 +448,14 @@ export class Account<T = any> extends EventEmitter {
         useQualifiedIds: this.backendFeatures.federationEndpoints,
       },
       mlsService,
+      proteusService,
     );
 
     const selfService = new SelfService(this.apiClient);
     const teamService = new TeamService(this.apiClient);
 
     const broadcastService = new BroadcastService(this.apiClient, cryptographyService);
-    const userService = new UserService(this.apiClient, broadcastService, conversationService, connectionService);
+    const userService = new UserService(this.apiClient, broadcastService, connectionService);
 
     this.service = {
       mls: mlsService,
@@ -604,7 +608,7 @@ export class Account<T = any> extends EventEmitter {
     onNotificationStreamProgress?: ({done, total}: {done: number; total: number}) => void;
 
     /**
-     * called when the connection stateh with the backend has changed
+     * called when the connection state with the backend has changed
      */
     onConnectionStateChanged?: (state: ConnectionState) => void;
 
