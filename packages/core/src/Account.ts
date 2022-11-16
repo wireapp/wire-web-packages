@@ -519,51 +519,6 @@ export class Account<T = any> extends EventEmitter {
     return loadedClient;
   }
 
-  /*
-  private async createMLSClient(
-    client: RegisteredClient,
-    context: Context,
-    cryptoProtocolConfig: CryptoProtocolConfig,
-    entropyData?: Uint8Array,
-  ) {
-    if (!this.service) {
-      throw new Error('Services are not set.');
-    }
-    const coreCryptoKeyId = 'corecrypto-key';
-    const dbName = this.generateSecretsDbName(context);
-
-    const secretStore = cryptoProtocolConfig.systemCrypto
-      ? await createCustomEncryptedStore(dbName, cryptoProtocolConfig.systemCrypto)
-      : await createEncryptedStore(dbName);
-
-    let key = await secretStore.getsecretValue(coreCryptoKeyId);
-    let isNewMLSDevice = false;
-    if (!key) {
-      key = window.crypto.getRandomValues(new Uint8Array(16));
-      await secretStore.saveSecretValue(coreCryptoKeyId, key);
-      // Keeping track that this device is a new MLS device (but can be an old proteus device)
-      isNewMLSDevice = true;
-    }
-
-    const {userId, domain} = this.apiClient.context!;
-    const mlsClient = await CoreCrypto.init({
-      databaseName: `corecrypto-${this.generateDbName(context)}`,
-      key: Encoder.toBase64(key).asString,
-      clientId: `${userId}:${client.id}@${domain}`,
-      wasmFilePath: cryptoProtocolConfig.coreCrypoWasmFilePath,
-      entropySeed: entropyData,
-    });
-
-    if (isNewMLSDevice) {
-      // If the device is new, we need to upload keypackages and public key to the backend
-      await this.service.mls.uploadMLSPublicKeys(await mlsClient.clientPublicKey(), client.id);
-      await this.service.mls.uploadMLSKeyPackages(await mlsClient.clientKeypackages(this.nbPrekeys), client.id);
-    }
-
-    return mlsClient;
-  }
-  */
-
   private async registerClient(
     loginData: LoginData,
     clientInfo: ClientInfo = coreDefaultClient,

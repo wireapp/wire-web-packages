@@ -20,6 +20,7 @@
 import {LoginData, PreKey} from '@wireapp/api-client/lib/auth/';
 import {ClientType, CreateClientPayload, RegisteredClient} from '@wireapp/api-client/lib/client/';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
+import {keys as ProteusKeys} from '@wireapp/proteus';
 import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
 import {Encoder} from 'bazinga64';
 
@@ -115,16 +116,15 @@ export class ClientService {
       throw new Error(`Can't register client of type "${ClientType.NONE}"`);
     }
 
-    //const serializedPreKeys: PreKey[] = await this.cryptographyService.createCryptobox(entropyData);
-    // TODO generate and upload prekeys to backend
-    // question: How do we know which ID to use to generate prekeys ? since we don't handle the state of the prekeys already generated we cannot really know which ID to use
     const prekeys: PreKey[] = [];
+
     for (let i = 0; i < nbPrekeys; i++) {
       const id = i;
       const key = await coreCryptoClient.proteusNewPrekey(i);
       prekeys.push({id, key: Encoder.toBase64(key).asString});
     }
-    const lastPrekeyId = 65535;
+
+    const lastPrekeyId = ProteusKeys.PreKey.MAX_PREKEY_ID;
     const lastPrekeyBytes = await coreCryptoClient.proteusNewPrekey(lastPrekeyId);
     const lastPrekey = {id: lastPrekeyId, key: Encoder.toBase64(lastPrekeyBytes).asString};
 
