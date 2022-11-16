@@ -356,18 +356,16 @@ export class Account<T = any> extends EventEmitter {
     clientInfo?: ClientInfo,
     entropyData?: Uint8Array,
   ): Promise<{isNewClient: boolean; localClient: RegisteredClient}> {
-    if (!this.service || !this.apiClient.context) {
+    if (!this.service || !this.apiClient.context || !this.coreCryptoClient) {
       throw new Error('Services are not set.');
     }
 
     try {
       const localClient = await this.loadAndValidateLocalClient();
-      const coreCryptoClient = await this.initCoreCrypto(this.apiClient.context, entropyData);
-
-      await coreCryptoClient.proteusInit();
+      await this.coreCryptoClient.proteusInit();
 
       if (this.backendFeatures.supportsMLS) {
-        await coreCryptoClient.mlsInit(localClient.id);
+        await this.coreCryptoClient.mlsInit(localClient.id);
       }
 
       return {isNewClient: false, localClient};
@@ -414,7 +412,7 @@ export class Account<T = any> extends EventEmitter {
     }
   }
 
-  private async initCoreCrypto(context: Context, entropyData?: Uint8Array) {
+  private async initCoreCrypto(context: Context) {
     const coreCryptoKeyId = 'corecrypto-key';
     const dbName = this.generateSecretsDbName(context);
 
@@ -429,13 +427,12 @@ export class Account<T = any> extends EventEmitter {
       await secretStore.saveSecretValue(coreCryptoKeyId, key);
     }
 
-    this.coreCryptoClient = await CoreCrypto.deferredInit(
+    return CoreCrypto.deferredInit(
       `corecrypto-${this.generateDbName(context)}`,
       Encoder.toBase64(key).asString,
-      entropyData,
+      undefined, // We pass a placeholder entropy data. It will be set later on by calling `reseedRng`
       this.cryptoProtocolConfig?.coreCrypoWasmFilePath,
     );
-    return this.coreCryptoClient;
   }
 
   /**
@@ -450,6 +447,7 @@ export class Account<T = any> extends EventEmitter {
   }
 
   public async initServices(context: Context): Promise<void> {
+    this.coreCryptoClient = await this.initCoreCrypto(context);
     this.storeEngine = await this.initEngine(context);
     const accountService = new AccountService(this.apiClient);
     const assetService = new AssetService(this.apiClient);
@@ -460,7 +458,7 @@ export class Account<T = any> extends EventEmitter {
     });
 
     const clientService = new ClientService(this.apiClient, this.storeEngine, cryptographyService);
-    const mlsService = new MLSService(this.apiClient, () => this.coreCryptoClient, {
+    const mlsService = new MLSService(this.apiClient, this.coreCryptoClient, {
       ...this.cryptoProtocolConfig?.mls,
       nbKeyPackages: this.nbPrekeys,
     });
@@ -519,29 +517,31 @@ export class Account<T = any> extends EventEmitter {
     clientInfo: ClientInfo = coreDefaultClient,
     entropyData?: Uint8Array,
   ): Promise<{isNewClient: boolean; localClient: RegisteredClient}> {
-    if (!this.service || !this.apiClient.context) {
+    if (!this.service || !this.apiClient.context || !this.coreCryptoClient) {
       throw new Error('Services are not set or context not initialized.');
     }
     const createMlsClient = !!this.cryptoProtocolConfig?.mls;
     this.logger.info(`Creating new client {mls: ${createMlsClient}}`);
-    const coreCryptoClient = await this.initCoreCrypto(this.apiClient.context, entropyData);
+    if (entropyData) {
+      await this.coreCryptoClient.reseedRng(entropyData);
+    }
     await this.coreCryptoClient?.proteusInit();
 
     const registeredClient = await this.service.client.register(
       loginData,
       clientInfo,
-      coreCryptoClient,
+      this.coreCryptoClient,
       this.nbPrekeys,
     );
 
     if (createMlsClient && this.backendFeatures.supportsMLS) {
-      await coreCryptoClient.mlsInit(registeredClient.id);
+      await this.coreCryptoClient.mlsInit(registeredClient.id);
     }
     this.apiClient.context.clientId = registeredClient.id;
     this.logger.info('Client is created');
 
-    await this.service!.notification.initializeNotificationStream();
-    await this.service!.client.synchronizeClients();
+    await this.service.notification.initializeNotificationStream();
+    await this.service.client.synchronizeClients();
 
     return {isNewClient: true, localClient: registeredClient};
   }
