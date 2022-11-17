@@ -193,7 +193,6 @@ export class ProteusService {
       const payloadAsArrayBuffer = await this.coreCryptoClient.proteusEncrypt(sessionId, plainText);
       encryptedPayload = new Uint8Array(payloadAsArrayBuffer);
     } catch (error) {
-      //todo: figure out error codes for core crypto implementation
       const notFoundErrorCode = 2;
       if ((error as any).code === notFoundErrorCode) {
         // If the session is not in the database, we just return undefined. Later on there will be a mismatch and the session will be created
@@ -222,6 +221,17 @@ export class ProteusService {
             .filter(clientId => !!users[userId][clientId]);
       for (const clientId of clientIds) {
         const sessionId = this.cryptographyService.constructSessionId(userId, clientId, domain);
+        const sessionExists = (await this.coreCryptoClient.proteusSessionExists(sessionId)) as unknown as boolean;
+        if (!sessionExists) {
+          const userQualifiedId = {id: userId, domain: domain ?? ''};
+          await createSession({
+            apiClient: this.apiClient,
+            coreCryptoClient: this.coreCryptoClient,
+            sessionId,
+            userId: userQualifiedId,
+            clientId,
+          });
+        }
         const result = await this.encryptPayloadForSession(sessionId, plainText);
         if (result) {
           encrypted[userId] ||= {};
