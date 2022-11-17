@@ -89,7 +89,6 @@ describe('ConversationService', () => {
     };
     return new ConversationService(
       client,
-      new CryptographyService(client, new MemoryEngine(), {useQualifiedIds: false, nbPrekeys: 1}),
       {
         useQualifiedIds: federated,
       },
