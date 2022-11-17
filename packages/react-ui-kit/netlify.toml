@@ -5,6 +5,6 @@
 
 [build.environment]
     NODE_VERSION = "16"
-    NETLIFY_USE_YARN = true
+    NETLIFY_USE_YARN = "true"
     YARN_FLAGS = "--immutable"
-    NETLIFY_YARN_WORKSPACES = true
+    NETLIFY_YARN_WORKSPACES = "true"
