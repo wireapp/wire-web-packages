@@ -58,13 +58,24 @@ export class ProteusService {
     return handleBackendEvent({...params, cryptographyService: this.cryptographyService});
   }
 
+  /**
+   * Get the fingerprint of the local client.
+   */
   public getLocalFingerprint() {
     return this.coreCryptoClient.proteusFingerprint();
   }
 
+  /**
+   * Get the fingerprint of a remote client
+   * @param userId ID of user
+   * @param clientId ID of client
+   * @param prekey A prekey can be given to create a session if it doesn't already exist.
+   *   If not provided and the session doesn't exists it will fetch a new prekey from the backend
+   */
   public async getRemoteFingerprint(userId: QualifiedId, clientId: string, prekey?: PreKey) {
     const sessionId = this.cryptographyService.constructSessionId(userId, clientId);
-    if (!((await this.coreCryptoClient.proteusSessionExists(sessionId)) as unknown as boolean)) {
+    const sessionExists = (await this.coreCryptoClient.proteusSessionExists(sessionId)) as unknown as boolean;
+    if (!sessionExists) {
       await this.createSession(sessionId, userId, clientId, prekey);
     }
     return this.coreCryptoClient.proteusFingerprintRemote(sessionId);
