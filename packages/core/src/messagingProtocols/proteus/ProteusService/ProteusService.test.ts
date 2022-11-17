@@ -33,6 +33,7 @@ import {buildTextMessage} from '../../../conversation/message/MessageBuilder';
 import {CryptographyService} from '../../../cryptography';
 import {getUUID} from '../../../test/PayloadHelper';
 import {SendProteusMessageParams} from './ProteusService.types';
+import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
 jest.mock('./Utility/Recipients', () => ({
   ...jest.requireActual('./Utility/Recipients'),
@@ -41,7 +42,9 @@ jest.mock('./Utility/Recipients', () => ({
 }));
 const MockedRecipients = Recipients as jest.Mocked<typeof Recipients>;
 
-const buildProteusService = (federated: boolean = false) => {
+const buildProteusService = (
+  federated: boolean = false,
+): [ProteusService, {apiClient: APIClient; coreCrypto: CoreCrypto}] => {
   const apiClient = new APIClient({urls: APIClient.BACKEND.STAGING});
   jest.spyOn(apiClient.api.user, 'postListClients').mockImplementation(() =>
     Promise.resolve({
@@ -67,146 +70,225 @@ const buildProteusService = (federated: boolean = false) => {
     useQualifiedIds: false,
     nbPrekeys: 1,
   });
-  return new ProteusService(apiClient, cryptographyService, {useQualifiedIds: federated});
+
+  const coreCrypto = {
+    getRemoteFingerprint: jest.fn(),
+    getLocalFingerprint: jest.fn(),
+    proteusSessionExists: jest.fn(),
+    proteusSessionFromPrekey: jest.fn(),
+    proteusFingerprintRemote: jest.fn(),
+  } as unknown as CoreCrypto;
+
+  return [
+    new ProteusService(apiClient, cryptographyService, coreCrypto, {useQualifiedIds: federated}),
+    {apiClient, coreCrypto},
+  ];
 };
 
-describe('sendGenericMessage', () => {
-  describe('targetted messages', () => {
-    const message = buildTextMessage({text: 'test'});
-    // eslint-disable-next-line jest/no-done-callback
+describe('ProteusService', () => {
+  describe('getRemoteFingerprint', () => {
+    it('create a session if session does not exists', async () => {
+      const [proteusService, {apiClient, coreCrypto}] = buildProteusService();
+      const expectedFingerprint = 'fingerprint-client1';
 
-    it('fails if no userIds are given', async () => {
-      const proteusService = buildProteusService();
-      let errorMessage;
+      const getPrekeyMock = jest.spyOn(apiClient.api.user, 'getClientPreKey').mockResolvedValue({
+        client: 'client1',
+        prekey: {
+          id: 123,
+          key: 'pQABARhIAqEAWCCaJpFa9c626ORmjj1aV6OnOYgmTjfoiE3ynOfNfGAOmgOhAKEAWCD60VMzRrLfO+1GSjgyhnVp2N7L58DM+eeJhZJi1tBLfQT2',
+        },
+      });
+      jest.spyOn(coreCrypto, 'proteusFingerprintRemote').mockResolvedValue(expectedFingerprint);
+      jest.spyOn(coreCrypto as any, 'proteusSessionExists').mockResolvedValue(false);
 
-      const params: SendProteusMessageParams = {
-        conversationId: {id: 'conv1', domain: ''},
-        payload: message,
-        protocol: ConversationProtocol.PROTEUS,
-        targetMode: MessageTargetMode.USERS,
-      };
+      const userId = {id: 'user1', domain: 'domain.com'};
+      const clientId = 'client1';
 
-      try {
-        await proteusService.sendMessage(params);
-      } catch (error) {
-        errorMessage = error.message;
-      } finally {
-        expect(errorMessage).toContain('no userIds are given');
-      }
+      const result = await proteusService.getRemoteFingerprint(userId, clientId);
+
+      expect(getPrekeyMock).toHaveBeenCalledWith(userId, clientId);
+      expect(result).toBe(expectedFingerprint);
     });
 
-    [{user1: ['client1'], user2: ['client11', 'client12']}, ['user1', 'user2']].forEach(recipients => {
-      it(`forwards the list of users to report (${JSON.stringify(recipients)})`, async () => {
-        const proteusService = buildProteusService();
+    it('create a session from given prekey if session does not exists', async () => {
+      const [proteusService, {apiClient, coreCrypto}] = buildProteusService();
+      const expectedFingerprint = 'fingerprint-client1';
 
-        MockedRecipients.getRecipientsForConversation.mockResolvedValue({} as any);
+      const getPrekeyMock = jest.spyOn(apiClient.api.user, 'getClientPreKey');
+      jest.spyOn(coreCrypto, 'proteusFingerprintRemote').mockResolvedValue(expectedFingerprint);
+      jest.spyOn(coreCrypto as any, 'proteusSessionExists').mockResolvedValue(false);
 
-        jest.spyOn(proteusService['messageService'], 'sendMessage').mockReturnValue(Promise.resolve({} as any));
-        await proteusService.sendMessage({
-          protocol: ConversationProtocol.PROTEUS,
-          payload: message,
-          targetMode: MessageTargetMode.USERS,
-          userIds: recipients,
+      const userId = {id: 'user1', domain: 'domain.com'};
+      const clientId = 'client1';
+
+      const result = await proteusService.getRemoteFingerprint(userId, clientId, {
+        key: 'pQABARhIAqEAWCCaJpFa9c626ORmjj1aV6OnOYgmTjfoiE3ynOfNfGAOmgOhAKEAWCD60VMzRrLfO+1GSjgyhnVp2N7L58DM+eeJhZJi1tBLfQT2',
+        id: 123,
+      });
+
+      expect(getPrekeyMock).not.toHaveBeenCalled();
+      expect(result).toBe(expectedFingerprint);
+    });
+
+    it('returns the fingerprint from existing session', async () => {
+      const [proteusService, {apiClient, coreCrypto}] = buildProteusService();
+      const expectedFingerprint = 'fingerprint-client1';
+
+      const getPrekeyMock = jest.spyOn(apiClient.api.user, 'getClientPreKey');
+      const sessionFromPrekeyMock = jest.spyOn(coreCrypto, 'proteusSessionFromPrekey');
+      jest.spyOn(coreCrypto, 'proteusFingerprintRemote').mockResolvedValue(expectedFingerprint);
+      jest.spyOn(coreCrypto as any, 'proteusSessionExists').mockResolvedValue(true);
+
+      const userId = {id: 'user1', domain: 'domain.com'};
+      const clientId = 'client1';
+
+      const result = await proteusService.getRemoteFingerprint(userId, clientId);
+
+      expect(getPrekeyMock).not.toHaveBeenCalled();
+      expect(sessionFromPrekeyMock).not.toHaveBeenCalled();
+      expect(result).toBe(expectedFingerprint);
+    });
+  });
+
+  describe('sendGenericMessage', () => {
+    describe('targetted messages', () => {
+      const message = buildTextMessage({text: 'test'});
+      // eslint-disable-next-line jest/no-done-callback
+
+      it('fails if no userIds are given', async () => {
+        const [proteusService] = buildProteusService();
+
+        let errorMessage;
+
+        const params: SendProteusMessageParams = {
           conversationId: {id: 'conv1', domain: ''},
-        });
-
-        expect(proteusService['messageService'].sendMessage).toHaveBeenCalledWith(
-          expect.any(String),
-          expect.any(Object),
-          expect.any(Uint8Array),
-          expect.objectContaining({reportMissing: ['user1', 'user2']}),
-        );
-      });
-    });
-
-    [
-      {domain1: {user1: ['client1'], user2: ['client11', 'client12']}, domain2: {user3: ['client1']}},
-      [
-        {id: 'user1', domain: 'domain1'},
-        {id: 'user2', domain: 'domain1'},
-        {id: 'user3', domain: 'domain2'},
-      ],
-    ].forEach(recipients => {
-      it(`forwards the list of users to report for federated message (${JSON.stringify(recipients)})`, async () => {
-        const proteusService = buildProteusService(true);
-        MockedRecipients.getQualifiedRecipientsForConversation.mockResolvedValue({} as any);
-        jest.spyOn(proteusService['messageService'], 'sendFederatedMessage').mockResolvedValue({} as any);
-        await proteusService.sendMessage({
-          protocol: ConversationProtocol.PROTEUS,
-          conversationId: {id: 'conv1', domain: 'domain1'},
           payload: message,
+          protocol: ConversationProtocol.PROTEUS,
           targetMode: MessageTargetMode.USERS,
-          userIds: recipients,
-        });
+        };
 
-        expect(proteusService['messageService'].sendFederatedMessage).toHaveBeenCalledWith(
-          expect.any(String),
-          expect.any(Object),
-          expect.any(Uint8Array),
-          expect.objectContaining({
-            reportMissing: [
-              {id: 'user1', domain: 'domain1'},
-              {id: 'user2', domain: 'domain1'},
-              {id: 'user3', domain: 'domain2'},
-            ],
-          }),
-        );
+        try {
+          await proteusService.sendMessage(params);
+        } catch (error) {
+          errorMessage = error.message;
+        } finally {
+          expect(errorMessage).toContain('no userIds are given');
+        }
       });
-    });
 
-    [{user1: ['client1'], user2: ['client11', 'client12']}, ['user1', 'user2']].forEach(recipients => {
-      it(`ignores all missing user/client pair if targetMode is USER_CLIENTS`, async () => {
-        const proteusService = buildProteusService(false);
-        MockedRecipients.getRecipientsForConversation.mockReturnValue(Promise.resolve({} as any));
-        jest.spyOn(proteusService['messageService'], 'sendMessage').mockReturnValue(Promise.resolve({} as any));
-        await proteusService.sendMessage({
-          conversationId: {id: 'conv1', domain: ''},
-          protocol: ConversationProtocol.PROTEUS,
-          payload: message,
-          targetMode: MessageTargetMode.USERS_CLIENTS,
-          userIds: recipients,
+      [{user1: ['client1'], user2: ['client11', 'client12']}, ['user1', 'user2']].forEach(recipients => {
+        it(`forwards the list of users to report (${JSON.stringify(recipients)})`, async () => {
+          const [proteusService] = buildProteusService();
+
+          MockedRecipients.getRecipientsForConversation.mockResolvedValue({} as any);
+
+          jest.spyOn(proteusService['messageService'], 'sendMessage').mockReturnValue(Promise.resolve({} as any));
+          await proteusService.sendMessage({
+            protocol: ConversationProtocol.PROTEUS,
+            payload: message,
+            targetMode: MessageTargetMode.USERS,
+            userIds: recipients,
+            conversationId: {id: 'conv1', domain: ''},
+          });
+
+          expect(proteusService['messageService'].sendMessage).toHaveBeenCalledWith(
+            expect.any(String),
+            expect.any(Object),
+            expect.any(Uint8Array),
+            expect.objectContaining({reportMissing: ['user1', 'user2']}),
+          );
         });
-
-        expect(proteusService['messageService'].sendMessage).toHaveBeenCalledWith(
-          expect.any(String),
-          expect.any(Object),
-          expect.any(Uint8Array),
-          expect.objectContaining({reportMissing: false}),
-        );
       });
-    });
 
-    [
-      {domain1: {user1: ['client1'], user2: ['client11', 'client12']}, domain2: {user3: ['client1']}},
       [
-        {id: 'user1', domain: 'domain1'},
-        {id: 'user2', domain: 'domain1'},
-        {id: 'user3', domain: 'domain2'},
-      ],
-    ].forEach(recipients => {
-      it(`ignores all missing user/client pair if targetMode is USER_CLIENTS on federated env`, async () => {
-        const proteusService = buildProteusService(true);
+        {domain1: {user1: ['client1'], user2: ['client11', 'client12']}, domain2: {user3: ['client1']}},
+        [
+          {id: 'user1', domain: 'domain1'},
+          {id: 'user2', domain: 'domain1'},
+          {id: 'user3', domain: 'domain2'},
+        ],
+      ].forEach(recipients => {
+        it(`forwards the list of users to report for federated message (${JSON.stringify(recipients)})`, async () => {
+          const [proteusService] = buildProteusService(true);
+          MockedRecipients.getQualifiedRecipientsForConversation.mockResolvedValue({} as any);
+          jest.spyOn(proteusService['messageService'], 'sendFederatedMessage').mockResolvedValue({} as any);
+          await proteusService.sendMessage({
+            protocol: ConversationProtocol.PROTEUS,
+            conversationId: {id: 'conv1', domain: 'domain1'},
+            payload: message,
+            targetMode: MessageTargetMode.USERS,
+            userIds: recipients,
+          });
 
-        MockedRecipients.getQualifiedRecipientsForConversation.mockResolvedValue({} as any);
-        jest
-          .spyOn(proteusService['messageService'], 'sendFederatedMessage')
-          .mockReturnValue(Promise.resolve({} as any));
-        await proteusService.sendMessage({
-          protocol: ConversationProtocol.PROTEUS,
-          conversationId: {id: 'conv1', domain: 'domain1'},
-          payload: message,
-          targetMode: MessageTargetMode.USERS_CLIENTS,
-          userIds: recipients,
+          expect(proteusService['messageService'].sendFederatedMessage).toHaveBeenCalledWith(
+            expect.any(String),
+            expect.any(Object),
+            expect.any(Uint8Array),
+            expect.objectContaining({
+              reportMissing: [
+                {id: 'user1', domain: 'domain1'},
+                {id: 'user2', domain: 'domain1'},
+                {id: 'user3', domain: 'domain2'},
+              ],
+            }),
+          );
         });
+      });
 
-        expect(proteusService['messageService'].sendFederatedMessage).toHaveBeenCalledWith(
-          expect.any(String),
-          expect.any(Object),
-          expect.any(Uint8Array),
-          expect.objectContaining({
-            reportMissing: false,
-          }),
-        );
+      [{user1: ['client1'], user2: ['client11', 'client12']}, ['user1', 'user2']].forEach(recipients => {
+        it(`ignores all missing user/client pair if targetMode is USER_CLIENTS`, async () => {
+          const [proteusService] = buildProteusService(false);
+          MockedRecipients.getRecipientsForConversation.mockReturnValue(Promise.resolve({} as any));
+          jest.spyOn(proteusService['messageService'], 'sendMessage').mockReturnValue(Promise.resolve({} as any));
+          await proteusService.sendMessage({
+            conversationId: {id: 'conv1', domain: ''},
+            protocol: ConversationProtocol.PROTEUS,
+            payload: message,
+            targetMode: MessageTargetMode.USERS_CLIENTS,
+            userIds: recipients,
+          });
+
+          expect(proteusService['messageService'].sendMessage).toHaveBeenCalledWith(
+            expect.any(String),
+            expect.any(Object),
+            expect.any(Uint8Array),
+            expect.objectContaining({reportMissing: false}),
+          );
+        });
+      });
+
+      [
+        {domain1: {user1: ['client1'], user2: ['client11', 'client12']}, domain2: {user3: ['client1']}},
+        [
+          {id: 'user1', domain: 'domain1'},
+          {id: 'user2', domain: 'domain1'},
+          {id: 'user3', domain: 'domain2'},
+        ],
+      ].forEach(recipients => {
+        it(`ignores all missing user/client pair if targetMode is USER_CLIENTS on federated env`, async () => {
+          const [proteusService] = buildProteusService(true);
+
+          MockedRecipients.getQualifiedRecipientsForConversation.mockResolvedValue({} as any);
+          jest
+            .spyOn(proteusService['messageService'], 'sendFederatedMessage')
+            .mockReturnValue(Promise.resolve({} as any));
+          await proteusService.sendMessage({
+            protocol: ConversationProtocol.PROTEUS,
+            conversationId: {id: 'conv1', domain: 'domain1'},
+            payload: message,
+            targetMode: MessageTargetMode.USERS_CLIENTS,
+            userIds: recipients,
+          });
+
+          expect(proteusService['messageService'].sendFederatedMessage).toHaveBeenCalledWith(
+            expect.any(String),
+            expect.any(Object),
+            expect.any(Uint8Array),
+            expect.objectContaining({
+              reportMissing: false,
+            }),
+          );
+        });
       });
     });
   });
