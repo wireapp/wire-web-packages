@@ -42,9 +42,7 @@ jest.mock('./Utility/Recipients', () => ({
 }));
 const MockedRecipients = Recipients as jest.Mocked<typeof Recipients>;
 
-const buildProteusService = (
-  federated: boolean = false,
-): [ProteusService, {apiClient: APIClient; coreCrypto: CoreCrypto}] => {
+const buildProteusService = (federated = false): [ProteusService, {apiClient: APIClient; coreCrypto: CoreCrypto}] => {
   const apiClient = new APIClient({urls: APIClient.BACKEND.STAGING});
   jest.spyOn(apiClient.api.user, 'postListClients').mockImplementation(() =>
     Promise.resolve({
