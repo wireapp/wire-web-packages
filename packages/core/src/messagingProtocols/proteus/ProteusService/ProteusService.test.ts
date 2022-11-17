@@ -25,6 +25,8 @@ import {ConversationProtocol} from '@wireapp/api-client/lib/conversation';
 import {MessageTargetMode} from '../../../conversation';
 import {buildTextMessage} from '../../../conversation/message/MessageBuilder';
 import {SendProteusMessageParams} from './ProteusService.types';
+import {SessionPayloadBundle} from '../../../cryptography';
+import {BackendError} from '@wireapp/api-client/lib/http';
 
 import {buildProteusService} from './ProteusService.mocks';
 
@@ -97,6 +99,106 @@ describe('ProteusService', () => {
       expect(getPrekeyMock).not.toHaveBeenCalled();
       expect(sessionFromPrekeyMock).not.toHaveBeenCalled();
       expect(result).toBe(expectedFingerprint);
+    });
+  });
+
+  describe('"encrypt"', () => {
+    it('calls proteusEncrypt method on core-crypto', async () => {
+      const [proteusService, {coreCrypto}] = buildProteusService();
+
+      const userId = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
+      const clientId = 'be67218b77d02d30';
+
+      const preKeyBundleMap = {
+        [userId]: {
+          [clientId]: {
+            id: 72,
+            key: '',
+          },
+        },
+      };
+
+      const text = new Uint8Array(Buffer.from('Hello', 'utf8'));
+      await proteusService.encrypt(text, preKeyBundleMap);
+
+      expect(coreCrypto.proteusEncrypt).toHaveBeenCalledWith(`${userId}@${clientId}`, text);
+    });
+
+    it('generates a set of encrypted data based on PreKeys from multiple clients.', async () => {
+      const [proteusService] = buildProteusService();
+
+      const firstUserID = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
+      const secondUserID = '2bde49aa-bdb5-458f-98cf-7d3552b10916';
+      const noPrekeyClient = 'ae87218e77d02d30';
+
+      const firstClientId = '2b83ee08d7ac550d';
+
+      const preKeyBundleMap = {
+        [firstUserID]: {
+          '5e80ea7886680975': {
+            id: 1337,
+            key: 'pQABARn//wKhAFggJ1Fbpg5l6wnzKOJE+vXpRnkqUYhIvVnR5lNXEbO2o/0DoQChAFggHxZvgvtDktY/vqBcpjjo6rQnXvcNQhfwmy8AJQJKlD0E9g==',
+          },
+          be67218b77d02d30: {
+            id: 72,
+            key: 'pQABARn//wKhAFggTWwHUoppQ8aXWhbH95YWnNp6uOYMxo2y4wbarWbF+EEDoQChAFggUiFoPtsiR0WFowIvl0myD+bVnFQJBYarqieI0Gly46QE9g==',
+          },
+          [noPrekeyClient]: null,
+          [firstClientId]: {
+            id: 42,
+            key: 'pQABARn//wKhAFggWcbwny0jdqlcnnn0j4QSENIVVq/KgyQ3mmdpunfvGZQDoQChAFggrsQBkQkrVZ8sWhr8wTeaC+dmctuJ3oRqfdHsymTtKmgE9g==',
+          },
+        },
+        [secondUserID]: {
+          '5bad8cdeddc5a90f': {
+            id: 1,
+            key: 'pQABARn//wKhAFggEYATUNJBQ7E2tfHT7HMLxa4O3Ckd7PciUdyKiGNNWbYDoQChAFggP/s0BHmHQDNwrO4pC1dqdNHsW7bnpmF9mBadrbep4PoE9g==',
+          },
+          bc78eded90386d20: {
+            id: 65535,
+            key: 'pQABARn//wKhAFgg1xOfzMpWmpN2aBGW+0RG23L0I301pncd/HXqUm+pVyoDoQChAFggnl+dmwGW45AArcPutjUkAjYmhIbXBPrqkVrNyg0ZI08E9g==',
+          },
+        },
+      };
+      const text = new Uint8Array(Buffer.from('Hello', 'utf8'));
+      const {encrypted} = await proteusService.encrypt(text, preKeyBundleMap);
+      expect(Object.keys(encrypted).length).toBe(2);
+      expect(Object.keys(encrypted[firstUserID]).length).toBe(3);
+      expect(Object.keys(encrypted[secondUserID]).length).toBe(2);
+      expect(encrypted[firstUserID][firstClientId]).toEqual(expect.any(Uint8Array));
+      expect(encrypted[firstUserID][noPrekeyClient]).not.toBeDefined();
+    });
+  });
+
+  describe('"encryptPayloadForSession"', () => {
+    it('encodes plaintext.', async () => {
+      const [proteusService] = buildProteusService();
+
+      const sessionWithBobId = 'bob-user-id@bob-client-id';
+      const text = new Uint8Array([72, 101, 108, 108, 111, 32, 66, 111, 98, 33]); // "Hello Bob!"
+      const {sessionId, encryptedPayload} = (await proteusService['encryptPayloadForSession'](
+        sessionWithBobId,
+        text,
+      )) as SessionPayloadBundle;
+      expect(Buffer.from(encryptedPayload).toString('utf8')).not.toBe('💣');
+      expect(sessionId).toBe(sessionWithBobId);
+    });
+
+    it('encodes invalid text as Bomb Emoji.', async () => {
+      const [proteusService, {coreCrypto}] = buildProteusService();
+
+      jest.spyOn(coreCrypto, 'proteusEncrypt').mockImplementationOnce(() => {
+        throw new BackendError('', undefined, 999);
+      });
+
+      const sessionWithBobId = 'bob-user-id@bob-client-id';
+      const {sessionId, encryptedPayload} = (await proteusService['encryptPayloadForSession'](
+        sessionWithBobId,
+        undefined as any,
+      )) as SessionPayloadBundle;
+
+      expect(Buffer.from(encryptedPayload).toString()).toBe('💣');
+      expect(sessionId).toBe(sessionWithBobId);
     });
   });
 
