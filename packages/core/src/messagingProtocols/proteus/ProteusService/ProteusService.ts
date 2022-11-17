@@ -18,8 +18,13 @@
  */
 
 import {APIClient} from '@wireapp/api-client/lib/APIClient';
+import {PreKey} from '@wireapp/api-client/lib/auth';
 import {Conversation, NewConversation} from '@wireapp/api-client/lib/conversation';
+import {QualifiedId} from '@wireapp/api-client/lib/user';
+import {Decoder} from 'bazinga64';
 import logdown from 'logdown';
+
+import {CoreCrypto} from '@wireapp/core-crypto';
 
 import {
   AddUsersToProteusConversationParams,
@@ -43,6 +48,7 @@ export class ProteusService {
   constructor(
     private readonly apiClient: APIClient,
     private readonly cryptographyService: CryptographyService,
+    private readonly coreCryptoClient: CoreCrypto,
     private readonly config: ProteusServiceConfig,
   ) {
     this.messageService = new MessageService(this.apiClient, this.cryptographyService);
@@ -50,6 +56,33 @@ export class ProteusService {
 
   public async handleEvent(params: Omit<EventHandlerParams, 'cryptographyService'>): EventHandlerResult {
     return handleBackendEvent({...params, cryptographyService: this.cryptographyService});
+  }
+
+  public getLocalFingerprint() {
+    return this.coreCryptoClient.proteusFingerprint();
+  }
+
+  public async getRemoteFingerprint(userId: QualifiedId, clientId: string, prekey?: PreKey) {
+    const sessionId = this.cryptographyService.constructSessionId(userId, clientId);
+    if (!((await this.coreCryptoClient.proteusSessionExists(sessionId)) as unknown as boolean)) {
+      await this.createSession(sessionId, userId, clientId, prekey);
+    }
+    return this.coreCryptoClient.proteusFingerprintRemote(sessionId);
+  }
+
+  private async createSession(
+    sessionId: string,
+    userId: QualifiedId,
+    clientId: string,
+    initialPrekey?: PreKey,
+  ): Promise<void> {
+    const prekey = initialPrekey ?? (await this.getUserPrekey(userId, clientId)).prekey;
+    const prekeyBuffer = Decoder.fromBase64(prekey.key).asBytes;
+    return this.coreCryptoClient.proteusSessionFromPrekey(sessionId, prekeyBuffer);
+  }
+
+  private getUserPrekey(userId: QualifiedId, clientId: string) {
+    return this.apiClient.api.user.getClientPreKey(userId, clientId);
   }
 
   public async createConversation({

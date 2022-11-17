@@ -175,6 +175,7 @@ export class Account<T = any> extends EventEmitter {
   public static readonly TOPIC = TOPIC;
   public service?: {
     mls: MLSService;
+    proteus: ProteusService;
     account: AccountService;
     asset: AssetService;
     broadcast: BroadcastService;
@@ -464,7 +465,7 @@ export class Account<T = any> extends EventEmitter {
       ...this.cryptoProtocolConfig?.mls,
       nbKeyPackages: this.nbPrekeys,
     });
-    const proteusService = new ProteusService(this.apiClient, cryptographyService, {
+    const proteusService = new ProteusService(this.apiClient, cryptographyService, this.coreCryptoClient, {
       // We can use qualified ids to send messages as long as the backend supports federated endpoints
       useQualifiedIds: this.backendFeatures.federationEndpoints,
     });
@@ -491,6 +492,7 @@ export class Account<T = any> extends EventEmitter {
 
     this.service = {
       mls: mlsService,
+      proteus: proteusService,
       account: accountService,
       asset: assetService,
       broadcast: broadcastService,
