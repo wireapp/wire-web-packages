@@ -1,6 +1,6 @@
 [build]
-    base = '.'
-    publish = './styleguide'
+    base = 'packages/react-ui-kit'
+    publish = 'styleguide'
     command =  'yarn run build:styleguide'
 
 [build.environment]
