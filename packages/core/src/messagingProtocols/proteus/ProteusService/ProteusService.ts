@@ -19,8 +19,15 @@
 
 import {APIClient} from '@wireapp/api-client/lib/APIClient';
 import {PreKey} from '@wireapp/api-client/lib/auth';
-import {Conversation, NewConversation} from '@wireapp/api-client/lib/conversation';
-import {QualifiedId} from '@wireapp/api-client/lib/user';
+import {
+  Conversation,
+  NewConversation,
+  OTRRecipients,
+  QualifiedOTRRecipients,
+  QualifiedUserClients,
+  UserClients,
+} from '@wireapp/api-client/lib/conversation';
+import {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 import logdown from 'logdown';
 
 import {CoreCrypto} from '@wireapp/core-crypto';
@@ -34,7 +41,8 @@ import {
 
 import {MessageSendingState, SendResult} from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
-import {CryptographyService} from '../../../cryptography';
+import {CryptographyService, SessionPayloadBundle} from '../../../cryptography';
+import {isUserClients} from '../../../util';
 import {EventHandlerResult} from '../../common.types';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
 import {createSession} from '../Utility/createSession';
@@ -52,7 +60,7 @@ export class ProteusService {
     private readonly coreCryptoClient: CoreCrypto,
     private readonly config: ProteusServiceConfig,
   ) {
-    this.messageService = new MessageService(this.apiClient, this.cryptographyService);
+    this.messageService = new MessageService(this.apiClient, this);
   }
 
   public async handleEvent(params: Pick<EventHandlerParams, 'event' | 'source' | 'dryRun'>): EventHandlerResult {
@@ -170,6 +178,80 @@ export class ProteusService {
       id: payload.messageId,
       sentAt: response.time,
       state: response.errored ? MessageSendingState.CANCELLED : MessageSendingState.OUTGOING_SENT,
+    };
+  }
+
+  private async encryptPayloadForSession(
+    sessionId: string,
+    plainText: Uint8Array,
+  ): Promise<SessionPayloadBundle | undefined> {
+    this.logger.log(`Encrypting payload for session ID "${sessionId}"`);
+
+    let encryptedPayload: Uint8Array;
+
+    try {
+      const payloadAsArrayBuffer = await this.coreCryptoClient.proteusEncrypt(sessionId, plainText);
+      encryptedPayload = new Uint8Array(payloadAsArrayBuffer);
+    } catch (error) {
+      //todo: figure out error codes for core crypto implementation
+      const notFoundErrorCode = 2;
+      if ((error as any).code === notFoundErrorCode) {
+        // If the session is not in the database, we just return undefined. Later on there will be a mismatch and the session will be created
+        return undefined;
+      }
+      this.logger.error(`Could not encrypt payload: ${(error as Error).message}`);
+      encryptedPayload = new Uint8Array(Buffer.from('💣', 'utf-8'));
+    }
+
+    return {encryptedPayload, sessionId};
+  }
+
+  public async encrypt(
+    plainText: Uint8Array,
+    users: UserPreKeyBundleMap | UserClients,
+    domain?: string,
+  ): Promise<{missing: UserClients; encrypted: OTRRecipients<Uint8Array>}> {
+    const encrypted: OTRRecipients<Uint8Array> = {};
+    const missing: UserClients = {};
+
+    for (const userId in users) {
+      const clientIds = isUserClients(users)
+        ? users[userId]
+        : Object.keys(users[userId])
+            // We filter out clients that have `null` prekey
+            .filter(clientId => !!users[userId][clientId]);
+      for (const clientId of clientIds) {
+        const sessionId = this.cryptographyService.constructSessionId(userId, clientId, domain);
+        const result = await this.encryptPayloadForSession(sessionId, plainText);
+        if (result) {
+          encrypted[userId] ||= {};
+          encrypted[userId][clientId] = result.encryptedPayload;
+        } else {
+          missing[userId] ||= [];
+          missing[userId].push(clientId);
+        }
+      }
+    }
+
+    return {encrypted, missing};
+  }
+
+  public async encryptQualified(
+    plainText: Uint8Array,
+    preKeyBundles: QualifiedUserPreKeyBundleMap | QualifiedUserClients,
+  ): Promise<{missing: QualifiedUserClients; encrypted: QualifiedOTRRecipients}> {
+    const qualifiedOTRRecipients: QualifiedOTRRecipients = {};
+    const missing: QualifiedUserClients = {};
+
+    for (const [domain, preKeyBundleMap] of Object.entries(preKeyBundles)) {
+      const result = await this.encrypt(plainText, preKeyBundleMap, domain);
+      qualifiedOTRRecipients[domain] = result.encrypted;
+      missing[domain] = result.missing;
+    }
+
+    return {
+      encrypted: qualifiedOTRRecipients,
+      missing,
     };
   }
 }

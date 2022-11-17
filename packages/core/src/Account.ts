@@ -428,6 +428,7 @@ export class Account<T = any> extends EventEmitter {
       ...this.cryptoProtocolConfig?.mls,
       nbKeyPackages: this.nbPrekeys,
     });
+
     const proteusService = new ProteusService(this.apiClient, cryptographyService, this.coreCryptoClient, {
       // We can use qualified ids to send messages as long as the backend supports federated endpoints
       useQualifiedIds: this.backendFeatures.federationEndpoints,
@@ -438,7 +439,6 @@ export class Account<T = any> extends EventEmitter {
     const notificationService = new NotificationService(this.apiClient, mlsService, proteusService, this.storeEngine);
     const conversationService = new ConversationService(
       this.apiClient,
-      cryptographyService,
       {
         // We can use qualified ids to send messages as long as the backend supports federated endpoints
         useQualifiedIds: this.backendFeatures.federationEndpoints,
@@ -450,7 +450,7 @@ export class Account<T = any> extends EventEmitter {
     const selfService = new SelfService(this.apiClient);
     const teamService = new TeamService(this.apiClient);
 
-    const broadcastService = new BroadcastService(this.apiClient, cryptographyService);
+    const broadcastService = new BroadcastService(this.apiClient, proteusService);
     const userService = new UserService(this.apiClient, broadcastService, connectionService);
 
     this.service = {
