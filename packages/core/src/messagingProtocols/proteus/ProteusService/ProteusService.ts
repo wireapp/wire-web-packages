@@ -184,7 +184,7 @@ export class ProteusService {
   public async encrypt(
     plainText: Uint8Array,
     users: UserPreKeyBundleMap | UserClients,
-    domain?: string,
+    domain: string = '',
   ): Promise<{missing: UserClients; encrypted: OTRRecipients<Uint8Array>}> {
     const userClients = filterUserClientsWithoutPreKey(users);
     const sessions: string[] = [];
@@ -197,7 +197,7 @@ export class ProteusService {
         const sessionExists = (await this.coreCryptoClient.proteusSessionExists(sessionId)) as unknown as boolean;
 
         if (!sessionExists) {
-          const userQualifiedId = {id: userId, domain: domain ?? ''};
+          const userQualifiedId = {id: userId, domain};
           await createSession({
             apiClient: this.apiClient,
             coreCryptoClient: this.coreCryptoClient,
