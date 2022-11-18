@@ -25,12 +25,7 @@ interface ConstructSessionIdParams {
   useQualifiedIds?: boolean;
   domain?: string;
 }
-const constructSessionId = ({
-  userId,
-  clientId,
-  useQualifiedIds = false,
-  domain = '',
-}: ConstructSessionIdParams): string => {
+const constructSessionId = ({userId, clientId, useQualifiedIds, domain}: ConstructSessionIdParams): string => {
   const {id, domain: baseDomain} = typeof userId === 'string' ? {id: userId, domain} : userId;
   const baseId = `${id}@${clientId}`;
   return baseDomain && useQualifiedIds ? `${baseDomain}@${baseId}` : baseId;

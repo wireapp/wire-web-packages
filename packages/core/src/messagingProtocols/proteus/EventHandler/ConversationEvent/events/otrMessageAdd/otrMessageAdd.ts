@@ -33,6 +33,7 @@ type HandleOtrMessageAddParams = Omit<EventHandlerParams, 'event'> & {
 const handleOtrMessageAdd = async ({
   cryptographyService,
   coreCryptoClient,
+  apiClient,
   useQualifiedIds,
   event,
   source,
@@ -44,7 +45,7 @@ const handleOtrMessageAdd = async ({
     return {event};
   }
   try {
-    const decryptedData = await decryptOtrMessage({otrMessage: event, coreCryptoClient, useQualifiedIds});
+    const decryptedData = await decryptOtrMessage({otrMessage: event, coreCryptoClient, useQualifiedIds, apiClient});
     return {
       mappedEvent: cryptographyService.mapGenericMessage(event, decryptedData, source),
       event,

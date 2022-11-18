@@ -21,42 +21,57 @@ import {ConversationOtrMessageAddEvent} from '@wireapp/api-client/lib/event';
 import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
 import logdown from 'logdown';
 
+import {APIClient} from '@wireapp/api-client';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 
 import {DecryptionParams} from './CryptMessage.types';
 import {decrypt} from './decrypt';
 
 import {constructSessionId} from '../Utility/constructSessionId';
+import {createSession} from '../Utility/createSession';
 import {generateDecryptionError} from '../Utility/generateDecryptionError';
 
-const logger = logdown('@wireapp/core/messagingProtocols/proteus/ProteusService');
+const logger = logdown('@wireapp/core/messagingProtocols/proteus/CryptMessages');
 
 const decryptMessage = (params: DecryptionParams): Promise<Uint8Array> => decrypt({...params, logger});
 
 interface DecryptMessageParams {
   otrMessage: ConversationOtrMessageAddEvent;
   coreCryptoClient: CoreCrypto;
+  apiClient: APIClient;
   useQualifiedIds: boolean;
 }
 const decryptOtrMessage = async ({
   otrMessage,
   coreCryptoClient,
+  apiClient,
   useQualifiedIds,
 }: DecryptMessageParams): Promise<GenericMessage> => {
   const {
-    from,
+    from: userId,
     qualified_from,
-    data: {sender, text: encodedCiphertext},
+    data: {sender: clientId, text: encodedCiphertext},
   } = otrMessage;
 
   const sessionId = constructSessionId({
-    clientId: from,
-    userId: sender,
+    clientId,
+    userId,
     domain: qualified_from?.domain,
     useQualifiedIds,
   });
+  const sessionExists = (await coreCryptoClient.proteusSessionExists(sessionId)) as unknown as boolean;
+  if (!sessionExists) {
+    const userQualifiedId = {id: userId, domain: qualified_from?.domain ?? ''};
+    createSession({
+      sessionId,
+      userId: userQualifiedId,
+      clientId,
+      apiClient,
+      coreCryptoClient: coreCryptoClient,
+    });
+  }
   try {
-    const decryptedMessage = await decryptMessage({sessionId, encodedCiphertext, coreCryptoClient});
+    const decryptedMessage = await decrypt({sessionId, encodedCiphertext, coreCryptoClient, logger});
     return GenericMessage.decode(decryptedMessage);
   } catch (error) {
     throw generateDecryptionError(otrMessage, error, logger);
