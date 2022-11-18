@@ -3813,6 +3813,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/webcrypto@npm:^0":
+  version: 0.0.28
+  resolution: "@types/webcrypto@npm:0.0.28"
+  checksum: 3d04fce51654338d93219f5a9b352038fdec5d76fa44fb6a2b543375cdf574c3d0e1d7fd61207f5a6c50127f29fa0803f13aad303dca33e9b4df72af8d642cc5
+  languageName: node
+  linkType: hard
+
 "@types/webpack-env@npm:1.18.0":
   version: 1.18.0
   resolution: "@types/webpack-env@npm:1.18.0"
@@ -4405,6 +4412,7 @@ __metadata:
     "@types/long": ^5.0.0
     "@types/rimraf": ^3.0.2
     "@types/tough-cookie": 4.0.2
+    "@types/webcrypto": ^0
     "@wireapp/api-client": "workspace:^"
     "@wireapp/commons": "workspace:^"
     "@wireapp/core-crypto": 0.6.0-pre.5
