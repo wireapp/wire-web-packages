@@ -186,6 +186,18 @@ export class ProteusService {
     users: UserPreKeyBundleMap | UserClients,
     domain: string = '',
   ): Promise<{missing: UserClients; encrypted: OTRRecipients<Uint8Array>}> {
+    const {sessions, userClients} = await this.mapRecipantsToSessionsAndClients(users, domain, true);
+
+    const payload = await this.coreCryptoClient.proteusEncryptBatched(sessions, plainText);
+
+    return this.extractEncryptedAndMissingFromBatchedPayload(payload, userClients);
+  }
+
+  private async mapRecipantsToSessionsAndClients(
+    users: UserPreKeyBundleMap | UserClients,
+    domain: string = '',
+    shouldCreateSession = false,
+  ) {
     const userClients = filterUserClientsWithoutPreKey(users);
     const sessions: string[] = [];
 
@@ -194,25 +206,27 @@ export class ProteusService {
 
       for (const clientId of clientIds) {
         const sessionId = this.cryptographyService.constructSessionId(userId, clientId, domain);
-        const sessionExists = (await this.coreCryptoClient.proteusSessionExists(sessionId)) as unknown as boolean;
 
-        if (!sessionExists) {
-          const userQualifiedId = {id: userId, domain};
-          await createSession({
-            apiClient: this.apiClient,
-            coreCryptoClient: this.coreCryptoClient,
-            sessionId,
-            userId: userQualifiedId,
-            clientId,
-          });
+        if (shouldCreateSession) {
+          const sessionExists = (await this.coreCryptoClient.proteusSessionExists(sessionId)) as unknown as boolean;
+
+          if (!sessionExists) {
+            const userQualifiedId = {id: userId, domain};
+            await createSession({
+              apiClient: this.apiClient,
+              coreCryptoClient: this.coreCryptoClient,
+              sessionId,
+              userId: userQualifiedId,
+              clientId,
+            });
+          }
         }
 
         sessions.push(sessionId);
       }
     }
 
-    const payload = await this.coreCryptoClient.proteusEncryptBatched(sessions, plainText);
-    return this.extractEncryptedAndMissingFromBatchedPayload(payload, userClients);
+    return {sessions, userClients};
   }
 
   private extractEncryptedAndMissingFromBatchedPayload(
