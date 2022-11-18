@@ -41,8 +41,8 @@ import {
 
 import {MessageSendingState, SendResult} from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
-import {CryptographyService, SessionPayloadBundle} from '../../../cryptography';
-import {isUserClients} from '../../../util';
+import {CryptographyService} from '../../../cryptography';
+import {filterUserClientsWithoutPreKey} from '../../../util/filterUserClientsWithoutPreKey';
 import {EventHandlerResult} from '../../common.types';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
 import {createSession} from '../Utility/createSession';
@@ -181,47 +181,21 @@ export class ProteusService {
     };
   }
 
-  private async encryptPayloadForSession(
-    sessionId: string,
-    plainText: Uint8Array,
-  ): Promise<SessionPayloadBundle | undefined> {
-    this.logger.log(`Encrypting payload for session ID "${sessionId}"`);
-
-    let encryptedPayload: Uint8Array;
-
-    try {
-      const payloadAsArrayBuffer = await this.coreCryptoClient.proteusEncrypt(sessionId, plainText);
-      encryptedPayload = new Uint8Array(payloadAsArrayBuffer);
-    } catch (error) {
-      const notFoundErrorCode = 2;
-      if ((error as any).code === notFoundErrorCode) {
-        // If the session is not in the database, we just return undefined. Later on there will be a mismatch and the session will be created
-        return undefined;
-      }
-      this.logger.error(`Could not encrypt payload: ${(error as Error).message}`);
-      encryptedPayload = new Uint8Array(Buffer.from('💣', 'utf-8'));
-    }
-
-    return {encryptedPayload, sessionId};
-  }
-
   public async encrypt(
     plainText: Uint8Array,
     users: UserPreKeyBundleMap | UserClients,
     domain?: string,
   ): Promise<{missing: UserClients; encrypted: OTRRecipients<Uint8Array>}> {
-    const encrypted: OTRRecipients<Uint8Array> = {};
-    const missing: UserClients = {};
+    const userClients = filterUserClientsWithoutPreKey(users);
+    const sessions: string[] = [];
 
     for (const userId in users) {
-      const clientIds = isUserClients(users)
-        ? users[userId]
-        : Object.keys(users[userId])
-            // We filter out clients that have `null` prekey
-            .filter(clientId => !!users[userId][clientId]);
+      const clientIds = userClients[userId];
+
       for (const clientId of clientIds) {
         const sessionId = this.cryptographyService.constructSessionId(userId, clientId, domain);
         const sessionExists = (await this.coreCryptoClient.proteusSessionExists(sessionId)) as unknown as boolean;
+
         if (!sessionExists) {
           const userQualifiedId = {id: userId, domain: domain ?? ''};
           await createSession({
@@ -232,10 +206,30 @@ export class ProteusService {
             clientId,
           });
         }
-        const result = await this.encryptPayloadForSession(sessionId, plainText);
-        if (result) {
+
+        sessions.push(sessionId);
+      }
+    }
+
+    const payload = await this.coreCryptoClient.proteusEncryptBatched(sessions, plainText);
+    return this.extractEncryptedAndMissingFromBatchedPayload(payload, userClients);
+  }
+
+  private extractEncryptedAndMissingFromBatchedPayload(
+    payload: Map<string, Uint8Array>,
+    users: UserClients,
+  ): {missing: UserClients; encrypted: OTRRecipients<Uint8Array>} {
+    const encrypted: OTRRecipients<Uint8Array> = {};
+    const missing: UserClients = {};
+
+    const userClientsArr = Object.entries(users);
+    for (const [userId, clientIds] of userClientsArr) {
+      for (const clientId of clientIds) {
+        const sessionId = this.cryptographyService.constructSessionId(userId, clientId);
+
+        if (payload.has(sessionId)) {
           encrypted[userId] ||= {};
-          encrypted[userId][clientId] = result.encryptedPayload;
+          encrypted[userId][clientId] = payload.get(sessionId)!;
         } else {
           missing[userId] ||= [];
           missing[userId].push(clientId);
