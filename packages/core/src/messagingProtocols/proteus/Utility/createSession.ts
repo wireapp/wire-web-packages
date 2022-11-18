@@ -17,22 +17,32 @@
  *
  */
 
-import {BackendEvent} from '@wireapp/api-client/lib/event';
+import {PreKey} from '@wireapp/api-client/lib/auth';
+import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
+import {Decoder} from 'bazinga64';
 
 import {APIClient} from '@wireapp/api-client';
 
-import {PayloadBundleSource} from '../../../conversation';
-import {CryptographyService} from '../../../cryptography';
-
-export {BackendEvent, PayloadBundleSource};
-
-export type EventHandlerParams = {
-  dryRun?: boolean;
-  event: BackendEvent;
-  source: PayloadBundleSource;
-  cryptographyService: CryptographyService;
+interface CreateSessionParams {
   coreCryptoClient: CoreCrypto;
   apiClient: APIClient;
-  useQualifiedIds: boolean;
+  sessionId: string;
+  userId: QualifiedId;
+  clientId: string;
+  initialPrekey?: PreKey;
+}
+const createSession = async ({
+  clientId,
+  coreCryptoClient,
+  apiClient,
+  sessionId,
+  userId,
+  initialPrekey,
+}: CreateSessionParams): Promise<void> => {
+  const prekey = initialPrekey ?? (await apiClient.api.user.getClientPreKey(userId, clientId)).prekey;
+  const prekeyBuffer = Decoder.fromBase64(prekey.key).asBytes;
+  return coreCryptoClient.proteusSessionFromPrekey(sessionId, prekeyBuffer);
 };
+
+export {createSession};
