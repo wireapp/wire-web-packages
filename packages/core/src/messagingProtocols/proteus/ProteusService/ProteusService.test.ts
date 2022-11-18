@@ -18,7 +18,7 @@
  */
 
 /* eslint-disable import/order */
-import * as Recipients from './Utility/Recipients';
+import * as Recipients from '../Utility/Recipients';
 
 import {ClientClassification, ClientType} from '@wireapp/api-client/lib/client';
 import {ConversationProtocol} from '@wireapp/api-client/lib/conversation';
@@ -35,8 +35,8 @@ import {getUUID} from '../../../test/PayloadHelper';
 import {SendProteusMessageParams} from './ProteusService.types';
 import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
-jest.mock('./Utility/Recipients', () => ({
-  ...jest.requireActual('./Utility/Recipients'),
+jest.mock('../Utility/Recipients', () => ({
+  ...jest.requireActual('../Utility/Recipients'),
   getRecipientsForConversation: jest.fn(),
   getQualifiedRecipientsForConversation: jest.fn(),
 }));

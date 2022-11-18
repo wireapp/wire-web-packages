@@ -22,7 +22,7 @@ import logdown from 'logdown';
 
 import {errors as ProteusErrors} from '@wireapp/proteus';
 
-import {DecryptionError} from '../../errors/DecryptionError';
+import {DecryptionError} from '../../../errors/DecryptionError';
 
 type ErrorWithCode = Error & {code?: number};
 const hasErrorCode = (error: any): ErrorWithCode => error && error.code;

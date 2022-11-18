@@ -17,8 +17,23 @@
  *
  */
 
-export * from './PreKeyBundle';
-export * from '../../../../conversation/ConversationService/Utility/getConversationQualifiedMembers';
-export * from './UserIds';
-export * from './Recipients';
-export * from './isClearFromMismatch';
+import {QualifiedId} from '@wireapp/api-client/lib/user';
+
+interface ConstructSessionIdParams {
+  userId: string | QualifiedId;
+  clientId: string;
+  useQualifiedIds?: boolean;
+  domain?: string;
+}
+const constructSessionId = ({
+  userId,
+  clientId,
+  useQualifiedIds = false,
+  domain = '',
+}: ConstructSessionIdParams): string => {
+  const {id, domain: baseDomain} = typeof userId === 'string' ? {id: userId, domain} : userId;
+  const baseId = `${id}@${clientId}`;
+  return baseDomain && useQualifiedIds ? `${baseDomain}@${baseId}` : baseId;
+};
+
+export {constructSessionId};

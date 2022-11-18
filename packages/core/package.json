@@ -29,12 +29,14 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
+    "@peculiar/webcrypto": "^1.4.1",
     "@swc/core": "^1.3.10",
     "@swc/jest": "^0.2.23",
     "@types/jest": "^29.2.0",
     "@types/long": "^5.0.0",
     "@types/rimraf": "^3.0.2",
     "@types/tough-cookie": "4.0.2",
+    "@types/webcrypto": "^0",
     "commander": "9.4.1",
     "cross-env": "7.0.3",
     "dotenv-defaults": "5.0.2",
@@ -44,7 +46,8 @@
     "mock-socket": "9.1.5",
     "nock": "13.2.9",
     "rimraf": "^3.0.2",
-    "typescript": "^4.8.4"
+    "typescript": "^4.8.4",
+    "webcrypto": "^0.1.1"
   },
   "scripts": {
     "build": "yarn clean && tsc",

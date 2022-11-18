@@ -29,4 +29,7 @@ module.exports = {
     TextDecoder,
     TextEncoder,
   },
+  setupFiles: [
+    "fake-indexeddb/auto"
+  ],
 };
