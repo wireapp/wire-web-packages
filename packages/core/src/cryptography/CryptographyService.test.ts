@@ -17,8 +17,6 @@
  *
  */
 
-import * as bazinga64 from 'bazinga64';
-
 import * as crypto from 'crypto';
 import {promisify} from 'util';
 
@@ -30,8 +28,6 @@ import {CRUDEngine, MemoryEngine} from '@wireapp/store-engine';
 import {decryptAsset, encryptAsset} from './AssetCryptography';
 import {CryptographyService} from './CryptographyService';
 
-import * as CryptographyHelper from '../test/CryptographyHelper';
-
 import {SessionPayloadBundle} from '.';
 
 async function createEngine(storeName: string): Promise<CRUDEngine> {
@@ -42,7 +38,6 @@ async function createEngine(storeName: string): Promise<CRUDEngine> {
 
 describe('CryptographyService', () => {
   let cryptographyService: CryptographyService;
-  let aliceLastResortPreKey: Proteus.keys.PreKey;
   let bob: Cryptobox;
 
   beforeAll(async () => {
@@ -54,8 +49,6 @@ describe('CryptographyService', () => {
       nbPrekeys: 1,
       useQualifiedIds: false,
     });
-    const preKeys = await cryptographyService.cryptobox.create();
-    aliceLastResortPreKey = preKeys.filter(preKey => preKey.key_id === Proteus.keys.PreKey.MAX_PREKEY_ID)[0];
     bob = new Cryptobox(await createEngine('wire'));
     await bob.create();
   });
@@ -129,37 +122,6 @@ describe('CryptographyService', () => {
       expect(() => {
         cryptographyService.parseSessionId('jfkdsmqfd');
       }).toThrow(Error);
-    });
-  });
-
-  describe('"decrypt"', () => {
-    it('decrypts a Base64-encoded cipher message.', async () => {
-      const alicePublicKey = cryptographyService.cryptobox['identity']!.public_key;
-      const publicPreKeyBundle = new Proteus.keys.PreKeyBundle(alicePublicKey, aliceLastResortPreKey);
-      const text = 'Hello Alice!';
-      const encryptedPreKeyMessage = await bob.encrypt(
-        'alice-user-id@alice-client-id',
-        text,
-        publicPreKeyBundle.serialise(),
-      );
-      const encodedPreKeyMessage = bazinga64.Encoder.toBase64(encryptedPreKeyMessage).asString;
-      const decryptedMessage = await cryptographyService.decrypt('bob-user-id@bob-client-id', encodedPreKeyMessage);
-      const plaintext = Buffer.from(decryptedMessage).toString('utf8');
-      expect(plaintext).toBe(text);
-    });
-
-    it('is resistant to duplicated message errors', async () => {
-      const receiver = cryptographyService.cryptobox['identity']!;
-      const preKey = await cryptographyService.cryptobox['get_prekey']();
-      const text = 'Hi!';
-      const encodedPreKeyMessage = await CryptographyHelper.createEncodedCipherText(receiver, preKey!, text);
-      const sessionId = 'alice-to-bob';
-      const plaintext = await CryptographyHelper.getPlainText(cryptographyService, encodedPreKeyMessage, sessionId);
-      // Testing to decrypt the same message multiple times (to provoke duplicate message errors)
-      await CryptographyHelper.getPlainText(cryptographyService, encodedPreKeyMessage, sessionId);
-      await CryptographyHelper.getPlainText(cryptographyService, encodedPreKeyMessage, sessionId);
-      await CryptographyHelper.getPlainText(cryptographyService, encodedPreKeyMessage, sessionId);
-      expect(plaintext).toBe(text);
     });
   });
 

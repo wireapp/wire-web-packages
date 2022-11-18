@@ -17,6 +17,10 @@
  *
  */
 
-export * from './ProteusService';
-export * from '../Utility';
-export * from '../Utility/getGenericMessageParams';
+import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
+
+export interface DecryptionParams {
+  coreCryptoClient: CoreCrypto;
+  sessionId: string;
+  encodedCiphertext: string;
+}

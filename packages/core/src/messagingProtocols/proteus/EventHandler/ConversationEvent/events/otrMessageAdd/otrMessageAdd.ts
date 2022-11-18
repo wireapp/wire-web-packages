@@ -21,6 +21,7 @@ import {BackendEvent, ConversationOtrMessageAddEvent, CONVERSATION_EVENT} from '
 
 import {DecryptionError} from '../../../../../../errors/DecryptionError';
 import {EventHandlerResult} from '../../../../../common.types';
+import {decryptOtrMessage} from '../../../../CryptMessages/CryptMessages';
 import {EventHandlerParams} from '../../../EventHandler.types';
 
 const isOtrMessageAddEvent = (event: BackendEvent): event is ConversationOtrMessageAddEvent =>
@@ -31,6 +32,8 @@ type HandleOtrMessageAddParams = Omit<EventHandlerParams, 'event'> & {
 };
 const handleOtrMessageAdd = async ({
   cryptographyService,
+  coreCryptoClient,
+  useQualifiedIds,
   event,
   source,
   dryRun = false,
@@ -41,7 +44,7 @@ const handleOtrMessageAdd = async ({
     return {event};
   }
   try {
-    const decryptedData = await cryptographyService.decryptMessage(event);
+    const decryptedData = await decryptOtrMessage({otrMessage: event, coreCryptoClient, useQualifiedIds});
     return {
       mappedEvent: cryptographyService.mapGenericMessage(event, decryptedData, source),
       event,

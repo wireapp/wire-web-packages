@@ -23,8 +23,8 @@ import {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@w
 
 import {getQualifiedPreKeyBundle, getPreKeyBundleMap} from './PreKeyBundle';
 
-import {getConversationQualifiedMembers} from '../../../../conversation/ConversationService/Utility/getConversationQualifiedMembers';
-import {isQualifiedUserClients, isUserClients} from '../../../../util';
+import {getConversationQualifiedMembers} from '../../../conversation/ConversationService/Utility/getConversationQualifiedMembers';
+import {isQualifiedUserClients, isUserClients} from '../../../util';
 
 interface GetRecipientsForConversationQualifiedParams {
   apiClient: APIClient;

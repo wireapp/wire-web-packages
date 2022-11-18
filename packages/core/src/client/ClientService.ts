@@ -20,11 +20,11 @@
 import {LoginData, PreKey} from '@wireapp/api-client/lib/auth/';
 import {ClientType, CreateClientPayload, RegisteredClient} from '@wireapp/api-client/lib/client/';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
-import {keys as ProteusKeys} from '@wireapp/proteus';
 import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
 import {Encoder} from 'bazinga64';
 
 import {APIClient} from '@wireapp/api-client';
+import {keys as ProteusKeys} from '@wireapp/proteus';
 import {CRUDEngine} from '@wireapp/store-engine';
 
 import {CryptographyService} from '../cryptography/';

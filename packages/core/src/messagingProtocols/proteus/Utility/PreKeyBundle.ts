@@ -21,7 +21,7 @@ import {APIClient} from '@wireapp/api-client/lib/APIClient';
 import {QualifiedUserClients, UserClients} from '@wireapp/api-client/lib/conversation';
 import {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 
-import {isQualifiedIdArray, isStringArray, isUserClients} from '../../../../util';
+import {isQualifiedIdArray, isStringArray, isUserClients} from '../../../util';
 
 interface GetPreKeyBundleMapParams {
   apiClient: APIClient;

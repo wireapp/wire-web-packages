@@ -32,18 +32,20 @@ import {
   ProteusServiceConfig,
   SendProteusMessageParams,
 } from './ProteusService.types';
-import {isClearFromMismatch} from './Utility';
-import {getGenericMessageParams} from './Utility/getGenericMessageParams';
 
 import {PayloadBundleState, SendResult} from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
 import {CryptographyService} from '../../../cryptography';
 import {EventHandlerResult} from '../../common.types';
+import {decryptMessage} from '../CryptMessages';
+import {DecryptionParams} from '../CryptMessages/CryptMessage.types';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
+import {isClearFromMismatch} from '../Utility';
+import {getGenericMessageParams} from '../Utility/getGenericMessageParams';
 
 export class ProteusService {
   private readonly messageService: MessageService;
-  private readonly logger = logdown('@wireapp/core/ProteusService');
+  private readonly logger = logdown('@wireapp/core/messagingProtocols/proteus/ProteusService');
 
   constructor(
     private readonly apiClient: APIClient,
@@ -54,9 +56,20 @@ export class ProteusService {
     this.messageService = new MessageService(this.apiClient, this.cryptographyService);
   }
 
-  public async handleEvent(params: Omit<EventHandlerParams, 'cryptographyService'>): EventHandlerResult {
-    return handleBackendEvent({...params, cryptographyService: this.cryptographyService});
+  public async handleEvent(
+    params: Omit<EventHandlerParams, 'cryptographyService' | 'coreCryptoClient' | 'useQualifiedIds'>,
+  ): EventHandlerResult {
+    return handleBackendEvent({
+      ...params,
+      cryptographyService: this.cryptographyService,
+      coreCryptoClient: this.coreCryptoClient,
+      useQualifiedIds: this.config.useQualifiedIds,
+    });
   }
+
+  public decryptMessage = (params: Omit<DecryptionParams, 'coreCryptoClient'>) => {
+    return decryptMessage({...params, coreCryptoClient: this.coreCryptoClient});
+  };
 
   /**
    * Get the fingerprint of the local client.

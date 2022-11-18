@@ -17,6 +17,18 @@
  *
  */
 
-export * from './ProteusService';
-export * from '../Utility';
-export * from '../Utility/getGenericMessageParams';
+import {Decoder} from 'bazinga64';
+import logdown from 'logdown';
+
+import {DecryptionParams} from '../CryptMessage.types';
+
+type DecryptParams = DecryptionParams & {
+  logger: logdown.Logger;
+};
+const decrypt = ({coreCryptoClient, encodedCiphertext, logger, sessionId}: DecryptParams): Promise<Uint8Array> => {
+  logger.log(`Decrypting message for session ID "${sessionId}"`);
+  const messageBytes = Decoder.fromBase64(encodedCiphertext).asBytes;
+  return coreCryptoClient.proteusDecrypt(sessionId, messageBytes);
+};
+
+export {decrypt};

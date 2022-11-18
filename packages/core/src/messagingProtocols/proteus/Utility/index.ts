@@ -17,6 +17,8 @@
  *
  */
 
-export * from './ProteusService';
-export * from '../Utility';
-export * from '../Utility/getGenericMessageParams';
+export * from './PreKeyBundle';
+export * from '../../../conversation/ConversationService/Utility/getConversationQualifiedMembers';
+export * from './UserIds';
+export * from './Recipients';
+export * from './isClearFromMismatch';
