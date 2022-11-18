@@ -17,14 +17,17 @@
  *
  */
 
+import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
 import {Decoder} from 'bazinga64';
 import logdown from 'logdown';
 
-import {DecryptionParams} from '../CryptMessage.types';
-
-type DecryptParams = DecryptionParams & {
+interface DecryptParams {
+  coreCryptoClient: CoreCrypto;
+  sessionId: string;
+  encodedCiphertext: string;
   logger: logdown.Logger;
-};
+}
+
 const decrypt = ({coreCryptoClient, encodedCiphertext, logger, sessionId}: DecryptParams): Promise<Uint8Array> => {
   logger.log(`Decrypting message for session ID "${sessionId}"`);
   const messageBytes = Decoder.fromBase64(encodedCiphertext).asBytes;

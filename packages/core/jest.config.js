@@ -30,6 +30,10 @@ module.exports = {
     TextEncoder,
   },
   setupFiles: [
-    "fake-indexeddb/auto"
+    "fake-indexeddb/auto",
   ],
+  setupFilesAfterEnv: ["./jest.setup.ts"],
+  moduleNameMapper: {
+    '^axios$': require.resolve('axios'),
+  },
 };

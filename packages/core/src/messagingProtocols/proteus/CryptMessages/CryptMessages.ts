@@ -24,7 +24,6 @@ import logdown from 'logdown';
 import {APIClient} from '@wireapp/api-client';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 
-import {DecryptionParams} from './CryptMessage.types';
 import {decrypt} from './decrypt';
 
 import {constructSessionId} from '../Utility/constructSessionId';
@@ -32,8 +31,6 @@ import {createSession} from '../Utility/createSession';
 import {generateDecryptionError} from '../Utility/generateDecryptionError';
 
 const logger = logdown('@wireapp/core/messagingProtocols/proteus/CryptMessages');
-
-const decryptMessage = (params: DecryptionParams): Promise<Uint8Array> => decrypt({...params, logger});
 
 interface DecryptMessageParams {
   otrMessage: ConversationOtrMessageAddEvent;
@@ -78,4 +75,4 @@ const decryptOtrMessage = async ({
   }
 };
 
-export {decryptOtrMessage, decryptMessage};
+export {decryptOtrMessage};

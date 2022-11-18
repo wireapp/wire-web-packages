@@ -36,8 +36,6 @@ import {PayloadBundleState, SendResult} from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
 import {CryptographyService} from '../../../cryptography';
 import {EventHandlerResult} from '../../common.types';
-import {decryptMessage} from '../CryptMessages';
-import {DecryptionParams} from '../CryptMessages/CryptMessage.types';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
 import {isClearFromMismatch} from '../Utility';
 import {createSession} from '../Utility/createSession';
@@ -65,10 +63,6 @@ export class ProteusService {
       apiClient: this.apiClient,
     });
   }
-
-  public decryptMessage = (params: Omit<DecryptionParams, 'coreCryptoClient'>) => {
-    return decryptMessage({...params, coreCryptoClient: this.coreCryptoClient});
-  };
 
   /**
    * Get the fingerprint of the local client.
@@ -104,20 +98,17 @@ export class ProteusService {
     conversationData,
     otherUserIds,
   }: CreateProteusConversationParams): Promise<Conversation> {
-    const isNewConversation = (conversationData: any): conversationData is NewConversation =>
-      conversationData && conversationData?.name && conversationData?.users;
     let payload: NewConversation;
+    if (typeof conversationData === 'string') {
+      const ids = typeof otherUserIds === 'string' ? [otherUserIds] : otherUserIds;
 
-    if (isNewConversation(conversationData)) {
-      payload = {...conversationData};
-    } else {
-      const users: string[] = otherUserIds ? (Array.isArray(otherUserIds) ? otherUserIds : [otherUserIds]) : [];
-      const payloadName = conversationData && typeof conversationData === 'string' ? conversationData : undefined;
       payload = {
-        name: payloadName,
+        name: conversationData,
         receipt_mode: null,
-        users,
+        users: ids ?? [],
       };
+    } else {
+      payload = conversationData;
     }
 
     return this.apiClient.api.conversation.postConversation(payload);

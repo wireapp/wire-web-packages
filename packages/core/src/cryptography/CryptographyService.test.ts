@@ -55,7 +55,6 @@ describe('CryptographyService', () => {
 
   describe('"constructor"', () => {
     it('creates an instance.', () => {
-      expect(cryptographyService.cryptobox['identity']!.public_key.fingerprint()).toBeDefined();
       expect(cryptographyService).toBeDefined();
     });
   });
