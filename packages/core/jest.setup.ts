@@ -17,16 +17,11 @@
  *
  */
 
-const baseConfig = require('../../jest.config.base');
+import 'fake-indexeddb/auto';
 
-const {TextDecoder, TextEncoder} = require('util');
+import nodeCrypto from 'crypto';
 
-module.exports = {
-  ...baseConfig,
-  testEnvironment: 'node',
-  setupFilesAfterEnv: ['./jest.setup.ts'],
-  globals: {
-    TextDecoder,
-    TextEncoder,
-  },
-};
+// @ts-ignore
+global.crypto = nodeCrypto.webcrypto;
+global.btoa = (text: string) => Buffer.from(text).toString('base64');
+global.atob = (base64: string) => Buffer.from(base64, 'base64').toString();

@@ -26,12 +26,9 @@ import {NotificationAPI} from '@wireapp/api-client/lib/notification';
 import {Self, SelfAPI} from '@wireapp/api-client/lib/self';
 import {WebSocketClient} from '@wireapp/api-client/lib/tcp';
 import {ReconnectingWebsocket} from '@wireapp/api-client/lib/tcp/ReconnectingWebsocket';
-import 'fake-indexeddb/auto';
 import {StatusCodes as HTTP_STATUS} from 'http-status-codes';
 import {WS} from 'jest-websocket-mock';
 import nock, {cleanAll} from 'nock';
-
-import nodeCrypto from 'crypto';
 
 import {APIClient} from '@wireapp/api-client';
 import {AccentColor, ValidationUtil} from '@wireapp/commons';
@@ -90,12 +87,6 @@ describe('Account', () => {
     token_type: 'Bearer',
     user: 'aaf9a833-ef30-4c22-86a0-9adc8a15b3b4',
   };
-
-  beforeEach(() => {
-    // @ts-ignore
-    global.crypto = nodeCrypto.webcrypto;
-    global.window = {crypto: nodeCrypto.webcrypto, btoa: i => i};
-  });
 
   beforeEach(() => {
     nock(MOCK_BACKEND.rest)
