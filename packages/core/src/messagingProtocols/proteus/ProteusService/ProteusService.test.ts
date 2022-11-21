@@ -20,7 +20,7 @@
 /* eslint-disable import/order */
 import * as Recipients from '../Utility/Recipients';
 
-import {ConversationProtocol} from '@wireapp/api-client/lib/conversation';
+import {ConversationProtocol, QualifiedUserClients, UserClients} from '@wireapp/api-client/lib/conversation';
 
 import {MessageTargetMode} from '../../../conversation';
 import {buildTextMessage} from '../../../conversation/message/MessageBuilder';
@@ -235,6 +235,56 @@ describe('ProteusService', () => {
       expect(sessions).not.toContain(
         proteusService['cryptographyService'].constructSessionId(firstUserID, noPrekeyClient),
       );
+    });
+  });
+
+  describe('createSessions', () => {
+    it('calls createLegacySessions for UserClients type', async () => {
+      const [proteusService] = buildProteusService();
+
+      const firstUserID = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
+      const firstUserClient1 = '5e80ea7886680975';
+      const firstUserClient2 = 'be67218b77d02d30';
+
+      const secondUserID = '2bde49aa-bdb5-458f-98cf-7d3552b10916';
+      const secondUserClient = '5bad8cdeddc5a90f';
+
+      const userClients: UserClients = {
+        [firstUserID]: [firstUserClient1, firstUserClient2],
+        [secondUserID]: [secondUserClient],
+      };
+
+      jest.spyOn(proteusService, 'createLegacySessions' as any);
+
+      await proteusService['createSessions'](userClients);
+
+      expect(proteusService['createLegacySessions']).toHaveBeenCalledWith(userClients);
+    });
+
+    it('calls createQualifiedSessions for QualifiedUserClients type', async () => {
+      const [proteusService] = buildProteusService();
+
+      const domain = 'staging.zinfra.io';
+
+      const firstUserID = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
+      const firstUserClient1 = '5e80ea7886680975';
+      const firstUserClient2 = 'be67218b77d02d30';
+
+      const secondUserID = '2bde49aa-bdb5-458f-98cf-7d3552b10916';
+      const secondUserClient = '5bad8cdeddc5a90f';
+
+      const qualifiedUserClients: QualifiedUserClients = {
+        [domain]: {
+          [firstUserID]: [firstUserClient1, firstUserClient2],
+          [secondUserID]: [secondUserClient],
+        },
+      };
+
+      jest.spyOn(proteusService, 'createQualifiedSessions' as any);
+
+      await proteusService['createSessions'](qualifiedUserClients);
+
+      expect(proteusService['createQualifiedSessions']).toHaveBeenCalledWith(qualifiedUserClients);
     });
   });
 
