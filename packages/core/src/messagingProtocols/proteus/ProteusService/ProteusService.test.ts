@@ -25,6 +25,7 @@ import {ConversationProtocol} from '@wireapp/api-client/lib/conversation';
 import {MessageTargetMode} from '../../../conversation';
 import {buildTextMessage} from '../../../conversation/message/MessageBuilder';
 import {SendProteusMessageParams} from './ProteusService.types';
+import {Decoder} from 'bazinga64';
 
 import {buildProteusService} from './ProteusService.mocks';
 
@@ -102,10 +103,28 @@ describe('ProteusService', () => {
 
   describe('"encrypt"', () => {
     it('calls proteusEncryptBatched method on core-crypto', async () => {
-      const [proteusService, {coreCrypto}] = buildProteusService();
+      const [proteusService, {coreCrypto, apiClient}] = buildProteusService();
 
       const userId = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
       const clientId = 'be67218b77d02d30';
+
+      const clientSessionId = `${userId}@${clientId}`;
+
+      const prekeyBundleBundleMap = {
+        [userId]: {
+          [clientId]: {id: 0, key: ''},
+        },
+      };
+
+      const sessionToPayloadMap = new Map([[clientSessionId, new Uint8Array([])]]);
+
+      jest
+        .spyOn(apiClient.api.user, 'postMultiPreKeyBundles')
+        .mockImplementationOnce(() => Promise.resolve(prekeyBundleBundleMap));
+
+      jest
+        .spyOn(coreCrypto, 'proteusEncryptBatched')
+        .mockImplementationOnce(() => Promise.resolve(sessionToPayloadMap));
 
       const preKeyBundleMap = {
         [userId]: {
@@ -119,52 +138,103 @@ describe('ProteusService', () => {
       const text = new Uint8Array(Buffer.from('Hello', 'utf8'));
       await proteusService.encrypt(text, preKeyBundleMap);
 
-      expect(coreCrypto.proteusEncryptBatched).toHaveBeenCalledWith(`${userId}@${clientId}`, text);
+      expect(coreCrypto.proteusEncryptBatched).toHaveBeenCalledWith([clientSessionId], text);
     });
+  });
 
-    it('generates a set of encrypted data based on PreKeys from multiple clients.', async () => {
-      const [proteusService] = buildProteusService();
+  describe('"createSessionsFromPreKeys"', () => {
+    it('creates a session from prekey when session does not exist', async () => {
+      const [proteusService, {coreCrypto}] = buildProteusService();
+
+      jest.spyOn(coreCrypto, 'proteusSessionExists').mockResolvedValueOnce(false as any); //todo: fix type
 
       const firstUserID = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
-      const secondUserID = '2bde49aa-bdb5-458f-98cf-7d3552b10916';
-      const noPrekeyClient = 'ae87218e77d02d30';
+      const firstUserClient1 = '5e80ea7886680975';
 
-      const firstClientId = '2b83ee08d7ac550d';
+      const validPreKey = {
+        id: 1337,
+        key: 'pQABARn//wKhAFggJ1Fbpg5l6wnzKOJE+vXpRnkqUYhIvVnR5lNXEbO2o/0DoQChAFggHxZvgvtDktY/vqBcpjjo6rQnXvcNQhfwmy8AJQJKlD0E9g==',
+      };
 
       const preKeyBundleMap = {
         [firstUserID]: {
-          '5e80ea7886680975': {
-            id: 1337,
-            key: 'pQABARn//wKhAFggJ1Fbpg5l6wnzKOJE+vXpRnkqUYhIvVnR5lNXEbO2o/0DoQChAFggHxZvgvtDktY/vqBcpjjo6rQnXvcNQhfwmy8AJQJKlD0E9g==',
-          },
-          be67218b77d02d30: {
-            id: 72,
-            key: 'pQABARn//wKhAFggTWwHUoppQ8aXWhbH95YWnNp6uOYMxo2y4wbarWbF+EEDoQChAFggUiFoPtsiR0WFowIvl0myD+bVnFQJBYarqieI0Gly46QE9g==',
-          },
-          [noPrekeyClient]: null,
-          [firstClientId]: {
-            id: 42,
-            key: 'pQABARn//wKhAFggWcbwny0jdqlcnnn0j4QSENIVVq/KgyQ3mmdpunfvGZQDoQChAFggrsQBkQkrVZ8sWhr8wTeaC+dmctuJ3oRqfdHsymTtKmgE9g==',
-          },
-        },
-        [secondUserID]: {
-          '5bad8cdeddc5a90f': {
-            id: 1,
-            key: 'pQABARn//wKhAFggEYATUNJBQ7E2tfHT7HMLxa4O3Ckd7PciUdyKiGNNWbYDoQChAFggP/s0BHmHQDNwrO4pC1dqdNHsW7bnpmF9mBadrbep4PoE9g==',
-          },
-          bc78eded90386d20: {
-            id: 65535,
-            key: 'pQABARn//wKhAFgg1xOfzMpWmpN2aBGW+0RG23L0I301pncd/HXqUm+pVyoDoQChAFggnl+dmwGW45AArcPutjUkAjYmhIbXBPrqkVrNyg0ZI08E9g==',
-          },
+          [firstUserClient1]: validPreKey,
         },
       };
-      const text = new Uint8Array(Buffer.from('Hello', 'utf8'));
-      const {encrypted} = await proteusService.encrypt(text, preKeyBundleMap);
-      expect(Object.keys(encrypted).length).toBe(2);
-      expect(Object.keys(encrypted[firstUserID]).length).toBe(3);
-      expect(Object.keys(encrypted[secondUserID]).length).toBe(2);
-      expect(encrypted[firstUserID][firstClientId]).toEqual(expect.any(Uint8Array));
-      expect(encrypted[firstUserID][noPrekeyClient]).not.toBeDefined();
+
+      const sessions = await proteusService['createSessionsFromPreKeys'](preKeyBundleMap);
+
+      const sessionId = proteusService['cryptographyService'].constructSessionId(firstUserID, firstUserClient1);
+      const prekeyBuffer = Decoder.fromBase64(validPreKey.key).asBytes;
+
+      expect(coreCrypto.proteusSessionFromPrekey).toHaveBeenCalledWith(sessionId, prekeyBuffer);
+      expect(sessions).toContain(sessionId);
+    });
+
+    it('does not create a new session when it does exist already', async () => {
+      const [proteusService, {coreCrypto}] = buildProteusService();
+
+      jest.spyOn(coreCrypto, 'proteusSessionExists').mockResolvedValueOnce(true as any); //todo: fix type
+
+      const firstUserID = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
+      const firstUserClient1 = '5e80ea7886680975';
+
+      const validPreKey = {
+        id: 1337,
+        key: 'pQABARn//wKhAFggJ1Fbpg5l6wnzKOJE+vXpRnkqUYhIvVnR5lNXEbO2o/0DoQChAFggHxZvgvtDktY/vqBcpjjo6rQnXvcNQhfwmy8AJQJKlD0E9g==',
+      };
+
+      const preKeyBundleMap = {
+        [firstUserID]: {
+          [firstUserClient1]: validPreKey,
+        },
+      };
+
+      const sessions = await proteusService['createSessionsFromPreKeys'](preKeyBundleMap);
+      const sessionId = proteusService['cryptographyService'].constructSessionId(firstUserID, firstUserClient1);
+
+      expect(coreCrypto.proteusSessionFromPrekey).not.toHaveBeenCalled();
+      expect(sessions).toContain(sessionId);
+    });
+
+    it('creates a list of sessions based on passed preKeyBundleMap', async () => {
+      const [proteusService] = buildProteusService();
+
+      const firstUserID = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
+      const firstUserClient1 = '5e80ea7886680975';
+      const firstUserClient2 = 'be67218b77d02d30';
+
+      const secondUserID = '2bde49aa-bdb5-458f-98cf-7d3552b10916';
+      const secondUserClient = '5bad8cdeddc5a90f';
+      const noPrekeyClient = 'ae87218e77d02d30';
+
+      const validPreKey = {
+        id: 1337,
+        key: 'pQABARn//wKhAFggJ1Fbpg5l6wnzKOJE+vXpRnkqUYhIvVnR5lNXEbO2o/0DoQChAFggHxZvgvtDktY/vqBcpjjo6rQnXvcNQhfwmy8AJQJKlD0E9g==',
+      };
+
+      const preKeyBundleMap = {
+        [firstUserID]: {
+          [firstUserClient1]: validPreKey,
+          [firstUserClient2]: validPreKey,
+          [noPrekeyClient]: null,
+        },
+        [secondUserID]: {
+          [secondUserClient]: validPreKey,
+        },
+      };
+
+      const sessions = await proteusService['createSessionsFromPreKeys'](preKeyBundleMap);
+      expect(sessions).toEqual(
+        expect.arrayContaining([
+          proteusService['cryptographyService'].constructSessionId(firstUserID, firstUserClient1),
+          proteusService['cryptographyService'].constructSessionId(firstUserID, firstUserClient2),
+          proteusService['cryptographyService'].constructSessionId(secondUserID, secondUserClient),
+        ]),
+      );
+      expect(sessions).not.toContain(
+        proteusService['cryptographyService'].constructSessionId(firstUserID, noPrekeyClient),
+      );
     });
   });
 
