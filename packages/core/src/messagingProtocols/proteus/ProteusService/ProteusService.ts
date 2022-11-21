@@ -108,6 +108,11 @@ export class ProteusService {
     return this.coreCryptoClient.proteusFingerprintRemote(sessionId);
   }
 
+  /**
+   * Create sessions for all the clients from given prekey bundle map.
+   * @param prekeyBundleMap map of user IDs to client IDs
+   * @param domain client domain
+   */
   private async createSessionsFromPreKeys(
     prekeyBundleMap: UserPreKeyBundleMap,
     domain: string = '',
@@ -129,7 +134,7 @@ export class ProteusService {
           break;
         }
 
-        const sessionId = this.cryptographyService.constructSessionId(userId, clientId);
+        const sessionId = this.cryptographyService.constructSessionId(userId, clientId, domain);
         const prekeyBuffer = Decoder.fromBase64(prekey.key).asBytes;
 
         const sessionExists = (await this.coreCryptoClient.proteusSessionExists(sessionId)) as unknown as boolean;
@@ -145,13 +150,23 @@ export class ProteusService {
     return sessions;
   }
 
-  private async createLegacySessions(userClientMap: UserClients): Promise<string[]> {
-    const prekeyBundleMap = await this.apiClient.api.user.postMultiPreKeyBundles(userClientMap);
+  /**
+   * Create sessions for all the clients without domain assigned.
+   * @param userClients map of user IDs containg the lists of clients
+   * Note that this function uses deprecated endpoint ("/users/prekeys") under the hood.
+   * Use createQualifiedSessions instead if possible.
+   */
+  private async createLegacySessions(userClients: UserClients): Promise<string[]> {
+    const prekeyBundleMap = await this.apiClient.api.user.postMultiPreKeyBundles(userClients);
     const sessions = await this.createSessionsFromPreKeys(prekeyBundleMap);
 
     return sessions;
   }
 
+  /**
+   * Create sessions for the qualified clients.
+   * @param userClientMap map of domain to (map of user IDs to client IDs)
+   */
   private async createQualifiedSessions(userClientMap: QualifiedUserClients): Promise<string[]> {
     const prekeyBundleMap = await this.apiClient.api.user.postQualifiedMultiPreKeyBundles(userClientMap);
 
@@ -167,6 +182,11 @@ export class ProteusService {
     return sessions;
   }
 
+  /**
+   * Create sessions for legacy/qualified clients (umberella function).
+   * Will call createQualifiedSessions or createLegacySessions based on passed userClientMap.
+   * @param userClientMap map of domain to (map of user IDs to client IDs) or map of user IDs containg the lists of clients
+   */
   private async createSessions(userClientMap: UserClients | QualifiedUserClients): Promise<string[]> {
     if (isQualifiedUserClients(userClientMap)) {
       return await this.createQualifiedSessions(userClientMap);
