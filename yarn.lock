@@ -4209,6 +4209,7 @@ __metadata:
     commander: 9.4.1
     cross-env: 7.0.3
     dotenv-defaults: 5.0.2
+    fake-indexeddb: ^4.0.0
     hash.js: 1.1.7
     http-status-codes: 2.2.0
     idb: 7.1.1

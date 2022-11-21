@@ -424,7 +424,7 @@ export class Account<T = any> extends EventEmitter {
 
     let key = await secretStore.getsecretValue(coreCryptoKeyId);
     if (!key) {
-      key = window.crypto.getRandomValues(new Uint8Array(16));
+      key = crypto.getRandomValues(new Uint8Array(16));
       await secretStore.saveSecretValue(coreCryptoKeyId, key);
     }
 

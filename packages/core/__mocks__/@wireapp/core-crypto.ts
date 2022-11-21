@@ -27,3 +27,12 @@ export enum RatchetTreeType {
   Delta = 2,
   ByRef = 3,
 }
+
+export class CoreCrypto {
+  static deferredInit() {
+    return {
+      proteusInit: jest.fn(),
+      proteusNewPrekey: jest.fn(() => Uint8Array.from([])),
+    };
+  }
+}

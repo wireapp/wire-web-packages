@@ -32,6 +32,7 @@ import {PayloadBundleState} from '../../../conversation';
 import {buildTextMessage} from '../../../conversation/message/MessageBuilder';
 import {CryptographyService} from '../../../cryptography';
 import {getUUID} from '../../../test/PayloadHelper';
+import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
 jest.mock('./Utility/getGenericMessageParams', () => {
   return {
@@ -69,7 +70,8 @@ const buildProteusService = (federated: boolean = false) => {
     useQualifiedIds: false,
     nbPrekeys: 1,
   });
-  return new ProteusService(apiClient, cryptographyService, {useQualifiedIds: federated});
+  const coreCrypto = {} as CoreCrypto;
+  return new ProteusService(apiClient, cryptographyService, coreCrypto, {useQualifiedIds: federated});
 };
 
 describe('sendGenericMessage', () => {
