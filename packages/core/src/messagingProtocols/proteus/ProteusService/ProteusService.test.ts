@@ -26,6 +26,7 @@ import {MessageTargetMode} from '../../../conversation';
 import {buildTextMessage} from '../../../conversation/message/MessageBuilder';
 import {SendProteusMessageParams} from './ProteusService.types';
 import {Decoder} from 'bazinga64';
+import {preKeyBundleToUserClients} from '../../../util/preKeyBundleToUserClients';
 
 import {buildProteusService} from './ProteusService.mocks';
 
@@ -285,6 +286,112 @@ describe('ProteusService', () => {
       await proteusService['createSessions'](qualifiedUserClients);
 
       expect(proteusService['createQualifiedSessions']).toHaveBeenCalledWith(qualifiedUserClients);
+    });
+  });
+
+  describe('getSessionsAndClientsFromRecipients', () => {
+    it('returns userClients for legacy clients', async () => {
+      const [proteusService] = buildProteusService();
+
+      const firstUserID = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
+      const firstUserClient1 = '5e80ea7886680975';
+      const firstUserClient2 = 'be67218b77d02d30';
+
+      const secondUserID = '2bde49aa-bdb5-458f-98cf-7d3552b10916';
+      const secondUserClient = '5bad8cdeddc5a90f';
+
+      const userClients: UserClients = {
+        [firstUserID]: [firstUserClient1, firstUserClient2],
+        [secondUserID]: [secondUserClient],
+      };
+
+      const {userClients: userClientsResult} = await proteusService['getSessionsAndClientsFromRecipients'](userClients);
+
+      expect(userClientsResult).toEqual(userClients);
+    });
+
+    it('returns userClients for qualified clients', async () => {
+      const [proteusService] = buildProteusService();
+
+      const validPreKey = {
+        id: 1337,
+        key: 'pQABARn//wKhAFggJ1Fbpg5l6wnzKOJE+vXpRnkqUYhIvVnR5lNXEbO2o/0DoQChAFggHxZvgvtDktY/vqBcpjjo6rQnXvcNQhfwmy8AJQJKlD0E9g==',
+      };
+
+      const firstUserID = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
+      const firstUserClient1 = '5e80ea7886680975';
+      const firstUserClient2 = 'be67218b77d02d30';
+
+      const secondUserID = '2bde49aa-bdb5-458f-98cf-7d3552b10916';
+      const secondUserClient = '5bad8cdeddc5a90f';
+
+      const userPreKeyBundleMap: UserPreKeyBundleMap = {
+        [firstUserID]: {
+          [firstUserClient1]: validPreKey,
+          [firstUserClient2]: validPreKey,
+        },
+        [secondUserID]: {
+          [secondUserClient]: validPreKey,
+        },
+      };
+
+      const {userClients} = await proteusService['getSessionsAndClientsFromRecipients'](userPreKeyBundleMap);
+
+      expect(userClients).toEqual(preKeyBundleToUserClients(userPreKeyBundleMap));
+    });
+
+    it('calls createSessions method without defined domain', async () => {
+      const [proteusService] = buildProteusService();
+
+      jest.spyOn(proteusService, 'createSessions' as any);
+
+      const firstUserID = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
+      const firstUserClient1 = '5e80ea7886680975';
+      const firstUserClient2 = 'be67218b77d02d30';
+
+      const secondUserID = '2bde49aa-bdb5-458f-98cf-7d3552b10916';
+      const secondUserClient = '5bad8cdeddc5a90f';
+
+      const userClients: UserClients = {
+        [firstUserID]: [firstUserClient1, firstUserClient2],
+        [secondUserID]: [secondUserClient],
+      };
+
+      await proteusService['getSessionsAndClientsFromRecipients'](userClients);
+
+      expect(proteusService['createSessions']).toHaveBeenCalledWith({
+        [firstUserID]: [firstUserClient1, firstUserClient2],
+        [secondUserID]: [secondUserClient],
+      });
+    });
+
+    it('calls createSessions method with client domain', async () => {
+      const [proteusService] = buildProteusService();
+
+      jest.spyOn(proteusService, 'createSessions' as any);
+
+      const domain = 'staging.zinfra.io';
+
+      const firstUserID = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
+      const firstUserClient1 = '5e80ea7886680975';
+      const firstUserClient2 = 'be67218b77d02d30';
+
+      const secondUserID = '2bde49aa-bdb5-458f-98cf-7d3552b10916';
+      const secondUserClient = '5bad8cdeddc5a90f';
+
+      const userClients: UserClients = {
+        [firstUserID]: [firstUserClient1, firstUserClient2],
+        [secondUserID]: [secondUserClient],
+      };
+
+      await proteusService['getSessionsAndClientsFromRecipients'](userClients, domain);
+
+      expect(proteusService['createSessions']).toHaveBeenCalledWith({
+        [domain]: {
+          [firstUserID]: [firstUserClient1, firstUserClient2],
+          [secondUserID]: [secondUserClient],
+        },
+      });
     });
   });
 

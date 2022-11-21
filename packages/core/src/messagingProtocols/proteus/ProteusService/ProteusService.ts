@@ -298,8 +298,7 @@ export class ProteusService {
     recipients: UserPreKeyBundleMap | UserClients,
     domain: string = '',
   ) {
-    const areUserClients = isUserClients(recipients);
-    const userClients = areUserClients ? recipients : preKeyBundleToUserClients(recipients);
+    const userClients = isUserClients(recipients) ? recipients : preKeyBundleToUserClients(recipients);
 
     const userClientMap: QualifiedUserClients | UserClients = domain ? {[domain]: userClients} : userClients;
 
