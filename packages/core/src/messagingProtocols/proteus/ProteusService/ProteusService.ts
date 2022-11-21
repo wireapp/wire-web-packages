@@ -108,7 +108,7 @@ export class ProteusService {
     return this.coreCryptoClient.proteusFingerprintRemote(sessionId);
   }
 
-  private async createSessionsWithBundleMap(
+  private async createSessionsFromPreKeys(
     prekeyBundleMap: UserPreKeyBundleMap,
     domain: string = '',
   ): Promise<string[]> {
@@ -145,14 +145,14 @@ export class ProteusService {
     return sessions;
   }
 
-  private async createSessionsBatchedNonQualified(userClientMap: UserClients): Promise<string[]> {
+  private async createLegacySessions(userClientMap: UserClients): Promise<string[]> {
     const prekeyBundleMap = await this.apiClient.api.user.postMultiPreKeyBundles(userClientMap);
-    const sessions = await this.createSessionsWithBundleMap(prekeyBundleMap);
+    const sessions = await this.createSessionsFromPreKeys(prekeyBundleMap);
 
     return sessions;
   }
 
-  private async createSessionsBatchedQualified(userClientMap: QualifiedUserClients): Promise<string[]> {
+  private async createQualifiedSessions(userClientMap: QualifiedUserClients): Promise<string[]> {
     const prekeyBundleMap = await this.apiClient.api.user.postQualifiedMultiPreKeyBundles(userClientMap);
 
     const sessions: string[] = [];
@@ -160,19 +160,19 @@ export class ProteusService {
     for (const domain in prekeyBundleMap) {
       const domainUsers = prekeyBundleMap[domain];
 
-      const domainSessions = await this.createSessionsWithBundleMap(domainUsers, domain);
+      const domainSessions = await this.createSessionsFromPreKeys(domainUsers, domain);
       sessions.push(...domainSessions);
     }
 
     return sessions;
   }
 
-  private async createSessionsBatched(userClientMap: UserClients | QualifiedUserClients): Promise<string[]> {
+  private async createSessions(userClientMap: UserClients | QualifiedUserClients): Promise<string[]> {
     if (isQualifiedUserClients(userClientMap)) {
-      return await this.createSessionsBatchedQualified(userClientMap);
+      return await this.createQualifiedSessions(userClientMap);
     }
 
-    return await this.createSessionsBatchedNonQualified(userClientMap);
+    return await this.createLegacySessions(userClientMap);
   }
 
   private async createSession(userId: QualifiedId, clientId: string, initialPrekey?: PreKey): Promise<void> {
@@ -283,7 +283,7 @@ export class ProteusService {
 
     const userClientMap: QualifiedUserClients | UserClients = domain ? {[domain]: userClients} : userClients;
 
-    const sessions = await this.createSessionsBatched(userClientMap);
+    const sessions = await this.createSessions(userClientMap);
 
     return {sessions, userClients};
   }
