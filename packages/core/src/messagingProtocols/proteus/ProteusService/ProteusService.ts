@@ -108,7 +108,7 @@ export class ProteusService {
     return this.coreCryptoClient.proteusFingerprintRemote(sessionId);
   }
 
-  private async _createSessionsWithBundleMap(
+  private async createSessionsWithBundleMap(
     prekeyBundleMap: UserPreKeyBundleMap,
     domain: string = '',
   ): Promise<string[]> {
@@ -145,14 +145,14 @@ export class ProteusService {
     return sessions;
   }
 
-  private async _createSessionsBatchedNonQualified(userClientMap: UserClients): Promise<string[]> {
+  private async createSessionsBatchedNonQualified(userClientMap: UserClients): Promise<string[]> {
     const prekeyBundleMap = await this.apiClient.api.user.postMultiPreKeyBundles(userClientMap);
-    const sessions = await this._createSessionsWithBundleMap(prekeyBundleMap);
+    const sessions = await this.createSessionsWithBundleMap(prekeyBundleMap);
 
     return sessions;
   }
 
-  private async _createSessionsBatchedQualified(userClientMap: QualifiedUserClients): Promise<string[]> {
+  private async createSessionsBatchedQualified(userClientMap: QualifiedUserClients): Promise<string[]> {
     const prekeyBundleMap = await this.apiClient.api.user.postQualifiedMultiPreKeyBundles(userClientMap);
 
     const sessions: string[] = [];
@@ -160,7 +160,7 @@ export class ProteusService {
     for (const domain in prekeyBundleMap) {
       const domainUsers = prekeyBundleMap[domain];
 
-      const domainSessions = await this._createSessionsWithBundleMap(domainUsers, domain);
+      const domainSessions = await this.createSessionsWithBundleMap(domainUsers, domain);
       sessions.push(...domainSessions);
     }
 
@@ -169,10 +169,10 @@ export class ProteusService {
 
   private async createSessionsBatched(userClientMap: UserClients | QualifiedUserClients): Promise<string[]> {
     if (isQualifiedUserClients(userClientMap)) {
-      return await this._createSessionsBatchedQualified(userClientMap);
+      return await this.createSessionsBatchedQualified(userClientMap);
     }
 
-    return await this._createSessionsBatchedNonQualified(userClientMap);
+    return await this.createSessionsBatchedNonQualified(userClientMap);
   }
 
   private async createSession(userId: QualifiedId, clientId: string, initialPrekey?: PreKey): Promise<void> {
