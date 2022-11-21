@@ -20,18 +20,9 @@
 import {UserClients} from '@wireapp/api-client/lib/conversation';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 
-import {isUserClients} from './TypePredicateUtil';
-
-export const filterUserClientsWithoutPreKey = (users: UserPreKeyBundleMap | UserClients): UserClients => {
-  if (isUserClients(users)) {
-    return users;
-  }
-
+export const preKeyBundleToUserClients = (users: UserPreKeyBundleMap): UserClients => {
   return Object.entries(users).reduce<UserClients>((acc, [userId, clientsObj]) => {
-    acc[userId] = Object.entries(clientsObj)
-      .map(([clientId, preKey]) => preKey && clientId)
-      // We filter out clients that have `null` prekey
-      .filter((x): x is string => typeof x === 'string');
+    acc[userId] = Object.entries(clientsObj).map(([clientId]) => clientId);
     return acc;
   }, {});
 };
