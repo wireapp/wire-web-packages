@@ -4,8 +4,6 @@ Demo:
 import {Columns, Column, IndicatorRangeInput} from '@wireapp/react-ui-kit';
 import {useState} from 'react';
 
-const [fontValue, setFontValue] = useState(0);
-
 const dataListOptions = [
   {value: 10, label: '10px', heading: 'Small'},
   {value: 12, label: '12px'},
@@ -17,6 +15,8 @@ const dataListOptions = [
   {value: 30, label: '30px'},
   {value: 36, label: '36px', heading: 'Huge'},
 ];
+
+const [fontValue, setFontValue] = useState(3);
 
 const handleChange = e => {
   setFontValue(+e.target.value);
