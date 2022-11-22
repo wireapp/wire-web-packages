@@ -60,7 +60,7 @@ const StyledLabel = ({
                 right: theme.fontSize.s,
               }
             : {
-                left: '0.25rem',
+                left: '4px',
               }),
         },
         ...(!disabled && {
