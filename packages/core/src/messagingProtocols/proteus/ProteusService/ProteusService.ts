@@ -37,9 +37,9 @@ import {MessageService} from '../../../conversation/message/MessageService';
 import {CryptographyService} from '../../../cryptography';
 import {EventHandlerResult} from '../../common.types';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
-import {isClearFromMismatch} from '../Utility';
 import {createSession} from '../Utility/createSession';
 import {getGenericMessageParams} from '../Utility/getGenericMessageParams';
+import {isClearFromMismatch} from '../Utility/isClearFromMismatch';
 
 export class ProteusService {
   private readonly messageService: MessageService;
@@ -57,7 +57,6 @@ export class ProteusService {
   public async handleEvent(params: Pick<EventHandlerParams, 'event' | 'source' | 'dryRun'>): EventHandlerResult {
     return handleBackendEvent({
       ...params,
-      cryptographyService: this.cryptographyService,
       coreCryptoClient: this.coreCryptoClient,
       useQualifiedIds: this.config.useQualifiedIds,
       apiClient: this.apiClient,
