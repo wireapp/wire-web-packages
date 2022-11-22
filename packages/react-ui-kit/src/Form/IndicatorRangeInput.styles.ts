@@ -35,7 +35,7 @@ export const rangeStyles = (
   const lastOptionThumbPosition = `calc(((100% - 12px) / (${listLength} * 2) - 6px) / 2)`;
 
   const isFirstOption = value === 0;
-  const isLastOption = value === listLength - 1;
+  const isLastOption = value === listLength;
 
   return {
     appearance: 'none',

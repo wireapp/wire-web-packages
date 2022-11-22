@@ -35,7 +35,7 @@ type DataListOptions = {
 export interface IndicatorRangeInputProps<T = HTMLInputElement> extends TextProps<T> {
   label?: string;
   wrapperCSS?: CSSObject;
-  dataListOptions?: DataListOptions[];
+  dataListOptions: DataListOptions[];
 }
 
 export const IndicatorRangeInput: FC<IndicatorRangeInputProps> = forwardRef<
@@ -51,7 +51,7 @@ export const IndicatorRangeInput: FC<IndicatorRangeInputProps> = forwardRef<
       value = '0',
       onChange,
       wrapperCSS,
-      dataListOptions = [],
+      dataListOptions,
       ...inputProps
     },
     ref,
@@ -73,7 +73,7 @@ export const IndicatorRangeInput: FC<IndicatorRangeInputProps> = forwardRef<
       }
 
       return `${((valueNum - minNum) * 100) / (maxNum - minNum)}% 100%`;
-    }, [valueNum, minNum, maxNum, listLength]);
+    }, [isCustomSlider, valueNum, minNum, maxNum, listLength]);
 
     return (
       <div css={wrapperCSS}>

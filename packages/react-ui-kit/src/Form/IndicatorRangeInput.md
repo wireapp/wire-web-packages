@@ -4,7 +4,7 @@ Demo:
 import {Columns, Column, IndicatorRangeInput} from '@wireapp/react-ui-kit';
 import {useState} from 'react';
 
-const [zoom, setZoom] = useState(0);
+const [fontValue, setFontValue] = useState(0);
 
 const dataListOptions = [
   {value: 10, label: '10px', heading: 'Small'},
@@ -19,7 +19,7 @@ const dataListOptions = [
 ];
 
 const handleChange = e => {
-  setZoom(+e.target.value);
+  setFontValue(+e.target.value);
 };
 
 <>
@@ -27,9 +27,8 @@ const handleChange = e => {
     <IndicatorRangeInput
       label="Font size"
       onChange={handleChange}
-      value={zoom}
+      value={fontValue}
       min={0}
-      max={9}
       step={1}
       dataListOptions={dataListOptions}
     />
