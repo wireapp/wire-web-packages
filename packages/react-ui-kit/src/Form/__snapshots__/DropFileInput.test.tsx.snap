@@ -21,7 +21,7 @@ exports[`"DropFileInput" matches snapshot 1`] = `
   background-color: #fff;
   font-weight: 400;
   font-size: 0.75rem;
-  line-height: 0.8125rem;
+  line-height: 13px;
   color: #696c6e;
 }
 
