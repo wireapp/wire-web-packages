@@ -79,7 +79,7 @@ export const inputStyle: <T>(theme: Theme, props: InputProps<T>, hasError?: bool
     color: theme.general.color,
     fontWeight: 300,
     height: '48px',
-    lineHeight: '24px',
+    lineHeight: '1.5rem',
     outline: 'none',
     padding: '0 16px',
     width: '100%',

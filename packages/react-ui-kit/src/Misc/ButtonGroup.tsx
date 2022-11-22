@@ -99,7 +99,7 @@ const Button = ({children, icon, ...props}: GroupButtonProps) => {
             marginLeft: !!icon && '6px',
             fontSize: theme.fontSize.s,
             fontWeight: 'bold',
-            lineHeight: '14px',
+            lineHeight: '0.875rem',
             letterSpacing: '0.25px',
           })}
         >

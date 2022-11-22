@@ -49,7 +49,7 @@ const digitInputStyle: <T>(theme: Theme, props: DigitInputProps<T>) => CSSObject
     boxShadow: `0 0 0 1px ${COLOR_V2.GRAY_60}`,
   },
   fontSize: theme.fontSize.xxxl,
-  lineHeight: '28px',
+  lineHeight: '1.75rem',
   borderRadius: '12px',
   padding: 0,
   textAlign: 'center',

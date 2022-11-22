@@ -103,7 +103,7 @@ export const customStyles = (theme: Theme, markInvalid = false) => ({
     cursor: isDisabled ? 'not-allowed' : 'pointer',
     fontSize: theme.fontSize.l,
     fontWeight: 300,
-    lineHeight: '24px',
+    lineHeight: '1.5rem',
     ...(isSelected &&
       !isDisabled &&
       !isMulti && {

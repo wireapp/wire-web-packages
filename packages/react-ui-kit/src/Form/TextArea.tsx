@@ -68,7 +68,7 @@ export const textAreaStyle: <T>(theme: Theme, props: TextAreaProps<T>) => CSSObj
     caretColor: COLOR.BLUE,
     color: theme.general.color,
     fontWeight: 300,
-    lineHeight: '24px',
+    lineHeight: '1.5rem',
     margin: '0 0 16px',
     outline: 'none',
     padding: '16px 16px',

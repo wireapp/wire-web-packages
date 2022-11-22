@@ -49,13 +49,13 @@ export const h1Style: <T>(theme: Theme, props: HeadingProps<T>) => CSSObject = (
   ...textStyle(theme, {block, color, noWrap, textTransform, ...props}),
   fontSize: theme.fontSize.xxxxxxl,
   fontWeight: 300,
-  lineHeight: '56px',
+  lineHeight: '3.5rem',
   marginBottom: '64px',
   marginTop: 0,
-  minHeight: '48px',
+  minHeight: '3rem',
   [media[QueryKeys.MOBILE]]: {
     fontSize: theme.fontSize.xxxxxl,
-    lineHeight: '48px',
+    lineHeight: '3rem',
   },
 });
 
@@ -70,12 +70,12 @@ export const h2Style: <T>(theme: Theme, props: HeadingProps<T>) => CSSObject = (
   ...textStyle(theme, {block, color, noWrap, textTransform, ...props}),
   fontSize: theme.fontSize.xxl,
   fontWeight: 700,
-  lineHeight: '28px',
+  lineHeight: '1.75rem',
   marginBottom: '24px',
   marginTop: '32px',
   [media[QueryKeys.MOBILE]]: {
     fontSize: theme.fontSize.xl,
-    lineHeight: '26px',
+    lineHeight: '1.625rem',
     marginBottom: '20px',
     marginTop: '26px',
   },

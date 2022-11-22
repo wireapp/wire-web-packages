@@ -63,7 +63,7 @@ export const dropFileZoneWrapperStyle: (theme: Theme, isDraggedOver: boolean) =>
   backgroundColor: isDraggedOver ? theme.general.backgroundColor : COLOR.WHITE,
   fontWeight: 400,
   fontSize: theme.fontSize.s,
-  lineHeight: '13px',
+  lineHeight: '0.8125rem',
   color: COLOR.GRAY,
 });
 
@@ -87,7 +87,7 @@ export const dropFileZonDescriptionStyle: (theme: Theme) => CSSObject = theme =>
   marginTop: '12px',
   fontWeight: 400,
   fontSize: theme.fontSize.xxs,
-  lineHeight: '13px',
+  lineHeight: '0.8125rem',
   color: COLOR.GRAY,
   whiteSpace: 'pre-line',
 });

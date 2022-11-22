@@ -51,7 +51,7 @@ const tooltipStyle: <T>(props: ToolTipProps<T>) => CSSObject = ({
     fontSize: '0.75rem',
     fontWeight: light ? 400 : 600,
     left: right ? 'calc(100% + 8px)' : 'auto',
-    lineHeight: '14px',
+    lineHeight: '0.875rem',
     maxWidth: '200px',
     minWidth: '120px',
     opacity: 0,
