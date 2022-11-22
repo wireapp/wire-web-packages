@@ -20,15 +20,13 @@
 /* eslint-disable import/order */
 import * as Recipients from '../Utility/Recipients';
 
-import {ConversationProtocol, QualifiedUserClients, UserClients} from '@wireapp/api-client/lib/conversation';
+import {ConversationProtocol, UserClients} from '@wireapp/api-client/lib/conversation';
 
 import {MessageTargetMode} from '../../../conversation';
 import {buildTextMessage} from '../../../conversation/message/MessageBuilder';
 import {SendProteusMessageParams} from './ProteusService.types';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
-import {preKeyBundleToUserClients} from '../../../util/preKeyBundleToUserClients';
-
-import {buildProteusService} from './ProteusService.mocks';
+import {buildProteusService} from '../../../test/ProteusHelper';
 
 jest.mock('../Utility/Recipients', () => ({
   ...jest.requireActual('../Utility/Recipients'),
@@ -103,43 +101,203 @@ describe('ProteusService', () => {
   });
 
   describe('"encrypt"', () => {
-    it('calls proteusEncryptBatched method on core-crypto', async () => {
-      const [proteusService, {coreCrypto, apiClient}] = buildProteusService();
+    const prepareDataForEncryption = () => {
+      const [proteusService, {coreCrypto, apiClient, cryptographyService}] = buildProteusService();
 
-      const userId = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
-      const clientId = 'be67218b77d02d30';
+      //user 1
+      const firstUserId = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
+      //user 1 clients
+      const firstClientId = 'be67218b77d02d30';
+      const secondClientId = 'ae87218e77d02d30';
+      //user 1 sessions
+      const firstClientSessionId = cryptographyService.constructSessionId(firstUserId, firstClientId);
+      const firstClientSession2Id = cryptographyService.constructSessionId(firstUserId, secondClientId);
 
-      const clientSessionId = `${userId}@${clientId}`;
+      //user 2
+      const secondUserId = 'cd0c88f1-49a5-4ar2-889a-62885af37069';
+      //user 2 client
+      const thirdClientId = 'be67218b77d02d69';
+      //user 2 sessions
+      const secondClientSessionId = cryptographyService.constructSessionId(secondUserId, thirdClientId);
 
-      const prekeyBundleBundleMap = {
-        [userId]: {
-          [clientId]: {id: 0, key: ''},
-        },
+      //message sent by a user
+      const message = 'Hello';
+      //buffer of the message
+      const messageBuffer = new Uint8Array(Buffer.from(message, 'utf8'));
+
+      //mocked payload encrypted and returned by corecrypto
+      const encryptedMessageBuffer = messageBuffer.reverse();
+
+      const validPreKey = {
+        id: 1337,
+        key: 'pQABARn//wKhAFggJ1Fbpg5l6wnzKOJE+vXpRnkqUYhIvVnR5lNXEbO2o/0DoQChAFggHxZvgvtDktY/vqBcpjjo6rQnXvcNQhfwmy8AJQJKlD0E9g==',
       };
 
-      const sessionToPayloadMap = new Map([[clientSessionId, new Uint8Array([])]]);
-
-      jest
-        .spyOn(apiClient.api.user, 'postMultiPreKeyBundles')
-        .mockImplementationOnce(() => Promise.resolve(prekeyBundleBundleMap));
-
-      jest
-        .spyOn(coreCrypto, 'proteusEncryptBatched')
-        .mockImplementationOnce(() => Promise.resolve(sessionToPayloadMap));
-
-      const preKeyBundleMap = {
-        [userId]: {
-          [clientId]: {
-            id: 72,
-            key: '',
+      return {
+        services: {proteusService, apiClient, coreCryptoClient: coreCrypto, cryptographyService},
+        data: {
+          firstUser: {
+            id: firstUserId,
+            clients: {first: firstClientId, second: secondClientId},
+            sessions: {first: firstClientSessionId, second: firstClientSession2Id},
           },
+          secondUser: {
+            id: secondUserId,
+            clients: {first: thirdClientId},
+            sessions: {first: secondClientSessionId},
+          },
+          message,
+          messageBuffer,
+          encryptedMessageBuffer,
+          validPreKey,
+        },
+      };
+    };
+
+    it('returns encrypted payload', async () => {
+      const {
+        services,
+        data: {firstUser, validPreKey, encryptedMessageBuffer, messageBuffer},
+      } = prepareDataForEncryption();
+
+      const userClients: UserClients = {
+        [firstUser.id]: [firstUser.clients.first, firstUser.clients.second],
+      };
+
+      const preKeyBundleMap: UserPreKeyBundleMap = {
+        [firstUser.id]: {
+          [firstUser.clients.first]: validPreKey,
+          [firstUser.clients.second]: validPreKey,
         },
       };
 
-      const text = new Uint8Array(Buffer.from('Hello', 'utf8'));
-      await proteusService.encrypt(text, preKeyBundleMap);
+      const encryptedPayload = new Map([
+        [firstUser.sessions.first, encryptedMessageBuffer],
+        [firstUser.sessions.second, encryptedMessageBuffer],
+      ]);
 
-      expect(coreCrypto.proteusEncryptBatched).toHaveBeenCalledWith([clientSessionId], text);
+      jest
+        .spyOn(services.apiClient.api.user, 'postMultiPreKeyBundles')
+        .mockImplementationOnce(() => Promise.resolve(preKeyBundleMap));
+
+      jest
+        .spyOn(services.coreCryptoClient, 'proteusEncryptBatched')
+        .mockImplementationOnce(() => Promise.resolve(encryptedPayload));
+
+      const {encrypted, missing} = await services.proteusService.encrypt(messageBuffer, userClients);
+
+      expect(services.coreCryptoClient.proteusEncryptBatched).toHaveBeenCalledWith(
+        [firstUser.sessions.first, firstUser.sessions.second],
+        messageBuffer,
+      );
+
+      expect(missing).toEqual({});
+
+      expect(encrypted).toEqual({
+        [firstUser.id]: {
+          [firstUser.clients.first]: encryptedMessageBuffer,
+          [firstUser.clients.second]: encryptedMessageBuffer,
+        },
+      });
+    });
+
+    it('returns missing clients', async () => {
+      const {
+        services,
+        data: {firstUser, validPreKey, encryptedMessageBuffer, messageBuffer},
+      } = prepareDataForEncryption();
+
+      const userClients: UserClients = {
+        [firstUser.id]: [firstUser.clients.first, firstUser.clients.second],
+      };
+
+      const preKeyBundleMap: UserPreKeyBundleMap = {
+        [firstUser.id]: {
+          [firstUser.clients.first]: validPreKey,
+          [firstUser.clients.second]: null,
+        },
+      };
+
+      const encryptedPayload = new Map([[firstUser.sessions.first, encryptedMessageBuffer]]);
+
+      jest
+        .spyOn(services.apiClient.api.user, 'postMultiPreKeyBundles')
+        .mockImplementationOnce(() => Promise.resolve(preKeyBundleMap));
+
+      jest
+        .spyOn(services.coreCryptoClient, 'proteusEncryptBatched')
+        .mockImplementationOnce(() => Promise.resolve(encryptedPayload));
+
+      const {encrypted, missing} = await services.proteusService.encrypt(messageBuffer, userClients);
+
+      expect(services.coreCryptoClient.proteusEncryptBatched).toHaveBeenCalledWith(
+        [firstUser.sessions.first],
+        messageBuffer,
+      );
+
+      expect(missing).toEqual({
+        [firstUser.id]: [firstUser.clients.second],
+      });
+
+      expect(encrypted).toEqual({
+        [firstUser.id]: {
+          [firstUser.clients.first]: encryptedMessageBuffer,
+        },
+      });
+    });
+
+    it('returns missing clients and encrypted payload for multiple users', async () => {
+      const {
+        services,
+        data: {firstUser, secondUser, validPreKey, encryptedMessageBuffer, messageBuffer},
+      } = prepareDataForEncryption();
+
+      const userClients: UserClients = {
+        [firstUser.id]: [firstUser.clients.first, firstUser.clients.second],
+        [secondUser.id]: [secondUser.clients.first],
+      };
+
+      const preKeyBundleMap: UserPreKeyBundleMap = {
+        [firstUser.id]: {
+          [firstUser.clients.first]: validPreKey,
+          [firstUser.clients.second]: null,
+        },
+        [secondUser.id]: {
+          [secondUser.clients.first]: validPreKey,
+        },
+      };
+
+      const encryptedPayload = new Map([
+        [firstUser.sessions.first, encryptedMessageBuffer],
+        [secondUser.sessions.first, encryptedMessageBuffer],
+      ]);
+
+      jest
+        .spyOn(services.apiClient.api.user, 'postMultiPreKeyBundles')
+        .mockImplementationOnce(() => Promise.resolve(preKeyBundleMap));
+      jest
+        .spyOn(services.coreCryptoClient, 'proteusEncryptBatched')
+        .mockImplementationOnce(() => Promise.resolve(encryptedPayload));
+
+      const {encrypted, missing} = await services.proteusService.encrypt(messageBuffer, userClients);
+
+      expect(services.coreCryptoClient.proteusEncryptBatched).toHaveBeenCalledWith(
+        [firstUser.sessions.first, secondUser.sessions.first],
+        messageBuffer,
+      );
+
+      expect(missing).toEqual({
+        [firstUser.id]: [firstUser.clients.second],
+      });
+
+      expect(encrypted).toEqual({
+        [firstUser.id]: {
+          [firstUser.clients.first]: encryptedMessageBuffer,
+        },
+        [secondUser.id]: {
+          [secondUser.clients.first]: encryptedMessageBuffer,
+        },
+      });
     });
   });
 
