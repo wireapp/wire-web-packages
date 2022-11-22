@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2022 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,16 +17,16 @@
  *
  */
 
-export * from './Box';
-export * from './Column';
-export * from './Container';
-export * from './Content';
-export * from './FlexBox';
-export * from './Footer';
-export * from './Header';
-export * from './headerMenu/index';
-export * from './MatchMedia';
-export * from './Spacer';
-export * from './StyledApp';
-export * from '../Theme/Theme';
-export * from './sizes';
+export const fontSizes = {
+  xxs: '0.625rem',
+  xs: '0.6875rem',
+  s: '0.75rem',
+  m: '0.875rem',
+  l: '1rem',
+  xl: '1.125rem',
+  xxl: '1.25rem',
+  xxxl: '1.5rem',
+  xxxxl: '2rem',
+  xxxxxl: '2.5rem',
+  xxxxxxl: '3rem',
+};

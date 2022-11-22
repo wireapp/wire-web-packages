@@ -39,7 +39,7 @@ export const linkStyle: <T>(theme: Theme, props: LinkProps<T>) => CSSObject = (
   theme,
   {
     bold = true,
-    fontSize = '0.6875rem',
+    fontSize = theme.fontSize.xs,
     textTransform = 'uppercase',
     variant = LinkVariant.SECONDARY,
     color = theme.general.color,
@@ -58,7 +58,7 @@ export const linkStyle: <T>(theme: Theme, props: LinkProps<T>) => CSSObject = (
       '&:hover, &:visited:hover, &:focus-visible': {
         color: theme.general.primaryColor,
       },
-      fontSize: '1rem',
+      fontSize: theme.fontSize.l,
       fontWeight: 400,
       textTransform: 'none',
       textDecoration: 'underline',

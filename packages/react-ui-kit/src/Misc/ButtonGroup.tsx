@@ -95,13 +95,13 @@ const Button = ({children, icon, ...props}: GroupButtonProps) => {
       {icon}
       {children && (
         <span
-          css={{
+          css={(theme: Theme) => ({
             marginLeft: !!icon && '6px',
-            fontSize: '0.75rem',
+            fontSize: theme.fontSize.s,
             fontWeight: 'bold',
             lineHeight: '14px',
             letterSpacing: '0.25px',
-          }}
+          })}
         >
           {children}
         </span>

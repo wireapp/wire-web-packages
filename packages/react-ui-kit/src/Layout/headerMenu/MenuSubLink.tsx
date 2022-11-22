@@ -22,7 +22,7 @@ import {CSSObject} from '@emotion/react';
 import {defaultTransition} from '../../Identity/motions';
 import {QueryKeys, media} from '../../mediaQueries';
 import {TextProps, textStyle} from '../../Text';
-import {Theme} from '../Theme';
+import {Theme} from '../../Theme/Theme';
 
 type MenuSubLinkProps<T = HTMLDivElement> = TextProps<T>;
 
@@ -43,7 +43,7 @@ export const menuSubLinkStyle: <T>(theme: Theme, props: MenuSubLinkProps<T>) => 
     '&:last-child': {
       marginRight: 0,
     },
-    fontSize: '0.6875rem',
+    fontSize: theme.fontSize.xs,
     margin: '0 26px 0 10px',
     textTransform: 'uppercase',
   },

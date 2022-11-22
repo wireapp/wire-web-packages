@@ -57,7 +57,7 @@ const StyledLabel = ({
           transform: 'translateY(-50%)',
           ...(labelBeforeCheckbox
             ? {
-                right: '0.75rem',
+                right: theme.fontSize.s,
               }
             : {
                 left: '0.25rem',
