@@ -47,10 +47,13 @@ import {isQualifiedUserClients, isUserClients} from '../../../util';
 import {preKeyBundleToUserClients} from '../../../util/preKeyBundleToUserClients';
 import {EventHandlerResult} from '../../common.types';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
+<<<<<<< HEAD
 import {createSession} from '../Utility/createSession';
 import {getGenericMessageParams} from '../Utility/getGenericMessageParams';
 import {isClearFromMismatch} from '../Utility/isClearFromMismatch';
 import {constructSessionId} from '../Utility/SessionIdBuilder';
+=======
+>>>>>>> 2fcdea123 (test: extract extractEncryptedAndMissingFromBatchedPayload to separate module)
 
 export class ProteusService {
   private readonly messageService: MessageService;
