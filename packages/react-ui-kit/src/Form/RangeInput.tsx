@@ -66,24 +66,14 @@ export const RangeInput: FC<RangeInputProps> = forwardRef<HTMLInputElement, Rang
         {label && <InputLabel htmlFor={id}>{label}</InputLabel>}
         <div css={rangeInputWrapperStyles}>
           {minValueLabel && (
-            <span
-              css={(theme: Theme) => getValueLabelStyles(theme, ValueLabelPosition.LEFT}
-            >
-              {minValueLabel}
-            </span>
+            <span css={(theme: Theme) => getValueLabelStyles(theme, ValueLabelPosition.LEFT)}>{minValueLabel}</span>
           )}
           {maxValueLabel && (
-            <span
-              css={(theme: Theme) => getValueLabelStyles(theme, ValueLabelPosition.RIGHT)}
-            >
-              {maxValueLabel}
-            </span>
+            <span css={(theme: Theme) => getValueLabelStyles(theme, ValueLabelPosition.RIGHT)}>{maxValueLabel}</span>
           )}
           <input
             ref={ref}
-            css={(theme: Theme) => {
-              return getImageCropZoomInputStyles(theme, backgroundSize);
-            }}
+            css={(theme: Theme) => getImageCropZoomInputStyles(theme, backgroundSize)}
             id={id}
             name={id}
             min={min}
