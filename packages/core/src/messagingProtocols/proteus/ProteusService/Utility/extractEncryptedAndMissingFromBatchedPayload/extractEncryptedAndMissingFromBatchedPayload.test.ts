@@ -17,63 +17,15 @@
  *
  */
 
-import {ClientClassification, ClientType} from '@wireapp/api-client/lib/client';
 import {UserClients} from '@wireapp/api-client/lib/conversation';
-import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
-import {APIClient} from '@wireapp/api-client';
-import {MemoryEngine} from '@wireapp/store-engine';
+import {extractEncryptedAndMissingFromBatchedPayload} from './extractEncryptedAndMissingFromBatchedPayload';
 
-import {ProteusService} from '../..';
-import {CryptographyService} from '../../../../../cryptography';
-import {getUUID} from '../../../../../test/PayloadHelper';
-
-const buildProteusService = (federated = false): [ProteusService, {apiClient: APIClient; coreCrypto: CoreCrypto}] => {
-  const apiClient = new APIClient({urls: APIClient.BACKEND.STAGING});
-  jest.spyOn(apiClient.api.user, 'postListClients').mockImplementation(() =>
-    Promise.resolve({
-      qualified_user_map: {
-        'test-domain': {
-          'test-id-1': [{class: ClientClassification.DESKTOP, id: 'test-client-id-1-user-1'}],
-          'test-id-2': [
-            {class: ClientClassification.DESKTOP, id: 'test-client-id-1-user-2'},
-            {class: ClientClassification.PHONE, id: 'test-client-id-2-user-2'},
-          ],
-        },
-      },
-    }),
-  );
-
-  jest.spyOn(apiClient.api.user, 'postMultiPreKeyBundles').mockImplementation(jest.fn());
-  jest.spyOn(apiClient.api.user, 'postQualifiedMultiPreKeyBundles').mockImplementation(jest.fn());
-
-  apiClient.context = {
-    clientType: ClientType.NONE,
-    userId: getUUID(),
-    clientId: getUUID(),
-  };
-
-  const cryptographyService = new CryptographyService(apiClient, new MemoryEngine(), {
-    useQualifiedIds: federated,
-    nbPrekeys: 1,
-  });
-
-  const coreCrypto = {
-    getRemoteFingerprint: jest.fn(),
-    getLocalFingerprint: jest.fn(),
-    proteusSessionExists: jest.fn(),
-    proteusSessionFromPrekey: jest.fn(),
-    proteusFingerprintRemote: jest.fn(),
-    proteusEncryptBatched: jest.fn(),
-  } as unknown as CoreCrypto;
-
-  const proteusService = new ProteusService(apiClient, cryptographyService, coreCrypto, {useQualifiedIds: federated});
-  return [proteusService, {apiClient, coreCrypto}];
-};
+import {buildProteusService} from '../../../../../test/ProteusHelper';
 
 describe('extractEncryptedAndMissingFromBatchedPayload', () => {
   it('properly extracts missing and encrypted from payload (without missing)', async () => {
-    const [proteusService] = buildProteusService();
+    const [proteusService, {cryptographyService}] = buildProteusService();
 
     const domain = 'staging.zinfra.io';
 
@@ -99,11 +51,12 @@ describe('extractEncryptedAndMissingFromBatchedPayload', () => {
       ].map(([u, c, d]) => [proteusService['cryptographyService'].constructSessionId(u, c, d), textPayload]),
     );
 
-    const {encrypted, missing} = proteusService['extractEncryptedAndMissingFromBatchedPayload'](
-      batchedEncryptPayload,
-      userClients,
+    const {encrypted, missing} = extractEncryptedAndMissingFromBatchedPayload({
+      payload: batchedEncryptPayload,
+      users: userClients,
       domain,
-    );
+      cryptographyService,
+    });
 
     expect(encrypted).toEqual({
       [firstUserID]: {[firstUserClient1]: textPayload, [firstUserClient2]: textPayload},
@@ -114,7 +67,7 @@ describe('extractEncryptedAndMissingFromBatchedPayload', () => {
   });
 
   it('properly extracts missing and encrypted from payload (with missing)', async () => {
-    const [proteusService] = buildProteusService();
+    const [proteusService, {cryptographyService}] = buildProteusService();
 
     const domain = 'staging.zinfra.io';
 
@@ -136,11 +89,12 @@ describe('extractEncryptedAndMissingFromBatchedPayload', () => {
       [proteusService['cryptographyService'].constructSessionId(firstUserID, firstUserClient1, domain), textPayload],
     ]);
 
-    const {encrypted, missing} = proteusService['extractEncryptedAndMissingFromBatchedPayload'](
-      batchedEncryptPayload,
-      userClients,
+    const {encrypted, missing} = extractEncryptedAndMissingFromBatchedPayload({
+      payload: batchedEncryptPayload,
+      users: userClients,
       domain,
-    );
+      cryptographyService,
+    });
 
     expect(encrypted).toEqual({
       [firstUserID]: {[firstUserClient1]: textPayload},

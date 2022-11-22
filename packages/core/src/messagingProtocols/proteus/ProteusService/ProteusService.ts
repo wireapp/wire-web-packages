@@ -39,14 +39,12 @@ import {
   ProteusServiceConfig,
   SendProteusMessageParams,
 } from './ProteusService.types';
-import {createSessionsFromPreKeys} from './Utility/createSessionsFromPreKeys/createSessionsFromPreKeys';
 import {extractEncryptedAndMissingFromBatchedPayload} from './Utility/extractEncryptedAndMissingFromBatchedPayload/extractEncryptedAndMissingFromBatchedPayload';
+import {getSessionsAndClientsFromRecipients} from './Utility/getSessionsAndClientsFromRecipients/getSessionsAndClientsFromRecipients';
 
 import {MessageSendingState, SendResult} from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
 import {CryptographyService} from '../../../cryptography';
-import {isQualifiedUserClients, isUserClients} from '../../../util';
-import {preKeyBundleToUserClients} from '../../../util/preKeyBundleToUserClients';
 import {EventHandlerResult} from '../../common.types';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
 import {createSession} from '../Utility/createSession';
@@ -108,62 +106,6 @@ export class ProteusService {
       });
     }
     return this.coreCryptoClient.proteusFingerprintRemote(sessionId);
-  }
-
-  /**
-   * Create sessions for all the clients without domain assigned.
-   * @param userClients map of user IDs containg the lists of clients
-   * Note that this function uses deprecated endpoint ("/users/prekeys") under the hood.
-   * Use createQualifiedSessions instead if possible.
-   */
-  private async createLegacySessions(userClients: UserClients): Promise<string[]> {
-    const preKeyBundleMap = await this.apiClient.api.user.postMultiPreKeyBundles(userClients);
-    const sessions = await createSessionsFromPreKeys({
-      preKeyBundleMap,
-      coreCryptoClient: this.coreCryptoClient,
-      cryptographyService: this.cryptographyService,
-      logger: this.logger,
-    });
-
-    return sessions;
-  }
-
-  /**
-   * Create sessions for the qualified clients.
-   * @param userClientMap map of domain to (map of user IDs to client IDs)
-   */
-  private async createQualifiedSessions(userClientMap: QualifiedUserClients): Promise<string[]> {
-    const prekeyBundleMap = await this.apiClient.api.user.postQualifiedMultiPreKeyBundles(userClientMap);
-
-    const sessions: string[] = [];
-
-    for (const domain in prekeyBundleMap) {
-      const domainUsers = prekeyBundleMap[domain];
-
-      const domainSessions = await createSessionsFromPreKeys({
-        preKeyBundleMap: domainUsers,
-        domain,
-        coreCryptoClient: this.coreCryptoClient,
-        cryptographyService: this.cryptographyService,
-        logger: this.logger,
-      });
-      sessions.push(...domainSessions);
-    }
-
-    return sessions;
-  }
-
-  /**
-   * Create sessions for legacy/qualified clients (umberella function).
-   * Will call createQualifiedSessions or createLegacySessions based on passed userClientMap.
-   * @param userClientMap map of domain to (map of user IDs to client IDs) or map of user IDs containg the lists of clients
-   */
-  private async createSessions(userClientMap: UserClients | QualifiedUserClients): Promise<string[]> {
-    if (isQualifiedUserClients(userClientMap)) {
-      return await this.createQualifiedSessions(userClientMap);
-    }
-
-    return await this.createLegacySessions(userClientMap);
   }
 
   private async createSession(userId: QualifiedId, clientId: string, initialPrekey?: PreKey): Promise<void> {
@@ -255,10 +197,17 @@ export class ProteusService {
 
   public async encrypt(
     plainText: Uint8Array,
-    users: UserPreKeyBundleMap | UserClients,
+    recipients: UserPreKeyBundleMap | UserClients,
     domain: string = '',
   ): Promise<{missing: UserClients; encrypted: OTRRecipients<Uint8Array>}> {
-    const {sessions, userClients} = await this.getSessionsAndClientsFromRecipients(users, domain);
+    const {sessions, userClients} = await getSessionsAndClientsFromRecipients({
+      recipients,
+      domain,
+      apiClient: this.apiClient,
+      coreCryptoClient: this.coreCryptoClient,
+      cryptographyService: this.cryptographyService,
+      logger: this.logger,
+    });
 
     const payload = await this.coreCryptoClient.proteusEncryptBatched(sessions, plainText);
 
@@ -268,19 +217,6 @@ export class ProteusService {
       domain,
       cryptographyService: this.cryptographyService,
     });
-  }
-
-  private async getSessionsAndClientsFromRecipients(
-    recipients: UserPreKeyBundleMap | UserClients,
-    domain: string = '',
-  ) {
-    const userClients = isUserClients(recipients) ? recipients : preKeyBundleToUserClients(recipients);
-
-    const userClientMap: QualifiedUserClients | UserClients = domain ? {[domain]: userClients} : userClients;
-
-    const sessions = await this.createSessions(userClientMap);
-
-    return {sessions, userClients};
   }
 
   public async encryptQualified(
