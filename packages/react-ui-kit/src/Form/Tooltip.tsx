@@ -48,7 +48,7 @@ const tooltipStyle: <T>(props: ToolTipProps<T>) => CSSObject = ({
     color: light ? COLOR.TEXT : COLOR.WHITE,
     content: 'attr(data-text)',
     display: 'block',
-    fontSize: '12px',
+    fontSize: '0.75rem',
     fontWeight: light ? 400 : 600,
     left: right ? 'calc(100% + 8px)' : 'auto',
     lineHeight: '14px',

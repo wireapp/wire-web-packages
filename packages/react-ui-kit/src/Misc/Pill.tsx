@@ -68,7 +68,7 @@ export const pillStyle: <T>(theme: Theme, props: PillProps<T>) => CSSObject = (
     color: active ? COLOR.TEXT : theme.general.color,
     cursor: active ? 'default' : undefined,
     display: 'inline-block',
-    fontSize: '12px',
+    fontSize: '0.75rem',
     lineHeight: '16px',
     margin: type ? '12px 0 0 0' : '0 8px',
     minHeight: '32px',

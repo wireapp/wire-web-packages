@@ -32,7 +32,14 @@ export interface MenuLinkProps<T = HTMLAnchorElement> extends LinkProps<T> {
 
 export const menuLinkStyle: <T>(theme: Theme, props: MenuLinkProps<T>) => CSSObject = (
   theme,
-  {bold = true, color = theme.general.color, fontSize = '11px', textTransform = 'uppercase', button = false, ...props},
+  {
+    bold = true,
+    color = theme.general.color,
+    fontSize = '0.6875rem',
+    textTransform = 'uppercase',
+    button = false,
+    ...props
+  },
 ) => ({
   ...linkStyle(theme, {bold, color, fontSize, textTransform, ...props}),
   [media[QueryKeys.DESKTOP]]: {
@@ -54,7 +61,7 @@ export const menuLinkStyle: <T>(theme: Theme, props: MenuLinkProps<T>) => CSSObj
   },
   [media[QueryKeys.TABLET_DOWN]]: {
     border: 'none',
-    fontSize: '32px !important',
+    fontSize: '2rem !important',
     fontWeight: 300,
     maxWidth: '480px',
     padding: '8px 24px',

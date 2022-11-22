@@ -97,7 +97,7 @@ const Button = ({children, icon, ...props}: GroupButtonProps) => {
         <span
           css={{
             marginLeft: !!icon && '6px',
-            fontSize: '12px',
+            fontSize: '0.75rem',
             fontWeight: 'bold',
             lineHeight: '14px',
             letterSpacing: '0.25px',

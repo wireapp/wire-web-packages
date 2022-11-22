@@ -70,7 +70,6 @@ export const RangeInput: FC<RangeInputProps> = forwardRef<HTMLInputElement, Rang
           <input
             ref={ref}
             css={(theme: Theme) => {
-              console.info('hallo', theme, backgroundSize);
               return getImageCropZoomInputStyles(theme, backgroundSize);
             }}
             id={id}

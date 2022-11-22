@@ -47,14 +47,14 @@ export const h1Style: <T>(theme: Theme, props: HeadingProps<T>) => CSSObject = (
   {block = true, color = theme.general.color, level = '1', noWrap = false, textTransform = 'none', ...props},
 ) => ({
   ...textStyle(theme, {block, color, noWrap, textTransform, ...props}),
-  fontSize: '48px',
+  fontSize: '3rem',
   fontWeight: 300,
   lineHeight: '56px',
   marginBottom: '64px',
   marginTop: 0,
   minHeight: '48px',
   [media[QueryKeys.MOBILE]]: {
-    fontSize: '40px',
+    fontSize: '2.5rem',
     lineHeight: '48px',
   },
 });
@@ -68,13 +68,13 @@ export const h2Style: <T>(theme: Theme, props: HeadingProps<T>) => CSSObject = (
   {block = true, color = theme.general.color, noWrap = false, textTransform = 'none', ...props},
 ) => ({
   ...textStyle(theme, {block, color, noWrap, textTransform, ...props}),
-  fontSize: '20px',
+  fontSize: '1.25rem',
   fontWeight: 700,
   lineHeight: '28px',
   marginBottom: '24px',
   marginTop: '32px',
   [media[QueryKeys.MOBILE]]: {
-    fontSize: '18px',
+    fontSize: '1.125rem',
     lineHeight: '26px',
     marginBottom: '20px',
     marginTop: '26px',
@@ -90,7 +90,7 @@ export const h3Style: <T>(theme: Theme, props: HeadingProps<T>) => CSSObject = (
   {block = true, color = theme.general.color, noWrap = false, textTransform = 'none', ...props},
 ) => ({
   ...textStyle(theme, {block, color, noWrap, textTransform, ...props}),
-  fontSize: '16px',
+  fontSize: '1rem',
   fontWeight: 600,
   marginBottom: '16px',
 });
@@ -104,7 +104,7 @@ export const h4Style: <T>(theme: Theme, props: HeadingProps<T>) => CSSObject = (
   {block = true, color = theme.general.color, noWrap = false, textTransform = 'none', ...props},
 ) => ({
   ...textStyle(theme, {block, color, noWrap, textTransform, ...props}),
-  fontSize: '11px',
+  fontSize: '0.6875rem',
   fontWeight: 300,
   marginBottom: '5px',
   marginTop: '20px',
