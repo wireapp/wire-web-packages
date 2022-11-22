@@ -33,7 +33,7 @@ const InputLabel: FC<InputLabelProps> = ({htmlFor, markInvalid, isRequired, chil
   <label
     htmlFor={htmlFor}
     css={(theme: Theme) => ({
-      fontSize: theme.fontSize.medium,
+      fontSize: theme.fontSizes.medium,
       fontWeight: 400,
       lineHeight: '1rem',
       color: markInvalid ? COLOR_V2.RED_LIGHT_500 : theme.Input.labelColor,
@@ -43,7 +43,9 @@ const InputLabel: FC<InputLabelProps> = ({htmlFor, markInvalid, isRequired, chil
     {children}
 
     {isRequired && (
-      <span css={(theme: Theme) => ({fontSize: theme.fontSize.base, marginLeft: '4px', color: COLOR_V2.RED_LIGHT_500})}>
+      <span
+        css={(theme: Theme) => ({fontSize: theme.fontSizes.base, marginLeft: '4px', color: COLOR_V2.RED_LIGHT_500})}
+      >
         *
       </span>
     )}

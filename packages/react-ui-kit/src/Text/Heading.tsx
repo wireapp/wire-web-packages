@@ -90,7 +90,7 @@ export const h3Style: <T>(theme: Theme, props: HeadingProps<T>) => CSSObject = (
   {block = true, color = theme.general.color, noWrap = false, textTransform = 'none', ...props},
 ) => ({
   ...textStyle(theme, {block, color, noWrap, textTransform, ...props}),
-  fontSize: theme.fontSize.base,
+  fontSize: theme.fontSizes.base,
   fontWeight: 600,
   marginBottom: '16px',
 });
@@ -104,7 +104,7 @@ export const h4Style: <T>(theme: Theme, props: HeadingProps<T>) => CSSObject = (
   {block = true, color = theme.general.color, noWrap = false, textTransform = 'none', ...props},
 ) => ({
   ...textStyle(theme, {block, color, noWrap, textTransform, ...props}),
-  fontSize: theme.fontSize.extraSmall,
+  fontSize: theme.fontSizes.extraSmall,
   fontWeight: 300,
   marginBottom: '5px',
   marginTop: '20px',

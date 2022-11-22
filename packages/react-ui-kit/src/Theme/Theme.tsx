@@ -33,7 +33,14 @@ export enum THEME_ID {
 }
 
 export interface Theme extends ETheme {
-  fontSize: any;
+  fontSizes: {
+    extraSmall: string;
+    small: string;
+    medium: string;
+    base: string;
+    large: string;
+    extraLarge: string;
+  };
   Button?: {
     primaryBg: String;
     primaryHoverBg: String;
@@ -101,7 +108,7 @@ export interface Theme extends ETheme {
 
 export const themes: {[themeId in THEME_ID]: Theme} = {
   [THEME_ID.DEFAULT]: {
-    fontSize: {...fontSizes},
+    fontSizes: {...fontSizes},
     Button: {
       primaryBg: 'var(--accent-color)',
       primaryHoverBg: 'var(--button-primary-hover)',
@@ -167,7 +174,7 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
     },
   },
   [THEME_ID.LIGHT]: {
-    fontSize: {...fontSizes},
+    fontSizes: {...fontSizes},
     Button: {
       primaryBg: 'var(--accent-color)',
       primaryHoverBg: 'var(--button-primary-hover)',
@@ -233,7 +240,7 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
     },
   },
   [THEME_ID.DARK]: {
-    fontSize: {...fontSizes},
+    fontSizes: {...fontSizes},
     Button: {
       primaryBg: 'var(--accent-color)',
       primaryHoverBg: 'var(--button-primary-hover)',

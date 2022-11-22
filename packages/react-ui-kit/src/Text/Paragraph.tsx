@@ -43,7 +43,7 @@ export type LeadProps<T = HTMLParagraphElement> = TextProps<T>;
 
 export const leadStyle: <T>(theme: Theme, props: LeadProps<T>) => CSSObject = (
   theme,
-  {block = true, center = true, fontSize = theme.fontSize.extraLarge, ...props},
+  {block = true, center = true, fontSize = theme.fontSizes.extraLarge, ...props},
 ) => ({
   ...textStyle(theme, {block, center, fontSize, ...props}),
   marginBottom: '56px',

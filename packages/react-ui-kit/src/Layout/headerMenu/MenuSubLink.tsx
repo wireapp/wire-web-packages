@@ -43,7 +43,7 @@ export const menuSubLinkStyle: <T>(theme: Theme, props: MenuSubLinkProps<T>) => 
     '&:last-child': {
       marginRight: 0,
     },
-    fontSize: theme.fontSize.extraSmall,
+    fontSize: theme.fontSizes.extraSmall,
     margin: '0 26px 0 10px',
     textTransform: 'uppercase',
   },

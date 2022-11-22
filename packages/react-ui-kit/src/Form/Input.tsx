@@ -45,7 +45,7 @@ export const inputStyle: <T>(theme: Theme, props: InputProps<T>, hasError?: bool
 ) => {
   const placeholderStyle = {
     color: theme.Input.placeholderColor,
-    fontSize: theme.fontSize.base,
+    fontSize: theme.fontSizes.base,
     textTransform: placeholderTextTransform,
   };
 
@@ -160,7 +160,7 @@ export const Input: React.FC<InputProps<HTMLInputElement>> = React.forwardRef<
       {!hasError && helperText && (
         <p
           css={(theme: Theme) => ({
-            fontSize: theme.fontSize.small,
+            fontSize: theme.fontSizes.small,
             fontWeight: 400,
             color: theme.Input.placeholderColor,
             marginTop: 8,
