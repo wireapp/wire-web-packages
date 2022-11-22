@@ -61,7 +61,7 @@ export const textStyle: <T>(theme: Theme, props: TextProps<T>) => CSSObject = (
     bold = false,
     center = false,
     color = theme.general.color,
-    fontSize = theme.fontSize.l,
+    fontSize = theme.fontSize.base,
     light = false,
     muted = false,
     noWrap = false,

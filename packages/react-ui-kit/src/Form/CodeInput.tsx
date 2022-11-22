@@ -48,7 +48,7 @@ const digitInputStyle: <T>(theme: Theme, props: DigitInputProps<T>) => CSSObject
   '&:hover': {
     boxShadow: `0 0 0 1px ${COLOR_V2.GRAY_60}`,
   },
-  fontSize: theme.fontSize.xxxl,
+  fontSize: theme.fontSize.extraLarge,
   lineHeight: '1.75rem',
   borderRadius: '12px',
   padding: 0,

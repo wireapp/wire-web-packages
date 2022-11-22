@@ -28,7 +28,7 @@ export type TextLinkProps<T = HTMLAnchorElement> = LinkProps<T>;
 
 export const textLinkStyle: <T>(theme: Theme, props: TextLinkProps<T>) => CSSObject = (
   theme,
-  {color = COLOR_V2.BLUE, fontSize = theme.fontSize.l, bold = false, textTransform = 'none', ...props},
+  {color = COLOR_V2.BLUE, fontSize = theme.fontSize.base, bold = false, textTransform = 'none', ...props},
 ) => ({
   ...linkStyle(theme, {bold, color, fontSize, textTransform, ...props}),
 });

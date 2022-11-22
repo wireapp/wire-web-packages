@@ -35,7 +35,7 @@ export const menuLinkStyle: <T>(theme: Theme, props: MenuLinkProps<T>) => CSSObj
   {
     bold = true,
     color = theme.general.color,
-    fontSize = theme.fontSize.xs,
+    fontSize = theme.fontSize.extraSmall,
     textTransform = 'uppercase',
     button = false,
     ...props

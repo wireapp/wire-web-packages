@@ -18,15 +18,10 @@
  */
 
 export const fontSizes = {
-  xxs: '0.625rem',
-  xs: '0.6875rem',
-  s: '0.75rem',
-  m: '0.875rem',
-  l: '1rem',
-  xl: '1.125rem',
-  xxl: '1.25rem',
-  xxxl: '1.5rem',
-  xxxxl: '2rem',
-  xxxxxl: '2.5rem',
-  xxxxxxl: '3rem',
+  extraSmall: '0.6875rem',
+  small: '0.75rem',
+  medium: '0.875rem',
+  base: '1rem',
+  large: '1.25rem',
+  extraLarge: '1.5rem',
 };

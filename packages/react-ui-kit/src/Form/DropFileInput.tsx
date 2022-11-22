@@ -62,8 +62,8 @@ export const dropFileZoneWrapperStyle: (theme: Theme, isDraggedOver: boolean) =>
   textAlign: 'center',
   backgroundColor: isDraggedOver ? theme.general.backgroundColor : COLOR.WHITE,
   fontWeight: 400,
-  fontSize: theme.fontSize.s,
-  lineHeight: '0.8125rem',
+  fontSize: '0.75rem',
+  lineHeight: '13px',
   color: COLOR.GRAY,
 });
 
@@ -83,14 +83,14 @@ export const dropFileZoneHeadingStyle: CSSObject = {
   whiteSpace: 'pre-line',
 };
 
-export const dropFileZonDescriptionStyle: (theme: Theme) => CSSObject = theme => ({
+export const dropFileZonDescriptionStyle: CSSObject = {
   marginTop: '12px',
   fontWeight: 400,
-  fontSize: theme.fontSize.xxs,
+  fontSize: '0.625rem',
   lineHeight: '0.8125rem',
   color: COLOR.GRAY,
   whiteSpace: 'pre-line',
-});
+};
 
 export const DropFileInput: FC<DropFileInputProps<HTMLInputElement>> = forwardRef<
   HTMLInputElement,

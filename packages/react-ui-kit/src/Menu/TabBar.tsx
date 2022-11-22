@@ -55,7 +55,7 @@ const tabBarItemStyle: <T>(theme: Theme, props: TabBarItemProps<T>) => CSSObject
     color = theme.general.color,
     bold = true,
     active = false,
-    fontSize = theme.fontSize.xs,
+    fontSize = theme.fontSize.extraSmall,
     textTransform = 'uppercase',
     ...props
   },

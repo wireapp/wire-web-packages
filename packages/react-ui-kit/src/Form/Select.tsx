@@ -117,7 +117,7 @@ export const Select = <IsMulti extends boolean = false>({
       {!hasError && helperText && (
         <p
           css={(theme: Theme) => ({
-            fontSize: theme.fontSize.s,
+            fontSize: theme.fontSize.small,
             fontWeight: 400,
             color: theme.Input.labelColor,
             marginTop: 8,

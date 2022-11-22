@@ -88,7 +88,7 @@ export const CustomOption = (dataUieName: string) => (props: OptionProps<Option>
           <p
             css={(theme: Theme) => ({
               marginBottom: 0,
-              fontSize: theme.fontSize.m,
+              fontSize: theme.fontSize.medium,
               color: isSelected ? theme.Select.focusedDescriptionColor : theme.Input.labelColor,
               gridArea: 'description',
             })}

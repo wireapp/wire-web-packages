@@ -69,7 +69,7 @@ export enum ValueLabelPosition {
 export const getValueLabelStyles = (theme: Theme, position: ValueLabelPosition): CSSObject => ({
   pointerEvents: 'none',
   bottom: '100%',
-  fontSize: theme.fontSize.l,
+  fontSize: theme.fontSize.base,
   fontWeight: 300,
   position: 'absolute',
   [position]: '4px',
