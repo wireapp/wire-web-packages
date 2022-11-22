@@ -23,7 +23,6 @@ import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
 import {APIClient} from '@wireapp/api-client';
 
 import {PayloadBundleSource} from '../../../conversation';
-import {CryptographyService} from '../../../cryptography';
 
 export {BackendEvent, PayloadBundleSource};
 
@@ -31,7 +30,6 @@ export type EventHandlerParams = {
   dryRun?: boolean;
   event: BackendEvent;
   source: PayloadBundleSource;
-  cryptographyService: CryptographyService;
   coreCryptoClient: CoreCrypto;
   apiClient: APIClient;
   useQualifiedIds: boolean;

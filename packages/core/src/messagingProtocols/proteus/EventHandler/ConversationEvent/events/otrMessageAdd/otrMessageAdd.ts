@@ -19,10 +19,32 @@
 
 import {BackendEvent, ConversationOtrMessageAddEvent, CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
 
+import {GenericMessage} from '@wireapp/protocol-messaging';
+
+import {GenericMessageType, PayloadBundle} from '../../../../../../conversation';
 import {DecryptionError} from '../../../../../../errors/DecryptionError';
 import {EventHandlerResult} from '../../../../../common.types';
 import {decryptOtrMessage} from '../../../../CryptMessages/CryptMessages';
-import {EventHandlerParams} from '../../../EventHandler.types';
+import {GenericMessageMapper} from '../../../../Utility/GenericMessageMapper';
+import {EventHandlerParams, PayloadBundleSource} from '../../../EventHandler.types';
+
+const mapGenericMessage = (
+  otrMessage: ConversationOtrMessageAddEvent,
+  genericMessage: GenericMessage,
+  source: PayloadBundleSource,
+): PayloadBundle => {
+  if (genericMessage.content === GenericMessageType.EPHEMERAL) {
+    const unwrappedMessage = GenericMessageMapper.mapGenericMessage(genericMessage.ephemeral, otrMessage, source);
+    unwrappedMessage.id = genericMessage.messageId;
+    if (genericMessage.ephemeral) {
+      const expireAfterMillis = genericMessage.ephemeral.expireAfterMillis;
+      unwrappedMessage.messageTimer =
+        typeof expireAfterMillis === 'number' ? expireAfterMillis : expireAfterMillis.toNumber();
+    }
+    return unwrappedMessage;
+  }
+  return GenericMessageMapper.mapGenericMessage(genericMessage, otrMessage, source);
+};
 
 const isOtrMessageAddEvent = (event: BackendEvent): event is ConversationOtrMessageAddEvent =>
   event.type === CONVERSATION_EVENT.OTR_MESSAGE_ADD;
@@ -31,7 +53,6 @@ type HandleOtrMessageAddParams = Omit<EventHandlerParams, 'event'> & {
   event: ConversationOtrMessageAddEvent;
 };
 const handleOtrMessageAdd = async ({
-  cryptographyService,
   coreCryptoClient,
   apiClient,
   useQualifiedIds,
@@ -47,7 +68,7 @@ const handleOtrMessageAdd = async ({
   try {
     const decryptedData = await decryptOtrMessage({otrMessage: event, coreCryptoClient, useQualifiedIds, apiClient});
     return {
-      mappedEvent: cryptographyService.mapGenericMessage(event, decryptedData, source),
+      mappedEvent: mapGenericMessage(event, decryptedData, source),
       event,
       decryptedData,
     };
