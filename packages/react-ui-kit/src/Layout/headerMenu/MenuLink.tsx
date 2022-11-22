@@ -23,8 +23,8 @@ import {DESKTOP_HEADER_SUB_MENU_CLASSNAME} from './HeaderSubMenu';
 
 import {QueryKeys, media} from '../../mediaQueries';
 import {LinkProps, filterLinkProps, linkStyle} from '../../Text';
-import {filterProps} from '../../util';
 import {Theme} from '../../Theme/Theme';
+import {filterProps} from '../../util';
 
 export interface MenuLinkProps<T = HTMLAnchorElement> extends LinkProps<T> {
   button?: boolean;
