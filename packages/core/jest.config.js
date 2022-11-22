@@ -29,11 +29,4 @@ module.exports = {
     TextDecoder,
     TextEncoder,
   },
-  setupFiles: [
-    "fake-indexeddb/auto",
-  ],
-  setupFilesAfterEnv: ["./jest.setup.ts"],
-  moduleNameMapper: {
-    '^axios$': require.resolve('axios'),
-  },
 };
