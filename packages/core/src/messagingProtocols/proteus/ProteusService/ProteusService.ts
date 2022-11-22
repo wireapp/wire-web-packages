@@ -39,6 +39,8 @@ import {
   ProteusServiceConfig,
   SendProteusMessageParams,
 } from './ProteusService.types';
+import {createSessionsFromPreKeys} from './Utility/createSessionsFromPreKeys/createSessionsFromPreKeys';
+import {extractEncryptedAndMissingFromBatchedPayload} from './Utility/extractEncryptedAndMissingFromBatchedPayload/extractEncryptedAndMissingFromBatchedPayload';
 
 import {MessageSendingState, SendResult} from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
@@ -47,13 +49,10 @@ import {isQualifiedUserClients, isUserClients} from '../../../util';
 import {preKeyBundleToUserClients} from '../../../util/preKeyBundleToUserClients';
 import {EventHandlerResult} from '../../common.types';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
-<<<<<<< HEAD
 import {createSession} from '../Utility/createSession';
 import {getGenericMessageParams} from '../Utility/getGenericMessageParams';
 import {isClearFromMismatch} from '../Utility/isClearFromMismatch';
 import {constructSessionId} from '../Utility/SessionIdBuilder';
-=======
->>>>>>> 2fcdea123 (test: extract extractEncryptedAndMissingFromBatchedPayload to separate module)
 
 export class ProteusService {
   private readonly messageService: MessageService;
@@ -112,56 +111,19 @@ export class ProteusService {
   }
 
   /**
-   * Create sessions for all the clients from given prekey bundle map.
-   * @param prekeyBundleMap map of user IDs to client IDs
-   * @param domain client domain
-   */
-  private async createSessionsFromPreKeys(
-    prekeyBundleMap: UserPreKeyBundleMap,
-    domain: string = '',
-  ): Promise<string[]> {
-    const sessions: string[] = [];
-
-    for (const userId in prekeyBundleMap) {
-      const userClients = prekeyBundleMap[userId];
-
-      for (const clientId in userClients) {
-        const prekey = userClients[clientId];
-
-        if (!prekey) {
-          this.logger.error(
-            `A prekey for client ${clientId} of user ${userId}${
-              domain ? ` on domain ${domain}` : ''
-            } was not found, session won't be created.`,
-          );
-          break;
-        }
-
-        const sessionId = this.cryptographyService.constructSessionId(userId, clientId, domain);
-        const prekeyBuffer = Decoder.fromBase64(prekey.key).asBytes;
-
-        const sessionExists = (await this.coreCryptoClient.proteusSessionExists(sessionId)) as unknown as boolean;
-
-        if (!sessionExists) {
-          await this.coreCryptoClient.proteusSessionFromPrekey(sessionId, prekeyBuffer);
-        }
-
-        sessions.push(sessionId);
-      }
-    }
-
-    return sessions;
-  }
-
-  /**
    * Create sessions for all the clients without domain assigned.
    * @param userClients map of user IDs containg the lists of clients
    * Note that this function uses deprecated endpoint ("/users/prekeys") under the hood.
    * Use createQualifiedSessions instead if possible.
    */
   private async createLegacySessions(userClients: UserClients): Promise<string[]> {
-    const prekeyBundleMap = await this.apiClient.api.user.postMultiPreKeyBundles(userClients);
-    const sessions = await this.createSessionsFromPreKeys(prekeyBundleMap);
+    const preKeyBundleMap = await this.apiClient.api.user.postMultiPreKeyBundles(userClients);
+    const sessions = await createSessionsFromPreKeys({
+      preKeyBundleMap,
+      coreCryptoClient: this.coreCryptoClient,
+      cryptographyService: this.cryptographyService,
+      logger: this.logger,
+    });
 
     return sessions;
   }
@@ -178,7 +140,13 @@ export class ProteusService {
     for (const domain in prekeyBundleMap) {
       const domainUsers = prekeyBundleMap[domain];
 
-      const domainSessions = await this.createSessionsFromPreKeys(domainUsers, domain);
+      const domainSessions = await createSessionsFromPreKeys({
+        preKeyBundleMap: domainUsers,
+        domain,
+        coreCryptoClient: this.coreCryptoClient,
+        cryptographyService: this.cryptographyService,
+        logger: this.logger,
+      });
       sessions.push(...domainSessions);
     }
 
@@ -294,7 +262,12 @@ export class ProteusService {
 
     const payload = await this.coreCryptoClient.proteusEncryptBatched(sessions, plainText);
 
-    return this.extractEncryptedAndMissingFromBatchedPayload(payload, userClients, domain);
+    return extractEncryptedAndMissingFromBatchedPayload({
+      payload,
+      users: userClients,
+      domain,
+      cryptographyService: this.cryptographyService,
+    });
   }
 
   private async getSessionsAndClientsFromRecipients(
@@ -308,32 +281,6 @@ export class ProteusService {
     const sessions = await this.createSessions(userClientMap);
 
     return {sessions, userClients};
-  }
-
-  private extractEncryptedAndMissingFromBatchedPayload(
-    payload: Map<string, Uint8Array>,
-    users: UserClients,
-    domain: string = '',
-  ): {missing: UserClients; encrypted: OTRRecipients<Uint8Array>} {
-    const encrypted: OTRRecipients<Uint8Array> = {};
-    const missing: UserClients = {};
-
-    const userClientsArr = Object.entries(users);
-    for (const [userId, clientIds] of userClientsArr) {
-      for (const clientId of clientIds) {
-        const sessionId = this.cryptographyService.constructSessionId(userId, clientId, domain);
-
-        if (payload.has(sessionId)) {
-          encrypted[userId] ||= {};
-          encrypted[userId][clientId] = payload.get(sessionId)!;
-        } else {
-          missing[userId] ||= [];
-          missing[userId].push(clientId);
-        }
-      }
-    }
-
-    return {encrypted, missing};
   }
 
   public async encryptQualified(

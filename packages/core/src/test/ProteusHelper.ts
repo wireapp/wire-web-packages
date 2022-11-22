@@ -30,7 +30,7 @@ import {ProteusService} from '../messagingProtocols/proteus';
 
 export const buildProteusService = (
   federated = false,
-): [ProteusService, {apiClient: APIClient; coreCrypto: CoreCrypto}] => {
+): [ProteusService, {apiClient: APIClient; coreCrypto: CoreCrypto; cryptographyService: CryptographyService}] => {
   const apiClient = new APIClient({urls: APIClient.BACKEND.STAGING});
   jest.spyOn(apiClient.api.user, 'postListClients').mockImplementation(() =>
     Promise.resolve({
@@ -70,5 +70,5 @@ export const buildProteusService = (
   } as unknown as CoreCrypto;
 
   const proteusService = new ProteusService(apiClient, cryptographyService, coreCrypto, {useQualifiedIds: federated});
-  return [proteusService, {apiClient, coreCrypto}];
+  return [proteusService, {apiClient, coreCrypto, cryptographyService}];
 };
