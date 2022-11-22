@@ -17,7 +17,7 @@
  *
  */
 
-import {UserClients} from '@wireapp/api-client/lib/conversation';
+import type {UserClients} from '@wireapp/api-client/lib/conversation';
 
 import {extractEncryptedAndMissingFromBatchedPayload} from './extractEncryptedAndMissingFromBatchedPayload';
 

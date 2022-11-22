@@ -17,9 +17,9 @@
  *
  */
 
-import {APIClient} from '@wireapp/api-client/lib/APIClient';
-import {PreKey} from '@wireapp/api-client/lib/auth';
-import {
+import type {APIClient} from '@wireapp/api-client/lib/APIClient';
+import type {PreKey} from '@wireapp/api-client/lib/auth';
+import type {
   Conversation,
   NewConversation,
   OTRRecipients,
@@ -27,13 +27,13 @@ import {
   QualifiedUserClients,
   UserClients,
 } from '@wireapp/api-client/lib/conversation';
-import {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
+import type {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 import {Decoder} from 'bazinga64';
 import logdown from 'logdown';
 
-import {CoreCrypto} from '@wireapp/core-crypto';
+import type {CoreCrypto} from '@wireapp/core-crypto';
 
-import {
+import type {
   AddUsersToProteusConversationParams,
   CreateProteusConversationParams,
   ProteusServiceConfig,
@@ -44,8 +44,8 @@ import {getSessionsAndClientsFromRecipients} from './Utility/getSessionsAndClien
 
 import {MessageSendingState, SendResult} from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
-import {CryptographyService} from '../../../cryptography';
-import {EventHandlerResult} from '../../common.types';
+import type {CryptographyService} from '../../../cryptography';
+import type {EventHandlerResult} from '../../common.types';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
 import {createSession} from '../Utility/createSession';
 import {getGenericMessageParams} from '../Utility/getGenericMessageParams';

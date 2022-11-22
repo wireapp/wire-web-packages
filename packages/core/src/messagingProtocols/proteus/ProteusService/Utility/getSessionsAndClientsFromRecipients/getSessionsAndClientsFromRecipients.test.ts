@@ -24,7 +24,6 @@ import {getSessionsAndClientsFromRecipients} from './getSessionsAndClientsFromRe
 
 import {buildProteusService} from '../../../../../test/ProteusHelper';
 import {preKeyBundleToUserClients} from '../../../../../util/preKeyBundleToUserClients';
-import {createSessions} from '../createSessions/createSessions';
 
 describe('getSessionsAndClientsFromRecipients', () => {
   it('returns userClients for legacy clients', async () => {

@@ -17,7 +17,7 @@
  *
  */
 
-import {UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
+import type {UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 import {Decoder} from 'bazinga64';
 
 import {createSessionsFromPreKeys} from './createSessionsFromPreKeys';
