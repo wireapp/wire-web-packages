@@ -50,6 +50,7 @@ const getGlobalStyles: (theme: Theme) => CSSObject = (theme: Theme) => ({
   html: {
     background: theme.general.backgroundColor,
     transition: 'background 0.15s',
+    fontSize: '16px',
   },
   p: {
     marginTop: 0,
