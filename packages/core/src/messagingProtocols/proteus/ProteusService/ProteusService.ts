@@ -39,7 +39,7 @@ import type {
   ProteusServiceConfig,
   SendProteusMessageParams,
 } from './ProteusService.types';
-import {extractEncryptedAndMissingFromBatchedPayload} from './Utility/extractEncryptedAndMissingFromBatchedPayload/extractEncryptedAndMissingFromBatchedPayload';
+import {extractEncryptedAndMissingFromBatchedPayload} from './Utility/extractEncryptedAndMissingFromBatchedPayload';
 import {getSessionsAndClientsFromRecipients} from './Utility/getSessionsAndClientsFromRecipients';
 
 import {MessageSendingState, SendResult} from '../../../conversation';
