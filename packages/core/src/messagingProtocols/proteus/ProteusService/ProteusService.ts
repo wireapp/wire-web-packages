@@ -32,6 +32,7 @@ import logdown from 'logdown';
 
 import type {CoreCrypto} from '@wireapp/core-crypto';
 
+import {generateInitialPrekeys} from './PrekeysGenerator';
 import type {
   AddUsersToProteusConversationParams,
   CreateProteusConversationParams,
@@ -66,6 +67,14 @@ export class ProteusService {
       useQualifiedIds: this.config.useQualifiedIds,
       apiClient: this.apiClient,
     });
+  }
+
+  public init() {
+    return this.coreCryptoClient.proteusInit();
+  }
+
+  public createClient(nbPrekeys: number) {
+    return generateInitialPrekeys(nbPrekeys, this.coreCryptoClient);
   }
 
   /**

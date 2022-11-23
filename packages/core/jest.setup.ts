@@ -21,6 +21,32 @@ import 'fake-indexeddb/auto';
 
 import nodeCrypto from 'crypto';
 
+// Storage Mock
+function storageMock() {
+  const storage: any = {};
+
+  return {
+    setItem: function (key: any, value: any) {
+      storage[key] = value || '';
+    },
+    getItem: function (key: any) {
+      return key in storage ? storage[key] : null;
+    },
+    removeItem: function (key: any) {
+      delete storage[key];
+    },
+    get length() {
+      return Object.keys(storage).length;
+    },
+    key: function (i: any) {
+      const keys = Object.keys(storage);
+      return keys[i] || null;
+    },
+  };
+}
+
+// @ts-ignore
+global.localStorage = storageMock();
 // @ts-ignore
 global.crypto = nodeCrypto.webcrypto;
 global.btoa = (text: string) => Buffer.from(text).toString('base64');

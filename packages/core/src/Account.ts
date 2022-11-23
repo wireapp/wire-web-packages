@@ -328,7 +328,7 @@ export class Account<T = any> extends EventEmitter {
 
     try {
       const localClient = await this.loadAndValidateLocalClient();
-      await this.coreCryptoClient.proteusInit();
+      await this.service.proteus.init();
 
       if (this.backendFeatures.supportsMLS) {
         await this.coreCryptoClient.mlsInit(localClient.id);
@@ -494,14 +494,10 @@ export class Account<T = any> extends EventEmitter {
     if (entropyData) {
       await this.coreCryptoClient.reseedRng(entropyData);
     }
-    await this.coreCryptoClient?.proteusInit();
+    await this.service.proteus.init();
+    const initialPreKeys = await this.service.proteus.createClient(this.nbPrekeys);
 
-    const registeredClient = await this.service.client.register(
-      loginData,
-      clientInfo,
-      this.coreCryptoClient,
-      this.nbPrekeys,
-    );
+    const registeredClient = await this.service.client.register(loginData, clientInfo, initialPreKeys);
 
     if (createMlsClient && this.backendFeatures.supportsMLS) {
       await this.coreCryptoClient.mlsInit(registeredClient.id);
