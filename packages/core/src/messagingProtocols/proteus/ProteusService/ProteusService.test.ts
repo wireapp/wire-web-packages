@@ -38,7 +38,7 @@ const MockedRecipients = Recipients as jest.Mocked<typeof Recipients>;
 describe('ProteusService', () => {
   describe('getRemoteFingerprint', () => {
     it('create a session if session does not exists', async () => {
-      const [proteusService, {apiClient, coreCrypto}] = buildProteusService();
+      const [proteusService, {apiClient, coreCrypto}] = await buildProteusService();
       const expectedFingerprint = 'fingerprint-client1';
 
       const getPrekeyMock = jest.spyOn(apiClient.api.user, 'getClientPreKey').mockResolvedValue({
@@ -61,7 +61,7 @@ describe('ProteusService', () => {
     });
 
     it('create a session from given prekey if session does not exists', async () => {
-      const [proteusService, {apiClient, coreCrypto}] = buildProteusService();
+      const [proteusService, {apiClient, coreCrypto}] = await await buildProteusService();
       const expectedFingerprint = 'fingerprint-client1';
 
       const getPrekeyMock = jest.spyOn(apiClient.api.user, 'getClientPreKey');
@@ -81,7 +81,7 @@ describe('ProteusService', () => {
     });
 
     it('returns the fingerprint from existing session', async () => {
-      const [proteusService, {apiClient, coreCrypto}] = buildProteusService();
+      const [proteusService, {apiClient, coreCrypto}] = await buildProteusService();
       const expectedFingerprint = 'fingerprint-client1';
 
       const getPrekeyMock = jest.spyOn(apiClient.api.user, 'getClientPreKey');
@@ -101,8 +101,8 @@ describe('ProteusService', () => {
   });
 
   describe('"encrypt"', () => {
-    const prepareDataForEncryption = () => {
-      const [proteusService, {coreCrypto, apiClient, cryptographyService}] = buildProteusService();
+    const prepareDataForEncryption = async () => {
+      const [proteusService, {coreCrypto, apiClient, cryptographyService}] = await buildProteusService();
 
       //user 1
       const firstUserId = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
@@ -158,7 +158,7 @@ describe('ProteusService', () => {
       const {
         services,
         data: {firstUser, validPreKey, encryptedMessageBuffer, messageBuffer},
-      } = prepareDataForEncryption();
+      } = await prepareDataForEncryption();
 
       const userClients: UserClients = {
         [firstUser.id]: [firstUser.clients.first, firstUser.clients.second],
@@ -205,7 +205,7 @@ describe('ProteusService', () => {
       const {
         services,
         data: {firstUser, validPreKey, encryptedMessageBuffer, messageBuffer},
-      } = prepareDataForEncryption();
+      } = await prepareDataForEncryption();
 
       const userClients: UserClients = {
         [firstUser.id]: [firstUser.clients.first, firstUser.clients.second],
@@ -250,7 +250,7 @@ describe('ProteusService', () => {
       const {
         services,
         data: {firstUser, secondUser, validPreKey, encryptedMessageBuffer, messageBuffer},
-      } = prepareDataForEncryption();
+      } = await prepareDataForEncryption();
 
       const userClients: UserClients = {
         [firstUser.id]: [firstUser.clients.first, firstUser.clients.second],
@@ -307,7 +307,7 @@ describe('ProteusService', () => {
       // eslint-disable-next-line jest/no-done-callback
 
       it('fails if no userIds are given', async () => {
-        const [proteusService] = buildProteusService();
+        const [proteusService] = await buildProteusService();
 
         let errorMessage;
 
@@ -329,7 +329,7 @@ describe('ProteusService', () => {
 
       [{user1: ['client1'], user2: ['client11', 'client12']}, ['user1', 'user2']].forEach(recipients => {
         it(`forwards the list of users to report (${JSON.stringify(recipients)})`, async () => {
-          const [proteusService] = buildProteusService();
+          const [proteusService] = await buildProteusService();
 
           MockedRecipients.getRecipientsForConversation.mockResolvedValue({} as any);
 
@@ -360,7 +360,7 @@ describe('ProteusService', () => {
         ],
       ].forEach(recipients => {
         it(`forwards the list of users to report for federated message (${JSON.stringify(recipients)})`, async () => {
-          const [proteusService] = buildProteusService(true);
+          const [proteusService] = await buildProteusService(true);
           MockedRecipients.getQualifiedRecipientsForConversation.mockResolvedValue({} as any);
           jest.spyOn(proteusService['messageService'], 'sendFederatedMessage').mockResolvedValue({} as any);
           await proteusService.sendMessage({
@@ -388,7 +388,7 @@ describe('ProteusService', () => {
 
       [{user1: ['client1'], user2: ['client11', 'client12']}, ['user1', 'user2']].forEach(recipients => {
         it(`ignores all missing user/client pair if targetMode is USER_CLIENTS`, async () => {
-          const [proteusService] = buildProteusService(false);
+          const [proteusService] = await buildProteusService(false);
           MockedRecipients.getRecipientsForConversation.mockReturnValue(Promise.resolve({} as any));
           jest.spyOn(proteusService['messageService'], 'sendMessage').mockReturnValue(Promise.resolve({} as any));
           await proteusService.sendMessage({
@@ -417,7 +417,7 @@ describe('ProteusService', () => {
         ],
       ].forEach(recipients => {
         it(`ignores all missing user/client pair if targetMode is USER_CLIENTS on federated env`, async () => {
-          const [proteusService] = buildProteusService(true);
+          const [proteusService] = await buildProteusService(true);
 
           MockedRecipients.getQualifiedRecipientsForConversation.mockResolvedValue({} as any);
           jest

@@ -17,6 +17,7 @@
  *
  */
 
+import {ClientClassification} from '@wireapp/api-client/lib/client';
 import type {UserClients} from '@wireapp/api-client/lib/conversation';
 import type {UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 
@@ -25,9 +26,31 @@ import {preKeyBundleToUserClients} from '../preKeyBundleToUserClients';
 
 import {getSessionsAndClientsFromRecipients} from './';
 
+const prepareProteusService = async () => {
+  const [proteusClient, services] = await buildProteusService();
+  jest.spyOn(services.apiClient.api.user, 'postListClients').mockImplementation(() =>
+    Promise.resolve({
+      qualified_user_map: {
+        'test-domain': {
+          'test-id-1': [{class: ClientClassification.DESKTOP, id: 'test-client-id-1-user-1'}],
+          'test-id-2': [
+            {class: ClientClassification.DESKTOP, id: 'test-client-id-1-user-2'},
+            {class: ClientClassification.PHONE, id: 'test-client-id-2-user-2'},
+          ],
+        },
+      },
+    }),
+  );
+
+  jest.spyOn(services.apiClient.api.user, 'postMultiPreKeyBundles').mockImplementation(jest.fn());
+  jest.spyOn(services.apiClient.api.user, 'postQualifiedMultiPreKeyBundles').mockImplementation(jest.fn());
+
+  return [proteusClient, {...services}] as const;
+};
+
 describe('getSessionsAndClientsFromRecipients', () => {
   it('returns userClients for legacy clients', async () => {
-    const {apiClient, coreCrypto, cryptographyService} = buildProteusService()[1];
+    const {apiClient, coreCrypto, cryptographyService} = (await prepareProteusService())[1];
 
     const firstUserID = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
     const firstUserClient1 = '5e80ea7886680975';
@@ -52,7 +75,7 @@ describe('getSessionsAndClientsFromRecipients', () => {
   });
 
   it('returns userClients for qualified clients', async () => {
-    const {apiClient, coreCrypto, cryptographyService} = buildProteusService()[1];
+    const {apiClient, coreCrypto, cryptographyService} = (await prepareProteusService())[1];
 
     const validPreKey = {
       id: 1337,

@@ -33,6 +33,12 @@ export class CoreCrypto {
     return {
       proteusInit: jest.fn(),
       proteusNewPrekey: jest.fn(() => Uint8Array.from([])),
+      getRemoteFingerprint: jest.fn(),
+      getLocalFingerprint: jest.fn(),
+      proteusSessionExists: jest.fn(),
+      proteusSessionFromPrekey: jest.fn(),
+      proteusFingerprintRemote: jest.fn(),
+      proteusEncryptBatched: jest.fn(),
     };
   }
 }

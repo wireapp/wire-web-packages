@@ -25,7 +25,7 @@ import {extractEncryptedAndMissingFromBatchedPayload} from './';
 
 describe('extractEncryptedAndMissingFromBatchedPayload', () => {
   it('properly extracts missing and encrypted from payload (without missing)', async () => {
-    const [proteusService, {cryptographyService}] = buildProteusService();
+    const [proteusService, {cryptographyService}] = await buildProteusService();
 
     const domain = 'staging.zinfra.io';
 
@@ -67,7 +67,7 @@ describe('extractEncryptedAndMissingFromBatchedPayload', () => {
   });
 
   it('properly extracts missing and encrypted from payload (with missing)', async () => {
-    const [proteusService, {cryptographyService}] = buildProteusService();
+    const [proteusService, {cryptographyService}] = await buildProteusService();
 
     const domain = 'staging.zinfra.io';
 

@@ -26,7 +26,7 @@ import {createSessions} from './';
 
 describe('createSessions', () => {
   it('returns sessions for qualified clients type', async () => {
-    const {apiClient, coreCrypto, cryptographyService} = buildProteusService()[1];
+    const {apiClient, coreCrypto, cryptographyService} = (await buildProteusService())[1];
 
     const domain = 'staging.zinfra.io';
 
@@ -75,7 +75,7 @@ describe('createSessions', () => {
   });
 
   it('returns sessions for legacy clients type', async () => {
-    const {apiClient, coreCrypto, cryptographyService} = buildProteusService()[1];
+    const {apiClient, coreCrypto, cryptographyService} = (await buildProteusService())[1];
 
     const domain = 'staging.zinfra.io';
 
