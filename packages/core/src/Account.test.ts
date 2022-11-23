@@ -45,7 +45,7 @@ const MOCK_BACKEND = {
   ws: `wss://${BASE_URL}`,
 };
 
-async function createAccount(storageName = `test-${Date.now()}`): Promise<{account: Account; apiClient: APIClient}> {
+async function createAccount(): Promise<{account: Account; apiClient: APIClient}> {
   const apiClient = new APIClient({urls: MOCK_BACKEND});
   const account = new Account(apiClient);
   await account.initServices({
@@ -92,7 +92,7 @@ describe('Account', () => {
     nock(MOCK_BACKEND.rest)
       .post(AuthAPI.URL.LOGIN, body => body.email && body.password)
       .query(() => true)
-      .reply((uri, body: any) => {
+      .reply((_, body: any) => {
         if (body.password === 'wrong') {
           return [
             HTTP_STATUS.FORBIDDEN,
@@ -230,8 +230,9 @@ describe('Account', () => {
       } catch (error) {
         backendError = error as BackendError;
       } finally {
-        expect(backendError.code).toBe(HTTP_STATUS.FORBIDDEN);
-        expect(backendError.label).toBe(BackendErrorLabel.INVALID_CREDENTIALS);
+        const {code, label} = backendError as {code: number; label: string};
+        expect(code).toBe(HTTP_STATUS.FORBIDDEN);
+        expect(label).toBe(BackendErrorLabel.INVALID_CREDENTIALS);
       }
     });
   });
@@ -268,7 +269,7 @@ describe('Account', () => {
     let dependencies: {account: Account; apiClient: APIClient};
 
     const mockNotifications = (size: number) => {
-      const notifications = Array.from(new Array(size)).map(i => ({
+      const notifications = Array.from(new Array(size)).map(() => ({
         id: MessageBuilder.createId(),
         payload: [{}] as BackendEvent[],
       }));
