@@ -25,7 +25,7 @@ import type {Logger} from '@wireapp/commons';
 
 import type {CryptographyService} from '../../../../../cryptography';
 import {isQualifiedUserClients} from '../../../../../util';
-import {createSessionsFromPreKeys} from '../createSessionsFromPreKeys/createSessionsFromPreKeys';
+import {createSessionsFromPreKeys} from '../createSessionsFromPreKeys';
 
 interface CreateSessionsBase {
   apiClient: APIClient;

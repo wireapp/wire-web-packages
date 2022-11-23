@@ -40,7 +40,7 @@ import type {
   SendProteusMessageParams,
 } from './ProteusService.types';
 import {extractEncryptedAndMissingFromBatchedPayload} from './Utility/extractEncryptedAndMissingFromBatchedPayload/extractEncryptedAndMissingFromBatchedPayload';
-import {getSessionsAndClientsFromRecipients} from './Utility/getSessionsAndClientsFromRecipients/getSessionsAndClientsFromRecipients';
+import {getSessionsAndClientsFromRecipients} from './Utility/getSessionsAndClientsFromRecipients';
 
 import {MessageSendingState, SendResult} from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';

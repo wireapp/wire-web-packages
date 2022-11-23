@@ -20,9 +20,9 @@
 import type {QualifiedUserClients, UserClients} from '@wireapp/api-client/lib/conversation';
 import type {QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 
-import {createSessions} from './createSessions';
-
 import {buildProteusService} from '../../../../../test/ProteusHelper';
+
+import {createSessions} from './';
 
 describe('createSessions', () => {
   it('returns sessions for qualified clients type', async () => {

@@ -20,10 +20,10 @@
 import type {UserClients} from '@wireapp/api-client/lib/conversation';
 import type {UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 
-import {getSessionsAndClientsFromRecipients} from './getSessionsAndClientsFromRecipients';
-
 import {buildProteusService} from '../../../../../test/ProteusHelper';
 import {preKeyBundleToUserClients} from '../../../../../util/preKeyBundleToUserClients';
+
+import {getSessionsAndClientsFromRecipients} from './';
 
 describe('getSessionsAndClientsFromRecipients', () => {
   it('returns userClients for legacy clients', async () => {

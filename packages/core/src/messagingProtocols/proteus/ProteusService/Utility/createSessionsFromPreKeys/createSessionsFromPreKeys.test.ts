@@ -20,9 +20,9 @@
 import type {UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 import {Decoder} from 'bazinga64';
 
-import {createSessionsFromPreKeys} from './createSessionsFromPreKeys';
-
 import {buildProteusService} from '../../../../../test/ProteusHelper';
+
+import {createSessionsFromPreKeys} from './';
 
 describe('"createSessionsFromPreKeys"', () => {
   it('creates a session from prekey when session does not exist', async () => {
