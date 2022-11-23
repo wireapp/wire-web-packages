@@ -22,7 +22,7 @@ import {UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 
 export const preKeyBundleToUserClients = (users: UserPreKeyBundleMap): UserClients => {
   return Object.entries(users).reduce<UserClients>((acc, [userId, clientsObj]) => {
-    acc[userId] = Object.entries(clientsObj).map(([clientId]) => clientId);
+    acc[userId] = Object.keys(clientsObj);
     return acc;
   }, {});
 };
