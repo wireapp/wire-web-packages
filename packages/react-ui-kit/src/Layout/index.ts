@@ -28,5 +28,5 @@ export * from './headerMenu/index';
 export * from './MatchMedia';
 export * from './Spacer';
 export * from './StyledApp';
-export * from './Theme';
+export * from '../Theme/Theme';
 export * from './sizes';

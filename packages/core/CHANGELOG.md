@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [37.2.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@37.1.2...@wireapp/core@37.2.0) (2022-11-23)
+
+### Bug Fixes
+
+* **core:** Send broadcast message through the sending queue ([2065dcc](https://github.com/wireapp/wire-web-packages/commit/2065dcc9619032d95c8690d7ac37759d62ddd800))
+
+### Features
+
+* **core:** Expose whether a message is being sent ([ca70c99](https://github.com/wireapp/wire-web-packages/commit/ca70c992bfa01a085a25bb249adf1e9be9de1873))
+
+## [37.1.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@37.1.1...@wireapp/core@37.1.2) (2022-11-22)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [37.1.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@37.1.0...@wireapp/core@37.1.1) (2022-11-21)
+
+### Bug Fixes
+
+* Handle case of empty list of users added to a conversation ([#4629](https://github.com/wireapp/wire-web-packages/issues/4629)) ([c64503b](https://github.com/wireapp/wire-web-packages/commit/c64503b784685e5826fd1aa2136170d99b5e32cb))
+
+# [37.1.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@37.0.4...@wireapp/core@37.1.0) (2022-11-16)
+
+### Features
+
+* Ability to register an already existing conversation into coreCrypto ([#4609](https://github.com/wireapp/wire-web-packages/issues/4609)) ([9fd5552](https://github.com/wireapp/wire-web-packages/commit/9fd555241d7ee244266d967b9f741705ef157992))
+
+## [37.0.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@37.0.3...@wireapp/core@37.0.4) (2022-11-16)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [37.0.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@37.0.2...@wireapp/core@37.0.3) (2022-11-16)
+
+### Bug Fixes
+
+* Fix creating new proteus conversations ([#4615](https://github.com/wireapp/wire-web-packages/issues/4615)) ([59d6e1d](https://github.com/wireapp/wire-web-packages/commit/59d6e1d44153c8d2b9d1911b41ed5c563a56c8b9))
+
 ## [37.0.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@37.0.1...@wireapp/core@37.0.2) (2022-11-15)
 
 ### Bug Fixes

@@ -231,11 +231,51 @@ export class MLSService {
     return this.processCommitAction(conversationId, () => this.coreCryptoClient.updateKeyingMaterial(conversationId));
   }
 
-  public async createConversation(
-    conversationId: ConversationId,
-    configuration?: ConversationConfiguration,
-  ): Promise<any> {
-    return this.coreCryptoClient.createConversation(conversationId, configuration);
+  /**
+   * Will create a conversation inside of coreCrypto.
+   * @param groupId the id of the group to create inside of coreCrypto
+   * @param users the list of users that will be members of the conversation (including the self user)
+   * @param creator the creator of the list. Most of the time will be the self user (or empty if the conversation was created by backend first)
+   */
+  public async registerConversation(
+    groupId: string,
+    users: QualifiedId[],
+    creator?: {user: QualifiedId; client?: string},
+  ): Promise<PostMlsMessageResponse | null | undefined> {
+    const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
+
+    const mlsKeys = (await this.apiClient.api.client.getPublicKeys()).removal;
+    const mlsKeyBytes = Object.values(mlsKeys).map((key: string) => Decoder.fromBase64(key).asBytes);
+    const configuration: ConversationConfiguration = {
+      externalSenders: mlsKeyBytes,
+      ciphersuite: 1, // TODO: Use the correct ciphersuite enum.
+    };
+
+    await this.coreCryptoClient.createConversation(groupIdBytes, configuration);
+
+    const keyPackages = await this.getKeyPackagesPayload(
+      users.map(user => {
+        if (user.id === creator?.user.id) {
+          /**
+           * we should skip fetching key packages for current self client,
+           * it's already added by the backend on the group creation time
+           */
+          return {...creator.user, skipOwn: creator.client};
+        }
+        return user;
+      }),
+    );
+
+    const response =
+      keyPackages.length > 0
+        ? await this.addUsersToExistingConversation(groupIdBytes, keyPackages)
+        : // If there are no clients to add, just update the keying material
+          await this.processCommitAction(groupIdBytes, () => this.coreCryptoClient.updateKeyingMaterial(groupIdBytes));
+
+    // We schedule a key material renewal
+    this.scheduleKeyMaterialRenewal(groupId);
+
+    return response;
   }
 
   public removeClientsFromConversation(conversationId: ConversationId, clientIds: Uint8Array[]) {
