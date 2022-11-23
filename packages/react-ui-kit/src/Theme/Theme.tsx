@@ -108,7 +108,7 @@ export interface Theme extends ETheme {
 
 export const themes: {[themeId in THEME_ID]: Theme} = {
   [THEME_ID.DEFAULT]: {
-    fontSizes: {...fontSizes},
+    fontSizes,
     Button: {
       primaryBg: 'var(--accent-color)',
       primaryHoverBg: 'var(--button-primary-hover)',
@@ -174,7 +174,7 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
     },
   },
   [THEME_ID.LIGHT]: {
-    fontSizes: {...fontSizes},
+    fontSizes,
     Button: {
       primaryBg: 'var(--accent-color)',
       primaryHoverBg: 'var(--button-primary-hover)',
@@ -240,7 +240,7 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
     },
   },
   [THEME_ID.DARK]: {
-    fontSizes: {...fontSizes},
+    fontSizes,
     Button: {
       primaryBg: 'var(--accent-color)',
       primaryHoverBg: 'var(--button-primary-hover)',
