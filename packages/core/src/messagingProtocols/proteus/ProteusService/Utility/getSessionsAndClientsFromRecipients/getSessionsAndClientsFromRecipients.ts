@@ -26,8 +26,8 @@ import type {Logger} from '@wireapp/commons';
 
 import type {CryptographyService} from '../../../../../cryptography';
 import {isUserClients} from '../../../../../util';
-import {preKeyBundleToUserClients} from '../../../../../util/preKeyBundleToUserClients';
 import {createSessions} from '../createSessions';
+import {preKeyBundleToUserClients} from '../preKeyBundleToUserClients';
 
 interface GetSessionsAndClientsFromRecipientsProps {
   recipients: UserPreKeyBundleMap | UserClients;
