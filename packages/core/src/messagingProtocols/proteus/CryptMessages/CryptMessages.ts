@@ -26,13 +26,13 @@ import {GenericMessage} from '@wireapp/protocol-messaging';
 
 import {decrypt} from './decrypt';
 
-import {constructSessionId} from '../Utility/constructSessionId';
+import {constructSessionId} from '../Utility/constructSessionId/constructSessionId';
 import {createSession} from '../Utility/createSession';
-import {generateDecryptionError} from '../Utility/generateDecryptionError';
+import {generateDecryptionError} from '../Utility/generateDecryptionError/generateDecryptionError';
 
 const logger = logdown('@wireapp/core/messagingProtocols/proteus/CryptMessages');
 
-interface DecryptMessageParams {
+export interface DecryptMessageParams {
   otrMessage: ConversationOtrMessageAddEvent;
   coreCryptoClient: CoreCrypto;
   apiClient: APIClient;
@@ -59,7 +59,7 @@ const decryptOtrMessage = async ({
   const sessionExists = (await coreCryptoClient.proteusSessionExists(sessionId)) as unknown as boolean;
   if (!sessionExists) {
     const userQualifiedId = {id: userId, domain: qualified_from?.domain ?? ''};
-    createSession({
+    await createSession({
       sessionId,
       userId: userQualifiedId,
       clientId,

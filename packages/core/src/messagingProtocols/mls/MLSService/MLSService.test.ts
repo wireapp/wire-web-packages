@@ -45,7 +45,7 @@ describe('MLSService', () => {
     let mlsService: MLSService;
 
     beforeEach(() => {
-      mlsService = new MLSService(apiClient, () => mockCoreCrypto, {});
+      mlsService = new MLSService(apiClient, mockCoreCrypto, {});
       jest
         .spyOn(apiClient.api.client, 'getPublicKeys')
         .mockResolvedValue({removal: {algo: 'mXOagqRIX/RFd7QyXJA8/Ed8X+hvQgLXIiwYHm3OQFc='}});
