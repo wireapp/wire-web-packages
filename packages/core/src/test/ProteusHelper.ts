@@ -23,6 +23,7 @@ import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
 import {APIClient} from '@wireapp/api-client';
 import {MemoryEngine} from '@wireapp/store-engine';
 
+import {coreCryptoMock} from './CoreCryptoHelper';
 import {getUUID} from './PayloadHelper';
 
 import {CryptographyService} from '../cryptography';
@@ -60,15 +61,8 @@ export const buildProteusService = (
     nbPrekeys: 1,
   });
 
-  const coreCrypto = {
-    getRemoteFingerprint: jest.fn(),
-    getLocalFingerprint: jest.fn(),
-    proteusSessionExists: jest.fn(),
-    proteusSessionFromPrekey: jest.fn(),
-    proteusFingerprintRemote: jest.fn(),
-    proteusEncryptBatched: jest.fn(),
-  } as unknown as CoreCrypto;
-
-  const proteusService = new ProteusService(apiClient, cryptographyService, coreCrypto, {useQualifiedIds: federated});
-  return [proteusService, {apiClient, coreCrypto, cryptographyService}];
+  const proteusService = new ProteusService(apiClient, cryptographyService, coreCryptoMock, {
+    useQualifiedIds: federated,
+  });
+  return [proteusService, {apiClient, coreCrypto: coreCryptoMock, cryptographyService}];
 };
