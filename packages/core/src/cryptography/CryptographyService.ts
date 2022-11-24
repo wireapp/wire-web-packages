@@ -39,7 +39,6 @@ import {CRUDEngine} from '@wireapp/store-engine';
 
 import {CryptographyDatabaseRepository} from './CryptographyDatabaseRepository';
 import {GenericMessageMapper} from './GenericMessageMapper';
-import {generateDecryptionError} from './Utlility/generateDecryptionError';
 
 import {GenericMessageType, PayloadBundle, PayloadBundleSource} from '../conversation';
 import {SessionPayloadBundle} from '../cryptography/';
@@ -155,12 +154,6 @@ export class CryptographyService {
         return {id: -1, key: ''};
       })
       .filter(serializedPreKey => serializedPreKey.key);
-  }
-
-  public decrypt(sessionId: string, encodedCiphertext: string): Promise<Uint8Array> {
-    this.logger.log(`Decrypting message for session ID "${sessionId}"`);
-    const messageBytes = Decoder.fromBase64(encodedCiphertext).asBytes;
-    return this.cryptobox.decrypt(sessionId, messageBytes.buffer);
   }
 
   public async encryptQualified(
@@ -286,22 +279,6 @@ export class CryptographyService {
   public async resetSession(sessionId: string): Promise<void> {
     await this.cryptobox.session_delete(sessionId);
     this.logger.log(`Deleted session ID "${sessionId}".`);
-  }
-
-  public async decryptMessage(otrMessage: ConversationOtrMessageAddEvent): Promise<GenericMessage> {
-    const {
-      from,
-      qualified_from,
-      data: {sender, text: cipherText},
-    } = otrMessage;
-
-    const sessionId = this.constructSessionId(from, sender, qualified_from?.domain);
-    try {
-      const decryptedMessage = await this.decrypt(sessionId, cipherText);
-      return GenericMessage.decode(decryptedMessage);
-    } catch (error) {
-      throw generateDecryptionError(otrMessage, error, this.logger);
-    }
   }
 
   public mapGenericMessage(

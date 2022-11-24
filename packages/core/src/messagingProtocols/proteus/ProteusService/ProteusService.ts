@@ -21,7 +21,6 @@ import {APIClient} from '@wireapp/api-client/lib/APIClient';
 import {PreKey} from '@wireapp/api-client/lib/auth';
 import {Conversation, NewConversation} from '@wireapp/api-client/lib/conversation';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
-import {Decoder} from 'bazinga64';
 import logdown from 'logdown';
 
 import {CoreCrypto} from '@wireapp/core-crypto';
@@ -32,14 +31,16 @@ import {
   ProteusServiceConfig,
   SendProteusMessageParams,
 } from './ProteusService.types';
-import {isClearFromMismatch} from './Utility';
-import {getGenericMessageParams} from './Utility/getGenericMessageParams';
 
 import {PayloadBundleState, SendResult} from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
 import {CryptographyService} from '../../../cryptography';
 import {EventHandlerResult} from '../../common.types';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
+import {createSession} from '../Utility/createSession';
+import {getGenericMessageParams} from '../Utility/getGenericMessageParams';
+import {isClearFromMismatch} from '../Utility/isClearFromMismatch';
+import {constructSessionId} from '../Utility/SessionIdBuilder';
 
 export class ProteusService {
   private readonly messageService: MessageService;
@@ -54,8 +55,13 @@ export class ProteusService {
     this.messageService = new MessageService(this.apiClient, this.cryptographyService);
   }
 
-  public async handleEvent(params: Omit<EventHandlerParams, 'cryptographyService'>): EventHandlerResult {
-    return handleBackendEvent({...params, cryptographyService: this.cryptographyService});
+  public async handleEvent(params: Pick<EventHandlerParams, 'event' | 'source' | 'dryRun'>): EventHandlerResult {
+    return handleBackendEvent({
+      ...params,
+      coreCryptoClient: this.coreCryptoClient,
+      useQualifiedIds: this.config.useQualifiedIds,
+      apiClient: this.apiClient,
+    });
   }
 
   /**
@@ -63,6 +69,10 @@ export class ProteusService {
    */
   public getLocalFingerprint() {
     return this.coreCryptoClient.proteusFingerprint();
+  }
+
+  public constructSessionId(userId: string | QualifiedId, clientId: string, domain?: string): string {
+    return constructSessionId({clientId, userId, domain, useQualifiedIds: this.config.useQualifiedIds});
   }
 
   /**
@@ -76,24 +86,16 @@ export class ProteusService {
     const sessionId = this.cryptographyService.constructSessionId(userId, clientId);
     const sessionExists = (await this.coreCryptoClient.proteusSessionExists(sessionId)) as unknown as boolean;
     if (!sessionExists) {
-      await this.createSession(sessionId, userId, clientId, prekey);
+      await createSession({
+        sessionId,
+        userId,
+        clientId,
+        initialPrekey: prekey,
+        apiClient: this.apiClient,
+        coreCryptoClient: this.coreCryptoClient,
+      });
     }
     return this.coreCryptoClient.proteusFingerprintRemote(sessionId);
-  }
-
-  private async createSession(
-    sessionId: string,
-    userId: QualifiedId,
-    clientId: string,
-    initialPrekey?: PreKey,
-  ): Promise<void> {
-    const prekey = initialPrekey ?? (await this.getUserPrekey(userId, clientId)).prekey;
-    const prekeyBuffer = Decoder.fromBase64(prekey.key).asBytes;
-    return this.coreCryptoClient.proteusSessionFromPrekey(sessionId, prekeyBuffer);
-  }
-
-  private getUserPrekey(userId: QualifiedId, clientId: string) {
-    return this.apiClient.api.user.getClientPreKey(userId, clientId);
   }
 
   public async createConversation({

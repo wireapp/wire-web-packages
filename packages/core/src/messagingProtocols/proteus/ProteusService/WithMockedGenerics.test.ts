@@ -18,7 +18,7 @@
  */
 
 /* eslint-disable import/order */
-import * as GenericMessageParams from './Utility/getGenericMessageParams';
+import * as GenericMessageParams from '../Utility/getGenericMessageParams';
 
 import {ClientClassification, ClientType} from '@wireapp/api-client/lib/client';
 import {Conversation, ConversationProtocol, NewConversation} from '@wireapp/api-client/lib/conversation';
@@ -34,7 +34,7 @@ import {CryptographyService} from '../../../cryptography';
 import {getUUID} from '../../../test/PayloadHelper';
 import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
-jest.mock('./Utility/getGenericMessageParams', () => {
+jest.mock('../Utility/getGenericMessageParams', () => {
   return {
     getGenericMessageParams: jest.fn(),
   };
@@ -70,7 +70,14 @@ const buildProteusService = (federated: boolean = false) => {
     useQualifiedIds: false,
     nbPrekeys: 1,
   });
-  const coreCrypto = {} as CoreCrypto;
+
+  const coreCrypto = {
+    getRemoteFingerprint: jest.fn(),
+    getLocalFingerprint: jest.fn(),
+    proteusSessionExists: jest.fn(),
+    proteusSessionFromPrekey: jest.fn(),
+    proteusFingerprintRemote: jest.fn(),
+  } as unknown as CoreCrypto;
   return new ProteusService(apiClient, cryptographyService, coreCrypto, {useQualifiedIds: federated});
 };
 

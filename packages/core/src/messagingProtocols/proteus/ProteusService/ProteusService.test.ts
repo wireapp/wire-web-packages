@@ -18,70 +18,22 @@
  */
 
 /* eslint-disable import/order */
-import * as Recipients from './Utility/Recipients';
+import * as Recipients from '../Utility/Recipients';
 
-import {ClientClassification, ClientType} from '@wireapp/api-client/lib/client';
 import {ConversationProtocol} from '@wireapp/api-client/lib/conversation';
-
-import {APIClient} from '@wireapp/api-client';
-import {MemoryEngine} from '@wireapp/store-engine';
-
-import {ProteusService} from './ProteusService';
 
 import {MessageTargetMode} from '../../../conversation';
 import {buildTextMessage} from '../../../conversation/message/MessageBuilder';
-import {CryptographyService} from '../../../cryptography';
-import {getUUID} from '../../../test/PayloadHelper';
 import {SendProteusMessageParams} from './ProteusService.types';
-import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
-jest.mock('./Utility/Recipients', () => ({
-  ...jest.requireActual('./Utility/Recipients'),
+import {buildProteusService} from './ProteusService.mocks';
+
+jest.mock('../Utility/Recipients', () => ({
+  ...jest.requireActual('../Utility/Recipients'),
   getRecipientsForConversation: jest.fn(),
   getQualifiedRecipientsForConversation: jest.fn(),
 }));
 const MockedRecipients = Recipients as jest.Mocked<typeof Recipients>;
-
-const buildProteusService = (federated = false): [ProteusService, {apiClient: APIClient; coreCrypto: CoreCrypto}] => {
-  const apiClient = new APIClient({urls: APIClient.BACKEND.STAGING});
-  jest.spyOn(apiClient.api.user, 'postListClients').mockImplementation(() =>
-    Promise.resolve({
-      qualified_user_map: {
-        'test-domain': {
-          'test-id-1': [{class: ClientClassification.DESKTOP, id: 'test-client-id-1-user-1'}],
-          'test-id-2': [
-            {class: ClientClassification.DESKTOP, id: 'test-client-id-1-user-2'},
-            {class: ClientClassification.PHONE, id: 'test-client-id-2-user-2'},
-          ],
-        },
-      },
-    }),
-  );
-
-  apiClient.context = {
-    clientType: ClientType.NONE,
-    userId: getUUID(),
-    clientId: getUUID(),
-  };
-
-  const cryptographyService = new CryptographyService(apiClient, new MemoryEngine(), {
-    useQualifiedIds: false,
-    nbPrekeys: 1,
-  });
-
-  const coreCrypto = {
-    getRemoteFingerprint: jest.fn(),
-    getLocalFingerprint: jest.fn(),
-    proteusSessionExists: jest.fn(),
-    proteusSessionFromPrekey: jest.fn(),
-    proteusFingerprintRemote: jest.fn(),
-  } as unknown as CoreCrypto;
-
-  return [
-    new ProteusService(apiClient, cryptographyService, coreCrypto, {useQualifiedIds: federated}),
-    {apiClient, coreCrypto},
-  ];
-};
 
 describe('ProteusService', () => {
   describe('getRemoteFingerprint', () => {
@@ -168,7 +120,7 @@ describe('ProteusService', () => {
         try {
           await proteusService.sendMessage(params);
         } catch (error) {
-          errorMessage = error.message;
+          errorMessage = (error as {message: string}).message;
         } finally {
           expect(errorMessage).toContain('no userIds are given');
         }

@@ -17,6 +17,16 @@
  *
  */
 
-export * from './ProteusService';
-export * from '../Utility';
-export * from '../Utility/getGenericMessageParams';
+import {ConversationOtrMessageAddEvent, CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
+
+export const conversationOtrMessageAddEventMock: ConversationOtrMessageAddEvent = {
+  conversation: 'conversation-id',
+  from: 'user-id',
+  time: '2020-01',
+  data: {
+    recipient: 'recipient-id',
+    sender: 'sender-id',
+    text: 'text',
+  },
+  type: CONVERSATION_EVENT.OTR_MESSAGE_ADD,
+};
