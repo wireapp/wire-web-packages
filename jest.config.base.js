@@ -17,6 +17,7 @@
  *
  */
 
+const ignoredPaths = ['archive/', 'lib/'];
 module.exports = {
   clearMocks: true,
   transform: {
@@ -24,8 +25,8 @@ module.exports = {
   },
   transformIgnorePatterns: ['node_modules/'],
   testEnvironment: 'jsdom',
-  testPathIgnorePatterns: ['archive/'],
-  coveragePathIgnorePatterns: ['archive/'],
-  modulePathIgnorePatterns: ['archive/'],
+  testPathIgnorePatterns: ignoredPaths,
+  coveragePathIgnorePatterns: ignoredPaths,
+  modulePathIgnorePatterns: ignoredPaths,
   moduleFileExtensions: ['js', 'json', 'ts', 'tsx'],
 };
