@@ -17,4 +17,4 @@
  *
  */
 
-export * from './constructSessionId';
+export * from './SessionIdBuilder';

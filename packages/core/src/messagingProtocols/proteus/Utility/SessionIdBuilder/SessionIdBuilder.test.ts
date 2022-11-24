@@ -17,7 +17,7 @@
  *
  */
 
-import {constructSessionId} from './constructSessionId';
+import {constructSessionId} from './SessionIdBuilder';
 
 describe('constructSessionId', () => {
   describe('constructs a session ID', () => {

@@ -21,8 +21,8 @@ import logdown from 'logdown';
 
 import {errors as ProteusErrors} from '@wireapp/proteus';
 
-import {generateDecryptionError} from './generateDecryptionError';
-import {conversationOtrMessageAddEventMock} from './generateDecryptionError.mocks';
+import {generateDecryptionError} from './DecryptionErrorGenerator';
+import {conversationOtrMessageAddEventMock} from './DecryptionErrorGenerator.mocks';
 
 import {DecryptionError} from '../../../../errors/DecryptionError';
 

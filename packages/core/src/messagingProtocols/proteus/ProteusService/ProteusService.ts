@@ -37,10 +37,10 @@ import {MessageService} from '../../../conversation/message/MessageService';
 import {CryptographyService} from '../../../cryptography';
 import {EventHandlerResult} from '../../common.types';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
-import {constructSessionId} from '../Utility/constructSessionId';
 import {createSession} from '../Utility/createSession';
 import {getGenericMessageParams} from '../Utility/getGenericMessageParams';
 import {isClearFromMismatch} from '../Utility/isClearFromMismatch';
+import {constructSessionId} from '../Utility/SessionIdBuilder';
 
 export class ProteusService {
   private readonly messageService: MessageService;

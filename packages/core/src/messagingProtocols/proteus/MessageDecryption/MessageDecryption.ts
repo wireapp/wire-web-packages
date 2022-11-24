@@ -25,8 +25,8 @@ import logdown from 'logdown';
 import {APIClient} from '@wireapp/api-client';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 
-import {constructSessionId} from '../Utility/constructSessionId/constructSessionId';
-import {generateDecryptionError} from '../Utility/generateDecryptionError/generateDecryptionError';
+import {generateDecryptionError} from '../Utility/DecryptionErrorGenerator/DecryptionErrorGenerator';
+import {constructSessionId} from '../Utility/SessionIdBuilder/SessionIdBuilder';
 
 const logger = logdown('@wireapp/core/MessageDecryption');
 
