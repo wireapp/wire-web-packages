@@ -18,8 +18,8 @@
  */
 
 export enum MessageSendingState {
-  INCOMING = 'PayloadBundleState.INCOMING',
-  OUTGOING_SENT = 'PayloadBundleState.OUTGOING_SENT',
-  OUTGOING_UNSENT = 'PayloadBundleState.OUTGOING_UNSENT',
-  CANCELLED = 'PayloadBundleState.CANCELLED',
+  INCOMING = 'INCOMING',
+  OUTGOING_SENT = 'OUTGOING_SENT',
+  OUTGOING_UNSENT = 'OUTGOING_UNSENT',
+  CANCELLED = 'CANCELLED',
 }
