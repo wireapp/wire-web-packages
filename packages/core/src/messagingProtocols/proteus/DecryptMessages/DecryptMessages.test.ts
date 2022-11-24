@@ -22,20 +22,7 @@ import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
 import {APIClient} from '@wireapp/api-client';
 
-import {DecryptMessageParams, decryptOtrMessage} from './CryptMessages';
-import * as Decrypt from './decrypt';
-
-import * as CreateSession from '../Utility/createSession';
-
-jest.mock('../Utility/createSession', () => ({
-  createSession: jest.fn(),
-}));
-const mockedCreateSession = CreateSession as jest.Mocked<typeof CreateSession>;
-
-jest.mock('./decrypt', () => ({
-  decrypt: jest.fn().mockResolvedValue(new TextEncoder().encode('Hallo Welt')),
-}));
-const mockedDecrypt = Decrypt as jest.Mocked<typeof Decrypt>;
+import {DecryptMessageParams, decryptOtrMessage} from './DecryptMessages';
 
 jest.mock('@wireapp/protocol-messaging', () => ({
   GenericMessage: {
@@ -64,10 +51,15 @@ const otrMessageMock = {
   type: 'conversation.otr-message-add',
 } as ConversationOtrMessageAddEvent;
 
+const coreCryptoClient = {
+  proteusSessionExists: jest.fn().mockResolvedValue(true),
+  proteusDecrypt: jest.fn().mockResolvedValue('decrypted'),
+  proteusSessionFromMessage: jest.fn().mockResolvedValue('session'),
+} as unknown as CoreCrypto;
+const mockedCoreCryptoClient = coreCryptoClient as jest.Mocked<CoreCrypto>;
+
 const decryptParams: DecryptMessageParams = {
-  coreCryptoClient: {
-    proteusSessionExists: jest.fn().mockResolvedValue(true),
-  } as unknown as CoreCrypto,
+  coreCryptoClient: mockedCoreCryptoClient,
   apiClient: {} as APIClient,
   otrMessage: otrMessageMock,
   useQualifiedIds: false,
@@ -75,7 +67,7 @@ const decryptParams: DecryptMessageParams = {
 
 describe('decryptOtrMessage', () => {
   it('throws an error when decryption fails', async () => {
-    mockedDecrypt.decrypt.mockRejectedValueOnce(new Error('Decryption failed'));
+    mockedCoreCryptoClient.proteusDecrypt = jest.fn().mockRejectedValue(new Error('Decryption failed'));
     let error: {message: string} | undefined;
     try {
       await decryptOtrMessage(decryptParams);
@@ -88,22 +80,20 @@ describe('decryptOtrMessage', () => {
   });
 
   it('should create a session when no session exists', async () => {
-    const coreCryptoClient = {
-      proteusSessionExists: jest.fn().mockResolvedValue(false),
-    } as unknown as CoreCrypto;
+    mockedCoreCryptoClient.proteusSessionExists = jest.fn().mockResolvedValue(false);
+    mockedCoreCryptoClient.proteusDecrypt = jest.fn().mockResolvedValue(new TextEncoder().encode('Hallo Welt'));
 
-    await decryptOtrMessage({...decryptParams, coreCryptoClient});
+    await decryptOtrMessage({...decryptParams, coreCryptoClient: mockedCoreCryptoClient});
 
-    expect(mockedCreateSession.createSession).toHaveBeenCalled();
+    expect(coreCryptoClient.proteusSessionFromMessage).toHaveBeenCalled();
   });
 
   it('should not create a session when a session exists', async () => {
-    const coreCryptoClient = {
-      proteusSessionExists: jest.fn().mockResolvedValue(true),
-    } as unknown as CoreCrypto;
+    mockedCoreCryptoClient.proteusSessionExists = jest.fn().mockResolvedValue(true);
+    mockedCoreCryptoClient.proteusDecrypt = jest.fn().mockResolvedValue(new TextEncoder().encode('Hallo Welt'));
 
     await decryptOtrMessage({...decryptParams, coreCryptoClient});
 
-    expect(mockedCreateSession.createSession).not.toHaveBeenCalled();
+    expect(coreCryptoClient.proteusSessionFromMessage).not.toHaveBeenCalled();
   });
 });

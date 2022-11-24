@@ -19,20 +19,18 @@
 
 import {ConversationOtrMessageAddEvent} from '@wireapp/api-client/lib/event';
 import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
+import {Decoder} from 'bazinga64';
 import logdown from 'logdown';
 
 import {APIClient} from '@wireapp/api-client';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 
-import {decrypt} from './decrypt';
-
 import {constructSessionId} from '../Utility/constructSessionId/constructSessionId';
-import {createSession} from '../Utility/createSession';
 import {generateDecryptionError} from '../Utility/generateDecryptionError/generateDecryptionError';
 
 const logger = logdown('@wireapp/core/messagingProtocols/proteus/CryptMessages');
 
-interface DecryptMessageParams {
+export interface DecryptMessageParams {
   otrMessage: ConversationOtrMessageAddEvent;
   coreCryptoClient: CoreCrypto;
   apiClient: APIClient;
@@ -41,7 +39,6 @@ interface DecryptMessageParams {
 const decryptOtrMessage = async ({
   otrMessage,
   coreCryptoClient,
-  apiClient,
   useQualifiedIds,
 }: DecryptMessageParams): Promise<GenericMessage> => {
   const {
@@ -57,18 +54,14 @@ const decryptOtrMessage = async ({
     useQualifiedIds,
   });
   const sessionExists = (await coreCryptoClient.proteusSessionExists(sessionId)) as unknown as boolean;
-  if (!sessionExists) {
-    const userQualifiedId = {id: userId, domain: qualified_from?.domain ?? ''};
-    await createSession({
-      sessionId,
-      userId: userQualifiedId,
-      clientId,
-      apiClient,
-      coreCryptoClient: coreCryptoClient,
-    });
-  }
   try {
-    const decryptedMessage = await decrypt({sessionId, encodedCiphertext, coreCryptoClient, logger});
+    const messageBytes = Decoder.fromBase64(encodedCiphertext).asBytes;
+    if (!sessionExists) {
+      logger.log(`Crate a new session from message for session ID "${sessionId}"`);
+      await coreCryptoClient.proteusSessionFromMessage(sessionId, messageBytes);
+    }
+    logger.log(`Decrypting message for session ID "${sessionId}"`);
+    const decryptedMessage = await coreCryptoClient.proteusDecrypt(sessionId, messageBytes);
     return GenericMessage.decode(decryptedMessage);
   } catch (error) {
     throw generateDecryptionError(otrMessage, error, logger);

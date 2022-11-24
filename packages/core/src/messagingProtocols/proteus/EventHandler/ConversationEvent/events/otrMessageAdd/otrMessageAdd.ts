@@ -24,7 +24,7 @@ import {GenericMessage} from '@wireapp/protocol-messaging';
 import {GenericMessageType, PayloadBundle} from '../../../../../../conversation';
 import {DecryptionError} from '../../../../../../errors/DecryptionError';
 import {EventHandlerResult} from '../../../../../common.types';
-import {decryptOtrMessage} from '../../../../CryptMessages/CryptMessages';
+import {decryptOtrMessage} from '../../../../DecryptMessages/DecryptMessages';
 import {GenericMessageMapper} from '../../../../Utility/GenericMessageMapper';
 import {EventHandlerParams, PayloadBundleSource} from '../../../EventHandler.types';
 

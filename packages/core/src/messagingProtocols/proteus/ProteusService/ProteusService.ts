@@ -37,6 +37,7 @@ import {MessageService} from '../../../conversation/message/MessageService';
 import {CryptographyService} from '../../../cryptography';
 import {EventHandlerResult} from '../../common.types';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
+import {constructSessionId} from '../Utility/constructSessionId';
 import {createSession} from '../Utility/createSession';
 import {getGenericMessageParams} from '../Utility/getGenericMessageParams';
 import {isClearFromMismatch} from '../Utility/isClearFromMismatch';
@@ -68,6 +69,10 @@ export class ProteusService {
    */
   public getLocalFingerprint() {
     return this.coreCryptoClient.proteusFingerprint();
+  }
+
+  public constructSessionId(userId: string | QualifiedId, clientId: string, domain?: string): string {
+    return constructSessionId({clientId, userId, domain, useQualifiedIds: this.config.useQualifiedIds});
   }
 
   /**
