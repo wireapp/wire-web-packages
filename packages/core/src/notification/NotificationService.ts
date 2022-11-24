@@ -17,7 +17,7 @@
  *
  */
 
-import * as Events from '@wireapp/api-client/lib/event';
+import {BackendEvent, CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
 import {Notification} from '@wireapp/api-client/lib/notification/';
 import {AbortHandler} from '@wireapp/api-client/lib/tcp';
 import logdown from 'logdown';
@@ -38,7 +38,7 @@ import {MLSService} from '../messagingProtocols/mls';
 import {ProteusService} from '../messagingProtocols/proteus';
 
 export type HandledEventPayload = {
-  event: Events.BackendEvent;
+  event: BackendEvent;
   decryptedData?: GenericMessage;
   decryptionError?: DecryptionError;
 };
@@ -97,7 +97,7 @@ export class NotificationService extends EventEmitter {
     return !!notificationEvents.length;
   }
 
-  public getNotificationEventList(): Promise<Events.BackendEvent[]> {
+  public getNotificationEventList(): Promise<BackendEvent[]> {
     return this.database.getNotificationEventList();
   }
 
@@ -234,7 +234,7 @@ export class NotificationService extends EventEmitter {
    * @return the decrypted payload and the raw event. Returns `undefined` when the payload is a coreCrypto-only system message
    */
   private async handleEvent(
-    event: Events.BackendEvent,
+    event: BackendEvent,
     source: NotificationSource,
     dryRun: boolean = false,
   ): Promise<HandledEventPayload | undefined> {
@@ -256,7 +256,7 @@ export class NotificationService extends EventEmitter {
     // Fallback to other events
     switch (event.type) {
       // Meta events
-      case Events.CONVERSATION_EVENT.MEMBER_JOIN:
+      case CONVERSATION_EVENT.MEMBER_JOIN:
         // As of today (07/07/2022) the backend sends `WELCOME` message to the user's own conversation (not the actual conversation that the welcome should be part of)
         // So in order to map conversation Ids and groupId together, we need to first fetch the conversation and get the groupId linked to it.
         const conversation = await this.apiClient.api.conversation.getConversation(
