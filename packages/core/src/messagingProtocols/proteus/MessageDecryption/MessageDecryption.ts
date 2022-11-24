@@ -28,7 +28,7 @@ import {GenericMessage} from '@wireapp/protocol-messaging';
 import {constructSessionId} from '../Utility/constructSessionId/constructSessionId';
 import {generateDecryptionError} from '../Utility/generateDecryptionError/generateDecryptionError';
 
-const logger = logdown('@wireapp/core/messagingProtocols/proteus/CryptMessages');
+const logger = logdown('@wireapp/core/MessageDecryption');
 
 export interface DecryptMessageParams {
   otrMessage: ConversationOtrMessageAddEvent;
