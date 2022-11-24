@@ -44,7 +44,7 @@ import {isClearFromMismatch} from '../Utility/isClearFromMismatch';
 
 export class ProteusService {
   private readonly messageService: MessageService;
-  private readonly logger = logdown('@wireapp/core/messagingProtocols/proteus/ProteusService');
+  private readonly logger = logdown('@wireapp/core/ProteusService');
 
   constructor(
     private readonly apiClient: APIClient,

@@ -17,4 +17,4 @@
  *
  */
 
-export * from './DecryptMessages';
+export * from './MessageDecryption';

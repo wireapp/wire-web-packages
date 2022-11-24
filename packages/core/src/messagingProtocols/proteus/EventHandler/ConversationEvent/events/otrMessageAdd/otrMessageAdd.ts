@@ -19,32 +19,10 @@
 
 import {BackendEvent, ConversationOtrMessageAddEvent, CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
 
-import {GenericMessage} from '@wireapp/protocol-messaging';
-
-import {GenericMessageType, PayloadBundle} from '../../../../../../conversation';
 import {DecryptionError} from '../../../../../../errors/DecryptionError';
 import {EventHandlerResult} from '../../../../../common.types';
-import {decryptOtrMessage} from '../../../../DecryptMessages/DecryptMessages';
-import {GenericMessageMapper} from '../../../../Utility/GenericMessageMapper';
-import {EventHandlerParams, PayloadBundleSource} from '../../../EventHandler.types';
-
-const mapGenericMessage = (
-  otrMessage: ConversationOtrMessageAddEvent,
-  genericMessage: GenericMessage,
-  source: PayloadBundleSource,
-): PayloadBundle => {
-  if (genericMessage.content === GenericMessageType.EPHEMERAL) {
-    const unwrappedMessage = GenericMessageMapper.mapGenericMessage(genericMessage.ephemeral, otrMessage, source);
-    unwrappedMessage.id = genericMessage.messageId;
-    if (genericMessage.ephemeral) {
-      const expireAfterMillis = genericMessage.ephemeral.expireAfterMillis;
-      unwrappedMessage.messageTimer =
-        typeof expireAfterMillis === 'number' ? expireAfterMillis : expireAfterMillis.toNumber();
-    }
-    return unwrappedMessage;
-  }
-  return GenericMessageMapper.mapGenericMessage(genericMessage, otrMessage, source);
-};
+import {decryptOtrMessage} from '../../../../MessageDecryption/MessageDecryption';
+import {EventHandlerParams} from '../../../EventHandler.types';
 
 const isOtrMessageAddEvent = (event: BackendEvent): event is ConversationOtrMessageAddEvent =>
   event.type === CONVERSATION_EVENT.OTR_MESSAGE_ADD;
@@ -57,7 +35,6 @@ const handleOtrMessageAdd = async ({
   apiClient,
   useQualifiedIds,
   event,
-  source,
   dryRun = false,
 }: HandleOtrMessageAddParams): EventHandlerResult => {
   if (dryRun) {
@@ -68,7 +45,6 @@ const handleOtrMessageAdd = async ({
   try {
     const decryptedData = await decryptOtrMessage({otrMessage: event, coreCryptoClient, useQualifiedIds, apiClient});
     return {
-      mappedEvent: mapGenericMessage(event, decryptedData, source),
       event,
       decryptedData,
     };

@@ -22,7 +22,7 @@ import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
 import {APIClient} from '@wireapp/api-client';
 
-import {DecryptMessageParams, decryptOtrMessage} from './DecryptMessages';
+import {DecryptMessageParams, decryptOtrMessage} from './MessageDecryption';
 
 jest.mock('@wireapp/protocol-messaging', () => ({
   GenericMessage: {
