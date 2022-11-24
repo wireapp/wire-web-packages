@@ -30,41 +30,30 @@ import {
 } from '@wireapp/api-client/lib/conversation';
 import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/lib/conversation/data';
 import {ConversationMemberLeaveEvent} from '@wireapp/api-client/lib/event';
-import {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
+import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {XOR} from '@wireapp/commons/lib/util/TypeUtil';
 import {Decoder} from 'bazinga64';
 
 import {APIClient} from '@wireapp/api-client';
-import {ConversationConfiguration, ExternalProposalType} from '@wireapp/core-crypto';
+import {ExternalProposalType} from '@wireapp/core-crypto';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 
-import {
-  AddUsersParams,
-  MessageSendingOptions,
-  MessageTargetMode,
-  MLSReturnType,
-  SendMlsMessageParams,
-  SendProteusMessageParams,
-} from './ConversationService.types';
+import {AddUsersParams, MLSReturnType, SendMlsMessageParams, SendResult} from './ConversationService.types';
 
 import {MessageTimer, PayloadBundleState, RemoveUsersParams} from '../../conversation/';
 import {CryptographyService} from '../../cryptography/';
 import {decryptAsset} from '../../cryptography/AssetCryptography';
-import {MLSService, optionalToUint8Array} from '../../mls';
+import {MLSService, optionalToUint8Array} from '../../messagingProtocols/mls';
+import {getConversationQualifiedMembers, ProteusService} from '../../messagingProtocols/proteus';
+import {
+  AddUsersToProteusConversationParams,
+  SendProteusMessageParams,
+} from '../../messagingProtocols/proteus/ProteusService/ProteusService.types';
 import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/fullyQualifiedClientIdUtils';
-import {isStringArray, isQualifiedIdArray, isQualifiedUserClients, isUserClients} from '../../util/TypePredicateUtil';
 import {RemoteData} from '../content';
-import {sendMessage} from '../message/messageSender';
+import {isSendingMessage, sendMessage} from '../message/messageSender';
 import {MessageService} from '../message/MessageService';
 
-type SendResult = {
-  /** The id of the message sent */
-  id: string;
-  /** the ISO formatted date at which the message was received by the backend */
-  sentAt: string;
-  /** The sending state of the payload (has the payload been succesfully sent or canceled) */
-  state: PayloadBundleState;
-};
 export class ConversationService {
   public readonly messageTimer: MessageTimer;
   private readonly messageService: MessageService;
@@ -74,212 +63,10 @@ export class ConversationService {
     cryptographyService: CryptographyService,
     private readonly config: {useQualifiedIds?: boolean},
     private readonly mlsService: MLSService,
+    private readonly proteusService: ProteusService,
   ) {
     this.messageTimer = new MessageTimer();
     this.messageService = new MessageService(this.apiClient, cryptographyService);
-  }
-
-  private async getConversationQualifiedMembers(conversationId: string | QualifiedId): Promise<QualifiedId[]> {
-    const conversation = await this.apiClient.api.conversation.getConversation(conversationId);
-    /*
-     * If you are sending a message to a conversation, you have to include
-     * yourself in the list of users if you want to sync a message also to your
-     * other clients.
-     */
-    return conversation.members.others
-      .filter(member => !!member.qualified_id)
-      .map(member => member.qualified_id!)
-      .concat(conversation.members.self.qualified_id!);
-  }
-
-  /**
-   * Will generate a prekey bundle for specific users.
-   * If a QualifiedId array is given the bundle will contain all the clients from those users fetched from the server.
-   * If a QualifiedUserClients is provided then only the clients in the payload will be targeted (which could generate a ClientMismatch when sending messages)
-   *
-   * @param {QualifiedId[]|QualifiedUserClients} userIds - Targeted users.
-   * @returns {Promise<QualifiedUserPreKeyBundleMap}
-   */
-  private async getQualifiedPreKeyBundle(
-    userIds: QualifiedId[] | QualifiedUserClients,
-  ): Promise<QualifiedUserPreKeyBundleMap> {
-    type Target = {id: QualifiedId; clients?: string[]};
-    let targets: Target[] = [];
-
-    if (userIds) {
-      if (isQualifiedIdArray(userIds)) {
-        targets = userIds.map(id => ({id}));
-      } else {
-        targets = Object.entries(userIds).reduce<Target[]>((accumulator, [domain, userClients]) => {
-          for (const userId in userClients) {
-            accumulator.push({id: {id: userId, domain}, clients: userClients[userId]});
-          }
-          return accumulator;
-        }, []);
-      }
-    }
-
-    const preKeys = await Promise.all(
-      targets.map(async ({id: userId, clients}) => {
-        const prekeyBundle = await this.apiClient.api.user.getUserPreKeys(userId);
-        // We filter the clients that should not receive the message (if a QualifiedUserClients was given as parameter)
-        const userClients = clients
-          ? prekeyBundle.clients.filter(client => clients.includes(client.client))
-          : prekeyBundle.clients;
-        return {user: userId, clients: userClients};
-      }),
-    );
-
-    return preKeys.reduce<QualifiedUserPreKeyBundleMap>((bundleMap, qualifiedPrekey) => {
-      bundleMap[qualifiedPrekey.user.domain] ||= {};
-      for (const client of qualifiedPrekey.clients) {
-        bundleMap[qualifiedPrekey.user.domain][qualifiedPrekey.user.id] ||= {};
-        bundleMap[qualifiedPrekey.user.domain][qualifiedPrekey.user.id][client.client] = client.prekey;
-      }
-      return bundleMap;
-    }, {});
-  }
-
-  async getPreKeyBundleMap(
-    conversationId: QualifiedId,
-    userIds?: string[] | UserClients,
-  ): Promise<UserPreKeyBundleMap> {
-    let members: string[] = [];
-
-    if (userIds) {
-      if (isStringArray(userIds)) {
-        members = userIds;
-      } else if (isUserClients(userIds)) {
-        members = Object.keys(userIds);
-      }
-    }
-
-    if (!members.length) {
-      const conversation = await this.apiClient.api.conversation.getConversation(conversationId);
-      /*
-       * If you are sending a message to a conversation, you have to include
-       * yourself in the list of users if you want to sync a message also to your
-       * other clients.
-       */
-      members = conversation.members.others.map(member => member.id).concat(conversation.members.self.id);
-    }
-
-    const preKeys = await Promise.all(members.map(member => this.apiClient.api.user.getUserPreKeys(member)));
-
-    return preKeys.reduce((bundleMap: UserPreKeyBundleMap, bundle) => {
-      const userId = bundle.user;
-      bundleMap[userId] ||= {};
-      for (const client of bundle.clients) {
-        bundleMap[userId][client.client] = client.prekey;
-      }
-      return bundleMap;
-    }, {});
-  }
-
-  private async getQualifiedRecipientsForConversation(
-    conversationId: QualifiedId,
-    userIds?: QualifiedId[] | QualifiedUserClients,
-  ): Promise<QualifiedUserClients | QualifiedUserPreKeyBundleMap> {
-    if (isQualifiedUserClients(userIds)) {
-      return userIds;
-    }
-    const recipientIds = userIds || (await this.getConversationQualifiedMembers(conversationId));
-    return this.getQualifiedPreKeyBundle(recipientIds);
-  }
-
-  private async getRecipientsForConversation(
-    conversationId: QualifiedId,
-    userIds?: string[] | UserClients,
-  ): Promise<UserClients | UserPreKeyBundleMap> {
-    if (isUserClients(userIds)) {
-      return userIds;
-    }
-    return this.getPreKeyBundleMap(conversationId, userIds);
-  }
-
-  /**
-   * Sends a message to a conversation
-   *
-   * @param sendingClientId The clientId from which the message is sent
-   * @param conversationId The conversation in which to send the message
-   * @param genericMessage The payload of the message to send
-   * @return Resolves with the message sending status from backend
-   */
-  private async sendGenericMessage(
-    conversationId: QualifiedId,
-    sendingClientId: string,
-    genericMessage: GenericMessage,
-    {
-      userIds,
-      nativePush,
-      sendAsProtobuf,
-      onClientMismatch,
-      targetMode = MessageTargetMode.NONE,
-    }: MessageSendingOptions = {},
-  ) {
-    const plainText = GenericMessage.encode(genericMessage).finish();
-    if (targetMode !== MessageTargetMode.NONE && !userIds) {
-      throw new Error('Cannot send targetted message when no userIds are given');
-    }
-
-    if (conversationId.domain && this.config.useQualifiedIds) {
-      if (isStringArray(userIds) || isUserClients(userIds)) {
-        throw new Error('Invalid userIds option for sending to federated backend');
-      }
-      const recipients = await this.getQualifiedRecipientsForConversation(conversationId, userIds);
-      let reportMissing;
-      if (targetMode === MessageTargetMode.NONE) {
-        reportMissing = isQualifiedUserClients(userIds); // we want to check mismatch in case the consumer gave an exact list of users/devices
-      } else if (targetMode === MessageTargetMode.USERS) {
-        reportMissing = this.extractQualifiedUserIds(userIds);
-      } else {
-        // in case the message is fully targetted at user/client pairs, we do not want to report the missing clients or users at all
-        reportMissing = false;
-      }
-      return this.messageService.sendFederatedMessage(sendingClientId, recipients, plainText, {
-        conversationId,
-        nativePush,
-        reportMissing,
-        onClientMismatch: mismatch => onClientMismatch?.(mismatch, false),
-      });
-    }
-
-    if (isQualifiedIdArray(userIds) || isQualifiedUserClients(userIds)) {
-      throw new Error('Invalid userIds option for sending');
-    }
-    const recipients = await this.getRecipientsForConversation(conversationId, userIds);
-    let reportMissing;
-    if (targetMode === MessageTargetMode.NONE) {
-      reportMissing = isUserClients(userIds); // we want to check mismatch in case the consumer gave an exact list of users/devices
-    } else if (targetMode === MessageTargetMode.USERS) {
-      reportMissing = this.extractUserIds(userIds);
-    } else {
-      // in case the message is fully targetted at user/client pairs, we do not want to report the missing clients or users at all
-      reportMissing = false;
-    }
-    return this.messageService.sendMessage(sendingClientId, recipients, plainText, {
-      conversationId,
-      sendAsProtobuf,
-      nativePush,
-      reportMissing,
-      onClientMismatch: mistmatch => onClientMismatch?.(mistmatch, false),
-    });
-  }
-
-  private extractUserIds(userIds?: string[] | UserClients): string[] | undefined {
-    if (isUserClients(userIds)) {
-      return Object.keys(userIds);
-    }
-    return userIds;
-  }
-
-  private extractQualifiedUserIds(userIds?: QualifiedId[] | QualifiedUserClients): QualifiedId[] | undefined {
-    if (isQualifiedUserClients(userIds)) {
-      return Object.entries(userIds).reduce<QualifiedId[]>((ids, [domain, userClients]) => {
-        return ids.concat(Object.keys(userClients).map(userId => ({domain, id: userId})));
-      }, []);
-    }
-    return userIds;
   }
 
   /**
@@ -328,9 +115,10 @@ export class ConversationService {
     conversationId: string,
     conversationDomain?: string,
   ): Promise<UserClients | QualifiedUserClients> {
-    const qualifiedMembers = await this.getConversationQualifiedMembers(
-      conversationDomain ? {id: conversationId, domain: conversationDomain} : conversationId,
-    );
+    const qualifiedMembers = await getConversationQualifiedMembers({
+      apiClient: this.apiClient,
+      conversationId: conversationDomain ? {id: conversationId, domain: conversationDomain} : conversationId,
+    });
     const allClients = await this.apiClient.api.user.postListClients({qualified_users: qualifiedMembers});
     const qualifiedUserClients: QualifiedUserClients = {};
 
@@ -346,14 +134,6 @@ export class ConversationService {
 
   /**
    * Create a group conversation.
-   * @param  {string} name
-   * @param  {string|string[]} otherUserIds
-   * @deprecated
-   * @returns Promise
-   */
-  public createProteusConversation(name: string, otherUserIds: string | string[]): Promise<Conversation>;
-  /**
-   * Create a group conversation.
    *
    * @note Do not include yourself as the requestor
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/createGroupConversation
@@ -361,25 +141,12 @@ export class ConversationService {
    * @param conversationData Payload object for group creation
    * @returns Resolves when the conversation was created
    */
-  public createProteusConversation(conversationData: NewConversation): Promise<Conversation>;
-  public createProteusConversation(
+  public async createProteusConversation(conversationData: NewConversation): Promise<Conversation>;
+  public async createProteusConversation(
     conversationData: NewConversation | string,
     otherUserIds?: string | string[],
   ): Promise<Conversation> {
-    let payload: NewConversation;
-    if (typeof conversationData === 'string') {
-      const ids = typeof otherUserIds === 'string' ? [otherUserIds] : otherUserIds;
-
-      payload = {
-        name: conversationData,
-        receipt_mode: null,
-        users: ids ?? [],
-      };
-    } else {
-      payload = conversationData;
-    }
-
-    return this.apiClient.api.conversation.postConversation(payload);
+    return this.proteusService.createConversation({conversationData, otherUserIds});
   }
 
   public async getConversations(conversationId: string): Promise<Conversation>;
@@ -410,8 +177,8 @@ export class ConversationService {
     return (await request.response).buffer;
   }
 
-  public async addUsersToProteusConversation({conversationId, qualifiedUserIds}: Omit<AddUsersParams, 'groupId'>) {
-    return this.apiClient.api.conversation.postMembers(conversationId, qualifiedUserIds);
+  public async addUsersToProteusConversation(params: AddUsersToProteusConversationParams) {
+    return this.proteusService.addUsersToConversation(params);
   }
 
   public async removeUserFromConversation(
@@ -419,37 +186,6 @@ export class ConversationService {
     userId: QualifiedId,
   ): Promise<ConversationMemberLeaveEvent> {
     return this.apiClient.api.conversation.deleteMember(conversationId, userId);
-  }
-
-  private async sendProteusMessage({
-    userIds,
-    sendAsProtobuf,
-    conversationId,
-    nativePush,
-    targetMode,
-    payload,
-    onClientMismatch,
-  }: SendProteusMessageParams): Promise<SendResult> {
-    const response = await this.sendGenericMessage(conversationId, this.apiClient.validatedClientId, payload, {
-      userIds,
-      sendAsProtobuf,
-      nativePush,
-      targetMode,
-      onClientMismatch,
-    });
-
-    if (!response.errored) {
-      if (!this.isClearFromMismatch(response)) {
-        // We warn the consumer that there is a mismatch that did not prevent message sending
-        await onClientMismatch?.(response, true);
-      }
-    }
-
-    return {
-      id: payload.messageId,
-      sentAt: response.time,
-      state: response.errored ? PayloadBundleState.CANCELLED : PayloadBundleState.OUTGOING_SENT,
-    };
   }
 
   /**
@@ -460,7 +196,7 @@ export class ConversationService {
     function isMLS(params: SendProteusMessageParams | SendMlsMessageParams): params is SendMlsMessageParams {
       return params.protocol === ConversationProtocol.MLS;
     }
-    return sendMessage(() => (isMLS(params) ? this.sendMLSMessage(params) : this.sendProteusMessage(params)));
+    return sendMessage(() => (isMLS(params) ? this.sendMLSMessage(params) : this.proteusService.sendMessage(params)));
   }
 
   public sendTypingStart(conversationId: string): Promise<void> {
@@ -469,6 +205,13 @@ export class ConversationService {
 
   public sendTypingStop(conversationId: string): Promise<void> {
     return this.apiClient.api.conversation.postTyping(conversationId, {status: CONVERSATION_TYPING.STOPPED});
+  }
+
+  /**
+   * returns the number of messages that are in the queue expecting to be sent
+   */
+  isSendingMessage(): boolean {
+    return isSendingMessage();
   }
 
   public setConversationMutedStatus(
@@ -515,21 +258,22 @@ export class ConversationService {
     });
   }
 
-  private isClearFromMismatch(mismatch: ClientMismatch | MessageSendingStatus): boolean {
-    const hasMissing = Object.keys(mismatch.missing || {}).length > 0;
-    const hasDeleted = Object.keys(mismatch.deleted || {}).length > 0;
-    const hasRedundant = Object.keys(mismatch.redundant || {}).length > 0;
-    const hasFailed = Object.keys((mismatch as MessageSendingStatus).failed_to_send || {}).length > 0;
-    return !hasMissing && !hasDeleted && !hasRedundant && !hasFailed;
-  }
-
   /**
    *   ###############################################
    *   ################ MLS Functions ################
    *   ###############################################
    */
 
+  /**
+   * Will create a conversation on backend and register it to CoreCrypto once created
+   * @param conversationData
+   */
   public async createMLSConversation(conversationData: NewConversation): Promise<MLSReturnType> {
+    const {selfUserId, qualified_users: qualifiedUsers = []} = conversationData;
+    if (!selfUserId) {
+      throw new Error('You need to pass self user qualified id in order to create an MLS conversation');
+    }
+
     /**
      * @note For creating MLS conversations the users & qualified_users
      * field must be empty as backend is not aware which users
@@ -545,47 +289,16 @@ export class ConversationService {
       throw new Error('No group_id found in response which is required for creating MLS conversations.');
     }
 
-    const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
-    const {qualified_users: qualifiedUsers = [], selfUserId} = conversationData;
-    if (!selfUserId) {
-      throw new Error('You need to pass self user qualified id in order to create an MLS conversation');
-    }
-
-    const mlsKeys = (await this.apiClient.api.client.getPublicKeys()).removal;
-    const mlsKeyBytes = Object.values(mlsKeys).map((key: string) => Decoder.fromBase64(key).asBytes);
-    const config: ConversationConfiguration = {
-      externalSenders: mlsKeyBytes,
-      ciphersuite: 1, // TODO: Use the correct ciphersuite enum.
-    };
-
-    await this.mlsService.createConversation(groupIdBytes, config);
-
-    const coreCryptoKeyPackagesPayload = await this.mlsService.getKeyPackagesPayload([
-      {
-        id: selfUserId.id,
-        domain: selfUserId.domain,
-        /**
-         * we should skip fetching key packages for current self client,
-         * it's already added by the backend on the group creation time
-         */
-        skipOwn: conversationData.creator_client,
-      },
-      ...qualifiedUsers,
-    ]);
-
-    let response;
-    if (coreCryptoKeyPackagesPayload.length !== 0) {
-      response = await this.mlsService.addUsersToExistingConversation(groupIdBytes, coreCryptoKeyPackagesPayload);
-    }
-
-    // We schedule a key material renewal
-    this.mlsService.scheduleKeyMaterialRenewal(groupId);
+    const response = await this.mlsService.registerConversation(groupId, qualifiedUsers.concat(selfUserId), {
+      user: selfUserId,
+      client: conversationData.creator_client,
+    });
 
     // We fetch the fresh version of the conversation created on backend with the newly added users
-    const conversation = await this.getConversations(qualifiedId.id);
+    const conversation = await this.apiClient.api.conversation.getConversation(qualifiedId);
 
     return {
-      events: response?.events || [],
+      events: response?.events ?? [],
       conversation,
     };
   }

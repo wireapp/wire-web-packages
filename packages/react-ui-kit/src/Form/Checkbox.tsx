@@ -17,7 +17,7 @@
  *
  */
 
-import {FC, ForwardedRef, forwardRef, InputHTMLAttributes, LabelHTMLAttributes, useId} from 'react';
+import {ForwardedRef, InputHTMLAttributes, LabelHTMLAttributes, useId, FC, forwardRef} from 'react';
 
 import {CSSObject} from '@emotion/react';
 
@@ -59,10 +59,10 @@ const StyledLabel = ({
           transform: 'translateY(-50%)',
           ...(labelBeforeCheckbox
             ? {
-                right: '0.75rem',
+                right: theme.fontSizes.small,
               }
             : {
-                left: '0.25rem',
+                left: '4px',
               }),
         },
         ...(!disabled && {
@@ -87,7 +87,7 @@ const StyledLabel = ({
           display: 'inline-block',
           width: '22px',
           height: '22px',
-          lineHeight: 1.4,
+          lineHeight: '1.4rem',
           margin: '0 8px 0 0px',
           color: theme.general.color,
         },
@@ -99,7 +99,7 @@ const StyledLabel = ({
         position: 'relative',
         margin: '0 0 0 -16px',
         width: aligncenter ? 'auto' : '100%',
-        lineHeight: 1.4,
+        lineHeight: '1.4rem',
         display: 'flex',
         opacity: disabled ? 0.56 : 1,
         cursor: disabled ? 'not-allowed' : 'pointer',
@@ -124,67 +124,59 @@ interface CheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
   markInvalid?: boolean;
 }
 
-const CheckboxInner: FC<CheckboxProps> = (props: CheckboxProps, ref: ForwardedRef<HTMLInputElement>) => {
-  const {
-    id,
-    children,
-    style,
-    disabled,
-    wrapperCSS = {},
-    markInvalid,
-    aligncenter,
-    labelBeforeCheckbox,
-    outlineOffset = '0.4rem',
-    ...rest
-  } = props;
-  const inputId = useId();
-  return (
-    <div
-      css={(theme: Theme) => ({
-        alignItems: 'center',
-        display: 'flex',
-        justifyContent: 'flex-start',
-        position: 'relative',
-        left: '-0.3rem',
-        [`.${INPUT_CLASSNAME}:focus-visible + label`]: {
-          outline: `1px solid ${theme.general.primaryColor}`,
-          outlineOffset: outlineOffset,
-        },
-        ...wrapperCSS,
-      })}
-      style={style}
-    >
-      <input
-        type="checkbox"
-        id={id ?? inputId}
-        style={{
-          height: '22px',
-          marginBottom: '0',
-          opacity: 0,
-          width: '22px',
-          cursor: disabled ? 'not-allowed' : 'pointer',
-        }}
-        disabled={disabled}
-        ref={ref}
-        className={INPUT_CLASSNAME}
-        {...rest}
-      />
+const Checkbox: FC<CheckboxProps> = forwardRef<HTMLInputElement, CheckboxProps>(
+  (
+    {
+      id,
+      children,
+      style,
+      disabled,
+      wrapperCSS = {},
+      markInvalid,
+      aligncenter,
+      labelBeforeCheckbox,
+      outlineOffset = '0.4rem',
+      ...props
+    },
+    ref,
+  ) => {
+    const inputId = useId();
 
-      <StyledLabel
-        htmlFor={id}
-        disabled={disabled}
-        markInvalid={markInvalid}
-        aligncenter={aligncenter}
-        labelBeforeCheckbox={labelBeforeCheckbox}
+    return (
+      <div
+        css={(theme: Theme) => ({
+          alignItems: 'center',
+          display: 'flex',
+          justifyContent: 'flex-start',
+          position: 'relative',
+          left: '-0.3rem',
+          [`.${INPUT_CLASSNAME}:focus-visible + label`]: {
+            outline: `1px solid ${theme.general.primaryColor}`,
+            outlineOffset: outlineOffset,
+          },
+          ...wrapperCSS,
+        })}
+        style={style}
       >
         {children}
-      </StyledLabel>
-    </div>
-  );
-};
-const Checkbox = forwardRef(CheckboxInner);
 
-export type CheckboxLabelProps = LabelHTMLAttributes<HTMLSpanElement> & TextProps;
+        <StyledLabel
+          htmlFor={id ?? inputId}
+          disabled={disabled}
+          markInvalid={markInvalid}
+          aligncenter={aligncenter}
+          labelBeforeCheckbox={labelBeforeCheckbox}
+        >
+          {children}
+        </StyledLabel>
+      </div>
+    );
+  },
+);
+Checkbox.displayName = 'Checkbox';
+
+export type CheckboxLabelProps<T = HTMLSpanElement> = TextProps<T>;
+
 const CheckboxLabel = ({...props}: CheckboxLabelProps) => (
   <Text
     css={(theme: Theme) => ({

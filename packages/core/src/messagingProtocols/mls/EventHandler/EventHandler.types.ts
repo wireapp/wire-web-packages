@@ -17,22 +17,16 @@
  *
  */
 
-import logdown from 'logdown';
+import {BackendEvent} from '@wireapp/api-client/lib/event';
 
-import {isWelcomeMessageEvent, handleWelcomeMessage, isMLSMessageAddEvent, handleMLSMessageAdd} from './events';
+import {PayloadBundleSource} from '../../../conversation';
+import {MLSService} from '../MLSService/MLSService';
 
-import {EventHandlerParams, EventHandlerResult} from '..';
+export {BackendEvent, PayloadBundleSource};
 
-const logger = logdown('@wireapp/core/EventHandler/ConversationEvent');
-
-const handleConversationEvent = async (params: EventHandlerParams): EventHandlerResult => {
-  const {event} = params;
-  if (isWelcomeMessageEvent(event)) {
-    return handleWelcomeMessage({...params, event});
-  }
-  if (isMLSMessageAddEvent(event)) {
-    return handleMLSMessageAdd({...params, event, logger});
-  }
+export type EventHandlerParams = {
+  mlsService: MLSService;
+  event: BackendEvent;
+  source: PayloadBundleSource;
+  dryRun?: boolean;
 };
-
-export {handleConversationEvent};

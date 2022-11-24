@@ -17,7 +17,7 @@
  *
  */
 
-import {FC, HTMLProps} from 'react';
+import {FC, HTMLProps, ReactNode} from 'react';
 
 import {CSSObject} from '@emotion/react';
 
@@ -28,9 +28,11 @@ import {COLOR, Opacity, Slide, YAxisMovement} from '../../Identity';
 import {DURATION} from '../../Identity/motions';
 import {QUERY} from '../../mediaQueries';
 import {ParagraphProps} from '../../Text';
-import {Theme} from '../Theme';
+import {Theme} from '../../Theme/Theme';
 
-export type DesktopStyledHeaderSubMenuProps<T = HTMLDivElement> = HTMLProps<T>;
+export type DesktopStyledHeaderSubMenuProps<T = HTMLDivElement> = HTMLProps<T> & {
+  children?: ReactNode;
+};
 
 const desktopStyledHeaderSubMenuStyle: (theme: Theme, props: DesktopStyledHeaderSubMenuProps) => CSSObject = theme => ({
   alignItems: 'left',
@@ -72,6 +74,7 @@ export const DesktopStyledHeaderSubMenu = (props: DesktopStyledHeaderSubMenuProp
 
 export interface MobileStyledHeaderSubMenuProps<T = HTMLSpanElement> extends HTMLProps<T> {
   open?: boolean;
+  children?: ReactNode;
 }
 
 const mobileStyledHeaderSubMenuStyle: (props: MobileStyledHeaderSubMenuProps) => CSSObject = _ => ({
@@ -94,6 +97,7 @@ export const MobileStyledHeaderSubMenu = (props: MobileStyledHeaderSubMenuProps)
 export interface HeaderSubMenuProps extends ParagraphProps<HTMLParagraphElement> {
   caption: string;
   isOpen: boolean;
+  children: ReactNode;
 }
 
 export const HeaderSubMenu: FC<HeaderSubMenuProps> = ({caption, isOpen, children, ...props}) => {

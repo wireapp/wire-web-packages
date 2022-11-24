@@ -17,9 +17,26 @@
  *
  */
 
-import {handleConversationEvent} from './ConversationEvent';
-import {EventHandlerResult, EventHandlerParams} from './EventHandler.types';
+import {CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
 
-const handleBackendEvent = async (params: EventHandlerParams): EventHandlerResult => handleConversationEvent(params);
+import {BackendEvent} from '../../../EventHandler.types';
 
-export {handleBackendEvent};
+import {isOtrMessageAddEvent} from '.';
+
+describe('MLS messageAdd eventHandler', () => {
+  describe('isMessageAdd', () => {
+    it('returns true for a messageAdd event', () => {
+      const event = {
+        type: CONVERSATION_EVENT.OTR_MESSAGE_ADD,
+      } as BackendEvent;
+      expect(isOtrMessageAddEvent(event)).toBe(true);
+    });
+
+    it('returns false for a non-messageAdd event', () => {
+      const event = {
+        type: CONVERSATION_EVENT.MEMBER_JOIN,
+      } as BackendEvent;
+      expect(isOtrMessageAddEvent(event)).toBe(false);
+    });
+  });
+});

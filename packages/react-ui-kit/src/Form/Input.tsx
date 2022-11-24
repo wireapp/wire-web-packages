@@ -44,7 +44,7 @@ export const inputStyle: (theme: Theme, props: InputProps, hasError?: boolean) =
 ) => {
   const placeholderStyle = {
     color: theme.Input.placeholderColor,
-    fontSize: '16px',
+    fontSize: theme.fontSizes.base,
     textTransform: placeholderTextTransform,
   };
 
@@ -78,7 +78,7 @@ export const inputStyle: (theme: Theme, props: InputProps, hasError?: boolean) =
     color: theme.general.color,
     fontWeight: 300,
     height: '48px',
-    lineHeight: '24px',
+    lineHeight: '1.5rem',
     outline: 'none',
     padding: '0 16px',
     width: '100%',
@@ -159,7 +159,7 @@ const InputInner: FC<InputProps> = (
       {!hasError && helperText && (
         <p
           css={(theme: Theme) => ({
-            fontSize: '12px',
+            fontSize: theme.fontSizes.small,
             fontWeight: 400,
             color: theme.Input.placeholderColor,
             marginTop: 8,

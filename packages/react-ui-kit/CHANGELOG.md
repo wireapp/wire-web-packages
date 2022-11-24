@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.0.10](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.0.9...@wireapp/react-ui-kit@9.0.10) (2022-11-23)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+## [9.0.9](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.0.8...@wireapp/react-ui-kit@9.0.9) (2022-11-22)
+
+### Bug Fixes
+
+* **react-ui-kit:** Use proper  id for input and checkbox ([#4631](https://github.com/wireapp/wire-web-packages/issues/4631)) ([2eb7e20](https://github.com/wireapp/wire-web-packages/commit/2eb7e20b0d83dbe72b98cde884d03cec1f1c9c91))
+
+## [9.0.8](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.0.7...@wireapp/react-ui-kit@9.0.8) (2022-11-21)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+## [9.0.7](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.0.6...@wireapp/react-ui-kit@9.0.7) (2022-11-16)
+
+### Bug Fixes
+
+* styleguidist rendering ([#4618](https://github.com/wireapp/wire-web-packages/issues/4618)) ([01be991](https://github.com/wireapp/wire-web-packages/commit/01be99170008d2d93a0f997b137cb8cbee4d9192))
+
 ## [9.0.6](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.0.5...@wireapp/react-ui-kit@9.0.6) (2022-11-08)
 
 **Note:** Version bump only for package @wireapp/react-ui-kit

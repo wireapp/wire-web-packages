@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [22.7.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@22.6.1...@wireapp/api-client@22.7.0) (2022-11-22)
+
+### Features
+
+* paginated member api ([#4620](https://github.com/wireapp/wire-web-packages/issues/4620)) ([0f66119](https://github.com/wireapp/wire-web-packages/commit/0f6611937655d6071ea6efa75907e1e5863d5918))
+
+## [22.6.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@22.6.0...@wireapp/api-client@22.6.1) (2022-11-21)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+# [22.6.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@22.5.0...@wireapp/api-client@22.6.0) (2022-11-16)
+
+### Features
+
+* add a user setting for font sizes [ACC-302] ([#4612](https://github.com/wireapp/wire-web-packages/issues/4612)) ([ab9a81d](https://github.com/wireapp/wire-web-packages/commit/ab9a81dd272b51dc28de920dd7bf254880582039))
+
+# [22.5.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@22.4.0...@wireapp/api-client@22.5.0) (2022-11-09)
+
+### Features
+
+* **core, api-client:** associate client id with login session [FS-1137] ([#4605](https://github.com/wireapp/wire-web-packages/issues/4605)) ([bc664f9](https://github.com/wireapp/wire-web-packages/commit/bc664f9a81f1f3de3e7d8509cd352897441d5bde))
+
+# [22.4.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@22.3.3...@wireapp/api-client@22.4.0) (2022-11-09)
+
+### Features
+
+* Add mls team group type in conversation types ([#4607](https://github.com/wireapp/wire-web-packages/issues/4607)) ([d0daa5e](https://github.com/wireapp/wire-web-packages/commit/d0daa5e2b90548b40968b39ee3b0bf144e64cd59))
+
 ## [22.3.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@22.3.2...@wireapp/api-client@22.3.3) (2022-11-08)
 
 **Note:** Version bump only for package @wireapp/api-client
