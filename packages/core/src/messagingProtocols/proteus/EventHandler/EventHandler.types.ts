@@ -22,14 +22,14 @@ import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
 import {APIClient} from '@wireapp/api-client';
 
-import {PayloadBundleSource} from '../../../conversation';
+import {NotificationSource} from '../../../notification';
 
-export {BackendEvent, PayloadBundleSource};
+export {BackendEvent};
 
 export type EventHandlerParams = {
   dryRun?: boolean;
   event: BackendEvent;
-  source: PayloadBundleSource;
+  source: NotificationSource;
   coreCryptoClient: CoreCrypto;
   apiClient: APIClient;
   useQualifiedIds: boolean;

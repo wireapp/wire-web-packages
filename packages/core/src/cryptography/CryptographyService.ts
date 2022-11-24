@@ -26,7 +26,6 @@ import {
   QualifiedUserClients,
   UserClients,
 } from '@wireapp/api-client/lib/conversation/';
-import {ConversationOtrMessageAddEvent} from '@wireapp/api-client/lib/event';
 import {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user/';
 import {Decoder, Encoder} from 'bazinga64';
 import logdown from 'logdown';
@@ -34,13 +33,10 @@ import logdown from 'logdown';
 import {APIClient} from '@wireapp/api-client';
 import {Cryptobox, CryptoboxSession} from '@wireapp/cryptobox';
 import {keys as ProteusKeys} from '@wireapp/proteus';
-import {GenericMessage} from '@wireapp/protocol-messaging';
 import {CRUDEngine} from '@wireapp/store-engine';
 
 import {CryptographyDatabaseRepository} from './CryptographyDatabaseRepository';
-import {GenericMessageMapper} from './GenericMessageMapper';
 
-import {GenericMessageType, PayloadBundle, PayloadBundleSource} from '../conversation';
 import {SessionPayloadBundle} from '../cryptography/';
 import {isUserClients} from '../util';
 
@@ -279,23 +275,5 @@ export class CryptographyService {
   public async resetSession(sessionId: string): Promise<void> {
     await this.cryptobox.session_delete(sessionId);
     this.logger.log(`Deleted session ID "${sessionId}".`);
-  }
-
-  public mapGenericMessage(
-    otrMessage: ConversationOtrMessageAddEvent,
-    genericMessage: GenericMessage,
-    source: PayloadBundleSource,
-  ): PayloadBundle {
-    if (genericMessage.content === GenericMessageType.EPHEMERAL) {
-      const unwrappedMessage = GenericMessageMapper.mapGenericMessage(genericMessage.ephemeral, otrMessage, source);
-      unwrappedMessage.id = genericMessage.messageId;
-      if (genericMessage.ephemeral) {
-        const expireAfterMillis = genericMessage.ephemeral.expireAfterMillis;
-        unwrappedMessage.messageTimer =
-          typeof expireAfterMillis === 'number' ? expireAfterMillis : expireAfterMillis.toNumber();
-      }
-      return unwrappedMessage;
-    }
-    return GenericMessageMapper.mapGenericMessage(genericMessage, otrMessage, source);
   }
 }
