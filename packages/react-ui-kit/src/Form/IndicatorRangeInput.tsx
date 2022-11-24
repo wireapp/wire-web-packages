@@ -24,6 +24,7 @@ import {CSSObject} from '@emotion/react';
 import {containerStyles, dataListOption, headingStyle, rangeStyles} from './IndicatorRangeInput.styles';
 import {InputLabel} from './InputLabel';
 
+import {Theme} from '../Layout';
 import {TextProps} from '../Text';
 
 type DataListOptions = {
@@ -76,14 +77,14 @@ export const IndicatorRangeInput: FC<IndicatorRangeInputProps> = forwardRef<
     }, [isCustomSlider, valueNum, minNum, maxNum, listLength]);
 
     return (
-      <div css={wrapperCSS}>
+      <div css={{wrapperCSS, width: '100%'}}>
         {label && <InputLabel htmlFor={id}>{label}</InputLabel>}
 
         <div css={containerStyles}>
           {isCustomSlider && (
             <div css={{position: 'relative', display: 'flex', marginBottom: '20px'}}>
               {dataListOptions.map(dataListOption => (
-                <div key={dataListOption.value} css={() => headingStyle(listLength)}>
+                <div key={dataListOption.value} css={(theme: Theme) => headingStyle(listLength, theme)}>
                   {dataListOption?.heading}
                 </div>
               ))}
@@ -92,7 +93,7 @@ export const IndicatorRangeInput: FC<IndicatorRangeInputProps> = forwardRef<
 
           <input
             ref={ref}
-            css={() => rangeStyles(backgroundSize, valueNum, listLength, isCustomSlider)}
+            css={(theme: Theme) => rangeStyles(backgroundSize, valueNum, listLength, isCustomSlider, theme)}
             id={id}
             name={id}
             min={minNum}
@@ -105,7 +106,7 @@ export const IndicatorRangeInput: FC<IndicatorRangeInputProps> = forwardRef<
           />
 
           {isCustomSlider && (
-            <datalist id="tickMarks" css={() => dataListOption(listLength)}>
+            <datalist id="tickMarks" css={(theme: Theme) => dataListOption(listLength, theme)}>
               {dataListOptions.map((dataListOption, index) => (
                 <option key={index} value={dataListOption.value} label={dataListOption.label} />
               ))}

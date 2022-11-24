@@ -19,7 +19,7 @@
 
 import {CSSObject} from '@emotion/react/dist/emotion-react.cjs';
 
-import {COLOR_V2} from '../Identity';
+import {Theme} from '../Layout';
 import {manySelectors} from '../util';
 
 const thumbSelectors = ['&::-webkit-slider-thumb', '&::-moz-range-thumb', '&::-ms-thumb'];
@@ -30,6 +30,7 @@ export const rangeStyles = (
   value: number,
   listLength: number,
   isCustomSlider: boolean,
+  theme: Theme,
 ): CSSObject => {
   const firstOptionThumbPosition = `calc(((100% - 10px) / (${listLength} * 2) - 4px) / 2)`;
   const lastOptionThumbPosition = `calc(((100% - 12px) / (${listLength} * 2) - 6px) / 2)`;
@@ -41,8 +42,8 @@ export const rangeStyles = (
     appearance: 'none',
     width: '100%',
     height: '8px',
-    backgroundImage: `linear-gradient(${COLOR_V2.BLUE_LIGHT_700}, ${COLOR_V2.BLUE_LIGHT_700})`,
-    backgroundColor: COLOR_V2.GRAY_60,
+    backgroundImage: `linear-gradient(${theme.general.primaryColor}, ${theme.general.primaryColor})`,
+    backgroundColor: theme.Input.borderHover,
     backgroundSize: backgroundSize || '0% 100%',
     backgroundRepeat: 'no-repeat',
     display: 'flex',
@@ -57,7 +58,7 @@ export const rangeStyles = (
       height: '28px',
       width: '10px',
       borderRadius: '4px',
-      background: COLOR_V2.BLUE_LIGHT_700,
+      background: theme.Button.primaryActiveBorder,
       cursor: 'pointer',
       border: 'none',
       boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.25);',
@@ -78,14 +79,14 @@ export const rangeStyles = (
   };
 };
 
-export const headingStyle = (listLength: number): CSSObject => {
+export const headingStyle = (listLength: number, theme: Theme): CSSObject => {
   const optionWidth = `calc((100% - 12px) / ${listLength})`;
 
   return {
-    color: COLOR_V2.BLACK,
-    fontSize: '14px',
+    color: theme.general.color,
+    fontSize: theme.fontSizes.medium,
     fontWeight: '400',
-    lineHeight: '16px',
+    lineHeight: '1.2em',
     width: optionWidth,
     textAlign: 'center',
 
@@ -99,14 +100,14 @@ export const headingStyle = (listLength: number): CSSObject => {
   };
 };
 
-export const dataListOption = (listLength: number): CSSObject => {
+export const dataListOption = (listLength: number, theme: Theme): CSSObject => {
   const optionWidth = `calc((100% - 12px) / ${listLength})`;
 
   return {
-    color: COLOR_V2.GRAY_80,
-    fontSize: '16px',
+    color: theme.Input.labelColor,
+    fontSize: theme.fontSizes.small,
     fontWeight: '400',
-    lineHeight: '14px',
+    lineHeight: '1.2em',
 
     boxSizing: 'border-box',
     display: 'flex',
@@ -134,7 +135,7 @@ export const dataListOption = (listLength: number): CSSObject => {
       '&::before': {
         content: '""',
         position: 'absolute',
-        borderLeft: `2px solid ${COLOR_V2.GRAY_60}`,
+        borderLeft: `2px solid ${theme.Select.borderColor}`,
         width: '2px',
         height: '27px',
         top: '-37px',
