@@ -23,4 +23,3 @@ export * as conversation from './conversation/';
 export {CoreError} from './CoreError';
 export * as cryptography from './cryptography/';
 export * as util from './util';
-export * as MessageBuilder from './conversation/message/MessageBuilder';

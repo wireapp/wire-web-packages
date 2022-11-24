@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2019 Wire Swiss GmbH
+ * Copyright (C) 2022 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +17,4 @@
  *
  */
 
-import {OtrMessage} from './OtrMessage';
-import {TeamMessage} from './TeamMessage';
-import {UserMessage} from './UserMessage';
-
-export type Message = OtrMessage | TeamMessage | UserMessage;
+export * from './Message.types';

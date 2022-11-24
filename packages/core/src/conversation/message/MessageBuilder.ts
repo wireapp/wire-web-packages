@@ -40,27 +40,26 @@ import {
   Reaction,
   LastRead,
   Cleared,
+  IConfirmation,
+  IButtonActionConfirmation,
+  IButtonAction,
+  IMessageEdit,
+  IKnock,
+  ICalling,
+  IMessageDelete,
+  IMessageHide,
 } from '@wireapp/protocol-messaging';
 
-import {
-  ButtonActionConfirmationMessage,
-  ButtonActionMessage,
-  CallMessage,
-  ConfirmationMessage,
-  DeleteMessage,
-  EditedTextMessage,
-  FileAssetAbortMessage,
-  FileAssetMessage,
-  FileAssetMetaDataMessage,
-  HideMessage,
-  ImageAssetMessageOutgoing,
-  LocationMessage,
-  PingMessage,
-  ReactionMessage,
-  TextMessage,
-} from './OtrMessage';
-
 import {AssetTransferState} from '../AssetTransferState';
+import {
+  FileAssetAbortContent,
+  FileAssetContent,
+  FileAssetMetaDataContent,
+  ImageAssetContent,
+  LocationContent,
+  ReactionContent,
+  TextContent,
+} from '../content';
 import {GenericMessageType} from '../GenericMessageType';
 import {MessageToProtoMapper} from '../message/MessageToProtoMapper';
 
@@ -68,18 +67,16 @@ export function createId() {
   return genV4().toString();
 }
 
-export function buildButtonActionMessage(payloadBundle: ButtonActionMessage['content']): GenericMessage {
+export function buildButtonActionMessage(payload: IButtonAction): GenericMessage {
   return GenericMessage.create({
-    [GenericMessageType.BUTTON_ACTION]: ButtonAction.create(payloadBundle),
+    [GenericMessageType.BUTTON_ACTION]: ButtonAction.create(payload),
     messageId: createId(),
   });
 }
 
-export function buildButtonActionConfirmationMessage(
-  payloadBundle: ButtonActionConfirmationMessage['content'],
-): GenericMessage {
+export function buildButtonActionConfirmationMessage(payload: IButtonActionConfirmation): GenericMessage {
   return GenericMessage.create({
-    [GenericMessageType.BUTTON_ACTION_CONFIRMATION]: ButtonActionConfirmation.create(payloadBundle),
+    [GenericMessageType.BUTTON_ACTION_CONFIRMATION]: ButtonActionConfirmation.create(payload),
     messageId: createId(),
   });
 }
@@ -91,8 +88,8 @@ export function buildCompositeMessage(payload: IComposite): GenericMessage {
   });
 }
 
-export function buildConfirmationMessage(payloadBundle: ConfirmationMessage['content']): GenericMessage {
-  const content = Confirmation.create(payloadBundle);
+export function buildConfirmationMessage(payload: IConfirmation): GenericMessage {
+  const content = Confirmation.create(payload);
 
   return GenericMessage.create({
     [GenericMessageType.CONFIRMATION]: content,
@@ -100,14 +97,8 @@ export function buildConfirmationMessage(payloadBundle: ConfirmationMessage['con
   });
 }
 
-export function buildEditedTextMessage(
-  payloadBundle: EditedTextMessage['content'],
-  messageId: string = createId(),
-): GenericMessage {
-  const editedMessage = MessageEdit.create({
-    replacingMessageId: payloadBundle.originalMessageId,
-    text: MessageToProtoMapper.mapText(payloadBundle),
-  });
+export function buildEditedTextMessage(payload: IMessageEdit, messageId: string = createId()): GenericMessage {
+  const editedMessage = MessageEdit.create(payload);
 
   return GenericMessage.create({
     [GenericMessageType.EDITED]: editedMessage,
@@ -115,11 +106,8 @@ export function buildEditedTextMessage(
   });
 }
 
-export function buildFileDataMessage(
-  payloadBundle: FileAssetMessage['content'],
-  messageId: string = createId(),
-): GenericMessage {
-  const {asset, expectsReadConfirmation, legalHoldStatus} = payloadBundle;
+export function buildFileDataMessage(payload: FileAssetContent, messageId: string = createId()): GenericMessage {
+  const {asset, expectsReadConfirmation, legalHoldStatus} = payload;
 
   const remoteData = Asset.RemoteData.create({
     assetId: asset.key,
@@ -145,8 +133,8 @@ export function buildFileDataMessage(
   return genericMessage;
 }
 
-export function buildFileMetaDataMessage(payloadBundle: FileAssetMetaDataMessage['content']): GenericMessage {
-  const {expectsReadConfirmation, legalHoldStatus, metaData} = payloadBundle;
+export function buildFileMetaDataMessage(payload: FileAssetMetaDataContent): GenericMessage {
+  const {expectsReadConfirmation, legalHoldStatus, metaData} = payload;
 
   const original = Asset.Original.create({
     audio: metaData.audio,
@@ -171,11 +159,8 @@ export function buildFileMetaDataMessage(payloadBundle: FileAssetMetaDataMessage
   return genericMessage;
 }
 
-export function buildFileAbortMessage(
-  payloadBundle: FileAssetAbortMessage['content'],
-  messageId: string = createId(),
-): GenericMessage {
-  const {expectsReadConfirmation, legalHoldStatus, reason} = payloadBundle;
+export function buildFileAbortMessage(payload: FileAssetAbortContent, messageId: string = createId()): GenericMessage {
+  const {expectsReadConfirmation, legalHoldStatus, reason} = payload;
 
   const assetMessage = Asset.create({
     expectsReadConfirmation,
@@ -230,11 +215,8 @@ export function buildClearedMessage(conversationId: QualifiedId, timestamp: numb
   });
 }
 
-export function buildImageMessage(
-  payloadBundle: ImageAssetMessageOutgoing['content'],
-  messageId: string = createId(),
-): GenericMessage {
-  const imageAsset = buildAsset(payloadBundle);
+export function buildImageMessage(payload: ImageAssetContent, messageId: string = createId()): GenericMessage {
+  const imageAsset = buildAsset(payload);
 
   const genericMessage = GenericMessage.create({
     [GenericMessageType.ASSET]: imageAsset,
@@ -243,8 +225,8 @@ export function buildImageMessage(
 
   return genericMessage;
 }
-export function buildLocationMessage(payloadBundle: LocationMessage['content']): GenericMessage {
-  const {expectsReadConfirmation, latitude, legalHoldStatus, longitude, name, zoom} = payloadBundle;
+export function buildLocationMessage(payload: LocationContent): GenericMessage {
+  const {expectsReadConfirmation, latitude, legalHoldStatus, longitude, name, zoom} = payload;
 
   const locationMessage = Location.create({
     expectsReadConfirmation,
@@ -262,8 +244,8 @@ export function buildLocationMessage(payloadBundle: LocationMessage['content']):
 
   return genericMessage;
 }
-export function buildPingMessage(payloadBundle: PingMessage['content']): GenericMessage {
-  const content = Knock.create(payloadBundle);
+export function buildPingMessage(payload: IKnock): GenericMessage {
+  const content = Knock.create(payload);
 
   const genericMessage = GenericMessage.create({
     [GenericMessageType.KNOCK]: content,
@@ -273,8 +255,8 @@ export function buildPingMessage(payloadBundle: PingMessage['content']): Generic
   return genericMessage;
 }
 
-export function buildReactionMessage(payloadBundle: ReactionMessage['content']): GenericMessage {
-  const {legalHoldStatus, originalMessageId, type} = payloadBundle;
+export function buildReactionMessage(payload: ReactionContent): GenericMessage {
+  const {legalHoldStatus, originalMessageId, type} = payload;
 
   const reaction = Reaction.create({
     emoji: type,
@@ -296,10 +278,8 @@ export function buildSessionResetMessage(): GenericMessage {
   });
 }
 
-export function buildCallMessage(payloadBundle: CallMessage['content']): GenericMessage {
-  const callMessage = Calling.create({
-    content: payloadBundle,
-  });
+export function buildCallMessage(payload: ICalling): GenericMessage {
+  const callMessage = Calling.create(payload);
 
   return GenericMessage.create({
     [GenericMessageType.CALLING]: callMessage,
@@ -307,7 +287,7 @@ export function buildCallMessage(payloadBundle: CallMessage['content']): Generic
   });
 }
 
-export function buildDeleteMessage(payload: DeleteMessage['content']): GenericMessage {
+export function buildDeleteMessage(payload: IMessageDelete): GenericMessage {
   const content = MessageDelete.create(payload);
 
   return GenericMessage.create({
@@ -316,7 +296,7 @@ export function buildDeleteMessage(payload: DeleteMessage['content']): GenericMe
   });
 }
 
-export function buildHideMessage(payload: HideMessage['content']): GenericMessage {
+export function buildHideMessage(payload: IMessageHide): GenericMessage {
   const content = MessageHide.create(payload);
 
   return GenericMessage.create({
@@ -325,20 +305,17 @@ export function buildHideMessage(payload: HideMessage['content']): GenericMessag
   });
 }
 
-export function buildTextMessage(
-  payloadBundle: TextMessage['content'],
-  messageId: string = createId(),
-): GenericMessage {
+export function buildTextMessage(payload: TextContent, messageId: string = createId()): GenericMessage {
   const genericMessage = GenericMessage.create({
     messageId,
-    [GenericMessageType.TEXT]: MessageToProtoMapper.mapText(payloadBundle),
+    [GenericMessageType.TEXT]: MessageToProtoMapper.mapText(payload),
   });
 
   return genericMessage;
 }
 
-function buildAsset(payloadBundle: ImageAssetMessageOutgoing['content']): Asset {
-  const {asset, expectsReadConfirmation, image, legalHoldStatus} = payloadBundle;
+function buildAsset(payload: ImageAssetContent): Asset {
+  const {asset, expectsReadConfirmation, image, legalHoldStatus} = payload;
 
   const imageMetadata = Asset.ImageMetaData.create({
     height: image.height,
