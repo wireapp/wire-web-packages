@@ -44,11 +44,10 @@ import {MessageService} from '../../../conversation/message/MessageService';
 import type {CryptographyService} from '../../../cryptography';
 import type {EventHandlerResult} from '../../common.types';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
-import {createSession} from '../Utility/createSession';
 import {extractEncryptedAndMissingFromBatchedPayload} from '../Utility/extractEncryptedAndMissingFromBatchedPayload';
 import {getGenericMessageParams} from '../Utility/getGenericMessageParams';
 import {isClearFromMismatch} from '../Utility/isClearFromMismatch';
-import {constructSessionId, getSessionsAndClientsFromRecipients} from '../Utility/SessionHandler';
+import {constructSessionId, createSession, getSessionsAndClientsFromRecipients} from '../Utility/SessionHandler';
 
 export class ProteusService {
   private readonly messageService: MessageService;

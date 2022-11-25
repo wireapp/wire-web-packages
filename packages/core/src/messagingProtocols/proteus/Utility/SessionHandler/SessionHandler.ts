@@ -17,6 +17,7 @@
  *
  */
 
+import {PreKey} from '@wireapp/api-client/lib/auth';
 import {QualifiedUserClients, UserClients} from '@wireapp/api-client/lib/conversation';
 import {QualifiedId, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
@@ -34,12 +35,36 @@ interface ConstructSessionIdParams {
   useQualifiedIds?: boolean;
   domain?: string;
 }
+
 const constructSessionId = ({userId, clientId, useQualifiedIds, domain}: ConstructSessionIdParams): string => {
   const id = typeof userId === 'string' ? userId : userId.id;
   const baseDomain = typeof userId === 'string' ? domain : userId.domain;
   const baseId = `${id}@${clientId}`;
   return baseDomain && useQualifiedIds ? `${baseDomain}@${baseId}` : baseId;
 };
+
+interface CreateSessionParams {
+  coreCryptoClient: CoreCrypto;
+  apiClient: APIClient;
+  sessionId: string;
+  userId: QualifiedId;
+  clientId: string;
+  initialPrekey?: PreKey;
+}
+const createSession = async ({
+  clientId,
+  coreCryptoClient,
+  apiClient,
+  sessionId,
+  userId,
+  initialPrekey,
+}: CreateSessionParams): Promise<void> => {
+  const prekey = initialPrekey ?? (await apiClient.api.user.getClientPreKey(userId, clientId)).prekey;
+  const prekeyBuffer = Decoder.fromBase64(prekey.key).asBytes;
+  return coreCryptoClient.proteusSessionFromPrekey(sessionId, prekeyBuffer);
+};
+
+export {createSession};
 
 interface CreateSessionsBase {
   apiClient: APIClient;
