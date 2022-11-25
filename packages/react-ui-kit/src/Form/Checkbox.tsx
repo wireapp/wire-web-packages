@@ -57,10 +57,10 @@ const StyledLabel = ({
           transform: 'translateY(-50%)',
           ...(labelBeforeCheckbox
             ? {
-                right: '0.75rem',
+                right: '11px',
               }
             : {
-                left: '0.25rem',
+                left: '4px',
               }),
         },
         ...(!disabled && {

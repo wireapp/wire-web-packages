@@ -84,7 +84,7 @@ export const headingStyle = (listLength: number, theme: Theme): CSSObject => {
 
   return {
     color: theme.general.color,
-    fontSize: theme.fontSizes.medium,
+    fontSize: '14px',
     fontWeight: '400',
     lineHeight: '1.2em',
     width: optionWidth,
@@ -105,7 +105,7 @@ export const dataListOption = (listLength: number, theme: Theme): CSSObject => {
 
   return {
     color: theme.Input.labelColor,
-    fontSize: theme.fontSizes.small,
+    fontSize: '16px',
     fontWeight: '400',
     lineHeight: '1.2em',
 
