@@ -20,12 +20,13 @@
 import {QualifiedUserClients, UserClients} from '@wireapp/api-client/lib/conversation';
 import {QualifiedId, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
+import {Decoder} from 'bazinga64';
 import {Logger} from 'logdown';
 
 import {APIClient} from '@wireapp/api-client';
 
 import {isQualifiedUserClients, isUserClients} from '../../../../util';
-import {createSessionsFromPreKeys, preKeyBundleToUserClients} from '../PrekeyHandler';
+import {preKeyBundleToUserClients} from '../PrekeyHandler';
 
 interface ConstructSessionIdParams {
   userId: string | QualifiedId;
@@ -155,4 +156,54 @@ const getSessionsAndClientsFromRecipients = async ({
   return {sessions, userClients};
 };
 
-export {createSessions, getSessionsAndClientsFromRecipients, constructSessionId};
+interface CreateSessionsFromPreKeysProps {
+  preKeyBundleMap: UserPreKeyBundleMap;
+  coreCryptoClient: CoreCrypto;
+  domain?: string;
+  logger?: Logger;
+}
+
+const createSessionsFromPreKeys = async ({
+  preKeyBundleMap,
+  domain = '',
+  coreCryptoClient,
+  logger,
+}: CreateSessionsFromPreKeysProps): Promise<string[]> => {
+  const sessions: string[] = [];
+
+  for (const userId in preKeyBundleMap) {
+    const userClients = preKeyBundleMap[userId];
+
+    for (const clientId in userClients) {
+      const sessionId = constructSessionId({userId, clientId, domain});
+      const sessionExists = (await coreCryptoClient.proteusSessionExists(sessionId)) as unknown as boolean;
+
+      if (sessionExists) {
+        //if session for the client already exsits, we just return it
+        sessions.push(sessionId);
+        continue;
+      }
+
+      const prekey = userClients[clientId];
+
+      if (!prekey) {
+        logger?.error(
+          `A prekey for client ${clientId} of user ${userId}${
+            domain ? ` on domain ${domain}` : ''
+          } was not found, session won't be created.`,
+        );
+        continue;
+      }
+
+      const prekeyBuffer = Decoder.fromBase64(prekey.key).asBytes;
+
+      await coreCryptoClient.proteusSessionFromPrekey(sessionId, prekeyBuffer);
+
+      sessions.push(sessionId);
+    }
+  }
+
+  return sessions;
+};
+
+export {createSessions, getSessionsAndClientsFromRecipients, constructSessionId, createSessionsFromPreKeys};

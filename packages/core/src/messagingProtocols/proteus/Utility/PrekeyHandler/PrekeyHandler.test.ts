@@ -19,12 +19,8 @@
 
 import type {UserClients} from '@wireapp/api-client/lib/conversation';
 import type {UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
-import {Decoder} from 'bazinga64';
 
-import {createSessionsFromPreKeys, preKeyBundleToUserClients} from './PrekeyHandler';
-
-import {buildProteusService} from '../../ProteusService/ProteusService.mocks';
-import {constructSessionId} from '../SessionHandler';
+import {preKeyBundleToUserClients} from './PrekeyHandler';
 
 const firstUser = {
   id: 'bc0c99f1-49a5-4ad2-889a-62885af37088',
@@ -79,109 +75,6 @@ describe('PrekeyHandler', () => {
       };
 
       expect(preKeyBundleToUserClients(input)).toEqual(output);
-    });
-  });
-
-  describe('"createSessionsFromPreKeys"', () => {
-    it('creates a session from prekey when session does not exist', async () => {
-      const {coreCrypto} = (await buildProteusService())[1];
-
-      jest.spyOn(coreCrypto, 'proteusSessionExists').mockResolvedValueOnce(false as any); //todo: fix type
-
-      const firstUserID = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
-      const firstUserClient1 = '5e80ea7886680975';
-
-      const validPreKey = {
-        id: 1337,
-        key: 'pQABARn//wKhAFggJ1Fbpg5l6wnzKOJE+vXpRnkqUYhIvVnR5lNXEbO2o/0DoQChAFggHxZvgvtDktY/vqBcpjjo6rQnXvcNQhfwmy8AJQJKlD0E9g==',
-      };
-
-      const preKeyBundleMap: UserPreKeyBundleMap = {
-        [firstUserID]: {
-          [firstUserClient1]: validPreKey,
-        },
-      };
-
-      const sessions = await createSessionsFromPreKeys({
-        preKeyBundleMap,
-        coreCryptoClient: coreCrypto,
-      });
-
-      const sessionId = constructSessionId({userId: firstUserID, clientId: firstUserClient1});
-      const prekeyBuffer = Decoder.fromBase64(validPreKey.key).asBytes;
-
-      expect(coreCrypto.proteusSessionFromPrekey).toHaveBeenCalledWith(sessionId, prekeyBuffer);
-      expect(sessions).toContain(sessionId);
-    });
-
-    it('does not create a new session when it does exist already', async () => {
-      const {coreCrypto} = (await buildProteusService())[1];
-
-      jest.spyOn(coreCrypto, 'proteusSessionExists').mockResolvedValueOnce(true as any); //todo: fix type
-
-      const firstUserID = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
-      const firstUserClient1 = '5e80ea7886680975';
-
-      const validPreKey = {
-        id: 1337,
-        key: 'pQABARn//wKhAFggJ1Fbpg5l6wnzKOJE+vXpRnkqUYhIvVnR5lNXEbO2o/0DoQChAFggHxZvgvtDktY/vqBcpjjo6rQnXvcNQhfwmy8AJQJKlD0E9g==',
-      };
-
-      const preKeyBundleMap = {
-        [firstUserID]: {
-          [firstUserClient1]: validPreKey,
-        },
-      };
-
-      const sessions = await createSessionsFromPreKeys({
-        preKeyBundleMap,
-        coreCryptoClient: coreCrypto,
-      });
-      const sessionId = constructSessionId({userId: firstUserID, clientId: firstUserClient1});
-
-      expect(coreCrypto.proteusSessionFromPrekey).not.toHaveBeenCalled();
-      expect(sessions).toContain(sessionId);
-    });
-
-    it('creates a list of sessions based on passed preKeyBundleMap', async () => {
-      const {coreCrypto} = (await buildProteusService())[1];
-
-      const firstUserID = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
-      const firstUserClient1 = '5e80ea7886680975';
-      const firstUserClient2 = 'be67218b77d02d30';
-
-      const secondUserID = '2bde49aa-bdb5-458f-98cf-7d3552b10916';
-      const secondUserClient = '5bad8cdeddc5a90f';
-      const noPrekeyClient = 'ae87218e77d02d30';
-
-      const validPreKey = {
-        id: 1337,
-        key: 'pQABARn//wKhAFggJ1Fbpg5l6wnzKOJE+vXpRnkqUYhIvVnR5lNXEbO2o/0DoQChAFggHxZvgvtDktY/vqBcpjjo6rQnXvcNQhfwmy8AJQJKlD0E9g==',
-      };
-
-      const preKeyBundleMap = {
-        [firstUserID]: {
-          [firstUserClient1]: validPreKey,
-          [firstUserClient2]: validPreKey,
-          [noPrekeyClient]: null,
-        },
-        [secondUserID]: {
-          [secondUserClient]: validPreKey,
-        },
-      };
-
-      const sessions = await createSessionsFromPreKeys({
-        preKeyBundleMap,
-        coreCryptoClient: coreCrypto,
-      });
-      expect(sessions).toEqual(
-        expect.arrayContaining([
-          constructSessionId({userId: firstUserID, clientId: firstUserClient1}),
-          constructSessionId({userId: firstUserID, clientId: firstUserClient2}),
-          constructSessionId({userId: secondUserID, clientId: secondUserClient}),
-        ]),
-      );
-      expect(sessions).not.toContain(constructSessionId({userId: firstUserID, clientId: noPrekeyClient}));
     });
   });
 });
