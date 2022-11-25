@@ -22,10 +22,8 @@ import {ConversationProtocol} from '@wireapp/api-client/lib/conversation';
 
 import {APIClient} from '@wireapp/api-client';
 import {GenericMessage} from '@wireapp/protocol-messaging';
-import {MemoryEngine} from '@wireapp/store-engine';
 
 import {ConversationService, MessageSendingState} from '..';
-import {CryptographyService} from '../../cryptography';
 import {MLSService} from '../../messagingProtocols/mls';
 import * as MessagingProtocols from '../../messagingProtocols/proteus';
 import * as PayloadHelper from '../../test/PayloadHelper';

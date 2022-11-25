@@ -17,13 +17,21 @@
  *
  */
 
+import {UserClients} from '@wireapp/api-client/lib/conversation';
 import type {UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 import type {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
 import {Decoder} from 'bazinga64';
 
 import type {Logger} from '@wireapp/commons';
 
-import type {CryptographyService} from '../../../../../cryptography';
+import {CryptographyService} from '../../../../cryptography';
+
+const preKeyBundleToUserClients = (users: UserPreKeyBundleMap): UserClients => {
+  return Object.entries(users).reduce<UserClients>((acc, [userId, clientsObj]) => {
+    acc[userId] = Object.keys(clientsObj);
+    return acc;
+  }, {});
+};
 
 interface CreateSessionsFromPreKeysProps {
   preKeyBundleMap: UserPreKeyBundleMap;
@@ -33,7 +41,7 @@ interface CreateSessionsFromPreKeysProps {
   logger?: Logger;
 }
 
-export const createSessionsFromPreKeys = async ({
+const createSessionsFromPreKeys = async ({
   preKeyBundleMap,
   domain = '',
   cryptographyService,
@@ -54,7 +62,7 @@ export const createSessionsFromPreKeys = async ({
             domain ? ` on domain ${domain}` : ''
           } was not found, session won't be created.`,
         );
-        break;
+        continue;
       }
 
       const sessionId = cryptographyService.constructSessionId(userId, clientId, domain);
@@ -72,3 +80,5 @@ export const createSessionsFromPreKeys = async ({
 
   return sessions;
 };
+
+export {preKeyBundleToUserClients, createSessionsFromPreKeys};

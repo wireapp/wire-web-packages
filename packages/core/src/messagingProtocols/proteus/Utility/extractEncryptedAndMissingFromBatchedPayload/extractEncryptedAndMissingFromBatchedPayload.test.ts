@@ -19,9 +19,9 @@
 
 import type {UserClients} from '@wireapp/api-client/lib/conversation';
 
-import {buildProteusService} from '../../ProteusService.mocks';
+import {buildProteusService} from '../../ProteusService/ProteusService.mocks';
 
-import {extractEncryptedAndMissingFromBatchedPayload} from './';
+import {extractEncryptedAndMissingFromBatchedPayload} from '.';
 
 describe('extractEncryptedAndMissingFromBatchedPayload', () => {
   it('properly extracts missing and encrypted from payload (without missing)', async () => {

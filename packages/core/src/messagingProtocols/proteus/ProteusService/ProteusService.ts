@@ -38,8 +38,6 @@ import type {
   ProteusServiceConfig,
   SendProteusMessageParams,
 } from './ProteusService.types';
-import {extractEncryptedAndMissingFromBatchedPayload} from './Utility/extractEncryptedAndMissingFromBatchedPayload';
-import {getSessionsAndClientsFromRecipients} from './Utility/getSessionsAndClientsFromRecipients';
 
 import {MessageSendingState, SendResult} from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
@@ -47,9 +45,10 @@ import type {CryptographyService} from '../../../cryptography';
 import type {EventHandlerResult} from '../../common.types';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
 import {createSession} from '../Utility/createSession';
+import {extractEncryptedAndMissingFromBatchedPayload} from '../Utility/extractEncryptedAndMissingFromBatchedPayload';
 import {getGenericMessageParams} from '../Utility/getGenericMessageParams';
 import {isClearFromMismatch} from '../Utility/isClearFromMismatch';
-import {constructSessionId} from '../Utility/SessionIdBuilder';
+import {constructSessionId, getSessionsAndClientsFromRecipients} from '../Utility/SessionHandler';
 
 export class ProteusService {
   private readonly messageService: MessageService;

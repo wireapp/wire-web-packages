@@ -19,7 +19,7 @@
 
 import type {OTRRecipients, UserClients} from '@wireapp/api-client/lib/conversation';
 
-import type {CryptographyService} from '../../../../../cryptography';
+import type {CryptographyService} from '../../../../cryptography';
 
 interface ExtractEncryptedAndMissingFromBatchedPayloadProps {
   payload: Map<string, Uint8Array>;

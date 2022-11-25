@@ -17,15 +17,29 @@
  *
  */
 
-import type {QualifiedUserClients, UserClients} from '@wireapp/api-client/lib/conversation';
-import type {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
+import {QualifiedUserClients, UserClients} from '@wireapp/api-client/lib/conversation';
+import {QualifiedId, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
+import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
+import {Logger} from 'logdown';
 
-import type {APIClient} from '@wireapp/api-client';
-import type {Logger} from '@wireapp/commons';
+import {APIClient} from '@wireapp/api-client';
 
-import type {CryptographyService} from '../../../../../cryptography';
-import {isQualifiedUserClients} from '../../../../../util';
-import {createSessionsFromPreKeys} from '../createSessionsFromPreKeys';
+import {CryptographyService} from '../../../../cryptography';
+import {isQualifiedUserClients, isUserClients} from '../../../../util';
+import {createSessionsFromPreKeys, preKeyBundleToUserClients} from '../PrekeyHandler';
+
+interface ConstructSessionIdParams {
+  userId: string | QualifiedId;
+  clientId: string;
+  useQualifiedIds?: boolean;
+  domain?: string;
+}
+const constructSessionId = ({userId, clientId, useQualifiedIds, domain}: ConstructSessionIdParams): string => {
+  const id = typeof userId === 'string' ? userId : userId.id;
+  const baseDomain = typeof userId === 'string' ? domain : userId.domain;
+  const baseId = `${id}@${clientId}`;
+  return baseDomain && useQualifiedIds ? `${baseDomain}@${baseId}` : baseId;
+};
 
 interface CreateSessionsBase {
   apiClient: APIClient;
@@ -100,16 +114,14 @@ interface CreateSessionsProps extends CreateSessionsBase {
  * Will call createQualifiedSessions or createLegacySessions based on passed userClientMap.
  * @param {userClientMap} map of domain to (map of user IDs to client IDs) or map of user IDs containg the lists of clients
  */
-export const createSessions = async ({
+const createSessions = async ({
   userClientMap,
   apiClient,
   coreCryptoClient,
   cryptographyService,
   logger,
 }: CreateSessionsProps): Promise<string[]> => {
-  const qualifiedUserClients = isQualifiedUserClients(userClientMap);
-
-  if (qualifiedUserClients) {
+  if (isQualifiedUserClients(userClientMap)) {
     return await createQualifiedSessions({userClientMap, apiClient, coreCryptoClient, cryptographyService, logger});
   }
 
@@ -121,3 +133,37 @@ export const createSessions = async ({
     logger,
   });
 };
+
+interface GetSessionsAndClientsFromRecipientsProps {
+  recipients: UserPreKeyBundleMap | UserClients;
+  domain?: string;
+  apiClient: APIClient;
+  coreCryptoClient: CoreCrypto;
+  cryptographyService: CryptographyService;
+  logger?: Logger;
+}
+
+const getSessionsAndClientsFromRecipients = async ({
+  recipients,
+  domain = '',
+  apiClient,
+  coreCryptoClient,
+  cryptographyService,
+  logger,
+}: GetSessionsAndClientsFromRecipientsProps) => {
+  const userClients = isUserClients(recipients) ? recipients : preKeyBundleToUserClients(recipients);
+
+  const userClientMap: QualifiedUserClients | UserClients = domain ? {[domain]: userClients} : userClients;
+
+  const sessions = await createSessions({
+    userClientMap,
+    apiClient,
+    coreCryptoClient,
+    cryptographyService,
+    logger,
+  });
+
+  return {sessions, userClients};
+};
+
+export {createSessions, getSessionsAndClientsFromRecipients, constructSessionId};
