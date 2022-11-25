@@ -20,7 +20,7 @@
 import type {UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 import {Decoder} from 'bazinga64';
 
-import {buildProteusService} from '../../../../../test/ProteusHelper';
+import {buildProteusService} from '../../ProteusService.mocks';
 
 import {createSessionsFromPreKeys} from './';
 

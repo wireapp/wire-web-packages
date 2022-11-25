@@ -34,8 +34,8 @@ import {GenericMessage, Text} from '@wireapp/protocol-messaging';
 
 import {MessageService} from './MessageService';
 
+import {buildProteusService} from '../../messagingProtocols/proteus/ProteusService/ProteusService.mocks';
 import {getUUID} from '../../test/PayloadHelper';
-import {buildProteusService} from '../../test/ProteusHelper';
 
 const baseMessageSendingStatus: MessageSendingStatus = {
   deleted: {},

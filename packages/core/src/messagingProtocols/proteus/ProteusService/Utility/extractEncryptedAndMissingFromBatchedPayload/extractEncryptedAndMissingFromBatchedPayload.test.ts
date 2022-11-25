@@ -19,7 +19,7 @@
 
 import type {UserClients} from '@wireapp/api-client/lib/conversation';
 
-import {buildProteusService} from '../../../../../test/ProteusHelper';
+import {buildProteusService} from '../../ProteusService.mocks';
 
 import {extractEncryptedAndMissingFromBatchedPayload} from './';
 

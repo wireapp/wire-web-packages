@@ -25,7 +25,7 @@ import {Conversation, ConversationProtocol, NewConversation} from '@wireapp/api-
 
 import {MessageSendingState} from '../../../conversation';
 import {buildTextMessage} from '../../../conversation/message/MessageBuilder';
-import {buildProteusService} from '../../../test/ProteusHelper';
+import {buildProteusService} from './ProteusService.mocks';
 
 jest.mock('../Utility/getGenericMessageParams', () => {
   return {

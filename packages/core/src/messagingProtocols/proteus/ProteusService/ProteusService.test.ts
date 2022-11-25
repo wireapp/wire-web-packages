@@ -26,7 +26,7 @@ import {MessageTargetMode} from '../../../conversation';
 import {buildTextMessage} from '../../../conversation/message/MessageBuilder';
 import {SendProteusMessageParams} from './ProteusService.types';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
-import {buildProteusService} from '../../../test/ProteusHelper';
+import {buildProteusService} from './ProteusService.mocks';
 
 jest.mock('../Utility/Recipients', () => ({
   ...jest.requireActual('../Utility/Recipients'),
