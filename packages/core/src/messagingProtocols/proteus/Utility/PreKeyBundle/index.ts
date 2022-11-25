@@ -17,4 +17,4 @@
  *
  */
 
-export * from './PrekeyHandler';
+export * from './PreKeyBundle';

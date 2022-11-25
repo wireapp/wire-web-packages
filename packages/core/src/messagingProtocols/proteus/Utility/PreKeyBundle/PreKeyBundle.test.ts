@@ -20,7 +20,7 @@
 import type {UserClients} from '@wireapp/api-client/lib/conversation';
 import type {UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 
-import {preKeyBundleToUserClients} from './PrekeyHandler';
+import {preKeyBundleToUserClients} from './PreKeyBundle';
 
 const firstUser = {
   id: 'bc0c99f1-49a5-4ad2-889a-62885af37088',

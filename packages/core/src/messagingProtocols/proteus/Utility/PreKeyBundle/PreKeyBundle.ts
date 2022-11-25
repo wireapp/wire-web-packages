@@ -21,7 +21,14 @@ import {APIClient} from '@wireapp/api-client/lib/APIClient';
 import {QualifiedUserClients, UserClients} from '@wireapp/api-client/lib/conversation';
 import {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 
-import {isQualifiedIdArray, isStringArray, isUserClients} from '../../../util';
+import {isQualifiedIdArray, isStringArray, isUserClients} from '../../../../util';
+
+const preKeyBundleToUserClients = (users: UserPreKeyBundleMap): UserClients => {
+  return Object.entries(users).reduce<UserClients>((acc, [userId, clientsObj]) => {
+    acc[userId] = Object.keys(clientsObj);
+    return acc;
+  }, {});
+};
 
 interface GetPreKeyBundleMapParams {
   apiClient: APIClient;
@@ -118,4 +125,4 @@ const getQualifiedPreKeyBundle = async ({
   }, {});
 };
 
-export {getPreKeyBundleMap, getQualifiedPreKeyBundle};
+export {getPreKeyBundleMap, getQualifiedPreKeyBundle, preKeyBundleToUserClients};

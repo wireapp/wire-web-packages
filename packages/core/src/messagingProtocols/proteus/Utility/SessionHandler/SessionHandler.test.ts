@@ -30,7 +30,7 @@ import {
 } from './SessionHandler';
 
 import {buildProteusService} from '../../ProteusService/ProteusService.mocks';
-import {preKeyBundleToUserClients} from '../PrekeyHandler';
+import {preKeyBundleToUserClients} from '../PreKeyBundle';
 
 describe('SessionHandler', () => {
   describe('constructSessionId', () => {

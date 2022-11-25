@@ -27,7 +27,7 @@ import {Logger} from 'logdown';
 import {APIClient} from '@wireapp/api-client';
 
 import {isQualifiedUserClients, isUserClients} from '../../../../util';
-import {preKeyBundleToUserClients} from '../PrekeyHandler';
+import {preKeyBundleToUserClients} from '../PreKeyBundle';
 
 interface ConstructSessionIdParams {
   userId: string | QualifiedId;
