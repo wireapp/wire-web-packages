@@ -24,6 +24,7 @@ import {Decoder} from 'bazinga64';
 import {createSessionsFromPreKeys, preKeyBundleToUserClients} from './PrekeyHandler';
 
 import {buildProteusService} from '../../ProteusService/ProteusService.mocks';
+import {constructSessionId} from '../SessionHandler';
 
 const firstUser = {
   id: 'bc0c99f1-49a5-4ad2-889a-62885af37088',
@@ -83,7 +84,7 @@ describe('PrekeyHandler', () => {
 
   describe('"createSessionsFromPreKeys"', () => {
     it('creates a session from prekey when session does not exist', async () => {
-      const [proteusService, {coreCrypto, cryptographyService}] = await buildProteusService();
+      const {coreCrypto} = (await buildProteusService())[1];
 
       jest.spyOn(coreCrypto, 'proteusSessionExists').mockResolvedValueOnce(false as any); //todo: fix type
 
@@ -104,10 +105,9 @@ describe('PrekeyHandler', () => {
       const sessions = await createSessionsFromPreKeys({
         preKeyBundleMap,
         coreCryptoClient: coreCrypto,
-        cryptographyService,
       });
 
-      const sessionId = proteusService['cryptographyService'].constructSessionId(firstUserID, firstUserClient1);
+      const sessionId = constructSessionId({userId: firstUserID, clientId: firstUserClient1});
       const prekeyBuffer = Decoder.fromBase64(validPreKey.key).asBytes;
 
       expect(coreCrypto.proteusSessionFromPrekey).toHaveBeenCalledWith(sessionId, prekeyBuffer);
@@ -115,7 +115,7 @@ describe('PrekeyHandler', () => {
     });
 
     it('does not create a new session when it does exist already', async () => {
-      const [proteusService, {coreCrypto, cryptographyService}] = await buildProteusService();
+      const {coreCrypto} = (await buildProteusService())[1];
 
       jest.spyOn(coreCrypto, 'proteusSessionExists').mockResolvedValueOnce(true as any); //todo: fix type
 
@@ -136,16 +136,15 @@ describe('PrekeyHandler', () => {
       const sessions = await createSessionsFromPreKeys({
         preKeyBundleMap,
         coreCryptoClient: coreCrypto,
-        cryptographyService,
       });
-      const sessionId = proteusService['cryptographyService'].constructSessionId(firstUserID, firstUserClient1);
+      const sessionId = constructSessionId({userId: firstUserID, clientId: firstUserClient1});
 
       expect(coreCrypto.proteusSessionFromPrekey).not.toHaveBeenCalled();
       expect(sessions).toContain(sessionId);
     });
 
     it('creates a list of sessions based on passed preKeyBundleMap', async () => {
-      const [proteusService, {coreCrypto, cryptographyService}] = await buildProteusService();
+      const {coreCrypto} = (await buildProteusService())[1];
 
       const firstUserID = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
       const firstUserClient1 = '5e80ea7886680975';
@@ -174,18 +173,15 @@ describe('PrekeyHandler', () => {
       const sessions = await createSessionsFromPreKeys({
         preKeyBundleMap,
         coreCryptoClient: coreCrypto,
-        cryptographyService,
       });
       expect(sessions).toEqual(
         expect.arrayContaining([
-          proteusService['cryptographyService'].constructSessionId(firstUserID, firstUserClient1),
-          proteusService['cryptographyService'].constructSessionId(firstUserID, firstUserClient2),
-          proteusService['cryptographyService'].constructSessionId(secondUserID, secondUserClient),
+          constructSessionId({userId: firstUserID, clientId: firstUserClient1}),
+          constructSessionId({userId: firstUserID, clientId: firstUserClient2}),
+          constructSessionId({userId: secondUserID, clientId: secondUserClient}),
         ]),
       );
-      expect(sessions).not.toContain(
-        proteusService['cryptographyService'].constructSessionId(firstUserID, noPrekeyClient),
-      );
+      expect(sessions).not.toContain(constructSessionId({userId: firstUserID, clientId: noPrekeyClient}));
     });
   });
 });

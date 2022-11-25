@@ -91,7 +91,7 @@ export class ProteusService {
    *   If not provided and the session doesn't exists it will fetch a new prekey from the backend
    */
   public async getRemoteFingerprint(userId: QualifiedId, clientId: string, prekey?: PreKey) {
-    const sessionId = this.cryptographyService.constructSessionId(userId, clientId);
+    const sessionId = this.constructSessionId(userId, clientId);
     const sessionExists = (await this.coreCryptoClient.proteusSessionExists(sessionId)) as unknown as boolean;
     if (!sessionExists) {
       await createSession({
@@ -191,7 +191,6 @@ export class ProteusService {
       domain,
       apiClient: this.apiClient,
       coreCryptoClient: this.coreCryptoClient,
-      cryptographyService: this.cryptographyService,
       logger: this.logger,
     });
 

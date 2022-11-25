@@ -110,7 +110,6 @@ describe('SessionHandler', () => {
         userClientMap: qualifiedUserClients,
         apiClient,
         coreCryptoClient: coreCrypto,
-        cryptographyService,
       });
 
       expect(sessions).toEqual(
@@ -155,7 +154,6 @@ describe('SessionHandler', () => {
         userClientMap: qualifiedUserClients,
         apiClient,
         coreCryptoClient: coreCrypto,
-        cryptographyService,
       });
 
       expect(sessions).toEqual(
@@ -192,7 +190,7 @@ describe('SessionHandler', () => {
 
   describe('getSessionsAndClientsFromRecipients', () => {
     it('returns userClients for legacy clients', async () => {
-      const {apiClient, coreCrypto, cryptographyService} = (await prepareProteusService())[1];
+      const {apiClient, coreCrypto} = (await prepareProteusService())[1];
 
       const firstUserID = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
       const firstUserClient1 = '5e80ea7886680975';
@@ -210,14 +208,13 @@ describe('SessionHandler', () => {
         recipients: userClients,
         apiClient,
         coreCryptoClient: coreCrypto,
-        cryptographyService,
       });
 
       expect(userClientsResult).toEqual(userClients);
     });
 
     it('returns userClients for qualified clients', async () => {
-      const {apiClient, coreCrypto, cryptographyService} = (await prepareProteusService())[1];
+      const {apiClient, coreCrypto} = (await prepareProteusService())[1];
 
       const validPreKey = {
         id: 1337,
@@ -245,7 +242,6 @@ describe('SessionHandler', () => {
         recipients: userPreKeyBundleMap,
         apiClient,
         coreCryptoClient: coreCrypto,
-        cryptographyService,
       });
 
       expect(userClients).toEqual(preKeyBundleToUserClients(userPreKeyBundleMap));

@@ -27,6 +27,7 @@ import {buildTextMessage} from '../../../conversation/message/MessageBuilder';
 import {SendProteusMessageParams} from './ProteusService.types';
 import {UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 import {buildProteusService} from './ProteusService.mocks';
+import {constructSessionId} from '../Utility/SessionHandler';
 
 jest.mock('../Utility/Recipients', () => ({
   ...jest.requireActual('../Utility/Recipients'),
@@ -110,15 +111,15 @@ describe('ProteusService', () => {
       const firstClientId = 'be67218b77d02d30';
       const secondClientId = 'ae87218e77d02d30';
       //user 1 sessions
-      const firstClientSessionId = cryptographyService.constructSessionId(firstUserId, firstClientId);
-      const firstClientSession2Id = cryptographyService.constructSessionId(firstUserId, secondClientId);
+      const firstClientSessionId = constructSessionId({userId: firstUserId, clientId: firstClientId});
+      const firstClientSession2Id = constructSessionId({userId: firstUserId, clientId: secondClientId});
 
       //user 2
       const secondUserId = 'cd0c88f1-49a5-4ar2-889a-62885af37069';
       //user 2 client
       const thirdClientId = 'be67218b77d02d69';
       //user 2 sessions
-      const secondClientSessionId = cryptographyService.constructSessionId(secondUserId, thirdClientId);
+      const secondClientSessionId = constructSessionId({userId: secondUserId, clientId: thirdClientId});
 
       //message sent by a user
       const message = 'Hello';

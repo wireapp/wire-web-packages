@@ -20,6 +20,7 @@
 import type {OTRRecipients, UserClients} from '@wireapp/api-client/lib/conversation';
 
 import type {CryptographyService} from '../../../../cryptography';
+import {constructSessionId} from '../SessionHandler';
 
 interface ExtractEncryptedAndMissingFromBatchedPayloadProps {
   payload: Map<string, Uint8Array>;
@@ -32,7 +33,6 @@ export const extractEncryptedAndMissingFromBatchedPayload = ({
   payload,
   users,
   domain = '',
-  cryptographyService,
 }: ExtractEncryptedAndMissingFromBatchedPayloadProps): {missing: UserClients; encrypted: OTRRecipients<Uint8Array>} => {
   const encrypted: OTRRecipients<Uint8Array> = {};
   const missing: UserClients = {};
@@ -40,7 +40,7 @@ export const extractEncryptedAndMissingFromBatchedPayload = ({
   const userClientsArr = Object.entries(users);
   for (const [userId, clientIds] of userClientsArr) {
     for (const clientId of clientIds) {
-      const sessionId = cryptographyService.constructSessionId(userId, clientId, domain);
+      const sessionId = constructSessionId({userId, clientId, domain});
 
       if (payload.has(sessionId)) {
         encrypted[userId] ||= {};

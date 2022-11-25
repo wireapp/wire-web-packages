@@ -423,7 +423,7 @@ export class Account<T = any> extends EventEmitter {
       nbPrekeys: this.nbPrekeys,
     });
 
-    const clientService = new ClientService(this.apiClient, this.storeEngine, cryptographyService);
+    const clientService = new ClientService(this.apiClient, this.storeEngine);
     const mlsService = new MLSService(this.apiClient, this.coreCryptoClient, {
       ...this.cryptoProtocolConfig?.mls,
       nbKeyPackages: this.nbPrekeys,

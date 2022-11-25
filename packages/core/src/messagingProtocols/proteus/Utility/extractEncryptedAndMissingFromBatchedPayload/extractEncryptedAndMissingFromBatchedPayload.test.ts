@@ -20,12 +20,13 @@
 import type {UserClients} from '@wireapp/api-client/lib/conversation';
 
 import {buildProteusService} from '../../ProteusService/ProteusService.mocks';
+import {constructSessionId} from '../SessionHandler';
 
 import {extractEncryptedAndMissingFromBatchedPayload} from '.';
 
 describe('extractEncryptedAndMissingFromBatchedPayload', () => {
   it('properly extracts missing and encrypted from payload (without missing)', async () => {
-    const [proteusService, {cryptographyService}] = await buildProteusService();
+    const {cryptographyService} = (await buildProteusService())[1];
 
     const domain = 'staging.zinfra.io';
 
@@ -48,7 +49,7 @@ describe('extractEncryptedAndMissingFromBatchedPayload', () => {
         [firstUserID, firstUserClient1, domain],
         [firstUserID, firstUserClient2, domain],
         [secondUserID, secondUserClient, domain],
-      ].map(([u, c, d]) => [proteusService['cryptographyService'].constructSessionId(u, c, d), textPayload]),
+      ].map(([userId, clientId, domain]) => [constructSessionId({userId, clientId, domain}), textPayload]),
     );
 
     const {encrypted, missing} = extractEncryptedAndMissingFromBatchedPayload({
@@ -67,7 +68,7 @@ describe('extractEncryptedAndMissingFromBatchedPayload', () => {
   });
 
   it('properly extracts missing and encrypted from payload (with missing)', async () => {
-    const [proteusService, {cryptographyService}] = await buildProteusService();
+    const {cryptographyService} = (await buildProteusService())[1];
 
     const domain = 'staging.zinfra.io';
 
@@ -86,7 +87,7 @@ describe('extractEncryptedAndMissingFromBatchedPayload', () => {
     const textPayload = new Uint8Array();
 
     const batchedEncryptPayload: Map<string, Uint8Array> = new Map([
-      [proteusService['cryptographyService'].constructSessionId(firstUserID, firstUserClient1, domain), textPayload],
+      [constructSessionId({userId: firstUserID, clientId: firstUserClient1, domain}), textPayload],
     ]);
 
     const {encrypted, missing} = extractEncryptedAndMissingFromBatchedPayload({

@@ -28,6 +28,8 @@ import {CRUDEngine, MemoryEngine} from '@wireapp/store-engine';
 import {decryptAsset, encryptAsset} from './AssetCryptography';
 import {CryptographyService} from './CryptographyService';
 
+import {constructSessionId} from '../messagingProtocols/proteus/Utility/SessionHandler';
+
 async function createEngine(storeName: string): Promise<CRUDEngine> {
   const engine = new MemoryEngine();
   await engine.init(storeName);
@@ -61,7 +63,7 @@ describe('CryptographyService', () => {
     it('constructs a Session ID by a given User ID and Client ID.', () => {
       const clientId = '1ceb9063fced26d3';
       const userId = 'afbb5d60-1187-4385-9c29-7361dea79647';
-      const actual = cryptographyService.constructSessionId(userId, clientId);
+      const actual = constructSessionId({userId, clientId});
       expect(actual).toContain(clientId);
       expect(actual).toContain(userId);
 
@@ -81,7 +83,7 @@ describe('CryptographyService', () => {
       const clientId = '1ceb9063fced26d3';
       const userId = 'afbb5d60-1187-4385-9c29-7361dea79647';
       const domain = 'test.wire.link';
-      const actual = cryptographyService.constructSessionId(userId, clientId, domain);
+      const actual = constructSessionId({userId, clientId, useQualifiedIds: true, domain});
       expect(actual).toContain(clientId);
       expect(actual).toContain(userId);
       expect(actual).toContain(domain);
@@ -102,7 +104,7 @@ describe('CryptographyService', () => {
       const clientId = '1ceb9063fced26d3';
       const userId = 'afbb5d60-1187-4385-9c29-7361dea79647';
       const domain = 'test.wire.link';
-      const actual = cryptographyService.constructSessionId({id: userId, domain}, clientId);
+      const actual = constructSessionId({userId: {id: userId, domain}, useQualifiedIds: true, clientId});
       expect(actual).toContain(clientId);
       expect(actual).toContain(userId);
       expect(actual).toContain(domain);

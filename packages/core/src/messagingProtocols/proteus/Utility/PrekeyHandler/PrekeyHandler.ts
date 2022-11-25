@@ -24,7 +24,7 @@ import {Decoder} from 'bazinga64';
 
 import type {Logger} from '@wireapp/commons';
 
-import {CryptographyService} from '../../../../cryptography';
+import {constructSessionId} from '../SessionHandler';
 
 const preKeyBundleToUserClients = (users: UserPreKeyBundleMap): UserClients => {
   return Object.entries(users).reduce<UserClients>((acc, [userId, clientsObj]) => {
@@ -35,7 +35,6 @@ const preKeyBundleToUserClients = (users: UserPreKeyBundleMap): UserClients => {
 
 interface CreateSessionsFromPreKeysProps {
   preKeyBundleMap: UserPreKeyBundleMap;
-  cryptographyService: CryptographyService;
   coreCryptoClient: CoreCrypto;
   domain?: string;
   logger?: Logger;
@@ -44,7 +43,6 @@ interface CreateSessionsFromPreKeysProps {
 const createSessionsFromPreKeys = async ({
   preKeyBundleMap,
   domain = '',
-  cryptographyService,
   coreCryptoClient,
   logger,
 }: CreateSessionsFromPreKeysProps): Promise<string[]> => {
@@ -54,6 +52,15 @@ const createSessionsFromPreKeys = async ({
     const userClients = preKeyBundleMap[userId];
 
     for (const clientId in userClients) {
+      const sessionId = constructSessionId({userId, clientId, domain});
+      const sessionExists = (await coreCryptoClient.proteusSessionExists(sessionId)) as unknown as boolean;
+
+      if (sessionExists) {
+        //if session for the client already exsits, we just return it
+        sessions.push(sessionId);
+        continue;
+      }
+
       const prekey = userClients[clientId];
 
       if (!prekey) {
@@ -65,14 +72,9 @@ const createSessionsFromPreKeys = async ({
         continue;
       }
 
-      const sessionId = cryptographyService.constructSessionId(userId, clientId, domain);
       const prekeyBuffer = Decoder.fromBase64(prekey.key).asBytes;
 
-      const sessionExists = (await coreCryptoClient.proteusSessionExists(sessionId)) as unknown as boolean;
-
-      if (!sessionExists) {
-        await coreCryptoClient.proteusSessionFromPrekey(sessionId, prekeyBuffer);
-      }
+      await coreCryptoClient.proteusSessionFromPrekey(sessionId, prekeyBuffer);
 
       sessions.push(sessionId);
     }

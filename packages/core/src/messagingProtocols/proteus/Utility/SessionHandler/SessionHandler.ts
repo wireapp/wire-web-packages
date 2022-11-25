@@ -24,7 +24,6 @@ import {Logger} from 'logdown';
 
 import {APIClient} from '@wireapp/api-client';
 
-import {CryptographyService} from '../../../../cryptography';
 import {isQualifiedUserClients, isUserClients} from '../../../../util';
 import {createSessionsFromPreKeys, preKeyBundleToUserClients} from '../PrekeyHandler';
 
@@ -44,7 +43,6 @@ const constructSessionId = ({userId, clientId, useQualifiedIds, domain}: Constru
 interface CreateSessionsBase {
   apiClient: APIClient;
   coreCryptoClient: CoreCrypto;
-  cryptographyService: CryptographyService;
   logger?: Logger;
 }
 
@@ -56,14 +54,12 @@ const createLegacySessions = async ({
   userClients,
   apiClient,
   coreCryptoClient,
-  cryptographyService,
   logger,
 }: CreateLegacySessionsProps): Promise<string[]> => {
   const preKeyBundleMap = await apiClient.api.user.postMultiPreKeyBundles(userClients);
   const sessions = await createSessionsFromPreKeys({
     preKeyBundleMap,
     coreCryptoClient,
-    cryptographyService,
     logger,
   });
 
@@ -82,7 +78,6 @@ const createQualifiedSessions = async ({
   userClientMap,
   apiClient,
   coreCryptoClient,
-  cryptographyService,
   logger,
 }: CreateQualifiedSessionsProps): Promise<string[]> => {
   const prekeyBundleMap = await apiClient.api.user.postQualifiedMultiPreKeyBundles(userClientMap);
@@ -96,7 +91,6 @@ const createQualifiedSessions = async ({
       preKeyBundleMap: domainUsers,
       domain,
       coreCryptoClient,
-      cryptographyService,
       logger,
     });
     sessions.push(...domainSessions);
@@ -118,18 +112,16 @@ const createSessions = async ({
   userClientMap,
   apiClient,
   coreCryptoClient,
-  cryptographyService,
   logger,
 }: CreateSessionsProps): Promise<string[]> => {
   if (isQualifiedUserClients(userClientMap)) {
-    return await createQualifiedSessions({userClientMap, apiClient, coreCryptoClient, cryptographyService, logger});
+    return await createQualifiedSessions({userClientMap, apiClient, coreCryptoClient, logger});
   }
 
   return await createLegacySessions({
     userClients: userClientMap,
     apiClient,
     coreCryptoClient,
-    cryptographyService,
     logger,
   });
 };
@@ -139,7 +131,6 @@ interface GetSessionsAndClientsFromRecipientsProps {
   domain?: string;
   apiClient: APIClient;
   coreCryptoClient: CoreCrypto;
-  cryptographyService: CryptographyService;
   logger?: Logger;
 }
 
@@ -148,7 +139,6 @@ const getSessionsAndClientsFromRecipients = async ({
   domain = '',
   apiClient,
   coreCryptoClient,
-  cryptographyService,
   logger,
 }: GetSessionsAndClientsFromRecipientsProps) => {
   const userClients = isUserClients(recipients) ? recipients : preKeyBundleToUserClients(recipients);
@@ -159,7 +149,6 @@ const getSessionsAndClientsFromRecipients = async ({
     userClientMap,
     apiClient,
     coreCryptoClient,
-    cryptographyService,
     logger,
   });
 
