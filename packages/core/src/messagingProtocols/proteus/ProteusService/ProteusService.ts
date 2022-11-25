@@ -28,7 +28,6 @@ import type {
   UserClients,
 } from '@wireapp/api-client/lib/conversation';
 import type {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
-import {Decoder} from 'bazinga64';
 import logdown from 'logdown';
 
 import type {CoreCrypto} from '@wireapp/core-crypto';
@@ -106,18 +105,6 @@ export class ProteusService {
       });
     }
     return this.coreCryptoClient.proteusFingerprintRemote(sessionId);
-  }
-
-  private async createSession(userId: QualifiedId, clientId: string, initialPrekey?: PreKey): Promise<void> {
-    const sessionId = this.cryptographyService.constructSessionId(userId, clientId);
-
-    const prekey = initialPrekey ?? (await this.getUserPrekey(userId, clientId)).prekey;
-    const prekeyBuffer = Decoder.fromBase64(prekey.key).asBytes;
-    return this.coreCryptoClient.proteusSessionFromPrekey(sessionId, prekeyBuffer);
-  }
-
-  private getUserPrekey(userId: QualifiedId, clientId: string) {
-    return this.apiClient.api.user.getClientPreKey(userId, clientId);
   }
 
   public async createConversation({

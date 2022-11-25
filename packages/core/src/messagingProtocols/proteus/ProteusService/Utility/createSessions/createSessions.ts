@@ -107,7 +107,9 @@ export const createSessions = async ({
   cryptographyService,
   logger,
 }: CreateSessionsProps): Promise<string[]> => {
-  if (isQualifiedUserClients(userClientMap)) {
+  const qualifiedUserClients = isQualifiedUserClients(userClientMap);
+
+  if (qualifiedUserClients) {
     return await createQualifiedSessions({userClientMap, apiClient, coreCryptoClient, cryptographyService, logger});
   }
 

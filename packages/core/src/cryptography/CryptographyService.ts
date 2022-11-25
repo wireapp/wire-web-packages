@@ -19,14 +19,8 @@
 
 import {PreKey} from '@wireapp/api-client/lib/auth/';
 import {RegisteredClient} from '@wireapp/api-client/lib/client/';
-import {
-  OTRClientMap,
-  OTRRecipients,
-  QualifiedOTRRecipients,
-  QualifiedUserClients,
-  UserClients,
-} from '@wireapp/api-client/lib/conversation/';
-import {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user/';
+import {OTRClientMap, OTRRecipients} from '@wireapp/api-client/lib/conversation/';
+import {QualifiedId} from '@wireapp/api-client/lib/user/';
 import {Decoder, Encoder} from 'bazinga64';
 import logdown from 'logdown';
 
@@ -36,9 +30,6 @@ import {keys as ProteusKeys} from '@wireapp/proteus';
 import {CRUDEngine} from '@wireapp/store-engine';
 
 import {CryptographyDatabaseRepository} from './CryptographyDatabaseRepository';
-
-import {SessionPayloadBundle} from '../cryptography/';
-import {isUserClients} from '../util';
 
 export type SessionId = {
   userId: string;
@@ -150,84 +141,6 @@ export class CryptographyService {
         return {id: -1, key: ''};
       })
       .filter(serializedPreKey => serializedPreKey.key);
-  }
-
-  public async encryptQualified(
-    plainText: Uint8Array,
-    preKeyBundles: QualifiedUserPreKeyBundleMap | QualifiedUserClients,
-  ): Promise<{missing: QualifiedUserClients; encrypted: QualifiedOTRRecipients}> {
-    const qualifiedOTRRecipients: QualifiedOTRRecipients = {};
-    const missing: QualifiedUserClients = {};
-
-    for (const [domain, preKeyBundleMap] of Object.entries(preKeyBundles)) {
-      const result = await this.encrypt(plainText, preKeyBundleMap, domain);
-      qualifiedOTRRecipients[domain] = result.encrypted;
-      missing[domain] = result.missing;
-    }
-
-    return {
-      encrypted: qualifiedOTRRecipients,
-      missing,
-    };
-  }
-
-  public async encrypt(
-    plainText: Uint8Array,
-    users: UserPreKeyBundleMap | UserClients,
-    domain?: string,
-  ): Promise<{missing: UserClients; encrypted: OTRRecipients<Uint8Array>}> {
-    const encrypted: OTRRecipients<Uint8Array> = {};
-    const missing: UserClients = {};
-
-    for (const userId in users) {
-      const clientIds = isUserClients(users)
-        ? users[userId]
-        : Object.keys(users[userId])
-            // We filter out clients that have `null` prekey
-            .filter(clientId => !!users[userId][clientId]);
-      for (const clientId of clientIds) {
-        const base64PreKey = isUserClients(users) ? undefined : users[userId][clientId]?.key;
-        const sessionId = this.constructSessionId(userId, clientId, domain);
-        const result = await this.encryptPayloadForSession(sessionId, plainText, base64PreKey);
-        if (result) {
-          encrypted[userId] ||= {};
-          encrypted[userId][clientId] = result.encryptedPayload;
-        } else {
-          missing[userId] ||= [];
-          missing[userId].push(clientId);
-        }
-      }
-    }
-
-    return {encrypted, missing};
-  }
-
-  private async encryptPayloadForSession(
-    sessionId: string,
-    plainText: Uint8Array,
-    base64EncodedPreKey?: string,
-  ): Promise<SessionPayloadBundle | undefined> {
-    this.logger.log(`Encrypting payload for session ID "${sessionId}"`);
-
-    let encryptedPayload: Uint8Array;
-
-    try {
-      const decodedPreKeyBundle = base64EncodedPreKey
-        ? Decoder.fromBase64(base64EncodedPreKey).asBytes.buffer
-        : undefined;
-      const payloadAsArrayBuffer = await this.cryptobox.encrypt(sessionId, plainText, decodedPreKeyBundle);
-      encryptedPayload = new Uint8Array(payloadAsArrayBuffer);
-    } catch (error) {
-      const notFoundErrorCode = 2;
-      if ((error as any).code === notFoundErrorCode) {
-        // If the session is not in the database, we just return undefined. Later on there will be a mismatch and the session will be created
-        return undefined;
-      }
-      this.logger.error(`Could not encrypt payload: ${(error as Error).message}`);
-      encryptedPayload = new Uint8Array(Buffer.from('💣', 'utf-8'));
-    }
-
-    return {encryptedPayload, sessionId};
   }
 
   /**

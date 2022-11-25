@@ -97,7 +97,7 @@ describe('createConversation', () => {
     });
 
     it('create a new conversation with no name', async () => {
-      const [proteusService] = await buildProteusService();
+      const proteusService = await prepareProteusService();
       const otherUserIds = ['user1', 'user2'];
       const conversationData = {users: ['user1', 'user2'], receipt_mode: null};
       const returnData = await proteusService.createConversation({conversationData, otherUserIds});
