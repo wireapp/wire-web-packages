@@ -22,34 +22,43 @@ import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
 import {Encoder} from 'bazinga64';
 
 import {keys as ProteusKeys} from '@wireapp/proteus';
+import {CRUDEngine} from '@wireapp/store-engine';
 
-import {createId} from './PrekeysGenerator.store';
+import {PrekeysGeneratorStore} from './PrekeysGenerator.store';
 
 import {NewDevicePrekeys} from '../ProteusService.types';
 
-type PrekeyGenerator = Pick<CoreCrypto, 'proteusNewPrekey'>;
+type CoreCryptoPrekeyGenerator = Pick<CoreCrypto, 'proteusNewPrekey'>;
 
-async function generatePrekey(id: number, generator: PrekeyGenerator) {
-  const key = await generator.proteusNewPrekey(id);
-  return {id, key: Encoder.toBase64(key).asString};
-}
-
-export async function generatePrekeys(nbPrekeys: number, generator: PrekeyGenerator): Promise<PreKey[]> {
-  const prekeys: PreKey[] = [];
-  for (let id = 0; id < nbPrekeys; id++) {
-    prekeys.push(await generatePrekey(createId(), generator));
+export class PrekeyGenerator {
+  private prekeyState: PrekeysGeneratorStore;
+  constructor(private readonly generator: CoreCryptoPrekeyGenerator, store: CRUDEngine) {
+    this.prekeyState = new PrekeysGeneratorStore(store);
   }
-  return prekeys;
-}
 
-/**
- * Will generate the initial set of prekeys for a new device
- * @param nbPrekeys the number of prekeys to generate
- * @param generator the class that will be used to generate a single prekey
- */
-export async function generateInitialPrekeys(nbPrekeys: number, generator: PrekeyGenerator): Promise<NewDevicePrekeys> {
-  return {
-    prekeys: await generatePrekeys(nbPrekeys, generator),
-    lastPrekey: await generatePrekey(ProteusKeys.PreKey.MAX_PREKEY_ID, generator),
-  };
+  private async generatePrekey(id: number) {
+    const key = await this.generator.proteusNewPrekey(id);
+    return {id, key: Encoder.toBase64(key).asString};
+  }
+
+  async generatePrekeys(nbPrekeys: number): Promise<PreKey[]> {
+    const prekeys: PreKey[] = [];
+    const ids = await this.prekeyState.createIds(nbPrekeys);
+    for (const id of ids) {
+      prekeys.push(await this.generatePrekey(id));
+    }
+    return prekeys;
+  }
+
+  /**
+   * Will generate the initial set of prekeys for a new device
+   * @param nbPrekeys the number of prekeys to generate
+   * @param generator the class that will be used to generate a single prekey
+   */
+  async generateInitialPrekeys(nbPrekeys: number): Promise<NewDevicePrekeys> {
+    return {
+      prekeys: await this.generatePrekeys(nbPrekeys),
+      lastPrekey: await this.generatePrekey(ProteusKeys.PreKey.MAX_PREKEY_ID),
+    };
+  }
 }

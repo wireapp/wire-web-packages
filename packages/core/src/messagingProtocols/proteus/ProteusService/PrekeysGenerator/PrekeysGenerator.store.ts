@@ -17,35 +17,32 @@
  *
  */
 
-const storageKey = 'prekeysState';
+import {CRUDEngine} from '@wireapp/store-engine';
 
-interface PrekeysState {
-  lastGeneratedId: number;
-  nbPrekeys: number;
-}
+const TABLE_NAME = 'prekeys_state';
+const STATE_PRIMARY_KEY = 'highest_id';
 
-const defaultState: PrekeysState = {
-  lastGeneratedId: 0,
-  nbPrekeys: 0,
-};
+export class PrekeysGeneratorStore {
+  constructor(private readonly store: CRUDEngine) {}
 
-export function getState(): PrekeysState {
-  const value = localStorage.getItem(storageKey);
-  return value ? JSON.parse(value) : defaultState;
-}
+  private async getState(): Promise<number> {
+    try {
+      const value = await this.store.read<number>(TABLE_NAME, STATE_PRIMARY_KEY);
+      return value;
+    } catch (e) {
+      return 0;
+    }
+  }
 
-function saveState(state: PrekeysState): void {
-  localStorage.setItem(storageKey, JSON.stringify(state));
-}
+  private async saveState(state: number): Promise<void> {
+    await this.store.updateOrCreate(TABLE_NAME, STATE_PRIMARY_KEY, state);
+  }
 
-export function createId(): number {
-  const currentState = getState();
-  const newState = {
-    ...currentState,
-    lastGeneratedId: currentState.lastGeneratedId + 1,
-    nbPrekeys: currentState.nbPrekeys + 1,
-  };
-  saveState(newState);
+  async createIds(nbIds: number): Promise<number[]> {
+    const currentState = await this.getState();
+    const newState = currentState + nbIds;
+    this.saveState(newState);
 
-  return newState.lastGeneratedId;
+    return Array.from(new Array(nbIds)).map((_, i) => currentState + 1 + i);
+  }
 }

@@ -23,7 +23,7 @@ import nodeCrypto from 'crypto';
 
 // Storage Mock
 function storageMock() {
-  const storage: any = {};
+  let storage: any = {};
 
   return {
     setItem: function (key: any, value: any) {
@@ -41,6 +41,9 @@ function storageMock() {
     key: function (i: any) {
       const keys = Object.keys(storage);
       return keys[i] || null;
+    },
+    clear() {
+      storage = {};
     },
   };
 }

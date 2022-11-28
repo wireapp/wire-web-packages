@@ -31,8 +31,9 @@ import type {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} fro
 import logdown from 'logdown';
 
 import type {CoreCrypto} from '@wireapp/core-crypto';
+import {CRUDEngine} from '@wireapp/store-engine';
 
-import {generateInitialPrekeys} from './PrekeysGenerator';
+import {PrekeyGenerator} from './PrekeysGenerator';
 import type {
   AddUsersToProteusConversationParams,
   CreateProteusConversationParams,
@@ -51,13 +52,16 @@ import {buildEncryptedPayloads, constructSessionId, initSession, initSessions} f
 export class ProteusService {
   private readonly messageService: MessageService;
   private readonly logger = logdown('@wireapp/core/ProteusService');
+  private readonly prekeyGenerator: PrekeyGenerator;
 
   constructor(
     private readonly apiClient: APIClient,
     private readonly coreCryptoClient: CoreCrypto,
+    store: CRUDEngine,
     private readonly config: ProteusServiceConfig,
   ) {
     this.messageService = new MessageService(this.apiClient, this);
+    this.prekeyGenerator = new PrekeyGenerator(coreCryptoClient, store);
   }
 
   public async handleEvent(params: Pick<EventHandlerParams, 'event' | 'source' | 'dryRun'>): EventHandlerResult {
@@ -74,7 +78,7 @@ export class ProteusService {
   }
 
   public createClient(nbPrekeys: number) {
-    return generateInitialPrekeys(nbPrekeys, this.coreCryptoClient);
+    return this.prekeyGenerator.generateInitialPrekeys(nbPrekeys);
   }
 
   /**
