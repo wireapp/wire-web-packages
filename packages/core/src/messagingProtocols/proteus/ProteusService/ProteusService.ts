@@ -17,15 +17,22 @@
  *
  */
 
-import {APIClient} from '@wireapp/api-client/lib/APIClient';
-import {PreKey} from '@wireapp/api-client/lib/auth';
-import {Conversation, NewConversation} from '@wireapp/api-client/lib/conversation';
-import {QualifiedId} from '@wireapp/api-client/lib/user';
+import type {APIClient} from '@wireapp/api-client/lib/APIClient';
+import type {PreKey} from '@wireapp/api-client/lib/auth';
+import type {
+  Conversation,
+  NewConversation,
+  OTRRecipients,
+  QualifiedOTRRecipients,
+  QualifiedUserClients,
+  UserClients,
+} from '@wireapp/api-client/lib/conversation';
+import type {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 import logdown from 'logdown';
 
-import {CoreCrypto} from '@wireapp/core-crypto';
+import type {CoreCrypto} from '@wireapp/core-crypto';
 
-import {
+import type {
   AddUsersToProteusConversationParams,
   CreateProteusConversationParams,
   ProteusServiceConfig,
@@ -34,13 +41,12 @@ import {
 
 import {MessageSendingState, SendResult} from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
-import {CryptographyService} from '../../../cryptography';
-import {EventHandlerResult} from '../../common.types';
+import type {EventHandlerResult} from '../../common.types';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
-import {createSession} from '../Utility/createSession';
+import {extractEncryptedAndMissingFromBatchedPayload} from '../Utility/extractEncryptedAndMissingFromBatchedPayload';
 import {getGenericMessageParams} from '../Utility/getGenericMessageParams';
 import {isClearFromMismatch} from '../Utility/isClearFromMismatch';
-import {constructSessionId} from '../Utility/SessionIdBuilder';
+import {constructSessionId, createSession, getSessionsAndClientsFromRecipients} from '../Utility/SessionHandler';
 
 export class ProteusService {
   private readonly messageService: MessageService;
@@ -48,11 +54,10 @@ export class ProteusService {
 
   constructor(
     private readonly apiClient: APIClient,
-    private readonly cryptographyService: CryptographyService,
     private readonly coreCryptoClient: CoreCrypto,
     private readonly config: ProteusServiceConfig,
   ) {
-    this.messageService = new MessageService(this.apiClient, this.cryptographyService);
+    this.messageService = new MessageService(this.apiClient, this);
   }
 
   public async handleEvent(params: Pick<EventHandlerParams, 'event' | 'source' | 'dryRun'>): EventHandlerResult {
@@ -83,7 +88,7 @@ export class ProteusService {
    *   If not provided and the session doesn't exists it will fetch a new prekey from the backend
    */
   public async getRemoteFingerprint(userId: QualifiedId, clientId: string, prekey?: PreKey) {
-    const sessionId = this.cryptographyService.constructSessionId(userId, clientId);
+    const sessionId = this.constructSessionId(userId, clientId);
     const sessionExists = (await this.coreCryptoClient.proteusSessionExists(sessionId)) as unknown as boolean;
     if (!sessionExists) {
       await createSession({
@@ -170,6 +175,48 @@ export class ProteusService {
       id: payload.messageId,
       sentAt: response.time,
       state: response.errored ? MessageSendingState.CANCELLED : MessageSendingState.OUTGOING_SENT,
+    };
+  }
+
+  public async encrypt(
+    plainText: Uint8Array,
+    recipients: UserPreKeyBundleMap | UserClients,
+    domain: string = '',
+  ): Promise<{missing: UserClients; encrypted: OTRRecipients<Uint8Array>}> {
+    const {sessions, userClients} = await getSessionsAndClientsFromRecipients({
+      recipients,
+      domain,
+      apiClient: this.apiClient,
+      coreCryptoClient: this.coreCryptoClient,
+      logger: this.logger,
+    });
+
+    const payload = await this.coreCryptoClient.proteusEncryptBatched(sessions, plainText);
+
+    return extractEncryptedAndMissingFromBatchedPayload({
+      payload,
+      users: userClients,
+      domain,
+      useQualifiedIds: this.config.useQualifiedIds,
+    });
+  }
+
+  public async encryptQualified(
+    plainText: Uint8Array,
+    preKeyBundles: QualifiedUserPreKeyBundleMap | QualifiedUserClients,
+  ): Promise<{missing: QualifiedUserClients; encrypted: QualifiedOTRRecipients}> {
+    const qualifiedOTRRecipients: QualifiedOTRRecipients = {};
+    const qualifiedMissing: QualifiedUserClients = {};
+
+    for (const [domain, preKeyBundleMap] of Object.entries(preKeyBundles)) {
+      const result = await this.encrypt(plainText, preKeyBundleMap, domain);
+      qualifiedOTRRecipients[domain] = result.encrypted;
+      qualifiedMissing[domain] = result.missing;
+    }
+
+    return {
+      encrypted: qualifiedOTRRecipients,
+      missing: qualifiedMissing,
     };
   }
 }

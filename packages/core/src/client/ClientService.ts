@@ -27,7 +27,7 @@ import {APIClient} from '@wireapp/api-client';
 import {keys as ProteusKeys} from '@wireapp/proteus';
 import {CRUDEngine} from '@wireapp/store-engine';
 
-import {CryptographyService} from '../cryptography/';
+import type {ProteusService} from '../messagingProtocols/proteus';
 
 import {ClientInfo, ClientBackendRepository, ClientDatabaseRepository} from './';
 
@@ -45,10 +45,10 @@ export class ClientService {
 
   constructor(
     private readonly apiClient: APIClient,
+    private readonly proteusService: ProteusService,
     private readonly storeEngine: CRUDEngine,
-    private readonly cryptographyService: CryptographyService,
   ) {
-    this.database = new ClientDatabaseRepository(this.storeEngine, this.cryptographyService);
+    this.database = new ClientDatabaseRepository(this.storeEngine, this.apiClient.backendFeatures.federationEndpoints);
     this.backend = new ClientBackendRepository(this.apiClient);
   }
 
@@ -67,7 +67,7 @@ export class ClientService {
   public async deleteClient(clientId: string, password?: string): Promise<unknown> {
     const userId: QualifiedId = {id: this.apiClient.userId as string, domain: this.apiClient.domain || ''};
     await this.backend.deleteClient(clientId, password);
-    return this.database.deleteClient(this.cryptographyService.constructSessionId(userId, clientId));
+    return this.database.deleteClient(this.proteusService.constructSessionId(userId, clientId));
   }
 
   /**

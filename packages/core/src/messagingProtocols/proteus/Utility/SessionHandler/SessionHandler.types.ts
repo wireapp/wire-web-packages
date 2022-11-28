@@ -17,19 +17,8 @@
  *
  */
 
-import {QualifiedId} from '@wireapp/api-client/lib/user';
-
-interface ConstructSessionIdParams {
-  userId: string | QualifiedId;
+export type SessionId = {
+  userId: string;
   clientId: string;
-  useQualifiedIds?: boolean;
   domain?: string;
-}
-const constructSessionId = ({userId, clientId, useQualifiedIds, domain}: ConstructSessionIdParams): string => {
-  const id = typeof userId === 'string' ? userId : userId.id;
-  const baseDomain = typeof userId === 'string' ? domain : userId.domain;
-  const baseId = `${id}@${clientId}`;
-  return baseDomain && useQualifiedIds ? `${baseDomain}@${baseId}` : baseId;
 };
-
-export {constructSessionId};
