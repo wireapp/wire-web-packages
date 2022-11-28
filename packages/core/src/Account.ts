@@ -429,7 +429,7 @@ export class Account<T = any> extends EventEmitter {
       nbKeyPackages: this.nbPrekeys,
     });
 
-    const proteusService = new ProteusService(this.apiClient, cryptographyService, this.coreCryptoClient, {
+    const proteusService = new ProteusService(this.apiClient, this.coreCryptoClient, {
       // We can use qualified ids to send messages as long as the backend supports federated endpoints
       useQualifiedIds: this.backendFeatures.federationEndpoints,
     });

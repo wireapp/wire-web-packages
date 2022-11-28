@@ -41,7 +41,6 @@ import type {
 
 import {MessageSendingState, SendResult} from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
-import type {CryptographyService} from '../../../cryptography';
 import type {EventHandlerResult} from '../../common.types';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
 import {extractEncryptedAndMissingFromBatchedPayload} from '../Utility/extractEncryptedAndMissingFromBatchedPayload';
@@ -55,7 +54,6 @@ export class ProteusService {
 
   constructor(
     private readonly apiClient: APIClient,
-    private readonly cryptographyService: CryptographyService,
     private readonly coreCryptoClient: CoreCrypto,
     private readonly config: ProteusServiceConfig,
   ) {
@@ -199,7 +197,6 @@ export class ProteusService {
       payload,
       users: userClients,
       domain,
-      cryptographyService: this.cryptographyService,
     });
   }
 

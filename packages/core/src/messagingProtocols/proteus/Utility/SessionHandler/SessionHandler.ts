@@ -26,6 +26,8 @@ import {Logger} from 'logdown';
 
 import {APIClient} from '@wireapp/api-client';
 
+import {SessionId} from './SessionHandler.types';
+
 import {isQualifiedUserClients, isUserClients} from '../../../../util';
 import {preKeyBundleToUserClients} from '../PreKeyBundle';
 
@@ -43,6 +45,23 @@ const constructSessionId = ({userId, clientId, useQualifiedIds, domain}: Constru
   return baseDomain && useQualifiedIds ? `${baseDomain}@${baseId}` : baseId;
 };
 
+const isSessionId = (object: any): object is SessionId => {
+  return object.userId && object.clientId;
+};
+
+/**
+ * Splits a sessionId into userId, clientId & domain (if any).
+ */
+const parseSessionId = (sessionId: string): SessionId => {
+  // see https://regex101.com/r/c8FtCw/1
+  const regex = /((?<domain>.+)@)?(?<userId>.+)@(?<clientId>.+)$/g;
+  const match = regex.exec(sessionId);
+  if (!match || !isSessionId(match.groups)) {
+    throw new Error(`given session id "${sessionId}" has wrong format`);
+  }
+  return match.groups;
+};
+
 interface CreateSessionParams {
   coreCryptoClient: CoreCrypto;
   apiClient: APIClient;
@@ -52,19 +71,17 @@ interface CreateSessionParams {
   initialPrekey?: PreKey;
 }
 const createSession = async ({
+  userId,
   clientId,
+  sessionId,
+  initialPrekey,
   coreCryptoClient,
   apiClient,
-  sessionId,
-  userId,
-  initialPrekey,
 }: CreateSessionParams): Promise<void> => {
   const prekey = initialPrekey ?? (await apiClient.api.user.getClientPreKey(userId, clientId)).prekey;
   const prekeyBuffer = Decoder.fromBase64(prekey.key).asBytes;
   return coreCryptoClient.proteusSessionFromPrekey(sessionId, prekeyBuffer);
 };
-
-export {createSession};
 
 interface CreateSessionsBase {
   apiClient: APIClient;
@@ -231,4 +248,11 @@ const createSessionsFromPreKeys = async ({
   return sessions;
 };
 
-export {createSessions, getSessionsAndClientsFromRecipients, constructSessionId, createSessionsFromPreKeys};
+export {
+  constructSessionId,
+  parseSessionId,
+  createSession,
+  createSessions,
+  getSessionsAndClientsFromRecipients,
+  createSessionsFromPreKeys,
+};

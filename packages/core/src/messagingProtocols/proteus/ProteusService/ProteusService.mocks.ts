@@ -21,18 +21,14 @@ import {ClientType} from '@wireapp/api-client/lib/client';
 
 import {APIClient} from '@wireapp/api-client';
 import {CoreCrypto} from '@wireapp/core-crypto';
-import {MemoryEngine} from '@wireapp/store-engine';
 
 import {ProteusService} from './ProteusService';
 
-import {CryptographyService} from '../../../cryptography';
 import {getUUID} from '../../../test/PayloadHelper';
 
 export const buildProteusService = async (
   federated = false,
-): Promise<
-  [ProteusService, {apiClient: APIClient; coreCrypto: CoreCrypto; cryptographyService: CryptographyService}]
-> => {
+): Promise<[ProteusService, {apiClient: APIClient; coreCrypto: CoreCrypto}]> => {
   const apiClient = new APIClient({urls: APIClient.BACKEND.STAGING});
 
   apiClient.context = {
@@ -43,13 +39,8 @@ export const buildProteusService = async (
 
   const coreCrypto = await CoreCrypto.deferredInit('store-name', 'key');
 
-  const cryptographyService = new CryptographyService(apiClient, new MemoryEngine(), {
-    useQualifiedIds: federated,
-    nbPrekeys: 1,
-  });
-
-  const proteusService = new ProteusService(apiClient, cryptographyService, coreCrypto, {
+  const proteusService = new ProteusService(apiClient, coreCrypto, {
     useQualifiedIds: federated,
   });
-  return [proteusService, {apiClient, coreCrypto, cryptographyService}];
+  return [proteusService, {apiClient, coreCrypto}];
 };

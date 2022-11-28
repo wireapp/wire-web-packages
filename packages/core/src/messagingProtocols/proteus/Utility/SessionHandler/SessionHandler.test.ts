@@ -24,13 +24,37 @@ import {Decoder} from 'bazinga64';
 
 import {
   constructSessionId,
+  createSession,
   createSessions,
   createSessionsFromPreKeys,
   getSessionsAndClientsFromRecipients,
+  parseSessionId,
 } from './SessionHandler';
 
 import {buildProteusService} from '../../ProteusService/ProteusService.mocks';
 import {preKeyBundleToUserClients} from '../PreKeyBundle';
+
+const prepareProteusService = async () => {
+  const [proteusClient, services] = await buildProteusService();
+  jest.spyOn(services.apiClient.api.user, 'postListClients').mockImplementation(() =>
+    Promise.resolve({
+      qualified_user_map: {
+        'test-domain': {
+          'test-id-1': [{class: ClientClassification.DESKTOP, id: 'test-client-id-1-user-1'}],
+          'test-id-2': [
+            {class: ClientClassification.DESKTOP, id: 'test-client-id-1-user-2'},
+            {class: ClientClassification.PHONE, id: 'test-client-id-2-user-2'},
+          ],
+        },
+      },
+    }),
+  );
+
+  jest.spyOn(services.apiClient.api.user, 'postMultiPreKeyBundles').mockImplementation(jest.fn());
+  jest.spyOn(services.apiClient.api.user, 'postQualifiedMultiPreKeyBundles').mockImplementation(jest.fn());
+
+  return [proteusClient, {...services}] as const;
+};
 
 describe('SessionHandler', () => {
   describe('constructSessionId', () => {
@@ -78,9 +102,129 @@ describe('SessionHandler', () => {
     });
   });
 
+  describe('constructSessionId & parseSessionId', () => {
+    it('constructs a Session ID by a given User ID and Client ID.', () => {
+      const clientId = '1ceb9063fced26d3';
+      const userId = 'afbb5d60-1187-4385-9c29-7361dea79647';
+      const actual = constructSessionId({userId, clientId});
+      expect(actual).toContain(clientId);
+      expect(actual).toContain(userId);
+
+      const parsedSessionId = parseSessionId(actual);
+      expect(parsedSessionId).toEqual({
+        userId,
+        clientId,
+        domain: undefined,
+      });
+    });
+
+    it('constructs a Session ID by a given User ID and Client ID and domain.', async () => {
+      const clientId = '1ceb9063fced26d3';
+      const userId = 'afbb5d60-1187-4385-9c29-7361dea79647';
+      const domain = 'test.wire.link';
+      const actual = constructSessionId({userId, clientId, useQualifiedIds: true, domain});
+      expect(actual).toContain(clientId);
+      expect(actual).toContain(userId);
+      expect(actual).toContain(domain);
+
+      const parsedSessionId = parseSessionId(actual);
+      expect(parsedSessionId).toEqual({
+        userId,
+        clientId,
+        domain,
+      });
+    });
+
+    it('constructs a qualified Session ID by a given qualified User ID and Client ID.', async () => {
+      const clientId = '1ceb9063fced26d3';
+      const userId = 'afbb5d60-1187-4385-9c29-7361dea79647';
+      const domain = 'test.wire.link';
+      const actual = constructSessionId({userId: {id: userId, domain}, useQualifiedIds: true, clientId});
+      expect(actual).toContain(clientId);
+      expect(actual).toContain(userId);
+      expect(actual).toContain(domain);
+
+      const parsedSessionId = parseSessionId(actual);
+      expect(parsedSessionId).toEqual({
+        userId,
+        clientId,
+        domain,
+      });
+    });
+
+    it('fails to parse wrongly formatted session Id', () => {
+      expect(() => {
+        parseSessionId('jfkdsmqfd');
+      }).toThrow(Error);
+    });
+  });
+
+  describe('createSession', () => {
+    it('creates session without initial prekey', async () => {
+      const {apiClient, coreCrypto} = (await buildProteusService())[1];
+
+      const domain = 'staging.zifra.io';
+      const userId = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
+      const clientId = '5e80ea7886680975';
+
+      const sessionId = constructSessionId({useQualifiedIds: true, userId: {id: userId, domain}, clientId});
+
+      const prekeyMock = {
+        id: 123,
+        key: 'pQABARhIAqEAWCCaJpFa9c626ORmjj1aV6OnOYgmTjfoiE3ynOfNfGAOmgOhAKEAWCD60VMzRrLfO+1GSjgyhnVp2N7L58DM+eeJhZJi1tBLfQT2',
+      };
+
+      const prekeyMockBuffer = Decoder.fromBase64(prekeyMock.key).asBytes;
+
+      const mockedGetClientPreKey = jest.spyOn(apiClient.api.user, 'getClientPreKey').mockResolvedValue({
+        client: clientId,
+        prekey: prekeyMock,
+      });
+
+      await createSession({sessionId, userId: {id: userId, domain}, clientId, apiClient, coreCryptoClient: coreCrypto});
+
+      expect(mockedGetClientPreKey).toHaveBeenCalled();
+      expect(coreCrypto.proteusSessionFromPrekey).toHaveBeenCalledWith(sessionId, prekeyMockBuffer);
+    });
+
+    it('creates session with initial prekey', async () => {
+      const {apiClient, coreCrypto} = (await buildProteusService())[1];
+
+      const domain = 'staging.zifra.io';
+      const userId = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
+      const clientId = '5e80ea7886680975';
+
+      const sessionId = constructSessionId({useQualifiedIds: true, userId: {id: userId, domain}, clientId});
+
+      const prekeyMock = {
+        id: 123,
+        key: 'pQABARhIAqEAWCCaJpFa9c626ORmjj1aV6OnOYgmTjfoiE3ynOfNfGAOmgOhAKEAWCD60VMzRrLfO+1GSjgyhnVp2N7L58DM+eeJhZJi1tBLfQT2',
+      };
+
+      const prekeyMockBuffer = Decoder.fromBase64(prekeyMock.key).asBytes;
+
+      const mockedGetClientPreKey = jest.spyOn(apiClient.api.user, 'getClientPreKey').mockResolvedValue({
+        client: clientId,
+        prekey: prekeyMock,
+      });
+
+      await createSession({
+        sessionId,
+        userId: {id: userId, domain},
+        initialPrekey: prekeyMock,
+        clientId,
+        apiClient,
+        coreCryptoClient: coreCrypto,
+      });
+
+      expect(mockedGetClientPreKey).not.toHaveBeenCalled();
+      expect(coreCrypto.proteusSessionFromPrekey).toHaveBeenCalledWith(sessionId, prekeyMockBuffer);
+    });
+  });
+
   describe('createSessions', () => {
     it('returns sessions for qualified clients type', async () => {
-      const {apiClient, coreCrypto, cryptographyService} = (await buildProteusService())[1];
+      const {apiClient, coreCrypto} = (await buildProteusService())[1];
 
       const domain = 'staging.zinfra.io';
 
@@ -120,15 +264,15 @@ describe('SessionHandler', () => {
 
       expect(sessions).toEqual(
         expect.arrayContaining([
-          cryptographyService['constructSessionId'](firstUserID, firstUserClient1, domain),
-          cryptographyService['constructSessionId'](firstUserID, firstUserClient2, domain),
-          cryptographyService['constructSessionId'](secondUserID, secondUserClient, domain),
+          constructSessionId({userId: firstUserID, clientId: firstUserClient1, domain}),
+          constructSessionId({userId: firstUserID, clientId: firstUserClient2, domain}),
+          constructSessionId({userId: secondUserID, clientId: secondUserClient, domain}),
         ]),
       );
     });
 
     it('returns sessions for legacy clients type', async () => {
-      const {apiClient, coreCrypto, cryptographyService} = (await buildProteusService())[1];
+      const {apiClient, coreCrypto} = (await buildProteusService())[1];
 
       const domain = 'staging.zinfra.io';
 
@@ -164,35 +308,13 @@ describe('SessionHandler', () => {
 
       expect(sessions).toEqual(
         expect.arrayContaining([
-          cryptographyService['constructSessionId'](firstUserID, firstUserClient1, domain),
-          cryptographyService['constructSessionId'](firstUserID, firstUserClient2, domain),
-          cryptographyService['constructSessionId'](secondUserID, secondUserClient, domain),
+          constructSessionId({userId: firstUserID, clientId: firstUserClient1, domain}),
+          constructSessionId({userId: firstUserID, clientId: firstUserClient2, domain}),
+          constructSessionId({userId: secondUserID, clientId: secondUserClient, domain}),
         ]),
       );
     });
   });
-
-  const prepareProteusService = async () => {
-    const [proteusClient, services] = await buildProteusService();
-    jest.spyOn(services.apiClient.api.user, 'postListClients').mockImplementation(() =>
-      Promise.resolve({
-        qualified_user_map: {
-          'test-domain': {
-            'test-id-1': [{class: ClientClassification.DESKTOP, id: 'test-client-id-1-user-1'}],
-            'test-id-2': [
-              {class: ClientClassification.DESKTOP, id: 'test-client-id-1-user-2'},
-              {class: ClientClassification.PHONE, id: 'test-client-id-2-user-2'},
-            ],
-          },
-        },
-      }),
-    );
-
-    jest.spyOn(services.apiClient.api.user, 'postMultiPreKeyBundles').mockImplementation(jest.fn());
-    jest.spyOn(services.apiClient.api.user, 'postQualifiedMultiPreKeyBundles').mockImplementation(jest.fn());
-
-    return [proteusClient, {...services}] as const;
-  };
 
   describe('getSessionsAndClientsFromRecipients', () => {
     it('returns userClients for legacy clients', async () => {

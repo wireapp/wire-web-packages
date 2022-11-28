@@ -48,7 +48,7 @@ export const buildProteusService = async (
     nbPrekeys: 1,
   });
 
-  const proteusService = new ProteusService(apiClient, cryptographyService, coreCrypto, {
+  const proteusService = new ProteusService(apiClient, coreCrypto, {
     useQualifiedIds: federated,
   });
   return [proteusService, {apiClient, coreCrypto, cryptographyService}];
