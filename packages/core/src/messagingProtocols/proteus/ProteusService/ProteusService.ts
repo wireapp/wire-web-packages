@@ -31,7 +31,6 @@ import type {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} fro
 import logdown from 'logdown';
 
 import type {CoreCrypto} from '@wireapp/core-crypto';
-import {CRUDEngine} from '@wireapp/store-engine';
 
 import {PrekeyGenerator} from './PrekeysGenerator';
 import type {
@@ -43,6 +42,7 @@ import type {
 
 import {MessageSendingState, SendResult} from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
+import {CoreDatabase} from '../../../storage/CoreDB';
 import type {EventHandlerResult} from '../../common.types';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
 import {getGenericMessageParams} from '../Utility/getGenericMessageParams';
@@ -57,11 +57,11 @@ export class ProteusService {
   constructor(
     private readonly apiClient: APIClient,
     private readonly coreCryptoClient: CoreCrypto,
-    store: CRUDEngine,
+    db: CoreDatabase,
     private readonly config: ProteusServiceConfig,
   ) {
     this.messageService = new MessageService(this.apiClient, this);
-    this.prekeyGenerator = new PrekeyGenerator(coreCryptoClient, store);
+    this.prekeyGenerator = new PrekeyGenerator(coreCryptoClient, db);
   }
 
   public async handleEvent(params: Pick<EventHandlerParams, 'event' | 'source' | 'dryRun'>): EventHandlerResult {

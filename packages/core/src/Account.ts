@@ -60,6 +60,7 @@ import {MLSCallbacks, CryptoProtocolConfig} from './messagingProtocols/mls/types
 import {ProteusService} from './messagingProtocols/proteus';
 import {HandledEventPayload, NotificationService, NotificationSource} from './notification/';
 import {SelfService} from './self/';
+import {openDB} from './storage/CoreDB';
 import {TeamService} from './team/';
 import {UserService} from './user/';
 import {createCustomEncryptedStore, createEncryptedStore, deleteEncryptedStore} from './util/encryptedStore';
@@ -415,6 +416,7 @@ export class Account<T = any> extends EventEmitter {
   public async initServices(context: Context): Promise<void> {
     this.coreCryptoClient = await this.initCoreCrypto(context);
     this.storeEngine = await this.initEngine(context);
+    const db = await openDB(this.generateCoreDbName(context));
     const accountService = new AccountService(this.apiClient);
     const assetService = new AssetService(this.apiClient);
     const cryptographyService = new CryptographyService(this.apiClient, this.storeEngine, {
@@ -427,8 +429,7 @@ export class Account<T = any> extends EventEmitter {
       ...this.cryptoProtocolConfig?.mls,
       nbKeyPackages: this.nbPrekeys,
     });
-
-    const proteusService = new ProteusService(this.apiClient, this.coreCryptoClient, this.storeEngine, {
+    const proteusService = new ProteusService(this.apiClient, this.coreCryptoClient, db, {
       // We can use qualified ids to send messages as long as the backend supports federated endpoints
       useQualifiedIds: this.backendFeatures.federationEndpoints,
     });
@@ -660,6 +661,10 @@ export class Account<T = any> extends EventEmitter {
 
   private generateSecretsDbName(context: Context) {
     return `secrets-${this.generateDbName(context)}`;
+  }
+
+  private generateCoreDbName(context: Context) {
+    return `core-${this.generateDbName(context)}`;
   }
 
   private async initEngine(context: Context): Promise<CRUDEngine> {

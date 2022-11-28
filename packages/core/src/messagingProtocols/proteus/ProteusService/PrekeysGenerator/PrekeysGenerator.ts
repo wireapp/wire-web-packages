@@ -22,18 +22,18 @@ import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
 import {Encoder} from 'bazinga64';
 
 import {keys as ProteusKeys} from '@wireapp/proteus';
-import {CRUDEngine} from '@wireapp/store-engine';
 
 import {PrekeysGeneratorStore} from './PrekeysGenerator.store';
 
+import {CoreDatabase} from '../../../../storage/CoreDB';
 import {NewDevicePrekeys} from '../ProteusService.types';
 
 type CoreCryptoPrekeyGenerator = Pick<CoreCrypto, 'proteusNewPrekey'>;
 
 export class PrekeyGenerator {
   private prekeyState: PrekeysGeneratorStore;
-  constructor(private readonly generator: CoreCryptoPrekeyGenerator, store: CRUDEngine) {
-    this.prekeyState = new PrekeysGeneratorStore(store);
+  constructor(private readonly generator: CoreCryptoPrekeyGenerator, db: CoreDatabase) {
+    this.prekeyState = new PrekeysGeneratorStore(db);
   }
 
   private async generatePrekey(id: number) {

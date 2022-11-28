@@ -18,23 +18,27 @@
  */
 
 import {keys as ProteusKeys} from '@wireapp/proteus';
-import {MemoryEngine, CRUDEngine} from '@wireapp/store-engine';
 
 import {PrekeyGenerator} from './PrekeysGenerator';
 
+import {CoreDatabase, openDB} from '../../../../storage/CoreDB';
+
 describe('PrekeysGenerator', () => {
-  let store: CRUDEngine;
+  let db: CoreDatabase;
   const mockPrekeyGenerator = {
     proteusNewPrekey: jest.fn().mockResolvedValue(Uint8Array.from([])),
   };
 
   beforeEach(async () => {
-    store = new MemoryEngine();
-    await store.init('testdb');
+    db = await openDB('test');
+  });
+
+  afterEach(async () => {
+    await db.clear('prekeys');
   });
 
   it('generates initial device prekeys', async () => {
-    const prekeyGenerator = new PrekeyGenerator(mockPrekeyGenerator, store);
+    const prekeyGenerator = new PrekeyGenerator(mockPrekeyGenerator, db);
     const nbPrekeys = Math.floor(Math.random() * 100);
     const {prekeys, lastPrekey} = await prekeyGenerator.generateInitialPrekeys(nbPrekeys);
     expect(prekeys).toHaveLength(nbPrekeys);
@@ -42,7 +46,7 @@ describe('PrekeysGenerator', () => {
   });
 
   it('keeps track of the last generated prekey ID', async () => {
-    const prekeyGenerator = new PrekeyGenerator(mockPrekeyGenerator, store);
+    const prekeyGenerator = new PrekeyGenerator(mockPrekeyGenerator, db);
     const nbPrekeys = Math.floor(Math.random() * 100);
     const {prekeys, lastPrekey} = await prekeyGenerator.generateInitialPrekeys(nbPrekeys);
     expect(prekeys).toHaveLength(nbPrekeys);

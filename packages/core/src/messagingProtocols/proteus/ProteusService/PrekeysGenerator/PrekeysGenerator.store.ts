@@ -17,27 +17,25 @@
  *
  */
 
-import {CRUDEngine} from '@wireapp/store-engine';
+import {CoreDatabase} from '../../../../storage/CoreDB';
 
-const TABLE_NAME = 'prekeys_state';
 const STATE_PRIMARY_KEY = 'highest_id';
 
 export class PrekeysGeneratorStore {
-  constructor(private readonly store: CRUDEngine) {}
+  constructor(private readonly db: CoreDatabase) {}
 
   private async getState(): Promise<number> {
-    try {
-      const value = await this.store.read<number>(TABLE_NAME, STATE_PRIMARY_KEY);
-      return value;
-    } catch (e) {
-      return 0;
-    }
+    return (await this.db.get('prekeys', STATE_PRIMARY_KEY)) ?? 0;
   }
 
   private async saveState(state: number): Promise<void> {
-    await this.store.updateOrCreate(TABLE_NAME, STATE_PRIMARY_KEY, state);
+    await this.db.put('prekeys', state, STATE_PRIMARY_KEY);
   }
 
+  /**
+   * will generate nbIds ids that can be used to store prekeys
+   * @param nbIds the number of ids to generate
+   */
   async createIds(nbIds: number): Promise<number[]> {
     const currentState = await this.getState();
     const newState = currentState + nbIds;
