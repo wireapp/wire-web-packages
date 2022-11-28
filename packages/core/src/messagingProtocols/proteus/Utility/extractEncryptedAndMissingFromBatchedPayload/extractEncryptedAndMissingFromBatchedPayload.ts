@@ -19,14 +19,12 @@
 
 import type {OTRRecipients, UserClients} from '@wireapp/api-client/lib/conversation';
 
-import type {CryptographyService} from '../../../../cryptography';
 import {constructSessionId} from '../SessionHandler';
 
 interface ExtractEncryptedAndMissingFromBatchedPayloadProps {
   payload: Map<string, Uint8Array>;
   users: UserClients;
   domain: string;
-  cryptographyService: CryptographyService;
 }
 
 export const extractEncryptedAndMissingFromBatchedPayload = ({
