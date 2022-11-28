@@ -25,12 +25,14 @@ interface ExtractEncryptedAndMissingFromBatchedPayloadProps {
   payload: Map<string, Uint8Array>;
   users: UserClients;
   domain: string;
+  useQualifiedIds: boolean;
 }
 
 export const extractEncryptedAndMissingFromBatchedPayload = ({
   payload,
   users,
   domain = '',
+  useQualifiedIds,
 }: ExtractEncryptedAndMissingFromBatchedPayloadProps): {missing: UserClients; encrypted: OTRRecipients<Uint8Array>} => {
   const encrypted: OTRRecipients<Uint8Array> = {};
   const missing: UserClients = {};
@@ -38,7 +40,7 @@ export const extractEncryptedAndMissingFromBatchedPayload = ({
   const userClientsArr = Object.entries(users);
   for (const [userId, clientIds] of userClientsArr) {
     for (const clientId of clientIds) {
-      const sessionId = constructSessionId({userId, clientId, domain});
+      const sessionId = constructSessionId({userId, clientId, domain, useQualifiedIds});
 
       if (payload.has(sessionId)) {
         encrypted[userId] ||= {};

@@ -60,10 +60,14 @@ describe('CryptographyService', () => {
   });
 
   describe('constructSessionId & parseSessionId', () => {
-    it('constructs a Session ID by a given User ID and Client ID.', () => {
+    it('constructs a Session ID by a given User ID and Client ID.', async () => {
+      const cryptographyService = new CryptographyService(new APIClient(), await createEngine('wire'), {
+        useQualifiedIds: true,
+        nbPrekeys: 1,
+      });
       const clientId = '1ceb9063fced26d3';
       const userId = 'afbb5d60-1187-4385-9c29-7361dea79647';
-      const actual = constructSessionId({userId, clientId});
+      const actual = cryptographyService.constructSessionId(userId, clientId);
       expect(actual).toContain(clientId);
       expect(actual).toContain(userId);
 

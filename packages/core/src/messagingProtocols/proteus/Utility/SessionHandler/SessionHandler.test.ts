@@ -60,7 +60,7 @@ describe('SessionHandler', () => {
   describe('constructSessionId', () => {
     describe('constructs a session ID', () => {
       it('without a domain', () => {
-        const sessionId = constructSessionId({userId: 'user-id', clientId: 'client-id'});
+        const sessionId = constructSessionId({userId: 'user-id', clientId: 'client-id', useQualifiedIds: true});
         expect(sessionId).toBe('user-id@client-id');
       });
 
@@ -69,8 +69,9 @@ describe('SessionHandler', () => {
           userId: 'user-id',
           clientId: 'client-id',
           domain: 'domain',
+          useQualifiedIds: true,
         });
-        expect(sessionId).toBe('user-id@client-id');
+        expect(sessionId).toBe('domain@user-id@client-id');
       });
 
       it('with a domain and useQualifiedIds', () => {
@@ -87,8 +88,9 @@ describe('SessionHandler', () => {
         const sessionId = constructSessionId({
           userId: {id: 'user-id', domain: 'domain'},
           clientId: 'client-id',
+          useQualifiedIds: true,
         });
-        expect(sessionId).toBe('user-id@client-id');
+        expect(sessionId).toBe('domain@user-id@client-id');
       });
 
       it('with a qualified ID and useQualifiedIds', () => {
@@ -106,7 +108,7 @@ describe('SessionHandler', () => {
     it('constructs a Session ID by a given User ID and Client ID.', () => {
       const clientId = '1ceb9063fced26d3';
       const userId = 'afbb5d60-1187-4385-9c29-7361dea79647';
-      const actual = constructSessionId({userId, clientId});
+      const actual = constructSessionId({userId, clientId, useQualifiedIds: true});
       expect(actual).toContain(clientId);
       expect(actual).toContain(userId);
 
@@ -264,9 +266,9 @@ describe('SessionHandler', () => {
 
       expect(sessions).toEqual(
         expect.arrayContaining([
-          constructSessionId({userId: firstUserID, clientId: firstUserClient1, domain}),
-          constructSessionId({userId: firstUserID, clientId: firstUserClient2, domain}),
-          constructSessionId({userId: secondUserID, clientId: secondUserClient, domain}),
+          constructSessionId({userId: firstUserID, clientId: firstUserClient1, domain, useQualifiedIds: true}),
+          constructSessionId({userId: firstUserID, clientId: firstUserClient2, domain, useQualifiedIds: true}),
+          constructSessionId({userId: secondUserID, clientId: secondUserClient, domain, useQualifiedIds: true}),
         ]),
       );
     });
@@ -308,9 +310,9 @@ describe('SessionHandler', () => {
 
       expect(sessions).toEqual(
         expect.arrayContaining([
-          constructSessionId({userId: firstUserID, clientId: firstUserClient1, domain}),
-          constructSessionId({userId: firstUserID, clientId: firstUserClient2, domain}),
-          constructSessionId({userId: secondUserID, clientId: secondUserClient, domain}),
+          constructSessionId({userId: firstUserID, clientId: firstUserClient1, domain, useQualifiedIds: false}),
+          constructSessionId({userId: firstUserID, clientId: firstUserClient2, domain, useQualifiedIds: false}),
+          constructSessionId({userId: secondUserID, clientId: secondUserClient, domain, useQualifiedIds: false}),
         ]),
       );
     });
@@ -399,9 +401,10 @@ describe('SessionHandler', () => {
       const sessions = await createSessionsFromPreKeys({
         preKeyBundleMap,
         coreCryptoClient: coreCrypto,
+        useQualifiedIds: true,
       });
 
-      const sessionId = constructSessionId({userId: firstUserID, clientId: firstUserClient1});
+      const sessionId = constructSessionId({userId: firstUserID, clientId: firstUserClient1, useQualifiedIds: true});
       const prekeyBuffer = Decoder.fromBase64(validPreKey.key).asBytes;
 
       expect(coreCrypto.proteusSessionFromPrekey).toHaveBeenCalledWith(sessionId, prekeyBuffer);
@@ -430,8 +433,9 @@ describe('SessionHandler', () => {
       const sessions = await createSessionsFromPreKeys({
         preKeyBundleMap,
         coreCryptoClient: coreCrypto,
+        useQualifiedIds: true,
       });
-      const sessionId = constructSessionId({userId: firstUserID, clientId: firstUserClient1});
+      const sessionId = constructSessionId({userId: firstUserID, clientId: firstUserClient1, useQualifiedIds: true});
 
       expect(coreCrypto.proteusSessionFromPrekey).not.toHaveBeenCalled();
       expect(sessions).toContain(sessionId);
@@ -452,9 +456,9 @@ describe('SessionHandler', () => {
       const firstUserClient2 = '3330ea7844444975';
       const firstUserClient3 = '3330ea7845444975';
 
-      const session1Id = constructSessionId({userId: firstUserID, clientId: firstUserClient1});
-      const session2Id = constructSessionId({userId: firstUserID, clientId: firstUserClient2});
-      const session3Id = constructSessionId({userId: firstUserID, clientId: firstUserClient3});
+      const session1Id = constructSessionId({userId: firstUserID, clientId: firstUserClient1, useQualifiedIds: true});
+      const session2Id = constructSessionId({userId: firstUserID, clientId: firstUserClient2, useQualifiedIds: true});
+      const session3Id = constructSessionId({userId: firstUserID, clientId: firstUserClient3, useQualifiedIds: true});
 
       const validPreKey = {
         id: 1337,
@@ -472,6 +476,7 @@ describe('SessionHandler', () => {
       const sessions = await createSessionsFromPreKeys({
         preKeyBundleMap,
         coreCryptoClient: coreCrypto,
+        useQualifiedIds: true,
       });
       expect(coreCrypto.proteusSessionFromPrekey).toHaveBeenCalledTimes(2);
       expect(sessions).toEqual(expect.arrayContaining([session1Id, session2Id, session3Id]));
@@ -507,15 +512,18 @@ describe('SessionHandler', () => {
       const sessions = await createSessionsFromPreKeys({
         preKeyBundleMap,
         coreCryptoClient: coreCrypto,
+        useQualifiedIds: true,
       });
       expect(sessions).toEqual(
         expect.arrayContaining([
-          constructSessionId({userId: firstUserID, clientId: firstUserClient1}),
-          constructSessionId({userId: firstUserID, clientId: firstUserClient2}),
-          constructSessionId({userId: secondUserID, clientId: secondUserClient}),
+          constructSessionId({userId: firstUserID, clientId: firstUserClient1, useQualifiedIds: true}),
+          constructSessionId({userId: firstUserID, clientId: firstUserClient2, useQualifiedIds: true}),
+          constructSessionId({userId: secondUserID, clientId: secondUserClient, useQualifiedIds: true}),
         ]),
       );
-      expect(sessions).not.toContain(constructSessionId({userId: firstUserID, clientId: noPrekeyClient}));
+      expect(sessions).not.toContain(
+        constructSessionId({userId: firstUserID, clientId: noPrekeyClient, useQualifiedIds: true}),
+      );
     });
   });
 });

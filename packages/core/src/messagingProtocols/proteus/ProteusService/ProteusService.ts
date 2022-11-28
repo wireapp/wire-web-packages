@@ -197,6 +197,7 @@ export class ProteusService {
       payload,
       users: userClients,
       domain,
+      useQualifiedIds: this.config.useQualifiedIds,
     });
   }
 
@@ -205,17 +206,17 @@ export class ProteusService {
     preKeyBundles: QualifiedUserPreKeyBundleMap | QualifiedUserClients,
   ): Promise<{missing: QualifiedUserClients; encrypted: QualifiedOTRRecipients}> {
     const qualifiedOTRRecipients: QualifiedOTRRecipients = {};
-    const missing: QualifiedUserClients = {};
+    const qualifiedMissing: QualifiedUserClients = {};
 
     for (const [domain, preKeyBundleMap] of Object.entries(preKeyBundles)) {
       const result = await this.encrypt(plainText, preKeyBundleMap, domain);
       qualifiedOTRRecipients[domain] = result.encrypted;
-      missing[domain] = result.missing;
+      qualifiedMissing[domain] = result.missing;
     }
 
     return {
       encrypted: qualifiedOTRRecipients,
-      missing,
+      missing: qualifiedMissing,
     };
   }
 }

@@ -46,13 +46,17 @@ describe('extractEncryptedAndMissingFromBatchedPayload', () => {
         [firstUserID, firstUserClient1, domain],
         [firstUserID, firstUserClient2, domain],
         [secondUserID, secondUserClient, domain],
-      ].map(([userId, clientId, domain]) => [constructSessionId({userId, clientId, domain}), textPayload]),
+      ].map(([userId, clientId, domain]) => [
+        constructSessionId({userId, clientId, domain, useQualifiedIds: true}),
+        textPayload,
+      ]),
     );
 
     const {encrypted, missing} = extractEncryptedAndMissingFromBatchedPayload({
       payload: batchedEncryptPayload,
       users: userClients,
       domain,
+      useQualifiedIds: true,
     });
 
     expect(encrypted).toEqual({
@@ -81,13 +85,17 @@ describe('extractEncryptedAndMissingFromBatchedPayload', () => {
     const textPayload = new Uint8Array();
 
     const batchedEncryptPayload: Map<string, Uint8Array> = new Map([
-      [constructSessionId({userId: firstUserID, clientId: firstUserClient1, domain}), textPayload],
+      [
+        constructSessionId({userId: firstUserID, clientId: firstUserClient1, domain, useQualifiedIds: true}),
+        textPayload,
+      ],
     ]);
 
     const {encrypted, missing} = extractEncryptedAndMissingFromBatchedPayload({
       payload: batchedEncryptPayload,
       users: userClients,
       domain,
+      useQualifiedIds: true,
     });
 
     expect(encrypted).toEqual({
